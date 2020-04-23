@@ -2,152 +2,85 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E468C55185
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C76C55185
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6D2F20776
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:29:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A4BE20747
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:31:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgDWC3J (ORCPT
+        id S1726525AbgDWCbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 22:29:09 -0400
-Received: from mail-m127107.qiye.163.com ([115.236.127.107]:9783 "EHLO
-        mail-m127107.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726784AbgDWC3I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 22:29:08 -0400
-Received: from vivo.com (wm-12.qy.internal [127.0.0.1])
-        by mail-m127107.qiye.163.com (Hmail) with ESMTP id 23EDE8239F;
-        Thu, 23 Apr 2020 10:26:51 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <ALIAKgDoCKmzQ6k5LYOILapX.3.1587608811084.Hmail.wenhu.wang@vivo.com>
-To:     =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
-Cc:     Scott Wood <oss@buserror.net>, gregkh@linuxfoundation.org,
-        arnd@arndb.de, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, kernel@vivo.com, robh@kernel.org,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSCB2MixSRVNFTkRdIG1pc2M6IG5ldyBkcml2ZXIgc3JhbV91YXBpIGZvciB1c2VyIGxldmVsIFNSQU0gYWNjZXNz?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 58.251.74.226
-In-Reply-To: <AEcAyQCMCDKzrJl2z8MdhKp5.3.1587602127200.Hmail.wenhu.wang@vivo.com>
+        Wed, 22 Apr 2020 22:31:34 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2873 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725781AbgDWCbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 22:31:34 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 88D166779FDD7B390461;
+        Thu, 23 Apr 2020 10:31:31 +0800 (CST)
+Received: from [127.0.0.1] (10.63.139.185) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Thu, 23 Apr 2020
+ 10:31:21 +0800
+Subject: Re: [PATCH -next] crypto: hisilicon/qm - Make qm_controller_reset()
+ static
+To:     Zou Wei <zou_wei@huawei.com>, <herbert@gondor.apana.org.au>,
+        <davem@davemloft.net>
+References: <1587608556-113975-1-git-send-email-zou_wei@huawei.com>
+CC:     <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From:   Zhou Wang <wangzhou1@hisilicon.com>
+Message-ID: <5EA0FDF4.5010601@hisilicon.com>
+Date:   Thu, 23 Apr 2020 10:31:16 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Received: from wenhu.wang@vivo.com( [58.251.74.226) ] by ajax-webmail ( [127.0.0.1] ) ; Thu, 23 Apr 2020 10:26:51 +0800 (GMT+08:00)
-From:   =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
-Date:   Thu, 23 Apr 2020 10:26:51 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVCTkhCQkJCQk1KQ05IWVdZKFlBSE
-        83V1ktWUFJV1kJDhceCFlBWTU0KTY6NyQpLjc#WQY+
-X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMSExJQk9LS01KN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
-        WUc6NzI6MBw*FDgwFgEqTRBONyI0MjcaCyNVSFVKTkNMTUtDQ0pISU5MVTMWGhIXVQweFRMOVQwa
-        FRw7DRINFFUYFBZFWVdZEgtZQVlOQ1VJTkpVTE9VSUlNWVdZCAFZQUJDTEI3Bg++
-X-HM-Tid: 0a71a4dbf693986bkuuu23ede8239f
+In-Reply-To: <1587608556-113975-1-git-send-email-zou_wei@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.63.139.185]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PkhpLCBTY290dCwgR3JlZywKPgo+VGhhbmsgeW91IGZvciB5b3VyIGhlbHBmdWwgY29tbWVudHMu
-Cj5Gb3IgdGhhdCBHcmVnIG1lbnRpb25lZCB0aGF0IHRoZSBwYXRjaCAob3IgcGF0Y2ggc2VyaWVz
-KSB2aWEgVUlPIHNob3VsZCB3b3JrZWQgdGhyb3VnaCwKPnNvIEkgd2FudCB0byBtYWtlIGl0IGNs
-ZWFyIHRoYXQgaWYgaXQgd291bGQgZ28gdXBzdHJlYW0/KEFuZCBpZiBzbywgd2hlbj8gTm8gcHVz
-aCwganVzdCBhc2spCj4KPkFsc28gSSBoYXZlIGJlZW4gd29uZGVyaW5nIGhvdyB0aGUgcGF0Y2hl
-cyB3aXRoIGNvbXBvbmVudHMgaW4gZGlmZmVyZW50IHN1YnN5c3RlbXMKPmdvIGdldCB1cHN0cmVh
-bSB0byB0aGUgbWFpbmxpbmU/IExpa2UgcGF0Y2ggMS0zIGFyZSBvZiBsaW51eHBwYy1kZXYsIGFu
-ZCBwYXRjaCA0IGlzIG9mCj5zdWJzeXN0ZW0gVUlPLCBhbmQgaWYgYWNjZXB0YWJsZSwgaG93IHdv
-dWxkIHlvdSBkZWFsIHdpdGggdGhlbT8KPgo+QmFjayB0byB0aGUgZGV2aWNldHJlZSB0aGluZywg
-SSBtYWtlIGl0IGRldGFjaGVkIGZyb20gaGFyZHdhcmUgY29tcGF0aWJpbGl0aWVzIHdoaWNoIGJl
-bG9uZwo+dG8gdGhlIGhhcmR3YXJlIGxldmVsIGRyaXZlciBhbmQgYWxzbyB1c2VkIG1vZHVsZSBw
-YXJhbWV0ZXIgZm9yIG9mX2lkIGRlZmluaXRpb24gYXMgZHQtYmluZGluZwo+aXMgbm90IGFsbG93
-ZWQgZm9yIFVJTyBub3cuIFNvIGFzIEkgY2FuIHNlZSwgdGhpbmdzIG1heSBnbyB3ZWxsIGFuZCB0
-aGVyZSBpcyBubyBoYXJtIHRvIGFueXRoaW5nLAo+SSBob3BlIHlvdShTY290dCkgcGxlYXNlIHRh
-a2UgYSByZS1jb25zaWRlcmF0aW9uLiAKPgoKSSBtZWFuIEkgaGF2ZSBnZXQgc29tZSBuZXcgd29y
-ayBkb25lIGJhc2VkIG9uIHRoZSBjb21tZW50cyBvZiBBcm5kLCBTY290dCBhbmQgR3JlZy4gQWxz
-byBhIGxvdCBvZiB0ZXN0cyBkb25lLgpTbyBpdCB3b3VsZCBiZSBiZXR0ZXIgdG8gbWFrZSBpdCBj
-bGVhciB3aGV0aGVyIEkgc2hvdWQga2VlcCB0aGUgd29yayBnb2luZyBvciB0aGUgVUlPIHZlcnNp
-b24gaXMgdG8gYmUgYWNjZXB0ZWQKdG8gZ28gdXBzdHJlYW0gcmVjZW50bHkgaW4gdGhlIGZ1dHVy
-ZS4KClRoYW5rcyAmIHJlZ2FyZHMsCldlbmh1Cj4KPj5PbiBTdW4sIDIwMjAtMDQtMTkgYXQgMjA6
-MDUgLTA3MDAsIFdhbmcgV2VuaHUgd3JvdGU6Cj4+PiArc3RhdGljIHZvaWQgc3JhbV91YXBpX3Jl
-c19pbnNlcnQoc3RydWN0IHNyYW1fdWFwaSAqdWFwaSwKPj4+ICsJCQkJIHN0cnVjdCBzcmFtX3Jl
-c291cmNlICpyZXMpCj4+PiArewo+Pj4gKwlzdHJ1Y3Qgc3JhbV9yZXNvdXJjZSAqY3VyLCAqdG1w
-Owo+Pj4gKwlzdHJ1Y3QgbGlzdF9oZWFkICpoZWFkID0gJnVhcGktPnJlc19saXN0Owo+Pj4gKwo+
-Pj4gKwlsaXN0X2Zvcl9lYWNoX2VudHJ5X3NhZmUoY3VyLCB0bXAsIGhlYWQsIGxpc3QpIHsKPj4+
-ICsJCWlmICgmdG1wLT5saXN0ICE9IGhlYWQgJiYKPj4+ICsJCSAgICAoY3VyLT5pbmZvLm9mZnNl
-dCArIGN1ci0+aW5mby5zaXplICsgcmVzLT5pbmZvLnNpemUgPD0KPj4+ICsJCSAgICB0bXAtPmlu
-Zm8ub2Zmc2V0KSkgewo+Pj4gKwkJCXJlcy0+aW5mby5vZmZzZXQgPSBjdXItPmluZm8ub2Zmc2V0
-ICsgY3VyLT5pbmZvLnNpemU7Cj4+PiArCQkJcmVzLT5wYXJlbnQgPSB1YXBpOwo+Pj4gKwkJCWxp
-c3RfYWRkKCZyZXMtPmxpc3QsICZjdXItPmxpc3QpOwo+Pj4gKwkJCXJldHVybjsKPj4+ICsJCX0K
-Pj4+ICsJfQo+Pgo+PldlIGRvbid0IG5lZWQgeWV0IGFub3RoZXIgb3BlbiBjb2RlZCBhbGxvY2F0
-b3IuICBJZiB5b3UgcmVhbGx5IG5lZWQgdG8gZG8gdGhpcwo+PnRoZW4gdXNlIGluY2x1ZGUvbGlu
-dXgvZ2VuYWxsb2MuaCwgYnV0IG1heWJlIGtlZXAgaXQgc2ltcGxlIGFuZCBqdXN0IGhhdmUgb25l
-Cj4+YWxsb2NhdG9uIHBlciBmaWxlIGRlc2NyaXB0b3Igc28geW91IGRvbid0IG5lZWQgdG8gbWFu
-YWdlIGZkIG9mZnNldHM/Cj4+Cj4+PiArc3RhdGljIHN0cnVjdCBzcmFtX3Jlc291cmNlICpzcmFt
-X3VhcGlfZmluZF9yZXMoc3RydWN0IHNyYW1fdWFwaSAqdWFwaSwKPj4+ICsJCQkJCQlfX3UzMiBv
-ZmZzZXQpCj4+PiArewo+Pj4gKwlzdHJ1Y3Qgc3JhbV9yZXNvdXJjZSAqcmVzOwo+Pj4gKwo+Pj4g
-KwlsaXN0X2Zvcl9lYWNoX2VudHJ5KHJlcywgJnVhcGktPnJlc19saXN0LCBsaXN0KSB7Cj4+PiAr
-CQlpZiAocmVzLT5pbmZvLm9mZnNldCA9PSBvZmZzZXQpCj4+PiArCQkJcmV0dXJuIHJlczsKPj4+
-ICsJfQo+Pj4gKwo+Pj4gKwlyZXR1cm4gTlVMTDsKPj4+ICt9Cj4+Cj4+V2hhdCBpZiB0aGUgYWxs
-b2NhdGlvbiBpcyBtb3JlIHRoYW4gb25lIHBhZ2UsIGFuZCB0aGUgdXNlciBtbWFwcyBzdGFydGlu
-Zwo+PnNvbWV3aGVyZSBvdGhlciB0aGFuIHRoZSBmaXJzdCBwYWdlPwo+Pgo+Pj4gKwlzd2l0Y2gg
-KGNtZCkgewo+Pj4gKwljYXNlIFNSQU1fVUFQSV9JT0NfU0VUX1NSQU1fVFlQRToKPj4+ICsJCWlm
-ICh1YXBpLT5zYSkKPj4+ICsJCQlyZXR1cm4gLUVFWElTVDsKPj4+ICsKPj4+ICsJCWdldF91c2Vy
-KHR5cGUsIChjb25zdCBfX3UzMiBfX3VzZXIgKilhcmcpOwo+Pj4gKwkJdWFwaS0+c2EgPSBnZXRf
-c3JhbV9hcGlfZnJvbV90eXBlKHR5cGUpOwo+Pj4gKwkJaWYgKHVhcGktPnNhKQo+Pj4gKwkJCXJl
-dCA9IDA7Cj4+PiArCQllbHNlCj4+PiArCQkJcmV0ID0gLUVOT0RFVjsKPj4+ICsKPj4+ICsJCWJy
-ZWFrOwo+Pj4gKwo+Pgo+Pkp1c3QgZXhwb3NlIG9uZSBkZXZpY2UgcGVyIGJhY2tpbmcgU1JBTSwg
-ZXNwZWNpYWxseSBpZiB0aGUgdXNlciBoYXMgYW55IHJlYXNvbgo+PnRvIGNhcmUgYWJvdXQgd2hl
-cmUgdGhlIFNSQU0gaXMgY29taW5nIGZyb20gKGNvcnJlbGF0aW5nIHN5c2ZzIG5vZGVzIGlzIG11
-Y2gKPj5tb3JlIGV4cHJlc3NpdmUgdGhhbiBzb21lIHZhZ3VlIG5vdGlvbiBvZiAidHlwZSIpLgo+
-Pgo+Pj4gKwljYXNlIFNSQU1fVUFQSV9JT0NfQUxMT0M6Cj4+PiArCQlpZiAoIXVhcGktPnNhKQo+
-Pj4gKwkJCXJldHVybiAtRUlOVkFMOwo+Pj4gKwo+Pj4gKwkJcmVzID0ga3phbGxvYyhzaXplb2Yo
-KnJlcyksIEdGUF9LRVJORUwpOwo+Pj4gKwkJaWYgKCFyZXMpCj4+PiArCQkJcmV0dXJuIC1FTk9N
-RU07Cj4+PiArCj4+PiArCQlzaXplID0gY29weV9mcm9tX3VzZXIoKHZvaWQgKikmcmVzLT5pbmZv
-LAo+Pj4gKwkJCQkgICAgICAoY29uc3Qgdm9pZCBfX3VzZXIgKilhcmcsCj4+PiArCQkJCSAgICAg
-IHNpemVvZihyZXMtPmluZm8pKTsKPj4+ICsJCWlmICghUEFHRV9BTElHTkVEKHJlcy0+aW5mby5z
-aXplKSB8fCAhcmVzLT5pbmZvLnNpemUpCj4+PiArCQkJcmV0dXJuIC1FSU5WQUw7Cj4+Cj4+TWlz
-c2luZyBFRkFVTFQgdGVzdCAoaGVyZSBhbmQgZWxzZXdoZXJlKSwgYW5kIHJlcyBsZWFrcyBvbiBl
-cnJvci4KPj4KPj4+ICsKPj4+ICsJCXJlcy0+dmlydCA9ICh2b2lkICopdWFwaS0+c2EtPnNyYW1f
-YWxsb2MocmVzLT5pbmZvLnNpemUsCj4+PiArCQkJCQkJCSAmcmVzLT5waHlzLAo+Pj4gKwkJCQkJ
-CQkgUEFHRV9TSVpFKTsKPj4KPj5EbyB3ZSByZWFsbHkgbmVlZCBtdWx0aXBsZSBhbGxvY2F0b3Jz
-LCBvciBjb3VsZCB0aGUgYmFja2VuZCBiZSBsaW1pdGVkIHRvIGp1c3QKPj5hZGRpbmcgcmVnaW9u
-cyB0byBhIGdlbmVyaWMgYWxsb2NhdG9yICh3aXRoIHRoYXQgYWxsb2NhdG9yIGFsc28gc2Vydmlu
-ZyBpbi0KPj5rZXJuZWwgdXNlcnMpPwo+Pgo+PklmIHNyYW1fYWxsb2MgaXMgc3VwcG9zZWQgdG8g
-cmV0dXJuIGEgdmlydHVhbCBhZGRyZXNzLCB3aHkgaXNuJ3QgdGhhdCB0aGUKPj5yZXR1cm4gdHlw
-ZT8KPj4KPj4+ICsJCWlmICghcmVzLT52aXJ0KSB7Cj4+PiArCQkJa2ZyZWUocmVzKTsKPj4+ICsJ
-CQlyZXR1cm4gLUVOT01FTTsKPj4+ICsJCX0KPj4KPj5FTk9TUEMgbWlnaHQgYmUgbW9yZSBhcHBy
-b3ByaWF0ZSwgYXMgdGhpcyBpc24ndCBnZW5lcmFsLXB1cnBvc2UgUkFNLgo+Pgo+Pj4gKwo+Pj4g
-KwkJc3JhbV91YXBpX3Jlc19pbnNlcnQodWFwaSwgcmVzKTsKPj4+ICsJCXNpemUgPSBjb3B5X3Rv
-X3VzZXIoKHZvaWQgX191c2VyICopYXJnLAo+Pj4gKwkJCQkgICAgKGNvbnN0IHZvaWQgKikmcmVz
-LT5pbmZvLAo+Pj4gKwkJCQkgICAgc2l6ZW9mKHJlcy0+aW5mbykpOwo+Pj4gKwo+Pj4gKwkJcmV0
-ID0gMDsKPj4+ICsJCWJyZWFrOwo+Pj4gKwo+Pj4gKwljYXNlIFNSQU1fVUFQSV9JT0NfRlJFRToK
-Pj4+ICsJCWlmICghdWFwaS0+c2EpCj4+PiArCQkJcmV0dXJuIC1FSU5WQUw7Cj4+PiArCj4+PiAr
-CQlzaXplID0gY29weV9mcm9tX3VzZXIoKHZvaWQgKikmaW5mbywgKGNvbnN0IHZvaWQgX191c2Vy
-ICopYXJnLAo+Pj4gKwkJCQkgICAgICBzaXplb2YoaW5mbykpOwo+Pj4gKwo+Pj4gKwkJcmVzID0g
-c3JhbV91YXBpX3Jlc19kZWxldGUodWFwaSwgJmluZm8pOwo+Pj4gKwkJaWYgKCFyZXMpIHsKPj4+
-ICsJCQlwcl9lcnIoImVycm9yIG5vIHNyYW0gcmVzb3VyY2UgZm91bmRcbiIpOwo+Pj4gKwkJCXJl
-dHVybiAtRUlOVkFMOwo+Pj4gKwkJfQo+Pj4gKwo+Pj4gKwkJdWFwaS0+c2EtPnNyYW1fZnJlZShy
-ZXMtPnZpcnQpOwo+Pj4gKwkJa2ZyZWUocmVzKTsKPj4+ICsKPj4+ICsJCXJldCA9IDA7Cj4+PiAr
-CQlicmVhazsKPj4KPj5TbyB5b3UgY2FuIGp1c3QgZGVsZXRlIGFueSBhcmJpdHJhcnkgb2Zmc2V0
-LCBldmVuIGlmIHlvdSB3ZXJlbid0IHRoZSBvbmUgdGhhdAo+PmFsbG9jYXRlZCBpdD8gIEV2ZW4g
-aWYgdGhpcyBpc24ndCBtZWFudCBmb3IgdW5wcml2aWxlZ2VkIHVzZSBpdCBzZWVtcyBlcnJvci0K
-Pj5wcm9uZS4gIAo+Pgo+Pj4gKwo+Pj4gKwlkZWZhdWx0Ogo+Pj4gKwkJcHJfZXJyKCJlcnJvciBu
-byBjbWQgbm90IHN1cHBvcnRlZFxuIik7Cj4+PiArCQlicmVhazsKPj4+ICsJfQo+Pj4gKwo+Pj4g
-KwlyZXR1cm4gcmV0Owo+Pj4gK30KPj4+ICsKPj4+ICtzdGF0aWMgaW50IHNyYW1fdWFwaV9tbWFw
-KHN0cnVjdCBmaWxlICpmaWxwLCBzdHJ1Y3Qgdm1fYXJlYV9zdHJ1Y3QgKnZtYSkKPj4+ICt7Cj4+
-PiArCXN0cnVjdCBzcmFtX3VhcGkgKnVhcGkgPSBmaWxwLT5wcml2YXRlX2RhdGE7Cj4+PiArCXN0
-cnVjdCBzcmFtX3Jlc291cmNlICpyZXM7Cj4+PiArCj4+PiArCXJlcyA9IHNyYW1fdWFwaV9maW5k
-X3Jlcyh1YXBpLCB2bWEtPnZtX3Bnb2ZmKTsKPj4+ICsJaWYgKCFyZXMpCj4+PiArCQlyZXR1cm4g
-LUVJTlZBTDsKPj4+ICsKPj4+ICsJaWYgKHZtYS0+dm1fZW5kIC0gdm1hLT52bV9zdGFydCA+IHJl
-cy0+aW5mby5zaXplKQo+Pj4gKwkJcmV0dXJuIC1FSU5WQUw7Cj4+PiArCj4+PiArCXZtYS0+dm1f
-cGFnZV9wcm90ID0gcGdwcm90X25vbmNhY2hlZCh2bWEtPnZtX3BhZ2VfcHJvdCk7Cj4+PiArCj4+
-PiArCXJldHVybiByZW1hcF9wZm5fcmFuZ2Uodm1hLCB2bWEtPnZtX3N0YXJ0LAo+Pj4gKwkJCSAg
-ICAgICByZXMtPnBoeXMgPj4gUEFHRV9TSElGVCwKPj4+ICsJCQkgICAgICAgdm1hLT52bV9lbmQg
-LSB2bWEtPnZtX3N0YXJ0LAo+Pj4gKwkJCSAgICAgICB2bWEtPnZtX3BhZ2VfcHJvdCk7Cj4+PiAr
-fQo+Pgo+PldpbGwgbm9uY2FjaGVkIGFsd2F5cyBiZSB3aGF0J3Mgd2FudGVkIGhlcmU/Cj4+Cj4+
-LVNjb3R0Cj4+Cj4+Cj4KPgoNCg0K
+On 2020/4/23 10:22, Zou Wei wrote:
+> Fix the following sparse warning:
+> 
+> drivers/crypto/hisilicon/qm.c:3079:5: warning: symbol 'qm_controller_reset'
+> was not declared. Should it be static?
+
+It should be static.
+
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Zou Wei <zou_wei@huawei.com>
+
+Reviewed-by: Zhou Wang <wangzhou1@hisilicon.com>
+
+Thanks,
+Zhou
+
+> ---
+>  drivers/crypto/hisilicon/qm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
+> index 80c5525..69d02cb 100644
+> --- a/drivers/crypto/hisilicon/qm.c
+> +++ b/drivers/crypto/hisilicon/qm.c
+> @@ -3076,7 +3076,7 @@ static int qm_controller_reset_done(struct hisi_qm *qm)
+>  	return 0;
+>  }
+>  
+> -int qm_controller_reset(struct hisi_qm *qm)
+> +static int qm_controller_reset(struct hisi_qm *qm)
+>  {
+>  	struct pci_dev *pdev = qm->pdev;
+>  	int ret;
+> 
+
