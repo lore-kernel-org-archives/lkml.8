@@ -2,99 +2,113 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FC2C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 981B9C55192
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 615E02076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77A3021569
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:26:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ilxYUyh/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgDWJZL (ORCPT
+        id S1726894AbgDWJ0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 05:25:11 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:40865 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726716AbgDWJZJ (ORCPT
+        Thu, 23 Apr 2020 05:26:11 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:56675 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725884AbgDWJ0L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 05:25:09 -0400
-Received: from mail-qk1-f170.google.com ([209.85.222.170]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1M4roN-1jSv120psd-0020KI; Thu, 23 Apr 2020 11:25:07 +0200
-Received: by mail-qk1-f170.google.com with SMTP id t3so5686261qkg.1;
-        Thu, 23 Apr 2020 02:25:06 -0700 (PDT)
-X-Gm-Message-State: AGi0PubPju4TS9vqFIy5fUpPQXhorHWEfCTMOmWy9O+uzLsr19DU4U0c
-        kbcUSai7neEsPCcvYaur2DGy6nKnjCrmZIZgJh0=
-X-Google-Smtp-Source: APiQypL+w45VTBoxMvprVb6NEGdgZyNyPMU0dKAvD2rTXgVRLwfn3/Y7HWt6ZXTYoBoj1KPld4qOl8X+Utd6NzHUvt8=
-X-Received: by 2002:a37:63d0:: with SMTP id x199mr2439571qkb.3.1587633905619;
- Thu, 23 Apr 2020 02:25:05 -0700 (PDT)
+        Thu, 23 Apr 2020 05:26:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587633969;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MGgmr4DwO0KzfyPWlPuSjwCWCAlutT/YH5ClZ1SR4T4=;
+        b=ilxYUyh/A0yAJ7uvLJPHUnYzxEBnf1rYXNzBrWJHnT2D7MBiWojVzeRPA+KSgKTGVa7pxj
+        rVbF/SVaGJMf31ayaQHinVbxK6XHhXHCbJ19s1yp7dtx5LI1hm/9m2oyCHB59p0vbSjRIZ
+        UNMjG2rXP3fDq/LfYwGIk1GlNfbuQHs=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-357-mIpSYKm3PK-j641bY5Bo0Q-1; Thu, 23 Apr 2020 05:26:07 -0400
+X-MC-Unique: mIpSYKm3PK-j641bY5Bo0Q-1
+Received: by mail-wr1-f71.google.com with SMTP id m5so2555170wru.15
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 02:26:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MGgmr4DwO0KzfyPWlPuSjwCWCAlutT/YH5ClZ1SR4T4=;
+        b=Q5yqGEmrQG8TVXDhjXELdFrlzgfiHHwGv9+i90U4rCXwxS2Ae6PnI20TTzEypl+dGr
+         e9WzH/IIu0xqQjjQ6+lhZJ5qLNE6Ic2MtqXRtZZsXmHrtfjmkaji1ltpyOcaUp129uxK
+         r5UGpqdn8tjgVzPfte/zyTLKYaJLtGs970LGZROdb3lCvx6DbMC9hEoKilPwMWPlrW1k
+         GUL7kQxkie4SEyUBbbzl9jtpyZAclIb4qfSUD3taPrTFf0S2F1gYu90Wc9wM5P0u4tfS
+         foBkK1XvU1p5q96YnoJi9yj2B/rIAmv6eVw4HmnbOcs43FtMEMirkGGpwYxfcxkYFiS9
+         qisQ==
+X-Gm-Message-State: AGi0PuYRxTdml27H3DOUk7u63f4XvtDyNTSUpO+zJtExp1BnRGFSGzuE
+        2zyMEH7/AdGBfBJh7NQkurVtsLDZxbCWK3reGpRDHSrL21HRJCiBBxfxLpaNstkghTyH0sdsGjQ
+        60mB+uD4oQMZuc+IdDRabbeYK
+X-Received: by 2002:adf:ee91:: with SMTP id b17mr3881553wro.109.1587633966465;
+        Thu, 23 Apr 2020 02:26:06 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKViKVqjhZYWHhmD4gX+L181e384ppt9H3dp83Sm4GYTaac8jfbTOwhBotE8r0qEIg2tyXvIA==
+X-Received: by 2002:adf:ee91:: with SMTP id b17mr3881512wro.109.1587633966196;
+        Thu, 23 Apr 2020 02:26:06 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:d0a0:f143:e9e4:2926? ([2001:b07:6468:f312:d0a0:f143:e9e4:2926])
+        by smtp.gmail.com with ESMTPSA id z18sm2779590wrw.41.2020.04.23.02.26.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Apr 2020 02:26:05 -0700 (PDT)
+Subject: Re: [PATCH 4/5] kvm: Replace vcpu->swait with rcuwait
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Marc Zyngier <maz@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
+        tglx@linutronix.de, kvm@vger.kernel.org,
+        Davidlohr Bueso <dbueso@suse.de>,
+        torvalds@linux-foundation.org, bigeasy@linutronix.de,
+        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        linux-mips@vger.kernel.org, Paul Mackerras <paulus@ozlabs.org>,
+        joel@joelfernandes.org, will@kernel.org,
+        kvmarm@lists.cs.columbia.edu
+References: <20200422040739.18601-1-dave@stgolabs.net>
+ <20200422040739.18601-5-dave@stgolabs.net> <20200423094140.69909bbb@why>
+ <f07f6f55-9339-04b0-3877-d3240abd6d9c@redhat.com>
+ <20200423091911.GP20730@hirez.programming.kicks-ass.net>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <1a1e2aa6-64b2-f642-1e19-d3f5684d70b3@redhat.com>
+Date:   Thu, 23 Apr 2020 11:26:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <cover.1587531463.git.josh@joshtriplett.org> <05c9a6725490c5a5c4ee71be73326c2fedf35ba5.1587531463.git.josh@joshtriplett.org>
-In-Reply-To: <05c9a6725490c5a5c4ee71be73326c2fedf35ba5.1587531463.git.josh@joshtriplett.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 23 Apr 2020 11:24:49 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a09h4jhJWckxVUMYLoUp8=vAJ5NXuMTzSmghRxuk2_PTQ@mail.gmail.com>
-Message-ID: <CAK8P3a09h4jhJWckxVUMYLoUp8=vAJ5NXuMTzSmghRxuk2_PTQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] fs: Support setting a minimum fd for "lowest
- available fd" allocation
-To:     Josh Triplett <josh@joshtriplett.org>
-Cc:     io-uring@vger.kernel.org,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>, Aleksa Sarai <cyphar@cyphar.com>,
-        linux-man <linux-man@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:e6+fXZCzbNUcGueHZi0BR8/JFqXLu3ow8UkwsShEw/fDTsxMjHo
- Qt1mAwe83HkCU+qPttGnY+0+8e3ZAHvsTa02Fukov2D2leInYAI/HO06d2FyAdvYk3pgoIh
- 89W3fIgoQ6/p4NNtT/BtKzw5jAz2+rRJy2GeWnBok4QDe/DCzXnyOn+APqk5xJG0Kx4aAp2
- vy+iKbATk+5JtgOy4odVQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:V3w25P3eXTE=:ThBWKENYGuaDDbCgV64qnP
- bkbRgl8/B2JfJMnqoS0JcufoLCvJqQNpdxz+pX4XaXGGEokkLU9t8l4Ha1MlAHOFKG/8K6FXI
- MYgyZ0j2vV5S0xR09xlGrx+I3Lfoa56k4t6h6pX0LTYtAUgK2cIJMjm4eOc6jQdXBEAiaDdE4
- KylyazTM42OhTMoN6Qw1U1rlngh6GgVM9AT90hM/XVLp5mEfR6nldUdSReMlKQmPSYSOq+0Pz
- aD7MXXCwbVwbu1VX3wHVgAp+JhwDrK/Bbr6svVTCIR4MqTy7I503erAZvZtqm+7y6HsS9/SwK
- C6131GSKb579dphRwUOY76Eh+oBlIZgjwNopQS/eDDIBqpswCUTpCF4McxzZ1auDrOMA68/X8
- tP2KlKWOvFCG80DicrkpzLNXqQVippZPOgPqkVs5AqvEqwQG6+tdQu82gRBMUtEMrJgADgtH5
- 7ezukIAhwBbMBSGDPAb6F84UR9oixi2YEnHSK93vq69kT65uLfVEZdbaazznxZzq3EUmTLniB
- q3r8wazivQU22HEn79g0Jal+QVdPnEQM41vBpJ/6hZBe/T9+PAwFpec/re6J5FIemCkKHzUpO
- 2ras1d3DBNePUpsWkCX8uW69oIsM7wWleraqMomlc9EUebhOa3Hu3RnEWjywuu0uo449qjD9t
- yHWhG+k50RrPr9MhcRvBxlifJIcFlP69epb+U4BuIgglulInbGMZvYyxlj/XjySxeQZItuhLp
- 3Ymw+EJwVAIu3LOp1e92ImKesomN3PC4JP3/s0b8LQ9vGHci3Z1z7rjfVhyEZtHub3Pa4wpLM
- M4OEPdbG01a3cYWIZvLOQG5wmdOIKX8dOZZX7tg6VELwG4fFbI=
+In-Reply-To: <20200423091911.GP20730@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 7:19 AM Josh Triplett <josh@joshtriplett.org> wrote:
->
-> Some applications want to prevent the usual "lowest available fd"
-> allocation from allocating certain file descriptors. For instance, they
-> may want to prevent allocation of a closed fd 0, 1, or 2 other than via
-> dup2/dup3, or reserve some low file descriptors for other purposes.
->
-> Add a prctl to increase the minimum fd and return the previous minimum.
->
-> System calls that allocate a specific file descriptor, such as
-> dup2/dup3, ignore this minimum.
->
-> exec resets the minimum fd, to prevent one program from interfering with
-> another program's expectations about fd allocation.
+On 23/04/20 11:19, Peter Zijlstra wrote:
+>>
+>> 1) Davidlohr, please post only patches 1-3 to "equalize" the swait and
+>> rcuwait APIs.
+>>
+>> 2) Peter, please prepare a topic branch for those, or provide Acked-by
+> I don't think I have anything that conflicts with this, so sure, take
+> the whole thing through KVM.
+> 
+> For 1-3 (and I'll send a small niggle for 3 right after this):
+> 
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-Have you considered making this a separate system call rather than
-a part of prctl()?
+Great thanks.  I assume you have no issue with rcuwait_active either.
 
-At the moment, there are certain classes of things controlled by prctl,
-e.g. capabilities, floating point handling and timer behavior, but nothing
-that relates to file descriptors as such, so it's not an obvious decision.
+Paolo
 
-Another option would be prlimit(), as it already controls the maximum
-file descriptor number with RLIMIT_NOFILE, and adding a minimum
-there would let you set min/max atomically.
+> I'll keep 5 as it is unrelated.
+> 
 
-     Arnd
