@@ -2,155 +2,235 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48073C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A717CC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26D5720857
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:26:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 856DA20781
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:28:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PSPRcaL1"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Vs/ffabl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729935AbgDWR0a (ORCPT
+        id S1729949AbgDWR2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 13:26:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43316 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729802AbgDWR03 (ORCPT
+        Thu, 23 Apr 2020 13:28:19 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:14338 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729802AbgDWR2T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 13:26:29 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8651C09B043
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 10:26:29 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id 7so3845626pjo.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 10:26:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DpK1MTO7mSVlwfsYeufnIzC273XYT16h4tVPLSulEzc=;
-        b=PSPRcaL1HUiOr023rE5B+XwN77h8gbIjK8X6Mh74KkTryaei+Vot45w0LONd32yLVu
-         zlCj1BeWiuKyoSI2yHH/9jcc4rwIXhvs1DeIOYOwKMnfyG+qL4vBswh3XVvyFV6YZn8F
-         SSKvIxsHeSq+xYlGIVrup6/beM54i8LXBv7O3i2OXOAqgDp5wYEnhWdDsz8TBZ+r8ZdC
-         DGTPleUuXt0NpSl1Gnd56AatVnGrcRxdLn1luU35ni4mScbHsJZlds5t4BOy143Up/Sr
-         iILYdeAN0U+adJ/51NYjQHOVzw0LzBUUl0t3Yc6YF0ZLn+T/0dRr+MA/3WNEp1WEJlQu
-         jbVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DpK1MTO7mSVlwfsYeufnIzC273XYT16h4tVPLSulEzc=;
-        b=PuVNliaO7yAdN1T4gHZY5TdmSaIxSsVunDmBG5MiS0a7DTNW4tby55U1p1uI/1YLOX
-         rs6HhplTJdG0+tu4+0771RCWu9/TsrS9m4SZ8odgxXVc6BX/sjJCvhL0H3kEFoBRjrRw
-         FwPMZKR+ZNj89G+FZaWUFiE6MeWmQJFjKNkS2DCCE73SUbHXjcuTCZIZRELpKhDv0JWR
-         34kv7i0fwjtw3TPUk9572Rkn1mODVLT6HyVG0eGJRZ548/DuPtTQ23qdvpxKjDTGZbzO
-         wipBUXJrFY0qxSBbvcN/z7UifS8k2AL6dheMoA5hBNfqgo+kFdiVsvunGd4corjL9mTq
-         OXzw==
-X-Gm-Message-State: AGi0PuZYryfnB6TlTleKumQ/WdUxTs+L6nuJvB+iPNNdKOFrl1ThA2Wu
-        LJ+kNqi0A9USc+3sYgB8x2tA4Q==
-X-Google-Smtp-Source: APiQypLp3Z+/Yk+XGaZEB6yuRINzC6WDm70jllBSgPHmDuMXP7oj5imDwelymWaTBn9GSKEN4ay0HA==
-X-Received: by 2002:a17:902:a418:: with SMTP id p24mr4970644plq.55.1587662789172;
-        Thu, 23 Apr 2020 10:26:29 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id f2sm2786447pju.32.2020.04.23.10.26.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2020 10:26:28 -0700 (PDT)
-Date:   Thu, 23 Apr 2020 11:26:26 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [RFC 00/18] remoteproc: Decorelate virtio from core
-Message-ID: <20200423172626.GA5781@xps15>
-References: <20200416161331.7606-1-arnaud.pouliquen@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416161331.7606-1-arnaud.pouliquen@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 23 Apr 2020 13:28:19 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587662897; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=cxfuvRu3LSOmwmNCPdvKgSuEMztyXS3OI1EIKjoDUaE=; b=Vs/ffabluN26cnpU44omufTDX2FydLpvsLoHOhCtZFPvaBj1khruY/zuVUwNhKDSyPghUBSw
+ ULN9c0tmvvpHzuP3iIuTvFItTYW6y9fKz7hQPdBHYtqYq0TPlejOh+oknMWOiLEzfkQ9TlDo
+ xK0rVFX6nQG+3gBblzMjThRMpYQ=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea1cfeb.7f6547a765e0-smtp-out-n02;
+ Thu, 23 Apr 2020 17:27:07 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 944A8C432C2; Thu, 23 Apr 2020 17:27:06 +0000 (UTC)
+Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 78E6AC433CB;
+        Thu, 23 Apr 2020 17:27:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 78E6AC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+From:   Wesley Cheng <wcheng@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wesley Cheng <wcheng@codeaurora.org>
+Subject: [PATCH] phy: qcom-snps: Add runtime suspend and resume handlers
+Date:   Thu, 23 Apr 2020 10:26:58 -0700
+Message-Id: <1587662818-4461-1-git-send-email-wcheng@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 06:13:13PM +0200, Arnaud Pouliquen wrote:
-> This series proposes to introduce the notion of platform device for the
-> rproc virtio management. One obective is to allow virtio to declare is
-> own memory resources without the usage of dma_declare_coherent_memory
-> that seems deprecated since the introduction of the device tree.
+Allow for the PHY to be put into a powered down state when possible.
+Add the required suspend and resume callbacks, which will determine
+what resources can be turned off depending on the cable status.
 
-Just to follow up with the rest of the community...
+Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+---
+Depends-on: phy: qcom-snps: Add SNPS USB PHY driver for QCOM based SOCs
+(https://patchwork.kernel.org/patch/11486171/)
+---
+ drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c | 93 +++++++++++++++++++++++++++
+ 1 file changed, 93 insertions(+)
 
-During the openAMP remoteproc sub-group conference call [1] Arnaud and I have agreed
-the best way forward for this patchset is to split it up and make a few
-adjustment that will make it easier for people to review the work.
-
-Thanks,
-Mathieu
-
-[1]. These conference call are open to anyone who wishes to participate.
-
-> 
-> Proposal:
-> - the rproc virtio is processed in a separate platform and could be handled
->   as a generic platform device.
-> - Several vdev devices can be declared in DT:
->     - which allows to declare their own memory regions and answer to [1].
->     - as next steps it would be also possible to:
->        - declare their own mailboxes, rpmsg drivers, ...
->        - use dma-range to handle the pa<->da translation at virtio level
-> 
-> Several notions are introduced here:
-> - Virtio platform registration which allows to decorelate virtio from the
->   remote proc core device. 
-> - Synchronization of the child devices relying on component bind/unbind.
->   This mechanism ensures the synchronization of the child devices before
->   the boot of the remote processor and before the release of the resources
->   on the remote processor shutdown.
-> - Ability to populate child devices declared in rproc device tree node.
-> - Possibility to declare the memory regions reserved to a virtio devices in
->   the devicetree.
-> 
-> Known limitations:
-> - the patchset has been tested on a st32mP1 plaform only
-> - it is based on the v5.6 (need to evoluate depending on V5.7 and on going
->   patchsets).
-> - The virtio memory allocation does not take into account memory
->   controllers such as IOMMU and MPU.
-> 
-> Arnaud Pouliquen (18):
->   remoteproc: Store resource table address in rvdev
->   remoteproc: Introduce virtio device add/remove functions in core.
->   remoteproc: Move rvdev management in rproc_virtio
->   remoteproc: Add rproc_get_by_node helper
->   remoteproc: Create platform device for vdev
->   remoteproc: Add component in core for child devices synchronization
->   remoteproc: Add component bind/unbind for virtio platform
->   remoteproc: Externalize carveout functions
->   remoteproc: Move vring management from core to virtio
->   remoteproc: Add capability to populate rproc subnode devices
->   remoteproc: Add child node component in rproc match list
->   remoteproc: Support of pre-registered virtio device
->   remoteproc: Add memory default allocator helper
->   remoteproc: Add pa to da translation API
->   remoteproc: associate memory entry to a device
->   remoteproc: Parse virtio node for memory region
->   remoteproc: stm32: add the pa to da ops.
->   ARM: dts: stm32: Declare a virtio device
-> 
->  arch/arm/boot/dts/stm32mp15xx-dkx.dtsi   |  10 +
->  drivers/remoteproc/remoteproc_core.c     | 469 ++++++++++++-----------
->  drivers/remoteproc/remoteproc_internal.h |  23 +-
->  drivers/remoteproc/remoteproc_virtio.c   | 415 ++++++++++++++++++--
->  drivers/remoteproc/stm32_rproc.c         |   1 +
->  include/linux/remoteproc.h               |  27 +-
->  6 files changed, 673 insertions(+), 272 deletions(-)
-> 
-> -- 
-> 2.17.1
-> 
+diff --git a/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c b/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
+index 20442a3..f48d877 100644
+--- a/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
++++ b/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
+@@ -76,7 +76,9 @@
+  * @iface_clk: phy interface clock
+  * @phy_reset: phy reset control
+  * @vregs: regulator supplies bulk data
++ * @suspended: PHY is in the suspended state
+  * @phy_initialized: if PHY has been initialized correctly
++ * @mode: contains the current mode the PHY is in
+  */
+ struct qcom_snps_hsphy {
+ 	struct phy *phy;
+@@ -87,7 +89,9 @@ struct qcom_snps_hsphy {
+ 	struct reset_control *phy_reset;
+ 	struct regulator_bulk_data vregs[SNPS_HS_NUM_VREGS];
+ 
++	bool suspended;
+ 	bool phy_initialized;
++	enum phy_mode mode;
+ };
+ 
+ static inline void qcom_snps_hsphy_write_mask(void __iomem *base, u32 offset,
+@@ -104,6 +108,77 @@ static inline void qcom_snps_hsphy_write_mask(void __iomem *base, u32 offset,
+ 	readl_relaxed(base + offset);
+ }
+ 
++static int qcom_snps_hsphy_suspend(struct qcom_snps_hsphy *hsphy)
++{
++	if (hsphy->suspended)
++		return 0;
++
++	dev_dbg(&hsphy->phy->dev, "Suspend QCOM SNPS PHY, mode = %d \n", hsphy->mode);
++
++	if (hsphy->mode == PHY_MODE_USB_HOST) {
++		/* Enable auto-resume to meet remote wakeup timing */
++		qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL2,
++										USB2_AUTO_RESUME, USB2_AUTO_RESUME);
++		usleep_range(500, 1000);
++		qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL2,
++										0, USB2_AUTO_RESUME);
++	}
++
++	clk_disable_unprepare(hsphy->cfg_ahb_clk);
++	hsphy->suspended = true;
++
++	return 0;
++}
++
++static int qcom_snps_hsphy_resume(struct qcom_snps_hsphy *hsphy)
++{
++	int ret = 0;
++
++	if (!hsphy->suspended)
++		return 0;
++
++	dev_dbg(&hsphy->phy->dev, "Resume QCOM SNPS PHY, mode = %d \n", hsphy->mode);
++
++	ret = clk_prepare_enable(hsphy->cfg_ahb_clk);
++	if (ret) {
++		dev_err(&hsphy->phy->dev, "failed to enable cfg ahb clock, %d\n", ret);
++		return ret;
++	}
++
++	hsphy->suspended = false;
++	return 0;
++}
++
++static int __maybe_unused qcom_snps_hsphy_runtime_suspend(struct device *dev)
++{
++	struct qcom_snps_hsphy *hsphy = dev_get_drvdata(dev);
++
++	if (!hsphy->phy_initialized)
++		return 0;
++
++	qcom_snps_hsphy_suspend(hsphy);
++	return 0;
++}
++
++static int __maybe_unused qcom_snps_hsphy_runtime_resume(struct device *dev)
++{
++	struct qcom_snps_hsphy *hsphy = dev_get_drvdata(dev);
++
++	if (!hsphy->phy_initialized)
++		return 0;
++
++	qcom_snps_hsphy_resume(hsphy);
++	return 0;
++}
++
++static int qcom_snps_hsphy_set_mode(struct phy *phy, enum phy_mode mode, int submode)
++{
++	struct qcom_snps_hsphy *hsphy = phy_get_drvdata(phy);
++
++	hsphy->mode = mode;
++	return 0;
++}
++
+ static int qcom_snps_hsphy_init(struct phy *phy)
+ {
+ 	struct qcom_snps_hsphy *hsphy = phy_get_drvdata(phy);
+@@ -171,6 +246,7 @@ static int qcom_snps_hsphy_init(struct phy *phy)
+ 					UTMI_PHY_CMN_CTRL_OVERRIDE_EN, 0);
+ 
+ 	hsphy->phy_initialized = true;
++	hsphy->suspended = false;
+ 
+ 	return 0;
+ 
+@@ -197,6 +273,7 @@ static int qcom_snps_hsphy_exit(struct phy *phy)
+ static const struct phy_ops qcom_snps_hsphy_gen_ops = {
+ 	.init		= qcom_snps_hsphy_init,
+ 	.exit		= qcom_snps_hsphy_exit,
++	.set_mode	= qcom_snps_hsphy_set_mode,
+ 	.owner		= THIS_MODULE,
+ };
+ 
+@@ -208,6 +285,11 @@ static int qcom_snps_hsphy_exit(struct phy *phy)
+ };
+ MODULE_DEVICE_TABLE(of, qcom_snps_hsphy_of_match_table);
+ 
++static const struct dev_pm_ops qcom_snps_hsphy_pm_ops = {
++	SET_RUNTIME_PM_OPS(qcom_snps_hsphy_runtime_suspend,
++			   qcom_snps_hsphy_runtime_resume, NULL)
++};
++
+ static int qcom_snps_hsphy_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -251,6 +333,14 @@ static int qcom_snps_hsphy_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	pm_runtime_set_active(dev);
++	pm_runtime_enable(dev);
++	/*
++	 * Prevent runtime pm from being ON by default. Users can enable
++	 * it using power/control in sysfs.
++	 */
++	pm_runtime_forbid(dev);
++
+ 	generic_phy = devm_phy_create(dev, NULL, &qcom_snps_hsphy_gen_ops);
+ 	if (IS_ERR(generic_phy)) {
+ 		ret = PTR_ERR(generic_phy);
+@@ -265,6 +355,8 @@ static int qcom_snps_hsphy_probe(struct platform_device *pdev)
+ 	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+ 	if (!IS_ERR(phy_provider))
+ 		dev_dbg(dev, "Registered Qcom-SNPS HS phy\n");
++	else
++		pm_runtime_disable(dev);
+ 
+ 	return PTR_ERR_OR_ZERO(phy_provider);
+ }
+@@ -273,6 +365,7 @@ static int qcom_snps_hsphy_probe(struct platform_device *pdev)
+ 	.probe		= qcom_snps_hsphy_probe,
+ 	.driver = {
+ 		.name	= "qcom-snps-hs-femto-v2-phy",
++		.pm = &qcom_snps_hsphy_pm_ops,
+ 		.of_match_table = qcom_snps_hsphy_of_match_table,
+ 	},
+ };
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
