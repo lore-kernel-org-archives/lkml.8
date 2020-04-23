@@ -2,118 +2,112 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1988AC55193
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7A8C55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E73FA20781
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:21:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E268E2074F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:22:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SL+MA9BT"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qhw65OtA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbgDWKVb (ORCPT
+        id S1727065AbgDWKWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 06:21:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33364 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725854AbgDWKVO (ORCPT
+        Thu, 23 Apr 2020 06:22:17 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:5847 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbgDWKWQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 06:21:14 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB641C035493;
-        Thu, 23 Apr 2020 03:21:13 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id v2so2171398plp.9;
-        Thu, 23 Apr 2020 03:21:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=jJtnFW/MJ1nCflksmUkvWZ3WflwQQKwodxCjPDupG9g=;
-        b=SL+MA9BTwa7HX9cUn2j5xDITP997LDN3HbD/qjO86/wv5xpXkNgbmjFZ8WZi9YTx78
-         qgwmKScnBS+z5QiqP+VTwClgd3H2WwlvQUYePUMJZ5mA++HZrfBJzy1PN3lj/8ZLv5Dx
-         IUqdoiAe3EHaIkzmnStrXgVjYV5KfhUQkyMzqiLGbki355Ax1z3SfsoqJT6THn7dg1P/
-         FEUQZS4Pj2589j2HQnosfG6I0ScwYJYUta04/XZoy5MVEk2weROYwGqByZ8a0aSCwwVz
-         m7We8Z4UOStTP0Qd07pXUSee+CfoTI0kk6CSoKBkTPPJVhcNf7u/oOt77R3oj2hW8CGI
-         XCzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=jJtnFW/MJ1nCflksmUkvWZ3WflwQQKwodxCjPDupG9g=;
-        b=mxF7wbJYyd6SZrHzSkVvzbyudda36n0j71Eo6dqjqFNj+1QSain8Y7iJW22DUnF+8U
-         HbzPiXVIiwxDYbRRp6v1cqrKkQTwtT9L28wohwnKTd2XBN9YBXCMhIA7K3tlmlmcRJZ6
-         GBM65gEXpvokM5Pc+58HWahTsxYC7qpjD/Bd3FwQE1mU4vmybsctVQnUiWIACxBig6uh
-         TVWSbL9SI9h+g9BlEOw9KbSAaifOfkfhD/6HHI4A7JTUAMjgsuj1wRwPquWWxoV/DPRb
-         q1SNhNPGCKqm7g0UQGTLWsMKwTKzuXyOB9y2hHoEzygiZM/RJiOi+DtwI7STBgxA7LFT
-         OkCg==
-X-Gm-Message-State: AGi0PubwVkdTdXXnylKZ+46XxuBP9mmbGFzYbAev4vCNmFPGdnKuBWjZ
-        OPBr6eNQLMvddLX/RFJ6GTjMUKdC/JnhXmFsFyc=
-X-Google-Smtp-Source: APiQypI72YMXj/eLWFT07xzy8FGvE30CVwUIO/B8ZXXxdfzcDMRlffRZbIssKJ42cgrlohzeba429xetnxfkBq9KMVA=
-X-Received: by 2002:a17:902:9306:: with SMTP id bc6mr3049629plb.255.1587637273301;
- Thu, 23 Apr 2020 03:21:13 -0700 (PDT)
+        Thu, 23 Apr 2020 06:22:16 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ea16c180000>; Thu, 23 Apr 2020 03:21:12 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 23 Apr 2020 03:22:15 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 23 Apr 2020 03:22:15 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Apr
+ 2020 10:22:15 +0000
+Received: from [10.26.73.193] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Apr
+ 2020 10:22:11 +0000
+Subject: Re: [PATCH 4.19 00/64] 4.19.118-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20200422095008.799686511@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <994d756a-3659-c22d-e056-f739a35ff677@nvidia.com>
+Date:   Thu, 23 Apr 2020 11:22:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200420194405.8281-1-jithu.joseph@intel.com> <20200420194405.8281-2-jithu.joseph@intel.com>
- <CAHp75VeV+HOditUphBkFoy6LLh6QKfBoC-eLixquAHLTwaz4RQ@mail.gmail.com> <ac04f1aa46234496fc88354add386da725d883ab.camel@intel.com>
-In-Reply-To: <ac04f1aa46234496fc88354add386da725d883ab.camel@intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 23 Apr 2020 13:21:06 +0300
-Message-ID: <CAHp75VfqWkAEk3deJmjBzeinmJY3MXTWVxO4FdBWyxcY8oXtAQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] platform/x86: Add Slim Bootloader firmware update
- signaling driver
-To:     Jithu Joseph <jithu.joseph@intel.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        maurice.ma@intel.com, ravi.p.rangarajan@intel.com,
-        sean.v.kelley@intel.com, kuo-lang.tseng@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587637272; bh=4PTecHOzV1Vq708KN+Y5xaZBKB8Q/aoMcR55AE6G70Q=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=qhw65OtANj1TQn8mGsraRarWdwI5//uX/kceoOLV211IFsl6YtURBMY9D1+2tUHvG
+         ETpN3kcNylImKLsRSsvgIPnfGxw6uxaA3EpbPubGVpWT7Y5ax2ouFN4M4DCJqoybSH
+         qERY0f9gX0kk3rdsUqoQJ+ZB4pDkjudwkirAz7XKR4WP1FKMkM3WpRWVuGrnWIR9gB
+         ZxtyDyxf9qByehUIHg3joih8bIZ8sqiv68O0PzeejI1ZW7zxqPWV9noNyAqACi1I4P
+         VtXb5evbhlBoKZjtk1PezZXNz0fJz983eU5FQDb6ewYQf90L2/883LUQCmjXnBLNCV
+         OSNYClzsql1jA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 5:08 AM Jithu Joseph <jithu.joseph@intel.com> wrote=
-:
 
-...
+On 22/04/2020 10:56, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.118 release.
+> There are 64 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri, 24 Apr 2020 09:48:23 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.118-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-> > > +static ssize_t firmware_update_request_store(struct device *dev,
-> > > +                                            struct
-> > > device_attribute *attr,
-> > > +                                            const char *buf,
-> > > size_t count)
-> > > +{
-> > > +       bool val;
-> > > +       int ret;
-> > > +
-> > > +       ret =3D kstrtobool(buf, &val);
-> > > +       if (ret)
-> > > +               return ret;
-> > > +
-> > > +       ret =3D set_fwu_request(dev, val ? 1 : 0);
-> >
-> > Hmm... If you are going to extend this, why not to pass integer
-> > directly? (And thus take one from user)
->
-> We have also been thinking about  extensibility =E2=80=A6
->
-> So I will modify the code to allow any u32 input by the user  to be
-> passed down via wmi_set_block(), though 0 and 1 will be the only
-> inputs  documented  in the ABI today.( Or did you still mean  to error
-> out if the user input is something other than 0 or 1 ?)
+All tests are passing for Tegra ...
 
-I think the best approach is to allow to parse integer input
-(kstrtouint() is good enough) and return -ERANGE for values > 1. Also
-put a comment before that check why is done like this (some
-justification that interface may be extended in the future or so), and
-pass integer value directly to set_fwu_request().
+Test results for stable-v4.19:
+    11 builds:	11 pass, 0 fail
+    22 boots:	22 pass, 0 fail
+    32 tests:	32 pass, 0 fail
 
---=20
-With Best Regards,
-Andy Shevchenko
+Linux version:	4.19.118-rc1-gb5f03cd61ab6
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
+
+Cheers
+Jon
+
+-- 
+nvpublic
