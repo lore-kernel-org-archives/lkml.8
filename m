@@ -2,144 +2,167 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD65C55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44781C55192
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A7EC2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:22:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QeaT55Sy"
+	by mail.kernel.org (Postfix) with ESMTP id 1D45120857
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:22:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgDWNWJ (ORCPT
+        id S1728461AbgDWNWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 09:22:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33260 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726780AbgDWNWI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 09:22:08 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D6A6C08E934;
-        Thu, 23 Apr 2020 06:22:07 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id c63so6327225qke.2;
-        Thu, 23 Apr 2020 06:22:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cfSJ/n7+m5NIf3p98KEiW2LshWNCIUPwffj22cRtE+A=;
-        b=QeaT55SyqVcIQ7WBkkNii9JSiVqmvsk7W6SEPdaXHSRPgjtMOdOPtUWWCmu6f7104I
-         UW1zvQTFSI8nHcex0kAXCgvJTOM265EX8G4rVD9Z2dxGogbBgUDQL/35DScsSZ1VNnrG
-         ih7JMde8AgfVA4DxmUB1FJ996x/xH68j69zzjLumM+3y0g/AJdbbF5tKtpUFLl1+oBNd
-         Q4B+KhuueCa5YeLv9qrrCCGl8xnnQrDoOGkbhmz47wYoVnA8pUNDl+KcNc1zg6uDVXFV
-         1/MQGfIPF/U4FCt1jYbMV+5rv4b0DLLAbRSLfh6BbaSQQ4Uv8wx0+8Dji2re6KGtkmIw
-         Kb+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cfSJ/n7+m5NIf3p98KEiW2LshWNCIUPwffj22cRtE+A=;
-        b=QzKTWNNdp9rmZDIyj+SBLaKL/T2Sz+DNAaPRh7ZBSRxjxe2sgRHaoXr8mOSo06dqn1
-         MnP9ap/gkoGfRD+U4jygT8hIwVzBLF38A8kCpL/ijncf9gssOC+Nf10YAWZSMXQWKH2t
-         7QnMpceXA6ATUY8P+cNKMHYRSQokMpGFSqGSVNe80SsYNEvH289XFs3O9wQW3I/LdlX0
-         iVz3QU/uzjw7wGnM3E02hTJT0JNp4Pso1uBryzCoK08MWhuMZNm7F/8u7c0bjRuTWEz8
-         Qv4PGQRsFjXNmbQhehn5ZXKStmhty8spXMnliRYbheje6zp0c6Jp0Flc3ZdniO9HMfEn
-         XSvA==
-X-Gm-Message-State: AGi0PuZIHDzVpwIPqcBlsIIjwmE0rLtDhRPF4GXy/s8DRTAKFxM/ZpdX
-        vqG0loXT9OLYGkON6D/ZT50=
-X-Google-Smtp-Source: APiQypLIlJIjbI0Sz0htU7mo5gYbQ5yhlssITmswaWusPAXt0p4NFJNphZpfZkTmJ09ustzF2tzx2g==
-X-Received: by 2002:a05:620a:7fa:: with SMTP id k26mr1822673qkk.289.1587648126553;
-        Thu, 23 Apr 2020 06:22:06 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id y6sm1467644qky.133.2020.04.23.06.22.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2020 06:22:02 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 1B9B7409A3; Thu, 23 Apr 2020 10:22:01 -0300 (-03)
-Date:   Thu, 23 Apr 2020 10:22:01 -0300
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Thu, 23 Apr 2020 09:22:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36940 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726361AbgDWNWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 09:22:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id C605CAC44;
+        Thu, 23 Apr 2020 13:22:06 +0000 (UTC)
+Date:   Thu, 23 Apr 2020 15:22:06 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Gerald Schaefer <gerald.schaefer@de.ibm.com>
+cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>
-Subject: Re: [PATCH v2 2/4] perf docs: substitute CAP_SYS_ADMIN with
- CAP_PERFMON where needed
-Message-ID: <20200423132201.GB19437@kernel.org>
-References: <66f2975b-4a69-b428-7dc5-d9aa40b3c673@linux.intel.com>
- <f1b48de9-e2b7-d20b-3686-3a15b73ef45c@linux.intel.com>
+        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com, Vasily Gorbik <gor@linux.ibm.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>
+Subject: Re: [PATCH v2 6/9] s390/module: Use s390_kernel_write() for late
+ relocations
+In-Reply-To: <20200423141834.234ed0bc@thinkpad>
+Message-ID: <alpine.LSU.2.21.2004231513250.6520@pobox.suse.cz>
+References: <cover.1587131959.git.jpoimboe@redhat.com> <18266eb2c2c9a2ce0033426837d89dcb363a85d3.1587131959.git.jpoimboe@redhat.com> <20200422164037.7edd21ea@thinkpad> <20200422172126.743908f5@thinkpad> <20200422194605.n77t2wtx5fomxpyd@treble>
+ <20200423141834.234ed0bc@thinkpad>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f1b48de9-e2b7-d20b-3686-3a15b73ef45c@linux.intel.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Apr 22, 2020 at 05:44:53PM +0300, Alexey Budankov escreveu:
+On Thu, 23 Apr 2020, Gerald Schaefer wrote:
+
+> On Wed, 22 Apr 2020 14:46:05 -0500
+> Josh Poimboeuf <jpoimboe@redhat.com> wrote:
 > 
-> Substitute CAP_SYS_ADMIN with CAP_PERFMON in the docs where admin
-> is mentioned. CAP_SYS_ADMIN still works in keeping with user space
-> backward compatibility approach.
+> > On Wed, Apr 22, 2020 at 05:21:26PM +0200, Gerald Schaefer wrote:
+> > > > Sorry, just noticed this. Heiko will return next month, and I'm not
+> > > > really familiar with s390 livepatching. Adding Vasily, he might
+> > > > have some more insight.
+> > > > 
+> > > > So, I might be completely wrong here, but using s390_kernel_write()
+> > > > for writing to anything other than 1:1 mapped kernel, should go
+> > > > horribly wrong, as that runs w/o DAT. It would allow to bypass
+> > > > DAT write protection, which I assume is why you want to use it,
+> > > > but it should not work on module text section, as that would be
+> > > > in vmalloc space and not 1:1 mapped kernel memory.
+> > > > 
+> > > > Not quite sure how to test / trigger this, did this really work for
+> > > > you on s390?
+> > > 
+> > > OK, using s390_kernel_write() as default write function for module
+> > > relocation seems to work fine for me, so apparently I am missing /
+> > > mixing up something. Sorry for the noise, please ignore my concern.
+> > 
+> > Hi Gerald,
+> > 
+> > I think you were right.  Joe found the below panic with his klp-convert
+> > tests.
+> > 
+> > Your test was probably the early module loading case (normal relocations
+> > before write protection), rather than the late case.  Not sure why that
+> > would work, but calling s390_kernel_write() late definitely seems to be
+> > broken.
+> > 
+> > Is there some other way to write vmalloc'ed s390 text without using
+> > module_disable_ro()?
+> > 
+> > [   50.294476] Unable to handle kernel pointer dereference in virtual kernel address space
+> > [   50.294479] Failing address: 000003ff8015b000 TEID: 000003ff8015b407
+> > [   50.294480] Fault in home space mode while using kernel ASCE.
+> > [   50.294483] AS:000000006cef0007 R3:000000007e2c4007 S:0000000003ccb800 P:0000 00000257321d
+> > [   50.294557] Oops: 0004 ilc:3 [#1] SMP
+> > [   50.294561] Modules linked in: test_klp_convert1(K+) test_klp_convert_mod ghash_s390 prng xts aes_s390 des_s390 libdes sha512_s390 vmur zcrypt_cex4 ip_tables xfs libcrc32c dasd_fba_mod qeth_l2 dasd_eckd_mod dasd_mod qeth lcs ctcm qdio cc
+> > wgroup fsm dm_mirror dm_region_hash dm_log dm_mod pkey zcrypt [last unloaded: test_klp_atomic_replace]
+> > [   50.294576] CPU: 0 PID: 1743 Comm: modprobe Tainted: G              K   5.6.0 + #2
+> > [   50.294579] Hardware name: IBM 2964 N96 400 (z/VM 6.4.0)
+> > [   50.294583] Krnl PSW : 0704e00180000000 000000006bf6be0a (apply_rela+0x2ba/0x 4e0)
+> > [   50.294589]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 RI: 0 EA:3
+> > [   50.294684] Krnl GPRS: 000003ff80147010 000003e0001b9588 000003ff8015c168 000 003ff8015b19a
+> > [   50.294686]            000003ff8015b07c 0d10e310100a0004 000003ff80147010 000 00000000000a0
+> > [   50.294687]            000003ff8015e588 000003ff8015e5e8 000003ff8015d300 000 0003b00000014
+> > [   50.294698]            000000007a663000 000000006c6bbb80 000003e0009a7918 000 003e0009a78b8
+> > [   50.294707] Krnl Code: 000000006bf6bdf8: e350d0080004        lg      %r5,8(%r 13)
+> > [   50.294707]            000000006bf6bdfe: e34010080008        ag      %r4,8(%r 1)
+> > [   50.294707]           #000000006bf6be04: e340a2000008        ag      %r4,512( %r10)
+> > [   50.294707]           >000000006bf6be0a: e35040000024        stg     %r5,0(%r 4)
+> > [   50.294707]            000000006bf6be10: c050007c6136        larl    %r5,0000 00006cef807c
+> > [   50.294707]            000000006bf6be16: e35050000012        lt      %r5,0(%r 5)
+> > [   50.294707]            000000006bf6be1c: a78400a6            brc     8,000000 006bf6bf68
+> > [   50.294707]            000000006bf6be20: a55e07f1            llilh   %r5,2033
+> > 01: HCPGSP2629I The virtual machine is placed in CP mode due to a SIGP stop from CPU 01.
+> > 01: HCPGSP2629I The virtual machine is placed in CP mode due to a SIGP stop from CPU 00.
+> > [   50.295369] Call Trace:
+> > [   50.295372]  [<000000006bf6be0a>] apply_rela+0x2ba/0x4e0
+> > [   50.295376]  [<000000006bf6c5c8>] apply_relocate_add+0xe0/0x138
+> > [   50.295378]  [<000000006c0229a0>] klp_apply_section_relocs+0xe8/0x128
+> > [   50.295380]  [<000000006c022b4c>] klp_apply_object_relocs+0x9c/0xd0
+> > [   50.295382]  [<000000006c022bb0>] klp_init_object_loaded+0x30/0x138
+> > [   50.295384]  [<000000006c023052>] klp_enable_patch+0x39a/0x870
+> > [   50.295387]  [<000003ff8015b0da>] test_klp_convert_init+0x22/0x50 [test_klp_convert1]
+> > [   50.295389]  [<000000006bf54838>] do_one_initcall+0x40/0x1f0
+> > [   50.295391]  [<000000006c04d610>] do_init_module+0x70/0x280
+> > [   50.295392]  [<000000006c05002a>] load_module+0x1aba/0x1d10
+> > [   50.295394]  [<000000006c0504c4>] __do_sys_finit_module+0xa4/0xe8
+> > [   50.295416]  [<000000006c6b5742>] system_call+0x2aa/0x2c8
+> > [   50.295416] Last Breaking-Event-Address:
+> > [   50.295418]  [<000000006c6b6aa0>] __s390_indirect_jump_r4+0x0/0xc
+> > [   50.295421] Kernel panic - not syncing: Fatal exception: panic_on_oops
+> > 
+> 
+> Hi Josh,
+> 
+> this is strange. While I would have expected an exception similar to
+> this, it really should have happened on the "sturg" instruction which
+> does the DAT-off store in s390_kernel_write(), and certainly not with
+> an ID of 0004 (protection). However, in your case, it happens on a
+> normal store instruction, with 0004 indicating a protection exception.
+> 
+> This is more like what I would expect e.g. in the case where you do
+> _not_ use the s390_kernel_write() function for RO module text patching,
+> but rather normal memory access. So I am pretty sure that this is not
+> related to the s390_kernel_write(), but some other issue, maybe some
+> place left where you still use normal memory access?
 
-Same issue as with the previous patch, the documentation is for the
-tool, that may be used in older kernels, so we need to clarify that
-CAP_PERFMON requires updating libcap and the kernel, if that isn't
-possible, then CAP_SYS_ADMIN is needed.
+The call trace above also suggests that it is not a late relocation, no? 
+The path is from KLP module init function through klp_enable_patch. It should 
+mean that the to-be-patched object is loaded (it must be a module thanks 
+to a check klp_init_object_loaded(), vmlinux relocations were processed 
+earlier in apply_relocations()).
 
-- Arnaldo
+However, the KLP module state here must be COMING, so s390_kernel_write() 
+should be used. What are we missing?
+
+Joe, could you debug this a bit, please?
  
-> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-> ---
->  tools/perf/Documentation/perf-intel-pt.txt | 2 +-
->  tools/perf/design.txt                      | 3 +--
->  2 files changed, 2 insertions(+), 3 deletions(-)
+> There is also some good news. While thinking about how to use "sturg"
+> for vmalloc addresses, I came up with the idea to use "lra" (load
+> real address) before that. Then I found out that we already do exactly
+> that in the inline assembly, so all should be fine. Well, maybe the
+> comment for s390_kernel_write() could be improved...
 > 
-> diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Documentation/perf-intel-pt.txt
-> index 456fdcbf26ac..176597be0755 100644
-> --- a/tools/perf/Documentation/perf-intel-pt.txt
-> +++ b/tools/perf/Documentation/perf-intel-pt.txt
-> @@ -687,7 +687,7 @@ The v4.2 kernel introduced support for a context switch metadata event,
->  PERF_RECORD_SWITCH, which allows unprivileged users to see when their processes
->  are scheduled out and in, just not by whom, which is left for the
->  PERF_RECORD_SWITCH_CPU_WIDE, that is only accessible in system wide context,
-> -which in turn requires CAP_SYS_ADMIN.
-> +which in turn requires CAP_PERFMON.
->  
->  Please see the 45ac1403f564 ("perf: Add PERF_RECORD_SWITCH to indicate context
->  switches") commit, that introduces these metadata events for further info.
-> diff --git a/tools/perf/design.txt b/tools/perf/design.txt
-> index a42fab308ff6..6fd879440c40 100644
-> --- a/tools/perf/design.txt
-> +++ b/tools/perf/design.txt
-> @@ -258,8 +258,7 @@ gets schedule to. Per task counters can be created by any user, for
->  their own tasks.
->  
->  A 'pid == -1' and 'cpu == x' counter is a per CPU counter that counts
-> -all events on CPU-x. Per CPU counters need CAP_PERFMON or CAP_SYS_ADMIN
-> -privilege.
-> +all events on CPU-x. Per CPU counters need CAP_PERFMON privilege.
->  
->  The 'flags' parameter is currently unused and must be zero.
->  
-> -- 
-> 2.24.1
-> 
-> 
+> Vasily also found out that we apparently already use s390_kernel_write()
+> for module text, for alternatives, so I guess we can safely assume that
+> it should work fine in principle.
 
--- 
+Phew, okay. I noticed that s390_kernel_write() is called on a couple of 
+places already (kprobes) and I wondered where the trick was.
 
-- Arnaldo
+Thanks
+Miroslav
