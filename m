@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D44BC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A3EC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84B4820784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0FB320784
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728698AbgDWXLI (ORCPT
+        id S1729221AbgDWXLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:11:08 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50200 "EHLO
+        Thu, 23 Apr 2020 19:11:10 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50286 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728542AbgDWXGw (ORCPT
+        by vger.kernel.org with ESMTP id S1728585AbgDWXGw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:52 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvb-0004mB-0n; Fri, 24 Apr 2020 00:06:43 +0100
+        id 1jRkva-0004lP-CL; Fri, 24 Apr 2020 00:06:42 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvX-00E6x9-1z; Fri, 24 Apr 2020 00:06:39 +0100
+        id 1jRkvY-00E6xt-3U; Fri, 24 Apr 2020 00:06:40 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Matteo Croce" <mcroce@redhat.com>,
-        "Eric Dumazet" <edumazet@google.com>,
-        "Jurgen Van Ham" <juvanham@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Date:   Fri, 24 Apr 2020 00:06:57 +0100
-Message-ID: <lsq.1587683028.236720981@decadent.org.uk>
+        "=?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?=" <mirq-linux@rere.qmqm.pl>,
+        "Ulf Hansson" <ulf.hansson@linaro.org>,
+        "Adrian Hunter" <adrian.hunter@intel.com>
+Date:   Fri, 24 Apr 2020 00:07:07 +0100
+Message-ID: <lsq.1587683028.708872706@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 190/245] macvlan: use skb_reset_mac_header() in
- macvlan_queue_xmit()
+Subject: [PATCH 3.16 200/245] mmc: sdhci: fix minimum clock rate for v3
+ controller
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,48 +57,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-commit 1712b2fff8c682d145c7889d2290696647d82dab upstream.
+commit 2a187d03352086e300daa2044051db00044cd171 upstream.
 
-I missed the fact that macvlan_broadcast() can be used both
-in RX and TX.
+For SDHCIv3+ with programmable clock mode, minimal clock frequency is
+still base clock / max(divider). Minimal programmable clock frequency is
+always greater than minimal divided clock frequency. Without this patch,
+SDHCI uses out-of-spec initial frequency when multiplier is big enough:
 
-skb_eth_hdr() makes only sense in TX paths, so we can not
-use it blindly in macvlan_broadcast()
+mmc1: mmc_rescan_try_freq: trying to init card at 468750 Hz
+[for 480 MHz source clock divided by 1024]
 
-Fixes: 96cc4b69581d ("macvlan: do not assume mac_header is set in macvlan_broadcast()")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Jurgen Van Ham <juvanham@gmail.com>
-Tested-by: Matteo Croce <mcroce@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The code in sdhci_calc_clk() already chooses a correct SDCLK clock mode.
+
+Fixes: c3ed3877625f ("mmc: sdhci: add support for programmable clock mode")
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Link: https://lore.kernel.org/r/ffb489519a446caffe7a0a05c4b9372bd52397bb.1579082031.git.mirq-linux@rere.qmqm.pl
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/macvlan.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/mmc/host/sdhci.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/drivers/net/macvlan.c
-+++ b/drivers/net/macvlan.c
-@@ -162,7 +162,7 @@ static void macvlan_broadcast(struct sk_
- 			      struct net_device *src,
- 			      enum macvlan_mode mode)
- {
--	const struct ethhdr *eth = skb_eth_hdr(skb);
-+	const struct ethhdr *eth = eth_hdr(skb);
- 	const struct macvlan_dev *vlan;
- 	struct sk_buff *nskb;
- 	unsigned int i;
-@@ -345,10 +345,11 @@ static int macvlan_queue_xmit(struct sk_
- 	const struct macvlan_dev *dest;
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -2945,11 +2945,13 @@ int sdhci_add_host(struct sdhci_host *ho
+ 	if (host->ops->get_min_clock)
+ 		mmc->f_min = host->ops->get_min_clock(host);
+ 	else if (host->version >= SDHCI_SPEC_300) {
+-		if (host->clk_mul) {
+-			mmc->f_min = (host->max_clk * host->clk_mul) / 1024;
++		if (host->clk_mul)
+ 			mmc->f_max = host->max_clk * host->clk_mul;
+-		} else
+-			mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_300;
++		/*
++		 * Divided Clock Mode minimum clock rate is always less than
++		 * Programmable Clock Mode minimum clock rate.
++		 */
++		mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_300;
+ 	} else
+ 		mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_200;
  
- 	if (vlan->mode == MACVLAN_MODE_BRIDGE) {
--		const struct ethhdr *eth = (void *)skb->data;
-+		const struct ethhdr *eth = skb_eth_hdr(skb);
- 
- 		/* send to other bridge ports directly */
- 		if (is_multicast_ether_addr(eth->h_dest)) {
-+			skb_reset_mac_header(skb);
- 			macvlan_broadcast(skb, port, dev, MACVLAN_MODE_BRIDGE);
- 			goto xmit_world;
- 		}
 
