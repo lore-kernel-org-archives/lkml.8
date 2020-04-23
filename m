@@ -2,152 +2,168 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78170C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE6CC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FE2920728
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:31:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587673907;
-	bh=doFNDamFus9z1sCuhkDS6mVJuFcrInf5m+Axb3+tTmI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Q6QGKWDL7dyB4OKs1lFZqrdU/rcVogZLQINCkRxB9xPeVmaAwwNNqIxAfukadFGl+
-	 qatQlDJsqK3AvHlqKToB2gtmMLMY1ttNHutSLEh35LNUSzQppW4yslDksU2zB84rPS
-	 Idy1SOEZ34M94nyyu/IJ+hsrYfC6Sich5zrmLWQo=
+	by mail.kernel.org (Postfix) with ESMTP id 7993F20728
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:33:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sm3n1yn1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbgDWUbq (ORCPT
+        id S1726161AbgDWUdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 16:31:46 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39271 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgDWUbq (ORCPT
+        Thu, 23 Apr 2020 16:33:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44518 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbgDWUdj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 16:31:46 -0400
-Received: by mail-pl1-f194.google.com with SMTP id k18so2809502pll.6;
-        Thu, 23 Apr 2020 13:31:45 -0700 (PDT)
+        Thu, 23 Apr 2020 16:33:39 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC684C09B042
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 13:33:37 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id n16so3446446pgb.7
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 13:33:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=WqMcHBrQL5Hrx/5UPlvgx3z4tpcct1oI0fprZGVyhow=;
+        b=sm3n1yn1FEv8KlppYnJA3szSMesRSg+OEYPnihsFc2ITcWOXMlhTGDwdfSRy2OUMTu
+         WD6Pf5xk6bydVlTjzR+2xJZ//sYi0mBGJoID6eJmV8YCgjbXKOaLI0PsFjRPQ7kxziG1
+         iGqTHbnmqrHdempnnkY3rDxrvTXc55MvLIlU0ZAx5+BLQHxz68U0XcuyAJWchpO4X4lb
+         zx4Dy1CHk4lpIbeY84XVqDfINyVycVreY+5vvnEkf71VzPP+OA0hfoP+aDUnZDuB4XEy
+         Qp/Of4Tj2E3WMiEOqJvvx8tzK+PpGA7QyBG+o/X0PguA6mcYP3v+M3UZng/zxgNMBFNx
+         nJYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Y6Yd6vxHdKXfNCR7irTzdhZ+vT9Aep8/YD4m/YAtVdw=;
-        b=qNOB7/UTbJ0WPrPane5g72b+wI2CWnElQ+1GsyFof6hilH9nn57dITTjHfdxCiCq2f
-         5CW9lFkGUfxwqNK5P6nFR3TXevhfMAoOjC5ioZ7mlMd9Xly6jj2W37URq7SU6xwBa9gW
-         hATHcnqRvCLuCBjWcLMWjQVQBCv07Q+7XrteTSZjliOFdS6cZTq3d4V6Lu0ksbGz8DFK
-         8EGfVu1D7L/YrfTb8WjXG8lhE7OX/jopd6NEAkSvv2xSlFNsqwQdOcE3ebME0AIaeucx
-         yjd9ecWpdZiIOa7AaRNbMcpc1mPli/q/LmHr160WqLicZHqWDdOfBVMeppvvGj+B3RoI
-         Ffyg==
-X-Gm-Message-State: AGi0PuZj7qNgxi3/QtXksAyipn6LwILKAob98lK7w+/vW/Jm4hjcpHea
-        4cAf/bpZQSDMust7kIL6hfk=
-X-Google-Smtp-Source: APiQypKOj073Uw8F/aSZ3X0Bvrwz5W+5tF3TTJN6agQwB0Is8Rf+PdYFuKSeUpk4MYviekLU7vhFUg==
-X-Received: by 2002:a17:90a:6488:: with SMTP id h8mr2613636pjj.51.1587673904498;
-        Thu, 23 Apr 2020 13:31:44 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id e11sm881707pfl.85.2020.04.23.13.31.43
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version;
+        bh=WqMcHBrQL5Hrx/5UPlvgx3z4tpcct1oI0fprZGVyhow=;
+        b=CRzHIiQm1ZNDrqrLfVNx72k/sRI7v5zEQsg9Ix1kGmxRmISzdPI/c56gLT+7oIIu/G
+         IzTH5ypNs689Kl5tKS+2atEvVlNXFQtUTXFxBjaNDnwGWrZyrExu2RlWtQ853YS6Sy5+
+         STIYGUAXaqsuidEDTc6gUrI/YV8rmV9xptkugBebvYTIhRPOTGKT3Q1ohjG8EuoTb1n0
+         U5z1SUNWjnBs8ruHM+3918kd+0ehZX0UcC3v1uMty5kky+ubnU6KNs1q7eFyWdzbtNDs
+         iRYdnULZbfYsZ9pTa/g85TLIalv/FelNyy3Mrs7WHKyDPQcbhDfhUiE0eHRN4L3aqwVT
+         UOMQ==
+X-Gm-Message-State: AGi0PuaPkGqaEPzvJXXuNgm6IownU6qEVVJsi3kiD2VDlToBPFFXpoBw
+        8H1CLGK9OqlrzVDaLjwKLLXIAQ==
+X-Google-Smtp-Source: APiQypLNIoAWytupjwFrf+mjTSan1lvG0IjxLhTQdyYYTq2V/sufCnzkIjSsou9MFnqjvUvvPYOO7Q==
+X-Received: by 2002:a63:1a0b:: with SMTP id a11mr5278109pga.29.1587674016957;
+        Thu, 23 Apr 2020 13:33:36 -0700 (PDT)
+Received: from bsegall-glaptop.localhost (c-73-71-82-80.hsd1.ca.comcast.net. [73.71.82.80])
+        by smtp.gmail.com with ESMTPSA id o11sm2832171pgd.58.2020.04.23.13.33.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2020 13:31:43 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 62B10402A1; Thu, 23 Apr 2020 20:31:42 +0000 (UTC)
-From:   "Luis R. Rodriguez" <mcgrof@kernel.org>
-To:     gregkh@linuxfoundation.org
-Cc:     akpm@linux-foundation.org, josh@joshtriplett.org,
-        rishabhb@codeaurora.org, kubakici@wp.pl, maco@android.com,
-        andy.gross@linaro.org, david.brown@linaro.org,
-        bjorn.andersson@linaro.org, linux-wireless@vger.kernel.org,
-        keescook@chromium.org, shuah@kernel.org, mfuzzey@parkeon.com,
-        zohar@linux.vnet.ibm.com, dhowells@redhat.com,
-        pali.rohar@gmail.com, tiwai@suse.de, arend.vanspriel@broadcom.com,
-        zajec5@gmail.com, nbroeking@me.com, markivx@codeaurora.org,
-        broonie@kernel.org, dmitry.torokhov@gmail.com, dwmw2@infradead.org,
-        torvalds@linux-foundation.org, Abhay_Salunke@dell.com,
-        jewalt@lgsinnovations.com, cantabile.desu@gmail.com, ast@fb.com,
-        andresx7@gmail.com, dan.rue@linaro.org, brendanhiggins@google.com,
-        yzaikin@google.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [PATCH] firmware_loader: re-export fw_fallback_config into firmware_loader's own namespace
-Date:   Thu, 23 Apr 2020 20:31:40 +0000
-Message-Id: <20200423203140.19510-1-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.23.0.rc1
+        Thu, 23 Apr 2020 13:33:35 -0700 (PDT)
+From:   bsegall@google.com
+To:     Huaixin Chang <changhuaixin@linux.alibaba.com>
+Cc:     bsegall@google.com, chiluk+linux@indeed.com,
+        linux-kernel@vger.kernel.org, mingo@redhat.com, pauld@redhead.com,
+        peterz@infradead.org, vincent.guittot@linaro.org
+Subject: Re: [PATCH] sched: Defend cfs and rt bandwidth quota against overflow
+References: <xm261roim4hi.fsf@google.com>
+        <20200423133752.12787-1-changhuaixin@linux.alibaba.com>
+Date:   Thu, 23 Apr 2020 13:33:33 -0700
+In-Reply-To: <20200423133752.12787-1-changhuaixin@linux.alibaba.com> (Huaixin
+        Chang's message of "Thu, 23 Apr 2020 21:37:52 +0800")
+Message-ID: <xm26k126kkma.fsf@google.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Chamberlain <mcgrof@kernel.org>
+Huaixin Chang <changhuaixin@linux.alibaba.com> writes:
 
-Christoph's recent patch "firmware_loader: remove unused exports", which
-is not merged upstream yet, removed two exported symbols. One is fine to
-remove since only built-in code uses it but the other is incorrect.
+> When users write some huge number into cpu.cfs_quota_us or
+> cpu.rt_runtime_us, overflow might happen during to_ratio() shifts of
+> schedulable checks.
+>
+> to_ratio() could be altered to avoid unnecessary internal overflow, but
+> min_cfs_quota_period is less than 1 << BW_SHIFT, so a cutoff would still
+> be needed. Set a cap MAX_BW for cfs_quota_us and rt_runtime_us to
+> prevent overflow.
+>
+> Signed-off-by: Huaixin Chang <changhuaixin@linux.alibaba.com>
+> ---
+>  kernel/sched/core.c  | 8 ++++++++
+>  kernel/sched/rt.c    | 9 +++++++++
+>  kernel/sched/sched.h | 2 ++
+>  3 files changed, 19 insertions(+)
+>
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 3a61a3b8eaa9..0be1782e15c9 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -7390,6 +7390,8 @@ static DEFINE_MUTEX(cfs_constraints_mutex);
+>  
+>  const u64 max_cfs_quota_period = 1 * NSEC_PER_SEC; /* 1s */
+>  static const u64 min_cfs_quota_period = 1 * NSEC_PER_MSEC; /* 1ms */
+> +/* More than 203 days if BW_SHIFT equals 20. */
+> +static const u64 max_cfs_runtime = MAX_BW * NSEC_PER_USEC;
+>  
+>  static int __cfs_schedulable(struct task_group *tg, u64 period, u64 runtime);
+>  
+> @@ -7417,6 +7419,12 @@ static int tg_set_cfs_bandwidth(struct task_group *tg, u64 period, u64 quota)
+>  	if (period > max_cfs_quota_period)
+>  		return -EINVAL;
+>  
+> +	/*
+> +	 * Bound quota to defend quota against overflow during bandwidth shift.
+> +	 */
+> +	if (quota != RUNTIME_INF && quota > max_cfs_runtime)
+> +		return -EINVAL;
+> +
+>  	/*
+>  	 * Prevent race between setting of cfs_rq->runtime_enabled and
+>  	 * unthrottle_offline_cfs_rqs().
+> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+> index df11d88c9895..7ba49625cdbd 100644
+> --- a/kernel/sched/rt.c
+> +++ b/kernel/sched/rt.c
+> @@ -2569,6 +2569,9 @@ static int __rt_schedulable(struct task_group *tg, u64 period, u64 runtime)
+>  	return ret;
+>  }
+>  
+> +/* More than 4 hours if BW_SHIFT equals 20. */
+> +static const u64 max_rt_runtime = MAX_BW;
+> +
+>  static int tg_set_rt_bandwidth(struct task_group *tg,
+>  		u64 rt_period, u64 rt_runtime)
+>  {
+> @@ -2585,6 +2588,12 @@ static int tg_set_rt_bandwidth(struct task_group *tg,
+>  	if (rt_period == 0)
+>  		return -EINVAL;
+>  
+> +	/*
+> +	 * Bound quota to defend quota against overflow during bandwidth shift.
+> +	 */
+> +	if (rt_runtime != RUNTIME_INF && rt_runtime > max_rt_runtime)
+> +		return -EINVAL;
+> +
 
-If CONFIG_FW_LOADER=m so the firmware_loader is modular but
-CONFIG_FW_LOADER_USER_HELPER=y we fail at mostpost with:
+We probably _do_ also want this in sched_rt_global_validate now that I
+think of it. Other than missing that, it looks good.
 
-ERROR: modpost: "fw_fallback_config" [drivers/base/firmware_loader/firmware_class.ko] undefined!
-
-This happens because the variable fw_fallback_config is built into the
-kernel if CONFIG_FW_LOADER_USER_HELPER=y always, so we need to grant
-access to the firmware loader module by exporting it.
-
-Instead of just exporting it as we used to, take advantage of the new
-kernel symbol namespacing functionality, and export the symbol only to
-the firmware loader private namespace. This would prevent misuses from
-other drivers and makes it clear the goal is to keep this private to
-the firmware loader alone.
-
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Fixes: "firmware_loader: remove unused exports"
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- drivers/base/firmware_loader/fallback.c       | 3 +++
- drivers/base/firmware_loader/fallback_table.c | 1 +
- 2 files changed, 4 insertions(+)
-
-diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
-index 1e9c96e3ed63..d9ac7296205e 100644
---- a/drivers/base/firmware_loader/fallback.c
-+++ b/drivers/base/firmware_loader/fallback.c
-@@ -9,6 +9,7 @@
- #include <linux/umh.h>
- #include <linux/sysctl.h>
- #include <linux/vmalloc.h>
-+#include <linux/module.h>
- 
- #include "fallback.h"
- #include "firmware.h"
-@@ -17,6 +18,8 @@
-  * firmware fallback mechanism
-  */
- 
-+MODULE_IMPORT_NS(FIRMWARE_LOADER_PRIVATE);
-+
- extern struct firmware_fallback_config fw_fallback_config;
- 
- /* These getters are vetted to use int properly */
-diff --git a/drivers/base/firmware_loader/fallback_table.c b/drivers/base/firmware_loader/fallback_table.c
-index 0a737349f78f..46a731dede6f 100644
---- a/drivers/base/firmware_loader/fallback_table.c
-+++ b/drivers/base/firmware_loader/fallback_table.c
-@@ -21,6 +21,7 @@ struct firmware_fallback_config fw_fallback_config = {
- 	.loading_timeout = 60,
- 	.old_timeout = 60,
- };
-+EXPORT_SYMBOL_NS_GPL(fw_fallback_config, FIRMWARE_LOADER_PRIVATE);
- 
- #ifdef CONFIG_SYSCTL
- struct ctl_table firmware_config_table[] = {
--- 
-2.25.1
-
+>  	mutex_lock(&rt_constraints_mutex);
+>  	err = __rt_schedulable(tg, rt_period, rt_runtime);
+>  	if (err)
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index db3a57675ccf..1f58677a8f23 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -1918,6 +1918,8 @@ extern void init_dl_inactive_task_timer(struct sched_dl_entity *dl_se);
+>  #define BW_SHIFT		20
+>  #define BW_UNIT			(1 << BW_SHIFT)
+>  #define RATIO_SHIFT		8
+> +#define MAX_BW_BITS		(64 - BW_SHIFT)
+> +#define MAX_BW			((1ULL << MAX_BW_BITS) - 1)
+>  unsigned long to_ratio(u64 period, u64 runtime);
+>  
+>  extern void init_entity_runnable_average(struct sched_entity *se);
