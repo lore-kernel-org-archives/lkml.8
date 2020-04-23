@@ -2,93 +2,82 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68433C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2C8C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49A4320776
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F37E20728
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:07:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IHyA1D6y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729537AbgDWQHL convert rfc822-to-8bit (ORCPT
+        id S1729561AbgDWQHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 12:07:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59132 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729386AbgDWQHK (ORCPT
+        Thu, 23 Apr 2020 12:07:17 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:40091 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729386AbgDWQHP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 12:07:10 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9C9EC09B040;
-        Thu, 23 Apr 2020 09:07:10 -0700 (PDT)
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jReNX-0000y2-Et; Thu, 23 Apr 2020 18:07:07 +0200
-Date:   Thu, 23 Apr 2020 18:07:07 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Daniel Wagner <dwagner@suse.de>
-Subject: Re: [PREEMPT_RT] 8250 IRQ lockup when flooding serial console (was
- Re: [ANNOUNCE] v5.4.28-rt19)
-Message-ID: <20200423160707.hqt5wjinzcec2yig@linutronix.de>
-References: <20200330144712.cwcz5ejal4ankeoi@linutronix.de>
- <nycvar.YEU.7.76.2004231017470.4730@gjva.wvxbf.pm>
- <nycvar.YFH.7.76.2004231111550.19713@cbobk.fhfr.pm>
- <20200423104559.rgplz6rqk6sg4kz7@linutronix.de>
+        Thu, 23 Apr 2020 12:07:15 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587658034; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=qbSJxZQNaWxw8mAgGamaaFomuWjyilvDfwW/TLq0WJQ=;
+ b=IHyA1D6yl+BB7L449y6vqFB5SBWInfb4gN7A6HqItPNp2biPIamPm2VyPWLXVOww1NLgH5Uz
+ GnUzmY1pfwccIqV83xulCAUvJskbGinGHvL+LuhEb/IlAjzICwXtyEEOAl6w3LpvKuDvPw8W
+ 5zX1IEaQkEC8rcE2okUiFuXlVLc=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea1bd2a.7f736ae07c38-smtp-out-n01;
+ Thu, 23 Apr 2020 16:07:06 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E24FDC433D2; Thu, 23 Apr 2020 16:07:04 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BCF2BC433D2;
+        Thu, 23 Apr 2020 16:07:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BCF2BC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200423104559.rgplz6rqk6sg4kz7@linutronix.de>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2 2/2] rtw88: Use udelay instead of usleep in atomic context
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200423073007.3566-1-kai.heng.feng@canonical.com>
+References: <20200423073007.3566-1-kai.heng.feng@canonical.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     yhchuang@realtek.com, Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org (open list:REALTEK WIRELESS DRIVER
+        (rtw88)), netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
+        linux-kernel@vger.kernel.org (open list)
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200423160704.E24FDC433D2@smtp.codeaurora.org>
+Date:   Thu, 23 Apr 2020 16:07:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-23 12:45:59 [+0200], To Jiri Kosina wrote:
-> On 2020-04-23 11:12:59 [+0200], Jiri Kosina wrote:
-> > On Thu, 23 Apr 2020, Jiri Kosina wrote:
-> > 
-> > > > I'm pleased to announce the v5.4.28-rt19 patch set. 
-> > > 
-> > > First, I don't believe this is necessarily a regression coming with this 
-> > > particular version, but this is the first kernel where I tried this and it 
-> > > crashed.
-> > 
-> > I just tried with 5.6.4-rt3, and I can make it explode exactly the same 
-> > way:
+Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+
+> It's incorrect to use usleep in atomic context.
 > 
-> I though I dealt with it. In the past it triggered also with threadirqs
-> on !RT but this isn't the case anymore. It still explodes on RT. Let me
-> look…
+> Switch to a macro which uses udelay instead of usleep to prevent the issue.
+> 
+> Fixes: 6343a6d4b213 ("rtw88: Add delay on polling h2c command status bit")
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-So it also happens with !RT, you just have to try a little harder. For
-instance in drivers/tty/serial/8250/8250_core.c making the PASS_LIMIT
-change apply to !RT and boom.
+For patch 1 please also CC linux-wireless, otherwise patchwork cannot see it.
 
-The IRQ4 is edge and in charge of ttyS0. It is handled by
-handle_edge_irq() and after ->irq_ack(), the thread is woken up and then
-we get another ->handle_edge_irq() for IRQ4. With larger PASS_LIMIT the
-thread runs longer so note_interrupt() will make less IRQ_HANDLED based
-on ->threads_handled_last. If it observes 100 handled within 100000
-interrupts then the counters are reset again. On !RT it usually manages
-to get >100 per 100000 interrupts so it appears good. On RT it gets less
-and the interrupt gets disabled.
+-- 
+https://patchwork.kernel.org/patch/11505147/
 
-So it is not RT related, but RT triggers it more reliably (also the
-PASS_LIMIT change can vanish).
-I can't tell if this is a qemu bug in emulating the HW or not. I can't
-reproduce it real HW. I see a second edge interrupt only after the
-thread completed. I can't tell if this is because it is a real UART and
-the data is flowing slower or because the edge-IRQ is not triggered
-repeatedly.
-
-Sebastian
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
