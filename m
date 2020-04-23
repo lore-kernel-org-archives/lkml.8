@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33791C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB80C55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EFE520780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71EDD20780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729901AbgDWXVF (ORCPT
+        id S1729182AbgDWXVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:21:05 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48548 "EHLO
+        Thu, 23 Apr 2020 19:21:06 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48588 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728203AbgDWXGd (ORCPT
+        by vger.kernel.org with ESMTP id S1728204AbgDWXGd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:33 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvL-0004bO-Dn; Fri, 24 Apr 2020 00:06:27 +0100
+        id 1jRkvM-0004cG-Dd; Fri, 24 Apr 2020 00:06:28 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvJ-00E6iD-Ly; Fri, 24 Apr 2020 00:06:25 +0100
+        id 1jRkvK-00E6jV-JV; Fri, 24 Apr 2020 00:06:26 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Xu Wen" <wen.xu@gatech.edu>, "David Sterba" <dsterba@suse.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Su Yue" <suy.fnst@cn.fujitsu.com>,
-        "Ben Hutchings" <ben.hutchings@codethink.co.uk>,
-        "Qu Wenruo" <wqu@suse.com>
-Date:   Fri, 24 Apr 2020 00:04:38 +0100
-Message-ID: <lsq.1587683028.268403345@decadent.org.uk>
+        "Mika Westerberg" <mika.westerberg@linux.intel.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>
+Date:   Fri, 24 Apr 2020 00:04:54 +0100
+Message-ID: <lsq.1587683028.328988480@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 051/245] btrfs: Check that each block group has
- corresponding chunk at mount time
+Subject: [PATCH 3.16 067/245] pinctrl: baytrail: Clear interrupt
+ triggering from pins that are in GPIO mode
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,83 +56,91 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Qu Wenruo <wqu@suse.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-commit 514c7dca85a0bf40be984dab0b477403a6db901f upstream.
+commit 95f0972c7e4cbf3fc68160131c5ac2f033481d00 upstream.
 
-A crafted btrfs image with incorrect chunk<->block group mapping will
-trigger a lot of unexpected things as the mapping is essential.
+If the pin is already configured as GPIO and it has any of the triggering
+flags set, we may get spurious interrupts depending on the state of the
+pin.
 
-Although the problem can be caught by block group item checker
-added in "btrfs: tree-checker: Verify block_group_item", it's still not
-sufficient.  A sufficiently valid block group item can pass the check
-added by the mentioned patch but could fail to match the existing chunk.
+Prevent this by clearing the triggering flags on such pins. However, if the
+pin is also configured as "direct IRQ" we leave the flags as is. Otherwise
+it will prevent interrupts that are routed directly to IO-APIC.
 
-This patch will add extra block group -> chunk mapping check, to ensure
-we have a completely matching (start, len, flags) chunk for each block
-group at mount time.
-
-Here we reuse the original helper find_first_block_group(), which is
-already doing the basic bg -> chunk checks, adding further checks of the
-start/len and type flags.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=199837
-Reported-by: Xu Wen <wen.xu@gatech.edu>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: Su Yue <suy.fnst@cn.fujitsu.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-[bwh: Backported to 4.4: Use root->fs_info instead of fs_info]
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+[bwh: Backported to 3.16:
+ - Add definition of BYT_DIRECT_IRQ_EN
+ - Adjust filename]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/btrfs/extent-tree.c | 28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
-
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -8556,6 +8556,8 @@ static int find_first_block_group(struct
- 	int ret = 0;
- 	struct btrfs_key found_key;
- 	struct extent_buffer *leaf;
-+	struct btrfs_block_group_item bg;
-+	u64 flags;
- 	int slot;
+--- a/drivers/pinctrl/pinctrl-baytrail.c
++++ b/drivers/pinctrl/pinctrl-baytrail.c
+@@ -44,6 +44,7 @@
  
- 	ret = btrfs_search_slot(NULL, root, key, path, 0, 0);
-@@ -8590,8 +8592,32 @@ static int find_first_block_group(struct
- 			"logical %llu len %llu found bg but no related chunk",
- 					  found_key.objectid, found_key.offset);
- 				ret = -ENOENT;
-+			} else if (em->start != found_key.objectid ||
-+				   em->len != found_key.offset) {
-+				btrfs_err(root->fs_info,
-+		"block group %llu len %llu mismatch with chunk %llu len %llu",
-+					  found_key.objectid, found_key.offset,
-+					  em->start, em->len);
-+				ret = -EUCLEAN;
- 			} else {
--				ret = 0;
-+				read_extent_buffer(leaf, &bg,
-+					btrfs_item_ptr_offset(leaf, slot),
-+					sizeof(bg));
-+				flags = btrfs_block_group_flags(&bg) &
-+					BTRFS_BLOCK_GROUP_TYPE_MASK;
+ /* BYT_CONF0_REG register bits */
+ #define BYT_IODEN		BIT(31)
++#define BYT_DIRECT_IRQ_EN	BIT(27)
+ #define BYT_TRIG_NEG		BIT(26)
+ #define BYT_TRIG_POS		BIT(25)
+ #define BYT_TRIG_LVL		BIT(24)
+@@ -160,6 +161,19 @@ static void __iomem *byt_gpio_reg(struct
+ 	return vg->reg_base + reg_offset + reg;
+ }
+ 
++static void byt_gpio_clear_triggering(struct byt_gpio *vg, unsigned offset)
++{
++	void __iomem *reg = byt_gpio_reg(&vg->chip, offset, BYT_CONF0_REG);
++	unsigned long flags;
++	u32 value;
 +
-+				if (flags != (em->map_lookup->type &
-+					      BTRFS_BLOCK_GROUP_TYPE_MASK)) {
-+					btrfs_err(root->fs_info,
-+"block group %llu len %llu type flags 0x%llx mismatch with chunk type flags 0x%llx",
-+						found_key.objectid,
-+						found_key.offset, flags,
-+						(BTRFS_BLOCK_GROUP_TYPE_MASK &
-+						 em->map_lookup->type));
-+					ret = -EUCLEAN;
-+				} else {
-+					ret = 0;
-+				}
- 			}
- 			free_extent_map(em);
- 			goto out;
++	spin_lock_irqsave(&vg->lock, flags);
++	value = readl(reg);
++	value &= ~(BYT_TRIG_POS | BYT_TRIG_NEG | BYT_TRIG_LVL);
++	writel(value, reg);
++	spin_unlock_irqrestore(&vg->lock, flags);
++}
++
+ static u32 byt_get_gpio_mux(struct byt_gpio *vg, unsigned offset)
+ {
+ 	/* SCORE pin 92-93 */
+@@ -213,14 +227,8 @@ static int byt_gpio_request(struct gpio_
+ static void byt_gpio_free(struct gpio_chip *chip, unsigned offset)
+ {
+ 	struct byt_gpio *vg = to_byt_gpio(chip);
+-	void __iomem *reg = byt_gpio_reg(&vg->chip, offset, BYT_CONF0_REG);
+-	u32 value;
+-
+-	/* clear interrupt triggering */
+-	value = readl(reg);
+-	value &= ~(BYT_TRIG_POS | BYT_TRIG_NEG | BYT_TRIG_LVL);
+-	writel(value, reg);
+ 
++	byt_gpio_clear_triggering(vg, offset);
+ 	pm_runtime_put(&vg->pdev->dev);
+ }
+ 
+@@ -496,6 +504,21 @@ static void byt_gpio_irq_init_hw(struct
+ {
+ 	void __iomem *reg;
+ 	u32 base, value;
++	int i;
++
++	/*
++	 * Clear interrupt triggers for all pins that are GPIOs and
++	 * do not use direct IRQ mode. This will prevent spurious
++	 * interrupts from misconfigured pins.
++	 */
++	for (i = 0; i < vg->chip.ngpio; i++) {
++		value = readl(byt_gpio_reg(&vg->chip, i, BYT_CONF0_REG));
++		if ((value & BYT_PIN_MUX) == byt_get_gpio_mux(vg, i) &&
++		    !(value & BYT_DIRECT_IRQ_EN)) {
++			byt_gpio_clear_triggering(vg, i);
++			dev_dbg(&vg->pdev->dev, "disabling GPIO %d\n", i);
++		}
++	}
+ 
+ 	/* clear interrupt status trigger registers */
+ 	for (base = 0; base < vg->chip.ngpio; base += 32) {
 
