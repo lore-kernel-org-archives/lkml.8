@@ -2,132 +2,138 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A7FC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2646CC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6468320784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:20:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gP/V70j/"
+	by mail.kernel.org (Postfix) with ESMTP id 1043A2087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:20:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729865AbgDWXUS (ORCPT
+        id S1729153AbgDWXU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:20:18 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17709 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729589AbgDWXUP (ORCPT
+        Thu, 23 Apr 2020 19:20:28 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48642 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728220AbgDWXGd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 19:20:15 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ea222a20000>; Thu, 23 Apr 2020 16:20:02 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 23 Apr 2020 16:20:15 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 23 Apr 2020 16:20:15 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Apr
- 2020 23:20:14 +0000
-Received: from [10.2.165.49] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Apr
- 2020 23:20:13 +0000
-Subject: Re: [RFC PATCH v9 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1587536339-4030-1-git-send-email-skomatineni@nvidia.com>
- <1587536339-4030-7-git-send-email-skomatineni@nvidia.com>
- <7e473fa9-0409-d868-e818-2e7928a8acca@gmail.com>
- <a83bfc89-35de-85b5-fe5f-71e62456f5e9@nvidia.com>
-Message-ID: <3691c4b5-1ecc-2ad3-23ed-72ef6b8d25fa@nvidia.com>
-Date:   Thu, 23 Apr 2020 16:20:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 23 Apr 2020 19:06:33 -0400
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1jRkvM-0004bO-0O; Fri, 24 Apr 2020 00:06:28 +0100
+Received: from ben by deadeye with local (Exim 4.93)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1jRkvK-00E6jf-Lr; Fri, 24 Apr 2020 00:06:26 +0100
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-In-Reply-To: <a83bfc89-35de-85b5-fe5f-71e62456f5e9@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587684002; bh=CPRq9cMt/lN6NzDJ05Bova74TvWpdusnmYaV2OQmpZc=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=gP/V70j/RucgH4oE3n6e/1smKYjeDoHMjHN/psXuADH9AlFST3EEkQCEVSqbkKTmi
-         l//C9mwLWXxdia9IrSUrhTGW6ze7BUYFWhX3FVAZAK58EYcTXLDNgqJlWNVFPFaQCN
-         nEwCgtUC2FOTMKw1AAQiGkHY/6RB3ZQCVSl2xBFaU0v04D3L9axdagwKcQnCYGGfFB
-         Emy7GW7lGBBoqnXCTU7FVD/2tAvJbtj9gaTSJIULthE+Odlnp+92m9nTgJy8scK+UZ
-         TDJa5aSuX0SCMCPocR+LZj0Dn0Sc+GZbJNBo/0Iu4xSGa206pLTZUMzlSXJMpKXNpH
-         unAWdnh7miXPA==
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Mika Westerberg" <mika.westerberg@linux.intel.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>
+Date:   Fri, 24 Apr 2020 00:04:56 +0100
+Message-ID: <lsq.1587683028.924632410@decadent.org.uk>
+X-Mailer: LinuxStableQueue (scripts by bwh)
+X-Patchwork-Hint: ignore
+Subject: [PATCH 3.16 069/245] pinctrl: baytrail: Serialize all register access
+In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+3.16.83-rc1 review patch.  If anyone has any objections, please let me know.
 
-On 4/23/20 4:19 PM, Sowjanya Komatineni wrote:
->
-> On 4/23/20 4:16 PM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> 22.04.2020 09:18, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> +static int chan_capture_kthread_start(void *data)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan =3D data;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_channel_buffer *buf;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 int err =3D 0;
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 set_freezable();
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 while (1) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 try_to_freeze();
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 wait_event_interruptible(chan->start_wait,
->>> + !list_empty(&chan->capture) ||
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 kthread_should_stop());
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 if (kthread_should_stop())
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break;
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 /*
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 * Source is not streaming if error is non-zero.
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 * So, do not dequeue buffers on capture error.
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 */
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 if (err)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 continue;
->> This will result in an endless loop, I suppose it wasn't the intention.
->
-> no it will not. on error we report vb2_queue_error which will do=20
-> streaming stop request.
->
-> So thread will be stopped on streaming stop request thru kthread stop=20
-> signal
-To be clear on error it reports vb2 queue error and waits for stop=20
-streaming to happen
+------------------
+
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+
+commit 39ce8150a079e3ae6ed9abf26d7918a558ef7c19 upstream.
+
+There is a hardware issue in Intel Baytrail where concurrent GPIO register
+access might result reads of 0xffffffff and writes might get dropped
+completely.
+
+Prevent this from happening by taking the serializing lock in all places
+where it is possible that more than one thread might be accessing the
+hardware concurrently.
+
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+[bwh: Backported to 3.16: adjust filename]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+---
+ drivers/pinctrl/pinctrl-baytrail.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
+
+--- a/drivers/pinctrl/pinctrl-baytrail.c
++++ b/drivers/pinctrl/pinctrl-baytrail.c
+@@ -194,6 +194,9 @@ static int byt_gpio_request(struct gpio_
+ 	struct byt_gpio *vg = to_byt_gpio(chip);
+ 	void __iomem *reg = byt_gpio_reg(chip, offset, BYT_CONF0_REG);
+ 	u32 value, gpio_mux;
++	unsigned long flags;
++
++	spin_lock_irqsave(&vg->lock, flags);
+ 
+ 	/*
+ 	 * In most cases, func pin mux 000 means GPIO function.
+@@ -207,18 +210,16 @@ static int byt_gpio_request(struct gpio_
+ 	value = readl(reg) & BYT_PIN_MUX;
+ 	gpio_mux = byt_get_gpio_mux(vg, offset);
+ 	if (WARN_ON(gpio_mux != value)) {
+-		unsigned long flags;
+-
+-		spin_lock_irqsave(&vg->lock, flags);
+ 		value = readl(reg) & ~BYT_PIN_MUX;
+ 		value |= gpio_mux;
+ 		writel(value, reg);
+-		spin_unlock_irqrestore(&vg->lock, flags);
+ 
+ 		dev_warn(&vg->pdev->dev,
+ 			 "pin %u forcibly re-configured as GPIO\n", offset);
+ 	}
+ 
++	spin_unlock_irqrestore(&vg->lock, flags);
++
+ 	pm_runtime_get(&vg->pdev->dev);
+ 
+ 	return 0;
+@@ -266,7 +267,15 @@ static int byt_irq_type(struct irq_data
+ static int byt_gpio_get(struct gpio_chip *chip, unsigned offset)
+ {
+ 	void __iomem *reg = byt_gpio_reg(chip, offset, BYT_VAL_REG);
+-	return readl(reg) & BYT_LEVEL;
++	struct byt_gpio *vg = to_byt_gpio(chip);
++	unsigned long flags;
++	u32 val;
++
++	spin_lock_irqsave(&vg->lock, flags);
++	val = readl(reg);
++	spin_unlock_irqrestore(&vg->lock, flags);
++
++	return val & BYT_LEVEL;
+ }
+ 
+ static void byt_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
+@@ -435,8 +444,10 @@ static void byt_irq_ack(struct irq_data
+ 	unsigned offset = irqd_to_hwirq(d);
+ 	void __iomem *reg;
+ 
++	spin_lock(&vg->lock);
+ 	reg = byt_gpio_reg(&vg->chip, offset, BYT_INT_STAT_REG);
+ 	writel(BIT(offset % 32), reg);
++	spin_unlock(&vg->lock);
+ }
+ 
+ static void byt_irq_unmask(struct irq_data *d)
+
