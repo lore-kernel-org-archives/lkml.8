@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9168BC55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BCF5C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A98820784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF48E20780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:12:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728052AbgDWXMZ (ORCPT
+        id S1727873AbgDWXMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:12:25 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50170 "EHLO
+        Thu, 23 Apr 2020 19:12:34 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50174 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728524AbgDWXGv (ORCPT
+        by vger.kernel.org with ESMTP id S1728534AbgDWXGv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:51 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvb-0004mo-0a; Fri, 24 Apr 2020 00:06:43 +0100
+        id 1jRkva-0004lg-Pc; Fri, 24 Apr 2020 00:06:43 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvW-00E6wW-EP; Fri, 24 Apr 2020 00:06:38 +0100
+        id 1jRkvX-00E6xD-4m; Fri, 24 Apr 2020 00:06:39 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Martin Jansen" <martin.jansen@opticon.com>,
-        "Johan Hovold" <johan@kernel.org>
-Date:   Fri, 24 Apr 2020 00:06:50 +0100
-Message-ID: <lsq.1587683028.532135298@decadent.org.uk>
+        "Johan Hovold" <johan@kernel.org>,
+        "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Date:   Fri, 24 Apr 2020 00:06:58 +0100
+Message-ID: <lsq.1587683028.694890311@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 183/245] USB: serial: opticon: fix control-message
+Subject: [PATCH 3.16 191/245] Input: keyspan-remote - fix control-message
  timeouts
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
@@ -59,34 +59,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit 5e28055f340275a8616eee88ef19186631b4d136 upstream.
+commit ba9a103f40fc4a3ec7558ec9b0b97d4f92034249 upstream.
 
 The driver was issuing synchronous uninterruptible control requests
-without using a timeout. This could lead to the driver hanging
-on open() or tiocmset() due to a malfunctioning (or malicious) device
-until the device is physically disconnected.
+without using a timeout. This could lead to the driver hanging on probe
+due to a malfunctioning (or malicious) device until the device is
+physically disconnected. While sleeping in probe the driver prevents
+other devices connected to the same hub from being added to (or removed
+from) the bus.
 
 The USB upper limit of five seconds per request should be more than
 enough.
 
-Fixes: 309a057932ab ("USB: opticon: add rts and cts support")
-Cc: Martin Jansen <martin.jansen@opticon.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 99f83c9c9ac9 ("[PATCH] USB: add driver for Keyspan Digital Remote")
 Signed-off-by: Johan Hovold <johan@kernel.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20200113171715.30621-1-johan@kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/serial/opticon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/misc/keyspan_remote.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/serial/opticon.c
-+++ b/drivers/usb/serial/opticon.c
-@@ -116,7 +116,7 @@ static int send_control_msg(struct usb_s
- 	retval = usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
- 				requesttype,
- 				USB_DIR_OUT|USB_TYPE_VENDOR|USB_RECIP_INTERFACE,
--				0, 0, buffer, 1, 0);
-+				0, 0, buffer, 1, USB_CTRL_SET_TIMEOUT);
- 	kfree(buffer);
+--- a/drivers/input/misc/keyspan_remote.c
++++ b/drivers/input/misc/keyspan_remote.c
+@@ -344,7 +344,8 @@ static int keyspan_setup(struct usb_devi
+ 	int retval = 0;
  
- 	if (retval < 0)
+ 	retval = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
+-				 0x11, 0x40, 0x5601, 0x0, NULL, 0, 0);
++				 0x11, 0x40, 0x5601, 0x0, NULL, 0,
++				 USB_CTRL_SET_TIMEOUT);
+ 	if (retval) {
+ 		dev_dbg(&dev->dev, "%s - failed to set bit rate due to error: %d\n",
+ 			__func__, retval);
+@@ -352,7 +353,8 @@ static int keyspan_setup(struct usb_devi
+ 	}
+ 
+ 	retval = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
+-				 0x44, 0x40, 0x0, 0x0, NULL, 0, 0);
++				 0x44, 0x40, 0x0, 0x0, NULL, 0,
++				 USB_CTRL_SET_TIMEOUT);
+ 	if (retval) {
+ 		dev_dbg(&dev->dev, "%s - failed to set resume sensitivity due to error: %d\n",
+ 			__func__, retval);
+@@ -360,7 +362,8 @@ static int keyspan_setup(struct usb_devi
+ 	}
+ 
+ 	retval = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
+-				 0x22, 0x40, 0x0, 0x0, NULL, 0, 0);
++				 0x22, 0x40, 0x0, 0x0, NULL, 0,
++				 USB_CTRL_SET_TIMEOUT);
+ 	if (retval) {
+ 		dev_dbg(&dev->dev, "%s - failed to turn receive on due to error: %d\n",
+ 			__func__, retval);
 
