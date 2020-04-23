@@ -2,112 +2,146 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7156C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B24C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD95320736
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02A0C2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:49:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eaSzW00D"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="CpOMfkYJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgDWIrG (ORCPT
+        id S1726623AbgDWItO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 04:47:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46852 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbgDWIrG (ORCPT
+        Thu, 23 Apr 2020 04:49:14 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:31248 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbgDWItN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 04:47:06 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA938C03C1AF
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 01:47:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=pdOPuyAEsL0uTW547isQ3x2UrY6A2JZipdSfI4TDH+o=; b=eaSzW00DUSBBbn/OWLhd07a5Vf
-        gFxPFHWEN58PlGfVTwU126p0M/FLh6VB6I8VwF1+GwbtmqGZc94vnNpexjDjcgEHQ2DmDk2RTj4A4
-        fr5p8pnnLuPTKqw5z9KRic5rumyAbZyXq/GEgDq441mWKmQAxlGC4CDo8lLFxMpKBTjHT2XdnnlqU
-        p3WASS7gBokwwT8n4eGZzLYkDnwf8FYVA4Xewke4nGp+yznD28/m51DUHPg7I6uAyPAA+MUbhUWc5
-        jSgZP01tPnIGKIlmk9fHYbd/FyYdkC3niXjZAPm5Ug7zzLkgwTh4Z2vXb7gNi+J+xXpTEzIgCUs1M
-        SY22pWbg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jRXV7-0002uN-Im; Thu, 23 Apr 2020 08:46:29 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D02C93010C8;
-        Thu, 23 Apr 2020 10:46:26 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8F19A20BE0448; Thu, 23 Apr 2020 10:46:26 +0200 (CEST)
-Date:   Thu, 23 Apr 2020 10:46:26 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        rostedt@goodmis.org, qais.yousef@arm.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, bsegall@google.com, mgorman@suse.de,
-        rafael.j.wysocki@intel.com
-Subject: Re: [PATCH 04/23] sched,acpi_pad: Convert to sched_set_fifo*()
-Message-ID: <20200423084626.GT20713@hirez.programming.kicks-ass.net>
-References: <20200422112719.826676174@infradead.org>
- <20200422112831.455977635@infradead.org>
- <c620bb30-eeee-336b-f8d6-a98e903a48e2@arm.com>
+        Thu, 23 Apr 2020 04:49:13 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200423084910epoutp01400857162378162b74dc66ef0902b20b~IZqpJ-23M1521815218epoutp01V
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:49:10 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200423084910epoutp01400857162378162b74dc66ef0902b20b~IZqpJ-23M1521815218epoutp01V
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1587631750;
+        bh=KwdIFH/L5SIr+QnGowAwrh8gTyuooEa0C2RIgzHAXto=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=CpOMfkYJ3yRxrfeJgUmVrIOhL9B4UIAmHp78jawGm65OEqnuYSlZGx3cyho9LqOFg
+         47ybqGPOaLcJ2iC6tTQcg9+U3KdQOlguAVITzNCqWzFom96WamxVY4VDo6Awt/rKor
+         UxNXW3kJmJrmYwMdHidIhClRB7ddwYZcqCpJ7olo=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20200423084909epcas1p4da55aa560d9389b7bc730155969caf2f~IZqo03bo51221312213epcas1p4-;
+        Thu, 23 Apr 2020 08:49:09 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.164]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 4979vm5mL7zMqYkf; Thu, 23 Apr
+        2020 08:49:08 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        70.94.04648.48651AE5; Thu, 23 Apr 2020 17:49:08 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200423084908epcas1p1b5d43c33b263b30844fc03a341f67413~IZqnfniHt2361123611epcas1p1G;
+        Thu, 23 Apr 2020 08:49:08 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200423084908epsmtrp18addace45fb4525f4bc94ac0687d24d5~IZqnea3jc1033910339epsmtrp18;
+        Thu, 23 Apr 2020 08:49:08 +0000 (GMT)
+X-AuditID: b6c32a37-1dbff70000001228-d3-5ea1568410ab
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        78.A0.04158.48651AE5; Thu, 23 Apr 2020 17:49:08 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200423084908epsmtip1f4a453c8fa0c376dd19e06b0c5b22915~IZqnQk8zp1130711307epsmtip1H;
+        Thu, 23 Apr 2020 08:49:08 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     "'LKML'" <linux-kernel@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>
+Cc:     "'Hyunchul Lee'" <hyc.lee@gmail.com>,
+        "'Eric Sandeen'" <sandeen@sandeen.net>,
+        "'Sedat Dilek'" <sedat.dilek@gmail.com>,
+        "'Goldwyn Rodrigues'" <rgoldwyn@suse.de>
+Subject: [ANNOUNCE] exfatprogs-1.0.2 version released
+Date:   Thu, 23 Apr 2020 17:49:08 +0900
+Message-ID: <004701d6194c$0d238990$276a9cb0$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c620bb30-eeee-336b-f8d6-a98e903a48e2@arm.com>
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AdYZSpFQSutFdpomSvqOYdc5YaaMqA==
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SeUgUcRTH+e3Mzk7SxrRavbZrd0IqaS/X1dXcEIxYSEqQTDrWBndQcfZg
+        ZxUPJIVcTcWjiHC7ERSFylQ8OpAMSekQ7LILlZJSMa0w7cDa3THyv897v+9739/7/R6JyeoI
+        OZlpd7MuO8PRRBDecX+HSnUy+apF+9ijMb4YmZEY79wdwI1Pb10gjDXT10XGkmdhxutn+/E4
+        wtztfScxt9ePicxtDwvM31o3J+KHudgMlrGyLgVrT3NYM+3pJnpfUmp8qiFSq1Ppoo1RtMLO
+        2FgTvSchUbU3k/NZ04ochsv2pRIZnqc1u2Ndjmw3q8hw8G4TzTqtnFOndap5xsZn29PVaQ5b
+        jE6rDTf4lMe5jOKpcbGzKih3pu+MqAhdIsvRChKoCJhceCMpR0GkjOpC8OhcNSEEXxF0DPUh
+        IfiOoLGkWvSv5O3IgNjPMuouguf9JkE0geBO5TzyHxCUChZ/9xB+DqESYPbnsMgvwqhGBHWj
+        UwFRMGWAtsmngU44FQrVf9oDLKWioer9PVzg1TBQ9yHAGLUFOqcvYMItFPBjvEEsGKihvrMG
+        EzQhcP6UB/ObAdVPQNlIw1LBHng+WkIIHAyTD9olAsthotrjY9LHBfClZ0lehuDTvElgPby6
+        0SL2SzBqB9y4pRHSSuj+dREJtqvg81ylWOgihTKPTJCEQtXQ/aV32wDlpbNLpmZoLp6S1CCl
+        d9mQ3mVDepcN4/1vfAXhzWgt6+Rt6Syvc+qXf3YrCqxlWFQXanmS0IsoEtErpSnKKxaZmMnh
+        82y9CEiMDpG2jF2yyKRWJi+fdTlSXdkcy/cig+8PajH5mjSHb8nt7lSdIVyv1xsjIqMiDXp6
+        nfTsS84io9IZN5vFsk7W9a9ORK6QF6EY/cL81ab9Zw7lmCPaR8ur8IYkSXT4aGnTkcUGRntw
+        Wl0o8tRneeZmB0l5Fx43c+CN5ck7RfLNMfVMZu22oYjB8V3hx273POgrGNx+7/VE/OJHvlWZ
+        8lITaeFOb1qfrLnsVp5c2Pgod2dtPmGpGFZbk04k7ry8tXB3m6T2aEXTNRrnMxhdGObimb+s
+        m1oOrAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFLMWRmVeSWpSXmKPExsWy7bCSnG5L2MI4g45+YYtr99+zW+zZe5LF
+        4vKuOWwWE96uY7JovaJlsW7qCRYHNo+ds+6ye2xZ/JDJY/Ppao/Pm+QCWKK4bFJSczLLUov0
+        7RK4MhpfP2Ut6OOqeH90MlMD4zyOLkZODgkBE4k790+ydjFycQgJ7GaU6F21ihUiIS1x7MQZ
+        5i5GDiBbWOLw4WKImueMEvvPvGUGqWET0JX492c/G4gtIuAn8WvZGyaQImaBlYwSu7f3gg0S
+        FjCV2PzqMpjNIqAq0f9/C5jNK2Ap0ff4IAuELShxcuYTFpBlzAJ6Em0bGUHCzALyEtvfzmGG
+        uEdB4ufTZawQu/QkFm+fwAxRIyIxu7ONeQKj4Cwkk2YhTJqFZNIsJB0LGFlWMUqmFhTnpucW
+        GxYY5aWW6xUn5haX5qXrJefnbmIEx4CW1g7GEyfiDzEKcDAq8fBGKC6IE2JNLCuuzD3EKMHB
+        rCTCu+HhvDgh3pTEyqrUovz4otKc1OJDjNIcLErivPL5xyKFBNITS1KzU1MLUotgskwcnFIN
+        jDIvdrXd22hj8v+UDNvZ7eeWy2xgub5s9s37236eqNBpMM+SObbqdZjqr3Dz2YbfOyeFGn2P
+        UCubvV5c4rT9jNcKs9Wf7qkytbB0Ociw2qBM7fWR8I3yc/9ttTt09Oi9iLlmS/epnehvncf7
+        JsT6rmKYwNWSqc2Fy3dOetEj47vyxEeFBapT93grsRRnJBpqMRcVJwIA15nMUX0CAAA=
+X-CMS-MailID: 20200423084908epcas1p1b5d43c33b263b30844fc03a341f67413
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200423084908epcas1p1b5d43c33b263b30844fc03a341f67413
+References: <CGME20200423084908epcas1p1b5d43c33b263b30844fc03a341f67413@epcas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 06:45:36PM +0200, Dietmar Eggemann wrote:
-> On 22/04/2020 13:27, Peter Zijlstra wrote:
-> > Because SCHED_FIFO is a broken scheduler model (see previous patches)
-> > take away the priority field, the kernel can't possibly make an
-> > informed decision.
-> > 
-> > In this case, use fifo_low, because it only cares about being above
-> > SCHED_NORMAL. Effectively no change in behaviour.
-> > 
-> > XXX: this driver is still complete crap; why isn't it using proper
-> > idle injection or at the very least play_idle() ?
-> > 
-> > Cc: rafael.j.wysocki@intel.com
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Reviewed-by: Ingo Molnar <mingo@kernel.org>
-> > ---
-> >  drivers/acpi/acpi_pad.c |    3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > 
-> > --- a/drivers/acpi/acpi_pad.c
-> > +++ b/drivers/acpi/acpi_pad.c
-> > @@ -136,12 +136,11 @@ static unsigned int idle_pct = 5; /* per
-> >  static unsigned int round_robin_time = 1; /* second */
-> >  static int power_saving_thread(void *data)
-> >  {
-> > -	struct sched_param param = {.sched_priority = 1};
-> >  	int do_sleep;
-> >  	unsigned int tsk_index = (unsigned long)data;
-> >  	u64 last_jiffies = 0;
-> >  
-> > -	sched_setscheduler(current, SCHED_RR, &param);
-> 
-> I was wondering what happened to the SCHED_RR cases but as I can see now
-> they are handled here and in the next patch.
+This is the second release of exfatprogs since the initial version(1.0.1).
+We have received various feedbacks and patches since the previous release
+and applied them in this release. Thanks for feedback and patches!
 
-Oh right; I completely forgot to mention that in the Changelog didn't I
-:-(
+According to Goldwyn's comments, We renamed the project name from
+exfat-utils to exfatprogs. However, There is an opinion that just renaming
+the name is not enough. Because the binary names(mkfs.exfat, fsck.exfat)
+still are same with ones in current exfat-utils RPM package.
 
-In this case, this driver is a broken piece of crap and doing fake idle
-with RR is just plain idiotic. Also note the WARNs in play_idle().
+If that's real problem, We are considering a long jump with 2.0.0 when adding
+repair feature.
 
-Also, rjw, what was the point of renmaing play_idle() to
-play_idle_precise() if there is only one anyway? The changelog talks
-about adding play_idle_precise() but the patch (rightfully) doesn't add
-another version but replaces the existing one. But why change the name?!
+Any feedback is welcome!:)
+
+The major changes in this release:
+ * Rename project name to exfatprogs.
+ * label.exfat: Add support for label.exfat to set/get exfat volume label.
+ * Replace iconv library by standard C functions mbstowcs() and wcrtomb().
+ * Fix the build warnings/errors and add warning options.
+ * Fix several bugs(memory leak, wrong endian conversion, zero out beyond end of file) and cleanup codes
+ * Fix issues on big endian system and on 32bit system.
+ * Add support for Android build system.
+
+The git tree is at:
+      https://github.com/exfatprogs/exfatprogs
+
+The tarballs can be found at:
+      https://github.com/exfatprogs/exfatprogs/releases/tag/1.0.2
+
