@@ -2,106 +2,100 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 572BDC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C19C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3716120784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ED0021556
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:19:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729531AbgDWXTT (ORCPT
+        id S1728853AbgDWXTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:19:19 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48802 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728244AbgDWXGg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 19:06:36 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvO-0004e7-Fq; Fri, 24 Apr 2020 00:06:30 +0100
-Received: from ben by deadeye with local (Exim 4.93)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvM-00E6lL-28; Fri, 24 Apr 2020 00:06:28 +0100
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        Thu, 23 Apr 2020 19:19:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55748 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729809AbgDWXTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 19:19:22 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8CF92192A;
+        Thu, 23 Apr 2020 23:19:21 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.93)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1jRl7o-000YtH-L0; Thu, 23 Apr 2020 19:19:20 -0400
+Message-Id: <20200423231920.532930181@goodmis.org>
+User-Agent: quilt/0.65
+Date:   Thu, 23 Apr 2020 19:18:42 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hulk Robot <hulkci@huawei.com>, Jason Yan <yanaijie@huawei.com>
+Subject: [for-linus][PATCH 4/4] tracing: Convert local functions in tracing_map.c to static
+References: <20200423231838.682478056@goodmis.org>
 MIME-Version: 1.0
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Todd Brandt" <todd.e.brandt@linux.intel.com>,
-        "Zhang Rui" <rui.zhang@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Date:   Fri, 24 Apr 2020 00:05:06 +0100
-Message-ID: <lsq.1587683028.391501382@decadent.org.uk>
-X-Mailer: LinuxStableQueue (scripts by bwh)
-X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 079/245] ACPI: PM: Avoid attaching ACPI PM domain to
- certain devices
-In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3.16.83-rc1 review patch.  If anyone has any objections, please let me know.
+From: Jason Yan <yanaijie@huawei.com>
 
-------------------
+Fix the following sparse warning:
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+kernel/trace/tracing_map.c:286:6: warning: symbol
+'tracing_map_array_clear' was not declared. Should it be static?
+kernel/trace/tracing_map.c:297:6: warning: symbol
+'tracing_map_array_free' was not declared. Should it be static?
+kernel/trace/tracing_map.c:319:26: warning: symbol
+'tracing_map_array_alloc' was not declared. Should it be static?
 
-commit b9ea0bae260f6aae546db224daa6ac1bd9d94b91 upstream.
+Link: http://lkml.kernel.org/r/20200410073312.38855-1-yanaijie@huawei.com
 
-Certain ACPI-enumerated devices represented as platform devices in
-Linux, like fans, require special low-level power management handling
-implemented by their drivers that is not in agreement with the ACPI
-PM domain behavior.  That leads to problems with managing ACPI fans
-during system-wide suspend and resume.
-
-For this reason, make acpi_dev_pm_attach() skip the affected devices
-by adding a list of device IDs to avoid to it and putting the IDs of
-the affected devices into that list.
-
-Fixes: e5cc8ef31267 (ACPI / PM: Provide ACPI PM callback routines for subsystems)
-Reported-by: Zhang Rui <rui.zhang@intel.com>
-Tested-by: Todd Brandt <todd.e.brandt@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-[bwh: Backported to 3.16: adjust context]
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- drivers/acpi/device_pm.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ kernel/trace/tracing_map.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/acpi/device_pm.c
-+++ b/drivers/acpi/device_pm.c
-@@ -1041,9 +1041,19 @@ static struct dev_pm_domain acpi_general
-  */
- int acpi_dev_pm_attach(struct device *dev, bool power_on)
+diff --git a/kernel/trace/tracing_map.c b/kernel/trace/tracing_map.c
+index 9e31bfc818ff..74738c9856f1 100644
+--- a/kernel/trace/tracing_map.c
++++ b/kernel/trace/tracing_map.c
+@@ -283,7 +283,7 @@ int tracing_map_add_key_field(struct tracing_map *map,
+ 	return idx;
+ }
+ 
+-void tracing_map_array_clear(struct tracing_map_array *a)
++static void tracing_map_array_clear(struct tracing_map_array *a)
  {
-+	/*
-+	 * Skip devices whose ACPI companions match the device IDs below,
-+	 * because they require special power management handling incompatible
-+	 * with the generic ACPI PM domain.
-+	 */
-+	static const struct acpi_device_id special_pm_ids[] = {
-+		{"PNP0C0B", }, /* Generic ACPI fan */
-+		{"INT3404", }, /* Fan */
-+		{}
-+	};
- 	struct acpi_device *adev = ACPI_COMPANION(dev);
+ 	unsigned int i;
  
--	if (!adev)
-+	if (!adev || !acpi_match_device_ids(adev, special_pm_ids))
- 		return -ENODEV;
+@@ -294,7 +294,7 @@ void tracing_map_array_clear(struct tracing_map_array *a)
+ 		memset(a->pages[i], 0, PAGE_SIZE);
+ }
  
- 	if (dev->pm_domain)
+-void tracing_map_array_free(struct tracing_map_array *a)
++static void tracing_map_array_free(struct tracing_map_array *a)
+ {
+ 	unsigned int i;
+ 
+@@ -316,7 +316,7 @@ void tracing_map_array_free(struct tracing_map_array *a)
+ 	kfree(a);
+ }
+ 
+-struct tracing_map_array *tracing_map_array_alloc(unsigned int n_elts,
++static struct tracing_map_array *tracing_map_array_alloc(unsigned int n_elts,
+ 						  unsigned int entry_size)
+ {
+ 	struct tracing_map_array *a;
+-- 
+2.26.1
+
 
