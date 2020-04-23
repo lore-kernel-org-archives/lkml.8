@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A49C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C0FC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFD3620780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA51920780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:07:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728877AbgDWXH1 (ORCPT
+        id S1728883AbgDWXH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:07:27 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50448 "EHLO
+        Thu, 23 Apr 2020 19:07:29 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50442 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728603AbgDWXGy (ORCPT
+        by vger.kernel.org with ESMTP id S1728602AbgDWXGy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:54 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvf-0004tC-UC; Fri, 24 Apr 2020 00:06:48 +0100
+        id 1jRkvg-0004tl-7a; Fri, 24 Apr 2020 00:06:48 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkva-00E70g-PO; Fri, 24 Apr 2020 00:06:42 +0100
+        id 1jRkvc-00E71X-AU; Fri, 24 Apr 2020 00:06:44 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Cengiz Can" <cengiz@kernel.wtf>, "Bob Liu" <bob.liu@oracle.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        "Ming Lei" <ming.lei@redhat.com>, "Jens Axboe" <axboe@kernel.dk>
-Date:   Fri, 24 Apr 2020 00:07:20 +0100
-Message-ID: <lsq.1587683028.504333663@decadent.org.uk>
+        "Paolo Bonzini" <pbonzini@redhat.com>,
+        "Oliver Upton" <oupton@google.com>
+Date:   Fri, 24 Apr 2020 00:07:24 +0100
+Message-ID: <lsq.1587683028.625278815@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 213/245] blktrace: fix dereference after null check
+Subject: [PATCH 3.16 217/245] KVM: nVMX: Don't emulate instructions in
+ guest mode
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,63 +56,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Cengiz Can <cengiz@kernel.wtf>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit 153031a301bb07194e9c37466cfce8eacb977621 upstream.
+commit 07721feee46b4b248402133228235318199b05ec upstream.
 
-There was a recent change in blktrace.c that added a RCU protection to
-`q->blk_trace` in order to fix a use-after-free issue during access.
+vmx_check_intercept is not yet fully implemented. To avoid emulating
+instructions disallowed by the L1 hypervisor, refuse to emulate
+instructions by default.
 
-However the change missed an edge case that can lead to dereferencing of
-`bt` pointer even when it's NULL:
-
-Coverity static analyzer marked this as a FORWARD_NULL issue with CID
-1460458.
-
-```
-/kernel/trace/blktrace.c: 1904 in sysfs_blk_trace_attr_store()
-1898            ret = 0;
-1899            if (bt == NULL)
-1900                    ret = blk_trace_setup_queue(q, bdev);
-1901
-1902            if (ret == 0) {
-1903                    if (attr == &dev_attr_act_mask)
->>>     CID 1460458:  Null pointer dereferences  (FORWARD_NULL)
->>>     Dereferencing null pointer "bt".
-1904                            bt->act_mask = value;
-1905                    else if (attr == &dev_attr_pid)
-1906                            bt->pid = value;
-1907                    else if (attr == &dev_attr_start_lba)
-1908                            bt->start_lba = value;
-1909                    else if (attr == &dev_attr_end_lba)
-```
-
-Added a reassignment with RCU annotation to fix the issue.
-
-Fixes: c780e86dd48 ("blktrace: Protect q->blk_trace with RCU")
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Bob Liu <bob.liu@oracle.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+[Made commit, added commit msg - Oliver]
+Signed-off-by: Oliver Upton <oupton@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+[bwh: Backported to 3.16: adjust filename, context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- kernel/trace/blktrace.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/x86/kvm/vmx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -1834,8 +1834,11 @@ static ssize_t sysfs_blk_trace_attr_stor
- 	}
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -8938,7 +8938,7 @@ static int vmx_check_intercept(struct kv
+ 			       struct x86_instruction_info *info,
+ 			       enum x86_intercept_stage stage)
+ {
+-	return X86EMUL_CONTINUE;
++	return X86EMUL_UNHANDLEABLE;
+ }
  
- 	ret = 0;
--	if (bt == NULL)
-+	if (bt == NULL) {
- 		ret = blk_trace_setup_queue(q, bdev);
-+		bt = rcu_dereference_protected(q->blk_trace,
-+				lockdep_is_held(&q->blk_trace_mutex));
-+	}
- 
- 	if (ret == 0) {
- 		if (attr == &dev_attr_act_mask)
+ static struct kvm_x86_ops vmx_x86_ops = {
 
