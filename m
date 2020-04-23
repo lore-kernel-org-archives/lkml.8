@@ -2,92 +2,82 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E86C55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40331C55185
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8811C2076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:18:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587604735;
-	bh=5J7cR0szFxvJoNJ8P80jMKgqc3d3/p0yIBp4jdKWeYo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SE+uz2re80sU3MxkcqirAtl+T3d195pLmQFRU07VN1Z+MhLhqj3NMcC092nkA3wc/
-	 4sHE4OofC2R+b2VRGh+9xKHZsQjY4JlZSuZIQ3pbhe7bF4LjeNjz+Cn4n13t8J5Onx
-	 o82+JBLSaqfP93IZ2ACXbkD92nVAxdm6y7+Np3Fc=
+	by mail.kernel.org (Postfix) with ESMTP id 1CC1F2075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:21:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbgDWBSz (ORCPT
+        id S1726192AbgDWBVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 21:18:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39698 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725961AbgDWBSy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 21:18:54 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5B6A2075A;
-        Thu, 23 Apr 2020 01:18:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587604734;
-        bh=5J7cR0szFxvJoNJ8P80jMKgqc3d3/p0yIBp4jdKWeYo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IIx59UKndzfTh4wq2bvrFTQGolD30iYA5PEGQljltaIBRO7fHpu7TroWBiaoSDHiL
-         zQzTb3TtBKYrMsVRxlHH0z/8IkrBtBN9md++fOaiM7ZrqN+MmQ0q4EHdlAIVhi7UEo
-         DcjwZEgN++cnXQXTx8NmtR6QNwx8wcuUWELejeYo=
-Date:   Thu, 23 Apr 2020 09:18:47 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Martin Kepplinger <martink@posteo.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] arm64: dts: imx8mq-librem5-devkit: Use 0.9V for
- VDD_GPU
-Message-ID: <20200423011846.GG8571@dragon>
-References: <cover.1587480093.git.agx@sigxcpu.org>
+        Wed, 22 Apr 2020 21:21:18 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34145 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbgDWBVR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 21:21:17 -0400
+Received: by mail-pf1-f195.google.com with SMTP id x15so2098728pfa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 18:21:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HuA0hxQTe90PJtZs9WSSy8kDWUbxSlnvi9VsPza7S2Y=;
+        b=NxRGnjG+UfX4tgyPXsBtpAS7Ie29rFncjOTE1gAkOH3z2STfgMKfNzV6wTRRmyuvfX
+         zPB0hS7tuzb4UsOI8BNVUMKvlFqN5AlknjZeIFJCo6msYW9bLiO3Hd3mGQ/Vk9cSnQAW
+         nFesuslAC/VQtY+yujN6O/0lKJF8WSZWoQ8nCIVqislChrJuS4Shql5nHK5/S6KWmraq
+         MG371PT5+Ql5cHo3ZRVgAxO1u2aSPKJvkKaZ4yeju8Z/OfecVlBS9nHY2YiXxHGu5SnT
+         sEI3IhylpUwVoljxW5svgPudgs2e+A4ImcQGEEFAGLAsjwIFFB0uTPBt2/39agzDHJ4O
+         GP3Q==
+X-Gm-Message-State: AGi0PuY3mPuDaXhI3aHXso6RXLG2DNZz8DJGHkF6jWUbvEvELXPHcrft
+        X1hiWoCsb3uPZXuVtcSyWhA=
+X-Google-Smtp-Source: APiQypKxBlGRT0F6vEFPhi5oneOUM697xMXU65q00ggKMra7UIbFqy/Kx++vjPJ34SrVHIxn8OpClA==
+X-Received: by 2002:aa7:80cf:: with SMTP id a15mr1441540pfn.124.1587604876968;
+        Wed, 22 Apr 2020 18:21:16 -0700 (PDT)
+Received: from [100.124.12.67] ([104.129.198.222])
+        by smtp.gmail.com with ESMTPSA id n23sm471545pjq.18.2020.04.22.18.21.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Apr 2020 18:21:16 -0700 (PDT)
+Subject: Re: [PATCH v2] stacktrace: cleanup inconsistent variable type
+To:     Walter Wu <walter-zh.wu@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        wsd_upstream <wsd_upstream@mediatek.com>
+References: <20200421013511.5960-1-walter-zh.wu@mediatek.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <d2a9f155-f309-0182-73c9-5c02d7014574@acm.org>
+Date:   Wed, 22 Apr 2020 18:21:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cover.1587480093.git.agx@sigxcpu.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200421013511.5960-1-walter-zh.wu@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 04:44:12PM +0200, Guido Günther wrote:
-> According to the imx8mq data sheet running VDD_GPU at 0.9V is enough
-> when not overclocking to 1GHz (which we currently don't do).
-> 
-> changes from v2:
->  - rebase aginst Shawn's tree
->  - fix a warning for the typec connector
-> 
-> Guido Günther (2):
->   arm64: dts: imx8mq-librem5-devkit: Use 0.9V for VDD_GPU
->   arm64: dts: Don't use underscore in node name
+On 4/20/20 6:35 PM, Walter Wu wrote:
+> Modify the variable type of 'skip' member of struct stack_trace.
+> In theory, the 'skip' variable type should be unsigned int.
+> There are two reasons:
+> - The 'skip' only has two situation, 1)Positive value, 2)Zero
+> - The 'skip' of struct stack_trace has inconsistent type with struct
+>    stack_trace_data, it makes a bit confusion in the relationship between
+>    struct stack_trace and stack_trace_data.
 
-This one should also be prefixed like arm64: dts: imx8mq-librem5-devkit:
-
-I fixed it up and applied both.
-
-Shawn
-
-> 
->  arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> -- 
-> 2.26.1
-> 
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
