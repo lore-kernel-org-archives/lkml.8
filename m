@@ -2,121 +2,125 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 178ECC55193
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 870A4C55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBC262098B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:35:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587652518;
-	bh=rTNJGPsQUx5fw1XQatvpogr5TI8tvW4SJdwN6KzsVbQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HlbXph3xN/3kcr0/V2hWDuB/Lw//hVkW8fLhwU/t4Y6EmZllvIOfHIxDAixprYxNQ
-	 h4fsnadUD/au7lAwhcTsfYX5tUAEb/nhaateQhWMwjQi6pBYAIWwLsjapLcPW2naNA
-	 pbgaNBqKPhQggqAix6g1e+Jn0CeUfeB+FZxTZF4Q=
+	by mail.kernel.org (Postfix) with ESMTP id 66FD220857
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:35:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vf8Ep7dr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbgDWOfR (ORCPT
+        id S1728283AbgDWOfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 10:35:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42368 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728036AbgDWOfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 10:35:17 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC9C620728;
-        Thu, 23 Apr 2020 14:35:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587652516;
-        bh=rTNJGPsQUx5fw1XQatvpogr5TI8tvW4SJdwN6KzsVbQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Kgd3dSZdZzX0zm4W8ZQ1CAi+zJwzKKzfNBpr5gzaWBcMOU9CXWIqwnKGxkK/S68oF
-         DC72b8r1cFWv5yycG8vEoVc6OB1dJxs2BanFkcVhzrXxWcX4IIpTOhp7MHcRUqukfz
-         9P8zIN4M89x6wF1Tq6oaEVquMYgjc4Whyjn4Hqlg=
-Date:   Thu, 23 Apr 2020 15:35:14 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Todd Kjos <tkjos@google.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-renesas-soc@vger.kernel.org,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH v5 0/6] driver core: Improve and cleanup
- driver_deferred_probe_check_state()
-Message-ID: <20200423143514.GL4808@sirena.org.uk>
-References: <20200225050828.56458-1-john.stultz@linaro.org>
- <20200421235836.GA8319@lxhi-065.adit-jv.com>
- <CALAqxLXX455P0V0o11scc3-1MHvecnvcUoT=XBcwB+ma7Kyjqg@mail.gmail.com>
- <20200422075413.GB4898@sirena.org.uk>
- <CALAqxLW13oA376bqj7uTR4E4zmnX5ASK=rpqw3HMr4yOWQGaOw@mail.gmail.com>
+        Thu, 23 Apr 2020 10:35:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44688 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726458AbgDWOfr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 10:35:47 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDF2CC08ED7D;
+        Thu, 23 Apr 2020 07:35:46 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id x17so6379125wrt.5;
+        Thu, 23 Apr 2020 07:35:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=x6IGIVHimLN6wXXRyErAIS+MRNtXI4hH2CwyG6Xff30=;
+        b=vf8Ep7drlVFpFPiDnXCutY0TNWGrNo8Xncv2udOcbey1cXFppOGy4CONEDFgH3iI/j
+         cPG+bOr+DeXb9D5cEFTkQ/ApdoEGgKqnH0Mfdj3rMaYdt3PTzrGkZrqpN9M0jfx2jxK7
+         +JtJBwVUMmkszV9SZkHhv/V3keBtmCQt6INjSdmLaGrUaF71Dfw3ph0q02qvZDqa7xjG
+         sDXh9fdNg/3xYeeQ04KaI9+jlD5B2UVwz9eDT4sQKg4gQrQe+CDLnuHIi6e0iploviqL
+         CWzqSckSWzdDxZ7qCmtwoLGia8OJL2fNk/KGo7+B6nJnlch+YdQNE9a0nlwCv7DfSFvO
+         hMaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=x6IGIVHimLN6wXXRyErAIS+MRNtXI4hH2CwyG6Xff30=;
+        b=VJKUBldEpK7IztpBN9wQt9kMjggaRpf8ru5RlxCEUfm9z3hGzp7vTyAvfxiS+ya0tD
+         4TjqcagQiWsBopD0tuv+4117VOz6bNqIfrvgKL5y3B/lA6Ah+zgNueb35YOtgjZ0pGLq
+         gaBNf5Ewo5d8blwGkS5xNt+oT2niUQd8TzfB50fUfiKnT76BDAAiJTrNBr6E3aSMbGOj
+         7F9arKNjQQpjKz86QJ/EmpAlK3vnrWoZfJstComeZJKGBcYQP+EhWro/Slnout22bdgE
+         0CCTsYqtqcoR3niUelLzmUAsPz5xpXsRPyTXECL2Xyct2+YkFAX/1lHWt77JNISOsiMp
+         nqEA==
+X-Gm-Message-State: AGi0PuarU7ABaCOFnfIPPd6AhoQ4PYiO0U5kQxq6jDHlPjGHr27HMCl+
+        WSHV3gyUq6xWP9ifiEJZvxxOoUCufgOGbQ==
+X-Google-Smtp-Source: APiQypLIUH9cLSTf94KBbNXeLc8HmzzTpjl+Y2L4JZrTFpsXOzsPlyUs45ikzIJWhNEC7Yfw6+4rqg==
+X-Received: by 2002:adf:eecc:: with SMTP id a12mr5225266wrp.112.1587652544894;
+        Thu, 23 Apr 2020 07:35:44 -0700 (PDT)
+Received: from net.saheed (563BD1A4.dsl.pool.telekom.hu. [86.59.209.164])
+        by smtp.gmail.com with ESMTPSA id c20sm4420321wmd.36.2020.04.23.07.35.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Apr 2020 07:35:44 -0700 (PDT)
+Subject: Re: [PATCH] docs: Fix WARNING - Title underline too short
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>, Stephen Kitt <steve@sk2.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Masanari Iida <standby24x7@gmail.com>,
+        Eric Biggers <ebiggers@google.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+References: <20200423114517.18074-1-refactormyself@users.noreply.github.com>
+ <20200423070230.3fd863ba@lwn.net>
+From:   Saheed Bolarinwa <refactormyself@gmail.com>
+Message-ID: <41072c85-7157-a3b8-17b5-9b4ab38f14ca@gmail.com>
+Date:   Thu, 23 Apr 2020 15:35:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="1X+6QtwRodzgDPAC"
-Content-Disposition: inline
-In-Reply-To: <CALAqxLW13oA376bqj7uTR4E4zmnX5ASK=rpqw3HMr4yOWQGaOw@mail.gmail.com>
-X-Cookie: This unit... must... survive.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200423070230.3fd863ba@lwn.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---1X+6QtwRodzgDPAC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 4/23/20 3:02 PM, Jonathan Corbet wrote:
+> On Thu, 23 Apr 2020 13:45:17 +0200
+> Bolarinwa Olayemi Saheed <refactormyself@gmail.com> wrote:
+>
+>> From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+>>
+>> There were two instances of "Title underline too short" and they were
+>> increased to match the title text.
+>>
+>> Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+>> ---
+>>   Documentation/admin-guide/sysctl/kernel.rst | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+> These warnings are caused by a patch entering linux-next via the -mm tree;
+> Randy has already sent a patch to fix them.
+>
+> [Next time you might want to examine the recipient list a bit; this patch
+> was broadcast a bit more widely than was really necessary.]
+>
+>
 
-On Wed, Apr 22, 2020 at 01:45:49PM -0700, John Stultz wrote:
-> On Wed, Apr 22, 2020 at 12:54 AM Mark Brown <broonie@kernel.org> wrote:
+Noted, sorry about that.
 
-> > If you're reverting the timeout we should revert the regulator change
-> > too I think.
+Thank you.
 
-> Maybe? The main issue for me was my change was clearly breaking users
-> with dts with missing dependencies where their setup was working
-> before. I sort of feel like having a dtb with missing dependencies is
-> less valid than wanting to load module dependencies from userland, but
-> they were working first, so we have to keep them happy :) And at least
-> now the latter can add the timeout boot argument to make it work.
+Saheed
 
-> For your case, I'm not sure if the timeout would run afoul on the nfs
-> root mounting case this one tripped over.
-
-Given that it's basically entirely about glitching displays rather than
-an unrecoverable break I suspect that anyone using NFS root is some
-combination of unaffected or doesn't care if they see the timeout kick
-in.
-
---1X+6QtwRodzgDPAC
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6hp6EACgkQJNaLcl1U
-h9BAnQf4o2K1oT2OABX/pK3TMNmi6b4KY4XoVJSbuGguI9f01sgsNzhCfw+4txVs
-2sUiq++Ug1lckGyW3I56+/ZAYAuQco4kGgHsQ6ME27rl2hnt3Es457jjw2By3rmk
-VfCpvUWdq7Zifdq/2tKx2uJgNMWuRy6kPJ4wfwXeSXxLPFk3GvATDcyw7JjA0BMA
-Dt4GAC8Y2PFATD0AteC+bBo9JIWR4qs4CZ/1uladh22gWL4cAkCwDXQAKAJnpgbq
-ybEXCThDRbUeygV4aZD5yWwNLbyyN6+X+XN3itoIbmqBNiSnDGvILAkYGUNGTPN2
-exAfj9tWxY+JKkJTibhLAvmP7bYx
-=Gd5+
------END PGP SIGNATURE-----
-
---1X+6QtwRodzgDPAC--
