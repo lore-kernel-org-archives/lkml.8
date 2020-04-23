@@ -2,29 +2,29 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1332BC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B0CC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED22820781
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEDDA221EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:59:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbgDWN7h (ORCPT
+        id S1728661AbgDWN7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 09:59:37 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43644 "EHLO huawei.com"
+        Thu, 23 Apr 2020 09:59:39 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2848 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726764AbgDWN7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 09:59:36 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C16B4508EF9653258787;
-        Thu, 23 Apr 2020 21:59:31 +0800 (CST)
+        id S1726764AbgDWN7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 09:59:38 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id BE7DC2A2357CFE6281DA;
+        Thu, 23 Apr 2020 21:59:36 +0800 (CST)
 Received: from DESKTOP-KKJBAGG.china.huawei.com (10.173.220.25) by
  DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 23 Apr 2020 21:59:21 +0800
+ 14.3.487.0; Thu, 23 Apr 2020 21:59:28 +0800
 From:   Zhenyu Ye <yezhenyu2@huawei.com>
 To:     <peterz@infradead.org>, <mark.rutland@arm.com>, <will@kernel.org>,
         <catalin.marinas@arm.com>, <aneesh.kumar@linux.ibm.com>,
@@ -38,10 +38,12 @@ CC:     <yezhenyu2@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
         <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
         <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
         <kuhn.chenqun@huawei.com>
-Subject: [PATCH v2 0/6] arm64: tlb: add support for TTL feature
-Date:   Thu, 23 Apr 2020 21:56:50 +0800
-Message-ID: <20200423135656.2712-1-yezhenyu2@huawei.com>
+Subject: [PATCH v2 6/6] arm64: tlb: Set the TTL field in flush_tlb_range
+Date:   Thu, 23 Apr 2020 21:56:56 +0800
+Message-ID: <20200423135656.2712-7-yezhenyu2@huawei.com>
 X-Mailer: git-send-email 2.22.0.windows.1
+In-Reply-To: <20200423135656.2712-1-yezhenyu2@huawei.com>
+References: <20200423135656.2712-1-yezhenyu2@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -52,56 +54,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to reduce the cost of TLB invalidation, ARMv8.4 provides
-the TTL field in TLBI instruction.  The TTL field indicates the
-level of page table walk holding the leaf entry for the address
-being invalidated.  This series provide support for this feature.
+This patch uses the cleared_* in struct mmu_gather to set the
+TTL field in flush_tlb_range().
 
-When ARMv8.4-TTL is implemented, the operand for TLBIs looks like
-below:
+Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+---
+ arch/arm64/include/asm/tlb.h      | 29 ++++++++++++++++++++++++++++-
+ arch/arm64/include/asm/tlbflush.h | 14 ++++++++------
+ 2 files changed, 36 insertions(+), 7 deletions(-)
 
-* +----------+-------+----------------------+
-* |   ASID   |  TTL  |        BADDR         |
-* +----------+-------+----------------------+
-* |63      48|47   44|43                   0|
-
-
-This version updates some codes implementation according to Peter's
-suggestion, and adds some commit msg.
-
-See patches for details, Thanks.
-
-
---
-ChangeList:
-v2:
-rebase series on Linux 5.7-rc1 and simplify the code implementation.
-
-v1:
-add support for TTL feature in arm64.
-
-Marc Zyngier (2):
-  arm64: Detect the ARMv8.4 TTL feature
-  arm64: Add level-hinted TLB invalidation helper
-
-Peter Zijlstra (Intel) (1):
-  tlb: mmu_gather: add tlb_flush_*_range APIs
-
-Zhenyu Ye (3):
-  arm64: Add tlbi_user_level TLB invalidation helper
-  mm: tlb: Provide flush_*_tlb_range wrappers
-  arm64: tlb: Set the TTL field in flush_tlb_range
-
- arch/arm64/include/asm/cpucaps.h  |  3 +-
- arch/arm64/include/asm/sysreg.h   |  1 +
- arch/arm64/include/asm/tlb.h      | 29 +++++++++++++++-
- arch/arm64/include/asm/tlbflush.h | 54 +++++++++++++++++++++++++-----
- arch/arm64/kernel/cpufeature.c    | 11 +++++++
- include/asm-generic/pgtable.h     | 12 +++++--
- include/asm-generic/tlb.h         | 55 ++++++++++++++++++++++---------
- mm/pgtable-generic.c              | 22 +++++++++++++
- 8 files changed, 160 insertions(+), 27 deletions(-)
-
+diff --git a/arch/arm64/include/asm/tlb.h b/arch/arm64/include/asm/tlb.h
+index b76df828e6b7..61c97d3b58c7 100644
+--- a/arch/arm64/include/asm/tlb.h
++++ b/arch/arm64/include/asm/tlb.h
+@@ -21,11 +21,37 @@ static void tlb_flush(struct mmu_gather *tlb);
+ 
+ #include <asm-generic/tlb.h>
+ 
++/*
++ * get the tlbi levels in arm64.  Default value is 0 if more than one
++ * of cleared_* is set or neither is set.
++ * Arm64 doesn't support p4ds now.
++ */
++static inline int tlb_get_level(struct mmu_gather *tlb)
++{
++	if (tlb->cleared_ptes && !(tlb->cleared_pmds ||
++				   tlb->cleared_puds ||
++				   tlb->cleared_p4ds))
++		return 3;
++
++	if (tlb->cleared_pmds && !(tlb->cleared_ptes ||
++				   tlb->cleared_puds ||
++				   tlb->cleared_p4ds))
++		return 2;
++
++	if (tlb->cleared_puds && !(tlb->cleared_ptes ||
++				   tlb->cleared_pmds ||
++				   tlb->cleared_p4ds))
++		return 1;
++
++	return 0;
++}
++
+ static inline void tlb_flush(struct mmu_gather *tlb)
+ {
+ 	struct vm_area_struct vma = TLB_FLUSH_VMA(tlb->mm, 0);
+ 	bool last_level = !tlb->freed_tables;
+ 	unsigned long stride = tlb_get_unmap_size(tlb);
++	int tlb_level = tlb_get_level(tlb);
+ 
+ 	/*
+ 	 * If we're tearing down the address space then we only care about
+@@ -38,7 +64,8 @@ static inline void tlb_flush(struct mmu_gather *tlb)
+ 		return;
+ 	}
+ 
+-	__flush_tlb_range(&vma, tlb->start, tlb->end, stride, last_level);
++	__flush_tlb_range(&vma, tlb->start, tlb->end, stride,
++			  last_level, tlb_level);
+ }
+ 
+ static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t pte,
+diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
+index 892f33235dc7..3cc705755a2d 100644
+--- a/arch/arm64/include/asm/tlbflush.h
++++ b/arch/arm64/include/asm/tlbflush.h
+@@ -215,7 +215,8 @@ static inline void flush_tlb_page(struct vm_area_struct *vma,
+ 
+ static inline void __flush_tlb_range(struct vm_area_struct *vma,
+ 				     unsigned long start, unsigned long end,
+-				     unsigned long stride, bool last_level)
++				     unsigned long stride, bool last_level,
++				     int tlb_level)
+ {
+ 	unsigned long asid = ASID(vma->vm_mm);
+ 	unsigned long addr;
+@@ -237,11 +238,11 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
+ 	dsb(ishst);
+ 	for (addr = start; addr < end; addr += stride) {
+ 		if (last_level) {
+-			__tlbi_level(vale1is, addr, 0);
+-			__tlbi_user_level(vale1is, addr, 0);
++			__tlbi_level(vale1is, addr, tlb_level);
++			__tlbi_user_level(vale1is, addr, tlb_level);
+ 		} else {
+-			__tlbi_level(vae1is, addr, 0);
+-			__tlbi_user_level(vae1is, addr, 0);
++			__tlbi_level(vae1is, addr, tlb_level);
++			__tlbi_user_level(vae1is, addr, tlb_level);
+ 		}
+ 	}
+ 	dsb(ish);
+@@ -253,8 +254,9 @@ static inline void flush_tlb_range(struct vm_area_struct *vma,
+ 	/*
+ 	 * We cannot use leaf-only invalidation here, since we may be invalidating
+ 	 * table entries as part of collapsing hugepages or moving page tables.
++	 * Set the tlb_level to 0 because we can not get enough information here.
+ 	 */
+-	__flush_tlb_range(vma, start, end, PAGE_SIZE, false);
++	__flush_tlb_range(vma, start, end, PAGE_SIZE, false, 0);
+ }
+ 
+ static inline void flush_tlb_kernel_range(unsigned long start, unsigned long end)
 -- 
 2.19.1
 
