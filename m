@@ -2,85 +2,122 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A535FC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C95C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85D972074F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 780152074F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:52:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oyIVHUIM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728875AbgDWOvy (ORCPT
+        id S1728877AbgDWOwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 10:51:54 -0400
-Received: from mga12.intel.com ([192.55.52.136]:45957 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726380AbgDWOvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 10:51:53 -0400
-IronPort-SDR: mFfim4ixyjTNpauoq+3yzZBJ9jHeT+GOVX34/U4zw2ljZyK3VEz/v1kzR7gh7A71LqLpmQlhUl
- 20qlw0500qLQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 07:51:53 -0700
-IronPort-SDR: LqoLZriqlM/nAE/u5Cwq5eB70FSL9WIyibntNOBpYeXBsw7OaVAygKvArEIkh9kSUds/I7DIXH
- U8xLJfBF+Huw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,307,1583222400"; 
-   d="scan'208";a="457524584"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 23 Apr 2020 07:51:52 -0700
-Received: from [10.249.228.14] (abudanko-mobl.ccr.corp.intel.com [10.249.228.14])
-        by linux.intel.com (Postfix) with ESMTP id F29595802C9;
-        Thu, 23 Apr 2020 07:51:49 -0700 (PDT)
-Subject: Re: [PATCH v2 2/4] perf docs: substitute CAP_SYS_ADMIN with
- CAP_PERFMON where needed
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>
-References: <66f2975b-4a69-b428-7dc5-d9aa40b3c673@linux.intel.com>
- <f1b48de9-e2b7-d20b-3686-3a15b73ef45c@linux.intel.com>
- <20200423132201.GB19437@kernel.org>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <1f7e4ffa-6c46-3a27-7949-969586165aca@linux.intel.com>
-Date:   Thu, 23 Apr 2020 17:51:48 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 23 Apr 2020 10:52:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47316 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726380AbgDWOwQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 10:52:16 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96078C08E934;
+        Thu, 23 Apr 2020 07:52:16 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id w65so3041100pfc.12;
+        Thu, 23 Apr 2020 07:52:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/sb3dlUj5FrGwmCMaw1i7cs39EU8HrExHVtJsyVG3VY=;
+        b=oyIVHUIMteQ+Jyujbx3EDLFuw+ISWFk6HIHSvS6fYlUsxnyisljN8Ia6w8b2XrbWI5
+         kn/ZnFcbY+qdKeF4vLEem6y/yZrATTRtLYUbkbxX3dq1jQP4X9U7bqOquWVm5PQ58wIk
+         zQFJtrba2s5XmQtB/1CUeF+UNtgy0Yi8WYrsAzHDHbkhJbbtS8LHnkI2ZWLBtfq8FGl7
+         n/e8I9fe0HozYBhAYBxbmkzDW7MPkIPONX9Wc16T4KH3D7OeN4TJyax0hcFB6T5/cnEQ
+         PMi7d1gyQRk9aDLupdLrXQo4rLNH0emHJrkAKy0ai5BJJ6Z8/NjsAqq8kSnh0lLmjYHd
+         d3Bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/sb3dlUj5FrGwmCMaw1i7cs39EU8HrExHVtJsyVG3VY=;
+        b=iVPE5J1N4c2m6sNJbechtJqGxq6C0vF8CwJYcm7CBQXNiA934g7f/v96eZ9dv+qaS/
+         ImPEEQakcLsaI/hE0T8IhmhF0QKO8fDnhJd1pweym07BQbAJwWeULT19RzsjZZslwnj8
+         LSrMZGJHYS0gOqfK9yQqzlCd9p3Gjk4a5l1938L3gnILiBU7oy9MfjKPNeSRnT87iiaZ
+         01p/vaMr1RG0G+CTWTK8ZlFRP9lHavCSIPklLCZS7NIjhd80r2FrXroHe7apXf9a9Giy
+         WSEqcJaJOeNkyNzJviG+7anSbHQZja/1iAKO+9ixHeB4GGLmyAABPW5UqGhq2y02D+JJ
+         aVQQ==
+X-Gm-Message-State: AGi0PuaiJzJGltWNvCC5LUi9/ICVAHx3qN2TpgwYaMN76Oeen3LtsDP0
+        onnRv6z5JsEjqEHIbfppfwD2nIxdkVQflhf1HlI=
+X-Google-Smtp-Source: APiQypJYkHlH+G01ukIQTIcX4mw/JbzhQZYKNM2IW0V/S/oVOVH5kXUElwv3U/VvSlsvXAXK2gyRX1QXlKVJiRNAlsI=
+X-Received: by 2002:a62:5ec7:: with SMTP id s190mr3964136pfb.130.1587653536121;
+ Thu, 23 Apr 2020 07:52:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200423132201.GB19437@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200423142627.1820-1-zhengdejin5@gmail.com>
+In-Reply-To: <20200423142627.1820-1-zhengdejin5@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 23 Apr 2020 17:52:09 +0300
+Message-ID: <CAHp75Vf1_SMk=_WDUrB97BGR6K6EXOdtgQ92=hTyMdVUoyWQiw@mail.gmail.com>
+Subject: Re: [PATCH v2] console: console: Complete exception handling in newport_probe()
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, FlorianSchandinat@gmx.de,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-fbdev@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 23, 2020 at 5:26 PM Dejin Zheng <zhengdejin5@gmail.com> wrote:
+>
+> A call of the function =C2=A1=C2=B0do_take_over_console=C2=A1=C2=B1 can f=
+ail here.
+> The corresponding system resources were not released then.
+> Thus add a call of the function =C2=A1=C2=B0iounmap=C2=A1=C2=B1 together =
+with the check
+> of a failure predicate.
 
-On 23.04.2020 16:22, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Apr 22, 2020 at 05:44:53PM +0300, Alexey Budankov escreveu:
->>
->> Substitute CAP_SYS_ADMIN with CAP_PERFMON in the docs where admin
->> is mentioned. CAP_SYS_ADMIN still works in keeping with user space
->> backward compatibility approach.
-> 
-> Same issue as with the previous patch, the documentation is for the
-> tool, that may be used in older kernels, so we need to clarify that
-> CAP_PERFMON requires updating libcap and the kernel, if that isn't
-> possible, then CAP_SYS_ADMIN is needed.
+...
 
-Then it is just extending of single mentioning of "CAP_SYS_ADMIN" with
-"CAP_PERFMON or CAP_SYS_ADMIN" where required.
+> CC: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Thanks,
-Alexey
+Use Cc: Better to read.
+
+...
+
+> v1 -> v2:
+>         - modify the commit comments by Markus'suggestion.
+
+What suggestion? You need to be clear in changelog what exactly has
+been done without looking to any previous mail.
+
+...
+
+>         console_lock();
+>         err =3D do_take_over_console(&newport_con, 0, MAX_NR_CONSOLES - 1=
+, 1);
+>         console_unlock();
+> +
+> +       if (err)
+> +               iounmap((void *)npregs);
+>         return err;
+>  }
+
+I have briefly looked at the code (it is actually quite old one!), and
+I think this is half-baked solution, besides the fact of missed
+__iomem annotation and useless explicit casting.
+The proper one seems to switch to memremap() and do memunmap() here.
+
+--=20
+With Best Regards,
+Andy Shevchenko
