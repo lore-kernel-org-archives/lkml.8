@@ -2,127 +2,147 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC2BC5518A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 07:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 407F2C55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 07:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7840621655
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 07:18:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B5WpYfbH"
+	by mail.kernel.org (Postfix) with ESMTP id 29F942076C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 07:19:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbgDXHS3 (ORCPT
+        id S1726625AbgDXHTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 03:18:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59974 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726056AbgDXHS2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 03:18:28 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D497C09B045
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 00:18:27 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id t14so9451430wrw.12
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 00:18:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=TJ5Xz/v3Hc30cuvJyJGs5IX6MWAAzYb1YSZtC9xjqEU=;
-        b=B5WpYfbHEkVWSsubr3ytIZmD80f2ymgSmPsDIYveL2XaNgSqwjVg5HE8672wb26WCH
-         ECVm0dw6k8PO+Y/V5FsXQV8XS4lSIPRCd6CR/5NdYaRb8YnZqtTQPatj64L7nf1H/fgQ
-         eUnEGsco0MLm8U9RSEkbxlGD9jBW24n36keMWvdFdlksYoRfLey0bg+tNasdD4S3pSYL
-         zJAaeLOY7kK2T7V2eCM+Xk/GBkYjTDuJUIAHBrE+9rsSbdAIi2y4Z+Rpb035FFHwfAJR
-         SgWOPRSUbfiqy9uAesl+JOMXd4T+WTBArO2sOyKM4itUEtm+Yza1E8ldJeypF8m06lym
-         hzaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=TJ5Xz/v3Hc30cuvJyJGs5IX6MWAAzYb1YSZtC9xjqEU=;
-        b=VagZYi5mP7ZgUTV4S3MFOdeH1Us0IEI7MKvcXHTsFR6az4qLd13a+ilmQ+bWn/I/GO
-         OJO7Z70xz2nNAY+bDj2iXBibjRNSN4P6KZB8zAyMtUi82K+hof2EuwRdd5Rd9fuiVgVC
-         h9Yflg8zrOOguEPhhsvojOlE/zjiSBFMSm53eMTSrMhmsZ2z2D8iAOf3SZE3rliAoMfo
-         E99XuzBU8W+R05w2loj55M6XwhaWzZ+9USqhy4fGGENMiUGbewq2F6bT7l95R/MOdk+v
-         fA9JWVipRWPMtjk6jnpH1s0t/PNl+FU9ak4JDVnAenIaUMNhgj+08WksiSIC7syCbFct
-         1KfQ==
-X-Gm-Message-State: AGi0PuZc1EaW8I6kxiTeWYzGssgC1MfruLzHXyhlStiRyvPT8IY2PzaE
-        B1HNKGaKSc4BnKgZQnmdoICzdA==
-X-Google-Smtp-Source: APiQypLwPG8ELo0NdJrmqJobPxrMbsP0hvOgYGuVOmP8pw5UhAZiBUyKPCJyFd2ve2lS88LTSoWcsw==
-X-Received: by 2002:adf:fe0e:: with SMTP id n14mr9941757wrr.247.1587712705585;
-        Fri, 24 Apr 2020 00:18:25 -0700 (PDT)
-Received: from dell ([2.31.163.63])
-        by smtp.gmail.com with ESMTPSA id t20sm1578651wmi.2.2020.04.24.00.18.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 00:18:24 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 08:18:22 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     andy.shevchenko@gmail.com, robh+dt@kernel.org, jic23@kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        sre@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v9 2/6] mfd: mp2629: Add support for mps battery charger
-Message-ID: <20200424071822.GM3612@dell>
-References: <20200415162030.16414-1-sravanhome@gmail.com>
- <20200415162030.16414-3-sravanhome@gmail.com>
+        Fri, 24 Apr 2020 03:19:04 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2092 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726051AbgDXHTD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 03:19:03 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id DC1392CAC0741D5FB70B;
+        Fri, 24 Apr 2020 08:19:01 +0100 (IST)
+Received: from [127.0.0.1] (10.47.6.64) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 24 Apr
+ 2020 08:19:00 +0100
+Subject: Re: [PATCH] blk-mq: Put driver tag in blk_mq_dispatch_rq_list() when
+ no budget
+To:     Ming Lei <ming.lei@redhat.com>,
+        Doug Anderson <dianders@chromium.org>
+CC:     Bart Van Assche <bvanassche@acm.org>, Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Guenter Roeck <groeck@chromium.org>
+References: <1587035931-125028-1-git-send-email-john.garry@huawei.com>
+ <e5416179-2ba0-c9a8-1b86-d52eae29e146@acm.org>
+ <663d472a-5bde-4b89-3137-c7bfdf4d7b97@huawei.com>
+ <CAD=FV=XBrKgng+vYzJx+qsOEZ-cZ10A0t+pRh=FcbQMop2ht4Q@mail.gmail.com>
+ <20200424013519.GA355437@T590>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <3b91a730-0923-c049-bbe4-68fc5a7ae793@huawei.com>
+Date:   Fri, 24 Apr 2020 08:18:25 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200415162030.16414-3-sravanhome@gmail.com>
+In-Reply-To: <20200424013519.GA355437@T590>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.6.64]
+X-ClientProxiedBy: lhreml722-chm.china.huawei.com (10.201.108.73) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Apr 2020, Saravanan Sekar wrote:
-
-> mp2629 is a highly-integrated switching-mode battery charge management
-> device for single-cell Li-ion or Li-polymer battery.
+On 24/04/2020 02:35, Ming Lei wrote:
+> On Thu, Apr 23, 2020 at 03:42:37PM -0700, Doug Anderson wrote:
+>> Hi,
+>>
+>> On Mon, Apr 20, 2020 at 1:23 AM John Garry <john.garry@huawei.com> wrote:
+>>>
+>>> On 18/04/2020 03:43, Bart Van Assche wrote:
+>>>> On 2020-04-16 04:18, John Garry wrote:
+>>>>> If in blk_mq_dispatch_rq_list() we find no budget, then we break of the
+>>>>> dispatch loop, but the request may keep the driver tag, evaulated
+>>>>> in 'nxt' in the previous loop iteration.
+>>>>>
+>>>>> Fix by putting the driver tag for that request.
+>>>>>
+>>>>> Signed-off-by: John Garry <john.garry@huawei.com>
+>>>>>
+>>>>> diff --git a/block/blk-mq.c b/block/blk-mq.c
+>>>>> index 8e56884fd2e9..a7785df2c944 100644
+>>>>> --- a/block/blk-mq.c
+>>>>> +++ b/block/blk-mq.c
+>>>>> @@ -1222,8 +1222,10 @@ bool blk_mq_dispatch_rq_list(struct request_queue *q, struct list_head *list,
+>>>>>               rq = list_first_entry(list, struct request, queuelist);
+>>>>>
+>>>>>               hctx = rq->mq_hctx;
+>>>>> -            if (!got_budget && !blk_mq_get_dispatch_budget(hctx))
+>>>>> +            if (!got_budget && !blk_mq_get_dispatch_budget(hctx)) {
+>>>>> +                    blk_mq_put_driver_tag(rq);
+>>>>>                       break;
+>>>>> +            }
+>>>>>
+>>>>>               if (!blk_mq_get_driver_tag(rq)) {
+>>>>>                       /*
+>>>>
+>>>> Is this something that can only happen if q->mq_ops->queue_rq(hctx, &bd)
+>>>> returns another value than BLK_STS_OK, BLK_STS_RESOURCE and
+>>>> BLK_STS_DEV_RESOURCE?
+>>>
+>>> Right, as that case is handled in blk_mq_handle_dev_resource()
+>>>
+>>> If so, please add a comment in the source code
+>>>> that explains this.
+>>>
+>>> So important that we should now do this in an extra patch?
+>>>
+>>>>
+>>>> Is this perhaps a bug fix for 0bca799b9280 ("blk-mq: order getting
+>>>> budget and driver tag")? If so, please mention this and add Cc tags for
+>>>> the people who were Cc-ed on that patch.
+>>>
+>>> So it looks like 0bca799b9280 had a flaw, but I am not sure if anything
+>>> got broken there and worthy of stable backport.
+>>>
+>>> I found this issue while debugging Ming's blk-mq cpu hotplug patchset,
+>>> which I feel is ready to merge.
+>>>
+>>> Having said that, this nasty issue did take > 1 day for me to debug...
+>>> so let me know.
+>>
+>> As per the above conversation, presumably this should go to stable
+>> then for any kernel that has commit 0bca799b9280 ("blk-mq: order
+>> getting budget and driver tag")?  For instance, I think 4.19 would be
+>> affected?  When I picked it there I got a conflict due to not having
+>> commit ea4f995ee8b8 ("blk-mq: cache request hardware queue mapping")
+>> but I think it's just a context collision and easy to resolve.
+>>
+>> I'm no expert in the block code, but I posted my backport to 4.19 at
+>> <https://crrev.com/c/2163313>.  I'm happy to send an email as a patch
+>> to the list too or double-check that someone else's conflict
+>> resolution matches mine.
 > 
-> Add MFD core enables chip access for ADC driver for battery readings,
-> and a power supply battery-charger driver
+> The thing is that there may not user visible effect by this issue,
+> when one tag isn't freed, this request will be re-dispatched soon.
+> That said it just makes the tag lifetime longer.
 > 
-> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> ---
->  drivers/mfd/Kconfig        |  9 ++++
->  drivers/mfd/Makefile       |  2 +
->  drivers/mfd/mp2629.c       | 86 ++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/mp2629.h | 19 +++++++++
->  4 files changed, 116 insertions(+)
->  create mode 100644 drivers/mfd/mp2629.c
->  create mode 100644 include/linux/mfd/mp2629.h
+> It could only be an issue in case of request dependency, meantime
+> the tag space is quite limited. However, not sure if there is such
+> case in reality.
+> 
 
-How is this driver registered?
+FWIW, this was pretty nasty to debug, and if it's not going to cause 
+harm, then I'd be more inclined to add to stable. In addition, some 
+distro may backport patches on a stable baseline where it is visible 
+separately, and miss this one.
 
-Looks like it has device tree support.  Is there another way?
-
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 3c547ed575e6..85be799795aa 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -434,6 +434,15 @@ config MFD_MC13XXX_I2C
->  	help
->  	  Select this if your MC13xxx is connected via an I2C bus.
->  
-> +config MFD_MP2629
-> +	tristate "Monolithic power system MP2629 ADC and Battery charger"
-> +	depends on I2C
-> +	select REGMAP_I2C
-> +	help
-> +	  Select this option to enable support for monolithic power system
-> +	  battery charger. This provides ADC, thermal, battery charger power
-> +	  management functions on the systems.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Thanks,
+John
