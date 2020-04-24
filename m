@@ -2,116 +2,184 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D37C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C57C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D19B20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F26922074F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:54:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lNQg7yUM"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="D0b2GNW8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgDXJyf (ORCPT
+        id S1726829AbgDXJyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 05:54:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726582AbgDXJyf (ORCPT
+        Fri, 24 Apr 2020 05:54:46 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:49000 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbgDXJyp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 05:54:35 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 802C9C09B045;
-        Fri, 24 Apr 2020 02:54:34 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id o185so4413170pgo.3;
-        Fri, 24 Apr 2020 02:54:34 -0700 (PDT)
+        Fri, 24 Apr 2020 05:54:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iVvYIfEqTyiL0cJpR1ziiocvVVbqCRYQEWmIpkQdSo4=;
-        b=lNQg7yUM1uHwNZH9rRi6aMycHtL1Wrb5aNMA14RGDMtHDItmAykWFl25jb742vRfhF
-         EToY+8xjZ3SGMPWKCWL/d0VBa26J8XWpkzgQ2YkpiobCnlFhsf2wFQJfRWFTEdJIxt+L
-         tOALbRk1YJkPUconj59UScO5akAZO43/Rude99MbOaxAFladi7T3HCeVxwu3QVLyjXqW
-         wuD6ASN6ByFkw5EXnKYCxq9ZKthzLmzdzmc/1QrG44xetQ7KbXWUL2MiCOgM0eeXCdQ6
-         h4gYVDa3Ae5GfEJ5C1n9XwkuAvet6QEQfXGzAbAZ1naPIg45QtWPruZmvjAgTlJestom
-         OZwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iVvYIfEqTyiL0cJpR1ziiocvVVbqCRYQEWmIpkQdSo4=;
-        b=hp/Kq9Ehb8/xMSAKg0bBwH4kJc2wYYIeSIXxpGLNd35jXzMNEMJCiybiXNNO1XuUAt
-         VQwsVdpYdLL7S9xaWeUbYoJuUNIf6oaWqYstvLLdCO021A7wDjDxQGUAOcp2VMSbVNpD
-         T8OdXWDZfhBAQwOxk0Jfnh9lehBhaInORwgew2JlSHnVA73gcXCrt9gvg3CLMCzRyZpn
-         KPutpCjXOtRjwu9l2Ba9Bd0NWIzc8Q/DOfnafO6rCLELLapGBKWOqZN1H6PjqAIGItGj
-         wL7cUL30ZsDfgSvpFM5gwnRts0n+1pnX+SCNMm4uU3excu5bOul6PL7PVJsf8OEVlU6W
-         T+yw==
-X-Gm-Message-State: AGi0PuZcoUnINnrCvmECFTyuG2QW/4RVYtX1PdBLCDbjf5m1Cnq95puD
-        L8P8kSLVObt4eEhY6G/8FrmEuDdWyltN1jpSVMs=
-X-Google-Smtp-Source: APiQypLTdtY2h3+c0DJDMGPfzEIOPk2dta0lyKEsWgoM7Y++nWond/ddP3DuM+fDmLggdLnM2ad9czHqSI0wS3/NnOw=
-X-Received: by 2002:aa7:8f26:: with SMTP id y6mr8944170pfr.36.1587722073914;
- Fri, 24 Apr 2020 02:54:33 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1587722084; x=1619258084;
+  h=subject:from:to:cc:references:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=qVuZE7OJN2t88CjqZJ9zf+6czW58eoIHznZXj+QvLrY=;
+  b=D0b2GNW8MxsFiYyaq4dYGLDCPCJma9Qqme1ewySRDdhdHFCea0vV/XMv
+   UlBNMXisNRgAGdrbhjdCS469JllFu4ehhBBAwNcW95Q3VV+E4ynD/bL3+
+   /jyXS7rRanS+UTJromNlbeeCyiCd+0nj5VYpvyH4PisoH3ds64RSHsXsE
+   I=;
+IronPort-SDR: JWGstll9TZ69BBNXYi3D/4rW1l3wB6WXwVzswXlLPkHeeBbt/yw6IRHtOq4WqJNjo2k0UFQ/6u
+ I3M1oycfBDRQ==
+X-IronPort-AV: E=Sophos;i="5.73,311,1583193600"; 
+   d="scan'208";a="30900065"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-c5104f52.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 24 Apr 2020 09:54:42 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-c5104f52.us-west-2.amazon.com (Postfix) with ESMTPS id C9C88A03AD;
+        Fri, 24 Apr 2020 09:54:40 +0000 (UTC)
+Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 24 Apr 2020 09:54:40 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.52) by
+ EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 24 Apr 2020 09:54:32 +0000
+Subject: Re: [PATCH v1 00/15] Add support for Nitro Enclaves
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+To:     "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
+        <longpeng2@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>,
+        <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@amazon.com>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>, Balbir Singh <sblbir@amazon.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>,
+        "Gonglei (Arei)" <arei.gonglei@huawei.com>
+References: <20200421184150.68011-1-andraprs@amazon.com>
+ <18406322-dc58-9b59-3f94-88e6b638fe65@redhat.com>
+ <ff65b1ed-a980-9ddc-ebae-996869e87308@amazon.com>
+ <2aa9c865-61c1-fc73-c85d-6627738d2d24@huawei.com>
+ <7ac3f702-9c5f-5021-ebe3-42f1c93afbdf@amazon.com>
+Message-ID: <f701e084-7d2d-35dd-31ec-adc7d2a9e893@amazon.com>
+Date:   Fri, 24 Apr 2020 12:54:23 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200424031617.24033-1-calvin.johnson@oss.nxp.com>
- <20200424031617.24033-2-calvin.johnson@oss.nxp.com> <b583f6fb-e6fe-3320-41c6-e019a4e10388@gmail.com>
- <20200424092651.GA4501@lsv03152.swis.in-blr01.nxp.com>
-In-Reply-To: <20200424092651.GA4501@lsv03152.swis.in-blr01.nxp.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 24 Apr 2020 12:54:26 +0300
-Message-ID: <CAHp75VdxFjzs2uj7ZYNmwt9DC386gMNahi3A_MYV4wE3kbtq=g@mail.gmail.com>
-Subject: Re: [net-next PATCH v1 1/2] device property: Introduce fwnode_phy_find_device()
-To:     Calvin Johnson <calvin.johnson@oss.nxp.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>, linux.cj@gmail.com,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Madalin Bucur <madalin.bucur@oss.nxp.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Diana Madalina Craciun <diana.craciun@nxp.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>, Varun Sethi <V.Sethi@nxp.com>,
-        Marcin Wojtas <mw@semihalf.com>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <7ac3f702-9c5f-5021-ebe3-42f1c93afbdf@amazon.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.161.52]
+X-ClientProxiedBy: EX13D07UWA001.ant.amazon.com (10.43.160.145) To
+ EX13D16EUB003.ant.amazon.com (10.43.166.99)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 12:27 PM Calvin Johnson
-<calvin.johnson@oss.nxp.com> wrote:
-> On Thu, Apr 23, 2020 at 08:45:03PM -0700, Florian Fainelli wrote:
-> > On 4/23/2020 8:16 PM, Calvin Johnson wrote:
+CgpPbiAyNC8wNC8yMDIwIDExOjE5LCBQYXJhc2NoaXYsIEFuZHJhLUlyaW5hIHdyb3RlOgo+Cj4K
+PiBPbiAyNC8wNC8yMDIwIDA2OjA0LCBMb25ncGVuZyAoTWlrZSwgQ2xvdWQgSW5mcmFzdHJ1Y3R1
+cmUgU2VydmljZSAKPiBQcm9kdWN0IERlcHQuKSB3cm90ZToKPj4gT24gMjAyMC80LzIzIDIxOjE5
+LCBQYXJhc2NoaXYsIEFuZHJhLUlyaW5hIHdyb3RlOgo+Pj4KPj4+IE9uIDIyLzA0LzIwMjAgMDA6
+NDYsIFBhb2xvIEJvbnppbmkgd3JvdGU6Cj4+Pj4gT24gMjEvMDQvMjAgMjA6NDEsIEFuZHJhIFBh
+cmFzY2hpdiB3cm90ZToKPj4+Pj4gQW4gZW5jbGF2ZSBjb21tdW5pY2F0ZXMgd2l0aCB0aGUgcHJp
+bWFyeSBWTSB2aWEgYSBsb2NhbCAKPj4+Pj4gY29tbXVuaWNhdGlvbiBjaGFubmVsLAo+Pj4+PiB1
+c2luZyB2aXJ0aW8tdnNvY2sgWzJdLiBBbiBlbmNsYXZlIGRvZXMgbm90IGhhdmUgYSBkaXNrIG9y
+IGEgCj4+Pj4+IG5ldHdvcmsgZGV2aWNlCj4+Pj4+IGF0dGFjaGVkLgo+Pj4+IElzIGl0IHBvc3Np
+YmxlIHRvIGhhdmUgYSBzYW1wbGUgb2YgdGhpcyBpbiB0aGUgc2FtcGxlcy8gZGlyZWN0b3J5Pwo+
+Pj4gSSBjYW4gYWRkIGluIHYyIGEgc2FtcGxlIGZpbGUgaW5jbHVkaW5nIHRoZSBiYXNpYyBmbG93
+IG9mIGhvdyB0byB1c2UgCj4+PiB0aGUgaW9jdGwKPj4+IGludGVyZmFjZSB0byBjcmVhdGUgLyB0
+ZXJtaW5hdGUgYW4gZW5jbGF2ZS4KPj4+Cj4+PiBUaGVuIHdlIGNhbiB1cGRhdGUgLyBidWlsZCBv
+biB0b3AgaXQgYmFzZWQgb24gdGhlIG9uZ29pbmcgCj4+PiBkaXNjdXNzaW9ucyBvbiB0aGUKPj4+
+IHBhdGNoIHNlcmllcyBhbmQgdGhlIHJlY2VpdmVkIGZlZWRiYWNrLgo+Pj4KPj4+PiBJIGFtIGlu
+dGVyZXN0ZWQgZXNwZWNpYWxseSBpbjoKPj4+Pgo+Pj4+IC0gdGhlIGluaXRpYWwgQ1BVIHN0YXRl
+OiBDUEwwIHZzLiBDUEwzLCBpbml0aWFsIHByb2dyYW0gY291bnRlciwgZXRjLgo+Pj4+Cj4+Pj4g
+LSB0aGUgY29tbXVuaWNhdGlvbiBjaGFubmVsOyBkb2VzIHRoZSBlbmNsYXZlIHNlZSB0aGUgdXN1
+YWwgbG9jYWwgQVBJQwo+Pj4+IGFuZCBJT0FQSUMgaW50ZXJmYWNlcyBpbiBvcmRlciB0byBnZXQg
+aW50ZXJydXB0cyBmcm9tIHZpcnRpby12c29jaywgCj4+Pj4gYW5kCj4+Pj4gd2hlcmUgaXMgdGhl
+IHZpcnRpby12c29jayBkZXZpY2UgKHZpcnRpby1tbWlvIEkgc3VwcG9zZSkgcGxhY2VkIGluIAo+
+Pj4+IG1lbW9yeT8KPj4+Pgo+Pj4+IC0gd2hhdCB0aGUgZW5jbGF2ZSBpcyBhbGxvd2VkIHRvIGRv
+OiBjYW4gaXQgY2hhbmdlIHByaXZpbGVnZSBsZXZlbHMsCj4+Pj4gd2hhdCBoYXBwZW5zIGlmIHRo
+ZSBlbmNsYXZlIHBlcmZvcm1zIGFuIGFjY2VzcyB0byBub25leGlzdGVudCAKPj4+PiBtZW1vcnks
+IGV0Yy4KPj4+Pgo+Pj4+IC0gd2hldGhlciB0aGVyZSBhcmUgc3BlY2lhbCBoeXBlcmNhbGwgaW50
+ZXJmYWNlcyBmb3IgdGhlIGVuY2xhdmUKPj4+IEFuIGVuY2xhdmUgaXMgYSBWTSwgcnVubmluZyBv
+biB0aGUgc2FtZSBob3N0IGFzIHRoZSBwcmltYXJ5IFZNLCB0aGF0IAo+Pj4gbGF1bmNoZWQKPj4+
+IHRoZSBlbmNsYXZlLiBUaGV5IGFyZSBzaWJsaW5ncy4KPj4+Cj4+PiBIZXJlIHdlIG5lZWQgdG8g
+dGhpbmsgb2YgdHdvIGNvbXBvbmVudHM6Cj4+Pgo+Pj4gMS4gQW4gZW5jbGF2ZSBhYnN0cmFjdGlv
+biBwcm9jZXNzIC0gYSBwcm9jZXNzIHJ1bm5pbmcgaW4gdGhlIHByaW1hcnkgCj4+PiBWTSBndWVz
+dCwKPj4+IHRoYXQgdXNlcyB0aGUgcHJvdmlkZWQgaW9jdGwgaW50ZXJmYWNlIG9mIHRoZSBOaXRy
+byBFbmNsYXZlcyBrZXJuZWwgCj4+PiBkcml2ZXIgdG8KPj4+IHNwYXduIGFuIGVuY2xhdmUgVk0g
+KHRoYXQncyAyIGJlbG93KS4KPj4+Cj4+PiBIb3cgZG9lcyBhbGwgZ2V0cyB0byBhbiBlbmNsYXZl
+IFZNIHJ1bm5pbmcgb24gdGhlIGhvc3Q/Cj4+Pgo+Pj4gVGhlcmUgaXMgYSBOaXRybyBFbmNsYXZl
+cyBlbXVsYXRlZCBQQ0kgZGV2aWNlIGV4cG9zZWQgdG8gdGhlIHByaW1hcnkgCj4+PiBWTS4gVGhl
+Cj4+PiBkcml2ZXIgZm9yIHRoaXMgbmV3IFBDSSBkZXZpY2UgaXMgaW5jbHVkZWQgaW4gdGhlIGN1
+cnJlbnQgcGF0Y2ggc2VyaWVzLgo+Pj4KPj4gSGkgUGFyYXNjaGl2LAo+Pgo+PiBUaGUgbmV3IFBD
+SSBkZXZpY2UgaXMgZW11bGF0ZWQgaW4gUUVNVSA/IElmIHNvLCBpcyB0aGVyZSBhbnkgcGxhbiB0
+byAKPj4gc2VuZCB0aGUKPj4gUUVNVSBjb2RlID8KPgo+IEhpLAo+Cj4gTm9wZSwgbm90IHRoYXQg
+SSBrbm93IG9mIHNvIGZhci4KCkFuZCBqdXN0IHRvIGJlIGEgYml0IG1vcmUgY2xlYXIsIHRoZSBy
+ZXBseSBhYm92ZSB0YWtlcyBpbnRvIApjb25zaWRlcmF0aW9uIHRoYXQgaXQncyBub3QgZW11bGF0
+ZWQgaW4gUUVNVS4KCgpUaGFua3MsCkFuZHJhCgo+Cj4+Cj4+PiBUaGUgaW9jdGwgbG9naWMgaXMg
+bWFwcGVkIHRvIFBDSSBkZXZpY2UgY29tbWFuZHMgZS5nLiB0aGUgCj4+PiBORV9FTkNMQVZFX1NU
+QVJUIGlvY3RsCj4+PiBtYXBzIHRvIGFuIGVuY2xhdmUgc3RhcnQgUENJIGNvbW1hbmQgb3IgdGhl
+IAo+Pj4gS1ZNX1NFVF9VU0VSX01FTU9SWV9SRUdJT04gbWFwcyB0bwo+Pj4gYW4gYWRkIG1lbW9y
+eSBQQ0kgY29tbWFuZC4gVGhlIFBDSSBkZXZpY2UgY29tbWFuZHMgYXJlIHRoZW4gCj4+PiB0cmFu
+c2xhdGVkIGludG8KPj4+IGFjdGlvbnMgdGFrZW4gb24gdGhlIGh5cGVydmlzb3Igc2lkZTsgdGhh
+dCdzIHRoZSBOaXRybyBoeXBlcnZpc29yIAo+Pj4gcnVubmluZyBvbiB0aGUKPj4+IGhvc3Qgd2hl
+cmUgdGhlIHByaW1hcnkgVk0gaXMgcnVubmluZy4KPj4+Cj4+PiAyLiBUaGUgZW5jbGF2ZSBpdHNl
+bGYgLSBhIFZNIHJ1bm5pbmcgb24gdGhlIHNhbWUgaG9zdCBhcyB0aGUgcHJpbWFyeSAKPj4+IFZN
+IHRoYXQKPj4+IHNwYXduZWQgaXQuCj4+Pgo+Pj4gVGhlIGVuY2xhdmUgVk0gaGFzIG5vIHBlcnNp
+c3RlbnQgc3RvcmFnZSBvciBuZXR3b3JrIGludGVyZmFjZSAKPj4+IGF0dGFjaGVkLCBpdCB1c2Vz
+Cj4+PiBpdHMgb3duIG1lbW9yeSBhbmQgQ1BVcyArIGl0cyB2aXJ0aW8tdnNvY2sgZW11bGF0ZWQg
+ZGV2aWNlIGZvciAKPj4+IGNvbW11bmljYXRpb24KPj4+IHdpdGggdGhlIHByaW1hcnkgVk0uCj4+
+Pgo+Pj4gVGhlIG1lbW9yeSBhbmQgQ1BVcyBhcmUgY2FydmVkIG91dCBvZiB0aGUgcHJpbWFyeSBW
+TSwgdGhleSBhcmUgCj4+PiBkZWRpY2F0ZWQgZm9yIHRoZQo+Pj4gZW5jbGF2ZS4gVGhlIE5pdHJv
+IGh5cGVydmlzb3IgcnVubmluZyBvbiB0aGUgaG9zdCBlbnN1cmVzIG1lbW9yeSBhbmQgCj4+PiBD
+UFUKPj4+IGlzb2xhdGlvbiBiZXR3ZWVuIHRoZSBwcmltYXJ5IFZNIGFuZCB0aGUgZW5jbGF2ZSBW
+TS4KPj4+Cj4+Pgo+Pj4gVGhlc2UgdHdvIGNvbXBvbmVudHMgbmVlZCB0byByZWZsZWN0IHRoZSBz
+YW1lIHN0YXRlIGUuZy4gd2hlbiB0aGUgCj4+PiBlbmNsYXZlCj4+PiBhYnN0cmFjdGlvbiBwcm9j
+ZXNzICgxKSBpcyB0ZXJtaW5hdGVkLCB0aGUgZW5jbGF2ZSBWTSAoMikgaXMgCj4+PiB0ZXJtaW5h
+dGVkIGFzIHdlbGwuCj4+Pgo+Pj4gV2l0aCByZWdhcmQgdG8gdGhlIGNvbW11bmljYXRpb24gY2hh
+bm5lbCwgdGhlIHByaW1hcnkgVk0gaGFzIGl0cyBvd24gCj4+PiBlbXVsYXRlZAo+Pj4gdmlydGlv
+LXZzb2NrIFBDSSBkZXZpY2UuIFRoZSBlbmNsYXZlIFZNIGhhcyBpdHMgb3duIGVtdWxhdGVkIAo+
+Pj4gdmlydGlvLXZzb2NrIGRldmljZQo+Pj4gYXMgd2VsbC4gVGhpcyBjaGFubmVsIGlzIHVzZWQs
+IGZvciBleGFtcGxlLCB0byBmZXRjaCBkYXRhIGluIHRoZSAKPj4+IGVuY2xhdmUgYW5kCj4+PiB0
+aGVuIHByb2Nlc3MgaXQuIEFuIGFwcGxpY2F0aW9uIHRoYXQgc2V0cyB1cCB0aGUgdnNvY2sgc29j
+a2V0IGFuZCAKPj4+IGNvbm5lY3RzIG9yCj4+PiBsaXN0ZW5zLCBkZXBlbmRpbmcgb24gdGhlIHVz
+ZSBjYXNlLCBpcyB0aGVuIGRldmVsb3BlZCB0byB1c2UgdGhpcyAKPj4+IGNoYW5uZWw7IHRoaXMK
+Pj4+IGhhcHBlbnMgb24gYm90aCBlbmRzIC0gcHJpbWFyeSBWTSBhbmQgZW5jbGF2ZSBWTS4KPj4+
+Cj4+PiBMZXQgbWUga25vdyBpZiBmdXJ0aGVyIGNsYXJpZmljYXRpb25zIGFyZSBuZWVkZWQuCj4+
+Pgo+Pj4+PiBUaGUgcHJvcG9zZWQgc29sdXRpb24gaXMgZm9sbG93aW5nIHRoZSBLVk0gbW9kZWwg
+YW5kIHVzZXMgdGhlIEtWTSAKPj4+Pj4gQVBJIHRvIGJlIGFibGUKPj4+Pj4gdG8gY3JlYXRlIGFu
+ZCBzZXQgcmVzb3VyY2VzIGZvciBlbmNsYXZlcy4gQW4gYWRkaXRpb25hbCBpb2N0bCAKPj4+Pj4g
+Y29tbWFuZCwgYmVzaWRlcwo+Pj4+PiB0aGUgb25lcyBwcm92aWRlZCBieSBLVk0sIGlzIHVzZWQg
+dG8gc3RhcnQgYW4gZW5jbGF2ZSBhbmQgc2V0dXAgCj4+Pj4+IHRoZSBhZGRyZXNzaW5nCj4+Pj4+
+IGZvciB0aGUgY29tbXVuaWNhdGlvbiBjaGFubmVsIGFuZCBhbiBlbmNsYXZlIHVuaXF1ZSBpZC4K
+Pj4+PiBSZXVzaW5nIHNvbWUgS1ZNIGlvY3RscyBpcyBkZWZpbml0ZWx5IGEgZ29vZCBpZGVhLCBi
+dXQgSSB3b3VsZG4ndCAKPj4+PiByZWFsbHkKPj4+PiBzYXkgaXQncyB0aGUgS1ZNIEFQSSBzaW5j
+ZSB0aGUgVkNQVSBmaWxlIGRlc2NyaXB0b3IgaXMgYmFzaWNhbGx5IG5vbgo+Pj4+IGZ1bmN0aW9u
+YWwgKHdpdGhvdXQgS1ZNX1JVTiBhbmQgbW1hcCBpdCdzIG5vdCByZWFsbHkgdGhlIEtWTSBBUEkp
+Lgo+Pj4gSXQgdXNlcyBwYXJ0IG9mIHRoZSBLVk0gQVBJIG9yIGEgc2V0IG9mIEtWTSBpb2N0bHMg
+dG8gbW9kZWwgdGhlIHdheSAKPj4+IGEgVk0gaXMKPj4+IGNyZWF0ZWQgLyB0ZXJtaW5hdGVkLiBU
+aGF0J3MgdHJ1ZSwgS1ZNX1JVTiBhbmQgbW1hcC1pbmcgdGhlIHZjcHUgZmQgCj4+PiBhcmUgbm90
+Cj4+PiBpbmNsdWRlZC4KPj4+Cj4+PiBUaGFua3MgZm9yIHRoZSBmZWVkYmFjayByZWdhcmRpbmcg
+dGhlIHJldXNlIG9mIEtWTSBpb2N0bHMuCj4+Pgo+Pj4gQW5kcmEKPj4+Cj4+Pgo+Pj4KPj4+Cj4+
+PiBBbWF6b24gRGV2ZWxvcG1lbnQgQ2VudGVyIChSb21hbmlhKSBTLlIuTC4gcmVnaXN0ZXJlZCBv
+ZmZpY2U6IDI3QSAKPj4+IFNmLiBMYXphcgo+Pj4gU3RyZWV0LCBVQkM1LCBmbG9vciAyLCBJYXNp
+LCBJYXNpIENvdW50eSwgNzAwMDQ1LCBSb21hbmlhLiAKPj4+IFJlZ2lzdGVyZWQgaW4KPj4+IFJv
+bWFuaWEuIFJlZ2lzdHJhdGlvbiBudW1iZXIgSjIyLzI2MjEvMjAwNS4KPgoKCgoKQW1hem9uIERl
+dmVsb3BtZW50IENlbnRlciAoUm9tYW5pYSkgUy5SLkwuIHJlZ2lzdGVyZWQgb2ZmaWNlOiAyN0Eg
+U2YuIExhemFyIFN0cmVldCwgVUJDNSwgZmxvb3IgMiwgSWFzaSwgSWFzaSBDb3VudHksIDcwMDA0
+NSwgUm9tYW5pYS4gUmVnaXN0ZXJlZCBpbiBSb21hbmlhLiBSZWdpc3RyYXRpb24gbnVtYmVyIEoy
+Mi8yNjIxLzIwMDUuCg==
 
-> > If you forget to update the MAINTAINERS file, or do not place this code
-> > under drivers/net/phy/* or drivers/of/of_mdio.c then this is going to
-> > completely escape the sight of the PHYLIB/PHYLINK maintainers...
->
-> Did you mean the following change?
-
-I don't think this is an appreciated option.
-Second one was to locate this code under drivers/net, which may be
-better. And perhaps other not basic (to the properties) stuff should
-be also moved to respective subsystems.
-
--- 
-With Best Regards,
-Andy Shevchenko
