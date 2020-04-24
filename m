@@ -4,94 +4,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF923C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77253C55191
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A330B2074F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5778620728
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:50:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f496t3Lk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TL206/yZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgDXJqR (ORCPT
+        id S1726753AbgDXJuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 05:46:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54638 "EHLO
+        Fri, 24 Apr 2020 05:50:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726193AbgDXJqQ (ORCPT
+        by vger.kernel.org with ESMTP id S1726193AbgDXJuk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 05:46:16 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 745C2C09B045;
-        Fri, 24 Apr 2020 02:46:16 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id 18so4548303pfx.6;
-        Fri, 24 Apr 2020 02:46:16 -0700 (PDT)
+        Fri, 24 Apr 2020 05:50:40 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD508C09B045;
+        Fri, 24 Apr 2020 02:50:38 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id x15so4573896pfa.1;
+        Fri, 24 Apr 2020 02:50:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ExKZcNy4UT9MAfzU9W5gIALpzWpye1YJM4TUcHlXCDo=;
-        b=f496t3LkG/23Ta6UCBN0L5jMBPEmEpxCFIGznyl6mUHfmvl/Rf4p3CAHdRqEyUuNQj
-         PG1zA+MOaO+V3N76MPxU53QIkYlDgP0dyqhVhiVTA/LJFwYhv5SHXhf8FnySPkcLSPHo
-         ABfKzWEqLqhczhuoS4Py1ScTegygLMTtlh9C2mIfvHqBPovUoaM2OUNFiRsC37wt6cZ4
-         3QCFAlAUX/mk15fRBVyiWLKaU1O2A8WAWqcgaY9zM6iJatfPuUcUxmZWMq7AHx+CfCHc
-         19vcLR6COIMJQuVYN6X081jQN8O6Ma63ps1MYxLY/qTyiHT7CwUg5QYdaOtPgN846arE
-         TLdA==
+        bh=pbcOhQqKUatbZW3PIFWQB5WseDd9hz4BT+OKuV/Ex7c=;
+        b=TL206/yZkNCWkdT6lTbCRA+yet/mIFpmA/kkvZoeN13bkRghulq4uPnFiTInaph6vu
+         0lsjwi/qCY82okNZ8Cj75SBQEPzEL4oL8QtKOr812oYwJznSfRaUtiYf89kH1av7vp7L
+         G/wzsGsCqgQG9I/K8UBzKMsrl/k5xblLEfKZCN0zpTLHMxsWCtfXSFnmE9Ozdda3P8Q2
+         kjeA6u+jJIKCbFi4RNMCYIUJATEJHDbWEMQZ/DVQpLSrKd/uLBcci5IewrdVnKv7RXKA
+         /rtGkwEWrrzZtt/6HNWEYzDNhr4FveRGf0RXBk0Krjg6DCdspss4ZHQcUmYHMoJktsNr
+         eYqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ExKZcNy4UT9MAfzU9W5gIALpzWpye1YJM4TUcHlXCDo=;
-        b=FPpKj9b6wkd+moks2Sknr+/zulGsZNyFJ2OjtEvHqk/2CQQ6POPUPZOZWa0ndGVCSS
-         N15QegmovGBL1VfLCpl+yLqLQ4DP1Ukqm5ns43RTZLJZE0+HsSd4OQyHvnSmAMxNbrlx
-         aa0UYXj2MHzJlCpBUqLd/fSkWnjCjH9mDkP2CC8gCPByxYSODxL7XvbiFoK6nrkt1zey
-         Lv5vkYwWNPpI0rvffWF4mivR7e9wE+w0CpvzJAb/7VV8rS1CeQVM2nbQJiO5B5JASGnM
-         KSq+OfD1/V9kthK20tZ54IBRXwxEN4/GBwCenV31HwFKiUyKnyXGrNefjh21vj3ULICk
-         9T2Q==
-X-Gm-Message-State: AGi0PuagucyOm8/F9fVaCU2tU0gYdibM8RlKK4UDhNJSLOmBRMJUP5Q4
-        d6pxdPKyjqsqGgW14bSLFEOxOchWKitOCqwn1bc=
-X-Google-Smtp-Source: APiQypKPRijoqzvaLFgVOo1jcs0yYSDYq7L2KiLh6fYX3N9Q0RVZ0J5xQ+CWRUf/6fnbYxSqRWSGBshLvTa+tAwTu/Y=
-X-Received: by 2002:a62:f908:: with SMTP id o8mr8528896pfh.170.1587721575071;
- Fri, 24 Apr 2020 02:46:15 -0700 (PDT)
+        bh=pbcOhQqKUatbZW3PIFWQB5WseDd9hz4BT+OKuV/Ex7c=;
+        b=h1Z53n6eqbxtYeNCIsrj9RuaWZL+Ki60SKas5pauYwgGmia465/vOtvZUfpVf9QIhm
+         EW6U20lnLJOhTrQmX0rsm7xCm8LZtdB/GMyIkJt+dgZOqq5SUnrWb6rSRiiUGPPBti8Y
+         hwIfA9YyJDjhPm1bLtHKI0DLrWIFCSj1rTfmssux1J3zEJky1pw4KvcVCPtnbiQJd09N
+         +MlUJC2tH0mYYkcR1CnwNfj6WMNUwpOO1D2SlxHRGxDvFcD7AZqX8JRsuXIN2XdfJRAS
+         MWo0L30hR/WdhJNd/qakKubeAUEF4wdWsk+wGe5L0enJxisGnDxk6BwvLAhyxu+ytkV0
+         jhfw==
+X-Gm-Message-State: AGi0PubJ2N/csKljO41W8txMAdvCwFSb33NvXOzaJ2Sg2eHa+0yaO+2C
+        9xtnWla8Feol7EJLb+Rx/zkJl/81mXq4h3yjmnw=
+X-Google-Smtp-Source: APiQypJXXt1pl3u4AK4S+SuhVmIplJPaKhlPqZsOUJSg4hODFktaXH831PhMVdx9Mh7LqK5fPo+AHR2k21LMyjkNLvE=
+X-Received: by 2002:a63:5511:: with SMTP id j17mr8205689pgb.4.1587721838081;
+ Fri, 24 Apr 2020 02:50:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200424085315.36876e01@canb.auug.org.au>
-In-Reply-To: <20200424085315.36876e01@canb.auug.org.au>
+References: <20200424091201.568-1-caizhaopeng@uniontech.com>
+In-Reply-To: <20200424091201.568-1-caizhaopeng@uniontech.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 24 Apr 2020 12:46:08 +0300
-Message-ID: <CAHp75VcHHQgt-vfGSnxBbHbRvH+zoXeMXkv8GKJNb-uJR+VJbQ@mail.gmail.com>
-Subject: Re: linux-next: Fixes tag needs some work in the drivers-x86 tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
+Date:   Fri, 24 Apr 2020 12:50:30 +0300
+Message-ID: <CAHp75VekvqHX_eUm88RQJQiU59hUoxUY=pP4MWsp6xn3os9bPg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] pinctrl: add IRQF_EARLY_RESUME flags with gpio irq
+ for elan touchpad.
+To:     caizhaopeng@uniontech.com
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Archana Patni <archana.patni@intel.com>
+        Zhangyueqian <zhangyueqian@uniontech.com>,
+        Zhangshuang <zhangshuang@uniontech.com>,
+        Hualet Wang <wangyaohua@uniontech.com>,
+        Zhanglei <zhanglei@uniontech.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 1:53 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+On Fri, Apr 24, 2020 at 12:16 PM <caizhaopeng@uniontech.com> wrote:
 >
-> Hi all,
+> From: Caicai <caizhaopeng@uniontech.com>
 >
-> In commit
->
->   92f62e696851 ("platform/x86: intel_pmc_core: Change Jasper Lake S0ix debug reg map back to ICL")
->
-> Fixes tag
->
->   Fixes: 16292bed9c ("platform/x86: intel_pmc_core: Add Atom based Jasper Lake (JSL) platform support")
->
-> has these problem(s):
->
->   - SHA1 should be at least 12 digits long
->     Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
->     or later) just making sure it is not set (or set to "auto").
+> I had tested two Notebook machines, the Intel i5(or amd ryzen)
+> with elan touchpad, and there's a probability that the touchpad
+> won't work after going to the S3/S4 to wake up, that it would
+> appear no more than 15 times. I found that there's no interrupt
+> to check for /proc/interrupt. It was found that the gpio
+> interrupt of i2c was also not on top. By adding the gpio
+> interrupt flags with IRQF_EARLY_RESUME, now the touchpad tested
+> 200 + times works well.
 
-Thanks, fixed now!
+Thanks for the contribution!
+
+You need
+a) to split this to patch per driver (I can't take or speak for AMD
+code, I'm not a maintainer and don't have hardware)
+b) explain what this flag actually means and does
+
+On top of that we need to test this widely to avoid regressions.
 
 -- 
 With Best Regards,
