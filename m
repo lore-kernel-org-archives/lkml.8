@@ -2,128 +2,110 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A68DC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DD4C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FA9820774
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E893D2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:41:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="dg9qHz7E"
+	dkim=pass (2048-bit key) header.d=jonmasters-org.20150623.gappssmtp.com header.i=@jonmasters-org.20150623.gappssmtp.com header.b="XbMDk80t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbgDXGjQ (ORCPT
+        id S1726524AbgDXGlu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 02:39:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53802 "EHLO
+        Fri, 24 Apr 2020 02:41:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726008AbgDXGjQ (ORCPT
+        by vger.kernel.org with ESMTP id S1726008AbgDXGlt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 02:39:16 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB02BC09B045
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 23:39:15 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id c63so9217325qke.2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 23:39:15 -0700 (PDT)
+        Fri, 24 Apr 2020 02:41:49 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D729C09B045
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 23:41:49 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id t8so4192898qvw.5
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 23:41:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MI+yH4sWs2g+xaF5o8m/k2oPkU56sjfkGtnomIB4E0U=;
-        b=dg9qHz7EDRwXufT/YP6k9XH3SP+J4Xh//jNFQ/EEJX3Nvk0y/SC3n1nt9PMbu0jQ/X
-         VvKHCMu8F94TwPTtc555MwZ0CQ4mT22g0uTSgbO933KX3/H1GcfLmykKQO+SYU0LSpBL
-         WzyVexhmKOfFxDRtOYgaSZXe7uB7Ipi9U9Nx0bG/ahjksO2aD5C7ZELgYFF5qx1Fa+es
-         c/gCbAj0tpavovlvqPWD/tZt9Jufis2GRR3Jg4P008vrb9xN6lOhdU5TudO9A2zcARwL
-         ocjyOXAIweMQdtqDEP+aYenA+/JBp8ExxBuOIxZ12fw96S3t6YFPR/5NUypiLRP90Qfj
-         /W1w==
+        d=jonmasters-org.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:organization:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dw634XdyImgBtxBGiKE6aOOF3ij0GTDJAHDLmmt5LWA=;
+        b=XbMDk80twGVmgH7VAv4fo1NBup5wcjQC9l4DDzhD7aB/wd4FSW/leAjuRJmSMv5+fm
+         Pf0nli2XpbKq4zZVB5KDSY5KuBhWPzagfLa3LUeSVdKLQrtpPKgc0DybawmrKwIOXHRL
+         1U6Qg2DfJ3qh5blhXHQhF+dd0R7q06eWp+m4TMfDXPXMt6O7P34d5KizON3EAeFafcN9
+         dzWwKJWcg3DoL9n5kqna+c2vPLYZgAi3fuxrqFJh2bpjUy4SJ2I+1T3yA5DkFux1rN9i
+         QCC8HSxatNmvbZ66lO3iSIh89tT3AGQgNpbF4nWnqsPZVqNtA8o+EqbWC/Waya4sN+EJ
+         5JRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MI+yH4sWs2g+xaF5o8m/k2oPkU56sjfkGtnomIB4E0U=;
-        b=SLFpUKzYg33JqhGvH4lUrFl2X97uRS+M1TlS4YgPT1ehsORBAa1MxwMZbysdHbTypH
-         SAXV7KjF7Cj0/amJXBEELXZ0Mxt6G86AtTlH/4aYEAgr1mLYlEcNWxlp5TGL7xGbyNxf
-         my7nbtR126oMmiqxNLhDcK/Uuzq5SvkC6Nn1P+Axvx9I8NflvBxl7F4D7M8NDYCiguX1
-         TE/96uekKgdM5ZTqRYjEjPHznLN9gzvpOA+mpjWD7wQ6lppQ3Mcrn3+uPkJtsJeB+kLp
-         HuKv7BfkQN/pElmbCWTlUXVKbwlW/P8AoMuY4FIxLSk7j38VHt2JkDF3dlGMEOZrg3ey
-         J8Tg==
-X-Gm-Message-State: AGi0Pubs+DJQLqVzetboGV4jMiXZ6Ahiskk2/tFJQqpDiKvl6x7uJGOD
-        SyTkGkQzhjxJqN8v0MG5GKQ21rvRIeJVURMMGPwR0g==
-X-Google-Smtp-Source: APiQypJTxoKTMusG3+g6U7mAgMTkBCtd9S+RSwVgV6Ylt84lBEXLVH/cth7Ecc7CdJxpGo1zxG6AXwY9dmwgK2uLDgw=
-X-Received: by 2002:a05:620a:1395:: with SMTP id k21mr7467340qki.120.1587710355206;
- Thu, 23 Apr 2020 23:39:15 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=dw634XdyImgBtxBGiKE6aOOF3ij0GTDJAHDLmmt5LWA=;
+        b=ubkSpsAr5IA6083G0zAURZK8dp0dcQLiKOwV9KuGvrZjc+vra1W2ib14JbCaeUGdOI
+         jQtDWQMf/8huPj+6aSAS3wrxmqYPIOO3lNokJAkFXYM61ySa70WOTe3+nZrj8R3QF1L2
+         0fy0VVH098iye/9KXoLDtePtKuO8UysCmaMydlrbCAucHW2F4g15/ks2Ar1pjVwqHbVi
+         TMHFgbNe/CJ1MY4XXAUdpgVvt1cEdnjs7Sj9Y8yzYghAQvsvu5CN6m/8KhiyIjvY1hkF
+         O71D3HPyFw32Ydtr129LpP69T6aGua/Ue9oTrTSi7JR98uSDf8JDrItHQ4GFPBR15vb4
+         Pw1A==
+X-Gm-Message-State: AGi0PuZj5PIs/PyqruxB5kkIuM4+cvxH1OhOz2PxTxwO4Ur1+hSXhFUi
+        8kAD2JGZLkRch+R+78w3Z3MYS2N4268=
+X-Google-Smtp-Source: APiQypL/sVIxGCPChbkFMeL7MpTIjm0PFfEfGZJNdnHvQc46o/m2udafOY4Ej2MAPzEXcihSk0e1Bg==
+X-Received: by 2002:a05:6214:150f:: with SMTP id e15mr7528697qvy.18.1587710508495;
+        Thu, 23 Apr 2020 23:41:48 -0700 (PDT)
+Received: from independence.bos.jonmasters.org (Boston.jonmasters.org. [50.195.43.97])
+        by smtp.gmail.com with ESMTPSA id o201sm3193720qke.31.2020.04.23.23.41.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Apr 2020 23:41:47 -0700 (PDT)
+Subject: Re: [PATCH tip/core/rcu 2/6] Documentation/memory-barriers.txt:
+ ACCESS_ONCE() provides cache coherence
+To:     "Paul E. McKenney" <paulmck@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1392672413-5114-2-git-send-email-paulmck () linux ! vnet ! ibm !
+ com>
+From:   Jon Masters <jcm@jonmasters.org>
+Organization: World Organi{s,z}ation of Broken Dreams
+Message-ID: <f3cdec26-480e-d2e0-3e54-4b0536831fcd@jonmasters.org>
+Date:   Thu, 23 Apr 2020 23:36:19 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20200419163816.19856-1-zhengdejin5@gmail.com>
-In-Reply-To: <20200419163816.19856-1-zhengdejin5@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 24 Apr 2020 08:39:04 +0200
-Message-ID: <CAMpxmJUzrWRuHV-=EOgjd-N-iwhZwVGzF26tH0ybpzZQSP6VJQ@mail.gmail.com>
-Subject: Re: [PATCH v1] gpio: fix several typos
-To:     Dejin Zheng <zhengdejin5@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1392672413-5114-2-git-send-email-paulmck () linux ! vnet ! ibm !
+ com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-niedz., 19 kwi 2020 o 18:38 Dejin Zheng <zhengdejin5@gmail.com> napisa=C5=
-=82(a):
->
-> Use codespell to fix lots of typos over frontends.
->
-> CC: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> ---
->  drivers/gpio/gpio-ftgpio010.c | 2 +-
->  drivers/gpio/gpio-mm-lantiq.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-ftgpio010.c b/drivers/gpio/gpio-ftgpio010.=
-c
-> index fbddb1662428..4031164780f7 100644
-> --- a/drivers/gpio/gpio-ftgpio010.c
-> +++ b/drivers/gpio/gpio-ftgpio010.c
-> @@ -193,7 +193,7 @@ static int ftgpio_gpio_set_config(struct gpio_chip *g=
-c, unsigned int offset,
->         if (val =3D=3D deb_div) {
->                 /*
->                  * The debounce timer happens to already be set to the
-> -                * desireable value, what a coincidence! We can just enab=
-le
-> +                * desirable value, what a coincidence! We can just enabl=
-e
->                  * debounce on this GPIO line and return. This happens mo=
-re
->                  * often than you think, for example when all GPIO keys
->                  * on a system are requesting the same debounce interval.
-> diff --git a/drivers/gpio/gpio-mm-lantiq.c b/drivers/gpio/gpio-mm-lantiq.=
-c
-> index f460d71b0c92..538e31fe8903 100644
-> --- a/drivers/gpio/gpio-mm-lantiq.c
-> +++ b/drivers/gpio/gpio-mm-lantiq.c
-> @@ -36,7 +36,7 @@ struct ltq_mm {
->   * @chip:     Pointer to our private data structure.
->   *
->   * Write the shadow value to the EBU to set the gpios. We need to set th=
-e
-> - * global EBU lock to make sure that PCI/MTD dont break.
-> + * global EBU lock to make sure that PCI/MTD don't break.
->   */
->  static void ltq_mm_apply(struct ltq_mm *chip)
->  {
-> --
-> 2.25.0
->
+Hi Paul,
 
-The subject line should be gpio: <name of the driver>: short message
+On 2/17/14 4:26 PM, Paul E. McKenney wrote:
 
-And please split those into patches for each driver.
+> The ACCESS_ONCE() primitive provides cache coherence, but the
+> documentation does not clearly state this.  This commit therefore upgrades
+> the documentation.
 
-Bart
+<snip>
+
+> +     In short, ACCESS_ONCE() provides "cache coherence" for accesses from
+> +     multiple CPUs to a single variable.
+
+(ACCESS_ONCE is now READ_ONCE/WRITE_ONCE but the above added the 
+original language around cache coherence)
+
+I would argue that we might want to avoid describing it in this manner. 
+The hardware provides cache coherency in order to keep a single memory 
+location coherent between multiple observers. These kernel macros only 
+tell the compiler to perform the load once. They take advantage of the 
+properties of coherence in the presence of multiple observers.
+
+Jon.
+
+-- 
+Computer Architect
