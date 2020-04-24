@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E7BFC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D94FC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B9F220767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:40:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D82920700
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:40:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="hVgh4s1O";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="0BusZXTW"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="BD1B4CN8";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Pis+VpXI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728713AbgDXPkN (ORCPT
+        id S1729124AbgDXPkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:40:13 -0400
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:40435 "EHLO
+        Fri, 24 Apr 2020 11:40:20 -0400
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:53017 "EHLO
         wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728463AbgDXPgK (ORCPT
+        by vger.kernel.org with ESMTP id S1728437AbgDXPgH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:36:10 -0400
+        Fri, 24 Apr 2020 11:36:07 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 595891444;
-        Fri, 24 Apr 2020 11:36:09 -0400 (EDT)
+        by mailnew.west.internal (Postfix) with ESMTP id 6AA8F10AA;
+        Fri, 24 Apr 2020 11:36:06 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:36:10 -0400
+  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:36:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=UdgYbZrIwJnSM
-        Hscz6inzr3NelpnaolYLVN8TL98PDY=; b=hVgh4s1OSZwh1pGJXjUfnfjUOPRt+
-        mhIdPTX+1RN8gv8XJ4ZKop7Bq7vCIejFJZMjMp68iTn4jTBQNL35Z328T8GdudTU
-        Mom1umQ0VW4ldGLtsSxEX5xAkx3h1gtWBL1O8pmIBG8cp+mK9G21pjQsZniJJfN9
-        EBQyRPBoLBuNV/H3rIqj8/Hrm3eG2vSu/QD2LY0rHgidhxiAqiakhTaQWh/aQskZ
-        oFkQnjhuu1fsGPTUQcTAxDMYSCj/88OI+3pxUpzGrjdn1OaeLeUegd1iYBwafURp
-        wto5/koDx8NhUIqCqCSxneAn8EfusoM3l/g12rcliSDTAHvOhjl9m3P5Q==
+        :mime-version:content-transfer-encoding; s=fm2; bh=2I5zMakGdefyc
+        AHM9J30Y7T2xEqngHoH53dlRgc3XbQ=; b=BD1B4CN8zWU+fPz7IlbsH+rnyrL/K
+        GmWvt/35ykWfkbGxhUf3nvgpM/HFzhC6z5mbrPEessL1hEz9R1N36E3rQfYI+jOX
+        4NeMvWRfrYLX3CWXu8lALSxcJFtXgnijMRi1t93HqXYAt+/6Su/sJERGgtJYUKLy
+        ss86uXwDxtAHwKXgtomXo8lToxz1CUKTyZkf+cKUBkRBtaz/7Gqe0XZlXOGN5Mxu
+        LhfAac9FMdLJwAjB6XLz5MpFWNUFjdOqIZAqHwXM99H5iHt1MW5PTN96gc6aRwwc
+        PdvRZrDN2H+GwHWfBheSDg2WnL2WJtgs0irTb+HE1jMwJlSAiKzOJ8Exw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=UdgYbZrIwJnSMHscz6inzr3NelpnaolYLVN8TL98PDY=; b=0BusZXTW
-        Ept8UTHEPUQk+SG72HeV8u+bTJJRazreReLeHY69WWc+nljFWHN1w5Hv1UpsFj6a
-        SBOzIUjkvSQagbmirJ31NjVkd6pLCIlkkj49EyWs6pjHMkBnGDz882FTH2rTJxIa
-        TG7OjAWZ/4sQV72PR4TdG+AhARr5sCQlkYKuCmwYuO49nZKMAZcZCrZI/5VU6dfH
-        n7bXR5Xyv1Rg++uTvTBQaOrPJYUjn5zB933agz+iPifMCf/ps0JK0txxgQlavvHM
-        4Ms96MtG4AzkE6nCCpeR1daaOq/2S+eJf3aE3qxUOUbY1JpEK4UyxA70dA4rUIvT
-        0VQ2GmltoFi3cA==
-X-ME-Sender: <xms:aAejXpfWeSa3NpHKz-4oLDjF1gmr5N8VdaxLB_WEV2HGG1EFJHWAog>
+        fm2; bh=2I5zMakGdefycAHM9J30Y7T2xEqngHoH53dlRgc3XbQ=; b=Pis+VpXI
+        t0wmLmPGRLm+wsq/DgSmOoRh+9csdgurzenCAT4Ra6SxAyJYtkWgBcp6Mx9j0tRE
+        on987iRDzEBBXlS/JnMLPgvTGYLdpSJOBU8mdAjUjy4nS1+nMBJiyxLfNeKgmCot
+        UeeN0/zqrttVLPbV92LYnWIWbG0vFw5Wz0kIRejyZs5MnqKWJ+JL9VaUbbNt50/H
+        mZnyWAimGdR+ar+ed45xnMdcohtr02DWUnD6oixn+LJwadBsYthTXGp9kNRmKwzT
+        kYfVDSDgUHxYjR709uuYs2B4hUdW/JIt4fqM43JK1O7JHh93MAXZt1pFdzmjnRei
+        fVCEHGAaADQTiw==
+X-ME-Sender: <xms:ZQejXkufTVDwLok66FHM6BLrBJuB_BSbVYKOOazzTbfziom17RDw6w>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrhedugdekiecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
@@ -57,13 +57,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrhedugdekiecutefuodetggdote
     ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
     ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedvheenucfrrghrrghmpehmrghi
     lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:aAejXluQSr3b_qefsCvDKTKiVA0COpPSfhAqjLzMWCDzyWRXVwAQog>
-    <xmx:aAejXuB3czI_CXqwWvxzP7iZRpKxvSsqm9TlvOlxLX9gOWaN5Itndw>
-    <xmx:aAejXtHd2N0XU64vf-m3ivb2IPpmLl3iPlHR9o-q1jhV2kCuwDaldA>
-    <xmx:aAejXh4OIt2bRC67WrFpEKJq6L50KiKlAzcRu2QcfjUkZiRDfuebAxlgqsg>
+X-ME-Proxy: <xmx:ZQejXo31Oh_FJDumAK97HP0x9cGyjm3g5i4OalhfqmvRBbCD4PkpUw>
+    <xmx:ZQejXqFiow9NgvsiJn5lD0t8g-U3c-sZGhwV2nQv7IbJAA9lhLELnA>
+    <xmx:ZQejXtPhBRvfTvRQfys8YUwSYQ3cfoYMHaeD8ma69SixaggyksKPvA>
+    <xmx:ZgejXppFBIk2U4L8O8z2BDU1N5BMLE3_ww19HQbuONEucwCJCxwu5ZU3b7Y>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 6F13A3065DA4;
-        Fri, 24 Apr 2020 11:36:08 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id A6A0E3065D9A;
+        Fri, 24 Apr 2020 11:36:05 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -74,10 +74,11 @@ Cc:     dri-devel@lists.freedesktop.org,
         Dave Stevenson <dave.stevenson@raspberrypi.com>,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v2 33/91] drm/vc4: drv: Support BCM2711
-Date:   Fri, 24 Apr 2020 17:34:14 +0200
-Message-Id: <e56e77704251cd4fdf5caa1ef7c64138dc763a1a.1587742492.git-series.maxime@cerno.tech>
+        Maxime Ripard <maxime@cerno.tech>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v2 31/91] dt-bindings: display: vc4: Document BCM2711 VC5
+Date:   Fri, 24 Apr 2020 17:34:12 +0200
+Message-Id: <1fc211841ff633f59d64c3b074724a23f3606d72.1587742492.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
 References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
@@ -88,117 +89,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The BCM2711 has a reworked display pipeline, and the load tracker needs
-some adjustement to operate properly. Let's add a compatible for BCM2711
-and disable the load tracker until properly supported.
+The BCM2711 comes with a new VideoCore. Add a compatible for it.
 
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh+dt@kernel.org>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_drv.c   |  1 +
- drivers/gpu/drm/vc4/vc4_drv.h   |  3 +++
- drivers/gpu/drm/vc4/vc4_kms.c   | 32 +++++++++++++++++++++-----------
- drivers/gpu/drm/vc4/vc4_plane.c |  5 +++++
- 4 files changed, 30 insertions(+), 11 deletions(-)
+ Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/vc4/vc4_drv.c b/drivers/gpu/drm/vc4/vc4_drv.c
-index 76f93b662766..d7f554a6f0ed 100644
---- a/drivers/gpu/drm/vc4/vc4_drv.c
-+++ b/drivers/gpu/drm/vc4/vc4_drv.c
-@@ -364,6 +364,7 @@ static int vc4_platform_drm_remove(struct platform_device *pdev)
- }
+diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml
+index 0dcf0c397375..49a5e041aa49 100644
+--- a/Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml
++++ b/Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml
+@@ -17,6 +17,7 @@ description: >
+ properties:
+   compatible:
+     enum:
++      - brcm,bcm2711-vc5
+       - brcm,bcm2835-vc4
+       - brcm,cygnus-vc4
  
- static const struct of_device_id vc4_of_match[] = {
-+	{ .compatible = "brcm,bcm2711-vc5", },
- 	{ .compatible = "brcm,bcm2835-vc4", },
- 	{ .compatible = "brcm,cygnus-vc4", },
- 	{},
-diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
-index e7748f8e2967..6024de9ecd35 100644
---- a/drivers/gpu/drm/vc4/vc4_drv.h
-+++ b/drivers/gpu/drm/vc4/vc4_drv.h
-@@ -201,6 +201,9 @@ struct vc4_dev {
- 
- 	int power_refcount;
- 
-+	/* Set to true when the load tracker is supported. */
-+	bool load_tracker_available;
-+
- 	/* Set to true when the load tracker is active. */
- 	bool load_tracker_enabled;
- 
-diff --git a/drivers/gpu/drm/vc4/vc4_kms.c b/drivers/gpu/drm/vc4/vc4_kms.c
-index 78d4fb0499e3..71e7211a5fb9 100644
---- a/drivers/gpu/drm/vc4/vc4_kms.c
-+++ b/drivers/gpu/drm/vc4/vc4_kms.c
-@@ -415,6 +415,9 @@ static int vc4_load_tracker_atomic_check(struct drm_atomic_state *state)
- 	struct drm_plane *plane;
- 	int i;
- 
-+	if (!vc4->load_tracker_available)
-+		return 0;
-+
- 	priv_state = drm_atomic_get_private_obj_state(state,
- 						      &vc4->load_tracker);
- 	if (IS_ERR(priv_state))
-@@ -514,10 +517,14 @@ int vc4_kms_load(struct drm_device *dev)
- 	struct vc4_load_tracker_state *load_state;
- 	int ret;
- 
--	/* Start with the load tracker enabled. Can be disabled through the
--	 * debugfs load_tracker file.
--	 */
--	vc4->load_tracker_enabled = true;
-+	if (!of_device_is_compatible(dev->dev->of_node, "brcm,bcm2711-vc5")) {
-+		vc4->load_tracker_available = true;
-+
-+		/* Start with the load tracker enabled. Can be
-+		 * disabled through the debugfs load_tracker file.
-+		 */
-+		vc4->load_tracker_enabled = true;
-+	}
- 
- 	sema_init(&vc4->async_modeset, 1);
- 
-@@ -547,14 +554,17 @@ int vc4_kms_load(struct drm_device *dev)
- 	drm_atomic_private_obj_init(dev, &vc4->ctm_manager, &ctm_state->base,
- 				    &vc4_ctm_state_funcs);
- 
--	load_state = kzalloc(sizeof(*load_state), GFP_KERNEL);
--	if (!load_state) {
--		drm_atomic_private_obj_fini(&vc4->ctm_manager);
--		return -ENOMEM;
--	}
-+	if (vc4->load_tracker_available) {
-+		load_state = kzalloc(sizeof(*load_state), GFP_KERNEL);
-+		if (!load_state) {
-+			drm_atomic_private_obj_fini(&vc4->ctm_manager);
-+			return -ENOMEM;
-+		}
- 
--	drm_atomic_private_obj_init(dev, &vc4->load_tracker, &load_state->base,
--				    &vc4_load_tracker_state_funcs);
-+		drm_atomic_private_obj_init(dev, &vc4->load_tracker,
-+					    &load_state->base,
-+					    &vc4_load_tracker_state_funcs);
-+	}
- 
- 	drm_mode_config_reset(dev);
- 
-diff --git a/drivers/gpu/drm/vc4/vc4_plane.c b/drivers/gpu/drm/vc4/vc4_plane.c
-index 91e408f7a56e..57a73a2e2e5c 100644
---- a/drivers/gpu/drm/vc4/vc4_plane.c
-+++ b/drivers/gpu/drm/vc4/vc4_plane.c
-@@ -492,6 +492,11 @@ static void vc4_plane_calc_load(struct drm_plane_state *state)
- 	struct vc4_plane_state *vc4_state;
- 	struct drm_crtc_state *crtc_state;
- 	unsigned int vscale_factor;
-+	struct vc4_dev *vc4;
-+
-+	vc4 = to_vc4_dev(state->plane->dev);
-+	if (!vc4->load_tracker_available)
-+		return;
- 
- 	vc4_state = to_vc4_plane_state(state);
- 	crtc_state = drm_atomic_get_existing_crtc_state(state->state,
 -- 
 git-series 0.9.1
