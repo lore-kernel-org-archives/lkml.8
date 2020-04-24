@@ -2,130 +2,105 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A42C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0006DC55191
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1615420728
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA02A20767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:59:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="umkc6zh1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgDXL6M convert rfc822-to-8bit (ORCPT
+        id S1726919AbgDXL7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 07:58:12 -0400
-Received: from mga03.intel.com ([134.134.136.65]:58553 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726289AbgDXL6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 07:58:11 -0400
-IronPort-SDR: ADdyRU6qjg94jhmcRO+UoUBeyycJlgiCkcWkInC1qE/eaGRwtvtYUBFX9nAQ8rz8xPZV4v1rGj
- /XQZ7bm+UTGw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2020 04:58:11 -0700
-IronPort-SDR: Yuo+tyxdFcNR+dgH7VP2JRkB9N4V5vQcDWxiWXaB6Ba2/J+uipbIjd64JEZsDUzjbsi2RNhxQU
- eZQdWbty67rg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,311,1583222400"; 
-   d="scan'208";a="430743288"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by orsmga005.jf.intel.com with ESMTP; 24 Apr 2020 04:58:11 -0700
-Received: from lcsmsx602.ger.corp.intel.com (10.109.210.11) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 24 Apr 2020 04:57:58 -0700
-Received: from hasmsx602.ger.corp.intel.com (10.184.107.142) by
- LCSMSX602.ger.corp.intel.com (10.109.210.11) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 24 Apr 2020 14:57:55 +0300
-Received: from hasmsx602.ger.corp.intel.com ([10.184.107.142]) by
- HASMSX602.ger.corp.intel.com ([10.184.107.142]) with mapi id 15.01.1713.004;
- Fri, 24 Apr 2020 14:57:55 +0300
-From:   "Winkler, Tomas" <tomas.winkler@intel.com>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Joao Lima <Joao.Lima@synopsys.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/5] scsi: ufs: Allow UFS 3.0 as a valid version
-Thread-Topic: [PATCH 1/5] scsi: ufs: Allow UFS 3.0 as a valid version
-Thread-Index: AQHWGizfcmpbFdxnWUWqBCA+Q3q4E6iIKq4g
-Date:   Fri, 24 Apr 2020 11:57:55 +0000
-Message-ID: <a8ffb94396b340c396823b59e0452946@intel.com>
-References: <cover.1587727756.git.Jose.Abreu@synopsys.com>
- <5c4281080538b74ca39cedb9112ffe71bf7a80b5.1587727756.git.Jose.Abreu@synopsys.com>
-In-Reply-To: <5c4281080538b74ca39cedb9112ffe71bf7a80b5.1587727756.git.Jose.Abreu@synopsys.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-x-originating-ip: [10.184.70.1]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Fri, 24 Apr 2020 07:59:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47178 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726793AbgDXL7J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 07:59:09 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DF72C09B048
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 04:59:09 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id f11so5040879ljp.1
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 04:59:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=S+yBMYNVRFyvJW4JlBM9svUKJeMIKoXS31YVPYoI3wk=;
+        b=umkc6zh1mpHsMuqE0JCi52u7o05OF2fe71Dt8DSMWSYuDhTZNIeSU8KSpWCAR+4HYN
+         W+cuBXKcBRS6BIy3ays0tX4EG5dMu1TDGHQhPmpaBRrtUH1632ksAT+l8zpfFv/LefeL
+         Mle/sbGDhs3vF85TXJE1q/w73QNqOrQ3NWkGfGwRpdgRfgwOP6stpUD6ldfZz5arqZJQ
+         n6ZihBAAGwmkD94DjecbGoWnA1YLozas39ny66F1etm25yxZ/h69wmKfbfBOOV+INzgX
+         DkKHUGL6wsDH5sXWXrk7dZp8VZVM6wJtrWUz6P+kUvrRSlcFy2BeYX1SvLPsec6jRXHG
+         7mTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=S+yBMYNVRFyvJW4JlBM9svUKJeMIKoXS31YVPYoI3wk=;
+        b=WvCNJFLbC9yEmoj+DJRUzsCRYVrELb8wzQMHAw5EFzkjJ5dVjXJib/Ip1ri5UEfnwr
+         cfM6u3mM2WfAApowNpFb66KyxNVZdrzsQAQMjAJE8TEIDDlUheIT14aXGJiIfiTKc3A0
+         VLXdE1T+JsoGtw3oiLqFpii39x80WXFaMB6LGlPjx9v4EBHwNKi7SUjEgacweQP9Y22r
+         bZBLrv3XGSf3hNZL6fz8Qddmj4D9/cIabMHPrfoiJZlgQ6TlshUA5o7cyEZlWB0TL2Lp
+         Q5uOTHadSDcD9vhVjciERlnH7V2lIMAdwW5Q2sn+XXxzW28UWTiDCUIjVHLbzMkzYcqy
+         sD4A==
+X-Gm-Message-State: AGi0PuaI9wtcIGUUlKQZyU363/g5D9pLQVtj0I6iQqJb6GbhPGFoq2ly
+        0zDbI1NIayFIH/3iugwpE5YDJW3CLMFWAw==
+X-Google-Smtp-Source: APiQypJA/Jj8k1RyumTDUcNNFRefy4LnrX/jcN1Gi5Qg6/1DPcTzIQMuZNAY7jj0ZHr6hpxhuzdBVw==
+X-Received: by 2002:a2e:8603:: with SMTP id a3mr5794332lji.153.1587729547414;
+        Fri, 24 Apr 2020 04:59:07 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:6b0:1584:1a81:c430:c3eb:7993])
+        by smtp.gmail.com with ESMTPSA id u2sm4390222lfk.67.2020.04.24.04.59.06
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 Apr 2020 04:59:06 -0700 (PDT)
+Subject: Re: [PATCH] dt-bindings: sh_eth: Sort compatible string in increasing
+ number of the SoC
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Simon Horman <horms+renesas@verge.net.au>
+Cc:     Lad Prabhakar <prabhakar.csengg@gmail.com>, netdev@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1587724695-27295-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <c3e5be67-4e6e-e6c9-8de2-9cab13848dbb@cogentembedded.com>
+Date:   Fri, 24 Apr 2020 14:59:05 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
+In-Reply-To: <1587724695-27295-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Add a define for UFS version 3.0 and do not print an error message upon probe
-> when using this version.
-> 
-> Signed-off-by: Joao Lima <Joao.Lima@synopsys.com>
-> Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
-LGTM
-Thanks
-Tomas
-> 
-> ---
-> Cc: Joao Lima <Joao.Lima@synopsys.com>
-> Cc: Jose Abreu <Jose.Abreu@synopsys.com>
-> Cc: Alim Akhtar <alim.akhtar@samsung.com>
-> Cc: Avri Altman <avri.altman@wdc.com>
-> Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-> Cc: linux-scsi@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/scsi/ufs/ufshcd.c | 3 ++-
->  drivers/scsi/ufs/ufshci.h | 1 +
->  2 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c index
-> 7d1fa1349d40..2e5c200e915b 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -8441,7 +8441,8 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem
-> *mmio_base, unsigned int irq)
->  	if ((hba->ufs_version != UFSHCI_VERSION_10) &&
->  	    (hba->ufs_version != UFSHCI_VERSION_11) &&
->  	    (hba->ufs_version != UFSHCI_VERSION_20) &&
-> -	    (hba->ufs_version != UFSHCI_VERSION_21))
-> +	    (hba->ufs_version != UFSHCI_VERSION_21) &&
-> +	    (hba->ufs_version != UFSHCI_VERSION_30))
->  		dev_err(hba->dev, "invalid UFS version 0x%x\n",
->  			hba->ufs_version);
-> 
-> diff --git a/drivers/scsi/ufs/ufshci.h b/drivers/scsi/ufs/ufshci.h index
-> c2961d37cc1c..f2ee81669b00 100644
-> --- a/drivers/scsi/ufs/ufshci.h
-> +++ b/drivers/scsi/ufs/ufshci.h
-> @@ -104,6 +104,7 @@ enum {
->  	UFSHCI_VERSION_11 = 0x00010100, /* 1.1 */
->  	UFSHCI_VERSION_20 = 0x00000200, /* 2.0 */
->  	UFSHCI_VERSION_21 = 0x00000210, /* 2.1 */
-> +	UFSHCI_VERSION_30 = 0x00000300, /* 3.0 */
->  };
-> 
->  /*
-> --
-> 2.7.4
+Hello!
 
+   The bindings file is no longer called sh_eth, please adapt the subject to
+the new DT reality...
+
+On 04/24/2020 01:38 PM, Lad Prabhakar wrote:
+
+> Sort the items in the compatible string list in increasing number of SoC.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+
+Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+[...]
+
+MBR, Sergei
