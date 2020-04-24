@@ -2,346 +2,99 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B9D1C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A874BC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24F6820736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:41:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="sWsdKnmu"
+	by mail.kernel.org (Postfix) with ESMTP id 8069520736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:42:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbgDXNl4 (ORCPT
+        id S1728097AbgDXNmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 09:41:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34964 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726791AbgDXNlz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 09:41:55 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BA2EC09B045
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 06:41:55 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id n6so9947686ljg.12
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 06:41:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=6bzGPbBR5INYjAbEOgGMPYc9YHJ427hb01U+XkmIM2w=;
-        b=sWsdKnmuOFjeeA/Ws/vlAHRXawQreqqdgcW35iCwHM2+/VBbptLWTFraQ6HONd1a3V
-         IR3yJ+iHTro8gT4ssMoXJRpemdXoNLT7bUFUcVHtn6dKkJ4ITuunwv/NtOW2AiwHjVUJ
-         ISLvu+vGmSkp1xl5MjLviloIH2Rq/giA/lhnJ7Ga4BoyasPHUYnCn9iXlEheBNHSsSTl
-         XOdrzz94Oi8G0oCz/WEd5EIL5XuyFsIHI6sSgUkC1IVuuVh/E1juTqWSdFXw/VWXO9x5
-         p8jFxyUcC4HNdXJEhailJmxyixlkwEyIsY+HK08/mE0OAenvQO2IOyo2APMSRejYip4r
-         CP9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=6bzGPbBR5INYjAbEOgGMPYc9YHJ427hb01U+XkmIM2w=;
-        b=JO1GW1b38USuMurAUguRHZXnZJBf0LkBGfGLS7gTni0k6P0hOSnFiXux2c733aq70X
-         WYyr9lHQWkRMBs5Z0mFu0NKA591F9hX4RynTZSQ2EW5bgrtdgRYN/3OUcak1b3VOvfEV
-         2TSMpV7QN20laeJ9KQJDoem341F+oKuHCjg5eFbmKmAfYCjhyeHOoj83TXIuQ9GIYBQ7
-         bCDchfS12+Iug1/Mjhzo8RUD6WAnwiKDxnGpROEqo81vWf6TxTBcf6HcA9ZiPfXu1xht
-         o6NHAyccwY3VU8RUet4LLIcUua74XNaSJXp4XilPQmeygb1iLINC9Kn/GaG8F8NiP2aq
-         FPPQ==
-X-Gm-Message-State: AGi0PuYv59W4mQ7C1mZNUyTf7x6mvactUsxKpjjY0V3Ji2P02z5PrXvo
-        NNXt3zNtuGXCcRyhadu2efE72g==
-X-Google-Smtp-Source: APiQypL/VlhXwxqOq9ECI0n/FIOd5FmswFdEgd7vBzijnzBicL2YNZE3/DNH4hsy3VJD22u1LWTf5Q==
-X-Received: by 2002:a2e:9a82:: with SMTP id p2mr6021525lji.279.1587735713510;
-        Fri, 24 Apr 2020 06:41:53 -0700 (PDT)
-Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
-        by smtp.gmail.com with ESMTPSA id z21sm4248693ljh.42.2020.04.24.06.41.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 06:41:52 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 15:41:52 +0200
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Helen Koike <helen.koike@collabora.com>
-Cc:     linux-media@vger.kernel.org, kernel@collabora.com,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        hans.verkuil@cisco.com, skhan@linuxfoundation.org,
-        mchehab@kernel.org
-Subject: Re: [PATCH v3 2/4] media: v4l2-common: add helper functions to call
- s_stream() callbacks
-Message-ID: <20200424134152.GB4040416@oden.dyn.berto.se>
-References: <20200415013044.1778572-1-helen.koike@collabora.com>
- <20200415013044.1778572-3-helen.koike@collabora.com>
+        Fri, 24 Apr 2020 09:42:07 -0400
+Received: from mga17.intel.com ([192.55.52.151]:48236 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726301AbgDXNmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 09:42:07 -0400
+IronPort-SDR: XcNwQyCIiOsSAEukrIvEUZOjK5/VmgEN4juUP5nFbfsN1FsFN2pPaV2zVIMZaWjs0tQH3DG4PY
+ YxdF3AN430AA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2020 06:42:06 -0700
+IronPort-SDR: 8USxce6JaaWf19goY9DaQF4NC95AxRX0qFW2EG2S6Bj2Mf9VZvApdNXRxwbY+XB1N2nBBrb0U6
+ RbK9j+LAYDPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,311,1583222400"; 
+   d="scan'208";a="280800527"
+Received: from unknown (HELO localhost) ([10.239.159.128])
+  by fmsmga004.fm.intel.com with ESMTP; 24 Apr 2020 06:42:04 -0700
+Date:   Fri, 24 Apr 2020 21:44:07 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
+        jmattson@google.com, yu.c.zhang@linux.intel.com
+Subject: Re: [PATCH v11 1/9] KVM: VMX: Introduce CET VMX fields and flags
+Message-ID: <20200424134407.GD24039@local-michael-cet-test>
+References: <20200326081847.5870-1-weijiang.yang@intel.com>
+ <20200326081847.5870-2-weijiang.yang@intel.com>
+ <20200423163948.GA25564@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200415013044.1778572-3-helen.koike@collabora.com>
+In-Reply-To: <20200423163948.GA25564@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Helen,
+On Thu, Apr 23, 2020 at 09:39:48AM -0700, Sean Christopherson wrote:
+> On Thu, Mar 26, 2020 at 04:18:38PM +0800, Yang Weijiang wrote:
+> > If VM_EXIT_LOAD_HOST_CET_STATE = 1, the host CET states are restored
+> > from below VMCS fields at VM-Exit:
+> >   HOST_S_CET
+> >   HOST_SSP
+> >   HOST_INTR_SSP_TABLE
+> > 
+> > If VM_ENTRY_LOAD_GUEST_CET_STATE = 1, the guest CET states are loaded
+> > from below VMCS fields at VM-Entry:
+> >   GUEST_S_CET
+> >   GUEST_SSP
+> >   GUEST_INTR_SSP_TABLE
+> > 
+> > Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> > Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> > ---
+> 
+> ...
+> 
+> > diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
+> > index 5e090d1f03f8..e938bc6c37aa 100644
+> > --- a/arch/x86/include/asm/vmx.h
+> > +++ b/arch/x86/include/asm/vmx.h
+> > @@ -94,6 +94,7 @@
+> >  #define VM_EXIT_CLEAR_BNDCFGS                   0x00800000
+> >  #define VM_EXIT_PT_CONCEAL_PIP			0x01000000
+> >  #define VM_EXIT_CLEAR_IA32_RTIT_CTL		0x02000000
+> > +#define VM_EXIT_LOAD_HOST_CET_STATE             0x10000000
+> >  
+> >  #define VM_EXIT_ALWAYSON_WITHOUT_TRUE_MSR	0x00036dff
+> >  
+> > @@ -107,6 +108,7 @@
+> >  #define VM_ENTRY_LOAD_BNDCFGS                   0x00010000
+> >  #define VM_ENTRY_PT_CONCEAL_PIP			0x00020000
+> >  #define VM_ENTRY_LOAD_IA32_RTIT_CTL		0x00040000
+> > +#define VM_ENTRY_LOAD_GUEST_CET_STATE           0x00100000
+> 
+> I think it probably make senses to drop HOST/GUEST from the controls,
+> i.e. VM_{ENTER,EXIT}_LOAD_CET_STATE.  The SDM doesn't qualify them with
+> guest vs. host, nor does KVM qualify any of the other entry/exit controls
+> that are effective guest vs. host.
+Sure, will fix them, thanks.
 
-Thanks for your work.
-
-On 2020-04-14 22:30:42 -0300, Helen Koike wrote:
-> Add v4l2_pipeline_stream_{enable,disable} helper functions to iterate
-> through the subdevices in a given stream (i.e following links from sink
-> to source) and call .s_stream() callback.
-> 
-> Add stream_count on the subdevice object for simultaneous streaming from
-> different video devices which shares subdevices.
-> 
-> Prevent calling .s_stream(true) if it was already called previously by
-> another stream.
-> 
-> Prevent calling .s_stream(false) from one stream when there are still
-> others active.
-> 
-> If .s_stream(true) fails, call .s_stream(false) in the reverse order.
-> 
-> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> ---
-> 
-> Changes in v3:
-> - re-write helpers to use media walkers as in v1, but with
-> v4l2_pipeline_subdevs_get() to reverse the order we call s_stream(true)
-> in subdevices.
-> - rename size to max_size (and update docs) in v4l2_pipeline_subdevs_get() to
-> reflect the meaning of the argument.
-> - add if defined(CONFIG_MEDIA_CONTROLLER) around helpers
-> 
-> Changes in v2:
-> - re-write helpers to not use media walkers
-> 
->  drivers/media/v4l2-core/v4l2-common.c | 125 ++++++++++++++++++++++++++
->  include/media/v4l2-common.h           |  43 +++++++++
->  include/media/v4l2-subdev.h           |   2 +
->  3 files changed, 170 insertions(+)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
-> index 9e8eb45a5b03c..2f991a1a57d7c 100644
-> --- a/drivers/media/v4l2-core/v4l2-common.c
-> +++ b/drivers/media/v4l2-core/v4l2-common.c
-> @@ -442,3 +442,128 @@ int v4l2_fill_pixfmt(struct v4l2_pix_format *pixfmt, u32 pixelformat,
->  	return 0;
->  }
->  EXPORT_SYMBOL_GPL(v4l2_fill_pixfmt);
-> +
-> +#if defined(CONFIG_MEDIA_CONTROLLER)
-> +
-> +/*
-> + * v4l2_pipeline_subdevs_get - Assemble a list of subdevices in a pipeline
-> + * @subdevs: the array to be filled.
-> + * @max_size: max number of elements that can fit in subdevs array.
-> + *
-> + * Walk from a video node, following links from sink to source and fill the
-> + * array with subdevices in the path.
-> + * The walker performs a depth-first traversal, which means that, in a topology
-> + * sd1->sd2->sd3->vdev, sd1 will be the first element placed in the array.
-> + *
-> + * Return the number of subdevices filled in the array.
-> + */
-> +static int v4l2_pipeline_subdevs_get(struct video_device *vdev,
-> +				     struct media_pipeline *pipe,
-> +				     struct v4l2_subdev **subdevs,
-> +				     unsigned int max_size)
-> +{
-> +	struct media_entity *entity = &vdev->entity;
-> +	struct media_device *mdev = entity->graph_obj.mdev;
-> +	int idx = 0;
-> +	int ret;
-> +
-> +	mutex_lock(&mdev->graph_mutex);
-> +
-> +	if (!pipe->streaming_count) {
-> +		ret = media_graph_walk_init(&pipe->graph, mdev);
-> +		if (ret) {
-> +			mutex_unlock(&mdev->graph_mutex);
-> +			return ret;
-> +		}
-> +	}
-
-This confuses me a bit. Why is this conditional on streaming_count ?  
-Looking how it's used in mc-entity.c the count is also 
-increased/decreased with this pattern.
-
-Would it make sens to create a local 'struct media_graph graph' here and 
-always init and clean it up ?
-
-> +
-> +	media_graph_walk_start(&pipe->graph, entity);
-> +
-> +	while ((entity = media_graph_walk_next_stream(&pipe->graph))) {
-> +		if (!is_media_entity_v4l2_subdev(entity))
-> +			continue;
-> +		if (WARN_ON(idx >= max_size)) {
-> +			mutex_unlock(&mdev->graph_mutex);
-> +			return -EINVAL;
-> +		}
-> +		subdevs[idx++] = media_entity_to_v4l2_subdev(entity);
-> +	}
-> +
-> +	if (!pipe->streaming_count)
-> +		media_graph_walk_cleanup(&pipe->graph);
-> +
-> +	mutex_unlock(&mdev->graph_mutex);
-> +
-> +	return idx;
-> +}
-> +
-> +__must_check int v4l2_pipeline_stream_enable(struct video_device *vdev,
-> +					     struct media_pipeline *pipe)
-> +{
-> +	struct media_device *mdev = vdev->entity.graph_obj.mdev;
-> +	struct v4l2_subdev *subdevs[MEDIA_ENTITY_ENUM_MAX_DEPTH];
-> +	struct v4l2_subdev *sd;
-> +	int i, size, ret;
-> +
-> +	size = v4l2_pipeline_subdevs_get(vdev, pipe,
-> +					 subdevs, ARRAY_SIZE(subdevs));
-> +	if (size <= 0)
-> +		return size;
-> +
-> +	/* Call s_stream() in reverse order to enable sensors last */
-> +	for (i = size - 1; i >= 0; i--) {
-> +		sd = subdevs[i];
- +		if (sd->stream_count++)
-> +			continue;
-> +		dev_dbg(mdev->dev,
-> +			"enabling stream for '%s'\n", sd->entity.name);
-> +		ret = v4l2_subdev_call(sd, video, s_stream, true);
-> +		if (ret && ret != -ENOIOCTLCMD) {
-> +			sd->stream_count = 0;
-> +			goto err_stream_disable;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +
-> +err_stream_disable:
-> +	for (i++; i < size; i++) {
-> +		sd = subdevs[i];
-> +		if (--sd->stream_count)
-> +			continue;
-> +		dev_dbg(mdev->dev,
-> +			"disabling stream for '%s'\n", sd->entity.name);
-> +		v4l2_subdev_call(sd, video, s_stream, false);
-> +	};
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(v4l2_pipeline_stream_enable);
-> +
-> +void v4l2_pipeline_stream_disable(struct video_device *vdev,
-> +				  struct media_pipeline *pipe)
-> +{
-> +	struct media_device *mdev = vdev->entity.graph_obj.mdev;
-> +	struct v4l2_subdev *subdevs[MEDIA_ENTITY_ENUM_MAX_DEPTH];
-> +	unsigned int i;
-> +	int size;
-> +
-> +	size = v4l2_pipeline_subdevs_get(vdev, pipe,
-> +					 subdevs, ARRAY_SIZE(subdevs));
-> +	if (WARN_ON(size < 0))
-> +		return;
-> +
-> +	/* Call s_stream() in order to disable sensors first */
-> +	for (i = 0; i < size; i++) {
-> +		struct v4l2_subdev *sd = subdevs[i];
-> +
-> +		if (--sd->stream_count)
-> +			continue;
-> +		dev_dbg(mdev->dev,
-> +			"disabling stream for '%s'\n", sd->entity.name);
-> +		v4l2_subdev_call(sd, video, s_stream, false);
-
-small nit, maybe this can be extracted to a helper as the code is 
-duplicated here and in the error path v4l2_pipeline_stream_enable ?
-
-> +	}
-> +}
-> +EXPORT_SYMBOL_GPL(v4l2_pipeline_stream_disable);
-> +
-> +#endif /* CONFIG_MEDIA_CONTROLLER */
-> diff --git a/include/media/v4l2-common.h b/include/media/v4l2-common.h
-> index 150ee16ebd811..dc46812120cdc 100644
-> --- a/include/media/v4l2-common.h
-> +++ b/include/media/v4l2-common.h
-> @@ -539,4 +539,47 @@ static inline void v4l2_buffer_set_timestamp(struct v4l2_buffer *buf,
->  	buf->timestamp.tv_usec = ts.tv_nsec / NSEC_PER_USEC;
->  }
->  
-> +#if defined(CONFIG_MEDIA_CONTROLLER)
-> +
-> +/**
-> + * v4l2_pipeline_stream_enable - Call .s_stream(true) callbacks in the stream
-> + * @vdev: Starting video device.
-> + * @pipe: Pipeline this entity belongs to.
-> + *
-> + * Call .s_stream(true) callback in all the subdevices participating in the
-> + * stream, i.e. following links from sink to source.
-> + *
-> + * .s_stream(true) is also called from sink to source, i.e. in a topology
-> + * sd1->sd2->sd3->vdev, .s_stream(true) of sd3 is called first.
-> + *
-> + * Calls to this function can be nested, in which case the same number of
-> + * v4l2_pipeline_stream_disable() calls will be required to disable streaming
-> + * through subdevices in the pipeline.
-> + * The  pipeline pointer must be identical for all nested calls to
-> + * v4l2_pipeline_stream_enable().
-> + */
-> +__must_check int v4l2_pipeline_stream_enable(struct video_device *vdev,
-> +					     struct media_pipeline *pipe);
-> +
-> +/**
-> + * v4l2_pipeline_stream_disable - Call .s_stream(false) callbacks in the stream
-> + * @vdev: Starting video device.
-> + * @pipe: Pipeline this entity belongs to.
-> + *
-> + * Call .s_stream(false) callback in all the subdevices participating in the
-> + * stream, i.e. following links from sink to source.
-> + *
-> + * s_stream(false) is called in a reverse order from
-> + * v4l2_pipeline_stream_enable(), i.e. in a topology sd1->sd2->sd3->vdev,
-> + * .s_stream(false) of sd1 is called first.
-> + *
-> + * If multiple calls to v4l2_pipeline_stream_enable() have been made, the same
-> + * number of calls to this function are required to disable streaming through
-> + * subdevices in the pipeline.
-> + */
-> +void v4l2_pipeline_stream_disable(struct video_device *vdev,
-> +				  struct media_pipeline *pipe);
-> +
-> +#endif /* CONFIG_MEDIA_CONTROLLER */
-> +
->  #endif /* V4L2_COMMON_H_ */
-> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-> index a4848de598521..20f913a9f70c5 100644
-> --- a/include/media/v4l2-subdev.h
-> +++ b/include/media/v4l2-subdev.h
-> @@ -838,6 +838,7 @@ struct v4l2_subdev_platform_data {
->   * @subdev_notifier: A sub-device notifier implicitly registered for the sub-
->   *		     device using v4l2_device_register_sensor_subdev().
->   * @pdata: common part of subdevice platform data
-> + * @stream_count: Stream count for the subdevice.
->   *
->   * Each instance of a subdev driver should create this struct, either
->   * stand-alone or embedded in a larger struct.
-> @@ -869,6 +870,7 @@ struct v4l2_subdev {
->  	struct v4l2_async_notifier *notifier;
->  	struct v4l2_async_notifier *subdev_notifier;
->  	struct v4l2_subdev_platform_data *pdata;
-> +	unsigned int stream_count;
->  };
->  
->  
-> -- 
-> 2.26.0
-> 
-
--- 
-Regards,
-Niklas Söderlund
