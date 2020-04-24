@@ -2,96 +2,196 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6163FC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAB3C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32D37206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:28:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nkIS6iDR"
+	by mail.kernel.org (Postfix) with ESMTP id 2A70F20774
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:29:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587752954;
+	bh=2iHXrxlGqCGvHpA0iJyiWHnqF7ubNSTrXKpNcp7gs9o=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=WxCiF/GMFFqhdgw2oK0bWDzHMtS7mpNJt5l+g1TQ9AIsJ9yUQb2GoXy5N5zDa7Wf1
+	 YeVjjPDtCsMfMt13sUPPRTmToel2jDFrvAl/Se84cVtN1Edtk3IJFsZbEU9Ce56DP8
+	 uPi/8k3WDUfm283398WRr6myBsOJZjb/p9zhEByU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728563AbgDXS2r (ORCPT
+        id S1728905AbgDXS3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 14:28:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53102 "EHLO
+        Fri, 24 Apr 2020 14:29:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726793AbgDXS2q (ORCPT
+        by vger.kernel.org with ESMTP id S1726793AbgDXS3M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 14:28:46 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89003C09B048
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 11:28:41 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id a31so2321432pje.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 11:28:41 -0700 (PDT)
+        Fri, 24 Apr 2020 14:29:12 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2571AC09B048
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 11:29:12 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id i16so10185505ils.12
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 11:29:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=bo0gNJYD9TaFbPTYHZNdZmu8XOHkiYZaUwRrLiBlQt8=;
-        b=nkIS6iDRrrk60XZCjmY+b/v/aV6BYN4xCBd8JR8pU3jX6L/soKWm+Sqyeu8fhaaFxq
-         f0BlWcYwlEmb0vivIreM3UV+VDxe1vpG5wjN84IqLo1WLefte/5eKcfX7qaczFq1CjVY
-         qVJs06yBb884/K7vZKoHnou30mWwKHw9J9Lbo=
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=o3ECeOnWmOOIX7JhONBpTDrU6V2RncHpVLywz33DaM0=;
+        b=B1/5SqL0yLaKdQZ0nVzCSET6KOFzOezDBatJbZRoANF6iAyGl68o1Z4bZsudRV09sh
+         PnubkcySFifqXIcbIugrfnLPzy1jXIU1LJb6B1TxJAJ454iWUvnlc8zRMNJc0wZm8QNO
+         luAsBYEmRZSzphToZbUw8440p0nnXREQkeZuc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=bo0gNJYD9TaFbPTYHZNdZmu8XOHkiYZaUwRrLiBlQt8=;
-        b=OilrndaFDh8iGhKFinIlOQnaeD4OeR/mZFyIeOABppfx17F86JEGEqPG2r2HMhlcyp
-         f/UGddmyscPKSvbaX6fbgGEydkAKOM1qjQwNMwRIvED+4T/y1PiIKj2W2Fo48nnwgWOZ
-         THErAf36X55CO1HCj2ATFCBAnKJvzt6MkTKMuGp8OkdbQP/mcOVGXaGTEyxU0HeLn551
-         Qv5r57rep95sJ/Fo4XvsG4bJIxRI9q0itB8tiUcuDYbbbLGLHqADz5Wh+OutJYbDgdAD
-         7j4IJJoqRHwn7uOlZIhcw4JenPEV5PtXS8C23rMtBhv8BF5Llo7aGTPAQ7XuOWVTVVdI
-         pPgA==
-X-Gm-Message-State: AGi0PuZwIOEBdes1q7ntOagoTH6njLAlphF9YPzQ4hDG2vwMXOy8k3ef
-        2AK0UOKza1tZ/GWj8yVLWsCR/g==
-X-Google-Smtp-Source: APiQypKQd5ZOUkWaJNEa8HpJ4UolzAGh5EYjp2Mw2Gm3PoS9ogmjosprM/Z1/YDNMycww0TPlZdvrg==
-X-Received: by 2002:a17:90a:8c93:: with SMTP id b19mr7824732pjo.141.1587752920900;
-        Fri, 24 Apr 2020 11:28:40 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id j2sm6512273pfb.73.2020.04.24.11.28.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 11:28:39 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=o3ECeOnWmOOIX7JhONBpTDrU6V2RncHpVLywz33DaM0=;
+        b=YorealeLvQfM3mia6vdDSblnVHpLjzY8ktsM6DKQL/sjXcbEuKVN8aPNWnqcLfl0+J
+         ZlkhWTsFVqzATdKS2MJSA3V53VPTgAy/dFdjpBfYtw7/ZxG8LzMzlDgCBO3IXySL3pDt
+         vIfIw/BKBc2x0t8VFBwTqRmyj3QLeVkB+JtU3rIlqF7ptkgZGntSaDezPEAwNRxB7jNC
+         6QeY3pRPVBfZ9meedkRvYjYrIu5YcQqj1qpXdTtzxN0nPKq7cEnvAZC2WpP4H6PmgUk/
+         qC4rNGFtNsii+DBe+ssalpHFI/xGmXwCP8H/18hu/TCoqKO0SETlgeMZJbqpoSWnFYmm
+         1X3Q==
+X-Gm-Message-State: AGi0PuZdkezNMYipHSbegx9ecb0OQcC2RIrWlvZWmMTJMD3jQchF3aA6
+        IL1w/ivSBJgg85nW/RZjhppROQ==
+X-Google-Smtp-Source: APiQypL779N+IIt95hyM/PzjM4PPg8knZ/jgyJ3ubr7vLM8Nr7bmHptbylBBO3nXHUcwZ+5v2tR6tA==
+X-Received: by 2002:a92:d846:: with SMTP id h6mr8165453ilq.248.1587752951431;
+        Fri, 24 Apr 2020 11:29:11 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id l14sm2047083ioj.12.2020.04.24.11.29.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Apr 2020 11:29:10 -0700 (PDT)
+Subject: Re: [PATCH] selftests: add build/cross-build dependency check script
+To:     "Bird, Tim" <Tim.Bird@sony.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "bamv2005@gmail.com" <bamv2005@gmail.com>,
+        "khilman@baylibre.com" <khilman@baylibre.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20200414212208.21667-1-skhan@linuxfoundation.org>
+ <374866ac-4519-f367-bdc6-ec8d0c1b6347@infradead.org>
+ <CY4PR13MB1527A6A6F9BCEADAF14A3C6BFDD00@CY4PR13MB1527.namprd13.prod.outlook.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <177a6b62-630d-7b30-dbb6-7e6ca7054790@linuxfoundation.org>
+Date:   Fri, 24 Apr 2020 12:29:09 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <158775156694.135303.3535369004080151247@swboyd.mtv.corp.google.com>
-References: <20200424094610.v5.1.Ic7096b3b9b7828cdd41cd5469a6dee5eb6abf549@changeid> <20200424094610.v5.4.Ib8dccfdb10bf6b1fb1d600ca1c21d9c0db1ef746@changeid> <158775156694.135303.3535369004080151247@swboyd.mtv.corp.google.com>
-Subject: Re: [PATCH v5 4/5] soc: qcom: rpmh-rsc: Simplify locking by eliminating the per-TCS lock
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     evgreen@chromium.org, mka@chromium.org, mkshah@codeaurora.org,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rafael.j.wysocki@intel.com
-Date:   Fri, 24 Apr 2020 11:28:38 -0700
-Message-ID: <158775291872.135303.5673866534956446786@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+In-Reply-To: <CY4PR13MB1527A6A6F9BCEADAF14A3C6BFDD00@CY4PR13MB1527.namprd13.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Stephen Boyd (2020-04-24 11:06:06)
-> Quoting Douglas Anderson (2020-04-24 09:46:56)
-> > @@ -581,24 +575,19 @@ static int tcs_write(struct rsc_drv *drv, const s=
-truct tcs_request *msg)
-> > +       ret =3D find_free_tcs(tcs);
-> > +       if (ret < 0)
-> > +               goto unlock;
-> > +       tcs_id =3D ret;
->=20
-> Sorry, missed this. We should keep the tcs_id =3D find_free_tcs() thing
-> and then assign ret to it on failure. Otherwise the return value of this
-> function is -EBUSY or the tcs_id number instead of -EBUSY or 0.
->=20
+On 4/24/20 11:28 AM, Bird, Tim wrote:
+>> -----Original Message-----
+>> From: linux-kselftest-owner@vger.kernel.org <linux-kselftest-owner@vger.kernel.org> On Behalf Of Randy Dunlap
+>>
+>> On 4/14/20 2:22 PM, Shuah Khan wrote:
+>>> -CFLAGS += -O2 -g -std=gnu99 -Wall -I../../../../usr/include/ $(MOUNT_CFLAGS)
+>>> -LDLIBS += $(MOUNT_LDLIBS)
+>>> +CFLAGS += -O2 -g -std=gnu99 -Wall -I../../../../usr/include/ $(VAR_CFLAGS)
+>>> +LDLIBS += $(VAR_LDLIBS)
+>>
+>>
+>> (1) Can that series of ../../../.. be replaced by $(objtree)?
+>> If so, that would be much cleaner IMO.
+> 
+> kselftests doesn't set $(objtree) when it is run directly
+> (ie make -C tools/testing/selftests)
+> 
+> I had my own solution which was to use KBUILD_OUTPUT, like so:
+> This was a patch in my queue, that I didn't send in because I wasn't
+> very happy with it.  I was still considering alternatives.
+> 
+> ---------------- (patch)
+> Subject: [PATCH] selftests/vm: use includes from KBUILD_OUTPUT directory
+> 
+> The Makefile for the vm tests was specifying a relative path
+> (in the source directory) for accessing include files.  This
+> doesn't work when the headers files are placed in another
+> directory (with O= or KBUILD_OUTPUT).  It may appear to work,
+> but ends up using includes from the host machine, which may
+> not match the kernel source being compiled against.
+> 
+> Without this change, when the program userfaultfd.c was
+> compiled, it generated errors like the following:
+> 
+>      userfaultfd.c:267:21: error: 'UFFD_API_RANGE_IOCTLS_BASIC' undeclared
+>      here (not in a function)
+>        .expected_ioctls = UFFD_API_RANGE_IOCTLS_BASIC,
+>                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>      userfaultfd.c: In function 'uffd_poll_thread':
+>      userfaultfd.c:529:8: error: 'UFFD_EVENT_FORK' undeclared (first use in
+>      this function)
+>         case UFFD_EVENT_FORK:
+>              ^~~~~~~~~~~~~~~
+>      userfaultfd.c:529:8: note: each undeclared identifier is reported only
+>      once for each function it appears in
+>      userfaultfd.c:531:18: error: 'union <anonymous>' has no member named
+>      'fork'
+>          uffd = msg.arg.fork.ufd;
+>                        ^
+> 
+> Change the CFLAGS definition in the Makefile to reference
+> KBUILD_OUTPUT.
+> 
+> Signed-off-by: Tim Bird <tim.bird@sony.com>
+> ---
+>   tools/testing/selftests/vm/Makefile | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/vm/Makefile b/tools/testing/selftests/vm/Makefile
+> index 7f9a8a8..0208659 100644
+> --- a/tools/testing/selftests/vm/Makefile
+> +++ b/tools/testing/selftests/vm/Makefile
+> @@ -3,7 +3,7 @@
+>   uname_M := $(shell uname -m 2>/dev/null || echo not)
+>   ARCH ?= $(shell echo $(uname_M) | sed -e 's/aarch64.*/arm64/')
+>   
+> -CFLAGS = -Wall -I ../../../../usr/include $(EXTRA_CFLAGS)
+> +CFLAGS = -Wall -I $(KBUILD_OUTPUT)/usr/include $(EXTRA_CFLAGS)
+>   LDLIBS = -lrt
+>   TEST_GEN_FILES = compaction_test
+>   TEST_GEN_FILES += gup_benchmark
+> 
 
-Ah I see that ret is only returned on error. Nevermind that comment. I
-should make that coffee this morning...
+This should be $(OUTPUT) instead of $(KBUILD_OUTPUT). OUTPUT is
+set by selftests Makefile and lib.mk which is common for all
+tests even when make -C is used for compile.
+
+Using KBUILD_OUTPUT will break other use-cases.
+
+Send me the patch when you are ready.
+
+kselftest Makefile invokes headers_install from the main Makefile.
+
+This sequence doesn't install headers again when kselftest make
+is done:
+
+Main directory:
+# make headers_install
+[headers_install runs]
+
+# make headers_install
+INSTALL ./usr/include
+[does nothing - headers are there]
+
+make kselftest-all
+make --no-builtin-rules ARCH=x86 -C ../../.. headers_install
+make[2]: Entering directory '/home/shuah/lkml/linux_5.7'
+   INSTALL ./usr/include
+
+[Same here - headers aren't installed]
+
+I didn't check O= and KBUILD_OUTPUT cases though.
+
+thanks,
+-- Shuah
