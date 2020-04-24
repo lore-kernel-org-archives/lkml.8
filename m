@@ -2,277 +2,231 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85492C55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BABC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68BE820857
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:55:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95D4C20700
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:56:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A0acEGXd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbgDXFzR (ORCPT
+        id S1726524AbgDXF4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 01:55:17 -0400
-Received: from mga12.intel.com ([192.55.52.136]:40659 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725554AbgDXFzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 01:55:17 -0400
-IronPort-SDR: OTsL7GHDmk4IOlFPJ83MIa4CqvJUssd29nxNnaLHN5pwCaz41pHukT3NYNIvfQr0iLnnQfstY4
- zBT+w+zgJHtw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 22:55:17 -0700
-IronPort-SDR: Wu2Yjz+iBs/lqXxpfWg5oqiMgwsxTdBMbyVV3M3en0Zx/O1+ymKy3bS2I+DKabJzGQWxyckY3f
- R9LOgGSUyKjA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,310,1583222400"; 
-   d="scan'208";a="280698972"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga004.fm.intel.com with ESMTP; 23 Apr 2020 22:55:17 -0700
-Date:   Thu, 23 Apr 2020 22:55:16 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Jan Kara <jack@suse.cz>, Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH V10 04/11] Documentation/dax: Update Usage section
-Message-ID: <20200424055516.GD4088835@iweiny-DESK2.sc.intel.com>
-References: <20200422212102.3757660-1-ira.weiny@intel.com>
- <20200422212102.3757660-5-ira.weiny@intel.com>
- <20200423222720.GS27860@dread.disaster.area>
- <20200423232548.GA4088835@iweiny-DESK2.sc.intel.com>
- <20200424021516.GB2040@dread.disaster.area>
+        Fri, 24 Apr 2020 01:56:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47154 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725554AbgDXF4g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 01:56:36 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA780C09B045
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 22:56:35 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id r26so9325164wmh.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 22:56:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=RwEuL4PRU7ZiIXXogudBG/X0lEu1VFJ0M/eo+6J0PC4=;
+        b=A0acEGXdemZZBZX4VGZXVfyllGprABCYm/+QvNCS9TMXbH1QS/PwyTFjU8LlHv7k20
+         +UdhXH/UXb4SQyDB/GHv3k7mcdkkZisqezRBI+WtbCL53VdCGzHp2FdPQ0WGXYnshFRW
+         0PLeBmvV4XZznHdK/5appfCFijdY7U+UxWCNgehXpJZ007d4Fpa2rWeX/XL1BlnstKkT
+         hkBivZ3FVmolRG9sdf9TCBogm0DZJxx08XF3HLY6YYRqxCuycutvw/pINLM+oenLccDq
+         v9hjmFwf37Sw4jfijv0Me023WmjL8V9NhS3T/JSLU8qsIO4VioDKUxMlwjronJBV58Ym
+         Dwug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=RwEuL4PRU7ZiIXXogudBG/X0lEu1VFJ0M/eo+6J0PC4=;
+        b=PeaDxUjVUtC27L53FirmezHCu56GezxK/6w9h7KxdEpCJe/Ki1QwoGMz8TbqErt6X2
+         xDuD6yOA1RtCAmFFqhbymwQnC3+gOaDa6eT6/aHJGa6RwxFjkjGrqCcYmMNFWmyPLenR
+         X05xhY/xNGtb6j8dHR3rzxNZ37siO7CZDc4woagfFwzzY0n2gIxa/TLQUxz1Y3aJsobd
+         bhTxBAXYIeqUBNzh7fBLxaWFeZv/ASZW5YT5IPzN2//e827tdv6JenMpedvA0Q/rXp1O
+         hXrPThj6Gsjr+RB9MtpKHtNDiYAQ3vZuoW2Zp1YuUt8I5Fs/wXRgPrT90klbtu0OvsH5
+         adTA==
+X-Gm-Message-State: AGi0Pubta8BPvaoomg/db4MPRQ+K1LM2xWSU15GArqr3JL9vXN/3csDb
+        NWchWqwkYdkWuu5lPj4Gus2L7eMnuh1+Z0yp2wRBEmW5hmQ=
+X-Google-Smtp-Source: APiQypIrKLAkMsZVecmJEOp4wzNsurc947aIaadQ5oLy4jbf5MdN9I6ZaMih9JzO1KFccV1yqLJtSvQdwRkIYMrY3m4=
+X-Received: by 2002:a7b:c927:: with SMTP id h7mr7970018wml.122.1587707794423;
+ Thu, 23 Apr 2020 22:56:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200424021516.GB2040@dread.disaster.area>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+References: <20200419131947.173685-1-sedat.dilek@gmail.com>
+ <CAKwvOd=Rt0q0+nRJasc8GzOXSj1_-jZGNc2bAWJkmd7Vzr8FFw@mail.gmail.com>
+ <CAK7LNAQzh8EajBkXSSgFh2=5iF38XvkADf1C7J0JnwTov=NmNQ@mail.gmail.com> <20200424051833.4om5dzimpnvegeab@google.com>
+In-Reply-To: <20200424051833.4om5dzimpnvegeab@google.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Fri, 24 Apr 2020 07:56:27 +0200
+Message-ID: <CA+icZUUf=3qMmPfqa2wgyVO8Ensnc-o8xaK9zcLxgoqui8eaZA@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] kbuild: add CONFIG_LD_IS_BINUTILS
+To:     Fangrui Song <maskray@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 12:15:16PM +1000, Dave Chinner wrote:
-> On Thu, Apr 23, 2020 at 04:25:48PM -0700, Ira Weiny wrote:
+On Fri, Apr 24, 2020 at 7:18 AM Fangrui Song <maskray@google.com> wrote:
+>
+> On 2020-04-24, Masahiro Yamada wrote:
+> >On Fri, Apr 24, 2020 at 3:44 AM Nick Desaulniers
+> ><ndesaulniers@google.com> wrote:
+> >>
+> >> On Sun, Apr 19, 2020 at 6:19 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+> >> >
+> >> > This patch is currently not mandatory but a prerequisites for the second one.
+> >> >
+> >> > Folks from ClangBuiltLinux project like the combination of Clang compiler
+> >> > and LLD linker from LLVM project to build their Linux kernels.
+> >> >
+> >> > Sami Tolvanen <samitolvanen@google.com> has a patch for using LD_IS_LLD (see [1]).
+> >> >
+> >> > Documentation/process/changes.rst says and uses "binutils" that's why I called
+> >> > it LD_IS_BINUTILS (see [2] and [3]).
+> >> >
+> >> > The second patch will rename existing LD_VERSION to BINUTILS_VERSION to have
+> >> > a consistent naming convention like:
+> >> >
+> >> > 1. CC_IS_GCC and GCC_VERSION
+> >> > 2. CC_IS_CLANG and CLANG_VERSION
+> >> > 3. LD_IS_BINUTILS and BINUTILS_VERSION
+> >> >
+> >> > [1] https://github.com/samitolvanen/linux/commit/61889e01f0ed4f07a9d631f163bba6c6637bfa46
+> >> > [2] https://git.kernel.org/linus/tree/Documentation/process/changes.rst#n34
+> >> > [3] https://git.kernel.org/linus/tree/Documentation/process/changes.rst#n76
+> >> >
+> >> > Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
+> >>
+> >> Just some background on Sami's patch.  Originally we were using
+> >> ld.gold (for LTO for Pixel 3) before moving to ld.lld (for LTO for
+> >> Pixel 4 and later).  Not sure if Kconfig would be a better place to
+> >> check if gold is used, then warn?  I kind of prefer the distinction
+> >> that binutils contains two different linkers, though if no one is
+> >> supporting ld.gold, and it doesn't work for the kernel, then maybe
+> >> that preference is moot?
+> >
+> >
+> >I prefer LD_IS_BFD, like this patch:
+> >https://lore.kernel.org/patchwork/patch/1039719/
+> >
+> >We do not need LD_IS_GOLD, though.
+> >
+> >--
+> >Best Regards
+> >Masahiro Yamada
+>
+> +1 for CONFIG_LD_IS_BFD
+>
+> Usually GNU ld is also installed as ld.bfd and can be referred to by -fuse-ld=bfd (GCC >= 9, or clang)
+>
+> The repository binutils-gdb includes two linkers: GNU ld and GNU gold, so CONFIG_LD_IS_BINUTILS would be ambiguous.
 
-[snap]
+Hi,
 
-> > > > +        ii> If the file still does not have the desired S_DAX access
-> > > > +            mode, either unmount and remount the filesystem, or close
-> > > > +            the file and use drop_caches.
-> > > 
-> > > .... don't have permissions to do either of these things...
-> > > 
-> > > Essentially, you may as well say "reboot the machine" at this point,
-> > > because it's effectively the same thing from a production workload
-> > > point of view...
-> > > 
-> > > Realistically, I'm not sure we should even say "programs must cause
-> > > eviction", because that's something they cannot do directly without
-> > > admin privileges nor is it something we want to occur randomly on
-> > > production machines during production. i.e. this is something that
-> > > should only be done in scheduled downtime by an administrator, not
-> > > attempted by applications because DAX isn't immediately available.
-> > > The admin is in charge here, not the "program".
-> > 
-> > I agree with everything you say.
-> > 
-> > But I feel a bit stuck here.  Without some type of documentation we are not
-> > allowing FS_XFLAG_DAX to be changed on a file by the user.  Which is what we
-> > were proposing before and we all disliked.
-> 
-> For production systems, the admin is the "user" we are taking about.
-> The program itself shouldn't be choosing the method of file data
-> access; that's up to the administrator in charge of the system to
-> set the policy how they want it to be set.
-> 
-> i.e. there's a difference between the user/admin taking action to
-> change a data access policy, and the application taking actions to
-> override the policy that the admin has set.
-> 
-> What I'm trying to say is that setting/clearing the DAX flags is an
-> -admin operation-, and part of the consideration of that admin
-> operation is when the change should take effect.
-> 
-> i.e. refering to "programs" as if they control the access mode is
-> entirely the wrong way to be looking at persistent inode flags. They
-> are an administration policy mechanism that belongs to the data set,
-> not the application (or "program"). Managing data set storage and
-> access policy is something administrators do, not the application...
+The last days I was busy with job-hunting, so this is my prio #1.
+Thus I was not very responsive.
 
-Ok.
+And I am sorry to mixup different threads in ClangBuiltLinux and elsewhere.
 
-> 
-> > So I feel like we need to say something about getting the inodes evicted.
-> > perhaps by a 'drop cache' even requested of the admin???
-> > 
-> > Maybe this?
-> > 
-> > 
-> >  4. Programs that require a specific file access mode (DAX or not DAX)
-> >     can do one of the following:
-> > 
-> >     (a) Set the parent directory FS_XFLAG_DAX as needed before file are
-> >         created; or
-> > 
-> >     (b) Have the administrator set the desired behaviour via mount option; or
-> > 
-> >     (c) Set or clear the file's FS_XFLAG_DAX flag as needed and wait for the
-> >         inode to be evicted from memory.
-> > 
-> >         i> the only effective way of ensuring this is to request the admin drop
-> >            the file system caches.
-> 
-> 4. The DAX policy can be changed via:
-> 
-> 	a) Set the parent directory FS_XFLAG_DAX as needed before
-> 	   files are created
-> 
-> 	b) Set the appropriate dax="foo" mount option
-> 
-> 	c) Change the FS_XFLAG_DAX on existing regular files and
-> 	   directories. This has runtime constraints and limitations
-> 	   that are described in 5) below.
-> 
-> 5. When changing the DAX policy via toggling the persistent
-> FS_XFLAG_DAX flag, the change in behaviour for existing regular
-> files may not occur immediately. If the change must take effect
-> immediately, the administrator needs to:
-> 
-> 	1. stop the application so there are no active references to
-> 	   the data set the policy change will affect
-> 	2. evict the data set from kernel caches so it will be
-> 	   re-instantiated when the application is restarted. This can
-> 	   be acheived by:
-> 		a. drop-caches
-> 		b. a filesystem unmount and mount cycle
-> 		c. a system reboot
-> 
-> Hence if DAX access policy changes are required to take immediate
-> effect, scheduled system-wide downtime will be required to guarantee
-> the new policy change takes effect when the application is
-> restarted.
-> 
-> 
-> > <quote>
-> > Enabling DAX on xfs
-> > -------------------
-> > 
-> > Summary
-> > -------
-> > 
-> >  1. There exists an in-kernel file access mode flag S_DAX that corresponds to
-> >     the statx flag STATX_ATTR_DAX.  See the manpage for statx(2) for details
-> >     about this access mode.
-> > 
-> >  2. There exists a regular file and directory inode flag FS_XFLAG_DAX.  It is
-> >     inherited from the parent directory FS_XFLAG_DAX inode flag at creation
-> >     time.  This advisory flag can be set or cleared at any time, but doing so
-> >     does not immediately affect the S_DAX state.
-> 
-> 2. There exists a persistent flag FS_XFLAG_DAX that can be applied to
-> regular files and directories. This advisory flag can be set or
-> cleared at any time, but doing so does not immediately affect the
-> S_DAX state.
+WOW Huh ***Votings***!
 
-Done.
+Originally the patchset from Nick had LD_IS_BFD, LD_IS_GOLD and LD_IS_LLD.
 
-> 
-> 3. If the persistent FS_XFLAG_DAX flag is set on a directory, this
-> flag will be inherited by all regular files and sub directories that
-> are subsequently created in this directory. Files and subdirectories
-> that exist at the time this flag is set or cleared on the parent
-> directory are not modified by this modification of the parent
-> directory.
-> 
+As pointed out GOLD is no more suitable to link the kernel and thus
+deactivated (AFAICS Thomas Gleixner did this).
 
-Done.
+Personally, I am OK with ***LD_IS_LD*** because we have now
+***LD_VERSION*** which was introduced in Linux v5.7-rc1.
+We have the pair LD_IS_LD and LD_VERSION like CC_IS_GCC and GCC_VERSION.
+The only thing I would like to be changed is the comment in
+***scripts/ld-version.sh*** to mention "GNU/ld (binutils)" if you
+decide for LD_IS_LD or not.
+But I am OK with LD_IS_BFD.
+If you ask people what they come into mind when speaking of "ld" - 99%
+of the answers of this people will point to GNU/ld from GNU/binutils.
+This is simply a fact in the Linux-kernel world.
 
-> 
-> > 
-> >  3. There exists dax mount options which can override FS_XFLAG_DAX in the
-> >     setting of the S_DAX flag.  Given underlying storage which supports DAX the
-> >     following hold.
-> > 
-> >     "-o dax=inode"  means "follow FS_XFLAG_DAX" and is the default.
-> > 
-> >     "-o dax=never"  means "never set S_DAX, ignore FS_XFLAG_DAX."
-> > 
-> >     "-o dax=always" means "always set S_DAX ignore FS_XFLAG_DAX."
-> > 
-> >     "-o dax"        is a legacy option which is an alias for "dax=always".
-> >     		    This may be removed in the future so "-o dax=always" is
-> > 		    the preferred method for specifying this behavior.
-> > 
-> >     NOTE: Setting and inheritance affect FS_XFLAG_DAX at all times even when
-> >     the file system is mounted with a dax option.  However, in-core inode
-> >     state (S_DAX) will continue to be overridden until the file system is
-> 
-> s/continue to//
+I am living in my x86 world and do not test with cross-compilation or
+any other archs like ARM or MIPS or whatever.
+So, I might not catch all corner-cases.
 
-Done.
+Some bots like kbuild-bot(?) already sent some warnings on my patchset.
 
-> 
-> >     remounted with dax=inode and the inode is evicted.
-> 
-> evicted from kernel memory.
+My ***main interest*** is to have good support of ***LLD*** which is
+my primary linker.
 
-Done.
+Why?
+(Might be off-topic here in this thread)
 
-> 
-> > 
-> >  4. Programs that require a specific file access mode (DAX or not DAX)
-> >     can do one of the following:
-> > 
-> >     (a) Set the parent directory FS_XFLAG_DAX as needed before file are
-> >         created; or
-> > 
-> >     (b) Have the administrator set the desired behaviour via mount option; or
-> > 
-> >     (c) Set or clear the file's FS_XFLAG_DAX flag as needed and wait for the
-> >         inode to be evicted from memory.
-> > 
-> > 	i> the only effective way of ensuring this is to request the admin drop
-> > 	   the file system caches.
-> 
-> See my comments above.
+"Numbers talk, bullshit walks." (Linus Torvalds)
 
-Done. thanks!
+Please, compile yourself (here: Debian/testing AMD64)...
 
-> 
-> > 
-> > 
-> > Details
-> > -------
-> > 
-> > There are 2 per-file dax flags.  One is a persistent inode setting (FS_XFLAG_DAX)
-> > and the other is a volatile flag indicating the active state of the feature
-> > (S_DAX).
-> > 
-> > FS_XFLAG_DAX is preserved within the file system.  This persistent config
-> > setting can be set, cleared and/or queried using the FS_IOC_FS[GS]ETXATTR ioctl
-> > (see ioctl_xfs_fsgetxattr(2)) or an utility such as 'xfs_io'.
-> > 'chattr [-+]x'".
-> 
-> Stray line.
+#1: gcc 9.3 with GNU/ld (binutils)
+#2: gcc 9.3 with ld.lld-10
+#3: clang-10 and ld.lld-10
 
-Thanks for the review!  V11 should be out soon.
+I have not the same code-base to compare, but first numbers:
 
-Ira
+Even the combo of gcc-9.3 and ld.lld-10 produces 5GiB more disc-space
+in my linux-git.
+The debug binaries and the resulting Debian debug packages are
+significantly bigger
 
-> 
-> Cheers,
-> 
-> Dave.
-> 
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+$ cd stats
+
+$ cat 5.7.0-rc*/disc-usage.txt
+23406   linux
+1951    archives/5.7.0-rc1-2-amd64-gcc <--- XXX: gcc-9.3 + ld.lld-10
+17958   linux
+1365    5.7.0-rc2-1-amd64-clang <--- XXX: LLVM/Clang/LLD
+10.0.1-git-92d5c1be9ee93850c0a8903f05f36a23ee835dc2
+
+$ cd archives
+
+$ du -m 5.7.0-rc*/linux-image-*-dbg*_amd64.deb
+617     5.7.0-rc1-2-amd64-gcc/linux-image-5.7.0-rc1-2-amd64-gcc-dbg_5.7.0~rc1-2~bullseye+dileks1_amd64.deb
+424     5.7.0-rc2-1-amd64-clang/linux-image-5.7.0-rc2-1-amd64-clang-dbg_5.7.0~rc2-1~bullseye+dileks1_amd64.deb
+
+$ du -m 5.7.0-rc*/vmlinux*
+603     5.7.0-rc1-2-amd64-gcc/vmlinux
+7       5.7.0-rc1-2-amd64-gcc/vmlinux.compressed
+597     5.7.0-rc1-2-amd64-gcc/vmlinux.o
+409     5.7.0-rc2-1-amd64-clang/vmlinux
+7       5.7.0-rc2-1-amd64-clang/vmlinux.compressed
+404     5.7.0-rc2-1-amd64-clang/vmlinux.o
+
+As said - not the same code and patch base!
+
+This needs definitely to be investigated.
+
+LLD seems to be - seen from the numbers - be a lot of "smarter".
+
+Have more fun!
+
+Regards and happy first day of Ramadan if you celebrate it,
+- Sedat -
+
+P.S.: A build of Linux v5.7-rcX with gcc-9.3 as compiler is much much
+faster here.
