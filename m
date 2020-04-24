@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD7EC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E3EDC55194
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5639D20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:25:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23FBA20700
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587731111;
-	bh=NuRlHIjlB91sUF8amoWtOUcTAyrC/yg678lKo8O7yEI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=CvgeJSzKX3KFuvrRMW9tn+5mh22MQkkGSkjtWj3MO/bv6/SyqY2mpIdHrQ/C1iP0H
-	 14lpskUUcqnohHmndSJv+qV3PfAYTW9IDK/kdr1tYv831J9UuymrQzzKsFPnOvc8RF
-	 CqR0x+R+LYDP7eQxn0bm22gvhHlAUzE2UTdJwsMQ=
+	s=default; t=1587731116;
+	bh=ySL282Fl7aUcXPkzqQzibkmlNVMn1FzT4+uJENDy+Do=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=N0LtF5dUX+lhrJlcLimIPSQZ+QtZTrvtc1j8F4iVzyXgxk8HXlduf9eYoSVbIQzkv
+	 waFYKhMvTIXkmmyqvhvLF4EUFZPwKMjOK8jnmlY3sYrh6i6mb+dDwCchyGdFI+RO/J
+	 w3CBilGeTynEfFL+hHKsmMDG5XW3fmKs8uVRWI9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbgDXMZK (ORCPT
+        id S1728684AbgDXMZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:25:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56132 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:25:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727065AbgDXMZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:25:05 -0400
+        id S1728637AbgDXMZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:25:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9A2E20700;
-        Fri, 24 Apr 2020 12:25:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0064821BE5;
+        Fri, 24 Apr 2020 12:25:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587731105;
-        bh=NuRlHIjlB91sUF8amoWtOUcTAyrC/yg678lKo8O7yEI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=1Z3V5lMd9sVlkZnsFRXb69XxMbUZ/mTZA1+F/8RsAxb5UPCCYD/nwM5p8jwsKCzBP
-         /KaP2FKOWtDtAbGwSZ5IujbxksLodazcNSb2M1ppM0A6IseoDzW1pt32jodEr8XhwC
-         kiu1F5hKWnSXJRlDrBkE4qJI6yJmzzRqmjos+xHc=
+        s=default; t=1587731108;
+        bh=ySL282Fl7aUcXPkzqQzibkmlNVMn1FzT4+uJENDy+Do=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=r3Q+EHUZxIH32dqdILcjtVHovwmQ54ikSWcLhwHouhOnee3NK3coDcyHo/1HiKD5N
+         JSzapU9bBWLg1mrsDjTJMhi3+JGHhPfrVyyClNzfps/mWlKWZzm1Wy3poslfjuKps3
+         i10GniK8cUBpzqbfphDt/DOQNyRx2zlZhLaA/Puw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.4 1/8] ALSA: hda: Don't release card at firmware loading error
-Date:   Fri, 24 Apr 2020 08:24:56 -0400
-Message-Id: <20200424122503.11046-1-sashal@kernel.org>
+Cc:     Li Bin <huawei.libin@huawei.com>,
+        Douglas Gilbert <dgilbert@interlog.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 4/8] scsi: sg: add sg_remove_request in sg_common_write
+Date:   Fri, 24 Apr 2020 08:24:59 -0400
+Message-Id: <20200424122503.11046-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200424122503.11046-1-sashal@kernel.org>
+References: <20200424122503.11046-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -56,61 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Li Bin <huawei.libin@huawei.com>
 
-[ Upstream commit 25faa4bd37c10f19e4b848b9032a17a3d44c6f09 ]
+[ Upstream commit 849f8583e955dbe3a1806e03ecacd5e71cce0a08 ]
 
-At the error path of the firmware loading error, the driver tries to
-release the card object and set NULL to drvdata.  This may be referred
-badly at the possible PM action, as the driver itself is still bound
-and the PM callbacks read the card object.
+If the dxfer_len is greater than 256M then the request is invalid and we
+need to call sg_remove_request in sg_common_write.
 
-Instead, we continue the probing as if it were no option set.  This is
-often a better choice than the forced abort, too.
-
-Fixes: 5cb543dba986 ("ALSA: hda - Deferred probing with request_firmware_nowait()")
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207043
-Link: https://lore.kernel.org/r/20200413082034.25166-2-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Link: https://lore.kernel.org/r/1586777361-17339-1-git-send-email-huawei.libin@huawei.com
+Fixes: f930c7043663 ("scsi: sg: only check for dxfer_len greater than 256M")
+Acked-by: Douglas Gilbert <dgilbert@interlog.com>
+Signed-off-by: Li Bin <huawei.libin@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c | 19 +++++--------------
- 1 file changed, 5 insertions(+), 14 deletions(-)
+ drivers/scsi/sg.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index 3e3277100f08a..0fa0c33660087 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -1839,24 +1839,15 @@ static void azx_firmware_cb(const struct firmware *fw, void *context)
- {
- 	struct snd_card *card = context;
- 	struct azx *chip = card->private_data;
--	struct pci_dev *pci = chip->pci;
--
--	if (!fw) {
--		dev_err(card->dev, "Cannot load firmware, aborting\n");
--		goto error;
--	}
+diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
+index e1639e80db536..63e21ca538f19 100644
+--- a/drivers/scsi/sg.c
++++ b/drivers/scsi/sg.c
+@@ -820,8 +820,10 @@ sg_common_write(Sg_fd * sfp, Sg_request * srp,
+ 			"sg_common_write:  scsi opcode=0x%02x, cmd_size=%d\n",
+ 			(int) cmnd[0], (int) hp->cmd_len));
  
--	chip->fw = fw;
-+	if (fw)
-+		chip->fw = fw;
-+	else
-+		dev_err(card->dev, "Cannot load firmware, continue without patching\n");
- 	if (!chip->disabled) {
- 		/* continue probing */
--		if (azx_probe_continue(chip))
--			goto error;
-+		azx_probe_continue(chip);
- 	}
--	return; /* OK */
--
-- error:
--	snd_card_free(card);
--	pci_set_drvdata(pci, NULL);
- }
- #endif
+-	if (hp->dxfer_len >= SZ_256M)
++	if (hp->dxfer_len >= SZ_256M) {
++		sg_remove_request(sfp, srp);
+ 		return -EINVAL;
++	}
  
+ 	k = sg_start_req(srp, cmnd);
+ 	if (k) {
 -- 
 2.20.1
 
