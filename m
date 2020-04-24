@@ -2,87 +2,118 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B690C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B66C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3E7220774
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D70AF20774
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:52:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587747089;
-	bh=v47mgOKAClzASxcV2Mt75OgxIokGkWQHNoCwnSJqPWA=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=LADTOTERhhDtCXM0HxDi9zhLw+60EiIr4GJ0kzQO2JIJ8byTa9/ElwyX2gxLe5u7J
-	 H99qEQyvGkjkhgmptOMm2rlOkd5RK4cc0MmZRegUEvuJBrvPL3ua0Xy83NC+66+RWN
-	 Mz65yr5FQfkhPwaM/FY7FIw22miIqjExl60Op7pw=
+	s=default; t=1587747132;
+	bh=lQE9T5LzPof7nBKO8GPRqY/ZDhq/5vz9BEA3Xz2iqkY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JJxpy0dr51fL9VIFsIspkzWgMPvfJ9OX+FMrb41CgiCRVAQVFP7FMCnpuKFfwD6b1
+	 ygy+VBLp4LEMNw+O5enm84o8arIQmqL/zDqb2E9vFDRX4xFeRaJoVE/EuJRjxggtrS
+	 UBDOsvnb41YOl5jfutu0OtE2j36pFOWl9ZAKPRH8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbgDXQv3 (ORCPT
+        id S1728640AbgDXQwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 12:51:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49820 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 12:52:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727031AbgDXQv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 12:51:28 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728019AbgDXQwL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 12:52:11 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50D6F20728;
-        Fri, 24 Apr 2020 16:51:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98F7620728;
+        Fri, 24 Apr 2020 16:52:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587747087;
-        bh=v47mgOKAClzASxcV2Mt75OgxIokGkWQHNoCwnSJqPWA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=QJSZlg2jczNQ0oqxMs1FnlaRM5IhqNa1apITy8fV4t+qOxnXQKjTliYnLGpV+QR5D
-         LZ3FJYfxSmpbVmy7ZDCbuOGp3Jc+dM2GQ74RzOfpRRZvKTTytdsJOxcvtYEaBB+GGF
-         tTzcN1AhWiuFbKYfyxokAWz2OEDKKM5uRmeMkTUg=
-Subject: Re: [PATCH 4.4 00/99] 4.4.220-rc2 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200423103313.886224224@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <499f3bd9-b8cb-1858-0f5e-e19b4340faeb@kernel.org>
-Date:   Fri, 24 Apr 2020 10:51:26 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        s=default; t=1587747131;
+        bh=lQE9T5LzPof7nBKO8GPRqY/ZDhq/5vz9BEA3Xz2iqkY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zwe6qKlD9HGccAzrGsOmDRlLxNKacRmL5rd1qt5514PO1CKcnllydC8GICKjA88rV
+         YrLEuwlJNm/UCVAvHoBWk/GNLWbaET2ahkD7U3XfIJ6OvRM/WwTJZ4usN1lTcKcUIh
+         DtEFqVHcfwAufNmZI4o2tnHzwRv8I1VOzVHvJEio=
+Date:   Fri, 24 Apr 2020 17:52:05 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Marco Elver <elver@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [PATCH v4 00/11] Rework READ_ONCE() to improve codegen
+Message-ID: <20200424165204.GG21141@willie-the-truck>
+References: <20200421151537.19241-1-will@kernel.org>
+ <CAHk-=wjjz927czq5zKkV1TUvajbWZGsPeFBSgnQftLNWmCcoSg@mail.gmail.com>
+ <20200422081838.GA29541@willie-the-truck>
+ <20200422113721.GA20730@hirez.programming.kicks-ass.net>
+ <20200422122626.GA676@willie-the-truck>
+ <20200424134238.GE21141@willie-the-truck>
+ <CANpmjNP-r_18QwJcOHFtmPeGrN3gx-E=bj+_GaDYEaQ08DWgnw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200423103313.886224224@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNP-r_18QwJcOHFtmPeGrN3gx-E=bj+_GaDYEaQ08DWgnw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/23/20 4:34 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.220 release.
-> There are 99 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Fri, Apr 24, 2020 at 05:54:10PM +0200, Marco Elver wrote:
+> On Fri, 24 Apr 2020 at 15:42, Will Deacon <will@kernel.org> wrote:
+> > On Wed, Apr 22, 2020 at 01:26:27PM +0100, Will Deacon wrote:
+> > > On Wed, Apr 22, 2020 at 01:37:21PM +0200, Peter Zijlstra wrote:
+> > > > So I'm obviously all for these patches; do note however that it collides
+> > > > most mighty with the KCSAN stuff, which I believe is still pending.
+> > >
+> > > That stuff has been pending for the last two releases afaict :/
+> > >
+> > > Anyway, I'm happy to either provide a branch with this series on, or do
+> > > the merge myself, or send this again based on something else. What works
+> > > best for you? The only thing I'd obviously like to avoid is tightly
+> > > coupling this to KCSAN if there's a chance of it missing the merge window
+> > > again.
+> >
+> > FWIW, I had a go at rebasing onto linux-next, just to get an idea for how
+> > bad it is. It's fairly bad, and I don't think it's fair to inflict it on
+> > sfr. I've included the interesting part of the resulting compiler.h below
+> > for you and the KCSAN crowd to take a look at (yes, there's room for
+> > subsequent cleanup, but I was focussing on the conflict resolution for now).
 > 
-> Responses should be made by Sat, 25 Apr 2020 10:31:20 +0000.
-> Anything received after that time might be too late.
+> Thanks for the heads up. From what I can tell, your proposed change
+> may work fine for KCSAN. However, I've had trouble compiling this:
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.220-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
-> and the diffstat can be found below.
+> 1. kcsan_disable_current() / kcsan_enable_current() do not work as-is,
+> because READ_ONCE/WRITE_ONCE seems to be used from compilation units
+> where the KCSAN runtime is not available (e.g.
+> arch/x86/entry/vdso/Makefile which had to set KCSAN_SANITIZE := n for
+> that reason).
+> 2. Some new uaccess whitelist entries were needed.
 > 
-> thanks,
+> I think this is what's needed:
+> https://lkml.kernel.org/r/20200424154730.190041-1-elver@google.com
 > 
-> greg k-h
-> 
+> With that you can change the calls to __kcsan_disable_current() /
+> __kcsan_enable_current() for READ_ONCE() and WRITE_ONCE(). After that,
+> I was able to compile, and my test suite passed.
 
-Compiled and booted on my test system. No dmesg regressions.
+Brill, thanks Marco! I'll take a look at your other patches, but I'm pretty
+stuck until we've figured out the merging plan for all of this.
 
-thanks,
--- Shuah
+Will
