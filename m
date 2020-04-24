@@ -4,53 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 815F7C55191
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7D7C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60A002087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89A8B20700
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:28:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587731306;
-	bh=Mi2EeL3jHCWIbg8Moz3TNZ/gICusH4EaR9zxNVDG98U=;
+	s=default; t=1587731310;
+	bh=21jnwet0trPW2Kv3E6ihRnckW6TR5od8KkJAPHwPeqE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hkO/MW9e/d2llJehn9PWngZkNZNGtuMpShhy34MG1pyZdeo1Rj0XGxM/TI61Xn+jY
-	 ZV5xwxXccIqEFZBkTk3rxCTfgHJs05uPT99OIg5YGEXxDwUBkNVJd2qwuPBFPpyMB/
-	 XjvRS+n+AZl5GEJrBXIecU8Kc8URsOkqYXFRWTPs=
+	b=1HLSHHZNnXNfeN66+McXnYMyw0NuSMaP7rNNU7iCQUT9qZC5lcLAeep9TQzX9eRqO
+	 gKGCeepuCK6rKv+kSstq0EPsaJCcce9uFXoRRM++Z7qKE77LaJMsHybX5sA2O9gU3P
+	 b1uJuO25EcHmqdxC0SxhaXLu4ig/7ChQVTgq7arA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728323AbgDXMYP (ORCPT
+        id S1728691AbgDXM22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:24:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54438 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:28:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728277AbgDXMYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:24:07 -0400
+        id S1728325AbgDXMYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:24:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 193682168B;
-        Fri, 24 Apr 2020 12:24:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B20D621835;
+        Fri, 24 Apr 2020 12:24:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587731047;
-        bh=Mi2EeL3jHCWIbg8Moz3TNZ/gICusH4EaR9zxNVDG98U=;
+        s=default; t=1587731055;
+        bh=21jnwet0trPW2Kv3E6ihRnckW6TR5od8KkJAPHwPeqE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M8J3xbhelkcipkBzj21mrlm2P0TaRMJylbyMtxFpGB1tT4HLxGpTV7Shz+MnYQ3sx
-         fS0+Ip6YSIrDwab/hvR/YfxImV7pPSXSi4Iuwt0qmcWbUo8AorvM8DCWAoQf+XBwAK
-         8FNibasQQx3pA+BijkB7vmaQKT9Zi7XJca8A+7EU=
+        b=L7W/2T83CUnd5AGRNZR9YaKAv87omwC9MfZ0t+RxJSHbBE4uoqNHvZrREM1Y3Z+Jd
+         OXbPVg3S+37kF6Yy6+hpfEXlBpfKAxezBV23jJ8qrHRqqjINVrefxQBLlltg+4SQ9S
+         geXIIjMiBq8aQq9M540rGheejGhYp8+srUIHrj8E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Borislav Petkov <bp@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 09/18] objtool: Fix CONFIG_UBSAN_TRAP unreachable warnings
-Date:   Fri, 24 Apr 2020 08:23:46 -0400
-Message-Id: <20200424122355.10453-9-sashal@kernel.org>
+Cc:     Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 16/18] ext4: increase wait time needed before reuse of deleted inode numbers
+Date:   Fri, 24 Apr 2020 08:23:53 -0400
+Message-Id: <20200424122355.10453-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200424122355.10453-1-sashal@kernel.org>
 References: <20200424122355.10453-1-sashal@kernel.org>
@@ -63,67 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Theodore Ts'o <tytso@mit.edu>
 
-[ Upstream commit bd841d6154f5f41f8a32d3c1b0bc229e326e640a ]
+[ Upstream commit a17a9d935dc4a50acefaf319d58030f1da7f115a ]
 
-CONFIG_UBSAN_TRAP causes GCC to emit a UD2 whenever it encounters an
-unreachable code path.  This includes __builtin_unreachable().  Because
-the BUG() macro uses __builtin_unreachable() after it emits its own UD2,
-this results in a double UD2.  In this case objtool rightfully detects
-that the second UD2 is unreachable:
+Current wait times have proven to be too short to protect against inode
+reuses that lead to metadata inconsistencies.
 
-  init/main.o: warning: objtool: repair_env_string()+0x1c8: unreachable instruction
+Now that we will retry the inode allocation if we can't find any
+recently deleted inodes, it's a lot safer to increase the recently
+deleted time from 5 seconds to a minute.
 
-We weren't able to figure out a way to get rid of the double UD2s, so
-just silence the warning.
-
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/6653ad73c6b59c049211bd7c11ed3809c20ee9f5.1585761021.git.jpoimboe@redhat.com
+Link: https://lore.kernel.org/r/20200414023925.273867-1-tytso@mit.edu
+Google-Bug-Id: 36602237
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/check.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ fs/ext4/ialloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 9479c74af9baf..4613d796492ab 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2086,14 +2086,27 @@ static bool ignore_unreachable_insn(struct instruction *insn)
- 	    !strcmp(insn->sec->name, ".altinstr_aux"))
- 		return true;
+diff --git a/fs/ext4/ialloc.c b/fs/ext4/ialloc.c
+index dafa7e4aaecb9..8876eaad10f68 100644
+--- a/fs/ext4/ialloc.c
++++ b/fs/ext4/ialloc.c
+@@ -665,7 +665,7 @@ static int find_group_other(struct super_block *sb, struct inode *parent,
+  * block has been written back to disk.  (Yes, these values are
+  * somewhat arbitrary...)
+  */
+-#define RECENTCY_MIN	5
++#define RECENTCY_MIN	60
+ #define RECENTCY_DIRTY	300
  
-+	if (!insn->func)
-+		return false;
-+
-+	/*
-+	 * CONFIG_UBSAN_TRAP inserts a UD2 when it sees
-+	 * __builtin_unreachable().  The BUG() macro has an unreachable() after
-+	 * the UD2, which causes GCC's undefined trap logic to emit another UD2
-+	 * (or occasionally a JMP to UD2).
-+	 */
-+	if (list_prev_entry(insn, list)->dead_end &&
-+	    (insn->type == INSN_BUG ||
-+	     (insn->type == INSN_JUMP_UNCONDITIONAL &&
-+	      insn->jump_dest && insn->jump_dest->type == INSN_BUG)))
-+		return true;
-+
- 	/*
- 	 * Check if this (or a subsequent) instruction is related to
- 	 * CONFIG_UBSAN or CONFIG_KASAN.
- 	 *
- 	 * End the search at 5 instructions to avoid going into the weeds.
- 	 */
--	if (!insn->func)
--		return false;
- 	for (i = 0; i < 5; i++) {
- 
- 		if (is_kasan_insn(insn) || is_ubsan_insn(insn))
+ static int recently_deleted(struct super_block *sb, ext4_group_t group, int ino)
 -- 
 2.20.1
 
