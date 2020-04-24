@@ -2,219 +2,92 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25833C55191
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D48C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3BC020736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:40:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bBfkpuWz"
+	by mail.kernel.org (Postfix) with ESMTP id 6E91520736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:41:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgDXJkH (ORCPT
+        id S1726746AbgDXJlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 05:40:07 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:25524 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726494AbgDXJkG (ORCPT
+        Fri, 24 Apr 2020 05:41:36 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:29049 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726665AbgDXJlf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 05:40:06 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587721205; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=rekLU09/3Cv7LAWd7/5Px5rmTpuddbamtpPpCDzbFDw=; b=bBfkpuWzIWexC/Kz/glS9s7lSFMXQscgu74IbOC+bKmRRvvE5U/F48/c3WvLwJnn3mnv8Jwe
- sD4rgxmg5h/jv7a6fW+icpc2C7Mg1niJECQiszGlQiL1xLBHOXMSza6O8oI2Xw6SavhJk0Et
- J/PZypNqBwGu90pmCCy5rPA1JP8=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea2b3f3.7fc46c44c880-smtp-out-n03;
- Fri, 24 Apr 2020 09:40:03 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id EA355C433BA; Fri, 24 Apr 2020 09:40:01 +0000 (UTC)
-Received: from [192.168.43.137] (unknown [106.213.151.218])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7F7A7C433CB;
-        Fri, 24 Apr 2020 09:39:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7F7A7C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [RFC v3] irqchip: qcom: pdc: Introduce irq_set_wake call
-To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, linus.walleij@linaro.org, tglx@linutronix.de,
-        maz@kernel.org, jason@lakedaemon.net, dianders@chromium.org,
-        rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org
-References: <1585586460-3272-1-git-send-email-mkshah@codeaurora.org>
- <1585586460-3272-2-git-send-email-mkshah@codeaurora.org>
- <158682455899.84447.8337952928773625866@swboyd.mtv.corp.google.com>
- <1f1322be-c93a-f2f2-c2fe-541f26d8682c@codeaurora.org>
- <158693796555.105027.4658047860202135403@swboyd.mtv.corp.google.com>
- <bddc11e0-8d9a-dd55-3aab-42aeb18204f4@codeaurora.org>
- <158755213744.163502.17257131401798918469@swboyd.mtv.corp.google.com>
- <7cb97940-18d6-75b1-f4d2-7a80a6fe68c8@codeaurora.org>
- <158769585826.135303.15159589318457908652@swboyd.mtv.corp.google.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <95ec19bb-0e94-4384-5cca-fb6dbd3607ea@codeaurora.org>
-Date:   Fri, 24 Apr 2020 15:09:50 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 24 Apr 2020 05:41:35 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-238-t_Zt5DGvOoelu7WWLG6BdA-1; Fri, 24 Apr 2020 10:41:30 +0100
+X-MC-Unique: t_Zt5DGvOoelu7WWLG6BdA-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 24 Apr 2020 10:41:30 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 24 Apr 2020 10:41:30 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Robin Murphy' <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "kernel-team@android.com" <kernel-team@android.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: RE: [PATCH v4 05/11] arm64: csum: Disable KASAN for do_csum()
+Thread-Topic: [PATCH v4 05/11] arm64: csum: Disable KASAN for do_csum()
+Thread-Index: AQHWGJKn2Kpp2f5dBUqU7GxfOqWk0qiE6POAgAMcVSA=
+Date:   Fri, 24 Apr 2020 09:41:30 +0000
+Message-ID: <db86e9fa88754d59ac5f8d3f4fe0f9a3@AcuMS.aculab.com>
+References: <20200421151537.19241-1-will@kernel.org>
+ <20200421151537.19241-6-will@kernel.org>
+ <20200422094951.GA54428@lakrids.cambridge.arm.com>
+ <20200422104138.GA30265@willie-the-truck>
+ <6efa0cc1-bd3e-b9b6-4e69-7ac05e6efe35@arm.com>
+In-Reply-To: <6efa0cc1-bd3e-b9b6-4e69-7ac05e6efe35@arm.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-In-Reply-To: <158769585826.135303.15159589318457908652@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+RnJvbTogUm9iaW4gTXVycGh5DQo+IFNlbnQ6IDIyIEFwcmlsIDIwMjAgMTI6MDINCi4uDQo+IFN1
+cmUgLSBJIGhhdmUgYSBuYWdnaW5nIGZlZWxpbmcgdGhhdCBpdCBjb3VsZCBzdGlsbCBkbyBiZXR0
+ZXIgV1JUDQo+IHBpcGVsaW5pbmcgdGhlIGxvYWRzIGFueXdheSwgc28gSSdtIGhhcHB5IHRvIGNv
+bWUgYmFjayBhbmQgcmVjb25zaWRlcg0KPiB0aGUgbG9jYWwgY29kZWdlbiBsYXRlci4gSXQgY2Vy
+dGFpbmx5IGRvZXNuJ3QgZGVzZXJ2ZSB0byBzdGFuZCBpbiB0aGUNCj4gd2F5IG9mIGNyb3NzLWFy
+Y2ggcmV3b3JrLg0KDQpIb3cgZmFzdCBkb2VzIHRoYXQgbG9vcCBhY3R1YWxseSBydW4/DQpUbyBt
+eSBtaW5kIGl0IHNlZW1zIHRvIGRvIGEgbG90IG9mIG9wZXJhdGlvbnMgb24gZWFjaCA2NGJpdCB2
+YWx1ZS4NCkknZCBoYXZlIHRob3VnaHQgdGhhdCBhIGxvb3AgYmFzZWQgb246DQoJc3VtNjQgPSAq
+cHRyOw0KCXN1bTY0X2hpZ2ggPSAqcHRyKysgPj4gMzI7DQphbmQgdGhlbiBmaXhpbmcgdXAgdGhl
+IHJlc3VsdCB3b3VsZCBiZSBmYXN0ZXIuDQoNClRoZSB4ODYtNjQgY29kZSBpcyBhbHNvIGJhZCEN
+Ck9uIGludGVsIGNwdSBwcmlvciB0byBoYXN3ZWxsIGEgc2ltcGxlOg0KCXN1bV82NCArPSAqcHRy
+MzIrKzsNCmlzIGZhc3RlciB0aGFuIHRoZSBjdXJyZW50IGNvZGUuDQooQWx0aG91Z2ggeW91IGNh
+biBkbyBhIGxvdCBiZXR0ZXIgZXZlbiBvbiBpdnkgYnJpZGdlLikNCg0KCURhdmlkDQoNCi0NClJl
+Z2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0
+b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykN
+Cg==
 
-On 4/24/2020 8:07 AM, Stephen Boyd wrote:
-> Quoting Maulik Shah (2020-04-22 05:14:21)
->> We discussed this in RFC v2, pasting your reply from same.
->>
->>> That looks like a bug. It appears that gpiolib is only hooking the irq
->>> disable path here so that it can keep track of what irqs are not in use
->>> by gpiolib and allow them to be used for GPIO purposes when the irqs are
->>> disabled. See commit 461c1a7d4733 ("gpiolib: override
->>> irq_enable/disable"). That code in gpiolib should probably see if lazy
->>> mode has been disabled on the irq and do similar things to what genirq
->>> does and then let genirq mask the gpios if they trigger during the time
->>> when the irq is disabled. Regardless of this design though, I don't
->>> understand why this matters.
-> Yeah. I'm saying that the gpiolib code that forces all gpio irqs to be
-> non-lazy is broken. Please send a patch to fix gpiolib so that irqs can
-> be lazy again.
-
-Let me reiterate.
-
-In below genirq code, if irq_chip did not choose to implement 
-.irq_disable (and the mask argument is coming as false by default during 
-first disable) from the caller of this,
-
-Then yes control takes lazy path since it doesn't enter to  if 
-(desc->irq_data.chip->irq_disable)  or else if (mask) case and the 
-__irq_disable call simply returns  without executing anything.
-
-This leaves IRQ enabled in HW during suspend even though driver done 
-disable_irq()
-
-static void __irq_disable(struct irq_desc *desc, bool mask)
-{
-         if (irqd_irq_disabled(&desc->irq_data)) {
-                 if (mask)
-                         mask_irq(desc);
-         } else {
-                 irq_state_set_disabled(desc);
-                 if (desc->irq_data.chip->irq_disable) {
-desc->irq_data.chip->irq_disable(&desc->irq_data);
-                         irq_state_set_masked(desc);
-                 } else if (mask) {
-                         mask_irq(desc);
-                 }
-         }
-}
-
-With above understanding, we have two more points to consider
-
-1. The gpiolib registers for .irq_disable for every gpio chip, making it 
-unlazy for every gpio chip.
-
-2. The irq_chip that registers with gpiolib (from pinctrl-msm.c, also 
-has .irq_disable implemented, and its parent PDC also has .irq_disable 
-implemented)
-
-Even if we fix point (1), by making gpiolib replicating genirq code,
-It still will call irq_disable (from replicated code in gpiolib now) 
-since irq_chip that registers with gpiolib has chosen to implement 
-.irq_disable.
-
-For other irq_chip's which don't implement .irq_disable, it will help.
-But since from point (2) we know that PDC irq_chip implements 
-.irq_disable, and would disable in HW the moment .irq_disable call comes in.
-
-
-> I thought it didn't matter before but now that I've
-> learned more it sounds like we have to use lazy irqs here so that irqs
-> stay enabled on the path to suspend while they're disabled but marked
-> for wakeup.
-
-The description for irq_disable() says...
-
-  * If the chip does not implement the irq_disable callback, we
-  * use a lazy disable approach. That means we mark the interrupt
-  * disabled, but leave the hardware unmasked. That's an
-  * optimization...
-
-Since PDC irq_chip implements .irq_disable callback, IRQ gets disabled 
-in HW immediatly.
-
-The comment says that lazy approch will be used if .irq_disable callback 
-is not implemented.
-
-IMO, client driver's should not assume/expect that underlying irq_chip 
-will take lazy path only,
-As it depends on whether irq_chip implemented .irq_disable callback or not.
-
-If a driver is relying on lazy disable approach till date, then the 
-driver should get fixed.
-(by removing the unnecessary disable_irq() during suspend)
-
-i suspect this might be the case in EC driver, on the platforms where it 
-worked fine till today,
-irq may not have been disabled in HW (may be that working platform's 
-irq_chip may not have implemented irq_disable
-hence support lazy disable which leaves IRQ unmasked in HW even after 
-disable_irq() and able to resume from suspend)
-
-
-> Otherwise I don't know how to make this work.
-There are 3 possible options to make it work
-
-1. Fix the EC driver (to stop calling disable_irq() during suspend) / 
-support unlazy disable in EC driver
-
-2. Support lazy disable (requires fixes in gpiolib and irq_chip also 
-should not implement .irq_disable callback)
-
-With above explanation, The PDC irq_chip want to keep continue implement 
-.irq_disable callback
-(we have different functionality in .irq_mask and .irq_disable 
-implementation)
-
-so option 2 is ruled out IMO.
-
-3. We use this patch
-
-The current patch makes this work by re-enabling such IRQs in HW during 
-suspend's very end point, and restores state during resume.
-
-i can not think of any other option.
-
-Let me know if you now agree to go with option (1)
-
-Otherwise, for option (3),
-
-i can post next revision after addressing some minor fixes/suggestions.
-I have tried to make this further simpler by not operating on both 
-PDC-GPIO and PDC irq domains,
-but it seems we need to use both irq domains and take the action 
-accordingly during pdc_suspend() and pdc_resume().
-
-I have missed the default case in switch (noticed same during rpmh patch 
-doug has posted :-)), as it can get called for CLUSTER notification.
-Will fix in next revision.
-
-Thanks,
-Maulik
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
