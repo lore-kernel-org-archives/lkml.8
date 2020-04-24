@@ -2,175 +2,95 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3578EC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBA4C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D3ED2084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB3552084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:39:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="CvTlpgdn";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fmrKc0jh"
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="qW1fjVFB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728643AbgDXPgo (ORCPT
+        id S1729060AbgDXPjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:36:44 -0400
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:60131 "EHLO
-        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728607AbgDXPgi (ORCPT
+        Fri, 24 Apr 2020 11:39:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53306 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729037AbgDXPjB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:36:38 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id DD3F7334;
-        Fri, 24 Apr 2020 11:36:36 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:36:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=XgpR8YJnNmnYq
-        WrxoxGzp5tJxm5kpe8QM86vr3IeBP4=; b=CvTlpgdnk+I6xeAkpc11HZ8an/noN
-        v9bYUzMyT33rG+5aX4zp6+L6WSeLiljqVk8C7Z9tOBT30YRNWn1ubiIrSr3PdtpR
-        5xvJJz51P5HBMKwfXkxx5SzmLwwEeEl8s2QvLOICuc6X1MmAlnxPRaxldqkMz/m0
-        o1nufB8ZJT5qbu8G32AGWfk9Rjrk5vakoEeNWZJzCZZWqJG+IVSKtMInXV6ntC3O
-        14Bf8xnr3tCtwXNOolln4IiHdq/1KslFpPAr5yjBQveaVlHi5Lqg6mv9cmqkt7Wx
-        hu81risDkHsn1UfIVbsRclDgBkHacnaY6zAFePG5yjbtyaZ6Y/Z10raCw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=XgpR8YJnNmnYqWrxoxGzp5tJxm5kpe8QM86vr3IeBP4=; b=fmrKc0jh
-        xFyxYi/ovynC1lBCtJgTS7SQ6jcPrt7+lz2uuopqzo9gMXv6Pcck5BHcnpu4aEIs
-        WsSLYS+ZlXtWy07NXmBX1Gqc5gt8XKuBFygv+BCYLrD8XdKXl3+oBJl4L1G+BRC1
-        ZKq59jVsWOObQAAIjHdyZ/EnHCO73tQ4h8uZ+Naa0dTWJ97VmOwqdAGdcvryAOpY
-        p5xCWLiEtBrCyWnpX9M61KfmzNEj5GIw+djQ54FJeXRPB8eYSOEFdGt/2/UCUyGX
-        JBcNlNlVQu7q96bUkuWXL0UgpTyzcAw3KuDLVnPWcnat5dhKbB+mY++Qf66gZgfH
-        76vVHqNQmCZq6A==
-X-ME-Sender: <xms:hAejXjgmDTJ6T4BJ3N3y-AGvXKB4vjW7Mz3SReQ6uPW76iSrpwkBPQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrhedugdekiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpeegjeenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:hAejXrPTjrv2f4kHXG7v7_qg7cJ2t2dr0pQ2JgIEE1AiTmfzUUpOfA>
-    <xmx:hAejXm5zP81_YiT9fi_RHKXYORc85GGKoPdqTzHENyU3MTBLhJQ7-Q>
-    <xmx:hAejXqn_zRExBPY8onbYXlMurd9nbnggVv7WpSz-RPw7iKeZ8nfbrA>
-    <xmx:hAejXhHBz9WU0a-ofQ7qVaSFy42NliQCtK7pchg7c7cnK_QReBq0tAiECQw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 2534B3065D87;
-        Fri, 24 Apr 2020 11:36:36 -0400 (EDT)
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v2 53/91] drm/vc4: crtc: Add FIFO depth to vc4_crtc_data
-Date:   Fri, 24 Apr 2020 17:34:34 +0200
-Message-Id: <97f6f0dfa74264edf5bcb9c12b5424f5b8739021.1587742492.git-series.maxime@cerno.tech>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
-References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
+        Fri, 24 Apr 2020 11:39:01 -0400
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 876D6C09B045
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 08:39:01 -0700 (PDT)
+Received: by mail-wm1-x32a.google.com with SMTP id u127so11305448wmg.1
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 08:39:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=YSBMPH2SiMvyXNhOgsqYroFNDKcMckrugusrbaG1UMY=;
+        b=qW1fjVFBbdDldpxEkq1v3UYceJOVKO4e8h+dx18ZHmwBfMeB7tDoIKXT7CJdyE6tFn
+         H2yCZ4sCMX16NUANvxE0uJHz4pKUS/QbjFbDAEZg3ZprYH0q4/IYUjEB2EQ1KXRXn28U
+         ksRB59kvydHXpIiesXIeQWF19ASwHyX5SA+7E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=YSBMPH2SiMvyXNhOgsqYroFNDKcMckrugusrbaG1UMY=;
+        b=EooL9UwUbB/p22Y9nHeBi/OSwqEGlBV9XPdQ4JGv5Qk5VGSDWJBX62a+cbOobLcGGu
+         wFnoh166RmOtDWWGSVEA8d9YiQR0KPnxNWbtorbzR6vuxZweHHuDoilqKKdSt3a4VrkS
+         LC1IJpxSHs1snI0sh7jQP024/vaxl6bjWlXfIjl8LOafQZyljC3sCy1VwqmevTTvpc7b
+         4jTrmE3/j7H/fadoCSSN7fYg7nAs/rKcnvcDYNtK9vf3jJfrUe5f6eYm+DXfUMNx8/d3
+         ZCpO/N6Yjm/8SmTduOTQG6018b7PfjxAtx5Kn78BLci0fvH+MVWg3nJl9x9Qi/UOezxX
+         tSlQ==
+X-Gm-Message-State: AGi0PuYKvYtDogJNaG94uHPtdX1Iezd2IwKLo3BNrDyfJabIvFXod08y
+        s7TlMg/uXscr92gRgCgGjNPRag==
+X-Google-Smtp-Source: APiQypKKdDuBIK3RAel7TfdUZEJ9nb6qCSCu/AD3mzsQfBGssktdzJVcFdOgmONYb+33+dUh2wfrJg==
+X-Received: by 2002:a7b:c213:: with SMTP id x19mr10552650wmi.53.1587742740012;
+        Fri, 24 Apr 2020 08:39:00 -0700 (PDT)
+Received: from localhost ([2a01:4b00:8432:8a00:56e1:adff:fe3f:49ed])
+        by smtp.gmail.com with ESMTPSA id f7sm8614173wrt.10.2020.04.24.08.38.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Apr 2020 08:38:59 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 16:38:59 +0100
+From:   Chris Down <chris@chrisdown.name>
+To:     Suren Baghdasaryan <surenb@google.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: PSI poll() support for unprivileged users
+Message-ID: <20200424153859.GA1481119@chrisdown.name>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Not all pixelvalve FIFOs in vc5 have the same depth, so we need to add that
-to our vc4_crtc_data structure to be able to compute the fill level
-properly later on.
+Hi Suren,
 
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
----
- drivers/gpu/drm/vc4/vc4_crtc.c | 19 ++++++++++++++++---
- drivers/gpu/drm/vc4/vc4_drv.h  |  3 +++
- 2 files changed, 19 insertions(+), 3 deletions(-)
+I noticed that one restriction of the PSI poll() interface is that currently 
+only root can set up new triggers. Talking to Johannes, it seems the reason for 
+this was that you end up with a realtime kernel thread for every cgroup where a 
+trigger is set, and this could be used by unprivileged users to sap resources.
 
-diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
-index ea55d4ca2766..e9d71153c6c6 100644
---- a/drivers/gpu/drm/vc4/vc4_crtc.c
-+++ b/drivers/gpu/drm/vc4/vc4_crtc.c
-@@ -251,10 +251,20 @@ vc4_crtc_update_gamma_lut(struct drm_crtc *crtc)
- 	vc4_crtc_lut_load(crtc);
- }
- 
--static u32 vc4_get_fifo_full_level(u32 format)
-+static u32 vc4_get_fifo_full_level(struct vc4_crtc *vc4_crtc, u32 format)
- {
--	static const u32 fifo_len_bytes = 64;
-+	u32 fifo_len_bytes = vc4_crtc->data->fifo_depth;
- 
-+	/*
-+	 * Pixels are pulled from the HVS if the number of bytes is
-+	 * lower than the FIFO full level.
-+	 *
-+	 * The latency of the pixel fetch mechanism is 6 pixels, so we
-+	 * need to convert those 6 pixels in bytes, depending on the
-+	 * format, and then subtract that from the length of the FIFO
-+	 * to make sure we never end up in a situation where the FIFO
-+	 * is full.
-+	 */
- 	switch (format) {
- 	case PV_CONTROL_FORMAT_DSIV_16:
- 	case PV_CONTROL_FORMAT_DSIC_16:
-@@ -369,7 +379,7 @@ static void vc4_crtc_config_pv(struct drm_crtc *crtc)
- 
- 	CRTC_WRITE(PV_CONTROL,
- 		   VC4_SET_FIELD(format, PV_CONTROL_FORMAT) |
--		   VC4_SET_FIELD(vc4_get_fifo_full_level(format),
-+		   VC4_SET_FIELD(vc4_get_fifo_full_level(vc4_crtc, format),
- 				 PV_CONTROL_FIFO_LEVEL) |
- 		   VC4_SET_FIELD(pixel_rep - 1, PV_CONTROL_PIXEL_REP) |
- 		   PV_CONTROL_CLR_AT_START |
-@@ -1068,6 +1078,7 @@ static const struct vc4_crtc_data bcm2835_pv0_data = {
- 	.hvs_available_channels = BIT(0),
- 	.hvs_output = 0,
- 	.debugfs_name = "crtc0_regs",
-+	.fifo_depth = 64,
- 	.pixels_per_clock = 1,
- 	.encoder_types = {
- 		[PV_CONTROL_CLK_SELECT_DSI] = VC4_ENCODER_TYPE_DSI0,
-@@ -1079,6 +1090,7 @@ static const struct vc4_crtc_data bcm2835_pv1_data = {
- 	.hvs_available_channels = BIT(2),
- 	.hvs_output = 2,
- 	.debugfs_name = "crtc1_regs",
-+	.fifo_depth = 64,
- 	.pixels_per_clock = 1,
- 	.encoder_types = {
- 		[PV_CONTROL_CLK_SELECT_DSI] = VC4_ENCODER_TYPE_DSI1,
-@@ -1090,6 +1102,7 @@ static const struct vc4_crtc_data bcm2835_pv2_data = {
- 	.hvs_available_channels = BIT(1),
- 	.hvs_output = 1,
- 	.debugfs_name = "crtc2_regs",
-+	.fifo_depth = 64,
- 	.pixels_per_clock = 1,
- 	.encoder_types = {
- 		[PV_CONTROL_CLK_SELECT_DPI_SMI_HDMI] = VC4_ENCODER_TYPE_HDMI,
-diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
-index 6468c6df20b6..1ac27f8ec725 100644
---- a/drivers/gpu/drm/vc4/vc4_drv.h
-+++ b/drivers/gpu/drm/vc4/vc4_drv.h
-@@ -450,6 +450,9 @@ to_vc4_encoder(struct drm_encoder *encoder)
- }
- 
- struct vc4_crtc_data {
-+	/* Depth of the PixelValve FIFO in bytes */
-+	unsigned int fifo_depth;
-+
- 	/* Which channels of the HVS can the output source from */
- 	unsigned int hvs_available_channels;
- 
--- 
-git-series 0.9.1
+I'm building a userspace daemon for desktop users which notifies based on 
+pressure events, and it's particularly janky to ask people to run such a 
+notifier as root: the notification mechanism is usually tied to the user's 
+display server auth, and the surrounding environment is generally pretty 
+important to maintain. In addition to this, just in general this doesn't feel 
+like the kind of feature that by its nature needs to be restricted to root -- 
+it seems reasonable that there would be unprivileged users which want to use 
+this, and that not using RT threads would be acceptable in that scenario.
+
+Have you considered making the per-cgroup RT threads optional? If the 
+processing isn't done in the FIFO kthread for unprivileged users, I think it 
+should be safe to allow them to write to pressure files (perhaps with some 
+additional limits or restrictions on things like the interval, as needed).
+
+Thanks!
+
+Chris
