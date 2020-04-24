@@ -2,168 +2,173 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CD2C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 14:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7707DC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 14:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CD562071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 14:46:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f6wIq6Wk"
+	by mail.kernel.org (Postfix) with ESMTP id 60BDD2071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 14:46:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgDXOp7 (ORCPT
+        id S1727920AbgDXOqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 10:45:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44982 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726900AbgDXOp6 (ORCPT
+        Fri, 24 Apr 2020 10:46:03 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58570 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726900AbgDXOqA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 10:45:58 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BE7FC09B045;
-        Fri, 24 Apr 2020 07:45:56 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id t11so7889760lfe.4;
-        Fri, 24 Apr 2020 07:45:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=iH8/qrJUxibm5hpteaDetiyg70O8GZ3/bRpeHyBvoXI=;
-        b=f6wIq6Wk8kdhjuc3xofRYuEZ7+tzwG8wSG/EE3Nn4aAROdSCN9Pm+WbRLPz44JiiJB
-         6aN7qvcmIoI6wxSXCjGZSvQnrPD+erMdDrQ+EPpKBdxYg6Un57s/GnQWSu8EoK48ck5t
-         XgAFvWXYqaVCeZjOQi8TZsSq/gTlBecGXVNUmahhCMSOrUr0ifdDsFUP4OzD/nI6xknF
-         hHJ19kdg3TYvT9c4YAaAbyFqIatcQ/KX7cGwx0e3lJXMlIVGA+y1Nr/PIqQRWQPIueUO
-         wz0PFLpoz2kYPwBstpM9K5BZK5c35lVHR8PBAc8LW5uN+O6HQAhGXgWj2IRKc0p57i3K
-         Cu8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=iH8/qrJUxibm5hpteaDetiyg70O8GZ3/bRpeHyBvoXI=;
-        b=nUUS7NiYUX80p+vqFvJXVXbjwynzFooO47b9udkkdRZMvIYkt5n8nUglOGBj8q1iiU
-         vYgj5sFDwAk6ypwAQy099cMkGJjrzXgf/GAKsRB5laQt7nSJz02aVNsFJEi8Ya/FEbNW
-         kyPKjOZVxy9ufTosrlWKAwjwXAlz6WInHAMb4t1YKBqTg4wcM/x7dwkBG942lXkGeRWb
-         xl0oITqtHZA/KzmFy7+CNaYEGfh2/5lFXveGAENHT+xKWcpAYh2TPTLiO1qpaCcP0OMH
-         4YjiWThOzhMDrREZhnGD+uSukbwaA7Kad8U5QwuGCqCcRU3KsagSLkCmS58frnQsuoi3
-         ibQg==
-X-Gm-Message-State: AGi0PuZ0dhzvirljkuu4U3BsH4R6XxDVv7n6ycmdn+ML29G8hQrj2hi3
-        Y9zd3j8ahG8ITIcFV2CvcgiK9EzS
-X-Google-Smtp-Source: APiQypL7gVL6/UUdwYXz5Cw3+FkoespAOslKOehWov9NzOrKa0wNhB8XxfWO5o9Et+pdntpDReBXtQ==
-X-Received: by 2002:ac2:5b92:: with SMTP id o18mr3036957lfn.140.1587739552624;
-        Fri, 24 Apr 2020 07:45:52 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id r206sm4596060lff.65.2020.04.24.07.45.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Apr 2020 07:45:50 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
- for a long time
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>
-Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200324191217.1829-1-digetx@gmail.com>
- <20200324191217.1829-2-digetx@gmail.com>
- <1e259e22-c300-663a-e537-18d854e0f478@nvidia.com>
- <f59ba318-8e99-c486-fa4d-1ee28a7b203d@gmail.com>
- <b01cec76-bb39-9fb5-8f6e-4023c075e6b3@gmail.com>
- <8cd085e1-f9fd-6ec0-9f7a-d5463f176a63@nvidia.com>
- <db1132ce-53a8-371c-98e0-cb7cd91d5c7d@gmail.com>
- <fa344989-4cce-0d2c-dc93-4ca546823160@nvidia.com>
- <bba0a93a-8ec4-eda6-97f3-fb2ab0b9b503@gmail.com>
- <6f07e5c8-7916-7ea2-2fe7-d05f8f011471@nvidia.com>
- <77a31b2f-f525-ba9e-f1ae-2b474465bde4@gmail.com>
- <470b4de4-e98a-1bdc-049e-6259ad603507@nvidia.com>
- <d2531fc1-b452-717d-af71-19497e14ef00@gmail.com>
- <a5198024-7273-74c4-b4f4-3a29d042bc36@nvidia.com>
- <f8fb1f7f-2497-033e-ff2c-c86c6caa9706@gmail.com>
- <fd1ca178-1ea3-851f-20a6-10bf00453ce3@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <a5734f19-254e-b6bc-e791-fa1ac63f11a4@gmail.com>
-Date:   Fri, 24 Apr 2020 17:45:49 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <fd1ca178-1ea3-851f-20a6-10bf00453ce3@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Fri, 24 Apr 2020 10:46:00 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03OEXs8s090025;
+        Fri, 24 Apr 2020 10:45:51 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30jtk3xcwf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Apr 2020 10:45:51 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03OEjc79018177;
+        Fri, 24 Apr 2020 14:45:49 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma02fra.de.ibm.com with ESMTP id 30fs65h4yc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Apr 2020 14:45:49 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03OEjl9u58589366
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Apr 2020 14:45:47 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 012A6A4051;
+        Fri, 24 Apr 2020 14:45:47 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A7903A4040;
+        Fri, 24 Apr 2020 14:45:45 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.204.171])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 24 Apr 2020 14:45:45 +0000 (GMT)
+Message-ID: <1587739544.5190.14.camel@linux.ibm.com>
+Subject: Re: [PATCH 3/5] ima: Fix ima digest hash table key calculation
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>
+Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Date:   Fri, 24 Apr 2020 10:45:44 -0400
+In-Reply-To: <59a280b928db4c478f660d14c33cdd87@huawei.com>
+References: <20200325161116.7082-1-roberto.sassu@huawei.com>
+         <20200325161116.7082-3-roberto.sassu@huawei.com>
+         <1587588987.5165.20.camel@linux.ibm.com>
+         <11984a05a5624f64aed1ec6b0d0b75ff@huawei.com>
+         <1587660781.5610.15.camel@linux.ibm.com>
+         <59a280b928db4c478f660d14c33cdd87@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-24_07:2020-04-24,2020-04-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ spamscore=0 mlxlogscore=999 bulkscore=0 clxscore=1011 lowpriorityscore=0
+ priorityscore=1501 suspectscore=0 impostorscore=0 malwarescore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004240117
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-24.04.2020 10:10, Jon Hunter пишет:
-...
->> Could you please clarify why pm_runtime_get_sync() can't be used by the
->> I2C driver's in NOIRQ phase?
+On Fri, 2020-04-24 at 12:18 +0000, Roberto Sassu wrote:
+
+> > On Thu, 2020-04-23 at 10:21 +0000, Roberto Sassu wrote:
+> > > > Hi Roberto, Krsysztof,
+> > > >
+> > > > On Wed, 2020-03-25 at 17:11 +0100, Roberto Sassu wrote:
+> > > > > From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+> > > > >
+> > > > > Function hash_long() accepts unsigned long, while currently only one
+> > byte
+> > > > > is passed from ima_hash_key(), which calculates a key for ima_htable.
+> > > > Use
+> > > > > more bytes to avoid frequent collisions.
+> > > > >
+> > > > > Length of the buffer is not explicitly passed as a function parameter,
+> > > > > because this function expects a digest whose length is greater than
+> > the
+> > > > > size of unsigned long.
+> > > >
+> > > > Somehow I missed the original report of this problem https://lore.kern
+> > > > el.org/patchwork/patch/674684/.  This patch is definitely better, but
+> > > > how many unique keys are actually being used?  Is it anywhere near
+> > > > IMA_MEASURE_HTABLE_SIZE(512)?
+> > >
+> > > I did a small test (with 1043 measurements):
+> > >
+> > > slots: 250, max depth: 9 (without the patch)
+> > > slots: 448, max depth: 7 (with the patch)
+> > 
+> > 448 out of 512 slots are used.
+> > 
+> > >
+> > > Then, I increased the number of bits to 10:
+> > >
+> > > slots: 251, max depth: 9 (without the patch)
+> > > slots: 660, max depth: 4 (with the patch)
+> > 
+> > 660 out of 1024 slots are used.
+> > 
+> > I wonder if there is any benefit to hashing a digest, instead of just
+> > using the first bits.
 > 
-> Yes take a look at commit 1e2ef05bb8cf ("PM: Limit race conditions
-> between runtime PM and system sleep (v2)").
-
-I2C driver now uses irq-safe RPM since ede2299f7 ("i2c: tegra: Support
-atomic transfers"), and thus, the RPM's workqueue shouldn't be a
-problem. I guess RPM should work fine in this case, don't you think so?
-
-...
->> Yes, keeping PCI regulators always-enabled should be a good immediate
->> solution.
+> Before I calculated max depth until there is a match, not the full depth.
 > 
-> I was thinking about that, and I am not sure it is. I don't think that
-> the failure to send the I2C command should break suspend.
-
-It shouldn't, but looks like it should be a separate problem.
-
-....
-> So I confirmed that DMA is not the issue in this case. I tested this by
-> ensuring that DMA is never used. However, it is a potential problem
-> indeed.
+> #1
+> return hash_long(*((unsigned long *)digest), IMA_HASH_BITS);
+> #define IMA_HASH_BITS 9
 > 
->> Could you please try to apply this hunk and see if it makes any
->> difference (I'll probably make it as proper patch):
+> Runtime measurements: 1488
+> Violations: 0
+> Slots (used/available): 484/512
+> Max depth hash table: 10
 > 
-> Per my tests, I don't believe that it will as disabling DMA does not
-> resolve the problem.
+> #2
+> return *(unsigned long *)digest % IMA_MEASURE_HTABLE_SIZE;
+> #define IMA_HASH_BITS 9
 > 
->> It also could be that there is more than the suspend ordering problem,
->> but for now it is hard to tell without having a detailed log which
->> includes I2C/DMA/RPM traces.
+> Runtime measurements: 1491
+> Violations: 2
+> Slots (used/available): 489/512
+> Max depth hash table: 10
 > 
-> I have taken a look and I don't see any issues with ordering. I2C is
-> suspended after PCI. This did not change.
+> #3
+> return hash_long(*((unsigned long *)digest), IMA_HASH_BITS);
+> #define IMA_HASH_BITS 10
+> 
+> Runtime measurements: 1489
+> Violations: 0
+> Slots (used/available): 780/1024
+> Max depth hash table: 6
+> 
+> #4
+> return *(unsigned long *)digest % IMA_MEASURE_HTABLE_SIZE;
+> #define IMA_HASH_BITS 10
+> 
+> Runtime measurements: 1489
+> Violations: 0
+> Slots (used/available): 793/1024
+> Max depth hash table: 6
 
-Do you see a "completion done after timeout" messages in the KMSG log of
-the v5.6 kernel?
+At least for this measurement list sample, there doesn't seem to be
+any benefit to hashing the digest.  In terms of increasing the number
+of slots, the additional memory is minimal and shouldn't negatively
+affect small embedded devices.  Please make sure checkpatch doesn't
+flag it.
 
-Could you please try this hunk? Although, I'll be surprised if it
-changes anything.
+thanks,
 
---- >8 ---
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 36d7114823ce..7196084b15fd 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -1028,6 +1028,13 @@ tegra_i2c_wait_completion_timeout(struct
-tegra_i2c_dev *i2c_dev,
- 						  msecs_to_jiffies(timeout_ms));
- 		disable_irq(i2c_dev->irq);
-
-+		/*
-+		 * There is a chance that completion may happen after IRQ
-+		 * synchronization, which is done by disable_irq().
-+		 */
-+		if (ret == 0 && completion_done(complete))
-+			ret = 1;
-+
- 		/*
- 		 * Under some rare circumstances (like running KASAN +
- 		 * NFS root) CPU, which handles interrupt, may stuck in
---- >8 ---
+Mimi
