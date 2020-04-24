@@ -4,56 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9023C55191
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2923C55194
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8492020767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9421920700
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:37:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="hK8sgt3x"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="YAHqjp9j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgDXLh1 (ORCPT
+        id S1726939AbgDXLhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 07:37:27 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:43916 "EHLO
+        Fri, 24 Apr 2020 07:37:25 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:43894 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726831AbgDXLhY (ORCPT
+        by vger.kernel.org with ESMTP id S1726699AbgDXLhX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 07:37:24 -0400
+        Fri, 24 Apr 2020 07:37:23 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 77B99C00E0;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 01EDEC033A;
         Fri, 24 Apr 2020 11:37:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1587728243; bh=hFru8LZBc46qgU3/SBVkJocidWlFzfoaiEu/7j+x3SY=;
+        t=1587728243; bh=t1u/b9URLHxzkXkdDqsLLKlZ2VysHQq+blYp3IVJB48=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=hK8sgt3xWQn3prukyE5/jXSGyK1iZrqIYE/e37JJLV3/s0S7798AzSFJHr65Lh45u
-         LGfal4VByg2s+4Sc4Cm24rG4A3j83qqlbMuZ4H5sQisH+kp/PqHpQcvyzYYPmL+fer
-         FoLjP89/TWHG7wh6kd7FCpj5oo4tpV0sSlKHGP95PosLkbwpA+Byk6PZ8G5XWewtjh
-         ujiWxXWqhCPNWffeCwf3AOAFB2A3W6qKkc9eSaNJK0FVW4F2+V3TIgb0W9pbTcZcRi
-         I1w+iabg36zNfnZ5idEwX/LRGGGVwcrTna+bXRNfP/HZoPZZGk4gZNHrfwgu63EX9Q
-         Ntin1YN9UQNcw==
+        b=YAHqjp9j9vqUJbss9NrRoNXdDkxh3Qt39HOaGn1P4FILyYfyuvuJ2c9JLPbJ4Tn8l
+         27mtj/0ePhPpH2YvVYevSyptLdRupfhyxv3stzt3sfqBcLBID+ba04xKG965VndSAi
+         FuJq26K0o0iGsn+NBn/zaELx0ODTOeyokT0mXyPjGXwCTS0PripM6IFRiAj9VMcxeM
+         Vd0Iut/Bo76pnRf8T2RdPFQ/CqZphLlKSO20Y0TJrttjhuzFwZTpAreKZeSiNeZauG
+         G/6DiCfH3CyevzB6p4HG64IRjjJvr7P2ujRr2WYynDoa6pz8y2zkVuANTbk12vn7V6
+         9oSPncOcRwKEQ==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 32736A005C;
+        by mailhost.synopsys.com (Postfix) with ESMTP id 78A1AA006E;
         Fri, 24 Apr 2020 11:37:21 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     linux-scsi@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Jose Abreu <Jose.Abreu@synopsys.com>,
         Joao Lima <Joao.Lima@synopsys.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/5] scsi: ufs: Allow UFS 3.0 as a valid version
-Date:   Fri, 24 Apr 2020 13:36:56 +0200
-Message-Id: <5c4281080538b74ca39cedb9112ffe71bf7a80b5.1587727756.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH 5/5] MAINTAINERS: Change Maintainers for SCSI UFS DWC Drivers
+Date:   Fri, 24 Apr 2020 13:37:00 +0200
+Message-Id: <d886365758727d313571317938909c66edd37317.1587727756.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1587727756.git.Jose.Abreu@synopsys.com>
 References: <cover.1587727756.git.Jose.Abreu@synopsys.com>
@@ -64,52 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a define for UFS version 3.0 and do not print an error message upon
-probe when using this version.
+Pedro Sousa is no longer with Synopsys. Joao Lima and me have been
+working internally with our UFS Controller so we are able to help and
+we are volunteering as Maintainers for UFS DWC Drivers.
 
-Signed-off-by: Joao Lima <Joao.Lima@synopsys.com>
 Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
 ---
 Cc: Joao Lima <Joao.Lima@synopsys.com>
 Cc: Jose Abreu <Jose.Abreu@synopsys.com>
-Cc: Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Avri Altman <avri.altman@wdc.com>
-Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/scsi/ufs/ufshcd.c | 3 ++-
- drivers/scsi/ufs/ufshci.h | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ MAINTAINERS | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 7d1fa1349d40..2e5c200e915b 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -8441,7 +8441,8 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
- 	if ((hba->ufs_version != UFSHCI_VERSION_10) &&
- 	    (hba->ufs_version != UFSHCI_VERSION_11) &&
- 	    (hba->ufs_version != UFSHCI_VERSION_20) &&
--	    (hba->ufs_version != UFSHCI_VERSION_21))
-+	    (hba->ufs_version != UFSHCI_VERSION_21) &&
-+	    (hba->ufs_version != UFSHCI_VERSION_30))
- 		dev_err(hba->dev, "invalid UFS version 0x%x\n",
- 			hba->ufs_version);
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e64e5db31497..61c6579e7d80 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17307,7 +17307,8 @@ F:	Documentation/scsi/ufs.rst
+ F:	drivers/scsi/ufs/
  
-diff --git a/drivers/scsi/ufs/ufshci.h b/drivers/scsi/ufs/ufshci.h
-index c2961d37cc1c..f2ee81669b00 100644
---- a/drivers/scsi/ufs/ufshci.h
-+++ b/drivers/scsi/ufs/ufshci.h
-@@ -104,6 +104,7 @@ enum {
- 	UFSHCI_VERSION_11 = 0x00010100, /* 1.1 */
- 	UFSHCI_VERSION_20 = 0x00000200, /* 2.0 */
- 	UFSHCI_VERSION_21 = 0x00000210, /* 2.1 */
-+	UFSHCI_VERSION_30 = 0x00000300, /* 3.0 */
- };
- 
- /*
+ UNIVERSAL FLASH STORAGE HOST CONTROLLER DRIVER DWC HOOKS
+-M:	Pedro Sousa <pedrom.sousa@synopsys.com>
++M:	Joao Lima <Joao.Lima@synopsys.com>
++M:	Jose Abreu <Jose.Abreu@synopsys.com>
+ L:	linux-scsi@vger.kernel.org
+ S:	Supported
+ F:	drivers/scsi/ufs/*dwc*
 -- 
 2.7.4
 
