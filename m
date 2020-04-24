@@ -2,85 +2,120 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1740BC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 357C5C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E604C20776
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:40:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587732012;
-	bh=+vdKnDcBEieV3yadyUoOrGcDswj08iAZns741Z0Kr4U=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=g7IdDuUNfrIKWl5isB9+YDzXhNcCiQtc7CFQHSlxwagfyF7ZB3w1EyivqePg2iYft
-	 yjjKuh31AZCeQ25YyzeqcwV1a8iT2dLBnGiba2YvhTk0nldsPRZMfa6cy2pRcjo8xI
-	 n8MF/aqw1CqtlUretIj0gfEN6MSaUirUrpJp+fPw=
+	by mail.kernel.org (Postfix) with ESMTP id 10AFA20704
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:40:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ha46ki2b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbgDXMkM (ORCPT
+        id S1727114AbgDXMkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:40:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39822 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726668AbgDXMkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:40:11 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F27220704;
-        Fri, 24 Apr 2020 12:40:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587732011;
-        bh=+vdKnDcBEieV3yadyUoOrGcDswj08iAZns741Z0Kr4U=;
-        h=From:To:Cc:Subject:Date:From;
-        b=A8chcFzo+owc6vCA5A9/L4mEkgEdgHo0gcjo9UM7exp5VopKB85xHx2M9dYyFAdaw
-         ENBO69Sh/qYM7YJH/FYuT5tHYwu4ObZ8INnPG0rclhElvMPX1MDqypleDFZHtZ6TMK
-         Nn6JmIxKwiSYgoURDFR3fgjjTeqsknDmniSw1veQ=
-From:   Mark Brown <broonie@kernel.org>
-To:     Theodore Ts'o <tytso@mit.edu>
-Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: [PATCH] random: Document add_hwgenerator_randomness() with other input functions
-Date:   Fri, 24 Apr 2020 13:39:59 +0100
-Message-Id: <20200424123959.45559-1-broonie@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Fri, 24 Apr 2020 08:40:52 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:48526 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726667AbgDXMkv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:40:51 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03OCeSwJ130179;
+        Fri, 24 Apr 2020 07:40:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1587732028;
+        bh=OqOZLXd6jVvlszCib9onXl4SS/9K0iruKK4fRcv8uIo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ha46ki2bVuhYHKmUkAjivI0+mpfT7WpIwnDlT14eb2DC9lTigC25z6CcIBzOrVumB
+         A2XwWgWHoOz4DuYBnO7J5iUE78ku6r1j52O4oUAXepntKDk65Ly7uPiFuIYvERXfoa
+         GEzSBhFyo3FISMa/7Vdkr2wpMR/rzcNrm3L1E9oA=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03OCeSpK001066
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 24 Apr 2020 07:40:28 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 24
+ Apr 2020 07:40:28 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 24 Apr 2020 07:40:28 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03OCeOSv072911;
+        Fri, 24 Apr 2020 07:40:25 -0500
+Subject: Re: OF: ERROR: Bad of_node_put() on
+ /ocp/interconnect@4a000000/segment@0/target-module@8000/cm_core@0/l4per-cm@1700/l4per-clkctrl@28
+To:     Tony Lindgren <tony@atomide.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>
+CC:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, <lkft-triage@lists.linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Benoit Cousson <bcousson@baylibre.com>,
+        Carlos Hernandez <ceh@ti.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Olof Johansson <olof@lixom.net>, <tomi.valkeinen@ti.com>,
+        Anders Roxell <anders.roxell@linaro.org>
+References: <CA+G9fYv5NxK+F5DX_q1c_wvnhjT_WTZBFJQXLWFeqMXsEcASZg@mail.gmail.com>
+ <CA+G9fYu-qYP2wJw4p1p_C6_ttwK0fvw+qUnsN9mDuKOv3zGEBw@mail.gmail.com>
+ <20200417152903.GO37466@atomide.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <6366d76c-b9dc-6fa5-afad-0b2f471f8ec5@ti.com>
+Date:   Fri, 24 Apr 2020 15:40:23 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200417152903.GO37466@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The section at the top of random.c which documents the input functions
-available does not document add_hwgenerator_randomness() which might lead
-a reader to overlook it. Add a brief note about it.
+On 17/04/2020 18:29, Tony Lindgren wrote:
+> * Naresh Kamboju <naresh.kamboju@linaro.org> [200327 16:44]:
+>> The reported problem still happening on arm beagle board x15 device
+>> running Linux next kernel 20200327.
+> ...
+> 
+>> [    0.000000] OF: ERROR: Bad of_node_put() on
+>> /ocp/interconnect@4a000000/segment@0/target-module@8000/cm_core@0/l4per-cm@1700/l4per-clkctrl@28
+>> [    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W
+>>    5.6.0-rc7-next-20200327 #1
+>> [    0.000000] Hardware name: Generic DRA74X (Flattened Device Tree)
+>> [    0.000000] [<c0311810>] (unwind_backtrace) from [<c030ba14>]
+>> (show_stack+0x10/0x14)
+>> [    0.000000] [<c030ba14>] (show_stack) from [<c0fb6604>]
+>> (dump_stack+0xbc/0xd0)
+>> [    0.000000] [<c0fb6604>] (dump_stack) from [<c0fbb07c>]
+>> (kobject_put+0xc0/0x104)
+>> [    0.000000] [<c0fbb07c>] (kobject_put) from [<c1639e4c>]
+>> (of_clk_init+0x18c/0x228)
+>> [    0.000000] [<c1639e4c>] (of_clk_init) from [<c1611544>]
+>> (omap_clk_init+0x3c/0x58)
+>> [    0.000000] [<c1611544>] (omap_clk_init) from [<c1611ea8>]
+>> (omap4_sync32k_timer_init+0x8/0x2c)
+>> [    0.000000] [<c1611ea8>] (omap4_sync32k_timer_init) from
+>> [<c161213c>] (omap5_realtime_timer_init+0x8/0x234)
+>> [    0.000000] [<c161213c>] (omap5_realtime_timer_init) from
+>> [<c1600c88>] (start_kernel+0x330/0x4b8)
+> 
+> Just FYI, Tero is looking at the clock issues that seem to be
+> causing these warnings.
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/char/random.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Haven't seen this before, but easily reproducible with 
+multi_v7_defconfig. I have a simple fix for it now, will post to lists soon.
 
-diff --git a/drivers/char/random.c b/drivers/char/random.c
-index 0d10e31fd342..ba2dc45bf718 100644
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -228,6 +228,14 @@
-  * particular randomness source.  They do this by keeping track of the
-  * first and second order deltas of the event timings.
-  *
-+ * There is also an interface for true hardware RNGs:
-+ *
-+ *	void add_hwgenerator_randomness(const char *buffer, size_t count,
-+ *				size_t entropy);
-+ *
-+ * This will credit entropy as specified by the caller, if the entropy
-+ * pool is full it will block until more entropy is needed.
-+ *
-  * Ensuring unpredictability at system startup
-  * ============================================
-  *
--- 
-2.20.1
-
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
