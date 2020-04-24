@@ -2,82 +2,123 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBC0C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0292C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 750E920728
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 942DA20728
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:56:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgDXLvZ (ORCPT
+        id S1726865AbgDXL4F convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 07:51:25 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:34656 "EHLO inva020.nxp.com"
+        Fri, 24 Apr 2020 07:56:05 -0400
+Received: from mga11.intel.com ([192.55.52.93]:23711 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726247AbgDXLvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 07:51:25 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A27361A03A9;
-        Fri, 24 Apr 2020 13:51:23 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 93DF11A039B;
-        Fri, 24 Apr 2020 13:51:23 +0200 (CEST)
-Received: from fsr-ub1864-126.ea.freescale.net (fsr-ub1864-126.ea.freescale.net [10.171.82.212])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 3540B205C6;
-        Fri, 24 Apr 2020 13:51:23 +0200 (CEST)
-From:   Ioana Ciornei <ioana.ciornei@nxp.com>
-To:     leoyang.li@nxp.com
-Cc:     linux-kernel@vger.kernel.org, Roy Pledge <roy.pledge@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>
-Subject: [PATCH] soc: fsl: dpio: Prefer the CPU affine DPIO
-Date:   Fri, 24 Apr 2020 14:51:12 +0300
-Message-Id: <20200424115112.22437-1-ioana.ciornei@nxp.com>
-X-Mailer: git-send-email 2.17.1
-Reply-to: ioana.ciornei@nxp.com
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726668AbgDXL4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 07:56:05 -0400
+IronPort-SDR: NBE/w8AKVRFuvbQKW1c50tyEo8Kcw/lIgYlg/m1ebOfdV0nIbPrfAKn1In0tamM9sthIdhEsxE
+ sdnVvMyBgKew==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2020 04:56:05 -0700
+IronPort-SDR: MXUKIbeMU1jiZqsaGhX5fvVBvt08G2gRDR49XH6QtXN1ekKYDFmyLOCLDtIy3Phkd1T/y6zTJt
+ bne+C5Mk4N3Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,311,1583222400"; 
+   d="scan'208";a="245215736"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by orsmga007.jf.intel.com with ESMTP; 24 Apr 2020 04:56:04 -0700
+Received: from lcsmsx601.ger.corp.intel.com (10.109.210.10) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 24 Apr 2020 04:56:00 -0700
+Received: from hasmsx602.ger.corp.intel.com (10.184.107.142) by
+ LCSMSX601.ger.corp.intel.com (10.109.210.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 24 Apr 2020 14:55:57 +0300
+Received: from hasmsx602.ger.corp.intel.com ([10.184.107.142]) by
+ HASMSX602.ger.corp.intel.com ([10.184.107.142]) with mapi id 15.01.1713.004;
+ Fri, 24 Apr 2020 14:55:57 +0300
+From:   "Winkler, Tomas" <tomas.winkler@intel.com>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Joao Lima <Joao.Lima@synopsys.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 4/5] scsi: ufs: tc-dwc-pci: Allow for MSI interrupt type
+Thread-Topic: [PATCH 4/5] scsi: ufs: tc-dwc-pci: Allow for MSI interrupt type
+Thread-Index: AQHWGizUo6qBFQEMn0y8MY3DRjEwoqiIKdoA
+Date:   Fri, 24 Apr 2020 11:55:57 +0000
+Message-ID: <a8a9d40b0bef460c8e593e0add88094d@intel.com>
+References: <cover.1587727756.git.Jose.Abreu@synopsys.com>
+ <9b5c2d47997629c55ac14ce594771e9e8f254c74.1587727756.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <9b5c2d47997629c55ac14ce594771e9e8f254c74.1587727756.git.Jose.Abreu@synopsys.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+x-originating-ip: [10.184.70.1]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roy Pledge <roy.pledge@nxp.com>
-
-Use the cpu affine DPIO unless there isn't one which can happen
-if less DPIOs than cores are assign to the kernel.
-
-Signed-off-by: Roy Pledge <roy.pledge@nxp.com>
-Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
----
- drivers/soc/fsl/dpio/dpio-service.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/soc/fsl/dpio/dpio-service.c b/drivers/soc/fsl/dpio/dpio-service.c
-index cd4f6410e8c2..f1080c7a3fe1 100644
---- a/drivers/soc/fsl/dpio/dpio-service.c
-+++ b/drivers/soc/fsl/dpio/dpio-service.c
-@@ -58,7 +58,7 @@ static inline struct dpaa2_io *service_select_by_cpu(struct dpaa2_io *d,
- 	 * If cpu == -1, choose the current cpu, with no guarantees about
- 	 * potentially being migrated away.
- 	 */
--	if (unlikely(cpu < 0))
-+	if (cpu < 0)
- 		cpu = smp_processor_id();
- 
- 	/* If a specific cpu was requested, pick it up immediately */
-@@ -70,6 +70,10 @@ static inline struct dpaa2_io *service_select(struct dpaa2_io *d)
- 	if (d)
- 		return d;
- 
-+	d = service_select_by_cpu(d, -1);
-+	if (d)
-+		return d;
-+
- 	spin_lock(&dpio_list_lock);
- 	d = list_entry(dpio_list.next, struct dpaa2_io, node);
- 	list_del(&d->node);
--- 
-2.17.1
+> 
+> Newer Test Chips boards have MSI support. It does no harm to try to request it
+> as the function will fallback to legacy interrupts if MSI is not supported.
+> 
+> Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+> 
+> ---
+> Cc: Joao Lima <Joao.Lima@synopsys.com>
+> Cc: Jose Abreu <Jose.Abreu@synopsys.com>
+> Cc: Alim Akhtar <alim.akhtar@samsung.com>
+> Cc: Avri Altman <avri.altman@wdc.com>
+> Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+> Cc: linux-scsi@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/scsi/ufs/tc-dwc-pci.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/scsi/ufs/tc-dwc-pci.c b/drivers/scsi/ufs/tc-dwc-pci.c index
+> 74a2d80d32bd..e0a880cbbe68 100644
+> --- a/drivers/scsi/ufs/tc-dwc-pci.c
+> +++ b/drivers/scsi/ufs/tc-dwc-pci.c
+> @@ -136,9 +136,15 @@ tc_dwc_pci_probe(struct pci_dev *pdev, const struct
+> pci_device_id *id)
+>  		return -ENOENT;
+>  	}
+> 
+> +	err = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_ALL_TYPES);
+PCI_IRQ_LEGACY | PCI_IRQ_MSI , is enough  you don't have MSIX
+> +	if (err < 0) {
+> +		dev_err(&pdev->dev, "Allocation failed\n");
+> +		return err;
+> +	}
+> +
+Where do you call pci_free_irq_vectors() ? 
+>  	hba->vops = &data->ops;
+> 
+> -	err = ufshcd_init(hba, mmio_base, pdev->irq);
+> +	err = ufshcd_init(hba, mmio_base, pci_irq_vector(pdev, 0));
+>  	if (err) {
+>  		dev_err(&pdev->dev, "Initialization failed\n");
+>  		return err;
+> --
+> 2.7.4
 
