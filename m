@@ -2,97 +2,162 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E77E2C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF1FC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C231D20706
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76B562071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:10:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587744626;
+	bh=5O01W0mYnWjJ6eCiby6ZlDS+UBSamYrqrNJzlj4uuCo=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=nwz8ZVxQysDrdP1FgS8Vxv77kBrA7Uye4y2JkTHilblFccVITfWDBaiWOgLmCB73A
+	 3IPMZk34jTAgpShPvJ6cgTZDNCpjKd47n47a+VNchrLBNSSse7Uw8t2AUF1XR2eJh9
+	 rrFiLn7ndjyXsc+OJQh4UNkRK8kf3tj7uW/3F710=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727863AbgDXQHe (ORCPT
+        id S1727977AbgDXQKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 12:07:34 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:60856 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726707AbgDXQHd (ORCPT
+        Fri, 24 Apr 2020 12:10:25 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:33109 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726920AbgDXQKZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 12:07:33 -0400
-X-IronPort-AV: E=Sophos;i="5.73,311,1583190000"; 
-   d="scan'208";a="446777922"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Apr 2020 18:07:31 +0200
-Date:   Fri, 24 Apr 2020 18:07:30 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Joe Perches <joe@perches.com>
-cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Dan Carpenter <error27@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: linux-kernel: Unused static inline functions
-In-Reply-To: <572b03bdc3eed286c5ed20887d42f674bd93336e.camel@perches.com>
-Message-ID: <alpine.DEB.2.21.2004241806220.2344@hadrien>
-References: <1583509304-28508-1-git-send-email-cai@lca.pw>  <CAKwvOd=V44ksbiffN5UYw-oVfTK_wdeP59ipWANkOUS_zavxew@mail.gmail.com>  <a7503afc9d561ae9c7116b97c7a960d7ad5cbff9.camel@perches.com>  <442b7ace85a414c6a01040368f05d6d219f86536.camel@perches.com> 
- <CAKwvOdmdaDL4bhJc+7Xms=f4YXDw-Rr+WQAknd0Jv6UWOBUcEA@mail.gmail.com>  <4603e761a5f39f4d97375e1e08d20d720c526341.camel@perches.com>  <CAKwvOdnW-xvSnT3RS8MWufyp+3=NM-Mb+bv0r2u2soNnyVvXBg@mail.gmail.com>
- <572b03bdc3eed286c5ed20887d42f674bd93336e.camel@perches.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 24 Apr 2020 12:10:25 -0400
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 03OGA4Xb007030;
+        Sat, 25 Apr 2020 01:10:05 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 03OGA4Xb007030
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587744607;
+        bh=xceHdPymZ0jYeqlYbS+1ffX8Lsmm0Px07TLnEqY9gaE=;
+        h=From:Date:Subject:To:Cc:From;
+        b=VptGmdjz8KWGP7WfjlKeHhzFpCyWS70xVdlvOaVfcH0Ra7+QmhGIMROe6Kh6HpmMa
+         wq8Ygxltb9vxI813dM8qJg0WTLSaJHJCWkcHPu5tAIkwBz3/Vrj+9iEnuu9UKp7TZo
+         heLNgAFka4IssY2GQbux1SW8y/RCeYGkmFXfXGfKposTsCsgjVP0bgen5yiwGwQNxa
+         JBn07Oq6G4Yyo1TiwiWziHdHV76Bk3aZ/QSiok+0EVzMvcXWqYOc6PPf9tZX+2WUuT
+         mFau2Rwf529ghOt1LSzJKvMN2kvL6udOf/W6oS7GtCmZJsM2OjVRrchs2edAVkhxOm
+         7o1PDqhMzumUA==
+X-Nifty-SrcIP: [209.85.222.44]
+Received: by mail-ua1-f44.google.com with SMTP id z16so9974086uae.11;
+        Fri, 24 Apr 2020 09:10:04 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZMKzDcU+k7DoGvL9bCN0sHg+u0/krBNIHjL2dTeU0U0v9B0YUB
+        wBbPeX5CbVZ5IrMjYKbTdAkOw/njICsrwbQwL5I=
+X-Google-Smtp-Source: APiQypJgw4L1bt6MdT4aesOm05pMR6gubOC6tW1R2n+87+6V0/QRV0SMQyP0b4MPfuI04HcF+NNPRc6j0OzHtDrohSE=
+X-Received: by 2002:a67:3293:: with SMTP id y141mr8428387vsy.54.1587744603426;
+ Fri, 24 Apr 2020 09:10:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sat, 25 Apr 2020 01:09:27 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQRXn_n60K9LF=pBz0HHg55Lj-1p5gwwmT=YSOdMBXKCA@mail.gmail.com>
+Message-ID: <CAK7LNAQRXn_n60K9LF=pBz0HHg55Lj-1p5gwwmT=YSOdMBXKCA@mail.gmail.com>
+Subject: [GIT PULL] Kbuild fixes for v5.7-rc3
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
+
+Please pull Kbuild fixes.
+Thanks.
 
 
-On Thu, 23 Apr 2020, Joe Perches wrote:
+The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
 
-> (adding Julia Lawall and Dan Carpenter who may have ideas too)
->
-> On Thu, 2020-04-23 at 11:57 -0700, Nick Desaulniers wrote:
-> > I've been mulling over teaching a class internally at Google on
-> > getting started contributing to the Linux kernel.  I think this idea
-> > (removing dead static inline functions) is perfect for having lots of
-> > small little tasks that are clear wins.  Do you have any other ideas
-> > for work that there's a lot of?  Like lots of small little bite sized
-> > tasks?  Maybe more fallthrough conversion? Anything else?
->
-> Some generic ideas:
->
-> o look for always unused/unreferenced, or always static
->   value function arguments and remove them
->
-> o int function returns constrained to 0 or 1 could be
->   converted to bool.
->
-> And some logging ideas:
->
-> o printk to tracing conversions
->
-> o removal of printks used just for function tracing
->   as ftrace works well
->
-> o pr_<level> macro conversions to functions to save
->   object space
->
-> o singletons for pr_fmt
->
-> o default use of #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->   and removal of the ~1200 current defines treewide
->
-> > Happy to have folks use your script and add your suggested by tag.
->
-> Suggested-by doesn't have much value to me,
-> especially for scripted stuff.
->
-> I'd be happy enough that it gets done eventually.
+  Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
 
-Perhaps typedefs for structures?  Using standard list operations?  In
-staging there are a lot of camel case and variables whose names
-incorporate their type.
+are available in the Git repository at:
 
-julia
+  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+tags/kbuild-fixes-v5.7
+
+for you to fetch changes up to d9451798998df3a72dce1bc365bc9e76401b0d3a:
+
+  h8300: ignore vmlinux.lds (2020-04-23 16:41:26 +0900)
+
+----------------------------------------------------------------
+Kbuild fixes for v5.7
+
+ - fix scripts/config to properly handle ':' in string type CONFIG options
+
+ - fix unneeded rebuilds of DT schema check rule
+
+ - git rid of ordering dependency between <linux/vermagic.h> and
+   <linux/module.h> to fix build errors in some network drivers
+
+ - clean up generated headers of host arch with 'make ARCH=um mrproper'
+
+----------------------------------------------------------------
+Jeremie Francois (on alpha) (1):
+      scripts/config: allow colons in option strings for sed
+
+Masahiro Yamada (4):
+      kbuild: fix DT binding schema rule again to avoid needless rebuilds
+      arch: split MODULE_ARCH_VERMAGIC definitions out to <asm/vermagic.h>
+      Documentation: kbuild: fix the section title format
+      h8300: ignore vmlinux.lds
+
+Vitor Massaru Iha (1):
+      um: ensure `make ARCH=um mrproper` removes
+arch/$(SUBARCH)/include/generated/
+
+ Documentation/kbuild/makefiles.rst                |  3 +-
+ arch/arc/include/asm/module.h                     |  5 --
+ arch/arc/include/asm/vermagic.h                   |  8 +++
+ arch/arm/include/asm/module.h                     | 24 ---------
+ arch/arm/include/asm/vermagic.h                   | 31 ++++++++++++
+ arch/arm64/include/asm/module.h                   |  2 -
+ arch/arm64/include/asm/vermagic.h                 | 10 ++++
+ arch/h8300/kernel/.gitignore                      |  2 +
+ arch/hexagon/include/asm/{module.h => vermagic.h} |  8 +--
+ arch/ia64/include/asm/module.h                    |  4 --
+ arch/ia64/include/asm/vermagic.h                  | 15 ++++++
+ arch/mips/include/asm/module.h                    | 61 -----------------------
+ arch/mips/include/asm/vermagic.h                  | 66
++++++++++++++++++++++++++
+ arch/nds32/include/asm/{module.h => vermagic.h}   |  8 ++-
+ arch/powerpc/include/asm/module.h                 | 18 -------
+ arch/powerpc/include/asm/vermagic.h               | 20 ++++++++
+ arch/riscv/include/asm/module.h                   |  2 -
+ arch/riscv/include/asm/vermagic.h                 |  9 ++++
+ arch/sh/include/asm/module.h                      | 28 -----------
+ arch/sh/include/asm/vermagic.h                    | 34 +++++++++++++
+ arch/um/Makefile                                  |  1 +
+ arch/x86/include/asm/module.h                     | 60 -----------------------
+ arch/x86/include/asm/vermagic.h                   | 68
+++++++++++++++++++++++++++
+ arch/xtensa/include/asm/{module.h => vermagic.h}  | 15 +++---
+ include/asm-generic/Kbuild                        |  1 +
+ include/asm-generic/vermagic.h                    |  7 +++
+ include/linux/vermagic.h                          |  8 +--
+ scripts/Makefile.lib                              |  2 +-
+ scripts/config                                    |  5 +-
+ 29 files changed, 297 insertions(+), 228 deletions(-)
+ create mode 100644 arch/arc/include/asm/vermagic.h
+ create mode 100644 arch/arm/include/asm/vermagic.h
+ create mode 100644 arch/arm64/include/asm/vermagic.h
+ create mode 100644 arch/h8300/kernel/.gitignore
+ rename arch/hexagon/include/asm/{module.h => vermagic.h} (64%)
+ create mode 100644 arch/ia64/include/asm/vermagic.h
+ create mode 100644 arch/mips/include/asm/vermagic.h
+ rename arch/nds32/include/asm/{module.h => vermagic.h} (52%)
+ create mode 100644 arch/powerpc/include/asm/vermagic.h
+ create mode 100644 arch/riscv/include/asm/vermagic.h
+ create mode 100644 arch/sh/include/asm/vermagic.h
+ create mode 100644 arch/x86/include/asm/vermagic.h
+ rename arch/xtensa/include/asm/{module.h => vermagic.h} (57%)
+ create mode 100644 include/asm-generic/vermagic.h
+
+
+-- 
+Best Regards
+Masahiro Yamada
