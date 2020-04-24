@@ -2,71 +2,87 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5AE0C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F1BC55191
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9198520736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3F6820736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:27:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbgDXLZ6 (ORCPT
+        id S1726883AbgDXL1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 07:25:58 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:47772 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbgDXLZ6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 07:25:58 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jRwSw-000650-Ud; Fri, 24 Apr 2020 11:25:55 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: cx231xx: remove redundant assignment to variable err
-Date:   Fri, 24 Apr 2020 12:25:54 +0100
-Message-Id: <20200424112554.12456-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 24 Apr 2020 07:27:07 -0400
+Received: from sauhun.de ([88.99.104.3]:46698 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726582AbgDXL1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 07:27:06 -0400
+Received: from localhost (p5486CE62.dip0.t-ipconnect.de [84.134.206.98])
+        by pokefinder.org (Postfix) with ESMTPSA id 6B1C22C1FE8;
+        Fri, 24 Apr 2020 13:27:05 +0200 (CEST)
+Date:   Fri, 24 Apr 2020 13:27:05 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Bjorn Ardo <bjorn.ardo@axis.com>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        patrick@stwcx.xyz, kernel@axis.com
+Subject: Re: [PATCHv2] i2c: slave-eeprom: Make it possible to pre-load eeprom
+ data
+Message-ID: <20200424112705.GD1959@kunai>
+References: <20200424090443.26316-1-bjorn.ardo@axis.com>
+ <20200424111337.GC1959@kunai>
+ <5038e4c1-440b-0a56-978b-a8c9fac061cc@axis.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="9UV9rz0O2dU/yYYn"
+Content-Disposition: inline
+In-Reply-To: <5038e4c1-440b-0a56-978b-a8c9fac061cc@axis.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
 
-The variable err is being initialized with a value that is
-never read and it is being updated later with a new value. The
-initialization is redundant and can be removed.
+--9UV9rz0O2dU/yYYn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/media/usb/cx231xx/cx231xx-417.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/usb/cx231xx/cx231xx-417.c b/drivers/media/usb/cx231xx/cx231xx-417.c
-index b0cd51134654..c5e21785fafe 100644
---- a/drivers/media/usb/cx231xx/cx231xx-417.c
-+++ b/drivers/media/usb/cx231xx/cx231xx-417.c
-@@ -1734,7 +1734,7 @@ static void cx231xx_video_dev_init(
- int cx231xx_417_register(struct cx231xx *dev)
- {
- 	/* FIXME: Port1 hardcoded here */
--	int err = -ENODEV;
-+	int err;
- 	struct cx231xx_tsport *tsport = &dev->ts1;
- 	struct vb2_queue *q;
- 
--- 
-2.25.1
+> As I can see in drivers/base/firmware_loader/main.c in function
+> _request_firmware, then the fw will be released internally if it returns =
+an
+> error value.
 
+Ouch, of course!
+
+> > Also, do we need 'error' and 'ret'? Can't we reuse one of them?
+>=20
+> Yes, I can fix that.
+
+Great, thanks!
+
+
+--9UV9rz0O2dU/yYYn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6izQgACgkQFA3kzBSg
+KbZ2ThAAhMsZ3tQuyAqOGMN9/wJ9va85sHDKjPkaNaXrPFpI3R2IVgdHPYS/5c6Z
+y1hVZu7mL7tTXMjS9gnt0cDQhGJ2w2K6uMDo4JFx7LdaWE/wws0j81NhzVJCUcfi
+RYt+8x5cNJYPi6u7HDtNZgiX1DGa2oZRodSvkbbd0uyxNiZXc4dKuenXY8trrN2E
+YNMtXee5ChsDBZl0AhNOo+TASMUBepo7XAcPaigJiDol5nDYdSMvKu52g4ys7eZa
+aEf9iFx5o6qbVRUGiUptv/5XjuN0mpK87vB9qJNNqWMp9ACheRAG87nEtRx0qp3P
+YlY8uT7nx1cCpcqaICfDpHyWCp8+VvKWHFd+omKsQLx2fODjMO2otEPsqGEcMxwX
+OKgPwrUlwnymlRFvIfmJ5b+JQsoXCIeCGqvo82RIa/4U9Xo/019n8dFnAj2VWqwV
+fcrUERYQ4E0pGH6IIsXvZYTaPIFzhtPbIlBrt01SKIRLvZeOLzU0mnNmEfvU2iwC
+YUVnnVgkp0ReGSsjsLE+27UN7JJN/9cXt3Ofy0FaJyPcHlU8gwLh/G6+rUXIfAO1
+wUjuS0H5N3ef5NfLK67L9SO0jfrvlrxP8qIsR3VCOGD6gP57VgTQL/jLFi620OjP
+/WBsufP+JjSGdOkO4BDMOu06cKDmExA9QaaWRkLR1Nqr4ilXIWg=
+=kSjn
+-----END PGP SIGNATURE-----
+
+--9UV9rz0O2dU/yYYn--
