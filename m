@@ -2,140 +2,110 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E05CBC55199
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB60C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BABA420781
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:05:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587755139;
-	bh=2LW2+5Tf6piUtKBA+zu56Phwir9j1mdmuZQUDUqTbto=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=NTKoWL7ioyJCw+IqhBgMv1rBoYC5I2bK+kXfSNMYmzRMNr/3OR8p7IZ6+2diRND4r
-	 CaFlS1VHVo3eyYqfe0yZXLe8C8mSwxVYkvv/Lg+ZO6F0zc1KEf2BL+IZH69quHUu4R
-	 u1JouLTwvU/JvFP+48XfFN4qBHv/q+4cnQS1Gr8s=
+	by mail.kernel.org (Postfix) with ESMTP id 2EF9120736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:06:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QRKaD2CJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729256AbgDXTFj (ORCPT
+        id S1729268AbgDXTGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 15:05:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53718 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728943AbgDXTFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 15:05:38 -0400
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 24 Apr 2020 15:06:37 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:23293 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727022AbgDXTGh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 15:06:37 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587755196; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
+ To: From: Reply-To: Sender;
+ bh=Y0Xh9YwcFuchacYRPmOt5mmHgQmhT+OyA1r+OZ9piB0=; b=QRKaD2CJGHgqPpFlWiiZ5fd2krVfg9T8KE1fMlTclEVmZxykQP0wCRngqtap6ygi7c9e4i+c
+ WDk6mRgfFCtGogvHYPp2aOIswrAZoa22Q5hCdBOUQBpSB6UovzCrQl8L1g6X1vBsgv3z4nhj
+ +tXA+0kt2pYkZ3t0QjTD1mDxpJ8=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea338af.7fe1991a80a0-smtp-out-n01;
+ Fri, 24 Apr 2020 19:06:23 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9D18CC433D2; Fri, 24 Apr 2020 19:06:23 +0000 (UTC)
+Received: from BCAIN (104-54-226-75.lightspeed.austtx.sbcglobal.net [104.54.226.75])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7390F20781;
-        Fri, 24 Apr 2020 19:05:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587755137;
-        bh=2LW2+5Tf6piUtKBA+zu56Phwir9j1mdmuZQUDUqTbto=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=eOrxIKqyOo7ejaDTs0ubssNSbAE20haMWbjGTGLc9rjd4DeVRi41+Xl6C582esdy2
-         ZpS/iltG/og19WgPe1ZfRDE52u8P8iWD/llXmzNEcs2qRiPQhMmAa8KE7A9V1BCFtu
-         RvSv1rLJDDWFKu14JdXAIDr4euM2BwDrwAThVJmU=
-Received: by mail-qk1-f175.google.com with SMTP id l78so11299370qke.7;
-        Fri, 24 Apr 2020 12:05:37 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaIML5xQc1Is39fwZvGoFDcfMeaI7GexAdASPs6IeCc+cCRzHWl
-        dpaAI5hmD0pVYWFeqYMbPmFj0iKGkU4UjXDPUA==
-X-Google-Smtp-Source: APiQypLgIU1HRvZ5lP4/zCnhpczaENuWMmeePklaGGio8tzLp6+kdqIoxkpjzRKcy3ZHEsU+f8KdIp18kSxYeLJS5QQ=
-X-Received: by 2002:a37:cc1:: with SMTP id 184mr10738607qkm.254.1587755136520;
- Fri, 24 Apr 2020 12:05:36 -0700 (PDT)
+        (Authenticated sender: bcain)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E8CE7C433CB;
+        Fri, 24 Apr 2020 19:06:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E8CE7C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bcain@codeaurora.org
+Reply-To: <bcain@codeaurora.org>
+From:   "Brian Cain" <bcain@codeaurora.org>
+To:     "'Masahiro Yamada'" <masahiroy@kernel.org>,
+        <linux-hexagon@vger.kernel.org>
+Cc:     <linux-kernel@vger.kernel.org>
+References: <20200424161502.656103-1-masahiroy@kernel.org>
+In-Reply-To: <20200424161502.656103-1-masahiroy@kernel.org>
+Subject: RE: [PATCH] hexagon: suppress error message for 'make clean'
+Date:   Fri, 24 Apr 2020 14:06:21 -0500
+Message-ID: <009101d61a6b$71f93a70$55ebaf50$@codeaurora.org>
 MIME-Version: 1.0
-References: <20200424130847.328584-1-jiaxun.yang@flygoat.com>
- <20200424130847.328584-2-jiaxun.yang@flygoat.com> <CAL_JsqKsZrsnn92XHL4QdFkAgFKqVTBZXDz9wVv-_7oywOOsBQ@mail.gmail.com>
- <D5CC0902-F84F-43F1-88E5-C03018B25050@flygoat.com>
-In-Reply-To: <D5CC0902-F84F-43F1-88E5-C03018B25050@flygoat.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 24 Apr 2020 14:05:23 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLEHZOZXkuW4_9KeUWjzahvP0OMtQUGVU_pASi9Ag=GAQ@mail.gmail.com>
-Message-ID: <CAL_JsqLEHZOZXkuW4_9KeUWjzahvP0OMtQUGVU_pASi9Ag=GAQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/6] PCI: OF: Don't remap iospace on unsupported platform
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Paul Burton <paulburton@kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: en-us
+Thread-Index: AQKG+ktipLZoGTdJhMlkCcPdnKK3f6cm4gQw
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 1:03 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote=
-:
->
->
->
-> =E4=BA=8E 2020=E5=B9=B44=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=88=
-1:47:23, Rob Herring <robh+dt@kernel.org> =E5=86=99=E5=88=B0:
-> >On Fri, Apr 24, 2020 at 8:09 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wr=
-ote:
-> >>
-> >> There are some platforms that don't support I/O space remapping
-> >> like MIPS. However, our PCI code will try to remap iospace
-> >> unconditionally and reject io resources on these platforms.
-> >>
-> >> So we should remove I/O space remapping check and use a range
-> >> check instead on these platforms.
-> >>
-> >> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> >> --
-> >> v4: Fix a typo in commit message.
-> >> v5: Commit message massage
-> >> ---
-> >>  drivers/pci/of.c | 9 +++++++++
-> >>  1 file changed, 9 insertions(+)
-> >>
-> >> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> >> index 81ceeaa6f1d5..36e8761b66c6 100644
-> >> --- a/drivers/pci/of.c
-> >> +++ b/drivers/pci/of.c
-> >> @@ -547,12 +547,21 @@ int pci_parse_request_of_pci_ranges(struct devic=
-e *dev,
-> >>
-> >>                 switch (resource_type(res)) {
-> >>                 case IORESOURCE_IO:
-> >> +#if defined(PCI_IOBASE) && defined(CONFIG_MMU)
-> >
-> >We already have the same condition in pci_remap_iospace(). All this
-> >does is suppress a WARN. If a WARN is not desired, then change it.
-> >Perhaps just a single line rather than backtrace would be okay.
-> >Whether to WARN or not shouldn't be a decision for firmware code.
-> >
-> >Though really, if I/O space can never be supported, then it's an error
-> >in your DT to describe it.
->
-> In MIPS world, we do have inb/oub family of I/O functions
-> to support I/O space. But we're not using remap_iospace as it's breaking
-> some of our assumptions.
+> -----Original Message-----
+> From: linux-hexagon-owner@vger.kernel.org <linux-hexagon-
+> owner@vger.kernel.org> On Behalf Of Masahiro Yamada
+...
+> 'make ARCH=hexagon clean' emits an error message as follows:
+> 
+>   $ make ARCH=hexagon clean
+>   gcc: error: unrecognized command line option '-G0'
+> 
+> You can suppress it by setting the correct CROSS_COMPILE=, but we should
+> not require any compiler for cleaning.
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-I suspect that's largely because most MIPS drivers pre-date the common
-iospace handling. Really MIPS should start using this.
 
-> We have our own inb/outb implementation.
+Acked-by: Brian Cain <bcain@codeaurora.org>
 
-That's orthogonal to mapping the iospace.
 
-> In that case, I think make a range check instead of remapping would
-> be more practical.
+> ---
+> 
+>  arch/hexagon/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/hexagon/Makefile b/arch/hexagon/Makefile index
+> 4c5858b80f0e..c168c6980d05 100644
+> --- a/arch/hexagon/Makefile
+> +++ b/arch/hexagon/Makefile
+> @@ -30,7 +30,7 @@ TIR_NAME := r19
+>  KBUILD_CFLAGS += -ffixed-$(TIR_NAME) -
+> DTHREADINFO_REG=$(TIR_NAME) -D__linux__  KBUILD_AFLAGS += -
+> DTHREADINFO_REG=$(TIR_NAME)
+> 
+> -LIBGCC := $(shell $(CC) $(KBUILD_CFLAGS) -print-libgcc-file-name)
+> +LIBGCC := $(shell $(CC) $(KBUILD_CFLAGS) -print-libgcc-file-name
+> +2>/dev/null)
+>  libs-y += $(LIBGCC)
+> 
+>  head-y := arch/hexagon/kernel/head.o
+> --
+> 2.25.1
 
-Not the kernel's job to validate the DT especially if you aren't using
-this data anywhere.
-
-Just remove the WARN, make it a single line print, or add
-!IS_ENABLED(CONFIG_MIPS) where the warning is.
-
-Rob
