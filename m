@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FD2C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A989C55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 424F620700
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 459F320700
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:23:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r9EXwphq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mSBtBjdu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbgDXGXA (ORCPT
+        id S1726683AbgDXGXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 02:23:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51262 "EHLO
+        Fri, 24 Apr 2020 02:23:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726008AbgDXGW7 (ORCPT
+        by vger.kernel.org with ESMTP id S1726665AbgDXGXG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 02:22:59 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5FB5C09B045;
-        Thu, 23 Apr 2020 23:22:59 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id x2so612902pfx.7;
-        Thu, 23 Apr 2020 23:22:59 -0700 (PDT)
+        Fri, 24 Apr 2020 02:23:06 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAFAFC09B047;
+        Thu, 23 Apr 2020 23:23:05 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id 18so3104325pfv.8;
+        Thu, 23 Apr 2020 23:23:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=UFT0hKfL7iS8UZisqhI7Q6xNbcamwNw/NX1yQQKe78k=;
-        b=r9EXwphqugPnCRsU9hun3rEjYYMPFF5n3SJRgkB06t8M1LLomn2v/KHS7FYZ8QsaTF
-         OZhrIsF24j2K9W3BvcBzWpkJtNptx2ECz0VvKoqPNqW571yWQ2gxidDiGKd90GltpbT3
-         I/EZLu/35Vf74VFUQ3hWOw2BggmuQXaNuV7nNg+7nghNldbyuqGqm3JkFx93pMoOBnRG
-         kVg3X6koFKGnLYCClKcFJFLoSBpP78pbnKyeOLI+MrkWrs1NCcaQekDcQM35UBP89ncS
-         Zn7IO01wHLBh3q46+r/kwkxK56XEoejS7l+C5IEM6p5L8LqZ2dUOwcii/oAsRVwv0dvS
-         s3Kw==
+        bh=zsPf//Pz+Ikh6+DsYPyUBP5glvQEMcSomDR2Wz5ze9I=;
+        b=mSBtBjduNX75Q8OPv0HvHykSL62EEwkpC7HS/ITEACsut+AYwVLLBPMn0lKKb6YjVk
+         b0w4uYU1Mi3+aX76+Yldo98XKTAYA/8//z/hk53fOkn6I1fYaLEK3/FKsG25ZzPAwQjB
+         o1aqF3s56c+2xx7kpSXXtpHbJ7bF7uZ39ff7ABCleS+Gycqz5D1INBJxz+yUwRHva7Dg
+         PkN2XR2r8a2SLfAQVIfKdE+6VKwYo9lnGoSwSA19O8nbT6s2TIXM6z1tXnUg/5ERfsX1
+         Yt973ARfSZDV89nTe8wPdROMoBBTVTIB039HvOmYHpOOpOTkhmC/dflxB6fMeMByKgWY
+         Q84w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=UFT0hKfL7iS8UZisqhI7Q6xNbcamwNw/NX1yQQKe78k=;
-        b=hzrja8lhh1APcRERjiMLdVltbQ1waWo8pxW+YeKNvPBJqKXnwvzqut8EIrcukj4sFJ
-         EIgIeJx4h4VKXdk/BTwWl6YqVl6zNpPhFNLqZS8X2TFuJY5iFCJ/61KQwdrM+gtdKbQ8
-         sa2iIwcUqAAJlhTvPbdYolBdJbQJjM4Svol7O9uYakisblVZDQm6YPQoT05uNdvIYezj
-         QKk+OzFEE0/VY9/Lil88D7WCJ5UjA5Ozs/tpUUWHL2K7Z7QjVX3j2OEJSwVW0q1Bww/K
-         d44UNgz8l1aUq90rENueYbWmEHIs9G2T3lOO5jpOrzlDtOonqGD8VM6a5BbVjwLi4Li8
-         SPSg==
-X-Gm-Message-State: AGi0PubhdLFATJwf6eZo7uXZwkn2cFM9ztB1bAD5f7q7Vo5TnCplzDCF
-        y2LfON2OTRX8dUy71YnXF88DqRrH
-X-Google-Smtp-Source: APiQypJxuwuvFp5xaaFdP2nRbicoYJCzqR9KIgDJ6O55/vXmZ012YMWjjUMzMCASJnAKzYj6mBRriw==
-X-Received: by 2002:a62:7656:: with SMTP id r83mr7763612pfc.71.1587709378973;
-        Thu, 23 Apr 2020 23:22:58 -0700 (PDT)
+        bh=zsPf//Pz+Ikh6+DsYPyUBP5glvQEMcSomDR2Wz5ze9I=;
+        b=bvgNIdGE0Whfgto5Uh9paCCO6/udGxHjvsCp/HOG46LffyVy7Yq3etSaUeGu1pl3kw
+         lgP/DYB7qWDVzwOuqd2rk/a7LGz9cHoA/QNslZZYt+sbjK3Ep8PwM3aFM9qEerqG9m13
+         58sJyI4TjRD4ZRGWOthWWHNodrP+/HP76g9wtOopAbiPWyguM8wbtnSbu20SchkGEPYc
+         OH/b2jLHXgRS7tTc3jrfJD+a/4jCcZrW9sKvSTSJaoKhLI2pIU+YFJHWbmwJTBp0uBpx
+         fAVMaG2EUxTMbzs/Tfl/6e9LbLsFyicrT+fcN/HBFbMG7EuTm0jdxlZcOUmBmLAp7h9k
+         g7sQ==
+X-Gm-Message-State: AGi0PuZru2ASqSw8Ze+BrlSnuCbFsyRpy9nY0EBZ1YeEDGE/JTfFgUYg
+        MOpmVvmynoM0Ejc2aLz51UigKYY4
+X-Google-Smtp-Source: APiQypJ1ixZkeAqhQDfMzttF2Fw3E7k+vFcjhPVtqlT3SLiCtjcXny5qyc20qxRsSEd27zZLt9KPlQ==
+X-Received: by 2002:a62:34c1:: with SMTP id b184mr7844399pfa.73.1587709385259;
+        Thu, 23 Apr 2020 23:23:05 -0700 (PDT)
 Received: from localhost.localdomain ([103.7.29.6])
-        by smtp.googlemail.com with ESMTPSA id l30sm3920674pgu.29.2020.04.23.23.22.56
+        by smtp.googlemail.com with ESMTPSA id l30sm3920674pgu.29.2020.04.23.23.23.02
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 Apr 2020 23:22:58 -0700 (PDT)
+        Thu, 23 Apr 2020 23:23:04 -0700 (PDT)
 From:   Wanpeng Li <kernellwp@gmail.com>
 X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
@@ -69,9 +69,9 @@ Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>,
         Haiwei Li <lihaiwei@tencent.com>
-Subject: [PATCH v3 1/5] KVM: VMX: Introduce generic fastpath handler
-Date:   Fri, 24 Apr 2020 14:22:40 +0800
-Message-Id: <1587709364-19090-2-git-send-email-wanpengli@tencent.com>
+Subject: [PATCH v3 3/5] KVM: VMX: Optimize posted-interrupt delivery for timer fastpath
+Date:   Fri, 24 Apr 2020 14:22:42 +0800
+Message-Id: <1587709364-19090-4-git-send-email-wanpengli@tencent.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1587709364-19090-1-git-send-email-wanpengli@tencent.com>
 References: <1587709364-19090-1-git-send-email-wanpengli@tencent.com>
@@ -82,87 +82,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Wanpeng Li <wanpengli@tencent.com>
 
-Introduce generic fastpath handler to handle MSR fastpath, VMX-preemption 
-timer fastpath etc. In addition, we can't observe benefit from single 
-target IPI fastpath when APICv is disabled, let's just enable IPI and 
-Timer fastpath when APICv is enabled for now.
+Optimizing posted-interrupt delivery especially for the timer fastpath 
+scenario, I observe kvm_x86_ops.deliver_posted_interrupt() has more latency 
+then vmx_sync_pir_to_irr() in the case of timer fastpath scenario, since 
+it needs to wait vmentry, after that it can handle external interrupt, ack 
+the notification vector, read posted-interrupt descriptor etc, it is slower 
+than evaluate and delivery during vmentry immediately approach. Let's skip 
+sending interrupt to notify target pCPU and replace by vmx_sync_pir_to_irr() 
+before each cont_run.
 
 Tested-by: Haiwei Li <lihaiwei@tencent.com>
 Cc: Haiwei Li <lihaiwei@tencent.com>
 Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
 ---
- arch/x86/include/asm/kvm_host.h |  1 +
- arch/x86/kvm/vmx/vmx.c          | 25 ++++++++++++++++++++-----
- 2 files changed, 21 insertions(+), 5 deletions(-)
+ arch/x86/kvm/vmx/vmx.c | 9 ++++++---
+ virt/kvm/kvm_main.c    | 1 +
+ 2 files changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index f26df2c..6397723 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -188,6 +188,7 @@ enum {
- enum exit_fastpath_completion {
- 	EXIT_FASTPATH_NONE,
- 	EXIT_FASTPATH_SKIP_EMUL_INS,
-+	EXIT_FASTPATH_CONT_RUN,
- };
- 
- struct x86_emulate_ctxt;
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 766303b..f1f6638 100644
+index 5c21027..d21b66b 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6559,6 +6559,20 @@ void vmx_update_host_rsp(struct vcpu_vmx *vmx, unsigned long host_rsp)
- 	}
- }
+@@ -3909,8 +3909,9 @@ static int vmx_deliver_posted_interrupt(struct kvm_vcpu *vcpu, int vector)
+ 	if (pi_test_and_set_on(&vmx->pi_desc))
+ 		return 0;
  
-+static enum exit_fastpath_completion vmx_exit_handlers_fastpath(struct kvm_vcpu *vcpu)
-+{
-+	if (!is_guest_mode(vcpu) && vcpu->arch.apicv_active) {
-+		switch (to_vmx(vcpu)->exit_reason) {
-+		case EXIT_REASON_MSR_WRITE:
-+			return handle_fastpath_set_msr_irqoff(vcpu);
-+		default:
-+			return EXIT_FASTPATH_NONE;
+-	if (!kvm_vcpu_trigger_posted_interrupt(vcpu, false))
+-		kvm_vcpu_kick(vcpu);
++	if (vcpu != kvm_get_running_vcpu() &&
++		!kvm_vcpu_trigger_posted_interrupt(vcpu, false))
++		kvm_vcpu_kick(vcpu);
+ 
+ 	return 0;
+ }
+@@ -6757,8 +6758,10 @@ static enum exit_fastpath_completion vmx_vcpu_run(struct kvm_vcpu *vcpu)
+ 	if (!kvm_need_cancel_enter_guest(vcpu)) {
+ 		exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
+ 		/* static call is better with retpolines */
+-		if (exit_fastpath == EXIT_FASTPATH_CONT_RUN)
++		if (exit_fastpath == EXIT_FASTPATH_CONT_RUN) {
++			vmx_sync_pir_to_irr(vcpu);
+ 			goto cont_run;
 +		}
-+	}
-+
-+	return EXIT_FASTPATH_NONE;
-+}
-+
- bool __vmx_vcpu_run(struct vcpu_vmx *vmx, unsigned long *regs, bool launched);
+ 	}
  
- static enum exit_fastpath_completion vmx_vcpu_run(struct kvm_vcpu *vcpu)
-@@ -6567,6 +6581,7 @@ static enum exit_fastpath_completion vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	unsigned long cr3, cr4;
- 
-+cont_run:
- 	/* Record the guest's net vcpu time for enforced NMI injections. */
- 	if (unlikely(!enable_vnmi &&
- 		     vmx->loaded_vmcs->soft_vnmi_blocked))
-@@ -6733,17 +6748,17 @@ static enum exit_fastpath_completion vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 	if (unlikely(vmx->exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY))
- 		return EXIT_FASTPATH_NONE;
- 
--	if (!is_guest_mode(vcpu) && vmx->exit_reason == EXIT_REASON_MSR_WRITE)
--		exit_fastpath = handle_fastpath_set_msr_irqoff(vcpu);
--	else
--		exit_fastpath = EXIT_FASTPATH_NONE;
--
- 	vmx->loaded_vmcs->launched = 1;
- 	vmx->idt_vectoring_info = vmcs_read32(IDT_VECTORING_INFO_FIELD);
- 
- 	vmx_recover_nmi_blocking(vmx);
- 	vmx_complete_interrupts(vmx);
- 
-+	exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
-+	/* static call is better with retpolines */
-+	if (exit_fastpath == EXIT_FASTPATH_CONT_RUN)
-+		goto cont_run;
-+
  	return exit_fastpath;
- }
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index e7436d0..6a289d1 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -4633,6 +4633,7 @@ struct kvm_vcpu *kvm_get_running_vcpu(void)
  
+ 	return vcpu;
+ }
++EXPORT_SYMBOL_GPL(kvm_get_running_vcpu);
+ 
+ /**
+  * kvm_get_running_vcpus - get the per-CPU array of currently running vcpus.
 -- 
 2.7.4
 
