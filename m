@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B509FC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43ADEC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C21520728
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:07:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FC5E20736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:07:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587733642;
-	bh=xfSWHVVKn3KbC6cxywgzau1V2atH9TVMfdBBeCUGOTg=;
+	s=default; t=1587733649;
+	bh=rspLT0jEFuKk+8InswzVszPuHwWF31+D+jC6L7vwmz4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tdUyJAl8zgQaBAkXyi42riEVAG7htSYCI9C3+LLrJJeQvYHrmVQCKaQQURbQMdnqT
-	 xSO68MAmnhEoMaFG+M73Ijyoz0S9hYfOW36K8EQBRILPA9TXP+q26e9CSbU0XWwPmh
-	 dgSiZL85IQV6eI5xGdjlpALtX++4xGgGaMzxjLs4=
+	b=nY3zvdKzuheZ3gGsMCt+mH3yXE2P4zKZ5hHxzMAUskwAXQ7l5jloZxx5AyF+a9xOA
+	 W318c9V8R6qmAjTU54NwldJMPRFvz9iP9vyjxTXvBYvXZ+2T0TFvRJiQdqo7GC22Ct
+	 Xq9UC9mc8jsP2zsEXXgsKU4morLRyo+CenU5zlfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728343AbgDXNHV (ORCPT
+        id S1728376AbgDXNH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 09:07:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58058 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 09:07:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728305AbgDXNHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 09:07:20 -0400
+        id S1728349AbgDXNHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 09:07:24 -0400
 Received: from e123331-lin.home (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99DEF20776;
-        Fri, 24 Apr 2020 13:07:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4DB82084D;
+        Fri, 24 Apr 2020 13:07:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587733639;
-        bh=xfSWHVVKn3KbC6cxywgzau1V2atH9TVMfdBBeCUGOTg=;
+        s=default; t=1587733643;
+        bh=rspLT0jEFuKk+8InswzVszPuHwWF31+D+jC6L7vwmz4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q2qx7LAynjfezNLRBGrHdQOjzuBzQfV05mGc5gYsUmx18g3OS8beayhCn7Ml9Vv/2
-         J17VRgsU42yiQLX9RTm6g5VtwIk7PZSnSaj35XIg/qEkkO4xPcFoPE4XW503JCUWYs
-         lWAN22A8sZrSOJDudmFvGYuRzCd4eJHl8VmICE/0=
+        b=sYFlRO6jWEY3RG+Kv0wINRYb/ec4eP7uzJIq0tAy0RmMFoPHeAI2kxKJChwADxCoj
+         Lugi496iid7DBICoC+stgTEpiaWC9TkE6yzy6gedmR5h+90t43VFeA8QesiNc5nxgd
+         Evp5Ln89iaNOTMM7jQu52O5QlhOBrL5WqnTFMG0c=
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,9 +47,9 @@ Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
         Atish Patra <atish.patra@wdc.com>,
         Palmer Dabbelt <palmerdabbelt@google.com>,
         Zou Wei <zou_wei@huawei.com>
-Subject: [PATCH 31/33] efi/libstub/x86: Avoid getter function for efi_is64
-Date:   Fri, 24 Apr 2020 15:05:29 +0200
-Message-Id: <20200424130531.30518-32-ardb@kernel.org>
+Subject: [PATCH 33/33] efi: Move arch_tables check to caller
+Date:   Fri, 24 Apr 2020 15:05:31 +0200
+Message-Id: <20200424130531.30518-34-ardb@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200424130531.30518-1-ardb@kernel.org>
 References: <20200424130531.30518-1-ardb@kernel.org>
@@ -58,63 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We no longer need to take special care when using global variables
-in the EFI stub, so switch to a simple symbol reference for efi_is64.
+Instead of making match_config_table() test its table_types pointer for
+NULL-ness, omit the call entirely if no arch_tables pointer was provided
+to efi_config_parse_tables().
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/include/asm/efi.h              | 11 ++++++++---
- drivers/firmware/efi/libstub/x86-stub.c |  8 --------
- 2 files changed, 8 insertions(+), 11 deletions(-)
+ drivers/firmware/efi/efi.c | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
-index 78e839925a81..cd0c3fbf6156 100644
---- a/arch/x86/include/asm/efi.h
-+++ b/arch/x86/include/asm/efi.h
-@@ -225,14 +225,19 @@ efi_status_t efi_set_virtual_address_map(unsigned long memory_map_size,
- 
- /* arch specific definitions used by the stub code */
- 
--__attribute_const__ bool efi_is_64bit(void);
-+extern const bool efi_is64;
-+
-+static inline bool efi_is_64bit(void)
-+{
-+	if (IS_ENABLED(CONFIG_EFI_MIXED))
-+		return efi_is64;
-+	return IS_ENABLED(CONFIG_X86_64);
-+}
- 
- static inline bool efi_is_native(void)
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index e49c0b6db988..48d0188936c3 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -525,15 +525,13 @@ static __init int match_config_table(const efi_guid_t *guid,
  {
- 	if (!IS_ENABLED(CONFIG_X86_64))
- 		return true;
--	if (!IS_ENABLED(CONFIG_EFI_MIXED))
--		return true;
- 	return efi_is_64bit();
- }
+ 	int i;
  
-diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-index bddbc103a34b..597793fe8d22 100644
---- a/drivers/firmware/efi/libstub/x86-stub.c
-+++ b/drivers/firmware/efi/libstub/x86-stub.c
-@@ -21,16 +21,8 @@
- #define MAXMEM_X86_64_4LEVEL (1ull << 46)
+-	if (table_types) {
+-		for (i = 0; efi_guidcmp(table_types[i].guid, NULL_GUID); i++) {
+-			if (!efi_guidcmp(*guid, table_types[i].guid)) {
+-				*(table_types[i].ptr) = table;
+-				if (table_types[i].name[0])
+-					pr_cont(" %s=0x%lx ",
+-						table_types[i].name, table);
+-				return 1;
+-			}
++	for (i = 0; efi_guidcmp(table_types[i].guid, NULL_GUID); i++) {
++		if (!efi_guidcmp(*guid, table_types[i].guid)) {
++			*(table_types[i].ptr) = table;
++			if (table_types[i].name[0])
++				pr_cont("%s=0x%lx ",
++					table_types[i].name, table);
++			return 1;
+ 		}
+ 	}
  
- const efi_system_table_t *efi_system_table;
--extern const bool efi_is64;
- extern u32 image_offset;
+@@ -570,7 +568,7 @@ int __init efi_config_parse_tables(const efi_config_table_t *config_tables,
+ 			table = tbl32[i].table;
+ 		}
  
--__attribute_const__ bool efi_is_64bit(void)
--{
--	if (IS_ENABLED(CONFIG_EFI_MIXED))
--		return efi_is64;
--	return IS_ENABLED(CONFIG_X86_64);
--}
--
- static efi_status_t
- preserve_pci_rom_image(efi_pci_io_protocol_t *pci, struct pci_setup_rom **__rom)
- {
+-		if (!match_config_table(guid, table, common_tables))
++		if (!match_config_table(guid, table, common_tables) && arch_tables)
+ 			match_config_table(guid, table, arch_tables);
+ 	}
+ 	pr_cont("\n");
 -- 
 2.17.1
 
