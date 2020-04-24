@@ -2,458 +2,604 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22879C55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BB5C5518A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E89672084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:01:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B8A420774
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:05:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sEe2hpGR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jMKF0/4E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbgDXIBn (ORCPT
+        id S1726614AbgDXIFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 04:01:43 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:47894 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbgDXIBm (ORCPT
+        Fri, 24 Apr 2020 04:05:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38974 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726051AbgDXIFW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 04:01:42 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03O8132i064874;
-        Fri, 24 Apr 2020 03:01:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587715264;
-        bh=CufqJPLArn/1zNvKyuZxkxD9MIE4MH2yrXvv+vLMP8s=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=sEe2hpGRhqe4GyJTijRzpYrSXui6NuKg47zvwio340vpe29Jlb/UQa52vao3emr6A
-         sqzVUnNDRi/cpIemykxEIu6X774/xcCHl3qhJ8gcj2nNc9XRexJGSHBP2It7DYFzAG
-         ZSfK2yF+ZKlyLUwtkYmWazARl4+BLov7liX5XBhQ=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03O813vC019841
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 24 Apr 2020 03:01:03 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 24
- Apr 2020 03:01:03 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 24 Apr 2020 03:01:03 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03O80vnA006366;
-        Fri, 24 Apr 2020 03:00:58 -0500
-Subject: Re: [PATCH v9 5/8] PCI: endpoint: Add support to handle multiple base
- for mapping outbound memory
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-CC:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>
-References: <1587666159-6035-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1587666159-6035-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <99ff8fb8-101c-a548-7d6e-07c3a31ced2c@ti.com>
- <CA+V-a8sCLm_3hxBT+p_mjSt92rTF3+4nPBuuOdoq==ZKbTK2zg@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <765b262f-0162-38f6-f341-dab906ba1eef@ti.com>
-Date:   Fri, 24 Apr 2020 13:30:56 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 24 Apr 2020 04:05:22 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2ED6C09B047
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 01:05:21 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id u127so9633039wmg.1
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 01:05:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=WmaSZtcJ97CVuu5ovBVXDQ/oN+gMvGID2LE/mRUyMFg=;
+        b=jMKF0/4ElvJJU7ACf8LJ4xPnX+osyHWbnXvCkZLDHI2ozVzE73WQ1ti40GmhmeQaf4
+         W9d3u+Aq//ipqx5TPvpM0NqfkN+zhE5FqT5ZFFLJfeQEjbfeBxd+Ec+RCC1HWKrzeyBY
+         tavYHXqgaU565PNno3ZyaLrtBJorwTriaG1N+LmnXJgQq2vJ7rysJHQSiMAreUdHwbeA
+         iTB7d9JUrSt7OLQBpbRrlzf/icJxoRlONAW8+x3ndfwlF6G6yS9uv2iH2FQcFPL2l9zp
+         vdCMQgjrw7hsYH99BsSLpgByq5izD+jxpJVsxD+iYbgVfl0wBfGn7bGmjephUqM3u80K
+         b4VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=WmaSZtcJ97CVuu5ovBVXDQ/oN+gMvGID2LE/mRUyMFg=;
+        b=Xq9A2AWEbUW2HsMjsDf5gfiqpFLwVVx5hQ1+KQW1fCpgmIItho0nSeHyLNR5n1OR2u
+         BJSdU/k40I0QVsAgqamAUwppK87v590ntjaay5mPY+jAEH7Z+JSSI2mO+r+wGlVw3QWu
+         86oWE3m2OOcxyOY6XvZ06PT8bCNdak27vWj7LeV9JcbRAG+w9jl1crtFf/7ocMQk/btO
+         oafMF009RUQkkZdjFvBTabOGmbwikBT+xfol86ObGckn9WYFlIDR8tjJbR50sMXimGRc
+         oFdbl4hIFi0MB/2/3EtsZO4gi+rRXBodZ5GUEspvLGPcqHZhA0lfqx2uKOnMENRcwjaK
+         EMhA==
+X-Gm-Message-State: AGi0Pub21T+CT3VgYp6V/a87wI0gaPDlB+1y9QooH6FYDR5lnahhdekz
+        GAHSvYQkLvwoboImWBHB1gWa8Q==
+X-Google-Smtp-Source: APiQypKfRbQHOEb26CmLxcxK7PdDhRB4YNVM3ll52lyYv4/YuYOGq4FejHAjcQ9F2GuTU8hNHZDCuw==
+X-Received: by 2002:a1c:750a:: with SMTP id o10mr8535498wmc.124.1587715520195;
+        Fri, 24 Apr 2020 01:05:20 -0700 (PDT)
+Received: from dell ([2.31.163.63])
+        by smtp.gmail.com with ESMTPSA id d7sm6958518wrn.78.2020.04.24.01.05.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Apr 2020 01:05:18 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 09:05:17 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, mripard@kernel.org, wens@csie.org,
+        linux@armlinux.org.uk, davem@davemloft.net,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [RFC PATCH 1/4] mfd: Add support for AC200
+Message-ID: <20200424080517.GO3612@dell>
+References: <20200416185758.1388148-1-jernej.skrabec@siol.net>
+ <20200416185758.1388148-2-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-In-Reply-To: <CA+V-a8sCLm_3hxBT+p_mjSt92rTF3+4nPBuuOdoq==ZKbTK2zg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200416185758.1388148-2-jernej.skrabec@siol.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+On Thu, 16 Apr 2020, Jernej Skrabec wrote:
 
-On 4/24/2020 1:16 PM, Lad, Prabhakar wrote:
-> Hi Kishon,
+> This adds support for AC200 multi functional IC. It can be packaged
+> standalone or copackaged with SoC like Allwinner H6.
 > 
-> Thank you for the review.
+> It has analog audio codec, CVBS encoder, RTC and Fast Ethernet PHY.
+> Documentation also mention eFuses, but it seems that it's not used in
+> copackaged variant.
 > 
-> On Fri, Apr 24, 2020 at 7:13 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>
->> Hi Prabhakar,
->>
->> On 4/23/2020 11:52 PM, Lad Prabhakar wrote:
->>> R-Car PCIe controller has support to map multiple memory regions for
->>> mapping the outbound memory in local system also the controller limits
->>> single allocation for each region (that is, once a chunk is used from the
->>> region it cannot be used to allocate a new one). This features inspires to
->>> add support for handling multiple memory bases in endpoint framework.
->>>
->>> With this patch pci_epc_mem_init() initializes address space for endpoint
->>> controller which support single window and pci_epc_multi_mem_init()
->>> initializes multiple windows supported by endpoint controller.
->>
->> Have a couple of clean-up comments. See below.
->>>
->>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->>> ---
->>>  .../pci/controller/dwc/pcie-designware-ep.c   |  16 +-
->>>  drivers/pci/endpoint/pci-epc-mem.c            | 199 ++++++++++++------
->>>  include/linux/pci-epc.h                       |  33 ++-
->>>  3 files changed, 170 insertions(+), 78 deletions(-)
->>>
->> .
->> .
->> <snip>
->> .
->> .
->>> diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
->>> index cdd1d3821249..a3466da2a16f 100644
->>> --- a/drivers/pci/endpoint/pci-epc-mem.c
->>> +++ b/drivers/pci/endpoint/pci-epc-mem.c
->>> @@ -23,7 +23,7 @@
->>>  static int pci_epc_mem_get_order(struct pci_epc_mem *mem, size_t size)
->>>  {
->>>       int order;
->>> -     unsigned int page_shift = ilog2(mem->page_size);
->>> +     unsigned int page_shift = ilog2(mem->window.page_size);
->>>
->>>       size--;
->>>       size >>= page_shift;
->>> @@ -36,67 +36,95 @@ static int pci_epc_mem_get_order(struct pci_epc_mem *mem, size_t size)
->>>  }
->>>
->>>  /**
->>> - * __pci_epc_mem_init() - initialize the pci_epc_mem structure
->>> + * pci_epc_multi_mem_init() - initialize the pci_epc_mem structure
->>>   * @epc: the EPC device that invoked pci_epc_mem_init
->>> - * @phys_base: the physical address of the base
->>> - * @size: the size of the address space
->>> - * @page_size: size of each page
->>> + * @windows: pointer to windows supported by the device
->>> + * @num_windows: number of windows device supports
->>>   *
->>>   * Invoke to initialize the pci_epc_mem structure used by the
->>>   * endpoint functions to allocate mapped PCI address.
->>>   */
->>> -int __pci_epc_mem_init(struct pci_epc *epc, phys_addr_t phys_base, size_t size,
->>> -                    size_t page_size)
->>> +int pci_epc_multi_mem_init(struct pci_epc *epc,
->>> +                        struct pci_epc_mem_window *windows,
->>> +                        unsigned int num_windows)
->>>  {
->>> -     int ret;
->>> -     struct pci_epc_mem *mem;
->>> -     unsigned long *bitmap;
->>> +     struct pci_epc_mem *mem = NULL;
->>> +     unsigned long *bitmap = NULL;
->>>       unsigned int page_shift;
->>> -     int pages;
->>> +     size_t page_size;
->>>       int bitmap_size;
->>> +     int pages;
->>> +     int ret;
->>> +     int i;
->>>
->>> -     if (page_size < PAGE_SIZE)
->>> -             page_size = PAGE_SIZE;
->>> +     epc->num_windows = 0;
->>>
->>> -     page_shift = ilog2(page_size);
->>> -     pages = size >> page_shift;
->>> -     bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
->>> +     if (!windows || !num_windows)
->>> +             return -EINVAL;
->>>
->>> -     mem = kzalloc(sizeof(*mem), GFP_KERNEL);
->>> -     if (!mem) {
->>> -             ret = -ENOMEM;
->>> -             goto err;
->>> -     }
->>> +     epc->windows = kcalloc(num_windows, sizeof(*mem), GFP_KERNEL);
->>> +     if (!epc->windows)
->>> +             return -ENOMEM;
->>>
->>> -     bitmap = kzalloc(bitmap_size, GFP_KERNEL);
->>> -     if (!bitmap) {
->>> -             ret = -ENOMEM;
->>> -             goto err_mem;
->>> -     }
->>> +     for (i = 0; i < num_windows; i++) {
->>> +             page_size = windows[i].page_size;
->>> +             if (page_size < PAGE_SIZE)
->>> +                     page_size = PAGE_SIZE;
->>> +             page_shift = ilog2(page_size);
->>> +             pages = windows[i].size >> page_shift;
->>> +             bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
->>>
->>> -     mem->bitmap = bitmap;
->>> -     mem->phys_base = phys_base;
->>> -     mem->page_size = page_size;
->>> -     mem->pages = pages;
->>> -     mem->size = size;
->>> -     mutex_init(&mem->lock);
->>> +             mem = kzalloc(sizeof(*mem), GFP_KERNEL);
->>> +             if (!mem) {
->>> +                     ret = -ENOMEM;
->>> +                     i--;
->>> +                     goto err_mem;
->>> +             }
->>>
->>> -     epc->mem = mem;
->>> +             bitmap = kzalloc(bitmap_size, GFP_KERNEL);
->>> +             if (!bitmap) {
->>> +                     ret = -ENOMEM;
->>> +                     kfree(mem);
->>> +                     i--;
->>> +                     goto err_mem;
->>> +             }
->>> +
->>> +             mem->window.phys_base = windows[i].phys_base;
->>> +             mem->window.size = windows[i].size;
->>> +             mem->window.page_size = page_size;
->>> +             mem->bitmap = bitmap;
->>> +             mem->pages = pages;
->>> +             mutex_init(&mem->lock);
->>> +             epc->windows[i] = mem;
->>> +     }
->>> +
->>> +     epc->mem = epc->windows[0];
->>
->> "mem" member of EPC looks unnecessary since that value is available at
->> epc->windows[0].
-> This was suggested by Shimoda-san, as most of the current  controller
-> drivers support single region this pointer would be easier to access
-> the region instead of adding #define EPC_DEFAULT_WINDOW  0 and
-> accessing  as epc->windows[EPC_DEFAULT_WINDOW];
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>  drivers/mfd/Kconfig       |   9 ++
+>  drivers/mfd/Makefile      |   1 +
+>  drivers/mfd/ac200.c       | 188 ++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/ac200.h | 210 ++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 408 insertions(+)
+>  create mode 100644 drivers/mfd/ac200.c
+>  create mode 100644 include/linux/mfd/ac200.h
 > 
->>> +     epc->num_windows = num_windows;
->>>
->>>       return 0;
->>>
->>>  err_mem:
->>> -     kfree(mem);
->>> +     for (; i >= 0; i--) {
->>> +             mem = epc->windows[i];
->>> +             kfree(mem->bitmap);
->>> +             kfree(mem);
->>> +     }
->>> +     kfree(epc->windows);
->>>
->>> -err:
->>> -return ret;
->>> +     return ret;
->>>  }
->>> -EXPORT_SYMBOL_GPL(__pci_epc_mem_init);
->>> +EXPORT_SYMBOL_GPL(pci_epc_multi_mem_init);
->>>
->>>  int pci_epc_mem_init(struct pci_epc *epc, phys_addr_t base,
->>>                    size_t size, size_t page_size)
->>>  {
->>> -     return __pci_epc_mem_init(epc, base, size, page_size);
->>> +     struct pci_epc_mem_window mem_window;
->>> +
->>> +     mem_window.phys_base = base;
->>> +     mem_window.size = size;
->>> +     mem_window.page_size = page_size;
->>> +
->>> +     return pci_epc_multi_mem_init(epc, &mem_window, 1);
->>>  }
->>>  EXPORT_SYMBOL_GPL(pci_epc_mem_init);
->>>
->>> @@ -109,11 +137,22 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_init);
->>>   */
->>>  void pci_epc_mem_exit(struct pci_epc *epc)
->>>  {
->>> -     struct pci_epc_mem *mem = epc->mem;
->>> +     struct pci_epc_mem *mem;
->>> +     int i;
->>>
->>> +     if (!epc->num_windows)
->>> +             return;
->>> +
->>> +     for (i = 0; i < epc->num_windows; i++) {
->>> +             mem = epc->windows[i];
->>> +             kfree(mem->bitmap);
->>> +             kfree(mem);
->>> +     }
->>> +     kfree(epc->windows);
->>> +
->>> +     epc->windows = NULL;
->>>       epc->mem = NULL;
->>> -     kfree(mem->bitmap);
->>> -     kfree(mem);
->>> +     epc->num_windows = 0;
->>>  }
->>>  EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
->>>
->>> @@ -129,31 +168,60 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
->>>  void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
->>>                                    phys_addr_t *phys_addr, size_t size)
->>>  {
->>> -     int pageno;
->>>       void __iomem *virt_addr = NULL;
->>> -     struct pci_epc_mem *mem = epc->mem;
->>> -     unsigned int page_shift = ilog2(mem->page_size);
->>> +     struct pci_epc_mem *mem;
->>> +     unsigned int page_shift;
->>> +     size_t align_size;
->>> +     int pageno;
->>>       int order;
->>> +     int i;
->>>
->>> -     size = ALIGN(size, mem->page_size);
->>> -     order = pci_epc_mem_get_order(mem, size);
->>> -
->>> -     mutex_lock(&mem->lock);
->>> -     pageno = bitmap_find_free_region(mem->bitmap, mem->pages, order);
->>> -     if (pageno < 0)
->>> -             goto ret;
->>> +     for (i = 0; i < epc->num_windows; i++) {
->>> +             mem = epc->windows[i];
->>> +             mutex_lock(&mem->lock);
->>> +             align_size = ALIGN(size, mem->window.page_size);
->>> +             order = pci_epc_mem_get_order(mem, align_size);
->>>
->>> -     *phys_addr = mem->phys_base + ((phys_addr_t)pageno << page_shift);
->>> -     virt_addr = ioremap(*phys_addr, size);
->>> -     if (!virt_addr)
->>> -             bitmap_release_region(mem->bitmap, pageno, order);
->>> +             pageno = bitmap_find_free_region(mem->bitmap, mem->pages,
->>> +                                              order);
->>> +             if (pageno >= 0) {
->>> +                     page_shift = ilog2(mem->window.page_size);
->>> +                     *phys_addr = mem->window.phys_base +
->>> +                             ((phys_addr_t)pageno << page_shift);
->>> +                     virt_addr = ioremap(*phys_addr, align_size);
->>> +                     if (!virt_addr) {
->>> +                             bitmap_release_region(mem->bitmap,
->>> +                                                   pageno, order);
->>> +                             mutex_unlock(&mem->lock);
->>> +                             continue;
->>> +                     }
->>> +                     mutex_unlock(&mem->lock);
->>> +                     return virt_addr;
->>> +             }
->>> +             mutex_unlock(&mem->lock);
->>> +     }
->>>
->>> -ret:
->>> -     mutex_unlock(&mem->lock);
->>>       return virt_addr;
->>>  }
->>>  EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
->>>
->>> +struct pci_epc_mem *pci_epc_get_matching_window(struct pci_epc *epc,
->>> +                                             phys_addr_t phys_addr)
->>> +{
->>> +     struct pci_epc_mem *mem;
->>> +     int i;
->>> +
->>> +     for (i = 0; i < epc->num_windows; i++) {
->>> +             mem = epc->windows[i];
->>> +
->>> +             if (phys_addr >= mem->window.phys_base &&
->>> +                 phys_addr < (mem->window.phys_base + mem->window.size))
->>> +                     return mem;
->>> +     }
->>> +
->>> +     return NULL;
->>> +}
->>> +
->>>  /**
->>>   * pci_epc_mem_free_addr() - free the allocated memory address
->>>   * @epc: the EPC device on which memory was allocated
->>> @@ -166,14 +234,23 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
->>>  void pci_epc_mem_free_addr(struct pci_epc *epc, phys_addr_t phys_addr,
->>>                          void __iomem *virt_addr, size_t size)
->>>  {
->>> +     struct pci_epc_mem *mem;
->>> +     unsigned int page_shift;
->>> +     size_t page_size;
->>>       int pageno;
->>> -     struct pci_epc_mem *mem = epc->mem;
->>> -     unsigned int page_shift = ilog2(mem->page_size);
->>>       int order;
->>>
->>> +     mem = pci_epc_get_matching_window(epc, phys_addr);
->>> +     if (!mem) {
->>> +             pr_err("failed to get matching window\n");
->>> +             return;
->>> +     }
->>> +
->>> +     page_size = mem->window.page_size;
->>> +     page_shift = ilog2(page_size);
->>>       iounmap(virt_addr);
->>> -     pageno = (phys_addr - mem->phys_base) >> page_shift;
->>> -     size = ALIGN(size, mem->page_size);
->>> +     pageno = (phys_addr - mem->window.phys_base) >> page_shift;
->>> +     size = ALIGN(size, page_size);
->>>       order = pci_epc_mem_get_order(mem, size);
->>>       mutex_lock(&mem->lock);
->>>       bitmap_release_region(mem->bitmap, pageno, order);
->>> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
->>> index 5bc1de65849e..cc66bec8be90 100644
->>> --- a/include/linux/pci-epc.h
->>> +++ b/include/linux/pci-epc.h
->>> @@ -65,20 +65,28 @@ struct pci_epc_ops {
->>>       struct module *owner;
->>>  };
->>>
->>> +/**
->>> + * struct pci_epc_mem_window - address window of the endpoint controller
->>> + * @phys_base: physical base address of the PCI address window
->>> + * @size: the size of the PCI address window
->>> + * @page_size: size of each page
->>> + */
->>> +struct pci_epc_mem_window {
->>> +     phys_addr_t     phys_base;
->>> +     size_t          size;
->>> +     size_t          page_size;
->>> +};
->>> +
->>>  /**
->>>   * struct pci_epc_mem - address space of the endpoint controller
->>> - * @phys_base: physical base address of the PCI address space
->>> - * @size: the size of the PCI address space
->>> + * @window: address window of the endpoint controller
->>>   * @bitmap: bitmap to manage the PCI address space
->>>   * @pages: number of bits representing the address region
->>> - * @page_size: size of each page
->>>   * @lock: mutex to protect bitmap
->>>   */
->>>  struct pci_epc_mem {
->>> -     phys_addr_t     phys_base;
->>> -     size_t          size;
->>> +     struct pci_epc_mem_window window;
->>
->> Don't see any additional value in moving phys_base, size, page_size to a new
->> structure and again including it here.
->>
-> Controllers supporting multiple windows create a list of supported
-> regions (struct pci_epc_mem_window ) and pass a pointer to
-> pci_epc_multi_mem_init(), hence this split.
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 0a59249198d3..1d6b7f3ae193 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -178,6 +178,15 @@ config MFD_AC100
+>  	  This driver include only the core APIs. You have to select individual
+>  	  components like codecs or RTC under the corresponding menus.
+>  
+> +config MFD_AC200
+> +	tristate "X-Powers AC200"
+> +	select MFD_CORE
+> +	depends on I2C
+> +	help
+> +	  If you say Y here you get support for the X-Powers AC200 IC.
 
-Okay, thanks for clarifying.
+Please describe the IC here.
 
-Regards
-Kishon
+> +	  This driver include only the core APIs. You have to select individual
+> +	  components like Ethernet PHY or RTC under the corresponding menus.
+> +
+>  config MFD_AXP20X
+>  	tristate
+>  	select MFD_CORE
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index f935d10cbf0f..a20407290d6f 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -142,6 +142,7 @@ obj-$(CONFIG_MFD_DA9052_SPI)	+= da9052-spi.o
+>  obj-$(CONFIG_MFD_DA9052_I2C)	+= da9052-i2c.o
+>  
+>  obj-$(CONFIG_MFD_AC100)		+= ac100.o
+> +obj-$(CONFIG_MFD_AC200)		+= ac200.o
+>  obj-$(CONFIG_MFD_AXP20X)	+= axp20x.o
+>  obj-$(CONFIG_MFD_AXP20X_I2C)	+= axp20x-i2c.o
+>  obj-$(CONFIG_MFD_AXP20X_RSB)	+= axp20x-rsb.o
+> diff --git a/drivers/mfd/ac200.c b/drivers/mfd/ac200.c
+> new file mode 100644
+> index 000000000000..cf2710b84879
+> --- /dev/null
+> +++ b/drivers/mfd/ac200.c
+> @@ -0,0 +1,188 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * MFD core driver for X-Powers' AC200 IC
+> + *
+> + * The AC200 is a chip which is co-packaged with Allwinner H6 SoC and
+> + * includes analog audio codec, analog TV encoder, ethernet PHY, eFuse
+> + * and RTC.
+> + *
+> + * Copyright (c) 2020 Jernej Skrabec <jernej.skrabec@siol.net>
+
+This usually goes higher in the header comment.
+
+> + */
+> +
+> +#include <linux/i2c.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/mfd/ac200.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+
+Alphabetical.
+
+> +/* Interrupts */
+> +#define AC200_IRQ_RTC  0
+> +#define AC200_IRQ_EPHY 1
+> +#define AC200_IRQ_TVE  2
+> +
+> +/* IRQ enable register */
+> +#define AC200_SYS_IRQ_ENABLE_OUT_EN BIT(15)
+> +#define AC200_SYS_IRQ_ENABLE_RTC    BIT(12)
+> +#define AC200_SYS_IRQ_ENABLE_EPHY   BIT(8)
+> +#define AC200_SYS_IRQ_ENABLE_TVE    BIT(4)
+> +
+> +static const struct regmap_range_cfg ac200_range_cfg[] = {
+> +	{
+> +		.range_min = AC200_SYS_VERSION,
+> +		.range_max = AC200_IC_CHARA1,
+> +		.selector_reg = AC200_TWI_REG_ADDR_H,
+> +		.selector_mask = 0xff,
+> +		.selector_shift = 0,
+> +		.window_start = 0,
+> +		.window_len = 256,
+> +	}
+> +};
+> +
+> +static const struct regmap_config ac200_regmap_config = {
+> +	.reg_bits	= 8,
+> +	.val_bits	= 16,
+> +	.ranges		= ac200_range_cfg,
+> +	.num_ranges	= ARRAY_SIZE(ac200_range_cfg),
+> +	.max_register	= AC200_IC_CHARA1,
+> +};
+> +
+> +static const struct regmap_irq ac200_regmap_irqs[] = {
+> +	REGMAP_IRQ_REG(AC200_IRQ_RTC,  0, AC200_SYS_IRQ_ENABLE_RTC),
+> +	REGMAP_IRQ_REG(AC200_IRQ_EPHY, 0, AC200_SYS_IRQ_ENABLE_EPHY),
+> +	REGMAP_IRQ_REG(AC200_IRQ_TVE,  0, AC200_SYS_IRQ_ENABLE_TVE),
+> +};
+> +
+> +static const struct regmap_irq_chip ac200_regmap_irq_chip = {
+> +	.name			= "ac200_irq_chip",
+> +	.status_base		= AC200_SYS_IRQ_STATUS,
+> +	.mask_base		= AC200_SYS_IRQ_ENABLE,
+> +	.mask_invert		= true,
+> +	.irqs			= ac200_regmap_irqs,
+> +	.num_irqs		= ARRAY_SIZE(ac200_regmap_irqs),
+> +	.num_regs		= 1,
+> +};
+> +
+> +static const struct resource ephy_resource[] = {
+> +	DEFINE_RES_IRQ(AC200_IRQ_EPHY),
+> +};
+> +
+> +static const struct mfd_cell ac200_cells[] = {
+> +	{
+> +		.name		= "ac200-ephy",
+> +		.num_resources	= ARRAY_SIZE(ephy_resource),
+> +		.resources	= ephy_resource,
+> +		.of_compatible	= "x-powers,ac200-ephy",
+> +	},
+> +};
+
+Where are the reset of the devices?
+
+> +static int ac200_i2c_probe(struct i2c_client *i2c,
+> +			   const struct i2c_device_id *id)
+> +{
+> +	struct device *dev = &i2c->dev;
+> +	struct ac200_dev *ac200;
+
+struct ac200_ddata *ddata;
+
+> +	int ret;
+> +
+> +	ac200 = devm_kzalloc(dev, sizeof(*ac200), GFP_KERNEL);
+> +	if (!ac200)
+> +		return -ENOMEM;
+> +
+> +	i2c_set_clientdata(i2c, ac200);
+> +
+> +	ac200->regmap = devm_regmap_init_i2c(i2c, &ac200_regmap_config);
+> +	if (IS_ERR(ac200->regmap)) {
+> +		dev_err(dev, "regmap init failed\n");
+> +		return PTR_ERR(ac200->regmap);
+> +	}
+> +
+> +	ac200->clk = devm_clk_get(dev, NULL);
+> +	if (IS_ERR(ac200->clk)) {
+> +		dev_err(dev, "Can't obtain the clock!\n");
+> +		return PTR_ERR(ac200->clk);
+> +	}
+> +
+> +	ret = clk_prepare_enable(ac200->clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* do a reset to put chip in a known state */
+
+If you define the magic values here, this comment become superfluous.
+
+> +	ret = regmap_write(ac200->regmap, AC200_SYS_CONTROL, 0);
+> +	if (ret)
+> +		goto err_free_clk;
+> +
+> +	ret = regmap_write(ac200->regmap, AC200_SYS_CONTROL, 1);
+> +	if (ret)
+> +		goto err_free_clk;
+> +
+> +	/* enable interrupt pin */
+
+This comment can be dropped.
+
+> +	ret = regmap_write(ac200->regmap, AC200_SYS_IRQ_ENABLE,
+> +			   AC200_SYS_IRQ_ENABLE_OUT_EN);
+> +	if (ret)
+> +		goto err_free_clk;
+> +
+> +	ret = regmap_add_irq_chip(ac200->regmap, i2c->irq, IRQF_ONESHOT, 0,
+> +				  &ac200_regmap_irq_chip, &ac200->regmap_irqc);
+> +	if (ret)
+> +		goto err_free_clk;
+> +
+> +	ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE, ac200_cells,
+> +				   ARRAY_SIZE(ac200_cells), NULL, 0, NULL);
+> +	if (ret) {
+> +		dev_err(dev, "failed to add MFD devices: %d\n", ret);
+
+"Failed to register child devices"
+
+> +		goto err_del_irq_chip;
+> +	}
+
+Do you want to leave the clock running when you leave?
+
+Seems wasteful.
+
+> +	return 0;
+> +
+> +err_del_irq_chip:
+> +	regmap_del_irq_chip(i2c->irq, ac200->regmap_irqc);
+
+Use the devm_* version, then you do not have to clear up.
+
+> +err_free_clk:
+> +	clk_disable_unprepare(ac200->clk);
+> +
+> +	return ret;
+> +}
+> +
+> +static int ac200_i2c_remove(struct i2c_client *i2c)
+> +{
+> +	struct ac200_dev *ac200 = i2c_get_clientdata(i2c);
+> +
+> +	/* put chip in reset state */
+
+Use defines, then remove the comment.
+
+> +	regmap_write(ac200->regmap, AC200_SYS_CONTROL, 0);
+> +
+> +	mfd_remove_devices(&i2c->dev);
+
+Use devm_* instead.
+
+> +	regmap_del_irq_chip(i2c->irq, ac200->regmap_irqc);
+
+Use devm_* instead.
+
+> +	clk_disable_unprepare(ac200->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct i2c_device_id ac200_ids[] = {
+> +	{ "ac200", },
+> +	{ /* sentinel */ }
+
+No need for this comment.
+
+In fact, no need for this table.  It can be removed.
+
+> +};
+> +MODULE_DEVICE_TABLE(i2c, ac200_ids);
+> +
+> +static const struct of_device_id ac200_of_match[] = {
+> +	{ .compatible = "x-powers,ac200" },
+> +	{ /* sentinel */ }
+
+No need for this comment.
+
+> +};
+> +MODULE_DEVICE_TABLE(of, ac200_of_match);
+> +
+> +static struct i2c_driver ac200_i2c_driver = {
+> +	.driver = {
+> +		.name	= "ac200",
+> +		.of_match_table	= of_match_ptr(ac200_of_match),
+> +	},
+> +	.probe	= ac200_i2c_probe,
+> +	.remove = ac200_i2c_remove,
+> +	.id_table = ac200_ids,
+> +};
+> +module_i2c_driver(ac200_i2c_driver);
+> +
+> +MODULE_DESCRIPTION("MFD core driver for AC200");
+
+"Parent driver ..."
+
+> +MODULE_AUTHOR("Jernej Skrabec <jernej.skrabec@siol.net>");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/include/linux/mfd/ac200.h b/include/linux/mfd/ac200.h
+> new file mode 100644
+> index 000000000000..f75baf0d910c
+> --- /dev/null
+> +++ b/include/linux/mfd/ac200.h
+> @@ -0,0 +1,210 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * AC200 register list
+> + *
+> + * Copyright (C) 2019 Jernej Skrabec <jernej.skrabec@siol.net>
+
+This usually sits higher.
+
+> + */
+> +
+> +#ifndef __LINUX_MFD_AC200_H
+> +#define __LINUX_MFD_AC200_H
+> +
+> +#include <linux/clk.h>
+> +#include <linux/regmap.h>
+> +
+> +/* interface registers (can be accessed from any page) */
+
+Please use correct grammar in comments.
+
+"Interface"
+
+> +#define AC200_TWI_CHANGE_TO_RSB		0x3E
+> +#define AC200_TWI_PAD_DELAY		0xC4
+> +#define AC200_TWI_REG_ADDR_H		0xFE
+> +
+> +/* General registers */
+> +#define AC200_SYS_VERSION		0x0000
+> +#define AC200_SYS_CONTROL		0x0002
+> +#define AC200_SYS_IRQ_ENABLE		0x0004
+> +#define AC200_SYS_IRQ_STATUS		0x0006
+> +#define AC200_SYS_CLK_CTL		0x0008
+> +#define AC200_SYS_DLDO_OSC_CTL		0x000A
+> +#define AC200_SYS_PLL_CTL0		0x000C
+> +#define AC200_SYS_PLL_CTL1		0x000E
+> +#define AC200_SYS_AUDIO_CTL0		0x0010
+> +#define AC200_SYS_AUDIO_CTL1		0x0012
+> +#define AC200_SYS_EPHY_CTL0		0x0014
+> +#define AC200_SYS_EPHY_CTL1		0x0016
+> +#define AC200_SYS_TVE_CTL0		0x0018
+> +#define AC200_SYS_TVE_CTL1		0x001A
+> +
+> +/* Audio Codec registers */
+> +#define AC200_AC_SYS_CLK_CTL		0x2000
+> +#define AC200_SYS_MOD_RST		0x2002
+> +#define AC200_SYS_SAMP_CTL		0x2004
+> +#define AC200_I2S_CTL			0x2100
+> +#define AC200_I2S_CLK			0x2102
+> +#define AC200_I2S_FMT0			0x2104
+> +#define AC200_I2S_FMT1			0x2108
+> +#define AC200_I2S_MIX_SRC		0x2114
+> +#define AC200_I2S_MIX_GAIN		0x2116
+> +#define AC200_I2S_DACDAT_DVC		0x2118
+> +#define AC200_I2S_ADCDAT_DVC		0x211A
+> +#define AC200_AC_DAC_DPC		0x2200
+> +#define AC200_AC_DAC_MIX_SRC		0x2202
+> +#define AC200_AC_DAC_MIX_GAIN		0x2204
+> +#define AC200_DACA_OMIXER_CTRL		0x2220
+> +#define AC200_OMIXER_SR			0x2222
+> +#define AC200_LINEOUT_CTRL		0x2224
+> +#define AC200_AC_ADC_DPC		0x2300
+> +#define AC200_MBIAS_CTRL		0x2310
+> +#define AC200_ADC_MIC_CTRL		0x2320
+> +#define AC200_ADCMIXER_SR		0x2322
+> +#define AC200_ANALOG_TUNING0		0x232A
+> +#define AC200_ANALOG_TUNING1		0x232C
+> +#define AC200_AC_AGC_SEL		0x2480
+> +#define AC200_ADC_DAPLCTRL		0x2500
+> +#define AC200_ADC_DAPRCTRL		0x2502
+> +#define AC200_ADC_DAPLSTA		0x2504
+> +#define AC200_ADC_DAPRSTA		0x2506
+> +#define AC200_ADC_DAPLTL		0x2508
+> +#define AC200_ADC_DAPRTL		0x250A
+> +#define AC200_ADC_DAPLHAC		0x250C
+> +#define AC200_ADC_DAPLLAC		0x250E
+> +#define AC200_ADC_DAPRHAC		0x2510
+> +#define AC200_ADC_DAPRLAC		0x2512
+> +#define AC200_ADC_DAPLDT		0x2514
+> +#define AC200_ADC_DAPLAT		0x2516
+> +#define AC200_ADC_DAPRDT		0x2518
+> +#define AC200_ADC_DAPRAT		0x251A
+> +#define AC200_ADC_DAPNTH		0x251C
+> +#define AC200_ADC_DAPLHNAC		0x251E
+> +#define AC200_ADC_DAPLLNAC		0x2520
+> +#define AC200_ADC_DAPRHNAC		0x2522
+> +#define AC200_ADC_DAPRLNAC		0x2524
+> +#define AC200_AC_DAPHHPFC		0x2526
+> +#define AC200_AC_DAPLHPFC		0x2528
+> +#define AC200_AC_DAPOPT			0x252A
+> +#define AC200_AC_DAC_DAPCTRL		0x3000
+> +#define AC200_AC_DRC_HHPFC		0x3002
+> +#define AC200_AC_DRC_LHPFC		0x3004
+> +#define AC200_AC_DRC_CTRL		0x3006
+> +#define AC200_AC_DRC_LPFHAT		0x3008
+> +#define AC200_AC_DRC_LPFLAT		0x300A
+> +#define AC200_AC_DRC_RPFHAT		0x300C
+> +#define AC200_AC_DRC_RPFLAT		0x300E
+> +#define AC200_AC_DRC_LPFHRT		0x3010
+> +#define AC200_AC_DRC_LPFLRT		0x3012
+> +#define AC200_AC_DRC_RPFHRT		0x3014
+> +#define AC200_AC_DRC_RPFLRT		0x3016
+> +#define AC200_AC_DRC_LRMSHAT		0x3018
+> +#define AC200_AC_DRC_LRMSLAT		0x301A
+> +#define AC200_AC_DRC_RRMSHAT		0x301C
+> +#define AC200_AC_DRC_RRMSLAT		0x301E
+> +#define AC200_AC_DRC_HCT		0x3020
+> +#define AC200_AC_DRC_LCT		0x3022
+> +#define AC200_AC_DRC_HKC		0x3024
+> +#define AC200_AC_DRC_LKC		0x3026
+> +#define AC200_AC_DRC_HOPC		0x3028
+> +#define AC200_AC_DRC_LOPC		0x302A
+> +#define AC200_AC_DRC_HLT		0x302C
+> +#define AC200_AC_DRC_LLT		0x302E
+> +#define AC200_AC_DRC_HKI		0x3030
+> +#define AC200_AC_DRC_LKI		0x3032
+> +#define AC200_AC_DRC_HOPL		0x3034
+> +#define AC200_AC_DRC_LOPL		0x3036
+> +#define AC200_AC_DRC_HET		0x3038
+> +#define AC200_AC_DRC_LET		0x303A
+> +#define AC200_AC_DRC_HKE		0x303C
+> +#define AC200_AC_DRC_LKE		0x303E
+> +#define AC200_AC_DRC_HOPE		0x3040
+> +#define AC200_AC_DRC_LOPE		0x3042
+> +#define AC200_AC_DRC_HKN		0x3044
+> +#define AC200_AC_DRC_LKN		0x3046
+> +#define AC200_AC_DRC_SFHAT		0x3048
+> +#define AC200_AC_DRC_SFLAT		0x304A
+> +#define AC200_AC_DRC_SFHRT		0x304C
+> +#define AC200_AC_DRC_SFLRT		0x304E
+> +#define AC200_AC_DRC_MXGHS		0x3050
+> +#define AC200_AC_DRC_MXGLS		0x3052
+> +#define AC200_AC_DRC_MNGHS		0x3054
+> +#define AC200_AC_DRC_MNGLS		0x3056
+> +#define AC200_AC_DRC_EPSHC		0x3058
+> +#define AC200_AC_DRC_EPSLC		0x305A
+> +#define AC200_AC_DRC_HPFHGAIN		0x305E
+> +#define AC200_AC_DRC_HPFLGAIN		0x3060
+> +#define AC200_AC_DRC_BISTCR		0x3100
+> +#define AC200_AC_DRC_BISTST		0x3102
+> +
+> +/* TVE registers */
+> +#define AC200_TVE_CTL0			0x4000
+> +#define AC200_TVE_CTL1			0x4002
+> +#define AC200_TVE_MOD0			0x4004
+> +#define AC200_TVE_MOD1			0x4006
+> +#define AC200_TVE_DAC_CFG0		0x4008
+> +#define AC200_TVE_DAC_CFG1		0x400A
+> +#define AC200_TVE_YC_DELAY		0x400C
+> +#define AC200_TVE_YC_FILTER		0x400E
+> +#define AC200_TVE_BURST_FRQ0		0x4010
+> +#define AC200_TVE_BURST_FRQ1		0x4012
+> +#define AC200_TVE_FRONT_PORCH		0x4014
+> +#define AC200_TVE_BACK_PORCH		0x4016
+> +#define AC200_TVE_TOTAL_LINE		0x401C
+> +#define AC200_TVE_FIRST_ACTIVE		0x401E
+> +#define AC200_TVE_BLACK_LEVEL		0x4020
+> +#define AC200_TVE_BLANK_LEVEL		0x4022
+> +#define AC200_TVE_PLUG_EN		0x4030
+> +#define AC200_TVE_PLUG_IRQ_EN		0x4032
+> +#define AC200_TVE_PLUG_IRQ_STA		0x4034
+> +#define AC200_TVE_PLUG_STA		0x4038
+> +#define AC200_TVE_PLUG_DEBOUNCE		0x4040
+> +#define AC200_TVE_DAC_TEST		0x4042
+> +#define AC200_TVE_PLUG_PULSE_LEVEL	0x40F4
+> +#define AC200_TVE_PLUG_PULSE_START	0x40F8
+> +#define AC200_TVE_PLUG_PULSE_PERIOD	0x40FA
+> +#define AC200_TVE_IF_CTL		0x5000
+> +#define AC200_TVE_IF_TIM0		0x5008
+> +#define AC200_TVE_IF_TIM1		0x500A
+> +#define AC200_TVE_IF_TIM2		0x500C
+> +#define AC200_TVE_IF_TIM3		0x500E
+> +#define AC200_TVE_IF_SYNC0		0x5010
+> +#define AC200_TVE_IF_SYNC1		0x5012
+> +#define AC200_TVE_IF_SYNC2		0x5014
+> +#define AC200_TVE_IF_TIM4		0x5016
+> +#define AC200_TVE_IF_STATUS		0x5018
+> +
+> +/* EPHY registers */
+> +#define AC200_EPHY_CTL			0x6000
+> +#define AC200_EPHY_BIST			0x6002
+> +
+> +/* eFuse registers (0x8000 - 0x9FFF, layout unknown) */
+> +
+> +/* RTC registers */
+> +#define AC200_LOSC_CTRL0		0xA000
+> +#define AC200_LOSC_CTRL1		0xA002
+> +#define AC200_LOSC_AUTO_SWT_STA		0xA004
+> +#define AC200_INTOSC_CLK_PRESCAL	0xA008
+> +#define AC200_RTC_YY_MM_DD0		0xA010
+> +#define AC200_RTC_YY_MM_DD1		0xA012
+> +#define AC200_RTC_HH_MM_SS0		0xA014
+> +#define AC200_RTC_HH_MM_SS1		0xA016
+> +#define AC200_ALARM0_CUR_VLU0		0xA024
+> +#define AC200_ALARM0_CUR_VLU1		0xA026
+> +#define AC200_ALARM0_ENABLE		0xA028
+> +#define AC200_ALARM0_IRQ_EN		0xA02C
+> +#define AC200_ALARM0_IRQ_STA		0xA030
+> +#define AC200_ALARM1_WK_HH_MM_SS0	0xA040
+> +#define AC200_ALARM1_WK_HH_MM_SS1	0xA042
+> +#define AC200_ALARM1_ENABLE		0xA044
+> +#define AC200_ALARM1_IRQ_EN		0xA048
+> +#define AC200_ALARM1_IRQ_STA		0xA04C
+> +#define AC200_ALARM_CONFIG		0xA050
+> +#define AC200_LOSC_OUT_GATING		0xA060
+> +#define AC200_GP_DATA(x)		(0xA100 + (x) * 2)
+> +#define AC200_RTC_DEB			0xA170
+> +#define AC200_GPL_HOLD_OUTPUT		0xA180
+> +#define AC200_VDD_RTC			0xA190
+> +#define AC200_IC_CHARA0			0xA1F0
+> +#define AC200_IC_CHARA1			0xA1F2
+> +
+> +struct ac200_dev {
+> +	struct clk			*clk;
+> +	struct regmap			*regmap;
+> +	struct regmap_irq_chip_data	*regmap_irqc;
+> +};
+> +
+> +#endif /* __LINUX_MFD_AC200_H */
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
