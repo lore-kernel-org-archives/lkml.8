@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA226C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB0DC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:07:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 953AA20728
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A9C920767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:07:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587733670;
-	bh=p+IQwNbfDeLJQR+77NgodSuCuaqd1Jnu5YGcIuDiIUQ=;
+	s=default; t=1587733674;
+	bh=AUIhmBrwWQvg0vpZYTLhZ9VphUoWGT7eDzR6HRlUqCU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fJ26noyVEGvHPQ2gc4seBUmwR3KQnifzuf1oVVHqssovIA5JwfUbjyevRuZ/jNZDM
-	 QvwcEQFYEE2rUdySz0vJZJqlFnvuIbuhYuut+HJKKREYrVFsabgKEWlhO4zjbn9jHd
-	 +bSeOp/V50GVMkAvN1sUwYk8EoAC03Wja31K1DFQ=
+	b=tFY40cbdA0rQLtgsXpm36OV7l1d8khSILiB10pX5BETG/0L6dCm5CXVNZa00Ru/mc
+	 i8y63kzP6zaz7Nqm1Il4LrMQtiP1OM5/yudVs4QbXLkiLNsGS8eYg3EQ9gDI4ynssy
+	 x8KjawQmkoVzwGKpa/Fr3IdLsoKOI620IQ3/MGA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbgDXNHt (ORCPT
+        id S1728437AbgDXNHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 09:07:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57856 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 09:07:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728245AbgDXNHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 09:07:09 -0400
+        id S1728199AbgDXNHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 09:07:03 -0400
 Received: from e123331-lin.home (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D709721D7A;
-        Fri, 24 Apr 2020 13:07:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 691942084D;
+        Fri, 24 Apr 2020 13:07:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587733628;
-        bh=p+IQwNbfDeLJQR+77NgodSuCuaqd1Jnu5YGcIuDiIUQ=;
+        s=default; t=1587733622;
+        bh=AUIhmBrwWQvg0vpZYTLhZ9VphUoWGT7eDzR6HRlUqCU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cl805xhFzHKUAJmo20ZVqxtpOpmjyxSr8/AbZtPrexCrvqcdOyN3phpQpvhFvr9MW
-         DMJkpSOwmeqFl+fUO+h2y3uGVZ/QvcudwPyjqFbaobSExnfRDkV/wQBcwpTeNc5WLg
-         vUN44RDohp6J49E9u6A2yNLro2YJIndNA2Bb7MkQ=
+        b=OzPk+3RuUPCwUi+pruyNZDaPaEjC3YYFHJXFhjoEp+HiI8lPsnXuXnPeBtA9Bj2/R
+         VHiczgapVnNO4tyczrSWu6aQMVSu+TEifJkoCA/BpjVWhhmpdPuDazRxcf8n4mwauk
+         nJ+e7HUJsmrMDRSP4k8wF956bhXxO9RyoovajNJk=
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,9 +47,9 @@ Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
         Atish Patra <atish.patra@wdc.com>,
         Palmer Dabbelt <palmerdabbelt@google.com>,
         Zou Wei <zou_wei@huawei.com>
-Subject: [PATCH 26/33] efi/arm: Remove __efistub_global annotation
-Date:   Fri, 24 Apr 2020 15:05:24 +0200
-Message-Id: <20200424130531.30518-27-ardb@kernel.org>
+Subject: [PATCH 23/33] efi/libstub: Add API function to allocate aligned memory
+Date:   Fri, 24 Apr 2020 15:05:21 +0200
+Message-Id: <20200424130531.30518-24-ardb@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200424130531.30518-1-ardb@kernel.org>
 References: <20200424130531.30518-1-ardb@kernel.org>
@@ -58,65 +58,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Sankar <nivedita@alum.mit.edu>
+Break out the code to create an aligned page allocation from mem.c
+and move it into a function efi_allocate_pages_aligned() in alignedmem.c.
+Update efi_allocate_pages() to invoke it unless the minimum alignment
+equals the EFI page size (4 KB), in which case the ordinary page
+allocator is sufficient. This way, efi_allocate_pages_aligned() will
+only be pulled into the build if it is actually being used (which will
+be on arm64 only in the immediate future)
 
-Instead of using __efistub_global to force variables into the .data
-section, leave them in the .bss but pull the EFI stub's .bss section
-into .data in the linker script for the compressed kernel.
-
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-Link: https://lore.kernel.org/r/20200416151227.3360778-2-nivedita@alum.mit.edu
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/arm/boot/compressed/vmlinux.lds.S | 2 +-
- drivers/firmware/efi/libstub/Makefile  | 7 ++++---
- drivers/firmware/efi/libstub/efistub.h | 2 +-
- 3 files changed, 6 insertions(+), 5 deletions(-)
+ drivers/firmware/efi/libstub/Makefile     |  3 +-
+ drivers/firmware/efi/libstub/alignedmem.c | 57 +++++++++++++++++++++++
+ drivers/firmware/efi/libstub/efistub.h    |  3 ++
+ drivers/firmware/efi/libstub/mem.c        | 25 ++++------
+ 4 files changed, 71 insertions(+), 17 deletions(-)
+ create mode 100644 drivers/firmware/efi/libstub/alignedmem.c
 
-diff --git a/arch/arm/boot/compressed/vmlinux.lds.S b/arch/arm/boot/compressed/vmlinux.lds.S
-index b247f399de71..b6793c7932a9 100644
---- a/arch/arm/boot/compressed/vmlinux.lds.S
-+++ b/arch/arm/boot/compressed/vmlinux.lds.S
-@@ -78,7 +78,7 @@ SECTIONS
-      * The EFI stub always executes from RAM, and runs strictly before the
-      * decompressor, so we can make an exception for its r/w data, and keep it
-      */
--    *(.data.efistub)
-+    *(.data.efistub .bss.efistub)
-     __pecoff_data_end = .;
- 
-     /*
 diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index 9a712a6e2f87..aa3ab9a4105e 100644
+index 75cb2c3a1519..bb8af2b16c49 100644
 --- a/drivers/firmware/efi/libstub/Makefile
 +++ b/drivers/firmware/efi/libstub/Makefile
-@@ -101,8 +101,9 @@ quiet_cmd_stubcopy = STUBCPY $@
+@@ -42,7 +42,8 @@ KCOV_INSTRUMENT			:= n
  
- #
- # ARM discards the .data section because it disallows r/w data in the
--# decompressor. So move our .data to .data.efistub, which is preserved
--# explicitly by the decompressor linker script.
-+# decompressor. So move our .data to .data.efistub and .bss to .bss.efistub,
-+# which are preserved explicitly by the decompressor linker script.
- #
--STUBCOPY_FLAGS-$(CONFIG_ARM)	+= --rename-section .data=.data.efistub
-+STUBCOPY_FLAGS-$(CONFIG_ARM)	+= --rename-section .data=.data.efistub	\
-+				   --rename-section .bss=.bss.efistub,load,alloc
- STUBCOPY_RELOC-$(CONFIG_ARM)	:= R_ARM_ABS
+ lib-y				:= efi-stub-helper.o gop.o secureboot.o tpm.o \
+ 				   file.o mem.o random.o randomalloc.o pci.o \
+-				   skip_spaces.o lib-cmdline.o lib-ctype.o
++				   skip_spaces.o lib-cmdline.o lib-ctype.o \
++				   alignedmem.o
+ 
+ # include the stub's generic dependencies from lib/ when building for ARM/arm64
+ efi-deps-y := fdt_rw.c fdt_ro.c fdt_wip.c fdt.c fdt_empty_tree.c fdt_sw.c
+diff --git a/drivers/firmware/efi/libstub/alignedmem.c b/drivers/firmware/efi/libstub/alignedmem.c
+new file mode 100644
+index 000000000000..cc89c4d6196f
+--- /dev/null
++++ b/drivers/firmware/efi/libstub/alignedmem.c
+@@ -0,0 +1,57 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/efi.h>
++#include <asm/efi.h>
++
++#include "efistub.h"
++
++/**
++ * efi_allocate_pages_aligned() - Allocate memory pages
++ * @size:	minimum number of bytes to allocate
++ * @addr:	On return the address of the first allocated page. The first
++ *		allocated page has alignment EFI_ALLOC_ALIGN which is an
++ *		architecture dependent multiple of the page size.
++ * @max:	the address that the last allocated memory page shall not
++ *		exceed
++ * @align:	minimum alignment of the base of the allocation
++ *
++ * Allocate pages as EFI_LOADER_DATA. The allocated pages are aligned according
++ * to @align, which should be >= EFI_ALLOC_ALIGN. The last allocated page will
++ * not exceed the address given by @max.
++ *
++ * Return:	status code
++ */
++efi_status_t efi_allocate_pages_aligned(unsigned long size, unsigned long *addr,
++					unsigned long max, unsigned long align)
++{
++	efi_physical_addr_t alloc_addr;
++	efi_status_t status;
++	int slack;
++
++	if (align < EFI_ALLOC_ALIGN)
++		align = EFI_ALLOC_ALIGN;
++
++	alloc_addr = ALIGN_DOWN(max + 1, align) - 1;
++	size = round_up(size, EFI_ALLOC_ALIGN);
++	slack = align / EFI_PAGE_SIZE - 1;
++
++	status = efi_bs_call(allocate_pages, EFI_ALLOCATE_MAX_ADDRESS,
++			     EFI_LOADER_DATA, size / EFI_PAGE_SIZE + slack,
++			     &alloc_addr);
++	if (status != EFI_SUCCESS)
++		return status;
++
++	*addr = ALIGN((unsigned long)alloc_addr, align);
++
++	if (slack > 0) {
++		int l = (alloc_addr % align) / EFI_PAGE_SIZE;
++
++		if (l) {
++			efi_bs_call(free_pages, alloc_addr, slack - l + 1);
++			slack = l - 1;
++		}
++		if (slack)
++			efi_bs_call(free_pages, *addr + size, slack);
++	}
++	return EFI_SUCCESS;
++}
 diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-index 2a0698d9dc78..96e25b17c88e 100644
+index 9af65be3b278..baa0bc166074 100644
 --- a/drivers/firmware/efi/libstub/efistub.h
 +++ b/drivers/firmware/efi/libstub/efistub.h
-@@ -25,7 +25,7 @@
- #define EFI_ALLOC_ALIGN		EFI_PAGE_SIZE
- #endif
+@@ -657,6 +657,9 @@ efi_status_t efi_low_alloc(unsigned long size, unsigned long align,
+ efi_status_t efi_allocate_pages(unsigned long size, unsigned long *addr,
+ 				unsigned long max);
  
--#if defined(CONFIG_ARM) || defined(CONFIG_X86)
-+#if defined(CONFIG_X86)
- #define __efistub_global	__section(.data)
- #else
- #define __efistub_global
++efi_status_t efi_allocate_pages_aligned(unsigned long size, unsigned long *addr,
++					unsigned long max, unsigned long align);
++
+ efi_status_t efi_relocate_kernel(unsigned long *image_addr,
+ 				 unsigned long image_size,
+ 				 unsigned long alloc_size,
+diff --git a/drivers/firmware/efi/libstub/mem.c b/drivers/firmware/efi/libstub/mem.c
+index 869a79c8946f..0020b0fa9587 100644
+--- a/drivers/firmware/efi/libstub/mem.c
++++ b/drivers/firmware/efi/libstub/mem.c
+@@ -93,31 +93,24 @@ efi_status_t efi_get_memory_map(struct efi_boot_memmap *map)
+ efi_status_t efi_allocate_pages(unsigned long size, unsigned long *addr,
+ 				unsigned long max)
+ {
+-	efi_physical_addr_t alloc_addr = ALIGN_DOWN(max + 1, EFI_ALLOC_ALIGN) - 1;
+-	int slack = EFI_ALLOC_ALIGN / EFI_PAGE_SIZE - 1;
++	efi_physical_addr_t alloc_addr;
+ 	efi_status_t status;
+ 
+-	size = round_up(size, EFI_ALLOC_ALIGN);
++	if (EFI_ALLOC_ALIGN > EFI_PAGE_SIZE)
++		return efi_allocate_pages_aligned(size, addr, max,
++						  EFI_ALLOC_ALIGN);
++
++	alloc_addr = ALIGN_DOWN(max + 1, EFI_ALLOC_ALIGN) - 1;
+ 	status = efi_bs_call(allocate_pages, EFI_ALLOCATE_MAX_ADDRESS,
+-			     EFI_LOADER_DATA, size / EFI_PAGE_SIZE + slack,
++			     EFI_LOADER_DATA, DIV_ROUND_UP(size, EFI_PAGE_SIZE),
+ 			     &alloc_addr);
+ 	if (status != EFI_SUCCESS)
+ 		return status;
+ 
+-	*addr = ALIGN((unsigned long)alloc_addr, EFI_ALLOC_ALIGN);
+-
+-	if (slack > 0) {
+-		int l = (alloc_addr % EFI_ALLOC_ALIGN) / EFI_PAGE_SIZE;
+-
+-		if (l) {
+-			efi_bs_call(free_pages, alloc_addr, slack - l + 1);
+-			slack = l - 1;
+-		}
+-		if (slack)
+-			efi_bs_call(free_pages, *addr + size, slack);
+-	}
++	*addr = alloc_addr;
+ 	return EFI_SUCCESS;
+ }
++
+ /**
+  * efi_low_alloc_above() - allocate pages at or above given address
+  * @size:	size of the memory area to allocate
 -- 
 2.17.1
 
