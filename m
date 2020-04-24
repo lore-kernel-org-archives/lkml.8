@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E409C55191
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F33C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 056F42064C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CC0D2064C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:30:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="M4QdAJQ7"
+	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="Sonq2jpc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726904AbgDXL3n (ORCPT
+        id S1726941AbgDXLak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 07:29:43 -0400
-Received: from smtp2.axis.com ([195.60.68.18]:3585 "EHLO smtp2.axis.com"
+        Fri, 24 Apr 2020 07:30:40 -0400
+Received: from smtp2.axis.com ([195.60.68.18]:3661 "EHLO smtp2.axis.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726582AbgDXL3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 07:29:43 -0400
+        id S1726698AbgDXLak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 07:30:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=axis.com; l=1906; q=dns/txt; s=axis-central1;
-  t=1587727782; x=1619263782;
+  t=1587727839; x=1619263839;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
   bh=tamrexV4OWrlM7Wl4jj2JSBcp9yOh7DTXPmsR1xB0mo=;
-  b=M4QdAJQ7maaVZhblMFSKK4r70RFyVkMxx/GAT2aJ9yIjhh1YdH1aDFo2
-   mPe2v3C22CH/YX0EdU0WX8cCmA9smVFVbXOmcJgYqQsehDpgsShSb1L3s
-   CMJcVgIt6evAbaNHRhto45EvxmgeBYTUEQF10DlBVbL/1RHOroPeKneDE
-   B0wt5VZBxLuAmT3rvT/4c5JVGOF0GWe9BbIdBkq9s259NhzRkhEzWezga
-   MR+e2JQbGjigKZQsElTNwh026nCT4T/lH5CueO/YrmTEeQUq/qciioJ37
-   BK/g7p+if2Q2weTBtlL9MU2gW2nfCsc21QhvXELP1gFyfMI7IkscTv1fU
-   Q==;
-IronPort-SDR: HzM2mCa5UxWKURCAU4aMMQzj9ERLDXczVo/AyvdLFshb70DfkK/iiFPatBqf89xzDhDFkyKgYZ
- OAzecIYfJPkdDyW7jgVODjPEdj1vDuIUtSF68FaYifdVItnwbK6yEcREu+Yd1BcsuZLOPwsXUe
- UvGPW5vubwjpMEzaduvEcVrGsw7fdSsrLAdH1cZ5wJkO78EnpMilIDAlfLFtlEbbLg/gNlmlzS
- 1hdqTVQ8uzuNkpOdKYmMPdXGjL1lj1oXsyPVlMrSrKIXHIbE9Zv/pNrW0PlXrDc/2q4n5huCQ1
- YjI=
+  b=Sonq2jpcP53RohE8nnFQ4TA8vIgj/OFxcT/0YEfm37W08r7Z8VvrCfK+
+   Z3Vk/Hc/IDsq3UmExeTNPwOa2POVQGxBKQCZZgqYzopWe5exlIlYV9UXP
+   8Ze8JSzuUwMRTqKJPg3yp9X4DhRm03orAYC2/7AmTfKXAyabIhk6Urt3F
+   I9CljPE74J5W0MxVcOE0vrAmsAsj/vxuXsxuKffOGBfOgV8Ye9zC3umR6
+   qH8KdVLP1l4Kxm/3ScbJce9JceEwEQqhIRrkhZhLIzDU9A5CR3eAzmoZb
+   71xRLVZk/TiaaQgoi3wvKoA8xHfZ/nf69NiUetIRgEmmZbmfgJiT5S+p4
+   w==;
+IronPort-SDR: QBW1UsdwJkdX+L6Q3IBWBKo85vacTqeOzOe9md8XEA23dlWnx7Hv5J2W6na8r+MnJND6yWa00K
+ vpV0S2VYIyYRnuVMmQJNJmFeblA6OCoQxVY9V/DJMG780HWLJBd3dPiG1Tw2u+0AJqEfjATqOk
+ /S+ymLYZgbDU8IurBqJuI4yWoA3ZfTlIOnhxkGnCu4TNDMJ6S1Klj1uh4senzbHJ7y9uum6qGT
+ mNz32U0YmYJdXAtcfopsp85P9grV/G0nUo7+8I8O7jgocqN4U6QMwB30eBrKww1ZlqPI9lXxQc
+ LxM=
 X-IronPort-AV: E=Sophos;i="5.73,311,1583190000"; 
-   d="scan'208";a="7791806"
+   d="scan'208";a="7791894"
 From:   =?UTF-8?q?Bj=C3=B6rn=20Ard=C3=B6?= <bjorn.ardo@axis.com>
 To:     <wsa@the-dreams.de>
 CC:     <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <patrick@stwcx.xyz>, <kernel@axis.com>,
         =?UTF-8?q?Bj=C3=B6rn=20Ard=C3=B6?= <bjorn.ardo@axis.com>
-Subject: [PATCHv2] i2c: slave-eeprom: Make it possible to pre-load eeprom data
-Date:   Fri, 24 Apr 2020 13:29:38 +0200
-Message-ID: <20200424112938.15031-1-bjorn.ardo@axis.com>
+Subject: [PATCHv3] i2c: slave-eeprom: Make it possible to pre-load eeprom data
+Date:   Fri, 24 Apr 2020 13:30:36 +0200
+Message-ID: <20200424113036.15109-1-bjorn.ardo@axis.com>
 X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
