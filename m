@@ -2,68 +2,128 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53711C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35EA3C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EC8020767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 158F920767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:28:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587731334;
+	bh=khfuUtphoGowJXyD29xSnB3vDa40rTfdz83YDfqA7vA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fnLNOzsRHRWoLkYSB2PXzk7ZvMiK7pFobwFNESFCq4tRpWpeZMNw91dBUGsbVlqmH
+	 KtWzcBqwb66jvsC28wmhqCao+jB85KT/IyXnLt2rYNFZuciJ2bsHHJwbTY752XYYSl
+	 mxXTErGoMowxPOSLmX4J4YDOLv8++lGWPEtt8Aeg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgDXM2j (ORCPT
+        id S1728545AbgDXM2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:28:39 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2896 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728827AbgDXM2g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:28:36 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 25CA67D325C9B243DC51;
-        Fri, 24 Apr 2020 20:28:34 +0800 (CST)
-Received: from huawei.com (10.175.101.78) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Fri, 24 Apr 2020
- 20:28:24 +0800
-From:   Yang Yingliang <yangyingliang@huawei.com>
-To:     <richardcochran@gmail.com>, <vincent.cheng.xh@renesas.com>,
-        <davem@davemloft.net>, <yangyingliang@huawei.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next v2] ptp: clockmatrix: remove unnecessary comparison
-Date:   Fri, 24 Apr 2020 20:52:26 +0800
-Message-ID: <1587732746-98057-1-git-send-email-yangyingliang@huawei.com>
-X-Mailer: git-send-email 1.8.3
+        Fri, 24 Apr 2020 08:28:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54632 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728310AbgDXMYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:24:13 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2404C2168B;
+        Fri, 24 Apr 2020 12:24:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587731053;
+        bh=khfuUtphoGowJXyD29xSnB3vDa40rTfdz83YDfqA7vA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PSZaFWnxGouv3RBRQjVuw8NABOvqTf/3/9pBkkHAiinfrgZYCew/UK/DQFt9die68
+         3a/V7mcyhJx1QDh/aZ2gnHt7om3Df9bVSFotSs5B/+LlgV4hucivrECr/UmcUdOhlF
+         9iXTrpIKx8r/WLHGkNb27JPkbLhwMkcP7alHjv70=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Fangrui Song <maskray@google.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 14/18] arm64: Delete the space separator in __emit_inst
+Date:   Fri, 24 Apr 2020 08:23:51 -0400
+Message-Id: <20200424122355.10453-14-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200424122355.10453-1-sashal@kernel.org>
+References: <20200424122355.10453-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.101.78]
-X-CFilter-Loop: Reflected
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The type of loaddr is u8 which is always '<=' 0xff, so the
-loaddr <= 0xff is always true, we can remove this comparison.
+From: Fangrui Song <maskray@google.com>
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+[ Upstream commit c9a4ef66450145a356a626c833d3d7b1668b3ded ]
+
+In assembly, many instances of __emit_inst(x) expand to a directive. In
+a few places __emit_inst(x) is used as an assembler macro argument. For
+example, in arch/arm64/kvm/hyp/entry.S
+
+  ALTERNATIVE(nop, SET_PSTATE_PAN(1), ARM64_HAS_PAN, CONFIG_ARM64_PAN)
+
+expands to the following by the C preprocessor:
+
+  alternative_insn nop, .inst (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
+
+Both comma and space are separators, with an exception that content
+inside a pair of parentheses/quotes is not split, so the clang
+integrated assembler splits the arguments to:
+
+   nop, .inst, (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
+
+GNU as preprocesses the input with do_scrub_chars(). Its arm64 backend
+(along with many other non-x86 backends) sees:
+
+  alternative_insn nop,.inst(0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
+  # .inst(...) is parsed as one argument
+
+while its x86 backend sees:
+
+  alternative_insn nop,.inst (0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
+  # The extra space before '(' makes the whole .inst (...) parsed as two arguments
+
+The non-x86 backend's behavior is considered unintentional
+(https://sourceware.org/bugzilla/show_bug.cgi?id=25750).
+So drop the space separator inside `.inst (...)` to make the clang
+integrated assembler work.
+
+Suggested-by: Ilie Halip <ilie.halip@gmail.com>
+Signed-off-by: Fangrui Song <maskray@google.com>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/939
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ptp/ptp_clockmatrix.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/include/asm/sysreg.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/ptp/ptp_clockmatrix.c b/drivers/ptp/ptp_clockmatrix.c
-index 032e112..56aee4f 100644
---- a/drivers/ptp/ptp_clockmatrix.c
-+++ b/drivers/ptp/ptp_clockmatrix.c
-@@ -780,7 +780,7 @@ static int idtcm_load_firmware(struct idtcm *idtcm,
+diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+index 3091ae5975a3a..ed99d941c4623 100644
+--- a/arch/arm64/include/asm/sysreg.h
++++ b/arch/arm64/include/asm/sysreg.h
+@@ -60,7 +60,9 @@
+ #ifndef CONFIG_BROKEN_GAS_INST
  
- 			/* Page size 128, last 4 bytes of page skipped */
- 			if (((loaddr > 0x7b) && (loaddr <= 0x7f))
--			     || ((loaddr > 0xfb) && (loaddr <= 0xff)))
-+			     || loaddr > 0xfb)
- 				continue;
- 
- 			err = idtcm_write(idtcm, regaddr, 0, &val, sizeof(val));
+ #ifdef __ASSEMBLY__
+-#define __emit_inst(x)			.inst (x)
++// The space separator is omitted so that __emit_inst(x) can be parsed as
++// either an assembler directive or an assembler macro argument.
++#define __emit_inst(x)			.inst(x)
+ #else
+ #define __emit_inst(x)			".inst " __stringify((x)) "\n\t"
+ #endif
 -- 
-1.8.3
+2.20.1
 
