@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6663C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A2C3C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C06CE21473
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3835C20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:37:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="MfULuYr8";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="S1Wu8rko"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="mdGJxBOi";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mBpc/h/J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728932AbgDXPho (ORCPT
+        id S1727808AbgDXPh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:37:44 -0400
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:40215 "EHLO
+        Fri, 24 Apr 2020 11:37:28 -0400
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:51589 "EHLO
         wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728892AbgDXPhb (ORCPT
+        by vger.kernel.org with ESMTP id S1728806AbgDXPhO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:37:31 -0400
+        Fri, 24 Apr 2020 11:37:14 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id DA6E51454;
-        Fri, 24 Apr 2020 11:37:29 -0400 (EDT)
+        by mailnew.west.internal (Postfix) with ESMTP id 239A11461;
+        Fri, 24 Apr 2020 11:37:13 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:37:30 -0400
+  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:37:13 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=6MnqtvvYOSp05
-        oKCDbjq338DK0xU4jQ2iQPjC8rZ2gA=; b=MfULuYr8Y6PvQTTnATo1/RLyHNSSG
-        a3gtvvA1MT0V90cleaWX5MEawFg3CKr5QMfL11+XmD0iJgblqFeNIqD93VLPGgZd
-        FO8OTy2H88xrKuzWSS5qBpPMYfwU5qeiuvxSF6ZQ7vA1XsOT4Jaa4wg5zla6KoxA
-        o7dGttq1A51+fErk2JN3FrXnC9cjhlMOgCGe8Onalau9vDSDaThqCEQgj0zkTkiw
-        G7W7OrsBYlFjUFbqCHpljeo+PB4aMbWmdrUYt9b1e2XkyweURM1jchFdKstkli0y
-        UhNW7SiS7FZIpdF14vKHOaMf51Wk8lpd3l70IDIt+v7cPj6gB5CJ3ogVw==
+        :mime-version:content-transfer-encoding; s=fm2; bh=4gbeJ1neY6PRy
+        YOdg83Vrr06ONFPkgKT+hUqnCfpgBE=; b=mdGJxBOifSOZqThxFw3YXh8yGaDd6
+        MGEuJAWGCzK/riXQpriKW1fhqkGbgwxtdYoRbA4bRCxRjyKJ7A1hDi2GIWD54GoO
+        1Fc2iBufdiO0z8oaNsCz4jcs+G6vZbP360TohdrtPasaEl0/yH3yTCSg2kUFoHeB
+        kRJE6wdhCQckWuvzrQPlw4dm2IHsyPTT8n8eQWN9Rqi+9HAtyQxBkm7uptbCc/Y/
+        2uZW0n5xg9VSjus5R9qtK9IFs2Krm5E2as8nRFA1jUpOdWWtrQDQjLsNVpxmEJij
+        b0inZLsmfbSBiDbBCIbwCBeKL1OkPmdk1hR795+Wp/pkSu/ctz7IOTEmw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=6MnqtvvYOSp05oKCDbjq338DK0xU4jQ2iQPjC8rZ2gA=; b=S1Wu8rko
-        SQP4E00SMHGkPLlSho9xZvF2NyxWrN7W3yOwfwNcmjAmruH6jYXFmFMmmywIWUd+
-        jb74HU71bVFOfo5gKsqF+khbAZc6WQsu/Lls+jkW+1NUL7t+PYyTxKlFS8bVmHX3
-        7tiCMVeG459YNEUGjOrvIWV7TTQeJ3WZYi3HT9gnvtXrbGK54kJ+evENJDuAH8da
-        xlEHKEdAoChfkzXSqsfP92vgYR+UX6VsoEAAcB+dygSa+DCAagMoJVQTO21LdvRp
-        1eQAA5a45vUoh78C2InBt/KSlq7v+V9+PV5sWD0ZTj+B6y61EuuWIscjyx8Wsrqc
-        9tH2Wrtuzm+oOQ==
-X-ME-Sender: <xms:uQejXrqfO2ZAPpZk3AE8odgCQWQ5hRXyRObpljafIFJr1kNBYGsx0w>
+        fm2; bh=4gbeJ1neY6PRyYOdg83Vrr06ONFPkgKT+hUqnCfpgBE=; b=mBpc/h/J
+        OSXmQXe9kdtItqzbEApSrqmoDo1518f7XUtj53bLqBmACQRA1QQs8MZfJ2IVQE8N
+        X2vW3IuzBb3vk92d2n6u0hDdveJ/PDN8lTmuRs36Vv9V/QDYSTuGtmiGT6OefXhV
+        fcq1wj7GPSRh3E1sWAUg/J2QuN+Yl27UQ+caG4g7le77RR74awNEiuB178C+yej7
+        730P3H+Irewv2peDiaq+cPn55Fka3WtolDBPnS9HVts0rIg01dFxIGUQ6WNkp3Z2
+        +q6KtW/YofQcn5Acvsmy0RCBXjqNYZ5kNgWzInMAMt+NNNBsMu2uAZv7u2C1Oweo
+        u8n/IGuAGQA5zw==
+X-ME-Sender: <xms:qAejXj561ZX2016MkOY8O_Addumprkxr61VZPb0RMl4hyCPGiVbu4w>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrhedugdekiecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgv
     ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpeekvdenucfrrghrrghmpehmrghi
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpeejtdenucfrrghrrghmpehmrghi
     lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:uQejXp4TgUVdoT5joefpPH7-7oOjmKHJ_WCAfXG8ssOohzYnxbxA_Q>
-    <xmx:uQejXjM76Gr03H2Z1vry_63yQzPTABa25gL9L_098pwSldMPZyh2AA>
-    <xmx:uQejXjMQFAaCxj21EvQhDzkb6Gcf4VB7BcE5pz5qjwDCO9cc3tD1kQ>
-    <xmx:uQejXg1csJ1Lt9nZdfVxAnHg4WaYHgdB54ryA-uw7u3Rk--ckz4Yepbq9ew>
+X-ME-Proxy: <xmx:qAejXvMISqCJYKyU5xw82jpL2h_bOZ86n-2uvPaG9J1lM7v2kekuuw>
+    <xmx:qAejXgeXIK8Zhx9LJH7SGIaqAfv6qJ8c1shB3ghbPltUw8UlNlHXaw>
+    <xmx:qAejXhc5AYRU6Km3OM_AX_-MgxszADui9pVx1Uu2cmWOYh3D0zMdXw>
+    <xmx:qAejXq-qM9Fhob-GzMmJInOwRIvZQ2S3ti7nq0J1a2W7TTeFjovTzG2tdmM>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 213B73065D9A;
-        Fri, 24 Apr 2020 11:37:29 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 738C33065D9A;
+        Fri, 24 Apr 2020 11:37:12 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -75,9 +75,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v2 91/91] ARM: dts: bcm2711: Enable the display pipeline
-Date:   Fri, 24 Apr 2020 17:35:12 +0200
-Message-Id: <7e7941611dad8106e5d9b03eeae06a6aefc0772c.1587742492.git-series.maxime@cerno.tech>
+Subject: [PATCH v2 79/91] drm/vc4: hdmi: Deal with multiple debugfs files
+Date:   Fri, 24 Apr 2020 17:35:00 +0200
+Message-Id: <4cd617827cc28875ef36f3632122a83cff2ea4a7.1587742492.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
 References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
@@ -88,218 +88,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that all the drivers have been adjusted for it, let's bring in the
-necessary device tree changes.
+The HDMI driver was registering a single debugfs file so far with the name
+hdmi_regs.
+
+Obviously, this is not going to work anymore when will have multiple HDMI
+controllers since we will end up trying to register two files with the same
+name.
+
+Let's use the ID to avoid that name conflict.
 
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- arch/arm/boot/dts/bcm2711-rpi-4-b.dts |  46 +++++++++++-
- arch/arm/boot/dts/bcm2711.dtsi        | 115 ++++++++++++++++++++++++++-
- 2 files changed, 160 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/vc4/vc4_hdmi.c | 5 ++++-
+ drivers/gpu/drm/vc4/vc4_hdmi.h | 3 +++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-index 3205d2dfa898..0efbc4412dc9 100644
---- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-+++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-@@ -220,3 +220,49 @@
- &vchiq {
- 	interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
- };
-+
-+&vc4 {
-+	status = "okay";
-+};
-+
-+&pixelvalve0 {
-+	status = "okay";
-+};
-+
-+&pixelvalve1 {
-+	status = "okay";
-+};
-+
-+&pixelvalve2 {
-+	status = "okay";
-+};
-+
-+&pixelvalve3 {
-+	status = "okay";
-+};
-+
-+&pixelvalve4 {
-+	status = "okay";
-+};
-+
-+&hdmi0 {
-+	clocks = <&firmware_clocks 13>, <&dvp 0>;
-+	status = "okay";
-+};
-+
-+&ddc0 {
-+	status = "okay";
-+};
-+
-+&hdmi1 {
-+	clocks = <&firmware_clocks 13>, <&dvp 1>;
-+	status = "okay";
-+};
-+
-+&ddc1 {
-+	status = "okay";
-+};
-+
-+&hvs {
-+	clocks = <&firmware_clocks 4>;
-+};
-diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
-index 00bcaed1be32..a6549fa6e62b 100644
---- a/arch/arm/boot/dts/bcm2711.dtsi
-+++ b/arch/arm/boot/dts/bcm2711.dtsi
-@@ -12,6 +12,11 @@
+diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
+index aaf96420d0ec..aae5b10a2d11 100644
+--- a/drivers/gpu/drm/vc4/vc4_hdmi.c
++++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+@@ -1377,7 +1377,9 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
+ 	if (ret)
+ 		goto err_destroy_encoder;
  
- 	interrupt-parent = <&gicv2>;
+-	vc4_debugfs_add_file(drm, "hdmi_regs", vc4_hdmi_debugfs_regs, vc4_hdmi);
++	vc4_debugfs_add_file(drm, variant->debugfs_name,
++			     vc4_hdmi_debugfs_regs,
++			     vc4_hdmi);
  
-+	vc4: gpu {
-+		compatible = "brcm,bcm2711-vc5";
-+		status = "disabled";
-+	};
-+
- 	clk_108MHz: clk-108M {
- 		#clock-cells = <0>;
- 		compatible = "fixed-clock";
-@@ -238,6 +243,27 @@
- 			status = "disabled";
- 		};
+ 	return 0;
  
-+		pixelvalve0: pixelvalve@7e206000 {
-+			compatible = "brcm,bcm2711-pixelvalve0";
-+			reg = <0x7e206000 0x100>;
-+			interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		pixelvalve1: pixelvalve@7e207000 {
-+			compatible = "brcm,bcm2711-pixelvalve1";
-+			reg = <0x7e207000 0x100>;
-+			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		pixelvalve2: pixelvalve@7e20a000 {
-+			compatible = "brcm,bcm2711-pixelvalve2";
-+			reg = <0x7e20a000 0x100>;
-+			interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
- 		pwm1: pwm@7e20c800 {
- 			compatible = "brcm,bcm2835-pwm";
- 			reg = <0x7e20c800 0x28>;
-@@ -248,10 +274,25 @@
- 			status = "disabled";
- 		};
+@@ -1439,6 +1441,7 @@ static int vc4_hdmi_dev_remove(struct platform_device *pdev)
  
--		hvs@7e400000 {
-+		pixelvalve4: pixelvalve@7e216000 {
-+			compatible = "brcm,bcm2711-pixelvalve4";
-+			reg = <0x7e216000 0x100>;
-+			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		hvs: hvs@7e400000 {
-+			compatible = "brcm,bcm2711-hvs";
- 			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
- 		};
+ static const struct vc4_hdmi_variant bcm2835_variant = {
+ 	.encoder_type		= VC4_ENCODER_TYPE_HDMI0,
++	.debugfs_name		= "hdmi_regs",
+ 	.registers		= vc4_hdmi_fields,
+ 	.num_registers		= ARRAY_SIZE(vc4_hdmi_fields),
  
-+		pixelvalve3: pixelvalve@7ec12000 {
-+			compatible = "brcm,bcm2711-pixelvalve3";
-+			reg = <0x7ec12000 0x100>;
-+			interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
- 		dvp: clock@7ef00000 {
- 			compatible = "brcm,brcm2711-dvp";
- 			reg = <0x7ef00000 0x10>;
-@@ -259,6 +300,78 @@
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
- 		};
-+
-+		hdmi0: hdmi@7ef00700 {
-+			compatible = "brcm,bcm2711-hdmi0";
-+			reg = <0x7ef00700 0x300>,
-+			      <0x7ef00300 0x200>,
-+			      <0x7ef00f00 0x80>,
-+			      <0x7ef00f80 0x80>,
-+			      <0x7ef01b00 0x200>,
-+			      <0x7ef01f00 0x400>,
-+			      <0x7ef00200 0x80>,
-+			      <0x7ef04300 0x100>,
-+			      <0x7ef20000 0x100>;
-+			reg-names = "hdmi",
-+				    "dvp",
-+				    "phy",
-+				    "rm",
-+				    "packet",
-+				    "metadata",
-+				    "csc",
-+				    "cec",
-+				    "hd";
-+			clock-names = "hdmi", "clk-108M";
-+			resets = <&dvp 0>;
-+			ddc = <&ddc0>;
-+			dmas = <&dma 10>;
-+			dma-names = "audio-rx";
-+			status = "disabled";
-+		};
-+
-+		ddc0: i2c@7ef04500 {
-+			compatible = "brcm,bcm2711-hdmi-i2c";
-+			reg = <0x7ef04500 0x100>, <0x7ef00b00 0x300>;
-+			reg-names = "bsc", "auto-i2c";
-+			clock-frequency = <390000>;
-+			status = "disabled";
-+		};
-+
-+		hdmi1: hdmi@7ef05700 {
-+			compatible = "brcm,bcm2711-hdmi1";
-+			reg = <0x7ef05700 0x300>,
-+			      <0x7ef05300 0x200>,
-+			      <0x7ef05f00 0x80>,
-+			      <0x7ef05f80 0x80>,
-+			      <0x7ef06b00 0x200>,
-+			      <0x7ef06f00 0x400>,
-+			      <0x7ef00280 0x80>,
-+			      <0x7ef09300 0x100>,
-+			      <0x7ef20000 0x100>;
-+			reg-names = "hdmi",
-+				    "dvp",
-+				    "phy",
-+				    "rm",
-+				    "packet",
-+				    "metadata",
-+				    "csc",
-+				    "cec",
-+				    "hd";
-+			ddc = <&ddc1>;
-+			clock-names = "hdmi", "clk-108M";
-+			resets = <&dvp 1>;
-+			dmas = <&dma 17>;
-+			dma-names = "audio-rx";
-+			status = "disabled";
-+		};
-+
-+		ddc1: i2c@7ef09500 {
-+			compatible = "brcm,bcm2711-hdmi-i2c";
-+			reg = <0x7ef09500 0x100>, <0x7ef05b00 0x300>;
-+			reg-names = "bsc", "auto-i2c";
-+			clock-frequency = <390000>;
-+			status = "disabled";
-+		};
- 	};
+diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdmi.h
+index 4240c5ea7fde..22100820c81b 100644
+--- a/drivers/gpu/drm/vc4/vc4_hdmi.h
++++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
+@@ -30,6 +30,9 @@ struct vc4_hdmi_variant {
+ 	/* Encoder Type for that controller */
+ 	enum vc4_encoder_type encoder_type;
  
- 	/*
++	/* Filename to expose the registers in debugfs */
++	const char *debugfs_name;
++
+ 	/* List of the registers available on that variant */
+ 	const struct vc4_hdmi_register *registers;
+ 
 -- 
 git-series 0.9.1
