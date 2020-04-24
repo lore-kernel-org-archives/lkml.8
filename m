@@ -2,108 +2,123 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 036AEC55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF9CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D49012074F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:00:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587697211;
-	bh=haezx3wYCgmbsBJ9MfBelbG321ST7/HsGAoFQtMkstU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=yrs0XUCTbE3CxjTOX4Tgskb1o7exeu+xNbfMoKxeDPP9yrGj6j5XCd0ootiKQAd04
-	 cRvy5WMyplSxBRhu38LmRNlrNB9rQcIEwnSq0UnGl8DHtpkRSzaHHDpsiV/7V2qm46
-	 U+eWRSKdso3WKbtxdISU3UM2Eq9aEF8WvlsWZJXw=
+	by mail.kernel.org (Postfix) with ESMTP id 3199420CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:01:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="xCajfsFC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbgDXDAK (ORCPT
+        id S1726343AbgDXDBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 23:00:10 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:44927 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbgDXDAK (ORCPT
+        Thu, 23 Apr 2020 23:01:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48252 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbgDXDBU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 23:00:10 -0400
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 03O2xoAh028692;
-        Fri, 24 Apr 2020 11:59:51 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 03O2xoAh028692
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587697191;
-        bh=sMhAyQXgx3aGgeT2cBKikLWxHkHjlRUwrBTCsV1+3Gw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pnu0hGRUoE/m3c5iNOXeZVq/zyyFbsQqCoxufZov1J8pArY22bCjRMZqzG/L3m5+n
-         1TGlCwr5ISXTw+671s8m/Z/m5pAMgJwxRH3EVJGBXzTKsOAUN9wqwbss3CVkEAvV6k
-         TRIuXE+CR0M+7GUrLfZZxVChoqZApt5XMnu03Kn5LEbu63plgi0Xb/c58bmydut5wk
-         ubf65em2YZFOa3Qr6YgDq4cquF49M9yRvYo9oLYU7XwS8nx46BohhaZA0TS2j4U4Mg
-         HUeE4Mn2IySUCOFVuOb2xUOPxiwPIzQj1nRYpgqcPxO/A84tApwP7x1aS3P2vB1am/
-         hUrlcaFMHbMBg==
-X-Nifty-SrcIP: [209.85.222.45]
-Received: by mail-ua1-f45.google.com with SMTP id a10so8040902uad.7;
-        Thu, 23 Apr 2020 19:59:51 -0700 (PDT)
-X-Gm-Message-State: AGi0Pua1YSRFCR1v4PLQ63nig+DIo038pykOo5o3uN4c2TW0u5aUWuM+
-        lT0D0BB3hrt+8A8Pn4tyRwy8I5WsdAYsBNMUDb4=
-X-Google-Smtp-Source: APiQypJwidJWbxYPm/8c0bwT8boM9jxvggOQZWWhl+mIk5bgeb7K2rLmsZC1B59FOXGSWq0gtKzTuQcI9OVc/f+WiGc=
-X-Received: by 2002:ab0:cd:: with SMTP id 71mr5422237uaj.109.1587697190149;
- Thu, 23 Apr 2020 19:59:50 -0700 (PDT)
+        Thu, 23 Apr 2020 23:01:20 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8649C09B045
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 20:01:20 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id di6so4018255qvb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 20:01:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=kyzduwWV8InceUnIl0vidH/X3bbDtm0JxJsBZQHUEsg=;
+        b=xCajfsFC29zFs0ldyM1nenfzOzJDtFNYbMcgKb1rYjfjosHZZWeWeXnPI+8bxZ2ntm
+         XHXSecOpa9F53pVydA37qwBNQQz3IM8/taC9P6tAXhUnpQt/iT4a01qo0tF1UzjpM1pl
+         9weajk44I9MEZiCL03RFgeD8nMd6M1w7/fZJVwQ9w0ADRRNU6IYndhE3AF/qOVSxKDnx
+         voK4SCOCZVyquDhFXfze9UC5Qoftazh/65yyjBEJeOa43yxDbu4gxT1oLoaN8bh/AsTH
+         9tc/JQBlf043Zpg9/w1+sY2RY/7r2b4k7AZyRfSTf+lRVIRzyrXJ5E4L4HDmZr5V+x+J
+         G9zA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kyzduwWV8InceUnIl0vidH/X3bbDtm0JxJsBZQHUEsg=;
+        b=E3/TJ0WJf73/Ggw9rBUTgiP+TPIgThsGwIiDT4Bxt9qonnZ3kmyP+7cL6H+1X23yQp
+         dWIIX92NbzdsMBSu+PJfbKSEy4AIxvk1IH3pTTWoMtSQMZvwWxDDP5dOMU45LhJAi5Wx
+         I/LUhw2yCqBaarPR4bF7L5tKEmAZp4E+zru93IMJkadkuJZgUUDdyrhQkHXUyFYwbjS9
+         UFrM8Wtryn0v5h2S3i6HF3Ys2Lnptej6DiPDJnEfEhRS5InCHBk19CfDFzVu3ZWCBQQ3
+         W5RUP1Bbvl5gDJNBS9kSKPHWzP2MBZXRM2hHQtdpN0DnZZcgjAxItMpG1g1ZpYEGvOgc
+         9nxg==
+X-Gm-Message-State: AGi0PuYm+LSxrX3Vm9ZVtU3ZfxfKegCU27NVJBQ7W12a8MEhaqQBkFXE
+        cFMKfTMJWKcb3BXxeHlPKysSZA==
+X-Google-Smtp-Source: APiQypLJSGpBwzleZnV3t7v1nCIoNAWsHqMVrq1I/vhX91pyUFLlxLheGBhyb3rY17tsM867rwR2zw==
+X-Received: by 2002:a05:6214:1812:: with SMTP id o18mr7437268qvw.64.1587697279787;
+        Thu, 23 Apr 2020 20:01:19 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::921])
+        by smtp.gmail.com with ESMTPSA id g187sm2808459qkf.115.2020.04.23.20.01.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 20:01:19 -0700 (PDT)
+Date:   Thu, 23 Apr 2020 23:01:17 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Joonsoo Kim <js1304@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Shakeel Butt <shakeelb@google.com>,
+        Hugh Dickins <hughd@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 15/18] mm: memcontrol: make swap tracking an integral
+ part of memory control
+Message-ID: <20200424030117.GC464082@cmpxchg.org>
+References: <20200420221126.341272-1-hannes@cmpxchg.org>
+ <20200420221126.341272-16-hannes@cmpxchg.org>
 MIME-Version: 1.0
-References: <20200423073929.127521-1-masahiroy@kernel.org> <20200423073929.127521-15-masahiroy@kernel.org>
- <CANiq72nUa8uoXtSThqq7t9oAmZnGSE9a1_d+ZoRAagpKDo4DRg@mail.gmail.com>
-In-Reply-To: <CANiq72nUa8uoXtSThqq7t9oAmZnGSE9a1_d+ZoRAagpKDo4DRg@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 24 Apr 2020 11:59:14 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASo=R2uoNPzof_FppFUp=sMAZG62C3PLAMm9jZix9z3Rw@mail.gmail.com>
-Message-ID: <CAK7LNASo=R2uoNPzof_FppFUp=sMAZG62C3PLAMm9jZix9z3Rw@mail.gmail.com>
-Subject: Re: [PATCH 14/16] samples: auxdisplay: use 'userprogs' syntax
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Sam Ravnborg <sam@ravnborg.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420221126.341272-16-hannes@cmpxchg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Miguel,
+On Mon, Apr 20, 2020 at 06:11:23PM -0400, Johannes Weiner wrote:
+> @@ -6884,9 +6876,6 @@ void mem_cgroup_swapout(struct page *page, swp_entry_t entry)
+>  	VM_BUG_ON_PAGE(PageLRU(page), page);
+>  	VM_BUG_ON_PAGE(page_count(page), page);
+>  
+> -	if (!do_memsw_account())
+> -		return;
+> -
+>  	memcg = page->mem_cgroup;
+>  
+>  	/* Readahead page, never charged */
 
-On Thu, Apr 23, 2020 at 8:50 PM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> Hi Masahiro,
->
-> On Thu, Apr 23, 2020 at 9:41 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> >
-> > Kbuild now supports the 'userprogs' syntax to describe the build rules
-> > of userspace programs for the target architecture (i.e. the same
-> > architecture as the kernel).
-> >
-> > Add the entry to samples/Makefile to put this into the build bot
-> > coverage.
-> >
-> > I also added the CONFIG option guarded by 'depends on CC_CAN_LINK'
-> > because $(CC) may not necessarily provide libc.
-> >
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
->
-> Thanks for this! Looks nice. I guess you take all patches for the
-> samples/ changes through your tree?
+I messed up here.
 
-Yes, I will take all to my tree
-since this series is mostly Makefile changes.
+mem_cgroup_swapout() must not run on cgroup2, because cgroup2 uses
+mem_cgroup_try_charge_swap() instead. Both record a swap entry and
+running them both will trigger a VM_BUG_ON() on an existing record.
 
+I'm actually somewhat baffled why this didn't trigger in my
+MADV_PAGEOUT -> MADV_WILLNEED swap test. memory.max driven swapout
+triggered it right away.
 
+!do_memsw_account() needs to be !cgroup_subsys_on_dfl(memory_cgrp_subsys)
 
-> Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
->
-> Cheers,
-> Miguel
+> @@ -6913,7 +6902,7 @@ void mem_cgroup_swapout(struct page *page, swp_entry_t entry)
+>  	if (!mem_cgroup_is_root(memcg))
+>  		page_counter_uncharge(&memcg->memory, nr_entries);
+>  
+> -	if (memcg != swap_memcg) {
+> +	if (do_memsw_account() && memcg != swap_memcg) {
+>  		if (!mem_cgroup_is_root(swap_memcg))
+>  			page_counter_charge(&swap_memcg->memsw, nr_entries);
+>  		page_counter_uncharge(&memcg->memsw, nr_entries);
 
+And this can be !cgroup_memory_noswap instead. It'll do the same
+thing, but will be clearer.
 
+I'll have it fixed in version 2.
 
--- 
-Best Regards
-Masahiro Yamada
