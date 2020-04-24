@@ -2,141 +2,83 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BE6C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD3A4C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 862C52071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0EFE2071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:06:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="WfFHFjpr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgDXKEX (ORCPT
+        id S1726746AbgDXKGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 06:04:23 -0400
-Received: from mga18.intel.com ([134.134.136.126]:16160 "EHLO mga18.intel.com"
+        Fri, 24 Apr 2020 06:06:48 -0400
+Received: from smtp2.axis.com ([195.60.68.18]:23084 "EHLO smtp2.axis.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726489AbgDXKEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 06:04:23 -0400
-IronPort-SDR: lQNevgnSAYdpCRG7u5HvZw6CJRI9+B4RSG5cUKXCutorunxqVf/6ShU8VIIbDlLaLXpxuW+5Ks
- +Z8u5G8iaR9g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2020 03:04:22 -0700
-IronPort-SDR: 0rZ8bHp+me5uUBc2xp4wacOWeGz9KMvj9xxyBNfUJ9cPDNC6hHi/MaFgNt6E34vFpUvmg9UlRC
- +YWwO73fwrWQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,311,1583222400"; 
-   d="scan'208";a="366299723"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 24 Apr 2020 03:04:15 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 24 Apr 2020 13:04:15 +0300
-Date:   Fri, 24 Apr 2020 13:04:15 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Calvin Johnson <calvin.johnson@oss.nxp.com>
-Cc:     linux.cj@gmail.com, Jeremy Linton <jeremy.linton@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Madalin Bucur <madalin.bucur@oss.nxp.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        linux-acpi@vger.kernel.org,
-        Diana Madalina Craciun <diana.craciun@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Varun Sethi <V.Sethi@nxp.com>, Marcin Wojtas <mw@semihalf.com>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [net-next PATCH v1 1/2] device property: Introduce
- fwnode_phy_find_device()
-Message-ID: <20200424100415.GA1575367@kuha.fi.intel.com>
-References: <20200424031617.24033-1-calvin.johnson@oss.nxp.com>
- <20200424031617.24033-2-calvin.johnson@oss.nxp.com>
+        id S1726193AbgDXKGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 06:06:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=axis.com; l=510; q=dns/txt; s=axis-central1;
+  t=1587722807; x=1619258807;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=WoKs5Og0gerlj6eE3S0a39ru9NWbT0TOBZiuhm7c8HQ=;
+  b=WfFHFjpr9AEzrDLkdsOXlVGzxuk9cWVZlHPgSeVzTKUmq1bxo8FFfhee
+   fBb3Z8QP6nTHzwZyVi+i5d/m27xXZkzimpxA5uP1pJ60J96JN+U59eyZq
+   Ev2c+e/jsoVNv1Y3gIiDwOwxRCMUPt+z8IdhHScN2m6V1eb8JjlaTSIOw
+   eDeA/J4Wp/HZ8hq5LsDKrVcWUa8xPEoMabFLN3iBHGPNkcayKLZEGpPig
+   88b2WuDk8kLbfuhyDJgM1/x55bhsDE/8eNt8Sj43rybepF5BEqenyman6
+   aMvT4b+br6njW/10yVQUPRkdKvg8T0xxDyTzgI85IlPQOkufIojlufmzG
+   A==;
+IronPort-SDR: 69TvoBs7eMFR2AZgl5S6HzHxhG545ihyS+eLK5ecWyHdgrhPtHtqUC38d4FChwzjWUhCFUTI9E
+ u6oI0rp/BV0G51/28ubuuYSTuDeboMKB96KF6jHE4FcX9hHczTqGGvhF3K2ZsC3ZvE5pmcu5Qz
+ Jd8GQKf2p/hNN4KFbaF5+45UdcsZqX5dNs5ypS+MPTotLZSzt/CXEtZ9Ri+lpelUZ1Vup6vYar
+ LaITfe78aLNdC9mMMjSSENe52Rox6D7cXaWfxRUwD4HregB2ST/VsZJCx++kQwRcd9TpMv5Xfy
+ zeA=
+X-IronPort-AV: E=Sophos;i="5.73,311,1583190000"; 
+   d="scan'208";a="7783874"
+Subject: Re: [PATCHv2] i2c: slave-eeprom: Make it possible to pre-load eeprom
+ data
+To:     Wolfram Sang <wsa@the-dreams.de>
+CC:     <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <patrick@stwcx.xyz>, <kernel@axis.com>
+References: <20200424090443.26316-1-bjorn.ardo@axis.com>
+ <20200424100307.GB1959@kunai>
+From:   Bjorn Ardo <bjorn.ardo@axis.com>
+Message-ID: <5180b657-33ff-c182-8a16-82a35a61f647@axis.com>
+Date:   Fri, 24 Apr 2020 12:06:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200424031617.24033-2-calvin.johnson@oss.nxp.com>
+In-Reply-To: <20200424100307.GB1959@kunai>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.0.5.60]
+X-ClientProxiedBy: XBOX01.axis.com (10.0.5.15) To XBOX02.axis.com (10.0.5.16)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 08:46:16AM +0530, Calvin Johnson wrote:
-> Define fwnode_phy_find_device() to iterate an mdiobus and find the
-> phy device of the provided phy fwnode.
-> 
-> Signed-off-by: Calvin Johnson <calvin.johnson@oss.nxp.com>
-> ---
-> 
->  drivers/base/property.c  | 41 ++++++++++++++++++++++++++++++++++++++++
->  include/linux/property.h |  5 +++++
->  2 files changed, 46 insertions(+)
-> 
-> diff --git a/drivers/base/property.c b/drivers/base/property.c
-> index 5f35c0ccf5e0..7c0c14c800b7 100644
-> --- a/drivers/base/property.c
-> +++ b/drivers/base/property.c
-> @@ -870,6 +870,47 @@ int device_get_phy_mode(struct device *dev)
->  }
->  EXPORT_SYMBOL_GPL(device_get_phy_mode);
->  
-> +/**
-> + * fwnode_phy_find_device - Give a phy fwnode to find the corresponding
-> + * phy_device on the mdiobus.
-> + * @phy_fwnode: Pointer to the phy's fwnode.
-> + *
-> + * If successful, returns a pointer to the phy_device with the embedded
-> + * struct device refcount incremented by one, or NULL on failure.
-> + */
-> +struct phy_device *fwnode_phy_find_device(struct fwnode_handle *phy_fwnode)
-> +{
-> +	struct device *d;
-> +	struct mdio_device *mdiodev;
-> +
-> +	if (!phy_fwnode)
-> +		return NULL;
-> +
-> +	d = bus_find_device_by_fwnode(&mdio_bus_type, phy_fwnode);
-> +	if (d) {
-> +		mdiodev = to_mdio_device(d);
-> +		if (mdiodev->flags & MDIO_DEVICE_FLAG_PHY)
-> +			return to_phy_device(d);
-> +		put_device(d);
-> +	}
-> +
-> +	return NULL;
-> +}
-> +EXPORT_SYMBOL(fwnode_phy_find_device);
-> +
-> +/**
-> + * device_phy_find_device - For the given device, get the phy_device
-> + * @dev: Pointer to the given device
-> + *
-> + * If successful, returns a pointer to the phy_device with the embedded
-> + * struct device refcount incremented by one, or NULL on failure.
-> + */
-> +struct phy_device *device_phy_find_device(struct device *dev)
-> +{
-> +	return fwnode_phy_find_device(dev_fwnode(dev));
-> +}
-> +EXPORT_SYMBOL_GPL(device_phy_find_device);
 
-Let's not put any more subsystem specific functions into property.c.
+On 4/24/20 12:03 PM, Wolfram Sang wrote:
+> On Fri, Apr 24, 2020 at 11:04:43AM +0200, Björn Ardö wrote:
+>> If the slave eeprom has a "firmware-name" in devicetree, then
+>> pre-load the data in the eeprom with this file. Otherwise we
+>> init the eeprom with 0xFF.
+>>
+>> Signed-off-by: Björn Ardö <bjorn.ardo@axis.com>
+> I like it a lot, thanks! Maybe we could add a SoB from Patrick for his
+> 0xff-suggestion (but keeping you as the patch author).
+>
+> Is this okay for everyone?
 
-thanks,
 
--- 
-heikki
+OK for me!
+
