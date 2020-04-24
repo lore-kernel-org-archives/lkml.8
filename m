@@ -2,74 +2,122 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF610C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E409C55191
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A34172064C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:29:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 056F42064C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:29:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="M4QdAJQ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbgDXL31 (ORCPT
+        id S1726904AbgDXL3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 07:29:27 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:47810 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbgDXL30 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 07:29:26 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jRwWG-0006NF-DI; Fri, 24 Apr 2020 11:29:20 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Tony Luck <tony.luck@intel.com>, Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rrichter@marvell.com>,
-        linux-edac@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] EDAC: remove redundant assignment to variable rc
-Date:   Fri, 24 Apr 2020 12:29:20 +0100
-Message-Id: <20200424112920.12676-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 24 Apr 2020 07:29:43 -0400
+Received: from smtp2.axis.com ([195.60.68.18]:3585 "EHLO smtp2.axis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726582AbgDXL3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 07:29:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=axis.com; l=1906; q=dns/txt; s=axis-central1;
+  t=1587727782; x=1619263782;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=tamrexV4OWrlM7Wl4jj2JSBcp9yOh7DTXPmsR1xB0mo=;
+  b=M4QdAJQ7maaVZhblMFSKK4r70RFyVkMxx/GAT2aJ9yIjhh1YdH1aDFo2
+   mPe2v3C22CH/YX0EdU0WX8cCmA9smVFVbXOmcJgYqQsehDpgsShSb1L3s
+   CMJcVgIt6evAbaNHRhto45EvxmgeBYTUEQF10DlBVbL/1RHOroPeKneDE
+   B0wt5VZBxLuAmT3rvT/4c5JVGOF0GWe9BbIdBkq9s259NhzRkhEzWezga
+   MR+e2JQbGjigKZQsElTNwh026nCT4T/lH5CueO/YrmTEeQUq/qciioJ37
+   BK/g7p+if2Q2weTBtlL9MU2gW2nfCsc21QhvXELP1gFyfMI7IkscTv1fU
+   Q==;
+IronPort-SDR: HzM2mCa5UxWKURCAU4aMMQzj9ERLDXczVo/AyvdLFshb70DfkK/iiFPatBqf89xzDhDFkyKgYZ
+ OAzecIYfJPkdDyW7jgVODjPEdj1vDuIUtSF68FaYifdVItnwbK6yEcREu+Yd1BcsuZLOPwsXUe
+ UvGPW5vubwjpMEzaduvEcVrGsw7fdSsrLAdH1cZ5wJkO78EnpMilIDAlfLFtlEbbLg/gNlmlzS
+ 1hdqTVQ8uzuNkpOdKYmMPdXGjL1lj1oXsyPVlMrSrKIXHIbE9Zv/pNrW0PlXrDc/2q4n5huCQ1
+ YjI=
+X-IronPort-AV: E=Sophos;i="5.73,311,1583190000"; 
+   d="scan'208";a="7791806"
+From:   =?UTF-8?q?Bj=C3=B6rn=20Ard=C3=B6?= <bjorn.ardo@axis.com>
+To:     <wsa@the-dreams.de>
+CC:     <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <patrick@stwcx.xyz>, <kernel@axis.com>,
+        =?UTF-8?q?Bj=C3=B6rn=20Ard=C3=B6?= <bjorn.ardo@axis.com>
+Subject: [PATCHv2] i2c: slave-eeprom: Make it possible to pre-load eeprom data
+Date:   Fri, 24 Apr 2020 13:29:38 +0200
+Message-ID: <20200424112938.15031-1-bjorn.ardo@axis.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+If the slave eeprom has a "firmware-name" in devicetree, then
+pre-load the data in the eeprom with this file. Otherwise we
+init the eeprom with 0xFF.
 
-The variable rc is being initialized with a value that is
-never read and it is being updated later with a new value. The
-initialization is redundant and can be removed.
-
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Björn Ardö <bjorn.ardo@axis.com>
 ---
- drivers/edac/sb_edac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/i2c/i2c-slave-eeprom.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/edac/sb_edac.c b/drivers/edac/sb_edac.c
-index d414698ca324..19c95943d218 100644
---- a/drivers/edac/sb_edac.c
-+++ b/drivers/edac/sb_edac.c
-@@ -3442,7 +3442,7 @@ MODULE_DEVICE_TABLE(x86cpu, sbridge_cpuids);
+diff --git a/drivers/i2c/i2c-slave-eeprom.c b/drivers/i2c/i2c-slave-eeprom.c
+index cb415b10642f..b425cefea92c 100644
+--- a/drivers/i2c/i2c-slave-eeprom.c
++++ b/drivers/i2c/i2c-slave-eeprom.c
+@@ -18,6 +18,7 @@
+  */
  
- static int sbridge_probe(const struct x86_cpu_id *id)
+ #include <linux/bitfield.h>
++#include <linux/firmware.h>
+ #include <linux/i2c.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+@@ -120,6 +121,26 @@ static ssize_t i2c_slave_eeprom_bin_write(struct file *filp, struct kobject *kob
+ 	return count;
+ }
+ 
++static int i2c_slave_init_eeprom_data(struct eeprom_data *eeprom, struct i2c_client *client,
++					 unsigned int size)
++{
++	const struct firmware *fw;
++	const char *eeprom_data;
++	int error = device_property_read_string(&client->dev, "firmware-name", &eeprom_data);
++
++	if (!error) {
++		error = request_firmware_into_buf(&fw, eeprom_data, &client->dev,
++						  eeprom->buffer, size);
++		if (error)
++			return error;
++		release_firmware(fw);
++	} else {
++		/* An empty eeprom typically has all bits set to 1 */
++		memset(eeprom->buffer, 0xFF, size);
++	}
++	return 0;
++}
++
+ static int i2c_slave_eeprom_probe(struct i2c_client *client, const struct i2c_device_id *id)
  {
--	int rc = -ENODEV;
-+	int rc;
- 	u8 mc, num_mc = 0;
- 	struct sbridge_dev *sbridge_dev;
- 	struct pci_id_table *ptable = (struct pci_id_table *)id->driver_data;
+ 	struct eeprom_data *eeprom;
+@@ -138,6 +159,10 @@ static int i2c_slave_eeprom_probe(struct i2c_client *client, const struct i2c_de
+ 	spin_lock_init(&eeprom->buffer_lock);
+ 	i2c_set_clientdata(client, eeprom);
+ 
++	ret = i2c_slave_init_eeprom_data(eeprom, client, size);
++	if (ret)
++		return ret;
++
+ 	sysfs_bin_attr_init(&eeprom->bin);
+ 	eeprom->bin.attr.name = "slave-eeprom";
+ 	eeprom->bin.attr.mode = S_IRUSR | S_IWUSR;
 -- 
-2.25.1
+2.11.0
 
