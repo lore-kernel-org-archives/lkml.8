@@ -2,138 +2,138 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5709C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5D4C55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EEC42075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:57:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="e7aSL4FW"
+	by mail.kernel.org (Postfix) with ESMTP id 8571B2074F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:59:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbgDXE5x (ORCPT
+        id S1726523AbgDXE70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 00:57:53 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:39585 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbgDXE5x (ORCPT
+        Fri, 24 Apr 2020 00:59:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38286 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbgDXE7Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 00:57:53 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200424045750epoutp04230bedf9564766cd0d8c9085bd7aeef0~IqJ88tkaQ3074030740epoutp047
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 04:57:50 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200424045750epoutp04230bedf9564766cd0d8c9085bd7aeef0~IqJ88tkaQ3074030740epoutp047
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1587704270;
-        bh=AgT+mu/DbDkkraNd6kgFPOP710cAaa571GBMHlW3C9I=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=e7aSL4FW64sfdE438pT1pAjbiWb3esJRW0dITF/LGTppKxcMD2naDx68VIfUdrKVO
-         vLX3YR4j3FCGXt8eAc5lgXK46UbFeSZCJlWB6Ik1wREFXZwFf8otsnJybV4N8rMdGy
-         MPZZfSEtZoVMWLW0lC7Y+xoBsavxrRZSXiQBA+vs=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200424045749epcas1p222ea5c712e7d950fc414c1840bdbe444~IqJ8Lbj6y2408524085epcas1p27;
-        Fri, 24 Apr 2020 04:57:49 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.165]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 497hkN2dpVzMqYkb; Fri, 24 Apr
-        2020 04:57:48 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D6.4C.04744.CC172AE5; Fri, 24 Apr 2020 13:57:48 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200424045748epcas1p153c5dc5b2ab9e8da1daf7b10a51da6dc~IqJ6rkln20626706267epcas1p1q;
-        Fri, 24 Apr 2020 04:57:48 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200424045748epsmtrp1613e0000816a73e7d22947c2b291e0b6~IqJ6plV2E1101711017epsmtrp1g;
-        Fri, 24 Apr 2020 04:57:48 +0000 (GMT)
-X-AuditID: b6c32a38-26bff70000001288-ab-5ea271cc3b53
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        0E.5D.18461.BC172AE5; Fri, 24 Apr 2020 13:57:47 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200424045747epsmtip26d4f3532ac08cabdca2d9e9a685b0a3f~IqJ6Zdh2n1363113631epsmtip2c;
-        Fri, 24 Apr 2020 04:57:47 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Stephen Rothwell'" <sfr@canb.auug.org.au>
-Cc:     "'Namjae Jeon'" <linkinjeon@kernel.org>,
-        "'Linux Next Mailing List'" <linux-next@vger.kernel.org>,
-        "'Linux Kernel Mailing List'" <linux-kernel@vger.kernel.org>
-In-Reply-To: <000001d619f4$9d7fee90$d87fcbb0$@samsung.com>
-Subject: RE: linux-next: manual merge of the exfat tree with Linus' tree
-Date:   Fri, 24 Apr 2020 13:57:47 +0900
-Message-ID: <000101d619f4$e62c5cf0$b28516d0$@samsung.com>
+        Fri, 24 Apr 2020 00:59:25 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42CE8C09B045
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 21:59:25 -0700 (PDT)
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jRqQo-0001DJ-IO; Fri, 24 Apr 2020 06:59:18 +0200
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jRqQm-0006xK-0d; Fri, 24 Apr 2020 06:59:16 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Jay Cliburn <jcliburn@gmail.com>,
+        Chris Snook <chris.snook@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v1] net: ag71xx: extend link validation to support other SoCs
+Date:   Fri, 24 Apr 2020 06:59:14 +0200
+Message-Id: <20200424045914.26682-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQFjuEGWdDyIOjJKXJTh27xcMasqNgJJvlsfqVoq0HA=
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRTHeXa3u6s1uc1ZJ5NaF4w0plvbdFqTIgsjISvoQx+2rnpR6e6l
-        e2ekUSrFfM8kynwtJUsW4RDfsoamQhmimFnmh0rQyMLKovfXbdfIb79zzv885/k/zyEweTke
-        SmRZHQxnpVkKDxR3DkREq4aPNpnUBQsKQ+XFZsww3lOHG+42OpGhwzMh3SZOKpicxJPaXMV4
-        0se2tSnYIXZrJkOnM5ySsabZ0rOsGUZqzwHzDrM+Rq1RaeIMsZTSSlsYI5WYnKLalcV6p1HK
-        YzSb7U2l0DxPRSds5WzZDkaZaeMdRoqxp7N2jdoexdMWPtuaEZVms8Rr1OrNeq/yMJs5/ew1
-        speLjxfO35DmowtYCQoggNTBt1I3XoICCTnZjaBn9hImBB8Q9I2VIiH4jKDp1xT61/Ki6alE
-        KHgQDL0flArBHIL7Ezf9KpxUwe+fvbiPFWQ01JbOiX0ijLyOwDl9W+IrBJDxsOBy+TmYTILq
-        789FPhaT4eBpHfffUEbGwfCfK7jAK2CoekbsY4xcB13zdYsulPBt9ppEGBYPVTNnRIJGAbXF
-        Tr8hID9JoW/q92JDIoyMluACB8Pre+1SgUNhrsLpZcLLJ2Chd1FehODVF6PAWnja6pb4JBgZ
-        Aa090UJ6Pdz6UY+EsUHw9lOZRDhFBkVOuSAJh7MPB0QCr4GSwvfSc4iqWWKsZomxmiUGav4P
-        u4LELrSSsfOWDIbX2HVLf7sN+Vcx0tCN7owk9yOSQNRy2STXaJJL6GN8jqUfAYFRCpl7usEk
-        l6XTObkMZzNz2SzD9yO9990rsdCQNJt3sa0Os0a/WavVGnQxsTF6LbVKduEJa5KTGbSDOcIw
-        dob71yciAkLz0cGqjadmRaVbWhaqL+2bEP0Y3evKczakelpXVyzL26V9OOas9RTVOaqCH4/v
-        bhdtYiarjTmD8+6Gd1uM212XOwLrc8wYF7Y9L0Snu9piIsZSCvpPugs7Fadnht6yCQ0jBeTO
-        MP3jl7sT3jyzpA53fW8+H7R/w9dHeVMJD1TNZeG5lJjPpDWRGMfTfwErOAtuoAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFLMWRmVeSWpSXmKPExsWy7bCSvO7pwkVxBpfPmFtMnLaU2eLyrjls
-        FgcXtjFabN17ld2BxaPxxg02j02rOtk8Pm+SC2CO4rJJSc3JLEst0rdL4Mp4eO8VY0EvS0X7
-        29XsDYxTmbsYOTkkBEwkHiy6ydrFyMUhJLCbUaLx6k+ohLTEsRNngGwOIFtY4vDhYoia54wS
-        2w62sILUsAnoSvz7s58NxBYR0JeY3f2SBaSIWWA5o8T0l2vAEkIC3YwS63sNQWxOASuJj6tW
-        gTULC3hIzPx1nwnEZhFQldi7/jLYYl4BS4kz/xewQdiCEidnPmEBsZkFtCV6H7YyQtjyEtvf
-        zoE6VEHi59NlrBBHWElMf9LCBFEjIjG7s415AqPwLCSjZiEZNQvJqFlIWhYwsqxilEwtKM5N
-        zy02LDDMSy3XK07MLS7NS9dLzs/dxAiODi3NHYzbV33QO8TIxMF4iFGCg1lJhHfDw3lxQrwp
-        iZVVqUX58UWlOanFhxilOViUxHlvFC6MExJITyxJzU5NLUgtgskycXBKNTCtqj9cuN821UPo
-        PUvBy86Q3YseG7Kreax+c+ncllKBM7csN3ac2nifr2nhjs1m7/f/uMj3lWWt5TJGqyKHby4t
-        3XcU26d9/qLzl2tJp6LlFflKgf3VJvM8jrLm7wi2XvJW/MAdjlfFuzYtbOObuajFJ+bHg6YE
-        YzdHrnnVUhJM8w9ZawscXnBRxsvq4Nv7LSfbSuIvJIpUdlqvsjyzkC+4R+yGxm6xXpndnEx2
-        jXJtmp1rmzaxRk/ZkLvwt0v0hYcpAfyuTxmXnKkpPcfFJRNXnshp0fV1yS8tb7u5O5nrvmxr
-        vbxfxq5tayRT65X1HXt63YqST80/9WRanN3WeRsqToX+VbTqX53p6CJ9p1aJpTgj0VCLuag4
-        EQB/TEat/QIAAA==
-X-CMS-MailID: 20200424045748epcas1p153c5dc5b2ab9e8da1daf7b10a51da6dc
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200424045546epcas1p29c96627082a25905c9715790b5b2ea82
-References: <CGME20200424045546epcas1p29c96627082a25905c9715790b5b2ea82@epcas1p2.samsung.com>
-        <000001d619f4$9d7fee90$d87fcbb0$@samsung.com>
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Hi all,
-Hi Stephen,
-> 
-> Today's linux-next merge of the exfat tree got conflicts in:
-> 
->   fs/exfat/super.c
->   fs/exfat/misc.c
->   fs/exfat/exfat_fs.h
-> 
-> Various patches in the exfat tree have been added to Linus' tree overnight as different commits (an in
-> some cases slightly different patches.
-> Please rebase the exfat tree on top of commit
-Fixed with rebase!
-Thanks!
-> 
->   81df1ad40644 ("exfat: truncate atimes to 2s granularity")
-> 
-> from Linus' tree (or do a backmerge of that commit).
+Most (all?) QCA SoCs have two MAC with different supported link
+capabilities. Extend ag71xx_mac_validate() to properly validate this
+variants.
 
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ drivers/net/ethernet/atheros/ag71xx.c | 43 +++++++++++++++++++++++----
+ 1 file changed, 38 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/net/ethernet/atheros/ag71xx.c b/drivers/net/ethernet/atheros/ag71xx.c
+index 02b7705393ca7..112edbd308230 100644
+--- a/drivers/net/ethernet/atheros/ag71xx.c
++++ b/drivers/net/ethernet/atheros/ag71xx.c
+@@ -871,13 +871,40 @@ static void ag71xx_mac_validate(struct phylink_config *config,
+ 			    unsigned long *supported,
+ 			    struct phylink_link_state *state)
+ {
++	struct ag71xx *ag = netdev_priv(to_net_dev(config->dev));
+ 	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
+ 
+-	if (state->interface != PHY_INTERFACE_MODE_NA &&
+-	    state->interface != PHY_INTERFACE_MODE_GMII &&
+-	    state->interface != PHY_INTERFACE_MODE_MII) {
+-		bitmap_zero(supported, __ETHTOOL_LINK_MODE_MASK_NBITS);
+-		return;
++	switch (state->interface) {
++	case PHY_INTERFACE_MODE_NA:
++		break;
++	case PHY_INTERFACE_MODE_MII:
++		if ((ag71xx_is(ag, AR9330) && ag->mac_idx == 0) ||
++		    ag71xx_is(ag, AR9340) ||
++		    ag71xx_is(ag, QCA9530) ||
++		    (ag71xx_is(ag, QCA9550) && ag->mac_idx == 1))
++			break;
++		goto unsupported;
++	case PHY_INTERFACE_MODE_GMII:
++		if ((ag71xx_is(ag, AR9330) && ag->mac_idx == 1) ||
++		    (ag71xx_is(ag, AR9340) && ag->mac_idx == 1) ||
++		    (ag71xx_is(ag, QCA9530) && ag->mac_idx == 1))
++			break;
++		goto unsupported;
++	case PHY_INTERFACE_MODE_SGMII:
++		if (ag71xx_is(ag, QCA9550) && ag->mac_idx == 0)
++			break;
++		goto unsupported;
++	case PHY_INTERFACE_MODE_RMII:
++		if (ag71xx_is(ag, AR9340) && ag->mac_idx == 0)
++			break;
++		goto unsupported;
++	case PHY_INTERFACE_MODE_RGMII:
++		if ((ag71xx_is(ag, AR9340) && ag->mac_idx == 0) ||
++		    (ag71xx_is(ag, QCA9550) && ag->mac_idx == 1))
++			break;
++		goto unsupported;
++	default:
++		goto unsupported;
+ 	}
+ 
+ 	phylink_set(mask, MII);
+@@ -889,6 +916,8 @@ static void ag71xx_mac_validate(struct phylink_config *config,
+ 	phylink_set(mask, 100baseT_Full);
+ 
+ 	if (state->interface == PHY_INTERFACE_MODE_NA ||
++	    state->interface == PHY_INTERFACE_MODE_SGMII ||
++	    state->interface == PHY_INTERFACE_MODE_RGMII ||
+ 	    state->interface == PHY_INTERFACE_MODE_GMII) {
+ 		phylink_set(mask, 1000baseT_Full);
+ 		phylink_set(mask, 1000baseX_Full);
+@@ -898,6 +927,10 @@ static void ag71xx_mac_validate(struct phylink_config *config,
+ 		   __ETHTOOL_LINK_MODE_MASK_NBITS);
+ 	bitmap_and(state->advertising, state->advertising, mask,
+ 		   __ETHTOOL_LINK_MODE_MASK_NBITS);
++
++	return;
++unsupported:
++	bitmap_zero(supported, __ETHTOOL_LINK_MODE_MASK_NBITS);
+ }
+ 
+ static void ag71xx_mac_pcs_get_state(struct phylink_config *config,
+-- 
+2.26.1
 
