@@ -2,125 +2,79 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C42C55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1C7C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D58FF2076C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:12:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE51A2074F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:12:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587719556;
+	bh=t0Et9NuUznj1yMEWKlEsvCLzBff1vdHhFUTvncIdPYc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SUE4FuYTGuox5Vdc0r1gOblFEhkTdVO8OblPjUPYoWkpcDactHgdrGgOOl8p7bGsw
+	 7SsFQlO+oLHls5ia6tM+Gc4W+smwxuIMwVjtYaaqfqL7tZtSUhuqMV7Y5u4+kh0Fks
+	 U8XQiq0LVyUMSUMIC9m+L+UMOfMuX4yzDgpUz5lg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgDXJM2 (ORCPT
+        id S1726770AbgDXJMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 05:12:28 -0400
-Received: from mx.socionext.com ([202.248.49.38]:38499 "EHLO mx.socionext.com"
+        Fri, 24 Apr 2020 05:12:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726298AbgDXJM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 05:12:28 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 24 Apr 2020 18:12:26 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 5A66E60057;
-        Fri, 24 Apr 2020 18:12:26 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 24 Apr 2020 18:12:26 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 2AD8F1A12D0;
-        Fri, 24 Apr 2020 18:12:26 +0900 (JST)
-Received: from [10.212.22.225] (unknown [10.212.22.225])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 6F879120131;
-        Fri, 24 Apr 2020 18:12:25 +0900 (JST)
-Subject: Re: [PATCH] dt-bindings: spi: Convert UniPhier SPI controller to
- json-schema
-To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1587087014-14598-1-git-send-email-hayashi.kunihiko@socionext.com>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <1243a377-cb88-3fa5-fcf9-75da200d9a9c@socionext.com>
-Date:   Fri, 24 Apr 2020 18:12:24 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726298AbgDXJMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 05:12:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC0082076C;
+        Fri, 24 Apr 2020 09:12:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587719554;
+        bh=t0Et9NuUznj1yMEWKlEsvCLzBff1vdHhFUTvncIdPYc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mm80pggYax7dmYkrA2bmeVQyluscZvE3t+nc20G9kdnlBcI5ZjS/BSeGNbI01b9Ns
+         3EN2XVxIA1v7KxG+lcPFsHYAY+ehMlglYh5y2rJwlQLwJwmBuyxnFAtDDVaDw4M7iI
+         EIkyJXlc2hrcoiExKmvptL5gUpoyJu+NEccDiHRg=
+Date:   Fri, 24 Apr 2020 11:12:31 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.6 000/166] 5.6.7-rc1 review
+Message-ID: <20200424091231.GA359097@kroah.com>
+References: <20200422095047.669225321@linuxfoundation.org>
+ <20200422203644.GD52250@roeck-us.net>
 MIME-Version: 1.0
-In-Reply-To: <1587087014-14598-1-git-send-email-hayashi.kunihiko@socionext.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422203644.GD52250@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/04/17 10:30, Kunihiko Hayashi wrote:
-> Convert UniPhier SPI controller binding to DT schema format.
+On Wed, Apr 22, 2020 at 01:36:44PM -0700, Guenter Roeck wrote:
+> On Wed, Apr 22, 2020 at 11:55:27AM +0200, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.6.7 release.
+> > There are 166 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Fri, 24 Apr 2020 09:48:23 +0000.
+> > Anything received after that time might be too late.
+> > 
 > 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->   .../bindings/spi/socionext,uniphier-spi.yaml       | 55 ++++++++++++++++++++++
->   .../devicetree/bindings/spi/spi-uniphier.txt       | 28 -----------
->   2 files changed, 55 insertions(+), 28 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/spi/socionext,uniphier-spi.yaml
->   delete mode 100644 Documentation/devicetree/bindings/spi/spi-uniphier.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/socionext,uniphier-spi.yaml b/Documentation/devicetree/bindings/spi/socionext,uniphier-spi.yaml
-> new file mode 100644
-> index 0000000..bab8bcc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/socionext,uniphier-spi.yaml
-> @@ -0,0 +1,55 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/spi/socionext,uniphier-spi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Socionext UniPhier SPI controller
-> +
-> +description: |
-> +  UniPhier SoCs have SCSSI which supports SPI single channel.
-> +
-> +maintainers:
-> +  - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> +  - Keiji Hayashibara <hayashibara.keiji@socionext.com>
-> +
-> +allOf:
-> +  - $ref: spi-controller.yaml#
-> +
-> +properties:
-> +  "#address-cells": true
-> +  "#size-cells": true
-> +
-> +  compatible:
-> +    const: socionext,uniphier-scssi
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - resets
+> Build results:
+> 	total: 155 pass: 155 fail: 0
+> Qemu test results:
+> 	total: 428 pass: 428 fail: 0
 
-According to spi-controller.yaml, the "#address-cells" is required.
-And the "#size-cells" is also required because it specifies "const: 0".
-I'll add them in v2.
+Thanks for testing all of these (including the -rc2 versions) and
+letting me know.
 
-Thank you,
-
----
-Best Regards
-Kunihiko Hayashi
+greg k-h
