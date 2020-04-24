@@ -2,128 +2,112 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20ED7C5518A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBF9C55192
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE8832075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F9972073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:15:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UeSf/5Nu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ISQ55rpH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726174AbgDXEMO (ORCPT
+        id S1726051AbgDXEPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 00:12:14 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40314 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725922AbgDXEMN (ORCPT
+        Fri, 24 Apr 2020 00:15:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59660 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbgDXEPB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 00:12:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587701532;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1ORnbYYJvOimK1L52WvsWC1QfTySNsKmDnq5F4Mgpto=;
-        b=UeSf/5Nu6THn+yPpTuKjC1daZXfbchBVG4+TpNcp0rGr8o3CbH1iEuIjFK8lHCO1tep7kC
-        HWzhAqzLZEtSwd+bLq2ic5Kf6HaneR8aeR1oaGdYRFecDZanUhp5QnSNEUf1srLilzK/HP
-        qOToL7oZHZ1AhpG4LlDK637XYn6CnhE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-200-lVzwMglxMhKl9T9PGTuJzQ-1; Fri, 24 Apr 2020 00:12:09 -0400
-X-MC-Unique: lVzwMglxMhKl9T9PGTuJzQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A4B67835B47;
-        Fri, 24 Apr 2020 04:12:07 +0000 (UTC)
-Received: from treble (ovpn-118-207.rdu2.redhat.com [10.10.118.207])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5764D100164D;
-        Fri, 24 Apr 2020 04:12:03 +0000 (UTC)
-Date:   Thu, 23 Apr 2020 23:12:01 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-Cc:     Miroslav Benes <mbenes@suse.cz>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, Vasily Gorbik <gor@linux.ibm.com>
-Subject: Re: [PATCH v2 6/9] s390/module: Use s390_kernel_write() for late
- relocations
-Message-ID: <20200424041201.ekbx6wvl3dn45zfl@treble>
-References: <18266eb2c2c9a2ce0033426837d89dcb363a85d3.1587131959.git.jpoimboe@redhat.com>
- <20200422164037.7edd21ea@thinkpad>
- <20200422172126.743908f5@thinkpad>
- <20200422194605.n77t2wtx5fomxpyd@treble>
- <20200423141834.234ed0bc@thinkpad>
- <alpine.LSU.2.21.2004231513250.6520@pobox.suse.cz>
- <20200423141228.sjvnxwdqlzoyqdwg@treble>
- <20200423181030.b5mircvgc7zmqacr@treble>
- <20200423232657.7minzcsysnhp474w@treble>
- <20200424023521.GA22117@redhat.com>
+        Fri, 24 Apr 2020 00:15:01 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A10CAC09B047
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 21:14:59 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id m18so10192764otq.9
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 21:14:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hNeKWP0wVVfHdvI2+GMr4lo7jLpNJp6SXOmf25ATHxg=;
+        b=ISQ55rpHtbLZWNBGVYOXEiLHbR5pvj+D+zK8Y3PA2yQf4kJxoU6V2GjCj1e1UqHgIJ
+         3962XuymntrbY9qOPUILjH6Dx/DkugOIU5QJNu85Krl0702HsDkr2HSlcIemnmF01jHJ
+         WGTrcdZW3AwCbIuoO0eu9W+vrKY3pddkXjIlqN6RzcxDM7NhtFjjg7xgOzQe4aW6Ui9Q
+         FRp3mttrtVpagGThU/dfrsG6mstBUrvmaWAM2Q95tgFnchoggwMBIL0DyE7vWkzPItKE
+         9CXZF6Qo7jlgzgvMU8I8hRnh76itJeU/QF4mMvWKLWeVpKRqmVKYwVvmfW4k2KEOA8Z4
+         g/1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hNeKWP0wVVfHdvI2+GMr4lo7jLpNJp6SXOmf25ATHxg=;
+        b=ZMlbFEr4tpeL7B4Rk5DlIR1+jvVGz7XinxFWV97/AxUYANhDY/BMAHAAITgjYvUnJP
+         JPpvMjVYmiAHhwi52P+Vd6trFAVzP6wwJJJbslmzfNCxj0oa3cVb6TdZ12snpUPxLDze
+         Yo5uDQyusnFK6/0/Dq4gUMbGyawxgIb8FDqc+/rhov/vNEAY7mP6O7/sygV5niXqT3q6
+         EEJttX5JsG2eZYKHOOynvllMLvkEF3B1SXY5I3Xmt5m2Gh55IuZy23J5eJXExtcidu1e
+         vaOt/u8A/PQ3FmuJjrQattsuYQIM3mhC+FM5BTGJjS/0HLsP+uutZo1u0sQJvmekejnF
+         URVg==
+X-Gm-Message-State: AGi0Pub+dur7HP+79MrP1ugPUVFsnKe4s+S1+LKm02oDn5FNbXyqHUrg
+        yQZLY65wRbFoiS/SxGbgsRTuT4y5KOD+BswH0siIFw==
+X-Google-Smtp-Source: APiQypJnPanMwbARQX4Hfircqy0s3DCPTIopnJmsul/liN7lTudNu6VrdEx/D3Q3Iw+xpQYXZpHdyV5PmViGWlGfRw0=
+X-Received: by 2002:a54:4f02:: with SMTP id e2mr5867574oiy.10.1587701698779;
+ Thu, 23 Apr 2020 21:14:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200424023521.GA22117@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+References: <20200421041815.1808-1-john.stultz@linaro.org> <CALAqxLUHLqoYAZRvF1HjHhOJPdztYh9oz=L0kEuYun7y6fBzGA@mail.gmail.com>
+ <62be69b1-8349-aa16-b5d6-dcacbc4eb05c@ti.com>
+In-Reply-To: <62be69b1-8349-aa16-b5d6-dcacbc4eb05c@ti.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Thu, 23 Apr 2020 21:14:48 -0700
+Message-ID: <CALAqxLX4_gi6mo_HRhRUQvC0stXf4ya3aa1VOPqDdpV8_37iww@mail.gmail.com>
+Subject: Re: [RESEND x2][PATCH v2] phy: qcom-qusb2: Re add "qcom,sdm845-qusb2-phy"
+ compat string
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Doug Anderson <dianders@chromium.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 10:35:21PM -0400, Joe Lawrence wrote:
-> > diff --git a/arch/s390/kernel/module.c b/arch/s390/kernel/module.c
-> > index 2798329ebb74..fe446f42818f 100644
-> > --- a/arch/s390/kernel/module.c
-> > +++ b/arch/s390/kernel/module.c
-> > @@ -297,7 +297,7 @@ static int apply_rela(Elf_Rela *rela, Elf_Addr ba=
-se, Elf_Sym *symtab,
-> > =20
-> >  			gotent =3D me->core_layout.base + me->arch.got_offset +
-> >  				info->got_offset;
-> > -			*gotent =3D val;
-> > +			write(gotent, &val, sizeof(*gotent));
-> >  			info->got_initialized =3D 1;
-> >  		}
-> >  		val =3D info->got_offset + rela->r_addend;
-> > @@ -330,25 +330,29 @@ static int apply_rela(Elf_Rela *rela, Elf_Addr =
-base, Elf_Sym *symtab,
-> >  	case R_390_PLTOFF32:	/* 32 bit offset from GOT to PLT. */
-> >  	case R_390_PLTOFF64:	/* 16 bit offset from GOT to PLT. */
-> >  		if (info->plt_initialized =3D=3D 0) {
-> > -			unsigned int *ip;
-> > +			unsigned int *ip, insn[5];
-> > +
-> >  			ip =3D me->core_layout.base + me->arch.plt_offset +
-> >  				info->plt_offset;
->=20
-> Would it be too paranoid to declare:
->=20
->   			const unsigned int *ip =3D me->core_layout.base +=20
-> 						 me->arch.plt_offset +
->   						 info->plt_offset;
->=20
-> That would trip an assignment to read-only error if someone were tempte=
-d
-> to write directly through the pointer in the future.  Ditto for Elf_Add=
-r
-> *gotent pointer in the R_390_GOTPLTENT case.
+On Thu, Apr 23, 2020 at 9:07 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> On 4/24/2020 9:35 AM, John Stultz wrote:
+> > On Mon, Apr 20, 2020 at 9:18 PM John Stultz <john.stultz@linaro.org> wrote:
+> >>
+> >> This patch fixes a regression in 5.7-rc1+
+> >>
+> >> In commit 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2
+> >> PHY support"), the change was made to add "qcom,qusb2-v2-phy"
+> >> as a generic compat string. However the change also removed
+> >> the "qcom,sdm845-qusb2-phy" compat string, which is documented
+> >> in the binding and already in use.
+> >>
+> >> This patch re-adds the "qcom,sdm845-qusb2-phy" compat string
+> >> which allows the driver to continue to work with existing dts
+> >> entries such as found on the db845c.
+> >
+> > I hate to be a bother on this, but I'd really like to see this
+> > regression resolved.  This fix missed rc1 and rc2, and it would be a
+> > shame to miss rc3 too.
+> >
+> > Do I have the right folks on the cc for this?
+>
+> Yes, I'll be merging this. Sorry for the delay.
 
-The only problem is then the write() triggers a warning because then we
-*are* trying to write through the pointer :-)
+Thanks so much, sorry to be a nag! I was just worried it was slipping through.
 
-arch/s390/kernel/module.c:300:10: warning: passing argument 1 of =E2=80=98=
-write=E2=80=99 discards =E2=80=98const=E2=80=99 qualifier from pointer ta=
-rget type [-Wdiscarded-qualifiers]
-  300 |    write(gotent, &val, sizeof(*gotent));
-
---=20
-Josh
-
+thanks again!
+-john
