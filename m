@@ -2,100 +2,90 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A53AC55191
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CABF7C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10CB020736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AF8A20736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:18:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726076AbgDXWPW (ORCPT
+        id S1726094AbgDXWSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 18:15:22 -0400
-Received: from muru.com ([72.249.23.125]:51336 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725874AbgDXWPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 18:15:21 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id D47FE80E7;
-        Fri, 24 Apr 2020 22:16:06 +0000 (UTC)
-Date:   Fri, 24 Apr 2020 15:15:15 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCHv6 0/4] n_gsm serdev support and protocol driver for
- droid4 modem
-Message-ID: <20200424221515.GM37466@atomide.com>
-References: <20200421232752.3070-1-tony@atomide.com>
- <20200423114326.GQ18608@localhost>
- <20200424215040.GA14087@amd>
+        Fri, 24 Apr 2020 18:18:07 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:34019 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725874AbgDXWSH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 18:18:07 -0400
+Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 24 Apr 2020 15:17:57 -0700
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg01-sd.qualcomm.com with ESMTP; 24 Apr 2020 15:17:56 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id D1A8C4C90; Fri, 24 Apr 2020 15:17:56 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 15:17:56 -0700
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     linux-pwm@vger.kernel.org, David Collins <collinsd@codeaurora.org>,
+        David Airlie <airlied@linux.ie>,
+        intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+Subject: Re: [PATCH v13 01/11] drm/i915: Use 64-bit division macro
+Message-ID: <20200424221756.GB31118@codeaurora.org>
+References: <cover.1587523702.git.gurus@codeaurora.org>
+ <4a3acf8673c08308848fb7ae73d992b6feb758d3.1587523702.git.gurus@codeaurora.org>
+ <87ftctbe5l.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200424215040.GA14087@amd>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87ftctbe5l.fsf@intel.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Pavel Machek <pavel@denx.de> [200424 21:51]:
-> Hi!
+On Fri, Apr 24, 2020 at 09:17:58AM +0300, Jani Nikula wrote:
+> On Tue, 21 Apr 2020, Guru Das Srinagesh <gurus@codeaurora.org> wrote:
+> > Since the PWM framework is switching struct pwm_state.duty_cycle's
+> > datatype to u64, prepare for this transition by using DIV_ROUND_UP_ULL
+> > to handle a 64-bit dividend.
+> >
+> > To: Jani Nikula <jani.nikula@linux.intel.com>
+> > Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+> > Cc: David Airlie <airlied@linux.ie>
+> > Cc: Daniel Vetter <daniel@ffwll.ch>
+> > Cc: Chris Wilson <chris@chris-wilson.co.uk>
+> > Cc: "Ville Syrjälä" <ville.syrjala@linux.intel.com>
+> > Cc: intel-gfx@lists.freedesktop.org
+> > Cc: dri-devel@lists.freedesktop.org
+> >
 > 
-> > > Here's v4 set of n_gsm serdev support patches, and the related protocol
-> > > driver for the modem found on Motorola Mapphone phones and tablets
-> > > like droid4.
-> > > 
-> > > This series only adds basic character device support for the serdev
-> > > driver. Other serdev consumer drivers for specific devices will be
-> > > posted separately.
-> > 
-> > I'm still missing an architectural (design) overview here -- reviewer
-> > time is a scarce resource.
-> > 
-> > I also suggested earlier that you include, at least as an RFC, one or
-> > more of your child-device drivers so that we can see how this ends up
-> > being used in the end (including an example devicetree).
+> Superfluous blank line.
+
+Will remove.
+
 > 
-> Note that this is useful on its own: we have ofonod running on the top
-> of this doing calls and SMSes.
+> Anyway, please preserve the existing acks and reviews [1] so people
+> don't have to do it again.
+> 
+> BR,
+> Jani.
+> 
+> [1] http://lore.kernel.org/r/87h7yleb0i.fsf@intel.com
 
-Yup.
+I dropped your Acked-by as the patch had to changed to resolve a merge
+conflict when I rebased to tip. Could you please re-review this patch?
 
-> Tony: I know you have drivers depending on this somewhere (audio
-> routing and GPS), but I can't find them. It is not droid4-pending-v5.6
-> AFAICT. Do you have a pointer / could you publish them somewhere?
+Thank you.
 
-Hmm they should be there in droid4-pending-v5.6 branch [0]:
-
-$ git log --abbrev=12 --pretty=format:"%h (\"%s\")" \
-	v5.6..droid4-pending-v5.6 | grep -i -e gsm -e mot -e mdm
-e09590a260a4 ("mfd: motmdm: Fix oops on unload of motorola-mdm")
-f9252f9ff6bd ("mfd: motmdm: Revert bad list change")
-d733dcaf4416 ("mfd: motmdm: Fix issue with receiving data before ddata is set")
-452d2b5d4c95 ("n_gsm: Build fixes for make randconfig build")
-6882b27ea92a ("phy: mapphone-mdm6600: Fix write timeouts with shorter GPIO toggle interval")
-58ff58c4b520 ("mfd: motmdm: Add basic DTMF support")
-e92b6f30e5ae ("ASoC: audio-graph-card: Add audio mixer for motorold mdm6600")
-c2caea5767d5 ("gnss: mot-mdm6600: Add support for Motorola Mapphone MDM6600 modem")
-a5f73b7b06f6 ("mfd: motmdm: Add Motorola TS 27.010 serdev driver for devices like droid4")
-6c311d5aeb0a ("dt-bindings: mfd: motmdm: Add binding for motorola-mdm")
-cd02274b920e ("tty: n_gsm: Add support for serdev drivers")
-a73a48321c98 ("phy: mapphone-mdm6600: Fix timeouts by adding wake-up handling")
-
-Regards,
-
-Tony
-
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git/log/?h=droid4-pending-v5.6
+Guru Das.
