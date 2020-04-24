@@ -2,110 +2,182 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB60C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A644C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF9120736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7512420736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:07:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QRKaD2CJ"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="YoW0VXww";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Hpf986Sz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729268AbgDXTGh (ORCPT
+        id S1729280AbgDXTHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 15:06:37 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:23293 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727022AbgDXTGh (ORCPT
+        Fri, 24 Apr 2020 15:07:20 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:44712 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727022AbgDXTHT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 15:06:37 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587755196; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
- To: From: Reply-To: Sender;
- bh=Y0Xh9YwcFuchacYRPmOt5mmHgQmhT+OyA1r+OZ9piB0=; b=QRKaD2CJGHgqPpFlWiiZ5fd2krVfg9T8KE1fMlTclEVmZxykQP0wCRngqtap6ygi7c9e4i+c
- WDk6mRgfFCtGogvHYPp2aOIswrAZoa22Q5hCdBOUQBpSB6UovzCrQl8L1g6X1vBsgv3z4nhj
- +tXA+0kt2pYkZ3t0QjTD1mDxpJ8=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea338af.7fe1991a80a0-smtp-out-n01;
- Fri, 24 Apr 2020 19:06:23 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9D18CC433D2; Fri, 24 Apr 2020 19:06:23 +0000 (UTC)
-Received: from BCAIN (104-54-226-75.lightspeed.austtx.sbcglobal.net [104.54.226.75])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bcain)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E8CE7C433CB;
-        Fri, 24 Apr 2020 19:06:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E8CE7C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bcain@codeaurora.org
-Reply-To: <bcain@codeaurora.org>
-From:   "Brian Cain" <bcain@codeaurora.org>
-To:     "'Masahiro Yamada'" <masahiroy@kernel.org>,
-        <linux-hexagon@vger.kernel.org>
-Cc:     <linux-kernel@vger.kernel.org>
-References: <20200424161502.656103-1-masahiroy@kernel.org>
-In-Reply-To: <20200424161502.656103-1-masahiroy@kernel.org>
-Subject: RE: [PATCH] hexagon: suppress error message for 'make clean'
-Date:   Fri, 24 Apr 2020 14:06:21 -0500
-Message-ID: <009101d61a6b$71f93a70$55ebaf50$@codeaurora.org>
+        Fri, 24 Apr 2020 15:07:19 -0400
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03OJ3ec4026642;
+        Fri, 24 Apr 2020 12:06:58 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=hM/GrYLnqKmMzBHmP7BfjUaoL2dAdHwpFmp9GcTdpKg=;
+ b=YoW0VXwwvyIny6pKKv9c1GPWwV/luiWDCDz/7DSidKflBPj7dOWwEmJtbNdpCrmv3jKW
+ Pf77jfqa+fpLZL/KtwjrL27PdhNOsIDXFTf0MBoy7Y8rVnZcWTvZcii+XMWTVCSLjFQh
+ jpVrZQSncVPpkbDRuKQ6EwR5b9DAirtSHAI= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 30kknkxgp4-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 24 Apr 2020 12:06:57 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Fri, 24 Apr 2020 12:06:54 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VIRClPYVvElwaX0TqgXPwqcXSJTDqRyayRHhe9WfeC6pOq/VW8zEydasZhEw9XXFqjMH5b9mw62gaq5TPTorBpyhS4cGpP75umh+Oo2LHrWq9dslmp1S5CZFDnljHpGP26CGrEYKycJtWY+nVTHX3OxkvcuG/5gr9jq7IT129OfbJoUqdYy6PTfwpyDFdh54u6qRkyTvEQHoEb/pfhjZGUBStyjZgwUZUJWMlUUZfCN/bnpR7cw+nSxe3ME3y2+nSYC8hSj1T9viiuriYjL5uHjUofRjGfKZwV4Pp/wSj7QIgsj74gVNwGtCdLEjdnKEsOE8wXIN7wO/+yTo+KVhRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hM/GrYLnqKmMzBHmP7BfjUaoL2dAdHwpFmp9GcTdpKg=;
+ b=hP5TgoPtB1afinpU4yjb06/O8CzbZHtObwf0uLKr0rrz3w2Y8Nzlnaxr/2SwqVpNOU9XWnzhZqVpx8WICa57OO5NoOvMpV3gZr5RRvUwNCat/O68MrZ4Agln1QleQbb1FaRypGh8/2OE+dA+3BtXX10CdvEqkQGWuPGp0nQiBl/xchjbN6ZeSqLZQ1cvs6Qn7cEomiIc3JNlBBPMLthyniF5fZh3XSS8OTPs3gX/xqeJI7pfVhSHhSSlAEH0EIiOWxWq4SOluB/JG599/bhtvWBaC2wiCngy4PLjMWiwFVD8x0x1zYSDE8yRbftNjwotUAhnqdd5lXCnESsLoWMq4g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hM/GrYLnqKmMzBHmP7BfjUaoL2dAdHwpFmp9GcTdpKg=;
+ b=Hpf986SzpRAxcXLpZ9r3Q4GmLwIkyYho0tIkR2UogIImrgSFbwmHSsDXVIxPd5QzHK3+TPFSZXdaYi4DKTWjoGJRSXVf+j0hZNycN22igo8xX9dBidiRY640UG6ytZNiraT/boxiopUlm5eENfRb/1xVm3oOEfFmjgl+bjP3rko=
+Received: from BYAPR15MB4119.namprd15.prod.outlook.com (2603:10b6:a02:cd::20)
+ by BYAPR15MB2646.namprd15.prod.outlook.com (2603:10b6:a03:155::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.27; Fri, 24 Apr
+ 2020 19:06:53 +0000
+Received: from BYAPR15MB4119.namprd15.prod.outlook.com
+ ([fe80::90d6:ec75:fde:e992]) by BYAPR15MB4119.namprd15.prod.outlook.com
+ ([fe80::90d6:ec75:fde:e992%7]) with mapi id 15.20.2921.030; Fri, 24 Apr 2020
+ 19:06:53 +0000
+Date:   Fri, 24 Apr 2020 12:06:50 -0700
+From:   Andrey Ignatov <rdna@fb.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-fsdevel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <bpf@vger.kernel.org>
+Subject: Re: [PATCH 5/5] sysctl: pass kernel pointers to ->proc_handler
+Message-ID: <20200424190650.GA72647@rdna-mbp.dhcp.thefacebook.com>
+References: <20200424064338.538313-1-hch@lst.de>
+ <20200424064338.538313-6-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200424064338.538313-6-hch@lst.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-ClientProxiedBy: MWHPR12CA0059.namprd12.prod.outlook.com
+ (2603:10b6:300:103::21) To BYAPR15MB4119.namprd15.prod.outlook.com
+ (2603:10b6:a02:cd::20)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-us
-Thread-Index: AQKG+ktipLZoGTdJhMlkCcPdnKK3f6cm4gQw
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost (2620:10d:c090:400::5:f8d0) by MWHPR12CA0059.namprd12.prod.outlook.com (2603:10b6:300:103::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Fri, 24 Apr 2020 19:06:52 +0000
+X-Originating-IP: [2620:10d:c090:400::5:f8d0]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6370f825-e3ee-4832-c815-08d7e882a65d
+X-MS-TrafficTypeDiagnostic: BYAPR15MB2646:
+X-Microsoft-Antispam-PRVS: <BYAPR15MB264688E3CFBA32A1C0EB36C9A8D00@BYAPR15MB2646.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:639;
+X-Forefront-PRVS: 03838E948C
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4119.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(376002)(366004)(136003)(346002)(39860400002)(396003)(9686003)(66556008)(186003)(5660300002)(16526019)(54906003)(478600001)(7416002)(52116002)(6496006)(316002)(6486002)(66946007)(66476007)(86362001)(8936002)(81156014)(33656002)(2906002)(6916009)(1076003)(8676002)(4326008);DIR:OUT;SFP:1102;
+Received-SPF: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: eNaGqUW6wSd4bBK1v86xk6mZCTRwc50jcBjq/tkNyMtygZSTtQE9d4AYHmafq+og7DtEg31A7TsKBERa871xT1IlOx4SKdcNKbE+dXWGUUyJUUAsMfzzASuU2cvotVcf3bycf3byM8zHCa5pAQU3SwM5YFPnl9VJoJVAqM5L+yc1SK8Hrp6VfYW+V8QpU5Ncs3qYKENXs9wfM4aSkBoKwa637zgwaeZWanejKCGWI7Tsq+YCkOzb+4yizIbEGA8a5RK6ez0zWfE3h5Re8+vukOjGKy3qXq9Hp98DzlGyu95YG4eIZZAS8j8NK1Asnx5Gky/61q8jMA2wy1n60EOwjt9tvICDYYwpdatHxXDadkVuf+DDX7xL5i9gntT1Dj9WXQYyf+GyBk+5xwwEjwPoloWfJhFnW/W9+6FLfks/NIMuovf0iyo3Vc6QUp7+lpew
+X-MS-Exchange-AntiSpam-MessageData: VEbm7jeTzG09fd1BaC+airxTE26QraJYUEe/Ot9gLYkU9qtJyaFqgT/lcN78FHmXoMQzzduUqFoHr+fHtGg3Fa/a7ZjKzvkEjq1CsJUTmwKLppY3pehwpevWrPXbXc+qSxxmCRy0+g+jVxM7AaukoYiMOERY7BMsbwC0sDh+Zj3nj9LOqT4x5w0UjUXM2WO5
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6370f825-e3ee-4832-c815-08d7e882a65d
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2020 19:06:53.3219
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: o8laA+gNu2MlHLKV//wJ1THIf/h4mDwarLihJBfieHtW9btJzFXmWYrKRW7m51ti
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2646
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-24_11:2020-04-24,2020-04-24 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ lowpriorityscore=0 phishscore=0 suspectscore=0 adultscore=0 bulkscore=0
+ mlxlogscore=999 impostorscore=0 malwarescore=0 clxscore=1015 mlxscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004240144
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: linux-hexagon-owner@vger.kernel.org <linux-hexagon-
-> owner@vger.kernel.org> On Behalf Of Masahiro Yamada
+Christoph Hellwig <hch@lst.de> [Thu, 2020-04-23 23:44 -0700]:
+> Instead of having all the sysctl handlers deal with user pointers, which
+> is rather hairy in terms of the BPF interaction, copy the input to and
+> from  userspace in common code.  This also means that the strings are
+> always NUL-terminated by the common code, making the API a little bit
+> safer.
+> 
+> As most handler just pass through the data to one of the common handlers
+> a lot of the changes are mechnical.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Acked-by: Andrey Ignatov <rdna@fb.com>
+
 ...
-> 'make ARCH=hexagon clean' emits an error message as follows:
-> 
->   $ make ARCH=hexagon clean
->   gcc: error: unrecognized command line option '-G0'
-> 
-> You can suppress it by setting the correct CROSS_COMPILE=, but we should
-> not require any compiler for cleaning.
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
+> @@ -72,33 +70,21 @@ extern unsigned int sysctl_sched_autogroup_enabled;
+>  extern int sysctl_sched_rr_timeslice;
+>  extern int sched_rr_timeslice;
+>  
+> -extern int sched_rr_handler(struct ctl_table *table, int write,
+> -		void __user *buffer, size_t *lenp,
+> -		loff_t *ppos);
+> -
+> -extern int sched_rt_handler(struct ctl_table *table, int write,
+> -		void __user *buffer, size_t *lenp,
+> -		loff_t *ppos);
+> -
+> -#ifdef CONFIG_UCLAMP_TASK
 
-Acked-by: Brian Cain <bcain@codeaurora.org>
+Decided to skim through the patch one last time to double-check the fix
+from previous iteration and found that this ifdef got lost below.
 
+> -extern int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
+> -				       void __user *buffer, size_t *lenp,
+> -				       loff_t *ppos);
+> -#endif
+> -
+> -extern int sysctl_numa_balancing(struct ctl_table *table, int write,
+> -				 void __user *buffer, size_t *lenp,
+> -				 loff_t *ppos);
+> -
+> -extern int sysctl_schedstats(struct ctl_table *table, int write,
+> -				 void __user *buffer, size_t *lenp,
+> -				 loff_t *ppos);
+> +int sched_rr_handler(struct ctl_table *table, int write, void *buffer,
+> +		size_t *lenp, loff_t *ppos);
+> +int sched_rt_handler(struct ctl_table *table, int write, void *buffer,
+> +		size_t *lenp, loff_t *ppos);
+> +int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
+> +		void *buffer, size_t *lenp, loff_t *ppos);
 
-> ---
-> 
->  arch/hexagon/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/hexagon/Makefile b/arch/hexagon/Makefile index
-> 4c5858b80f0e..c168c6980d05 100644
-> --- a/arch/hexagon/Makefile
-> +++ b/arch/hexagon/Makefile
-> @@ -30,7 +30,7 @@ TIR_NAME := r19
->  KBUILD_CFLAGS += -ffixed-$(TIR_NAME) -
-> DTHREADINFO_REG=$(TIR_NAME) -D__linux__  KBUILD_AFLAGS += -
-> DTHREADINFO_REG=$(TIR_NAME)
-> 
-> -LIBGCC := $(shell $(CC) $(KBUILD_CFLAGS) -print-libgcc-file-name)
-> +LIBGCC := $(shell $(CC) $(KBUILD_CFLAGS) -print-libgcc-file-name
-> +2>/dev/null)
->  libs-y += $(LIBGCC)
-> 
->  head-y := arch/hexagon/kernel/head.o
-> --
-> 2.25.1
+Here ^^
 
+-- 
+Andrey Ignatov
