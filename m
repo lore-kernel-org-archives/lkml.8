@@ -2,59 +2,97 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76940C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 21:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DDB5C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 21:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AAE22168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 21:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64CCC216FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 21:48:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587764914;
+	bh=/Flh79nNPN9TxKaLGme5W4hkOaqTdEn8R2DTFhqf+zo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=emlF7fOifbriynviYaSCfc/Pi8Fb/7hGXySHIzV7zyz5/filBvnt5cXnyh9NyQy+Q
+	 0crUSRGqsjayO/CT457QX4ME8M1Wlwm6bED69TPG7i3O/Pm0x0EDfL9t6lUFYCgV7t
+	 FjnamcH33OPcBtu/zG3NmrveXWuwQQzrivoBr9tA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726102AbgDXVqR (ORCPT
+        id S1726110AbgDXVsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 17:46:17 -0400
-Received: from elvis.franken.de ([193.175.24.41]:53504 "EHLO elvis.franken.de"
+        Fri, 24 Apr 2020 17:48:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726027AbgDXVqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 17:46:17 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jS69H-0007ly-00; Fri, 24 Apr 2020 23:46:15 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 557ACC02EB; Fri, 24 Apr 2020 23:36:23 +0200 (CEST)
-Date:   Fri, 24 Apr 2020 23:36:23 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MIPS: Clear XContext at boot time
-Message-ID: <20200424213623.GA23556@alpha.franken.de>
-References: <20200422144535.1253459-1-jiaxun.yang@flygoat.com>
+        id S1725874AbgDXVsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 17:48:33 -0400
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EFDB216FD;
+        Fri, 24 Apr 2020 21:48:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587764912;
+        bh=/Flh79nNPN9TxKaLGme5W4hkOaqTdEn8R2DTFhqf+zo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=e/0CtyihQizoahvum6szmpYpGJtmSQIFkuXvdTrSS670sqIcGAmPFlZBa13+XObeU
+         t5XXxRvntjTYQnV2UTSrjXNUlYkGaQ1cnNGt9Cr7bqpXwix+wHJlIRYot/ECRCOqtp
+         0oEGg5rsaQFqjTsESmkfFNteBnTm/ShZI2vJHdB4=
+Received: by mail-qt1-f170.google.com with SMTP id h26so8960045qtu.8;
+        Fri, 24 Apr 2020 14:48:32 -0700 (PDT)
+X-Gm-Message-State: AGi0PuamCWNZ0OxHIbF2rkeNIiu4ALWzz2B36LTvP5BHK2IqJ0Qr2krF
+        7btCxDWLJZz7yT3wSq1OMux++ZzAdHDQKc+KJQ==
+X-Google-Smtp-Source: APiQypL4JJo4fnsihFTOStqlmUkReE8AtASTbdGhFb4Wqybx4fc8PwdXXMT6vIbr014VWfZHaMQ0/yzYClt+9x0QYf8=
+X-Received: by 2002:ac8:7cba:: with SMTP id z26mr11972735qtv.143.1587764911775;
+ Fri, 24 Apr 2020 14:48:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422144535.1253459-1-jiaxun.yang@flygoat.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20200422201216.10593-1-ansuelsmth@gmail.com> <20200422201216.10593-2-ansuelsmth@gmail.com>
+In-Reply-To: <20200422201216.10593-2-ansuelsmth@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 24 Apr 2020 16:48:19 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLUbM7ed2q7so4Uibiz2URRg1juoGRExy9Ta3J-LWAFow@mail.gmail.com>
+Message-ID: <CAL_JsqLUbM7ed2q7so4Uibiz2URRg1juoGRExy9Ta3J-LWAFow@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: opp: Fix wrong binding in qcom-nvmem-cpufreq
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Viresh Kumar <vireshk@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ilia Lin <ilia.lin@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sricharan R <sricharan@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 10:45:34PM +0800, Jiaxun Yang wrote:
-> XContext might be dirty at boot time. We need to clear it
-> to ensure early stackframe is safe.
-> 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+On Wed, Apr 22, 2020 at 3:12 PM Ansuel Smith <ansuelsmth@gmail.com> wrote:
+>
+> Update binding to new generic name "operating-points-v2-qcom-cpu"
+>
+> Fixes: a8811ec764f9 ("cpufreq: qcom: Add support for krait based socs")
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
 > ---
->  arch/mips/kernel/head.S | 3 +++
->  1 file changed, 3 insertions(+)
-> 
+>  Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
+> index 64f07417ecfb..537e1774f589 100644
+> --- a/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
+> +++ b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
+> @@ -19,7 +19,7 @@ In 'cpu' nodes:
+>
+>  In 'operating-points-v2' table:
+>  - compatible: Should be
+> -       - 'operating-points-v2-kryo-cpu' for apq8096, msm8996, msm8974,
+> +       - 'operating-points-v2-qcom-cpu' for apq8096, msm8996, msm8974,
+>                                              apq8064, ipq8064, msm8960 and ipq8074.
 
-applied to mips-next.
+This is not how you fix the backwards compatibility issue pointed out
+on the Fixes reference.
 
-Thomas.
-
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+Rob
