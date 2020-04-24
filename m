@@ -2,229 +2,70 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5559C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F9DC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A918120776
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:46:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="FGM0coSe"
+	by mail.kernel.org (Postfix) with ESMTP id 4D75F20728
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:47:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728173AbgDXNqN (ORCPT
+        id S1728026AbgDXNrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 09:46:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35646 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727083AbgDXNqN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 09:46:13 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55FF4C09B045
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 06:46:12 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id y4so10003163ljn.7
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 06:46:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=oK6CmIJHBHfv0HWo7YgYzceYBh86WgxIMM3aYNj+VtQ=;
-        b=FGM0coSe2uA5sqGO3457F/ihOg+whBn2NcHGxD/ud+9LhUkq4c0kHyOuO9/V2jLkyO
-         oeiN8mN6X7Dm83p3qnYNJQww602eaSpvY5sUV8PUjhSdgUQZ40Uw/OW6/XSQU3dyme4y
-         qMpFqMCNV24mV4smwQOwCRu2JCoj84iJLVBreJT3BEHLYygZUv6jGfWMYrxbEEcANiXq
-         0jdtPrHpi8VrXL1lnclMDVw5VSJhpDosNuILro1fBQqdkTsExY4Ub5IMwtRq/VAPFqA3
-         DLIGaVWvHusyzYA97iOHZuYBx03kuKWaMhHM6O6meDFTi/BDJc871E5FdDNT+reHI7h7
-         cUzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=oK6CmIJHBHfv0HWo7YgYzceYBh86WgxIMM3aYNj+VtQ=;
-        b=chVDd5v9HOO5ndM+xGAL7oPVYqK4IxwTcDoSvdsvDJcmIjOCmMHLS5juz7RQEL6XZG
-         krMHeMa5v6ne7TQLQ/cmGr/oHERKaTTofPyc1JZIikUHxeE5FAGtVNxBQsz5yy37uA0r
-         2TXt8LpQQ8HdkIg6r2NxNQQnw5Bsze+Bqxoi3I1dRsyQhbn/oHNVPJ5qkBso3kHW1rjU
-         FYQ5+pidSHVRgJgVp20pnsqWo1Ch6QjoQEULVOzoHWJkCIju4rba08Mwvb625BTVmdBc
-         jMOcEUDroZYxZslcMIOSV3PFOcI5aZWYa/DLb2dlNWBMYidgZoBmRivan7WM2YVQSg5A
-         WMKQ==
-X-Gm-Message-State: AGi0Pua8xTCCKh/hYx5iAiPSyepvAuyP02dLLpO8RZlokpj1SubZWgZ/
-        eHMZU7HMXtubEQaWG953ExXj6w==
-X-Google-Smtp-Source: APiQypJ2JlXPRC2HDUqFteHa9WDe5UBL/Ds/AInQim0iWDH7dzhdZesOkFgfADD4cjMazeUcn52u+w==
-X-Received: by 2002:a2e:8798:: with SMTP id n24mr5829194lji.200.1587735970781;
-        Fri, 24 Apr 2020 06:46:10 -0700 (PDT)
-Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
-        by smtp.gmail.com with ESMTPSA id m20sm4335105ljj.94.2020.04.24.06.46.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 06:46:10 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 15:46:09 +0200
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Helen Koike <helen.koike@collabora.com>
-Cc:     linux-media@vger.kernel.org, kernel@collabora.com,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        hans.verkuil@cisco.com, skhan@linuxfoundation.org,
-        mchehab@kernel.org
-Subject: Re: [PATCH v3 1/4] media: mc-entity.c: add
- media_graph_walk_next_stream()
-Message-ID: <20200424134609.GD4040416@oden.dyn.berto.se>
-References: <20200415013044.1778572-1-helen.koike@collabora.com>
- <20200415013044.1778572-2-helen.koike@collabora.com>
+        Fri, 24 Apr 2020 09:47:14 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3288 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726895AbgDXNrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 09:47:14 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 368F1BF29C90C2F48167;
+        Fri, 24 Apr 2020 21:47:05 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 24 Apr 2020 21:46:57 +0800
+From:   Zou Wei <zou_wei@huawei.com>
+To:     <tariqt@mellanox.com>
+CC:     <netdev@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Zou Wei <zou_wei@huawei.com>
+Subject: [PATCH -next] net/mlx4_core: Add missing iounmap() in error path
+Date:   Fri, 24 Apr 2020 21:53:14 +0800
+Message-ID: <1587736394-111502-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: git-send-email 2.6.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200415013044.1778572-2-helen.koike@collabora.com>
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Helen,
+This fixes the following coccicheck warning:
 
-Thanks for your work.
+drivers/net/ethernet/mellanox/mlx4/crdump.c:200:2-8: ERROR: missing iounmap;
+ioremap on line 190 and execution via conditional on line 198
 
-On 2020-04-14 22:30:41 -0300, Helen Koike wrote:
-> Add media_graph_walk_next_stream() function to follow links only from
-> sink to source (not the opposite) to allow iteration only through the
-> entities participating in a given stream.
-> 
-> This is useful to allow calling .s_stream() callback only in the
-> subdevices that requires to be enabled/disabled, and avoid calling this
-> callback when not required.
-> 
-> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> 
-> ---
-> 
-> Changes in v3:
-> - Patch re-added in the series from version 1
-> 
-> Changes in v2: None
-> 
->  drivers/media/mc/mc-entity.c | 34 +++++++++++++++++++++++++++++++---
->  include/media/media-entity.h | 15 +++++++++++++++
->  2 files changed, 46 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/media/mc/mc-entity.c b/drivers/media/mc/mc-entity.c
-> index 211279c5fd77d..0d44c2de23e6f 100644
-> --- a/drivers/media/mc/mc-entity.c
-> +++ b/drivers/media/mc/mc-entity.c
-> @@ -228,6 +228,11 @@ EXPORT_SYMBOL_GPL(media_entity_pads_init);
->   * Graph traversal
->   */
->  
-> +enum media_graph_walk_type {
-> +	MEDIA_GRAPH_WALK_CONNECTED_NODES,
-> +	MEDIA_GRAPH_WALK_STREAM_NODES,
-> +};
-> +
->  static struct media_entity *
->  media_entity_other(struct media_entity *entity, struct media_link *link)
->  {
-> @@ -305,7 +310,8 @@ void media_graph_walk_start(struct media_graph *graph,
->  }
->  EXPORT_SYMBOL_GPL(media_graph_walk_start);
->  
-> -static void media_graph_walk_iter(struct media_graph *graph)
-> +static void media_graph_walk_iter(struct media_graph *graph,
-> +				  enum media_graph_walk_type type)
->  {
->  	struct media_entity *entity = stack_top(graph);
->  	struct media_link *link;
-> @@ -326,6 +332,15 @@ static void media_graph_walk_iter(struct media_graph *graph)
->  	/* Get the entity in the other end of the link . */
->  	next = media_entity_other(entity, link);
->  
-> +	if (type == MEDIA_GRAPH_WALK_STREAM_NODES
-> +	    && next == link->sink->entity) {
-> +		link_top(graph) = link_top(graph)->next;
-> +		dev_dbg(entity->graph_obj.mdev->dev,
-> +			"walk: skipping '%s' (outside of the stream path)\n",
-> +			link->sink->entity->name);
-> +		return;
-> +	}
-> +
->  	/* Has the entity already been visited? */
->  	if (media_entity_enum_test_and_set(&graph->ent_enum, next)) {
->  		link_top(graph) = link_top(graph)->next;
-> @@ -342,7 +357,9 @@ static void media_graph_walk_iter(struct media_graph *graph)
->  		next->name);
->  }
->  
-> -struct media_entity *media_graph_walk_next(struct media_graph *graph)
-> +static struct media_entity *
-> +__media_graph_walk_next(struct media_graph *graph,
-> +			enum media_graph_walk_type type)
->  {
->  	struct media_entity *entity;
->  
-> @@ -355,7 +372,7 @@ struct media_entity *media_graph_walk_next(struct media_graph *graph)
->  	 * found.
->  	 */
->  	while (link_top(graph) != &stack_top(graph)->links)
-> -		media_graph_walk_iter(graph);
-> +		media_graph_walk_iter(graph, type);
->  
->  	entity = stack_pop(graph);
->  	dev_dbg(entity->graph_obj.mdev->dev,
-> @@ -363,8 +380,19 @@ struct media_entity *media_graph_walk_next(struct media_graph *graph)
->  
->  	return entity;
->  }
-> +
-> +struct media_entity *media_graph_walk_next(struct media_graph *graph)
-> +{
-> +	return __media_graph_walk_next(graph, MEDIA_GRAPH_WALK_CONNECTED_NODES);
-> +}
->  EXPORT_SYMBOL_GPL(media_graph_walk_next);
->  
-> +struct media_entity *media_graph_walk_next_stream(struct media_graph *graph)
-> +{
-> +	return __media_graph_walk_next(graph,  MEDIA_GRAPH_WALK_STREAM_NODES);
+Fixes: 7ef19d3b1d5e ("devlink: report error once U32_MAX snapshot ids have been used")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zou Wei <zou_wei@huawei.com>
+---
+ drivers/net/ethernet/mellanox/mlx4/crdump.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-One space to much after the ','. With this fixed,
-
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-
-> +}
-> +EXPORT_SYMBOL_GPL(media_graph_walk_next_stream);
-> +
->  int media_entity_get_fwnode_pad(struct media_entity *entity,
->  				struct fwnode_handle *fwnode,
->  				unsigned long direction_flags)
-> diff --git a/include/media/media-entity.h b/include/media/media-entity.h
-> index 8cb2c504a05c7..f17a5180ce524 100644
-> --- a/include/media/media-entity.h
-> +++ b/include/media/media-entity.h
-> @@ -927,6 +927,21 @@ void media_graph_walk_start(struct media_graph *graph,
->   */
->  struct media_entity *media_graph_walk_next(struct media_graph *graph);
->  
-> +/**
-> + * media_graph_walk_next_stream - Get the next entity in the graph
-> + * @graph: Media graph structure
-> + *
-> + * Perform a depth-first traversal of the given media entities graph only
-> + * following links from sink to source (and not the opposite).
-> + *
-> + * The graph structure must have been previously initialized with a call to
-> + * media_graph_walk_start().
-> + *
-> + * Return: returns the next entity in the graph in the stream path
-> + * or %NULL if the whole stream path have been traversed.
-> + */
-> +struct media_entity *media_graph_walk_next_stream(struct media_graph *graph);
-> +
->  /**
->   * media_pipeline_start - Mark a pipeline as streaming
->   * @entity: Starting entity
-> -- 
-> 2.26.0
-> 
-
+diff --git a/drivers/net/ethernet/mellanox/mlx4/crdump.c b/drivers/net/ethernet/mellanox/mlx4/crdump.c
+index 73eae80e..ac5468b 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/crdump.c
++++ b/drivers/net/ethernet/mellanox/mlx4/crdump.c
+@@ -197,6 +197,7 @@ int mlx4_crdump_collect(struct mlx4_dev *dev)
+ 	err = devlink_region_snapshot_id_get(devlink, &id);
+ 	if (err) {
+ 		mlx4_err(dev, "crdump: devlink get snapshot id err %d\n", err);
++		iounmap(cr_space);
+ 		return err;
+ 	}
+ 
 -- 
-Regards,
-Niklas Söderlund
+2.6.2
+
