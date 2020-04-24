@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 610A8C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9409C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34ABE20776
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2BEF20767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:26:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587731204;
-	bh=TygesCzghEkRvZdNuf5/krX4BSlw8CWFiMSdm0suEcM=;
+	s=default; t=1587731207;
+	bh=bNANKviVquGroUDmFUbv1Ylh8FSezjVIPwlM6upjf6M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o7dkjGt4Wlclind9ClQ3O2Qqxd6KQyR+aZBhvyOREJk1UlWlwl8XIiSJLEWfOJ0GJ
-	 MBxcc4+kMap/fHd/XnYT3WSB5wDyOMfq4bp9nbm9Ky0S5lY7skw9O5HHV4lTsTLtle
-	 CB5/OfsbjLKt9S3rdPQ+tuuVk6CBKI/WobuDYw2M=
+	b=ZPDmYAfCPWkwOPvcumpecz30eJJdd2+VZXRwJT/E0MKTOM5inNDXEqBMn66mUwa+j
+	 +xm4KFddhcESK+KY7sX1N50VycCiyJE0Jg6XIOCTNagBTMRj8kafA1yah3GwlEEqdJ
+	 PhpAAZ9RlShYrekbip4oAli0Z7Cctk66PCyrMlAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbgDXMYu (ORCPT
+        id S1728771AbgDXM0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:24:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55586 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:26:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728518AbgDXMYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:24:43 -0400
+        id S1728556AbgDXMYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:24:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8627520776;
-        Fri, 24 Apr 2020 12:24:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28C5621775;
+        Fri, 24 Apr 2020 12:24:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587731083;
-        bh=TygesCzghEkRvZdNuf5/krX4BSlw8CWFiMSdm0suEcM=;
+        s=default; t=1587731089;
+        bh=bNANKviVquGroUDmFUbv1Ylh8FSezjVIPwlM6upjf6M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YMX0VN2MPQ4HkKIZyQdvJxPGDRST80BYrmBomSW5n4tnnvDLcZe6w5NaG+8Nh/d8n
-         wcOL+jSqGZHqDcr6tcmj7m29Y8M3oztAQMEo1VBGG6NpBnGbOVsg4hZ11HACOwNjgq
-         +UHNTX3w/L+KJlfnk0c9sUh2/WvpATbDwM80oETo=
+        b=KgoBncAnyjsxVQqNoW1r2AUU9g7tqAiv7dxhY746W2MiGC2Z0sIuXNHYTYAZuM2ew
+         qYVFaHHdbQwjNUas0a1xEnhOXcuSb9PF8HRtBH3XAwoobZKkGa+ai+Ln+ATSatIjzT
+         gVUKVrL/AN9XCiQ44MuOGZBuJqtworFRZck5vgGU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zenghui Yu <yuzenghui@huawei.com>, Marc Zyngier <maz@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 19/21] irqchip/mbigen: Free msi_desc on device teardown
-Date:   Fri, 24 Apr 2020 08:24:17 -0400
-Message-Id: <20200424122419.10648-19-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.9 02/13] ALSA: hda: Don't release card at firmware loading error
+Date:   Fri, 24 Apr 2020 08:24:35 -0400
+Message-Id: <20200424122447.10882-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200424122419.10648-1-sashal@kernel.org>
-References: <20200424122419.10648-1-sashal@kernel.org>
+In-Reply-To: <20200424122447.10882-1-sashal@kernel.org>
+References: <20200424122447.10882-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,45 +58,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zenghui Yu <yuzenghui@huawei.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit edfc23f6f9fdbd7825d50ac1f380243cde19b679 ]
+[ Upstream commit 25faa4bd37c10f19e4b848b9032a17a3d44c6f09 ]
 
-Using irq_domain_free_irqs_common() on the irqdomain free path will
-leave the MSI descriptor unfreed when platform devices get removed.
-Properly free it by MSI domain free function.
+At the error path of the firmware loading error, the driver tries to
+release the card object and set NULL to drvdata.  This may be referred
+badly at the possible PM action, as the driver itself is still bound
+and the PM callbacks read the card object.
 
-Fixes: 9650c60ebfec0 ("irqchip/mbigen: Create irq domain for each mbigen device")
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200408114352.1604-1-yuzenghui@huawei.com
+Instead, we continue the probing as if it were no option set.  This is
+often a better choice than the forced abort, too.
+
+Fixes: 5cb543dba986 ("ALSA: hda - Deferred probing with request_firmware_nowait()")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207043
+Link: https://lore.kernel.org/r/20200413082034.25166-2-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-mbigen.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ sound/pci/hda/hda_intel.c | 19 +++++--------------
+ 1 file changed, 5 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/irqchip/irq-mbigen.c b/drivers/irqchip/irq-mbigen.c
-index f7fdbf5d183b9..c98358be0bc8b 100644
---- a/drivers/irqchip/irq-mbigen.c
-+++ b/drivers/irqchip/irq-mbigen.c
-@@ -231,10 +231,16 @@ static int mbigen_irq_domain_alloc(struct irq_domain *domain,
- 	return 0;
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index 3234e9ca02cec..5a578ebca1055 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -1828,24 +1828,15 @@ static void azx_firmware_cb(const struct firmware *fw, void *context)
+ {
+ 	struct snd_card *card = context;
+ 	struct azx *chip = card->private_data;
+-	struct pci_dev *pci = chip->pci;
+-
+-	if (!fw) {
+-		dev_err(card->dev, "Cannot load firmware, aborting\n");
+-		goto error;
+-	}
+ 
+-	chip->fw = fw;
++	if (fw)
++		chip->fw = fw;
++	else
++		dev_err(card->dev, "Cannot load firmware, continue without patching\n");
+ 	if (!chip->disabled) {
+ 		/* continue probing */
+-		if (azx_probe_continue(chip))
+-			goto error;
++		azx_probe_continue(chip);
+ 	}
+-	return; /* OK */
+-
+- error:
+-	snd_card_free(card);
+-	pci_set_drvdata(pci, NULL);
  }
+ #endif
  
-+static void mbigen_irq_domain_free(struct irq_domain *domain, unsigned int virq,
-+				   unsigned int nr_irqs)
-+{
-+	platform_msi_domain_free(domain, virq, nr_irqs);
-+}
-+
- static const struct irq_domain_ops mbigen_domain_ops = {
- 	.translate	= mbigen_domain_translate,
- 	.alloc		= mbigen_irq_domain_alloc,
--	.free		= irq_domain_free_irqs_common,
-+	.free		= mbigen_irq_domain_free,
- };
- 
- static int mbigen_of_create_domain(struct platform_device *pdev,
 -- 
 2.20.1
 
