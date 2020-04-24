@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90EBCC55191
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 426E3C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E81320700
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:32:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18F4420736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:32:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587731565;
-	bh=wMtdi2mSKs8GJKWAFYEXR4EYW0aiS/Rd2QRsf2QSWoI=;
+	s=default; t=1587731570;
+	bh=+IpdCvSrrMlIO5bYtEAPQGW5UebOGBJelOOYntb8ZG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wsCl2IRPETIB/ZRtaYKwHGKg4I+ZuLI97bUO/Qv4Xlip4F2rwfRdphCF5H0pjKP7T
-	 r9AJW9+IZ5vrJcAGR3Jsr3rqht9+6UVFOHqxNo2ILSWVmpnCBsCo2TszMrZpYLr2kb
-	 BzARTwvHJkgKhxo3ejGh+fVExCq97YkqcoJbmPHI=
+	b=yfDlp+4awJfJqqMULt3hnihpu56bFLAe5Lt7asJfhYw5tZ7VSnY8upI5iiU6bQwza
+	 yyUP2VedBRznTW9XmHVjVU/9qXYV1hqxE4DJjhiFPUAOxj+VtYWdNeKvVozLgKGFTA
+	 ReqX43COeojfP0xQ4YHSVev3Mq/hf/mhdpXLO6Ho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbgDXMco (ORCPT
+        id S1728598AbgDXMct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:32:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52168 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:32:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727044AbgDXMWy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:22:54 -0400
+        id S1727082AbgDXMWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:22:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9938D20767;
-        Fri, 24 Apr 2020 12:22:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5836421582;
+        Fri, 24 Apr 2020 12:22:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587730973;
-        bh=wMtdi2mSKs8GJKWAFYEXR4EYW0aiS/Rd2QRsf2QSWoI=;
+        s=default; t=1587730970;
+        bh=+IpdCvSrrMlIO5bYtEAPQGW5UebOGBJelOOYntb8ZG0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IhSGRyp/oaUG45ZW3eaWzgsjbOlib8ciaO8MslVsah2JYpDLocpgqkRZO3dtF31t/
-         KzqunRojp15/TI+f2hHy+Ed9c7bxhty7dob5KMBAdde3KzUo16OoCbbs3VJD5/hrnC
-         18cUJYlHaQDpi+phLIkM3H3S1RW+WbmbV2alvxFs=
+        b=hSWxtVEG7qZcO/I3BM6QjAfS39u/mRBWuk31DOEBQsjGlxdWXjtRZ20AIY6tO+7Ww
+         qrrQammUPbCau6q6IGrPPkGkpDUiyMh5A47y0w646IVyzE0DGAnSVRSxop8kka6vrn
+         hLchslAos0go7E8iiU9hWMdT/L18ontwLVx4YyZ8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.6 14/38] drm/amdgpu: fix wrong vram lost counter increment V2
-Date:   Fri, 24 Apr 2020 08:22:12 -0400
-Message-Id: <20200424122237.9831-14-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Roy Spliet <nouveau@spliet.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.6 11/38] ALSA: hda: Keep the controller initialization even if no codecs found
+Date:   Fri, 24 Apr 2020 08:22:09 -0400
+Message-Id: <20200424122237.9831-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200424122237.9831-1-sashal@kernel.org>
 References: <20200424122237.9831-1-sashal@kernel.org>
@@ -60,124 +58,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Quan <evan.quan@amd.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 028cfb2444b94d4f394a6fa4ca46182481236e91 ]
+[ Upstream commit 9479e75fca370a5220784f7596bf598c4dad0b9b ]
 
-Vram lost counter is wrongly increased by two during baco reset.
+Currently, when the HD-audio controller driver doesn't detect any
+codecs, it tries to abort the probe.  But this abort happens at the
+delayed probe, i.e. the primary probe call already returned success,
+hence the driver is never unbound until user does so explicitly.
+As a result, it may leave the HD-audio device in the running state
+without the runtime PM.  More badly, if the device is a HD-audio bus
+that is tied with a GPU, GPU cannot reach to the full power down and
+consumes unnecessarily much power.
 
-V2: assumed vram lost for mode1 reset on all ASICs
+This patch changes the logic after no-codec situation; it continues
+probing without the further codec initialization but keep the
+controller driver running normally.
 
-Signed-off-by: Evan Quan <evan.quan@amd.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207043
+Tested-by: Roy Spliet <nouveau@spliet.org>
+Link: https://lore.kernel.org/r/20200413082034.25166-5-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 20 ++++++++++++++++++--
- drivers/gpu/drm/amd/amdgpu/cik.c           |  2 --
- drivers/gpu/drm/amd/amdgpu/nv.c            |  4 ----
- drivers/gpu/drm/amd/amdgpu/soc15.c         |  4 ----
- drivers/gpu/drm/amd/amdgpu/vi.c            |  2 --
- 5 files changed, 18 insertions(+), 14 deletions(-)
+ sound/pci/hda/hda_intel.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-index c8bf9cb3cebf2..f184cdca938de 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@ -1953,8 +1953,24 @@ static void amdgpu_device_fill_reset_magic(struct amdgpu_device *adev)
-  */
- static bool amdgpu_device_check_vram_lost(struct amdgpu_device *adev)
- {
--	return !!memcmp(adev->gart.ptr, adev->reset_magic,
--			AMDGPU_RESET_MAGIC_NUM);
-+	if (memcmp(adev->gart.ptr, adev->reset_magic,
-+			AMDGPU_RESET_MAGIC_NUM))
-+		return true;
-+
-+	if (!adev->in_gpu_reset)
-+		return false;
-+
-+	/*
-+	 * For all ASICs with baco/mode1 reset, the VRAM is
-+	 * always assumed to be lost.
-+	 */
-+	switch (amdgpu_asic_reset_method(adev)) {
-+	case AMD_RESET_METHOD_BACO:
-+	case AMD_RESET_METHOD_MODE1:
-+		return true;
-+	default:
-+		return false;
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index 692857904d49e..aa0be85614b6c 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -2009,7 +2009,7 @@ static int azx_first_init(struct azx *chip)
+ 	/* codec detection */
+ 	if (!azx_bus(chip)->codec_mask) {
+ 		dev_err(card->dev, "no codecs found!\n");
+-		return -ENODEV;
++		/* keep running the rest for the runtime PM */
+ 	}
+ 
+ 	if (azx_acquire_irq(chip, 0) < 0)
+@@ -2303,9 +2303,11 @@ static int azx_probe_continue(struct azx *chip)
+ #endif
+ 
+ 	/* create codec instances */
+-	err = azx_probe_codecs(chip, azx_max_codecs[chip->driver_type]);
+-	if (err < 0)
+-		goto out_free;
++	if (bus->codec_mask) {
++		err = azx_probe_codecs(chip, azx_max_codecs[chip->driver_type]);
++		if (err < 0)
++			goto out_free;
 +	}
- }
  
- /**
-diff --git a/drivers/gpu/drm/amd/amdgpu/cik.c b/drivers/gpu/drm/amd/amdgpu/cik.c
-index 006f21ef7ddf0..62635e58e45ee 100644
---- a/drivers/gpu/drm/amd/amdgpu/cik.c
-+++ b/drivers/gpu/drm/amd/amdgpu/cik.c
-@@ -1358,8 +1358,6 @@ static int cik_asic_reset(struct amdgpu_device *adev)
- 	int r;
- 
- 	if (cik_asic_reset_method(adev) == AMD_RESET_METHOD_BACO) {
--		if (!adev->in_suspend)
--			amdgpu_inc_vram_lost(adev);
- 		r = amdgpu_dpm_baco_reset(adev);
- 	} else {
- 		r = cik_asic_pci_config_reset(adev);
-diff --git a/drivers/gpu/drm/amd/amdgpu/nv.c b/drivers/gpu/drm/amd/amdgpu/nv.c
-index 2d1bebdf1603d..cc3a79029376b 100644
---- a/drivers/gpu/drm/amd/amdgpu/nv.c
-+++ b/drivers/gpu/drm/amd/amdgpu/nv.c
-@@ -351,8 +351,6 @@ static int nv_asic_reset(struct amdgpu_device *adev)
- 	struct smu_context *smu = &adev->smu;
- 
- 	if (nv_asic_reset_method(adev) == AMD_RESET_METHOD_BACO) {
--		if (!adev->in_suspend)
--			amdgpu_inc_vram_lost(adev);
- 		ret = smu_baco_enter(smu);
- 		if (ret)
- 			return ret;
-@@ -360,8 +358,6 @@ static int nv_asic_reset(struct amdgpu_device *adev)
- 		if (ret)
- 			return ret;
- 	} else {
--		if (!adev->in_suspend)
--			amdgpu_inc_vram_lost(adev);
- 		ret = nv_asic_mode1_reset(adev);
+ #ifdef CONFIG_SND_HDA_PATCH_LOADER
+ 	if (chip->fw) {
+@@ -2319,7 +2321,7 @@ static int azx_probe_continue(struct azx *chip)
+ #endif
  	}
- 
-diff --git a/drivers/gpu/drm/amd/amdgpu/soc15.c b/drivers/gpu/drm/amd/amdgpu/soc15.c
-index d8945c31b622c..132a67a041a24 100644
---- a/drivers/gpu/drm/amd/amdgpu/soc15.c
-+++ b/drivers/gpu/drm/amd/amdgpu/soc15.c
-@@ -569,14 +569,10 @@ static int soc15_asic_reset(struct amdgpu_device *adev)
- 
- 	switch (soc15_asic_reset_method(adev)) {
- 		case AMD_RESET_METHOD_BACO:
--			if (!adev->in_suspend)
--				amdgpu_inc_vram_lost(adev);
- 			return soc15_asic_baco_reset(adev);
- 		case AMD_RESET_METHOD_MODE2:
- 			return amdgpu_dpm_mode2_reset(adev);
- 		default:
--			if (!adev->in_suspend)
--				amdgpu_inc_vram_lost(adev);
- 			return soc15_asic_mode1_reset(adev);
- 	}
- }
-diff --git a/drivers/gpu/drm/amd/amdgpu/vi.c b/drivers/gpu/drm/amd/amdgpu/vi.c
-index 78b35901643bc..3ce10e05d0d6b 100644
---- a/drivers/gpu/drm/amd/amdgpu/vi.c
-+++ b/drivers/gpu/drm/amd/amdgpu/vi.c
-@@ -765,8 +765,6 @@ static int vi_asic_reset(struct amdgpu_device *adev)
- 	int r;
- 
- 	if (vi_asic_reset_method(adev) == AMD_RESET_METHOD_BACO) {
--		if (!adev->in_suspend)
--			amdgpu_inc_vram_lost(adev);
- 		r = amdgpu_dpm_baco_reset(adev);
- 	} else {
- 		r = vi_asic_pci_config_reset(adev);
+ #endif
+-	if ((probe_only[dev] & 1) == 0) {
++	if (bus->codec_mask && !(probe_only[dev] & 1)) {
+ 		err = azx_codec_configure(chip);
+ 		if (err < 0)
+ 			goto out_free;
 -- 
 2.20.1
 
