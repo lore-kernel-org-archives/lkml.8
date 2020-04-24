@@ -2,97 +2,103 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C489C55194
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC14C55191
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFBDC20776
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7941520736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:43:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="pceQaPqP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V8NcKri1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbgDXNmr (ORCPT
+        id S1728199AbgDXNnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 09:42:47 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:60858 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726667AbgDXNmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 09:42:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=K/wuW35fCeVAxwxu9PaLKs0VDsc/O/tT3lplBdlNIHk=; b=pceQaPqPZele9yUDVkCTmJaCJa
-        GaM0FxwqoKga+jO7qsdOmKuA71oqfoaW2LgmP9JmUb9jQo87Ff9BIpq05a9F2lI3gyKx6X7pdK4v7
-        RchVvTiNAc6OQcZWJK373PjpAvJ4VPRt35S24z+GAQqWpo7ezUVhRC+5T1eKIrOl+rLY=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jRybE-004Yyc-G2; Fri, 24 Apr 2020 15:42:36 +0200
-Date:   Fri, 24 Apr 2020 15:42:36 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Florinel Iordache <florinel.iordache@nxp.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, linux@armlinux.org.uk,
-        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, kuba@kernel.org,
-        corbet@lwn.net, shawnguo@kernel.org, leoyang.li@nxp.com,
-        madalin.bucur@oss.nxp.com, ioana.ciornei@nxp.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2 3/9] net: phy: add kr phy connection type
-Message-ID: <20200424134236.GB1087366@lunn.ch>
-References: <1587732391-3374-1-git-send-email-florinel.iordache@nxp.com>
- <1587732391-3374-4-git-send-email-florinel.iordache@nxp.com>
+        Fri, 24 Apr 2020 09:43:13 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31157 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726946AbgDXNnM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 09:43:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587735791;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=X4OZnFlcvX3IqZHJE/SPPyQuprY94beQh1BVXIF1Tvc=;
+        b=V8NcKri1MOPuzSazSvs3etbXaOvlQq2r0WZeo5dX6o4qqwZxyWahO+i1CdezXHvgzMOL/L
+        zLGrVuL+pmMbwGC/wB+ySPAlZAZol3QJ84CahNYotOzCWF9f2n4ndLYj7ML9IwbaYjLHKs
+        zWjWwXKro0s3oCDlV2YEeaPDOxdJsxc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-379-ucB76fxYONKVBrG96cDFDw-1; Fri, 24 Apr 2020 09:43:07 -0400
+X-MC-Unique: ucB76fxYONKVBrG96cDFDw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 638701005510;
+        Fri, 24 Apr 2020 13:43:05 +0000 (UTC)
+Received: from treble (ovpn-118-207.rdu2.redhat.com [10.10.118.207])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 071D85D9CC;
+        Fri, 24 Apr 2020 13:43:03 +0000 (UTC)
+Date:   Fri, 24 Apr 2020 08:43:01 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com
+Subject: Re: [PATCH v2 6/9] s390/module: Use s390_kernel_write() for late
+ relocations
+Message-ID: <20200424134301.rug4i5hxtnplahge@treble>
+References: <cover.1587131959.git.jpoimboe@redhat.com>
+ <18266eb2c2c9a2ce0033426837d89dcb363a85d3.1587131959.git.jpoimboe@redhat.com>
+ <alpine.LSU.2.21.2004221411140.28581@pobox.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1587732391-3374-4-git-send-email-florinel.iordache@nxp.com>
+In-Reply-To: <alpine.LSU.2.21.2004221411140.28581@pobox.suse.cz>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 03:46:25PM +0300, Florinel Iordache wrote:
-> Add support for backplane kr phy connection types currently available
-> (10gbase-kr, 40gbase-kr4) and the required phylink updates (cover all
-> the cases for KR modes which are clause 45 compatible to correctly assign
-> phy_interface and phylink#supported)
+On Wed, Apr 22, 2020 at 02:28:26PM +0200, Miroslav Benes wrote:
+> > +int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
+> > +		       unsigned int symindex, unsigned int relsec,
+> > +		       struct module *me)
+> > +{
+> > +	int ret;
+> > +	bool early = me->state == MODULE_STATE_UNFORMED;
+> > +	void *(*write)(void *, const void *, size_t) = memcpy;
+> > +
+> > +	if (!early) {
+> > +		write = s390_kernel_write;
+> > +		mutex_lock(&text_mutex);
+> > +	}
+> > +
+> > +	ret = __apply_relocate_add(sechdrs, strtab, symindex, relsec, me,
+> > +				   write);
+> > +
+> > +	if (!early)
+> > +		mutex_unlock(&text_mutex);
+> > +
+> > +	return ret;
+> > +}
 > 
-> Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
-> ---
->  drivers/net/phy/phylink.c | 15 ++++++++++++---
->  include/linux/phy.h       |  6 +++++-
->  2 files changed, 17 insertions(+), 4 deletions(-)
+> It means that you can take text_mutex the second time here because it 
+> is still taken in klp_init_object_loaded(). It is removed later in the 
+> series though. The same applies for x86 patch.
 > 
-> diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
-> index 34ca12a..9a31f68 100644
-> --- a/drivers/net/phy/phylink.c
-> +++ b/drivers/net/phy/phylink.c
-> @@ -4,6 +4,7 @@
->   * technologies such as SFP cages where the PHY is hot-pluggable.
->   *
->   * Copyright (C) 2015 Russell King
-> + * Copyright 2020 NXP
->   */
->  #include <linux/ethtool.h>
->  #include <linux/export.h>
-> @@ -304,7 +305,6 @@ static int phylink_parse_mode(struct phylink *pl, struct fwnode_handle *fwnode)
->  			break;
->  
->  		case PHY_INTERFACE_MODE_USXGMII:
-> -		case PHY_INTERFACE_MODE_10GKR:
->  		case PHY_INTERFACE_MODE_10GBASER:
->  			phylink_set(pl->supported, 10baseT_Half);
->  			phylink_set(pl->supported, 10baseT_Full);
+> Also, s390_kernel_write() grabs s390_kernel_write_lock spinlock before 
+> writing anything, so maybe text_mutex is not really needed as long as 
+> s390_kernel_write is called everywhere for text patching.
 
-Hi Florinel
+Good catch, maybe I'll just drop the text_mutex here.
 
-What about the issues pointed out in:
+-- 
+Josh
 
-https://www.spinics.net/lists/netdev/msg641046.html
-
-	Andrew
