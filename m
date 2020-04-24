@@ -2,65 +2,186 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22852C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CCCC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07C412071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD60520774
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:21:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbgDXQVt (ORCPT
+        id S1728396AbgDXQV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 12:21:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36194 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726908AbgDXQVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 12:21:48 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEFC520700;
-        Fri, 24 Apr 2020 16:21:47 +0000 (UTC)
-Date:   Fri, 24 Apr 2020 12:21:46 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        linux-kernel@vger.kernel.org, Dmitry Safonov <dima@arista.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH] printk: Add loglevel for "do not print to consoles".
-Message-ID: <20200424122146.163b1680@gandalf.local.home>
-In-Reply-To: <d967cd75-f61d-291a-81e9-1da76e4179c2@i-love.sakura.ne.jp>
-References: <20200424024239.63607-1-penguin-kernel@I-love.SAKURA.ne.jp>
-        <20200424092816.62a61b1d@gandalf.local.home>
-        <579fbe97-9aae-2b67-03ff-01291b9cbb7d@i-love.sakura.ne.jp>
-        <20200424103131.7987f890@gandalf.local.home>
-        <7ec0b0a3-39ae-0f1c-b8c2-e1e9e60f1223@i-love.sakura.ne.jp>
-        <20200424114225.5a3bab7e@gandalf.local.home>
-        <d967cd75-f61d-291a-81e9-1da76e4179c2@i-love.sakura.ne.jp>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 24 Apr 2020 12:21:59 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:58598 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726908AbgDXQV6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 12:21:58 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jS15O-0004dV-97; Fri, 24 Apr 2020 16:21:54 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-api@vger.kernel.org
+Cc:     Jonathan Corbet <corbet@lwn.net>, Serge Hallyn <serge@hallyn.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
+        Seth Forshee <seth.forshee@canonical.com>,
+        David Rheinsberg <david.rheinsberg@gmail.com>,
+        Tom Gundersen <teg@jklm.no>,
+        Christian Kellner <ckellner@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        =?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@ubuntu.com>,
+        linux-doc@vger.kernel.org, netdev@vger.kernel.org,
+        Steve Barber <smbarber@google.com>,
+        Dylan Reid <dgreid@google.com>,
+        Filipe Brandenburger <filbranden@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Benjamin Elder <bentheelder@google.com>,
+        Akihiro Suda <suda.kyoto@gmail.com>
+Subject: [PATCH v3 1/7] kobject_uevent: remove unneeded netlink_ns check
+Date:   Fri, 24 Apr 2020 18:20:46 +0200
+Message-Id: <20200424162052.441452-2-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200424162052.441452-1-christian.brauner@ubuntu.com>
+References: <20200424162052.441452-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 25 Apr 2020 01:10:15 +0900
-Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp> wrote:
+Back when I rewrote large chunks of uevent sending I should have removed
+the .netlink_ns method completely after having removed it's last user in
+[1]. Let's remove it now and also remove the helper associated with it
+that is unused too.
 
-> KERN_NO_CONSOLES is a mechanism for implementing user decided policy. As long as
-> userspace can control whether to use KERN_NO_CONSOLES (e.g. sysctl), there should
-> be no problem with adding KERN_NO_CONSOLES (i.e. this patch) to the kernel side.
+Fixes: a3498436b3a0 ("netns: restrict uevents") /* No backport needed. */
+Cc: "David S. Miller" <davem@davemloft.net>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+/* v2 */
+unchanged
 
-How would you define what gets "KERN_NO_CONSOLES"? Is it going to be a
-sysctl switch?
+/* v3 */
+unchanged
+---
+ Documentation/filesystems/sysfs-tagging.txt |  1 -
+ include/linux/kobject_ns.h                  |  3 ---
+ lib/kobject.c                               | 13 -------------
+ lib/kobject_uevent.c                        |  2 +-
+ net/core/net-sysfs.c                        |  6 ------
+ 5 files changed, 1 insertion(+), 24 deletions(-)
 
-Also, how does one control the log level of prints with KERN_NO_CONSOLES?
+diff --git a/Documentation/filesystems/sysfs-tagging.txt b/Documentation/filesystems/sysfs-tagging.txt
+index c7c8e6438958..51d28dd8b84f 100644
+--- a/Documentation/filesystems/sysfs-tagging.txt
++++ b/Documentation/filesystems/sysfs-tagging.txt
+@@ -37,6 +37,5 @@ Users of this interface:
+ - define a type in the kobj_ns_type enumeration.
+ - call kobj_ns_type_register() with its kobj_ns_type_operations which has
+   - current_ns() which returns current's namespace
+-  - netlink_ns() which returns a socket's namespace
+   - initial_ns() which returns the initial namesapce
+ - call kobj_ns_exit() when an individual tag is no longer valid
+diff --git a/include/linux/kobject_ns.h b/include/linux/kobject_ns.h
+index 069aa2ebef90..991a9286bcea 100644
+--- a/include/linux/kobject_ns.h
++++ b/include/linux/kobject_ns.h
+@@ -32,7 +32,6 @@ enum kobj_ns_type {
+ /*
+  * Callbacks so sysfs can determine namespaces
+  *   @grab_current_ns: return a new reference to calling task's namespace
+- *   @netlink_ns: return namespace to which a sock belongs (right?)
+  *   @initial_ns: return the initial namespace (i.e. init_net_ns)
+  *   @drop_ns: drops a reference to namespace
+  */
+@@ -40,7 +39,6 @@ struct kobj_ns_type_operations {
+ 	enum kobj_ns_type type;
+ 	bool (*current_may_mount)(void);
+ 	void *(*grab_current_ns)(void);
+-	const void *(*netlink_ns)(struct sock *sk);
+ 	const void *(*initial_ns)(void);
+ 	void (*drop_ns)(void *);
+ };
+@@ -52,7 +50,6 @@ const struct kobj_ns_type_operations *kobj_ns_ops(struct kobject *kobj);
+ 
+ bool kobj_ns_current_may_mount(enum kobj_ns_type type);
+ void *kobj_ns_grab_current(enum kobj_ns_type type);
+-const void *kobj_ns_netlink(enum kobj_ns_type type, struct sock *sk);
+ const void *kobj_ns_initial(enum kobj_ns_type type);
+ void kobj_ns_drop(enum kobj_ns_type type, void *ns);
+ 
+diff --git a/lib/kobject.c b/lib/kobject.c
+index 83198cb37d8d..6f07083cc111 100644
+--- a/lib/kobject.c
++++ b/lib/kobject.c
+@@ -1092,19 +1092,6 @@ void *kobj_ns_grab_current(enum kobj_ns_type type)
+ }
+ EXPORT_SYMBOL_GPL(kobj_ns_grab_current);
+ 
+-const void *kobj_ns_netlink(enum kobj_ns_type type, struct sock *sk)
+-{
+-	const void *ns = NULL;
+-
+-	spin_lock(&kobj_ns_type_lock);
+-	if ((type > KOBJ_NS_TYPE_NONE) && (type < KOBJ_NS_TYPES) &&
+-	    kobj_ns_ops_tbl[type])
+-		ns = kobj_ns_ops_tbl[type]->netlink_ns(sk);
+-	spin_unlock(&kobj_ns_type_lock);
+-
+-	return ns;
+-}
+-
+ const void *kobj_ns_initial(enum kobj_ns_type type)
+ {
+ 	const void *ns = NULL;
+diff --git a/lib/kobject_uevent.c b/lib/kobject_uevent.c
+index 7998affa45d4..a45b3eeaa2b9 100644
+--- a/lib/kobject_uevent.c
++++ b/lib/kobject_uevent.c
+@@ -400,7 +400,7 @@ static int kobject_uevent_net_broadcast(struct kobject *kobj,
+ 	 * are the only tag relevant here since we want to decide which
+ 	 * network namespaces to broadcast the uevent into.
+ 	 */
+-	if (ops && ops->netlink_ns && kobj->ktype->namespace)
++	if (ops && kobj->ktype->namespace)
+ 		if (ops->type == KOBJ_NS_TYPE_NET)
+ 			net = kobj->ktype->namespace(kobj);
+ 
+diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+index 4773ad6ec111..3fa35a3c843a 100644
+--- a/net/core/net-sysfs.c
++++ b/net/core/net-sysfs.c
+@@ -1694,16 +1694,10 @@ static const void *net_initial_ns(void)
+ 	return &init_net;
+ }
+ 
+-static const void *net_netlink_ns(struct sock *sk)
+-{
+-	return sock_net(sk);
+-}
+-
+ const struct kobj_ns_type_operations net_ns_type_operations = {
+ 	.type = KOBJ_NS_TYPE_NET,
+ 	.current_may_mount = net_current_may_mount,
+ 	.grab_current_ns = net_grab_current_ns,
+-	.netlink_ns = net_netlink_ns,
+ 	.initial_ns = net_initial_ns,
+ 	.drop_ns = net_drop_ns,
+ };
+-- 
+2.26.2
 
--- Steve
