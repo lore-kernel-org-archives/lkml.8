@@ -2,181 +2,128 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA54C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA7CC5518A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B89A2076C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F8C02076C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:34:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="NMge3sl0"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fINztLT1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbgDXEQv (ORCPT
+        id S1726175AbgDXEeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 00:16:51 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:18303 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725823AbgDXEQv (ORCPT
+        Fri, 24 Apr 2020 00:34:00 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:28388 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725982AbgDXEd5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 00:16:51 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200424041648epoutp020a0b101b395f2b54ce336ae590130b0c~IpmHryRoe2565425654epoutp02n
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 04:16:48 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200424041648epoutp020a0b101b395f2b54ce336ae590130b0c~IpmHryRoe2565425654epoutp02n
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1587701808;
-        bh=Xxaz6tD9bza4jciD/mqZAoysNvynFcYuDnWX77bailQ=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=NMge3sl00COwuholSzFFCrV+LVdUQoXsC+pwo9egpSNBLIPtdiWLVo0azom+eH9Zq
-         txbUWjMaB+25iBThn05wljr45NDZ5I3X9M8zCLPGTL3N4lhz/TBueNBrBvuRBuELbQ
-         pHCc7SWnfhmxrJiP2sSTxPCsI9t7zSJkv66PCwqE=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200424041647epcas1p47279eb650cdf1beca08f8cd7f04d8f43~IpmHDnNXO2595825958epcas1p4b;
-        Fri, 24 Apr 2020 04:16:47 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.160]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 497gq22TNtzMqYlm; Fri, 24 Apr
-        2020 04:16:46 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        79.D7.04648.E2862AE5; Fri, 24 Apr 2020 13:16:46 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200424041645epcas1p2e5d0c132ebae47d7f6d60d33bf920712~IpmFXBpZU1014810148epcas1p2Q;
-        Fri, 24 Apr 2020 04:16:45 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200424041645epsmtrp18afdd0eec1a2845ec05925f205535bff~IpmFV1LrC2183921839epsmtrp1Z;
-        Fri, 24 Apr 2020 04:16:45 +0000 (GMT)
-X-AuditID: b6c32a37-1f3ff70000001228-30-5ea2682ec055
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        55.86.25866.D2862AE5; Fri, 24 Apr 2020 13:16:45 +0900 (KST)
-Received: from [10.253.104.82] (unknown [10.253.104.82]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200424041645epsmtip2baa9db0282471f5ef5465d9d636ebe36~IpmE7sZXO2398923989epsmtip2f;
-        Fri, 24 Apr 2020 04:16:45 +0000 (GMT)
-Subject: Re: [PATCH v2] mm/vmscan: count layzfree pages and fix
- nr_isolated_* mismatch
-To:     Minchan Kim <minchan@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Cc:     mgorman@suse.de, m.szyprowski@samsung.com, mina86@mina86.com,
-        shli@fb.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, jaewon31.kim@gmail.com,
-        ytk.lee@samsung.com
-From:   Jaewon Kim <jaewon31.kim@samsung.com>
-Message-ID: <5EA2682D.7010307@samsung.com>
-Date:   Fri, 24 Apr 2020 13:16:45 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
-        Thunderbird/38.7.2
+        Fri, 24 Apr 2020 00:33:57 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587702837; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: In-Reply-To: Date: References: Subject: Cc:
+ To: From: Sender; bh=a/cWZWil63oy2LeUPylT7nToPBhx2A8BfuTg5P7sK6o=; b=fINztLT1UYGejVqqY8P8ItnxSLd2O34hDC/6UkLo7v9lgdP8SBHI8yqKctkdMy922pk8kL0p
+ qhyJT4Yo1sd0PefUMfL5g6+5jYQHJaZS5r6tkmgqsLITzxH9P+QLj6BxnyHMiIgBdC2jBd3c
+ DtqdNSGsvSng4d7R33zmyhJhC4k=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea26c23.7f79f87ed6c0-smtp-out-n01;
+ Fri, 24 Apr 2020 04:33:39 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 767B9C432C2; Fri, 24 Apr 2020 04:33:38 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DC793C433CB;
+        Fri, 24 Apr 2020 04:33:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DC793C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        stas.yakovlev@gmail.com, davem@davemloft.net,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] ipw2x00: Remove a memory allocation failure log message
+References: <20200423075825.18206-1-christophe.jaillet@wanadoo.fr>
+        <5868418d-88b0-3694-2942-5988ab15bdcb@cogentembedded.com>
+        <3c80ef48-57a8-b414-6cf1-6c255a46f6be@wanadoo.fr>
+Date:   Fri, 24 Apr 2020 07:33:33 +0300
+In-Reply-To: <3c80ef48-57a8-b414-6cf1-6c255a46f6be@wanadoo.fr> (Christophe
+        JAILLET's message of "Thu, 23 Apr 2020 22:47:25 +0200")
+Message-ID: <87zhb1h59e.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200423200020.GB46847@google.com>
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01TaUwTURD2ddvugtas9ZoQj7qoBAzQWltWI8ZEootXSDTGaAJuYG3RXnYL
-        gncCnqCIoIEiBpUQRaTQqoEGNQJGFK8ACV6oRCWKAgoBUVRsuxj5N/PN930zb957BCa/Kw0g
-        Ek02zmpiDZTUX3yjLjg0NEx/IVb5qGgCfdZRJqWvONfQGa58RDe7z0rp12XDEvpqfRtO53R3
-        ILroXrqELunvwemS6iwx/c4xdulYpu5LD8Zkp3XjTLW9DWecpUeljLP3FM405A2JmfJfnSLm
-        xLVSxLgadzN9zhkx/psMi/Ucm8BZFZwp3pyQaNJFUqvWxS2L02iVqlDVQjqCUphYIxdJRa2O
-        CV2eaPAMTCmSWUOSB4pheZ4KX7LYak6ycQq9mbdFUpwlwWBRKS1hPGvkk0y6sHizcZFKqZyv
-        8TC3GPS5JZW45TGZUpOuPYCuy44hPwLIBZD79anoGPIn5GQVgrLa1pGkF0HumQyxkPQhKLh4
-        TvJP8uRwPRIKbgSDdqdUSLoQvBgsFXlZE8mNMHDkJuaNJ5Eroe/SZYmXhJGNCMofvhR7C1Jy
-        HvQUnfLZysgQyOnK9gnE5ByoKXb48Mkeo6rCb0jgTID7+e89WoLwI5VwsmCHF8bImZB2vQDz
-        +gNZQ0DW4RzMywEyCjq/i4SpJ0LnvWu4EAfAp6xDuMBPQ9CV70JCko6gzXkcCSw1HM986jPC
-        yGBwuMMFeBZUDxUiofF46O7PlAi9ZHDkkFygzIX0jv6RbU2D3386RmIGulvvSIRlFYvA1fAF
-        O4kU9lFHs486j/1/5yKElaIpnIU36jheZVGPvmIn8j3hkIgqVPF4dS0iCUSNkz2zno+VS9hk
-        PtVYi4DAqEmyivZzsXJZApu6i7Oa46xJBo6vRRrPtrOxgMnxZs+HMNniVJr5arWaXqCN0GrU
-        1FTZ6VZDrJzUsTZuO8dZOOs/nYjwCziA1m7rndt+pzklJrDwW2dxXtStrRXszpSKD/IlWFCH
-        YiCzIfXKg8p5f16t29uSt2ra+6FNKYF6XfGPlrfJz29/LF+eHDTl52DBQOPd6M+ze6O1TeFv
-        BlaYMtyS6U3y+13PtHkz7W5XRMv6PZuDsKYxQ1fzHcP77VvpdnwDtnT4YOC+H82UmNezqhDM
-        yrN/AUskxOLYAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnkeLIzCtJLcpLzFFi42LZdlhJXlc3Y1GcQft3WYs569ewWaze5GvR
-        vXkmo8XlXXPYLO6t+c9qsfbIXXaLye+eMVosON7CarHs63t2i2U7+1ksHq/nduD2OPzmPbPH
-        xOZ37B47Z91l99i0qpPNY9OnSeweJ2b8ZvFY9+cVk0ffllWMHptPV3t83iQXwBXFZZOSmpNZ
-        llqkb5fAlTFl2Ub2gnMCFXtazBoYt/J2MXJySAiYSJxvP8IIYgsJ7GCUmPdFESIuI/Hm/FOW
-        LkYOIFtY4vDh4i5GLqCS14wSL6e9ZQKpERaIkLj17SI7iC0i4CXxecVKVoiiJUwSJ190MII4
-        zAKnGSVmtV1hBaliE9CWeL9gEpjNK6AlMfntRGYQm0VAVWLPkvVgcVGgqavXXWOGqBGUODnz
-        CdgVnAIGEhNmF4KEmQXUJf7Mu8QMYctLNG+dzTyBUXAWko5ZSMpmISlbwMi8ilEytaA4Nz23
-        2LDAKC+1XK84Mbe4NC9dLzk/dxMjOK60tHYw7ln1Qe8QIxMH4yFGCQ5mJRHeDQ/nxQnxpiRW
-        VqUW5ccXleakFh9ilOZgURLn/TprYZyQQHpiSWp2ampBahFMlomDU6qBKaulluPI1Wm5R3/p
-        CfPymiwRXX8hMYj7t7iL5yaWGYnsX+8o8J9g1z+7Z6e/zsv7H36fXWioOun5CyXrYvkI+6kc
-        7z6mXTsR7zr39ktBDS+2mRPLls87frk+h7Nf5v/nTIFwDsdV56dJ7Ilb0cbqKdz7Zcf3PC2u
-        np31D2bZOs1gOFv2w+CqyNvoNNFM78bc62EVsx9zTW2/vb5aS/J0NN/5goRlntnbU5pn6n5J
-        Oap/wjTg+p/DkbuPirYXV87Vyt1gy2e0j/9uwkEvWQ7nvZqs7HOsgleYC1dqqmo7f2xZuqD7
-        5+9zy9sPzE0wuvX+ddD5V17zVAMjtiVmlck8ZuP/v3bV2vvdRhLZR57MVWIpzkg01GIuKk4E
-        AC52eCkaAwAA
-X-CMS-MailID: 20200424041645epcas1p2e5d0c132ebae47d7f6d60d33bf920712
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200422084832epcas1p333225f9b6a00c9ce36f5f5d63fe6e3bf
-References: <CGME20200422084832epcas1p333225f9b6a00c9ce36f5f5d63fe6e3bf@epcas1p3.samsung.com>
-        <20200422084815.21913-1-jaewon31.kim@samsung.com>
-        <20200422130751.GD358439@cmpxchg.org> <5EA10872.3010500@samsung.com>
-        <20200423160546.GA389168@cmpxchg.org> <20200423200020.GB46847@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Christophe JAILLET <christophe.jaillet@wanadoo.fr> writes:
 
-
-On 2020년 04월 24일 05:00, Minchan Kim wrote:
-> On Thu, Apr 23, 2020 at 12:05:46PM -0400, Johannes Weiner wrote:
->> On Thu, Apr 23, 2020 at 12:16:02PM +0900, Jaewon Kim wrote:
+> Le 23/04/2020 =C3=A0 11:46, Sergei Shtylyov a =C3=A9crit=C2=A0:
+>> Hello!
+>>
+>> On 23.04.2020 10:58, Christophe JAILLET wrote:
+>>
+>>> Axe a memory allocation failure log message. This message is useless and
+>>> incorrect (vmalloc is not used here for the memory allocation)
 >>>
->>> On 2020년 04월 22일 22:07, Johannes Weiner wrote:
->>>> On Wed, Apr 22, 2020 at 05:48:15PM +0900, Jaewon Kim wrote:
->>>>> @@ -1295,11 +1295,15 @@ static unsigned long shrink_page_list(struct list_head *page_list,
->>>>>  		 */
->>>>>  		if (page_mapped(page)) {
->>>>>  			enum ttu_flags flags = ttu_flags | TTU_BATCH_FLUSH;
->>>>> +			bool lazyfree = PageAnon(page) && !PageSwapBacked(page);
->>>>>  
->>>>>  			if (unlikely(PageTransHuge(page)))
->>>>>  				flags |= TTU_SPLIT_HUGE_PMD;
->>>>> +
->>>>>  			if (!try_to_unmap(page, flags)) {
->>>>>  				stat->nr_unmap_fail += nr_pages;
->>>>> +				if (lazyfree && PageSwapBacked(page))
->>>> This looks pretty strange, until you remember that try_to_unmap()
->>>> could SetPageSwapbacked again.
->>>>
->>>> This might be more obvious?
->>>>
->>>> 			was_swapbacked = PageSwapBacked(page);
->>>> 			if (!try_to_unmap(page, flags)) {
->>>> 				stat->nr_unmap_fail += nr_pages;
->>>> 				if (!was_swapbacked && PageSwapBacked(page))
->>> Hello Johannes, thank you for your comment.
+>>> This has been like that since the very beginning of this driver in
+>>> commit 43f66a6ce8da ("Add ipw2200 wireless driver.")
 >>>
->>> The name can changed from layzyfree to was_swapbacked.
->>> By the way, did you mean removing PageAnon(page), too? It seems to be OK, though.
->> I can't decide whether PageAnon() makes it clearer or not. But it's
->> not really needed for correctness. So feel free to keep what you had.
-> Yub, PageAnon is redundant.
+>>> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+>>> ---
+>>> =C2=A0 drivers/net/wireless/intel/ipw2x00/ipw2200.c | 5 ++---
+>>> =C2=A0 1 file changed, 2 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2200.c
+>>> b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
+>>> index 60b5e08dd6df..30c4f041f565 100644
+>>> --- a/drivers/net/wireless/intel/ipw2x00/ipw2200.c
+>>> +++ b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
+>>> @@ -3770,10 +3770,9 @@ static int ipw_queue_tx_init(struct ipw_priv
+>>> *priv,
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct pci_dev *dev =3D priv->pci_dev;
+>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 q->txb =3D kmalloc_array(count, s=
+izeof(q->txb[0]), GFP_KERNEL);
+>>> -=C2=A0=C2=A0=C2=A0 if (!q->txb) {
+>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 IPW_ERROR("vmalloc for auxi=
+liary BD structures failed\n");
+>>> +=C2=A0=C2=A0=C2=A0 if (!q->txb)
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENOMEM;
+>>> -=C2=A0=C2=A0=C2=A0 }
+>>> +
+>>
+>> =C2=A0=C2=A0 No need for this extra empty line.
 >
->> I would really just at least change bool lazyfree to was_lazyfree,
-> It's better.
-Thank you both.
-
-Sorry but let me ask again.
-
-Because PageAnon is redundant, let me remove it on checking lazyfree.
-Then, I think, was_swapbacked (first suggestion) is better then was_lazyfree (second suggestion),
-because it just checks PageSwapBacked(page). And we knows was_swapbacked is used for lazyfree on stat->nr_lazyfree_fail.
-
-If you don't mind let me pick was_swapbacked instead of was_lazyfree
-bool was_lazyfree = PageSwapBacked(page);
-
-Thank you
-
 >
+> That's right, sorry about that.
 >
+> Can it be fixed when/if the patch is applied, or should I send a V2?
 
+Please send v2.
+
+> If a V2 is required, should kcalloc be used, as pointed out by Joe Perche=
+s?
+> (personally, If the code works fine as-is, I don't think it is
+> required, but it can't hurt)
+
+There's always the risk of regressions, which happens even with cleanup
+patches so hurting is always possible :)
+
+I can take a patch changing the allocation but please do it in a
+separate patch. Though personally I wouldn't bother, ipw2x00 is an old
+driver and not being actively developed anymore.
+
+--=20
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
+hes
