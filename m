@@ -2,150 +2,150 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D4CC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F67AC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 719B220776
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8AF120776
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:54:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TqnzzbkL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NtY+hhn0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgDXKxY (ORCPT
+        id S1726848AbgDXKyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 06:53:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36918 "EHLO
+        Fri, 24 Apr 2020 06:54:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726825AbgDXKxX (ORCPT
+        with ESMTP id S1726289AbgDXKyN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 06:53:23 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C826AC09B046
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 03:53:22 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id j1so10242489wrt.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 03:53:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=ANVFxj0a3PZxuvcR/cQpqDlmHqLVaxnBkwvzY2D+yRQ=;
-        b=TqnzzbkLwgVbmsD15PJo6vPGbNOmNr2/mJjPgL9eevI2ZbgbaLKHqzcjjpusU51Doh
-         NVKcjMg+bWBhUhNbQDdkbqj9ERt0ChWSN01vAzVDSi9CmtdIQtsX8VUHEB3/jNNRSerX
-         y9U+/g8CZ27zw3gjVVpl4mV24Jl5Fr5r/scKO/zgNbjmn48lfTIykG9/YnSj4IzlpQ7x
-         9sCMoDp9Q+frjZdGucx9E0GLUTjBwivWtbkXOEqoXAzz/EXNwZawwuny5QWFYB/4wCko
-         MgQOaXyD5AxOimhaN8V4FFfg8BCImvzBgwiESTze/+9yXbeRgPdupE3wfoBu6Sl2sbkX
-         PAyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ANVFxj0a3PZxuvcR/cQpqDlmHqLVaxnBkwvzY2D+yRQ=;
-        b=rLky8ilD2fBbquvPWNmInbs7nf0nJ5Cog5aqk2+f+qN8CA3GzgnOOBBHLCbPTbzVe/
-         WeEgwzQkKSMlf47/3iivq85mJoFUE3oqkBNLOOTYDfjRLtTkXboMl7+IS9ISd3iN2LSm
-         dYEN3m7bXLyfE/zyYBqQJYQfsDpdElYjYWVsVWBdXL8n2Akzt24Hvw2ae2/PwgOyy71O
-         Iyt2FjmmgVKZ1xr7QY8lFeZt/STyeJraEAGVTzMUAYXi4YVyiC1PGkPfnF2fH7QlTmp2
-         WRq5A2movfk3yMuJ6AZw2VVn6PZwtC1Sv+gEQqnZIsqFl4fOj5Z33GGS/GWo3qsV4UQ+
-         pRUg==
-X-Gm-Message-State: AGi0PuZMP4b96WLyhD/zNUcC5WBi0bhZZUQ6ArplXGT+BxXwdsvICdk4
-        4sZqVLrxRtvcdL5e9r6McE9pew==
-X-Google-Smtp-Source: APiQypKP9clOM1Dthyy7Ek8Ij90zL+Giy22gsKlvN3INV/Bf1kE9Y4mK9kb1o6kuHIq3Nyvws+waXA==
-X-Received: by 2002:adf:cd12:: with SMTP id w18mr10512940wrm.177.1587725601416;
-        Fri, 24 Apr 2020 03:53:21 -0700 (PDT)
-Received: from dell ([2.31.163.63])
-        by smtp.gmail.com with ESMTPSA id c25sm2218532wmb.44.2020.04.24.03.53.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 03:53:20 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 11:53:19 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     saravanan sekar <sravanhome@gmail.com>
-Cc:     andy.shevchenko@gmail.com, robh+dt@kernel.org, jic23@kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        sre@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v9 2/6] mfd: mp2629: Add support for mps battery charger
-Message-ID: <20200424105319.GD8414@dell>
-References: <20200415162030.16414-1-sravanhome@gmail.com>
- <20200415162030.16414-3-sravanhome@gmail.com>
- <20200424071822.GM3612@dell>
- <8ff17d07-8030-fcfe-8d8a-3011e4077778@gmail.com>
- <20200424093720.GA3542@dell>
- <864eb6ad-a605-c0a0-c3e7-23c0c70f5ede@gmail.com>
+        Fri, 24 Apr 2020 06:54:13 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77D3BC09B045
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 03:54:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=8Xa2PUMRqvFJR5GwWTaYEgHQNPO5CXK8JGRyEXAVy64=; b=NtY+hhn0FtOdG+6yBaAhPrZSgI
+        ywkvKZ5g6k9+9XxJlPM4Kf0Ip/BFfYCQg8SZvKqLHPBcSEA18GsUtxMhJabuCmZ18LvEp4JhvdVrq
+        exmRqYmiYgr3lhnEnMvJNxSoWXnH5qyyGncL6qGH12rlJOWIS7FOVDgMgTA8QxkZaS2HV3eNk1qo2
+        /TIpyzI3fgyv9N/9/Eu9CgG7JlyxR/yCGF32kvdp1/H/KiN3WXuBKLWMSO/V2P+gx3ILtxkGw/iV+
+        0+OCT6bqmFjD09/5lSFHlpAZU+6/hMV3LvTfblt7w/YWWTSEWbGcqJKX8ismo3gCECQnYfnwafmN8
+        wAns82Cw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jRvxp-0007lg-18; Fri, 24 Apr 2020 10:53:45 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 287F6306108;
+        Fri, 24 Apr 2020 12:53:43 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 112922392DE86; Fri, 24 Apr 2020 12:53:43 +0200 (CEST)
+Date:   Fri, 24 Apr 2020 12:53:43 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "luto@kernel.org" <luto@kernel.org>, "bp@alien8.de" <bp@alien8.de>
+Subject: Re: [PATCH] x86/mm/cpa: Flush direct map alias during cpa
+Message-ID: <20200424105343.GA20730@hirez.programming.kicks-ass.net>
+References: <20200423031355.23955-1-rick.p.edgecombe@intel.com>
+ <20200423084114.GS20713@hirez.programming.kicks-ass.net>
+ <f1c60f169231ecf65facb9b6c1af96ef75a0eb78.camel@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <864eb6ad-a605-c0a0-c3e7-23c0c70f5ede@gmail.com>
+In-Reply-To: <f1c60f169231ecf65facb9b6c1af96ef75a0eb78.camel@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Apr 2020, saravanan sekar wrote:
-
-> Hi Lee,
+On Thu, Apr 23, 2020 at 07:02:26PM +0000, Edgecombe, Rick P wrote:
+> On Thu, 2020-04-23 at 10:41 +0200, Peter Zijlstra wrote:
+> > Wouldn't something like so make more sense?
 > 
-> On 24/04/20 11:37 am, Lee Jones wrote:
-> > On Fri, 24 Apr 2020, saravanan sekar wrote:
-> > 
-> > > Hi Lee,
-> > > 
-> > > On 24/04/20 9:18 am, Lee Jones wrote:
-> > > > On Wed, 15 Apr 2020, Saravanan Sekar wrote:
-> > > > 
-> > > > > mp2629 is a highly-integrated switching-mode battery charge management
-> > > > > device for single-cell Li-ion or Li-polymer battery.
-> > > > > 
-> > > > > Add MFD core enables chip access for ADC driver for battery readings,
-> > > > > and a power supply battery-charger driver
-> > > > > 
-> > > > > Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> > > > > ---
-> > > > >    drivers/mfd/Kconfig        |  9 ++++
-> > > > >    drivers/mfd/Makefile       |  2 +
-> > > > >    drivers/mfd/mp2629.c       | 86 ++++++++++++++++++++++++++++++++++++++
-> > > > >    include/linux/mfd/mp2629.h | 19 +++++++++
-> > > > >    4 files changed, 116 insertions(+)
-> > > > >    create mode 100644 drivers/mfd/mp2629.c
-> > > > >    create mode 100644 include/linux/mfd/mp2629.h
-> > > > How is this driver registered?
-> > > > 
-> > > > Looks like it has device tree support.  Is there another way?
-> > > Yes, only using device tree
-> > Then how about using 'simple-mfd' and 'syscon'?
-> > 
-> > Then you can omit this driver completely.
-> 
-> The exception is to support for non device tree platform as well, but I have
-> tested only for ARM device tree platform.
+> Yes. Dave had commented on whether a smaller fix would be better for
+> backports if needed. Since that diff is the whole fix, do you want to
+> take it from here or should I put it in a patch?
 
-Is that a reality though?
+I've made it look like this. Holler if you need it changed ;-)
 
-How else do you see this realistically being registered?
+---
+Subject: x86/mm/cpa: Flush direct map alias during cpa
+From: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Date: Wed, 22 Apr 2020 20:13:55 -0700
 
-> > > > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > > > > index 3c547ed575e6..85be799795aa 100644
-> > > > > --- a/drivers/mfd/Kconfig
-> > > > > +++ b/drivers/mfd/Kconfig
-> > > > > @@ -434,6 +434,15 @@ config MFD_MC13XXX_I2C
-> > > > >    	help
-> > > > >    	  Select this if your MC13xxx is connected via an I2C bus.
-> > > > > +config MFD_MP2629
-> > > > > +	tristate "Monolithic power system MP2629 ADC and Battery charger"
-> > > > > +	depends on I2C
-> > > > > +	select REGMAP_I2C
-> > > > > +	help
-> > > > > +	  Select this option to enable support for monolithic power system
-> > > > > +	  battery charger. This provides ADC, thermal, battery charger power
-> > > > > +	  management functions on the systems.
+From: Rick Edgecombe <rick.p.edgecombe@intel.com>
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+As an optimization, cpa_flush() was changed to optionally only flush
+the range in @cpa if it was small enough.  However, this range does
+not include any direct map aliases changed in cpa_process_alias(). So
+small set_memory_() calls that touch that alias don't get the direct
+map changes flushed. This situation can happen when the virtual
+address taking variants are passed an address in vmalloc or modules
+space.
+
+In these cases, force a full TLB flush.
+
+Note this issue does not extend to cases where the set_memory_() calls are
+passed a direct map address, or page array, etc, as the primary target. In
+those cases the direct map would be flushed.
+
+Fixes: 935f5839827e ("x86/mm/cpa: Optimize cpa_flush_array() TLB invalidation")
+Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ arch/x86/mm/pat/set_memory.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+--- a/arch/x86/mm/pat/set_memory.c
++++ b/arch/x86/mm/pat/set_memory.c
+@@ -43,7 +43,8 @@ struct cpa_data {
+ 	unsigned long	pfn;
+ 	unsigned int	flags;
+ 	unsigned int	force_split		: 1,
+-			force_static_prot	: 1;
++			force_static_prot	: 1,
++			force_flush_all		: 1;
+ 	struct page	**pages;
+ };
+ 
+@@ -355,10 +356,10 @@ static void cpa_flush(struct cpa_data *d
+ 		return;
+ 	}
+ 
+-	if (cpa->numpages <= tlb_single_page_flush_ceiling)
+-		on_each_cpu(__cpa_flush_tlb, cpa, 1);
+-	else
++	if (cpa->force_flush_all || cpa->numpages > tlb_single_page_flush_ceiling)
+ 		flush_tlb_all();
++	else
++		on_each_cpu(__cpa_flush_tlb, cpa, 1);
+ 
+ 	if (!cache)
+ 		return;
+@@ -1598,6 +1599,8 @@ static int cpa_process_alias(struct cpa_
+ 		alias_cpa.flags &= ~(CPA_PAGES_ARRAY | CPA_ARRAY);
+ 		alias_cpa.curpage = 0;
+ 
++		cpa->force_flush_all = 1;
++
+ 		ret = __change_page_attr_set_clr(&alias_cpa, 0);
+ 		if (ret)
+ 			return ret;
+@@ -1618,6 +1621,7 @@ static int cpa_process_alias(struct cpa_
+ 		alias_cpa.flags &= ~(CPA_PAGES_ARRAY | CPA_ARRAY);
+ 		alias_cpa.curpage = 0;
+ 
++		cpa->force_flush_all = 1;
+ 		/*
+ 		 * The high mapping range is imprecise, so ignore the
+ 		 * return value.
