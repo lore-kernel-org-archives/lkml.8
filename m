@@ -2,138 +2,202 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4028C55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 464F6C55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A400220715
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 150B02073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:35:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587699330;
+	bh=X4SrWJkSoc3Enbcge8Fd0LvQVeH/UDL4vww6M2ZMQP0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HA/wtBktfdbR7r1dkrgXDNUvLnWPTH6J/DUbKQAZ8iF0tK1Afnu2doziHGl7VTni8
+	 6SEFRpFTn5tsuAqEu2mwa2u3+SYunuxmIXexRUWmIavInKjZFEQgjLCQH+xKzVg1fN
+	 ho00kUJppgx9X1Mut3hG54SeNWEgIQJTi1drjKfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbgDXDdt (ORCPT
+        id S1726415AbgDXDf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 23:33:49 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6102 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725884AbgDXDdt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 23:33:49 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03O3VivU023650
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 23:33:48 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30k3xv65ec-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 23:33:48 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Fri, 24 Apr 2020 04:33:08 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 24 Apr 2020 04:33:05 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03O3Xfdf12583372
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Apr 2020 03:33:41 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 28B36AE04D;
-        Fri, 24 Apr 2020 03:33:41 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 74A51AE045;
-        Fri, 24 Apr 2020 03:33:40 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.145.87.192])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 24 Apr 2020 03:33:40 +0000 (GMT)
-Date:   Fri, 24 Apr 2020 05:33:38 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pmorel@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
-Subject: Re: [PATCH v7 03/15] s390/zcrypt: driver callback to indicate
- resource in use
-In-Reply-To: <20200416113721.124f9843.cohuck@redhat.com>
-References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
-        <20200407192015.19887-4-akrowiak@linux.ibm.com>
-        <20200414145851.562867ae.cohuck@redhat.com>
-        <35d8c3cb-78bb-8f84-41d8-c6e59d201ba0@linux.ibm.com>
-        <20200416113721.124f9843.cohuck@redhat.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Thu, 23 Apr 2020 23:35:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42624 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725884AbgDXDf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 23:35:28 -0400
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35C24206D7;
+        Fri, 24 Apr 2020 03:35:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587699328;
+        bh=X4SrWJkSoc3Enbcge8Fd0LvQVeH/UDL4vww6M2ZMQP0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XJFpTycSwL3dRrWsMY+tgEUrJ06u5mgJKl5PDT/SRSRuZptbbNM0xDPU7s+Mshgn1
+         uwXm7TubOigHs4yp+miarFIfiiYgSursUT2Nu37RUYptafjuEGc0N+xMHhoIefB2dV
+         OukxSDbO1uoxXQGqsKSy+iVqwf8CyQBT+ZTyze28=
+Date:   Thu, 23 Apr 2020 20:35:27 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
+Subject: Re: [f2fs-dev] [PATCH v2] f2fs: fix quota_sync failure due to
+ f2fs_lock_op
+Message-ID: <20200424033527.GA106894@google.com>
+References: <20200409173056.229855-1-jaegeuk@kernel.org>
+ <77e9f2e6-f3f3-8ca9-e6b5-3d57c4d2acc5@huawei.com>
+ <20200416213946.GA196168@google.com>
+ <fd8b116a-7830-809c-70a4-a3a12da1eb14@huawei.com>
+ <20200423194952.GA99191@google.com>
+ <e67273bc-7416-c86e-58ba-c025029e8099@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20042403-0008-0000-0000-000003765C89
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20042403-0009-0000-0000-00004A982BA6
-Message-Id: <20200424053338.658b2a05.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-23_19:2020-04-23,2020-04-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
- impostorscore=0 adultscore=0 priorityscore=1501 bulkscore=0 clxscore=1015
- malwarescore=0 mlxlogscore=997 lowpriorityscore=0 suspectscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004240020
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e67273bc-7416-c86e-58ba-c025029e8099@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Apr 2020 11:37:21 +0200
-Cornelia Huck <cohuck@redhat.com> wrote:
-
-> On Wed, 15 Apr 2020 13:10:10 -0400
-> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
-> 
-> > On 4/14/20 8:58 AM, Cornelia Huck wrote:
-> > > On Tue,  7 Apr 2020 15:20:03 -0400
-> > > Tony Krowiak <akrowiak@linux.ibm.com> wrote:
-> 
-> > >> +
-> > >> +	if (ap_drv->in_use)
-> > >> +		if (ap_drv->in_use(newapm, ap_perms.aqm))  
-> > > Can we log the offending apm somewhere, preferably with additional info
-> > > that allows the admin to figure out why an error was returned?  
+On 04/24, Chao Yu wrote:
+> On 2020/4/24 3:49, Jaegeuk Kim wrote:
+> > On 04/23, Chao Yu wrote:
+> >> On 2020/4/17 5:39, Jaegeuk Kim wrote:
+> >>> f2fs_quota_sync() uses f2fs_lock_op() before flushing dirty pages, but
+> >>> f2fs_write_data_page() returns EAGAIN.
+> >>> Likewise dentry blocks, we can just bypass getting the lock, since quota
+> >>> blocks are also maintained by checkpoint.
+> >>>
+> >>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> >>> ---
+> >>> v2:
+> >>>  - fix multipage write case
+> >>>
+> >>>  fs/f2fs/compress.c | 2 +-
+> >>>  fs/f2fs/data.c     | 4 ++--
+> >>>  2 files changed, 3 insertions(+), 3 deletions(-)
+> >>>
+> >>> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+> >>> index df7b2d15eacde..faaa358289010 100644
+> >>> --- a/fs/f2fs/compress.c
+> >>> +++ b/fs/f2fs/compress.c
+> >>> @@ -985,7 +985,7 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+> >>>  	loff_t psize;
+> >>>  	int i, err;
+> >>>  
+> >>> -	if (!f2fs_trylock_op(sbi))
+> >>> +	if (!IS_NOQUOTA(inode) && !f2fs_trylock_op(sbi))
+> >>>  		return -EAGAIN;
+> >>
+> >> I encounter deadlock..
+> >>
+> >> Should call f2fs_unlock_op() for non-quota compressed inode later.
 > > 
-> > One of the things on my TODO list is to add logging to the vfio_ap
-> > module which will track all significant activity within the device
-> > driver. I plan to do that with a patch or set of patches specifically
-> > put together for that purpose. Having said that, the best place to
-> > log this would be in the in_use callback in the vfio_ap device driver
-> > (see next patch) where the APQNs that are in use can be identified.
-> > For now, I will log a message to the dmesg log indicating which
-> > APQNs are in use by the matrix mdev.
+> > Could you elaborate a bit?
 > 
-> Sounds reasonable. My main issue was what an admin was supposed to do
-> until logging was in place :)
+> I meant we need to change as below, otherwise, cp_rwsem can be negative
+> after f2fs_unlock_op if writebacked datas are belong to compressed quota
+> file.
 
-Logging may not be the right answer here. Imagine somebody wants to build
-a nice web-tool for managing this stuff at scale -- e.g. something HMC. I
-don't think the solution is to let this tool parse the kernel messages
-and try to relate that to its own transactions.
+Ah, I see. Fixed.
 
-But I do agree, having a way to report why "won't do" to the end user is
-important for usability.
+Thanks,
 
-Regards,
-Halil
-
+> 
+> >From 817dc629c47d3000c595640ecb3099b880519d47 Mon Sep 17 00:00:00 2001
+> From: Jaegeuk Kim <jaegeuk@kernel.org>
+> Date: Thu, 9 Apr 2020 10:25:21 -0700
+> Subject: [PATCH] f2fs: fix quota_sync failure due to f2fs_lock_op
+> 
+> f2fs_quota_sync() uses f2fs_lock_op() before flushing dirty pages, but
+> f2fs_write_data_page() returns EAGAIN.
+> Likewise dentry blocks, we can just bypass getting the lock, since quota
+> blocks are also maintained by checkpoint.
+> 
+> Reviewed-by: Chao Yu <yuchao0@huawei.com>
+> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> ---
+>  fs/f2fs/compress.c | 8 +++++---
+>  fs/f2fs/data.c     | 4 ++--
+>  2 files changed, 7 insertions(+), 5 deletions(-)
+> 
+> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+> index df7b2d15eacd..26b071afe48a 100644
+> --- a/fs/f2fs/compress.c
+> +++ b/fs/f2fs/compress.c
+> @@ -985,7 +985,7 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+>  	loff_t psize;
+>  	int i, err;
+> 
+> -	if (!f2fs_trylock_op(sbi))
+> +	if (!IS_NOQUOTA(inode) && !f2fs_trylock_op(sbi))
+>  		return -EAGAIN;
+> 
+>  	set_new_dnode(&dn, cc->inode, NULL, NULL, 0);
+> @@ -1092,7 +1092,8 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+>  		set_inode_flag(inode, FI_FIRST_BLOCK_WRITTEN);
+> 
+>  	f2fs_put_dnode(&dn);
+> -	f2fs_unlock_op(sbi);
+> +	if (!IS_NOQUOTA(inode))
+> +		f2fs_unlock_op(sbi);
+> 
+>  	spin_lock(&fi->i_size_lock);
+>  	if (fi->last_disk_size < psize)
+> @@ -1118,7 +1119,8 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+>  out_put_dnode:
+>  	f2fs_put_dnode(&dn);
+>  out_unlock_op:
+> -	f2fs_unlock_op(sbi);
+> +	if (!IS_NOQUOTA(inode))
+> +		f2fs_unlock_op(sbi);
+>  	return -EAGAIN;
+>  }
+> 
+> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> index 8dd48c5b6c0d..dd439dbb134d 100644
+> --- a/fs/f2fs/data.c
+> +++ b/fs/f2fs/data.c
+> @@ -2660,8 +2660,8 @@ int f2fs_write_single_data_page(struct page *page, int *submitted,
+>  			f2fs_available_free_memory(sbi, BASE_CHECK))))
+>  		goto redirty_out;
+> 
+> -	/* Dentry blocks are controlled by checkpoint */
+> -	if (S_ISDIR(inode->i_mode)) {
+> +	/* Dentry/quota blocks are controlled by checkpoint */
+> +	if (S_ISDIR(inode->i_mode) || IS_NOQUOTA(inode)) {
+>  		fio.need_lock = LOCK_DONE;
+>  		err = f2fs_do_write_data_page(&fio);
+>  		goto done;
+> -- 
+> 2.18.0.rc1
+> 
+> 
 > 
 > > 
-> > >  
-> > >> +			rc = -EADDRINUSE;
-> > >> +
-> > >> +	module_put(drv->owner);
-> > >> +
-> > >> +	return rc;
-> > >> +}  
-> 
-
+> >>
+> >> Thanks,
+> >>
+> >>>  
+> >>>  	set_new_dnode(&dn, cc->inode, NULL, NULL, 0);
+> >>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> >>> index accd28728642a..5c8d3823d7593 100644
+> >>> --- a/fs/f2fs/data.c
+> >>> +++ b/fs/f2fs/data.c
+> >>> @@ -2656,8 +2656,8 @@ int f2fs_write_single_data_page(struct page *page, int *submitted,
+> >>>  			f2fs_available_free_memory(sbi, BASE_CHECK))))
+> >>>  		goto redirty_out;
+> >>>  
+> >>> -	/* Dentry blocks are controlled by checkpoint */
+> >>> -	if (S_ISDIR(inode->i_mode)) {
+> >>> +	/* Dentry/quota blocks are controlled by checkpoint */
+> >>> +	if (S_ISDIR(inode->i_mode) || IS_NOQUOTA(inode)) {
+> >>>  		fio.need_lock = LOCK_DONE;
+> >>>  		err = f2fs_do_write_data_page(&fio);
+> >>>  		goto done;
+> >>>
+> > .
+> > 
