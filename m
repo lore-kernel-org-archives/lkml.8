@@ -2,127 +2,76 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2270C5518A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05513C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B558F20774
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFCD320774
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:11:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgDXIHM (ORCPT
+        id S1726582AbgDXILB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 04:07:12 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42824 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbgDXIHM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 04:07:12 -0400
-Received: by mail-ot1-f67.google.com with SMTP id m18so10934569otq.9;
-        Fri, 24 Apr 2020 01:07:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tzIFhflCUpW0vlwD+HN499aTW1TuNaMPbwNcI/YnbU8=;
-        b=sSX50AOTW8dUpnYE+Fuki2PZITmeLRO2PtouLIrv57IVcQz0IpnI4UWvD99MmD22yG
-         SAWGvNwBFbajaf2NXazrw13oSgONZZzVIEipsFpGgNCEMKxzkTXVsSOzRxdH+T18CD2M
-         1vJcwMfEmF0chAmi4ptV146nIChqbDtplA60esmVB1mD0hzAqP5ICjmEnoeJ2PWTrXHr
-         HOYEHExELPJ+QQ/ITljVEPHhGyAkTfNxfTFNFu1c+ZXcg2Ttb54u9+BuP35RbAL3a6fr
-         xJJFo19E6jBwuAgtvkjYUIKA5Kav+fmHqVhGY9bFQwzluIN5S6zKlOC/Wh5FzPx3sNHH
-         xs1Q==
-X-Gm-Message-State: AGi0PuZv9BDBONgIydasA6ozGJSt1zrtVm6AZp/b831RR8clkn6PwCGJ
-        r7LibU1b08ZCKqT/nlAXXLjnCDbRYkxNPYWz2AzHapEy
-X-Google-Smtp-Source: APiQypKQNbeN4mNtj3QtUc1MVDLrUbKP4GFG3yBb1TIc/Bv8Ot642D/RYCQ/hI/TESa0U15+fXMnRv0n9KoFV8tx1ZE=
-X-Received: by 2002:a9d:7d85:: with SMTP id j5mr6433482otn.107.1587715630830;
- Fri, 24 Apr 2020 01:07:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200422101026.9220-1-erosca@de.adit-jv.com> <20200422101026.9220-2-erosca@de.adit-jv.com>
-In-Reply-To: <20200422101026.9220-2-erosca@de.adit-jv.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 24 Apr 2020 10:06:59 +0200
-Message-ID: <CAMuHMdXvrBHuBpVbJ=fUcRsQ9qk4Q3Lr13DeJjiHanN3f8K+1g@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/3] dt-bindings: gpio-rcar: Add optional
- use-alternative-interrupt property
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Chris Paterson <chris.paterson2@renesas.com>,
-        Yusuke Ashiduka <ashiduka@fujitsu.com>,
-        Torii Kenichi <torii.ken1@jp.fujitsu.com>,
-        Fukui Yohhei <yohhei.fukui@denso-ten.com>,
-        Yasushi Asano <yasano@jp.adit-jv.com>,
-        Yuichi Kusakabe <yuichi.kusakabe@denso-ten.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Jiada Wang <jiada_wang@mentor.com>,
-        Eugeniu Rosca <rosca.eugeniu@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
+        Fri, 24 Apr 2020 04:11:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52786 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbgDXILA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 04:11:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 11D68AED2;
+        Fri, 24 Apr 2020 08:10:59 +0000 (UTC)
+Message-ID: <1587715859.28179.17.camel@suse.cz>
+Subject: Re: [BISECTED] bug/regression, x86-64: completely unbootable machine
+From:   Giovanni Gherdovich <ggherdovich@suse.cz>
+To:     Rui Salvaterra <rsalvaterra@gmail.com>, x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Date:   Fri, 24 Apr 2020 10:10:59 +0200
+In-Reply-To: <CALjTZvaiCzPQT6Jrx4pFW6KuZj2WLSQQpCbU-sg1jEgscQAKFQ@mail.gmail.com>
+References: <CALjTZvaiCzPQT6Jrx4pFW6KuZj2WLSQQpCbU-sg1jEgscQAKFQ@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eugeniu,
+On Fri, 2020-04-24 at 09:00 +0100, Rui Salvaterra wrote:
+> Hi, everyone,
+> 
+> Starting with Linux 5.7-rc1, my Arrandale (Core i3-380M) laptop is
+> completely unbootable (the last messages on screen are GRUB's loading
+> kernel/initramfs). I was hoping someone would have noticed it before
+> 5.7-rc2 had been tagged, but alas. Anyway, I bisected it down to
+> commit 1567c3e3467cddeb019a7b53ec632f834b6a9239 (x86, sched: Add
+> support for frequency invariance). After reverting it, the machine
+> boots again, obviously.
+> 
+> Let me know if you need any further info in order to fix this issue.
+> 
+> Complete bisection log follows.
+> [...]
 
-CC devicetree
+Hello Rui,
 
-On Wed, Apr 22, 2020 at 12:11 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
-> From: Torii Kenichi <torii.ken1@jp.fujitsu.com>
->
-> When setting this property, you must set alternate interrupt number in
-> the 'interrupts' property.
->
-> Signed-off-by: Torii Kenichi <torii.ken1@jp.fujitsu.com>
-> [erosca: tidy up the descriptions/comments]
-> Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+thanks for the report.
 
-Thanks for your/forwarding this patch!
+The problem you encountered is due to a bug where the code doesn't work on
+machines with less than 4 physical CPU cores. It is fixed by this patch
+series:
 
-> --- a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-> +++ b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-> @@ -50,6 +50,9 @@ Optional properties:
->    - clocks: Must contain a reference to the functional clock.  The property is
->      mandatory if the hardware implements a controllable functional clock for
->      the GPIO instance.
-> +  - use-alternative-interrupt: Use 'alternative' GPIO interrupt instead
+https://lore.kernel.org/lkml/20200416054745.740-1-ggherdovich@suse.cz/
 
-renesas,use-alternative-interrupt?
-(unless you can convince Rob this becomes a generic property).
+The series has been merged in the branch sched/urgent of the "tip" tree
+(https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git), the commit
+fixing the bug you observed is 23ccee22e834 (x86, sched: Account for CPUs
+with less than 4 cores in freq. invariance), and will be merged in Linus'
+tree at some point.
 
-> +    of 'normal' GPIO interrupt. When you specify this property, you must
-> +    also change the 'interrupts' DT property.
 
-In light of "DT describes the hardware", I think you should instead list
-both interrupts in DT.  I.e. first/single interrupt is the normal one,
-second optional interrupt is the alternative one.
-
-On R-Car Gen2, the oldest SoC family with this feature I could find,
-they are called "ext_int" resp. "ext_alt_int", so introducing the
-optional "clock-names" property would be a good idea, too.
-
->    - gpio-reserved-ranges: See gpio.txt.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks,
+Giovanni Gherdovich
