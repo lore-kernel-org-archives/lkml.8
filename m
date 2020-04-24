@@ -2,94 +2,184 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D3AEC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E054C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D47BE20736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:31:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587724283;
-	bh=h66Ml5FnOsOSWU6lMS3uLnKawUO+JUEIXmAgQhGYYbI=;
-	h=Date:From:To:In-Reply-To:References:Subject:List-ID:From;
-	b=QjxuLCVOeKhd5xnJTDaz2S/2Y5NHDD+c3aN165gQY80AaP6fIGyRiZjK8Zx8US08i
-	 S4mGQel0Tb/SInH4LnSTNDF0TgUvz4/+ybV8bM0of6EFxCK7QAZJRv8Rxl6cyR45xM
-	 OEUcHlzO1B7T4rMEpx740rL+kXu3j8ObCSrwjNRM=
+	by mail.kernel.org (Postfix) with ESMTP id 4021C2071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:35:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IjY0s8yZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726849AbgDXKbX (ORCPT
+        id S1726845AbgDXKfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 06:31:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45850 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726193AbgDXKbW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 06:31:22 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE6722071E;
-        Fri, 24 Apr 2020 10:31:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587724282;
-        bh=h66Ml5FnOsOSWU6lMS3uLnKawUO+JUEIXmAgQhGYYbI=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=iPEubyNKFt0g7XIDtD7BIoymS6NCtN+DD747wgEWgF+cfYeYd1t6wh2B37G6Tlsni
-         YyFxwMKh8JP9LtstkVzcy1x0b3PE3q8c4Nm6v1MZJzmxAt4KF2mKpfijSm/rEbovdc
-         vj7YXG0cCEqssjx4gLYfN4Mc1EK8UX2OqUf+d53o=
-Date:   Fri, 24 Apr 2020 11:31:19 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     perex@perex.cz, alsa-devel@alsa-project.org, tglx@linutronix.de,
-        allison@lohutok.net, patches@opensource.cirrus.com, tiwai@suse.com,
-        lgirdwood@gmail.com, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        linux-kernel@vger.kernel.org, info@metux.net
-In-Reply-To: <6d25d5b36d4b9aeb8655b5e947dad52214e34177.1587693523.git.shengjiu.wang@nxp.com>
-References: <6d25d5b36d4b9aeb8655b5e947dad52214e34177.1587693523.git.shengjiu.wang@nxp.com>
-Subject: Re: [PATCH v2] ASoC: wm8962: set CLOCKING2 as non-volatile register
-Message-Id: <158772427980.54572.3910251949812603149.b4-ty@kernel.org>
+        Fri, 24 Apr 2020 06:35:24 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43336 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726289AbgDXKfX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 06:35:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587724521;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ntfPLZXoNyTvwSjnNtD9RbmeW0yN1V6v3M89sKls28c=;
+        b=IjY0s8yZj2KYuelyE2zv4p3ddP6ogAEXoUUQ1PtaiS1D8FHWbvR4kL3uKbnGghjLQF4333
+        R+IbATcNdiOXLmx5+gEpVZE+ms2s464EZisrEZY1NRuE4R1lnT8xvFOLHfISrqbBJgRzxY
+        ZxHGYvEX8pVTqi3eRShhKhW3O0EN6qQ=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-367-HoK4VjOdMbePx1UNpKa1rQ-1; Fri, 24 Apr 2020 06:35:19 -0400
+X-MC-Unique: HoK4VjOdMbePx1UNpKa1rQ-1
+Received: by mail-wm1-f69.google.com with SMTP id h22so3630914wml.1
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 03:35:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ntfPLZXoNyTvwSjnNtD9RbmeW0yN1V6v3M89sKls28c=;
+        b=BFVUhKCC1F01yCJsvKdMboR/DyYCxfSP6yuIm7ginQsB0IlhfbDZJ8xWfxMbFu+5z8
+         FZFIjUID+6d63DCPHkTh6kGQr5eQ+PYayQwp1SV787s7WByw64CwsskRkkiNEOfau8IZ
+         nZ9k/Wg/iQtz95fGz9AI0OGKIeYH8BE5VD74jM4eHjhejAlEAO8adh2PWnHTmhGLpoez
+         G3cP88BK3yf90DiMEKYqYMQGTSuxfzLM+FTF5JsNJQVFg2a+v2Ecstj56SnGXDMbSgX3
+         5JHITy6Tti7sj0ISpFiWKtnqMdpm8UMFrf4qbeJTUYFzRNI1uU9Kab62jVdis/3rc0/h
+         0+kA==
+X-Gm-Message-State: AGi0PuaJ7xji3yDl9tP0NxsLiMYtAftH16ihDcYCopsxW/amGOkm0oQr
+        orze0F92i9UEY6GbodFWfNR7kmU6Fa/6Z8tT6CxjHdcxBKWXwwaUw2026r9EWdZwg0E9BZ5zwM3
+        RzZarklczDiPLtcMLDxvtwJXH
+X-Received: by 2002:a1c:3884:: with SMTP id f126mr9826285wma.91.1587724518696;
+        Fri, 24 Apr 2020 03:35:18 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJwafXiFz/67CLTHYy0TolHGXrpgwxNZZfuWGXn40Y8iNEzMExmzSW5yG6FLTxenAUETL6jWw==
+X-Received: by 2002:a1c:3884:: with SMTP id f126mr9826249wma.91.1587724518274;
+        Fri, 24 Apr 2020 03:35:18 -0700 (PDT)
+Received: from steredhat (host108-207-dynamic.49-79-r.retail.telecomitalia.it. [79.49.207.108])
+        by smtp.gmail.com with ESMTPSA id 5sm2228287wmg.34.2020.04.24.03.35.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Apr 2020 03:35:17 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 12:35:15 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Stefan Hajnoczi <stefanha@redhat.com>
+Cc:     Stefan Hajnoczi <stefanha@gmail.com>, davem@davemloft.net,
+        Gerard Garcia <ggarcia@abra.uab.cat>, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [PATCH net] vsock/virtio: postpone packet delivery to monitoring
+ devices
+Message-ID: <20200424103515.v62vldnnmtz3r6dm@steredhat>
+References: <20200421092527.41651-1-sgarzare@redhat.com>
+ <20200421154246.GA47385@stefanha-x1.localdomain>
+ <20200421161724.c3pnecltfz4jajww@steredhat>
+ <20200422165420.GL47385@stefanha-x1.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422165420.GL47385@stefanha-x1.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Apr 2020 10:01:38 +0800, Shengjiu Wang wrote:
-> Previously CLOCKING2 is set as a volatile register, but cause
-> issue at suspend & resume, that some bits of CLOCKING2 is not
-> restored at resume, for example SYSCLK_SRC bits, then the output
-> clock is wrong.
+On Wed, Apr 22, 2020 at 05:54:20PM +0100, Stefan Hajnoczi wrote:
+> On Tue, Apr 21, 2020 at 06:17:24PM +0200, Stefano Garzarella wrote:
+> > On Tue, Apr 21, 2020 at 04:42:46PM +0100, Stefan Hajnoczi wrote:
+> > > On Tue, Apr 21, 2020 at 11:25:27AM +0200, Stefano Garzarella wrote:
+> > > > We delivering packets to monitoring devices, before to check if
+> > > > the virtqueue has enough space.
+> > > 
+> > > "We [are] delivering packets" and "before to check" -> "before
+> > > checking".  Perhaps it can be rewritten as:
+> > > 
+> > >   Packets are delivered to monitoring devices before checking if the
+> > >   virtqueue has enough space.
+> > > 
+> > 
+> > Yeah, it is better :-)
+> > 
+> > > > 
+> > > > If the virtqueue is full, the transmitting packet is queued up
+> > > > and it will be sent in the next iteration. This causes the same
+> > > > packet to be delivered multiple times to monitoring devices.
+> > > > 
+> > > > This patch fixes this issue, postponing the packet delivery
+> > > > to monitoring devices, only when it is properly queued in the
+> > > 
+> > > s/,//
+> > > 
+> > > > virqueue.
+> > > 
+> > > s/virqueue/virtqueue/
+> > > 
+> > 
+> > Thanks, I'll fix in the v2!
+> > 
+> > > > @@ -137,6 +135,11 @@ virtio_transport_send_pkt_work(struct work_struct *work)
+> > > >  			break;
+> > > >  		}
+> > > >  
+> > > > +		/* Deliver to monitoring devices all correctly transmitted
+> > > > +		 * packets.
+> > > > +		 */
+> > > > +		virtio_transport_deliver_tap_pkt(pkt);
+> > > > +
+> > > 
+> > > The device may see the tx packet and therefore receive a reply to it
+> > > before we can call virtio_transport_deliver_tap_pkt().  Does this mean
+> > > that replies can now appear in the packet capture before the transmitted
+> > > packet?
+> > 
+> > hmm, you are right!
+> > 
+> > And the same thing can already happen in vhost-vsock where we call
+> > virtio_transport_deliver_tap_pkt() after the vhost_add_used(), right?
+> > 
+> > The vhost-vsock case can be fixed in a simple way, but here do you think
+> > we should serialize them? (e.g. mutex, spinlock)
+> > 
+> > In this case I'm worried about performance.
+> > 
+> > Or is there some virtqueue API to check availability?
 > 
-> The volatile property is caused by CLASSD_CLK_DIV bits,
-> which are controlled by the chip itself. But the datasheet
-> claims these are read only and protected by the security key,
-> and they are not read by the driver at all.
-> 
-> [...]
+> Let's stick to the same semantics as Ethernet netdevs.  That way there
+> are no surprises to anyone who is familiar with Linux packet captures.
+> I don't know what those semantics are though, you'd need to check the
+> code :).
 
-Applied to
+IIUC, the packet is delivered to tap/monitoring devices before to call
+the xmit() callback provided by the NIC driver.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.7
+At that point, if the packet is delayed/dropped/retransmitted by the driver
+or the NIC, the monitoring application is not aware.
 
-Thanks!
+So, I think we can delivery it the first time that we see the packet,
+before to queue it in the virtqueue (I should revert this change and fix
+vhost-vsock), setting a flag in the 'struct virtio_vsock_pkt' to avoid
+to delivery it multiple times.
 
-[1/1] ASoC: wm8962: set CLOCKING2 as non-volatile register
-      commit: c38b608504aa1ad8bfa00d85abd61cffad57f27f
+I mean something like this:
+--- a/net/vmw_vsock/virtio_transport_common.c
++++ b/net/vmw_vsock/virtio_transport_common.c
+@@ -157,7 +157,11 @@ static struct sk_buff *virtio_transport_build_skb(void *opaque)
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+ void virtio_transport_deliver_tap_pkt(struct virtio_vsock_pkt *pkt)
+ {
++       if (pkt->tap_delivered)
++               return;
++
+        vsock_deliver_tap(virtio_transport_build_skb, pkt);
++       pkt->tap_delivered = true;
+ }
+ EXPORT_SYMBOL_GPL(virtio_transport_deliver_tap_pkt);
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Let me know if you think it is a bad idea.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+I'll send a v2 whit these changes.
 
 Thanks,
-Mark
+Stefano
+
