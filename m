@@ -2,133 +2,121 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 319CCC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7664AC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 148DC20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74EE320767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:22:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="cxxk591O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbgDXNWB (ORCPT
+        id S1728059AbgDXNWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 09:22:01 -0400
-Received: from mga18.intel.com ([134.134.136.126]:26970 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726888AbgDXNWA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 09:22:00 -0400
-IronPort-SDR: aILh596cps8DEppJvtcPC+64xO9G7kbPYMvUOJCTRNrtxbqNXO2i21MRVMXyZnnT80Kz1hILim
- ibGFgrFR3A9A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2020 06:21:59 -0700
-IronPort-SDR: oaGBBMiFEtDI0vHr8jOq2s7krzrgEp/x0I1rnzuhwhBFkLZwHscv+f2WsU0c9Aw8XimoJHEJpT
- y9XDrGw3VfhQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,311,1583222400"; 
-   d="scan'208";a="403297318"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.173.189]) ([10.249.173.189])
-  by orsmga004.jf.intel.com with ESMTP; 24 Apr 2020 06:21:58 -0700
-Subject: Re: [RFC PATCH 2/3] kvm: x86: Use KVM_DEBUGREG_NEED_RELOAD instead of
- KVM_DEBUGREG_BP_ENABLED
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Nadav Amit <namit@cs.technion.ac.il>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linux-kernel@vger.kernel.org
-References: <20200416101509.73526-1-xiaoyao.li@intel.com>
- <20200416101509.73526-3-xiaoyao.li@intel.com>
- <20200423192949.GO17824@linux.intel.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <ea6e0343-8c51-52c7-ba7b-48d3d4e7177a@intel.com>
-Date:   Fri, 24 Apr 2020 21:21:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 24 Apr 2020 09:22:50 -0400
+Received: from mail-eopbgr1410110.outbound.protection.outlook.com ([40.107.141.110]:31456
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726872AbgDXNWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 09:22:50 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SsSmP+UEydSAbB/lz7qRuOenj9JcX9i0QkZ+ELcenc70FuIaOVY+snmfCYzINHTvcyexoSdeUOp+7BGE+H6CD1vP+Ui94k96RzIHszZfpEcoBRTRuPHiiToU4kTCAizbgSKYZgyEeo23NN/AVbeHwdxRZ5etXj1lNqpCrX57jYjLNGnB2QpRVwZTUG1dsd0b4A0x9Dbl4BIcNb3X7gWYlN0dssXZaRBOizrI9r5qicbhmJsLzhb8exZNFGuUShtj3tUIvbiniTgbequVDcSdlbyQAsBX7AxMNNjxAK9KvJ9EtrSXX/Cv2UrlZJqJUUmYpx34F6z7kJq1m58jfHIHmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4uLlzLiN8yi7CScHuYWI8qOTghBOyIPgyy5Ex2cOm2k=;
+ b=dO0m7yL/AHrt9q0jqe9bhuo8udAEGs9eZ1c2heJySUvw/15Q9HsWHfTJPOjqRP6TQ4HVdwwappLOzyOVbbWfbS7fUgf+4A7Cfqgl9p1JjoAxeqUlERCex3BRgukbML8z5q40A8dVTMKINkXmIUObS7kUEhWfzxp4XtHGoL+rzLC1eqaBCb3Ifr9iGWo6kv592L0SNvw8UGGTIVWLci52LWT46jgZe0EaY848X5+ngFt0mOvI9hJgx+b214aO+u+We5ojsS38KzdllvHHWJ8GhulXYILL7cKXospCKI1URcIBOHxpTxFdsolU2ynOWQSL/xTFZgI8RGe3UODBnNnXRA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4uLlzLiN8yi7CScHuYWI8qOTghBOyIPgyy5Ex2cOm2k=;
+ b=cxxk591O2bdCR/xYqZIPvnnyk5vCThR1gAAQFjpyC6ONinOdTxd2BSwQu8hpnhBY1hs3uQL7Pe4PdIHVQXa5bUXmfGJrePxjA+Ca2AUICrPBPjsxVaJ0X9auw0trODsRGuyoVXnZaU8mW6TahsK30J+aaUThSbmEVHwa/Eq4Fbc=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=vincent.cheng.xh@renesas.com; 
+Received: from TYAPR01MB4735.jpnprd01.prod.outlook.com (20.179.186.82) by
+ TYAPR01MB2784.jpnprd01.prod.outlook.com (20.177.102.85) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2921.29; Fri, 24 Apr 2020 13:22:45 +0000
+Received: from TYAPR01MB4735.jpnprd01.prod.outlook.com
+ ([fe80::5079:4b36:6c93:3a5b]) by TYAPR01MB4735.jpnprd01.prod.outlook.com
+ ([fe80::5079:4b36:6c93:3a5b%7]) with mapi id 15.20.2937.020; Fri, 24 Apr 2020
+ 13:22:45 +0000
+Date:   Fri, 24 Apr 2020 09:22:34 -0400
+From:   Vincent Cheng <vincent.cheng.xh@renesas.com>
+To:     Yang Yingliang <yangyingliang@huawei.com>
+Cc:     richardcochran@gmail.com, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2] ptp: clockmatrix: remove unnecessary
+ comparison
+Message-ID: <20200424132233.GA18127@renesas.com>
+References: <1587732746-98057-1-git-send-email-yangyingliang@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1587732746-98057-1-git-send-email-yangyingliang@huawei.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-ClientProxiedBy: BYAPR08CA0013.namprd08.prod.outlook.com
+ (2603:10b6:a03:100::26) To TYAPR01MB4735.jpnprd01.prod.outlook.com
+ (2603:1096:404:12b::18)
 MIME-Version: 1.0
-In-Reply-To: <20200423192949.GO17824@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from renesas.com (173.195.53.163) by BYAPR08CA0013.namprd08.prod.outlook.com (2603:10b6:a03:100::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Fri, 24 Apr 2020 13:22:43 +0000
+X-Originating-IP: [173.195.53.163]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 5b10ff67-008d-4924-8c47-08d7e852930c
+X-MS-TrafficTypeDiagnostic: TYAPR01MB2784:
+X-Microsoft-Antispam-PRVS: <TYAPR01MB2784E6A125D52DE9BDCA427DD2D00@TYAPR01MB2784.jpnprd01.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
+X-Forefront-PRVS: 03838E948C
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4735.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(346002)(39860400002)(136003)(366004)(396003)(376002)(16526019)(4744005)(2616005)(81156014)(52116002)(26005)(1076003)(956004)(7696005)(316002)(86362001)(5660300002)(66946007)(8676002)(6666004)(55016002)(36756003)(4326008)(8886007)(478600001)(2906002)(66476007)(66556008)(186003)(8936002)(6916009)(33656002);DIR:OUT;SFP:1102;
+Received-SPF: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: SqxbuvjorV8nqcnMZPS+rZvry7uHKuBZ2+OId2H8sRnZEqr/Na1rO3B130pbPag5phUHk0xaCA5+ZEirYX4fqpKP3OfHPf9DmDLrgv5VqpWIfeMM3bqOnWgr32Wj1z4HOALEKh3YfQe/uneIcHDqgvHV/XexLH752sm/7B7CemkfTFaEFxfNF0VxM89gWXbUY3+uUyqPG0ARNGie3UO/PzLlBX9WJexjhQ7Wqb6pbsFGJujRMa7vSZdcGgN7r+SlP6bVMZs/Bpr/1MzxkDbhADoN3iWrRB390GWbnvEaDulBVoNJjhxTvFCO54pIyVQUehGJPtXpbri7sldaYTngrluEBDpTe1i4vnP9feRrWad5FZeCg3qmTJMHOzOYjgqYhy/exH8WXOupWqivuEWYFFNWws1umV7B1JapWvDEUBbqhaX0pZvtEZGqgPS9jVWM
+X-MS-Exchange-AntiSpam-MessageData: ePf020sB+x459Va/FfI119tzBKB9XHX8RBGoD66b4ffWCuBW6DnC8JcxDsyYZwUuZ4ggi9o3K0B9Puh1fatMfpxT4F8gEJFrud1CrZcT14xlL5ef9VRPfHX/Yu/qtMYSIms6g0gLK13MSX4F+NPEMg==
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5b10ff67-008d-4924-8c47-08d7e852930c
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2020 13:22:44.9958
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UScd7w0AQ3zC007Qwbz/iEPlhw1aaV4t7cUxYjHb/RQq5kcerkciJayGIL5nBI6LTgbDCcO1l3Al4nuvZPVuXSknkdDtvyORd89Nd6MlKec=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2784
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/24/2020 3:29 AM, Sean Christopherson wrote:
-> On Thu, Apr 16, 2020 at 06:15:08PM +0800, Xiaoyao Li wrote:
->> Once any #BP enabled in DR7, it will set KVM_DEBUGREG_BP_ENABLED, which
->> leads to reload DRn before every VM entry even if none of DRn changed.
->>
->> Drop KVM_DEBUGREG_BP_ENABLED flag and set KVM_DEBUGREG_NEED_RELOAD flag
->> for the cases that DRn need to be reloaded instead, to avoid unnecessary
->> DRn reload.
+>Reported-by: Hulk Robot <hulkci@huawei.com>
+>Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+>---
+> drivers/ptp/ptp_clockmatrix.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>
+>diff --git a/drivers/ptp/ptp_clockmatrix.c b/drivers/ptp/ptp_clockmatrix.c
+>index 032e112..56aee4f 100644
+>--- a/drivers/ptp/ptp_clockmatrix.c
+>+++ b/drivers/ptp/ptp_clockmatrix.c
+>@@ -780,7 +780,7 @@ static int idtcm_load_firmware(struct idtcm *idtcm,
 > 
-> Loading DRs on every VM-Enter _is_ necessary if there are breakpoints
-> enabled for the guest.  The hardware DR values are not "stable", e.g. they
-> are loaded with the host's values immediately after saving the guest's
-> value (if DR_EXITING is disabled) in vcpu_enter_guest(), notably iff the
-> host has an active/enabled breakpoint.  
-
-May bad, bbviously I didn't think about it.
-
-> My bet is that DRs can be changed
-> from interrupt context as well.
-So set KVM_DEBUGREG_NEED_RELOAD in vcpu_load won't help.
-
-> Loading DRs for the guest (not necessarily the same as the guest's DRs) is
-> necessary if a breakpoint is enabled so that the #DB is actually hit in
-> guest.  It's a similar concept to instructions that consume MSR values,
-> e.g. SYSCALL, RDTSCP, etc..., even if KVM intercepts the MSR/DR, hardware
-> still needs the correct value so that the guest behavior is correct.
+> 			/* Page size 128, last 4 bytes of page skipped */
+> 			if (((loaddr > 0x7b) && (loaddr <= 0x7f))
+>-			     || ((loaddr > 0xfb) && (loaddr <= 0xff)))
+>+			     || loaddr > 0xfb)
+> 				continue;
 > 
->> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
->> ---
->>   arch/x86/include/asm/kvm_host.h | 3 +--
->>   arch/x86/kvm/x86.c              | 4 ++--
->>   2 files changed, 3 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
->> index f465c76e6e5a..87e2d020351e 100644
->> --- a/arch/x86/include/asm/kvm_host.h
->> +++ b/arch/x86/include/asm/kvm_host.h
->> @@ -509,9 +509,8 @@ struct kvm_pmu {
->>   struct kvm_pmu_ops;
->>   
->>   enum {
->> -	KVM_DEBUGREG_BP_ENABLED = 1,
->> +	KVM_DEBUGREG_NEED_RELOAD = 1,
->>   	KVM_DEBUGREG_WONT_EXIT = 2,
->> -	KVM_DEBUGREG_NEED_RELOAD = 4,
->>   };
->>   
->>   struct kvm_mtrr_range {
->> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->> index cce926658d10..71264df64001 100644
->> --- a/arch/x86/kvm/x86.c
->> +++ b/arch/x86/kvm/x86.c
->> @@ -1086,9 +1086,8 @@ static void kvm_update_dr7(struct kvm_vcpu *vcpu)
->>   	else
->>   		dr7 = vcpu->arch.dr7;
->>   	kvm_x86_ops.set_dr7(vcpu, dr7);
->> -	vcpu->arch.switch_db_regs &= ~KVM_DEBUGREG_BP_ENABLED;
->>   	if (dr7 & DR7_BP_EN_MASK)
->> -		vcpu->arch.switch_db_regs |= KVM_DEBUGREG_BP_ENABLED;
->> +		vcpu->arch.switch_db_regs |= KVM_DEBUGREG_NEED_RELOAD;
->>   }
->>   
->>   static u64 kvm_dr6_fixed(struct kvm_vcpu *vcpu)
->> @@ -1128,6 +1127,7 @@ static int __kvm_set_dr(struct kvm_vcpu *vcpu, int dr, unsigned long val)
->>   		break;
->>   	}
->>   
->> +	vcpu->arch.switch_db_regs |= KVM_DEBUGREG_NEED_RELOAD;
->>   	return 0;
->>   }
->>   
->> -- 
->> 2.20.1
->>
+> 			err = idtcm_write(idtcm, regaddr, 0, &val, sizeof(val));
+
+Thank-you for the fix.
+
+Reviewed-by: Vincent Cheng  <vincent.cheng.xh@renesas.com>
 
