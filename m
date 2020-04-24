@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D177C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03956C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0A9020736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6D7B20767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:07:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587733621;
-	bh=u/xP6CoK1MUmVKKpWlYTdz2lShxhmNKAh4XSY+FwLjI=;
+	s=default; t=1587733624;
+	bh=dv+ZaFhzeEqvKSGnInxiwWTt/ioK6J793NdZ5ogNnHw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V+MZXtJNCtE2JAd8o7nlLmwMIcwlw8Ko6EuyS6oovHmdJevLCfWl9lRpQoxmQq/SJ
-	 LxaDNZSDgbZ63R4mfBjq4akYz0rRNM2X//ZKlUZm6INVm+jQElNFzdM1MKYe8iAnpc
-	 uOYHcE5EzRX72Xld9Gndgad6ObafqqMOkpTUJMhk=
+	b=b6eBslE6MaTLJJN+Vp8e1yW72G9PheZZQfPf5CUMeDgH3fsLr7h7iKihJjylkGSnU
+	 ILPuLTF8Hgd6DRtycY8ih4QJ6lu5SBlQNg6g2h0wsuiE6P+RvbpC3FlXtgtRu1njWK
+	 XYJhzWUM1/ilkaoRHKzm94c+5elxmldSpq9zL7+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbgDXNHA (ORCPT
+        id S1728217AbgDXNHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 09:07:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57592 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 09:07:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728124AbgDXNG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 09:06:56 -0400
+        id S1728124AbgDXNHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 09:07:00 -0400
 Received: from e123331-lin.home (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E50ED20728;
-        Fri, 24 Apr 2020 13:06:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DABF20776;
+        Fri, 24 Apr 2020 13:06:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587733615;
-        bh=u/xP6CoK1MUmVKKpWlYTdz2lShxhmNKAh4XSY+FwLjI=;
+        s=default; t=1587733620;
+        bh=dv+ZaFhzeEqvKSGnInxiwWTt/ioK6J793NdZ5ogNnHw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ej66MkSHbWOonlumdQ9GGnTn+UsiBagZBTkYO+Jv5zmh/HazYXl0bZV4rkQqIoVYE
-         2Zq5Wa+A8Lo66KcR8sJF+lDLkNmALZBcBSP9Tk6oBNaJ3p3v/y6lVTUmKy4RuZyuUQ
-         IGI9ILrieHZ3fH6Y+0ISv4vHQ282P9wI5Wf3O8D8=
+        b=uaD36U46EHROKfyL42WnWW2saO3W2GOheB+ccWVAlZWgwB7kWcLZ2wF6Zk6rYZcSU
+         7fctkjDj2iHGJ7xZSopyyjXj9JbLPN6bz+u0/dW93kyBRHsnz85/59ZgagZ2EZbkLL
+         d+qQkZ35AcVW6tvnPcq1q1HV3RZ5eW4DPLntaabc=
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,9 +47,9 @@ Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
         Atish Patra <atish.patra@wdc.com>,
         Palmer Dabbelt <palmerdabbelt@google.com>,
         Zou Wei <zou_wei@huawei.com>
-Subject: [PATCH 20/33] efi/libstub/random: Increase random alloc granularity
-Date:   Fri, 24 Apr 2020 15:05:18 +0200
-Message-Id: <20200424130531.30518-21-ardb@kernel.org>
+Subject: [PATCH 22/33] efi/libstub/arm64: Simplify randomized loading of kernel image
+Date:   Fri, 24 Apr 2020 15:05:20 +0200
+Message-Id: <20200424130531.30518-23-ardb@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200424130531.30518-1-ardb@kernel.org>
 References: <20200424130531.30518-1-ardb@kernel.org>
@@ -58,36 +58,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The implementation of efi_random_alloc() arbitrarily truncates the
-provided random seed to 16 bits, which limits the granularity of the
-randomly chosen allocation offset in memory. This is currently only
-an issue if the size of physical memory exceeds 128 GB, but going
-forward, we will reduce the allocation alignment to 64 KB, and this
-means we need to increase the granularity to ensure that the random
-memory allocations are distributed evenly.
-
-We will need to switch to 64-bit arithmetic for the multiplication,
-but this does not result in 64-bit integer intrinsic calls on ARM or
-on i386.
+The KASLR code path in the arm64 version of the EFI stub incorporates
+some overly complicated logic to randomly allocate a region of the right
+alignment: there is no need to randomize the placement of the kernel
+modulo 2 MiB separately from the placement of the 2 MiB aligned allocation
+itself - we can simply follow the same logic used by the non-randomized
+placement, which is to allocate at the correct alignment, and only take
+TEXT_OFFSET into account if it is not a round multiple of the alignment.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- drivers/firmware/efi/libstub/randomalloc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/firmware/efi/libstub/arm64-stub.c | 32 ++++-------------------
+ 1 file changed, 5 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/firmware/efi/libstub/randomalloc.c b/drivers/firmware/efi/libstub/randomalloc.c
-index 6200dfa650f5..a408df474d83 100644
---- a/drivers/firmware/efi/libstub/randomalloc.c
-+++ b/drivers/firmware/efi/libstub/randomalloc.c
-@@ -87,7 +87,7 @@ efi_status_t efi_random_alloc(unsigned long size,
+diff --git a/drivers/firmware/efi/libstub/arm64-stub.c b/drivers/firmware/efi/libstub/arm64-stub.c
+index cfd535c13242..6fc3bd9a56db 100644
+--- a/drivers/firmware/efi/libstub/arm64-stub.c
++++ b/drivers/firmware/efi/libstub/arm64-stub.c
+@@ -52,7 +52,7 @@ efi_status_t handle_kernel_image(unsigned long *image_addr,
+ {
+ 	efi_status_t status;
+ 	unsigned long kernel_size, kernel_memsize = 0;
+-	u64 phys_seed = 0;
++	u32 phys_seed = 0;
+ 
+ 	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {
+ 		if (!nokaslr()) {
+@@ -74,36 +74,15 @@ efi_status_t handle_kernel_image(unsigned long *image_addr,
+ 
+ 	kernel_size = _edata - _text;
+ 	kernel_memsize = kernel_size + (_end - _edata);
++	*reserve_size = kernel_memsize + TEXT_OFFSET % min_kimg_align;
+ 
+ 	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE) && phys_seed != 0) {
+-		/*
+-		 * Produce a displacement in the interval [0, MIN_KIMG_ALIGN)
+-		 * that doesn't violate this kernel's de-facto alignment
+-		 * constraints.
+-		 */
+-		u32 mask = (MIN_KIMG_ALIGN - 1) & ~(EFI_KIMG_ALIGN - 1);
+-		u32 offset = (phys_seed >> 32) & mask;
+-
+-		/*
+-		 * With CONFIG_RANDOMIZE_TEXT_OFFSET=y, TEXT_OFFSET may not
+-		 * be a multiple of EFI_KIMG_ALIGN, and we must ensure that
+-		 * we preserve the misalignment of 'offset' relative to
+-		 * EFI_KIMG_ALIGN so that statically allocated objects whose
+-		 * alignment exceeds PAGE_SIZE appear correctly aligned in
+-		 * memory.
+-		 */
+-		offset |= TEXT_OFFSET % EFI_KIMG_ALIGN;
+-
+ 		/*
+ 		 * If KASLR is enabled, and we have some randomness available,
+ 		 * locate the kernel at a randomized offset in physical memory.
+ 		 */
+-		*reserve_size = kernel_memsize + offset;
+-		status = efi_random_alloc(*reserve_size,
+-					  MIN_KIMG_ALIGN, reserve_addr,
+-					  (u32)phys_seed);
+-
+-		*image_addr = *reserve_addr + offset;
++		status = efi_random_alloc(*reserve_size, min_kimg_align,
++					  reserve_addr, phys_seed);
+ 	} else {
+ 		status = EFI_OUT_OF_RESOURCES;
+ 	}
+@@ -119,7 +98,6 @@ efi_status_t handle_kernel_image(unsigned long *image_addr,
+ 			return EFI_SUCCESS;
+ 		}
+ 
+-		*reserve_size = kernel_memsize + TEXT_OFFSET % min_kimg_align;
+ 		status = efi_low_alloc(*reserve_size,
+ 				       min_kimg_align, reserve_addr);
+ 
+@@ -128,9 +106,9 @@ efi_status_t handle_kernel_image(unsigned long *image_addr,
+ 			*reserve_size = 0;
+ 			return status;
+ 		}
+-		*image_addr = *reserve_addr + TEXT_OFFSET % min_kimg_align;
  	}
  
- 	/* find a random number between 0 and total_slots */
--	target_slot = (total_slots * (u16)random_seed) >> 16;
-+	target_slot = (total_slots * (u64)(random_seed & U32_MAX)) >> 32;
++	*image_addr = *reserve_addr + TEXT_OFFSET % min_kimg_align;
+ 	memcpy((void *)*image_addr, _text, kernel_size);
  
- 	/*
- 	 * target_slot is now a value in the range [0, total_slots), and so
+ 	return EFI_SUCCESS;
 -- 
 2.17.1
 
