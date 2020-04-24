@@ -2,151 +2,177 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C45C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C87C55194
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95F1E20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1422120776
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:58:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="c2hKhoEu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726141AbgDXWxL (ORCPT
+        id S1726070AbgDXW6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 18:53:11 -0400
-Received: from mga11.intel.com ([192.55.52.93]:2083 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725874AbgDXWxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 18:53:11 -0400
-IronPort-SDR: f6W4JBYLu/r9zYCtrS7qAIL/zVrg/pvo6l+7Prk3m60MZoApP9PEVCbsa+ZIFG3QjWgeulIQiT
- VToLiyZDRMKQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2020 15:53:10 -0700
-IronPort-SDR: SMTKaa/W1dwcaDZ9uCNjIskBxvIAv4RAYS02wPLr7W4WbNrkSIutDHuoegRtg8zJnPOr/NjZ10
- YBhjjQt0fMUQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,313,1583222400"; 
-   d="scan'208";a="259991541"
-Received: from bfallaha-mobl2.amr.corp.intel.com (HELO [10.252.132.86]) ([10.252.132.86])
-  by orsmga006.jf.intel.com with ESMTP; 24 Apr 2020 15:53:10 -0700
-Subject: Re: [PATCH] Allow RDTSC and RDTSCP from userspace
-To:     Tom Lendacky <thomas.lendacky@amd.com>,
-        Mike Stunes <mstunes@vmware.com>, joro@8bytes.org
-Cc:     dan.j.williams@intel.com, dave.hansen@linux.intel.com,
-        hpa@zytor.com, jgross@suse.com, jroedel@suse.de, jslaby@suse.cz,
-        keescook@chromium.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, luto@kernel.org,
-        peterz@infradead.org, thellstrom@vmware.com,
-        virtualization@lists.linux-foundation.org, x86@kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-References: <20200319091407.1481-56-joro@8bytes.org>
- <20200424210316.848878-1-mstunes@vmware.com>
- <2c49061d-eb84-032e-8dcb-dd36a891ce90@intel.com>
- <ead88d04-1756-1190-2b37-b24f86422595@amd.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <4d2ac222-a896-a60e-9b3c-b35aa7e81a97@intel.com>
-Date:   Fri, 24 Apr 2020 15:53:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Fri, 24 Apr 2020 18:58:33 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2181 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbgDXW6c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 18:58:32 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ea36f090000>; Fri, 24 Apr 2020 15:58:17 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 24 Apr 2020 15:58:30 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 24 Apr 2020 15:58:30 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 Apr
+ 2020 22:58:30 +0000
+Received: from [10.2.53.96] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 Apr
+ 2020 22:58:29 +0000
+Subject: Re: [regression] Re: [PATCH v6 06/12] mm/gup: track FOLL_PIN pages
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Dave Chinner" <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+References: <20200211001536.1027652-1-jhubbard@nvidia.com>
+ <20200211001536.1027652-7-jhubbard@nvidia.com>
+ <20200424121846.5ee2685f@w520.home>
+ <5b901542-d949-8d7e-89c7-f8d5ee20f6e9@nvidia.com>
+ <20200424141548.5afdd2bb@w520.home>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <665ffb48-d498-90f4-f945-997a922fc370@nvidia.com>
+Date:   Fri, 24 Apr 2020 15:58:29 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <ead88d04-1756-1190-2b37-b24f86422595@amd.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200424141548.5afdd2bb@w520.home>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587769097; bh=eWq6lnMyYMCE4u6Qo5YJg74M9siYA8iyhwQdRnlfX1c=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=c2hKhoEuSh1BAJrQqwmQ4yRX74kL6heQtFpgh7vdU0THjF65L33iCiD03eDW+FA/A
+         gPzdByilynRgl6PXyZbjbFqiMAPfg2MC2yWKEUmWV3hNz2kXS0FG1vD8v0ladCzvkp
+         ensNbePajMC62D3wlNBE0ggKDFPB7iksWmuTz/TmgzRz66HITXTAXbFjLQsDogUOac
+         89EWT/bWRcVSdjG/Jj1uvJd+YfWM6Dzo6LnQHChsW1bmPSswJ20xCCbZ+ZSP/f5ouO
+         xEjzb7jndBL51nmhtJ3vfyuBMCtIVJy+ryq2i429v4MB4nctSJU5bnSnOJtk2esANH
+         vYuZIhb4iJBWA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/24/20 2:27 PM, Tom Lendacky wrote:
-> On 4/24/20 4:24 PM, Dave Hansen wrote:
->> On 4/24/20 2:03 PM, Mike Stunes wrote:
->>> I needed to allow RDTSC(P) from userspace and in early boot in order to
->>> get userspace started properly. Patch below.
->>>
->>> ---
->>> SEV-ES guests will need to execute rdtsc and rdtscp from userspace and
->>> during early boot. Move the rdtsc(p) #VC handler into common code and
->>> extend the #VC handlers.
->>
->> Do SEV-ES guests _always_ #VC on rdtsc(p)?
+On 2020-04-24 13:15, Alex Williamson wrote:
+> On Fri, 24 Apr 2020 12:20:03 -0700
+> John Hubbard <jhubbard@nvidia.com> wrote:
 > 
-> Only if the hypervisor is intercepting those instructions.
+>> On 2020-04-24 11:18, Alex Williamson wrote:
+>> ...
+>>> Hi John,
+>>>
+>>> I'm seeing a regression bisected back to this commit (3faa52c03f44
+>>> mm/gup: track FOLL_PIN pages).  I've attached some vfio-pci test code
+>>> that reproduces this by mmap'ing a page of MMIO space of a device and
+>>> then tries to map that through the IOMMU, so this should be attempting
+>>> a gup/pin of a PFNMAP page.  Previously this failed gracefully (-EFAULT),
+>>> but now results in:
+>>
+>>
+>> Hi Alex,
+>>
+>> Thanks for this report, and especially for source code to test it,
+>> seeing as how I can't immediately spot the problem just from the crash
+>> data so far.  I'll get set up and attempt a repro.
+>>
+>> Actually this looks like it should be relatively easier than the usual
+>> sort of "oops, we leaked a pin_user_pages() or unpin_user_pages() call,
+>> good luck finding which one" report that I fear the most. :) This one
+>> looks more like a crash that happens directly, when calling into the
+>> pin_user_pages_remote() code. Which should be a lot easier to solve...
+>>
+>> btw, if you are set up for it, it would be nice to know what source file
+>> and line number corresponds to the RIP (get_pfnblock_flags_mask+0x22)
+>> below. But if not, no problem, because I've likely got to do the repro
+>> in any case.
+> 
+> Hey John,
+> 
+> TBH I'm feeling a lot less confident about this bisect.  This was
+> readily reproducible to me on a clean tree a bit ago, but now it
+> eludes me.  Let me go back and figure out what's going on before you
+> spend any more time on it.  Thanks,
+> 
 
-Ahh, so any instruction that can have an instruction intercept set
-potentially needs to be able to tolerate a #VC?  Those instruction
-intercepts are under the control of the (untrusted relative to the
-guest) hypervisor, right?
+OK. But I'm keeping the repro program! :)  It made it quick and easy to
+set up a vfio test, so it was worth doing in any case.
 
-From the main sev-es series:
+Anyway, I wanted to double check this just out of paranoia, and so
+now I have a data point for you: your test program runs and passes for
+me using today's linux.git kernel, with an NVIDIA GPU as the vfio
+device, and the kernel log is clean. No hint of any problems.
 
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+idtentry vmm_communication     do_vmm_communication    has_error_code=1
-+#endif
+I traced it a little bit:
 
-Since this is set as non-paranoid, that both limits the instructions
-that can be used in entry paths *and* limits the future architecture
-from being able add instructions that a current SEV-ES guest doesn't
-know about.  Does SEV-ES have versioning so guests can tell if they
-might be subject to new interrupt intercepts for which they are not
-prepared?  I didn't see anything obvious in section 15.35 of the manual.
+# sudo bpftrace -e kprobe:__get_user_pages { @[kstack()] = count(); }
+Attaching 1 probe...
+^C
+...
+@[
+     __get_user_pages+1
+     __gup_longterm_locked+176
+     vaddr_get_pfn+104
+     vfio_pin_pages_remote+113
+     vfio_dma_do_map+760
+     vfio_iommu_type1_ioctl+761
+     ksys_ioctl+135
+     __x64_sys_ioctl+22
+     do_syscall_64+90
+     entry_SYSCALL_64_after_hwframe+73
+]: 1
 
-There's also a nugget in the manual that says:
+...and also verified that it's not actually pinning any pages with that
+path:
 
-> Similarly, the hypervisor should avoid setting intercept bits for
-> events that would occur in the #VC handler (such as IRET).
+$ grep foll_pin /proc/vmstat
+nr_foll_pin_acquired 0
+nr_foll_pin_released 0
 
-That's a fun point because it means that the (untrusted) hypervisor can
-cause endless faults.  I *guess* we have mitigation for this with our
-stack guard pages, but it's still a bit nasty that the hypervisor can
-arbitrarily land a guest in the double-fault handler.
 
-It just all seems a bit weak for the hypervisor to be considered
-untrusted.  But, it's _certainly_ a steep in the right direction from SEV.
+Good luck and let me know if it starts pointing to FOLL_PIN or gup, etc.
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
