@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9E9C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9145CC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0211320776
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7141920776
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:36:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="TPANBAfE";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="K2LORPcj"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="CmqO2O8i";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FPVHTavr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728577AbgDXPgc (ORCPT
+        id S1728589AbgDXPge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:36:32 -0400
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:33797 "EHLO
+        Fri, 24 Apr 2020 11:36:34 -0400
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:33937 "EHLO
         wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728482AbgDXPgY (ORCPT
+        by vger.kernel.org with ESMTP id S1728524AbgDXPgV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:36:24 -0400
+        Fri, 24 Apr 2020 11:36:21 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 0EC6D144E;
-        Fri, 24 Apr 2020 11:36:22 -0400 (EDT)
+        by mailnew.west.internal (Postfix) with ESMTP id 47E811457;
+        Fri, 24 Apr 2020 11:36:20 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:36:23 -0400
+  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:36:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=JNjtzlAqDA9+g
-        wfnpcyHMYWUnTOc/3kzSZCf4w6U+OU=; b=TPANBAfETOT2h3oOong+BLrk8KY+b
-        CnGjzxLnIkIw22U0zKGIo65vT8aT8Tz9SmIZk8uqrXalX/rhC97y9r6Fz+/QFOII
-        n/6BugrDOQ4G+7MyfNnkdHaGhjPhwS3gGI27kgld3e80jORHEwmmNTO+T4ZNNUPL
-        JVgiA8gaw1Vsr6OlX9dH8IvGGvRFgq3UiU/TinomGrTK++rx1MjY7/EzAl2IdNXb
-        9mhv9c0alK9cfRqXfPlecVf4It0XI8OUJL3YZLOUKtHT/mD9elz7hAsyosmfR3Vr
-        oPd3dZDUz9ioOB+o1PCB9seiqvfVHoMM+cd9zPDm34AhpgCNTrCx4EvXw==
+        :mime-version:content-transfer-encoding; s=fm2; bh=FGHgip5pCgsef
+        Z4M/vFInKoncWLsvsxW7FNyZtJgmzk=; b=CmqO2O8i+VWdwlU7GZmLV7QUqF7Qi
+        H1uEr6Y3t7rLpOTWaE/imWNHc1zSrAo1LxPOXfgB5YevCRxmkJqjeWByop+fSFYz
+        5FUTQ9wHVAZIVyXSOD2pdBKJrj6U0lDDpghWsgveL4G8kO9tjpJKhxxakqbHZ/cp
+        hoexvzanYAP0lRmXp6NJ+8r5CVbXV/g8l27XNTlrirnMI9mc+SaT8E0ie/gv/nzZ
+        CSF7Wab5C8i+inWTOW95l+GuC9QPHo+G66LfufVjhmIYPykfA5anGT1KZqnXW/vo
+        5wPB+d6UEC9QqeVPFcOQQ5Kdn06kraGQtbhkAUOKXuPSqXZKOmSSC/XDQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=JNjtzlAqDA9+gwfnpcyHMYWUnTOc/3kzSZCf4w6U+OU=; b=K2LORPcj
-        Lre8C0ysdK2c9Ya5lTwcwUSlYvr/m5ULCYtuQark64ZHQ1MsYe7IntA7gEY5Hs4S
-        zI0rutJfvdfFmaC18p6L5OxqAVyk8Qo81aREyVj5ZMK1/f6o/PcrRoWCvNtzUTqd
-        5iUJ2eoRyZs0p5EhJ/8PUzqpnZpUaP0H/QyNj5na3Tp60+iDIcIFDC0zElZHgmmA
-        QVflBI1OJnAXo22HIxBCRM+tUQaXplAg4mB2y3DuFB6W6gzvObR0tUfC/bthcoML
-        2zSikw0se47dSIacjSUWKIv86jKPXaLqWZUKMwJpSqiX7Y2pXVurs8+yq0LSyOT3
-        gua+M6FB++HEHQ==
-X-ME-Sender: <xms:dgejXir_nbk6kf7mD4TSFkc2bFOW4LgTcRvGsz5rfRYwebGr2P41Ag>
+        fm2; bh=FGHgip5pCgsefZ4M/vFInKoncWLsvsxW7FNyZtJgmzk=; b=FPVHTavr
+        iw1RU+funiiPcK4fBcWP0o/Y6w8mM0a6gD2FvYZWk914IFHUziiArUaBLqGn9V/d
+        pdSU5qepokPMbRbJfRFMzP0CGTzyGFQ/9RDj9yB0vXc8yGLyN6VEUekJb2FXPo5F
+        eVB8FBzQIhZ4DRl4E1mYYoQebpD5wu/RCorRfwVgYU5dwgAmTzrH6VS43G0B9icS
+        b3FVZxIgXlqy2nSIl8e6/4aN+7uc3BIQm1ZKIquc4j8MD0thXFEQgHFEjV1CLmav
+        9smszb906rSK9l5xqCBz1xXQbveAEp8poLSczyLUi642KvR2Fg2eRtVSlOsXMmzP
+        MkFHwXOzYj9OiA==
+X-ME-Sender: <xms:cwejXrB_bJ_voiKPpLa5yNroCo3KoATSRyZF57uHahyfFxHtEaorMg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrhedugdekiecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgv
     ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpeefkeenucfrrghrrghmpehmrghi
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpeefgeenucfrrghrrghmpehmrghi
     lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:dgejXr1UWDKtDVJcot0RQoNdxUfQbHuvERKw_8fPiJG2KKBkaG4VLQ>
-    <xmx:dgejXmU9EOQGzXB1l4-PKgV-XAGpfSKjybmZeSmLtjVH3m5zEHGLZg>
-    <xmx:dgejXiKgxq4kmkH9XCPmKtFq9_jPddKb1zxvF4ndwwzM0wNdvHdW-w>
-    <xmx:dgejXjIiqJYNEp5Erv_DFD9clt_MMrtTA86G8LQfSIv0MFptbBC_8_sS4g0>
+X-ME-Proxy: <xmx:cwejXmvWMhmXi1TtCoszF01iseM4zgRYynUz5HS0EmLcIV3VraztYQ>
+    <xmx:cwejXnJEOnexdPpyTQBbIbhYlEIXc4alRjU-HSR1bIWZKMoAhv315w>
+    <xmx:cwejXoqI197gngZ4rJPzPoXehktQmjcoQPcxx347lgqsdn_PlCjA0A>
+    <xmx:cwejXpb417U-jmP4nPAN_Qc-xkTXTMPzzZtQjSYsJwcOjWjErdQGIKex_co>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4DFD33065DA3;
-        Fri, 24 Apr 2020 11:36:22 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 867383065D87;
+        Fri, 24 Apr 2020 11:36:19 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -75,9 +75,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v2 43/91] drm/vc4: crtc: Rename SoC data structures
-Date:   Fri, 24 Apr 2020 17:34:24 +0200
-Message-Id: <56fcb796f96befc5fe024a50520718a1cc76900c.1587742492.git-series.maxime@cerno.tech>
+Subject: [PATCH v2 41/91] drm/vc4: plane: Create overlays for any CRTC
+Date:   Fri, 24 Apr 2020 17:34:22 +0200
+Message-Id: <66cac7b94354a2cf28fab69a872d1c96a6444716.1587742492.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
 References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
@@ -88,58 +88,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we're going to introduce pixelvalve data structures for other SoCs
-than the BCM2835, let's rename the structures defined in the code to
-make it obvious which SoC we're targeting.
+Now that we have everything in place, we can now register all the overlay
+planes that can be assigned to all the CRTCs.
+
+This has two side effects:
+
+  - The number of overlay planes is reduced from 24 to 8. This is temporary
+    and will be increased again in the next patch.
+
+  - The ID of the various planes is changed again, and we will now have all
+    the primary planes, then all the overlay planes and finally the cursor
+    planes. This shouldn't cause any issue since the ordering between
+    primary, overlay and cursor planes is preserved.
 
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_crtc.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/vc4/vc4_plane.c | 35 +++++++++++++++++-----------------
+ 1 file changed, 18 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
-index 2131164779dd..9fdb0ccc4a28 100644
---- a/drivers/gpu/drm/vc4/vc4_crtc.c
-+++ b/drivers/gpu/drm/vc4/vc4_crtc.c
-@@ -1058,7 +1058,7 @@ static const struct drm_crtc_helper_funcs vc4_crtc_helper_funcs = {
- 	.get_scanout_position = vc4_crtc_get_scanout_position,
- };
+diff --git a/drivers/gpu/drm/vc4/vc4_plane.c b/drivers/gpu/drm/vc4/vc4_plane.c
+index 824c188980b0..5335123ae2a0 100644
+--- a/drivers/gpu/drm/vc4/vc4_plane.c
++++ b/drivers/gpu/drm/vc4/vc4_plane.c
+@@ -1378,26 +1378,27 @@ int vc4_plane_create_additional_planes(struct drm_device *drm)
+ 	struct drm_crtc *crtc;
+ 	unsigned int i;
  
--static const struct vc4_crtc_data pv0_data = {
-+static const struct vc4_crtc_data bcm2835_pv0_data = {
- 	.hvs_channel = 0,
- 	.debugfs_name = "crtc0_regs",
- 	.encoder_types = {
-@@ -1067,7 +1067,7 @@ static const struct vc4_crtc_data pv0_data = {
- 	},
- };
+-	drm_for_each_crtc(crtc, drm) {
+-		/* Set up some arbitrary number of planes.  We're not limited
+-		 * by a set number of physical registers, just the space in
+-		 * the HVS (16k) and how small an plane can be (28 bytes).
+-		 * However, each plane we set up takes up some memory, and
+-		 * increases the cost of looping over planes, which atomic
+-		 * modesetting does quite a bit.  As a result, we pick a
+-		 * modest number of planes to expose, that should hopefully
+-		 * still cover any sane usecase.
+-		 */
+-		for (i = 0; i < 8; i++) {
+-			struct drm_plane *plane =
+-				vc4_plane_init(drm, DRM_PLANE_TYPE_OVERLAY);
++	/* Set up some arbitrary number of planes.  We're not limited
++	 * by a set number of physical registers, just the space in
++	 * the HVS (16k) and how small an plane can be (28 bytes).
++	 * However, each plane we set up takes up some memory, and
++	 * increases the cost of looping over planes, which atomic
++	 * modesetting does quite a bit.  As a result, we pick a
++	 * modest number of planes to expose, that should hopefully
++	 * still cover any sane usecase.
++	 */
++	for (i = 0; i < 8; i++) {
++		struct drm_plane *plane =
++			vc4_plane_init(drm, DRM_PLANE_TYPE_OVERLAY);
  
--static const struct vc4_crtc_data pv1_data = {
-+static const struct vc4_crtc_data bcm2835_pv1_data = {
- 	.hvs_channel = 2,
- 	.debugfs_name = "crtc1_regs",
- 	.encoder_types = {
-@@ -1076,7 +1076,7 @@ static const struct vc4_crtc_data pv1_data = {
- 	},
- };
+-			if (IS_ERR(plane))
+-				continue;
++		if (IS_ERR(plane))
++			continue;
  
--static const struct vc4_crtc_data pv2_data = {
-+static const struct vc4_crtc_data bcm2835_pv2_data = {
- 	.hvs_channel = 1,
- 	.debugfs_name = "crtc2_regs",
- 	.encoder_types = {
-@@ -1086,9 +1086,9 @@ static const struct vc4_crtc_data pv2_data = {
- };
+-			plane->possible_crtcs = drm_crtc_mask(crtc);
+-		}
++		plane->possible_crtcs =
++			GENMASK(drm->mode_config.num_crtc - 1, 0);
++	}
  
- static const struct of_device_id vc4_crtc_dt_match[] = {
--	{ .compatible = "brcm,bcm2835-pixelvalve0", .data = &pv0_data },
--	{ .compatible = "brcm,bcm2835-pixelvalve1", .data = &pv1_data },
--	{ .compatible = "brcm,bcm2835-pixelvalve2", .data = &pv2_data },
-+	{ .compatible = "brcm,bcm2835-pixelvalve0", .data = &bcm2835_pv0_data },
-+	{ .compatible = "brcm,bcm2835-pixelvalve1", .data = &bcm2835_pv1_data },
-+	{ .compatible = "brcm,bcm2835-pixelvalve2", .data = &bcm2835_pv2_data },
- 	{}
- };
- 
++	drm_for_each_crtc(crtc, drm) {
+ 		/* Set up the legacy cursor after overlay initialization,
+ 		 * since we overlay planes on the CRTC in the order they were
+ 		 * initialized.
 -- 
 git-series 0.9.1
