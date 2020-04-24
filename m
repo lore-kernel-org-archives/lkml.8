@@ -2,74 +2,139 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E9FC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 459A5C55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B71AB20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:54:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DF582075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:55:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XZE878Fe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbgDXGya (ORCPT
+        id S1726622AbgDXGzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 02:54:30 -0400
-Received: from mail-m127108.qiye.163.com ([115.236.127.108]:44794 "EHLO
-        mail-m127108.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbgDXGya (ORCPT
+        Fri, 24 Apr 2020 02:55:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56308 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725868AbgDXGzA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 02:54:30 -0400
-X-Greylist: delayed 365 seconds by postgrey-1.27 at vger.kernel.org; Fri, 24 Apr 2020 02:54:08 EDT
-Received: from vivo.com (wm-13.qy.internal [127.0.0.1])
-        by mail-m127108.qiye.163.com (Hmail) with ESMTP id 6E3FB842298;
-        Fri, 24 Apr 2020 14:47:54 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <APcAywCbCKy-qoRJBcISMqo3.3.1587710874432.Hmail.wenhu.wang@vivo.com>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     gregkh@linuxfoundation.org, arnd@arndb.de,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        oss@buserror.net, kernel@vivo.com, robh@kernel.org,
-        benh@kernel.crashing.org, paulus@samba.org,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2Myw0LzVdIG1pc2M6IHNyYW1fZHluYW1pYyBmb3IgdXNlciBsZXZlbCBTUkFNIGFjY2Vzcw==?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 58.251.74.226
-In-Reply-To: <6675dd9d-43be-6451-88a9-02d2c52c7d3a@c-s.fr>
+        Fri, 24 Apr 2020 02:55:00 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AE92C09B045
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 23:54:56 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id d17so9380857wrg.11
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 23:54:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=suQ4RDO6wFMF7yNndDjyQyI4nxOZRUEOPb3EJG29NcI=;
+        b=XZE878Fe3CvfJwClJO4OFMDn98hJmO2fQ6LWYqcDaiLo+3JL4q/Zd7jGgD5gmAm40v
+         kKgK9DhGf3dTYA0zKn5Td5ADNw5PentPTkTwcYV75JjFS5DfR43viYXGpnjuWlz/VbUF
+         IEEd8oDeVr+yil+plMELkeB58E6npuPNwf6UQpX2nY24JQ+pcS3uIOCNXjIxHIG7LVNG
+         hfPP43NqUJ5f1R/97apyFagFwdeLBIpJKfRirjSaJE+pdgR10SlRSgPuUmEw9oaMi8uY
+         JAw7Gd44uPR5tHfOA5CeDnZiixqymoffif8LsUBxRYsiutoM7/sr9RrU60VSRUueAeAf
+         Ql7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=suQ4RDO6wFMF7yNndDjyQyI4nxOZRUEOPb3EJG29NcI=;
+        b=RWq3G0S/AKPkCgOegm5PjEaC0nJLTaWS5bjFitEkO+CCJT1a6TOURWv2/EI0QmjQtb
+         5KGLEOKNfZUO0gupakCK1PuPz7PYdwlqc1zdZ7Xr4hipKImoUtwrRhmdrTg3BNXD9YnE
+         SXwypqWMEIoL1ks7VqrAB7NR9fu5GYLTzbFTy58CvLpcic3/vOT2GV8GoiCaxk8FVKr+
+         dxY4ijkDXdlHnuxbl+XUys44VwsUuBbRbWvaogs96FXi1aLBfyTI6sZlhU6iRUPAjJym
+         HL0UOzx0f8avnktEcaR0TLrIEISfWNpGIEteMis6kVjp9pMLYOZte5rkYPh42ka1+uuB
+         yPNw==
+X-Gm-Message-State: AGi0Pubnjvh6SA4fkFnsayQ+JXtTcUWaRWzc2Wt/CDIqFBrIPFsCgl2u
+        OPViXbLQvt5Mh8fnoOivv3LtYemU305MgLYlP/FON3CNTC+RRpk+
+X-Google-Smtp-Source: APiQypK0X/llYwGmgoAx2FKi2APDvwatdgw54G+xdccmhBBObjobcT63Tc2IwOpD1Vd5LlrpanOhXQqK2MExJ3YVixM=
+X-Received: by 2002:a05:6000:10c4:: with SMTP id b4mr9377644wrx.203.1587711294889;
+ Thu, 23 Apr 2020 23:54:54 -0700 (PDT)
 MIME-Version: 1.0
-Received: from wenhu.wang@vivo.com( [58.251.74.226) ] by ajax-webmail ( [127.0.0.1] ) ; Fri, 24 Apr 2020 14:47:54 +0800 (GMT+08:00)
-From:   =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
-Date:   Fri, 24 Apr 2020 14:47:54 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VNSktLS0tKSEhOSk9PWVdZKFlBSE
-        83V1ktWUFJV1kJDhceCFlBWTU0KTY6NyQpLjc#WQY+
-X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMT0tJT0xNS0lDN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
-        WUc6Kxg6Agw4GTgwAlYKFCkxORgyKDYKFEhVSFVKTkNMTEpLQ0xNTktDVTMWGhIXVQweFRMOVQwa
-        FRw7DRINFFUYFBZFWVdZEgtZQVlOQ1VJTkpVTE9VSUlNWVdZCAFZQUhNSUg3Bg++
-X-HM-Tid: 0a71aaf1535d986ckuuu6e3fb842298
+References: <20200423154503.5103-1-dja@axtens.net>
+In-Reply-To: <20200423154503.5103-1-dja@axtens.net>
+From:   David Gow <davidgow@google.com>
+Date:   Fri, 24 Apr 2020 14:54:43 +0800
+Message-ID: <CABVgOSkwn2Y0khsWw4xLASj5e-m7hng6Z+5wCMYomZbZGn_N2Q@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] Fix some incompatibilites between KASAN and FORTIFY_SOURCE
+To:     Daniel Axtens <dja@axtens.net>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Dmitry Vyukov <dvyukov@google.com>, christophe.leroy@c-s.fr
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvc3JhbV9keW5hbWljLmggYi9pbmNsdWRlL2xp
-bnV4L3NyYW1fZHluYW1pYy5oCj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+IGluZGV4IDAwMDAw
-MDAwMDAwMC4uYzc3ZTllN2IxMTUxCj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvaW5jbHVkZS9s
-aW51eC9zcmFtX2R5bmFtaWMuaAo+PiBAQCAtMCwwICsxLDIzIEBACj4+ICsvKiBTUERYLUxpY2Vu
-c2UtSWRlbnRpZmllcjogR1BMLTIuMCAqLwo+PiArI2lmbmRlZiBfX1NSQU1fRFlOQU1JQ19ICj4+
-ICsjZGVmaW5lIF9fU1JBTV9EWU5BTUlDX0gKPj4gKwo+PiArc3RydWN0IHNyYW1fYXBpIHsKPj4g
-Kwljb25zdCBjaGFyCSpuYW1lOwo+PiArCXN0cnVjdCBzcmFtX2RldmljZSAqc2RldjsKPj4gKwl2
-b2lkICooKmFsbG9jKShfX3UzMiBzaXplLCBwaHlzX2FkZHJfdCAqcGh5cywgX191MzIgYWxpZ24p
-Owo+PiArCXZvaWQgKCpmcmVlKSh2b2lkICpwdHIpOwo+PiArfTsKPj4gKwo+PiArZXh0ZXJuIGlu
-dCBfX211c3RfY2hlY2sKPj4gKwlfX3NyYW1fcmVnaXN0ZXJfZGV2aWNlKHN0cnVjdCBtb2R1bGUg
-Km93bmVyLAo+PiArCQkJICAgICAgIHN0cnVjdCBkZXZpY2UgKnBhcmVudCwKPj4gKwkJCSAgICAg
-ICBzdHJ1Y3Qgc3JhbV9hcGkgKnNhKTsKPgo+J2V4dGVybicga2V5d29yZCBpcyB1c2VsZXNzIGhl
-cmUsIHJlbW92ZSBpdCAoY2hlY2twYXRjaCAtLXN0cmljdCB3aWxsIAo+bGlrZWx5IHRlbGwgeW91
-IHRoZSBzYW1lKQo+Cj4+ICsKPj4gKy8qIFVzZSBhIGRlZmluZSB0byBhdm9pZCBpbmNsdWRlIGNo
-YWluaW5nIHRvIGdldCBUSElTX01PRFVMRSAqLwo+PiArI2RlZmluZSBzcmFtX3JlZ2lzdGVyX2Rl
-dmljZShwYXJlbnQsIHNhKSBcCj4+ICsJX19zcmFtX3JlZ2lzdGVyX2RldmljZShUSElTX01PRFVM
-RSwgcGFyZW50LCBzYSkKPj4gKwo+PiArZXh0ZXJuIHZvaWQgc3JhbV91bnJlZ2lzdGVyX2Rldmlj
-ZShzdHJ1Y3Qgc3JhbV9hcGkgKnNhKTsKPgo+U2FtZSwgbm8gJ2V4dGVybicgcGxlYXNlLgo+CgpU
-aGFua3MsIEkgd2lsbCByZW1vdmUgdGhlbSBpbiBwYXRjaCB2NC4gQW5kIGNoZWNrcGF0Y2ggd2l0
-aCAtLXN0cmljdCB3aWxsIGJlIHByZWZlcmVkLgoKV2VuaHUNCg0K
+On Thu, Apr 23, 2020 at 11:45 PM Daniel Axtens <dja@axtens.net> wrote:
+>
+> 3 KASAN self-tests fail on a kernel with both KASAN and FORTIFY_SOURCE:
+> memchr, memcmp and strlen. I have observed this on x86 and powerpc.
+>
+> When FORTIFY_SOURCE is on, a number of functions are replaced with
+> fortified versions, which attempt to check the sizes of the
+> operands. However, these functions often directly invoke __builtin_foo()
+> once they have performed the fortify check.
+>
+> This breaks things in 2 ways:
+>
+>  - the three function calls are technically dead code, and can be
+>    eliminated. When __builtin_ versions are used, the compiler can detect
+>    this.
+>
+>  - Using __builtins may bypass KASAN checks if the compiler decides to
+>    inline it's own implementation as sequence of instructions, rather than
+>    emit a function call that goes out to a KASAN-instrumented
+>    implementation.
+>
+> The patches address each reason in turn. Finally, test_memcmp used a
+> stack array without explicit initialisation, which can sometimes break
+> too, so fix that up.
+>
+> v3: resend with Reviewed-bys, hopefully for inclusion in 5.8.
+>
+> v2: - some cleanups, don't mess with arch code as I missed some wrinkles.
+>     - add stack array init (patch 3)
+>
+> Daniel Axtens (3):
+>   kasan: stop tests being eliminated as dead code with FORTIFY_SOURCE
+>   string.h: fix incompatibility between FORTIFY_SOURCE and KASAN
+>   kasan: initialise array in kasan_memcmp test
+>
+>  include/linux/string.h | 60 +++++++++++++++++++++++++++++++++---------
+>  lib/test_kasan.c       | 32 +++++++++++++---------
+>  2 files changed, 68 insertions(+), 24 deletions(-)
+>
+> --
+> 2.20.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200423154503.5103-1-dja%40axtens.net.
+
+Thanks, Daniel!
+
+For the series:
+Tested-by: David Gow <davidgow@google.com>
+
+(Though I will mirror Dmitry's comment[1] on patch 3 -- I also have a
+memset() already present in my branch...)
+
+I'd been digging into what turns out to be this issue, which we were
+seeing sporadically[2] with the KUnit port of these tests. v7 of the
+KUnit port[3] includes your changes, and fixes the issues.
+
+Cheers,
+-- David
+
+[1]: https://lkml.org/lkml/2020/4/23/838
+[2]: https://lkml.org/lkml/2020/4/18/570
+[3]: https://lkml.org/lkml/2020/4/24/80
