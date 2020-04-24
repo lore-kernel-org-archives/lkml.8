@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DEB5C55191
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92281C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 410A920700
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BFCB217BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:27:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587731272;
-	bh=DdCZTrUqnf7MZk9AylUU42r70E9vPDBHdTRjezsqosk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TrYhaD4vuOYVj9nDmtGa81vgsGr768ysHm49wFr97sk+frmSNLNSqu2NWb179wmHH
-	 pT6BuLQsp6Qz1TixhjB6eqnBVyA1sZD9prmHD2tt20IEJSXfIRdcZsW0MKxUsrvV3C
-	 35hytFw6RLe5nfegyMuIzT9yM/8je8XnyzpNH1Hc=
+	s=default; t=1587731277;
+	bh=cQVFE2oXggkz34TEBtKvHUTAk0MrHQLs86Hg/SE6S/I=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=T52UiKZx0j3Bzs8e7rHDroRKEUPu39bCfS/pW8t00bU0oj798LlWhZuRBa5ysrX/N
+	 HpNNYwACLdGH2a+9DKMRLfYno8fK5650hMYZjUToTyKN44QYhG1p/a/MNtMDBFikVg
+	 rR8MJodyjbCiA+A0X5qLQl/90+kay9qtXtHHuBEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbgDXM1v (ORCPT
+        id S1728423AbgDXMY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:27:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55168 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:24:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728447AbgDXMYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:24:31 -0400
+        id S1728377AbgDXMYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:24:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B5DB20776;
-        Fri, 24 Apr 2020 12:24:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 617D121569;
+        Fri, 24 Apr 2020 12:24:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587731071;
-        bh=DdCZTrUqnf7MZk9AylUU42r70E9vPDBHdTRjezsqosk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kn7GzgENSWaw3fyD+L8R/Zc81nzG5zptnIP8LxfZI3mnJTyaCEYXbFTkH6UlkT03W
-         4eUJ6oIuq4Mf6MeKO7gZXZHbpyQ96DWfoF/ZxGpSqRTtoyyS1sdyXmdiuKYGmdftpO
-         PR7ootziyLAjh+gfq94luiTHyWp2/jjylxmZWrLs=
+        s=default; t=1587731061;
+        bh=cQVFE2oXggkz34TEBtKvHUTAk0MrHQLs86Hg/SE6S/I=;
+        h=From:To:Cc:Subject:Date:From;
+        b=N2xjMA/7jb9BEyfQ2fySJTd5Hvpd1vinwJP6NZn/F9Wr4qOkZde2JQ5PkpmcwGKz0
+         nEoPwy8OxR9zGX9SvFYcXsenKZvjuyYqiyemveWwhOakGIAZUGRPxbpJiKoxVu+CEL
+         nak3StgrgZZDgh6DmkZBfZfepUuJcaUhyiVAm4j8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, Borislav Petkov <bp@suse.de>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 09/21] objtool: Fix switch table detection in .text.unlikely
-Date:   Fri, 24 Apr 2020 08:24:07 -0400
-Message-Id: <20200424122419.10648-9-sashal@kernel.org>
+Cc:     Olaf Hering <olaf@aepfle.de>, Wei Liu <wei.liu@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 01/21] x86: hyperv: report value of misc_features
+Date:   Fri, 24 Apr 2020 08:23:59 -0400
+Message-Id: <20200424122419.10648-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200424122419.10648-1-sashal@kernel.org>
-References: <20200424122419.10648-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,47 +56,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Olaf Hering <olaf@aepfle.de>
 
-[ Upstream commit b401efc120a399dfda1f4d2858a4de365c9b08ef ]
+[ Upstream commit 97d9f1c43bedd400301d6f1eff54d46e8c636e47 ]
 
-If a switch jump table's indirect branch is in a ".cold" subfunction in
-.text.unlikely, objtool doesn't detect it, and instead prints a false
-warning:
+A few kernel features depend on ms_hyperv.misc_features, but unlike its
+siblings ->features and ->hints, the value was never reported during boot.
 
-  drivers/media/v4l2-core/v4l2-ioctl.o: warning: objtool: v4l_print_format.cold()+0xd6: sibling call from callable instruction with modified stack frame
-  drivers/hwmon/max6650.o: warning: objtool: max6650_probe.cold()+0xa5: sibling call from callable instruction with modified stack frame
-  drivers/media/dvb-frontends/drxk_hard.o: warning: objtool: init_drxk.cold()+0x16f: sibling call from callable instruction with modified stack frame
-
-Fix it by comparing the function, instead of the section and offset.
-
-Fixes: 13810435b9a7 ("objtool: Support GCC 8's cold subfunctions")
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/157c35d42ca9b6354bbb1604fe9ad7d1153ccb21.1585761021.git.jpoimboe@redhat.com
+Signed-off-by: Olaf Hering <olaf@aepfle.de>
+Link: https://lore.kernel.org/r/20200407172739.31371-1-olaf@aepfle.de
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/check.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ arch/x86/kernel/cpu/mshyperv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index b8ee6ee9b8947..04fc04b4ab67e 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -915,10 +915,7 @@ static struct rela *find_switch_table(struct objtool_file *file,
- 	 * it.
- 	 */
- 	for (;
--	     &insn->list != &file->insn_list &&
--	     insn->sec == func->sec &&
--	     insn->offset >= func->offset;
--
-+	     &insn->list != &file->insn_list && insn->func && insn->func->pfunc == func;
- 	     insn = insn->first_jump_src ?: list_prev_entry(insn, list)) {
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+index c0201b11e9e2a..a6b323a3a6304 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -178,8 +178,8 @@ static void __init ms_hyperv_init_platform(void)
+ 	ms_hyperv.misc_features = cpuid_edx(HYPERV_CPUID_FEATURES);
+ 	ms_hyperv.hints    = cpuid_eax(HYPERV_CPUID_ENLIGHTMENT_INFO);
  
- 		if (insn != orig_insn && insn->type == INSN_JUMP_DYNAMIC)
+-	pr_info("Hyper-V: features 0x%x, hints 0x%x\n",
+-		ms_hyperv.features, ms_hyperv.hints);
++	pr_info("Hyper-V: features 0x%x, hints 0x%x, misc 0x%x\n",
++		ms_hyperv.features, ms_hyperv.hints, ms_hyperv.misc_features);
+ 
+ 	ms_hyperv.max_vp_index = cpuid_eax(HVCPUID_IMPLEMENTATION_LIMITS);
+ 	ms_hyperv.max_lp_index = cpuid_ebx(HVCPUID_IMPLEMENTATION_LIMITS);
 -- 
 2.20.1
 
