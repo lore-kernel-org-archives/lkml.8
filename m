@@ -2,199 +2,175 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C7FC5518A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97137C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AF3C2076C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AD3220724
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:20:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dDT6IC8v"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="OdW7gT0L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbgDXIS4 (ORCPT
+        id S1726711AbgDXIUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 04:18:56 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36534 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726324AbgDXISz (ORCPT
+        Fri, 24 Apr 2020 04:20:00 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:21953 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbgDXIT7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 04:18:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587716332;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=PFINnC+BGZGn9sYdlJV9u2+Sx+OXMChLSv8A9wCKC34=;
-        b=dDT6IC8vfiuogJcik4rmvLH5Z/wXdg2Y4coIOXbf4Ymzaa6PODyETSr0kGCBGL3mym8srT
-        WSQZwW4PrhmbdPUhPnR18pj4J3mbJICtZ6XlJBSluD2+6d2O/PlMMBhZmzConBpVu0RgAO
-        0AH2YPmy9OImPp68bQUaloPbSc9d7E8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-356-zCd0CgxRN3KpX01kuDq-6w-1; Fri, 24 Apr 2020 04:18:50 -0400
-X-MC-Unique: zCd0CgxRN3KpX01kuDq-6w-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 86B99800FC7;
-        Fri, 24 Apr 2020 08:18:48 +0000 (UTC)
-Received: from [10.36.113.138] (ovpn-113-138.ams2.redhat.com [10.36.113.138])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4805A100238A;
-        Fri, 24 Apr 2020 08:18:46 +0000 (UTC)
-Subject: Re: [PATCH v1] s390: drop memory notifier for protecting kdump crash
- kernel area
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, linux-s390@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Michal Hocko <mhocko@kernel.org>
-References: <20200424081218.6919-1-david@redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <548f3adb-7569-93a0-ef79-0f5d65f8ef0d@redhat.com>
-Date:   Fri, 24 Apr 2020 10:18:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 24 Apr 2020 04:19:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1587716398; x=1619252398;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=TXFnlEVEDU78EXiEMVImLIntv7UP4r00mvJOb5cx6Ks=;
+  b=OdW7gT0LQjQ3JpDd8fnRM8dnt4HhMrHOgiRDM3jF4W1YkZkZPQD7875P
+   57/s3z/PyQiY8alcPUCjwcIFbY6gv8N3UkC2Xp7rG1DvNbmSn9bojUyTj
+   uEILSJ/Euv9KT37vdQ2ATZyzCsXx08RDCsqO2vDoBbxLTnshps24ZgEoq
+   8=;
+IronPort-SDR: NJ+R3Myr8HE7d3UMEF7a5axtFkVzwaYrSo66mji2JnlEffg558Cbgx402zlrmjj8YReWdZFfH/
+ XGwW/kwFuzJQ==
+X-IronPort-AV: E=Sophos;i="5.73,310,1583193600"; 
+   d="scan'208";a="27432411"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2c-6f38efd9.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 24 Apr 2020 08:19:43 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2c-6f38efd9.us-west-2.amazon.com (Postfix) with ESMTPS id 5D9F3A18EB;
+        Fri, 24 Apr 2020 08:19:42 +0000 (UTC)
+Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 24 Apr 2020 08:19:41 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.203) by
+ EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 24 Apr 2020 08:19:32 +0000
+Subject: Re: [PATCH v1 00/15] Add support for Nitro Enclaves
+To:     "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
+        <longpeng2@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>,
+        <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@amazon.com>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>, Balbir Singh <sblbir@amazon.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>,
+        "Gonglei (Arei)" <arei.gonglei@huawei.com>
+References: <20200421184150.68011-1-andraprs@amazon.com>
+ <18406322-dc58-9b59-3f94-88e6b638fe65@redhat.com>
+ <ff65b1ed-a980-9ddc-ebae-996869e87308@amazon.com>
+ <2aa9c865-61c1-fc73-c85d-6627738d2d24@huawei.com>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <7ac3f702-9c5f-5021-ebe3-42f1c93afbdf@amazon.com>
+Date:   Fri, 24 Apr 2020 11:19:21 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200424081218.6919-1-david@redhat.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <2aa9c865-61c1-fc73-c85d-6627738d2d24@huawei.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Originating-IP: [10.43.161.203]
+X-ClientProxiedBy: EX13D08UWB004.ant.amazon.com (10.43.161.232) To
+ EX13D16EUB003.ant.amazon.com (10.43.166.99)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.04.20 10:12, David Hildenbrand wrote:
-> Assume we have a crashkernel area of 256MB reserved:
-> 
-> root@vm0:~# cat /proc/iomem
-> 00000000-6fffffff : System RAM
->   0f258000-0fcfffff : Kernel code
->   0fd00000-101d10e3 : Kernel data
->   105b3000-1068dfff : Kernel bss
-> 70000000-7fffffff : Crash kernel
-> 
-> This exactly corresponds to memory block 7 (memory block size is 256MB).
-> Trying to offline that memory block results in:
-> 
-> root@vm0:~# echo "offline" > /sys/devices/system/memory/memory7/state
-> -bash: echo: write error: Device or resource busy
-> 
-> [  128.458762] page:000003d081c00000 refcount:1 mapcount:0 mapping:00000000d01cecd4 index:0x0
-> [  128.458773] flags: 0x1ffff00000001000(reserved)
-> [  128.458781] raw: 1ffff00000001000 000003d081c00008 000003d081c00008 0000000000000000
-> [  128.458781] raw: 0000000000000000 0000000000000000 ffffffff00000001 0000000000000000
-> [  128.458783] page dumped because: unmovable page
-> 
-> The craskernel area is marked reserved in the bootmem allocator. This
-> results in the memmap getting initialized (refcount=1, PG_reserved), but
-> the pages are never freed to the page allocator.
-> 
-> So these pages look like allocated pages that are unmovable (esp.
-> PG_reserved), and therefore, memory offlining fails early, when trying to
-> isolate the page range.
-> 
-> We don't need a special memory notifier and can drop it. Repeating the
-> above test with this patch results in the same behavior.
-> 
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-> Cc: Philipp Rudo <prudo@linux.ibm.com>
-> Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-> Cc: Eric W. Biederman <ebiederm@xmission.com>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  arch/s390/kernel/setup.c | 33 ---------------------------------
->  1 file changed, 33 deletions(-)
-> 
-> diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
-> index 0f0b140b5558..95d4fba0d811 100644
-> --- a/arch/s390/kernel/setup.c
-> +++ b/arch/s390/kernel/setup.c
-> @@ -39,7 +39,6 @@
->  #include <linux/kernel_stat.h>
->  #include <linux/dma-contiguous.h>
->  #include <linux/device.h>
-> -#include <linux/notifier.h>
->  #include <linux/pfn.h>
->  #include <linux/ctype.h>
->  #include <linux/reboot.h>
-> @@ -591,35 +590,6 @@ static void __init setup_memory_end(void)
->  	pr_notice("The maximum memory size is %luMB\n", memory_end >> 20);
->  }
->  
-> -#ifdef CONFIG_CRASH_DUMP
-> -
-> -/*
-> - * When kdump is enabled, we have to ensure that no memory from
-> - * the area [0 - crashkernel memory size] and
-> - * [crashk_res.start - crashk_res.end] is set offline.
-> - */
-
-Re-reading that comment, I missed the [0 - crashkernel memory size]
-part (for relocation IIRC). So we might want to keep checking for [0 -
-crashkernel memory size] - will double check.
-
-
--- 
-Thanks,
-
-David / dhildenb
+CgpPbiAyNC8wNC8yMDIwIDA2OjA0LCBMb25ncGVuZyAoTWlrZSwgQ2xvdWQgSW5mcmFzdHJ1Y3R1
+cmUgU2VydmljZSAKUHJvZHVjdCBEZXB0Likgd3JvdGU6Cj4gT24gMjAyMC80LzIzIDIxOjE5LCBQ
+YXJhc2NoaXYsIEFuZHJhLUlyaW5hIHdyb3RlOgo+Pgo+PiBPbiAyMi8wNC8yMDIwIDAwOjQ2LCBQ
+YW9sbyBCb256aW5pIHdyb3RlOgo+Pj4gT24gMjEvMDQvMjAgMjA6NDEsIEFuZHJhIFBhcmFzY2hp
+diB3cm90ZToKPj4+PiBBbiBlbmNsYXZlIGNvbW11bmljYXRlcyB3aXRoIHRoZSBwcmltYXJ5IFZN
+IHZpYSBhIGxvY2FsIGNvbW11bmljYXRpb24gY2hhbm5lbCwKPj4+PiB1c2luZyB2aXJ0aW8tdnNv
+Y2sgWzJdLiBBbiBlbmNsYXZlIGRvZXMgbm90IGhhdmUgYSBkaXNrIG9yIGEgbmV0d29yayBkZXZp
+Y2UKPj4+PiBhdHRhY2hlZC4KPj4+IElzIGl0IHBvc3NpYmxlIHRvIGhhdmUgYSBzYW1wbGUgb2Yg
+dGhpcyBpbiB0aGUgc2FtcGxlcy8gZGlyZWN0b3J5Pwo+PiBJIGNhbiBhZGQgaW4gdjIgYSBzYW1w
+bGUgZmlsZSBpbmNsdWRpbmcgdGhlIGJhc2ljIGZsb3cgb2YgaG93IHRvIHVzZSB0aGUgaW9jdGwK
+Pj4gaW50ZXJmYWNlIHRvIGNyZWF0ZSAvIHRlcm1pbmF0ZSBhbiBlbmNsYXZlLgo+Pgo+PiBUaGVu
+IHdlIGNhbiB1cGRhdGUgLyBidWlsZCBvbiB0b3AgaXQgYmFzZWQgb24gdGhlIG9uZ29pbmcgZGlz
+Y3Vzc2lvbnMgb24gdGhlCj4+IHBhdGNoIHNlcmllcyBhbmQgdGhlIHJlY2VpdmVkIGZlZWRiYWNr
+Lgo+Pgo+Pj4gSSBhbSBpbnRlcmVzdGVkIGVzcGVjaWFsbHkgaW46Cj4+Pgo+Pj4gLSB0aGUgaW5p
+dGlhbCBDUFUgc3RhdGU6IENQTDAgdnMuIENQTDMsIGluaXRpYWwgcHJvZ3JhbSBjb3VudGVyLCBl
+dGMuCj4+Pgo+Pj4gLSB0aGUgY29tbXVuaWNhdGlvbiBjaGFubmVsOyBkb2VzIHRoZSBlbmNsYXZl
+IHNlZSB0aGUgdXN1YWwgbG9jYWwgQVBJQwo+Pj4gYW5kIElPQVBJQyBpbnRlcmZhY2VzIGluIG9y
+ZGVyIHRvIGdldCBpbnRlcnJ1cHRzIGZyb20gdmlydGlvLXZzb2NrLCBhbmQKPj4+IHdoZXJlIGlz
+IHRoZSB2aXJ0aW8tdnNvY2sgZGV2aWNlICh2aXJ0aW8tbW1pbyBJIHN1cHBvc2UpIHBsYWNlZCBp
+biBtZW1vcnk/Cj4+Pgo+Pj4gLSB3aGF0IHRoZSBlbmNsYXZlIGlzIGFsbG93ZWQgdG8gZG86IGNh
+biBpdCBjaGFuZ2UgcHJpdmlsZWdlIGxldmVscywKPj4+IHdoYXQgaGFwcGVucyBpZiB0aGUgZW5j
+bGF2ZSBwZXJmb3JtcyBhbiBhY2Nlc3MgdG8gbm9uZXhpc3RlbnQgbWVtb3J5LCBldGMuCj4+Pgo+
+Pj4gLSB3aGV0aGVyIHRoZXJlIGFyZSBzcGVjaWFsIGh5cGVyY2FsbCBpbnRlcmZhY2VzIGZvciB0
+aGUgZW5jbGF2ZQo+PiBBbiBlbmNsYXZlIGlzIGEgVk0sIHJ1bm5pbmcgb24gdGhlIHNhbWUgaG9z
+dCBhcyB0aGUgcHJpbWFyeSBWTSwgdGhhdCBsYXVuY2hlZAo+PiB0aGUgZW5jbGF2ZS4gVGhleSBh
+cmUgc2libGluZ3MuCj4+Cj4+IEhlcmUgd2UgbmVlZCB0byB0aGluayBvZiB0d28gY29tcG9uZW50
+czoKPj4KPj4gMS4gQW4gZW5jbGF2ZSBhYnN0cmFjdGlvbiBwcm9jZXNzIC0gYSBwcm9jZXNzIHJ1
+bm5pbmcgaW4gdGhlIHByaW1hcnkgVk0gZ3Vlc3QsCj4+IHRoYXQgdXNlcyB0aGUgcHJvdmlkZWQg
+aW9jdGwgaW50ZXJmYWNlIG9mIHRoZSBOaXRybyBFbmNsYXZlcyBrZXJuZWwgZHJpdmVyIHRvCj4+
+IHNwYXduIGFuIGVuY2xhdmUgVk0gKHRoYXQncyAyIGJlbG93KS4KPj4KPj4gSG93IGRvZXMgYWxs
+IGdldHMgdG8gYW4gZW5jbGF2ZSBWTSBydW5uaW5nIG9uIHRoZSBob3N0Pwo+Pgo+PiBUaGVyZSBp
+cyBhIE5pdHJvIEVuY2xhdmVzIGVtdWxhdGVkIFBDSSBkZXZpY2UgZXhwb3NlZCB0byB0aGUgcHJp
+bWFyeSBWTS4gVGhlCj4+IGRyaXZlciBmb3IgdGhpcyBuZXcgUENJIGRldmljZSBpcyBpbmNsdWRl
+ZCBpbiB0aGUgY3VycmVudCBwYXRjaCBzZXJpZXMuCj4+Cj4gSGkgUGFyYXNjaGl2LAo+Cj4gVGhl
+IG5ldyBQQ0kgZGV2aWNlIGlzIGVtdWxhdGVkIGluIFFFTVUgPyBJZiBzbywgaXMgdGhlcmUgYW55
+IHBsYW4gdG8gc2VuZCB0aGUKPiBRRU1VIGNvZGUgPwoKSGksCgpOb3BlLCBub3QgdGhhdCBJIGtu
+b3cgb2Ygc28gZmFyLgoKVGhhbmtzLApBbmRyYQoKPgo+PiBUaGUgaW9jdGwgbG9naWMgaXMgbWFw
+cGVkIHRvIFBDSSBkZXZpY2UgY29tbWFuZHMgZS5nLiB0aGUgTkVfRU5DTEFWRV9TVEFSVCBpb2N0
+bAo+PiBtYXBzIHRvIGFuIGVuY2xhdmUgc3RhcnQgUENJIGNvbW1hbmQgb3IgdGhlIEtWTV9TRVRf
+VVNFUl9NRU1PUllfUkVHSU9OIG1hcHMgdG8KPj4gYW4gYWRkIG1lbW9yeSBQQ0kgY29tbWFuZC4g
+VGhlIFBDSSBkZXZpY2UgY29tbWFuZHMgYXJlIHRoZW4gdHJhbnNsYXRlZCBpbnRvCj4+IGFjdGlv
+bnMgdGFrZW4gb24gdGhlIGh5cGVydmlzb3Igc2lkZTsgdGhhdCdzIHRoZSBOaXRybyBoeXBlcnZp
+c29yIHJ1bm5pbmcgb24gdGhlCj4+IGhvc3Qgd2hlcmUgdGhlIHByaW1hcnkgVk0gaXMgcnVubmlu
+Zy4KPj4KPj4gMi4gVGhlIGVuY2xhdmUgaXRzZWxmIC0gYSBWTSBydW5uaW5nIG9uIHRoZSBzYW1l
+IGhvc3QgYXMgdGhlIHByaW1hcnkgVk0gdGhhdAo+PiBzcGF3bmVkIGl0Lgo+Pgo+PiBUaGUgZW5j
+bGF2ZSBWTSBoYXMgbm8gcGVyc2lzdGVudCBzdG9yYWdlIG9yIG5ldHdvcmsgaW50ZXJmYWNlIGF0
+dGFjaGVkLCBpdCB1c2VzCj4+IGl0cyBvd24gbWVtb3J5IGFuZCBDUFVzICsgaXRzIHZpcnRpby12
+c29jayBlbXVsYXRlZCBkZXZpY2UgZm9yIGNvbW11bmljYXRpb24KPj4gd2l0aCB0aGUgcHJpbWFy
+eSBWTS4KPj4KPj4gVGhlIG1lbW9yeSBhbmQgQ1BVcyBhcmUgY2FydmVkIG91dCBvZiB0aGUgcHJp
+bWFyeSBWTSwgdGhleSBhcmUgZGVkaWNhdGVkIGZvciB0aGUKPj4gZW5jbGF2ZS4gVGhlIE5pdHJv
+IGh5cGVydmlzb3IgcnVubmluZyBvbiB0aGUgaG9zdCBlbnN1cmVzIG1lbW9yeSBhbmQgQ1BVCj4+
+IGlzb2xhdGlvbiBiZXR3ZWVuIHRoZSBwcmltYXJ5IFZNIGFuZCB0aGUgZW5jbGF2ZSBWTS4KPj4K
+Pj4KPj4gVGhlc2UgdHdvIGNvbXBvbmVudHMgbmVlZCB0byByZWZsZWN0IHRoZSBzYW1lIHN0YXRl
+IGUuZy4gd2hlbiB0aGUgZW5jbGF2ZQo+PiBhYnN0cmFjdGlvbiBwcm9jZXNzICgxKSBpcyB0ZXJt
+aW5hdGVkLCB0aGUgZW5jbGF2ZSBWTSAoMikgaXMgdGVybWluYXRlZCBhcyB3ZWxsLgo+Pgo+PiBX
+aXRoIHJlZ2FyZCB0byB0aGUgY29tbXVuaWNhdGlvbiBjaGFubmVsLCB0aGUgcHJpbWFyeSBWTSBo
+YXMgaXRzIG93biBlbXVsYXRlZAo+PiB2aXJ0aW8tdnNvY2sgUENJIGRldmljZS4gVGhlIGVuY2xh
+dmUgVk0gaGFzIGl0cyBvd24gZW11bGF0ZWQgdmlydGlvLXZzb2NrIGRldmljZQo+PiBhcyB3ZWxs
+LiBUaGlzIGNoYW5uZWwgaXMgdXNlZCwgZm9yIGV4YW1wbGUsIHRvIGZldGNoIGRhdGEgaW4gdGhl
+IGVuY2xhdmUgYW5kCj4+IHRoZW4gcHJvY2VzcyBpdC4gQW4gYXBwbGljYXRpb24gdGhhdCBzZXRz
+IHVwIHRoZSB2c29jayBzb2NrZXQgYW5kIGNvbm5lY3RzIG9yCj4+IGxpc3RlbnMsIGRlcGVuZGlu
+ZyBvbiB0aGUgdXNlIGNhc2UsIGlzIHRoZW4gZGV2ZWxvcGVkIHRvIHVzZSB0aGlzIGNoYW5uZWw7
+IHRoaXMKPj4gaGFwcGVucyBvbiBib3RoIGVuZHMgLSBwcmltYXJ5IFZNIGFuZCBlbmNsYXZlIFZN
+Lgo+Pgo+PiBMZXQgbWUga25vdyBpZiBmdXJ0aGVyIGNsYXJpZmljYXRpb25zIGFyZSBuZWVkZWQu
+Cj4+Cj4+Pj4gVGhlIHByb3Bvc2VkIHNvbHV0aW9uIGlzIGZvbGxvd2luZyB0aGUgS1ZNIG1vZGVs
+IGFuZCB1c2VzIHRoZSBLVk0gQVBJIHRvIGJlIGFibGUKPj4+PiB0byBjcmVhdGUgYW5kIHNldCBy
+ZXNvdXJjZXMgZm9yIGVuY2xhdmVzLiBBbiBhZGRpdGlvbmFsIGlvY3RsIGNvbW1hbmQsIGJlc2lk
+ZXMKPj4+PiB0aGUgb25lcyBwcm92aWRlZCBieSBLVk0sIGlzIHVzZWQgdG8gc3RhcnQgYW4gZW5j
+bGF2ZSBhbmQgc2V0dXAgdGhlIGFkZHJlc3NpbmcKPj4+PiBmb3IgdGhlIGNvbW11bmljYXRpb24g
+Y2hhbm5lbCBhbmQgYW4gZW5jbGF2ZSB1bmlxdWUgaWQuCj4+PiBSZXVzaW5nIHNvbWUgS1ZNIGlv
+Y3RscyBpcyBkZWZpbml0ZWx5IGEgZ29vZCBpZGVhLCBidXQgSSB3b3VsZG4ndCByZWFsbHkKPj4+
+IHNheSBpdCdzIHRoZSBLVk0gQVBJIHNpbmNlIHRoZSBWQ1BVIGZpbGUgZGVzY3JpcHRvciBpcyBi
+YXNpY2FsbHkgbm9uCj4+PiBmdW5jdGlvbmFsICh3aXRob3V0IEtWTV9SVU4gYW5kIG1tYXAgaXQn
+cyBub3QgcmVhbGx5IHRoZSBLVk0gQVBJKS4KPj4gSXQgdXNlcyBwYXJ0IG9mIHRoZSBLVk0gQVBJ
+IG9yIGEgc2V0IG9mIEtWTSBpb2N0bHMgdG8gbW9kZWwgdGhlIHdheSBhIFZNIGlzCj4+IGNyZWF0
+ZWQgLyB0ZXJtaW5hdGVkLiBUaGF0J3MgdHJ1ZSwgS1ZNX1JVTiBhbmQgbW1hcC1pbmcgdGhlIHZj
+cHUgZmQgYXJlIG5vdAo+PiBpbmNsdWRlZC4KPj4KPj4gVGhhbmtzIGZvciB0aGUgZmVlZGJhY2sg
+cmVnYXJkaW5nIHRoZSByZXVzZSBvZiBLVk0gaW9jdGxzLgo+Pgo+PiBBbmRyYQo+Pgo+Pgo+Pgo+
+Pgo+PiBBbWF6b24gRGV2ZWxvcG1lbnQgQ2VudGVyIChSb21hbmlhKSBTLlIuTC4gcmVnaXN0ZXJl
+ZCBvZmZpY2U6IDI3QSBTZi4gTGF6YXIKPj4gU3RyZWV0LCBVQkM1LCBmbG9vciAyLCBJYXNpLCBJ
+YXNpIENvdW50eSwgNzAwMDQ1LCBSb21hbmlhLiBSZWdpc3RlcmVkIGluCj4+IFJvbWFuaWEuIFJl
+Z2lzdHJhdGlvbiBudW1iZXIgSjIyLzI2MjEvMjAwNS4KCgoKCkFtYXpvbiBEZXZlbG9wbWVudCBD
+ZW50ZXIgKFJvbWFuaWEpIFMuUi5MLiByZWdpc3RlcmVkIG9mZmljZTogMjdBIFNmLiBMYXphciBT
+dHJlZXQsIFVCQzUsIGZsb29yIDIsIElhc2ksIElhc2kgQ291bnR5LCA3MDAwNDUsIFJvbWFuaWEu
+IFJlZ2lzdGVyZWQgaW4gUm9tYW5pYS4gUmVnaXN0cmF0aW9uIG51bWJlciBKMjIvMjYyMS8yMDA1
+Lgo=
 
