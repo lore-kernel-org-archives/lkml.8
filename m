@@ -2,102 +2,117 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F49C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF2AC55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D0D520728
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6776320767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:43:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="F8+rpfJI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C703FsBf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbgDXIn1 (ORCPT
+        id S1726796AbgDXIni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 04:43:27 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:32914 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbgDXIn1 (ORCPT
+        Fri, 24 Apr 2020 04:43:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44904 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbgDXIni (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 04:43:27 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03O8gkqb185611;
-        Fri, 24 Apr 2020 08:43:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=zivr8YfPZWKR+1AB9kVD2ltz8Thkr6z6zfpjQtCJAl8=;
- b=F8+rpfJIzNqiXL79BFMjmXhS+Z19ynDwC238hk6/Tee5AKqscD1vGd6KKGbFfl4uQqmn
- Ow0sMTZI97u2oYMGgabKBSeUtedB1+qDlGiZRCM7VAFMH9s8mJW8SAYLRg+RDq692ITT
- MeloKVUlhEohrelVUMY4kaWdR8r7jZPw37pNMz5dyZrlDiQT3/TUiyRYyKE8izbThQ7V
- Skdyz7HQxQdNBXxTpDtPIN5kfRR4gS+LIF+kCjsujZa92X+mODbnKFCoL00PyNa538Nw
- nqhHm0qw0th8YanbU9/cSUkPTvZQuYhM8sDBJFXafHYkubmv0oHgxZTMBpHuMZP7Mk7F XQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 30ketdk3p5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Apr 2020 08:43:20 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03O8gfeE172054;
-        Fri, 24 Apr 2020 08:43:19 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 30gbbpj3kw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Apr 2020 08:43:19 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03O8hF3t029366;
-        Fri, 24 Apr 2020 08:43:15 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 24 Apr 2020 01:43:14 -0700
-Date:   Fri, 24 Apr 2020 11:43:07 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Felipe Balbi <balbi@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alan Stern <stern@rowland.harvard.edu>
-Subject: Re: [PATCH USB 1/2] usb: raw-gadget: fix return value of ep read
- ioctls
-Message-ID: <20200424084307.GQ2682@kadam>
-References: <ca6b79b47313aa7ee9d8c24c5a7f595772764171.1587690539.git.andreyknvl@google.com>
+        Fri, 24 Apr 2020 04:43:38 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACADCC09B045
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 01:43:37 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id w145so7033437lff.3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 01:43:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KahPbvSltMlEDsEeg/YpqC1aWuwrm7i/vom/fz3t8MI=;
+        b=C703FsBfCivIr01X565R4eJgDHh8uASs3zFuWvMLo/hE3YFmCWq+LAQ0DAzJ90H2qi
+         hfnk5TMBcpnzYH5PJM+tdQ7Cre0RrzZpIsy/mrvpDCpQModeebB6J57Ah5SZJ5EJwn+/
+         cSU/BT7koyaVe37mc5yxU0gYsKjoUAguafi01CF8BYn08Q61u/VZo0da49x10gtimv/L
+         1bEkra85Rjt2fXE0LhqxFNq8bZHMcbIBqt64wi7hNbYzCIyRyzsTVXE0drtl9jtGbVTj
+         Ujo28NPeTShbEJAAtoYNVHMjV4t8HPgRI4Q4//1qJh48V3RgnmXJgzvqbhEM6WBL2v11
+         qV3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KahPbvSltMlEDsEeg/YpqC1aWuwrm7i/vom/fz3t8MI=;
+        b=hAW9Exr8LTj3e+lZ3lAXYUChX42PnMYYSu3cDs4ZeLcfSPz/UYEFAKvJwzaXjsZc6A
+         MnQj88TSpcH10xMrMRbuuFdHNzgRYSSSjAirpW7oxDNc8N4V4pltyXX5NZY5B9X9essh
+         N0TH4XGIXk5dMA7R86hlhUQ3o4q8dlISHDgfzmL/ca/lCRbjhI0kUGKlO5xukLg01seR
+         igWpaz7zeav3Bvo8kC6Ea2PUT/pUpT3bf1Cz4LRt0MRP7vzgFM2VSi/u/V2yLpWaJWiT
+         2n3tTFjaL8mqwAPGKNv4CfzbjcRYAUqjW3LkIinSHs0oAQ4cFBRVi5qp/ZzoazvHg/of
+         83CA==
+X-Gm-Message-State: AGi0PubidXBBKRMVJsv6R5W/kVpz75g7vSHtf2so0TfSrs670lI3YgYf
+        aND8Zs5BAfQWsLEqhD0mUHHg+REhsJtS8gLz1uM=
+X-Google-Smtp-Source: APiQypIFfHxSBQ292OjLSgV6e0RPypU6rNufaQLpxum7bV4atU8dJuyEW/rwmU2ysS0JW6NiM8Fy0CpmZYYRJ4X9r5w=
+X-Received: by 2002:ac2:57cb:: with SMTP id k11mr5537416lfo.19.1587717816207;
+ Fri, 24 Apr 2020 01:43:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ca6b79b47313aa7ee9d8c24c5a7f595772764171.1587690539.git.andreyknvl@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9600 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
- suspectscore=0 mlxlogscore=896 adultscore=0 mlxscore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004240068
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9600 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
- impostorscore=0 bulkscore=0 mlxlogscore=955 phishscore=0 mlxscore=0
- priorityscore=1501 clxscore=1015 suspectscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004240068
+References: <cover.1587088646.git.baolin.wang7@gmail.com> <96d444cd73239e0166316bd8f44082031cf72491.1587088646.git.baolin.wang7@gmail.com>
+ <20200424081138.GP3612@dell> <CAK8P3a1e15P6xRUgYLYxT8XUx7FREbs5mMbfL1Qj+qwoDfFX+Q@mail.gmail.com>
+ <20200424083255.GQ3612@dell> <CADBw62pisHz=ejgnhL=Y_qufCoZjPDLT90X2bztTZzMgbNMvmQ@mail.gmail.com>
+In-Reply-To: <CADBw62pisHz=ejgnhL=Y_qufCoZjPDLT90X2bztTZzMgbNMvmQ@mail.gmail.com>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Fri, 24 Apr 2020 16:43:24 +0800
+Message-ID: <CADBw62o778f8HWgbbQMFXUQFw1AC0yV+AM8R6_g53HO0CujMaA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mfd: syscon: Support physical regmap bus
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 03:09:58AM +0200, Andrey Konovalov wrote:
-> They must return the number of bytes transferred during the data stage.
-> 
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+On Fri, Apr 24, 2020 at 4:42 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
+>
+> On Fri, Apr 24, 2020 at 4:32 PM Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > On Fri, 24 Apr 2020, Arnd Bergmann wrote:
+> >
+> > > On Fri, Apr 24, 2020 at 10:11 AM Lee Jones <lee.jones@linaro.org> wrote:
+> > > > On Fri, 17 Apr 2020, Baolin Wang wrote:
+> > > > > @@ -106,14 +107,25 @@ static struct syscon *of_syscon_register(struct device_node *np, bool check_clk)
+> > > > >       syscon_config.val_bits = reg_io_width * 8;
+> > > > >       syscon_config.max_register = resource_size(&res) - reg_io_width;
+> > > > >
+> > > > > -     regmap = regmap_init_mmio(NULL, base, &syscon_config);
+> > > > > +      /*
+> > > > > +       * The Spreadtrum syscon need register a real physical regmap bus
+> > > > > +       * with new atomic bits updating operation instead of using
+> > > > > +       * read-modify-write.
+> > > > > +       */
+> > > > > +     if (IS_ENABLED(CONFIG_ARCH_SPRD) &&
+> > > > > +         of_device_is_compatible(np, "sprd,atomic-syscon") &&
+> > > >
+> > > > Please find a more generic way of supporting your use-case.  This is a
+> > > > generic driver, and as such I am vehemently against adding any sort of
+> > > > vendor specific code in here.
+> > >
+> > > I suggested doing it this way, as all alternatives seemed worse than this.
+> >
+> > If we're using a registration function (could probably be swapped out
+> > for or accompanied by a Device Tree property) anyway, then why conduct
+> > the vendor platform checks?
+>
+> Actually I've send out the v3 patch according to Arnd's suggestion. In
+> v3 patch, I removed the registration function, but we agreed that
+> adding the vendor specific support in the syscon driver seems a better
+> way than others.
 
-This was my mistake.  Please add a Fixes tag.
+Sorry, I forgot the link:
+https://lore.kernel.org/patchwork/patch/1228160/
 
-Fixes: 068fbff4f860 ("usb: raw-gadget: Fix copy_to/from_user() checks")
-
-I should have seen that bug...  I thought I was being careful and I
-even singled out that part of the commit and mentioned it in the
-commit message but I messed up.  Sorry.
-
-regards,
-dan carpenter
-
+-- 
+Baolin Wang
