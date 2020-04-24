@@ -2,137 +2,128 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88634C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29435C55194
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6422720700
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:17:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bcrd/Mjr"
+	by mail.kernel.org (Postfix) with ESMTP id 1432320700
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:18:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgDXMRE (ORCPT
+        id S1727009AbgDXMSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:17:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbgDXMRE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:17:04 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E4B4C09B045;
-        Fri, 24 Apr 2020 05:17:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=1LG3NTg+hQCnLOSki57Fzf/dRCxKCCPgCIak4djFi6U=; b=bcrd/MjrN7q9MjBw2FPtqGANDb
-        G8GizFfPgO5JvWhBkqbbZakuSq4FHK48XFaYrsufaLf+eA9gHFanJKkTyJex6qrVnyzV0LDn9txKe
-        gF1WZYAzpger/d0puTRVwfAr0V9w3dntoHLLGJV8F4S5EAFXZKSi5TpaVnf4IVGNGA8Wy0E2Ff/Uf
-        ZKxV9G+98Tk/ZHn9JNJTchiWLMm4DL6I68e2gPaC3WVtC13zXIKmTy8bXq1cKqYqGU/G2diqvYkVn
-        oe704Js1w8AMuziYZGzziDYrThyQSnyF5Q10csBICoHzYi1RxES/1/rjObx7cpDHD+466v6rBgtc3
-        KrJVsn8Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jRxFt-0007hI-4o; Fri, 24 Apr 2020 12:16:29 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4CFA530257C;
-        Fri, 24 Apr 2020 14:16:26 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 31884202EEC81; Fri, 24 Apr 2020 14:16:26 +0200 (CEST)
-Date:   Fri, 24 Apr 2020 14:16:26 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Like Xu <like.xu@linux.intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, wei.w.wang@intel.com,
-        ak@linux.intel.com
-Subject: Re: [PATCH v10 08/11] KVM: x86/pmu: Add LBR feature emulation via
- guest LBR event
-Message-ID: <20200424121626.GB20730@hirez.programming.kicks-ass.net>
-References: <20200423081412.164863-1-like.xu@linux.intel.com>
- <20200423081412.164863-9-like.xu@linux.intel.com>
+        Fri, 24 Apr 2020 08:18:14 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2096 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726698AbgDXMSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:18:14 -0400
+Received: from lhreml740-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 3F53095920E6AD0816A0;
+        Fri, 24 Apr 2020 13:18:12 +0100 (IST)
+Received: from fraeml706-chm.china.huawei.com (10.206.15.55) by
+ lhreml740-chm.china.huawei.com (10.201.108.190) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.1913.5; Fri, 24 Apr 2020 13:18:12 +0100
+Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
+ fraeml706-chm.china.huawei.com (10.206.15.55) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Fri, 24 Apr 2020 14:18:11 +0200
+Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
+ fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1913.007;
+ Fri, 24 Apr 2020 14:18:11 +0200
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH 3/5] ima: Fix ima digest hash table key calculation
+Thread-Topic: [PATCH 3/5] ima: Fix ima digest hash table key calculation
+Thread-Index: AQHWAsCL0WxU1zQQXUO+TcKy4wW9saiFqfKAgAD8PeCAAFIUgIABYaXQ
+Date:   Fri, 24 Apr 2020 12:18:11 +0000
+Message-ID: <59a280b928db4c478f660d14c33cdd87@huawei.com>
+References: <20200325161116.7082-1-roberto.sassu@huawei.com>
+         <20200325161116.7082-3-roberto.sassu@huawei.com>
+         <1587588987.5165.20.camel@linux.ibm.com>
+         <11984a05a5624f64aed1ec6b0d0b75ff@huawei.com>
+ <1587660781.5610.15.camel@linux.ibm.com>
+In-Reply-To: <1587660781.5610.15.camel@linux.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.14.239]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200423081412.164863-9-like.xu@linux.intel.com>
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 04:14:09PM +0800, Like Xu wrote:
-> +static int intel_pmu_create_lbr_event(struct kvm_vcpu *vcpu)
-> +{
-> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> +	struct perf_event *event;
-> +
-> +	/*
-> +	 * The perf_event_attr is constructed in the minimum efficient way:
-> +	 * - set 'pinned = true' to make it task pinned so that if another
-> +	 *   cpu pinned event reclaims LBR, the event->oncpu will be set to -1;
-> +	 *
-> +	 * - set 'sample_type = PERF_SAMPLE_BRANCH_STACK' and
-> +	 *   'exclude_host = true' to mark it as a guest LBR event which
-> +	 *   indicates host perf to schedule it without but a fake counter,
-> +	 *   check is_guest_lbr_event() and intel_guest_event_constraints();
-> +	 *
-> +	 * - set 'branch_sample_type = PERF_SAMPLE_BRANCH_CALL_STACK |
-> +	 *   PERF_SAMPLE_BRANCH_USER' to configure it to use callstack mode,
-> +	 *   which allocs 'ctx->task_ctx_data' and request host perf subsystem
-> +	 *   to save/restore guest LBR records during host context switches,
-> +	 *   check branch_user_callstack() and intel_pmu_lbr_sched_task();
-> +	 */
-> +	struct perf_event_attr attr = {
-> +		.type = PERF_TYPE_RAW,
-
-This is not right; this needs a .config
-
-And I suppose that is why you need that horrible:
-needs_guest_lbr_without_counter() thing to begin with.
-
-Please allocate yourself an event from the pseudo event range:
-event==0x00. Currently we only have umask==3 for Fixed2 and umask==4
-for Fixed3, given you claim 58, which is effectively Fixed25,
-umask==0x1a might be appropriate.
-
-Also, I suppose we need to claim 0x0000 as an error, so that other
-people won't try this again.
-
-> +		.size = sizeof(attr),
-> +		.pinned = true,
-> +		.exclude_host = true,
-> +		.sample_type = PERF_SAMPLE_BRANCH_STACK,
-> +		.branch_sample_type = PERF_SAMPLE_BRANCH_CALL_STACK |
-> +					PERF_SAMPLE_BRANCH_USER,
-> +	};
-> +
-> +	if (unlikely(pmu->lbr_event))
-> +		return 0;
-> +
-> +	event = perf_event_create_kernel_counter(&attr, -1,
-> +						current, NULL, NULL);
-> +	if (IS_ERR(event)) {
-> +		pr_debug_ratelimited("%s: failed %ld\n",
-> +					__func__, PTR_ERR(event));
-> +		return -ENOENT;
-> +	}
-> +	pmu->lbr_event = event;
-> +	pmu->event_count++;
-> +	return 0;
-> +}
-
-Also, what happens if you fail programming due to a conflicting cpu
-event? That pinned doesn't guarantee you'll get the event, it just means
-you'll error instead of getting RR.
-
-I didn't find any code checking the event state.
+DQoNCkhVQVdFSSBURUNITk9MT0dJRVMgRHVlc3NlbGRvcmYgR21iSCwgSFJCIDU2MDYzDQpNYW5h
+Z2luZyBEaXJlY3RvcjogTGkgUGVuZywgTGkgSmlhbiwgU2hpIFlhbmxpDQoNCg0KPiAtLS0tLU9y
+aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNaW1pIFpvaGFyIFttYWlsdG86em9oYXJAbGlu
+dXguaWJtLmNvbV0NCj4gU2VudDogVGh1cnNkYXksIEFwcmlsIDIzLCAyMDIwIDY6NTMgUE0NCj4g
+VG86IFJvYmVydG8gU2Fzc3UgPHJvYmVydG8uc2Fzc3VAaHVhd2VpLmNvbT4NCj4gQ2M6IGxpbnV4
+LWludGVncml0eUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXNlY3VyaXR5LW1vZHVsZUB2Z2VyLmtl
+cm5lbC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IEtyenlzenRvZiBTdHJ1
+Y3p5bnNraQ0KPiA8a3J6eXN6dG9mLnN0cnVjenluc2tpQGh1YXdlaS5jb20+OyBTaWx2aXUgVmxh
+c2NlYW51DQo+IDxTaWx2aXUuVmxhc2NlYW51QGh1YXdlaS5jb20+OyBzdGFibGVAdmdlci5rZXJu
+ZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMy81XSBpbWE6IEZpeCBpbWEgZGlnZXN0IGhh
+c2ggdGFibGUga2V5IGNhbGN1bGF0aW9uDQo+IA0KPiBPbiBUaHUsIDIwMjAtMDQtMjMgYXQgMTA6
+MjEgKzAwMDAsIFJvYmVydG8gU2Fzc3Ugd3JvdGU6DQo+ID4gPiBIaSBSb2JlcnRvLCBLcnN5c3p0
+b2YsDQo+ID4gPg0KPiA+ID4gT24gV2VkLCAyMDIwLTAzLTI1IGF0IDE3OjExICswMTAwLCBSb2Jl
+cnRvIFNhc3N1IHdyb3RlOg0KPiA+ID4gPiBGcm9tOiBLcnp5c3p0b2YgU3RydWN6eW5za2kgPGty
+enlzenRvZi5zdHJ1Y3p5bnNraUBodWF3ZWkuY29tPg0KPiA+ID4gPg0KPiA+ID4gPiBGdW5jdGlv
+biBoYXNoX2xvbmcoKSBhY2NlcHRzIHVuc2lnbmVkIGxvbmcsIHdoaWxlIGN1cnJlbnRseSBvbmx5
+IG9uZQ0KPiBieXRlDQo+ID4gPiA+IGlzIHBhc3NlZCBmcm9tIGltYV9oYXNoX2tleSgpLCB3aGlj
+aCBjYWxjdWxhdGVzIGEga2V5IGZvciBpbWFfaHRhYmxlLg0KPiA+ID4gVXNlDQo+ID4gPiA+IG1v
+cmUgYnl0ZXMgdG8gYXZvaWQgZnJlcXVlbnQgY29sbGlzaW9ucy4NCj4gPiA+ID4NCj4gPiA+ID4g
+TGVuZ3RoIG9mIHRoZSBidWZmZXIgaXMgbm90IGV4cGxpY2l0bHkgcGFzc2VkIGFzIGEgZnVuY3Rp
+b24gcGFyYW1ldGVyLA0KPiA+ID4gPiBiZWNhdXNlIHRoaXMgZnVuY3Rpb24gZXhwZWN0cyBhIGRp
+Z2VzdCB3aG9zZSBsZW5ndGggaXMgZ3JlYXRlciB0aGFuDQo+IHRoZQ0KPiA+ID4gPiBzaXplIG9m
+IHVuc2lnbmVkIGxvbmcuDQo+ID4gPg0KPiA+ID4gU29tZWhvdyBJIG1pc3NlZCB0aGUgb3JpZ2lu
+YWwgcmVwb3J0IG9mIHRoaXMgcHJvYmxlbcKgaHR0cHM6Ly9sb3JlLmtlcm4NCj4gPiA+IGVsLm9y
+Zy9wYXRjaHdvcmsvcGF0Y2gvNjc0Njg0Ly4gwqBUaGlzIHBhdGNoIGlzIGRlZmluaXRlbHkgYmV0
+dGVyLCBidXQNCj4gPiA+IGhvdyBtYW55IHVuaXF1ZSBrZXlzIGFyZSBhY3R1YWxseSBiZWluZyB1
+c2VkPyDCoElzIGl0IGFueXdoZXJlIG5lYXINCj4gPiA+IElNQV9NRUFTVVJFX0hUQUJMRV9TSVpF
+KDUxMik/DQo+ID4NCj4gPiBJIGRpZCBhIHNtYWxsIHRlc3QgKHdpdGggMTA0MyBtZWFzdXJlbWVu
+dHMpOg0KPiA+DQo+ID4gc2xvdHM6IDI1MCwgbWF4IGRlcHRoOiA5ICh3aXRob3V0IHRoZSBwYXRj
+aCkNCj4gPiBzbG90czogNDQ4LCBtYXggZGVwdGg6IDcgKHdpdGggdGhlIHBhdGNoKQ0KPiANCj4g
+NDQ4IG91dCBvZiA1MTIgc2xvdHMgYXJlIHVzZWQuDQo+IA0KPiA+DQo+ID4gVGhlbiwgSSBpbmNy
+ZWFzZWQgdGhlIG51bWJlciBvZiBiaXRzIHRvIDEwOg0KPiA+DQo+ID4gc2xvdHM6IDI1MSwgbWF4
+IGRlcHRoOiA5ICh3aXRob3V0IHRoZSBwYXRjaCkNCj4gPiBzbG90czogNjYwLCBtYXggZGVwdGg6
+IDQgKHdpdGggdGhlIHBhdGNoKQ0KPiANCj4gNjYwIG91dCBvZiAxMDI0IHNsb3RzIGFyZSB1c2Vk
+Lg0KPiANCj4gSSB3b25kZXIgaWYgdGhlcmUgaXMgYW55IGJlbmVmaXQgdG8gaGFzaGluZyBhIGRp
+Z2VzdCwgaW5zdGVhZCBvZiBqdXN0DQo+IHVzaW5nIHRoZSBmaXJzdCBiaXRzLg0KDQpCZWZvcmUg
+SSBjYWxjdWxhdGVkIG1heCBkZXB0aCB1bnRpbCB0aGVyZSBpcyBhIG1hdGNoLCBub3QgdGhlIGZ1
+bGwgZGVwdGguDQoNCiMxDQpyZXR1cm4gaGFzaF9sb25nKCooKHVuc2lnbmVkIGxvbmcgKilkaWdl
+c3QpLCBJTUFfSEFTSF9CSVRTKTsNCiNkZWZpbmUgSU1BX0hBU0hfQklUUyA5DQoNClJ1bnRpbWUg
+bWVhc3VyZW1lbnRzOiAxNDg4DQpWaW9sYXRpb25zOiAwDQpTbG90cyAodXNlZC9hdmFpbGFibGUp
+OiA0ODQvNTEyDQpNYXggZGVwdGggaGFzaCB0YWJsZTogMTANCg0KIzINCnJldHVybiAqKHVuc2ln
+bmVkIGxvbmcgKilkaWdlc3QgJSBJTUFfTUVBU1VSRV9IVEFCTEVfU0laRTsNCiNkZWZpbmUgSU1B
+X0hBU0hfQklUUyA5DQoNClJ1bnRpbWUgbWVhc3VyZW1lbnRzOiAxNDkxDQpWaW9sYXRpb25zOiAy
+DQpTbG90cyAodXNlZC9hdmFpbGFibGUpOiA0ODkvNTEyDQpNYXggZGVwdGggaGFzaCB0YWJsZTog
+MTANCg0KIzMNCnJldHVybiBoYXNoX2xvbmcoKigodW5zaWduZWQgbG9uZyAqKWRpZ2VzdCksIElN
+QV9IQVNIX0JJVFMpOw0KI2RlZmluZSBJTUFfSEFTSF9CSVRTIDEwDQoNClJ1bnRpbWUgbWVhc3Vy
+ZW1lbnRzOiAxNDg5DQpWaW9sYXRpb25zOiAwDQpTbG90cyAodXNlZC9hdmFpbGFibGUpOiA3ODAv
+MTAyNA0KTWF4IGRlcHRoIGhhc2ggdGFibGU6IDYNCg0KIzQNCnJldHVybiAqKHVuc2lnbmVkIGxv
+bmcgKilkaWdlc3QgJSBJTUFfTUVBU1VSRV9IVEFCTEVfU0laRTsNCiNkZWZpbmUgSU1BX0hBU0hf
+QklUUyAxMA0KDQpSdW50aW1lIG1lYXN1cmVtZW50czogMTQ4OQ0KVmlvbGF0aW9uczogMA0KU2xv
+dHMgKHVzZWQvYXZhaWxhYmxlKTogNzkzLzEwMjQNCk1heCBkZXB0aCBoYXNoIHRhYmxlOiA2DQoN
+ClJvYmVydG8NCg0KSFVBV0VJIFRFQ0hOT0xPR0lFUyBEdWVzc2VsZG9yZiBHbWJILCBIUkIgNTYw
+NjMNCk1hbmFnaW5nIERpcmVjdG9yOiBMaSBQZW5nLCBMaSBKaWFuLCBTaGkgWWFubGkNCg0KDQo+
+ID4gPiBEbyB3ZSBuZWVkIGEgbmV3IHNlY3VyaXR5ZnMgZW50cnkgdG8gZGlzcGxheSB0aGUgbnVt
+YmVyIHVzZWQ/DQo+ID4NCj4gPiBQcm9iYWJseSBpdCBpcyB1c2VmdWwgb25seSBpZiB0aGUgYWRt
+aW5pc3RyYXRvciBjYW4gZGVjaWRlIHRoZSBudW1iZXIgb2YNCj4gc2xvdHMuDQo+IA0KPiBUaGUg
+c2VjdXJpdHlmcyBzdWdnZXN0aW9uIHdhcyBqdXN0IGEgbWVhbnMgZm9yIHRyaWdnZXJpbmcgdGhl
+IGFib3ZlDQo+IGRlYnVnZ2luZyBpbmZvIHlvdSBwcm92aWRlZC4gwqBDb3VsZCB5b3UgcHJvdmlk
+ZSBhbm90aGVyIHBhdGNoIHdpdGggdGhlDQo+IGRlYnVnZ2luZyBpbmZvPw0KPiANCj4gdGhhbmtz
+LA0KPiANCj4gTWltaQ0KDQo=
