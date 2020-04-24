@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBEFC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B57C55191
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B42092173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F30FD2087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:23:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587730988;
-	bh=gQAWuW39xI8mn+xgNei4VJx/ZoOFJOfZegmSKlqk98g=;
+	s=default; t=1587730992;
+	bh=t6QrlUuqm7H12f/LEkP2lMqOz6UI8P+PkX2WkGbdVLQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jq7LAtNMGnmu2uTrq7KpVphywcqg9BGVD/M0P6vJ3lKXidG65/AlaQGUOtoikal7A
-	 yqtbGSUsSU3Stiu0eX4HYRIfVWt0OYwK2dDMsHC2ZmqGO7qCnGaGCUkNiZHHrMOd1u
-	 sFztOl9RfPtCGbYeFSBNfrwfa1+o2hwnAFlZdvU0=
+	b=hziuz2ThbkShQpcEffWioXycETcD7duLM6Odu2u41wiBh6iYQouXYDG7gH1myBR1w
+	 tGbamSj75uhdBlfQnqRNGlOUijCFex8z/veNRXB8UUyOS9Vj0SPXaEzIJl1fORHEWZ
+	 HRUWaRjtCjVSJnPY50WS12LCUOb0Z1pkaktx1mT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgDXMXH (ORCPT
+        id S1727857AbgDXMXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:23:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52506 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:23:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727809AbgDXMXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:23:04 -0400
+        id S1727825AbgDXMXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:23:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6843621473;
-        Fri, 24 Apr 2020 12:23:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD69B2087E;
+        Fri, 24 Apr 2020 12:23:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587730984;
-        bh=gQAWuW39xI8mn+xgNei4VJx/ZoOFJOfZegmSKlqk98g=;
+        s=default; t=1587730986;
+        bh=t6QrlUuqm7H12f/LEkP2lMqOz6UI8P+PkX2WkGbdVLQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HbywYlIj+QWm7owny5oTnrIOYDDYdAb0cHj660zEdKP2aMhyP3Z6cMZH7hk5r1BKR
-         hb5jhNc/66SaYrTcAE0kyX4odTJ6vpqV4MCv1rGnEZGxKmI67rp2WZPtuWhuJAeOEe
-         VMQUX5AAjtWeu9eozLoBNTNUQkWzRg5C4QMn5tds=
+        b=Ce2KMzcwtR1jHYB2iMVnQZ2AWFQNnrLnW3oEUCfVZMskCTvM1nMjyERAm9QOolKfo
+         ARKRMog7pVaaZnPjDO93g9dU7LuWh5m2YcsBt8Wkv5B10s50IqjCmrkd6Z07ywy3b9
+         5+qKE9Ahx/F72Tz0mGJO2bLeuJ/HmS9H8eIT3d98=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 23/38] net: stmmac: socfpga: Allow all RGMII modes
-Date:   Fri, 24 Apr 2020 08:22:21 -0400
-Message-Id: <20200424122237.9831-23-sashal@kernel.org>
+Cc:     Tamizh chelvam <tamizhr@codeaurora.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 25/38] mac80211: fix channel switch trigger from unknown mesh peer
+Date:   Fri, 24 Apr 2020 08:22:23 -0400
+Message-Id: <20200424122237.9831-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200424122237.9831-1-sashal@kernel.org>
 References: <20200424122237.9831-1-sashal@kernel.org>
@@ -61,33 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
+From: Tamizh chelvam <tamizhr@codeaurora.org>
 
-[ Upstream commit a7a0d6269652846671312b29992143f56e2866b8 ]
+[ Upstream commit 93e2d04a1888668183f3fb48666e90b9b31d29e6 ]
 
-Allow all the RGMII modes to be used.  (Not only "rgmii", "rgmii-id"
-but "rgmii-txid", "rgmii-rxid")
+Previously mesh channel switch happens if beacon contains
+CSA IE without checking the mesh peer info. Due to that
+channel switch happens even if the beacon is not from
+its own mesh peer. Fixing that by checking if the CSA
+originated from the same mesh network before proceeding
+for channel switch.
 
-Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Tamizh chelvam <tamizhr@codeaurora.org>
+Link: https://lore.kernel.org/r/1585403604-29274-1-git-send-email-tamizhr@codeaurora.org
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/mac80211/mesh.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-index e0212d2fc2a12..fa32cd5b418ef 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-@@ -241,6 +241,8 @@ static int socfpga_set_phy_mode_common(int phymode, u32 *val)
- 	switch (phymode) {
- 	case PHY_INTERFACE_MODE_RGMII:
- 	case PHY_INTERFACE_MODE_RGMII_ID:
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+	case PHY_INTERFACE_MODE_RGMII_TXID:
- 		*val = SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_RGMII;
- 		break;
- 	case PHY_INTERFACE_MODE_MII:
+diff --git a/net/mac80211/mesh.c b/net/mac80211/mesh.c
+index d09b3c789314d..36978a0e50001 100644
+--- a/net/mac80211/mesh.c
++++ b/net/mac80211/mesh.c
+@@ -1257,15 +1257,15 @@ static void ieee80211_mesh_rx_bcn_presp(struct ieee80211_sub_if_data *sdata,
+ 		    sdata->u.mesh.mshcfg.rssi_threshold < rx_status->signal)
+ 			mesh_neighbour_update(sdata, mgmt->sa, &elems,
+ 					      rx_status);
++
++		if (ifmsh->csa_role != IEEE80211_MESH_CSA_ROLE_INIT &&
++		    !sdata->vif.csa_active)
++			ieee80211_mesh_process_chnswitch(sdata, &elems, true);
+ 	}
+ 
+ 	if (ifmsh->sync_ops)
+ 		ifmsh->sync_ops->rx_bcn_presp(sdata,
+ 			stype, mgmt, &elems, rx_status);
+-
+-	if (ifmsh->csa_role != IEEE80211_MESH_CSA_ROLE_INIT &&
+-	    !sdata->vif.csa_active)
+-		ieee80211_mesh_process_chnswitch(sdata, &elems, true);
+ }
+ 
+ int ieee80211_mesh_finish_csa(struct ieee80211_sub_if_data *sdata)
+@@ -1373,6 +1373,9 @@ static void mesh_rx_csa_frame(struct ieee80211_sub_if_data *sdata,
+ 	ieee802_11_parse_elems(pos, len - baselen, true, &elems,
+ 			       mgmt->bssid, NULL);
+ 
++	if (!mesh_matches_local(sdata, &elems))
++		return;
++
+ 	ifmsh->chsw_ttl = elems.mesh_chansw_params_ie->mesh_ttl;
+ 	if (!--ifmsh->chsw_ttl)
+ 		fwd_csa = false;
 -- 
 2.20.1
 
