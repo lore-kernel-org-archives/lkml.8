@@ -2,167 +2,119 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9EEC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0231C55196
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0779220774
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:35:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FC682075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:36:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RkeTuMr6"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pkYmgV7c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729004AbgDXRf5 (ORCPT
+        id S1729042AbgDXRgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 13:35:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44704 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728877AbgDXRfs (ORCPT
+        Fri, 24 Apr 2020 13:36:00 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:56636 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728853AbgDXRf4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 13:35:48 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33974C09B048
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 10:35:48 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id 7so4845684pjo.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 10:35:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=33hdVZdIvdo3r9ulzCeqVPA1lq6sxl5V/50+KNNX3vA=;
-        b=RkeTuMr6pQxS9kGQ1szZoB7f5ty7zYGnPdIZBCe2ITN1R7VrKR6yI0p9MOpKHYnxo3
-         0Brs7q3clGo3BgEVWdBjge9STeM5CRm7P2uyr8Mzr8kWWDVlBmgfl6BCE7UoOLb1896D
-         biUAhpRWUo7UjVhyGr6DCwQpy2UUSC3zc+iP4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=33hdVZdIvdo3r9ulzCeqVPA1lq6sxl5V/50+KNNX3vA=;
-        b=pH6XI+/sNDy8CSXihPCJsBSUC8sytVPWOZktN6NE9rX/qFch4/hdbQiOdomFD56Lg4
-         bQngbmH1pegs0Rr8384/9rj8P+xqQs7qr5HkbSI24ibDGzB9zjkOmLvbsILRuuLfjLkO
-         GvGO222sAqEn3IvUXjoj6mWgrzj57RZ0yqtgs6Fv/nx8q1opvAjyHaKB1Kr3fEBYwOOx
-         QqPxBLUrBRdOR+4fH30sOaS9ngduaX1WITo1rDyOnt+cXS9I3l5wkoB9TprbDy3Ni1nH
-         NGUb6TN/PtGTZdbrcEgSZMNNdbvPsVyqMVxCAkYJHI8auaOmP6cNzzkdFpvc6p0Yo8+q
-         nhFg==
-X-Gm-Message-State: AGi0PubhWrysxthf3U9p8oQY6poMFL6J4sdSWn8J9myd28nH8G9p7q9R
-        8WXLu9SE0lNM3KGZ2mqrZgA28nnnqWrCXA==
-X-Google-Smtp-Source: APiQypLJyUYhCmBaJxgPQFab/PXXMhS2ejilK7aTPfMJlbmAfwvBlF1nccjDo6PyB52i/djxAENRDg==
-X-Received: by 2002:a17:902:549:: with SMTP id 67mr10219965plf.115.1587749747510;
-        Fri, 24 Apr 2020 10:35:47 -0700 (PDT)
-Received: from mathewk1.lan ([161.97.192.125])
-        by smtp.gmail.com with ESMTPSA id t188sm5360641pgc.3.2020.04.24.10.35.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 10:35:46 -0700 (PDT)
-From:   Mathew King <mathewk@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Mathew King <mathewk@chromium.org>,
-        Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH 4/4] power_supply: Add power supply type property to uevent env
-Date:   Fri, 24 Apr 2020 11:35:33 -0600
-Message-Id: <20200424173533.48572-5-mathewk@chromium.org>
-X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
-In-Reply-To: <20200424173533.48572-1-mathewk@chromium.org>
-References: <20200424173533.48572-1-mathewk@chromium.org>
+        Fri, 24 Apr 2020 13:35:56 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03OHMh65085952;
+        Fri, 24 Apr 2020 17:35:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=lK2lR6oS0MmTS17S06yxfyPGi7flPdKuNqf3iWlHMCE=;
+ b=pkYmgV7ciA+P+zHSuqe91yhAWFprZZffzKC77wa9GAX1G5dTFZU4M5TAjpfer/yIkPMw
+ wZN/JCDTcGJ158VH432lr/eqmNtf8eK24UsoeIewCjfk9mRIcCVo+Kp0mEKSZteg4GU6
+ hCobxlWFbq/EnOY4q8G3PSrJMHK9x5LrO1h/R/iAzJkoF6HtsEnY0tGWlmcpNRO0XGNq
+ swYTaUxrYXy+km5PPLRG+RyNvFwAJJqGSYyN5qUduTOEvdW0tU6hxYRzzWlrbGrFP+hN
+ Y1GAfSZu/6vlRtCqI6XQj2MHt8kRjKCxIBm8sBLJaF0XFxjBPC5yvFqB0xtHpK3YFqo5 IA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 30ketdnn7m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Apr 2020 17:35:48 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03OHMRmR038154;
+        Fri, 24 Apr 2020 17:35:47 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 30gb1q6yhh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Apr 2020 17:35:47 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03OHZhUg028461;
+        Fri, 24 Apr 2020 17:35:43 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 24 Apr 2020 10:35:43 -0700
+Date:   Fri, 24 Apr 2020 20:35:36 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alan Stern <stern@rowland.harvard.edu>
+Subject: Re: [PATCH USB 1/2] usb: raw-gadget: fix return value of ep read
+ ioctls
+Message-ID: <20200424173536.GS2682@kadam>
+References: <ca6b79b47313aa7ee9d8c24c5a7f595772764171.1587690539.git.andreyknvl@google.com>
+ <20200424084307.GQ2682@kadam>
+ <CAAeHK+zS3WcmPEr9+hYGTMrZUwXyn5489Ke4f1zpdvTa-U-s9Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAeHK+zS3WcmPEr9+hYGTMrZUwXyn5489Ke4f1zpdvTa-U-s9Q@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9601 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0 spamscore=0
+ mlxlogscore=965 mlxscore=0 malwarescore=0 bulkscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004240134
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9601 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
+ impostorscore=0 bulkscore=0 mlxlogscore=999 phishscore=0 mlxscore=0
+ priorityscore=1501 clxscore=1015 suspectscore=0 adultscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004240134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add POWER_SUPPLY_TYPE to the uevent env for power supply. Type is a
-property of all power supplies and there is a sysfs entry for it but it
-is not included in the properties array of the power supply so
-explicitly add it to the udev env.
+On Fri, Apr 24, 2020 at 03:16:35PM +0200, Andrey Konovalov wrote:
+> On Fri, Apr 24, 2020 at 10:43 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> >
+> > On Fri, Apr 24, 2020 at 03:09:58AM +0200, Andrey Konovalov wrote:
+> > > They must return the number of bytes transferred during the data stage.
+> > >
+> > > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> >
+> > This was my mistake.  Please add a Fixes tag.
+> >
+> > Fixes: 068fbff4f860 ("usb: raw-gadget: Fix copy_to/from_user() checks")
+> >
+> > I should have seen that bug...  I thought I was being careful and I
+> > even singled out that part of the commit and mentioned it in the
+> > commit message but I messed up.  Sorry.
+> 
+> No worries, the bug was actually present before your change, but in a
+> slightly different form. So FWIW we can also add:
+> 
+> Fixes: f2c2e717642c ("usb: gadget: add raw-gadget interface")
+> 
+> However raw-gadget is not present in any released kernel yet, so need
+> of backporting AFAIU.
 
-Signed-off-by: Mathew King <mathewk@chromium.org>
----
- drivers/power/supply/power_supply_sysfs.c | 61 ++++++++++++++---------
- 1 file changed, 37 insertions(+), 24 deletions(-)
+The Fixes: tag lets scripts know that it's not required to back port it.
 
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index fbb05466b9a5..c7087cd7ffe3 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -448,6 +448,37 @@ void power_supply_destroy_attrs(void)
- 	}
- }
- 
-+static int add_prop_uevent(struct device *dev, struct kobj_uevent_env *env,
-+			   enum power_supply_property prop, char *prop_buf)
-+{
-+	int ret = 0;
-+	struct power_supply_attr *pwr_attr;
-+	struct device_attribute *dev_attr;
-+	char *line;
-+
-+	pwr_attr = &power_supply_attrs[prop];
-+	dev_attr = &pwr_attr->dev_attr;
-+
-+	ret = power_supply_show_property(dev, dev_attr, prop_buf);
-+	if (ret == -ENODEV || ret == -ENODATA) {
-+		/*
-+		 * When a battery is absent, we expect -ENODEV. Don't abort;
-+		 * send the uevent with at least the the PRESENT=0 property
-+		 */
-+		return 0;
-+	}
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	line = strchr(prop_buf, '\n');
-+	if (line)
-+		*line = 0;
-+
-+	return add_uevent_var(env, "POWER_SUPPLY_%s=%s",
-+			      pwr_attr->upper_name, prop_buf);
-+}
-+
- int power_supply_uevent(struct device *dev, struct kobj_uevent_env *env)
- {
- 	struct power_supply *psy = dev_get_drvdata(dev);
-@@ -467,31 +498,13 @@ int power_supply_uevent(struct device *dev, struct kobj_uevent_env *env)
- 	if (!prop_buf)
- 		return -ENOMEM;
- 
--	for (j = 0; j < psy->desc->num_properties; j++) {
--		struct power_supply_attr *pwr_attr;
--		struct device_attribute *dev_attr;
--		char *line;
--
--		pwr_attr = &power_supply_attrs[psy->desc->properties[j]];
--		dev_attr = &pwr_attr->dev_attr;
--
--		ret = power_supply_show_property(dev, dev_attr, prop_buf);
--		if (ret == -ENODEV || ret == -ENODATA) {
--			/* When a battery is absent, we expect -ENODEV. Don't abort;
--			   send the uevent with at least the the PRESENT=0 property */
--			ret = 0;
--			continue;
--		}
--
--		if (ret < 0)
--			goto out;
--
--		line = strchr(prop_buf, '\n');
--		if (line)
--			*line = 0;
-+	ret = add_prop_uevent(dev, env, POWER_SUPPLY_PROP_TYPE, prop_buf);
-+	if (ret)
-+		goto out;
- 
--		ret = add_uevent_var(env, "POWER_SUPPLY_%s=%s",
--				     pwr_attr->upper_name, prop_buf);
-+	for (j = 0; j < psy->desc->num_properties; j++) {
-+		ret = add_prop_uevent(dev, env, psy->desc->properties[j],
-+				      prop_buf);
- 		if (ret)
- 			goto out;
- 	}
--- 
-2.26.2.303.gf8c07b1a785-goog
+regards,
+dan carpenter
+
 
