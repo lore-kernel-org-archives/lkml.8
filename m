@@ -5,68 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2ECCC55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 267DEC55196
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1AA120857
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 003C6214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:02:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qszvw6G5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r/j9BvpK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729519AbgDXUB7 (ORCPT
+        id S1729505AbgDXUB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 16:01:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39298 "EHLO
+        Fri, 24 Apr 2020 16:01:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729477AbgDXUBw (ORCPT
+        with ESMTP id S1729449AbgDXUBs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 16:01:52 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6898BC09B04E
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 13:01:52 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id w3so4133262plz.5
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 13:01:52 -0700 (PDT)
+        Fri, 24 Apr 2020 16:01:48 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F801C09B048
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 13:01:48 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id v2so4123183plp.9
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 13:01:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=x5AHzcS8sGC9RgEnYTkEdMtqDh+A4mE2SJWyouyzavc=;
-        b=Qszvw6G5hey/OgSVSi18emlbljJRMDrWac3iPQQrHxseohEWF+b/gOBuTe3FeI7Rdi
-         N70dW6ppXpbePUI7XLXYE6qv9No8YpF1Ny00lB2qULYDCzvKaofA/IW632rEAqAbS2lP
-         KuDNIbU6Rdf1A4AG2Z+UGWblwCigb/HunNdtWjlx9O69ntpyYF0M2UOlA/L9Duznq0TV
-         es9aiuHwxnHRCL5ovv90Er7EuA96nL6RsxDq2+St98vJuOpgiWwX3T3og+9O4ZWVCyqo
-         RecNKOO5in7OfsMy/oSIDBE60tOaS0WJpLc+NlQZmQVK+kHkLCNeCCQsNgcIOzWlsblK
-         9IKA==
+        bh=ACPRkKaJUyZo8C7iIU0IKcYFjC5Ccd7f4ibW90mBkI0=;
+        b=r/j9BvpKD2+h7VVgkG6ZqnvbwTKfJUON8chtw0D9EhgYbrohwaxbHnSVC6DKEdMEoe
+         oUXUi8/KX/T7uSpfkE4CekO3PnJenQRoXtAgul+AqPvsi9ow75wBY9tjEYhz6nTdaqVv
+         4rG72mUD5zmnY1U56LkaTOIe79apgYVIYuaDdelF24YVNO12eYio7lJ/BvWIwgM/Dfjc
+         oTm1k2Zqjev5iWhdRYVG1o2lZQ0HszP/yehulR/satJVmmY7IK32kv4qPzMJgc5Ip3DC
+         c0kEPOPrsCds0d6wzib3xL7J3JBfcXPJbr9I1gFyucTNRsTuVHqP+okYgh+Uapw2Eot6
+         sUGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=x5AHzcS8sGC9RgEnYTkEdMtqDh+A4mE2SJWyouyzavc=;
-        b=uGQnAHaCJR0FD+QXXDnemGfFAziPbyUaQtHukojDp1I/qgE3fxZu44jf8hOGakOKkK
-         TE9wVfIn40Q3IDgD8QVa9L2NIDF7DyDevKg4n5GE/bDKiPGeMOBxOzbPWgboFEhCLMrg
-         Q9jBWmmR0Pqgh81/QC1j6o0FujDWwcAobN9vSJ8CoNlfymP3Ytzdo/6Pcl4PKb2TXNA5
-         YMKyzY3pmb2APKs7Br7uCM9YVcrCI23R1BfRw/NM56/h5FJm7/5vONvlPnn2+/musFDr
-         PAC0YRGMKxUg5lpyCcInP5XK418ri/9g54xzG7E7N7ghXPVCyZCIDMF/ulCKqYzMlR5Q
-         xatg==
-X-Gm-Message-State: AGi0PuaF03TvxpX6lIV0IAjuIRMp2msyi6NZPB7Ijq3Wt7Pten6MO4GI
-        KD7It+Z6zmTQCX9+lNCPZbjS/A==
-X-Google-Smtp-Source: APiQypIGm772GdNEbMZRG1Sl2BHW92OFtPhGXH1b/EFdq/5lG+DrWOi9wf3UyXMrfeaSEtc6o2N63A==
-X-Received: by 2002:a17:90a:5d02:: with SMTP id s2mr7992200pji.148.1587758511852;
-        Fri, 24 Apr 2020 13:01:51 -0700 (PDT)
+        bh=ACPRkKaJUyZo8C7iIU0IKcYFjC5Ccd7f4ibW90mBkI0=;
+        b=ILhjuM5hOXQSLBvFYuUuKX6RCVo4hjMuZmmz4O1lqQmK4cC3jPEkfiErTR1bBbs8RG
+         24D2YA69oR3TmK4RF0OOs1N01rEk7kTCo5SJulNfnt4UWuXJFFUWN2dZF2ZW4K9pMrZU
+         vzJWK5AOyH0N4SsUJhq6zLl4w5LdysCS5++mICpZ9k2sXoKWIVfevzMFIhGHZF2zXj+J
+         kHaZBcnoF0EPRZGJ6ZiqG/Rpy0PbpucKa3z3DD5XKiiAQUilAj+ATTrNVQRMqJeyi3HB
+         bOIzUQAr/QNjps2ezAQntz45A6nFDQ/Qqd18o3dG2VbUpZ6gNRS/OUQMwYGXoNj2aZIE
+         RtEg==
+X-Gm-Message-State: AGi0PuZvEk+mrA6naiFx1Jo/KtxrsR8oan/ti+e/YrIqKJpj2thpWmmj
+        +cdgwf0KNSSN4M4mIDS1L9bRyQ==
+X-Google-Smtp-Source: APiQypKfmGSdN3v0D8zcRUOZanqmk0b+MRKxMtXLO8IYCYWXEgvCIFclKnMbij53lOKaXmiqTriYqA==
+X-Received: by 2002:a17:90a:276a:: with SMTP id o97mr8248471pje.194.1587758507788;
+        Fri, 24 Apr 2020 13:01:47 -0700 (PDT)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id o11sm5532224pgd.58.2020.04.24.13.01.50
+        by smtp.gmail.com with ESMTPSA id o11sm5532224pgd.58.2020.04.24.13.01.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 13:01:51 -0700 (PDT)
+        Fri, 24 Apr 2020 13:01:47 -0700 (PDT)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     bjorn.andersson@linaro.org, ohad@wizery.com
 Cc:     loic.pallardy@st.com, arnaud.pouliquen@st.com, s-anna@ti.com,
         linux-remoteproc@vger.kernel.org, corbet@lwn.net,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 11/14] remoteproc: Deal with synchronisation when changing FW image
-Date:   Fri, 24 Apr 2020 14:01:32 -0600
-Message-Id: <20200424200135.28825-12-mathieu.poirier@linaro.org>
+Subject: [PATCH v3 08/14] remoteproc: Call core functions based on synchronisation flag
+Date:   Fri, 24 Apr 2020 14:01:29 -0600
+Message-Id: <20200424200135.28825-9-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200424200135.28825-1-mathieu.poirier@linaro.org>
 References: <20200424200135.28825-1-mathieu.poirier@linaro.org>
@@ -77,60 +77,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch prevents the firmware image from being displayed or changed
-when the remoteproc core is synchronising with a remote processor. This
-is needed since there is no guarantee about the nature of the firmware
-image that is loaded by the external entity.
+Call the right core function based on whether we should synchronise
+with a remote processor or boot it from scratch.
 
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- drivers/remoteproc/remoteproc_sysfs.c | 24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+ drivers/remoteproc/remoteproc_internal.h | 50 ++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
-diff --git a/drivers/remoteproc/remoteproc_sysfs.c b/drivers/remoteproc/remoteproc_sysfs.c
-index 7f8536b73295..cdd322a6ecfa 100644
---- a/drivers/remoteproc/remoteproc_sysfs.c
-+++ b/drivers/remoteproc/remoteproc_sysfs.c
-@@ -13,9 +13,20 @@
- static ssize_t firmware_show(struct device *dev, struct device_attribute *attr,
- 			  char *buf)
+diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
+index dda7044c4b3e..3985c084b184 100644
+--- a/drivers/remoteproc/remoteproc_internal.h
++++ b/drivers/remoteproc/remoteproc_internal.h
+@@ -72,6 +72,12 @@ static inline bool rproc_needs_syncing(struct rproc *rproc)
+ static inline
+ int rproc_fw_sanity_check(struct rproc *rproc, const struct firmware *fw)
  {
-+	ssize_t ret;
- 	struct rproc *rproc = to_rproc(dev);
- 
--	return sprintf(buf, "%s\n", rproc->firmware);
-+	/*
-+	 * In most instances there is no guarantee about the firmware
-+	 * that was loaded by the external entity.  As such simply don't
-+	 * print anything.
-+	 */
-+	if (rproc_needs_syncing(rproc))
-+		ret = sprintf(buf, "\n");
-+	else
-+		ret = sprintf(buf, "%s\n", rproc->firmware);
-+
-+	return ret;
- }
- 
- /* Change firmware name via sysfs */
-@@ -39,6 +50,17 @@ static ssize_t firmware_store(struct device *dev,
- 		goto out;
- 	}
- 
-+	/*
-+	 * There is no point in trying to change the firmware if loading the
-+	 * image of the remote processor is done by another entity.
-+	 */
 +	if (rproc_needs_syncing(rproc)) {
-+		dev_err(dev,
-+			"can't change firmware while synchronising with MCU\n");
-+		err = -EBUSY;
-+		goto out;
++		if (rproc->sync_ops && rproc->sync_ops->sanity_check)
++			return rproc->sync_ops->sanity_check(rproc, fw);
++		return 0;
 +	}
 +
- 	len = strcspn(buf, "\n");
- 	if (!len) {
- 		dev_err(dev, "can't provide a NULL firmware\n");
+ 	if (rproc->ops && rproc->ops->sanity_check)
+ 		return rproc->ops->sanity_check(rproc, fw);
+ 
+@@ -81,6 +87,12 @@ int rproc_fw_sanity_check(struct rproc *rproc, const struct firmware *fw)
+ static inline
+ u64 rproc_get_boot_addr(struct rproc *rproc, const struct firmware *fw)
+ {
++	if (rproc_needs_syncing(rproc)) {
++		if (rproc->sync_ops && rproc->sync_ops->get_boot_addr)
++			return rproc->sync_ops->get_boot_addr(rproc, fw);
++		return 0;
++	}
++
+ 	if (rproc->ops && rproc->ops->get_boot_addr)
+ 		return rproc->ops->get_boot_addr(rproc, fw);
+ 
+@@ -90,6 +102,12 @@ u64 rproc_get_boot_addr(struct rproc *rproc, const struct firmware *fw)
+ static inline
+ int rproc_load_segments(struct rproc *rproc, const struct firmware *fw)
+ {
++	if (rproc_needs_syncing(rproc)) {
++		if (rproc->sync_ops && rproc->sync_ops->load)
++			return rproc->sync_ops->load(rproc, fw);
++		return 0;
++	}
++
+ 	if (rproc->ops && rproc->ops->load)
+ 		return rproc->ops->load(rproc, fw);
+ 
+@@ -98,6 +116,12 @@ int rproc_load_segments(struct rproc *rproc, const struct firmware *fw)
+ 
+ static inline int rproc_parse_fw(struct rproc *rproc, const struct firmware *fw)
+ {
++	if (rproc_needs_syncing(rproc)) {
++		if (rproc->sync_ops && rproc->sync_ops->parse_fw)
++			return rproc->sync_ops->parse_fw(rproc, fw);
++		return 0;
++	}
++
+ 	if (rproc->ops && rproc->ops->parse_fw)
+ 		return rproc->ops->parse_fw(rproc, fw);
+ 
+@@ -108,6 +132,13 @@ static inline
+ int rproc_handle_rsc(struct rproc *rproc, u32 rsc_type, void *rsc, int offset,
+ 		     int avail)
+ {
++	if (rproc_needs_syncing(rproc)) {
++		if (rproc->sync_ops && rproc->sync_ops->handle_rsc)
++			return rproc->sync_ops->handle_rsc(rproc, rsc_type,
++							   rsc, offset, avail);
++		return 0;
++	}
++
+ 	if (rproc->ops && rproc->ops->handle_rsc)
+ 		return rproc->ops->handle_rsc(rproc, rsc_type, rsc, offset,
+ 					      avail);
+@@ -119,6 +150,13 @@ static inline
+ struct resource_table *rproc_find_loaded_rsc_table(struct rproc *rproc,
+ 						   const struct firmware *fw)
+ {
++	if (rproc_needs_syncing(rproc)) {
++		if (rproc->sync_ops && rproc->sync_ops->find_loaded_rsc_table)
++			return rproc->sync_ops->find_loaded_rsc_table(rproc,
++								      fw);
++		return NULL;
++	}
++
+ 	if (rproc->ops && rproc->ops->find_loaded_rsc_table)
+ 		return rproc->ops->find_loaded_rsc_table(rproc, fw);
+ 
+@@ -127,6 +165,12 @@ struct resource_table *rproc_find_loaded_rsc_table(struct rproc *rproc,
+ 
+ static inline int rproc_start_device(struct rproc *rproc)
+ {
++	if (rproc_needs_syncing(rproc)) {
++		if (rproc->sync_ops && rproc->sync_ops->start)
++			return rproc->sync_ops->start(rproc);
++		return 0;
++	}
++
+ 	if (rproc->ops && rproc->ops->start)
+ 		return rproc->ops->start(rproc);
+ 
+@@ -135,6 +179,12 @@ static inline int rproc_start_device(struct rproc *rproc)
+ 
+ static inline int rproc_stop_device(struct rproc *rproc)
+ {
++	if (rproc_needs_syncing(rproc)) {
++		if (rproc->sync_ops && rproc->sync_ops->stop)
++			return rproc->sync_ops->stop(rproc);
++		return 0;
++	}
++
+ 	if (rproc->ops && rproc->ops->stop)
+ 		return rproc->ops->stop(rproc);
+ 
 -- 
 2.20.1
 
