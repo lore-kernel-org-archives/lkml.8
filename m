@@ -2,234 +2,200 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B64DCC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A38C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97E3B20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B83220767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:17:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="mrPonUye"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726458AbgDXFQQ (ORCPT
+        id S1726481AbgDXFRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 01:16:16 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:49784 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726051AbgDXFQQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 01:16:16 -0400
-Received: by mail-il1-f197.google.com with SMTP id z18so8559593ilp.16
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 22:16:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=A6c/LQtJZc4+qQOkiE4dj1+HwbD1HzzkY4RQO9cB8zk=;
-        b=HhFE2hrdJpUzzbDnz5PczM9KX4p2ks4rVVZaBkCUlXlPmaauGMt6ds00slSCqbWwqj
-         4mKigjSp/BDXONBj/hui2XoNH5v50m6IouhRoly2ZMb+D/+fNUYNRx8h+BHDjH1uajfO
-         5r9hhkUPfLfJhbQquqenJiS0FewPNGSJz+pyexHtbtNDn8m8FCqqyBMcxbTmSNExjy5b
-         WW655I7GUyX0WlgzjSOE5albMXANLJKVs9JSyPvENoqL44G9UgXaEmVb0E7DoNS7RrCB
-         5iKhs0I4aj6xhUXHyiSn+juplRBtb/fXULrLmQeD28vVMYQ2zOUsqNQL7j1ki9+AwNAh
-         crMg==
-X-Gm-Message-State: AGi0PuYzdBnBphMcJHIEztgI0deMxoJfC0yXA/D06+qlft9S2Vqgy6Bl
-        FWgZTo4Zx8lf228S9F85ZKO7Wbthv2tCMnSkB07PmRFKDh/5
-X-Google-Smtp-Source: APiQypI7qOhbzivl8UaVt3DFLRaetqjpp6n26KYC5aYYQI5TbSST3tKWkrjAJLyX/h2BFJctWSC/RQ4IPcI16SiPUE/NcerUG1sn
+        Fri, 24 Apr 2020 01:17:23 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:46856 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725823AbgDXFRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 01:17:23 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 497j8w4XjRzB09ZM;
+        Fri, 24 Apr 2020 07:17:20 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=mrPonUye; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id v305KuRG_Mok; Fri, 24 Apr 2020 07:17:20 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 497j8w2q7czB09ZL;
+        Fri, 24 Apr 2020 07:17:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1587705440; bh=++Ny41IFNLTue5qM5LUZ2+tvZQZ82gblN7S6VqtUqJY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=mrPonUyeyqqdhKl+VLWfaNIg1q1pf2a1m6WBCddK9KAFnfa8wPHQQpfJl5GDPFdvG
+         iFuufG/+9phDPac9TAiGjP8TOmvUOHuY0PP+6ZjuOrj31mTrsiK9XSclKHWnlGpOvu
+         ZZR80+iKdm+63ln1IPCk8aVzQxdY/GbE/IeRODkQ=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3141B8B775;
+        Fri, 24 Apr 2020 07:17:21 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 6s-IckGNVvmj; Fri, 24 Apr 2020 07:17:21 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 258FD8B75E;
+        Fri, 24 Apr 2020 07:17:17 +0200 (CEST)
+Subject: Re: [PATCH v3,4/5] misc: sram_dynamic for user level SRAM access
+To:     Wang Wenhu <wenhu.wang@vivo.com>, gregkh@linuxfoundation.org,
+        arnd@arndb.de, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     oss@buserror.net, kernel@vivo.com, robh@kernel.org,
+        benh@kernel.crashing.org, paulus@samba.org,
+        Michael Ellerman <mpe@ellerman.id.au>
+References: <20200424024554.30709-1-wenhu.wang@vivo.com>
+ <20200424024554.30709-5-wenhu.wang@vivo.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <6675dd9d-43be-6451-88a9-02d2c52c7d3a@c-s.fr>
+Date:   Fri, 24 Apr 2020 07:17:11 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:7e8b:: with SMTP id q11mr6675708ill.281.1587705374979;
- Thu, 23 Apr 2020 22:16:14 -0700 (PDT)
-Date:   Thu, 23 Apr 2020 22:16:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e23c2805a4027606@google.com>
-Subject: INFO: task hung in vcs_open
-From:   syzbot <syzbot+975c6b229a82b59591c0@syzkaller.appspotmail.com>
-To:     gregkh@linuxfoundation.org, jslaby@suse.com,
-        linux-kernel@vger.kernel.org, nico@fluxnic.net,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200424024554.30709-5-wenhu.wang@vivo.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    90280eaa Merge tag 'docs-fixes' of git://git.lwn.net/linux
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12afdef0100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5d351a1019ed81a2
-dashboard link: https://syzkaller.appspot.com/bug?extid=975c6b229a82b59591c0
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+975c6b229a82b59591c0@syzkaller.appspotmail.com
-
-INFO: task syz-executor.1:9967 blocked for more than 143 seconds.
-      Not tainted 5.7.0-rc1-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor.1  D27296  9967   7170 0x00000004
-Call Trace:
- schedule+0xd0/0x2a0 kernel/sched/core.c:4163
- schedule_timeout+0x55b/0x850 kernel/time/timer.c:1874
- __down_common kernel/locking/semaphore.c:220 [inline]
- __down+0x176/0x2c0 kernel/locking/semaphore.c:237
- down+0x57/0x80 kernel/locking/semaphore.c:61
- console_lock+0x25/0x80 kernel/printk/printk.c:2314
- vcs_open+0x62/0xc0 drivers/tty/vt/vc_screen.c:688
- chrdev_open+0x219/0x5c0 fs/char_dev.c:414
- do_dentry_open+0x4ba/0x1290 fs/open.c:797
- do_open fs/namei.c:3229 [inline]
- path_openat+0x1e59/0x27d0 fs/namei.c:3346
- do_filp_open+0x192/0x260 fs/namei.c:3373
- do_sys_openat2+0x585/0x7d0 fs/open.c:1148
- do_sys_open+0xc3/0x140 fs/open.c:1164
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x416661
-Code: 24 10 48 c7 44 24 18 02 00 00 00 e8 49 02 00 00 48 8b 44 24 20 48 89 c1 48 c1 e0 03 48 8b 94 24 80 00 00 00 48 39 d0 75 75 48 <89> c8 e9 67 ff ff ff 48 89 f0 b9 28 00 00 00 e8 fb 8f 04 00 48 89
-RSP: 002b:00007f77ea7707a0 EFLAGS: 00000293 ORIG_RAX: 0000000000000002
-RAX: ffffffffffffffda RBX: 6666666666666667 RCX: 0000000000416661
-RDX: 0000000000000000 RSI: 0000000000101000 RDI: 00007f77ea770850
-RBP: 000000000076bfa0 R08: 000000000000000f R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000293 R12: 00000000ffffffff
-R13: 0000000000000c15 R14: 00000000004ce483 R15: 000000000076bfac
-INFO: task syz-executor.1:9970 blocked for more than 143 seconds.
-      Not tainted 5.7.0-rc1-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor.1  D27496  9970   7170 0x00000004
-Call Trace:
- schedule+0xd0/0x2a0 kernel/sched/core.c:4163
- schedule_preempt_disabled+0xf/0x20 kernel/sched/core.c:4222
- __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
- __mutex_lock+0x7ab/0x13c0 kernel/locking/mutex.c:1103
- lock_fb_info include/linux/fb.h:637 [inline]
- fb_open+0xd3/0x430 drivers/video/fbdev/core/fbmem.c:1418
- chrdev_open+0x219/0x5c0 fs/char_dev.c:414
- do_dentry_open+0x4ba/0x1290 fs/open.c:797
- do_open fs/namei.c:3229 [inline]
- path_openat+0x1e59/0x27d0 fs/namei.c:3346
- do_filp_open+0x192/0x260 fs/namei.c:3373
- do_sys_openat2+0x585/0x7d0 fs/open.c:1148
- do_sys_open+0xc3/0x140 fs/open.c:1164
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x45c869
-Code: 04 24 48 89 4c 24 08 48 89 54 24 10 e8 d0 5c fa ff 80 7c 24 18 00 74 cf 48 8b 44 24 38 48 8b 48 60 48 85 c9 74 1a 8b 54 24 24 <85> d2 74 12 8b 5c 24 68 0f b7 0c 59 81 e1 ff 7f 00 00 39 d1 75 30
-RSP: 002b:00007f77ea74fc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
-RAX: ffffffffffffffda RBX: 00007f77ea7506d4 RCX: 000000000045c869
-RDX: 0000000000000000 RSI: 0000000020000180 RDI: ffffffffffffff9c
-RBP: 000000000076c040 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 000000000000079a R14: 00000000004ca55c R15: 000000000076c04c
-INFO: task syz-executor.1:10007 blocked for more than 143 seconds.
-      Not tainted 5.7.0-rc1-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor.1  D28400 10007   7170 0x00000004
-Call Trace:
- schedule+0xd0/0x2a0 kernel/sched/core.c:4163
- schedule_timeout+0x55b/0x850 kernel/time/timer.c:1874
- __down_common kernel/locking/semaphore.c:220 [inline]
- __down+0x176/0x2c0 kernel/locking/semaphore.c:237
- down+0x57/0x80 kernel/locking/semaphore.c:61
- console_lock+0x25/0x80 kernel/printk/printk.c:2314
- vcs_open+0x62/0xc0 drivers/tty/vt/vc_screen.c:688
- chrdev_open+0x219/0x5c0 fs/char_dev.c:414
- do_dentry_open+0x4ba/0x1290 fs/open.c:797
- do_open fs/namei.c:3229 [inline]
- path_openat+0x1e59/0x27d0 fs/namei.c:3346
- do_filp_open+0x192/0x260 fs/namei.c:3373
- do_sys_openat2+0x585/0x7d0 fs/open.c:1148
- do_sys_open+0xc3/0x140 fs/open.c:1164
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x416661
-Code: 24 10 48 c7 44 24 18 02 00 00 00 e8 49 02 00 00 48 8b 44 24 20 48 89 c1 48 c1 e0 03 48 8b 94 24 80 00 00 00 48 39 d0 75 75 48 <89> c8 e9 67 ff ff ff 48 89 f0 b9 28 00 00 00 e8 fb 8f 04 00 48 89
-RSP: 002b:00007f77ea70d7a0 EFLAGS: 00000293 ORIG_RAX: 0000000000000002
-RAX: ffffffffffffffda RBX: 6666666666666667 RCX: 0000000000416661
-RDX: 0000000000000000 RSI: 0000000000101000 RDI: 00007f77ea70d850
-RBP: 000000000076c180 R08: 000000000000000f R09: 0000000000000000
-R10: 00007f77ea70e9d0 R11: 0000000000000293 R12: 00000000ffffffff
-R13: 0000000000000c15 R14: 00000000004ce483 R15: 000000000076c18c
-
-Showing all locks held in the system:
-1 lock held by khungtaskd/1140:
- #0: ffffffff899bed00 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x53/0x260 kernel/locking/lockdep.c:5754
-1 lock held by in:imklog/6702:
- #0: ffff8880a90ef0f0 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0xe9/0x100 fs/file.c:826
-2 locks held by syz-executor.1/9963:
-1 lock held by syz-executor.1/9970:
- #0: ffff888218eb7078 (&fb_info->lock){+.+.}-{3:3}, at: lock_fb_info include/linux/fb.h:637 [inline]
- #0: ffff888218eb7078 (&fb_info->lock){+.+.}-{3:3}, at: fb_open+0xd3/0x430 drivers/video/fbdev/core/fbmem.c:1418
-
-=============================================
-
-NMI backtrace for cpu 0
-CPU: 0 PID: 1140 Comm: khungtaskd Not tainted 5.7.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- nmi_cpu_backtrace.cold+0x70/0xb1 lib/nmi_backtrace.c:101
- nmi_trigger_cpumask_backtrace+0x231/0x27e lib/nmi_backtrace.c:62
- trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
- check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
- watchdog+0xa8c/0x1010 kernel/hung_task.c:289
- kthread+0x388/0x470 kernel/kthread.c:268
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Sending NMI from CPU 0 to CPUs 1:
-NMI backtrace for cpu 1
-CPU: 1 PID: 9963 Comm: syz-executor.1 Not tainted 5.7.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:write_comp_data+0x1e/0x70 kernel/kcov.c:208
-Code: 48 89 11 c3 0f 1f 84 00 00 00 00 00 65 4c 8b 04 25 00 1f 02 00 65 8b 05 68 ea 8e 7e a9 00 01 1f 00 75 51 41 8b 80 d8 13 00 00 <83> f8 03 75 45 49 8b 80 e0 13 00 00 45 8b 80 dc 13 00 00 4c 8b 08
-RSP: 0018:ffffc9001606f590 EFLAGS: 00000246
-RAX: 0000000000000002 RBX: 0000000000000050 RCX: ffffffff83c364ea
-RDX: 000000000000003e RSI: 0000000000000050 RDI: 0000000000000004
-RBP: 000000000000003e R08: ffff88805043c480 R09: ffffed10431c9dec
-R10: ffff888218e4ef5f R11: ffffed10431c9deb R12: ffff8880000a003e
-R13: ffff8880000a0000 R14: 0000000000000000 R15: 00000000f0bb4ad1
-FS:  00007f77ea792700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fce82f67000 CR3: 0000000096c52000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- vga16fb_fillrect+0x9da/0x1960 drivers/video/fbdev/vga16fb.c:922
- bit_clear_margins+0x2d5/0x4a0 drivers/video/fbdev/core/bitblit.c:232
- fbcon_clear_margins+0x1de/0x240 drivers/video/fbdev/core/fbcon.c:1381
- fbcon_switch+0xd21/0x1740 drivers/video/fbdev/core/fbcon.c:2363
- redraw_screen+0x2ae/0x770 drivers/tty/vt/vt.c:1009
- fbcon_modechanged+0x5c3/0x790 drivers/video/fbdev/core/fbcon.c:3000
- fbcon_update_vcs+0x3a/0x50 drivers/video/fbdev/core/fbcon.c:3047
- fb_set_var+0xad0/0xd40 drivers/video/fbdev/core/fbmem.c:1056
- do_fb_ioctl+0x390/0x6e0 drivers/video/fbdev/core/fbmem.c:1109
- fb_ioctl+0xdd/0x130 drivers/video/fbdev/core/fbmem.c:1185
- vfs_ioctl fs/ioctl.c:47 [inline]
- ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
- __do_sys_ioctl fs/ioctl.c:772 [inline]
- __se_sys_ioctl fs/ioctl.c:770 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x45c869
-Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f77ea791c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007f77ea7926d4 RCX: 000000000045c869
-RDX: 0000000020000000 RSI: 0000000000004601 RDI: 0000000000000007
-RBP: 000000000076bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 00000000000002f0 R14: 00000000004c5524 R15: 000000000076bf0c
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Le 24/04/2020 à 04:45, Wang Wenhu a écrit :
+> A generic User-Kernel interface module that allows a misc device created
+> when a backend SRAM hardware device driver registers its APIs to support
+> file operations of ioctl and mmap for user space applications to allocate
+> SRAM memory, mmap it to process address space and free it then after.
+> 
+> It is extremely helpful for the user space applications that require
+> high performance memory accesses, such as embedded networking devices
+> that would process data in user space, and PowerPC e500 is one case.
+> 
+> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+> Cc: Scott Wood <oss@buserror.net>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> ---
+> Changes since v1: addressed comments from Arnd
+>   * Changed the ioctl cmd definitions using _IO micros
+>   * Export interfaces for HW-SRAM drivers to register apis to available list
+>   * Modified allocation alignment to PAGE_SIZE
+>   * Use phys_addr_t as type of SRAM resource size and offset
+>   * Support compat_ioctl
+>   * Misc device name:sram
+>   * Use tristate for SRAM_UAPI
+>   * Use postcore_initcall
+> 
+> Changes since v2: addressed comments from Arnd, greg and Scott
+>   * Name the module with sram_dynamic in comparing with drivers/misc/sram.c
+> 
+>      I tried to tie the sram_dynamic with the abstractions in sram.c as
+>      Arnd suggested, and actually sram.c probes SRAM devices from devicetree
+>      and manages them with different partitions and create memory pools which
+>      are managed with genalloc functions.
+> 
+>      Here sram_dynamic acts only as a interface to user space. A SRAM memory
+>      pool is managed by the module that registers APIs to us, such as the
+>      backend hardware driver of Freescale 85xx Cache-SRAM.
+> 
+>   * Create one sram_device for each backend SRAM device(from Scott)
+>   * Allow only one block of SRAM memory allocated to a file descriptor(from Scott)
+>   * Add sysfs files for every allocated SRAM memory block
+>   * More documentations(As Greg commented)
+>   * Make uapi and non-uapi components apart(from Arnd and Greg)
+> 
+> Links:
+> v1: https://lore.kernel.org/lkml/20200418162157.50428-5-wenhu.wang@vivo.com/
+> v2: https://lore.kernel.org/lkml/20200420030538.101696-1-wenhu.wang@vivo.com/
+> UIO version:
+> v5: https://lore.kernel.org/lkml/20200417071616.44598-5-wenhu.wang@vivo.com/
+> ---
+>   drivers/misc/Kconfig         |  11 +
+>   drivers/misc/Makefile        |   1 +
+>   drivers/misc/sram_dynamic.c  | 580 +++++++++++++++++++++++++++++++++++
+>   drivers/misc/sram_uapi.c     | 351 +++++++++++++++++++++
+>   include/linux/sram_dynamic.h |  23 ++
+>   include/uapi/linux/sram.h    |  11 +
+>   6 files changed, 977 insertions(+)
+>   create mode 100644 drivers/misc/sram_dynamic.c
+>   create mode 100644 drivers/misc/sram_uapi.c
+>   create mode 100644 include/linux/sram_dynamic.h
+>   create mode 100644 include/uapi/linux/sram.h
+> 
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> diff --git a/include/linux/sram_dynamic.h b/include/linux/sram_dynamic.h
+> new file mode 100644
+> index 000000000000..c77e9e7b1151
+> --- /dev/null
+> +++ b/include/linux/sram_dynamic.h
+> @@ -0,0 +1,23 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __SRAM_DYNAMIC_H
+> +#define __SRAM_DYNAMIC_H
+> +
+> +struct sram_api {
+> +	const char	*name;
+> +	struct sram_device *sdev;
+> +	void *(*alloc)(__u32 size, phys_addr_t *phys, __u32 align);
+> +	void (*free)(void *ptr);
+> +};
+> +
+> +extern int __must_check
+> +	__sram_register_device(struct module *owner,
+> +			       struct device *parent,
+> +			       struct sram_api *sa);
+
+'extern' keyword is useless here, remove it (checkpatch --strict will 
+likely tell you the same)
+
+> +
+> +/* Use a define to avoid include chaining to get THIS_MODULE */
+> +#define sram_register_device(parent, sa) \
+> +	__sram_register_device(THIS_MODULE, parent, sa)
+> +
+> +extern void sram_unregister_device(struct sram_api *sa);
+
+Same, no 'extern' please.
+
+> +
+> +#endif /* __SRAM_DYNAMIC_H */
+> diff --git a/include/uapi/linux/sram.h b/include/uapi/linux/sram.h
+> new file mode 100644
+> index 000000000000..9b4a2615dbfe
+> --- /dev/null
+> +++ b/include/uapi/linux/sram.h
+> @@ -0,0 +1,11 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __SRAM_H
+> +#define __SRAM_H
+> +
+> +/* Allocate memory resource from SRAM */
+> +#define SRAM_UAPI_IOC_ALLOC	_IOWR('S', 0, __be64)
+> +
+> +/* Free allocated memory resource to SRAM */
+> +#define SRAM_UAPI_IOC_FREE	_IO('S', 1)
+> +
+> +#endif /* __SRAM_H */
+> 
+
+Christophe
