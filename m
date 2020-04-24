@@ -2,78 +2,121 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EB8C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D243C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBA1D20706
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:03:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 234FB20706
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:05:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n4peOn/s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgDXPDt (ORCPT
+        id S1727796AbgDXPFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:03:49 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:45297 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726998AbgDXPDs (ORCPT
+        Fri, 24 Apr 2020 11:05:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48102 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726717AbgDXPFj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:03:48 -0400
-Received: (qmail 5128 invoked by uid 500); 24 Apr 2020 11:03:47 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 24 Apr 2020 11:03:47 -0400
-Date:   Fri, 24 Apr 2020 11:03:47 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Qais Yousef <qais.yousef@arm.com>
-cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Tony Prisk <linux@prisktech.co.nz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Oliver Neukum <oneukum@suse.de>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] usb/xhci-plat: Set PM runtime as active on resume
-In-Reply-To: <20200424134800.4629-2-qais.yousef@arm.com>
-Message-ID: <Pine.LNX.4.44L0.2004241102400.2596-100000@netrider.rowland.org>
+        Fri, 24 Apr 2020 11:05:39 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2523C09B045;
+        Fri, 24 Apr 2020 08:05:37 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id r14so4928483pfg.2;
+        Fri, 24 Apr 2020 08:05:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=d4gGd17nKXAZGsG4iVsACxdSRpoMmpH7XJzq4FM92WM=;
+        b=n4peOn/s/AQG8koZqpSrfBKGJB1DH60y3deG8H5m2P1g+SuMSiEtld5J5vGAWrpX0P
+         /BUSssIG+0rGdcPoF7u9ME1/E966Jawd9DhaaeB9DFgQJPdWlXJW0VRD0ptv4yQUNbs6
+         1gv82m6FH6lxsMio7sDaVO6b7Oa02eHBW5Ey5HPBxq8EygtY2sCPUhExZPSFmfT1QtJf
+         IfY/9dlNW2HJUowUcrbDkjBpwrseWQBFA0pksskUfQKy+N7yllXmZWGJnGRWAgPOrg2O
+         XFl6L3WIocCB/mPND6GqF2jdJmXMj/KWzUv/XNsfQOGuPq+nCp0H5BSJPjdIpp+Aidy5
+         0mhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=d4gGd17nKXAZGsG4iVsACxdSRpoMmpH7XJzq4FM92WM=;
+        b=ZsWWIO9vSMWYborJp5iyZflbYN2iCY7LJIhIPOKP45nCQJlGWZsp09TBUfzCOP3/Qb
+         KSRRzylMq4SopQ0ZLzOLiJ0L8CdSw7GuzSAZrLOZrN3XWN7cDaKV0YlIvlYw3VenLBlD
+         8bRPfshiIe2sykjv41yjZezomSB/G4sIhdH0iHEFBDyXXqWAGM/of5vt3tlEou7+zbR8
+         qrqJWJjCUrdXASA6HjTcJI7nEbN90Q4jztz5S17p2MA4W1UHZgO/0GMduOu/EKE2dDrq
+         evOOhaiObqVkf1xQbL6dhfgqUZYZSGWlOuakDjhA3pvBinYaRAuC/4WS08Ube3faQLXf
+         nPGQ==
+X-Gm-Message-State: AGi0PuYNr37SqLE5XX6poIbgChOP3vtP2ZVXkx3lce7wVsYME/v82bJg
+        QG11P/BqEz05rVxio8RrQIq+aPen
+X-Google-Smtp-Source: APiQypKcZXLckuTzIO760BvGIrtUlZK84e+1m4OPJqIJ8UnZ6DtIh82hQIS4MhMMyJvGV1m8X2uTUQ==
+X-Received: by 2002:a63:2143:: with SMTP id s3mr9510994pgm.20.1587740736829;
+        Fri, 24 Apr 2020 08:05:36 -0700 (PDT)
+Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id y24sm6058461pfn.211.2020.04.24.08.05.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Apr 2020 08:05:35 -0700 (PDT)
+Subject: Re: [PATCH] net: openvswitch: use do_div() for 64-by-32 divisions:
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Pravin B Shelar <pshelar@ovn.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Tonghao Zhang <xiangxia.m.yue@gmail.com>
+Cc:     netdev@vger.kernel.org, dev@openvswitch.org,
+        linux-kernel@vger.kernel.org
+References: <20200424121051.5056-1-geert@linux-m68k.org>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <d2c14a2d-4e7b-d36a-be90-e987b1ea6183@gmail.com>
+Date:   Fri, 24 Apr 2020 08:05:34 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+In-Reply-To: <20200424121051.5056-1-geert@linux-m68k.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Apr 2020, Qais Yousef wrote:
 
-> Follow suit of ohci-platform.c and perform pm_runtime_set_active() on
-> resume.
+
+On 4/24/20 5:10 AM, Geert Uytterhoeven wrote:
+> On 32-bit architectures (e.g. m68k):
 > 
-> ohci-platform.c had a warning reported due to the missing
-> pm_runtime_set_active() [1].
+>     ERROR: modpost: "__udivdi3" [net/openvswitch/openvswitch.ko] undefined!
+>     ERROR: modpost: "__divdi3" [net/openvswitch/openvswitch.ko] undefined!
 > 
-> [1] https://lore.kernel.org/lkml/20200323143857.db5zphxhq4hz3hmd@e107158-lin.cambridge.arm.com/
-> 
-> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-> CC: Tony Prisk <linux@prisktech.co.nz>
-> CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> CC: Mathias Nyman <mathias.nyman@intel.com>
-> CC: Oliver Neukum <oneukum@suse.de>
-> CC: linux-arm-kernel@lists.infradead.org
-> CC: linux-usb@vger.kernel.org
-> CC: linux-kernel@vger.kernel.org
+> Fixes: e57358873bb5d6ca ("net: openvswitch: use u64 for meter bucket")
+> Reported-by: noreply@ellerman.id.au
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 > ---
+>  net/openvswitch/meter.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> xhci_resume() here could fail, I wasn't sure if we need to call
-> pm_runtime_set_active() unconditionally. I assumed not.
+> diff --git a/net/openvswitch/meter.c b/net/openvswitch/meter.c
+> index 915f31123f235c03..3498a5ab092ab2b8 100644
+> --- a/net/openvswitch/meter.c
+> +++ b/net/openvswitch/meter.c
+> @@ -393,7 +393,7 @@ static struct dp_meter *dp_meter_create(struct nlattr **a)
+>  		 * Start with a full bucket.
+>  		 */
+>  		band->bucket = (band->burst_size + band->rate) * 1000ULL;
+> -		band_max_delta_t = band->bucket / band->rate;
+> +		band_max_delta_t = do_div(band->bucket, band->rate);
+>  		if (band_max_delta_t > meter->max_delta_t)
+>  			meter->max_delta_t = band_max_delta_t;
+>  		band++;
 > 
-> There was another function xhci_plat_resume(), I think we just care about the
-> PM runtime resume callback only.
-> 
-> Please have a closer look.
 
-No, it's the other way around.  The function you want to change is the 
-one used for system resume, not runtime resume.
+This is fascinating... Have you tested this patch ?
 
-Alan Stern
+Please double check what do_div() return value is supposed to be !
 
+Thanks.
