@@ -2,137 +2,219 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDFA4C55197
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25833C55191
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A0E52074F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3BC020736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:40:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E+H+PKEW"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bBfkpuWz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbgDXJh1 (ORCPT
+        id S1726707AbgDXJkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 05:37:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53272 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726808AbgDXJhZ (ORCPT
+        Fri, 24 Apr 2020 05:40:07 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:25524 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726494AbgDXJkG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 05:37:25 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F042C09B045
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 02:37:24 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id x25so9706286wmc.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 02:37:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=lpgfeCztxAhzxjhQqiFZc+a2M7I9kDIUKtebW9THuHo=;
-        b=E+H+PKEWckalgAUrAxfA2tUr4Dr5zRoWeGzskBy6H53BglCw3eP155NoYhsC7jdQiI
-         qluFEhKpQ+DSHSzqLqSZMeD0k14RwoB+SUuhVdhR8jgyw4gXACOPaWr9XutcMcLuLel3
-         8WZxlynNH7qJd0BspwLL1sYeTrHFFu3a76G+RdF7obaS1pLM1DSCbMFbNY9dK4EZ5ymT
-         tlnH/ERsB9TegNHu+KfzIuiJdzFqqCnkwQ8PTxfEGIX3McYJjbN7mZF6m5rNJlKz3aGn
-         ZTeNp7OtPikPXwo7ZqOKDOi+bqkFqVzNR4szarGXzmGI+oivP5a8mWF6fMD7ByBzQbzj
-         15Iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=lpgfeCztxAhzxjhQqiFZc+a2M7I9kDIUKtebW9THuHo=;
-        b=jQoQfalZX6FDZIHtjsXrenHPOeIdhTAnMDCU4bGJMDHapesgbMrZ+OYZhruyX0Xdpn
-         xL9BmJb0QOXONj6hDQUi0PV3iC0WlX1BX9LvYFigrmWLo3RelKgoGhD7DpilBu2WH47f
-         kiFYdZiKYvXEpGDsy0Cs5KC3a+Q/wFeyNwOv7X1ZNpeygESbuvPlO2pMgps1F0I95LUj
-         uKXL2TmSquydZSTDuUDpO9NBEaVCJve4dP0ddxGotY6Y4ZNYHMq8wVmhNhRhTmz8y1k1
-         SeEeSMdUgSUtil6FXSZL8mzsIppnSSQos8Ly+KwenPy1fKAH/CGTEPtBMsGNbXWfPxcE
-         DYQg==
-X-Gm-Message-State: AGi0PuYnKWcpwNAUUPD2QCxizh7LDKdt6PC6csHBM5BNXMzQOoyAK+R4
-        ez2KplrXacTg67k05tItFN4pyw==
-X-Google-Smtp-Source: APiQypIP711LckL5LI1ubR6GN3OUzUAydpJDOVRvnJ3Nw6MpHq29JuuPonguAQ22PujRITptpK9QEA==
-X-Received: by 2002:a7b:c213:: with SMTP id x19mr8902459wmi.53.1587721043049;
-        Fri, 24 Apr 2020 02:37:23 -0700 (PDT)
-Received: from dell ([2.31.163.63])
-        by smtp.gmail.com with ESMTPSA id a7sm2062330wmj.12.2020.04.24.02.37.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 02:37:22 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 10:37:20 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     saravanan sekar <sravanhome@gmail.com>
-Cc:     andy.shevchenko@gmail.com, robh+dt@kernel.org, jic23@kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        sre@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v9 2/6] mfd: mp2629: Add support for mps battery charger
-Message-ID: <20200424093720.GA3542@dell>
-References: <20200415162030.16414-1-sravanhome@gmail.com>
- <20200415162030.16414-3-sravanhome@gmail.com>
- <20200424071822.GM3612@dell>
- <8ff17d07-8030-fcfe-8d8a-3011e4077778@gmail.com>
+        Fri, 24 Apr 2020 05:40:06 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587721205; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=rekLU09/3Cv7LAWd7/5Px5rmTpuddbamtpPpCDzbFDw=; b=bBfkpuWzIWexC/Kz/glS9s7lSFMXQscgu74IbOC+bKmRRvvE5U/F48/c3WvLwJnn3mnv8Jwe
+ sD4rgxmg5h/jv7a6fW+icpc2C7Mg1niJECQiszGlQiL1xLBHOXMSza6O8oI2Xw6SavhJk0Et
+ J/PZypNqBwGu90pmCCy5rPA1JP8=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea2b3f3.7fc46c44c880-smtp-out-n03;
+ Fri, 24 Apr 2020 09:40:03 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EA355C433BA; Fri, 24 Apr 2020 09:40:01 +0000 (UTC)
+Received: from [192.168.43.137] (unknown [106.213.151.218])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7F7A7C433CB;
+        Fri, 24 Apr 2020 09:39:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7F7A7C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [RFC v3] irqchip: qcom: pdc: Introduce irq_set_wake call
+To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, mka@chromium.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, linus.walleij@linaro.org, tglx@linutronix.de,
+        maz@kernel.org, jason@lakedaemon.net, dianders@chromium.org,
+        rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org
+References: <1585586460-3272-1-git-send-email-mkshah@codeaurora.org>
+ <1585586460-3272-2-git-send-email-mkshah@codeaurora.org>
+ <158682455899.84447.8337952928773625866@swboyd.mtv.corp.google.com>
+ <1f1322be-c93a-f2f2-c2fe-541f26d8682c@codeaurora.org>
+ <158693796555.105027.4658047860202135403@swboyd.mtv.corp.google.com>
+ <bddc11e0-8d9a-dd55-3aab-42aeb18204f4@codeaurora.org>
+ <158755213744.163502.17257131401798918469@swboyd.mtv.corp.google.com>
+ <7cb97940-18d6-75b1-f4d2-7a80a6fe68c8@codeaurora.org>
+ <158769585826.135303.15159589318457908652@swboyd.mtv.corp.google.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <95ec19bb-0e94-4384-5cca-fb6dbd3607ea@codeaurora.org>
+Date:   Fri, 24 Apr 2020 15:09:50 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <158769585826.135303.15159589318457908652@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8ff17d07-8030-fcfe-8d8a-3011e4077778@gmail.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Apr 2020, saravanan sekar wrote:
+Hi,
 
-> Hi Lee,
-> 
-> On 24/04/20 9:18 am, Lee Jones wrote:
-> > On Wed, 15 Apr 2020, Saravanan Sekar wrote:
-> > 
-> > > mp2629 is a highly-integrated switching-mode battery charge management
-> > > device for single-cell Li-ion or Li-polymer battery.
-> > > 
-> > > Add MFD core enables chip access for ADC driver for battery readings,
-> > > and a power supply battery-charger driver
-> > > 
-> > > Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> > > ---
-> > >   drivers/mfd/Kconfig        |  9 ++++
-> > >   drivers/mfd/Makefile       |  2 +
-> > >   drivers/mfd/mp2629.c       | 86 ++++++++++++++++++++++++++++++++++++++
-> > >   include/linux/mfd/mp2629.h | 19 +++++++++
-> > >   4 files changed, 116 insertions(+)
-> > >   create mode 100644 drivers/mfd/mp2629.c
-> > >   create mode 100644 include/linux/mfd/mp2629.h
-> > How is this driver registered?
-> > 
-> > Looks like it has device tree support.  Is there another way?
-> Yes, only using device tree
+On 4/24/2020 8:07 AM, Stephen Boyd wrote:
+> Quoting Maulik Shah (2020-04-22 05:14:21)
+>> We discussed this in RFC v2, pasting your reply from same.
+>>
+>>> That looks like a bug. It appears that gpiolib is only hooking the irq
+>>> disable path here so that it can keep track of what irqs are not in use
+>>> by gpiolib and allow them to be used for GPIO purposes when the irqs are
+>>> disabled. See commit 461c1a7d4733 ("gpiolib: override
+>>> irq_enable/disable"). That code in gpiolib should probably see if lazy
+>>> mode has been disabled on the irq and do similar things to what genirq
+>>> does and then let genirq mask the gpios if they trigger during the time
+>>> when the irq is disabled. Regardless of this design though, I don't
+>>> understand why this matters.
+> Yeah. I'm saying that the gpiolib code that forces all gpio irqs to be
+> non-lazy is broken. Please send a patch to fix gpiolib so that irqs can
+> be lazy again.
 
-Then how about using 'simple-mfd' and 'syscon'?
+Let me reiterate.
 
-Then you can omit this driver completely.
+In below genirq code, if irq_chip did not choose to implement 
+.irq_disable (and the mask argument is coming as false by default during 
+first disable) from the caller of this,
 
-> > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > > index 3c547ed575e6..85be799795aa 100644
-> > > --- a/drivers/mfd/Kconfig
-> > > +++ b/drivers/mfd/Kconfig
-> > > @@ -434,6 +434,15 @@ config MFD_MC13XXX_I2C
-> > >   	help
-> > >   	  Select this if your MC13xxx is connected via an I2C bus.
-> > > +config MFD_MP2629
-> > > +	tristate "Monolithic power system MP2629 ADC and Battery charger"
-> > > +	depends on I2C
-> > > +	select REGMAP_I2C
-> > > +	help
-> > > +	  Select this option to enable support for monolithic power system
-> > > +	  battery charger. This provides ADC, thermal, battery charger power
-> > > +	  management functions on the systems.
+Then yes control takes lazy path since it doesn't enter to  if 
+(desc->irq_data.chip->irq_disable)  or else if (mask) case and the 
+__irq_disable call simply returns  without executing anything.
+
+This leaves IRQ enabled in HW during suspend even though driver done 
+disable_irq()
+
+static void __irq_disable(struct irq_desc *desc, bool mask)
+{
+         if (irqd_irq_disabled(&desc->irq_data)) {
+                 if (mask)
+                         mask_irq(desc);
+         } else {
+                 irq_state_set_disabled(desc);
+                 if (desc->irq_data.chip->irq_disable) {
+desc->irq_data.chip->irq_disable(&desc->irq_data);
+                         irq_state_set_masked(desc);
+                 } else if (mask) {
+                         mask_irq(desc);
+                 }
+         }
+}
+
+With above understanding, we have two more points to consider
+
+1. The gpiolib registers for .irq_disable for every gpio chip, making it 
+unlazy for every gpio chip.
+
+2. The irq_chip that registers with gpiolib (from pinctrl-msm.c, also 
+has .irq_disable implemented, and its parent PDC also has .irq_disable 
+implemented)
+
+Even if we fix point (1), by making gpiolib replicating genirq code,
+It still will call irq_disable (from replicated code in gpiolib now) 
+since irq_chip that registers with gpiolib has chosen to implement 
+.irq_disable.
+
+For other irq_chip's which don't implement .irq_disable, it will help.
+But since from point (2) we know that PDC irq_chip implements 
+.irq_disable, and would disable in HW the moment .irq_disable call comes in.
+
+
+> I thought it didn't matter before but now that I've
+> learned more it sounds like we have to use lazy irqs here so that irqs
+> stay enabled on the path to suspend while they're disabled but marked
+> for wakeup.
+
+The description for irq_disable() says...
+
+  * If the chip does not implement the irq_disable callback, we
+  * use a lazy disable approach. That means we mark the interrupt
+  * disabled, but leave the hardware unmasked. That's an
+  * optimization...
+
+Since PDC irq_chip implements .irq_disable callback, IRQ gets disabled 
+in HW immediatly.
+
+The comment says that lazy approch will be used if .irq_disable callback 
+is not implemented.
+
+IMO, client driver's should not assume/expect that underlying irq_chip 
+will take lazy path only,
+As it depends on whether irq_chip implemented .irq_disable callback or not.
+
+If a driver is relying on lazy disable approach till date, then the 
+driver should get fixed.
+(by removing the unnecessary disable_irq() during suspend)
+
+i suspect this might be the case in EC driver, on the platforms where it 
+worked fine till today,
+irq may not have been disabled in HW (may be that working platform's 
+irq_chip may not have implemented irq_disable
+hence support lazy disable which leaves IRQ unmasked in HW even after 
+disable_irq() and able to resume from suspend)
+
+
+> Otherwise I don't know how to make this work.
+There are 3 possible options to make it work
+
+1. Fix the EC driver (to stop calling disable_irq() during suspend) / 
+support unlazy disable in EC driver
+
+2. Support lazy disable (requires fixes in gpiolib and irq_chip also 
+should not implement .irq_disable callback)
+
+With above explanation, The PDC irq_chip want to keep continue implement 
+.irq_disable callback
+(we have different functionality in .irq_mask and .irq_disable 
+implementation)
+
+so option 2 is ruled out IMO.
+
+3. We use this patch
+
+The current patch makes this work by re-enabling such IRQs in HW during 
+suspend's very end point, and restores state during resume.
+
+i can not think of any other option.
+
+Let me know if you now agree to go with option (1)
+
+Otherwise, for option (3),
+
+i can post next revision after addressing some minor fixes/suggestions.
+I have tried to make this further simpler by not operating on both 
+PDC-GPIO and PDC irq domains,
+but it seems we need to use both irq domains and take the action 
+accordingly during pdc_suspend() and pdc_resume().
+
+I have missed the default case in switch (noticed same during rpmh patch 
+doug has posted :-)), as it can get called for CLUSTER notification.
+Will fix in next revision.
+
+Thanks,
+Maulik
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
