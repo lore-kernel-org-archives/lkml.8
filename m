@@ -2,212 +2,141 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED98C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C49FC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82BD520857
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FAC620857
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:48:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Gy4e1DrY"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KPy7wj2M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726130AbgDXUrQ (ORCPT
+        id S1726090AbgDXUsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 16:47:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46392 "EHLO
+        Fri, 24 Apr 2020 16:48:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbgDXUrQ (ORCPT
+        with ESMTP id S1726038AbgDXUsI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 16:47:16 -0400
-Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BBE6C09B048
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 13:47:14 -0700 (PDT)
-Received: by mail-ua1-x944.google.com with SMTP id c24so10876099uap.13
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 13:47:14 -0700 (PDT)
+        Fri, 24 Apr 2020 16:48:08 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7A26C09B048
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 13:48:07 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id z1so3689588pfn.3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 13:48:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qeSr0lei+fRC9/QJxXSmPKueqlEcByGy/C+Sm2/krvg=;
-        b=Gy4e1DrYdXOs9V95msoY1FVrKuSQ1ZhCKigCD3DdHYa4vQSZF0/wZGOzsXWdhDRQMJ
-         ntjWHIAzoYQW/EbWleAXGSfEnaY3ZJ7a7cSARn7y8iNmYUhWJlNIe/hR5f+f+ETIthcj
-         +7H9KyKHdOyYM6Yq87MOT6M0ttEfo85nWdehE=
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
+        bh=PDTf+FwCag54Gix+XkZ+brAEDzVD747g0MZvcGy7XE0=;
+        b=KPy7wj2MyP0KtwiHu32IxKWS9Qes02e9yin3KAala4NLgMm1VYdrAdwr8R5QkeoAax
+         AV6XDCiajWl6bZojse0RsWdjHKVDx/QTxgsCtwI3f9jEAAE3qq2pzTryQ9Fu54fb2eWZ
+         sAelmXTpQT+moDBXTrFrFjpIeNnGkF2gnhsexFwJufG4FMRsjy4aoBIMZfzgB4RTYRN6
+         uggAlfgC8WxPk5l1ZYSZdq40lfLyB+I+UsQ5FkIdcokI4sPvMZrrsovt90fmPTN5K2UV
+         xQkKBLGA4zKXHilVWKPH14a6fAvJEM+hZhklmeX8y3qiqakYNpmE97QZFLPYgiy889vo
+         iInw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qeSr0lei+fRC9/QJxXSmPKueqlEcByGy/C+Sm2/krvg=;
-        b=NIjMtvWx1Ggz0GN4+18Wq8QYQVYznLUdxM4n8VkyNlv5fOzYO9FzC9sxIYOd9cbCkt
-         FKpZQ9p3Grn0GVdfy9T5HmoFnAeihlLapk+h3YaTE+HsEsn8VQOZQUs0Ym07lig5gU3m
-         EVtb/0b3JS8a0CmMYCQNpI1ZlmU2Tpdh0IPzo81VVwNJfK8yNeCrtz+oAm3Ar3Gvvlax
-         Tdii5iqom/0yi7riMceqL9cU4ZSSrR8RoEHPZz25CeaU9CnvlJItP1tatgkQIB0mxVtZ
-         09D6x0NLPBBBDa683PhJ24VdN/C9UmnduN02h+iVy4NtpKOw3ZSqVQI2aay+IRQOGqxz
-         ADew==
-X-Gm-Message-State: AGi0PubGTjd1Hn1RbLxOykO8Q9itsmQc4y1mSOsmwVMuP2+5PN2CODgf
-        tgmJt+j04KFnQezvY/98iE9fdom4NhI=
-X-Google-Smtp-Source: APiQypITkQIdsFy00Hd27mx8HtPMRNoAGkvIdyyKMcRfg3SdeHMg0YoYwTfn+EnHkeu8AEn05n3fJg==
-X-Received: by 2002:a67:2247:: with SMTP id i68mr9117338vsi.19.1587761233275;
-        Fri, 24 Apr 2020 13:47:13 -0700 (PDT)
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
-        by smtp.gmail.com with ESMTPSA id v16sm1678906vsq.18.2020.04.24.13.47.11
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Apr 2020 13:47:12 -0700 (PDT)
-Received: by mail-ua1-f49.google.com with SMTP id z16so10884430uae.11
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 13:47:11 -0700 (PDT)
-X-Received: by 2002:ab0:b13:: with SMTP id b19mr8989653uak.91.1587761231452;
- Fri, 24 Apr 2020 13:47:11 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=PDTf+FwCag54Gix+XkZ+brAEDzVD747g0MZvcGy7XE0=;
+        b=M23h2AGi8RHjlUdlnOKVl8mKfzx7foNC0EwOWJQOdvFwS2+f68CL74xQVuD9b5prTW
+         ZPV4PNSq+YIo0SURjAxcnDtgOEJd7rzty679g8dd77pZaDTLZ5ecrwe8yOYlyEZd6+5J
+         9925RZp3w/NwIepSd70UTmRHwjN7qf68tmyjpff2RedxqqUn9kFavKoSylV0geyXuO0e
+         Ln2yaoSYThEIAGPRMr7GX18sLpztcu2rpdvMAKQDvgQCYrZUz8M3NT7G5UMMO7Fed6+A
+         3o9BK2kGhURpB7SbWj2N7Bjgrb4/GRJpQOwPNU/BYI5JFHnwDJo9KrK5ZLU04eZEYXkL
+         /GTA==
+X-Gm-Message-State: AGi0PuaAWh0LIrAfWFGmm0zDV5qje3LiHOSNB5nPxcbvSeuk5BZOvqGf
+        aGZQRGrtckRqobCD9L6HRJLh0CuR2aI=
+X-Google-Smtp-Source: APiQypLbr3SMUctOMl8jKy4C36Pwrcoy0esZlXUBcjNAytAVSV5T3V1sQHTQBWvGQsaOgghOVd6afA==
+X-Received: by 2002:a63:ed50:: with SMTP id m16mr3271084pgk.271.1587761287198;
+        Fri, 24 Apr 2020 13:48:07 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id 139sm2494798pfc.170.2020.04.24.13.48.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Apr 2020 13:48:06 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 13:48:06 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+cc:     Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [patch] mm, oom: stop reclaiming if GFP_ATOMIC will start failing
+ soon
+Message-ID: <alpine.DEB.2.22.394.2004241347310.70176@chino.kir.corp.google.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-References: <1587726554-32018-1-git-send-email-sumit.garg@linaro.org> <1587726554-32018-5-git-send-email-sumit.garg@linaro.org>
-In-Reply-To: <1587726554-32018-5-git-send-email-sumit.garg@linaro.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 24 Apr 2020 13:46:59 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VSrVnx_R=Y38tQ=bw_o22zxWmm=+M+AaqmEMAtK66b-Q@mail.gmail.com>
-Message-ID: <CAD=FV=VSrVnx_R=Y38tQ=bw_o22zxWmm=+M+AaqmEMAtK66b-Q@mail.gmail.com>
-Subject: Re: [RFC Patch v1 4/4] arm64: kgdb: Round up cpus using IPI_CALL_NMI_FUNC
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, julien.thierry.kdev@gmail.com,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+If GFP_ATOMIC allocations will start failing soon because the amount of
+free memory is substantially under per-zone min watermarks, it is better
+to oom kill a process rather than continue to reclaim.
 
-On Fri, Apr 24, 2020 at 4:11 AM Sumit Garg <sumit.garg@linaro.org> wrote:
->
-> arm64 platforms with GICv3 or later supports pseudo NMIs which can be
-> leveraged to round up CPUs which are stuck in hard lockup state with
-> interrupts disabled that wouldn't be possible with a normal IPI.
->
-> So instead switch to round up CPUs using IPI_CALL_NMI_FUNC. And in
-> case a particular arm64 platform doesn't supports pseudo NMIs,
-> IPI_CALL_NMI_FUNC will act as a normal IPI which maintains existing
-> kgdb functionality.
->
-> Also, one thing to note here is that with CPUs running in NMI context,
-> kernel has special handling for printk() which involves CPU specific
-> buffers and defering printk() until exit from NMI context. But with kgdb
-> we don't want to defer printk() especially backtrace on corresponding
-> CPUs. So switch to normal printk() context instead prior to entering
-> kgdb context.
->
-> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> ---
->  arch/arm64/kernel/kgdb.c | 15 +++++++++++++++
->  arch/arm64/kernel/smp.c  | 17 ++++++++++++++---
->  2 files changed, 29 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/arm64/kernel/kgdb.c b/arch/arm64/kernel/kgdb.c
-> index 4311992..0851ead 100644
-> --- a/arch/arm64/kernel/kgdb.c
-> +++ b/arch/arm64/kernel/kgdb.c
-> @@ -14,6 +14,7 @@
->  #include <linux/kgdb.h>
->  #include <linux/kprobes.h>
->  #include <linux/sched/task_stack.h>
-> +#include <linux/smp.h>
->
->  #include <asm/debug-monitors.h>
->  #include <asm/insn.h>
-> @@ -353,3 +354,17 @@ int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt)
->         return aarch64_insn_write((void *)bpt->bpt_addr,
->                         *(u32 *)bpt->saved_instr);
->  }
-> +
-> +#ifdef CONFIG_SMP
-> +void kgdb_roundup_cpus(void)
-> +{
-> +       struct cpumask mask;
-> +
-> +       cpumask_copy(&mask, cpu_online_mask);
-> +       cpumask_clear_cpu(raw_smp_processor_id(), &mask);
-> +       if (cpumask_empty(&mask))
-> +               return;
-> +
-> +       arch_send_call_nmi_func_ipi_mask(&mask);
-> +}
-> +#endif
-> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-> index 27c8ee1..c7158f6e8 100644
-> --- a/arch/arm64/kernel/smp.c
-> +++ b/arch/arm64/kernel/smp.c
-> @@ -31,6 +31,7 @@
->  #include <linux/of.h>
->  #include <linux/irq_work.h>
->  #include <linux/kexec.h>
-> +#include <linux/kgdb.h>
->  #include <linux/kvm_host.h>
->
->  #include <asm/alternative.h>
-> @@ -976,9 +977,19 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
->                 /* Handle it as a normal interrupt if not in NMI context */
->                 if (!in_nmi())
->                         irq_enter();
-> -
-> -               /* nop, IPI handlers for special features can be added here. */
-> -
-> +#ifdef CONFIG_KGDB
+This intends to significantly reduce the number of page allocation
+failures that are encountered when the demands of user and atomic
+allocations overwhelm the ability of reclaim to keep up.  We can see this
+with a high ingress of networking traffic where memory allocated in irq
+context can overwhelm the ability to reclaim fast enough such that user
+memory consistently loops.  In that case, we have reclaimable memory, and
+reclaiming is successful, but we've fully depleted memory reserves that
+are allowed for non-blockable allocations.
 
-My vote would be to keep "ifdef"s out of the middle of functions.  Can
-you put your code in "arch/arm64/kernel/kgdb.c" and then have a dummpy
-no-op function if "CONFIG_KGDB" isn't defined?
+Commit 400e22499dd9 ("mm: don't warn about allocations which stall for
+too long") removed evidence of user allocations stalling because of this,
+but the situation can apply anytime we get "page allocation failures"
+where reclaim is happening but per-zone min watermarks are starved:
 
+Node 0 Normal free:87356kB min:221984kB low:416984kB high:611984kB active_anon:123009936kB inactive_anon:67647652kB active_file:429612kB inactive_file:209980kB unevictable:112348kB writepending:260kB present:198180864kB managed:195027624kB mlocked:81756kB kernel_stack:24040kB pagetables:11460kB bounce:0kB free_pcp:940kB local_pcp:96kB free_cma:0kB
+lowmem_reserve[]: 0 0 0 0
+Node 1 Normal free:105616kB min:225568kB low:423716kB high:621864kB active_anon:122124196kB inactive_anon:74112696kB active_file:39172kB inactive_file:103696kB unevictable:204480kB writepending:180kB present:201326592kB managed:198174372kB mlocked:204480kB kernel_stack:11328kB pagetables:3680kB bounce:0kB free_pcp:1140kB local_pcp:0kB free_cma:0kB
+lowmem_reserve[]: 0 0 0 0
 
-> +               if (atomic_read(&kgdb_active) != -1) {
-> +                       /*
-> +                        * For kgdb to work properly, we need printk to operate
-> +                        * in normal context.
-> +                        */
-> +                       if (in_nmi())
-> +                               printk_nmi_exit();
+Without this patch, there is no guarantee that user memory allocations
+will ever be successful when non-blockable allocations overwhelm the
+ability to get above per-zone min watermarks.
 
-It feels like all the printk management belongs in kgdb_nmicallback().
-...or is there some reason that this isn't a problem for other
-platforms using NMI?  Maybe it's just that nobody has noticed it yet?
+This doesn't solve page allocation failures entirely since it's a
+preemptive measure based on watermarks that requires concurrent blockable
+allocations to trigger the oom kill.  To complete solve page allocation
+failures, it would be possible to do the same watermark check for non-
+blockable allocations and then queue a worker to asynchronously oom kill
+if it finds watermarks to be sufficiently low as well.
 
+Signed-off-by: David Rientjes <rientjes@google.com>
+---
+ mm/page_alloc.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-> +                       kgdb_nmicallback(raw_smp_processor_id(), regs);
-
-Why do you need to call raw_smp_processor_id()?  Are you expecting a
-different value than the local variable "cpu"?
-
-
-> +                       if (in_nmi())
-> +                               printk_nmi_enter();
-> +               }
-> +#endif
->                 if (!in_nmi())
->                         irq_exit();
->                 break;
-
-Not that I really know what I'm talking about since I really don't
-know arm64 at this level very well, but I'll ask anyway and probably
-look like a fool...  I had a note that said:
-
-* Will Deacon says:
-*
-* the whole roundup code is sketchy and it's the only place in the kernel
-* which tries to perform I-cache maintenance with irqs disabled, leading
-* to this nasty hack in the arch code:
-*
-* https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/include/asm/cacheflush.h#n74
-
-I presume that, if nothing else, the comment needs to be updated.
-...but is the situation any better (or worse?) with your new solution?
-
--Doug
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -4372,11 +4372,21 @@ should_reclaim_retry(gfp_t gfp_mask, unsigned order,
+ 					ac->nodemask) {
+ 		unsigned long available;
+ 		unsigned long reclaimable;
++		unsigned long free;
+ 		unsigned long min_wmark = min_wmark_pages(zone);
+ 		bool wmark;
+ 
++		free = zone_page_state_snapshot(zone, NR_FREE_PAGES);
++		/*
++		 * If this zone is approaching the point where even order-0
++		 * GFP_ATOMIC allocations will fail, stop considering reclaim.
++		 */
++		if (!__zone_watermark_ok(zone, 0, min_wmark, ac_classzone_idx(ac),
++					 alloc_flags | ALLOC_HIGH, free))
++			continue;
++
+ 		available = reclaimable = zone_reclaimable_pages(zone);
+-		available += zone_page_state_snapshot(zone, NR_FREE_PAGES);
++		available += free;
+ 
+ 		/*
+ 		 * Would the allocation succeed if we reclaimed all
