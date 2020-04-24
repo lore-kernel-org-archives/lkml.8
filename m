@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12258C55191
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93938C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCB6A21582
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C94520776
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:25:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587731121;
-	bh=KXJPhbBVzIkTHaGHP5HZL37C1iruhpdS90eLLxL7Ffg=;
+	s=default; t=1587731124;
+	bh=9Q2IOMdHquNMhWFmuNNMTvTXMfG9dO1N8X6bkgWoKM8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mtGnS/8tmPw8ZVzvokJ7kTu95j3XGUlz/Wew0ylongwtHQFWnwACld4+XX8nGkW8J
-	 dar41YvH2h2swVTsA3MYKxW9fjVNtK9s1Folg+3kVPLhJlnr2NGC9D0oVU2ycJ6AGs
-	 HFfkIHMu4PIvMSTjEr6iC77Gy41UHEVZFfGaA3Pg=
+	b=0N7KlAsZocsyfv/pH99ctJIPCq2gsW13iR8DsVy4MJxwlpoPvQgnDC83A+ba/jXkb
+	 5rfiNiSlAqMnBXXduhwNJ2u8/GOR9TxJAr2u+D3tNCxVgxCW3PvPVr91xDOBHD6T3h
+	 E06px6dsoWCycO5aKNmkaErDxX0vKDKcsCZx66AQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728711AbgDXMZV (ORCPT
+        id S1728704AbgDXMZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:25:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56370 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:25:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727083AbgDXMZN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:25:13 -0400
+        id S1727891AbgDXMZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:25:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A757217BA;
-        Fri, 24 Apr 2020 12:25:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AB5E21655;
+        Fri, 24 Apr 2020 12:25:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587731113;
-        bh=KXJPhbBVzIkTHaGHP5HZL37C1iruhpdS90eLLxL7Ffg=;
+        s=default; t=1587731111;
+        bh=9Q2IOMdHquNMhWFmuNNMTvTXMfG9dO1N8X6bkgWoKM8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eWfoMLIJ+9eIGAIlSQYGf8UUZZDjWLEHGEvs9A6K5qjvZLAIQQyyls0liAiarMTHh
-         MDO997V0xXPGeeopPzAtaFqJdxur7Ow+qGWuHXTuWXFgiHOhUNkMg3SfUX/+lO1y+N
-         1zDWxdU18ocMvAbQ+d3oRFDG86MjbHijAf+cOO/k=
+        b=lFcREYVtlJb0zAcjhvWeoGHrJodhZQcvIK2xhKgxMREb9hWJ2dRagOkC5fHuztj1D
+         M8NLqBm19ABmFaHnri+kqaNcn3hAneMg7OVorlqbvZqE/QNHf7y/LOTEOErteR6QHF
+         awlaRe6Wo9ZsDK2ceP+3ZxM+bHgOfVE2DSItLq68=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Frank Rowand <frank.rowand@sony.com>,
-        "Erhard F ." <erhard_f@mailbox.org>, Rob Herring <robh@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 8/8] of: unittest: kmemleak on changeset destroy
-Date:   Fri, 24 Apr 2020 08:25:03 -0400
-Message-Id: <20200424122503.11046-8-sashal@kernel.org>
+Cc:     Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 7/8] ext4: convert BUG_ON's to WARN_ON's in mballoc.c
+Date:   Fri, 24 Apr 2020 08:25:02 -0400
+Message-Id: <20200424122503.11046-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200424122503.11046-1-sashal@kernel.org>
 References: <20200424122503.11046-1-sashal@kernel.org>
@@ -59,42 +58,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
+From: Theodore Ts'o <tytso@mit.edu>
 
-[ Upstream commit b3fb36ed694b05738d45218ea72cf7feb10ce2b1 ]
+[ Upstream commit 907ea529fc4c3296701d2bfc8b831dd2a8121a34 ]
 
-kmemleak reports several memory leaks from devicetree unittest.
-This is the fix for problem 1 of 5.
+If the in-core buddy bitmap gets corrupted (or out of sync with the
+block bitmap), issue a WARN_ON and try to recover.  In most cases this
+involves skipping trying to allocate out of a particular block group.
+We can end up declaring the file system corrupted, which is fair,
+since the file system probably should be checked before we proceed any
+further.
 
-of_unittest_changeset() reaches deeply into the dynamic devicetree
-functions.  Several nodes were left with an elevated reference
-count and thus were not properly cleaned up.  Fix the reference
-counts so that the memory will be freed.
-
-Fixes: 201c910bd689 ("of: Transactional DT support.")
-Reported-by: Erhard F. <erhard_f@mailbox.org>
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
+Link: https://lore.kernel.org/r/20200414035649.293164-1-tytso@mit.edu
+Google-Bug-Id: 34811296
+Google-Bug-Id: 34639169
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/of/unittest.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/ext4/mballoc.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index af9e4785b7a6e..1ee2474fa8fbb 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -544,6 +544,10 @@ static void __init of_unittest_changeset(void)
- 	mutex_unlock(&of_mutex);
+diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+index fda49f4c5a8eb..04fab14e630c1 100644
+--- a/fs/ext4/mballoc.c
++++ b/fs/ext4/mballoc.c
+@@ -1944,7 +1944,8 @@ void ext4_mb_complex_scan_group(struct ext4_allocation_context *ac,
+ 	int free;
  
- 	of_changeset_destroy(&chgset);
-+
-+	of_node_put(n1);
-+	of_node_put(n2);
-+	of_node_put(n21);
- #endif
- }
+ 	free = e4b->bd_info->bb_free;
+-	BUG_ON(free <= 0);
++	if (WARN_ON(free <= 0))
++		return;
  
+ 	i = e4b->bd_info->bb_first_free;
+ 
+@@ -1965,7 +1966,8 @@ void ext4_mb_complex_scan_group(struct ext4_allocation_context *ac,
+ 		}
+ 
+ 		mb_find_extent(e4b, i, ac->ac_g_ex.fe_len, &ex);
+-		BUG_ON(ex.fe_len <= 0);
++		if (WARN_ON(ex.fe_len <= 0))
++			break;
+ 		if (free < ex.fe_len) {
+ 			ext4_grp_locked_error(sb, e4b->bd_group, 0, 0,
+ 					"%d free clusters as per "
 -- 
 2.20.1
 
