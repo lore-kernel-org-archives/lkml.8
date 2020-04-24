@@ -2,274 +2,193 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07309C55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CCEC55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D286920728
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:55:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88F8B20715
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:00:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YyX3K2Jg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726127AbgDXBzY (ORCPT
+        id S1726107AbgDXCAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 21:55:24 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:59334 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725913AbgDXBzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 21:55:23 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EB6071A0200;
-        Fri, 24 Apr 2020 03:55:18 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id BCAD61A0210;
-        Fri, 24 Apr 2020 03:55:12 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 2C6D3402ED;
-        Fri, 24 Apr 2020 09:55:05 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, robh+dt@kernel.org,
-        leonard.crestez@nxp.com, linux@rempel-privat.de, peng.fan@nxp.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V3] dt-bindings: firmware: imx: Move system control into dt-binding headfile
-Date:   Fri, 24 Apr 2020 09:46:41 +0800
-Message-Id: <1587692801-12149-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 23 Apr 2020 22:00:46 -0400
+Received: from mail-eopbgr10074.outbound.protection.outlook.com ([40.107.1.74]:37428
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725913AbgDXCAq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 22:00:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B7iydBW6lHuFisHprSdgOj+LSNE0Qwaf8hD1TKWul1RLv8aXUPMb5qcl4fncTEd0b8kp+FOeh36QC7wbqQ97FJkjJ6GA30JWk7HRGCh6hkhoamp5P80YX2wCL4rFX+VPcR13bGhpz/D9u3jzf2IdMF2mlujK9Y1Vdz3MQpVT2EjXwj/jcWKRweixVHIYrK19rv0lAOEweSl3r8JnzT9dCkqgkdxIL90+olYZ5ftQMNsfmQo00JcqDk+jBsoHoM9CavuZ4wTShgW7RWKX6ZtiQ4yLZMge+F/u9Bil8Jnx7HX3zQn3wLeuZ2mvdi4oOgdJPbMrh2R69MnQaI6LGdi5uw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uuy9geXnC9nAEj0Wpc//Eboz+dERgk1UiSlQtz+68IQ=;
+ b=TIkKAFVirMu9MHSCyHnjYq1IwYxQxRmebghU4NVuNP+pJlfBOS3xNsE/dN/0QswKI8+D9m4eHkhItj0UKjPWqZ/MNX/ckTLNrBnrVTzrsUSOeA/dbHjvWeD8y8DPHpNvS5wAnTmd0Yx43D3Kw69/xrGq4n2kOmFyf5m5GkKZy1CTCJ97zG0eq/I25p3w7OFi78bzoBFJuwCwGnyfw5NMweFBOR3GHJFI43U0EeceO8LCw77CeoUbzAyjCnTqdskWYd8FAV1h8q6JEt8QHv9piWw6Z0QzP9n8pyqG0FyL1VsW86gc65EBvRNr5SvFdL2t1B1ZAiG9Sah6EGCETwZC/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uuy9geXnC9nAEj0Wpc//Eboz+dERgk1UiSlQtz+68IQ=;
+ b=YyX3K2JgY5XYKQWhv8bCsfRsBprRlMka4WdMdLEO8O4D1MdeFemztspf0eM1xW8l9ju3NEu7IDFYABzYvzTByShwF20T/dOTj3zPgjEflbtWoSgNqCziv7uHwRloRI70uvFnd9nPXZJEF19dKfaRXdA2uKIXpp64ttnqGHY0n58=
+Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
+ by AM6PR04MB6328.eurprd04.prod.outlook.com (2603:10a6:20b:b7::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Fri, 24 Apr
+ 2020 01:59:02 +0000
+Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
+ ([fe80::d9f7:5527:e89d:1ae3]) by AM6PR04MB4966.eurprd04.prod.outlook.com
+ ([fe80::d9f7:5527:e89d:1ae3%7]) with mapi id 15.20.2921.032; Fri, 24 Apr 2020
+ 01:59:02 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Peng Fan <peng.fan@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "sboyd@kernel.org" <sboyd@kernel.org>
+CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] clk: imx: introduce imx_clk_hw_critical
+Thread-Topic: [PATCH] clk: imx: introduce imx_clk_hw_critical
+Thread-Index: AQHWGTz23ipTFSUpC02goIyCROLLPKiGhOhwgAADf4CAADHRcIAAvOMAgAAM6xA=
+Date:   Fri, 24 Apr 2020 01:59:02 +0000
+Message-ID: <AM6PR04MB49665A599A06623160EB592980D00@AM6PR04MB4966.eurprd04.prod.outlook.com>
+References: <1587624748-27228-1-git-send-email-peng.fan@nxp.com>
+ <AM6PR04MB4966934EE0411F7C3FF5AA2F80D30@AM6PR04MB4966.eurprd04.prod.outlook.com>
+ <DB6PR0402MB2760793865AA2E67E1C33F4488D30@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+ <AM6PR04MB4966460FE849E557FDA754F980D30@AM6PR04MB4966.eurprd04.prod.outlook.com>
+ <DB6PR0402MB276068E21E36BFCCA91728D088D00@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+In-Reply-To: <DB6PR0402MB276068E21E36BFCCA91728D088D00@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=aisheng.dong@nxp.com; 
+x-originating-ip: [92.121.68.129]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 810c2ee4-1380-4178-bc1e-08d7e7f30fb5
+x-ms-traffictypediagnostic: AM6PR04MB6328:|AM6PR04MB6328:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR04MB63288430082A1C44DFD2D9E680D00@AM6PR04MB6328.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 03838E948C
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(136003)(39860400002)(366004)(376002)(346002)(81156014)(8676002)(64756008)(8936002)(71200400001)(86362001)(66476007)(2906002)(966005)(5660300002)(76116006)(478600001)(66946007)(4326008)(33656002)(55016002)(7696005)(110136005)(52536014)(54906003)(9686003)(66556008)(316002)(26005)(186003)(6506007)(53546011)(44832011)(66446008);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: yXPJFVtBjmRO3Yjf9+2WI3CyyINzoTO3yvWrKHqCYe8NNG/CZAVRf5U/7u3hJGv9m2MVC5oWxB1d2WKFvRS5BsNa1QsAWuM8brS9jUvG+TPkiCXjK70F5uFcCf4pI1PkUwoPU8IeNFPr6TMBJmTNImUDAaa9aG9XCLKbUbXUfCbWkM2oN2RzFm4QXu+P9bxX3JGLMlCOfVd7Ja6+OANKRZ+RTM5ZiQ9XszG3LbnAM/psxm8thPgiSuRJ3FVrJYzYseWdYK8yp2N2eowqomu9HJtJut9VbDPE1jjadON8oyRCgddHOhXHGyIEfIYCQDec/BUN62OWcIIxDNh/GIuSIVaILAdvUAiokD5+FbyBNRCW5Au1pdblr4VwJDORbOEOtgFhoPodnfoa0UevNNHCRgG6yh+J7PBvKRPiYTz3YQAm3WNs6dAMbe54cyw0Hb+KV4uKsdSgmO+eueqNwoqy6onUY5nWhaUFOMvFmsOUAv2knQH4/px3oy3yEVsf5cLjnGoeY+t04H8AVJtRjtzopw==
+x-ms-exchange-antispam-messagedata: ailYHvJMCcn01pGS3fzKBMOsw4zbyBQyiH1SWGqAhFPpnAYHTstcji7LUgYibiTysy6icZG9mENtVsSSAb1HYLWuVX8N1mw0GV6/x/1SSTSrlNzczZePPUY4Kp35+/MNTkf82+yY3yJBqu1Rd1Fl8A==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 810c2ee4-1380-4178-bc1e-08d7e7f30fb5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2020 01:59:02.1564
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HBm2KT8tYNKSloLqzEGViBCJ3s2OKx2EC4G2/8ecJ/so92G87ELNDHUYCqDSuseCvzcMIxAUooh53WtOdN7HUA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB6328
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dong Aisheng <aisheng.dong@nxp.com>
-
-i.MX8 SoCs DTS file needs system control macro definitions, so move them
-into dt-binding headfile, then include/linux/firmware/imx/types.h can be
-removed and those drivers using it should be changed accordingly.
-
-Signed-off-by: Jacky Bai <ping.bai@nxp.com>
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V2:
-	- Change the author and add necessary signed-off.
----
- drivers/firmware/imx/imx-scu.c          |  1 -
- drivers/thermal/imx_sc_thermal.c        |  2 +-
- include/dt-bindings/firmware/imx/rsrc.h | 84 +++++++++++++++++++++++++++++++++
- include/linux/firmware/imx/sci.h        |  1 -
- include/linux/firmware/imx/types.h      | 65 -------------------------
- 5 files changed, 85 insertions(+), 68 deletions(-)
- delete mode 100644 include/linux/firmware/imx/types.h
-
-diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-scu.c
-index f71eaa5..f3340fa 100644
---- a/drivers/firmware/imx/imx-scu.c
-+++ b/drivers/firmware/imx/imx-scu.c
-@@ -8,7 +8,6 @@
-  */
- 
- #include <linux/err.h>
--#include <linux/firmware/imx/types.h>
- #include <linux/firmware/imx/ipc.h>
- #include <linux/firmware/imx/sci.h>
- #include <linux/interrupt.h>
-diff --git a/drivers/thermal/imx_sc_thermal.c b/drivers/thermal/imx_sc_thermal.c
-index b2b68c9..b01d28e 100644
---- a/drivers/thermal/imx_sc_thermal.c
-+++ b/drivers/thermal/imx_sc_thermal.c
-@@ -3,9 +3,9 @@
-  * Copyright 2018-2020 NXP.
-  */
- 
-+#include <dt-bindings/firmware/imx/rsrc.h>
- #include <linux/err.h>
- #include <linux/firmware/imx/sci.h>
--#include <linux/firmware/imx/types.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-diff --git a/include/dt-bindings/firmware/imx/rsrc.h b/include/dt-bindings/firmware/imx/rsrc.h
-index 4e61f64..51906b9 100644
---- a/include/dt-bindings/firmware/imx/rsrc.h
-+++ b/include/dt-bindings/firmware/imx/rsrc.h
-@@ -547,4 +547,88 @@
- #define IMX_SC_R_ATTESTATION		545
- #define IMX_SC_R_LAST			546
- 
-+/*
-+ * Defines for SC PM CLK
-+ */
-+#define IMX_SC_PM_CLK_SLV_BUS		0	/* Slave bus clock */
-+#define IMX_SC_PM_CLK_MST_BUS		1	/* Master bus clock */
-+#define IMX_SC_PM_CLK_PER		2	/* Peripheral clock */
-+#define IMX_SC_PM_CLK_PHY		3	/* Phy clock */
-+#define IMX_SC_PM_CLK_MISC		4	/* Misc clock */
-+#define IMX_SC_PM_CLK_MISC0		0	/* Misc 0 clock */
-+#define IMX_SC_PM_CLK_MISC1		1	/* Misc 1 clock */
-+#define IMX_SC_PM_CLK_MISC2		2	/* Misc 2 clock */
-+#define IMX_SC_PM_CLK_MISC3		3	/* Misc 3 clock */
-+#define IMX_SC_PM_CLK_MISC4		4	/* Misc 4 clock */
-+#define IMX_SC_PM_CLK_CPU		2	/* CPU clock */
-+#define IMX_SC_PM_CLK_PLL		4	/* PLL */
-+#define IMX_SC_PM_CLK_BYPASS		4	/* Bypass clock */
-+
-+/*
-+ * Defines for SC CONTROL
-+ */
-+#define IMX_SC_C_TEMP                       0U
-+#define IMX_SC_C_TEMP_HI                    1U
-+#define IMX_SC_C_TEMP_LOW                   2U
-+#define IMX_SC_C_PXL_LINK_MST1_ADDR         3U
-+#define IMX_SC_C_PXL_LINK_MST2_ADDR         4U
-+#define IMX_SC_C_PXL_LINK_MST_ENB           5U
-+#define IMX_SC_C_PXL_LINK_MST1_ENB          6U
-+#define IMX_SC_C_PXL_LINK_MST2_ENB          7U
-+#define IMX_SC_C_PXL_LINK_SLV1_ADDR         8U
-+#define IMX_SC_C_PXL_LINK_SLV2_ADDR         9U
-+#define IMX_SC_C_PXL_LINK_MST_VLD           10U
-+#define IMX_SC_C_PXL_LINK_MST1_VLD          11U
-+#define IMX_SC_C_PXL_LINK_MST2_VLD          12U
-+#define IMX_SC_C_SINGLE_MODE                13U
-+#define IMX_SC_C_ID                         14U
-+#define IMX_SC_C_PXL_CLK_POLARITY           15U
-+#define IMX_SC_C_LINESTATE                  16U
-+#define IMX_SC_C_PCIE_G_RST                 17U
-+#define IMX_SC_C_PCIE_BUTTON_RST            18U
-+#define IMX_SC_C_PCIE_PERST                 19U
-+#define IMX_SC_C_PHY_RESET                  20U
-+#define IMX_SC_C_PXL_LINK_RATE_CORRECTION   21U
-+#define IMX_SC_C_PANIC                      22U
-+#define IMX_SC_C_PRIORITY_GROUP             23U
-+#define IMX_SC_C_TXCLK                      24U
-+#define IMX_SC_C_CLKDIV                     25U
-+#define IMX_SC_C_DISABLE_50                 26U
-+#define IMX_SC_C_DISABLE_125                27U
-+#define IMX_SC_C_SEL_125                    28U
-+#define IMX_SC_C_MODE                       29U
-+#define IMX_SC_C_SYNC_CTRL0                 30U
-+#define IMX_SC_C_KACHUNK_CNT                31U
-+#define IMX_SC_C_KACHUNK_SEL                32U
-+#define IMX_SC_C_SYNC_CTRL1                 33U
-+#define IMX_SC_C_DPI_RESET                  34U
-+#define IMX_SC_C_MIPI_RESET                 35U
-+#define IMX_SC_C_DUAL_MODE                  36U
-+#define IMX_SC_C_VOLTAGE                    37U
-+#define IMX_SC_C_PXL_LINK_SEL               38U
-+#define IMX_SC_C_OFS_SEL                    39U
-+#define IMX_SC_C_OFS_AUDIO                  40U
-+#define IMX_SC_C_OFS_PERIPH                 41U
-+#define IMX_SC_C_OFS_IRQ                    42U
-+#define IMX_SC_C_RST0                       43U
-+#define IMX_SC_C_RST1                       44U
-+#define IMX_SC_C_SEL0                       45U
-+#define IMX_SC_C_CALIB0                     46U
-+#define IMX_SC_C_CALIB1                     47U
-+#define IMX_SC_C_CALIB2                     48U
-+#define IMX_SC_C_IPG_DEBUG                  49U
-+#define IMX_SC_C_IPG_DOZE                   50U
-+#define IMX_SC_C_IPG_WAIT                   51U
-+#define IMX_SC_C_IPG_STOP                   52U
-+#define IMX_SC_C_IPG_STOP_MODE              53U
-+#define IMX_SC_C_IPG_STOP_ACK               54U
-+#define IMX_SC_C_SYNC_CTRL                  55U
-+#define IMX_SC_C_OFS_AUDIO_ALT              56U
-+#define IMX_SC_C_DSP_BYP                    57U
-+#define IMX_SC_C_CLK_GEN_EN                 58U
-+#define IMX_SC_C_INTF_SEL                   59U
-+#define IMX_SC_C_RXC_DLY                    60U
-+#define IMX_SC_C_TIMER_SEL                  61U
-+#define IMX_SC_C_LAST                       62U
-+
- #endif /* __DT_BINDINGS_RSCRC_IMX_H */
-diff --git a/include/linux/firmware/imx/sci.h b/include/linux/firmware/imx/sci.h
-index 17ba4e4..3fa418a 100644
---- a/include/linux/firmware/imx/sci.h
-+++ b/include/linux/firmware/imx/sci.h
-@@ -11,7 +11,6 @@
- #define _SC_SCI_H
- 
- #include <linux/firmware/imx/ipc.h>
--#include <linux/firmware/imx/types.h>
- 
- #include <linux/firmware/imx/svc/misc.h>
- #include <linux/firmware/imx/svc/pm.h>
-diff --git a/include/linux/firmware/imx/types.h b/include/linux/firmware/imx/types.h
-deleted file mode 100644
-index 8082110..0000000
---- a/include/linux/firmware/imx/types.h
-+++ /dev/null
-@@ -1,65 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0+ */
--/*
-- * Copyright (C) 2016 Freescale Semiconductor, Inc.
-- * Copyright 2017~2018 NXP
-- *
-- * Header file containing types used across multiple service APIs.
-- */
--
--#ifndef _SC_TYPES_H
--#define _SC_TYPES_H
--
--/*
-- * This type is used to indicate a control.
-- */
--enum imx_sc_ctrl {
--	IMX_SC_C_TEMP = 0,
--	IMX_SC_C_TEMP_HI = 1,
--	IMX_SC_C_TEMP_LOW = 2,
--	IMX_SC_C_PXL_LINK_MST1_ADDR = 3,
--	IMX_SC_C_PXL_LINK_MST2_ADDR = 4,
--	IMX_SC_C_PXL_LINK_MST_ENB = 5,
--	IMX_SC_C_PXL_LINK_MST1_ENB = 6,
--	IMX_SC_C_PXL_LINK_MST2_ENB = 7,
--	IMX_SC_C_PXL_LINK_SLV1_ADDR = 8,
--	IMX_SC_C_PXL_LINK_SLV2_ADDR = 9,
--	IMX_SC_C_PXL_LINK_MST_VLD = 10,
--	IMX_SC_C_PXL_LINK_MST1_VLD = 11,
--	IMX_SC_C_PXL_LINK_MST2_VLD = 12,
--	IMX_SC_C_SINGLE_MODE = 13,
--	IMX_SC_C_ID = 14,
--	IMX_SC_C_PXL_CLK_POLARITY = 15,
--	IMX_SC_C_LINESTATE = 16,
--	IMX_SC_C_PCIE_G_RST = 17,
--	IMX_SC_C_PCIE_BUTTON_RST = 18,
--	IMX_SC_C_PCIE_PERST = 19,
--	IMX_SC_C_PHY_RESET = 20,
--	IMX_SC_C_PXL_LINK_RATE_CORRECTION = 21,
--	IMX_SC_C_PANIC = 22,
--	IMX_SC_C_PRIORITY_GROUP = 23,
--	IMX_SC_C_TXCLK = 24,
--	IMX_SC_C_CLKDIV = 25,
--	IMX_SC_C_DISABLE_50 = 26,
--	IMX_SC_C_DISABLE_125 = 27,
--	IMX_SC_C_SEL_125 = 28,
--	IMX_SC_C_MODE = 29,
--	IMX_SC_C_SYNC_CTRL0 = 30,
--	IMX_SC_C_KACHUNK_CNT = 31,
--	IMX_SC_C_KACHUNK_SEL = 32,
--	IMX_SC_C_SYNC_CTRL1 = 33,
--	IMX_SC_C_DPI_RESET = 34,
--	IMX_SC_C_MIPI_RESET = 35,
--	IMX_SC_C_DUAL_MODE = 36,
--	IMX_SC_C_VOLTAGE = 37,
--	IMX_SC_C_PXL_LINK_SEL = 38,
--	IMX_SC_C_OFS_SEL = 39,
--	IMX_SC_C_OFS_AUDIO = 40,
--	IMX_SC_C_OFS_PERIPH = 41,
--	IMX_SC_C_OFS_IRQ = 42,
--	IMX_SC_C_RST0 = 43,
--	IMX_SC_C_RST1 = 44,
--	IMX_SC_C_SEL0 = 45,
--	IMX_SC_C_LAST
--};
--
--#endif /* _SC_TYPES_H */
--- 
-2.7.4
-
+PiBGcm9tOiBQZW5nIEZhbiA8cGVuZy5mYW5AbnhwLmNvbT4NCj4gU2VudDogRnJpZGF5LCBBcHJp
+bCAyNCwgMjAyMCA5OjA4IEFNDQo+IA0KPiA+IFN1YmplY3Q6IFJFOiBbUEFUQ0hdIGNsazogaW14
+OiBpbnRyb2R1Y2UgaW14X2Nsa19od19jcml0aWNhbA0KPiA+DQo+ID4gPiBGcm9tOiBQZW5nIEZh
+biA8cGVuZy5mYW5AbnhwLmNvbT4NCj4gPiA+IFNlbnQ6IFRodXJzZGF5LCBBcHJpbCAyMywgMjAy
+MCA2OjU0IFBNDQo+ID4gPg0KPiA+ID4gPiBTdWJqZWN0OiBSRTogW1BBVENIXSBjbGs6IGlteDog
+aW50cm9kdWNlIGlteF9jbGtfaHdfY3JpdGljYWwNCj4gPiA+ID4NCj4gPiA+ID4gPiBGcm9tOiBQ
+ZW5nIEZhbiA8cGVuZy5mYW5AbnhwLmNvbT4NCj4gPiA+ID4gPiBTZW50OiBUaHVyc2RheSwgQXBy
+aWwgMjMsIDIwMjAgMjo1MiBQTQ0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gVG8gaS5NWDhNIFNvQywg
+dGhlcmUgaXMgYW4gY2FzZSBpcyB3aGVuIHJ1bm5pbmcgZHVhbCBPU2VzIHdpdGgNCj4gPiA+ID4g
+PiBoeXBlcnZpc29yLCB0aGUgY2xrIG9mIHRoZSBoYXJkd2FyZSB0aGF0IHBhc3N0aHJvdWdoIHRv
+IHRoZSAybmQNCj4gPiA+ID4gPiBPUyBuZWVkcyB0byBiZSBzZXR1cCBieSAxc3QgTGludXggT1Mu
+DQo+ID4gPiA+ID4gU28gZGV0ZWN0IGNsb2NrLWNyaXRpY2FsIGZyb20gY2NtIG5vZGUgYW5kIGVu
+YWJsZSB0aGUgY2xvY2tzIHRvDQo+ID4gPiA+ID4gbGV0IHRoZSAybmQgT1MgY291bGQgdXNlIHRo
+ZSBoYXJkd2FyZSB3aXRob3V0IHRvdWNoIENDTSBtb2R1bGUuDQo+ID4gPiA+ID4NCj4gPiA+ID4g
+PiBTaWduZWQtb2ZmLWJ5OiBQZW5nIEZhbiA8cGVuZy5mYW5AbnhwLmNvbT4NCj4gPiA+ID4gPiAt
+LS0NCj4gPiA+ID4gPiAgZHJpdmVycy9jbGsvaW14L2Nsay5jIHwgMTkgKysrKysrKysrKysrKysr
+KysrKw0KPiA+ID4gPiA+IGRyaXZlcnMvY2xrL2lteC9jbGsuaA0KPiA+ID4gPiA+IHwgIDENCj4g
+PiA+ID4gPiArDQo+ID4gPiA+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMjAgaW5zZXJ0aW9ucygrKQ0K
+PiA+ID4gPiA+DQo+ID4gPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2lteC9jbGsuYyBi
+L2RyaXZlcnMvY2xrL2lteC9jbGsuYyBpbmRleA0KPiA+ID4gPiA+IDg3YWI4ZGIzZDI4Mi4uZWM3
+ZDQyMjU0MGMxIDEwMDY0NA0KPiA+ID4gPiA+IC0tLSBhL2RyaXZlcnMvY2xrL2lteC9jbGsuYw0K
+PiA+ID4gPiA+ICsrKyBiL2RyaXZlcnMvY2xrL2lteC9jbGsuYw0KPiA+ID4gPiA+IEBAIC0xNzcs
+MyArMTc3LDIyIEBAIHN0YXRpYyBpbnQgX19pbml0IGlteF9jbGtfZGlzYWJsZV91YXJ0KHZvaWQp
+DQo+ID4gPiA+ID4gIAlyZXR1cm4gMDsNCj4gPiA+ID4gPiAgfQ0KPiA+ID4gPiA+ICBsYXRlX2lu
+aXRjYWxsX3N5bmMoaW14X2Nsa19kaXNhYmxlX3VhcnQpOw0KPiA+ID4gPiA+ICsNCj4gPiA+ID4g
+PiAraW50IGlteF9jbGtfaHdfY3JpdGljYWwoc3RydWN0IGRldmljZV9ub2RlICpucCwgc3RydWN0
+IGNsa19odyAqDQo+ID4gPiA+ID4gK2NvbnN0DQo+ID4gPiA+ID4gK2h3c1tdKSB7DQo+ID4gPiA+
+ID4gKwlzdHJ1Y3QgcHJvcGVydHkgKnByb3A7DQo+ID4gPiA+ID4gKwljb25zdCBfX2JlMzIgKmN1
+cjsNCj4gPiA+ID4gPiArCXUzMiBpZHg7DQo+ID4gPiA+ID4gKwlpbnQgcmV0Ow0KPiA+ID4gPiA+
+ICsNCj4gPiA+ID4gPiArCWlmICghbnAgfHwgIWh3cykNCj4gPiA+ID4gPiArCQlyZXR1cm4gLUVJ
+TlZBTDsNCj4gPiA+ID4gPiArDQo+ID4gPiA+ID4gKwlvZl9wcm9wZXJ0eV9mb3JfZWFjaF91MzIo
+bnAsICJjbG9jay1jcml0aWNhbCIsIHByb3AsIGN1ciwgaWR4KQ0KPiA+ID4gPiA+ICt7DQo+ID4g
+PiA+DQo+ID4gPiA+IElzIHRoZXJlIGEgYmluZGluZyBmb3IgaXQgYWxyZWFkeT8NCj4gPiA+DQo+
+ID4gPiBJIHRoaW5rIGNsb2NrLWNyaXRpY2FsIGlzIGEgY29tbW9uIGJpbmRpbmdzPyBTZWUgb2Zf
+Y2xrX2RldGVjdF9jcml0aWNhbC4NCj4gPiA+IFBsZWFzZSByZXZpZXcgd2hldGhlciB0aGlzIGFw
+cHJvYWNoIGlzIGFjY2VwdGFibGUsIGlmIGRvIG5lZWQNCj4gPiA+IGJpbmRpbmdzLCBJIGNvdWxk
+IGFkZCB0aGF0IGluIHYyLg0KPiA+ID4NCj4gPg0KPiA+IEknbSBvayBpZiBpdCdzIGEgY29tbW9u
+IGJpbmRpbmcgYWxyZWFkeSBzdXBwb3J0ZWQgYnkgY3VycmVudCBjbGsgZnJhbWV3b3JrLg0KPiA+
+IEJ1dCBpdCBzZWVtcyB0byBiZSBtb3JlIGxpa2UgYSBjb21tb24gY2xrIGZlYXR1cmUgcmF0aGVy
+IHRoYW4gcGxhdGZvcm0NCj4gPiBmZWF0dXJlLg0KPiANCj4gSGVyZSBpcyB0byB1c2UgaXQgZm9y
+IGR1YWwgTGludXggY2FzZSBydW5uaW5nIG9uIGkuTVggcGxhZm9ybXMuDQo+IEl0IGlzIHRvIHJl
+cGxhY2UgdGhlIGluaXQtb24tYXJyYXkgcHJvcGVydHkgaW4gZG93bnN0cmVhbSBrZXJuZWwuDQo+
+IA0KPiBUaGUgcmVjb21tZW5kZWQgY3JpdGljYWwgY2xvY2sgaXMgdXNpbmcgQ0xLX0lTX0NSSVRJ
+Q0FMIGZsYWcgaW4gY2xrIGRyaXZlciwgbm90DQo+IHVzZSBjbG9jay1jcml0aWNhbCBwcm9wZXJ0
+eS4NCj4gDQoNCkNsb2NrLWNyaXRpY2FsIHByb3BlcnR5IHNlZW1zIERUIHVzYWdlIG9mIENMS19J
+U19DUklUSUNBTCBmbGFnIGFuZCBwdXJlIHBsYXRmb3JtIGluZGVwZW5kZW50Lg0KU28gSSB3b25k
+ZXIgaWYgdGhpcyBmZWF0dXJlIGNvdWxkIGJlIGFkZGVkIGludG8gb2ZfY2xrX2FkZF9od19wcm92
+aWRlci4NCg0KPiBCdXQgaGVyZSwgd2UgY291bGQgbm90IHVzZSBDTEtfSVNfQ1JJVElDQUwsIGJl
+Y2F1c2Ugd2hlbiBzdXBwb3J0IGR1YWwgT1NlcywNCj4gaXQgaXMgbm90IGZsZXhpYmxlLCBhbmQg
+aXQgd2lsbCBhZmZlY3Qgbm9uIGh5cGVydmlzb3IgY2FzZS4NCj4gDQoNCkEgYml0IGNvbmZ1aW5n
+IGJlY2F1c2UgeW91IHNhaWQgdGhlIGNyaXRpY2FsLWNsb2NrIHByb3BlcnR5IHdpbGwgb25seSBi
+ZSB1c2VkIGJ5DQpIeXBlcnZpc29yIGR0cywgdGhlbiBob3cgdG8gYWZmZWN0IG5vbiBoeXBlcnZp
+c29yIGNhc2VzPw0KDQo+ID4gQWxzbyBhIGJpdCBzdHJhbmdlIHRoYXQgd2h5IEkgZGlkIG5vdCBm
+aW5kIHRoZSBiaW5kaW5nIGRvYyBpbiBsYXRlc3Qga2VybmVsLg0KPiA+IE1heWJlIFN0ZXBoZW4g
+Y291bGQgY29tbWVudCBtb3JlLg0KPiANCj4gSXQgaXMgdXNlZCBoZXJlLg0KPiBodHRwczovL2Vs
+aXhpci5ib290bGluLmNvbS9saW51eC92NS43LXJjMi9zb3VyY2UvZHJpdmVycy9jbGsvY2xrLmMj
+TDQ4OTENCg0KWWVzLCBJIGFsc28gc2F3IGl0LCBidXQgZGlkbid0IGZpbmQgYmluZGluZyBkb2Mu
+DQoNClJlZ2FyZHMNCkFpc2hlbmcNCg0KPiANCj4gPg0KPiA+IEJUVywgaWYgdXNpbmcgdGhpcyBm
+b3IgZHVhbCBPU2VzIGNhc2UsIHdpbGwgdGhvc2UgY3JpdGljYWwgY2xvY2tzDQo+ID4gYWZmZWN0
+IHRoZSBub3JtYWwgdXNlcnMgdGhhdCBub3QgYm9vdGluZyB0aGUgc2Vjb25kIE9TPw0KPiANCj4g
+Tm8uIGR1YWwgb3MgdXNpbmcgeC1yb290LmR0cywgbm90IHguZHRzLiBjcml0aWNhbC1jbG9jayB3
+aWxsIGJlIHB1c2ggaW4geC1yb290LmR0cy4NCj4gDQo+IFRoYW5rcywNCj4gUGVuZy4NCj4gDQo+
+ID4NCj4gPiBSZWdhcmRzDQo+ID4gQWlzaGVuZw0KPiA+DQo+ID4gPiBUaGFua3MsDQo+ID4gPiBQ
+ZW5nLg0KPiA+ID4NCj4gPiA+ID4NCj4gPiA+ID4gUmVnYXJkcw0KPiA+ID4gPiBBaXNoZW5nDQo+
+ID4gPiA+DQo+ID4gPiA+ID4gKwkJcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKGh3c1tpZHhdLT5j
+bGspOw0KPiA+ID4gPiA+ICsJCWlmIChyZXQpDQo+ID4gPiA+ID4gKwkJCXJldHVybiByZXQ7DQo+
+ID4gPiA+ID4gKwl9DQo+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ICsJcmV0dXJuIDA7DQo+ID4gPiA+
+ID4gK30NCj4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbGsvaW14L2Nsay5oIGIvZHJp
+dmVycy9jbGsvaW14L2Nsay5oIGluZGV4DQo+ID4gPiA+ID4gZDRlYTE2MDliY2I3Li43MDFkNzQ0
+MGY5OGMgMTAwNjQ0DQo+ID4gPiA+ID4gLS0tIGEvZHJpdmVycy9jbGsvaW14L2Nsay5oDQo+ID4g
+PiA+ID4gKysrIGIvZHJpdmVycy9jbGsvaW14L2Nsay5oDQo+ID4gPiA+ID4gQEAgLTksNiArOSw3
+IEBAIGV4dGVybiBzcGlubG9ja190IGlteF9jY21fbG9jazsNCj4gPiA+ID4gPg0KPiA+ID4gPiA+
+ICB2b2lkIGlteF9jaGVja19jbG9ja3Moc3RydWN0IGNsayAqY2xrc1tdLCB1bnNpZ25lZCBpbnQg
+Y291bnQpOw0KPiA+ID4gPiA+IHZvaWQgaW14X2NoZWNrX2Nsa19od3Moc3RydWN0IGNsa19odyAq
+Y2xrc1tdLCB1bnNpZ25lZCBpbnQNCj4gPiA+ID4gPiBjb3VudCk7DQo+ID4gPiA+ID4gK2ludCBp
+bXhfY2xrX2h3X2NyaXRpY2FsKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAsIHN0cnVjdCBjbGtfaHcg
+Kg0KPiA+ID4gPiA+ICtjb25zdCBod3NbXSk7DQo+ID4gPiA+ID4gIHZvaWQgaW14X3JlZ2lzdGVy
+X3VhcnRfY2xvY2tzKHN0cnVjdCBjbGsgKiogY29uc3QgY2xrc1tdKTsNCj4gPiA+ID4gPiB2b2lk
+IGlteF9tbWRjX21hc2tfaGFuZHNoYWtlKHZvaWQgX19pb21lbSAqY2NtX2Jhc2UsIHVuc2lnbmVk
+DQo+ID4gPiA+ID4gaW50DQo+ID4gY2huKTsNCj4gPiA+ID4gPiB2b2lkIGlteF91bnJlZ2lzdGVy
+X2Nsb2NrcyhzdHJ1Y3QgY2xrICpjbGtzW10sIHVuc2lnbmVkIGludA0KPiA+ID4gPiA+IGNvdW50
+KTsNCj4gPiA+ID4gPiAtLQ0KPiA+ID4gPiA+IDIuMTYuNA0KDQo=
