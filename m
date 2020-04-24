@@ -2,127 +2,155 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE82C55191
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF4DC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 897BA2071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:10:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VpecBWsD"
+	by mail.kernel.org (Postfix) with ESMTP id 3CEA820767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:11:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbgDXKKO (ORCPT
+        id S1726821AbgDXKL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 06:10:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726698AbgDXKKO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 06:10:14 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D546C09B046
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 03:10:14 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id v24so8859294uak.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 03:10:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/7X2G22ItV4Y4N+eb7B9/IPLptDWVPPgxbfXxVm6c0U=;
-        b=VpecBWsDHCHHO0gD9i2Q+wOtC/bhPUTbFJumSZmGKAPLRyGV0WQNt+0aw3Fzkvd6Ky
-         YNnA3xcIN+JKDZPwlTndqmO/W3+X8T5EaIskhnIvK0+od9Dh2G1TpQoC2ex4NIFslEOK
-         wyph8U4lQiPX/EY1u7sdflAgmOPiWwOUC5I4uyYHIqebMO8tKeOL7F2+/v9KhWLuUlzp
-         NE9K5KuDRaimnnq1rVRW40PPCD+1dh4R6OYSlpPJAY32uxr2mOz79SVJP6ttVM5dm6cn
-         mf2rknK5IJWHhSWj3Gw8nyJLC3+q6iIszJNoLq7J7Ld+CRf3RvsCM8heQx0RJFLLcvN9
-         KAKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/7X2G22ItV4Y4N+eb7B9/IPLptDWVPPgxbfXxVm6c0U=;
-        b=tqTe8cEiOwwL4u3Kg3IgXb2K8BGQLzsdltz8gQ8RFb5KuUztnedsafh4+Yx2DKfpXz
-         t/CjWmloKfA3XDTqSsWRiIqJr6nZcf9MBlag40EhUh4a/Dp2sL7cYulI8yLeCjDzvkNZ
-         Nlp3Ktvseb4EAgHJBQXxd+jSlW2F7L9j3yt1ZNNqMa/hEMD8T6L/eklaB5r29yP7Da/K
-         lyKSCJ0gxEwSmn+wp4wx2ebkOGils5tNRd/eRIIztK1SJy1Fxl2BDQNnMRtVJArLZoqR
-         5dcGBAWmUIOTnwCRXRtcn+ynj9ZvfvJPgL06KHRyzx0Prhm0UYGRrVXoblbtBTZtXZG0
-         qmiA==
-X-Gm-Message-State: AGi0PuaU5PXIOW/G/k+hN9btQBDTXPdyxdBkMRkTpaxo4FqNyhAJ503C
-        t/Cs56cvBdI00W3R3Z2BOIT9QfhRG6ylQZhB3KIC0I3R6/8=
-X-Google-Smtp-Source: APiQypKPFxKbTuswyzazMAoKTL41AiVtC3nWpHcWL/JgaZTTZJKmyutS6k++bDb6ybJle6h4nW9ENAd6LSnZ1BI5+xw=
-X-Received: by 2002:a67:8b46:: with SMTP id n67mr6857957vsd.35.1587723013211;
- Fri, 24 Apr 2020 03:10:13 -0700 (PDT)
+        Fri, 24 Apr 2020 06:11:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44062 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726698AbgDXKL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 06:11:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D8C84AED7;
+        Fri, 24 Apr 2020 10:11:23 +0000 (UTC)
 MIME-Version: 1.0
-References: <1586835611-13857-1-git-send-email-yong.mao@mediatek.com> <1586835611-13857-2-git-send-email-yong.mao@mediatek.com>
-In-Reply-To: <1586835611-13857-2-git-send-email-yong.mao@mediatek.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 24 Apr 2020 12:09:37 +0200
-Message-ID: <CAPDyKFo40tBpowmWN3gxH8b=jMmCK8O5ALNQ7y6XZ5AosX=GUA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] mmc: core: need do mmc_power_cycle in mmc_sdio_resend_if_cond
-To:     Yong Mao <yong.mao@mediatek.com>
-Cc:     Chaotian Jing <chaotian.jing@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 24 Apr 2020 12:11:23 +0200
+From:   Roman Penyaev <rpenyaev@suse.de>
+To:     Khazhismel Kumykov <khazhy@google.com>
+Cc:     viro@zeniv.linux.org.uk, akpm@linux-foundation.org, r@hev.cc,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] eventpoll: fix missing wakeup for ovflist in
+ ep_poll_callback
+In-Reply-To: <20200424025057.118641-1-khazhy@google.com>
+References: <20200424025057.118641-1-khazhy@google.com>
+Message-ID: <2bd5fcb37337dd7248a5cb245bf8dde9@suse.de>
+X-Sender: rpenyaev@suse.de
+User-Agent: Roundcube Webmail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Apr 2020 at 05:40, Yong Mao <yong.mao@mediatek.com> wrote:
->
-> From: yong mao <yong.mao@mediatek.com>
->
-> When mmc_sdio_resned_if_cond is invoked, it indicates the SDIO
-> device is not in the right state. In this condition, the previous
-> implementation of mmc_sdio_resend_if_cond can't make sure SDIO
-> device be back to idle state. mmc_power_cycle can reset the SDIO
-> device by HW and also make sure SDIO device enter to idle state
-> correctly.
->
-> Signed-off-by: Yong Mao <yong.mao@mediatek.com>
+Hi Khazhismel,
+
+That seems to be correct. The patch you refer 339ddb53d373
+relies on callback path, which *should* wake up, not the path
+which harvests events (thus unnecessary wakeups).  When we add
+a new event to the ->ovflist nobody wakes up the waiters,
+thus missing wakeup. You are right.
+
+May I suggest a small change in order to avoid one new goto?
+We can add a new event in either ->ovflist or ->rdllist and
+then wakeup should happen. So simple 'else if' branch should
+do things right, something like the following:
+
+diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+index 8c596641a72b..7d566667c6ad 100644
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -1171,6 +1171,10 @@ static inline bool chain_epi_lockless(struct 
+epitem *epi)
+  {
+         struct eventpoll *ep = epi->ep;
+
++       /* Fast preliminary check */
++       if (epi->next != EP_UNACTIVE_PTR)
++               return false;
++
+         /* Check that the same epi has not been just chained from 
+another CPU */
+         if (cmpxchg(&epi->next, EP_UNACTIVE_PTR, NULL) != 
+EP_UNACTIVE_PTR)
+                 return false;
+@@ -1237,16 +1241,13 @@ static int ep_poll_callback(wait_queue_entry_t 
+*wait, unsigned mode, int sync, v
+          * chained in ep->ovflist and requeued later on.
+          */
+         if (READ_ONCE(ep->ovflist) != EP_UNACTIVE_PTR) {
+-               if (epi->next == EP_UNACTIVE_PTR &&
+-                   chain_epi_lockless(epi))
++               if (chain_epi_lockless(epi))
+                         ep_pm_stay_awake_rcu(epi);
+-               goto out_unlock;
+         }
+-
+-       /* If this file is already in the ready list we exit soon */
+-       if (!ep_is_linked(epi) &&
+-           list_add_tail_lockless(&epi->rdllink, &ep->rdllist)) {
+-               ep_pm_stay_awake_rcu(epi);
++       /* Otherwise take usual path and add event to ready list */
++       else if (!ep_is_linked(epi)) {
++               if (list_add_tail_lockless(&epi->rdllink, &ep->rdllist))
++                       ep_pm_stay_awake_rcu(epi);
+         }
+
+
+I also moved 'epi->next == EP_UNACTIVE_PTR' check directly
+to the chain_epi_lockless, where it should be.
+
+This is minor, of course, you are free to keep it as is.
+
+Reviewed-by: Roman Penyaev <rpenyaev@suse.de>
+
+--
+Roman
+
+
+On 2020-04-24 04:50, Khazhismel Kumykov wrote:
+> In the event that we add to ovflist, before 339ddb53d373 we would be
+> woken up by ep_scan_ready_list, and did no wakeup in ep_poll_callback.
+> With that wakeup removed, if we add to ovflist here, we may never wake
+> up. Rather than adding back the ep_scan_ready_list wakeup - which was
+> resulting un uncessary wakeups, trigger a wake-up in ep_poll_callback.
+> 
+> We noticed that one of our workloads was missing wakeups starting with
+> 339ddb53d373 and upon manual inspection, this wakeup seemed missing to
+> me. With this patch added, we no longer see missing wakeups. I haven't
+> yet tried to make a small reproducer, but the existing kselftests in
+> filesystem/epoll passed for me with this patch.
+> 
+> Fixes: 339ddb53d373 ("fs/epoll: remove unnecessary wakeups of nested 
+> epoll")
+> Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
 > ---
->  drivers/mmc/core/sdio.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/mmc/core/sdio.c b/drivers/mmc/core/sdio.c
-> index ebb387a..ada0a80 100644
-> --- a/drivers/mmc/core/sdio.c
-> +++ b/drivers/mmc/core/sdio.c
-> @@ -546,6 +546,7 @@ static int mmc_sdio_init_uhs_card(struct mmc_card *card)
->  static void mmc_sdio_resend_if_cond(struct mmc_host *host,
->                                     struct mmc_card *card)
->  {
-> +       mmc_power_cycle(host, host->card->ocr);
+>  fs/eventpoll.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+> index 8c596641a72b..40cc89559cf6 100644
+> --- a/fs/eventpoll.c
+> +++ b/fs/eventpoll.c
+> @@ -1240,7 +1240,7 @@ static int ep_poll_callback(wait_queue_entry_t
+> *wait, unsigned mode, int sync, v
+>  		if (epi->next == EP_UNACTIVE_PTR &&
+>  		    chain_epi_lockless(epi))
+>  			ep_pm_stay_awake_rcu(epi);
+> -		goto out_unlock;
+> +		goto out_wakeup_unlock;
+>  	}
+> 
+>  	/* If this file is already in the ready list we exit soon */
+> @@ -1249,6 +1249,7 @@ static int ep_poll_callback(wait_queue_entry_t
+> *wait, unsigned mode, int sync, v
+>  		ep_pm_stay_awake_rcu(epi);
+>  	}
+> 
+> +out_wakeup_unlock:
+>  	/*
+>  	 * Wake up ( if active ) both the eventpoll wait list and the 
+> ->poll()
+>  	 * wait list.
 
-This looks wrong to me. mmc_sdio_resend_if_cond() is called from two places.
-
-1. In the case when mmc_set_uhs_voltage() fails in
-mmc_sdio_init_card(), which means a call to mmc_power_cycle() has
-already been done.
-
-2. Wen sdio_read_cccr() fails and when we decide to retry the UHS-I
-voltage switch. Then perhaps it could make sense to run a power cycle.
-But if so, we better do it only for that path.
-
-I will continue to look a bit, as I think there are really more issues
-that we may want to look into while looking at this piece of code.
-However, allow me some more time before I can provide some more ideas
-of how to move forward.
-
->         sdio_reset(host);
->         mmc_go_idle(host);
->         mmc_send_if_cond(host, host->ocr_avail);
-> --
-> 1.9.1
-
-Kind regards
-Uffe
