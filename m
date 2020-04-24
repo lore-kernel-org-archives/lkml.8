@@ -2,141 +2,137 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F7AC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B951C55197
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3039F2173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CA702098B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:43:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T0keOgZ7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iB1jjpAP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729263AbgDXTlt (ORCPT
+        id S1729308AbgDXTnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 15:41:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36168 "EHLO
+        Fri, 24 Apr 2020 15:43:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726908AbgDXTls (ORCPT
+        with ESMTP id S1726908AbgDXTnk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 15:41:48 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03652C09B048
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 12:41:48 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id u15so11210370ljd.3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 12:41:47 -0700 (PDT)
+        Fri, 24 Apr 2020 15:43:40 -0400
+Received: from mail-ua1-x92d.google.com (mail-ua1-x92d.google.com [IPv6:2607:f8b0:4864:20::92d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C13BAC09B048
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 12:43:40 -0700 (PDT)
+Received: by mail-ua1-x92d.google.com with SMTP id c24so10683013uap.13
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 12:43:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xEmEzSJAW12x5niGKKzPXSqsRmQBFq2lP6H8xvuac/8=;
-        b=T0keOgZ72bgaeEiqotFnnG+NMkzgKYHGXH4TyFbkmZQOJe1Y5iKcFbRjOuVS3LytBL
-         W6AnOWDW2QWZo3w+XoSlX7QKg7WFduDC+turDLabtmC3eHu2R+LW2LppYuJYXdj40rg7
-         CdC1QLOEEL0R1Cimqms8CMRslN8tW7OXjqcp181VPdrvY8W8QYwXkvlGnezntNU/aIQI
-         i6YsVJ+qBo1IpmfuneESoyprPvhhXr26CeMvNdDtUxyovd7PslG1FH6YR8sVB7ohtRad
-         QOWlk/axNwWA9QPd0lqbh3Eau8RDrkadohiHGyCxCHAzXRPCkwjqYlFo45dJvWYiXb2y
-         7ahA==
+        bh=uYIyO0FM6OKLTtdidib4kMcRxKmjnuqRDI/kUo72TPs=;
+        b=iB1jjpAPyu5N+Ty0NvIhETMALoLw3CWs1vsmNe2SNdO3f2nhQ/G117vxfSTMqpjmp3
+         kWTI4UFRErUQddDTVOeyXh3p/aBKbAiVEbsOTjsoopA9/inmwJ0b22h9QQthrtyJhe5f
+         aEWQ9wzmaYdHFzXlIn4rMfCyLFLx0p9W+O6uPflycOwPNAXikNYhRwd23PlWaUdh5o19
+         +p56EjWuBxrskFZiFuReT57UOngHnfrUzIgPQdCRfhGL12cWrIjK3ZfkIGx7aTxvS1bK
+         bjqcOSNHvYE4Se4z0d8UOpQ7EUOw/gormYfm5EAbxC5xxNMvlTaXfdv3D2kzbzmjKtDu
+         bOmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xEmEzSJAW12x5niGKKzPXSqsRmQBFq2lP6H8xvuac/8=;
-        b=K7AVGQowQJ6/H5nlw5L42Gq5ydaJoIZYYo6FeEPMdc7BrFzTHUN7uKbM2a3aQ1vcga
-         TTE5/a6dR425SPEFMQjuaRcgBtCrCW0c1hhzc5VWOdh+dao+vLm8cW+HY2+TER204lrN
-         B0bUa+N6H6V0iYvJnV9y/Ql4RxCdjnZe8SZt9A9d8azFRWDgsSqVq+0lN0torGBPv9RD
-         YqBeIYe3UHlcmsuheetdS5WyyBVm4GRsme8W1D88CMeTjLmYqBZrd6eDqk/0juxQb2vq
-         ep2h2+v6KuCp+qUAPrawVqFtNHEcnVil+GilDt1EQQAV5SJa4aQa27F3Deogvgm/MOpB
-         8J2A==
-X-Gm-Message-State: AGi0PuYLDf3X6rS4mxM9HQPbxM+octDPUSbZCetoG2qiMOhHDCMr7qo7
-        Oy5ER8UC3keWf5P8aZDNoUPLak3OMYuSUC2F4uN47Q==
-X-Google-Smtp-Source: APiQypI4Xi6+DbAAYIeOQPzrEcE/mxStfNg2RlTAQ/87ko7Y+RTOVwvrDrzFbofvytmtXUu0lTzmeVzRLH+KYXFDMfY=
-X-Received: by 2002:a2e:9791:: with SMTP id y17mr7027497lji.174.1587757306172;
- Fri, 24 Apr 2020 12:41:46 -0700 (PDT)
+        bh=uYIyO0FM6OKLTtdidib4kMcRxKmjnuqRDI/kUo72TPs=;
+        b=pxmrJeYaSBGFU4O+YbC323OfGGrhEzAVk7jZ4MPPa9pB2F2eN5XyQjomJjnYXBpvdM
+         z+1oEviJoueLyRXt7V9AEPCyADdmrFN+4Nsvj3gyVlF6Uge6kUDq7iHCFbolKkJFWnOv
+         D/ELu9CcZ6ekGmyLz87hIbGn8Myy0nFByCEktUG1bVin9tie59Xid7ITmRl3l9iMsLkC
+         WdY3sH4prFX+F0cbLK+vZ6lu37IBPabi/0/YbM7T+5T5U32pre3yAdmHhzlJtXQW56HW
+         WxGcMQYkbL+RhfXcJLCLh2d1ibP8w1LjUSaKmbrWbgXW/u7MrHOJ3H/yjgOOSDHT9vrD
+         hUPw==
+X-Gm-Message-State: AGi0PubiKO8E62c0rWrUp1mSwMk6xifb1xoDdD9B8/l6zLT3zQYtvFXb
+        +G0fREY2Aemz2LoE+283ayn2vFb3JnyzR6gk+zZf+A==
+X-Google-Smtp-Source: APiQypLbCAPlZZDSVGcMwx906oxRyln6GauufX0aC9cwnkiQn/QK/qcy4q5D1KHXLNqyNSNn+GZ2PeLwEhU2CmLECH4=
+X-Received: by 2002:ab0:485:: with SMTP id 5mr8980818uaw.86.1587757419335;
+ Fri, 24 Apr 2020 12:43:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200328185916.98423-1-rajatja@google.com> <20200328185916.98423-3-rajatja@google.com>
- <20200410164140.GA25924@bogus>
-In-Reply-To: <20200410164140.GA25924@bogus>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Fri, 24 Apr 2020 12:41:09 -0700
-Message-ID: <CACK8Z6G=oy9Gesazk1jJVhk22Dgm8_TGZCcpNndkv+WLqAe8hg@mail.gmail.com>
-Subject: Re: [PATCH v4 3/5] dt-bindings: input/atkbd.txt: Add binding for "function-row-physmap"
-To:     Rob Herring <robh@kernel.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Dmitry Torokhov <dtor@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Furquan Shaikh <furquan@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Benson Leung <bleung@google.com>,
-        Zentaro Kavanagh <zentaro@google.com>,
-        Dominik Behr <dbehr@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>
+References: <20200424153859.GA1481119@chrisdown.name>
+In-Reply-To: <20200424153859.GA1481119@chrisdown.name>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Fri, 24 Apr 2020 12:43:28 -0700
+Message-ID: <CAJuCfpGnJBEvQTUeJ_U6+rHmPcMjw_pPL+QFj7Sec5fHZPH67w@mail.gmail.com>
+Subject: Re: PSI poll() support for unprivileged users
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Apr 24, 2020 at 8:39 AM Chris Down <chris@chrisdown.name> wrote:
+>
+> Hi Suren,
 
-On Fri, Apr 10, 2020 at 10:38 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Sat, Mar 28, 2020 at 11:59:14AM -0700, Rajat Jain wrote:
-> > Create the documentation for the new introduced property, that
-> > describes the function-row keys physical positions.
-> >
-> > Signed-off-by: Rajat Jain <rajatja@google.com>
-> > ---
-> > v4: Same as v3
-> > v3: same as v2
-> > v2: Remove the Change-Id from the commit log
-> >
-> >  .../devicetree/bindings/input/atkbd.txt       | 34 +++++++++++++++++++
-> >  1 file changed, 34 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/input/atkbd.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/input/atkbd.txt b/Documentation/devicetree/bindings/input/atkbd.txt
-> > new file mode 100644
-> > index 0000000000000..816653eb8e98d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/input/atkbd.txt
-> > @@ -0,0 +1,34 @@
-> > +Device tree bindings for AT / PS2 keyboard device
-> > +
-> > +Optional properties:
-> > +
-> > +     function-row-physmap:
-> > +                     An ordered array of the physical codes for the function
-> > +                     row keys. Arranged in order from left to right.
->
-> A single optional property doesn't constitute a DT binding.
->
-> > +
-> > +Example:
-> > +
-> > +     This is a sample ACPI _DSD node describing the property:
->
-> Neither does this ACPI stuff.
+Hi Chris,
 
-I assume this means a nack to the documentation patches.
+>
+> I noticed that one restriction of the PSI poll() interface is that currently
+> only root can set up new triggers. Talking to Johannes, it seems the reason for
+> this was that you end up with a realtime kernel thread for every cgroup where a
+> trigger is set, and this could be used by unprivileged users to sap resources.
+>
 
-Dmitry, can you apply the other patches in the series?
+This reasoning is correct and IIRC the enforcement of this is just the
+way /proc/pressure files are created:
+
+proc_create("pressure/io", 0, NULL, &psi_io_fops);
+proc_create("pressure/memory", 0, NULL, &psi_memory_fops);
+proc_create("pressure/cpu", 0, NULL, &psi_cpu_fops);
+
+IOW there are no additional capability checks performed on the PSI
+trigger users.
+
+> I'm building a userspace daemon for desktop users which notifies based on
+> pressure events, and it's particularly janky to ask people to run such a
+> notifier as root: the notification mechanism is usually tied to the user's
+> display server auth, and the surrounding environment is generally pretty
+> important to maintain. In addition to this, just in general this doesn't feel
+> like the kind of feature that by its nature needs to be restricted to root --
+> it seems reasonable that there would be unprivileged users which want to use
+> this, and that not using RT threads would be acceptable in that scenario.
+
+For these cases you can provide a userspace privileged daemon that
+will relay pressure notifications to its unprivileged clients. This is
+what we do on Android - Android Management Server registers its PSI
+triggers and then relays low memory notifications to unprivileged
+apps.
+Another approach is taken by Android Low Memory Killer Daemon (lmkd)
+which is an unprivileged process but registers its PSI triggers. The
+trick is that the init process executes "chmod 0664
+/proc/pressure/memory" from its init script and further restrictions
+are enforced by selinux policy granting only LMKD write access to this
+file.
+
+Would any of these options work for you?
+
+> Have you considered making the per-cgroup RT threads optional? If the
+> processing isn't done in the FIFO kthread for unprivileged users, I think it
+> should be safe to allow them to write to pressure files (perhaps with some
+> additional limits or restrictions on things like the interval, as needed).
+
+I didn't consider that as I viewed memory condition tracking that
+consumes kernel resources as being potentially exploitable. RT threads
+did make that more of an issue but even without them I'm not sure we
+should allow unprivileged processes to create unlimited numbers of
+triggers each of which is not really free.
+
+>
+> Thanks!
+>
+> Chris
 
 Thanks,
-
-Rajat
-
->
-> Rob
+Suren.
