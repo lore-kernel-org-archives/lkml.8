@@ -2,88 +2,75 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12AA5C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04CB9C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E392E2084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:41:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D66A42084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:41:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="AIgM//qh";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rTJv9lGS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g/zPeq/0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbgDXPf2 (ORCPT
+        id S1728798AbgDXPld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:35:28 -0400
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:43581 "EHLO
-        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726849AbgDXPf1 (ORCPT
+        Fri, 24 Apr 2020 11:41:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53686 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727089AbgDXPla (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:35:27 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 99300D4C;
-        Fri, 24 Apr 2020 11:35:25 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:35:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=c0Cq8AgsYHTOO
-        +aKa7NtdasFIoTnbBQjl8WHb1AcNco=; b=AIgM//qhbQnqcGZd6ypjsTr0h4cA4
-        P9moePqISdJM4fa0mFETksJlM9nh7fkiATFVzQbZAcxYRIAdt8xwLGcMB5aYUELg
-        cgjUEdQwNqOjvqX/DpMdeToSFY9SJ0xaspOjQJ1hBbBnwdyFapnv06O9EPMxsFZa
-        6wD2R3ukL2/WLZM3qWOiFgK0Ab7P5PWBcTY4GVa24cBwtHMKUKAXwnZVT0PPqU4c
-        GVBECWcFVHnGM51dQrP0MA1by4Tt7uR4LUm8l/pJlUROogxVs6TxGolA8kOEEeic
-        yRHM4Q7lhzP9X3cj7PqdqTfDRQXNXaYSiCVP9NP2WlEgLctbo1Zx7xQTg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=c0Cq8AgsYHTOO+aKa7NtdasFIoTnbBQjl8WHb1AcNco=; b=rTJv9lGS
-        l/Pah3UDoWJ8NJaUp9LhURu1LSEDjraxbuzf/S5yoS3N1Jk1AfMmwRJxU2gl8cg2
-        VJDyXTRl4DvpWIbgFdUE53cX9EdFVhSvdbf80vf+fm6EfhOYZUaJqarwUgDkSoFE
-        3nLJKtMtKdHOLGdewtLDi4W9SqkB46O8149I0gyVv0YjxB8kv59L3WJadKALEryh
-        61NMk8jCLT9lXLF9jQ5mYe5QOVF3bbpN7u0HaaytMljApzQmA1hzPlCISVBub2Jy
-        ZATPbNzgz+hMUTA35t9xSuLVS61deV2dItdwVhlIJxXt219L2Ley6dcOAhR8H+/B
-        SMeeylBUEDEd3A==
-X-ME-Sender: <xms:PAejXhFJcy9keLEvH-F1EkiBrfwLT6KUl0O1oQAXeDclq-nJQY_Pag>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrhedugdekiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:PAejXszuuchr5JKJspuQw8qBdu98B01y-tXS-AD5DUn1s3KQNQWPAg>
-    <xmx:PAejXkfCgGKU-Nd6cx5nVg0QUFMw0MC3f1d-0lHDQedXv__RLftUyw>
-    <xmx:PAejXi_5QXGSaDj0Bh8O-W_eXCUTWPbZI3m6h_N4qIsKc8fscRLSJg>
-    <xmx:PQejXnVFBw61Tij7uieRQ3X9vLfkHNTA52yl6RpJnUvdq97bRxMqDrIGpeE>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id BC8043065D87;
-        Fri, 24 Apr 2020 11:35:23 -0400 (EDT)
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v2 01/91] i2c: brcmstb: Allow to compile it on BCM2835
-Date:   Fri, 24 Apr 2020 17:33:42 +0200
-Message-Id: <c8c666eb5c82dcb73621930b3fedf5814792bf1a.1587742492.git-series.maxime@cerno.tech>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
-References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
+        Fri, 24 Apr 2020 11:41:30 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2377C09B045;
+        Fri, 24 Apr 2020 08:41:30 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id e6so4022943pjt.4;
+        Fri, 24 Apr 2020 08:41:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=iANNSEEtaSdoRSb2NNbyW8qHMADG1+A2MJpwz58Ug8Y=;
+        b=g/zPeq/0IgKGHMnnK66V+XlBJiNYIA1IcF/dqTUCZLPnLc+dEq56MmCwH6kNfk4bfS
+         uJ6v3z/mgcGzhiPwf1FOyzyylKrdIEjKP9q365Y+/IYca0/C4jIMe11nwjsY1G+QRX4x
+         5TppbOlc/rpJ/fW+EAhMRJ0krlF5ZxT2gninv84+462CZaPFeLSp1FKzVawx6QegrcWs
+         skCnCHGOVMKT8iMpcSK4Q+4CELwV5HkrymiyflOS0G/EDGFhh2yorAKePtT+vnsQuYdn
+         r0kvV+tH9NdnPJWZG2cfIuaD0P7V6tUvKyZfSdVtID/XIqphpOT03S3TXDnIZXEQZpZR
+         gvEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=iANNSEEtaSdoRSb2NNbyW8qHMADG1+A2MJpwz58Ug8Y=;
+        b=XzYUu2xi7m7EUDKfAe0cWj2YiJ1rEq7K68tXNOYIf6jhVPrXp/TPmZKTETm8uY3qsn
+         2NL8IR1wTUyHU8EBZIahG5BMaTKv335EcRnVWsAz+/LSNQBiJ11MhWR3+RN23L3bVx3A
+         OtXUpmNxspu05iEz72q/iUXmXQ9fGnAbalWzS81kmhUfxQnYvU0nuFb/r1DmGMUzMLJi
+         if6qZ1NUb8MMYSn9VgHt/BznE+X+w0J6GQrRiVmf3CMTwJZKJH8yPRMGtfkHEYNN+1kZ
+         3oGEbqG9YTtMCEa2v7jhPZrHfatq48tFeCocZI138Hb3vJwwg8qCS3daqQMD2x413RrP
+         f+lg==
+X-Gm-Message-State: AGi0PubegWJeD+Kfbxf4b3hOzHea+nYBxv/kBJicji7IDeSRjLsXbXgw
+        uRTSELL0WcbqexzDKrKeYjw=
+X-Google-Smtp-Source: APiQypIurSVxcZoMKqJhRcYDDnKJwoTiQRqndMEEaH891ipAoHbHiqPjN2M+/VJuKxUxvZc535v+kw==
+X-Received: by 2002:a17:902:222:: with SMTP id 31mr10117218plc.108.1587742890302;
+        Fri, 24 Apr 2020 08:41:30 -0700 (PDT)
+Received: from localhost (176.122.158.64.16clouds.com. [176.122.158.64])
+        by smtp.gmail.com with ESMTPSA id d14sm6087728pfr.35.2020.04.24.08.41.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 Apr 2020 08:41:29 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        linux-gpio@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v2 1/2] gpio: ftgpio010: Fix small typo
+Date:   Fri, 24 Apr 2020 23:41:02 +0800
+Message-Id: <20200424154103.10311-2-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200424154103.10311-1-zhengdejin5@gmail.com>
+References: <20200424154103.10311-1-zhengdejin5@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -91,33 +78,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The BCM2711, supported by ARCH_BCM2835, also has a controller by the
-brcmstb driver so let's allow it to be compiled on that platform.
+Fix a spelling typo in gpio-ftgpio010.c by codespell
+s/desireable/desirable/
 
-Cc: Kamal Dasu <kdasu.kdev@gmail.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>
-Cc: bcm-kernel-feedback-list@broadcom.com
-Cc: linux-i2c@vger.kernel.org
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
 ---
- drivers/i2c/busses/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+v1 -> v2:
+	- split patch v1 (only one patch) into patches for each driver
+	  by Bartosz's suggestion. thanks Bartosz.
 
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index 2ddca08f8a76..6644e0faa3df 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -475,8 +475,8 @@ config I2C_BCM_KONA
- 
- config I2C_BRCMSTB
- 	tristate "BRCM Settop/DSL I2C controller"
--	depends on ARCH_BRCMSTB || BMIPS_GENERIC || ARCH_BCM_63XX || \
--		   COMPILE_TEST
-+	depends on ARCH_BCM2835 || ARCH_BRCMSTB || BMIPS_GENERIC || \
-+		   ARCH_BCM_63XX || COMPILE_TEST
- 	default y
- 	help
- 	  If you say yes to this option, support will be included for the
+ drivers/gpio/gpio-ftgpio010.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpio-ftgpio010.c b/drivers/gpio/gpio-ftgpio010.c
+index fbddb1662428..4031164780f7 100644
+--- a/drivers/gpio/gpio-ftgpio010.c
++++ b/drivers/gpio/gpio-ftgpio010.c
+@@ -193,7 +193,7 @@ static int ftgpio_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
+ 	if (val == deb_div) {
+ 		/*
+ 		 * The debounce timer happens to already be set to the
+-		 * desireable value, what a coincidence! We can just enable
++		 * desirable value, what a coincidence! We can just enable
+ 		 * debounce on this GPIO line and return. This happens more
+ 		 * often than you think, for example when all GPIO keys
+ 		 * on a system are requesting the same debounce interval.
 -- 
-git-series 0.9.1
+2.25.0
+
