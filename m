@@ -2,89 +2,62 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56130C55192
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 07:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60155C55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 07:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3470621655
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 07:46:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="mBIGmXaG"
+	by mail.kernel.org (Postfix) with ESMTP id 4AD5F20704
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 07:46:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgDXHqV (ORCPT
+        id S1726693AbgDXHql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 03:46:21 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:47797 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726008AbgDXHqV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 03:46:21 -0400
-X-UUID: 42574fb4d7c640c6b37c4610ca4244c7-20200424
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=TGTl6pQNQgkA/N1LJ9tQCq0BeEV1GoiphNNPW0tMqhM=;
-        b=mBIGmXaGn7DNbs+CdEYFFVdoacHrZrzgN14Zdeq1MggFG2x3DSHhL22LnNtTFoLpd7rWxtqg5xLSJCZLYBVevakXumwRDDl3fwy3yk3ab5fmeX9Ht+fyE78558yfrGFBoNcTYsBHcHrGzmNc5TQNOR59qq/VamhsU+NDSpiYl6Y=;
-X-UUID: 42574fb4d7c640c6b37c4610ca4244c7-20200424
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <michael.kao@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 475130578; Fri, 24 Apr 2020 15:46:18 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 24 Apr 2020 15:46:15 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 24 Apr 2020 15:46:15 +0800
-From:   Michael Kao <michael.kao@mediatek.com>
-To:     Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <hsinyi@chromium.org>, <linux-pm@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Michael Kao <michael.kao@mediatek.com>
-Subject: [PATCH] arm64: dts: mt8173: fix cooling device range
-Date:   Fri, 24 Apr 2020 15:46:15 +0800
-Message-ID: <20200424074615.2835-1-michael.kao@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Fri, 24 Apr 2020 03:46:41 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:43338 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726650AbgDXHql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 03:46:41 -0400
+Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1jRt2g-0000bl-9K; Fri, 24 Apr 2020 17:46:35 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 24 Apr 2020 17:46:34 +1000
+Date:   Fri, 24 Apr 2020 17:46:34 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Colin King <colin.king@canonical.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: algif_rng: remove redundant assignment to
+ variable err
+Message-ID: <20200424074634.GC24682@gondor.apana.org.au>
+References: <20200415230358.1566912-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415230358.1566912-1-colin.king@canonical.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-V2hlbiB0aGVybWFsIHJlYWNoZXMgdGFyZ2V0IHRlbXBlcmF0dXJlLGl0IHdvdWxkIGJlIHBpbm5l
-ZCB0byBzdGF0ZSAwDQoobWF4IGZyZXF1ZW5jeSBhbmQgcG93ZXIpLg0KRml4IHRoZSB0aHJvdHRs
-aW5nIHJhbmdlIHRvIG5vIGxpbWl0Lg0KDQpTaWduZWQtb2ZmLWJ5OiBIc2luLVlpIFdhbmcgPGhz
-aW55aUBjaHJvbWl1bS5vcmc+DQpTaWduZWQtb2ZmLWJ5OiBNaWNoYWVsIEthbyA8bWljaGFlbC5r
-YW9AbWVkaWF0ZWsuY29tPg0KLS0tDQogYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgx
-NzMuZHRzaSB8IDEyICsrKysrKysrLS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlvbnMo
-KyksIDQgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL21l
-ZGlhdGVrL210ODE3My5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxNzMu
-ZHRzaQ0KaW5kZXggY2NiOGU4OGE2MGM1Li4xMWIxYmQ1NWJhOWIgMTAwNjQ0DQotLS0gYS9hcmNo
-L2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE3My5kdHNpDQorKysgYi9hcmNoL2FybTY0L2Jv
-b3QvZHRzL21lZGlhdGVrL210ODE3My5kdHNpDQpAQCAtMjk0LDE0ICsyOTQsMTggQEANCiAJCQlj
-b29saW5nLW1hcHMgew0KIAkJCQltYXBAMCB7DQogCQkJCQl0cmlwID0gPCZ0YXJnZXQ+Ow0KLQkJ
-CQkJY29vbGluZy1kZXZpY2UgPSA8JmNwdTAgMCAwPiwNCi0JCQkJCQkJIDwmY3B1MSAwIDA+Ow0K
-KwkJCQkJY29vbGluZy1kZXZpY2UgPSA8JmNwdTAgVEhFUk1BTF9OT19MSU1JVA0KKwkJCQkJCQkg
-IFRIRVJNQUxfTk9fTElNSVQ+LA0KKwkJCQkJCQkgPCZjcHUxIFRIRVJNQUxfTk9fTElNSVQNCisJ
-CQkJCQkJICBUSEVSTUFMX05PX0xJTUlUPjsNCiAJCQkJCWNvbnRyaWJ1dGlvbiA9IDwzMDcyPjsN
-CiAJCQkJfTsNCiAJCQkJbWFwQDEgew0KIAkJCQkJdHJpcCA9IDwmdGFyZ2V0PjsNCi0JCQkJCWNv
-b2xpbmctZGV2aWNlID0gPCZjcHUyIDAgMD4sDQotCQkJCQkJCSA8JmNwdTMgMCAwPjsNCisJCQkJ
-CWNvb2xpbmctZGV2aWNlID0gPCZjcHUyIFRIRVJNQUxfTk9fTElNSVQNCisJCQkJCQkJICBUSEVS
-TUFMX05PX0xJTUlUPiwNCisJCQkJCQkJIDwmY3B1MyBUSEVSTUFMX05PX0xJTUlUDQorCQkJCQkJ
-CSAgVEhFUk1BTF9OT19MSU1JVD47DQogCQkJCQljb250cmlidXRpb24gPSA8MTAyND47DQogCQkJ
-CX07DQogCQkJfTsNCi0tIA0KMi4xOC4wDQo=
+On Thu, Apr 16, 2020 at 12:03:58AM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The variable err is being initialized with a value that is never read
+> and it is being updated later with a new value.  The initialization is
+> redundant and can be removed.
+> 
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  crypto/algif_rng.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
+Patch applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
