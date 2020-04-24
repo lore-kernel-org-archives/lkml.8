@@ -2,128 +2,163 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE01C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 748ECC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C24E20728
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:49:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="clKYIOnj"
+	by mail.kernel.org (Postfix) with ESMTP id 5325620728
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:50:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbgDXMtp (ORCPT
+        id S1727812AbgDXMuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:49:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55052 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726849AbgDXMto (ORCPT
+        Fri, 24 Apr 2020 08:50:16 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63018 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726849AbgDXMuQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:49:44 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5393AC09B045
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 05:49:43 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id c21so2874454plz.4
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 05:49:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uC2/p4RFgTEv6gK1u1RWyAJblPPgS8/cfRxIcvP+Zmg=;
-        b=clKYIOnj6AYWFVwxBITX0c2CMkW694tIL60wcNXbq/+dI2JbqlKLUMNfjP6VAAobbx
-         gfVm7BJ33VOLjQ/b3enC3ejGD2qszGwLKiP4MMlEndEqghjr9s/r/U2/JX8Egf57DiCM
-         9WA7Bf1qtekMoPfdHK9h0befHv23tlsJtZ86OeV/wqpXUsi3weA7xHOLIC6wdxjM6MBW
-         VeVHEm1hjAtXzp1NqJztHViymF6DZxxcpEEzTaUXihJlyHG8l/c//Kfvdd3Ikao6QSii
-         9y0awom544Yf2Hn6CTdFXL2/YkD7vpbf3gOw5qJonJzoyqhlsEEYIYLsi6/zfoPFxzlf
-         fxFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uC2/p4RFgTEv6gK1u1RWyAJblPPgS8/cfRxIcvP+Zmg=;
-        b=jKhSrvbpvPQiDvvIGm67PrG/JAhVbAjjz+pajew6H72FhGty7Lvs+triYRZ6pkIlLU
-         oOiQEKqeM5+XjCC5A43jSc8wojRGJ4MueqHotnmZJIxICJ1OY6Dz5qmwHwnMNpHX/gVU
-         nFcZRsvhZYMU39IMaHunpOyJ9LgvqyTbLBadCSSj4esy3dq5qwim1WF+NhCF0tf3N1L2
-         4vz8uL23BbW4BThNTkd481KgN5ePptKNQBTHgkaTed4ina735GfZXk98zRZRD1vQr5DC
-         P6ir0BYkda71d3yxFGwNx9/LzApxOXCDcQ09Fed2GrmOxB5mDTAeZQ7BLYA48U2xtrb3
-         UyMQ==
-X-Gm-Message-State: AGi0PuaVDvcg05fM6ml+NtC4rVWnlsspCURvqwG6ObdSgVw9OzfUbg7Y
-        VSTGOXeRPq9G1YT5yft8Xjc=
-X-Google-Smtp-Source: APiQypJXCFnzC0T8S8VKrymEH2eJrMUjFHnHVDn/zH/MEdUUqEhsA1M/NKla1AzHQGAgogXRhiQCfw==
-X-Received: by 2002:a17:902:d70f:: with SMTP id w15mr9109688ply.138.1587732582915;
-        Fri, 24 Apr 2020 05:49:42 -0700 (PDT)
-Received: from blackclown ([171.60.179.95])
-        by smtp.gmail.com with ESMTPSA id u21sm4968911pga.21.2020.04.24.05.49.38
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 Apr 2020 05:49:41 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 18:19:26 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     jerome.pouiller@silabs.com
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        dan.carpenter@oracle.com
-Subject: Re: [PATCH] staging: wfx: cleanup long lines in data_tx.c
-Message-ID: <20200424124926.GA17373@blackclown>
-References: <20200422153900.GA6184@blackclown>
- <2253201.upfRyW1aZW@pc-42>
+        Fri, 24 Apr 2020 08:50:16 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03OCZZi8015222;
+        Fri, 24 Apr 2020 08:50:15 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30kk5tey9y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Apr 2020 08:50:14 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03OCa7QK017316;
+        Fri, 24 Apr 2020 08:50:14 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30kk5tey91-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Apr 2020 08:50:14 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03OCkG6a027373;
+        Fri, 24 Apr 2020 12:50:12 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 30fs6593aq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Apr 2020 12:50:12 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03OCo9rr66126272
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Apr 2020 12:50:09 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9AF7BAE045;
+        Fri, 24 Apr 2020 12:50:09 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 39636AE053;
+        Fri, 24 Apr 2020 12:50:09 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.145.37.140])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 24 Apr 2020 12:50:09 +0000 (GMT)
+Date:   Fri, 24 Apr 2020 14:50:07 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Eric Farman <farman@linux.ibm.com>
+Cc:     Cornelia Huck <cohuck@redhat.com>,
+        Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] vfio-ccw: Enable transparent CCW IPL from DASD
+Message-ID: <20200424145007.75101d10.pasic@linux.ibm.com>
+In-Reply-To: <b6dc3d32-3e84-4ce1-59a2-d5de99716027@linux.ibm.com>
+References: <20200417182939.11460-1-jrossi@linux.ibm.com>
+        <20200417182939.11460-2-jrossi@linux.ibm.com>
+        <20200423155620.493cb7cb.pasic@linux.ibm.com>
+        <20200423171103.497dcd02.cohuck@redhat.com>
+        <b6dc3d32-3e84-4ce1-59a2-d5de99716027@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="DocE+STaALJfprDB"
-Content-Disposition: inline
-In-Reply-To: <2253201.upfRyW1aZW@pc-42>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-24_05:2020-04-23,2020-04-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 adultscore=0 mlxscore=0 bulkscore=0 clxscore=1015
+ priorityscore=1501 suspectscore=0 impostorscore=0 malwarescore=0
+ mlxlogscore=999 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2004240099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 23 Apr 2020 16:25:39 -0400
+Eric Farman <farman@linux.ibm.com> wrote:
 
---DocE+STaALJfprDB
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> 
+> 
+> On 4/23/20 11:11 AM, Cornelia Huck wrote:
+> > On Thu, 23 Apr 2020 15:56:20 +0200
+> > Halil Pasic <pasic@linux.ibm.com> wrote:
+> > 
+> >> On Fri, 17 Apr 2020 14:29:39 -0400
+> >> Jared Rossi <jrossi@linux.ibm.com> wrote:
+> >>
+> >>> Remove the explicit prefetch check when using vfio-ccw devices.
+> >>> This check is not needed as all Linux channel programs are intended
+> >>> to use prefetch and will be executed in the same way regardless.  
+> >>
+> >> Hm. This is a guest thing or? So you basically say, it is OK to do
+> >> this, because you know that the guest is gonna be Linux and that it
+> >> the channel program is intended to use prefetch -- but the ORB supplied
+> >> by the guest that designates the channel program happens to state the
+> >> opposite.
+> >>
+> >> Or am I missing something?
+> > 
+> > I see this as a kind of architecture compliance/ease of administration
+> > tradeoff, as we none of the guests we currently support uses something
+> > that breaks with prefetching outside of IPL (which has a different
+> > workaround).>
 
-On Thu, Apr 23, 2020 at 09:29:28AM +0000, Jerome Pouiller wrote:
-> Hello Suraj,
->=20
-> Thank you for your contribution.
-This would be my first patch to linux-kernel :)
+And that workaround AFAIR makes sure that we don't issue a CP that is
+self-modifying or otherwise reliant on non-prefetch. So any time we see
+a self-modifying program we know, we have an incompatible setup.
 
-> On Wednesday 22 April 2020 17:39:00 CEST Suraj Upadhyay wrote:
-> >=20
-> > Break lines with length over 80 characters to conform
-> > to the linux coding style. Issue found by checkpatch.
-> >=20
-> > Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
->=20
-> Is this reported by checkpatch? The strings can exceed 80 columns.
-No, it's not. Actually I am using vim with some plugins and it was
-showing red their. So, I thought why not make these strings in a new
-line.
+In any case I believe the commit message is inadequate, as it does not
+reflect about the risks.
 
-> J=E9r=F4me Pouiller
->=20
+> > One thing that still concerns me a bit is debuggability if a future
+> > guest indeed does want to dynamically rewrite a channel program: the
+> 
+> +1 for some debuggability, just in general
+> 
+> > guest thinks it instructed the device to not prefetch, and then
+> > suddenly things do not work as expected. We can log when a guest
+> > submits an orb without prefetch set, but we can't find out if the guest
+> > actually does something that relies on non-prefetch.
+> 
+> Without going too far down a non-prefetch rabbit-hole, can we use the
+> cpa_within_range logic to see if the address of the CCW being fetched
+> exists as the CDA of an earlier (non-TIC) CCW in the chain we're
+> processing, and tracing/logging/messaging something about a possible
+> conflict?
+> 
+> (Jared, you did some level of this tracing with our real/synthetic tests
+> some time ago.  Any chance something of it could be polished and made
+> useful, without being overly heavy on the mainline path?)
+> 
 
---DocE+STaALJfprDB
-Content-Type: application/pgp-signature; name="signature.asc"
+Back then I believe I made a proposal on how this logic could look like.
+I think all we need is checking for self rewrites (ccw reads to the
+addresses that comprise the  complete original channel program), and for
+status-modifier 'skips'. The latter could be easily done by putting some
+sort of poison at the end of the detected channel program segments.
 
------BEGIN PGP SIGNATURE-----
+> > 
+> > The only correct way to handle this would be to actually implement
+> > non-prefetch processing, where I would not really know where to even
+> > start -- and then we'd only have synthetic test cases, for now. None of
+> > the options are pleasant :(
+> > 
+> 
 
-iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl6i4FYACgkQ+gRsbIfe
-744NFg/+K7LCGsRpnJr/OgCb2VgMmZ4KWXENRA5AQ++9O6rqt484dVk9dztC3rhX
-82GUJS4hyNpRWpqnREJiJSkklpo7nq9b98rGlBuTu4kEySEclq6ByU3ym4Xq6E3O
-wcZazZUI7tuSw4J1qUojOwHhApgHAuK5d8hLoogsPOxk7Ymhlm/1fqXZss6IDOKb
-potWtqhYn+ixL9e5/A5GQZGg2MZe+GVdb66/0yc2gIC6EtmSArY1JXsXBwcHaq61
-B2se5WCqMkoBK0ZvZqW7IDKBHam6/VP0uhbCaf8SSUK8doKWEc1ALugueiZL+Nxm
-oLGhY7Q0Cw2T5xwjxAZxOFU8CWbN+bwVCAens5b4ocamWhiVQ3SjRZQcv++XWsPz
-ueKyoNy6zcoC5SfoZGc6zUAGRhrmBb4hROInd3pzuxYYdykynDjkis5rgg2XU1OL
-GiKx/kNyN7zyTBHknwZBPAa3T6ZXgzK999R8Zq6BvG75ngf71jO+CcypSyDPuzmz
-idDNHLNnxHbX7P7sZ0YbTP4P0pOG3nks/48v+0s75bp7btud+bcnBuVkw3qTE30t
-hWXDwtl1qWetpnCy1/9d9RxeiPya28+nL/R9afBtiTqN73QNiPzSfbVS/oEmu3fP
-gMQw/YZy2a/6ietO4a73UT7ceSmwL0HnDrqFPghv1lWp6bZSUFs=
-=UOYc
------END PGP SIGNATURE-----
+I don't think implementing non-prefetch processing is possible with
+vfio-ccw. 
 
---DocE+STaALJfprDB--
+Regards,
+Halil
