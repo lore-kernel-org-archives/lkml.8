@@ -2,156 +2,93 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0643C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCF2C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A93482074F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC04E20774
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:02:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="JCw8cmB/";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="FiWnzdpR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fgNnWdwW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgDXFAe (ORCPT
+        id S1726304AbgDXFCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 01:00:34 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:17084 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbgDXFAe (ORCPT
+        Fri, 24 Apr 2020 01:02:51 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23931 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725919AbgDXFCv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 01:00:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1587704434; x=1619240434;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=cXI5XArBC2z8g33BwE0i/uv/zplGk8cfHyIJaSUoTcQ=;
-  b=JCw8cmB/htHkStfjnrcHgFbfRGwCy7MvkLiBdYffSW9PD5EykdtemkR+
-   LrqrU8XUDuDQi0mABfrpTW5lGRmFCJG3/yVQpAezlra7iKsfB3VHUZ3qg
-   7nJ/wA53EWykiFksqzBaJVbEpO/6I1NGcHE0yr6fmWBncw5Fenozgz6qR
-   Ph3fnop+AthnBla652n4KD4dWnzTQOEU4GPbQRvGowj0d6TC5L5pd0ejo
-   Tahfj+4vfM6O79VMr29eEz+9DM+LVzyJEthzdOHtW5CxMKcedPB0Kjh1R
-   3393FwDmsrwkP2CSmjxrpwzfJaiDXNSBSL5Ydq441qvbZb7MQUqIxpmQp
-   Q==;
-IronPort-SDR: H69R1u6/XTLAtEsdGgj7AnvGFEtirXuuYOd91zGxEpj56tf5nkVT2761XYJsMgbexVRQfsxFc7
- Qzqi9HufxDBhzjK2HkMrSjlexQ1PPouRjT6Fa0trLbfMOAwblL0/WgnUZU9xvEI3HKy+X9b5+d
- PbdhG0bE95MlM5HV5mBSRGgxTxn38r34g0fUDFec1FAvm7V7nLUNZV44wAHhbLKnJt7r3dQS+d
- Hzo6/oh56qsDpEhQSJPrFtsXOBy9yFtZr8BXc0bSoyC5G7EDFeUpaQJy8Bxo6uNlL8lzE6Gk9s
- 2Ls=
-X-IronPort-AV: E=Sophos;i="5.73,310,1583164800"; 
-   d="scan'208";a="136354236"
-Received: from mail-co1nam11lp2176.outbound.protection.outlook.com (HELO NAM11-CO1-obe.outbound.protection.outlook.com) ([104.47.56.176])
-  by ob1.hgst.iphmx.com with ESMTP; 24 Apr 2020 13:00:33 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Gd8FP3qKZS5jm/3d9te7QqkvSGmNEQgPFuQxUSIKcpX8K9NvIhOjnIOkxGAa5Pkh9I9094wnuDCqhRbm8Vq67WvuTQ4Pkc+GnnkDZRCMWCiViQ0MDWPnz7XxnAe7ndptX5uGpVoCbRy/5yjvNmVhj1HAP2PgwPU6hntMjq5eBq92fAS/GkEEC7d+leVufRmhPZZddTOs6y14H8Fv8HILCVMDO3jdwyCQX1CoVZhPHHH8VrJ6DUOmHnRq0re8r691evOuN+jR0aQfJUNL4axiQKIfpLwocLSZgQMnhKaoAm4IHHUd5E14vi7TGBXfBhZEpxJlPojBeNtjEFC/e56RlQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k65QgFyR9lve0l0tTNCfsaZWQHbNvhiIVb5NMlpDydw=;
- b=Y/anzw0PTJryq5kpXKtZjLnE2CA3s5ETTeUlE86vBOpV0I0+JeqdqR21Ysk4SPb8B4+s6ZD1yi1ceMvXGaYrsXHsJq1Ri+tnQlPUPxX4RuVWWbkLAA58cIM0i904f/0W1dWJCW5wkiJz1WUinqLLCFYUjkm85I97p6BLPmDTyY731qT2SuqxbO2kvAtKgKdNmSuiKw9zcFtP4LtjPjn3sI2vGNIbTeXYzKKz5WTIbJRe0RHbmKIRVpuh/vUZkd+1f9WZvNTYkFAAEAaK8mMX8f8jCA7OCOb6j3hVFBPSbItEWRd/A15edTq86Pxj8YPYH1SVQGppE8TCTNPYRGUJBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k65QgFyR9lve0l0tTNCfsaZWQHbNvhiIVb5NMlpDydw=;
- b=FiWnzdpRdbUS6g/vSbeIX0thHrVpdjOrpCc1A0O+3rg3JQUiUZwHaJGayczpFYY2lY138sUBKUxCAWFKxTV61tQJFmGFMnXrwjCM9J7O4OWd6fzUUtsL2t/o3RMXJ1idnNovNhuPzChC8JX8i5slV2bt3mAx7t1pAKXuuk+eGoU=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Anup.Patel@wdc.com; 
-Received: from DM6PR04MB6201.namprd04.prod.outlook.com (20.178.225.224) by
- DM6PR04MB5467.namprd04.prod.outlook.com (20.178.25.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2937.13; Fri, 24 Apr 2020 05:00:32 +0000
-Received: from DM6PR04MB6201.namprd04.prod.outlook.com
- ([fe80::f8b3:c124:482b:52e0]) by DM6PR04MB6201.namprd04.prod.outlook.com
- ([fe80::f8b3:c124:482b:52e0%5]) with mapi id 15.20.2921.030; Fri, 24 Apr 2020
- 05:00:32 +0000
-From:   Anup Patel <anup.patel@wdc.com>
-To:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Anup Patel <anup@brainfault.org>, kvm@vger.kernel.org,
-        kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Anup Patel <anup.patel@wdc.com>
-Subject: [PATCH 3/3] RISC-V: Remove N-extension related defines
-Date:   Fri, 24 Apr 2020 10:29:28 +0530
-Message-Id: <20200424045928.79324-4-anup.patel@wdc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200424045928.79324-1-anup.patel@wdc.com>
-References: <20200424045928.79324-1-anup.patel@wdc.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MA1PR01CA0130.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:35::24) To DM6PR04MB6201.namprd04.prod.outlook.com
- (2603:10b6:5:127::32)
+        Fri, 24 Apr 2020 01:02:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587704570;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=hH9lbE6SFnNo0tAhCp7KPnS9UdSxpybxkGRDirKuis4=;
+        b=fgNnWdwWstWNHcJEWrSVzzSALGCnLFqWqvUiD8qAryAtzaGpR10u+P2Q79vtnttYE8UETT
+        ZKNLMR3eGeJ7n439ztf+lwk2vpyTHggzwhg05eax4aC28uEglaoiaApY4cyosnsxHVGW/T
+        soRMa9CBFTr01sQWYD5z2MJvD6i9riA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-310-VDaNjlOSO9uzyF2A73z_CQ-1; Fri, 24 Apr 2020 01:02:45 -0400
+X-MC-Unique: VDaNjlOSO9uzyF2A73z_CQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 07EA91800D42;
+        Fri, 24 Apr 2020 05:02:44 +0000 (UTC)
+Received: from localhost.localdomain.com (vpn2-54-127.bne.redhat.com [10.64.54.127])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 745765C1C8;
+        Fri, 24 Apr 2020 05:02:40 +0000 (UTC)
+From:   Gavin Shan <gshan@redhat.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
+        will@kernel.org, steve.capper@arm.com, broonie@kernel.org,
+        mark.rutland@arm.com, shan.gavin@gmail.com
+Subject: [PATCH] arm64/kernel: Fix range on invalidating dcache for boot page tables
+Date:   Fri, 24 Apr 2020 15:02:30 +1000
+Message-Id: <20200424050230.16720-1-gshan@redhat.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from wdc.com (49.207.59.136) by MA1PR01CA0130.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:35::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Fri, 24 Apr 2020 05:00:26 +0000
-X-Mailer: git-send-email 2.25.1
-X-Originating-IP: [49.207.59.136]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 008c275f-dacb-4c20-cf04-08d7e80c6a54
-X-MS-TrafficTypeDiagnostic: DM6PR04MB5467:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR04MB5467F8155B0EB1AB7CFFFC7D8DD00@DM6PR04MB5467.namprd04.prod.outlook.com>
-WDCIPOUTBOUND: EOP-TRUE
-X-MS-Oob-TLC-OOBClassifiers: OLM:331;
-X-Forefront-PRVS: 03838E948C
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR04MB6201.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(39860400002)(136003)(346002)(376002)(54906003)(110136005)(55016002)(52116002)(7696005)(16526019)(8936002)(5660300002)(7416002)(4326008)(2906002)(8886007)(81156014)(478600001)(1006002)(186003)(316002)(1076003)(55236004)(36756003)(4744005)(44832011)(8676002)(2616005)(26005)(956004)(66556008)(66476007)(86362001)(66946007);DIR:OUT;SFP:1102;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 81FlpW/i4S41bF88AKOnMDz20+lJ5qedTOzch+gdXVUjbvx5gOIQlbo2OQONza+iaOY1G8heByCF8K0eIz+6q3OJdW69tlT/SVub8J6wi6LoC1IxTz4w2FxEXVT32XG5zqihaDzT/RGHT1xmAnyARkj3qTM8m5SI3rgD7qNGxK1XAiaBvXQ//4dLGRkzOuIV/Bz3Vnk+HbIyp4/sdtTyMVJjH1x2SegAqvOJwKtd+Nq1bNpFz95TfRTEEW2BBjJLABK+1d4pICP7q+rA96r3m/dhFJAq/ffqlf2wS7NxcK64sn8e6k/0619gkzfR7pBFB70mjetZA5K+jZqBJgnV9tGIts/p7z9/QQy1AmLUM+GAJOh2KYb0gOrFIlqi9qOAvFKop90ML14Oqo1i+ZArKaezGbU29fAxHwjalyGa+Dl6lLkFtbWHiWejdQQ65/0k
-X-MS-Exchange-AntiSpam-MessageData: 7YeIaXOtczUR0IjhZDC+2cb1bGYfLyvSQH9kyFyLukSlO86gubQHATpECFkwu+esT2AQ+urQcqg744wZIFkI0OBCcseOkCxccUwIhNdMjdhmPNXL9JmjWwkYnqJDfNS3kbWw1KliYMKAMxz+HVTXiA==
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 008c275f-dacb-4c20-cf04-08d7e80c6a54
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2020 05:00:32.1076
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RJAr1YSRdbteEdf8KRtFM0jxrgAoHZ5FUNdS/dJNUZ7unOaPnoUimCqIVuqEFtaOJ+Vk7nCrwaxVhe+yZpVHOA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB5467
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The RISC-V N-extension is still in draft state hence remove
-N-extension related defines from asm/csr.h.
+The MMU is disabled when __create_page_tables() is called. The data
+cache corresponding to these two page tables, which are tracked by
+@idmap_pg_dir and @init_pg_dir, is invalidated after the page tables
+are populated. However, the wrong or inappropriate size have been used
+and more data cache are invalidated than it need.
 
-Signed-off-by: Anup Patel <anup.patel@wdc.com>
+This fixes the issue by invalidating the data cache for these two
+page tables separately as they aren't necessarily physically adjacent.
+
+Signed-off-by: Gavin Shan <gshan@redhat.com>
 ---
- arch/riscv/include/asm/csr.h | 3 ---
- 1 file changed, 3 deletions(-)
+ arch/arm64/kernel/head.S | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
-index 8e18d2c64399..cec462e198ce 100644
---- a/arch/riscv/include/asm/csr.h
-+++ b/arch/riscv/include/asm/csr.h
-@@ -51,13 +51,10 @@
- #define CAUSE_IRQ_FLAG		(_AC(1, UL) << (__riscv_xlen - 1))
- 
- /* Interrupt causes (minus the high bit) */
--#define IRQ_U_SOFT		0
- #define IRQ_S_SOFT		1
- #define IRQ_M_SOFT		3
--#define IRQ_U_TIMER		4
- #define IRQ_S_TIMER		5
- #define IRQ_M_TIMER		7
--#define IRQ_U_EXT		8
- #define IRQ_S_EXT		9
- #define IRQ_M_EXT		11
- 
--- 
-2.25.1
+diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+index 57a91032b4c2..66947873c9e7 100644
+--- a/arch/arm64/kernel/head.S
++++ b/arch/arm64/kernel/head.S
+@@ -398,6 +398,10 @@ SYM_FUNC_START_LOCAL(__create_page_tables)
+ 	 * tables again to remove any speculatively loaded cache lines.
+ 	 */
+ 	adrp	x0, idmap_pg_dir
++	mov	x1, #IDMAP_DIR_SIZE
++	dmb	sy
++	bl	__inval_dcache_area
++	adrp	x0, init_pg_dir
+ 	adrp	x1, init_pg_end
+ 	sub	x1, x1, x0
+ 	dmb	sy
+--=20
+2.23.0
 
