@@ -2,147 +2,217 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 070D4C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C97B0C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB19320728
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:24:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FA85216FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:26:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aMpISK3E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729020AbgDXSYB (ORCPT
+        id S1728497AbgDXS0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 14:24:01 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56500 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726793AbgDXSYA (ORCPT
+        Fri, 24 Apr 2020 14:26:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52748 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726793AbgDXS0Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 14:24:00 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03OI7KmW074755;
-        Fri, 24 Apr 2020 14:23:57 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30kk5ts63y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Apr 2020 14:23:57 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03OI7RHT075473;
-        Fri, 24 Apr 2020 14:23:56 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30kk5ts639-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Apr 2020 14:23:56 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03OIA4Gl020117;
-        Fri, 24 Apr 2020 18:23:54 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04ams.nl.ibm.com with ESMTP id 30fs659dkp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Apr 2020 18:23:54 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03OINpHu56098924
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Apr 2020 18:23:51 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CBA2842041;
-        Fri, 24 Apr 2020 18:23:51 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1EAB64203F;
-        Fri, 24 Apr 2020 18:23:51 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.145.37.140])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 24 Apr 2020 18:23:51 +0000 (GMT)
-Date:   Fri, 24 Apr 2020 20:23:48 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pmorel@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
-Subject: Re: [PATCH v7 03/15] s390/zcrypt: driver callback to indicate
- resource in use
-Message-ID: <20200424202348.39bb2eaf.pasic@linux.ibm.com>
-In-Reply-To: <195d237d-c668-48ca-1125-08eafc0011db@linux.ibm.com>
-References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
-        <20200407192015.19887-4-akrowiak@linux.ibm.com>
-        <20200414145851.562867ae.cohuck@redhat.com>
-        <35d8c3cb-78bb-8f84-41d8-c6e59d201ba0@linux.ibm.com>
-        <20200416113721.124f9843.cohuck@redhat.com>
-        <20200424053338.658b2a05.pasic@linux.ibm.com>
-        <195d237d-c668-48ca-1125-08eafc0011db@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Fri, 24 Apr 2020 14:26:24 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F1D2C09B048
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 11:26:24 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id b18so10185179ilf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 11:26:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pYGcnKYRU9uURI0r1qD3tlSxc3V/4QuWnHzjogV6130=;
+        b=aMpISK3EVPKuTv64GwuroTTPYBPsQ/4Pbu/lvzajy9aC8/wG7mQMIaFDJJsSJDLBhg
+         nL0kPYtx97AksBGHO83KeT6qIWbpd4xkuh5lt0xyaxe4Dbso6X6QgeqnyWp3udLneel3
+         UaIe6kHxRIfd+1oYItIl/0j05NdFTCQOAcyyYEcFIhHsi2QIfx2lDEXaMM3/wwig/Jtu
+         MQH1sEt95rnRP7vq5djLplB82O3Y2sbaArGPJWPxDO63K7xP13p5ODcSo3vUlYJrFoAK
+         R0dDeUl345BBPNPrsuNzOOLu16SKyQcQQKVT04f1AdzEnzCjQgS5OxNGPuqAVx54si5E
+         nqIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pYGcnKYRU9uURI0r1qD3tlSxc3V/4QuWnHzjogV6130=;
+        b=iWcQDiaahl4nyuCap4jwVdkZD3LtuYTlIQoU3Pn62vYlFe/iUGtiAM9bnVmg0tHUVp
+         4Ido9Uk3CkHpJfTIreriI0fdlsFY/ikVOK8fbD9d8BQ8w1IqsiqghTjABkx5gkm5zWGX
+         m/NUCwUEQSnVOQ44BrjeyyOgn+NAV7meW+8ScZaRLkAusP/K6Or3WHB7qFO108LdYHZd
+         RMeaObjxbj+YUSOTQmJJfkk2UczJSm6bqkAQSRDAuYHNmHOvudevDnpwI/j9tmj2Lr4A
+         f6B+Ql0eFzDIdPixqRcwIGQaBIg6Rs5FBCWJYWY3kVpzdt8dW7AodU6jJGgPIO50icxQ
+         Ji3w==
+X-Gm-Message-State: AGi0PuYRdwqhSuBpOnyGgENb2e8OHHJs557LitOTMRIeb2imoRD1OXG6
+        W/D2OPy5UmF2HNOiG/KMy20qe+0hyBoXy35vGeM=
+X-Google-Smtp-Source: APiQypJDNXAdjomHebtWL/SwtpY/wFcOOIsUAhljTeFxom3s098gX7QRiXQwkRBusMK/MOxvomK3nsgKocIGB9NDJZ8=
+X-Received: by 2002:a92:3a09:: with SMTP id h9mr6622973ila.5.1587752783415;
+ Fri, 24 Apr 2020 11:26:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-24_09:2020-04-24,2020-04-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- lowpriorityscore=0 adultscore=0 mlxscore=0 bulkscore=0 clxscore=1015
- priorityscore=1501 suspectscore=0 impostorscore=0 malwarescore=0
- mlxlogscore=999 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2004240138
+References: <20200424122619.GA5573@syed> <CAHp75VcWwHT1eWekAMheaaU0-M_-w41XvJ-iNdKSVC+GZY7JsQ@mail.gmail.com>
+In-Reply-To: <CAHp75VcWwHT1eWekAMheaaU0-M_-w41XvJ-iNdKSVC+GZY7JsQ@mail.gmail.com>
+From:   Syed Nayyar Waris <syednwaris@gmail.com>
+Date:   Fri, 24 Apr 2020 23:56:11 +0530
+Message-ID: <CACG_h5oNkRbusS9Qa-KR35Q=LppQxx+ah7wHpkC1FvjLQ1wHgQ@mail.gmail.com>
+Subject: Re: [PATCH 2/6] lib/test_bitmap.c: Add for_each_set_clump test cases
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Apr 2020 13:07:38 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
-
-> 
-> 
-> On 4/23/20 11:33 PM, Halil Pasic wrote:
-> > On Thu, 16 Apr 2020 11:37:21 +0200
-> > Cornelia Huck <cohuck@redhat.com> wrote:
+On Fri, Apr 24, 2020 at 6:41 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Fri, Apr 24, 2020 at 3:29 PM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
 > >
-> >> On Wed, 15 Apr 2020 13:10:10 -0400
-> >> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
-> >>
-> >>> On 4/14/20 8:58 AM, Cornelia Huck wrote:
-> >>>> On Tue,  7 Apr 2020 15:20:03 -0400
-> >>>> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
-> >>>>> +
-> >>>>> +	if (ap_drv->in_use)
-> >>>>> +		if (ap_drv->in_use(newapm, ap_perms.aqm))
-> >>>> Can we log the offending apm somewhere, preferably with additional info
-> >>>> that allows the admin to figure out why an error was returned?
-> >>> One of the things on my TODO list is to add logging to the vfio_ap
-> >>> module which will track all significant activity within the device
-> >>> driver. I plan to do that with a patch or set of patches specifically
-> >>> put together for that purpose. Having said that, the best place to
-> >>> log this would be in the in_use callback in the vfio_ap device driver
-> >>> (see next patch) where the APQNs that are in use can be identified.
-> >>> For now, I will log a message to the dmesg log indicating which
-> >>> APQNs are in use by the matrix mdev.
-> >> Sounds reasonable. My main issue was what an admin was supposed to do
-> >> until logging was in place :)
-> > Logging may not be the right answer here. Imagine somebody wants to build
-> > a nice web-tool for managing this stuff at scale -- e.g. something HMC. I
-> > don't think the solution is to let this tool parse the kernel messages
-> > and try to relate that to its own transactions.
-> 
-> I don't believe there is no right or wrong answer here; I simply don't
-> see the relevance of discussing a tool in this context. We are talking
-> about a sysfs attribute interface here, so - correct me if I'm
-> mistaken - our options for notifying the user that a queue is in use are
-> limited to the return code from the sysfs interface and logging. I would
-> expect that a tool would have to do something similar to the callback
-> implemented in the vfio_ap device driver and check the APQNs
-> removed against the APQNs assigned to the mdevs to determine which
-> is in use.
-> 
+> > The introduction of the generic for_each_set_clump macro need test
+> > cases to verify the implementation. This patch adds test cases for
+> > scenarios in which clump sizes are 8 bits, 24 bits, 30 bits and 6 bits.
+> > The cases contain situations where clump is getting split at the word
+> > boundary and also when zeroes are present in the start and middle of
+> > bitmap.
+>
+> ...
+>
+> >  #define expect_eq_clump8(...)          __expect_eq(clump8, ##__VA_ARGS__)
+> > +#define expect_eq_clump(...)           __expect_eq(clump, ##__VA_ARGS__)
+>
+> What the difference with clump8() ? Can either of them use another?
+>
 
-We are talking interface design. The relevance of discussing a tool is
-that any userspace tool must come by with whatever interface we come up
-now. IMHO thinking about the usage (and the client code) is very helpful
-in avoiding broken interface designs. AFAIK this is one of the basic
-ideas behind test driven development.
+The difference is that generic (Non-8 version) expect_eq_clump(...)
+expands to __check_eq_clump(...), which further uses clump_size
+variable to check for the tests. Now this clump_size can have any
+value signifying number of bits (less than or equal to BITS_PER_LONG).
 
-Regards,
-Halil
+While the clump8 version uses a fixed (hardcoded) value '8' for clump size.
+
+I don't think either of them can use another.
+
+> ...
+>
+> >  #define CLUMP_EXP_NUMBITS 64
+>
+> > +static void __init test_for_each_set_clump_8(void)  /* 8 bit clumps test using
+> > +                                                 new for_each_set_clump */
+> > +{
+>
+> > +#define CLUMP_EXP_NUMBITS 64
+>
+> Isn't it a redefinition? Shouldn't we undef all local definitions
+> above and below?
+>
+> Also, can we derive it's size based on ARRAY_SIZE() and clump size?
+
+Actually this macro is to create bitmap having a particular size. The
+size doesn't need to be related to or derived from clump_size
+necessarily.  I believe I should hardcode it - as it is just a test
+value. I will submit this change in next version. Let me know if you
+think otherwise.
+
+>
+> > +       DECLARE_BITMAP(bits, CLUMP_EXP_NUMBITS);
+> > +       unsigned long start, clump, clump_size = 8;
+> > +
+> > +       /* set bitmap to test case */
+> > +       bitmap_zero(bits, CLUMP_EXP_NUMBITS);
+> > +       bitmap_set_value(bits, 0x38000201, 0, 32);
+> > +       bitmap_set_value(bits, 0x05ff0f38, 32, 32);
+> > +
+> > +       for_each_set_clump(start, clump, bits, CLUMP_EXP_NUMBITS, clump_size)
+> > +               expect_eq_clump(start, CLUMP_EXP_NUMBITS, clump_exp1, &clump, clump_size);
+> > +}
+> > +
+> > +static void __init test_for_each_set_clump_24(void)  /* 24 bit clumps */
+> > +{
+> > +#define CLUMP_EXP_NUMBITS_2 256
+> > +       DECLARE_BITMAP(bits, CLUMP_EXP_NUMBITS_2);
+> > +       unsigned long start, clump, clump_size = 24;
+> > +       unsigned long size = clump_size * 10;
+> > +
+> > +       /* set bitmap to test case */
+> > +       bitmap_zero(bits, CLUMP_EXP_NUMBITS_2);
+> > +       bitmap_set_value(bits, 0xeffedcba, 0, 32);
+> > +       bitmap_set_value(bits, 0xbbbbabcd, 32, 32);
+> > +       bitmap_set_value(bits, 0x000000aa, 64, 32);
+> > +       bitmap_set_value(bits, 0x000000aa, 96, 32);
+> > +       bitmap_set_value(bits, 0x00ff0000, 128, 32);
+> > +       bitmap_set_value(bits, 0xaaaaaa00, 160, 32);
+> > +       bitmap_set_value(bits, 0xff000000, 192, 32);
+> > +       bitmap_set_value(bits, 0x00aa0000, 224, 32);
+> > +
+> > +       for_each_set_clump(start, clump, bits, size, clump_size)
+> > +               expect_eq_clump(start, size, clump_exp2, &clump, clump_size);
+> > +}
+> > +
+> > +static void __init test_for_each_set_clump_30(void)   /* 30 bit clumps */
+> > +{
+> > +#define CLUMP_EXP_NUMBITS_2 256
+> > +       DECLARE_BITMAP(bits, CLUMP_EXP_NUMBITS_2);
+> > +       unsigned long start, clump, clump_size = 30;
+> > +       unsigned long size = clump_size * 8;
+> > +
+> > +       /* set bitmap to test case */
+> > +       bitmap_zero(bits, CLUMP_EXP_NUMBITS_2);
+> > +       bitmap_set_value(bits, 0x00000000, 0, 32);
+> > +       bitmap_set_value(bits, 0x00000000, 32, 32);
+> > +       bitmap_set_value(bits, 0x00000000, 64, 32);
+> > +       bitmap_set_value(bits, 0x0f000000, 96, 32);
+> > +       bitmap_set_value(bits, 0x00ff0000, 128, 32);
+> > +       bitmap_set_value(bits, 0xaaaaaa00, 160, 32);
+> > +       bitmap_set_value(bits, 0xff000000, 192, 32);
+> > +       bitmap_set_value(bits, 0x00aa0000, 224, 32);
+> > +
+> > +       for_each_set_clump(start, clump, bits, size, clump_size)
+> > +               expect_eq_clump(start, size, clump_exp3, &clump, clump_size);
+> > +}
+> > +
+> > +static void __init test_for_each_set_clump_6(void)   /* 6 bit clumps */
+> > +{
+> > +#define CLUMP_EXP_NUMBITS_2 256
+> > +       DECLARE_BITMAP(bits, CLUMP_EXP_NUMBITS_2);
+> > +       unsigned long start, clump, clump_size = 6;
+> > +       unsigned long size = clump_size * 3;
+> > +
+> > +       /* set bitmap to test case */
+> > +       bitmap_zero(bits, CLUMP_EXP_NUMBITS_2);
+> > +       bitmap_set_value(bits, 0x00000ac0, 0, 32);
+> > +       bitmap_set_value(bits, 0x00000000, 32, 32);
+> > +       bitmap_set_value(bits, 0x00000000, 64, 32);
+> > +       bitmap_set_value(bits, 0x0f000000, 96, 32);
+> > +       bitmap_set_value(bits, 0x00ff0000, 128, 32);
+> > +       bitmap_set_value(bits, 0xaaaaaa00, 160, 32);
+> > +       bitmap_set_value(bits, 0xff000000, 192, 32);
+> > +       bitmap_set_value(bits, 0x00aa0000, 224, 32);
+> > +
+> > +       for_each_set_clump(start, clump, bits, size, clump_size)
+> > +               expect_eq_clump(start, size, clump_exp4, &clump, clump_size);
+> > +}
+>
+> Can we unify all above and provide simple two test data sets:
+> expected, input, clump size and other information as function
+> parameter?
+
+Yes I can do that. I will try it out in next version (v2).
+
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+
+Thank You!
+Syed Nayyar Waris
