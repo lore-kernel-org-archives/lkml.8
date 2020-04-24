@@ -2,104 +2,145 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 460C2C2BA19
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B728EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 236CA2075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:43:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W9wU0S35"
+	by mail.kernel.org (Postfix) with ESMTP id 9332E20715
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:46:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbgDXCny (ORCPT
+        id S1726154AbgDXCqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 22:43:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45536 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbgDXCnx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 22:43:53 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C0FFC09B044
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 19:43:52 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id t4so3194026plq.12
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 19:43:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=MNMnOVg0VvvHH7uhAzqo/TEq6LY04Ce9ZaQn59nbqNE=;
-        b=W9wU0S35tK3hdAWzJ5sK0FfvQ4pOzhzpB+Kp5Tz2BrjguU+aR3rN67BrYxFNIHfYIo
-         LxfgPg2tX0tcnDr8MI4wT8jl1I4AXY6BsgyC2KXSJzlctVPKZzaEdcjEV6CYKIRHJ3uB
-         db1an0G+FO+QGZ8xUpuGYcwfGk1+x+A/CNFH0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=MNMnOVg0VvvHH7uhAzqo/TEq6LY04Ce9ZaQn59nbqNE=;
-        b=fkrHD5ukIvChckbF/gXbiFfDVxuSIYEynU58EKjiBz6xm31tEvU6mCWsTh/00nTfp3
-         YKcrsAhIkknYeIbiQc6LTc2eyvtKJ3iz5H3/hHfFaU+Jg/NOnfyr4NvskRx2x8Xh35Yi
-         DXXW4s828HeYbFKzREJTUQKRiMPbKn05+D9P5NeyeA0cA69/68Qy+84s8LTg+lQK3vdb
-         xkkltICveC35apmYwGWAIcWDfX/nF91Le5OIp25Bbd6D0AVZLA9+iEWyob313LuLW0Ra
-         6Rg3oRUBb/msPsygXmltebcenkEREPvF40ulsiHQNwSW+x3EQ3Ijy0fHzUsO7gswKOBy
-         7Dpg==
-X-Gm-Message-State: AGi0PuZYjpVrzrkrAyZn4ciZdH1v5co8YGqyFYoStZ6mfSF3n1mgce7u
-        R/+ufvI2IOcAXso8uJgPEN83jw==
-X-Google-Smtp-Source: APiQypK3fY2AtARpDgKpZjQz72rkRV9mIULEsBCePCFvjPt31SoILsB4CygqnJHiX2BIX8WWIZdyRw==
-X-Received: by 2002:a17:902:ee06:: with SMTP id z6mr4719895plb.125.1587696232161;
-        Thu, 23 Apr 2020 19:43:52 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id u21sm3415738pga.21.2020.04.23.19.43.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2020 19:43:51 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 23 Apr 2020 22:46:16 -0400
+Received: from mga17.intel.com ([192.55.52.151]:10178 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725884AbgDXCqQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 22:46:16 -0400
+IronPort-SDR: Ek3EacB7RPeY9CBQrY1XOJ2rlIxnvXyx0vRMokItaZDGPNW0gCMTf6SvvK8/dIPHqUiLwZvL2R
+ 1bzQqYn0PJZw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 19:46:16 -0700
+IronPort-SDR: fFqGCE8bJogeRWjJevLA+X/Q55LKy24BPWiLC3aTrj7yu9DseBFagquD1OUY/YJaemiThYiTeb
+ fYe3AECb8adA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,310,1583222400"; 
+   d="scan'208";a="366206939"
+Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.4.151]) ([10.238.4.151])
+  by fmsmga001.fm.intel.com with ESMTP; 23 Apr 2020 19:46:12 -0700
+Subject: Re: [PATCH v2 00/11] perf metric fixes and test
+To:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Haiyan Song <haiyanx.song@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Paul Clarke <pc@us.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+References: <20200422220430.254014-1-irogers@google.com>
+ <20200423112825.GD1136647@krava>
+ <1dd2e280-d711-2dda-61b1-b81609af6467@linux.intel.com>
+ <20200423140249.GA1199027@krava>
+ <CAP-5=fUO5sA8g2qv=Bg5LSSbG3nnhm57cBR7PsraH9+thph5qQ@mail.gmail.com>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <3f88ebf8-633a-83b4-cd02-aca0922e1a6b@linux.intel.com>
+Date:   Fri, 24 Apr 2020 10:46:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200422145408.v4.3.I2d44fc0053d019f239527a4e5829416714b7e299@changeid>
-References: <20200422145408.v4.1.Ic7096b3b9b7828cdd41cd5469a6dee5eb6abf549@changeid> <20200422145408.v4.3.I2d44fc0053d019f239527a4e5829416714b7e299@changeid>
-Subject: Re: [PATCH v4 3/5] kernel/cpu_pm: Fix uninitted local in cpu_pm
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     mka@chromium.org, mkshah@codeaurora.org, evgreen@chromium.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Colin Cross <ccross@android.com>,
-        Kevin Hilman <khilman@ti.com>,
-        Santosh Shilimkar <santosh.shilimkar@ti.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rafael.j.wysocki@intel.com
-Date:   Thu, 23 Apr 2020 19:43:50 -0700
-Message-ID: <158769623054.135303.13351246588453753133@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+In-Reply-To: <CAP-5=fUO5sA8g2qv=Bg5LSSbG3nnhm57cBR7PsraH9+thph5qQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Douglas Anderson (2020-04-22 14:55:01)
-> cpu_pm_notify() is basically a wrapper of notifier_call_chain().
-> notifier_call_chain() doesn't initialize *nr_calls to 0 before it
-> starts incrementing it--presumably it's up to the callers to do this.
->=20
-> Unfortunately the callers of cpu_pm_notify() don't init *nr_calls.
-> This potentially means you could get too many or two few calls to
-> CPU_PM_ENTER_FAILED or CPU_CLUSTER_PM_ENTER_FAILED depending on the
-> luck of the stack.
->=20
-> Let's fix this.
->=20
-> Fixes: ab10023e0088 ("cpu_pm: Add cpu power management notifiers")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+
+On 4/23/2020 10:31 PM, Ian Rogers wrote:
+> On Thu, Apr 23, 2020 at 7:03 AM Jiri Olsa <jolsa@redhat.com> wrote:
+>>
+>> On Thu, Apr 23, 2020 at 09:44:24PM +0800, Jin, Yao wrote:
+>>> Hi Jiri,
+>>>
+>>> On 4/23/2020 7:28 PM, Jiri Olsa wrote:
+>>>> On Wed, Apr 22, 2020 at 03:04:19PM -0700, Ian Rogers wrote:
+>>>>> Add a test that all perf metrics (for your architecture) are
+>>>>> parsable. Fix bugs in the expr parser and in x86 metrics. Untested on
+>>>>> architectures other than x86.
+>>>>>
+>>>>> v2 adds Fixes tags to commit messages for when broken metrics were
+>>>>>     first added. Adds a debug warning for division by zero in expr, and
+>>>>>     adds a workaround for id values in the expr test necessary for
+>>>>>     powerpc. It also fixes broken power8 and power9 metrics.
+>>>>
+>>>> looks good to me
+>>>>
+>>>> Jin Yao, is there a metric that's not working for you with this patchset
+>>>> applied?
+>>>>
+>>>> thanks,
+>>>> jirka
+>>>>
+>>>
+>>> Let me look for a CLX for testing, but maybe need some time.
+>>>
+>>> BTW, suppose this patchset can work well, does it mean we will change the
+>>> json file format in future?
+>>>
+>>> For example,
+>>>
+>>> before:
+>>> cha@event\\=0x36\\\\\\
+>>>
+>>> after:
+>>> cha@event\\=0x36\\
+>>>
+>>> "\\\\" are removed.
+>>>
+>>> If so, we need to change our event generation script.
+>>
+>> ok, maybe I got the wrong idea that the extra \\\\ were just
+>> superfluous, what was the actual error there? and what's the
+>> reason for that many '\' in there?
+> 
+> I believe they are superfluous and break even before the flex change.
+> I commented on it here with a reproduction of a parse events error on
+> skylake:
+> https://lore.kernel.org/lkml/CAP-5=fUnWAycQehCJ9=btquV2c3DVDX+tTEc85H8py9Kfehq4w@mail.gmail.com/
+> 
+> Fixing the script that generates this would be great! With the test
+> landed it should be much harder for this to be broken in the future.
+> 
+> Thanks,
+> Ian
+> 
+
+Tested on CLX and the error disappeared.
+
+BTW, I will post the latest version of event list once the testing is 
+completed.
+
+Thanks
+Jin Yao
+
+> 
+>> jirka
+>>
