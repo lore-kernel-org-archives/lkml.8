@@ -2,187 +2,96 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 441DBC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CDCC55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 212A020774
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:02:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587751377;
-	bh=GjSvgTiUfJoQDX5RWLfMxG6G8m1V2jsRyg5MYZ+OrpY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=g/fQxzm5XJ2w5x5U/ifzeA59NJh2CYTtFhGe1pl0mC4NJ17vFM4tpdF+fiJagl7kf
-	 P7KAl4IG6GAloj2teLuheg5G7QzGOHDJEU+vq20UwWDqQQ2RWOl0j88AnlDmf9Eobb
-	 HvTqXnkmyFX2EcchSWSYqPlrSNe0zRoivDXF7mmQ=
+	by mail.kernel.org (Postfix) with ESMTP id 04E7A20704
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:03:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="MUKlal7f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728877AbgDXSC4 (ORCPT
+        id S1728932AbgDXSDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 14:02:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49108 "EHLO
+        Fri, 24 Apr 2020 14:03:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726908AbgDXSCz (ORCPT
+        by vger.kernel.org with ESMTP id S1728300AbgDXSDb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 14:02:55 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61029C09B048
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 11:02:55 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id t11so8426616lfe.4
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 11:02:55 -0700 (PDT)
+        Fri, 24 Apr 2020 14:03:31 -0400
+Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A07CEC09B049
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 11:03:30 -0700 (PDT)
+Received: by mail-io1-xd33.google.com with SMTP id o127so11331407iof.0
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 11:03:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Z13IEYz83XdBeUibWdG7wclkW3og2+VosmLRfwAtAdA=;
-        b=WsMshc2mIdVUt3yh9Dd3vA9NAUPuyxr+K526tt3N6H9SWCUwoLVukf7frGTwCg48QE
-         DZUzz3sWj1a8QHzrAGEPyboToxOGmPzCgGA1IDa8Ud0ufbf5qTjMtiFJwutkwG32h2SQ
-         ovIx45Wunn4iKR1DL6i7Xis6NIaAz1s2wwEGQ=
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=l9DZkzCjHWvWpAFUFEboMfl5JVZotMAsYoNk7iZWJS0=;
+        b=MUKlal7f0QTMDIbBD8mwNCPDsD4bz887lRmnK33mEet2P64rMi8Vdt/2i9wnUocIyI
+         XuuV8O8JLZM4TxpdTeaM6BzaVw2V3bIbeNprvtXp0QsdlQe9z+PyTQbZ6394kJ2tlf0r
+         wMNlD88pAn1GCrzaHbDY9MiyovI+WDXb70koPCM/7N3yIwXC24BfdxKgcj5gNZaRE4xD
+         9mDNc8xTTvOj7wQ27RdvrSPMxgT+dlxPvVhIJ6oB/EAp8mIBn/y1V4k5sHBFBj4taT21
+         jlirb9cG3XjaNWCBY6u/xNiEvOAPibinQFajatGA4cpvFm/xQlRMmuuSF6p81PgiiAzB
+         vIGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Z13IEYz83XdBeUibWdG7wclkW3og2+VosmLRfwAtAdA=;
-        b=NDM4rN3PPsouS04AUS0Y0eBDXqElkm3KgZT9h9VKlw76XJqx8DhH8hc68+oeT0wQ6j
-         iFyMLj7aU+wT4xA9nKUTrX/MUwA25ZHX52A+8GEcYscAe/RF2Kw8mvN7n4Xjo2Z68Mw5
-         EO1IL8e2r3OzB9Cx+h1DWMJ/rLSRrOJpk4jRTQfcugliLjUNSSevYpM/JzIN1mpbwh8A
-         JZ8wm89izCKAGmLOsFTSBkuj4ialGAgO1vmJ5QtIVHQX3NPTXbQLQAThyVxya1w9y6rn
-         cNaQ80G/NKa27RAcVXSbVpFnprWGmFBpRhto7+zrvk3T7lrB1VkqVKo9vw6Oj21TJPLh
-         F2aw==
-X-Gm-Message-State: AGi0PuavMH1UDy68lWVMB4vTNG8HXAGG19PLpbYhWpkIbxaO0Sh5Ov2o
-        4PtFrev1Rer+MZ+q/Y7fira3SMmZQ0Q=
-X-Google-Smtp-Source: APiQypKWZ0iuNPf0j5A7orzHCHJRna2flN4ReDkgspbg4ILBN/qceU/WaCXzkLZq/03CIxGXeb0Tcw==
-X-Received: by 2002:ac2:57cb:: with SMTP id k11mr7094272lfo.19.1587751373239;
-        Fri, 24 Apr 2020 11:02:53 -0700 (PDT)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id j22sm5157528lfg.96.2020.04.24.11.02.52
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=l9DZkzCjHWvWpAFUFEboMfl5JVZotMAsYoNk7iZWJS0=;
+        b=VohpdsUBBQLEri0b6k/FNBUtcYu4dKl82V3+gjNKQvyZZXL4teI1l4A1y8hiOkjjnD
+         K7ts1wHVi4l40vUbZI5ElPirjyIQe4GvTvPo+PHQt/7bDjCYNDRyYlNZbMNHknqSTnn2
+         GedSqAoQVTTiVs3NA1McOJZot85JFSlGmnROE4s32LOls2rlTaYOVZb09nuYUZ0MFxxJ
+         x3pKI2rLGTxBt861HF37e7VUydcH65sqFOxHLialyAuTzH0AiqUmySv60OBlCHWed3N2
+         4w8ra78cOjUkjsQLLvdV5g+sD7MgQsPgVOw2RNerYlET0lYoQkE2BZQIUfDQr2aPqMFw
+         epRQ==
+X-Gm-Message-State: AGi0PuZ9Kl1qkNicZ2s7lXS/E/NxUffVDIY0LWSOAe+Ewd7lCgqwabMx
+        PtYxN8CmZXjMJsF0j3TDx1CaDK/FUrDYRA==
+X-Google-Smtp-Source: APiQypLiBb6pQAayp6kyLN7BnySABnVTZSw+CHHuZ4vQXAsd/3B4Bc5CFHJtmvahPb0r6NhZxQdEiQ==
+X-Received: by 2002:a02:a90e:: with SMTP id n14mr9230294jam.97.1587751409829;
+        Fri, 24 Apr 2020 11:03:29 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id g90sm2329941ila.19.2020.04.24.11.03.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Apr 2020 11:02:52 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id n6so10853811ljg.12
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 11:02:52 -0700 (PDT)
-X-Received: by 2002:a2e:814e:: with SMTP id t14mr6506692ljg.204.1587751371830;
- Fri, 24 Apr 2020 11:02:51 -0700 (PDT)
+        Fri, 24 Apr 2020 11:03:29 -0700 (PDT)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     io-uring <io-uring@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [GIT PULL] io_uring fix for 5.7-rc3
+Message-ID: <156f8353-5841-39ad-3bc2-af9cadac3c71@kernel.dk>
+Date:   Fri, 24 Apr 2020 12:03:28 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
- <87ftcv1nqe.fsf@x220.int.ebiederm.org> <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
- <CAHk-=wgXEJdkgGzZQzBDGk7ijjVdAVXe=G-mkFSVng_Hpwd4tQ@mail.gmail.com> <87tv19tv65.fsf@x220.int.ebiederm.org>
-In-Reply-To: <87tv19tv65.fsf@x220.int.ebiederm.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 24 Apr 2020 11:02:35 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj-K3fqdMr-r8WgS8RKPuZOuFbPXCEUe9APrdShn99xsA@mail.gmail.com>
-Message-ID: <CAHk-=wj-K3fqdMr-r8WgS8RKPuZOuFbPXCEUe9APrdShn99xsA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] proc: Ensure we see the exit of each process tid exactly
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 8:36 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
->
-> At one point my brain I had forgetten that xchg can not take two memory
-> arguments and had hoped to be able to provide stronger guarnatees than I
-> can.  Which is where I think the structure of exchange_pids came from.
+Hi Linus,
 
-Note that even if we were to have a "exchange two memory locations
-atomically" instruction (and we don't - even a "double cmpxchg" is
-actually just a double-_sized_ one, not a two different locations
-one), I'm not convinced it makes sense.
+Single fixup for a change that went into -rc2, please pull.
 
-There's no way to _walk_ two lists atomically. Any user will only ever
-walk one or the other, so it's not sensible to try to make the two
-list updates be atomic.
 
-And if a user for some reason walks both, the walking itself will
-obviously then be racy - it does one or the other first, and can see
-either the old state, or the new state - or see _neither_ (ie if you
-walk it twice, you might see neither task, or you might see both, just
-depending on order or walk).
+  git://git.kernel.dk/linux-block.git tags/io_uring-5.7-2020-04-24
 
-> I do agree the clearer we can write things, the easier it is for
-> someone else to come along and follow.
 
-Your alternate write of the function seems a bit more readable to me,
-even if the main effect might be just that it was split up a bit and
-added a few comments and whitespace.
+----------------------------------------------------------------
+Xiaoguang Wang (1):
+      io_uring: only restore req->work for req that needs do completion
 
-So I'm more happier with that one. That said:
+ fs/io_uring.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-> We can not use a remove and reinser model because that does break rcu
-> accesses, and complicates everything else.  With a swap model we have
-> the struct pids pointer at either of the tasks that are swapped but
-> never at nothing.
+-- 
+Jens Axboe
 
-I'm not suggesting removing the pid entirely - like making task->pid
-be NULL. I'm literally suggesting just doing the RCU list operations
-as "remove and re-insert".
-
-And that shouldn't break anything, for the same reason that an atomic
-exchange doesn't make sense: you can only ever walk one of the lists
-at a time. And regardless of how you walk it, you might not see the
-new state (or the old state) reliably.
-
-Put another way:
-
->         void hlist_swap_before_rcu(struct hlist_node *left, struct hlist_node *right)
->         {
->                 struct hlist_node **lpprev = left->pprev;
->                 struct hlist_node **rpprev = right->pprev;
->
->                 rcu_assign_pointer(*lpprev, right);
->                 rcu_assign_pointer(*rpprev, left);
-
-These are the only two assignments that matter for anything that walks
-the list (the pprev ones are for things that change the list, and they
-have to have exclusions in place).
-
-And those two writes cannot be atomic anyway, so you fundamentally
-will always be in the situation that a walker can miss one of the
-tasks.
-
-Which is why I think it would be ok to just do the RCU list swap as a
-"remove left, remove right, add left, add right" operation. It doesn't
-seem fundamentally different to a walker than the "switch left/right"
-operation, and it seems much simpler.
-
-Is there something I'm missing?
-
-But I'm *not* suggesting that we change these simple parts to be
-"remove thread_pid or pid pointer, and then insert a new one":
-
->                 /* Swap thread_pid */
->                 rpid = left->thread_pid;
->                 lpid = right->thread_pid;
->                 rcu_assign_pointer(left->thread_pid, lpid);
->                 rcu_assign_pointer(right->thread_pid, rpid);
->
->                 /* Swap the cached pid value */
->                 WRITE_ONCE(left->pid, pid_nr(lpid));
->                 WRITE_ONCE(right->pid, pid_nr(rpid));
->         }
-
-because I agree that for things that don't _walk_ the list, but just
-look up "thread_pid" vs "pid" atomically but asynchronously, we
-obviously need to get one or the other, not some kind of "empty"
-state.
-
-> Does that look a little more readable?
-
-Regardless, I find your new version at least a lot more readable, so
-I'm ok with it.
-
-It looks like Oleg found an independent issue, though.
-
-                  Linus
