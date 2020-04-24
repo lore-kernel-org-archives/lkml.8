@@ -2,130 +2,278 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8B2C55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B47B1C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C94212063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:49:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LXbf8HmZ"
+	by mail.kernel.org (Postfix) with ESMTP id 917AD2063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:49:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbgDXPtQ (ORCPT
+        id S1728319AbgDXPtj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:49:16 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:58780 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbgDXPtP (ORCPT
+        Fri, 24 Apr 2020 11:49:39 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:56250 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727843AbgDXPti (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:49:15 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03OFmvgr112448;
-        Fri, 24 Apr 2020 10:48:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587743337;
-        bh=brDS66IythliFGEaOudO2r3RwbjKsL4G+NVVMco0T4w=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=LXbf8HmZgPVyfb7AbDC/MngnskLjXg1hpW8gOpuma3t6ZDd4C5SWcpJSbIY71EcO6
-         J8xOD1nxVc6CeIzfvL+ATDJvtc58ZzvET3E0rQBFHnXoNtmMp0rq9WwXnFPrr8g5p/
-         G9/Z1BB8Rhf1Y4PQZUKaBvIFEy9yOj+coCQFJVSU=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03OFmv77021324
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 24 Apr 2020 10:48:57 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 24
- Apr 2020 10:48:57 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 24 Apr 2020 10:48:57 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03OFmrEs029197;
-        Fri, 24 Apr 2020 10:48:54 -0500
-Subject: Re: OF: ERROR: Bad of_node_put() on
- /ocp/interconnect@4a000000/segment@0/target-module@8000/cm_core@0/l4per-cm@1700/l4per-clkctrl@28
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>, <lkft-triage@lists.linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Benoit Cousson <bcousson@baylibre.com>,
-        Carlos Hernandez <ceh@ti.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Olof Johansson <olof@lixom.net>, <tomi.valkeinen@ti.com>,
-        Anders Roxell <anders.roxell@linaro.org>
-References: <CA+G9fYv5NxK+F5DX_q1c_wvnhjT_WTZBFJQXLWFeqMXsEcASZg@mail.gmail.com>
- <CA+G9fYu-qYP2wJw4p1p_C6_ttwK0fvw+qUnsN9mDuKOv3zGEBw@mail.gmail.com>
- <20200417152903.GO37466@atomide.com>
- <6366d76c-b9dc-6fa5-afad-0b2f471f8ec5@ti.com>
- <20200424153806.GJ37466@atomide.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <913875ab-1b78-e37c-a168-3eb6e4815edb@ti.com>
-Date:   Fri, 24 Apr 2020 18:48:52 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 24 Apr 2020 11:49:38 -0400
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1jS0a8-0001hP-NW; Fri, 24 Apr 2020 16:49:36 +0100
+Received: from ben by deadeye with local (Exim 4.93)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1jS0a8-00FNGP-2R; Fri, 24 Apr 2020 16:49:36 +0100
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-In-Reply-To: <20200424153806.GJ37466@atomide.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Jann Horn" <jannh@google.com>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Date:   Fri, 24 Apr 2020 16:51:31 +0100
+Message-ID: <lsq.1587743246.9036831@decadent.org.uk>
+X-Mailer: LinuxStableQueue (scripts by bwh)
+X-Patchwork-Hint: ignore
+Subject: [PATCH 3.16 246/247] futex: Fix inode life-time issue
+In-Reply-To: <lsq.1587743245.5555628@decadent.org.uk>
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/04/2020 18:38, Tony Lindgren wrote:
-> * Tero Kristo <t-kristo@ti.com> [200424 12:41]:
->> On 17/04/2020 18:29, Tony Lindgren wrote:
->>> * Naresh Kamboju <naresh.kamboju@linaro.org> [200327 16:44]:
->>>> The reported problem still happening on arm beagle board x15 device
->>>> running Linux next kernel 20200327.
->>> ...
->>>
->>>> [    0.000000] OF: ERROR: Bad of_node_put() on
->>>> /ocp/interconnect@4a000000/segment@0/target-module@8000/cm_core@0/l4per-cm@1700/l4per-clkctrl@28
->>>> [    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W
->>>>     5.6.0-rc7-next-20200327 #1
->>>> [    0.000000] Hardware name: Generic DRA74X (Flattened Device Tree)
->>>> [    0.000000] [<c0311810>] (unwind_backtrace) from [<c030ba14>]
->>>> (show_stack+0x10/0x14)
->>>> [    0.000000] [<c030ba14>] (show_stack) from [<c0fb6604>]
->>>> (dump_stack+0xbc/0xd0)
->>>> [    0.000000] [<c0fb6604>] (dump_stack) from [<c0fbb07c>]
->>>> (kobject_put+0xc0/0x104)
->>>> [    0.000000] [<c0fbb07c>] (kobject_put) from [<c1639e4c>]
->>>> (of_clk_init+0x18c/0x228)
->>>> [    0.000000] [<c1639e4c>] (of_clk_init) from [<c1611544>]
->>>> (omap_clk_init+0x3c/0x58)
->>>> [    0.000000] [<c1611544>] (omap_clk_init) from [<c1611ea8>]
->>>> (omap4_sync32k_timer_init+0x8/0x2c)
->>>> [    0.000000] [<c1611ea8>] (omap4_sync32k_timer_init) from
->>>> [<c161213c>] (omap5_realtime_timer_init+0x8/0x234)
->>>> [    0.000000] [<c161213c>] (omap5_realtime_timer_init) from
->>>> [<c1600c88>] (start_kernel+0x330/0x4b8)
->>>
->>> Just FYI, Tero is looking at the clock issues that seem to be
->>> causing these warnings.
->>
->> Haven't seen this before, but easily reproducible with multi_v7_defconfig. I
->> have a simple fix for it now, will post to lists soon.
-> 
-> OK thanks for tracking it down.
+3.16.83-rc2 review patch.  If anyone has any objections, please let me know.
 
-No problem, sorry about the latency in my response though. I guess I got 
-too many things on my plate. :)
+------------------
 
--Tero
+From: Peter Zijlstra <peterz@infradead.org>
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+commit 8019ad13ef7f64be44d4f892af9c840179009254 upstream.
+
+As reported by Jann, ihold() does not in fact guarantee inode
+persistence. And instead of making it so, replace the usage of inode
+pointers with a per boot, machine wide, unique inode identifier.
+
+This sequence number is global, but shared (file backed) futexes are
+rare enough that this should not become a performance issue.
+
+Reported-by: Jann Horn <jannh@google.com>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[bwh: Backported to 3.16: Use atomic64_cmpxchg() instead of the
+ _relaxed() variant which we don't have]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+---
+ fs/inode.c            |  1 +
+ include/linux/fs.h    |  1 +
+ include/linux/futex.h | 17 +++++----
+ kernel/futex.c        | 89 ++++++++++++++++++++++++++-----------------
+ 4 files changed, 65 insertions(+), 43 deletions(-)
+
+--- a/fs/inode.c
++++ b/fs/inode.c
+@@ -131,6 +131,7 @@ int inode_init_always(struct super_block
+ 	inode->i_sb = sb;
+ 	inode->i_blkbits = sb->s_blocksize_bits;
+ 	inode->i_flags = 0;
++	atomic64_set(&inode->i_sequence, 0);
+ 	atomic_set(&inode->i_count, 1);
+ 	inode->i_op = &empty_iops;
+ 	inode->i_fop = &empty_fops;
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -570,6 +570,7 @@ struct inode {
+ 		struct rcu_head		i_rcu;
+ 	};
+ 	u64			i_version;
++	atomic64_t		i_sequence; /* see futex */
+ 	atomic_t		i_count;
+ 	atomic_t		i_dio_count;
+ 	atomic_t		i_writecount;
+--- a/include/linux/futex.h
++++ b/include/linux/futex.h
+@@ -39,23 +39,26 @@ handle_futex_death(u32 __user *uaddr, st
+ 
+ union futex_key {
+ 	struct {
++		u64 i_seq;
+ 		unsigned long pgoff;
+-		struct inode *inode;
+-		int offset;
++		unsigned int offset;
+ 	} shared;
+ 	struct {
++		union {
++			struct mm_struct *mm;
++			u64 __tmp;
++		};
+ 		unsigned long address;
+-		struct mm_struct *mm;
+-		int offset;
++		unsigned int offset;
+ 	} private;
+ 	struct {
++		u64 ptr;
+ 		unsigned long word;
+-		void *ptr;
+-		int offset;
++		unsigned int offset;
+ 	} both;
+ };
+ 
+-#define FUTEX_KEY_INIT (union futex_key) { .both = { .ptr = NULL } }
++#define FUTEX_KEY_INIT (union futex_key) { .both = { .ptr = 0ULL } }
+ 
+ #ifdef CONFIG_FUTEX
+ extern void exit_robust_list(struct task_struct *curr);
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -338,7 +338,7 @@ static void get_futex_key_refs(union fut
+ 
+ 	switch (key->both.offset & (FUT_OFF_INODE|FUT_OFF_MMSHARED)) {
+ 	case FUT_OFF_INODE:
+-		ihold(key->shared.inode); /* implies MB (B) */
++		smp_mb();		/* explicit smp_mb(); (B) */
+ 		break;
+ 	case FUT_OFF_MMSHARED:
+ 		futex_get_mm(key); /* implies MB (B) */
+@@ -362,7 +362,6 @@ static void drop_futex_key_refs(union fu
+ 
+ 	switch (key->both.offset & (FUT_OFF_INODE|FUT_OFF_MMSHARED)) {
+ 	case FUT_OFF_INODE:
+-		iput(key->shared.inode);
+ 		break;
+ 	case FUT_OFF_MMSHARED:
+ 		mmdrop(key->private.mm);
+@@ -370,6 +369,46 @@ static void drop_futex_key_refs(union fu
+ 	}
+ }
+ 
++/*
++ * Generate a machine wide unique identifier for this inode.
++ *
++ * This relies on u64 not wrapping in the life-time of the machine; which with
++ * 1ns resolution means almost 585 years.
++ *
++ * This further relies on the fact that a well formed program will not unmap
++ * the file while it has a (shared) futex waiting on it. This mapping will have
++ * a file reference which pins the mount and inode.
++ *
++ * If for some reason an inode gets evicted and read back in again, it will get
++ * a new sequence number and will _NOT_ match, even though it is the exact same
++ * file.
++ *
++ * It is important that match_futex() will never have a false-positive, esp.
++ * for PI futexes that can mess up the state. The above argues that false-negatives
++ * are only possible for malformed programs.
++ */
++static u64 get_inode_sequence_number(struct inode *inode)
++{
++	static atomic64_t i_seq;
++	u64 old;
++
++	/* Does the inode already have a sequence number? */
++	old = atomic64_read(&inode->i_sequence);
++	if (likely(old))
++		return old;
++
++	for (;;) {
++		u64 new = atomic64_add_return(1, &i_seq);
++		if (WARN_ON_ONCE(!new))
++			continue;
++
++		old = atomic64_cmpxchg(&inode->i_sequence, 0, new);
++		if (old)
++			return old;
++		return new;
++	}
++}
++
+ /**
+  * get_futex_key() - Get parameters which are the keys for a futex
+  * @uaddr:	virtual address of the futex
+@@ -382,9 +421,15 @@ static void drop_futex_key_refs(union fu
+  *
+  * The key words are stored in *key on success.
+  *
+- * For shared mappings, it's (page->index, file_inode(vma->vm_file),
+- * offset_within_page).  For private mappings, it's (uaddr, current->mm).
+- * We can usually work out the index without swapping in the page.
++ * For shared mappings (when @fshared), the key is:
++ *   ( inode->i_sequence, page->index, offset_within_page )
++ * [ also see get_inode_sequence_number() ]
++ *
++ * For private mappings (or when !@fshared), the key is:
++ *   ( current->mm, address, 0 )
++ *
++ * This allows (cross process, where applicable) identification of the futex
++ * without keeping the page pinned for the duration of the FUTEX_WAIT.
+  *
+  * lock_page() might sleep, the caller should not hold a spinlock.
+  */
+@@ -545,8 +590,6 @@ again:
+ 		key->private.mm = mm;
+ 		key->private.address = address;
+ 
+-		get_futex_key_refs(key); /* implies smp_mb(); (B) */
+-
+ 	} else {
+ 		struct inode *inode;
+ 
+@@ -578,40 +621,14 @@ again:
+ 			goto again;
+ 		}
+ 
+-		/*
+-		 * Take a reference unless it is about to be freed. Previously
+-		 * this reference was taken by ihold under the page lock
+-		 * pinning the inode in place so i_lock was unnecessary. The
+-		 * only way for this check to fail is if the inode was
+-		 * truncated in parallel which is almost certainly an
+-		 * application bug. In such a case, just retry.
+-		 *
+-		 * We are not calling into get_futex_key_refs() in file-backed
+-		 * cases, therefore a successful atomic_inc return below will
+-		 * guarantee that get_futex_key() will still imply smp_mb(); (B).
+-		 */
+-		if (!atomic_inc_not_zero(&inode->i_count)) {
+-			rcu_read_unlock();
+-			put_page(page_head);
+-
+-			goto again;
+-		}
+-
+-		/* Should be impossible but lets be paranoid for now */
+-		if (WARN_ON_ONCE(inode->i_mapping != mapping)) {
+-			err = -EFAULT;
+-			rcu_read_unlock();
+-			iput(inode);
+-
+-			goto out;
+-		}
+-
+ 		key->both.offset |= FUT_OFF_INODE; /* inode-based key */
+-		key->shared.inode = inode;
++		key->shared.i_seq = get_inode_sequence_number(inode);
+ 		key->shared.pgoff = basepage_index(page);
+ 		rcu_read_unlock();
+ 	}
+ 
++	get_futex_key_refs(key); /* implies smp_mb(); (B) */
++
+ out:
+ 	put_page(page_head);
+ 	return err;
+
