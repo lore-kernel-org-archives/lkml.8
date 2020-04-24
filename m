@@ -2,93 +2,110 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FFADC55194
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CFF3C55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7459920767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:13:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587719582;
-	bh=VUbZ3LRQI5qQroc1jTBzwNv73zK9D1/8U6/W3QlH2R8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jg5LeuFKl9C8tvGAPJiTPQFJ0Ny9BHfPBkocAZMoCd8ytfX4PVdhc1E06BK9dutju
-	 YqIp1IPTSMbw37tOSI9S+DU2CLYj9H57iAun97EiITzX1WXB2vgHCnFpWRIap2eZeK
-	 lPNKOB0v3xMnXw1mODAciJwbZMGXnn738c/p5YWs=
+	by mail.kernel.org (Postfix) with ESMTP id 4DCC820724
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:13:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbgDXJNB (ORCPT
+        id S1726806AbgDXJNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 05:13:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49654 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726298AbgDXJNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 05:13:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F94C20724;
-        Fri, 24 Apr 2020 09:13:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587719581;
-        bh=VUbZ3LRQI5qQroc1jTBzwNv73zK9D1/8U6/W3QlH2R8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z81J7org7Q+wFxEMCH7BLItFnZ+UHSE+ESvdoF16gTtSjycrF7+CaeCT8eL/sbv+N
-         ubXWLJ+bS5ACehBarUWZ8RnEhLhyL219/nufzQuw88R76jMEETgXqIwvorhvJ/w9xL
-         a9nf9Lg1HliGI6H2e8lO5/v1K4HxhS8ygXWXN/dU=
-Date:   Fri, 24 Apr 2020 11:12:58 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 5.6 000/166] 5.6.7-rc1 review
-Message-ID: <20200424091258.GB359097@kroah.com>
-References: <20200422095047.669225321@linuxfoundation.org>
- <CA+G9fYt+DmKn-h_XoG1TseqP7J5BxgrwQPNqyaL+htn40qLo9w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYt+DmKn-h_XoG1TseqP7J5BxgrwQPNqyaL+htn40qLo9w@mail.gmail.com>
+        Fri, 24 Apr 2020 05:13:21 -0400
+Received: from lucky1.263xmail.com ([211.157.147.133]:37154 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726489AbgDXJNV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 05:13:21 -0400
+Received: from localhost (unknown [192.168.167.209])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 630A9B1E84;
+        Fri, 24 Apr 2020 17:13:15 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost.localdomain (unknown [113.57.152.160])
+        by smtp.263.net (postfix) whith ESMTP id P17634T139992827418368S1587719594268319_;
+        Fri, 24 Apr 2020 17:13:15 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <b887aa9ef3120df775ab07e15fb52640>
+X-RL-SENDER: caizhaopeng@uniontech.com
+X-SENDER: caizhaopeng@uniontech.com
+X-LOGIN-NAME: caizhaopeng@uniontech.com
+X-FST-TO: linus.walleij@linaro.org
+X-SENDER-IP: 113.57.152.160
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+From:   caizhaopeng@uniontech.com
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Zhangyueqian <zhangyueqian@uniontech.com>,
+        Zhangshuang <zhangshuang@uniontech.com>,
+        Hualet Wang <wangyaohua@uniontech.com>,
+        Zhanglei <zhanglei@uniontech.com>,
+        Caicai <caizhaopeng@uniontech.com>
+Subject: [PATCH 1/1] pinctrl: add IRQF_EARLY_RESUME flags with gpio irq for elan touchpad.
+Date:   Fri, 24 Apr 2020 17:12:01 +0800
+Message-Id: <20200424091201.568-1-caizhaopeng@uniontech.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 01:16:22PM +0530, Naresh Kamboju wrote:
-> On Wed, 22 Apr 2020 at 15:55, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.6.7 release.
-> > There are 166 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Fri, 24 Apr 2020 09:48:23 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.7-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
+From: Caicai <caizhaopeng@uniontech.com>
 
-Thanks for testing all of these and letting me know.
+I had tested two Notebook machines, the Intel i5(or amd ryzen)
+with elan touchpad, and there's a probability that the touchpad
+won't work after going to the S3/S4 to wake up, that it would
+appear no more than 15 times. I found that there's no interrupt
+to check for /proc/interrupt. It was found that the gpio
+interrupt of i2c was also not on top. By adding the gpio
+interrupt flags with IRQF_EARLY_RESUME, now the touchpad tested
+200 + times works well.
 
-greg k-h
+Signed-off-by: Caicai <caizhaopeng@uniontech.com>
+---
+ drivers/pinctrl/intel/pinctrl-intel.c | 2 +-
+ drivers/pinctrl/pinctrl-amd.c         | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+index 8fb6c9668c37..a350dade6aa0 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -1189,7 +1189,7 @@ static int intel_gpio_probe(struct intel_pinctrl *pctrl, int irq)
+ 	 * controllers share the same interrupt line.
+ 	 */
+ 	ret = devm_request_irq(pctrl->dev, irq, intel_gpio_irq,
+-			       IRQF_SHARED | IRQF_NO_THREAD,
++			       IRQF_SHARED | IRQF_NO_THREAD | IRQF_EARLY_RESUME,
+ 			       dev_name(pctrl->dev), pctrl);
+ 	if (ret) {
+ 		dev_err(pctrl->dev, "failed to request interrupt\n");
+diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
+index 977792654e01..70c37f4da2b1 100644
+--- a/drivers/pinctrl/pinctrl-amd.c
++++ b/drivers/pinctrl/pinctrl-amd.c
+@@ -937,7 +937,7 @@ static int amd_gpio_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	ret = devm_request_irq(&pdev->dev, irq_base, amd_gpio_irq_handler,
+-			       IRQF_SHARED, KBUILD_MODNAME, gpio_dev);
++			       IRQF_SHARED | IRQF_EARLY_RESUME | IRQF_NO_THREAD, KBUILD_MODNAME, gpio_dev);
+ 	if (ret)
+ 		goto out2;
+ 
+-- 
+2.20.1
+
+
+
