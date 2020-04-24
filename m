@@ -2,109 +2,115 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F703C55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B62C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 158CC20781
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:04:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 333232098B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:05:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PJg0h0Ao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729204AbgDXTE0 (ORCPT
+        id S1729213AbgDXTFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 15:04:26 -0400
-Received: from sauhun.de ([88.99.104.3]:50924 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726813AbgDXTEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 15:04:25 -0400
-Received: from localhost (p5486CE62.dip0.t-ipconnect.de [84.134.206.98])
-        by pokefinder.org (Postfix) with ESMTPSA id E69B42C2019;
-        Fri, 24 Apr 2020 21:04:23 +0200 (CEST)
-Date:   Fri, 24 Apr 2020 21:04:22 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Maxime Ripard <maxime@cerno.tech>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v2 01/91] i2c: brcmstb: Allow to compile it on BCM2835
-Message-ID: <20200424190422.GA5220@kunai>
-References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
- <c8c666eb5c82dcb73621930b3fedf5814792bf1a.1587742492.git-series.maxime@cerno.tech>
- <20200424161353.GA4487@kunai>
- <bedfe073-6ff4-69ee-fe39-d5802cc3ecfd@gmail.com>
+        Fri, 24 Apr 2020 15:05:00 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:22916 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728943AbgDXTFA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 15:05:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587755098;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=C8wjwSUlBu5CF9/SPvwHt9jPX1JTspiCCnkRG7oTxtg=;
+        b=PJg0h0AoHHhKTF5EeYQ6htWBqMJ+Q9q10ptevsuQZpeoo+tv42BZQodi2YRDXAdXES5G19
+        O0xKJ+r7GyxAlnHwO7JK8ZyZRj075TybrCO7pXChcsEQOW5ubD5VC6xNJHt3bShdO8V8xU
+        Zv2dwL70n90A4VRmrFODvuNzrgwKMec=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-364-XhIgUx9eNn2lJg2Qo7BFYA-1; Fri, 24 Apr 2020 15:04:53 -0400
+X-MC-Unique: XhIgUx9eNn2lJg2Qo7BFYA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9FC09E99EF;
+        Fri, 24 Apr 2020 19:04:30 +0000 (UTC)
+Received: from treble (ovpn-114-29.rdu2.redhat.com [10.10.114.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AABF960F8D;
+        Fri, 24 Apr 2020 19:04:29 +0000 (UTC)
+Date:   Fri, 24 Apr 2020 14:04:27 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     alexandre.chartre@oracle.com, linux-kernel@vger.kernel.org,
+        jthierry@redhat.com, tglx@linutronix.de, x86@kernel.org,
+        mbenes@suse.cz
+Subject: Re: [PATCH 5/8] x86/speculation: Change FILL_RETURN_BUFFER to work
+ with objtool
+Message-ID: <20200424190427.3p7oxloliov72fwu@treble>
+References: <20200423125013.452964352@infradead.org>
+ <20200423125042.876058319@infradead.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rwEMma7ioTxnRzrJ"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <bedfe073-6ff4-69ee-fe39-d5802cc3ecfd@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200423125042.876058319@infradead.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 23, 2020 at 02:47:22PM +0200, Peter Zijlstra wrote:
+>  #define __FILL_RETURN_BUFFER(reg, nr, sp)	\
+>  	mov	$(nr/2), reg;			\
+>  771:						\
+> +	ANNOTATE_INTRA_FUNCTION_CALL		\
+>  	call	772f;				\
+>  773:	/* speculation trap */			\
+> +	UNWIND_HINT_EMPTY;			\
+>  	pause;					\
+>  	lfence;					\
+>  	jmp	773b;				\
+>  772:						\
+> +	ANNOTATE_INTRA_FUNCTION_CALL		\
+>  	call	774f;				\
+>  775:	/* speculation trap */			\
+> +	UNWIND_HINT_EMPTY;			\
+>  	pause;					\
+>  	lfence;					\
+>  	jmp	775b;				\
+>  774:						\
+> +	add	$(BITS_PER_LONG/8) * 2, sp;	\
+>  	dec	reg;				\
+> -	jnz	771b;				\
+> -	add	$(BITS_PER_LONG/8) * nr, sp;
+> +	jnz	771b;
 
---rwEMma7ioTxnRzrJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Looks weird having semicolons for one annotation but not the other...
 
-On Fri, Apr 24, 2020 at 10:07:25AM -0700, Florian Fainelli wrote:
->=20
->=20
-> On 4/24/2020 9:13 AM, Wolfram Sang wrote:
-> >=20
-> >>  config I2C_BRCMSTB
-> >>  	tristate "BRCM Settop/DSL I2C controller"
-> >> -	depends on ARCH_BRCMSTB || BMIPS_GENERIC || ARCH_BCM_63XX || \
-> >> -		   COMPILE_TEST
-> >> +	depends on ARCH_BCM2835 || ARCH_BRCMSTB || BMIPS_GENERIC || \
-> >> +		   ARCH_BCM_63XX || COMPILE_TEST
-> >=20
-> > Isn't there something like ARCH_BROADCOM which we could use here instead
-> > of adding each and every SoC?
->=20
-> If you are worried about this list growing bigger, I do not think this
-> is going to happen beyond this changeset (famous last words).
+>  
+>  #ifdef __ASSEMBLY__
+>  
+> @@ -137,10 +143,8 @@
+>    */
+>  .macro FILL_RETURN_BUFFER reg:req nr:req ftr:req
+>  #ifdef CONFIG_RETPOLINE
+> -	ANNOTATE_NOSPEC_ALTERNATIVE
+> -	ALTERNATIVE "jmp .Lskip_rsb_\@",				\
+> -		__stringify(__FILL_RETURN_BUFFER(\reg,\nr,%_ASM_SP))	\
+> -		\ftr
+> +	ALTERNATIVE "jmp .Lskip_rsb_\@", "", \ftr
+> +	__FILL_RETURN_BUFFER(\reg,\nr,%_ASM_SP)
 
-Okay, thanks for the heads up.
+I almost gave my "you can't change the stack in an alternative" lecture,
+then I did a double take :-)
 
-I wonder, then, if the description after 'tristate' is still accurate?
+We do still need a patch to prevent other code from doing that though.
 
-But that withstanding, I am fine with this patch:
+-- 
+Josh
 
-Acked-by: Wolfram Sang <wsa@the-dreams.de>
-
-Let me know if I shall take this via I2C.
-
-
---rwEMma7ioTxnRzrJ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6jODIACgkQFA3kzBSg
-KbYN+Q//SQP+Vpeh1qTzUNAUeo0heLgu/UyeswoGy/XX0fkPi1VnjHdErSP3hI5i
-qDLv1Xsz6XsjjlNPIIjMyisPgLT1blkvBicJnfNcjh+6ztSQaO1TqUscpgxxxG6f
-n4Dk+CRwVEgmbYI3B/CAxxLSV+ulKl4l6/QSHoDXEdlNcpnQVYqB9noyJh9DJenG
-MUb3zxOoJSDvuNVftZg1Pc07yexfFgRvix0JYC41z9A/bD3yrw/apd4omkuzpojG
-dqEg+xeqCCg6kC4TozKlcqi7Zq4n+pjO0M5crP9U1jllCxgo0pMDbdF7QSXnWuiC
-GVToAKqKWMZbnm4h05ZrGt7IujJExmpRIj6tr6TySvyMpGM3h3EGGjebLFhvRJ2q
-AdRodX9+cAnIQl9HP+eXFHuvp/VzPY8RPgSK3XjAogMNgIQqTTa8L4a6rfNOz83F
-yI0nf2ftcX+7ukUGmtWzL7XT9njqBNhNgTUOXMQ7ccFTe9bpxQxcukYYM/3asi14
-DrcWVHQ6VRbjHvn52lRqfw0rKMaCLGSPgsSd9wXA9OiHCexTDjP7LMdzLKW+QgJq
-1CCCwRvvct6pMvLsHnEhCdwC11ZIHnVOagtvt6p9YrOJOjBSBak3+/IpXaVQ/eSY
-F5UsPOi0nuo0ZLmBLnn/uU4/yK4ciPgZRdX/pe9iRlkSY0V5STo=
-=kdd5
------END PGP SIGNATURE-----
-
---rwEMma7ioTxnRzrJ--
