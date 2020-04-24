@@ -2,88 +2,122 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E93C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17379C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34DE420736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:37:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aT20FB4i"
+	by mail.kernel.org (Postfix) with ESMTP id F293E20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:37:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgDXNhY (ORCPT
+        id S1727819AbgDXNhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 09:37:24 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51492 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726301AbgDXNhX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 09:37:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587735443;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=4p9xE6dDL4DwA5J4m+c63Sg1xaDNlwCwqGVVFWe5OKA=;
-        b=aT20FB4iKIitqWG8j80qRr8oQDSsExlugSCww9JrZvaPsLiC5nnzw5ZMFZJu1T6tzvtzy8
-        PLuQehC8+WwWpbx24Dwgwv9alFpgSTPo3USctrr6/PYFNJuH8VOevLFm8iU0yo4jXHJldG
-        PF4waPTnEACIUPa1BxA8ucwbJ23Lcp0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-290-PGQFGcJnM42jROWMNDQS9Q-1; Fri, 24 Apr 2020 09:37:19 -0400
-X-MC-Unique: PGQFGcJnM42jROWMNDQS9Q-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4838A8B8C96;
-        Fri, 24 Apr 2020 13:37:17 +0000 (UTC)
-Received: from treble (ovpn-118-207.rdu2.redhat.com [10.10.118.207])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 011E599DE;
-        Fri, 24 Apr 2020 13:37:11 +0000 (UTC)
-Date:   Fri, 24 Apr 2020 08:37:09 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Miroslav Benes <mbenes@suse.cz>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, Vasily Gorbik <gor@linux.ibm.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>
-Subject: Re: [PATCH v2 6/9] s390/module: Use s390_kernel_write() for late
- relocations
-Message-ID: <20200424133709.egffplf3ewrc4leg@treble>
-References: <18266eb2c2c9a2ce0033426837d89dcb363a85d3.1587131959.git.jpoimboe@redhat.com>
- <20200422164037.7edd21ea@thinkpad>
- <20200422172126.743908f5@thinkpad>
- <20200422194605.n77t2wtx5fomxpyd@treble>
- <20200423141834.234ed0bc@thinkpad>
- <alpine.LSU.2.21.2004231513250.6520@pobox.suse.cz>
- <20200423141228.sjvnxwdqlzoyqdwg@treble>
- <20200423181030.b5mircvgc7zmqacr@treble>
- <20200423232657.7minzcsysnhp474w@treble>
- <eb464a0b-922b-1dbd-81e6-1161a5157acb@de.ibm.com>
+        Fri, 24 Apr 2020 09:37:35 -0400
+Received: from mga18.intel.com ([134.134.136.126]:27806 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726707AbgDXNhf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 09:37:35 -0400
+IronPort-SDR: smZEGsQDHNyIyfr3bTrmSbugVJZP07PpGCpQwPTrtWt0Ukvd/I8/hQXMI58h5/CddiNCs76wON
+ WR1IntiUqDeQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2020 06:37:34 -0700
+IronPort-SDR: gvhqoOaLEf6Tu1Xn++AV+1iiWh1wz2sv79iC+M3NuVZRpn4/WCzuaYkzP49lrQF+j14AldJ7fR
+ yjXGiCW0M07g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,311,1583222400"; 
+   d="scan'208";a="457907574"
+Received: from unknown (HELO localhost) ([10.239.159.128])
+  by fmsmga006.fm.intel.com with ESMTP; 24 Apr 2020 06:37:32 -0700
+Date:   Fri, 24 Apr 2020 21:39:33 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
+        jmattson@google.com, yu.c.zhang@linux.intel.com
+Subject: Re: [PATCH v11 1/9] KVM: VMX: Introduce CET VMX fields and flags
+Message-ID: <20200424133933.GC24039@local-michael-cet-test>
+References: <20200326081847.5870-1-weijiang.yang@intel.com>
+ <20200326081847.5870-2-weijiang.yang@intel.com>
+ <20200423160748.GF17824@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <eb464a0b-922b-1dbd-81e6-1161a5157acb@de.ibm.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20200423160748.GF17824@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 09:20:24AM +0200, Christian Borntraeger wrote:
-> > Here's a fix, using write() for the PLT and the GOT.
+On Thu, Apr 23, 2020 at 09:07:48AM -0700, Sean Christopherson wrote:
+> On Thu, Mar 26, 2020 at 04:18:38PM +0800, Yang Weijiang wrote:
+> > CET(Control-flow Enforcement Technology) is a CPU feature
+> > used to prevent Return/Jump-Oriented Programming(ROP/JOP)
+> > attacks. It provides the following sub-features to defend
+> > against ROP/JOP style control-flow subversion attacks:
 > 
-> Are you going to provide a proper patch?
+> Changelogs should wrap at 75 characters.  Wrapping slightly earlier is ok,
+> but wrapping at ~60 chars is too narrow.
+>
+Got it, thank you!
 
-Yes.  These incremental patches are intended to be part of the
-discussion, feel free to ignore them.
+> > Shadow Stack (SHSTK):
+> >   A second stack for program which is used exclusively for
+> >   control transfer operations.
+> > 
 
--- 
-Josh
+> >  /* Select x86 specific features in <linux/kvm.h> */
+> >  #define __KVM_HAVE_PIT
+> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > index 40c6768942ae..830afe5038d1 100644
+> > --- a/arch/x86/kvm/x86.c
+> > +++ b/arch/x86/kvm/x86.c
+> > @@ -186,6 +186,9 @@ static struct kvm_shared_msrs __percpu *shared_msrs;
+> >  				| XFEATURE_MASK_BNDCSR | XFEATURE_MASK_AVX512 \
+> >  				| XFEATURE_MASK_PKRU)
+> >  
+> > +#define KVM_SUPPORTED_XSS	(XFEATURE_MASK_CET_USER | \
+> > +				 XFEATURE_MASK_CET_KERNEL)
+> 
+> This belongs in a later patch, KVM obviously doesn't support XSS.
+>
+OK, will change it.
 
+> > +
+> >  u64 __read_mostly host_efer;
+> >  EXPORT_SYMBOL_GPL(host_efer);
+> >  
+> > @@ -402,6 +405,7 @@ static int exception_class(int vector)
+> >  	case NP_VECTOR:
+> >  	case SS_VECTOR:
+> >  	case GP_VECTOR:
+> > +	case CP_VECTOR:
+> >  		return EXCPT_CONTRIBUTORY;
+> >  	default:
+> >  		break;
+> > diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+> > index c1954e216b41..8f0baa6fa72f 100644
+> > --- a/arch/x86/kvm/x86.h
+> > +++ b/arch/x86/kvm/x86.h
+> > @@ -115,7 +115,7 @@ static inline bool x86_exception_has_error_code(unsigned int vector)
+> >  {
+> >  	static u32 exception_has_error_code = BIT(DF_VECTOR) | BIT(TS_VECTOR) |
+> >  			BIT(NP_VECTOR) | BIT(SS_VECTOR) | BIT(GP_VECTOR) |
+> > -			BIT(PF_VECTOR) | BIT(AC_VECTOR);
+> > +			BIT(PF_VECTOR) | BIT(AC_VECTOR) | BIT(CP_VECTOR);
+> >  
+> >  	return (1U << vector) & exception_has_error_code;
+> 
+> Maybe it's gratuitous, but I feel like the #CP logic should be in a patch
+> of its own, e.g. the changelog doesn't mention anything about #CP.
+> 
+My fault, will find a proper place to hold it. 
+
+> >  }
+> > -- 
+> > 2.17.2
+> > 
