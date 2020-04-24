@@ -2,386 +2,277 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BCEC55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85492C55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B18920700
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:54:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=topicbv.onmicrosoft.com header.i=@topicbv.onmicrosoft.com header.b="kRZ1Co9+";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=topicbv.onmicrosoft.com header.i=@topicbv.onmicrosoft.com header.b="WkhSrwJd"
+	by mail.kernel.org (Postfix) with ESMTP id 68BE820857
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:55:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgDXFyh (ORCPT
+        id S1726614AbgDXFzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 01:54:37 -0400
-Received: from mail-eopbgr00083.outbound.protection.outlook.com ([40.107.0.83]:9888
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725823AbgDXFyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 01:54:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=topicbv.onmicrosoft.com; s=selector2-topicbv-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LljQ9mSeYvwRiYARD2L2SLj2sKhSo6rGCjreMhNke1w=;
- b=kRZ1Co9+KT4Y3rgR85sfzPDfo7YZ45KDwKD9Z8Jc/PZlV/aKQMZyL/+2nHQoq1pubM1GG6iNC9T8F0q2IPH9ynQVWiAV8S9ERbp3PuIBR5Iwom7WfsTR8Qop0fJKYin2OHpNyR2AEfL7qfMeyEADI7Wbzx6GKgQYm873c/COjLg=
-Received: from DB6PR0801CA0066.eurprd08.prod.outlook.com (2603:10a6:4:2b::34)
- by AM0PR04MB6643.eurprd04.prod.outlook.com (2603:10a6:208:169::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Fri, 24 Apr
- 2020 05:54:30 +0000
-Received: from DB5EUR01FT064.eop-EUR01.prod.protection.outlook.com
- (2603:10a6:4:2b:cafe::9f) by DB6PR0801CA0066.outlook.office365.com
- (2603:10a6:4:2b::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend
- Transport; Fri, 24 Apr 2020 05:54:30 +0000
-Authentication-Results: spf=pass (sender IP is 13.81.10.179)
- smtp.mailfrom=topicproducts.com; arm.com; dkim=fail (signature did not
- verify) header.d=topicbv.onmicrosoft.com;arm.com; dmarc=none action=none
- header.from=topic.nl;
-Received-SPF: Pass (protection.outlook.com: domain of topicproducts.com
- designates 13.81.10.179 as permitted sender) receiver=protection.outlook.com;
- client-ip=13.81.10.179; helo=westeu13-emailsignatures-cloud.codetwo.com;
-Received: from westeu13-emailsignatures-cloud.codetwo.com (13.81.10.179) by
- DB5EUR01FT064.mail.protection.outlook.com (10.152.5.83) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2937.15 via Frontend Transport; Fri, 24 Apr 2020 05:54:29 +0000
-Received: from EUR03-DB5-obe.outbound.protection.outlook.com (104.47.10.51) by westeu13-emailsignatures-cloud.codetwo.com with CodeTwo SMTP Server (TLS12) via SMTP; Fri, 24 Apr 2020 05:54:27 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Hqsgn2yEfErLERcpfc+SOojoNa5T1ANig8fahmcjQpsUbxU24UsMeeJZZiCRxtAEDdERyXDjup53VRcqTHd6/D2OBY+tDUVxlhmR+3RWxN46maakPoD1HYmCWwkpO+3IN+CW7Uh29pkfOiL+ir9QcMUtZZfooaZ1q/U6qEWEm+wrpKUBQ7nsKhtCer/3J7Z7sL8hKGCit+KpgGP7/6NfdBWaDgpzLwF62ZRPPHKLQznT5v57yfy+SX3lqLaPfLIiN+Fb3KWnv4PC2BfXRn1+eSG8Cy1PzeLA/uanGW7DWyD/7nktlutr3aa2AjFttkZKs+MQDMxHQLBjQKl1AZ3l7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LljQ9mSeYvwRiYARD2L2SLj2sKhSo6rGCjreMhNke1w=;
- b=Lq5gktFA5YTdX6m9nXdo9WfDX1/6tHJ3GPyhna/2G0LhFaOM1eq2VxWGdYLyDD8qfSzYNYG0ndWQ9F+TZKf72fJRiHN6EkCVGRVj+QgPI6PHbC0bD5pi/awGGb68WiTmYc66jacRHZEBGaPmH/7ofDM1PacZLoMfu58pXTjeSXYYylyC4FK3u91oKyMzRk3w8793KxK9wXV4Kmi74hW9XPfCqIT9WaV0M9fx9kUXaWAUxZQd6rzvz3647tcztmUj6rZlwkM8sNENMBTex0jBPyFfti/wzaGuoLmGxApI+8qr4HuNU+GX8UuEHVc2W/Zzry0kih6jYRo2Masud+HSMA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=topicproducts.com; dmarc=pass action=none header.from=topic.nl;
- dkim=pass header.d=topic.nl; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=topicbv.onmicrosoft.com; s=selector2-topicbv-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LljQ9mSeYvwRiYARD2L2SLj2sKhSo6rGCjreMhNke1w=;
- b=WkhSrwJdtjkrXzeWrg2z06hAHYjUpzPNr09K91UI5B8r7J3rrV0iF1gKKjcpDnF1x+8+vZ4I5vRUfFyCy8pbS7XOG7j1gMh98pFrAkKu09EjXehmB7UBQeZemP7tQqHJsggECD3EI++mTghB4qo88i+dnbh4WXQ4Lp8BHW5+SQg=
-Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=mike.looijmans@topicproducts.com; 
-Received: from DB8PR04MB6523.eurprd04.prod.outlook.com (2603:10a6:10:10f::26)
- by DB8PR04MB5738.eurprd04.prod.outlook.com (2603:10a6:10:aa::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Fri, 24 Apr
- 2020 05:54:24 +0000
-Received: from DB8PR04MB6523.eurprd04.prod.outlook.com
- ([fe80::1ed:921f:1b:4f0f]) by DB8PR04MB6523.eurprd04.prod.outlook.com
- ([fe80::1ed:921f:1b:4f0f%7]) with mapi id 15.20.2937.012; Fri, 24 Apr 2020
- 05:54:24 +0000
-Subject: Re: [PATCH v5 2/2] iio: accel: Add support for the Bosch-Sensortec
- BMI088
-To:     Jonathan Cameron <jic23@kernel.org>
-CC:     devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com
-References: <20200324080309.12171-1-mike.looijmans@topic.nl>
- <20200324080309.12171-2-mike.looijmans@topic.nl>
- <20200328162044.7b9992c3@archlinux>
- <51d63f6b-a561-88f3-3718-b04539a7b3be@topic.nl>
- <20200404154847.62a4a35e@archlinux>
-From:   Mike Looijmans <mike.looijmans@topic.nl>
-Organization: Topic
-Message-ID: <efecaca9-9150-ada3-561f-1eb8a37727b2@topic.nl>
-Date:   Fri, 24 Apr 2020 07:54:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-In-Reply-To: <20200404154847.62a4a35e@archlinux>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: AM7PR04CA0018.eurprd04.prod.outlook.com
- (2603:10a6:20b:110::28) To DB8PR04MB6523.eurprd04.prod.outlook.com
- (2603:10a6:10:10f::26)
+        Fri, 24 Apr 2020 01:55:17 -0400
+Received: from mga12.intel.com ([192.55.52.136]:40659 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725554AbgDXFzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 01:55:17 -0400
+IronPort-SDR: OTsL7GHDmk4IOlFPJ83MIa4CqvJUssd29nxNnaLHN5pwCaz41pHukT3NYNIvfQr0iLnnQfstY4
+ zBT+w+zgJHtw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 22:55:17 -0700
+IronPort-SDR: Wu2Yjz+iBs/lqXxpfWg5oqiMgwsxTdBMbyVV3M3en0Zx/O1+ymKy3bS2I+DKabJzGQWxyckY3f
+ R9LOgGSUyKjA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,310,1583222400"; 
+   d="scan'208";a="280698972"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga004.fm.intel.com with ESMTP; 23 Apr 2020 22:55:17 -0700
+Date:   Thu, 23 Apr 2020 22:55:16 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Jan Kara <jack@suse.cz>, Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH V10 04/11] Documentation/dax: Update Usage section
+Message-ID: <20200424055516.GD4088835@iweiny-DESK2.sc.intel.com>
+References: <20200422212102.3757660-1-ira.weiny@intel.com>
+ <20200422212102.3757660-5-ira.weiny@intel.com>
+ <20200423222720.GS27860@dread.disaster.area>
+ <20200423232548.GA4088835@iweiny-DESK2.sc.intel.com>
+ <20200424021516.GB2040@dread.disaster.area>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.130] (83.128.90.119) by AM7PR04CA0018.eurprd04.prod.outlook.com (2603:10a6:20b:110::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Fri, 24 Apr 2020 05:54:23 +0000
-X-Originating-IP: [83.128.90.119]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 687d3ee8-98d1-4743-a65d-08d7e813f421
-X-MS-TrafficTypeDiagnostic: DB8PR04MB5738:|AM0PR04MB6643:
-X-Microsoft-Antispam-PRVS: <AM0PR04MB66433EB9B62BE733811E4EE996D00@AM0PR04MB6643.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;OLM:10000;
-X-Forefront-PRVS: 03838E948C
-X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6523.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(366004)(346002)(376002)(396003)(39840400004)(136003)(6486002)(26005)(2906002)(44832011)(66946007)(66476007)(66556008)(5660300002)(4326008)(31686004)(83170400001)(6916009)(31696002)(8936002)(53546011)(16526019)(8676002)(36756003)(81156014)(186003)(316002)(36916002)(52116002)(2616005)(42882007)(508600001)(16576012)(956004);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: topicproducts.com does not
- designate permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: vgql90YWTUaPxQ6bEwXRTPZS2lLQ8lqwkytdNNh3o/VBU1o1mfEQ5+a+GhUZs0Ic56GjW96LQRlnQn91X5k6dTFO332fY6MIub/7eT08m3s0I5lrYk/kQcC1skNJR+3lsHcpYi8O/RcAv925U3SHPmgg4N5fbUGo4L2Sa7CVDkTtA042MCjYyUWgnGnY9KBrTNcS/ZXIqaF+/t4EmhF3zo1j7xBzaPao/SGeeikYFQ+MOt+TbOF/mR47ipne80+jZaVRE0kFaOzA5oxA2ot2jr3OZT9/OlKSzkDjOxO2L8oU3s6KDJYpyDO73Hp0WDrRqS9nJlqIDEuhsEtrotx0hF4KSMXWZiOeUC89m+vqz/De6TeemFCCk3VKIzb40NqS4VC5rM8OBamR7orbKL+Vv+bJWs4MS3lOWwevvo+FmwXqOlRWQ9as9ZuHChN9GHuF
-X-MS-Exchange-AntiSpam-MessageData: 7u9BACQYl9iV0yZrL/W1QM1iOQnQ/eBw8dyyfkZsLLimJzt21cgZ5XCNS9+S3fW9y9Oz2JFvsbx2TguGK1YdGyI2U8W32e0PB/7FUbGyRNc+BeJtYHbheqypYoDPEeHIdGQxJXjcNf3WvNARM5lQvA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB5738
-X-CodeTwo-MessageID: fa4a5c92-7b20-4f4e-9101-76e53d652197.20200424055427@westeu13-emailsignatures-cloud.codetwo.com
-X-CodeTwoProcessed: true
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR01FT064.eop-EUR01.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:13.81.10.179;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:westeu13-emailsignatures-cloud.codetwo.com;PTR:westeu13-emailsignatures-cloud.codetwo.com;CAT:NONE;SFTY:;SFS:(396003)(346002)(136003)(376002)(39840400004)(46966005)(47076004)(36916002)(186003)(336012)(356005)(42882007)(16526019)(83170400001)(4326008)(7596003)(2616005)(956004)(31686004)(44832011)(508600001)(70586007)(82310400002)(26005)(7636003)(70206006)(36756003)(31696002)(8936002)(246002)(6486002)(53546011)(6916009)(316002)(5660300002)(16576012)(2906002)(8676002);DIR:OUT;SFP:1101;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 3f63e5b6-3774-4cee-9cec-08d7e813f0da
-X-Forefront-PRVS: 03838E948C
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Ac0L5AK83r8OUa0HOtjXKjjtnca4yn4pvv/UDJfYX4wUCXsXNQNinm7N9KsDntdea1PwDyZ2HZLnQ65vj7Im8MALVV5AH3l1E2GHfS3tI/8vQTTfZVLLEDDWG/MgWqtyYgPark1rYd3udXhucB1/7ZBCitUU/BrO+LTnpAhmQUSedKIOgdYQVzANVr+yPqbUbOahF7cpwOO86VKa6cuTY9y4PlGqGVjnXrMtFEVO+8f8rlPmX+cNSqFuIwmICOZUlksxQ8EBms7NOoMnUTJJ1wBgvm2bRjhVpCRyrWgeK/gwFN+YAWdRl91BVgg1FxVlZeuGInsjUMAaLSlXmJZAqPAUh+AyzgWmLl8PbmZpllNCi6BOnfPacdMOoHVwhquO6IfYE7dUqMqyE7E2NnvrH1G4hG/O3THD0YF1SwmTvNh6MWTXZkzY8MulJ2+wCkBOkFzP54yDM+0EEmrD9bV5S/17MA3Qg6MTXxSCb37rg/RT90t5cX4gC8WmVrRBjnzLzGjnLb06uQ/QonCFnSmr1Q==
-X-OriginatorOrg: topic.nl
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2020 05:54:29.2333
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 687d3ee8-98d1-4743-a65d-08d7e813f421
-X-MS-Exchange-CrossTenant-Id: 449607a5-3517-482d-8d16-41dd868cbda3
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=449607a5-3517-482d-8d16-41dd868cbda3;Ip=[13.81.10.179];Helo=[westeu13-emailsignatures-cloud.codetwo.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6643
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200424021516.GB2040@dread.disaster.area>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just an update, there'll be a v6 but I currently don't have access to 
-the board for testing.
+On Fri, Apr 24, 2020 at 12:15:16PM +1000, Dave Chinner wrote:
+> On Thu, Apr 23, 2020 at 04:25:48PM -0700, Ira Weiny wrote:
 
-On 04-04-2020 16:48, Jonathan Cameron wrote:
-> On Mon, 30 Mar 2020 10:07:00 +0200
-> Mike Looijmans <mike.looijmans@topic.nl> wrote:
->
->> On 28-03-2020 17:20, Jonathan Cameron wrote:
->>> On Tue, 24 Mar 2020 09:03:08 +0100
->>> Mike Looijmans <mike.looijmans@topic.nl> wrote:
->>>    
->>>> The BMI088 is a combined module with both accelerometer and gyroscope.
->>>> This adds the accelerometer driver support for the SPI interface.
->>>> The gyroscope part is already supported by the BMG160 driver.
->>>>
->>>> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
->>> Hi Mike,
->>>
->>> A few tiny things from me.
->>>
->>> For the sampling frequency, I wonder if we are better off going back
->>> to the list of values, but then also using the read_avail infrastructure
->>> to avoid having to carry them as a string as well?
->> The frequency range is just a simple power-of-two formula, so my take
->> was that a table would just be a waste of memory and resources.
->>
->> A table lookup costs more resources and requires more code in this case.
-> True, but the table is still there be it in string form  in order
-> to provide the 'available' list.
->
-> For reasons of simplicity in the IIO core, the read_avail callbacks
-> deal with tables of numbers like was originally the case here.
->
->
->>> Thanks,
->>>
->>> Jonathan
->>>    
->>>> diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
->>>> index 5d91a6dda894..7ed9c82b731b 100644
->>>> --- a/drivers/iio/accel/Kconfig
->>>> +++ b/drivers/iio/accel/Kconfig
->>>> @@ -151,6 +151,23 @@ config BMC150_ACCEL_SPI
->>>>    	tristate
->>>>    	select REGMAP_SPI
->>>>    
->>>> +config BMI088_ACCEL
->>>> +	tristate "Bosch BMI088 Accelerometer Driver"
->>>> +	select IIO_BUFFER
->>>> +	select IIO_TRIGGERED_BUFFER
->>>> +	select REGMAP
->>>> +	select BMI088_ACCEL_SPI
->>>> +	help
->>>> +	  Say yes here to build support for the Bosch BMI088 accelerometer.
->>>> +
->>>> +	  This is a combo module with both accelerometer and gyroscope.
->>>> +	  This driver is only implementing accelerometer part, which has
->>>> +	  its own address and register map.
->>>> +
->>>> +config BMI088_ACCEL_SPI
->>>> +	tristate
->>>> +	select REGMAP_SPI
->>>> +
->>> Hmm. So we list this driver even if SPI is disabled.  Generally we try
->>> not to do that, as it makes for lots of things to pick on devices that
->>> don't actually have an SPI bus.
->>>
->>> Hence, please add a depends to the first Kconfig symbol so it's hidden
->>> if no SPI.  When I2C is added it can become at least one of the two.
->>>    
->> I'm okay with a depends on SPI. Adding the I2C support is not difficult,
->> but I don't want to release something into the kernel that I cannot test.
-> Agreed.  Just add the depends on SPI.  I was just looking forwards to yourself
-> or someone else adding I2C when they do have a platform to test it.
->
->
->>
->>> ...
->>>    
->>>> +
->>>> +static int bmi088_accel_get_sample_freq(struct bmi088_accel_data *data,
->>>> +					int *val, int *val2)
->>>> +{
->>>> +	unsigned int value;
->>>> +	int ret;
->>>> +
->>>> +	ret = regmap_read(data->regmap, BMI088_ACCEL_REG_ACC_CONF,
->>>> +			  &value);
->>>> +	if (ret)
->>>> +		return ret;
->>>> +
->>>> +	value &= BMI088_ACCEL_MODE_ODR_MASK;
->>>> +	if (value == BMI088_ACCEL_MODE_ODR_12_5) {
->>>> +		*val = 12;
->>>> +		*val2 = 500000;
->>>> +		ret = IIO_VAL_INT_PLUS_MICRO;
->>>> +	} else {
->>>> +		*val = 25 << (value - BMI088_ACCEL_MODE_ODR_25);
->>>> +		*val2 = 0;
->>>> +		ret = IIO_VAL_INT;
->>>> +	}
->>>> +
->>>> +	return ret;
->>>> +}
->>>> +
->>>> +static int bmi088_accel_set_sample_freq(struct bmi088_accel_data *data, int val)
->>>> +{
->>>> +	unsigned int value;
->>>> +
->>>> +	if (val < 12 || val > 1600)
->>>> +		return -EINVAL;
->>>> +
->>>> +	value = fls(val) + 1;
->>> This leads to some 'novel' rounding to my mind.
->>>
->>> (12,16] = 12.5
->>> (16,32] = 25
->>> (32,64] = 50
->>> (64,128] = 100
->>>
->>> Generally we want to go faster if anything when talking about sampling frequencies,
->>> so I'd either like to see round up or precise value matching only.
->> I went for simplicity. The driver reports an "avail" range, so users
->> should not expect other values like "70" to actually work. The above is
->> the shortest inversion of the get_sample_freq function.
-> That's a bold assumption to make about userspace doing what it should
-> and checking _avail before writing crazy values.   A not entirely stupid
-> optimization would be to write without checking _avail and only do the
-> handling of that if the write fails (indicating that whatever value was
-> provided by some user isn't fine).
->
->
->> Just wanted to make it so that obvious things would work, and I feared
->> that a range would require one to spec "100.000" in decimal format just
->> because of the existence of the 12.5 value. So the driver is a bit
->> forgiving in that specifying "12" or "13" will also work.
->>
->> For a more exact match I could also add something like:
->>
->> if (val > 13 && (25 << (value - BMI088_ACCEL_MODE_ODR_25 ) != val)
->>      return -EINVAL;
->>
->> this would return -EINVAL for values like "26" or "1599".
-> Given the way the IIO core works, it will be perfectly happy to present
-> you with precise values.  If the val == 12, then check the val2 == 5
-> For the rest just check if the val is correct and val2 == 0.
->
-> If decimal part is not provide val2 will be equal to 0.
->
-> I'm still falling on the side of thinking a table of values is simpler,
-> less bug prone (because it's just a case of linear search for a match)
-> and if you use read_avail callback can handle that case as well without
-> needing to repeat values.  Memory cost of the
-> table is tiny 8 * 4 * 2 = 64 bytes.
->
-> It's not exactly a huge list of possibilities.
->
-> Jonathan
->
->>>    
->>>> +
->>>> +	return regmap_update_bits(data->regmap, BMI088_ACCEL_REG_ACC_CONF,
->>>> +				  BMI088_ACCEL_MODE_ODR_MASK, value);
->>>> +}
->>>> +
->>> ...
->>>    
->>>> +
->>>> +static int bmi088_accel_read_raw(struct iio_dev *indio_dev,
->>>> +				 struct iio_chan_spec const *chan,
->>>> +				 int *val, int *val2, long mask)
->>>> +{
->>>> +	struct bmi088_accel_data *data = iio_priv(indio_dev);
->>>> +	int ret;
->>>> +
->>>> +	switch (mask) {
->>>> +	case IIO_CHAN_INFO_RAW:
->>>> +		switch (chan->type) {
->>>> +		case IIO_TEMP:
->>>> +			return bmi088_accel_get_temp(data, val);
->>>> +		case IIO_ACCEL:
->>>> +			ret = iio_device_claim_direct_mode(indio_dev);
->>>> +			if (ret)
->>>> +				return ret;
->>>> +
->>>> +			ret = bmi088_accel_get_axis(data, chan, val);
->>>> +			iio_device_release_direct_mode(indio_dev);
->>>> +			if (ret)
->>>> +				return ret;
->>>> +
->>>> +			return IIO_VAL_INT;
->>>> +		default:
->>>> +			return -EINVAL;
->>>> +		}
->>>> +	case IIO_CHAN_INFO_OFFSET:
->>>> +		switch (chan->type) {
->>>> +		case IIO_TEMP:
->>>> +			/* Offset applies before scale */
->>>> +			*val = BMI088_ACCEL_TEMP_OFFSET/BMI088_ACCEL_TEMP_UNIT;
->>>> +			return IIO_VAL_INT;
->>>> +		default:
->>>> +			return -EINVAL;
->>>> +		}
->>>> +	case IIO_CHAN_INFO_SCALE:
->>>> +		*val = 0;
->>> Why?  In error paths it's not used, and it's set in the other two paths.
->> will remove
->>
->>>    
->>>> +		switch (chan->type) {
->>>> +		case IIO_TEMP:
->>>> +			/* 0.125 degrees per LSB */
->>>> +			*val = BMI088_ACCEL_TEMP_UNIT;
->>>> +			return IIO_VAL_INT;
->>>> +		case IIO_ACCEL:
->>>> +			ret = regmap_read(data->regmap,
->>>> +					  BMI088_ACCEL_REG_ACC_RANGE, val);
->>>> +			if (ret)
->>>> +				return ret;
->>>> +
->>>> +			*val2 = 15 - (*val & 0x3);
->>>> +			*val = 3 * 980;
->>>> +
->>>> +			return IIO_VAL_FRACTIONAL_LOG2;
->>>> +		default:
->>>> +			return -EINVAL;
->>>> +		}
->>>> +	case IIO_CHAN_INFO_SAMP_FREQ:
->>>> +		mutex_lock(&data->mutex);
->>>> +		ret = bmi088_accel_get_sample_freq(data, val, val2);
->>>> +		mutex_unlock(&data->mutex);
->>>> +		return ret;
->>>> +	default:
->>>> +		return -EINVAL;
->>>> +	}
->>>> +}
->>>> +
->>> ...
->>>    
->>
+[snap]
 
--- 
-Mike Looijmans
+> > > > +        ii> If the file still does not have the desired S_DAX access
+> > > > +            mode, either unmount and remount the filesystem, or close
+> > > > +            the file and use drop_caches.
+> > > 
+> > > .... don't have permissions to do either of these things...
+> > > 
+> > > Essentially, you may as well say "reboot the machine" at this point,
+> > > because it's effectively the same thing from a production workload
+> > > point of view...
+> > > 
+> > > Realistically, I'm not sure we should even say "programs must cause
+> > > eviction", because that's something they cannot do directly without
+> > > admin privileges nor is it something we want to occur randomly on
+> > > production machines during production. i.e. this is something that
+> > > should only be done in scheduled downtime by an administrator, not
+> > > attempted by applications because DAX isn't immediately available.
+> > > The admin is in charge here, not the "program".
+> > 
+> > I agree with everything you say.
+> > 
+> > But I feel a bit stuck here.  Without some type of documentation we are not
+> > allowing FS_XFLAG_DAX to be changed on a file by the user.  Which is what we
+> > were proposing before and we all disliked.
+> 
+> For production systems, the admin is the "user" we are taking about.
+> The program itself shouldn't be choosing the method of file data
+> access; that's up to the administrator in charge of the system to
+> set the policy how they want it to be set.
+> 
+> i.e. there's a difference between the user/admin taking action to
+> change a data access policy, and the application taking actions to
+> override the policy that the admin has set.
+> 
+> What I'm trying to say is that setting/clearing the DAX flags is an
+> -admin operation-, and part of the consideration of that admin
+> operation is when the change should take effect.
+> 
+> i.e. refering to "programs" as if they control the access mode is
+> entirely the wrong way to be looking at persistent inode flags. They
+> are an administration policy mechanism that belongs to the data set,
+> not the application (or "program"). Managing data set storage and
+> access policy is something administrators do, not the application...
 
+Ok.
+
+> 
+> > So I feel like we need to say something about getting the inodes evicted.
+> > perhaps by a 'drop cache' even requested of the admin???
+> > 
+> > Maybe this?
+> > 
+> > 
+> >  4. Programs that require a specific file access mode (DAX or not DAX)
+> >     can do one of the following:
+> > 
+> >     (a) Set the parent directory FS_XFLAG_DAX as needed before file are
+> >         created; or
+> > 
+> >     (b) Have the administrator set the desired behaviour via mount option; or
+> > 
+> >     (c) Set or clear the file's FS_XFLAG_DAX flag as needed and wait for the
+> >         inode to be evicted from memory.
+> > 
+> >         i> the only effective way of ensuring this is to request the admin drop
+> >            the file system caches.
+> 
+> 4. The DAX policy can be changed via:
+> 
+> 	a) Set the parent directory FS_XFLAG_DAX as needed before
+> 	   files are created
+> 
+> 	b) Set the appropriate dax="foo" mount option
+> 
+> 	c) Change the FS_XFLAG_DAX on existing regular files and
+> 	   directories. This has runtime constraints and limitations
+> 	   that are described in 5) below.
+> 
+> 5. When changing the DAX policy via toggling the persistent
+> FS_XFLAG_DAX flag, the change in behaviour for existing regular
+> files may not occur immediately. If the change must take effect
+> immediately, the administrator needs to:
+> 
+> 	1. stop the application so there are no active references to
+> 	   the data set the policy change will affect
+> 	2. evict the data set from kernel caches so it will be
+> 	   re-instantiated when the application is restarted. This can
+> 	   be acheived by:
+> 		a. drop-caches
+> 		b. a filesystem unmount and mount cycle
+> 		c. a system reboot
+> 
+> Hence if DAX access policy changes are required to take immediate
+> effect, scheduled system-wide downtime will be required to guarantee
+> the new policy change takes effect when the application is
+> restarted.
+> 
+> 
+> > <quote>
+> > Enabling DAX on xfs
+> > -------------------
+> > 
+> > Summary
+> > -------
+> > 
+> >  1. There exists an in-kernel file access mode flag S_DAX that corresponds to
+> >     the statx flag STATX_ATTR_DAX.  See the manpage for statx(2) for details
+> >     about this access mode.
+> > 
+> >  2. There exists a regular file and directory inode flag FS_XFLAG_DAX.  It is
+> >     inherited from the parent directory FS_XFLAG_DAX inode flag at creation
+> >     time.  This advisory flag can be set or cleared at any time, but doing so
+> >     does not immediately affect the S_DAX state.
+> 
+> 2. There exists a persistent flag FS_XFLAG_DAX that can be applied to
+> regular files and directories. This advisory flag can be set or
+> cleared at any time, but doing so does not immediately affect the
+> S_DAX state.
+
+Done.
+
+> 
+> 3. If the persistent FS_XFLAG_DAX flag is set on a directory, this
+> flag will be inherited by all regular files and sub directories that
+> are subsequently created in this directory. Files and subdirectories
+> that exist at the time this flag is set or cleared on the parent
+> directory are not modified by this modification of the parent
+> directory.
+> 
+
+Done.
+
+> 
+> > 
+> >  3. There exists dax mount options which can override FS_XFLAG_DAX in the
+> >     setting of the S_DAX flag.  Given underlying storage which supports DAX the
+> >     following hold.
+> > 
+> >     "-o dax=inode"  means "follow FS_XFLAG_DAX" and is the default.
+> > 
+> >     "-o dax=never"  means "never set S_DAX, ignore FS_XFLAG_DAX."
+> > 
+> >     "-o dax=always" means "always set S_DAX ignore FS_XFLAG_DAX."
+> > 
+> >     "-o dax"        is a legacy option which is an alias for "dax=always".
+> >     		    This may be removed in the future so "-o dax=always" is
+> > 		    the preferred method for specifying this behavior.
+> > 
+> >     NOTE: Setting and inheritance affect FS_XFLAG_DAX at all times even when
+> >     the file system is mounted with a dax option.  However, in-core inode
+> >     state (S_DAX) will continue to be overridden until the file system is
+> 
+> s/continue to//
+
+Done.
+
+> 
+> >     remounted with dax=inode and the inode is evicted.
+> 
+> evicted from kernel memory.
+
+Done.
+
+> 
+> > 
+> >  4. Programs that require a specific file access mode (DAX or not DAX)
+> >     can do one of the following:
+> > 
+> >     (a) Set the parent directory FS_XFLAG_DAX as needed before file are
+> >         created; or
+> > 
+> >     (b) Have the administrator set the desired behaviour via mount option; or
+> > 
+> >     (c) Set or clear the file's FS_XFLAG_DAX flag as needed and wait for the
+> >         inode to be evicted from memory.
+> > 
+> > 	i> the only effective way of ensuring this is to request the admin drop
+> > 	   the file system caches.
+> 
+> See my comments above.
+
+Done. thanks!
+
+> 
+> > 
+> > 
+> > Details
+> > -------
+> > 
+> > There are 2 per-file dax flags.  One is a persistent inode setting (FS_XFLAG_DAX)
+> > and the other is a volatile flag indicating the active state of the feature
+> > (S_DAX).
+> > 
+> > FS_XFLAG_DAX is preserved within the file system.  This persistent config
+> > setting can be set, cleared and/or queried using the FS_IOC_FS[GS]ETXATTR ioctl
+> > (see ioctl_xfs_fsgetxattr(2)) or an utility such as 'xfs_io'.
+> > 'chattr [-+]x'".
+> 
+> Stray line.
+
+Thanks for the review!  V11 should be out soon.
+
+Ira
+
+> 
+> Cheers,
+> 
+> Dave.
+> 
+> -- 
+> Dave Chinner
+> david@fromorbit.com
