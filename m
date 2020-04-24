@@ -2,176 +2,136 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 569BDC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 169F1C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3144C20776
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:55:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587725722;
-	bh=K9+b1rTapg006SIB5atM7S2iJK8RNGUMIZkn+n29O1s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ez+56uUDuaPW9wExWOpFBm5LTsPmvr/KsjvPZEcmKQh/JC/ShVmycPMczSB80wGhM
-	 ubv+rmmff1V75tBiwdq/4FSeFRrEoBLadYOcFkdZnABhQrggTWp3EqKlYIRStqWvEC
-	 kQeB3K7WvbMj6GV+Hc909B5zYYUv5NKpWBTe8C0w=
+	by mail.kernel.org (Postfix) with ESMTP id ECE1620736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:00:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbgDXKzV (ORCPT
+        id S1726791AbgDXLA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 06:55:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52376 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 07:00:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:59820 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726289AbgDXKzV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 06:55:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 652F220776;
-        Fri, 24 Apr 2020 10:55:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587725718;
-        bh=K9+b1rTapg006SIB5atM7S2iJK8RNGUMIZkn+n29O1s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LJdel0eRJof2lo1GMlC9+yZ5jSeuKES0JLS+2ISF2npXrRzEHsgz+pKvEzFcqy7f6
-         pQoEFMZ7k/LrjecJxiBrXNH9qmW1UkVmOse8grbU6SWp+rqv/aGxzZd8iulU1EbnU0
-         x24p9hKPmLkpz95YIFjoFcAFbW8NhI48hQg9ZLCw=
-Date:   Fri, 24 Apr 2020 12:55:16 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Christian.Gromm@microchip.com
-Cc:     devel@driverdev.osuosl.org, lkp@lists.01.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: b276527539 ("staging: most: move core files out of the staging
- .."): [   12.247349] BUG: kernel NULL pointer dereference, address: 00000000
-Message-ID: <20200424105516.GA395057@kroah.com>
-References: <20200329133917.GE11705@shao2-debian>
- <1e725f60c598cd8a5f167fd63ade6ee173960f01.camel@microchip.com>
- <20200424101634.GB390100@kroah.com>
- <210f5dac5fe26fba008068a932e51a9cde142c89.camel@microchip.com>
+        id S1726289AbgDXLA5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 07:00:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F3BF01FB;
+        Fri, 24 Apr 2020 04:00:55 -0700 (PDT)
+Received: from [10.57.33.170] (unknown [10.57.33.170])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 385363F6CF;
+        Fri, 24 Apr 2020 04:00:53 -0700 (PDT)
+Subject: Re: [PATCH v4 05/11] arm64: csum: Disable KASAN for do_csum()
+To:     David Laight <David.Laight@ACULAB.COM>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "kernel-team@android.com" <kernel-team@android.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+References: <20200421151537.19241-1-will@kernel.org>
+ <20200421151537.19241-6-will@kernel.org>
+ <20200422094951.GA54428@lakrids.cambridge.arm.com>
+ <20200422104138.GA30265@willie-the-truck>
+ <6efa0cc1-bd3e-b9b6-4e69-7ac05e6efe35@arm.com>
+ <db86e9fa88754d59ac5f8d3f4fe0f9a3@AcuMS.aculab.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <a4ddb547-ea46-d79d-3088-a97b9a033997@arm.com>
+Date:   Fri, 24 Apr 2020 12:00:52 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <210f5dac5fe26fba008068a932e51a9cde142c89.camel@microchip.com>
+In-Reply-To: <db86e9fa88754d59ac5f8d3f4fe0f9a3@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 10:21:05AM +0000, Christian.Gromm@microchip.com wrote:
-> On Fri, 2020-04-24 at 12:16 +0200, Greg KH wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you
-> > know the content is safe
-> > 
-> > On Fri, Apr 24, 2020 at 09:41:36AM +0000, 
-> > Christian.Gromm@microchip.com wrote:
-> > > On Sun, 2020-03-29 at 21:39 +0800, kernel test robot wrote:
-> > > > EXTERNAL EMAIL: Do not click links or open attachments unless you
-> > > > know the content is safe
-> > > > 
-> > > > Greetings,
-> > > > 
-> > > > 0day kernel testing robot got the below dmesg and the first bad
-> > > > commit is
-> > > > 
-> > > > https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git
-> > > > staging-next
-> > > > 
-> > > > commit b276527539188f1f61c082ebef27803db93e536d
-> > > > Author:     Christian Gromm <christian.gromm@microchip.com>
-> > > > AuthorDate: Tue Mar 10 14:02:40 2020 +0100
-> > > > Commit:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > CommitDate: Tue Mar 24 13:42:44 2020 +0100
-> > > > 
-> > > >     staging: most: move core files out of the staging area
-> > > > 
-> > > >     This patch moves the core module to the /drivers/most
-> > > > directory
-> > > >     and makes all necessary changes in order to not break the
-> > > > build.
-> > > > 
-> > > >     Signed-off-by: Christian Gromm <christian.gromm@microchip.com
-> > > > >
-> > > >     Link:
-> > > > https://lore.kernel.org/r/1583845362-26707-2-git-send-email-christian.gromm@microchip.com
-> > > >     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org
-> > > > >
-> > > > 
-> > > > 22dd4acc80  Staging: speakup: Add identifier name to function
-> > > > declaration arguments.
-> > > > b276527539  staging: most: move core files out of the staging
-> > > > area
-> > > > e681bb287f  staging: vt6656: Use DIV_ROUND_UP macro instead of
-> > > > specific code
-> > > > +-------------------------------------------------------+------
-> > > > ----
-> > > > --+------------+------------+
-> > > > >                                                       |
-> > > > > 22dd4acc80
-> > > > > > b276527539 | e681bb287f |
-> > > > +-------------------------------------------------------+------
-> > > > ----
-> > > > --+------------+------------+
-> > > > > boot_successes                                        |
-> > > > > 26         | 0          | 0          |
-> > > > > boot_failures                                         |
-> > > > > 8          | 11         | 11         |
-> > > > > WARNING:possible_circular_locking_dependency_detected |
-> > > > > 8          |            |            |
-> > > > > BUG:kernel_NULL_pointer_dereference,address           |
-> > > > > 0          | 11         | 11         |
-> > > > > Oops:#[##]                                            |
-> > > > > 0          | 11         | 11         |
-> > > > > EIP:__list_add_valid                                  |
-> > > > > 0          | 11         | 11         |
-> > > > > Kernel_panic-not_syncing:Fatal_exception              |
-> > > > > 0          | 11         | 11         |
-> > > > +-------------------------------------------------------+------
-> > > > ----
-> > > > --+------------+------------+
-> > > > 
-> > > > If you fix the issue, kindly add following tag
-> > > > Reported-by: kernel test robot <lkp@intel.com>
-> > > > 
-> > > > [   12.242090] no options.
-> > > > [   12.245364] FPGA DOWNLOAD --->
-> > > > [   12.245723] FPGA image file name: xlinx_fpga_firmware.bit
-> > > > [   12.246548] GPIO INIT FAIL!!
-> > > > [   12.246995] most_sound: init()
-> > > > [   12.247349] BUG: kernel NULL pointer dereference, address:
-> > > 
-> > > The init order of the modules is wrong in case the driver is
-> > > being built in-tree.
-> > > 
-> > > The init function of module most_sound is called before the
-> > > core itself is being initialized.
-> > > 
-> > > [    5.179189] most_sound: init()
-> > > [    5.180205] mostcore: __init()
-> > > 
-> > > Hence the list used in the core to store and track the
-> > > registered components has not been initialized with
-> > > INIT_LIST_HEAD(&comp_list) by the time the sound module
-> > > tries to register itself with the core.
-> > > 
-> > > The Kconfig of most_sound, however, has a dependency to
-> > > MOST. How can the build system be forced to initialize the
-> > > core module first?
-> > 
-> > Linker order is the thing here.
-> > 
-> > You can mess with the init levels here, and use subsys_initcall() for
-> > mostcore, will that fix it?
+On 2020-04-24 10:41 am, David Laight wrote:
+> From: Robin Murphy
+>> Sent: 22 April 2020 12:02
+> ..
+>> Sure - I have a nagging feeling that it could still do better WRT
+>> pipelining the loads anyway, so I'm happy to come back and reconsider
+>> the local codegen later. It certainly doesn't deserve to stand in the
+>> way of cross-arch rework.
 > 
-> I already gave it a try and it works. But is it ok to use the
-> subsys_initcall() function when the driver is being built as a
-> module?
+> How fast does that loop actually run?
 
-Yes, that works the same, see it's use elsewhere in the kernel tree, and
-for what it "degrades to" if the file is being built as a module.
+I've not characterised it in detail, but faster than any of the other 
+attempts so far ;)
 
-thanks,
+> To my mind it seems to do a lot of operations on each 64bit value.
+> I'd have thought that a loop based on:
+> 	sum64 = *ptr;
+> 	sum64_high = *ptr++ >> 32;
+> and then fixing up the result would be faster.
+> 
+> The x86-64 code is also bad!
+> On intel cpu prior to haswell a simple:
+> 	sum_64 += *ptr32++;
+> is faster than the current code.
+> (Although you can do a lot better even on ivy bridge.)
 
-greg k-h
+The aim here is to minimise load bandwidth - most Arm cores can slurp 16 
+bytes from L1 in a single load as quickly as any smaller amount, so 
+nibbling away in little 32-bit chunks would result in up to 4x more load 
+cycles. Yes, the C code looks ridiculous, but the other trick is that 
+most of those operations don't actually exist. Since a __uint128_t is 
+really backed by any two 64-bit GPRs - or if you're careful, one 64-bit 
+GPR and the carry flag - all those shifts and rotations are in fact 
+resolved by register allocation, so what we end up with is a very neat 
+loop of essentially just loads and 64-bit accumulation:
+
+...
+  138:   a94030c3        ldp     x3, x12, [x6]
+  13c:   a9412cc8        ldp     x8, x11, [x6, #16]
+  140:   a94228c4        ldp     x4, x10, [x6, #32]
+  144:   a94324c7        ldp     x7, x9, [x6, #48]
+  148:   ab03018d        adds    x13, x12, x3
+  14c:   510100a5        sub     w5, w5, #0x40
+  150:   9a0c0063        adc     x3, x3, x12
+  154:   ab08016c        adds    x12, x11, x8
+  158:   9a0b0108        adc     x8, x8, x11
+  15c:   ab04014b        adds    x11, x10, x4
+  160:   9a0a0084        adc     x4, x4, x10
+  164:   ab07012a        adds    x10, x9, x7
+  168:   9a0900e7        adc     x7, x7, x9
+  16c:   ab080069        adds    x9, x3, x8
+  170:   9a080063        adc     x3, x3, x8
+  174:   ab070088        adds    x8, x4, x7
+  178:   9a070084        adc     x4, x4, x7
+  17c:   910100c6        add     x6, x6, #0x40
+  180:   ab040067        adds    x7, x3, x4
+  184:   9a040063        adc     x3, x3, x4
+  188:   ab010064        adds    x4, x3, x1
+  18c:   9a030023        adc     x3, x1, x3
+  190:   710100bf        cmp     w5, #0x40
+  194:   aa0303e1        mov     x1, x3
+  198:   54fffd0c        b.gt    138 <do_csum+0xd8>
+...
+
+Instruction-wise, that's about as good as it can get short of 
+maintaining multiple accumulators and moving the pairwise folding out of 
+the loop. The main thing that I think is still left on the table is that 
+the load-to-use distances are pretty short and there's clearly scope to 
+spread out and amortise the load cycles better, which stands to benefit 
+both big and little cores.
+
+Robin.
