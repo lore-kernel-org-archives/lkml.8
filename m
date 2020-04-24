@@ -2,96 +2,92 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3212AC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E27C9C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17E2020704
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C008520736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:39:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587731966;
+	bh=L7vTCbCHK5QUVdLRP/hudQkCt/S3GNMCtxRfc2gl49E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fNbwqJ/NQ5x9BEzmLQ0LNA/q0sm53yVkm1qTK8oO/Hm/VKGbnPOZSkbs8inkYBpFL
+	 j+vLYGq5zk5ttrAybM8MWrz6/I7sZAEzc79m7qzwwWuO3RC5CuM3/YGAftyxF6xg5I
+	 ZFtZ02HYGZlTCRSoW71Z2s/WTOU2xVyOFhpZYLRc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbgDXMio (ORCPT
+        id S1727041AbgDXMjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:38:44 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:59524 "EHLO inva020.nxp.com"
+        Fri, 24 Apr 2020 08:39:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726489AbgDXMin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:38:43 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 875331A03CA;
-        Fri, 24 Apr 2020 14:38:41 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 067471A03BE;
-        Fri, 24 Apr 2020 14:38:37 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 24BD8402C7;
-        Fri, 24 Apr 2020 20:38:31 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, broonie@kernel.org,
-        alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
-        tiwai@suse.com
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: fsl_easrc: Check NULL pinter before dereference
-Date:   Fri, 24 Apr 2020 20:30:04 +0800
-Message-Id: <1587731404-29750-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726668AbgDXMjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:39:25 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D46720704;
+        Fri, 24 Apr 2020 12:39:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587731965;
+        bh=L7vTCbCHK5QUVdLRP/hudQkCt/S3GNMCtxRfc2gl49E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iVPTGngs30PgIDoHePGAg82N2cv2toTq3Gfc9RDatmKX9Nt3+mq9UM+6QpEMKCxTX
+         QQdPBIcmk5xVQy/i+5/rG2NU/02LIwoGGWGnoQvi3hqqXJIAI8b7yDHNzsyscuSwpJ
+         tcxxcYuaS/7uqYQMAhp1GAFHOmASztPluptgDF2Q=
+Date:   Fri, 24 Apr 2020 13:39:22 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     AceLan Kao <acelan.kao@canonical.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Aaron Sierra <asierra@xes-inc.com>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] regmap-i2c: add 16 bits register width support
+Message-ID: <20200424123922.GF5850@sirena.org.uk>
+References: <20200423085857.93684-1-acelan.kao@canonical.com>
+ <20200423144529.GM4808@sirena.org.uk>
+ <CAFv23QmNLUqWKHTjK-sFE7ChUCu9j=0p6=Rn22d0E8_HeV-8aw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Y/WcH0a6A93yCHGr"
+Content-Disposition: inline
+In-Reply-To: <CAFv23QmNLUqWKHTjK-sFE7ChUCu9j=0p6=Rn22d0E8_HeV-8aw@mail.gmail.com>
+X-Cookie: Information is the inverse of entropy.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch 955ac624058f: "ASoC: fsl_easrc: Add EASRC ASoC CPU DAI
-drivers" from Apr 16, 2020, leads to the following Smatch complaint:
 
-sound/soc/fsl/fsl_easrc.c:1529 fsl_easrc_hw_free()
-warn: variable dereferenced before check 'ctx' (see line 1527)
+--Y/WcH0a6A93yCHGr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-sound/soc/fsl/fsl_easrc.c
-  1526          struct fsl_asrc_pair *ctx = runtime->private_data;
-  1527          struct fsl_easrc_ctx_priv *ctx_priv = ctx->private;
-                                                      ^^^^^
-Dereference
+On Fri, Apr 24, 2020 at 08:24:53PM +0800, AceLan Kao wrote:
 
-  1528
-  1529          if (ctx && (ctx_priv->ctx_streams & BIT(substream->stream))) {
-                    ^^^
-This check is too late, to prevent a NULL dereference.
+> I'm not an expert in this field, please let me know if there is any
+> better way to archive this.
 
-  1530                  ctx_priv->ctx_streams &= ~BIT(substream->stream);
-  1531                  fsl_easrc_release_context(ctx);
+I think you're limited by the decisions of the hardware people here
+sadly and there are no really good options.
 
-Fixes: 955ac624058f ("ASoC: fsl_easrc: Add EASRC ASoC CPU DAI drivers")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- sound/soc/fsl/fsl_easrc.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+--Y/WcH0a6A93yCHGr
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/sound/soc/fsl/fsl_easrc.c b/sound/soc/fsl/fsl_easrc.c
-index 97658e1f4989..20326bffab64 100644
---- a/sound/soc/fsl/fsl_easrc.c
-+++ b/sound/soc/fsl/fsl_easrc.c
-@@ -1524,9 +1524,14 @@ static int fsl_easrc_hw_free(struct snd_pcm_substream *substream,
- {
- 	struct snd_pcm_runtime *runtime = substream->runtime;
- 	struct fsl_asrc_pair *ctx = runtime->private_data;
--	struct fsl_easrc_ctx_priv *ctx_priv = ctx->private;
-+	struct fsl_easrc_ctx_priv *ctx_priv;
-+
-+	if (!ctx)
-+		return -EINVAL;
-+
-+	ctx_priv = ctx->private;
- 
--	if (ctx && (ctx_priv->ctx_streams & BIT(substream->stream))) {
-+	if (ctx_priv->ctx_streams & BIT(substream->stream)) {
- 		ctx_priv->ctx_streams &= ~BIT(substream->stream);
- 		fsl_easrc_release_context(ctx);
- 	}
--- 
-2.21.0
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6i3fkACgkQJNaLcl1U
+h9CksQf/QlFtbzO4d7uYaF/4YDx2vWKQIG7Z8GYvPllPFb6dTd9BZcI/Onq95xpd
+AWRYXybNuClD2NrsJ38sbK1yw33cScCNxBt0vkyUpK6143QUpjGjqzyb7igBxL6N
+zSqUcjQHeiDOXYBqddQO0ylynY7bIEumiW/y8U5TZ/WtsLnfPwcJzcIXCopL/S5t
+4iFF87LoT5KsVx6ZAH2tpYC+Jy51q+BQASar/KctOBo0TXVXckmmI3wPmt2aVxdC
+ZzpmNl6SQkd//jr+G4U/fV552298if/HtKcV5xuWf8qWcsI7nHA41z3guqdpa5f2
+Ve1iLld22XEQDdhxUli2A8ZhLuw5TA==
+=/Ldv
+-----END PGP SIGNATURE-----
+
+--Y/WcH0a6A93yCHGr--
