@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7B5C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90EBCC55191
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 381FD20736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:32:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E81320700
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:32:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587731560;
-	bh=nYV0G6EkJ94yM3KWpVtyeNfmNdgWB3s/ofgybmqmjF8=;
+	s=default; t=1587731565;
+	bh=wMtdi2mSKs8GJKWAFYEXR4EYW0aiS/Rd2QRsf2QSWoI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jBC1z3NzUIirhHMorSlIZUMmAzCEU29muDU6Kg+O2toO1VmRQqT15Ed0fcWGwvx1N
-	 fZc7CimUYXwGpT1A2JtM7IeTYdkM7bCSavxww2Z9qGGF5DBlhgmySxYLi+eZrVHAmq
-	 R11LNgDXqWbWdTRvZmexeft2qOTcpyhyx30XzHBU=
+	b=wsCl2IRPETIB/ZRtaYKwHGKg4I+ZuLI97bUO/Qv4Xlip4F2rwfRdphCF5H0pjKP7T
+	 r9AJW9+IZ5vrJcAGR3Jsr3rqht9+6UVFOHqxNo2ILSWVmpnCBsCo2TszMrZpYLr2kb
+	 BzARTwvHJkgKhxo3ejGh+fVExCq97YkqcoJbmPHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbgDXMcj (ORCPT
+        id S1728184AbgDXMco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:32:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52258 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:32:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727114AbgDXMW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:22:56 -0400
+        id S1727044AbgDXMWy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:22:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1134721473;
-        Fri, 24 Apr 2020 12:22:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9938D20767;
+        Fri, 24 Apr 2020 12:22:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587730975;
-        bh=nYV0G6EkJ94yM3KWpVtyeNfmNdgWB3s/ofgybmqmjF8=;
+        s=default; t=1587730973;
+        bh=wMtdi2mSKs8GJKWAFYEXR4EYW0aiS/Rd2QRsf2QSWoI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cO/yWddvHRabF4ldWzBKshFvAg8FH6fdwC2X1jPezTSnsN3EeSNGXeSE1Re35f1U2
-         PvN3Ju7BI6PMWIqNRquuza10rHC9SBRueBjQJNeGPHmvBuN0Th6nfYIqzZPWtbh+Ld
-         oylOwjOQ7opX7WTasAypxJcpAOQkYVkFGoKrCnOo=
+        b=IhSGRyp/oaUG45ZW3eaWzgsjbOlib8ciaO8MslVsah2JYpDLocpgqkRZO3dtF31t/
+         KzqunRojp15/TI+f2hHy+Ed9c7bxhty7dob5KMBAdde3KzUo16OoCbbs3VJD5/hrnC
+         18cUJYlHaQDpi+phLIkM3H3S1RW+WbmbV2alvxFs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bodo Stroesser <bstroesser@ts.fujitsu.com>,
-        Mike Christie <mchristi@redhat.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 16/38] scsi: target: tcmu: reset_ring should reset TCMU_DEV_BIT_BROKEN
-Date:   Fri, 24 Apr 2020 08:22:14 -0400
-Message-Id: <20200424122237.9831-16-sashal@kernel.org>
+Cc:     Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.6 14/38] drm/amdgpu: fix wrong vram lost counter increment V2
+Date:   Fri, 24 Apr 2020 08:22:12 -0400
+Message-Id: <20200424122237.9831-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200424122237.9831-1-sashal@kernel.org>
 References: <20200424122237.9831-1-sashal@kernel.org>
@@ -61,41 +60,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+From: Evan Quan <evan.quan@amd.com>
 
-[ Upstream commit 066f79a5fd6d1b9a5cc57b5cd445b3e4bb68a5b2 ]
+[ Upstream commit 028cfb2444b94d4f394a6fa4ca46182481236e91 ]
 
-In case command ring buffer becomes inconsistent, tcmu sets device flag
-TCMU_DEV_BIT_BROKEN.  If the bit is set, tcmu rejects new commands from LIO
-core with TCM_LOGICAL_UNIT_COMMUNICATION_FAILURE, and no longer processes
-completions from the ring.  The reset_ring attribute can be used to
-completely clean up the command ring, so after reset_ring the ring no
-longer is inconsistent.
+Vram lost counter is wrongly increased by two during baco reset.
 
-Therefore reset_ring also should reset bit TCMU_DEV_BIT_BROKEN to allow
-normal processing.
+V2: assumed vram lost for mode1 reset on all ASICs
 
-Link: https://lore.kernel.org/r/20200409101026.17872-1-bstroesser@ts.fujitsu.com
-Acked-by: Mike Christie <mchristi@redhat.com>
-Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Evan Quan <evan.quan@amd.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/target_core_user.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 20 ++++++++++++++++++--
+ drivers/gpu/drm/amd/amdgpu/cik.c           |  2 --
+ drivers/gpu/drm/amd/amdgpu/nv.c            |  4 ----
+ drivers/gpu/drm/amd/amdgpu/soc15.c         |  4 ----
+ drivers/gpu/drm/amd/amdgpu/vi.c            |  2 --
+ 5 files changed, 18 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
-index 0b9dfa6b17bc7..f769bb1e37356 100644
---- a/drivers/target/target_core_user.c
-+++ b/drivers/target/target_core_user.c
-@@ -2073,6 +2073,7 @@ static void tcmu_reset_ring(struct tcmu_dev *udev, u8 err_level)
- 	mb->cmd_tail = 0;
- 	mb->cmd_head = 0;
- 	tcmu_flush_dcache_range(mb, sizeof(*mb));
-+	clear_bit(TCMU_DEV_BIT_BROKEN, &udev->flags);
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+index c8bf9cb3cebf2..f184cdca938de 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+@@ -1953,8 +1953,24 @@ static void amdgpu_device_fill_reset_magic(struct amdgpu_device *adev)
+  */
+ static bool amdgpu_device_check_vram_lost(struct amdgpu_device *adev)
+ {
+-	return !!memcmp(adev->gart.ptr, adev->reset_magic,
+-			AMDGPU_RESET_MAGIC_NUM);
++	if (memcmp(adev->gart.ptr, adev->reset_magic,
++			AMDGPU_RESET_MAGIC_NUM))
++		return true;
++
++	if (!adev->in_gpu_reset)
++		return false;
++
++	/*
++	 * For all ASICs with baco/mode1 reset, the VRAM is
++	 * always assumed to be lost.
++	 */
++	switch (amdgpu_asic_reset_method(adev)) {
++	case AMD_RESET_METHOD_BACO:
++	case AMD_RESET_METHOD_MODE1:
++		return true;
++	default:
++		return false;
++	}
+ }
  
- 	del_timer(&udev->cmd_timer);
+ /**
+diff --git a/drivers/gpu/drm/amd/amdgpu/cik.c b/drivers/gpu/drm/amd/amdgpu/cik.c
+index 006f21ef7ddf0..62635e58e45ee 100644
+--- a/drivers/gpu/drm/amd/amdgpu/cik.c
++++ b/drivers/gpu/drm/amd/amdgpu/cik.c
+@@ -1358,8 +1358,6 @@ static int cik_asic_reset(struct amdgpu_device *adev)
+ 	int r;
  
+ 	if (cik_asic_reset_method(adev) == AMD_RESET_METHOD_BACO) {
+-		if (!adev->in_suspend)
+-			amdgpu_inc_vram_lost(adev);
+ 		r = amdgpu_dpm_baco_reset(adev);
+ 	} else {
+ 		r = cik_asic_pci_config_reset(adev);
+diff --git a/drivers/gpu/drm/amd/amdgpu/nv.c b/drivers/gpu/drm/amd/amdgpu/nv.c
+index 2d1bebdf1603d..cc3a79029376b 100644
+--- a/drivers/gpu/drm/amd/amdgpu/nv.c
++++ b/drivers/gpu/drm/amd/amdgpu/nv.c
+@@ -351,8 +351,6 @@ static int nv_asic_reset(struct amdgpu_device *adev)
+ 	struct smu_context *smu = &adev->smu;
+ 
+ 	if (nv_asic_reset_method(adev) == AMD_RESET_METHOD_BACO) {
+-		if (!adev->in_suspend)
+-			amdgpu_inc_vram_lost(adev);
+ 		ret = smu_baco_enter(smu);
+ 		if (ret)
+ 			return ret;
+@@ -360,8 +358,6 @@ static int nv_asic_reset(struct amdgpu_device *adev)
+ 		if (ret)
+ 			return ret;
+ 	} else {
+-		if (!adev->in_suspend)
+-			amdgpu_inc_vram_lost(adev);
+ 		ret = nv_asic_mode1_reset(adev);
+ 	}
+ 
+diff --git a/drivers/gpu/drm/amd/amdgpu/soc15.c b/drivers/gpu/drm/amd/amdgpu/soc15.c
+index d8945c31b622c..132a67a041a24 100644
+--- a/drivers/gpu/drm/amd/amdgpu/soc15.c
++++ b/drivers/gpu/drm/amd/amdgpu/soc15.c
+@@ -569,14 +569,10 @@ static int soc15_asic_reset(struct amdgpu_device *adev)
+ 
+ 	switch (soc15_asic_reset_method(adev)) {
+ 		case AMD_RESET_METHOD_BACO:
+-			if (!adev->in_suspend)
+-				amdgpu_inc_vram_lost(adev);
+ 			return soc15_asic_baco_reset(adev);
+ 		case AMD_RESET_METHOD_MODE2:
+ 			return amdgpu_dpm_mode2_reset(adev);
+ 		default:
+-			if (!adev->in_suspend)
+-				amdgpu_inc_vram_lost(adev);
+ 			return soc15_asic_mode1_reset(adev);
+ 	}
+ }
+diff --git a/drivers/gpu/drm/amd/amdgpu/vi.c b/drivers/gpu/drm/amd/amdgpu/vi.c
+index 78b35901643bc..3ce10e05d0d6b 100644
+--- a/drivers/gpu/drm/amd/amdgpu/vi.c
++++ b/drivers/gpu/drm/amd/amdgpu/vi.c
+@@ -765,8 +765,6 @@ static int vi_asic_reset(struct amdgpu_device *adev)
+ 	int r;
+ 
+ 	if (vi_asic_reset_method(adev) == AMD_RESET_METHOD_BACO) {
+-		if (!adev->in_suspend)
+-			amdgpu_inc_vram_lost(adev);
+ 		r = amdgpu_dpm_baco_reset(adev);
+ 	} else {
+ 		r = vi_asic_pci_config_reset(adev);
 -- 
 2.20.1
 
