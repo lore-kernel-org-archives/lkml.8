@@ -2,98 +2,127 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F544C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FCAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05F012071C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:41:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BiMwVvkI"
+	by mail.kernel.org (Postfix) with ESMTP id 1E82420736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:41:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587692513;
+	bh=UHl3f9KMN5Mp5iMxWneKGyf/iaA1jKo8Qh5hVET/Cr8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=eewS3DVLwOXB9KYk7zhFc6oNjqMep6858TdR8atITOTabodmwwvPAlOw0wRaS9mmf
+	 4JjaQuAu6tzbL/hUw7S2d4lGnUeCf7NfRhcx5+wdeTe3CX9hh3xb/NLXaY82iixHUw
+	 0hprlFZ0aKKopU2NmS36QYQSRF2/GAfDFrgnxnQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726192AbgDXBlU (ORCPT
+        id S1726240AbgDXBlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 21:41:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725888AbgDXBlU (ORCPT
+        Thu, 23 Apr 2020 21:41:52 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:44456 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726021AbgDXBlv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 21:41:20 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 970B1C09B042;
-        Thu, 23 Apr 2020 18:41:19 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 497cMc3fmBz9sP7;
-        Fri, 24 Apr 2020 11:41:16 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1587692476;
-        bh=8/JeDTE0FdkiHAdnZiUnJb/qjEG0rVOWIdfq4r5Dwc0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=BiMwVvkI8LBcM3w1iimHE2FKhlnWupThzD2vvj9E2H7lV/JYabr2j9zuPhDuS6Inp
-         xC5E9QJAxK1kjBN6dXSIKwjHtVsx0WdLWpfrg1BKtEsvDzkYzmykyuBrfPVXQbd2aZ
-         +F8xVBSxbmBw0VPRS6ke5+milJkThSdRwC1hDD/Io4Tf/7sb88QawFOQOtyRzccSpb
-         FOJej/0/VExFnhe0TM/KEeuVWYakG/LzyA1ElLkzv+Hqe4ZGzAmDMKNfHdDlB5H+eg
-         ghx9wZ2wWXrJmuWeQ7DGYu5OBW5i9o8Q+PJhNROTx03x/DMnRI9kAam/b1o7kCX+fk
-         ZPFlhkSUfAMBw==
-Date:   Fri, 24 Apr 2020 11:41:09 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Namjae Jeon <linkinjeon@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the exfat tree with Linus' tree
-Message-ID: <20200424114109.365a9ae5@canb.auug.org.au>
+        Thu, 23 Apr 2020 21:41:51 -0400
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 03O1fZLW015549
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 10:41:36 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 03O1fZLW015549
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587692496;
+        bh=1SEaeJhyzWU9jqAsfWMzXzgCHVbK39e/WrbxIKUu+9Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=zjP6/500g28HsFRys18oTDgIc5zqswWxubUWm5vAW6XbUYRbiAOAoTGUi607PAgaZ
+         UHqR4PqJDMjbNCBxdP+N6iRPSLg1wgQLeJXiIE+5RbmoCewH/cMHABVXJpg6vfewbV
+         kLDupuMG063b92KrY4bcHmJhiscmfHgGsv8ZYj+bNAZhjyczJwOrg0d8hRkYJ6IoI7
+         by5pPFl1PargBRg1X1U6pq7PvjFu6yi0F2aKB5y9hK2bXAd5+pxvKXEYigqnF0bG+H
+         JyOyKxRvlHuTWKRrFWlBXZEHHLSq+V1wAKp3EYYyJp0ai1Hrg07FEaGa2Y1GnlCro/
+         PwMivZffezdwQ==
+X-Nifty-SrcIP: [209.85.221.170]
+Received: by mail-vk1-f170.google.com with SMTP id f7so2326197vkl.6
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 18:41:36 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZK3gAWTbj3R6x7GwO7er3DN+yqMoIUeRgNzq+qrKgyXvcUt991
+        du7NPgasdbudY5PLg0Y/2YVX9+7edbSGy8Y9m7U=
+X-Google-Smtp-Source: APiQypJiQIUSipFhDNU2QSUU4sKY7y2xH1moEdr0+/BEit/iYa7pPZLaJvyceF6V1UOvqEW1T7uWgrOhfAhS9eLwumg=
+X-Received: by 2002:a1f:3649:: with SMTP id d70mr5910043vka.12.1587692495242;
+ Thu, 23 Apr 2020 18:41:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/TchrO31fZWjeSqqcfhbL+BP";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200419131947.173685-1-sedat.dilek@gmail.com> <CAKwvOd=Rt0q0+nRJasc8GzOXSj1_-jZGNc2bAWJkmd7Vzr8FFw@mail.gmail.com>
+In-Reply-To: <CAKwvOd=Rt0q0+nRJasc8GzOXSj1_-jZGNc2bAWJkmd7Vzr8FFw@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 24 Apr 2020 10:40:59 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQzh8EajBkXSSgFh2=5iF38XvkADf1C7J0JnwTov=NmNQ@mail.gmail.com>
+Message-ID: <CAK7LNAQzh8EajBkXSSgFh2=5iF38XvkADf1C7J0JnwTov=NmNQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] kbuild: add CONFIG_LD_IS_BINUTILS
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Sedat Dilek <sedat.dilek@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/TchrO31fZWjeSqqcfhbL+BP
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, Apr 24, 2020 at 3:44 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> On Sun, Apr 19, 2020 at 6:19 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+> >
+> > This patch is currently not mandatory but a prerequisites for the second one.
+> >
+> > Folks from ClangBuiltLinux project like the combination of Clang compiler
+> > and LLD linker from LLVM project to build their Linux kernels.
+> >
+> > Sami Tolvanen <samitolvanen@google.com> has a patch for using LD_IS_LLD (see [1]).
+> >
+> > Documentation/process/changes.rst says and uses "binutils" that's why I called
+> > it LD_IS_BINUTILS (see [2] and [3]).
+> >
+> > The second patch will rename existing LD_VERSION to BINUTILS_VERSION to have
+> > a consistent naming convention like:
+> >
+> > 1. CC_IS_GCC and GCC_VERSION
+> > 2. CC_IS_CLANG and CLANG_VERSION
+> > 3. LD_IS_BINUTILS and BINUTILS_VERSION
+> >
+> > [1] https://github.com/samitolvanen/linux/commit/61889e01f0ed4f07a9d631f163bba6c6637bfa46
+> > [2] https://git.kernel.org/linus/tree/Documentation/process/changes.rst#n34
+> > [3] https://git.kernel.org/linus/tree/Documentation/process/changes.rst#n76
+> >
+> > Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
+>
+> Just some background on Sami's patch.  Originally we were using
+> ld.gold (for LTO for Pixel 3) before moving to ld.lld (for LTO for
+> Pixel 4 and later).  Not sure if Kconfig would be a better place to
+> check if gold is used, then warn?  I kind of prefer the distinction
+> that binutils contains two different linkers, though if no one is
+> supporting ld.gold, and it doesn't work for the kernel, then maybe
+> that preference is moot?
 
-Hi all,
 
-Today's linux-next merge of the exfat tree got conflicts in:
+I prefer LD_IS_BFD, like this patch:
+https://lore.kernel.org/patchwork/patch/1039719/
 
-  fs/exfat/super.c
-  fs/exfat/misc.c
-  fs/exfat/exfat_fs.h
+We do not need LD_IS_GOLD, though.
 
-Various patches in the exfat tree have been added to Linus' tree overnight
-as different commits (an in some cases slightly different patches.
-Please rebase the exfat tree on top of commit
 
-  81df1ad40644 ("exfat: truncate atimes to 2s granularity")
 
-from Linus' tree (or do a backmerge of that commit).
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/TchrO31fZWjeSqqcfhbL+BP
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6iQ7UACgkQAVBC80lX
-0GzB6gf/UTuGY4aMYaWeBIyrsMnB+JjyVQwac/+Q1kmhE/UqbIcNmfVg8FxT3GQ7
-m20OJwYZpVTth1y7VMdvcT0HGrIoPFBMDAkp68Pj3LjpKayQ4+vsgazXQ35NszdI
-ft/GcmUXK4QfrCZII+3kl/qkxD6Z1/VZvWhLVNCvpJLgolPtBT4GJHRTswXutyov
-sPJSm4Z7xn1fyEvwnmibg9UuFw1rWwvNVaJKvQdH2z3oZxZDJDyLFE9lsXpEjUlh
-MPki6uMyYzO9lxyTjmhlbUUUaSX7r0hUnmzfFhCbr+dFkbQhb5jWEHXEp1BmePtO
-BPnqG8yF7d5AKqWQc6trmmxE5IraiA==
-=D+ns
------END PGP SIGNATURE-----
-
---Sig_/TchrO31fZWjeSqqcfhbL+BP--
+-- 
+Best Regards
+Masahiro Yamada
