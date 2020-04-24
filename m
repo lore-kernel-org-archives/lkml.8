@@ -7,50 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF15C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8740CC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E06E20736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B4DE20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:33:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587731574;
-	bh=hpb5Dlgj/A1AFNx7ZyVBlCM4ijqWSGiYBG2UZcu/z1E=;
+	s=default; t=1587731582;
+	bh=d9R2OtnCbzy2kZlftOg/kItqCRyQPnSNX2spNt3uGCI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=elZBz4xyAVivshITlclDEgP4lB0vVmPlJnK+PHUIc4tbR7emHh3+UD6PG0aRkm+WK
-	 AiZaapPP86TDIwRbg1YgUTj01i4I43XVNf6bUYPGH4jBbk/VbpnHoj4RA2SD7WViBu
-	 D10pRbtn1aQnb9+XVxcrEIaTCW//3RR+HY34sn4g=
+	b=EwAVzsaiGOP/g+8d4H6vE1I3VuZdmOK0dj6dCz66xZHrR85kDZtdzsifygRxCYTos
+	 PYJUUyyWS1LSBGznANXFrFgi2rTFPFO5ZxMV25FO2ADiLq7Vv5VlNozdIW1PRgLyN8
+	 2v+3OwbiH9yaBI97oIsiRtWxvrxQHFCKwVJHs2xc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728629AbgDXMcx (ORCPT
+        id S1728631AbgDXMdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:32:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51962 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:33:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727067AbgDXMWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:22:47 -0400
+        id S1727053AbgDXMWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:22:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1F1120767;
-        Fri, 24 Apr 2020 12:22:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA27E20776;
+        Fri, 24 Apr 2020 12:22:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587730966;
-        bh=hpb5Dlgj/A1AFNx7ZyVBlCM4ijqWSGiYBG2UZcu/z1E=;
+        s=default; t=1587730965;
+        bh=d9R2OtnCbzy2kZlftOg/kItqCRyQPnSNX2spNt3uGCI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yX1HqBiVNs+SqB/zuBJF66zliN8l9Do+ApTawuSoKLhEcg2AN/5VDGqRBXENtbmcM
-         EnheEZDL2HXdO2q92eXEDBzSf9usaTsfDCh1Hi+eJ7O6IfYQhkxrmnWNT1+ciP4HZd
-         JiImzBFov8/U7lzPgAkY+tfzDlzVpRdVo9sdPG8A=
+        b=MqJ0s99ZS279dLxcwdms5uvcXgUfu4GJPPgBfkymBsFQYgt8j2qrEOOP7hNC+92H9
+         SEj9++lzEgaHUhojmgeS1IJoGNaA1k72bfk5cFacVB4/OnTwM4wF04OZiE485vIvO0
+         7b0ziFaYt1OpJ5ktteVpiOJacRuFtGQ2xGNgQaMU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brian Foster <bfoster@redhat.com>,
-        Paul Furtado <paulfurtado91@gmail.com>,
-        Chandan Rajendra <chandanrlinux@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Allison Collins <allison.henderson@oracle.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 08/38] xfs: acquire superblock freeze protection on eofblocks scans
-Date:   Fri, 24 Apr 2020 08:22:06 -0400
-Message-Id: <20200424122237.9831-8-sashal@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 07/38] afs: Fix length of dump of bad YFSFetchStatus record
+Date:   Fri, 24 Apr 2020 08:22:05 -0400
+Message-Id: <20200424122237.9831-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200424122237.9831-1-sashal@kernel.org>
 References: <20200424122237.9831-1-sashal@kernel.org>
@@ -63,83 +58,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Foster <bfoster@redhat.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 4b674b9ac852937af1f8c62f730c325fb6eadcdb ]
+[ Upstream commit 3efe55b09a92a59ed8214db801683cf13c9742c4 ]
 
-The filesystem freeze sequence in XFS waits on any background
-eofblocks or cowblocks scans to complete before the filesystem is
-quiesced. At this point, the freezer has already stopped the
-transaction subsystem, however, which means a truncate or cowblock
-cancellation in progress is likely blocked in transaction
-allocation. This results in a deadlock between freeze and the
-associated scanner.
+Fix the length of the dump of a bad YFSFetchStatus record.  The function
+was copied from the AFS version, but the YFS variant contains bigger fields
+and extra information, so expand the dump to match.
 
-Fix this problem by holding superblock write protection across calls
-into the block reapers. Since protection for background scans is
-acquired from the workqueue task context, trylock to avoid a similar
-deadlock between freeze and blocking on the write lock.
-
-Fixes: d6b636ebb1c9f ("xfs: halt auto-reclamation activities while rebuilding rmap")
-Reported-by: Paul Furtado <paulfurtado91@gmail.com>
-Signed-off-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Chandan Rajendra <chandanrlinux@gmail.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Allison Collins <allison.henderson@oracle.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_icache.c | 10 ++++++++++
- fs/xfs/xfs_ioctl.c  |  5 ++++-
- 2 files changed, 14 insertions(+), 1 deletion(-)
+ fs/afs/yfsclient.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index 8dc2e54142768..00932d2b503b6 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -907,7 +907,12 @@ xfs_eofblocks_worker(
- {
- 	struct xfs_mount *mp = container_of(to_delayed_work(work),
- 				struct xfs_mount, m_eofblocks_work);
-+
-+	if (!sb_start_write_trylock(mp->m_super))
-+		return;
- 	xfs_icache_free_eofblocks(mp, NULL);
-+	sb_end_write(mp->m_super);
-+
- 	xfs_queue_eofblocks(mp);
- }
+diff --git a/fs/afs/yfsclient.c b/fs/afs/yfsclient.c
+index 83b6d67325f6c..b5b45c57e1b1d 100644
+--- a/fs/afs/yfsclient.c
++++ b/fs/afs/yfsclient.c
+@@ -165,15 +165,15 @@ static void xdr_dump_bad(const __be32 *bp)
+ 	int i;
  
-@@ -934,7 +939,12 @@ xfs_cowblocks_worker(
- {
- 	struct xfs_mount *mp = container_of(to_delayed_work(work),
- 				struct xfs_mount, m_cowblocks_work);
-+
-+	if (!sb_start_write_trylock(mp->m_super))
-+		return;
- 	xfs_icache_free_cowblocks(mp, NULL);
-+	sb_end_write(mp->m_super);
-+
- 	xfs_queue_cowblocks(mp);
- }
- 
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index d42de92cb2833..4a99e0b0f3333 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -2264,7 +2264,10 @@ xfs_file_ioctl(
- 		if (error)
- 			return error;
- 
--		return xfs_icache_free_eofblocks(mp, &keofb);
-+		sb_start_write(mp->m_super);
-+		error = xfs_icache_free_eofblocks(mp, &keofb);
-+		sb_end_write(mp->m_super);
-+		return error;
+ 	pr_notice("YFS XDR: Bad status record\n");
+-	for (i = 0; i < 5 * 4 * 4; i += 16) {
++	for (i = 0; i < 6 * 4 * 4; i += 16) {
+ 		memcpy(x, bp, 16);
+ 		bp += 4;
+ 		pr_notice("%03x: %08x %08x %08x %08x\n",
+ 			  i, ntohl(x[0]), ntohl(x[1]), ntohl(x[2]), ntohl(x[3]));
  	}
  
- 	default:
+-	memcpy(x, bp, 4);
+-	pr_notice("0x50: %08x\n", ntohl(x[0]));
++	memcpy(x, bp, 8);
++	pr_notice("0x60: %08x %08x\n", ntohl(x[0]), ntohl(x[1]));
+ }
+ 
+ /*
 -- 
 2.20.1
 
