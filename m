@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE51BC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2CAC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D62020767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A58DF2087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:28:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587731282;
-	bh=5qRrk/qk1QSXAwev/EVg/ssIKECEKJ1TPHFWCiMyJVM=;
+	s=default; t=1587731288;
+	bh=lxhfnXgYcVRlg5qg2dJlQ3P4jRcUUBgKbYQnuRpQ6iE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aoKmYhdKp/LqDBpdfPnUEkyI4ApRH3uROTRIkfn4Hx4AS6NyihimvREIAcKYTWOUV
-	 sJMKDbfoKhzIBlz/N8H4ztYYn/4TTQL06oMWp8Opnjmfq6OkehmHgVclFi7t3DMY46
-	 OU0qUWj1BTbeAGotGvF7H59PggyS+4LVRvKnae5k=
+	b=UZ7GWNl2ntLfMGdvh90XfmjZkbpRNuzK4yHkmKw+tabzHVtvWFxmM6d4Nv6TJnCQ8
+	 xrYCkdyGEhDigXtZMt9+D8q/OYjh7r6DBe6awD7FAx/ySLV0VTTiKDz5iVECwW4WTL
+	 lAZ1w9iHEY/z0Jpkh/w9uEWVOf+B5rbkH0Vihg2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728560AbgDXM2B (ORCPT
+        id S1728023AbgDXM2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:28:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55064 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:28:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728414AbgDXMY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:24:27 -0400
+        id S1728397AbgDXMYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:24:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BBA821744;
-        Fri, 24 Apr 2020 12:24:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 821C720767;
+        Fri, 24 Apr 2020 12:24:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587731067;
-        bh=5qRrk/qk1QSXAwev/EVg/ssIKECEKJ1TPHFWCiMyJVM=;
+        s=default; t=1587731064;
+        bh=lxhfnXgYcVRlg5qg2dJlQ3P4jRcUUBgKbYQnuRpQ6iE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WZc9OE9pLP93VqYKwlvX7qHLkTrRCbCxaxynxHVE90+p1wMcxf//dZi/qHad97h+I
-         BvwJ4/iZA6WrfPTGmLDpf0GjVXUFJZriJCQGrKlRgZ68MXWH/AalABHTnP3vlapQ1X
-         MyFEnr95UcuWwqfr8x2jVyiLK7aAQt0EIJD73Cq0=
+        b=RqnFgkRF5BRhHnekQYcawfVe2SqS9IxVV2d2J/F5nM5uN8qszkKyU6CN79XUHvyRf
+         7CdTQ5vhX441O/8ZqLV3+RVD+kzr79rKcuWpZpePJ4UOGUOXZ1vAVSGoLClZjSHeuc
+         LTLxIjI3cCaOnN2SoOAdwuhNueKa7dW39sXA2j98=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Li Bin <huawei.libin@huawei.com>,
-        Douglas Gilbert <dgilbert@interlog.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 06/21] scsi: sg: add sg_remove_request in sg_common_write
-Date:   Fri, 24 Apr 2020 08:24:04 -0400
-Message-Id: <20200424122419.10648-6-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Roy Spliet <nouveau@spliet.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.14 04/21] ALSA: hda: Keep the controller initialization even if no codecs found
+Date:   Fri, 24 Apr 2020 08:24:02 -0400
+Message-Id: <20200424122419.10648-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200424122419.10648-1-sashal@kernel.org>
 References: <20200424122419.10648-1-sashal@kernel.org>
@@ -60,39 +58,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li Bin <huawei.libin@huawei.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 849f8583e955dbe3a1806e03ecacd5e71cce0a08 ]
+[ Upstream commit 9479e75fca370a5220784f7596bf598c4dad0b9b ]
 
-If the dxfer_len is greater than 256M then the request is invalid and we
-need to call sg_remove_request in sg_common_write.
+Currently, when the HD-audio controller driver doesn't detect any
+codecs, it tries to abort the probe.  But this abort happens at the
+delayed probe, i.e. the primary probe call already returned success,
+hence the driver is never unbound until user does so explicitly.
+As a result, it may leave the HD-audio device in the running state
+without the runtime PM.  More badly, if the device is a HD-audio bus
+that is tied with a GPU, GPU cannot reach to the full power down and
+consumes unnecessarily much power.
 
-Link: https://lore.kernel.org/r/1586777361-17339-1-git-send-email-huawei.libin@huawei.com
-Fixes: f930c7043663 ("scsi: sg: only check for dxfer_len greater than 256M")
-Acked-by: Douglas Gilbert <dgilbert@interlog.com>
-Signed-off-by: Li Bin <huawei.libin@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+This patch changes the logic after no-codec situation; it continues
+probing without the further codec initialization but keep the
+controller driver running normally.
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207043
+Tested-by: Roy Spliet <nouveau@spliet.org>
+Link: https://lore.kernel.org/r/20200413082034.25166-5-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/sg.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/pci/hda/hda_intel.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
-index 3a406b40f1505..b5f589b7b43dc 100644
---- a/drivers/scsi/sg.c
-+++ b/drivers/scsi/sg.c
-@@ -809,8 +809,10 @@ sg_common_write(Sg_fd * sfp, Sg_request * srp,
- 			"sg_common_write:  scsi opcode=0x%02x, cmd_size=%d\n",
- 			(int) cmnd[0], (int) hp->cmd_len));
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index a868a88bc2897..9a8f5164d88e5 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -2012,7 +2012,7 @@ static int azx_first_init(struct azx *chip)
+ 	/* codec detection */
+ 	if (!azx_bus(chip)->codec_mask) {
+ 		dev_err(card->dev, "no codecs found!\n");
+-		return -ENODEV;
++		/* keep running the rest for the runtime PM */
+ 	}
  
--	if (hp->dxfer_len >= SZ_256M)
-+	if (hp->dxfer_len >= SZ_256M) {
-+		sg_remove_request(sfp, srp);
- 		return -EINVAL;
+ 	if (azx_acquire_irq(chip, 0) < 0)
+@@ -2340,9 +2340,11 @@ static int azx_probe_continue(struct azx *chip)
+ #endif
+ 
+ 	/* create codec instances */
+-	err = azx_probe_codecs(chip, azx_max_codecs[chip->driver_type]);
+-	if (err < 0)
+-		goto out_free;
++	if (bus->codec_mask) {
++		err = azx_probe_codecs(chip, azx_max_codecs[chip->driver_type]);
++		if (err < 0)
++			goto out_free;
 +	}
  
- 	k = sg_start_req(srp, cmnd);
- 	if (k) {
+ #ifdef CONFIG_SND_HDA_PATCH_LOADER
+ 	if (chip->fw) {
+@@ -2356,7 +2358,7 @@ static int azx_probe_continue(struct azx *chip)
+ #endif
+ 	}
+ #endif
+-	if ((probe_only[dev] & 1) == 0) {
++	if (bus->codec_mask && !(probe_only[dev] & 1)) {
+ 		err = azx_codec_configure(chip);
+ 		if (err < 0)
+ 			goto out_free;
 -- 
 2.20.1
 
