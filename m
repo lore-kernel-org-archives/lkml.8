@@ -2,142 +2,137 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2AAC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED57C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8108D2087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB8CA20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:57:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="kJsLJJdG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728211AbgDXN4C (ORCPT
+        id S1728241AbgDXN5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 09:56:02 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:56251 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726301AbgDXN4C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 09:56:02 -0400
-X-Originating-IP: 93.29.109.196
-Received: from aptenodytes (196.109.29.93.rev.sfr.net [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 50BE640004;
-        Fri, 24 Apr 2020 13:55:53 +0000 (UTC)
-Date:   Fri, 24 Apr 2020 15:55:52 +0200
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hansverk@cisco.com>,
-        justin.swartz@risingedge.co.za, Johan Jonker <jbx6244@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 3/4] media: rockchip: rga: Add support for the PX30
- compatible
-Message-ID: <20200424135552.GI610776@aptenodytes>
-References: <20200423200937.1039257-1-paul.kocialkowski@bootlin.com>
- <20200423200937.1039257-4-paul.kocialkowski@bootlin.com>
- <cf31ae67792aedf60ee4cf8002861edadc305314.camel@collabora.com>
+        Fri, 24 Apr 2020 09:57:21 -0400
+Received: from mout.web.de ([217.72.192.78]:35167 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726301AbgDXN5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 09:57:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1587736587;
+        bh=hfMhg2gfEQzVXboyXrze7k444ZL6NjpOuu5e9U298DI=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=kJsLJJdGu13+Zs8gFl19fp7Lmm2En3u+0cq61hOl6AKooTiVsX43YCUyoPajbhBEX
+         M9k6Nqrntw1HBCxYytfxlrV2io+fA2EY85+Dznan6/CyqEEeuIY3+ak66RJZBnsM+L
+         oduR/ldpFZ/Qk418hhhOTZfXSmW0IJgjGREbKSVg=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.48.129.82]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MEmc2-1jPBo11QWQ-00FyDm; Fri, 24
+ Apr 2020 15:56:27 +0200
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>, Timur Tabi <timur@kernel.org>,
+        Xiubo Li <Xiubo.Lee@gmail.com>
+Subject: =?UTF-8?Q?Re=3a_=5bPATCH=5d_ASoC=3a_fsl=5feasrc=3a_Check_for_null_p?=
+ =?UTF-8?Q?ointer_before_dereferencing_=e2=80=9cctx=e2=80=9d_in_fsl=5feasrc?=
+ =?UTF-8?B?X2h3X2ZyZWUoKQ==?=
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <46dd43d7-72ac-be74-9fc6-4ba931d3871b@web.de>
+Date:   Fri, 24 Apr 2020 15:56:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3U8TY7m7wOx7RL1F"
-Content-Disposition: inline
-In-Reply-To: <cf31ae67792aedf60ee4cf8002861edadc305314.camel@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+X-Provags-ID: V03:K1:oJTSXsbcZ2GPfOV8GtyhZaXjSYx+5KO4WkTlTTFmZqtiJGBVIaa
+ 73ejqWmpHC1hdxOT4jNaGz3bnZSLopy0P9VPPnWS77y8Ye6a+ASt+iMIR+Jyv+Eb4k8x23t
+ N+2OI75gDQd+GP34dvo40Xsl714pFFTWU1cWyFwPZboi8xx+UgU/jU41LpTlLbes0FCxZux
+ um2uKPKs2VeV/BPiWktRg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:++oRII4ZkSo=:i3wGc0tk9o3ED3R05WQCoa
+ DeCIdt5oVkbiKPO+PMlJSfuMrq9Xt3wAdTw6PxRm90y1gIXwbyjyq9qT7WPRzbEadMXGTSJkO
+ ZJH7sHFodd/8FvgR2VzA2wY1zMJzj/rExgePvA1/emgDO+cq3DeJT26Osy9pWgS3y1Sidtgtn
+ Y/VkzWwjBgHyEsSvyc5exVG72SmoD8W3Qat6CeS9UxE24eMqsHTnveTTKwI6eXBHddw7w4Zlw
+ LxZpFA+/oj73zvSJjsYv9PQYXUPy/Eqav4GARdXoavabHDfDrd5uk43PHWOLzpCaIpnp/+uIH
+ u5t+5EMxFrS+OEJb3o9kllxW1vZC+t+QvV/7xYgdCQtMpEx4+dijglIebIcyiWJkP2pGXLbFw
+ BGc0ynQ1a7xMR3Qx3ko4lPRzVxJytNwPnbYwKE1kNqXGDQYJ5HG8eHiX5klaoPZpEWIiU61mP
+ NxxKY0Bg89FviR0hzXGg3R3p97F4yDt+LpCJWYpIWjRwMVlztr75+wRU9kUv37/sv05atFxM5
+ 5sOgCjSSG5UlBF3hTUTrO2ytuYobEm2ekE619NwU/uJ4wRHzzvDVKyRgk4pBf1uC2/wmjfuKl
+ k6MCVme55CHrSM5fTWRaW8tsnpzx+BIXi+N7HDgGgzJS/SyZbz1fMGD+BXJQWgQ2Zyot9ATWI
+ 9WjKnh+DAnb4cwxTg/kn0xOwSgc/G44KjydSTKbXWRDscuyibWabnAxB35arrMxN/wSIMlH6S
+ ZT95Sq0VnT1Ybr6EIFiLsjQyP9nko4LYXAiJOr+ZRgDtdwR8gSOJYn87GIUotlr+KNvI3kdFS
+ 1cDT5tPzg9JPF9G35vWXLEY45WrwhOYouc9xH2nXLoKBVBTIaxa8iY8EMZcIGEpSrFVilBeDe
+ +H8Z+2kq3C+SA36Jp54YmQgYMAOO2Ksz06LBeNuz+Ixw+GRWiMblYzX7RDv5iM79KngzncUm4
+ Btt07UVa5LPWhiOkFD+bnFvB+LTm9/PqAiSPjXw+Ru568weDAwMBdcINBrpaUG9sSULCMI2o/
+ VDpp7vZnZHA+YBDDJwROfFmj4pkT1+Tl2ySt8adlSdPZXWE/lrlzG5LwGSTRlERo4EQqwHM0G
+ MLHlqLIl3ppXR4uAAQDzjI7KWTWYQGNsmLV+66zSyQZ8NsFwOSpxtcfWqxAkqUI9nVAEW1vzw
+ wXOenTrYg+Hq5Nbh3I2ZUGYOIyOs8N7kx87YoQQVd9fjMHZWP3UWrc2HwXi/G4Dr2Fd8DmZc0
+ g2Kqc149SUlhNfRxH
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> The patch 955ac624058f: "ASoC: fsl_easrc: Add EASRC ASoC CPU DAI
+> drivers" from Apr 16, 2020, leads to the following Smatch complaint:
+>
+> sound/soc/fsl/fsl_easrc.c:1529 fsl_easrc_hw_free()
+> warn: variable dereferenced before check 'ctx' (see line 1527)
 
---3U8TY7m7wOx7RL1F
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Please avoid a typo in the final commit subject.
 
-Hi Ezequiel,
-
-On Fri 24 Apr 20, 09:54, Ezequiel Garcia wrote:
-> Hey Paul,
->=20
-> Thanks for the patch!
->=20
-> On Thu, 2020-04-23 at 22:09 +0200, Paul Kocialkowski wrote:
-> > The PX30 SoC has a RGA block, so add the associated compatible to
-> > support it.
-> >=20
-> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > ---
-> >  drivers/media/platform/rockchip/rga/rga.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >=20
-> > diff --git a/drivers/media/platform/rockchip/rga/rga.c b/drivers/media/=
-platform/rockchip/rga/rga.c
-> > index 9d122429706e..4fb4615662b7 100644
-> > --- a/drivers/media/platform/rockchip/rga/rga.c
-> > +++ b/drivers/media/platform/rockchip/rga/rga.c
-> > @@ -955,6 +955,9 @@ static const struct dev_pm_ops rga_pm =3D {
-> >  };
-> > =20
-> >  static const struct of_device_id rockchip_rga_match[] =3D {
-> > +	{
-> > +		.compatible =3D "rockchip,px30-rga",
-> > +	},
->=20
-> Please note that if you don't have anything px30-specific,
-> then you don't need the compatible in the driver.
->=20
-> You can have something like:
->=20
-> compatible =3D "rockchip,px30-rga", "rockchip,rk3288-rga"
->=20
-> so you need to add it to the bindings. See Justin Swartz
-> recent patches for rk3228.
-
-Thanks for the instruction!
-
-I've been a bit confused about that because RK3399 has its own compatible
-(without a 2nd rk3288 compatible) although there's nothing different with it
-either. All of these rockchip platforms come with what they call "RGA2", th=
-at
-seems to have no variation across platforms (downstream rockchip even has a
-single compatible for it).
-
-Should we add the rk3288 compatible to the rk3399 dtsi? I guess we
-can't remove it from the driver at this point, for backward compatibility
-with previous dts (what a strange idea...).
-
-> Down the road, if you find something specific for px30,
-> you can make the driver aware.=20
-
-Makes sense, yes.
-
-Cheers,
-
-Paul
-
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---3U8TY7m7wOx7RL1F
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl6i7+gACgkQ3cLmz3+f
-v9FiYAf/S2rf7jhG7m6KOPzamwQ3o9tzlswdBgoIl9QCOJ45gxp6WdL/pYTzIG5n
-699GzPx7eFLs9nig+3To7cjsatt1he0hyI4Y5VXrBYTJUINu7mPXrXOOOytT85mL
-9HNLhZJrvnDMRBdailFpY/nwYUq4TORps7ll3yMwOBWCIziyxU6ShuaS7UUcNfd6
-KQWa19k19huhhJ/WFG04lc1mjMQYzAM+DoLSn72KGTho3YYZjm8P9rvYgMTW5rF8
-kTX8Zd1CM6esAQhYji6CJQV4sKi0ZRCLz81dAf0chibWLcDbA9DyXgGX3A4GDIfR
-2rXiW1ggIZhknk09nPri7clhpqxSVQ==
-=GDWl
------END PGP SIGNATURE-----
-
---3U8TY7m7wOx7RL1F--
+Regards,
+Markus
