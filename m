@@ -2,334 +2,147 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBEAC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BAA4C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42E1320781
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:55:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587758156;
-	bh=XyAZQ+e0o7lKduytKo6lvmMqRCZ1EqfQCzwTnAq96HM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xo3be0kxoZYhB9ia6dcfUVE5XsR2xrMJm28dPyh1LO/tLEKFf6SDO8By/UlwSbx9W
-	 gdA4eHP+c15X/lAekplPlyOgYkXOZR4avM8nsUrMZ290Gwwg2XTUxY9Dhyzme0ZBPa
-	 f5UPHZMpZ7RoWWgBAJPEEGogOXAfo46ShYhkrcao=
+	by mail.kernel.org (Postfix) with ESMTP id E458B20781
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:56:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GijluJZW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729444AbgDXTzz (ORCPT
+        id S1729455AbgDXT4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 15:55:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46470 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729419AbgDXTzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 15:55:54 -0400
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86228215A4;
-        Fri, 24 Apr 2020 19:55:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587758153;
-        bh=XyAZQ+e0o7lKduytKo6lvmMqRCZ1EqfQCzwTnAq96HM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fV8hXCcw3sdoVZvyT2ycb3P/w1YU7ELr4Hxd9Un8zFJ8TB3zwtrJ9iPol/89Q4z9F
-         ZLYdcJdtFLdPS9FCtOahiG5HXdIX7ycnQbUXUS0XXdqLY2xw0KdQHPDw6HsaJ1+tG1
-         cqkMSsJhYHantVRmxqg7qv57CTejZPcFSiT4r/ZE=
-Received: by mail-qv1-f46.google.com with SMTP id fb4so5310871qvb.7;
-        Fri, 24 Apr 2020 12:55:53 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYP157vDYmJ2xU5xTvW5md0cc49fmUYDV4/r/LDqY2uDLawKIbV
-        o6OBcLp6Ppf/HcN6BEwZU5WIFuwJjhGbzm2dcg==
-X-Google-Smtp-Source: APiQypL6QVP34OIZcFjfLZaCQy58J6loPgHHO+jJmV1P6s/hngLJU56sMwG2qfl9h0lCetvcQovdru7JCgkvs7MOHI0=
-X-Received: by 2002:a0c:a986:: with SMTP id a6mr10586552qvb.79.1587758152580;
- Fri, 24 Apr 2020 12:55:52 -0700 (PDT)
+        Fri, 24 Apr 2020 15:56:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38362 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729419AbgDXT4C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 15:56:02 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7EC6C09B048
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 12:56:02 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id b13so14572881oti.3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 12:56:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=mxyNAcrpAygdl0PQUuE7YWHqIPwtRko8aJ9V9gG70nQ=;
+        b=GijluJZWWp+LFBb7h6DeNgHOUecBxi1OD1hjb1vB7Iy4+Kc0JoPmtDax/Y20FupRuB
+         FC3NU4SMoI6Fdl799BRM5BErL+sM7F66CeL4m93b7RfJ2UBMuhjPFL9mWWtUECF+bn5R
+         /fBFRf9252j1gSjzpg+ifbxcmQ7dQIuXqMfjVbtCbAiO2cEVIcvkHom/B22omI84P9cj
+         C5BUksbGxK1dKwTb6fTA5k0Rty3wKtgcEsdCc6kdDQCD7oZMMNqIPtJbyCpbnOFNkYWw
+         COw8AwCgEBjo3Wj9sItt/5LNsOyhX7XQSvPJpSYwfIiI4V5aIGTtWpOTqTHKyzpOux+N
+         FFxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=mxyNAcrpAygdl0PQUuE7YWHqIPwtRko8aJ9V9gG70nQ=;
+        b=uiQ/NjNitw5Cqpc86b2TWaYl6uusyncYLH/rJfGvM2ageDihiszX3XRoEWGVEXDAJA
+         i6NuQdcJ5cL8RHozhBXwCbBYSllW2cbd2O1u0D3K6fscAuwmRM8HRtuTBHjJKRJKfngo
+         gdDTxhccz7Llz0BJ8MPI9E+bsLv0BtQbbp2EBFB7Q+mjf63/7oxnCbekST2VbOf8SYfT
+         wDK1/7xvpFNdtO6a5C1uoBUJh1oG1sAd7P2l7dxa/x4+70SWQ0dypvB2sLGN3qpsxhUp
+         8qAyG61gmkQM01TuKR3G6DeRc9pIUlFSeAfX0wknz0F+dkgmJqxr6imtAqa6kDQT27c0
+         lJ8w==
+X-Gm-Message-State: AGi0PuamS2gTPrrRWVdT//cl6ftfx6UMdNtT8x8oFwMXtMNRMf8YCf3W
+        +pS5Lnb6M5DvM41MNsjEJPo=
+X-Google-Smtp-Source: APiQypKG99R9/t7a1R4PtD4C2Aa45HoghelBN5DZhIdQpZzDWtIT9YE/s90axTBUiQUGswriUfMh9A==
+X-Received: by 2002:a05:6808:b0c:: with SMTP id s12mr8412430oij.163.1587758162094;
+        Fri, 24 Apr 2020 12:56:02 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id h24sm1767443otj.25.2020.04.24.12.56.01
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 Apr 2020 12:56:01 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 12:56:00 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: Re: [PATCH] soundwire: intel: Remove unused function
+Message-ID: <20200424195600.GA45659@ubuntu-s3-xlarge-x86>
+References: <20200422190815.5975-1-sudipm.mukherjee@gmail.com>
 MIME-Version: 1.0
-References: <1587732391-3374-1-git-send-email-florinel.iordache@nxp.com> <1587732391-3374-3-git-send-email-florinel.iordache@nxp.com>
-In-Reply-To: <1587732391-3374-3-git-send-email-florinel.iordache@nxp.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 24 Apr 2020 14:55:40 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+7zpDDcVzTKSufzuCWnRcLZ0h+y0TpsJE=G+pbuhWtvw@mail.gmail.com>
-Message-ID: <CAL_Jsq+7zpDDcVzTKSufzuCWnRcLZ0h+y0TpsJE=G+pbuhWtvw@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 2/9] dt-bindings: net: add backplane dt bindings
-To:     Florinel Iordache <florinel.iordache@nxp.com>
-Cc:     David Miller <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        devicetree@vger.kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Yang-Leo Li <leoyang.li@nxp.com>,
-        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200422190815.5975-1-sudipm.mukherjee@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 7:46 AM Florinel Iordache
-<florinel.iordache@nxp.com> wrote:
->
-> Add ethernet backplane device tree bindings
-
-For a new, common binding, you've got to do better than this. Bindings
-need to stand on their own. I need a h/w block diagram or something
-because I know little about "ethernet backplane".
-
->
-> Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
+On Wed, Apr 22, 2020 at 08:08:15PM +0100, Sudip Mukherjee wrote:
+> The function sdw_intel_init() is not used anywhere, remove it for now.
+> 
+> Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 > ---
->  .../bindings/net/ethernet-controller.yaml          |  3 +-
->  .../devicetree/bindings/net/ethernet-phy.yaml      | 50 +++++++++++++++++++++
->  .../devicetree/bindings/net/serdes-lane.yaml       | 51 ++++++++++++++++++++++
->  Documentation/devicetree/bindings/net/serdes.yaml  | 44 +++++++++++++++++++
->  4 files changed, 147 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/net/serdes-lane.yaml
->  create mode 100644 Documentation/devicetree/bindings/net/serdes.yaml
->
-> diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> index ac471b6..541cee5 100644
-> --- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> +++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> @@ -93,8 +93,9 @@ properties:
->        - rxaui
->        - xaui
->
-> -      # 10GBASE-KR, XFI, SFI
-> +      # 10GBASE-KR, 40GBASE-KR4, XFI, SFI
->        - 10gbase-kr
-> +      - 40gbase-kr4
->        - usxgmii
->
->    phy-mode:
-> diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-> index 5aa141c..436b5a7 100644
-> --- a/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-> +++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-> @@ -161,6 +161,42 @@ properties:
->      description:
->        Specifies a reference to a node representing a SFP cage.
->
-> +  eq-algorithm:
-> +    description:
-> +      Specifies the desired equalization algorithm to be used
-> +      by the KR link training
-> +    oneOf:
-> +      - const: fixed
-> +        description:
-> +          Backplane KR using fixed coefficients meaning no
-> +          equalization algorithm
-> +      - const: bee
-> +        description:
-> +          Backplane KR using 3-Taps Bit Edge Equalization (BEE)
-> +          algorithm
-> +
-> +  eq-init:
+>  drivers/soundwire/intel_init.c | 23 -----------------------
+>  1 file changed, 23 deletions(-)
+> 
+> diff --git a/drivers/soundwire/intel_init.c b/drivers/soundwire/intel_init.c
+> index ad7053463889..2f37dad06321 100644
+> --- a/drivers/soundwire/intel_init.c
+> +++ b/drivers/soundwire/intel_init.c
+> @@ -183,29 +183,6 @@ static acpi_status sdw_intel_acpi_cb(acpi_handle handle, u32 level,
+>  }
+>  
+>  /**
+> - * sdw_intel_init() - SoundWire Intel init routine
+> - * @parent_handle: ACPI parent handle
+> - * @res: resource data
+> - *
+> - * This scans the namespace and creates SoundWire link controller devices
+> - * based on the info queried.
+> - */
+> -static void *sdw_intel_init(acpi_handle *parent_handle,
+> -			    struct sdw_intel_res *res)
+> -{
+> -	acpi_status status;
+> -
+> -	status = acpi_walk_namespace(ACPI_TYPE_DEVICE,
+> -				     parent_handle, 1,
+> -				     sdw_intel_acpi_cb,
+> -				     NULL, res, NULL);
+> -	if (ACPI_FAILURE(status))
+> -		return NULL;
+> -
+> -	return sdw_intel_add_controller(res);
+> -}
+> -
+> -/**
+>   * sdw_intel_exit() - SoundWire Intel exit
+>   * @arg: callback context
+>   *
+> -- 
+> 2.11.0
+> 
 
-eq-coefficients?
+This patch will cause two more warnings.
 
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    minItems: 3
-> +    maxItems: 3
-> +    description:
-> +      Triplet of KR coefficients. Specifies the initialization
-> +      values for standard KR equalization coefficients used by
-> +      the link training (pre-cursor, main-cursor, post-cursor)
+$ make -j$(nproc) -s O=out allyesconfig drivers/soundwire/intel_init.o
+../drivers/soundwire/intel_init.c:152:20: warning: ‘sdw_intel_acpi_cb’
+defined but not used [-Wunused-function]
+ static acpi_status sdw_intel_acpi_cb(acpi_handle handle, u32 level,
+                    ^~~~~~~~~~~~~~~~~
+../drivers/soundwire/intel_init.c:51:2: warning:
+‘sdw_intel_add_controller’ defined but not used [-Wunused-function]
+ *sdw_intel_add_controller(struct sdw_intel_res *res)
+  ^~~~~~~~~~~~~~~~~~~~~~~~
 
-items:
-  - description: pre-cursor
-  - description: main-cursor
-  ...
+Removing these two functions seems to be enough. link_mask should also
+be removed at that point.
 
-Is 0-2^32 valid data? If not, add some constraints.
-
-> +
-> +  eq-params:
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    description:
-> +      Variable size array of KR parameters. Specifies the HW
-> +      specific parameters used by the link training.
-
-DT is not a dumping ground for magic register values.
-
-eq-init vs. eq-params is pretty vague as to what they are.
-
-I fail to see how these properties are related to $subject. Should be
-a separate patch.
-
-> +
-> +  lane-handle:
-> +    $ref: /schemas/types.yaml#definitions/phandle
-> +    description:
-> +      Specifies a reference (or array of references) to a node
-> +      representing the desired SERDES lane (or lanes) used in
-> +      backplane mode.
-> +
->  required:
->    - reg
->
-> @@ -183,3 +219,17 @@ examples:
->              reset-deassert-us = <2000>;
->          };
->      };
-> +  - |
-> +    ethernet {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        ethernet-phy@0 {
-> +            compatible = "ethernet-phy-ieee802.3-c45";
-> +            reg = <0x0>;
-> +            lane-handle = <&lane_d>;
-> +            eq-algorithm = "fixed";
-> +            eq-init = <0x2 0x29 0x5>;
-> +            eq-params = <0>;
-> +        };
-> +    };
-> diff --git a/Documentation/devicetree/bindings/net/serdes-lane.yaml b/Documentation/devicetree/bindings/net/serdes-lane.yaml
-> new file mode 100644
-> index 0000000..ce3581e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/serdes-lane.yaml
-> @@ -0,0 +1,51 @@
-> +# SPDX-License-Identifier: GPL-2.0
-
-Dual license new bindings:
-
-(GPL-2.0-only OR BSD-2-Clause)
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/serdes-lane.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Serdes Lane Binding
-> +
-> +maintainers:
-> +  - Florinel Iordache <florinel.iordache@nxp.com>
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^lane(@[a-f0-9]+)?$"
-> +
-> +  compatible:
-> +    oneOf:
-> +      - const: lane-10g
-> +        description: Lane part of a 10G SerDes module
-> +      - const: lane-28g
-> +        description: Lane part of a 28G SerDes module
-> +
-> +  reg:
-> +    description:
-> +      Registers memory map offset and size for this lane
-> +
-> +  reg-names:
-> +    description:
-> +      Names of the register map given in "reg" node.
-> +
-> +examples:
-> +  - |
-> +    serdes1: serdes@1ea0000 {
-> +        compatible = "serdes-10g";
-
-Do you have a datasheet for this device as bindings describe devices?
-I assume not because serdes is a protocol, not a device. AFAIK,
-there's no standard programming interface for 'serdes' as that is
-about the only time we have any sort of genericish compatible strings.
-The compatible string at a minimum should tell me what the programming
-model for the registers are.
-
-> +        reg = <0x0 0x1ea0000 0 0x00002000>;
-> +        reg-names = "serdes", "serdes-10g";
-
-The default address and sizes are 1 cell. So you have addr 0 with size
-0x1ea0000 and then addr 0 with size 0x2000.
-
-> +        little-endian;
-> +
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +        lane_a: lane@800 {
-> +            compatible = "lane-10g";
-> +            reg = <0x800 0x40>;
-> +            reg-names = "lane", "serdes-lane";
-
-Not valid. You have 1 entry (with a addr and size) for reg, but 2
-entries for reg-names.
-
-40G is made up of 4 10G lanes, right? Do all 40G serdes phys have
-separate register regions for each lane? You can't assume lanes and DT
-nodes are 1-1.
-
-As lanes have to be child nodes, these 2 schemas should be 1. Though I
-don't think lane nodes will survive.
-
-> +        };
-> +        lane_b: lane@840 {
-> +            compatible = "lane-10g";
-> +            reg = <0x840 0x40>;
-> +            reg-names = "lane", "serdes-lane";
-> +        };
-> +    };
-> diff --git a/Documentation/devicetree/bindings/net/serdes.yaml b/Documentation/devicetree/bindings/net/serdes.yaml
-> new file mode 100644
-> index 0000000..fd3da85
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/serdes.yaml
-> @@ -0,0 +1,44 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/serdes.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Serdes Module Binding
-> +
-> +maintainers:
-> +  - Florinel Iordache <florinel.iordache@nxp.com>
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^serdes(@[a-f0-9]+)?$"
-> +
-> +  compatible:
-> +    oneOf:
-> +      - const: serdes-10g
-> +        description: SerDes module type of 10G
-> +      - const: serdes-28g
-> +        description: SerDes module type of 28G
-> +
-> +  reg:
-> +    description:
-> +      Registers memory map offset and size for this serdes module
-> +
-> +  reg-names:
-> +    description:
-> +      Names of the register map given in "reg" node.
-> +
-> +  little-endian:
-> +    description:
-> +      Specifies the endianness of serdes module
-> +      For complete definition see
-> +      Documentation/devicetree/bindings/common-properties.txt
-> +
-> +examples:
-> +  - |
-> +    serdes1: serdes@1ea0000 {
-> +        compatible = "serdes-10g";
-> +        reg = <0x0 0x1ea0000 0 0x00002000>;
-> +        reg-names = "serdes", "serdes-10g";
-> +        little-endian;
-> +    };
-> --
-> 1.9.1
->
+Cheers,
+Nathan
