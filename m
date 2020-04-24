@@ -2,192 +2,210 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 923E4C55191
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 994A6C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66B8720767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F43B21569
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:20:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="a/nKnXk/"
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="Sr+iKy2B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728055AbgDXNUj (ORCPT
+        id S1728103AbgDXNUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 09:20:39 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:21162 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727930AbgDXNUj (ORCPT
+        Fri, 24 Apr 2020 09:20:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59900 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728059AbgDXNUk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 09:20:39 -0400
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200424132036epoutp04b30167e7a799e5a58afed6b06dc3f6e3~IxA67qtUg1454614546epoutp04l
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 13:20:36 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200424132036epoutp04b30167e7a799e5a58afed6b06dc3f6e3~IxA67qtUg1454614546epoutp04l
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1587734436;
-        bh=fQKH9QlmIlAGvKr7V5WKuFLyssTMbCuG6BNkIal6tCY=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=a/nKnXk/LC+PLo856Ry0h/Rfw2NKqOCyythtOOttUIzfVwMQNiSbozq7Rl5CmY9jq
-         yNLJ72BgVrUVJD0oLIY5tXzEhs/VfoJAOO1yES9DKvOxm14BQmU98MjDie/lQAhMEg
-         MTY8hKajASBnuWfzreuCFfdI2gvCnSc+hC93EusU=
-Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20200424132035epcas5p38fd6a4b25a584cf6fb716c15e85daf00~IxA6FMSGo3204432044epcas5p33;
-        Fri, 24 Apr 2020 13:20:35 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        56.41.04782.3A7E2AE5; Fri, 24 Apr 2020 22:20:35 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200424131638epcas5p300fec614f4a2d6aedc3de337cb3fd259~Iw9dL1DW50364803648epcas5p3k;
-        Fri, 24 Apr 2020 13:16:38 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200424131638epsmtrp1ecba1de0bcc2ca5fab2dca0bd48e830c~Iw9dLDP5y2002120021epsmtrp1o;
-        Fri, 24 Apr 2020 13:16:38 +0000 (GMT)
-X-AuditID: b6c32a49-89bff700000012ae-6a-5ea2e7a33bb7
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        87.BA.25866.5B6E2AE5; Fri, 24 Apr 2020 22:16:38 +0900 (KST)
-Received: from localhost.localdomain (unknown [107.108.92.210]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200424131636epsmtip17a9af7606f6909c676808a3b6e6a0dc9~Iw9cHQfrq3162631626epsmtip1M;
-        Fri, 24 Apr 2020 13:16:36 +0000 (GMT)
-From:   Vishal Goel <vishal.goel@samsung.com>
-To:     casey@schaufler-ca.com, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Vishal Goel <vishal.goel@samsung.com>,
-        Amit Sahrawat <a.sahrawat@samsung.com>
-Subject: [PATCH 1/1] Smack:- Remove mutex lock "smk_lock" from inode_smack
- structure.
-Date:   Fri, 24 Apr 2020 18:25:19 +0530
-Message-Id: <1587732920-49120-1-git-send-email-vishal.goel@samsung.com>
-X-Mailer: git-send-email 1.9.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrAIsWRmVeSWpSXmKPExsWy7bCmhu7i54viDC6sELC4uDvV4t62X2wW
-        l3fNYbP40POIzWLd7dOMDqwefVtWMXoc3b+IzePzJrkA5igum5TUnMyy1CJ9uwSujO8XXzAW
-        vBGrOHCkl7mB8bBQFyMnh4SAicSp65dYuxi5OIQEdjNKLDq5iA0kISTwiVHi5PtwiMRnRokX
-        z34ywXQ03//FDJHYxShxf1U/C4TzhVHi86/p7CBVbALaEr3z7oJ1iAgkSnx4sgMsziwQLLHx
-        wxUWEFtYIFxiyuOpQJM4OFgEVCWmH9QFCfMKuEu8utTIDrFMTuLksclg50kI9LNLbHrcxw5S
-        LyHgIrGjLRGiRlji1fEtUPVSEi/729gh6tsZJY7O2gjlTGGU+LfvBlSVvcTr5gYmkEHMApoS
-        63fpQ4RlJaaeWscEcSefRO/vJ1Af80rsmAdjq0pMndQNNUZa4vCNMywQtofE7zUbWCBBFyvx
-        908b8wRG2VkIGxYwMq5ilEwtKM5NTy02LTDMSy3XK07MLS7NS9dLzs/dxAiOZy3PHYyzzvkc
-        YhTgYFTi4WU4tChOiDWxrLgy9xCjBAezkghvTAlQiDclsbIqtSg/vqg0J7X4EKM0B4uSOO8k
-        1qsxQgLpiSWp2ampBalFMFkmDk6pBkYX2+b9bP9Xshqof9d+e+CIv4/tw7zVXGd/97yRT7x5
-        g7tEUFGWPfhA4cUrDTorn747WrquZUlPksaTqVaJBnveLijOYdpYx+b7dGZYvBl7e8LitjVz
-        bsx8+qt6nZeOnky1akVlcaVQ/P5j8/6oeHXn/Ihny0p5pGFdGS5i/W5va8XmxvCPZ5RYijMS
-        DbWYi4oTAQ0B2bHjAgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrJJMWRmVeSWpSXmKPExsWy7bCSnO62Z4viDFasY7S4uDvV4t62X2wW
-        l3fNYbP40POIzWLd7dOMDqwefVtWMXoc3b+IzePzJrkA5igum5TUnMyy1CJ9uwSujO8XXzAW
-        vBGrOHCkl7mB8bBQFyMnh4SAiUTz/V/MXYxcHEICOxgl5mxdyQyRkJZY0vmGHcIWllj57zk7
-        RNEnRomW+ZvAitgEtCV6591lArFFBJIldjdPZwSxmQWCJU737GQBsYUFQiUuXnkLVMPBwSKg
-        KjH9oC5ImFfAXeLVpUao+XISJ49NZp3AyLOAkWEVo2RqQXFuem6xYYFRXmq5XnFibnFpXrpe
-        cn7uJkZwaGhp7WDcs+qD3iFGJg7GQ4wSHMxKIrwxJYvihHhTEiurUovy44tKc1KLDzFKc7Ao
-        ifN+nbUwTkggPbEkNTs1tSC1CCbLxMEp1cC0U4JB6XjYQ7ODtex5G4/2nnk8pTHxVJTIzWu3
-        tlQUPRA2WPHC6OCjA7z7FVyPzd/UsGeb3+6uTuGMz10qFQde7Zi1O6abY/2czjfmUUmVkrc+
-        bc1Wcc19+f+cvurl285bch5v2LT+XNeUlT/XGantfv/QdPK2nYssxNgNkpasvbpwl8aRgLB+
-        009zDJdGS2qs6tW+J/7WyyP3ebmm2sqtTBvdLD+XfJFZtW3vBTPNtzpalw9tlZUorpf5zede
-        c2eH/zt1pv2sjDXLX7N1ec+apbak6vJsTYdFn17MC2S5tczCgqPx1ezn+9LNp+kmXuNKUCxV
-        811U/M2vPmdm8OrJdlvPS7mLBq7Y/nXr/EU7PJRYijMSDbWYi4oTAaohdix8AgAA
-X-CMS-MailID: 20200424131638epcas5p300fec614f4a2d6aedc3de337cb3fd259
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200424131638epcas5p300fec614f4a2d6aedc3de337cb3fd259
-References: <CGME20200424131638epcas5p300fec614f4a2d6aedc3de337cb3fd259@epcas5p3.samsung.com>
+        Fri, 24 Apr 2020 09:20:40 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17A6CC09B045
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 06:20:40 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id l11so7659287lfc.5
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 06:20:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=E4cbnT6iD9NKF/pSlrfjp2r6UpANFg0iv/kYrzOZLes=;
+        b=Sr+iKy2By/lSo0Y94e7vCAmXPlw3o+frOpginSSqvNVDZKz+8JKWDI9IEMVKNbDKin
+         sURo8CzDQuMEUkRmGLUfCdMh3p8Feax72WCiViNKCpYXaXN6nP/Q8a/3i5Z03Dn5R5kO
+         JQyEN1R+eU3eC5UtW4Hy4qrr2u7VxIL7zpjkM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=E4cbnT6iD9NKF/pSlrfjp2r6UpANFg0iv/kYrzOZLes=;
+        b=JjJBsQ4EnS7ajJC7gENALvO+HybQ/3lFIeNCXvuAlE0BxmajTijpCQRzDA9iJ9MkoD
+         NIwVrXWGZVJ/RblsKOI/U2Cg6NZaZgCmRryMTBHeq+Lqg8zj7PUy7xaN2VDbQDvUlqs9
+         srbrW+pBePEHrfH6O3fKen3U3W1PKIFEDMEfJKju2kC7yU6dR99sVX1cpEXrZI9N47Jb
+         hk3uybU12IQVKz3GnSMAhouh9stSr1kdnu4F8vojTmWr1G0QOHE93xO76Z0AcEed5osl
+         sqmuX7vlU9w82oUWX1U8DObMswXM1NGgJrAk+wuYRgK383JqXchu4ZOJvTFeSoD4TBQb
+         4npA==
+X-Gm-Message-State: AGi0PuY/BSfPJGtaghDwn9LCHdkl7jIp2T2pm+VsEYqk0N/KWTMOYhzT
+        0ureu+Ag1Do3HTMOxJT7KQbONw==
+X-Google-Smtp-Source: APiQypLyLg/ZbS3zAM8LTd2glrbQ22nI6vwPlWMi53bTGZhDnFMOfArtlnmfUo3xGPQOc4KgZzVnGQ==
+X-Received: by 2002:a19:230c:: with SMTP id j12mr6327801lfj.109.1587734438545;
+        Fri, 24 Apr 2020 06:20:38 -0700 (PDT)
+Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
+        by smtp.gmail.com with ESMTPSA id j22sm4120697ljh.107.2020.04.24.06.20.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Apr 2020 06:20:37 -0700 (PDT)
+Subject: Re: [PATCH net-next v3 11/11] net: bridge: Add checks for enabling
+ the STP.
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>, davem@davemloft.net,
+        jiri@resnulli.us, ivecera@redhat.com, kuba@kernel.org,
+        roopa@cumulusnetworks.com, olteanv@gmail.com, andrew@lunn.ch,
+        UNGLinuxDriver@microchip.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bridge@lists.linux-foundation.org
+References: <20200422161833.1123-1-horatiu.vultur@microchip.com>
+ <20200422161833.1123-12-horatiu.vultur@microchip.com>
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Message-ID: <2d97fea6-8f24-89ba-a97b-99a12cf41b09@cumulusnetworks.com>
+Date:   Fri, 24 Apr 2020 16:20:35 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200422161833.1123-12-horatiu.vultur@microchip.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"smk_lock" mutex is used during inode instantiation in
-smack_d_instantiate()function. It has been used to avoid
-simultaneous access on same inode security structure.
-Since smack related initialization is done only once i.e during
-inode creation. If the inode has already been instantiated then
-smack_d_instantiate() function just returns without doing
-anything.
+On 22/04/2020 19:18, Horatiu Vultur wrote:
+> It is not possible to have the MRP and STP running at the same time on the
+> bridge, therefore add check when enabling the STP to check if MRP is already
+> enabled. In that case return error.
+> 
+> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> ---
+>  net/bridge/br_ioctl.c    |  3 +--
+>  net/bridge/br_netlink.c  |  4 +++-
+>  net/bridge/br_private.h  |  3 ++-
+>  net/bridge/br_stp.c      |  6 ++++++
+>  net/bridge/br_stp_if.c   | 11 ++++++++++-
+>  net/bridge/br_sysfs_br.c |  4 +---
+>  6 files changed, 23 insertions(+), 8 deletions(-)
+> 
+> diff --git a/net/bridge/br_ioctl.c b/net/bridge/br_ioctl.c
+> index ae22d784b88a..5e71fc8b826f 100644
+> --- a/net/bridge/br_ioctl.c
+> +++ b/net/bridge/br_ioctl.c
+> @@ -242,8 +242,7 @@ static int old_dev_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
+>  		if (!ns_capable(dev_net(dev)->user_ns, CAP_NET_ADMIN))
+>  			return -EPERM;
+>  
+> -		br_stp_set_enabled(br, args[1]);
+> -		ret = 0;
+> +		ret = br_stp_set_enabled(br, args[1], NULL);
+>  		break;
+>  
+>  	case BRCTL_SET_BRIDGE_PRIORITY:
+> diff --git a/net/bridge/br_netlink.c b/net/bridge/br_netlink.c
+> index 1a5e681a626a..a774e19c41bb 100644
+> --- a/net/bridge/br_netlink.c
+> +++ b/net/bridge/br_netlink.c
+> @@ -1109,7 +1109,9 @@ static int br_changelink(struct net_device *brdev, struct nlattr *tb[],
+>  	if (data[IFLA_BR_STP_STATE]) {
+>  		u32 stp_enabled = nla_get_u32(data[IFLA_BR_STP_STATE]);
+>  
+> -		br_stp_set_enabled(br, stp_enabled);
+> +		err = br_stp_set_enabled(br, stp_enabled, extack);
+> +		if (err)
+> +			return err;
+>  	}
+>  
+>  	if (data[IFLA_BR_PRIORITY]) {
+> diff --git a/net/bridge/br_private.h b/net/bridge/br_private.h
+> index 5835828320b6..c35647cb138a 100644
+> --- a/net/bridge/br_private.h
+> +++ b/net/bridge/br_private.h
+> @@ -1283,7 +1283,8 @@ int br_set_ageing_time(struct net_bridge *br, clock_t ageing_time);
+>  /* br_stp_if.c */
+>  void br_stp_enable_bridge(struct net_bridge *br);
+>  void br_stp_disable_bridge(struct net_bridge *br);
+> -void br_stp_set_enabled(struct net_bridge *br, unsigned long val);
+> +int br_stp_set_enabled(struct net_bridge *br, unsigned long val,
+> +		       struct netlink_ext_ack *extack);
+>  void br_stp_enable_port(struct net_bridge_port *p);
+>  void br_stp_disable_port(struct net_bridge_port *p);
+>  bool br_stp_recalculate_bridge_id(struct net_bridge *br);
+> diff --git a/net/bridge/br_stp.c b/net/bridge/br_stp.c
+> index 1f14b8455345..3e88be7aa269 100644
+> --- a/net/bridge/br_stp.c
+> +++ b/net/bridge/br_stp.c
+> @@ -36,6 +36,12 @@ void br_set_state(struct net_bridge_port *p, unsigned int state)
+>  	};
+>  	int err;
+>  
+> +	/* Don't change the state of the ports if they are driven by a different
+> +	 * protocol.
+> +	 */
+> +	if (p->flags & BR_MRP_AWARE)
+> +		return;
+> +
+>  	p->state = state;
+>  	err = switchdev_port_attr_set(p->dev, &attr);
+>  	if (err && err != -EOPNOTSUPP)
+> diff --git a/net/bridge/br_stp_if.c b/net/bridge/br_stp_if.c
+> index d174d3a566aa..a42850b7eb9a 100644
+> --- a/net/bridge/br_stp_if.c
+> +++ b/net/bridge/br_stp_if.c
+> @@ -196,10 +196,17 @@ static void br_stp_stop(struct net_bridge *br)
+>  	br->stp_enabled = BR_NO_STP;
+>  }
+>  
+> -void br_stp_set_enabled(struct net_bridge *br, unsigned long val)
+> +int br_stp_set_enabled(struct net_bridge *br, unsigned long val,
+> +		       struct netlink_ext_ack *extack)
+>  {
+>  	ASSERT_RTNL();
+>  
+> +	if (br_mrp_enabled(br)) {
+> +		NL_SET_ERR_MSG_MOD(extack,
+> +				   "STP can't be enabled if MRP is already enabled\n");
 
-So it means mutex lock is required only during inode creation.
-But since 2 processes can't create same inodes or files
-simultaneously. Also linking or some other file operation can't
-be done simultaneously when the file is getting created since
-file lookup will fail before dentry inode linkup which is done
-after smack initialization.
-So no mutex lock is required in inode_smack structure.
+The operation could be disable (noop in case it's already disabled) and this will still
+return an error.
 
-It will save memory as well as improve some performance.
-If 40000 inodes are created in system, it will save 1.5 MB on
-32-bit systems & 2.8 MB on 64-bit systems.
-
-Signed-off-by: Vishal Goel <vishal.goel@samsung.com>
-Signed-off-by: Amit Sahrawat <a.sahrawat@samsung.com>
----
- security/smack/smack.h     | 1 -
- security/smack/smack_lsm.c | 8 ++------
- 2 files changed, 2 insertions(+), 7 deletions(-)
-
-diff --git a/security/smack/smack.h b/security/smack/smack.h
-index 62529f3..fd09dc8 100644
---- a/security/smack/smack.h
-+++ b/security/smack/smack.h
-@@ -109,7 +109,6 @@ struct inode_smack {
- 	struct smack_known	*smk_inode;	/* label of the fso */
- 	struct smack_known	*smk_task;	/* label of the task */
- 	struct smack_known	*smk_mmap;	/* label of the mmap domain */
--	struct mutex		smk_lock;	/* initialization lock */
- 	int			smk_flags;	/* smack inode flags */
- 	struct rcu_head         smk_rcu;	/* for freeing inode_smack */
- };
-diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
-index 2862fc3..10c2bdd 100644
---- a/security/smack/smack_lsm.c
-+++ b/security/smack/smack_lsm.c
-@@ -317,7 +317,6 @@ static void init_inode_smack(struct inode *inode, struct smack_known *skp)
- 
- 	isp->smk_inode = skp;
- 	isp->smk_flags = 0;
--	mutex_init(&isp->smk_lock);
- }
- 
- /**
-@@ -3274,13 +3273,12 @@ static void smack_d_instantiate(struct dentry *opt_dentry, struct inode *inode)
- 
- 	isp = smack_inode(inode);
- 
--	mutex_lock(&isp->smk_lock);
- 	/*
- 	 * If the inode is already instantiated
- 	 * take the quick way out
- 	 */
- 	if (isp->smk_flags & SMK_INODE_INSTANT)
--		goto unlockandout;
-+		return;
- 
- 	sbp = inode->i_sb;
- 	sbsp = sbp->s_security;
-@@ -3331,7 +3329,7 @@ static void smack_d_instantiate(struct dentry *opt_dentry, struct inode *inode)
- 			break;
- 		}
- 		isp->smk_flags |= SMK_INODE_INSTANT;
--		goto unlockandout;
-+		return;
- 	}
- 
- 	/*
-@@ -3466,8 +3464,6 @@ static void smack_d_instantiate(struct dentry *opt_dentry, struct inode *inode)
- 
- 	isp->smk_flags |= (SMK_INODE_INSTANT | transflag);
- 
--unlockandout:
--	mutex_unlock(&isp->smk_lock);
- 	return;
- }
- 
--- 
-1.9.1
+> +		return -EINVAL;
+> +	}
+> +
+>  	if (val) {
+>  		if (br->stp_enabled == BR_NO_STP)
+>  			br_stp_start(br);
+> @@ -207,6 +214,8 @@ void br_stp_set_enabled(struct net_bridge *br, unsigned long val)
+>  		if (br->stp_enabled != BR_NO_STP)
+>  			br_stp_stop(br);
+>  	}
+> +
+> +	return 0;
+>  }
+>  
+>  /* called under bridge lock */
+> diff --git a/net/bridge/br_sysfs_br.c b/net/bridge/br_sysfs_br.c
+> index 9ab0f00b1081..7db06e3f642a 100644
+> --- a/net/bridge/br_sysfs_br.c
+> +++ b/net/bridge/br_sysfs_br.c
+> @@ -126,9 +126,7 @@ static ssize_t stp_state_show(struct device *d,
+>  
+>  static int set_stp_state(struct net_bridge *br, unsigned long val)
+>  {
+> -	br_stp_set_enabled(br, val);
+> -
+> -	return 0;
+> +	return br_stp_set_enabled(br, val, NULL);
+>  }
+>  
+>  static ssize_t stp_state_store(struct device *d,
+> 
 
