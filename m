@@ -2,163 +2,322 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 910CFC55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7972FC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A1332166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EDDA2166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:51:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="ARLOFE8m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbgDXGvE (ORCPT
+        id S1726577AbgDXGvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 02:51:04 -0400
-Received: from mga01.intel.com ([192.55.52.88]:54077 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726008AbgDXGvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 02:51:04 -0400
-IronPort-SDR: vTehXbCx9MrbrdJiUrDbMLbpULmFhMNoBVCjZU+8oH2qISfYdKtnqGcjQHzYPF3iSUaEBl8+6T
- kCt0hrpH9cxA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 23:51:03 -0700
-IronPort-SDR: rq5jS3fFMNGrknJ1GGETQwTMb1CqUZj8HMqxO6yCTzs+VhYT9wjkD741GwU1BDvfrDJWU1w50W
- W2ukMFrdBLVA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,310,1583222400"; 
-   d="scan'208";a="245148152"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 23 Apr 2020 23:51:02 -0700
-Received: from [10.249.228.69] (abudanko-mobl.ccr.corp.intel.com [10.249.228.69])
-        by linux.intel.com (Postfix) with ESMTP id 7978E580100;
-        Thu, 23 Apr 2020 23:51:00 -0700 (PDT)
-Subject: [PATCH v3 2/3] perf tool: make Perf tool aware of SELinux access
- control
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>
-References: <d7cec72d-cc3c-381b-38cd-20e7242bfda8@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <f5232d1d-cf7b-3863-1b3e-548230961efd@linux.intel.com>
-Date:   Fri, 24 Apr 2020 09:50:59 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 24 Apr 2020 02:51:39 -0400
+Received: from mail-bn7nam10on2095.outbound.protection.outlook.com ([40.107.92.95]:44983
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726008AbgDXGvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 02:51:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Kyj0OEqJld9fxHTYwAxeN/i6O17nUPWE58XPXl6Ms8/1AfdgBCYnyYGW6e1ZMkZ8mzu4U+aXhV7IvYEgX0e9Bwv0yTd8ow/m2Wy7QFaKXUwSkkq+KHQSZjemBx6/TUeXqA3L4TOlYVtinsqWmegINW5Pkk/7cYye6EtC/CjjolJm5ByyR4Fj+pqkHFUE5c/7SLsQpfpRE5iGgdhYmtUvQTjpKr7EMXoDOtiobvdL3MuMlIU+a+EG1Kgcp7jDG26aHwv+0LAdz0qJ5DtNedbRUhtZpYL4P3ZQxTQ4nqKGDIQt+2VxR65lXhx8VJRcwhGeh9Kkh6DTGd62Qen0OUzPRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5+K/zYEtWLLkYt899xdr3onmc+0JXgF4WWsPpVU9VTg=;
+ b=hSXCyzO02VuyIy1N+/kDoPzwjsdVz05ESQJJNce/rv7psIl1MoleP51Hg9rhCFEfFwBMh0NoW+A/uv6sdMzJS558bGgYDimZi8Fzsf7bvtNGEQr8DT4z6Ku1+gRa9r3rTkDx374LYY9vQXSwESHzl55yFEHDiB11RWJBstI8bN/r+Fty+tM+vRIRGTY8PEbBw60REdaTvH4yCvaKOjfyeIk3tBEi6PRBjTaQua0FdIuf1f7/08Vatyul/++8mD44mpyOPFwCfMQgl5ZyHQuQePkIfMArZpo0m4VP3mmcVNCD2ktmoonRTiGc7lwpiPfzx/wYk65erdqXYapXbn1xJw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
+ header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5+K/zYEtWLLkYt899xdr3onmc+0JXgF4WWsPpVU9VTg=;
+ b=ARLOFE8mpaLHhN1C6r48TU3yZc8DNeX/1uId0zrO+dPFItuJxk30Ma86t8eDAaG33EdJJ0letuA88cBEj+L9tVic8zxdPKBa+YC3+UXvqSEjhH6iqFAtVfm9EWYZmi+txw3MAF/UcOFQ1pDSAPEQMVF71BQneKPxO4zNIxOTWPg=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=xji@analogixsemi.com; 
+Received: from BY5PR04MB6739.namprd04.prod.outlook.com (2603:10b6:a03:229::8)
+ by BY5PR04MB7107.namprd04.prod.outlook.com (2603:10b6:a03:22f::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.27; Fri, 24 Apr
+ 2020 06:51:33 +0000
+Received: from BY5PR04MB6739.namprd04.prod.outlook.com
+ ([fe80::4517:bcc8:a3bd:407f]) by BY5PR04MB6739.namprd04.prod.outlook.com
+ ([fe80::4517:bcc8:a3bd:407f%6]) with mapi id 15.20.2921.030; Fri, 24 Apr 2020
+ 06:51:33 +0000
+Date:   Fri, 24 Apr 2020 14:51:25 +0800
+From:   Xin Ji <xji@analogixsemi.com>
+To:     Nicolas Boichat <drinkcat@chromium.org>
+Cc:     devel@driverdev.osuosl.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Sheng Pan <span@analogixsemi.com>
+Subject: Re: [PATCH v7 2/2] drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to
+ DP bridge driver
+Message-ID: <20200424065124.GA31922@xin-VirtualBox>
+References: <cover.1582529411.git.xji@analogixsemi.com>
+ <a81adcf2e79d440edcb7b3989f31efcb80a6e9ff.1582529411.git.xji@analogixsemi.com>
+ <CANMq1KBfB6tXFqYGvr=8fV_bpCV5GbVHeEbRs+fuaZba65-OPw@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANMq1KBfB6tXFqYGvr=8fV_bpCV5GbVHeEbRs+fuaZba65-OPw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-ClientProxiedBy: HK2PR02CA0194.apcprd02.prod.outlook.com
+ (2603:1096:201:21::30) To BY5PR04MB6739.namprd04.prod.outlook.com
+ (2603:10b6:a03:229::8)
 MIME-Version: 1.0
-In-Reply-To: <d7cec72d-cc3c-381b-38cd-20e7242bfda8@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xin-VirtualBox (114.247.245.254) by HK2PR02CA0194.apcprd02.prod.outlook.com (2603:1096:201:21::30) with Microsoft SMTP Server (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.20.2937.13 via Frontend Transport; Fri, 24 Apr 2020 06:51:32 +0000
+X-Originating-IP: [114.247.245.254]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ed264fab-2b30-4a02-6b2b-08d7e81beced
+X-MS-TrafficTypeDiagnostic: BY5PR04MB7107:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BY5PR04MB710786FED4BB327686FFCAF5C7D00@BY5PR04MB7107.namprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-Forefront-PRVS: 03838E948C
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6739.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(39840400004)(366004)(396003)(136003)(346002)(376002)(2906002)(478600001)(6496006)(16526019)(186003)(66556008)(33716001)(54906003)(107886003)(26005)(316002)(66946007)(66476007)(86362001)(52116002)(4326008)(53546011)(9686003)(8676002)(1076003)(8936002)(55016002)(33656002)(5660300002)(6666004)(81156014)(956004)(7416002)(6916009);DIR:OUT;SFP:1102;
+Received-SPF: None (protection.outlook.com: analogixsemi.com does not
+ designate permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: dbY7EGESs+tn09HUp2sN8PPgwYlku1KP7aFBdwU+tApM16rrFwQemUhUC9Ir+elbzAU2x0MAAkIYKI6aG3Tk4IwH9VTyIhUPCkC+ocWzfq2y9Ol1+H4UjROfVdZ7ZzrUHk79rk0xLa8bV2WmncWI68z63IgHKckY461grJY9nQ2z6yLJFYzM6UiyLAS7Yh4WXCIadCZ2kK5RcnL0h0CWKYhP7LbWEJR1cUTBJpQGkjsl0eeA3lKxfDkx+Y037ODZ/UMiEbedKu4vgUuro0W/me70/7OCWBo1nXo3bGKASZBqzqZ5ZXIpflmRScDaHoGqzu8yOA86rqhmE3jsliB/hDdTW5KBdE4DJQdePfL7WyJrv6/mefP9MPU3vvs2s98K1Jvt5WrGHY8DL97YLM3Fkz2XEiUan2Ahsjeewh/U/w/gu+2OpxcGw2qa3vjp+Y6n
+X-MS-Exchange-AntiSpam-MessageData: 41Esy56dCLI+1vaQ5wrReK5u2kT7ZJgNlTuarADgQIOfQ4Vj/osKy/yySe5pz8SSZSFF1bvlK3EzbwLnTADPbiND2Lguk5BKI4c5zF5oav0V1cMGjLo5KzZcsWLSe+bCYcOz6703Hxu1CCa+iRwMiQ==
+X-OriginatorOrg: analogixsemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ed264fab-2b30-4a02-6b2b-08d7e81beced
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2020 06:51:33.5745
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jPOzm+3x85Jm8M+E65WQnCj7ZCkIpB856jJxpBp18e28XjkBALQdOe4cO9+e+DOZn7avOkh3CED+vae5QcwLIg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR04MB7107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Implement selinux sysfs check to see the system is in enforcing
-mode and print warning message with pointer to check audit logs.
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/util/cloexec.c |  4 ++--
- tools/perf/util/evsel.c   | 39 ++++++++++++++++++++++++---------------
- 2 files changed, 26 insertions(+), 17 deletions(-)
-
-diff --git a/tools/perf/util/cloexec.c b/tools/perf/util/cloexec.c
-index a12872f2856a..9c8ec816261b 100644
---- a/tools/perf/util/cloexec.c
-+++ b/tools/perf/util/cloexec.c
-@@ -65,7 +65,7 @@ static int perf_flag_probe(void)
- 		return 1;
- 	}
- 
--	WARN_ONCE(err != EINVAL && err != EBUSY,
-+	WARN_ONCE(err != EINVAL && err != EBUSY && err != EACCES,
- 		  "perf_event_open(..., PERF_FLAG_FD_CLOEXEC) failed with unexpected error %d (%s)\n",
- 		  err, str_error_r(err, sbuf, sizeof(sbuf)));
- 
-@@ -83,7 +83,7 @@ static int perf_flag_probe(void)
- 	if (fd >= 0)
- 		close(fd);
- 
--	if (WARN_ONCE(fd < 0 && err != EBUSY,
-+	if (WARN_ONCE(fd < 0 && err != EBUSY && err != EACCES,
- 		      "perf_event_open(..., 0) failed unexpectedly with error %d (%s)\n",
- 		      err, str_error_r(err, sbuf, sizeof(sbuf))))
- 		return -1;
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 9fa92649adb4..bf437c059c2b 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2514,32 +2514,41 @@ int perf_evsel__open_strerror(struct evsel *evsel, struct target *target,
- 			      int err, char *msg, size_t size)
- {
- 	char sbuf[STRERR_BUFSIZE];
--	int printed = 0;
-+	int printed = 0, enforced = 0;
- 
- 	switch (err) {
- 	case EPERM:
- 	case EACCES:
-+		printed += scnprintf(msg + printed, size - printed,
-+			"Access to performance monitoring and observability operations is limited.\n");
-+
-+		if (!sysfs__read_int("fs/selinux/enforce", &enforced)) {
-+			if (enforced) {
-+				printed += scnprintf(msg + printed, size - printed,
-+					"Enforced MAC policy settings (SELinux) can limit access to performance\n"
-+					"monitoring and observability operations. Inspect system audit records for\n"
-+					"more perf_event access control information and adjusting the policy.\n");
-+			}
-+		}
-+
- 		if (err == EPERM)
--			printed = scnprintf(msg, size,
-+			printed += scnprintf(msg, size,
- 				"No permission to enable %s event.\n\n",
- 				perf_evsel__name(evsel));
- 
- 		return scnprintf(msg + printed, size - printed,
--		 "You may not have permission to collect %sstats.\n\n"
--		 "Consider tweaking /proc/sys/kernel/perf_event_paranoid,\n"
--		 "which controls use of the performance events system by\n"
--		 "unprivileged users (without CAP_PERFMON or CAP_SYS_ADMIN).\n\n"
--		 "The current value is %d:\n\n"
-+		 "Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open\n"
-+		 "access to performance monitoring and observability operations for users\n"
-+		 "without CAP_PERFMON or CAP_SYS_ADMIN Linux capability.\n"
-+		 "perf_event_paranoid setting is %d:\n"
- 		 "  -1: Allow use of (almost) all events by all users\n"
- 		 "      Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK\n"
--		 ">= 0: Disallow ftrace function tracepoint by users without CAP_PERFMON or CAP_SYS_ADMIN\n"
--		 "      Disallow raw tracepoint access by users without CAP_SYS_PERFMON or CAP_SYS_ADMIN\n"
--		 ">= 1: Disallow CPU event access by users without CAP_PERFMON or CAP_SYS_ADMIN\n"
--		 ">= 2: Disallow kernel profiling by users without CAP_PERFMON or CAP_SYS_ADMIN\n\n"
--		 "To make this setting permanent, edit /etc/sysctl.conf too, e.g.:\n\n"
--		 "	kernel.perf_event_paranoid = -1\n" ,
--				 target->system_wide ? "system-wide " : "",
--				 perf_event_paranoid());
-+		 ">= 0: Disallow raw and ftrace function tracepoint access\n"
-+		 ">= 1: Disallow CPU event access\n"
-+		 ">= 2: Disallow kernel profiling\n"
-+		 "To make the adjusted perf_event_paranoid setting permanent preserve it\n"
-+		 "in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)",
-+		 perf_event_paranoid());
- 	case ENOENT:
- 		return scnprintf(msg, size, "The %s event is not supported.",
- 				 perf_evsel__name(evsel));
--- 
-2.24.1
-
-
+On Thu, Apr 23, 2020 at 07:55:15PM +0800, Nicolas Boichat wrote:
+> Hi,
+> 
+> Just commenting on the mode_fixup function that was added in v7.
+> 
+> On Tue, Feb 25, 2020 at 2:15 PM Xin Ji <xji@analogixsemi.com> wrote:
+> >
+> > The ANX7625 is an ultra-low power 4K Mobile HD Transmitter designed
+> > for portable device. It converts MIPI DSI/DPI to DisplayPort 1.3 4K.
+> >
+> > The ANX7625 can support both USB Type-C PD feature and MIPI DSI/DPI
+> > to DP feature. This driver only enabled MIPI DSI/DPI to DP feature.
+> >
+> > Signed-off-by: Xin Ji <xji@analogixsemi.com>
+> > ---
+> >  drivers/gpu/drm/bridge/Makefile           |    2 +-
+> >  drivers/gpu/drm/bridge/analogix/Kconfig   |    6 +
+> >  drivers/gpu/drm/bridge/analogix/Makefile  |    1 +
+> >  drivers/gpu/drm/bridge/analogix/anx7625.c | 2172 +++++++++++++++++++++++++++++
+> >  drivers/gpu/drm/bridge/analogix/anx7625.h |  410 ++++++
+> >  5 files changed, 2590 insertions(+), 1 deletion(-)
+> >  create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.c
+> >  create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.h
+> >
+> > diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+> > index 4934fcf..bcd388a 100644
+> > --- a/drivers/gpu/drm/bridge/Makefile
+> > +++ b/drivers/gpu/drm/bridge/Makefile
+> [snip]
+> > +static bool anx7625_bridge_mode_fixup(struct drm_bridge *bridge,
+> > +                                     const struct drm_display_mode *mode,
+> > +                                     struct drm_display_mode *adj)
+> > +{
+> > +       struct anx7625_data *ctx = bridge_to_anx7625(bridge);
+> > +       struct device *dev = &ctx->client->dev;
+> > +       u32 hsync, hfp, hbp, hactive, hblanking;
+> > +       u32 adj_hsync, adj_hfp, adj_hbp, adj_hblanking, delta_adj;
+> > +       u32 vref, adj_clock;
+> > +
+> > +       DRM_DEV_DEBUG_DRIVER(dev, "drm mode fixup set\n");
+> > +
+> > +       mutex_lock(&ctx->lock);
+> 
+> Why do you need this lock?
+Seems no need this lock, I'll remove it.
+> 
+> > +
+> > +       hactive = mode->hdisplay;
+> 
+> This is never used, drop it?
+OK, I'll drop it.
+> 
+> > +       hsync = mode->hsync_end - mode->hsync_start;
+> > +       hfp = mode->hsync_start - mode->hdisplay;
+> > +       hbp = mode->htotal - mode->hsync_end;
+> > +       hblanking = mode->htotal - mode->hdisplay;
+> > +
+> > +       DRM_DEV_DEBUG_DRIVER(dev, "before mode fixup\n");
+> > +       DRM_DEV_DEBUG_DRIVER(dev, "hsync(%d),hfp(%d),hbp(%d),clock(%d)\n",
+> > +                            hsync,
+> > +                            hfp,
+> > +                            hbp,
+> > +                            adj->clock);
+> > +       DRM_DEV_DEBUG_DRIVER(dev, "hsync_start(%d),hsync_end(%d),htotal(%d)\n",
+> > +                            adj->hsync_start,
+> > +                            adj->hsync_end,
+> > +                            adj->htotal);
+> > +
+> > +       adj_hfp = hfp;
+> > +       adj_hsync = hsync;
+> > +       adj_hbp = hbp;
+> > +       adj_hblanking = hblanking;
+> > +
+> > +       /* plus 1 if hfp is odd */
+> 
+> A better way to word these comments is to say "hfp needs to be even",
+> otherwise, you're just repeating what we can already see in the code.
+OK
+> 
+> > +       if (hfp & 0x1) {
+> > +               adj_hfp = hfp + 1;
+> 
+> adj_hfp -= 1 for consistency?
+OK
+> 
+> > +               adj_hblanking += 1;
+> > +       }
+> > +
+> > +       /* minus 1 if hbp is odd */
+> > +       if (hbp & 0x1) {
+> > +               adj_hbp = hbp - 1;
+> 
+> ditto, adj_hbp -= 1;
+OK
+> 
+> > +               adj_hblanking -= 1;
+> > +       }
+> > +
+> > +       /* plus 1 if hsync is odd */
+> > +       if (hsync & 0x1) {
+> > +               if (adj_hblanking < hblanking)
+> > +                       adj_hsync = hsync + 1;
+> 
+> ditto
+OK
+> 
+> > +               else
+> > +                       adj_hsync = hsync - 1;
+> 
+> ditto
+OK
+> 
+> > +       }
+> > +
+> > +       /*
+> > +        * once illegal timing detected, use default HFP, HSYNC, HBP
+> > +        */
+> > +       if (hblanking < HBLANKING_MIN || (hfp < HP_MIN && hbp < HP_MIN)) {
+> 
+> should this be adj_hblanking/adj_hfp/adj_hbp?
+NO, need check original HFP and HBP, if they are not legal, driver need
+set default value to adj_hsync, adj_hfp, adj_hbp.
+> 
+> > +               adj_hsync = SYNC_LEN_DEF;
+> > +               adj_hfp = HFP_HBP_DEF;
+> > +               adj_hbp = HFP_HBP_DEF;
+> > +               vref = adj->clock * 1000 / (adj->htotal * adj->vtotal);
+> > +               if (hblanking < HBLANKING_MIN) {
+> > +                       delta_adj = HBLANKING_MIN - hblanking;
+> > +                       adj_clock = vref * delta_adj * adj->vtotal;
+> > +                       adj->clock += DIV_ROUND_UP(adj_clock, 1000);
+> > +               } else {
+> > +                       delta_adj = hblanking - HBLANKING_MIN;
+> > +                       adj_clock = vref * delta_adj * adj->vtotal;
+> > +                       adj->clock -= DIV_ROUND_UP(adj_clock, 1000);
+> > +               }
+> > +
+> > +               DRM_WARN("illegal hblanking timing, use default.\n");
+> > +               DRM_WARN("hfp(%d),hbp(%d),hsync(%d).\n", hfp, hbp, hsync);
+> 
+> How likely is it that this mode is going to work? Can you just return
+> false here to reject the mode?
+We want to set the default minimal Hblancking value, then it may display,
+otherwise. If we just return false, there is no display for sure.
+> 
+> > +       } else if (adj_hfp < HP_MIN) {
+> > +               /* adjust hfp if hfp less than HP_MIN */
+> > +               delta_adj = HP_MIN - adj_hfp;
+> > +               adj_hfp = HP_MIN;
+> > +
+> > +               /*
+> > +                * balance total HBlanking pixel, if HBP hasn't enough space,
+> 
+> "does not have enough space"
+OK
+> 
+> > +                * adjust HSYNC length, otherwize adjust HBP
+> 
+> otherwise
+OK
+> 
+> > +                */
+> > +               if ((adj_hbp - delta_adj) < HP_MIN)
+> > +                       /* hbp not enough space */
+> > +                       adj_hsync -= delta_adj;
+> > +               else
+> > +                       adj_hbp -= delta_adj;
+> > +       } else if (adj_hbp < HP_MIN) {
+> > +               delta_adj = HP_MIN - adj_hbp;
+> > +               adj_hbp = HP_MIN;
+> > +
+> > +               /*
+> > +                * balance total HBlanking pixel, if HBP hasn't enough space,
+> > +                * adjust HSYNC length, otherwize adjust HBP
+> > +                */
+> > +               if ((adj_hfp - delta_adj) < HP_MIN)
+> > +                       /* hbp not enough space */
+> > +                       adj_hsync -= delta_adj;
+> > +               else
+> > +                       adj_hfp -= delta_adj;
+> > +       }
+> > +
+> > +       DRM_DEV_DEBUG_DRIVER(dev, "after mode fixup\n");
+> > +       DRM_DEV_DEBUG_DRIVER(dev, "hsync(%d),hfp(%d),hbp(%d),clock(%d)\n",
+> 
+> Add spaces after commas in your debug strings (same above and below).
+OK
+> 
+> > +                            adj_hsync,
+> > +                            adj_hfp,
+> > +                            adj_hbp,
+> > +                            adj->clock);
+> 
+> Put these 4 on a single line.
+OK
+> 
+> > +
+> > +       /* reconstruct timing */
+> > +       adj->hsync_start = adj->hdisplay + adj_hfp;
+> > +       adj->hsync_end = adj->hsync_start + adj_hsync;
+> > +       adj->htotal = adj->hsync_end + adj_hbp;
+> > +       DRM_DEV_DEBUG_DRIVER(dev, "hsync_start(%d),hsync_end(%d),htotal(%d)\n",
+> > +                            adj->hsync_start,
+> > +                            adj->hsync_end,
+> > +                            adj->htotal);
+> > +
+> > +       mutex_unlock(&ctx->lock);
+> > +
+> > +       return true;
+> > +}
+> > +
+> > [snip]
