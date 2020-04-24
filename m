@@ -2,164 +2,108 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6CBC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B80C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B770020767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87CAB20700
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:37:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="N4dYuxqU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbgDXLgd (ORCPT
+        id S1726957AbgDXLh0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 07:36:33 -0400
-Received: from mga17.intel.com ([192.55.52.151]:40392 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726247AbgDXLgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 07:36:32 -0400
-IronPort-SDR: Kebrq8v6JEcnldjX7rpb/IULwVXfr0Q64oOmZKPD2NJWTOKCob0SwG7GeFwtLySKXY42RktKi3
- 5II2Tw4aeUWQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2020 04:36:32 -0700
-IronPort-SDR: Zv1XQsnCbqAAkdkjaL1/fIzxcODcfmHGKS6fmVD0B8qRxGCIIzktBorvwINQcos/2ij8JRYSx6
- m+Tvk52l0XpA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,311,1583222400"; 
-   d="scan'208";a="366323045"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 24 Apr 2020 04:36:29 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 24 Apr 2020 14:36:28 +0300
-Date:   Fri, 24 Apr 2020 14:36:28 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, twawrzynczak@chromium.org,
-        Benson Leung <bleung@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/2] platform/chrome: typec: Register Type C switches
-Message-ID: <20200424113628.GC1575367@kuha.fi.intel.com>
-References: <20200422222242.241699-1-pmalani@chromium.org>
- <20200422222242.241699-2-pmalani@chromium.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422222242.241699-2-pmalani@chromium.org>
+        Fri, 24 Apr 2020 07:37:26 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:43908 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726798AbgDXLhX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 07:37:23 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id AB5FCC0339;
+        Fri, 24 Apr 2020 11:37:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1587728243; bh=Kdkz2c2eoMxFLfQe031hFNSbGAX9E7zYNTPeDp82S8s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=N4dYuxqUA9OTOsx9Zy1mrvltv9gyN02r6VGkNONaTmS2VaF+Qj/sGe0feG0LtkUFf
+         mnqlCDPlYZc8e6LYbwJXx5H68pnfMta4/iv19PvVWrd5yyrARGHhtaE0o28iaPW0+a
+         HYH8Tl7SsCS/5NlpE47Q1MGv9UH464dn++8j5tGuYcU4uOz3pLEOmrwxlHVP04YGcM
+         5wG75361T6Y412TrE+EecIGQAllbG5yfFUYzinFY+2i7mUN4Th1QattB3p2l54AteX
+         DEi6KtLo4YOmeb/IAbJ+WaK6Zsjpu9qLtg8ABY253m8XfK/cTObtsvGc4Z9KdnpNU2
+         gAZPUvMcc9Xew==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 67740A006C;
+        Fri, 24 Apr 2020 11:37:21 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     linux-scsi@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Joao Lima <Joao.Lima@synopsys.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 4/5] scsi: ufs: tc-dwc-pci: Allow for MSI interrupt type
+Date:   Fri, 24 Apr 2020 13:36:59 +0200
+Message-Id: <9b5c2d47997629c55ac14ce594771e9e8f254c74.1587727756.git.Jose.Abreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1587727756.git.Jose.Abreu@synopsys.com>
+References: <cover.1587727756.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <cover.1587727756.git.Jose.Abreu@synopsys.com>
+References: <cover.1587727756.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 03:22:41PM -0700, Prashant Malani wrote:
-> Register Type C mux and switch handles, when provided via firmware
-> bindings. These will allow the cros-ec-typec driver, and also alternate
-> mode drivers to configure connected Muxes correctly, according to PD
-> information retrieved from the Chrome OS EC.
-> 
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+Newer Test Chips boards have MSI support. It does no harm to try to
+request it as the function will fallback to legacy interrupts if MSI is
+not supported.
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@intel.linux.com>
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
-> ---
->  drivers/platform/chrome/cros_ec_typec.c | 47 +++++++++++++++++++++++++
->  1 file changed, 47 insertions(+)
-> 
-> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-> index eda57db26f8d..324ead297c4d 100644
-> --- a/drivers/platform/chrome/cros_ec_typec.c
-> +++ b/drivers/platform/chrome/cros_ec_typec.c
-> @@ -14,6 +14,8 @@
->  #include <linux/platform_data/cros_usbpd_notify.h>
->  #include <linux/platform_device.h>
->  #include <linux/usb/typec.h>
-> +#include <linux/usb/typec_mux.h>
-> +#include <linux/usb/role.h>
->  
->  #define DRV_NAME "cros-ec-typec"
->  
-> @@ -25,6 +27,9 @@ struct cros_typec_port {
->  	struct typec_partner *partner;
->  	/* Port partner PD identity info. */
->  	struct usb_pd_identity p_identity;
-> +	struct typec_switch *ori_sw;
-> +	struct typec_mux *mux;
-> +	struct usb_role_switch *role_sw;
->  };
->  
->  /* Platform-specific data for the Chrome OS EC Type C controller. */
-> @@ -84,6 +89,40 @@ static int cros_typec_parse_port_props(struct typec_capability *cap,
->  	return 0;
->  }
->  
-> +static int cros_typec_get_switch_handles(struct cros_typec_port *port,
-> +					 struct fwnode_handle *fwnode,
-> +					 struct device *dev)
-> +{
-> +	port->mux = fwnode_typec_mux_get(fwnode, NULL);
-> +	if (IS_ERR(port->mux)) {
-> +		dev_info(dev, "Mux handle not found.\n");
-> +		goto mux_err;
-> +	}
-> +
-> +	port->ori_sw = fwnode_typec_switch_get(fwnode);
-> +	if (IS_ERR(port->ori_sw)) {
-> +		dev_info(dev, "Orientation switch handle not found.\n");
-> +		goto ori_sw_err;
-> +	}
-> +
-> +	port->role_sw = fwnode_usb_role_switch_get(fwnode);
-> +	if (IS_ERR(port->role_sw)) {
-> +		dev_info(dev, "USB role switch handle not found.\n");
-> +		goto role_sw_err;
-> +	}
-> +
-> +	return 0;
-> +
-> +role_sw_err:
-> +	usb_role_switch_put(port->role_sw);
-> +ori_sw_err:
-> +	typec_switch_put(port->ori_sw);
-> +mux_err:
-> +	typec_mux_put(port->mux);
-> +
-> +	return -ENODEV;
-> +}
-> +
->  static void cros_unregister_ports(struct cros_typec_data *typec)
->  {
->  	int i;
-> @@ -91,6 +130,9 @@ static void cros_unregister_ports(struct cros_typec_data *typec)
->  	for (i = 0; i < typec->num_ports; i++) {
->  		if (!typec->ports[i])
->  			continue;
-> +		usb_role_switch_put(typec->ports[i]->role_sw);
-> +		typec_switch_put(typec->ports[i]->ori_sw);
-> +		typec_mux_put(typec->ports[i]->mux);
->  		typec_unregister_port(typec->ports[i]->port);
->  	}
->  }
-> @@ -153,6 +195,11 @@ static int cros_typec_init_ports(struct cros_typec_data *typec)
->  			ret = PTR_ERR(cros_port->port);
->  			goto unregister_ports;
->  		}
-> +
-> +		ret = cros_typec_get_switch_handles(cros_port, fwnode, dev);
-> +		if (ret)
-> +			dev_info(dev, "No switch control for port %d\n",
-> +				 port_num);
->  	}
->  
->  	return 0;
-> -- 
-> 2.26.1.301.g55bc3eb7cb9-goog
+---
+Cc: Joao Lima <Joao.Lima@synopsys.com>
+Cc: Jose Abreu <Jose.Abreu@synopsys.com>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Avri Altman <avri.altman@wdc.com>
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/scsi/ufs/tc-dwc-pci.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-thanks,
-
+diff --git a/drivers/scsi/ufs/tc-dwc-pci.c b/drivers/scsi/ufs/tc-dwc-pci.c
+index 74a2d80d32bd..e0a880cbbe68 100644
+--- a/drivers/scsi/ufs/tc-dwc-pci.c
++++ b/drivers/scsi/ufs/tc-dwc-pci.c
+@@ -136,9 +136,15 @@ tc_dwc_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 		return -ENOENT;
+ 	}
+ 
++	err = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_ALL_TYPES);
++	if (err < 0) {
++		dev_err(&pdev->dev, "Allocation failed\n");
++		return err;
++	}
++
+ 	hba->vops = &data->ops;
+ 
+-	err = ufshcd_init(hba, mmio_base, pdev->irq);
++	err = ufshcd_init(hba, mmio_base, pci_irq_vector(pdev, 0));
+ 	if (err) {
+ 		dev_err(&pdev->dev, "Initialization failed\n");
+ 		return err;
 -- 
-heikki
+2.7.4
+
