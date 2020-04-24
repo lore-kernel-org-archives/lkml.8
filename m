@@ -2,125 +2,250 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C249CC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB25AC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 764BA2063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7791E2063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:53:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="bzXgut1D"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WuM+BZfN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728375AbgDXPwg (ORCPT
+        id S1728090AbgDXPxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:52:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55402 "EHLO
+        Fri, 24 Apr 2020 11:53:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726301AbgDXPwg (ORCPT
+        with ESMTP id S1727031AbgDXPxm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:52:36 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52E0EC09B046
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 08:52:35 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id r26so11390553wmh.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 08:52:35 -0700 (PDT)
+        Fri, 24 Apr 2020 11:53:42 -0400
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DF4AC09B047
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 08:53:40 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id j21so11416885qtq.8
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 08:53:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rtV64CdoXvodJnTwhQjpfJxxVe45YkDM4hkifaxGTP4=;
-        b=bzXgut1D3RMLHq+6TOlFXEGKdoDJSQqqm0o8pV8jytLUrH58+0aLEm94VnDZ7AkrUk
-         xNDfM0s8GOdUZw/OiJd+QDrUdBKATW8a1cdNYICSDa27AkURhZBYfJkGBYD2Xt4HIIcR
-         e0V8tiumDDlPrTTe6Sz7iNk3kHEFW86jligXyvzUBSMc5/kdMKtoyCz4uA3IPASpNBBl
-         jSuh4dsVYyUcdX92swDnfzTzkZ/QCt+sfkR3dBD/tvueKKon+0jVM0vSyMN+EBLKVvxF
-         NFHcN2o45xlcYBTCwy6HyUD6CI1b8Jc6Umj/aeRzqjr3tx0ZX6qgpLI0sBHAQwMihfD4
-         QyNA==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=lMQvFTtuTw6kNlBxtxkqtbssFCtHBR2FRtmMk0xCduU=;
+        b=WuM+BZfN2f2K8PeB8zeAMu1uSBTEQQcy3jadaZaxu0hXdSM2+0ZSleQc8OoKCypGbq
+         cpYym+HQQEBWNfdSrOJBaiU0UE/RfhhsaLGKqGj0b7R2JR/YAKcZzUEbAHNimy/bV+aQ
+         o7zMZA5LBhGziX1lc93Tb/7e4F3JuQm0Q3/Ssi9rJrZ7m4BxwgeQOXaVK7/R3/pLiFTh
+         nSMifeb/reCxUKWjGrggcFOliuUypD8RXqWN3d1K2KBZhWW1l8jiYpoU2z2m9T6RVtVm
+         kuduB/9vEEMY9PiVvQXyd8FvtNg4isZqjarCBovLiTSGbsTaLiisAX4woIdWhcboxvFl
+         Q8EA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rtV64CdoXvodJnTwhQjpfJxxVe45YkDM4hkifaxGTP4=;
-        b=T2PI+bcMTVsidl4BtvxLqqvmJN+lsgJUBoQh/lXN38MA9/SdHMmKyEZ1uiGLkAlsXh
-         wGMus873dB4FB5g/LhtlBKDQ/TxywTlTwFtNTRifESJS2IVH4iGjnh3nN5OFZMO9Iy3x
-         ayrpA18Wq0hOsAtaC0gujyJSMBJMPCR/yiHlMFU01SQ02R+vyh8q4MyYqi6RG3EJm8Xi
-         N0Zpoz7+teGgkHOfakEaTdu/dSs6VwauKsnd17ifgqe2VRy4r0JNKPEJYLdJVHHbByCq
-         Q3+Z08eVQqJj4a6KD8OPBM0CDAewTS4u0PUB87Pxhs3Pw9m5feSSi9mABI7RXO37UU3I
-         luzQ==
-X-Gm-Message-State: AGi0PuYuHVXqZXjn9F5zUydeikYrN4TuDiOwZymFXfvwrLI8lNoCw0Mx
-        vARVtcOu4LaE+R619LWP+H7W5w==
-X-Google-Smtp-Source: APiQypLHoMtXgNvUu4rSXl4sbf4gXGV+tWNxmLDcuR0fz6lAjF9ERRKa1+QHe3UHlNpGkUzFVpTL3w==
-X-Received: by 2002:a1c:e408:: with SMTP id b8mr11014823wmh.68.1587743553991;
-        Fri, 24 Apr 2020 08:52:33 -0700 (PDT)
-Received: from ?IPv6:2a02:8084:e84:2480:228:f8ff:fe6f:83a8? ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id q143sm3661290wme.31.2020.04.24.08.52.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Apr 2020 08:52:33 -0700 (PDT)
-Subject: Re: [PATCH] printk: Add loglevel for "do not print to consoles".
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-References: <20200424024239.63607-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20200424092816.62a61b1d@gandalf.local.home>
- <579fbe97-9aae-2b67-03ff-01291b9cbb7d@i-love.sakura.ne.jp>
- <20200424103131.7987f890@gandalf.local.home>
- <7ec0b0a3-39ae-0f1c-b8c2-e1e9e60f1223@i-love.sakura.ne.jp>
- <20200424114225.5a3bab7e@gandalf.local.home>
-From:   Dmitry Safonov <dima@arista.com>
-Message-ID: <b3129b4a-cd08-c507-4c6a-8b3e24b130d0@arista.com>
-Date:   Fri, 24 Apr 2020 16:52:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200424114225.5a3bab7e@gandalf.local.home>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=lMQvFTtuTw6kNlBxtxkqtbssFCtHBR2FRtmMk0xCduU=;
+        b=WXQQbo+jI6Sc6RI3DioR28NcoPgOKww/GNEICgQlkkjsC+44PejiO8H/rmeALwf6BQ
+         Mgc6/lYGafeARKxWSCIR1qoHhrgirdtiCnTt4Ho+Amtr9okU5fat3dFYg+O8JtXWDTqU
+         jH+mnhmxodB6eKGMpIHr3hYWIxdu/xXRsGaQIN4wQQzZPCBNLh2yhkoyhts3iVLtXJKb
+         dClBoSPEjsQii2uq9BqnjMjFuEmLsrpYGoIMDGk8qKFcxId/QTow8xDacI20cswE9Oem
+         aL+vaAx7C1hxTNt6rXOxxoEOrp7jBcLATNtEU3SF1LbEwlFNM7biHiOMNx8CZehcj+my
+         qHAA==
+X-Gm-Message-State: AGi0PuZOcta3/9hB52z8RnNBYur52kw4+zOPXKv8eNVFpl5ebgq/2BxP
+        j3CcBRY+7LRieyqiSDmm0VW6+KOtdQ==
+X-Google-Smtp-Source: APiQypKtqUH8bX6hdDPwC8R0M0bM9FGGsnwRt9hoDS2kUCXaRMJJNNuQg3q+K+Z0rrHGzNocbJa2Rwq+2w==
+X-Received: by 2002:ac8:70d:: with SMTP id g13mr9835143qth.91.1587743619648;
+ Fri, 24 Apr 2020 08:53:39 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 08:53:35 -0700
+Message-Id: <20200424155335.63787-1-sqazi@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
+Subject: [PATCH v4] block: Limit number of items taken from the I/O scheduler
+ in one go
+From:   Salman Qazi <sqazi@google.com>
+To:     Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jesse Barnes <jsbarnes@google.com>,
+        Gwendal Grignou <gwendal@google.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@lst.de>, Salman Qazi <sqazi@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Flushes bypass the I/O scheduler and get added to hctx->dispatch
+in blk_mq_sched_bypass_insert.  This can happen while a kworker is running
+hctx->run_work work item and is past the point in
+blk_mq_sched_dispatch_requests where hctx->dispatch is checked.
 
+The blk_mq_do_dispatch_sched call is not guaranteed to end in bounded time,
+because the I/O scheduler can feed an arbitrary number of commands.
 
-On 4/24/20 4:42 PM, Steven Rostedt wrote:
-> On Sat, 25 Apr 2020 00:28:53 +0900
-> Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp> wrote:
->> For those who analyze log files (instead of console output), the point of
->> printk() is to save kernel messages into log files (via userspace syslog
->> daemon).
->>
->> By the way, I think
->>
->>   printk(KERN_NO_CONSOLES "hello\n")
->>
->> is almost same with doing
->>
->>   saved_loglevel = console_loglevel;
->>   console_loglevel = CONSOLE_LOGLEVEL_SILENT;
->>   printk("hello\n");
->>   console_loglevel = saved_loglevel;
->>
->> used by vkdb_printf().
-> 
-> And both shouldn't be done within the kernel. The "CONSOLE_LOGLEVEL_SILENT"
-> if for user decided policy, not the kernel making that policy for the user.
+Since we have only one hctx->run_work, the commands waiting in
+hctx->dispatch will wait an arbitrary length of time for run_work to be
+rerun.
 
-Though, I believe the reverse KERN_UNSUPPRESSED [1] still makes sense
-for sysrq/kdb where user expects their interactive messages to appear on
-console. And unfortunately, userspace depends on the loglevel of those
-messages as it is.
-With KERN_UNSUPPRESSED I hope to remove all those console_loglevel
-tricks and make it static variable for printk.
+A similar phenomenon exists with dispatches from the software queue.
 
-[1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/
+The solution is to poll hctx->dispatch in blk_mq_do_dispatch_sched and
+blk_mq_do_dispatch_ctx and return from the run_work handler and let it
+rerun.
 
-Thanks,
-          Dmitry
+Signed-off-by: Salman Qazi <sqazi@google.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+---
+Changes since v3
+
+Updated a comment to make it clear why we call __blk_mq_sched_dispatch_requests
+twice before rerunning the work item.
+
+ block/blk-mq-sched.c | 67 +++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 54 insertions(+), 13 deletions(-)
+
+diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+index 74cedea56034..31ce6dbec93e 100644
+--- a/block/blk-mq-sched.c
++++ b/block/blk-mq-sched.c
+@@ -84,12 +84,16 @@ void blk_mq_sched_restart(struct blk_mq_hw_ctx *hctx)
+  * Only SCSI implements .get_budget and .put_budget, and SCSI restarts
+  * its queue by itself in its completion handler, so we don't need to
+  * restart queue if .get_budget() returns BLK_STS_NO_RESOURCE.
++ *
++ * Returns -EAGAIN if hctx->dispatch was found non-empty and run_work has to
++ * be run again.  This is necessary to avoid starving flushes.
+  */
+-static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
++static int blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+ {
+ 	struct request_queue *q = hctx->queue;
+ 	struct elevator_queue *e = q->elevator;
+ 	LIST_HEAD(rq_list);
++	int ret = 0;
+ 
+ 	do {
+ 		struct request *rq;
+@@ -97,6 +101,11 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+ 		if (e->type->ops.has_work && !e->type->ops.has_work(hctx))
+ 			break;
+ 
++		if (!list_empty_careful(&hctx->dispatch)) {
++			ret = -EAGAIN;
++			break;
++		}
++
+ 		if (!blk_mq_get_dispatch_budget(hctx))
+ 			break;
+ 
+@@ -113,6 +122,8 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+ 		 */
+ 		list_add(&rq->queuelist, &rq_list);
+ 	} while (blk_mq_dispatch_rq_list(q, &rq_list, true));
++
++	return ret;
+ }
+ 
+ static struct blk_mq_ctx *blk_mq_next_ctx(struct blk_mq_hw_ctx *hctx,
+@@ -130,16 +141,25 @@ static struct blk_mq_ctx *blk_mq_next_ctx(struct blk_mq_hw_ctx *hctx,
+  * Only SCSI implements .get_budget and .put_budget, and SCSI restarts
+  * its queue by itself in its completion handler, so we don't need to
+  * restart queue if .get_budget() returns BLK_STS_NO_RESOURCE.
++ *
++ * Returns -EAGAIN if hctx->dispatch was found non-empty and run_work has to
++ * to be run again.  This is necessary to avoid starving flushes.
+  */
+-static void blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
++static int blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
+ {
+ 	struct request_queue *q = hctx->queue;
+ 	LIST_HEAD(rq_list);
+ 	struct blk_mq_ctx *ctx = READ_ONCE(hctx->dispatch_from);
++	int ret = 0;
+ 
+ 	do {
+ 		struct request *rq;
+ 
++		if (!list_empty_careful(&hctx->dispatch)) {
++			ret = -EAGAIN;
++			break;
++		}
++
+ 		if (!sbitmap_any_bit_set(&hctx->ctx_map))
+ 			break;
+ 
+@@ -165,21 +185,17 @@ static void blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
+ 	} while (blk_mq_dispatch_rq_list(q, &rq_list, true));
+ 
+ 	WRITE_ONCE(hctx->dispatch_from, ctx);
++	return ret;
+ }
+ 
+-void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
++int __blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+ {
+ 	struct request_queue *q = hctx->queue;
+ 	struct elevator_queue *e = q->elevator;
+ 	const bool has_sched_dispatch = e && e->type->ops.dispatch_request;
++	int ret = 0;
+ 	LIST_HEAD(rq_list);
+ 
+-	/* RCU or SRCU read lock is needed before checking quiesced flag */
+-	if (unlikely(blk_mq_hctx_stopped(hctx) || blk_queue_quiesced(q)))
+-		return;
+-
+-	hctx->run++;
+-
+ 	/*
+ 	 * If we have previous entries on our dispatch list, grab them first for
+ 	 * more fair dispatch.
+@@ -208,19 +224,44 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+ 		blk_mq_sched_mark_restart_hctx(hctx);
+ 		if (blk_mq_dispatch_rq_list(q, &rq_list, false)) {
+ 			if (has_sched_dispatch)
+-				blk_mq_do_dispatch_sched(hctx);
++				ret = blk_mq_do_dispatch_sched(hctx);
+ 			else
+-				blk_mq_do_dispatch_ctx(hctx);
++				ret = blk_mq_do_dispatch_ctx(hctx);
+ 		}
+ 	} else if (has_sched_dispatch) {
+-		blk_mq_do_dispatch_sched(hctx);
++		ret = blk_mq_do_dispatch_sched(hctx);
+ 	} else if (hctx->dispatch_busy) {
+ 		/* dequeue request one by one from sw queue if queue is busy */
+-		blk_mq_do_dispatch_ctx(hctx);
++		ret = blk_mq_do_dispatch_ctx(hctx);
+ 	} else {
+ 		blk_mq_flush_busy_ctxs(hctx, &rq_list);
+ 		blk_mq_dispatch_rq_list(q, &rq_list, false);
+ 	}
++
++	return ret;
++}
++
++void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
++{
++	struct request_queue *q = hctx->queue;
++
++	/* RCU or SRCU read lock is needed before checking quiesced flag */
++	if (unlikely(blk_mq_hctx_stopped(hctx) || blk_queue_quiesced(q)))
++		return;
++
++	hctx->run++;
++
++	/*
++	 * A return of -EAGAIN is an indication that hctx->dispatch is not
++	 * empty and we must run again in order to avoid starving flushes.
++	 * As an optimization, we run again locally once.  In the unlikely
++	 * event that we encounter the same race again, we reschedule
++	 * the work item.
++	 */
++	if (__blk_mq_sched_dispatch_requests(hctx) == -EAGAIN) {
++		if (__blk_mq_sched_dispatch_requests(hctx) == -EAGAIN)
++			blk_mq_run_hw_queue(hctx, true);
++	}
+ }
+ 
+ bool blk_mq_sched_try_merge(struct request_queue *q, struct bio *bio,
+-- 
+2.26.2.303.gf8c07b1a785-goog
+
