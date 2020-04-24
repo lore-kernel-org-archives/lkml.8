@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FFEDC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93835C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C46220728
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:06:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7390220767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:06:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587733613;
-	bh=ti7o2wvzWD5uBibPRB7wXDoilnMCRc5lKbVwQ8cbNqc=;
+	s=default; t=1587733615;
+	bh=SRMy+oO2EF/+CFJMY2bNfExRnH7AZOgojjnqMOddHOM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eXABvNhV5PRQMmkBJcPe6AkebaZjJU1PyUeK7+WnqKH7bIjgMq8AdCJEj1W9Iy/Hu
-	 xoYoqAAI5Lr3JFcSQqCQcUnxfek+Lumwt4X6mBMarj6hBlVJV7m6/E3ZUZ8IELgD9e
-	 7lUU18Zk19WBEqQIiIsBmocZlvUCdg+FODvmiRpA=
+	b=cBHyjAg/mXDjTNi3jp0AilQAYWqfuGgE3WZ1+0ZxfrtePFs3D0iIzTWWWV91EVQVA
+	 A7LCj16dQ83PSLCBRrPKx9wyHkwaKOd2XLMCGnkXWAbo+370ExozSPUh57WAlG1ufO
+	 hLXsFfaOr973AgE8SprK7osNPIH85gwr89c6WdeU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728125AbgDXNGw (ORCPT
+        id S1728153AbgDXNGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 09:06:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57316 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 09:06:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726798AbgDXNGs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 09:06:48 -0400
+        id S1728124AbgDXNGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 09:06:51 -0400
 Received: from e123331-lin.home (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54EDE21582;
-        Fri, 24 Apr 2020 13:06:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A6792087E;
+        Fri, 24 Apr 2020 13:06:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587733607;
-        bh=ti7o2wvzWD5uBibPRB7wXDoilnMCRc5lKbVwQ8cbNqc=;
+        s=default; t=1587733611;
+        bh=SRMy+oO2EF/+CFJMY2bNfExRnH7AZOgojjnqMOddHOM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hx/VQchmd0UR/Xu7wr3nMZ8zuY6xlm6+TL0pIIYA4Y904Ebf2sZNMkAFxU8dr5Faf
-         MGWB9CHQ2HyJRO7I2955vuz+AbSM388Db5H6seD5jVL3OwHiGOgg3bZ2gbDTbSApkb
-         kjdCeQSyilRVTsAD+A1O3g9bY7zh/NJp8h6hMTKM=
+        b=Qe92GNKjj35bLagCXbhoTzNSSioHVDp7YxRHpIlR6QD/CCiNeZWrUAawhXXxH/QN3
+         yaaCkJ4md+Hg8c0jI6zx9OMA1q8V5Qdm4Zvoc8Oa4kxv2xUV6jgqQV4t8SV1aRAUNO
+         fB9KTJPbhlHqB/3vdqkiHl2PUeXwwYZISYrGZQa4=
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,9 +47,9 @@ Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
         Atish Patra <atish.patra@wdc.com>,
         Palmer Dabbelt <palmerdabbelt@google.com>,
         Zou Wei <zou_wei@huawei.com>
-Subject: [PATCH 16/33] efi/gop: Allow specifying mode by <xres>x<yres>
-Date:   Fri, 24 Apr 2020 15:05:14 +0200
-Message-Id: <20200424130531.30518-17-ardb@kernel.org>
+Subject: [PATCH 18/33] efi/gop: Allow automatically choosing the best mode
+Date:   Fri, 24 Apr 2020 15:05:16 +0200
+Message-Id: <20200424130531.30518-19-ardb@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200424130531.30518-1-ardb@kernel.org>
 References: <20200424130531.30518-1-ardb@kernel.org>
@@ -60,82 +60,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arvind Sankar <nivedita@alum.mit.edu>
 
-Add the ability to choose a video mode using a command-line argument of
-the form
-	video=efifb:<xres>x<yres>
+Add the ability to automatically pick the highest resolution video mode
+(defined as the product of vertical and horizontal resolution) by using
+a command-line argument of the form
+	video=efifb:auto
+
+If there are multiple modes with the highest resolution, pick one with
+the highest color depth.
 
 Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Link: https://lore.kernel.org/r/20200320020028.1936003-13-nivedita@alum.mit.edu
+Link: https://lore.kernel.org/r/20200328160601.378299-2-nivedita@alum.mit.edu
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- Documentation/fb/efifb.rst         |  5 ++
+ Documentation/fb/efifb.rst         |  6 +++
  drivers/firmware/efi/libstub/gop.c | 84 +++++++++++++++++++++++++++++-
- 2 files changed, 88 insertions(+), 1 deletion(-)
+ 2 files changed, 89 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/fb/efifb.rst b/Documentation/fb/efifb.rst
-index 367fbda2f4da..635275071307 100644
+index eca38466487a..519550517fd4 100644
 --- a/Documentation/fb/efifb.rst
 +++ b/Documentation/fb/efifb.rst
-@@ -50,4 +50,9 @@ mode=n
-         The EFI stub will set the mode of the display to mode number n if
-         possible.
+@@ -57,4 +57,10 @@ mode=n
+         "rgb" or "bgr" to match specifically those pixel formats, or a number
+         for a mode with matching bits per pixel.
  
-+<xres>x<yres>
-+        The EFI stub will search for a display mode that matches the specified
-+        horizontal and vertical resolution, and set the mode of the display to
-+        it if one is found.
++auto
++        The EFI stub will choose the mode with the highest resolution (product
++        of horizontal and vertical resolution). If there are multiple modes
++        with the highest resolution, it will choose one with the highest color
++        depth.
 +
  Edgar Hucek <gimli@dark-green.com>
 diff --git a/drivers/firmware/efi/libstub/gop.c b/drivers/firmware/efi/libstub/gop.c
-index a32b784b4577..cc84e6a82f54 100644
+index 848cb605a9c4..fa05a0b0adfd 100644
 --- a/drivers/firmware/efi/libstub/gop.c
 +++ b/drivers/firmware/efi/libstub/gop.c
-@@ -6,6 +6,7 @@
-  * ----------------------------------------------------------------------- */
- 
- #include <linux/bitops.h>
-+#include <linux/ctype.h>
- #include <linux/efi.h>
- #include <linux/screen_info.h>
- #include <linux/string.h>
-@@ -17,11 +18,17 @@
+@@ -18,7 +18,8 @@
  enum efi_cmdline_option {
  	EFI_CMDLINE_NONE,
  	EFI_CMDLINE_MODE_NUM,
-+	EFI_CMDLINE_RES
+-	EFI_CMDLINE_RES
++	EFI_CMDLINE_RES,
++	EFI_CMDLINE_AUTO
  };
  
  static struct {
- 	enum efi_cmdline_option option;
--	u32 mode;
-+	union {
-+		u32 mode;
-+		struct {
-+			u32 width, height;
-+		} res;
-+	};
- } cmdline __efistub_global = { .option = EFI_CMDLINE_NONE };
- 
- static bool parse_modenum(char *option, char **next)
-@@ -41,11 +48,33 @@ static bool parse_modenum(char *option, char **next)
+@@ -86,6 +87,19 @@ static bool parse_res(char *option, char **next)
  	return true;
  }
  
-+static bool parse_res(char *option, char **next)
++static bool parse_auto(char *option, char **next)
 +{
-+	u32 w, h;
-+
-+	if (!isdigit(*option))
++	if (!strstarts(option, "auto"))
 +		return false;
-+	w = simple_strtoull(option, &option, 10);
-+	if (*option++ != 'x' || !isdigit(*option))
-+		return false;
-+	h = simple_strtoull(option, &option, 10);
++	option += strlen("auto");
 +	if (*option && *option++ != ',')
 +		return false;
-+	cmdline.option     = EFI_CMDLINE_RES;
-+	cmdline.res.width  = w;
-+	cmdline.res.height = h;
++	cmdline.option = EFI_CMDLINE_AUTO;
 +
 +	*next = option;
 +	return true;
@@ -144,18 +125,20 @@ index a32b784b4577..cc84e6a82f54 100644
  void efi_parse_option_graphics(char *option)
  {
  	while (*option) {
- 		if (parse_modenum(option, &option))
+@@ -93,6 +107,8 @@ void efi_parse_option_graphics(char *option)
  			continue;
-+		if (parse_res(option, &option))
+ 		if (parse_res(option, &option))
+ 			continue;
++		if (parse_auto(option, &option))
 +			continue;
  
  		while (*option && *option++ != ',')
  			;
-@@ -94,6 +123,56 @@ static u32 choose_mode_modenum(efi_graphics_output_protocol_t *gop)
- 	return cmdline.mode;
+@@ -211,6 +227,69 @@ static u32 choose_mode_res(efi_graphics_output_protocol_t *gop)
+ 	return cur_mode;
  }
  
-+static u32 choose_mode_res(efi_graphics_output_protocol_t *gop)
++static u32 choose_mode_auto(efi_graphics_output_protocol_t *gop)
 +{
 +	efi_status_t status;
 +
@@ -163,21 +146,28 @@ index a32b784b4577..cc84e6a82f54 100644
 +	efi_graphics_output_mode_info_t *info;
 +	unsigned long info_size;
 +
-+	u32 max_mode, cur_mode;
++	u32 max_mode, cur_mode, best_mode, area;
++	u8 depth;
 +	int pf;
-+	u32 m, w, h;
++	efi_pixel_bitmask_t pi;
++	u32 m, w, h, a;
++	u8 d;
 +
 +	mode = efi_table_attr(gop, mode);
 +
 +	cur_mode = efi_table_attr(mode, mode);
-+	info = efi_table_attr(mode, info);
-+	w = info->horizontal_resolution;
-+	h = info->vertical_resolution;
-+
-+	if (w == cmdline.res.width && h == cmdline.res.height)
-+		return cur_mode;
-+
 +	max_mode = efi_table_attr(mode, max_mode);
++
++	info = efi_table_attr(mode, info);
++
++	pf = info->pixel_format;
++	pi = info->pixel_information;
++	w  = info->horizontal_resolution;
++	h  = info->vertical_resolution;
++
++	best_mode = cur_mode;
++	area = w * h;
++	depth = pixel_bpp(pf, pi);
 +
 +	for (m = 0; m < max_mode; m++) {
 +		if (m == cur_mode)
@@ -189,6 +179,7 @@ index a32b784b4577..cc84e6a82f54 100644
 +			continue;
 +
 +		pf = info->pixel_format;
++		pi = info->pixel_information;
 +		w  = info->horizontal_resolution;
 +		h  = info->vertical_resolution;
 +
@@ -196,24 +187,29 @@ index a32b784b4577..cc84e6a82f54 100644
 +
 +		if (pf == PIXEL_BLT_ONLY || pf >= PIXEL_FORMAT_MAX)
 +			continue;
-+		if (w == cmdline.res.width && h == cmdline.res.height)
-+			return m;
++		a = w * h;
++		if (a < area)
++			continue;
++		d = pixel_bpp(pf, pi);
++		if (a > area || d > depth) {
++			best_mode = m;
++			area = a;
++			depth = d;
++		}
 +	}
 +
-+	efi_printk("Couldn't find requested mode\n");
-+
-+	return cur_mode;
++	return best_mode;
 +}
 +
  static void set_mode(efi_graphics_output_protocol_t *gop)
  {
  	efi_graphics_output_protocol_mode_t *mode;
-@@ -103,6 +182,9 @@ static void set_mode(efi_graphics_output_protocol_t *gop)
- 	case EFI_CMDLINE_MODE_NUM:
- 		new_mode = choose_mode_modenum(gop);
+@@ -223,6 +302,9 @@ static void set_mode(efi_graphics_output_protocol_t *gop)
+ 	case EFI_CMDLINE_RES:
+ 		new_mode = choose_mode_res(gop);
  		break;
-+	case EFI_CMDLINE_RES:
-+		new_mode = choose_mode_res(gop);
++	case EFI_CMDLINE_AUTO:
++		new_mode = choose_mode_auto(gop);
 +		break;
  	default:
  		return;
