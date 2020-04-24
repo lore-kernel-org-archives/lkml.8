@@ -2,105 +2,117 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4D3C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 419EDC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C5432075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17BF42098B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:49:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587754032;
-	bh=3DnuD4Zl9wa8w/vDHbLj6+0pA+nXALn2i2YRRevApPc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=GFaoWyLFrQS0SV33mP/eZwdGsppD7ZqatRblVAVPFlxYyE0jGrrsuBOc6LIx9Lj7x
-	 qGUWxpHg3DjSI2c1O03YsnW4eGCLiNivyU306codGM1nxY2paEq1PHg2JCMYw8Iru+
-	 ijQXmq84C/NE36OnAcjLNBkl7CY/pAhKmtx1MAI0=
+	s=default; t=1587754162;
+	bh=mFm/kXQHhsWPpMEmXWij3iYQKwYKbZWlNKUSWFVvDdY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=V3HiB94kKkuba5ZbOo7FCBNy/8EdN/dX2Oj+2zBfqE66QI6NiRlLLM+Nkj6j4m/Dd
+	 nnopr8FXJTrIjgWqZM2A4M2cmCy4KmLhT+He0ggX1RoEucoSe3yZelLwaqO7V6Rqfe
+	 e3J6Y0zpxZqdHtJfkce+gQ5RVXJnpQXmKoWOIJuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728990AbgDXSrL (ORCPT
+        id S1729119AbgDXStV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 14:47:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727031AbgDXSrK (ORCPT
+        Fri, 24 Apr 2020 14:49:21 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38507 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727022AbgDXStU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 14:47:10 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 834D7C09B049
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 11:47:10 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id l11so8549468lfc.5
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 11:47:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4xGKLkYDrbkxXaPDoAGMclBp7ffRJ6EszDQ3T54v3nc=;
-        b=MwEjKDGJj1MODwKnNzA+vLKGg1thtRHT3e3U4LHSFK+h9wYouw58019uyy6/KEmGky
-         24VnGgQr1b7rgt9D8CYnPjqHNk/6kz2e+VairFXVurg4X02ZtnTJl3DNdjL89KBLASEH
-         jDDJT1LRGx4BfhkYMobF+P34B+Sx/MgLFiZjc=
+        Fri, 24 Apr 2020 14:49:20 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y25so5212118pfn.5;
+        Fri, 24 Apr 2020 11:49:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4xGKLkYDrbkxXaPDoAGMclBp7ffRJ6EszDQ3T54v3nc=;
-        b=CQ5qLZm7sOQN1aNHN87pWkfjL1rFH/Q82f9PIbxZdL1J+TKvGym00WHaB6e9sGhpGs
-         5FAC+5+rqd34cUJAB9vux4Aw4flEL4u6/KPn37jBTgDpqj+2h6QGSv2rb9LzFEoz2wVV
-         mXuc667i+JBv6jIsQPUYQ5JLAMz+YN9GavllTw2smECUmC3jxJht8gidT6rzmLWJ9sLx
-         z98NT1R6Xcg6uPwQY5a6gIBfMPITZpuLciupXC/4kvlLPeo8611KzUhDsY06UCY0YnZx
-         /feC/6F7l27mH5sRjsI1DbjSZ4pdIgSok5EU8pXQfchJz9PHoaTipq0B5DZ0n7r5x3H8
-         RR9A==
-X-Gm-Message-State: AGi0PuY/hkZ4T5j5nWqcSJKC2qKwVbEj3r26BRch7vy/gEhWrqf3Vq/l
-        BA5LI/JhmOpANvrloYEXwPyboyY5bm4=
-X-Google-Smtp-Source: APiQypIBXSMCd+4z4ZSs1qmKNqqhjJ3Sx17B/vu8OfPFqbTcLaDN95hTDjDhfzwh3kpVyzbCidKwJQ==
-X-Received: by 2002:a19:4204:: with SMTP id p4mr7189707lfa.111.1587754028421;
-        Fri, 24 Apr 2020 11:47:08 -0700 (PDT)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id x24sm4925395lfc.6.2020.04.24.11.47.07
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Apr 2020 11:47:07 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id e25so11028055ljg.5
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 11:47:07 -0700 (PDT)
-X-Received: by 2002:a2e:9a54:: with SMTP id k20mr4968653ljj.265.1587754027148;
- Fri, 24 Apr 2020 11:47:07 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dnrdoD7nmACg/ZcofKqMNFF5jN6vuaerLfx/Qx9DPPc=;
+        b=kacqRBdxwzcFxPk43qDM6P0s1HxZZbMkh/Y1WYFhZLOFtVuRujjYLWeFf+fFWTfe/P
+         8U/5Nu/UdYjYlzt8YntmeBT+bDv12SVBEe5ACyBdJSfkf/D782eG7rNOQYvkBnaBQVDK
+         5ibhi6LYHgSpisXfg+qBlPrdTsC5S0VQAguhq/FQ2cAL/zRgJugY0Tn7WNlMECvexo8N
+         cZ3bPm230/5/jJ59A7AqRtwGeBRtm/p0kl1JD1Z3Rz5Jk55AHwkdGEEdG8HbSx4ZETVQ
+         gXiYaVgk/+X0sPGWOySkZEGSNiZdjli18uvJDfOLFp7cq2Ll2Vbf3W9w6IOZjFP3q2E5
+         XD/A==
+X-Gm-Message-State: AGi0PuZW8/X7s8RovHwLBZnei4syqU2WL4IX/Fg/DiGDLtOr1q9WB7md
+        INTBSEWtzI7XNDJIEkkYal0=
+X-Google-Smtp-Source: APiQypKS/Krkami4O3Ig5kxq8u0/B8rJ9D1wPXZ5S66dUFNYWrEFGiRqwPOe2N19TWYG+SlCQ0y47g==
+X-Received: by 2002:aa7:9251:: with SMTP id 17mr10452124pfp.315.1587754159592;
+        Fri, 24 Apr 2020 11:49:19 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id x4sm6334099pfj.76.2020.04.24.11.49.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Apr 2020 11:49:18 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 99D05403AB; Fri, 24 Apr 2020 18:49:17 +0000 (UTC)
+From:   "Luis R. Rodriguez" <mcgrof@kernel.org>
+To:     gregkh@linuxfoundation.org
+Cc:     akpm@linux-foundation.org, josh@joshtriplett.org,
+        rishabhb@codeaurora.org, kubakici@wp.pl, maco@android.com,
+        david.brown@linaro.org, bjorn.andersson@linaro.org,
+        linux-wireless@vger.kernel.org, keescook@chromium.org,
+        shuah@kernel.org, mfuzzey@parkeon.com, zohar@linux.vnet.ibm.com,
+        dhowells@redhat.com, pali.rohar@gmail.com, tiwai@suse.de,
+        arend.vanspriel@broadcom.com, zajec5@gmail.com, nbroeking@me.com,
+        broonie@kernel.org, dmitry.torokhov@gmail.com, dwmw2@infradead.org,
+        torvalds@linux-foundation.org, Abhay_Salunke@dell.com,
+        jewalt@lgsinnovations.com, cantabile.desu@gmail.com, ast@fb.com,
+        andresx7@gmail.com, dan.rue@linaro.org, brendanhiggins@google.com,
+        yzaikin@google.com, sfr@canb.auug.org.au, rdunlap@infradead.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Luis Chamberlain <mcgrof@kernel.org>
+Subject: [PATCH v2 1/2] firmware_loader: revert removal of the fw_fallback_config export
+Date:   Fri, 24 Apr 2020 18:49:15 +0000
+Message-Id: <20200424184916.22843-1-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.23.0.rc1
 MIME-Version: 1.0
-References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
- <87ftcv1nqe.fsf@x220.int.ebiederm.org> <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
- <CAHk-=wgXEJdkgGzZQzBDGk7ijjVdAVXe=G-mkFSVng_Hpwd4tQ@mail.gmail.com>
- <87tv19tv65.fsf@x220.int.ebiederm.org> <CAHk-=wj-K3fqdMr-r8WgS8RKPuZOuFbPXCEUe9APrdShn99xsA@mail.gmail.com>
-In-Reply-To: <CAHk-=wj-K3fqdMr-r8WgS8RKPuZOuFbPXCEUe9APrdShn99xsA@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 24 Apr 2020 11:46:51 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg9RQ4rc-TmiP0-rdGPGje2uAX5aWh+=pFhfVdKq=u+aA@mail.gmail.com>
-Message-ID: <CAHk-=wg9RQ4rc-TmiP0-rdGPGje2uAX5aWh+=pFhfVdKq=u+aA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] proc: Ensure we see the exit of each process tid exactly
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 11:02 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
->  [..] even a "double cmpxchg" is
-> actually just a double-_sized_ one, not a two different locations
-> one
+From: Luis Chamberlain <mcgrof@kernel.org>
 
-Historical accuracy side note: the 68020 actually had a CAS2 that was
-"two different locations".
+Christoph's patch removed two unsused exported symbols, however, one
+symbol is used by the firmware_loader itself.  If CONFIG_FW_LOADER=m so
+the firmware_loader is modular but CONFIG_FW_LOADER_USER_HELPER=y we fail
+the build at mostpost.
 
-Maybe somebody else did too.
+ERROR: modpost: "fw_fallback_config" [drivers/base/firmware_loader/firmware_class.ko] undefined!
 
-            Linus
+This happens because the variable fw_fallback_config is built into the
+kernel if CONFIG_FW_LOADER_USER_HELPER=y always, so we need to grant
+access to the firmware loader module by exporting it.
+
+Revert only one hunk from his patch.
+
+Fixes: 739604734bd8e4ad71 ("firmware_loader: remove unused exports")
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+---
+ drivers/base/firmware_loader/fallback_table.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/base/firmware_loader/fallback_table.c b/drivers/base/firmware_loader/fallback_table.c
+index 0a737349f78f..a182e318bd09 100644
+--- a/drivers/base/firmware_loader/fallback_table.c
++++ b/drivers/base/firmware_loader/fallback_table.c
+@@ -21,6 +21,7 @@ struct firmware_fallback_config fw_fallback_config = {
+ 	.loading_timeout = 60,
+ 	.old_timeout = 60,
+ };
++EXPORT_SYMBOL_GPL(fw_fallback_config);
+ 
+ #ifdef CONFIG_SYSCTL
+ struct ctl_table firmware_config_table[] = {
+-- 
+2.25.1
+
