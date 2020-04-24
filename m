@@ -2,114 +2,97 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA600C2BA19
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C40C55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CEA82071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E8532087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:30:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b="AQJIlA4V"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iA7ZZmUV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbgDXC1n (ORCPT
+        id S1726152AbgDXCaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 22:27:43 -0400
-Received: from mx4.wp.pl ([212.77.101.12]:55432 "EHLO mx4.wp.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725884AbgDXC1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 22:27:42 -0400
-Received: (wp-smtpd smtp.wp.pl 19782 invoked from network); 24 Apr 2020 04:27:39 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
-          t=1587695259; bh=6jg83JwrUc4Qa5UTPTIUHbq5+ryy3N6k3IIDya4aHXc=;
-          h=From:To:Cc:Subject;
-          b=AQJIlA4V5DMc1Sd0PCeHxN/5wP0bOrRSA9HhgTR2I2nvnsDzZcHZPeniUQI7zoUPS
-           ba/qPFH2u/33E9FplPJYv9De+O/3gshBsOWwDZA1R63B3/9jb4RrKws5lZ6h4ut2SO
-           p/wggvjqpYo8XGw9XpmXFW2L7Jqu9sqB4X0XHTJA=
-Received: from unknown (HELO kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com) (kubakici@wp.pl@[163.114.132.1])
-          (envelope-sender <kubakici@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <mcgrof@kernel.org>; 24 Apr 2020 04:27:39 +0200
-Date:   Thu, 23 Apr 2020 19:27:16 -0700
-From:   Jakub Kicinski <kubakici@wp.pl>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     gregkh@linuxfoundation.org, akpm@linux-foundation.org,
-        josh@joshtriplett.org, rishabhb@codeaurora.org, maco@android.com,
-        andy.gross@linaro.org, david.brown@linaro.org,
-        bjorn.andersson@linaro.org, linux-wireless@vger.kernel.org,
-        keescook@chromium.org, shuah@kernel.org, mfuzzey@parkeon.com,
-        zohar@linux.vnet.ibm.com, dhowells@redhat.com,
-        pali.rohar@gmail.com, tiwai@suse.de, arend.vanspriel@broadcom.com,
-        zajec5@gmail.com, nbroeking@me.com, markivx@codeaurora.org,
-        broonie@kernel.org, dmitry.torokhov@gmail.com, dwmw2@infradead.org,
-        torvalds@linux-foundation.org, Abhay_Salunke@dell.com,
-        jewalt@lgsinnovations.com, cantabile.desu@gmail.com, ast@fb.com,
-        andresx7@gmail.com, dan.rue@linaro.org, brendanhiggins@google.com,
-        yzaikin@google.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH] firmware_loader: re-export fw_fallback_config into
- firmware_loader's own namespace
-Message-ID: <20200423192716.2c32f5dd@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200424021420.GZ11244@42.do-not-panic.com>
-References: <20200423203140.19510-1-mcgrof@kernel.org>
-        <20200423180544.60d12af0@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <20200424021420.GZ11244@42.do-not-panic.com>
+        Thu, 23 Apr 2020 22:30:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43394 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbgDXCaK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 22:30:10 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A6C6C09B044;
+        Thu, 23 Apr 2020 19:30:09 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id u10so6413706lfo.8;
+        Thu, 23 Apr 2020 19:30:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mWi/vih/fdORw5r13nsVhcqP42U/y5SZ8mxbRZKotUU=;
+        b=iA7ZZmUVUGkgEzLCHwt06en1AYT6jF+LTthqBBF9qgERwzY3dnZmrm5i9h65YaAYEZ
+         ngufClNYkXK5JURrY14EwntZ/mnb3L7+kN9CPHzBiuA8y9pEdUExgS44MNBaspT58jUf
+         yRqmLB442NxQIeVi9YCctmUSPCY6vGfKYz1OvoIIa5Git3ANQFwXfYHlwEAKQ2vCpWgr
+         HmJ/A0V8U/hU0VQvzNWOxmTcDjxV0LjSi1amZLySc1Ls5MOOJ3wsvMoGcdV3kGg3YwV9
+         7R2HYwHJPJJMMRU+usLhuljFZx6iFJra+FWojrCJk5chGUp55GDGZ5yEX8puiraIobG1
+         oW2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mWi/vih/fdORw5r13nsVhcqP42U/y5SZ8mxbRZKotUU=;
+        b=NsUxKYw6ly3uJCZyYbJUYMy13R2srqOEBP6RpdsVTMcOl4fWzeFwtUSHFyu2/P6USk
+         ZUsDko3nsKDkfqbU1VQ2ftmSTlikXJ0mNxwk6wNwOuoxbiO3Cf2Gf3JbEue+KPzSUw+q
+         BqHAVBrrb+TT0rgrS3HukACGDPcMV7+eARqjdA7I9xBnCaICQRhtbMnZn3yPTfR2pYMX
+         VVhHaqbMwRd0TLJm23ihWfHOmmN95bc52XIzeWL/3wYNDi0mtuw6XV1dF9DNxPJj7jVh
+         BL22EzTmarBsrVW9dj/bqMjg743vWGbmhbg5SLQqEPNCSLYbrJJGgVcP5Rtp5p+EsYch
+         a85g==
+X-Gm-Message-State: AGi0PuYVfXfnigK6cSok5jrChPEBP+qTtcLt8w4NCsGvorTk0TXRrAOI
+        YkJVxHEHMNOY82uF5OLqYHg9gA4GgKkYDlFVhjI=
+X-Google-Smtp-Source: APiQypIbcKnB5kTwprnVNJIZcWAqoLug/rgqXZfGeEQRYeTrvFHSY2W4b0fXow22LMXqVZXBll4OCt9xuwb8wxJ583A=
+X-Received: by 2002:a05:6512:54e:: with SMTP id h14mr4532469lfl.56.1587695407993;
+ Thu, 23 Apr 2020 19:30:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-WP-MailID: 814065103326dcc26bec12dfaf1106fd
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 0000003 [wfDU]                               
+References: <1587692801-12149-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1587692801-12149-1-git-send-email-Anson.Huang@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Thu, 23 Apr 2020 23:30:53 -0300
+Message-ID: <CAOMZO5CmgxUggzZxpmeHT8Rh_Q9XXWvsMopOzq7NfVpkCsLVQA@mail.gmail.com>
+Subject: Re: [PATCH V3] dt-bindings: firmware: imx: Move system control into
+ dt-binding headfile
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "rui.zhang" <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Peng Fan <peng.fan@nxp.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, linux-pm@vger.kernel.org,
+        NXP Linux Team <Linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Apr 2020 02:14:20 +0000 Luis Chamberlain wrote:
-> On Thu, Apr 23, 2020 at 06:05:44PM -0700, Jakub Kicinski wrote:
-> > On Thu, 23 Apr 2020 20:31:40 +0000 Luis R. Rodriguez wrote:  
-> > > From: Luis Chamberlain <mcgrof@kernel.org>
-> > > 
-> > > Christoph's recent patch "firmware_loader: remove unused exports", which
-> > > is not merged upstream yet, removed two exported symbols. One is fine to
-> > > remove since only built-in code uses it but the other is incorrect.
-> > > 
-> > > If CONFIG_FW_LOADER=m so the firmware_loader is modular but
-> > > CONFIG_FW_LOADER_USER_HELPER=y we fail at mostpost with:
-> > > 
-> > > ERROR: modpost: "fw_fallback_config" [drivers/base/firmware_loader/firmware_class.ko] undefined!
-> > > 
-> > > This happens because the variable fw_fallback_config is built into the
-> > > kernel if CONFIG_FW_LOADER_USER_HELPER=y always, so we need to grant
-> > > access to the firmware loader module by exporting it.
-> > > 
-> > > Instead of just exporting it as we used to, take advantage of the new
-> > > kernel symbol namespacing functionality, and export the symbol only to
-> > > the firmware loader private namespace. This would prevent misuses from
-> > > other drivers and makes it clear the goal is to keep this private to
-> > > the firmware loader alone.
-> > > 
-> > > Cc: Christoph Hellwig <hch@lst.de>
-> > > Cc: Randy Dunlap <rdunlap@infradead.org>
-> > > Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-> > > Fixes: "firmware_loader: remove unused exports"  
-> > 
-> > Can't help but notice this strange form of the Fixes tag, is it
-> > intentional?  
-> 
-> Yeah, no there is no commit for the patch as the commit is ephemeral in
-> a development tree not yet upstream, ie, not on Linus' tree yet. Using a
-> commit here then makes no sense unless one wants to use a reference
-> development tree in this case, as development trees are expected to
-> rebase to move closer towards Linus' tree. When a tree rebases, the
-> commit IDs change, and this is why the commit is ephemeral unless
-> one uses a base tree / branch / tag.
+On Thu, Apr 23, 2020 at 10:55 PM Anson Huang <Anson.Huang@nxp.com> wrote:
+>
+> From: Dong Aisheng <aisheng.dong@nxp.com>
+>
+> i.MX8 SoCs DTS file needs system control macro definitions, so move them
+> into dt-binding headfile, then include/linux/firmware/imx/types.h can be
+> removed and those drivers using it should be changed accordingly.
+>
+> Signed-off-by: Jacky Bai <ping.bai@nxp.com>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-I'd think that either the commit is rebase-able and the fix can be
-squashed into it, or it's not and it has a stable commit id. 
-But I guess it may get tricky around the edges..
+The From and Signed-off-by tags do not match.
