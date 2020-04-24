@@ -2,125 +2,75 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1497C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C73CC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC4772075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D61C2075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:12:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZPPlj6Ke"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ocipGPei"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728159AbgDXPLw (ORCPT
+        id S1728182AbgDXPMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:11:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726908AbgDXPLv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:11:51 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01EE1C09B045;
-        Fri, 24 Apr 2020 08:11:51 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id h6so8012305lfc.0;
-        Fri, 24 Apr 2020 08:11:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NCKvIwAX2lyXMS3V6hPb1K5t940QaLImTpHp7o0dE7s=;
-        b=ZPPlj6KejWk1GgqB17PvtCeurdQHT9dJyPcc6ya8nlrJqICXXJUQxO5szQgOw9D+/u
-         EzCY3JkhGA7rbu8v44DxyBba204k0ftrATJ02TAt/4dBuMkIhzlclFO7ixNYvtCnYPXg
-         Vj0EF2QOxCYxovSVnTdHhWjKMdL8/W+aWrWL/gJUOeVJt0wZG22IH2UrHmgFuMjifPkq
-         o6c9HiQINryTwKeTLeh6Oc1MUYB0lJfma2zgJ0dHDoP7agJUrMAToOXKOwpxuM2+DsRN
-         ZkUCrzKMPvZ0c8knVIbQUhYNRU8Co59TjlKp1VzmDgG8/OU0M+2YV2UxHO/iiInjvNO5
-         v4sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NCKvIwAX2lyXMS3V6hPb1K5t940QaLImTpHp7o0dE7s=;
-        b=eVDCK/OCE0ZjXSopaoKxFIMljHo9Zbspq6s/AONUIwq5PevvqxPCW4tvqCRJRc187K
-         aDIeWJxcC8bY9Uc4/Jvcj0Cn7XBCYE2wFQ3TIU3sArSuLs0pYJKtuzdeuadr+oyEGwV+
-         VsHXUkQL6W/HaXvhLtIRNSbFz9vkvzqkT+RwfZflcN25Hoq+ONoM5sfT9s1sd2l4B93c
-         SPzYAtTyQUJw1cbpEnVrEk4sffBy22TfHnOOX+JZ7LWe/0j8BuJplNLm8R/kbsFpRfi9
-         +VjJJpvNutrDMCThVPimu4QtQSkp/D5mt2xEdT6m6i7STOB+VYw9Pm1B5YWS9dSX4Oz9
-         I1tw==
-X-Gm-Message-State: AGi0PuZwiVl7PahJrtxuAg6PjrAV/bTYNbDzs/4zWgIUelM7uzEZ+B6t
-        sewlowr4PX3oMM7TioVqYlJDlU6s
-X-Google-Smtp-Source: APiQypL6Y5pP8frZ9lwc0gIlbRZu3rStQ/IZIVvDo4JJv6attpFW3Fvcwp2bbk7qQ+x9ipofzKGfEw==
-X-Received: by 2002:a05:6512:308c:: with SMTP id z12mr6528775lfd.195.1587741108845;
-        Fri, 24 Apr 2020 08:11:48 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id a26sm4679765lfl.66.2020.04.24.08.11.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Apr 2020 08:11:47 -0700 (PDT)
-Subject: Re: [RFC PATCH v10 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1587700513-28449-1-git-send-email-skomatineni@nvidia.com>
- <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <6ca93ff9-ca59-544f-767c-4355d01a5c20@gmail.com>
-Date:   Fri, 24 Apr 2020 18:11:46 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 24 Apr 2020 11:12:01 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:32884 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726908AbgDXPMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 11:12:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=DbJzuBrGtHR1eZj0UHcEgF+IrVmFrdfzQz1lXORZb64=; b=ocipGPeimsV5QD6IgsQot/RdFt
+        EsnEcfe2OMSNWRggZKf0UAtcGiZcX+sRpjT1GIdLj/lWOV7Q3w4PcT+KHOaSU0ASHzZPaXNLDEEjy
+        7bl8mtpou76OzqOMQt5lo6W3GS0eF2NonxkvrgdCtb2HXO7oKQlktS+stSl0/Fc10L9Q=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jRzzc-004ZeQ-Aa; Fri, 24 Apr 2020 17:11:52 +0200
+Date:   Fri, 24 Apr 2020 17:11:52 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Florinel Iordache <florinel.iordache@nxp.com>
+Cc:     "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [EXT] Re: Re: [PATCH net-next v2 6/9] net: phy: add backplane kr
+ driver support
+Message-ID: <20200424151152.GC1088354@lunn.ch>
+References: <AM0PR04MB5443BCFEC71B6903BE6EFE02FBD00@AM0PR04MB5443.eurprd04.prod.outlook.com>
+ <20200424145635.GB1088354@lunn.ch>
+ <AM0PR04MB54435DFD9870FA66C01E07CEFBD00@AM0PR04MB5443.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB54435DFD9870FA66C01E07CEFBD00@AM0PR04MB5443.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-24.04.2020 06:55, Sowjanya Komatineni пишет:
-> Tegra210 contains a powerful Video Input (VI) hardware controller
-> which can support up to 6 MIPI CSI camera sensors.
-> 
-> Each Tegra CSI port can be one-to-one mapped to VI channel and can
-> capture from an external camera sensor connected to CSI or from
-> built-in test pattern generator.
-> 
-> Tegra210 supports built-in test pattern generator from CSI to VI.
-> 
-> This patch adds a v4l2 capture driver with media interface for
-> Tegra210 built-in CSI to VI test pattern generator.
-> 
-> This patch includes TPG support only and all the video pipeline
-> configuration happens through the video device node.
-> 
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/staging/media/Kconfig          |    2 +
->  drivers/staging/media/Makefile         |    1 +
->  drivers/staging/media/tegra/Kconfig    |   12 +
->  drivers/staging/media/tegra/Makefile   |    8 +
->  drivers/staging/media/tegra/TODO       |   10 +
->  drivers/staging/media/tegra/common.h   |  259 ++++++++
->  drivers/staging/media/tegra/csi.c      |  604 +++++++++++++++++
->  drivers/staging/media/tegra/csi.h      |  144 ++++
->  drivers/staging/media/tegra/tegra210.c |  708 ++++++++++++++++++++
->  drivers/staging/media/tegra/tegra210.h |  190 ++++++
->  drivers/staging/media/tegra/vi.c       | 1127 ++++++++++++++++++++++++++++++++
->  drivers/staging/media/tegra/vi.h       |   72 ++
->  drivers/staging/media/tegra/video.c    |  153 +++++
->  drivers/staging/media/tegra/video.h    |   29 +
+> But since I am not responsible for the PHY core, I made this
+> workaround only in backplane driver.
 
-The media/tegra/ sounds a bit too generic, the media/tegra-vi/ path
-should better reflect the driver, IMO.
+You don't need to be responsible for the core to make changes to the
+code. Just send patches.
 
-It also should be better to name the compiled kernel module as tegra-vi,
-IMO.
+      Andrew
