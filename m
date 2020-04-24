@@ -2,239 +2,110 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E49C55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0B0C55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51D7D20706
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:48:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A4EB20767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:55:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="K9ofKEQj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgDXDsa (ORCPT
+        id S1726472AbgDXDzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 23:48:30 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2892 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725823AbgDXDs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 23:48:29 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id DF85C2F4996050ACE8C5;
-        Fri, 24 Apr 2020 11:48:26 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.154) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Fri, 24 Apr 2020
- 11:48:25 +0800
-Subject: Re: [PATCH] xfrm: policy: Only use mark as policy lookup key
-To:     Xin Long <lucien.xin@gmail.com>
-References: <20200421143149.45108-1-yuehaibing@huawei.com>
- <20200422093344.GY13121@gauss3.secunet.de>
- <1650fd55-dd70-f687-88b6-d32a04245915@huawei.com>
- <CADvbK_cEgKCEGRJU1v=FAdFNoh3TzD+cZLiKUtsMLHJh3JqOfg@mail.gmail.com>
- <02a56d2c-8d27-f53a-d9e3-c25bd03677c8@huawei.com>
- <CADvbK_cScGYRuZfJPoQ+oQKRUk-cr6nOAdTX9cU7MKtw0DUEaA@mail.gmail.com>
- <b392a477-2ab5-1045-a18c-4df915f78001@huawei.com>
- <CADvbK_dAjP-Qa1L0zDyzG_25bwr-3xtiPLzY4_CeimKcarp9Tg@mail.gmail.com>
-CC:     Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        davem <davem@davemloft.net>, <kuba@kernel.org>,
-        network dev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jamal Hadi Salim <hadi@cyberus.ca>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <cb82c789-8eb5-e7bf-4f5a-4a8ec0672648@huawei.com>
-Date:   Fri, 24 Apr 2020 11:48:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Thu, 23 Apr 2020 23:55:21 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4605 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbgDXDzT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 23:55:19 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ea262e80000>; Thu, 23 Apr 2020 20:54:16 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 23 Apr 2020 20:55:19 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 23 Apr 2020 20:55:19 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 Apr
+ 2020 03:55:19 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 24 Apr 2020 03:55:18 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.165.49]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ea263250001>; Thu, 23 Apr 2020 20:55:18 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [RFC PATCH v10 1/9] arm64: tegra: Fix sor powergate clocks and reset
+Date:   Thu, 23 Apr 2020 20:55:05 -0700
+Message-ID: <1587700513-28449-2-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1587700513-28449-1-git-send-email-skomatineni@nvidia.com>
+References: <1587700513-28449-1-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-In-Reply-To: <CADvbK_dAjP-Qa1L0zDyzG_25bwr-3xtiPLzY4_CeimKcarp9Tg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.215.154]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587700456; bh=PTc2SyRS9NP+68XdMh+c6cj6nLmKTNHZwxALx6dnzdM=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=K9ofKEQjPdSxxcxucsmQiiOs6uPzCnyu/RYzv2Fyc4btmStIXjN735plZNX1FsQ3J
+         8ms81wzi60fZTglWnQdDdpWmGZ5Yk72UP/m40Fz3nyvx++4QokV6wLAjyPZefOmGqc
+         DD3isBLtRRww0UWnwgZEhxSfQKnOJPF/j5i1OqHUImZ9NF1Js/Kgjndq6B5jkvy8rD
+         pKiUnUVdc34I7JQU+UnJPKjIxBNmrLBJlhH1h/auR0PEFSRby6CB6YdRtHt+X+GZ5J
+         n8dSs5IlA14+QUnWdtaEZTPK4XY5tqx4bNMIkyxPXeSsx59uBa8x6eMT+PO1/2w0nU
+         AKKGrq6KZkk2A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/23 17:43, Xin Long wrote:
-> On Thu, Apr 23, 2020 at 4:41 PM Yuehaibing <yuehaibing@huawei.com> wrote:
->>
->> On 2020/4/23 14:37, Xin Long wrote:
->>> On Thu, Apr 23, 2020 at 10:26 AM Yuehaibing <yuehaibing@huawei.com> wrote:
->>>>
->>>> On 2020/4/22 23:41, Xin Long wrote:
->>>>> On Wed, Apr 22, 2020 at 8:18 PM Yuehaibing <yuehaibing@huawei.com> wrote:
->>>>>>
->>>>>> On 2020/4/22 17:33, Steffen Klassert wrote:
->>>>>>> On Tue, Apr 21, 2020 at 10:31:49PM +0800, YueHaibing wrote:
->>>>>>>> While update xfrm policy as follow:
->>>>>>>>
->>>>>>>> ip -6 xfrm policy update src fd00::1/128 dst fd00::2/128 dir in \
->>>>>>>>  priority 1 mark 0 mask 0x10
->>>>>>>> ip -6 xfrm policy update src fd00::1/128 dst fd00::2/128 dir in \
->>>>>>>>  priority 2 mark 0 mask 0x00
->>>>>>>> ip -6 xfrm policy update src fd00::1/128 dst fd00::2/128 dir in \
->>>>>>>>  priority 2 mark 0 mask 0x10
->>>>>>>>
->>>>>>>> We get this warning:
->>>>>>>>
->>>>>>>> WARNING: CPU: 0 PID: 4808 at net/xfrm/xfrm_policy.c:1548
->>>>>>>> Kernel panic - not syncing: panic_on_warn set ...
->>>>>>>> CPU: 0 PID: 4808 Comm: ip Not tainted 5.7.0-rc1+ #151
->>>>>>>> Call Trace:
->>>>>>>> RIP: 0010:xfrm_policy_insert_list+0x153/0x1e0
->>>>>>>>  xfrm_policy_inexact_insert+0x70/0x330
->>>>>>>>  xfrm_policy_insert+0x1df/0x250
->>>>>>>>  xfrm_add_policy+0xcc/0x190 [xfrm_user]
->>>>>>>>  xfrm_user_rcv_msg+0x1d1/0x1f0 [xfrm_user]
->>>>>>>>  netlink_rcv_skb+0x4c/0x120
->>>>>>>>  xfrm_netlink_rcv+0x32/0x40 [xfrm_user]
->>>>>>>>  netlink_unicast+0x1b3/0x270
->>>>>>>>  netlink_sendmsg+0x350/0x470
->>>>>>>>  sock_sendmsg+0x4f/0x60
->>>>>>>>
->>>>>>>> Policy C and policy A has the same mark.v and mark.m, so policy A is
->>>>>>>> matched in first round lookup while updating C. However policy C and
->>>>>>>> policy B has same mark and priority, which also leads to matched. So
->>>>>>>> the WARN_ON is triggered.
->>>>>>>>
->>>>>>>> xfrm policy lookup should only be matched when the found policy has the
->>>>>>>> same lookup keys (mark.v & mark.m) no matter priority.
->>>>>>>>
->>>>>>>> Fixes: 7cb8a93968e3 ("xfrm: Allow inserting policies with matching mark and different priorities")
->>>>>>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->>>>>>>> ---
->>>>>>>>  net/xfrm/xfrm_policy.c | 16 +++++-----------
->>>>>>>>  1 file changed, 5 insertions(+), 11 deletions(-)
->>>>>>>>
->>>>>>>> diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
->>>>>>>> index 297b2fd..67d0469 100644
->>>>>>>> --- a/net/xfrm/xfrm_policy.c
->>>>>>>> +++ b/net/xfrm/xfrm_policy.c
->>>>>>>> @@ -1436,13 +1436,7 @@ static void xfrm_policy_requeue(struct xfrm_policy *old,
->>>>>>>>  static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
->>>>>>>>                                 struct xfrm_policy *pol)
->>>>>>>>  {
->>>>>>>> -    u32 mark = policy->mark.v & policy->mark.m;
->>>>>>>> -
->>>>>>>> -    if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
->>>>>>>> -            return true;
->>>>>>>> -
->>>>>>>> -    if ((mark & pol->mark.m) == pol->mark.v &&
->>>>>>>> -        policy->priority == pol->priority)
->>>>>>>
->>>>>>> If you remove the priority check, you can't insert policies with matching
->>>>>>> mark and different priorities anymore. This brings us back the old bug.
->>>>>>
->>>>>> Yes, this is true.
->>>>>>
->>>>>>>
->>>>>>> I plan to apply the patch from Xin Long, this seems to be the right way
->>>>>>> to address this problem.
->>>>>>
->>>>>> That still brings an issue, update like this:
->>>>>>
->>>>>> policy A (mark.v = 1, mark.m = 0, priority = 1)
->>>>>> policy B (mark.v = 1, mark.m = 0, priority = 1)
->>>>>>
->>>>>> A and B will all in the list.
->>>>> I think this is another issue even before:
->>>>> 7cb8a93968e3 ("xfrm: Allow inserting policies with matching mark and
->>>>> different priorities")
->>>>>
->>>>>>
->>>>>> So should do this:
->>>>>>
->>>>>>  static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
->>>>>>                                    struct xfrm_policy *pol)
->>>>>>  {
->>>>>> -       u32 mark = policy->mark.v & policy->mark.m;
->>>>>> -
->>>>>> -       if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
->>>>>> -               return true;
->>>>>> -
->>>>>> -       if ((mark & pol->mark.m) == pol->mark.v &&
->>>>>> +       if ((policy->mark.v & policy->mark.m) == (pol->mark.v & pol->mark.m) &&
->>>>>>             policy->priority == pol->priority)
->>>>>>                 return true;
->>>>> "mark.v & mark.m" looks weird to me, it should be:
->>>>> ((something & mark.m) == mark.v)
->>>>>
->>>>> So why should we just do this here?:
->>>>> (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m &&
->>>>>  policy->priority == pol->priority)
->>>>
->>>>
->>>> This leads to this issue:
->>>>
->>>>  ip -6 xfrm policy add src fd00::1/128 dst fd00::2/128 dir in mark 0x00000001 mask 0x00000005
->>>>  ip -6 xfrm policy add src fd00::1/128 dst fd00::2/128 dir in mark 0x00000001 mask 0x00000003
->>>>
->>>> the two policies will be in list, which should not be allowed.
->>> I think these are two different policies.
->>> For instance:
->>> mark = 0x1234567b will match the 1st one only.
->>> mark = 0x1234567d will match the 2st one only
->>>
->>> So these should have been allowed, no?
->>
->> If mark = 0x12345671, it may match different policy depends on the order of inserting,
->>
->> ip xfrm policy update src 172.16.2.0/24 dst 172.16.1.0/24 dir in ptype main \
->> tmpl src 192.168.2.10 dst 192.168.1.20 proto esp mode tunnel mark 0x00000001 mask 0x00000005
->>
->> ip xfrm policy update src 172.16.2.0/24 dst 172.16.1.0/24 dir in ptype main \
->> tmpl src 192.168.2.100 dst 192.168.1.100 proto esp mode beet mark 0x00000001 mask 0x00000003
->>
->> In fact, your case should use different priority to match.
-> Sorry, but it does match your above policies now, like in xfrm_policy_match(),
-> when fl->flowi_mark == 0x1234567b:
-> 
-> (fl->flowi_mark & pol->mark.m) != pol->mark.v
-> 0x1234567b & 0x00000005 == 0x00000001
-> 
-> and when fl->flowi_mark ==  0x1234567d:
-> 0x1234567d & 0x00000003 ==  0x00000001
-> 
-> am I missing something?
+Tegra210 device tree lists csi clock and reset under SOR powergate
+node.
 
-when fl->flowi_mark == 0x12345671
+But Tegra210 has csicil in SOR partition and csi in VENC partition.
 
-0x12345671 & 0x00000005 == 0x00000001
-0x12345671 & 0x00000003 == 0x00000001
+So, this patch includes fix for sor powergate node.
 
-This will match different policy depends on the order of policy inserting, it is not expected.
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-> 
-> 
->>
->>>
->>> I'm actually confused now.
->>> does the mask work against its own value, or the other value?
->>> as 'A == (mark.v&mark.m)' and '(A & mark.m) == mark.v' are different things.
->>>
->>> This can date back to Jamal's xfrm by MARK:
->>>
->>> https://lwn.net/Articles/375829/
->>>
->>> where it does 'm->v & m->m' in xfrm_mark_get() and
->>> 'policy->mark.v & policy->mark.m' in xfrm_policy_insert() while
->>> it does '(A & pol->mark.m) == pol->mark.v' in other places.
->>>
->>> Now I'm thinking 'm->v & m->m' is meaningless, by which if we get
->>> a value != m->v, it means this mark can never be matched by any.
->>>
->>>   policy A (mark.v = 1, mark.m = 0, priority = 1)
->>>   policy B (mark.v = 1, mark.m = 0, priority = 1)
->>>
->>> So probably we should avoid this case by check m->v == (m->v & m->m)
->>> when adding a new policy.
->>>
->>> wdyt?
->>>
->>
-> 
-> .
-> 
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+index 64c46ce..d0eff92 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+@@ -796,7 +796,9 @@
+ 			pd_sor: sor {
+ 				clocks = <&tegra_car TEGRA210_CLK_SOR0>,
+ 					 <&tegra_car TEGRA210_CLK_SOR1>,
+-					 <&tegra_car TEGRA210_CLK_CSI>,
++					 <&tegra_car TEGRA210_CLK_CILAB>,
++					 <&tegra_car TEGRA210_CLK_CILCD>,
++					 <&tegra_car TEGRA210_CLK_CILE>,
+ 					 <&tegra_car TEGRA210_CLK_DSIA>,
+ 					 <&tegra_car TEGRA210_CLK_DSIB>,
+ 					 <&tegra_car TEGRA210_CLK_DPAUX>,
+@@ -804,7 +806,6 @@
+ 					 <&tegra_car TEGRA210_CLK_MIPI_CAL>;
+ 				resets = <&tegra_car TEGRA210_CLK_SOR0>,
+ 					 <&tegra_car TEGRA210_CLK_SOR1>,
+-					 <&tegra_car TEGRA210_CLK_CSI>,
+ 					 <&tegra_car TEGRA210_CLK_DSIA>,
+ 					 <&tegra_car TEGRA210_CLK_DSIB>,
+ 					 <&tegra_car TEGRA210_CLK_DPAUX>,
+-- 
+2.7.4
 
