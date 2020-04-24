@@ -2,113 +2,115 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D9C0C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E9FC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65FFC206B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 354B1206B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:39:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e5he+uee"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728524AbgDXRik (ORCPT
+        id S1728816AbgDXRjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 13:38:40 -0400
-Received: from mother.openwall.net ([195.42.179.200]:54079 "HELO
-        mother.openwall.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726813AbgDXRik (ORCPT
+        Fri, 24 Apr 2020 13:39:36 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26678 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726908AbgDXRjf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 13:38:40 -0400
-Received: (qmail 12213 invoked from network); 24 Apr 2020 17:38:38 -0000
-Received: from localhost (HELO pvt.openwall.com) (127.0.0.1)
-  by localhost with SMTP; 24 Apr 2020 17:38:38 -0000
-Received: by pvt.openwall.com (Postfix, from userid 503)
-        id CF163AB5C7; Fri, 24 Apr 2020 19:38:28 +0200 (CEST)
-Date:   Fri, 24 Apr 2020 19:38:28 +0200
-From:   Solar Designer <solar@openwall.com>
-To:     Ben Hutchings <ben@decadent.org.uk>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Salvatore Mesoraca <s.mesoraca16@gmail.com>,
+        Fri, 24 Apr 2020 13:39:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587749975;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZgQK9XAbwzLmLV+qfkziGOTjqm2qDmPdwhUEm9j9Saw=;
+        b=e5he+ueev6OcgQ94bgpiMFiUAIxL669O/ae4dmCRddubqvcSeddFufYGcGONZqDz96sjbf
+        KEU6S66yEr15x/KNwrtx/AIP/fghAnfB+FzP5fcqJryZqmZs7aD1mWPNu7TkJIiA1+pCeV
+        MU8jmYxwkQMxA4x6+Grm9HIedGsiyiE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-178-sMY4QfKLNsezFEmtfeffSA-1; Fri, 24 Apr 2020 13:39:33 -0400
+X-MC-Unique: sMY4QfKLNsezFEmtfeffSA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CA670800D24;
+        Fri, 24 Apr 2020 17:39:31 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.22])
+        by smtp.corp.redhat.com (Postfix) with SMTP id A6B311001B2C;
+        Fri, 24 Apr 2020 17:39:29 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri, 24 Apr 2020 19:39:31 +0200 (CEST)
+Date:   Fri, 24 Apr 2020 19:39:28 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH 3.16 208/245] namei: allow restricted O_CREAT of FIFOs and regular files
-Message-ID: <20200424173828.GA27528@openwall.com>
-References: <lsq.1587683027.831233700@decadent.org.uk> <lsq.1587683028.722200761@decadent.org.uk> <20200424135205.GA27204@openwall.com> <8783c94cb802ade8a45cdf4233fe3b7341cca5c9.camel@decadent.org.uk>
-Mime-Version: 1.0
+Subject: Re: [PATCH v2 2/2] proc: Ensure we see the exit of each process tid
+ exactly
+Message-ID: <20200424173927.GB26802@redhat.com>
+References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
+ <87ftcv1nqe.fsf@x220.int.ebiederm.org>
+ <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8783c94cb802ade8a45cdf4233fe3b7341cca5c9.camel@decadent.org.uk>
-User-Agent: Mutt/1.4.2.3i
+In-Reply-To: <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 04:13:22PM +0100, Ben Hutchings wrote:
-> On Fri, 2020-04-24 at 15:52 +0200, Solar Designer wrote:
-> > On Fri, Apr 24, 2020 at 12:07:15AM +0100, Ben Hutchings wrote:
-> > > 3.16.83-rc1 review patch.  If anyone has any objections, please let me know.
-> > 
-> > I do.  This patch is currently known-buggy, see this thread:
-> > 
-> > https://www.openwall.com/lists/oss-security/2020/01/28/2
-> > 
-> > It is (partially) fixed with these newer commits in 5.5 and 5.5.2:
-> > 
-> > commit d0cb50185ae942b03c4327be322055d622dc79f6
-> > Author: Al Viro <viro@zeniv.linux.org.uk>
-> > Date:   Sun Jan 26 09:29:34 2020 -0500
-> > 
-> >     do_last(): fetch directory ->i_mode and ->i_uid before it's too late
-> >     
-> >     may_create_in_sticky() call is done when we already have dropped the
-> >     reference to dir.
-> >     
-> >     Fixes: 30aba6656f61e (namei: allow restricted O_CREAT of FIFOs and regular files)
-> >     Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-> > 
-> > commit d76341d93dedbcf6ed5a08dfc8bce82d3e9a772b
-> > Author: Al Viro <viro@zeniv.linux.org.uk>
-> > Date:   Sat Feb 1 16:26:45 2020 +0000
-> > 
-> >     vfs: fix do_last() regression
-> >     
-> >     commit 6404674acd596de41fd3ad5f267b4525494a891a upstream.
-> [...]
-> > At least inclusion of the above fixes is mandatory for any backports.
-> 
-> I know, and those are the next 2 patches in the series.
+On 04/23, Eric W. Biederman wrote:
+>
+> When the thread group leader changes during exec and the old leaders
+> thread is reaped proc_flush_pid
 
-Ah, then no objections from me.
+This is off-topic, but let me mention this before I forget...
 
-> > Also, I think no one has fixed the logic of may_create_in_sticky() so
-> > that it wouldn't unintentionally apply the "protection" when the file
-> > is neither a FIFO nor a regular file (something I found and mentioned in
-> > the oss-security posting above).
-> [...]
-> > I think the implementation of may_create_in_sticky() should be rewritten
-> > such that it'd directly correspond to the textual description in the
-> > comment above.  As we've seen, trying to write the code "more optimally"
-> > resulted in its logic actually being different from the description.
-> > 
-> > Meanwhile, I think backporting known-so-buggy code is a bad idea.
-> 
-> I can see that it's not quite right, but does it matter in practice? 
-> Directories and symlinks are handled separately; sockets can't be
-> opened anyway; block and character devices wonn't normally appear in a
-> sticky directory.
+Note that proc_flush_pid() does nothing if CONFIG_PROC_FS=n, this mean
+that in this case release_task() leaks thread_pid.
 
-Clearly, it doesn't matter all that much in practice - I'm not aware of
-anyone having complained about it causing issues on their system.
+> +void exchange_tids(struct task_struct *ntask, struct task_struct *otask)
+> +{
+> +	/* pid_links[PIDTYPE_PID].next is always NULL */
+> +	struct pid *npid = READ_ONCE(ntask->thread_pid);
+> +	struct pid *opid = READ_ONCE(otask->thread_pid);
+> +
+> +	rcu_assign_pointer(opid->tasks[PIDTYPE_PID].first, &ntask->pid_links[PIDTYPE_PID]);
+> +	rcu_assign_pointer(npid->tasks[PIDTYPE_PID].first, &otask->pid_links[PIDTYPE_PID]);
+> +	rcu_assign_pointer(ntask->thread_pid, opid);
+> +	rcu_assign_pointer(otask->thread_pid, npid);
+> +	WRITE_ONCE(ntask->pid_links[PIDTYPE_PID].pprev, &opid->tasks[PIDTYPE_PID].first);
+> +	WRITE_ONCE(otask->pid_links[PIDTYPE_PID].pprev, &npid->tasks[PIDTYPE_PID].first);
+> +	WRITE_ONCE(ntask->pid, pid_nr(opid));
+> +	WRITE_ONCE(otask->pid, pid_nr(npid));
+> +}
 
-I think it primarily mattered as an attack vector on the issue fixed
-with Al's commits above.
+Oh, at first glance this breaks posix-cpu-timers.c:lookup_task(), the last
+user of has_group_leader_pid().
 
-I think we should nevertheless fix the code to match its intent and the
-comment, but meanwhile this isn't a blocker for the backport.
+I think that we should change lookup_task() to return "struct *pid", this
+should simplify the code... Note that none of its callers needs task_struct.
 
-Alexander
+And, instead of thread_group_leader/has_group_leader_pid checks we should
+use pid_has_task(TGID).
+
+After that, this patch should kill has_group_leader_pid().
+
+What do you think?
+
+Oleg.
+
