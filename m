@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 242F4C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD12EC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E955C20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:26:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A128520767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587731212;
-	bh=CUiDohPDP8ZlDP+N9vTBD3Uh15zGs4LLW3aiX76VKF0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=rFPyyZ1ZCb410i9r1/c6ZDEeToa3aApsNNASCZUM8tq+7kz2wfjUXjfTifVtlBLae
-	 koB4Da+PT0tz1dqdQjdcahIVcZuNFPSPxh7nSVAYlLz6HN2j8bb+XrJPCTHwPv9syH
-	 itnUFBab/TyKTn//vaBVc0PRYErVJVWgsK3gjy7A=
+	s=default; t=1587731218;
+	bh=Wu+vYA794mwY+sZ6ty1ffNeuXRRrOC0XMoMhp0KuxDQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LOvzqJ3/eetThplmj4rtzcrl68IxSTgcvTioW73/0NDPRN1yNOMyJqhjGN/AopPHR
+	 J62LgOL6tmNucCPfYAcmsjYTay6eiSUinff1Zb3yaS5mgxfAq5dc6yO19kffs1kkDq
+	 LcDTipSTSVgvEk1gLcEJlqmmQtGGfxnt3y5QSeho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728775AbgDXM0u (ORCPT
+        id S1727887AbgDXM06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:26:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55746 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:26:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728552AbgDXMYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:24:49 -0400
+        id S1728529AbgDXMYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:24:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1546F20776;
-        Fri, 24 Apr 2020 12:24:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C21021569;
+        Fri, 24 Apr 2020 12:24:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587731088;
-        bh=CUiDohPDP8ZlDP+N9vTBD3Uh15zGs4LLW3aiX76VKF0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ixkTeEk9Txov1/zzIEvMtEADkNLkDW7r5j/nkttIKrEcTF2ruYiujm3IySZcuUbyE
-         HHy5Z0DDY+vN3ISCKG0IOvI7h60UGLWsLDXBpdcNL6/LdXuQbuwGzQc6JMIOkQteKl
-         jVxd4irGJUlGcGCeizb9lSZwESS9Es/owgnd/Uaw=
+        s=default; t=1587731084;
+        bh=Wu+vYA794mwY+sZ6ty1ffNeuXRRrOC0XMoMhp0KuxDQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xccxXdYu7zK1iAbMicXc0PEbgZiHM4ipVIvFJiawoPQDTjmtRD2P1LQjjAmTqS+Yk
+         /GdUlQaeGqTTNvpT71wKza0NE260yGv/xK+k2zI0cMKwb3pCAsYdbXHHA5zYmMtG90
+         M8RYwLEaRWg3OzPXGw7MBL2kgZPWY0SfD1mJy9qQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Brian Foster <bfoster@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 01/13] xfs: fix partially uninitialized structure in xfs_reflink_remap_extent
-Date:   Fri, 24 Apr 2020 08:24:34 -0400
-Message-Id: <20200424122447.10882-1-sashal@kernel.org>
+Cc:     Frank Rowand <frank.rowand@sony.com>,
+        "Erhard F ." <erhard_f@mailbox.org>, Rob Herring <robh@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 20/21] of: unittest: kmemleak on changeset destroy
+Date:   Fri, 24 Apr 2020 08:24:18 -0400
+Message-Id: <20200424122419.10648-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200424122419.10648-1-sashal@kernel.org>
+References: <20200424122419.10648-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,36 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Darrick J. Wong" <darrick.wong@oracle.com>
+From: Frank Rowand <frank.rowand@sony.com>
 
-[ Upstream commit c142932c29e533ee892f87b44d8abc5719edceec ]
+[ Upstream commit b3fb36ed694b05738d45218ea72cf7feb10ce2b1 ]
 
-In the reflink extent remap function, it turns out that uirec (the block
-mapping corresponding only to the part of the passed-in mapping that got
-unmapped) was not fully initialized.  Specifically, br_state was not
-being copied from the passed-in struct to the uirec.  This could lead to
-unpredictable results such as the reflinked mapping being marked
-unwritten in the destination file.
+kmemleak reports several memory leaks from devicetree unittest.
+This is the fix for problem 1 of 5.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
+of_unittest_changeset() reaches deeply into the dynamic devicetree
+functions.  Several nodes were left with an elevated reference
+count and thus were not properly cleaned up.  Fix the reference
+counts so that the memory will be freed.
+
+Fixes: 201c910bd689 ("of: Transactional DT support.")
+Reported-by: Erhard F. <erhard_f@mailbox.org>
+Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_reflink.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/of/unittest.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
-index 17d3c964a2a23..6b753b969f7b8 100644
---- a/fs/xfs/xfs_reflink.c
-+++ b/fs/xfs/xfs_reflink.c
-@@ -1162,6 +1162,7 @@ xfs_reflink_remap_extent(
- 		uirec.br_startblock = irec->br_startblock + rlen;
- 		uirec.br_startoff = irec->br_startoff + rlen;
- 		uirec.br_blockcount = unmap_len - rlen;
-+		uirec.br_state = irec->br_state;
- 		unmap_len = rlen;
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 4bf6a9db6ac0c..aaec4a9fa2bc4 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -605,6 +605,10 @@ static void __init of_unittest_changeset(void)
+ 	unittest(!of_changeset_revert(&chgset), "revert failed\n");
  
- 		/* If this isn't a real mapping, we're done. */
+ 	of_changeset_destroy(&chgset);
++
++	of_node_put(n1);
++	of_node_put(n2);
++	of_node_put(n21);
+ #endif
+ }
+ 
 -- 
 2.20.1
 
