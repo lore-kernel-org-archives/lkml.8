@@ -2,87 +2,74 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F1BC55191
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF610C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3F6820736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A34172064C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:29:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbgDXL1H (ORCPT
+        id S1726865AbgDXL31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 07:27:07 -0400
-Received: from sauhun.de ([88.99.104.3]:46698 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726582AbgDXL1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 07:27:06 -0400
-Received: from localhost (p5486CE62.dip0.t-ipconnect.de [84.134.206.98])
-        by pokefinder.org (Postfix) with ESMTPSA id 6B1C22C1FE8;
-        Fri, 24 Apr 2020 13:27:05 +0200 (CEST)
-Date:   Fri, 24 Apr 2020 13:27:05 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Bjorn Ardo <bjorn.ardo@axis.com>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        patrick@stwcx.xyz, kernel@axis.com
-Subject: Re: [PATCHv2] i2c: slave-eeprom: Make it possible to pre-load eeprom
- data
-Message-ID: <20200424112705.GD1959@kunai>
-References: <20200424090443.26316-1-bjorn.ardo@axis.com>
- <20200424111337.GC1959@kunai>
- <5038e4c1-440b-0a56-978b-a8c9fac061cc@axis.com>
+        Fri, 24 Apr 2020 07:29:27 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:47810 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbgDXL30 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 07:29:26 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jRwWG-0006NF-DI; Fri, 24 Apr 2020 11:29:20 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Tony Luck <tony.luck@intel.com>, Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rrichter@marvell.com>,
+        linux-edac@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] EDAC: remove redundant assignment to variable rc
+Date:   Fri, 24 Apr 2020 12:29:20 +0100
+Message-Id: <20200424112920.12676-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="9UV9rz0O2dU/yYYn"
-Content-Disposition: inline
-In-Reply-To: <5038e4c1-440b-0a56-978b-a8c9fac061cc@axis.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Colin Ian King <colin.king@canonical.com>
 
---9UV9rz0O2dU/yYYn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The variable rc is being initialized with a value that is
+never read and it is being updated later with a new value. The
+initialization is redundant and can be removed.
 
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/edac/sb_edac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> As I can see in drivers/base/firmware_loader/main.c in function
-> _request_firmware, then the fw will be released internally if it returns =
-an
-> error value.
+diff --git a/drivers/edac/sb_edac.c b/drivers/edac/sb_edac.c
+index d414698ca324..19c95943d218 100644
+--- a/drivers/edac/sb_edac.c
++++ b/drivers/edac/sb_edac.c
+@@ -3442,7 +3442,7 @@ MODULE_DEVICE_TABLE(x86cpu, sbridge_cpuids);
+ 
+ static int sbridge_probe(const struct x86_cpu_id *id)
+ {
+-	int rc = -ENODEV;
++	int rc;
+ 	u8 mc, num_mc = 0;
+ 	struct sbridge_dev *sbridge_dev;
+ 	struct pci_id_table *ptable = (struct pci_id_table *)id->driver_data;
+-- 
+2.25.1
 
-Ouch, of course!
-
-> > Also, do we need 'error' and 'ret'? Can't we reuse one of them?
->=20
-> Yes, I can fix that.
-
-Great, thanks!
-
-
---9UV9rz0O2dU/yYYn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6izQgACgkQFA3kzBSg
-KbZ2ThAAhMsZ3tQuyAqOGMN9/wJ9va85sHDKjPkaNaXrPFpI3R2IVgdHPYS/5c6Z
-y1hVZu7mL7tTXMjS9gnt0cDQhGJ2w2K6uMDo4JFx7LdaWE/wws0j81NhzVJCUcfi
-RYt+8x5cNJYPi6u7HDtNZgiX1DGa2oZRodSvkbbd0uyxNiZXc4dKuenXY8trrN2E
-YNMtXee5ChsDBZl0AhNOo+TASMUBepo7XAcPaigJiDol5nDYdSMvKu52g4ys7eZa
-aEf9iFx5o6qbVRUGiUptv/5XjuN0mpK87vB9qJNNqWMp9ACheRAG87nEtRx0qp3P
-YlY8uT7nx1cCpcqaICfDpHyWCp8+VvKWHFd+omKsQLx2fODjMO2otEPsqGEcMxwX
-OKgPwrUlwnymlRFvIfmJ5b+JQsoXCIeCGqvo82RIa/4U9Xo/019n8dFnAj2VWqwV
-fcrUERYQ4E0pGH6IIsXvZYTaPIFzhtPbIlBrt01SKIRLvZeOLzU0mnNmEfvU2iwC
-YUVnnVgkp0ReGSsjsLE+27UN7JJN/9cXt3Ofy0FaJyPcHlU8gwLh/G6+rUXIfAO1
-wUjuS0H5N3ef5NfLK67L9SO0jfrvlrxP8qIsR3VCOGD6gP57VgTQL/jLFi620OjP
-/WBsufP+JjSGdOkO4BDMOu06cKDmExA9QaaWRkLR1Nqr4ilXIWg=
-=kSjn
------END PGP SIGNATURE-----
-
---9UV9rz0O2dU/yYYn--
