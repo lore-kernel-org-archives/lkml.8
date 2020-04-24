@@ -2,188 +2,112 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E15C55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C12C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA61F20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:43:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587703407;
-	bh=iNmFScr18oN2eDrbxAgPlz5bhULsk0p3yjhL8V85T8c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jKhwToex3huyJjnm0KeQ3/ZYYpOkHKjscrGrCLI+EfIFerUGDnO8wuRAvwvEha8rn
-	 NL7aXOyHftkTkM3Pk38y11t7fKxoeegUl4YTJJ4rbDde2TTqI3nELoRCa/b75ohjRO
-	 I0O1av66DCkSpM1g6pOOMZzpcYExiK+N/3di4d6s=
+	by mail.kernel.org (Postfix) with ESMTP id 769342075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:49:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XY19Ro6E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726239AbgDXEn1 (ORCPT
+        id S1726072AbgDXEtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 00:43:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38292 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725554AbgDXEnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 00:43:25 -0400
-Received: from vkoul-mobl.Dlink (unknown [106.51.110.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 24 Apr 2020 00:49:10 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29698 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725554AbgDXEtK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 00:49:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587703748;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=64G9GahoE1R2oI2BMnZEz8XNw5xsvmzLezAX8Z3VN+g=;
+        b=XY19Ro6EAz6Gl23j01hrA3gNNk6o5ALGA7FdXjejU7OkV4Ft/uxe+3yIPMGSYt1zJJXTXV
+        bxW535tR6VwjlNOUlHqXMwYMYksz0ZQqkIexGjUxVk9rOvEIId1R4Tpw0OMdEMonS6yRm8
+        IIkfa6x0Y24h+7IIHjsX4hRswhJag3A=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-423-3TwUM8z4Pue688Km7TtidA-1; Fri, 24 Apr 2020 00:49:03 -0400
+X-MC-Unique: 3TwUM8z4Pue688Km7TtidA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2267820767;
-        Fri, 24 Apr 2020 04:43:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587703405;
-        bh=iNmFScr18oN2eDrbxAgPlz5bhULsk0p3yjhL8V85T8c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zvHAxowI7UC/F+I+kZziK75HAMEtVvqttWHYoQUEOmwuiCGM9zRQtUqpdnXExS3HS
-         dpjiF5K8hAJ0H0W++6vA8dcSq/vmLQF0AANRlgTKi5CzvRFc4TX8qjP9e472a0yBKf
-         ZfwGYR06wnl6c5iIv87TqD7Exzm0Gj58KFBSPgkU=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
-        Jonathan Marek <jonathan@marek.ca>, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] clk: qcom: gcc: Add missing UFS clocks for SM8150
-Date:   Fri, 24 Apr 2020 10:13:11 +0530
-Message-Id: <20200424044311.2155917-2-vkoul@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200424044311.2155917-1-vkoul@kernel.org>
-References: <20200424044311.2155917-1-vkoul@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E7BA6835B4A;
+        Fri, 24 Apr 2020 04:49:01 +0000 (UTC)
+Received: from localhost.localdomain.com (vpn2-54-127.bne.redhat.com [10.64.54.127])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 97D3F5C1C8;
+        Fri, 24 Apr 2020 04:48:59 +0000 (UTC)
+From:   Gavin Shan <gshan@redhat.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
+        will@kernel.org, mark.rutland@arm.com, shan.gavin@gmail.com
+Subject: [PATCH] arm64/mm: Use phys_to_page() to access pgtable memory
+Date:   Fri, 24 Apr 2020 14:48:54 +1000
+Message-Id: <20200424044854.15760-1-gshan@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the missing ufs card and ufs phy clocks for SM8150. They were missed
-in earlier addition of clock driver.
+The macros {pgd, pud, pmd}_page() retrieves the page struct of the
+corresponding page frame, which is reserved as page table. There
+is already a macro (phys_to_page), defined in memory.h, to convert
+the physical address to the page struct. So it's reasonable to
+use that in pgtable.h.
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Gavin Shan <gshan@redhat.com>
 ---
- drivers/clk/qcom/gcc-sm8150.c | 84 +++++++++++++++++++++++++++++++++++
- 1 file changed, 84 insertions(+)
+ arch/arm64/include/asm/pgtable.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/qcom/gcc-sm8150.c b/drivers/clk/qcom/gcc-sm8150.c
-index 5c3dc34c955e..4354620fa12d 100644
---- a/drivers/clk/qcom/gcc-sm8150.c
-+++ b/drivers/clk/qcom/gcc-sm8150.c
-@@ -2881,6 +2881,45 @@ static struct clk_branch gcc_ufs_card_phy_aux_hw_ctl_clk = {
- 	},
- };
- 
-+/* external clocks so add BRANCH_HALT_SKIP */
-+static struct clk_branch gcc_ufs_card_rx_symbol_0_clk = {
-+	.halt_check = BRANCH_HALT_SKIP,
-+	.clkr = {
-+		.enable_reg = 0x7501c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_ufs_card_rx_symbol_0_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+/* external clocks so add BRANCH_HALT_SKIP */
-+static struct clk_branch gcc_ufs_card_rx_symbol_1_clk = {
-+	.halt_check = BRANCH_HALT_SKIP,
-+	.clkr = {
-+		.enable_reg = 0x750ac,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_ufs_card_rx_symbol_1_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+/* external clocks so add BRANCH_HALT_SKIP */
-+static struct clk_branch gcc_ufs_card_tx_symbol_0_clk = {
-+	.halt_check = BRANCH_HALT_SKIP,
-+	.clkr = {
-+		.enable_reg = 0x75018,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_ufs_card_tx_symbol_0_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_branch gcc_ufs_card_unipro_core_clk = {
- 	.halt_reg = 0x75058,
- 	.halt_check = BRANCH_HALT,
-@@ -3061,6 +3100,45 @@ static struct clk_branch gcc_ufs_phy_phy_aux_hw_ctl_clk = {
- 	},
- };
- 
-+/* external clocks so add BRANCH_HALT_SKIP */
-+static struct clk_branch gcc_ufs_phy_rx_symbol_0_clk = {
-+	.halt_check = BRANCH_HALT_SKIP,
-+	.clkr = {
-+		.enable_reg = 0x7701c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_ufs_phy_rx_symbol_0_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+/* external clocks so add BRANCH_HALT_SKIP */
-+static struct clk_branch gcc_ufs_phy_rx_symbol_1_clk = {
-+	.halt_check = BRANCH_HALT_SKIP,
-+	.clkr = {
-+		.enable_reg = 0x770ac,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_ufs_phy_rx_symbol_1_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+/* external clocks so add BRANCH_HALT_SKIP */
-+static struct clk_branch gcc_ufs_phy_tx_symbol_0_clk = {
-+	.halt_check = BRANCH_HALT_SKIP,
-+	.clkr = {
-+		.enable_reg = 0x77018,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_ufs_phy_tx_symbol_0_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_branch gcc_ufs_phy_unipro_core_clk = {
- 	.halt_reg = 0x77058,
- 	.halt_check = BRANCH_HALT,
-@@ -3557,6 +3635,9 @@ static struct clk_regmap *gcc_sm8150_clocks[] = {
- 	[GCC_UFS_CARD_PHY_AUX_CLK_SRC] = &gcc_ufs_card_phy_aux_clk_src.clkr,
- 	[GCC_UFS_CARD_PHY_AUX_HW_CTL_CLK] =
- 		&gcc_ufs_card_phy_aux_hw_ctl_clk.clkr,
-+	[GCC_UFS_CARD_RX_SYMBOL_0_CLK] = &gcc_ufs_card_rx_symbol_0_clk.clkr,
-+	[GCC_UFS_CARD_RX_SYMBOL_1_CLK] = &gcc_ufs_card_rx_symbol_1_clk.clkr,
-+	[GCC_UFS_CARD_TX_SYMBOL_0_CLK] = &gcc_ufs_card_tx_symbol_0_clk.clkr,
- 	[GCC_UFS_CARD_UNIPRO_CORE_CLK] = &gcc_ufs_card_unipro_core_clk.clkr,
- 	[GCC_UFS_CARD_UNIPRO_CORE_CLK_SRC] =
- 		&gcc_ufs_card_unipro_core_clk_src.clkr,
-@@ -3574,6 +3655,9 @@ static struct clk_regmap *gcc_sm8150_clocks[] = {
- 	[GCC_UFS_PHY_PHY_AUX_CLK] = &gcc_ufs_phy_phy_aux_clk.clkr,
- 	[GCC_UFS_PHY_PHY_AUX_CLK_SRC] = &gcc_ufs_phy_phy_aux_clk_src.clkr,
- 	[GCC_UFS_PHY_PHY_AUX_HW_CTL_CLK] = &gcc_ufs_phy_phy_aux_hw_ctl_clk.clkr,
-+	[GCC_UFS_PHY_RX_SYMBOL_0_CLK] = &gcc_ufs_phy_rx_symbol_0_clk.clkr,
-+	[GCC_UFS_PHY_RX_SYMBOL_1_CLK] = &gcc_ufs_phy_rx_symbol_1_clk.clkr,
-+	[GCC_UFS_PHY_TX_SYMBOL_0_CLK] = &gcc_ufs_phy_tx_symbol_0_clk.clkr,
- 	[GCC_UFS_PHY_UNIPRO_CORE_CLK] = &gcc_ufs_phy_unipro_core_clk.clkr,
- 	[GCC_UFS_PHY_UNIPRO_CORE_CLK_SRC] =
- 		&gcc_ufs_phy_unipro_core_clk_src.clkr,
--- 
-2.25.1
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pg=
+table.h
+index 538c85e62f86..8c20e2bd6287 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -508,7 +508,7 @@ static inline void pte_unmap(pte_t *pte) { }
+ #define pte_set_fixmap_offset(pmd, addr)	pte_set_fixmap(pte_offset_phys(=
+pmd, addr))
+ #define pte_clear_fixmap()		clear_fixmap(FIX_PTE)
+=20
+-#define pmd_page(pmd)		pfn_to_page(__phys_to_pfn(__pmd_to_phys(pmd)))
++#define pmd_page(pmd)			phys_to_page(__pmd_to_phys(pmd))
+=20
+ /* use ONLY for statically allocated translation tables */
+ #define pte_offset_kimg(dir,addr)	((pte_t *)__phys_to_kimg(pte_offset_ph=
+ys((dir), (addr))))
+@@ -566,7 +566,7 @@ static inline phys_addr_t pud_page_paddr(pud_t pud)
+ #define pmd_set_fixmap_offset(pud, addr)	pmd_set_fixmap(pmd_offset_phys(=
+pud, addr))
+ #define pmd_clear_fixmap()		clear_fixmap(FIX_PMD)
+=20
+-#define pud_page(pud)		pfn_to_page(__phys_to_pfn(__pud_to_phys(pud)))
++#define pud_page(pud)			phys_to_page(__pud_to_phys(pud))
+=20
+ /* use ONLY for statically allocated translation tables */
+ #define pmd_offset_kimg(dir,addr)	((pmd_t *)__phys_to_kimg(pmd_offset_ph=
+ys((dir), (addr))))
+@@ -624,7 +624,7 @@ static inline phys_addr_t pgd_page_paddr(pgd_t pgd)
+ #define pud_set_fixmap_offset(pgd, addr)	pud_set_fixmap(pud_offset_phys(=
+pgd, addr))
+ #define pud_clear_fixmap()		clear_fixmap(FIX_PUD)
+=20
+-#define pgd_page(pgd)		pfn_to_page(__phys_to_pfn(__pgd_to_phys(pgd)))
++#define pgd_page(pgd)			phys_to_page(__pgd_to_phys(pgd))
+=20
+ /* use ONLY for statically allocated translation tables */
+ #define pud_offset_kimg(dir,addr)	((pud_t *)__phys_to_kimg(pud_offset_ph=
+ys((dir), (addr))))
+--=20
+2.23.0
 
