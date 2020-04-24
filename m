@@ -1,81 +1,93 @@
 Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: **
-X-Spam-Status: No, score=2.8 required=3.0 tests=DEAR_FRIEND,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	SUBJ_ALL_CAPS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C656C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 634B1C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15DDF20736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44A2920736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:21:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726164AbgDXWVR convert rfc822-to-8bit (ORCPT
+        id S1726234AbgDXWVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 18:21:17 -0400
-Received: from [116.62.10.213] ([116.62.10.213]:45252 "EHLO mail.qdztrk.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1725874AbgDXWVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 18:21:16 -0400
-X-Greylist: delayed 27374 seconds by postgrey-1.27 at vger.kernel.org; Fri, 24 Apr 2020 18:21:16 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by mail.qdztrk.com (Postfix) with ESMTP id E1C571E68E7
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 21:43:39 +0800 (CST)
-Received: from mail.qdztrk.com ([127.0.0.1])
-        by localhost (mail.qdztrk.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id YT1GXarMxdm8 for <linux-kernel@vger.kernel.org>;
-        Fri, 24 Apr 2020 21:43:39 +0800 (CST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.qdztrk.com (Postfix) with ESMTP id 9E6341E68D7
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 21:43:39 +0800 (CST)
-X-Virus-Scanned: amavisd-new at mail.qdztrk.com
-Received: from mail.qdztrk.com ([127.0.0.1])
-        by localhost (mail.qdztrk.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id pQw3xWfrLzay for <linux-kernel@vger.kernel.org>;
-        Fri, 24 Apr 2020 21:43:39 +0800 (CST)
-Received: from coris.com (unknown [103.207.36.17])
-        by mail.qdztrk.com (Postfix) with ESMTP id 720001E68E8
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 21:43:37 +0800 (CST)
-Reply-To: kentpace@sina.com
-From:   Kent Pace <kentpace@coris.com>
-To:     linux-kernel@vger.kernel.org
-Subject: URGENT!! PLEASE READ
-Date:   24 Apr 2020 06:43:32 -0700
-Message-ID: <20200424064331.B81787232022F12A@coris.com>
+        Fri, 24 Apr 2020 18:21:31 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:55410 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725874AbgDXWVb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 18:21:31 -0400
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 24 Apr 2020 15:21:30 -0700
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg03-sd.qualcomm.com with ESMTP; 24 Apr 2020 15:21:29 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id E22914C90; Fri, 24 Apr 2020 15:21:29 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 15:21:29 -0700
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Shiyan <shc_work@mail.ru>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v13 04/11] pwm: clps711x: Cast period to u32 before use
+ as divisor
+Message-ID: <20200424222129.GC31118@codeaurora.org>
+References: <cover.1587523702.git.gurus@codeaurora.org>
+ <02ba64d8289bf84a8d140f5a3c38ed64a9474d3b.1587523702.git.gurus@codeaurora.org>
+ <CAMuHMdVOPKWL9u_4QCvcBZKFrW-7aKZonXjODqUx9HwS=CF09g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVOPKWL9u_4QCvcBZKFrW-7aKZonXjODqUx9HwS=CF09g@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Friend,
+On Thu, Apr 23, 2020 at 11:30:19AM +0200, Geert Uytterhoeven wrote:
+> On Wed, Apr 22, 2020 at 5:00 AM Guru Das Srinagesh <gurus@codeaurora.org> wrote:
+> > Since the PWM framework is switching struct pwm_args.period's datatype
+> > to u64, prepare for this transition by typecasting it to u32.
+> >
+> > Also, since the dividend is still a 32-bit number, any divisor greater
+> > than the numerator will cause the quotient to be zero, so return 0 in
+> > that case to efficiently skip the division.
+> >
+> > Cc: Alexander Shiyan <shc_work@mail.ru>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> >
+> > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+> > ---
+> >  drivers/pwm/pwm-clps711x.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
+> > index 924d39a..0d368ac 100644
+> > --- a/drivers/pwm/pwm-clps711x.c
+> > +++ b/drivers/pwm/pwm-clps711x.c
+> > @@ -43,7 +43,10 @@ static void clps711x_pwm_update_val(struct clps711x_chip *priv, u32 n, u32 v)
+> >  static unsigned int clps711x_get_duty(struct pwm_device *pwm, unsigned int v)
+> >  {
+> >         /* Duty cycle 0..15 max */
+> > -       return DIV_ROUND_CLOSEST(v * 0xf, pwm->args.period);
+> > +       if ((u32)pwm->args.period > (v * 0xf))
+> 
+> Shouldn't the cast be removed from the expression above?
+> Else a period larger than or equal to 2^32 may be accepted, but truncated
+> silently.  And even cause a division by zero error.
 
+I agree. Will remove the cast in the next patchset.
 
-There is something very important I need to discuss with you.  I 
-am writing  this letter in tears and fear. In tears because I 
-will soon depart and in fear because I don't really know if you 
-will do this faithfully.
+Thank you.
 
-I am COVID-19  patient and the doctor has already confirmed I may 
-not last for the next 7 days.
-
-I have substantial amount of money deposited in a security vault 
-around your country. It is in trunk boxes and once  I receive 
-your response and see your readiness to claim the money 
-immediately, I will forward the needed documents and the contact 
-of the security vault where the consignment is deposited,
-I am not asking you to give me anything but I want you to help 
-people that has been infected with this deadly virus with 60% of 
-the money and 40% should be for you and your family.
-
-I will disclose exact amount in the boxes as soon as I 
-receive your response.
-
-
-Regards.
-
+Guru Das.
