@@ -2,370 +2,118 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99ED5C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 14:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E4F4C55191
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 14:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D14E20776
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 14:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE85F21582
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 14:56:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="jw3YPGTC"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="iGp9a3vl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727863AbgDXOzk (ORCPT
+        id S1727886AbgDXO4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 10:55:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46520 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727820AbgDXOzh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 10:55:37 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC53CC09B045
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 07:55:37 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id x77so4922265pfc.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 07:55:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=MyaPBmU94mv7wzJ+8hGCstQaBgwGiAO22Ok0nmEBVO4=;
-        b=jw3YPGTCndMYUxuALrfcfMqgg3V6iMjEmtQCF6IGTmgIR8JhClKAX4VK/15cy/CnFt
-         qI2Hepq80StIEjef93pttb8mmow/KUKwvuKNLh4cOibySFJNfinEKe5vgY15WFaC01nW
-         n5SdrIEbAyw0ez0FrfO4VRVDYdG5C9PAMYD60=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=MyaPBmU94mv7wzJ+8hGCstQaBgwGiAO22Ok0nmEBVO4=;
-        b=bfbhh9eqh55UaidNFeyZJauEOD2jWIyLq1wfftqScMfA8yUo5Fpt4DUAqqB7cYatFL
-         2SMhUODFlF5HW+cgJWX399mgbBbNhurTUGKO1i9O47d+GicAb4yLXfqgH/Vxry9ufgwA
-         KtrtS4SEtPiEFwDZ908a34puKX/9CM+jL1/gEsP3KpV3SDYAOuswknozTpgsAk86rvZz
-         yAnr0CCkPUbNL80JH4mOMYoXKBzL58NHbvM/OHSeBY2qfKxYDt1ea22BR6Zxby8Ljog7
-         xLMetyM0W1PUjEMZjGx14YN1o1bn5YjwyqK0L9gmk+85IMIvOjqk2v3Hu6zqGbW0jNL+
-         vOnw==
-X-Gm-Message-State: AGi0Pua3QPaInMsvGp9SYQXq0+0r7FezGd1f+3V5bFSo8WSjm3T9sfxp
-        yNbig+krClvDINBUPHADGZ9W/ewy01c=
-X-Google-Smtp-Source: APiQypLsmM4PBiH3RPHnTBncZjamw0ToU8vWvO3hT9t/draLCTQNJ/qRnesDmdBNMREeG/VqfjbUvQ==
-X-Received: by 2002:a63:b542:: with SMTP id u2mr9513034pgo.352.1587740136840;
-        Fri, 24 Apr 2020 07:55:36 -0700 (PDT)
-Received: from localhost (2001-44b8-1113-6700-fd06-aa7b-7508-4b8b.static.ipv6.internode.on.net. [2001:44b8:1113:6700:fd06:aa7b:7508:4b8b])
-        by smtp.gmail.com with ESMTPSA id 18sm4862533pjf.30.2020.04.24.07.55.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 07:55:36 -0700 (PDT)
-From:   Daniel Axtens <dja@axtens.net>
-To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, kasan-dev@googlegroups.com
-Cc:     dvyukov@google.com, christophe.leroy@c-s.fr,
-        Daniel Axtens <dja@axtens.net>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        David Gow <davidgow@google.com>
-Subject: [PATCH v4 2/2] string.h: fix incompatibility between FORTIFY_SOURCE and KASAN
-Date:   Sat, 25 Apr 2020 00:55:21 +1000
-Message-Id: <20200424145521.8203-3-dja@axtens.net>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200424145521.8203-1-dja@axtens.net>
-References: <20200424145521.8203-1-dja@axtens.net>
+        Fri, 24 Apr 2020 10:56:49 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:32838 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726698AbgDXO4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 10:56:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=i8T8P91+yzcMB/IYq4PEZyj+h3cSZcj0sTJ9rKQhaaY=; b=iGp9a3vlmwA0+2N3ar/5vj/na/
+        ZazxDH05VDYsLFC+x395RWF8pI2wxVPWtby8BnVnCoaFv/77qGF99D4QPfirjkwi4POEhx49cg8WE
+        n/3e7HiOOu6xNUarECxAjKcAtobNKax6eXFRFl2svjY4RX4WND5aWUzDeTWpsoyV5fzg=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jRzkp-004ZXA-Qh; Fri, 24 Apr 2020 16:56:35 +0200
+Date:   Fri, 24 Apr 2020 16:56:35 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Florinel Iordache <florinel.iordache@nxp.com>
+Cc:     "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: Re: [PATCH net-next v2 6/9] net: phy: add backplane kr driver
+ support
+Message-ID: <20200424145635.GB1088354@lunn.ch>
+References: <AM0PR04MB5443BCFEC71B6903BE6EFE02FBD00@AM0PR04MB5443.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB5443BCFEC71B6903BE6EFE02FBD00@AM0PR04MB5443.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The memcmp KASAN self-test fails on a kernel with both KASAN and
-FORTIFY_SOURCE.
+On Fri, Apr 24, 2020 at 02:39:54PM +0000, Florinel Iordache wrote:
+> > > +/* Backplane custom logging */
+> > > +#define bpdev_fn(fn)                                                 \
+> > > +void bpdev_##fn(struct phy_device *phydev, char *fmt, ...)           \
+> > > +{                                                                    \
+> > > +     struct va_format vaf = {                                        \
+> > > +             .fmt = fmt,                                             \
+> > > +     };                                                              \
+> > > +     va_list args;                                                   \
+> > > +     va_start(args, fmt);                                            \
+> > > +     vaf.va = &args;                                                 \
+> > > +     if (!phydev->attached_dev)                                      \
+> > > +             dev_##fn(&phydev->mdio.dev, "%pV", &vaf);               \
+> > > +     else                                                            \
+> > > +             dev_##fn(&phydev->mdio.dev, "%s: %pV",                  \
+> > > +                     netdev_name(phydev->attached_dev), &vaf);       \
+> > > +     va_end(args);                                                   \
+> > > +}
+> > > +
+> > > +bpdev_fn(err)
+> > > +EXPORT_SYMBOL(bpdev_err);
+> > > +
+> > > +bpdev_fn(warn)
+> > > +EXPORT_SYMBOL(bpdev_warn);
+> > > +
+> > > +bpdev_fn(info)
+> > > +EXPORT_SYMBOL(bpdev_info);
+> > > +
+> > > +bpdev_fn(dbg)
+> > > +EXPORT_SYMBOL(bpdev_dbg);
+> > 
+> > Didn't i say something about just using phydev_{err|warn|info|dbg}?
+> > 
+> >        Andrew
+> 
+> Hi Andrew,
+> 
+> I used this custom logging in order to be able to add any kind of useful information we might need to all prints (err/warn/info/dbg).
+> For example all these bpdev_ functions are equivalent with phydev_ but only in the case when there is no attached device: phydev->attached_dev == NULL.
+> Otherwise, if there is a device attached, then we also want to add its name to all these prints in order to know to which device the information refers to.
+> For example in this case the print looks like this:
+> [   50.853515] backplane_qoriq 8c13000:00: eth1: 10gbase-kr link trained, Tx equalization: C(-1)=0x0, C(0)=0x29, C(+1)=0x5
+> This is very useful because we can see very easy to which interface the information printed is related to: in this case the link was trained for interface: eth1
+> This information (the name of attached device: eth1) is not printed by phydev_ functions.
+> I'm sorry I have not explained all this earlier, the first time when you asked about it. 
 
-When FORTIFY_SOURCE is on, a number of functions are replaced with
-fortified versions, which attempt to check the sizes of the operands.
-However, these functions often directly invoke __builtin_foo() once they
-have performed the fortify check. Using __builtins may bypass KASAN
-checks if the compiler decides to inline it's own implementation as
-sequence of instructions, rather than emit a function call that goes out
-to a KASAN-instrumented implementation.
+So why not argue that the phydev_* functions should be extended to
+include this information? Is this extra information only valuable for
+link training, or for anything a PHY does? If the core does not do
+something, fix the core, rather than work around it in your driver.
 
-Why is only memcmp affected?
-============================
-
-Of the string and string-like functions that kasan_test tests, only memcmp
-is replaced by an inline sequence of instructions in my testing on x86 with
-gcc version 9.2.1 20191008 (Ubuntu 9.2.1-9ubuntu2).
-
-I believe this is due to compiler heuristics. For example, if I annotate
-kmalloc calls with the alloc_size annotation (and disable some fortify
-compile-time checking!), the compiler will replace every memset except the
-one in kmalloc_uaf_memset with inline instructions. (I have some WIP
-patches to add this annotation.)
-
-Does this affect other functions in string.h?
-=============================================
-
-Yes. Anything that uses __builtin_* rather than __real_* could be
-affected. This looks like:
-
- - strncpy
- - strcat
- - strlen
- - strlcpy maybe, under some circumstances?
- - strncat under some circumstances
- - memset
- - memcpy
- - memmove
- - memcmp (as noted)
- - memchr
- - strcpy
-
-Whether a function call is emitted always depends on the compiler. Most
-bugs should get caught by FORTIFY_SOURCE, but the missed memcmp test shows
-that this is not always the case.
-
-Isn't FORTIFY_SOURCE disabled with KASAN?
-========================================-
-
-The string headers on all arches supporting KASAN disable fortify with
-kasan, but only when address sanitisation is _also_ disabled. For example
-from x86:
-
- #if defined(CONFIG_KASAN) && !defined(__SANITIZE_ADDRESS__)
- /*
-  * For files that are not instrumented (e.g. mm/slub.c) we
-  * should use not instrumented version of mem* functions.
-  */
- #define memcpy(dst, src, len) __memcpy(dst, src, len)
- #define memmove(dst, src, len) __memmove(dst, src, len)
- #define memset(s, c, n) __memset(s, c, n)
-
- #ifndef __NO_FORTIFY
- #define __NO_FORTIFY /* FORTIFY_SOURCE uses __builtin_memcpy, etc. */
- #endif
-
- #endif
-
-This comes from commit 6974f0c4555e ("include/linux/string.h: add the
-option of fortified string.h functions"), and doesn't work when KASAN is
-enabled and the file is supposed to be sanitised - as with test_kasan.c
-
-I'm pretty sure this is not wrong, but not as expansive it should be:
-
- * we shouldn't use __builtin_memcpy etc in files where we don't have
-   instrumentation - it could devolve into a function call to memcpy,
-   which will be instrumented. Rather, we should use __memcpy which
-   by convention is not instrumented.
-
- * we also shouldn't be using __builtin_memcpy when we have a KASAN
-   instrumented file, because it could be replaced with inline asm
-   that will not be instrumented.
-
-What is correct behaviour?
-==========================
-
-Firstly, there is some overlap between fortification and KASAN: both
-provide some level of _runtime_ checking. Only fortify provides
-compile-time checking.
-
-KASAN and fortify can pick up different things at runtime:
-
- - Some fortify functions, notably the string functions, could easily be
-   modified to consider sub-object sizes (e.g. members within a struct),
-   and I have some WIP patches to do this. KASAN cannot detect these
-   because it cannot insert poision between members of a struct.
-
- - KASAN can detect many over-reads/over-writes when the sizes of both
-   operands are unknown, which fortify cannot.
-
-So there are a couple of options:
-
- 1) Flip the test: disable fortify in santised files and enable it in
-    unsanitised files. This at least stops us missing KASAN checking, but
-    we lose the fortify checking.
-
- 2) Make the fortify code always call out to real versions. Do this only
-    for KASAN, for fear of losing the inlining opportunities we get from
-    __builtin_*.
-
-(We can't use kasan_check_{read,write}: because the fortify functions are
-_extern inline_, you can't include _static_ inline functions without a
-compiler warning. kasan_check_{read,write} are static inline so we can't
-use them even when they would otherwise be suitable.)
-
-Take approach 2 and call out to real versions when KASAN is enabled.
-
-Use __underlying_foo to distinguish from __real_foo: __real_foo always
-refers to the kernel's implementation of foo, __underlying_foo could be
-either the kernel implementation or the __builtin_foo implementation.
-
-Cc: Daniel Micay <danielmicay@gmail.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Fixes: 6974f0c4555e ("include/linux/string.h: add the option of fortified string.h functions")
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-Tested-by: David Gow <davidgow@google.com>
-Signed-off-by: Daniel Axtens <dja@axtens.net>
----
- include/linux/string.h | 60 +++++++++++++++++++++++++++++++++---------
- 1 file changed, 48 insertions(+), 12 deletions(-)
-
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 6dfbb2efa815..9b7a0632e87a 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -272,6 +272,31 @@ void __read_overflow3(void) __compiletime_error("detected read beyond size of ob
- void __write_overflow(void) __compiletime_error("detected write beyond size of object passed as 1st parameter");
- 
- #if !defined(__NO_FORTIFY) && defined(__OPTIMIZE__) && defined(CONFIG_FORTIFY_SOURCE)
-+
-+#ifdef CONFIG_KASAN
-+extern void *__underlying_memchr(const void *p, int c, __kernel_size_t size) __RENAME(memchr);
-+extern int __underlying_memcmp(const void *p, const void *q, __kernel_size_t size) __RENAME(memcmp);
-+extern void *__underlying_memcpy(void *p, const void *q, __kernel_size_t size) __RENAME(memcpy);
-+extern void *__underlying_memmove(void *p, const void *q, __kernel_size_t size) __RENAME(memmove);
-+extern void *__underlying_memset(void *p, int c, __kernel_size_t size) __RENAME(memset);
-+extern char *__underlying_strcat(char *p, const char *q) __RENAME(strcat);
-+extern char *__underlying_strcpy(char *p, const char *q) __RENAME(strcpy);
-+extern __kernel_size_t __underlying_strlen(const char *p) __RENAME(strlen);
-+extern char *__underlying_strncat(char *p, const char *q, __kernel_size_t count) __RENAME(strncat);
-+extern char *__underlying_strncpy(char *p, const char *q, __kernel_size_t size) __RENAME(strncpy);
-+#else
-+#define __underlying_memchr	__builtin_memchr
-+#define __underlying_memcmp	__builtin_memcmp
-+#define __underlying_memcpy	__builtin_memcpy
-+#define __underlying_memmove	__builtin_memmove
-+#define __underlying_memset	__builtin_memset
-+#define __underlying_strcat	__builtin_strcat
-+#define __underlying_strcpy	__builtin_strcpy
-+#define __underlying_strlen	__builtin_strlen
-+#define __underlying_strncat	__builtin_strncat
-+#define __underlying_strncpy	__builtin_strncpy
-+#endif
-+
- __FORTIFY_INLINE char *strncpy(char *p, const char *q, __kernel_size_t size)
- {
- 	size_t p_size = __builtin_object_size(p, 0);
-@@ -279,14 +304,14 @@ __FORTIFY_INLINE char *strncpy(char *p, const char *q, __kernel_size_t size)
- 		__write_overflow();
- 	if (p_size < size)
- 		fortify_panic(__func__);
--	return __builtin_strncpy(p, q, size);
-+	return __underlying_strncpy(p, q, size);
- }
- 
- __FORTIFY_INLINE char *strcat(char *p, const char *q)
- {
- 	size_t p_size = __builtin_object_size(p, 0);
- 	if (p_size == (size_t)-1)
--		return __builtin_strcat(p, q);
-+		return __underlying_strcat(p, q);
- 	if (strlcat(p, q, p_size) >= p_size)
- 		fortify_panic(__func__);
- 	return p;
-@@ -300,7 +325,7 @@ __FORTIFY_INLINE __kernel_size_t strlen(const char *p)
- 	/* Work around gcc excess stack consumption issue */
- 	if (p_size == (size_t)-1 ||
- 	    (__builtin_constant_p(p[p_size - 1]) && p[p_size - 1] == '\0'))
--		return __builtin_strlen(p);
-+		return __underlying_strlen(p);
- 	ret = strnlen(p, p_size);
- 	if (p_size <= ret)
- 		fortify_panic(__func__);
-@@ -333,7 +358,7 @@ __FORTIFY_INLINE size_t strlcpy(char *p, const char *q, size_t size)
- 			__write_overflow();
- 		if (len >= p_size)
- 			fortify_panic(__func__);
--		__builtin_memcpy(p, q, len);
-+		__underlying_memcpy(p, q, len);
- 		p[len] = '\0';
- 	}
- 	return ret;
-@@ -346,12 +371,12 @@ __FORTIFY_INLINE char *strncat(char *p, const char *q, __kernel_size_t count)
- 	size_t p_size = __builtin_object_size(p, 0);
- 	size_t q_size = __builtin_object_size(q, 0);
- 	if (p_size == (size_t)-1 && q_size == (size_t)-1)
--		return __builtin_strncat(p, q, count);
-+		return __underlying_strncat(p, q, count);
- 	p_len = strlen(p);
- 	copy_len = strnlen(q, count);
- 	if (p_size < p_len + copy_len + 1)
- 		fortify_panic(__func__);
--	__builtin_memcpy(p + p_len, q, copy_len);
-+	__underlying_memcpy(p + p_len, q, copy_len);
- 	p[p_len + copy_len] = '\0';
- 	return p;
- }
-@@ -363,7 +388,7 @@ __FORTIFY_INLINE void *memset(void *p, int c, __kernel_size_t size)
- 		__write_overflow();
- 	if (p_size < size)
- 		fortify_panic(__func__);
--	return __builtin_memset(p, c, size);
-+	return __underlying_memset(p, c, size);
- }
- 
- __FORTIFY_INLINE void *memcpy(void *p, const void *q, __kernel_size_t size)
-@@ -378,7 +403,7 @@ __FORTIFY_INLINE void *memcpy(void *p, const void *q, __kernel_size_t size)
- 	}
- 	if (p_size < size || q_size < size)
- 		fortify_panic(__func__);
--	return __builtin_memcpy(p, q, size);
-+	return __underlying_memcpy(p, q, size);
- }
- 
- __FORTIFY_INLINE void *memmove(void *p, const void *q, __kernel_size_t size)
-@@ -393,7 +418,7 @@ __FORTIFY_INLINE void *memmove(void *p, const void *q, __kernel_size_t size)
- 	}
- 	if (p_size < size || q_size < size)
- 		fortify_panic(__func__);
--	return __builtin_memmove(p, q, size);
-+	return __underlying_memmove(p, q, size);
- }
- 
- extern void *__real_memscan(void *, int, __kernel_size_t) __RENAME(memscan);
-@@ -419,7 +444,7 @@ __FORTIFY_INLINE int memcmp(const void *p, const void *q, __kernel_size_t size)
- 	}
- 	if (p_size < size || q_size < size)
- 		fortify_panic(__func__);
--	return __builtin_memcmp(p, q, size);
-+	return __underlying_memcmp(p, q, size);
- }
- 
- __FORTIFY_INLINE void *memchr(const void *p, int c, __kernel_size_t size)
-@@ -429,7 +454,7 @@ __FORTIFY_INLINE void *memchr(const void *p, int c, __kernel_size_t size)
- 		__read_overflow();
- 	if (p_size < size)
- 		fortify_panic(__func__);
--	return __builtin_memchr(p, c, size);
-+	return __underlying_memchr(p, c, size);
- }
- 
- void *__real_memchr_inv(const void *s, int c, size_t n) __RENAME(memchr_inv);
-@@ -460,11 +485,22 @@ __FORTIFY_INLINE char *strcpy(char *p, const char *q)
- 	size_t p_size = __builtin_object_size(p, 0);
- 	size_t q_size = __builtin_object_size(q, 0);
- 	if (p_size == (size_t)-1 && q_size == (size_t)-1)
--		return __builtin_strcpy(p, q);
-+		return __underlying_strcpy(p, q);
- 	memcpy(p, q, strlen(q) + 1);
- 	return p;
- }
- 
-+/* Don't use these outside the FORITFY_SOURCE implementation */
-+#undef __underlying_memchr
-+#undef __underlying_memcmp
-+#undef __underlying_memcpy
-+#undef __underlying_memmove
-+#undef __underlying_memset
-+#undef __underlying_strcat
-+#undef __underlying_strcpy
-+#undef __underlying_strlen
-+#undef __underlying_strncat
-+#undef __underlying_strncpy
- #endif
- 
- /**
--- 
-2.20.1
-
+     Andrew
