@@ -2,91 +2,96 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24484C55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 950DBC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E592D2071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:34:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587746048;
-	bh=OGgn4SN24TNomJz/Gi7PzZVJ33s9Wr+ofJ0PArUa8jo=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=rmh0LN4oNQf73ZVwa8yBxdBXznz8OEh3/Lov2DohIW/Q72mrxIu/H+YP3yu5/jk53
-	 vVcD/e/G++lZeyX6kgh7kPl900cs8cY4s6VYd7KLYR5gs9ahIHnktb/lo6UD8CctQ9
-	 YIfQC/ldEvDfbC3sFCOf3U2ihtwajV1of6Y76xaE=
+	by mail.kernel.org (Postfix) with ESMTP id 79A6E2071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:34:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbgDXQeH (ORCPT
+        id S1728373AbgDXQeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 12:34:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41366 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 12:34:11 -0400
+Received: from mga03.intel.com ([134.134.136.65]:11407 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727038AbgDXQeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 12:34:06 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD763206D7;
-        Fri, 24 Apr 2020 16:34:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587746046;
-        bh=OGgn4SN24TNomJz/Gi7PzZVJ33s9Wr+ofJ0PArUa8jo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=QmEAPGnEZjx8X71+18TXk0RRBxG2dNwnOipIigJknGrw3yX8nbHOymiNq4BPiN5jS
-         JIcTfHySap6HqeHnZGDlsLf1hyyE3w87UyZtHXAwoscP664x8A8kNAdsDarmDXc34z
-         dngxFt5KU74UTxZHQyBbIwWLpw1UDSkKX0N9Z5us=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Borislav Petkov <bp@alien8.de>, Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [BUGFIX PATCH 0/1] bootconfig: Fix wrong initramfs/initrd error with bootconfig
-Date:   Sat, 25 Apr 2020 01:34:00 +0900
-Message-Id: <158774604073.7423.11492815214537711118.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-User-Agent: StGit/0.17.1-dirty
+        id S1727123AbgDXQeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 12:34:10 -0400
+IronPort-SDR: XExRAI9o+lqhrFYWuvEyikVXV1a3fByAKsXYyZtkQhv3xdj6aOzYfX3J8UTt3FQY25GehrAEoC
+ C84fgaZWopGw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2020 09:34:10 -0700
+IronPort-SDR: ngvym3+L5ScyIZ1Lzg94Y3EyStWESL5cit+lM/KL/xmSGIspPVGp49mPFcyjBgcpwPUAyif5XG
+ Xt7mXyPXJMjw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,311,1583222400"; 
+   d="scan'208";a="274647472"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 24 Apr 2020 09:34:07 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jS1HG-002sEv-MN; Fri, 24 Apr 2020 19:34:10 +0300
+Date:   Fri, 24 Apr 2020 19:34:10 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     Lukas Wunner <lukas@wunner.de>,
+        Syed Nayyar Waris <syednwaris@gmail.com>,
+        akpm@linux-foundation.org, arnd@arndb.de,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] bitops: Introduce the the for_each_set_clump macro
+Message-ID: <20200424163410.GD185537@smile.fi.intel.com>
+References: <20200424122521.GA5552@syed>
+ <20200424141037.ersebbfe7xls37be@wunner.de>
+ <CACG_h5prcXVdk6ecn2WoT1jas3K6UF+KCrxAM9u4_ZLSyPKCEA@mail.gmail.com>
+ <20200424150058.xadjxaga3csh3br6@wunner.de>
+ <20200424150828.GA5034@icarus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200424150828.GA5034@icarus>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, Apr 24, 2020 at 11:09:26AM -0400, William Breathitt Gray wrote:
+> On Fri, Apr 24, 2020 at 05:00:58PM +0200, Lukas Wunner wrote:
+> > On Fri, Apr 24, 2020 at 08:22:38PM +0530, Syed Nayyar Waris wrote:
+> > > On Fri, Apr 24, 2020 at 7:40 PM Lukas Wunner <lukas@wunner.de> wrote:
+> > > > On Fri, Apr 24, 2020 at 05:55:21PM +0530, Syed Nayyar Waris wrote:
 
-I found that the bootconfig breaks initramfs unpacking.
-I saw an error message as following if I apply a bootconfig
-to initramfs image.
+...
 
-[    0.883882] Unpacking initramfs...
-[    2.696429] Initramfs unpacking failed: invalid magic at start of compressed archive
+> > > So, this function preserves the behaviour of earlier
+> > > bitmap_set_value8() function and also adds extra functionality to
+> > > that.
+> > 
+> > Please leave drivers as is which use exclusively 8-bit accesses,
+> > e.g. gpio-max3191x.c and gpio-74x164.c.  I'm fearing a performance
+> > regression if your new generic variant is used.  They work perfectly
+> > fine the way they are and I don't see any benefit this series may have
+> > for them.
+> > 
+> > If there are other drivers which benefit from the flexibility of your
+> > generic variant then I'm not opposed to changing those.
 
-Without CONFIG_BLK_DEV_RAM, it has no failback method,
-so boot up with unpacked initramfs normally. But with
-CONFIG_BLK_DEV_RAM=y, the kernel tries to failback to
-initrd and failes to mount rootfs.
+> We can leave of course bitmap_set_value8 alone, but for 8-bit values the
+> difference in latency I suspect is primarily due to the conditional test
+> for the word boundaries. This latency is surely overshadowed by the I/O
+> latency of the GPIO drivers, so I don't think there's much harm in
+> changing those to use the generic function when the bottleneck will not
+> be due to the bitmap_set_value/bitmap_get_value operations.
 
-To fix this issue, I took a way to shrink the initrd_end
-so that the kernel can ignore the bootconfig data.
+Okay, how many new (non-8-bit) users this will target?
 
-Any thought?
-
-Thank you,
-
----
-
-Masami Hiramatsu (1):
-      bootconfig: Fix to remove bootconfig data from initrd while boot
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
- init/main.c |   62 +++++++++++++++++++++++++++++++++++++++++++----------------
- 1 file changed, 45 insertions(+), 17 deletions(-)
-
---
-Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
