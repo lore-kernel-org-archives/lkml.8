@@ -2,139 +2,140 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F64C55191
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 272E7C55191
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4310C20776
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05B212071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:43:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WfTaEa4o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgDXKkE (ORCPT
+        id S1726806AbgDXKnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 06:40:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:59494 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726848AbgDXKkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 06:40:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9ABDC1FB;
-        Fri, 24 Apr 2020 03:40:00 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4E0C53F6CF;
-        Fri, 24 Apr 2020 03:39:56 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 11:39:53 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Jianyong Wu <Jianyong.Wu@arm.com>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "yangbo.lu@nxp.com" <yangbo.lu@nxp.com>,
-        "john.stultz@linaro.org" <john.stultz@linaro.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "richardcochran@gmail.com" <richardcochran@gmail.com>,
-        "will@kernel.org" <will@kernel.org>,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Steven Price <Steven.Price@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Steve Capper <Steve.Capper@arm.com>,
-        Kaly Xin <Kaly.Xin@arm.com>, Justin He <Justin.He@arm.com>,
-        nd <nd@arm.com>
-Subject: Re: [RFC PATCH v11 5/9] psci: Add hypercall service for ptp_kvm.
-Message-ID: <20200424103953.GD1167@C02TD0UTHF1T.local>
-References: <20200421032304.26300-1-jianyong.wu@arm.com>
- <20200421032304.26300-6-jianyong.wu@arm.com>
- <20200421095736.GB16306@C02TD0UTHF1T.local>
- <ab629714-c08c-2155-dd13-ad25e7f60b39@arm.com>
+        Fri, 24 Apr 2020 06:43:00 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55648 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726614AbgDXKm7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 06:42:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587724978;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=pL+Y2FSl5usXnWFqFb9T8Nd7Bq7Qkybd1Lh3zGsmB9U=;
+        b=WfTaEa4oo21ukT1aFrp25t+dW9OMwLbFOkyLMOmSkZdevn5sWdRhS5Pdsc+VWQSpiCwffJ
+        goTGFwmQcanpfMbZEEqBz0pe/wQVL78qsvqAxlS4goe+I17nT4exUbj6Pe2WxMLBopFBU1
+        0p8fxpv3B8yLO2PMGxvICBkdgek5p8Y=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-486-vsW2AbJbOEuaFi50kmH8qQ-1; Fri, 24 Apr 2020 06:42:54 -0400
+X-MC-Unique: vsW2AbJbOEuaFi50kmH8qQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0D9D91005510;
+        Fri, 24 Apr 2020 10:42:53 +0000 (UTC)
+Received: from localhost (ovpn-114-136.ams2.redhat.com [10.36.114.136])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E20915D70B;
+        Fri, 24 Apr 2020 10:42:49 +0000 (UTC)
+Date:   Fri, 24 Apr 2020 11:42:48 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     virtualization@lists.linux-foundation.org,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Lance Digby <ldigby@redhat.com>
+Subject: Re: [PATCH] virtio-blk: handle block_device_operations callbacks
+ after hot unplug
+Message-ID: <20200424104248.GB174193@stefanha-x1.localdomain>
+References: <20200423123717.139141-1-stefanha@redhat.com>
+ <20200423141338.GA29646@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20200423141338.GA29646@infradead.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wq9mPyueHGvFACwf"
 Content-Disposition: inline
-In-Reply-To: <ab629714-c08c-2155-dd13-ad25e7f60b39@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 03:50:22AM +0100, Jianyong Wu wrote:
-> On 2020/4/21 5:57 PM, Mark Rutland wrote:
-> > On Tue, Apr 21, 2020 at 11:23:00AM +0800, Jianyong Wu wrote:
-> >> diff --git a/virt/kvm/arm/hypercalls.c b/virt/kvm/arm/hypercalls.c
-> >> index 550dfa3e53cd..a5309c28d4dc 100644
-> >> --- a/virt/kvm/arm/hypercalls.c
-> >> +++ b/virt/kvm/arm/hypercalls.c
+--wq9mPyueHGvFACwf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> >> @@ -62,6 +66,44 @@ int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
-> >>   if (gpa != GPA_INVALID)
-> >>   val = gpa;
-> >>   break;
-> >> +/*
-> >> + * This serves virtual kvm_ptp.
-> >> + * Four values will be passed back.
-> >> + * reg0 stores high 32-bit host ktime;
-> >> + * reg1 stores low 32-bit host ktime;
-> >> + * reg2 stores high 32-bit difference of host cycles and cntvoff;
-> >> + * reg3 stores low 32-bit difference of host cycles and cntvoff.
-> >> + */
-> >> +case ARM_SMCCC_HYP_KVM_PTP_FUNC_ID:
-> > Shouldn't the host opt-in to providing this to the guest, as with other
-> > features?
-> 
-> er, do you mean that "ARM_SMCCC_HV_PV_TIME_XXX" as "opt-in"? if so, I
-> think this
-> 
-> kvm_ptp doesn't need a buddy. the driver in guest will call this service
-> in a definite way.
+On Thu, Apr 23, 2020 at 07:13:38AM -0700, Christoph Hellwig wrote:
+> On Thu, Apr 23, 2020 at 01:37:17PM +0100, Stefan Hajnoczi wrote:
+> > A virtio_blk block device can still be referenced after hot unplug by
+> > userspace processes that hold the file descriptor.  In this case
+> > virtblk_getgeo() can be invoked after virtblk_remove() was called.  For
+> > example, a program that has /dev/vdb open can call ioctl(HDIO_GETGEO)
+> > after hot unplug.
+> >=20
+> > Fix this by clearing vblk->disk->private_data and checking that the
+> > virtio_blk driver instance is still around in virtblk_getgeo().
+> >=20
+> > Note that the virtblk_getgeo() function itself is guaranteed to remain
+> > in memory after hot unplug because the virtio_blk module refcount is
+> > still held while a block device reference exists.
+> >=20
+> > Originally-by: Lance Digby <ldigby@redhat.com>
+> > Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
+> > ---
+> >  drivers/block/virtio_blk.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >=20
+> > diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+> > index 93468b7c6701..b50cdf37a6f7 100644
+> > --- a/drivers/block/virtio_blk.c
+> > +++ b/drivers/block/virtio_blk.c
+> > @@ -300,6 +300,10 @@ static int virtblk_getgeo(struct block_device *bd,=
+ struct hd_geometry *geo)
+> >  {
+> >  =09struct virtio_blk *vblk =3D bd->bd_disk->private_data;
+> > =20
+> > +=09/* Driver instance has been removed */
+> > +=09if (!vblk)
+> > +=09=09return -ENOTTY;
+>=20
+> If this ever hits you have a nasty race condition and this is not
+> going to fix it, as it could be removed just after this check as well.
 
-I mean that when creating the VM, userspace should be able to choose
-whether the PTP service is provided to the guest. The host shouldn't
-always provide it as there may be cases where doing so is undesireable.
+Perhaps a better fix is to keep a refcount in struct virtio_blk and
+implement block_device_operations->release() to decrement the refcount.
 
-> >> +/*
-> >> + * system time and counter value must captured in the same
-> >> + * time to keep consistency and precision.
-> >> + */
-> >> +ktime_get_snapshot(&systime_snapshot);
-> >> +if (systime_snapshot.cs_id != CSID_ARM_ARCH_COUNTER)
-> >> +break;
-> >> +arg[0] = upper_32_bits(systime_snapshot.real);
-> >> +arg[1] = lower_32_bits(systime_snapshot.real);
-> > Why exactly does the guest need the host's real time? Neither the cover
-> > letter nor this commit message have explained that, and for those of us
-> > unfamliar with PTP it would be very helpful to know that to understand
-> > what's going on.
-> 
-> oh, sorry, I should have added more background knowledge here.
-> 
-> just give some hints here:
-> 
-> the kvm_ptp targets to sync guest time with host. some services in user
-> space
-> 
-> like chrony can do time sync by inputing time(in kvm_ptp also clock
-> counter sometimes) from
-> 
-> remote clocksource(often network clocksource). This kvm_ptp driver can
-> offer a interface for
-> 
-> those user space service in guest to get the host time to do time sync
-> in guest.
+That way the struct virtio_blk stays around until all block device
+references are dropped.  This is similar to nbd_put() in
+drivers/block/nbd.c.
 
-I think it would be very helpful for the commit message and/or cover
-letter to have a high-level desctiption of what PTP is meant to do, and
-an outline of the algorithmm (clearly splitting the host and guest
-bits).
+Stefan
 
-It's also not clear to me what notion of host time is being exposed to
-the guest (and consequently how this would interact with time changes on
-the host, time namespaces, etc). Having some description of that would
-be very helpful.
+--wq9mPyueHGvFACwf
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
-Mark.
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl6iwqgACgkQnKSrs4Gr
+c8gkBQgAwHhtsW9ZXLDZXqp0Kkfsefk/q7JtsVeNejQKlMtOxFqaksestEjC6QvD
+i1eTIlK/eNKdy6dfYcLANEpE4GQWxfYcdRGjVFiEghbpyOxCqbhk+Tj2PYIEpczs
+Hs0l/nnEN07+hP7nI+owGGdpPN3USN8ZPGJyUOEVjPMT10wYbU5msh2sFnPGGAcU
+NbCMJQq6PaNij35r1AL8GdimGQ6lqjnMoTbL1ex9Jrf1KzBoYBBJckK/JkDd1v59
+5DsDbjTkDFcaRHKJzf3iuxg8a0AzGXQKudwiS2rGzVirxwVQN1RAi5yHBZnLJ0uT
+C0Q7z66olBCYP+IxjOpt5ZtA7X8H6A==
+=+zCT
+-----END PGP SIGNATURE-----
+
+--wq9mPyueHGvFACwf--
+
