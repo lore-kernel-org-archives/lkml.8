@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F318C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 823B4C2BA19
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F5F920736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5293B20736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:04:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HEvhI3mB"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LNOh8DSK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbgDXBEE (ORCPT
+        id S1728444AbgDXBEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 21:04:04 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:13770 "EHLO
+        Thu, 23 Apr 2020 21:04:48 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:39975 "EHLO
         mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727968AbgDXBEE (ORCPT
+        by vger.kernel.org with ESMTP id S1726970AbgDXBEr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 21:04:04 -0400
+        Thu, 23 Apr 2020 21:04:47 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587690243; h=Content-Transfer-Encoding: Content-Type:
+ s=smtp; t=1587690287; h=Content-Transfer-Encoding: Content-Type:
  In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=G6mhG4mz2toGOYigr/TcPYDN0XCRA/uAhCT3m96wlxE=; b=HEvhI3mBYr1Cm0KjaVGPLM2tegTpkerzCMC/VYNIjeUa5WOl/SkSfmIuOWWMvmL3bIbbL2iR
- TLoQShm72md1ou0giVbwKJ/L5UOxm7unfEP+Rn99InanLS8NnqX9nrBVC8+0WR1cuLbp4Hfc
- H1gKk0py5aU5W7V5BrczKlyed5A=
+ Subject: Sender; bh=iSv45M9ODOpJ8dM9Lq4HhXLjlTISh1BkCs8Nd1IrDAM=; b=LNOh8DSKcPK0WWXTHKF/l+up7YmiAniH7tdepwxzHlQdmtxZo4wq245qAkvuWkgei8StNiRy
+ 4MOdYwXKADfWoVz6+dGJTpGNqCATxjXhpgGFzSxgWmTlO5CB5VetYL/WKd9A6lt++IcXZm1D
+ zWM2XwtfF9G3ztOnLm/gskXc1wc=
 X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea23af5.7fe8ed549228-smtp-out-n03;
- Fri, 24 Apr 2020 01:03:49 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5ea23b2e.7f351b993f48-smtp-out-n01;
+ Fri, 24 Apr 2020 01:04:46 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A37D7C433BA; Fri, 24 Apr 2020 01:03:48 +0000 (UTC)
+        id 4ECB8C433D2; Fri, 24 Apr 2020 01:04:46 +0000 (UTC)
 Received: from [192.168.142.6] (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: clew)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C04BEC433CB;
-        Fri, 24 Apr 2020 01:03:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C04BEC433CB
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 849EAC433CB;
+        Fri, 24 Apr 2020 01:04:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 849EAC433CB
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=clew@codeaurora.org
-Subject: Re: [PATCH 2/4] soc: qcom: glink_ssr: Internalize ssr_notifiers
+Subject: Re: [PATCH 3/4] rpmsg: glink: Integrate glink_ssr in qcom_glink
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         Andy Gross <agross@kernel.org>,
         Ohad Ben-Cohen <ohad@wizery.com>
@@ -54,14 +54,14 @@ Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Sibi <sibis@codeaurora.org>,
         Siddharth Gupta <sidgup@codeaurora.org>
 References: <20200423003736.2027371-1-bjorn.andersson@linaro.org>
- <20200423003736.2027371-3-bjorn.andersson@linaro.org>
+ <20200423003736.2027371-4-bjorn.andersson@linaro.org>
 From:   Chris Lew <clew@codeaurora.org>
-Message-ID: <520f62ea-144d-92dd-aaa5-562d45deeade@codeaurora.org>
-Date:   Thu, 23 Apr 2020 18:03:47 -0700
+Message-ID: <06aa0286-899f-7e37-dfdc-e8aef3a9d299@codeaurora.org>
+Date:   Thu, 23 Apr 2020 18:04:45 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200423003736.2027371-3-bjorn.andersson@linaro.org>
+In-Reply-To: <20200423003736.2027371-4-bjorn.andersson@linaro.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -73,11 +73,9 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 On 4/22/2020 5:37 PM, Bjorn Andersson wrote:
-> Rather than carrying a special purpose blocking notifier for glink_ssr
-> in remoteproc's qcom_common.c, move it into glink_ssr so allow wider
-> reuse of the common one.
-> 
-> The rpmsg glink header file is used in preparation for the next patch.
+> In all but the very special case of a system with _only_ glink_rpm,
+> GLINK is dependent on glink_ssr, so move it to rpmsg and combine it with
+> qcom_glink_native in the new qcom_glink kernel module.
 > 
 > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Acked-by: Chris Lew <clew@codeaurora.org>
