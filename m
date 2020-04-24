@@ -7,64 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E946AC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48982C55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B449720706
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FA2520706
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:38:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="XbLKQ1ae";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="foliInlX"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="DwEUBnX4";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AC3vF+HX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727038AbgDXPiy (ORCPT
+        id S1729036AbgDXPi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:38:54 -0400
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:46577 "EHLO
+        Fri, 24 Apr 2020 11:38:56 -0400
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:38629 "EHLO
         wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728675AbgDXPgw (ORCPT
+        by vger.kernel.org with ESMTP id S1728661AbgDXPgr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:36:52 -0400
+        Fri, 24 Apr 2020 11:36:47 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id ED9201449;
-        Fri, 24 Apr 2020 11:36:50 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:36:51 -0400
+        by mailnew.west.internal (Postfix) with ESMTP id A48AA1435;
+        Fri, 24 Apr 2020 11:36:46 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:36:47 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=QEJKWnaZzR3+q
-        oqRuw5W5gKK2SMkJo6qCi6X5edDMMU=; b=XbLKQ1aezBgcv9Q+2r1Hf5rXFqqAl
-        rIoXeMzHhl9eVAg2iAYQ0nKhz6K/40QF/PJUr8iD+zp3F/fAPo9yFvoxNpLQnVAu
-        pSmjKoWBKRvmPLG81Eb93NqnIXwd9TiMgYdYVa8WxU7O9Wv7UkXI2K7GDer2b3Wz
-        NVVJwvv9Ozg77FlpnMq6IuU1XQHEF3QFlx0rGmDRs8rT+9AYhZAK8pSxTSSl57Hx
-        uH3u2eoYbxNXP94LSRszDN2AmB/muGQF9KbbSxN2fHBgf+FPJT/mRiKFQHcKtxef
-        K+mePp2hYYxgTLFO52ic9EKxdyuWpXp6+4laEIVJZi17Ha++VV/VSzWbQ==
+        :mime-version:content-transfer-encoding; s=fm2; bh=SIMuFGVg56lCs
+        LzWn+VUgTWZ4DXI1HPB+cAZv29Mcoo=; b=DwEUBnX4VKk0DXbfzvyEXbwcT6GLl
+        06xu8d1KxvaYwZxcbvkHWY+1RP3EMoAa4APaVz7kUzxO+iQKrbNWzTjS6yINSlVC
+        bvaEuHUTUteJbBLlDBhZx+kK6PZKyMrzYDL3C2M9itRUsWDyPjEuRXXc9OF5hMsQ
+        FbOy4zhwZQ3h4PR0jVYff8X5fZVGqm979aAfkS1Dk+QHrwZtCWdF9OiEPQUo8zcn
+        T9xT1BLJ72opYZS90ZykWu94fYPhmxOOjt9kJ66Pf+RqAUSpxKj77C7G3nK6z3OQ
+        +qpwEPZSpFaByp4w40v+60fIz1XSKp2+Oyw6kEOc8JKmHvJf6oEKHlRDQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=QEJKWnaZzR3+qoqRuw5W5gKK2SMkJo6qCi6X5edDMMU=; b=foliInlX
-        zijwP5WBb3gCwjxSV3nlMLC4gYoLiKihdiMVGpvgqf7Q1AIpMWaI+v3371TBWV/K
-        dY8OjSGVUmeKLA5Ivh9KNorvHXggy6B8LWlHGIRiKjykc4Z8DpjXtkV8VDkFz8v4
-        vMx/527AOhJgC+R2XAFdsOu5X0T27cvC92WqXVhRw08akTP9XHS49AMDEaL7ODs1
-        mbPMKRkso4kZRqS5yypH93v8dxpnKn68IDNe5i+Aq4Q7sx5AHF/IT94JFw12zuDR
-        Or8ROJuePb041+MnQ56s9lZ4ohBy5Az3f/RxDdi6u8nnStql3umM80yPXufwUEYf
-        MSqs/NrE1TAl5A==
-X-ME-Sender: <xms:kgejXmtzYmKyfe2GQ9m5m1M5vrYZTp3gLS6w96Z-0qgikgHeqdFz4w>
+        fm2; bh=SIMuFGVg56lCsLzWn+VUgTWZ4DXI1HPB+cAZv29Mcoo=; b=AC3vF+HX
+        6P149qCvrT24CLLDUJYQAdtfNXKll0NY5nqdISay9GbmoVtfXuFb7fGcF4SVr3rB
+        wHlo87BvIrN/ga+jeeTDdFc9PWJBfIjZuixLNFZCVLDSvLGRZgddTH2MMpA6p8My
+        VZ3czPSu5SYtH1p+OEcdR2djKYyAWQA0CTrjy4Tyn432WNZ2nakypK8pY7R9Rba9
+        GN1e4HE/MSe01KzDW3r+BWiIOG0Y/Hv8SRc5VD8u+q6ZUqIPkgRDO+oWw2lYFHmJ
+        V+efcrI5DlHrWr020U2WeP1Cly+zt7oxa1jCz50UuPISiWSDUcVjqVtDsAoMW06z
+        It3MIAM99F3ivA==
+X-ME-Sender: <xms:jgejXj0fgx0EEBJirUfNIEZSuZgT4rRLK3DNoU1WHau8OqpFmeYhbw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrhedugdekiecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
-    epsgihthgvshdruggrthgrnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgv
-    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnh
-    hordhtvggthh
-X-ME-Proxy: <xmx:kgejXsUKVBcnP-kdaHNlfkIujlXmbpkBqKvNOXQwPvSQnleOEH6O5g>
-    <xmx:kgejXizBzjB01eMaPQvlb9v8WRTPH4oPGQCS569bBRjFhARD6YzY_w>
-    <xmx:kgejXjJbX5P0wSKsT5oQsmPEmVscMVtbjTgW-UA7bvG6e3z1QyZEpA>
-    <xmx:kgejXsSEVQeROK1A3VmKtiKTtAa8JONEVVyf15aX1MLLZJq7ALAk1jzq3Pc>
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpeehheenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:jgejXriB7cBTT2gwj0Cr-xR3jU2gkirlj7VrNGMuk8RCqno4yK9WrA>
+    <xmx:jgejXqjh-GWD2PnghScUPqK4dXTrZVXJd0Ap9fe5OU5oQzZpqhN5sg>
+    <xmx:jgejXrNhn7TaB6UYA-19bBbwyl7IzxmKoBEHy7upfLfrt-jJMC4BNA>
+    <xmx:jgejXqK1HHoG21uxx4eVbnxnegLfUQnaUiQtnVdqMfByROgqzFQO36LzQJo>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 2BBCB3065CDA;
-        Fri, 24 Apr 2020 11:36:50 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id E18403280068;
+        Fri, 24 Apr 2020 11:36:45 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -76,9 +75,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v2 63/91] drm/vc4: hdmi: rework connectors and encoders
-Date:   Fri, 24 Apr 2020 17:34:44 +0200
-Message-Id: <9ac05e280ae09286e80a882a5103c2e615f6253f.1587742492.git-series.maxime@cerno.tech>
+Subject: [PATCH v2 60/91] drm/vc4: crtc: Add BCM2711 pixelvalves
+Date:   Fri, 24 Apr 2020 17:34:41 +0200
+Message-Id: <99a3fa9330b3c5d2482078de035c27d5f5d60d95.1587742492.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
 References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
@@ -89,355 +88,156 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-the vc4_hdmi driver has some custom structures to hold the data it needs to
-associate with the drm_encoder and drm_connector structures.
-
-However, it allocates them separately from the vc4_hdmi structure which
-makes it more complicated than it needs to be.
-
-Move those structures to be contained by vc4_hdmi and update the code
-accordingly.
+The BCM2711 has 5 pixelvalves, so now that our driver is ready, let's add
+support for them.
 
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_hdmi.c | 87 ++++++++++++++++-------------------
- drivers/gpu/drm/vc4/vc4_hdmi.h | 64 +++++++++++++-------------
- 2 files changed, 72 insertions(+), 79 deletions(-)
+ drivers/gpu/drm/vc4/vc4_crtc.c | 81 ++++++++++++++++++++++++++++++++++-
+ drivers/gpu/drm/vc4/vc4_regs.h |  6 +++-
+ 2 files changed, 85 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-index 4b21292072e4..ba3b589af30d 100644
---- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-+++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-@@ -190,20 +190,15 @@ static const struct drm_connector_helper_funcs vc4_hdmi_connector_helper_funcs =
- 	.get_modes = vc4_hdmi_connector_get_modes,
+diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
+index 47e411cbf5dc..20c038519751 100644
+--- a/drivers/gpu/drm/vc4/vc4_crtc.c
++++ b/drivers/gpu/drm/vc4/vc4_crtc.c
+@@ -274,6 +274,13 @@ static u32 vc4_get_fifo_full_level(struct vc4_crtc *vc4_crtc, u32 format)
+ 	case PV_CONTROL_FORMAT_24:
+ 	case PV_CONTROL_FORMAT_DSIV_24:
+ 	default:
++		/*
++		 * For some reason, the pixelvalve4 doesn't work with
++		 * the usual formula and will only work with 32.
++		 */
++		if (vc4_crtc->data->hvs_output == 5)
++			return 32;
++
+ 		return fifo_len_bytes - 3 * HVS_FIFO_LATENCY_PIX;
+ 	}
+ }
+@@ -282,9 +289,14 @@ static u32 vc4_crtc_get_fifo_full_level_bits(struct vc4_crtc *vc4_crtc,
+ 					     u32 format)
+ {
+ 	u32 level = vc4_get_fifo_full_level(vc4_crtc, format);
++	u32 ret = 0;
+ 
+-	return VC4_SET_FIELD(level & 0x3f,
+-			     PV_CONTROL_FIFO_LEVEL);
++	if (level > 0x3f)
++		ret |= VC4_SET_FIELD((level >> 6) & 0x3,
++				     PV5_CONTROL_FIFO_LEVEL_HIGH);
++
++	return ret | VC4_SET_FIELD(level & 0x3f,
++				   PV_CONTROL_FIFO_LEVEL);
+ }
+ 
+ /*
+@@ -330,6 +342,9 @@ static void vc4_crtc_config_pv(struct drm_crtc *crtc)
+ 	CRTC_WRITE(PV_CONTROL, PV_CONTROL_FIFO_CLR | PV_CONTROL_EN);
+ 	CRTC_WRITE(PV_CONTROL, 0);
+ 
++	CRTC_WRITE(PV_MUX_CFG,
++		   VC4_SET_FIELD(8, PV_MUX_CFG_RGB_PIXEL_MUX_MODE));
++
+ 	CRTC_WRITE(PV_HORZA,
+ 		   VC4_SET_FIELD((mode->htotal - mode->hsync_end) * pixel_rep / ppc,
+ 				 PV_HORZA_HBP) |
+@@ -1118,10 +1133,72 @@ static const struct vc4_crtc_data bcm2835_pv2_data = {
+ 	},
  };
  
--static struct drm_connector *vc4_hdmi_connector_init(struct drm_device *dev,
--						     struct drm_encoder *encoder,
--						     struct i2c_adapter *ddc)
-+static int vc4_hdmi_connector_init(struct drm_device *dev,
-+				   struct vc4_hdmi *vc4_hdmi,
-+				   struct i2c_adapter *ddc)
- {
--	struct drm_connector *connector;
--	struct vc4_hdmi_connector *hdmi_connector;
-+	struct vc4_hdmi_connector *hdmi_connector = &vc4_hdmi->connector;
-+	struct drm_connector *connector = &hdmi_connector->base;
-+	struct drm_encoder *encoder = &vc4_hdmi->encoder.base.base;
- 	int ret;
- 
--	hdmi_connector = devm_kzalloc(dev->dev, sizeof(*hdmi_connector),
--				      GFP_KERNEL);
--	if (!hdmi_connector)
--		return ERR_PTR(-ENOMEM);
--	connector = &hdmi_connector->base;
--
- 	hdmi_connector->encoder = encoder;
- 
- 	drm_connector_init_with_ddc(dev, connector,
-@@ -215,7 +210,7 @@ static struct drm_connector *vc4_hdmi_connector_init(struct drm_device *dev,
- 	/* Create and attach TV margin props to this connector. */
- 	ret = drm_mode_create_tv_margin_properties(dev);
- 	if (ret)
--		return ERR_PTR(ret);
-+		return ret;
- 
- 	drm_connector_attach_tv_margin_properties(connector);
- 
-@@ -227,7 +222,7 @@ static struct drm_connector *vc4_hdmi_connector_init(struct drm_device *dev,
- 
- 	drm_connector_attach_encoder(connector, encoder);
- 
--	return connector;
-+	return 0;
- }
- 
- static void vc4_hdmi_encoder_destroy(struct drm_encoder *encoder)
-@@ -306,21 +301,22 @@ static void vc4_hdmi_set_avi_infoframe(struct drm_encoder *encoder)
- 	struct vc4_hdmi_encoder *vc4_encoder = to_vc4_hdmi_encoder(encoder);
- 	struct vc4_dev *vc4 = encoder->dev->dev_private;
- 	struct vc4_hdmi *hdmi = vc4->hdmi;
--	struct drm_connector_state *cstate = hdmi->connector->state;
-+	struct drm_connector *connector = &hdmi->connector.base;
-+	struct drm_connector_state *cstate = connector->state;
- 	struct drm_crtc *crtc = encoder->crtc;
- 	const struct drm_display_mode *mode = &crtc->state->adjusted_mode;
- 	union hdmi_infoframe frame;
- 	int ret;
- 
- 	ret = drm_hdmi_avi_infoframe_from_display_mode(&frame.avi,
--						       hdmi->connector, mode);
-+						       connector, mode);
- 	if (ret < 0) {
- 		DRM_ERROR("couldn't fill AVI infoframe\n");
- 		return;
- 	}
- 
- 	drm_hdmi_avi_infoframe_quant_range(&frame.avi,
--					   hdmi->connector, mode,
-+					   connector, mode,
- 					   vc4_encoder->limited_rgb_range ?
- 					   HDMI_QUANTIZATION_RANGE_LIMITED :
- 					   HDMI_QUANTIZATION_RANGE_FULL);
-@@ -636,7 +632,8 @@ static const struct drm_encoder_helper_funcs vc4_hdmi_encoder_helper_funcs = {
- /* HDMI audio codec callbacks */
- static void vc4_hdmi_audio_set_mai_clock(struct vc4_hdmi *hdmi)
- {
--	struct drm_device *drm = hdmi->encoder->dev;
-+	struct drm_encoder *encoder = &hdmi->encoder.base.base;
-+	struct drm_device *drm = encoder->dev;
- 	struct vc4_dev *vc4 = to_vc4_dev(drm);
- 	u32 hsm_clock = clk_get_rate(hdmi->hsm_clock);
- 	unsigned long n, m;
-@@ -655,7 +652,7 @@ static void vc4_hdmi_audio_set_mai_clock(struct vc4_hdmi *hdmi)
- 
- static void vc4_hdmi_set_n_cts(struct vc4_hdmi *hdmi)
- {
--	struct drm_encoder *encoder = hdmi->encoder;
-+	struct drm_encoder *encoder = &hdmi->encoder.base.base;
- 	struct drm_crtc *crtc = encoder->crtc;
- 	struct drm_device *drm = encoder->dev;
- 	struct vc4_dev *vc4 = to_vc4_dev(drm);
-@@ -693,7 +690,8 @@ static int vc4_hdmi_audio_startup(struct snd_pcm_substream *substream,
- 				  struct snd_soc_dai *dai)
- {
- 	struct vc4_hdmi *hdmi = dai_to_hdmi(dai);
--	struct drm_encoder *encoder = hdmi->encoder;
-+	struct drm_encoder *encoder = &hdmi->encoder.base.base;
-+	struct drm_connector *connector = &hdmi->connector.base;
- 	struct vc4_dev *vc4 = to_vc4_dev(encoder->dev);
- 	int ret;
- 
-@@ -710,8 +708,7 @@ static int vc4_hdmi_audio_startup(struct snd_pcm_substream *substream,
- 				VC4_HDMI_RAM_PACKET_ENABLE))
- 		return -ENODEV;
- 
--	ret = snd_pcm_hw_constraint_eld(substream->runtime,
--					hdmi->connector->eld);
-+	ret = snd_pcm_hw_constraint_eld(substream->runtime, connector->eld);
- 	if (ret)
- 		return ret;
- 
-@@ -725,7 +722,7 @@ static int vc4_hdmi_audio_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 
- static void vc4_hdmi_audio_reset(struct vc4_hdmi *hdmi)
- {
--	struct drm_encoder *encoder = hdmi->encoder;
-+	struct drm_encoder *encoder = &hdmi->encoder.base.base;
- 	struct drm_device *drm = encoder->dev;
- 	struct device *dev = &hdmi->pdev->dev;
- 	struct vc4_dev *vc4 = to_vc4_dev(drm);
-@@ -759,7 +756,7 @@ static int vc4_hdmi_audio_hw_params(struct snd_pcm_substream *substream,
- 				    struct snd_soc_dai *dai)
- {
- 	struct vc4_hdmi *hdmi = dai_to_hdmi(dai);
--	struct drm_encoder *encoder = hdmi->encoder;
-+	struct drm_encoder *encoder = &hdmi->encoder.base.base;
- 	struct drm_device *drm = encoder->dev;
- 	struct device *dev = &hdmi->pdev->dev;
- 	struct vc4_dev *vc4 = to_vc4_dev(drm);
-@@ -832,7 +829,7 @@ static int vc4_hdmi_audio_trigger(struct snd_pcm_substream *substream, int cmd,
- 				  struct snd_soc_dai *dai)
- {
- 	struct vc4_hdmi *hdmi = dai_to_hdmi(dai);
--	struct drm_encoder *encoder = hdmi->encoder;
-+	struct drm_encoder *encoder = &hdmi->encoder.base.base;
- 	struct drm_device *drm = encoder->dev;
- 	struct vc4_dev *vc4 = to_vc4_dev(drm);
- 
-@@ -876,9 +873,10 @@ static int vc4_hdmi_audio_eld_ctl_info(struct snd_kcontrol *kcontrol,
- {
- 	struct snd_soc_component *component = snd_kcontrol_chip(kcontrol);
- 	struct vc4_hdmi *hdmi = snd_component_to_hdmi(component);
-+	struct drm_connector *connector = &hdmi->connector.base;
- 
- 	uinfo->type = SNDRV_CTL_ELEM_TYPE_BYTES;
--	uinfo->count = sizeof(hdmi->connector->eld);
-+	uinfo->count = sizeof(connector->eld);
- 
- 	return 0;
- }
-@@ -888,9 +886,10 @@ static int vc4_hdmi_audio_eld_ctl_get(struct snd_kcontrol *kcontrol,
- {
- 	struct snd_soc_component *component = snd_kcontrol_chip(kcontrol);
- 	struct vc4_hdmi *hdmi = snd_component_to_hdmi(component);
-+	struct drm_connector *connector = &hdmi->connector.base;
- 
--	memcpy(ucontrol->value.bytes.data, hdmi->connector->eld,
--	       sizeof(hdmi->connector->eld));
-+	memcpy(ucontrol->value.bytes.data, connector->eld,
-+	       sizeof(connector->eld));
- 
- 	return 0;
- }
-@@ -1228,7 +1227,7 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
- 	struct drm_device *drm = dev_get_drvdata(master);
- 	struct vc4_dev *vc4 = drm->dev_private;
- 	struct vc4_hdmi *hdmi;
--	struct vc4_hdmi_encoder *vc4_hdmi_encoder;
-+	struct drm_encoder *encoder;
- 	struct device_node *ddc_node;
- 	u32 value;
- 	int ret;
-@@ -1237,14 +1236,10 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
- 	if (!hdmi)
- 		return -ENOMEM;
- 
--	vc4_hdmi_encoder = devm_kzalloc(dev, sizeof(*vc4_hdmi_encoder),
--					GFP_KERNEL);
--	if (!vc4_hdmi_encoder)
--		return -ENOMEM;
--	vc4_hdmi_encoder->base.type = VC4_ENCODER_TYPE_HDMI0;
--	hdmi->encoder = &vc4_hdmi_encoder->base.base;
--
- 	hdmi->pdev = pdev;
-+	encoder = &hdmi->encoder.base.base;
-+	encoder->base.type = VC4_ENCODER_TYPE_HDMI0;
-+
- 	hdmi->hdmicore_regs = vc4_ioremap_regs(pdev, 0);
- 	if (IS_ERR(hdmi->hdmicore_regs))
- 		return PTR_ERR(hdmi->hdmicore_regs);
-@@ -1330,16 +1325,14 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
- 	}
- 	pm_runtime_enable(dev);
- 
--	drm_encoder_init(drm, hdmi->encoder, &vc4_hdmi_encoder_funcs,
-+	drm_encoder_init(drm, encoder, &vc4_hdmi_encoder_funcs,
- 			 DRM_MODE_ENCODER_TMDS, NULL);
--	drm_encoder_helper_add(hdmi->encoder, &vc4_hdmi_encoder_helper_funcs);
-+	drm_encoder_helper_add(encoder, &vc4_hdmi_encoder_helper_funcs);
- 
--	hdmi->connector =
--		vc4_hdmi_connector_init(drm, hdmi->encoder, hdmi->ddc);
--	if (IS_ERR(hdmi->connector)) {
--		ret = PTR_ERR(hdmi->connector);
-+	ret = vc4_hdmi_connector_init(drm, hdmi, hdmi->ddc);
-+	if (ret)
- 		goto err_destroy_encoder;
--	}
-+
- #ifdef CONFIG_DRM_VC4_HDMI_CEC
- 	hdmi->cec_adap = cec_allocate_adapter(&vc4_hdmi_cec_adap_ops,
- 					      vc4, "vc4",
-@@ -1349,7 +1342,7 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
- 	if (ret < 0)
- 		goto err_destroy_conn;
- 
--	cec_fill_conn_info_from_drm(&conn_info, hdmi->connector);
-+	cec_fill_conn_info_from_drm(&conn_info, &hdmi->connector.base);
- 	cec_s_conn_info(hdmi->cec_adap, &conn_info);
- 
- 	HDMI_WRITE(VC4_HDMI_CPU_MASK_SET, 0xffffffff);
-@@ -1386,10 +1379,10 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
- err_delete_cec_adap:
- 	cec_delete_adapter(hdmi->cec_adap);
- err_destroy_conn:
--	vc4_hdmi_connector_destroy(hdmi->connector);
-+	vc4_hdmi_connector_destroy(&hdmi->connector.base);
- #endif
- err_destroy_encoder:
--	vc4_hdmi_encoder_destroy(hdmi->encoder);
-+	vc4_hdmi_encoder_destroy(encoder);
- err_unprepare_hsm:
- 	clk_disable_unprepare(hdmi->hsm_clock);
- 	pm_runtime_disable(dev);
-@@ -1407,8 +1400,8 @@ static void vc4_hdmi_unbind(struct device *dev, struct device *master,
- 	struct vc4_hdmi *hdmi = vc4->hdmi;
- 
- 	cec_unregister_adapter(hdmi->cec_adap);
--	vc4_hdmi_connector_destroy(hdmi->connector);
--	vc4_hdmi_encoder_destroy(hdmi->encoder);
-+	vc4_hdmi_connector_destroy(&hdmi->connector.base);
-+	vc4_hdmi_encoder_destroy(&hdmi->encoder.base.base);
- 
- 	clk_disable_unprepare(hdmi->hsm_clock);
- 	pm_runtime_disable(dev);
-diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdmi.h
-index 5ec5d1f6b1e6..17079a39f1b1 100644
---- a/drivers/gpu/drm/vc4/vc4_hdmi.h
-+++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
-@@ -8,6 +8,36 @@
- 
- #include "vc4_drv.h"
- 
-+/* VC4 HDMI encoder KMS struct */
-+struct vc4_hdmi_encoder {
-+	struct vc4_encoder base;
-+	bool hdmi_monitor;
-+	bool limited_rgb_range;
++static const struct vc4_crtc_data bcm2711_pv0_data = {
++	.debugfs_name = "crtc0_regs",
++	.hvs_available_channels = BIT(0),
++	.hvs_output = 0,
++	.fifo_depth = 64,
++	.pixels_per_clock = 1,
++	.encoder_types = {
++		[0] = VC4_ENCODER_TYPE_DSI0,
++		[1] = VC4_ENCODER_TYPE_DPI,
++	},
 +};
 +
-+static inline struct vc4_hdmi_encoder *
-+to_vc4_hdmi_encoder(struct drm_encoder *encoder)
-+{
-+	return container_of(encoder, struct vc4_hdmi_encoder, base.base);
-+}
-+
-+/* VC4 HDMI connector KMS struct */
-+struct vc4_hdmi_connector {
-+	struct drm_connector base;
-+
-+	/* Since the connector is attached to just the one encoder,
-+	 * this is the reference to it so we can do the best_encoder()
-+	 * hook.
-+	 */
-+	struct drm_encoder *encoder;
++static const struct vc4_crtc_data bcm2711_pv1_data = {
++	.debugfs_name = "crtc1_regs",
++	.hvs_available_channels = BIT(0) | BIT(1) | BIT(2),
++	.hvs_output = 3,
++	.fifo_depth = 64,
++	.pixels_per_clock = 1,
++	.encoder_types = {
++		[0] = VC4_ENCODER_TYPE_DSI1,
++		[1] = VC4_ENCODER_TYPE_SMI,
++	},
 +};
 +
-+static inline struct vc4_hdmi_connector *
-+to_vc4_hdmi_connector(struct drm_connector *connector)
-+{
-+	return container_of(connector, struct vc4_hdmi_connector, base);
-+}
++static const struct vc4_crtc_data bcm2711_pv2_data = {
++	.debugfs_name = "crtc2_regs",
++	.hvs_available_channels = BIT(0) | BIT(1) | BIT(2),
++	.hvs_output = 4,
++	.fifo_depth = 256,
++	.pixels_per_clock = 2,
++	.encoder_types = {
++		[0] = VC4_ENCODER_TYPE_HDMI0,
++	},
++};
 +
- /* HDMI audio information */
- struct vc4_hdmi_audio {
- 	struct snd_soc_card card;
-@@ -25,8 +55,8 @@ struct vc4_hdmi_audio {
- struct vc4_hdmi {
- 	struct platform_device *pdev;
++static const struct vc4_crtc_data bcm2711_pv3_data = {
++	.debugfs_name = "crtc3_regs",
++	.hvs_available_channels = BIT(1),
++	.hvs_output = 1,
++	.fifo_depth = 64,
++	.pixels_per_clock = 1,
++	.encoder_types = {
++		[0] = VC4_ENCODER_TYPE_VEC,
++	},
++};
++
++static const struct vc4_crtc_data bcm2711_pv4_data = {
++	.debugfs_name = "crtc4_regs",
++	.hvs_available_channels = BIT(0) | BIT(1) | BIT(2),
++	.hvs_output = 5,
++	.fifo_depth = 64,
++	.pixels_per_clock = 2,
++	.encoder_types = {
++		[0] = VC4_ENCODER_TYPE_HDMI1,
++	},
++};
++
+ static const struct of_device_id vc4_crtc_dt_match[] = {
+ 	{ .compatible = "brcm,bcm2835-pixelvalve0", .data = &bcm2835_pv0_data },
+ 	{ .compatible = "brcm,bcm2835-pixelvalve1", .data = &bcm2835_pv1_data },
+ 	{ .compatible = "brcm,bcm2835-pixelvalve2", .data = &bcm2835_pv2_data },
++	{ .compatible = "brcm,bcm2711-pixelvalve0", .data = &bcm2711_pv0_data },
++	{ .compatible = "brcm,bcm2711-pixelvalve1", .data = &bcm2711_pv1_data },
++	{ .compatible = "brcm,bcm2711-pixelvalve2", .data = &bcm2711_pv2_data },
++	{ .compatible = "brcm,bcm2711-pixelvalve3", .data = &bcm2711_pv3_data },
++	{ .compatible = "brcm,bcm2711-pixelvalve4", .data = &bcm2711_pv4_data },
+ 	{}
+ };
  
--	struct drm_encoder *encoder;
--	struct drm_connector *connector;
-+	struct vc4_hdmi_encoder encoder;
-+	struct vc4_hdmi_connector connector;
+diff --git a/drivers/gpu/drm/vc4/vc4_regs.h b/drivers/gpu/drm/vc4/vc4_regs.h
+index b96ebbb1354b..35279b118d41 100644
+--- a/drivers/gpu/drm/vc4/vc4_regs.h
++++ b/drivers/gpu/drm/vc4/vc4_regs.h
+@@ -130,6 +130,8 @@
+ #define V3D_ERRSTAT  0x00f20
  
- 	struct vc4_hdmi_audio audio;
+ #define PV_CONTROL				0x00
++# define PV5_CONTROL_FIFO_LEVEL_HIGH_MASK	VC4_MASK(26, 25)
++# define PV5_CONTROL_FIFO_LEVEL_HIGH_SHIFT	25
+ # define PV_CONTROL_FORMAT_MASK			VC4_MASK(23, 21)
+ # define PV_CONTROL_FORMAT_SHIFT		21
+ # define PV_CONTROL_FORMAT_24			0
+@@ -209,6 +211,10 @@
  
-@@ -53,34 +83,4 @@ struct vc4_hdmi {
- #define HD_READ(offset) readl(vc4->hdmi->hd_regs + offset)
- #define HD_WRITE(offset, val) writel(val, vc4->hdmi->hd_regs + offset)
+ #define PV_HACT_ACT				0x30
  
--/* VC4 HDMI encoder KMS struct */
--struct vc4_hdmi_encoder {
--	struct vc4_encoder base;
--	bool hdmi_monitor;
--	bool limited_rgb_range;
--};
--
--static inline struct vc4_hdmi_encoder *
--to_vc4_hdmi_encoder(struct drm_encoder *encoder)
--{
--	return container_of(encoder, struct vc4_hdmi_encoder, base.base);
--}
--
--/* VC4 HDMI connector KMS struct */
--struct vc4_hdmi_connector {
--	struct drm_connector base;
--
--	/* Since the connector is attached to just the one encoder,
--	 * this is the reference to it so we can do the best_encoder()
--	 * hook.
--	 */
--	struct drm_encoder *encoder;
--};
--
--static inline struct vc4_hdmi_connector *
--to_vc4_hdmi_connector(struct drm_connector *connector)
--{
--	return container_of(connector, struct vc4_hdmi_connector, base);
--}
--
- #endif /* _VC4_HDMI_H_ */
++#define PV_MUX_CFG				0x34
++# define PV_MUX_CFG_RGB_PIXEL_MUX_MODE_MASK	VC4_MASK(5, 2)
++# define PV_MUX_CFG_RGB_PIXEL_MUX_MODE_SHIFT	2
++
+ #define SCALER_CHANNELS_COUNT			3
+ 
+ #define SCALER_DISPCTRL                         0x00000000
 -- 
 git-series 0.9.1
