@@ -2,239 +2,111 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C9FC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4ECC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 031DA20781
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B23B82166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:06:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587765963;
+	bh=JivJTIRgDiUIQy8eirUs45TtyuILvCgZqRvnH5Wfcmk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=cAGG3XPuSuVShOS+PAMFsY2PDBh7Nw7T81CZv7p4bMEZlszGE0Jg641DV8VSJcMIE
+	 uYJeo1KWj284wbo6b0JN5VPw1akusDkQ3+jQYUc35e2a2rpaU6h3KrHuXzTOSO0717
+	 ZutwvwKgVV1Rr2zZt/KMq4N6gwHe/HsNs/OsHq+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726122AbgDXWCu (ORCPT
+        id S1726100AbgDXWGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 18:02:50 -0400
-Received: from v6.sk ([167.172.42.174]:59610 "EHLO v6.sk"
+        Fri, 24 Apr 2020 18:06:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725874AbgDXWCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 18:02:49 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 44208610A8;
-        Fri, 24 Apr 2020 22:02:47 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v4] leds: ariel: Add driver for status LEDs on Dell Wyse 3020
-Date:   Sat, 25 Apr 2020 00:02:40 +0200
-Message-Id: <20200424220240.106055-1-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.26.0
+        id S1725874AbgDXWGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 18:06:02 -0400
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2A392098B;
+        Fri, 24 Apr 2020 22:06:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587765961;
+        bh=JivJTIRgDiUIQy8eirUs45TtyuILvCgZqRvnH5Wfcmk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2syVbBmoK8XrkPtUfJDqtPoO+QllnBQNWmGqXWVUUPjXUdNygPj3yDGu1IkZB/ltc
+         RY4Eubr6n1HDACvMv60r+ICK/pBsG5rUEu4y9TmhfkD9POKfJZTfhhMsmgypj2StyW
+         EDp7nlwKG4kh9mFheZAtzuxFuQZcuePnmfbko3QE=
+Received: by mail-qt1-f178.google.com with SMTP id w29so9299035qtv.3;
+        Fri, 24 Apr 2020 15:06:01 -0700 (PDT)
+X-Gm-Message-State: AGi0Pub/LiMMC0DLxOSUFijIItVNhJ6iSEKYC6WcP9brRlk/QSDzrlHT
+        Pg3yqo2bCIPqJxIFFBiq3l83szafduw/Ykcy2g==
+X-Google-Smtp-Source: APiQypIVltF4TcBafK99loWjJjLLH+9EYxohE3EW1fPkl7KXSdN1YZmaVY0jfUimAylQ+g9ffp3oxucLw5yVf10M3Zo=
+X-Received: by 2002:ac8:47cb:: with SMTP id d11mr10875122qtr.136.1587765960749;
+ Fri, 24 Apr 2020 15:06:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200423064808.10468-1-etienne.carriere@linaro.org> <20200423064808.10468-2-etienne.carriere@linaro.org>
+In-Reply-To: <20200423064808.10468-2-etienne.carriere@linaro.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 24 Apr 2020 17:05:49 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKvQasaBCHC2s68WmtfwGN+t349tzmF=ySkuYz11HzksQ@mail.gmail.com>
+Message-ID: <CAL_JsqKvQasaBCHC2s68WmtfwGN+t349tzmF=ySkuYz11HzksQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] dt-bindings: arm: Add secure-clocks binding description
+To:     Etienne Carriere <etienne.carriere@linaro.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds support for controlling the LEDs attached to the Embedded
-Controller on a Dell Wyse 3020 "Ariel" board.
+On Thu, Apr 23, 2020 at 1:49 AM Etienne Carriere
+<etienne.carriere@linaro.org> wrote:
+>
+> Describe how clocks property can leverage secure- property prefix
+> for clocks handled exclusively or shared by secure and non-secure
+> worlds.
+>
+> Signed-off-by: Etienne Carriere <etienne.carriere@linaro.org>
+> ---
+>  .../devicetree/bindings/arm/secure.txt        | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/secure.txt b/Documentation/devicetree/bindings/arm/secure.txt
+> index f27bbff2c780..9bc94921f2a6 100644
+> --- a/Documentation/devicetree/bindings/arm/secure.txt
+> +++ b/Documentation/devicetree/bindings/arm/secure.txt
+> @@ -53,6 +53,25 @@ Valid Secure world properties
+>     status = "disabled";                             /* disabled in both */
+>     status = "disabled"; secure-status = "disabled"; /* disabled in both */
+>
+> +- secure-clocks : specifies the Phandle list secure world shall use
+> +  for the related clocks whereas property "clocks" specifies the
+> +  clock Phandle list non-secure shall use for the that clocks.
+> +  This configuration can apply for example when a hardware clock is
+> +  shared by the 2 worlds and the hardware implements a specific interface
+> +  for each world, i.e.:
+> +
+> +  clocks = <&clk DMA_NS>;      /* NS relies on clock handle DMA_NS */
+> +  secure-clocks = <&clk DMA_S>;        /* S relies on clock handle DMA_S */
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+The device has to know what it's clocks are for and should know if
+some clocks are secure only.
 
----
-Changes since v3:
-- Actually use the loop iterator when registering the LEDs.
-- Move dev_get_regmap() above devm_kcalloc()
+> +  Another example where use of "clocks" and "secure-clocks" can apply
+> +  is when hardware implements a clock that secure and non-secure must
+> +  share, as a shared GPIO bank clock, and secure world relies on clock
+> +  device driver whereas non-secure world relies on a software service
+> +  exposed by secure world as SCMI clock device. I.e.:
+> +
+> +  clocks = <&scmi_clk 2>;      /* NS relies on SCMI resources */
+> +  secure-clocks= <&clk 5>;     /* S accesses the SoC reset interfaces */
 
-Changes since v2:
-- Hopefully sending out the correct patch this time...
+If you have this case, I don't think this is the solution. I don't
+think it scales well and you probably need separate DTs. It's
+something to solve in the system DT project.
 
-Changes since v1:
-- Reduce code duplication with a loop
-- Drop "ariel:" prefix from led names
-- Do not print a message after a successful probe
-
- drivers/leds/Kconfig      |  11 ++++
- drivers/leds/Makefile     |   1 +
- drivers/leds/leds-ariel.c | 133 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 145 insertions(+)
- create mode 100644 drivers/leds/leds-ariel.c
-
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index c664d84e1667..a20149e9581f 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -83,6 +83,17 @@ config LEDS_APU
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called leds-apu.
- 
-+config LEDS_ARIEL
-+	tristate "Dell Wyse 3020 status LED support"
-+	depends on LEDS_CLASS
-+	depends on (MACH_MMP3_DT && MFD_ENE_KB3930) || COMPILE_TEST
-+	help
-+	  This driver adds support for controlling the front panel status
-+	  LEDs on Dell Wyse 3020 (Ariel) board via the KB3930 Embedded
-+	  Controller.
-+
-+	  Say Y to if your machine is a Dell Wyse 3020 thin client.
-+
- config LEDS_AS3645A
- 	tristate "AS3645A and LM3555 LED flash controllers support"
- 	depends on I2C && LEDS_CLASS_FLASH
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index 45235d5fb218..24127f2c4a16 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -12,6 +12,7 @@ obj-$(CONFIG_LEDS_AAT1290)		+= leds-aat1290.o
- obj-$(CONFIG_LEDS_ADP5520)		+= leds-adp5520.o
- obj-$(CONFIG_LEDS_AN30259A)		+= leds-an30259a.o
- obj-$(CONFIG_LEDS_APU)			+= leds-apu.o
-+obj-$(CONFIG_LEDS_ARIEL)		+= leds-ariel.o
- obj-$(CONFIG_LEDS_AS3645A)		+= leds-as3645a.o
- obj-$(CONFIG_LEDS_ASIC3)		+= leds-asic3.o
- obj-$(CONFIG_LEDS_BCM6328)		+= leds-bcm6328.o
-diff --git a/drivers/leds/leds-ariel.c b/drivers/leds/leds-ariel.c
-new file mode 100644
-index 000000000000..bb68ba23a7d4
---- /dev/null
-+++ b/drivers/leds/leds-ariel.c
-@@ -0,0 +1,133 @@
-+// SPDX-License-Identifier: BSD-2-Clause OR GPL-2.0-or-later
-+/*
-+ * Dell Wyse 3020 a.k.a. "Ariel" Embedded Controller LED Driver
-+ *
-+ * Copyright (C) 2020 Lubomir Rintel
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/leds.h>
-+#include <linux/regmap.h>
-+#include <linux/of_platform.h>
-+
-+enum ec_index {
-+	EC_BLUE_LED	= 0x01,
-+	EC_AMBER_LED	= 0x02,
-+	EC_GREEN_LED	= 0x03,
-+};
-+
-+enum {
-+	EC_LED_OFF	= 0x00,
-+	EC_LED_STILL	= 0x01,
-+	EC_LED_FADE	= 0x02,
-+	EC_LED_BLINK	= 0x03,
-+};
-+
-+struct ariel_led {
-+	struct regmap *ec_ram;
-+	enum ec_index ec_index;
-+	struct led_classdev led_cdev;
-+};
-+
-+#define led_cdev_to_ariel_led(c) container_of(c, struct ariel_led, led_cdev)
-+
-+static enum led_brightness ariel_led_get(struct led_classdev *led_cdev)
-+{
-+	struct ariel_led *led = led_cdev_to_ariel_led(led_cdev);
-+	unsigned int led_status = 0;
-+
-+	if (regmap_read(led->ec_ram, led->ec_index, &led_status))
-+		return LED_OFF;
-+
-+	if (led_status == EC_LED_STILL)
-+		return LED_FULL;
-+	else
-+		return LED_OFF;
-+}
-+
-+static void ariel_led_set(struct led_classdev *led_cdev,
-+			  enum led_brightness brightness)
-+{
-+	struct ariel_led *led = led_cdev_to_ariel_led(led_cdev);
-+
-+	if (brightness == LED_OFF)
-+		regmap_write(led->ec_ram, led->ec_index, EC_LED_OFF);
-+	else
-+		regmap_write(led->ec_ram, led->ec_index, EC_LED_STILL);
-+}
-+
-+static int ariel_blink_set(struct led_classdev *led_cdev,
-+			   unsigned long *delay_on, unsigned long *delay_off)
-+{
-+	struct ariel_led *led = led_cdev_to_ariel_led(led_cdev);
-+
-+	if (*delay_on == 0 && *delay_off == 0)
-+		return -EINVAL;
-+
-+	if (*delay_on == 0) {
-+		regmap_write(led->ec_ram, led->ec_index, EC_LED_OFF);
-+	} else if (*delay_off == 0) {
-+		regmap_write(led->ec_ram, led->ec_index, EC_LED_STILL);
-+	} else {
-+		*delay_on = 500;
-+		*delay_off = 500;
-+		regmap_write(led->ec_ram, led->ec_index, EC_LED_BLINK);
-+	}
-+
-+	return 0;
-+}
-+
-+#define NLEDS 3
-+
-+static int ariel_led_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct ariel_led *leds;
-+	struct regmap *ec_ram;
-+	int ret;
-+	int i;
-+
-+	ec_ram = dev_get_regmap(dev->parent, "ec_ram");
-+	if (!ec_ram)
-+		return -ENODEV;
-+
-+	leds = devm_kcalloc(dev, NLEDS, sizeof(*leds), GFP_KERNEL);
-+	if (!leds)
-+		return -ENOMEM;
-+
-+	leds[0].ec_index = EC_BLUE_LED;
-+	leds[0].led_cdev.name = "blue:power",
-+	leds[0].led_cdev.default_trigger = "default-on";
-+
-+	leds[1].ec_index = EC_AMBER_LED;
-+	leds[1].led_cdev.name = "amber:status",
-+
-+	leds[2].ec_index = EC_GREEN_LED;
-+	leds[2].led_cdev.name = "green:status",
-+	leds[2].led_cdev.default_trigger = "default-on";
-+
-+	for (i = 0; i < NLEDS; i++) {
-+		leds[i].ec_ram = ec_ram;
-+		leds[i].led_cdev.brightness_get = ariel_led_get;
-+		leds[i].led_cdev.brightness_set = ariel_led_set;
-+		leds[i].led_cdev.blink_set = ariel_blink_set;
-+
-+		ret = devm_led_classdev_register(dev, &leds[i].led_cdev);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct platform_driver ariel_led_driver = {
-+	.probe = ariel_led_probe,
-+	.driver = {
-+		.name = "dell-wyse-ariel-led",
-+	},
-+};
-+module_platform_driver(ariel_led_driver);
-+
-+MODULE_AUTHOR("Lubomir Rintel <lkundrak@v3.sk>");
-+MODULE_DESCRIPTION("Dell Wyse 3020 Status LEDs Driver");
-+MODULE_LICENSE("Dual BSD/GPL");
--- 
-2.26.0
-
+Rob
