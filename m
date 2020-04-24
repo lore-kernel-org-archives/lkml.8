@@ -2,121 +2,98 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B313C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B9EC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 682C320700
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:31:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AkTXVEwS"
+	by mail.kernel.org (Postfix) with ESMTP id 91AD220700
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:31:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587731474;
+	bh=PtDDryNXCt/9ihdYD2ZXT+uVLrhInNakO1Houm02HMs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ofGY3u37ZyUSH/JwCQWLF/2PhcG+sw4Nj4pCI9BLoy2VfnuN+KTam0gXizG4fvkKg
+	 9pCHAaooycIFZWKTfz1bjf+gJCcySzASLOHE4/3ScrbHqqXCMtQTvXuuboY0//uulZ
+	 ftpTMlFLu8g01IE1QZC7nx8R3GZAEQrV+UTUO4ks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728884AbgDXMbC (ORCPT
+        id S1728405AbgDXMbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:31:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52120 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728476AbgDXMa6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:30:58 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65E5AC09B045;
-        Fri, 24 Apr 2020 05:30:58 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id h11so3666605plr.11;
-        Fri, 24 Apr 2020 05:30:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=t9Lzyy5hmq/sWXwmK6V3xxvcVaLKMxmhplBn/KbogKU=;
-        b=AkTXVEwSZkN0UrEMj153ZdmMhPBFg1AVBj5QcNAlNuSdnBDcTj15nb1h0DBAmpQCdl
-         P45C+S/zE+jnY0f1syYEjoygUenKLDOMUOSpZnfewgHuhqB1Yc1JkRO3U0ChrYzaX5nB
-         xJk6uVgor7q6NZKuCLA/Uw+3iKOaTRq01kLNPl5ZRQkwlgIOGalYwjsanYgaDBvePya7
-         sS5CwgCc/SZ7UwfJH1AldjDcIt0BNnrSu070JHUFShdwM4kwbDPyyVpqrXuKx4wO0h7C
-         xHxROMFrCoZEmjRjU6asoYWFsRQRg5poIx5BZ+/qxyoxDcCO5jLCTe4jxWB0TZaJrg3i
-         MCIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=t9Lzyy5hmq/sWXwmK6V3xxvcVaLKMxmhplBn/KbogKU=;
-        b=Air+1juGzSxryn4xDht9ZIU2FCLV4pEDzZlf6O2C8VXZBlArteO1MWtqhv513Bk330
-         5gEYBVLkWiYMT6EKlxjl93dIcFf1v9OEZG4FiWDbnWfRfID5OsutvubPVWqWGI2Rg8UI
-         PqI9dh4s9J9PLKrtjnTB+XZ17ZprZjdZ69T/yFnGgYcpFCaObtSPa68si9uP8AFlOqOj
-         kZL5bsQA+UBhUWIabNe3HGILA41soWLpn9zCIJf5bjOLSZhOF1uUULas8vjW+lrcurjI
-         p0P/kWNOyLuHIAArbFj76vMW7YGGRmjM3VyFzzFWbwrtguntUguUlh3ALrg8UccZC/Fp
-         hcgQ==
-X-Gm-Message-State: AGi0PubhfHu1R+0hwG7VC9Isu159GWnJTEozshqnmPAnmp/8bJ44JhQV
-        /HaXhuk0VJbGvyhzKtZAQKk=
-X-Google-Smtp-Source: APiQypLWlblKpczKfwKO4MBHWH1VTc92fAppAaKzkMK9+L+S7l7hehZQG15Du2fyFvH2p9AybrXPVQ==
-X-Received: by 2002:a17:90a:3441:: with SMTP id o59mr5344496pjb.185.1587731457833;
-        Fri, 24 Apr 2020 05:30:57 -0700 (PDT)
-Received: from syed ([106.223.101.26])
-        by smtp.gmail.com with ESMTPSA id p62sm5560770pfb.93.2020.04.24.05.30.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 Apr 2020 05:30:57 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 18:00:50 +0530
-From:   Syed Nayyar Waris <syednwaris@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     andriy.shevchenko@linux.intel.com, vilhelm.gray@gmail.com,
-        rrichter@marvell.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 5/6] gpio: thunderx: Utilize for_each_set_clump macro
-Message-ID: <20200424123050.GA5653@syed>
+        Fri, 24 Apr 2020 08:31:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53098 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727944AbgDXMXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:23:21 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 881852087E;
+        Fri, 24 Apr 2020 12:23:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587731001;
+        bh=PtDDryNXCt/9ihdYD2ZXT+uVLrhInNakO1Houm02HMs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=15hz3TXrSVCI1xdp6a43GdWQjJ2F+dww1c3LxXd7OFtlhm31mchGBny6EaqkT4J3j
+         swFUcOj8k78h/ysIOCEXJ4dWZTbhDFCpjEh6N2DurS0VpNT2CsezANMG+eYzKF1yyx
+         vnvveCpqvz7ETj4RFA+KubeiIx7G4H5mrS5RINcA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 38/38] hwmon: (jc42) Fix name to have no illegal characters
+Date:   Fri, 24 Apr 2020 08:22:36 -0400
+Message-Id: <20200424122237.9831-38-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200424122237.9831-1-sashal@kernel.org>
+References: <20200424122237.9831-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch reimplements the thunderx_gpio_set_multiple function in
-drivers/gpio/gpio-thunderx.c to use the new for_each_set_clump macro.
-Instead of looping for each bank in thunderx_gpio_set_multiple
-function, now we can skip bank which is not set and save cycles.
+From: Sascha Hauer <s.hauer@pengutronix.de>
 
-Cc: Robert Richter <rrichter@marvell.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
-Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+[ Upstream commit c843b382e61b5f28a3d917712c69a344f632387c ]
+
+The jc42 driver passes I2C client's name as hwmon device name. In case
+of device tree probed devices this ends up being part of the compatible
+string, "jc-42.4-temp". This name contains hyphens and the hwmon core
+doesn't like this:
+
+jc42 2-0018: hwmon: 'jc-42.4-temp' is not a valid name attribute, please fix
+
+This changes the name to "jc42" which doesn't have any illegal
+characters.
+
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Link: https://lore.kernel.org/r/20200417092853.31206-1-s.hauer@pengutronix.de
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-thunderx.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/hwmon/jc42.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-thunderx.c b/drivers/gpio/gpio-thunderx.c
-index 9f66dea..74aea25 100644
---- a/drivers/gpio/gpio-thunderx.c
-+++ b/drivers/gpio/gpio-thunderx.c
-@@ -275,12 +275,16 @@ static void thunderx_gpio_set_multiple(struct gpio_chip *chip,
- 				       unsigned long *bits)
- {
- 	int bank;
--	u64 set_bits, clear_bits;
-+	u64 set_bits, clear_bits, gpio_mask;
-+	const unsigned long bank_size = 64;
-+	unsigned long offset;
-+
- 	struct thunderx_gpio *txgpio = gpiochip_get_data(chip);
- 
--	for (bank = 0; bank <= chip->ngpio / 64; bank++) {
--		set_bits = bits[bank] & mask[bank];
--		clear_bits = ~bits[bank] & mask[bank];
-+	for_each_set_clump(offset, gpio_mask, mask, chip->ngpio, bank_size) {
-+		bank = offset / bank_size;
-+		set_bits = bits[bank] & gpio_mask;
-+		clear_bits = ~bits[bank] & gpio_mask;
- 		writeq(set_bits, txgpio->register_base + (bank * GPIO_2ND_BANK) + GPIO_TX_SET);
- 		writeq(clear_bits, txgpio->register_base + (bank * GPIO_2ND_BANK) + GPIO_TX_CLR);
+diff --git a/drivers/hwmon/jc42.c b/drivers/hwmon/jc42.c
+index f2d81b0558e56..e3f1ebee71306 100644
+--- a/drivers/hwmon/jc42.c
++++ b/drivers/hwmon/jc42.c
+@@ -506,7 +506,7 @@ static int jc42_probe(struct i2c_client *client, const struct i2c_device_id *id)
  	}
+ 	data->config = config;
+ 
+-	hwmon_dev = devm_hwmon_device_register_with_info(dev, client->name,
++	hwmon_dev = devm_hwmon_device_register_with_info(dev, "jc42",
+ 							 data, &jc42_chip_info,
+ 							 NULL);
+ 	return PTR_ERR_OR_ZERO(hwmon_dev);
 -- 
-2.7.4
+2.20.1
 
