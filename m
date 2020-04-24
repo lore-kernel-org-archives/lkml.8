@@ -2,96 +2,153 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B26C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74672C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CB9920728
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:15:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jxGCXqkJ"
+	by mail.kernel.org (Postfix) with ESMTP id 5093120728
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:16:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587723398;
+	bh=vZNKJUin/JtOZ/kk42GlXa+eYTXUflytn8PWZgxt+uw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vR9pf2YaPqFBAupXZd4D7CUXaNZ3/LhL1LCdMeih+uV09lKvgDXl7/gq4hQ5tg97b
+	 ntNMyuoWY0yLF97laYUPouIU8X/FCTGoqrtRa60viIGo9r7RpbgoVEFDDIRYMPkjto
+	 RzFKeQwPXmW6/qA0HS40hNsXMsm9BnNReSxatHMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgDXKPz (ORCPT
+        id S1727008AbgDXKQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 06:15:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59298 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726726AbgDXKPy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 06:15:54 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 425FEC09B045
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 03:15:53 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id o10so4423606pgb.6
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 03:15:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=kKqnTUenA/rrGtoXHPWbx59Tan7ETAeJu0G1PoePj8Q=;
-        b=jxGCXqkJid1cEbzBEHdxZAmk6SP0zwAOb26BSRaPOA6UiIS01PgdZvgAidmq7Vy2LM
-         P+VrNbtJXKvbGkOHiu10OPUlYwB6IM6dozMYqAt7/QUi8NZ7uY7AoWQUi/0s+pNg513e
-         VQmYhYVgMvui0Gns1IdMI8sWB9zHMfU/GMwr6gthtCdrJKZy56cM3H1D5xOjNgSz7ZTP
-         l3pFxITeDywBjGllqR5KPy2LpeoG05Qs5mLieXRsUuBvBvX4cONL95yYRR9u/fikIiBn
-         BXdkk0/RLepxrH6NO7WvXAsqDVPHXkc69UObcIOJpFcE5Vbq5wV32NbIK30dt/XaGHg1
-         id7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=kKqnTUenA/rrGtoXHPWbx59Tan7ETAeJu0G1PoePj8Q=;
-        b=cU3LBOGuuTdpLaAUpm/qlNg/uAoS+GyYWXiwxlYjJJtLIIcBdn4NwV/9i8WwMr5Ds4
-         RgTDQSFO8HlTOAgUnqaxX/8OJJ+CjpORpInB/9CDuvYKV2eahCgxQDntIhU9cVWOm7cn
-         5T5iO5Fklc23xXm1DwNseDxXRt8ss2qv8/SKSqajtmVrccFx9j/QULCvihSZupC7QbDH
-         sbH6vIqRh7c6t1bWvpk64RO1XmDJDwPVoEWYV+vYe6qP3XcdIm4/ymp0WulUqDTuAudj
-         /j1gMFx4SD1RjnPmlyPBm3+dcTuTwva+Q1ZV4VKR6xi7O9D4J2epnOq+jr0ilkzSpw88
-         10yQ==
-X-Gm-Message-State: AGi0PuZbsAJK4omjgMT9HqeBdGgD8RWXjKGw2o+JgHj8qDZm/bvNR/Rk
-        IDOpfZBX7bD32/J0owZYXUe8UuWeLyQM9g==
-X-Google-Smtp-Source: APiQypLVT/jJRAyLJCZsU721zNGW4Fe35u6Tl5hXfGOqTbzN5EGHV16pWlevVhBY+Fi/UlcbWeNANw==
-X-Received: by 2002:a62:76c3:: with SMTP id r186mr8806021pfc.190.1587723352734;
-        Fri, 24 Apr 2020 03:15:52 -0700 (PDT)
-Received: from localhost.localdomain ([223.104.63.47])
-        by smtp.gmail.com with ESMTPSA id 127sm5254252pfz.128.2020.04.24.03.15.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 03:15:52 -0700 (PDT)
-From:   Guixiong Wei <guixiongwei@gmail.com>
-To:     linux-graphics-maintainer@vmware.com, thellstrom@vmware.com,
-        airlied@linux.ie, daniel@ffwll.ch
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Guixiong Wei <guixiongwei@gmail.com>
-Subject: [PATCH] drm/vmwgfx: Fix parameter name in vmw_bo_init
-Date:   Sat, 25 Apr 2020 00:14:39 +1400
-Message-Id: <20200424101439.13572-1-guixiongwei@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 24 Apr 2020 06:16:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43580 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726776AbgDXKQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 06:16:37 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAD9920728;
+        Fri, 24 Apr 2020 10:16:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587723396;
+        bh=vZNKJUin/JtOZ/kk42GlXa+eYTXUflytn8PWZgxt+uw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ljw/PhL3FZ3c855PrmjOFMaodxTFs6r8UU6j0wl9eOHzwKGGD507R1lZ2g5eTZcgS
+         kuNdWJAHP2IqbIPYI4O9epJUPLTWdDCit/wkOf/8WKQAp0iIKWASeYI2dWVJLkjFOF
+         tiGL+dHYa8IlXcAcFgxtieE8ntrlRXBD3AvRjp2g=
+Date:   Fri, 24 Apr 2020 12:16:34 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Christian.Gromm@microchip.com
+Cc:     lkp@intel.com, devel@driverdev.osuosl.org, lkp@lists.01.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: b276527539 ("staging: most: move core files out of the staging
+ .."): [   12.247349] BUG: kernel NULL pointer dereference, address: 00000000
+Message-ID: <20200424101634.GB390100@kroah.com>
+References: <20200329133917.GE11705@shao2-debian>
+ <1e725f60c598cd8a5f167fd63ade6ee173960f01.camel@microchip.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1e725f60c598cd8a5f167fd63ade6ee173960f01.camel@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The parameter name should be interruptible instead of interuptable.
+On Fri, Apr 24, 2020 at 09:41:36AM +0000, Christian.Gromm@microchip.com wrote:
+> On Sun, 2020-03-29 at 21:39 +0800, kernel test robot wrote:
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you
+> > know the content is safe
+> > 
+> > Greetings,
+> > 
+> > 0day kernel testing robot got the below dmesg and the first bad
+> > commit is
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git
+> > staging-next
+> > 
+> > commit b276527539188f1f61c082ebef27803db93e536d
+> > Author:     Christian Gromm <christian.gromm@microchip.com>
+> > AuthorDate: Tue Mar 10 14:02:40 2020 +0100
+> > Commit:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > CommitDate: Tue Mar 24 13:42:44 2020 +0100
+> > 
+> >     staging: most: move core files out of the staging area
+> > 
+> >     This patch moves the core module to the /drivers/most directory
+> >     and makes all necessary changes in order to not break the build.
+> > 
+> >     Signed-off-by: Christian Gromm <christian.gromm@microchip.com>
+> >     Link: 
+> > https://lore.kernel.org/r/1583845362-26707-2-git-send-email-christian.gromm@microchip.com
+> >     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > 
+> > 22dd4acc80  Staging: speakup: Add identifier name to function
+> > declaration arguments.
+> > b276527539  staging: most: move core files out of the staging area
+> > e681bb287f  staging: vt6656: Use DIV_ROUND_UP macro instead of
+> > specific code
+> > +-------------------------------------------------------+----------
+> > --+------------+------------+
+> > >                                                       | 22dd4acc80
+> > > | b276527539 | e681bb287f |
+> > +-------------------------------------------------------+----------
+> > --+------------+------------+
+> > > boot_successes                                        |
+> > > 26         | 0          | 0          |
+> > > boot_failures                                         |
+> > > 8          | 11         | 11         |
+> > > WARNING:possible_circular_locking_dependency_detected |
+> > > 8          |            |            |
+> > > BUG:kernel_NULL_pointer_dereference,address           |
+> > > 0          | 11         | 11         |
+> > > Oops:#[##]                                            |
+> > > 0          | 11         | 11         |
+> > > EIP:__list_add_valid                                  |
+> > > 0          | 11         | 11         |
+> > > Kernel_panic-not_syncing:Fatal_exception              |
+> > > 0          | 11         | 11         |
+> > +-------------------------------------------------------+----------
+> > --+------------+------------+
+> > 
+> > If you fix the issue, kindly add following tag
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > 
+> > [   12.242090] no options.
+> > [   12.245364] FPGA DOWNLOAD --->
+> > [   12.245723] FPGA image file name: xlinx_fpga_firmware.bit
+> > [   12.246548] GPIO INIT FAIL!!
+> > [   12.246995] most_sound: init()
+> > [   12.247349] BUG: kernel NULL pointer dereference, address: 
+> 
+> 
+> The init order of the modules is wrong in case the driver is
+> being built in-tree.
+> 
+> The init function of module most_sound is called before the
+> core itself is being initialized.
+> 
+> [    5.179189] most_sound: init()
+> [    5.180205] mostcore: __init()
+> 
+> Hence the list used in the core to store and track the
+> registered components has not been initialized with
+> INIT_LIST_HEAD(&comp_list) by the time the sound module
+> tries to register itself with the core.
+> 
+> The Kconfig of most_sound, however, has a dependency to
+> MOST. How can the build system be forced to initialize the
+> core module first?
 
-Signed-off-by: Guixiong Wei <guixiongwei@gmail.com>
----
- drivers/gpu/drm/vmwgfx/vmwgfx_drv.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Linker order is the thing here.
 
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
-index 8cdcd6e5f9e1..3596f3923ea3 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
-@@ -850,7 +850,7 @@ extern void vmw_bo_bo_free(struct ttm_buffer_object *bo);
- extern int vmw_bo_init(struct vmw_private *dev_priv,
- 		       struct vmw_buffer_object *vmw_bo,
- 		       size_t size, struct ttm_placement *placement,
--		       bool interuptable,
-+		       bool interruptible,
- 		       void (*bo_free)(struct ttm_buffer_object *bo));
- extern int vmw_user_bo_verify_access(struct ttm_buffer_object *bo,
- 				     struct ttm_object_file *tfile);
--- 
-2.17.1
+You can mess with the init levels here, and use subsys_initcall() for
+mostcore, will that fix it?
 
+thanks,
+
+greg k-h
