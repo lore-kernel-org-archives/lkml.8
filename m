@@ -2,137 +2,90 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D98CBC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9FFC5518A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7C8B20857
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:45:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="pVpskSeu";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pK/cQ/6X"
+	by mail.kernel.org (Postfix) with ESMTP id 9509A2166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:49:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbgDXGp7 (ORCPT
+        id S1726489AbgDXGte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 02:45:59 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:56357 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726072AbgDXGp6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 02:45:58 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 828565C06DC;
-        Fri, 24 Apr 2020 02:45:57 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Fri, 24 Apr 2020 02:45:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=fW6EuJKIjWQLgOq/xz1RhKe9sHY
-        s05skQGD45ZQNTr4=; b=pVpskSeuZ0qM21QJz7Q199X/rxMUzN97ZTsoLxYq6r7
-        HA7f5SyrqJ5C/h/34NTQIrpvMpl/9DtdFSTowf+qx44FVWzjJAmzeqRz1VvQyKZV
-        9TS1AMBiEoJO3xDJhsvdH0K0kwloC9T+dI4r0LQXXBuXT0zyncQfiouykTocvTJs
-        k1CRB1Rjy7ziVwVS2KO7jzUNTqiBh6gBUGZQbA1wgGt3oKVQOxIBejAOGcKfuIoz
-        nxMcb46wCqz5DxTRfK9wFuLb2h8aZRnprvNyP02EB5ihMRWggMb7yy9lARe0SfUn
-        WGcbfV2G1yrDtkniDWp1WQgzKVVB2KoyRMf/+qrcWUg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=fW6EuJ
-        KIjWQLgOq/xz1RhKe9sHYs05skQGD45ZQNTr4=; b=pK/cQ/6XBY1EATf1/X0yn9
-        k6ZMj+gQzK7yMj2vUJ6EYaf5fAojtqK8yDOoqvrt8DHaYiqe2bUrV+/OncqEkYqV
-        KqbgLAdcZ4RM+RRGviBMI1+tBu77ubNGVTl1CO+Jse2XeXbD7AkzFdakWHaJw7Yz
-        okmSRvtGT7BZ4qHbzJNAwxfvSQ5A3s8DpD3+gzLOhmsYBoTY/7wPgvTmDPlvjD5T
-        DmjCiA+nQ1vtRufgHHZhZ1DbuMmAntF71hu8EV4CZeEum83hePn/EtjZAALF437K
-        F3FTNyGkmisRBll1upwDGopu99zN64zoepgPF0aPPK7JE3aPEGf17hWRVhMRCVSQ
-        ==
-X-ME-Sender: <xms:JYuiXvg3Z_VEo-cDS2a5Ooq4qDLHVZCsysHhfdofjH7EzJtrgHsOBg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrhedtgddutddtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
-    ejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhr
-    vghgsehkrhhorghhrdgtohhm
-X-ME-Proxy: <xmx:JYuiXgSaAIPaN6Xr3UquT6F6IdHLQPB7VTqC8it9_K0YB-pp-cojIw>
-    <xmx:JYuiXqEY_IZJqLUut0l6hDKTWyBnUOWNCM-X_I3hdROc742yOpxGiA>
-    <xmx:JYuiXgks4lhlWJlBA5-8IJoZwy_OAyOPPdZ1zKEn0uEIkJgDJm7ngQ>
-    <xmx:JYuiXnxduA81WSM4aVOgicAEq2kcrsJEv6XzNNjvExNBN9Rb_dKosw>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D25963065D11;
-        Fri, 24 Apr 2020 02:45:56 -0400 (EDT)
-Date:   Fri, 24 Apr 2020 08:45:55 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Malcolm Priestley <tvboxspy@gmail.com>
-Subject: Re: linux-next: manual merge of the staging tree with the
- staging.current tree
-Message-ID: <20200424064555.GA143960@kroah.com>
-References: <20200424151546.4dea83cb@canb.auug.org.au>
+        Fri, 24 Apr 2020 02:49:34 -0400
+Received: from mga14.intel.com ([192.55.52.115]:40409 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725898AbgDXGtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 02:49:33 -0400
+IronPort-SDR: r5ICoHa4/pH8LXMXsQwaWqU9vwC7deplj+YWv1ad9cSa/Qj8GZDHiFmNxKhgFTP5PjufAtdv2u
+ aOuQ2DI7wjfQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 23:49:32 -0700
+IronPort-SDR: Ljg+v7YIu1xTz76lcT5LXHp5XR5ykTEqFz0weRpwWkPt0WIsu3crKvxGafHvIG1NXQhrTSGxcp
+ pN05dHxsu+hA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,310,1583222400"; 
+   d="scan'208";a="259720879"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 23 Apr 2020 23:49:32 -0700
+Received: from [10.249.228.69] (abudanko-mobl.ccr.corp.intel.com [10.249.228.69])
+        by linux.intel.com (Postfix) with ESMTP id 674D5580100;
+        Thu, 23 Apr 2020 23:49:30 -0700 (PDT)
+Subject: [PATCH v3 1/3] perf docs: extend CAP_SYS_ADMIN with CAP_PERFMON where
+ needed
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>
+References: <d7cec72d-cc3c-381b-38cd-20e7242bfda8@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <f79344ba-e861-2710-e3d1-2bcccea85348@linux.intel.com>
+Date:   Fri, 24 Apr 2020 09:49:29 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200424151546.4dea83cb@canb.auug.org.au>
+In-Reply-To: <d7cec72d-cc3c-381b-38cd-20e7242bfda8@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 03:15:46PM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the staging tree got a conflict in:
-> 
->   drivers/staging/vt6656/main_usb.c
-> 
-> between commit:
-> 
->   664ba5180234 ("staging: vt6656: Fix calling conditions of vnt_set_bss_mode")
-> 
-> from the staging.current tree and commit:
-> 
->   463288b98190 ("staging: vt6556: vnt_rf_setpower convert to use ieee80211_channel.")
-> 
-> from the staging tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
-> 
-> diff --cc drivers/staging/vt6656/main_usb.c
-> index 5f78cad3b647,3c76d3cb5bbe..000000000000
-> --- a/drivers/staging/vt6656/main_usb.c
-> +++ b/drivers/staging/vt6656/main_usb.c
-> @@@ -743,13 -740,8 +736,12 @@@ static void vnt_bss_info_changed(struc
->   		vnt_update_pre_ed_threshold(priv, false);
->   	}
->   
->  +	if (changed & (BSS_CHANGED_BASIC_RATES | BSS_CHANGED_ERP_PREAMBLE |
->  +		       BSS_CHANGED_ERP_SLOT))
->  +		vnt_set_bss_mode(priv);
->  +
-> - 	if (changed & BSS_CHANGED_TXPOWER)
-> - 		vnt_rf_setpower(priv, priv->current_rate,
-> - 				conf->chandef.chan->hw_value);
-> + 	if (changed & (BSS_CHANGED_TXPOWER | BSS_CHANGED_BANDWIDTH))
-> + 		vnt_rf_setpower(priv, conf->chandef.chan);
->   
->   	if (changed & BSS_CHANGED_BEACON_ENABLED) {
->   		dev_dbg(&priv->usb->dev,
 
+Extend CAP_SYS_ADMIN with CAP_PERFMON in the docs.
 
-Thanks, that looks correct, I'll handle this when the staging.linus
-branch goes to Linus in a few days.
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/perf/Documentation/perf-intel-pt.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-greg k-h
+diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Documentation/perf-intel-pt.txt
+index 456fdcbf26ac..832408a54c1c 100644
+--- a/tools/perf/Documentation/perf-intel-pt.txt
++++ b/tools/perf/Documentation/perf-intel-pt.txt
+@@ -687,7 +687,7 @@ The v4.2 kernel introduced support for a context switch metadata event,
+ PERF_RECORD_SWITCH, which allows unprivileged users to see when their processes
+ are scheduled out and in, just not by whom, which is left for the
+ PERF_RECORD_SWITCH_CPU_WIDE, that is only accessible in system wide context,
+-which in turn requires CAP_SYS_ADMIN.
++which in turn requires CAP_PERFMON or CAP_SYS_ADMIN.
+ 
+ Please see the 45ac1403f564 ("perf: Add PERF_RECORD_SWITCH to indicate context
+ switches") commit, that introduces these metadata events for further info.
+-- 
+2.24.1
+
