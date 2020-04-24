@@ -2,139 +2,113 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CF8C55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34235C55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94FDA20774
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:37:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587706636;
-	bh=UpjdYfWzhaIBWwT8pfBeT5E2eAvIuj0KkNBR5ForkP8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=B6b1ChZAMzZAHSMDW9L/NRkQE8SfLlYeKGefCdauUz2Kk/FRwtD42jBBFXUiWWKeL
-	 NRMkbnhEbP/two3+/vB4ffZMnIvUju2XzEbttiT7KnE8LDim8pJpInNxRE5bmSCZeo
-	 NbinkVQvpgckZRJ/IraMvfP69N++C00VOrc8I9GI=
+	by mail.kernel.org (Postfix) with ESMTP id 132622075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:37:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gR3uh2Rk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbgDXFhP (ORCPT
+        id S1726660AbgDXFhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 01:37:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48358 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725852AbgDXFhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 01:37:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C808D2075A;
-        Fri, 24 Apr 2020 05:37:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587706634;
-        bh=UpjdYfWzhaIBWwT8pfBeT5E2eAvIuj0KkNBR5ForkP8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xRAZIkUacZko7ajq7cHgKyFBma9mq+G+xqKbHfA9RNyQ85imZkOzVX+M8T8pPEBpX
-         HjMiJaSUqzGWbQVIFLn8NU2K1bIYEo3FgiiElxYqvGeI0GunAOkV+dFb52E7hqyOuZ
-         mGR5wIQ88ku15rmA65YXFz2L+nTo8+7OdvZoqyLQ=
-Date:   Fri, 24 Apr 2020 07:37:11 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Hyunki Koo <hyunki00.koo@samsung.com>
-Cc:     robh+dt@kernel.org, linux-serial@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 0/3] 32-bit access for TX/RX hold registers for
- samsung_tty driver
-Message-ID: <20200424053711.GB103562@kroah.com>
-References: <20200420013300.17249-1-hyunki00.koo@samsung.com>
- <CGME20200420233607epcas2p305dbd652ab73592a32c17773c1fce329@epcas2p3.samsung.com>
- <20200420233558.11879-1-hyunki00.koo@samsung.com>
- <000a01d619d0$ee167730$ca436590$@samsung.com>
+        Fri, 24 Apr 2020 01:37:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44154 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726647AbgDXFhU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 01:37:20 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 515F2C09B046
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 22:37:20 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id ay1so3356534plb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 22:37:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+pEdo7FoT+8rIIkf67cF+HbAagDt9BJysxaSwF5QNvI=;
+        b=gR3uh2RkgZKafzMCtjDQgnqKxzdnSwbnGNph9VqDIc/5TxuFkOOEJRxo4ROgDp9fBt
+         ckFtsizxYOVyfPkrK0T5q0UqsHxQhw0zgvepKKwYISEPP0vf2Un5lffLleYF8cFhUjIE
+         FcFjXC7wcfQG3RkWX0Q4JfBvBOCd0081cZ5kQHaryCSewd5sn+3oVB47VZdY6WLcggz5
+         WSeB2QeKjI4Ow11xC6aHyW6cSGnV7gapAFi5e+Lm1VlFgPYwuB2otw1d6zB1wrAMrtN+
+         AVBBQRIYP1jaFtefFOQoXBYsUbtWN2N3mYMY2o52yQHvtpLfeucCdMxga5+bk5Dwl9cc
+         LSvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+pEdo7FoT+8rIIkf67cF+HbAagDt9BJysxaSwF5QNvI=;
+        b=lpQmlkJX+TXRVFsDEmROHkL/B1r96OAWKASs0cSfxV+w2Mf9QRarfbkt0xoER97bNP
+         fgo/rT98KP59wudDfaTE5MaEnYLljJw5eFVCuQo4sj3hGsspNVHDtJf+15Or6kXZrIJT
+         KORKPkQ2b6Q5weNIZXa8NQ3eWNHwicD3COHr9CAHNgW5kNNt08fD0iuYGA92r2k+gms2
+         jVRbKX6IEevkV7UyEvy8eZse6QC1Y2v9HxLp5sgO6d/drZKlm9eSnpP1NQMZtNBqJiEA
+         Uk+J0+N0kGq6icJmUvsdSHUZb2LNszB/sh5jX6/C4hz+DwgUKMRZdOXSBx1I4TpqDS6e
+         ZMFA==
+X-Gm-Message-State: AGi0PuaVsAdQfGocAH/VZrG+vn069vqWklIC3s94RTRdjHGppeB41Gjf
+        aDpRk8PDxj/lDuhGj49Xmq/ynQ==
+X-Google-Smtp-Source: APiQypLEmG4Dhpgbc96eigaH0M+6gvJ2ml+eyScVCRhE0VcMxKP0oupLYOgy/Qsurk5KtHG5Wqy7xQ==
+X-Received: by 2002:a17:90a:37a3:: with SMTP id v32mr4764052pjb.2.1587706639783;
+        Thu, 23 Apr 2020 22:37:19 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id y21sm4424636pfm.219.2020.04.23.22.37.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 22:37:19 -0700 (PDT)
+Date:   Thu, 23 Apr 2020 22:37:48 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Maulik Shah <mkshah@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 3/3] soc: qcom: rpmh-rsc: Fold WARN_ON() into if condition
+Message-ID: <20200424053748.GX20625@builder.lan>
+References: <20200424045414.133381-1-swboyd@chromium.org>
+ <20200424045414.133381-4-swboyd@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <000a01d619d0$ee167730$ca436590$@samsung.com>
+In-Reply-To: <20200424045414.133381-4-swboyd@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 09:40:18AM +0900, Hyunki Koo wrote:
-> On Sat, April 21, 2020 at 08:36:00 AM +0900, Hyunki Koo wrote:
-> > 
-> > Change in v8:
-> > - spit into 3 patch
-> >   [1/3] create the new functions with no functional change to the code as-
-> > is.
-> >   Replace rd_regb/wr_regb with rd_reg/wr_reg for general usage.
-> >   [2/3] add the new binding reg-io-width in device tree
-> >   [3/3] add the new funtinality of rd_reg / wr_reg and wr_reg_barrier
-> >         to support 32-bit access for the TX/RX hold registers UTXH and URXH.
-> > 
-> > Change in v7:
-> > - [1/2] correct build error on running 'make dt_binding_check'
-> > Documentation/devicetree/bindings/serial/samsung_uart.yaml:  mapping
-> > values are not allowed in this context
-> >   in "<unicode string>", line 36, column 13
-> >   Documentation/devicetree/bindings/Makefile:12: recipe for target
-> > 'Documentation/devicetree/bindings/serial/samsung_uart.example.dts'
-> > failed
-> >   make[1]: ***
-> > [Documentation/devicetree/bindings/serial/samsung_uart.example.dts]
-> > Error 1
-> >   make[1]: *** Waiting for unfinished jobs....
-> >   Makefile:1262: recipe for target 'dt_binding_check' failed
-> >   make: *** [dt_binding_check] Error 2
-> > - [2/2] add commit message of reviewed by and tested by in commit
-> > message
-> >   Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-> >   Tested on Odroid HC1 (Exynos5422):
-> >   Tested-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > 
-> > Change in v6:
-> > - [2/2] clean description of reg-io-width
-> >   allOf is not needed. Just enum [1, 2] is enough.
-> > 
-> > Changes in v5:
-> > - spit into 2 patch, newly added patch for dt-binding
-> >   [1/2] newly added dt-binding and go as first patch in this series.
-> >   [2/2] go as second patch in this series.
-> > 
-> > Changes in v4:
-> > - correct variable types and change misleading function name
-> > 
-> > Changes in v3:
-> > - line 2031: remove redundant init value  for ourport->port.iotype
-> > 
-> > Changes in v2:
-> > - line 954 : change rd_regl to rd_reg in for backward compatibility.
-> > - line 2031: Add init value for ourport->port.iotype  to UPIO_MEM
-> > 
-> > 
-> > Hyunki Koo (3):
-> >   serial: samsung: Replace rd_regb/wr_regb with rd_reg/wr_reg
-> >   dt-bindings: serial: Add reg-io-width compatible
-> >   tty: samsung_tty: 32-bit access for TX/RX hold registers
-> > 
-> >  .../devicetree/bindings/serial/samsung_uart.yaml   |  8 +++
-> >  drivers/tty/serial/samsung_tty.c                   | 76 ++++++++++++++++++---
-> > -
-> >  2 files changed, 72 insertions(+), 12 deletions(-)
-> > 
-> > --
-> > 2.15.0.rc1
+On Thu 23 Apr 21:54 PDT 2020, Stephen Boyd wrote:
+
+> Move the WARN_ON() into the if condition so the compiler can see that
+> the branch is unlikely() and possibly optimize it better.
 > 
-> Hi Greg KH
+> Cc: Maulik Shah <mkshah@codeaurora.org>
+> Cc: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+> ---
+>  drivers/soc/qcom/rpmh-rsc.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
-> Can I ask is this series patch are acceptable or not?
-> Do you think, I have to do any further action  for this patch?
+> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+> index 462dd267afef..f7763f008e03 100644
+> --- a/drivers/soc/qcom/rpmh-rsc.c
+> +++ b/drivers/soc/qcom/rpmh-rsc.c
+> @@ -373,10 +373,8 @@ static irqreturn_t tcs_tx_done(int irq, void *p)
+>  
+>  	for_each_set_bit(i, &irq_status, BITS_PER_TYPE(u32)) {
+>  		req = get_req_from_tcs(drv, i);
+> -		if (!req) {
+> -			WARN_ON(1);
+> +		if (WARN_ON(!req))
+>  			goto skip;
+> -		}
+>  
+>  		err = 0;
+>  		for (j = 0; j < req->num_cmds; j++) {
+> -- 
+> Sent by a computer, using git, on the internet
 > 
-
-It's been 3 days, give us a chance please...
-
-Also, I need to wait for the dt patch to be reviewed first before I can
-take any of this, so that's up to the DT maintainers.
-
-thanks,
-
-greg k-h
