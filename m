@@ -2,122 +2,108 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3DAC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B827C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6796120706
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 089A920706
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:11:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="VeHDJD9D"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XElZtWvW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728131AbgDXPLR (ORCPT
+        id S1728153AbgDXPLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:11:17 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:18804 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbgDXPLQ (ORCPT
+        Fri, 24 Apr 2020 11:11:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48998 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727886AbgDXPLQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 Apr 2020 11:11:16 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40335C09B045;
+        Fri, 24 Apr 2020 08:11:16 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id u16so11190600wmc.5;
+        Fri, 24 Apr 2020 08:11:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1587741076; x=1619277076;
-  h=subject:from:to:cc:references:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=8Jb7EVV32sM+of0rWYvrUyPXOj40Sl4zB6UzPqKZ4zU=;
-  b=VeHDJD9D69UHUVh7xQoEZSZrGXinGOjP+xQGeFxL0QscL99A69gxKyRQ
-   NCQ8XwbXfm5FxaBqrbPyqba1pi0TLrErPvhFIxQIADUMu+es7W+P5gJok
-   G/MSpAolvfDmkND6n0yldhSZ0d7KTU8Pi8ASWDGGjKKhs1oEY1UqpSZId
-   g=;
-IronPort-SDR: jHprymWSpAyeRoaNoJvLQC3dXrc+OXCAOwBRM+Ies5jnMbh/9T6vqEH4uBAWO+aWu343tQmgtD
- INpY1h1e+0og==
-X-IronPort-AV: E=Sophos;i="5.73,311,1583193600"; 
-   d="scan'208";a="40701760"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 24 Apr 2020 15:11:14 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com (Postfix) with ESMTPS id 3951BA0732;
-        Fri, 24 Apr 2020 15:11:13 +0000 (UTC)
-Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 24 Apr 2020 15:11:12 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.217) by
- EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 24 Apr 2020 15:11:05 +0000
-Subject: Re: [PATCH v1 02/15] nitro_enclaves: Define the PCI device interface
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>, <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@amazon.com>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Alexander Graf <graf@amazon.de>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>, Balbir Singh <sblbir@amazon.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200421184150.68011-1-andraprs@amazon.com>
- <20200421184150.68011-3-andraprs@amazon.com>
- <bfbb7242-b818-337d-4cff-fc48b7bb1cc0@redhat.com>
- <b4c58884-987a-0be0-8fa1-9aa8efa3e874@amazon.com>
-Message-ID: <f936d026-65cd-2632-2ffa-041d1430fb28@amazon.com>
-Date:   Fri, 24 Apr 2020 18:10:54 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <b4c58884-987a-0be0-8fa1-9aa8efa3e874@amazon.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.161.217]
-X-ClientProxiedBy: EX13D19UWA004.ant.amazon.com (10.43.160.102) To
- EX13D16EUB003.ant.amazon.com (10.43.166.99)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=GSOYiwkqZKLb7y47h2QBV30Cg8CF5SiWC7cPuAELcE0=;
+        b=XElZtWvWYfo+l3n7mMqN1xxPqug0hipNIvwZbiMvLDeqdtBuwB/R/6eVVvDvJxBgcO
+         n+a23AuCg9C9WCRJyzvHwUZavxy47Fp07az0w1Kcn/xtsYYARq+oDFsMiZTSzhfnC5ig
+         2AChAZhyFp+edQTpegElq6dzHnqWvbqtu+i5ZuOf/NYmxkNDTIyCNhAMt7L06VkCxMdS
+         hWtnusjfCzjMpyUtFQuZR96Az07KImi9q8sgJi/2krbFS0lQMcOMClOTqwNFm5xxZX/V
+         9IsR2fdCccxkXJprwt9cKc7QCxOd3g/sYqt0v+mn95AcIUCMeWFvl4KmBZFP9NCROubp
+         Fzbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=GSOYiwkqZKLb7y47h2QBV30Cg8CF5SiWC7cPuAELcE0=;
+        b=gYyo54wnDgcY02DyBCL/K8VbqCDzeiJkUrxfokMAgebcXOUTP8ic6DHQzxHzAzdoOT
+         u5hGvdVv+yb8Pxk/jR3Kt7pWQEXl0V2my+g4xilIjjaEaDWrsabh+znyhR+aY84NF0dq
+         HmrsjfYLqoNPXtkGrrVqRKpSq1GqgsOOLSkveqsKCp0YbqQVrdoVnC1h7H+bgHhGMTHd
+         co45uYmWQtzX32C87/5pc13HrC+6MeoDkv8SE5lfUtr6/vq54SUNf4iZh9cxQ26D0WLp
+         gasWTnS46Z1VwwrE/PsYlJKUoEXddSCW4uPBE9YZk6dItnmx2x67yE5VL+t7GySUn58U
+         JVAA==
+X-Gm-Message-State: AGi0PuYzamlMd5eqzQO/B12BaCzSj2AXolwJUk1MX3wt1rmnOStaN7ok
+        voFP1hNZfKvd7uivvEe2bMs=
+X-Google-Smtp-Source: APiQypLO0aRIuz+zgTRv7w4cBk8IwnBuB8JeO+edeOvmFEHyU5aHRBfNcBgiCNZ4D87S2qOgXE4Gdg==
+X-Received: by 2002:a7b:c181:: with SMTP id y1mr11303273wmi.83.1587741074999;
+        Fri, 24 Apr 2020 08:11:14 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id a125sm3215289wme.3.2020.04.24.08.11.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 Apr 2020 08:11:14 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] include: dt-bindings: rockchip: mark RK_GPIO defines as deprecated
+Date:   Fri, 24 Apr 2020 17:11:05 +0200
+Message-Id: <20200424151105.18736-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpPbiAyMy8wNC8yMDIwIDE2OjM3LCBQYXJhc2NoaXYsIEFuZHJhLUlyaW5hIHdyb3RlOgo+Cj4K
-PiBPbiAyMi8wNC8yMDIwIDAwOjIyLCBQYW9sbyBCb256aW5pIHdyb3RlOgo+PiBPbiAyMS8wNC8y
-MCAyMDo0MSwgQW5kcmEgUGFyYXNjaGl2IHdyb3RlOgo+Pj4gVGhlIE5pdHJvIEVuY2xhdmVzIChO
-RSkgZHJpdmVyIGNvbW11bmljYXRlcyB3aXRoIGEgbmV3IFBDSSBkZXZpY2UsIHRoYXQKPj4+IGlz
-IGV4cG9zZWQgdG8gYSB2aXJ0dWFsIG1hY2hpbmUgKFZNKSBhbmQgaGFuZGxlcyBjb21tYW5kcyBt
-ZWFudCBmb3IKPj4+IGhhbmRsaW5nIGVuY2xhdmVzIGxpZmV0aW1lIGUuZy4gY3JlYXRpb24sIHRl
-cm1pbmF0aW9uLCBzZXR0aW5nIG1lbW9yeQo+Pj4gcmVnaW9ucy4gVGhlIGNvbW11bmljYXRpb24g
-d2l0aCB0aGUgUENJIGRldmljZSBpcyBoYW5kbGVkIHVzaW5nIGEgTU1JTwo+Pj4gc3BhY2UgYW5k
-IE1TSS1YIGludGVycnVwdHMuCj4+Pgo+Pj4gVGhpcyBkZXZpY2UgY29tbXVuaWNhdGVzIHdpdGgg
-dGhlIGh5cGVydmlzb3Igb24gdGhlIGhvc3QsIHdoZXJlIHRoZSBWTQo+Pj4gdGhhdCBzcGF3bmVk
-IHRoZSBlbmNsYXZlIGl0c2VsZiBydW4sIGUuZy4gdG8gbGF1bmNoIGEgVk0gdGhhdCBpcyB1c2Vk
-Cj4+PiBmb3IgdGhlIGVuY2xhdmUuCj4+Pgo+Pj4gRGVmaW5lIHRoZSBNTUlPIHNwYWNlIG9mIHRo
-ZSBQQ0kgZGV2aWNlLCB0aGUgY29tbWFuZHMgdGhhdCBhcmUKPj4+IHByb3ZpZGVkIGJ5IHRoaXMg
-ZGV2aWNlLiBBZGQgYW4gaW50ZXJuYWwgZGF0YSBzdHJ1Y3R1cmUgdXNlZCBhcyBwcml2YXRlCj4+
-PiBkYXRhIGZvciB0aGUgUENJIGRldmljZSBkcml2ZXIgYW5kIHRoZSBmdW5jdGlvbnMgZm9yIHRo
-ZSBQQ0kgZGV2aWNlIAo+Pj4gaW5pdAo+Pj4gLyB1bmluaXQgYW5kIGNvbW1hbmQgcmVxdWVzdHMg
-aGFuZGxpbmcuCj4+Pgo+Pj4gU2lnbmVkLW9mZi1ieTogQWxleGFuZHJ1LUNhdGFsaW4gVmFzaWxl
-IDxsZXhudkBhbWF6b24uY29tPgo+Pj4gU2lnbmVkLW9mZi1ieTogQWxleGFuZHJ1IENpb2JvdGFy
-dSA8YWxjaW9hQGFtYXpvbi5jb20+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBBbmRyYSBQYXJhc2NoaXYg
-PGFuZHJhcHJzQGFtYXpvbi5jb20+Cj4+PiAtLS0KPj4+IMKgIC4uLi92aXJ0L2FtYXpvbi9uaXRy
-b19lbmNsYXZlcy9uZV9wY2lfZGV2LmjCoMKgIHwgMjY2IAo+Pj4gKysrKysrKysrKysrKysrKysr
-Cj4+PiDCoCAxIGZpbGUgY2hhbmdlZCwgMjY2IGluc2VydGlvbnMoKykKPj4+IMKgIGNyZWF0ZSBt
-b2RlIDEwMDY0NCBkcml2ZXJzL3ZpcnQvYW1hem9uL25pdHJvX2VuY2xhdmVzL25lX3BjaV9kZXYu
-aAo+PiBDYW4gdGhpcyBiZSBwbGFjZWQganVzdCBpbiBkcml2ZXJzL3ZpcnQvbml0cm9fZW5jbGF2
-ZXMsIG9yCj4+IGRyaXZlcnMvdmlydC9lbmNsYXZlL25pdHJvP8KgIEl0J3Mgbm90IHVubGlrZWx5
-IHRoYXQgdGhpcyBkZXZpY2UgYmUKPj4gaW1wbGVtZW50ZWQgb3V0c2lkZSBFQzIgc29vbmVyIG9y
-IGxhdGVyLCBhbmQgdGhlcmUncyBub3RoaW5nCj4+IEFtYXpvbi1zcGVjaWZpYyBhcyBmYXIgYXMg
-SSBjYW4gc2VlIGZyb20gdGhlIFVBUEkuCj4KPiBJIGNhbiB1cGRhdGUgdGhlIHBhdGggdG8gZHJp
-dmVycy92aXJ0L25pdHJvX2VuY2xhdmVzLgo+Cj4gVGhlIFBDSSBkZXZpY2UgaW4gdGhlIHBhdGNo
-IHNlcmllcyBpcyByZWdpc3RlcmVkIHVuZGVyIEFtYXpvbiBQQ0kgCj4gVmVuZG9yIElEIGFuZCBp
-dCBoYXMgdGhpcyBQQ0kgRGV2aWNlIElEIC0gMHhlNGMxLgoKdjIgbm93IGluY2x1ZGVzIHRoZSB1
-cGRhdGVkIHBhdGggLSBkcml2ZXJzL3ZpcnQvbml0cm9fZW5jbGF2ZXMuCgpUaGFua3MsCkFuZHJh
-CgoKCgpBbWF6b24gRGV2ZWxvcG1lbnQgQ2VudGVyIChSb21hbmlhKSBTLlIuTC4gcmVnaXN0ZXJl
-ZCBvZmZpY2U6IDI3QSBTZi4gTGF6YXIgU3RyZWV0LCBVQkM1LCBmbG9vciAyLCBJYXNpLCBJYXNp
-IENvdW50eSwgNzAwMDQ1LCBSb21hbmlhLiBSZWdpc3RlcmVkIGluIFJvbWFuaWEuIFJlZ2lzdHJh
-dGlvbiBudW1iZXIgSjIyLzI2MjEvMjAwNS4K
+The defines RK_GPIO0, RK_GPIO1, RK_GPIO2, RK_GPIO3,
+RK_GPIO4 and RK_GPIO6 are no longer used. Mark them as
+"deprecated" to prevent that someone start using them again.
+
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ include/dt-bindings/pinctrl/rockchip.h | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/include/dt-bindings/pinctrl/rockchip.h b/include/dt-bindings/pinctrl/rockchip.h
+index 6d6bac1c2..e379ec110 100644
+--- a/include/dt-bindings/pinctrl/rockchip.h
++++ b/include/dt-bindings/pinctrl/rockchip.h
+@@ -9,12 +9,12 @@
+ #ifndef __DT_BINDINGS_ROCKCHIP_PINCTRL_H__
+ #define __DT_BINDINGS_ROCKCHIP_PINCTRL_H__
+ 
+-#define RK_GPIO0	0
+-#define RK_GPIO1	1
+-#define RK_GPIO2	2
+-#define RK_GPIO3	3
+-#define RK_GPIO4	4
+-#define RK_GPIO6	6
++#define RK_GPIO0	0 /* deprecated */
++#define RK_GPIO1	1 /* deprecated */
++#define RK_GPIO2	2 /* deprecated */
++#define RK_GPIO3	3 /* deprecated */
++#define RK_GPIO4	4 /* deprecated */
++#define RK_GPIO6	6 /* deprecated */
+ 
+ #define RK_PA0		0
+ #define RK_PA1		1
+-- 
+2.11.0
 
