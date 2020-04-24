@@ -2,55 +2,51 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD40C55194
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D183C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EDD02087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 622C620700
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:24:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587731037;
-	bh=Hs8s9eHC6FrR8kVw+W14GPnW2VfpOKl6QsOnOLWjeE4=;
+	s=default; t=1587731044;
+	bh=PtDDryNXCt/9ihdYD2ZXT+uVLrhInNakO1Houm02HMs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RBROYuAnsjyaT26ukdF5oowyAV3syumkdbVmYZ+VOSgBDDV0jN0rikmgIlkCudGsH
-	 VJpeuwo16o/llM+HFpFjaUgQOsf+s0Z57z+YHKbuPvyaPCIsNEIUWco2Ux9ixsKx+X
-	 K0q07QGqYiJI5CVSydU9HM3d7gUaIw7NomQF52qY=
+	b=XIde4fYHuVhJnjad8H5TjXn5cK7YuJXNPk4a5dUwXw8NhptTaNig38grrnLY6ulxe
+	 5UKceTCFq+s0rKuhkRPYEj0bndmFwD3wB62uVBEgH1jeMhDReXD7XOWwJL72AQgWkG
+	 tfCxJFZhjk8PVPenvn19EkZAIWoJxcaJCynL2zZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728211AbgDXMX4 (ORCPT
+        id S1726699AbgDXMYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:23:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53940 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:24:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728153AbgDXMXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:23:48 -0400
+        id S1728190AbgDXMXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:23:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F6F220706;
-        Fri, 24 Apr 2020 12:23:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E760820706;
+        Fri, 24 Apr 2020 12:23:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587731028;
-        bh=Hs8s9eHC6FrR8kVw+W14GPnW2VfpOKl6QsOnOLWjeE4=;
+        s=default; t=1587731033;
+        bh=PtDDryNXCt/9ihdYD2ZXT+uVLrhInNakO1Houm02HMs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m/YrB3Rl3V+wlQUT5tRJ8NpTtOgSLqL3bjFa+hrtwERiK7mniW8o5G8rWDGMNSC9A
-         4eLNaWqtVhobB4Mz4LUhkfwXi1LQu6kBZHWRpbglgCS6tJi1BPtdypRwI+MuN0LbBW
-         TJ8tmqC9q55S4A1MPdv5dxKNLy09NVBmY7NtOwN8=
+        b=ze+jnc3sIU0XgPHPoBdXPizwyYz67A1Fz1jz/d5DGaGqVXD6ZYlytEicbuH93Dvl2
+         w8+w5/XgW9ZDVJtBSX3NhJ4qs/+l7HHrqvKD5FBbAIhNhEaMfCVV+P/og2VMGMVjfl
+         MPZ4blyeQuy9VA3J2znI9IM9F+nSmV4ALomlb74E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fangrui Song <maskray@google.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.4 21/26] arm64: Delete the space separator in __emit_inst
-Date:   Fri, 24 Apr 2020 08:23:18 -0400
-Message-Id: <20200424122323.10194-21-sashal@kernel.org>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 26/26] hwmon: (jc42) Fix name to have no illegal characters
+Date:   Fri, 24 Apr 2020 08:23:23 -0400
+Message-Id: <20200424122323.10194-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200424122323.10194-1-sashal@kernel.org>
 References: <20200424122323.10194-1-sashal@kernel.org>
@@ -63,67 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fangrui Song <maskray@google.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
 
-[ Upstream commit c9a4ef66450145a356a626c833d3d7b1668b3ded ]
+[ Upstream commit c843b382e61b5f28a3d917712c69a344f632387c ]
 
-In assembly, many instances of __emit_inst(x) expand to a directive. In
-a few places __emit_inst(x) is used as an assembler macro argument. For
-example, in arch/arm64/kvm/hyp/entry.S
+The jc42 driver passes I2C client's name as hwmon device name. In case
+of device tree probed devices this ends up being part of the compatible
+string, "jc-42.4-temp". This name contains hyphens and the hwmon core
+doesn't like this:
 
-  ALTERNATIVE(nop, SET_PSTATE_PAN(1), ARM64_HAS_PAN, CONFIG_ARM64_PAN)
+jc42 2-0018: hwmon: 'jc-42.4-temp' is not a valid name attribute, please fix
 
-expands to the following by the C preprocessor:
+This changes the name to "jc42" which doesn't have any illegal
+characters.
 
-  alternative_insn nop, .inst (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
-
-Both comma and space are separators, with an exception that content
-inside a pair of parentheses/quotes is not split, so the clang
-integrated assembler splits the arguments to:
-
-   nop, .inst, (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
-
-GNU as preprocesses the input with do_scrub_chars(). Its arm64 backend
-(along with many other non-x86 backends) sees:
-
-  alternative_insn nop,.inst(0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
-  # .inst(...) is parsed as one argument
-
-while its x86 backend sees:
-
-  alternative_insn nop,.inst (0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
-  # The extra space before '(' makes the whole .inst (...) parsed as two arguments
-
-The non-x86 backend's behavior is considered unintentional
-(https://sourceware.org/bugzilla/show_bug.cgi?id=25750).
-So drop the space separator inside `.inst (...)` to make the clang
-integrated assembler work.
-
-Suggested-by: Ilie Halip <ilie.halip@gmail.com>
-Signed-off-by: Fangrui Song <maskray@google.com>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/939
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Link: https://lore.kernel.org/r/20200417092853.31206-1-s.hauer@pengutronix.de
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/sysreg.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/hwmon/jc42.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-index 6e919fafb43dd..9b68f1b3915ec 100644
---- a/arch/arm64/include/asm/sysreg.h
-+++ b/arch/arm64/include/asm/sysreg.h
-@@ -49,7 +49,9 @@
- #ifndef CONFIG_BROKEN_GAS_INST
+diff --git a/drivers/hwmon/jc42.c b/drivers/hwmon/jc42.c
+index f2d81b0558e56..e3f1ebee71306 100644
+--- a/drivers/hwmon/jc42.c
++++ b/drivers/hwmon/jc42.c
+@@ -506,7 +506,7 @@ static int jc42_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 	}
+ 	data->config = config;
  
- #ifdef __ASSEMBLY__
--#define __emit_inst(x)			.inst (x)
-+// The space separator is omitted so that __emit_inst(x) can be parsed as
-+// either an assembler directive or an assembler macro argument.
-+#define __emit_inst(x)			.inst(x)
- #else
- #define __emit_inst(x)			".inst " __stringify((x)) "\n\t"
- #endif
+-	hwmon_dev = devm_hwmon_device_register_with_info(dev, client->name,
++	hwmon_dev = devm_hwmon_device_register_with_info(dev, "jc42",
+ 							 data, &jc42_chip_info,
+ 							 NULL);
+ 	return PTR_ERR_OR_ZERO(hwmon_dev);
 -- 
 2.20.1
 
