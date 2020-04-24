@@ -2,121 +2,149 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D243C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4613DC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 234FB20706
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 206A92087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:06:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n4peOn/s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NH651Ypc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbgDXPFk (ORCPT
+        id S1727101AbgDXPGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:05:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48102 "EHLO
+        Fri, 24 Apr 2020 11:06:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726717AbgDXPFj (ORCPT
+        by vger.kernel.org with ESMTP id S1726301AbgDXPGf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:05:39 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2523C09B045;
-        Fri, 24 Apr 2020 08:05:37 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id r14so4928483pfg.2;
-        Fri, 24 Apr 2020 08:05:37 -0700 (PDT)
+        Fri, 24 Apr 2020 11:06:35 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC410C09B045;
+        Fri, 24 Apr 2020 08:06:35 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id o19so10453814qkk.5;
+        Fri, 24 Apr 2020 08:06:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=d4gGd17nKXAZGsG4iVsACxdSRpoMmpH7XJzq4FM92WM=;
-        b=n4peOn/s/AQG8koZqpSrfBKGJB1DH60y3deG8H5m2P1g+SuMSiEtld5J5vGAWrpX0P
-         /BUSssIG+0rGdcPoF7u9ME1/E966Jawd9DhaaeB9DFgQJPdWlXJW0VRD0ptv4yQUNbs6
-         1gv82m6FH6lxsMio7sDaVO6b7Oa02eHBW5Ey5HPBxq8EygtY2sCPUhExZPSFmfT1QtJf
-         IfY/9dlNW2HJUowUcrbDkjBpwrseWQBFA0pksskUfQKy+N7yllXmZWGJnGRWAgPOrg2O
-         XFl6L3WIocCB/mPND6GqF2jdJmXMj/KWzUv/XNsfQOGuPq+nCp0H5BSJPjdIpp+Aidy5
-         0mhw==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=yyX/3hlYI9v8tniswwYztr6J4TMawjRxXhM0VuPsDdM=;
+        b=NH651Ypc8kYaUmZRnZHoe1JJ3fUD2+GJ3Ju660JSJbKdjO/JCCfEnXMSbakVxDPR3I
+         qlOXYi3UQkbrihFjzTzqi4rlyplp9mqERg06+Ye/uKROe4g6knNMuq4fEY/1Bn/REPhf
+         YLt7GRxUm0FPcAu47KIwA7QADukeo0rQY6V14KjHcUmFl2e0CkpBvNVqhVdvolQ0/COm
+         ccgjXiyQRe4bHPQ8URk26SSPW5ZFk4avXRwcriBEscsEjXf6ajuqjQmofaIQpagLGfVZ
+         alejKa0+l0fdeCGdEQWiuNrODXjN5hfhQvMVVO/nJXJoW2oxVo28Zl68N0XQVH3MD2Qv
+         H8lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=d4gGd17nKXAZGsG4iVsACxdSRpoMmpH7XJzq4FM92WM=;
-        b=ZsWWIO9vSMWYborJp5iyZflbYN2iCY7LJIhIPOKP45nCQJlGWZsp09TBUfzCOP3/Qb
-         KSRRzylMq4SopQ0ZLzOLiJ0L8CdSw7GuzSAZrLOZrN3XWN7cDaKV0YlIvlYw3VenLBlD
-         8bRPfshiIe2sykjv41yjZezomSB/G4sIhdH0iHEFBDyXXqWAGM/of5vt3tlEou7+zbR8
-         qrqJWJjCUrdXASA6HjTcJI7nEbN90Q4jztz5S17p2MA4W1UHZgO/0GMduOu/EKE2dDrq
-         evOOhaiObqVkf1xQbL6dhfgqUZYZSGWlOuakDjhA3pvBinYaRAuC/4WS08Ube3faQLXf
-         nPGQ==
-X-Gm-Message-State: AGi0PuYNr37SqLE5XX6poIbgChOP3vtP2ZVXkx3lce7wVsYME/v82bJg
-        QG11P/BqEz05rVxio8RrQIq+aPen
-X-Google-Smtp-Source: APiQypKcZXLckuTzIO760BvGIrtUlZK84e+1m4OPJqIJ8UnZ6DtIh82hQIS4MhMMyJvGV1m8X2uTUQ==
-X-Received: by 2002:a63:2143:: with SMTP id s3mr9510994pgm.20.1587740736829;
-        Fri, 24 Apr 2020 08:05:36 -0700 (PDT)
-Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
-        by smtp.gmail.com with ESMTPSA id y24sm6058461pfn.211.2020.04.24.08.05.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Apr 2020 08:05:35 -0700 (PDT)
-Subject: Re: [PATCH] net: openvswitch: use do_div() for 64-by-32 divisions:
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Pravin B Shelar <pshelar@ovn.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Tonghao Zhang <xiangxia.m.yue@gmail.com>
-Cc:     netdev@vger.kernel.org, dev@openvswitch.org,
-        linux-kernel@vger.kernel.org
-References: <20200424121051.5056-1-geert@linux-m68k.org>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <d2c14a2d-4e7b-d36a-be90-e987b1ea6183@gmail.com>
-Date:   Fri, 24 Apr 2020 08:05:34 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=yyX/3hlYI9v8tniswwYztr6J4TMawjRxXhM0VuPsDdM=;
+        b=sK+MaY4rdBBYO11SptlCAm0V6dsOl6F7EIz8NsV2rPrQZCwZU1dCmPkWQU/xj7oMM/
+         tO9kTj/afVlwQaqtsfERM9JX11MpcIX8czYDPWXqRYCEmodHA4ENjj8zWYaRm/OXBXjr
+         giaGwv+8/R15dVlcC0EyfRXQ7FXZHvabUSBZgPppoLrsaW8YfDOGJt5aGrsSW7EaP7bx
+         /trXc41e4Qv4Wy+gBOQctfPXioZMLGDqb4m0CCgV0NR+o+ZvUvFos0CIAP8a9+CXsqc4
+         aLX2s76Jyc1BvbnWkLKb8o0PNRhrQ27x01Dem/hV87ACGXybrmDdcClWfDANl0FR1azO
+         sByA==
+X-Gm-Message-State: AGi0Pubv+ZVMPEdsTp6vyuHs5ke2yqb7SNh3ODpGwgSE3rQ54O2b0qA+
+        PAz7jCVqJNCn+Zd+ydWaDP8=
+X-Google-Smtp-Source: APiQypKtscCOWMmu820+Wft70OlEY8PI5k3/2hiIPFvw+plUyz3duppEjFYPb+sUqI7aArSzgtVvZg==
+X-Received: by 2002:a37:9d8c:: with SMTP id g134mr9666653qke.307.1587740794854;
+        Fri, 24 Apr 2020 08:06:34 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id y185sm2740750qkd.29.2020.04.24.08.06.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Apr 2020 08:06:33 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 78FFC409A3; Fri, 24 Apr 2020 12:06:31 -0300 (-03)
+Date:   Fri, 24 Apr 2020 12:06:31 -0300
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        heiko.carstens@de.ibm.com
+Subject: Re: [PATCH] perf symbol: Fix kernel symbol address display
+Message-ID: <20200424150631.GN19437@kernel.org>
+References: <20200415070744.59919-1-tmricht@linux.ibm.com>
+ <20200420204617.GA23638@kernel.org>
+ <475a5c86-2be3-4f12-56f3-7bd6587e8ec3@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200424121051.5056-1-geert@linux-m68k.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <475a5c86-2be3-4f12-56f3-7bd6587e8ec3@linux.ibm.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/24/20 5:10 AM, Geert Uytterhoeven wrote:
-> On 32-bit architectures (e.g. m68k):
+Em Fri, Apr 24, 2020 at 02:37:01PM +0200, Thomas Richter escreveu:
+> On 4/20/20 10:46 PM, Arnaldo Carvalho de Melo wrote:
+> > Em Wed, Apr 15, 2020 at 09:07:44AM +0200, Thomas Richter escreveu:
+> >> Running commands
+> >>
+> >>    ./perf record -e rb0000 -- find .
+> >>    ./perf report -v
+> > 
+> > Or when pressing 'V' in the TUI.
+> >  
+> >> reveals symbol names and its addresses. There is a mismatch between
+> > 
+> > Yeah, an address that at some point was put there to help with debugging
+> > the symbol resolution, IIRC how it looked like when looking at
+> > 
+> >   readelf -sW vmlinux
+> > 
+> > Or any other DSO, for instance, for a glibc symbol here:
+> > 
+> > Using 'perf report -s pid,dso,sym' then pressing 'V':
+> > 
+> >    1.55%    20325:perf  /usr/lib64/libc-2.30.so   0x161825   B [.] __strlen_avx2
+> > 
+> > [acme@five perf]$ readelf -sW /usr/lib64/libc-2.30.so | grep strlen_avx2
+> >  24371: 0000000000161810   414 FUNC    LOCAL  DEFAULT   15 __strlen_avx2
+> > [acme@five perf]$ 
+> > 
+> > Can you check if doing in /lib/modules/.../build/vmlinux produces what
+> > appears when 'V' is in place?
+> > 
+> > And perhaps we can also show the DSO offset and the rip as it gets laid
+> > out in memory in the end? So we have all the informations?
+> > 
+> > - Arnaldo
+> > 
 > 
->     ERROR: modpost: "__udivdi3" [net/openvswitch/openvswitch.ko] undefined!
->     ERROR: modpost: "__divdi3" [net/openvswitch/openvswitch.ko] undefined!
+> Arnaldo,
 > 
-> Fixes: e57358873bb5d6ca ("net: openvswitch: use u64 for meter bucket")
-> Reported-by: noreply@ellerman.id.au
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> ---
->  net/openvswitch/meter.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> having verified this also works in the TUI mode using 'V', are you going to pick
+> this patch?
+
+That would be a change in behaviour, the original intent was to show the
+value one would get from the ELF symbol table, isn't that the case?
+
+That is why I asked if you would think that providing the information
+you want, which is matching to what is in kallsyms, would be
+interesting, which I think it is, but how? showing the vmlinux offset
+somehow?
+ 
+> Thanks
 > 
-> diff --git a/net/openvswitch/meter.c b/net/openvswitch/meter.c
-> index 915f31123f235c03..3498a5ab092ab2b8 100644
-> --- a/net/openvswitch/meter.c
-> +++ b/net/openvswitch/meter.c
-> @@ -393,7 +393,7 @@ static struct dp_meter *dp_meter_create(struct nlattr **a)
->  		 * Start with a full bucket.
->  		 */
->  		band->bucket = (band->burst_size + band->rate) * 1000ULL;
-> -		band_max_delta_t = band->bucket / band->rate;
-> +		band_max_delta_t = do_div(band->bucket, band->rate);
->  		if (band_max_delta_t > meter->max_delta_t)
->  			meter->max_delta_t = band_max_delta_t;
->  		band++;
 > 
+> -- 
+> Thomas Richter, Dept 3252, IBM s390 Linux Development, Boeblingen, Germany
+> --
+> Vorsitzender des Aufsichtsrats: Matthias Hartmann
+> Geschäftsführung: Dirk Wittkopp
+> Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
 
-This is fascinating... Have you tested this patch ?
+-- 
 
-Please double check what do_div() return value is supposed to be !
-
-Thanks.
+- Arnaldo
