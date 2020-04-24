@@ -2,128 +2,126 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35EA3C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 259A9C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 158F920767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:28:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587731334;
-	bh=khfuUtphoGowJXyD29xSnB3vDa40rTfdz83YDfqA7vA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fnLNOzsRHRWoLkYSB2PXzk7ZvMiK7pFobwFNESFCq4tRpWpeZMNw91dBUGsbVlqmH
-	 KtWzcBqwb66jvsC28wmhqCao+jB85KT/IyXnLt2rYNFZuciJ2bsHHJwbTY752XYYSl
-	 mxXTErGoMowxPOSLmX4J4YDOLv8++lGWPEtt8Aeg=
+	by mail.kernel.org (Postfix) with ESMTP id F218220767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:28:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fvvc1Cpv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728545AbgDXM2x (ORCPT
+        id S1728713AbgDXM25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:28:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54632 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728310AbgDXMYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:24:13 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2404C2168B;
-        Fri, 24 Apr 2020 12:24:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587731053;
-        bh=khfuUtphoGowJXyD29xSnB3vDa40rTfdz83YDfqA7vA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PSZaFWnxGouv3RBRQjVuw8NABOvqTf/3/9pBkkHAiinfrgZYCew/UK/DQFt9die68
-         3a/V7mcyhJx1QDh/aZ2gnHt7om3Df9bVSFotSs5B/+LlgV4hucivrECr/UmcUdOhlF
-         9iXTrpIKx8r/WLHGkNb27JPkbLhwMkcP7alHjv70=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fangrui Song <maskray@google.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 14/18] arm64: Delete the space separator in __emit_inst
-Date:   Fri, 24 Apr 2020 08:23:51 -0400
-Message-Id: <20200424122355.10453-14-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200424122355.10453-1-sashal@kernel.org>
-References: <20200424122355.10453-1-sashal@kernel.org>
+        Fri, 24 Apr 2020 08:28:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51798 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728213AbgDXM2y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:28:54 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A62BC09B045;
+        Fri, 24 Apr 2020 05:28:54 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id u10so7526505lfo.8;
+        Fri, 24 Apr 2020 05:28:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=k60UfD2VvBeqBR1jDBzYaJ+PcNnTDpEV245LnyiomDc=;
+        b=Fvvc1CpvO2kTUW3CN4WXkCvbalXgjoKl8RN1Zg0SM0fKe39PWZs6HdM05NtgxbI0qK
+         odQmc/Fhc3vUJv1pVcMIx96Io2J7GF+mx0evj2sbJDE6BIFp676xLh3eDGaRL0Vixvp+
+         bPjw3i18QpY4WTdIqEo/EsNCQxMHA78KIPsawcAU6Asl5pqrdMVI+LRqZkmKaGSnwKM/
+         EP3wZiIZ5KfvMzyOggdeYADddHL7WbpwtFJ7qK9LooUSm1EQxLby6BWgsNC/Ui+w/a1X
+         OZSEre0HE6S637vg0ju0ZfyJxRghFxEjHgVQURiWw3zRg4zmr0glquK7UIuKsNCztjQP
+         n3cA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=k60UfD2VvBeqBR1jDBzYaJ+PcNnTDpEV245LnyiomDc=;
+        b=CEjA8EURxP/UHhfqH3k6t6zm584fPQAfbkka1+7k9p9Waz4S+jB14wIeFNFca0iH/5
+         XWIJxYg8/Uah6Tbzc7Y4Bw7YGbBhvtQl3sK/2lM3X7x5QUI25uws1T4cDMDZOysm1+ns
+         2+jGRkJUvH6b93AAp2QhmB9+0YaloQSBSurNwVj5lmXwhcRbFySYDGcWcDA30l1kSO73
+         tYTY+pvrZ3Rhs97aOyOm5p1w4sH/8SCzbwop+0ugP95Ln6o8IcxJsc5kQiOIQCdXi3N/
+         CjyrtSJBl08ouQ+lBcALH7elr+saNjj9jD8Cmv8GBEp0m1gvmwySJFPDP7KH71IHObM7
+         gRUA==
+X-Gm-Message-State: AGi0PuYchwyn8lk7WfCtoI+qqZjuTNLAAr3DiKDAUn872inMFB/8dHKR
+        7gOpAftUQosTBWhogU8zO+U=
+X-Google-Smtp-Source: APiQypL+5Ph8LgmCGcZsihaI0P2D/qLm24X5ZCz7Lj4PdtcDPWF2S10Om0rJtJRItzJNqj6cDOAN+w==
+X-Received: by 2002:a19:700b:: with SMTP id h11mr6207726lfc.89.1587731332534;
+        Fri, 24 Apr 2020 05:28:52 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id f26sm4270043lfc.84.2020.04.24.05.28.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Apr 2020 05:28:51 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Fri, 24 Apr 2020 14:28:35 +0200
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu <rcu@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH RFC] rcu/tree: Refactor object allocation and try harder
+ for array allocation
+Message-ID: <20200424122835.GA4686@pc636>
+References: <20200416131745.GA90777@google.com>
+ <20200416180100.GT17661@paulmck-ThinkPad-P72>
+ <20200422145752.GB362484@cmpxchg.org>
+ <20200422153503.GQ17661@paulmck-ThinkPad-P72>
+ <20200423174831.GB389168@cmpxchg.org>
+ <20200423180249.GT17661@paulmck-ThinkPad-P72>
+ <20200423182750.GA32451@pc636>
+ <20200423192115.GV17661@paulmck-ThinkPad-P72>
+ <20200423195955.GA476@pc636>
+ <CAEXW_YSt=yLDS4Fj7atqB_OYiKAvt2472eTKcytEkzVABUMPkQ@mail.gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEXW_YSt=yLDS4Fj7atqB_OYiKAvt2472eTKcytEkzVABUMPkQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fangrui Song <maskray@google.com>
+> 
+> I think Johannes said that waking up kswapd is Ok. OTOH, I did not see
+> the drawback in waking up kswapd to do background reclaim since it
+> does not happen synchronously right? I think Johannes said we can do
+> better than just waking kswapd by also doing light direct reclaim
+> using __GFP_NORETRY but let me know if I missed something.
+> 
+Then i misunderstood that point. So, seems it is settled now. We just
+use GFP_NOWAIT | __GFP_RECLAIM | __GFP_NORETRY | __GFP_NOWARN for headless
+case, i.e. when we can sleep. It will do direct reclaim(slow path), but
+light one because of __GFP_NORETRY.
 
-[ Upstream commit c9a4ef66450145a356a626c833d3d7b1668b3ded ]
+Does it sound good?
 
-In assembly, many instances of __emit_inst(x) expand to a directive. In
-a few places __emit_inst(x) is used as an assembler macro argument. For
-example, in arch/arm64/kvm/hyp/entry.S
+> > For single argument we inline freeing into current context after
+> > synchronize_rcu() because it follows might_sleep() annotation.
+> 
+> Yes.
+> 
+> Also, with the additional caching being planned, we could avoid the
+> chances of hitting the synchronize_rcu inlining.
+> 
+Or minimize it.
 
-  ALTERNATIVE(nop, SET_PSTATE_PAN(1), ARM64_HAS_PAN, CONFIG_ARM64_PAN)
+There is also one question i would like to clarify. That is dynamic head
+attaching that requires small allocations. Do we drop it?
 
-expands to the following by the C preprocessor:
+Thanks!
 
-  alternative_insn nop, .inst (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
-
-Both comma and space are separators, with an exception that content
-inside a pair of parentheses/quotes is not split, so the clang
-integrated assembler splits the arguments to:
-
-   nop, .inst, (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
-
-GNU as preprocesses the input with do_scrub_chars(). Its arm64 backend
-(along with many other non-x86 backends) sees:
-
-  alternative_insn nop,.inst(0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
-  # .inst(...) is parsed as one argument
-
-while its x86 backend sees:
-
-  alternative_insn nop,.inst (0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
-  # The extra space before '(' makes the whole .inst (...) parsed as two arguments
-
-The non-x86 backend's behavior is considered unintentional
-(https://sourceware.org/bugzilla/show_bug.cgi?id=25750).
-So drop the space separator inside `.inst (...)` to make the clang
-integrated assembler work.
-
-Suggested-by: Ilie Halip <ilie.halip@gmail.com>
-Signed-off-by: Fangrui Song <maskray@google.com>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/939
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/include/asm/sysreg.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-index 3091ae5975a3a..ed99d941c4623 100644
---- a/arch/arm64/include/asm/sysreg.h
-+++ b/arch/arm64/include/asm/sysreg.h
-@@ -60,7 +60,9 @@
- #ifndef CONFIG_BROKEN_GAS_INST
- 
- #ifdef __ASSEMBLY__
--#define __emit_inst(x)			.inst (x)
-+// The space separator is omitted so that __emit_inst(x) can be parsed as
-+// either an assembler directive or an assembler macro argument.
-+#define __emit_inst(x)			.inst(x)
- #else
- #define __emit_inst(x)			".inst " __stringify((x)) "\n\t"
- #endif
--- 
-2.20.1
-
+--
+Vlad Rezki
