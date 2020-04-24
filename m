@@ -2,99 +2,150 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CC9C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76157C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6975D20736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A60920767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:41:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ADkPnr9y"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="QZciqfKy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbgDXNlH (ORCPT
+        id S1728075AbgDXNlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 09:41:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34812 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727083AbgDXNk7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 09:40:59 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D9C5C09B048
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 06:40:58 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id s10so10885756wrr.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 06:40:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Ndmpq96aa384Sl37ToPJaNdgDlf/x8LYEzQhHaZaot8=;
-        b=ADkPnr9yiaJF6N83Qi1UawN9bUOTC2Lz/MtEbZn5OOZx/E5srl3KrUk2E27M/S2X4r
-         U1eeGYQLhrcy++Mk8dVDU98gGWuwX0FrxKaeRuzRQYoexv3d2HB1sScZ3lMTK8k+uxR7
-         SnkeUasvRakQ1tu2bREUrO8DV6761/6cnQYh5vTiQ+QrZ57zSXb+rwbzqS2tnRORzxI3
-         EJGcPmAcEl/wDCAeDX+1PSnhr2yPh/U8tLNgst4aOKqOpfHU5fpuNOtFjZsSIIAuzVy7
-         56vs+RbGY7D0CMMyXQmAJSoPpYhpNXhGPea3ipagCNecPElxA5TMVfb1f+7AzTn7m1GH
-         ijaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Ndmpq96aa384Sl37ToPJaNdgDlf/x8LYEzQhHaZaot8=;
-        b=Hx5lXlGwJbjmjBvCjE0zTXkfQ0rmWQTNnNKkbjZJ50NeGp5nruYd1/NymlZ3HOQIOv
-         C2Oh0VWL44EmvebSa6+H8eqmYChaf01T7YmQfYDI2NZit/yQS7j/z70QV1IQExXKRAkC
-         NkWHVEhiU+s2ReFottIVYSTDKX/LzkOhOlw0eIFutYYacpGHbI8sn1kztwg1y7DX9xVv
-         HRfJJDUj5MvWDxhKnHdr+UT98X2xJsLl1Jvg/H5ZrOKNCL3snl1bFf2izIEATjs/JSDE
-         uItb/eLgXdpe9Kz1eP4cRWtvU/aZqS7X9sCggUuTqQME+wNmAQWQ4f+d3Hrz800iDFFY
-         /dig==
-X-Gm-Message-State: AGi0PuahfwR/YKtn15telNw38T0mNmnF5QjjWqvdvXi2v0oa7oHgEQS1
-        agu2APIIr5WmBpFVIdoAGtpsgQ==
-X-Google-Smtp-Source: APiQypIM3oR2zdqBn4FAYYq15nUy0OKbqAG2Qu+Xz4Qva4HgoEXlu8D3GkIfWKWMwxq1IUmnin2vMQ==
-X-Received: by 2002:adf:83c2:: with SMTP id 60mr11023887wre.169.1587735657134;
-        Fri, 24 Apr 2020 06:40:57 -0700 (PDT)
-Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id 185sm3408958wmc.32.2020.04.24.06.40.56
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 Apr 2020 06:40:56 -0700 (PDT)
-From:   Corentin Labbe <clabbe@baylibre.com>
-To:     davem@davemloft.net, herbert@gondor.apana.org.au
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH v3 2/3] crypto: CRYPTO_CTR no longer need CRYPTO_SEQIV
-Date:   Fri, 24 Apr 2020 13:40:46 +0000
-Message-Id: <1587735647-17718-3-git-send-email-clabbe@baylibre.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1587735647-17718-1-git-send-email-clabbe@baylibre.com>
-References: <1587735647-17718-1-git-send-email-clabbe@baylibre.com>
+        Fri, 24 Apr 2020 09:41:23 -0400
+Received: from mail-am6eur05on2072.outbound.protection.outlook.com ([40.107.22.72]:6215
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727083AbgDXNlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 09:41:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AzxSm5PNRxPyA/MI4t2cOATXnNGoBg+V850WaNiLrCUnQWiQTGjYGFEjr4pnwd1Ov6Ez2t/+klJ9mnZtyY7KU1eZEF70kigHCB/axCbO7wPfyuhFM/9YGNhAMPu90tBHqm9KupLd8Ej6FULfi1mvLcR3FivUbOcn4SB/pVY0aE87tJLPgSJU/bdIk6QxUmuaTm59RBrP2heSsS+fls/YAt/1M+T06alN4bocSCo4qxAl9ft/NBtfnAB6WPeK2bSOh6qFwD1wB9KSiRfoeM+RKHsMNHpC0OgbzP/cYH6RRRk33daQcJxBltbZpdLLRjxTQ9jswSu1LJSBWDiSceOVuA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TVDkDJzt0P7oZrY6N6wDFkwF6QElWuyqzr6CFV1sTR0=;
+ b=matQzPa+oZ7ajhCUymEg4dHyH9t7E4gg6WUTv/f7Hbc3tZdZzf9Lqp3v0eTGJ1SfUnW/QagJQw6o4k7FgSAZnt45QxfzGimy7c/AOQWu1J/foBjIdIAJp44zsZOhmerCmYojg0rACuWwHbGkn5E1LDKuY+PfupaS+eK9pu82t9JxGCWNV/NrazYuKja92cO14B7CFeHAVRlzIQLcA/6ed0RULc2TWzR/CvDfmYqKrJAnKSp8NVYnu6FcXt5SyvGv0EEot89MY02W5F1RErZS4aOrp4N0tRXEsM0YcoYVYp+Rt7TVilOdXdMWIgHCrvHDf4Gl5d4vJTxm6PozRtE2Tw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TVDkDJzt0P7oZrY6N6wDFkwF6QElWuyqzr6CFV1sTR0=;
+ b=QZciqfKy+Q8jfcFaCDW4CXaw26XrQt52XlMaEsX/oGapXq4qo82r/Y2Jox0pI0NMFvKsLbmIOTCclN7gDrPKk8hSDJN/AIWwbnaFbjxONIYkkSB4eb0TbmcrWo6M73Nw2PkePaZxRaGQy9DZca9YoPHHiSOD79u3v2+l2lvzKI8=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=calvin.johnson@oss.nxp.com; 
+Received: from AM0PR04MB5636.eurprd04.prod.outlook.com (2603:10a6:208:130::22)
+ by AM0PR04MB4371.eurprd04.prod.outlook.com (2603:10a6:208:72::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Fri, 24 Apr
+ 2020 13:41:18 +0000
+Received: from AM0PR04MB5636.eurprd04.prod.outlook.com
+ ([fe80::c4fe:d4a4:f0e1:a75b]) by AM0PR04MB5636.eurprd04.prod.outlook.com
+ ([fe80::c4fe:d4a4:f0e1:a75b%4]) with mapi id 15.20.2921.030; Fri, 24 Apr 2020
+ 13:41:18 +0000
+Date:   Fri, 24 Apr 2020 19:11:04 +0530
+From:   Calvin Johnson <calvin.johnson@oss.nxp.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>, linux.cj@gmail.com,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>, Varun Sethi <V.Sethi@nxp.com>,
+        Marcin Wojtas <mw@semihalf.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [net-next PATCH v1 1/2] device property: Introduce
+ fwnode_phy_find_device()
+Message-ID: <20200424134104.GA19106@lsv03152.swis.in-blr01.nxp.com>
+References: <20200424031617.24033-1-calvin.johnson@oss.nxp.com>
+ <20200424031617.24033-2-calvin.johnson@oss.nxp.com>
+ <b583f6fb-e6fe-3320-41c6-e019a4e10388@gmail.com>
+ <20200424092651.GA4501@lsv03152.swis.in-blr01.nxp.com>
+ <CAHp75VdxFjzs2uj7ZYNmwt9DC386gMNahi3A_MYV4wE3kbtq=g@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdxFjzs2uj7ZYNmwt9DC386gMNahi3A_MYV4wE3kbtq=g@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: SG2PR04CA0177.apcprd04.prod.outlook.com
+ (2603:1096:4:14::15) To AM0PR04MB5636.eurprd04.prod.outlook.com
+ (2603:10a6:208:130::22)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from lsv03152.swis.in-blr01.nxp.com (14.142.151.118) by SG2PR04CA0177.apcprd04.prod.outlook.com (2603:1096:4:14::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Fri, 24 Apr 2020 13:41:11 +0000
+X-Originating-IP: [14.142.151.118]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 1a288760-d394-452e-6da3-08d7e8552a87
+X-MS-TrafficTypeDiagnostic: AM0PR04MB4371:|AM0PR04MB4371:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR04MB43711738E9C320CCA5CE91F7D2D00@AM0PR04MB4371.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 03838E948C
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB5636.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(376002)(396003)(136003)(39860400002)(9686003)(1006002)(54906003)(81156014)(6666004)(8676002)(16526019)(5660300002)(1076003)(33656002)(316002)(8936002)(6506007)(44832011)(86362001)(478600001)(186003)(55016002)(53546011)(66476007)(2906002)(4326008)(26005)(52116002)(7696005)(66946007)(7416002)(66556008)(6916009)(4744005)(55236004)(956004)(110426005);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: oss.nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: xocNXNcgRprDqflEzd0OMJHCrpi9CbU9d4ZTXm6JjmSDNVq6foJ/fpxH2LM00g7awST6p/39b9ViuPd6EuM7Rx13uuOrHbuCQdwCdaS9M4yp8LE/esbiOgtLPD1EAB0UP+gewpo0O5gCzfUePNlk0iLEOZoRBQc5lEkRCGEGpt3W4YBaUXw9q8t4l+QKjdiIYuhDbAyHs7PEPQoZAI/qnMRyTEBFZTH7imSmxTSMdZ/GUICqxtCDRcqhZIN3t9txnJG9cqAglITXeQE7k9zRm78G/uWFzxGO2IiqX6knfd9/+i81ZCHGT2kFAWvMq5Rhc/pV4/lPsqAwaPG7xUR6M7Be4DG96YE4NbEy/7PrS0Fcg7i6ObYl1Qi+oJGSmSex3oWM+AYFJc3c0PVqFVuE5jYTVXpz7SjAvoFACUo5Nr0k7RcpJcd4olT8d/1pOvL4AV5+7Givj18HvPO7U+Dkyv1G9KFxUPaT68JSeGs62TiQZkqhfcwg6dI/+fa+4oTA
+X-MS-Exchange-AntiSpam-MessageData: KfvS2W5uGptCDkL766egryhMddOQFJRYdvyFIVIXSu7Wc2ZwXMs2uRJm2PPUHK1TDKkjZS/7OthfhDsQNzUjrR/1psUZZbxm0FqDwksOJzq2eN/K5D7CrW5y1m1I0URki+TLK/h/YpT7T0SnK7Xz0w==
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1a288760-d394-452e-6da3-08d7e8552a87
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2020 13:41:18.5154
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xFc/M5kNJBf0V004AmvmSoFPVjq4vkARb9w9bQ++1TAK15RUyBzn+LU09g/njPqB+IDvgvUv+jzY00aPNpGoXw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4371
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As comment of the v2, Herbert said: "The SEQIV select from CTR is historical
-and no longer necessary."
+On Fri, Apr 24, 2020 at 12:54:26PM +0300, Andy Shevchenko wrote:
+> On Fri, Apr 24, 2020 at 12:27 PM Calvin Johnson
+> <calvin.johnson@oss.nxp.com> wrote:
+> > On Thu, Apr 23, 2020 at 08:45:03PM -0700, Florian Fainelli wrote:
+> > > On 4/23/2020 8:16 PM, Calvin Johnson wrote:
+> 
+> > > If you forget to update the MAINTAINERS file, or do not place this code
+> > > under drivers/net/phy/* or drivers/of/of_mdio.c then this is going to
+> > > completely escape the sight of the PHYLIB/PHYLINK maintainers...
+> >
+> > Did you mean the following change?
+> 
+> I don't think this is an appreciated option.
+> Second one was to locate this code under drivers/net, which may be
+> better. And perhaps other not basic (to the properties) stuff should
+> be also moved to respective subsystems.
 
-So let's get rid of it.
+How about placing it in drivers/net/phy/phy_device.c?
 
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
----
- crypto/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+If it is ok, I can do it in v2.
 
-diff --git a/crypto/Kconfig b/crypto/Kconfig
-index 6d27fc6a7bf5..a5936e967fe2 100644
---- a/crypto/Kconfig
-+++ b/crypto/Kconfig
-@@ -370,7 +370,6 @@ config CRYPTO_CFB
- config CRYPTO_CTR
- 	tristate "CTR support"
- 	select CRYPTO_SKCIPHER
--	select CRYPTO_SEQIV
- 	select CRYPTO_MANAGER
- 	help
- 	  CTR: Counter mode
--- 
-2.26.2
-
+Thanks
+Calvin
