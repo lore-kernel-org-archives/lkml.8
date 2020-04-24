@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 441F6C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8C5C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20CBD21473
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:22:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F405215A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:22:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587730974;
-	bh=IEy7Kjr9+UyETMpmsFP7167uF2IVWAuDrab38EHG1CA=;
+	s=default; t=1587730977;
+	bh=oL+8TEkGErZ9ILv0k+jhUSJahhEcOSEpINEPR+DQHUQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uYrTqUcm9wkB2NwNVRJIHPjSXCoAwuRVL3hlE+yxD4Qcmok6/XWY2dIJilneLj/Tv
-	 0e75cS5qF6fz0D45izafpxUCOZkfo2OhYJDrwu7bRkmTjipGdO7Ynj1Gyf1pUIuA5t
-	 YUqyMW9TejhKYh9jkDJA8WAaZm9/wA66juhTp+5s=
+	b=S30/6KtAFJbdGujo7MGqEwzq6neNQNsFnYEgM5tuYeuM2lPQPT7Cd+mf6u0y5RyXo
+	 AzMXAVrw32RQSqtS/aKnWi5smZcjclkrMKmXGG4qCD09qiRymnXa917kSaE2X1m+ou
+	 TIGCSEdX3G5jkl5gUcwigmKCg5v33u9yOGOs22D8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbgDXMWx (ORCPT
+        id S1727124AbgDXMW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:22:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52028 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:22:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727044AbgDXMWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:22:49 -0400
+        id S1727097AbgDXMWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:22:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64E9B20776;
-        Fri, 24 Apr 2020 12:22:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63F77215A4;
+        Fri, 24 Apr 2020 12:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587730969;
-        bh=IEy7Kjr9+UyETMpmsFP7167uF2IVWAuDrab38EHG1CA=;
+        s=default; t=1587730972;
+        bh=oL+8TEkGErZ9ILv0k+jhUSJahhEcOSEpINEPR+DQHUQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JgUdaEJbxfb7mxDPBFKq41xK+EVKV0nHXWI0ZICSMfNSFP4EgyfY+sUGkqQJ7s7Q2
-         91rV0sM0TNxWFrjA7V15AoZd5C12i2bKbxueoHdsn8zN9zolzTHOklrMA2ZdoFp6aK
-         BN1Juzg+84RltCa1wVwxx6wmkA4iG2oQsZuWtU6Q=
+        b=MRtY/2XlgeDyNRCHY6GAsLAIP/+6DObSOgtfT2ngde5+KGtgZtSMVJkKH+sWLlT+4
+         Nl3UWHPMBN9/RccuSg3YkkYTiO7hJKmCTHecdSPHwqaKShFmuis1w+dHLWYGyI1VoA
+         hK4wGkUhHlF1cRt7zocfbCCRaYTcHmNouGPE1OYk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.6 10/38] ALSA: hda: Release resources at error in delayed probe
-Date:   Fri, 24 Apr 2020 08:22:08 -0400
-Message-Id: <20200424122237.9831-10-sashal@kernel.org>
+Cc:     Roy Spliet <nouveau@spliet.org>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.6 13/38] ALSA: hda: Explicitly permit using autosuspend if runtime PM is supported
+Date:   Fri, 24 Apr 2020 08:22:11 -0400
+Message-Id: <20200424122237.9831-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200424122237.9831-1-sashal@kernel.org>
 References: <20200424122237.9831-1-sashal@kernel.org>
@@ -58,139 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Roy Spliet <nouveau@spliet.org>
 
-[ Upstream commit 2393e7555b531a534152ffe7bfd1862cacedaacb ]
+[ Upstream commit 3ba21113bd33d49f3c300a23fc08cf114c434995 ]
 
-snd-hda-intel driver handles the most of its probe task in the delayed
-work (either via workqueue or via firmware loader).  When an error
-happens in the later delayed probe, we can't deregister the device
-itself because the probe callback already returned success and the
-device was bound.  So, for now, we set hda->init_failed flag and make
-the rest untouched until the device gets really unbound.
-However, this leaves the device up running, keeping the resources
-without any use that prevents other operations.
-
-In this patch, we release the resources at first when a probe error
-happens in the delayed probe stage, but keeps the top-level object, so
-that the PM and other ops can still refer to the object itself.
-
-Also for simplicity, snd_hda_intel object is allocated via devm, so
-that we can get rid of the explicit kfree calls.
+This fixes runtime PM not working after a suspend-to-RAM cycle at least for
+the codec-less HDA device found on NVIDIA GPUs.
 
 BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207043
-Link: https://lore.kernel.org/r/20200413082034.25166-4-tiwai@suse.de
+Signed-off-by: Roy Spliet <nouveau@spliet.org>
+Link: https://lore.kernel.org/r/20200413082034.25166-7-tiwai@suse.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c | 29 ++++++++++++++++-------------
- sound/pci/hda/hda_intel.h |  1 +
- 2 files changed, 17 insertions(+), 13 deletions(-)
+ sound/pci/hda/hda_intel.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index f41d8b7864c1e..692857904d49e 100644
+index 02c6308502b1e..8519051a426e7 100644
 --- a/sound/pci/hda/hda_intel.c
 +++ b/sound/pci/hda/hda_intel.c
-@@ -1203,10 +1203,8 @@ static void azx_vs_set_state(struct pci_dev *pci,
- 		if (!disabled) {
- 			dev_info(chip->card->dev,
- 				 "Start delayed initialization\n");
--			if (azx_probe_continue(chip) < 0) {
-+			if (azx_probe_continue(chip) < 0)
- 				dev_err(chip->card->dev, "initialization error\n");
--				hda->init_failed = true;
--			}
- 		}
- 	} else {
- 		dev_info(chip->card->dev, "%s via vga_switcheroo\n",
-@@ -1339,12 +1337,15 @@ static int register_vga_switcheroo(struct azx *chip)
- /*
-  * destructor
-  */
--static int azx_free(struct azx *chip)
-+static void azx_free(struct azx *chip)
- {
- 	struct pci_dev *pci = chip->pci;
- 	struct hda_intel *hda = container_of(chip, struct hda_intel, chip);
- 	struct hdac_bus *bus = azx_bus(chip);
+@@ -2354,8 +2354,10 @@ static int azx_probe_continue(struct azx *chip)
  
-+	if (hda->freed)
-+		return;
-+
- 	if (azx_has_pm_runtime(chip) && chip->running)
- 		pm_runtime_get_noresume(&pci->dev);
- 	chip->running = 0;
-@@ -1388,9 +1389,8 @@ static int azx_free(struct azx *chip)
+ 	set_default_power_save(chip);
  
- 	if (chip->driver_caps & AZX_DCAPS_I915_COMPONENT)
- 		snd_hdac_i915_exit(bus);
--	kfree(hda);
- 
--	return 0;
-+	hda->freed = 1;
- }
- 
- static int azx_dev_disconnect(struct snd_device *device)
-@@ -1406,7 +1406,8 @@ static int azx_dev_disconnect(struct snd_device *device)
- 
- static int azx_dev_free(struct snd_device *device)
- {
--	return azx_free(device->device_data);
-+	azx_free(device->device_data);
-+	return 0;
- }
- 
- #ifdef SUPPORT_VGA_SWITCHEROO
-@@ -1773,7 +1774,7 @@ static int azx_create(struct snd_card *card, struct pci_dev *pci,
- 	if (err < 0)
- 		return err;
- 
--	hda = kzalloc(sizeof(*hda), GFP_KERNEL);
-+	hda = devm_kzalloc(&pci->dev, sizeof(*hda), GFP_KERNEL);
- 	if (!hda) {
- 		pci_disable_device(pci);
- 		return -ENOMEM;
-@@ -1814,7 +1815,6 @@ static int azx_create(struct snd_card *card, struct pci_dev *pci,
- 
- 	err = azx_bus_init(chip, model[dev]);
- 	if (err < 0) {
--		kfree(hda);
- 		pci_disable_device(pci);
- 		return err;
- 	}
-@@ -2340,13 +2340,16 @@ static int azx_probe_continue(struct azx *chip)
+-	if (azx_has_pm_runtime(chip))
++	if (azx_has_pm_runtime(chip)) {
++		pm_runtime_use_autosuspend(&pci->dev);
  		pm_runtime_put_autosuspend(&pci->dev);
++	}
  
  out_free:
--	if (err < 0 || !hda->need_i915_power)
-+	if (err < 0) {
-+		azx_free(chip);
-+		return err;
-+	}
-+
-+	if (!hda->need_i915_power)
- 		display_power(chip, false);
--	if (err < 0)
--		hda->init_failed = 1;
- 	complete_all(&hda->probe_wait);
- 	to_hda_bus(bus)->bus_probing = 0;
--	return err;
-+	return 0;
- }
- 
- static void azx_remove(struct pci_dev *pci)
-diff --git a/sound/pci/hda/hda_intel.h b/sound/pci/hda/hda_intel.h
-index 2acfff3da1a04..3fb119f090408 100644
---- a/sound/pci/hda/hda_intel.h
-+++ b/sound/pci/hda/hda_intel.h
-@@ -27,6 +27,7 @@ struct hda_intel {
- 	unsigned int use_vga_switcheroo:1;
- 	unsigned int vga_switcheroo_registered:1;
- 	unsigned int init_failed:1; /* delayed init failed */
-+	unsigned int freed:1; /* resources already released */
- 
- 	bool need_i915_power:1; /* the hda controller needs i915 power */
- };
+ 	if (err < 0) {
 -- 
 2.20.1
 
