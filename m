@@ -2,100 +2,128 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFFBC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A68DC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A38C92076C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FA9820774
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:39:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fRs8hN2T"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="dg9qHz7E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgDXGiO (ORCPT
+        id S1726602AbgDXGjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 02:38:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53642 "EHLO
+        Fri, 24 Apr 2020 02:39:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726051AbgDXGiO (ORCPT
+        by vger.kernel.org with ESMTP id S1726008AbgDXGjQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 02:38:14 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D10BC09B045;
-        Thu, 23 Apr 2020 23:38:14 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id j4so10638695otr.11;
-        Thu, 23 Apr 2020 23:38:14 -0700 (PDT)
+        Fri, 24 Apr 2020 02:39:16 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB02BC09B045
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 23:39:15 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id c63so9217325qke.2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 23:39:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kgtdeLLirDcYUa0WKIp40D/3j8a2GshzI0q29q+2ksw=;
-        b=fRs8hN2TAI292KXDF698tVkU1H3z8WWtndsAvX0JVRnmvmxD4PzP8jZUwH9Q4t1lJH
-         jLus/Nn8fmNU0c16B10UEjKz9FS+JE5cv1AU8UwED0wWJO9VNCCp8tlb5UJTl6Mp3kPA
-         2DkJKMjDY/ApRqKTj73jI30+TeFDeYM7EEgfIsuMAGb4qlt03VUR5YOjnuuf9E/ShjO8
-         9YfnwYOoIVDWSxFlfwV1MZa+0t1XwZxI/WFnl1llt0S1qm3VIxsBRseiuzHEDwMpfcHN
-         VoBupdSwIO8x2BHGJFbUHdBNxCEkVWok1Gme0IRpc0xe2bGtb1EcBYC1vtajpLQqBdkj
-         B2sw==
+         :cc:content-transfer-encoding;
+        bh=MI+yH4sWs2g+xaF5o8m/k2oPkU56sjfkGtnomIB4E0U=;
+        b=dg9qHz7EDRwXufT/YP6k9XH3SP+J4Xh//jNFQ/EEJX3Nvk0y/SC3n1nt9PMbu0jQ/X
+         VvKHCMu8F94TwPTtc555MwZ0CQ4mT22g0uTSgbO933KX3/H1GcfLmykKQO+SYU0LSpBL
+         WzyVexhmKOfFxDRtOYgaSZXe7uB7Ipi9U9Nx0bG/ahjksO2aD5C7ZELgYFF5qx1Fa+es
+         c/gCbAj0tpavovlvqPWD/tZt9Jufis2GRR3Jg4P008vrb9xN6lOhdU5TudO9A2zcARwL
+         ocjyOXAIweMQdtqDEP+aYenA+/JBp8ExxBuOIxZ12fw96S3t6YFPR/5NUypiLRP90Qfj
+         /W1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kgtdeLLirDcYUa0WKIp40D/3j8a2GshzI0q29q+2ksw=;
-        b=H2G3RDpH2JCyJ4r1Sndn6VRt7J5+TImM9X4lO/SLBh+6aJtw7LB21qnvITeoHKdw0u
-         VtRqKDQhS00Te5KAclRFQkmoRRF/EeMqHt2qpaDPzt13usq/SyvF0MmOEIVnsEkFezvU
-         CDNAyE1j6DOOqgWgC/RIHzV5wKgbxnt/fVCPzW0ymbqt897y+ZaSujlxiyMh9/iv1bxd
-         oKBD06sVCFeBckD6qR9DNFCAOOtccTHGmRoP+Oo2VnoF4jtQyAzYcoHE+sK6j+BNYFFl
-         5dMkYPuBMBOdGq+vtw+WBxmo8/4M6RCTEa/TxYTRMtUPy4AUrs5d1kRi8iNr4Qg2w+/r
-         b+gg==
-X-Gm-Message-State: AGi0PuYJntFpV7B5U1WNClNUC9xIizMP9OHpwcfb8vN49UJKC7in8xQI
-        t69If6mnZTUYXnIF22mjB68Naxp1I6yW/nL8hgo=
-X-Google-Smtp-Source: APiQypJgjEi9DQJcYqvaHVJii9baHVd2hXM4G2q/PMLqpVouAfVskfNaz3bT1qMAif0yzEYm72zXQ+RALcOrVeiIIyA=
-X-Received: by 2002:a05:6830:20d9:: with SMTP id z25mr347333otq.254.1587710293470;
- Thu, 23 Apr 2020 23:38:13 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=MI+yH4sWs2g+xaF5o8m/k2oPkU56sjfkGtnomIB4E0U=;
+        b=SLFpUKzYg33JqhGvH4lUrFl2X97uRS+M1TlS4YgPT1ehsORBAa1MxwMZbysdHbTypH
+         SAXV7KjF7Cj0/amJXBEELXZ0Mxt6G86AtTlH/4aYEAgr1mLYlEcNWxlp5TGL7xGbyNxf
+         my7nbtR126oMmiqxNLhDcK/Uuzq5SvkC6Nn1P+Axvx9I8NflvBxl7F4D7M8NDYCiguX1
+         TE/96uekKgdM5ZTqRYjEjPHznLN9gzvpOA+mpjWD7wQ6lppQ3Mcrn3+uPkJtsJeB+kLp
+         HuKv7BfkQN/pElmbCWTlUXVKbwlW/P8AoMuY4FIxLSk7j38VHt2JkDF3dlGMEOZrg3ey
+         J8Tg==
+X-Gm-Message-State: AGi0Pubs+DJQLqVzetboGV4jMiXZ6Ahiskk2/tFJQqpDiKvl6x7uJGOD
+        SyTkGkQzhjxJqN8v0MG5GKQ21rvRIeJVURMMGPwR0g==
+X-Google-Smtp-Source: APiQypJTxoKTMusG3+g6U7mAgMTkBCtd9S+RSwVgV6Ylt84lBEXLVH/cth7Ecc7CdJxpGo1zxG6AXwY9dmwgK2uLDgw=
+X-Received: by 2002:a05:620a:1395:: with SMTP id k21mr7467340qki.120.1587710355206;
+ Thu, 23 Apr 2020 23:39:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <1587632507-18997-1-git-send-email-wanpengli@tencent.com>
- <1587632507-18997-6-git-send-email-wanpengli@tencent.com> <99d81fa5-dc37-b22f-be1e-4aa0449e6c26@redhat.com>
- <CANRm+CyyKwFoSns31gK=_v0j1VQrOwDhgTqWZOLZS9iGZeC3Gw@mail.gmail.com> <ce15ea08-4d5d-6e7b-9413-b5fcf1309697@redhat.com>
-In-Reply-To: <ce15ea08-4d5d-6e7b-9413-b5fcf1309697@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Fri, 24 Apr 2020 14:38:03 +0800
-Message-ID: <CANRm+CxxQ1oL0fKmnxAv739nsjDg_V7Pgkmm==7CfPQUxBHW4w@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] KVM: VMX: Handle preemption timer fastpath
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Haiwei Li <lihaiwei@tencent.com>
+References: <20200419163816.19856-1-zhengdejin5@gmail.com>
+In-Reply-To: <20200419163816.19856-1-zhengdejin5@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 24 Apr 2020 08:39:04 +0200
+Message-ID: <CAMpxmJUzrWRuHV-=EOgjd-N-iwhZwVGzF26tH0ybpzZQSP6VJQ@mail.gmail.com>
+Subject: Re: [PATCH v1] gpio: fix several typos
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Apr 2020 at 18:29, Paolo Bonzini <pbonzini@redhat.com> wrote:
+niedz., 19 kwi 2020 o 18:38 Dejin Zheng <zhengdejin5@gmail.com> napisa=C5=
+=82(a):
 >
-> On 23/04/20 11:56, Wanpeng Li wrote:
-> >> Please re-evaluate if this is needed (or which parts are needed) after
-> >> cleaning up patch 4.  Anyway again---this is already better, I don't
-> >> like the duplicated code but at least I can understand what's going on.
-> > Except the apic_lvtt_tscdeadline(apic) check, others are duplicated,
-> > what do you think about apic_lvtt_tscdeadline(apic) check?
+> Use codespell to fix lots of typos over frontends.
 >
-> We have to take a look again after you clean up patch 4.  My hope is to
-> reuse the slowpath code as much as possible, by introducing some
-> optimizations here and there.
+> CC: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> ---
+>  drivers/gpio/gpio-ftgpio010.c | 2 +-
+>  drivers/gpio/gpio-mm-lantiq.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-ftgpio010.c b/drivers/gpio/gpio-ftgpio010.=
+c
+> index fbddb1662428..4031164780f7 100644
+> --- a/drivers/gpio/gpio-ftgpio010.c
+> +++ b/drivers/gpio/gpio-ftgpio010.c
+> @@ -193,7 +193,7 @@ static int ftgpio_gpio_set_config(struct gpio_chip *g=
+c, unsigned int offset,
+>         if (val =3D=3D deb_div) {
+>                 /*
+>                  * The debounce timer happens to already be set to the
+> -                * desireable value, what a coincidence! We can just enab=
+le
+> +                * desirable value, what a coincidence! We can just enabl=
+e
+>                  * debounce on this GPIO line and return. This happens mo=
+re
+>                  * often than you think, for example when all GPIO keys
+>                  * on a system are requesting the same debounce interval.
+> diff --git a/drivers/gpio/gpio-mm-lantiq.c b/drivers/gpio/gpio-mm-lantiq.=
+c
+> index f460d71b0c92..538e31fe8903 100644
+> --- a/drivers/gpio/gpio-mm-lantiq.c
+> +++ b/drivers/gpio/gpio-mm-lantiq.c
+> @@ -36,7 +36,7 @@ struct ltq_mm {
+>   * @chip:     Pointer to our private data structure.
+>   *
+>   * Write the shadow value to the EBU to set the gpios. We need to set th=
+e
+> - * global EBU lock to make sure that PCI/MTD dont break.
+> + * global EBU lock to make sure that PCI/MTD don't break.
+>   */
+>  static void ltq_mm_apply(struct ltq_mm *chip)
+>  {
+> --
+> 2.25.0
+>
 
-I found we are not need to move the if (vcpu->arch.apicv_active) from
-__apic_accept_irq() to a separate function if I understand you
-correctly. Please see patch v3 3/5. In addition, I observe
-kvm-unit-tests #UD etc if check need_cancel_enter_guest() after the
-generic fastpath handler, I didn't dig too much, just move it before
-the generic fastpath handler for safe in patch v3 2/5.
+The subject line should be gpio: <name of the driver>: short message
 
-    Wanpeng
+And please split those into patches for each driver.
+
+Bart
