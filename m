@@ -2,223 +2,153 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E41BC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE6FC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64D6C21744
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AA062173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:41:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OvWTBqlk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729401AbgDXThh (ORCPT
+        id S1728950AbgDXTlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 15:37:37 -0400
-Received: from mga03.intel.com ([134.134.136.65]:23297 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729310AbgDXTh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 15:37:28 -0400
-IronPort-SDR: /KtyUZr/QSiATZYqG6/2mgtARa5/3yA9aLPJSmNQOz57wtgnN0MiayvrmAZOrHpWWFKT/uhiKB
- ZIZi+kxfpezw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2020 12:37:26 -0700
-IronPort-SDR: ugAU5SoIYpM33jGyrd/BLKC600zBLKCaqbkV6YHfn5xsj3PyzNEqH0SDsiGTTXjIOKWOHX45Sd
- Aj4nICqVWy/g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,313,1583222400"; 
-   d="scan'208";a="403425642"
-Received: from kmp-skylake-client-platform.sc.intel.com ([172.25.112.108])
-  by orsmga004.jf.intel.com with ESMTP; 24 Apr 2020 12:37:23 -0700
-From:   Kyung Min Park <kyung.min.park@intel.com>
-To:     x86@kernel.org, linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        gregkh@linuxfoundation.org, ak@linux.intel.com,
-        tony.luck@intel.com, ashok.raj@intel.com, ravi.v.shankar@intel.com,
-        fenghua.yu@intel.com, kyung.min.park@intel.com
-Subject: [PATCH v4 1/3] x86/delay: Preparatory code cleanup
-Date:   Fri, 24 Apr 2020 12:37:54 -0700
-Message-Id: <1587757076-30337-2-git-send-email-kyung.min.park@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1587757076-30337-1-git-send-email-kyung.min.park@intel.com>
-References: <1587757076-30337-1-git-send-email-kyung.min.park@intel.com>
+        Fri, 24 Apr 2020 15:41:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36076 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726908AbgDXTlO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 15:41:14 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B91A5C09B049
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 12:41:14 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id w65so5259889pfc.12
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 12:41:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Qbux80UTz0vA817hD4tP9hl9NHJsjLKh48SDL2L8F/o=;
+        b=OvWTBqlkP7TC/ZbPKUDwMuhgaD+AWHPGVEFsc9vkTNBX+V1qdIdW+igEYnSvFhaLK9
+         EICcoAcgtctkQZt8fWHFfCvAkpU/GgdvOGNstLWdDXD+s/lBR9H7+w5R7U9c7qLJntGH
+         1MJ0XEyyRX9XrKLk6IPcyxURkHmjOM2IKjOiM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Qbux80UTz0vA817hD4tP9hl9NHJsjLKh48SDL2L8F/o=;
+        b=DGtowlaWVpNuxNgdqvlQGVmUWOxJiGGZZ3prkB0sG+Yc6/lp3xM4/3jEUYFE0q6wvR
+         mo9WDSbLK61b/I7OHOsII3+XeuVGh63YWVuDiH9pm7l3JE+fwI7dXc7C5TPHySS+gCBf
+         zQTt1SaJSVSEq3CQ2OhJHFqXDM9DrUmH9MxEmn0oujuUGdbTt1dGCu0h4MUpiQzh4Ykj
+         z+0n1NkzeMBvdTyHeW21Gky1hj0cqic1r7CNFpvy4iPkHwoozG8asaaOkafXhA6/eUUd
+         3cFJeasiKaYQpXPf0NaM6r1xzWwHY7yjRugjCabN5LOO6VYCURwLSnSVwhA4LvmK6dva
+         cZww==
+X-Gm-Message-State: AGi0PuYOzoyZeeHpbYCeuqG3PBvMgqDRvjwsXaoESCBwWE+oegw15NlY
+        eMbX5Q/lMH0Ikm1Ovu++3y76Kg==
+X-Google-Smtp-Source: APiQypKUSiQYkB+1l3STtqMgcJ9AzHkpeWfGE0J7tpvxsaxtM/vlY9mCbgbOGUURLv/PRIWyx/N0Ew==
+X-Received: by 2002:a62:ed14:: with SMTP id u20mr11580549pfh.69.1587757274146;
+        Fri, 24 Apr 2020 12:41:14 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id nm22sm5212397pjb.38.2020.04.24.12.41.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Apr 2020 12:41:13 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 12:41:12 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
+        robh+dt@kernel.org, rjw@rjwysocki.net, saravanak@google.com,
+        sibis@codeaurora.org, rnayak@codeaurora.org,
+        bjorn.andersson@linaro.org, vincent.guittot@linaro.org,
+        jcrouse@codeaurora.org, evgreen@chromium.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 7/7] cpufreq: dt: Add support for interconnect
+ bandwidth scaling
+Message-ID: <20200424194112.GD4525@google.com>
+References: <20200424155404.10746-1-georgi.djakov@linaro.org>
+ <20200424155404.10746-8-georgi.djakov@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200424155404.10746-8-georgi.djakov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+On Fri, Apr 24, 2020 at 06:54:04PM +0300, Georgi Djakov wrote:
+> In addition to clocks and regulators, some devices can scale the bandwidth
+> of their on-chip interconnect - for example between CPU and DDR memory. Add
+> support for that, so that platforms which support it can make use of it.
+> 
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+> v7:
+> * Drop using dev_pm_opp_set_paths(), as it has been removed.
+> * Add Kconfig dependency on INTERCONNECT, as it can be module.
+> 
+> 
+> v2: https://lore.kernel.org/r/20190423132823.7915-6-georgi.djakov@linaro.org
+> 
+>  drivers/cpufreq/Kconfig      |  1 +
+>  drivers/cpufreq/cpufreq-dt.c | 15 +++++++++++++++
+>  2 files changed, 16 insertions(+)
+> 
+> diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
+> index c3e6bd59e920..db2ad54ee67f 100644
+> --- a/drivers/cpufreq/Kconfig
+> +++ b/drivers/cpufreq/Kconfig
+> @@ -217,6 +217,7 @@ config CPUFREQ_DT
+>  
+>  config CPUFREQ_DT_PLATDEV
+>  	bool
+> +	depends on INTERCONNECT || !INTERCONNECT
+>  	help
+>  	  This adds a generic DT based cpufreq platdev driver for frequency
+>  	  management.  This creates a 'cpufreq-dt' platform device, on the
+> diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
+> index 26fe8dfb9ce6..4ecef3257532 100644
+> --- a/drivers/cpufreq/cpufreq-dt.c
+> +++ b/drivers/cpufreq/cpufreq-dt.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/cpufreq.h>
+>  #include <linux/cpumask.h>
+>  #include <linux/err.h>
+> +#include <linux/interconnect.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/pm_opp.h>
+> @@ -95,6 +96,7 @@ static int resources_available(void)
+>  	struct device *cpu_dev;
+>  	struct regulator *cpu_reg;
+>  	struct clk *cpu_clk;
+> +	struct icc_path *cpu_path;
+>  	int ret = 0;
+>  	const char *name;
+>  
+> @@ -121,6 +123,19 @@ static int resources_available(void)
+>  
+>  	clk_put(cpu_clk);
+>  
+> +	cpu_path = of_icc_get(cpu_dev, NULL);
+> +	ret = PTR_ERR_OR_ZERO(cpu_path);
+> +	if (ret) {
+> +		if (ret == -EPROBE_DEFER)
+> +			dev_dbg(cpu_dev, "defer icc path: %d\n", ret);
+> +		else
+> +			dev_err(cpu_dev, "failed to get icc path: %d\n", ret);
+> +
+> +		return ret;
+> +	}
+> +
+> +	icc_put(cpu_path);
+> +
+>  	name = find_supply_name(cpu_dev);
+>  	/* Platform doesn't require regulator */
+>  	if (!name)
 
-The naming conventions in the delay code are confusing at best.
-
-All delay variants use a loops argument and or variable which originates
-from the original delay_loop() implementation. But all variants except
-delay_loop() are based on TSC cycles.
-
-Rename the argument to cycles and make it type u64 to avoid these weird
-expansions to u64 in the functions.
-
-Rename MWAITX_MAX_LOOPS to MWAITX_MAX_WAIT_CYCLES for the same reason
-and fixup the comment of delay_mwaitx() as well.
-
-Mark the delay_fn function pointer __ro_after_init and fixup the comment
-for it.
-
-No functional change and preparation for the upcoming TPAUSE based delay
-variant.
-
-[Kyung Min Park: Added __init to use_tsc_delay()]
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Kyung Min Park <kyung.min.park@intel.com>
----
- arch/x86/include/asm/delay.h |  3 ++-
- arch/x86/include/asm/mwait.h |  2 +-
- arch/x86/lib/delay.c         | 45 +++++++++++++++++++++++---------------------
- 3 files changed, 27 insertions(+), 23 deletions(-)
-
-diff --git a/arch/x86/include/asm/delay.h b/arch/x86/include/asm/delay.h
-index de9e784..9aa38de 100644
---- a/arch/x86/include/asm/delay.h
-+++ b/arch/x86/include/asm/delay.h
-@@ -3,8 +3,9 @@
- #define _ASM_X86_DELAY_H
- 
- #include <asm-generic/delay.h>
-+#include <linux/init.h>
- 
--void use_tsc_delay(void);
-+void __init use_tsc_delay(void);
- void use_mwaitx_delay(void);
- 
- #endif /* _ASM_X86_DELAY_H */
-diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
-index b809f11..a43b35b 100644
---- a/arch/x86/include/asm/mwait.h
-+++ b/arch/x86/include/asm/mwait.h
-@@ -20,7 +20,7 @@
- 
- #define MWAIT_ECX_INTERRUPT_BREAK	0x1
- #define MWAITX_ECX_TIMER_ENABLE		BIT(1)
--#define MWAITX_MAX_LOOPS		((u32)-1)
-+#define MWAITX_MAX_WAIT_CYCLES		UINT_MAX
- #define MWAITX_DISABLE_CSTATES		0xf0
- 
- u32 get_umwait_control_msr(void);
-diff --git a/arch/x86/lib/delay.c b/arch/x86/lib/delay.c
-index c126571..887d52d 100644
---- a/arch/x86/lib/delay.c
-+++ b/arch/x86/lib/delay.c
-@@ -27,9 +27,19 @@
- # include <asm/smp.h>
- #endif
- 
-+static void delay_loop(u64 __loops);
-+
-+/*
-+ * Calibration and selection of the delay mechanism happens only once
-+ * during boot.
-+ */
-+static void (*delay_fn)(u64) __ro_after_init = delay_loop;
-+
- /* simple loop based delay: */
--static void delay_loop(unsigned long loops)
-+static void delay_loop(u64 __loops)
- {
-+	unsigned long loops = (unsigned long)__loops;
-+
- 	asm volatile(
- 		"	test %0,%0	\n"
- 		"	jz 3f		\n"
-@@ -49,9 +59,9 @@ static void delay_loop(unsigned long loops)
- }
- 
- /* TSC based delay: */
--static void delay_tsc(unsigned long __loops)
-+static void delay_tsc(u64 cycles)
- {
--	u64 bclock, now, loops = __loops;
-+	u64 bclock, now;
- 	int cpu;
- 
- 	preempt_disable();
-@@ -59,7 +69,7 @@ static void delay_tsc(unsigned long __loops)
- 	bclock = rdtsc_ordered();
- 	for (;;) {
- 		now = rdtsc_ordered();
--		if ((now - bclock) >= loops)
-+		if ((now - bclock) >= cycles)
- 			break;
- 
- 		/* Allow RT tasks to run */
-@@ -77,7 +87,7 @@ static void delay_tsc(unsigned long __loops)
- 		 * counter for this CPU.
- 		 */
- 		if (unlikely(cpu != smp_processor_id())) {
--			loops -= (now - bclock);
-+			cycles -= (now - bclock);
- 			cpu = smp_processor_id();
- 			bclock = rdtsc_ordered();
- 		}
-@@ -87,24 +97,24 @@ static void delay_tsc(unsigned long __loops)
- 
- /*
-  * On some AMD platforms, MWAITX has a configurable 32-bit timer, that
-- * counts with TSC frequency. The input value is the loop of the
-- * counter, it will exit when the timer expires.
-+ * counts with TSC frequency. The input value is the number of TSC cycles
-+ * to wait. MWAITX will also exit when the timer expires.
-  */
--static void delay_mwaitx(unsigned long __loops)
-+static void delay_mwaitx(u64 cycles)
- {
--	u64 start, end, delay, loops = __loops;
-+	u64 start, end, delay;
- 
- 	/*
- 	 * Timer value of 0 causes MWAITX to wait indefinitely, unless there
- 	 * is a store on the memory monitored by MONITORX.
- 	 */
--	if (loops == 0)
-+	if (!cycles)
- 		return;
- 
- 	start = rdtsc_ordered();
- 
- 	for (;;) {
--		delay = min_t(u64, MWAITX_MAX_LOOPS, loops);
-+		delay = min_t(u64, MWAITX_MAX_WAIT_CYCLES, cycles);
- 
- 		/*
- 		 * Use cpu_tss_rw as a cacheline-aligned, seldomly
-@@ -121,22 +131,15 @@ static void delay_mwaitx(unsigned long __loops)
- 
- 		end = rdtsc_ordered();
- 
--		if (loops <= end - start)
-+		if (cycles <= end - start)
- 			break;
- 
--		loops -= end - start;
--
-+		cycles -= end - start;
- 		start = end;
- 	}
- }
- 
--/*
-- * Since we calibrate only once at boot, this
-- * function should be set once at boot and not changed
-- */
--static void (*delay_fn)(unsigned long) = delay_loop;
--
--void use_tsc_delay(void)
-+void __init use_tsc_delay(void)
- {
- 	if (delay_fn == delay_loop)
- 		delay_fn = delay_tsc;
--- 
-2.7.4
-
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
