@@ -2,223 +2,253 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F7CC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A9BC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87EE820728
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:07:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="coyeLHGp"
+	by mail.kernel.org (Postfix) with ESMTP id AB68F20728
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:07:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587733657;
+	bh=pZDLek65a4BFU9uhFDTfw0N0CAWf3NQxjP4QC3U79HA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tYWaR0h+BIrxNWvV+JqROSKqDDShLLiQxxsHgds6G2E7BxYYom436NxheQt5fwvB6
+	 mnRgAjubhxn/6e9Q5mHJW6d+79vzcs7+fcPHM1zy+fiNwWGyMCCjKKJwaEF1fBfBUP
+	 5UEv3StuSxKLd5OTLCzVZfmya9ax1+g2DtPjnhto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728392AbgDXNHc (ORCPT
+        id S1728325AbgDXNHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 09:07:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726793AbgDXNHa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 09:07:30 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EFA9C09B045;
-        Fri, 24 Apr 2020 06:07:26 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id i68so7766084qtb.5;
-        Fri, 24 Apr 2020 06:07:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=BACYUJ9Ax+sBOclJuw9FAWOKwxhj77NX+HwVzCYrlHM=;
-        b=coyeLHGpucDw6yi+Off2lRApXRS1LjvxqhlYhjZsq6sLUAaRN51RWLqS/FR/OhdbmE
-         1b73C8+Awp/J/uj9LneKItox7/SohZdVNhYWUOzvcp/fxyAGUkFZc72GiNvdlT9CUcaI
-         xCz2gqtnU+cyjjWj/mDN8J8gqXUao+SojW2iyvuAatrlAfz0r6O8zOIglEk9hO/sRou9
-         pWFCdPRMx5HtFyS0wt7MVW5ZndlR2tMUAK8XMi2v3D9WzGaiVvdTtw9tfbZK/F4IEY3U
-         P76gS7hi5aPfeaURB71T2Yo+l4dtomBQ80CJnIvNyLfeCh1n0y0tV0TUvQWmP/JKr8LY
-         4p9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=BACYUJ9Ax+sBOclJuw9FAWOKwxhj77NX+HwVzCYrlHM=;
-        b=e0L74BhqPqildaRGGZaxZpNJ0mS3Wv+UkixunThJXIpkph9UFplrVnaib7JrxjLTWA
-         7V/+x/Pcd3c1Abw69MfgW/xTVATygqysklnhrNUg0NGeCR20ZgBjrlwe/ER33Jx+eSwX
-         S9/1Jh0Lrx72Jo8ZW072MajsiRlMpwK99XhHkAGiibgJuRvF4x7u966V80b3HdvNIetH
-         0quORGWiBA6fHOmd3u+CowGDjhlGd+Noin6Bppul+ykbM9GiS3SJa0E5lLRBmLOo7Bsi
-         90kyVKGpkEg37Snn1+E5Tedbs/QJFlI15wnIve/wP+b9wv7Vy9NKREfdxj4iRSbQt/0i
-         KO7w==
-X-Gm-Message-State: AGi0PuY8wcCmbhBj5IhMQcBwKYzBAgD3y81NZX9pvHJ3Kw/PqdDfrmnV
-        7rUrVz2d/DlPfA4OB0/6dKc=
-X-Google-Smtp-Source: APiQypJ+3c5kEBO5ugffa6QVDGTNi9ZLDOCvhGzzzAOy33soM3OcWCZrZcABYpk4Rtlj+w/RtvmuxA==
-X-Received: by 2002:ac8:1090:: with SMTP id a16mr9406411qtj.181.1587733645527;
-        Fri, 24 Apr 2020 06:07:25 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id y52sm3804398qth.38.2020.04.24.06.07.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 06:07:24 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4AF2D409A3; Fri, 24 Apr 2020 10:07:22 -0300 (-03)
-Date:   Fri, 24 Apr 2020 10:07:22 -0300
-To:     Andreas Gerstmayr <agerstmayr@redhat.com>,
-        Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        He Zhe <zhe.he@windriver.com>, Ian Rogers <irogers@google.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Konstantin Kharlamov <hi-angel@yandex.ru>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        lkft-triage@lists.linaro.org
-Subject: Re: [GIT PULL] perf/core improvements and fixes
-Message-ID: <20200424130722.GK19437@kernel.org>
-References: <20200420115316.18781-1-acme@kernel.org>
- <20200422120943.GA110748@gmail.com>
- <CAEUSe7_wmKS361mKLTB1eYbzYXcKkXdU26BX5BojdKRz8MfPCw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEUSe7_wmKS361mKLTB1eYbzYXcKkXdU26BX5BojdKRz8MfPCw@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+        Fri, 24 Apr 2020 09:07:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58000 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728296AbgDXNHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 09:07:18 -0400
+Received: from e123331-lin.home (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77D2F21582;
+        Fri, 24 Apr 2020 13:07:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587733637;
+        bh=pZDLek65a4BFU9uhFDTfw0N0CAWf3NQxjP4QC3U79HA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dvUkIOD2YpnBWVGMBQXUwFo0/RgLRR4H4d9/gzt4VOxNLfbZCzNY1PfE44yq7LuGr
+         IaOe9GUruRikPtw1bCZv0viX8hrb0Tbh0py/diKrVxa0k+shmd7vxle4etWh7DxMgI
+         ZP3n9lKqkbaC5gE8CesbdIyRVHdYAUN7DLIUAqjI=
+From:   Ard Biesheuvel <ardb@kernel.org>
+To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Atish Patra <atish.patra@wdc.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Zou Wei <zou_wei@huawei.com>
+Subject: [PATCH 30/33] efi/libstub: Drop __pure getters for EFI stub options
+Date:   Fri, 24 Apr 2020 15:05:28 +0200
+Message-Id: <20200424130531.30518-31-ardb@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200424130531.30518-1-ardb@kernel.org>
+References: <20200424130531.30518-1-ardb@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Apr 23, 2020 at 04:28:46PM -0500, Daniel Díaz escreveu:
-> On Wed, 22 Apr 2020 at 07:09, Ingo Molnar <mingo@kernel.org> wrote:
-> > >  85 files changed, 1851 insertions(+), 513 deletions(-)
+The practice of using __pure getter functions to access global
+variables in the EFI stub dates back to the time when we had to
+carefully prevent GOT entries from being emitted, because we
+could not rely on the toolchain to do this for us.
 
-> > Pulled, thanks a lot Arnaldo!
+Today, we use the hidden visibility pragma for all EFI stub source
+files, which now all live in the same subdirectory, and we apply a
+sanity check on the objects, so we can get rid of these getter
+functions and simply refer to global data objects directly.
+
+So switch over the remaining boolean variables carrying options set
+on the kernel command line.
+
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+---
+ drivers/firmware/efi/libstub/arm64-stub.c     |  2 +-
+ .../firmware/efi/libstub/efi-stub-helper.c    | 31 ++++---------------
+ drivers/firmware/efi/libstub/efi-stub.c       |  6 ++--
+ drivers/firmware/efi/libstub/efistub.h        | 12 +++----
+ drivers/firmware/efi/libstub/fdt.c            |  2 +-
+ drivers/firmware/efi/libstub/file.c           |  2 +-
+ drivers/firmware/efi/libstub/x86-stub.c       |  4 +--
+ 7 files changed, 20 insertions(+), 39 deletions(-)
+
+diff --git a/drivers/firmware/efi/libstub/arm64-stub.c b/drivers/firmware/efi/libstub/arm64-stub.c
+index 99b67e88a33b..ba4db35015a3 100644
+--- a/drivers/firmware/efi/libstub/arm64-stub.c
++++ b/drivers/firmware/efi/libstub/arm64-stub.c
+@@ -55,7 +55,7 @@ efi_status_t handle_kernel_image(unsigned long *image_addr,
+ 	u32 phys_seed = 0;
  
-> Our OpenEmbedded builds detected an issue with 5287f9269206 ("perf
-> script: Add flamegraph.py script"):
->   ERROR: perf-1.0-r9 do_package_qa: QA Issue:
-> /usr/libexec/perf-core/scripts/python/bin/flamegraph-report contained
-> in package perf-python requires /usr/bin/sh, but no providers found in
-> RDEPENDS_perf-python? [file-rdeps]
+ 	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {
+-		if (!nokaslr()) {
++		if (!efi_nokaslr) {
+ 			status = efi_get_random_bytes(sizeof(phys_seed),
+ 						      (u8 *)&phys_seed);
+ 			if (status == EFI_NOT_FOUND) {
+diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
+index 0b1688b10ddc..1c92ac231f94 100644
+--- a/drivers/firmware/efi/libstub/efi-stub-helper.c
++++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
+@@ -12,34 +12,15 @@
+ 
+ #include "efistub.h"
+ 
+-static bool efi_nochunk;
+-static bool efi_nokaslr;
+-static bool efi_noinitrd;
+-static bool efi_quiet;
+-static bool efi_novamap;
++bool efi_nochunk;
++bool efi_nokaslr;
++bool efi_noinitrd;
++bool efi_quiet;
++bool efi_novamap;
++
+ static bool efi_nosoftreserve;
+ static bool efi_disable_pci_dma = IS_ENABLED(CONFIG_EFI_DISABLE_PCI_DMA);
+ 
+-bool __pure nochunk(void)
+-{
+-	return efi_nochunk;
+-}
+-bool __pure nokaslr(void)
+-{
+-	return efi_nokaslr;
+-}
+-bool __pure noinitrd(void)
+-{
+-	return efi_noinitrd;
+-}
+-bool __pure is_quiet(void)
+-{
+-	return efi_quiet;
+-}
+-bool __pure novamap(void)
+-{
+-	return efi_novamap;
+-}
+ bool __pure __efi_soft_reserve_enabled(void)
+ {
+ 	return !efi_nosoftreserve;
+diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
+index 8edfd4022803..ee225b323687 100644
+--- a/drivers/firmware/efi/libstub/efi-stub.c
++++ b/drivers/firmware/efi/libstub/efi-stub.c
+@@ -263,7 +263,7 @@ efi_status_t efi_entry(efi_handle_t handle, efi_system_table_t *sys_table_arg)
+ 	if (!fdt_addr)
+ 		pr_efi("Generating empty DTB\n");
+ 
+-	if (!noinitrd()) {
++	if (!efi_noinitrd) {
+ 		max_addr = efi_get_max_initrd_addr(dram_base, image_addr);
+ 		status = efi_load_initrd_dev_path(&initrd_addr, &initrd_size,
+ 						  max_addr);
+@@ -294,7 +294,7 @@ efi_status_t efi_entry(efi_handle_t handle, efi_system_table_t *sys_table_arg)
+ 			   EFI_PROPERTIES_RUNTIME_MEMORY_PROTECTION_NON_EXECUTABLE_PE_DATA);
+ 
+ 	/* hibernation expects the runtime regions to stay in the same place */
+-	if (!IS_ENABLED(CONFIG_HIBERNATION) && !nokaslr() && !flat_va_mapping) {
++	if (!IS_ENABLED(CONFIG_HIBERNATION) && !efi_nokaslr && !flat_va_mapping) {
+ 		/*
+ 		 * Randomize the base of the UEFI runtime services region.
+ 		 * Preserve the 2 MB alignment of the region by taking a
+@@ -367,7 +367,7 @@ void efi_get_virtmap(efi_memory_desc_t *memory_map, unsigned long map_size,
+ 		size = in->num_pages * EFI_PAGE_SIZE;
+ 
+ 		in->virt_addr = in->phys_addr;
+-		if (novamap()) {
++		if (efi_novamap) {
+ 			continue;
+ 		}
+ 
+diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
+index c1481c5abea4..5ff63230a1f1 100644
+--- a/drivers/firmware/efi/libstub/efistub.h
++++ b/drivers/firmware/efi/libstub/efistub.h
+@@ -25,11 +25,11 @@
+ #define EFI_ALLOC_ALIGN		EFI_PAGE_SIZE
+ #endif
+ 
+-extern bool __pure nochunk(void);
+-extern bool __pure nokaslr(void);
+-extern bool __pure noinitrd(void);
+-extern bool __pure is_quiet(void);
+-extern bool __pure novamap(void);
++extern bool efi_nochunk;
++extern bool efi_nokaslr;
++extern bool efi_noinitrd;
++extern bool efi_quiet;
++extern bool efi_novamap;
+ 
+ extern const efi_system_table_t *efi_system_table;
+ 
+@@ -50,7 +50,7 @@ extern const efi_system_table_t *efi_system_table;
+ #endif
+ 
+ #define pr_efi(msg)		do {			\
+-	if (!is_quiet()) efi_printk("EFI stub: "msg);	\
++	if (!efi_quiet) efi_printk("EFI stub: "msg);	\
+ } while (0)
+ 
+ #define pr_efi_err(msg) efi_printk("EFI stub: ERROR: "msg)
+diff --git a/drivers/firmware/efi/libstub/fdt.c b/drivers/firmware/efi/libstub/fdt.c
+index 06d5e7fc8e34..3074a5e27c65 100644
+--- a/drivers/firmware/efi/libstub/fdt.c
++++ b/drivers/firmware/efi/libstub/fdt.c
+@@ -310,7 +310,7 @@ efi_status_t allocate_new_fdt_and_exit_boot(void *handle,
+ 	if (status == EFI_SUCCESS) {
+ 		efi_set_virtual_address_map_t *svam;
+ 
+-		if (novamap())
++		if (efi_novamap)
+ 			return EFI_SUCCESS;
+ 
+ 		/* Install the new virtual address map */
+diff --git a/drivers/firmware/efi/libstub/file.c b/drivers/firmware/efi/libstub/file.c
+index 27e014ea4459..50aaf15f9ad5 100644
+--- a/drivers/firmware/efi/libstub/file.c
++++ b/drivers/firmware/efi/libstub/file.c
+@@ -142,7 +142,7 @@ efi_status_t handle_cmdline_files(efi_loaded_image_t *image,
+ 	if (!load_addr || !load_size)
+ 		return EFI_INVALID_PARAMETER;
+ 
+-	if (IS_ENABLED(CONFIG_X86) && !nochunk())
++	if (IS_ENABLED(CONFIG_X86) && !efi_nochunk)
+ 		efi_chunk_size = EFI_READ_CHUNK_SIZE;
+ 
+ 	alloc_addr = alloc_size = 0;
+diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
+index 3f132f51ab0f..bddbc103a34b 100644
+--- a/drivers/firmware/efi/libstub/x86-stub.c
++++ b/drivers/firmware/efi/libstub/x86-stub.c
+@@ -427,7 +427,7 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
+ 		if (status != EFI_SUCCESS)
+ 			goto fail2;
+ 
+-		if (!noinitrd()) {
++		if (!efi_noinitrd) {
+ 			status = efi_load_initrd(image, &ramdisk_addr,
+ 						 &ramdisk_size,
+ 						 hdr->initrd_addr_max,
+@@ -787,7 +787,7 @@ unsigned long efi_main(efi_handle_t handle,
+ 	 * permit an initrd loaded from the LINUX_EFI_INITRD_MEDIA_GUID device
+ 	 * path to supersede it.
+ 	 */
+-	if (!noinitrd()) {
++	if (!efi_noinitrd) {
+ 		unsigned long addr, size;
+ 
+ 		status = efi_load_initrd_dev_path(&addr, &size, ULONG_MAX);
+-- 
+2.17.1
 
-
-yeah, the flamegraph scripts are the outliers, there, everything else is
-using /bin/bash, so I'll switch to that, ok Andreas?
-
-[acme@quaco perf]$ vim tools/perf/scripts/python/bin/*
-34 files to edit
-[acme@quaco perf]$ head -1 tools/perf/scripts/python/bin/*
-==> tools/perf/scripts/python/bin/compaction-times-record <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/compaction-times-report <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/event_analyzing_sample-record <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/event_analyzing_sample-report <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/export-to-postgresql-record <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/export-to-postgresql-report <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/export-to-sqlite-record <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/export-to-sqlite-report <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/failed-syscalls-by-pid-record <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/failed-syscalls-by-pid-report <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/flamegraph-record <==
-#!/usr/bin/sh
-
-==> tools/perf/scripts/python/bin/flamegraph-report <==
-#!/usr/bin/sh
-
-==> tools/perf/scripts/python/bin/futex-contention-record <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/futex-contention-report <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/intel-pt-events-record <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/intel-pt-events-report <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/mem-phys-addr-record <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/mem-phys-addr-report <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/netdev-times-record <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/netdev-times-report <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/net_dropmonitor-record <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/net_dropmonitor-report <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/powerpc-hcalls-record <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/powerpc-hcalls-report <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/sched-migration-record <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/sched-migration-report <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/sctop-record <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/sctop-report <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/stackcollapse-record <==
-#!/bin/sh
-
-==> tools/perf/scripts/python/bin/stackcollapse-report <==
-#!/bin/sh
-
-==> tools/perf/scripts/python/bin/syscall-counts-by-pid-record <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/syscall-counts-by-pid-report <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/syscall-counts-record <==
-#!/bin/bash
-
-==> tools/perf/scripts/python/bin/syscall-counts-report <==
-#!/bin/bash
-[acme@quaco perf]$
