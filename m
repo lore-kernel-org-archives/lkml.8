@@ -2,99 +2,224 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A874BC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54183C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8069520736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33EA020736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:42:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="1gBHdNVV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728097AbgDXNmH (ORCPT
+        id S1728119AbgDXNmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 09:42:07 -0400
-Received: from mga17.intel.com ([192.55.52.151]:48236 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726301AbgDXNmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 09:42:07 -0400
-IronPort-SDR: XcNwQyCIiOsSAEukrIvEUZOjK5/VmgEN4juUP5nFbfsN1FsFN2pPaV2zVIMZaWjs0tQH3DG4PY
- YxdF3AN430AA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2020 06:42:06 -0700
-IronPort-SDR: 8USxce6JaaWf19goY9DaQF4NC95AxRX0qFW2EG2S6Bj2Mf9VZvApdNXRxwbY+XB1N2nBBrb0U6
- RbK9j+LAYDPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,311,1583222400"; 
-   d="scan'208";a="280800527"
-Received: from unknown (HELO localhost) ([10.239.159.128])
-  by fmsmga004.fm.intel.com with ESMTP; 24 Apr 2020 06:42:04 -0700
-Date:   Fri, 24 Apr 2020 21:44:07 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        jmattson@google.com, yu.c.zhang@linux.intel.com
-Subject: Re: [PATCH v11 1/9] KVM: VMX: Introduce CET VMX fields and flags
-Message-ID: <20200424134407.GD24039@local-michael-cet-test>
-References: <20200326081847.5870-1-weijiang.yang@intel.com>
- <20200326081847.5870-2-weijiang.yang@intel.com>
- <20200423163948.GA25564@linux.intel.com>
+        Fri, 24 Apr 2020 09:42:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35082 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726667AbgDXNmi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 09:42:38 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38C41C09B046
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 06:42:37 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id t11so7709954lfe.4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 06:42:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=9XPuItu2p5q0J1stXYL3FlizDb4b2Hp0W76okzjB3Yg=;
+        b=1gBHdNVVVD55yBdxouLHVQIr2R2DG14UwgiuO1DRw+MsxOTtsLf6Qt4nCy2XNn0Wn9
+         T+Z+OHefE+86FdQvoYKGav4kR+gpWcBZY448c0Rrexhv66wYCGuMFsInXNldtDi46o04
+         rD/aRfmdPWZxY1H5gMK+k/OTThXFo7bm347H8dcPyg8MLpoIIf6WSa0BAjjnyqViV9+B
+         S5z+aa2b6k6Nz4zPQs9Khf8Dpd8chZtC40Do54ozJSUPCxO21aQm9HkqYoTfskEWiOgT
+         Ek5c9tTtMTnNqbEW4tTqdz7MbaEu3lx+zKesB59zZ6JnAYHCJZVOgPv7b3F7GuIt4WzF
+         mUTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=9XPuItu2p5q0J1stXYL3FlizDb4b2Hp0W76okzjB3Yg=;
+        b=rsSPHy6G/rSajxyJmSyI3HulNIEBW7+xbA8IC1ArTMSeMisVV2+0yjlMlj4P+lEq/4
+         vJSo2yLxTjW0PLXemNEKwtzM6wdkX9koa57e1v3vHq2Ubt22yQmxVRoA7EK4eF/hIinD
+         4U1Ry6cgkTWcYibxB2WT7tYQ1VIIsPUJ+EQGwItPZDiHI6rGM/MNSk831rf8JEZkCj++
+         h0Ye8kskgoEDGK6jzZHo8qq5xiw0DPddkAO11Wqwey8YIXLIVWkBSGr8NdBWWhbEpus0
+         Q2uXbCg/y2Bsh5SfJzw+W8Ubq+kZNQ2flr9HqZlp8Fx+Q8eCONRz2v+GoUMQ/R6BB0Jx
+         OqGg==
+X-Gm-Message-State: AGi0PuYz6puUKUP4QF/CAwyAWTiGZp9HAhUDmNSgD88B7bQnJ+KpVdjj
+        os39nENH+42EONXdlESAN0YMlLTg4Z8=
+X-Google-Smtp-Source: APiQypJUCaE4jBrGyzJqhy/Wi6vjxKbAYz+/SclhtNuTdMQXmtFuj4rozg3LhSbteTaPt3IW2bzkZg==
+X-Received: by 2002:a19:5217:: with SMTP id m23mr6595764lfb.202.1587735755707;
+        Fri, 24 Apr 2020 06:42:35 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id a13sm4259474ljm.25.2020.04.24.06.42.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Apr 2020 06:42:35 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 15:42:34 +0200
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     linux-media@vger.kernel.org, kernel@collabora.com,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        hans.verkuil@cisco.com, skhan@linuxfoundation.org,
+        mchehab@kernel.org
+Subject: Re: [PATCH v3 3/4] media: staging: rkisp1: use
+ v4l2_pipeline_stream_{enable,disable} helpers
+Message-ID: <20200424134234.GC4040416@oden.dyn.berto.se>
+References: <20200415013044.1778572-1-helen.koike@collabora.com>
+ <20200415013044.1778572-4-helen.koike@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200423163948.GA25564@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200415013044.1778572-4-helen.koike@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 09:39:48AM -0700, Sean Christopherson wrote:
-> On Thu, Mar 26, 2020 at 04:18:38PM +0800, Yang Weijiang wrote:
-> > If VM_EXIT_LOAD_HOST_CET_STATE = 1, the host CET states are restored
-> > from below VMCS fields at VM-Exit:
-> >   HOST_S_CET
-> >   HOST_SSP
-> >   HOST_INTR_SSP_TABLE
-> > 
-> > If VM_ENTRY_LOAD_GUEST_CET_STATE = 1, the guest CET states are loaded
-> > from below VMCS fields at VM-Entry:
-> >   GUEST_S_CET
-> >   GUEST_SSP
-> >   GUEST_INTR_SSP_TABLE
-> > 
-> > Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-> > Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-> > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> > ---
-> 
-> ...
-> 
-> > diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
-> > index 5e090d1f03f8..e938bc6c37aa 100644
-> > --- a/arch/x86/include/asm/vmx.h
-> > +++ b/arch/x86/include/asm/vmx.h
-> > @@ -94,6 +94,7 @@
-> >  #define VM_EXIT_CLEAR_BNDCFGS                   0x00800000
-> >  #define VM_EXIT_PT_CONCEAL_PIP			0x01000000
-> >  #define VM_EXIT_CLEAR_IA32_RTIT_CTL		0x02000000
-> > +#define VM_EXIT_LOAD_HOST_CET_STATE             0x10000000
-> >  
-> >  #define VM_EXIT_ALWAYSON_WITHOUT_TRUE_MSR	0x00036dff
-> >  
-> > @@ -107,6 +108,7 @@
-> >  #define VM_ENTRY_LOAD_BNDCFGS                   0x00010000
-> >  #define VM_ENTRY_PT_CONCEAL_PIP			0x00020000
-> >  #define VM_ENTRY_LOAD_IA32_RTIT_CTL		0x00040000
-> > +#define VM_ENTRY_LOAD_GUEST_CET_STATE           0x00100000
-> 
-> I think it probably make senses to drop HOST/GUEST from the controls,
-> i.e. VM_{ENTER,EXIT}_LOAD_CET_STATE.  The SDM doesn't qualify them with
-> guest vs. host, nor does KVM qualify any of the other entry/exit controls
-> that are effective guest vs. host.
-Sure, will fix them, thanks.
+Hi Helen,
 
+Thanks for your work.
+
+On 2020-04-14 22:30:43 -0300, Helen Koike wrote:
+> Use v4l2_pipeline_stream_{enable,disable} to call .s_stream() subdevice
+> callbacks through the pipeline.
+> 
+> Tested by streaming on Scarlet Chromebook.
+> 
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+
+> 
+> ---
+> 
+> Changes in v3:
+> - rebase on top of new helpers prototypes
+> 
+> Changes in v2:
+> - rebase on top of new helpers prototypes
+> 
+>  drivers/staging/media/rkisp1/rkisp1-capture.c | 76 +------------------
+>  1 file changed, 3 insertions(+), 73 deletions(-)
+> 
+> diff --git a/drivers/staging/media/rkisp1/rkisp1-capture.c b/drivers/staging/media/rkisp1/rkisp1-capture.c
+> index 24fe6a7888aa4..a18f1668e3563 100644
+> --- a/drivers/staging/media/rkisp1/rkisp1-capture.c
+> +++ b/drivers/staging/media/rkisp1/rkisp1-capture.c
+> @@ -838,71 +838,6 @@ static void rkisp1_return_all_buffers(struct rkisp1_capture *cap,
+>  	spin_unlock_irqrestore(&cap->buf.lock, flags);
+>  }
+>  
+> -/*
+> - * rkisp1_pipeline_sink_walk - Walk through the pipeline and call cb
+> - * @from: entity at which to start pipeline walk
+> - * @until: entity at which to stop pipeline walk
+> - *
+> - * Walk the entities chain starting at the pipeline video node and stop
+> - * all subdevices in the chain.
+> - *
+> - * If the until argument isn't NULL, stop the pipeline walk when reaching the
+> - * until entity. This is used to disable a partially started pipeline due to a
+> - * subdev start error.
+> - */
+> -static int rkisp1_pipeline_sink_walk(struct media_entity *from,
+> -				     struct media_entity *until,
+> -				     int (*cb)(struct media_entity *from,
+> -					       struct media_entity *curr))
+> -{
+> -	struct media_entity *entity = from;
+> -	struct media_pad *pad;
+> -	unsigned int i;
+> -	int ret;
+> -
+> -	while (1) {
+> -		pad = NULL;
+> -		/* Find remote source pad */
+> -		for (i = 0; i < entity->num_pads; i++) {
+> -			struct media_pad *spad = &entity->pads[i];
+> -
+> -			if (!(spad->flags & MEDIA_PAD_FL_SINK))
+> -				continue;
+> -			pad = media_entity_remote_pad(spad);
+> -			if (pad && is_media_entity_v4l2_subdev(pad->entity))
+> -				break;
+> -		}
+> -		if (!pad || !is_media_entity_v4l2_subdev(pad->entity))
+> -			break;
+> -
+> -		entity = pad->entity;
+> -		if (entity == until)
+> -			break;
+> -
+> -		ret = cb(from, entity);
+> -		if (ret)
+> -			return ret;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+> -static int rkisp1_pipeline_disable_cb(struct media_entity *from,
+> -				      struct media_entity *curr)
+> -{
+> -	struct v4l2_subdev *sd = media_entity_to_v4l2_subdev(curr);
+> -
+> -	return v4l2_subdev_call(sd, video, s_stream, false);
+> -}
+> -
+> -static int rkisp1_pipeline_enable_cb(struct media_entity *from,
+> -				     struct media_entity *curr)
+> -{
+> -	struct v4l2_subdev *sd = media_entity_to_v4l2_subdev(curr);
+> -
+> -	return v4l2_subdev_call(sd, video, s_stream, true);
+> -}
+> -
+>  static void rkisp1_stream_stop(struct rkisp1_capture *cap)
+>  {
+>  	int ret;
+> @@ -929,11 +864,7 @@ static void rkisp1_vb2_stop_streaming(struct vb2_queue *queue)
+>  
+>  	rkisp1_stream_stop(cap);
+>  	media_pipeline_stop(&node->vdev.entity);
+> -	ret = rkisp1_pipeline_sink_walk(&node->vdev.entity, NULL,
+> -					rkisp1_pipeline_disable_cb);
+> -	if (ret)
+> -		dev_err(rkisp1->dev,
+> -			"pipeline stream-off failed error:%d\n", ret);
+> +	v4l2_pipeline_stream_disable(&node->vdev, &cap->rkisp1->pipe);
+>  
+>  	rkisp1_return_all_buffers(cap, VB2_BUF_STATE_ERROR);
+>  
+> @@ -1005,8 +936,7 @@ rkisp1_vb2_start_streaming(struct vb2_queue *queue, unsigned int count)
+>  	rkisp1_stream_start(cap);
+>  
+>  	/* start sub-devices */
+> -	ret = rkisp1_pipeline_sink_walk(entity, NULL,
+> -					rkisp1_pipeline_enable_cb);
+> +	ret = v4l2_pipeline_stream_enable(&cap->vnode.vdev, &cap->rkisp1->pipe);
+>  	if (ret)
+>  		goto err_stop_stream;
+>  
+> @@ -1019,7 +949,7 @@ rkisp1_vb2_start_streaming(struct vb2_queue *queue, unsigned int count)
+>  	return 0;
+>  
+>  err_pipe_disable:
+> -	rkisp1_pipeline_sink_walk(entity, NULL, rkisp1_pipeline_disable_cb);
+> +	v4l2_pipeline_stream_disable(&cap->vnode.vdev, &cap->rkisp1->pipe);
+>  err_stop_stream:
+>  	rkisp1_stream_stop(cap);
+>  	v4l2_pipeline_pm_put(entity);
+> -- 
+> 2.26.0
+> 
+
+-- 
+Regards,
+Niklas Söderlund
