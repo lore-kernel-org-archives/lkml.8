@@ -5,68 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93401C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0473C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B91C214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B766214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:02:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nQ2U1b8k"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bkgpsJhe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729543AbgDXUCJ (ORCPT
+        id S1729555AbgDXUCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 16:02:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39300 "EHLO
+        Fri, 24 Apr 2020 16:02:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729499AbgDXUB4 (ORCPT
+        with ESMTP id S1729473AbgDXUBw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 16:01:56 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EC16C09B04B
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 13:01:55 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id k18so4130058pll.6
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 13:01:55 -0700 (PDT)
+        Fri, 24 Apr 2020 16:01:52 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28780C09B049
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 13:01:51 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id k18so4129975pll.6
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 13:01:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Rb70E/sjGdouOLoWnX7vl3Ag+u7wzfoBCVwZVo3HJd8=;
-        b=nQ2U1b8khZFfIfjOuvs7xqMrSwowogjemD4mPQXzUxFybJtnqqu0wz83C9Xy9WzxjK
-         BR5SM0fkeuVtP00aV10s31vFYUrPfKfroOSGtQ+x6c7zp9iEYrg9LYxy2nQo6XVNJK9o
-         tA1hkmNN3wXKGrpFuueUK2WquyplBhHywJqkjiteGWj/SpancKa4wHsaBVd3r+ITQLt5
-         nZYDGLys/6olCPsbJAs2TYqvlArstuJvbBTyyWSo1tvYu1Yfjaa8t/JPfuKttZwiLnGS
-         kmn3KZKlGNFMPu+I4r7/7/mGV+j+taV3mOtBzqEvITyaCXnXG+PF4q1J1AJATywYH+TO
-         AAhQ==
+        bh=/8EQG22JXL8ro/80I28EMVnMy622Pquoagwe6M0KrVU=;
+        b=bkgpsJheMHUDzSTUosy/UAmwFCjhd6C93gLM9hF6tuH8HE0JtCUDwchMJgA4bHZwLP
+         4+f1x8+0v/848OOPExzbK2I3sunvdbo5trOn22INE8ZwrpXG0YsszY6YCNaTw1LFt4lY
+         XN72vfCJQTu+zmfwmIj5CHhW3OjXO2uMxf+/NdOGySfetVTtMhHgSzuchXCmesiwvz61
+         sctlSYlMaonWSsoBknhQ0UeQXNbWCA5tw9GbaJPOEjMemh924mF1FKK/BSqAELRs7mpc
+         1OLxUhPRlrtGb02Ieerk9XKr3T05xZzlamq5SxmhEy/mXhO79lDkbcb/RGM90w2y/YOM
+         te2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Rb70E/sjGdouOLoWnX7vl3Ag+u7wzfoBCVwZVo3HJd8=;
-        b=t4rkaA50sz9vKijVkhzlU/CqP6WFNys3Jts0Cm6AP0gcass8YcCgCC3sYcru2AjLlI
-         gu/9sPv4R7pnMxlLhHrz78DRXQQknyPRaW+Rh7PvoMqbZdrHjfqDWkBzoVJAZAzDlhMs
-         6ak6i7A22aHYtYR5SbtFIVe6fOt1LHF6nclvn2OoYZEMUyV1Il0OSWokAi/dKVygM0nN
-         Nu3lTO4Upa7syZrAOAIP2EEeiYHEp3crlkuRFuaUXjauQ/PzoZtKTl3+6v7IAgfA0wav
-         mxHkTtMJXfn79PzyUPhq6sQo7LSTlLriWInzZYkFcPOtFjuttoaGWi5DMMZfo6+MZY9q
-         htJg==
-X-Gm-Message-State: AGi0PuYv19HPug8OAarAvhnVM6TWSRhVHwYoGHaPVtXb8yqbJY8JgJYj
-        opKBqH+xTSk0B1sIMTgtOANidg==
-X-Google-Smtp-Source: APiQypK4C28yh0PLdX0/fSmEWnxbUJ2uF1f02JWzlTKDSyT3ZBXAedHvxEuxZren5njEVG7AHjvb4A==
-X-Received: by 2002:a17:90a:1b67:: with SMTP id q94mr8348667pjq.84.1587758514536;
-        Fri, 24 Apr 2020 13:01:54 -0700 (PDT)
+        bh=/8EQG22JXL8ro/80I28EMVnMy622Pquoagwe6M0KrVU=;
+        b=QIhaIdHG9EMm5d5BARNx1MfypP6hSe3IvbD1aKa0S33HyMIaMTDd8hbM0FiszWEYoR
+         1UTbYN1EON+4grTyQ2/sBNQz4kdNwXv1DrUHqas9EBUIlb3hNoS7PskRbKSVFZe8KFSe
+         dnDWKK5tePtbB6JxONsSR/ompAX9xOruOTr+kzpkV8T9CJMOO4nGSRoWWs6mrBYSWimN
+         hhEZ5jGW+G9PDedJWT7igHqwkq96ppdu0r+ryXGQZS/9yK4U46Qy0j253Dt7RMWUY6kS
+         wn82LmWXG0nUgu9ZaQDSSkSo5fhL8rgkZJZx6eD5gCBf1kRTQ30b2mt6a4FlF/2spbLL
+         AJFA==
+X-Gm-Message-State: AGi0PuYxw0f9glzCU//7JPPu6d6k4380hG1SpjFtp+9scTJmFJC9u4Q5
+        +TIXySYoMt5rdmy0/A5bmeS0SnSFto0=
+X-Google-Smtp-Source: APiQypJUSxhtBMeJ7MpTSeNvVV+NwnzwtOy8Co1PRQCOAmo3YYA+dJdsE6uygCk7p+wHrej+onVEZg==
+X-Received: by 2002:a17:90a:c702:: with SMTP id o2mr8185535pjt.196.1587758510506;
+        Fri, 24 Apr 2020 13:01:50 -0700 (PDT)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id o11sm5532224pgd.58.2020.04.24.13.01.53
+        by smtp.gmail.com with ESMTPSA id o11sm5532224pgd.58.2020.04.24.13.01.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 13:01:53 -0700 (PDT)
+        Fri, 24 Apr 2020 13:01:49 -0700 (PDT)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     bjorn.andersson@linaro.org, ohad@wizery.com
 Cc:     loic.pallardy@st.com, arnaud.pouliquen@st.com, s-anna@ti.com,
         linux-remoteproc@vger.kernel.org, corbet@lwn.net,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 13/14] remoteproc: Document function rproc_set_state_machine()
-Date:   Fri, 24 Apr 2020 14:01:34 -0600
-Message-Id: <20200424200135.28825-14-mathieu.poirier@linaro.org>
+Subject: [PATCH v3 10/14] remoteproc: Deal with synchronisation when shutting down
+Date:   Fri, 24 Apr 2020 14:01:31 -0600
+Message-Id: <20200424200135.28825-11-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200424200135.28825-1-mathieu.poirier@linaro.org>
 References: <20200424200135.28825-1-mathieu.poirier@linaro.org>
@@ -77,43 +77,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a few words on the newly added rproc_set_state_machine()
-in order to adversite the new API and help put people into
-context.
+The remoteproc core must not allow function rproc_shutdown() to
+proceed if currently synchronising with a remote processor and
+the synchronisation operations of that remote processor does not
+support it.  Also part of the process is to set the synchronisation
+flag so that the remoteproc core can make the right decisions when
+restarting the system.
 
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- Documentation/remoteproc.txt | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ drivers/remoteproc/remoteproc_core.c     | 32 ++++++++++++++++++++++++
+ drivers/remoteproc/remoteproc_internal.h |  7 ++++++
+ 2 files changed, 39 insertions(+)
 
-diff --git a/Documentation/remoteproc.txt b/Documentation/remoteproc.txt
-index 2be1147256e0..550ed9a06a27 100644
---- a/Documentation/remoteproc.txt
-+++ b/Documentation/remoteproc.txt
-@@ -132,6 +132,23 @@ On success, the new rproc is returned, and on failure, NULL.
-   **never** directly deallocate @rproc, even if it was not registered
-   yet. Instead, when you need to unroll rproc_alloc(), use rproc_free().
+diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+index 3a84a38ba37b..48afa1f80a8f 100644
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -1849,6 +1849,27 @@ int rproc_boot(struct rproc *rproc)
+ }
+ EXPORT_SYMBOL(rproc_boot);
  
-+::
++static bool rproc_can_shutdown(struct rproc *rproc)
++{
++	/*
++	 * The remoteproc core is the lifecycle manager, no problem
++	 * calling for a shutdown.
++	 */
++	if (!rproc_needs_syncing(rproc))
++		return true;
 +
-+  int rproc_set_state_machine(struct rproc *rproc,
-+			      const struct rproc_ops *sync_ops,
-+			      struct rproc_sync_flags sync_flags)
++	/*
++	 * The remoteproc has been loaded by another entity (as per above
++	 * condition) and the platform code has given us the capability
++	 * of stopping it.
++	 */
++	if (rproc->sync_ops->stop)
++		return true;
 +
-+This function should be called for cases where the remote processor has
-+been started by another entity, be it a boot loader or trusted environment,
-+and the remoteproc core is to synchronise with the remote processor rather
-+then boot it.  The synchronisation flags @sync_flags tell the core whether
-+it should synchronise with a remote processor when the core initialises, after
-+a remote processor has crashed and after it was voluntarily stopped.  Operations
-+provided in the @sync_ops should reflect the reality of the use case.  For
-+example if the remoteproc core is to synchronise with a remote processor at
-+initialisation time, sync_ops::find_loaded_rsc_table should provide a pointer to
-+the resource table in memory rather than fetch it from the firmware image.
++	/* Any other condition should not be allowed */
++	return false;
++}
 +
- ::
+ /**
+  * rproc_shutdown() - power off the remote processor
+  * @rproc: the remote processor
+@@ -1879,6 +1900,9 @@ void rproc_shutdown(struct rproc *rproc)
+ 		return;
+ 	}
  
-   void rproc_free(struct rproc *rproc)
++	if (!rproc_can_shutdown(rproc))
++		goto out;
++
+ 	/* if the remote proc is still needed, bail out */
+ 	if (!atomic_dec_and_test(&rproc->power))
+ 		goto out;
+@@ -1898,6 +1922,14 @@ void rproc_shutdown(struct rproc *rproc)
+ 	kfree(rproc->cached_table);
+ 	rproc->cached_table = NULL;
+ 	rproc->table_ptr = NULL;
++
++	/*
++	 * The remote processor has been switched off - tell the core what
++	 * operation to use from hereon, i.e whether an external entity will
++	 * reboot the remote processor or it is now the remoteproc core's
++	 * responsability.
++	 */
++	rproc_set_sync_flag(rproc, RPROC_SYNC_STATE_SHUTDOWN);
+ out:
+ 	mutex_unlock(&rproc->lock);
+ }
+diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
+index 61500981155c..7dcc0a26892b 100644
+--- a/drivers/remoteproc/remoteproc_internal.h
++++ b/drivers/remoteproc/remoteproc_internal.h
+@@ -27,6 +27,9 @@ struct rproc_debug_trace {
+ /*
+  * enum rproc_sync_states - remote processsor sync states
+  *
++ * @RPROC_SYNC_STATE_SHUTDOWN	state to use after the remoteproc core
++ *				has shutdown (rproc_shutdown()) the
++ *				remote processor.
+  * @RPROC_SYNC_STATE_CRASHED	state to use after the remote processor
+  *				has crashed but has not been recovered by
+  *				the remoteproc core yet.
+@@ -36,6 +39,7 @@ struct rproc_debug_trace {
+  * operation to use.
+  */
+ enum rproc_sync_states {
++	RPROC_SYNC_STATE_SHUTDOWN,
+ 	RPROC_SYNC_STATE_CRASHED,
+ };
+ 
+@@ -43,6 +47,9 @@ static inline void rproc_set_sync_flag(struct rproc *rproc,
+ 				       enum rproc_sync_states state)
+ {
+ 	switch (state) {
++	case RPROC_SYNC_STATE_SHUTDOWN:
++		rproc->sync_with_rproc = rproc->sync_flags.after_stop;
++		break;
+ 	case RPROC_SYNC_STATE_CRASHED:
+ 		rproc->sync_with_rproc = rproc->sync_flags.after_crash;
+ 		break;
 -- 
 2.20.1
 
