@@ -7,74 +7,74 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0599DC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C507EC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C83CE20661
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E8A20661
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:59:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="EjEpnJIB"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="mm4VKM1n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgDXU7P (ORCPT
+        id S1726491AbgDXU7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 16:59:15 -0400
-Received: from mail-bn8nam11on2059.outbound.protection.outlook.com ([40.107.236.59]:23232
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        Fri, 24 Apr 2020 16:59:17 -0400
+Received: from mail-mw2nam10on2045.outbound.protection.outlook.com ([40.107.94.45]:28901
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726327AbgDXU7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 16:59:12 -0400
+        id S1726337AbgDXU6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 16:58:37 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=E7T0aN4FOAMvErLL8O/8QSrIXEioF7YrczOFYQl6rV9AEN1q6eQm2JlFl3utoak8qXABcU4UYOFl3hKrCCrv7pQkgqnm+SsIA7wNMZTF4S7C46v4ij9WDphSoy8rEHTeSF0cbL6Qv+C9hzQA0WU8Jvm0Ixqlh6imAoSjnL0jkMlLnJtAB/5UnRYTfF0KXnhwaZAQ4Cz9MrtOoPQUtgcfzNUxrGQMa6r2XgvqDfc3d19hpIBr/2U5scUFlrbRfSHlxk/3qC+5jBINVkKjAPaO8Zd16YjS/KcTGx+gPYAzxOe5jxo/4t/ywX3qkuPnYS0unyxzSTM/ZR0vIJNuW9xS6Q==
+ b=STq2SWMfX9l6HnkLXt5FLfiGOgrRsxrCEsjOaP6Irei7jgmd6pMk4zW/IMNczRCt4UINpx5DxrsFJi+cPSdyBclQXlOlR1W6StSvbGPHVNo1cEGM1eWvvHGmbScB5N7d5oeTLtLuBHVew0sV5f2srsY+mE+AbfuwiJv/H50ladcmJu5bI9e8AByegmL3VoWNOWzYS4j040E6yjPqa3S7tN4ErjjbTLthJYlRCqOo9gJQa3vHNQAnElXQqJYVYrMxzsdm58xQBcE+r6MBa7zQgl5DLQB0Sa4Kw5FokGMLrcg2/rpcrEv1tZkZjFQPUxQIIhiVms24se6FV86Zh54A4w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UtkfAb+OctstBJIdILKS1FBwP2Cp3vedcBC+0xJGhUE=;
- b=lABZc2Jbx+JU5JxWzIfXJwuI0jeaabyeg+1PQgCNYFoiGHV0pk7cM6Pvk9uW3QuM2Dx8F4y09HGvc/rYPJL6YpBmJxoVpYtyjLm+DrB8w5ilbbodiuAq+TYNI979NODjaFFpP+8OQkdvzZPAkXXMNp37TdwlEMxZXsRB/n/qjP0cqEl4S822fqUHnHZ3iDNQaADMC6nODMuaU8VDMKfHKlohg3Msy+/lwp1tOncJZ7OXmIOlUpBy8m3B4lzVltFoXH55Vhi+nbivN/5D3WzlgRq5nImoGllaFnkQ+Onvd2VF5iI9SDqNZyK9K/6m1KictCDbOlIAihJ7QMtA7MIXJQ==
+ bh=hXDpwfmUqNZ3tgxJZ1ZwTJgsq8EuORoJLksCgzjN2JA=;
+ b=CdAy3hvLuGhXVHxDX0X+K6SkgY8XrKNs+S+37Qx6KwCNNKhmaN59nt1WS4XHGehh5lLfsxKEngCsPjga/9HoJHDDKIxSgNj4/iPAiG+iotWa9uaZXWX4ygkTlOp1ZpJZpZFnCHYA/mMKetftvB+pjnfks+4hoxW0dvtEYz2JzV8ULofGNH8t8hogVG8vcj72VNIuFmuJFYtf/v0Y+BHVwJm6N7Des2pdw9WlgH5VtcaFfXK7G9OEyB313lCn0/FKjqkq3uQDerKqUJzwa+jM985JjcBLq+KJvOfGiNMGTjsPy6J0xef1tpGS9jtq4GZROhRp6QO39cCdLWGC64qIFg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=aggios.com smtp.mailfrom=xilinx.com;
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
  dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
  not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UtkfAb+OctstBJIdILKS1FBwP2Cp3vedcBC+0xJGhUE=;
- b=EjEpnJIBqlPsdmSb7wBbTlmb1CWIK/D1VhrC2mSXxeUlYwvK2cMHk/+qWHCgnf1wJX0p83SvAZa6R5hr3ifN4BzLbui/KeWjD3vEO/SVUechKQ2YlAwBZXPBxp8e4UpDzfDCE6oOTK3sBKcMWXEx0/QXh+zKZxCts0OVL4XdoYk=
-Received: from CY4PR1201CA0002.namprd12.prod.outlook.com
- (2603:10b6:910:16::12) by BY5PR02MB6337.namprd02.prod.outlook.com
- (2603:10b6:a03:1b3::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Fri, 24 Apr
+ bh=hXDpwfmUqNZ3tgxJZ1ZwTJgsq8EuORoJLksCgzjN2JA=;
+ b=mm4VKM1n4Wdzx5Xijb6mstQ9+xrTumF1FhIydfY+9chuUb4dgjanmZfzQNkRB1NY9EQUA5tBVgao8o2igdEox569QrSHSo3HGRO4KHa4xIuVcc1HBqNH9WhobOBpA7JYcNIR0+2alQxfesX0ShkNU4w7J/nCwjW8TYIPveO3eMw=
+Received: from MN2PR05CA0065.namprd05.prod.outlook.com (2603:10b6:208:236::34)
+ by BN8PR02MB5713.namprd02.prod.outlook.com (2603:10b6:408:b4::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.30; Fri, 24 Apr
  2020 20:58:33 +0000
-Received: from CY1NAM02FT047.eop-nam02.prod.protection.outlook.com
- (2603:10b6:910:16:cafe::9e) by CY4PR1201CA0002.outlook.office365.com
- (2603:10b6:910:16::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend
+Received: from BL2NAM02FT055.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:208:236:cafe::c4) by MN2PR05CA0065.outlook.office365.com
+ (2603:10b6:208:236::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.10 via Frontend
  Transport; Fri, 24 Apr 2020 20:58:33 +0000
 Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; aggios.com; dkim=none (message not signed)
- header.d=none;aggios.com; dmarc=bestguesspass action=none
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
  header.from=xilinx.com;
 Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.60.83 as permitted sender) receiver=protection.outlook.com;
  client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
 Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT047.mail.protection.outlook.com (10.152.74.177) with Microsoft SMTP
- Server id 15.20.2937.19 via Frontend Transport; Fri, 24 Apr 2020 20:58:32
+ BL2NAM02FT055.mail.protection.outlook.com (10.152.77.126) with Microsoft SMTP
+ Server id 15.20.2937.19 via Frontend Transport; Fri, 24 Apr 2020 20:58:33
  +0000
-Received: from [149.199.38.66] (port=33424 helo=xsj-pvapsmtp01)
+Received: from [149.199.38.66] (port=33437 helo=xsj-pvapsmtp01)
         by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1jS5Nx-0002Dd-GH; Fri, 24 Apr 2020 13:57:21 -0700
+        id 1jS5Nx-0002Dl-MA; Fri, 24 Apr 2020 13:57:21 -0700
 Received: from [127.0.0.1] (helo=localhost)
         by xsj-pvapsmtp01 with smtp (Exim 4.63)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1jS5P6-0007Pe-FS; Fri, 24 Apr 2020 13:58:32 -0700
-Received: from xsj-pvapsmtp01 (mailman.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 03OKwKu2026349;
-        Fri, 24 Apr 2020 13:58:20 -0700
+        id 1jS5P6-0007Pe-LX; Fri, 24 Apr 2020 13:58:32 -0700
+Received: from xsj-pvapsmtp01 (xsj-mail.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 03OKwJT9030389;
+        Fri, 24 Apr 2020 13:58:19 -0700
 Received: from [172.19.2.91] (helo=xsjjollys50.xilinx.com)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1jS5Ou-0007Lo-6I; Fri, 24 Apr 2020 13:58:20 -0700
+        id 1jS5Ot-0007Lo-Ex; Fri, 24 Apr 2020 13:58:19 -0700
 From:   Jolly Shah <jolly.shah@xilinx.com>
 To:     ard.biesheuvel@linaro.org, mingo@kernel.org,
         gregkh@linuxfoundation.org, matt@codeblueprint.co.uk,
@@ -82,12 +82,10 @@ To:     ard.biesheuvel@linaro.org, mingo@kernel.org,
         dmitry.torokhov@gmail.com, michal.simek@xilinx.com
 Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>,
-        Stefan Krsmanovic <stefan.krsmanovic@aggios.com>,
-        Tejas Patel <tejas.patel@xilinx.com>,
         Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH v5 24/25] firmware: xilinx: Add sysfs to set shutdown scope
-Date:   Fri, 24 Apr 2020 13:58:06 -0700
-Message-Id: <1587761887-4279-25-git-send-email-jolly.shah@xilinx.com>
+Subject: [PATCH v5 13/25] firmware: xilinx: Remove eemi ops for reset_get_status
+Date:   Fri, 24 Apr 2020 13:57:55 -0700
+Message-Id: <1587761887-4279-14-git-send-email-jolly.shah@xilinx.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1587761887-4279-1-git-send-email-jolly.shah@xilinx.com>
 References: <1587761887-4279-1-git-send-email-jolly.shah@xilinx.com>
@@ -96,27 +94,27 @@ X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
 X-TM-AS-User-Approved-Sender: Yes;Yes
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(396003)(346002)(376002)(46966005)(316002)(7696005)(2616005)(44832011)(9786002)(426003)(26005)(36756003)(8676002)(107886003)(2906002)(4326008)(8936002)(7416002)(5660300002)(81156014)(6666004)(70586007)(70206006)(336012)(81166007)(54906003)(478600001)(82310400002)(82740400003)(47076004)(6636002)(356005)(186003);DIR:OUT;SFP:1101;
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(376002)(346002)(39860400002)(136003)(46966005)(82310400002)(36756003)(5660300002)(6636002)(426003)(2906002)(478600001)(4326008)(8936002)(7416002)(9786002)(107886003)(81156014)(8676002)(2616005)(70206006)(186003)(26005)(356005)(82740400003)(6666004)(44832011)(47076004)(336012)(54906003)(81166007)(70586007)(316002)(7696005);DIR:OUT;SFP:1101;
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 804339d3-e216-4003-f559-08d7e8923fb5
-X-MS-TrafficTypeDiagnostic: BY5PR02MB6337:
-X-Microsoft-Antispam-PRVS: <BY5PR02MB6337FE173A27145110579033B8D00@BY5PR02MB6337.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: e295c455-1dc8-4804-bc0a-08d7e8923fe7
+X-MS-TrafficTypeDiagnostic: BN8PR02MB5713:
+X-Microsoft-Antispam-PRVS: <BN8PR02MB57134A23220EF1CBA1E2603FB8D00@BN8PR02MB5713.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-MS-Oob-TLC-OOBClassifiers: OLM:1360;
 X-Forefront-PRVS: 03838E948C
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: iFALMs0mdSBtjYxM3AtcEbqUrHyrCxgRsB2q0YOt6LBvj1n59MCz/heTYUc2+D3yI+hvGx9/Oa2kHVmOlWCrL3P0kVCmV6Dduhb4hYQmxYxWGgpWPdTle/Eadic45r+aCZD5xA0W9lWSslTapN7XFziEzjac42aDptXPWZ+FXUecpl3VYW2W7sKRVft0beElQbm7QKhUiyjgeJqleSJmCSWEeYkcASPqbuGrNtVGjaDSCvG0CFj2xXzK+O7gsuSIiMYhpc0idXfLZHP76AJuvYXe0sRCUmvmXW22E+IUJ9zNlKqSpwFi7ljD7iagtbZrqfmGTiqVAfsGkkypdsYoueCEssYg5IJfp+mjgBuiSQHJEHkPuBl8I2mQZaZpvct1f+o8dE51KpP7snBGmOvJ8lYJMA5xbzC/uC3TGg9fK/eRbfwHdixggK0mb5qZMkoxVA2O+DDsaMZgFVK/cs/SZMfyPboG3RaVl4wSxlNTB2jLehb4i0Gyk1qGK1xfmXZWhrRmdU1ogXN+YOCZwqMeQg==
+X-Microsoft-Antispam-Message-Info: gW4S1P6NbnHaNgXK3lQ0+4FWW+ucC2TdHP6PQ5/v6l8NtxQyc57vZXCYCckZcB3RcGPThmRHUT91Oirh3u39n2UWU4Y6kJqzCTJJipvCVws4NJ++ZWohGDk6C42E1296u478G0sU70wMQsA0hszkPh9Kd9joGDixVAZp8Nk7c4P8zP2behfKmjoAMcLEmtYgVS7mytLjHHWH8Jve1JEjUpScgv2w09xUlVC6csrwF5LeoDaNoaiK8PJlHQDGjux27G5Jj1Q3SlPbY6AHYJbLrh6034oE03H6I54lhe+2epW75yYgn0SLpycSC8fXLKRtjSy8wcxxYCmI/45Nb7C7Whz0JFa+zprE5ehaJhLPgVBLLMA22JPdmwdmBN7ko3cbonpeh8Sp76/PT4JRDNR9Z1+pvE0w7zX6MWIbd2owEiY3Yo56J63WeeyLXG9e0oJxRf3baRUB+eKQer42cugryTwJg+ibKbuWd0JBDAPjo4CrBx+fA9jZ35HNKOH+gXqlF6NCAV58sEfRS+yNWPZH4Q==
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2020 20:58:32.7813
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2020 20:58:33.0870
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 804339d3-e216-4003-f559-08d7e8923fb5
+X-MS-Exchange-CrossTenant-Network-Message-Id: e295c455-1dc8-4804-bc0a-08d7e8923fe7
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6337
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR02MB5713
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -124,211 +122,114 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rajan Vaja <rajan.vaja@xilinx.com>
 
-The Linux shutdown functionality implemented via PSCI system_off does
-not include an option to set a scope, i.e. which parts of the system to
-shut down.
-
-This patch creates sysfs that allows to set the shutdown scope for the
-next shutdown request. When the next shutdown is performed, the platform
-specific portion of PSCI-system_off can use the chosen shutdown scope.
+Use direct function call instead of using eemi ops for
+reset_get_status.
 
 Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
-Signed-off-by: Stefan Krsmanovic <stefan.krsmanovic@aggios.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Tejas Patel <tejas.patel@xilinx.com>
 Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
 ---
- .../ABI/stable/sysfs-driver-firmware-zynqmp        | 32 +++++++
- drivers/firmware/xilinx/zynqmp.c                   | 98 +++++++++++++++++++++-
- include/linux/firmware/xlnx-zynqmp.h               | 12 +++
- 3 files changed, 141 insertions(+), 1 deletion(-)
+ drivers/firmware/xilinx/zynqmp.c     | 5 ++---
+ drivers/reset/reset-zynqmp.c         | 8 +-------
+ include/linux/firmware/xlnx-zynqmp.h | 7 ++++++-
+ 3 files changed, 9 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/ABI/stable/sysfs-driver-firmware-zynqmp b/Documentation/ABI/stable/sysfs-driver-firmware-zynqmp
-index 2e3aebd..554f30c 100644
---- a/Documentation/ABI/stable/sysfs-driver-firmware-zynqmp
-+++ b/Documentation/ABI/stable/sysfs-driver-firmware-zynqmp
-@@ -48,3 +48,35 @@ Description:
- 		# echo 0x1234ABCD > /sys/devices/platform/firmware\:zynqmp-firmware/pggs0
- 
- Users:		Xilinx
-+
-+What:		/sys/devices/platform/firmware\:zynqmp-firmware/shutdown_scope
-+Date:		March 2020
-+KernelVersion:	5.6
-+Contact:	"Jolly Shah" <jollys@xilinx.com>
-+Description:
-+		This sysfs interface allows to set the shutdown scope for the
-+		next shutdown request. When the next shutdown is performed, the
-+		platform specific portion of PSCI-system_off can use the chosen
-+		shutdown scope.
-+
-+		Following are available shutdown scopes(subtypes):
-+
-+		subsystem:	Only the APU along with all of its peripherals
-+				not used by other processing units will be
-+				shut down. This may result in the FPD power
-+				domain being shut down provided that no other
-+				processing unit uses FPD peripherals or DRAM.
-+		ps_only:	The complete PS will be shut down, including the
-+				RPU, PMU, etc.  Only the PL domain (FPGA)
-+				remains untouched.
-+		system:		The complete system/device is shut down.
-+
-+		Usage:
-+		# cat /sys/devices/platform/firmware\:zynqmp-firmware/shutdown_scope
-+		# echo <scope> > /sys/devices/platform/firmware\:zynqmp-firmware/shutdown_scope
-+
-+		Example:
-+		# cat /sys/devices/platform/firmware\:zynqmp-firmware/shutdown_scope
-+		# echo "subsystem" > /sys/devices/platform/firmware\:zynqmp-firmware/shutdown_scope
-+
-+Users:		Xilinx
 diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index 9ba376c..8d36618 100644
+index 2a79091..4380853 100644
 --- a/drivers/firmware/xilinx/zynqmp.c
 +++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -888,6 +888,102 @@ int zynqmp_pm_system_shutdown(const u32 type, const u32 subtype)
- 				   0, 0, NULL);
+@@ -642,8 +642,7 @@ EXPORT_SYMBOL_GPL(zynqmp_pm_reset_assert);
+  *
+  * Return: Returns status, either success or error+reason
+  */
+-static int zynqmp_pm_reset_get_status(const enum zynqmp_pm_reset reset,
+-				      u32 *status)
++int zynqmp_pm_reset_get_status(const enum zynqmp_pm_reset reset, u32 *status)
+ {
+ 	u32 ret_payload[PAYLOAD_ARG_CNT];
+ 	int ret;
+@@ -657,6 +656,7 @@ static int zynqmp_pm_reset_get_status(const enum zynqmp_pm_reset reset,
+ 
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(zynqmp_pm_reset_get_status);
+ 
+ /**
+  * zynqmp_pm_fpga_load - Perform the fpga load
+@@ -808,7 +808,6 @@ static int zynqmp_pm_aes_engine(const u64 address, u32 *out)
  }
  
-+/**
-+ * struct zynqmp_pm_shutdown_scope - Struct for shutdown scope
-+ * @subtype:	Shutdown subtype
-+ * @name:	Matching string for scope argument
-+ *
-+ * This struct encapsulates mapping between shutdown scope ID and string.
-+ */
-+struct zynqmp_pm_shutdown_scope {
-+	const enum zynqmp_pm_shutdown_subtype subtype;
-+	const char *name;
-+};
-+
-+static struct zynqmp_pm_shutdown_scope shutdown_scopes[] = {
-+	[ZYNQMP_PM_SHUTDOWN_SUBTYPE_SUBSYSTEM] = {
-+		.subtype = ZYNQMP_PM_SHUTDOWN_SUBTYPE_SUBSYSTEM,
-+		.name = "subsystem",
-+	},
-+	[ZYNQMP_PM_SHUTDOWN_SUBTYPE_PS_ONLY] = {
-+		.subtype = ZYNQMP_PM_SHUTDOWN_SUBTYPE_PS_ONLY,
-+		.name = "ps_only",
-+	},
-+	[ZYNQMP_PM_SHUTDOWN_SUBTYPE_SYSTEM] = {
-+		.subtype = ZYNQMP_PM_SHUTDOWN_SUBTYPE_SYSTEM,
-+		.name = "system",
-+	},
-+};
-+
-+static struct zynqmp_pm_shutdown_scope *selected_scope =
-+		&shutdown_scopes[ZYNQMP_PM_SHUTDOWN_SUBTYPE_SYSTEM];
-+
-+/**
-+ * zynqmp_pm_is_shutdown_scope_valid - Check if shutdown scope string is valid
-+ * @scope_string:	Shutdown scope string
-+ *
-+ * Return:		Return pointer to matching shutdown scope struct from
-+ *			array of available options in system if string is valid,
-+ *			otherwise returns NULL.
-+ */
-+static struct zynqmp_pm_shutdown_scope*
-+		zynqmp_pm_is_shutdown_scope_valid(const char *scope_string)
-+{
-+	int count;
-+
-+	for (count = 0; count < ARRAY_SIZE(shutdown_scopes); count++)
-+		if (sysfs_streq(scope_string, shutdown_scopes[count].name))
-+			return &shutdown_scopes[count];
-+
-+	return NULL;
-+}
-+
-+static ssize_t shutdown_scope_show(struct device *device,
-+				   struct device_attribute *attr,
-+				   char *buf)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(shutdown_scopes); i++) {
-+		if (&shutdown_scopes[i] == selected_scope) {
-+			strcat(buf, "[");
-+			strcat(buf, shutdown_scopes[i].name);
-+			strcat(buf, "]");
-+		} else {
-+			strcat(buf, shutdown_scopes[i].name);
-+		}
-+		strcat(buf, " ");
-+	}
-+	strcat(buf, "\n");
-+
-+	return strlen(buf);
-+}
-+
-+static ssize_t shutdown_scope_store(struct device *device,
-+				    struct device_attribute *attr,
-+				    const char *buf, size_t count)
-+{
-+	int ret;
-+	struct zynqmp_pm_shutdown_scope *scope;
-+
-+	scope = zynqmp_pm_is_shutdown_scope_valid(buf);
-+	if (!scope)
-+		return -EINVAL;
-+
-+	ret = zynqmp_pm_system_shutdown(ZYNQMP_PM_SHUTDOWN_TYPE_SETSCOPE_ONLY,
-+					scope->subtype);
-+	if (ret) {
-+		pr_err("unable to set shutdown scope %s\n", buf);
-+		return ret;
-+	}
-+
-+	selected_scope = scope;
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR_RW(shutdown_scope);
-+
- static ssize_t ggs_show(struct device *device,
- 			struct device_attribute *attr,
- 			char *buf,
-@@ -923,7 +1019,6 @@ static ssize_t ggs_store(struct device *device,
- 	ret = zynqmp_pm_write_ggs(reg, value);
- 	if (ret)
- 		count = -EFAULT;
--
- err:
- 	return count;
- }
-@@ -1047,6 +1142,7 @@ static struct attribute *zynqmp_firmware_attrs[] = {
- 	&dev_attr_pggs1.attr,
- 	&dev_attr_pggs2.attr,
- 	&dev_attr_pggs3.attr,
-+	&dev_attr_shutdown_scope.attr,
- 	NULL,
+ static const struct zynqmp_eemi_ops eemi_ops = {
+-	.reset_get_status = zynqmp_pm_reset_get_status,
+ 	.init_finalize = zynqmp_pm_init_finalize,
+ 	.set_suspend_mode = zynqmp_pm_set_suspend_mode,
+ 	.request_node = zynqmp_pm_request_node,
+diff --git a/drivers/reset/reset-zynqmp.c b/drivers/reset/reset-zynqmp.c
+index 4a01b7e..373ea8d4 100644
+--- a/drivers/reset/reset-zynqmp.c
++++ b/drivers/reset/reset-zynqmp.c
+@@ -15,7 +15,6 @@
+ 
+ struct zynqmp_reset_data {
+ 	struct reset_controller_dev rcdev;
+-	const struct zynqmp_eemi_ops *eemi_ops;
  };
  
+ static inline struct zynqmp_reset_data *
+@@ -41,10 +40,9 @@ static int zynqmp_reset_deassert(struct reset_controller_dev *rcdev,
+ static int zynqmp_reset_status(struct reset_controller_dev *rcdev,
+ 			       unsigned long id)
+ {
+-	struct zynqmp_reset_data *priv = to_zynqmp_reset_data(rcdev);
+ 	int val, err;
+ 
+-	err = priv->eemi_ops->reset_get_status(ZYNQMP_RESET_ID + id, &val);
++	err = zynqmp_pm_reset_get_status(ZYNQMP_RESET_ID + id, &val);
+ 	if (err)
+ 		return err;
+ 
+@@ -73,10 +71,6 @@ static int zynqmp_reset_probe(struct platform_device *pdev)
+ 	if (!priv)
+ 		return -ENOMEM;
+ 
+-	priv->eemi_ops = zynqmp_pm_get_eemi_ops();
+-	if (IS_ERR(priv->eemi_ops))
+-		return PTR_ERR(priv->eemi_ops);
+-
+ 	platform_set_drvdata(pdev, priv);
+ 
+ 	priv->rcdev.ops = &zynqmp_reset_ops;
 diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index 2254c7c..c297333 100644
+index 22b2bbe..200f9e0 100644
 --- a/include/linux/firmware/xlnx-zynqmp.h
 +++ b/include/linux/firmware/xlnx-zynqmp.h
-@@ -286,6 +286,18 @@ enum dll_reset_type {
- 	PM_DLL_RESET_PULSE,
- };
+@@ -296,7 +296,6 @@ struct zynqmp_pm_query_data {
+ struct zynqmp_eemi_ops {
+ 	int (*fpga_load)(const u64 address, const u32 size, const u32 flags);
+ 	int (*fpga_get_status)(u32 *value);
+-	int (*reset_get_status)(const enum zynqmp_pm_reset reset, u32 *status);
+ 	int (*init_finalize)(void);
+ 	int (*set_suspend_mode)(u32 mode);
+ 	int (*request_node)(const u32 node,
+@@ -336,6 +335,7 @@ int zynqmp_pm_set_sd_tapdelay(u32 node_id, u32 type, u32 value);
+ int zynqmp_pm_sd_dll_reset(u32 node_id, u32 type);
+ int zynqmp_pm_reset_assert(const enum zynqmp_pm_reset reset,
+ 			   const enum zynqmp_pm_reset_action assert_flag);
++int zynqmp_pm_reset_get_status(const enum zynqmp_pm_reset reset, u32 *status);
+ #else
+ static inline struct zynqmp_eemi_ops *zynqmp_pm_get_eemi_ops(void)
+ {
+@@ -419,6 +419,11 @@ static inline int zynqmp_pm_reset_assert(const enum zynqmp_pm_reset reset,
+ {
+ 	return -ENODEV;
+ }
++static inline int zynqmp_pm_reset_get_status(const enum zynqmp_pm_reset reset,
++					     u32 *status)
++{
++	return -ENODEV;
++}
+ #endif
  
-+enum zynqmp_pm_shutdown_type {
-+	ZYNQMP_PM_SHUTDOWN_TYPE_SHUTDOWN,
-+	ZYNQMP_PM_SHUTDOWN_TYPE_RESET,
-+	ZYNQMP_PM_SHUTDOWN_TYPE_SETSCOPE_ONLY,
-+};
-+
-+enum zynqmp_pm_shutdown_subtype {
-+	ZYNQMP_PM_SHUTDOWN_SUBTYPE_SUBSYSTEM,
-+	ZYNQMP_PM_SHUTDOWN_SUBTYPE_PS_ONLY,
-+	ZYNQMP_PM_SHUTDOWN_SUBTYPE_SYSTEM,
-+};
-+
- /**
-  * struct zynqmp_pm_query_data - PM query data
-  * @qid:	query ID
+ #endif /* __FIRMWARE_ZYNQMP_H__ */
 -- 
 2.7.4
 
