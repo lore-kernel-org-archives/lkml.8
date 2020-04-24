@@ -2,188 +2,97 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2FEC55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9082C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08AE820776
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:50:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587707408;
-	bh=LA1NnT5N/n+tshfSASRDN5MQHcTL1fL6TFxg8JbTf9Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YCCfZmA2xuEX0IPADhUWPTo8EtW0gCbflYdvVu/YjobFSlDIpBy404DRLwUraE1Pc
-	 sCQiRMYSA9p/wlCf2w0HpX6tLBHyyGr81vLXRwhvrXNFspWihzqoXIFPfGTeqJ0SeV
-	 aD7uVP0ohfyIHOdZS5XYymP/wQoTTpqFlR1ZNQxM=
+	by mail.kernel.org (Postfix) with ESMTP id BFCB82084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:52:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbgDXFuH (ORCPT
+        id S1726494AbgDXFwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 01:50:07 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:58088 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgDXFuG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 01:50:06 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 03O5nYpa003914;
-        Fri, 24 Apr 2020 14:49:35 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 03O5nYpa003914
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587707375;
-        bh=ly7ncAkOwNhudqWgq4kpvUp1J/j0jCzsqD3ZoL348ns=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SAvHAcEstDx8bpN+Crcf489pPo97faJQ/15vfJgbqdy4sD/kSRUDdpy8/IaijAsfc
-         H8T8Vx/RXKduOrVKCoVFDCJQLZlfNKbt7VkTAxkCYcaUl2GKZt/DC1kVjMEiNZI3ce
-         6IuE6caDUrnuAglFmYAKhkeJ/m+CiF1xxDqz5dPfocHbsn9Ebl1cPYdzJPTLz2Zf1L
-         XDNDjwnvHQ9gYeqq4h0waUu7jkAUhHeRHc4NUZ75XhMNGMYTD0Akz3aUgIkAfaKvtk
-         UsF97tEJuRRnAJOBcNW1tY93jZyECpeJsB32jXLtszTOa71aX+vN9P+6jsBol5nfgQ
-         H5I/dgCZUAhDQ==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Ulf Magnusson <ulfalizer@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] kconfig: allow only 'config', 'comment', and 'if' statements inside choice
-Date:   Fri, 24 Apr 2020 14:49:29 +0900
-Message-Id: <20200424054929.502485-2-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200424054929.502485-1-masahiroy@kernel.org>
-References: <20200424054929.502485-1-masahiroy@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 24 Apr 2020 01:52:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36982 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725554AbgDXFwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 01:52:19 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 801EBAD71;
+        Fri, 24 Apr 2020 05:52:16 +0000 (UTC)
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     tglx@linutronix.de, pbonzini@redhat.com
+Cc:     peterz@infradead.org, maz@kernel.org, bigeasy@linutronix.de,
+        rostedt@goodmis.org, torvalds@linux-foundation.org,
+        will@kernel.org, joel@joelfernandes.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        dave@stgolabs.net
+Subject: [PATCH v4 0/5] kvm: Use rcuwait for vcpu blocking
+Date:   Thu, 23 Apr 2020 22:48:32 -0700
+Message-Id: <20200424054837.5138-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The statement block surrounded by 'if' ... 'endif' is reduced into
-if_stmt, which is accepted in the choice context. Therefore, you can
-do anything within a choice block by wrapping 'if y' ... 'end'.
+Hi,
 
-For example, you can create a menu inside a choice.
+The following is an updated (and hopefully final) revision of the kvm
+vcpu to rcuwait conversion[0], following the work on completions using
+simple waitqueues.
 
-[Test Code]
+Patches 1-4 level up the rcuwait api with waitqueues.
+Patch 5 converts kvm to use rcuwait.
 
----------------->8----------------
-  choice
-          prompt "choice"
+Changes from v3:
+  - picked up maz and peterz's acks for routing via kvm tree.
+  - added new patch 4/5 which introduces rcuwait_active. This is to avoid
+    directly calling rcu_dereference() to peek at the wait->task.
+  - fixed breakage for arm in patch 4/5.
+  - removed previous patch 5/5 which updates swait doc as peterz will
+    keep it.
 
-  config A
-          bool "A"
+Changes from v2:
+  - new patch 3 which adds prepare_to_rcuwait and finish_rcuwait helpers.
+  - fixed broken sleep and tracepoint semantics in patch 4. (Marc and Paolo)
+  
+This has only been run tested on x86 but compile tested on mips, powerpc
+and arm. It passes all tests from kvm-unit-tests[1].
 
-  config B
-          bool "B"
+This series applies on top of current kvm and tip trees.
+Please consider for v5.8.
 
-  if y
+[0] https://lore.kernel.org/lkml/20200320085527.23861-3-dave@stgolabs.net/
+[1] git://git.kernel.org/pub/scm/virt/kvm/kvm-unit-tests.git
 
-  menu "strange menu"
+Thanks!
 
-  config C
-          bool "C"
+Davidlohr Bueso (5):
+  rcuwait: Fix stale wake call name in comment
+  rcuwait: Let rcuwait_wake_up() return whether or not a task was awoken
+  rcuwait: Introduce prepare_to and finish_rcuwait
+  rcuwait: Introduce rcuwait_active()
+  kvm: Replace vcpu->swait with rcuwait
 
-  endmenu
+ arch/mips/kvm/mips.c                  |  6 ++----
+ arch/powerpc/include/asm/kvm_book3s.h |  2 +-
+ arch/powerpc/include/asm/kvm_host.h   |  2 +-
+ arch/powerpc/kvm/book3s_hv.c          | 22 ++++++++--------------
+ arch/powerpc/kvm/powerpc.c            |  2 +-
+ arch/x86/kvm/lapic.c                  |  2 +-
+ include/linux/kvm_host.h              | 10 +++++-----
+ include/linux/rcuwait.h               | 32 ++++++++++++++++++++++++++------
+ kernel/exit.c                         |  9 ++++++---
+ virt/kvm/arm/arch_timer.c             |  3 ++-
+ virt/kvm/arm/arm.c                    |  9 +++++----
+ virt/kvm/async_pf.c                   |  3 +--
+ virt/kvm/kvm_main.c                   | 19 +++++++++----------
+ 13 files changed, 68 insertions(+), 53 deletions(-)
 
-  endif
-
-  endchoice
----------------->8----------------
-
-I want to make such a weird structure a syntax error.
-
-In fact, the USB gadget Kconfig file used nested choice for no good
-reason until commit df8df5e4bc37 ("usb: get rid of 'choice' for
-legacy gadget drivers") killed it.
-
-I think the 'source' statement inside choice is on the fence. It is
-at least gramatically sensible as long as the included file contains
-only bool/tristate config statements. However, it makes the code
-unreadable, and in the end, people forget the fact that the file is
-included from the choice block. Commit 10e5e6c24963 ("usb: gadget: move
-choice ... endchoice to legacy/Kconfig") got rid of the only user.
-
-Going forward, you can only use 'config', 'comment', and 'if' inside
-choice blocks. This also recursively applies to 'if' blocks inside
-choice blocks.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
- scripts/kconfig/parser.y | 30 ++++++++++++++++--------------
- 1 file changed, 16 insertions(+), 14 deletions(-)
-
-diff --git a/scripts/kconfig/parser.y b/scripts/kconfig/parser.y
-index 708b6c4b13ca..190f1117f35a 100644
---- a/scripts/kconfig/parser.y
-+++ b/scripts/kconfig/parser.y
-@@ -119,20 +119,24 @@ mainmenu_stmt: T_MAINMENU T_WORD_QUOTE T_EOL
- 
- stmt_list:
- 	  /* empty */
--	| stmt_list common_stmt
-+	| stmt_list assignment_stmt
- 	| stmt_list choice_stmt
-+	| stmt_list comment_stmt
-+	| stmt_list config_stmt
-+	| stmt_list if_stmt
- 	| stmt_list menu_stmt
-+	| stmt_list menuconfig_stmt
-+	| stmt_list source_stmt
- 	| stmt_list T_WORD error T_EOL	{ zconf_error("unknown statement \"%s\"", $2); }
- 	| stmt_list error T_EOL		{ zconf_error("invalid statement"); }
- ;
- 
--common_stmt:
--	  if_stmt
--	| comment_stmt
--	| config_stmt
--	| menuconfig_stmt
--	| source_stmt
--	| assignment_stmt
-+stmt_list_in_choice:
-+	  /* empty */
-+	| stmt_list_in_choice comment_stmt
-+	| stmt_list_in_choice config_stmt
-+	| stmt_list_in_choice if_stmt_in_choice
-+	| stmt_list_in_choice error T_EOL	{ zconf_error("invalid statement"); }
- ;
- 
- /* config/menuconfig entry */
-@@ -254,7 +258,7 @@ choice_end: end
- 	}
- };
- 
--choice_stmt: choice_entry choice_block choice_end
-+choice_stmt: choice_entry stmt_list_in_choice choice_end
- ;
- 
- choice_option_list:
-@@ -305,11 +309,6 @@ default:
- 	| T_DEF_BOOL		{ $$ = S_BOOLEAN; }
- 	| T_DEF_TRISTATE	{ $$ = S_TRISTATE; }
- 
--choice_block:
--	  /* empty */
--	| choice_block common_stmt
--;
--
- /* if entry */
- 
- if_entry: T_IF expr T_EOL
-@@ -331,6 +330,9 @@ if_end: end
- if_stmt: if_entry stmt_list if_end
- ;
- 
-+if_stmt_in_choice: if_entry stmt_list_in_choice if_end
-+;
-+
- /* menu entry */
- 
- menu: T_MENU T_WORD_QUOTE T_EOL
--- 
-2.25.1
+--
+2.16.4
 
