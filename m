@@ -2,83 +2,68 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD3A4C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 038BCC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0EFE2071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:06:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="WfFHFjpr"
+	by mail.kernel.org (Postfix) with ESMTP id DBE3D2071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:07:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726746AbgDXKGs (ORCPT
+        id S1726858AbgDXKHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 06:06:48 -0400
-Received: from smtp2.axis.com ([195.60.68.18]:23084 "EHLO smtp2.axis.com"
+        Fri, 24 Apr 2020 06:07:37 -0400
+Received: from mga03.intel.com ([134.134.136.65]:53046 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726193AbgDXKGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 06:06:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; l=510; q=dns/txt; s=axis-central1;
-  t=1587722807; x=1619258807;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=WoKs5Og0gerlj6eE3S0a39ru9NWbT0TOBZiuhm7c8HQ=;
-  b=WfFHFjpr9AEzrDLkdsOXlVGzxuk9cWVZlHPgSeVzTKUmq1bxo8FFfhee
-   fBb3Z8QP6nTHzwZyVi+i5d/m27xXZkzimpxA5uP1pJ60J96JN+U59eyZq
-   Ev2c+e/jsoVNv1Y3gIiDwOwxRCMUPt+z8IdhHScN2m6V1eb8JjlaTSIOw
-   eDeA/J4Wp/HZ8hq5LsDKrVcWUa8xPEoMabFLN3iBHGPNkcayKLZEGpPig
-   88b2WuDk8kLbfuhyDJgM1/x55bhsDE/8eNt8Sj43rybepF5BEqenyman6
-   aMvT4b+br6njW/10yVQUPRkdKvg8T0xxDyTzgI85IlPQOkufIojlufmzG
-   A==;
-IronPort-SDR: 69TvoBs7eMFR2AZgl5S6HzHxhG545ihyS+eLK5ecWyHdgrhPtHtqUC38d4FChwzjWUhCFUTI9E
- u6oI0rp/BV0G51/28ubuuYSTuDeboMKB96KF6jHE4FcX9hHczTqGGvhF3K2ZsC3ZvE5pmcu5Qz
- Jd8GQKf2p/hNN4KFbaF5+45UdcsZqX5dNs5ypS+MPTotLZSzt/CXEtZ9Ri+lpelUZ1Vup6vYar
- LaITfe78aLNdC9mMMjSSENe52Rox6D7cXaWfxRUwD4HregB2ST/VsZJCx++kQwRcd9TpMv5Xfy
- zeA=
-X-IronPort-AV: E=Sophos;i="5.73,311,1583190000"; 
-   d="scan'208";a="7783874"
-Subject: Re: [PATCHv2] i2c: slave-eeprom: Make it possible to pre-load eeprom
- data
-To:     Wolfram Sang <wsa@the-dreams.de>
-CC:     <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <patrick@stwcx.xyz>, <kernel@axis.com>
-References: <20200424090443.26316-1-bjorn.ardo@axis.com>
- <20200424100307.GB1959@kunai>
-From:   Bjorn Ardo <bjorn.ardo@axis.com>
-Message-ID: <5180b657-33ff-c182-8a16-82a35a61f647@axis.com>
-Date:   Fri, 24 Apr 2020 12:06:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200424100307.GB1959@kunai>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.0.5.60]
-X-ClientProxiedBy: XBOX01.axis.com (10.0.5.15) To XBOX02.axis.com (10.0.5.16)
+        id S1726808AbgDXKHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 06:07:36 -0400
+IronPort-SDR: sbyXEKFkS2eqBx5N0JhMV63KMwhr3pqeV+PzL9yzs3DLk8oredz/JJd0ExrE9GziMaWg42YWhG
+ 4x+Gn2TC2kbg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2020 03:07:33 -0700
+IronPort-SDR: iqpJQBt4RyCbuxg/Er9EZDf02Fi1kIQAK37+Wk6ATAN9jt4gJ5Zv2V7tkrxj5+gEPkQFGOm+NG
+ wEJrHqwd6mtg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,311,1583222400"; 
+   d="scan'208";a="280755901"
+Received: from unknown (HELO localhost.localdomain.bj.intel.com) ([10.240.193.79])
+  by fmsmga004.fm.intel.com with ESMTP; 24 Apr 2020 03:07:30 -0700
+From:   Zhu Lingshan <lingshan.zhu@intel.com>
+To:     mst@redhat.com, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        jasowang@redhat.com
+Cc:     lulu@redhat.com, dan.daly@intel.com, cunming.liang@intel.com,
+        Zhu Lingshan <lingshan.zhu@intel.com>
+Subject: [PATCH 0/2] Config interrupt support in VDPA and IFCVF 
+Date:   Fri, 24 Apr 2020 18:04:17 +0800
+Message-Id: <1587722659-1300-1-git-send-email-lingshan.zhu@intel.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This series includes two patches, one introduced
+config interrupt support in VDPA core, the other
+one implemented config interrupt in IFCVF.
 
-On 4/24/20 12:03 PM, Wolfram Sang wrote:
-> On Fri, Apr 24, 2020 at 11:04:43AM +0200, Björn Ardö wrote:
->> If the slave eeprom has a "firmware-name" in devicetree, then
->> pre-load the data in the eeprom with this file. Otherwise we
->> init the eeprom with 0xFF.
->>
->> Signed-off-by: Björn Ardö <bjorn.ardo@axis.com>
-> I like it a lot, thanks! Maybe we could add a SoB from Patrick for his
-> 0xff-suggestion (but keeping you as the patch author).
->
-> Is this okay for everyone?
+Zhu Lingshan (2):
+  vdpa: Support config interrupt in vhost_vdpa
+  vdpa: implement config interrupt in IFCVF
 
+ drivers/vdpa/ifcvf/ifcvf_base.c  |  3 +++
+ drivers/vdpa/ifcvf/ifcvf_base.h  |  2 ++
+ drivers/vdpa/ifcvf/ifcvf_main.c  | 22 ++++++++++++++++-
+ drivers/vhost/vdpa.c             | 53 ++++++++++++++++++++++++++++++++++++++++
+ include/uapi/linux/vhost.h       |  2 ++
+ include/uapi/linux/vhost_types.h |  2 ++
+ 6 files changed, 83 insertions(+), 1 deletion(-)
 
-OK for me!
+-- 
+1.8.3.1
 
