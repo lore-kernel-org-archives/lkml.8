@@ -2,114 +2,191 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54365C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 293A9C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3173920728
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05E5420728
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:11:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="boaoa6Qx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pngB0Cmd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgDXNLb (ORCPT
+        id S1728290AbgDXNLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 09:11:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58416 "EHLO
+        Fri, 24 Apr 2020 09:11:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728241AbgDXNLZ (ORCPT
+        with ESMTP id S1728241AbgDXNLf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 09:11:25 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 742ECC09B045
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 06:11:24 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id r17so7650797lff.2
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 06:11:24 -0700 (PDT)
+        Fri, 24 Apr 2020 09:11:35 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E18FDC09B045
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 06:11:34 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id y25so4782424pfn.5
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 06:11:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cumulusnetworks.com; s=google;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=G2uXfV2zQ6YcJDE/jPT/znzd8EhGd4IlBIY8GlaqseU=;
-        b=boaoa6QxxZN3lCBv5P/sBvwVlfHCoZjiR0gPpaqf3dyoRwSHGfxFtQStzuk++J/6To
-         4n5I0Jvx6fc19Pv+X2xswYOFxMK3keWFmkmu4j8r60wq9yJeXq1wqyMxR2WUlB0Fv38R
-         Sk68/ReojCiQxUbN0FG1hf2ZUMLZLX0F3+EAQ=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=20oOj0FbEeXishwdAVymg17c3dn9yshiC1V7t1YWhiU=;
+        b=pngB0Cmdt/l0wNv+SuNtWhN6rGP7nuhbFBa6uMmKDBq2MLRxVIrfj4OQrQUuYJnbDP
+         /eMFC1zQTneDVYtVQbpnHqrGZ2IzKa9Byjk/NqGovdeC/VfuyRafOFnD5F8gi5wIkUV0
+         t5OOToyAiRT4r9PHDo2xXWhNxMI4oRkxWt+/iRPGZSQCttM4m8ykhqblqt2s8pSEDEyq
+         e3b7bQa/kRjeYtA0LeDpmkeYfclLRCR/uF82b5S1rltwwRSvN73/ugSQ3VVJD5VKdhBr
+         es+tWUDcU9B9TIY3XP5bfH5lauwzyfBbcWaEeAcfS1WbnH5d62riyz9UtTCKtr0QCs+S
+         U+Nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=G2uXfV2zQ6YcJDE/jPT/znzd8EhGd4IlBIY8GlaqseU=;
-        b=I09YVixp3qplGcPvE05Vc6tRBl48lUNOPSPNGWJfpXjJbiz6PlMDQxWDNgXJdvVRfN
-         rW0U55KBIAUgGOZoNy/EtBLgx+t9x0OTUg0ysd9A8NVkQTr5WKSQ1wlZHa7yax1Z/9md
-         VTLICXdWiYtElwzcryr8u4yH6s3+/+7/H6y50BVzlHVtahc91q478ifjRpACPg2l4bxr
-         OCc6VqmG2A268GNGqTY8Mov2N04kuzCP3C1N7NlyOg5mfus3j06Juv7kmm06umZKiWUW
-         /lOWGGZd1hLm9i2Sz5XBcPdOcvxlcmt/uvidr+T2DSyM+rytEI0fOcyUovGGN4oMPBYA
-         LbSA==
-X-Gm-Message-State: AGi0PuYhE3pk8SO9o3/25oULR2wVXiaEhVxP+wIjrUOeO1Y7+pX95p7Y
-        lk9ouo4lCGiTXmzFind7esf69g==
-X-Google-Smtp-Source: APiQypLSz5FyzC47Rafs0O51HZGYwp2jhTj+lYOAvYPKJ5wYmLjjuBz8V0lWiSfO0U29zYw8ZGkO3A==
-X-Received: by 2002:a05:6512:3081:: with SMTP id z1mr6229213lfd.102.1587733882939;
-        Fri, 24 Apr 2020 06:11:22 -0700 (PDT)
-Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
-        by smtp.gmail.com with ESMTPSA id e186sm4551183lfd.83.2020.04.24.06.11.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Apr 2020 06:11:21 -0700 (PDT)
-Subject: Re: [PATCH net-next v3 02/11] bridge: mrp: Update Kconfig
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>, davem@davemloft.net,
-        jiri@resnulli.us, ivecera@redhat.com, kuba@kernel.org,
-        roopa@cumulusnetworks.com, olteanv@gmail.com, andrew@lunn.ch,
-        UNGLinuxDriver@microchip.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bridge@lists.linux-foundation.org
-References: <20200422161833.1123-1-horatiu.vultur@microchip.com>
- <20200422161833.1123-3-horatiu.vultur@microchip.com>
-From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Message-ID: <cfbeabee-8df5-3a50-b43f-8833723b8ed9@cumulusnetworks.com>
-Date:   Fri, 24 Apr 2020 16:11:18 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=20oOj0FbEeXishwdAVymg17c3dn9yshiC1V7t1YWhiU=;
+        b=a9ipff+Ou9Xw2mU6uWVQICKE57SaQ1TzX6MVZgQmzOmp0eLM86j/LOseJbFFQx97BC
+         F/sqGZOn3whcNMS3jjLg2bJqoYFAar5Y+fDYwmiMiUexgO+sx4SxWCoC1DOqNCCBJtcW
+         k1LiAlysGJdio/q7hq5vvC56CgoUBMzgdzHzCSkakmZxDlYdaD37BWT1hRUkBGOCHGro
+         JWlAHNFCcxng7BP1gbFjBF9alyZfwIIMJlRG2chunIcKNWKwho5GnsneS85gj+wOlAKl
+         fVz9H3+CK+60vHlwQCPP/MS6TUwMnvNBwbnTrxEvNW65ViZvpdRS90jp/MduqOptpMNu
+         UcoQ==
+X-Gm-Message-State: AGi0PuZ7b6LmZ/kd3f6VOlDdPq64aEFSpbpPx+8ynruUyBkG/uJXsZa6
+        8VGLc1/W3Jh/umEkD4tGqZBbYXgde/ABjC+NZnc=
+X-Google-Smtp-Source: APiQypKugQfTNWwzZrWFU2ZXQGOPlo2vFscCqmE6g6oZMX0508KzU2BqKUWfgdN/qtKhg43mYtJOhaVBhSUk3Pm+EK8=
+X-Received: by 2002:aa7:8f26:: with SMTP id y6mr9791653pfr.36.1587733894375;
+ Fri, 24 Apr 2020 06:11:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200422161833.1123-3-horatiu.vultur@microchip.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200424122619.GA5573@syed>
+In-Reply-To: <20200424122619.GA5573@syed>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 24 Apr 2020 16:11:27 +0300
+Message-ID: <CAHp75VcWwHT1eWekAMheaaU0-M_-w41XvJ-iNdKSVC+GZY7JsQ@mail.gmail.com>
+Subject: Re: [PATCH 2/6] lib/test_bitmap.c: Add for_each_set_clump test cases
+To:     Syed Nayyar Waris <syednwaris@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/04/2020 19:18, Horatiu Vultur wrote:
-> Add the option BRIDGE_MRP to allow to build in or not MRP support.
-> The default value is N.
-> 
-> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> ---
->  net/bridge/Kconfig | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/net/bridge/Kconfig b/net/bridge/Kconfig
-> index e4fb050e2078..51a6414145d2 100644
-> --- a/net/bridge/Kconfig
-> +++ b/net/bridge/Kconfig
-> @@ -61,3 +61,15 @@ config BRIDGE_VLAN_FILTERING
->  	  Say N to exclude this support and reduce the binary size.
->  
->  	  If unsure, say Y.
-> +
-> +config BRIDGE_MRP
-> +	bool "MRP protocol"
-> +	depends on BRIDGE
-> +	default n
-> +	help
-> +	  If you say Y here, then the Ethernet bridge will be able to run MRP
-> +	  protocol to detect loops
-> +
-> +	  Say N to exclude this support and reduce the binary size.
-> +
-> +	  If unsure, say N.
-> 
+On Fri, Apr 24, 2020 at 3:29 PM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
+>
+> The introduction of the generic for_each_set_clump macro need test
+> cases to verify the implementation. This patch adds test cases for
+> scenarios in which clump sizes are 8 bits, 24 bits, 30 bits and 6 bits.
+> The cases contain situations where clump is getting split at the word
+> boundary and also when zeroes are present in the start and middle of
+> bitmap.
 
-Reviewed-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+...
 
+>  #define expect_eq_clump8(...)          __expect_eq(clump8, ##__VA_ARGS__)
+> +#define expect_eq_clump(...)           __expect_eq(clump, ##__VA_ARGS__)
+
+What the difference with clump8() ? Can either of them use another?
+
+...
+
+>  #define CLUMP_EXP_NUMBITS 64
+
+> +static void __init test_for_each_set_clump_8(void)  /* 8 bit clumps test using
+> +                                                 new for_each_set_clump */
+> +{
+
+> +#define CLUMP_EXP_NUMBITS 64
+
+Isn't it a redefinition? Shouldn't we undef all local definitions
+above and below?
+
+Also, can we derive it's size based on ARRAY_SIZE() and clump size?
+
+> +       DECLARE_BITMAP(bits, CLUMP_EXP_NUMBITS);
+> +       unsigned long start, clump, clump_size = 8;
+> +
+> +       /* set bitmap to test case */
+> +       bitmap_zero(bits, CLUMP_EXP_NUMBITS);
+> +       bitmap_set_value(bits, 0x38000201, 0, 32);
+> +       bitmap_set_value(bits, 0x05ff0f38, 32, 32);
+> +
+> +       for_each_set_clump(start, clump, bits, CLUMP_EXP_NUMBITS, clump_size)
+> +               expect_eq_clump(start, CLUMP_EXP_NUMBITS, clump_exp1, &clump, clump_size);
+> +}
+> +
+> +static void __init test_for_each_set_clump_24(void)  /* 24 bit clumps */
+> +{
+> +#define CLUMP_EXP_NUMBITS_2 256
+> +       DECLARE_BITMAP(bits, CLUMP_EXP_NUMBITS_2);
+> +       unsigned long start, clump, clump_size = 24;
+> +       unsigned long size = clump_size * 10;
+> +
+> +       /* set bitmap to test case */
+> +       bitmap_zero(bits, CLUMP_EXP_NUMBITS_2);
+> +       bitmap_set_value(bits, 0xeffedcba, 0, 32);
+> +       bitmap_set_value(bits, 0xbbbbabcd, 32, 32);
+> +       bitmap_set_value(bits, 0x000000aa, 64, 32);
+> +       bitmap_set_value(bits, 0x000000aa, 96, 32);
+> +       bitmap_set_value(bits, 0x00ff0000, 128, 32);
+> +       bitmap_set_value(bits, 0xaaaaaa00, 160, 32);
+> +       bitmap_set_value(bits, 0xff000000, 192, 32);
+> +       bitmap_set_value(bits, 0x00aa0000, 224, 32);
+> +
+> +       for_each_set_clump(start, clump, bits, size, clump_size)
+> +               expect_eq_clump(start, size, clump_exp2, &clump, clump_size);
+> +}
+> +
+> +static void __init test_for_each_set_clump_30(void)   /* 30 bit clumps */
+> +{
+> +#define CLUMP_EXP_NUMBITS_2 256
+> +       DECLARE_BITMAP(bits, CLUMP_EXP_NUMBITS_2);
+> +       unsigned long start, clump, clump_size = 30;
+> +       unsigned long size = clump_size * 8;
+> +
+> +       /* set bitmap to test case */
+> +       bitmap_zero(bits, CLUMP_EXP_NUMBITS_2);
+> +       bitmap_set_value(bits, 0x00000000, 0, 32);
+> +       bitmap_set_value(bits, 0x00000000, 32, 32);
+> +       bitmap_set_value(bits, 0x00000000, 64, 32);
+> +       bitmap_set_value(bits, 0x0f000000, 96, 32);
+> +       bitmap_set_value(bits, 0x00ff0000, 128, 32);
+> +       bitmap_set_value(bits, 0xaaaaaa00, 160, 32);
+> +       bitmap_set_value(bits, 0xff000000, 192, 32);
+> +       bitmap_set_value(bits, 0x00aa0000, 224, 32);
+> +
+> +       for_each_set_clump(start, clump, bits, size, clump_size)
+> +               expect_eq_clump(start, size, clump_exp3, &clump, clump_size);
+> +}
+> +
+> +static void __init test_for_each_set_clump_6(void)   /* 6 bit clumps */
+> +{
+> +#define CLUMP_EXP_NUMBITS_2 256
+> +       DECLARE_BITMAP(bits, CLUMP_EXP_NUMBITS_2);
+> +       unsigned long start, clump, clump_size = 6;
+> +       unsigned long size = clump_size * 3;
+> +
+> +       /* set bitmap to test case */
+> +       bitmap_zero(bits, CLUMP_EXP_NUMBITS_2);
+> +       bitmap_set_value(bits, 0x00000ac0, 0, 32);
+> +       bitmap_set_value(bits, 0x00000000, 32, 32);
+> +       bitmap_set_value(bits, 0x00000000, 64, 32);
+> +       bitmap_set_value(bits, 0x0f000000, 96, 32);
+> +       bitmap_set_value(bits, 0x00ff0000, 128, 32);
+> +       bitmap_set_value(bits, 0xaaaaaa00, 160, 32);
+> +       bitmap_set_value(bits, 0xff000000, 192, 32);
+> +       bitmap_set_value(bits, 0x00aa0000, 224, 32);
+> +
+> +       for_each_set_clump(start, clump, bits, size, clump_size)
+> +               expect_eq_clump(start, size, clump_exp4, &clump, clump_size);
+> +}
+
+Can we unify all above and provide simple two test data sets:
+expected, input, clump size and other information as function
+parameter?
+
+-- 
+With Best Regards,
+Andy Shevchenko
