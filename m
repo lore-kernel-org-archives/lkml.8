@@ -2,132 +2,181 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6FAC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BADCC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 267C6206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 056AC206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:20:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ex7Yp2MG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U5i/QaJO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbgDXPTx (ORCPT
+        id S1727841AbgDXPUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:19:53 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53021 "EHLO
+        Fri, 24 Apr 2020 11:20:07 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22037 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726717AbgDXPTx (ORCPT
+        with ESMTP id S1726717AbgDXPUG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:19:53 -0400
+        Fri, 24 Apr 2020 11:20:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587741591;
+        s=mimecast20190719; t=1587741605;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Hup8zMplhzCtriOS6DgGXays5t9vNVweQrUya2JH8v4=;
-        b=ex7Yp2MGjsfz/1Z8cSmtbuuWDRQHRmrMGGuFjlTkPsJ4GCZ3zMBHIPee/OUwZKDjifesCn
-        2fDHa+tKnRs9AXjvZ0Pg6ywuvaSuC2+/HKYfhehPAV5hQwrYPtRGy6JtVPLg/Qso2UvOC5
-        M+xrN/Y0LvxkGlC85jloecE4QOn0uaM=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=q1UIvPO2OeK7xnyzKLufwvPJpLv8Bjq2NUDTIoZpR/E=;
+        b=U5i/QaJOmTVq/OaZQTdIew8+4T0Wewn7AZpj+lhB2CeONyWXBa14sAcQg6+lGPtHLgfIHI
+        7eK6HnqXL6Y+cpFm0wTMVOXypyYmTX/+tvEXLpcyD4B/u+/qbRbeAU6q+ipIi1IwYWXM75
+        P2pxomWf/4jX3wtARWzzWsjXHZMbQt4=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-155-3lctEr2_M3277HjaZZgtFw-1; Fri, 24 Apr 2020 11:19:49 -0400
-X-MC-Unique: 3lctEr2_M3277HjaZZgtFw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-407-ENBiw4WGNR6bOFCCtfvNpQ-1; Fri, 24 Apr 2020 11:20:03 -0400
+X-MC-Unique: ENBiw4WGNR6bOFCCtfvNpQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5CED71009633;
-        Fri, 24 Apr 2020 15:19:48 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4C8411800D51;
+        Fri, 24 Apr 2020 15:20:02 +0000 (UTC)
 Received: from warthog.procyon.org.uk (ovpn-113-129.rdu2.redhat.com [10.10.113.129])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3C3925D9D5;
-        Fri, 24 Apr 2020 15:19:47 +0000 (UTC)
-Subject: [PATCH 0/8] afs: NAT-mitigation and other bits
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 633E6600F5;
+        Fri, 24 Apr 2020 15:20:01 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 2/8] afs: Make record checking use TASK_UNINTERRUPTIBLE when
+ appropriate
 From:   David Howells <dhowells@redhat.com>
 To:     linux-afs@lists.infradead.org
-Cc:     Dave Botsch <botsch@cnf.cornell.edu>,
-        Jeffrey Altman <jaltman@auristor.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         dhowells@redhat.com
-Date:   Fri, 24 Apr 2020 16:19:46 +0100
-Message-ID: <158774158625.3619859.10579201535876583842.stgit@warthog.procyon.org.uk>
+Date:   Fri, 24 Apr 2020 16:20:00 +0100
+Message-ID: <158774160071.3619859.1408458755440831935.stgit@warthog.procyon.org.uk>
+In-Reply-To: <158774158625.3619859.10579201535876583842.stgit@warthog.procyon.org.uk>
+References: <158774158625.3619859.10579201535876583842.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/0.21
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When an operation is meant to be done uninterruptibly (such as
+FS.StoreData), we should not be allowing volume and server record checking
+to be interrupted.
 
-The primary part of this patchset, is intended to help deal with the
-effects of using an AFS client that is communicating with a server through
-some sort of NAT or firewall, whereby if the just right amount of time
-lapses before a third party change is made, the client thinks it still has
-a valid callback, but the server's attempt to notify the client of the
-change bounces because the NAT/firewall window has closed.  The problem is
-that kafs does insufficient probing to maintain the firewall window.
-
-The effect is mitigated in the following ways:
-
- (1) When an FS.InlineBulkStatus op is sent to the server during a file
-     lookup, the FID of the directory being looked up in will now get
-     included in the list of vnodes to query.  This will find out more
-     quickly if the dir has changed.
-
- (2) The fileserver is now polled regularly by an independent, timed
-     manager rather than only being polled by the rotation algorithm when
-     someone does a VFS operation that performs an RPC call.
-
-I have included some other bits in the patchset also:
-
- (1) Apply uninterruptibility a bit more thoroughly.  There are more places
-     that need it yet, but they're harder to fix.
-
- (2) Use the serverUnique field from the VLDB record to trigger a recheck
-     of a fileserver's endpoints rather than doing it on a timed basis
-     separately for each fileserver.  This reduces the number of VL RPCs
-     performed, albeit it's a minor reduction.
-
- (3) Note when we have detected the epoch from the fileserver so that the
-     code that checks it actually does its stuff.
-
- (4) Remove some unused bits in the code.
-
-Note that I've spotted some bugs in the fileserver rotation algorithm, but
-that's going to need its own rewrite as the structure of it is wrong.
-
-David
+Signed-off-by: David Howells <dhowells@redhat.com>
 ---
-David Howells (8):
-      afs: Always include dir in bulk status fetch from afs_do_lookup()
-      afs: Make record checking use TASK_UNINTERRUPTIBLE when appropriate
-      afs: Use the serverUnique field in the UVLDB record to reduce rpc ops
-      afs: Fix to actually set AFS_SERVER_FL_HAVE_EPOCH
-      afs: Remove some unused bits
-      afs: Split the usage count on struct afs_server
-      afs: Actively poll fileservers to maintain NAT or firewall openings
-      afs: Show more information in /proc/net/afs/servers
 
+ fs/afs/internal.h |    2 +-
+ fs/afs/rotate.c   |    6 +++---
+ fs/afs/server.c   |    7 ++-----
+ fs/afs/volume.c   |    8 +++++---
+ 4 files changed, 11 insertions(+), 12 deletions(-)
 
- fs/afs/cmservice.c         |    8 +
- fs/afs/dir.c               |    9 +
- fs/afs/fs_probe.c          |  280 +++++++++++++++++++++++++++++++++-----------
- fs/afs/fsclient.c          |   24 ++--
- fs/afs/internal.h          |   58 ++++++---
- fs/afs/main.c              |    5 +
- fs/afs/proc.c              |   18 ++-
- fs/afs/rotate.c            |   13 +-
- fs/afs/rxrpc.c             |    2 
- fs/afs/server.c            |  201 +++++++++++++++++++-------------
- fs/afs/server_list.c       |    7 +
- fs/afs/vl_rotate.c         |    4 -
- fs/afs/vlclient.c          |    1 
- fs/afs/volume.c            |   32 +++--
- include/trace/events/afs.h |   22 +++
- 15 files changed, 455 insertions(+), 229 deletions(-)
+diff --git a/fs/afs/internal.h b/fs/afs/internal.h
+index ef732dd4e7ef..15ae9c7f9c00 100644
+--- a/fs/afs/internal.h
++++ b/fs/afs/internal.h
+@@ -1335,7 +1335,7 @@ extern struct afs_volume *afs_create_volume(struct afs_fs_context *);
+ extern void afs_activate_volume(struct afs_volume *);
+ extern void afs_deactivate_volume(struct afs_volume *);
+ extern void afs_put_volume(struct afs_cell *, struct afs_volume *);
+-extern int afs_check_volume_status(struct afs_volume *, struct key *);
++extern int afs_check_volume_status(struct afs_volume *, struct afs_fs_cursor *);
+ 
+ /*
+  * write.c
+diff --git a/fs/afs/rotate.c b/fs/afs/rotate.c
+index 172ba569cd60..2a3305e42b14 100644
+--- a/fs/afs/rotate.c
++++ b/fs/afs/rotate.c
+@@ -192,7 +192,7 @@ bool afs_select_fileserver(struct afs_fs_cursor *fc)
+ 			write_unlock(&vnode->volume->servers_lock);
+ 
+ 			set_bit(AFS_VOLUME_NEEDS_UPDATE, &vnode->volume->flags);
+-			error = afs_check_volume_status(vnode->volume, fc->key);
++			error = afs_check_volume_status(vnode->volume, fc);
+ 			if (error < 0)
+ 				goto failed_set_error;
+ 
+@@ -281,7 +281,7 @@ bool afs_select_fileserver(struct afs_fs_cursor *fc)
+ 
+ 			set_bit(AFS_VOLUME_WAIT, &vnode->volume->flags);
+ 			set_bit(AFS_VOLUME_NEEDS_UPDATE, &vnode->volume->flags);
+-			error = afs_check_volume_status(vnode->volume, fc->key);
++			error = afs_check_volume_status(vnode->volume, fc);
+ 			if (error < 0)
+ 				goto failed_set_error;
+ 
+@@ -341,7 +341,7 @@ bool afs_select_fileserver(struct afs_fs_cursor *fc)
+ 	/* See if we need to do an update of the volume record.  Note that the
+ 	 * volume may have moved or even have been deleted.
+ 	 */
+-	error = afs_check_volume_status(vnode->volume, fc->key);
++	error = afs_check_volume_status(vnode->volume, fc);
+ 	if (error < 0)
+ 		goto failed_set_error;
+ 
+diff --git a/fs/afs/server.c b/fs/afs/server.c
+index b7f3cb2130ca..11b90ac7ea30 100644
+--- a/fs/afs/server.c
++++ b/fs/afs/server.c
+@@ -594,12 +594,9 @@ bool afs_check_server_record(struct afs_fs_cursor *fc, struct afs_server *server
+ 	}
+ 
+ 	ret = wait_on_bit(&server->flags, AFS_SERVER_FL_UPDATING,
+-			  TASK_INTERRUPTIBLE);
++			  (fc->flags & AFS_FS_CURSOR_INTR) ?
++			  TASK_INTERRUPTIBLE : TASK_UNINTERRUPTIBLE);
+ 	if (ret == -ERESTARTSYS) {
+-		if (!(fc->flags & AFS_FS_CURSOR_INTR) && server->addresses) {
+-			_leave(" = t [intr]");
+-			return true;
+-		}
+ 		fc->error = ret;
+ 		_leave(" = f [intr]");
+ 		return false;
+diff --git a/fs/afs/volume.c b/fs/afs/volume.c
+index 92ca5e27573b..4310336b9bb8 100644
+--- a/fs/afs/volume.c
++++ b/fs/afs/volume.c
+@@ -281,7 +281,7 @@ static int afs_update_volume_status(struct afs_volume *volume, struct key *key)
+ /*
+  * Make sure the volume record is up to date.
+  */
+-int afs_check_volume_status(struct afs_volume *volume, struct key *key)
++int afs_check_volume_status(struct afs_volume *volume, struct afs_fs_cursor *fc)
+ {
+ 	time64_t now = ktime_get_real_seconds();
+ 	int ret, retries = 0;
+@@ -299,7 +299,7 @@ int afs_check_volume_status(struct afs_volume *volume, struct key *key)
+ 	}
+ 
+ 	if (!test_and_set_bit_lock(AFS_VOLUME_UPDATING, &volume->flags)) {
+-		ret = afs_update_volume_status(volume, key);
++		ret = afs_update_volume_status(volume, fc->key);
+ 		clear_bit_unlock(AFS_VOLUME_WAIT, &volume->flags);
+ 		clear_bit_unlock(AFS_VOLUME_UPDATING, &volume->flags);
+ 		wake_up_bit(&volume->flags, AFS_VOLUME_WAIT);
+@@ -312,7 +312,9 @@ int afs_check_volume_status(struct afs_volume *volume, struct key *key)
+ 		return 0;
+ 	}
+ 
+-	ret = wait_on_bit(&volume->flags, AFS_VOLUME_WAIT, TASK_INTERRUPTIBLE);
++	ret = wait_on_bit(&volume->flags, AFS_VOLUME_WAIT,
++			  (fc->flags & AFS_FS_CURSOR_INTR) ?
++			  TASK_INTERRUPTIBLE : TASK_UNINTERRUPTIBLE);
+ 	if (ret == -ERESTARTSYS) {
+ 		_leave(" = %d", ret);
+ 		return ret;
 
 
