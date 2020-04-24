@@ -2,92 +2,92 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D7FC5518A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B873FC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBCB620724
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:23:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="X/Rep5K8"
+	by mail.kernel.org (Postfix) with ESMTP id 9CB4C20724
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:24:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbgDXIXp (ORCPT
+        id S1726726AbgDXIY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 04:23:45 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:32475 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726028AbgDXIXp (ORCPT
+        Fri, 24 Apr 2020 04:24:28 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:51937 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbgDXIY2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 04:23:45 -0400
-X-UUID: aa5e11a295bd4456a9b0e6dd56f50983-20200424
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=5Le9qoejU+6jSbO30NZ6FQCsnzb28/ib8ihNNO5nR/Q=;
-        b=X/Rep5K8QMo98wwa7h4FZ9m9ROq5x7ZKPJXqFs76Mw4ybRk0NHNOaoSQxEBKdP3grJcrLBZwNrEL2I4qkBgFcRBwvpOVmQh1aaDQj5+zysrE52qZxF2KaXzlJHemL0vzGEWtWgvLaIWdzgM3IXpCsXi00WaDLcgwa54tk+sITJE=;
-X-UUID: aa5e11a295bd4456a9b0e6dd56f50983-20200424
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <michael.kao@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1217075942; Fri, 24 Apr 2020 16:23:42 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 24 Apr 2020 16:23:39 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 24 Apr 2020 16:23:39 +0800
-From:   Michael Kao <michael.kao@mediatek.com>
-To:     Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <hsinyi@chromium.org>, <linux-pm@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Michael Kao <michael.kao@mediatek.com>
-Subject: [PATCH] [RESEND] arm64: dts: mt8173: fix cooling device range
-Date:   Fri, 24 Apr 2020 16:23:40 +0800
-Message-ID: <20200424082340.4127-1-michael.kao@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Fri, 24 Apr 2020 04:24:28 -0400
+Received: from mail-qt1-f178.google.com ([209.85.160.178]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MirfI-1iy5Bm2knE-00ermo for <linux-kernel@vger.kernel.org>; Fri, 24 Apr
+ 2020 10:24:26 +0200
+Received: by mail-qt1-f178.google.com with SMTP id c23so6702945qtp.11
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 01:24:26 -0700 (PDT)
+X-Gm-Message-State: AGi0PubbSM2MMsL3F1/OZTSC5t5Od9DJ9u1P7EPrt1VmHsliQQ/PCAGR
+        ehTn+RplmfYYDEDk3cCvuDidwbf5LdxWEI0Kz+c=
+X-Google-Smtp-Source: APiQypI5XKKeYpph2srgBYptReM/Zy+X8DRo7uaSXOoQaczls9rUfDwM4DHkoEvZ2EFyHutZ4c/nmGywPTpyagyzaIk=
+X-Received: by 2002:ac8:6757:: with SMTP id n23mr8169715qtp.304.1587716665488;
+ Fri, 24 Apr 2020 01:24:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <cover.1587088646.git.baolin.wang7@gmail.com> <96d444cd73239e0166316bd8f44082031cf72491.1587088646.git.baolin.wang7@gmail.com>
+ <20200424081138.GP3612@dell>
+In-Reply-To: <20200424081138.GP3612@dell>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 24 Apr 2020 10:24:09 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1e15P6xRUgYLYxT8XUx7FREbs5mMbfL1Qj+qwoDfFX+Q@mail.gmail.com>
+Message-ID: <CAK8P3a1e15P6xRUgYLYxT8XUx7FREbs5mMbfL1Qj+qwoDfFX+Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mfd: syscon: Support physical regmap bus
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Baolin Wang <baolin.wang7@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:2K+GAGwFhQmpVmBIpjaWQD045qweWak1znMe5IElenplRHB83/p
+ rfFyfdjPHps/upi/qoIomw7X6jwDR6y/lKeSHY2YbPX1YKyq3pITGvTAKc3yRHYUXNdSg/z
+ QOhGICO/UIymow9wI21jq3xUWFubIEo7e6PQU3bvCxNVDCnrywk8So6y3FPgC4HU5ZTDxpQ
+ bXjiIrlDJox1entBgZugA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nQRoZ+27ENQ=:SAMUZguhLGVZxEaMbhTvS4
+ 2sS50cUBpWfEJXXQpXimDz8dSli0Ho+nWMpWCf0r0UCYkWZju5ufoQFrr4WLnJRyK2UmI9hcp
+ AaDS2fH2r3q+WC34sq+rZB5lL29vwbqWP6LrkfHitV72Hwuduthd5SinD1YWU5508pOPxDFym
+ M3yuvND9DDd6Nn0s1FdmxhhYkA+IynfOsA6h1c5TLwB7+Gl1dLQAnptH4bJJCmjoq7BNBCP0Z
+ kG7sVVeha9R7ukNL2aPk31RjqKaMRIp6N4OoJZBL7+IU91IF2WOkvkxlooU6CY7oYq12OkHkH
+ 4umkU3UIwtq5hsIapvX3CWdLsrrOXCVwTaaXS00yc9KotMWTSLF3lda+Debaqdl9yJDW7HjVQ
+ SFwOavgXOqHzFeaBktb0+jS2plKGs/hR0p88EsmouQlpGOplY+g6wLRnMd4By8GZFWxoFvYjn
+ 8niZm3wmXTYwCM0O8B7yf84kcGWGUPuTWYfHH6ZsXiGrnVVOim/pmp1xofLhNsMHeMTpKxNwp
+ x7y61+D2VYDIbeHDNn0iMkLTPH61mqKJ23CEntS7dbYJx+iDahyrFP+p6w+TWCduclGBAjNp9
+ pvmdkS1SiBJPhvmhNxtjri8jPzdpOFehkzY/tFSebzmEpi7GRc0V4vSGk3a5Oz8A87+mCv+k6
+ qXpfQ7Oif5BGY5tKWIlWCHDacMriKRQhg0cSTRycrzGJcznjPcqO7OcAIZjkfjJmHYoyg/5Uf
+ R2ZMqVl0pAo+Rl1UhEnwHuyEJuLrWosaek4Cj1ximvMyFbPX1c3khr5r4J3c+DbMxiH/odZwA
+ 5XDnIXQlsfwd5ycZrhvRrTXGB27X9v/ya75s0VQPXokKaifvkI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-V2hlbiB0aGVybWFsIHJlYWNoZXMgdGFyZ2V0IHRlbXBlcmF0dXJlLGl0IHdvdWxkIGJlIHBpbm5l
-ZCB0byBzdGF0ZSAwDQoobWF4IGZyZXF1ZW5jeSBhbmQgcG93ZXIpLg0KRml4IHRoZSB0aHJvdHRs
-aW5nIHJhbmdlIHRvIG5vIGxpbWl0Lg0KDQpTaWduZWQtb2ZmLWJ5OiBIc2luLVlpIFdhbmcgPGhz
-aW55aUBjaHJvbWl1bS5vcmc+DQpTaWduZWQtb2ZmLWJ5OiBNaWNoYWVsIEthbyA8bWljaGFlbC5r
-YW9AbWVkaWF0ZWsuY29tPg0KLS0tDQogYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgx
-NzMuZHRzaSB8IDEzICsrKysrKysrKy0tLS0NCiAxIGZpbGUgY2hhbmdlZCwgOSBpbnNlcnRpb25z
-KCspLCA0IGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9t
-ZWRpYXRlay9tdDgxNzMuZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTcz
-LmR0c2kNCmluZGV4IGNjYjhlODhhNjBjNS4uY2FlMmNlYzQ2Y2RjIDEwMDY0NA0KLS0tIGEvYXJj
-aC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxNzMuZHRzaQ0KKysrIGIvYXJjaC9hcm02NC9i
-b290L2R0cy9tZWRpYXRlay9tdDgxNzMuZHRzaQ0KQEAgLTE5LDYgKzE5LDcgQEANCiAjaW5jbHVk
-ZSA8ZHQtYmluZGluZ3MvcG93ZXIvbXQ4MTczLXBvd2VyLmg+DQogI2luY2x1ZGUgPGR0LWJpbmRp
-bmdzL3Jlc2V0L210ODE3My1yZXNldHMuaD4NCiAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvZ2NlL210
-ODE3My1nY2UuaD4NCisjaW5jbHVkZSA8ZHQtYmluZGluZ3MvdGhlcm1hbC90aGVybWFsLmg+DQog
-I2luY2x1ZGUgIm10ODE3My1waW5mdW5jLmgiDQogDQogLyB7DQpAQCAtMjk0LDE0ICsyOTUsMTgg
-QEANCiAJCQljb29saW5nLW1hcHMgew0KIAkJCQltYXBAMCB7DQogCQkJCQl0cmlwID0gPCZ0YXJn
-ZXQ+Ow0KLQkJCQkJY29vbGluZy1kZXZpY2UgPSA8JmNwdTAgMCAwPiwNCi0JCQkJCQkJIDwmY3B1
-MSAwIDA+Ow0KKwkJCQkJY29vbGluZy1kZXZpY2UgPSA8JmNwdTAgVEhFUk1BTF9OT19MSU1JVA0K
-KwkJCQkJCQkgIFRIRVJNQUxfTk9fTElNSVQ+LA0KKwkJCQkJCQkgPCZjcHUxIFRIRVJNQUxfTk9f
-TElNSVQNCisJCQkJCQkJICBUSEVSTUFMX05PX0xJTUlUPjsNCiAJCQkJCWNvbnRyaWJ1dGlvbiA9
-IDwzMDcyPjsNCiAJCQkJfTsNCiAJCQkJbWFwQDEgew0KIAkJCQkJdHJpcCA9IDwmdGFyZ2V0PjsN
-Ci0JCQkJCWNvb2xpbmctZGV2aWNlID0gPCZjcHUyIDAgMD4sDQotCQkJCQkJCSA8JmNwdTMgMCAw
-PjsNCisJCQkJCWNvb2xpbmctZGV2aWNlID0gPCZjcHUyIFRIRVJNQUxfTk9fTElNSVQNCisJCQkJ
-CQkJICBUSEVSTUFMX05PX0xJTUlUPiwNCisJCQkJCQkJIDwmY3B1MyBUSEVSTUFMX05PX0xJTUlU
-DQorCQkJCQkJCSAgVEhFUk1BTF9OT19MSU1JVD47DQogCQkJCQljb250cmlidXRpb24gPSA8MTAy
-ND47DQogCQkJCX07DQogCQkJfTsNCi0tIA0KMi4xOC4wDQo=
+On Fri, Apr 24, 2020 at 10:11 AM Lee Jones <lee.jones@linaro.org> wrote:
+> On Fri, 17 Apr 2020, Baolin Wang wrote:
+> > @@ -106,14 +107,25 @@ static struct syscon *of_syscon_register(struct device_node *np, bool check_clk)
+> >       syscon_config.val_bits = reg_io_width * 8;
+> >       syscon_config.max_register = resource_size(&res) - reg_io_width;
+> >
+> > -     regmap = regmap_init_mmio(NULL, base, &syscon_config);
+> > +      /*
+> > +       * The Spreadtrum syscon need register a real physical regmap bus
+> > +       * with new atomic bits updating operation instead of using
+> > +       * read-modify-write.
+> > +       */
+> > +     if (IS_ENABLED(CONFIG_ARCH_SPRD) &&
+> > +         of_device_is_compatible(np, "sprd,atomic-syscon") &&
+>
+> Please find a more generic way of supporting your use-case.  This is a
+> generic driver, and as such I am vehemently against adding any sort of
+> vendor specific code in here.
 
+I suggested doing it this way, as all alternatives seemed worse than this.
+
+        Arnd
