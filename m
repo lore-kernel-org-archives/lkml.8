@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8869DC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA478C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6795D20736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CA7E20736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:32:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587731541;
-	bh=f5gA1/aIFeOtSaG/MyaRYS8peF9JIhvDtG2xbcm4O/I=;
+	s=default; t=1587731543;
+	bh=HzlJRxvoWLWrTG8oY8QmwnmlLgFsVoN2D29ndbKHzCw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dqPBBJenGBtUKOJz9wCfZJRB9UUPNARQ2Y4hy13/q9Gxgni030yAp5/AFc30vFGzc
-	 Vvq2TDf50nBpgC84Mlb/n8oybAtvhy1eMlMnxV2nrsgHsjVWTDCg3i5ehqm4XpW3t7
-	 PEEmrkN5PL0djIQmeuxsEqZD2an6oMk0FWp6R39s=
+	b=eZQ2pFKCXiX0DKD6ciqX2y9SGZA6LsZj+Y24GEJYi9xzHVkguWYXsGI7l6+CYciLD
+	 AMFdFT8TxzteeLuYLerqJhG2DdmWKZxQmG7BsXOmzK7XFN/J+1zNTMQfCkG+DUriMq
+	 12L9uQ3UfhlAA1+jHfBCFIV3RUJ6PEOcUaFU4jXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728229AbgDXMcU (ORCPT
+        id S1728714AbgDXMcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:32:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52390 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:32:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727781AbgDXMXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:23:00 -0400
+        id S1727772AbgDXMW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:22:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B61A6215A4;
-        Fri, 24 Apr 2020 12:22:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6378A21655;
+        Fri, 24 Apr 2020 12:22:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587730979;
-        bh=f5gA1/aIFeOtSaG/MyaRYS8peF9JIhvDtG2xbcm4O/I=;
+        s=default; t=1587730978;
+        bh=HzlJRxvoWLWrTG8oY8QmwnmlLgFsVoN2D29ndbKHzCw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MLe3RMcVtsKRqeIjgM9+AemRRvSxmiIH2QVLhIFA/8e3QJ44mE6VHz0MDyc6Bf+o3
-         oxey8TVOsHa0OElroGC+Q/+EF4K1oK0Kfji+tz1cmaZIYMKfjG1ysAR+ERWrugoKsI
-         4oTlKz+e/JNlMpfst3do8XafGyqvXGoc5QQ1fz9c=
+        b=tm04s82/GByCVOB6vsPM/EQh5eNNz/7eTVlQWA/SUj3IDzNZbzVMm+Wm7R8t8RtHk
+         ZQuupQMrrnpp4swwOIAc6y+fqV3Te27SmZji+G6BfJshW1gJIUrN51FnG5UHMLUQjI
+         KegSZj5+/YgvGfJQAv9iUAUM9rlsaFIr7372wiFE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Borislav Petkov <bp@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 19/38] objtool: Fix CONFIG_UBSAN_TRAP unreachable warnings
-Date:   Fri, 24 Apr 2020 08:22:17 -0400
-Message-Id: <20200424122237.9831-19-sashal@kernel.org>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, Jiri Slaby <jslaby@suse.cz>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, x86@kernel.org
+Subject: [PATCH AUTOSEL 5.6 18/38] efi/x86: Don't remap text<->rodata gap read-only for mixed mode
+Date:   Fri, 24 Apr 2020 08:22:16 -0400
+Message-Id: <20200424122237.9831-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200424122237.9831-1-sashal@kernel.org>
 References: <20200424122237.9831-1-sashal@kernel.org>
@@ -63,67 +60,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit bd841d6154f5f41f8a32d3c1b0bc229e326e640a ]
+[ Upstream commit f6103162008dfd37567f240b50e5e1ea7cf2e00c ]
 
-CONFIG_UBSAN_TRAP causes GCC to emit a UD2 whenever it encounters an
-unreachable code path.  This includes __builtin_unreachable().  Because
-the BUG() macro uses __builtin_unreachable() after it emits its own UD2,
-this results in a double UD2.  In this case objtool rightfully detects
-that the second UD2 is unreachable:
+Commit
 
-  init/main.o: warning: objtool: repair_env_string()+0x1c8: unreachable instruction
+  d9e3d2c4f10320 ("efi/x86: Don't map the entire kernel text RW for mixed mode")
 
-We weren't able to figure out a way to get rid of the double UD2s, so
-just silence the warning.
+updated the code that creates the 1:1 memory mapping to use read-only
+attributes for the 1:1 alias of the kernel's text and rodata sections, to
+protect it from inadvertent modification. However, it failed to take into
+account that the unused gap between text and rodata is given to the page
+allocator for general use.
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/6653ad73c6b59c049211bd7c11ed3809c20ee9f5.1585761021.git.jpoimboe@redhat.com
+If the vmap'ed stack happens to be allocated from this region, any by-ref
+output arguments passed to EFI runtime services that are allocated on the
+stack (such as the 'datasize' argument taken by GetVariable() when invoked
+from efivar_entry_size()) will be referenced via a read-only mapping,
+resulting in a page fault if the EFI code tries to write to it:
+
+  BUG: unable to handle page fault for address: 00000000386aae88
+  #PF: supervisor write access in kernel mode
+  #PF: error_code(0x0003) - permissions violation
+  PGD fd61063 P4D fd61063 PUD fd62063 PMD 386000e1
+  Oops: 0003 [#1] SMP PTI
+  CPU: 2 PID: 255 Comm: systemd-sysv-ge Not tainted 5.6.0-rc4-default+ #22
+  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+  RIP: 0008:0x3eaeed95
+  Code: ...  <89> 03 be 05 00 00 80 a1 74 63 b1 3e 83 c0 48 e8 44 d2 ff ff eb 05
+  RSP: 0018:000000000fd73fa0 EFLAGS: 00010002
+  RAX: 0000000000000001 RBX: 00000000386aae88 RCX: 000000003e9f1120
+  RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000000000000001
+  RBP: 000000000fd73fd8 R08: 00000000386aae88 R09: 0000000000000000
+  R10: 0000000000000002 R11: 0000000000000000 R12: 0000000000000000
+  R13: ffffc0f040220000 R14: 0000000000000000 R15: 0000000000000000
+  FS:  00007f21160ac940(0000) GS:ffff9cf23d500000(0000) knlGS:0000000000000000
+  CS:  0008 DS: 0018 ES: 0018 CR0: 0000000080050033
+  CR2: 00000000386aae88 CR3: 000000000fd6c004 CR4: 00000000003606e0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  Call Trace:
+  Modules linked in:
+  CR2: 00000000386aae88
+  ---[ end trace a8bfbd202e712834 ]---
+
+Let's fix this by remapping text and rodata individually, and leave the
+gaps mapped read-write.
+
+Fixes: d9e3d2c4f10320 ("efi/x86: Don't map the entire kernel text RW for mixed mode")
+Reported-by: Jiri Slaby <jslaby@suse.cz>
+Tested-by: Jiri Slaby <jslaby@suse.cz>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20200409130434.6736-10-ardb@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/check.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ arch/x86/platform/efi/efi_64.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 2b765bbbef922..95c485d3d4d83 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2307,14 +2307,27 @@ static bool ignore_unreachable_insn(struct instruction *insn)
- 	    !strcmp(insn->sec->name, ".altinstr_aux"))
- 		return true;
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index a472940638820..a20914b38e6ae 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -202,7 +202,7 @@ virt_to_phys_or_null_size(void *va, unsigned long size)
  
-+	if (!insn->func)
-+		return false;
-+
-+	/*
-+	 * CONFIG_UBSAN_TRAP inserts a UD2 when it sees
-+	 * __builtin_unreachable().  The BUG() macro has an unreachable() after
-+	 * the UD2, which causes GCC's undefined trap logic to emit another UD2
-+	 * (or occasionally a JMP to UD2).
-+	 */
-+	if (list_prev_entry(insn, list)->dead_end &&
-+	    (insn->type == INSN_BUG ||
-+	     (insn->type == INSN_JUMP_UNCONDITIONAL &&
-+	      insn->jump_dest && insn->jump_dest->type == INSN_BUG)))
-+		return true;
-+
- 	/*
- 	 * Check if this (or a subsequent) instruction is related to
- 	 * CONFIG_UBSAN or CONFIG_KASAN.
- 	 *
- 	 * End the search at 5 instructions to avoid going into the weeds.
- 	 */
--	if (!insn->func)
--		return false;
- 	for (i = 0; i < 5; i++) {
+ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
+ {
+-	unsigned long pfn, text, pf;
++	unsigned long pfn, text, pf, rodata;
+ 	struct page *page;
+ 	unsigned npages;
+ 	pgd_t *pgd = efi_mm.pgd;
+@@ -256,7 +256,7 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
  
- 		if (is_kasan_insn(insn) || is_ubsan_insn(insn))
+ 	efi_scratch.phys_stack = page_to_phys(page + 1); /* stack grows down */
+ 
+-	npages = (__end_rodata_aligned - _text) >> PAGE_SHIFT;
++	npages = (_etext - _text) >> PAGE_SHIFT;
+ 	text = __pa(_text);
+ 	pfn = text >> PAGE_SHIFT;
+ 
+@@ -266,6 +266,14 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
+ 		return 1;
+ 	}
+ 
++	npages = (__end_rodata - __start_rodata) >> PAGE_SHIFT;
++	rodata = __pa(__start_rodata);
++	pfn = rodata >> PAGE_SHIFT;
++	if (kernel_map_pages_in_pgd(pgd, pfn, rodata, npages, pf)) {
++		pr_err("Failed to map kernel rodata 1:1\n");
++		return 1;
++	}
++
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
