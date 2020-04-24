@@ -2,53 +2,55 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 320CFC55194
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD40C55194
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 074EB21707
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EDD02087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587731032;
-	bh=gQAWuW39xI8mn+xgNei4VJx/ZoOFJOfZegmSKlqk98g=;
+	s=default; t=1587731037;
+	bh=Hs8s9eHC6FrR8kVw+W14GPnW2VfpOKl6QsOnOLWjeE4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SebQH2z7gE45q88G9bAodzhRmInMcs+mjjB1MkJ3X1RdW01QZZFSctqVUuY8c3gSK
-	 N75+2s2bMO6vS8uaEZ1OYAOPrV8UDVKG7Tk2sMhKvYL+5rlsb6It9m9JWYbsbQ7TyD
-	 G8T9H/FMP0IjfXttx6tVfwo8rIYvMy5Zf01g3Oh8=
+	b=RBROYuAnsjyaT26ukdF5oowyAV3syumkdbVmYZ+VOSgBDDV0jN0rikmgIlkCudGsH
+	 VJpeuwo16o/llM+HFpFjaUgQOsf+s0Z57z+YHKbuPvyaPCIsNEIUWco2Ux9ixsKx+X
+	 K0q07QGqYiJI5CVSydU9HM3d7gUaIw7NomQF52qY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728173AbgDXMXu (ORCPT
+        id S1728211AbgDXMX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:23:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53848 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:23:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728110AbgDXMXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:23:45 -0400
+        id S1728153AbgDXMXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:23:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8CCD2168B;
-        Fri, 24 Apr 2020 12:23:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F6F220706;
+        Fri, 24 Apr 2020 12:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587731024;
-        bh=gQAWuW39xI8mn+xgNei4VJx/ZoOFJOfZegmSKlqk98g=;
+        s=default; t=1587731028;
+        bh=Hs8s9eHC6FrR8kVw+W14GPnW2VfpOKl6QsOnOLWjeE4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EWcsE9bpBBMu7ZCYyxSxBgRR4pPz9cMqUROZnobD9xyFDvj9F4S58NMrn/QOrHE54
-         DTFAg4+Q3G9APLRr43h609sQXtSb3JyCbgKp/SNXxFS4hCNevrCD6X9CHWOr3ffmrE
-         eP4aBN4fUNlT+6nnLpi4omQyEngyuzVwgWwFOsdU=
+        b=m/YrB3Rl3V+wlQUT5tRJ8NpTtOgSLqL3bjFa+hrtwERiK7mniW8o5G8rWDGMNSC9A
+         4eLNaWqtVhobB4Mz4LUhkfwXi1LQu6kBZHWRpbglgCS6tJi1BPtdypRwI+MuN0LbBW
+         TJ8tmqC9q55S4A1MPdv5dxKNLy09NVBmY7NtOwN8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 18/26] net: stmmac: socfpga: Allow all RGMII modes
-Date:   Fri, 24 Apr 2020 08:23:15 -0400
-Message-Id: <20200424122323.10194-18-sashal@kernel.org>
+Cc:     Fangrui Song <maskray@google.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.4 21/26] arm64: Delete the space separator in __emit_inst
+Date:   Fri, 24 Apr 2020 08:23:18 -0400
+Message-Id: <20200424122323.10194-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200424122323.10194-1-sashal@kernel.org>
 References: <20200424122323.10194-1-sashal@kernel.org>
@@ -61,33 +63,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
+From: Fangrui Song <maskray@google.com>
 
-[ Upstream commit a7a0d6269652846671312b29992143f56e2866b8 ]
+[ Upstream commit c9a4ef66450145a356a626c833d3d7b1668b3ded ]
 
-Allow all the RGMII modes to be used.  (Not only "rgmii", "rgmii-id"
-but "rgmii-txid", "rgmii-rxid")
+In assembly, many instances of __emit_inst(x) expand to a directive. In
+a few places __emit_inst(x) is used as an assembler macro argument. For
+example, in arch/arm64/kvm/hyp/entry.S
 
-Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  ALTERNATIVE(nop, SET_PSTATE_PAN(1), ARM64_HAS_PAN, CONFIG_ARM64_PAN)
+
+expands to the following by the C preprocessor:
+
+  alternative_insn nop, .inst (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
+
+Both comma and space are separators, with an exception that content
+inside a pair of parentheses/quotes is not split, so the clang
+integrated assembler splits the arguments to:
+
+   nop, .inst, (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
+
+GNU as preprocesses the input with do_scrub_chars(). Its arm64 backend
+(along with many other non-x86 backends) sees:
+
+  alternative_insn nop,.inst(0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
+  # .inst(...) is parsed as one argument
+
+while its x86 backend sees:
+
+  alternative_insn nop,.inst (0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
+  # The extra space before '(' makes the whole .inst (...) parsed as two arguments
+
+The non-x86 backend's behavior is considered unintentional
+(https://sourceware.org/bugzilla/show_bug.cgi?id=25750).
+So drop the space separator inside `.inst (...)` to make the clang
+integrated assembler work.
+
+Suggested-by: Ilie Halip <ilie.halip@gmail.com>
+Signed-off-by: Fangrui Song <maskray@google.com>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/939
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/include/asm/sysreg.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-index e0212d2fc2a12..fa32cd5b418ef 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-@@ -241,6 +241,8 @@ static int socfpga_set_phy_mode_common(int phymode, u32 *val)
- 	switch (phymode) {
- 	case PHY_INTERFACE_MODE_RGMII:
- 	case PHY_INTERFACE_MODE_RGMII_ID:
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+	case PHY_INTERFACE_MODE_RGMII_TXID:
- 		*val = SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_RGMII;
- 		break;
- 	case PHY_INTERFACE_MODE_MII:
+diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+index 6e919fafb43dd..9b68f1b3915ec 100644
+--- a/arch/arm64/include/asm/sysreg.h
++++ b/arch/arm64/include/asm/sysreg.h
+@@ -49,7 +49,9 @@
+ #ifndef CONFIG_BROKEN_GAS_INST
+ 
+ #ifdef __ASSEMBLY__
+-#define __emit_inst(x)			.inst (x)
++// The space separator is omitted so that __emit_inst(x) can be parsed as
++// either an assembler directive or an assembler macro argument.
++#define __emit_inst(x)			.inst(x)
+ #else
+ #define __emit_inst(x)			".inst " __stringify((x)) "\n\t"
+ #endif
 -- 
 2.20.1
 
