@@ -2,139 +2,170 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2D2C55191
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F85C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73FEA2087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F82920776
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:58:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728282AbgDXN6R (ORCPT
+        id S1728327AbgDXN65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 09:58:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:35148 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726946AbgDXN6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 09:58:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 63408C14;
-        Fri, 24 Apr 2020 06:58:14 -0700 (PDT)
-Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6389A3F68F;
-        Fri, 24 Apr 2020 06:58:13 -0700 (PDT)
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 1/2] firmware/psci: Make PSCI checker not bother with parking
-Date:   Fri, 24 Apr 2020 14:56:56 +0100
-Message-Id: <20200424135657.32519-2-valentin.schneider@arm.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200424135657.32519-1-valentin.schneider@arm.com>
-References: <20200424135657.32519-1-valentin.schneider@arm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 24 Apr 2020 09:58:57 -0400
+Received: from mother.openwall.net ([195.42.179.200]:37296 "HELO
+        mother.openwall.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726667AbgDXN64 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 09:58:56 -0400
+X-Greylist: delayed 400 seconds by postgrey-1.27 at vger.kernel.org; Fri, 24 Apr 2020 09:58:55 EDT
+Received: (qmail 32561 invoked from network); 24 Apr 2020 13:52:14 -0000
+Received: from localhost (HELO pvt.openwall.com) (127.0.0.1)
+  by localhost with SMTP; 24 Apr 2020 13:52:14 -0000
+Received: by pvt.openwall.com (Postfix, from userid 503)
+        id 5E3FBAB5C7; Fri, 24 Apr 2020 15:52:05 +0200 (CEST)
+Date:   Fri, 24 Apr 2020 15:52:05 +0200
+From:   Solar Designer <solar@openwall.com>
+To:     Ben Hutchings <ben@decadent.org.uk>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Salvatore Mesoraca <s.mesoraca16@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 3.16 208/245] namei: allow restricted O_CREAT of FIFOs and regular files
+Message-ID: <20200424135205.GA27204@openwall.com>
+References: <lsq.1587683027.831233700@decadent.org.uk> <lsq.1587683028.722200761@decadent.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <lsq.1587683028.722200761@decadent.org.uk>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kthread_stop() unconditionally calls kthread_unpark(). For kthreads
-with KTHREAD_IS_PER_CPU, this leads to waiting for
-wait_task_inactive(TASK_PARKED) before re-binding them. This is required
-mainly for smpboot threads, as they are parked before their respective CPU
-comes online which causes their affinity mask to be reset.
+On Fri, Apr 24, 2020 at 12:07:15AM +0100, Ben Hutchings wrote:
+> 3.16.83-rc1 review patch.  If anyone has any objections, please let me know.
 
-For users of kthread_create_on_cpu(), this means they must park their
-threads before stopping them, which is a bit silly. While we could change
-kthread_unpark() to only do the rebind if it is required, using
-kthread_create_on_cpu() for anything else than smpboot threads is risky:
-they won't get parked/unparked during a hotplug cycle, so their affinity
-will just be reset as soon as their respective CPU goes out.
+I do.  This patch is currently known-buggy, see this thread:
 
-The PSCI checker only lives during initcalls and explicitly points out
-that it cannot exist concurrently with hotplug operations, so let's just
-make it use kthread_create_on_node() + kthread_bind() (similar to what
-e.g. RCU torture does).
+https://www.openwall.com/lists/oss-security/2020/01/28/2
 
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
----
- drivers/firmware/psci/psci_checker.c | 32 +++++++++++-----------------
- 1 file changed, 12 insertions(+), 20 deletions(-)
+It is (partially) fixed with these newer commits in 5.5 and 5.5.2:
 
-diff --git a/drivers/firmware/psci/psci_checker.c b/drivers/firmware/psci/psci_checker.c
-index a5279a430274..fa7bb1e8a461 100644
---- a/drivers/firmware/psci/psci_checker.c
-+++ b/drivers/firmware/psci/psci_checker.c
-@@ -347,19 +347,12 @@ static int suspend_test_thread(void *arg)
- 	if (atomic_dec_return_relaxed(&nb_active_threads) == 0)
- 		complete(&suspend_threads_done);
- 
--	for (;;) {
--		/* Needs to be set first to avoid missing a wakeup. */
--		set_current_state(TASK_INTERRUPTIBLE);
--		if (kthread_should_park())
--			break;
--		schedule();
--	}
-+	while (!kthread_should_stop())
-+		schedule_timeout_interruptible(MAX_SCHEDULE_TIMEOUT);
- 
- 	pr_info("CPU %d suspend test results: success %d, shallow states %d, errors %d\n",
- 		cpu, nb_suspend, nb_shallow_sleep, nb_err);
- 
--	kthread_parkme();
--
- 	return nb_err;
- }
- 
-@@ -395,13 +388,15 @@ static int suspend_tests(void)
- 			continue;
- 		}
- 
--		thread = kthread_create_on_cpu(suspend_test_thread,
--					       (void *)(long)cpu, cpu,
--					       "psci_suspend_test");
--		if (IS_ERR(thread))
-+		thread = kthread_create_on_node(suspend_test_thread,
-+						(void *)(long)cpu, cpu_to_node(cpu),
-+						"psci_suspend_test/%d", cpu);
-+		if (IS_ERR(thread)) {
- 			pr_err("Failed to create kthread on CPU %d\n", cpu);
--		else
-+		} else {
- 			threads[nb_threads++] = thread;
-+			kthread_bind(thread, cpu);
-+		}
- 	}
- 
- 	if (nb_threads < 1) {
-@@ -418,17 +413,14 @@ static int suspend_tests(void)
- 	 */
- 	for (i = 0; i < nb_threads; ++i)
- 		wake_up_process(threads[i]);
--	complete_all(&suspend_threads_started);
- 
-+	complete_all(&suspend_threads_started);
- 	wait_for_completion(&suspend_threads_done);
- 
--
- 	/* Stop and destroy all threads, get return status. */
--	for (i = 0; i < nb_threads; ++i) {
--		err += kthread_park(threads[i]);
-+	for (i = 0; i < nb_threads; ++i)
- 		err += kthread_stop(threads[i]);
--	}
-- out:
-+out:
- 	cpuidle_resume_and_unlock();
- 	kfree(threads);
- 	return err;
--- 
-2.24.0
+commit d0cb50185ae942b03c4327be322055d622dc79f6
+Author: Al Viro <viro@zeniv.linux.org.uk>
+Date:   Sun Jan 26 09:29:34 2020 -0500
 
+    do_last(): fetch directory ->i_mode and ->i_uid before it's too late
+    
+    may_create_in_sticky() call is done when we already have dropped the
+    reference to dir.
+    
+    Fixes: 30aba6656f61e (namei: allow restricted O_CREAT of FIFOs and regular files)
+    Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+
+commit d76341d93dedbcf6ed5a08dfc8bce82d3e9a772b
+Author: Al Viro <viro@zeniv.linux.org.uk>
+Date:   Sat Feb 1 16:26:45 2020 +0000
+
+    vfs: fix do_last() regression
+    
+    commit 6404674acd596de41fd3ad5f267b4525494a891a upstream.
+    
+    Brown paperbag time: fetching ->i_uid/->i_mode really should've been
+    done from nd->inode.  I even suggested that, but the reason for that has
+    slipped through the cracks and I went for dir->d_inode instead - made
+    for more "obvious" patch.
+    
+    Analysis:
+    
+     - at the entry into do_last() and all the way to step_into(): dir (aka
+       nd->path.dentry) is known not to have been freed; so's nd->inode and
+       it's equal to dir->d_inode unless we are already doomed to -ECHILD.
+       inode of the file to get opened is not known.
+    
+     - after step_into(): inode of the file to get opened is known; dir
+       might be pointing to freed memory/be negative/etc.
+    
+     - at the call of may_create_in_sticky(): guaranteed to be out of RCU
+       mode; inode of the file to get opened is known and pinned; dir might
+       be garbage.
+    
+    The last was the reason for the original patch.  Except that at the
+    do_last() entry we can be in RCU mode and it is possible that
+    nd->path.dentry->d_inode has already changed under us.
+    
+    In that case we are going to fail with -ECHILD, but we need to be
+    careful; nd->inode is pointing to valid struct inode and it's the same
+    as nd->path.dentry->d_inode in "won't fail with -ECHILD" case, so we
+    should use that.
+    
+    Reported-by: "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>
+    Reported-by: syzbot+190005201ced78a74ad6@syzkaller.appspotmail.com
+    Wearing-brown-paperbag: Al Viro <viro@zeniv.linux.org.uk>
+    Cc: stable@kernel.org
+    Fixes: d0cb50185ae9 ("do_last(): fetch directory ->i_mode and ->i_uid before it's too late")
+    Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+At least inclusion of the above fixes is mandatory for any backports.
+
+Also, I think no one has fixed the logic of may_create_in_sticky() so
+that it wouldn't unintentionally apply the "protection" when the file
+is neither a FIFO nor a regular file (something I found and mentioned in
+the oss-security posting above).
+
+> +/**
+> + * may_create_in_sticky - Check whether an O_CREAT open in a sticky directory
+> + *			  should be allowed, or not, on files that already
+> + *			  exist.
+> + * @dir: the sticky parent directory
+> + * @inode: the inode of the file to open
+> + *
+> + * Block an O_CREAT open of a FIFO (or a regular file) when:
+> + *   - sysctl_protected_fifos (or sysctl_protected_regular) is enabled
+> + *   - the file already exists
+> + *   - we are in a sticky directory
+> + *   - we don't own the file
+> + *   - the owner of the directory doesn't own the file
+> + *   - the directory is world writable
+> + * If the sysctl_protected_fifos (or sysctl_protected_regular) is set to 2
+> + * the directory doesn't have to be world writable: being group writable will
+> + * be enough.
+> + *
+> + * Returns 0 if the open is allowed, -ve on error.
+> + */
+> +static int may_create_in_sticky(struct dentry * const dir,
+> +				struct inode * const inode)
+> +{
+> +	if ((!sysctl_protected_fifos && S_ISFIFO(inode->i_mode)) ||
+> +	    (!sysctl_protected_regular && S_ISREG(inode->i_mode)) ||
+> +	    likely(!(dir->d_inode->i_mode & S_ISVTX)) ||
+> +	    uid_eq(inode->i_uid, dir->d_inode->i_uid) ||
+> +	    uid_eq(current_fsuid(), inode->i_uid))
+> +		return 0;
+> +
+> +	if (likely(dir->d_inode->i_mode & 0002) ||
+> +	    (dir->d_inode->i_mode & 0020 &&
+> +	     ((sysctl_protected_fifos >= 2 && S_ISFIFO(inode->i_mode)) ||
+> +	      (sysctl_protected_regular >= 2 && S_ISREG(inode->i_mode))))) {
+> +		return -EACCES;
+> +	}
+> +	return 0;
+> +}
+
+I think the implementation of may_create_in_sticky() should be rewritten
+such that it'd directly correspond to the textual description in the
+comment above.  As we've seen, trying to write the code "more optimally"
+resulted in its logic actually being different from the description.
+
+Meanwhile, I think backporting known-so-buggy code is a bad idea.
+
+Alexander
