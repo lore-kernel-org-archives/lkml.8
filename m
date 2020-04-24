@@ -6,151 +6,82 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF4DC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D9EC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CEA820767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EC5120776
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:11:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgDXKL1 (ORCPT
+        id S1726839AbgDXKLl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 06:11:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44062 "EHLO mx2.suse.de"
+        Fri, 24 Apr 2020 06:11:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:58994 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726698AbgDXKL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 06:11:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D8C84AED7;
-        Fri, 24 Apr 2020 10:11:23 +0000 (UTC)
+        id S1726667AbgDXKLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 06:11:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E9151FB;
+        Fri, 24 Apr 2020 03:11:40 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C41323F73D;
+        Fri, 24 Apr 2020 03:11:38 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 11:11:32 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Gavin Shan <gshan@redhat.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com, will@kernel.org, shan.gavin@gmail.com,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH] arm64/mm: Reject invalid NUMA option
+Message-ID: <20200424101132.GC1167@C02TD0UTHF1T.local>
+References: <20200424045314.16017-1-gshan@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 24 Apr 2020 12:11:23 +0200
-From:   Roman Penyaev <rpenyaev@suse.de>
-To:     Khazhismel Kumykov <khazhy@google.com>
-Cc:     viro@zeniv.linux.org.uk, akpm@linux-foundation.org, r@hev.cc,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] eventpoll: fix missing wakeup for ovflist in
- ep_poll_callback
-In-Reply-To: <20200424025057.118641-1-khazhy@google.com>
-References: <20200424025057.118641-1-khazhy@google.com>
-Message-ID: <2bd5fcb37337dd7248a5cb245bf8dde9@suse.de>
-X-Sender: rpenyaev@suse.de
-User-Agent: Roundcube Webmail
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200424045314.16017-1-gshan@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Khazhismel,
+[Adding Steve, who added str_has_prefix()]
 
-That seems to be correct. The patch you refer 339ddb53d373
-relies on callback path, which *should* wake up, not the path
-which harvests events (thus unnecessary wakeups).  When we add
-a new event to the ->ovflist nobody wakes up the waiters,
-thus missing wakeup. You are right.
+On Fri, Apr 24, 2020 at 02:53:14PM +1000, Gavin Shan wrote:
+> The NUMA option is parsed by str_has_prefix() and the invalid option
+> like "numa=o" can be regarded as "numa=off" wrongly.
 
-May I suggest a small change in order to avoid one new goto?
-We can add a new event in either ->ovflist or ->rdllist and
-then wakeup should happen. So simple 'else if' branch should
-do things right, something like the following:
+Are you certain that can pass? If that can happen, str_has_prefix() is
+misnamed and does not seem to do what its kerneldoc says it does, as
+"off" is not a prefix of "o".
 
-diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-index 8c596641a72b..7d566667c6ad 100644
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -1171,6 +1171,10 @@ static inline bool chain_epi_lockless(struct 
-epitem *epi)
-  {
-         struct eventpoll *ep = epi->ep;
+> This fixes the issue with sysfs_streq(), which have more sanity checks,
+> to avoid accepting the invalid options.
 
-+       /* Fast preliminary check */
-+       if (epi->next != EP_UNACTIVE_PTR)
-+               return false;
-+
-         /* Check that the same epi has not been just chained from 
-another CPU */
-         if (cmpxchg(&epi->next, EP_UNACTIVE_PTR, NULL) != 
-EP_UNACTIVE_PTR)
-                 return false;
-@@ -1237,16 +1241,13 @@ static int ep_poll_callback(wait_queue_entry_t 
-*wait, unsigned mode, int sync, v
-          * chained in ep->ovflist and requeued later on.
-          */
-         if (READ_ONCE(ep->ovflist) != EP_UNACTIVE_PTR) {
--               if (epi->next == EP_UNACTIVE_PTR &&
--                   chain_epi_lockless(epi))
-+               if (chain_epi_lockless(epi))
-                         ep_pm_stay_awake_rcu(epi);
--               goto out_unlock;
-         }
--
--       /* If this file is already in the ready list we exit soon */
--       if (!ep_is_linked(epi) &&
--           list_add_tail_lockless(&epi->rdllink, &ep->rdllist)) {
--               ep_pm_stay_awake_rcu(epi);
-+       /* Otherwise take usual path and add event to ready list */
-+       else if (!ep_is_linked(epi)) {
-+               if (list_add_tail_lockless(&epi->rdllink, &ep->rdllist))
-+                       ep_pm_stay_awake_rcu(epi);
-         }
+That doesn't sound immediately right, since this is an early parameter,
+which has nothing to do with sysfs. Perhaps that's just a misleading
+name?
 
+Thanks,
+Mark.
 
-I also moved 'epi->next == EP_UNACTIVE_PTR' check directly
-to the chain_epi_lockless, where it should be.
-
-This is minor, of course, you are free to keep it as is.
-
-Reviewed-by: Roman Penyaev <rpenyaev@suse.de>
-
---
-Roman
-
-
-On 2020-04-24 04:50, Khazhismel Kumykov wrote:
-> In the event that we add to ovflist, before 339ddb53d373 we would be
-> woken up by ep_scan_ready_list, and did no wakeup in ep_poll_callback.
-> With that wakeup removed, if we add to ovflist here, we may never wake
-> up. Rather than adding back the ep_scan_ready_list wakeup - which was
-> resulting un uncessary wakeups, trigger a wake-up in ep_poll_callback.
-> 
-> We noticed that one of our workloads was missing wakeups starting with
-> 339ddb53d373 and upon manual inspection, this wakeup seemed missing to
-> me. With this patch added, we no longer see missing wakeups. I haven't
-> yet tried to make a small reproducer, but the existing kselftests in
-> filesystem/epoll passed for me with this patch.
-> 
-> Fixes: 339ddb53d373 ("fs/epoll: remove unnecessary wakeups of nested 
-> epoll")
-> Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
+> Signed-off-by: Gavin Shan <gshan@redhat.com>
 > ---
->  fs/eventpoll.c | 3 ++-
+>  arch/arm64/mm/numa.c | 3 ++-
 >  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-> index 8c596641a72b..40cc89559cf6 100644
-> --- a/fs/eventpoll.c
-> +++ b/fs/eventpoll.c
-> @@ -1240,7 +1240,7 @@ static int ep_poll_callback(wait_queue_entry_t
-> *wait, unsigned mode, int sync, v
->  		if (epi->next == EP_UNACTIVE_PTR &&
->  		    chain_epi_lockless(epi))
->  			ep_pm_stay_awake_rcu(epi);
-> -		goto out_unlock;
-> +		goto out_wakeup_unlock;
->  	}
+> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+> index 4decf1659700..bd458b28616a 100644
+> --- a/arch/arm64/mm/numa.c
+> +++ b/arch/arm64/mm/numa.c
+> @@ -29,7 +29,8 @@ static __init int numa_parse_early_param(char *opt)
+>  {
+>  	if (!opt)
+>  		return -EINVAL;
+> -	if (str_has_prefix(opt, "off"))
+> +
+> +	if (sysfs_streq(opt, "off"))
+>  		numa_off = true;
+>  
+>  	return 0;
+> -- 
+> 2.23.0
 > 
->  	/* If this file is already in the ready list we exit soon */
-> @@ -1249,6 +1249,7 @@ static int ep_poll_callback(wait_queue_entry_t
-> *wait, unsigned mode, int sync, v
->  		ep_pm_stay_awake_rcu(epi);
->  	}
-> 
-> +out_wakeup_unlock:
->  	/*
->  	 * Wake up ( if active ) both the eventpoll wait list and the 
-> ->poll()
->  	 * wait list.
-
