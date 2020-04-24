@@ -2,253 +2,92 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CACC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D29EFC55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90CD320767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:38:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="YKrze/7p";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Pn9zzOM6"
+	by mail.kernel.org (Postfix) with ESMTP id B446420767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:38:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728990AbgDXPiK (ORCPT
+        id S1728211AbgDXPiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 24 Apr 2020 11:38:14 -0400
+Received: from muru.com ([72.249.23.125]:51236 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728222AbgDXPiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 Apr 2020 11:38:10 -0400
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:40073 "EHLO
-        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728817AbgDXPhQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:37:16 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 9327710AA;
-        Fri, 24 Apr 2020 11:37:14 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:37:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=v0wT99TRG4A07
-        CiLRgiNJop5CNO/2rg6M7E82BWYHLU=; b=YKrze/7plwHLwACpj24dyp2L9+FfA
-        PBIkH+/g60+68fh4KNV5CXnxb3lJQJ6ReZcnlcozbPBcXH8CE4Rd3/ghdGEqcTCh
-        YCWSXIpbMUl9xrluRAm5iJapg0aVv7RydHL6p3w2TY0ggbKlkMEN4B7su+Ct1Y1R
-        2Surnu/J20oKt9UEPgyFH0P2jqEYcnRQUJxOtvsq63rns/XcYoBxI5SPS71Wkvfc
-        anjD0ifw+8rbrqqlvTnVyk1VQTUfh+mNTfeYjIhj418q90wMxcCYjOJF2cG2Zsmk
-        yBmxUt+sB8fi753Wdtln7Jc07uq0ac0YUKEuh62hA/i/j+eY1+qH+RuBA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=v0wT99TRG4A07CiLRgiNJop5CNO/2rg6M7E82BWYHLU=; b=Pn9zzOM6
-        iBvBLlsXaxT7ZCQMMMB8tF4yJ7txV0YT71fbyKVC+Di04LfNQOdnjkXGLw0ZP7H/
-        0sUmmkib0ca0gf7GkXbtBs8B7c/w6fEMoHm2hjRWkEEpAD1Hij80NemBB3RVwU06
-        Oahp2y40zPs0FwpSbnz0FASI8oLC8F2hJEFtIPfwi7nuC3UZPzcPbS/p1/H0RV3M
-        9gS1EtpVYcDzI7xvw0CV3xDbXNMH/dYBNr/OPQ78cg/C5V5s70Tv+KSGwD2UTpKN
-        uKeqgvcFvj68QObnHvVutnu212var7nHhU/tFy9hLSAiGuv9Q3raMa0RvdNyourR
-        b89BLF5u0fxR9Q==
-X-ME-Sender: <xms:qgejXvNFYpmqDlm6gH4L1BGeRe4gQd4HEUWHELwWPManjWIPkCOOrw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrhedugdekiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpeejtdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:qgejXuMP2XCDuNAxgGBjcnUlQdmOiULAfm5mYngk5eTr1CTq-jZB3w>
-    <xmx:qgejXpSioFEa9WjTEIdXBV3FD6C09EiAQ79FBBNgQlyYQmDouJhuqA>
-    <xmx:qgejXoA65VpA33Rg1XLvlFxRPaGnd39C1w8VnSX6Q-fQWkhZFu1OXA>
-    <xmx:qgejXpLzQ35NbXvkoRWqkqu3Hy84VAerf56va_oNJ_9j6JhvssddbKLDmc8>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id CCFD23280063;
-        Fri, 24 Apr 2020 11:37:13 -0400 (EDT)
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v2 80/91] drm/vc4: hdmi: Move CEC init to its own function
-Date:   Fri, 24 Apr 2020 17:35:01 +0200
-Message-Id: <8485077451e339cbb491746ae98980f76eedc754.1587742492.git-series.maxime@cerno.tech>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
-References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 062F880E7;
+        Fri, 24 Apr 2020 15:38:56 +0000 (UTC)
+Date:   Fri, 24 Apr 2020 08:38:06 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Tero Kristo <t-kristo@ti.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-omap@vger.kernel.org, lkft-triage@lists.linaro.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Benoit Cousson <bcousson@baylibre.com>,
+        Carlos Hernandez <ceh@ti.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Olof Johansson <olof@lixom.net>, tomi.valkeinen@ti.com,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: OF: ERROR: Bad of_node_put() on
+ /ocp/interconnect@4a000000/segment@0/target-module@8000/cm_core@0/l4per-cm@1700/l4per-clkctrl@28
+Message-ID: <20200424153806.GJ37466@atomide.com>
+References: <CA+G9fYv5NxK+F5DX_q1c_wvnhjT_WTZBFJQXLWFeqMXsEcASZg@mail.gmail.com>
+ <CA+G9fYu-qYP2wJw4p1p_C6_ttwK0fvw+qUnsN9mDuKOv3zGEBw@mail.gmail.com>
+ <20200417152903.GO37466@atomide.com>
+ <6366d76c-b9dc-6fa5-afad-0b2f471f8ec5@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6366d76c-b9dc-6fa5-afad-0b2f471f8ec5@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CEC init code was put directly into the bind function, which was quite
-inconsistent with how the audio support was done, and would prevent us from
-further changes to skip that initialisation entirely.
+* Tero Kristo <t-kristo@ti.com> [200424 12:41]:
+> On 17/04/2020 18:29, Tony Lindgren wrote:
+> > * Naresh Kamboju <naresh.kamboju@linaro.org> [200327 16:44]:
+> > > The reported problem still happening on arm beagle board x15 device
+> > > running Linux next kernel 20200327.
+> > ...
+> > 
+> > > [    0.000000] OF: ERROR: Bad of_node_put() on
+> > > /ocp/interconnect@4a000000/segment@0/target-module@8000/cm_core@0/l4per-cm@1700/l4per-clkctrl@28
+> > > [    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W
+> > >    5.6.0-rc7-next-20200327 #1
+> > > [    0.000000] Hardware name: Generic DRA74X (Flattened Device Tree)
+> > > [    0.000000] [<c0311810>] (unwind_backtrace) from [<c030ba14>]
+> > > (show_stack+0x10/0x14)
+> > > [    0.000000] [<c030ba14>] (show_stack) from [<c0fb6604>]
+> > > (dump_stack+0xbc/0xd0)
+> > > [    0.000000] [<c0fb6604>] (dump_stack) from [<c0fbb07c>]
+> > > (kobject_put+0xc0/0x104)
+> > > [    0.000000] [<c0fbb07c>] (kobject_put) from [<c1639e4c>]
+> > > (of_clk_init+0x18c/0x228)
+> > > [    0.000000] [<c1639e4c>] (of_clk_init) from [<c1611544>]
+> > > (omap_clk_init+0x3c/0x58)
+> > > [    0.000000] [<c1611544>] (omap_clk_init) from [<c1611ea8>]
+> > > (omap4_sync32k_timer_init+0x8/0x2c)
+> > > [    0.000000] [<c1611ea8>] (omap4_sync32k_timer_init) from
+> > > [<c161213c>] (omap5_realtime_timer_init+0x8/0x234)
+> > > [    0.000000] [<c161213c>] (omap5_realtime_timer_init) from
+> > > [<c1600c88>] (start_kernel+0x330/0x4b8)
+> > 
+> > Just FYI, Tero is looking at the clock issues that seem to be
+> > causing these warnings.
+> 
+> Haven't seen this before, but easily reproducible with multi_v7_defconfig. I
+> have a simple fix for it now, will post to lists soon.
 
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
----
- drivers/gpu/drm/vc4/vc4_hdmi.c | 108 +++++++++++++++++++++-------------
- 1 file changed, 67 insertions(+), 41 deletions(-)
+OK thanks for tracking it down.
 
-diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-index aae5b10a2d11..1c612db1d22c 100644
---- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-+++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-@@ -1172,6 +1172,67 @@ static const struct cec_adap_ops vc4_hdmi_cec_adap_ops = {
- 	.adap_log_addr = vc4_hdmi_cec_adap_log_addr,
- 	.adap_transmit = vc4_hdmi_cec_adap_transmit,
- };
-+
-+static int vc4_hdmi_cec_init(struct vc4_hdmi *vc4_hdmi)
-+{
-+	struct cec_connector_info conn_info;
-+	struct platform_device *pdev = vc4_hdmi->pdev;
-+	u32 value;
-+	int ret;
-+
-+	vc4_hdmi->cec_adap = cec_allocate_adapter(&vc4_hdmi_cec_adap_ops,
-+						  vc4_hdmi, "vc4",
-+						  CEC_CAP_DEFAULTS |
-+						  CEC_CAP_CONNECTOR_INFO, 1);
-+	ret = PTR_ERR_OR_ZERO(vc4_hdmi->cec_adap);
-+	if (ret < 0)
-+		return ret;
-+
-+	cec_fill_conn_info_from_drm(&conn_info, &vc4_hdmi->connector);
-+	cec_s_conn_info(vc4_hdmi->cec_adap, &conn_info);
-+
-+	HDMI_WRITE(HDMI_CEC_CPU_MASK_SET, 0xffffffff);
-+	value = HDMI_READ(HDMI_CEC_CNTRL_1);
-+	value &= ~VC4_HDMI_CEC_DIV_CLK_CNT_MASK;
-+	/*
-+	 * Set the logical address to Unregistered and set the clock
-+	 * divider: the hsm_clock rate and this divider setting will
-+	 * give a 40 kHz CEC clock.
-+	 */
-+	value |= VC4_HDMI_CEC_ADDR_MASK |
-+		 (4091 << VC4_HDMI_CEC_DIV_CLK_CNT_SHIFT);
-+	HDMI_WRITE(HDMI_CEC_CNTRL_1, value);
-+	ret = devm_request_threaded_irq(&pdev->dev, platform_get_irq(pdev, 0),
-+					vc4_cec_irq_handler,
-+					vc4_cec_irq_handler_thread, 0,
-+					"vc4 hdmi cec", vc4_hdmi);
-+	if (ret)
-+		goto err_delete_cec_adap;
-+
-+	ret = cec_register_adapter(vc4_hdmi->cec_adap, &pdev->dev);
-+	if (ret < 0)
-+		goto err_delete_cec_adap;
-+
-+	return 0;
-+
-+err_delete_cec_adap:
-+	cec_delete_adapter(vc4_hdmi->cec_adap);
-+
-+	return ret;
-+}
-+
-+static void vc4_hdmi_cec_exit(struct vc4_hdmi *vc4_hdmi)
-+{
-+	cec_unregister_adapter(vc4_hdmi->cec_adap);
-+}
-+#else
-+static int vc4_hdmi_cec_init(struct vc4_hdmi *vc4_hdmi)
-+{
-+	return 0;
-+}
-+
-+static void vc4_hdmi_cec_exit(struct vc4_hdmi *vc4_hdmi) {};
-+
- #endif
- 
- static int vc4_hdmi_build_regset(struct vc4_hdmi *vc4_hdmi,
-@@ -1249,9 +1310,6 @@ static int vc4_hdmi_init_resources(struct vc4_hdmi *vc4_hdmi)
- 
- static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
- {
--#ifdef CONFIG_DRM_VC4_HDMI_CEC
--	struct cec_connector_info conn_info;
--#endif
- 	struct platform_device *pdev = to_platform_device(dev);
- 	struct drm_device *drm = dev_get_drvdata(master);
- 	const struct vc4_hdmi_variant *variant;
-@@ -1339,43 +1397,13 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
- 	if (ret)
- 		goto err_destroy_encoder;
- 
--#ifdef CONFIG_DRM_VC4_HDMI_CEC
--	vc4_hdmi->cec_adap = cec_allocate_adapter(&vc4_hdmi_cec_adap_ops,
--						  vc4_hdmi, "vc4",
--						  CEC_CAP_DEFAULTS |
--						  CEC_CAP_CONNECTOR_INFO, 1);
--	ret = PTR_ERR_OR_ZERO(vc4_hdmi->cec_adap);
--	if (ret < 0)
--		goto err_destroy_conn;
--
--	cec_fill_conn_info_from_drm(&conn_info, &vc4_hdmi->connector);
--	cec_s_conn_info(vc4_hdmi->cec_adap, &conn_info);
--
--	HDMI_WRITE(HDMI_CEC_CPU_MASK_SET, 0xffffffff);
--	value = HDMI_READ(HDMI_CEC_CNTRL_1);
--	value &= ~VC4_HDMI_CEC_DIV_CLK_CNT_MASK;
--	/*
--	 * Set the logical address to Unregistered and set the clock
--	 * divider: the hsm_clock rate and this divider setting will
--	 * give a 40 kHz CEC clock.
--	 */
--	value |= VC4_HDMI_CEC_ADDR_MASK |
--		 (4091 << VC4_HDMI_CEC_DIV_CLK_CNT_SHIFT);
--	HDMI_WRITE(HDMI_CEC_CNTRL_1, value);
--	ret = devm_request_threaded_irq(dev, platform_get_irq(pdev, 0),
--					vc4_cec_irq_handler,
--					vc4_cec_irq_handler_thread, 0,
--					"vc4 hdmi cec", vc4_hdmi);
-+	ret = vc4_hdmi_cec_init(vc4_hdmi);
- 	if (ret)
--		goto err_delete_cec_adap;
--	ret = cec_register_adapter(vc4_hdmi->cec_adap, dev);
--	if (ret < 0)
--		goto err_delete_cec_adap;
--#endif
-+		goto err_destroy_conn;
- 
- 	ret = vc4_hdmi_audio_init(vc4_hdmi);
- 	if (ret)
--		goto err_destroy_encoder;
-+		goto err_free_cec;
- 
- 	vc4_debugfs_add_file(drm, variant->debugfs_name,
- 			     vc4_hdmi_debugfs_regs,
-@@ -1383,12 +1411,10 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
- 
- 	return 0;
- 
--#ifdef CONFIG_DRM_VC4_HDMI_CEC
--err_delete_cec_adap:
--	cec_delete_adapter(vc4_hdmi->cec_adap);
-+err_free_cec:
-+	vc4_hdmi_cec_exit(vc4_hdmi);
- err_destroy_conn:
- 	vc4_hdmi_connector_destroy(&vc4_hdmi->connector);
--#endif
- err_destroy_encoder:
- 	vc4_hdmi_encoder_destroy(encoder);
- err_unprepare_hsm:
-@@ -1413,7 +1439,7 @@ static void vc4_hdmi_unbind(struct device *dev, struct device *master,
- 	kfree(vc4_hdmi->hdmi_regset.regs);
- 	kfree(vc4_hdmi->hd_regset.regs);
- 
--	cec_unregister_adapter(vc4_hdmi->cec_adap);
-+	vc4_hdmi_cec_exit(vc4_hdmi);
- 	vc4_hdmi_connector_destroy(&vc4_hdmi->connector);
- 	vc4_hdmi_encoder_destroy(&vc4_hdmi->encoder.base.base);
- 
--- 
-git-series 0.9.1
+Tony
