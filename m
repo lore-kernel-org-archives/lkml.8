@@ -7,116 +7,98 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16929C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 468A5C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E222E206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:20:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24EB5206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:20:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ERNapSpp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lhco5piE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbgDXPUV (ORCPT
+        id S1728021AbgDXPU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:20:21 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55731 "EHLO
+        Fri, 24 Apr 2020 11:20:26 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:32746 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727868AbgDXPUT (ORCPT
+        by vger.kernel.org with ESMTP id S1727983AbgDXPUX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:20:19 -0400
+        Fri, 24 Apr 2020 11:20:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587741618;
+        s=mimecast20190719; t=1587741622;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=2Z+Gadu21Z2xRE8cYGvxOo9yHCfq6rp1d/CEGZW+78A=;
-        b=ERNapSpp8t1L427qnG7XIdBBzs5gBjKUSiMEXDsDE6FrYmCejb6i790Ip3G8t8OJvJwUB8
-        YOXte+pOtmuBUdFdHNTrKY52rR4Q2ovDgi1sSZAHRbt+x6tKJomSnBRx2GULmeRJmCAD95
-        yZu6mSFuJQReMqNk5u4iNY+FZk+gIvs=
+        bh=bLArxLt5J+HGf6waK/sSvqkLaTxB3mfg5kFgnvOW+fI=;
+        b=Lhco5piEEA92QqSNh7k5PgZJD8+vZmp7cwESGcQUTUIa81a2obX6jC9viPd2Qa9bPK9b6I
+        GfCACdAz8ZJYqDQAdeo2bEblZeYigf4Ru0+o+pjaq7jEX2GNaWi/mnw/RkroBDyz+MMJEY
+        j4Jz9JA+9T5Gut/IRjoxODX/MhjHBWM=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-392-hUBQ_FouPRuxm-87spewCA-1; Fri, 24 Apr 2020 11:19:56 -0400
-X-MC-Unique: hUBQ_FouPRuxm-87spewCA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-419-mCTsx_R4PL-hTT-7nDYHfQ-1; Fri, 24 Apr 2020 11:20:18 -0400
+X-MC-Unique: mCTsx_R4PL-hTT-7nDYHfQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 79D5B107ACCA;
-        Fri, 24 Apr 2020 15:19:55 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A92C8800D24;
+        Fri, 24 Apr 2020 15:20:17 +0000 (UTC)
 Received: from warthog.procyon.org.uk (ovpn-113-129.rdu2.redhat.com [10.10.113.129])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5AD0260CD0;
-        Fri, 24 Apr 2020 15:19:54 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E0DD96084A;
+        Fri, 24 Apr 2020 15:20:16 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
         Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
         Kingdom.
         Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 1/8] afs: Always include dir in bulk status fetch from
- afs_do_lookup()
+Subject: [PATCH 4/8] afs: Fix to actually set AFS_SERVER_FL_HAVE_EPOCH
 From:   David Howells <dhowells@redhat.com>
 To:     linux-afs@lists.infradead.org
-Cc:     Dave Botsch <botsch@cnf.cornell.edu>,
-        Jeffrey Altman <jaltman@auristor.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         dhowells@redhat.com
-Date:   Fri, 24 Apr 2020 16:19:53 +0100
-Message-ID: <158774159361.3619859.14445546902173034503.stgit@warthog.procyon.org.uk>
+Date:   Fri, 24 Apr 2020 16:20:16 +0100
+Message-ID: <158774161611.3619859.10748767826695181897.stgit@warthog.procyon.org.uk>
 In-Reply-To: <158774158625.3619859.10579201535876583842.stgit@warthog.procyon.org.uk>
 References: <158774158625.3619859.10579201535876583842.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/0.21
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a lookup is done in an AFS directory, the filesystem will speculate
-and fetch up to 49 other statuses for files in the same directory and fetch
-those as well, turning them into inodes or updating inodes that already
-exist.
+AFS keeps track of the epoch value from the rxrpc protocol to note (a) when
+a fileserver appears to have restarted and (b) when different endpoints of
+a fileserver do not appear to be associated with the same fileserver
+(ie. all probes back from a fileserver from all of its interfaces should
+carry the same epoch).
 
-However, occasionally, a callback break might go missing due to NAT timing
-out, but the afs filesystem doesn't then realise that the directory is not
-up to date.
+However, the AFS_SERVER_FL_HAVE_EPOCH flag that indicates that we've
+received the server's epoch is never set, though it is used.
 
-Alleviate this by using one of the status slots to check the directory in
-which the lookup is being done.
+Fix this to set the flag when we first receive an epoch value from a probe
+sent to the filesystem client from the fileserver.
 
-Reported-by: Dave Botsch <botsch@cnf.cornell.edu>
-Suggested-by: Jeffrey Altman <jaltman@auristor.com>
+Fixes: 3bf0fb6f33dd ("afs: Probe multiple fileservers simultaneously")
 Signed-off-by: David Howells <dhowells@redhat.com>
 ---
 
- fs/afs/dir.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ fs/afs/cmservice.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/afs/dir.c b/fs/afs/dir.c
-index d1e1caa23c8b..3c486340b220 100644
---- a/fs/afs/dir.c
-+++ b/fs/afs/dir.c
-@@ -658,7 +658,8 @@ static struct inode *afs_do_lookup(struct inode *dir, struct dentry *dentry,
+diff --git a/fs/afs/cmservice.c b/fs/afs/cmservice.c
+index 6765949b3aab..380ad5ace7cf 100644
+--- a/fs/afs/cmservice.c
++++ b/fs/afs/cmservice.c
+@@ -169,7 +169,7 @@ static int afs_record_cm_probe(struct afs_call *call, struct afs_server *server)
  
- 	cookie->ctx.actor = afs_lookup_filldir;
- 	cookie->name = dentry->d_name;
--	cookie->nr_fids = 1; /* slot 0 is saved for the fid we actually want */
-+	cookie->nr_fids = 2; /* slot 0 is saved for the fid we actually want
-+			      * and slot 1 for the directory */
+ 	spin_lock(&server->probe_lock);
  
- 	read_seqlock_excl(&dvnode->cb_lock);
- 	dcbi = rcu_dereference_protected(dvnode->cb_interest,
-@@ -709,7 +710,11 @@ static struct inode *afs_do_lookup(struct inode *dir, struct dentry *dentry,
- 	if (!cookie->inodes)
- 		goto out_s;
- 
--	for (i = 1; i < cookie->nr_fids; i++) {
-+	cookie->fids[1] = dvnode->fid;
-+	cookie->statuses[1].cb_break = afs_calc_vnode_cb_break(dvnode);
-+	cookie->inodes[1] = igrab(&dvnode->vfs_inode);
-+
-+	for (i = 2; i < cookie->nr_fids; i++) {
- 		scb = &cookie->statuses[i];
- 
- 		/* Find any inodes that already exist and get their
+-	if (!test_bit(AFS_SERVER_FL_HAVE_EPOCH, &server->flags)) {
++	if (!test_and_set_bit(AFS_SERVER_FL_HAVE_EPOCH, &server->flags)) {
+ 		server->cm_epoch = call->epoch;
+ 		server->probe.cm_epoch = call->epoch;
+ 		goto out;
 
 
