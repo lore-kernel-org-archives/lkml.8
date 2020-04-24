@@ -2,167 +2,134 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC36C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 459BEC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B86FC20728
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CB4820728
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:08:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YtHDDkn8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbgDXLGu (ORCPT
+        id S1726904AbgDXLIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 07:06:50 -0400
-Received: from mail-out.m-online.net ([212.18.0.10]:58281 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbgDXLGu (ORCPT
+        Fri, 24 Apr 2020 07:08:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39312 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726844AbgDXLIu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 07:06:50 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 497rw31JCtz1rvy6;
-        Fri, 24 Apr 2020 13:06:43 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 497rw26Slqz1qrwY;
-        Fri, 24 Apr 2020 13:06:42 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id 0iaOQviYJv_e; Fri, 24 Apr 2020 13:06:41 +0200 (CEST)
-X-Auth-Info: WvWMMq5G9rT0EAZF7CsY2otKmcZZkujTKXBCzYD9TsA=
-Received: from [IPv6:::1] (unknown [195.140.253.167])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Fri, 24 Apr 2020 13:06:41 +0200 (CEST)
-Subject: Re: [PATCH v2 02/12] mfd: stm32-fmc2: add STM32 FMC2 controller
- driver
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Christophe Kerello <christophe.kerello@st.com>,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, tony@atomide.com,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
- <1586966256-29548-3-git-send-email-christophe.kerello@st.com>
- <20200424074517.GN3612@dell> <8b625f1c-9ded-c07a-a20e-8cd44c1ca46d@denx.de>
- <20200424105053.GC8414@dell>
-From:   Marek Vasut <marex@denx.de>
-Message-ID: <e5e6c279-28d0-f423-aa6d-5c7aca563352@denx.de>
-Date:   Fri, 24 Apr 2020 13:06:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 24 Apr 2020 07:08:50 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67597C09B045;
+        Fri, 24 Apr 2020 04:08:49 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id w65so4623915pfc.12;
+        Fri, 24 Apr 2020 04:08:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/GXB1+oqaJEZ3sRrWa2n2m9CuNj5/9wJlyHUPzBW4Zg=;
+        b=YtHDDkn88uz9vIopfu+CDX7vy37BDJ2uCN7QXKeQamXNYDl7ng8hLdufiPlS5+ecOz
+         QlAs/EEWf6LcYkALE6TZEPmdKRULqckgYB9J8jG/81b9tidUDbEd6N6QfALWUgwZbStL
+         PaGKlnOXjPkNF8hKBmA8DVLhipXFxqvO7gwRsgKP+S9rYqy3ru+qLx39J/5k/7WvEt2q
+         2+TIKYqPrIWU1tXuX0w86hcRNMPUtWah8iWq7PwYjXcTuDdOc+gd/b13xO2D7N6nc3tz
+         yuJVabgbDbgWFskfYc1U+b+oJ21sddlBRtuP7ePkL4qETxdgnZ5GCKcSlzbI1elnusi1
+         tY8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/GXB1+oqaJEZ3sRrWa2n2m9CuNj5/9wJlyHUPzBW4Zg=;
+        b=PpMboUlVPvzcv87khQYdRRxComvEmnjQ3vuCQBObnTINF83BEz4PgQtqDKYf+gufDz
+         y+xiHgguan0+1x6moeqypWeuYeUGrNI8FAVTfQw0XsJg30c0JDdmAATtbBxcCZPSJz9B
+         v0U+IZFT6foGXmRJ5HtcBLj/ATewEHXbJfPSTxSXhBVzoDsDGbFUitbFi155ZCLCL2n1
+         sNiZ/BkxwA3XQG7F3HgfAUWmmFn4HO9HpM5h9I8GkkSZYjYN+l2Xe2gURl1BbvXMAnXo
+         nB+/QofNUJsTLgAP5xDwt5YAF6s36Pkx8VRaGNl+SUKXGQhYojL79QEEPBx2WZd+tP9w
+         i+Gg==
+X-Gm-Message-State: AGi0Puau+iNkMTMgL4inI15/zRrpwata/GxJ07Mu4Tl/QvNNYT/xTso9
+        RfnHe0LyQlIPYPp3o9qvDOvXrTtSA4QXuP4l8LJXZaYEufU=
+X-Google-Smtp-Source: APiQypJ1oNin59u5IIssxyRMfGWiCbfuziAE8WvPxPUbG9ZlHjcwm3+mT9Tl288iQJjoj0ltRHgngajz0StmCEJ8yEQ=
+X-Received: by 2002:a62:f908:: with SMTP id o8mr8862431pfh.170.1587726528958;
+ Fri, 24 Apr 2020 04:08:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200424105053.GC8414@dell>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200423224222.29730-1-jithu.joseph@intel.com>
+In-Reply-To: <20200423224222.29730-1-jithu.joseph@intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 24 Apr 2020 14:08:41 +0300
+Message-ID: <CAHp75VcqV3e8ecAUX+dr9h-bE+1XJ_71hJRA1b9XdouJJLD2ZA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/1] platform/x86: Add Slim Bootloader firmware update support
+To:     Jithu Joseph <jithu.joseph@intel.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        maurice.ma@intel.com, ravi.p.rangarajan@intel.com,
+        Sean V Kelley <sean.v.kelley@intel.com>,
+        kuo-lang.tseng@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/24/20 12:50 PM, Lee Jones wrote:
-> On Fri, 24 Apr 2020, Marek Vasut wrote:
-> 
->> On 4/24/20 9:45 AM, Lee Jones wrote:
->>> On Wed, 15 Apr 2020, Christophe Kerello wrote:
->>>
->>>> The driver adds the support for the STMicroelectronics FMC2 controller
->>>> found on STM32MP SOCs.
->>>>
->>>> The FMC2 functional block makes the interface with: synchronous and
->>>> asynchronous static memories (such as PSNOR, PSRAM or other
->>>> memory-mapped peripherals) and NAND flash memories.
->>>>
->>>> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
->>>> ---
->>>> Changes in v2:
->>>>  - remove ops from stm32_fmc2 structure
->>>>  - add 2 APIs to manage FMC2 enable/disable
->>>>  - add 2 APIs to manage FMC2 NWAIT shared signal
->>>>
->>>>  drivers/mfd/Kconfig            |  12 +++
->>>>  drivers/mfd/Makefile           |   1 +
->>>>  drivers/mfd/stm32-fmc2.c       | 136 +++++++++++++++++++++++++
->>>>  include/linux/mfd/stm32-fmc2.h | 225 +++++++++++++++++++++++++++++++++++++++++
->>>>  4 files changed, 374 insertions(+)
->>>>  create mode 100644 drivers/mfd/stm32-fmc2.c
->>>>  create mode 100644 include/linux/mfd/stm32-fmc2.h
->>>>
->>>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->>>> index 2b20329..5260582 100644
->>>> --- a/drivers/mfd/Kconfig
->>>> +++ b/drivers/mfd/Kconfig
->>>> @@ -1922,6 +1922,18 @@ config MFD_ROHM_BD71828
->>>>  	  Also included is a Coulomb counter, a real-time clock (RTC), and
->>>>  	  a 32.768 kHz clock gate.
->>>>  
->>>> +config MFD_STM32_FMC2
->>>> +	tristate "Support for FMC2 controllers on STM32MP SoCs"
->>>> +	depends on MACH_STM32MP157 || COMPILE_TEST
->>>> +	select MFD_CORE
->>>> +	select REGMAP
->>>> +	select REGMAP_MMIO
->>>> +	help
->>>> +	  Select this option to enable STM32 FMC2 driver used for FMC2 External
->>>> +	  Bus Interface controller and FMC2 NAND flash controller. This driver
->>>> +	  provides core support for the STM32 FMC2 controllers, in order to use
->>>> +	  the actual functionality of the device other drivers must be enabled.
->>>
->>> Not sure how many times I have to say this before people stop
->>> attempting to pass these kinds of relationships off as MFDs:
->>>
->>> A memory device and its bus is not an MFD.  In a similar vain to the
->>> thousands of USB, I2C, SPI, PCI and the like devices that aren't MFDs
->>> either.
->>>
->>> Please find another way to associate your device with its bus.
->>
->> This FMC2 is however an IP which can either operate external devices
->> (like ethernet chip on this parallel bus) or external flashes (like NOR
->> and NAND chips).
-> 
-> I'm sure that it *can*.  Although that's not its main purpose.
+On Fri, Apr 24, 2020 at 1:49 AM Jithu Joseph <jithu.joseph@intel.com> wrote:
+>
+> v1 Upstream submission is available here:
+> https://lore.kernel.org/lkml/20200420194405.8281-1-jithu.joseph@intel.com
+>
 
-I use it to operate KSZ8851-16MLL ethernet chip, which has async bus
-interface. Linux just didn't have support for that mode of operation
-thus far and the FMC was used to operate NANDs and NORs only. This
-series, or rather, the first three patches in this series, add support
-for operating other bus devices, like this ethernet controller.
+Pushed to my review and testing queue, thanks!
 
-> The
-> clue is in the nomenclature ("Flexible *Memory* Controller").  Nor is
-> it how the device is being used in this submission:
-> 
->   "The FMC2 functional block makes the interface with: synchronous and
->    asynchronous static memories (such as PSNOR, PSRAM or other
->    memory-mapped peripherals) and NAND flash memories."
-> 
-> As I mentioned, this is just another memory device and its bus.
+> v2 primarily addresses review comments from Andy Shevchenko to v1.
+>
+> Changes in v2
+>  - Rebased on top of tag: v5.7-rc2
+>  - Added ABI documentation file
+>  - Changed the ordering of SBL entry in Makefile and Kconfig
+>  - Replaced kstrtobool() with kstrtouint() for user input processing
+>  - Added DocLink: tag to annottate weblink in commit message
+>  - Minor edits to commit message in p1/1
+>  - Style related changes
+>
+> From v1 submission:
+>
+> Slim Bootloader(SBL) [see link below] is a small open-source boot
+> firmware, designed for running on certain Intel platforms. SBL can be
+> thought-of as fulfilling the role of a minimal BIOS
+> implementation, i.e initializing the hardware and booting
+> Operating System.
+>
+> This driver creates sysfs interfaces which allows user space entities
+> to trigger update of SBL firmware.
+>
+> Acknowledgment: Initial draft of the driver code was authored by
+> Maurice Ma <maurice.ma@intel.com>
+>
+> DocLink: https://slimbootloader.github.io
+>
+> Jithu Joseph (1):
+>   platform/x86: Add Slim Bootloader firmware update signaling driver
+>
+>  .../ABI/testing/sysfs-platform-sbl-fwu-wmi    |  12 ++
+>  MAINTAINERS                                   |   7 +
+>  drivers/platform/x86/Kconfig                  |  10 ++
+>  drivers/platform/x86/Makefile                 |   1 +
+>  drivers/platform/x86/sbl_fwu_wmi.c            | 144 ++++++++++++++++++
+>  5 files changed, 174 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-platform-sbl-fwu-wmi
+>  create mode 100644 drivers/platform/x86/sbl_fwu_wmi.c
+>
+>
+> base-commit: ae83d0b416db002fe95601e7f97f64b59514d936
+> --
+> 2.17.1
+>
 
-I don't think it's _just_ a memory controller, it's more universal than
-that, see above. Note that SRAM interface basically boils down to
-anything which has external parallel bus, e.g. Davicom DM9000, that
-KSZ8851-16MLL etc.
-
->> Can you provide a suggestion how this should be handled, if not as MFD?
->> It seems to me, that this is a Multi-Function Device .
-> 
-> Simply move it into the MTD or Memory subsystems and set up the
-> dependencies via Kconfig.
-> 
->> If this discussion is a recurring topic, is there some documentation
->> which explains how such devices should be handled ?
-> 
-> Not that I'm aware of.
-
-I see.
 
 -- 
-Best regards,
-Marek Vasut
+With Best Regards,
+Andy Shevchenko
