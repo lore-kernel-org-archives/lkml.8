@@ -2,101 +2,157 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F07FC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15207C2BA19
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D95020728
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:41:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mkp2gRYN"
+	by mail.kernel.org (Postfix) with ESMTP id EDAD120728
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:43:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbgDXCld (ORCPT
+        id S1726337AbgDXCnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 22:41:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45174 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbgDXClb (ORCPT
+        Thu, 23 Apr 2020 22:43:01 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:52316 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbgDXCnA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 22:41:31 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D88BC09B045
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 19:41:31 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id v63so4065752pfb.10
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 19:41:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=IamAn4a0tQXNMZ5u6FtEHO8gII/iIo7Dkt5XESJ77dQ=;
-        b=mkp2gRYNtVroJL0E5FpN6TQ1ABuX3Q+1ke0nW3i6W26Jc9tboDBV1/i77MwsBJ3FYx
-         ejQXMEoqNJs5kQ/L3baIEXrXYDy71UBWrs3vxusMVBHr8B5OnDSG27PmRphMS0E7OsMq
-         xhhsoUhzxkI6F0+B8I8WhwwsuwLs3fMCRvh1w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=IamAn4a0tQXNMZ5u6FtEHO8gII/iIo7Dkt5XESJ77dQ=;
-        b=rMj8MZfTgzPnDqmD06Uni37G6s2gDpoful9XibKlG+MRNK9GeKEvMeVqIW5zsPx/XK
-         g5xnvc5F5w9KJ+X8G++n9R1BdXzcHYhfH5vQ3QGfxSuqV5CN3/V1ZGpiCbRHIJ8DON1M
-         VrXIJgSIvp2c+daanZSnjBKTunvOi5HkSCcLHSopgRQYyopr2ZM8Rc0wNe1dsMJp5FVk
-         CgG+Cn7Px1lqWHyPiunfv764wmmTRyjQHGQltfYOH1vIDdl1oh0WMmF7m9vNhOoFBnh1
-         vcMfF2xgCBMGgWHgBxUT4wixrAtaH2OWyAmuijU5NFhiGL7iFaMI55xzJpoXWx9Z+qm0
-         NK7Q==
-X-Gm-Message-State: AGi0Puanmyu9XpfuivnYYgXgqBirFQNw5NpcqYGC9WCITn5hJnNGajjr
-        bxw1KsKb0nfith2TohVo39dwPg==
-X-Google-Smtp-Source: APiQypLfcGqGen5mp5XKqJ1vdbdXM4bxAywugE5RO8B7Z7gEjxWlAJTv+Do9/rhgBJdrxbbr6Y8rww==
-X-Received: by 2002:a63:6342:: with SMTP id x63mr3762256pgb.185.1587696090768;
-        Thu, 23 Apr 2020 19:41:30 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id b24sm3361024pfi.4.2020.04.23.19.41.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2020 19:41:30 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <158769590404.135303.4049749400685142607@swboyd.mtv.corp.google.com>
-References: <20200422145408.v4.1.Ic7096b3b9b7828cdd41cd5469a6dee5eb6abf549@changeid> <20200422145408.v4.2.I1927d1bca2569a27b2d04986baf285027f0818a2@changeid> <158769590404.135303.4049749400685142607@swboyd.mtv.corp.google.com>
-Subject: Re: [PATCH v4 2/5] soc: qcom: rpmh-rsc: We aren't notified of our own failure w/ NOTIFY_BAD
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     mka@chromium.org, mkshah@codeaurora.org, evgreen@chromium.org,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rafael.j.wysocki@intel.com
-Date:   Thu, 23 Apr 2020 19:41:29 -0700
-Message-ID: <158769608929.135303.4217396252503884167@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+        Thu, 23 Apr 2020 22:43:00 -0400
+Received: from fsav108.sakura.ne.jp (fsav108.sakura.ne.jp [27.133.134.235])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 03O2gwPj002141;
+        Fri, 24 Apr 2020 11:42:58 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav108.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav108.sakura.ne.jp);
+ Fri, 24 Apr 2020 11:42:58 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav108.sakura.ne.jp)
+Received: from ccsecurity.localdomain (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 03O2gr0T001874
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Fri, 24 Apr 2020 11:42:58 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+To:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Dmitry Safonov <dima@arista.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: [PATCH] printk: Add loglevel for "do not print to consoles".
+Date:   Fri, 24 Apr 2020 11:42:39 +0900
+Message-Id: <20200424024239.63607-1-penguin-kernel@I-love.SAKURA.ne.jp>
+X-Mailer: git-send-email 2.18.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Stephen Boyd (2020-04-23 19:38:24)
-> Quoting Douglas Anderson (2020-04-22 14:55:00)
-> > When a PM Notifier returns NOTIFY_BAD it doesn't get called with
-> > CPU_PM_ENTER_FAILED.  It only get called for CPU_PM_ENTER_FAILED if
-> > someone else (further down the notifier chain) returns NOTIFY_BAD.
-> >=20
-> > Handle this case by taking our CPU out of the list of ones that have
-> > entered PM.  Without this it's possible we could detect that the last
-> > CPU went down (and we would flush) even if some CPU was alive.  That's
-> > not good since our flushing routines currently assume they're running
-> > on the last CPU for mutual exclusion.
-> >=20
-> > Fixes: 985427f997b6 ("soc: qcom: rpmh: Invoke rpmh_flush() for dirty ca=
-ches")
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > ---
->=20
-> Reported-by: Stephen Boyd <swboyd@chromium.org>
+Since dump_tasks() is capable of generating thousands of printk() lines,
+it can significantly delay solving OOM situation by killing a process
+via the OOM killer. There is /proc/sys/vm/oom_dump_tasks which allows
+suppressing dump_tasks(), but those who diagnose the reason of OOM need
+dump_tasks() in order to understand memory usage as of invocation of the
+OOM killer. Therefore, setting /proc/sys/vm/oom_dump_tasks to 0 cannot be
+an option. Also, since userspace syslog daemon is likely configured not
+to save low (e.g. KERN_DEBUG) loglevels, reducing loglevel used by
+dump_tasks() cannot be an option. We want to maintain current loglevels
+in order to allow saving kernel messages to log files while we also want
+to avoid delays caused by printing to consoles due to maintaining current
+loglevels.
 
-Scratch that one! Copy/paste for the lose.
+While an attempt to make printk() asynchronous (i.e. defer printing to
+consoles) and an attempt to make printk() to print to only selected
+consoles (i.e. don't print unimportant messages to slow consoles) are
+in progress, there are printk() callers where saving to log files is
+useful for later analysis but printing to consoles for immediate
+notification makes little sense. Two examples of such printk() callers
+will be the OOM killer and memory allocation failure messages. Therefore,
+this patch introduces a loglevel KERN_NO_CONSOLES which prevents all
+consoles from printing such messages.
+
+Since both KERN_NO_CONSOLES messages and !KERN_NO_CONSOLES messages are
+stored into common printk buffer, KERN_NO_CONSOLES messages will be
+retrievable from the vmcore file even if something bad (e.g. NULL pointer
+dereference) followed. Therefore, as long as a system is configured for
+later analysis, ability to suppress printing to consoles will be useful.
+Since Dmitry Safonov is working on adding loglevel argument to
+show_stack(), we will in near future be able to control whether
+dump_stack() output is important enough to immediately print to consoles,
+by adding loglevel argument to dump_stack().
+
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: Dmitry Safonov <dima@arista.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Yafang Shao <laoar.shao@gmail.com>
+---
+ include/linux/kern_levels.h | 3 +++
+ include/linux/printk.h      | 1 +
+ kernel/printk/printk.c      | 7 ++++++-
+ 3 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/kern_levels.h b/include/linux/kern_levels.h
+index bf2389c26ae3..cd69a9cb3c2a 100644
+--- a/include/linux/kern_levels.h
++++ b/include/linux/kern_levels.h
+@@ -23,6 +23,9 @@
+  */
+ #define KERN_CONT	KERN_SOH "c"
+ 
++/* Annotation for "don't print to consoles". */
++#define KERN_NO_CONSOLES KERN_SOH "S"
++
+ /* integer equivalents of KERN_<LEVEL> */
+ #define LOGLEVEL_SCHED		-2	/* Deferred messages from sched code
+ 					 * are set to this special level */
+diff --git a/include/linux/printk.h b/include/linux/printk.h
+index e061635e0409..da338b81c2e1 100644
+--- a/include/linux/printk.h
++++ b/include/linux/printk.h
+@@ -19,6 +19,7 @@ static inline int printk_get_level(const char *buffer)
+ 		switch (buffer[1]) {
+ 		case '0' ... '7':
+ 		case 'c':	/* KERN_CONT */
++		case 'S':       /* KERN_NO_CONSOLES */
+ 			return buffer[1];
+ 		}
+ 	}
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 9a9b6156270b..ed51641af087 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -361,6 +361,7 @@ static int console_msg_format = MSG_FORMAT_DEFAULT;
+  */
+ 
+ enum log_flags {
++	LOG_NO_CONSOLES = 1,    /* don't print to consoles */
+ 	LOG_NEWLINE	= 2,	/* text ended with a newline */
+ 	LOG_CONT	= 8,	/* text is a fragment of a continuation line */
+ };
+@@ -1959,6 +1960,9 @@ int vprintk_store(int facility, int level,
+ 				break;
+ 			case 'c':	/* KERN_CONT */
+ 				lflags |= LOG_CONT;
++				break;
++			case 'S':       /* KERN_NO_CONSOLES */
++				lflags |= LOG_NO_CONSOLES;
+ 			}
+ 
+ 			text_len -= 2;
+@@ -2453,7 +2457,8 @@ void console_unlock(void)
+ 			break;
+ 
+ 		msg = log_from_idx(console_idx);
+-		if (suppress_message_printing(msg->level)) {
++		if ((msg->flags & LOG_NO_CONSOLES) ||
++		    suppress_message_printing(msg->level)) {
+ 			/*
+ 			 * Skip record we have buffered and already printed
+ 			 * directly to the console when we received it, and
+-- 
+2.18.2
+
