@@ -2,99 +2,104 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD20C55194
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B98C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD9D02075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:07:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8468A2075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:08:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eF/Wjjdr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AfxldEHy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbgDXPHs (ORCPT
+        id S1727114AbgDXPIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:07:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48444 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727804AbgDXPHq (ORCPT
+        Fri, 24 Apr 2020 11:08:54 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33381 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726717AbgDXPIy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:07:46 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04279C09B045;
-        Fri, 24 Apr 2020 08:07:46 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id f18so10258629lja.13;
-        Fri, 24 Apr 2020 08:07:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eKcdA+dDv3apEGoIEYmiVrw3cgxqfzkbkMuXMV5Wzxw=;
-        b=eF/WjjdrpYG8GbJD2epM2jYqVElc8vnk/blaeJGJJUogjkBxOL2LpiQA2uVx6sCmL/
-         tyfaa+go+TW1tf8uCnKgbddliwbIp9qStq2D4BXW9ofydEk/Ej5xyCsGaiNwA4V0Xt4C
-         n+gl76v1gV4v4eXB4khekXndT1gpL0ixcoNz8ZOSvjlJ9mpkcy/dsO5XTmyUseS9BKy5
-         yTTcnR6hqUFkkR+4RBWZV3U+v35cN7wiRCZHFFoUXFjdj+iW9e5j+P7VuNQJArDEfyCC
-         RWRDb375SFQHnO6TWGKnJWBwybRlZxTGR9Gf+ex8uKB/Pi2vXtTeoNkb4a/20D57xB32
-         t08A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eKcdA+dDv3apEGoIEYmiVrw3cgxqfzkbkMuXMV5Wzxw=;
-        b=QghSTogBYbzuo2aQSuKdBiykGn04OEVWT6HYMsCQsEihCRrBd2g09c+ZA11oJs5pxu
-         C6UN2iNzPlkueFo8WZJqBkYxGaK6etuA3+lYcOygbJzizL8bborcp1htFSpTxiMz4J89
-         JmIN/C8STP16aZa53JiUemqNrkhe9LioAJDuJDr8NRquG8zgFYTpU2aiFKzSMTl1Ldn4
-         rnhkZSrFsVPGaEZpDYhWlz4t0kw9/k3IVa7cPzL4CJC4LIPMkrMFYpxTEYVXb6ZQlM2g
-         Eob9ey1aicG4P2u8b0X9CLAGSZzsAw0ObrLT7y0kP9fKtrSP2/2Vu9usB5HLQw6dKmcf
-         ECww==
-X-Gm-Message-State: AGi0PuYeIHRDrivbSfHFB8WuoJQplcdHVNJjzo1LZ69njRlnb2CE6MxY
-        hIyjVl0bC49aCRqX+1holY07f9KR
-X-Google-Smtp-Source: APiQypL5MY2vyLQU+YPqfQ5Dipx5sJ7h9GhaJyKYPeNiMvXVDpt5JK0SL1ZAFqjn9cgFhihxSs6Fdw==
-X-Received: by 2002:a2e:8912:: with SMTP id d18mr6334430lji.123.1587740863623;
-        Fri, 24 Apr 2020 08:07:43 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id e8sm4395850lja.3.2020.04.24.08.07.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Apr 2020 08:07:42 -0700 (PDT)
-Subject: Re: [RFC PATCH v10 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1587700513-28449-1-git-send-email-skomatineni@nvidia.com>
- <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <3155e0d2-94b0-6e0a-bf35-b3560c201039@gmail.com>
-Date:   Fri, 24 Apr 2020 18:07:41 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 24 Apr 2020 11:08:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587740933;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9R6yjveOElwyTut93FZB4NDQJHLkZZ8HkoqOG3/TEPw=;
+        b=AfxldEHyqAO66NENX9TzZ/wnF3442YOYGLZz7bUKzK0vZ5VbdbcasYGTLNpiZ0jVsM9BX1
+        B99hK5zKBjq4tEetgyV90cCt1RBto2dERj/BqW0m4fZhWThNnV2DrPEj24lgrgO0RzXbCr
+        0S+FMFN0qEp426NFer90q40MotEVvrs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-495-iTW-gitIMiyiT6Du8TpJbg-1; Fri, 24 Apr 2020 11:08:51 -0400
+X-MC-Unique: iTW-gitIMiyiT6Du8TpJbg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CBD7E1005510;
+        Fri, 24 Apr 2020 15:08:36 +0000 (UTC)
+Received: from steredhat.redhat.com (ovpn-114-43.ams2.redhat.com [10.36.114.43])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 71AC55D70C;
+        Fri, 24 Apr 2020 15:08:34 +0000 (UTC)
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     davem@davemloft.net
+Cc:     Jason Wang <jasowang@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Stefano Garzarella <sgarzare@redhat.com>, kvm@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: [PATCH net v2 1/2] vhost/vsock: fix packet delivery order to monitoring devices
+Date:   Fri, 24 Apr 2020 17:08:29 +0200
+Message-Id: <20200424150830.183113-2-sgarzare@redhat.com>
+In-Reply-To: <20200424150830.183113-1-sgarzare@redhat.com>
+References: <20200424150830.183113-1-sgarzare@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-24.04.2020 06:55, Sowjanya Komatineni пишет:
+We want to deliver packets to monitoring devices before it is
+put in the virtqueue, to avoid that replies can appear in the
+packet capture before the transmitted packet.
 
-Is this driver compiled as a single kernel module file?
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+---
+ drivers/vhost/vsock.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-> +MODULE_AUTHOR("Sowjanya Komatineni <skomatineni@nvidia.com>");
-> +MODULE_DESCRIPTION("NVIDIA Tegra CSI Device Driver");
-> +MODULE_LICENSE("GPL v2");
-...
-> +MODULE_AUTHOR("Sowjanya Komatineni <skomatineni@nvidia.com>");
-> +MODULE_DESCRIPTION("NVIDIA Tegra Video Input Device Driver");
-> +MODULE_LICENSE("GPL v2");
+diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
+index 97669484a3f6..18aff350a405 100644
+--- a/drivers/vhost/vsock.c
++++ b/drivers/vhost/vsock.c
+@@ -181,14 +181,14 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vso=
+ck,
+ 			break;
+ 		}
+=20
+-		vhost_add_used(vq, head, sizeof(pkt->hdr) + payload_len);
+-		added =3D true;
+-
+-		/* Deliver to monitoring devices all correctly transmitted
+-		 * packets.
++		/* Deliver to monitoring devices all packets that we
++		 * will transmit.
+ 		 */
+ 		virtio_transport_deliver_tap_pkt(pkt);
+=20
++		vhost_add_used(vq, head, sizeof(pkt->hdr) + payload_len);
++		added =3D true;
++
+ 		pkt->off +=3D payload_len;
+ 		total_len +=3D payload_len;
+=20
+--=20
+2.25.3
 
-I don't think that these macros are needed in that case.
-The video.c should be enough, isn't it?
