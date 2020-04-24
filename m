@@ -2,1000 +2,537 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB9DC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED993C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31A9B2063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAB212084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:50:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbgDXPtl (ORCPT
+        id S1728612AbgDXPuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:49:41 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:56246 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726698AbgDXPtj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:49:39 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jS0a8-0001hO-HO; Fri, 24 Apr 2020 16:49:36 +0100
-Received: from ben by deadeye with local (Exim 4.93)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jS0a7-00FNGM-Sz; Fri, 24 Apr 2020 16:49:35 +0100
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        Fri, 24 Apr 2020 11:50:16 -0400
+Received: from mga09.intel.com ([134.134.136.24]:64835 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727946AbgDXPuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 11:50:16 -0400
+IronPort-SDR: bI9t1TpZXQ0QuP2R3/jqUENbcpq+7+hzxKHhXrVp+6pDtBa7lc5gGJMlFybBsi2z1oS8CeL6CO
+ /QMALoJUF8+A==
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2020 08:50:13 -0700
+IronPort-SDR: WdT/PPbdxMh87tgFAbLQHHDCa2EzMsIuM/TX6iOxchhzju4pHaJHV5m66t/LzfmcQdTKBP/ZOz
+ 7tYvgF+3XnaA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,311,1583222400"; 
+   d="gz'50?scan'50,208,50";a="366385515"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 24 Apr 2020 08:50:09 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jS0ae-0001eE-0u; Fri, 24 Apr 2020 23:50:08 +0800
+Date:   Fri, 24 Apr 2020 23:49:49 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Joe Perches <joe@perches.com>
+Cc:     kbuild-all@lists.01.org,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 7/7] kernel.h: Split out might_sleep() and friends
+Message-ID: <202004242331.uqJBTXgo%lkp@intel.com>
+References: <20200422125201.37618-7-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     torvalds@linux-foundation.org, Guenter Roeck <linux@roeck-us.net>,
-        akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>
-Date:   Fri, 24 Apr 2020 16:47:25 +0100
-Message-ID: <lsq.1587743245.5555628@decadent.org.uk>
-X-Mailer: LinuxStableQueue (scripts by bwh)
-X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 000/247] 3.16.83-rc2 review
-In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: multipart/mixed; boundary="T4sUOijqQbZv57TR"
+Content-Disposition: inline
+In-Reply-To: <20200422125201.37618-7-andriy.shevchenko@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 3.16.83 release.
-There are 247 patches in this series, which will be posted as responses
-to this one.  If anyone has any issues with these being applied, please
-let me know.
 
-Responses should be made by Tue Apr 28 18:00:00 UTC 2020.
-Anything received after that time might be too late.
-
-All the patches have also been committed to the linux-3.16.y-rc branch of
-https://git.kernel.org/pub/scm/linux/kernel/git/bwh/linux-stable-rc.git .
-A shortlog and diffstat can be found below.
-
-Ben.
-
--------------
-
-Al Viro (2):
-      do_last(): fetch directory ->i_mode and ->i_uid before it's too late
-         [d0cb50185ae942b03c4327be322055d622dc79f6]
-      vfs: fix do_last() regression
-         [6404674acd596de41fd3ad5f267b4525494a891a]
-
-Alan Cox (1):
-      usb: dwc3: pci: Add PCI ID for Intel Braswell
-         [7d643664ea559b36188cae264047ce3c9bfec3a2]
-
-Alan Stern (1):
-      HID: Fix slab-out-of-bounds read in hid_field_extract
-         [8ec321e96e056de84022c032ffea253431a83c3c]
-
-Alberto Aguirre (2):
-      ALSA: usb-audio: add implicit fb quirk for Axe-Fx II
-         [17f08b0d9aafccdb10038ab6dbd9ddb6433c13e2]
-      ALSA: usb-audio: simplify set_sync_ep_implicit_fb_quirk
-         [103e9625647ad74d201e26fb74afcd8479142a37]
-
-Alex Sverdlin (1):
-      ARM: 8950/1: ftrace/recordmcount: filter relocation types
-         [927d780ee371d7e121cea4fc7812f6ef2cea461c]
-
-Amir Goldstein (1):
-      locks: print unsigned ino in /proc/locks
-         [98ca480a8f22fdbd768e3dad07024c8d4856576c]
-
-Ard Biesheuvel (1):
-      x86/efistub: Disable paging at mixed mode entry
-         [4911ee401b7ceff8f38e0ac597cbf503d71e690c]
-
-Arnd Bergmann (2):
-      btrfs: tree-checker: use %zu format string for size_t
-         [7cfad65297bfe0aa2996cd72d21c898aa84436d9]
-      scsi: fnic: fix invalid stack access
-         [42ec15ceaea74b5f7a621fc6686cbf69ca66c4cf]
-
-Avinash Patil (1):
-      mwifiex: fix probable memory corruption while processing TDLS frame
-         [3c99832d74777c9ec5545a92450fac5d37b0d0e1]
-
-Brian Norris (1):
-      mwifiex: fix unbalanced locking in mwifiex_process_country_ie()
-         [65b1aae0d9d5962faccc06bdb8e91a2a0b09451c]
-
-Cengiz Can (1):
-      blktrace: fix dereference after null check
-         [153031a301bb07194e9c37466cfce8eacb977621]
-
-Chao Yu (1):
-      quota: fix wrong condition in is_quota_modification()
-         [6565c182094f69e4ffdece337d395eb7ec760efc]
-
-Chen-Yu Tsai (1):
-      net: stmmac: dwmac-sunxi: Allow all RGMII modes
-         [52cc73e5404c7ba0cbfc50cb4c265108c84b3d5a]
-
-Christian Brauner (1):
-      taskstats: fix data-race
-         [0b8d616fb5a8ffa307b1d3af37f55c15dae14f28]
-
-Christophe Leroy (1):
-      powerpc/irq: fix stack overflow verification
-         [099bc4812f09155da77eeb960a983470249c9ce1]
-
-Cong Wang (2):
-      net_sched: fix datalen for ematch
-         [61678d28d4a45ef376f5d02a839cc37509ae9281]
-      netfilter: fix a use-after-free in mtype_destroy()
-         [c120959387efa51479056fd01dc90adfba7a590c]
-
-Dan Carpenter (1):
-      scsi: iscsi: qla4xxx: fix double free in probe
-         [fee92f25777789d73e1936b91472e9c4644457c8]
-
-David Hildenbrand (1):
-      virtio-balloon: fix managed page counts when migrating pages between zones
-         [63341ab03706e11a31e3dd8ccc0fbc9beaf723f0]
-
-David Sterba (6):
-      btrfs: add more checks to btrfs_read_sys_array
-         [e3540eab29e1b2260bc4b9b3979a49a00e3e3af8]
-      btrfs: cleanup, rename a few variables in btrfs_read_sys_array
-         [1ffb22cf8c322bbfea6b35fe23d025841b49fede]
-      btrfs: handle invalid num_stripes in sys_array
-         [f5cdedd73fa71b74dcc42f2a11a5735d89ce7c4f]
-      btrfs: kill extent_buffer_page helper
-         [fb85fc9a675738ee2746b51c3aedde944b18ca02]
-      btrfs: new define for the inline extent data start
-         [7ec20afbcb7b257aec82ea5d66e6b0b7499abaca]
-      btrfs: tree-check: reduce stack consumption in check_dir_item
-         [e2683fc9d219430f5b78889b50cde7f40efeba7b]
-
-Davidlohr Bueso (1):
-      blktrace: re-write setting q->blk_trace
-         [cdea01b2bf98affb7e9c44530108a4a28535eee8]
-
-Dedy Lansky (1):
-      cfg80211/mac80211: make ieee80211_send_layer2_update a public function
-         [30ca1aa536211f5ac3de0173513a7a99a98a97f3]
-
-Dmitry Torokhov (5):
-      HID: hid-input: clear unmapped usages
-         [4f3882177240a1f55e45a3d241d3121341bead78]
-      Input: add safety guards to input_set_keycode()
-         [cb222aed03d798fc074be55e59d9a112338ee784]
-      ptp: create "pins" together with the rest of attributes
-         [85a66e55019583da1e0f18706b7a8281c9f6de5b]
-      ptp: do not explicitly set drvdata in ptp_clock_register()
-         [882f312dc0751c973db26478f07f082c584d16aa]
-      ptp: use is_visible method to hide unused attributes
-         [af59e717d5ff9c8dbf9bcc581c0dfb3b2a9c9030]
-
-Emiliano Ingrassia (1):
-      usb: core: urb: fix URB structure initialization function
-         [1cd17f7f0def31e3695501c4f86cd3faf8489840]
-
-Eric Dumazet (9):
-      6pack,mkiss: fix possible deadlock
-         [5c9934b6767b16ba60be22ec3cbd4379ad64170d]
-      bonding: fix bond_neigh_init()
-         [9e99bfefdbce2e23ef37487a3bcb4adf90a791d1]
-      macvlan: do not assume mac_header is set in macvlan_broadcast()
-         [96cc4b69581db68efc9749ef32e9cf8e0160c509]
-      macvlan: use skb_reset_mac_header() in macvlan_queue_xmit()
-         [1712b2fff8c682d145c7889d2290696647d82dab]
-      neighbour: remove neigh_cleanup() method
-         [f394722fb0d0f701119368959d7cd0ecbc46363a]
-      netfilter: bridge: make sure to pull arp header in br_nf_forward_arp()
-         [5604285839aaedfb23ebe297799c6e558939334d]
-      pkt_sched: fq: do not accept silly TCA_FQ_QUANTUM
-         [d9e15a2733067c9328fb56d98fe8e574fa19ec31]
-      tcp: do not send empty skb from tcp_write_xmit()
-         [1f85e6267caca44b30c54711652b0726fadbb131]
-      vlan: vlan_changelink() should propagate errors
-         [eb8ef2a3c50092bb018077c047b8dba1ce0e78e3]
-
-Erkka Talvitie (1):
-      USB: EHCI: Do not return -EPIPE when hub is disconnected
-         [64cc3f12d1c7dd054a215bc1ff9cc2abcfe35832]
-
-Eryu Guan (1):
-      ext4: update c/mtime on truncate up
-         [911af577de4e444622d46500c1f9a37ab4335d3a]
-
-Eugenio Pérez (1):
-      vhost: Check docket sk_family instead of call getname
-         [42d84c8490f9f0931786f1623191fcab397c3d64]
-
-Fabian Henneke (1):
-      hidraw: Return EPOLLOUT from hidraw_poll
-         [378b80370aa1fe50f9c48a3ac8af3e416e73b89f]
-
-Felipe Balbi (3):
-      usb: dwc3: pci: Add Support for Intel Elkhart Lake Devices
-         [dbb0569de852fb4576d6f62078d515f989a181ca]
-      usb: dwc3: pci: add support for Comet Lake PCH ID
-         [7ae622c978db6b2e28b4fced6ecd2a174492059d]
-      usb: dwc3: pci: add support for TigerLake Devices
-         [b3649dee5fbb0f6585010e6e9313dfcbb075b22b]
-
-Filipe Manana (3):
-      Btrfs: fix emptiness check for dirtied extent buffers at check_leaf()
-         [f177d73949bf758542ca15a1c1945bd2e802cc65]
-      Btrfs: fix infinite loop during nocow writeback due to race
-         [de7999afedff02c6631feab3ea726a0e8f8c3d40]
-      Btrfs: fix removal logic of the tree mod log that leads to use-after-free issues
-         [6609fee8897ac475378388238456c84298bff802]
-
-Finn Thain (4):
-      net/sonic: Add mutual exclusion for accessing shared state
-         [865ad2f2201dc18685ba2686f13217f8b3a9c52c]
-      net/sonic: Fix receive buffer handling
-         [9e311820f67e740f4fb8dcb82b4c4b5b05bdd1a5]
-      net/sonic: Quiesce SONIC before re-initializing descriptor memory
-         [3f4b7e6a2be982fd8820a2b54d46dd9c351db899]
-      net/sonic: Use MMIO accessors
-         [e3885f576196ddfc670b3d53e745de96ffcb49ab]
-
-Florian Faber (1):
-      can: mscan: mscan_rx_poll(): fix rx path lockup when returning from polling to irq mode
-         [2d77bd61a2927be8f4e00d9478fe6996c47e8d45]
-
-Florian Westphal (6):
-      netfilter: arp_tables: init netns pointer in xt_tgchk_param struct
-         [1b789577f655060d98d20ed0c6f9fbd469d6ba63]
-      netfilter: arp_tables: init netns pointer in xt_tgdtor_param struct
-         [212e7f56605ef9688d0846db60c6c6ec06544095]
-      netfilter: ctnetlink: netns exit must wait for callbacks
-         [18a110b022a5c02e7dc9f6109d0bd93e58ac6ebb]
-      netfilter: ebtables: compat: reject all padding in matches/watchers
-         [e608f631f0ba5f1fc5ee2e260a3a35d13107cbfe]
-      netfilter: ebtables: convert BUG_ONs to WARN_ONs
-         [fc6a5d0601c5ac1d02f283a46f60b87b2033e5ca]
-      netfilter: ipset: avoid null deref when IPSET_ATTR_LINENO is present
-         [22dad713b8a5ff488e07b821195270672f486eb2]
-
-Geert Uytterhoeven (1):
-      gpio: Fix error message on out-of-range GPIO in lookup table
-         [d935bd50dd14a7714cbdba9a76435dbb56edb1ae]
-
-Goldwyn Rodrigues (1):
-      dm flakey: check for null arg_name in parse_features()
-         [7690e25302dc7d0cd42b349e746fe44b44a94f2b]
-
-Gu Jinxiang (1):
-      btrfs: validate type when reading a chunk
-         [315409b0098fb2651d86553f0436b70502b29bb2]
-
-Hangbin Liu (1):
-      vxlan: fix tos value before xmit
-         [71130f29979c7c7956b040673e6b9d5643003176]
-
-Hans de Goede (2):
-      pinctrl: baytrail: Really serialize all register accesses
-         [40ecab551232972a39cdd8b6f17ede54a3fdb296]
-      platform/x86: hp-wmi: Make buffer for HPWMI_FEATURE2_QUERY 128 bytes
-         [133b2acee3871ae6bf123b8fe34be14464aa3d2c]
-
-Heikki Krogerus (8):
-      usb: dwc3: pci: add ID for one more Intel Broxton platform
-         [1ffb4d5cc78a3a99109ff0808ce6915de07a0588]
-      usb: dwc3: pci: add ID for the Intel Comet Lake -H variant
-         [3c3caae4cd6e122472efcf64759ff6392fb6bce2]
-      usb: dwc3: pci: add Intel Cannonlake PCI IDs
-         [682179592e48fa66056fbad1a86604be4992f885]
-      usb: dwc3: pci: add Intel Gemini Lake PCI ID
-         [8f8983a5683623b62b339d159573f95a1fce44f3]
-      usb: dwc3: pci: add Intel Kabylake PCI ID
-         [4491ed5042f0419b22a4b08331adb54af31e2caa]
-      usb: dwc3: pci: add support for Intel Broxton SOC
-         [b4c580a43d520b7812c0fd064fbab929ce2f1da0]
-      usb: dwc3: pci: add support for Intel IceLake
-         [00908693c481f7298adf8cf4d2ff3dfbea8c375f]
-      usb: dwc3: pci: add support for Intel Sunrise Point PCH
-         [84a2b61b6eb94036093531cdabc448dddfbae45a]
-
-Hou Tao (1):
-      dm btree: increase rebalance threshold in __rebalance2()
-         [474e559567fa631dea8fb8407ab1b6090c903755]
-
-James Bottomley (1):
-      scsi: enclosure: Fix stale device oops with hot replug
-         [529244bd1afc102ab164429d338d310d5d65e60d]
-
-Jan Kara (7):
-      blktrace: Protect q->blk_trace with RCU
-         [c780e86dd48ef6467a1146cf7d0fe1e05a635039]
-      ext4: check for directory entries too close to block end
-         [109ba779d6cca2d519c5dd624a3276d03e21948e]
-      ext4: fix races between buffered IO and collapse / insert range
-         [32ebffd3bbb4162da5ff88f9a35dd32d0a28ea70]
-      ext4: fix races between page faults and hole punching
-         [ea3d7209ca01da209cda6f0dea8be9cc4b7a933b]
-      ext4: fix races of writeback with punch hole and zero range
-         [011278485ecc3cd2a3954b5d4c73101d919bf1fa]
-      ext4: move unlocked dio protection from ext4_alloc_file_blocks()
-         [17048e8a083fec7ad841d88ef0812707fbc7e39f]
-      kobject: Export kobject_get_unless_zero()
-         [c70c176ff8c3ff0ac6ef9a831cd591ea9a66bd1a]
-
-Jari Ruusu (1):
-      Fix built-in early-load Intel microcode alignment
-         [f5ae2ea6347a308cfe91f53b53682ce635497d0d]
-
-Jeff Mahoney (2):
-      btrfs: cleanup, stop casting for extent_map->lookup everywhere
-         [95617d69326ce386c95e33db7aeb832b45ee9f8f]
-      btrfs: struct-funcs, constify readers
-         [1cbb1f454e5321e47fc1e6b233066c7ccc979d15]
-
-Jerónimo Borque (1):
-      USB: serial: simple: Add Motorola Solutions TETRA MTP3xxx and MTP85xx
-         [260e41ac4dd3e5acb90be624c03ba7f019615b75]
-
-Jian-Hong Pan (1):
-      platform/x86: asus-wmi: Fix keyboard brightness cannot be set to 0
-         [176a7fca81c5090a7240664e3002c106d296bf31]
-
-Jim Mattson (1):
-      kvm: x86: Host feature SSBD doesn't imply guest feature SPEC_CTRL_SSBD
-         [396d2e878f92ec108e4293f1c77ea3bc90b414ff]
-
-Jiri Kosina (1):
-      HID: hidraw, uhid: Always report EPOLLOUT
-         [9e635c2851df6caee651e589fbf937b637973c91]
-
-Jiri Slaby (4):
-      vt: selection, close sel_buffer race
-         [07e6124a1a46b4b5a9b3cacc0c306b50da87abf5]
-      vt: selection, handle pending signals in paste_selection
-         [687bff0cd08f790d540cfb7b2349f0d876cdddec]
-      vt: selection, push console lock down
-         [4b70dd57a15d2f4685ac6e38056bad93e81e982f]
-      vt: selection, push sel_lock up
-         [e8c75a30a23c6ba63f4ef6895cbf41fd42f21aa2]
-
-Johan Hovold (29):
-      ALSA: usb-audio: fix sync-ep altsetting sanity check
-         [5d1b71226dc4d44b4b65766fa9d74492f9d4587b]
-      Input: aiptek - fix endpoint sanity check
-         [3111491fca4f01764e0c158c5e0f7ced808eef51]
-      Input: gtco - fix endpoint sanity check
-         [a8eeb74df5a6bdb214b2b581b14782c5f5a0cf83]
-      Input: keyspan-remote - fix control-message timeouts
-         [ba9a103f40fc4a3ec7558ec9b0b97d4f92034249]
-      Input: sur40 - fix interface sanity checks
-         [6b32391ed675827f8425a414abbc6fbd54ea54fe]
-      USB: adutux: fix interface sanity check
-         [3c11c4bed02b202e278c0f5c319ae435d7fb9815]
-      USB: atm: ueagle-atm: add missing endpoint check
-         [09068c1ad53fb077bdac288869dec2435420bdc4]
-      USB: core: add endpoint-blacklist quirk
-         [73f8bda9b5dc1c69df2bc55c0cbb24461a6391a9]
-      USB: core: fix check for duplicate endpoints
-         [3e4f8e21c4f27bcf30a48486b9dcc269512b79ff]
-      USB: idmouse: fix interface sanity checks
-         [59920635b89d74b9207ea803d5e91498d39e8b69]
-      USB: quirks: blacklist duplicate ep on Sound Devices USBPre2
-         [bdd1b147b8026df0e4260b387026b251d888ed01]
-      USB: serial: ch341: handle unbound port at reset_resume
-         [4d5ef53f75c22d28f490bcc5c771fcc610a9afa4]
-      USB: serial: io_edgeport: add missing active-port sanity check
-         [1568c58d11a7c851bd09341aeefd6a1c308ac40d]
-      USB: serial: io_edgeport: fix epic endpoint lookup
-         [7c5a2df3367a2c4984f1300261345817d95b71f8]
-      USB: serial: io_edgeport: handle unbound ports on URB completion
-         [e37d1aeda737a20b1846a91a3da3f8b0f00cf690]
-      USB: serial: keyspan: handle unbound ports
-         [3018dd3fa114b13261e9599ddb5656ef97a1fa17]
-      USB: serial: opticon: fix control-message timeouts
-         [5e28055f340275a8616eee88ef19186631b4d136]
-      USB: serial: quatech2: handle unbound ports
-         [9715a43eea77e42678a1002623f2d9a78f5b81a1]
-      USB: serial: suppress driver bind attributes
-         [fdb838efa31e1ed9a13ae6ad0b64e30fdbd00570]
-      can: gs_usb: gs_usb_probe(): use descriptors of current altsetting
-         [2f361cd9474ab2c4ab9ac8db20faf81e66c6279b]
-      media: ov519: add missing endpoint sanity checks
-         [998912346c0da53a6dbb71fab3a138586b596b30]
-      media: stv06xx: add missing descriptor sanity checks
-         [485b06aadb933190f4bc44e006076bc27a23f205]
-      media: xirlink_cit: add missing descriptor sanity checks
-         [a246b4d547708f33ff4d4b9a7a5dbac741dc89d8]
-      r8152: add missing endpoint sanity check
-         [86f3f4cd53707ceeec079b83205c8d3c756eca93]
-      staging: gigaset: add endpoint-type sanity check
-         [ed9ed5a89acba51b82bdff61144d4e4a4245ec8a]
-      staging: gigaset: fix general protection fault on probe
-         [53f35a39c3860baac1e5ca80bf052751cfb24a99]
-      staging: gigaset: fix illegal free on probe errors
-         [84f60ca7b326ed8c08582417493982fe2573a9ad]
-      staging: rtl8188eu: fix interface sanity check
-         [74ca34118a0e05793935d804ccffcedd6eb56596]
-      staging: rtl8712: fix interface sanity check
-         [c724f776f048538ecfdf53a52b7a522309f5c504]
-
-Johannes Thumshirn (1):
-      btrfs: ensure that a DUP or RAID1 block group has exactly two stripes
-         [349ae63f40638a28c6fce52e8447c2d14b84cc0c]
-
-Jose Abreu (2):
-      net: stmmac: 16KB buffer must be 16 byte aligned
-         [8605131747e7e1fd8f6c9f97a00287aae2b2c640]
-      net: stmmac: Enable 16KB buffer size
-         [b2f3a481c4cd62f78391b836b64c0a6e72b503d2]
-
-Josef Bacik (9):
-      Btrfs: fix em leak in find_first_block_group
-         [187ee58c62c1d0d238d3dc4835869d33e1869906]
-      btrfs: abort transaction after failed inode updates in create_subvol
-         [c7e54b5102bf3614cadb9ca32d7be73bad6cecf0]
-      btrfs: check rw_devices, not num_devices for balance
-         [b35cf1f0bf1f2b0b193093338414b9bd63b29015]
-      btrfs: do not call synchronize_srcu() in inode_tree_del
-         [f72ff01df9cf5db25c76674cac16605992d15467]
-      btrfs: do not delete mismatched root refs
-         [423a716cd7be16fb08690760691befe3be97d3fc]
-      btrfs: do not leak reloc root if we fail to read the fs root
-         [ca1aa2818a53875cfdd175fb5e9a2984e997cce9]
-      btrfs: handle ENOENT in btrfs_uuid_tree_iterate
-         [714cd3e8cba6841220dce9063a7388a81de03825]
-      btrfs: skip log replay on orphaned roots
-         [9bc574de590510eff899c3ca8dbaf013566b5efe]
-      ext4: only call ext4_truncate when size <= isize
-         [3da40c7b089810ac9cf2bb1e59633f619f3a7312]
-
-Jouni Malinen (1):
-      mac80211: Do not send Layer 2 Update frame before authorization
-         [3e493173b7841259a08c5c8e5cbe90adb349da7e]
-
-Kaitao Cheng (1):
-      kernel/trace: Fix do not unregister tracepoints when register sched_migrate_task fail
-         [50f9ad607ea891a9308e67b81f774c71736d1098]
-
-Keiya Nobuta (1):
-      usb: core: hub: Improved device recognition on remote wakeup
-         [9c06ac4c83df6d6fbdbf7488fbad822b4002ba19]
-
-Kenneth Klette Jonassen (1):
-      pkt_sched: fq: avoid hang when quantum 0
-         [3725a269815ba6dbb415feddc47da5af7d1fac58]
-
-Lars Möllendorf (1):
-      iio: buffer: align the size of scan bytes to size of the largest element
-         [883f616530692d81cb70f8a32d85c0d2afc05f69]
-
-Leo Yan (1):
-      tty: serial: msm_serial: Fix lockup for sysrq and oops
-         [0e4f7f920a5c6bfe5e851e989f27b35a0cc7fb7e]
-
-Linus Torvalds (1):
-      floppy: check FDC index for errors before assigning it
-         [2e90ca68b0d2f5548804f22f0dd61145516171e3]
-
-Liu Bo (9):
-      Btrfs: add validadtion checks for chunk loading
-         [e06cd3dd7cea50e87663a88acdfdb7ac1c53a5ca]
-      Btrfs: check btree node's nritems
-         [053ab70f0604224c7893b43f9d9d5efa283580d6]
-      Btrfs: check inconsistence between chunk and block group
-         [6fb37b756acce6d6e045f79c3764206033f617b4]
-      Btrfs: detect corruption when non-root leaf has zero item
-         [1ba98d086fe3a14d6a31f2f66dbab70c45d00f63]
-      Btrfs: fix BUG_ON in btrfs_mark_buffer_dirty
-         [ef85b25e982b5bba1530b936e283ef129f02ab9d]
-      Btrfs: improve check_node to avoid reading corrupted nodes
-         [6b722c1747d533ac6d4df110dc8233db46918b65]
-      Btrfs: kill BUG_ON in run_delayed_tree_ref
-         [02794222c4132ac003e7281fb71f4ec1645ffc87]
-      Btrfs: memset to avoid stale content in btree leaf
-         [851cd173f06045816528176001cf82948282029c]
-      Btrfs: memset to avoid stale content in btree node block
-         [3eb548ee3a8042d95ad81be254e67a5222c24e03]
-
-Logan Gunthorpe (1):
-      chardev: add helper function to register char devs with a struct device
-         [233ed09d7fdacf592ee91e6c97ce5f4364fbe7c0]
-
-Lu Fengqi (1):
-      btrfs: Remove redundant btrfs_release_path from btrfs_unlink_subvol
-         [5b7d687ad5913a56b6a8788435d7a53990b4176d]
-
-Lukas Czerner (1):
-      ext4: wait for existing dio workers in ext4_alloc_file_blocks()
-         [0d306dcf86e8f065dff42a4a934ae9d99af35ba5]
-
-Luuk Paulussen (1):
-      hwmon: (adt7475) Make volt2reg return same reg as reg2volt input
-         [cf3ca1877574a306c0207cbf7fdf25419d9229df]
-
-Mao Wenan (2):
-      af_packet: set defaule value for tmo
-         [b43d1f9f7067c6759b1051e8ecb84e82cef569fe]
-      net: sonic: return NETDEV_TX_OK if failed to map buffer
-         [6e1cdedcf0362fed3aedfe051d46bd7ee2a85fe1]
-
-Marcel Holtmann (2):
-      HID: hidraw: Fix returning EPOLLOUT from hidraw_poll
-         [9f3b61dc1dd7b81e99e7ed23776bb64a35f39e1a]
-      HID: uhid: Fix returning EPOLLOUT from uhid_char_poll
-         [be54e7461ffdc5809b67d2aeefc1ddc9a91470c7]
-
-Mathias Nyman (2):
-      xhci: handle some XHCI_TRUST_TX_LENGTH quirks cases as default behaviour.
-         [7ff11162808cc2ec66353fc012c58bb449c892c3]
-      xhci: make sure interrupts are restored to correct state
-         [bd82873f23c9a6ad834348f8b83f3b6a5bca2c65]
-
-Mauro Carvalho Chehab (3):
-      [media] media-device: dynamically allocate struct media_devnode
-         [a087ce704b802becbb4b0f2a20f2cb3f6911802e]
-      [media] media-devnode: fix namespace mess
-         [163f1e93e995048b894c5fc86a6034d16beed740]
-      [media] media-devnode: just return 0 instead of using a var
-         [8b37c6455fc8f43e0e95db2847284e618db6a4f8]
-
-Max Kellermann (2):
-      [media] drivers/media/media-devnode: clear private_data before put_device()
-         [bf244f665d76d20312c80524689b32a752888838]
-      [media] media-devnode: add missing mutex lock in error handler
-         [88336e174645948da269e1812f138f727cd2896b]
-
-Michael Straube (1):
-      staging: rtl8188eu: Add device code for TP-Link TL-WN727N v5.21
-         [58dcc5bf4030cab548d5c98cd4cd3632a5444d5a]
-
-Michał Mirosław (1):
-      mmc: sdhci: fix minimum clock rate for v3 controller
-         [2a187d03352086e300daa2044051db00044cd171]
-
-Mika Westerberg (4):
-      pinctrl: baytrail: Clear interrupt triggering from pins that are in GPIO mode
-         [95f0972c7e4cbf3fc68160131c5ac2f033481d00]
-      pinctrl: baytrail: Relax GPIO request rules
-         [f8323b6bb2cc7d26941d4838dd4375952980a88a]
-      pinctrl: baytrail: Rework interrupt handling
-         [31e4329f99062a06dca5a493bb4495a63b2dc6ba]
-      pinctrl: baytrail: Serialize all register access
-         [39ce8150a079e3ae6ed9abf26d7918a558ef7c19]
-
-Mike Snitzer (1):
-      dm flakey: fix reads to be issued if drop_writes configured
-         [299f6230bc6d0ccd5f95bb0fb865d80a9c7d5ccc]
-
-Mikulas Patocka (1):
-      block: fix an integer overflow in logical block size
-         [ad6bf88a6c19a39fb3b0045d78ea880325dfcf15]
-
-Moni Shoua (1):
-      IB/mlx4: Avoid executing gid task when device is being removed
-         [4bf9715f184969dc703bde7be94919995024a6a9]
-
-Nicolai Stange (2):
-      libertas: don't exit from lbs_ibss_join_existing() with RCU read lock held
-         [c7bf1fb7ddca331780b9a733ae308737b39f1ad4]
-      libertas: make lbs_ibss_join_existing() return error code on rates overflow
-         [1754c4f60aaf1e17d886afefee97e94d7f27b4cb]
-
-Nikos Tsironis (1):
-      dm thin metadata: Add support for a pre-commit callback
-         [ecda7c0280e6b3398459dc589b9a41c1adb45529]
-
-Pablo Neira Ayuso (2):
-      netfilter: nf_tables: missing sanitization in data from userspace
-         [71df14b0ce094be46d105b5a3ededd83b8e779a0]
-      netfilter: nf_tables: validate NFT_DATA_VALUE after nft_data_init()
-         [0d2c96af797ba149e559c5875c0151384ab6dd14]
-
-Paolo Bonzini (1):
-      KVM: nVMX: Don't emulate instructions in guest mode
-         [07721feee46b4b248402133228235318199b05ec]
-
-Parav Pandit (1):
-      IB/mlx4: Follow mirror sequence of device add during device removal
-         [89f988d93c62384758b19323c886db917a80c371]
-
-Paul Cercueil (1):
-      usb: musb: dma: Correct parameter passed to IRQ handler
-         [c80d0f4426c7fdc7efd6ae8d8b021dcfc89b4254]
-
-Pavel Tatashin (1):
-      x86/pti/efi: broken conversion from efi to kernel page table
-         [not upstream; fixes a bug specific to KAISER]
-
-Pengcheng Yang (1):
-      tcp: fix "old stuff" D-SACK causing SACK to be treated as D-SACK
-         [c9655008e7845bcfdaac10a1ed8554ec167aea88]
-
-Pete Zaitcev (1):
-      usb: mon: Fix a deadlock in usbmon between mmap and read
-         [19e6317d24c25ee737c65d1ffb7483bdda4bb54a]
-
-Peter Hurley (1):
-      tty: vt: Fix !TASK_RUNNING diagnostic warning from paste_selection()
-         [61e86cc90af49cecef9c54ccea1f572fbcb695ac]
-
-Peter Zijlstra (1):
-      futex: Fix inode life-time issue
-         [8019ad13ef7f64be44d4f892af9c840179009254]
-
-Qize Wang (1):
-      mwifiex: Fix heap overflow in mmwifiex_process_tdls_action_frame()
-         [1e58252e334dc3f3756f424a157d1b7484464c40]
-
-Qu Wenruo (14):
-      btrfs: Add checker for EXTENT_CSUM
-         [4b865cab96fe2a30ed512cf667b354bd291b3b0a]
-      btrfs: Add sanity check for EXTENT_DATA when reading out leaf
-         [40c3c40947324d9f40bf47830c92c59a9bbadf4a]
-      btrfs: Check if item pointer overlaps with the item itself
-         [7f43d4affb2a254d421ab20b0cf65ac2569909fb]
-      btrfs: Check that each block group has corresponding chunk at mount time
-         [514c7dca85a0bf40be984dab0b477403a6db901f]
-      btrfs: Enhance chunk validation check
-         [f04b772bfc17f502703794f4d100d12155c1a1a9]
-      btrfs: Move leaf and node validation checker to tree-checker.c
-         [557ea5dd003d371536f6b4e8f7c8209a2b6fd4e3]
-      btrfs: Refactor check_leaf function for later expansion
-         [c3267bbaa9cae09b62960eafe33ad19196803285]
-      btrfs: Verify that every chunk has corresponding block group at mount time
-         [7ef49515fa6727cb4b6f2f5b0ffbc5fc20a9f8c6]
-      btrfs: tree-checker: Add checker for dir item
-         [ad7b0368f33cffe67fecd302028915926e50ef7e]
-      btrfs: tree-checker: Check level for leaves and nodes
-         [f556faa46eb4e96d0d0772e74ecf66781e132f72]
-      btrfs: tree-checker: Detect invalid and empty essential trees
-         [ba480dd4db9f1798541eb2d1c423fc95feee8d36]
-      btrfs: tree-checker: Enhance btrfs_check_node output
-         [bba4f29896c986c4cec17bc0f19f2ce644fceae1]
-      btrfs: tree-checker: Fix false panic for sanity test
-         [69fc6cbbac542c349b3d350d10f6e394c253c81d]
-      btrfs: tree-checker: Verify block_group_item
-         [fce466eab7ac6baa9d2dcd88abcf945be3d4a089]
-
-Radoslaw Tyl (1):
-      ixgbevf: Remove limit of 10 entries for unicast filter list
-         [aa604651d523b1493988d0bf6710339f3ee60272]
-
-Rafael J. Wysocki (1):
-      ACPI: PM: Avoid attaching ACPI PM domain to certain devices
-         [b9ea0bae260f6aae546db224daa6ac1bd9d94b91]
-
-Randy Dunlap (1):
-      mm: mempolicy: require at least one nodeid for MPOL_PREFERRED
-         [aa9f7d5172fac9bf1f09e678c35e287a40a7b7dd]
-
-Richard Palethorpe (2):
-      can, slip: Protect tty->disc_data in write_wakeup and close with RCU
-         [0ace17d56824165c7f4c68785d6b58971db954dd]
-      slcan: Don't transmit uninitialized stack data in padding
-         [b9258a2cece4ec1f020715fe3554bc2e360f6264]
-
-Russell King (2):
-      gpiolib: fix up emulated open drain outputs
-         [256efaea1fdc4e38970489197409a26125ee0aaa]
-      mod_devicetable: fix PHY module format
-         [d2ed49cf6c13e379c5819aa5ac20e1f9674ebc89]
-
-Sabrina Dubroca (1):
-      net: ipv6_stub: use ip6_dst_lookup_flow instead of ip6_dst_lookup
-         [6c8991f41546c3c472503dff1ea9daaddf9331c2]
-
-Salvatore Mesoraca (1):
-      namei: allow restricted O_CREAT of FIFOs and regular files
-         [30aba6656f61ed44cba445a3c0d38b296fa9e8f5]
-
-Shaokun Zhang (1):
-      btrfs: tree-checker: Fix misleading group system information
-         [761333f2f50ccc887aa9957ae829300262c0d15b]
-
-Shengjiu Wang (1):
-      ASoC: wm8962: fix lambda value
-         [556672d75ff486e0b6786056da624131679e0576]
-
-Shuah Khan (3):
-      [media] media: Fix media_open() to clear filp->private_data in error leg
-         [d40ec6fdb0b03b7be4c7923a3da0e46bf943740a]
-      [media] media: fix media devnode ioctl/syscall and unregister race
-         [6f0dd24a084a17f9984dd49dffbf7055bf123993]
-      [media] media: fix use-after-free in cdev_put() when app exits after driver unbind
-         [5b28dde51d0ccc54cee70756e1800d70bed7114a]
-
-Steven Rostedt (1):
-      tracing: Have stack tracer compile when MCOUNT_INSN_SIZE is not defined
-         [b8299d362d0837ae39e87e9019ebe6b736e0f035]
-
-Sudip Mukherjee (2):
-      tty: always relink the port
-         [273f632912f1b24b642ba5b7eb5022e43a72f3b5]
-      tty: link tty and port before configuring it as console
-         [fb2b90014d782d80d7ebf663e50f96d8c507a73c]
-
-Suren Baghdasaryan (1):
-      staging: android: ashmem: Disallow ashmem memory from being remapped
-         [6d67b0290b4b84c477e6a2fc6e005e174d3c7786]
-
-Suwan Kim (1):
-      usbip: Fix error path of vhci_recv_ret_submit()
-         [aabb5b833872524eaf28f52187e5987984982264]
-
-Sven Eckelmann (1):
-      batman-adv: Fix DAT candidate selection on little endian systems
-         [4cc4a1708903f404d2ca0dfde30e71e052c6cbc9]
-
-Takashi Iwai (4):
-      ALSA: hda/ca0132 - Avoid endless loop
-         [cb04fc3b6b076f67d228a0b7d096c69ad486c09c]
-      ALSA: ice1724: Fix sleep-in-atomic in Infrasonic Quartet support code
-         [0aec96f5897ac16ad9945f531b4bef9a2edd2ebd]
-      ALSA: pcm: Avoid possible info leaks from PCM stream buffers
-         [add9d56d7b3781532208afbff5509d7382fb6efe]
-      ALSA: seq: Fix racy access for queue timer in proc read
-         [60adcfde92fa40fcb2dbf7cc52f9b096e0cd109a]
-
-Thomas Gleixner (1):
-      futex: Unbreak futex hashing
-         [8d67743653dce5a0e7aa500fcccb237cde7ad88e]
-
-Tom Lendacky (1):
-      x86/microcode/AMD: Add support for fam17h microcode loading
-         [f4e9b7af0cd58dd039a0fb2cd67d57cea4889abf]
-
-Vivek Goyal (1):
-      dm: do not override error code returned from dm_get_device()
-         [e80d1c805a3b2f0ad2081369be5dc5deedd5ee59]
-
-Vladis Dronov (2):
-      ptp: fix the race between the release of ptp_clock and cdev
-         [a33121e5487b424339636b25c35d3a180eaa5f5e]
-      ptp: free ptp device pin descriptors properly
-         [75718584cb3c64e6269109d4d54f888ac5a5fd15]
-
-Wang Shilong (1):
-      Btrfs: fix wrong max inline data size limit
-         [c01a5c074c0f6f85a3b02e39432b9e5576ab51de]
-
-Wei Yongjun (1):
-      dm flakey: return -EINVAL on interval bounds error in flakey_ctr()
-         [bff7e067ee518f9ed7e1cbc63e4c9e01670d0b71]
-
-Wen Huang (1):
-      libertas: Fix two buffer overflows at parsing bss descriptor
-         [e5e884b42639c74b5b57dc277909915c0aefc8bb]
-
-Wen Yang (1):
-      ftrace: Avoid potential division by zero in function profiler
-         [e31f7939c1c27faa5d0e3f14519eaf7c89e8a69d]
-
-Will Deacon (1):
-      chardev: Avoid potential use-after-free in 'chrdev_open()'
-         [68faa679b8be1a74e6663c21c3a9d25d32f1c079]
-
-Xiang Chen (1):
-      scsi: sd: Clear sdkp->protection_type if disk is reformatted without PI
-         [465f4edaecc6c37f81349233e84d46246bcac11a]
-
-Xin Long (1):
-      sctp: free cmd->obj.chunk for the unprocessed SCTP_CMD_REPLY
-         [be7a7729207797476b6666f046d765bdf9630407]
-
-YueHaibing (1):
-      ptp: Fix pass zero to ERR_PTR() in ptp_clock_register
-         [aea0a897af9e44c258e8ab9296fad417f1bc063a]
-
-Zhang Xiaoxu (1):
-      vgacon: Fix a UAF in vgacon_invert_region
-         [513dc792d6060d5ef572e43852683097a8420f56]
-
- Documentation/sysctl/fs.txt                       |  36 ++
- Makefile                                          |   4 +-
- arch/powerpc/kernel/irq.c                         |   4 +-
- arch/x86/boot/compressed/head_64.S                |   5 +
- arch/x86/include/asm/kaiser.h                     |  10 +
- arch/x86/kernel/cpu/microcode/amd.c               |   4 +
- arch/x86/kvm/cpuid.c                              |   3 +-
- arch/x86/kvm/vmx.c                                |   2 +-
- arch/x86/realmode/init.c                          |   4 +-
- arch/x86/realmode/rm/trampoline_64.S              |   3 +-
- block/blk-settings.c                              |   2 +-
- drivers/acpi/device_pm.c                          |  12 +-
- drivers/block/floppy.c                            |   7 +-
- drivers/gpio/gpiolib.c                            |  13 +-
- drivers/hid/hid-core.c                            |   6 +
- drivers/hid/hid-input.c                           |  16 +-
- drivers/hid/hidraw.c                              |   7 +-
- drivers/hid/uhid.c                                |   5 +-
- drivers/hwmon/adt7475.c                           |   5 +-
- drivers/iio/industrialio-buffer.c                 |   6 +-
- drivers/infiniband/hw/mlx4/main.c                 |  16 +-
- drivers/input/input.c                             |  26 +-
- drivers/input/misc/keyspan_remote.c               |   9 +-
- drivers/input/tablet/aiptek.c                     |   6 +-
- drivers/input/tablet/gtco.c                       |  10 +-
- drivers/input/touchscreen/sur40.c                 |   2 +-
- drivers/isdn/gigaset/usb-gigaset.c                |  23 +-
- drivers/md/dm-crypt.c                             |   4 +-
- drivers/md/dm-delay.c                             |  16 +-
- drivers/md/dm-flakey.c                            |  40 +-
- drivers/md/dm-linear.c                            |   7 +-
- drivers/md/dm-raid1.c                             |   8 +-
- drivers/md/dm-snap-persistent.c                   |   2 +-
- drivers/md/dm-stripe.c                            |   8 +-
- drivers/md/dm-thin-metadata.c                     |  29 +
- drivers/md/dm-thin-metadata.h                     |   7 +
- drivers/md/persistent-data/dm-btree-remove.c      |   8 +-
- drivers/md/raid0.c                                |   2 +-
- drivers/media/media-device.c                      |  43 +-
- drivers/media/media-devnode.c                     | 171 +++---
- drivers/media/usb/gspca/ov519.c                   |  10 +
- drivers/media/usb/gspca/stv06xx/stv06xx.c         |  19 +-
- drivers/media/usb/gspca/stv06xx/stv06xx_pb0100.c  |   4 +
- drivers/media/usb/gspca/xirlink_cit.c             |  18 +-
- drivers/media/usb/uvc/uvc_driver.c                |   2 +-
- drivers/misc/enclosure.c                          |   3 +-
- drivers/mmc/host/sdhci.c                          |  10 +-
- drivers/net/bonding/bond_main.c                   |  40 +-
- drivers/net/can/mscan/mscan.c                     |  21 +-
- drivers/net/can/slcan.c                           |  16 +-
- drivers/net/can/usb/gs_usb.c                      |   4 +-
- drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c |   5 -
- drivers/net/ethernet/natsemi/sonic.c              | 113 +++-
- drivers/net/ethernet/natsemi/sonic.h              |  25 +-
- drivers/net/ethernet/stmicro/stmmac/common.h      |   5 +-
- drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c |   2 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |   4 +-
- drivers/net/hamradio/6pack.c                      |   4 +-
- drivers/net/hamradio/mkiss.c                      |   4 +-
- drivers/net/macvlan.c                             |   3 +-
- drivers/net/slip/slip.c                           |  12 +-
- drivers/net/usb/r8152.c                           |   3 +
- drivers/net/vxlan.c                               |   5 +-
- drivers/net/wireless/libertas/cfg.c               |  18 +-
- drivers/net/wireless/mwifiex/sta_ioctl.c          |   1 +
- drivers/net/wireless/mwifiex/tdls.c               |  74 ++-
- drivers/pinctrl/pinctrl-baytrail.c                | 212 ++++---
- drivers/platform/x86/asus-wmi.c                   |   8 +-
- drivers/platform/x86/hp-wmi.c                     |   2 +-
- drivers/ptp/ptp_clock.c                           |  42 +-
- drivers/ptp/ptp_private.h                         |   9 +-
- drivers/ptp/ptp_sysfs.c                           | 162 +++---
- drivers/scsi/fnic/vnic_dev.c                      |  20 +-
- drivers/scsi/qla4xxx/ql4_os.c                     |   1 -
- drivers/scsi/sd.c                                 |   4 +-
- drivers/staging/android/ashmem.c                  |  28 +
- drivers/staging/rtl8188eu/os_dep/usb_intf.c       |   3 +-
- drivers/staging/rtl8712/usb_intf.c                |   2 +-
- drivers/staging/usbip/vhci_rx.c                   |  13 +-
- drivers/tty/serial/msm_serial.c                   |  13 +-
- drivers/tty/serial/serial_core.c                  |   1 +
- drivers/tty/vt/selection.c                        |  34 +-
- drivers/tty/vt/vt.c                               |   2 -
- drivers/usb/atm/ueagle-atm.c                      |  18 +-
- drivers/usb/core/config.c                         |  77 ++-
- drivers/usb/core/hub.c                            |   1 +
- drivers/usb/core/quirks.c                         |  37 ++
- drivers/usb/core/urb.c                            |   1 +
- drivers/usb/core/usb.h                            |   3 +
- drivers/usb/dwc3/dwc3-pci.c                       |  30 +
- drivers/usb/host/ehci-q.c                         |  13 +-
- drivers/usb/host/xhci-hub.c                       |   8 +-
- drivers/usb/host/xhci-ring.c                      |   3 +-
- drivers/usb/misc/adutux.c                         |   2 +-
- drivers/usb/misc/idmouse.c                        |   2 +-
- drivers/usb/mon/mon_bin.c                         |  32 +-
- drivers/usb/musb/musbhsdma.c                      |   2 +-
- drivers/usb/serial/ch341.c                        |   6 +-
- drivers/usb/serial/io_edgeport.c                  |  26 +-
- drivers/usb/serial/keyspan.c                      |   4 +
- drivers/usb/serial/opticon.c                      |   2 +-
- drivers/usb/serial/quatech2.c                     |   6 +
- drivers/usb/serial/usb-serial-simple.c            |   2 +
- drivers/usb/serial/usb-serial.c                   |   3 +
- drivers/vhost/net.c                               |  13 +-
- drivers/video/console/vgacon.c                    |   3 +
- drivers/virtio/virtio_balloon.c                   |  10 +
- firmware/Makefile                                 |   2 +-
- fs/btrfs/Makefile                                 |   2 +-
- fs/btrfs/ctree.c                                  |  19 +-
- fs/btrfs/ctree.h                                  | 157 +++---
- fs/btrfs/dev-replace.c                            |   2 +-
- fs/btrfs/disk-io.c                                |  80 +--
- fs/btrfs/extent-tree.c                            | 110 +++-
- fs/btrfs/extent_io.c                              |  98 ++--
- fs/btrfs/extent_io.h                              |  25 +-
- fs/btrfs/extent_map.c                             |   2 +-
- fs/btrfs/extent_map.h                             |  10 +-
- fs/btrfs/inode.c                                  |   8 +-
- fs/btrfs/ioctl.c                                  |  10 +-
- fs/btrfs/relocation.c                             |   1 +
- fs/btrfs/root-tree.c                              |  10 +-
- fs/btrfs/scrub.c                                  |   2 +-
- fs/btrfs/struct-funcs.c                           |   9 +-
- fs/btrfs/tree-checker.c                           | 649 ++++++++++++++++++++++
- fs/btrfs/tree-checker.h                           |  38 ++
- fs/btrfs/tree-log.c                               |  24 +-
- fs/btrfs/uuid-tree.c                              |   2 +
- fs/btrfs/volumes.c                                | 206 +++++--
- fs/btrfs/volumes.h                                |   2 +
- fs/char_dev.c                                     |  88 ++-
- fs/ext4/dir.c                                     |   5 +
- fs/ext4/ext4.h                                    |  13 +
- fs/ext4/extents.c                                 |  89 +--
- fs/ext4/file.c                                    |   2 +-
- fs/ext4/inode.c                                   | 117 +++-
- fs/ext4/super.c                                   |   1 +
- fs/ext4/truncate.h                                |   2 +
- fs/inode.c                                        |   1 +
- fs/locks.c                                        |   2 +-
- fs/namei.c                                        |  56 +-
- include/linux/blkdev.h                            |  10 +-
- include/linux/blktrace_api.h                      |   6 +-
- include/linux/cdev.h                              |   5 +
- include/linux/fs.h                                |   3 +
- include/linux/futex.h                             |  17 +-
- include/linux/if_ether.h                          |   8 +
- include/linux/kobject.h                           |   2 +
- include/linux/mod_devicetable.h                   |   4 +-
- include/linux/netfilter_arp/arp_tables.h          |   2 +-
- include/linux/posix-clock.h                       |  19 +-
- include/linux/quotaops.h                          |   2 +-
- include/linux/usb/quirks.h                        |   3 +
- include/media/media-device.h                      |   5 +-
- include/media/media-devnode.h                     |  32 +-
- include/net/addrconf.h                            |   5 +-
- include/net/cfg80211.h                            |  11 +
- include/net/neighbour.h                           |   1 -
- kernel/futex.c                                    |  93 ++--
- kernel/sysctl.c                                   |  18 +
- kernel/taskstats.c                                |  30 +-
- kernel/time/posix-clock.c                         |  31 +-
- kernel/trace/blktrace.c                           | 129 +++--
- kernel/trace/ftrace.c                             |   6 +-
- kernel/trace/trace_sched_wakeup.c                 |   4 +-
- kernel/trace/trace_stack.c                        |   5 +
- lib/kobject.c                                     |   5 +-
- mm/mempolicy.c                                    |   6 +-
- net/8021q/vlan_netlink.c                          |  10 +-
- net/batman-adv/distributed-arp-table.c            |   4 +-
- net/bridge/br_netfilter.c                         |   3 +
- net/bridge/netfilter/ebtables.c                   |  58 +-
- net/core/neighbour.c                              |   3 -
- net/ipv4/netfilter/arp_tables.c                   |  42 +-
- net/ipv4/netfilter/arptable_filter.c              |   2 +-
- net/ipv4/tcp_input.c                              |   5 +-
- net/ipv4/tcp_output.c                             |   8 +
- net/ipv6/af_inet6.c                               |   2 +-
- net/mac80211/cfg.c                                |  55 +-
- net/mac80211/sta_info.c                           |   4 +
- net/netfilter/ipset/ip_set_bitmap_gen.h           |   2 +-
- net/netfilter/ipset/ip_set_core.c                 |   3 +-
- net/netfilter/nf_conntrack_netlink.c              |   3 +
- net/netfilter/nft_bitwise.c                       |  19 +-
- net/netfilter/nft_cmp.c                           |  18 +-
- net/packet/af_packet.c                            |   3 +-
- net/sched/ematch.c                                |   2 +-
- net/sched/sch_fq.c                                |  10 +-
- net/sctp/sm_sideeffect.c                          |  28 +-
- net/wireless/util.c                               |  45 ++
- scripts/recordmcount.c                            |  17 +
- sound/core/pcm_native.c                           |   4 +
- sound/core/seq/seq_timer.c                        |  14 +-
- sound/pci/hda/patch_ca0132.c                      |   5 +-
- sound/pci/ice1712/ice1724.c                       |   9 +-
- sound/soc/codecs/wm8962.c                         |   4 +-
- sound/usb/pcm.c                                   |  44 +-
- 197 files changed, 3378 insertions(+), 1230 deletions(-)
-
--- 
-Ben Hutchings
-Knowledge is power.  France is bacon.
-
+--T4sUOijqQbZv57TR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi Andy,
+
+I love your patch! Yet something to improve:
+
+[auto build test ERROR on next-20200423]
+[cannot apply to tip/locking/core rcu/dev linus/master tip/x86/core v5.7-rc2 v5.7-rc1 v5.6 v5.7-rc2]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/Andy-Shevchenko/drm-shmobile-Reduce-include-dependencies/20200424-044529
+base:    aefe184e814492e36b2ca350c1522bd71b09b520
+config: mips-malta_kvm_guest_defconfig (attached as .config)
+compiler: mipsel-linux-gcc (GCC) 9.3.0
+reproduce:
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # save the attached .config to linux build tree
+        COMPILER_INSTALL_PATH=$HOME/0day GCC_VERSION=9.3.0 make.cross ARCH=mips 
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kbuild test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+   In file included from include/linux/cpumask.h:12,
+                    from arch/mips/include/asm/processor.h:15,
+                    from arch/mips/include/asm/thread_info.h:16,
+                    from include/linux/thread_info.h:39,
+                    from include/asm-generic/current.h:5,
+                    from ./arch/mips/include/generated/asm/current.h:1,
+                    from include/linux/might_sleep.h:6,
+                    from include/linux/kernel.h:14,
+                    from include/linux/list.h:9,
+                    from include/linux/preempt.h:11,
+                    from include/linux/spinlock.h:51,
+                    from include/linux/seqlock.h:36,
+                    from include/linux/time.h:6,
+                    from include/linux/compat.h:10,
+                    from arch/mips/kernel/asm-offsets.c:12:
+   include/linux/bitmap.h: In function 'bitmap_equal':
+>> include/linux/bitmap.h:339:6: error: implicit declaration of function 'IS_ALIGNED' [-Werror=implicit-function-declaration]
+     339 |      IS_ALIGNED(nbits, BITMAP_MEM_ALIGNMENT))
+         |      ^~~~~~~~~~
+   cc1: some warnings being treated as errors
+   make[2]: *** [scripts/Makefile.build:100: arch/mips/kernel/asm-offsets.s] Error 1
+   make[2]: Target '__build' not remade because of errors.
+   make[1]: *** [Makefile:1142: prepare0] Error 2
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:180: sub-make] Error 2
+
+vim +/IS_ALIGNED +339 include/linux/bitmap.h
+
+21035965f60b050 Omar Sandoval      2018-04-02  332  
+^1da177e4c3f415 Linus Torvalds     2005-04-16  333  static inline int bitmap_equal(const unsigned long *src1,
+3d6684f4e6a46f3 Rasmus Villemoes   2014-08-06  334  			const unsigned long *src2, unsigned int nbits)
+^1da177e4c3f415 Linus Torvalds     2005-04-16  335  {
+4b0bc0bca83f3fb Rusty Russell      2008-12-30  336  	if (small_const_nbits(nbits))
+^1da177e4c3f415 Linus Torvalds     2005-04-16  337  		return !((*src1 ^ *src2) & BITMAP_LAST_WORD_MASK(nbits));
+21035965f60b050 Omar Sandoval      2018-04-02  338  	if (__builtin_constant_p(nbits & BITMAP_MEM_MASK) &&
+21035965f60b050 Omar Sandoval      2018-04-02 @339  	    IS_ALIGNED(nbits, BITMAP_MEM_ALIGNMENT))
+7dd968163f7c12b Martin Schwidefsky 2016-05-25  340  		return !memcmp(src1, src2, nbits / 8);
+^1da177e4c3f415 Linus Torvalds     2005-04-16  341  	return __bitmap_equal(src1, src2, nbits);
+^1da177e4c3f415 Linus Torvalds     2005-04-16  342  }
+^1da177e4c3f415 Linus Torvalds     2005-04-16  343  
+
+:::::: The code at line 339 was first introduced by commit
+:::::: 21035965f60b0502fc6537b232839389bb4ce664 bitmap: fix memset optimization on big-endian systems
+
+:::::: TO: Omar Sandoval <osandov@fb.com>
+:::::: CC: Linus Torvalds <torvalds@linux-foundation.org>
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
+--T4sUOijqQbZv57TR
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
+
+H4sICHsEo14AAy5jb25maWcAjDzbcuM2su/5ClXyklQlWd9GmewpP4AkKCIiCQ4AypJfWBqP
+ZuKKbyXLyebvTzdAigAJUN7a3Rl1N26NvqM5P3z3w4y8HZ4ft4f7u+3Dw7+zb7un3X572H2Z
+fb1/2P3fLOGzkqsZTZj6FYjz+6e3//3n8f7ldfbh199+Pftlf3cxW+72T7uHWfz89PX+2xuM
+vn9++u6H7+C/PwDw8QUm2v93hoN2D7884Ay/fLu7m/24iOOfZr//evnrGZDGvEzZoonjhskG
+MNf/diD40ayokIyX17+fXZ6ddYg8OcIvLq/O9H+O8+SkXBzRZ9b0GZENkUWz4Ir3i1gIVuas
+pCPUDRFlU5BNRJu6ZCVTjOTsliY9IROfmhsulj0kqlmeKFbQRpEop43kQgFWc2ahOf0we90d
+3l56BkSCL2nZ8LKRRWXNDQs2tFw1RMDBWcHU9eUF8rfdIy8qBgsoKtXs/nX29HzAiY+c4jHJ
+O2Z8/70P3JDa5ofeeSNJriz6jKxos6SipHmzuGXW9mxMBJgLPyq/LYgfs74NjeAhxFWPcPd0
+5Iq9IZsrQwLc1hR+fTs9mk+jrzw3ktCU1LlqMi5VSQp6/f2PT89Pu5+OvJY3xOKv3MgVq+IR
+AP+MVW4fuuKSrZviU01r6t3XDVFx1ozwnSQJLmVT0IKLTUOUInFmz15LmrPIOy+pwUjYGC3m
+oBSz17fPr/++HnaPvZgvaEkFi7XOVIJHlr7ZKJnxGz+GpimNFQOBIGkKeimXfro4s+UUIQkv
+CCt9sCZjVBARZxv/XKxitjCWCWhcOxLQ7owpFzFNGpUJShJWLjQTd09fZs9fBzwZrqTtxQov
+luT5eCMxaO2SrmippAdZcNnUVUIU7eyMun/c7V99d6BYvARDQ4HJqp+q5E12iwal4KV98wCs
+YA2esNgjNmYUA44MZrIYxhZZI6jUBxTSZshoj92YSlBaVAqm0ha5F/IWvuJ5XSoiNl6JbKlG
+MhlX9X/U9vWv2QHWnW1hD6+H7eF1tr27e357Otw/fRswCQY0JI45rNVdZYteMaEGaLwM73ZQ
+LPTl9rReukgmqBMxBUUEUuUlUiDxUhEl/SeXzIW3jH7HyTWHRFzPpE9iyk0DOJsD8LOhaxAN
+n+ORhtgeLrvx7ZbcpSxuLc1f/KxcZqBWIEVeZ4fuKwXbwVJ1ff6hlyVWqiX4tJQOaS6HeiTj
+DJRXq1qnR/Luz92XNwhlZl9328Pbfveqwe0pPFjLOy8EryvfXtH0y4rAVfdcqpVsSus3mvlS
+DoywAJBnvoolztiSqsFYOFi8rDiwAnVRceF3EoYBGBPovftpNjKV4MlAzWIwOIlnP4LmxDKm
+Ub4E+pWOZoQdOeFvUsBsktdgN62YQySDUAMAgwgDIG5gAQA7ntB4Pvh9ZTMl4hy0eCRufQDI
+K1BciPbQrKMZhD8KUsaOTRqSSfiLZzYdxEBslYAAw5oJuBCiSEMxqCuJYq7VnST0KVwXDzi/
+QUFjWuGQBvgcWzZa76aKZbWEc+VE4cGs+6rS/odR8v53AfELQ1G0VltQha64GXkvIysjcGq8
+aA8w0cvRQziqO/zdlIXlj6N6Ye01T4Flwp44eEYi4b5qZ1e1ouvBz8b2/bTizuHYoiR5agm0
+PoAN0A7bBsgMYqz+J2GWgDLe1MI4mg6drBhss+WfxRmYJCJCMPsWlkiyKRy172AN/OkRmyNa
+cwO1FkMrR0WqtFveawxQEHRIm3rtgKSf7NkSCtelod7J4FA0SbwWxQgsrNUMYyANhG00qwI2
+yWMnXojPz65GcUCbuFa7/dfn/eP26W43o3/vnsAfErDqMXpECEtMyGCtYRb2+td3zthteVWY
+yRodD3RBkZXTEQUJ4dKn5zmJbGKZ1/6oXOY8CowH4REL2qUi7myATSF6ypkEPwE6ygv/7Fmd
+phAFVwQm0lwn4FL8dknRwlgwyDhZyuKRrYOYJ2X5KCpqWevmy0f5Z5XsPHSxvfvz/mkHFA+7
+u7YIcZwcCTv37j2KJiA5+L3CH00S8ZsfrrKLDyHMb7/7Q7yT24ni4uq39TqEm18GcHrimEeQ
+ufvxkNDBlccYOw5ciEvzB7n1p70aC7dEy8DWcwKxrV+xcyLJxL5yzsuF5OWlP113aC5oeppo
+fhWmqUC24U/GPeKquQhmRBFbQNthcWB7JY2BRCwpK/1RuR6/Elfngbsr11UjVXRxcTaN9ktb
+VcDy0h+qCQJ6tfSr8IJBiHnhP1KL9At+i/w4gbz0n6RFBtZk0UbRJhYZKwPBaUtBREH93qif
+g0/PcZJA3sAqUwQ5UyqnshaTs4CR59JfZGpJIrYITlKyJrAJLVJqffl7yBwY/FUQz5aCK7Zs
+RPQhcB8xWbG6aHisKFYluV/py7xo1rmAUJqIZIKimqDQWlcRQTCr9jqBsYkfZm7ZDWWLzApT
+j6URUIFIQJ4C1s9JSkyqwwumwOVBPtbo7MgOqLAkhKXfLlpu0sQqxenkQRCrThXTFUCurIA1
+hqzXhRg7jQmmp9ajF5R1VXGhsJ6DBTIr0kkK0laiY55RAbLl4kpejhF6wYhDpsXnVwNwIeMx
+w5gkOJsVlhpAQ+xQGPbe7xQCR4wAsNbtRDJVjeLd0DJhxJe1IIHRo5YmMH8/SYAgMEkVs2ah
+5lfr9Rr/fjY4vqzg3q0Zb0iFMbhOzAf3DInF5cVgeH4OwgVCZKoJzXwSfT0/1qD8gQryAsdd
+XjTiPMCrDn8x5HKHmPs1uaWYXw2m9lIErIFFEV6lpCuS+M0dokXx29mZ3zVYp7hsPjQpJaoW
+1O9P7RP7SX0ycosX6coPvu84fJ9GX0yjYd/TBCfQ8zBa39w0emJz+s78aHNhfpy5Lbtm5wrv
+WDItw9fC7G0pAmmH0uZE0NX1hfeWLi8iMMjmDSWg7PMrHwmueGKWDBwQuHVqnkK0uT8mEW0G
+d/j3ZdfXPfU0VoINeduiptIHMqk/Jk+frs/PzqzwDFMkrAk1V0tfRtbjz+dLJ7frMXP/UP3W
+AB5h3dxCNMNFAs7r/Ly3W3Bc8HJog4b+B3k1QCAMb74SNKVKv/5YmM45JHVRNSqPBhOmVcd7
+dxi4PsDVY6CxjGYiNw4oFL6AnlJmXYSyH1l8RKsKK75YLx6t0qMmsqnCH1S3LPQZnHbciN2x
+y4GS0kTiO4mEvEFpGi6ANha8TWwdW4fXcqScsIjt8IDzwFkSRtn4ygVbe6ByU8aDgxDJktad
+nY0RoCvy+qP1cgQBWUGLwHaOt9SSBe5wGnvkSgBvs9SPr+T5PGBECmkZRh2apTlRsBmIM4ah
+jhUBnRTdVrYmtoTSde2+wV34M1rAXH30rAjw89Z2W5BAzobTf/C7ZY3y+3uzRHDY+dmF7wHc
+OSsRaKadx8JbbT2dED0T+BjnVDXpmvrTkVgQmWkr5VubxlhcGxkDDt43rcBLthvzDMX6IreK
+4tgnoVjZJGpoCkGrSVVBJAo7N1h3MSxR2wRhEwO5xTsp4yLB3hXwPrx4HyUQNXStYO6wFbPm
+xNDJsqRu1VP7zG4sZjYJ9bgDLLos9SvEGFctTJ9MTlc0lxAZaJccvb3Onl8w1Hid/Qjh+8+z
+Ki5iRn6eUYghfp7p/1PxT72/xng/EQxbW2CuBYmtdK8o6oE2FwXE+6I0hgsOXYLxmsCTtfWo
+6BJ0JdsT8zhkznTs48WHy3576M7bHOzI7Hdz4xhuCZK0TxTHKKd6/me3nz1un7bfdo+7p0M3
+Y89CveOMRRA66UIhvsxIFtlvNW2WKlEyPegWMwLowvKt64s7lFyySjscvzXpt+MLoIpG5pQ6
+ag0wfMPU8EDRDILAJRrtpfc9tRjMph8u/IvHuWObbj4BT24gFKRpymKGVf620u6tbARvxFFG
+VFXgQG6izO42MRw344vj+GMDHuDYl4fdMMXEVo1Qi0A7wIaMptfzpff7x3+2+90s2d//PXgq
+SZkodJANjhIE38v9BecLUPeO1MNXmrKGEpFvYv1WYDpadt/229nXbu0vem37MT5A0KFHu3be
+liCSt68RS1E1dvqNxM7p4tvu7/68P0BC9Lbf/fJl9wJLedXK+CX3aVIvy83rhxNMLE3hx8u6
+PzAAz0lEfc95WjPRVXXuKXLbyfSKDDaBFgkWUQPUclhxMlBBlRfhvMNqiN6ANvIZ58sBEmtI
+8FuxRc1rTxMThP1aPNvmqYHBwZAUEh7F0k3XLTAmwCUk5Jh1qROM4RwmLeRp2gxPjg2gBU/a
+psjhQQVdQLCCdgqdGDbn6B6danj89rnTBhnrMOJRf42DLd4QMBjY+lERgW+abfOmZ4o2mgEt
+yp2qZQiuR+oD4M3TWHEL2Ta7uuiu/cr24J6xg0FSCW6nZIYNcO9gxLRsLNkIDbcKi2XDZtBA
+l9VQoMf9VQMKuNmWZxWN8Q3SCgt4UudUaq3B0Ey4BYN2erpGuSlNbyIe1yN7erR+MoWU3Xdh
+TjwxINALeOXeHfVxLCxdS6niVcJvSjMgJxteD4U85tWmXQRSb2sLcY4BRwTnAnOc2AgTsRi9
+QR77ztU2IYsmG2wdeQpeIGhupJHxtgzelEfHtoj56pfP29fdl9lfJsZ82T9/vX8wHXr90/AE
+mbMQtpJXeb1gtma7wN43HcFNvIn14XK8Hf/jsEUNuSE6e/ifAD6fokZJAU2ph21+g1fvE/6l
+OwuoSYHdKraJ1i0dEnsirGTdSLuTlGhQW0vCGN+XEBiaukR8cLBB+3OP3rSG8DiPFPGxLT3Q
+b9JRBhoEWzTemgAbPUWDbQs3EF5B/FpaHXkNK3Ry6u92KUGmwQ1siojnfhIlWNHRLbG3xsPP
+qG0wPP5cQqorGRifT255sWuci+TCC8yZk2D2fXaKLkRIZjsqzDL814UUXf6nddRfJUOym8j/
+rq/PhO9rFclH0VO13R/uUYJnCnJHt9OGgIvXiQdJVthq55VHmXDZk/aswbDRBvdh9mBFm5fF
+J0wcXf4CDJ2P3Z2FYJ0XmP523vd+WnEejGPclC2wf8/9osRCLjeRmwl1iCj95DUI7npHMytL
+61nAfMECZhXsCyojhCpuf7rBa/tv8FM479gbkCoaGmwj3dFHd6A/P0j0FnXuFSYRNwOCPn3U
+F0D/t7t7O2w/P+z0J0sz3Xh1sK4iYmVa6Je7wSI9An25si4IQG6Ijr9Mzbvzsjiq7UG2RMPM
+KGPBKqehqkWAkfE1z+PsOLktqKFjmU6n3ePz/l8rHRsnGm2J0mIbACC2SrQrbopROpASqZpF
+bZcjqxy8faX0NUL0Ja+vjhJsvg+J0HbaetcCTLwQuzrpg+mnDUHR0DrRWsEWgrikEYR0dqyv
+Y0LFIcVxGx2lr9Dc3ZqOiQqGRiUR11dnv887CizFY3ufDjOXTgoY55SYPMJr4VIIcxXmV/5C
+ZODTotuKc79nu41qvzW+laax0YvUCZNmZxda++sdVOjadvDLAZCAJqJlnGEnk78HIyh8PS/t
+70nwqa9coBd2gdQDAz1gAtIHSwiXbYGyy8e0ApS7wz/P+78gwBtLPgjZkjraZyBNwoivdFOX
+zGr2xV+gwI4AaNhwdO/oc59rX6d2kzH+gkBjwQcg3T792M+lgbr7JIUQxLucJpF11FQ8Z/Em
+sHSrQU45wYzEvj+pWBzaNCadWBx/tO9lSTfuRQHAWuJo/u2LZ5V5nYuJdKGdQ28EpCYD74fp
+aoSxEx3L6GDeKm8/q3S+lTCTthREZR4chJYRl9SDiXMCUWDiYKqyGv5ukiweA7E2Xg0Og3BB
+hO8RQutFxSr7+g1sgb6GFvU6OKpRdem8aCNP2iN0H24NMYOdFTafjpz0s7tihSya1bl7ZAN0
+2g3Q8PMlcxMLs+WVYl5xRmzK6ylcf2Dv/pCKZL28agDE8DZjOxjWfILJSUcE+hf7boyZk7ja
+oYFab9o7cTGjiypbQzQAwYod2N1PnVRh06Mp8HlomgKxIFFYkPFnArg6/HUxFWsfaeI6sgsn
+x7JDi7/+/u7t8/3d9/a4IvkAiZotPqu5+6u1BbrrwIeBg6R8gDBf26AtaxKSuAydj0Ri7pOJ
+eUgoHJrjnVsKBOsXrPK/iGosy0lwwqC8zHuoO9tAfWyUZMrVbQNr5sJ7IkSXCQSiOhhUm4oO
+2BrYwXssBZJ5jM0R/N5JLNsyOBddzJv8xmwxzHtNBhFMIFTSUlXl0xMVld8KwC3hR/5YXsUQ
+aWDpNKrKNrpIBh6sqAaRWE86rMseQUctdDIIwRII7o5Eo1w6ft7vMC6CbOGw24/+NYbRIr6Y
+rEXB37Bd3AkBWlRKCpZv2t34xrYE4PMGnHHnHn3YGiTUaaBvKx1BzhcDHzog4DL1rYRfiJWl
+jpad8an+OhQGJ3Q1uUMcrgvN1u6sSZtWPHwon/DYeCzJeL8XtYnwG+FUBlY4fh3lXwDFEzTS
+73aHhFqOT5PqZ4zQrpUu/PImie3QycYs7ITbRshYBYaAc4QUlQZYQApSJiRwOamqApjs8uIy
+gGIiHohKjwO5iBiXTaCy6V5/6e1LcW+3Cu5QkpKGUCw0SI1OrCxFn1CfRV5DWBkUlTLwQQ+g
+gka+X2TdRvCPxoitdcXjdXb3/Pj5/mn3Zfb4jJWuV58BWyujYR7TsNZf85Yt2pn5sN1/2x2c
+UqMzrm1O1Z9Jy9pXS/CS68Qh3QQ201H1e5peHOhaCxGKi8djArfgIU1kyLGNSLP81F49dYIJ
+aqxS6NaFd48AW/zOvU4IQ0tRpsZXTJJ0/mZyVyXXSvXOnWGWjOX8E5MC0TsnxGf49QlhMx96
+T5J0Xmh6nrgqpDxJA8E45Bfa+jj69rg93P25C+tbof81GizHYSh6WiwMfVT5P/7zkMZ5LQfx
+0gQxZM/Uceg+mrLEL7Zk8D57ulCDRohc/8NOpxafuLOeaBzXeOiq+n170057ei4IlsL/UoSP
+/h1GyFDSuJw8rUnrwviMyOw0YzOaV7oWN0ESNoaGwOSJ7zsVqwQpF2FD01GtAuHEmDa/UO9c
+O6flQmWTZz3NMMiuTuBPSKnJBbH/c5oHZRr8R3A81IFg30N4U564b1NgnSZZKp1BT9F8qrki
+kxS9f5igoSQvTlDEp0yXjqQnCbiunU+S6KeyUxS6LHOCSv8TF1Mkk66nJcFelCmC+vJCy1fX
+yziVJTsFUkl9+SkgVtaO9M+unGWPXslgq6jBQtxrOnnO2y5nreqH/fbp9eV5f8AOlsPz3fPD
+7OF5+2X2efuwfbrD547XtxfE9wGxmc7kQ2pQlj4iIFHyI4ixn15cEEGy8Wn7VG1UmdAne+0e
+rYc7F2LIzpsxKI9HRLmTihlg6v+X+AySr3yWoZ0/Gq+AsNFGkmwIkdl4H0UWXEnSZDhD+akL
+mjSnZBZmlsx6wflojSkmxhRmDCsTunalbfvy8nB/p2V/9ufu4aXtonU3lwZsb3vt2ILju/L/
+vqMWlWLxWBBdkbtyclNjh8ZwE/h2cDvXTOpKg0O5KNZ0Bg8xQ/RweI8V9A8aD7cDDAAUq44Z
+rANv49rMDzcxjc3LI0pU4wKfh0ypfDh1W1AcQLscRB9hvGiXCmxKzdrQVY8T/cGeykVOA0u3
+EbhdmXDwToDnYDyHxA/tByC4Vv8dkI6XHkS/5b61ZkJoW6n+e/4+ue7ldx6Q37lffuenBHA4
+rhVc3zhWzUMSOg+JqIWgNZtfBXCotQEUJoIBVJYHEHgA00wTICgGRnb+Tn2x6VRwCin89npu
+iaJn72PZmp9QuPkJjRtubqhU814D/p+yJ2tuI8f5r7j2YWu2arOxJB/SwzxQfUiM+3KTuvLS
+5XGUGdd4nHyxszPz7z+A7G6RbKCVfcghACTRPEEQR1jrQA3XT+qxOUtuxeEU66+TrdqfMmRs
+XyfSJlmGs63FAQKDG29c4dFB6UF3ekj4PBIzv5w2MxIj8tIVL11MXZFwyYFvSHhwRXIw/tXH
+QQyuCw5Oabr5bSYK7jPqpMoOJDLmOgx5a2hUb3xDssdV6KnUHHinbDu9YBEL1T1iUMlAHzDt
+taUnxt9NvFw15fJDVJBxRw1F+zJtbRLMeyC+RLuyK0un1oKOkMGWKIJAQi79OQ7GWu66AR/y
+beNSeP1ax4wBsqzo90+h6VhCjALBm5grYvEMhl+uchi0oiyrIFpui8cp3S53+nXUehUZVbUI
+nhERRJQwVcJmMLk/cXOCNaut/x7poPItIxXGIJeQd8DMv3rAzylBJbTInF0ADa1FVWWJD5ZV
+HFfBzyYpIuGxu2dCfmWiIkNJYFAr7+i5ycpdJZiwxEmSYFdck8KvmXXWg8rIQPffj9+PcBF9
+31ohe8GSW+omWjrD0AHXekkAUxUNoVUty0ArZOBGZXTPs4lbGFVOpVQ3nbAEtzq5zwjoMqXq
+j5asls7gE82qq221Ar94hMVV7V4bO2isBko2A4d/k5ziM67Zhxfbv/chH8OuvFuepYnW5R2r
+yjcU96F1e1hDGTNmGR1Fev8DRJE4w8cZNtbr8XGrJPNiY7CdhQUxEOj8c2bGjM8owpXY3t2f
+H15fnz63t3p/ZUZZYG0LAPQOChR1Bqwjqy8YIIwEdzWEp7shrNO9teAWZIKokh/XEYRPiiEL
+alsRjAH0huALdr5wBMx38y9IfTn+mdKQmMsD55+ERImhGPkSEQWG0gJNG1DtnAzhK+GKZith
+rSCWQ8Jc1sQ+iBgl0ImNYUiYC6av/DVAT/LrucSUMEOwkqHpsIHeLVvyAUtR8Mg+IACO+aWA
+BHiWjxKMDbVhoX1TGyfSaIE4SgJfmZdM7MOuf1N+P0K8tUdD62qWTEedTfzI1pNKYy15kmUi
+OhZIXGDQPlViFhiSYAnCojA+WCS6rJJiq3YymOYnOcsqQtgBNAYmrPHq6NAXim5yrUbOOMNp
+YNflUWQzzCWCLwhjVEWkKHNMRNV79Eg5NH6E8OW9l6MFg2l/IJKltG4NF2/H17fOx9WpG66P
+g9wS7TV/UDJAuJ4STl+JvBYxc5pHzLJiHP1ECt9ec1eOtLmLKGMatPavN54N/w4uoZlnmdhB
+cNI70MSY+bhWYwaEZnEBSFWHAZHcOq5J6Qol4Im3QWUGZFIqwbKm121XEGdLkpXoP4R5ouDk
+Z+JzdfRRghEM2iDYTVlsyGhdHTX6g0IfmCgu6DeRrOLlkHvjNddmHTIkuI8ogq67vlYUMqpj
+4UTmGbK+o7eeTC67PgwgUOWh0lCuYnFRlPNIfed7SfRo7oUNrtEBKx3Ehjlz3f47RB2hX5jS
+nt+/i+1dyH6E6ud//PH08vr27fjc/Pb2jwFhnijvCc1FqM6Hi3Ph6oltEP08KSgrjp5KaWFM
+IEx8QIwi+LMTlHAnAUqUrtM7mXnmDhYCMm3FWY3CBrVgfOCEZAS+pEJTA/psKlJ6L6mGUozH
+BHfGUtbe3TGodBOEQVzVJbDn5VpIhczKrWuynei1LsusO8kCj8qo3ea7q3N8/O/ToxsrxyX2
+PI/DH22WKc+cF8DGb3JJbh2IFarKvWoMhIr33+NMxCIF/NA975HhJvFDxKd0KSxhUzE6Kfz4
+nDxsEYO74l3YK8NtwcMqzWRKQKQs6UMfcXBk8DgMfEiLI6XGyx5SDY57hD1+eXn79uUZMwd9
+GgZRwrpTDX9PmAB7SIA55EZzCZge3mNqhf2Ah/j4+vTryw7DISE7xj5C9TYGvRgxRmZdkr/8
+Atw/PSP6yFYzQmU/++HTEZNmGPSpa14dswf/qyIRJzCxTF4X0xGkdHS+2j4+AD0k/XAlL5++
+fnl6CRnBiNMmjizZvFewr+r1z6e3x99+YAKoXSu46jDYoVM/X5tbWcSFXq9FJQNB8BTf6umx
+3bQuyt7Zti+5sRlMrP0ctbcmW51XqbdKO1iTo/sEqXNG0/3MCztU1balPrCYyVHZba59UC+0
+l3GNINLdKfZrt23v4Xzt68FkUz1nPbVNsjX8KoKSCjJyIurOlWH4sZbTXmFs4pCgntiLB9B3
+GR72Nqgho642BMmWi5ZtCVCcbasBITEvmd3bkAmMxNcRm8hfxCf28fUxPNNGl0E2RxBEvVgD
+9neT57J0O4WZZ338x0/m7PQm3rKOcqWXzUqqJUYQpYUlE8IyzrkUDihJYPC+4BQ9lV/LIc6J
+xNjx1YvRJYgYJiyWIzutCnJy5NqPoaNj0+1qeE70QUu+Pnx7DXYILCbqWxPuhPkGoHCiuJBO
+1UhTphYdMgWT0cS+J1oYRFXpGDQcbl4xZqD14DAJkDSatz1bg6Ps4W8/Ygq0tMzuYAK76a0M
+sPSjvqaaUblxCMli6jRmq1MqjenzVOVhIbcXy8pT+SKMjQ6ByD5ODdzsrO5hMAFqkb+vy/x9
++vzwCnv8b09fnbPCHeVUhoP3IYmTiFu7SADrt8/A6k+ZVKLex7jZlmS2QaTCxbwUxR1cJWK9
+bib+2AXY6Sj2ysdi+3JCwKYErNBJ5mkH+i/IQbiPh3A4YcQQutEyG0x/waReQRyTF8ssyiVm
+fSHXy8h4tpmsvn5FjU0LxOAvlurhETabwfJvY5Nhf1as6sFMtfVBcbE4EW+6sdliwD8mHjpW
+AqLWoE/6/CzjjNtMmsfnz+9QUHkwLl5QZ7uNUgKQaTGPrq/p53izurKxIarWY1j4M4Y2e88U
+ORzIzU+vv78rX95F+HWDm51XSVxGqxnZXed7wq8J9ohCFExoNTNVd01IYLjJqjiuL/5p/51i
+xOCLP2wYF6bLbQGK5/NVuYtqs5SOFsYCml1mog+qdQnymxuEpyNYJsvWvGZ66fOFWIxUFMzi
+gAJdFk3Dg7JmQNn+Wx9A2qMv1LF2tEYmAvhJCZ5ihBjN5F4HLIZe0nWSuBXYqLY06q5cfvAA
+6B7laUQB5sXVgt+FG3sFfuexeUM/AaCGpN7iIZPkAfuo1cgEZYpmQ09iRqU++RGcV6FusAUR
+5dsYc57yuw07V2yyDH/wpZrUefSOYtgxqXrwHqgULmVMKban1Fkd6SZPHB+KDprBkU1DTago
+6+I9D/FGN1m2ZQdMxfWSir7Qf/sypkqpPRXDv8N6SYocYMvh5IbCGY2fu8ZMP+JTQhRvw+7t
+wJgbOcXIZk4WB59gN4iH1U0YLcx0Qt2YY4pjYughY9QIBn01xKv9UHFRbPPEUzGEXYx4UkwE
+RBPqFrvXErdSexQ/vT5Stw+4n+UHXIS0xmUtCs3IBlqmubnikdikiLJSbVDZD6tVRsxlbl01
+MqPfbSq0L1hz6UC5085VYjThVtZTWSVSo+KUybtQbSvB5YWMpuEmYQP4JRWKUYSGx2KaxSza
+35DDFRR1mlreTi4HndxGD//r4fVConb++x8mNevrb3Ab/+T43jxjirlPMPBPX/G/fmjx/7m0
+KS7Q+PbhIq1WwglM/uXPF+PeY73cL376dvy/70/f4LIkpyadgbU6f3k7Pl/k0Kn/vPh2hNsT
+tEZ01ha2K+6mOlaF093Rmp5RGLYQU6Ni7uuIVoIaErge7lmKtQBRXzSCTkzvLTNPMS5jN0CN
++WEvxc/Hh1fMBAhy15dHMxjmYvn+6dMR//zn2+ubkT/Rs+X908vnLxdw64QKrJzi3JwA1uxh
+u8OAsH5buJtVktqyEKkAS+yAiFrFfj2rGKvyvKZ6aEVpt512oni46xtwF8isSeq69HMHO3TQ
+AL3TIAcak3XLMiJvs0iAj6lN2sfdw+5DeR6ougn0/pfvv35++svfHc3XjWW37c7uNh33eA+Y
+aO5p2o88zDCHkdehT5xT1ntKsb9xisJKaWyiLKLXyjTlk1R2RD/yeXh1vplS5rzB11kuB+VF
+Et1MuSTAHU0mJ9f72ThNHt9enaknyuObq3ESXcsU7pmjNOtKz27osFgdyQeTjYkxLugmhpTj
+7Ug9n9zSKQodkulkvGMMyXhDhZrfXk1o+9ue2ziaXsJANXCh+THCItmNEqrt7o4++XsKKXOx
+opd2T5NFi8vkzHDoOp8u6NeljmQrxXwa7Udlax3Nb6LLy8lQkrZzvFu9GOC6u+UOFq6Jfg3b
+sKMvFhJ3SV07HiVI5YQdxDJeolIDGbzJGmiwnxlmWi5M/qKLn+Dk/v3fF28PX4//vojidyBf
+/Gu4sSiHw2hdW5gefrqqCTrPer+HkoaChmf4P76HuLkCDDwrVys/6R1CVYT2Wm3SttNH6k4+
+eQ16W1WS6l+QkEmwNH93mJNcaaoSymJo0bMjyeQS/hmhqSuqmk5nEnxN0CU7kzvK2fINXPvx
+KyzQKLXVQaUjvET71XJm6ceJrs4RLYv9dIRmmUwHyGAyzXbNHjPY4pIY9P26Iv0iDA4KLqDg
+oAzAg4FwsQIfC4PRFyJqW/egMrq19XeXQAvAM0WZoMrAPtq0zqYhBSoltM3I3OTq58n1pZsz
+s6OyT1c22x515/TIcpBpTpkOTg2ZF0StD/iQX3jqi/4juCzZHcGCO0TtvrUdndb5dpOPzI+4
+0o2c0gK4bR+jAsJ0HaHAFzEmhTjiE+Bvyih2k5UwWy0cTAMbw5DGplQbpxnvChASzhFMx/cI
+TPhY3Y/05yZV64g+jdsFo2VJq8Ltet0o2GAZAc8yeWAeHTsszT9sf4xlk/0y7vrcnnP72WQx
+Gfmu1NoKsfcwQ7SKNW09a/d4JruoRRb4WDWKF5y1iv1AzYiQFnvIr2fRHFYsLdy1DI7M8nsz
+bJjkcoSJ+0wMdEAh/syGnlVjFcTRbHH918haxc9c3NLxCqwAo6rZSB/s4tvJYqQjeSsoKwjl
+ZicfI5iDNDeyPtLxHrQqv5FDc51kSpZQR0kLsfYrgmnqCgGBEOloIB2RCPWRaBfk2JEgCCMH
+Fys37QQAvfu0jzKZbYJqK2Oh0QZfPdkU/fn09htw/PIOrqwXLw9vT/89Xjy9vB2/fX549NLw
+mUrEmlunHZa8JJ+OSKSIki2dZcBg78ta0mpK0wYs2GgC18wRLlASOMOpkhmZ59XgTnd37JPH
+sLMev7++ffnjIsZUCVRHwa0JTj8mkYJp/V5p5sXSMrfnWFvm7tUEFTokh4bMSY6Joy9N2gC/
+oZw2HzS4YgSHakypmHXQdu8YktmvDXJL3zQNcpONDCnc+saQOlFqqF6tzvbhaVjN3GI4sMic
+3qAsstbM+W3RGgZoFF/Nb27pWW8IRhQiFq+ur2f01driD3zqKUOQpIKeswY7okjp8WPsI34/
+pSW5E8GMWBcGa5Un7pXhBB5pdUy3YwhAboP7GT2ZDQHc26NxAll8EMzJaAmGGhsXXWZxuHYt
+HARCbpMxBFZ5M9bnuFFxKiBDgN42nAhvCRiTI4NUjJeVReLjbo3xx0eqh23khhGLqrGdxJ6Z
+pVrL5UgHjekHq7EdxSB3sliWhO1CJct3X16e/w53lcFWYhbsZSj4epOPHHg7X0Z6BWfGyKCP
+Hc92UD+GCdI929rPD8/Pvzw8/n7x/uL5+OvD499D4y6spVU4B4LMIL018VqQOxf2HK5vskhE
+7YFQFLwcQCZDyJDo6vrGg50yr7hQ43Jw8N68uRfk/gk979LXDr8o9tzbYz4vs6kk9aMJdOTW
+GATD7IhVUpuM5ZzPTYyp/Ex8WzI3BqCNOYAT7iHHiCmVWpc6aFqvpTG420rMaDTSIJ9xCpAm
+xdooRVLTaw1rzuhYJXFufId941UAYowpNIc2eRG5SsPbxAnzMalLr2fcKeJW0cPh+sU1c6Jh
+nqjN6AbGLB5ywxe0tuwcNs0E55gLWNh8uUSLOBl4H9m2g82IMpbb+ZlMjn3ccMaoIN0oKnk1
+Rv64mMwWVxc/pU/fjjv48y/qaTmVdYI+mHTdLbIpShVw170+jzXTTYvC5FtAewdnL5OOmr9I
+Qm9PPC28EKLGJsOdU8jXaiPIRCjJvUnr7effwkZSKkWfTJchnU4E9W6Zi6gN2XRSigFIM2aX
+smL917d7DoNHAWO4vxR1somZdOuaMf0UkWLsOVAaKwtVknpXvfE+E342WzNMdalUQxbZUmZB
+hZ+urchyRoIUdRiSp7PFfPv29Mt3NGtQ1g9GOPlyPRvHzp/pB4v0s0Wv0bHWNTD27Ovws2Hv
+iMu6mUW+ndq2rDmNlz5U69L/1mF9IhYV7PVulS0IjZjrNFiYRAVwunnW3YmezCZcdrGuUCYi
+c8Z4jqoqk1FJOjN4RXXSZl3t+I0STquJxDWIjurcR+Tio5vXzEN5fhTwcz6ZTHDIKDkQZ9Bs
+SlcEW0KhpaCRrtuwC8eZUXrWF0Jn9PUEELRGDRH0ekYM13PnhnADR7lndGIhTbGcz315dFh4
+WZciDmby8opWVy6jHHckJgFwsac7I+KmhJarsmDe7aEyRlF1UDrJQwMztyAXL+P0wehM6H1v
+QT2pOWVa78PAlZuLNdUX2spNTs6lVifqud23alJNWZH0SO+i3kPp0TqhyYDILjtSRR4z4Som
+iphMrt6kWyW5LGS/gzISzuKSeTOI6SBsTpuxvzmas3mTSSYYfl+qtQ44NZRNactwtSni0Ht5
+WF8CkmniXS6XyfQs78nHaC09Rz8LaYpKtTeT3GaTP1fTqiwxWig1rdYbsUskiZLz6fV+T6PQ
+GcTjjHvWScLrrY9hzM9W9OMZwLd0tAC554oAgmnkim2d3ns+5GeGudVfeUt+m3MxVNQdY6Gj
+7g5U0EC3IWhFFKU3o/Jsf9Vwr7PZ/pq/AQBW7UbR6e4MPzKq/flwp+bz6wmUpS9rd+rjfH41
+MAilay7DZQDffns1O3PCmZIK9hdyAueH2neHg9+TS2ZA0kRkxZnmCqHbxk6bjQXRsrOaz+bT
+M+csxuqrpS8uqSkznbZ7MvquX11dFmVObwSFz7tsoL7/bZeZzxaXzsvYfj6/XXjxglsQZbTd
+1za9Oz8piq2MpXeOmCe4mJbqnILlnfeRQF+eObPa9NBJsZKFn7p2DVInTEzyMw4J+mun8oz0
+XiWFEvA/cjzsU7Xb4n0mZnvGyOQ+C0WmU437pIDx9OKS3pOqKrf1Ddp0556Idw8AjFtH7451
+fnaC1LH3PfXN5dWZFYCZTXTiHcXzyWwR0XdVROmSXh71fHKzONdYgVYw5GjUGKusJlFK5CAF
+eLFsFR46zCXDLZkk93SVZQaXN/jjiY+Ke1JPoybF4Toz3ZRE3YNn27SYXs4o4dEr5U17+Lng
+LDikmizODKjKlTcHVB4tmDejpJIRaywC1SwmTEGDvDq3uaoyQr/qvaZHQJvzw2NV5xiD+fyo
+bgp/n6iqQw7zmJMfYX+lZXFMG1gwx4dksnP1TByKslIHP7LGLmr22SpYwMOyOllvtLdRWsiZ
+Un4J2UQVSBWY7lYxkVh1oMIi6rSvSqcR0tHsej65JnUrW/9IgJ9NvZYFfaQjFqOyRYHadFjt
+Tn4MdFAW0uyuudnZE8zO3aStz5RbeetFhdsspi8l629pxF7y23FLk2UweBxNGseMP46sSM8T
+lGU7e80/POBy4wc2MLAIX0YkPd8shdRLUayGJTdwwdnsTSSQOmFCnXmEbe7oPRMAxRCvJZrA
+sb1haGR1P7+8oS/HhgD2FowGJxm/cCTZVxEZdmt9yKQT5lrtANKZl0CNF/BzxNldxPg2tKaV
+/CKPeVyrueIJrFi2ZAlgII2d7Ah+fjvEn7A2QmXw/Z0WCRH+419+fTXBx9qR5q7m8wnTXiQj
+EYuw1lb5wJSJBczpIStxhVL6lOUE8TqaTwas+DVczcfxN7dn8AuG7VTuk7hlugXJqMpgUQQf
+YoM37HfiwLaUoRGwnlxOJhHTWrbXflvtfTdsrAPDfYptzd4YR9Hm2vcDFJrv/f4OyFIUJsim
+GHDSibxd4dNHtyJp+NGt8Mg2hAIk9UGOzBJWqXQyuWTMlFAxDotKRoMW+wPO2GCFdbbHwgr2
+m2mNf5O1VxVj/JwR+bzWX17f3r0+fTpebNSyd5hBquPx0/GT8bNETBeGVnx6+IrZZgYOPrtA
+PO1Du+5iaj9F8tM7SB5cEwAyn04o2dYrp70nDHw65m1jAXtNawENhrWqBuyCLXdzRwtHO5nd
+TBnDEyg2uaRr3EXF7Ib0xfI/O3f9YOzPfoajG2QAcgvT2n9GJ381G3EIMFG6uOMYkSktO7jc
+DPTQQtZUtgS3TKe97DbHagc97VivtIAmLwupS88NtEPxswQppqTcB6cfIINotQAZq2yXXS1u
+aAdDwM0WVyxuJ1NKhAv7oVbS6Qq0hhZOwAv7+xQO728G0RRbLwJFi66y/aAudGd1umCd1Dlj
+2lBdX5mky+S9tqqlAjmBnqInReypo5NaCxV0voGNdH9PgkF5xynQdAd7gz6HcDCYd958l82p
+OCfe9ySxFMEGl+vbm78YDbbBTXnc5YzHTa4pNaLLTS3C55FaT/fklPeKDXU5tc7mk/n/M3Yl
+zY3jyPqvKOo0E9E1bcmSLR/qAIGUhBI3E6SWujDUtqqsaNtyyHbM1Pv1DwlwAcFMqg/dLiET
+K7EkEplfYhkVpQDL8tYX0+x3I8LOqKQSltIllcDqBurt6Jr1Uol3BNOJqd9bbw9VHVNkvZsp
+BvrSGlXZunern8Ud+n5vZ5Jt9O7NEN+w7Czt6/0mGI4I1C0gEUpKRZqSJPf9AWnDj51nq+ds
+kr7j+FH7dfE+i+AE0ShA+Hyvob83krjRgRlK4e6lBpvkFaLYDzZHgMn+VxdL/9+Dj9MAICg+
+niou5Fq3oQx8wi0YIxDqAwtuutnzpYeqU9atk1r9LBIHWamEEnn7/CCdrzW2d6s2SCjmc0CM
+CihTdsME4Q6oiAmGQyYslf6Kgp8zTCHLUrF1mWowyef962PjIvLuNB3QZKXvoE21KQAenmMr
+x2GT6ubiR8X22/BqNO7n2X27vZm69X2Pd/2j4a8v0Z3zyvp+FI64ybnydxq8ollDVYoS+Faz
+lqlMTQlWKwKDqWaJ/E1GmGXVPBAOBNY4PlNqtlKbfoEpizdsQ9hxNlx5dLHlsZpOuLanZtlm
+F0uZofErrDlhmYbBTzXVRkhSwQI77EKTPtt5WDK8EKm/SYIR5S5iCVwQMWLpf4KRdDRPDfXU
+kjZquh/ATkvYq1rV+yBkC0LV1tQW53y5EtjDUcM0jzmIDm1zM0OWfioI1bphMHH1oJYeJlA5
+Uf6WhmMtt9stw62my5ZU413AZZdevWr5S8WGX98Mi46SSkTWNgzQH7PH9G2Y6mqEyxWhGOMA
+WMv9+VHDT4k/44GLCAFv0dalsYv+53Don4WYXo1HbqL6v4sTaAjqqFZfHFOQaLISt83ScbKl
+jHBk09TSjtAp2K1ZjkInappbTMovlMGSGcWQaw6UtGCh3zVOK41RsS/SQHchR7YRLp725/0D
+aFkaeLqytiyzPELW1usXN7a8sAFEMtB6MWlzVgxYWiED37e2oeUG5W6Si5kwBto1OY/E9m5a
+JJkdlsYoD8jEEt1wNKkRDANP45HlgL7IagB4eTgf989d1xmzexi4TW5bkJaE6WhyhSaqO6Pa
+QLm6k3kVBrI7KSvO4c1kcsWKNVNJEYHCbfPP4VaOXQhtps7g2sQWrJVN8LcsxSlRWuQa3nuM
+UVM1yCL0axa03f5Wyd+eT3iNW4xMJr4atjWUdpHZo9d13bpsNJ0SL8EWm5pspKFxyQcg54jD
+loGUPL1+hXJUip5LWsmJ+EOURUHn3Pe7NkfbX8FKtD6uW+p3SWDVG7JU1xTC9L/i4DwiNMol
+hzoKb64pJBPDUm6n3zO2uPQNS9ZLbABLeYmn1Fwn8iKn2qf7yGlCb+GKPJdBESSX6tBcIgKX
+xkusHKwM1NIvPLEQXO1LhDN6+YUSF1uuxoNu7WGdjJFBgvIobLqoWBCzJ4p/xJSZGuDwZpRn
+kZIUIe5YRJjGmnbBdYiKoFAj7uAllC4gvOtkYmlbQ6Hkj8gL0AAj6sBJwcKq5RJYJwLSA5zK
+IWGB0TB2ASs6LJxnafspG0RPeFVEsqlBcZCWVcqKagdAd3ejezQZXVEq4+q/BC9LLaNgR2GB
+dsUGuxFmyNJcZhoey0Q46d5DRxzbFyEZq9Jmt7iviSWcEJgECTGBlwRKS9KGsTHOxFkyeHg+
+PfyNRhTKkmI4mU7BQZJ3tSelMsi8cQ9AFRH5GThcawsYmGdqcYaAwG9rhfaPjzo0hlrXuuL3
+/9h+SN32WM0RkZpv+MVnkYiYCpy2wZV2JmgXW6N2C5qmwbjsSWYlV+FW+jNrVIyxSYnnc6qs
+FEYKxQu3ueRO8rZhbJdaV4VPGcOT+hrqjYziCKjP4UWuOuhZEuB75XJD+a2B60NIXGE3ECPY
+izHnZSlnqlYpxcyRFCT2GdSpzlB2IHQmc/j5/HH8+fn6oIOx9MRfmHvmobCAc5BT8S5qrmXA
+CQgD4AlhOyFu2Iq8FDfj0bBIQkKGW2Zch1rj+EtkoO6nglACAI3CT4Cqv7PoR8HVxycucMCz
+8sOEQHfQncturu9uSXLq8WsKOwPoMpwQeEtstp1cdeGs7bydpQKpGcBMXV9PtkUmOev5LNl9
+uJ3i1tpAXm+nE+cNsoJt7ptF1rniL3IldBNSkbpyU12DN7GCg6djNyBpDqsjD6Q/BQ7iQj4D
+v/RILpkXb0g2U01ZRWelLM77t6fjAwIzvF4ACo0VibVM0KE2F0kuAZO/Of2RGwdTaTa4fDms
+drKJbnbevxwGf33+/KnObc+97s9nVXynpikqLYozMd/ZSS1z+upZV3UeMxSHQtV/cyVLqFtw
+1ioZCDxOdio76xA0LO0sEK2PBSWpbywWEaDMC+JBRHHB9luGXcPlScWTiUBXkDnoCd2heqo0
+Kx21ADRWpErQcVqZhPjNAfh3Mz8dUa5OikHtTAEoACi6UAcoSczXvsR3RkXsV6wrBjn0hqTj
+AMwF7U5BUZXcSdLE7ZjsMDzXxGSdqdrsiQMRBivbDUfTHirZVXzzBwpbU4jIQCWwbWB0/FhN
+WuLQUfTVLsVPBUW79ubkCKzj2ItjfFMHcja9GZG9yVLhUWgUMEJEwHo9h8lCudpaKHtp+Niz
+sFhss/GEnuRwTcoJWQamROWARDLMpiSmuf5KZHBfoIa3Q2d9VlEVsR3ShA/cP/z9fPz19AFB
+i7jXff5sZATuKdGfSVnaP6OtmDG+CrRKnGatAgT211whB76fnnXAiLfnfQX9gwZ4UIcLck2u
+Thcdj4S7OsNWsvob5GEkv02vcHoab+S30aTeI1MW+iYUDKawQshqNDJ1WMCFP2QpsYSRbGmc
+aWX0P87g+epX6ivRha38uBMTs7rr9g+u9eXjRYyW0Dn8LSk8zhG0qqU6TDuCwrIN2Kx+qmmU
+ZX66KyCWeLQg0FgVI/XqkS/RUxuKroCiXkrF+NvhAbRKkAER8CEHG5OvfZrM0xxfsJqaUAtW
+U/OU8ovRw+AHK4F/diBzdXEippEhC/Wrhx7nCwJjD8gh4yygLnOQXQuGNLkH4A/o6tst4iil
+cB2BxQ9lQdxdNTnwqRuXJv+g8IjMNAhnglAUavqcsGTTxCBORUyo9IBB1Uy/uGqGHd3tDQso
+7EYgr4W/kTGlyNfN26X0fgEM4B9A10853QDtO5sRN1SgZhsRLQnp1QxLJJVUSllKAEvAtSaB
+pvtRvMbFDTNplaCin6N7WIKMAmE09N1cnV30t1Mbq567dAna6D6e49KJ5ojB8LRnemp3nv4p
+FBGwe0ADUB1cAAJqoqRwtXWoSUzP/8TPWLCL6I0tAU0+ASGu6WAlkcI8pZeJPgjpKiQTfd3o
+M5TRdHhlCyjlvOZwUapcqh+ADp+KMia0hQ14m9BzhdLKwjIF6wV1K6LXk8Zx/x7veqvIRM96
+UBuJ9IknSU1fgja7G1i3xZTDOVskxNUCOLYiCulGAMRdbxfArJEERtUDoTYODdWB63T1URq4
+uOzVsxF2wtfGBZZAUr/DS3WlBGhouEQracpcya13ekUnNC55kHQiYltkbTGyZLJYcs/JSuQw
+L9nGxE8x6TfXRkyp05On3+/HB9VJHTcaE2SiONEFbrkvcNO67z/Gt7eIz1k5Uj3VtMdgwbwF
+YbuT7ZI+XZQ2o6ChAMOQUlCFtD1R5G/UmeHhc49x7oNGWAQUdiCYtEdi5kSNLYlpxsEep5kZ
+kBDy4fhmOpx2KfpG1E5a8iyWOzyxcjP9cv54uPpiMwCak5qg7VxlopOrUSNmnIQBBVpUPseZ
+iNoZRw1JgVFE2dzEhWnXr9MhgBCS7Fid2ulFLnyNDoQrP6HV6boTcrF+Z4OWOusBXsiIZHiV
+InIlz/uPn6fzi0Nz2qFEC+n2BNI9ORwRKmKLZTLElR02ywTfZC2Wm+mkmLNQEKK5xXk7xrV1
+DctofIXb/FUsMlsNbzOGa6IqpnA8zS70HliucU8dm2Vy188iw5vRhU7N7sfTq36WNJlw4jGh
+YllfX41wJU/F8WMX3YddQ+zT61ee5M4s6mQuodF6K5hn6l9XhANcxQSbNqGBrHt7e93ubH0T
+l4fX99OZaqsHz1FrN8aqgZQM2SyfV2b+LeOfXcRBK04B4UI+Jf2u/VL/3se29BlxpDv1Wxt6
+vvWETPBozbkNSZmDWYWY24oHSEpgxMBMighdCzwevIde4GHUOWdMP3lMCFO5sQDtjZ+YG1BQ
+XG7WBSiZDj/wgBrOb0b4oteeHsbMApNgjAmI9Z5jjFNCP8o7iS0LvCatA8hdhT5mQRC3n+hK
+ijbkJRuj8RGQXJBcvfoUyCxu+L0EQzFcg6te4SWW1GeSys42+XUqBdxnqAbw1UiRSHSoMpDy
+w/n0fvr5MVj+fjucv64Hvz4P7x8tTWcdDLaftaleXTC6hi7VQs3YwnkgqsQpkcjaCrBoYIeb
+YuPAmwuJgcDwYFVGB1/ltjEsmEcrGsQYS5ht9We8G4H2rQ4W8/Jyeh1wbfah9dbgVWTvMVDQ
+Unq4vNcUWGIDwFS4xDlTnwlDgH79dXg9Pgzkib9jO2RpUFnwRd63EbtsowllHd/mu/1nxRER
+C2y2LQlBWHFlPIeRQHdbfBgaLTL6vazL2UaJXhFqM2QyydPn+QF5hNS2aUU8t8BvdIoSMmf2
+FApWMuUaq/G6leqvMzdV/9RY9i3OWeAh+aFUvRgcFLJ6zKA1vaMaE2DqFriDyG7GM3TY0cGx
+ymAimMWot5aa2Ll1Q22FU9DEQbL/dfjQ9lqyu8FcYjVXhMPL6ePwdj49oHKOH8YZhB/HTd6Q
+zKbQt5f3X2h5SSgXaNCsqsRWTmubg2cIF53d3AdU2/4lf79/HF4GsZq/T8e3fw/eQVfwU/Xd
+a98O2Mvz6ZdZAhheNkY2+VSBgKFNZOtSzZvc+bR/fDi9UPlQurHR3iZ/zs+Hw7u6pB8G96ez
+uKcKucSqeY//CbdUAR2aJt5/7p9V08i2o3T7e8G66nys7fH5+Pq/TpllptIwes1zdG5gmWvl
+0D+aBU1ViT4R56mPi37+FgDhKS1FTDzWCOKEijL8oFBXddKgONl07WhAUIVw4IhTa3rvQouC
+abfAMCdgg7yzttL03uyO6rpjedH17ZfqjOnIzNUZ4zbRyg4IlGR/jbmj+pGlcRAg1rigz5Kf
+f73rb2zPmlLE7gNZKlZxxEA3RQMggXFreZsrsjhNKZsEm8/rKwzs6kW4nYb3pBsdsIVKuAlg
+uEV/ccmWFaNpFIIdMBE8yeaCvpJcMfcDCArspx4FWKG4DNKS39HWVTa9re9hZYVnH074P4cc
+H4mUdS+n7PXxfDo+tpDDIi+N3XCO1SZcslvXT4Yi3ZYKMvtnrQczV+rN4OO8fwAHeMwtJsNf
+GsxwuU/clXq6W2STc54sCLskKjCnIMyRZCBCaoFpiBT178jn+MzWHmiEiYHjjG1M0I7qvDGf
+v7WLr1kgPJb5qvmF9obHbP0VTYDHcvMh1JY7MjHL7V0YkootxMlGClH0626Wa11xLMW2YBxX
+R1Zc0ue5G26mYRl3yx7/o7LHVNltJkqN+33mtRxD4TfJrGoKTZApS1/rCzXqijJvg45UyYqZ
+Y355NYOOHy+ieYyWab4HTqrHBidXg9JQv1fNtH4jhXxvZ27GZt6HeqNzgc0NvCtgqpCtUzv8
+vs9jO7bq1mlQI60oAuEvBaQ40koLyVPisQuYNizFpYxtb78Wc/Alx9f5LDNjjUsiIujJOh91
+cjazDPko/hZuJu4iMWll2LE4QYsTgV9FIrNkDvD5UmfvzqVbG2KhDl6IQUZaUUkkRFVNc22F
+PTdBmATt49yqmHXVnCWpmi41r04AVRI8WZttd87QuAraYazkh5ng9NYQqIVvqFnqt6zV7udh
+VqwxsDhDsfzXdQE8a81pcDeeyzE1QQyZmCIAHdDecDhlvlFq94hawNAtYDuHbI6Y/cPToXXa
+zCUSH666eRtuw+59TePwT2/t6YOrObeqLy/ju5ubq/ZeFAfCDob0QzHZz2W5N696XNWI12KU
+7bH8c86yP/0t/F+Jl2g7FK3VhlCqfK2UtcsCvz1fxx5Uh7jnJ2zhfxtf32J0EfMlnMnZty/H
+99N0Orn7Ovxiz/OGNc/m+HOR7gC5w2TI7lNJEX0jYIT898Pn42nwExsZfSjZw68TVm3vY50G
+fiJZ4CTCqGA4eJqoLk+Bl/oY6tDKTyO7VufJNAuT9gaoEy7ICIaHEmuUQDr3Cp76SoiySzZ/
+6OFFBq+5zknznGMCCLUaHKdMXezoM4N51JJn846M4evdGWdfOoet+q0RXu20md8pUidRu+DM
+KdPviBPmvOummCK/XXXSdYhCY4jbljQqOrxpwSFDvHoZRpmHrm2wW5AjRtXpqPhT0jABCkg8
+DrWZpjoXLRiHFssPY8jgtDP4gTkDG1oKmlG3GCXOiKhbDtcuLREectNmUYde3JXiGroUP/BD
+w2aas3Wcp07bm9exmaCmLE9ZaM8G89sIK451Q0kKMwII4j5ncolWsnbFSggNtUVTNGzv2rJN
+apZlSC/JZULT7qPtuJd6Q41NWlZpIQTrFPAF8L1itjPD1LKbcBioweoUFKOxBwybmsKdihKZ
+4c5zakNbt9qcdzYQk2LWNT5feoVtcLwlRqzyjG7vrBXRNKT125a/9O9ru5MmhTw1NBl/8QWS
+3LSVLvWYxlkRuQ3xhARoJiXCJNYLQ8PgtX91G+pdaKnnNLW6uWikhQSwCqwq9Opzfqr87Sab
+dz7rIM6jNGmH4NApPZ+S+8mSWhlcUITYY+TZSM6MwJqS6kclVbXELotcyW2FktvaGWvKLU25
+nRCU6eSKpIxICl0a1YLpDVnPzZCkkC24uSYpY5JCtvrmhqTcEZS7ayrPHTmid9dUf+7GVD3T
+W6c/6oYBs6OYEhmGI7J+wDFtk5jkQuDlD/HkEZ58jScTbZ/gyTd48i2efEe0m2jKkGjL0GnM
+KhbTIkXS8lbg4wDCEnI4jwgviIqD+0FG6OMblijzc8K1smZKYyUIXKpsl4qAQiKsmBaMBCus
+WVKfMMevOAQHcEQCfqfiiXKBq79aw3epU1mernAjFOCAS2jrLI8Ed6ArSoqIi829Pg0qX0lb
+P12Cpz18no8fvy2DtzLzym8HGILfRerf5z7Y/ZAB6MF9W6hjP9KApKmIFoROriwSly+MRsv3
+aBZFKLwl+EcbhyAKe83cDcCwTeoXtSwVhLK/VztdEfFbHNgALVnq+ZFqcq6N4JJdAYZfnDl3
+6w4brrODgCbzHbzxp4QtpVbicl0MyP/Gcx5pXKW7aIaCWXbMgQy/fQFrjMfTf1//+L1/2f/x
+fNo/vh1f/3jf/zyoco6Pf4C99C+YJX/89fbzi5k4q8P59fCs/ewPrxYwcmVWEB5eTuffg+Pr
+8eO4fz7+3x6oNmStyKALfKUvSC0bLM4LdQleiAh8JHOeBT5b6X7iil+UfbZLfdy9rocfvhjx
+UKRaq2Rw/UXrESX0rRXzXG0pJG9l8IaPUkWmB7kBDnPWb62jh2AOIDVaQhfTJqxaO+SkhX7I
+k52bqspwk5J7NyVlwrtRK4vHa/sOqZZvXNu9nX+/fZwGD6fzYXA6D54Oz2+HczMXDLMa3AVL
+LNPKVvKom+4zz61QJ3ZZ5YqLZGlH+HMI3SxLdZFFE7usBhisk4Yy1jJvp+FkSxjV+FWSINyg
+9egmm1Cf3TLK9NbbWklyFxyasb40gReD7BS/mA9H0zAPOt0F6Dk0sdt0/Qf50nm2VMdES7du
+KK5DRZtqgn1WLtLJ51/Px4evfx9+Dx70JP0Fbt+/O3MzlQwZIg935qlq4pfoqUcAf1Rdz9O1
+P5pMhi3XAWMJ8PnxdHj9OD7sPw6PA/9Vtx6geP57/HgasPf308NRk7z9x77THc7DzoAueIgM
+Jl+qk56NrpI42A2vr3A3h3rxLYR0oD2c9ebfi84uoQZiydSmua4+ykxbB76cHm3/nKo9M+yT
+8znmZFYRsxTLkuG6sLJFs04rg3SDFBP31Zzgrd0SQLHVuvZ3m5QwFqlGGjRjWY6BD1Y9kLIZ
+0OX+/YkaTyVvdrq6DG0RoWo13pm1E8XHvOscfx3eP7qVpfx6xJGFpAl9Hd5ul5TbcskxC9jK
+H+HPyi2W3rFXDcmGV56Y0yO70EdDdyD+yQqpeLQtWc/m6o073yT0Jt3dW6iVo02lsC+Thh6F
+s2Nx3ODG0w3HaIK7PzUc12g01mrJL9mw0xmVqIrFkifDEdIVRcB9Sio6gXtTkeFJeIYi7VVn
+xiId3o06Ddokpj1Gijm+PbWMuOttTyJNVqkFGlW1okf5TMjusZby7ref6XjTetbhhEoR6NI5
+g2DygiEEuMRRmWQ2QVO7X8zzu12Y67+d5NWS/WAe9nFZIBnhkeacQpd5OiurU5uPRseuqWmi
+rq5YK0NMd1uLHP9f2ZEtt20D3/sVnj61M22mORq7D3ngJYkRL/OwZL1wHEfjehIfI8md9O+7
+uwBEgNyF3DcbuwJx7oG9pkvcrkp2z3T7sPomNOR5t93vHSXpuMizDO2e00FJ1h4NvhDiCY+/
+5l/OB/CCfzTRCJumnabBqW8evz49nBUvD1+2O+Vvb1S/yRUpGiwkXLOhOmbudThXkUmTo4cQ
+zakmghnBTnAMQopYc7OFMfnu5xTz9yTolFtdM3uCcnMPGsvJ7x8RjRbyKuRayAoxxkNNSJ4Z
+js14s9kq2vf7L7sbUEh3Ty+H+0dGXsjSUBM8pl3Rrsk5AtArWC+iqTt8EosVi6d4HHHC9iMX
+rtGw+ukd+5HXsPNhyLyAPMUWGN9ixR3i5KpfpLOiP//rT9631UJM83mbRJMzN0XUkY7TbaLK
+RsEsWUdCRW8LL8LqJKeQghxL2ET9fJ0xQwqa6xxTxgECPuVh+oRBvrGAVRdmGqfpQhdt/ecf
+f/VRgk9lKZZr0L61jpF0GTUXaGC/Qjj2IvrfIuo5FgNs0HTAd3VO2mUvZV9q0jk+7VWJctcj
+jwgcWcpE4EXb3QEjMUBL21MZ1f393ePN4WW3Pbv9e3uLxcasWhZkSVX5udWraO34CU7hzaef
+LScmDU/WbR3YKya9dZaYav56/D0eW3UNNxzT4zUtj2ycwV4xaVqdTCRE6r3JfocyLX2YFBFw
+hNo1kwfkM8k5yqQgF2JAsHWkTOQE1mHr2jRznsCjso5TLn6k1oWGLetsOQRhRGmflmhO7h3v
+bhfOgkyzdb0iuHxpyz9wRG8/jpE92gx033a9I6iBFjbq4D0We8pm4psKIcAFTcLrC+anCiKJ
+GYQS1CvpICqMUDCpAFSo5Q4QEXDOTAMos1ZNHbIYCakhKFe+f2HQsQj5a6b81ezWQZozX98g
+vTTeStbT/OYD277eYPP4/3598XHSRoEn1RQ3DT5+mDQGdc61tYsuDycALOo37TeMPjvu4KpV
+WKNhbv18k1qn3wKEAHjHQrJNHrCA9UbAL4V2ayVaIJBNgqmMuLZ+mVvVc632MGebZ43VHjRN
+GaXKsymo68ByV8OsSVSnYtw0pRnYHtsTL7DaDrQgGpmEbC5qUjIhPCoXKLVGSb8QMMgZCNWS
+0MknjSBYryyg4jXUScv0QLYAxJ2VtUnUcwLLia5zhoKx9MzHEFSUhQEoKyT1KePkIwqKcJSP
+Je/JZp4pM4/V5aVF2OdZ6bgM4v8+SlBkrkujIe1BW+ZpZF/DKNtgcTi7cwxExAKbTL95lTpZ
+mOCfWWytVUnZ/ObAkGvnqMHxM0O4iptyOrB50qKPYzmL7TM6K2Etmcxg2M66viP+xY+LUQ8X
+P95aVKrB0LjSWtwGaP1ov9BgW8zZFT5KFRNhYTwn0k6aRRan76cT1sBaBGY+YJRXsW2dsmHd
+EeiaTI1wR63Pu/vHwzfK3/T1Ybu/41LPqDI6FJXPG90VHJOa8kYbnTwXBPIMJJ7saIY6FzEu
+O/TzP1YMM2LxpIcPlkkf3er0UOIkEyp4xtdFACff45LmYEgVAkBDCEvUDJK6BvTEdnMQl/T4
+1HL/ffv74f5BS517Qr1V7TtuA9RQUGFmhpIUZALLsXYOxZFZhx4zGFMgiyoo6xzrCo4dxlnm
+UvhvEFPHgVDaaZFgUQ1gFFgbSrBcq4GDRI8CKvq858EoB90g9DsoNGiM2HK8klV3QLyBj6zQ
+bl4lRMd5Yf+1C+1kcdC3JN5+ebm7Q5t3+rg/7F4eto8Htz4JpkNF7UNIVaSHKvprKI4+jx2C
+i/9zyqphTl3YBAXIrEXappsEGYX9a4KyS/Gqyf3kjByDLBKLNqpWjFow9EQ7Dxw7cygGXlaq
+2tdIcWGqQ0QkfscTFuymXBXC4xSBqzLFnL2Ceqi+Uoafk0gwe+kjmgXcytNW6QWhYtTBcnoe
+DcTXPbmadI1UJqCBixtrrKSIp/Ggo/6u+CtpgH01pzqvHiSVNIG8RfzzpkFhANgsK1fTyTtg
+jvbTq1C/DPDkmgzhx1OlmqmPT29/GvulDEdr8tXFKN2Bsvsh/ln59Lz/7Sx7uv328qxu/OLm
+8c5laAHlkAECw0dDOnAMn+6SISxFAUlI6VpoHjaxnLXo8tJVOh29UHdG56pfdCBYtEHD7/Pq
+kq3QdITTQ5D6Gnvl/WuhnO+AKH59+U51C4Y77JxIFZHz7+igoqAvZIRluhzvHa7cMkkqrogK
+jtQiT7/sn+8fqXjZb2cPL4ftjy38sT3cvnnz5tdhqBTWSn3PSVabiolVjXnxdPgqu5zUB87L
+c2VQG+pAwRIyNOiTyWRkGl+9k52sVgoJyFK5qgIhS78e1apJBBauEGhqMo1VSEofUKV2T/SF
+a0x2Ay0T89+mr8INaLs6majgwyk/TtQrYP+PU2HLOEBVqI4k/2kUMGBZ+q5AoxwcdvWy4pn9
+UvERge58U8z1683h5gy56i2+KzJiHL5S+jjiCXjjY3QUE51KJYyIFRZ9HLSokNd1x0RtO+RD
+mNL4q1GdYMWYNMim8cF11PEiAgBQfJvJhwMxTp4gQhI3GaHJJRtLZNJbOeObXMRLLW3WjJzp
+YKrgehB58PWBHyq+uxXR9agCgc1xZ12hxGCaUT1SnI/QeR1UCx7HKC8zgo47UFVVc8orQj6T
+dTxCwUBdvBSECaJVYbvVqWSD+oeqF+uhCn7hkl+jhJihDFq7O01eIiJZyINQ1UmSwwGuL3vQ
+CKXq1wAGtjzzfok4nQdhsYKd8yFoDcw42ypMIaGDLmyrllmoXEu/75siqJpFyYlnIZAqUAmA
+rZGhZ+zCbNqDosD6NhjgRz+QUgsZdNh3L2KYLZW1r/RcueHkDAaRUxtI6rp8x5sAazNNacvD
+PQg1LHHRTC2N6aWvud6E7DqqzYARzLJg3nCSg8l0GpalT8Pd4OMDS19GY7RfYtrt/oD8DMWy
+6Omf7e7mbmtPYtkVUjiHJvP4+gDzS4vPSn3mj5xKM8DhjPXLJXpR/zsS3UFCh2a9Vm54H+Jz
+9ihd0x03FEnCOLWrkl3RWNeUQr4WQsnTglIVyxji70PD+0my8LCPEJ2zPHB84G7KrMSEpiIW
+pRQBNaH3dwbsDpiIDDePsoI0ZLAsv3cRiVZnkazjLvctn3rd9JU9NHhNJMSKKIs0YLRCCixC
+oHc5PiKC4Orl1QuHAy8UQSWMrhunIbOhazJ6yHBOg3UxanRukLVqteCSzw1B05j3LVHXYclL
+ngS8ymX5XU2+oRplvi0KK9/yo/l8oQqc8TUsZmkR4y6cIOrUmynx6TlQlA/EMx/5AVcfSIo+
+EsOz1KHMS8+JwJgTYOve20G2e4EGm05EBICJGo2XA0zCb9SD/X81zSUUNVcBAA==
+
+--T4sUOijqQbZv57TR--
