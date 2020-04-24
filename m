@@ -2,70 +2,105 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D63DAC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDBEC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE25620724
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97C5B20724
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:30:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="D3BZPpBL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729059AbgDXR3i (ORCPT
+        id S1729077AbgDXRaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 13:29:38 -0400
-Received: from balrog.mythic-beasts.com ([46.235.227.24]:34849 "EHLO
-        balrog.mythic-beasts.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727022AbgDXR3h (ORCPT
+        Fri, 24 Apr 2020 13:30:02 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:52174 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726753AbgDXRaC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 13:29:37 -0400
-Received: from [87.115.41.34] (port=58078 helo=slartibartfast.quignogs.org.uk)
-        by balrog.mythic-beasts.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <peter@bikeshed.quignogs.org.uk>)
-        id 1jS28m-0006fu-JF; Fri, 24 Apr 2020 18:29:32 +0100
-From:   Peter Lister <peter@bikeshed.quignogs.org.uk>
-Subject: Re: [PATCH v2 08/29] docs: filesystems: convert configfs.txt to ReST
-To:     Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Becker <jlbec@evilplan.org>, linux-usb@vger.kernel.org
-References: <cover.1587487612.git.mchehab+huawei@kernel.org>
- <278a9befc98b49ea866c9b687d070c70cde20628.1587487612.git.mchehab+huawei@kernel.org>
- <20200421165534.GA16511@lst.de>
- <20200421170223.GP5820@bombadil.infradead.org>
- <20200421172337.GA18305@lst.de>
-Message-ID: <894438a6-cd91-1728-a313-4bf4f8d5074d@bikeshed.quignogs.org.uk>
-Date:   Fri, 24 Apr 2020 18:28:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 24 Apr 2020 13:30:02 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03OHMYrl130647;
+        Fri, 24 Apr 2020 17:29:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=CZLc1DZWz37/9j/SPagTNrIvn4Qv65Ju64jtxEuMjtI=;
+ b=D3BZPpBLCiTfr1De+htHux2IB+H7ncfpqdOLokAVA1BiiF7E9jp+vOu3J17Umxlpgokj
+ Va+sbDWpk4MATru0zNd5dIQKJdVo59gOcO4tsWGb3MyxUm1tG156XdyYnea/pcBv1aWh
+ GaMJQ/B93D/4NVS7VfFSg3I9qK5sXokQoDc6k58ppovBCY88fvMV8Uy/enBBp26hSSTL
+ CP0FcD75d6WDONEgC+3xkWpvsyBOaqwN/fJ+sV7M0conNz2PRYzV52D9eyHnfZ7lHZRp
+ SXyYEDVziSSE5zaYL2XGexrH8EC7YKVXehVyH5B8bjuPkXFtHGo1lx27iAU0VPNAU/H0 mw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 30jvq52bmh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Apr 2020 17:29:54 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03OHLm4I162349;
+        Fri, 24 Apr 2020 17:29:54 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 30gb3xrr56-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Apr 2020 17:29:53 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03OHTpGM016098;
+        Fri, 24 Apr 2020 17:29:52 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 24 Apr 2020 10:29:51 -0700
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     <kashyap.desai@broadcom.com>, <sumit.saxena@broadcom.com>,
+        <shivasharan.srikanteshwara@broadcom.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <megaraidlinux.pdl@broadcom.com>,
+        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] scsi: megaraid: use true,false for bool variables
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20200421034111.28353-1-yanaijie@huawei.com>
+Date:   Fri, 24 Apr 2020 13:29:49 -0400
+In-Reply-To: <20200421034111.28353-1-yanaijie@huawei.com> (Jason Yan's message
+        of "Tue, 21 Apr 2020 11:41:11 +0800")
+Message-ID: <yq1zhb0dc6q.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200421172337.GA18305@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-BlackCat-Spam-Score: 14
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9601 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 adultscore=0
+ mlxlogscore=999 phishscore=0 suspectscore=0 bulkscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004240134
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9601 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
+ mlxscore=0 adultscore=0 mlxlogscore=999 phishscore=0 impostorscore=0
+ clxscore=1015 bulkscore=0 spamscore=0 priorityscore=1501 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004240134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/04/2020 18:23, Christoph Hellwig wrote:
-> It wasn't entirely uncommon, but that's not really the point.  The
-> Problem is all the weird ".." or "::" annotations that really kill
-> the flow, or things like "|copy|" that have no reason to exist.
 
-You aren't supposed to read REST documentation files - as opposed to 
-kerneldoc comments in the C source - any more than you read HTML.
+Jason,
 
-[ Exactly what should or should not be in C source kerneldoc is another 
-matter. ]
+> Fix the following coccicheck warning:
+>
+> drivers/scsi/megaraid/megaraid_sas_fusion.c:4242:6-16: WARNING:
+> Assignment of 0/1 to bool variable
+> drivers/scsi/megaraid/megaraid_sas_fusion.c:4786:1-29: WARNING:
+> Assignment of 0/1 to bool variable
+> drivers/scsi/megaraid/megaraid_sas_fusion.c:4791:1-29: WARNING:
+> Assignment of 0/1 to bool variable
+> drivers/scsi/megaraid/megaraid_sas_fusion.c:4716:1-29: WARNING:
+> Assignment of 0/1 to bool variable
+> drivers/scsi/megaraid/megaraid_sas_fusion.c:4721:1-29: WARNING:
+> Assignment of 0/1 to bool variable
 
-Developers are used to reading plain ol' text files for quick reference. 
-But there is no make target to generate the text files.
+Applied to 5.8/scsi-queue, thanks!
 
-Can we create a method to build text *output* files?
+-- 
+Martin K. Petersen	Oracle Linux Engineering
