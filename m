@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73201C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB3CC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48CAD2087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 519A82087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:36:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="yhZCD7Qw";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VLGeO82e"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="txhJsuoB";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FU2uHWGj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728381AbgDXPgC (ORCPT
+        id S1728431AbgDXPgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:36:02 -0400
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:55889 "EHLO
+        Fri, 24 Apr 2020 11:36:06 -0400
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:50781 "EHLO
         wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728340AbgDXPf4 (ORCPT
+        by vger.kernel.org with ESMTP id S1728340AbgDXPgD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:35:56 -0400
+        Fri, 24 Apr 2020 11:36:03 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 4188B78A;
-        Fri, 24 Apr 2020 11:35:55 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:35:56 -0400
+        by mailnew.west.internal (Postfix) with ESMTP id 3DFFE1338;
+        Fri, 24 Apr 2020 11:36:02 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:36:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=RAyogzkukKZAd
-        i7S8yBa6C6J+CTNVLFaPMJKvTHa5P4=; b=yhZCD7QwzRo929MJQo2eKzY6/OOJE
-        Uv52BA1a/pFnCyTnOBLfX4i2h9n3D/I1tAWDksFwyr8tx00W3lCKVYb4nKQlCJ3Y
-        OIKW1/VTBsb4+yr0HBVx+l5fxmn1gYzMAaSwXD81r2UTuIKwt6styluBdVyH84z9
-        L4r/RdUoQJ8ecx655K7Y00LcDfzhxCW5C1Bt27I1Rk6xd8Wj/Tu0jTgbXbfkHwhC
-        M5kyXIZQ/aar3CsuJtyi2TtN+eutvF38QWyXxEqDhVcd0vSQ/N5PZfAXvMZ53Msj
-        ucqiRa7CRGUqubgdTB2rsJflX8IAVFvZt1R8aL6uouMW0tqr9z29NJzJQ==
+        :mime-version:content-transfer-encoding; s=fm2; bh=5EfepUmgVDPUO
+        z3GVL3TqSbU3jIl6CJ4wxOzynhsQS0=; b=txhJsuoBnl+bVOQuzi8GERvG9jny1
+        icHSH5yYHUNe0aHhZrfUwh3HDEusyYk9UTVXAWe/Fo69Fea3dQczMne1t+uJQpyl
+        e5i+AoI/xSeBWLUHmpFoiOZx3yovfreQBPOX6o1Ns1JekaVZuHfE6QyCqGkDL/3d
+        D7DluPyBU/6Nvwj65GJUiVa/17BfU+HN7yPmEbKgK3qvwLyArpMz6E7L5r6rYJeI
+        YzR3eFpqxIdJq1pT283Zcn0rft/rNeUhPFKQ3c300gGIec65sb68WlDQ9XDoUvJZ
+        nZ6PLhpP8CcReBntLfa1MlaDwhMrLioGhjrS9vlgAX91wn1JeQvYlLrrg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=RAyogzkukKZAdi7S8yBa6C6J+CTNVLFaPMJKvTHa5P4=; b=VLGeO82e
-        vTD/HLM+NvsfFEdXq3Yg6t6GMg4l8JKRMiifEYE6B1E9KycDXkZKzChH7OH/13qb
-        AapEdFS4rLMkqYOCFmkYJPt6EvTV+GWb7q5ykvnGhaMSTRrY8/gf00Zm8sENLK2d
-        ds//UH30shAFEHdM9d/q5k6WDDSUpVytCOYopeA221kevx/xNPzso6ptGYfDRk2P
-        SdFFpaF9K3uVTA08y5VA98YF9pjanr+x/ZnTecdK7s3m0HkDhFX9sahjarfVD0sY
-        mRuw8Lvb/H6+DA02Fne563Tmdor5IrIBS0QBhO2Pd5gnj1JDhETLtA+6Hcj8o3rS
-        kp5mjmWz3ui4/A==
-X-ME-Sender: <xms:WgejXtplR3x-HH71IkGkCi_kHIOxI2M5vAf1ucsksxqEYn_Ppq5aQA>
+        fm2; bh=5EfepUmgVDPUOz3GVL3TqSbU3jIl6CJ4wxOzynhsQS0=; b=FU2uHWGj
+        2QyRJgVUbZCQqCft0ETFQdxL9P0+lWbTdRtvpHrw9LchDiuz+clw/bP1sWBxnzW0
+        AQW7aWK2TQIPzFYfRhV4qUrMR8IQ3cfFqImgQDBlkYoI/83Bk+GnXA0U1ZZCknSZ
+        6Sf5TYqnOfzj/tnaWZaAFQNR5eIx+DIOgMZsPrhGhFqI0fb52Ak5OFWC14HaIBXw
+        t8aL+FH8FW6C36/Fe0rPFnVqNtAmQBWzY4ZUFVWx5FiqDVgo70diLQeU4du7mZZs
+        EtEDd5Zc9i/65s4kGPV04wjBxcvXpxPFpRda42lQZLWFUkgcD5kgoq7COyscnzw+
+        9AtpSbxbFv4mQA==
+X-ME-Sender: <xms:YQejXqC8WTmxeQnL_VF53PL1f2WLTS1YpfkqvBc2BGuyEJbgxxSjSQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrhedugdekiecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgv
     ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpeduleenucfrrghrrghmpehmrghi
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedvvdenucfrrghrrghmpehmrghi
     lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:WgejXnEdBDQUpJkecvOw-HPobW_x0jVVkBgMapvXcXBQdDHY92P-NA>
-    <xmx:WgejXjIbJ0yAR-sJuxyPaRytcCcDrqE_xRVNyoS4s3bns2Zcrvwe9w>
-    <xmx:WgejXj37IGoZv5g01uuoq1tjuU514Pn9y2i1hIodx9O5mo7MZl4I5Q>
-    <xmx:WgejXoNO1w7qyB-vAJzZUbARGeMJmJneDbmWVNt-E5Hj--E_hdOBKXHp4VA>
+X-ME-Proxy: <xmx:YQejXpKxWyPhAs-mJK7T8ku-OMZ11X2Dm47mz1NEKKmI3Vg5JycFgg>
+    <xmx:YQejXltevHlWVaFZaGI8dbodUyQjhuWJkxUs_-nRgQmMlc_i2Gem-w>
+    <xmx:YQejXi79ukv8eJ-MdwR3KQGX_L7bhDddhR6mP35GfPeL0txUUarqrQ>
+    <xmx:YQejXv74mxP4GPht6FuGqhBJ4qKT4anSkNIiwg9SlnL8ub99D3ElfgtCADQ>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7E3E73065D87;
-        Fri, 24 Apr 2020 11:35:54 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 75CFA328005A;
+        Fri, 24 Apr 2020 11:36:01 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -74,11 +74,11 @@ Cc:     dri-devel@lists.freedesktop.org,
         Dave Stevenson <dave.stevenson@raspberrypi.com>,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v2 23/91] reset: simple: Add reset callback
-Date:   Fri, 24 Apr 2020 17:34:04 +0200
-Message-Id: <31e3daec5d5b703bd87ef9d77e353589daf6fa3e.1587742492.git-series.maxime@cerno.tech>
+        Maxime Ripard <maxime@cerno.tech>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v2 28/91] dt-bindings: display: vc4: dpi: Add missing clock-names property
+Date:   Fri, 24 Apr 2020 17:34:09 +0200
+Message-Id: <068b7528b56d53a5c8a527d66e2306c947477940.1587742492.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
 References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
@@ -89,89 +89,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The reset-simple code lacks a reset callback that is still pretty easy to
-implement. The only real thing to consider is the delay needed for a device
-to be reset, so let's expose that as part of the reset-simple driver data.
+While the device tree and the driver expected a clock-names property, it
+wasn't explicitly documented in the previous binding. Make sure it is now.
 
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh+dt@kernel.org>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/reset/reset-simple.c       | 24 ++++++++++++++++++++++++
- include/linux/reset/reset-simple.h |  6 ++++++
- 2 files changed, 30 insertions(+)
+ Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
-index c854aa351640..602ed972b0a9 100644
---- a/drivers/reset/reset-simple.c
-+++ b/drivers/reset/reset-simple.c
-@@ -11,6 +11,7 @@
-  * Maxime Ripard <maxime.ripard@free-electrons.com>
-  */
+diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml
+index 288494b70e82..58213c564e03 100644
+--- a/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml
++++ b/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml
+@@ -21,6 +21,11 @@ properties:
+       - description: The core clock the unit runs on
+       - description: The pixel clock that feeds the pixelvalve
  
-+#include <linux/delay.h>
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/io.h>
-@@ -63,6 +64,28 @@ static int reset_simple_deassert(struct reset_controller_dev *rcdev,
- 	return reset_simple_update(rcdev, id, false);
- }
++  clock-names:
++    items:
++      - const: core
++      - const: pixel
++
+   port:
+     type: object
+     description: >
+@@ -31,6 +36,7 @@ required:
+   - compatible
+   - reg
+   - clocks
++  - clock-names
+   - port
  
-+static int reset_simple_reset(struct reset_controller_dev *rcdev,
-+			      unsigned long id)
-+{
-+	struct reset_simple_data *data = to_reset_simple_data(rcdev);
-+	int ret;
-+
-+	if (!data->reset_us)
-+		return -ENOTSUPP;
-+
-+	ret = reset_simple_assert(rcdev, id);
-+	if (ret)
-+		return ret;
-+
-+	usleep_range(data->reset_us, data->reset_us * 2);
-+
-+	ret = reset_simple_deassert(rcdev, id);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
- static int reset_simple_status(struct reset_controller_dev *rcdev,
- 			       unsigned long id)
- {
-@@ -80,6 +103,7 @@ static int reset_simple_status(struct reset_controller_dev *rcdev,
- const struct reset_control_ops reset_simple_ops = {
- 	.assert		= reset_simple_assert,
- 	.deassert	= reset_simple_deassert,
-+	.reset		= reset_simple_reset,
- 	.status		= reset_simple_status,
- };
- EXPORT_SYMBOL_GPL(reset_simple_ops);
-diff --git a/include/linux/reset/reset-simple.h b/include/linux/reset/reset-simple.h
-index 08ccb25a55e6..5eb83625a495 100644
---- a/include/linux/reset/reset-simple.h
-+++ b/include/linux/reset/reset-simple.h
-@@ -27,6 +27,11 @@
-  * @status_active_low: if true, bits read back as cleared while the reset is
-  *                     asserted. Otherwise, bits read back as set while the
-  *                     reset is asserted.
-+ * @reset_us: Minimum delay in microseconds needed that needs to be
-+ *            waited for between an assert and a deassert to reset the
-+ *            device. If multiple consumers with different delay
-+ *            requirements are connected to this controller, it must
-+ *            be the largest minimum delay.
-  */
- struct reset_simple_data {
- 	spinlock_t			lock;
-@@ -34,6 +39,7 @@ struct reset_simple_data {
- 	struct reset_controller_dev	rcdev;
- 	bool				active_low;
- 	bool				status_active_low;
-+	unsigned int			reset_us;
- };
- 
- extern const struct reset_control_ops reset_simple_ops;
+ additionalProperties: false
 -- 
 git-series 0.9.1
