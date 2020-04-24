@@ -2,115 +2,227 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3037CC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C15C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E33320728
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05E36206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:22:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TfZTp1r/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BAUdh6VR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbgDXPUw (ORCPT
+        id S1728211AbgDXPWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:20:52 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25677 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728078AbgDXPUt (ORCPT
+        Fri, 24 Apr 2020 11:22:00 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58718 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726707AbgDXPV7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:20:49 -0400
+        Fri, 24 Apr 2020 11:21:59 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587741648;
+        s=mimecast20190719; t=1587741717;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=CCXBrdRVsySd/WwGvg6OF0IE99GGjSbx68WGqJoAVXk=;
-        b=TfZTp1r/zNQkZSSal555QY/pGGH4M0UCSoOa5WJuKoeORacAR2r753K0lh3Z6ztLAQg2p0
-        QObjglY6JMsG/WlK2Ripxh1XnCcSwHBICqjGPOqKNF3ArxtsvBeFZzxRaIb8ZDAhdb4vuZ
-        iKW3sFKvSJx3XpPKbGbBEHlW3dbKfH0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-392-5de4YK42OkSJ1I7pWNXceg-1; Fri, 24 Apr 2020 11:20:46 -0400
-X-MC-Unique: 5de4YK42OkSJ1I7pWNXceg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9F69C100A693;
-        Fri, 24 Apr 2020 15:20:45 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-113-129.rdu2.redhat.com [10.10.113.129])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DB8275D9CC;
-        Fri, 24 Apr 2020 15:20:44 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 8/8] afs: Show more information in /proc/net/afs/servers
-From:   David Howells <dhowells@redhat.com>
-To:     linux-afs@lists.infradead.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dhowells@redhat.com
-Date:   Fri, 24 Apr 2020 16:20:44 +0100
-Message-ID: <158774164414.3619859.10925543612058268605.stgit@warthog.procyon.org.uk>
-In-Reply-To: <158774158625.3619859.10579201535876583842.stgit@warthog.procyon.org.uk>
-References: <158774158625.3619859.10579201535876583842.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.21
+        bh=Wx6UqBc+7Fd78ffDznq1MJq+WQRq4yvKOdpl3Ke1Tvs=;
+        b=BAUdh6VR/QosJWAtDyB7wNTDgbVmsoK2FhVhJucXh5vOqksN0qOzZ+nVUJ+RErsn5XrXOi
+        ZDUjujFXd4oT6XFzzwo+DC9KbNPQ+9zK/QXobCFKf9+f2Fx0Vmh1rlwMWhZtJh8gN/8Pit
+        caYCTR+GmKjPf7/adXtTvetFvlFfNTA=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-270-rUQ1agwbMPmc1BSuybxKTg-1; Fri, 24 Apr 2020 11:21:54 -0400
+X-MC-Unique: rUQ1agwbMPmc1BSuybxKTg-1
+Received: by mail-qv1-f71.google.com with SMTP id c3so10050304qvi.10
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 08:21:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Wx6UqBc+7Fd78ffDznq1MJq+WQRq4yvKOdpl3Ke1Tvs=;
+        b=SShN1aIaRjTq0JFx9lVT7Y1kspnUQYzzGhZuzRY5I/aBzq8pwnorXW7+clD4/7pb5k
+         If61u05hUcOFA5+1N+usucxBdEzLglVe8Nepq306GEZFf3prVD5I6RKpzTpdExrUX0wH
+         WPoZP6DFUnF0mzOep6LgHytKe1t1Ep6v7ZEZJtsiA8UdvfTyl4GxFp7L5pNxyHIYL1bQ
+         xfS0ADKr7A8dS0S5yQDCOW1UPqDZpZXe8s6agUbaE4P7s3GpqzzVgsbawiNcNh53ZbK+
+         9gnHp/ukDrDDs2WMXPfRicLdLUXQO/IqVQlMIrjgp7so95EPlbEjxcqQX7oNnQ/EoX6I
+         +ukg==
+X-Gm-Message-State: AGi0PuYq78W9GQ6dmsVXRvhEWekwWnBzJl66k74ac2jzfeG2Y78Xdhqy
+        UgL7O1l9v+ldubwukTHn6RcMDQwjMHwghyvL1WH8JsYO7ceiiFy4BBQB7kiaa6vHkYP/7QjoE3s
+        UUUqDTHcloKPDmCjNWWAjUbiW
+X-Received: by 2002:a05:620a:22d6:: with SMTP id o22mr9336378qki.49.1587741714163;
+        Fri, 24 Apr 2020 08:21:54 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLQIQ4cCKKttCJu6UxYlK8vabyjhMsxG7WZoaBoQk27nV3zGbwoIRKSjA+BIEmG5/Gh77Y+cg==
+X-Received: by 2002:a05:620a:22d6:: with SMTP id o22mr9336338qki.49.1587741713790;
+        Fri, 24 Apr 2020 08:21:53 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id 195sm3758661qkd.6.2020.04.24.08.21.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Apr 2020 08:21:52 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 11:21:51 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Kevin Tian <kevin.tian@intel.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        Yan Zhao <yan.y.zhao@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH v8 03/14] KVM: X86: Don't track dirty for
+ KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
+Message-ID: <20200424152151.GB41816@xz-x1>
+References: <20200331190000.659614-1-peterx@redhat.com>
+ <20200331190000.659614-4-peterx@redhat.com>
+ <20200423203944.GS17824@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200423203944.GS17824@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Show more information in /proc/net/afs/servers to make it easier to see
-what's going on with the server probing.
+On Thu, Apr 23, 2020 at 01:39:44PM -0700, Sean Christopherson wrote:
+> On Tue, Mar 31, 2020 at 02:59:49PM -0400, Peter Xu wrote:
+> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > index 1b6d9ac9533c..faa702c4d37b 100644
+> > --- a/arch/x86/kvm/x86.c
+> > +++ b/arch/x86/kvm/x86.c
+> > @@ -9791,7 +9791,32 @@ void kvm_arch_sync_events(struct kvm *kvm)
+> >  	kvm_free_pit(kvm);
+> >  }
+> >  
+> > -int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size)
+> > +#define  ERR_PTR_USR(e)  ((void __user *)ERR_PTR(e))
+> 
+> Heh, my first thought when reading the below code was "cool, I didn't know
+> there was ERR_PTR_USR!".  This probably should be in include/linux/err.h,
+> or maybe a new arch specific implementation if it's not universally safe.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+Yeah, I just wanted to avoid introducing things in common headers before I'm
+sure it'll be used in the rest of the world..  We can always replace them with
+a global definition when it comes.
 
- fs/afs/proc.c |   17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+> 
+> An alternative, which looks enticing given that proper user variants will
+> be a bit of an explosion, would be to do:
+> 
+>   static void *____x86_set_memory_region(...)
+>   {
+> 	<actual function>
+>   }
+> 
+>   void __user *__x86_set_memory_region(...)
+>   {
+> 	return (void __user *)____x86_set_memory_region(...);
+>   }
+> 
+> A second alternative would be to return an "unsigned long", i.e. force the
+> one function that actually accesses the hva to do the cast.  I think I like
+> this option the best as it would minimize the churn in
+> __x86_set_memory_region().  Callers can use IS_ERR_VALUE() to detect failure.
 
-diff --git a/fs/afs/proc.c b/fs/afs/proc.c
-index 9bce7898cd7d..1d21465a4108 100644
---- a/fs/afs/proc.c
-+++ b/fs/afs/proc.c
-@@ -378,21 +378,22 @@ static int afs_proc_servers_show(struct seq_file *m, void *v)
- 	int i;
- 
- 	if (v == SEQ_START_TOKEN) {
--		seq_puts(m, "UUID                                 REF ACT ADDR\n");
-+		seq_puts(m, "UUID                                 REF ACT\n");
- 		return 0;
- 	}
- 
- 	server = list_entry(v, struct afs_server, proc_link);
- 	alist = rcu_dereference(server->addresses);
--	seq_printf(m, "%pU %3d %3d %pISpc%s\n",
-+	seq_printf(m, "%pU %3d %3d\n",
- 		   &server->uuid,
- 		   atomic_read(&server->ref),
--		   atomic_read(&server->active),
--		   &alist->addrs[0].transport,
--		   alist->preferred == 0 ? "*" : "");
--	for (i = 1; i < alist->nr_addrs; i++)
--		seq_printf(m, "                                             %pISpc%s\n",
--			   &alist->addrs[i].transport,
-+		   atomic_read(&server->active));
-+	seq_printf(m, "  - ALIST v=%u osp=%u r=%lx f=%lx\n",
-+		   alist->version, atomic_read(&server->probe_outstanding),
-+		   alist->responded, alist->failed);
-+	for (i = 0; i < alist->nr_addrs; i++)
-+		seq_printf(m, "    [%x] %pISpc%s\n",
-+			   i, &alist->addrs[i].transport,
- 			   alist->preferred == i ? "*" : "");
- 	return 0;
- }
+If you won't mind, I would prefer a 2nd opinion (maybe Paolo?) so we can
+consolidate the idea before I change them... (I would for sure still prefer the
+current approach for simplicity since after all I don't have strong opionion..)
 
+> 
+> > +/**
+> > + * __x86_set_memory_region: Setup KVM internal memory slot
+> > + *
+> > + * @kvm: the kvm pointer to the VM.
+> > + * @id: the slot ID to setup.
+> > + * @gpa: the GPA to install the slot (unused when @size == 0).
+> > + * @size: the size of the slot. Set to zero to uninstall a slot.
+> > + *
+> > + * This function helps to setup a KVM internal memory slot.  Specify
+> > + * @size > 0 to install a new slot, while @size == 0 to uninstall a
+> > + * slot.  The return code can be one of the following:
+> > + *
+> > + *   HVA:           on success (uninstall will return a bogus HVA)
+> 
+> I think it's important to call out that it returns '0' on uninstall, e.g.
+> otherwise it's not clear how a caller can detect failure.
+
+It will "return (0xdeadull << 48)" as you proposed in abbed4fa94f6? :-)
+
+Frankly speaking I always preferred zero but that's just not true any more
+after above change.  This also reminded me that maybe we should also return the
+same thing at [1] below.
+
+> 
+> > + *   -errno:        on error
+> > + *
+> > + * The caller should always use IS_ERR() to check the return value
+> > + * before use.  Note, the KVM internal memory slots are guaranteed to
+> > + * remain valid and unchanged until the VM is destroyed, i.e., the
+> > + * GPA->HVA translation will not change.  However, the HVA is a user
+> > + * address, i.e. its accessibility is not guaranteed, and must be
+> > + * accessed via __copy_{to,from}_user().
+> > + */
+> > +void __user * __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa,
+> > +				      u32 size)
+> >  {
+> >  	int i, r;
+> >  	unsigned long hva, uninitialized_var(old_npages);
+> > @@ -9800,12 +9825,12 @@ int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size)
+> >  
+> >  	/* Called with kvm->slots_lock held.  */
+> >  	if (WARN_ON(id >= KVM_MEM_SLOTS_NUM))
+> > -		return -EINVAL;
+> > +		return ERR_PTR_USR(-EINVAL);
+> >  
+> >  	slot = id_to_memslot(slots, id);
+> >  	if (size) {
+> >  		if (slot && slot->npages)
+> > -			return -EEXIST;
+> > +			return ERR_PTR_USR(-EEXIST);
+> >  
+> >  		/*
+> >  		 * MAP_SHARED to prevent internal slot pages from being moved
+> > @@ -9814,10 +9839,10 @@ int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size)
+> >  		hva = vm_mmap(NULL, 0, size, PROT_READ | PROT_WRITE,
+> >  			      MAP_SHARED | MAP_ANONYMOUS, 0);
+> >  		if (IS_ERR((void *)hva))
+> 
+> IS_ERR_VALUE() can be used to avoid the double cast.
+
+Agreed.  But it's a context cleanup, so I normally will keep it as is (or use a
+standalone patch).
+
+> 
+> > -			return PTR_ERR((void *)hva);
+> > +			return (void __user *)hva;
+> 
+> If we still want to go down the route of ERR_PTR_USR, then an ERR_CAST_USR
+> seems in order.
+
+Sure.  But I'll still keep it kvm-only if you won't mind...
+
+> 
+> >  	} else {
+> >  		if (!slot || !slot->npages)
+> > -			return 0;
+> > +			return ERR_PTR_USR(0);
+
+[1]
+
+> 
+> "return ERR_PTR_USR(NULL)" or "return NULL" would be more intuitive.  Moot
+> point if the return is changed to "unsigned long".
+
+ERR_PTR_USR() takes a "long".  I can use ERR_CAST_USR(NULL) if you prefer me to
+explicitly use NULL.
+
+Thanks,
+
+-- 
+Peter Xu
 
