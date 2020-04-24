@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39134C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD0FC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1462620700
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CCD620700
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:39:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="hYg3l6fd";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="3dbYHeoB"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="idrkZXnU";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UwaWsHSI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728562AbgDXPga (ORCPT
+        id S1729082AbgDXPjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:36:30 -0400
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:44945 "EHLO
+        Fri, 24 Apr 2020 11:39:37 -0400
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:48301 "EHLO
         wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728532AbgDXPgW (ORCPT
+        by vger.kernel.org with ESMTP id S1728558AbgDXPga (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:36:22 -0400
+        Fri, 24 Apr 2020 11:36:30 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id A53A91450;
-        Fri, 24 Apr 2020 11:36:21 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:36:22 -0400
+        by mailnew.west.internal (Postfix) with ESMTP id 9B85F1458;
+        Fri, 24 Apr 2020 11:36:28 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:36:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=fse909+Uy/SxW
-        fg4vh9c6yKXmMtSynUFNN2rQ9mVfiM=; b=hYg3l6fdlAFrgZSWEPIjkWIcnwxha
-        Qag9Q+JwYNlM7yuaeHtnZkjWUgobDiHdDkUEDifCesulStvhzgToa2V7xDR8Enhu
-        eHpW4umfiDGwfsnkpa8A/T43CgzS1Uya7KSPlFMp9YuradUY8FZOF4rCpCLQ0ag2
-        4DiCCkJf2/UwbQzlRt8DstlVP6bA6OIIsp68or4K7o8Ypqdi1/2H7NXgkV8RVt+/
-        M/MAMmNMUHydEjCRIN69GOYp9KEFcQjINNfMZlyJxgv+fRXCzvIDAMC6lR2DdcGX
-        orm/YIaunefNoCJfaaki7WCouxZ5SdfK7emE6Y5hjSDvPKn6GbfAkCieQ==
+        :mime-version:content-transfer-encoding; s=fm2; bh=RZBN3MbgcEFAH
+        BaADdNdwB2P6fayKSZ6ak4G/krg+rk=; b=idrkZXnUF+NCbQssNUAmhs4NcSJtJ
+        qXmqiZvI8E570cGKis1DsgYwBhxDV56Zl8GENyFX7V82HeObWMOo6feXvJeltbc3
+        7u0fm4gC7bg+906JE51INK6mffyUZQXZ5nUYJT5/yDfks/8OjcrX3qUv+oixO7DL
+        DVd7J3q59f6ZqjASbMsZV0q1JQ+2QExWFZqNRp7asvjWBYcNBZYaGJkBy3V0c+AQ
+        3KiPrZzGAHncDwXHMTmNXvp6kUa6qURzUcR6xWo9okttEn8Ooq3ZRxIn6c77Udxf
+        CYXea00Jf6yu4+J0uaF94+w6ZRugsGhkVFIYRKTB/vam0G91z7G8YJ7RA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=fse909+Uy/SxWfg4vh9c6yKXmMtSynUFNN2rQ9mVfiM=; b=3dbYHeoB
-        vE8Rep/MlLNAwsRAjDoVCQieqM6vDGvn0dJIRRkSY7IW6x91Rc3yHESjkQ3uf0MU
-        AhbkIQHLzRgaAN2PG8Pum9HPxPw6JW7xMszdecVOyFVdFwhpXprNL4D9hxYZXXkE
-        c4NIyLJxZPE475AN5A88ceWCpOgYOsUE7+0CWdS3hyuACrr9lo0qXUU4B//iUva4
-        u1OjoU/5lTblc5BbTsJD3+GR6oAXknFvNRiNGseQS3bJGaf3VgIN7B0gty1KF8Ek
-        8BuYAaFOwOE1u3rWoNxhBnmVkx2EnnP1PrmAcBrneL06xYcsPRoPpFPYrBZsjm51
-        q2eIoyTEaH+0iQ==
-X-ME-Sender: <xms:dQejXrnq73nQPyNZoLBmnICCDNsSUX8uT1GXm1tU89F3kW7TJcYjDg>
+        fm2; bh=RZBN3MbgcEFAHBaADdNdwB2P6fayKSZ6ak4G/krg+rk=; b=UwaWsHSI
+        KH0guK4v9aITs1UqQ79TgAM1c+C7YLJmmi8eo29qDwlKZzCEDQw2vCv8YqzpWtwa
+        AboEbmpsMWJvQAopVCQ4hL4N0wLHlskqnje8iU1+FIp6SRRDh3+vqzK4zvy6Ukjf
+        vvTUPhzbw1aN7CCgoTSDqU6TbmiXBGOW49NjB9bEAy07wj+8pxk5b4K7VxTc14bZ
+        GREnzmG1BzUPYLfPzBmN5IBQ7vBzeKfbT1NgPR+yJM9bqsCYLCa+Dsfarg4zjC5L
+        J4nLQOGgpZtlzjHYvOMhRW3OyTX6qcaLk9CdI/pU4WDqX9YSjkkcNzZ+AK23SYGA
+        TD1gj5HT4j6G6A==
+X-ME-Sender: <xms:fAejXpRsWpGDiT68WIJuALPPiPK9aoKRvWojcDxg9TN2RFngg28iag>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrhedugdekiecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgv
     ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpeefgeenucfrrghrrghmpehmrghi
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpeegvdenucfrrghrrghmpehmrghi
     lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:dQejXsMdFZ8tNIdtV4geE6mfEWw6_JKnV6e1eN0VLLmpciUQsqM7WA>
-    <xmx:dQejXtrSYBNBw1oYoxWmXk3MjnxdC7DMKm-Kz3RdXlR24lq0VlxAqg>
-    <xmx:dQejXnQlbEycIu-6U53_z58JBTO6WH2cy4j4qFK9_0WS0ics_iTiaA>
-    <xmx:dQejXgydEpi0GVzKuAAWdKn2qwzECNW4rKUG7luDWnkkQ1RXIzBYGdrCWZk>
+X-ME-Proxy: <xmx:fAejXnJszll0Nj_a4rT1c2K0s18cgllovCD0gwNKhlDQm2jTdivOPg>
+    <xmx:fAejXsvVGLrdSAODNVSjpfO9X_SuT2jYulya_H6dlZOj434mLE19xA>
+    <xmx:fAejXu__VfQguBPGw2suiW3Q8Ye1uNcMlb_q-3IRfv6NHRRwhTiYmw>
+    <xmx:fAejXg1L1v3ACvYyWhbbIcShpfuxK6VfyPQIlaSwRKMgUL0Lw6_hHXCXT38>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id DC519328006A;
-        Fri, 24 Apr 2020 11:36:20 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id D3F923065D97;
+        Fri, 24 Apr 2020 11:36:27 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -75,9 +75,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v2 42/91] drm/vc4: plane: Create more planes
-Date:   Fri, 24 Apr 2020 17:34:23 +0200
-Message-Id: <3f6e92b101bee5fc8609c41440d9fc81f69a6704.1587742492.git-series.maxime@cerno.tech>
+Subject: [PATCH v2 47/91] drm/vc4: crtc: Turn static const variable into a define
+Date:   Fri, 24 Apr 2020 17:34:28 +0200
+Message-Id: <153ceee1cd4823d03e5c64c95be15b03208e45f6.1587742492.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
 References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
@@ -88,34 +88,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's now create more planes that can be affected to all the CRTCs.
-
-vc4 has 3 CRTCs, 1 primary and 1 cursor each, and was having 24 (8
-planes per CRTC) overlays.
-
-However, vc5 has 5 CRTCs, so keeping the same logic would put us at 50
-planes which is well above the 32 planes limit imposed by DRM.
-
-Using 16 seems like a good tradeoff between staying under 32 and yet
-providing enough planes.
+The hvs_latency_pix variable doesn't need to be a variable and can just be
+defined.
 
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_plane.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/vc4/vc4_crtc.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/vc4/vc4_plane.c b/drivers/gpu/drm/vc4/vc4_plane.c
-index 5335123ae2a0..c190ccc42c51 100644
---- a/drivers/gpu/drm/vc4/vc4_plane.c
-+++ b/drivers/gpu/drm/vc4/vc4_plane.c
-@@ -1387,7 +1387,7 @@ int vc4_plane_create_additional_planes(struct drm_device *drm)
- 	 * modest number of planes to expose, that should hopefully
- 	 * still cover any sane usecase.
- 	 */
--	for (i = 0; i < 8; i++) {
-+	for (i = 0; i < 16; i++) {
- 		struct drm_plane *plane =
- 			vc4_plane_init(drm, DRM_PLANE_TYPE_OVERLAY);
+diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
+index 5d713fbae139..06bda23cd560 100644
+--- a/drivers/gpu/drm/vc4/vc4_crtc.c
++++ b/drivers/gpu/drm/vc4/vc4_crtc.c
+@@ -44,6 +44,8 @@
+ #include "vc4_drv.h"
+ #include "vc4_regs.h"
+ 
++#define HVS_FIFO_LATENCY_PIX	6
++
+ #define CRTC_WRITE(offset, val) writel(val, vc4_crtc->regs + (offset))
+ #define CRTC_READ(offset) readl(vc4_crtc->regs + (offset))
+ 
+@@ -231,18 +233,17 @@ vc4_crtc_update_gamma_lut(struct drm_crtc *crtc)
+ static u32 vc4_get_fifo_full_level(u32 format)
+ {
+ 	static const u32 fifo_len_bytes = 64;
+-	static const u32 hvs_latency_pix = 6;
+ 
+ 	switch (format) {
+ 	case PV_CONTROL_FORMAT_DSIV_16:
+ 	case PV_CONTROL_FORMAT_DSIC_16:
+-		return fifo_len_bytes - 2 * hvs_latency_pix;
++		return fifo_len_bytes - 2 * HVS_FIFO_LATENCY_PIX;
+ 	case PV_CONTROL_FORMAT_DSIV_18:
+ 		return fifo_len_bytes - 14;
+ 	case PV_CONTROL_FORMAT_24:
+ 	case PV_CONTROL_FORMAT_DSIV_24:
+ 	default:
+-		return fifo_len_bytes - 3 * hvs_latency_pix;
++		return fifo_len_bytes - 3 * HVS_FIFO_LATENCY_PIX;
+ 	}
+ }
  
 -- 
 git-series 0.9.1
