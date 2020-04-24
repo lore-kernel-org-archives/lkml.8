@@ -2,152 +2,114 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CCDC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 21:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E456C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 21:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8194D2098B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 21:20:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LCBYIFOl"
+	by mail.kernel.org (Postfix) with ESMTP id E2D292098B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 21:24:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726151AbgDXVUg (ORCPT
+        id S1726116AbgDXVYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 17:20:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51612 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbgDXVUg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 17:20:36 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 166D2C09B048
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 14:20:36 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id j4so14979669otr.11
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 14:20:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1y5J+t1rkSodDRL2D6On5fzA32zFL6p5sBHGHG/X4BU=;
-        b=LCBYIFOlRnMK2jDl+54oNy6Wv9KmCIa4ziW3YhSidyxuGnOMwqTTw8xE9r3MX6ob9O
-         Mmg3nZVUUAVhAIiLTqYCEJ4OWvZ7RefAPNCFjAGHpnj5HdXdeLaEiESinpQoPOoZz+jo
-         9JEWZnenjuSTn9A2QvSE0q0+Utt89r26vZng/pW8VKrpzQt+a3vFy+e0bSppa8Y6OmJa
-         +7YgPl5AX/QAbFjJbIOIyDj5foGG2i0fNV2Ya36kkwFwYnltYpdZUyVFcau60fEHLbFA
-         h+KY/DJ1K0sh5XeYFrbVfqUd9U2XSkDWZBJDKzVQpvUmMoVL1FnwC05UBlU//14agJ2X
-         E42g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1y5J+t1rkSodDRL2D6On5fzA32zFL6p5sBHGHG/X4BU=;
-        b=TE6Yt02LLwBFbvacXCF8H7cbQH1zzcDRyq6hbcPPiwQ4ac4pJrRzFH2VPHiWJzl1GV
-         zbjWznldmcRdyImEQVYTD78K7jh9QboOgVnaiIhrTn9qZds7aH2d3rKh2GKltOWeUVO0
-         xXO+ZDxPNIJ6PLTbNpFseOu35G/vkOhMEi40H3RKhiyudqNp3lLI70LqhB5EMGdM5+SW
-         XakL4P0AEtEEKmBw51Qzq2vG9HVo0hNbW747Az6wgzxmI2tHOS3GLx9pJ1OSK44qc1Iu
-         en/huz8ES22rhTQNgFIerzW/DgNrsp0scnZe1m4FZWf4mSha1ji0BC46VtqYzTjFCP4D
-         aZag==
-X-Gm-Message-State: AGi0PuYdtKGQFn2/09DwHtxuHQwNpYLvG5+fD4aOUlOa6Jz3gi65JsQ4
-        GXPhSuViHInhqpYprpkKNWLazC4VkirTDM5E2W8=
-X-Google-Smtp-Source: APiQypLhAY65mdyvjHIlIKThskIwVZqz00TDDg6W/dwxpuxHUzESsgwrjvzW3tZQMAZe4fe8HB+Fe3T8pZ71ICgz6wo=
-X-Received: by 2002:aca:d844:: with SMTP id p65mr8889936oig.126.1587763235367;
- Fri, 24 Apr 2020 14:20:35 -0700 (PDT)
+        Fri, 24 Apr 2020 17:24:14 -0400
+Received: from mga02.intel.com ([134.134.136.20]:14211 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726027AbgDXVYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 17:24:13 -0400
+IronPort-SDR: T1m5UudrK23502ym97sRA/c86MdIFscETFKYZ30i4JeHYcK9jSMS3gmdoFWqZ/G+/kpYeNFEYs
+ ZggYEw+wipWg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2020 14:24:12 -0700
+IronPort-SDR: WD2+kmF4Fvmbh+l3fWrp7J4751BAafQ7p+r3oQK3Yup6l3KTC5QL0olYs5Q0qmeafgG214jyq7
+ tUTx56M/ZQlg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,313,1583222400"; 
+   d="scan'208";a="259971308"
+Received: from bfallaha-mobl2.amr.corp.intel.com (HELO [10.252.132.86]) ([10.252.132.86])
+  by orsmga006.jf.intel.com with ESMTP; 24 Apr 2020 14:24:11 -0700
+Subject: Re: [PATCH] Allow RDTSC and RDTSCP from userspace
+To:     Mike Stunes <mstunes@vmware.com>, joro@8bytes.org
+Cc:     dan.j.williams@intel.com, dave.hansen@linux.intel.com,
+        hpa@zytor.com, jgross@suse.com, jroedel@suse.de, jslaby@suse.cz,
+        keescook@chromium.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, luto@kernel.org,
+        peterz@infradead.org, thellstrom@vmware.com,
+        thomas.lendacky@amd.com, virtualization@lists.linux-foundation.org,
+        x86@kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+References: <20200319091407.1481-56-joro@8bytes.org>
+ <20200424210316.848878-1-mstunes@vmware.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <2c49061d-eb84-032e-8dcb-dd36a891ce90@intel.com>
+Date:   Fri, 24 Apr 2020 14:24:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-References: <20200422042007.4836-1-tony.fischetti@gmail.com> <20200422071100.GS4247@MiWiFi-R3L-srv>
-In-Reply-To: <20200422071100.GS4247@MiWiFi-R3L-srv>
-From:   Tony Fischetti <tony.fischetti@gmail.com>
-Date:   Fri, 24 Apr 2020 17:20:24 -0400
-Message-ID: <CAOMV6SXDe+h+H1jm4GOFt2qPC_fvkbTJ0ZQOdCZX0LD9+esKDQ@mail.gmail.com>
-Subject: Re: [PATCH] x86/setup: Add boot messages about cmdline builtins
-To:     Baoquan He <bhe@redhat.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, dyoung@redhat.com, dave.hansen@linux.intel.com,
-        linux@roeck-us.net, Kees Cook <keescook@chromium.org>,
-        dan.j.williams@intel.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200424210316.848878-1-mstunes@vmware.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I like the idea of printing the original one, printing the information
-about the cmdline manipulation, and, then, printing the final one at the
-end, too.
+On 4/24/20 2:03 PM, Mike Stunes wrote:
+> I needed to allow RDTSC(P) from userspace and in early boot in order to
+> get userspace started properly. Patch below.
+> 
+> ---
+> SEV-ES guests will need to execute rdtsc and rdtscp from userspace and
+> during early boot. Move the rdtsc(p) #VC handler into common code and
+> extend the #VC handlers.
 
-The only problem is I don't know what to label the first printk so that it
-remains clear that it's not necessarily the _final_ one, yet.
-
-In either case, they should probably be changed to `pr_info`s, right?
-
-
-On Wed, Apr 22, 2020 at 3:11 AM Baoquan He <bhe@redhat.com> wrote:
->
-> On 04/22/20 at 12:20am, Tony Fischetti wrote:
-> > While the ability to override or append to the boot command line has
-> > been added, the boot messages contain no information as to whether the
-> > cmdline was manipulated by the build-time options. This patch, for x86,
-> > adds boot messages specifying whether the cmdline was manipulated and
-> > waits for the potential changes to take place before printing the final
-> > boot command line.
-> >
-> > Signed-off-by: Tony Fischetti <tony.fischetti@gmail.com>
-> > ---
-> >  arch/x86/kernel/setup.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> > index 4b3fa6cd3106..28d77f01fd0d 100644
-> > --- a/arch/x86/kernel/setup.c
-> > +++ b/arch/x86/kernel/setup.c
-> > @@ -828,7 +828,6 @@ void __init setup_arch(char **cmdline_p)
-> >        */
-> >       __flush_tlb_all();
-> >  #else
-> > -     printk(KERN_INFO "Command line: %s\n", boot_command_line);
-> >       boot_cpu_data.x86_phys_bits = MAX_PHYSMEM_BITS;
-> >  #endif
-> >
-> > @@ -904,10 +903,12 @@ void __init setup_arch(char **cmdline_p)
-> >
-> >  #ifdef CONFIG_CMDLINE_BOOL
-> >  #ifdef CONFIG_CMDLINE_OVERRIDE
-> > +     pr_info("Overriding command line with builtin\n");
-> >       strlcpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
-> >  #else
-> >       if (builtin_cmdline[0]) {
-> >               /* append boot loader cmdline to builtin */
-> > +             pr_info("Appending command line to builtin\n");
-> >               strlcat(builtin_cmdline, " ", COMMAND_LINE_SIZE);
-> >               strlcat(builtin_cmdline, boot_command_line, COMMAND_LINE_SIZE);
-> >               strlcpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
-> > @@ -916,6 +917,7 @@ void __init setup_arch(char **cmdline_p)
-> >  #endif
-> >
-> >       strlcpy(command_line, boot_command_line, COMMAND_LINE_SIZE);
-> > +     pr_info("Command line: %s\n", command_line);
->
-> Yeah, adding info to tell there's action on overriding or apending
-> command line looks good to me. Maybe keep the printing of the original
-> command, we can get the final command line from '/proc/cmdline' after
-> system boot, or just get it from the original cmdline + CONFIG_CMDLINE.
-> Or print the original cmdline and the final cmdline both.
->
-> Personal opinion.
->
-> >       *cmdline_p = command_line;
-> >
-> >       /*
-> > --
-> > 2.20.1
-> >
->
-
-
--- 
---
-Tony Fischetti
-tony.fischetti@gmail.com
-(718) 431-4597
+Do SEV-ES guests _always_ #VC on rdtsc(p)?
