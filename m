@@ -2,69 +2,154 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5CEC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91070C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E386F20857
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:40:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587753629;
-	bh=oGYtWO0myYIyjZeo9Jqvu/EFmmZXm1TEha+Yj0s0WQc=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=lgDL2hkLqkhZFzcWstkdlJ2htCue9dDabERXm1aJyb2D7vUWOLiTIHn8T8o05FgTX
-	 1TKf8cWcFNDucXM9MEFlO6nNOFgPP1T2ipUUnJJ2v12IpZQG2mLxLL8+yHpjjH58+S
-	 3o+yxEBQtA7cKOIItRN/DIVA+++gjk0zoIqX1b6w=
+	by mail.kernel.org (Postfix) with ESMTP id 667AB2098B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:44:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xCYt3soB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729102AbgDXSkX (ORCPT
+        id S1728650AbgDXSok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 14:40:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36494 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728915AbgDXSkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 14:40:21 -0400
-Subject: Re: [GIT PULL] afs: Miscellaneous fixes
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587753620;
-        bh=oGYtWO0myYIyjZeo9Jqvu/EFmmZXm1TEha+Yj0s0WQc=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=hSi5bio/7iNaTmm9YrrxQ/973QH26dTS21KKIyTNdqwhccRX75aPly+ikt99Fk8tg
-         8X74fOctGBp5nq3xZ3neTi7GzmS9NUoCZrUdQ0YR+Xrb5bGFKeLw+JAkJCTgyXa4Hs
-         NGNrHSKCiELd4NLY1Hg2wSGN1xN4Mw25NtYF98uE=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <3632016.1587744742@warthog.procyon.org.uk>
-References: <3632016.1587744742@warthog.procyon.org.uk>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <3632016.1587744742@warthog.procyon.org.uk>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
- tags/afs-fixes-20200424
-X-PR-Tracked-Commit-Id: c4bfda16d1b40d1c5941c61b5aa336bdd2d9904a
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9a195628522c08f36b3bbd0df96582a07ab272bf
-Message-Id: <158775362070.26557.15195413938093187702.pr-tracker-bot@kernel.org>
-Date:   Fri, 24 Apr 2020 18:40:20 +0000
-To:     David Howells <dhowells@redhat.com>
-Cc:     torvalds@linux-foundation.org, dhowells@redhat.com,
-        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        Fri, 24 Apr 2020 14:44:40 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:43918 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726813AbgDXSok (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 14:44:40 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03OIiJ9u102471;
+        Fri, 24 Apr 2020 13:44:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1587753859;
+        bh=hebJBVl54K4SuylgKSC5ysJ+B+gVpJf21C3rj/xF6u8=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=xCYt3soBlUOebXMrDm9ZQfm2BIv8tvvLTXk730wDi6vHRkIRPwca2yNQw30v992rs
+         hgrVEuqYHcZN1oZzI1X6ZefR/8a8noNpijxTmVVh42SgiWvpNUs7FQw2lJmvdDuTna
+         P8eRUGWwSygCo2SRoHxJQkFc5OIAGeisWFdAfd/U=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03OIiJaq085290;
+        Fri, 24 Apr 2020 13:44:19 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 24
+ Apr 2020 13:44:19 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 24 Apr 2020 13:44:19 -0500
+Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03OIiAa7047967;
+        Fri, 24 Apr 2020 13:44:15 -0500
+From:   Pratyush Yadav <p.yadav@ti.com>
+To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+CC:     Pratyush Yadav <p.yadav@ti.com>, Sekhar Nori <nsekhar@ti.com>
+Subject: [PATCH v4 01/16] spi: spi-mem: allow specifying whether an op is DTR or not
+Date:   Sat, 25 Apr 2020 00:13:55 +0530
+Message-ID: <20200424184410.8578-2-p.yadav@ti.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200424184410.8578-1-p.yadav@ti.com>
+References: <20200424184410.8578-1-p.yadav@ti.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 24 Apr 2020 17:12:22 +0100:
+Each phase is given a separate 'dtr' field so mixed protocols like
+4S-4D-4D can be supported.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/afs-fixes-20200424
+Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
+---
+ drivers/spi/spi-mem.c       | 3 +++
+ include/linux/spi/spi-mem.h | 8 ++++++++
+ 2 files changed, 11 insertions(+)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9a195628522c08f36b3bbd0df96582a07ab272bf
-
-Thank you!
-
+diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
+index adaa0c49f966..d8905e023649 100644
+--- a/drivers/spi/spi-mem.c
++++ b/drivers/spi/spi-mem.c
+@@ -154,6 +154,9 @@ bool spi_mem_default_supports_op(struct spi_mem *mem,
+ 				   op->data.dir == SPI_MEM_DATA_OUT))
+ 		return false;
+ 
++	if (op->cmd.dtr || op->addr.dtr || op->dummy.dtr || op->data.dtr)
++		return false;
++
+ 	return true;
+ }
+ EXPORT_SYMBOL_GPL(spi_mem_default_supports_op);
+diff --git a/include/linux/spi/spi-mem.h b/include/linux/spi/spi-mem.h
+index af9ff2f0f1b2..e3dcb956bf61 100644
+--- a/include/linux/spi/spi-mem.h
++++ b/include/linux/spi/spi-mem.h
+@@ -71,9 +71,11 @@ enum spi_mem_data_dir {
+  * struct spi_mem_op - describes a SPI memory operation
+  * @cmd.buswidth: number of IO lines used to transmit the command
+  * @cmd.opcode: operation opcode
++ * @cmd.dtr: whether the command opcode should be sent in DTR mode or not
+  * @addr.nbytes: number of address bytes to send. Can be zero if the operation
+  *		 does not need to send an address
+  * @addr.buswidth: number of IO lines used to transmit the address cycles
++ * @addr.dtr: whether the address should be sent in DTR mode or not
+  * @addr.val: address value. This value is always sent MSB first on the bus.
+  *	      Note that only @addr.nbytes are taken into account in this
+  *	      address value, so users should make sure the value fits in the
+@@ -81,7 +83,9 @@ enum spi_mem_data_dir {
+  * @dummy.nbytes: number of dummy bytes to send after an opcode or address. Can
+  *		  be zero if the operation does not require dummy bytes
+  * @dummy.buswidth: number of IO lanes used to transmit the dummy bytes
++ * @dummy.dtr: whether the dummy bytes should be sent in DTR mode or not
+  * @data.buswidth: number of IO lanes used to send/receive the data
++ * @data.dtr: whether the data should be sent in DTR mode or not
+  * @data.dir: direction of the transfer
+  * @data.nbytes: number of data bytes to send/receive. Can be zero if the
+  *		 operation does not involve transferring data
+@@ -91,22 +95,26 @@ enum spi_mem_data_dir {
+ struct spi_mem_op {
+ 	struct {
+ 		u8 buswidth;
++		u8 dtr : 1;
+ 		u8 opcode;
+ 	} cmd;
+ 
+ 	struct {
+ 		u8 nbytes;
+ 		u8 buswidth;
++		u8 dtr : 1;
+ 		u64 val;
+ 	} addr;
+ 
+ 	struct {
+ 		u8 nbytes;
+ 		u8 buswidth;
++		u8 dtr : 1;
+ 	} dummy;
+ 
+ 	struct {
+ 		u8 buswidth;
++		u8 dtr : 1;
+ 		enum spi_mem_data_dir dir;
+ 		unsigned int nbytes;
+ 		union {
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.25.0
+
