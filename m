@@ -2,114 +2,180 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DC9C2BA19
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90717C55192
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1FF420CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AC6620CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:09:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kWhpw730"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726196AbgDXCJB (ORCPT
+        id S1726306AbgDXCJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 22:09:01 -0400
-Received: from m17616.mail.qiye.163.com ([59.111.176.16]:10025 "EHLO
-        m17616.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbgDXCJB (ORCPT
+        Thu, 23 Apr 2020 22:09:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40172 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725884AbgDXCJF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 22:09:01 -0400
-Received: from ubuntu.localdomain (unknown [58.251.74.226])
-        by m17616.mail.qiye.163.com (Hmail) with ESMTPA id 870BF1065B6;
-        Fri, 24 Apr 2020 10:08:48 +0800 (CST)
-From:   Wang Wenhu <wenhu.wang@vivo.com>
-To:     arnd@arndb.de, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     rdunlap@infradead.org, kernel@vivo.com,
-        Wang Wenhu <wenhu.wang@vivo.com>
-Subject: [PATCH v3] io: correct doc-mismatches for io mem ops
-Date:   Thu, 23 Apr 2020 19:08:31 -0700
-Message-Id: <20200424020831.30494-1-wenhu.wang@vivo.com>
-X-Mailer: git-send-email 2.17.1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VNS05LS0tLSkJLTEhPQllXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PyI6PRw5DDg5DlYDAzQvGToR
-        Gi4KCTVVSlVKTkNMTUJPSkhNT09PVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
-        Q1VJTkpVTE9VSUlNWVdZCAFZQUhITkk3Bg++
-X-HM-Tid: 0a71a9f1ce729374kuws870bf1065b6
+        Thu, 23 Apr 2020 22:09:05 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9159C09B042;
+        Thu, 23 Apr 2020 19:09:04 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id a21so5459352ljj.11;
+        Thu, 23 Apr 2020 19:09:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=asdel7Nnwdq8gXb0wfYVTZi0cag88uF9i59tRQsaVzA=;
+        b=kWhpw7300uRV64GQ+LZk1RjwjbYN2maIGft1o6R8mtbKIer8m0k92d/hgbcgPMBOi7
+         fkrPQN71H3TNtQMdmt9IDsJ3jr5P4PKAwcJKPPj1EWxcdz6RBHdh56Q1tZBVKnQE+VsX
+         B5Kvg/E+2x/KUA/tR/t+2JD6ywz8Ylc/SNWa9E64BYzXqUe2vMueKVuIZ+8jxabTgy8G
+         5jgwP/2gPv7ny9VHCJpV3vlWsr30AhDcObnQjXpQK7WoKHEZvdocpWPj3Zy3KWyDRd0k
+         S38RDjznsPZEihkhBPgJm8B9hArOxcQK1r24EaM08rMUgTKBX6ZpuS+QyGhvCRaz/Y4K
+         vuwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=asdel7Nnwdq8gXb0wfYVTZi0cag88uF9i59tRQsaVzA=;
+        b=RgWp48/PDFgepbh9auzJ+NNyQhkX3xv7FL+moRUAsiNJRyDQlCVb2L2SoeHbv67iby
+         WaONAuVqhVW04whGEv6T7R/F5x/zNShmLe8Hs8JXTHVxlg823NxbGtVMGAisC27sDQqm
+         TWOHAfeMqSjxgv65mqzlNXB6ThWRoK3h+5qfzavmCEcdC8v7Hky6XCeOQNK9xZxdQufg
+         eT35XbKNKFKXRu+BqJl4dxmLGFNa63Npb415rOo0X3HJ1YdXxspvaP/b1q3pDJxMSDHc
+         eK2vtiEDy52O5C6zkjOvn6RiFBtspyHaPcfL1VGfgd6sDtKpV1jCCi8S5+ZkpcS/8s9U
+         pYLg==
+X-Gm-Message-State: AGi0PubQO95R+5KQE9jDEPsHw/cHQl2OeV3uOdD0qsuMoXfqyBbuEJYC
+        bm1o90APsCznQOMkIpJtCaDoUnCt
+X-Google-Smtp-Source: APiQypItFHoCX/FTFqbHNozzHeT8UgpiUGk4DWwc/59oGcQxfSMGZ9itJNAWOxIxRtCzgDv+zEmI6g==
+X-Received: by 2002:a2e:a313:: with SMTP id l19mr4437612lje.133.1587694142811;
+        Thu, 23 Apr 2020 19:09:02 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id l26sm3153517ljc.49.2020.04.23.19.09.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Apr 2020 19:09:02 -0700 (PDT)
+Subject: Re: [RFC PATCH v9 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1587536339-4030-1-git-send-email-skomatineni@nvidia.com>
+ <1587536339-4030-7-git-send-email-skomatineni@nvidia.com>
+ <7e473fa9-0409-d868-e818-2e7928a8acca@gmail.com>
+ <a83bfc89-35de-85b5-fe5f-71e62456f5e9@nvidia.com>
+ <3691c4b5-1ecc-2ad3-23ed-72ef6b8d25fa@nvidia.com>
+ <fce6dfbb-0b8d-319b-2d6f-976953a3c36c@gmail.com>
+ <a2672be9-93c1-8363-6c0e-6d43c2bd59bc@nvidia.com>
+ <492dafac-42aa-3caf-4d32-ba0e434b19c3@gmail.com>
+ <39402a49-f39f-256c-31e7-afaa25d55664@nvidia.com>
+ <8f01724e-95d4-e6d8-9e2d-bce4b8dd0177@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <5ad77b67-0dc6-3c6d-7df3-4c21c68b2b1e@gmail.com>
+Date:   Fri, 24 Apr 2020 05:09:00 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <8f01724e-95d4-e6d8-9e2d-bce4b8dd0177@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Minor mismatches exist between funtion documentations and parameter
-definitions. Also a dash '-' is needed between a function name and
-its description.
+24.04.2020 04:08, Sowjanya Komatineni пишет:
+> 
+> On 4/23/20 5:51 PM, Sowjanya Komatineni wrote:
+>>
+>> On 4/23/20 5:42 PM, Dmitry Osipenko wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> 24.04.2020 02:50, Sowjanya Komatineni пишет:
+>>>> On 4/23/20 4:25 PM, Dmitry Osipenko wrote:
+>>>>> External email: Use caution opening links or attachments
+>>>>>
+>>>>>
+>>>>> 24.04.2020 02:20, Sowjanya Komatineni пишет:
+>>>>>> On 4/23/20 4:19 PM, Sowjanya Komatineni wrote:
+>>>>>>> On 4/23/20 4:16 PM, Dmitry Osipenko wrote:
+>>>>>>>> External email: Use caution opening links or attachments
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> 22.04.2020 09:18, Sowjanya Komatineni пишет:
+>>>>>>>>> +static int chan_capture_kthread_start(void *data)
+>>>>>>>>> +{
+>>>>>>>>> +     struct tegra_vi_channel *chan = data;
+>>>>>>>>> +     struct tegra_channel_buffer *buf;
+>>>>>>>>> +     int err = 0;
+>>>>>>>>> +
+>>>>>>>>> +     set_freezable();
+>>>>>>>>> +
+>>>>>>>>> +     while (1) {
+>>>>>>>>> +             try_to_freeze();
+>>>>>>>>> +
+>>>>>>>>> + wait_event_interruptible(chan->start_wait,
+>>>>>>>>> + !list_empty(&chan->capture) ||
+>>>>>>>>> + kthread_should_stop());
+>>>>>>>>> +
+>>>>>>>>> +             if (kthread_should_stop())
+>>>>>>>>> +                     break;
+>>>>>>>>> +
+>>>>>>>>> +             /*
+>>>>>>>>> +              * Source is not streaming if error is non-zero.
+>>>>>>>>> +              * So, do not dequeue buffers on capture error.
+>>>>>>>>> +              */
+>>>>>>>>> +             if (err)
+>>>>>>>>> +                     continue;
+>>>>>>>> This will result in an endless loop, I suppose it wasn't the
+>>>>>>>> intention.
+>>>>>>> no it will not. on error we report vb2_queue_error which will do
+>>>>>>> streaming stop request.
+>>>>>>>
+>>>>>>> So thread will be stopped on streaming stop request thru kthread
+>>>>>>> stop
+>>>>>>> signal
+>>>>>> To be clear on error it reports vb2 queue error and waits for stop
+>>>>>> streaming to happen
+>>>>> If thread should exit on error, then it should do it on the actual
+>>>>> error. Otherwise it looks very error-prone.
+>>>> When v4l2 drivers indicate fatal error through vb2_queue_error, queue
+>>>> error flag  is set and wakes up all processes waiting on queue along
+>>>> with polling reporting  EPOLLERR and also reporting error for queuing
+>>>> and dequeuing buffers. Stream stop will surely happen which stops the
+>>>> thread.
+>>> This doesn't explain what is the point of continuing to loop instead of
+>>> exiting immediately on error.
+>>
+>> We are using 2 threads and when capture start error happens, we can
+>> stop capture_start thread immediately but capture_finish thread will
+>> still run for any outstanding buffers.
+>>
+>> So, as it makes no diff stopping both threads during stream stop which
+>> will definitely happen on error and when we don't dequeue buffers
+>>
+> Also there will be an issue if we break on error immediately during
+> stop_streaming -> kthread_stop()
+> 
+> As stop streaming can happen any time, we do kthread_stop and in case of
+> error if we stop thread and on stop streaming kthread_stop might crash
+> as kthread_stop can only be called on running thread
+> 
 
-Function definitions are as following:
-static inline void memset_io(volatile void __iomem *addr, int value,
-			     size_t size)
-static inline void memcpy_fromio(void *buffer,
-				 const volatile void __iomem *addr,
-				 size_t size)
-static inline void memcpy_toio(volatile void __iomem *addr, const void *buffer,
-			       size_t size)
+This a better explanation, but still it's not good that there could be a
+busy loop within the thread.
 
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
----
- include/asm-generic/io.h | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+Should be better to sleep if error is set.
 
-diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
-index d39ac997dda8..83ac47bfa33a 100644
---- a/include/asm-generic/io.h
-+++ b/include/asm-generic/io.h
-@@ -1049,10 +1049,10 @@ static inline void *bus_to_virt(unsigned long address)
- #ifndef memset_io
- #define memset_io memset_io
- /**
-- * memset_io	Set a range of I/O memory to a constant value
-+ * memset_io -	Set a range of I/O memory to a constant value
-  * @addr:	The beginning of the I/O-memory range to set
-- * @val:	The value to set the memory to
-- * @count:	The number of bytes to set
-+ * @value:	The value to set the memory to
-+ * @size:	The number of bytes to set
-  *
-  * Set a range of I/O memory to a given value.
-  */
-@@ -1066,10 +1066,10 @@ static inline void memset_io(volatile void __iomem *addr, int value,
- #ifndef memcpy_fromio
- #define memcpy_fromio memcpy_fromio
- /**
-- * memcpy_fromio	Copy a block of data from I/O memory
-- * @dst:		The (RAM) destination for the copy
-- * @src:		The (I/O memory) source for the data
-- * @count:		The number of bytes to copy
-+ * memcpy_fromio -	Copy a block of data from I/O memory
-+ * @buffer:		The (RAM) destination for the copy
-+ * @addr:		The (I/O memory) source for the data
-+ * @size:		The number of bytes to copy
-  *
-  * Copy a block of data from I/O memory.
-  */
-@@ -1084,10 +1084,10 @@ static inline void memcpy_fromio(void *buffer,
- #ifndef memcpy_toio
- #define memcpy_toio memcpy_toio
- /**
-- * memcpy_toio		Copy a block of data into I/O memory
-- * @dst:		The (I/O memory) destination for the copy
-- * @src:		The (RAM) source for the data
-- * @count:		The number of bytes to copy
-+ * memcpy_toio -	Copy a block of data into I/O memory
-+ * @addr:		The (I/O memory) destination for the copy
-+ * @buffer:		The (RAM) source for the data
-+ * @size:		The number of bytes to copy
-  *
-  * Copy a block of data to I/O memory.
-  */
--- 
-2.17.1
-
+wait_event_interruptible(chan->start_wait,
+			(!err && !list_empty(&chan->capture)) ||
+			kthread_should_stop());
