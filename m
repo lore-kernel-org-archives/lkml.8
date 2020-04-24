@@ -2,83 +2,99 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6FCC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2CAC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF3120781
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 779552166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:58:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F2Ka3sr1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729280AbgDXT6H (ORCPT
+        id S1729372AbgDXT6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 15:58:07 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:48954 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbgDXT6H (ORCPT
+        Fri, 24 Apr 2020 15:58:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38700 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbgDXT6P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 15:58:07 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jS4Sa-0004H3-Qr; Fri, 24 Apr 2020 13:58:04 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jS4Sa-0007oo-3E; Fri, 24 Apr 2020 13:58:04 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Christof Meerwald <cmeerw@cmeerw.org>,
-        Linux Containers <containers@lists.linux-foundation.org>
-References: <20200419201336.GI22017@edge.cmeerw.net>
-        <87sggyytnh.fsf@x220.int.ebiederm.org>
-        <20200421090426.GA6787@redhat.com> <20200421101904.GA9358@redhat.com>
-        <87mu74517d.fsf@x220.int.ebiederm.org>
-        <20200424180523.GD26802@redhat.com>
-Date:   Fri, 24 Apr 2020 14:54:55 -0500
-In-Reply-To: <20200424180523.GD26802@redhat.com> (Oleg Nesterov's message of
-        "Fri, 24 Apr 2020 20:05:24 +0200")
-Message-ID: <87d07wpskw.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jS4Sa-0007oo-3E;;;mid=<87d07wpskw.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+QVvs3O+peet5LQjScDuiQmGVaCM7O6Wc=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH] remove the no longer needed pid_alive() check in __task_pid_nr_ns()
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+        Fri, 24 Apr 2020 15:58:15 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83DEEC09B048;
+        Fri, 24 Apr 2020 12:58:15 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id b1so5335981qtt.1;
+        Fri, 24 Apr 2020 12:58:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=A3XPQz7R7FZXT20UmmKFaaeS4yksZtiocodJLBHbiYc=;
+        b=F2Ka3sr1kfzPB2y5reGyinI53PYXqPYk95Z5eu7UmYUBWb8iHjv+reSNCaKBjlPU2K
+         4Cbp0Lsmt4SH8TWsuOo0bd/2Ai/ymfU5VtoABZylrKZVcO9Rx8+Q90TPHThTGRx2RF7f
+         PpK+mRO/yeyH6WdKA992quQoHvIo+uFk/wMqD11sSvD0Nts9BVO5rvVSI9+Mh7Ruw4UH
+         UsZOtzjQeogiiPIarGe3Cbg95iW2zWL1CPdGoi8yTVflKUCJm3KFsi+JdTqWSmI46T15
+         xwX2A1XCg2DEVXqbPjm1TVTKGXMyoSP/PI3TsUErzEg1j0oqFPROOuo3AEAGHzxYSpJf
+         kaog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=A3XPQz7R7FZXT20UmmKFaaeS4yksZtiocodJLBHbiYc=;
+        b=cC+XL11KsaiXEJGLSAB6CAQ5iLwVNKoF67mQqvt6kx9eup5M9fNqQhBgFTAIkgRT3B
+         hpKphT0KYFW1x5HSI/ludY10cV1FIctvM+Aiw0Wg91F8dgUuMbwc0Fy/Y98h6r6HByCt
+         n9kQLQXiTaDN3/NIAbZC4rRZRCRmcZq/X/SiwqNcoVHrw9Wugcx233BYtmCLoSiGPExT
+         P7YU4zHFx0kiOpCFwx5OVDTy5lUR4zi69vhCc4gp18tu0qewU/Em4fYJqgTz2X3oqZb8
+         RCJjBmXtq//tDA9/I2W6hDia6bmm3kmiJDDTQLxL3TSouZb/OcWPhqI99iccrH1WZFBb
+         59gQ==
+X-Gm-Message-State: AGi0Pub6KOE5x1zo7grhN9GaCaZZMazTtQTli7sVMjBz1viXN+yPKaPQ
+        utmLJfCiDtxr6nVmMAHxbj/RxcPQpbMFVA==
+X-Google-Smtp-Source: APiQypJDJDu0Olrg+n6dE1MT/s5ZUshYnDdfbpU/SmL/bsxZZU5ZDP8HXI03DPTeHw+bLdLee2tyRQ==
+X-Received: by 2002:ac8:73d3:: with SMTP id v19mr11397487qtp.263.1587758294587;
+        Fri, 24 Apr 2020 12:58:14 -0700 (PDT)
+Received: from localhost.localdomain ([2804:14c:4e4:9fd:c16a:b4f7:4f95:6154])
+        by smtp.gmail.com with ESMTPSA id f188sm4141892qkd.101.2020.04.24.12.58.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 Apr 2020 12:58:14 -0700 (PDT)
+From:   Guilherme Ricioli <guilherme.riciolic@gmail.com>
+To:     linux-media@vger.kernel.org
+Cc:     lkcamp@lists.libreplanetbr.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, mchehab@kernel.org,
+        gregkh@linuxfoundation.org, hverkuil-cisco@xs4all.nl
+Subject: [PATCH] staging: media: soc_camera: Enclose macro with parentheses
+Date:   Fri, 24 Apr 2020 16:56:24 -0300
+Message-Id: <1587758184-17867-1-git-send-email-guilherme.riciolic@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Oleg Nesterov <oleg@redhat.com> writes:
+Fix checkpatch error "ERROR: Macros with complex values should be
+enclosed in parentheses" in soc_camera.c:241.
 
-> On 04/21, Eric W. Biederman wrote:
->>
->> Oleg Nesterov <oleg@redhat.com> writes:
->>
->> > Starting from 2c4704756cab ("pids: Move the pgrp and session pid pointers
->> > from task_struct to signal_struct") __task_pid_nr_ns() doesn't dereference
->> > task->group_leader, we can remove the pid_alive() check.
->> >
->> > pid_nr_ns() has to check pid != NULL anyway, pid_alive() just adds the
->> > unnecessary confusion.
->> >
->> > Signed-off-by: Oleg Nesterov <oleg@redhat.com>
->> Reviewed-by: "Eric W. Biederman" <ebiederm@xmission.com>
->
-> Thanks, can you take this patch?
+Signed-off-by: Guilherme Ricioli <guilherme.riciolic@gmail.com>
+---
+ drivers/staging/media/soc_camera/soc_camera.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I plan to.  Probably on a topic branch for signals.  I am sorting
-that out now.
-
-Eric
+diff --git a/drivers/staging/media/soc_camera/soc_camera.c b/drivers/staging/media/soc_camera/soc_camera.c
+index 39f513f..c2f96ea 100644
+--- a/drivers/staging/media/soc_camera/soc_camera.c
++++ b/drivers/staging/media/soc_camera/soc_camera.c
+@@ -238,8 +238,8 @@ unsigned long soc_camera_apply_board_flags(struct soc_camera_subdev_desc *ssdd,
+ }
+ EXPORT_SYMBOL(soc_camera_apply_board_flags);
+ 
+-#define pixfmtstr(x) (x) & 0xff, ((x) >> 8) & 0xff, ((x) >> 16) & 0xff, \
+-	((x) >> 24) & 0xff
++#define pixfmtstr(x) ((x) & 0xff, ((x) >> 8) & 0xff, ((x) >> 16) & 0xff, \
++	((x) >> 24) & 0xff)
+ 
+ static int soc_camera_try_fmt(struct soc_camera_device *icd,
+ 			      struct v4l2_format *f)
+-- 
+2.7.4
 
