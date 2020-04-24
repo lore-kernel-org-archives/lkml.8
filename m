@@ -2,129 +2,102 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFFEC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CC1C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDE0B20728
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:13:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B84F520704
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:16:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JfBwZ6Y8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728877AbgDXSNy (ORCPT
+        id S1728542AbgDXSQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 14:13:54 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:47536 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727022AbgDXSNy (ORCPT
+        Fri, 24 Apr 2020 14:16:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51240 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727031AbgDXSQq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 14:13:54 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jS2pk-0001i0-LL; Fri, 24 Apr 2020 12:13:52 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jS2pi-0008NB-5O; Fri, 24 Apr 2020 12:13:52 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
-        <87ftcv1nqe.fsf@x220.int.ebiederm.org>
-        <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
-        <20200424173927.GB26802@redhat.com>
-Date:   Fri, 24 Apr 2020 13:10:40 -0500
-In-Reply-To: <20200424173927.GB26802@redhat.com> (Oleg Nesterov's message of
-        "Fri, 24 Apr 2020 19:39:28 +0200")
-Message-ID: <87h7x8sqjj.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 24 Apr 2020 14:16:46 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2639EC09B048;
+        Fri, 24 Apr 2020 11:16:45 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id k13so12052731wrw.7;
+        Fri, 24 Apr 2020 11:16:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ieWnO8DComqla3yHOcWNlGDT1t9CTFtocezocte3FwY=;
+        b=JfBwZ6Y8cWCcahCa59GldWU93zzWnt8l14DjiUJIwHvNELNGgIXOEWkcg8GJtAg0KE
+         3ggAZEdzrMcnAbE03Kj/AZdCVqfnUbo4lCQESa9FJGpIOW94m2oLd2yIyrm6k1hZIzcG
+         k7lDOi/JcF8r4Eu4imA6Z6nciBGRXP8bqF0bcm2UNkMMMZqOTQY3XMu0Lc9t1+p1HTO4
+         4WPNvvdUo4hE4CCqAJowHZtTuTtwV8KzL/03aYqGHozoUaqoO+NBRtcRvIYdb6ebgqig
+         pJGUhv/oammk8nJpFd8f5zBcKqyXjKp/pK3dyrlFDxIt/b8JbvHi2Am66usvwyTBuOBe
+         fD8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ieWnO8DComqla3yHOcWNlGDT1t9CTFtocezocte3FwY=;
+        b=J7QxNJ4VdYGXF6mxyqjc0iLmWkv6LZFHGUqGJPgbuzUrYQ7vKkYTkiHv31OYw21udF
+         ZQGbrVbjKfVBHHXbeUp4TG7Aaq5FJdDlNZKnD/TOGMQzh5xGA2md/wOVw8IaN6lcGPjA
+         AUQe2B+ERhQ7VxPGaDiZq+gsUZxlGJFFJYRKoLYmqLMK1bwAQxIkuzqBZQf+ZFxcXkGh
+         nd6LlXea0r859Hjzkq3dnzIlohgpMTKypNCFxa2SIPnc2zAoM2lZQ3i5FMcxRKiNWK8u
+         RKHYP2lx4woNyz17pV6wo0ceMMv7PTJZyb3hzmH9aOOH78Gv+BtcXehxsX8EqfVm7XZM
+         +g+w==
+X-Gm-Message-State: AGi0PuYdkjVMkW6kIupIEr/hjae1nvsk4dSzmfMlp1S0RfA7t9m9Rqta
+        yFR+XHB9pY734ZEcQsM/wew=
+X-Google-Smtp-Source: APiQypIKSmT1g/OvWZvryuhk2ZfBiuMTXa6LcUv3vESta4ZnJL2cNrAoW7cKm4HTnxlFjfLG4W8Qsw==
+X-Received: by 2002:a5d:69c9:: with SMTP id s9mr12531518wrw.307.1587752203918;
+        Fri, 24 Apr 2020 11:16:43 -0700 (PDT)
+Received: from localhost.localdomain ([2a04:2413:8140:d480:18da:1e39:90cf:b88b])
+        by smtp.gmail.com with ESMTPSA id c190sm3913426wme.4.2020.04.24.11.16.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Apr 2020 11:16:43 -0700 (PDT)
+From:   Adrian Pop <pop.adrian61@gmail.com>
+To:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Adrian Pop <pop.adrian61@gmail.com>
+Subject: [PATCH 1/2] arm: dt-bindings: mfd: stm32f-rcc: Add missing DSI clock
+Date:   Fri, 24 Apr 2020 21:16:42 +0300
+Message-Id: <20200424181642.32084-1-pop.adrian61@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jS2pi-0008NB-5O;;;mid=<87h7x8sqjj.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18vFbjen3QEL+8U6HAHWr3unr7JC5DnSxc=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2 2/2] proc: Ensure we see the exit of each process tid exactly
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Oleg Nesterov <oleg@redhat.com> writes:
+Add missing clock.
 
-> On 04/23, Eric W. Biederman wrote:
->>
->> When the thread group leader changes during exec and the old leaders
->> thread is reaped proc_flush_pid
->
-> This is off-topic, but let me mention this before I forget...
->
-> Note that proc_flush_pid() does nothing if CONFIG_PROC_FS=n, this mean
-> that in this case release_task() leaks thread_pid.
+Signed-off-by: Adrian Pop <pop.adrian61@gmail.com>
+---
+ include/dt-bindings/mfd/stm32f7-rcc.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-Good catch.  Wow.  I seem to be introducing almost as many bugs as I am
-fixing right now.  Ouch.
-
->> +void exchange_tids(struct task_struct *ntask, struct task_struct *otask)
->> +{
->> +	/* pid_links[PIDTYPE_PID].next is always NULL */
->> +	struct pid *npid = READ_ONCE(ntask->thread_pid);
->> +	struct pid *opid = READ_ONCE(otask->thread_pid);
->> +
->> +	rcu_assign_pointer(opid->tasks[PIDTYPE_PID].first, &ntask->pid_links[PIDTYPE_PID]);
->> +	rcu_assign_pointer(npid->tasks[PIDTYPE_PID].first, &otask->pid_links[PIDTYPE_PID]);
->> +	rcu_assign_pointer(ntask->thread_pid, opid);
->> +	rcu_assign_pointer(otask->thread_pid, npid);
->> +	WRITE_ONCE(ntask->pid_links[PIDTYPE_PID].pprev, &opid->tasks[PIDTYPE_PID].first);
->> +	WRITE_ONCE(otask->pid_links[PIDTYPE_PID].pprev, &npid->tasks[PIDTYPE_PID].first);
->> +	WRITE_ONCE(ntask->pid, pid_nr(opid));
->> +	WRITE_ONCE(otask->pid, pid_nr(npid));
->> +}
->
-> Oh, at first glance this breaks posix-cpu-timers.c:lookup_task(), the last
-> user of has_group_leader_pid().
->
-> I think that we should change lookup_task() to return "struct *pid", this
-> should simplify the code... Note that none of its callers needs task_struct.
->
-> And, instead of thread_group_leader/has_group_leader_pid checks we should
-> use pid_has_task(TGID).
-
-Somehow I thought we could get away without fiddling with that right
-now, but on second glance I can see the races.
-
-I played with this earlier and I agree returning a struct pid *
-is desirable.  I will see if I can track down the patches I was
-playing with as that definitely needs to get fixed first.
-
-> After that, this patch should kill has_group_leader_pid().
->
-> What do you think?
-
-I agree completely.  has_group_leader_pid is the same as
-thread_group_leader after this so should be removed.  Especially as it
-won't have any users.
-
-There are several other potential cleanups as well.  Such as not
-using a hlist for PIDTYPE_PID.  Which would allow us to run the hlists
-through struct signal_struct instead.  I think that would clean things
-up but that touches so many things it may just be pointless code churn.
-
-Just for mentioning I am thinking we should rename PIDTYPE_PID to
-PIDTYPE_TID just to create a distance in peoples minds between
-the kernel concepts and the user space concepts.
-
-Eric
+diff --git a/include/dt-bindings/mfd/stm32f7-rcc.h b/include/dt-bindings/mfd/stm32f7-rcc.h
+index a90f3613c584..ba5cb7456ee4 100644
+--- a/include/dt-bindings/mfd/stm32f7-rcc.h
++++ b/include/dt-bindings/mfd/stm32f7-rcc.h
+@@ -107,6 +107,7 @@
+ #define STM32F7_RCC_APB2_SAI1		22
+ #define STM32F7_RCC_APB2_SAI2		23
+ #define STM32F7_RCC_APB2_LTDC		26
++#define STM32F7_RCC_APB2_DSI		27
+ 
+ #define STM32F7_APB2_RESET(bit)	(STM32F7_RCC_APB2_##bit + (0x24 * 8))
+ #define STM32F7_APB2_CLOCK(bit)	(STM32F7_RCC_APB2_##bit + 0xA0)
+-- 
+2.26.2
 
