@@ -2,75 +2,160 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 481F2C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBC2C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2814920736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B38A820736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:06:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587733574;
+	bh=MGfaKuTdiHMWXthLJG7QjKnDtjDnpF4Sbmv1jSHLBaw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=S71c0vwpdK7qE++drJldl7Z0BjjfaFTRU1f8OUBnRJDyjWe99dFnnpmPDQnMh/Kum
+	 f9WDWyeKVt3snNxuNTeDgXz+9N9L4fQ9iH0N9OwidPAN8BMJenzETlBMgpQV/46RS8
+	 6ZNf9PkE6fEJpXupF+3ccCsVhPcgfngPv+okyoSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbgDXNE2 (ORCPT
+        id S1727101AbgDXNGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 09:04:28 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:50751 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726489AbgDXNE1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 09:04:27 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jRy0C-0007Vi-69; Fri, 24 Apr 2020 13:04:20 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Dragos Bogdan <dragos.bogdan@analog.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] iio: adc: ad7476: remove redundant null check on an array
-Date:   Fri, 24 Apr 2020 14:04:19 +0100
-Message-Id: <20200424130419.22940-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Fri, 24 Apr 2020 09:06:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56458 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726489AbgDXNGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 09:06:13 -0400
+Received: from e123331-lin.home (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F317B20728;
+        Fri, 24 Apr 2020 13:06:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587733572;
+        bh=MGfaKuTdiHMWXthLJG7QjKnDtjDnpF4Sbmv1jSHLBaw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=mt2kNDVx0/Zn5SRqp6TTuvYKiha8u0LKNG4C0Mm81Hj/xmd4c+ipnN1bI8I9d/qOb
+         L2eCkuDsXWm0krlV9vsSHbdia8h5wNwC35oKuuoSVq2yKgkghNaMw5cs9xqX7KALd4
+         fv8J3CzfLL+l4brN8mLPIPSxQIZwcGLe3r+DSrMk=
+From:   Ard Biesheuvel <ardb@kernel.org>
+To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Atish Patra <atish.patra@wdc.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Zou Wei <zou_wei@huawei.com>
+Subject: [GIT PULL 00/33] EFI updates for v5.8
+Date:   Fri, 24 Apr 2020 15:04:58 +0200
+Message-Id: <20200424130531.30518-1-ardb@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Hello Ingo, Thomas,
 
-The null check on st->chip_info->convst_channel is redundant because
-convst_channel is a 2 element array of struct iio_chan_spec objects
-and this can never be null. Fix this by removing the null check.
+Please pull the attached changes into tip/efi/next. There is some
+coordination going on with the RISC-V tree this time, so please take the
+patches in this exact order, and apply them onto v5.7-rc2 so the first
+three patches can serve as a shared stable base between the efi/core
+branch and the riscv tree.
 
-Addresses-Coverity: ("Array compared against 0")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/iio/adc/ad7476.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
 
-diff --git a/drivers/iio/adc/ad7476.c b/drivers/iio/adc/ad7476.c
-index e9984a38fc4c..4e816d714ad2 100644
---- a/drivers/iio/adc/ad7476.c
-+++ b/drivers/iio/adc/ad7476.c
-@@ -309,7 +309,7 @@ static int ad7476_probe(struct spi_device *spi)
- 	indio_dev->num_channels = 2;
- 	indio_dev->info = &ad7476_info;
- 
--	if (st->convst_gpio && st->chip_info->convst_channel)
-+	if (st->convst_gpio)
- 		indio_dev->channels = st->chip_info->convst_channel;
- 	/* Setup default message */
- 
--- 
-2.25.1
+  Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-next
+
+for you to fetch changes up to 4eb8320bd1aaa7e69d039f2c251735e3ef0b9a38:
+
+  efi: Move arch_tables check to caller (2020-04-24 14:52:16 +0200)
+
+----------------------------------------------------------------
+EFI changes for v5.8:
+- preliminary changes for RISC-V
+- add support for setting the resolution on the EFI framebuffer
+- simplify kernel image loading for arm64
+- Move .bss into .data via the linker script instead of relying on symbol
+  annotations.
+- Get rid of __pure getters to access global variables
+- Clean up the config table matching arrays
+
+----------------------------------------------------------------
+Ard Biesheuvel (14):
+      efi/libstub: Make initrd file loader configurable
+      efi/libstub: Unify EFI call wrappers for non-x86
+      efi/libstub/random: Align allocate size to EFI_ALLOC_ALIGN
+      efi/libstub/random: Increase random alloc granularity
+      efi/libstub/arm64: Replace 'preferred' offset with alignment check
+      efi/libstub/arm64: Simplify randomized loading of kernel image
+      efi/libstub: Add API function to allocate aligned memory
+      efi/libstub/arm64: Switch to ordinary page allocator for kernel image
+      efi/libstub: Move efi_relocate_kernel() into separate source file
+      efi/libstub: Drop __pure getter for efi_system_table
+      efi/libstub: Drop __pure getters for EFI stub options
+      efi/libstub/x86: Avoid getter function for efi_is64
+      efi: Clean up config table description arrays
+      efi: Move arch_tables check to caller
+
+Arvind Sankar (17):
+      efi/gop: Remove redundant current_fb_base
+      efi/gop: Move check for framebuffer before con_out
+      efi/gop: Get mode information outside the loop
+      efi/gop: Factor out locating the gop into a function
+      efi/gop: Slightly re-arrange logic of find_gop
+      efi/gop: Move variable declarations into loop block
+      efi/gop: Use helper macros for populating lfb_base
+      efi/gop: Use helper macros for find_bits
+      efi/gop: Remove unreachable code from setup_pixel_info
+      efi/gop: Add prototypes for query_mode and set_mode
+      efi/gop: Allow specifying mode number on command line
+      efi/gop: Allow specifying mode by <xres>x<yres>
+      efi/gop: Allow specifying depth as well as resolution
+      efi/gop: Allow automatically choosing the best mode
+      efi/arm: Remove __efistub_global annotation
+      efi/x86: Remove __efistub_global and add relocation check
+      efi: Kill __efistub_global
+
+Atish Patra (1):
+      efi/libstub: Move arm-stub to a common file
+
+Zou Wei (1):
+      efi/libstub/arm: Make install_memreserve_table static
+
+ Documentation/fb/efifb.rst                         |  33 +-
+ arch/arm/Kconfig                                   |   2 +-
+ arch/arm/boot/compressed/vmlinux.lds.S             |   2 +-
+ arch/arm/include/asm/efi.h                         |   8 -
+ arch/arm64/Kconfig                                 |   2 +-
+ arch/arm64/include/asm/efi.h                       |   8 -
+ arch/ia64/kernel/efi.c                             |  12 +-
+ arch/x86/boot/compressed/vmlinux.lds.S             |   1 +
+ arch/x86/include/asm/efi.h                         |  29 +-
+ arch/x86/platform/efi/efi.c                        |   8 +-
+ drivers/firmware/efi/Kconfig                       |  15 +-
+ drivers/firmware/efi/arm-init.c                    |   4 +-
+ drivers/firmware/efi/efi.c                         |  44 +-
+ drivers/firmware/efi/libstub/Makefile              |  42 +-
+ drivers/firmware/efi/libstub/alignedmem.c          |  57 +++
+ drivers/firmware/efi/libstub/arm64-stub.c          |  94 ++--
+ drivers/firmware/efi/libstub/efi-stub-helper.c     |  47 +-
+ .../efi/libstub/{arm-stub.c => efi-stub.c}         |  23 +-
+ drivers/firmware/efi/libstub/efistub.h             |  96 ++--
+ drivers/firmware/efi/libstub/fdt.c                 |   8 +-
+ drivers/firmware/efi/libstub/file.c                |  34 +-
+ drivers/firmware/efi/libstub/gop.c                 | 492 ++++++++++++++++-----
+ drivers/firmware/efi/libstub/mem.c                 | 191 +-------
+ drivers/firmware/efi/libstub/randomalloc.c         |   6 +-
+ drivers/firmware/efi/libstub/relocate.c            | 174 ++++++++
+ drivers/firmware/efi/libstub/x86-stub.c            |  35 +-
+ include/linux/efi.h                                |   2 +-
+ 27 files changed, 895 insertions(+), 574 deletions(-)
+ create mode 100644 drivers/firmware/efi/libstub/alignedmem.c
+ rename drivers/firmware/efi/libstub/{arm-stub.c => efi-stub.c} (96%)
+ create mode 100644 drivers/firmware/efi/libstub/relocate.c
