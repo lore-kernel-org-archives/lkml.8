@@ -6,73 +6,72 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A84C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C24C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE0A20706
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F95A20706
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:11:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbgDXPKz (ORCPT
+        id S1727882AbgDXPLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:10:55 -0400
-Received: from mga18.intel.com ([134.134.136.126]:34128 "EHLO mga18.intel.com"
+        Fri, 24 Apr 2020 11:11:11 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:45734 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726872AbgDXPKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:10:54 -0400
-IronPort-SDR: GY1yEiyH3xqsNRlRQFNAB+SxvBjMmsGLe2A98xxZigxhesu3jKH7kg9ngca1gPz2AY+zao+uSV
- 257vEhRHY7Vg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2020 08:10:49 -0700
-IronPort-SDR: wmjljIv6HW5GhwZm7s0TvZQaaxz0KBjvEjC9Ruqc7fQyLP2YhAOBL90BWSJ9PLB9JeibauhHWu
- 4r5VdU5DcYKg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,311,1583222400"; 
-   d="scan'208";a="430793969"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga005.jf.intel.com with ESMTP; 24 Apr 2020 08:10:49 -0700
-Date:   Fri, 24 Apr 2020 08:10:49 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, jmattson@google.com,
-        yu.c.zhang@linux.intel.com
-Subject: Re: [PATCH v11 7/9] KVM: X86: Add userspace access interface for CET
- MSRs
-Message-ID: <20200424151049.GE30013@linux.intel.com>
-References: <20200326081847.5870-1-weijiang.yang@intel.com>
- <20200326081847.5870-8-weijiang.yang@intel.com>
- <20200423181406.GK17824@linux.intel.com>
- <20200424150246.GK24039@local-michael-cet-test>
+        id S1726698AbgDXPLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 11:11:10 -0400
+Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1jRzyV-0002yF-EN; Sat, 25 Apr 2020 01:10:44 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Sat, 25 Apr 2020 01:10:51 +1000
+Date:   Sat, 25 Apr 2020 01:10:51 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Iuliana Prodan <iuliana.prodan@nxp.com>
+Cc:     Baolin Wang <baolin.wang@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        Franck Lenormand <franck.lenormand@nxp.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH v5 2/3] crypto: engine - support for parallel requests
+ based on retry mechanism
+Message-ID: <20200424151051.GA26494@gondor.apana.org.au>
+References: <1586982375-18710-1-git-send-email-iuliana.prodan@nxp.com>
+ <1586982375-18710-3-git-send-email-iuliana.prodan@nxp.com>
+ <20200423114640.GA14399@gondor.apana.org.au>
+ <VI1PR0402MB3712298355411E273294E5F38CD00@VI1PR0402MB3712.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200424150246.GK24039@local-michael-cet-test>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <VI1PR0402MB3712298355411E273294E5F38CD00@VI1PR0402MB3712.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 11:02:46PM +0800, Yang Weijiang wrote:
-> On Thu, Apr 23, 2020 at 11:14:06AM -0700, Sean Christopherson wrote:
-> > > +	case MSR_IA32_INT_SSP_TAB:
-> > > +		if (!cet_check_ctl_msr_access(vcpu, msr_info))
-> > > +			return 1;
-> > > +		if (!is_64_bit_mode(vcpu))
-> > 
-> > This is wrong, the SDM explicitly calls out the !64 case:
-> > 
-> >   IA32_INTERRUPT_SSP_TABLE_ADDR (64 bits; 32 bits on processors that do not
-> >   support Intel 64 architecture).
-> So the check is also unnecessary as it's natual size?
+On Fri, Apr 24, 2020 at 02:34:57PM +0000, Iuliana Prodan wrote:
+>
+> Do you refer to the error codes returned by do_one_request (which sends 
+> the req to hw for execution)?
+> 
+> If this returns:
+> 1. 0, success;
+> 2. -ENOSPC, I'll requeue it regardless of MAY_BACKLOG;
+> 3. any other error (-EIO, -EINVAL, -ENOMEM, etc), I'll requeue only 
+> MAY_BACKLOG requests.
 
-It still needs a canonical check.
+Yes that sounds perfect.
 
-Note, KVM diverges from the SDM for canonical checks in that it performs
-canonical checks even when the virtual CPU doesn't support 64-bit and/or
-the host kernel is a 32-bit kernel.  This is intentional because the
-underlying hardware will still enforce the checks, i.e. KVM needs to make
-the physical CPU happy, and the number of people running KVM on hardware
-without 64-bit support can probably be counted on one hand.
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
