@@ -2,197 +2,153 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1ECC55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC506C55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E32B20704
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:34:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB71520704
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:35:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="W/DT2LnK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ii2FQ9kj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726124AbgDXBeU (ORCPT
+        id S1726169AbgDXBfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 21:34:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725884AbgDXBeT (ORCPT
+        Thu, 23 Apr 2020 21:35:42 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:44186 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725884AbgDXBfl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 21:34:19 -0400
-Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96950C09B042;
-        Thu, 23 Apr 2020 18:34:07 -0700 (PDT)
-Received: from flygoat-x1e (unknown [IPv6:240e:390:49b:be80::d68])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id D76FA204F6;
-        Fri, 24 Apr 2020 01:33:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1587692046; bh=y3UcmMZ5+BKX3Fs28CsIVIv20Sx6Su/SHtT1a7hY2AA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=W/DT2LnKH0odWP61kNgxzFDeGknUaUIUWZLE502JFlNv39JqTXGzHCW/QDsmoNgiQ
-         V7mWV09/rijjGRPw+410tJ5WmoCQXK6NDSRkQjbmgpkSCDsQWePtAgh7SPDbm1hrLE
-         OUvNjUgnkF8o8YoqYm8VXtKzw7qKMSH3nDS4B1nbcfgkNQMmdIxQoHFAHOqNF8i671
-         pmw2dKOn+ZvVxm6eJDTKUB4vltKy2yzoksr0tBrdFqTeceSj/e5uGXmFQWHMKJUfYI
-         Vca6YeZ1L5SYWxhvi9hh9dLng8XiVZQvn5ibs8jjg1B1/WepjV+mxFYuGKg86LRV9G
-         ONX9rAAX/OlWw==
-Date:   Fri, 24 Apr 2020 09:33:51 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     linux-mips@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 5/6] irqchip: Add Loongson PCH MSI controller
-Message-ID: <20200424093351.370c92e8@flygoat-x1e>
-In-Reply-To: <20200423154135.38b0ec25@why>
-References: <20200422142428.1249684-1-jiaxun.yang@flygoat.com>
-        <20200422142428.1249684-6-jiaxun.yang@flygoat.com>
-        <20200423154135.38b0ec25@why>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 23 Apr 2020 21:35:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587692139;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mE9Xh8mrcpOk6T4hIIq35lM4lacrhC50tnRMlWlgS+c=;
+        b=ii2FQ9kjj7bt7gdiWhEuPSUDJKdLbn6iXWr9UtsWpvYPpLW5vbdhKP4cPKgv+uSfxbIV2M
+        5OxNbD2KM0HEztNvBQUDVK2Eo6eBPedjaLN+3HuvSMweYABjUa09QnrKdysboQzjsOAatr
+        DfA6fBP1cc1S5XUnF7z+yu4WiOmh79c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-297-ArNzbblSNFSNTtHtyJheKw-1; Thu, 23 Apr 2020 21:35:35 -0400
+X-MC-Unique: ArNzbblSNFSNTtHtyJheKw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 85AB280B70B;
+        Fri, 24 Apr 2020 01:35:33 +0000 (UTC)
+Received: from T590 (ovpn-8-25.pek2.redhat.com [10.72.8.25])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 42BF060C81;
+        Fri, 24 Apr 2020 01:35:23 +0000 (UTC)
+Date:   Fri, 24 Apr 2020 09:35:19 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     John Garry <john.garry@huawei.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Guenter Roeck <groeck@chromium.org>
+Subject: Re: [PATCH] blk-mq: Put driver tag in blk_mq_dispatch_rq_list() when
+ no budget
+Message-ID: <20200424013519.GA355437@T590>
+References: <1587035931-125028-1-git-send-email-john.garry@huawei.com>
+ <e5416179-2ba0-c9a8-1b86-d52eae29e146@acm.org>
+ <663d472a-5bde-4b89-3137-c7bfdf4d7b97@huawei.com>
+ <CAD=FV=XBrKgng+vYzJx+qsOEZ-cZ10A0t+pRh=FcbQMop2ht4Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=XBrKgng+vYzJx+qsOEZ-cZ10A0t+pRh=FcbQMop2ht4Q@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Apr 2020 15:41:35 +0100
-Marc Zyngier <maz@kernel.org> wrote:
-
-> On Wed, 22 Apr 2020 22:24:25 +0800
-> Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+On Thu, Apr 23, 2020 at 03:42:37PM -0700, Doug Anderson wrote:
+> Hi,
 > 
-> > This controller appears on Loongson-7A family of PCH to transform
-> > interrupts from PCI MSI into HyperTransport vectorized interrrupts
-> > and send them to procrssor's HT vector controller.
-> > 
-> > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> > ---
-[...]
-> > +	ret = irq_domain_alloc_irqs_parent(domain, virq, 1,
-> > &fwspec);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	irq_domain_set_info(domain, virq, hwirq,
-> > +			    &middle_irq_chip, NULL,
-> > +			    handle_simple_irq, NULL, NULL);  
+> On Mon, Apr 20, 2020 at 1:23 AM John Garry <john.garry@huawei.com> wrote:
+> >
+> > On 18/04/2020 03:43, Bart Van Assche wrote:
+> > > On 2020-04-16 04:18, John Garry wrote:
+> > >> If in blk_mq_dispatch_rq_list() we find no budget, then we break of the
+> > >> dispatch loop, but the request may keep the driver tag, evaulated
+> > >> in 'nxt' in the previous loop iteration.
+> > >>
+> > >> Fix by putting the driver tag for that request.
+> > >>
+> > >> Signed-off-by: John Garry <john.garry@huawei.com>
+> > >>
+> > >> diff --git a/block/blk-mq.c b/block/blk-mq.c
+> > >> index 8e56884fd2e9..a7785df2c944 100644
+> > >> --- a/block/blk-mq.c
+> > >> +++ b/block/blk-mq.c
+> > >> @@ -1222,8 +1222,10 @@ bool blk_mq_dispatch_rq_list(struct request_queue *q, struct list_head *list,
+> > >>              rq = list_first_entry(list, struct request, queuelist);
+> > >>
+> > >>              hctx = rq->mq_hctx;
+> > >> -            if (!got_budget && !blk_mq_get_dispatch_budget(hctx))
+> > >> +            if (!got_budget && !blk_mq_get_dispatch_budget(hctx)) {
+> > >> +                    blk_mq_put_driver_tag(rq);
+> > >>                      break;
+> > >> +            }
+> > >>
+> > >>              if (!blk_mq_get_driver_tag(rq)) {
+> > >>                      /*
+> > >
+> > > Is this something that can only happen if q->mq_ops->queue_rq(hctx, &bd)
+> > > returns another value than BLK_STS_OK, BLK_STS_RESOURCE and
+> > > BLK_STS_DEV_RESOURCE?
+> >
+> > Right, as that case is handled in blk_mq_handle_dev_resource()
+> >
+> > If so, please add a comment in the source code
+> > > that explains this.
+> >
+> > So important that we should now do this in an extra patch?
+> >
+> > >
+> > > Is this perhaps a bug fix for 0bca799b9280 ("blk-mq: order getting
+> > > budget and driver tag")? If so, please mention this and add Cc tags for
+> > > the people who were Cc-ed on that patch.
+> >
+> > So it looks like 0bca799b9280 had a flaw, but I am not sure if anything
+> > got broken there and worthy of stable backport.
+> >
+> > I found this issue while debugging Ming's blk-mq cpu hotplug patchset,
+> > which I feel is ready to merge.
+> >
+> > Having said that, this nasty issue did take > 1 day for me to debug...
+> > so let me know.
 > 
-> No, this should at least be handle_edge_irq. More importantly, you
-> should use the flow set by the underlying irqchip, and not provide
-> your own.
-
-Hi Marc,
-Thanks for your review.
-
-The underlying irqchip (HTVEC) follows a simple_irq flow as it only
-has mask/unmask callback, and it doesn't have tyoe configuration. so I
-followed simple_irq flow.
-
-How can I use the flow set by the underlying irqchip? Just use
-irq_domain_set_hwirq_and_chip here and set_handler in HTVEC driver?
-
-
+> As per the above conversation, presumably this should go to stable
+> then for any kernel that has commit 0bca799b9280 ("blk-mq: order
+> getting budget and driver tag")?  For instance, I think 4.19 would be
+> affected?  When I picked it there I got a conflict due to not having
+> commit ea4f995ee8b8 ("blk-mq: cache request hardware queue mapping")
+> but I think it's just a context collision and easy to resolve.
 > 
-> > +	irq_set_probe(virq);  
-> 
-> Probe? what does it mean for MSIs? I also don't see how you tell the
-> underlying irqchip that the MSI is edge triggered.
-> 
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int pch_msi_middle_domain_alloc(struct irq_domain *domain,
-> > +					   unsigned int virq,
-> > +					   unsigned int nr_irqs,
-> > void *args) +{
-> > +	struct pch_msi_data *priv = domain->host_data;
-> > +	int hwirq, err, i;
-> > +
-> > +	hwirq = pch_msi_allocate_hwirq(priv, nr_irqs);
-> > +	if (hwirq < 0)
-> > +		return hwirq;
-> > +
-> > +	for (i = 0; i < nr_irqs; i++) {
-> > +		err = pch_msi_parent_domain_alloc(domain, virq +
-> > i, hwirq + i);
-> > +		if (err)
-> > +			goto err_hwirq;
-> > +
-> > +		irq_domain_set_hwirq_and_chip(domain, virq + i,
-> > hwirq + i,
-> > +					      &middle_irq_chip,
-> > priv);
-> > +	}
-> > +
-> > +	return 0;
-> > +err_hwirq:
-> > +	while (--i >= 0)
-> > +		irq_domain_free_irqs_parent(domain, virq, i);
-> > +
-> > +	pch_msi_free_hwirq(priv, hwirq, nr_irqs);
-> > +	return err;
-> > +}
-> > +
-> > +static void pch_msi_middle_domain_free(struct irq_domain *domain,
-> > +					   unsigned int virq,
-> > +					   unsigned int nr_irqs)
-> > +{
-> > +	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
-> > +	struct pch_msi_data *priv = irq_data_get_irq_chip_data(d);
-> > +
-> > +	irq_domain_free_irqs_parent(domain, virq, nr_irqs);
-> > +	pch_msi_free_hwirq(priv, d->hwirq, nr_irqs);
-> > +}
-> > +
-> > +static const struct irq_domain_ops pch_msi_middle_domain_ops = {
-> > +	.alloc	= pch_msi_middle_domain_alloc,
-> > +	.free	= pch_msi_middle_domain_free,
-> > +};
-> > +
-> > +static int pch_msi_init_domains(struct pch_msi_data *priv,
-> > +				struct device_node *node,
-> > +				struct device_node *parent)
-> > +{
-> > +	struct irq_domain *middle_domain, *msi_domain,
-> > *parent_domain; +
-> > +	parent_domain = irq_find_host(parent);
-> > +	if (!parent_domain) {
-> > +		pr_err("Failed to find the parent domain\n");
-> > +		return -ENXIO;
-> > +	}
-> > +
-> > +	middle_domain = irq_domain_add_tree(NULL,
-> > +
-> > &pch_msi_middle_domain_ops,
-> > +					    priv);  
-> 
-> You don't really need a tree, unless your interrupt space is huge and
-> very sparse. Given that the DT example says 64, I would go with a
-> linear domain if that number is realistic.
-> 
-It can up to 192 in latest generation of chip, is it still suitable?
+> I'm no expert in the block code, but I posted my backport to 4.19 at
+> <https://crrev.com/c/2163313>.  I'm happy to send an email as a patch
+> to the list too or double-check that someone else's conflict
+> resolution matches mine.
 
-In the latest generation, we have a enhanced version of HTVEC which has
-another delivery system that will be able to configure affinity. That's
-why I placed set_affinity call back here and in PCH PIC driver.
+The thing is that there may not user visible effect by this issue,
+when one tag isn't freed, this request will be re-dispatched soon.
+That said it just makes the tag lifetime longer.
 
-Thanks. 
+It could only be an issue in case of request dependency, meantime
+the tag space is quite limited. However, not sure if there is such
+case in reality.
 
-[...]
-> > +}
-> > +
-> > +IRQCHIP_DECLARE(pch_msi, "loongson,pch-msi-1.0", pch_msi_init);  
-> 
-> Thanks,
-> 
-> 	M.
 
---
-Jiaxun Yang
+Thanks,
+Ming
+
