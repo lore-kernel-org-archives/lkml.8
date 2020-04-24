@@ -4,48 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 426E3C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF15C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18F4420736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E06E20736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:32:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587731570;
-	bh=+IpdCvSrrMlIO5bYtEAPQGW5UebOGBJelOOYntb8ZG0=;
+	s=default; t=1587731574;
+	bh=hpb5Dlgj/A1AFNx7ZyVBlCM4ijqWSGiYBG2UZcu/z1E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yfDlp+4awJfJqqMULt3hnihpu56bFLAe5Lt7asJfhYw5tZ7VSnY8upI5iiU6bQwza
-	 yyUP2VedBRznTW9XmHVjVU/9qXYV1hqxE4DJjhiFPUAOxj+VtYWdNeKvVozLgKGFTA
-	 ReqX43COeojfP0xQ4YHSVev3Mq/hf/mhdpXLO6Ho=
+	b=elZBz4xyAVivshITlclDEgP4lB0vVmPlJnK+PHUIc4tbR7emHh3+UD6PG0aRkm+WK
+	 AiZaapPP86TDIwRbg1YgUTj01i4I43XVNf6bUYPGH4jBbk/VbpnHoj4RA2SD7WViBu
+	 D10pRbtn1aQnb9+XVxcrEIaTCW//3RR+HY34sn4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728598AbgDXMct (ORCPT
+        id S1728629AbgDXMcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:32:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52046 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:32:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727082AbgDXMWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:22:50 -0400
+        id S1727067AbgDXMWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:22:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5836421582;
-        Fri, 24 Apr 2020 12:22:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1F1120767;
+        Fri, 24 Apr 2020 12:22:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587730970;
-        bh=+IpdCvSrrMlIO5bYtEAPQGW5UebOGBJelOOYntb8ZG0=;
+        s=default; t=1587730966;
+        bh=hpb5Dlgj/A1AFNx7ZyVBlCM4ijqWSGiYBG2UZcu/z1E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hSWxtVEG7qZcO/I3BM6QjAfS39u/mRBWuk31DOEBQsjGlxdWXjtRZ20AIY6tO+7Ww
-         qrrQammUPbCau6q6IGrPPkGkpDUiyMh5A47y0w646IVyzE0DGAnSVRSxop8kka6vrn
-         hLchslAos0go7E8iiU9hWMdT/L18ontwLVx4YyZ8=
+        b=yX1HqBiVNs+SqB/zuBJF66zliN8l9Do+ApTawuSoKLhEcg2AN/5VDGqRBXENtbmcM
+         EnheEZDL2HXdO2q92eXEDBzSf9usaTsfDCh1Hi+eJ7O6IfYQhkxrmnWNT1+ciP4HZd
+         JiImzBFov8/U7lzPgAkY+tfzDlzVpRdVo9sdPG8A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Roy Spliet <nouveau@spliet.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.6 11/38] ALSA: hda: Keep the controller initialization even if no codecs found
-Date:   Fri, 24 Apr 2020 08:22:09 -0400
-Message-Id: <20200424122237.9831-11-sashal@kernel.org>
+Cc:     Brian Foster <bfoster@redhat.com>,
+        Paul Furtado <paulfurtado91@gmail.com>,
+        Chandan Rajendra <chandanrlinux@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Allison Collins <allison.henderson@oracle.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 08/38] xfs: acquire superblock freeze protection on eofblocks scans
+Date:   Fri, 24 Apr 2020 08:22:06 -0400
+Message-Id: <20200424122237.9831-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200424122237.9831-1-sashal@kernel.org>
 References: <20200424122237.9831-1-sashal@kernel.org>
@@ -58,69 +63,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Brian Foster <bfoster@redhat.com>
 
-[ Upstream commit 9479e75fca370a5220784f7596bf598c4dad0b9b ]
+[ Upstream commit 4b674b9ac852937af1f8c62f730c325fb6eadcdb ]
 
-Currently, when the HD-audio controller driver doesn't detect any
-codecs, it tries to abort the probe.  But this abort happens at the
-delayed probe, i.e. the primary probe call already returned success,
-hence the driver is never unbound until user does so explicitly.
-As a result, it may leave the HD-audio device in the running state
-without the runtime PM.  More badly, if the device is a HD-audio bus
-that is tied with a GPU, GPU cannot reach to the full power down and
-consumes unnecessarily much power.
+The filesystem freeze sequence in XFS waits on any background
+eofblocks or cowblocks scans to complete before the filesystem is
+quiesced. At this point, the freezer has already stopped the
+transaction subsystem, however, which means a truncate or cowblock
+cancellation in progress is likely blocked in transaction
+allocation. This results in a deadlock between freeze and the
+associated scanner.
 
-This patch changes the logic after no-codec situation; it continues
-probing without the further codec initialization but keep the
-controller driver running normally.
+Fix this problem by holding superblock write protection across calls
+into the block reapers. Since protection for background scans is
+acquired from the workqueue task context, trylock to avoid a similar
+deadlock between freeze and blocking on the write lock.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207043
-Tested-by: Roy Spliet <nouveau@spliet.org>
-Link: https://lore.kernel.org/r/20200413082034.25166-5-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: d6b636ebb1c9f ("xfs: halt auto-reclamation activities while rebuilding rmap")
+Reported-by: Paul Furtado <paulfurtado91@gmail.com>
+Signed-off-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Chandan Rajendra <chandanrlinux@gmail.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Allison Collins <allison.henderson@oracle.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ fs/xfs/xfs_icache.c | 10 ++++++++++
+ fs/xfs/xfs_ioctl.c  |  5 ++++-
+ 2 files changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index 692857904d49e..aa0be85614b6c 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -2009,7 +2009,7 @@ static int azx_first_init(struct azx *chip)
- 	/* codec detection */
- 	if (!azx_bus(chip)->codec_mask) {
- 		dev_err(card->dev, "no codecs found!\n");
--		return -ENODEV;
-+		/* keep running the rest for the runtime PM */
+diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+index 8dc2e54142768..00932d2b503b6 100644
+--- a/fs/xfs/xfs_icache.c
++++ b/fs/xfs/xfs_icache.c
+@@ -907,7 +907,12 @@ xfs_eofblocks_worker(
+ {
+ 	struct xfs_mount *mp = container_of(to_delayed_work(work),
+ 				struct xfs_mount, m_eofblocks_work);
++
++	if (!sb_start_write_trylock(mp->m_super))
++		return;
+ 	xfs_icache_free_eofblocks(mp, NULL);
++	sb_end_write(mp->m_super);
++
+ 	xfs_queue_eofblocks(mp);
+ }
+ 
+@@ -934,7 +939,12 @@ xfs_cowblocks_worker(
+ {
+ 	struct xfs_mount *mp = container_of(to_delayed_work(work),
+ 				struct xfs_mount, m_cowblocks_work);
++
++	if (!sb_start_write_trylock(mp->m_super))
++		return;
+ 	xfs_icache_free_cowblocks(mp, NULL);
++	sb_end_write(mp->m_super);
++
+ 	xfs_queue_cowblocks(mp);
+ }
+ 
+diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+index d42de92cb2833..4a99e0b0f3333 100644
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -2264,7 +2264,10 @@ xfs_file_ioctl(
+ 		if (error)
+ 			return error;
+ 
+-		return xfs_icache_free_eofblocks(mp, &keofb);
++		sb_start_write(mp->m_super);
++		error = xfs_icache_free_eofblocks(mp, &keofb);
++		sb_end_write(mp->m_super);
++		return error;
  	}
  
- 	if (azx_acquire_irq(chip, 0) < 0)
-@@ -2303,9 +2303,11 @@ static int azx_probe_continue(struct azx *chip)
- #endif
- 
- 	/* create codec instances */
--	err = azx_probe_codecs(chip, azx_max_codecs[chip->driver_type]);
--	if (err < 0)
--		goto out_free;
-+	if (bus->codec_mask) {
-+		err = azx_probe_codecs(chip, azx_max_codecs[chip->driver_type]);
-+		if (err < 0)
-+			goto out_free;
-+	}
- 
- #ifdef CONFIG_SND_HDA_PATCH_LOADER
- 	if (chip->fw) {
-@@ -2319,7 +2321,7 @@ static int azx_probe_continue(struct azx *chip)
- #endif
- 	}
- #endif
--	if ((probe_only[dev] & 1) == 0) {
-+	if (bus->codec_mask && !(probe_only[dev] & 1)) {
- 		err = azx_codec_configure(chip);
- 		if (err < 0)
- 			goto out_free;
+ 	default:
 -- 
 2.20.1
 
