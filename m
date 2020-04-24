@@ -2,287 +2,114 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7399C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 07:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E74D0C5518A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 07:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A616420700
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 07:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C030D20700
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 07:24:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="pkckESzc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U/kCdDql"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgDXHVP (ORCPT
+        id S1726626AbgDXHYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 03:21:15 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:4305 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725898AbgDXHVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 03:21:15 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 497lvr5T01z9tyJm;
-        Fri, 24 Apr 2020 09:21:12 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=pkckESzc; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id wSHBft-AlAuN; Fri, 24 Apr 2020 09:21:12 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 497lvr43CXz9tyJl;
-        Fri, 24 Apr 2020 09:21:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1587712872; bh=gElz+irgb5pZXKsTtCEsCa9jmvIEXBXElnqTn0G0itA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=pkckESzcazhl0l+06rf32KK9v5++yUkAixH67vxMH7QyzBQxPuaa+j2YFGb4Llh5h
-         UytnyWhHetlJAI9Vwr3Meb1rWPfjs+8e9izF9LCPEHc+ehD2vk3jN6UxTWD5ZKZ+Yp
-         O5yAxyg3cqmeAz8pfp1iwJuUjdo47oCAWUAN9Tfc=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9DE6A8B86C;
-        Fri, 24 Apr 2020 09:21:13 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id GrCHfk9VqGq4; Fri, 24 Apr 2020 09:21:13 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id CCB528B860;
-        Fri, 24 Apr 2020 09:21:10 +0200 (CEST)
-Subject: Re: [PATCH v3,5/5] powerpc: sysdev: support userspace access of
- fsl_85xx_sram
-To:     =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
-Cc:     gregkh@linuxfoundation.org, arnd@arndb.de,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        oss@buserror.net, kernel@vivo.com, robh@kernel.org,
-        benh@kernel.crashing.org, paulus@samba.org,
-        Michael Ellerman <mpe@ellerman.id.au>
-References: <AHIA-gAFCMi-wI-WAB9biKqO.3.1587711910539.Hmail.wenhu.wang@vivo.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <3da78776-f126-8815-e397-c5090c84d83a@c-s.fr>
-Date:   Fri, 24 Apr 2020 09:21:10 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 24 Apr 2020 03:24:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbgDXHYY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 03:24:24 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33429C09B045
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 00:24:24 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id c24so8476800uap.13
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 00:24:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bwU7oZ/XAAyY4lpunUIkqcm1gubUdFQTG9en47Gx4nM=;
+        b=U/kCdDqlJOd1t2vRuAJazeRN4kJyJhL8c20e2AZyQiNSeFyDxg2MRNpxtdeYhO5rIK
+         vtqkEpxvw0a89RGYgOoRh+8DAkWYm7/eXrn4gibrW9zZJa9pyD1eWp61ZZRKn8RNsP2X
+         CjOTQp0QBUXXW949H4Ni8j5Coze/J/jGKFIfNNwsd14oo3lmjqeq3sMPtBxY8beJ6os2
+         lulqpVkbj/zD2vMaHKK/ec+bwX2xHA0sCYxK0JpPcUO4oCzVVQ2KSaQup9KfiNrnv2Nv
+         2nM+QjPvXA+mXqoHYXzbjvzTHSiurIpJ2MWASURG+6mdwNC3Ruah2gL3Xbv9fCx1vbiZ
+         e2LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bwU7oZ/XAAyY4lpunUIkqcm1gubUdFQTG9en47Gx4nM=;
+        b=oCrXMrk+h3ysVumOVm2G7MKp+BYanBDrg30OT8cB9u3XN5O4jP1ZCFvberGXZVO2Ge
+         /Kk506kfeHrttHHPovpm94ryp8cPYbbGRN5T0Gj3J5eOICe0mINtB3wcH69p1FAsEp5P
+         LPcJ1aKG9Ye18a5JWjP06LsA09HauXwoPzLmFPbbMrnbxnRJTMRbmNqaLUgdSODS7j8I
+         2fPpaJFNAgWhUn7PiAj/+u3k+aPKjFsxc8ZkUp3d7Q3/Pc/hWY3W5SexiAxGCwt6Qkdv
+         JJmK77YchSTRcbZ6Ajgr4JxJVE2OEl8UBcUfnZAETb/x6lKafAsF0znBwnxtw+8TDM8o
+         2lVg==
+X-Gm-Message-State: AGi0Puaom1p7PzNT8Pv30Fc08vKsjnzn+qzhzQ/O+kTUQyzp/NeFGxJK
+        C4S7ZoYyZDatBpr+p3KAvOsE7y7Ct9P+TtsMgad6YA==
+X-Google-Smtp-Source: APiQypL6qzCRDuV/VbVYnPK5EVP2CZUDyh3ce3Agw5OQpvjytHoi9RN5IqoljEP2WZVNlu7rsy4mEAMRNQyRya+68vI=
+X-Received: by 2002:ab0:6588:: with SMTP id v8mr6618953uam.100.1587713062734;
+ Fri, 24 Apr 2020 00:24:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <AHIA-gAFCMi-wI-WAB9biKqO.3.1587711910539.Hmail.wenhu.wang@vivo.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+References: <1587573149-30269-1-git-send-email-skomatineni@nvidia.com>
+ <20200423064755.GA3491005@kroah.com> <fe49d36f-65c9-736f-791c-27c602cc3bb8@nvidia.com>
+In-Reply-To: <fe49d36f-65c9-736f-791c-27c602cc3bb8@nvidia.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 24 Apr 2020 09:23:46 +0200
+Message-ID: <CAPDyKFo0vx1=_j5M-X068n8Xp3wU9JVrXkADCDcGX0Q1oRBzRg@mail.gmail.com>
+Subject: Re: [PATCH 5.4.33 0/2] Fix for long operation cmds busy detection
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "(Exiting) Baolin Wang" <baolin.wang@linaro.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Bradley Bolen <bradleybolen@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Aniruddha Tvs Rao <anrao@nvidia.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 23 Apr 2020 at 17:38, Sowjanya Komatineni
+<skomatineni@nvidia.com> wrote:
+>
+>
+> On 4/22/20 11:47 PM, Greg KH wrote:
+> > External email: Use caution opening links or attachments
+> >
+> >
+> > On Wed, Apr 22, 2020 at 09:32:27AM -0700, Sowjanya Komatineni wrote:
+> >> This series is to backport the upstream patches that fixes busy detection
+> >> for long operation mmc commands by implementing Tegra specific timeout
+> >> callback to switch between finite and infinite HW busy detection wait
+> >> modes.
+> >>
+> >>
+> >> Sowjanya Komatineni (2):
+> >>    sdhci: tegra: Implement Tegra specific set_timeout callback
+> >>    sdhci: tegra: Enable MMC_CAP_WAIT_WHILE_BUSY host capability
+> >>
+> >>   drivers/mmc/host/sdhci-tegra.c | 33 +++++++++++++++++++++++++++++++++
+> >>   1 file changed, 33 insertions(+)
+> > Any specific reason you did not cc: the stable@vger list when asking for
+> > stable patches to be merged?
+>
+> I added Cc: <stable@vger.kernel.org> in Signed-off area of patches
 
+I think Greg meant you actually need to send manually backported
+patches to stable@vger.kernel.org. This helps Greg and Sasha to pick
+them up.
 
-Le 24/04/2020 à 09:05, 王文虎 a écrit :
->> Le 24/04/2020 à 04:45, Wang Wenhu a écrit :
->>> New module which registers its memory allocation and free APIs to the
->>> sram_dynamic module, which would create a device of struct sram_device
->>> type to act as an interface for user level applications to access the
->>> backend hardware device, fsl_85xx_cache_sram, which is drived by the
->>> FSL_85XX_CACHE_SRAM module.
->>>
->>> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
->>> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
->>> Cc: Scott Wood <oss@buserror.net>
->>> Cc: Michael Ellerman <mpe@ellerman.id.au>
->>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>> Cc: Arnd Bergmann <arnd@arndb.de>
->>> Cc: linuxppc-dev@lists.ozlabs.org
->>> ---
->>>    .../powerpc/include/asm/fsl_85xx_cache_sram.h |  4 ++
->>>    arch/powerpc/platforms/85xx/Kconfig           | 10 +++++
->>>    arch/powerpc/sysdev/Makefile                  |  1 +
->>>    arch/powerpc/sysdev/fsl_85xx_cache_ctlr.h     |  6 +++
->>>    arch/powerpc/sysdev/fsl_85xx_cache_sram.c     | 12 ++++++
->>>    arch/powerpc/sysdev/fsl_85xx_sram_uapi.c      | 39 +++++++++++++++++++
->>>    6 files changed, 72 insertions(+)
->>>    create mode 100644 arch/powerpc/sysdev/fsl_85xx_sram_uapi.c
->>
->> We shouldn't add more stuff in arch/powerpc/sysdev/
->>
->> Either it is dedicated to 85xx, and it should go into
->> arch/powerpc/platform/85xx/ , or it is common to several
->> platforms/architectures and should be moved to drivers/soc/fsl/
->>
-> 
-> Sure, actually I tried to find a better place, but did not recognize
-> the driver/soc. Thanks, and I will put fsl_85xx_sram_uapi there.
-> 
->>>
->>> diff --git a/arch/powerpc/include/asm/fsl_85xx_cache_sram.h b/arch/powerpc/include/asm/fsl_85xx_cache_sram.h
->>> index 0235a0447baa..99cb7e202c38 100644
->>> --- a/arch/powerpc/include/asm/fsl_85xx_cache_sram.h
->>> +++ b/arch/powerpc/include/asm/fsl_85xx_cache_sram.h
->>> @@ -26,6 +26,10 @@ struct mpc85xx_cache_sram {
->>>    	unsigned int size;
->>>    	rh_info_t *rh;
->>>    	spinlock_t lock;
->>> +
->>> +#ifdef CONFIG_FSL_85XX_SRAM_UAPI
->>> +	struct device *dev;
->>> +#endif
->>>    };
->>>    
->>>    extern void mpc85xx_cache_sram_free(void *ptr);
->>> diff --git a/arch/powerpc/platforms/85xx/Kconfig b/arch/powerpc/platforms/85xx/Kconfig
->>> index fa3d29dcb57e..3a6f6af973eb 100644
->>> --- a/arch/powerpc/platforms/85xx/Kconfig
->>> +++ b/arch/powerpc/platforms/85xx/Kconfig
->>> @@ -16,6 +16,16 @@ if FSL_SOC_BOOKE
->>>    
->>>    if PPC32
->>>    
->>> +config FSL_85XX_SRAM_UAPI
->>> +	tristate "Freescale MPC85xx SRAM UAPI Support"
->>> +	depends on FSL_SOC_BOOKE && SRAM_DYNAMIC
->>
->> Is SRAM_DYNAMIC usefull on its own, without a driver like this one ? Is
->> that worth allowing tiny selection of both drivers ? Shouldn't one of
->> them imply the other one ?
-> 
-> Truely the module like this is the top level selection, and SRAM_DYNAMIC
-> should be selected by any caller modules. As SRAM_DYNAMIC may be used by
-> other drivers(in the future, but currently only us here), I think make it
-> seleted by this is better? (show below)
-> 
-> diff --git a/drivers/soc/fsl/Kconfig b/drivers/soc/fsl/Kconfig
-> index 4df32bc4c7a6..ceeebb22f6d3 100644
-> --- a/drivers/soc/fsl/Kconfig
-> +++ b/drivers/soc/fsl/Kconfig
-> @@ -50,4 +50,16 @@ config FSL_RCPM
->   	  tasks associated with power management, such as wakeup source control.
->   	  Note that currently this driver will not support PowerPC based
->   	  QorIQ processor.
-> +
-> +config FSL_85XX_SRAM_UAPI
-> +	tristate "Freescale MPC85xx SRAM UAPI Support"
-> +	depends on FSL_SOC_BOOKE && PPC32
-> +	select FSL_85XX_CACHE_SRAM
-> +	select SRAM_DYNAMIC
-> +	help
-> +	  This registers a device of struct sram_device type which would act as
-> +	  an interface for user level applications to access the Freescale 85xx
-> +	  Cache-SRAM memory dynamically, meaning allocate on demand dynamically
-> +	  while they are running.
-> +
-
-And then in patch 4, I'm not sure it is worth to keep SRAM_DYNAMIC as 
-user selectable.
-
->   endmenu
-> diff --git a/drivers/soc/fsl/Makefile b/drivers/soc/fsl/Makefile
-> index 906f1cd8af01..716e38f75735 100644
-> --- a/drivers/soc/fsl/Makefile
-> +++ b/drivers/soc/fsl/Makefile
-> @@ -10,3 +10,4 @@ obj-$(CONFIG_FSL_RCPM)			+= rcpm.o
->   obj-$(CONFIG_FSL_GUTS)			+= guts.o
->   obj-$(CONFIG_FSL_MC_DPIO) 		+= dpio/
->   obj-$(CONFIG_DPAA2_CONSOLE)		+= dpaa2-console.o
-> +obj-$(CONFIG_FSL_85XX_SRAM_UAPI)	+= fsl_85xx_sram_uapi.o
-> 
->>>    
->>> +#ifdef CONFIG_FSL_85XX_SRAM_UAPI
->>> +extern struct mpc85xx_cache_sram *mpc85xx_get_cache_sram(void);
->>
->> 'extern' keywork is meaningless here, remove it.
->>
-> 
-> I will remove it in patch v4.
-> 
->>> +#endif
->>> +
->>>    extern int instantiate_cache_sram(struct platform_device *dev,
->>>    		struct sram_parameters sram_params);
->>>    extern void remove_cache_sram(struct platform_device *dev);
->>> diff --git a/arch/powerpc/sysdev/fsl_85xx_cache_sram.c b/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
->>> index 3de5ac8382c0..0156ea63a3a2 100644
->>> --- a/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
->>> +++ b/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
->>> @@ -23,6 +23,14 @@
->>>    
->>>    struct mpc85xx_cache_sram *cache_sram;
->>>    
->>> +
->>> +#ifdef CONFIG_FSL_85XX_SRAM_UAPI
->>> +struct mpc85xx_cache_sram *mpc85xx_get_cache_sram(void)
->>> +{
->>> +	return cache_sram;
->>> +}
->>> +#endif
->>
->> This function is not worth the mess of an #ifdef in a .c file.
->> cache_sram is already globaly visible, so this function should go in
->> fsl_85xx_cache_ctlr.h as a 'static inline'
->>
-> 
-> Yes, and I will change it like this, with an extern of cache_sram.
-> 
->   #define L2CR_SRAM_ZERO		0x00000000	/* L2SRAM zero size */
-> @@ -81,6 +83,15 @@ struct sram_parameters {
->   	phys_addr_t sram_offset;
->   };
->   
-> +#ifdef CONFIG_FSL_85XX_SRAM_UAPI
-> +extern struct mpc85xx_cache_sram *cache_sram;
-> +
-> +static inline struct mpc85xx_cache_sram *mpc85xx_get_cache_sram(void)
-> +{
-> +	return cache_sram;
-> +}
-> +#endif
-> +
->   extern int instantiate_cache_sram(struct platform_device *dev,
-> 
->>> +
->>>    void *mpc85xx_cache_sram_alloc(unsigned int size,
->>>    				phys_addr_t *phys, unsigned int align)
->>>    {
->>> @@ -115,6 +123,10 @@ int instantiate_cache_sram(struct platform_device *dev,
->>>    	rh_attach_region(cache_sram->rh, 0, cache_sram->size);
->>>    	spin_lock_init(&cache_sram->lock);
->>>    
->>> +#ifdef CONFIG_FSL_85XX_SRAM_UAPI
->>> +	cache_sram->dev = &dev->dev;
->>> +#endif
->>
->> 	Can we avoid the #ifdef in .c file ? (see
->> https://www.kernel.org/doc/html/latest/process/coding-style.html#conditional-compilation)
->>
-> 
-> Definitely, and I will change it as below in patch v4:
-> 
-> +	if (IS_ENABLED(CONFIG_FSL_85XX_SRAM_UAPI))
-> +		cache_sram->dev = &dev->dev;
-> +
-
-This will work only if is defined all the time in the .h regardless of 
-CONFIG_FSL_85XX_SRAM_UAPI. Otherwise you should have something like that 
-in the .h, that you call all the time from the .c:
-
-#ifdef CONFIG_FSL_85XX_SRAM_UAPI
-static inline void set_cache_sram_dev(struct mpc85xx_cache_sram *sram, 
-struct device *dev)
-{
-	sram->dev = dev;
-}
-#else
-static inline void set_cache_sram_dev(struct mpc85xx_cache_sram *sram, 
-struct device *dev) { }
-#endif
-
-
->   	dev_info(&dev->dev, "[base:0x%llx, size:0x%x] configured and loaded\n",
-> 
-> Thanks, for your suggestions, as these are minor modifications,
-> I will send a new patch series v4 soon.
-> 
-> Regards,
-> Wenhu
-> 
-
-Christophe
+Kind regards
+Uffe
