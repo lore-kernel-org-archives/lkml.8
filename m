@@ -2,137 +2,112 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 129D8C55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D21F3C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6C8520736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9C1F20767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:43:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F7tvAWZK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tgWUgeVt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbgDXImJ (ORCPT
+        id S1726698AbgDXInE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 04:42:09 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43769 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726298AbgDXImI (ORCPT
+        Fri, 24 Apr 2020 04:43:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbgDXInE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 04:42:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587717727;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=eRBkH5/Xmo1XGOKZTIj29qxMagsUMmu9LlrB6+bvzhA=;
-        b=F7tvAWZK3Pou5mUmzdqXeT5ByPCy2VEc7KDNRso3p7jwrMtEYaeptwjuKuAavM0xh5HmzJ
-        J8D4LU3qll80h2oD58YP+EPg/ax89yUxVcMi+CjiDrW0S4ENJSxza7lHfgkVRi0x9I9TBQ
-        kbpxa0QoWXE49i852sAUtM6CQYegjQ0=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-153-qCKx6qIoOxSxXBfk5XlA2g-1; Fri, 24 Apr 2020 04:42:02 -0400
-X-MC-Unique: qCKx6qIoOxSxXBfk5XlA2g-1
-Received: by mail-wr1-f69.google.com with SMTP id x15so4456907wrn.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 01:42:02 -0700 (PDT)
+        Fri, 24 Apr 2020 04:43:04 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D54DDC09B045
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 01:43:03 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id f11so4490399ljp.1
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 01:43:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3/5V9rfViLiIb3lSUOpxPhyBVl/15uDOkbFOxJipIyA=;
+        b=tgWUgeVt7DG6b5h4PlBnjqc4eCwJPI2AosELfpmCWn59Cg3NDw74znWUe+s2G1ef8e
+         CZ3Nq/voUq5ST78kTQD0PTfeJh88Cw/Gh2i0BWYA1TAPNsppYaQiJopPD1tuqR1X23J+
+         u2Rmpy11NykrZ8zz+ZB3mdIzp9dRzpua0A/x12OLCXUmLWoquyMaDOpdIn7xdiDo5nsc
+         E3BOFNlq2QiwCPVC9ei3naFh+Dfl9i0Ul/+pL7m5FkMMUGQHEkVvg35JbisitY1f2TRh
+         2syeY0wtkOKQAyjD7P5aJADQcqZ2MypVDmE9/2ndn/sBrx+Co8xJN7ltzWHquO9EQirI
+         6nxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eRBkH5/Xmo1XGOKZTIj29qxMagsUMmu9LlrB6+bvzhA=;
-        b=TK9Pb+BQLJF0RYP5iE5LIqFznezbPImvuE6KYJAxl29ih4SD9BCZ7H0nFRrfo5fJc9
-         mnHArMMmF39en+YujgORDHwq9GJeZDFdu8QoA5r7uu0Hri9fjrjj180DU6EeBzlYnKFg
-         ElcG37cOFCm20A48Bjbq0pTsaMe0Zo2AUxcqYmGwIBwhO/F4kI2Px2yi1UkUwAw9yqSW
-         9S+MqwG19d2EzkBrOo+bEJTuFghRdxH8SIA/Qg2188zcHwLEVlxw9GBbJZnSaEyvy+5l
-         PLR0tbWqgDmbvaYgD8S3pBD3PZ1fCvHNwDYzXp9+7EIsLrL6j66hXW5NPVEUR9kvvbjX
-         QJxg==
-X-Gm-Message-State: AGi0PuaRzfpO9W1gzvJrGa1DVA2shlg6bLoWifI/VTykFnqX9sC89lF2
-        urDERQcRryVgP9KJ9dVWTfQbf25qVJhtRr8sVqNGGaia+RBvttPmT2wm8Es3wtn8VoBO0Ad+tkG
-        yMYfSOhY946PaIkfUjEs+Bzo9
-X-Received: by 2002:a7b:cd04:: with SMTP id f4mr8507239wmj.3.1587717721287;
-        Fri, 24 Apr 2020 01:42:01 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKxuCqGvW3NHNyEw4+X3HPjqbYB2EyJcTmS/3W+wWEll8LclKWavyc7mGG0iFRlqlH/YaX6NQ==
-X-Received: by 2002:a7b:cd04:: with SMTP id f4mr8507206wmj.3.1587717721017;
-        Fri, 24 Apr 2020 01:42:01 -0700 (PDT)
-Received: from steredhat (host108-207-dynamic.49-79-r.retail.telecomitalia.it. [79.49.207.108])
-        by smtp.gmail.com with ESMTPSA id s12sm1831955wmc.7.2020.04.24.01.41.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 01:42:00 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 10:41:58 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Stefan Hajnoczi <stefanha@redhat.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Lance Digby <ldigby@redhat.com>
-Subject: Re: [PATCH] virtio-blk: handle block_device_operations callbacks
- after hot unplug
-Message-ID: <20200424084158.uayekt5c3lus4532@steredhat>
-References: <20200423123717.139141-1-stefanha@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3/5V9rfViLiIb3lSUOpxPhyBVl/15uDOkbFOxJipIyA=;
+        b=XPBh9ks1DOiOInge1hpMM5R1PTR18sHU1AoRjb6yDhRH44bn1CGudeuyiMPCGkGq4j
+         rV/kFEhRbhGnw7mP3lc5prEdvzAS3r/P/VoRzq8vybW22LjpCYCbE2Pe1NXCyJS0CJmh
+         mDxlF0+BH2jpoOPFx7r6Qy4FNfv69YmDPvEXwFgUKL03FLoqRw+O3NCmB0ZYhxqJfJXV
+         4SRAsOmuHYOO5IUwj6Vr4JYAAn2LSIIlAuBQgWhgHpAo9cpj/juDqAAl5V0zdtsZ9xYU
+         E3mqb7ByTUvRHVWbipr/1dcTgwJeiQzYHjTBZA3uye5+7pH/nd3KkmUck9WQbHIFCObU
+         5lgQ==
+X-Gm-Message-State: AGi0PuaIRRO8pxuyjrBttXdizVEIAdunXqHXxXpECjXrsLAZ4gzFhqaU
+        4U0vV0eRSrjqHUDoTE5A4SDhfqL8TEX+2ng2hxY=
+X-Google-Smtp-Source: APiQypJV8HBqJ9jW2FLsSv1wRY2BDsPGk0pWu/jMUuWVdKZxlr1XPtUb5tvSO1QSAE8+NlG7IZGNo/bH6DKm09pDI2M=
+X-Received: by 2002:a2e:6c08:: with SMTP id h8mr4950543ljc.48.1587717782344;
+ Fri, 24 Apr 2020 01:43:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200423123717.139141-1-stefanha@redhat.com>
+References: <cover.1587088646.git.baolin.wang7@gmail.com> <96d444cd73239e0166316bd8f44082031cf72491.1587088646.git.baolin.wang7@gmail.com>
+ <20200424081138.GP3612@dell> <CAK8P3a1e15P6xRUgYLYxT8XUx7FREbs5mMbfL1Qj+qwoDfFX+Q@mail.gmail.com>
+ <20200424083255.GQ3612@dell>
+In-Reply-To: <20200424083255.GQ3612@dell>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Fri, 24 Apr 2020 16:42:50 +0800
+Message-ID: <CADBw62pisHz=ejgnhL=Y_qufCoZjPDLT90X2bztTZzMgbNMvmQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mfd: syscon: Support physical regmap bus
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 01:37:17PM +0100, Stefan Hajnoczi wrote:
-> A virtio_blk block device can still be referenced after hot unplug by
-> userspace processes that hold the file descriptor.  In this case
-> virtblk_getgeo() can be invoked after virtblk_remove() was called.  For
-> example, a program that has /dev/vdb open can call ioctl(HDIO_GETGEO)
-> after hot unplug.
-> 
-> Fix this by clearing vblk->disk->private_data and checking that the
-> virtio_blk driver instance is still around in virtblk_getgeo().
-> 
-> Note that the virtblk_getgeo() function itself is guaranteed to remain
-> in memory after hot unplug because the virtio_blk module refcount is
-> still held while a block device reference exists.
-> 
-> Originally-by: Lance Digby <ldigby@redhat.com>
-> Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
-> ---
->  drivers/block/virtio_blk.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-> index 93468b7c6701..b50cdf37a6f7 100644
-> --- a/drivers/block/virtio_blk.c
-> +++ b/drivers/block/virtio_blk.c
-> @@ -300,6 +300,10 @@ static int virtblk_getgeo(struct block_device *bd, struct hd_geometry *geo)
->  {
->  	struct virtio_blk *vblk = bd->bd_disk->private_data;
->  
-> +	/* Driver instance has been removed */
-> +	if (!vblk)
-> +		return -ENOTTY;
-> +
->  	/* see if the host passed in geometry config */
->  	if (virtio_has_feature(vblk->vdev, VIRTIO_BLK_F_GEOMETRY)) {
->  		virtio_cread(vblk->vdev, struct virtio_blk_config,
-> @@ -835,6 +839,7 @@ static void virtblk_remove(struct virtio_device *vdev)
->  	vdev->config->reset(vdev);
->  
->  	refc = kref_read(&disk_to_dev(vblk->disk)->kobj.kref);
-> +	vblk->disk->private_data = NULL;
->  	put_disk(vblk->disk);
->  	vdev->config->del_vqs(vdev);
->  	kfree(vblk->vqs);
+On Fri, Apr 24, 2020 at 4:32 PM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> On Fri, 24 Apr 2020, Arnd Bergmann wrote:
+>
+> > On Fri, Apr 24, 2020 at 10:11 AM Lee Jones <lee.jones@linaro.org> wrote:
+> > > On Fri, 17 Apr 2020, Baolin Wang wrote:
+> > > > @@ -106,14 +107,25 @@ static struct syscon *of_syscon_register(struct device_node *np, bool check_clk)
+> > > >       syscon_config.val_bits = reg_io_width * 8;
+> > > >       syscon_config.max_register = resource_size(&res) - reg_io_width;
+> > > >
+> > > > -     regmap = regmap_init_mmio(NULL, base, &syscon_config);
+> > > > +      /*
+> > > > +       * The Spreadtrum syscon need register a real physical regmap bus
+> > > > +       * with new atomic bits updating operation instead of using
+> > > > +       * read-modify-write.
+> > > > +       */
+> > > > +     if (IS_ENABLED(CONFIG_ARCH_SPRD) &&
+> > > > +         of_device_is_compatible(np, "sprd,atomic-syscon") &&
+> > >
+> > > Please find a more generic way of supporting your use-case.  This is a
+> > > generic driver, and as such I am vehemently against adding any sort of
+> > > vendor specific code in here.
+> >
+> > I suggested doing it this way, as all alternatives seemed worse than this.
+>
+> If we're using a registration function (could probably be swapped out
+> for or accompanied by a Device Tree property) anyway, then why conduct
+> the vendor platform checks?
 
-As pointed out, can be a race. We had a very similar issue in
-virtio-vsock, and we solved using RCU to assign and get the pointer [1],
-maybe the same solution can work here.
+Actually I've send out the v3 patch according to Arnd's suggestion. In
+v3 patch, I removed the registration function, but we agreed that
+adding the vendor specific support in the syscon driver seems a better
+way than others.
 
-Cheers,
-Stefano
-
-[1] 0deab087b16a vsock/virtio: use RCU to avoid use-after-free on the_virtio_vsock
-
+-- 
+Baolin Wang
