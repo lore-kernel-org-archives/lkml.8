@@ -4,50 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EFBC5518A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97414C5518A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A14BF20774
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AE342076C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:57:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbgDXE4t (ORCPT
+        id S1726295AbgDXE4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 00:56:49 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:42606 "EHLO
+        Fri, 24 Apr 2020 00:56:40 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:38278 "EHLO
         mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726525AbgDXE4q (ORCPT
+        by vger.kernel.org with ESMTP id S1725823AbgDXE4k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 00:56:46 -0400
+        Fri, 24 Apr 2020 00:56:40 -0400
 Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03O4qto5023590;
-        Fri, 24 Apr 2020 00:56:32 -0400
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 30fxf6csgd-1
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03O4qul1024418;
+        Fri, 24 Apr 2020 00:56:24 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-00128a01.pphosted.com with ESMTP id 30fxf6csfu-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Apr 2020 00:56:32 -0400
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 03O4uU7O047688
+        Fri, 24 Apr 2020 00:56:24 -0400
+Received: from m0167089.ppops.net (m0167089.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03O4tF9c030227;
+        Fri, 24 Apr 2020 00:56:24 -0400
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 30fxf6csfq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Apr 2020 00:56:24 -0400
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 03O4uNfR047659
         (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Fri, 24 Apr 2020 00:56:31 -0400
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 23 Apr
- 2020 21:56:30 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Thu, 23 Apr 2020 21:56:30 -0700
+        Fri, 24 Apr 2020 00:56:23 -0400
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 24 Apr 2020 00:56:22 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 24 Apr 2020 00:56:21 -0400
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Fri, 24 Apr 2020 00:56:21 -0400
 Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03O4uGpq017534;
-        Fri, 24 Apr 2020 00:56:27 -0400
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03O4uGpk017534;
+        Fri, 24 Apr 2020 00:56:18 -0400
 From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
 To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC:     <lars@metafoo.de>, <jic23@kernel.org>, <pmeerw@pmeerw.net>,
+        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
         Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v4 7/7] iio: core: use new common ioctl() mechanism
-Date:   Fri, 24 Apr 2020 07:56:42 +0300
-Message-ID: <20200424045642.4903-8-alexandru.ardelean@analog.com>
+Subject: [PATCH v4 1/7] iio: Use an early return in iio_device_alloc to simplify code.
+Date:   Fri, 24 Apr 2020 07:56:36 +0300
+Message-ID: <20200424045642.4903-2-alexandru.ardelean@analog.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200424045642.4903-1-alexandru.ardelean@analog.com>
 References: <20200424045642.4903-1-alexandru.ardelean@analog.com>
@@ -66,117 +79,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change makes use of the new centralized ioctl() mechanism. The event
-interface registers it's ioctl() handler to IIO device.
-Both the buffer & event interface call 'iio_device_ioctl()', which should
-take care of all of indio_dev's ioctl() calls.
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Later, we may add per-buffer ioctl() calls, and since each buffer will get
-it's own chardev, the buffer ioctl() handler will need a bit of tweaking
-for the first/legacy buffer (i.e. indio_dev->buffer).
-Also, those per-buffer ioctl() calls will not be registered with this
-mechanism.
+Noticed whilst reviewing Alexandru's patch to the same function.
+If we simply flip the logic and return NULL immediately after memory
+allocation failure we reduce the indent of the following block and
+end up with more 'idiomatic' kernel code.
 
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/iio/iio_core.h            |  3 ---
- drivers/iio/industrialio-buffer.c |  2 +-
- drivers/iio/industrialio-event.c  | 14 ++++++++------
- 3 files changed, 9 insertions(+), 10 deletions(-)
+ drivers/iio/industrialio-core.c | 46 ++++++++++++++++-----------------
+ 1 file changed, 23 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/iio/iio_core.h b/drivers/iio/iio_core.h
-index 34c3e19229d8..f68de4af2738 100644
---- a/drivers/iio/iio_core.h
-+++ b/drivers/iio/iio_core.h
-@@ -54,9 +54,6 @@ ssize_t iio_format_value(char *buf, unsigned int type, int size, int *vals);
- #ifdef CONFIG_IIO_BUFFER
- struct poll_table_struct;
- 
--long iio_device_event_ioctl(struct iio_dev *indio_dev, struct file *filp,
--			    unsigned int cmd, unsigned long arg);
--
- void iio_device_buffer_attach_chrdev(struct iio_dev *indio_dev);
- 
- int iio_buffer_alloc_sysfs_and_mask(struct iio_dev *indio_dev);
-diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
-index 3daa44deee80..bd37901bc882 100644
---- a/drivers/iio/industrialio-buffer.c
-+++ b/drivers/iio/industrialio-buffer.c
-@@ -1159,7 +1159,7 @@ static long iio_buffer_ioctl(struct file *filep, unsigned int cmd,
- 	if (!buffer || !buffer->access)
- 		return -ENODEV;
- 
--	return iio_device_event_ioctl(buffer->indio_dev, filep, cmd, arg);
-+	return iio_device_ioctl(buffer->indio_dev, filep, cmd, arg);
- }
- 
- static ssize_t iio_buffer_store_enable(struct device *dev,
-diff --git a/drivers/iio/industrialio-event.c b/drivers/iio/industrialio-event.c
-index 0674b2117c98..1961c1d19370 100644
---- a/drivers/iio/industrialio-event.c
-+++ b/drivers/iio/industrialio-event.c
-@@ -32,6 +32,7 @@
-  * @read_lock:		lock to protect kfifo read operations
-  * @chrdev:		associated chardev for this event
-  * @indio_dev:		IIO device to which this event interface belongs to
-+ * @ioctl_handler:	handler for event ioctl() calls
-  */
- struct iio_event_interface {
- 	wait_queue_head_t	wait;
-@@ -44,6 +45,7 @@ struct iio_event_interface {
- 
- 	struct cdev		chrdev;
- 	struct iio_dev		*indio_dev;
-+	struct iio_ioctl_handler	ioctl_handler;
- };
- 
- bool iio_event_enabled(const struct iio_event_interface *ev_int)
-@@ -261,15 +263,12 @@ static int iio_chrdev_release(struct inode *inode, struct file *filp)
- 	return 0;
- }
- 
--long iio_device_event_ioctl(struct iio_dev *indio_dev, struct file *filp,
-+static long iio_event_ioctl(struct iio_dev *indio_dev, struct file *filp,
- 			    unsigned int cmd, unsigned long arg)
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index f4daf19f2a3b..3c97090c2ab9 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -1492,7 +1492,7 @@ struct device_type iio_device_type = {
+  **/
+ struct iio_dev *iio_device_alloc(int sizeof_priv)
  {
- 	int __user *ip = (int __user *)arg;
- 	int fd;
+-	struct iio_dev *dev;
++	struct iio_dev *indio_dev;
+ 	size_t alloc_size;
  
--	if (!indio_dev->info)
--		return -ENODEV;
+ 	alloc_size = sizeof(struct iio_dev);
+@@ -1503,30 +1503,30 @@ struct iio_dev *iio_device_alloc(int sizeof_priv)
+ 	/* ensure 32-byte alignment of whole construct ? */
+ 	alloc_size += IIO_ALIGN - 1;
+ 
+-	dev = kzalloc(alloc_size, GFP_KERNEL);
 -
- 	if (cmd == IIO_GET_EVENT_FD_IOCTL) {
- 		fd = iio_event_getfd(indio_dev);
- 		if (fd < 0)
-@@ -278,7 +277,7 @@ long iio_device_event_ioctl(struct iio_dev *indio_dev, struct file *filp,
- 			return -EFAULT;
- 		return 0;
- 	}
--	return -EINVAL;
-+	return IIO_IOCTL_UNHANDLED;
- }
- 
- static long iio_event_ioctl_wrapper(struct file *filp, unsigned int cmd,
-@@ -286,7 +285,7 @@ static long iio_event_ioctl_wrapper(struct file *filp, unsigned int cmd,
- {
- 	struct iio_event_interface *ev = filp->private_data;
- 
--	return iio_device_event_ioctl(ev->indio_dev, filp, cmd, arg);
-+	return iio_device_ioctl(ev->indio_dev, filp, cmd, arg);
- }
- 
- static const struct file_operations iio_event_fileops = {
-@@ -308,7 +307,10 @@ void iio_device_event_attach_chrdev(struct iio_dev *indio_dev)
- 	cdev_init(&ev->chrdev, &iio_event_fileops);
- 
- 	ev->indio_dev = indio_dev;
-+	ev->ioctl_handler.ioctl = iio_event_ioctl;
- 	indio_dev->chrdev = &ev->chrdev;
+-	if (dev) {
+-		dev->dev.groups = dev->groups;
+-		dev->dev.type = &iio_device_type;
+-		dev->dev.bus = &iio_bus_type;
+-		device_initialize(&dev->dev);
+-		dev_set_drvdata(&dev->dev, (void *)dev);
+-		mutex_init(&dev->mlock);
+-		mutex_init(&dev->info_exist_lock);
+-		INIT_LIST_HEAD(&dev->channel_attr_list);
+-
+-		dev->id = ida_simple_get(&iio_ida, 0, 0, GFP_KERNEL);
+-		if (dev->id < 0) {
+-			/* cannot use a dev_err as the name isn't available */
+-			pr_err("failed to get device id\n");
+-			kfree(dev);
+-			return NULL;
+-		}
+-		dev_set_name(&dev->dev, "iio:device%d", dev->id);
+-		INIT_LIST_HEAD(&dev->buffer_list);
++	indio_dev = kzalloc(alloc_size, GFP_KERNEL);
++	if (!indio_dev)
++		return NULL;
 +
-+	iio_device_ioctl_handler_register(indio_dev, &ev->ioctl_handler);
- }
++	indio_dev->id = ida_simple_get(&iio_ida, 0, 0, GFP_KERNEL);
++	if (indio_dev->id < 0) {
++		/* cannot use a dev_err as the name isn't available */
++		pr_err("failed to get device id\n");
++		kfree(indio_dev);
++		return NULL;
+ 	}
  
- static const char * const iio_ev_type_text[] = {
+-	return dev;
++	dev_set_name(&indio_dev->dev, "iio:device%d", indio_dev->id);
++	indio_dev->dev.groups = indio_dev->groups;
++	indio_dev->dev.type = &iio_device_type;
++	indio_dev->dev.bus = &iio_bus_type;
++	device_initialize(&indio_dev->dev);
++	dev_set_drvdata(&indio_dev->dev, (void *)indio_dev);
++	mutex_init(&indio_dev->mlock);
++	mutex_init(&indio_dev->info_exist_lock);
++	INIT_LIST_HEAD(&indio_dev->channel_attr_list);
++	INIT_LIST_HEAD(&indio_dev->buffer_list);
++
++	return indio_dev;
+ }
+ EXPORT_SYMBOL(iio_device_alloc);
+ 
 -- 
 2.17.1
 
