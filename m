@@ -2,112 +2,143 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D2FC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDBC7C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1B3120736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AADFB20728
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:04:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="ZlyPC9VQ"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="kNkQS/IN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgDXMDG (ORCPT
+        id S1726993AbgDXME0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:03:06 -0400
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:54599 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726289AbgDXMDF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:03:05 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id Rx2ojFZSvlKa1Rx2sjNxSJ; Fri, 24 Apr 2020 14:03:02 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1587729782; bh=1z7Vrb+eIs3Q+QIWDRbo2xCq8jhibPasLV2HTZfVOog=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=ZlyPC9VQ5ff2hpccNwIL2QhGpvr2dS/KqV3UCYEs5HwOVw73ZYjPkdCDG4n2Jdrgq
-         ATsCWdw/9lStxO8S5Sc3ioGQ3PzpyvdMFf4PvnuGec+2TqRPVF8YAciwKtttFczqKV
-         IDQ9h6kM6GXMU+yJ+rjj4UdVUjnE7Q6+Jm34cj3BHH4LxMja05v19qdIllxQxMNtRL
-         l2G7EAACZW813vsCR24MzVSpscHtB0TzDyQBvM5Exz0mGqtQTCjVw53ZC/ViqsxOHE
-         HZhsQ5wELmpUztcRvcSAGWZ/E8XTalOINYm1sIOnOBPk9C47NMe5gkvtGpZv2cSp2f
-         URUrRbaQXu+fw==
-Subject: Re: [RFC PATCH v8 0/9] Add Tegra driver for video capture
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>, jonathanh@nvidia.com,
-        frankc@nvidia.com, sakari.ailus@iki.fi, helen.koike@collabora.com,
-        digetx@gmail.com, sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1587427874-3291-1-git-send-email-skomatineni@nvidia.com>
- <5c44beca-4016-6e4f-01bb-e38480bfc34b@xs4all.nl>
- <20200421205032.GD3233341@ulmo>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <928b9b1d-b977-a281-ef5e-128b63cce94d@xs4all.nl>
-Date:   Fri, 24 Apr 2020 14:02:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 24 Apr 2020 08:04:26 -0400
+Received: from mail-bn8nam12on2085.outbound.protection.outlook.com ([40.107.237.85]:6147
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726699AbgDXMEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:04:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WcMyqEozX0sghNaoqdZiAFZPLY8jGotDz2anw31vAdg2G4ylSqDibAqBYBEC4mw9sWkdOBrj+uCx0EnlvtsL8jNu134pxFyL94eCHwXjzHLRxwUYjucWsLiR2+NC403TRaouQPg8gJRcclrLQ1koIq8kku5Dvv6b1MPZ1rsnnZBccf1h2lg58gORv2puFtlPVDn2I8rVDRaiaHg0MIFsnmK9mowS700RcF5/cM0/yKDmGE8EliqLtPScqxbG2E8x+pP3agxPTJLCyuVlHADUBQmNrcF/bL0xb6NBe/0eABNdW/EKa++fB0Blbc6SVrDYjIjnyo1Qhu2QT0Pq5AEWqA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pFjOSfs1PZmaCTHKx0oZjMpmacFCa7kXcMmDl8zA0Jk=;
+ b=YuyupxTcSKI8wbFOnwE0689DE+EakYhq67P+0slmiTIgQ0OhNpqhck12aXzhIpMZfFeT/KJHu18+aBGwSRabFbzaMnP8CMHAYM46C5pQsrdCJ3bop1toFSPUNC99g79wxU0K3WvQoHYIOAXWD+hgasg357+x6jZ8oF7GCyFlPbA/YkORl0hz6CM4YPA2LY70JwWQvxFT0nmb/JBmtlNyutuB6Htm/QKEE70dTALLAw9djA4XYf119zbT0bDgw29n18nBBPG/FK0QDIIzi3XOGoXaNXLCJmf4Trnb20sf4cnj8sgYxRWCZ/+vDxIQzzROBxD+YwKRtMjPm/ESACmVEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=google.com smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pFjOSfs1PZmaCTHKx0oZjMpmacFCa7kXcMmDl8zA0Jk=;
+ b=kNkQS/INPi/bELz+BaxrOrOSitqgQe5X0AE06jJnSTr0tVRpSUmXslmSI2B+ZI326J0BrzvzY6V7GVwq9ln1r3R25Kup/s75zsYNW+dukxbalqOP2CPM/+7AJYOBrGWZePeTgVO+pjSdAb++h2Zdximul6XvxIEp8uN15/ZSNAI=
+Received: from CY4PR04CA0044.namprd04.prod.outlook.com (2603:10b6:903:c6::30)
+ by CH2PR02MB6391.namprd02.prod.outlook.com (2603:10b6:610:b::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.30; Fri, 24 Apr
+ 2020 12:04:21 +0000
+Received: from CY1NAM02FT039.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:903:c6:cafe::68) by CY4PR04CA0044.outlook.office365.com
+ (2603:10b6:903:c6::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend
+ Transport; Fri, 24 Apr 2020 12:04:21 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT039.mail.protection.outlook.com (10.152.75.140) with Microsoft SMTP
+ Server id 15.20.2937.19 via Frontend Transport; Fri, 24 Apr 2020 12:04:20
+ +0000
+Received: from [149.199.38.66] (port=50988 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <bharat.kumar.gogada@xilinx.com>)
+        id 1jRx30-0004Sk-Fs; Fri, 24 Apr 2020 05:03:10 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <bharat.kumar.gogada@xilinx.com>)
+        id 1jRx48-0000zU-Bj; Fri, 24 Apr 2020 05:04:20 -0700
+Received: from xsj-pvapsmtp01 (mailhub.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 03OC4EWd027881;
+        Fri, 24 Apr 2020 05:04:14 -0700
+Received: from [10.140.9.2] (helo=xhdbharatku40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <bharat.kumar.gogada@xilinx.com>)
+        id 1jRx41-0000yh-HY; Fri, 24 Apr 2020 05:04:14 -0700
+From:   Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, rgummal@xilinx.com,
+        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Subject: [PATCH v6 0/2] Adding support for Versal CPM as Root Port driver
+Date:   Fri, 24 Apr 2020 17:34:02 +0530
+Message-Id: <1587729844-20798-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(396003)(346002)(39860400002)(376002)(46966005)(336012)(7696005)(107886003)(70206006)(26005)(9786002)(4326008)(2616005)(186003)(70586007)(426003)(81166007)(6666004)(47076004)(316002)(81156014)(478600001)(2906002)(5660300002)(356005)(82740400003)(82310400002)(36756003)(8936002)(8676002);DIR:OUT;SFP:1101;
 MIME-Version: 1.0
-In-Reply-To: <20200421205032.GD3233341@ulmo>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfP+I527Xj1o8On5xKP38GN60mxeh+SBcy8NpFGiniFnxzqcNuMRssBXZQ/3IFDm8ELdGAvqMJwNuXTa2TgFqYUsmAGImzoFCWE31tTkgvLJlZBuHwgHc
- bkpO1sgMKy2zn7y+/vBB7xIlaoflcV0TWxp6+mM6QKt4NsRXEB/MeZOzLYGE4HQhr6q7xMglkgXoP90WTwRfHJOiX4ELUxt/AYqXnysyZioKG2lOaLIwbpL8
- 9Hl5ZYpVPujJxNp8fZlp/XFoQXFshrR3Wxps6eVozgTEZC1R706ccn36TP8zP4RuR8bi/RhJYdrW2VRDvySLijyiuaBYXxDd3xKdllZfdorpenBkljEjWiQp
- WOXgNvKKpI5ICo2NAfE81tD3qQTbK9HkQpjVAkY2GNOb8pJyEof5L+ph9Iwc2nQhyIYCuYunrILeO3ZoaluXoBX9MY3BX9h2EKgrRyo1eQohRPvURjL/4Ni6
- tN6ifmNYX4gpw9Ahf2EMfpyE7LCoXW7OVmkyJNouyRxZ24p9wMPIgTF241u2Pd1YrdGYdgtwMVedZnowURRMGZjitpS9fXOxnVm5rhnfQDDF7LJVLFk1ajUS
- 7Yg=
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2f4b6b84-a5c2-4bfe-bc07-08d7e8479f20
+X-MS-TrafficTypeDiagnostic: CH2PR02MB6391:
+X-LD-Processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+X-Microsoft-Antispam-PRVS: <CH2PR02MB6391E854404AF07AB276ED0EA5D00@CH2PR02MB6391.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:3513;
+X-Forefront-PRVS: 03838E948C
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: qBv/LAaElXR7qA4gI9KfrhEh1rBB21AqBznDeNZL1T951/xnCYa5ngTSMbCqSmNoRx5Y10RdqkZCHZXNezCMwsTYVZt1hVkU4d2o9rzFpfS9PtvLDDYt6XsVVcZnhPZJrxbI+WXDdwr+QGz5SCxs8lram7j2pzlQMNj6ugsZWXsMUMlHMCuKFZOCtNqP2sPw8VkkQndiJ0+FlIRjytYoYqNlmkCXbIPX6otIgKpB+e2Dlaaes2+t7qbV9n3g6aC/bCCf9urskysv0pYGg0rq05+nJBn4UEZUmKzeDPtm+YS2PbVTOmydZjjDu6uodtih4z1NF3eAdUxcJZozHjoOvb5sQePocXkO+uhaaNeF+HP2jIYVGp70GWiCWyDc7GfSTL/MyGqFUGOXuBxl/vXw6Qpzf22OhCDiWHLiTFlvAT50kHP9MBSOO3xb68j5m8spcfeSWxCNbadPLbbhV5U+ue5DHNi5y3+HTPKX4Un5wQ8GgncHeyXYfs72dbtWjFk7NDGpsmSLoQ4yAEYvb9yZlA==
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2020 12:04:20.6189
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2f4b6b84-a5c2-4bfe-bc07-08d7e8479f20
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6391
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thierry,
+- Adding support for Versal CPM as Root port.
+- The Versal ACAP devices include CCIX-PCIe Module (CPM). The integrated
+  block for CPM along with the integrated bridge can function
+  as PCIe Root Port.
+- Versal CPM uses GICv3 ITS feature for assigning MSI/MSI-X
+  vectors and handling MSI/MSI-X interrupts.
+- Bridge error and legacy interrupts in Versal CPM are handled using
+  Versal CPM specific MISC interrupt line.
 
-On 21/04/2020 22:50, Thierry Reding wrote:
-> On Tue, Apr 21, 2020 at 01:09:50PM +0200, Hans Verkuil wrote:
->> Hi Sowjanya,
->>
->> On 21/04/2020 02:11, Sowjanya Komatineni wrote:
->>> This series adds Tegra210 VI and CSI driver for built-in test pattern
->>> generator (TPG) capture.
->>>
->>> Tegra210 supports max 6 channels on VI and 6 ports on CSI where each
->>> CSI port is one-to-one mapped to VI channel for video capture.
->>>
->>> This series has TPG support only where it creates hard media links
->>> between CSI subdevice and VI video device without device graphs.
->>>
->>> v4l2-compliance results are available below the patch diff.
->>
->> I'm ready to merge this v8. Looking at the series I should only merge
->> patches 6 and 7, all other patches go through different subsystems, right?
-> 
-> You could also pick up patch 5 because it adds the bindings that are
-> implemented by the driver in patch 6. But I can also pick that up into
-> the Tegra tree. In fact, I do have a set of patches to convert some
-> Tegra bindings to the new json-schema format and the host1x file is
-> among them. If I do get around to finish those up for v5.8 it might be
-> better for me to pick up patch 5 so that I can base my conversion patch
-> on top of that.
-> 
-> Either way is fine with me, so I've acked the three patches. Take which
-> ones you want and I'll pick up the rest.
+Changes for v6:
+- Using pci_generic_ecam_ops for ECAM registration.
+- Fixed INTX registration handling
 
-I've decided to take only patches 6 and 7. Just let me know if for some
-reason you want me to merge patch 5 as well, but I think it makes more
-sense if you pick that one up.
+Bharat Kumar Gogada (2):
+  PCI: xilinx-cpm: Add device tree binding for Versal CPM Root Port
+  PCI: xilinx-cpm: Add Versal CPM Root Port driver
 
-> 
-> Thanks again for your guidance on this patch set!
+ .../devicetree/bindings/pci/xilinx-versal-cpm.txt  |  68 +++
+ drivers/pci/controller/Kconfig                     |   9 +
+ drivers/pci/controller/Makefile                    |   1 +
+ drivers/pci/controller/pcie-xilinx-cpm.c           | 521 +++++++++++++++++++++
+ 4 files changed, 599 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/xilinx-versal-cpm.txt
+ create mode 100644 drivers/pci/controller/pcie-xilinx-cpm.c
 
-My pleasure, and it's nice to see this driver going in. Looking forward
-to the next phase when sensor support is added!
+-- 
+2.7.4
 
-Regards,
-
-	Hans
