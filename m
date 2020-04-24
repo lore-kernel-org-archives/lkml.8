@@ -2,184 +2,79 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A04DAC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4292C55191
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6140120728
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:08:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="SigemGgj"
+	by mail.kernel.org (Postfix) with ESMTP id 9AA5720728
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:10:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbgDXMIm (ORCPT
+        id S1726943AbgDXMK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:08:42 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:61526 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726945AbgDXMIj (ORCPT
+        Fri, 24 Apr 2020 08:10:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48984 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbgDXMK4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:08:39 -0400
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200424120836epoutp029a08666fb4d2eb10473f30a091186470~IwCD5k-lX2347523475epoutp02C
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 12:08:36 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200424120836epoutp029a08666fb4d2eb10473f30a091186470~IwCD5k-lX2347523475epoutp02C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1587730116;
-        bh=o1x/o0p5cvyo45FmR0LMyR4pPuLuODzDC+UZIaiwx+E=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=SigemGgjqFrsZJj+ae53HYfpBTMnpCXnwHVvOK73JS8LgFM4eOPCboVyPxmtaqzwf
-         ZEl1wIaeo2FZxVC9dOlBPS+dSWUE3eZNCaH5mgTk4d7p+2DJxr7Q/ZiEv+CfmbarM1
-         eTm+8Qxfq2PwUGqyKf1jjBPeJKbmgpop6YoU9PZ4=
-Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20200424120835epcas5p33b278b327be39a86415aead0e725f1f8~IwCDGCcZo2936429364epcas5p3_;
-        Fri, 24 Apr 2020 12:08:35 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        DC.1A.10083.3C6D2AE5; Fri, 24 Apr 2020 21:08:35 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200424120834epcas5p1b4c375c70425bc4079bb315c446e9a75~IwCCQbf9_2514025140epcas5p1S;
-        Fri, 24 Apr 2020 12:08:34 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200424120834epsmtrp2d2981f23801ee38612ae82ddd43cad33~IwCCPhDbO1612216122epsmtrp2P;
-        Fri, 24 Apr 2020 12:08:34 +0000 (GMT)
-X-AuditID: b6c32a4a-875ff70000002763-38-5ea2d6c3f2f1
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        CD.3C.18461.2C6D2AE5; Fri, 24 Apr 2020 21:08:34 +0900 (KST)
-Received: from alimakhtar02 (unknown [107.111.84.49]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200424120833epsmtip21c2f1f8c0a5ba202b3d368ef22d10be2~IwCA9uyT31554615546epsmtip2T;
-        Fri, 24 Apr 2020 12:08:33 +0000 (GMT)
-From:   "Alim Akhtar" <alim.akhtar@samsung.com>
-To:     "'Jose Abreu'" <Jose.Abreu@synopsys.com>,
-        <linux-scsi@vger.kernel.org>
-Cc:     "'Joao Pinto'" <Joao.Pinto@synopsys.com>,
-        "'Joao Lima'" <Joao.Lima@synopsys.com>,
-        "'Avri Altman'" <avri.altman@wdc.com>,
-        "'James E.J. Bottomley'" <jejb@linux.ibm.com>,
-        "'Martin K. Petersen'" <martin.petersen@oracle.com>,
-        <linux-kernel@vger.kernel.org>
-In-Reply-To: <5c4281080538b74ca39cedb9112ffe71bf7a80b5.1587727756.git.Jose.Abreu@synopsys.com>
-Subject: RE: [PATCH 1/5] scsi: ufs: Allow UFS 3.0 as a valid version
-Date:   Fri, 24 Apr 2020 17:38:31 +0530
-Message-ID: <000601d61a31$13fe2230$3bfa6690$@samsung.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQE+XL6e14367+A9KP/ZE9gmmc/2FgMEZj+1AnyNmNCpi6BGEA==
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHKsWRmVeSWpSXmKPExsWy7bCmhu7ha4viDG4vVLR4+fMqm8WiG9uY
-        LLZclbX48egos8W9Px9YLS7vmsNm0X19B5vF8uP/mBw4PCYsOsDo8fHpLRaPLfs/M3p83iTn
-        0X6gmymANYrLJiU1J7MstUjfLoErY/71M8wF/cIV919uZ2tg/MDfxcjJISFgIvHl2GS2LkYu
-        DiGB3YwSHVumsEA4nxglZj9fwgrhfGOUWPr5GwtMy+M985lBbCGBvYwSzzfKQBS9YpQ4eeIS
-        E0iCTUBXYsfiNjYQW0TAS+LehYmMIEXMAq1MEhOXHgUay8HBKRAn0bfLC6RGWMBF4s3pyawg
-        NouAqsTyI/fAFvAKWEpsm/KeFcIWlDg58wnYEcwC8hLb385hhjhIQeLn02VgI0UEnCQ27oiG
-        KBGXOPqzhxlkrYTAQg6Js192skPUu0j83/Ia6hlhiVfHt0DFpSQ+v9vLBjJHQiBbomeXMUS4
-        RmLpvGNQ5fYSB67MYQEpYRbQlFi/Sx9iFZ9E7+8nTBCdvBIdbUIQ1aoSze+uQnVKS0zs7maF
-        sD0kbszZyzaBUXEWkr9mIflrFpIHZiEsW8DIsopRMrWgODc9tdi0wCgvtVyvODG3uDQvXS85
-        P3cTIzgVaXntYFx2zucQowAHoxIPL8OhRXFCrIllxZW5hxglOJiVRHhjSoBCvCmJlVWpRfnx
-        RaU5qcWHGKU5WJTEeSexXo0REkhPLEnNTk0tSC2CyTJxcEo1MNaz9XZ6StR0hE7WWt+jw63J
-        utb20qXd+U12yrI/PrPtYQ+4Mal+ioTL5ABmY45rxeo3k+4lBtasbRTcpdxzO802JMt/k+b7
-        G5e1NE9U8JXyaHybvlzX8LtX0qm3UsEft0aFbtmy1aZDbFvQgcXrwxky5uQUJirfEDO9tnfG
-        9SO/s36wn884qcRSnJFoqMVcVJwIANPxW4xBAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmplkeLIzCtJLcpLzFFi42LZdlhJXvfQtUVxBrOaNSxe/rzKZrHoxjYm
-        iy1XZS1+PDrKbHHvzwdWi8u75rBZdF/fwWax/Pg/JgcOjwmLDjB6fHx6i8Vjy/7PjB6fN8l5
-        tB/oZgpgjeKySUnNySxLLdK3S+DKmH/9DHNBv3DF/Zfb2RoYP/B3MXJySAiYSDzeM5+5i5GL
-        Q0hgN6PEjO4zrBAJaYnrGyewQ9jCEiv/PWeHKHrBKNH8cDdYgk1AV2LH4jY2EFtEwEdi2fuL
-        YJOYBTqZJF7OmQQ19h6jxLN1n4E6ODg4BeIk+nZ5gTQIC7hIvDk9GWwbi4CqxPIj95hBbF4B
-        S4ltU96zQtiCEidnPmEBaWUW0JNo28gIEmYWkJfY/nYOM8RxChI/ny5jBSkREXCS2LgjGqJE
-        XOLozx7mCYzCs5AMmoUwaBaSQbOQdCxgZFnFKJlaUJybnltsWGCYl1quV5yYW1yal66XnJ+7
-        iREcU1qaOxi3r/qgd4iRiYPxEKMEB7OSCG9MyaI4Id6UxMqq1KL8+KLSnNTiQ4zSHCxK4rw3
-        ChfGCQmkJ5akZqemFqQWwWSZODilGpiqWdbMUluhlz3h8yfNq+byGQV/rTMnK+3UX6YRL18Z
-        Yllr+l13zYNHSSvUppx+yrRBo2iNxBaL/UXb/AMup3+r89u6PsNBvExs7T1lrfhdheavFpWe
-        eWC52kLMeOG5GUZzni61+/Et7VuWSO2Tc6vYlrHlKh+8dfyU/91za8W5328Juff2kK8yu5yj
-        9L6UrJA13r1Sfcsf7piezO0+fc/EzsoJTZ85n9sbaf6XvlfEvfr5Y61ZuaekWVy8pxu9jMmP
-        0tVY+muitgLDkUfFf0p/7qorP7pnvbfaB/8zHI6lvZnCrrYGYdd0+NkemWjLlfxOy9CqjFa7
-        njBpw7odS4rUb6y1nnXoyIJn7Kn3VTcpsRRnJBpqMRcVJwIAUGAlMhgDAAA=
-X-CMS-MailID: 20200424120834epcas5p1b4c375c70425bc4079bb315c446e9a75
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200424113726epcas5p2fe5c92ba9ad04d909e45c4a600ead28e
-References: <cover.1587727756.git.Jose.Abreu@synopsys.com>
-        <CGME20200424113726epcas5p2fe5c92ba9ad04d909e45c4a600ead28e@epcas5p2.samsung.com>
-        <5c4281080538b74ca39cedb9112ffe71bf7a80b5.1587727756.git.Jose.Abreu@synopsys.com>
+        Fri, 24 Apr 2020 08:10:56 -0400
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [IPv6:2a02:1800:110:4::f00:19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E46FFC09B045
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 05:10:55 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:8134:2f28:3a79:6257])
+        by laurent.telenet-ops.be with bizsmtp
+        id WcAs2200D3LKRvX01cAsFr; Fri, 24 Apr 2020 14:10:52 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jRxAS-0005xQ-CC; Fri, 24 Apr 2020 14:10:52 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jRxAS-0001KK-9Z; Fri, 24 Apr 2020 14:10:52 +0200
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     Pravin B Shelar <pshelar@ovn.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Tonghao Zhang <xiangxia.m.yue@gmail.com>
+Cc:     netdev@vger.kernel.org, dev@openvswitch.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH] net: openvswitch: use do_div() for 64-by-32 divisions:
+Date:   Fri, 24 Apr 2020 14:10:51 +0200
+Message-Id: <20200424121051.5056-1-geert@linux-m68k.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Jose,
+On 32-bit architectures (e.g. m68k):
 
-> -----Original Message-----
-> From: Jose Abreu <Jose.Abreu@synopsys.com>
-> Sent: 24 April 2020 17:07
-> To: linux-scsi@vger.kernel.org
-> Cc: Joao Pinto <Joao.Pinto@synopsys.com>; Jose Abreu
-> <Jose.Abreu@synopsys.com>; Joao Lima <Joao.Lima@synopsys.com>; Alim
-> Akhtar <alim.akhtar@samsung.com>; Avri Altman <avri.altman@wdc.com>;
-> James E.J. Bottomley <jejb@linux.ibm.com>; Martin K. Petersen
-> <martin.petersen@oracle.com>; linux-kernel@vger.kernel.org
-> Subject: [PATCH 1/5] scsi: ufs: Allow UFS 3.0 as a valid version
-> 
-> Add a define for UFS version 3.0 and do not print an error message upon
-probe
-> when using this version.
-> 
-> Signed-off-by: Joao Lima <Joao.Lima@synopsys.com>
-> Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
-> 
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+    ERROR: modpost: "__udivdi3" [net/openvswitch/openvswitch.ko] undefined!
+    ERROR: modpost: "__divdi3" [net/openvswitch/openvswitch.ko] undefined!
 
-> ---
-> Cc: Joao Lima <Joao.Lima@synopsys.com>
-> Cc: Jose Abreu <Jose.Abreu@synopsys.com>
-> Cc: Alim Akhtar <alim.akhtar@samsung.com>
-> Cc: Avri Altman <avri.altman@wdc.com>
-> Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-> Cc: linux-scsi@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/scsi/ufs/ufshcd.c | 3 ++-
->  drivers/scsi/ufs/ufshci.h | 1 +
->  2 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c index
-> 7d1fa1349d40..2e5c200e915b 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -8441,7 +8441,8 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem
-> *mmio_base, unsigned int irq)
->  	if ((hba->ufs_version != UFSHCI_VERSION_10) &&
->  	    (hba->ufs_version != UFSHCI_VERSION_11) &&
->  	    (hba->ufs_version != UFSHCI_VERSION_20) &&
-> -	    (hba->ufs_version != UFSHCI_VERSION_21))
-> +	    (hba->ufs_version != UFSHCI_VERSION_21) &&
-> +	    (hba->ufs_version != UFSHCI_VERSION_30))
->  		dev_err(hba->dev, "invalid UFS version 0x%x\n",
->  			hba->ufs_version);
-> 
-> diff --git a/drivers/scsi/ufs/ufshci.h b/drivers/scsi/ufs/ufshci.h index
-> c2961d37cc1c..f2ee81669b00 100644
-> --- a/drivers/scsi/ufs/ufshci.h
-> +++ b/drivers/scsi/ufs/ufshci.h
-> @@ -104,6 +104,7 @@ enum {
->  	UFSHCI_VERSION_11 = 0x00010100, /* 1.1 */
->  	UFSHCI_VERSION_20 = 0x00000200, /* 2.0 */
->  	UFSHCI_VERSION_21 = 0x00000210, /* 2.1 */
-> +	UFSHCI_VERSION_30 = 0x00000300, /* 3.0 */
->  };
-> 
->  /*
-> --
-> 2.7.4
+Fixes: e57358873bb5d6ca ("net: openvswitch: use u64 for meter bucket")
+Reported-by: noreply@ellerman.id.au
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+---
+ net/openvswitch/meter.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/net/openvswitch/meter.c b/net/openvswitch/meter.c
+index 915f31123f235c03..3498a5ab092ab2b8 100644
+--- a/net/openvswitch/meter.c
++++ b/net/openvswitch/meter.c
+@@ -393,7 +393,7 @@ static struct dp_meter *dp_meter_create(struct nlattr **a)
+ 		 * Start with a full bucket.
+ 		 */
+ 		band->bucket = (band->burst_size + band->rate) * 1000ULL;
+-		band_max_delta_t = band->bucket / band->rate;
++		band_max_delta_t = do_div(band->bucket, band->rate);
+ 		if (band_max_delta_t > meter->max_delta_t)
+ 			meter->max_delta_t = band_max_delta_t;
+ 		band++;
+-- 
+2.17.1
 
