@@ -2,110 +2,243 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7A0C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA946C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA7EB21556
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 880D8216FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:58:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Q8RRoyAY"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="TV9jHjzv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbgDXU5E (ORCPT
+        id S1726165AbgDXU6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 16:57:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47952 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbgDXU5D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 16:57:03 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A95AC09B04A
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 13:57:03 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id a31so2494376pje.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 13:57:03 -0700 (PDT)
+        Fri, 24 Apr 2020 16:58:25 -0400
+Received: from mail-eopbgr700064.outbound.protection.outlook.com ([40.107.70.64]:12768
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726032AbgDXU6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 16:58:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EQJaBHc6PvjTNdizalncVvpAbzCeS/Uq2UGnaGr2aAPdRAKa6JJVbFN/bxQkb0vk29mp/1Oads/gbHmDjnfPcCuLPCxRuUc3UojnzAFPlj+FXAno0uT/8AGdcF+JBrNB2+5OiJWLLjZoxygoNOwFt8Nz46Hryqi6OJ6o8cZvk57U4TL6dbyFZ5Ds2Ur7r/eUjIyqHCPgyfbrdCszpjAclgJw6TR2slrOcaNKmxlgCvw217b0490w7qLnuJdZvR/KIUsqQ02UBi0r0tmEcptmwspMaLEmuk13IgmDdZQa0oLVyzrvyoU0fLiWtJuGAWA5IuOgpiIMIbMpaoKu05sXVA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=z8vxUs/0dedErrEdwi1bx+iB6oF92F7WrtxM2KNCHZM=;
+ b=lIkiurGywIFRyPPpYy//78FbEqSqg1mwCzAJ9Y2PitGKBmKaiRZBcIN6035JHCKmDZUO7iP8aRaLtK3ZHDHHj6qS0WMlOPVkSS+Gy+UWPmmNeaiCUKmmNVa+b0Sydmyi05KOlbfd+aPSfv6cQUTq15xwHE1ZLJFrPLuoXjh3+3JufDaQHo4I6ZyO3MjICIcgUa/vlOVzvZlDWKI+hf80w1NuFHjc79Mz0re78cWOQxiZEaqQcVHwFfKQ87d0hNIUZBzWhthbn9M5x0j7gl5BubjrMzzigt7Qhxz+zj/kljSddjJyYFIF4YkDmRRsqnZUDsyLnhzb5NL+t1mUL6wFdQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=CMlR2Lch6qanhmgzHXzt9Ss34iAITfulP0yBSMWEtIk=;
-        b=Q8RRoyAYtL/AzdVawKmyJnSkxSE86u03IG8xw3LhjN5TgulDYq1XdyATi6YsU3g7sf
-         O8Nj2OoAahkWNE2WzQgpYAejnxmiP2G+jbNPownYuQ+2ypW+cRGyHoX6HeFrrjm2C7Q8
-         ZdojSE55OwpRlmFGD1RY4LREZWh6qxCy7bU9g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CMlR2Lch6qanhmgzHXzt9Ss34iAITfulP0yBSMWEtIk=;
-        b=glsqRfD+mmemg8fi/QPX0OaqmLBKDY4UmvNXtnwEdXN8jGtFGoVKNsQSO1/6+ANpXY
-         T6+VfUG54MONEZBVXN7Q3S6Zw0kgkKpqxLWaj6/I1vuP4xYCBN8Kp9E1/pGFvy5BODeM
-         kwp0YY9Zz1TOYakFPS/5h/CKWM6QQj9DuyZoCxGyb8KKkpcMRlWQPk0BlKjeSmM33BdT
-         bKukhT9pou6dhFiyMdrtP6sYxrz1239bT/GzMmefsj9Viuxhz9X/NXUkZAuOJum8VN12
-         JOq4QYo92/nZcN6xaOKagsT8mf5GMBiLmtmnqF4xVzaaslIgGz7nHKokNoBF6NIPaYy9
-         zpDA==
-X-Gm-Message-State: AGi0PuZQsRokVJmkf8miP+68qntrntS3ZqNNjafKnbOxTrmmrlX994Y9
-        vS806c4hARbLgmFLk0HZUe93ed+f7ks=
-X-Google-Smtp-Source: APiQypJ1Esxx+d2XPYW85epj3fqYRYqoDJaHV+BQi55XveY65BnIq4Qp6GCNmfHLlAsHZADZhUGE3g==
-X-Received: by 2002:a17:902:76c5:: with SMTP id j5mr2136961plt.189.1587761823068;
-        Fri, 24 Apr 2020 13:57:03 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id j13sm5405122pje.1.2020.04.24.13.57.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Apr 2020 13:57:02 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 13:57:01 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Manu Gautam <mgautam@codeaurora.org>, rojay@codeaurora.org,
-        c_skakit@codeaurora.org
-Subject: Re: [PATCH V5 3/3] dt-bindings: geni-se: Add binding for UART pin
- swap
-Message-ID: <20200424205701.GE4525@google.com>
-References: <1584095350-841-1-git-send-email-akashast@codeaurora.org>
- <1584095350-841-4-git-send-email-akashast@codeaurora.org>
- <CAL_JsqKLoiPUhiJDuYX+bSQwoCLTXOvtNyEB8ti__xMfEDyxNQ@mail.gmail.com>
- <ee34573a-e4ff-ad43-64ed-53439206d534@codeaurora.org>
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=z8vxUs/0dedErrEdwi1bx+iB6oF92F7WrtxM2KNCHZM=;
+ b=TV9jHjzvBZVa6MnjHBNOKh2gpiluJT/4KNgeDUPXHJa2mWXgD3lvMqvw+XFYmTFhHTA+ZeH4asV4T5y2AQ/wLMA+Cr7B5jh+FcyIvHLT8QFdsPgGSszrgX3AOlk8aSvfnwNA+cXmbip1VpfF8ykwD5Lxjlbev0QNr6UwZyELUI4=
+Received: from CY4PR18CA0041.namprd18.prod.outlook.com (2603:10b6:903:9a::27)
+ by DM5PR02MB3798.namprd02.prod.outlook.com (2603:10b6:4:b0::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Fri, 24 Apr
+ 2020 20:58:21 +0000
+Received: from CY1NAM02FT012.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:903:9a:cafe::2) by CY4PR18CA0041.outlook.office365.com
+ (2603:10b6:903:9a::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend
+ Transport; Fri, 24 Apr 2020 20:58:21 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT012.mail.protection.outlook.com (10.152.75.158) with Microsoft SMTP
+ Server id 15.20.2937.19 via Frontend Transport; Fri, 24 Apr 2020 20:58:20
+ +0000
+Received: from [149.199.38.66] (port=33200 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <jolly.shah@xilinx.com>)
+        id 1jS5Nl-0002CY-M8; Fri, 24 Apr 2020 13:57:09 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <jolly.shah@xilinx.com>)
+        id 1jS5Ou-0007N4-LL; Fri, 24 Apr 2020 13:58:20 -0700
+Received: from xsj-pvapsmtp01 (xsj-pvapsmtp01.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 03OKwJEW030383;
+        Fri, 24 Apr 2020 13:58:19 -0700
+Received: from [172.19.2.91] (helo=xsjjollys50.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <jolly.shah@xilinx.com>)
+        id 1jS5Ot-0007Lo-8O; Fri, 24 Apr 2020 13:58:19 -0700
+From:   Jolly Shah <jolly.shah@xilinx.com>
+To:     ard.biesheuvel@linaro.org, mingo@kernel.org,
+        gregkh@linuxfoundation.org, matt@codeblueprint.co.uk,
+        sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org,
+        dmitry.torokhov@gmail.com, michal.simek@xilinx.com
+Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>,
+        Jolly Shah <jolly.shah@xilinx.com>
+Subject: [PATCH v5 10/25] firmware: xilinx: Remove eemi ops for clock set/get parent
+Date:   Fri, 24 Apr 2020 13:57:52 -0700
+Message-Id: <1587761887-4279-11-git-send-email-jolly.shah@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1587761887-4279-1-git-send-email-jolly.shah@xilinx.com>
+References: <1587761887-4279-1-git-send-email-jolly.shah@xilinx.com>
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(396003)(39860400002)(346002)(136003)(46966005)(186003)(9786002)(81156014)(36756003)(8676002)(107886003)(5660300002)(70586007)(4326008)(8936002)(44832011)(7696005)(47076004)(2616005)(82310400002)(7416002)(426003)(26005)(70206006)(336012)(82740400003)(6666004)(6636002)(356005)(316002)(478600001)(2906002)(81166007)(54906003);DIR:OUT;SFP:1101;
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ee34573a-e4ff-ad43-64ed-53439206d534@codeaurora.org>
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8a0a7c19-46d4-4091-f287-08d7e89238ac
+X-MS-TrafficTypeDiagnostic: DM5PR02MB3798:
+X-Microsoft-Antispam-PRVS: <DM5PR02MB379815609FBC1D3F21337055B8D00@DM5PR02MB3798.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:115;
+X-Forefront-PRVS: 03838E948C
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 0H17qryxifryZ9dPaBsjZWW8jcDUdujNhiVeHzTijHCNmFYxlbyIZwtiySm7UOgjE9nk2/gkzPFMkHlBHwS696ufs2KYPa1+f48j9V+xZW2INDRs6F2AaQCJd1d5jT4AZFMrxOV3tv7mju9aHvml9FWFtKtU20Wyx84iSbMGIs7PcxutL0dEbDPTTNIbUoMQIka9AXzwAsimR61n9GPa4sAxa661UIYO5LdOihgs8KVQl5JAmM5nzCamWz18Xg+q8FZXXd6MmiUr7unEVpgOltKyFBu89Ia7A+GkN4Z7iLGgbUKQRuCvjynzY1UHwP/kOftAL7TCMGr4dziZymJDzVGbTruSkKdkxPhTCOZiynUmUyGWuPnOZBCzJ0hRzm8a+PUcmjdNQfAxNmyFInXMdjUfLXCr1T485ej+nSTgO7ipWwSnm04voXyhedOo8b+iM+yEVY4/NnzQh7Msb7HN8AQmfpI7JLr/F7qfy0ynkeWozCLyq063vusf96Ir8deXFo8wKq0K1ZwqHZDADhVnZw==
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2020 20:58:20.9792
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8a0a7c19-46d4-4091-f287-08d7e89238ac
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR02MB3798
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Akash,
+From: Rajan Vaja <rajan.vaja@xilinx.com>
 
-On Tue, Mar 24, 2020 at 10:46:40AM +0530, Akash Asthana wrote:
-> Hi Rob,
-> 
-> On 3/20/2020 11:37 PM, Rob Herring wrote:
-> > On Fri, Mar 13, 2020 at 4:29 AM Akash Asthana <akashast@codeaurora.org> wrote:
-> > > Add documentation to support RX/TX/CTS/RTS pin swap in HW.
-> > > 
-> > > Signed-off-by: Akash Asthana <akashast@codeaurora.org>
-> > > ---
-> > > Changes in V5:
-> > >   -  As per Matthias's comment, remove rx-tx-cts-rts-swap property from UART
-> > >      child node.
-> > > 
-> > >   Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml | 6 ++++++
-> > >   1 file changed, 6 insertions(+)
-> > STM32 folks need something similar. Can you move this to a common
-> > location. That's serial.txt, but that is being converted to DT schema.
-> > 
-> > Rob
-> 
-> Okay, once serial.txt is converted to DT schema, I will move it there.
+Use direct function call instead of eemi ops for clock set/get parent.
 
-It has landed upstream:
+Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
+---
+ drivers/clk/zynqmp/clk-mux-zynqmp.c  |  6 ++----
+ drivers/firmware/xilinx/zynqmp.c     |  8 ++++----
+ include/linux/firmware/xlnx-zynqmp.h | 12 ++++++++++--
+ 3 files changed, 16 insertions(+), 10 deletions(-)
 
-175a7427bb72 dt-bindings: serial: Convert generic bindings to json-schema
+diff --git a/drivers/clk/zynqmp/clk-mux-zynqmp.c b/drivers/clk/zynqmp/clk-mux-zynqmp.c
+index 0af8f74..0619414 100644
+--- a/drivers/clk/zynqmp/clk-mux-zynqmp.c
++++ b/drivers/clk/zynqmp/clk-mux-zynqmp.c
+@@ -47,9 +47,8 @@ static u8 zynqmp_clk_mux_get_parent(struct clk_hw *hw)
+ 	u32 clk_id = mux->clk_id;
+ 	u32 val;
+ 	int ret;
+-	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
+ 
+-	ret = eemi_ops->clock_getparent(clk_id, &val);
++	ret = zynqmp_pm_clock_getparent(clk_id, &val);
+ 
+ 	if (ret)
+ 		pr_warn_once("%s() getparent failed for clock: %s, ret = %d\n",
+@@ -71,9 +70,8 @@ static int zynqmp_clk_mux_set_parent(struct clk_hw *hw, u8 index)
+ 	const char *clk_name = clk_hw_get_name(hw);
+ 	u32 clk_id = mux->clk_id;
+ 	int ret;
+-	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
+ 
+-	ret = eemi_ops->clock_setparent(clk_id, index);
++	ret = zynqmp_pm_clock_setparent(clk_id, index);
+ 
+ 	if (ret)
+ 		pr_warn_once("%s() set parent failed for clock: %s, ret = %d\n",
+diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
+index 8462201..b0aa967 100644
+--- a/drivers/firmware/xilinx/zynqmp.c
++++ b/drivers/firmware/xilinx/zynqmp.c
+@@ -485,11 +485,12 @@ EXPORT_SYMBOL_GPL(zynqmp_pm_clock_getrate);
+  *
+  * Return: Returns status, either success or error+reason
+  */
+-static int zynqmp_pm_clock_setparent(u32 clock_id, u32 parent_id)
++int zynqmp_pm_clock_setparent(u32 clock_id, u32 parent_id)
+ {
+ 	return zynqmp_pm_invoke_fn(PM_CLOCK_SETPARENT, clock_id,
+ 				   parent_id, 0, 0, NULL);
+ }
++EXPORT_SYMBOL_GPL(zynqmp_pm_clock_setparent);
+ 
+ /**
+  * zynqmp_pm_clock_getparent() - Get the clock parent for given id
+@@ -501,7 +502,7 @@ static int zynqmp_pm_clock_setparent(u32 clock_id, u32 parent_id)
+  *
+  * Return: Returns status, either success or error+reason
+  */
+-static int zynqmp_pm_clock_getparent(u32 clock_id, u32 *parent_id)
++int zynqmp_pm_clock_getparent(u32 clock_id, u32 *parent_id)
+ {
+ 	u32 ret_payload[PAYLOAD_ARG_CNT];
+ 	int ret;
+@@ -512,6 +513,7 @@ static int zynqmp_pm_clock_getparent(u32 clock_id, u32 *parent_id)
+ 
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(zynqmp_pm_clock_getparent);
+ 
+ /**
+  * zynqmp_is_valid_ioctl() - Check whether IOCTL ID is valid or not
+@@ -744,8 +746,6 @@ static int zynqmp_pm_aes_engine(const u64 address, u32 *out)
+ }
+ 
+ static const struct zynqmp_eemi_ops eemi_ops = {
+-	.clock_setparent = zynqmp_pm_clock_setparent,
+-	.clock_getparent = zynqmp_pm_clock_getparent,
+ 	.ioctl = zynqmp_pm_ioctl,
+ 	.reset_assert = zynqmp_pm_reset_assert,
+ 	.reset_get_status = zynqmp_pm_reset_get_status,
+diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
+index a71f52c..7abb683 100644
+--- a/include/linux/firmware/xlnx-zynqmp.h
++++ b/include/linux/firmware/xlnx-zynqmp.h
+@@ -296,8 +296,6 @@ struct zynqmp_pm_query_data {
+ struct zynqmp_eemi_ops {
+ 	int (*fpga_load)(const u64 address, const u32 size, const u32 flags);
+ 	int (*fpga_get_status)(u32 *value);
+-	int (*clock_setparent)(u32 clock_id, u32 parent_id);
+-	int (*clock_getparent)(u32 clock_id, u32 *parent_id);
+ 	int (*ioctl)(u32 node_id, u32 ioctl_id, u32 arg1, u32 arg2, u32 *out);
+ 	int (*reset_assert)(const enum zynqmp_pm_reset reset,
+ 			    const enum zynqmp_pm_reset_action assert_flag);
+@@ -331,6 +329,8 @@ int zynqmp_pm_clock_setdivider(u32 clock_id, u32 divider);
+ int zynqmp_pm_clock_getdivider(u32 clock_id, u32 *divider);
+ int zynqmp_pm_clock_setrate(u32 clock_id, u64 rate);
+ int zynqmp_pm_clock_getrate(u32 clock_id, u64 *rate);
++int zynqmp_pm_clock_setparent(u32 clock_id, u32 parent_id);
++int zynqmp_pm_clock_getparent(u32 clock_id, u32 *parent_id);
+ #else
+ static inline struct zynqmp_eemi_ops *zynqmp_pm_get_eemi_ops(void)
+ {
+@@ -377,6 +377,14 @@ static inline int zynqmp_pm_clock_getrate(u32 clock_id, u64 *rate)
+ {
+ 	return -ENODEV;
+ }
++static inline int zynqmp_pm_clock_setparent(u32 clock_id, u32 parent_id)
++{
++	return -ENODEV;
++}
++static inline int zynqmp_pm_clock_getparent(u32 clock_id, u32 *parent_id)
++{
++	return -ENODEV;
++}
+ #endif
+ 
+ #endif /* __FIRMWARE_ZYNQMP_H__ */
+-- 
+2.7.4
+
