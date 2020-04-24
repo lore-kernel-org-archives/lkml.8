@@ -2,88 +2,141 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8D5C55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC5CC55192
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 499C420700
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:56:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C33220767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:59:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jo4uUlyb"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="Oa+Us3dh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgDXF4p (ORCPT
+        id S1726489AbgDXF7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 01:56:45 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:40894 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgDXF4p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 01:56:45 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03O5uhUu038861;
-        Fri, 24 Apr 2020 00:56:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587707803;
-        bh=gRuOwjKnS19hyev04VgHxxb94U9jBGqXi0jz+Ipyhlg=;
-        h=From:To:Subject:Date;
-        b=jo4uUlybOhQicPh3E22qTpUqH7zYZe9ttlswScj13yP3U2JpQXAZD3bVOl5B0Thai
-         +HjNnz4tqxEMZeUk33FUIvz47F2Ic6oQj9arE2qeUFV5fXNtaQ6w1/obPSA5NqNc4N
-         exBoBEvBNYzrHsq77dntJRkQ5cm+dCy3BDqFKK5Q=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03O5uh6H073135
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 24 Apr 2020 00:56:43 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 24
- Apr 2020 00:56:42 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 24 Apr 2020 00:56:42 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03O5ueYI053428;
-        Fri, 24 Apr 2020 00:56:41 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] MAINTAINERS: Add Vinod Koul as Generic PHY co-maintainer
-Date:   Fri, 24 Apr 2020 11:26:38 +0530
-Message-ID: <20200424055638.834-1-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 24 Apr 2020 01:59:25 -0400
+Received: from mail-eopbgr1400134.outbound.protection.outlook.com ([40.107.140.134]:28032
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725823AbgDXF7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 01:59:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fDT+/q9L1FhYffozgcBVGx2H6QSyATBnRLNiQAPMxVOcQEcvwmMut8R7jJXPt01p1Q2OpLQ5+ORnzaa7AjHzDpBQjJnxWAEdlWvhNJnvx70SbecZ6w9LpV+ePPZbetGrWzx1rtFiAgukSy+11hcCUCHNYO5nn6uTfr4aGs+RYALgZ5ndbUqWtF9A6EOffL5Sm4zgMjtrGZE3uTcqEpNqUTt2rdlKjW/XgBqrNpv1QzIw7+nNDAUzboDfaMqYNZ4gNwwl5X1VFeJHzzbzGteLtTRVv1cnt1j7NdQhzSQcIurCUQ+ZRLjKcm336XdTC/bC4vEnzq/KPpRiNQWuBmt3+A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CZZxxa6immi4mv/IvUWenKq/ezACII7CJDUmxA63oaA=;
+ b=nmS7lshE88Dz4Li3ZJ8ON1dEbpJFzAxnIUYvGMATeRf4auMu5FHvOlQXIEgT3+BiFz+SWLJnKgXSCtHiqJBAW/dLJ4fRdR3Uj+xz01F5HvtYJbGoiYiR1Co7nS0+ZFze7Y/xMVZXYFU7ulxVx21iDu78aidln2lYH8YEtBuQ2FdyV/5OS2WbEuAJHuVvhWOJzKLn+0fcG7Kne0bTBcnqQ6SVtiMYuCqZXztsj/7CY5VAlYgOZjbAR4FBmkflPQ+jmSsTv219iZalegzC27dRXPM71P/bXCfJqzQ7W6xYeBLFuPIrlJXkenwljPFRMFy5ZCBxAiXw+59BdOUctk+/lQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CZZxxa6immi4mv/IvUWenKq/ezACII7CJDUmxA63oaA=;
+ b=Oa+Us3dhOeKnzjz682JMc/9ZAPZkpBdVoah/mP+DmWw6Wx0A+v0VfqjMl2l/hIQJFdsCn7QQ8oBwMDOm/xdZG1bd7ftSXDvnpvyFvYe4+M3cPUrU1g65SBniMa2ritwKhnXV2B3G8D3fej5CZSLy9FXQCSlVI0uycfOJODuTdeQ=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB5340.jpnprd01.prod.outlook.com (20.180.231.207) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2921.27; Fri, 24 Apr 2020 05:59:19 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2937.020; Fri, 24 Apr 2020
+ 05:59:19 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>
+CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: RE: [PATCH v9 4/8] PCI: endpoint: Pass page size as argument to
+ pci_epc_mem_init()
+Thread-Topic: [PATCH v9 4/8] PCI: endpoint: Pass page size as argument to
+ pci_epc_mem_init()
+Thread-Index: AQHWGZzBHIsfM0fVvE+5ZLsD6I1PCaiHx42A
+Date:   Fri, 24 Apr 2020 05:59:19 +0000
+Message-ID: <TYAPR01MB4544F40FDAFF814BCDAD8FEBD8D00@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <1587666159-6035-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1587666159-6035-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1587666159-6035-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [124.210.22.195]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d4882f41-de69-4de0-03b0-08d7e814a142
+x-ms-traffictypediagnostic: TYAPR01MB5340:|TYAPR01MB5340:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TYAPR01MB5340FDBBE6205F0D8F1970CFD8D00@TYAPR01MB5340.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 03838E948C
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(136003)(39860400002)(366004)(346002)(376002)(396003)(66446008)(7696005)(7416002)(71200400001)(26005)(316002)(8936002)(4744005)(478600001)(6506007)(52536014)(2906002)(81156014)(186003)(8676002)(55236004)(9686003)(5660300002)(4326008)(55016002)(110136005)(33656002)(54906003)(66946007)(76116006)(66556008)(64756008)(107886003)(86362001)(66476007)(921003);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: tZc1aA8DG6BeRgYcddR6rZ+UHaAoG+pmkuPjGImNE1LMhNWNS4jDdq+NugtKb9Ebx3BhD1qPp/Qr/UP1j0UsFnxLPnlG/VVu0GR2rw5t41XE2HUqNvhMFmTldV/c738ReqPPPMhwK4RE1+z3IklTL0OR6BwEPm9qkYcB8MAZcqut13vxYDmSsQFNnBIoz4VwZGZJJku/UpeTDFb9M4cI0NpLs6SRk1sD6geMg7tufNf8OXH3oOfdvs/A3JYR9jLO/kFZA/5sshJD0Pg0MwowQK/yRqfgY4Hdjg0GqfK94uLUhZFltwSyhjEbFB9pvHFT0sHSUlT6ypNvrkAq9/YDR2apnvzjEZXM4WBxJ1V40KPZmYlbtucJ0/+RK1sVyXma3uCMLqNU7VhmQxTYdNzVLcBAGVYjh2XPYHNXXJIvqoHisKsuWd7xYpOrdEisSfIS1f+Aw5b6Lu5O5rW43nUP3MSZhihsWj4+aLohvo1Pmys=
+x-ms-exchange-antispam-messagedata: LMGV+15cOCN2e56Guxk928fNiV/KpNaKt85Bq5bukKAgjlXa6iJOUJ3ynkJsnN06bfrgswjTgnM33IuVn0rsoLftdFHANYo3PArZghvz13/dSprMyXRLPec/rBQ9kKTjQVGUPFh/2YSapn7POI/fpA==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d4882f41-de69-4de0-03b0-08d7e814a142
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2020 05:59:19.6483
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zMSUow1EIBztTrdZBjiKkzX1vpBYs2hLSGYxLfRhIt6jH6axJHdR60316S8c85erpgQ1lE0K9PpDoMMBCXm/snHu3uBKgquKVS9uvAgzmimisY5SqPykGU+n8OnZaaCw
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB5340
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Vinod Koul as Generic PHY Subsystem co-maintainer.
+Hi Prabhakar-san,
 
-Cc: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+> From: Lad Prabhakar, Sent: Friday, April 24, 2020 3:23 AM
+>=20
+> pci_epc_mem_init() internally used page size equal to *PAGE_SIZE* to
+> manage the address space so instead just pass the page size as a
+> argument to pci_epc_mem_init().
+>=20
+> Also make pci_epc_mem_init() as a C function instead of a macro function
+> in preparation for adding support for pci-epc-mem core to handle multiple
+> windows.
+>=20
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ffcd023d1cba..d61a51b05f17 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7116,6 +7116,7 @@ F:	include/uapi/asm-generic/
- 
- GENERIC PHY FRAMEWORK
- M:	Kishon Vijay Abraham I <kishon@ti.com>
-+M:	Vinod Koul <vkoul@kernel.org>
- L:	linux-kernel@vger.kernel.org
- S:	Supported
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git
--- 
-2.17.1
+Thank you for the patch!
+
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+
+Best regards,
+Yoshihiro Shimoda
 
