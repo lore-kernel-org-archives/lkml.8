@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A9BC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C781C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB68F20728
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE66020728
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:07:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587733657;
-	bh=pZDLek65a4BFU9uhFDTfw0N0CAWf3NQxjP4QC3U79HA=;
+	s=default; t=1587733663;
+	bh=RG0br87sZZ0/fDV9RN7SwM/1ICjCTgZKJ0ZHR/mwPBE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tYWaR0h+BIrxNWvV+JqROSKqDDShLLiQxxsHgds6G2E7BxYYom436NxheQt5fwvB6
-	 mnRgAjubhxn/6e9Q5mHJW6d+79vzcs7+fcPHM1zy+fiNwWGyMCCjKKJwaEF1fBfBUP
-	 5UEv3StuSxKLd5OTLCzVZfmya9ax1+g2DtPjnhto=
+	b=QJJz/APu1Y3vl1bLgZA2rV7L+JzIwQNHqwpZsWN5keskE9F9ynxsItod5sFUAOXjQ
+	 y7O+ec2LWaKFTVBUT4OlQ6Eq9Bpxzu9veZEy516n9xcSiY7o/U6ciWGzEVf7kTBze+
+	 VVzhotvw7Z4lKgXUR1j6zB2gNCf2xigUh3YTp4rM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728325AbgDXNHV (ORCPT
+        id S1728405AbgDXNHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 09:07:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58000 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 09:07:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728296AbgDXNHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 09:07:18 -0400
+        id S1728230AbgDXNHQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 09:07:16 -0400
 Received: from e123331-lin.home (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77D2F21582;
-        Fri, 24 Apr 2020 13:07:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 506D821473;
+        Fri, 24 Apr 2020 13:07:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587733637;
-        bh=pZDLek65a4BFU9uhFDTfw0N0CAWf3NQxjP4QC3U79HA=;
+        s=default; t=1587733635;
+        bh=RG0br87sZZ0/fDV9RN7SwM/1ICjCTgZKJ0ZHR/mwPBE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dvUkIOD2YpnBWVGMBQXUwFo0/RgLRR4H4d9/gzt4VOxNLfbZCzNY1PfE44yq7LuGr
-         IaOe9GUruRikPtw1bCZv0viX8hrb0Tbh0py/diKrVxa0k+shmd7vxle4etWh7DxMgI
-         ZP3n9lKqkbaC5gE8CesbdIyRVHdYAUN7DLIUAqjI=
+        b=aPjGUINROEYC/rT5vnhINPHfD3GqcK0klwjQu2LnVyY6X+1//0hyWznHSyraW8Xru
+         PD3Bkzr0N4x6EtFrv7EIUV4O2xaUVibbHo1DWkpP3Igx2EU0FI7Pg87JpquXvjLnqt
+         YJFzBDoRBeJ3asNwErNx5Ts8CrGQ4Gl8iGxXIruk=
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,9 +47,9 @@ Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
         Atish Patra <atish.patra@wdc.com>,
         Palmer Dabbelt <palmerdabbelt@google.com>,
         Zou Wei <zou_wei@huawei.com>
-Subject: [PATCH 30/33] efi/libstub: Drop __pure getters for EFI stub options
-Date:   Fri, 24 Apr 2020 15:05:28 +0200
-Message-Id: <20200424130531.30518-31-ardb@kernel.org>
+Subject: [PATCH 29/33] efi/libstub: Drop __pure getter for efi_system_table
+Date:   Fri, 24 Apr 2020 15:05:27 +0200
+Message-Id: <20200424130531.30518-30-ardb@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200424130531.30518-1-ardb@kernel.org>
 References: <20200424130531.30518-1-ardb@kernel.org>
@@ -68,187 +68,245 @@ files, which now all live in the same subdirectory, and we apply a
 sanity check on the objects, so we can get rid of these getter
 functions and simply refer to global data objects directly.
 
-So switch over the remaining boolean variables carrying options set
-on the kernel command line.
+Start with efi_system_table(), and convert it into a global variable.
+While at it, make it a pointer-to-const, because we can.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- drivers/firmware/efi/libstub/arm64-stub.c     |  2 +-
- .../firmware/efi/libstub/efi-stub-helper.c    | 31 ++++---------------
- drivers/firmware/efi/libstub/efi-stub.c       |  6 ++--
- drivers/firmware/efi/libstub/efistub.h        | 12 +++----
- drivers/firmware/efi/libstub/fdt.c            |  2 +-
- drivers/firmware/efi/libstub/file.c           |  2 +-
- drivers/firmware/efi/libstub/x86-stub.c       |  4 +--
- 7 files changed, 20 insertions(+), 39 deletions(-)
+ arch/x86/include/asm/efi.h                    | 14 ++++++-----
+ .../firmware/efi/libstub/efi-stub-helper.c    |  6 ++---
+ drivers/firmware/efi/libstub/efi-stub.c       | 13 ++++-------
+ drivers/firmware/efi/libstub/efistub.h        |  6 ++---
+ drivers/firmware/efi/libstub/fdt.c            |  6 ++---
+ drivers/firmware/efi/libstub/x86-stub.c       | 23 ++++++++-----------
+ 6 files changed, 30 insertions(+), 38 deletions(-)
 
-diff --git a/drivers/firmware/efi/libstub/arm64-stub.c b/drivers/firmware/efi/libstub/arm64-stub.c
-index 99b67e88a33b..ba4db35015a3 100644
---- a/drivers/firmware/efi/libstub/arm64-stub.c
-+++ b/drivers/firmware/efi/libstub/arm64-stub.c
-@@ -55,7 +55,7 @@ efi_status_t handle_kernel_image(unsigned long *image_addr,
- 	u32 phys_seed = 0;
+diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
+index f59cba117dcb..78e839925a81 100644
+--- a/arch/x86/include/asm/efi.h
++++ b/arch/x86/include/asm/efi.h
+@@ -339,15 +339,17 @@ static inline u32 efi64_convert_status(efi_status_t status)
  
- 	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {
--		if (!nokaslr()) {
-+		if (!efi_nokaslr) {
- 			status = efi_get_random_bytes(sizeof(phys_seed),
- 						      (u8 *)&phys_seed);
- 			if (status == EFI_NOT_FOUND) {
+ #define efi_bs_call(func, ...)						\
+ 	(efi_is_native()						\
+-		? efi_system_table()->boottime->func(__VA_ARGS__)	\
+-		: __efi64_thunk_map(efi_table_attr(efi_system_table(),	\
+-				boottime), func, __VA_ARGS__))
++		? efi_system_table->boottime->func(__VA_ARGS__)		\
++		: __efi64_thunk_map(efi_table_attr(efi_system_table,	\
++						   boottime),		\
++				    func, __VA_ARGS__))
+ 
+ #define efi_rt_call(func, ...)						\
+ 	(efi_is_native()						\
+-		? efi_system_table()->runtime->func(__VA_ARGS__)	\
+-		: __efi64_thunk_map(efi_table_attr(efi_system_table(),	\
+-				runtime), func, __VA_ARGS__))
++		? efi_system_table->runtime->func(__VA_ARGS__)		\
++		: __efi64_thunk_map(efi_table_attr(efi_system_table,	\
++						   runtime),		\
++				    func, __VA_ARGS__))
+ 
+ extern bool efi_reboot_required(void);
+ extern bool efi_is_table_address(unsigned long phys_addr);
 diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
-index 0b1688b10ddc..1c92ac231f94 100644
+index 14e56a64f208..0b1688b10ddc 100644
 --- a/drivers/firmware/efi/libstub/efi-stub-helper.c
 +++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
-@@ -12,34 +12,15 @@
+@@ -287,8 +287,8 @@ efi_status_t efi_exit_boot_services(void *handle,
  
- #include "efistub.h"
- 
--static bool efi_nochunk;
--static bool efi_nokaslr;
--static bool efi_noinitrd;
--static bool efi_quiet;
--static bool efi_novamap;
-+bool efi_nochunk;
-+bool efi_nokaslr;
-+bool efi_noinitrd;
-+bool efi_quiet;
-+bool efi_novamap;
-+
- static bool efi_nosoftreserve;
- static bool efi_disable_pci_dma = IS_ENABLED(CONFIG_EFI_DISABLE_PCI_DMA);
- 
--bool __pure nochunk(void)
--{
--	return efi_nochunk;
--}
--bool __pure nokaslr(void)
--{
--	return efi_nokaslr;
--}
--bool __pure noinitrd(void)
--{
--	return efi_noinitrd;
--}
--bool __pure is_quiet(void)
--{
--	return efi_quiet;
--}
--bool __pure novamap(void)
--{
--	return efi_novamap;
--}
- bool __pure __efi_soft_reserve_enabled(void)
+ void *get_efi_config_table(efi_guid_t guid)
  {
- 	return !efi_nosoftreserve;
+-	unsigned long tables = efi_table_attr(efi_system_table(), tables);
+-	int nr_tables = efi_table_attr(efi_system_table(), nr_tables);
++	unsigned long tables = efi_table_attr(efi_system_table, tables);
++	int nr_tables = efi_table_attr(efi_system_table, nr_tables);
+ 	int i;
+ 
+ 	for (i = 0; i < nr_tables; i++) {
+@@ -305,7 +305,7 @@ void *get_efi_config_table(efi_guid_t guid)
+ 
+ void efi_char16_printk(efi_char16_t *str)
+ {
+-	efi_call_proto(efi_table_attr(efi_system_table(), con_out),
++	efi_call_proto(efi_table_attr(efi_system_table, con_out),
+ 		       output_string, str);
+ }
+ 
 diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
-index 8edfd4022803..ee225b323687 100644
+index 8455c590c7b9..8edfd4022803 100644
 --- a/drivers/firmware/efi/libstub/efi-stub.c
 +++ b/drivers/firmware/efi/libstub/efi-stub.c
-@@ -263,7 +263,7 @@ efi_status_t efi_entry(efi_handle_t handle, efi_system_table_t *sys_table_arg)
- 	if (!fdt_addr)
- 		pr_efi("Generating empty DTB\n");
+@@ -38,12 +38,7 @@
+ static u64 virtmap_base = EFI_RT_VIRTUAL_BASE;
+ static bool flat_va_mapping;
  
--	if (!noinitrd()) {
-+	if (!efi_noinitrd) {
- 		max_addr = efi_get_max_initrd_addr(dram_base, image_addr);
- 		status = efi_load_initrd_dev_path(&initrd_addr, &initrd_size,
- 						  max_addr);
-@@ -294,7 +294,7 @@ efi_status_t efi_entry(efi_handle_t handle, efi_system_table_t *sys_table_arg)
- 			   EFI_PROPERTIES_RUNTIME_MEMORY_PROTECTION_NON_EXECUTABLE_PE_DATA);
+-static efi_system_table_t *sys_table;
+-
+-__pure efi_system_table_t *efi_system_table(void)
+-{
+-	return sys_table;
+-}
++const efi_system_table_t *efi_system_table;
  
- 	/* hibernation expects the runtime regions to stay in the same place */
--	if (!IS_ENABLED(CONFIG_HIBERNATION) && !nokaslr() && !flat_va_mapping) {
-+	if (!IS_ENABLED(CONFIG_HIBERNATION) && !efi_nokaslr && !flat_va_mapping) {
- 		/*
- 		 * Randomize the base of the UEFI runtime services region.
- 		 * Preserve the 2 MB alignment of the region by taking a
-@@ -367,7 +367,7 @@ void efi_get_virtmap(efi_memory_desc_t *memory_map, unsigned long map_size,
- 		size = in->num_pages * EFI_PAGE_SIZE;
+ static struct screen_info *setup_graphics(void)
+ {
+@@ -167,10 +162,10 @@ efi_status_t efi_entry(efi_handle_t handle, efi_system_table_t *sys_table_arg)
+ 	efi_properties_table_t *prop_tbl;
+ 	unsigned long max_addr;
  
- 		in->virt_addr = in->phys_addr;
--		if (novamap()) {
-+		if (efi_novamap) {
- 			continue;
- 		}
+-	sys_table = sys_table_arg;
++	efi_system_table = sys_table_arg;
  
+ 	/* Check if we were booted by the EFI firmware */
+-	if (sys_table->hdr.signature != EFI_SYSTEM_TABLE_SIGNATURE) {
++	if (efi_system_table->hdr.signature != EFI_SYSTEM_TABLE_SIGNATURE) {
+ 		status = EFI_INVALID_PARAMETER;
+ 		goto fail;
+ 	}
+@@ -184,7 +179,7 @@ efi_status_t efi_entry(efi_handle_t handle, efi_system_table_t *sys_table_arg)
+ 	 * information about the running image, such as size and the command
+ 	 * line.
+ 	 */
+-	status = sys_table->boottime->handle_protocol(handle,
++	status = efi_system_table->boottime->handle_protocol(handle,
+ 					&loaded_image_proto, (void *)&image);
+ 	if (status != EFI_SUCCESS) {
+ 		pr_efi_err("Failed to get loaded image protocol\n");
 diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-index c1481c5abea4..5ff63230a1f1 100644
+index 9a87fff1d4ba..c1481c5abea4 100644
 --- a/drivers/firmware/efi/libstub/efistub.h
 +++ b/drivers/firmware/efi/libstub/efistub.h
-@@ -25,11 +25,11 @@
- #define EFI_ALLOC_ALIGN		EFI_PAGE_SIZE
+@@ -31,13 +31,13 @@ extern bool __pure noinitrd(void);
+ extern bool __pure is_quiet(void);
+ extern bool __pure novamap(void);
+ 
+-extern __pure efi_system_table_t  *efi_system_table(void);
++extern const efi_system_table_t *efi_system_table;
+ 
+ #ifndef efi_bs_call
+-#define efi_bs_call(func, ...)	efi_system_table()->boottime->func(__VA_ARGS__)
++#define efi_bs_call(func, ...)	efi_system_table->boottime->func(__VA_ARGS__)
  #endif
- 
--extern bool __pure nochunk(void);
--extern bool __pure nokaslr(void);
--extern bool __pure noinitrd(void);
--extern bool __pure is_quiet(void);
--extern bool __pure novamap(void);
-+extern bool efi_nochunk;
-+extern bool efi_nokaslr;
-+extern bool efi_noinitrd;
-+extern bool efi_quiet;
-+extern bool efi_novamap;
- 
- extern const efi_system_table_t *efi_system_table;
- 
-@@ -50,7 +50,7 @@ extern const efi_system_table_t *efi_system_table;
+ #ifndef efi_rt_call
+-#define efi_rt_call(func, ...)	efi_system_table()->runtime->func(__VA_ARGS__)
++#define efi_rt_call(func, ...)	efi_system_table->runtime->func(__VA_ARGS__)
  #endif
- 
- #define pr_efi(msg)		do {			\
--	if (!is_quiet()) efi_printk("EFI stub: "msg);	\
-+	if (!efi_quiet) efi_printk("EFI stub: "msg);	\
- } while (0)
- 
- #define pr_efi_err(msg) efi_printk("EFI stub: ERROR: "msg)
+ #ifndef efi_is_native
+ #define efi_is_native()		(true)
 diff --git a/drivers/firmware/efi/libstub/fdt.c b/drivers/firmware/efi/libstub/fdt.c
-index 06d5e7fc8e34..3074a5e27c65 100644
+index 46cffac7a5f1..06d5e7fc8e34 100644
 --- a/drivers/firmware/efi/libstub/fdt.c
 +++ b/drivers/firmware/efi/libstub/fdt.c
-@@ -310,7 +310,7 @@ efi_status_t allocate_new_fdt_and_exit_boot(void *handle,
- 	if (status == EFI_SUCCESS) {
- 		efi_set_virtual_address_map_t *svam;
+@@ -110,7 +110,7 @@ static efi_status_t update_fdt(void *orig_fdt, unsigned long orig_fdt_size,
  
--		if (novamap())
-+		if (efi_novamap)
+ 	/* Add FDT entries for EFI runtime services in chosen node. */
+ 	node = fdt_subnode_offset(fdt, 0, "chosen");
+-	fdt_val64 = cpu_to_fdt64((u64)(unsigned long)efi_system_table());
++	fdt_val64 = cpu_to_fdt64((u64)(unsigned long)efi_system_table);
+ 
+ 	status = fdt_setprop_var(fdt, node, "linux,uefi-system-table", fdt_val64);
+ 	if (status)
+@@ -314,7 +314,7 @@ efi_status_t allocate_new_fdt_and_exit_boot(void *handle,
  			return EFI_SUCCESS;
  
  		/* Install the new virtual address map */
-diff --git a/drivers/firmware/efi/libstub/file.c b/drivers/firmware/efi/libstub/file.c
-index 27e014ea4459..50aaf15f9ad5 100644
---- a/drivers/firmware/efi/libstub/file.c
-+++ b/drivers/firmware/efi/libstub/file.c
-@@ -142,7 +142,7 @@ efi_status_t handle_cmdline_files(efi_loaded_image_t *image,
- 	if (!load_addr || !load_size)
- 		return EFI_INVALID_PARAMETER;
+-		svam = efi_system_table()->runtime->set_virtual_address_map;
++		svam = efi_system_table->runtime->set_virtual_address_map;
+ 		status = svam(runtime_entry_count * desc_size, desc_size,
+ 			      desc_ver, runtime_map);
  
--	if (IS_ENABLED(CONFIG_X86) && !nochunk())
-+	if (IS_ENABLED(CONFIG_X86) && !efi_nochunk)
- 		efi_chunk_size = EFI_READ_CHUNK_SIZE;
+@@ -348,7 +348,7 @@ efi_status_t allocate_new_fdt_and_exit_boot(void *handle,
+ 	efi_free(MAX_FDT_SIZE, *new_fdt_addr);
  
- 	alloc_addr = alloc_size = 0;
+ fail:
+-	efi_system_table()->boottime->free_pool(runtime_map);
++	efi_system_table->boottime->free_pool(runtime_map);
+ 
+ 	return EFI_LOAD_ERROR;
+ }
 diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-index 3f132f51ab0f..bddbc103a34b 100644
+index 1c3807d0c321..3f132f51ab0f 100644
 --- a/drivers/firmware/efi/libstub/x86-stub.c
 +++ b/drivers/firmware/efi/libstub/x86-stub.c
-@@ -427,7 +427,7 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
- 		if (status != EFI_SUCCESS)
- 			goto fail2;
+@@ -20,15 +20,10 @@
+ /* Maximum physical address for 64-bit kernel with 4-level paging */
+ #define MAXMEM_X86_64_4LEVEL (1ull << 46)
  
--		if (!noinitrd()) {
-+		if (!efi_noinitrd) {
- 			status = efi_load_initrd(image, &ramdisk_addr,
- 						 &ramdisk_size,
- 						 hdr->initrd_addr_max,
-@@ -787,7 +787,7 @@ unsigned long efi_main(efi_handle_t handle,
- 	 * permit an initrd loaded from the LINUX_EFI_INITRD_MEDIA_GUID device
- 	 * path to supersede it.
- 	 */
--	if (!noinitrd()) {
-+	if (!efi_noinitrd) {
- 		unsigned long addr, size;
+-static efi_system_table_t *sys_table;
++const efi_system_table_t *efi_system_table;
+ extern const bool efi_is64;
+ extern u32 image_offset;
  
- 		status = efi_load_initrd_dev_path(&addr, &size, ULONG_MAX);
+-__pure efi_system_table_t *efi_system_table(void)
+-{
+-	return sys_table;
+-}
+-
+ __attribute_const__ bool efi_is_64bit(void)
+ {
+ 	if (IS_ENABLED(CONFIG_EFI_MIXED))
+@@ -227,7 +222,7 @@ static const efi_char16_t apple[] = L"Apple";
+ static void setup_quirks(struct boot_params *boot_params)
+ {
+ 	efi_char16_t *fw_vendor = (efi_char16_t *)(unsigned long)
+-		efi_table_attr(efi_system_table(), fw_vendor);
++		efi_table_attr(efi_system_table, fw_vendor);
+ 
+ 	if (!memcmp(fw_vendor, apple, sizeof(apple))) {
+ 		if (IS_ENABLED(CONFIG_APPLE_PROPERTIES))
+@@ -377,10 +372,10 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
+ 	unsigned long ramdisk_addr;
+ 	unsigned long ramdisk_size;
+ 
+-	sys_table = sys_table_arg;
++	efi_system_table = sys_table_arg;
+ 
+ 	/* Check if we were booted by the EFI firmware */
+-	if (sys_table->hdr.signature != EFI_SYSTEM_TABLE_SIGNATURE)
++	if (efi_system_table->hdr.signature != EFI_SYSTEM_TABLE_SIGNATURE)
+ 		efi_exit(handle, EFI_INVALID_PARAMETER);
+ 
+ 	status = efi_bs_call(handle_protocol, handle, &proto, (void **)&image);
+@@ -446,7 +441,7 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
+ 		}
+ 	}
+ 
+-	efi_stub_entry(handle, sys_table, boot_params);
++	efi_stub_entry(handle, sys_table_arg, boot_params);
+ 	/* not reached */
+ 
+ fail2:
+@@ -651,14 +646,14 @@ static efi_status_t exit_boot_func(struct efi_boot_memmap *map,
+ 				   : EFI32_LOADER_SIGNATURE;
+ 	memcpy(&p->efi->efi_loader_signature, signature, sizeof(__u32));
+ 
+-	p->efi->efi_systab		= (unsigned long)efi_system_table();
++	p->efi->efi_systab		= (unsigned long)efi_system_table;
+ 	p->efi->efi_memdesc_size	= *map->desc_size;
+ 	p->efi->efi_memdesc_version	= *map->desc_ver;
+ 	p->efi->efi_memmap		= (unsigned long)*map->map;
+ 	p->efi->efi_memmap_size		= *map->map_size;
+ 
+ #ifdef CONFIG_X86_64
+-	p->efi->efi_systab_hi		= (unsigned long)efi_system_table() >> 32;
++	p->efi->efi_systab_hi		= (unsigned long)efi_system_table >> 32;
+ 	p->efi->efi_memmap_hi		= (unsigned long)*map->map >> 32;
+ #endif
+ 
+@@ -719,10 +714,10 @@ unsigned long efi_main(efi_handle_t handle,
+ 	efi_status_t status;
+ 	unsigned long cmdline_paddr;
+ 
+-	sys_table = sys_table_arg;
++	efi_system_table = sys_table_arg;
+ 
+ 	/* Check if we were booted by the EFI firmware */
+-	if (sys_table->hdr.signature != EFI_SYSTEM_TABLE_SIGNATURE)
++	if (efi_system_table->hdr.signature != EFI_SYSTEM_TABLE_SIGNATURE)
+ 		efi_exit(handle, EFI_INVALID_PARAMETER);
+ 
+ 	/*
 -- 
 2.17.1
 
