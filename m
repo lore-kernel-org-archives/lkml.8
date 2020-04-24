@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2CAC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1001C55191
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A58DF2087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6A462087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:28:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587731288;
-	bh=lxhfnXgYcVRlg5qg2dJlQ3P4jRcUUBgKbYQnuRpQ6iE=;
+	s=default; t=1587731292;
+	bh=JZcSxVs6Vogo/4ImjganqkXWmCApOZMcFXYZyCiTFXY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UZ7GWNl2ntLfMGdvh90XfmjZkbpRNuzK4yHkmKw+tabzHVtvWFxmM6d4Nv6TJnCQ8
-	 xrYCkdyGEhDigXtZMt9+D8q/OYjh7r6DBe6awD7FAx/ySLV0VTTiKDz5iVECwW4WTL
-	 lAZ1w9iHEY/z0Jpkh/w9uEWVOf+B5rbkH0Vihg2o=
+	b=GLvG7Ua0FP0QRGFEP7lhRjZdO6FHZUNNvbFxbfrGpSfUAcGLtLQot62rExtgT/RTj
+	 mSOR1JQTdxhmtI8eBPTUmfd5JsoA9FZa4iGMW7WYZpg6w3BSgM96rvUWCCKwwRCkpE
+	 GjCfgsGQxzp2NR0L1hcZWmn0wc+uuDJjbdS51eYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbgDXM2H (ORCPT
+        id S1728581AbgDXM2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:28:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54930 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:28:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728397AbgDXMYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:24:24 -0400
+        id S1728381AbgDXMYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:24:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 821C720767;
-        Fri, 24 Apr 2020 12:24:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E22D2176D;
+        Fri, 24 Apr 2020 12:24:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587731064;
-        bh=lxhfnXgYcVRlg5qg2dJlQ3P4jRcUUBgKbYQnuRpQ6iE=;
+        s=default; t=1587731062;
+        bh=JZcSxVs6Vogo/4ImjganqkXWmCApOZMcFXYZyCiTFXY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RqnFgkRF5BRhHnekQYcawfVe2SqS9IxVV2d2J/F5nM5uN8qszkKyU6CN79XUHvyRf
-         7CdTQ5vhX441O/8ZqLV3+RVD+kzr79rKcuWpZpePJ4UOGUOXZ1vAVSGoLClZjSHeuc
-         LTLxIjI3cCaOnN2SoOAdwuhNueKa7dW39sXA2j98=
+        b=SMjlhXovtYQQ7eEMKc+0kWdBThkPq6dshc3J3nSZmurGQD3FglrzDw/3t1CpD6E1s
+         bLzZ+NXD0fn4lH6yjPXrpVhJYojB2YAznp86IYzPx6Gbo+t237A4qB7RIGeqq8lAOx
+         2Rv6E5kX/9fOfilBJGTNZrR1/GoYJ7pk4O/Xm2Mg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Roy Spliet <nouveau@spliet.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.14 04/21] ALSA: hda: Keep the controller initialization even if no codecs found
-Date:   Fri, 24 Apr 2020 08:24:02 -0400
-Message-Id: <20200424122419.10648-4-sashal@kernel.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Brian Foster <bfoster@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 02/21] xfs: fix partially uninitialized structure in xfs_reflink_remap_extent
+Date:   Fri, 24 Apr 2020 08:24:00 -0400
+Message-Id: <20200424122419.10648-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200424122419.10648-1-sashal@kernel.org>
 References: <20200424122419.10648-1-sashal@kernel.org>
@@ -58,69 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: "Darrick J. Wong" <darrick.wong@oracle.com>
 
-[ Upstream commit 9479e75fca370a5220784f7596bf598c4dad0b9b ]
+[ Upstream commit c142932c29e533ee892f87b44d8abc5719edceec ]
 
-Currently, when the HD-audio controller driver doesn't detect any
-codecs, it tries to abort the probe.  But this abort happens at the
-delayed probe, i.e. the primary probe call already returned success,
-hence the driver is never unbound until user does so explicitly.
-As a result, it may leave the HD-audio device in the running state
-without the runtime PM.  More badly, if the device is a HD-audio bus
-that is tied with a GPU, GPU cannot reach to the full power down and
-consumes unnecessarily much power.
+In the reflink extent remap function, it turns out that uirec (the block
+mapping corresponding only to the part of the passed-in mapping that got
+unmapped) was not fully initialized.  Specifically, br_state was not
+being copied from the passed-in struct to the uirec.  This could lead to
+unpredictable results such as the reflinked mapping being marked
+unwritten in the destination file.
 
-This patch changes the logic after no-codec situation; it continues
-probing without the further codec initialization but keep the
-controller driver running normally.
-
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207043
-Tested-by: Roy Spliet <nouveau@spliet.org>
-Link: https://lore.kernel.org/r/20200413082034.25166-5-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ fs/xfs/xfs_reflink.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index a868a88bc2897..9a8f5164d88e5 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -2012,7 +2012,7 @@ static int azx_first_init(struct azx *chip)
- 	/* codec detection */
- 	if (!azx_bus(chip)->codec_mask) {
- 		dev_err(card->dev, "no codecs found!\n");
--		return -ENODEV;
-+		/* keep running the rest for the runtime PM */
- 	}
+diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
+index 37e603bf15913..db7f9fdd20a30 100644
+--- a/fs/xfs/xfs_reflink.c
++++ b/fs/xfs/xfs_reflink.c
+@@ -1125,6 +1125,7 @@ xfs_reflink_remap_extent(
+ 		uirec.br_startblock = irec->br_startblock + rlen;
+ 		uirec.br_startoff = irec->br_startoff + rlen;
+ 		uirec.br_blockcount = unmap_len - rlen;
++		uirec.br_state = irec->br_state;
+ 		unmap_len = rlen;
  
- 	if (azx_acquire_irq(chip, 0) < 0)
-@@ -2340,9 +2340,11 @@ static int azx_probe_continue(struct azx *chip)
- #endif
- 
- 	/* create codec instances */
--	err = azx_probe_codecs(chip, azx_max_codecs[chip->driver_type]);
--	if (err < 0)
--		goto out_free;
-+	if (bus->codec_mask) {
-+		err = azx_probe_codecs(chip, azx_max_codecs[chip->driver_type]);
-+		if (err < 0)
-+			goto out_free;
-+	}
- 
- #ifdef CONFIG_SND_HDA_PATCH_LOADER
- 	if (chip->fw) {
-@@ -2356,7 +2358,7 @@ static int azx_probe_continue(struct azx *chip)
- #endif
- 	}
- #endif
--	if ((probe_only[dev] & 1) == 0) {
-+	if (bus->codec_mask && !(probe_only[dev] & 1)) {
- 		err = azx_codec_configure(chip);
- 		if (err < 0)
- 			goto out_free;
+ 		/* If this isn't a real mapping, we're done. */
 -- 
 2.20.1
 
