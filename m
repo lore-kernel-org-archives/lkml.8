@@ -2,142 +2,117 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A555C5518A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20300C55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7617D20706
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:41:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="c7tcPnl+"
+	by mail.kernel.org (Postfix) with ESMTP id 03F2520706
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:43:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbgDXDlf (ORCPT
+        id S1726409AbgDXDnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 23:41:35 -0400
-Received: from mail-eopbgr690136.outbound.protection.outlook.com ([40.107.69.136]:28483
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725823AbgDXDle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 23:41:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gufJJuqGp+hZzcn3zGeYhKQjOaVS/2X0PDQxZe2GfjmexFc3m8jpxT5BcXrDSJIpcoValpkKGAoa8WOXqYkuaVgulMQjfWG6OKiTcMP7Nyr6I5oTP45a7SmambKjQXs6DPvJ+0XxPlderXZ4cAva/akY6zUVKzsD05+TJ2e9RPuwHdo1WQzuhSv0hSjJdNPfj+SG9O41p7MZlfIrNtVdJ2i0tO/v/HIQQNN5PgyzilSSVaT7vm/kfl1HPSmO6NZITViChfsvWQRiuIaO+kP41cM6RTiThlCHvB2mbCmdmk2Yz9iJ9rSql/dkCCEAFK+NQsKJzVtO66ZoRIf95jEwSA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X4+x0rFTlMEwx/m/YZNj5dLTyDjpQWSM9I7tw2XEP+I=;
- b=TcH7WofYzEwdwV/K7DaHxylUkP2eZGTPdCFquY3V8V+yjsdut+OVT6Wg9I6T3g8rmY0gBRoQZ21pQoeProncyMBzRTX7zp5WkrwvKiKv8BFUSy3pVedYp7DRRoxkoel07WqoHFDNdeiowIF6a3L2AstNcm4bCEW/GPu4mKqmST9GRCY5mfl67l7olL8Emq9tWQfcuiJXbdlfLUQVVZD/mXNm3SYYCxdJCIrcFTsOpzo9SsHuCdUZCjGaApVixBX1bGlFb0Ibws6wnPnPljGdUglJeHUk03e1J3aKFdd9ODj1RtD+Hoi5jCagGiGznEmDGKNyKFZ2S1dQPqt4n1hy2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X4+x0rFTlMEwx/m/YZNj5dLTyDjpQWSM9I7tw2XEP+I=;
- b=c7tcPnl+awPjrfMiHxeWO4baeTfrfO6k7Qoguu711miDb316+fZVJG3eyTiZzUjzC5VQZ/Aqx2syHZkbsgGT3IGsZgbjH2jfSVqqUiBk9eKGWl/baJAR++bEIKilj3gxaeBky/tzH0MJNJzlDgg3H4hyMXktFc5TOooKTm2TMgQ=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-Received: from BN6PR21MB0161.namprd21.prod.outlook.com (2603:10b6:404:94::7)
- by BN6PR21MB0740.namprd21.prod.outlook.com (2603:10b6:404:93::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.2; Fri, 24 Apr
- 2020 03:41:31 +0000
-Received: from BN6PR21MB0161.namprd21.prod.outlook.com
- ([fe80::171:e82f:b9f2:3a68]) by BN6PR21MB0161.namprd21.prod.outlook.com
- ([fe80::171:e82f:b9f2:3a68%13]) with mapi id 15.20.2958.010; Fri, 24 Apr 2020
- 03:41:31 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     linux-pm@vger.kernel.org, rjw@rjwysocki.net, len.brown@intel.com,
-        pavel@ucw.cz, bvanassche@acm.org, mikelley@microsoft.com,
-        longli@microsoft.com
-Cc:     linux-kernel@vger.kernel.org, ming.lei@redhat.com,
-        wei.liu@kernel.org, sthemmin@microsoft.com, haiyangz@microsoft.com,
-        kys@microsoft.com, Dexuan Cui <decui@microsoft.com>,
-        stable@vger.kernel.org
-Subject: [PATCH] PM: hibernate: Freeze kernel threads in software_resume()
-Date:   Thu, 23 Apr 2020 20:40:16 -0700
-Message-Id: <20200424034016.42046-1-decui@microsoft.com>
-X-Mailer: git-send-email 2.17.1
-Reply-To: decui@microsoft.com
-Content-Type: text/plain
-X-ClientProxiedBy: MWHPR02CA0010.namprd02.prod.outlook.com
- (2603:10b6:300:4b::20) To BN6PR21MB0161.namprd21.prod.outlook.com
- (2603:10b6:404:94::7)
+        Thu, 23 Apr 2020 23:43:08 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61792 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725823AbgDXDnH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 23:43:07 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03O3gLck027909;
+        Thu, 23 Apr 2020 23:42:36 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30ghu9npbr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Apr 2020 23:42:36 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03O3gZIC028150;
+        Thu, 23 Apr 2020 23:42:35 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30ghu9nnbs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Apr 2020 23:42:35 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03O3RjWX003478;
+        Fri, 24 Apr 2020 03:32:20 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma01fra.de.ibm.com with ESMTP id 30fs658g0r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Apr 2020 03:32:19 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03O3WHhk000350
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Apr 2020 03:32:17 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2F8B152050;
+        Fri, 24 Apr 2020 03:32:17 +0000 (GMT)
+Received: from [9.199.51.89] (unknown [9.199.51.89])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id D12BA5204E;
+        Fri, 24 Apr 2020 03:32:13 +0000 (GMT)
+Subject: Re: [PATCH v3 13/16] powerpc/watchpoint: Prepare handler to handle
+ more than one watcnhpoint
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     mpe@ellerman.id.au, mikey@neuling.org, apopple@linux.ibm.com,
+        paulus@samba.org, npiggin@gmail.com,
+        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
+        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
+        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20200414031659.58875-1-ravi.bangoria@linux.ibm.com>
+ <20200414031659.58875-14-ravi.bangoria@linux.ibm.com>
+ <67349339-03df-091a-47f0-78c1b14c5981@c-s.fr>
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Message-ID: <f571127c-89b0-a333-be71-18f411dc6586@linux.ibm.com>
+Date:   Fri, 24 Apr 2020 09:02:12 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from decui-u1804.corp.microsoft.com (2001:4898:80e8:9:d9f1:f6e4:3d4b:68b4) by MWHPR02CA0010.namprd02.prod.outlook.com (2603:10b6:300:4b::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Fri, 24 Apr 2020 03:41:27 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [2001:4898:80e8:9:d9f1:f6e4:3d4b:68b4]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 8411dd9e-86cd-4acb-82f0-08d7e8015f8d
-X-MS-TrafficTypeDiagnostic: BN6PR21MB0740:|BN6PR21MB0740:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BN6PR21MB0740AC41EA2537272FBC5C96BFD00@BN6PR21MB0740.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 03838E948C
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR21MB0161.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(376002)(346002)(136003)(39860400002)(316002)(66476007)(186003)(966005)(16526019)(6666004)(6486002)(7696005)(6636002)(86362001)(1076003)(82950400001)(10290500003)(82960400001)(5660300002)(2616005)(478600001)(3450700001)(66946007)(8676002)(52116002)(66556008)(8936002)(4326008)(2906002)(36756003)(81156014)(30253002);DIR:OUT;SFP:1102;
-Received-SPF: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: xBFbPlApz8WJGl7u+xkp8F/H1jXu9xg5dmlqr7tXPElA6lreqFRghjRuOioyueiaJxDhR2OtAdVuTtwx59ufq9jnBBVF30cN96omR8EKrdvbYMGqsDUYjP+J5nUBQqE1DTPNeCw86WczYN055nSTL9JzkBz0IilZGDYggqnoSnhNsa5O8e95ttrrcKXHv7/au4nF2XxYwAnwmnG8ChhchLoQx2J9OEVkYZyM98UH5+GT3TbilaK1sgV9hdEa4V2NJGZybp32BITpNQvSh/gdXLxnSrq1IebjsZmWOiKoPpZbGa1JfpWNpq4GJFJ8e6ln4GlO0T4tr+juCg03i8FUPquRsWl1US/bamR3E2IUygupBjFWGxaM9KV4ZyAb3eFzPrakHwbnK9Dy8aNM4LsxRoKVEPIXvnW7IM03jLI99LH+hUY/9E6zNUC6YsBTYmZNqozFuUoUgZVu9RPUiS3LjifA7khBPBP8AkuJIbx9ua1xaf8nwf8QuuXXuh1etop+9aN6XcJfrXRJsowco0t5MMBUo8bBlBcsp6Jr5TVk0AU3ZYzIAe8csdI9jqTo8QMa
-X-MS-Exchange-AntiSpam-MessageData: B7XKrctR7hm9XbLgAhwUsJZyvNXYFnzw0c17uGIvAbmEjLL7pv1ElhbRbmRPtYv9UOlUGVkl/tDOA56qeMpmuTINZ+AvHzlSDi9Gk8G3B2xIBHReVTtQSItcBhBFzAelRATVDNr9TJBE8VbIdgjFn2d6H8hV5NvySy9zvRqCnjQHtbSDug8Dx13U9gXyH+3nQO9Xfuqw7fRM2Uk7ceDjN6+lNNgfqPhwmv7m8lL9k+XKUmeboQhsyNrNcGFf4x6Tsst02RRH58ZfM7eWlITl6zlfi5mCb2RyogqVeh9NZws0JuTVcdJWosKvubMAA1EUZF//KA11KkCpXxt35tGA2BowACu8aAilWIz4eAIPYp1AL77MYp7SGDPQS+MaMNR67UrZMW8pG3edkD7qx6se0CG7UXigp0A7gQO+/o5olr1mY3zbfuzDvugAULWpZrZ1c0nKybP/pgCVaF59cO11dZjVuidfyEVyQVJbgGtlKoZo2jV9ap964ijAL9wonelSO9NfmEMW6fBSVp2NIbfloQ1uWjdAE21zRwAda3TYP/KHKz46EuYJ0SzvE25Waqdv+GIV9+C9BG7jRrCQy4Qo1d7jy8dVMZwbOWFVCPIAeusMFqjVHJFriNYDrSvB8Y4xxoSNy5Sp4ozdol5VJhO33CUKqYD74dCYvW+lvA4mBh875OiRdF1wNoJL1reneWnxRwfwNHv0TOl0cBpuwszVGWEPsCJOJf7aFEVbkwhM4hBqZr4kwI6KABnwji9Qvrq1GLJwNeR6752qZbflYxxD0MPXTeWxjYLl/ZREaE92P/2lFgtZXLDhiK6EfxV64jrBGj9uCMoGiTEwcxUK/eGgXnkagTdvgTSGff3t3jZlojk=
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8411dd9e-86cd-4acb-82f0-08d7e8015f8d
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2020 03:41:31.1076
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: z71R9MWpgbIOxfcjPEDz14zEDIv3lSwokxMBZddM7XdeiO3KZkbnQmjwVO6P2ivOFNtbU9XZ3wHqUrbwc4524w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR21MB0740
+In-Reply-To: <67349339-03df-091a-47f0-78c1b14c5981@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-23_19:2020-04-23,2020-04-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=695
+ suspectscore=0 bulkscore=0 spamscore=0 phishscore=0 adultscore=0
+ clxscore=1015 malwarescore=0 priorityscore=1501 lowpriorityscore=0
+ mlxscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004240020
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the kernel threads are not frozen in software_resume(), so
-between dpm_suspend_start(PMSG_QUIESCE) and resume_target_kernel(),
-system_freezable_power_efficient_wq can still try to submit SCSI
-commands and this can cause a panic since the low level SCSI driver
-(e.g. hv_storvsc) has quiesced the SCSI adapter and can not accept
-any SCSI commands: https://lkml.org/lkml/2020/4/10/47
+Hi Christophe,
 
-At first I posted a fix (https://lkml.org/lkml/2020/4/21/1318) trying
-to resolve the issue from hv_storvsc, but with the help of
-Bart Van Assche, I realized it's better to fix software_resume(),
-since this looks like a generic issue, not only pertaining to SCSI.
+>> @@ -101,14 +129,20 @@ static bool is_ptrace_bp(struct perf_event *bp)
+>>    */
+>>   void arch_unregister_hw_breakpoint(struct perf_event *bp)
+>>   {
+>> +    int i;
+>> +
+> 
+> This declaration should be in the block using it.
+> 
+>>       /*
+>>        * If the breakpoint is unregistered between a hw_breakpoint_handler()
+>>        * and the single_step_dabr_instruction(), then cleanup the breakpoint
+>>        * restoration variables to prevent dangling pointers.
+>>        * FIXME, this should not be using bp->ctx at all! Sayeth peterz.
+>>        */
+>> -    if (bp->ctx && bp->ctx->task && bp->ctx->task != ((void *)-1L))
+>> -        bp->ctx->task->thread.last_hit_ubp = NULL;
+>> +    if (bp->ctx && bp->ctx->task && bp->ctx->task != ((void *)-1L)) {
+> 
+> Add declaration of 'int i' here.
 
-Cc: Bart Van Assche <bvanassche@acm.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
----
- kernel/power/hibernate.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+How will that help? Keeping declaration at the start of function is also
+common practice and I don't see any recommendation to move them inside
+conditional block.
 
-diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
-index 86aba8706b16..30bd28d1d418 100644
---- a/kernel/power/hibernate.c
-+++ b/kernel/power/hibernate.c
-@@ -898,6 +898,13 @@ static int software_resume(void)
- 	error = freeze_processes();
- 	if (error)
- 		goto Close_Finish;
-+
-+	error = freeze_kernel_threads();
-+	if (error) {
-+		thaw_processes();
-+		goto Close_Finish;
-+	}
-+
- 	error = load_image_and_restore();
- 	thaw_processes();
-  Finish:
--- 
-2.19.1
-
+Thanks,
+Ravi
