@@ -2,262 +2,144 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B03F1C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A168C55191
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88B8E2064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:13:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nJpiIDKi"
+	by mail.kernel.org (Postfix) with ESMTP id 586B020776
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:14:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587723297;
+	bh=lvk0d/MafFePGFMJFa/1lWq6QApUb1vDz6L3QJfeU5o=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=rS/vF7AyX7i2k/QeArUEbmxBES+KpHCYiLeWQcGgrKW2iYzv6rV8b43zA7wRD7N0X
+	 h60IcbZcSjt1XjZGlowZvq0bOZm58JYTJth7ElQISvI+KZ1fxdKjMgsnyrTsZmgiku
+	 V1yiyJMWfZGzMi5v6bc8TVCj8uT3zztdGEn8qE/Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbgDXKNg (ORCPT
+        id S1726824AbgDXKO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 06:13:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58900 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726939AbgDXKNa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 06:13:30 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92E95C09B046
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 03:13:30 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id g12so10036930wmh.3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 03:13:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ZjzQSYK/IyLxZafwcBa3oQLq8j0LeJ0VAvQG1IbtSsk=;
-        b=nJpiIDKisp4o81gcE2OE3PWQ4HjSno7DC9r80HSP9jRZj7oSRNnoOqH+Fm9xb8UYCZ
-         Wmk1qocpOudxfgvO6KHvAnun/O4FaekVyRFA2z4In3z8cONLN+unHmUCW4XzxSaZJBjc
-         +6nOwtx6/o9v5JDmPnVyB9wx3tTUVvEqtHY4VhETf7Q7p2WrPKPYwjoSm0HnbkpnKS0V
-         WlWv8hpgzzbNGD/Za+R2jBW1j1YYhNEZ9yPLMN8qpAlkQY1vxu0nnDP5J3vDm5YQiC6G
-         QsT6iU0KSCintcgbl2xU2k28mHQyJTVm0QOh4Ny3Hmse36LKBFp249aHQ116xAA8h2qb
-         dVbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZjzQSYK/IyLxZafwcBa3oQLq8j0LeJ0VAvQG1IbtSsk=;
-        b=AjS9sgRujdJZLNB8X2C+U1RAhJ7Kj4cm6ScKTsmzXCBA4PVQrnWK/JGsGlKD/eWLsN
-         5QZOgNJ/AKvSQHsYA9oj3vD/kZcTkHglR2SzF40CCm4EjIK4xlV39VucYrbGA43G5DZy
-         UATp7DLT5ye2AvKJW+KQbZk7r6cM0LhC9cp+Ef3gnE2Qstf7d89mREllHgziAuDrrNpG
-         Kw4XkMR5NGKW0qZiYs6T0fcMZJlkiJKFLQtudPToNTJ4DS8K/HCqxgXBAd8AcIHZT0+c
-         H2oD9oYp1cKgcJT9TpJ3yt6iZA+9lLqhTDYcYZeLii76d5Uf9HOi5S2/L2Ol/6E0jvYR
-         dCjQ==
-X-Gm-Message-State: AGi0PuboOyAV2OBobKAVWz/kQ//sKJFEILotTaCsV4QuzUQ2NWYrWQIG
-        C24TFVeejDZa1k/LL1BGRHJ7MA==
-X-Google-Smtp-Source: APiQypJmFjG4xy1vgukyzOLL9UKSnSxqlFFMRbBsEa55Csbnd6hXWKh0+ZCj1PsyDDNVFrTioNOM4Q==
-X-Received: by 2002:a1c:66d5:: with SMTP id a204mr9365795wmc.69.1587723209114;
-        Fri, 24 Apr 2020 03:13:29 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id f8sm7617423wrm.14.2020.04.24.03.13.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 03:13:28 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 11:13:25 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        jason.wessel@windriver.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, catalin.marinas@arm.com,
-        bjorn.andersson@linaro.org, Nadav Amit <namit@vmware.com>,
-        hpa@zytor.com, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        will@kernel.org, Matt Mullins <mmullins@fb.com>,
-        Jonathan Corbet <corbet@lwn.net>, frowand.list@gmail.com,
-        x86@kernel.org, jinho lim <jordan.lim@samsung.com>,
-        agross@kernel.org, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-serial@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
-        Borislav Petkov <bp@suse.de>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org,
-        jslaby@suse.com, Alexios Zavras <alexios.zavras@intel.com>,
-        bp@alien8.de, tglx@linutronix.de, mingo@redhat.com,
-        Allison Randal <allison@lohutok.net>,
-        Juergen Gross <jgross@suse.com>, linux-usb@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        James Morse <james.morse@arm.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Enrico Weigelt <info@metux.net>
-Subject: Re: [PATCH v2 0/9] kgdb: Support late serial drivers; enable early
- debug w/ boot consoles
-Message-ID: <20200424101325.fvsxn32qzfocz7hb@holly.lan>
-References: <20200421211447.193860-1-dianders@chromium.org>
- <CAFA6WYMsN1Ep0WE2ngR4jzLuOHz7aDYP7ZL1Pmome2W9A9qKig@mail.gmail.com>
+        Fri, 24 Apr 2020 06:14:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42884 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726489AbgDXKO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 06:14:56 -0400
+Received: from localhost.localdomain (unknown [117.99.83.91])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D833E20736;
+        Fri, 24 Apr 2020 10:14:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587723295;
+        bh=lvk0d/MafFePGFMJFa/1lWq6QApUb1vDz6L3QJfeU5o=;
+        h=From:To:Cc:Subject:Date:From;
+        b=r8CKeKq8Uvzw8nmWZg+X8QPo0iZ3a811oFKe5LIelUOyUMbhuPCgv98SuvXK2vlse
+         t/Ij+hoF+982Xo66SA5ZWYNjSckY7XurtOe7eg7gqwhqkIttW3ogezc1Vgn1No7jLI
+         PmWwCDReoAvPQ/53YIGsIinUJi3olVOAEOxqtQFA=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        =?UTF-8?q?Andreas=20B=C3=B6hler?= <dev@aboehler.at>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v10 0/5] usb: xhci: Add support for Renesas USB controllers
+Date:   Fri, 24 Apr 2020 15:44:05 +0530
+Message-Id: <20200424101410.2364219-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFA6WYMsN1Ep0WE2ngR4jzLuOHz7aDYP7ZL1Pmome2W9A9qKig@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 02:02:51PM +0530, Sumit Garg wrote:
-> Hi Doug,
-> 
-> On Wed, 22 Apr 2020 at 02:45, Douglas Anderson <dianders@chromium.org> wrote:
-> >
-> > This whole pile of patches was motivated by me trying to get kgdb to
-> > work properly on a platform where my serial driver ended up being hit
-> > by the -EPROBE_DEFER virus (it wasn't practicing social distancing
-> > from other drivers).  Specifically my serial driver's parent device
-> > depended on a resource that wasn't available when its probe was first
-> > called.  It returned -EPROBE_DEFER which meant that when "kgdboc"
-> > tried to run its setup the serial driver wasn't there.  Unfortunately
-> > "kgdboc" never tried again, so that meant that kgdb was disabled until
-> > I manually enalbed it via sysfs.
-> >
-> > While I could try to figure out how to get around the -EPROBE_DEFER
-> > somehow, the above problems could happen to anyone and -EPROBE_DEFER
-> > is generally considered something you just have to live with.  In any
-> > case the current "kgdboc" setup is a bit of a race waiting to happen.
-> > I _think_ I saw during early testing that even adding a msleep() in
-> > the typical serial driver's probe() is enough to trigger similar
-> > issues.
-> >
-> > I decided that for the above race the best attitude to get kgdb to
-> > register at boot was probably "if you can't beat 'em, join 'em".
-> > Thus, "kgdboc" now jumps on the -EPROBE_DEFER bandwagon (now that my
-> > driver uses it it's no longer a virus).  It does so a little awkwardly
-> > because "kgdboc" hasn't normally had a "struct device" associated with
-> > it, but it's really not _that_ ugly to make a platform device and
-> > seems less ugly than alternatives.
-> >
-> > Unfortunately now on my system the debugger is one of the last things
-> > to register at boot.  That's OK for debugging problems that show up
-> > significantly after boot, but isn't so hot for all the boot problems
-> > that I end up debugging.  This motivated me to try to get something
-> > working a little earlier.
-> >
-> > My first attempt was to try to get the existing "ekgdboc" to work
-> > earlier.  I tried that for a bit until I realized that it needed to
-> > work at the tty layer and I couldn't find any serial drivers that
-> > managed to register themselves to the tty layer super early at boot.
-> > The only documented use of "ekgdboc" is "ekgdboc=kbd" and that's a bit
-> > of a special snowflake.  Trying to get my serial driver and all its
-> > dependencies to probe normally and register the tty driver super early
-> > at boot seemed like a bad way to go.  In fact, all the complexity
-> > needed to do something like this is why the system already has a
-> > special concept of a "boot console" that lives only long enough to
-> > transition to the normal console.
-> >
-> > Leveraging the boot console seemed like a good way to go and that's
-> > what this series does.  I found that consoles could have a read()
-> > function, though I couldn't find anyone who implemented it.  I
-> > implemented it for two serial drivers for the devices I had easy
-> > access to, making the assumption that for boot consoles that we could
-> > assume read() and write() were polling-compatible (seems sane I
-> > think).
-> >
-> > Now anyone who makes a small change to their serial driver can easily
-> > enable early kgdb debugging!
-> >
-> > The devices I had for testing were:
-> > - arm32: rk3288-veyron-jerry
-> > - arm64: rk3399-gru-kevin
-> > - arm64: qcom-sc7180-trogdor (not mainline yet)
-> >
-> > These are the devices I tested this series on.  I tried to test
-> > various combinations of enabling/disabling various options and I
-> > hopefully caught the corner cases, but I'd appreciate any extra
-> > testing people can do.
-> 
-> earlycon_kgdboc sounds like a really cool feature. So I gave it a try
-> on my arm64 machine (Developerbox) and it works like a charm. So for
-> patch 6/9 you can add:
-> 
-> Tested-by: Sumit Garg <sumit.garg@linaro.org>
-> 
-> Plus, in order to enable earlycon_kgdboc on Developerbox I had to
-> implement the read() function in the early console driver for
-> amba-pl011 (see patch [1]). It would be great if you could pick that
-> patch [1] too as part of this series.
-> 
-> [1] https://lkml.org/lkml/2020/4/24/173
+This series add support for Renesas USB controllers uPD720201 and uPD720202.
+These require firmware to be loaded and in case devices have ROM those can
+also be programmed if empty. If ROM is programmed, it runs from ROM as well.
 
-I think PL011 support is also useful for getting this feature integrated
-into the test suite too!
+This includes patches from Christian which supported these controllers w/o
+ROM and later my patches for ROM support and debugfs hook for rom erase and
+export of xhci-pci functions.
 
+Changes in v10:
+  remove renesas_xhci_pci_probe and call renesas_xhci_check_request_fw and
+  also cleanup exit code along with it.
 
-Daniel.
+Changes in v9:
+ Make fw load a sync call and have single instance of probe execute,
+   elimating probe/remove races
+ Add quirk for renesas and use that for loading
 
+Changes in v8:
+ Fix compile error reported by Kbuild-bot by making usb_hcd_pci_probe() take
+ const struct hc_driver * as argument
 
-> 
-> -Sumit
-> 
-> >  Notably I didn't test on x86, but (I think) I
-> > didn't touch much there so I shouldn't have broken anything.
-> >
-> > When testing I found a few problems with actually dropping into the
-> > debugger super early on arm and arm64 devices.  Patches in this series
-> > should help with this.  For arm I just avoid dropping into the
-> > debugger until a little later and for arm64 I actually enable
-> > debugging super early.
-> >
-> > I realize that bits of this series might feel a little hacky, though
-> > I've tried to do things in the cleanest way I could without overly
-> > interferring with the rest of the kernel.  If you hate the way I
-> > solved a problem I would love it if you could provide guidance on how
-> > you think I could solve the problem better.
-> >
-> > This series (and my comments / documentation / commit messages) are
-> > now long enough that my eyes glaze over when I try to read it all over
-> > to double-check.  I've nontheless tried to double-check it, but I'm
-> > pretty sure I did something stupid.  Thank you ahead of time for
-> > pointing it out to me so I can fix it in v3.  If somehow I managed to
-> > not do anything stupid (really?) then thank you for double-checking me
-> > anyway.
-> >
-> > Changes in v2:
-> > - ("kgdb: Disable WARN_CONSOLE_UNLOCKED for all kgdb") new for v2.
-> > - ("Revert "kgdboc: disable the console lock when in kgdb"") new for v2.
-> > - Assumes we have ("kgdb: Disable WARN_CONSOLE_UNLOCKED for all kgdb")
-> > - Fix kgdbts, tty/mips_ejtag_fdc, and usb/early/ehci-dbgp
-> >
-> > Douglas Anderson (9):
-> >   kgdb: Disable WARN_CONSOLE_UNLOCKED for all kgdb
-> >   Revert "kgdboc: disable the console lock when in kgdb"
-> >   kgdboc: Use a platform device to handle tty drivers showing up late
-> >   kgdb: Delay "kgdbwait" to dbg_late_init() by default
-> >   arm64: Add call_break_hook() to early_brk64() for early kgdb
-> >   kgdboc: Add earlycon_kgdboc to support early kgdb using boot consoles
-> >   Documentation: kgdboc: Document new earlycon_kgdboc parameter
-> >   serial: qcom_geni_serial: Support earlycon_kgdboc
-> >   serial: 8250_early: Support earlycon_kgdboc
-> >
-> >  .../admin-guide/kernel-parameters.txt         |  20 ++
-> >  Documentation/dev-tools/kgdb.rst              |  14 +
-> >  arch/arm64/include/asm/debug-monitors.h       |   2 +
-> >  arch/arm64/kernel/debug-monitors.c            |   2 +-
-> >  arch/arm64/kernel/kgdb.c                      |   5 +
-> >  arch/arm64/kernel/traps.c                     |   3 +
-> >  arch/x86/kernel/kgdb.c                        |   5 +
-> >  drivers/misc/kgdbts.c                         |   2 +-
-> >  drivers/tty/mips_ejtag_fdc.c                  |   2 +-
-> >  drivers/tty/serial/8250/8250_early.c          |  23 ++
-> >  drivers/tty/serial/kgdboc.c                   | 262 ++++++++++++++++--
-> >  drivers/tty/serial/qcom_geni_serial.c         |  32 +++
-> >  drivers/usb/early/ehci-dbgp.c                 |   2 +-
-> >  include/linux/kgdb.h                          |  25 +-
-> >  kernel/debug/debug_core.c                     |  48 +++-
-> >  15 files changed, 400 insertions(+), 47 deletions(-)
-> >
-> > --
-> > 2.26.1.301.g55bc3eb7cb9-goog
-> >
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Changes in v7:
+ Make a single module which removes issues with module loading
+ Keep the renesas code in renesas file
+ Add hc_driver as argument for usb_hcd_pci_probe and modify hdc drivers to
+   pass this and not use driver_data
+ Use driver data for fw name
+ Remove code to check if we need to load firmware or not
+ remove multiple fw version support, we can do that with symlink in
+   userspace
+
+Changes in v6:
+ Move the renesas code into a separate driver which invokes xhci-pci functions.
+
+Changes in v5:
+ Added a debugfs rom erase patch, helps in debugging
+ Squashed patch 1 & 2 as requested by Mathias
+
+Changes in v4:
+ Rollback the delay values as we got device failures
+
+Changes in v3:
+  Dropped patch 2 as discussed with Christian
+  Removed aligned 8 bytes check
+  Change order for firmware search from highest version to lowest
+  Added entry for new firmware for device 0x14 as well
+  Add tested by Christian
+
+Changes in v2:
+  used macros for timeout count and delay
+  removed renesas_fw_alive_check
+  cleaned renesas_fw_callback
+  removed recurion for renesas_fw_download
+  added MODULE_FIRMWARE
+  added comment for multiple fw order
+
+Christian Lamparter (1):
+  usb: renesas-xhci: Add the renesas xhci driver
+
+Vinod Koul (4):
+  usb: hci: add hc_driver as argument for usb_hcd_pci_probe
+  usb: xhci: Add support for Renesas controller with memory
+  usb: renesas-xhci: Add ROM loader for uPD720201
+  usb: xhci: provide a debugfs hook for erasing rom
+
+ drivers/usb/core/hcd-pci.c          |   7 +-
+ drivers/usb/host/Makefile           |   3 +-
+ drivers/usb/host/ehci-pci.c         |   6 +-
+ drivers/usb/host/ohci-pci.c         |   9 +-
+ drivers/usb/host/uhci-pci.c         |   8 +-
+ drivers/usb/host/xhci-pci-renesas.c | 726 ++++++++++++++++++++++++++++
+ drivers/usb/host/xhci-pci.c         |  42 +-
+ drivers/usb/host/xhci-pci.h         |  16 +
+ drivers/usb/host/xhci.h             |   1 +
+ include/linux/usb/hcd.h             |   3 +-
+ 10 files changed, 798 insertions(+), 23 deletions(-)
+ create mode 100644 drivers/usb/host/xhci-pci-renesas.c
+ create mode 100644 drivers/usb/host/xhci-pci.h
+
+-- 
+2.25.1
+
