@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2750EC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 700FBC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 062A420776
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 444E920776
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:36:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="b3d1ztNG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kkghyNB0"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="ipfEGabv";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZcDr0YO1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbgDXPgS (ORCPT
+        id S1728541AbgDXPgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:36:18 -0400
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:45555 "EHLO
+        Fri, 24 Apr 2020 11:36:23 -0400
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:42093 "EHLO
         wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728486AbgDXPgO (ORCPT
+        by vger.kernel.org with ESMTP id S1728519AbgDXPgU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:36:14 -0400
+        Fri, 24 Apr 2020 11:36:20 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 5C246144D;
-        Fri, 24 Apr 2020 11:36:13 -0400 (EDT)
+        by mailnew.west.internal (Postfix) with ESMTP id C90CB1452;
+        Fri, 24 Apr 2020 11:36:18 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:36:14 -0400
+  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:36:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=DDQ/otaSac56i
-        RPoiWof2TO+uS7QGjui1Jou2UPbw4k=; b=b3d1ztNGvQYiYrzy71PSaCDRiwmKo
-        KEUQqU5As8v990P+3wa7DyWBC8Do6cHJI5X/2b9BZQz0CIX8lr2F2n+fvj7PWy3/
-        FrUoPPTxdxImVt5kTkfpLCC7Ls2troocbNxj528K1/cZCB/p++bneols5qPpuAHf
-        xo8qwFJSX2XVEGIr8actzARgLJE7AikfE+p+qbascov+ByUpu3P4ptHPF0MC4GbG
-        Pv6z265Fvj3O/XzwALJjHIPm3Tfdr+3ZP4HnhgjA27o6eP/8kyS6Uzj0jJ5WyCqO
-        oc6fz+JVYzvFxqDOThu2R/85mHEq9TjAxsoRQj5JRfXEKEeobtYGZMqIA==
+        :mime-version:content-transfer-encoding; s=fm2; bh=f0IAMoWcdtv9T
+        oeZQDoNEujX/ZT2y+zDJGADLph1VQY=; b=ipfEGabvrhI2024ELe4Lok3QgFBIg
+        KEFH5qR9xgj4nW0nfdlylZ6dpVsY011OHFOfKl67Ddmo5SxLTmcSuj2LLyz/JaoH
+        MPewm+uIE5wbSf9P0gmTNRs4mu8DJ3G0awkrDDcftkuHaO5+zLmd4boyigSUjrKH
+        e+iRDgWrlGkTk2O90YflK/nW1dnuM0OQ/+NKQocSTQCjKHts8SciXZSi9Ye2tZ/p
+        bVUmgD8HTnnjcfFpUQbZ2NqnaSrR4hoPvbF+VFpanJ8rdR9w8WWA67pPwWTrbmdD
+        9a35nAiT1GQ6rBKNRb+mNJxWOGgZQ30LI5keeK8541p55XyvthHZ3aIyQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=DDQ/otaSac56iRPoiWof2TO+uS7QGjui1Jou2UPbw4k=; b=kkghyNB0
-        PnyXof+QVjsCWDz/luNPb1QeR8ce43Zb5oLatpUVCiPQau0rUMmTxRbD874xPgi5
-        0khcVHLdEl79oITRiCwwP+fgxQRYYVGvxXmSmd9n9rb7UXC26UKcPOw4kADjrzoT
-        5obL8K5j/oBuUwx5zdC+iCSTSwGhCUluhBaiWw9l1sqEwGYUqafkqTq74JtyKooY
-        B7F7NjrSz9emgjJI6tPhuoq8PNakvcQ7TOVque21DCNB3Wjvb7bSlDUf/hVnyiZy
-        8Xzo5S2uOw5LoqlCWwjFa1vCdDhpheRKdbP9O9Bu41bV+xZS88wJGZUajyqUcvHh
-        NkgrQeIFzYDszw==
-X-ME-Sender: <xms:bAejXviguTbO3jIIaa2S4IwJGtsN_Ko74x5qgzNoW82-bnUgL7K5AA>
+        fm2; bh=f0IAMoWcdtv9ToeZQDoNEujX/ZT2y+zDJGADLph1VQY=; b=ZcDr0YO1
+        gXPRf8TF31vpmM4B/HLHb1ZgTfJUbbFzYWyL9tOFRW3fUcA6IeVkDXFmybwiNRqu
+        fR015RQwdQ9z/EdkOOvtmT1xfvDjQKhuAqh0zGhufWBFgaE27QHOLAXLMyoeonRs
+        T2jS4TOvfMcSjZegRfgcyJI3xQT2YzeKi9zXZMU/wHSSv3T+gkcuv/nGoCQ3xPJN
+        vtgabDRWh5L32tmFippXK/d1C647gjAzLiWhHgF41RdPOnazoAiovs9s+7FMeFmV
+        uNW6cjjZnerH2nGJyOdTsqdWsYR6lT2AArJlSq8MKG/4duQ6PmO9nuW4h5henFsU
+        ZoNlZZ+u9mYNRw==
+X-ME-Sender: <xms:cgejXtXpzjeKCYiTbLkJowx6vZJrkT5dubcF1q-wMr_gVNBe-9ip6Q>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrhedugdekiecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgv
     ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedvleenucfrrghrrghmpehmrghi
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpeefgeenucfrrghrrghmpehmrghi
     lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:bAejXgRPbSkVWjwtc_0B1fnHisSnqwVw5akBMogeUf8lGQU6hC4Dlw>
-    <xmx:bAejXqEp4-l9o_ghcOONv1Qf265on5FWlltMKcq2kXHSVdsbD7RvYw>
-    <xmx:bAejXglpirrtWsgAKFMV2WrzScoJ1FNzRrW4ey0NQxHLbSr5TNO5wA>
-    <xmx:bAejXvM8Wn-zBHmavSNbpMYCHZvdRMEfteyLa1n_Kh0hJ3wiRgzSIYmmfSo>
+X-ME-Proxy: <xmx:cgejXlwCxMvH2ZmIyVPXP81ZqSXrBunzNI2RHxpf_QNg4dUh0fRdug>
+    <xmx:cgejXhdVCLQOYu-ImIMG7mXuyB7zfSvRq9u9pIkIxGx8t-i8en6_Jg>
+    <xmx:cgejXmdLA4yq6kcyG9D1QHmPxKoO-vMvfh14j0xYnw-NMsdUywH_Jg>
+    <xmx:cgejXiwHRmhW2R52M-YvTV2HokaRzO5jphjFm80mJ2u07d5_7JUXCZREbFI>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8FCBF328005E;
-        Fri, 24 Apr 2020 11:36:12 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 2399D328006B;
+        Fri, 24 Apr 2020 11:36:18 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -75,9 +75,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v2 36/91] drm/vc4: hvs: Boost the core clock during modeset
-Date:   Fri, 24 Apr 2020 17:34:17 +0200
-Message-Id: <679dca5ae8e93eb994bbbae63d77588d3c3bf2ec.1587742492.git-series.maxime@cerno.tech>
+Subject: [PATCH v2 40/91] drm/vc4: plane: Register all the planes at once
+Date:   Fri, 24 Apr 2020 17:34:21 +0200
+Message-Id: <beee55e47021192f983353b5fa3cbe535d56ea96.1587742492.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
 References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
@@ -88,94 +88,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to prevent timeouts and stalls in the pipeline, the core clock
-needs to be maxed at 500MHz during a modeset on the BCM2711.
+Instead of creating planes for each CRTC, we eventually want to create all
+the planes for each CRTCs.
+
+In order to make that more convenient, let's iterate on the CRTCs in the
+plane creation function instead of its caller.
 
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_drv.h |  2 ++
- drivers/gpu/drm/vc4/vc4_hvs.c |  9 +++++++++
- drivers/gpu/drm/vc4/vc4_kms.c |  7 +++++++
- 3 files changed, 18 insertions(+)
+ drivers/gpu/drm/vc4/vc4_drv.c   |  9 ++----
+ drivers/gpu/drm/vc4/vc4_drv.h   |  3 +--
+ drivers/gpu/drm/vc4/vc4_plane.c | 54 +++++++++++++++++-----------------
+ 3 files changed, 32 insertions(+), 34 deletions(-)
 
+diff --git a/drivers/gpu/drm/vc4/vc4_drv.c b/drivers/gpu/drm/vc4/vc4_drv.c
+index daf07a61a7b5..ed7893ee188a 100644
+--- a/drivers/gpu/drm/vc4/vc4_drv.c
++++ b/drivers/gpu/drm/vc4/vc4_drv.c
+@@ -250,7 +250,6 @@ static int vc4_drm_bind(struct device *dev)
+ {
+ 	struct platform_device *pdev = to_platform_device(dev);
+ 	struct drm_device *drm;
+-	struct drm_crtc *crtc;
+ 	struct vc4_dev *vc4;
+ 	struct device_node *node;
+ 	int ret = 0;
+@@ -289,11 +288,9 @@ static int vc4_drm_bind(struct device *dev)
+ 	if (ret)
+ 		goto gem_destroy;
+ 
+-	drm_for_each_crtc(crtc, drm) {
+-		ret = vc4_plane_create_additional_planes(drm, crtc);
+-		if (ret)
+-			continue;
+-	}
++	ret = vc4_plane_create_additional_planes(drm);
++	if (ret)
++		goto unbind_all;
+ 
+ 	drm_fb_helper_remove_conflicting_framebuffers(NULL, "vc4drmfb", false);
+ 
 diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
-index 7da417feff5a..4fd6f72dec56 100644
+index 0875d29a0cee..25466aa9dceb 100644
 --- a/drivers/gpu/drm/vc4/vc4_drv.h
 +++ b/drivers/gpu/drm/vc4/vc4_drv.h
-@@ -323,6 +323,8 @@ struct vc4_hvs {
- 	void __iomem *regs;
- 	u32 __iomem *dlist;
+@@ -855,8 +855,7 @@ int vc4_kms_load(struct drm_device *dev);
+ /* vc4_plane.c */
+ struct drm_plane *vc4_plane_init(struct drm_device *dev,
+ 				 enum drm_plane_type type);
+-int vc4_plane_create_additional_planes(struct drm_device *dev,
+-				       struct drm_crtc *crtc);
++int vc4_plane_create_additional_planes(struct drm_device *dev);
+ u32 vc4_plane_write_dlist(struct drm_plane *plane, u32 __iomem *dlist);
+ u32 vc4_plane_dlist_size(const struct drm_plane_state *state);
+ void vc4_plane_async_set_fb(struct drm_plane *plane,
+diff --git a/drivers/gpu/drm/vc4/vc4_plane.c b/drivers/gpu/drm/vc4/vc4_plane.c
+index 89d03605332e..824c188980b0 100644
+--- a/drivers/gpu/drm/vc4/vc4_plane.c
++++ b/drivers/gpu/drm/vc4/vc4_plane.c
+@@ -1372,39 +1372,41 @@ struct drm_plane *vc4_plane_init(struct drm_device *dev,
+ 	return plane;
+ }
  
-+	struct clk *core_clk;
-+
- 	/* Memory manager for CRTCs to allocate space in the display
- 	 * list.  Units are dwords.
- 	 */
-diff --git a/drivers/gpu/drm/vc4/vc4_hvs.c b/drivers/gpu/drm/vc4/vc4_hvs.c
-index 0fe4758de03a..f4942667355b 100644
---- a/drivers/gpu/drm/vc4/vc4_hvs.c
-+++ b/drivers/gpu/drm/vc4/vc4_hvs.c
-@@ -19,6 +19,7 @@
-  * each CRTC.
-  */
- 
-+#include <linux/clk.h>
- #include <linux/component.h>
- #include <linux/platform_device.h>
- 
-@@ -241,6 +242,14 @@ static int vc4_hvs_bind(struct device *dev, struct device *master, void *data)
- 	hvs->regset.regs = hvs_regs;
- 	hvs->regset.nregs = ARRAY_SIZE(hvs_regs);
- 
-+	if (hvs->hvs5) {
-+		hvs->core_clk = devm_clk_get(&pdev->dev, NULL);
-+		if (IS_ERR(hvs->core_clk)) {
-+			dev_err(&pdev->dev, "Couldn't get core clock\n");
-+			return PTR_ERR(hvs->core_clk);
-+		}
-+	}
-+
- 	if (!hvs->hvs5)
- 		hvs->dlist = hvs->regs + SCALER_DLIST_START;
- 	else
-diff --git a/drivers/gpu/drm/vc4/vc4_kms.c b/drivers/gpu/drm/vc4/vc4_kms.c
-index 71e7211a5fb9..851f0740b260 100644
---- a/drivers/gpu/drm/vc4/vc4_kms.c
-+++ b/drivers/gpu/drm/vc4/vc4_kms.c
-@@ -11,6 +11,8 @@
-  * crtc, HDMI encoder).
-  */
- 
-+#include <linux/clk.h>
-+
- #include <drm/drm_atomic.h>
- #include <drm/drm_atomic_helper.h>
- #include <drm/drm_crtc.h>
-@@ -149,6 +151,7 @@ vc4_atomic_complete_commit(struct drm_atomic_state *state)
+-int vc4_plane_create_additional_planes(struct drm_device *drm,
+-				       struct drm_crtc *crtc)
++int vc4_plane_create_additional_planes(struct drm_device *drm)
  {
- 	struct drm_device *dev = state->dev;
- 	struct vc4_dev *vc4 = to_vc4_dev(dev);
-+	struct vc4_hvs *hvs = vc4->hvs;
- 	struct vc4_crtc *vc4_crtc;
- 	int i;
+ 	struct drm_plane *cursor_plane;
++	struct drm_crtc *crtc;
+ 	unsigned int i;
  
-@@ -160,6 +163,8 @@ vc4_atomic_complete_commit(struct drm_atomic_state *state)
- 		vc4_hvs_mask_underrun(dev, vc4_crtc->channel);
+-	/* Set up some arbitrary number of planes.  We're not limited
+-	 * by a set number of physical registers, just the space in
+-	 * the HVS (16k) and how small an plane can be (28 bytes).
+-	 * However, each plane we set up takes up some memory, and
+-	 * increases the cost of looping over planes, which atomic
+-	 * modesetting does quite a bit.  As a result, we pick a
+-	 * modest number of planes to expose, that should hopefully
+-	 * still cover any sane usecase.
+-	 */
+-	for (i = 0; i < 8; i++) {
+-		struct drm_plane *plane =
+-			vc4_plane_init(drm, DRM_PLANE_TYPE_OVERLAY);
++	drm_for_each_crtc(crtc, drm) {
++		/* Set up some arbitrary number of planes.  We're not limited
++		 * by a set number of physical registers, just the space in
++		 * the HVS (16k) and how small an plane can be (28 bytes).
++		 * However, each plane we set up takes up some memory, and
++		 * increases the cost of looping over planes, which atomic
++		 * modesetting does quite a bit.  As a result, we pick a
++		 * modest number of planes to expose, that should hopefully
++		 * still cover any sane usecase.
++		 */
++		for (i = 0; i < 8; i++) {
++			struct drm_plane *plane =
++				vc4_plane_init(drm, DRM_PLANE_TYPE_OVERLAY);
+ 
+-		if (IS_ERR(plane))
+-			continue;
++			if (IS_ERR(plane))
++				continue;
+ 
+-		plane->possible_crtcs = drm_crtc_mask(crtc);
+-	}
++			plane->possible_crtcs = drm_crtc_mask(crtc);
++		}
+ 
+-	/* Set up the legacy cursor after overlay initialization,
+-	 * since we overlay planes on the CRTC in the order they were
+-	 * initialized.
+-	 */
+-	cursor_plane = vc4_plane_init(drm, DRM_PLANE_TYPE_CURSOR);
+-	if (!IS_ERR(cursor_plane)) {
+-		cursor_plane->possible_crtcs = drm_crtc_mask(crtc);
+-		crtc->cursor = cursor_plane;
++		/* Set up the legacy cursor after overlay initialization,
++		 * since we overlay planes on the CRTC in the order they were
++		 * initialized.
++		 */
++		cursor_plane = vc4_plane_init(drm, DRM_PLANE_TYPE_CURSOR);
++		if (!IS_ERR(cursor_plane)) {
++			cursor_plane->possible_crtcs = drm_crtc_mask(crtc);
++			crtc->cursor = cursor_plane;
++		}
  	}
  
-+	clk_set_rate(hvs->core_clk, 500000000);
-+
- 	drm_atomic_helper_wait_for_fences(dev, state, false);
- 
- 	drm_atomic_helper_wait_for_dependencies(state);
-@@ -182,6 +187,8 @@ vc4_atomic_complete_commit(struct drm_atomic_state *state)
- 
- 	drm_atomic_helper_commit_cleanup_done(state);
- 
-+	clk_set_rate(hvs->core_clk, 200000000);
-+
- 	drm_atomic_state_put(state);
- 
- 	up(&vc4->async_modeset);
+ 	return 0;
 -- 
 git-series 0.9.1
