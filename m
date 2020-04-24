@@ -2,136 +2,144 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B03C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D87C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAEB92075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:49:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587754164;
-	bh=vkjWNW1oICQEHI4zNCUePLvc/BFCB9ZHWb5Myn6P8+o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CVLJaw6TIU8Bo4UOvOecuPhUqFEC+YadV+gEbvjJpNRkhbiA15p/o3ei+T9qdmBgf
-	 adCnuWL8wApdF4gULVdILnIRFgKgauBLr/qZUfM4GqW0JjlTBwCiTuGnQnP2SqbXzm
-	 6qahQUqRpR9f24ZmbJVyuyZSyss/4Pow1QqtF0+o=
+	by mail.kernel.org (Postfix) with ESMTP id 3B2B22075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:49:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729198AbgDXStY (ORCPT
+        id S1729235AbgDXStd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 14:49:24 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:38323 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728943AbgDXStV (ORCPT
+        Fri, 24 Apr 2020 14:49:33 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:34102 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728943AbgDXStc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 14:49:21 -0400
-Received: by mail-pj1-f65.google.com with SMTP id t40so4226397pjb.3;
-        Fri, 24 Apr 2020 11:49:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/KdHtw0iNxBT1mFzOs+kCctxSiinEZ8vRaXskeLEpas=;
-        b=pdaOj6pEaDXTihKXkV73LUwSFoz8TyKEK6IG22e4ovvT2bJnJI1BCM7wwjfBZS1MGZ
-         IjeXc1RPO+T4jelk2RWNA6pZr3l17EqnyNprXCWEQiIYo1hltkw/RlzOkqbNLqfI0jRg
-         wTi4SaorJ02IVol8pZJel+kfUr55m+D04oEVKZPu7u3kGOLWVbG/aJ8cY88yCRygajX1
-         wJ4SSi+Y367FemwH6srOiR0tyArQaVWqbl5xZhDIgjtfq33t4CCDcfJkVKs0ggeqxIqd
-         WfXHNueca5EsdaC9eK97GMPa0gPoUm7NhNOPypt5hO54LH74fh+LKNEbf49vgtbJnZS+
-         04rA==
-X-Gm-Message-State: AGi0PubAhw311A9egTWKucMfESVaiCqjP2KOvwZIJrVcphEtTi/8Jema
-        tiBwCNWyAlE1grYE2ut2af0=
-X-Google-Smtp-Source: APiQypIy/NnmBc8N2fwBt1MHd/4L7BZFYNQtg6fsCXmGZgGhKnNZkb3oP0XC/BVldP8PcIiE8PGbIA==
-X-Received: by 2002:a17:902:8e8b:: with SMTP id bg11mr10147371plb.139.1587754160563;
-        Fri, 24 Apr 2020 11:49:20 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id 14sm6389640pfy.38.2020.04.24.11.49.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 11:49:18 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id AC5244096E; Fri, 24 Apr 2020 18:49:17 +0000 (UTC)
-From:   "Luis R. Rodriguez" <mcgrof@kernel.org>
-To:     gregkh@linuxfoundation.org
-Cc:     akpm@linux-foundation.org, josh@joshtriplett.org,
-        rishabhb@codeaurora.org, kubakici@wp.pl, maco@android.com,
-        david.brown@linaro.org, bjorn.andersson@linaro.org,
-        linux-wireless@vger.kernel.org, keescook@chromium.org,
-        shuah@kernel.org, mfuzzey@parkeon.com, zohar@linux.vnet.ibm.com,
-        dhowells@redhat.com, pali.rohar@gmail.com, tiwai@suse.de,
-        arend.vanspriel@broadcom.com, zajec5@gmail.com, nbroeking@me.com,
-        broonie@kernel.org, dmitry.torokhov@gmail.com, dwmw2@infradead.org,
-        torvalds@linux-foundation.org, Abhay_Salunke@dell.com,
-        jewalt@lgsinnovations.com, cantabile.desu@gmail.com, ast@fb.com,
-        andresx7@gmail.com, dan.rue@linaro.org, brendanhiggins@google.com,
-        yzaikin@google.com, sfr@canb.auug.org.au, rdunlap@infradead.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH v2 2/2] firmware_loader: move fw_fallback_config to a private kernel symbol namespace
-Date:   Fri, 24 Apr 2020 18:49:16 +0000
-Message-Id: <20200424184916.22843-2-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20200424184916.22843-1-mcgrof@kernel.org>
-References: <20200424184916.22843-1-mcgrof@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 24 Apr 2020 14:49:32 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jS3O9-0006cb-MJ; Fri, 24 Apr 2020 18:49:26 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     yhchuang@realtek.com, kvalo@codeaurora.org
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dejin Zheng <zhengdejin5@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 1/2] iopoll: Introduce read_poll_timeout_atomic macro
+Date:   Sat, 25 Apr 2020 02:49:14 +0800
+Message-Id: <20200424184918.30360-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200423063811.2636-1-kai.heng.feng@canonical.com>
+References: <20200423063811.2636-1-kai.heng.feng@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Chamberlain <mcgrof@kernel.org>
+Like read_poll_timeout, an atomic variant for multiple parameter read
+function can be useful.
 
-Take advantage of the new kernel symbol namespacing functionality, and
-export the fw_fallback_config symbol only to a new private firmware loader
-namespace. This would prevent misuses from other drivers and makes it clear
-the goal is to keep this private to the firmware loader only.
+Will be used by a later patch.
 
-It should also make it clearer for folks git grep'ing for users of
-the symbol that this exported symbol is private, and prevent future
-accidental removals of the exported symbol.
-
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 ---
- drivers/base/firmware_loader/fallback.c       | 3 +++
- drivers/base/firmware_loader/fallback_table.c | 2 +-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+v2:
+ - Cc linux-wireless.
 
-diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
-index 1e9c96e3ed63..d9ac7296205e 100644
---- a/drivers/base/firmware_loader/fallback.c
-+++ b/drivers/base/firmware_loader/fallback.c
-@@ -9,6 +9,7 @@
- #include <linux/umh.h>
- #include <linux/sysctl.h>
- #include <linux/vmalloc.h>
-+#include <linux/module.h>
+ include/linux/iopoll.h | 62 +++++++++++++++++++++++++++++-------------
+ 1 file changed, 43 insertions(+), 19 deletions(-)
+
+diff --git a/include/linux/iopoll.h b/include/linux/iopoll.h
+index cb20c733b15a..bc89ac625f26 100644
+--- a/include/linux/iopoll.h
++++ b/include/linux/iopoll.h
+@@ -57,6 +57,48 @@
+ 	(cond) ? 0 : -ETIMEDOUT; \
+ })
  
- #include "fallback.h"
- #include "firmware.h"
-@@ -17,6 +18,8 @@
-  * firmware fallback mechanism
-  */
- 
-+MODULE_IMPORT_NS(FIRMWARE_LOADER_PRIVATE);
++/**
++ * read_poll_timeout_atomic - Periodically poll an address until a condition is
++ * 				met or a timeout occurs
++ * @op: accessor function (takes @addr as its only argument)
++ * @addr: Address to poll
++ * @val: Variable to read the value into
++ * @cond: Break condition (usually involving @val)
++ * @delay_us: Time to udelay between reads in us (0 tight-loops).  Should
++ *            be less than ~10us since udelay is used (see
++ *            Documentation/timers/timers-howto.rst).
++ * @timeout_us: Timeout in us, 0 means never timeout
++ * @delay_before_read: if it is true, delay @delay_us before read.
++ *
++ * Returns 0 on success and -ETIMEDOUT upon a timeout. In either
++ * case, the last read value at @args is stored in @val.
++ *
++ * When available, you'll probably want to use one of the specialized
++ * macros defined below rather than this macro directly.
++ */
++#define read_poll_timeout_atomic(op, val, cond, delay_us, timeout_us, \
++					delay_before_read, args...) \
++({ \
++	u64 __timeout_us = (timeout_us); \
++	unsigned long __delay_us = (delay_us); \
++	ktime_t __timeout = ktime_add_us(ktime_get(), __timeout_us); \
++	if (delay_before_read && __delay_us) \
++		udelay(__delay_us); \
++	for (;;) { \
++		(val) = op(args); \
++		if (cond) \
++			break; \
++		if (__timeout_us && \
++		    ktime_compare(ktime_get(), __timeout) > 0) { \
++			(val) = op(args); \
++			break; \
++		} \
++		if (__delay_us) \
++			udelay(__delay_us); \
++	} \
++	(cond) ? 0 : -ETIMEDOUT; \
++})
 +
- extern struct firmware_fallback_config fw_fallback_config;
+ /**
+  * readx_poll_timeout - Periodically poll an address until a condition is met or a timeout occurs
+  * @op: accessor function (takes @addr as its only argument)
+@@ -96,25 +138,7 @@
+  * macros defined below rather than this macro directly.
+  */
+ #define readx_poll_timeout_atomic(op, addr, val, cond, delay_us, timeout_us) \
+-({ \
+-	u64 __timeout_us = (timeout_us); \
+-	unsigned long __delay_us = (delay_us); \
+-	ktime_t __timeout = ktime_add_us(ktime_get(), __timeout_us); \
+-	for (;;) { \
+-		(val) = op(addr); \
+-		if (cond) \
+-			break; \
+-		if (__timeout_us && \
+-		    ktime_compare(ktime_get(), __timeout) > 0) { \
+-			(val) = op(addr); \
+-			break; \
+-		} \
+-		if (__delay_us) \
+-			udelay(__delay_us);	\
+-	} \
+-	(cond) ? 0 : -ETIMEDOUT; \
+-})
+-
++	read_poll_timeout_atomic(op, val, cond, delay_us, timeout_us, false, addr)
  
- /* These getters are vetted to use int properly */
-diff --git a/drivers/base/firmware_loader/fallback_table.c b/drivers/base/firmware_loader/fallback_table.c
-index a182e318bd09..46a731dede6f 100644
---- a/drivers/base/firmware_loader/fallback_table.c
-+++ b/drivers/base/firmware_loader/fallback_table.c
-@@ -21,7 +21,7 @@ struct firmware_fallback_config fw_fallback_config = {
- 	.loading_timeout = 60,
- 	.old_timeout = 60,
- };
--EXPORT_SYMBOL_GPL(fw_fallback_config);
-+EXPORT_SYMBOL_NS_GPL(fw_fallback_config, FIRMWARE_LOADER_PRIVATE);
- 
- #ifdef CONFIG_SYSCTL
- struct ctl_table firmware_config_table[] = {
+ #define readb_poll_timeout(addr, val, cond, delay_us, timeout_us) \
+ 	readx_poll_timeout(readb, addr, val, cond, delay_us, timeout_us)
 -- 
-2.25.1
+2.17.1
 
