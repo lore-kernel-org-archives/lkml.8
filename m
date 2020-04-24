@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DCFC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 650E8C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 489F520776
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 391F920776
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:26:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587731156;
-	bh=OHarCE3z2KwdDvsY2ukKKecY1NjLvv7Vo6kyrUUarDw=;
+	s=default; t=1587731162;
+	bh=+n5qFEQ/Xd8deP6tXrs9aUSdt1QkCsV0ln5IyBLOgZ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ul3wjn3WeMXE1yy6w6WLVeVrU3PBkW8kAVUTH6EuUcnOSzEpsAS1CpAhM948WhDfh
-	 2NLCS4cy+1pQEgZGI3NSN3lxj7Jsa/4PKjMtmCmhk0jLRvoOg2yzMAXv/wQEBzSpjN
-	 bAJGOcSwEu1V3z3oyJtzC6p1jSEDyMCxYZrrz0TA=
+	b=FAn85wPAdvMPWQbdejQ+KF0Oo/WJ7fhCutHwBWwct8hPHVGrYCKNmdRJd0TKhzCN+
+	 pRxbnvh2fwcvK83h6rnAGPNb2EaeW3Hlgf6tgpRZiLwBU3XWAY0zvWwqOPeFvbnWgF
+	 q11xKt6Er5tlQ1Tp0vLzCr+CKdJb6rRSNyh1YC+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728732AbgDXMZv (ORCPT
+        id S1728742AbgDXM0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:25:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56144 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:26:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728628AbgDXMZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:25:07 -0400
+        id S1728620AbgDXMZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:25:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B020921473;
-        Fri, 24 Apr 2020 12:25:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA4A120776;
+        Fri, 24 Apr 2020 12:25:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587731106;
-        bh=OHarCE3z2KwdDvsY2ukKKecY1NjLvv7Vo6kyrUUarDw=;
+        s=default; t=1587731102;
+        bh=+n5qFEQ/Xd8deP6tXrs9aUSdt1QkCsV0ln5IyBLOgZ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kklnnEjH3JhgBl3A0amsTVWK08SORJbp3OkTqQ5HDmW9VA+Fqd6zsTwwDt5Sr/Pkb
-         SzDCKwjzaYOb6leUN1pWM7cb8lU6dU4yzsKetpJt9X2hdziPwYmTg5cM0+OLW5qHK1
-         y3Zr1JE1uDJZrRIeGNG4s/BUVU6bMej+Kd+O0W+M=
+        b=nuFmswgIF5W4pxMLh9NWtDizbOcx8Io4qtf+DWbDnUEIgtTighSZkQHa7PPMnPywD
+         9zkrT1eDJUyzzRXsEdnSG++w1bZNZWFyyTXGmP7btSa/rKRa5L+acBZyjPhRucxhGq
+         lTNlwDW82GGKkYLZHv/Hi2jCT9fbyLA5cgwdYrPw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Roy Spliet <nouveau@spliet.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.4 2/8] ALSA: hda: Keep the controller initialization even if no codecs found
-Date:   Fri, 24 Apr 2020 08:24:57 -0400
-Message-Id: <20200424122503.11046-2-sashal@kernel.org>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 13/13] hwmon: (jc42) Fix name to have no illegal characters
+Date:   Fri, 24 Apr 2020 08:24:46 -0400
+Message-Id: <20200424122447.10882-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200424122503.11046-1-sashal@kernel.org>
-References: <20200424122503.11046-1-sashal@kernel.org>
+In-Reply-To: <20200424122447.10882-1-sashal@kernel.org>
+References: <20200424122447.10882-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,69 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Sascha Hauer <s.hauer@pengutronix.de>
 
-[ Upstream commit 9479e75fca370a5220784f7596bf598c4dad0b9b ]
+[ Upstream commit c843b382e61b5f28a3d917712c69a344f632387c ]
 
-Currently, when the HD-audio controller driver doesn't detect any
-codecs, it tries to abort the probe.  But this abort happens at the
-delayed probe, i.e. the primary probe call already returned success,
-hence the driver is never unbound until user does so explicitly.
-As a result, it may leave the HD-audio device in the running state
-without the runtime PM.  More badly, if the device is a HD-audio bus
-that is tied with a GPU, GPU cannot reach to the full power down and
-consumes unnecessarily much power.
+The jc42 driver passes I2C client's name as hwmon device name. In case
+of device tree probed devices this ends up being part of the compatible
+string, "jc-42.4-temp". This name contains hyphens and the hwmon core
+doesn't like this:
 
-This patch changes the logic after no-codec situation; it continues
-probing without the further codec initialization but keep the
-controller driver running normally.
+jc42 2-0018: hwmon: 'jc-42.4-temp' is not a valid name attribute, please fix
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207043
-Tested-by: Roy Spliet <nouveau@spliet.org>
-Link: https://lore.kernel.org/r/20200413082034.25166-5-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+This changes the name to "jc42" which doesn't have any illegal
+characters.
+
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Link: https://lore.kernel.org/r/20200417092853.31206-1-s.hauer@pengutronix.de
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/hwmon/jc42.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index 0fa0c33660087..8bcf67fe84eb5 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -1817,7 +1817,7 @@ static int azx_first_init(struct azx *chip)
- 	/* codec detection */
- 	if (!azx_bus(chip)->codec_mask) {
- 		dev_err(card->dev, "no codecs found!\n");
--		return -ENODEV;
-+		/* keep running the rest for the runtime PM */
+diff --git a/drivers/hwmon/jc42.c b/drivers/hwmon/jc42.c
+index 0f1f6421845fd..85435e110ecd9 100644
+--- a/drivers/hwmon/jc42.c
++++ b/drivers/hwmon/jc42.c
+@@ -508,7 +508,7 @@ static int jc42_probe(struct i2c_client *client, const struct i2c_device_id *id)
  	}
+ 	data->config = config;
  
- 	if (azx_acquire_irq(chip, 0) < 0)
-@@ -2140,9 +2140,11 @@ static int azx_probe_continue(struct azx *chip)
- #endif
- 
- 	/* create codec instances */
--	err = azx_probe_codecs(chip, azx_max_codecs[chip->driver_type]);
--	if (err < 0)
--		goto out_free;
-+	if (bus->codec_mask) {
-+		err = azx_probe_codecs(chip, azx_max_codecs[chip->driver_type]);
-+		if (err < 0)
-+			goto out_free;
-+	}
- 
- #ifdef CONFIG_SND_HDA_PATCH_LOADER
- 	if (chip->fw) {
-@@ -2156,7 +2158,7 @@ static int azx_probe_continue(struct azx *chip)
- #endif
- 	}
- #endif
--	if ((probe_only[dev] & 1) == 0) {
-+	if (bus->codec_mask && !(probe_only[dev] & 1)) {
- 		err = azx_codec_configure(chip);
- 		if (err < 0)
- 			goto out_free;
+-	hwmon_dev = devm_hwmon_device_register_with_info(dev, client->name,
++	hwmon_dev = devm_hwmon_device_register_with_info(dev, "jc42",
+ 							 data, &jc42_chip_info,
+ 							 NULL);
+ 	return PTR_ERR_OR_ZERO(hwmon_dev);
 -- 
 2.20.1
 
