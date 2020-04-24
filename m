@@ -4,66 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E420C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3234C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0352120700
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:40:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB36C20700
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:40:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="ebLLrBJh";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="f+Wg3wvu"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="wLAisAiy";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pOPZ0yzo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729147AbgDXPkq (ORCPT
+        id S1729157AbgDXPkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:40:46 -0400
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:47567 "EHLO
+        Fri, 24 Apr 2020 11:40:51 -0400
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:41123 "EHLO
         wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728323AbgDXPfz (ORCPT
+        by vger.kernel.org with ESMTP id S1728286AbgDXPfu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:35:55 -0400
+        Fri, 24 Apr 2020 11:35:50 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id D96AE10EF;
-        Fri, 24 Apr 2020 11:35:53 -0400 (EDT)
+        by mailnew.west.internal (Postfix) with ESMTP id 6BD4CFE1;
+        Fri, 24 Apr 2020 11:35:48 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:35:54 -0400
+  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:35:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=H/2y1u+18pkIE
-        R5sI0A+gvL3htUncY5w9ZHNgfRxgqU=; b=ebLLrBJh8krPknOfeyfJbAgT3zERZ
-        /kzQTXf13Gt3sUPJDrxMsWDQbQ1Z08ZFhT/t8Ehj3ouNUwYiCPNxZW6YyddLWGqY
-        CiejB99bmXgPfAboHC2Gn1MhtCUAS4aWls7Y+rvb8uVvUCrHFoTI7GpJMiGwbHJq
-        1YDZsYykjfXTxQ3Wj0v65mnmTOOLv6aTfXIbWWowr6+I1lGfvpNbHsL9Si+DLVfs
-        xSMoXvYNKcCkG8OjZCQZE4tT0h3zGC1iz2+styGWBETGoWnqVNUbFAqDHNIYCKFa
-        k1FoqqhQGUFHua48jF+CjVUGHh7ItkeOojHkeX0FVjnKnwG4i9n4G5O1w==
+        :mime-version:content-transfer-encoding; s=fm2; bh=T8s1l/eHXLqjb
+        GsnVx39DFYxMbKPbICndFwvcL7Ds6w=; b=wLAisAiyYbfQvTkXuEAjdrG9KRY3n
+        Dx1T0/bwFiTD5syqI21YR3uM17XYdJMNsxVnR71QYAc2Twn8VJ4vZJFRBpTT145Y
+        qzOKYXKxYHTF1whDoyM0XKTLUQE3aqexzRJymxlPuyECyPlXWoKfht89TWQA5Vo2
+        bm9ZDtUQ8fQ7r2ns2RfGfSlEzdWu8j/2UyhfPygoeFShV8t1K9aGQrmu+EjOFZE6
+        gcs8KimMxl6aGF7u0kLDl/MO8j2BHTKIBc7qsBYM7L4gT0x4pLwzG7fuXtPHFeC9
+        8DPj7dP5Ijm8YoUXM60vb3fEs+/fmHiN8HiBfF9n/+xIM1oVojj0d9CUA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=H/2y1u+18pkIER5sI0A+gvL3htUncY5w9ZHNgfRxgqU=; b=f+Wg3wvu
-        ch3X4niSmTlHa77iu9G1VXfR6U3Tilw4rAjHrZevtyn3M41EFhYfQBjZqwIip6sZ
-        2bQCYhI/9GGmXa5OQCzPIEYI8fmFAqyly3sTBiZBqClRU3DuaHwHf+rTEHqefcAw
-        h5O4wWxJTysVQjucIqEZVODVrcNwEHxQjt1q6xw2EABO7f240BjmQtqs5ppXVlNG
-        dQAc5RM0PVwQoXQrppcSInQXcYU+U/MqA2yeCk0nbytZEqMtOCSlplYO9XCFMpul
-        wZd6qv98gn5Xw6+0Ce4K0Cpj2D4pn4EgyOxPuROZ8UPTVjWO5Ny1KYQw3nv6y25k
-        A8TiZoiDg0Wkeg==
-X-ME-Sender: <xms:WQejXliTFc1BSGyxiIbeTusUeFLfc5avvMbVSL-zyzjA8ycZtpSc-w>
+        fm2; bh=T8s1l/eHXLqjbGsnVx39DFYxMbKPbICndFwvcL7Ds6w=; b=pOPZ0yzo
+        24J+JQgsmWbxS0MVBJP4wG+RjLvju3QGR/XGGvO/D2qOCyLiPIUR21xAqVL2i8zJ
+        MaMXrW2txyNdTgtVoJd6+l/pV0uYrUo25x+mrITDf5ldoNsnLNIiKVto3ejXpwPb
+        AagXjCYYsEg8ZanUpIPXoMT5BdxGN9IJGzy35EmGgzs3zNnJDuujr7n39wqx+eyM
+        IB3Neozp8hamoJ/dZQkFbr+zW3LsI3hJpeFZ3Rl43UZzc2PH1q+VoKmUhxe7b43o
+        tW4lz49746NstfSyBz12Mg99tRYSn5X/3VoNuXSrYRds4CBXZtS5kbGRL8UsjEXU
+        85dYT35bH27oKg==
+X-ME-Sender: <xms:UwejXiDRznlAFI0n_NqNDzexDZqheNszetQYxag71Nk_0z5IM0_58Q>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrhedugdekiecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgv
     ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpeduleenucfrrghrrghmpehmrghi
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpeduheenucfrrghrrghmpehmrghi
     lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:WQejXkE_C9nWpvZxRCIo9KaATm_E73dm0boUEcndWofQEc-VJxKPVQ>
-    <xmx:WQejXkJwxpbmu7D9uEuvcLFh3ZY8HuPiA5N0PdN4TC4uETn2S7YQTg>
-    <xmx:WQejXiaLnOnwxUmChbpvU_lXtD6mueY9ZJpmgB_NQ5pXUGbIY87o5A>
-    <xmx:WQejXvG8qIcENaTpFtfoX_US2yQPBN5g3tp4SOODFYtvMJlwoso9lag2LME>
+X-ME-Proxy: <xmx:UwejXrBS3FV99XBQPVUUTXzmC_2ql3cE1yQy8du3JunjqxsEc1UAnA>
+    <xmx:UwejXhGUd_mhZryW0thiV8YDt5DFfn3W76APEq-FVdrqxxuI5gqksQ>
+    <xmx:UwejXq7kGMfoBdeZ-E6ZLyjokydUA1JEKIlBA4wut6rjN4lUidfSMg>
+    <xmx:VAejXvM4Zu5RzdfeQu5Yl3cnbX7fIsvSzp_l_fsxmW8CaaeSwMNZ_by93aE>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1C82D328005E;
-        Fri, 24 Apr 2020 11:35:53 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 91E9F3280067;
+        Fri, 24 Apr 2020 11:35:47 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -75,10 +75,11 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v2 22/91] reset: Move reset-simple header out of drivers/reset
-Date:   Fri, 24 Apr 2020 17:34:03 +0200
-Message-Id: <6f7651682a6dab539bd89c80704c8303bbae68bd.1587742492.git-series.maxime@cerno.tech>
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH v2 18/91] clk: bcm: rpi: Make the PLLB registration function return a clk_hw
+Date:   Fri, 24 Apr 2020 17:33:59 +0200
+Message-Id: <853ce991ff4dc9c8991091bff4ec6670bf14f583.1587742492.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
 References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
@@ -89,184 +90,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The reset-simple code can be useful for drivers outside of drivers/reset
-that have a few reset controls as part of their features. Let's move it to
-include/linux/reset.
+The raspberrypi_register_pllb has been returning an integer so far to
+notify whether the functions has exited successfully or not.
 
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
+However, the OF provider functions in the clock framework require access to
+the clk_hw structure so that we can expose those clocks to device tree
+consumers.
+
+Since we'll want that for the future clocks, let's return a clk_hw pointer
+instead of the return code.
+
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: linux-clk@vger.kernel.org
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/reset/reset-simple.c        |  3 +--
- drivers/reset/reset-simple.h        | 41 +------------------------------
- drivers/reset/reset-socfpga.c       |  3 +--
- drivers/reset/reset-sunxi.c         |  3 +--
- drivers/reset/reset-uniphier-glue.c |  3 +--
- include/linux/reset/reset-simple.h  | 41 ++++++++++++++++++++++++++++++-
- 6 files changed, 45 insertions(+), 49 deletions(-)
- delete mode 100644 drivers/reset/reset-simple.h
- create mode 100644 include/linux/reset/reset-simple.h
+ drivers/clk/bcm/clk-raspberrypi.c | 40 +++++++++++++++++---------------
+ 1 file changed, 22 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
-index 067e7e7b34f1..c854aa351640 100644
---- a/drivers/reset/reset-simple.c
-+++ b/drivers/reset/reset-simple.c
-@@ -18,10 +18,9 @@
- #include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/reset-controller.h>
-+#include <linux/reset/reset-simple.h>
- #include <linux/spinlock.h>
+diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-raspberrypi.c
+index 8c88d2ea1d67..677d7f3e8d2e 100644
+--- a/drivers/clk/bcm/clk-raspberrypi.c
++++ b/drivers/clk/bcm/clk-raspberrypi.c
+@@ -190,7 +190,7 @@ static const struct clk_ops raspberrypi_firmware_pll_clk_ops = {
+ 	.determine_rate = raspberrypi_pll_determine_rate,
+ };
  
--#include "reset-simple.h"
--
- static inline struct reset_simple_data *
- to_reset_simple_data(struct reset_controller_dev *rcdev)
+-static int raspberrypi_register_pllb(struct raspberrypi_clk *rpi)
++static struct clk_hw *raspberrypi_register_pllb(struct raspberrypi_clk *rpi)
  {
-diff --git a/drivers/reset/reset-simple.h b/drivers/reset/reset-simple.h
-deleted file mode 100644
-index 08ccb25a55e6..000000000000
---- a/drivers/reset/reset-simple.h
-+++ /dev/null
-@@ -1,41 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-or-later */
--/*
-- * Simple Reset Controller ops
-- *
-- * Based on Allwinner SoCs Reset Controller driver
-- *
-- * Copyright 2013 Maxime Ripard
-- *
-- * Maxime Ripard <maxime.ripard@free-electrons.com>
-- */
--
--#ifndef __RESET_SIMPLE_H__
--#define __RESET_SIMPLE_H__
--
--#include <linux/io.h>
--#include <linux/reset-controller.h>
--#include <linux/spinlock.h>
--
--/**
-- * struct reset_simple_data - driver data for simple reset controllers
-- * @lock: spinlock to protect registers during read-modify-write cycles
-- * @membase: memory mapped I/O register range
-- * @rcdev: reset controller device base structure
-- * @active_low: if true, bits are cleared to assert the reset. Otherwise, bits
-- *              are set to assert the reset. Note that this says nothing about
-- *              the voltage level of the actual reset line.
-- * @status_active_low: if true, bits read back as cleared while the reset is
-- *                     asserted. Otherwise, bits read back as set while the
-- *                     reset is asserted.
-- */
--struct reset_simple_data {
--	spinlock_t			lock;
--	void __iomem			*membase;
--	struct reset_controller_dev	rcdev;
--	bool				active_low;
--	bool				status_active_low;
--};
--
--extern const struct reset_control_ops reset_simple_ops;
--
--#endif /* __RESET_SIMPLE_H__ */
-diff --git a/drivers/reset/reset-socfpga.c b/drivers/reset/reset-socfpga.c
-index 96953992c2bb..bdd984296196 100644
---- a/drivers/reset/reset-socfpga.c
-+++ b/drivers/reset/reset-socfpga.c
-@@ -11,13 +11,12 @@
- #include <linux/of_address.h>
- #include <linux/platform_device.h>
- #include <linux/reset-controller.h>
-+#include <linux/reset/reset-simple.h>
- #include <linux/reset/socfpga.h>
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- #include <linux/types.h>
+ 	struct raspberrypi_clk_data *data;
+ 	struct clk_init_data init = {};
+@@ -199,7 +199,7 @@ static int raspberrypi_register_pllb(struct raspberrypi_clk *rpi)
  
--#include "reset-simple.h"
--
- #define SOCFPGA_NR_BANKS	8
+ 	data = devm_kzalloc(rpi->dev, sizeof(*data), GFP_KERNEL);
+ 	if (!data)
+-		return -ENOMEM;
++		return ERR_PTR(-ENOMEM);
+ 	data->rpi = rpi;
+ 	data->id = RPI_FIRMWARE_ARM_CLK_ID;
  
- static int a10_reset_init(struct device_node *np)
-diff --git a/drivers/reset/reset-sunxi.c b/drivers/reset/reset-sunxi.c
-index e7f169e57bcf..e752594b6971 100644
---- a/drivers/reset/reset-sunxi.c
-+++ b/drivers/reset/reset-sunxi.c
-@@ -14,13 +14,12 @@
- #include <linux/of_address.h>
- #include <linux/platform_device.h>
- #include <linux/reset-controller.h>
-+#include <linux/reset/reset-simple.h>
- #include <linux/reset/sunxi.h>
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- #include <linux/types.h>
+@@ -217,7 +217,7 @@ static int raspberrypi_register_pllb(struct raspberrypi_clk *rpi)
+ 	if (ret) {
+ 		dev_err(rpi->dev, "Failed to get %s min freq: %d\n",
+ 			init.name, ret);
+-		return ret;
++		return ERR_PTR(ret);
+ 	}
  
--#include "reset-simple.h"
--
- static int sunxi_reset_init(struct device_node *np)
+ 	ret = raspberrypi_clock_property(rpi->firmware, data,
+@@ -226,13 +226,13 @@ static int raspberrypi_register_pllb(struct raspberrypi_clk *rpi)
+ 	if (ret) {
+ 		dev_err(rpi->dev, "Failed to get %s max freq: %d\n",
+ 			init.name, ret);
+-		return ret;
++		return ERR_PTR(ret);
+ 	}
+ 
+ 	if (!min_rate || !max_rate) {
+ 		dev_err(rpi->dev, "Unexpected frequency range: min %u, max %u\n",
+ 			min_rate, max_rate);
+-		return -EINVAL;
++		return ERR_PTR(-EINVAL);
+ 	}
+ 
+ 	dev_info(rpi->dev, "CPU frequency range: min %u, max %u\n",
+@@ -243,7 +243,11 @@ static int raspberrypi_register_pllb(struct raspberrypi_clk *rpi)
+ 
+ 	data->hw.init = &init;
+ 
+-	return devm_clk_hw_register(rpi->dev, &data->hw);
++	ret = devm_clk_hw_register(rpi->dev, &data->hw);
++	if (ret)
++		return ERR_PTR(ret);
++
++	return &data->hw;
+ }
+ 
+ static struct clk_fixed_factor raspberrypi_clk_pllb_arm = {
+@@ -258,14 +262,14 @@ static struct clk_fixed_factor raspberrypi_clk_pllb_arm = {
+ 	},
+ };
+ 
+-static int raspberrypi_register_pllb_arm(struct raspberrypi_clk *rpi)
++static struct clk_hw *raspberrypi_register_pllb_arm(struct raspberrypi_clk *rpi)
  {
- 	struct reset_simple_data *data;
-diff --git a/drivers/reset/reset-uniphier-glue.c b/drivers/reset/reset-uniphier-glue.c
-index 2b188b3bb69a..027990b79f61 100644
---- a/drivers/reset/reset-uniphier-glue.c
-+++ b/drivers/reset/reset-uniphier-glue.c
-@@ -9,8 +9,7 @@
- #include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/reset.h>
--
--#include "reset-simple.h"
-+#include <linux/reset/reset-simple.h>
+ 	int ret;
  
- #define MAX_CLKS	2
- #define MAX_RSTS	2
-diff --git a/include/linux/reset/reset-simple.h b/include/linux/reset/reset-simple.h
-new file mode 100644
-index 000000000000..08ccb25a55e6
---- /dev/null
-+++ b/include/linux/reset/reset-simple.h
-@@ -0,0 +1,41 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Simple Reset Controller ops
-+ *
-+ * Based on Allwinner SoCs Reset Controller driver
-+ *
-+ * Copyright 2013 Maxime Ripard
-+ *
-+ * Maxime Ripard <maxime.ripard@free-electrons.com>
-+ */
-+
-+#ifndef __RESET_SIMPLE_H__
-+#define __RESET_SIMPLE_H__
-+
-+#include <linux/io.h>
-+#include <linux/reset-controller.h>
-+#include <linux/spinlock.h>
-+
-+/**
-+ * struct reset_simple_data - driver data for simple reset controllers
-+ * @lock: spinlock to protect registers during read-modify-write cycles
-+ * @membase: memory mapped I/O register range
-+ * @rcdev: reset controller device base structure
-+ * @active_low: if true, bits are cleared to assert the reset. Otherwise, bits
-+ *              are set to assert the reset. Note that this says nothing about
-+ *              the voltage level of the actual reset line.
-+ * @status_active_low: if true, bits read back as cleared while the reset is
-+ *                     asserted. Otherwise, bits read back as set while the
-+ *                     reset is asserted.
-+ */
-+struct reset_simple_data {
-+	spinlock_t			lock;
-+	void __iomem			*membase;
-+	struct reset_controller_dev	rcdev;
-+	bool				active_low;
-+	bool				status_active_low;
-+};
-+
-+extern const struct reset_control_ops reset_simple_ops;
-+
-+#endif /* __RESET_SIMPLE_H__ */
+ 	ret = devm_clk_hw_register(rpi->dev, &raspberrypi_clk_pllb_arm.hw);
+ 	if (ret) {
+ 		dev_err(rpi->dev, "Failed to initialize pllb_arm\n");
+-		return ret;
++		return ERR_PTR(ret);
+ 	}
+ 
+ 	ret = devm_clk_hw_register_clkdev(rpi->dev,
+@@ -273,10 +277,10 @@ static int raspberrypi_register_pllb_arm(struct raspberrypi_clk *rpi)
+ 					  NULL, "cpu0");
+ 	if (ret) {
+ 		dev_err(rpi->dev, "Failed to initialize clkdev\n");
+-		return ret;
++		return ERR_PTR(ret);
+ 	}
+ 
+-	return 0;
++	return &raspberrypi_clk_pllb_arm.hw;
+ }
+ 
+ static int raspberrypi_clk_probe(struct platform_device *pdev)
+@@ -285,7 +289,7 @@ static int raspberrypi_clk_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct rpi_firmware *firmware;
+ 	struct raspberrypi_clk *rpi;
+-	int ret;
++	struct clk_hw *hw;
+ 
+ 	/*
+ 	 * We can be probed either through the an old-fashioned
+@@ -314,15 +318,15 @@ static int raspberrypi_clk_probe(struct platform_device *pdev)
+ 	rpi->firmware = firmware;
+ 	platform_set_drvdata(pdev, rpi);
+ 
+-	ret = raspberrypi_register_pllb(rpi);
+-	if (ret) {
+-		dev_err(dev, "Failed to initialize pllb, %d\n", ret);
+-		return ret;
++	hw = raspberrypi_register_pllb(rpi);
++	if (IS_ERR(hw)) {
++		dev_err(dev, "Failed to initialize pllb, %ld\n", PTR_ERR(hw));
++		return PTR_ERR(hw);
+ 	}
+ 
+-	ret = raspberrypi_register_pllb_arm(rpi);
+-	if (ret)
+-		return ret;
++	hw = raspberrypi_register_pllb_arm(rpi);
++	if (IS_ERR(hw))
++		return PTR_ERR(hw);
+ 
+ 	rpi->cpufreq = platform_device_register_data(dev, "raspberrypi-cpufreq",
+ 						     -1, NULL, 0);
 -- 
 git-series 0.9.1
