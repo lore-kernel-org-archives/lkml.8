@@ -2,220 +2,160 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DF0C55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E4EC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 972F8206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B25EB206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:42:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="YOpBtwOx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S+Ad0MHs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbgDXQli (ORCPT
+        id S1728334AbgDXQmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 12:41:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35464 "EHLO
+        Fri, 24 Apr 2020 12:42:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbgDXQli (ORCPT
+        with ESMTP id S1726698AbgDXQmP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 12:41:38 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A24BCC09B046
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 09:41:36 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id p13so4946618qvt.12
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 09:41:36 -0700 (PDT)
+        Fri, 24 Apr 2020 12:42:15 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A225C09B046;
+        Fri, 24 Apr 2020 09:42:15 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id m67so10739953qke.12;
+        Fri, 24 Apr 2020 09:42:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=LO0jH7vd93rBwmid0ByKq3myZgKzrPDn68z/12qXZxQ=;
-        b=YOpBtwOx+Koq95Zm/Y4e4xnLHU8ppj1HeeDN/8tt+uOx1D+aPJZ+EpTI9+caN77RKD
-         e2Mbjzv8tRVhAv2g2zNslAESwFghWb0ZxqXD74EUtbttZ8ypZElUJn0dLzcP+z3OFk1o
-         ZxPsRZ1Z9YPbvFognx9hmhFuWKetAAyrpdfAG5rr70s7hGmX5uMlIrsfwMBlVGfl7nYN
-         MCyRvaEZFAfIJOB8G4y2G+Uo1iH/0k1vuf46iW2G6eyeCWgDZk0BV1kUcpW68awFkTnu
-         Ie4GJ8vWM2fR/OBRDWHhCcDOlN8WeKOzhhi57HSEDxXn3JUI2J2K2PH+M6nmyknXicJq
-         47rA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=5wf3CVS0VYQwb3ndPDAJj/ZT3uZl8XHETdHh1GRJh/Y=;
+        b=S+Ad0MHsGpxbYZqYc24itjDPDngEcvWVqvUdZ1FY9amJF+70j1ebE0WZw8Y9TFXI+Z
+         blAfnCYu1QOiol7hJxN4/iNvXsCHG3BXYB2IzmLBA42z/URVpfn8tEiENveKV0wx7hk0
+         w5Uep0sZLV6fqCScGGnWDqFMc1blPMLj3BqJClamhxFVXlfCWc2LSmofBmZpC/xgs8Gw
+         Uo69sydjS5gQs6it+20uzrtNCKDi/Ys98/QfcUKQKGzesNMH7geKDzWdmLdQmvhgrS+P
+         NsLeXzBx+puqhNSOpQPCY65PG0IghUGXmbzwSMNyfr+FSKPWUP0RoPHYaaqbJ3cca6Wk
+         WYjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=LO0jH7vd93rBwmid0ByKq3myZgKzrPDn68z/12qXZxQ=;
-        b=X4eALWpCa/9xYaUXC7OgmFkLTlqBxpf9mYxAf6ZO/hmsNjkxv1a64gc3C6FQF9HX7F
-         /PI0l2ZaGxqD+Oe33rq4u5zbSkgf1ffUL4U8T9QSU8+//0xa8uwXVHYUYi3HjAn/bQX5
-         Jom2TygRa/AN7XUp5YXlTVDxzZTQ1p6wewBbEscz5bA/3rxPRpxThqV06ig9YGD1/+K8
-         ay0Pwi1cEZ69SuPHjx15g7IahEgiL1AhcOhs33LNsUkxwkVdxlNpPPdWhrb32C6bKaBX
-         3YEC5+nK5UiHQRkDa3x+nDS/hnIbGTPnB45SILcKZGGreAeYMeKehlghZ5fw2YAydOGI
-         J4BA==
-X-Gm-Message-State: AGi0PubA80IgXmlYewZPfpztCsDBDY3So82rvtZX+d751bXYlNzsoXIj
-        OfH2MhuMu6UxJ5/9AGowOxtzQg==
-X-Google-Smtp-Source: APiQypKFLaGrRxdkVHj0FWYqdzE8CBXdMAk1d593LTm3IOKBHE5GBObc5A3ugtNe5/lwPMpAfkwzhw==
-X-Received: by 2002:a0c:facb:: with SMTP id p11mr10331029qvo.17.1587746495801;
-        Fri, 24 Apr 2020 09:41:35 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id w79sm4071443qkb.97.2020.04.24.09.41.34
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 Apr 2020 09:41:35 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH 1/2] mm, slab: Revert "extend slab/shrink to shrink all
- memcg caches"
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20200424151225.10966-1-longman@redhat.com>
-Date:   Fri, 24 Apr 2020 12:41:34 -0400
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <23B286D4-831B-4788-95BA-438C88BB4EB0@lca.pw>
-References: <20200424151225.10966-1-longman@redhat.com>
-To:     Waiman Long <longman@redhat.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5wf3CVS0VYQwb3ndPDAJj/ZT3uZl8XHETdHh1GRJh/Y=;
+        b=mtfcsIRZU8Eb/uymVydPDZFzaoiP7/gvIGIAoVVzzODbeO8uQfOp8h6nwcz4oMOnR2
+         cOtFGk5v2Shn4eb6RtRi68Hlih2L8Xadr9I4ItQZxI0a2BuJAAp5AY97jXEGUSN9kmth
+         tOxj48v16vailGeU/ajTWDvy80rnh0wpH8j8iDpP6P5zNmvQ8l9c20IyUqKIItmeUMV/
+         F3vAfihmJaT8dB0hwbP3TVNKOW3jCfh+E8ujr2kS7oP4Dy8qDjswm1NdrA8AO/+EJFsK
+         ctMb0KLWk1ai8GRU2YaFAXa9yPoQYWizOqSIKKbnu1gNdeR2VhXabkw5Q/hVLhFJ9tWb
+         DLtg==
+X-Gm-Message-State: AGi0PuYnTt7TQppoNakCnxulTqU6/0s9EAEGfInkCb0LaebDZSNogffb
+        Lnj38rlP60XkmhkZJwC6WKD+lI5hthgqUw==
+X-Google-Smtp-Source: APiQypKOV8hO1j2rVVAZYGqDuc8jDrPV+GuaYN5HTPNPESA+l0Nr3y0rMLbxwZutxW/qdlqq1wZRaw==
+X-Received: by 2002:a37:a841:: with SMTP id r62mr9610271qke.135.1587746534483;
+        Fri, 24 Apr 2020 09:42:14 -0700 (PDT)
+Received: from icarus (072-189-064-225.res.spectrum.com. [72.189.64.225])
+        by smtp.gmail.com with ESMTPSA id j9sm3986827qkk.99.2020.04.24.09.42.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Apr 2020 09:42:13 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 12:42:00 -0400
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Lukas Wunner <lukas@wunner.de>,
+        Syed Nayyar Waris <syednwaris@gmail.com>,
+        akpm@linux-foundation.org, arnd@arndb.de,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] bitops: Introduce the the for_each_set_clump macro
+Message-ID: <20200424163904.GA7742@icarus>
+References: <20200424122521.GA5552@syed>
+ <20200424141037.ersebbfe7xls37be@wunner.de>
+ <CACG_h5prcXVdk6ecn2WoT1jas3K6UF+KCrxAM9u4_ZLSyPKCEA@mail.gmail.com>
+ <20200424150058.xadjxaga3csh3br6@wunner.de>
+ <20200424150828.GA5034@icarus>
+ <20200424163410.GD185537@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="7ZAtKRhVyVSsbBD2"
+Content-Disposition: inline
+In-Reply-To: <20200424163410.GD185537@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--7ZAtKRhVyVSsbBD2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Apr 24, 2020, at 11:12 AM, Waiman Long <longman@redhat.com> wrote:
+On Fri, Apr 24, 2020 at 07:34:10PM +0300, Andy Shevchenko wrote:
+> On Fri, Apr 24, 2020 at 11:09:26AM -0400, William Breathitt Gray wrote:
+> > On Fri, Apr 24, 2020 at 05:00:58PM +0200, Lukas Wunner wrote:
+> > > On Fri, Apr 24, 2020 at 08:22:38PM +0530, Syed Nayyar Waris wrote:
+> > > > On Fri, Apr 24, 2020 at 7:40 PM Lukas Wunner <lukas@wunner.de> wrot=
+e:
+> > > > > On Fri, Apr 24, 2020 at 05:55:21PM +0530, Syed Nayyar Waris wrote:
 >=20
-> When the slub shrink sysfs file is written into, the function call
-> sequence is as follows:
+> ...
 >=20
->  kernfs_fop_write
->    =3D> slab_attr_store
->      =3D> shrink_store
->        =3D> kmem_cache_shrink_all
+> > > > So, this function preserves the behaviour of earlier
+> > > > bitmap_set_value8() function and also adds extra functionality to
+> > > > that.
+> > >=20
+> > > Please leave drivers as is which use exclusively 8-bit accesses,
+> > > e.g. gpio-max3191x.c and gpio-74x164.c.  I'm fearing a performance
+> > > regression if your new generic variant is used.  They work perfectly
+> > > fine the way they are and I don't see any benefit this series may have
+> > > for them.
+> > >=20
+> > > If there are other drivers which benefit from the flexibility of your
+> > > generic variant then I'm not opposed to changing those.
 >=20
-> It turns out that doing a memcg cache scan in kmem_cache_shrink_all()
-> is redundant as the same memcg cache scan is being done in
-> slab_attr_store(). So revert the commit 04f768a39d55 ("mm, slab: =
-extend
-> slab/shrink to shrink all memcg caches") except the documentation =
-change
-> which is still valid.
-
-BTW, currently, do,
-
-# echo 1 > /sys/kernel/slab/fs_cache/shrink
-
-would crash the kernel stack probably due to large amount of memcg =
-caches.
-
- I am still figuring out if the above commit 04f768a39d55 is the =
-culprit.
-
-[ 7938.979589][T106403] Kernel panic - not syncing: stack-protector: =
-Kernel stack is corrupted in: __kmem_cache_create+0x7f8/0x800
-[ 7938.979640][T106403] CPU: 80 PID: 106403 Comm: kworker/80:2 Not =
-tainted 5.7.0-rc2-next-20200424 #5
-[ 7938.979670][T106403] Workqueue: memcg_kmem_cache =
-memcg_kmem_cache_create_func
-[ 7938.979708][T106403] Call Trace:
-[ 7938.979745][T106403] [c000200012e0f880] [c000000000716498] =
-dump_stack+0xfc/0x174 (unreliable)
-[ 7938.979789][T106403] [c000200012e0f8d0] [c00000000010d7d0] =
-panic+0x224/0x4d4
-[ 7938.979816][T106403] [c000200012e0f970] [c00000000010d05c] =
-__stack_chk_fail+0x2c/0x30
-[ 7938.979865][T106403] [c000200012e0f9d0] [c0000000004b1fb8] =
-__kmem_cache_create+0x7f8/0x800
-[ 7938.979914][T106403] [c000200012e0faf0] [4320383d35334320] =
-0x4320383d35334320
-
+> > We can leave of course bitmap_set_value8 alone, but for 8-bit values the
+> > difference in latency I suspect is primarily due to the conditional test
+> > for the word boundaries. This latency is surely overshadowed by the I/O
+> > latency of the GPIO drivers, so I don't think there's much harm in
+> > changing those to use the generic function when the bottleneck will not
+> > be due to the bitmap_set_value/bitmap_get_value operations.
 >=20
-> Signed-off-by: Waiman Long <longman@redhat.com>
-> ---
-> mm/slab.h        |  1 -
-> mm/slab_common.c | 37 -------------------------------------
-> mm/slub.c        |  2 +-
-> 3 files changed, 1 insertion(+), 39 deletions(-)
+> Okay, how many new (non-8-bit) users this will target?
 >=20
-> diff --git a/mm/slab.h b/mm/slab.h
-> index 207c83ef6e06..0937cb2ae8aa 100644
-> --- a/mm/slab.h
-> +++ b/mm/slab.h
-> @@ -237,7 +237,6 @@ int __kmem_cache_shrink(struct kmem_cache *);
-> void __kmemcg_cache_deactivate(struct kmem_cache *s);
-> void __kmemcg_cache_deactivate_after_rcu(struct kmem_cache *s);
-> void slab_kmem_cache_release(struct kmem_cache *);
-> -void kmem_cache_shrink_all(struct kmem_cache *s);
->=20
-> struct seq_file;
-> struct file;
-> diff --git a/mm/slab_common.c b/mm/slab_common.c
-> index 23c7500eea7d..2e367ab8c15c 100644
-> --- a/mm/slab_common.c
-> +++ b/mm/slab_common.c
-> @@ -995,43 +995,6 @@ int kmem_cache_shrink(struct kmem_cache *cachep)
-> }
-> EXPORT_SYMBOL(kmem_cache_shrink);
->=20
-> -/**
-> - * kmem_cache_shrink_all - shrink a cache and all memcg caches for =
-root cache
-> - * @s: The cache pointer
-> - */
-> -void kmem_cache_shrink_all(struct kmem_cache *s)
-> -{
-> -	struct kmem_cache *c;
-> -
-> -	if (!IS_ENABLED(CONFIG_MEMCG_KMEM) || !is_root_cache(s)) {
-> -		kmem_cache_shrink(s);
-> -		return;
-> -	}
-> -
-> -	get_online_cpus();
-> -	get_online_mems();
-> -	kasan_cache_shrink(s);
-> -	__kmem_cache_shrink(s);
-> -
-> -	/*
-> -	 * We have to take the slab_mutex to protect from the memcg list
-> -	 * modification.
-> -	 */
-> -	mutex_lock(&slab_mutex);
-> -	for_each_memcg_cache(c, s) {
-> -		/*
-> -		 * Don't need to shrink deactivated memcg caches.
-> -		 */
-> -		if (s->flags & SLAB_DEACTIVATED)
-> -			continue;
-> -		kasan_cache_shrink(c);
-> -		__kmem_cache_shrink(c);
-> -	}
-> -	mutex_unlock(&slab_mutex);
-> -	put_online_mems();
-> -	put_online_cpus();
-> -}
-> -
-> bool slab_is_available(void)
-> {
-> 	return slab_state >=3D UP;
-> diff --git a/mm/slub.c b/mm/slub.c
-> index 9bf44955c4f1..183ccc364ccf 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -5343,7 +5343,7 @@ static ssize_t shrink_store(struct kmem_cache =
-*s,
-> 			const char *buf, size_t length)
-> {
-> 	if (buf[0] =3D=3D '1')
-> -		kmem_cache_shrink_all(s);
-> +		kmem_cache_shrink(s);
-> 	else
-> 		return -EINVAL;
-> 	return length;
 > --=20
-> 2.18.1
->=20
->=20
+> With Best Regards,
+> Andy Shevchenko
 
+Within this patchset the only non-8-bit users are gpio-thunderx and
+gpio-xilinix. The gpio-xilinx has configurable port widths so in some
+instances it can behave like the 8-bit users, but not always.
+
+If you want to keep the existing for_each_set_clump8 and related
+functions, ignore [PATCH 3/6] and [PATCH 4/6]. That should allow this
+patchset to be just an introduction of the new generic functions without
+affecting the existing 8-bit users.
+
+William Breathitt Gray
+
+--7ZAtKRhVyVSsbBD2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl6jFtgACgkQhvpINdm7
+VJJDLQ//dC8JJyJuTyByjULnK5tnjcifhON861BfrOYqbQu20etmMZFIFYkAnre4
+7fBxjh7tSk05AecOKxEG6va+XybbFoDuMEVftcIJ/FGf69Gw4ml6lD2PPP/HFiJJ
+jh0BnBIwP1B+gbJYtGnW5aFWZWPYkBRbSmN4QEn5TQ5x06mCCxdlSIAh2jPpnlZD
+9P67mVq1m59i8/ZcEG2YD8oNwK6WVYB0wYvbO42ixVAJfAmfjD4o0/V+8Lt2K4Gs
+sPEVpwJMfxBbLJDYFaQh+CY+32Acujkfo+CwqorKgMghNciLrrH3jwfGPv1vUvL4
+/7v26sjRraruBlHMAakvzeV2o5BCyIaUxEX/zXMm7OgLOes7unLpFtrf1PkDBEP0
+H/QUQUWomI5Qq2HTjFzMl2zj2ohVQjFdMpLyFZpssgpbOjdO3DXWuLqDMs5Amzp3
+4ATQvbwdNwHRMoZp1fs1aCcE0UGXDKH+lc4+yLH0tmVHX+uC0x91D0Pdl2epR+k6
+JD86YfHcN9TAG1x35KiA2V3F/2MaPwydqjaGLi7TaGYxjFEV+kLWcT1qjhUrVlCL
+ifgrvaI1TfPpYDi0CgsxQFiD6NXGH8CUIK3Y9fB8vMn/qSwuSCCGQSeDfsVRTk9k
+YHS7FpJYHJ81HVj3N3UI7XoM+wCvkgrp5X3bVeePTbykiA8EruQ=
+=6E0z
+-----END PGP SIGNATURE-----
+
+--7ZAtKRhVyVSsbBD2--
