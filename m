@@ -2,98 +2,121 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DA2C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA4BC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 956462098B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 338D72098B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:34:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jCacVM2F"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="l3ZW+OBc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbgDXUcq (ORCPT
+        id S1726181AbgDXUew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 16:32:46 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34702 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726027AbgDXUcq (ORCPT
+        Fri, 24 Apr 2020 16:34:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44432 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbgDXUeu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 16:32:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587760365;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=h1X0YGiakx0c7C8Tvxw3Lw8N5F4IF1B+B1haaP9Xeu0=;
-        b=jCacVM2FJK9HOccYoCL1y6oWpCpZwKAY1XqL4raEbSPm0N8YRSUZ6PDcrh7wlGPx3bqh2s
-        o5WMI2Q5c8tWIctqWV7xaE3iN0hoq0U/3b4qOfsRMAhhTRkmNekQpF6TGIzX/gzCA0hLNJ
-        t64bNqAcyK4hdL0tKywn3lj+dbZJYR0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-307-G7VY4VIwOUajk3m8D9r-Hw-1; Fri, 24 Apr 2020 16:32:36 -0400
-X-MC-Unique: G7VY4VIwOUajk3m8D9r-Hw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EC9051895A2F;
-        Fri, 24 Apr 2020 20:32:34 +0000 (UTC)
-Received: from treble (ovpn-114-29.rdu2.redhat.com [10.10.114.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E12145C1D0;
-        Fri, 24 Apr 2020 20:32:33 +0000 (UTC)
-Date:   Fri, 24 Apr 2020 15:32:31 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org, bpf@vger.kernel.org,
-        Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/16] Revert "objtool: Skip samples subdirectory"
-Message-ID: <20200424203231.b4lonbdgzkoxf7ug@treble>
-References: <20200423073929.127521-1-masahiroy@kernel.org>
- <20200423073929.127521-3-masahiroy@kernel.org>
+        Fri, 24 Apr 2020 16:34:50 -0400
+Received: from mo6-p04-ob.smtp.rzone.de (mo6-p04-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5304::5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A602C09B049;
+        Fri, 24 Apr 2020 13:34:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587760485;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=aeLQCupRaiUXbpss4HFlekm68gu+EZORgbPWCj4bUNQ=;
+        b=l3ZW+OBcvbDY7isy1fAmFenBtzfvigTsSRmvgWABoGgG2XTW8X6UyP+zexjhbZI66+
+        cYSmSdzRneGrNSIc0KH6SoOtngruwClfh/H9dGhmil/ydnX7RqoxPfBY97V5ntWu0OiU
+        /Xoft1PAI4F1UW3wGpzuPiFNSdw/pTxIGYzq/gWyaw1vS1/tSXN9Q9uWFYQkaO66RPJ+
+        I/Ma99WSXVKKLTCT/m+9ZxY+wsnah9uFIlGJisM4nKvWtO1XfErL5KR84uZ2gB7wcS3R
+        J0ejaNG9mV83M51oI5YI2mDoEn3WzR2LtrrkkOPtMPfNc+4tYbqUxvXu7vInozfeUlA0
+        NWGA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6GK44R2FE"
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
+        with ESMTPSA id R0acebw3OKYNEVF
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Fri, 24 Apr 2020 22:34:23 +0200 (CEST)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     Jonathan Bakker <xc-racer2@live.ca>,
+        Philipp Rossak <embed3d@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v7 07/12] ARM: DTS: omap5: add sgx gpu child node
+Date:   Fri, 24 Apr 2020 22:34:10 +0200
+Message-Id: <5840297da588ba37f65a2a4f4f1421922fe28a06.1587760454.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1587760454.git.hns@goldelico.com>
+References: <cover.1587760454.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200423073929.127521-3-masahiroy@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 04:39:15PM +0900, Masahiro Yamada wrote:
-> This reverts commit 8728497895794d1f207a836e02dae762ad175d56.
-> 
-> This directory contains no object.
-> 
-> Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
-> 
->  samples/Makefile | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/samples/Makefile b/samples/Makefile
-> index f8f847b4f61f..5ce50ef0f2b2 100644
-> --- a/samples/Makefile
-> +++ b/samples/Makefile
-> @@ -1,6 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0
->  # Makefile for Linux samples code
-> -OBJECT_FILES_NON_STANDARD := y
->  
->  obj-$(CONFIG_SAMPLE_ANDROID_BINDERFS)	+= binderfs/
->  obj-$(CONFIG_SAMPLE_CONFIGFS)		+= configfs/
-> -- 
-> 2.25.1
+Add SGX GPU node with interrupt. Tested on Pyra-Handheld.
 
-Hm, somehow I was thinking this would work recursively for
-subdirectories.  Anyway, you're right:
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+---
+ arch/arm/boot/dts/omap5.dtsi | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-
+diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+index 2ac7f021c284..1cf41664fd00 100644
+--- a/arch/arm/boot/dts/omap5.dtsi
++++ b/arch/arm/boot/dts/omap5.dtsi
+@@ -270,7 +270,7 @@ sata: sata@4a141100 {
+ 			ports-implemented = <0x1>;
+ 		};
+ 
+-		target-module@56000000 {
++		sgx_module: target-module@56000000 {
+ 			compatible = "ti,sysc-omap4", "ti,sysc";
+ 			reg = <0x5600fe00 0x4>,
+ 			      <0x5600fe10 0x4>;
+@@ -287,10 +287,11 @@ target-module@56000000 {
+ 			#size-cells = <1>;
+ 			ranges = <0 0x56000000 0x2000000>;
+ 
+-			/*
+-			 * Closed source PowerVR driver, no child device
+-			 * binding or driver in mainline
+-			 */
++			gpu: gpu@0 {
++				compatible = "ti,omap5-sgx544-116", "img,sgx544-116", "img,sgx544";
++				reg = <0x0 0x10000>;
++				interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
++			};
+ 		};
+ 
+ 		target-module@58000000 {
 -- 
-Josh
+2.25.1
 
