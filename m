@@ -2,173 +2,172 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87323C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7288DC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72729206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5229B206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:14:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RE5RXCnG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgDXPOS (ORCPT
+        id S1728071AbgDXPO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:14:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49474 "EHLO
+        Fri, 24 Apr 2020 11:14:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726998AbgDXPOS (ORCPT
+        by vger.kernel.org with ESMTP id S1726959AbgDXPO6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:14:18 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41855C09B045;
-        Fri, 24 Apr 2020 08:14:17 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 993952A2E0F;
-        Fri, 24 Apr 2020 16:14:15 +0100 (BST)
-Date:   Fri, 24 Apr 2020 17:14:12 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Christophe Kerello <christophe.kerello@st.com>
-Cc:     Marek Vasut <marex@denx.de>, Lee Jones <lee.jones@linaro.org>,
-        mark.rutland@arm.com, devicetree@vger.kernel.org, vigneshr@ti.com,
-        tony@atomide.com, richard@nod.at, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, linux-mtd@lists.infradead.org,
-        miquel.raynal@bootlin.com,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v2 02/12] mfd: stm32-fmc2: add STM32 FMC2 controller
- driver
-Message-ID: <20200424171412.5f65ff05@collabora.com>
-In-Reply-To: <268ea231-eb4a-6144-c632-1bc8e9f21582@st.com>
-References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
-        <1586966256-29548-3-git-send-email-christophe.kerello@st.com>
-        <20200424074517.GN3612@dell>
-        <8b625f1c-9ded-c07a-a20e-8cd44c1ca46d@denx.de>
-        <20200424105053.GC8414@dell>
-        <e5e6c279-28d0-f423-aa6d-5c7aca563352@denx.de>
-        <268ea231-eb4a-6144-c632-1bc8e9f21582@st.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 24 Apr 2020 11:14:58 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37FABC09B045;
+        Fri, 24 Apr 2020 08:14:58 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id y19so4803379qvv.4;
+        Fri, 24 Apr 2020 08:14:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QSwg6gghB4J4fxCnCtJXebe2/h8we5Uo4r3Dshm/gm4=;
+        b=RE5RXCnG+VdWldHaDGPi6/nEecCcxvkxHbnfNVgzb8DKgjrwjLAI7Ze5lCs/z+RBFG
+         CTgV2hmcegRhgTJOUk3RdA7otfcOx/Vijtj4L1PMpdAc8chmHhe0asg/Um6loo9AZkg8
+         Nf1Be1hpnlfQgM7Sxant7wbJ08eQAF9hIFGrK7VdwNPrmFs76N3kR4HjHejlAlgSoXVy
+         h2y2bHax3dUAlj1ueE8EVNlSOpRDWtKCT6xogZpn7YFxhj9/c5McHRdeCn20x8rbe5zv
+         bKjN/WCMOEx3W+QkOMhfVtb0u8Nk95Zz4JRqIWO5tw0TYUq+VSID/HozDkZ2YHNVmqB/
+         mY+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QSwg6gghB4J4fxCnCtJXebe2/h8we5Uo4r3Dshm/gm4=;
+        b=dkrSswHcY6xjzwVwiWZWCuRPPY79vfS/fcasQPW/6tnF6FJQrJ5vlJ+UDqyw+sod6f
+         Vo1y2e3/8/oUc8P2EYh8iKgNat3SA1Qw7lbgh7CQY4Gn1GwKfQZHZZI+P3JdDGFx18vx
+         lnQ5nSf6awB62jzRSDthL+ojdC8Qqs4nu8hbzT0RKK7C4JBckDFaBSKqim9NOHY62/uM
+         FXK7fof7rIIXJRcsZFONigD0yf5lUFIrTGXYXWDcki2m0IdI/wc5lvpL6/9r4oSW5hNy
+         Jf6E+iGGwROH89drmH71dRR80mmQitlsiUqR1fOxK/2KqQD9dt5BYRQY05ZXfSBHjAxh
+         pusw==
+X-Gm-Message-State: AGi0PubhDq4X+XGm1Lv7YfAwxJ9kBKPTUkdWRjriJJpOgSSqIdRRLXK4
+        lSUfmvUeHhspdCQ15e+InUg=
+X-Google-Smtp-Source: APiQypIvi4BPTJ2KoCQr/5RWFfI01+/rIl1QR4oi9k+baj+nWnNzEnKdLOjI7nNlp1fBi5DGaJG0bg==
+X-Received: by 2002:a05:6214:1262:: with SMTP id r2mr9952180qvv.126.1587741297402;
+        Fri, 24 Apr 2020 08:14:57 -0700 (PDT)
+Received: from icarus (072-189-064-225.res.spectrum.com. [72.189.64.225])
+        by smtp.gmail.com with ESMTPSA id 65sm3863089qkf.79.2020.04.24.08.14.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Apr 2020 08:14:56 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 11:14:54 -0400
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     rrichter@marvell.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com
+Cc:     akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        Syed Nayyar Waris <syednwaris@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/6] gpio: thunderx: Utilize for_each_set_clump macro
+Message-ID: <20200424151454.GB5034@icarus>
+References: <20200424123050.GA5653@syed>
+ <20200424135547.GB3255@icarus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="BQPnanjtCNWHyqYD"
+Content-Disposition: inline
+In-Reply-To: <20200424135547.GB3255@icarus>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Apr 2020 13:47:34 +0200
-Christophe Kerello <christophe.kerello@st.com> wrote:
 
-> On 4/24/20 1:06 PM, Marek Vasut wrote:
-> > On 4/24/20 12:50 PM, Lee Jones wrote:  
-> >> On Fri, 24 Apr 2020, Marek Vasut wrote:
-> >>  
-> >>> On 4/24/20 9:45 AM, Lee Jones wrote:  
-> >>>> On Wed, 15 Apr 2020, Christophe Kerello wrote:
-> >>>>  
-> >>>>> The driver adds the support for the STMicroelectronics FMC2 controller
-> >>>>> found on STM32MP SOCs.
-> >>>>>
-> >>>>> The FMC2 functional block makes the interface with: synchronous and
-> >>>>> asynchronous static memories (such as PSNOR, PSRAM or other
-> >>>>> memory-mapped peripherals) and NAND flash memories.
-> >>>>>
-> >>>>> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
-> >>>>> ---
-> >>>>> Changes in v2:
-> >>>>>   - remove ops from stm32_fmc2 structure
-> >>>>>   - add 2 APIs to manage FMC2 enable/disable
-> >>>>>   - add 2 APIs to manage FMC2 NWAIT shared signal
-> >>>>>
-> >>>>>   drivers/mfd/Kconfig            |  12 +++
-> >>>>>   drivers/mfd/Makefile           |   1 +
-> >>>>>   drivers/mfd/stm32-fmc2.c       | 136 +++++++++++++++++++++++++
-> >>>>>   include/linux/mfd/stm32-fmc2.h | 225 +++++++++++++++++++++++++++++++++++++++++
-> >>>>>   4 files changed, 374 insertions(+)
-> >>>>>   create mode 100644 drivers/mfd/stm32-fmc2.c
-> >>>>>   create mode 100644 include/linux/mfd/stm32-fmc2.h
-> >>>>>
-> >>>>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> >>>>> index 2b20329..5260582 100644
-> >>>>> --- a/drivers/mfd/Kconfig
-> >>>>> +++ b/drivers/mfd/Kconfig
-> >>>>> @@ -1922,6 +1922,18 @@ config MFD_ROHM_BD71828
-> >>>>>   	  Also included is a Coulomb counter, a real-time clock (RTC), and
-> >>>>>   	  a 32.768 kHz clock gate.
-> >>>>>   
-> >>>>> +config MFD_STM32_FMC2
-> >>>>> +	tristate "Support for FMC2 controllers on STM32MP SoCs"
-> >>>>> +	depends on MACH_STM32MP157 || COMPILE_TEST
-> >>>>> +	select MFD_CORE
-> >>>>> +	select REGMAP
-> >>>>> +	select REGMAP_MMIO
-> >>>>> +	help
-> >>>>> +	  Select this option to enable STM32 FMC2 driver used for FMC2 External
-> >>>>> +	  Bus Interface controller and FMC2 NAND flash controller. This driver
-> >>>>> +	  provides core support for the STM32 FMC2 controllers, in order to use
-> >>>>> +	  the actual functionality of the device other drivers must be enabled.  
-> >>>>
-> >>>> Not sure how many times I have to say this before people stop
-> >>>> attempting to pass these kinds of relationships off as MFDs:
-> >>>>
-> >>>> A memory device and its bus is not an MFD.  In a similar vain to the
-> >>>> thousands of USB, I2C, SPI, PCI and the like devices that aren't MFDs
-> >>>> either.
-> >>>>
-> >>>> Please find another way to associate your device with its bus.  
-> >>>
-> >>> This FMC2 is however an IP which can either operate external devices
-> >>> (like ethernet chip on this parallel bus) or external flashes (like NOR
-> >>> and NAND chips).  
-> >>
-> >> I'm sure that it *can*.  Although that's not its main purpose.  
-> > 
-> > I use it to operate KSZ8851-16MLL ethernet chip, which has async bus
-> > interface. Linux just didn't have support for that mode of operation
-> > thus far and the FMC was used to operate NANDs and NORs only. This
-> > series, or rather, the first three patches in this series, add support
-> > for operating other bus devices, like this ethernet controller.
-> >   
-> >> The
-> >> clue is in the nomenclature ("Flexible *Memory* Controller").  Nor is
-> >> it how the device is being used in this submission:
-> >>
-> >>    "The FMC2 functional block makes the interface with: synchronous and
-> >>     asynchronous static memories (such as PSNOR, PSRAM or other
-> >>     memory-mapped peripherals) and NAND flash memories."
-> >>
-> >> As I mentioned, this is just another memory device and its bus.  
-> > 
-> > I don't think it's _just_ a memory controller, it's more universal than
-> > that, see above. Note that SRAM interface basically boils down to
-> > anything which has external parallel bus, e.g. Davicom DM9000, that
-> > KSZ8851-16MLL etc.
-> >   
-> >>> Can you provide a suggestion how this should be handled, if not as MFD?
-> >>> It seems to me, that this is a Multi-Function Device .  
-> >>
-> >> Simply move it into the MTD or Memory subsystems and set up the
-> >> dependencies via Kconfig.
-> >>  
-> >>> If this discussion is a recurring topic, is there some documentation
-> >>> which explains how such devices should be handled ?  
-> >>
-> >> Not that I'm aware of.  
-> > 
-> > I see.
-> >  
-> 
-> Hi Lee, Marek,
-> 
-> I will move this source code in the FMC2 bus driver. I think that I 
-> should be able to manage the 2 controllers with 2 drivers (the FMC2 bus 
-> driver and the FMC2 raw NAND driver).
+--BQPnanjtCNWHyqYD
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-FWIW, that's what I did for the Atmel EBI (External Bus Interface)
-controller (see [1]).
+On Fri, Apr 24, 2020 at 09:55:47AM -0400, William Breathitt Gray wrote:
+> On Fri, Apr 24, 2020 at 06:00:50PM +0530, Syed Nayyar Waris wrote:
+> > This patch reimplements the thunderx_gpio_set_multiple function in
+> > drivers/gpio/gpio-thunderx.c to use the new for_each_set_clump macro.
+> > Instead of looping for each bank in thunderx_gpio_set_multiple
+> > function, now we can skip bank which is not set and save cycles.
+> >=20
+> > Cc: Robert Richter <rrichter@marvell.com>
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
+> > Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> > ---
+> >  drivers/gpio/gpio-thunderx.c | 12 ++++++++----
+> >  1 file changed, 8 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/drivers/gpio/gpio-thunderx.c b/drivers/gpio/gpio-thunderx.c
+> > index 9f66dea..74aea25 100644
+> > --- a/drivers/gpio/gpio-thunderx.c
+> > +++ b/drivers/gpio/gpio-thunderx.c
+> > @@ -275,12 +275,16 @@ static void thunderx_gpio_set_multiple(struct gpi=
+o_chip *chip,
+> >  				       unsigned long *bits)
+> >  {
+> >  	int bank;
+> > -	u64 set_bits, clear_bits;
+> > +	u64 set_bits, clear_bits, gpio_mask;
+> > +	const unsigned long bank_size =3D 64;
+> > +	unsigned long offset;
+> > +
+> >  	struct thunderx_gpio *txgpio =3D gpiochip_get_data(chip);
+> > =20
+> > -	for (bank =3D 0; bank <=3D chip->ngpio / 64; bank++) {
+> > -		set_bits =3D bits[bank] & mask[bank];
+> > -		clear_bits =3D ~bits[bank] & mask[bank];
+> > +	for_each_set_clump(offset, gpio_mask, mask, chip->ngpio, bank_size) {
+> > +		bank =3D offset / bank_size;
+> > +		set_bits =3D bits[bank] & gpio_mask;
+> > +		clear_bits =3D ~bits[bank] & gpio_mask;
+> >  		writeq(set_bits, txgpio->register_base + (bank * GPIO_2ND_BANK) + GP=
+IO_TX_SET);
+> >  		writeq(clear_bits, txgpio->register_base + (bank * GPIO_2ND_BANK) + =
+GPIO_TX_CLR);
+> >  	}
+> > --=20
+> > 2.7.4
+>=20
+> We noticed in the original code that this set_multiple callback does not
+> appear to work correctly on systems where BITS_PER_LONG =3D=3D 32. On tho=
+se
+> systems, the bits and mask values are 32-bit, but the for loop jumps 64
+> bits at a time -- that means the loop is skipping the upper 32 gpio
+> lines of every iteration.
+>=20
+> Is the gpio-thunderx driver only intended for 64-bit systems? Or this
+> behavior a bug?
+>=20
+> William Breathitt Gray
 
-[1]https://elixir.bootlin.com/linux/v5.6/source/drivers/memory/atmel-ebi.c
+Nevermind, I spoke too soon; I see there's a depends on 64BIT line in
+the Kconfig for GPIO_THUNDERX.
+
+William Breathitt Gray
+
+--BQPnanjtCNWHyqYD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl6jAm4ACgkQhvpINdm7
+VJK2DRAAjsPKyCL9M0yAhH8ymPu3Lg1Mgg3hUc3R0ZDUgEk570duKvcY4vGEWtBl
+EyFpN+ZUE+XFnftAEStFDGka9cvQyYMNdyfo9AGj2Ht1Ypo6UfTvHmIMnmjUB5zj
+4jThLWmEXRxXZOaNz9lQAdtdqaxTM3RzSiM4NZcc5+yNaB/n3y+XHlfKd+O6S2ZV
+ruaFrVvBSYfRmXgGm5JIpJlxAWFH3hpvpHutt6MxacR0wox0Ik+mM+7t/3Yp3+l3
+0fuh3UWHDEi7+yEpJlYYEwNna7rPRrzYZtOXILsKjEmJ0g98PgfhknnGLxJ5/rSR
+4BURS+R61qjTGOtCk3VVb6u+FuRB8pVWvLh07NS6JPnm5aNjKTiMfYwLnxpF7cey
+Kqh11+3b3gklWXgEnsBXVkZAT2kYnS/4KFC5LfFc7Mkt5K5SvQR15Y3zGu2CII2G
+10Zr5XfYIS5dArs4ZbSvFiWvRKlpa3dpHJMZEQxTA1DC0l5DFLC76MC1B5MA+miA
+7/J8rREmV5nyo3tAi1T05cDr5zpe2o66HB0N+qXck5TaiS0mjkMmPGVtl/BaTwDF
+pqiMZWIQ8TG/2QIm9I9AZ7w+O06rQ9TkNgheE5rBxn0TM3yrLDQ9oH990kwCEFjH
+Z1HQA9A7YqDjMfUQD/WNDL66B3/wUF7pCiNVgnfbHrc/vhT0w/Y=
+=7Xlp
+-----END PGP SIGNATURE-----
+
+--BQPnanjtCNWHyqYD--
