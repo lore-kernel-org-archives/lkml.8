@@ -2,177 +2,72 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C87C55194
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 109AAC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 23:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1422120776
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:58:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="c2hKhoEu"
+	by mail.kernel.org (Postfix) with ESMTP id E609220776
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 23:00:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726070AbgDXW6d (ORCPT
+        id S1726100AbgDXXAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 18:58:33 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2181 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbgDXW6c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 18:58:32 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ea36f090000>; Fri, 24 Apr 2020 15:58:17 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 24 Apr 2020 15:58:30 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 24 Apr 2020 15:58:30 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 Apr
- 2020 22:58:30 +0000
-Received: from [10.2.53.96] (172.20.13.39) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 Apr
- 2020 22:58:29 +0000
-Subject: Re: [regression] Re: [PATCH v6 06/12] mm/gup: track FOLL_PIN pages
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Dave Chinner" <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-mm@kvack.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-References: <20200211001536.1027652-1-jhubbard@nvidia.com>
- <20200211001536.1027652-7-jhubbard@nvidia.com>
- <20200424121846.5ee2685f@w520.home>
- <5b901542-d949-8d7e-89c7-f8d5ee20f6e9@nvidia.com>
- <20200424141548.5afdd2bb@w520.home>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <665ffb48-d498-90f4-f945-997a922fc370@nvidia.com>
-Date:   Fri, 24 Apr 2020 15:58:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 24 Apr 2020 19:00:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60308 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725874AbgDXXAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 19:00:48 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFDAB20736;
+        Fri, 24 Apr 2020 23:00:47 +0000 (UTC)
+Date:   Fri, 24 Apr 2020 19:00:46 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Borislav Petkov <bp@alien8.de>, Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [BUGFIX PATCH 1/1] bootconfig: Fix to remove bootconfig data
+ from initrd while boot
+Message-ID: <20200424190046.0471c3b5@gandalf.local.home>
+In-Reply-To: <158774605193.7423.573803007569761807.stgit@devnote2>
+References: <158774604073.7423.11492815214537711118.stgit@devnote2>
+        <158774605193.7423.573803007569761807.stgit@devnote2>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200424141548.5afdd2bb@w520.home>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587769097; bh=eWq6lnMyYMCE4u6Qo5YJg74M9siYA8iyhwQdRnlfX1c=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=c2hKhoEuSh1BAJrQqwmQ4yRX74kL6heQtFpgh7vdU0THjF65L33iCiD03eDW+FA/A
-         gPzdByilynRgl6PXyZbjbFqiMAPfg2MC2yWKEUmWV3hNz2kXS0FG1vD8v0ladCzvkp
-         ensNbePajMC62D3wlNBE0ggKDFPB7iksWmuTz/TmgzRz66HITXTAXbFjLQsDogUOac
-         89EWT/bWRcVSdjG/Jj1uvJd+YfWM6Dzo6LnQHChsW1bmPSswJ20xCCbZ+ZSP/f5ouO
-         xEjzb7jndBL51nmhtJ3vfyuBMCtIVJy+ryq2i429v4MB4nctSJU5bnSnOJtk2esANH
-         vYuZIhb4iJBWA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-24 13:15, Alex Williamson wrote:
-> On Fri, 24 Apr 2020 12:20:03 -0700
-> John Hubbard <jhubbard@nvidia.com> wrote:
+On Sat, 25 Apr 2020 01:34:12 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
+
+> If there is a bootconfig data in the tail of initrd/initramfs,
+> initrd image sanity check caused an error while decompression
+> stage as follows.
 > 
->> On 2020-04-24 11:18, Alex Williamson wrote:
->> ...
->>> Hi John,
->>>
->>> I'm seeing a regression bisected back to this commit (3faa52c03f44
->>> mm/gup: track FOLL_PIN pages).  I've attached some vfio-pci test code
->>> that reproduces this by mmap'ing a page of MMIO space of a device and
->>> then tries to map that through the IOMMU, so this should be attempting
->>> a gup/pin of a PFNMAP page.  Previously this failed gracefully (-EFAULT),
->>> but now results in:
->>
->>
->> Hi Alex,
->>
->> Thanks for this report, and especially for source code to test it,
->> seeing as how I can't immediately spot the problem just from the crash
->> data so far.  I'll get set up and attempt a repro.
->>
->> Actually this looks like it should be relatively easier than the usual
->> sort of "oops, we leaked a pin_user_pages() or unpin_user_pages() call,
->> good luck finding which one" report that I fear the most. :) This one
->> looks more like a crash that happens directly, when calling into the
->> pin_user_pages_remote() code. Which should be a lot easier to solve...
->>
->> btw, if you are set up for it, it would be nice to know what source file
->> and line number corresponds to the RIP (get_pfnblock_flags_mask+0x22)
->> below. But if not, no problem, because I've likely got to do the repro
->> in any case.
+> [    0.883882] Unpacking initramfs...
+> [    2.696429] Initramfs unpacking failed: invalid magic at start of compressed archive
 > 
-> Hey John,
+> This error will be ignored if CONFIG_BLK_DEV_RAM=n,
+> but CONFIG_BLK_DEV_RAM=y the kernel failed to mount rootfs
+> and causes a panic.
 > 
-> TBH I'm feeling a lot less confident about this bisect.  This was
-> readily reproducible to me on a clean tree a bit ago, but now it
-> eludes me.  Let me go back and figure out what's going on before you
-> spend any more time on it.  Thanks,
+> To fix this issue, shrink down the initrd_end for removing
+> tailing bootconfig data while boot the kernel.
 > 
+> Fixes: 7684b8582c24 ("bootconfig: Load boot config from the tail of initrd")
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: stable@vger.kernel.org
+> ---
 
-OK. But I'm keeping the repro program! :)  It made it quick and easy to
-set up a vfio test, so it was worth doing in any case.
+Thanks Masami! I pulled this into my urgent queue.
 
-Anyway, I wanted to double check this just out of paranoia, and so
-now I have a data point for you: your test program runs and passes for
-me using today's linux.git kernel, with an NVIDIA GPU as the vfio
-device, and the kernel log is clean. No hint of any problems.
-
-I traced it a little bit:
-
-# sudo bpftrace -e kprobe:__get_user_pages { @[kstack()] = count(); }
-Attaching 1 probe...
-^C
-...
-@[
-     __get_user_pages+1
-     __gup_longterm_locked+176
-     vaddr_get_pfn+104
-     vfio_pin_pages_remote+113
-     vfio_dma_do_map+760
-     vfio_iommu_type1_ioctl+761
-     ksys_ioctl+135
-     __x64_sys_ioctl+22
-     do_syscall_64+90
-     entry_SYSCALL_64_after_hwframe+73
-]: 1
-
-...and also verified that it's not actually pinning any pages with that
-path:
-
-$ grep foll_pin /proc/vmstat
-nr_foll_pin_acquired 0
-nr_foll_pin_released 0
-
-
-Good luck and let me know if it starts pointing to FOLL_PIN or gup, etc.
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+-- Steve
