@@ -2,162 +2,79 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF1FC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA5BC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76B562071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:10:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587744626;
-	bh=5O01W0mYnWjJ6eCiby6ZlDS+UBSamYrqrNJzlj4uuCo=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=nwz8ZVxQysDrdP1FgS8Vxv77kBrA7Uye4y2JkTHilblFccVITfWDBaiWOgLmCB73A
-	 3IPMZk34jTAgpShPvJ6cgTZDNCpjKd47n47a+VNchrLBNSSse7Uw8t2AUF1XR2eJh9
-	 rrFiLn7ndjyXsc+OJQh4UNkRK8kf3tj7uW/3F710=
+	by mail.kernel.org (Postfix) with ESMTP id 032292075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:10:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbgDXQKZ (ORCPT
+        id S1728082AbgDXQK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 12:10:25 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:33109 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726920AbgDXQKZ (ORCPT
+        Fri, 24 Apr 2020 12:10:58 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:58074 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726920AbgDXQK5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 12:10:25 -0400
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 03OGA4Xb007030;
-        Sat, 25 Apr 2020 01:10:05 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 03OGA4Xb007030
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587744607;
-        bh=xceHdPymZ0jYeqlYbS+1ffX8Lsmm0Px07TLnEqY9gaE=;
-        h=From:Date:Subject:To:Cc:From;
-        b=VptGmdjz8KWGP7WfjlKeHhzFpCyWS70xVdlvOaVfcH0Ra7+QmhGIMROe6Kh6HpmMa
-         wq8Ygxltb9vxI813dM8qJg0WTLSaJHJCWkcHPu5tAIkwBz3/Vrj+9iEnuu9UKp7TZo
-         heLNgAFka4IssY2GQbux1SW8y/RCeYGkmFXfXGfKposTsCsgjVP0bgen5yiwGwQNxa
-         JBn07Oq6G4Yyo1TiwiWziHdHV76Bk3aZ/QSiok+0EVzMvcXWqYOc6PPf9tZX+2WUuT
-         mFau2Rwf529ghOt1LSzJKvMN2kvL6udOf/W6oS7GtCmZJsM2OjVRrchs2edAVkhxOm
-         7o1PDqhMzumUA==
-X-Nifty-SrcIP: [209.85.222.44]
-Received: by mail-ua1-f44.google.com with SMTP id z16so9974086uae.11;
-        Fri, 24 Apr 2020 09:10:04 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZMKzDcU+k7DoGvL9bCN0sHg+u0/krBNIHjL2dTeU0U0v9B0YUB
-        wBbPeX5CbVZ5IrMjYKbTdAkOw/njICsrwbQwL5I=
-X-Google-Smtp-Source: APiQypJgw4L1bt6MdT4aesOm05pMR6gubOC6tW1R2n+87+6V0/QRV0SMQyP0b4MPfuI04HcF+NNPRc6j0OzHtDrohSE=
-X-Received: by 2002:a67:3293:: with SMTP id y141mr8428387vsy.54.1587744603426;
- Fri, 24 Apr 2020 09:10:03 -0700 (PDT)
+        Fri, 24 Apr 2020 12:10:57 -0400
+Received: from fsav302.sakura.ne.jp (fsav302.sakura.ne.jp [153.120.85.133])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 03OGAIaW043241;
+        Sat, 25 Apr 2020 01:10:18 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav302.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav302.sakura.ne.jp);
+ Sat, 25 Apr 2020 01:10:18 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav302.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 03OGAIJf043237
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Sat, 25 Apr 2020 01:10:18 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH] printk: Add loglevel for "do not print to consoles".
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        linux-kernel@vger.kernel.org, Dmitry Safonov <dima@arista.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+References: <20200424024239.63607-1-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20200424092816.62a61b1d@gandalf.local.home>
+ <579fbe97-9aae-2b67-03ff-01291b9cbb7d@i-love.sakura.ne.jp>
+ <20200424103131.7987f890@gandalf.local.home>
+ <7ec0b0a3-39ae-0f1c-b8c2-e1e9e60f1223@i-love.sakura.ne.jp>
+ <20200424114225.5a3bab7e@gandalf.local.home>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <d967cd75-f61d-291a-81e9-1da76e4179c2@i-love.sakura.ne.jp>
+Date:   Sat, 25 Apr 2020 01:10:15 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 25 Apr 2020 01:09:27 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQRXn_n60K9LF=pBz0HHg55Lj-1p5gwwmT=YSOdMBXKCA@mail.gmail.com>
-Message-ID: <CAK7LNAQRXn_n60K9LF=pBz0HHg55Lj-1p5gwwmT=YSOdMBXKCA@mail.gmail.com>
-Subject: [GIT PULL] Kbuild fixes for v5.7-rc3
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200424114225.5a3bab7e@gandalf.local.home>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 2020/04/25 0:42, Steven Rostedt wrote:
+> You can also use the tracing ring buffer for this, as it has been safe in
+> all these contexts for a very long time. And that ring buffer is something
+> that you can use outside of tracing (oprofile uses it).
 
-Please pull Kbuild fixes.
-Thanks.
+Some messages are read from printk() source and other messages are read from
+non-printk() source will loose ordering of messages (i.e. non-understandable
+log files). For those who analyze log files, multiple sources are not acceptable.
 
+> And both shouldn't be done within the kernel. The "CONSOLE_LOGLEVEL_SILENT"
+> if for user decided policy, not the kernel making that policy for the user.
 
-The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
+KERN_NO_CONSOLES is a mechanism for implementing user decided policy. As long as
+userspace can control whether to use KERN_NO_CONSOLES (e.g. sysctl), there should
+be no problem with adding KERN_NO_CONSOLES (i.e. this patch) to the kernel side.
 
-  Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
-tags/kbuild-fixes-v5.7
-
-for you to fetch changes up to d9451798998df3a72dce1bc365bc9e76401b0d3a:
-
-  h8300: ignore vmlinux.lds (2020-04-23 16:41:26 +0900)
-
-----------------------------------------------------------------
-Kbuild fixes for v5.7
-
- - fix scripts/config to properly handle ':' in string type CONFIG options
-
- - fix unneeded rebuilds of DT schema check rule
-
- - git rid of ordering dependency between <linux/vermagic.h> and
-   <linux/module.h> to fix build errors in some network drivers
-
- - clean up generated headers of host arch with 'make ARCH=um mrproper'
-
-----------------------------------------------------------------
-Jeremie Francois (on alpha) (1):
-      scripts/config: allow colons in option strings for sed
-
-Masahiro Yamada (4):
-      kbuild: fix DT binding schema rule again to avoid needless rebuilds
-      arch: split MODULE_ARCH_VERMAGIC definitions out to <asm/vermagic.h>
-      Documentation: kbuild: fix the section title format
-      h8300: ignore vmlinux.lds
-
-Vitor Massaru Iha (1):
-      um: ensure `make ARCH=um mrproper` removes
-arch/$(SUBARCH)/include/generated/
-
- Documentation/kbuild/makefiles.rst                |  3 +-
- arch/arc/include/asm/module.h                     |  5 --
- arch/arc/include/asm/vermagic.h                   |  8 +++
- arch/arm/include/asm/module.h                     | 24 ---------
- arch/arm/include/asm/vermagic.h                   | 31 ++++++++++++
- arch/arm64/include/asm/module.h                   |  2 -
- arch/arm64/include/asm/vermagic.h                 | 10 ++++
- arch/h8300/kernel/.gitignore                      |  2 +
- arch/hexagon/include/asm/{module.h => vermagic.h} |  8 +--
- arch/ia64/include/asm/module.h                    |  4 --
- arch/ia64/include/asm/vermagic.h                  | 15 ++++++
- arch/mips/include/asm/module.h                    | 61 -----------------------
- arch/mips/include/asm/vermagic.h                  | 66
-+++++++++++++++++++++++++
- arch/nds32/include/asm/{module.h => vermagic.h}   |  8 ++-
- arch/powerpc/include/asm/module.h                 | 18 -------
- arch/powerpc/include/asm/vermagic.h               | 20 ++++++++
- arch/riscv/include/asm/module.h                   |  2 -
- arch/riscv/include/asm/vermagic.h                 |  9 ++++
- arch/sh/include/asm/module.h                      | 28 -----------
- arch/sh/include/asm/vermagic.h                    | 34 +++++++++++++
- arch/um/Makefile                                  |  1 +
- arch/x86/include/asm/module.h                     | 60 -----------------------
- arch/x86/include/asm/vermagic.h                   | 68
-++++++++++++++++++++++++++
- arch/xtensa/include/asm/{module.h => vermagic.h}  | 15 +++---
- include/asm-generic/Kbuild                        |  1 +
- include/asm-generic/vermagic.h                    |  7 +++
- include/linux/vermagic.h                          |  8 +--
- scripts/Makefile.lib                              |  2 +-
- scripts/config                                    |  5 +-
- 29 files changed, 297 insertions(+), 228 deletions(-)
- create mode 100644 arch/arc/include/asm/vermagic.h
- create mode 100644 arch/arm/include/asm/vermagic.h
- create mode 100644 arch/arm64/include/asm/vermagic.h
- create mode 100644 arch/h8300/kernel/.gitignore
- rename arch/hexagon/include/asm/{module.h => vermagic.h} (64%)
- create mode 100644 arch/ia64/include/asm/vermagic.h
- create mode 100644 arch/mips/include/asm/vermagic.h
- rename arch/nds32/include/asm/{module.h => vermagic.h} (52%)
- create mode 100644 arch/powerpc/include/asm/vermagic.h
- create mode 100644 arch/riscv/include/asm/vermagic.h
- create mode 100644 arch/sh/include/asm/vermagic.h
- create mode 100644 arch/x86/include/asm/vermagic.h
- rename arch/xtensa/include/asm/{module.h => vermagic.h} (57%)
- create mode 100644 include/asm-generic/vermagic.h
-
-
--- 
-Best Regards
-Masahiro Yamada
