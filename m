@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64076C55191
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B40FC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CEFE21569
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:24:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42CEE21569
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:24:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587731071;
-	bh=Td21rX/o3YOY3BoOc3hcVsuA0sd4+0zGTVdxUbS7K9Q=;
+	s=default; t=1587731073;
+	bh=O2TyYFxh3MUYpgMEMCMs5+7mz4YEVwlq/xM/fCquLs4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ATVLsYWuWkG/kJgmcNKqi6lFOY8edKbihAhkweXcZw3803Gv/Qh/omDO9SHfAF0QV
-	 iHQlxQSwYWtUlBjWD0U1H6hhOyjUM1hLMPk0E/3fDQtwI8V3O8UOIuMBB4qewY3WaH
-	 fecu/9Q/ygWjF1edn75SAp6zn86INM9CyNmOopQ0=
+	b=fjr5tX0NkZzSGzh0iOXaohpkoFUCbEEwJqaEXJdd3CrcaM5DTKXfuRjfE+0jqLqVE
+	 lrDTbTOnR/CGS7eXQEAZ0J2VWhlIEIRq96s+vO1gKfyrYcONqTdGfWJHz4cdVMx/3h
+	 boWeLsK3aoxHgIMwDNzmmoDnCuaPGHF4p3li3cu4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728442AbgDXMYa (ORCPT
+        id S1728452AbgDXMYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:24:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54898 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:24:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728336AbgDXMYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:24:23 -0400
+        id S1728411AbgDXMY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:24:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EE7B2166E;
-        Fri, 24 Apr 2020 12:24:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91BD72168B;
+        Fri, 24 Apr 2020 12:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587731063;
-        bh=Td21rX/o3YOY3BoOc3hcVsuA0sd4+0zGTVdxUbS7K9Q=;
+        s=default; t=1587731066;
+        bh=O2TyYFxh3MUYpgMEMCMs5+7mz4YEVwlq/xM/fCquLs4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sYOQZigTOpQoYW9L+2zqKVXJcyz23VtNBDb2u90K/nWR3+89o5rlrKpSrr/RZkcRj
-         KiSCWMZ5A3QTDib+0/SjweXxHyGva9XtvKwUpx1EBDMK57j9IivEMt3Wqw+UQa3V8c
-         drASkk25H8j1MyapDqKdpr5guai4bN2zMXvykiYo=
+        b=RuQoynFwHbNXdDkR7N63Gmtgt6RuoYa7cinfg4iIimC6gqIwlnN7BMCB5aVin9VVv
+         0ISqU8HOlhDBa37t45SXMZYfVnZ2NSMvmjhWf1MtsyHEAXVQPviNU2nlap1tFLGSd3
+         XlVf3fH3h/nPOED55B8ikM2tCWJFdExKBDnfwHyw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.14 03/21] ALSA: hda: Don't release card at firmware loading error
-Date:   Fri, 24 Apr 2020 08:24:01 -0400
-Message-Id: <20200424122419.10648-3-sashal@kernel.org>
+Cc:     Bodo Stroesser <bstroesser@ts.fujitsu.com>,
+        Mike Christie <mchristi@redhat.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 05/21] scsi: target: fix PR IN / READ FULL STATUS for FC
+Date:   Fri, 24 Apr 2020 08:24:03 -0400
+Message-Id: <20200424122419.10648-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200424122419.10648-1-sashal@kernel.org>
 References: <20200424122419.10648-1-sashal@kernel.org>
@@ -58,61 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
 
-[ Upstream commit 25faa4bd37c10f19e4b848b9032a17a3d44c6f09 ]
+[ Upstream commit 8fed04eb79a74cbf471dfaa755900a51b37273ab ]
 
-At the error path of the firmware loading error, the driver tries to
-release the card object and set NULL to drvdata.  This may be referred
-badly at the possible PM action, as the driver itself is still bound
-and the PM callbacks read the card object.
+Creation of the response to READ FULL STATUS fails for FC based
+reservations. Reason is the too high loop limit (< 24) in
+fc_get_pr_transport_id(). The string representation of FC WWPN is 23 chars
+long only ("11:22:33:44:55:66:77:88"). So when i is 23, the loop body is
+executed a last time for the ending '\0' of the string and thus hex2bin()
+reports an error.
 
-Instead, we continue the probing as if it were no option set.  This is
-often a better choice than the forced abort, too.
-
-Fixes: 5cb543dba986 ("ALSA: hda - Deferred probing with request_firmware_nowait()")
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207043
-Link: https://lore.kernel.org/r/20200413082034.25166-2-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Link: https://lore.kernel.org/r/20200408132610.14623-3-bstroesser@ts.fujitsu.com
+Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+Reviewed-by: Mike Christie <mchristi@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c | 19 +++++--------------
- 1 file changed, 5 insertions(+), 14 deletions(-)
+ drivers/target/target_core_fabric_lib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index 890793ad85ca1..a868a88bc2897 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -2034,24 +2034,15 @@ static void azx_firmware_cb(const struct firmware *fw, void *context)
- {
- 	struct snd_card *card = context;
- 	struct azx *chip = card->private_data;
--	struct pci_dev *pci = chip->pci;
--
--	if (!fw) {
--		dev_err(card->dev, "Cannot load firmware, aborting\n");
--		goto error;
--	}
- 
--	chip->fw = fw;
-+	if (fw)
-+		chip->fw = fw;
-+	else
-+		dev_err(card->dev, "Cannot load firmware, continue without patching\n");
- 	if (!chip->disabled) {
- 		/* continue probing */
--		if (azx_probe_continue(chip))
--			goto error;
-+		azx_probe_continue(chip);
- 	}
--	return; /* OK */
--
-- error:
--	snd_card_free(card);
--	pci_set_drvdata(pci, NULL);
- }
- #endif
- 
+diff --git a/drivers/target/target_core_fabric_lib.c b/drivers/target/target_core_fabric_lib.c
+index 95aa47ac4dcd2..f8621fe673767 100644
+--- a/drivers/target/target_core_fabric_lib.c
++++ b/drivers/target/target_core_fabric_lib.c
+@@ -76,7 +76,7 @@ static int fc_get_pr_transport_id(
+ 	 * encoded TransportID.
+ 	 */
+ 	ptr = &se_nacl->initiatorname[0];
+-	for (i = 0; i < 24; ) {
++	for (i = 0; i < 23; ) {
+ 		if (!strncmp(&ptr[i], ":", 1)) {
+ 			i++;
+ 			continue;
 -- 
 2.20.1
 
