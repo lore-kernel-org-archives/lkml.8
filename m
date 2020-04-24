@@ -2,150 +2,91 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A211C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A96C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA232071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6FD220776
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:02:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgDXKBq (ORCPT
+        id S1726844AbgDXKC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 06:01:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:58726 "EHLO foss.arm.com"
+        Fri, 24 Apr 2020 06:02:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:58762 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726698AbgDXKBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 06:01:45 -0400
+        id S1726582AbgDXKCZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 06:02:25 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F26AF1FB;
-        Fri, 24 Apr 2020 03:01:44 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D755C3F73D;
-        Fri, 24 Apr 2020 03:01:42 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 11:01:31 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Gavin Shan <gshan@redhat.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, will@kernel.org, steve.capper@arm.com,
-        broonie@kernel.org, shan.gavin@gmail.com
-Subject: Re: [PATCH] arm64/kernel: Fix range on invalidating dcache for boot
- page tables
-Message-ID: <20200424100131.GB1167@C02TD0UTHF1T.local>
-References: <20200424050230.16720-1-gshan@redhat.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D64DD1FB;
+        Fri, 24 Apr 2020 03:02:24 -0700 (PDT)
+Received: from [10.37.12.92] (unknown [10.37.12.92])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 557CD3F73D;
+        Fri, 24 Apr 2020 03:02:14 -0700 (PDT)
+Subject: Re: [PATCH v6 09/10] thermal: devfreq_cooling: Refactor code and
+ switch to use Energy Model
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
+        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, rostedt@goodmis.org,
+        qperret@google.com, bsegall@google.com, mgorman@suse.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
+        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
+References: <20200410084210.24932-1-lukasz.luba@arm.com>
+ <20200410084210.24932-10-lukasz.luba@arm.com>
+ <20200423175708.GG65632@linaro.org>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <b93226ac-a1f1-c1d0-fc25-0bd0f336252a@arm.com>
+Date:   Fri, 24 Apr 2020 11:02:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200424050230.16720-1-gshan@redhat.com>
+In-Reply-To: <20200423175708.GG65632@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gavin,
+Hi Daniel,
 
-On Fri, Apr 24, 2020 at 03:02:30PM +1000, Gavin Shan wrote:
-> The MMU is disabled when __create_page_tables() is called. The data
-> cache corresponding to these two page tables, which are tracked by
-> @idmap_pg_dir and @init_pg_dir, is invalidated after the page tables
-> are populated. However, the wrong or inappropriate size have been used
-> and more data cache are invalidated than it need.
+On 4/23/20 6:57 PM, Daniel Lezcano wrote:
+> On Fri, Apr 10, 2020 at 09:42:09AM +0100, Lukasz Luba wrote:
+>> The overhauled Energy Model (EM) framework support also devfreq devices.
+>> The unified API interface of the EM can be used in the thermal subsystem to
+>> not duplicate code. The power table now is taken from EM structure and
+>> there is no need to maintain calculation for it locally. In case when the
+>> EM is not provided by the device a simple interface for cooling device is
+>> used.
+>>
+>> [lkp: Reported the build warning]
+>> Reported-by: kbuild test robot <lkp@intel.com>
+>> Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org> # for tracing code
+>> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
 > 
-> This fixes the issue by invalidating the data cache for these two
-> page tables separately as they aren't necessarily physically adjacent.
-
-Thanks for this!
-
-I think the commit message needs to explain the issue more explicitly,
-e.g.
-
-| Prior to commit:
-| 
-|   8eb7e28d4c642c31i ("arm64/mm: move runtime pgds to rodata")
-|
-| ... idmap_pgd_dir, tramp_pg_dir, reserved_ttbr0, swapper_pg_dir, and
-| init_pg_dir were contiguous at the end of the kernel image. The
-| maintenance at the end of __create_page_tables assumed these were
-| contiguous, and affected everything from the start of idmap_pg_dir to
-| the end of init_pg_dir.
-|
-| That commit moved all but init_pg_dir into the .rodata section, with
-| other data placed between idmap_pg_dir and init_pg_dir, but did not
-| update the maintenance. Hence the maintenance is performed on much
-| more data than necessary (but as the bootloader previously made this
-| clean to the PoC there is no functional problem).
-|
-| As we only alter idmap_pg_dir, and init_pg_dir, we only need to
-| perform maintenance for these. As the other dirs are in .rodata, the
-| bootloader will have initialised them as expected and cleaned them to
-| the PoC. The kernel will initialize them as necessary after enabling
-| the MMU.
-|
-| This patch reworks the maintenance to only cover the idmap_pg_dir and
-| init_pg_dir to avoid this unnecessary work.
-
-> Signed-off-by: Gavin Shan <gshan@redhat.com>
-> ---
->  arch/arm64/kernel/head.S | 4 ++++
->  1 file changed, 4 insertions(+)
+> Is it possible to split this patch into smaller parts? It is hard to understand
+> what is related to the em conversion and other changes which look not related
+> so far.
 > 
-> diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
-> index 57a91032b4c2..66947873c9e7 100644
-> --- a/arch/arm64/kernel/head.S
-> +++ b/arch/arm64/kernel/head.S
-> @@ -398,6 +398,10 @@ SYM_FUNC_START_LOCAL(__create_page_tables)
->  	 * tables again to remove any speculatively loaded cache lines.
->  	 */
 
-The comment above has been stale for a while, since it says:
+No problem, I will do the split (it will be in the v7).
 
-| 	/*
-| 	 * Since the page tables have been populated with non-cacheable
-| 	 * accesses (MMU disabled), invalidate the idmap and swapper page
-| 	 * tables again to remove any speculatively loaded cache lines.
-| 	 */
-
-... can we please update that at the same time? We can avoid mention of
-the specific tables and say:
-
-| 	/*
-| 	 * Since the page tables have been populated with non-cacheable
-| 	 * accesses (MMU disabled), invalidate those tables again to
-| 	 * remove any speculatively loaded cache lines.
-| 	 */
-
->  	adrp	x0, idmap_pg_dir
-> +	mov	x1, #IDMAP_DIR_SIZE
-> +	dmb	sy
-> +	bl	__inval_dcache_area
-> +	adrp	x0, init_pg_dir
->  	adrp	x1, init_pg_end
->  	sub	x1, x1, x0
->  	dmb	sy
-
-The existing DMB is to order prior non-cacheable accesses against cache
-maintenance, so we only need one of those at the start of the sequence.
-For consistency, we should use the same idiom to generate the size of
-both dirs. Given we use ADRP+ADRP+SUB here and elsewhere in head.S, I
-think that's preferable for now.
-
-So I reckon this should be:
-
-|	dmb	sy
-|
-|	adrp	x0, idmap_pg_dir
-|	adrp	x1, idmap_pg_end
-|	sub	x1, x1, x0
-|	bl	__inval_dcache_area
-|
-|	adrp	x0, init_pg_dir
-|	adrp	x1, init_pg_end
-|	sub	x1, x1, x0
-|	bl	__inval_dcache_area
-
-... with those line gaps to make the distinct blocks clearer.
-
-Thanks,
-Mark.
+Regards,
+Lukasz
