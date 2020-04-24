@@ -2,191 +2,147 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4AFC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 070D4C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 060B921569
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:23:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T/ufMybt"
+	by mail.kernel.org (Postfix) with ESMTP id DB19320728
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:24:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728958AbgDXSXl (ORCPT
+        id S1729020AbgDXSYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 14:23:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52322 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726793AbgDXSXk (ORCPT
+        Fri, 24 Apr 2020 14:24:01 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56500 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726793AbgDXSYA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 14:23:40 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A3F2C09B048;
-        Fri, 24 Apr 2020 11:23:40 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id z90so8697935qtd.10;
-        Fri, 24 Apr 2020 11:23:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=hlnTK6gfjpKzSfgdt+AIUDCtkzrhtUOwY7cenPzETQQ=;
-        b=T/ufMybtL7Dfd0xLVkue1BThy+vfuAZ/1YffMRjM43gu+YAvAP+i18xJG+5isWh9wZ
-         yafJxrU2f+kr6eFO4Sh9TzdmNfmkawInhCA5G4g/ujyicsdB7PCh9Wp8xxKwOI0VdlhE
-         SpU0yAPFn5g4UAlqUPz9WRp9614oLXWsIcH4G+5mN/dNQNuYTy92eKQ5wFWv7Ox4yzvX
-         Sk1Z4x/HEitnH0/ihZ5y7oHYBdU9XNf9CBHeZ/i8bka5KvVSmoEL4lj7oKLMgZCJOuyu
-         0HX/uPGUodNEfJBIo7MCQEx7MJaTwOb7VrRsRSNYBh997PfrDAiHLgXcFBdBHUghxEUq
-         c39g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=hlnTK6gfjpKzSfgdt+AIUDCtkzrhtUOwY7cenPzETQQ=;
-        b=p/H5zBwW9Yki9qv6kl3kxxsrwExsOBugob2TGCSVIPNLGv4zgBA3KNmVedjJXB/eU8
-         uB5HQoWtmKvRe0tuwJz4NKu0PwS/rUaOBLnnnnFDmvHF6m7QouQYpL8y9Qa9joAl7r7p
-         vl7kiRKkAYTq0mwwAzp75zIv4s2u9mHxFoMyvFzJPLWYdkyG0/U2Hjm7215DF+cYm45v
-         EXWBP+8vYRLPIWAGsaSjI35bo8+XpEW2bMfGDA3vaXS/AIIh0YTKV8j/+PSBsY5lxDwJ
-         FCkTh34ZI5ewGP87OlucIsIQfm/xv2QEwyqdXrvH0im/MqiobNknFL/p/IQ9D0P0h+Nr
-         ENVQ==
-X-Gm-Message-State: AGi0PuZAlsImlTFcfTwlKMCekmF/qm0BU4/mGcDYpZ+BBUrQhEhCI3X3
-        kiYIkcnk1gxxoQZn4bCFrvY=
-X-Google-Smtp-Source: APiQypKBrcu7p5JpivCIP2X8XHodvRnxs9lVsHBOweEmoqVon7lYUtDngHz3LLcUgyL/LvoVLhZIyQ==
-X-Received: by 2002:ac8:44c1:: with SMTP id b1mr8446962qto.156.1587752619569;
-        Fri, 24 Apr 2020 11:23:39 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id v23sm4135729qkv.55.2020.04.24.11.23.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 11:23:38 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 93E7F409A3; Fri, 24 Apr 2020 15:23:36 -0300 (-03)
-Date:   Fri, 24 Apr 2020 15:23:36 -0300
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        heiko.carstens@de.ibm.com
-Subject: Re: [PATCH] perf symbol: Fix kernel symbol address display
-Message-ID: <20200424182336.GO19437@kernel.org>
-References: <20200415070744.59919-1-tmricht@linux.ibm.com>
- <20200420204617.GA23638@kernel.org>
- <475a5c86-2be3-4f12-56f3-7bd6587e8ec3@linux.ibm.com>
- <20200424150631.GN19437@kernel.org>
- <db6de799-564a-273e-99ad-40817f2b970a@linux.ibm.com>
+        Fri, 24 Apr 2020 14:24:00 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03OI7KmW074755;
+        Fri, 24 Apr 2020 14:23:57 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30kk5ts63y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Apr 2020 14:23:57 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03OI7RHT075473;
+        Fri, 24 Apr 2020 14:23:56 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30kk5ts639-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Apr 2020 14:23:56 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03OIA4Gl020117;
+        Fri, 24 Apr 2020 18:23:54 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04ams.nl.ibm.com with ESMTP id 30fs659dkp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Apr 2020 18:23:54 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03OINpHu56098924
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Apr 2020 18:23:51 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CBA2842041;
+        Fri, 24 Apr 2020 18:23:51 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1EAB64203F;
+        Fri, 24 Apr 2020 18:23:51 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.145.37.140])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 24 Apr 2020 18:23:51 +0000 (GMT)
+Date:   Fri, 24 Apr 2020 20:23:48 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        freude@linux.ibm.com, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pmorel@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
+Subject: Re: [PATCH v7 03/15] s390/zcrypt: driver callback to indicate
+ resource in use
+Message-ID: <20200424202348.39bb2eaf.pasic@linux.ibm.com>
+In-Reply-To: <195d237d-c668-48ca-1125-08eafc0011db@linux.ibm.com>
+References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
+        <20200407192015.19887-4-akrowiak@linux.ibm.com>
+        <20200414145851.562867ae.cohuck@redhat.com>
+        <35d8c3cb-78bb-8f84-41d8-c6e59d201ba0@linux.ibm.com>
+        <20200416113721.124f9843.cohuck@redhat.com>
+        <20200424053338.658b2a05.pasic@linux.ibm.com>
+        <195d237d-c668-48ca-1125-08eafc0011db@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <db6de799-564a-273e-99ad-40817f2b970a@linux.ibm.com>
-X-Url:  http://acmel.wordpress.com
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-24_09:2020-04-24,2020-04-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 adultscore=0 mlxscore=0 bulkscore=0 clxscore=1015
+ priorityscore=1501 suspectscore=0 impostorscore=0 malwarescore=0
+ mlxlogscore=999 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2004240138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Apr 24, 2020 at 08:01:22PM +0200, Thomas Richter escreveu:
-> On 4/24/20 5:06 PM, Arnaldo Carvalho de Melo wrote:
-> > Em Fri, Apr 24, 2020 at 02:37:01PM +0200, Thomas Richter escreveu:
-> >> On 4/20/20 10:46 PM, Arnaldo Carvalho de Melo wrote:
-> >>> Em Wed, Apr 15, 2020 at 09:07:44AM +0200, Thomas Richter escreveu:
-> >>>> Running commands
-> >>>>
-> >>>>    ./perf record -e rb0000 -- find .
-> >>>>    ./perf report -v
-> >>>
-> >>> Or when pressing 'V' in the TUI.
-> >>>  
-> >>>> reveals symbol names and its addresses. There is a mismatch between
-> >>>
-> >>> Yeah, an address that at some point was put there to help with debugging
-> >>> the symbol resolution, IIRC how it looked like when looking at
-> >>>
-> >>>   readelf -sW vmlinux
-> >>>
-> >>> Or any other DSO, for instance, for a glibc symbol here:
-> >>>
-> >>> Using 'perf report -s pid,dso,sym' then pressing 'V':
-> >>>
-> >>>    1.55%    20325:perf  /usr/lib64/libc-2.30.so   0x161825   B [.] __strlen_avx2
-> >>>
-> >>> [acme@five perf]$ readelf -sW /usr/lib64/libc-2.30.so | grep strlen_avx2
-> >>>  24371: 0000000000161810   414 FUNC    LOCAL  DEFAULT   15 __strlen_avx2
-> >>> [acme@five perf]$ 
-> >>>
-> >>> Can you check if doing in /lib/modules/.../build/vmlinux produces what
-> >>> appears when 'V' is in place?
-> >>>
-> >>> And perhaps we can also show the DSO offset and the rip as it gets laid
-> >>> out in memory in the end? So we have all the informations?
-> >>>
-> >>> - Arnaldo
-> >>>
+On Fri, 24 Apr 2020 13:07:38 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+
+> 
+> 
+> On 4/23/20 11:33 PM, Halil Pasic wrote:
+> > On Thu, 16 Apr 2020 11:37:21 +0200
+> > Cornelia Huck <cohuck@redhat.com> wrote:
+> >
+> >> On Wed, 15 Apr 2020 13:10:10 -0400
+> >> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 > >>
-> >> Arnaldo,
-> >>
-> >> having verified this also works in the TUI mode using 'V', are you going to pick
-> >> this patch?
-> > 
-> > That would be a change in behaviour, the original intent was to show the
-> > value one would get from the ELF symbol table, isn't that the case?
-> > 
+> >>> On 4/14/20 8:58 AM, Cornelia Huck wrote:
+> >>>> On Tue,  7 Apr 2020 15:20:03 -0400
+> >>>> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+> >>>>> +
+> >>>>> +	if (ap_drv->in_use)
+> >>>>> +		if (ap_drv->in_use(newapm, ap_perms.aqm))
+> >>>> Can we log the offending apm somewhere, preferably with additional info
+> >>>> that allows the admin to figure out why an error was returned?
+> >>> One of the things on my TODO list is to add logging to the vfio_ap
+> >>> module which will track all significant activity within the device
+> >>> driver. I plan to do that with a patch or set of patches specifically
+> >>> put together for that purpose. Having said that, the best place to
+> >>> log this would be in the in_use callback in the vfio_ap device driver
+> >>> (see next patch) where the APQNs that are in use can be identified.
+> >>> For now, I will log a message to the dmesg log indicating which
+> >>> APQNs are in use by the matrix mdev.
+> >> Sounds reasonable. My main issue was what an admin was supposed to do
+> >> until logging was in place :)
+> > Logging may not be the right answer here. Imagine somebody wants to build
+> > a nice web-tool for managing this stuff at scale -- e.g. something HMC. I
+> > don't think the solution is to let this tool parse the kernel messages
+> > and try to relate that to its own transactions.
 > 
-> I think there is a misunderstanding.
+> I don't believe there is no right or wrong answer here; I simply don't
+> see the relevance of discussing a tool in this context. We are talking
+> about a sysfs attribute interface here, so - correct me if I'm
+> mistaken - our options for notifying the user that a queue is in use are
+> limited to the return code from the sysfs interface and logging. I would
+> expect that a tool would have to do something similar to the callback
+> implemented in the vfio_ap device driver and check the APQNs
+> removed against the APQNs assigned to the mdevs to determine which
+> is in use.
 > 
-> Your example above refers to libc, which shows the addresses
-> correctly (on x86 and s390). I was refering to the kernel dso.
-> The issue only shows up on the kernel DSO (vmlinux and kallsyms)
-> 
-> When I use the -v option (or 'V' in TUI) I get this
-> 
->   3.55%  find /lib/modules/.../build/vmlinux  0xf11ec  v [k] check_chain_key
->                                               ^^^^^^^
-> This address is not correct as compared to readelf on vmlinux file:
-> 
-> [root@m35lp76 linux]# readelf -sW vmlinux| fgrep check_chain_key
->  20698: 00000000001f0c70   486 FUNC    LOCAL  DEFAULT    1 check_chain_key
-> [root@m35lp76 linux]# 
-> 
-> The problem are the mapping functions with are applied for the kernel DSO.
-> In dso__process_kernel_symbol() the mapping is adjusted (around line 903)
-> and  function hist_entry_iter_add() saves the modified address in the
-> struct hist_entry->ip. This address is used from now on and printed.
-> 
-> Let me know and I will double check this and rework the commit message
-> as it was not good enough.
 
-Yeah, this may be me not understanding something right, I saw this was a
-corner case, that only happens in debug mode (ok, better provide good
-info here...), so I haven't devoted more than cursory attention to this
-and may be making a bad judgement, so I thought that since this doesn't
-seems urgent, better leave it to when I manage to have solid time to
-devote to this or someone else looks at this.
+We are talking interface design. The relevance of discussing a tool is
+that any userspace tool must come by with whatever interface we come up
+now. IMHO thinking about the usage (and the client code) is very helpful
+in avoiding broken interface designs. AFAIK this is one of the basic
+ideas behind test driven development.
 
-Sorry, but these have been difficult time for everybody, and I fear, for
-me, I have to prioritise all the time.
-
-- Arnaldo
- 
-> Thanks.
-> 
-> 
-> > That is why I asked if you would think that providing the information
-> > you want, which is matching to what is in kallsyms, would be
-> > interesting, which I think it is, but how? showing the vmlinux offset
-> > somehow?
-> >  
-> 
-> -- 
-> Thomas Richter, Dept 3252, IBM s390 Linux Development, Boeblingen, Germany
-> --
-> Vorsitzender des Aufsichtsrats: Matthias Hartmann
-> Geschäftsführung: Dirk Wittkopp
-> Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
-
--- 
-
-- Arnaldo
+Regards,
+Halil
