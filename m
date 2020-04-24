@@ -2,71 +2,87 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D8CC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 001C8C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2978620700
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2A8E20700
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:41:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GF7nzNe2"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="KxgYxG1V";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Hd3owlyQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbgDXPlT (ORCPT
+        id S1729190AbgDXPlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:41:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728488AbgDXPlP (ORCPT
+        Fri, 24 Apr 2020 11:41:24 -0400
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:42179 "EHLO
+        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726849AbgDXPfc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:41:15 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F36E4C09B045;
-        Fri, 24 Apr 2020 08:41:14 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id hi11so4009584pjb.3;
-        Fri, 24 Apr 2020 08:41:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yrssVl5uvJMgOzzbpGHEcXQI4lSvlAJjsgZ6qUXvhlQ=;
-        b=GF7nzNe2K4WbMFwU2VcvLrfuF8pFUUGZ6uac7PjQlS/cHEh9XCGdMKQyPXDWadUnKU
-         3hkms5PTzPg8NeZYOzK2fZkfFE54nA/RHmVldhS0txRMuDPj56MoLIrXkK/kOwpwKSZp
-         tNirYy+juPzX1pYFblyPWu0mTL9aJpxcWP90Up4vWGJ/mwR8SGb5jP5NGctVQymymMnO
-         zXRzD91Mh45TiZl6qDnm9wHNx/olULWw1AwBHDx3wf0s0XPmJQbWV2IFQyNmsAhKCDjn
-         9oHExH+KcC2CK6HCc5GWn+rkvwBcKRXUDmv6PgkIyDlch5Bc/BVPIun+N66Dpr1digF5
-         gdjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yrssVl5uvJMgOzzbpGHEcXQI4lSvlAJjsgZ6qUXvhlQ=;
-        b=UPxnLGF1/zAhn6o3eTLGFd9eu/9AMEiguo3bybHCvXwQxTVwNRi7aOm+rw1aomdChU
-         5AxIKaqc7QJ4Ik+yCE7d/ZJwcE7cIKW28yPDCrQaYcc4GPpG/xVeTj8bL/9n7YLHjimh
-         Ky7likZm5/gk4RMo0IPZgeTQXOStHmDxkYHVdOc0GUj0w5rmAxUsihkS6ZPw8LLUTZdO
-         TGRGwXLfoIM2e6/3wcNG7qGwfiZMPJ4MEDN4/rk+H3tVbe9wyypwP731QkLP+Tj1QtbT
-         IBySZmX+qqQmNw1Aeyzaow1Je9fd998ul2NJ0QN1W2RSjYimk/SCueWtHZnA+Xwl77lU
-         VB7A==
-X-Gm-Message-State: AGi0PuY5UGdJ03E4VVsp0Pro9L507LE8dv++ciUoqlvLsHqkpLJ75DgU
-        COFnsUSF9tCPPGyYrL2iI+8=
-X-Google-Smtp-Source: APiQypJpEVNi235bq9qEY27x1koxLWnJD8Cu6F7er7Y9lXvaeo1g0dSqYrdTsfOmso7zn50eIos0EQ==
-X-Received: by 2002:a17:90a:23ad:: with SMTP id g42mr6488956pje.35.1587742874369;
-        Fri, 24 Apr 2020 08:41:14 -0700 (PDT)
-Received: from localhost (176.122.158.64.16clouds.com. [176.122.158.64])
-        by smtp.gmail.com with ESMTPSA id w11sm4954939pjy.11.2020.04.24.08.41.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 Apr 2020 08:41:13 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        linux-gpio@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
-Subject: [PATCH v2 0/2] gpio: fix several typos
-Date:   Fri, 24 Apr 2020 23:41:01 +0800
-Message-Id: <20200424154103.10311-1-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
+        Fri, 24 Apr 2020 11:35:32 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 5412A21A;
+        Fri, 24 Apr 2020 11:35:30 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:35:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm2; bh=rUe63BFpIMvZr
+        fI+zHnOUJolkz68c07yBo2Dpng9F1M=; b=KxgYxG1VVQBgw/WMPSGVKx9LRRYyP
+        duEpS9mHn7NbXSLEqHT6AoCYTByR91ZWHQA6FISuUK/LtuBhoSIxoqx8uYo7/bg3
+        J9DI8HrWO5YLMy/bw65gHeRJwnLhPh2V/d84EXFXs4zsPqynZq0GbXkTuj3VP7rY
+        57nCpjGzJKBHtyYbCwj+q9Iz62RMqzZbDKLYNajMrmgJNHx4WtOPrvnkmNSaRfqw
+        BGRUowxKK6myR2C4paq4EdFY/Y6gOqJeI86sXUkhXM6EJG/Ybr5yz/kP7qKMa07Y
+        kWr6qNaxPl/mg2F/rvV8LMA+U2wv4LElQckLo8MfhWh6eI2FyGBGWqZwg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; bh=rUe63BFpIMvZrfI+zHnOUJolkz68c07yBo2Dpng9F1M=; b=Hd3owlyQ
+        wRURYq9Uo5s1IiQ1qcmYX7vYDs8AAChJ1m0V37R+B9IgSJSQU83vIm8vsglbt0Dy
+        nMnCBK0FkJi6T81iEcLWbLPutoGrMxLd46FPChMiGQWTgN65D7Qf70SjBzLZHKbU
+        Dr+E54HrdOrDmj+6hrY7MzA/I3VLAzjr2r4wMtp9yp7zGKE+Kvw9sKwzGHj91h9U
+        4rov/4CuDky9wRNWTZop4Cp9PQQ/lSTu4tYvpfnBQV95sM1X+yNGXWM8pHg6NcGw
+        7sQdh3in1Su2R4i9yEgFmPF/tRz0JALxMe0foJACWlGOQh0UGN50thl6ZD4rHlqv
+        CV3qwrCt0iL7Lw==
+X-ME-Sender: <xms:QQejXsen2X4obe0HmRjl_eazikLH1_wQZHAeWOrYFf_0saq44E45Bw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrhedugdekiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedvnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:QQejXlKJKfHyVWLoXe0BiWCvtzULfFDexVkO33INPfrDtmLD87DjmQ>
+    <xmx:QQejXipAbnVDPpFD3g_T6maq7qm_Ppa7PoOTKbpRbEXZUggFb6JOaw>
+    <xmx:QQejXmWcZ1UKlGm638mQeDPwcmbEZe3KHtI_ags4XohAzWJ5b7mVZQ>
+    <xmx:QQejXnP2-yKPln9oOg-rsLUYMRhXpa3ID7hRaHWlSIFWYLJV5SlgxdVr4MM>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 82F4E3065DA7;
+        Fri, 24 Apr 2020 11:35:29 -0400 (EDT)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH v2 05/91] clk: bcm: rpi: Allow the driver to be probed by DT
+Date:   Fri, 24 Apr 2020 17:33:46 +0200
+Message-Id: <0f5319caa4d1b9ba8a83a094abcb681d4be6eb1c.1587742492.git-series.maxime@cerno.tech>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
+References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,22 +90,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use codespell to fix two typos in ftgpio010 and mm-lantiq drivers.
-s/desireable/desirable/ for ftgpio010 driver.
-s/dont/don't/ for mm-lantiq driver.
+The current firmware clock driver for the RaspberryPi can only be probed by
+manually registering an associated platform_device.
 
-v1 -> v2:
-	- split patch v1 (only one patch) into patches for each driver
-	  by Bartosz's suggestion. thanks Bartosz.
+While this works fine for cpufreq where the device gets attached a clkdev
+lookup, it would be tedious to maintain a table of all the devices using
+one of the clocks exposed by the firmware.
 
-Dejin Zheng (2):
-  gpio: ftgpio010: Fix small typo
-  gpio: mm-lantiq: Fix small typo
+Since the DT on the other hand is the perfect place to store those
+associations, make the firmware clocks driver probe-able through the device
+tree so that we can represent it as a node.
 
- drivers/gpio/gpio-ftgpio010.c | 2 +-
- drivers/gpio/gpio-mm-lantiq.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-clk@vger.kernel.org
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+---
+ drivers/clk/bcm/clk-raspberrypi.c | 20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-raspberrypi.c
+index 1654fd0eedc9..aedeaaf2f66b 100644
+--- a/drivers/clk/bcm/clk-raspberrypi.c
++++ b/drivers/clk/bcm/clk-raspberrypi.c
+@@ -255,15 +255,22 @@ static int raspberrypi_clk_probe(struct platform_device *pdev)
+ 	struct raspberrypi_clk *rpi;
+ 	int ret;
+ 
+-	firmware_node = of_find_compatible_node(NULL, NULL,
+-					"raspberrypi,bcm2835-firmware");
++	/*
++	 * We can be probed either through the an old-fashioned
++	 * platform device registration or through a DT node that is a
++	 * child of the firmware node. Handle both cases.
++	 */
++	if (dev->of_node)
++		firmware_node = of_get_parent(dev->of_node);
++	else
++		firmware_node = of_find_compatible_node(NULL, NULL,
++							"raspberrypi,bcm2835-firmware");
+ 	if (!firmware_node) {
+ 		dev_err(dev, "Missing firmware node\n");
+ 		return -ENOENT;
+ 	}
+ 
+ 	firmware = rpi_firmware_get(firmware_node);
+-	of_node_put(firmware_node);
+ 	if (!firmware)
+ 		return -EPROBE_DEFER;
+ 
+@@ -300,9 +307,16 @@ static int raspberrypi_clk_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id raspberrypi_clk_match[] = {
++	{ .compatible = "raspberrypi,firmware-clocks" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, raspberrypi_clk_match);
++
+ static struct platform_driver raspberrypi_clk_driver = {
+ 	.driver = {
+ 		.name = "raspberrypi-clk",
++		.of_match_table = raspberrypi_clk_match,
+ 	},
+ 	.probe          = raspberrypi_clk_probe,
+ 	.remove		= raspberrypi_clk_remove,
 -- 
-2.25.0
-
+git-series 0.9.1
