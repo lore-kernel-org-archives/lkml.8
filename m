@@ -2,97 +2,163 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 503F8C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E9D1C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C99220736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B98120724
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:31:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="s4WXIf+A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ja+aS0yr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729114AbgDXRbL (ORCPT
+        id S1728953AbgDXRbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 13:31:11 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:51850 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727031AbgDXRbK (ORCPT
+        Fri, 24 Apr 2020 13:31:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44020 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727031AbgDXRbt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 13:31:10 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03OHNJlT086233;
-        Fri, 24 Apr 2020 17:30:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2020-01-29;
- bh=b63l/bhQnnn4+X9p4WKXJx5KlkkWuUUaaW0oUwuChlk=;
- b=s4WXIf+Av70xx6dMeb2fMORHwquUxIrXzLMXqTOx07nOdnmxRyzbOT6r8wmfcSO8y5y/
- UGyKvhSfU6L8EU49xnJEp9NzFt9CCBGBEf7e2G1buu+exXAPgud2CdnrQOZYvFbRz2o7
- p9nBx/Qc3Cne1aaEE/boO0AFJxRROtzLiMn/KSskdbB1tsRw5wNwUXGwUKvCbelQR5T9
- /ymu4+eF1OU5A0Isll9P5jdm+0ifIMDHuxSPlC6vLacAFKYDQk5l+W9EVmHVTYq7VZig
- U1YMU/zPYvvfXXXNkjTAlYPfd/BjMIvUyyLrxFOgCmPmVpnkpyCsEzDHxq/Tb8jy+bWW tA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 30ketdnmfy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Apr 2020 17:30:59 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03OHLm7r162378;
-        Fri, 24 Apr 2020 17:30:58 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 30gb3xrsqv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Apr 2020 17:30:58 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03OHUur9026087;
-        Fri, 24 Apr 2020 17:30:56 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 24 Apr 2020 10:30:56 -0700
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     <khalid@gonehiking.org>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <colin.king@canonical.com>,
-        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] scsi: BusLogic: remove conversion to bool in blogic_inquiry()
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20200421034120.28433-1-yanaijie@huawei.com>
-Date:   Fri, 24 Apr 2020 13:30:54 -0400
-In-Reply-To: <20200421034120.28433-1-yanaijie@huawei.com> (Jason Yan's message
-        of "Tue, 21 Apr 2020 11:41:20 +0800")
-Message-ID: <yq1v9lodc4x.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9601 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 adultscore=0
- mlxlogscore=851 phishscore=0 suspectscore=0 bulkscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004240134
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9601 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
- impostorscore=0 bulkscore=0 mlxlogscore=925 phishscore=0 mlxscore=0
- priorityscore=1501 clxscore=1011 suspectscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004240134
+        Fri, 24 Apr 2020 13:31:49 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 045B9C09B047;
+        Fri, 24 Apr 2020 10:31:49 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id r26so11803546wmh.0;
+        Fri, 24 Apr 2020 10:31:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=RQGcdRJLNrYqSHSgVV8oTnHfyay5BCm0woR8WhTdc4Q=;
+        b=ja+aS0yrKmnDgS7/Yv353TzMUKf+Ohd2yz5rM1nrhcs5dukGoeteAfWBJAbt9agbOq
+         f23Nn2GAq/qOdvbIRw/3KPT4ycN+pInXMjd1BChA640icyCAStpunnza9TON5zmWMu1c
+         1ncRB2J/f7CYgBxuId+vlwxI0hwDmtqs8WM5Nx+E/1Qj82b0akdSIo8m7dwMIWIfZLmj
+         wm0MkvHkENoCf8kX1kuTXcsyiHwBE90KfYczH3u7iNcGNw3zA/yU1fPsG86QmBe706e+
+         lnVV5pozr5Qvn5kcurLq4rGmVJafcm02HGsPIMeYIq7N/IGfY8m4NS7YMgkBf/ZnvW/c
+         c7pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=RQGcdRJLNrYqSHSgVV8oTnHfyay5BCm0woR8WhTdc4Q=;
+        b=rTiLQJaBjeNFEbmfCcRUd36kwg+H4USUtzkfUbLN+606VJY0kRItZrijdMnV6eOZzU
+         I3x+HIXtDg4VTscHTL7QBYBDI5Rilrgjd7Zadi64UZeD37OT1T4YgA8QjKs/5xLghH+1
+         bbShNF9n2Fv8MwFkGlrN8C2bT43OVB1b9MxGSCCd4XgJuLIqDOQnND6PI8GoWlQFPXoJ
+         7lxm6fDpahHAeu3Egmzdbk0VyEW1y/+26hO2vMPhM4pXeN3fpGkNTeivwgOnkS6R0eDa
+         FMTYV01sCrXyYhoW66zhTuC0SSeKgnWgBDTZG5EkrEfTh+AgKnna/L039WAYd4bYieat
+         k+qg==
+X-Gm-Message-State: AGi0PuYLf7R1MHGf1xmMd41AkaUKA04zJTq0SbJYgOH1K7ykXj9lGLOA
+        sRc1nhXHfepZRCjj9LMapCA=
+X-Google-Smtp-Source: APiQypIVOrCpLaUv6phLa+L8W2tcwyIUTRMpgnidvQwqKqpiIqMqXsVGTeo/XmtxMnTfLSyKDoDk4w==
+X-Received: by 2002:a7b:c4c7:: with SMTP id g7mr10922438wmk.97.1587749507716;
+        Fri, 24 Apr 2020 10:31:47 -0700 (PDT)
+Received: from debian.lan (host-84-13-17-86.opaltelecom.net. [84.13.17.86])
+        by smtp.gmail.com with ESMTPSA id s17sm3556006wmc.48.2020.04.24.10.31.46
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 Apr 2020 10:31:47 -0700 (PDT)
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+To:     Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Subject: [PATCH v3] IB/rdmavt: return proper error code
+Date:   Fri, 24 Apr 2020 18:31:46 +0100
+Message-Id: <20200424173146.10970-1-sudipm.mukherjee@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The commit 'ff23dfa13457' modified rvt_create_mmap_info() to return
+error code and also NULL but missed fixing codes which called
+rvt_create_mmap_info(). Modify rvt_create_mmap_info() to only return
+errorcode and fix error checking after rvt_create_mmap_info() was
+called.
 
-Jason,
+Fixes: ff23dfa13457 ("IB: Pass only ib_udata in function prototypes")
+Cc: stable@vger.kernel.org [5.4+]
+Tested-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Acked-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+---
+ drivers/infiniband/sw/rdmavt/cq.c   | 4 ++--
+ drivers/infiniband/sw/rdmavt/mmap.c | 4 ++--
+ drivers/infiniband/sw/rdmavt/qp.c   | 4 ++--
+ drivers/infiniband/sw/rdmavt/srq.c  | 4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
-> The '!=' expression itself is bool, no need to convert it to bool again.
-> This fixes the following coccicheck warning:
->
-> drivers/scsi/BusLogic.c:2240:46-51: WARNING: conversion to bool not
-> needed here
-
-Applied to 5.8/scsi-queue, thanks!
-
+diff --git a/drivers/infiniband/sw/rdmavt/cq.c b/drivers/infiniband/sw/rdmavt/cq.c
+index 5724cbbe38b1..04d2e72017fe 100644
+--- a/drivers/infiniband/sw/rdmavt/cq.c
++++ b/drivers/infiniband/sw/rdmavt/cq.c
+@@ -248,8 +248,8 @@ int rvt_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+ 	 */
+ 	if (udata && udata->outlen >= sizeof(__u64)) {
+ 		cq->ip = rvt_create_mmap_info(rdi, sz, udata, u_wc);
+-		if (!cq->ip) {
+-			err = -ENOMEM;
++		if (IS_ERR(cq->ip)) {
++			err = PTR_ERR(cq->ip);
+ 			goto bail_wc;
+ 		}
+ 
+diff --git a/drivers/infiniband/sw/rdmavt/mmap.c b/drivers/infiniband/sw/rdmavt/mmap.c
+index 652f4a7efc1b..37853aa3bcf7 100644
+--- a/drivers/infiniband/sw/rdmavt/mmap.c
++++ b/drivers/infiniband/sw/rdmavt/mmap.c
+@@ -154,7 +154,7 @@ int rvt_mmap(struct ib_ucontext *context, struct vm_area_struct *vma)
+  * @udata: user data (must be valid!)
+  * @obj: opaque pointer to a cq, wq etc
+  *
+- * Return: rvt_mmap struct on success
++ * Return: rvt_mmap struct on success, ERR_PTR on failure
+  */
+ struct rvt_mmap_info *rvt_create_mmap_info(struct rvt_dev_info *rdi, u32 size,
+ 					   struct ib_udata *udata, void *obj)
+@@ -166,7 +166,7 @@ struct rvt_mmap_info *rvt_create_mmap_info(struct rvt_dev_info *rdi, u32 size,
+ 
+ 	ip = kmalloc_node(sizeof(*ip), GFP_KERNEL, rdi->dparms.node);
+ 	if (!ip)
+-		return ip;
++		return ERR_PTR(-ENOMEM);
+ 
+ 	size = PAGE_ALIGN(size);
+ 
+diff --git a/drivers/infiniband/sw/rdmavt/qp.c b/drivers/infiniband/sw/rdmavt/qp.c
+index 0e1b291d2cec..500a7ee04c44 100644
+--- a/drivers/infiniband/sw/rdmavt/qp.c
++++ b/drivers/infiniband/sw/rdmavt/qp.c
+@@ -1244,8 +1244,8 @@ struct ib_qp *rvt_create_qp(struct ib_pd *ibpd,
+ 
+ 			qp->ip = rvt_create_mmap_info(rdi, s, udata,
+ 						      qp->r_rq.wq);
+-			if (!qp->ip) {
+-				ret = ERR_PTR(-ENOMEM);
++			if (IS_ERR(qp->ip)) {
++				ret = ERR_CAST(qp->ip);
+ 				goto bail_qpn;
+ 			}
+ 
+diff --git a/drivers/infiniband/sw/rdmavt/srq.c b/drivers/infiniband/sw/rdmavt/srq.c
+index 24fef021d51d..f547c115af03 100644
+--- a/drivers/infiniband/sw/rdmavt/srq.c
++++ b/drivers/infiniband/sw/rdmavt/srq.c
+@@ -111,8 +111,8 @@ int rvt_create_srq(struct ib_srq *ibsrq, struct ib_srq_init_attr *srq_init_attr,
+ 		u32 s = sizeof(struct rvt_rwq) + srq->rq.size * sz;
+ 
+ 		srq->ip = rvt_create_mmap_info(dev, s, udata, srq->rq.wq);
+-		if (!srq->ip) {
+-			ret = -ENOMEM;
++		if (IS_ERR(srq->ip)) {
++			ret = PTR_ERR(srq->ip);
+ 			goto bail_wq;
+ 		}
+ 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.11.0
+
