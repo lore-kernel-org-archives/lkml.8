@@ -2,92 +2,83 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 634B1C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB64C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44A2920736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C020D20736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:22:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbgDXWVb (ORCPT
+        id S1726116AbgDXWWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 18:21:31 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:55410 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725874AbgDXWVb (ORCPT
+        Fri, 24 Apr 2020 18:22:19 -0400
+Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:32761 "EHLO
+        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725874AbgDXWWS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 18:21:31 -0400
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 24 Apr 2020 15:21:30 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg03-sd.qualcomm.com with ESMTP; 24 Apr 2020 15:21:29 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id E22914C90; Fri, 24 Apr 2020 15:21:29 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 15:21:29 -0700
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Shiyan <shc_work@mail.ru>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v13 04/11] pwm: clps711x: Cast period to u32 before use
- as divisor
-Message-ID: <20200424222129.GC31118@codeaurora.org>
-References: <cover.1587523702.git.gurus@codeaurora.org>
- <02ba64d8289bf84a8d140f5a3c38ed64a9474d3b.1587523702.git.gurus@codeaurora.org>
- <CAMuHMdVOPKWL9u_4QCvcBZKFrW-7aKZonXjODqUx9HwS=CF09g@mail.gmail.com>
+        Fri, 24 Apr 2020 18:22:18 -0400
+Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+ EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
+ 15.0.1156.6; Fri, 24 Apr 2020 15:22:10 -0700
+Received: from localhost (unknown [10.129.220.242])
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 2124C4049C;
+        Fri, 24 Apr 2020 15:22:15 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 15:22:14 -0700
+From:   Matt Helsley <mhelsley@vmware.com>
+To:     Sami Tolvanen <samitolvanen@google.com>
+CC:     "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        <linux-kbuild@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] recordmcount: support >64k sections
+Message-ID: <20200424222214.GC9040@rlwimi.vmware.com>
+Mail-Followup-To: Matt Helsley <mhelsley@vmware.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Kees Cook <keescook@chromium.org>, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200422232417.72162-1-samitolvanen@google.com>
+ <20200424193046.160744-1-samitolvanen@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdVOPKWL9u_4QCvcBZKFrW-7aKZonXjODqUx9HwS=CF09g@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200424193046.160744-1-samitolvanen@google.com>
+Received-SPF: None (EX13-EDG-OU-001.vmware.com: mhelsley@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 11:30:19AM +0200, Geert Uytterhoeven wrote:
-> On Wed, Apr 22, 2020 at 5:00 AM Guru Das Srinagesh <gurus@codeaurora.org> wrote:
-> > Since the PWM framework is switching struct pwm_args.period's datatype
-> > to u64, prepare for this transition by typecasting it to u32.
-> >
-> > Also, since the dividend is still a 32-bit number, any divisor greater
-> > than the numerator will cause the quotient to be zero, so return 0 in
-> > that case to efficiently skip the division.
-> >
-> > Cc: Alexander Shiyan <shc_work@mail.ru>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> >
-> > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> > ---
-> >  drivers/pwm/pwm-clps711x.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
-> > index 924d39a..0d368ac 100644
-> > --- a/drivers/pwm/pwm-clps711x.c
-> > +++ b/drivers/pwm/pwm-clps711x.c
-> > @@ -43,7 +43,10 @@ static void clps711x_pwm_update_val(struct clps711x_chip *priv, u32 n, u32 v)
-> >  static unsigned int clps711x_get_duty(struct pwm_device *pwm, unsigned int v)
-> >  {
-> >         /* Duty cycle 0..15 max */
-> > -       return DIV_ROUND_CLOSEST(v * 0xf, pwm->args.period);
-> > +       if ((u32)pwm->args.period > (v * 0xf))
+On Fri, Apr 24, 2020 at 12:30:46PM -0700, Sami Tolvanen wrote:
+> When compiling a kernel with Clang and LTO, we need to run
+> recordmcount on vmlinux.o with a large number of sections, which
+> currently fails as the program doesn't understand extended
+> section indexes. This change adds support for processing binaries
+> with >64k sections.
 > 
-> Shouldn't the cast be removed from the expression above?
-> Else a period larger than or equal to 2^32 may be accepted, but truncated
-> silently.  And even cause a division by zero error.
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 
-I agree. Will remove the cast in the next patchset.
+Feel free to add
 
-Thank you.
+Reviewed-by: Matt Helsley <mhelsley@vmware.com>
 
-Guru Das.
+> ---
+> Changes in v2:
+>  - Switched to unsigned int for (old|new)_shnum in append_func.
+>  - Added set_shnum and find_symtab helper functions and moved
+>    the new logic there.
+> 
+> ---
+>  scripts/recordmcount.h | 98 +++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 92 insertions(+), 6 deletions(-)
+
+<snip>
