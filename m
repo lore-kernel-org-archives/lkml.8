@@ -2,82 +2,147 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F26BC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 14:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 596C5C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 14:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9FF520767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 14:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41F842084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 14:14:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728108AbgDXOKm (ORCPT
+        id S1727050AbgDXOOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 10:10:42 -0400
-Received: from bmailout1.hostsharing.net ([83.223.95.100]:57869 "EHLO
-        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727920AbgDXOKk (ORCPT
+        Fri, 24 Apr 2020 10:14:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40088 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726667AbgDXOOh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 10:10:40 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id B8F5A3000467A;
-        Fri, 24 Apr 2020 16:10:37 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 9335B70E94E; Fri, 24 Apr 2020 16:10:37 +0200 (CEST)
-Date:   Fri, 24 Apr 2020 16:10:37 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Syed Nayyar Waris <syednwaris@gmail.com>
-Cc:     akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        vilhelm.gray@gmail.com, arnd@arndb.de, linus.walleij@linaro.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] bitops: Introduce the the for_each_set_clump macro
-Message-ID: <20200424141037.ersebbfe7xls37be@wunner.de>
-References: <20200424122521.GA5552@syed>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200424122521.GA5552@syed>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Fri, 24 Apr 2020 10:14:37 -0400
+Received: from michel.telenet-ops.be (michel.telenet-ops.be [IPv6:2a02:1800:110:4::f00:18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB1AAC09B045
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 07:14:36 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:8134:2f28:3a79:6257])
+        by michel.telenet-ops.be with bizsmtp
+        id WeEZ2200C3LKRvX06eEZMf; Fri, 24 Apr 2020 16:14:34 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jRz69-0007cE-Mo; Fri, 24 Apr 2020 16:14:33 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jRz69-0002yb-Ju; Fri, 24 Apr 2020 16:14:33 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] gpiolib: Improve kernel messages
+Date:   Fri, 24 Apr 2020 16:14:32 +0200
+Message-Id: <20200424141432.11400-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 05:55:21PM +0530, Syed Nayyar Waris wrote:
-> +static inline void bitmap_set_value(unsigned long *map,
-> +				    unsigned long value,
-> +				    unsigned long start, unsigned long nbits)
-> +{
-> +	const size_t index = BIT_WORD(start);
-> +	const unsigned long offset = start % BITS_PER_LONG;
-> +	const unsigned long ceiling = roundup(start + 1, BITS_PER_LONG);
-> +	const unsigned long space = ceiling - start;
-> +
-> +	value &= GENMASK(nbits - 1, 0);
-> +
-> +	if (space >= nbits) {
-> +		map[index] &= ~(GENMASK(nbits + offset - 1, offset));
-> +		map[index] |= value << offset;
-> +	} else {
-> +		map[index] &= ~BITMAP_FIRST_WORD_MASK(start);
-> +		map[index] |= value << offset;
-> +		map[index + 1] &= ~BITMAP_LAST_WORD_MASK(start + nbits);
-> +		map[index + 1] |= (value >> space);
-> +	}
-> +}
+Simplify the printing of kernel messages and make the messages more
+accurate by using the most appropriate {dev,chip,gpiod}_*() helpers.
 
-Sorry but what's the advantage of using this complicated function
-as a replacement for the much simpler bitmap_set_value8()?
+Sample impact:
 
-The drivers calling bitmap_set_value8() *know* that 8-bit accesses
-are possible and take advantage of that knowledge by using a small,
-speed-optimized function.  Replacing that with a more complicated
-(potentially less performant) function doesn't seem to be a step
-forward.
+    -gpiochip_setup_dev: registered GPIOs 496 to 511 on device: gpiochip0 (e6050000.gpio)
+    +gpio gpiochip0: registered GPIOs 496 to 511 on e6050000.gpio
 
-Thanks,
+    -no flags found for gpios
+    +gpio-953 (?): no flags found for gpios
 
-Lukas
+    -GPIO line 355 (PCIE/SATA switch) hogged as output/low
+    +gpio-355 (PCIE/SATA switch): hogged as output/low
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/gpio/gpiolib.c | 24 +++++++++++-------------
+ 1 file changed, 11 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 40f2d7f69be26f22..48b4f70e2898e789 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1508,9 +1508,8 @@ static int gpiochip_setup_dev(struct gpio_device *gdev)
+ 
+ 	/* From this point, the .release() function cleans up gpio_device */
+ 	gdev->dev.release = gpiodevice_release;
+-	pr_debug("%s: registered GPIOs %d to %d on device: %s (%s)\n",
+-		 __func__, gdev->base, gdev->base + gdev->ngpio - 1,
+-		 dev_name(&gdev->dev), gdev->chip->label ? : "generic");
++	dev_dbg(&gdev->dev, "registered GPIOs %d to %d on %s\n", gdev->base,
++		gdev->base + gdev->ngpio - 1, gdev->chip->label ? : "generic");
+ 
+ 	return 0;
+ 
+@@ -1526,8 +1525,8 @@ static void gpiochip_machine_hog(struct gpio_chip *gc, struct gpiod_hog *hog)
+ 
+ 	desc = gpiochip_get_desc(gc, hog->chip_hwnum);
+ 	if (IS_ERR(desc)) {
+-		pr_err("%s: unable to get GPIO desc: %ld\n",
+-		       __func__, PTR_ERR(desc));
++		chip_err(gc, "%s: unable to get GPIO desc: %ld\n", __func__,
++			 PTR_ERR(desc));
+ 		return;
+ 	}
+ 
+@@ -1536,8 +1535,8 @@ static void gpiochip_machine_hog(struct gpio_chip *gc, struct gpiod_hog *hog)
+ 
+ 	rv = gpiod_hog(desc, hog->line_name, hog->lflags, hog->dflags);
+ 	if (rv)
+-		pr_err("%s: unable to hog GPIO line (%s:%u): %d\n",
+-		       __func__, gc->label, hog->chip_hwnum, rv);
++		gpiod_err(desc, "%s: unable to hog GPIO line (%s:%u): %d\n",
++			  __func__, gc->label, hog->chip_hwnum, rv);
+ }
+ 
+ static void machine_gpiochip_add(struct gpio_chip *gc)
+@@ -1562,8 +1561,8 @@ static void gpiochip_setup_devs(void)
+ 	list_for_each_entry(gdev, &gpio_devices, list) {
+ 		ret = gpiochip_setup_dev(gdev);
+ 		if (ret)
+-			pr_err("%s: Failed to initialize gpio device (%d)\n",
+-			       dev_name(&gdev->dev), ret);
++			dev_err(&gdev->dev,
++				"Failed to initialize gpio device (%d)\n", ret);
+ 	}
+ }
+ 
+@@ -2672,7 +2671,7 @@ int gpiochip_irqchip_add_key(struct gpio_chip *gc,
+ 		return -EINVAL;
+ 
+ 	if (!gc->parent) {
+-		pr_err("missing gpiochip .dev parent pointer\n");
++		chip_err(gc, "missing gpiochip .dev parent pointer\n");
+ 		return -EINVAL;
+ 	}
+ 	gc->irq.threaded = threaded;
+@@ -4842,7 +4841,7 @@ int gpiod_configure_flags(struct gpio_desc *desc, const char *con_id,
+ 
+ 	/* No particular flag request, return here... */
+ 	if (!(dflags & GPIOD_FLAGS_BIT_DIR_SET)) {
+-		pr_debug("no flags found for %s\n", con_id);
++		gpiod_dbg(desc, "no flags found for %s\n", con_id);
+ 		return 0;
+ 	}
+ 
+@@ -5067,8 +5066,7 @@ int gpiod_hog(struct gpio_desc *desc, const char *name,
+ 	/* Mark GPIO as hogged so it can be identified and removed later */
+ 	set_bit(FLAG_IS_HOGGED, &desc->flags);
+ 
+-	pr_info("GPIO line %d (%s) hogged as %s%s\n",
+-		desc_to_gpio(desc), name,
++	gpiod_info(desc, "hogged as %s%s\n",
+ 		(dflags & GPIOD_FLAGS_BIT_DIR_OUT) ? "output" : "input",
+ 		(dflags & GPIOD_FLAGS_BIT_DIR_OUT) ?
+ 		  (dflags & GPIOD_FLAGS_BIT_DIR_VAL) ? "/high" : "/low" : "");
+-- 
+2.17.1
+
