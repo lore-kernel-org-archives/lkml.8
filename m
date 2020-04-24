@@ -2,174 +2,186 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E385EC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0420C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBA0720776
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8BBC2087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:53:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VmBbirVE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qcq/8rBl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbgDXKu6 (ORCPT
+        id S1726753AbgDXKxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 06:50:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36534 "EHLO
+        Fri, 24 Apr 2020 06:53:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbgDXKu5 (ORCPT
+        with ESMTP id S1726289AbgDXKxU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 06:50:57 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40866C09B045
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 03:50:57 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id x4so9949808wmj.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 03:50:57 -0700 (PDT)
+        Fri, 24 Apr 2020 06:53:20 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BF2EC09B045
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 03:53:20 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id t4so3585742plq.12
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 03:53:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=yf9tP3sNXUsAB/rOddBDtkpZustuUZCD7ZROOWh0ox4=;
-        b=VmBbirVEjOgVcz1iLrCDuO5VLXN1951W8re/zO0nzgFYuwEMxoMSE1+bJi8VD1ugrt
-         k100zGpG94719MgmRICqnQneLX0yv58hh5Eu4UMybV0Ju088At0DHXnNLHBrNZ3wd4ir
-         ZD7sb8FxKGceNRllh8lWxRQJM921TSzHLF/sh9jCuOzooAWoNv9Y8c0eNgG9iXPQJcHo
-         UI6hKLFOmog5ICyxUJVBFWjTf1rn4Ep1qEVB2jzkZbhzpnSyDGeM4ygUy/LNdLZriX7H
-         9r9BKf31beIDyCBTLhxqlxcPdXdY26KNmj2nRe+DueEx2j8TvXDVpgjU/HC402cddZWP
-         tV6g==
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=R8t+7888K7kzJGE2cpI0Gewrm7h/D6gEhogwIFx31Lk=;
+        b=Qcq/8rBl9g732jhNkxk/yLJfMtvESceHcAhNq8mjG1GxTvJ8IX7OsX4ULyv5aXcf6A
+         XZK65r0qm0zbgUZaDhunfmvAaUraaq1Y6pUQlG4QNpejre+aIew2/3nYeZhhxpLmaImq
+         Qh00PpyAIBtDR0WZAoXZWMVSkicj+a+lzCswFroD6uPU8b9ctuKg4IKn/3d9UQcjA01j
+         ENSqq8/hZkrORRlXWjzHqqqvZ9p2m5rZkD6K4IF7Uh3fCXN9H36cjfmcn1gmPrrCc4n8
+         Juui253ahHG/SHnntUm/R4FJExyknpHv9GAo8z7R68twYuW74qB9ihE/KeE27+xXQtbc
+         yRbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=yf9tP3sNXUsAB/rOddBDtkpZustuUZCD7ZROOWh0ox4=;
-        b=sJjTh3ANRUEtmtYLDWd0Ht8Ga8U7RZ3Qr9AURvK7hUTKSxcY1ApThk9JDML5h3pk0E
-         Z+kcGaMBv52F5rBz+9Y1z3YrXIC1LbSGfiQ7jOVh9NJc55CA2dQuqK8IL4iSECRlVZX2
-         MJJtXXoExPwEbGgpSg4KuwqRNj+d7ohGpT/JuCbN6SBwZuq9PGd+yvrkaQaxVJwNrtT5
-         xFB9N5T3YV8bMrpUB5g154qflMAU96H69aW4eeTIuPmpzTT92U8l02lnwnc8iaui15wy
-         JNa3N6H7qBoLKX3NTvgzqHi084KBZGVCcG1qyMn3huQiNFDst/eLGj1Fb9BGQHBBT2El
-         lV5Q==
-X-Gm-Message-State: AGi0PuZ+5PNv+PsUZjH8mdNufEDdtyAo6EtzdHWLkjthV9AKZzaF6rJ/
-        80nxkrkqzxeiVlIEvDwsbaahtg==
-X-Google-Smtp-Source: APiQypIA21ZhRcvVCjZ27PG/4HY/Hpz6nTlXLW+I8YNTy6MMWXH+2KzYqqh4CqqJzSqriZ3BH6X/kw==
-X-Received: by 2002:a1c:7d90:: with SMTP id y138mr10044348wmc.121.1587725455891;
-        Fri, 24 Apr 2020 03:50:55 -0700 (PDT)
-Received: from dell ([2.31.163.63])
-        by smtp.gmail.com with ESMTPSA id o18sm7595925wrp.23.2020.04.24.03.50.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 03:50:55 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 11:50:53 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Marek Vasut <marex@denx.de>
-Cc:     Christophe Kerello <christophe.kerello@st.com>,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, tony@atomide.com,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 02/12] mfd: stm32-fmc2: add STM32 FMC2 controller
- driver
-Message-ID: <20200424105053.GC8414@dell>
-References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
- <1586966256-29548-3-git-send-email-christophe.kerello@st.com>
- <20200424074517.GN3612@dell>
- <8b625f1c-9ded-c07a-a20e-8cd44c1ca46d@denx.de>
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=R8t+7888K7kzJGE2cpI0Gewrm7h/D6gEhogwIFx31Lk=;
+        b=sLnNhHmNwfEJSAm9bxLHVJrGh+MeyK2tn66CURkP4FMFRi0mNr0zi6TpjZJ4uI8/PV
+         zFHnoYmXo0jVN8dnXmcmv7/ih/ksAVdk0WRWLO5S/XYBQD3fObwzhOR/s9MF18pXr4Xg
+         IyFvBNJR7M2fHBzoUfepp1n/m3Quhkiwf5g0cxBh7DzvnhU9Yc4l3Mrt4XXYIggtiXu3
+         Ab6Q+gjrpNwsM49uRhtEvj5TuOVu5NyetzLTtQqHtIlrW6rPC5G0j6TvzIJLBItjOJAW
+         vGtIcZdDDK9J8eTP44YsI3vZSB5v/V5XfvIRg/Wc9/DxL7jnLzdI7nnsJVC7V6HkBqlJ
+         KkLw==
+X-Gm-Message-State: AGi0PuazXDQIBrWSY6fHMjnHRTnfc9ZKjWq/9tgIcFDVAeAXWVyYBo8D
+        pEuc67eImdrauPC8bePMZVM=
+X-Google-Smtp-Source: APiQypK5+esVN5CdbnzPWeW2IhtsX++39F6f0uikR/CRyclafcDhXyyY7JjiOPtD6LG9xwD0kd49Ew==
+X-Received: by 2002:a17:90a:328f:: with SMTP id l15mr5666046pjb.77.1587725599462;
+        Fri, 24 Apr 2020 03:53:19 -0700 (PDT)
+Received: from [192.168.1.149] ([42.119.157.180])
+        by smtp.gmail.com with ESMTPSA id 198sm5628223pfa.87.2020.04.24.03.53.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Apr 2020 03:53:18 -0700 (PDT)
+Cc:     tranmanphong@gmail.com, steve.capper@arm.com, steven.price@arm.com,
+        keescook@chromium.org, greg@kroah.com, akpm@linux-foundation.org,
+        alexios.zavras@intel.com, broonie@kernel.org,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de
+Subject: Re: Re: [PATCH v2] arm64: add check_wx_pages debugfs for CHECK_WX
+To:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        ruscur@russell.cc
+References: <20200307093926.27145-1-tranmanphong@gmail.com>
+ <20200421173557.10817-1-tranmanphong@gmail.com>
+ <20200422143526.GD54796@lakrids.cambridge.arm.com>
+ <20200422152656.GF676@willie-the-truck>
+From:   Phong Tran <tranmanphong@gmail.com>
+Message-ID: <e06b1ad1-08ca-ec50-7ca1-7d08bbea81b3@gmail.com>
+Date:   Fri, 24 Apr 2020 17:52:41 +0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8b625f1c-9ded-c07a-a20e-8cd44c1ca46d@denx.de>
+In-Reply-To: <20200422152656.GF676@willie-the-truck>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Apr 2020, Marek Vasut wrote:
-
-> On 4/24/20 9:45 AM, Lee Jones wrote:
-> > On Wed, 15 Apr 2020, Christophe Kerello wrote:
-> > 
-> >> The driver adds the support for the STMicroelectronics FMC2 controller
-> >> found on STM32MP SOCs.
-> >>
-> >> The FMC2 functional block makes the interface with: synchronous and
-> >> asynchronous static memories (such as PSNOR, PSRAM or other
-> >> memory-mapped peripherals) and NAND flash memories.
-> >>
-> >> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
-> >> ---
-> >> Changes in v2:
-> >>  - remove ops from stm32_fmc2 structure
-> >>  - add 2 APIs to manage FMC2 enable/disable
-> >>  - add 2 APIs to manage FMC2 NWAIT shared signal
-> >>
-> >>  drivers/mfd/Kconfig            |  12 +++
-> >>  drivers/mfd/Makefile           |   1 +
-> >>  drivers/mfd/stm32-fmc2.c       | 136 +++++++++++++++++++++++++
-> >>  include/linux/mfd/stm32-fmc2.h | 225 +++++++++++++++++++++++++++++++++++++++++
-> >>  4 files changed, 374 insertions(+)
-> >>  create mode 100644 drivers/mfd/stm32-fmc2.c
-> >>  create mode 100644 include/linux/mfd/stm32-fmc2.h
-> >>
-> >> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> >> index 2b20329..5260582 100644
-> >> --- a/drivers/mfd/Kconfig
-> >> +++ b/drivers/mfd/Kconfig
-> >> @@ -1922,6 +1922,18 @@ config MFD_ROHM_BD71828
-> >>  	  Also included is a Coulomb counter, a real-time clock (RTC), and
-> >>  	  a 32.768 kHz clock gate.
-> >>  
-> >> +config MFD_STM32_FMC2
-> >> +	tristate "Support for FMC2 controllers on STM32MP SoCs"
-> >> +	depends on MACH_STM32MP157 || COMPILE_TEST
-> >> +	select MFD_CORE
-> >> +	select REGMAP
-> >> +	select REGMAP_MMIO
-> >> +	help
-> >> +	  Select this option to enable STM32 FMC2 driver used for FMC2 External
-> >> +	  Bus Interface controller and FMC2 NAND flash controller. This driver
-> >> +	  provides core support for the STM32 FMC2 controllers, in order to use
-> >> +	  the actual functionality of the device other drivers must be enabled.
-> > 
-> > Not sure how many times I have to say this before people stop
-> > attempting to pass these kinds of relationships off as MFDs:
-> > 
-> > A memory device and its bus is not an MFD.  In a similar vain to the
-> > thousands of USB, I2C, SPI, PCI and the like devices that aren't MFDs
-> > either.
-> > 
-> > Please find another way to associate your device with its bus.
+On 4/22/20 10:26 PM, Will Deacon wrote:
+> On Wed, Apr 22, 2020 at 03:35:27PM +0100, Mark Rutland wrote:
+>> On Wed, Apr 22, 2020 at 12:35:58AM +0700, Phong Tran wrote:
+>>> follow the suggestion from
+>>> https://github.com/KSPP/linux/issues/35
+>>>
+>>> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+>>> ---
+>>> Change since v1:
+>>> - Update the Kconfig help text
+>>> - Don't check the return value of debugfs_create_file()
+>>> - Tested on QEMU aarch64
+>>
+>> As on v1, I think that this should be generic across all architectures
+>> with CONFIG_DEBUG_WX. Adding this only on arm64 under
+>> CONFIG_PTDUMP_DEBUGFS (which does not generally imply a WX check)
+>> doesn't seem right.
+>>
+>> Maybe we need a new ARCH_HAS_CHECK_WX config to make that simpler, but
+>> that seems simple to me.
 > 
-> This FMC2 is however an IP which can either operate external devices
-> (like ethernet chip on this parallel bus) or external flashes (like NOR
-> and NAND chips).
+> Agreed. When I asked about respinning, I assumed this would be done in
+> generic code as you requested on the first version. Phong -- do you think
+> you can take a look at that, please?
+> 
 
-I'm sure that it *can*.  Although that's not its main purpose.  The
-clue is in the nomenclature ("Flexible *Memory* Controller").  Nor is
-it how the device is being used in this submission:
+sure, plan to make change in mm/ptdump.c with KConfig 
+"ARCH_HAS_CHECK_WX" as suggestion.
 
-  "The FMC2 functional block makes the interface with: synchronous and
-   asynchronous static memories (such as PSNOR, PSRAM or other
-   memory-mapped peripherals) and NAND flash memories."
+Then need align with this patch in PowerPC arch also
 
-As I mentioned, this is just another memory device and its bus.
+https://lore.kernel.org/kernel-hardening/20200402084053.188537-3-ruscur@russell.cc/
 
-> Can you provide a suggestion how this should be handled, if not as MFD?
-> It seems to me, that this is a Multi-Function Device .
+diff --git a/arch/arm64/Kconfig.debug b/arch/arm64/Kconfig.debug
+index a1efa246c9ed..50f18e7ff2ae 100644
+--- a/arch/arm64/Kconfig.debug
++++ b/arch/arm64/Kconfig.debug
+@@ -25,6 +25,7 @@ config ARM64_RANDOMIZE_TEXT_OFFSET
 
-Simply move it into the MTD or Memory subsystems and set up the
-dependencies via Kconfig.
+  config DEBUG_WX
+         bool "Warn on W+X mappings at boot"
++       select ARCH_HAS_CHECK_WX
+         select PTDUMP_CORE
+         ---help---
+           Generate a warning if any W+X mappings are found at boot.
+diff --git a/mm/Kconfig.debug b/mm/Kconfig.debug
+index 0271b22e063f..40c9ac5a4db2 100644
+--- a/mm/Kconfig.debug
++++ b/mm/Kconfig.debug
+@@ -138,3 +138,6 @@ config PTDUMP_DEBUGFS
+           kernel.
 
-> If this discussion is a recurring topic, is there some documentation
-> which explains how such devices should be handled ?
+           If in doubt, say N.
++
++config ARCH_HAS_CHECK_WX
++       bool
+diff --git a/mm/ptdump.c b/mm/ptdump.c
+index 26208d0d03b7..8f54db007aaa 100644
+--- a/mm/ptdump.c
++++ b/mm/ptdump.c
+@@ -137,3 +137,29 @@ void ptdump_walk_pgd(struct ptdump_state *st, 
+struct mm_struct *mm, pgd_t *pgd)
+         /* Flush out the last page */
+         st->note_page(st, 0, -1, 0);
+  }
++
++#ifdef CONFIG_ARCH_HAS_CHECK_WX
++#include <linux/debugfs.h>
++#include <asm/ptdump.h>
++
++static int check_wx_debugfs_set(void *data, u64 val)
++{
++       if (val != 1ULL)
++               return -EINVAL;
++
++       ptdump_check_wx();
++
++       return 0;
++}
++
++DEFINE_SIMPLE_ATTRIBUTE(check_wx_fops, NULL, check_wx_debugfs_set, 
+"%llu\n");
++
++static int ptdump_debugfs_check_wx_init(void)
++{
++       debugfs_create_file("check_wx_pages", 0200, NULL,
++                       NULL, &check_wx_fops) ? 0 : -ENOMEM;
++       return 0;
++}
++
++device_initcall(ptdump_debugfs_check_wx_init);
++#endif
 
-Not that I'm aware of.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Regards,
+Phong.
