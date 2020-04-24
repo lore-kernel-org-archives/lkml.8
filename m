@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7990C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17EEFC55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8311520776
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBCEF20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:37:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="tLSC0/Ub";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qrBLsC6l"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="q+NaaN9C";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="d1XUgjoe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728943AbgDXPhu (ORCPT
+        id S1728953AbgDXPhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:37:50 -0400
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:44281 "EHLO
+        Fri, 24 Apr 2020 11:37:53 -0400
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:55181 "EHLO
         wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728871AbgDXPh1 (ORCPT
+        by vger.kernel.org with ESMTP id S1728841AbgDXPhW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:37:27 -0400
+        Fri, 24 Apr 2020 11:37:22 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 9688F1450;
-        Fri, 24 Apr 2020 11:37:25 -0400 (EDT)
+        by mailnew.west.internal (Postfix) with ESMTP id 1AEAA144E;
+        Fri, 24 Apr 2020 11:37:20 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:37:26 -0400
+  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:37:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=/KsyQOpfutU4j
-        AT75agxrluQ1cWQoNM89G9u2gOdhXQ=; b=tLSC0/UbxSbZKpyPzYyr4uIaj8d5n
-        QCQXRhaS+QZ8ncKsz++oAfZA3IeSZJWw63r2/Vrovtv/ZTtNymE4oEcJod1JWwfA
-        Ny7/SCUwcEnfvSRJPZh4JIeCyRopDT999hlmL8KB5cYWIQRFg3Mi5dji7qYWT5ZA
-        7ruEkUgG0fB+sAvbmVsIfVw2L3N/q/vG/SmBAd++eod0zyhl+7STiwzigxGWZ1Gw
-        rh+2Fh14DwmhhZM1CgUOTMlK3TF0lhvJ/xoJNS6B+eqjpGCUumvazOBStggNxRkI
-        gwq255uo23d4bynTJHqYFtNl10j6jbTgreIleTDQZH77k9qTQQ35OIIxA==
+        :mime-version:content-transfer-encoding; s=fm2; bh=Xt1MDSph8wIIA
+        ftBrE+JYuJC2zNDaIZXQtW5wvsE+fg=; b=q+NaaN9CWkMWla284piJ1BsU/Diad
+        9SFzE1HX3Nhysz7a7LLBo0Bqmt7eB14H+YX9u1kruKucJJtCHSPFEzg5KX47nyj8
+        suysf0qrBt1RgGn7JOXlrctRAwFFKnQGxAjKu9wIfSsckpiEOTTmA3M5amp45fTx
+        P3cGEu5TCTXrfzz3+kI4KFQpt3JisgIMq8dUTYVj/5HtJ2r5vvPMPh9N9jRpUxcg
+        Dy64Pg1rthxy0UdA+4pF0EL5KC0E2OoYlLAS6+asJjife2skd1w/dmXJqmcoQVjT
+        qGluQh6Cv/LLdBfXMDtYXkre8LdZwdhTz2Kifa80PcABnjj/RMglnIaLA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=/KsyQOpfutU4jAT75agxrluQ1cWQoNM89G9u2gOdhXQ=; b=qrBLsC6l
-        YD3zUOpoGZxbt27eVYBWiQ/c77LjoAHvP/397bPupBDGjIkXuE/h/VVhu7SC/4wo
-        ymwjqkWmUzzaef/wnFx/67y3hT4ler14vm41ZvSAHmdoOBeJJvKxk5BGlokGxA62
-        1xvkePHhcN7PQDthNZ2CsbjXaCbo8q+3AFUn3MVJExK/2yR+qYuhCojjDF7jgwOw
-        ymcFzU259RS8Jwme464tUx/yLdVi/67DAkoNSSNyMn2T2Wh0v9Mnjh6i6aIoZEEG
-        KLaGOuA/DqI3uXNTo6KXkl2j57/+iwqh+9hXTByFEZYoHlrGjL+M6FwPJbfy4CxJ
-        XUSukH5rkvsWow==
-X-ME-Sender: <xms:tQejXtbY-WedBrS92KuWQQyhDSK-UJjYHJZSR2BVZE0Y5gJlhbXzsw>
+        fm2; bh=Xt1MDSph8wIIAftBrE+JYuJC2zNDaIZXQtW5wvsE+fg=; b=d1XUgjoe
+        RegJpShXCWV7keUEYImcFMKcN+JXX/B3Ss5uuLMShotoDOT0MUZr/SNDggseXEgc
+        axqCC6KP3OSz9E2kXGscsGpt5jGjERvz5rr2oVvULW5mS6bdSXTydjZxvhohAIne
+        tKse3PUKHJ9i9QSzapigo7QfdviOLsQyii5SrTPaL1Xkr9GsvsWutMvt9QvczWxR
+        pFc2cws6WPydMolUGwp8gJ82u4BNN9frDl3O5OdXcHSU0ZbEgcOws4YDOToRuzcu
+        rKOqiT82G5xfJPAC9nYxI+292WQrUxbJROu288+Lm5f8C3ME9eom+PShL4dnwqlF
+        2a04yKjoOTs+CA==
+X-ME-Sender: <xms:rwejXrYbLFyTSN-gKsoAtmujdJtti8LNQE2o3qUvrSh09CtxINLjgA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrhedugdekiecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgv
     ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpeejkeenucfrrghrrghmpehmrghi
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpeejgeenucfrrghrrghmpehmrghi
     lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:tQejXi7BDsVDUJzX0GG2tYxO0Hp8kPZ1GDI8JbFdv1qmZLGZFb-p3Q>
-    <xmx:tQejXqy7rya1HutnUC3-Qi2JtsidROuOyEVMmjmFOT5wFtgRpw9AJg>
-    <xmx:tQejXh38dWtnPCQpNFUXUqWc8lS1cVSOmnKk05VZRYZihkPZybgS0Q>
-    <xmx:tQejXuUDyYHZ56yI8KW5j-9vk5NXsJXtPDkbrFFxa6kL-1DiDDbRvyXLSKo>
+X-ME-Proxy: <xmx:rwejXtmgUj2CPM2oYvVy6xzYs-NdueyNatCBJ-9zb7MS6sLpqFB5xw>
+    <xmx:rwejXqGOF0rre_qoex_Yl-KHDak-DNMlRJlhs-IuzK8MhMu0WAvn7w>
+    <xmx:rwejXsFkYFNREHrVifzEsScDamFlzyTeao_rGQSrEQ0JIOHkjCqXpw>
+    <xmx:rwejXh4LVC2V-UFBvNOX3TVRVAkQHIxI884fe_YbVSqiPyZixcTCOI9lW80>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D3110328005E;
-        Fri, 24 Apr 2020 11:37:24 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 560C73280063;
+        Fri, 24 Apr 2020 11:37:19 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -75,9 +75,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v2 88/91] drm/vc4: hdmi: Add audio-related callbacks
-Date:   Fri, 24 Apr 2020 17:35:09 +0200
-Message-Id: <d2be7532c52a1b4ecd3748e327c1847b918b2e81.1587742492.git-series.maxime@cerno.tech>
+Subject: [PATCH v2 84/91] drm/vc4: hdmi: Adjust HSM clock rate depending on pixel rate
+Date:   Fri, 24 Apr 2020 17:35:05 +0200
+Message-Id: <3a3af29a36bec4161f40f3edcd5cacdfbfc7a9d8.1587742492.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
 References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
@@ -88,108 +88,195 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+The HSM clock needs to be setup at around 101% of the pixel rate. This
+was done previously by setting the clock rate to 163.7MHz at probe time and
+only check in mode_valid whether the mode pixel clock was under the pixel
+clock +1% or not.
 
-The audio configuration has changed for the BCM2711, with notably a
-different parent clock and a different channel configuration.
+However, with 4k we need to change that frequency to a higher frequency
+than 163.7MHz, and yet want to have the lowest clock as possible to have a
+decent power saving.
 
-Make that modular to be able to support the BCM2711.
+Let's change that logic a bit by setting the clock rate of the HSM clock
+to the pixel rate at encoder_enable time. This would work for the
+BCM2711 that support 4k resolutions and has a clock that can provide it,
+but we still have to take care of a 4k panel plugged on a BCM283x SoCs
+that wouldn't be able to use those modes, so let's define the limit in
+the variant.
 
-Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_hdmi.c | 25 +++++++++++++++++--------
- drivers/gpu/drm/vc4/vc4_hdmi.h |  4 ++++
- 2 files changed, 21 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/vc4/vc4_hdmi.c | 79 ++++++++++++++++-------------------
+ drivers/gpu/drm/vc4/vc4_hdmi.h |  3 +-
+ 2 files changed, 41 insertions(+), 41 deletions(-)
 
 diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-index 7c43c039e669..6baf4d460b80 100644
+index 356334eeaf66..df3973acbe88 100644
 --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
 +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-@@ -613,10 +613,22 @@ static const struct drm_encoder_helper_funcs vc4_hdmi_encoder_helper_funcs = {
- 	.enable = vc4_hdmi_encoder_enable,
- };
+@@ -52,7 +52,6 @@
+ #include "vc4_hdmi_regs.h"
+ #include "vc4_regs.h"
  
-+static u32 vc4_hdmi_channel_map(struct vc4_hdmi *vc4_hdmi, u32 channel_mask)
-+{
-+	int i;
-+	u32 channel_map = 0;
-+
-+	for (i = 0; i < 8; i++) {
-+		if (channel_mask & BIT(i))
-+			channel_map |= i << (3 * i);
+-#define HSM_CLOCK_FREQ 163682864
+ #define CEC_CLOCK_FREQ 40000
+ 
+ static int vc4_hdmi_debugfs_regs(struct seq_file *m, void *unused)
+@@ -328,6 +327,7 @@ static void vc4_hdmi_encoder_disable(struct drm_encoder *encoder)
+ 	HDMI_WRITE(HDMI_VID_CTL,
+ 		   HDMI_READ(HDMI_VID_CTL) & ~VC4_HD_VID_CTL_ENABLE);
+ 
++	clk_disable_unprepare(vc4_hdmi->hsm_clock);
+ 	clk_disable_unprepare(vc4_hdmi->pixel_clock);
+ 
+ 	ret = pm_runtime_put(&vc4_hdmi->pdev->dev);
+@@ -425,6 +425,7 @@ static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
+ 	struct vc4_hdmi *vc4_hdmi = encoder_to_vc4_hdmi(encoder);
+ 	struct vc4_hdmi_encoder *vc4_encoder = to_vc4_hdmi_encoder(encoder);
+ 	bool debug_dump_regs = false;
++	unsigned long pixel_rate, hsm_rate;
+ 	int ret;
+ 
+ 	ret = pm_runtime_get_sync(&vc4_hdmi->pdev->dev);
+@@ -433,9 +434,8 @@ static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
+ 		return;
+ 	}
+ 
+-	ret = clk_set_rate(vc4_hdmi->pixel_clock,
+-			   mode->clock * 1000 *
+-			   ((mode->flags & DRM_MODE_FLAG_DBLCLK) ? 2 : 1));
++	pixel_rate = mode->clock * 1000 * ((mode->flags & DRM_MODE_FLAG_DBLCLK) ? 2 : 1);
++	ret = clk_set_rate(vc4_hdmi->pixel_clock, pixel_rate);
+ 	if (ret) {
+ 		DRM_ERROR("Failed to set pixel clock rate: %d\n", ret);
+ 		return;
+@@ -447,6 +447,36 @@ static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
+ 		return;
+ 	}
+ 
++	/*
++	 * As stated in RPi's vc4 firmware "HDMI state machine (HSM) clock must
++	 * be faster than pixel clock, infinitesimally faster, tested in
++	 * simulation. Otherwise, exact value is unimportant for HDMI
++	 * operation." This conflicts with bcm2835's vc4 documentation, which
++	 * states HSM's clock has to be at least 108% of the pixel clock.
++	 *
++	 * Real life tests reveal that vc4's firmware statement holds up, and
++	 * users are able to use pixel clocks closer to HSM's, namely for
++	 * 1920x1200@60Hz. So it was decided to have leave a 1% margin between
++	 * both clocks. Which, for RPi0-3 implies a maximum pixel clock of
++	 * 162MHz.
++	 *
++	 * Additionally, the AXI clock needs to be at least 25% of
++	 * pixel clock, but HSM ends up being the limiting factor.
++	 */
++	hsm_rate = max_t(unsigned long, 120000000, (pixel_rate / 100) * 101);
++	ret = clk_set_rate(vc4_hdmi->hsm_clock, hsm_rate);
++	if (ret) {
++		DRM_ERROR("Failed to set HSM clock rate: %d\n", ret);
++		return;
 +	}
-+	return channel_map;
-+}
 +
- /* HDMI audio codec callbacks */
- static void vc4_hdmi_audio_set_mai_clock(struct vc4_hdmi *vc4_hdmi)
++	ret = clk_prepare_enable(vc4_hdmi->hsm_clock);
++	if (ret) {
++		DRM_ERROR("Failed to turn on HSM clock: %d\n", ret);
++		clk_disable_unprepare(vc4_hdmi->pixel_clock);
++		return;
++	}
++
+ 	if (vc4_hdmi->variant->reset)
+ 		vc4_hdmi->variant->reset(vc4_hdmi);
+ 
+@@ -561,23 +591,9 @@ static enum drm_mode_status
+ vc4_hdmi_encoder_mode_valid(struct drm_encoder *encoder,
+ 			    const struct drm_display_mode *mode)
  {
--	u32 hsm_clock = clk_get_rate(vc4_hdmi->hsm_clock);
-+	u32 hsm_clock = clk_get_rate(vc4_hdmi->audio_clock);
- 	unsigned long n, m;
+-	/*
+-	 * As stated in RPi's vc4 firmware "HDMI state machine (HSM) clock must
+-	 * be faster than pixel clock, infinitesimally faster, tested in
+-	 * simulation. Otherwise, exact value is unimportant for HDMI
+-	 * operation." This conflicts with bcm2835's vc4 documentation, which
+-	 * states HSM's clock has to be at least 108% of the pixel clock.
+-	 *
+-	 * Real life tests reveal that vc4's firmware statement holds up, and
+-	 * users are able to use pixel clocks closer to HSM's, namely for
+-	 * 1920x1200@60Hz. So it was decided to have leave a 1% margin between
+-	 * both clocks. Which, for RPi0-3 implies a maximum pixel clock of
+-	 * 162MHz.
+-	 *
+-	 * Additionally, the AXI clock needs to be at least 25% of
+-	 * pixel clock, but HSM ends up being the limiting factor.
+-	 */
+-	if (mode->clock > HSM_CLOCK_FREQ / (1000 * 101 / 100))
++	struct vc4_hdmi *vc4_hdmi = encoder_to_vc4_hdmi(encoder);
++
++	if ((mode->clock * 1000) > vc4_hdmi->variant->max_pixel_clock)
+ 		return MODE_CLOCK_HIGH;
  
- 	rational_best_approximation(hsm_clock, vc4_hdmi->audio.samplerate,
-@@ -735,7 +747,7 @@ static int vc4_hdmi_audio_hw_params(struct snd_pcm_substream *substream,
- 	struct vc4_hdmi *vc4_hdmi = dai_to_hdmi(dai);
- 	struct device *dev = &vc4_hdmi->pdev->dev;
- 	u32 audio_packet_config, channel_mask;
--	u32 channel_map, i;
-+	u32 channel_map;
+ 	return MODE_OK;
+@@ -1347,23 +1363,6 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
+ 		return -EPROBE_DEFER;
+ 	}
  
- 	if (substream != vc4_hdmi->audio.substream)
- 		return -EINVAL;
-@@ -787,12 +799,7 @@ static int vc4_hdmi_audio_hw_params(struct snd_pcm_substream *substream,
- 		   VC4_HDMI_MAI_CONFIG_BIT_REVERSE |
- 		   VC4_SET_FIELD(channel_mask, VC4_HDMI_MAI_CHANNEL_MASK));
- 
--	channel_map = 0;
--	for (i = 0; i < 8; i++) {
--		if (channel_mask & BIT(i))
--			channel_map |= i << (3 * i);
+-	/* This is the rate that is set by the firmware.  The number
+-	 * needs to be a bit higher than the pixel clock rate
+-	 * (generally 148.5Mhz).
+-	 */
+-	ret = clk_set_rate(vc4_hdmi->hsm_clock, HSM_CLOCK_FREQ);
+-	if (ret) {
+-		DRM_ERROR("Failed to set HSM clock rate: %d\n", ret);
+-		goto err_put_i2c;
 -	}
 -
-+	channel_map = vc4_hdmi->variant->channel_map(vc4_hdmi, channel_mask);
- 	HDMI_WRITE(HDMI_MAI_CHANNEL_MAP, channel_map);
- 	HDMI_WRITE(HDMI_AUDIO_PACKET_CONFIG, audio_packet_config);
- 	vc4_hdmi_set_n_cts(vc4_hdmi);
-@@ -1342,6 +1349,7 @@ static int vc4_hdmi_init_resources(struct vc4_hdmi *vc4_hdmi)
- 		DRM_ERROR("Failed to get HDMI state machine clock\n");
- 		return PTR_ERR(vc4_hdmi->hsm_clock);
- 	}
-+	vc4_hdmi->audio_clock = vc4_hdmi->hsm_clock;
+-	ret = clk_prepare_enable(vc4_hdmi->hsm_clock);
+-	if (ret) {
+-		DRM_ERROR("Failed to turn on HDMI state machine clock: %d\n",
+-			  ret);
+-		goto err_put_i2c;
+-	}
+-
+ 	/* Only use the GPIO HPD pin if present in the DT, otherwise
+ 	 * we'll use the HDMI core's register.
+ 	 */
+@@ -1420,9 +1419,7 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
+ err_destroy_encoder:
+ 	vc4_hdmi_encoder_destroy(encoder);
+ err_unprepare_hsm:
+-	clk_disable_unprepare(vc4_hdmi->hsm_clock);
+ 	pm_runtime_disable(dev);
+-err_put_i2c:
+ 	put_device(&vc4_hdmi->ddc->dev);
  
- 	return 0;
- }
-@@ -1499,6 +1507,7 @@ static const struct vc4_hdmi_variant bcm2835_variant = {
- 	.phy_disable		= vc4_hdmi_phy_disable,
- 	.phy_rng_enable		= vc4_hdmi_phy_rng_enable,
- 	.phy_rng_disable	= vc4_hdmi_phy_rng_disable,
-+	.channel_map		= vc4_hdmi_channel_map,
- };
+ 	return ret;
+@@ -1445,7 +1442,6 @@ static void vc4_hdmi_unbind(struct device *dev, struct device *master,
+ 	vc4_hdmi_connector_destroy(&vc4_hdmi->connector);
+ 	vc4_hdmi_encoder_destroy(&vc4_hdmi->encoder.base.base);
  
- static const struct of_device_id vc4_hdmi_dt_match[] = {
+-	clk_disable_unprepare(vc4_hdmi->hsm_clock);
+ 	pm_runtime_disable(dev);
+ 
+ 	put_device(&vc4_hdmi->ddc->dev);
+@@ -1470,6 +1466,7 @@ static int vc4_hdmi_dev_remove(struct platform_device *pdev)
+ static const struct vc4_hdmi_variant bcm2835_variant = {
+ 	.encoder_type		= VC4_ENCODER_TYPE_HDMI0,
+ 	.debugfs_name		= "hdmi_regs",
++	.max_pixel_clock	= 162000000,
+ 	.cec_available		= true,
+ 	.registers		= vc4_hdmi_fields,
+ 	.num_registers		= ARRAY_SIZE(vc4_hdmi_fields),
 diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdmi.h
-index eb0f91b57316..30eac891dc74 100644
+index 20e0f5498f1e..9a6831b941d9 100644
 --- a/drivers/gpu/drm/vc4/vc4_hdmi.h
 +++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
-@@ -72,6 +72,9 @@ struct vc4_hdmi_variant {
+@@ -36,6 +36,9 @@ struct vc4_hdmi_variant {
+ 	/* Set to true when the CEC support is available */
+ 	bool cec_available;
  
- 	/* Callback to disable the RNG in the PHY */
- 	void (*phy_rng_disable)(struct vc4_hdmi *vc4_hdmi);
++	/* Maximum pixel clock supported by the controller (in Hz) */
++	unsigned long long max_pixel_clock;
 +
-+	/* Callback to get channel map */
-+	u32 (*channel_map)(struct vc4_hdmi *vc4_hdmi, u32 channel_mask);
- };
+ 	/* List of the registers available on that variant */
+ 	const struct vc4_hdmi_register *registers;
  
- /* HDMI audio information */
-@@ -112,6 +115,7 @@ struct vc4_hdmi {
- 
- 	struct clk *pixel_clock;
- 	struct clk *hsm_clock;
-+	struct clk *audio_clock;
- 
- 	struct debugfs_regset32 hdmi_regset;
- 	struct debugfs_regset32 hd_regset;
 -- 
 git-series 0.9.1
