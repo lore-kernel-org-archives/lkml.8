@@ -2,132 +2,181 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5831EC55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA54C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39E8A2076C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B89A2076C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:16:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="hbylwVse"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="NMge3sl0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726174AbgDXEQa (ORCPT
+        id S1726298AbgDXEQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 00:16:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725823AbgDXEQ3 (ORCPT
+        Fri, 24 Apr 2020 00:16:51 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:18303 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725823AbgDXEQv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 00:16:29 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73E20C09B046
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 21:16:29 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id u5so8059725ilb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 21:16:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2jAtHDJaXQSPoo3nlkU9v2knO6zODUCVprDxXUvahvs=;
-        b=hbylwVseW+Q4cQX5hp1JKipzdh1CUwDlAXJDMcFr7j/SKwjCcLigYjv9Qmninfrg1S
-         C8ZpA8YPu9+bb7UiaB6jK3I4/m6PH5iUK9JBywLRaL5d/gOk2U99cr+DGgdndrFWhsit
-         PyX/Z2IGQoRX/MmSv+q+uxCOYkTCbvmIH9Pck=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2jAtHDJaXQSPoo3nlkU9v2knO6zODUCVprDxXUvahvs=;
-        b=cCpJ+YSYek+tnUZsqq25q3zmm9GQoR6JBp1oZB4Drphe2YK8ZUF6+8rc/npb7jfUbB
-         CPiZIeGNn9HsUIDjQCVyL3TRMWsVSlp/BMkhTHhMsKCQdbsyIrkalwa4n/HaiTwX1pjG
-         yelg4VKKRC0r6/EKQk211lunJBel36wZv31tmdVMQqS4ic/JEoKDUl1F5jbj4LDZ7cR9
-         rKeEVAXupcG9NYa2qQp+7s1EsOjuHjLwvEfCvKqxY0o5LhaRBB341MdYL5uDmL7lRLDT
-         Xoo3JNaohEZ/EWm0v0WIFbMjp9MOCF2wtcY6HesDPWaIYza0gK/4I6DsP3zxbdO8xgND
-         d9CA==
-X-Gm-Message-State: AGi0Pub6V5syhgr9tLtxhIA9L9XL0QPt4vlHqEdWuHQudATVXKNJ9DUr
-        7DDCgjYKsnRKO+5WYRxTyf8dpr9qmtfkTDwejzBvsw==
-X-Google-Smtp-Source: APiQypLx9xEPu8dS1vDdvm9qb8bGXok/ZPGQ0Hw37lDg82ejq0fVG3kbMb6RrvqQdn/HyvHInL+Ow9CgUloYV2kC984=
-X-Received: by 2002:a92:194f:: with SMTP id e15mr7143517ilm.78.1587701788804;
- Thu, 23 Apr 2020 21:16:28 -0700 (PDT)
+        Fri, 24 Apr 2020 00:16:51 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200424041648epoutp020a0b101b395f2b54ce336ae590130b0c~IpmHryRoe2565425654epoutp02n
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 04:16:48 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200424041648epoutp020a0b101b395f2b54ce336ae590130b0c~IpmHryRoe2565425654epoutp02n
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1587701808;
+        bh=Xxaz6tD9bza4jciD/mqZAoysNvynFcYuDnWX77bailQ=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=NMge3sl00COwuholSzFFCrV+LVdUQoXsC+pwo9egpSNBLIPtdiWLVo0azom+eH9Zq
+         txbUWjMaB+25iBThn05wljr45NDZ5I3X9M8zCLPGTL3N4lhz/TBueNBrBvuRBuELbQ
+         pHCc7SWnfhmxrJiP2sSTxPCsI9t7zSJkv66PCwqE=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20200424041647epcas1p47279eb650cdf1beca08f8cd7f04d8f43~IpmHDnNXO2595825958epcas1p4b;
+        Fri, 24 Apr 2020 04:16:47 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.160]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 497gq22TNtzMqYlm; Fri, 24 Apr
+        2020 04:16:46 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        79.D7.04648.E2862AE5; Fri, 24 Apr 2020 13:16:46 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200424041645epcas1p2e5d0c132ebae47d7f6d60d33bf920712~IpmFXBpZU1014810148epcas1p2Q;
+        Fri, 24 Apr 2020 04:16:45 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200424041645epsmtrp18afdd0eec1a2845ec05925f205535bff~IpmFV1LrC2183921839epsmtrp1Z;
+        Fri, 24 Apr 2020 04:16:45 +0000 (GMT)
+X-AuditID: b6c32a37-1f3ff70000001228-30-5ea2682ec055
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        55.86.25866.D2862AE5; Fri, 24 Apr 2020 13:16:45 +0900 (KST)
+Received: from [10.253.104.82] (unknown [10.253.104.82]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200424041645epsmtip2baa9db0282471f5ef5465d9d636ebe36~IpmE7sZXO2398923989epsmtip2f;
+        Fri, 24 Apr 2020 04:16:45 +0000 (GMT)
+Subject: Re: [PATCH v2] mm/vmscan: count layzfree pages and fix
+ nr_isolated_* mismatch
+To:     Minchan Kim <minchan@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Cc:     mgorman@suse.de, m.szyprowski@samsung.com, mina86@mina86.com,
+        shli@fb.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, jaewon31.kim@gmail.com,
+        ytk.lee@samsung.com
+From:   Jaewon Kim <jaewon31.kim@samsung.com>
+Message-ID: <5EA2682D.7010307@samsung.com>
+Date:   Fri, 24 Apr 2020 13:16:45 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+        Thunderbird/38.7.2
 MIME-Version: 1.0
-References: <20200414194353.GQ17661@paulmck-ThinkPad-P72> <20200416103007.GA3925@pc636>
- <20200416131745.GA90777@google.com> <20200416180100.GT17661@paulmck-ThinkPad-P72>
- <20200422145752.GB362484@cmpxchg.org> <20200422153503.GQ17661@paulmck-ThinkPad-P72>
- <20200423174831.GB389168@cmpxchg.org> <20200423180249.GT17661@paulmck-ThinkPad-P72>
- <20200423182750.GA32451@pc636> <20200423192115.GV17661@paulmck-ThinkPad-P72> <20200423195955.GA476@pc636>
-In-Reply-To: <20200423195955.GA476@pc636>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Fri, 24 Apr 2020 00:16:16 -0400
-Message-ID: <CAEXW_YSt=yLDS4Fj7atqB_OYiKAvt2472eTKcytEkzVABUMPkQ@mail.gmail.com>
-Subject: Re: [PATCH RFC] rcu/tree: Refactor object allocation and try harder
- for array allocation
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu <rcu@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200423200020.GB46847@google.com>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01TaUwTURD2ddvugtas9ZoQj7qoBAzQWltWI8ZEootXSDTGaAJuYG3RXnYL
+        gncCnqCIoIEiBpUQRaTQqoEGNQJGFK8ACV6oRCWKAgoBUVRsuxj5N/PN930zb957BCa/Kw0g
+        Ek02zmpiDZTUX3yjLjg0NEx/IVb5qGgCfdZRJqWvONfQGa58RDe7z0rp12XDEvpqfRtO53R3
+        ILroXrqELunvwemS6iwx/c4xdulYpu5LD8Zkp3XjTLW9DWecpUeljLP3FM405A2JmfJfnSLm
+        xLVSxLgadzN9zhkx/psMi/Ucm8BZFZwp3pyQaNJFUqvWxS2L02iVqlDVQjqCUphYIxdJRa2O
+        CV2eaPAMTCmSWUOSB4pheZ4KX7LYak6ycQq9mbdFUpwlwWBRKS1hPGvkk0y6sHizcZFKqZyv
+        8TC3GPS5JZW45TGZUpOuPYCuy44hPwLIBZD79anoGPIn5GQVgrLa1pGkF0HumQyxkPQhKLh4
+        TvJP8uRwPRIKbgSDdqdUSLoQvBgsFXlZE8mNMHDkJuaNJ5Eroe/SZYmXhJGNCMofvhR7C1Jy
+        HvQUnfLZysgQyOnK9gnE5ByoKXb48Mkeo6rCb0jgTID7+e89WoLwI5VwsmCHF8bImZB2vQDz
+        +gNZQ0DW4RzMywEyCjq/i4SpJ0LnvWu4EAfAp6xDuMBPQ9CV70JCko6gzXkcCSw1HM986jPC
+        yGBwuMMFeBZUDxUiofF46O7PlAi9ZHDkkFygzIX0jv6RbU2D3386RmIGulvvSIRlFYvA1fAF
+        O4kU9lFHs486j/1/5yKElaIpnIU36jheZVGPvmIn8j3hkIgqVPF4dS0iCUSNkz2zno+VS9hk
+        PtVYi4DAqEmyivZzsXJZApu6i7Oa46xJBo6vRRrPtrOxgMnxZs+HMNniVJr5arWaXqCN0GrU
+        1FTZ6VZDrJzUsTZuO8dZOOs/nYjwCziA1m7rndt+pzklJrDwW2dxXtStrRXszpSKD/IlWFCH
+        YiCzIfXKg8p5f16t29uSt2ra+6FNKYF6XfGPlrfJz29/LF+eHDTl52DBQOPd6M+ze6O1TeFv
+        BlaYMtyS6U3y+13PtHkz7W5XRMv6PZuDsKYxQ1fzHcP77VvpdnwDtnT4YOC+H82UmNezqhDM
+        yrN/AUskxOLYAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnkeLIzCtJLcpLzFFi42LZdlhJXlc3Y1GcQft3WYs569ewWaze5GvR
+        vXkmo8XlXXPYLO6t+c9qsfbIXXaLye+eMVosON7CarHs63t2i2U7+1ksHq/nduD2OPzmPbPH
+        xOZ37B47Z91l99i0qpPNY9OnSeweJ2b8ZvFY9+cVk0ffllWMHptPV3t83iQXwBXFZZOSmpNZ
+        llqkb5fAlTFl2Ub2gnMCFXtazBoYt/J2MXJySAiYSJxvP8IIYgsJ7GCUmPdFESIuI/Hm/FOW
+        LkYOIFtY4vDh4i5GLqCS14wSL6e9ZQKpERaIkLj17SI7iC0i4CXxecVKVoiiJUwSJ190MII4
+        zAKnGSVmtV1hBaliE9CWeL9gEpjNK6AlMfntRGYQm0VAVWLPkvVgcVGgqavXXWOGqBGUODnz
+        CdgVnAIGEhNmF4KEmQXUJf7Mu8QMYctLNG+dzTyBUXAWko5ZSMpmISlbwMi8ilEytaA4Nz23
+        2LDAKC+1XK84Mbe4NC9dLzk/dxMjOK60tHYw7ln1Qe8QIxMH4yFGCQ5mJRHeDQ/nxQnxpiRW
+        VqUW5ccXleakFh9ilOZgURLn/TprYZyQQHpiSWp2ampBahFMlomDU6qBKaulluPI1Wm5R3/p
+        CfPymiwRXX8hMYj7t7iL5yaWGYnsX+8o8J9g1z+7Z6e/zsv7H36fXWioOun5CyXrYvkI+6kc
+        7z6mXTsR7zr39ktBDS+2mRPLls87frk+h7Nf5v/nTIFwDsdV56dJ7Ilb0cbqKdz7Zcf3PC2u
+        np31D2bZOs1gOFv2w+CqyNvoNNFM78bc62EVsx9zTW2/vb5aS/J0NN/5goRlntnbU5pn6n5J
+        Oap/wjTg+p/DkbuPirYXV87Vyt1gy2e0j/9uwkEvWQ7nvZqs7HOsgleYC1dqqmo7f2xZuqD7
+        5+9zy9sPzE0wuvX+ddD5V17zVAMjtiVmlck8ZuP/v3bV2vvdRhLZR57MVWIpzkg01GIuKk4E
+        AC52eCkaAwAA
+X-CMS-MailID: 20200424041645epcas1p2e5d0c132ebae47d7f6d60d33bf920712
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200422084832epcas1p333225f9b6a00c9ce36f5f5d63fe6e3bf
+References: <CGME20200422084832epcas1p333225f9b6a00c9ce36f5f5d63fe6e3bf@epcas1p3.samsung.com>
+        <20200422084815.21913-1-jaewon31.kim@samsung.com>
+        <20200422130751.GD358439@cmpxchg.org> <5EA10872.3010500@samsung.com>
+        <20200423160546.GA389168@cmpxchg.org> <20200423200020.GB46847@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vlad,
-I'm mostly on the same page, some more comments below:
 
-On Thu, Apr 23, 2020 at 4:00 PM Uladzislau Rezki <urezki@gmail.com> wrote:
-[snip]
-> a) Single argument(headless)
-> In this case we can make use an allocator with sleepable flags,
-> because we document that headleass variant must follow might_sleep()
-> annotation. For example __GFP_NORETRY | __GFP_NOWARN. __GFP_NORETRY
-> can do some light direct reclaim, thus the caller can call schedule().
-> To do such allocation we just drop our local spinlock.
-> If an allocation gets failed, we directly fall into synchronize_rcu()
-> i.e. inline freeing.
+
+On 2020년 04월 24일 05:00, Minchan Kim wrote:
+> On Thu, Apr 23, 2020 at 12:05:46PM -0400, Johannes Weiner wrote:
+>> On Thu, Apr 23, 2020 at 12:16:02PM +0900, Jaewon Kim wrote:
+>>>
+>>> On 2020년 04월 22일 22:07, Johannes Weiner wrote:
+>>>> On Wed, Apr 22, 2020 at 05:48:15PM +0900, Jaewon Kim wrote:
+>>>>> @@ -1295,11 +1295,15 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>>>>>  		 */
+>>>>>  		if (page_mapped(page)) {
+>>>>>  			enum ttu_flags flags = ttu_flags | TTU_BATCH_FLUSH;
+>>>>> +			bool lazyfree = PageAnon(page) && !PageSwapBacked(page);
+>>>>>  
+>>>>>  			if (unlikely(PageTransHuge(page)))
+>>>>>  				flags |= TTU_SPLIT_HUGE_PMD;
+>>>>> +
+>>>>>  			if (!try_to_unmap(page, flags)) {
+>>>>>  				stat->nr_unmap_fail += nr_pages;
+>>>>> +				if (lazyfree && PageSwapBacked(page))
+>>>> This looks pretty strange, until you remember that try_to_unmap()
+>>>> could SetPageSwapbacked again.
+>>>>
+>>>> This might be more obvious?
+>>>>
+>>>> 			was_swapbacked = PageSwapBacked(page);
+>>>> 			if (!try_to_unmap(page, flags)) {
+>>>> 				stat->nr_unmap_fail += nr_pages;
+>>>> 				if (!was_swapbacked && PageSwapBacked(page))
+>>> Hello Johannes, thank you for your comment.
+>>>
+>>> The name can changed from layzyfree to was_swapbacked.
+>>> By the way, did you mean removing PageAnon(page), too? It seems to be OK, though.
+>> I can't decide whether PageAnon() makes it clearer or not. But it's
+>> not really needed for correctness. So feel free to keep what you had.
+> Yub, PageAnon is redundant.
 >
-> I also call it sleepable case, that is (a).
+>> I would really just at least change bool lazyfree to was_lazyfree,
+> It's better.
+Thank you both.
+
+Sorry but let me ask again.
+
+Because PageAnon is redundant, let me remove it on checking lazyfree.
+Then, I think, was_swapbacked (first suggestion) is better then was_lazyfree (second suggestion),
+because it just checks PageSwapBacked(page). And we knows was_swapbacked is used for lazyfree on stat->nr_lazyfree_fail.
+
+If you don't mind let me pick was_swapbacked instead of was_lazyfree
+bool was_lazyfree = PageSwapBacked(page);
+
+Thank you
+
 >
-> b) Double argument(with rcu_head)
-> This case we consider as it gets called from atomic context even though
-> it can be not. Why we consider such case as atomic: we just assume that.
-> The reason is to keep it simple, because it is not possible to detect whether
-> a current context is attomic or not(for all type of kernels), i mean the one
-> that calls kfree_rcu().
 >
-> In this case we do not have synchronize_rcu() option. Instead we have an
-> object with rcu_head inside. If an allocation gets failed we just make
-> use of rcu_head inside the object, regular queuing.
->
-> In this case we do not need to hard in order to obtain memory. Therefore
-> my question was to Johannes what is best way here. Since we decided to
-> minimize reclaiming, whereas GFP_NOWAIT wakes up kswapd if no memory.
-> GFP_ATOMIC also is not good, because for (b) we do not need to waste
-> it.
 
-I think Johannes said that waking up kswapd is Ok. OTOH, I did not see
-the drawback in waking up kswapd to do background reclaim since it
-does not happen synchronously right? I think Johannes said we can do
-better than just waking kswapd by also doing light direct reclaim
-using __GFP_NORETRY but let me know if I missed something.
-
-> > Upon memory-allocation failure, the single-argument kfree_rcu() can leak
-> > the memory (it has presumably already splatted) and the double-argument
-> > kfree_rcu() can make use of the rcu_head structure that was provided.
-> >
-> For single argument we inline freeing into current context after
-> synchronize_rcu() because it follows might_sleep() annotation.
-
-Yes.
-
-Also, with the additional caching being planned, we could avoid the
-chances of hitting the synchronize_rcu inlining.
-
-Thanks,
-
- - Joel
