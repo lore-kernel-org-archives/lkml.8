@@ -2,83 +2,76 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7387FC55191
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E08C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53B7D20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE1C420767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:45:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="FZDNASM/"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="DtZIrkwL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbgDXNpH (ORCPT
+        id S1727901AbgDXNpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 09:45:07 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:45420 "EHLO
+        Fri, 24 Apr 2020 09:45:05 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:45410 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726753AbgDXNpE (ORCPT
+        by vger.kernel.org with ESMTP id S1726698AbgDXNpE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 Apr 2020 09:45:04 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D904A4048C;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id DFC044049F;
         Fri, 24 Apr 2020 13:45:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1587735904; bh=fUGJqawcBEgP+QdRQ/p9SxgMNc2aPtUdTOSFffhfqTo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=FZDNASM/ehIHTH7vo/YP5DPNxEJA88SAayFd5SdTyZa1pXNAZW/lRnQQ74XrMSszS
-         gAx+Bms4xJAHpg6dCgrEoVjWTaWoCE8FgNyWgEQrocgZdFonrFIb+58hOAVrylF8AZ
-         FAoILgZCkmUmAfqLMZKVxeFKsXyvFwVMhAflmTPmC/ibRMqdAp9AjUzQMLDu7XiT1u
-         fkPZ1n6r1MJ9NF4xWJM34DTYOLFi8F/Qc9vd5ewUpN/ZqxkBIuIFURC90DPmKo0EpF
-         83IjE38P0bbGe4+QhMjUANQ3JA2Ln4lzr//pCuQ+FWB2J2w94A5M2i3icv9XYjfymD
-         9yHoQ3KsHoKyQ==
+        t=1587735904; bh=SPjxNuDzWiud56RftbTam+lOBwj9rLiqknpfyq50zzo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=DtZIrkwLnemlp38puCnXFuzpplsedzEhq1AFwnwSmjzFL3R8Eazwg2wuctQBzUGpr
+         emtLbUqiUpV7xVkUc/NIZ8nqEaWq8xImzWUwpUf4vZHx4nssZTJwojEt6fgeCh+n96
+         04I4vFgA8ofGlUnC4eRF5FeoX4vAR4AzfyEfyBlklZtZBr13hP9mVYZbByDFbuDZy1
+         GNbM806znl5h2eTj3pF2idJLZawMt1x/9/dLLcoHIbJFmKcK40SovQiz0DPfIR9QWk
+         WnZNDsSIjWO4Qog9eTdl7hYaTkN8RY/L7fTPtYHy6gVkV0JJ7vjc65SNbqDhUCG/Ef
+         J2Dv7De53bw/Q==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id C561FA005D;
-        Fri, 24 Apr 2020 13:45:01 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id B167DA005C;
+        Fri, 24 Apr 2020 13:45:02 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     linux-scsi@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Jose Abreu <Jose.Abreu@synopsys.com>,
-        "Winkler, Tomas" <tomas.winkler@intel.com>,
         Joao Lima <Joao.Lima@synopsys.com>,
         Alim Akhtar <alim.akhtar@samsung.com>,
         Avri Altman <avri.altman@wdc.com>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/5] scsi: ufs: Misc improvements for DesignWare drivers and UFS
-Date:   Fri, 24 Apr 2020 15:44:44 +0200
-Message-Id: <cover.1587735561.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH v2 1/5] scsi: ufs: Allow UFS 3.0 as a valid version
+Date:   Fri, 24 Apr 2020 15:44:45 +0200
+Message-Id: <c006813f8fc3052eef97d5216e4f31829d7cd10b.1587735561.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1587735561.git.Jose.Abreu@synopsys.com>
+References: <cover.1587735561.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <cover.1587735561.git.Jose.Abreu@synopsys.com>
+References: <cover.1587735561.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v2 Address review comments from Tomas and adds r-b tag provided by Alim.
+Add a define for UFS version 3.0 and do not print an error message upon
+probe when using this version.
+
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Signed-off-by: Joao Lima <Joao.Lima@synopsys.com>
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
 ---
-
-Misc set of improvements for Synopsys DesignWare drivers and UFS core.
-
-Patch 1/5, allows UFS 3.0 as a valid version for a given Host.
-
-Patch 2/5, removes all mention of G210 to the DesignWare drivers so that we
-can use same driver among different Test Chips.
-
-Patch 3/5, re-arranges the initialization sequence of PCI driver to be more
-modular.
-
-Patch 4/5, allows MSI as a valid interrupt type.
-
-Finally at 5/5, we change the Maintainers for UFS DesignWare drivers.
-
----
-Cc: "Winkler, Tomas" <tomas.winkler@intel.com>
 Cc: Joao Lima <Joao.Lima@synopsys.com>
 Cc: Jose Abreu <Jose.Abreu@synopsys.com>
 Cc: Alim Akhtar <alim.akhtar@samsung.com>
@@ -88,31 +81,36 @@ Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
 Cc: linux-scsi@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
+ drivers/scsi/ufs/ufshcd.c | 3 ++-
+ drivers/scsi/ufs/ufshci.h | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-Jose Abreu (5):
-  scsi: ufs: Allow UFS 3.0 as a valid version
-  scsi: ufs: Rename tc-dwc-g210 -> tc-dwc
-  scsi: ufs: tc-dwc-pci: Use PDI ID to match Test Chip type
-  scsi: ufs: tc-dwc-pci: Allow for MSI interrupt type
-  MAINTAINERS: Change Maintainers for SCSI UFS DWC Drivers
-
- MAINTAINERS                                        |   3 +-
- drivers/scsi/ufs/Kconfig                           |   4 +-
- drivers/scsi/ufs/Makefile                          |   4 +-
- drivers/scsi/ufs/tc-dwc-g210-pci.c                 | 176 ------------------
- drivers/scsi/ufs/tc-dwc-pci.c                      | 204 +++++++++++++++++++++
- .../ufs/{tc-dwc-g210-pltfrm.c => tc-dwc-pltfrm.c}  |  37 ++--
- drivers/scsi/ufs/{tc-dwc-g210.c => tc-dwc.c}       |   6 +-
- drivers/scsi/ufs/{tc-dwc-g210.h => tc-dwc.h}       |   6 +-
- drivers/scsi/ufs/ufshcd.c                          |   3 +-
- drivers/scsi/ufs/ufshci.h                          |   1 +
- 10 files changed, 238 insertions(+), 206 deletions(-)
- delete mode 100644 drivers/scsi/ufs/tc-dwc-g210-pci.c
- create mode 100644 drivers/scsi/ufs/tc-dwc-pci.c
- rename drivers/scsi/ufs/{tc-dwc-g210-pltfrm.c => tc-dwc-pltfrm.c} (70%)
- rename drivers/scsi/ufs/{tc-dwc-g210.c => tc-dwc.c} (98%)
- rename drivers/scsi/ufs/{tc-dwc-g210.h => tc-dwc.h} (78%)
-
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 7d1fa1349d40..2e5c200e915b 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -8441,7 +8441,8 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
+ 	if ((hba->ufs_version != UFSHCI_VERSION_10) &&
+ 	    (hba->ufs_version != UFSHCI_VERSION_11) &&
+ 	    (hba->ufs_version != UFSHCI_VERSION_20) &&
+-	    (hba->ufs_version != UFSHCI_VERSION_21))
++	    (hba->ufs_version != UFSHCI_VERSION_21) &&
++	    (hba->ufs_version != UFSHCI_VERSION_30))
+ 		dev_err(hba->dev, "invalid UFS version 0x%x\n",
+ 			hba->ufs_version);
+ 
+diff --git a/drivers/scsi/ufs/ufshci.h b/drivers/scsi/ufs/ufshci.h
+index c2961d37cc1c..f2ee81669b00 100644
+--- a/drivers/scsi/ufs/ufshci.h
++++ b/drivers/scsi/ufs/ufshci.h
+@@ -104,6 +104,7 @@ enum {
+ 	UFSHCI_VERSION_11 = 0x00010100, /* 1.1 */
+ 	UFSHCI_VERSION_20 = 0x00000200, /* 2.0 */
+ 	UFSHCI_VERSION_21 = 0x00000210, /* 2.1 */
++	UFSHCI_VERSION_30 = 0x00000300, /* 3.0 */
+ };
+ 
+ /*
 -- 
 2.7.4
 
