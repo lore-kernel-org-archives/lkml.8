@@ -4,55 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 100C6C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01652C55194
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA69020700
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE91320767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587730969;
-	bh=nvnmc9IWtdg9lfERc6tpzSUdwZC6kN8jrbfQLWlzrAQ=;
+	s=default; t=1587730971;
+	bh=D/WkIwVgvEMD3xO8gDUh7kVDLW+mEo/bNDyZXVnhDOM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SQPOkx3jKrn23qXpWy3e/ppS/kmj3h1cWHljDL2aOGzn2fTRy4+mIMcc9JL2aIlwP
-	 yfNDtbpz/a4RP44aONDQfeFX1JhupzSN5i4+UfK+9ljDB0NIOV64TmqmOKg8ZR5Tcf
-	 PEMGCADvvuufmYjHQJl9EzxZPLldxsCm+AABSQN8=
+	b=uGdu4W8qppwUEh+S6ZyTkusioGgpLpJk5wLKVNw1eMb3YtfZEW3qN5noK0Ipfbgzc
+	 4/pBYsgih0MSBMXOck5KGh3Qehc7Al8w6Jx8KoB9v0lEsYR5d1Tz+9M+2ahKXiD6ly
+	 xAin3fMUHHGcwO2i3KmGh4ijmnCXjanqM5N+H06A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgDXMWs (ORCPT
+        id S1727088AbgDXMWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:22:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51892 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:22:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727044AbgDXMWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:22:45 -0400
+        id S1727073AbgDXMWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:22:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D06582084D;
-        Fri, 24 Apr 2020 12:22:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E141215A4;
+        Fri, 24 Apr 2020 12:22:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587730964;
-        bh=nvnmc9IWtdg9lfERc6tpzSUdwZC6kN8jrbfQLWlzrAQ=;
+        s=default; t=1587730968;
+        bh=D/WkIwVgvEMD3xO8gDUh7kVDLW+mEo/bNDyZXVnhDOM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k8GQxkspDXN7+axftHJEclU4Bfj82tipL2VaT/3/ErdfYrkp8f57DFCj1yvrXcwJj
-         iYf2F7sXt9tS20+m44Dx0CLmn1GgGE7RuIEMJcVIoQTXROvZ4uu21v609ZtssUeAdt
-         J8YeKovPRuc6WkE0gGpXoCeN6jTqDXpSPTTKjJe0=
+        b=P6Uw/fDFjIAlFUeGmRpiIkhpMV7nOzajY3LG1D8iDp9/rMxh7rLJt1c7TGmV3heXT
+         mk1cI2mz4o3hkriVHG6O7DiTeZ+AladZLPJmjip4JYri2Keqpvg2Leniytmnm74WN8
+         mxj1or9vkvx5GKTnd4y3rhcADkmcitm4v7Bk03QA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        =?UTF-8?q?Holger=20Hoffst=C3=A4tte?= 
-        <holger@applied-asynchrony.com>, Sasha Levin <sashal@kernel.org>,
-        linux-hwmon@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 06/38] hwmon: (drivetemp) Return -ENODATA for invalid temperatures
-Date:   Fri, 24 Apr 2020 08:22:04 -0400
-Message-Id: <20200424122237.9831-6-sashal@kernel.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Brian Foster <bfoster@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 09/38] xfs: fix partially uninitialized structure in xfs_reflink_remap_extent
+Date:   Fri, 24 Apr 2020 08:22:07 -0400
+Message-Id: <20200424122237.9831-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200424122237.9831-1-sashal@kernel.org>
 References: <20200424122237.9831-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,46 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: "Darrick J. Wong" <darrick.wong@oracle.com>
 
-[ Upstream commit ed08ebb7124e90a99420bb913d602907d377d03d ]
+[ Upstream commit c142932c29e533ee892f87b44d8abc5719edceec ]
 
-Holger Hoffstätte observed that Samsung 850 Pro may return invalid
-temperatures for a short period of time after resume. Return -ENODATA
-to userspace if this is observed.
+In the reflink extent remap function, it turns out that uirec (the block
+mapping corresponding only to the part of the passed-in mapping that got
+unmapped) was not fully initialized.  Specifically, br_state was not
+being copied from the passed-in struct to the uirec.  This could lead to
+unpredictable results such as the reflinked mapping being marked
+unwritten in the destination file.
 
-Fixes:  5b46903d8bf3 ("hwmon: Driver for disk and solid state drives with temperature sensors")
-Reported-by: Holger Hoffstätte <holger@applied-asynchrony.com>
-Cc: Holger Hoffstätte <holger@applied-asynchrony.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/drivetemp.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/xfs/xfs_reflink.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/hwmon/drivetemp.c b/drivers/hwmon/drivetemp.c
-index 370d0c74eb012..9179460c2d9d5 100644
---- a/drivers/hwmon/drivetemp.c
-+++ b/drivers/hwmon/drivetemp.c
-@@ -264,12 +264,18 @@ static int drivetemp_get_scttemp(struct drivetemp_data *st, u32 attr, long *val)
- 		return err;
- 	switch (attr) {
- 	case hwmon_temp_input:
-+		if (!temp_is_valid(buf[SCT_STATUS_TEMP]))
-+			return -ENODATA;
- 		*val = temp_from_sct(buf[SCT_STATUS_TEMP]);
- 		break;
- 	case hwmon_temp_lowest:
-+		if (!temp_is_valid(buf[SCT_STATUS_TEMP_LOWEST]))
-+			return -ENODATA;
- 		*val = temp_from_sct(buf[SCT_STATUS_TEMP_LOWEST]);
- 		break;
- 	case hwmon_temp_highest:
-+		if (!temp_is_valid(buf[SCT_STATUS_TEMP_HIGHEST]))
-+			return -ENODATA;
- 		*val = temp_from_sct(buf[SCT_STATUS_TEMP_HIGHEST]);
- 		break;
- 	default:
+diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
+index b0ce04ffd3cd2..107bf2a2f3448 100644
+--- a/fs/xfs/xfs_reflink.c
++++ b/fs/xfs/xfs_reflink.c
+@@ -1051,6 +1051,7 @@ xfs_reflink_remap_extent(
+ 		uirec.br_startblock = irec->br_startblock + rlen;
+ 		uirec.br_startoff = irec->br_startoff + rlen;
+ 		uirec.br_blockcount = unmap_len - rlen;
++		uirec.br_state = irec->br_state;
+ 		unmap_len = rlen;
+ 
+ 		/* If this isn't a real mapping, we're done. */
 -- 
 2.20.1
 
