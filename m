@@ -2,261 +2,114 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 500E9C55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BB1C55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23FA321473
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:22:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RHexWr1+"
+	by mail.kernel.org (Postfix) with ESMTP id 77E6E21582
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:23:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587698589;
+	bh=QGw/dUCZotIbC/RrVmGOtAfKOimSYFvHWBXMT3tuKiQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=qPY7QT9G0gWr7+UfoUTLOiP3nQvgAWmgXtsY3rQ1AkRTjmscY+zHPHe0athjetkHf
+	 /qvBEAho/alTv8mPW4EqQqUMKhbZMQAeM4+P6gYNU6jYd7SlAEwZEO3kA9GRs8ZM7e
+	 p+ZMK/nuNwscj0SujMnnGmzNbm0N1pYAlM5TbVlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726124AbgDXDWr (ORCPT
+        id S1726379AbgDXDXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 23:22:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51544 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725884AbgDXDWq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 23:22:46 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ABCCC09B044
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 20:22:46 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id j20so6131599edj.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 20:22:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=abRl9WO9L5aHTZUxjonADdYG8d/NHJpa1DNCFn9mMXI=;
-        b=RHexWr1+8BoIornTZPveiuic/gwUY2Q6Katd6kYEhKmK4LPKKQc+r/Ksm76LV64q1u
-         td+utQdc67ykz+BLnRr0XjYRLGwKj0Mmz//VBnu20X01dUrSpjkIRI0hvjGb2JX8Gdh1
-         canPOm4TtZtXm6LcAmB+wGHaTsel2F9JCt7ex4OZQo8vX0QqkaoMVsMkGOzu98N+hanp
-         Yk57sWcRRFPyyjyBWP+R8GsFTwRXS5eAILQC3VSBvLWFneV5fhJTqGfLM4XiFGzIdhyo
-         5xQ6L364DN3P+gMYEIZCbh7LNJ0oZris+TIAuNUNTAaDsGrl5WPt6a07UWeUGJtx9abw
-         Ua5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=abRl9WO9L5aHTZUxjonADdYG8d/NHJpa1DNCFn9mMXI=;
-        b=qtIhIwO1Bp4BjHNWwiB4TLXVq4XFfwsxoDmnouC6qkaWWVUwvSes/VPXIeBoDl1o/X
-         Jnp5CfsLeznbsRZoR0OUBUpALYALk63lu8YCvNRUfYKj0JRAUAjyEUmNfk3qDO9gAqnv
-         pl/6PVJZTG2owej6VRDo35CaOqCYxWgQVnIQnEvGTsbmoXCN3FrE8FAwlrh3ch1I1biN
-         6/kI2aSGOo+buPBfvI/GhwYKruN3uXDal9owKG49Zk5BUoM7tAB7O7zKZGLQ1RVd+Uw7
-         hBqwuhBQDwUixfGeZLqymxr+M/pfW4yZN8/09M/HSwYzKBhENqSh0tAREBB5NDu3I0dd
-         AUnw==
-X-Gm-Message-State: AGi0PuYjh1viCtrtI2ni8hqH2bSt7yAfeZjwMQ9v8TgBQODdnn0uuCcS
-        LfPjuerrsLl2vQkykhdLvx9pgargRVTfG0CFxK+UQiYi
-X-Google-Smtp-Source: APiQypLAbeDXjZ4JEoaiya6oH/MkNPql2y+xAsvFy2d4ul5inFB9ndHCuJHEZRfF2L915WXb5wq+6voZ4MKpwPdewco=
-X-Received: by 2002:aa7:dac4:: with SMTP id x4mr4274447eds.127.1587698562488;
- Thu, 23 Apr 2020 20:22:42 -0700 (PDT)
+        Thu, 23 Apr 2020 23:23:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37860 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725884AbgDXDXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 23:23:08 -0400
+Received: from localhost (mobile-166-175-187-210.mycingular.net [166.175.187.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86CE42075A;
+        Fri, 24 Apr 2020 03:23:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587698587;
+        bh=QGw/dUCZotIbC/RrVmGOtAfKOimSYFvHWBXMT3tuKiQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=RnXjtqZXoxf6opd5HyypjaJ3ypfWW8b8ua2q7NGQPQLLdSh+laadbtGI/68vWCx7Z
+         0CwD36NiMJSQ+IAYCtWNgy/H/ukW7AQsheYgVtbXOeMI1B3PCnaBde282yPJzSnyZg
+         bUNMzCc7w+VrzYBSzH/B34igSd3JsCxLx7OPGdTM=
+Date:   Thu, 23 Apr 2020 22:23:05 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        =?iso-8859-1?Q?Lu=EDs?= Mendes <luis.p.mendes@gmail.com>,
+        Todd Poynor <toddpoynor@google.com>
+Subject: Re: [GIT PULL] PCI fixes for v5.7
+Message-ID: <20200424032305.GA32366@google.com>
 MIME-Version: 1.0
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Fri, 24 Apr 2020 13:22:30 +1000
-Message-ID: <CAPM=9txZkNiAoVMyoBwDaew+WDBQu3rcTYOTs9+Vn1unoq9m1A@mail.gmail.com>
-Subject: [git pull] drm fixes for 5.7-rc3
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wj7f3HJxmhP_SKQoFwuSx-OQgvp41pbgJN7TtspQj=RUA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Linus,
+On Thu, Apr 23, 2020 at 11:22:20AM -0700, Linus Torvalds wrote:
+> On Thu, Apr 23, 2020 at 10:40 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> >   - Workaround Apex TPU class code issue that prevents resource
+> >     assignment (Bjorn Helgaas)
+> 
+> Hmm.
+> 
+> I have no objections to that patch, but I do wonder if it might not be
+> better to try to actually assign the resource at enable_resource time?
+> 
+> Put another way: if I read the situation correctly, what happened is
+> that the hardware is broken and doesn't have the proper class code,
+> and so the resource is not initially assigned at all. But then the
+> driver matches on the device ID, and tries to use the device, and then
+> we get into trouble at pci_enable_resources().
 
-Weekly regular fixes for drm, The usual rc3 uptick here, but nothing
-too crazy or notable.
+Exactly.
 
-Dave.
+> But is there any reason we don't just at least try to do
+> pci_assign_resource() at that point? Yeah, because we didn't do it at
+> bus scanning, maybe there's no room for it, but that's what we do for
+> the PCI ROM resources (which I think we also don't claim by default)
+> when drivers ask to map them.
 
-drm-fixes-2020-04-24:
-drm fixes for 5.7-rc3
+That might make sense, but I think we should be consistent with the
+checking __dev_sort_resources() does, e.g., skipping
+PCI_CLASS_NOT_DEFINED, or at least understand why it's safe to be
+different.
 
-core:
-- mst: zero pbn when releasing vcpi slots
+> The pci/rom.c code does
+> 
+>         /* assign the ROM an address if it doesn't have one */
+>         if (res->parent == NULL && pci_assign_resource(pdev, PCI_ROM_RESOURCE))
+>                 return NULL;
+> 
+> could we perhaps do the same in enable_resource?
+> 
+> Your patch is obviously much better for an -rc kernel, so this is more
+> of a longer-term "wouldn't it be less fragile to ..." query.
+> 
+> Alternatively, maybe we should do resource assignment even for
+> PCI_CLASS_NOT_DEFINED?
 
-amdgpu:
-- Fix resume issue on renoir
-- Thermal fix for older CI dGPUs
-- Fix some fallout from dropping drm load/unload callbacks
+Yeah.  I don't know the history of why we skip PCI_CLASS_NOT_DEFINED.
+I did consider about the fact that we're skipping it, to make it
+easier to debug next time.
 
-i915:
-- Tigerlake Workaround - disabling media recompression (Matt)
-- Fix RPS interrupts for right GPU frequency (Chris)
-- HDCP fix prime check (Oliver)
-- Tigerlake Thunderbolt power well fix (Matt)
-- Tigerlake DP link training fixes (Jose)
-- Documentation sphinx build fix (Jani)
-- Fix enable_dpcd_backlight modparam (Lyude)
+PCI_CLASS_NOT_DEFINED is supposed to be for devices built before the
+Class Code field was defined.  That note is at least as old as PCI 2.2
+from 1998, so there shouldn't be *that* many of those devices left.
 
-analogix-dp:
-- binding fix
+Bjorn
 
-meson:
-- remove unneeded error message
-
-bindings:
-- fix warnings
-- fix lvds binding
-
-scheduler:
-- thread racing fix
-
-tidss:
-- use after free fix
-The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936=
-:
-
-  Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
-
-are available in the Git repository at:
-
-  git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2020-04-24
-
-for you to fetch changes up to e32b2484b3e00170b6cf57d99a18972e174e10ea:
-
-  Merge tag 'drm-misc-fixes-2020-04-23' of
-git://anongit.freedesktop.org/drm/drm-misc into drm-fixes (2020-04-24
-10:14:04 +1000)
-
-----------------------------------------------------------------
-drm fixes for 5.7-rc3
-
-core:
-- mst: zero pbn when releasing vcpi slots
-
-amdgpu:
-- Fix resume issue on renoir
-- Thermal fix for older CI dGPUs
-- Fix some fallout from dropping drm load/unload callbacks
-
-i915:
-- Tigerlake Workaround - disabling media recompression (Matt)
-- Fix RPS interrupts for right GPU frequency (Chris)
-- HDCP fix prime check (Oliver)
-- Tigerlake Thunderbolt power well fix (Matt)
-- Tigerlake DP link training fixes (Jose)
-- Documentation sphinx build fix (Jani)
-- Fix enable_dpcd_backlight modparam (Lyude)
-
-analogix-dp:
-- binding fix
-
-meson:
-- remove unneeded error message
-
-bindings:
-- fix warnings
-- fix lvds binding
-
-scheduler:
-- thread racing fix
-
-tidss:
-- use after free fix
-
-----------------------------------------------------------------
-Alex Deucher (2):
-      drm/amdgpu/display: fix aux registration (v2)
-      drm/amdgpu/display: give aux i2c buses more meaningful names
-
-Chris Wilson (1):
-      drm/i915/gt: Update PMINTRMSK holding fw
-
-Christian K=C3=B6nig (1):
-      drm/scheduler: fix drm_sched_get_cleanup_job
-
-Dave Airlie (3):
-      Merge tag 'amd-drm-fixes-5.7-2020-04-22' of
-git://people.freedesktop.org/~agd5f/linux into drm-fixes
-      Merge tag 'drm-intel-fixes-2020-04-23' of
-git://anongit.freedesktop.org/drm/drm-intel into drm-fixes
-      Merge tag 'drm-misc-fixes-2020-04-23' of
-git://anongit.freedesktop.org/drm/drm-misc into drm-fixes
-
-Fabio Estevam (2):
-      dt-bindings: display: ltk500hd1829: Remove the reg property
-      dt-bindings: display: xpp055c272: Remove the reg property
-
-Jani Nikula (1):
-      drm/i915: fix Sphinx build duplicate label warning
-
-Jos=C3=A9 Roberto de Souza (1):
-      drm/i915/display: Load DP_TP_CTL/STATUS offset before use it
-
-Lyude Paul (1):
-      drm/i915/dpcd_bl: Unbreak enable_dpcd_backlight modparam
-
-Marek Szyprowski (1):
-      drm/bridge: analogix_dp: Split bind() into probe() and real bind()
-
-Markus Elfring (1):
-      drm/meson: Delete an error message in meson_dw_hdmi_bind()
-
-Matt Roper (2):
-      drm/i915/tgl: Add Wa_14010477008:tgl
-      drm/i915/tgl: TBT AUX should use TC power well ops
-
-Maxime Ripard (1):
-      Merge v5.7-rc1 into drm-misc-fixes
-
-Mikita Lipski (1):
-      drm/dp_mst: Zero assigned PBN when releasing VCPI slots
-
-Oliver Barta (1):
-      drm/i915: HDCP: fix Ri prime check done during link check
-
-Prike Liang (1):
-      drm/amd/powerplay: fix resume failed as smu table initialize early ex=
-it
-
-Sam Ravnborg (1):
-      dt-bindings: display: allow port and ports in panel-lvds
-
-Sandeep Raghuraman (1):
-      drm/amdgpu: Correctly initialize thermal controller for GPUs
-with Powerplay table v0 (e.g Hawaii)
-
-Tomi Valkeinen (1):
-      drm/tidss: fix crash related to accessing freed memory
-
-Vasily Khoruzhick (1):
-      drm/bridge: anx6345: set correct BPC for display_info of connector
-
- .../display/panel/leadtek,ltk500hd1829.yaml        |  1 -
- .../devicetree/bindings/display/panel/lvds.yaml    | 10 ++++++++-
- .../bindings/display/panel/xinpeng,xpp055c272.yaml |  1 -
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c  | 14 ++++++++++--
- .../amd/display/amdgpu_dm/amdgpu_dm_mst_types.c    | 15 ++++++++-----
- .../amd/display/amdgpu_dm/amdgpu_dm_mst_types.h    |  3 ++-
- .../gpu/drm/amd/powerplay/hwmgr/processpptables.c  | 26 ++++++++++++++++++=
-++++
- drivers/gpu/drm/amd/powerplay/renoir_ppt.c         |  7 +++++-
- drivers/gpu/drm/bridge/analogix/analogix-anx6345.c |  3 +++
- drivers/gpu/drm/drm_dp_mst_topology.c              |  1 +
- drivers/gpu/drm/i915/display/intel_ddi.c           | 14 +++++++++---
- drivers/gpu/drm/i915/display/intel_display_power.c | 12 +++++-----
- drivers/gpu/drm/i915/display/intel_dp.c            |  5 ++---
- .../gpu/drm/i915/display/intel_dp_aux_backlight.c  |  1 +
- drivers/gpu/drm/i915/display/intel_hdmi.c          |  3 ++-
- drivers/gpu/drm/i915/display/intel_sprite.c        | 17 +++++++++-----
- drivers/gpu/drm/i915/gt/intel_rps.c                |  9 +++++---
- drivers/gpu/drm/i915/i915_drv.h                    |  2 ++
- drivers/gpu/drm/i915/i915_reg.h                    |  4 ++--
- drivers/gpu/drm/meson/meson_dw_hdmi.c              |  4 +---
- drivers/gpu/drm/scheduler/sched_main.c             |  2 +-
- drivers/gpu/drm/tidss/tidss_crtc.c                 | 16 ++++++++++---
- drivers/gpu/drm/tidss/tidss_encoder.c              | 14 +++++++++---
- drivers/gpu/drm/tidss/tidss_plane.c                | 24 +++++++++++++++---=
---
- 24 files changed, 156 insertions(+), 52 deletions(-)
