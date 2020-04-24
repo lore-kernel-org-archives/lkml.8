@@ -2,113 +2,128 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7207C5518A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20ED7C5518A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85F292075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE8832075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:12:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="peEcD9/B"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UeSf/5Nu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726203AbgDXEJH (ORCPT
+        id S1726174AbgDXEMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 00:09:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58744 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725823AbgDXEJG (ORCPT
+        Fri, 24 Apr 2020 00:12:14 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40314 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725922AbgDXEMN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 00:09:06 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15BB0C09B045;
-        Thu, 23 Apr 2020 21:09:06 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Fri, 24 Apr 2020 00:12:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587701532;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1ORnbYYJvOimK1L52WvsWC1QfTySNsKmDnq5F4Mgpto=;
+        b=UeSf/5Nu6THn+yPpTuKjC1daZXfbchBVG4+TpNcp0rGr8o3CbH1iEuIjFK8lHCO1tep7kC
+        HWzhAqzLZEtSwd+bLq2ic5Kf6HaneR8aeR1oaGdYRFecDZanUhp5QnSNEUf1srLilzK/HP
+        qOToL7oZHZ1AhpG4LlDK637XYn6CnhE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-200-lVzwMglxMhKl9T9PGTuJzQ-1; Fri, 24 Apr 2020 00:12:09 -0400
+X-MC-Unique: lVzwMglxMhKl9T9PGTuJzQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 497gf41Q18z9sSh;
-        Fri, 24 Apr 2020 14:09:00 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1587701344;
-        bh=3BTSk4sjDI4VDtA4QcqlpHfqwVft8oWPVuJUoLtTKek=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=peEcD9/Bx/jrDaJvgqEdcVpav38EIqqVX+s+YKbAT5kkoGuW/xPq4+kSCXgnISeFn
-         CI5Hidn4Pk65DerlY4HtBpI6ABpyKcXTrw37MuXZsJIGLHHYNMrZLTM3zB0NcYjmf6
-         WjhVpUqliNJoS2wdN6F5DRzNUE4eTN1ebklgBm0lDy9RHLeIHv/p2vsNcqRKmz+v8T
-         +Ql1Z+r53Pc7lcEqAI0NCFfCmarjNZnxdiKPQJjoBTjL8ZHbFtR2ofyYR5+s73QXNf
-         QeZUKsSRh6gIloNbM2yHq2qYoFfrwfvCNNekPdHP/PbCUdLkkYncOkwzw9E8HzMt96
-         l1DwO4qXJTeeQ==
-Date:   Fri, 24 Apr 2020 14:08:53 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Jakub Kicinski <kubakici@wp.pl>, gregkh@linuxfoundation.org,
-        akpm@linux-foundation.org, josh@joshtriplett.org,
-        rishabhb@codeaurora.org, maco@android.com, andy.gross@linaro.org,
-        david.brown@linaro.org, bjorn.andersson@linaro.org,
-        linux-wireless@vger.kernel.org, keescook@chromium.org,
-        shuah@kernel.org, mfuzzey@parkeon.com, zohar@linux.vnet.ibm.com,
-        dhowells@redhat.com, pali.rohar@gmail.com, tiwai@suse.de,
-        arend.vanspriel@broadcom.com, zajec5@gmail.com, nbroeking@me.com,
-        markivx@codeaurora.org, broonie@kernel.org,
-        dmitry.torokhov@gmail.com, dwmw2@infradead.org,
-        torvalds@linux-foundation.org, Abhay_Salunke@dell.com,
-        jewalt@lgsinnovations.com, cantabile.desu@gmail.com, ast@fb.com,
-        andresx7@gmail.com, dan.rue@linaro.org, brendanhiggins@google.com,
-        yzaikin@google.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH] firmware_loader: re-export fw_fallback_config into
- firmware_loader's own namespace
-Message-ID: <20200424140853.5d001d8d@canb.auug.org.au>
-In-Reply-To: <20200424031959.GB11244@42.do-not-panic.com>
-References: <20200423203140.19510-1-mcgrof@kernel.org>
-        <20200423180544.60d12af0@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <20200424021420.GZ11244@42.do-not-panic.com>
-        <20200424131556.1dbe18aa@canb.auug.org.au>
-        <20200424031959.GB11244@42.do-not-panic.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A4B67835B47;
+        Fri, 24 Apr 2020 04:12:07 +0000 (UTC)
+Received: from treble (ovpn-118-207.rdu2.redhat.com [10.10.118.207])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5764D100164D;
+        Fri, 24 Apr 2020 04:12:03 +0000 (UTC)
+Date:   Thu, 23 Apr 2020 23:12:01 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     Miroslav Benes <mbenes@suse.cz>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com, Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH v2 6/9] s390/module: Use s390_kernel_write() for late
+ relocations
+Message-ID: <20200424041201.ekbx6wvl3dn45zfl@treble>
+References: <18266eb2c2c9a2ce0033426837d89dcb363a85d3.1587131959.git.jpoimboe@redhat.com>
+ <20200422164037.7edd21ea@thinkpad>
+ <20200422172126.743908f5@thinkpad>
+ <20200422194605.n77t2wtx5fomxpyd@treble>
+ <20200423141834.234ed0bc@thinkpad>
+ <alpine.LSU.2.21.2004231513250.6520@pobox.suse.cz>
+ <20200423141228.sjvnxwdqlzoyqdwg@treble>
+ <20200423181030.b5mircvgc7zmqacr@treble>
+ <20200423232657.7minzcsysnhp474w@treble>
+ <20200424023521.GA22117@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/wE.85jsJZ4nTyPbO82kgXnL";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200424023521.GA22117@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/wE.85jsJZ4nTyPbO82kgXnL
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Apr 23, 2020 at 10:35:21PM -0400, Joe Lawrence wrote:
+> > diff --git a/arch/s390/kernel/module.c b/arch/s390/kernel/module.c
+> > index 2798329ebb74..fe446f42818f 100644
+> > --- a/arch/s390/kernel/module.c
+> > +++ b/arch/s390/kernel/module.c
+> > @@ -297,7 +297,7 @@ static int apply_rela(Elf_Rela *rela, Elf_Addr ba=
+se, Elf_Sym *symtab,
+> > =20
+> >  			gotent =3D me->core_layout.base + me->arch.got_offset +
+> >  				info->got_offset;
+> > -			*gotent =3D val;
+> > +			write(gotent, &val, sizeof(*gotent));
+> >  			info->got_initialized =3D 1;
+> >  		}
+> >  		val =3D info->got_offset + rela->r_addend;
+> > @@ -330,25 +330,29 @@ static int apply_rela(Elf_Rela *rela, Elf_Addr =
+base, Elf_Sym *symtab,
+> >  	case R_390_PLTOFF32:	/* 32 bit offset from GOT to PLT. */
+> >  	case R_390_PLTOFF64:	/* 16 bit offset from GOT to PLT. */
+> >  		if (info->plt_initialized =3D=3D 0) {
+> > -			unsigned int *ip;
+> > +			unsigned int *ip, insn[5];
+> > +
+> >  			ip =3D me->core_layout.base + me->arch.plt_offset +
+> >  				info->plt_offset;
+>=20
+> Would it be too paranoid to declare:
+>=20
+>   			const unsigned int *ip =3D me->core_layout.base +=20
+> 						 me->arch.plt_offset +
+>   						 info->plt_offset;
+>=20
+> That would trip an assignment to read-only error if someone were tempte=
+d
+> to write directly through the pointer in the future.  Ditto for Elf_Add=
+r
+> *gotent pointer in the R_390_GOTPLTENT case.
 
-Hi Luis,
+The only problem is then the write() triggers a warning because then we
+*are* trying to write through the pointer :-)
 
-On Fri, 24 Apr 2020 03:19:59 +0000 Luis Chamberlain <mcgrof@kernel.org> wro=
-te:
->
-> Cool, but once merged on Linus' tree, I think it gets yet-another-commit
-> ID right? So someone looking for:
-
-No, Linus merges Greg's tree directly, so all the commits remain the same.
+arch/s390/kernel/module.c:300:10: warning: passing argument 1 of =E2=80=98=
+write=E2=80=99 discards =E2=80=98const=E2=80=99 qualifier from pointer ta=
+rget type [-Wdiscarded-qualifiers]
+  300 |    write(gotent, &val, sizeof(*gotent));
 
 --=20
-Cheers,
-Stephen Rothwell
+Josh
 
---Sig_/wE.85jsJZ4nTyPbO82kgXnL
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6iZlUACgkQAVBC80lX
-0GzmMwf/aZZRSQ8nx5S414xzj4iE0Cc6Ymxcx9fxaz1fG+4PEnYinI1lSIZiqtHX
-1vU1GzcYx+54L5lIfeUpUfGpVekVfUzvjVK08N5JSFbs+MSfNm21l0h3F3DRC07N
-pMzKd/YXwfil1rTlYWEDaGobkmKzVNM4XbbDT1mbNUa9zcD3QJLNy/gTiRpUKvI8
-3bIFzCEuP7wbGcK7DLJ6KpdoBSPG/T6rR7e5/fwOXT/1FEC2b94oIOy2aeofbT9p
-PiELaayXqS+8ysYVM5p9vB8hL5qskMhTFbR6G+77fc6VYqQl2yw6fjMNOi1lazdp
-yuWoF6kN2yFBV3bmD0YlpsOlyvcoDg==
-=zShb
------END PGP SIGNATURE-----
-
---Sig_/wE.85jsJZ4nTyPbO82kgXnL--
