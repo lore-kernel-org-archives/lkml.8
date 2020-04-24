@@ -2,102 +2,92 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6132DC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D7FC5518A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B06020724
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:21:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBCB620724
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:23:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XFrhlA2D"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="X/Rep5K8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgDXIVu (ORCPT
+        id S1726699AbgDXIXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 04:21:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41508 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbgDXIVu (ORCPT
+        Fri, 24 Apr 2020 04:23:45 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:32475 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726028AbgDXIXp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 04:21:50 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D82F9C09B045
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 01:21:49 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id c17so8599360uae.12
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 01:21:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Odi1ziVK1CcSvxbtWVKLHGTvitokOWski09WlRklulg=;
-        b=XFrhlA2D4r6LyWN/vMKM5EZss4qMC2FKOueM0iCNZPF0PmlTgVe2q0aD3BRkQctr30
-         /RXoOhK7B4w98jrF3gwlGwtMxa2y559IHNrgfg25YtFHMN2MRrsoPEHeHcmyHeSOUJnH
-         t77IuyWOrVaA5pP1FYEiRuPCJmZ2wqgWcREYXjc9LgCQg0kY/UFG0IFxkJLQDMtvUDlr
-         jdnIySQHip5OJ/DZPD7V1erXlx/LVqSKTKmD117kKWpmgdXncqKHcyYcxXDGmPgIIK3c
-         hAuEq3Qff7L0+HpW91AvuKUuodfD0TwWwmkiot7C+93sYzY8iteacJjs5s3o6tBFcpbF
-         82OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Odi1ziVK1CcSvxbtWVKLHGTvitokOWski09WlRklulg=;
-        b=SnR53+xbK5Cua2hnonv89/GEC8Du0AKAY9H+TnJGhtQXERBnFLCRd84OMHPSMZpvIZ
-         lAVIQtxtHQfFO5H15mhc11qJem41TBEf0fcB8vldvDJIFt5gH0FM6WX57sNtthWBQiEw
-         6AMS04StlH5H6TMRxjtVaoKQlY5noPp6+jcubZiw+D2RlKVBEqS7y3tGjF8gKfSb5ddy
-         G6+H2AA2YsZt+BwYeuGUSGW8s/CQ82sNc1nGEjm4lpBKVvMcZDnrD4vFrJgKvPrxG4I1
-         1tTGSALClWA3xL/GGgplKQPE28uhz2V6YxawAPogf3hlzxQQnq8fKWMEZUI7XEL+dMmF
-         afBA==
-X-Gm-Message-State: AGi0Pub9WNi2Zp7cxzo2z5ADCdbtNBM1bI/vhdOyRF32gCnDPEDIqQ+r
-        t9rTlEvtUkWt5HYzoCCUvozB/El9BtJ5JSURQ/wukHA=
-X-Google-Smtp-Source: APiQypISzy34zpElN5spEfyfFWgrLoB2FrRXG/mlFt7B4sc3eXIkkiMykN6eJVLLlza8iSIzq7mCmza6bazPxvHo4Z4=
-X-Received: by 2002:ab0:238f:: with SMTP id b15mr6531756uan.32.1587716509046;
- Fri, 24 Apr 2020 01:21:49 -0700 (PDT)
+        Fri, 24 Apr 2020 04:23:45 -0400
+X-UUID: aa5e11a295bd4456a9b0e6dd56f50983-20200424
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=5Le9qoejU+6jSbO30NZ6FQCsnzb28/ib8ihNNO5nR/Q=;
+        b=X/Rep5K8QMo98wwa7h4FZ9m9ROq5x7ZKPJXqFs76Mw4ybRk0NHNOaoSQxEBKdP3grJcrLBZwNrEL2I4qkBgFcRBwvpOVmQh1aaDQj5+zysrE52qZxF2KaXzlJHemL0vzGEWtWgvLaIWdzgM3IXpCsXi00WaDLcgwa54tk+sITJE=;
+X-UUID: aa5e11a295bd4456a9b0e6dd56f50983-20200424
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <michael.kao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1217075942; Fri, 24 Apr 2020 16:23:42 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 24 Apr 2020 16:23:39 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 24 Apr 2020 16:23:39 +0800
+From:   Michael Kao <michael.kao@mediatek.com>
+To:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <hsinyi@chromium.org>, <linux-pm@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Michael Kao <michael.kao@mediatek.com>
+Subject: [PATCH] [RESEND] arm64: dts: mt8173: fix cooling device range
+Date:   Fri, 24 Apr 2020 16:23:40 +0800
+Message-ID: <20200424082340.4127-1-michael.kao@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-References: <CALjTZvaiCzPQT6Jrx4pFW6KuZj2WLSQQpCbU-sg1jEgscQAKFQ@mail.gmail.com>
- <1587715859.28179.17.camel@suse.cz>
-In-Reply-To: <1587715859.28179.17.camel@suse.cz>
-From:   Rui Salvaterra <rsalvaterra@gmail.com>
-Date:   Fri, 24 Apr 2020 09:21:37 +0100
-Message-ID: <CALjTZvZ2B3X1F=tVOvC4h0yGAfEvfu6HUZERmydMrVRsXdOtuQ@mail.gmail.com>
-Subject: Re: [BISECTED] bug/regression, x86-64: completely unbootable machine
-To:     Giovanni Gherdovich <ggherdovich@suse.cz>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Apr 2020 at 09:11, Giovanni Gherdovich <ggherdovich@suse.cz> wrote:
->
-> Hello Rui,
->
-> thanks for the report.
->
-> The problem you encountered is due to a bug where the code doesn't work on
-> machines with less than 4 physical CPU cores. It is fixed by this patch
-> series:
->
-> https://lore.kernel.org/lkml/20200416054745.740-1-ggherdovich@suse.cz/
->
-> The series has been merged in the branch sched/urgent of the "tip" tree
-> (https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git), the commit
-> fixing the bug you observed is 23ccee22e834 (x86, sched: Account for CPUs
-> with less than 4 cores in freq. invariance), and will be merged in Linus'
-> tree at some point.
->
->
-> Thanks,
-> Giovanni Gherdovich
+V2hlbiB0aGVybWFsIHJlYWNoZXMgdGFyZ2V0IHRlbXBlcmF0dXJlLGl0IHdvdWxkIGJlIHBpbm5l
+ZCB0byBzdGF0ZSAwDQoobWF4IGZyZXF1ZW5jeSBhbmQgcG93ZXIpLg0KRml4IHRoZSB0aHJvdHRs
+aW5nIHJhbmdlIHRvIG5vIGxpbWl0Lg0KDQpTaWduZWQtb2ZmLWJ5OiBIc2luLVlpIFdhbmcgPGhz
+aW55aUBjaHJvbWl1bS5vcmc+DQpTaWduZWQtb2ZmLWJ5OiBNaWNoYWVsIEthbyA8bWljaGFlbC5r
+YW9AbWVkaWF0ZWsuY29tPg0KLS0tDQogYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgx
+NzMuZHRzaSB8IDEzICsrKysrKysrKy0tLS0NCiAxIGZpbGUgY2hhbmdlZCwgOSBpbnNlcnRpb25z
+KCspLCA0IGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9t
+ZWRpYXRlay9tdDgxNzMuZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTcz
+LmR0c2kNCmluZGV4IGNjYjhlODhhNjBjNS4uY2FlMmNlYzQ2Y2RjIDEwMDY0NA0KLS0tIGEvYXJj
+aC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxNzMuZHRzaQ0KKysrIGIvYXJjaC9hcm02NC9i
+b290L2R0cy9tZWRpYXRlay9tdDgxNzMuZHRzaQ0KQEAgLTE5LDYgKzE5LDcgQEANCiAjaW5jbHVk
+ZSA8ZHQtYmluZGluZ3MvcG93ZXIvbXQ4MTczLXBvd2VyLmg+DQogI2luY2x1ZGUgPGR0LWJpbmRp
+bmdzL3Jlc2V0L210ODE3My1yZXNldHMuaD4NCiAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvZ2NlL210
+ODE3My1nY2UuaD4NCisjaW5jbHVkZSA8ZHQtYmluZGluZ3MvdGhlcm1hbC90aGVybWFsLmg+DQog
+I2luY2x1ZGUgIm10ODE3My1waW5mdW5jLmgiDQogDQogLyB7DQpAQCAtMjk0LDE0ICsyOTUsMTgg
+QEANCiAJCQljb29saW5nLW1hcHMgew0KIAkJCQltYXBAMCB7DQogCQkJCQl0cmlwID0gPCZ0YXJn
+ZXQ+Ow0KLQkJCQkJY29vbGluZy1kZXZpY2UgPSA8JmNwdTAgMCAwPiwNCi0JCQkJCQkJIDwmY3B1
+MSAwIDA+Ow0KKwkJCQkJY29vbGluZy1kZXZpY2UgPSA8JmNwdTAgVEhFUk1BTF9OT19MSU1JVA0K
+KwkJCQkJCQkgIFRIRVJNQUxfTk9fTElNSVQ+LA0KKwkJCQkJCQkgPCZjcHUxIFRIRVJNQUxfTk9f
+TElNSVQNCisJCQkJCQkJICBUSEVSTUFMX05PX0xJTUlUPjsNCiAJCQkJCWNvbnRyaWJ1dGlvbiA9
+IDwzMDcyPjsNCiAJCQkJfTsNCiAJCQkJbWFwQDEgew0KIAkJCQkJdHJpcCA9IDwmdGFyZ2V0PjsN
+Ci0JCQkJCWNvb2xpbmctZGV2aWNlID0gPCZjcHUyIDAgMD4sDQotCQkJCQkJCSA8JmNwdTMgMCAw
+PjsNCisJCQkJCWNvb2xpbmctZGV2aWNlID0gPCZjcHUyIFRIRVJNQUxfTk9fTElNSVQNCisJCQkJ
+CQkJICBUSEVSTUFMX05PX0xJTUlUPiwNCisJCQkJCQkJIDwmY3B1MyBUSEVSTUFMX05PX0xJTUlU
+DQorCQkJCQkJCSAgVEhFUk1BTF9OT19MSU1JVD47DQogCQkJCQljb250cmlidXRpb24gPSA8MTAy
+ND47DQogCQkJCX07DQogCQkJfTsNCi0tIA0KMi4xOC4wDQo=
 
-Hi, Giovanni,
-
-Great, thanks for the quick turnaround. I wager it will have hit
-Linus' tree by 5.7-rc3.
-
-Best regards,
-Rui
