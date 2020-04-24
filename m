@@ -2,303 +2,163 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B850BC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27214C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85DE120700
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0130420767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:28:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="NT12wP7B"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JKL8z3JI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbgDXP1k (ORCPT
+        id S1727108AbgDXP23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:27:40 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:13546 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbgDXP1k (ORCPT
+        Fri, 24 Apr 2020 11:28:29 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:40720 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727016AbgDXP22 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:27:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1587742058; x=1619278058;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=zrR+KCbhcERLGcAyFjOWLjy9cTa3gPlVudTF1SAPosk=;
-  b=NT12wP7Br6Tv5jaKayQPEPFiRPlvUI1LOFAKSOpV09S+Pbhn4B6ThsOp
-   BmSvzqkxB6uU7HagZWKf3pAcFEce6qIqCqWPPUyOBBzCt/bdgKUUDVifs
-   KoAJyWpi/NbhNI/FfDcX9MpWGg1NskFDu5TQ5oQhneEB/0e4g7vXdFG+4
-   0=;
-IronPort-SDR: d5YU5XmWm7K3rszI5VmhjEGREmeuIwcxc339x1V9gX2qEiNjR1Zq8WWaJbI+iIE64imCEzgunC
- 0g2dnEWtziWg==
-X-IronPort-AV: E=Sophos;i="5.73,311,1583193600"; 
-   d="scan'208";a="27489379"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 24 Apr 2020 15:27:24 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com (Postfix) with ESMTPS id D6102A1E29;
-        Fri, 24 Apr 2020 15:27:20 +0000 (UTC)
-Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 24 Apr 2020 15:27:20 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.52) by
- EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 24 Apr 2020 15:27:13 +0000
-Subject: Re: [PATCH v1 14/15] nitro_enclaves: Add Makefile for the Nitro
- Enclaves driver
-To:     kbuild test robot <lkp@intel.com>, <linux-kernel@vger.kernel.org>
-CC:     <kbuild-all@lists.01.org>, Anthony Liguori <aliguori@amazon.com>,
-        "Benjamin Herrenschmidt" <benh@amazon.com>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        "Frank van der Linden" <fllinden@amazon.com>,
-        Alexander Graf <graf@amazon.de>,
-        "Martin Pohlack" <mpohlack@amazon.de>, Matt Wilson <msw@amazon.com>
-References: <20200421184150.68011-15-andraprs@amazon.com>
- <202004231644.xTmN4Z1z%lkp@intel.com>
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Message-ID: <c7469263-fd17-1fd5-46b2-27d212de61e8@amazon.com>
-Date:   Fri, 24 Apr 2020 18:27:07 +0300
+        Fri, 24 Apr 2020 11:28:28 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03OFIll1061933;
+        Fri, 24 Apr 2020 15:28:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : message-id : date : mime-version : content-type :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=zOaIIh5Y3Ixgy8+bW/8s0a5JA8RFQkLrn9lA9JvNLy8=;
+ b=JKL8z3JICdqTHf3tVLjbYDCwsZ7/2LePqlPUskPF0EEb4j31YoDElbnDjxpFL7PFB3+T
+ o7b41+JXFs9vXmWXCDT/vOm7xCk0q7RbtGAtfGax9OItLT9PlfXcx+kfzWfqacyU80+x
+ PjHtLZxxYqEPZIHf/slDkzxRYAJh5iHOEMxkTs+HYM5sKfeCeD8eR3H0fr4NzMotyJR0
+ YkVW9t6u8SyJ5F40u7pDgPfA9vX2A0x97gbk+zUOIqtnUqq7HrIfhF9/+Hp6VR3dAe1a
+ Plcs7PwbgDs45i7rOIe5h0UMAyUldWQ3p/8GEQnmSyAyx74WehsytUu9dVkLeGfP8U+B XQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 30ketdn08h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Apr 2020 15:28:23 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03OFBdxZ096279;
+        Fri, 24 Apr 2020 15:28:22 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 30k7qxbu2e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Apr 2020 15:28:22 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03OFSLZW015782;
+        Fri, 24 Apr 2020 15:28:21 GMT
+Received: from dhcp-10-159-159-71.vpn.oracle.com (/10.159.159.71)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 24 Apr 2020 08:28:21 -0700
+From:   Divya Indi <divya.indi@oracle.com>
+To:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        =?UTF-8?Q?H=c3=a5kon_Bugge?= <haakon.bugge@oracle.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Gerd Rausch <gerd.rausch@oracle.com>,
+        Srinivas Eeda <srinivas.eeda@oracle.com>,
+        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>
+Subject: Request for feedback : Possible use-after-free in routing SA query
+ via netlink
+Message-ID: <8fbdf10e-3f08-6407-eb0d-a1bf663873c3@oracle.com>
+Date:   Fri, 24 Apr 2020 08:28:09 -0700
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+ Gecko/20100101 Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <202004231644.xTmN4Z1z%lkp@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Originating-IP: [10.43.161.52]
-X-ClientProxiedBy: EX13D03UWA004.ant.amazon.com (10.43.160.250) To
- EX13D16EUB003.ant.amazon.com (10.43.166.99)
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9601 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 mlxlogscore=999
+ adultscore=0 suspectscore=11 bulkscore=0 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004240121
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9601 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
+ impostorscore=0 bulkscore=0 mlxlogscore=999 phishscore=0 mlxscore=0
+ priorityscore=1501 clxscore=1011 suspectscore=11 adultscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004240121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi All,
+
+I wanted some feedback on a crash caused due to use-after-free in the 
+ibacm code path [while routing SA query via netlink].
+
+Commit 3ebd2fd IB/sa: Put netlink request into the request list before sending
+
+Above commit moved adding the query to the request list before ib_nl_snd_msg
+and moved ib_nl_snd_msg out of the spinlock (request_lock).
+
+However, if there is a delay in sending out the request (For
+eg: Delay due to low memory situation) the timer to handle request timeout
+might kick in before the request is sent out to ibacm via netlink.
+ib_nl_request_timeout may result in release of the query (by call to send_handler) 
+while ib_nl_snd_msg is still accessing query.
 
 
-On 23/04/2020 11:43, kbuild test robot wrote:
->
-> Hi Andra,
->
-> Thank you for the patch! Perhaps something to improve:
+We get the following stacktrace for the crash -
 
-Fixed in v2.
+[<ffffffffa02f43cb>] ? ib_pack+0x17b/0x240 [ib_core]
+[<ffffffffa032aef1>] ib_sa_path_rec_get+0x181/0x200 [ib_sa]
+[<ffffffffa0379db0>] rdma_resolve_route+0x3c0/0x8d0 [rdma_cm]
+[<ffffffffa0374450>] ? cma_bind_port+0xa0/0xa0 [rdma_cm]
+[<ffffffffa040f850>] ? rds_rdma_cm_event_handler_cmn+0x850/0x850
+[rds_rdma]
+[<ffffffffa040f22c>] rds_rdma_cm_event_handler_cmn+0x22c/0x850
+[rds_rdma]
+[<ffffffffa040f860>] rds_rdma_cm_event_handler+0x10/0x20 [rds_rdma]
+[<ffffffffa037778e>] addr_handler+0x9e/0x140 [rdma_cm]
+[<ffffffffa026cdb4>] process_req+0x134/0x190 [ib_addr]
+[<ffffffff810a02f9>] process_one_work+0x169/0x4a0
+[<ffffffff810a0b2b>] worker_thread+0x5b/0x560
+[<ffffffff810a0ad0>] ? flush_delayed_work+0x50/0x50
+[<ffffffff810a68fb>] kthread+0xcb/0xf0
+[<ffffffff816ec49a>] ? __schedule+0x24a/0x810
+[<ffffffff816ec49a>] ? __schedule+0x24a/0x810
+[<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
+[<ffffffff816f25a7>] ret_from_fork+0x47/0x90
+[<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
+....
+RIP  [<ffffffffa03296cd>] send_mad+0x33d/0x5d0 [ib_sa] 
 
-Andra
+On analysis of the vmcore, we see crash happens at -
 
->
-> [auto build test WARNING on linus/master]
-> [also build test WARNING on linux/master v5.7-rc2 next-20200422]
-> [if your patch is applied to the wrong git tree, please drop us a note to=
- help
-> improve the system. BTW, we also suggest to use '--base' option to specif=
-y the
-> base tree in git format-patch, please see https://stackoverflow.com/a/374=
-06982]
->
-> url:    https://github.com/0day-ci/linux/commits/Andra-Paraschiv/Add-supp=
-ort-for-Nitro-Enclaves/20200423-130814
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
-t 18bf34080c4c3beb6699181986cc97dd712498fe
-> config: i386-allmodconfig (attached as .config)
-> compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
-> reproduce:
->          # save the attached .config to linux build tree
->          make ARCH=3Di386
->
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kbuild test robot <lkp@intel.com>
->
-> All warnings (new ones prefixed by >>):
->
->     In file included from include/linux/device.h:15:0,
->                      from drivers/virt/amazon/nitro_enclaves/ne_pci_dev.c=
-:22:
->     drivers/virt/amazon/nitro_enclaves/ne_pci_dev.c: In function 'ne_subm=
-it_request':
->>> drivers/virt/amazon/nitro_enclaves/ne_pci_dev.c:80:9: warning: format '=
-%ld' expects argument of type 'long int', but argument 3 has type 'size_t {=
-aka unsigned int}' [-Wformat=3D]
->              "Invalid req size=3D%ld for cmd type=3D%d\n",
->              ^
->     include/linux/dev_printk.h:19:22: note: in definition of macro 'dev_f=
-mt'
->      #define dev_fmt(fmt) fmt
->                           ^~~
->>> include/linux/dev_printk.h:167:3: note: in expansion of macro 'dev_err'
->        dev_level(dev, fmt, ##__VA_ARGS__);   \
->        ^~~~~~~~~
->     include/linux/dev_printk.h:177:2: note: in expansion of macro 'dev_le=
-vel_ratelimited'
->       dev_level_ratelimited(dev_err, dev, fmt, ##__VA_ARGS__)
->       ^~~~~~~~~~~~~~~~~~~~~
->>> drivers/virt/amazon/nitro_enclaves/ne_pci_dev.c:79:3: note: in expansio=
-n of macro 'dev_err_ratelimited'
->        dev_err_ratelimited(&pdev->dev,
->        ^~~~~~~~~~~~~~~~~~~
->     drivers/virt/amazon/nitro_enclaves/ne_pci_dev.c: In function 'ne_retr=
-ieve_reply':
->     drivers/virt/amazon/nitro_enclaves/ne_pci_dev.c:121:35: warning: form=
-at '%ld' expects argument of type 'long int', but argument 3 has type 'size=
-_t {aka unsigned int}' [-Wformat=3D]
->        dev_err_ratelimited(&pdev->dev, "Invalid reply size=3D%ld\n",
->                                        ^
->     include/linux/dev_printk.h:19:22: note: in definition of macro 'dev_f=
-mt'
->      #define dev_fmt(fmt) fmt
->                           ^~~
->>> include/linux/dev_printk.h:167:3: note: in expansion of macro 'dev_err'
->        dev_level(dev, fmt, ##__VA_ARGS__);   \
->        ^~~~~~~~~
->     include/linux/dev_printk.h:177:2: note: in expansion of macro 'dev_le=
-vel_ratelimited'
->       dev_level_ratelimited(dev_err, dev, fmt, ##__VA_ARGS__)
->       ^~~~~~~~~~~~~~~~~~~~~
->     drivers/virt/amazon/nitro_enclaves/ne_pci_dev.c:121:3: note: in expan=
-sion of macro 'dev_err_ratelimited'
->        dev_err_ratelimited(&pdev->dev, "Invalid reply size=3D%ld\n",
->        ^~~~~~~~~~~~~~~~~~~
->     drivers/virt/amazon/nitro_enclaves/ne_pci_dev.c: In function 'ne_do_r=
-equest':
->     drivers/virt/amazon/nitro_enclaves/ne_pci_dev.c:193:9: warning: forma=
-t '%ld' expects argument of type 'long int', but argument 3 has type 'size_=
-t {aka unsigned int}' [-Wformat=3D]
->              "Invalid req size=3D%ld for cmd type=3D%d\n",
->              ^
->     include/linux/dev_printk.h:19:22: note: in definition of macro 'dev_f=
-mt'
->      #define dev_fmt(fmt) fmt
->                           ^~~
->>> include/linux/dev_printk.h:167:3: note: in expansion of macro 'dev_err'
->        dev_level(dev, fmt, ##__VA_ARGS__);   \
->        ^~~~~~~~~
->     include/linux/dev_printk.h:177:2: note: in expansion of macro 'dev_le=
-vel_ratelimited'
->       dev_level_ratelimited(dev_err, dev, fmt, ##__VA_ARGS__)
->       ^~~~~~~~~~~~~~~~~~~~~
->     drivers/virt/amazon/nitro_enclaves/ne_pci_dev.c:192:3: note: in expan=
-sion of macro 'dev_err_ratelimited'
->        dev_err_ratelimited(&pdev->dev,
->        ^~~~~~~~~~~~~~~~~~~
->     drivers/virt/amazon/nitro_enclaves/ne_pci_dev.c:203:35: warning: form=
-at '%ld' expects argument of type 'long int', but argument 3 has type 'size=
-_t {aka unsigned int}' [-Wformat=3D]
->        dev_err_ratelimited(&pdev->dev, "Invalid reply size=3D%ld\n",
->                                        ^
->     include/linux/dev_printk.h:19:22: note: in definition of macro 'dev_f=
-mt'
->      #define dev_fmt(fmt) fmt
->                           ^~~
->>> include/linux/dev_printk.h:167:3: note: in expansion of macro 'dev_err'
->        dev_level(dev, fmt, ##__VA_ARGS__);   \
->        ^~~~~~~~~
->     include/linux/dev_printk.h:177:2: note: in expansion of macro 'dev_le=
-vel_ratelimited'
->       dev_level_ratelimited(dev_err, dev, fmt, ##__VA_ARGS__)
->       ^~~~~~~~~~~~~~~~~~~~~
->     drivers/virt/amazon/nitro_enclaves/ne_pci_dev.c:203:3: note: in expan=
-sion of macro 'dev_err_ratelimited'
->        dev_err_ratelimited(&pdev->dev, "Invalid reply size=3D%ld\n",
->        ^~~~~~~~~~~~~~~~~~~
->
-> vim +80 drivers/virt/amazon/nitro_enclaves/ne_pci_dev.c
->
-> 0ed609272739ee Andra Paraschiv 2020-04-21  42
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  43  /**
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  44   * ne_submit_request - Sub=
-mit command request to the PCI device based on the
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  45   * command type.
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  46   *
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  47   * This function gets call=
-ed with the ne_pci_dev mutex held.
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  48   *
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  49   * @pdev: PCI device to se=
-nd the command to.
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  50   * @cmd_type: command type=
- of the request sent to the PCI device.
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  51   * @cmd_request: command r=
-equest payload.
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  52   * @cmd_request_size: size=
- of the command request payload.
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  53   *
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  54   * @returns: 0 on success,=
- negative return value on failure.
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  55   */
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  56  static int ne_submit_reque=
-st(struct pci_dev *pdev,
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  57                        enum=
- ne_pci_dev_cmd_type cmd_type,
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  58                        void=
- *cmd_request, size_t cmd_request_size)
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  59  {
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  60   struct ne_pci_dev *ne_pci=
-_dev =3D NULL;
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  61
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  62   BUG_ON(!pdev);
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  63
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  64   ne_pci_dev =3D pci_get_dr=
-vdata(pdev);
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  65   BUG_ON(!ne_pci_dev);
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  66   BUG_ON(!ne_pci_dev->iomem=
-_base);
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  67
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  68   if (WARN_ON(cmd_type <=3D=
- INVALID_CMD || cmd_type >=3D MAX_CMD)) {
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  69           dev_err_ratelimit=
-ed(&pdev->dev, "Invalid cmd type=3D%d\n",
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  70                            =
-   cmd_type);
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  71
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  72           return -EINVAL;
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  73   }
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  74
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  75   if (WARN_ON(!cmd_request))
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  76           return -EINVAL;
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  77
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  78   if (WARN_ON(cmd_request_s=
-ize > NE_SEND_DATA_SIZE)) {
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21 @79           dev_err_ratelimit=
-ed(&pdev->dev,
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21 @80                            =
-   "Invalid req size=3D%ld for cmd type=3D%d\n",
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  81                            =
-   cmd_request_size, cmd_type);
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  82
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  83           return -EINVAL;
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  84   }
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  85
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  86   memcpy_toio(ne_pci_dev->i=
-omem_base + NE_SEND_DATA, cmd_request,
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  87               cmd_request_s=
-ize);
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  88
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  89   iowrite32(cmd_type, ne_pc=
-i_dev->iomem_base + NE_COMMAND);
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  90
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  91   return 0;
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  92  }
-> 08a5a524ab0b6c Andra Paraschiv 2020-04-21  93
->
-> :::::: The code at line 80 was first introduced by commit
-> :::::: 08a5a524ab0b6c939997c8d44b4d07e5ee97e91d nitro_enclaves: Handle PC=
-I device command requests
->
-> :::::: TO: Andra Paraschiv <andraprs@amazon.com>
-> :::::: CC: 0day robot <lkp@intel.com>
->
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ib_sa_path_rec_get
+  send_mad
+     ib_nl_make_request()
+        ib_nl_send_msg
+                1  static void ib_nl_set_path_rec_attrs(struct sk_buff *skb,
+                2        struct ib_sa_query *query)
+                3  {
+                4   struct ib_sa_path_rec *sa_rec = query->mad_buf->context[1];
+                5   struct ib_sa_mad *mad = query->mad_buf->mad;
+                6   ib_sa_comp_mask comp_mask = mad->sa_hdr.comp_mask;
+
+Page fault occurs at line 5 while trying to access query->mad_buf->mad;
+
+If we look at the query, it does not appear to be a valid ib_sa_query. Instead
+looks like a pid struct for a process -> Use-after-free situation.
+
+We could simulate the crash by explicitly introducing a delay in ib_nl_snd_msg with
+a sleep. The timer kicks in before ib_nl_send_msg has even sent out the request 
+and releases the query. We could reproduce the crash with a similar stack trace.
+
+To summarize - We have a use-after-free possibility here when the timer(ib_nl_request_timeout)
+kicks in before ib_nl_snd_msg has completed sending the query out to ibacm via netlink. The 
+timeout handler ie ib_nl_request_timeout may result in releasing the query while ib_nl_snd_msg 
+is still accessing query.
+
+Appreciate your thoughts on the above issue.
 
 
-
-
-Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar=
- Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in R=
-omania. Registration number J22/2621/2005.
+Thanks,
+Divya 
 
