@@ -2,79 +2,115 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA5BC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED59BC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 032292075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD20420774
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:12:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VPTI1Zf3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728082AbgDXQK6 (ORCPT
+        id S1728193AbgDXQMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 12:10:58 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:58074 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726920AbgDXQK5 (ORCPT
+        Fri, 24 Apr 2020 12:12:31 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44809 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726813AbgDXQMa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 12:10:57 -0400
-Received: from fsav302.sakura.ne.jp (fsav302.sakura.ne.jp [153.120.85.133])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 03OGAIaW043241;
-        Sat, 25 Apr 2020 01:10:18 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav302.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav302.sakura.ne.jp);
- Sat, 25 Apr 2020 01:10:18 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav302.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 03OGAIJf043237
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Sat, 25 Apr 2020 01:10:18 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] printk: Add loglevel for "do not print to consoles".
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        linux-kernel@vger.kernel.org, Dmitry Safonov <dima@arista.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-References: <20200424024239.63607-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20200424092816.62a61b1d@gandalf.local.home>
- <579fbe97-9aae-2b67-03ff-01291b9cbb7d@i-love.sakura.ne.jp>
- <20200424103131.7987f890@gandalf.local.home>
- <7ec0b0a3-39ae-0f1c-b8c2-e1e9e60f1223@i-love.sakura.ne.jp>
- <20200424114225.5a3bab7e@gandalf.local.home>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <d967cd75-f61d-291a-81e9-1da76e4179c2@i-love.sakura.ne.jp>
-Date:   Sat, 25 Apr 2020 01:10:15 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 24 Apr 2020 12:12:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587744749;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=5OM2DPWHYM7y/6bsE5cL+3KwCNnH0bhlvscHbPBdZpg=;
+        b=VPTI1Zf3rWw3i6jbri76DhJd6/8sjjIyjaEOIuHn7HZvx/UoRiN1rVCq9gAVOAxcqSaIfO
+        okqx1WBwIT7ABR5JJo7HaXLwo1RvIT6kno4QkbOFJt04LC3otlOTVOlFYVJjAOOwL+7EG+
+        SclNYsc6QDnWHq2mjCVxI3dTm+rfROI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-407-tLRd7sxgNXGK1lxtdLGmnA-1; Fri, 24 Apr 2020 12:12:25 -0400
+X-MC-Unique: tLRd7sxgNXGK1lxtdLGmnA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F1A2B107B7C4;
+        Fri, 24 Apr 2020 16:12:23 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-113-129.rdu2.redhat.com [10.10.113.129])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 002201001B2C;
+        Fri, 24 Apr 2020 16:12:22 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] afs: Miscellaneous fixes
 MIME-Version: 1.0
-In-Reply-To: <20200424114225.5a3bab7e@gandalf.local.home>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3632015.1587744742.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Fri, 24 Apr 2020 17:12:22 +0100
+Message-ID: <3632016.1587744742@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/04/25 0:42, Steven Rostedt wrote:
-> You can also use the tracing ring buffer for this, as it has been safe in
-> all these contexts for a very long time. And that ring buffer is something
-> that you can use outside of tracing (oprofile uses it).
+Hi Linus,
 
-Some messages are read from printk() source and other messages are read from
-non-printk() source will loose ordering of messages (i.e. non-understandable
-log files). For those who analyze log files, multiple sources are not acceptable.
+Could you pull these three miscellaneous fixes to the afs filesystem:
 
-> And both shouldn't be done within the kernel. The "CONSOLE_LOGLEVEL_SILENT"
-> if for user decided policy, not the kernel making that policy for the user.
+ (1) Remove some struct members that aren't used, aren't set or aren't
+     read, plus a wake up that nothing ever waits for.
 
-KERN_NO_CONSOLES is a mechanism for implementing user decided policy. As long as
-userspace can control whether to use KERN_NO_CONSOLES (e.g. sysctl), there should
-be no problem with adding KERN_NO_CONSOLES (i.e. this patch) to the kernel side.
+ (2) Actually set the AFS_SERVER_FL_HAVE_EPOCH flag so that the code that
+     depends on it can work.
+
+ (3) Make a couple of waits uninterruptible if they're done for an
+     operation that isn't supposed to be interruptible.
+
+Thanks,
+David
+---
+The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d93=
+6:
+
+  Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags=
+/afs-fixes-20200424
+
+for you to fetch changes up to c4bfda16d1b40d1c5941c61b5aa336bdd2d9904a:
+
+  afs: Make record checking use TASK_UNINTERRUPTIBLE when appropriate (202=
+0-04-24 16:33:32 +0100)
+
+----------------------------------------------------------------
+AFS miscellany
+
+----------------------------------------------------------------
+David Howells (3):
+      afs: Remove some unused bits
+      afs: Fix to actually set AFS_SERVER_FL_HAVE_EPOCH
+      afs: Make record checking use TASK_UNINTERRUPTIBLE when appropriate
+
+ fs/afs/cmservice.c | 2 +-
+ fs/afs/fs_probe.c  | 5 +----
+ fs/afs/internal.h  | 4 +---
+ fs/afs/rotate.c    | 6 +++---
+ fs/afs/server.c    | 7 ++-----
+ fs/afs/vl_rotate.c | 4 ++--
+ fs/afs/volume.c    | 8 +++++---
+ 7 files changed, 15 insertions(+), 21 deletions(-)
 
