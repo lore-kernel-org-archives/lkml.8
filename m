@@ -2,138 +2,193 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E96FFC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE7FC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C99602075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32B5720706
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:09:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J05kz9Ow"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TRS0tzgm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728101AbgDXPJ3 (ORCPT
+        id S1728111AbgDXPJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:09:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48718 "EHLO
+        Fri, 24 Apr 2020 11:09:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727063AbgDXPJ2 (ORCPT
+        by vger.kernel.org with ESMTP id S1727017AbgDXPJm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:09:28 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B976C09B045;
-        Fri, 24 Apr 2020 08:09:28 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id x2so1217745pfx.7;
-        Fri, 24 Apr 2020 08:09:28 -0700 (PDT)
+        Fri, 24 Apr 2020 11:09:42 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE757C09B045;
+        Fri, 24 Apr 2020 08:09:41 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id v18so4785340qvx.9;
+        Fri, 24 Apr 2020 08:09:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=SjsWKS0P6j4+0PWlGdo7sqKYmvlFOBzbcYnBUVrrUFk=;
-        b=J05kz9Ow0ARHW+Rvq5ihe3AzNaoLD7Y5he9E0NYGt7dbkG/97kXcDVNsO1lEtlXwuy
-         /fpDq/vhxxftOnPjbXORYM2a+hXS94tqRKb/408UXOpQnqGY7NuLHOiT2MiC8/7l9CTQ
-         75GDceNY1S+ZKF6XnyOzmE4VvxsCHxNwvqX7XyfHjH04OYg/lO50X0993CXQHfVonegY
-         Z02IjUwgTjMCDOmfJkLFDG+E5Y0CqTy7XhacBONwmSW4gCLQP+BnhJoRlxqjNhQ1M+ev
-         87YSAOMhhQXm9JbVYZuDRPDQvpsunk5dMDToKMOJJCiM23iR//J9LbfasIxmJ+Nxckw+
-         Ziyw==
+         :content-disposition:in-reply-to;
+        bh=0n+CaYOXugl68dwLeUyYpsT/oNtgV3fNrvzz2gAddEw=;
+        b=TRS0tzgmIeGix4mr6vJEp34RuRU+aTbpETuTM6VJ+i645gFPC+dQgedTLYvNVGvJNy
+         iGNYyPKQjkTwewl918p83EIIMMR1f+DQyOh+nmHDrcsGGmzZHBEupn37EJKT/78D25cc
+         15uCwOl4aaHqXY6Z2eWCB26PT/aCQVGH6/fa+ImfurO9ucue/4/1oCjpiR6zGfthpGku
+         NSPisVcXjZeE6zObksVDF/FAbSjwu60sb/9luT5D/iO/eYaBZ4FstSFxO6UkiUdXIA3Z
+         DoYyf2q6OBPl7MMMv7XStcLRRIDyiJ+mcvD9ig9ScbL+G3x9IDTDB2QY2IG28ygSYfFM
+         9a5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=SjsWKS0P6j4+0PWlGdo7sqKYmvlFOBzbcYnBUVrrUFk=;
-        b=hAjIqTFzGJ0rX5b0uYKUGenAIiJdxA0vA/Mt0vkFiW7rxfHQkLbkHCHyWSviVmxm/t
-         XLfFE18kiaq4l52v455TKM9AIrjTbyuvnbh5rMydaMIdSstjE3c6jhhq+JgIxVkLYlZQ
-         mjkbdf0LksY3Bh/4Wzezwrk8xFCTWch9ISGEj69iKOu/y9nZ1xRZ0/jEIWNNqNKzqx8t
-         AWR3XNSjpISz+qGnCRKH14qRKNR5M64FjN3r33+ZN29Up+OwCMINY5TH05jcoYMvg0Qz
-         bBjK2KKFHUoaV7HKmXMXWd3lE/Mv05NfvK8z9JyASp+1LMRx16mdIWk5rWWGGK8cidMD
-         Qg9Q==
-X-Gm-Message-State: AGi0PubEjQsMRHfnPQo5/rM7cLc5a2cS2y33mXhsK7kTa9n2M/NriHUD
-        pTtO56N7MD/t3OunFP7jPu8=
-X-Google-Smtp-Source: APiQypLXb7pHQTP0HUk4IAA6VBZcz32kstw1TM/2+eKyCQxPQSIXJ/TedLAeKp79bT7BZjbQ0j74aA==
-X-Received: by 2002:a05:6a00:a:: with SMTP id h10mr10074220pfk.160.1587740968148;
-        Fri, 24 Apr 2020 08:09:28 -0700 (PDT)
-Received: from localhost ([176.122.158.64])
-        by smtp.gmail.com with ESMTPSA id y26sm5781189pfn.185.2020.04.24.08.09.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 Apr 2020 08:09:27 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 23:09:18 +0800
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v1] gpio: fix several typos
-Message-ID: <20200424150918.GB8853@nuc8i5>
-References: <20200419163816.19856-1-zhengdejin5@gmail.com>
- <CAMpxmJUzrWRuHV-=EOgjd-N-iwhZwVGzF26tH0ybpzZQSP6VJQ@mail.gmail.com>
+         :mime-version:content-disposition:in-reply-to;
+        bh=0n+CaYOXugl68dwLeUyYpsT/oNtgV3fNrvzz2gAddEw=;
+        b=Et9FDWRilJuCyOSna2yyT9adLgdehZ4KJWnxtLeAc8dRXAlZQXiscp35rfTTGmuDfw
+         mewPESfLwiv3FO3ZCUcmwBkukgk0Im2629XhghhGs+XNtgTyrp1HlIFI/SMGrYAYBaOb
+         J7MXBSHL5TW0KZrtBClGr9NnEm5mlvqSn7vP9vXzHJ0yn138OHpZScfJUEcALFmgZtfK
+         YPHavlYiwDB5Oacv9M+yGncMdQHqel9VEj983tE9e4jG7IMXjVnvNundEreFqLnNWF71
+         XkuhjtRQB4hrgXwSCvZ/MxMQAsGNoV+elYmTk/Z/+R/GgpNcXfoOjutH+mvC+Jq8ZWwA
+         PCIg==
+X-Gm-Message-State: AGi0PuZM+FLA2Eq1uQhUTqoiyURtGvyQXdz0xIY+2SErn2R9nGa8ZMpy
+        qeLB4Mmy9zurJ8NY8wquzCPuGWXdyvFjEQ==
+X-Google-Smtp-Source: APiQypKuWfLXARyuCrhIQ5hbeQX5DasIcu/OokAV/XglHzvPUpHJYIiUrUSCaw222yWd62aM8VlHWw==
+X-Received: by 2002:a05:6214:3ad:: with SMTP id m13mr9599272qvy.57.1587740980879;
+        Fri, 24 Apr 2020 08:09:40 -0700 (PDT)
+Received: from icarus (072-189-064-225.res.spectrum.com. [72.189.64.225])
+        by smtp.gmail.com with ESMTPSA id b10sm863066qkl.19.2020.04.24.08.09.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Apr 2020 08:09:39 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 11:09:26 -0400
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Syed Nayyar Waris <syednwaris@gmail.com>,
+        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        arnd@arndb.de, Linus Walleij <linus.walleij@linaro.org>,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] bitops: Introduce the the for_each_set_clump macro
+Message-ID: <20200424150828.GA5034@icarus>
+References: <20200424122521.GA5552@syed>
+ <20200424141037.ersebbfe7xls37be@wunner.de>
+ <CACG_h5prcXVdk6ecn2WoT1jas3K6UF+KCrxAM9u4_ZLSyPKCEA@mail.gmail.com>
+ <20200424150058.xadjxaga3csh3br6@wunner.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ylS2wUBXLOxYXZFQ"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpxmJUzrWRuHV-=EOgjd-N-iwhZwVGzF26tH0ybpzZQSP6VJQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200424150058.xadjxaga3csh3br6@wunner.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 08:39:04AM +0200, Bartosz Golaszewski wrote:
-> niedz., 19 kwi 2020 o 18:38 Dejin Zheng <zhengdejin5@gmail.com> napisał(a):
-> >
-> > Use codespell to fix lots of typos over frontends.
-> >
-> > CC: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> > ---
-> >  drivers/gpio/gpio-ftgpio010.c | 2 +-
-> >  drivers/gpio/gpio-mm-lantiq.c | 2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpio-ftgpio010.c b/drivers/gpio/gpio-ftgpio010.c
-> > index fbddb1662428..4031164780f7 100644
-> > --- a/drivers/gpio/gpio-ftgpio010.c
-> > +++ b/drivers/gpio/gpio-ftgpio010.c
-> > @@ -193,7 +193,7 @@ static int ftgpio_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
-> >         if (val == deb_div) {
-> >                 /*
-> >                  * The debounce timer happens to already be set to the
-> > -                * desireable value, what a coincidence! We can just enable
-> > +                * desirable value, what a coincidence! We can just enable
-> >                  * debounce on this GPIO line and return. This happens more
-> >                  * often than you think, for example when all GPIO keys
-> >                  * on a system are requesting the same debounce interval.
-> > diff --git a/drivers/gpio/gpio-mm-lantiq.c b/drivers/gpio/gpio-mm-lantiq.c
-> > index f460d71b0c92..538e31fe8903 100644
-> > --- a/drivers/gpio/gpio-mm-lantiq.c
-> > +++ b/drivers/gpio/gpio-mm-lantiq.c
-> > @@ -36,7 +36,7 @@ struct ltq_mm {
-> >   * @chip:     Pointer to our private data structure.
-> >   *
-> >   * Write the shadow value to the EBU to set the gpios. We need to set the
-> > - * global EBU lock to make sure that PCI/MTD dont break.
-> > + * global EBU lock to make sure that PCI/MTD don't break.
-> >   */
-> >  static void ltq_mm_apply(struct ltq_mm *chip)
-> >  {
-> > --
-> > 2.25.0
-> >
-> 
-> The subject line should be gpio: <name of the driver>: short message
-> 
-> And please split those into patches for each driver.
->
-Hi Bart:
 
-Thanks for your review, I will send the patch v2 for this change. 
+--ylS2wUBXLOxYXZFQ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-BR,
-Dejin
-> Bart
+On Fri, Apr 24, 2020 at 05:00:58PM +0200, Lukas Wunner wrote:
+> On Fri, Apr 24, 2020 at 08:22:38PM +0530, Syed Nayyar Waris wrote:
+> > On Fri, Apr 24, 2020 at 7:40 PM Lukas Wunner <lukas@wunner.de> wrote:
+> > >
+> > > On Fri, Apr 24, 2020 at 05:55:21PM +0530, Syed Nayyar Waris wrote:
+> > > > +static inline void bitmap_set_value(unsigned long *map,
+> > > > +                                 unsigned long value,
+> > > > +                                 unsigned long start, unsigned lon=
+g nbits)
+> > > > +{
+> > > > +     const size_t index =3D BIT_WORD(start);
+> > > > +     const unsigned long offset =3D start % BITS_PER_LONG;
+> > > > +     const unsigned long ceiling =3D roundup(start + 1, BITS_PER_L=
+ONG);
+> > > > +     const unsigned long space =3D ceiling - start;
+> > > > +
+> > > > +     value &=3D GENMASK(nbits - 1, 0);
+> > > > +
+> > > > +     if (space >=3D nbits) {
+> > > > +             map[index] &=3D ~(GENMASK(nbits + offset - 1, offset)=
+);
+> > > > +             map[index] |=3D value << offset;
+> > > > +     } else {
+> > > > +             map[index] &=3D ~BITMAP_FIRST_WORD_MASK(start);
+> > > > +             map[index] |=3D value << offset;
+> > > > +             map[index + 1] &=3D ~BITMAP_LAST_WORD_MASK(start + nb=
+its);
+> > > > +             map[index + 1] |=3D (value >> space);
+> > > > +     }
+> > > > +}
+> > >
+> > > Sorry but what's the advantage of using this complicated function
+> > > as a replacement for the much simpler bitmap_set_value8()?
+> > >
+> > > The drivers calling bitmap_set_value8() *know* that 8-bit accesses
+> > > are possible and take advantage of that knowledge by using a small,
+> > > speed-optimized function.  Replacing that with a more complicated
+> > > (potentially less performant) function doesn't seem to be a step
+> > > forward.
+> >=20
+> > Actually this generic function can work with n-bits of any size (less
+> > than equal to BITS_PER_LONG), while the earlier bitmap_set_value8
+> > worked with n-bits having size of 8 bits only.
+> >=20
+> > In the case when n-bits is 8-bits, this new bitmap_set_value()
+> > function would behave very similar to the earlier bitmap_set_value8()
+> > function. For example,  in case of n-bits being 8-bits it will always
+> > execute the 'if' condition and not the 'else' condition, hence
+> > offering the same performance (because of encountering similar code
+> > statements) as earlier bitmap_set_value8() function, most probably.
+> >=20
+> > There is an additional advantage (this can happen when n-bits is not 8
+> > bits): during setting value of n-bit in bitmap, if a situation arise
+> > that the width of next n-bit is exceeding the word boundary, then it
+> > will divide itself such that some portion of it is stored in that
+> > word, while the remaining portion is stored in the next higher word.
+> >=20
+> > So, this function preserves the behaviour of earlier
+> > bitmap_set_value8() function and also adds extra functionality to
+> > that.
+>=20
+> Please leave drivers as is which use exclusively 8-bit accesses,
+> e.g. gpio-max3191x.c and gpio-74x164.c.  I'm fearing a performance
+> regression if your new generic variant is used.  They work perfectly
+> fine the way they are and I don't see any benefit this series may have
+> for them.
+>=20
+> If there are other drivers which benefit from the flexibility of your
+> generic variant then I'm not opposed to changing those.
+>=20
+> Thanks,
+>=20
+> Lukas
+
+We can leave of course bitmap_set_value8 alone, but for 8-bit values the
+difference in latency I suspect is primarily due to the conditional test
+for the word boundaries. This latency is surely overshadowed by the I/O
+latency of the GPIO drivers, so I don't think there's much harm in
+changing those to use the generic function when the bottleneck will not
+be due to the bitmap_set_value/bitmap_get_value operations.
+
+William Breathitt Gray
+
+--ylS2wUBXLOxYXZFQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl6jASYACgkQhvpINdm7
+VJK6Pg/+KKvrnl2mkz+WQRqeUtC2vT7B96V67NjNLkDgAR2WUj35kia4ooNFeGD1
+e2tRjz/yAmdX3XhGnNfA2ec6O14y/IjRzN1WKijRKgiAGM8Lxa2XZC02a+IfYak1
+QsEk66u6CHN9hDdRf/TQl/slYKn7C2lz5mJZKmR9v+S7T4818xX1FxfB44sUEwzf
+x6eFnlA/flrrfH89bF++bVRO8UZqUurcejW4P1jFM8o5NbIna8S9zChxIwBFVPmh
+1Ng3VlCXYFihIdsLlXvegY/ZRr28MDr5J/JDSP5ZPVFDkYxnCeQUlAvJeXa8vZ8N
+01LX+JkhquzbPJns8mxnUZ1y9FZL5Zzz4yKZzS0zf+QQqiCDsnEl5eyjwXR/2sO9
+ahd/69eJaidwMiYtVLOj3z7qxgEvegxjp72mrYmGkfB88j9wjKly4z2P+wQlqXyz
+tJuZCBpJJSpBXe0lKNIjD+kNLhRHzoxQpN3bvNHby7N7P5L1OL2P4Js6yQ8N3fv0
+T5D/AHr1aC8wlVd2ULc5101dYpAxsqOZYMsZQ6AoIwXELTInyuNWKSkMZqh1uQZw
+EE8jzl5k0l37C4nbxlfxO8xrorGavE/R1NxV2iIqD2+4U80HnRgjaKiA/zy3BAZ0
+gPCEd/T/tXVx5glx5Hu9xrpQYFSm3kvoySNsZ7tbrFUQPx5z+kM=
+=Dh6C
+-----END PGP SIGNATURE-----
+
+--ylS2wUBXLOxYXZFQ--
