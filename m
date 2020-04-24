@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C51EEC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 447C3C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A539420776
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1816E2166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:22:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587730964;
-	bh=tD3zOv8bsJgydoBG6kFrPw2CiE43HwdTyu1zaZF25Mo=;
+	s=default; t=1587730967;
+	bh=mdQmb9MY40kZXt9reDoHxPqXLcnVg4QMo5kwsMaw1y0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tk4ELZHxZCKGnVOqqu1mX2L6PljfHA1MqX0Z36ui5wmRq3c8R6B0gNJf4ff+MNprq
-	 LbIo/xViaoDG0mGf1xWpsG4wGCPowS2kKZ5MloxGFEtax5LnBYGJNEFr4rN197JrOd
-	 BuwC/2Jpyq9UuG779TsYAizo+vbeP2w0FOFnUSy4=
+	b=M0lnfnuKpFGCUo/lnjAusRPzEWsBdFrBEA22cyrUtT8vK7SswRg+SKI0AvLGfAUmW
+	 i5JkKEfAKw8CSgSMtcJhFhGaqMoAJdboPeRDqyF+jfCEGbofZKZzAJOOH/z4AnyFhl
+	 Ki65btsSp5MYvfRD+yz6TkuMDTIGbIwXjJbUwMPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbgDXMWn (ORCPT
+        id S1727059AbgDXMWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:22:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51826 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:22:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726969AbgDXMWl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:22:41 -0400
+        id S1727038AbgDXMWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:22:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADED320776;
-        Fri, 24 Apr 2020 12:22:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4D542087E;
+        Fri, 24 Apr 2020 12:22:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587730961;
-        bh=tD3zOv8bsJgydoBG6kFrPw2CiE43HwdTyu1zaZF25Mo=;
+        s=default; t=1587730963;
+        bh=mdQmb9MY40kZXt9reDoHxPqXLcnVg4QMo5kwsMaw1y0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zFYAec5hXc5CDJiphzM05CPeoWA7ghZvYGXMfDfgJe1qESyS6lMxWRFi+neT81x1T
-         8GgsWawnpzRk6VMSKFMLJDFadVB4ivYRORsYWs76+4PiVmDhJOixL0LGcO4ri+hLcH
-         BVHw4UkuSPysab+7wXtaOLRvqjDmKRi4xMXjFSWo=
+        b=VLKf6glMWqi6r9dgnSJqpNYdy+13/fZlg0u5mTXM9CVDAJqA77fWvYYns5eKzAJmp
+         0X7VA7YTdK6rByoo78G+5WfvKe2LiB7rUk8SLEq+stU1BeiBjU4fuY4Oci9lmWiG4C
+         DAiz+mo3E/8NPqB+sZZe1De/KjnWkve1zcXaPGr0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Olaf Hering <olaf@aepfle.de>, Wei Liu <wei.liu@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 03/38] x86: hyperv: report value of misc_features
-Date:   Fri, 24 Apr 2020 08:22:01 -0400
-Message-Id: <20200424122237.9831-3-sashal@kernel.org>
+Cc:     Ann T Ropea <bedhanger@gmx.de>, Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 05/38] hwmon: (drivetemp) Use drivetemp's true module name in Kconfig section
+Date:   Fri, 24 Apr 2020 08:22:03 -0400
+Message-Id: <20200424122237.9831-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200424122237.9831-1-sashal@kernel.org>
 References: <20200424122237.9831-1-sashal@kernel.org>
@@ -58,36 +58,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olaf Hering <olaf@aepfle.de>
+From: Ann T Ropea <bedhanger@gmx.de>
 
-[ Upstream commit 97d9f1c43bedd400301d6f1eff54d46e8c636e47 ]
+[ Upstream commit 6bdf8f3efe867c5893e27431a555e41f54ed7f9a ]
 
-A few kernel features depend on ms_hyperv.misc_features, but unlike its
-siblings ->features and ->hints, the value was never reported during boot.
+The addition of the support for reading the temperature of ATA drives as
+per commit 5b46903d8bf3 ("hwmon: Driver for disk and solid state drives
+with temperature sensors") lists in the respective Kconfig section the
+name of the module to be optionally built as "satatemp".
 
-Signed-off-by: Olaf Hering <olaf@aepfle.de>
-Link: https://lore.kernel.org/r/20200407172739.31371-1-olaf@aepfle.de
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
+However, building the kernel modules with "CONFIG_SENSORS_DRIVETEMP=m",
+does not generate a file named "satatemp.ko".
+
+Instead, the rest of the original commit uses the term "drivetemp" and
+a file named "drivetemp.ko" ends up in the kernel's modules directory.
+This file has the right ingredients:
+
+	$ strings /path/to/drivetemp.ko | grep ^description
+	description=Hard drive temperature monitor
+
+and modprobing it produces the expected result:
+
+	# drivetemp is not loaded
+	$ sensors -u drivetemp-scsi-4-0
+	Specified sensor(s) not found!
+	$ sudo modprobe drivetemp
+	$ sensors -u drivetemp-scsi-4-0
+	drivetemp-scsi-4-0
+	Adapter: SCSI adapter
+	temp1:
+	  temp1_input: 35.000
+	  temp1_max: 60.000
+	  temp1_min: 0.000
+	  temp1_crit: 70.000
+	  temp1_lcrit: -40.000
+	  temp1_lowest: 20.000
+	  temp1_highest: 36.000
+
+Fix Kconfig by referring to the true name of the module.
+
+Fixes: 5b46903d8bf3 ("hwmon: Driver for disk and solid state drives with temperature sensors")
+Signed-off-by: Ann T Ropea <bedhanger@gmx.de>
+Link: https://lore.kernel.org/r/20200406235521.185309-1-bedhanger@gmx.de
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/mshyperv.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/hwmon/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 5e296a7e60363..ebf34c7bc8bc0 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -227,8 +227,8 @@ static void __init ms_hyperv_init_platform(void)
- 	ms_hyperv.misc_features = cpuid_edx(HYPERV_CPUID_FEATURES);
- 	ms_hyperv.hints    = cpuid_eax(HYPERV_CPUID_ENLIGHTMENT_INFO);
+diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+index 47ac20aee06fc..4c1c61aa4b82e 100644
+--- a/drivers/hwmon/Kconfig
++++ b/drivers/hwmon/Kconfig
+@@ -403,7 +403,7 @@ config SENSORS_DRIVETEMP
+ 	  hard disk drives.
  
--	pr_info("Hyper-V: features 0x%x, hints 0x%x\n",
--		ms_hyperv.features, ms_hyperv.hints);
-+	pr_info("Hyper-V: features 0x%x, hints 0x%x, misc 0x%x\n",
-+		ms_hyperv.features, ms_hyperv.hints, ms_hyperv.misc_features);
+ 	  This driver can also be built as a module. If so, the module
+-	  will be called satatemp.
++	  will be called drivetemp.
  
- 	ms_hyperv.max_vp_index = cpuid_eax(HYPERV_CPUID_IMPLEMENT_LIMITS);
- 	ms_hyperv.max_lp_index = cpuid_ebx(HYPERV_CPUID_IMPLEMENT_LIMITS);
+ config SENSORS_DS620
+ 	tristate "Dallas Semiconductor DS620"
 -- 
 2.20.1
 
