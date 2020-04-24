@@ -2,103 +2,116 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC14C55191
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE318C55191
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7941520736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:43:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V8NcKri1"
+	by mail.kernel.org (Postfix) with ESMTP id C453720736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:43:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728199AbgDXNnN (ORCPT
+        id S1728222AbgDXNnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 09:43:13 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31157 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726946AbgDXNnM (ORCPT
+        Fri, 24 Apr 2020 09:43:21 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:55704 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726946AbgDXNnU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 09:43:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587735791;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=X4OZnFlcvX3IqZHJE/SPPyQuprY94beQh1BVXIF1Tvc=;
-        b=V8NcKri1MOPuzSazSvs3etbXaOvlQq2r0WZeo5dX6o4qqwZxyWahO+i1CdezXHvgzMOL/L
-        zLGrVuL+pmMbwGC/wB+ySPAlZAZol3QJ84CahNYotOzCWF9f2n4ndLYj7ML9IwbaYjLHKs
-        zWjWwXKro0s3oCDlV2YEeaPDOxdJsxc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-379-ucB76fxYONKVBrG96cDFDw-1; Fri, 24 Apr 2020 09:43:07 -0400
-X-MC-Unique: ucB76fxYONKVBrG96cDFDw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 638701005510;
-        Fri, 24 Apr 2020 13:43:05 +0000 (UTC)
-Received: from treble (ovpn-118-207.rdu2.redhat.com [10.10.118.207])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 071D85D9CC;
-        Fri, 24 Apr 2020 13:43:03 +0000 (UTC)
-Date:   Fri, 24 Apr 2020 08:43:01 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com
-Subject: Re: [PATCH v2 6/9] s390/module: Use s390_kernel_write() for late
- relocations
-Message-ID: <20200424134301.rug4i5hxtnplahge@treble>
-References: <cover.1587131959.git.jpoimboe@redhat.com>
- <18266eb2c2c9a2ce0033426837d89dcb363a85d3.1587131959.git.jpoimboe@redhat.com>
- <alpine.LSU.2.21.2004221411140.28581@pobox.suse.cz>
+        Fri, 24 Apr 2020 09:43:20 -0400
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1jRybu-0001RS-UP; Fri, 24 Apr 2020 14:43:19 +0100
+Received: from ben by deadeye with local (Exim 4.93)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1jRybu-00EGsH-Az; Fri, 24 Apr 2020 14:43:18 +0100
+Message-ID: <a7a895a0e21ebdd0cef5da847a96235c3964c3c2.camel@decadent.org.uk>
+Subject: Re: [PATCH 3.16 000/245] 3.16.83-rc1 review
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Jann Horn <jannh@google.com>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Denis Kirjanov <kda@linux-powerpc.org>
+Date:   Fri, 24 Apr 2020 14:43:07 +0100
+In-Reply-To: <CAG48ez0nyLsyAeLJXEnCnhkh26EnZGnam1cyd84a5LoFcEyMiw@mail.gmail.com>
+References: <lsq.1587683027.831233700@decadent.org.uk>
+         <CAG48ez0nyLsyAeLJXEnCnhkh26EnZGnam1cyd84a5LoFcEyMiw@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-J+m/50BuKvD37kKwBzv2"
+User-Agent: Evolution 3.36.1-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.21.2004221411140.28581@pobox.suse.cz>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 02:28:26PM +0200, Miroslav Benes wrote:
-> > +int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
-> > +		       unsigned int symindex, unsigned int relsec,
-> > +		       struct module *me)
-> > +{
-> > +	int ret;
-> > +	bool early = me->state == MODULE_STATE_UNFORMED;
-> > +	void *(*write)(void *, const void *, size_t) = memcpy;
-> > +
-> > +	if (!early) {
-> > +		write = s390_kernel_write;
-> > +		mutex_lock(&text_mutex);
-> > +	}
-> > +
-> > +	ret = __apply_relocate_add(sechdrs, strtab, symindex, relsec, me,
-> > +				   write);
-> > +
-> > +	if (!early)
-> > +		mutex_unlock(&text_mutex);
-> > +
-> > +	return ret;
-> > +}
-> 
-> It means that you can take text_mutex the second time here because it 
-> is still taken in klp_init_object_loaded(). It is removed later in the 
-> series though. The same applies for x86 patch.
-> 
-> Also, s390_kernel_write() grabs s390_kernel_write_lock spinlock before 
-> writing anything, so maybe text_mutex is not really needed as long as 
-> s390_kernel_write is called everywhere for text patching.
 
-Good catch, maybe I'll just drop the text_mutex here.
+--=-J+m/50BuKvD37kKwBzv2
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Josh
+On Fri, 2020-04-24 at 01:59 +0200, Jann Horn wrote:
+> On Fri, Apr 24, 2020 at 1:03 AM Ben Hutchings <ben@decadent.org.uk> wrote=
+:
+> > This is the start of the stable review cycle for the 3.16.83 release.
+> > There are 245 patches in this series, which will be posted as responses
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >=20
+> > Responses should be made by Tue Apr 28 18:00:00 UTC 2020.
+> > Anything received after that time might be too late.
+>=20
+> Can you please add backports of the following patches? I asked for
+> that in <https://lore.kernel.org/stable/CAG48ez29d-JJOw8XMp1Z=3D7sDj8Kvmt=
++9KXC9-ux-0OBhUP02Xg@mail.gmail.com/>;,
+> but I guess that fell through the cracks somehow.
 
+Sorry I forgot about this,
+
+> 8019ad13ef7f64be44d4f892af9c840179009254 "futex: Fix inode life-time issu=
+e"
+> 8d67743653dce5a0e7aa500fcccb237cde7ad88e "futex: Unbreak futex hashing"
+>=20
+> Can those still go into 3.16.83, or is it too late for that now?
+
+I'll add them and send an -rc2.
+
+Ben.
+
+--=20
+Ben Hutchings
+Knowledge is power.  France is bacon.
+
+
+
+--=-J+m/50BuKvD37kKwBzv2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl6i7OwACgkQ57/I7JWG
+EQlqAg/+MVr5Qnw2tXy9cp9lUsxuIpSVduJAm3cLck4birfJCMiG0aFSxlJ/RFhH
+2zAXX+1ci6UOVo+wfKuqmgtR2IcMfrRATTQalyT7ffRrArIcVkoVEuC/Q8S/YJWU
+UgtaQK+szp3O83TSWXr/PAibjMiUyT35pGnYGzlzHjTdQI/Bl4z7778zhDhykbRg
+1LoASUemmyBkuZAcA6HWk51XNdzwmeADjE6Hzc0V4upUMVQFtBQOdiS1MTd3lpgu
+vY/oGqQs+VwbhjU1Bn0tejWyUGDtduln9vtd1c401fNVqi3Xdb1b03UlsQNpH8dO
+OGtf4zyuvLrqrXhzJkP8PbsbTIRuRmIPxYlrBtdK5BDS3glXXtEIg8va7NUc6YfI
+6ipkRRw+Ei9JzPbvz4L0cgle7nRryGAp8R7g4eqfJL35OOpk0JXV0dxnpAnaXcYj
+9VrZiFOuM2K6e3W+VlhecGQfikt2WLD3PsTFclPn4Oy19hkGQNAequrJwo0p3FdK
+eUb2uw3qu/xk9Z21pL99TfnpwEpFp/wSejoFix/SEtyMvLHst676zqICwsvzmGQd
+JFq4j1ccucysHXRg+jTVd84lQcwwvd7rXY7zKfHVMKRkc2QFs2Y2IsQYcLmCuhyW
+zPYAKKgXZ1cwXjMDm91oHmgiSJLmZXw15V9zFdMw+OL/xDUnSQw=
+=0FVp
+-----END PGP SIGNATURE-----
+
+--=-J+m/50BuKvD37kKwBzv2--
