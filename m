@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2C3C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 141DBC55196
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5956B20857
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:20:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D74262098B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:22:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587756048;
-	bh=FHMzbJyy7eRXCOtq4x+//rHY+BvnmW4DtKX65oueAJw=;
+	s=default; t=1587756148;
+	bh=hDgF+5y0mC6lW8C+AMpQL6Oev+ynnW512Twm837FWkg=;
 	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=O2x8iCnzQOmYGDEhw4j4+6gizHEfrNkxH2No9AjKkKPqPeaOKNcE8FBBf/cflcNt5
-	 d1T6C6zogzwl3P9+MgpGvfxpgpZ+iLIqjnwZ5EXm3h6Xb1u+qswXLLTsK3vZR6o6TS
-	 Zmeh8W0I7RrS7b0kjdF/WT/L7U3VhCboyOuLp06I=
+	b=akiIywonAhA5Y0fXvfn6bDvYdzUVGp8tQNA6+QCQ+D4CHy/4CaLdtxUla6fMUpWIY
+	 uwmUNUOg1NQSeqld1qNAWxYkYTdgvETtYzaqiLsNaNBjoxvtA7CdyuiEEsVdPGFcjF
+	 6u5Ci9rlt540u0g545p6nrM2WpyktJIaVFwIfYc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729348AbgDXTUr (ORCPT
+        id S1729349AbgDXTW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 15:20:47 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38849 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729300AbgDXTUr (ORCPT
+        Fri, 24 Apr 2020 15:22:28 -0400
+Received: from mail-oo1-f67.google.com ([209.85.161.67]:42299 "EHLO
+        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727021AbgDXTW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 15:20:47 -0400
-Received: by mail-ot1-f67.google.com with SMTP id g19so14338973otk.5;
-        Fri, 24 Apr 2020 12:20:46 -0700 (PDT)
+        Fri, 24 Apr 2020 15:22:27 -0400
+Received: by mail-oo1-f67.google.com with SMTP id e18so2356484oot.9;
+        Fri, 24 Apr 2020 12:22:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=8MV9/+u7qgMpCNZskfFSc9GcIYlBAlgzUWvj7mC9USM=;
-        b=hsg7xH6dVZJ8T3s9Hzhiw4MGiZW0iTqCEfsMfcHBFWkaSoUQASleo3D9OAaHWPQ4ty
-         Un4BxS0+ApHkggIVKIbG0x0y6pnP/rwLHrz9Jv36v/c9s8wyG4tP8yCjcwZ1JF3KxVP6
-         d1IYJmO52xVDHO5Cv5QmUcyiJpm5Y3c5oU8H04HCeTu6mcAv0b2WRgcp80nqMbmkea0q
-         Vg8jqffDh1mG9DniPYHxfLNy9vBH+YdJMiFGXdcz62HzUFNXsjpzT/hz4Dl8VVbx+9ky
-         vVPS4cgv6IV9BILryGtbB4923VtSOG5M28RQiW1OIxs43SYM2d2KYl6lroBJLBFcOtIG
-         kS9g==
-X-Gm-Message-State: AGi0PuYbq1cb9y/iHM7ojjO6IX3ij/yjusD+mXtb7HrdmUGZyOremuAN
-        se6inejrQilWKD8nKKTZ1OqXiX10Ocxk6DtSLG2squM7
-X-Google-Smtp-Source: APiQypJbTbaB7HobSd0rymt4BYLsZfeLqvRv4Qy+Ur5g3pk3lvZgWhpGsF7BRNHw3csBltxjDfo37fYRqg6xniP1Ck4=
-X-Received: by 2002:a9d:1d07:: with SMTP id m7mr8726815otm.167.1587756046086;
- Fri, 24 Apr 2020 12:20:46 -0700 (PDT)
+        bh=h5tgKPGX1pMT2Yv1+/KaLuaJr7i5eoDwlgF0bQgOpfw=;
+        b=j0yIIL4gqfca7b+edl4fupGCvTZNzsX2zzVoyKUey4bbUWKs7NMx6T+AvgYn0udtUJ
+         9iJ+OvhACWpQSBBl0dJ0pYdnEK75eYDqvoeHNqdfUA96qmLOKQ42gMYYTi3tZb7NLA41
+         dkClEZs0m6OGMPjD9jKog3hTiq2ST2p14wQcruGze4MX7oaD6aiBTuNhmqzsbeC1d5my
+         T2yYB6u/wYWV+6hQOhDLF7TKPVj2BVcXD9lCRGPtFzXPfBSY58fo29EgVFFQ6atqerQC
+         jg1GF0/S+HMljxdkscEsZMTq0ajszPzFdnTB+Sa+IJBTq4BxtPz8/VqBQ2YBaGkutpah
+         z5qA==
+X-Gm-Message-State: AGi0PuaoI3G5ASWTLK916JJ8rDHqL19Yddz+HUEwa6GvT2FbVte+yn87
+        VANHqu0Z4pjRU08pIpk8fQFRW5iyTxgfU7JLaWYx9NkF
+X-Google-Smtp-Source: APiQypKFPdpQHP7GUsDJMyDJJDYGh6iEoEASKq5idVwW/Z+UYWypYUGo0H5G7o+A0ewYQ0GCER42jZXOURsGLcZI9M4=
+X-Received: by 2002:a05:6820:245:: with SMTP id b5mr2075832ooe.75.1587756142064;
+ Fri, 24 Apr 2020 12:22:22 -0700 (PDT)
 MIME-Version: 1.0
 From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 24 Apr 2020 21:20:35 +0200
-Message-ID: <CAJZ5v0j1yk2k-tT+LxNH+Vq53og+rVRH413xGnzBqKd=AoQyHQ@mail.gmail.com>
-Subject: [GIT PULL] Power management updates for v5.7-rc3
+Date:   Fri, 24 Apr 2020 21:22:11 +0200
+Message-ID: <CAJZ5v0i=yOFpKuXeGnLh25xyvJsKcr9-3iSnHq7nA0_WMQKQwA@mail.gmail.com>
+Subject: [GIT PULL] ACPI fixes for v5.7-rc3
 To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -64,40 +64,36 @@ Hi Linus,
 Please pull from the tag
 
  git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- pm-5.7-rc3
+ acpi-5.7-rc3
 
-with top-most commit 4bee16d7cccddafd769e8d8ec0625ba239d11a26
+with top-most commit 0db0d142e2d2c7522764511f45c0d3c15dbd8be0
 
- Merge branch 'pm-tools'
+ Merge branch 'acpi-pci'
 
 on top of commit ae83d0b416db002fe95601e7f97f64b59514d936
 
  Linux 5.7-rc2
 
-to receive power management updates for 5.7-rc3.
+to receive ACPI fixes for 5.7-rc3.
 
-These restore an optimization related to asynchronous suspend and
-resume of devices during system-wide power transitions that was
-disabled by mistake (Kai-Heng Feng) and update the pm-graph suite
-of power management utilities (Todd Brandt).
+These drop a lid status quirk for Asus T200TA that is not necessary
+any more and clean up a resource management inconsistency in the
+PCI IRQ link configuration code.
+
+Both changes from Hans de Goede.
 
 Thanks!
 
 
 ---------------
 
-Kai-Heng Feng (1):
-      PM: sleep: core: Switch back to async_schedule_dev()
-
-Todd Brandt (1):
-      pm-graph v5.6
+Hans de Goede (2):
+      ACPI/PCI: pci_link: use extended_irq union member when setting
+ext-irq shareable
+      ACPI: button: Drop no longer necessary Asus T200TA lid_init_state quirk
 
 ---------------
 
- drivers/base/power/main.c          |   2 +-
- tools/power/pm-graph/Makefile      |   4 +
- tools/power/pm-graph/README        | 124 +++++-
- tools/power/pm-graph/bootgraph.py  |   2 +-
- tools/power/pm-graph/sleepgraph.8  |  65 ++-
- tools/power/pm-graph/sleepgraph.py | 795 +++++++++++++++++++++----------------
- 6 files changed, 620 insertions(+), 372 deletions(-)
+ drivers/acpi/button.c   | 12 ------------
+ drivers/acpi/pci_link.c |  4 ++--
+ 2 files changed, 2 insertions(+), 14 deletions(-)
