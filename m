@@ -2,104 +2,108 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D85DC2BA19
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 036AEC55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43A4C20715
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:57:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rylan.coffee header.i=@rylan.coffee header.b="Q1SRUDH4";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vF2er2Z+"
+	by mail.kernel.org (Postfix) with ESMTP id D49012074F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:00:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587697211;
+	bh=haezx3wYCgmbsBJ9MfBelbG321ST7/HsGAoFQtMkstU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=yrs0XUCTbE3CxjTOX4Tgskb1o7exeu+xNbfMoKxeDPP9yrGj6j5XCd0ootiKQAd04
+	 cRvy5WMyplSxBRhu38LmRNlrNB9rQcIEwnSq0UnGl8DHtpkRSzaHHDpsiV/7V2qm46
+	 U+eWRSKdso3WKbtxdISU3UM2Eq9aEF8WvlsWZJXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbgDXC5Z (ORCPT
+        id S1726166AbgDXDAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 22:57:25 -0400
-Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:55919 "EHLO
-        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725884AbgDXC5Y (ORCPT
+        Thu, 23 Apr 2020 23:00:10 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:44927 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbgDXDAK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 22:57:24 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.west.internal (Postfix) with ESMTP id CD09BD10;
-        Thu, 23 Apr 2020 22:57:23 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Thu, 23 Apr 2020 22:57:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rylan.coffee; h=
-        date:from:to:subject:message-id:mime-version:content-type; s=
-        fm3; bh=brsFHTOcuqgo//M85imCKMi4ly+rvtpPJ/C1YNSJwjE=; b=Q1SRUDH4
-        6CIIezndmyoo3LIlmYEWFiRCUSbukb5EaUg9mJjtdHgIBRrUhgCVD9k1YbyxSgRD
-        ZmYSSZzknqOjoIyJrdXIAEpxoGiz4Ae2U3YKRfsYcJHumQoKV3FdFf44EZpjHhN4
-        /76rlKgStMGYTqKPC4Ztxxb4LBc+JULaWOzwjMoeKFQM8rsVjGym4T2fTxauWjKQ
-        XxCztUp4shWS8e8IX+T4Xqcc64iK9WZ9bJMVP6smOmhjScHBCH7Pr5oy/X4y3sCu
-        kyBEFZ6N2wuUAwJAyq+2ZpD/8DKjnCXC+/ptWbsRnSbQ0kyQCTmdMb5tq2X1fJ1+
-        NxYqygFBM7KvCA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=content-type:date:from:message-id
-        :mime-version:subject:to:x-me-proxy:x-me-proxy:x-me-sender
-        :x-me-sender:x-sasl-enc; s=fm2; bh=brsFHTOcuqgo//M85imCKMi4ly+rv
-        tpPJ/C1YNSJwjE=; b=vF2er2Z+7N4uORZRrONoFrcP2Gxvi6OOu44nrF0U6MfO5
-        8ldsuGE6vfdzU7E9yi5RCxtE/NA4Ic1x8nxudXRESUDxIIwPYol+qIQBaMDV2wDY
-        GACd4U2+h3htPwdxXw/ide9hnhiAkLQPHgxfkxMQKiS0NmJgQnI1mrcPsImx9qvH
-        AxIQhRvn9GYNZRRWhTrWmrnZNKME0C98nk5ymbDMf8eXTrqAOtQEYlyES0uEt7T9
-        /EzKD/rGqOgrg3+o0LmpDyTaFRKDEK/ExE/dIqIKI8Zn1XSsL7Yc5h8PV63he5PD
-        Z7+t86Nk0fA3xboPQdAeh5rJMD8/IRJCF7Lve9J0Q==
-X-ME-Sender: <xms:k1WiXoHnP0mPLWCYQ6FPgG8m0k-dwYFiXKIQghIFBrHnIcas0WN-gA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrhedtgdeiudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkgggtugesthdtredttddtjeenucfhrhhomheptfihlhgrnhcuffhm
-    vghllhhouceomhgrihhlsehrhihlrghnrdgtohhffhgvvgeqnecukfhppedutdekrdegle
-    drudehkedrkeegnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghilhhf
-    rhhomhepmhgrihhlsehrhihlrghnrdgtohhffhgvvg
-X-ME-Proxy: <xmx:k1WiXoHI4mVwhLkDXdH7S62Mvksv3GvZCvPlbuZsHGhIl0Tsa-BH1Q>
-    <xmx:k1WiXj4lUwmH4z_G1pVpa_GvrmzIZFpNvumtlLEPBo61VsbtG3JsEA>
-    <xmx:k1WiXlxkIkxtq8AlM8Fo3v1NzCkj7zTItlBARmwe8z--7u00Ng_VPQ>
-    <xmx:k1WiXgDr5w9y_tR3OEg34Ww7f4hfDIv7ZKBa5xrfxNABOjyIrWT4qw>
-Received: from athena (pool-108-49-158-84.bstnma.fios.verizon.net [108.49.158.84])
-        by mail.messagingengine.com (Postfix) with ESMTPA id CF76A3280060;
-        Thu, 23 Apr 2020 22:57:22 -0400 (EDT)
-Date:   Thu, 23 Apr 2020 22:57:23 -0400
-From:   Rylan Dmello <mail@rylan.coffee>
-To:     Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: qlge: qlge_dbg.c: Remove trailing semicolon from
- macro
-Message-ID: <20200424025723.GA28156@athena>
+        Thu, 23 Apr 2020 23:00:10 -0400
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 03O2xoAh028692;
+        Fri, 24 Apr 2020 11:59:51 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 03O2xoAh028692
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587697191;
+        bh=sMhAyQXgx3aGgeT2cBKikLWxHkHjlRUwrBTCsV1+3Gw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=pnu0hGRUoE/m3c5iNOXeZVq/zyyFbsQqCoxufZov1J8pArY22bCjRMZqzG/L3m5+n
+         1TGlCwr5ISXTw+671s8m/Z/m5pAMgJwxRH3EVJGBXzTKsOAUN9wqwbss3CVkEAvV6k
+         TRIuXE+CR0M+7GUrLfZZxVChoqZApt5XMnu03Kn5LEbu63plgi0Xb/c58bmydut5wk
+         ubf65em2YZFOa3Qr6YgDq4cquF49M9yRvYo9oLYU7XwS8nx46BohhaZA0TS2j4U4Mg
+         HUeE4Mn2IySUCOFVuOb2xUOPxiwPIzQj1nRYpgqcPxO/A84tApwP7x1aS3P2vB1am/
+         hUrlcaFMHbMBg==
+X-Nifty-SrcIP: [209.85.222.45]
+Received: by mail-ua1-f45.google.com with SMTP id a10so8040902uad.7;
+        Thu, 23 Apr 2020 19:59:51 -0700 (PDT)
+X-Gm-Message-State: AGi0Pua1YSRFCR1v4PLQ63nig+DIo038pykOo5o3uN4c2TW0u5aUWuM+
+        lT0D0BB3hrt+8A8Pn4tyRwy8I5WsdAYsBNMUDb4=
+X-Google-Smtp-Source: APiQypJwidJWbxYPm/8c0bwT8boM9jxvggOQZWWhl+mIk5bgeb7K2rLmsZC1B59FOXGSWq0gtKzTuQcI9OVc/f+WiGc=
+X-Received: by 2002:ab0:cd:: with SMTP id 71mr5422237uaj.109.1587697190149;
+ Thu, 23 Apr 2020 19:59:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20200423073929.127521-1-masahiroy@kernel.org> <20200423073929.127521-15-masahiroy@kernel.org>
+ <CANiq72nUa8uoXtSThqq7t9oAmZnGSE9a1_d+ZoRAagpKDo4DRg@mail.gmail.com>
+In-Reply-To: <CANiq72nUa8uoXtSThqq7t9oAmZnGSE9a1_d+ZoRAagpKDo4DRg@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 24 Apr 2020 11:59:14 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASo=R2uoNPzof_FppFUp=sMAZG62C3PLAMm9jZix9z3Rw@mail.gmail.com>
+Message-ID: <CAK7LNASo=R2uoNPzof_FppFUp=sMAZG62C3PLAMm9jZix9z3Rw@mail.gmail.com>
+Subject: Re: [PATCH 14/16] samples: auxdisplay: use 'userprogs' syntax
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Sam Ravnborg <sam@ravnborg.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix checkpatch.pl warning: macros should not use a trailing semicolon
+Hi Miguel,
 
-Signed-off-by: Rylan Dmello <mail@rylan.coffee>
----
- drivers/staging/qlge/qlge_dbg.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Thu, Apr 23, 2020 at 8:50 PM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> Hi Masahiro,
+>
+> On Thu, Apr 23, 2020 at 9:41 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > Kbuild now supports the 'userprogs' syntax to describe the build rules
+> > of userspace programs for the target architecture (i.e. the same
+> > architecture as the kernel).
+> >
+> > Add the entry to samples/Makefile to put this into the build bot
+> > coverage.
+> >
+> > I also added the CONFIG option guarded by 'depends on CC_CAN_LINK'
+> > because $(CC) may not necessarily provide libc.
+> >
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+>
+> Thanks for this! Looks nice. I guess you take all patches for the
+> samples/ changes through your tree?
 
-diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
-index 1795533cbd3a..216b13d8c131 100644
---- a/drivers/staging/qlge/qlge_dbg.c
-+++ b/drivers/staging/qlge/qlge_dbg.c
-@@ -1564,7 +1564,7 @@ void ql_dump_stat(struct ql_adapter *qdev)
- 	pr_err("qdev->%-24s = %llx\n", #field, (unsigned long long)qdev->field)
- #define DUMP_QDEV_ARRAY(qdev, type, array, index, field) \
- 	pr_err("%s[%d].%s = " type "\n",		 \
--	       #array, index, #field, (qdev)->array[index].field);
-+	       #array, index, #field, (qdev)->array[index].field)
- void ql_dump_qdev(struct ql_adapter *qdev)
- {
- 	int i;
+Yes, I will take all to my tree
+since this series is mostly Makefile changes.
+
+
+
+> Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+>
+> Cheers,
+> Miguel
+
+
+
 -- 
-2.26.2
-
+Best Regards
+Masahiro Yamada
