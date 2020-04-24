@@ -2,127 +2,115 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FCAC2BA19
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3FEC55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E82420736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:41:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587692513;
-	bh=UHl3f9KMN5Mp5iMxWneKGyf/iaA1jKo8Qh5hVET/Cr8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eewS3DVLwOXB9KYk7zhFc6oNjqMep6858TdR8atITOTabodmwwvPAlOw0wRaS9mmf
-	 4JjaQuAu6tzbL/hUw7S2d4lGnUeCf7NfRhcx5+wdeTe3CX9hh3xb/NLXaY82iixHUw
-	 0hprlFZ0aKKopU2NmS36QYQSRF2/GAfDFrgnxnQQ=
+	by mail.kernel.org (Postfix) with ESMTP id 72F572071C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:42:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aBYxr6F+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgDXBlw (ORCPT
+        id S1726307AbgDXBmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 21:41:52 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:44456 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726021AbgDXBlv (ORCPT
+        Thu, 23 Apr 2020 21:42:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36014 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726021AbgDXBmH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 21:41:51 -0400
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 03O1fZLW015549
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 10:41:36 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 03O1fZLW015549
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587692496;
-        bh=1SEaeJhyzWU9jqAsfWMzXzgCHVbK39e/WrbxIKUu+9Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zjP6/500g28HsFRys18oTDgIc5zqswWxubUWm5vAW6XbUYRbiAOAoTGUi607PAgaZ
-         UHqR4PqJDMjbNCBxdP+N6iRPSLg1wgQLeJXiIE+5RbmoCewH/cMHABVXJpg6vfewbV
-         kLDupuMG063b92KrY4bcHmJhiscmfHgGsv8ZYj+bNAZhjyczJwOrg0d8hRkYJ6IoI7
-         by5pPFl1PargBRg1X1U6pq7PvjFu6yi0F2aKB5y9hK2bXAd5+pxvKXEYigqnF0bG+H
-         JyOyKxRvlHuTWKRrFWlBXZEHHLSq+V1wAKp3EYYyJp0ai1Hrg07FEaGa2Y1GnlCro/
-         PwMivZffezdwQ==
-X-Nifty-SrcIP: [209.85.221.170]
-Received: by mail-vk1-f170.google.com with SMTP id f7so2326197vkl.6
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 18:41:36 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZK3gAWTbj3R6x7GwO7er3DN+yqMoIUeRgNzq+qrKgyXvcUt991
-        du7NPgasdbudY5PLg0Y/2YVX9+7edbSGy8Y9m7U=
-X-Google-Smtp-Source: APiQypJiQIUSipFhDNU2QSUU4sKY7y2xH1moEdr0+/BEit/iYa7pPZLaJvyceF6V1UOvqEW1T7uWgrOhfAhS9eLwumg=
-X-Received: by 2002:a1f:3649:: with SMTP id d70mr5910043vka.12.1587692495242;
- Thu, 23 Apr 2020 18:41:35 -0700 (PDT)
+        Thu, 23 Apr 2020 21:42:07 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77B1AC09B042
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 18:42:07 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id n188so4212031ybc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 18:42:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=l23qZuUbbo3ViqI2ySplyyQqRUP3mFV2loomTBalDSY=;
+        b=aBYxr6F+mvuF4RXiZhZ7/TOOGek5Jbyxwkt0+kilTkf25Svp4JNtAznaaYMgJ0zZ2V
+         boCsgBrE6gAWZuSAb+yXGK13hoTcOdG0BzrLNe8eI1wJwAuHhwnJXMY4WWYxUzOiWWg2
+         59XkDBcRCM5sXCuWkJT7KifzI9p3kRz53WDtTRUB33pY2ELqKulePRiTtSHHwguyjgLU
+         quQSa7k/sAIrC/AHdoJ+sOFh/zYRJOkRDVb36tJ4A+Ayd/84eSZY00bREHMni3TLB2U0
+         YyRRhn0dqt3We39e8uXhyWsHjFamurc+3GipKEQ9KDKfAMs4GusXDoCM8IGvDwJfl1li
+         2buw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=l23qZuUbbo3ViqI2ySplyyQqRUP3mFV2loomTBalDSY=;
+        b=Swh1abWX+FWk4LfY0BaJBJxloGJxWLFKsNWCflREn6fLPPq9UNHm1Bh0S+3eD7IkU0
+         phMwncElS0xiG8PTIi8S+wkxOlV73U8oN2kT52hBKjwytZZ2wA0PiiNUVPXOJEdDvYFe
+         aqXalTh0FulGvp33BEpCXaqQjaUAzuAj9xh4+mzsVTLtERu4xtJR2/SLfAbDqrcSCHAD
+         sOwMq5wOJ0nnOll5Q0SyDW/doocl+8oXWO6JsnZt2FrdQgVCuCK4YNIYg5joafvw4XSK
+         gsTGJJJyxtP8nnAdm4k6z+oFDIdbMMTIRhRhQDlh+h2DVbf6NUqouJt28JaxdQzSKahE
+         Fk0g==
+X-Gm-Message-State: AGi0Pubx26sgFr9F/F2fOYSvGiE0zTrnlllTf+FqOyWXXdj6oJcoA9tQ
+        RVCltBoU3G9qiCR57hVA/UXMB+CiidQRSvircjIghg==
+X-Google-Smtp-Source: APiQypLCqGM186vZ/gOE5YTUOSqHd/vjc482HoZb0OM4rEIGLXuSpbnF7IuR9Vjy6xOqXF4+FyAS+kD9KRjNVATW/Ho=
+X-Received: by 2002:a25:df03:: with SMTP id w3mr11870988ybg.224.1587692526417;
+ Thu, 23 Apr 2020 18:42:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200419131947.173685-1-sedat.dilek@gmail.com> <CAKwvOd=Rt0q0+nRJasc8GzOXSj1_-jZGNc2bAWJkmd7Vzr8FFw@mail.gmail.com>
-In-Reply-To: <CAKwvOd=Rt0q0+nRJasc8GzOXSj1_-jZGNc2bAWJkmd7Vzr8FFw@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 24 Apr 2020 10:40:59 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQzh8EajBkXSSgFh2=5iF38XvkADf1C7J0JnwTov=NmNQ@mail.gmail.com>
-Message-ID: <CAK7LNAQzh8EajBkXSSgFh2=5iF38XvkADf1C7J0JnwTov=NmNQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] kbuild: add CONFIG_LD_IS_BINUTILS
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Sedat Dilek <sedat.dilek@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+References: <20200423210523.52833-1-sqazi@google.com> <83078447-831c-2921-db5e-9cab4c4c12df@kernel.dk>
+In-Reply-To: <83078447-831c-2921-db5e-9cab4c4c12df@kernel.dk>
+From:   Salman Qazi <sqazi@google.com>
+Date:   Thu, 23 Apr 2020 18:41:54 -0700
+Message-ID: <CAKUOC8Vb4AZnU_Sm=rxGk7QDK9=NvQT+G3Kp1cV8uVcebxsVWQ@mail.gmail.com>
+Subject: Re: [PATCH v2] block: Limit number of items taken from the I/O
+ scheduler in one go
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Ming Lei <ming.lei@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Gwendal Grignou <gwendal@google.com>,
+        Hannes Reinecke <hare@suse.com>, Christoph Hellwig <hch@lst.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 3:44 AM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
+I remailed it with the changes since v1 added.  But just to answer directly:
+
+Changes since v1:
+
+* Removed max_sched_batch.
+* Extended the fix to the software queue.
+* Use a return value from blk_mq_do_dispatch_sched to indicate if
+  the dispatch should be rerun.
+* Some comments added.
+
+On Thu, Apr 23, 2020 at 2:30 PM Jens Axboe <axboe@kernel.dk> wrote:
 >
-> On Sun, Apr 19, 2020 at 6:19 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+> On 4/23/20 3:05 PM, Salman Qazi wrote:
+> > Flushes bypass the I/O scheduler and get added to hctx->dispatch
+> > in blk_mq_sched_bypass_insert.  This can happen while a kworker is running
+> > hctx->run_work work item and is past the point in
+> > blk_mq_sched_dispatch_requests where hctx->dispatch is checked.
 > >
-> > This patch is currently not mandatory but a prerequisites for the second one.
+> > The blk_mq_do_dispatch_sched call is not guaranteed to end in bounded time,
+> > because the I/O scheduler can feed an arbitrary number of commands.
 > >
-> > Folks from ClangBuiltLinux project like the combination of Clang compiler
-> > and LLD linker from LLVM project to build their Linux kernels.
+> > Since we have only one hctx->run_work, the commands waiting in
+> > hctx->dispatch will wait an arbitrary length of time for run_work to be
+> > rerun.
 > >
-> > Sami Tolvanen <samitolvanen@google.com> has a patch for using LD_IS_LLD (see [1]).
+> > A similar phenomenon exists with dispatches from the software queue.
 > >
-> > Documentation/process/changes.rst says and uses "binutils" that's why I called
-> > it LD_IS_BINUTILS (see [2] and [3]).
-> >
-> > The second patch will rename existing LD_VERSION to BINUTILS_VERSION to have
-> > a consistent naming convention like:
-> >
-> > 1. CC_IS_GCC and GCC_VERSION
-> > 2. CC_IS_CLANG and CLANG_VERSION
-> > 3. LD_IS_BINUTILS and BINUTILS_VERSION
-> >
-> > [1] https://github.com/samitolvanen/linux/commit/61889e01f0ed4f07a9d631f163bba6c6637bfa46
-> > [2] https://git.kernel.org/linus/tree/Documentation/process/changes.rst#n34
-> > [3] https://git.kernel.org/linus/tree/Documentation/process/changes.rst#n76
-> >
-> > Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > The solution is to poll hctx->dispatch in blk_mq_do_dispatch_sched and
+> > blk_mq_do_dispatch_ctx and return from the run_work handler and let it
+> > rerun.
 >
-> Just some background on Sami's patch.  Originally we were using
-> ld.gold (for LTO for Pixel 3) before moving to ld.lld (for LTO for
-> Pixel 4 and later).  Not sure if Kconfig would be a better place to
-> check if gold is used, then warn?  I kind of prefer the distinction
-> that binutils contains two different linkers, though if no one is
-> supporting ld.gold, and it doesn't work for the kernel, then maybe
-> that preference is moot?
-
-
-I prefer LD_IS_BFD, like this patch:
-https://lore.kernel.org/patchwork/patch/1039719/
-
-We do not need LD_IS_GOLD, though.
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+> Any changes since v1? It's customary to put that in here too, below
+> the --- lines.
+>
+> --
+> Jens Axboe
+>
