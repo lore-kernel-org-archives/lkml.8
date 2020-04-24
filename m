@@ -2,230 +2,334 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC408C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBEAC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7959215A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42E1320781
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:55:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587758156;
+	bh=XyAZQ+e0o7lKduytKo6lvmMqRCZ1EqfQCzwTnAq96HM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xo3be0kxoZYhB9ia6dcfUVE5XsR2xrMJm28dPyh1LO/tLEKFf6SDO8By/UlwSbx9W
+	 gdA4eHP+c15X/lAekplPlyOgYkXOZR4avM8nsUrMZ290Gwwg2XTUxY9Dhyzme0ZBPa
+	 f5UPHZMpZ7RoWWgBAJPEEGogOXAfo46ShYhkrcao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729389AbgDXTyj (ORCPT
+        id S1729444AbgDXTzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 15:54:39 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:51924 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726793AbgDXTyi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 15:54:38 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jS4PE-0002zY-Dz; Fri, 24 Apr 2020 13:54:36 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jS4PD-0007HH-Hs; Fri, 24 Apr 2020 13:54:36 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
-        <87ftcv1nqe.fsf@x220.int.ebiederm.org>
-        <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
-        <CAHk-=wgXEJdkgGzZQzBDGk7ijjVdAVXe=G-mkFSVng_Hpwd4tQ@mail.gmail.com>
-        <87tv19tv65.fsf@x220.int.ebiederm.org>
-        <CAHk-=wj-K3fqdMr-r8WgS8RKPuZOuFbPXCEUe9APrdShn99xsA@mail.gmail.com>
-Date:   Fri, 24 Apr 2020 14:51:25 -0500
-In-Reply-To: <CAHk-=wj-K3fqdMr-r8WgS8RKPuZOuFbPXCEUe9APrdShn99xsA@mail.gmail.com>
-        (Linus Torvalds's message of "Fri, 24 Apr 2020 11:02:35 -0700")
-Message-ID: <87mu70psqq.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 24 Apr 2020 15:55:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729419AbgDXTzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 15:55:54 -0400
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86228215A4;
+        Fri, 24 Apr 2020 19:55:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587758153;
+        bh=XyAZQ+e0o7lKduytKo6lvmMqRCZ1EqfQCzwTnAq96HM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=fV8hXCcw3sdoVZvyT2ycb3P/w1YU7ELr4Hxd9Un8zFJ8TB3zwtrJ9iPol/89Q4z9F
+         ZLYdcJdtFLdPS9FCtOahiG5HXdIX7ycnQbUXUS0XXdqLY2xw0KdQHPDw6HsaJ1+tG1
+         cqkMSsJhYHantVRmxqg7qv57CTejZPcFSiT4r/ZE=
+Received: by mail-qv1-f46.google.com with SMTP id fb4so5310871qvb.7;
+        Fri, 24 Apr 2020 12:55:53 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYP157vDYmJ2xU5xTvW5md0cc49fmUYDV4/r/LDqY2uDLawKIbV
+        o6OBcLp6Ppf/HcN6BEwZU5WIFuwJjhGbzm2dcg==
+X-Google-Smtp-Source: APiQypL6QVP34OIZcFjfLZaCQy58J6loPgHHO+jJmV1P6s/hngLJU56sMwG2qfl9h0lCetvcQovdru7JCgkvs7MOHI0=
+X-Received: by 2002:a0c:a986:: with SMTP id a6mr10586552qvb.79.1587758152580;
+ Fri, 24 Apr 2020 12:55:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jS4PD-0007HH-Hs;;;mid=<87mu70psqq.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/r83cUDMsvQlOeMJelnJ6NFAsyWlR86Vo=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2 2/2] proc: Ensure we see the exit of each process tid exactly
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+References: <1587732391-3374-1-git-send-email-florinel.iordache@nxp.com> <1587732391-3374-3-git-send-email-florinel.iordache@nxp.com>
+In-Reply-To: <1587732391-3374-3-git-send-email-florinel.iordache@nxp.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 24 Apr 2020 14:55:40 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+7zpDDcVzTKSufzuCWnRcLZ0h+y0TpsJE=G+pbuhWtvw@mail.gmail.com>
+Message-ID: <CAL_Jsq+7zpDDcVzTKSufzuCWnRcLZ0h+y0TpsJE=G+pbuhWtvw@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 2/9] dt-bindings: net: add backplane dt bindings
+To:     Florinel Iordache <florinel.iordache@nxp.com>
+Cc:     David Miller <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        devicetree@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Yang-Leo Li <leoyang.li@nxp.com>,
+        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
-
-> On Thu, Apr 23, 2020 at 8:36 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
->>
->> At one point my brain I had forgetten that xchg can not take two memory
->> arguments and had hoped to be able to provide stronger guarnatees than I
->> can.  Which is where I think the structure of exchange_pids came from.
+On Fri, Apr 24, 2020 at 7:46 AM Florinel Iordache
+<florinel.iordache@nxp.com> wrote:
 >
-> Note that even if we were to have a "exchange two memory locations
-> atomically" instruction (and we don't - even a "double cmpxchg" is
-> actually just a double-_sized_ one, not a two different locations
-> one), I'm not convinced it makes sense.
+> Add ethernet backplane device tree bindings
+
+For a new, common binding, you've got to do better than this. Bindings
+need to stand on their own. I need a h/w block diagram or something
+because I know little about "ethernet backplane".
+
 >
-> There's no way to _walk_ two lists atomically. Any user will only ever
-> walk one or the other, so it's not sensible to try to make the two
-> list updates be atomic.
+> Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
+> ---
+>  .../bindings/net/ethernet-controller.yaml          |  3 +-
+>  .../devicetree/bindings/net/ethernet-phy.yaml      | 50 +++++++++++++++++++++
+>  .../devicetree/bindings/net/serdes-lane.yaml       | 51 ++++++++++++++++++++++
+>  Documentation/devicetree/bindings/net/serdes.yaml  | 44 +++++++++++++++++++
+>  4 files changed, 147 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/serdes-lane.yaml
+>  create mode 100644 Documentation/devicetree/bindings/net/serdes.yaml
 >
-> And if a user for some reason walks both, the walking itself will
-> obviously then be racy - it does one or the other first, and can see
-> either the old state, or the new state - or see _neither_ (ie if you
-> walk it twice, you might see neither task, or you might see both, just
-> depending on order or walk).
+> diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> index ac471b6..541cee5 100644
+> --- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> +++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> @@ -93,8 +93,9 @@ properties:
+>        - rxaui
+>        - xaui
 >
->> I do agree the clearer we can write things, the easier it is for
->> someone else to come along and follow.
+> -      # 10GBASE-KR, XFI, SFI
+> +      # 10GBASE-KR, 40GBASE-KR4, XFI, SFI
+>        - 10gbase-kr
+> +      - 40gbase-kr4
+>        - usxgmii
 >
-> Your alternate write of the function seems a bit more readable to me,
-> even if the main effect might be just that it was split up a bit and
-> added a few comments and whitespace.
+>    phy-mode:
+> diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+> index 5aa141c..436b5a7 100644
+> --- a/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+> +++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+> @@ -161,6 +161,42 @@ properties:
+>      description:
+>        Specifies a reference to a node representing a SFP cage.
 >
-> So I'm more happier with that one. That said:
+> +  eq-algorithm:
+> +    description:
+> +      Specifies the desired equalization algorithm to be used
+> +      by the KR link training
+> +    oneOf:
+> +      - const: fixed
+> +        description:
+> +          Backplane KR using fixed coefficients meaning no
+> +          equalization algorithm
+> +      - const: bee
+> +        description:
+> +          Backplane KR using 3-Taps Bit Edge Equalization (BEE)
+> +          algorithm
+> +
+> +  eq-init:
+
+eq-coefficients?
+
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    minItems: 3
+> +    maxItems: 3
+> +    description:
+> +      Triplet of KR coefficients. Specifies the initialization
+> +      values for standard KR equalization coefficients used by
+> +      the link training (pre-cursor, main-cursor, post-cursor)
+
+items:
+  - description: pre-cursor
+  - description: main-cursor
+  ...
+
+Is 0-2^32 valid data? If not, add some constraints.
+
+> +
+> +  eq-params:
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    description:
+> +      Variable size array of KR parameters. Specifies the HW
+> +      specific parameters used by the link training.
+
+DT is not a dumping ground for magic register values.
+
+eq-init vs. eq-params is pretty vague as to what they are.
+
+I fail to see how these properties are related to $subject. Should be
+a separate patch.
+
+> +
+> +  lane-handle:
+> +    $ref: /schemas/types.yaml#definitions/phandle
+> +    description:
+> +      Specifies a reference (or array of references) to a node
+> +      representing the desired SERDES lane (or lanes) used in
+> +      backplane mode.
+> +
+>  required:
+>    - reg
 >
->> We can not use a remove and reinser model because that does break rcu
->> accesses, and complicates everything else.  With a swap model we have
->> the struct pids pointer at either of the tasks that are swapped but
->> never at nothing.
+> @@ -183,3 +219,17 @@ examples:
+>              reset-deassert-us = <2000>;
+>          };
+>      };
+> +  - |
+> +    ethernet {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        ethernet-phy@0 {
+> +            compatible = "ethernet-phy-ieee802.3-c45";
+> +            reg = <0x0>;
+> +            lane-handle = <&lane_d>;
+> +            eq-algorithm = "fixed";
+> +            eq-init = <0x2 0x29 0x5>;
+> +            eq-params = <0>;
+> +        };
+> +    };
+> diff --git a/Documentation/devicetree/bindings/net/serdes-lane.yaml b/Documentation/devicetree/bindings/net/serdes-lane.yaml
+> new file mode 100644
+> index 0000000..ce3581e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/serdes-lane.yaml
+> @@ -0,0 +1,51 @@
+> +# SPDX-License-Identifier: GPL-2.0
+
+Dual license new bindings:
+
+(GPL-2.0-only OR BSD-2-Clause)
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/serdes-lane.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Serdes Lane Binding
+> +
+> +maintainers:
+> +  - Florinel Iordache <florinel.iordache@nxp.com>
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^lane(@[a-f0-9]+)?$"
+> +
+> +  compatible:
+> +    oneOf:
+> +      - const: lane-10g
+> +        description: Lane part of a 10G SerDes module
+> +      - const: lane-28g
+> +        description: Lane part of a 28G SerDes module
+> +
+> +  reg:
+> +    description:
+> +      Registers memory map offset and size for this lane
+> +
+> +  reg-names:
+> +    description:
+> +      Names of the register map given in "reg" node.
+> +
+> +examples:
+> +  - |
+> +    serdes1: serdes@1ea0000 {
+> +        compatible = "serdes-10g";
+
+Do you have a datasheet for this device as bindings describe devices?
+I assume not because serdes is a protocol, not a device. AFAIK,
+there's no standard programming interface for 'serdes' as that is
+about the only time we have any sort of genericish compatible strings.
+The compatible string at a minimum should tell me what the programming
+model for the registers are.
+
+> +        reg = <0x0 0x1ea0000 0 0x00002000>;
+> +        reg-names = "serdes", "serdes-10g";
+
+The default address and sizes are 1 cell. So you have addr 0 with size
+0x1ea0000 and then addr 0 with size 0x2000.
+
+> +        little-endian;
+> +
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +        lane_a: lane@800 {
+> +            compatible = "lane-10g";
+> +            reg = <0x800 0x40>;
+> +            reg-names = "lane", "serdes-lane";
+
+Not valid. You have 1 entry (with a addr and size) for reg, but 2
+entries for reg-names.
+
+40G is made up of 4 10G lanes, right? Do all 40G serdes phys have
+separate register regions for each lane? You can't assume lanes and DT
+nodes are 1-1.
+
+As lanes have to be child nodes, these 2 schemas should be 1. Though I
+don't think lane nodes will survive.
+
+> +        };
+> +        lane_b: lane@840 {
+> +            compatible = "lane-10g";
+> +            reg = <0x840 0x40>;
+> +            reg-names = "lane", "serdes-lane";
+> +        };
+> +    };
+> diff --git a/Documentation/devicetree/bindings/net/serdes.yaml b/Documentation/devicetree/bindings/net/serdes.yaml
+> new file mode 100644
+> index 0000000..fd3da85
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/serdes.yaml
+> @@ -0,0 +1,44 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/serdes.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Serdes Module Binding
+> +
+> +maintainers:
+> +  - Florinel Iordache <florinel.iordache@nxp.com>
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^serdes(@[a-f0-9]+)?$"
+> +
+> +  compatible:
+> +    oneOf:
+> +      - const: serdes-10g
+> +        description: SerDes module type of 10G
+> +      - const: serdes-28g
+> +        description: SerDes module type of 28G
+> +
+> +  reg:
+> +    description:
+> +      Registers memory map offset and size for this serdes module
+> +
+> +  reg-names:
+> +    description:
+> +      Names of the register map given in "reg" node.
+> +
+> +  little-endian:
+> +    description:
+> +      Specifies the endianness of serdes module
+> +      For complete definition see
+> +      Documentation/devicetree/bindings/common-properties.txt
+> +
+> +examples:
+> +  - |
+> +    serdes1: serdes@1ea0000 {
+> +        compatible = "serdes-10g";
+> +        reg = <0x0 0x1ea0000 0 0x00002000>;
+> +        reg-names = "serdes", "serdes-10g";
+> +        little-endian;
+> +    };
+> --
+> 1.9.1
 >
-> I'm not suggesting removing the pid entirely - like making task->pid
-> be NULL. I'm literally suggesting just doing the RCU list operations
-> as "remove and re-insert".
->
-> And that shouldn't break anything, for the same reason that an atomic
-> exchange doesn't make sense: you can only ever walk one of the lists
-> at a time. And regardless of how you walk it, you might not see the
-> new state (or the old state) reliably.
->
-> Put another way:
->
->>         void hlist_swap_before_rcu(struct hlist_node *left, struct hlist_node *right)
->>         {
->>                 struct hlist_node **lpprev = left->pprev;
->>                 struct hlist_node **rpprev = right->pprev;
->>
->>                 rcu_assign_pointer(*lpprev, right);
->>                 rcu_assign_pointer(*rpprev, left);
->
-> These are the only two assignments that matter for anything that walks
-> the list (the pprev ones are for things that change the list, and they
-> have to have exclusions in place).
->
-> And those two writes cannot be atomic anyway, so you fundamentally
-> will always be in the situation that a walker can miss one of the
-> tasks.
->
-> Which is why I think it would be ok to just do the RCU list swap as a
-> "remove left, remove right, add left, add right" operation. It doesn't
-> seem fundamentally different to a walker than the "switch left/right"
-> operation, and it seems much simpler.
->
-> Is there something I'm missing?
-
-
-The problem with
-
-remove
-remove
-add
-add
-is:
-
-A lookup that hit between the remove and the add could return nothing.
-
-The function kill_pid_info does everything it can to handle this case
-today does:
-
-int kill_pid_info(int sig, struct kernel_siginfo *info, struct pid *pid)
-{
-	int error = -ESRCH;
-	struct task_struct *p;
-
-	for (;;) {
-		rcu_read_lock();
-		p = pid_task(pid, PIDTYPE_PID);
-		if (p)
-			error = group_send_sig_info(sig, info, p, PIDTYPE_TGID);
-		rcu_read_unlock();
-		if (likely(!p || error != -ESRCH))
-			return error;
-
-		/*
-		 * The task was unhashed in between, try again.  If it
-		 * is dead, pid_task() will return NULL, if we race with
-		 * de_thread() it will find the new leader.
-		 */
-	}
-}
-
-Now kill_pid_info is signalling the entire task and is just using
-PIDTYPE_PID to find a thread in the task.
-
-With the remove then add model there will be a point where pid_task
-will return nothing, because ever so briefly the lists will be
-empty.
-
-However with an actually swap we will find a task and kill_pid_info
-will work.  It pathloglical cases lock_task_sighand might have to loop
-and we would need to find the new task that has the given pid.  But
-kill_pid_info is guaranteed to work with swaps and will fail with
-remove add.
-
-
-> But I'm *not* suggesting that we change these simple parts to be
-> "remove thread_pid or pid pointer, and then insert a new one":
->
->>                 /* Swap thread_pid */
->>                 rpid = left->thread_pid;
->>                 lpid = right->thread_pid;
->>                 rcu_assign_pointer(left->thread_pid, lpid);
->>                 rcu_assign_pointer(right->thread_pid, rpid);
->>
->>                 /* Swap the cached pid value */
->>                 WRITE_ONCE(left->pid, pid_nr(lpid));
->>                 WRITE_ONCE(right->pid, pid_nr(rpid));
->>         }
->
-> because I agree that for things that don't _walk_ the list, but just
-> look up "thread_pid" vs "pid" atomically but asynchronously, we
-> obviously need to get one or the other, not some kind of "empty"
-> state.
-
-For PIDTYPE_PID and PIDTYPE_TGID these practically aren't lists but
-pointers to the appropriate task.  Only for PIDTYPE_PGID and PIDTYPE_SID
-do these become lists in practice.
-
-That not-really-a-list status allows for signel delivery to indivdual
-processes to happen in rcu context.  Which is where we would get into
-trouble with add/remove.
-
-Since signals are guaranteed to be delivered to the entire session
-or the entire process group all of the list walking happens under
-the tasklist_lock currently.  Which really keeps list walking from
-being a concern.
-
->> Does that look a little more readable?
->
-> Regardless, I find your new version at least a lot more readable, so
-> I'm ok with it.
-
-Good. Then I will finish cleaning it up and go with that version.
-
-> It looks like Oleg found an independent issue, though.
-
-Yes, and I will definitely work through those.
-
-Eric
