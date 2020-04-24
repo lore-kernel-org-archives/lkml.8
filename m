@@ -2,105 +2,98 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDBEC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C2DC55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97C5B20724
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:30:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="D3BZPpBL"
+	by mail.kernel.org (Postfix) with ESMTP id C9D3D20736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:30:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729077AbgDXRaC (ORCPT
+        id S1729094AbgDXRaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 13:30:02 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:52174 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726753AbgDXRaC (ORCPT
+        Fri, 24 Apr 2020 13:30:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726813AbgDXRai (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 13:30:02 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03OHMYrl130647;
-        Fri, 24 Apr 2020 17:29:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2020-01-29;
- bh=CZLc1DZWz37/9j/SPagTNrIvn4Qv65Ju64jtxEuMjtI=;
- b=D3BZPpBLCiTfr1De+htHux2IB+H7ncfpqdOLokAVA1BiiF7E9jp+vOu3J17Umxlpgokj
- Va+sbDWpk4MATru0zNd5dIQKJdVo59gOcO4tsWGb3MyxUm1tG156XdyYnea/pcBv1aWh
- GaMJQ/B93D/4NVS7VfFSg3I9qK5sXokQoDc6k58ppovBCY88fvMV8Uy/enBBp26hSSTL
- CP0FcD75d6WDONEgC+3xkWpvsyBOaqwN/fJ+sV7M0conNz2PRYzV52D9eyHnfZ7lHZRp
- SXyYEDVziSSE5zaYL2XGexrH8EC7YKVXehVyH5B8bjuPkXFtHGo1lx27iAU0VPNAU/H0 mw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 30jvq52bmh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Apr 2020 17:29:54 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03OHLm4I162349;
-        Fri, 24 Apr 2020 17:29:54 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 30gb3xrr56-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Apr 2020 17:29:53 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03OHTpGM016098;
-        Fri, 24 Apr 2020 17:29:52 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 24 Apr 2020 10:29:51 -0700
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     <kashyap.desai@broadcom.com>, <sumit.saxena@broadcom.com>,
-        <shivasharan.srikanteshwara@broadcom.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <megaraidlinux.pdl@broadcom.com>,
-        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] scsi: megaraid: use true,false for bool variables
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20200421034111.28353-1-yanaijie@huawei.com>
-Date:   Fri, 24 Apr 2020 13:29:49 -0400
-In-Reply-To: <20200421034111.28353-1-yanaijie@huawei.com> (Jason Yan's message
-        of "Tue, 21 Apr 2020 11:41:11 +0800")
-Message-ID: <yq1zhb0dc6q.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Fri, 24 Apr 2020 13:30:38 -0400
+X-Greylist: delayed 63 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 24 Apr 2020 10:30:38 PDT
+Received: from balrog.mythic-beasts.com (balrog.mythic-beasts.com [IPv6:2a00:1098:0:82:1000:0:2:1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4227C09B047;
+        Fri, 24 Apr 2020 10:30:38 -0700 (PDT)
+Received: from [87.115.41.34] (port=58102 helo=slartibartfast.quignogs.org.uk)
+        by balrog.mythic-beasts.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <peter@bikeshed.quignogs.org.uk>)
+        id 1jS29p-00071N-EH; Fri, 24 Apr 2020 18:30:37 +0100
+From:   Peter Lister <peter@bikeshed.quignogs.org.uk>
+Subject: Re: [PATCH v2 33/33] lib: bitmap.c: get rid of some doc warnings
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+References: <cover.1586881715.git.mchehab+huawei@kernel.org>
+ <1e2568fdfa838c1a0d8cc2a1d70dd4b6de99bfb1.1586881715.git.mchehab+huawei@kernel.org>
+Message-ID: <634b1157-a78a-806f-2872-0a9a8efa3730@bikeshed.quignogs.org.uk>
+Date:   Fri, 24 Apr 2020 18:30:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9601 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 adultscore=0
- mlxlogscore=999 phishscore=0 suspectscore=0 bulkscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004240134
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9601 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
- mlxscore=0 adultscore=0 mlxlogscore=999 phishscore=0 impostorscore=0
- clxscore=1015 bulkscore=0 spamscore=0 priorityscore=1501 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004240134
+In-Reply-To: <1e2568fdfa838c1a0d8cc2a1d70dd4b6de99bfb1.1586881715.git.mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-BlackCat-Spam-Score: 14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 14/04/2020 17:48, Mauro Carvalho Chehab wrote:
+> There are two ascii art drawings there. Use a block markup tag there
+> in order to get rid of those warnings:
+> 
+> 	./lib/bitmap.c:189: WARNING: Unexpected indentation.
+> 	./lib/bitmap.c:190: WARNING: Block quote ends without a blank line; unexpected unindent.
+> 	./lib/bitmap.c:190: WARNING: Unexpected indentation.
+> 	./lib/bitmap.c:191: WARNING: Line block ends without a blank line.
 
-Jason,
+A few weeks ago, I asked if anyone had a better suggestion about how to 
+cope with this comment for bitmap_cut(). As far as I can see, this is 
+the first response.
 
-> Fix the following coccicheck warning:
->
-> drivers/scsi/megaraid/megaraid_sas_fusion.c:4242:6-16: WARNING:
-> Assignment of 0/1 to bool variable
-> drivers/scsi/megaraid/megaraid_sas_fusion.c:4786:1-29: WARNING:
-> Assignment of 0/1 to bool variable
-> drivers/scsi/megaraid/megaraid_sas_fusion.c:4791:1-29: WARNING:
-> Assignment of 0/1 to bool variable
-> drivers/scsi/megaraid/megaraid_sas_fusion.c:4716:1-29: WARNING:
-> Assignment of 0/1 to bool variable
-> drivers/scsi/megaraid/megaraid_sas_fusion.c:4721:1-29: WARNING:
-> Assignment of 0/1 to bool variable
+> It should be noticed that there's actually a syntax violation
+> right now, as something like:
+> 
+> 	/**
+> 	 ...
+> 	 @src:
 
-Applied to 5.8/scsi-queue, thanks!
+I don't see this as a syntax violation. I see it as the failure of 
+kernel-doc to cope with a perfectly reasonable construction. I suggest 
+that kernel-doc should recognise that the first use of @src: is as a 
+param definition, and that the second use isn't.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Actually the *main* bug here is that the second use messes up the sphinx 
+link/search info for this function by overwriting the correct first use.
+
+> will be handled as a definition for @src parameter, and not as
+> part of a diagram. So, we need to add something before it, in
+> order for this to be processed the way it should.
+.
+> + * The @src bitmap is::
+
+Making editorial changes to the text seems to me a bad way to get rid of 
+warnings. If we are saying that the original developer "got it wrong" 
+then we need to say how. I assert that this idiom is not wrong, and we 
+should not need to add even minor verbosity to the wording.
+
+Developers like compact idioms: someone will use this again before long. 
+Are you going to keep telling developers that they are wrong? This is 
+not a good way to encourage developers to compose annotation.
+
+It's a similar problem to REST's love of multiple line breaks. Maybe one 
+or two are not a big problem, but many little infelicities added 
+together make the C comments less useful as annotation for developers.
