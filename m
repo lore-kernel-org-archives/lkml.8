@@ -6,103 +6,101 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F54C55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E89C55192
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83B1A2075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0E9B20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:06:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M2gDZ0zk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Nu33gOA8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726010AbgDXEAQ (ORCPT
+        id S1725982AbgDXEGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 00:00:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57370 "EHLO
+        Fri, 24 Apr 2020 00:06:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725816AbgDXEAQ (ORCPT
+        by vger.kernel.org with ESMTP id S1725823AbgDXEGD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 00:00:16 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D396C09B045
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 21:00:16 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id c3so10160058otp.8
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 21:00:16 -0700 (PDT)
+        Fri, 24 Apr 2020 00:06:03 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 888EEC09B047
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 21:06:03 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id b13so10215646oti.3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 21:06:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=OQlQ+wnlPPSwWGxz5tXdlEB85veCyI0bjca+7B/4SpM=;
-        b=M2gDZ0zkPA29rkaYlXI6Liui/LoGfVGgSS0fUKnxBaYab9Gifu73xEteUfQhLeYWot
-         fP2OqHtPfht6HZ3iP8vaDS6HFv04SU6XWD/7pGcXQkgNZneClfR5YuGmsy7gjbegawww
-         C/VJi4mUjdTuQFY9vSfaueDrZXnG4cbKLeCAotSM1RmSn+xXmWODtE/F+8sG7sgp6zt3
-         FvFp2wkOEDgPG1mndoKBLTGYetNFgasY1rnuGZZHrH4+hZ7HnSiS9OClZVnx32HcPGut
-         RmEPtvmToC7A5Nwi/Cfv9MbiRQBByqC/7oD3OihOJLYPn5mi3epfi3y4X3qWp+blCunL
-         471g==
+        bh=Bp7bLiuTsfsWWKh/d49PwuT5rZ0JwxKcojUgMRnOFEI=;
+        b=Nu33gOA8niDaEdLvN8wgAlhCI7kCWoYqolpkmVpInY8Z06MQCgDjfMX49Y+oVOmZtx
+         ODAzh7G7HrkINIviJIEo5Li2eA0u/U2zXSXC7zpOAPPRGk7I2Z3GfZnqOoQ6wI+VH0w5
+         /oyTJS9tCM8GsO8IHQ+252MCDnwO6RwkWXBSLVCdsKUpqFg78c63KzZ7AEOtrVriYTCw
+         kcpA26l2byANp9rQdUX1EvDk04VBBEqknDRqjmS51TrcJw6ApBGvZuG8imfmb6QsuTVu
+         +RAhpGZluictRESlw0RfnGqQqfoJ7+IGhEg6KCUespkLiZaKgVUz5UDto/UtPEqPThOI
+         8A8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=OQlQ+wnlPPSwWGxz5tXdlEB85veCyI0bjca+7B/4SpM=;
-        b=P/orE+YiDl9bEaTnUJldVnyq8ITlS3W7sTdelo2mPIKg0HL7y3d0tKFM6HnvaIOC3b
-         GfcprmR/ZJlTkT0vFYt8HyXG75KdDthvKiDaqQak2W7n8vjVOwRewvVQ1dOOC5l7c1Y/
-         Jcy73VbJHjVvSsYaxBk1pCcJOn+gVzGosM8xEZuy0fmws3bmEbil2mAhnI+91+2WK43B
-         t3IIOwL0Ztse33fYKhYYmFWpl/f1/XZmEKq2CoiPZCHU2ttUMicMstFNiG2nUCbILOwH
-         XoxSyuJyHhj7A9RfTVRtEAxF1v/H1GrGkjCjID/ao6A8mDuvI9sIDNqMOomk74jhiYOK
-         kRWQ==
-X-Gm-Message-State: AGi0PuarkqEbhZ1J0tLJ74Gk/wmm31kNC/T2qRBL2OzpstEnedZsIfU+
-        c6+goxaEPc6E7ijSmLFm2bC72I5Jt6ow7UnVLKA7gg==
-X-Google-Smtp-Source: APiQypIxX1kzvQHlXAr2nzrZpN0ZouDGuzk2aruej4bW/gXfibDVkHVn2aj+k7p5tHa0hlFYNzGUq/3IQNt5/Uj+5Rg=
-X-Received: by 2002:a9d:3988:: with SMTP id y8mr5916871otb.352.1587700814858;
- Thu, 23 Apr 2020 21:00:14 -0700 (PDT)
+        bh=Bp7bLiuTsfsWWKh/d49PwuT5rZ0JwxKcojUgMRnOFEI=;
+        b=ImrgBHANSiCAAhw5OHtDnahxtzv2GV+KyQa2Th0gIX21477cgg8ALxBZ0tA4ErIfiB
+         Bjoigm1UQMgxL4Tt2CBEfvqN4KG07ql0udJzNRPzTpcpUCAqhH2+Yyzke12+9gpNfScC
+         i/QPn6uWH/FgWSgWD68qPSea0aSlPcisBFr7mkzlxi4g7Qcp8Fv2NUoD2hPxehPHm3z1
+         wTp3iMv8uS5xNPYitheXWOsui+9NGY9TtTCfmauksMz+LWmDLyIC+XBhvkapEzdeuBQg
+         qBhDdsnh95lD8vGzLBowf41tw/BQnnGxkJveZDhJiUb0zWpUfAZb+EFBLyb83dgQvZSd
+         +n5w==
+X-Gm-Message-State: AGi0PuakDdBF8ecD3g7ggRAhyqDFw0CQUjXlPa2lQaoadHqpIdqeO/Bt
+        Dlv8ZNfekG26gyLKptKWhCqrTVJvwLzBWinpAhkmwvxB
+X-Google-Smtp-Source: APiQypICLLkZsxvRZ82zTGoSs74K9wdNIuuFRe+atFJcMRtKX5SCjZvsA1yTcpkMd0TVPp369IIUO+UGIL/p4xFojtY=
+X-Received: by 2002:a54:4f02:: with SMTP id e2mr5845188oiy.10.1587701162614;
+ Thu, 23 Apr 2020 21:06:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200423220056.29450-1-john.stultz@linaro.org> <jhj1rodyeu1.mognet@arm.com>
-In-Reply-To: <jhj1rodyeu1.mognet@arm.com>
+References: <20200421041815.1808-1-john.stultz@linaro.org>
+In-Reply-To: <20200421041815.1808-1-john.stultz@linaro.org>
 From:   John Stultz <john.stultz@linaro.org>
-Date:   Thu, 23 Apr 2020 21:00:04 -0700
-Message-ID: <CALAqxLWxKfebXTy+p=sbUq3wz8Hx1zMctnuO4H2H2e9LMpcoeA@mail.gmail.com>
-Subject: Re: [RFC][PATCH] serial: amba-pl011: Make sure we initialize the
- port.lock spinlock
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org
+Date:   Thu, 23 Apr 2020 21:05:52 -0700
+Message-ID: <CALAqxLUHLqoYAZRvF1HjHhOJPdztYh9oz=L0kEuYun7y6fBzGA@mail.gmail.com>
+Subject: Re: [RESEND x2][PATCH v2] phy: qcom-qusb2: Re add "qcom,sdm845-qusb2-phy"
+ compat string
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Doug Anderson <dianders@chromium.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 4:14 PM Valentin Schneider
-<valentin.schneider@arm.com> wrote:
-> On 23/04/20 23:00, John Stultz wrote:
-> > Which seems to be due to the fact that after allocating the uap
-> > structure, the pl011 code doesn't initialize the spinlock.
-> >
-> > This patch fixes it by initializing the spinlock and the warning
-> > has gone away.
-> >
+On Mon, Apr 20, 2020 at 9:18 PM John Stultz <john.stultz@linaro.org> wrote:
 >
-> Thanks for having a look. It does seem like the reasonable thing to do, and
-> I no longer get the warning on h960.
+> This patch fixes a regression in 5.7-rc1+
 >
-> That said, I got more curious as this doesn't show up on my Juno (same
-> Image). Digging into it I see that uart_add_one_port() has a call to
-> uart_port_spin_lock_init() a few lines before uart_configure_port() (in
-> which the above warning gets triggered). That thing says:
+> In commit 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2
+> PHY support"), the change was made to add "qcom,qusb2-v2-phy"
+> as a generic compat string. However the change also removed
+> the "qcom,sdm845-qusb2-phy" compat string, which is documented
+> in the binding and already in use.
 >
->  * Ensure that the serial console lock is initialised early.
->  * If this port is a console, then the spinlock is already initialised.
->
-> Which requires me to ask: are we doing the right thing here?
+> This patch re-adds the "qcom,sdm845-qusb2-phy" compat string
+> which allows the driver to continue to work with existing dts
+> entries such as found on the db845c.
 
-Hrm. All good points. Obviously from the details above the port->lock
-initialization shouldn't be done in the way this patch proposes, but
-I'm at a loss as to why we're hitting the issue. My guess is it is
-tripping over the console case, but didn't get initialized there
-properly?
+I hate to be a bother on this, but I'd really like to see this
+regression resolved.  This fix missed rc1 and rc2, and it would be a
+shame to miss rc3 too.
 
-I'll try to trace through the code to see more about what's going on.
+Do I have the right folks on the cc for this?
 
 thanks
 -john
