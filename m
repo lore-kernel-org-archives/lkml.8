@@ -2,131 +2,100 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 845F6C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFFBC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 651D820774
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A38C92076C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:38:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T3WvB9Zk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fRs8hN2T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbgDXGhC (ORCPT
+        id S1726593AbgDXGiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 02:37:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53456 "EHLO
+        Fri, 24 Apr 2020 02:38:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726515AbgDXGhC (ORCPT
+        by vger.kernel.org with ESMTP id S1726051AbgDXGiO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 02:37:02 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B10EEC09B046
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 23:37:01 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id e26so9177199wmk.5
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 23:37:01 -0700 (PDT)
+        Fri, 24 Apr 2020 02:38:14 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D10BC09B045;
+        Thu, 23 Apr 2020 23:38:14 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id j4so10638695otr.11;
+        Thu, 23 Apr 2020 23:38:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=5Nl042EYhQkNdGgGpL0PjYS28b3/nSBEMCyC0XuhXcY=;
-        b=T3WvB9ZktxtKUFHZ4fn4bJrekvXMv5L0WjMsvkfzHvN3QFdGzUWUsLB/s/gpxzo8B8
-         c6u7vRd1abf2esEI0zaqL64FZhh/yBpz6GIb/TYnXFMj70BIzGV+U9GDhGksQs1x3Xp8
-         GHTDOI3SBEGflHKHNpuj8K/MipYao2Zz0mvyJnmtIMX2Dk270CoKX0Ug+oWGISPKXp6V
-         Hwu0YN1lmyWKmDFhs7mUa3sflRRX/6b03twFl6DB6VIgjo8t2R32x/QQxDO+d2MnFT+Q
-         2gzzqg0AZPgYowryahbt0CwianpNJaM2HiUbvb7ug3ukvlwpdIRmNvUHw0T/fQYAJU3X
-         sjjA==
+        bh=kgtdeLLirDcYUa0WKIp40D/3j8a2GshzI0q29q+2ksw=;
+        b=fRs8hN2TAI292KXDF698tVkU1H3z8WWtndsAvX0JVRnmvmxD4PzP8jZUwH9Q4t1lJH
+         jLus/Nn8fmNU0c16B10UEjKz9FS+JE5cv1AU8UwED0wWJO9VNCCp8tlb5UJTl6Mp3kPA
+         2DkJKMjDY/ApRqKTj73jI30+TeFDeYM7EEgfIsuMAGb4qlt03VUR5YOjnuuf9E/ShjO8
+         9YfnwYOoIVDWSxFlfwV1MZa+0t1XwZxI/WFnl1llt0S1qm3VIxsBRseiuzHEDwMpfcHN
+         VoBupdSwIO8x2BHGJFbUHdBNxCEkVWok1Gme0IRpc0xe2bGtb1EcBYC1vtajpLQqBdkj
+         B2sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5Nl042EYhQkNdGgGpL0PjYS28b3/nSBEMCyC0XuhXcY=;
-        b=BVsRKDu/JQyMHbHuPV2j0ROLy/+KH2hHRZlrJ1QDcInZ5+SLwKYqQRYGTWWnAUKH2S
-         JOj22hB07sVtzq3Xgs7l4PD6IEKIB3AzXiBY4uHtDgVVdulrZ4610eG/uj+1fesoxvlU
-         u+YpcfUEz9M1OQuN70Pu2RCb6ds7NJbHQppbX6dvFAl7+s5t7VcXM62SRNYMGoszTQOj
-         3Xjfg9/IzjGqoJ1l0E2IwwU3GaSHpM08I6pUOjBi3uLNRHBQWa7NSpzgRQWzaFheDeEi
-         SBRvgfPoU/Q+Lthr0wrcAbEUKu7YwluFS4p/DxUk2Pm4vz7zdAaLgYXHc/s25eEbBLh0
-         HPPA==
-X-Gm-Message-State: AGi0PubFfkuGgtFOxwlHxPKqj4sCVS8Uxxwi15bJZ3jmiiJVuFeRx8Ny
-        IcLQHFTGmfS+qAiIacuU+zaBlvw8RWPPUgGkKz1Oyw==
-X-Google-Smtp-Source: APiQypKMkY07NawNGwqDN/zJwXiWw1DxsM8Vl7RhgQHchO6nUWhs8EYKruSMVBR4h3l/hhGbDF2hnMbzJTvnl82TqiE=
-X-Received: by 2002:a1c:a512:: with SMTP id o18mr7973525wme.138.1587710219940;
- Thu, 23 Apr 2020 23:36:59 -0700 (PDT)
+        bh=kgtdeLLirDcYUa0WKIp40D/3j8a2GshzI0q29q+2ksw=;
+        b=H2G3RDpH2JCyJ4r1Sndn6VRt7J5+TImM9X4lO/SLBh+6aJtw7LB21qnvITeoHKdw0u
+         VtRqKDQhS00Te5KAclRFQkmoRRF/EeMqHt2qpaDPzt13usq/SyvF0MmOEIVnsEkFezvU
+         CDNAyE1j6DOOqgWgC/RIHzV5wKgbxnt/fVCPzW0ymbqt897y+ZaSujlxiyMh9/iv1bxd
+         oKBD06sVCFeBckD6qR9DNFCAOOtccTHGmRoP+Oo2VnoF4jtQyAzYcoHE+sK6j+BNYFFl
+         5dMkYPuBMBOdGq+vtw+WBxmo8/4M6RCTEa/TxYTRMtUPy4AUrs5d1kRi8iNr4Qg2w+/r
+         b+gg==
+X-Gm-Message-State: AGi0PuYJntFpV7B5U1WNClNUC9xIizMP9OHpwcfb8vN49UJKC7in8xQI
+        t69If6mnZTUYXnIF22mjB68Naxp1I6yW/nL8hgo=
+X-Google-Smtp-Source: APiQypJgjEi9DQJcYqvaHVJii9baHVd2hXM4G2q/PMLqpVouAfVskfNaz3bT1qMAif0yzEYm72zXQ+RALcOrVeiIIyA=
+X-Received: by 2002:a05:6830:20d9:: with SMTP id z25mr347333otq.254.1587710293470;
+ Thu, 23 Apr 2020 23:38:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200418031833.234942-1-davidgow@google.com> <alpine.LRH.2.21.2004181619110.12187@localhost>
-In-Reply-To: <alpine.LRH.2.21.2004181619110.12187@localhost>
-From:   David Gow <davidgow@google.com>
-Date:   Fri, 24 Apr 2020 14:36:48 +0800
-Message-ID: <CABVgOS=k2eCMwt-Tz46=mCXg1Kxjb54sD1kW-R=mchFQiCgYTQ@mail.gmail.com>
-Subject: Re: [PATCH v6 0/5] KUnit-KASAN Integration
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     Patricia Alfonso <trishalfonso@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
+References: <1587632507-18997-1-git-send-email-wanpengli@tencent.com>
+ <1587632507-18997-6-git-send-email-wanpengli@tencent.com> <99d81fa5-dc37-b22f-be1e-4aa0449e6c26@redhat.com>
+ <CANRm+CyyKwFoSns31gK=_v0j1VQrOwDhgTqWZOLZS9iGZeC3Gw@mail.gmail.com> <ce15ea08-4d5d-6e7b-9413-b5fcf1309697@redhat.com>
+In-Reply-To: <ce15ea08-4d5d-6e7b-9413-b5fcf1309697@redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Fri, 24 Apr 2020 14:38:03 +0800
+Message-ID: <CANRm+CxxQ1oL0fKmnxAv739nsjDg_V7Pgkmm==7CfPQUxBHW4w@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] KVM: VMX: Handle preemption timer fastpath
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Haiwei Li <lihaiwei@tencent.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 11:28 PM Alan Maguire <alan.maguire@oracle.com> wrote:
+On Thu, 23 Apr 2020 at 18:29, Paolo Bonzini <pbonzini@redhat.com> wrote:
 >
+> On 23/04/20 11:56, Wanpeng Li wrote:
+> >> Please re-evaluate if this is needed (or which parts are needed) after
+> >> cleaning up patch 4.  Anyway again---this is already better, I don't
+> >> like the duplicated code but at least I can understand what's going on.
+> > Except the apic_lvtt_tscdeadline(apic) check, others are duplicated,
+> > what do you think about apic_lvtt_tscdeadline(apic) check?
 >
-> On Fri, 17 Apr 2020, David Gow wrote:
->
-> > This patchset contains everything needed to integrate KASAN and KUnit.
-> >
-> > KUnit will be able to:
-> > (1) Fail tests when an unexpected KASAN error occurs
-> > (2) Pass tests when an expected KASAN error occurs
-> >
-> > Convert KASAN tests to KUnit with the exception of copy_user_test
-> > because KUnit is unable to test those.
-> >
->
-> I tried building and running and things look good but I am
-> still seeing the three failures I reported before, even with
-> CONFIG_AMD_MEM_ENCRYPT not set.  My config is attached if you
-> want to try and reproduce at your end.  Oddly this config was
-> working before IIRC (once CONFIG_AMD_MEM_ENCRYPT was not set).
->
-> Here's the failures:
->
->    # kasan_memchr: EXPECTATION FAILED at lib/test_kasan.c:545
->     Expected fail_data.report_expected == fail_data.report_found, but
->         fail_data.report_expected == 1
->         fail_data.report_found == 0
->     not ok 31 - kasan_memchr
->     # kasan_memcmp: EXPECTATION FAILED at lib/test_kasan.c:566
->     Expected fail_data.report_expected == fail_data.report_found, but
->         fail_data.report_expected == 1
->         fail_data.report_found == 0
->     not ok 32 - kasan_memcmp
+> We have to take a look again after you clean up patch 4.  My hope is to
+> reuse the slowpath code as much as possible, by introducing some
+> optimizations here and there.
 
-I was able to reproduce these (along with a kasan_strings) failure,
-and the cause seems to be some combination of __builtin functions
-being inlined by the compiler and potentially dead code elimination,
-as fixed by Daniel Axtens here:
-https://lkml.org/lkml/2020/4/23/708
+I found we are not need to move the if (vcpu->arch.apicv_active) from
+__apic_accept_irq() to a separate function if I understand you
+correctly. Please see patch v3 3/5. In addition, I observe
+kvm-unit-tests #UD etc if check need_cancel_enter_guest() after the
+generic fastpath handler, I didn't dig too much, just move it before
+the generic fastpath handler for safe in patch v3 2/5.
 
-I've sent out v7 of the patchset[1], which I've rebased on top of
-Daniel's patches, and can no longer reproduce those test failures with
-your .config.
-
-Cheers,
--- David
-
-[1]: https://lkml.org/lkml/2020/4/24/80
+    Wanpeng
