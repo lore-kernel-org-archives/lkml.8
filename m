@@ -2,70 +2,72 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BABC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D99C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AF9920728
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D14882074F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:44:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="mi3qkaGv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fjSO5XRQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726110AbgDXWgk (ORCPT
+        id S1726122AbgDXWos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 18:36:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35072 "EHLO
+        Fri, 24 Apr 2020 18:44:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbgDXWgk (ORCPT
+        with ESMTP id S1726090AbgDXWor (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 18:36:40 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19599C09B049
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 15:36:40 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id o19so11947855qkk.5
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 15:36:40 -0700 (PDT)
+        Fri, 24 Apr 2020 18:44:47 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B612C09B049;
+        Fri, 24 Apr 2020 15:44:46 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id v2so4283080plp.9;
+        Fri, 24 Apr 2020 15:44:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
+        d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=+BNYGluVlJlufemB0tZgDnGQgt3ZJZnv+s9tO+bs4no=;
-        b=mi3qkaGvjiwVHU1I0SCkUQLdO3SIIdaB1nbSmtfXnVRQAikXuhwmVWeUb1nmnMJQIc
-         rxNDs7SQQfuGZHCuJxmJfnAjqS/LLbJUT9fldddCUYCi800d5kn4bCleOBxmABQBJ9kU
-         HjCIJFAH8lhIElTgjzg5mn/bpoPxbmS7064LE=
+        bh=kEeOet+/40RLPQ2HnToplB1/VKa6bs4EBDI8R+ygUJo=;
+        b=fjSO5XRQlkI1TM8bFCjVp3PV3ZWTrx4nTWh1LjTf3NIu0jp3PkFGTJYi8fYbBlkD3H
+         geHf1ch6FUO8dH8CLiFIRoz9i2YU3xzeFjMQdqRVI0Y43UkhrYA5DrNr0uEnw9Ar9oRC
+         WklJ3LaRZZ4/02BWqgf8pnbY3BCcSCLvoE94GxI9V2a8isgFQA8Utn+52G4M2QAXFED2
+         IFlbHaqCWUy3rPd5ZiiDfsR+Rs39mQK8ZPwurnf568rWwBdBwDGvnxf0BZWr/6jBWfzc
+         jq5ZoYfTlIC4uLmTO7gZImNWP+jU0AdYXhY1J9re0vawiOlJP8s7nWLLnepJM3bit4z/
+         EzWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=+BNYGluVlJlufemB0tZgDnGQgt3ZJZnv+s9tO+bs4no=;
-        b=SkvWpBjBcobco/l+FCOnbF/SVfImDLajPhi2RGWrObTy1JitGjJWKJrXICXQlIcxWv
-         2uQDN/J74hUwu0dywwNGxI28e9rZWCUeA9axP26N2dgAXk99dxdnSH/EQr3cutDb3eDc
-         PtPfEzlMxFH5kdgmy+tSvIxc7cJv7816lIX7OpUVZ3KVYKzw05KUcOtqoksitSzQrdjH
-         8dZXJNlhSWcD9UTwJ82RNHw+6UWCnm9r0HSV/7fc8xXOIL9ZRyi4uG0J8sTxIzKGbfxt
-         qpRfmXnT5wASp6GkHekF3pdEvxYactmUj16XF0q7V8b5x2G8a0SvdjdAYMDxnaevDtYg
-         26LA==
-X-Gm-Message-State: AGi0PuZ/ZYcK4x3I24dw/OINSjU14ZwSfJlFCf6A86iDJakG8rfT/UKt
-        cda0yca8yDaQbHWweFOy18Jg26oH7yk=
-X-Google-Smtp-Source: APiQypLqlZkkulLXGJNb1qmPQj2FDWPAiR3qSRhIEzpbRWzsjcJl2p81tjHVqaRslx9UXdS/HBUiog==
-X-Received: by 2002:a05:620a:127a:: with SMTP id b26mr11043280qkl.219.1587767799087;
-        Fri, 24 Apr 2020 15:36:39 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id j76sm4563859qke.114.2020.04.24.15.36.38
+        bh=kEeOet+/40RLPQ2HnToplB1/VKa6bs4EBDI8R+ygUJo=;
+        b=Zi9mRrQ3eUB1MoJZRNtcO9eCQC+os7ER+HAV4jEnjIKkjcfDhYaHgMcA62fItIK6Jw
+         XJTKqXxTm7Bpf/bqBniJPaePiLBVPdpoYy5XI4pSb+6eqOMzcTW2QeX7qflMsI1evfjl
+         BIlHqDkFTIWlSWkpRHSMdfBW27Uoy+6cIW1OEgOqBmzZhDXa1Qt3XEPjeMcc3bleoSVj
+         OWARYtKqm7+Svw7ewK5c+Tp3CiMEz8AOEf3VvRKGph6qREPf/YRcBZ75h/OFFj3UleTb
+         5TKAjrHI+kvLA9Kb+lxsEMllUkH5R5dGWYhge2ixme5PuwRWUXPKBoevsCkFNytaiWdk
+         /yGA==
+X-Gm-Message-State: AGi0PuZZMcCQiI3D6H4FuydgAZlQ8uMFHvCw1R69HL+pJ/1nUFV3JJpA
+        68rUKyM+hKgpgcQTcuqlZ/4=
+X-Google-Smtp-Source: APiQypKFlXyN7qVKLFM4AphAq0veC6wby5t5GXEwXCV+9bPVFHaAzdzHbO+nU82oU6/4FA4ZJmdXzQ==
+X-Received: by 2002:a17:90a:6343:: with SMTP id v3mr8776998pjs.127.1587768285729;
+        Fri, 24 Apr 2020 15:44:45 -0700 (PDT)
+Received: from nish-HP-Pavilion ([2409:4072:610b:e3c6:8c8d:27b8:7b5b:c4d9])
+        by smtp.gmail.com with ESMTPSA id z5sm6613552pfn.142.2020.04.24.15.44.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 15:36:38 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Xiao Yang <yangx.jy@cn.fujitsu.com>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: [PATCH] kernel/trace: Stop and wait for kthread on preempt irq module unload
-Date:   Fri, 24 Apr 2020 18:36:30 -0400
-Message-Id: <20200424223630.224895-1-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
+        Fri, 24 Apr 2020 15:44:45 -0700 (PDT)
+From:   Nishant Malpani <nish.malpani25@gmail.com>
+To:     linux-iio@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, alexandru.Ardelean@analog.com,
+        nish.malpani25@gmail.com
+Subject: [PATCH 0/3] iio: accel: Abandon of_match_ptr macro
+Date:   Sat, 25 Apr 2020 04:14:36 +0530
+Message-Id: <20200424224439.5601-1-nish.malpani25@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,43 +75,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kthread running the test needs to be stopped or it can continue
-executing code unloaded by module causing a crash.
+This patchset extends Jonathan's and Alexandru's work [1] on removing the instances of
+of_match_ptr macro. Motivation to do so is two-fold:
+  1. to have an option of probing from ACPI using PRP0001
+  2. prevent people from copying to new driver code
 
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Reported-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
-Link: http://lore.kernel.org/r/5EA2B0C8.2080706@cn.fujitsu.com
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
- kernel/trace/preemptirq_delay_test.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+[1] https://patchwork.kernel.org/cover/11497535/
 
-diff --git a/kernel/trace/preemptirq_delay_test.c b/kernel/trace/preemptirq_delay_test.c
-index 31c0fad4cb9e1..1c28ca20e30b6 100644
---- a/kernel/trace/preemptirq_delay_test.c
-+++ b/kernel/trace/preemptirq_delay_test.c
-@@ -145,10 +145,10 @@ static struct attribute_group attr_group = {
- };
- 
- static struct kobject *preemptirq_delay_kobj;
-+static struct task_struct *test_task;
- 
- static int __init preemptirq_delay_init(void)
- {
--	struct task_struct *test_task;
- 	int retval;
- 
- 	test_task = preemptirq_start_test();
-@@ -171,6 +171,9 @@ static int __init preemptirq_delay_init(void)
- static void __exit preemptirq_delay_exit(void)
- {
- 	kobject_put(preemptirq_delay_kobj);
-+
-+	if (test_task)
-+		kthread_stop(test_task);
- }
- 
- module_init(preemptirq_delay_init)
+Nishant Malpani (3):
+  iio: accel: dmard06: Use mod_devicetable.h and drop of_match_ptr macro
+  iio: accel: kxsd9-i2c: Use mod_devicetable.h and drop of_match_ptr
+    macro
+  iio: accel: mma8452: Drop of_match_ptr macro
+
+ drivers/iio/accel/dmard06.c   | 3 ++-
+ drivers/iio/accel/kxsd9-i2c.c | 7 ++-----
+ drivers/iio/accel/mma8452.c   | 2 +-
+ 3 files changed, 5 insertions(+), 7 deletions(-)
+
 -- 
-2.26.2.303.gf8c07b1a785-goog
+2.20.1
 
