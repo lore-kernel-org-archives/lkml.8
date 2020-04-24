@@ -2,98 +2,130 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2825C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8B2C55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96A4220767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C94212063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:49:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vCckSVmY"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LXbf8HmZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbgDXPrq (ORCPT
+        id S1728926AbgDXPtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:47:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54642 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726301AbgDXPrq (ORCPT
+        Fri, 24 Apr 2020 11:49:16 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:58780 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbgDXPtP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:47:46 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1788C09B046
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 08:47:44 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id w15so10451018ybp.16
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 08:47:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=oVv3oHwxIfr4RsJUouPNW2RXip7ts7Rm/qpNl5CFftM=;
-        b=vCckSVmYqEhUBfuiNhMPfNxAj3Weqd7vBOJ8YENvroGbwb1o28+BjmHu0TZYvyJKjs
-         kIsDh4ZLgvnnXxR85JIfeNfaUd/uEN1U3eY3nAGd68C1cEWWbCS/WyeZouZW12TjQBYB
-         Jzyjds69PiMAxtiymZ0j3qwv4aowC3SQqwBJrDkNBpKiUXt2ASvR0f31Pzeart2LcfIw
-         hs3c9gGhtEkwrSqSUoZaWQnxFIoi3XR2dZTCMr922HKUiS4KQSTAjTDB69mfHTkI0daD
-         goWCDDwEv242fCI4tPPPU1kBlxP6fWaLpWJ8k9nYjOtPS59thqPgvVdPrWji6QIPbtrW
-         cBfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=oVv3oHwxIfr4RsJUouPNW2RXip7ts7Rm/qpNl5CFftM=;
-        b=FcOyhOP5dE5TzEZ5crmKDIvpiGAS9QSHCZkYtamFWMH0QohkfJoqhdW/PjhlkQWUsW
-         /w4D9EslAwNTxZcDtnoemi81neasvuM3Qbb1WK6ixQ0bYIto6JUsFFnDH+ONRmyGzNzT
-         mzQPgfFW42RmueRIPqQrppMDPARow7djZHIK7pQIIz4vn5+aULgdwPEgq5pmqLvPQFmZ
-         0RV7T1Lb2jFC/sDTMfnd2nsnD+ZK/IlecFj6H4teDtVs8kbvNCCb2Cv3oDOVhK/WP7ef
-         K6urkJatjCult25nVxuCFW7ZVXBfEQwWAkFkKzAXAMWmQMfDNte3h3Ii5bO18AzIgLWH
-         XKQA==
-X-Gm-Message-State: AGi0PuYft5jlYqxDo6HKT4/orhxD9z5/07dRiSdolgZ3r4KKAQcyqVaZ
-        lIrMH98f3iXHM3pWeGVn3VOwJeE8kA==
-X-Google-Smtp-Source: APiQypIu+bAY3rvbZTmH6gM7XgOIMYp0r3KGjFX++a6TN+a96r7kWKfhpQ7M+w87QCShYgNuzRzDliUnmw==
-X-Received: by 2002:a25:dd81:: with SMTP id u123mr9210131ybg.109.1587743263914;
- Fri, 24 Apr 2020 08:47:43 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 17:47:30 +0200
-In-Reply-To: <20200424154730.190041-1-elver@google.com>
-Message-Id: <20200424154730.190041-2-elver@google.com>
-Mime-Version: 1.0
-References: <20200424154730.190041-1-elver@google.com>
-X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
-Subject: [PATCH 2/2] objtool, kcsan: Add kcsan_disable_current() and kcsan_enable_current_nowarn()
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com
-Cc:     paulmck@kernel.org, dvyukov@google.com, glider@google.com,
-        andreyknvl@google.com, will@kernel.org, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
-        peterz@infradead.org
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 24 Apr 2020 11:49:15 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03OFmvgr112448;
+        Fri, 24 Apr 2020 10:48:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1587743337;
+        bh=brDS66IythliFGEaOudO2r3RwbjKsL4G+NVVMco0T4w=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=LXbf8HmZgPVyfb7AbDC/MngnskLjXg1hpW8gOpuma3t6ZDd4C5SWcpJSbIY71EcO6
+         J8xOD1nxVc6CeIzfvL+ATDJvtc58ZzvET3E0rQBFHnXoNtmMp0rq9WwXnFPrr8g5p/
+         G9/Z1BB8Rhf1Y4PQZUKaBvIFEy9yOj+coCQFJVSU=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03OFmv77021324
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 24 Apr 2020 10:48:57 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 24
+ Apr 2020 10:48:57 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 24 Apr 2020 10:48:57 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03OFmrEs029197;
+        Fri, 24 Apr 2020 10:48:54 -0500
+Subject: Re: OF: ERROR: Bad of_node_put() on
+ /ocp/interconnect@4a000000/segment@0/target-module@8000/cm_core@0/l4per-cm@1700/l4per-clkctrl@28
+To:     Tony Lindgren <tony@atomide.com>
+CC:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, <lkft-triage@lists.linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Benoit Cousson <bcousson@baylibre.com>,
+        Carlos Hernandez <ceh@ti.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Olof Johansson <olof@lixom.net>, <tomi.valkeinen@ti.com>,
+        Anders Roxell <anders.roxell@linaro.org>
+References: <CA+G9fYv5NxK+F5DX_q1c_wvnhjT_WTZBFJQXLWFeqMXsEcASZg@mail.gmail.com>
+ <CA+G9fYu-qYP2wJw4p1p_C6_ttwK0fvw+qUnsN9mDuKOv3zGEBw@mail.gmail.com>
+ <20200417152903.GO37466@atomide.com>
+ <6366d76c-b9dc-6fa5-afad-0b2f471f8ec5@ti.com>
+ <20200424153806.GJ37466@atomide.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <913875ab-1b78-e37c-a168-3eb6e4815edb@ti.com>
+Date:   Fri, 24 Apr 2020 18:48:52 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200424153806.GJ37466@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both are safe to be called from uaccess contexts.
+On 24/04/2020 18:38, Tony Lindgren wrote:
+> * Tero Kristo <t-kristo@ti.com> [200424 12:41]:
+>> On 17/04/2020 18:29, Tony Lindgren wrote:
+>>> * Naresh Kamboju <naresh.kamboju@linaro.org> [200327 16:44]:
+>>>> The reported problem still happening on arm beagle board x15 device
+>>>> running Linux next kernel 20200327.
+>>> ...
+>>>
+>>>> [    0.000000] OF: ERROR: Bad of_node_put() on
+>>>> /ocp/interconnect@4a000000/segment@0/target-module@8000/cm_core@0/l4per-cm@1700/l4per-clkctrl@28
+>>>> [    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W
+>>>>     5.6.0-rc7-next-20200327 #1
+>>>> [    0.000000] Hardware name: Generic DRA74X (Flattened Device Tree)
+>>>> [    0.000000] [<c0311810>] (unwind_backtrace) from [<c030ba14>]
+>>>> (show_stack+0x10/0x14)
+>>>> [    0.000000] [<c030ba14>] (show_stack) from [<c0fb6604>]
+>>>> (dump_stack+0xbc/0xd0)
+>>>> [    0.000000] [<c0fb6604>] (dump_stack) from [<c0fbb07c>]
+>>>> (kobject_put+0xc0/0x104)
+>>>> [    0.000000] [<c0fbb07c>] (kobject_put) from [<c1639e4c>]
+>>>> (of_clk_init+0x18c/0x228)
+>>>> [    0.000000] [<c1639e4c>] (of_clk_init) from [<c1611544>]
+>>>> (omap_clk_init+0x3c/0x58)
+>>>> [    0.000000] [<c1611544>] (omap_clk_init) from [<c1611ea8>]
+>>>> (omap4_sync32k_timer_init+0x8/0x2c)
+>>>> [    0.000000] [<c1611ea8>] (omap4_sync32k_timer_init) from
+>>>> [<c161213c>] (omap5_realtime_timer_init+0x8/0x234)
+>>>> [    0.000000] [<c161213c>] (omap5_realtime_timer_init) from
+>>>> [<c1600c88>] (start_kernel+0x330/0x4b8)
+>>>
+>>> Just FYI, Tero is looking at the clock issues that seem to be
+>>> causing these warnings.
+>>
+>> Haven't seen this before, but easily reproducible with multi_v7_defconfig. I
+>> have a simple fix for it now, will post to lists soon.
+> 
+> OK thanks for tracking it down.
 
-Signed-off-by: Marco Elver <elver@google.com>
----
- tools/objtool/check.c | 2 ++
- 1 file changed, 2 insertions(+)
+No problem, sorry about the latency in my response though. I guess I got 
+too many things on my plate. :)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 70e721002743..a22272c819f3 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -482,6 +482,8 @@ static const char *uaccess_safe_builtin[] = {
- 	"kcsan_found_watchpoint",
- 	"kcsan_setup_watchpoint",
- 	"kcsan_check_scoped_accesses",
-+	"kcsan_disable_current",
-+	"kcsan_enable_current_nowarn",
- 	/* KCSAN/TSAN */
- 	"__tsan_func_entry",
- 	"__tsan_func_exit",
--- 
-2.26.2.303.gf8c07b1a785-goog
+-Tero
 
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
