@@ -2,141 +2,153 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C49FC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61918C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FAC620857
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:48:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3713F20857
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 20:49:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KPy7wj2M"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="crCr29Iz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726090AbgDXUsI (ORCPT
+        id S1726105AbgDXUto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 16:48:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46530 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbgDXUsI (ORCPT
+        Fri, 24 Apr 2020 16:49:44 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48678 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726027AbgDXUtn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 16:48:08 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7A26C09B048
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 13:48:07 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id z1so3689588pfn.3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 13:48:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=PDTf+FwCag54Gix+XkZ+brAEDzVD747g0MZvcGy7XE0=;
-        b=KPy7wj2MyP0KtwiHu32IxKWS9Qes02e9yin3KAala4NLgMm1VYdrAdwr8R5QkeoAax
-         AV6XDCiajWl6bZojse0RsWdjHKVDx/QTxgsCtwI3f9jEAAE3qq2pzTryQ9Fu54fb2eWZ
-         sAelmXTpQT+moDBXTrFrFjpIeNnGkF2gnhsexFwJufG4FMRsjy4aoBIMZfzgB4RTYRN6
-         uggAlfgC8WxPk5l1ZYSZdq40lfLyB+I+UsQ5FkIdcokI4sPvMZrrsovt90fmPTN5K2UV
-         xQkKBLGA4zKXHilVWKPH14a6fAvJEM+hZhklmeX8y3qiqakYNpmE97QZFLPYgiy889vo
-         iInw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=PDTf+FwCag54Gix+XkZ+brAEDzVD747g0MZvcGy7XE0=;
-        b=M23h2AGi8RHjlUdlnOKVl8mKfzx7foNC0EwOWJQOdvFwS2+f68CL74xQVuD9b5prTW
-         ZPV4PNSq+YIo0SURjAxcnDtgOEJd7rzty679g8dd77pZaDTLZ5ecrwe8yOYlyEZd6+5J
-         9925RZp3w/NwIepSd70UTmRHwjN7qf68tmyjpff2RedxqqUn9kFavKoSylV0geyXuO0e
-         Ln2yaoSYThEIAGPRMr7GX18sLpztcu2rpdvMAKQDvgQCYrZUz8M3NT7G5UMMO7Fed6+A
-         3o9BK2kGhURpB7SbWj2N7Bjgrb4/GRJpQOwPNU/BYI5JFHnwDJo9KrK5ZLU04eZEYXkL
-         /GTA==
-X-Gm-Message-State: AGi0PuaAWh0LIrAfWFGmm0zDV5qje3LiHOSNB5nPxcbvSeuk5BZOvqGf
-        aGZQRGrtckRqobCD9L6HRJLh0CuR2aI=
-X-Google-Smtp-Source: APiQypLbr3SMUctOMl8jKy4C36Pwrcoy0esZlXUBcjNAytAVSV5T3V1sQHTQBWvGQsaOgghOVd6afA==
-X-Received: by 2002:a63:ed50:: with SMTP id m16mr3271084pgk.271.1587761287198;
-        Fri, 24 Apr 2020 13:48:07 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id 139sm2494798pfc.170.2020.04.24.13.48.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 13:48:06 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 13:48:06 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-cc:     Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [patch] mm, oom: stop reclaiming if GFP_ATOMIC will start failing
- soon
-Message-ID: <alpine.DEB.2.22.394.2004241347310.70176@chino.kir.corp.google.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Fri, 24 Apr 2020 16:49:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587761382;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=BCWSJl5PqQm7ozPqGIjNObZ1YK24zpjaMshD3elXd48=;
+        b=crCr29IzmPh71CW3c/SDuETRPneKBtjy9S9zXqw9l6CxwuWeseh7Z5lEvmkCj1Nw+nMOH4
+        /ibWce+/BhWI5SM0DrtVidLdwqCnBfD29U/K5eSXptUgfhbWaVEiQOxVups03DW74vrM6i
+        mrBP8MwbEZ2c5K5Eoy7TwrMckNcpOt0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-398-FmMwr57KOSm2s8R8j82jgA-1; Fri, 24 Apr 2020 16:49:37 -0400
+X-MC-Unique: FmMwr57KOSm2s8R8j82jgA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6F7301800D42;
+        Fri, 24 Apr 2020 20:49:36 +0000 (UTC)
+Received: from treble.redhat.com (ovpn-114-29.rdu2.redhat.com [10.10.114.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D6CB71002380;
+        Fri, 24 Apr 2020 20:49:35 +0000 (UTC)
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] samples/ftrace: Fix asm function ELF annotations
+Date:   Fri, 24 Apr 2020 15:49:30 -0500
+Message-Id: <86c1cbca67cb353da9f335643ef5fd19bd82988f.1587761369.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If GFP_ATOMIC allocations will start failing soon because the amount of
-free memory is substantially under per-zone min watermarks, it is better
-to oom kill a process rather than continue to reclaim.
+Enable objtool coverage for the sample ftrace modules by adding ELF
+annotations to the asm trampoline functions.
 
-This intends to significantly reduce the number of page allocation
-failures that are encountered when the demands of user and atomic
-allocations overwhelm the ability of reclaim to keep up.  We can see this
-with a high ingress of networking traffic where memory allocated in irq
-context can overwhelm the ability to reclaim fast enough such that user
-memory consistently loops.  In that case, we have reclaimable memory, and
-reclaiming is successful, but we've fully depleted memory reserves that
-are allowed for non-blockable allocations.
+  samples/ftrace/ftrace-direct.o: warning: objtool: .text+0x0: unreachabl=
+e instruction
+  samples/ftrace/ftrace-direct-modify.o: warning: objtool: .text+0x0: unr=
+eachable instruction
+  samples/ftrace/ftrace-direct-too.o: warning: objtool: .text+0x0: unreac=
+hable instruction
 
-Commit 400e22499dd9 ("mm: don't warn about allocations which stall for
-too long") removed evidence of user allocations stalling because of this,
-but the situation can apply anytime we get "page allocation failures"
-where reclaim is happening but per-zone min watermarks are starved:
-
-Node 0 Normal free:87356kB min:221984kB low:416984kB high:611984kB active_anon:123009936kB inactive_anon:67647652kB active_file:429612kB inactive_file:209980kB unevictable:112348kB writepending:260kB present:198180864kB managed:195027624kB mlocked:81756kB kernel_stack:24040kB pagetables:11460kB bounce:0kB free_pcp:940kB local_pcp:96kB free_cma:0kB
-lowmem_reserve[]: 0 0 0 0
-Node 1 Normal free:105616kB min:225568kB low:423716kB high:621864kB active_anon:122124196kB inactive_anon:74112696kB active_file:39172kB inactive_file:103696kB unevictable:204480kB writepending:180kB present:201326592kB managed:198174372kB mlocked:204480kB kernel_stack:11328kB pagetables:3680kB bounce:0kB free_pcp:1140kB local_pcp:0kB free_cma:0kB
-lowmem_reserve[]: 0 0 0 0
-
-Without this patch, there is no guarantee that user memory allocations
-will ever be successful when non-blockable allocations overwhelm the
-ability to get above per-zone min watermarks.
-
-This doesn't solve page allocation failures entirely since it's a
-preemptive measure based on watermarks that requires concurrent blockable
-allocations to trigger the oom kill.  To complete solve page allocation
-failures, it would be possible to do the same watermark check for non-
-blockable allocations and then queue a worker to asynchronously oom kill
-if it finds watermarks to be sufficiently low as well.
-
-Signed-off-by: David Rientjes <rientjes@google.com>
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
- mm/page_alloc.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ samples/ftrace/ftrace-direct-modify.c | 4 ++++
+ samples/ftrace/ftrace-direct-too.c    | 2 ++
+ samples/ftrace/ftrace-direct.c        | 2 ++
+ 3 files changed, 8 insertions(+)
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -4372,11 +4372,21 @@ should_reclaim_retry(gfp_t gfp_mask, unsigned order,
- 					ac->nodemask) {
- 		unsigned long available;
- 		unsigned long reclaimable;
-+		unsigned long free;
- 		unsigned long min_wmark = min_wmark_pages(zone);
- 		bool wmark;
- 
-+		free = zone_page_state_snapshot(zone, NR_FREE_PAGES);
-+		/*
-+		 * If this zone is approaching the point where even order-0
-+		 * GFP_ATOMIC allocations will fail, stop considering reclaim.
-+		 */
-+		if (!__zone_watermark_ok(zone, 0, min_wmark, ac_classzone_idx(ac),
-+					 alloc_flags | ALLOC_HIGH, free))
-+			continue;
-+
- 		available = reclaimable = zone_reclaimable_pages(zone);
--		available += zone_page_state_snapshot(zone, NR_FREE_PAGES);
-+		available += free;
- 
- 		/*
- 		 * Would the allocation succeed if we reclaimed all
+diff --git a/samples/ftrace/ftrace-direct-modify.c b/samples/ftrace/ftrac=
+e-direct-modify.c
+index e04229d21475..c13a5bc5095b 100644
+--- a/samples/ftrace/ftrace-direct-modify.c
++++ b/samples/ftrace/ftrace-direct-modify.c
+@@ -20,18 +20,22 @@ static unsigned long my_ip =3D (unsigned long)schedul=
+e;
+=20
+ asm (
+ "	.pushsection    .text, \"ax\", @progbits\n"
++"	.type		my_tramp1, @function\n"
+ "   my_tramp1:"
+ "	pushq %rbp\n"
+ "	movq %rsp, %rbp\n"
+ "	call my_direct_func1\n"
+ "	leave\n"
++"	.size		my_tramp1, .-my_tramp1\n"
+ "	ret\n"
++"	.type		my_tramp2, @function\n"
+ "   my_tramp2:"
+ "	pushq %rbp\n"
+ "	movq %rsp, %rbp\n"
+ "	call my_direct_func2\n"
+ "	leave\n"
+ "	ret\n"
++"	.size		my_tramp2, .-my_tramp2\n"
+ "	.popsection\n"
+ );
+=20
+diff --git a/samples/ftrace/ftrace-direct-too.c b/samples/ftrace/ftrace-d=
+irect-too.c
+index 27efa5f6ff52..d5c5022be664 100644
+--- a/samples/ftrace/ftrace-direct-too.c
++++ b/samples/ftrace/ftrace-direct-too.c
+@@ -15,6 +15,7 @@ extern void my_tramp(void *);
+=20
+ asm (
+ "	.pushsection    .text, \"ax\", @progbits\n"
++"	.type		my_tramp, @function\n"
+ "   my_tramp:"
+ "	pushq %rbp\n"
+ "	movq %rsp, %rbp\n"
+@@ -27,6 +28,7 @@ asm (
+ "	popq %rdi\n"
+ "	leave\n"
+ "	ret\n"
++"	.size		my_tramp, .-my_tramp\n"
+ "	.popsection\n"
+ );
+=20
+diff --git a/samples/ftrace/ftrace-direct.c b/samples/ftrace/ftrace-direc=
+t.c
+index a2e3063bd306..63ca06d42c80 100644
+--- a/samples/ftrace/ftrace-direct.c
++++ b/samples/ftrace/ftrace-direct.c
+@@ -13,6 +13,7 @@ extern void my_tramp(void *);
+=20
+ asm (
+ "	.pushsection    .text, \"ax\", @progbits\n"
++"	.type		my_tramp, @function\n"
+ "   my_tramp:"
+ "	pushq %rbp\n"
+ "	movq %rsp, %rbp\n"
+@@ -21,6 +22,7 @@ asm (
+ "	popq %rdi\n"
+ "	leave\n"
+ "	ret\n"
++"	.size		my_tramp, .-my_tramp\n"
+ "	.popsection\n"
+ );
+=20
+--=20
+2.21.1
+
