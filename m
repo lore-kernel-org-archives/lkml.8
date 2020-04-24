@@ -2,74 +2,125 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D59BCC2BA19
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DAD7C55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B07CC20706
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BE992168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:19:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728183AbgDXBTF (ORCPT
+        id S1728220AbgDXBTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 21:19:05 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:51541 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728101AbgDXBTE (ORCPT
+        Thu, 23 Apr 2020 21:19:44 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41891 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725888AbgDXBTo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 21:19:04 -0400
-Received: by mail-il1-f197.google.com with SMTP id p12so8004194iln.18
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 18:19:02 -0700 (PDT)
+        Thu, 23 Apr 2020 21:19:44 -0400
+Received: by mail-io1-f66.google.com with SMTP id b12so8658615ion.8;
+        Thu, 23 Apr 2020 18:19:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=v2zkYldKkekixKO8WAt2/m+8khJWXoDi3M8ZXRlhJLs=;
-        b=Unc573GfwkpqgX7Omoi/9JORM3jqpD4DLeyXKLrIekz7c1P+YY+S3SuNQOgQubPe25
-         hX9d2RrXmKNwI2WEx0qP5Txjz+ZQiB5m/ivmKxVteHqKATl/9rt6OwJD7gIH3rpJY/CP
-         Okm2lJfoDeTXiaWfHLXveEPiWllsJhPva3vMXRa1ff/dlJ3puwtV0MbkcavP0AAl42MG
-         Y/sECtnaPnaVXEJ1EdghkyHsHGAn4HTqgJvLvE0Q3v9rvbZUBqIujljMrCwqrKQSh1sh
-         mXYBul4okYv90yTBt21DcbEVyI1+vi1iJteI1bEXUPz/VwkPYfYwktQ4mBlqvCMS3IVs
-         2uqg==
-X-Gm-Message-State: AGi0PuYYRbclQQQIuVRUzhdUayu1sa2WlNjlc2+2PXdLRKRysaIFFUVu
-        IAhgNvATQpEwTr3YwIABNXy2GlP/cPJy7BsWtTrSPtdrXZFL
-X-Google-Smtp-Source: APiQypLj4NW2u0003xdrqvbIZukQh+qr3wA2LYK9h5V6cNp+SK12Sh+q3xiLk280yC7yd+Nf8KNJ22Onr0OhnuFdlwrcIVMo4XnZ
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W9OmgagrKCCt63SJ70DGo07Hs4DQPWadwIXDQwuPLQE=;
+        b=N5q+YAEa+Z81vrN6qlRJJzmaLqVv5kuPLYcNPFAs3voarUKw6mTL0rr5s4xqMZLYsR
+         nVbR6uQVFaPP65u303LfcpPNAmk02ID5dTKjhIUC7X5leog7ZHFM9zdj+dlNES96wA9n
+         f6ABMEtHD6EWTIZZxZjLpVSmUkH2qBVVxyldV5OI9w7YeQB67BoFvj3g5huGbTvgpXce
+         GfFkPryokZ4Lr61RK4nCDdIUi/mcJZtHlbkBN1qEmf86VwXq0UQj5b1DXwJw+w2E/gtL
+         2UaC5HucLmIy2KDbL6MFhp5zJEQXeDQ+BWkxyPZ/MrvuZM+qGUtppvQMD7tfa196Vcnd
+         96SQ==
+X-Gm-Message-State: AGi0Pubb+8ES688TxjrTybKVOhobp1JG6zDZHGO5XJ6MapwVCi0TfEhs
+        PYCbSeFNrO7wJHCn4Dj9n3J1LAUzMyRgAawEodJsQ3en
+X-Google-Smtp-Source: APiQypJksG9oll5dR51HBA7PNJp709ixLzaxLqE939dazCKHiP4+Otceirx7G1e9uvPhD1GNV4UI1AGYmqyDRqNld2w=
+X-Received: by 2002:a5e:8613:: with SMTP id z19mr6274962ioj.84.1587691181816;
+ Thu, 23 Apr 2020 18:19:41 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:7302:: with SMTP id e2mr5939972ioh.98.1587691142235;
- Thu, 23 Apr 2020 18:19:02 -0700 (PDT)
-Date:   Thu, 23 Apr 2020 18:19:02 -0700
-In-Reply-To: <Pine.LNX.4.44L0.2004232059480.2101-100000@netrider.rowland.org>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008bca8305a3ff2639@google.com>
-Subject: Re: WARNING in usbhid_raw_request/usb_submit_urb (3)
-From:   syzbot <syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        ingrassia@epigenesys.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, stern@rowland.harvard.edu,
-        syzkaller-bugs@googlegroups.com
+References: <20200422142428.1249684-1-jiaxun.yang@flygoat.com>
+ <20200422142428.1249684-7-jiaxun.yang@flygoat.com> <CAAhV-H43ds5YnW+h3zpbwedT0Lksz_o5d=Sz0Uqn+--uuDHN1A@mail.gmail.com>
+ <b645bfeba3c1c9d3167aef68868ef09f@kernel.org>
+In-Reply-To: <b645bfeba3c1c9d3167aef68868ef09f@kernel.org>
+From:   Huacai Chen <chenhc@lemote.com>
+Date:   Fri, 24 Apr 2020 09:27:07 +0800
+Message-ID: <CAAhV-H4o4yFLu28y7ZoyEwd_YVdDQpOdHF=KVBF0o9s7yZ3RZQ@mail.gmail.com>
+Subject: Re: [PATCH 6/6] dt-bindings: interrupt-controller: Add Loongson PCH MSI
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi, Marc,
 
-syzbot has tested the proposed patch and the reproducer did not trigger crash:
+On Thu, Apr 23, 2020 at 8:46 PM Marc Zyngier <maz@kernel.org> wrote:
+>
+> Huacai,
+>
+> On 2020-04-23 06:55, Huacai Chen wrote:
+> > Hi, Jiaxun,
+> >
+> > On Wed, Apr 22, 2020 at 10:28 PM Jiaxun Yang <jiaxun.yang@flygoat.com>
+> > wrote:
+> >>
+> >> Add binding for Loongson PCH MSI controller.
+> >>
+> >> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> >> ---
+> >>  .../loongson,pch-msi.yaml                     | 56
+> >> +++++++++++++++++++
+> >>  1 file changed, 56 insertions(+)
+> >>  create mode 100644
+> >> Documentation/devicetree/bindings/interrupt-controller/loongson,pch-msi.yaml
+> >>
+> >> diff --git
+> >> a/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-msi.yaml
+> >> b/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-msi.yaml
+> >> new file mode 100644
+> >> index 000000000000..dfb9cecacba0
+> >> --- /dev/null
+> >> +++
+> >> b/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-msi.yaml
+> >> @@ -0,0 +1,56 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id:
+> >> "http://devicetree.org/schemas/interrupt-controller/loongson,pch-msi.yaml#"
+> >> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> >> +
+> >> +title: Loongson PCH MSI Controller
+> >> +
+> >> +maintainers:
+> >> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
+> >> +
+> >> +description: |
+> >> +  This interrupt controller is found in the Loongson-7A family of PCH
+> >> for
+> > Please use "Loongson's LS7A family" here.
+>
+> It's the fourth email you send on the same subject. I think the author
+> has got the message already. Frankly, it is only a name, and if they
+> want to call it Bob, so be it.
+I'm sorry that make so much noise, and I will not do this again. Yes,
+a name is just a name, but we can do something to avoid confusing as
+much as possible.
 
-Reported-and-tested-by: syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com
+>
+> Thanks,
+>
+>          M.
+> --
+> Jazz is not dead. It just smells funny...
 
-Tested on:
-
-commit:         0fa84af8 Merge tag 'usb-serial-5.7-rc1' of https://git.ker..
-git tree:       https://github.com/google/kasan.git
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6b9c154b0c23aecf
-dashboard link: https://syzkaller.appspot.com/bug?extid=db339689b2101f6f6071
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=136ca310100000
-
-Note: testing is done by a robot and is best-effort only.
+Thanks,
+Huacai
