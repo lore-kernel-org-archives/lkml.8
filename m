@@ -2,126 +2,309 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B81BEC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 14:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1371CC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A40620706
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 14:59:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E95FE20706
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:00:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbgDXO70 (ORCPT
+        id S1727088AbgDXPAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 10:59:26 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:58885 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726698AbgDXO7Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 10:59:25 -0400
-Received: from [192.168.0.5] (ip5f5af075.dynamic.kabel-deutschland.de [95.90.240.117])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 782FD2002EE1D;
-        Fri, 24 Apr 2020 16:59:22 +0200 (CEST)
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc:     x86@kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: `calibrate_APIC_clock()` takes 100 ms on AMD systems
-Message-ID: <d6d50a65-59bc-aaa0-3f15-01d71496ef89@molgen.mpg.de>
-Date:   Fri, 24 Apr 2020 16:59:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 24 Apr 2020 11:00:51 -0400
+Received: from mga09.intel.com ([134.134.136.24]:61575 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726699AbgDXPAu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 11:00:50 -0400
+IronPort-SDR: VdKYBKcQGjXZNQkSo/kiQotPI5pMzfi56dn/0k+Jn6NB1265+O4kuAld8HIFsJJ8dU+Z9PQ+JY
+ 14BFaC/zKbTQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2020 08:00:47 -0700
+IronPort-SDR: muZ4nu+fNlrA6Q3uO/LHHIognqbUGMReHLHMfdfAnFRKY5IUAf1NL9DmFGXBSdlkKkySxOeLKC
+ BeAouUjX/ZxA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,311,1583222400"; 
+   d="scan'208";a="301565383"
+Received: from unknown (HELO localhost) ([10.239.159.128])
+  by FMSMGA003.fm.intel.com with ESMTP; 24 Apr 2020 08:00:44 -0700
+Date:   Fri, 24 Apr 2020 23:02:46 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
+        jmattson@google.com, yu.c.zhang@linux.intel.com
+Subject: Re: [PATCH v11 7/9] KVM: X86: Add userspace access interface for CET
+ MSRs
+Message-ID: <20200424150246.GK24039@local-michael-cet-test>
+References: <20200326081847.5870-1-weijiang.yang@intel.com>
+ <20200326081847.5870-8-weijiang.yang@intel.com>
+ <20200423181406.GK17824@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200423181406.GK17824@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Linux folks,
+On Thu, Apr 23, 2020 at 11:14:06AM -0700, Sean Christopherson wrote:
+> On Thu, Mar 26, 2020 at 04:18:44PM +0800, Yang Weijiang wrote:
+> > +#define CET_MSR_RSVD_BITS_1  GENMASK(1, 0)
+> > +#define CET_MSR_RSVD_BITS_2  GENMASK(9, 6)
+> > +
+> > +static bool cet_check_msr_write(struct kvm_vcpu *vcpu,
+> 
+> s/cet_check_msr_write/is_cet_msr_valid
+> 
+> Otherwise the polarity of the return value isn't obvious.
+> 
+> > +				struct msr_data *msr,
+> 
+> Unnecessary newline.
+> 
+> > +				u64 mask)
+> 
+> s/mask/rsvd_bits
+>
+Sure, will change them, thank you!
 
+> > +{
+> > +	u64 data = msr->data;
+> > +	u32 high_word = data >> 32;
+> > +
+> > +	if (data & mask)
+> > +		return false;
+> > +
+> > +	if (!is_64_bit_mode(vcpu) && high_word)
+> > +		return false;
+> 
+> As I called out before, this is wrong.  AFAIK, the CPU never depends on
+> WRMSR to prevent loading bits 63:32, software can simply do WRMSR and then
+> transition back to 32-bit mode.  Yes, the shadow stack itself is 32 bits,
+> but the internal value is still 64 bits.  This is backed up by the CALL
+> pseudocode:
+>
+So I'll remove this invalid check, thanks for the comments!
 
-Trying to decrease the boot time, I noticed on AMD systems 
-`calibrate_APIC_clock()` takes around 100 ms.
+>   IF ShadowStackEnabled(CPL)
+>     IF (EFER.LMA and DEST(CodeSegmentSelector).L) = 0
+>       (* If target is legacy or compatibility mode then the SSP must be in low 4GB *)
+>       IF (SSP & 0xFFFFFFFF00000000 != 0)
+>         THEN #GP(0); FI;
+>   FI;
+> 
+> as well as RDSSP:
+> 
+>   IF CPL = 3
+>     IF CR4.CET & IA32_U_CET.SH_STK_EN
+>       IF (operand size is 64 bit)
+>         THEN
+>           Dest ← SSP;
+>         ELSE
+>           Dest ← SSP[31:0];
+>       FI;
+>     FI;
+>   ELSE
+> 
+> > +
+> > +	return true;
+> > +}
+> > +
+> > +static bool cet_check_ssp_msr_access(struct kvm_vcpu *vcpu,
+> > +				     struct msr_data *msr)
+> 
+> Similar to above, the polarity of the return isn't obvious.  Maybe
+> is_cet_ssp_msr_accessible()?
+> 
+> I'd prefer to pass in @index, passing the full @msr makes it look like
+> this helper might also check msr->data.
+>
+Sure, will follow it.
 
-     [    0.004764] Freeing SMP alternatives memory: 32K
-     [    0.107676] smpboot: CPU0: AMD Ryzen 3 2200G with Radeon Vega 
-Graphics (family: 0x17, model: 0x11, stepping: 0x0)
+> > +{
+> > +	u32 index = msr->index;
+> > +
+> > +	if (!boot_cpu_has(X86_FEATURE_SHSTK))
+> > +		return false;
+> > +
+> > +	if (!msr->host_initiated &&
+> > +	    !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK))
+> > +		return false;
+> > +
+> > +	if (index == MSR_IA32_INT_SSP_TAB)
+> > +		return true;
+> > +
+> > +	if (index == MSR_IA32_PL3_SSP) {
+> > +		if (!(supported_xss & XFEATURE_MASK_CET_USER))
+> > +			return false;
+> > +	} else if (!(supported_xss & XFEATURE_MASK_CET_KERNEL)) {
+> > +		return false;
+> > +	}
+> 
+> 	if (index == MSR_IA32_PL3_SSP)
+> 		return supported_xss & XFEATURE_MASK_CET_USER;
+> 
+> 	/* MSR_IA32_PL[0-2]_SSP */
+> 	return supported_xss & XFEATURE_MASK_CET_KERNEL;
+Nice! ;-))
 
-On a different system with `apic=verbose`:
+> > +
+> > +	return true;
+> > +}
+> > +
+> > +static bool cet_check_ctl_msr_access(struct kvm_vcpu *vcpu,
+> 
+> is_cet_ctl_msr_accessible?
+> 
+OK.
 
-     [    0.209161] Freeing SMP alternatives memory: 28K
-     [    0.212830] Using local APIC timer interrupts.
-            calibrating APIC timer ...
-     [    0.320928] ... lapic delta = 625044
-     [    0.320928] ... PM-Timer delta = 357959
-     [    0.320928] ... PM-Timer result ok
-     [    0.320929] ..... delta 625044
-     [    0.320930] ..... mult: 26844619
-     [    0.320930] ..... calibration result: 400028
-     [    0.320931] ..... CPU clock speed is 4400.1228 MHz.
-     [    0.320931] ..... host bus clock speed is 100.0028 MHz.
-     [    0.320936] smpboot: CPU0: AMD A6-6400K APU with Radeon(tm) HD 
-Graphics (family: 0x15, model: 0x13, stepping: 0x1)
+> > +				     struct msr_data *msr)
+> > +{
+> > +	u32 index = msr->index;
+> > +
+> > +	if (!boot_cpu_has(X86_FEATURE_SHSTK) &&
+> > +	    !boot_cpu_has(X86_FEATURE_IBT))
+> > +		return false;
+> > +
+> > +	if (!msr->host_initiated &&
+> > +	    !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) &&
+> > +	    !guest_cpuid_has(vcpu, X86_FEATURE_IBT))
+> > +		return false;
+> > +
+> > +	if (index == MSR_IA32_U_CET) {
+> > +		if (!(supported_xss & XFEATURE_MASK_CET_USER))
+> > +			return false;
+> > +	} else if (!(supported_xss & XFEATURE_MASK_CET_KERNEL)) {
+> > +		return false;
+> > +	}
+> 
+> Same as above:
+> 
+> 	if (index == MSR_IA32_U_CET)
+> 		return supported_xss & XFEATURE_MASK_CET_USER;
+> 
+> 	return supported_xss & XFEATURE_MASK_CET_KERNEL;
+Got it!
 
-On Intel systems TSC deadline is used, and the function returns right away.
-
-         if (boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER))
-                 return 0;
-
-     [    0.078373] Freeing SMP alternatives memory: 32K
-     [    0.080373] TSC deadline timer enabled
-     [    0.080375] smpboot: CPU0: Intel(R) Core(TM) i7-5600U CPU @ 
-2.60GHz (family: 0x6, model: 0x3d, stepping: 0x4)
-
-100 ms is almost 10 % percent of the total one second the Linux kernel 
-takes here on the AMD systems, so I wonder if there are ways to reduce that.
-
-     #define LAPIC_CAL_LOOPS         (HZ/10)
-
-is 100 on my system, so the while loop below runs 100 times.
-
-         while (lapic_cal_loops <= LAPIC_CAL_LOOPS) {
-                 /* Wait for a tick to elapse */
-                 while (1) {
-                         if (tsc_khz) {
-                                 u64 tsc_now = rdtsc();
-                                 if ((tsc_now - tsc_start) >= tsc_perj) {
-                                         tsc_start += tsc_perj;
-                                         break;
-                                 }
-                         } else {
-                                 unsigned long jif_now = READ_ONCE(jiffies);
-
-                                 if (time_after(jif_now, jif_start)) {
-                                         jif_start = jif_now;
-                                         break;
-                                 }
-                         }
-                         cpu_relax();
-                 }
-
-                 /* Invoke the calibration routine */
-                 local_irq_disable();
-                 lapic_cal_handler(NULL);
-                 local_irq_enable();
-         }
-
-Can you give more information, why HZ/10 is chosen? Is there a way to 
-break out earlier?
-
-Do AMD devices feature an alternatives like for Intel? What other 
-possibilities are there? (Please excuse my ignorance.) For example, 
-taking the calibration values from the firmware, or could they be passed 
-on the command line, if the user knows, the system has not changed?
-
-
-Kind regards,
-
-Paul
+> > +
+> > +	return true;
+> > +}
+> >  /*
+> >   * Reads an msr value (of 'msr_index') into 'pdata'.
+> >   * Returns 0 on success, non-0 otherwise.
+> > @@ -1941,6 +2026,26 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+> >  		else
+> >  			msr_info->data = vmx->pt_desc.guest.addr_a[index / 2];
+> >  		break;
+> > +	case MSR_IA32_S_CET:
+> > +		if (!cet_check_ctl_msr_access(vcpu, msr_info))
+> > +			return 1;
+> > +		msr_info->data = vmcs_readl(GUEST_S_CET);
+> > +		break;
+> > +	case MSR_IA32_INT_SSP_TAB:
+> > +		if (!cet_check_ssp_msr_access(vcpu, msr_info))
+> > +			return 1;
+> > +		msr_info->data = vmcs_readl(GUEST_INTR_SSP_TABLE);
+> > +		break;
+> > +	case MSR_IA32_U_CET:
+> > +		if (!cet_check_ctl_msr_access(vcpu, msr_info))
+> > +			return 1;
+> > +		vmx_get_xsave_msr(msr_info);
+> > +		break;
+> > +	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
+> > +		if (!cet_check_ssp_msr_access(vcpu, msr_info))
+> > +			return 1;
+> > +		vmx_get_xsave_msr(msr_info);
+> > +		break;
+> >  	case MSR_TSC_AUX:
+> >  		if (!msr_info->host_initiated &&
+> >  		    !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
+> > @@ -2197,6 +2302,34 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+> >  		else
+> >  			vmx->pt_desc.guest.addr_a[index / 2] = data;
+> >  		break;
+> > +	case MSR_IA32_S_CET:
+> > +		if (!cet_check_ctl_msr_access(vcpu, msr_info))
+> > +			return 1;
+> > +		if (!cet_check_msr_write(vcpu, msr_info, CET_MSR_RSVD_BITS_2))
+> > +			return 1;
+> > +		vmcs_writel(GUEST_S_CET, data);
+> > +		break;
+> > +	case MSR_IA32_INT_SSP_TAB:
+> > +		if (!cet_check_ctl_msr_access(vcpu, msr_info))
+> > +			return 1;
+> > +		if (!is_64_bit_mode(vcpu))
+> 
+> This is wrong, the SDM explicitly calls out the !64 case:
+> 
+>   IA32_INTERRUPT_SSP_TABLE_ADDR (64 bits; 32 bits on processors that do not
+>   support Intel 64 architecture).
+So the check is also unnecessary as it's natual size?
+> 
+> > +			return 1;
+> > +		vmcs_writel(GUEST_INTR_SSP_TABLE, data);
+> > +		break;
+> > +	case MSR_IA32_U_CET:
+> > +		if (!cet_check_ctl_msr_access(vcpu, msr_info))
+> > +			return 1;
+> > +		if (!cet_check_msr_write(vcpu, msr_info, CET_MSR_RSVD_BITS_2))
+> > +			return 1;
+> > +		vmx_set_xsave_msr(msr_info);
+> > +		break;
+> > +	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
+> > +		if (!cet_check_ssp_msr_access(vcpu, msr_info))
+> > +			return 1;
+> > +		if (!cet_check_msr_write(vcpu, msr_info, CET_MSR_RSVD_BITS_1))
+> > +			return 1;
+> > +		vmx_set_xsave_msr(msr_info);
+> > +		break;
+> >  	case MSR_TSC_AUX:
+> >  		if (!msr_info->host_initiated &&
+> >  		    !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
+> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > index 9654d779bdab..9e89ee6a09e1 100644
+> > --- a/arch/x86/kvm/x86.c
+> > +++ b/arch/x86/kvm/x86.c
+> > @@ -1229,6 +1229,10 @@ static const u32 msrs_to_save_all[] = {
+> >  	MSR_ARCH_PERFMON_EVENTSEL0 + 12, MSR_ARCH_PERFMON_EVENTSEL0 + 13,
+> >  	MSR_ARCH_PERFMON_EVENTSEL0 + 14, MSR_ARCH_PERFMON_EVENTSEL0 + 15,
+> >  	MSR_ARCH_PERFMON_EVENTSEL0 + 16, MSR_ARCH_PERFMON_EVENTSEL0 + 17,
+> > +
+> > +	MSR_IA32_XSS, MSR_IA32_U_CET, MSR_IA32_S_CET,
+> > +	MSR_IA32_PL0_SSP, MSR_IA32_PL1_SSP, MSR_IA32_PL2_SSP,
+> > +	MSR_IA32_PL3_SSP, MSR_IA32_INT_SSP_TAB,
+> >  };
+> >  
+> >  static u32 msrs_to_save[ARRAY_SIZE(msrs_to_save_all)];
+> > @@ -1504,6 +1508,13 @@ static int __kvm_set_msr(struct kvm_vcpu *vcpu, u32 index, u64 data,
+> >  		 * invokes 64-bit SYSENTER.
+> >  		 */
+> >  		data = get_canonical(data, vcpu_virt_addr_bits(vcpu));
+> > +		break;
+> > +	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
+> > +	case MSR_IA32_U_CET:
+> > +	case MSR_IA32_S_CET:
+> > +	case MSR_IA32_INT_SSP_TAB:
+> > +		if (is_noncanonical_address(data, vcpu))
+> 
+> IMO the canonical check belongs in cet_check_msr_write().  The above checks
+> are for MSRs that are common to VMX and SVM, i.e. the common check saves
+> having to duplicate the logic.  If SVM picks up CET support, then they'll
+> presumably want to share all of the checks, not just the canonical piece.
+OK, I'll move them back.
+> 
+> > +			return 1;
+> >  	}
+> >  
+> >  	msr.data = data;
+> > -- 
+> > 2.17.2
+> > 
