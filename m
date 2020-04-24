@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB0DC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0E0C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A9C920767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 407CE20728
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:08:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587733674;
-	bh=AUIhmBrwWQvg0vpZYTLhZ9VphUoWGT7eDzR6HRlUqCU=;
+	s=default; t=1587733682;
+	bh=1WrbrzvZ9LXmWaooz3ri6pkY4Ib9PORA1CphY5O0EtY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tFY40cbdA0rQLtgsXpm36OV7l1d8khSILiB10pX5BETG/0L6dCm5CXVNZa00Ru/mc
-	 i8y63kzP6zaz7Nqm1Il4LrMQtiP1OM5/yudVs4QbXLkiLNsGS8eYg3EQ9gDI4ynssy
-	 x8KjawQmkoVzwGKpa/Fr3IdLsoKOI620IQ3/MGA4=
+	b=fUN7dZ8lAbe6I6LwoPXZiqTL/TaBk0Y0hhLXjN1v3EzpuNLNZWLPH4uNFfpp5KZdD
+	 HTJlaWDAs+rz4ndhKOmQOuVAAruNvfu5BpKnWhur2k26FntCd00+xesyZUMph1mAdv
+	 9dNDs2hqqWacV1EaqpCNDI5FOf4QJWw1J9nzhBlo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728437AbgDXNHx (ORCPT
+        id S1728451AbgDXNIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 09:07:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57730 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 09:08:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728199AbgDXNHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 09:07:03 -0400
+        id S1728103AbgDXNGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 09:06:49 -0400
 Received: from e123331-lin.home (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 691942084D;
-        Fri, 24 Apr 2020 13:07:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7814E208E4;
+        Fri, 24 Apr 2020 13:06:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587733622;
-        bh=AUIhmBrwWQvg0vpZYTLhZ9VphUoWGT7eDzR6HRlUqCU=;
+        s=default; t=1587733609;
+        bh=1WrbrzvZ9LXmWaooz3ri6pkY4Ib9PORA1CphY5O0EtY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OzPk+3RuUPCwUi+pruyNZDaPaEjC3YYFHJXFhjoEp+HiI8lPsnXuXnPeBtA9Bj2/R
-         VHiczgapVnNO4tyczrSWu6aQMVSu+TEifJkoCA/BpjVWhhmpdPuDazRxcf8n4mwauk
-         nJ+e7HUJsmrMDRSP4k8wF956bhXxO9RyoovajNJk=
+        b=jRdN4+I17nDJhAJogCCssKFoij5s3wnqzm8l3IpgCd/W3YyXv3O6JWUHYCqls1Wvt
+         uiaCwhK8fIlcBkiG87h+Z5nI0wJRj+sAws6wdD1mTA9wSIpknS7iAmhKiurnQcKg9V
+         JdH8o6yWvjAq8X6f2OaotuNmxGPkijsSM49v6h3c=
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,9 +47,9 @@ Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
         Atish Patra <atish.patra@wdc.com>,
         Palmer Dabbelt <palmerdabbelt@google.com>,
         Zou Wei <zou_wei@huawei.com>
-Subject: [PATCH 23/33] efi/libstub: Add API function to allocate aligned memory
-Date:   Fri, 24 Apr 2020 15:05:21 +0200
-Message-Id: <20200424130531.30518-24-ardb@kernel.org>
+Subject: [PATCH 17/33] efi/gop: Allow specifying depth as well as resolution
+Date:   Fri, 24 Apr 2020 15:05:15 +0200
+Message-Id: <20200424130531.30518-18-ardb@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200424130531.30518-1-ardb@kernel.org>
 References: <20200424130531.30518-1-ardb@kernel.org>
@@ -58,159 +58,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Break out the code to create an aligned page allocation from mem.c
-and move it into a function efi_allocate_pages_aligned() in alignedmem.c.
-Update efi_allocate_pages() to invoke it unless the minimum alignment
-equals the EFI page size (4 KB), in which case the ordinary page
-allocator is sufficient. This way, efi_allocate_pages_aligned() will
-only be pulled into the build if it is actually being used (which will
-be on arm64 only in the immediate future)
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
+Extend the video mode argument to handle an optional color depth
+specification of the form
+	video=efifb:<xres>x<yres>[-(rgb|bgr|<bpp>)]
+
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Link: https://lore.kernel.org/r/20200320020028.1936003-14-nivedita@alum.mit.edu
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- drivers/firmware/efi/libstub/Makefile     |  3 +-
- drivers/firmware/efi/libstub/alignedmem.c | 57 +++++++++++++++++++++++
- drivers/firmware/efi/libstub/efistub.h    |  3 ++
- drivers/firmware/efi/libstub/mem.c        | 25 ++++------
- 4 files changed, 71 insertions(+), 17 deletions(-)
- create mode 100644 drivers/firmware/efi/libstub/alignedmem.c
+ Documentation/fb/efifb.rst         |  8 +++--
+ drivers/firmware/efi/libstub/gop.c | 48 ++++++++++++++++++++++++++----
+ 2 files changed, 48 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index 75cb2c3a1519..bb8af2b16c49 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -42,7 +42,8 @@ KCOV_INSTRUMENT			:= n
+diff --git a/Documentation/fb/efifb.rst b/Documentation/fb/efifb.rst
+index 635275071307..eca38466487a 100644
+--- a/Documentation/fb/efifb.rst
++++ b/Documentation/fb/efifb.rst
+@@ -50,9 +50,11 @@ mode=n
+         The EFI stub will set the mode of the display to mode number n if
+         possible.
  
- lib-y				:= efi-stub-helper.o gop.o secureboot.o tpm.o \
- 				   file.o mem.o random.o randomalloc.o pci.o \
--				   skip_spaces.o lib-cmdline.o lib-ctype.o
-+				   skip_spaces.o lib-cmdline.o lib-ctype.o \
-+				   alignedmem.o
+-<xres>x<yres>
++<xres>x<yres>[-(rgb|bgr|<bpp>)]
+         The EFI stub will search for a display mode that matches the specified
+-        horizontal and vertical resolution, and set the mode of the display to
+-        it if one is found.
++        horizontal and vertical resolution, and optionally bit depth, and set
++        the mode of the display to it if one is found. The bit depth can either
++        "rgb" or "bgr" to match specifically those pixel formats, or a number
++        for a mode with matching bits per pixel.
  
- # include the stub's generic dependencies from lib/ when building for ARM/arm64
- efi-deps-y := fdt_rw.c fdt_ro.c fdt_wip.c fdt.c fdt_empty_tree.c fdt_sw.c
-diff --git a/drivers/firmware/efi/libstub/alignedmem.c b/drivers/firmware/efi/libstub/alignedmem.c
-new file mode 100644
-index 000000000000..cc89c4d6196f
---- /dev/null
-+++ b/drivers/firmware/efi/libstub/alignedmem.c
-@@ -0,0 +1,57 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/efi.h>
-+#include <asm/efi.h>
-+
-+#include "efistub.h"
-+
-+/**
-+ * efi_allocate_pages_aligned() - Allocate memory pages
-+ * @size:	minimum number of bytes to allocate
-+ * @addr:	On return the address of the first allocated page. The first
-+ *		allocated page has alignment EFI_ALLOC_ALIGN which is an
-+ *		architecture dependent multiple of the page size.
-+ * @max:	the address that the last allocated memory page shall not
-+ *		exceed
-+ * @align:	minimum alignment of the base of the allocation
-+ *
-+ * Allocate pages as EFI_LOADER_DATA. The allocated pages are aligned according
-+ * to @align, which should be >= EFI_ALLOC_ALIGN. The last allocated page will
-+ * not exceed the address given by @max.
-+ *
-+ * Return:	status code
-+ */
-+efi_status_t efi_allocate_pages_aligned(unsigned long size, unsigned long *addr,
-+					unsigned long max, unsigned long align)
-+{
-+	efi_physical_addr_t alloc_addr;
-+	efi_status_t status;
-+	int slack;
-+
-+	if (align < EFI_ALLOC_ALIGN)
-+		align = EFI_ALLOC_ALIGN;
-+
-+	alloc_addr = ALIGN_DOWN(max + 1, align) - 1;
-+	size = round_up(size, EFI_ALLOC_ALIGN);
-+	slack = align / EFI_PAGE_SIZE - 1;
-+
-+	status = efi_bs_call(allocate_pages, EFI_ALLOCATE_MAX_ADDRESS,
-+			     EFI_LOADER_DATA, size / EFI_PAGE_SIZE + slack,
-+			     &alloc_addr);
-+	if (status != EFI_SUCCESS)
-+		return status;
-+
-+	*addr = ALIGN((unsigned long)alloc_addr, align);
-+
-+	if (slack > 0) {
-+		int l = (alloc_addr % align) / EFI_PAGE_SIZE;
-+
-+		if (l) {
-+			efi_bs_call(free_pages, alloc_addr, slack - l + 1);
-+			slack = l - 1;
-+		}
-+		if (slack)
-+			efi_bs_call(free_pages, *addr + size, slack);
-+	}
-+	return EFI_SUCCESS;
-+}
-diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-index 9af65be3b278..baa0bc166074 100644
---- a/drivers/firmware/efi/libstub/efistub.h
-+++ b/drivers/firmware/efi/libstub/efistub.h
-@@ -657,6 +657,9 @@ efi_status_t efi_low_alloc(unsigned long size, unsigned long align,
- efi_status_t efi_allocate_pages(unsigned long size, unsigned long *addr,
- 				unsigned long max);
+ Edgar Hucek <gimli@dark-green.com>
+diff --git a/drivers/firmware/efi/libstub/gop.c b/drivers/firmware/efi/libstub/gop.c
+index cc84e6a82f54..848cb605a9c4 100644
+--- a/drivers/firmware/efi/libstub/gop.c
++++ b/drivers/firmware/efi/libstub/gop.c
+@@ -27,6 +27,8 @@ static struct {
+ 		u32 mode;
+ 		struct {
+ 			u32 width, height;
++			int format;
++			u8 depth;
+ 		} res;
+ 	};
+ } cmdline __efistub_global = { .option = EFI_CMDLINE_NONE };
+@@ -50,7 +52,8 @@ static bool parse_modenum(char *option, char **next)
  
-+efi_status_t efi_allocate_pages_aligned(unsigned long size, unsigned long *addr,
-+					unsigned long max, unsigned long align);
-+
- efi_status_t efi_relocate_kernel(unsigned long *image_addr,
- 				 unsigned long image_size,
- 				 unsigned long alloc_size,
-diff --git a/drivers/firmware/efi/libstub/mem.c b/drivers/firmware/efi/libstub/mem.c
-index 869a79c8946f..0020b0fa9587 100644
---- a/drivers/firmware/efi/libstub/mem.c
-+++ b/drivers/firmware/efi/libstub/mem.c
-@@ -93,31 +93,24 @@ efi_status_t efi_get_memory_map(struct efi_boot_memmap *map)
- efi_status_t efi_allocate_pages(unsigned long size, unsigned long *addr,
- 				unsigned long max)
+ static bool parse_res(char *option, char **next)
  {
--	efi_physical_addr_t alloc_addr = ALIGN_DOWN(max + 1, EFI_ALLOC_ALIGN) - 1;
--	int slack = EFI_ALLOC_ALIGN / EFI_PAGE_SIZE - 1;
-+	efi_physical_addr_t alloc_addr;
- 	efi_status_t status;
+-	u32 w, h;
++	u32 w, h, d = 0;
++	int pf = -1;
  
--	size = round_up(size, EFI_ALLOC_ALIGN);
-+	if (EFI_ALLOC_ALIGN > EFI_PAGE_SIZE)
-+		return efi_allocate_pages_aligned(size, addr, max,
-+						  EFI_ALLOC_ALIGN);
-+
-+	alloc_addr = ALIGN_DOWN(max + 1, EFI_ALLOC_ALIGN) - 1;
- 	status = efi_bs_call(allocate_pages, EFI_ALLOCATE_MAX_ADDRESS,
--			     EFI_LOADER_DATA, size / EFI_PAGE_SIZE + slack,
-+			     EFI_LOADER_DATA, DIV_ROUND_UP(size, EFI_PAGE_SIZE),
- 			     &alloc_addr);
- 	if (status != EFI_SUCCESS)
- 		return status;
+ 	if (!isdigit(*option))
+ 		return false;
+@@ -58,11 +61,26 @@ static bool parse_res(char *option, char **next)
+ 	if (*option++ != 'x' || !isdigit(*option))
+ 		return false;
+ 	h = simple_strtoull(option, &option, 10);
++	if (*option == '-') {
++		option++;
++		if (strstarts(option, "rgb")) {
++			option += strlen("rgb");
++			pf = PIXEL_RGB_RESERVED_8BIT_PER_COLOR;
++		} else if (strstarts(option, "bgr")) {
++			option += strlen("bgr");
++			pf = PIXEL_BGR_RESERVED_8BIT_PER_COLOR;
++		} else if (isdigit(*option))
++			d = simple_strtoull(option, &option, 10);
++		else
++			return false;
++	}
+ 	if (*option && *option++ != ',')
+ 		return false;
+ 	cmdline.option     = EFI_CMDLINE_RES;
+ 	cmdline.res.width  = w;
+ 	cmdline.res.height = h;
++	cmdline.res.format = pf;
++	cmdline.res.depth  = d;
  
--	*addr = ALIGN((unsigned long)alloc_addr, EFI_ALLOC_ALIGN);
--
--	if (slack > 0) {
--		int l = (alloc_addr % EFI_ALLOC_ALIGN) / EFI_PAGE_SIZE;
--
--		if (l) {
--			efi_bs_call(free_pages, alloc_addr, slack - l + 1);
--			slack = l - 1;
--		}
--		if (slack)
--			efi_bs_call(free_pages, *addr + size, slack);
--	}
-+	*addr = alloc_addr;
- 	return EFI_SUCCESS;
+ 	*next = option;
+ 	return true;
+@@ -123,6 +141,18 @@ static u32 choose_mode_modenum(efi_graphics_output_protocol_t *gop)
+ 	return cmdline.mode;
  }
+ 
++static u8 pixel_bpp(int pixel_format, efi_pixel_bitmask_t pixel_info)
++{
++	if (pixel_format == PIXEL_BIT_MASK) {
++		u32 mask = pixel_info.red_mask | pixel_info.green_mask |
++			   pixel_info.blue_mask | pixel_info.reserved_mask;
++		if (!mask)
++			return 0;
++		return __fls(mask) - __ffs(mask) + 1;
++	} else
++		return 32;
++}
 +
- /**
-  * efi_low_alloc_above() - allocate pages at or above given address
-  * @size:	size of the memory area to allocate
+ static u32 choose_mode_res(efi_graphics_output_protocol_t *gop)
+ {
+ 	efi_status_t status;
+@@ -133,16 +163,21 @@ static u32 choose_mode_res(efi_graphics_output_protocol_t *gop)
+ 
+ 	u32 max_mode, cur_mode;
+ 	int pf;
++	efi_pixel_bitmask_t pi;
+ 	u32 m, w, h;
+ 
+ 	mode = efi_table_attr(gop, mode);
+ 
+ 	cur_mode = efi_table_attr(mode, mode);
+ 	info = efi_table_attr(mode, info);
+-	w = info->horizontal_resolution;
+-	h = info->vertical_resolution;
++	pf = info->pixel_format;
++	pi = info->pixel_information;
++	w  = info->horizontal_resolution;
++	h  = info->vertical_resolution;
+ 
+-	if (w == cmdline.res.width && h == cmdline.res.height)
++	if (w == cmdline.res.width && h == cmdline.res.height &&
++	    (cmdline.res.format < 0 || cmdline.res.format == pf) &&
++	    (!cmdline.res.depth || cmdline.res.depth == pixel_bpp(pf, pi)))
+ 		return cur_mode;
+ 
+ 	max_mode = efi_table_attr(mode, max_mode);
+@@ -157,6 +192,7 @@ static u32 choose_mode_res(efi_graphics_output_protocol_t *gop)
+ 			continue;
+ 
+ 		pf = info->pixel_format;
++		pi = info->pixel_information;
+ 		w  = info->horizontal_resolution;
+ 		h  = info->vertical_resolution;
+ 
+@@ -164,7 +200,9 @@ static u32 choose_mode_res(efi_graphics_output_protocol_t *gop)
+ 
+ 		if (pf == PIXEL_BLT_ONLY || pf >= PIXEL_FORMAT_MAX)
+ 			continue;
+-		if (w == cmdline.res.width && h == cmdline.res.height)
++		if (w == cmdline.res.width && h == cmdline.res.height &&
++		    (cmdline.res.format < 0 || cmdline.res.format == pf) &&
++		    (!cmdline.res.depth || cmdline.res.depth == pixel_bpp(pf, pi)))
+ 			return m;
+ 	}
+ 
 -- 
 2.17.1
 
