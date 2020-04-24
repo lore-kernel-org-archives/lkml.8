@@ -2,107 +2,133 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D08C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DBCC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4667B2098B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 803F52063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:55:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728508AbgDXRy4 (ORCPT
+        id S1728737AbgDXRzA convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 13:54:56 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:56856 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726793AbgDXRy4 (ORCPT
+        Fri, 24 Apr 2020 13:55:00 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39538 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726793AbgDXRzA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 13:54:56 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jS2XO-0008CD-FM; Fri, 24 Apr 2020 18:54:54 +0100
-Received: from ben by deadeye with local (Exim 4.93)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jS2XO-00FO0e-0s; Fri, 24 Apr 2020 18:54:54 +0100
-Message-ID: <4614381d6b2115dd9d19900509965fb2c419ae2c.camel@decadent.org.uk>
-Subject: Re: [PATCH 3.16 000/247] 3.16.83-rc2 review
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        Denis Kirjanov <kda@linux-powerpc.org>
-Date:   Fri, 24 Apr 2020 18:54:49 +0100
-In-Reply-To: <67f1b156-1e65-aef7-f0e3-a15f637dbe71@roeck-us.net>
-References: <lsq.1587743245.5555628@decadent.org.uk>
-         <67f1b156-1e65-aef7-f0e3-a15f637dbe71@roeck-us.net>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-PZuy/PW7HmAZwMjlHo6s"
-User-Agent: Evolution 3.36.1-1 
+        Fri, 24 Apr 2020 13:55:00 -0400
+Received: by mail-ot1-f67.google.com with SMTP id m13so13856196otf.6;
+        Fri, 24 Apr 2020 10:54:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=zuGInC/Mu6yrfyua3ZXVt8I3phxBs6NPOwYz5n5f7xU=;
+        b=S/ZFy3fdCvXu14+vEW3CZa+onNWAJggLuRR6SCBMMC7fqH5sOWBWX4O9s6LC4qjV/F
+         12Wqjrw5koLIMZDEfs7j8yDkvFalDF/XEiN4IV3nI45FnQhz0gIOZP9a+3M7LEFFW6Y1
+         XyttEvxs663yoBGB+7rjESJeNCDg8KolChv92C2r6oWh4qJBlo4hjNByXiGwGEsNrdwa
+         N39/mnmAVh32FEHJ2OHobwo55e991ZD4Jt2lrLkb4ELs1dS5BN7Ofyf0hCi224rDprsE
+         9lEfLYI3SNKqxwIo9s8YWaKfxPH8K2bCe2xsw2rDgKUwMJyQTU1CLJy91dWsluaXQhS4
+         2dOA==
+X-Gm-Message-State: AGi0PuZJl90D3A/fpyiq3BTb+VrxyPKc0Nnky65sTiihxQJT6zw2kw++
+        l8gPbhH5lXIhK3+if5dBRHWBpYN/JZThML/QRhM=
+X-Google-Smtp-Source: APiQypI0Vh2kcbER7bwZJANdbWBlq4ehgarHewAXA6cjBmAMId7cmL3VOu3UZmsGpAscSyGzUDkLt6t3r1jcWTdivOI=
+X-Received: by 2002:aca:895:: with SMTP id 143mr7682697oii.153.1587750899078;
+ Fri, 24 Apr 2020 10:54:59 -0700 (PDT)
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+References: <20200424121051.5056-1-geert@linux-m68k.org> <d2c14a2d-4e7b-d36a-be90-e987b1ea6183@gmail.com>
+ <CAMuHMdWVmP04cXEgAkOc9Qdb2Y2xjGd1YEOcMt7ehE70ZwdqjQ@mail.gmail.com> <87ftcs3k90.fsf@toke.dk>
+In-Reply-To: <87ftcs3k90.fsf@toke.dk>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 24 Apr 2020 19:54:47 +0200
+Message-ID: <CAMuHMdUpQ1h5gapkzoX191hgxSQ814TfwcuPAmm8hOKSwk0RHA@mail.gmail.com>
+Subject: Re: [PATCH] net: openvswitch: use do_div() for 64-by-32 divisions:
+To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
+Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
+        Pravin B Shelar <pshelar@ovn.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Tonghao Zhang <xiangxia.m.yue@gmail.com>,
+        netdev <netdev@vger.kernel.org>, dev@openvswitch.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Toke,
 
---=-PZuy/PW7HmAZwMjlHo6s
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Fri, Apr 24, 2020 at 6:45 PM Toke Høiland-Jørgensen <toke@redhat.com> wrote:
+> Geert Uytterhoeven <geert@linux-m68k.org> writes:
+> > On Fri, Apr 24, 2020 at 5:05 PM Eric Dumazet <eric.dumazet@gmail.com> wrote:
+> >> On 4/24/20 5:10 AM, Geert Uytterhoeven wrote:
+> >> > On 32-bit architectures (e.g. m68k):
+> >> >
+> >> >     ERROR: modpost: "__udivdi3" [net/openvswitch/openvswitch.ko] undefined!
+> >> >     ERROR: modpost: "__divdi3" [net/openvswitch/openvswitch.ko] undefined!
+> >> >
+> >> > Fixes: e57358873bb5d6ca ("net: openvswitch: use u64 for meter bucket")
+> >> > Reported-by: noreply@ellerman.id.au
+> >> > Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> >> > ---
+> >> >  net/openvswitch/meter.c | 2 +-
+> >> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >> >
+> >> > diff --git a/net/openvswitch/meter.c b/net/openvswitch/meter.c
+> >> > index 915f31123f235c03..3498a5ab092ab2b8 100644
+> >> > --- a/net/openvswitch/meter.c
+> >> > +++ b/net/openvswitch/meter.c
+> >> > @@ -393,7 +393,7 @@ static struct dp_meter *dp_meter_create(struct nlattr **a)
+> >> >                * Start with a full bucket.
+> >> >                */
+> >> >               band->bucket = (band->burst_size + band->rate) * 1000ULL;
+> >> > -             band_max_delta_t = band->bucket / band->rate;
+> >> > +             band_max_delta_t = do_div(band->bucket, band->rate);
+> >> >               if (band_max_delta_t > meter->max_delta_t)
+> >> >                       meter->max_delta_t = band_max_delta_t;
+> >> >               band++;
+> >> >
+> >>
+> >> This is fascinating... Have you tested this patch ?
+> >
+> > Sorry, I should have said this is compile-tested only.
+> >
+> >> Please double check what do_div() return value is supposed to be !
+> >
+> > I do not have any openvswitch setups, let alone on the poor m68k box.
+>
+> I think what Eric is referring to is this, from the documentation of
+> do_div:
+>
+>  * do_div - returns 2 values: calculate remainder and update new dividend
+>  * @n: uint64_t dividend (will be updated)
+>  * @base: uint32_t divisor
+>  *
+>  * Summary:
+>  * ``uint32_t remainder = n % base;``
+>  * ``n = n / base;``
+>  *
+>  * Return: (uint32_t)remainder
 
-On Fri, 2020-04-24 at 10:48 -0700, Guenter Roeck wrote:
-> On 4/24/20 8:47 AM, Ben Hutchings wrote:
-> > This is the start of the stable review cycle for the 3.16.83 release.
-> > There are 247 patches in this series, which will be posted as responses
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >=20
-> > Responses should be made by Tue Apr 28 18:00:00 UTC 2020.
-> > Anything received after that time might be too late.
-> >=20
->=20
-> For v3.16.82-247-gffbdbb4fe113:
->=20
-> Build results:
-> 	total: 135 pass: 135 fail: 0
-> Qemu test results:
-> 	total: 233 pass: 233 fail: 0
+Oops, that was a serious brain fart. Sorry for that!
 
-Great, thanks for testing again.
+That should have been div_u64() instead of do_div().
+Feel free to update my patch while applying, else I'll send a v2 later.
 
-Ben.
+/me hides in a brown paper bag for the whole weekend...
 
---=20
-Ben Hutchings
-Knowledge is power.  France is bacon.
+Gr{oetje,eeting}s,
 
+                        Geert
 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
---=-PZuy/PW7HmAZwMjlHo6s
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl6jJ+kACgkQ57/I7JWG
-EQl1BQ/+MQzytDFTQq2eButY9lqNhNQiDYjyNclEQb9ibRS9XAu5U+OumgCpoLP4
-8xrrCZ+cbAH6pBy6uWJdq+P5OXENFtAXCIvtStBjD+R77D5n/OLfMMKQRMcQWais
-lNtAta5dhgoPek+9aSt9flM4ilim0d9jjrIwvK0WM6nlqjrwoCThFokfrx6v/FKG
-kBpVq49xSIg6ArfZiyUfgQKmApu/SAOU8QK3Bp6+/HmmZSJZJFDK+ltkh4nrjOqa
-ulMWthhvLBfBU+mW4U847khq0bDBUpB7IGDSvDftFK0iC7EhysTPduuH1cs+2Uuq
-19AHY0Ud2J2zgXQmV453Bkd1ubfEJaV7HgOK1jRWsPQjlp9tt99ydTOezYLTZJEM
-FBxdCD9zAXeuhJHnAZ7F6AkXm/V48+P2MdJxtF6tulcnNnXarI+a8fiCwjG8V2gS
-wYN/ICiQJqRh7pu6STCWUNBZEYsYWnsoPwWLpLOBrl6a0B4Ftcjes0+n9HbWZwkf
-A/RhDrCIkdOUTOM0/PGWthHMYvyKRmrlW6t8vMJxqTzYJVFjwAe5+cxlMgtxya4X
-Q3LW8W7ybqiStq1Fvl/QLm6kE/ugIAbZ7t3I4ehI0YuuAKfZijT4kvWSS0VnHV5m
-tjW+jMz8dh2uh7mIc2R3MVWcFg7FRoq9xADY5vAPjqzGfjb0Cnw=
-=tyso
------END PGP SIGNATURE-----
-
---=-PZuy/PW7HmAZwMjlHo6s--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
