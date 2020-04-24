@@ -2,107 +2,98 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F16DC55191
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AB2C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AC8120700
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D621F20736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:32:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587731534;
+	bh=0q/xyRhBBkaXhh1rqSS+bdiBtGSIXDcfrgR5fSDD1xA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=lOjLqxWM7zV3tc41P8MkT2J8zV1EHQQAlXGxdzJAal7CaFPvd8EMfEDnrrDrevpYB
+	 13e2wUhbeOV6b/9NcVjdSJOppcSlhTARbR8Rsq5vdi5PyUH917WYap1MjgyC7+GON3
+	 EufglOP7AaI0+j8+bMXpEpRxdyPlIsGxB5F0RQqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728240AbgDXMcK (ORCPT
+        id S1727797AbgDXMXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:32:10 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:37988 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728528AbgDXMcG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:32:06 -0400
-Received: by mail-il1-f198.google.com with SMTP id u11so9410540ilg.5
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 05:32:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=yK0wAoGKugNS69+oM9ObjI/OyZcx0KM5Rr5d8hGyhfk=;
-        b=GueV5YiP6oECLaDbD32l1k8GvVnmt6cmH2IyWbxYT+ryl0kvvRKtKbawRtCnEw8rB2
-         OSlWLPEwwoq4QFCcPQR0RLC9SEm/GBYFrB44pzDLh0aSbs887DAOjRcTJ5+ynJ9ar5QO
-         q3ALJePn3DOaCMUTtitfVKxWwZpHuXSLyztNJZ9afVl9+D5CEMsymEb/hJ4qTt7LHT+9
-         ozQZd7o7xVDqA6Ut5fqp8yTTtR7fODJFVkE+jXjYmPTeYMA+t6C1MkLVEWb9lbLMDQKW
-         PYCE7zMKZG2LnXr+IqMWKKFLxG7WJ0wdmwM6kMNiN0Fl1t2FKMYAXxZW40O99hodtZ43
-         HUGg==
-X-Gm-Message-State: AGi0PuaB1y1tXcmW6ebWYoNZEMrSTWPwMIPPaFlLpru/h7RsLVtx1+a+
-        zKtbXDpF4B3jyU4VkCvTMbHamXt1rueaAarlTgxOR950ATLm
-X-Google-Smtp-Source: APiQypIJVlz/0E/OMhixpF63qSBEIklUpfcXcAxKIuCOhhWqte2oP4DM638Zjln5/L8qBnO46RGI81CrYem5xaQKnJ+Bx0O7wKJm
+        Fri, 24 Apr 2020 08:23:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52228 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727106AbgDXMWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:22:55 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C92D621655;
+        Fri, 24 Apr 2020 12:22:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587730974;
+        bh=0q/xyRhBBkaXhh1rqSS+bdiBtGSIXDcfrgR5fSDD1xA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0OsikzGO61oUADvfmCTQQY+DSUkCvyqJAJCD22ANpSYsnaB1GDl2O8hKWc02BAVfj
+         p605JAgFTQ7WLoZ0fIhhHhEPbZ74ADWz6fkOmtNxZjOQK3+AIIlt10g3QsXqcx6tqu
+         w+dLFWZrkLh1pyDZLHUwpg7PkPavB6XbCMODdMbU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Bodo Stroesser <bstroesser@ts.fujitsu.com>,
+        Mike Christie <mchristi@redhat.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 15/38] scsi: target: fix PR IN / READ FULL STATUS for FC
+Date:   Fri, 24 Apr 2020 08:22:13 -0400
+Message-Id: <20200424122237.9831-15-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200424122237.9831-1-sashal@kernel.org>
+References: <20200424122237.9831-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:247:: with SMTP id w7mr7991586jaq.128.1587731523959;
- Fri, 24 Apr 2020 05:32:03 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 05:32:03 -0700
-In-Reply-To: <Pine.LNX.4.44L0.2004240817010.26813-100000@netrider.rowland.org>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007c083305a4088d09@google.com>
-Subject: Re: WARNING in usbhid_raw_request/usb_submit_urb (3)
-From:   syzbot <syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        ingrassia@epigenesys.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, stern@rowland.harvard.edu,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
 
-syzbot has tested the proposed patch but the reproducer still triggered crash:
-WARNING in usb_queue_reset_device
+[ Upstream commit 8fed04eb79a74cbf471dfaa755900a51b37273ab ]
 
-------------[ cut here ]------------
-usbhid 3-1:0.0: Device reset
-WARNING: CPU: 0 PID: 12 at drivers/usb/core/hub.c:6007 usb_queue_reset_device+0x63/0x130 drivers/usb/core/hub.c:6007
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.6.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events hid_reset
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xef/0x16e lib/dump_stack.c:118
- panic+0x2aa/0x6e1 kernel/panic.c:221
- __warn.cold+0x2f/0x30 kernel/panic.c:582
- report_bug+0x27b/0x2f0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- fixup_bug arch/x86/kernel/traps.c:169 [inline]
- do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:usb_queue_reset_device+0x63/0x130 drivers/usb/core/hub.c:6007
-Code: 00 00 4c 8d 6d 30 4d 85 e4 74 72 e8 47 02 e0 fd 4c 89 ef e8 4f d2 19 ff 4c 89 e2 48 c7 c7 20 79 3b 86 48 89 c6 e8 f5 92 b4 fd <0f> 0b 48 8d 95 f0 04 00 00 48 c7 c0 88 2a e6 87 48 b9 00 00 00 00
-RSP: 0018:ffff8881da227ce0 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: ffff8881cd5ae920 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff812974dd RDI: ffffed103b444f8e
-RBP: ffff8881ce92d000 R08: ffff8881da211880 R09: ffffed103b646248
-R10: ffffed103b646247 R11: ffff8881db23123f R12: ffff8881d4c25d80
-R13: ffff8881ce92d030 R14: ffff8881da0ef400 R15: ffff8881db233e00
- hid_reset+0x219/0x3e0 drivers/hid/usbhid/hid-core.c:138
- process_one_work+0x94b/0x1620 kernel/workqueue.c:2266
- worker_thread+0x96/0xe20 kernel/workqueue.c:2412
- kthread+0x318/0x420 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+Creation of the response to READ FULL STATUS fails for FC based
+reservations. Reason is the too high loop limit (< 24) in
+fc_get_pr_transport_id(). The string representation of FC WWPN is 23 chars
+long only ("11:22:33:44:55:66:77:88"). So when i is 23, the loop body is
+executed a last time for the ending '\0' of the string and thus hex2bin()
+reports an error.
 
+Link: https://lore.kernel.org/r/20200408132610.14623-3-bstroesser@ts.fujitsu.com
+Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+Reviewed-by: Mike Christie <mchristi@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/target/target_core_fabric_lib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Tested on:
-
-commit:         0fa84af8 Merge tag 'usb-serial-5.7-rc1' of https://git.ker..
-git tree:       https://github.com/google/kasan.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=147a58a7e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6b9c154b0c23aecf
-dashboard link: https://syzkaller.appspot.com/bug?extid=db339689b2101f6f6071
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1131acdfe00000
+diff --git a/drivers/target/target_core_fabric_lib.c b/drivers/target/target_core_fabric_lib.c
+index 6b4b354c88aa0..b5c970faf5854 100644
+--- a/drivers/target/target_core_fabric_lib.c
++++ b/drivers/target/target_core_fabric_lib.c
+@@ -63,7 +63,7 @@ static int fc_get_pr_transport_id(
+ 	 * encoded TransportID.
+ 	 */
+ 	ptr = &se_nacl->initiatorname[0];
+-	for (i = 0; i < 24; ) {
++	for (i = 0; i < 23; ) {
+ 		if (!strncmp(&ptr[i], ":", 1)) {
+ 			i++;
+ 			continue;
+-- 
+2.20.1
 
