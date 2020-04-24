@@ -2,245 +2,287 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DD8C5518A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 07:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7399C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 07:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94B3B2076C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 07:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A616420700
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 07:21:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="pkckESzc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbgDXHUm (ORCPT
+        id S1726683AbgDXHVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 03:20:42 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64356 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726317AbgDXHUm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 03:20:42 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03O73JMn032705;
-        Fri, 24 Apr 2020 03:20:30 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30kk5t5dfy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Apr 2020 03:20:30 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03O7H2r5072224;
-        Fri, 24 Apr 2020 03:20:29 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30kk5t5df1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Apr 2020 03:20:29 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03O7KLYY030948;
-        Fri, 24 Apr 2020 07:20:27 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04ams.nl.ibm.com with ESMTP id 30fs658rkx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Apr 2020 07:20:27 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03O7KPA450790596
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Apr 2020 07:20:25 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 457615205A;
-        Fri, 24 Apr 2020 07:20:25 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.14.129])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id AC3FD5204E;
-        Fri, 24 Apr 2020 07:20:24 +0000 (GMT)
-Subject: Re: [PATCH v2 6/9] s390/module: Use s390_kernel_write() for late
- relocations
-To:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>
-Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, Vasily Gorbik <gor@linux.ibm.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>
-References: <cover.1587131959.git.jpoimboe@redhat.com>
- <18266eb2c2c9a2ce0033426837d89dcb363a85d3.1587131959.git.jpoimboe@redhat.com>
- <20200422164037.7edd21ea@thinkpad> <20200422172126.743908f5@thinkpad>
- <20200422194605.n77t2wtx5fomxpyd@treble> <20200423141834.234ed0bc@thinkpad>
- <alpine.LSU.2.21.2004231513250.6520@pobox.suse.cz>
- <20200423141228.sjvnxwdqlzoyqdwg@treble>
- <20200423181030.b5mircvgc7zmqacr@treble>
- <20200423232657.7minzcsysnhp474w@treble>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Message-ID: <eb464a0b-922b-1dbd-81e6-1161a5157acb@de.ibm.com>
-Date:   Fri, 24 Apr 2020 09:20:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 24 Apr 2020 03:21:15 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:4305 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725898AbgDXHVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 03:21:15 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 497lvr5T01z9tyJm;
+        Fri, 24 Apr 2020 09:21:12 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=pkckESzc; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id wSHBft-AlAuN; Fri, 24 Apr 2020 09:21:12 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 497lvr43CXz9tyJl;
+        Fri, 24 Apr 2020 09:21:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1587712872; bh=gElz+irgb5pZXKsTtCEsCa9jmvIEXBXElnqTn0G0itA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=pkckESzcazhl0l+06rf32KK9v5++yUkAixH67vxMH7QyzBQxPuaa+j2YFGb4Llh5h
+         UytnyWhHetlJAI9Vwr3Meb1rWPfjs+8e9izF9LCPEHc+ehD2vk3jN6UxTWD5ZKZ+Yp
+         O5yAxyg3cqmeAz8pfp1iwJuUjdo47oCAWUAN9Tfc=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9DE6A8B86C;
+        Fri, 24 Apr 2020 09:21:13 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id GrCHfk9VqGq4; Fri, 24 Apr 2020 09:21:13 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id CCB528B860;
+        Fri, 24 Apr 2020 09:21:10 +0200 (CEST)
+Subject: Re: [PATCH v3,5/5] powerpc: sysdev: support userspace access of
+ fsl_85xx_sram
+To:     =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
+Cc:     gregkh@linuxfoundation.org, arnd@arndb.de,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        oss@buserror.net, kernel@vivo.com, robh@kernel.org,
+        benh@kernel.crashing.org, paulus@samba.org,
+        Michael Ellerman <mpe@ellerman.id.au>
+References: <AHIA-gAFCMi-wI-WAB9biKqO.3.1587711910539.Hmail.wenhu.wang@vivo.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <3da78776-f126-8815-e397-c5090c84d83a@c-s.fr>
+Date:   Fri, 24 Apr 2020 09:21:10 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200423232657.7minzcsysnhp474w@treble>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-24_02:2020-04-23,2020-04-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- lowpriorityscore=0 adultscore=0 mlxscore=0 bulkscore=0 clxscore=1011
- priorityscore=1501 suspectscore=0 impostorscore=0 malwarescore=0
- mlxlogscore=999 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2004240052
+In-Reply-To: <AHIA-gAFCMi-wI-WAB9biKqO.3.1587711910539.Hmail.wenhu.wang@vivo.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 24.04.20 01:26, Josh Poimboeuf wrote:
-> On Thu, Apr 23, 2020 at 01:10:30PM -0500, Josh Poimboeuf wrote:
->> On Thu, Apr 23, 2020 at 09:12:28AM -0500, Josh Poimboeuf wrote:
->>>>> this is strange. While I would have expected an exception similar to
->>>>> this, it really should have happened on the "sturg" instruction which
->>>>> does the DAT-off store in s390_kernel_write(), and certainly not with
->>>>> an ID of 0004 (protection). However, in your case, it happens on a
->>>>> normal store instruction, with 0004 indicating a protection exception.
->>>>>
->>>>> This is more like what I would expect e.g. in the case where you do
->>>>> _not_ use the s390_kernel_write() function for RO module text patching,
->>>>> but rather normal memory access. So I am pretty sure that this is not
->>>>> related to the s390_kernel_write(), but some other issue, maybe some
->>>>> place left where you still use normal memory access?
->>>>
->>>> The call trace above also suggests that it is not a late relocation, no? 
->>>> The path is from KLP module init function through klp_enable_patch. It should 
->>>> mean that the to-be-patched object is loaded (it must be a module thanks 
->>>> to a check klp_init_object_loaded(), vmlinux relocations were processed 
->>>> earlier in apply_relocations()).
->>>>
->>>> However, the KLP module state here must be COMING, so s390_kernel_write() 
->>>> should be used. What are we missing?
->>>
->>> I'm also scratching my head.  It _should_ be using s390_kernel_write()
->>> based on the module state, but I don't see that on the stack trace.
->>>
->>> This trace (and Gerald's comment) seem to imply it's using
->>> __builtin_memcpy(), which might expected for UNFORMED state.
->>>
->>> Weird...
->>
->> Mystery solved:
->>
->>   $ CROSS_COMPILE=s390x-linux-gnu- scripts/faddr2line vmlinux apply_rela+0x16a/0x520
->>   apply_rela+0x16a/0x520:
->>   apply_rela at arch/s390/kernel/module.c:336
->>
->> which corresponds to the following code in apply_rela():
->>
->>
->> 	case R_390_PLTOFF64:	/* 16 bit offset from GOT to PLT. */
->> 		if (info->plt_initialized == 0) {
->> 			unsigned int *ip;
->> 			ip = me->core_layout.base + me->arch.plt_offset +
->> 				info->plt_offset;
->> 			ip[0] = 0x0d10e310;	/* basr 1,0  */
->> 			ip[1] = 0x100a0004;	/* lg	1,10(1) */
->>
->>
->> Notice how it's writing directly to text... oops.
-> 
-> Here's a fix, using write() for the PLT and the GOT.
 
-Are you going to provide a proper patch?
+Le 24/04/2020 à 09:05, 王文虎 a écrit :
+>> Le 24/04/2020 à 04:45, Wang Wenhu a écrit :
+>>> New module which registers its memory allocation and free APIs to the
+>>> sram_dynamic module, which would create a device of struct sram_device
+>>> type to act as an interface for user level applications to access the
+>>> backend hardware device, fsl_85xx_cache_sram, which is drived by the
+>>> FSL_85XX_CACHE_SRAM module.
+>>>
+>>> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+>>> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+>>> Cc: Scott Wood <oss@buserror.net>
+>>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>> Cc: Arnd Bergmann <arnd@arndb.de>
+>>> Cc: linuxppc-dev@lists.ozlabs.org
+>>> ---
+>>>    .../powerpc/include/asm/fsl_85xx_cache_sram.h |  4 ++
+>>>    arch/powerpc/platforms/85xx/Kconfig           | 10 +++++
+>>>    arch/powerpc/sysdev/Makefile                  |  1 +
+>>>    arch/powerpc/sysdev/fsl_85xx_cache_ctlr.h     |  6 +++
+>>>    arch/powerpc/sysdev/fsl_85xx_cache_sram.c     | 12 ++++++
+>>>    arch/powerpc/sysdev/fsl_85xx_sram_uapi.c      | 39 +++++++++++++++++++
+>>>    6 files changed, 72 insertions(+)
+>>>    create mode 100644 arch/powerpc/sysdev/fsl_85xx_sram_uapi.c
+>>
+>> We shouldn't add more stuff in arch/powerpc/sysdev/
+>>
+>> Either it is dedicated to 85xx, and it should go into
+>> arch/powerpc/platform/85xx/ , or it is common to several
+>> platforms/architectures and should be moved to drivers/soc/fsl/
+>>
+> 
+> Sure, actually I tried to find a better place, but did not recognize
+> the driver/soc. Thanks, and I will put fsl_85xx_sram_uapi there.
+> 
+>>>
+>>> diff --git a/arch/powerpc/include/asm/fsl_85xx_cache_sram.h b/arch/powerpc/include/asm/fsl_85xx_cache_sram.h
+>>> index 0235a0447baa..99cb7e202c38 100644
+>>> --- a/arch/powerpc/include/asm/fsl_85xx_cache_sram.h
+>>> +++ b/arch/powerpc/include/asm/fsl_85xx_cache_sram.h
+>>> @@ -26,6 +26,10 @@ struct mpc85xx_cache_sram {
+>>>    	unsigned int size;
+>>>    	rh_info_t *rh;
+>>>    	spinlock_t lock;
+>>> +
+>>> +#ifdef CONFIG_FSL_85XX_SRAM_UAPI
+>>> +	struct device *dev;
+>>> +#endif
+>>>    };
+>>>    
+>>>    extern void mpc85xx_cache_sram_free(void *ptr);
+>>> diff --git a/arch/powerpc/platforms/85xx/Kconfig b/arch/powerpc/platforms/85xx/Kconfig
+>>> index fa3d29dcb57e..3a6f6af973eb 100644
+>>> --- a/arch/powerpc/platforms/85xx/Kconfig
+>>> +++ b/arch/powerpc/platforms/85xx/Kconfig
+>>> @@ -16,6 +16,16 @@ if FSL_SOC_BOOKE
+>>>    
+>>>    if PPC32
+>>>    
+>>> +config FSL_85XX_SRAM_UAPI
+>>> +	tristate "Freescale MPC85xx SRAM UAPI Support"
+>>> +	depends on FSL_SOC_BOOKE && SRAM_DYNAMIC
+>>
+>> Is SRAM_DYNAMIC usefull on its own, without a driver like this one ? Is
+>> that worth allowing tiny selection of both drivers ? Shouldn't one of
+>> them imply the other one ?
+> 
+> Truely the module like this is the top level selection, and SRAM_DYNAMIC
+> should be selected by any caller modules. As SRAM_DYNAMIC may be used by
+> other drivers(in the future, but currently only us here), I think make it
+> seleted by this is better? (show below)
+> 
+> diff --git a/drivers/soc/fsl/Kconfig b/drivers/soc/fsl/Kconfig
+> index 4df32bc4c7a6..ceeebb22f6d3 100644
+> --- a/drivers/soc/fsl/Kconfig
+> +++ b/drivers/soc/fsl/Kconfig
+> @@ -50,4 +50,16 @@ config FSL_RCPM
+>   	  tasks associated with power management, such as wakeup source control.
+>   	  Note that currently this driver will not support PowerPC based
+>   	  QorIQ processor.
+> +
+> +config FSL_85XX_SRAM_UAPI
+> +	tristate "Freescale MPC85xx SRAM UAPI Support"
+> +	depends on FSL_SOC_BOOKE && PPC32
+> +	select FSL_85XX_CACHE_SRAM
+> +	select SRAM_DYNAMIC
+> +	help
+> +	  This registers a device of struct sram_device type which would act as
+> +	  an interface for user level applications to access the Freescale 85xx
+> +	  Cache-SRAM memory dynamically, meaning allocate on demand dynamically
+> +	  while they are running.
+> +
 
+And then in patch 4, I'm not sure it is worth to keep SRAM_DYNAMIC as 
+user selectable.
+
+>   endmenu
+> diff --git a/drivers/soc/fsl/Makefile b/drivers/soc/fsl/Makefile
+> index 906f1cd8af01..716e38f75735 100644
+> --- a/drivers/soc/fsl/Makefile
+> +++ b/drivers/soc/fsl/Makefile
+> @@ -10,3 +10,4 @@ obj-$(CONFIG_FSL_RCPM)			+= rcpm.o
+>   obj-$(CONFIG_FSL_GUTS)			+= guts.o
+>   obj-$(CONFIG_FSL_MC_DPIO) 		+= dpio/
+>   obj-$(CONFIG_DPAA2_CONSOLE)		+= dpaa2-console.o
+> +obj-$(CONFIG_FSL_85XX_SRAM_UAPI)	+= fsl_85xx_sram_uapi.o
 > 
-> diff --git a/arch/s390/kernel/module.c b/arch/s390/kernel/module.c
-> index 2798329ebb74..fe446f42818f 100644
-> --- a/arch/s390/kernel/module.c
-> +++ b/arch/s390/kernel/module.c
-> @@ -297,7 +297,7 @@ static int apply_rela(Elf_Rela *rela, Elf_Addr base, Elf_Sym *symtab,
->  
->  			gotent = me->core_layout.base + me->arch.got_offset +
->  				info->got_offset;
-> -			*gotent = val;
-> +			write(gotent, &val, sizeof(*gotent));
->  			info->got_initialized = 1;
->  		}
->  		val = info->got_offset + rela->r_addend;
-> @@ -330,25 +330,29 @@ static int apply_rela(Elf_Rela *rela, Elf_Addr base, Elf_Sym *symtab,
->  	case R_390_PLTOFF32:	/* 32 bit offset from GOT to PLT. */
->  	case R_390_PLTOFF64:	/* 16 bit offset from GOT to PLT. */
->  		if (info->plt_initialized == 0) {
-> -			unsigned int *ip;
-> +			unsigned int *ip, insn[5];
-> +
->  			ip = me->core_layout.base + me->arch.plt_offset +
->  				info->plt_offset;
-> -			ip[0] = 0x0d10e310;	/* basr 1,0  */
-> -			ip[1] = 0x100a0004;	/* lg	1,10(1) */
-> +
-> +			insn[0] = 0x0d10e310;	/* basr 1,0  */
-> +			insn[1] = 0x100a0004;	/* lg	1,10(1) */
->  			if (IS_ENABLED(CONFIG_EXPOLINE) && !nospec_disable) {
->  				unsigned int *ij;
->  				ij = me->core_layout.base +
->  					me->arch.plt_offset +
->  					me->arch.plt_size - PLT_ENTRY_SIZE;
-> -				ip[2] = 0xa7f40000 +	/* j __jump_r1 */
-> +				insn[2] = 0xa7f40000 +	/* j __jump_r1 */
->  					(unsigned int)(u16)
->  					(((unsigned long) ij - 8 -
->  					  (unsigned long) ip) / 2);
->  			} else {
-> -				ip[2] = 0x07f10000;	/* br %r1 */
-> +				insn[2] = 0x07f10000;	/* br %r1 */
->  			}
-> -			ip[3] = (unsigned int) (val >> 32);
-> -			ip[4] = (unsigned int) val;
-> +			insn[3] = (unsigned int) (val >> 32);
-> +			insn[4] = (unsigned int) val;
-> +
-> +			write(ip, insn, sizeof(insn));
->  			info->plt_initialized = 1;
->  		}
->  		if (r_type == R_390_PLTOFF16 ||
+>>>    
+>>> +#ifdef CONFIG_FSL_85XX_SRAM_UAPI
+>>> +extern struct mpc85xx_cache_sram *mpc85xx_get_cache_sram(void);
+>>
+>> 'extern' keywork is meaningless here, remove it.
+>>
 > 
+> I will remove it in patch v4.
+> 
+>>> +#endif
+>>> +
+>>>    extern int instantiate_cache_sram(struct platform_device *dev,
+>>>    		struct sram_parameters sram_params);
+>>>    extern void remove_cache_sram(struct platform_device *dev);
+>>> diff --git a/arch/powerpc/sysdev/fsl_85xx_cache_sram.c b/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
+>>> index 3de5ac8382c0..0156ea63a3a2 100644
+>>> --- a/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
+>>> +++ b/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
+>>> @@ -23,6 +23,14 @@
+>>>    
+>>>    struct mpc85xx_cache_sram *cache_sram;
+>>>    
+>>> +
+>>> +#ifdef CONFIG_FSL_85XX_SRAM_UAPI
+>>> +struct mpc85xx_cache_sram *mpc85xx_get_cache_sram(void)
+>>> +{
+>>> +	return cache_sram;
+>>> +}
+>>> +#endif
+>>
+>> This function is not worth the mess of an #ifdef in a .c file.
+>> cache_sram is already globaly visible, so this function should go in
+>> fsl_85xx_cache_ctlr.h as a 'static inline'
+>>
+> 
+> Yes, and I will change it like this, with an extern of cache_sram.
+> 
+>   #define L2CR_SRAM_ZERO		0x00000000	/* L2SRAM zero size */
+> @@ -81,6 +83,15 @@ struct sram_parameters {
+>   	phys_addr_t sram_offset;
+>   };
+>   
+> +#ifdef CONFIG_FSL_85XX_SRAM_UAPI
+> +extern struct mpc85xx_cache_sram *cache_sram;
+> +
+> +static inline struct mpc85xx_cache_sram *mpc85xx_get_cache_sram(void)
+> +{
+> +	return cache_sram;
+> +}
+> +#endif
+> +
+>   extern int instantiate_cache_sram(struct platform_device *dev,
+> 
+>>> +
+>>>    void *mpc85xx_cache_sram_alloc(unsigned int size,
+>>>    				phys_addr_t *phys, unsigned int align)
+>>>    {
+>>> @@ -115,6 +123,10 @@ int instantiate_cache_sram(struct platform_device *dev,
+>>>    	rh_attach_region(cache_sram->rh, 0, cache_sram->size);
+>>>    	spin_lock_init(&cache_sram->lock);
+>>>    
+>>> +#ifdef CONFIG_FSL_85XX_SRAM_UAPI
+>>> +	cache_sram->dev = &dev->dev;
+>>> +#endif
+>>
+>> 	Can we avoid the #ifdef in .c file ? (see
+>> https://www.kernel.org/doc/html/latest/process/coding-style.html#conditional-compilation)
+>>
+> 
+> Definitely, and I will change it as below in patch v4:
+> 
+> +	if (IS_ENABLED(CONFIG_FSL_85XX_SRAM_UAPI))
+> +		cache_sram->dev = &dev->dev;
+> +
+
+This will work only if is defined all the time in the .h regardless of 
+CONFIG_FSL_85XX_SRAM_UAPI. Otherwise you should have something like that 
+in the .h, that you call all the time from the .c:
+
+#ifdef CONFIG_FSL_85XX_SRAM_UAPI
+static inline void set_cache_sram_dev(struct mpc85xx_cache_sram *sram, 
+struct device *dev)
+{
+	sram->dev = dev;
+}
+#else
+static inline void set_cache_sram_dev(struct mpc85xx_cache_sram *sram, 
+struct device *dev) { }
+#endif
+
+
+>   	dev_info(&dev->dev, "[base:0x%llx, size:0x%x] configured and loaded\n",
+> 
+> Thanks, for your suggestions, as these are minor modifications,
+> I will send a new patch series v4 soon.
+> 
+> Regards,
+> Wenhu
+> 
+
+Christophe
