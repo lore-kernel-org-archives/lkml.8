@@ -2,108 +2,151 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A90E6C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C45C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8431D20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:52:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587768737;
-	bh=k6EO4HV8b2LdbYgAlXsToOZ0phBXPGeCG8Astjp//Vw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XLeqI17Hc/6FhoM2Iw6hVsgBtBoO+zRHt0w9GUQJImpo0oxa/UsOqAS0GBFQzEQVR
-	 ANd0PT3zLqcBKM+wqaGdIAOdoq+tntv+It6NprhTU7bqUJDWShDaUWgQMVWa5/LvSE
-	 syJnA3R5ELtIKTvuzRZFc+QIYU7lCwU7SlE72c3s=
+	by mail.kernel.org (Postfix) with ESMTP id 95F1E20767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:53:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgDXWwQ (ORCPT
+        id S1726141AbgDXWxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 18:52:16 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33622 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbgDXWwQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 18:52:16 -0400
-Received: by mail-ot1-f65.google.com with SMTP id j26so15383781ots.0;
-        Fri, 24 Apr 2020 15:52:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wF6fQRNcOVGmiPWGuQ33fy/Py3YU3kYZ9u186GNu9uo=;
-        b=htSWQD+d0WCZNfCalaDjkEKy4fUv0uwYmrdbZ2zw2QnRhzFFf+B1bWEtkxIGb87ZS4
-         4xdAQ5o8cV1mHVZWgD31nep0szycSh+EXz7qPRACAaKse1DdnHgWeDL5MEnhUmqs1pzS
-         1uJ/miCjJI83xPldkDyyhAGuvh67apWIkpwKa8Qjdni7qHh2JZkEjZ0v+2iqIigPmu1f
-         kc4SecTmjxKKcVCx9LuwXPX5U7sX4Rlk9GpVD+lZ/9CFFOqAadbE1F6SfT0WMHwoTD3G
-         muIjFl8rY+0iqAmVhUcAjjIlLJJcTLfVsGiRGXgEekmjn1wHTjNwbOpImYEVKgBEBRT6
-         sE/w==
-X-Gm-Message-State: AGi0PuY7RlD1W0t/s/thz1oJQOigf9zEac61t4XPSPdRzEX8ISq9Nhx/
-        ZEvUvRiWxdj3j4iKolmgKw==
-X-Google-Smtp-Source: APiQypL+B3MmVxN4219JD1LUJE3v2D7vWF8MSXRe8ojTj26JKh2LYSmBoJni5bwWB5GfRoFjUUXlwQ==
-X-Received: by 2002:aca:c646:: with SMTP id w67mr9239297oif.70.1587768735355;
-        Fri, 24 Apr 2020 15:52:15 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s73sm2013006oih.14.2020.04.24.15.52.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 15:52:14 -0700 (PDT)
-Received: (nullmailer pid 18240 invoked by uid 1000);
-        Fri, 24 Apr 2020 22:52:13 -0000
-Date:   Fri, 24 Apr 2020 17:52:13 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Sandeep Maheswaram <sanm@codeaurora.org>, mka@chromium.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: phy: qcom-qusb2: Fix defaults
-Message-ID: <20200424225213.GA15428@bogus>
-References: <20200423111015.1.Ifa8039b6f3031e9a69c4a526a6efc2f499f07292@changeid>
+        Fri, 24 Apr 2020 18:53:11 -0400
+Received: from mga11.intel.com ([192.55.52.93]:2083 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725874AbgDXWxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 18:53:11 -0400
+IronPort-SDR: f6W4JBYLu/r9zYCtrS7qAIL/zVrg/pvo6l+7Prk3m60MZoApP9PEVCbsa+ZIFG3QjWgeulIQiT
+ VToLiyZDRMKQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2020 15:53:10 -0700
+IronPort-SDR: SMTKaa/W1dwcaDZ9uCNjIskBxvIAv4RAYS02wPLr7W4WbNrkSIutDHuoegRtg8zJnPOr/NjZ10
+ YBhjjQt0fMUQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,313,1583222400"; 
+   d="scan'208";a="259991541"
+Received: from bfallaha-mobl2.amr.corp.intel.com (HELO [10.252.132.86]) ([10.252.132.86])
+  by orsmga006.jf.intel.com with ESMTP; 24 Apr 2020 15:53:10 -0700
+Subject: Re: [PATCH] Allow RDTSC and RDTSCP from userspace
+To:     Tom Lendacky <thomas.lendacky@amd.com>,
+        Mike Stunes <mstunes@vmware.com>, joro@8bytes.org
+Cc:     dan.j.williams@intel.com, dave.hansen@linux.intel.com,
+        hpa@zytor.com, jgross@suse.com, jroedel@suse.de, jslaby@suse.cz,
+        keescook@chromium.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, luto@kernel.org,
+        peterz@infradead.org, thellstrom@vmware.com,
+        virtualization@lists.linux-foundation.org, x86@kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+References: <20200319091407.1481-56-joro@8bytes.org>
+ <20200424210316.848878-1-mstunes@vmware.com>
+ <2c49061d-eb84-032e-8dcb-dd36a891ce90@intel.com>
+ <ead88d04-1756-1190-2b37-b24f86422595@amd.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <4d2ac222-a896-a60e-9b3c-b35aa7e81a97@intel.com>
+Date:   Fri, 24 Apr 2020 15:53:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200423111015.1.Ifa8039b6f3031e9a69c4a526a6efc2f499f07292@changeid>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ead88d04-1756-1190-2b37-b24f86422595@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Apr 2020 11:10:27 -0700, Douglas Anderson wrote:
-> The defaults listed in the bindings don't match what the code is
-> actually doing.  Presumably existing users care more about keeping
-> existing behavior the same, so change the bindings to match the code
-> in Linux.
+On 4/24/20 2:27 PM, Tom Lendacky wrote:
+> On 4/24/20 4:24 PM, Dave Hansen wrote:
+>> On 4/24/20 2:03 PM, Mike Stunes wrote:
+>>> I needed to allow RDTSC(P) from userspace and in early boot in order to
+>>> get userspace started properly. Patch below.
+>>>
+>>> ---
+>>> SEV-ES guests will need to execute rdtsc and rdtscp from userspace and
+>>> during early boot. Move the rdtsc(p) #VC handler into common code and
+>>> extend the #VC handlers.
+>>
+>> Do SEV-ES guests _always_ #VC on rdtsc(p)?
 > 
-> The "qcom,preemphasis-level" default has been wrong for quite a long
-> time (May 2018).  The other two were recently added.
-> 
-> As some evidence that these values are wrong, this is from the Linux
-> driver:
-> - qcom,preemphasis-level: sets "PORT_TUNE1", lower 2 bits.  Driver
->   programs PORT_TUNE1 to 0x30 by default and (0x30 & 0x3) = 0.
-> - qcom,bias-ctrl-value: sets "PLL_BIAS_CONTROL_2", lower 6 bits.
->   Driver programs PLL_BIAS_CONTROL_2 to 0x20 by default and (0x20 &
->   0x3f) = 0x20 = 32.
-> - qcom,hsdisc-trim-value: sets "PORT_TUNE2", lower 2 bits.  Driver
->   programs PORT_TUNE2 to 0x29 by default and (0x29 & 0x3) = 1.
-> 
-> Fixes: 1e6f134eb67a ("dt-bindings: phy: qcom-qusb2: Add support for overriding Phy tuning parameters")
-> Fixes: a8b70ccf10e3 ("dt-bindings: phy-qcom-usb2: Add support to override tuning values")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> 
->  Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
+> Only if the hypervisor is intercepting those instructions.
 
-Applied, thanks.
+Ahh, so any instruction that can have an instruction intercept set
+potentially needs to be able to tolerate a #VC?  Those instruction
+intercepts are under the control of the (untrusted relative to the
+guest) hypervisor, right?
 
-Rob
+From the main sev-es series:
+
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++idtentry vmm_communication     do_vmm_communication    has_error_code=1
++#endif
+
+Since this is set as non-paranoid, that both limits the instructions
+that can be used in entry paths *and* limits the future architecture
+from being able add instructions that a current SEV-ES guest doesn't
+know about.  Does SEV-ES have versioning so guests can tell if they
+might be subject to new interrupt intercepts for which they are not
+prepared?  I didn't see anything obvious in section 15.35 of the manual.
+
+There's also a nugget in the manual that says:
+
+> Similarly, the hypervisor should avoid setting intercept bits for
+> events that would occur in the #VC handler (such as IRET).
+
+That's a fun point because it means that the (untrusted) hypervisor can
+cause endless faults.  I *guess* we have mitigation for this with our
+stack guard pages, but it's still a bit nasty that the hypervisor can
+arbitrarily land a guest in the double-fault handler.
+
+It just all seems a bit weak for the hypervisor to be considered
+untrusted.  But, it's _certainly_ a steep in the right direction from SEV.
