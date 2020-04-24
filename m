@@ -2,161 +2,87 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8879C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F53C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2E5920700
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 917952071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:24:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587745479;
+	bh=LvKHAjnn2HMnG88kLXWaBsIX08L+10a1y0Eksgp8qVs=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=T2q9F7uzP98wsFZgFYSnOcoTa7iCmVlLaUtRGEW6bS2fhlYXioB+uyY410hvgtt6x
+	 UuA4DBCFdGhoApEbRVWYdfmDT/WPbWoGeY2JfUdFyTH0hEr+Cj5x4z9s9AvD3o/0ll
+	 3EKioOdmDgIvJ0ipd5sVX3/7BwG1JJjJwza0xEE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728846AbgDXQWo (ORCPT
+        id S1728019AbgDXQYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 12:22:44 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:58612 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728325AbgDXQWB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 12:22:01 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein.fritz.box)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jS15R-0004dV-QH; Fri, 24 Apr 2020 16:21:57 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-api@vger.kernel.org
-Cc:     Jonathan Corbet <corbet@lwn.net>, Serge Hallyn <serge@hallyn.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
-        Seth Forshee <seth.forshee@canonical.com>,
-        David Rheinsberg <david.rheinsberg@gmail.com>,
-        Tom Gundersen <teg@jklm.no>,
-        Christian Kellner <ckellner@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        =?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@ubuntu.com>,
-        linux-doc@vger.kernel.org, netdev@vger.kernel.org,
-        Steve Barber <smbarber@google.com>,
-        Dylan Reid <dgreid@google.com>,
-        Filipe Brandenburger <filbranden@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Benjamin Elder <bentheelder@google.com>,
-        Akihiro Suda <suda.kyoto@gmail.com>
-Subject: [PATCH v3 3/7] loop: use ns_capable for some loop operations
-Date:   Fri, 24 Apr 2020 18:20:48 +0200
-Message-Id: <20200424162052.441452-4-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200424162052.441452-1-christian.brauner@ubuntu.com>
-References: <20200424162052.441452-1-christian.brauner@ubuntu.com>
+        Fri, 24 Apr 2020 12:24:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37802 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727033AbgDXQYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 12:24:38 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 910BF20700;
+        Fri, 24 Apr 2020 16:24:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587745478;
+        bh=LvKHAjnn2HMnG88kLXWaBsIX08L+10a1y0Eksgp8qVs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=fgbVNgPWBjParX/QrVh1/yIsaVVuo+fObeycRciInja3u6D48e1aIvhZoBHd8OG5p
+         V7+5vykbUiuZHmZre71/qzvUQsz9N25Ea9tuO0Du5DegPfihJ+J5wKKXwQFEqrEWLz
+         5CfUXmj5GLy3gfHpSafVISUK3SwX2/w7JkLLL8Fs=
+Subject: Re: [PATCH 5.6 000/166] 5.6.7-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200422095047.669225321@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <4e438765-b045-4201-8a6a-4ab0b986b753@kernel.org>
+Date:   Fri, 24 Apr 2020 10:24:25 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following  LOOP_GET_STATUS, LOOP_SET_STATUS, and LOOP_SET_BLOCK_SIZE
-operations are now allowed in non-initial namespaces. Most other
-operations were already possible before.
+On 4/22/20 3:55 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.6.7 release.
+> There are 166 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri, 24 Apr 2020 09:48:23 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.7-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Seth Forshee <seth.forshee@canonical.com>
-Cc: Tom Gundersen <teg@jklm.no>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Christian Kellner <ckellner@redhat.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: David Rheinsberg <david.rheinsberg@gmail.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Reviewed-by: Serge Hallyn <serge@hallyn.com>
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
-/* v2 */
-- Christian Brauner <christian.brauner@ubuntu.com>:
-  - Adapated loop_capable() based on changes in the loopfs
-    implementation patchset. Otherwise it is functionally equivalent to
-    the v1 version.
+Compiled and booted on my test system. No dmesg regressions.
 
-/* v3 */
-unchanged
----
- drivers/block/loop.c | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 0c99ee0b42a8..40705f5aeabd 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -1352,6 +1352,16 @@ void loopfs_evict_locked(struct loop_device *lo)
- 	}
- 	mutex_unlock(&loop_ctl_mutex);
- }
-+
-+static bool loop_capable(const struct loop_device *lo, int cap)
-+{
-+	return ns_capable(loopfs_ns(lo), cap);
-+}
-+#else /* !CONFIG_BLK_DEV_LOOPFS */
-+static inline bool loop_capable(const struct loop_device *lo, int cap)
-+{
-+	return capable(cap);
-+}
- #endif /* CONFIG_BLK_DEV_LOOPFS */
- 
- static int
-@@ -1368,7 +1378,7 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
- 		return err;
- 	if (lo->lo_encrypt_key_size &&
- 	    !uid_eq(lo->lo_key_owner, uid) &&
--	    !capable(CAP_SYS_ADMIN)) {
-+	    !loop_capable(lo, CAP_SYS_ADMIN)) {
- 		err = -EPERM;
- 		goto out_unlock;
- 	}
-@@ -1499,7 +1509,7 @@ loop_get_status(struct loop_device *lo, struct loop_info64 *info)
- 	memcpy(info->lo_crypt_name, lo->lo_crypt_name, LO_NAME_SIZE);
- 	info->lo_encrypt_type =
- 		lo->lo_encryption ? lo->lo_encryption->number : 0;
--	if (lo->lo_encrypt_key_size && capable(CAP_SYS_ADMIN)) {
-+	if (lo->lo_encrypt_key_size && loop_capable(lo, CAP_SYS_ADMIN)) {
- 		info->lo_encrypt_key_size = lo->lo_encrypt_key_size;
- 		memcpy(info->lo_encrypt_key, lo->lo_encrypt_key,
- 		       lo->lo_encrypt_key_size);
-@@ -1723,7 +1733,7 @@ static int lo_ioctl(struct block_device *bdev, fmode_t mode,
- 		return loop_clr_fd(lo);
- 	case LOOP_SET_STATUS:
- 		err = -EPERM;
--		if ((mode & FMODE_WRITE) || capable(CAP_SYS_ADMIN)) {
-+		if ((mode & FMODE_WRITE) || loop_capable(lo, CAP_SYS_ADMIN)) {
- 			err = loop_set_status_old(lo,
- 					(struct loop_info __user *)arg);
- 		}
-@@ -1732,7 +1742,7 @@ static int lo_ioctl(struct block_device *bdev, fmode_t mode,
- 		return loop_get_status_old(lo, (struct loop_info __user *) arg);
- 	case LOOP_SET_STATUS64:
- 		err = -EPERM;
--		if ((mode & FMODE_WRITE) || capable(CAP_SYS_ADMIN)) {
-+		if ((mode & FMODE_WRITE) || loop_capable(lo, CAP_SYS_ADMIN)) {
- 			err = loop_set_status64(lo,
- 					(struct loop_info64 __user *) arg);
- 		}
-@@ -1742,7 +1752,7 @@ static int lo_ioctl(struct block_device *bdev, fmode_t mode,
- 	case LOOP_SET_CAPACITY:
- 	case LOOP_SET_DIRECT_IO:
- 	case LOOP_SET_BLOCK_SIZE:
--		if (!(mode & FMODE_WRITE) && !capable(CAP_SYS_ADMIN))
-+		if (!(mode & FMODE_WRITE) && !loop_capable(lo, CAP_SYS_ADMIN))
- 			return -EPERM;
- 		/* Fall through */
- 	default:
--- 
-2.26.2
-
+thanks,
+-- Shuah
