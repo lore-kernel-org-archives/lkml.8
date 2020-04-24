@@ -2,70 +2,106 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8677C55196
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA8CC55196
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D022E20728
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C883221707
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:22:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbgDXJVi (ORCPT
+        id S1726846AbgDXJWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 05:21:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50782 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726806AbgDXJVg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 05:21:36 -0400
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B283AC09B045;
-        Fri, 24 Apr 2020 02:21:36 -0700 (PDT)
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.93)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1jRuWW-00FRFQ-N1; Fri, 24 Apr 2020 11:21:28 +0200
-Message-ID: <8d6fd8bfa0fb66f8ee4bfd34738a349bb1b7ee59.camel@sipsolutions.net>
-Subject: Re: [PATCH 2/4] net: mac80211: scan.c: Fix RCU list related
- warnings.
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     madhuparnabhowmik10@gmail.com, davem@davemloft.net, kuba@kernel.org
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, frextrite@gmail.com,
-        joel@joelfernandes.org, paulmck@kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Date:   Fri, 24 Apr 2020 11:21:27 +0200
-In-Reply-To: <20200409082849.27372-1-madhuparnabhowmik10@gmail.com> (sfid-20200409_102909_206741_272D703E)
-References: <20200409082849.27372-1-madhuparnabhowmik10@gmail.com>
-         (sfid-20200409_102909_206741_272D703E)
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Fri, 24 Apr 2020 05:22:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:58060 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726726AbgDXJWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 05:22:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CEBB81FB;
+        Fri, 24 Apr 2020 02:22:11 -0700 (PDT)
+Received: from [10.37.12.92] (unknown [10.37.12.92])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1A5703F73D;
+        Fri, 24 Apr 2020 02:22:06 -0700 (PDT)
+Subject: Re: [PATCH] thermal: power_allocate: add upper and lower limits
+To:     Michael Kao <michael.kao@mediatek.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>, hsinyi@chromium.org,
+        linux-pm@vger.kernel.org, srv_heupstream@mediatek.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+References: <20200424071601.2636-1-michael.kao@mediatek.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <accb83e0-ffbe-b6e3-6bf9-e7cc8b9fe19c@arm.com>
+Date:   Fri, 24 Apr 2020 10:22:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200424071601.2636-1-michael.kao@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-04-09 at 13:58 +0530, madhuparnabhowmik10@gmail.com wrote:
-> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Hi Michael,
+
+On 4/24/20 8:16 AM, Michael Kao wrote:
+> The upper and lower limits of thermal throttle state in the
+> device tree do not apply to the power_allocate governor.
+> Add the upper and lower limits to the power_allocate governor.
 > 
-> This patch fixes the following warning:
+> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
+> ---
+>   drivers/thermal/thermal_core.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> WARNING: suspicious RCU usage
-> [   84.530619] 5.6.0+ #4 Not tainted
-> [   84.530637] -----------------------------
-> [   84.530658] net/mac80211/scan.c:454 RCU-list traversed in non-reader section!!
+> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+> index 9a321dc548c8..f6feed2265bd 100644
+> --- a/drivers/thermal/thermal_core.c
+> +++ b/drivers/thermal/thermal_core.c
+> @@ -598,7 +598,7 @@ int power_actor_set_power(struct thermal_cooling_device *cdev,
+>   	if (ret)
+>   		return ret;
+>   
+> -	instance->target = state;
+> +	instance->target = clamp_val(state, instance->lower, instance->upper);
+>   	mutex_lock(&cdev->lock);
+>   	cdev->updated = false;
+>   	mutex_unlock(&cdev->lock);
 > 
-> As local->mtx is held in __ieee80211_scan_completed()
 
-Yeah, but is that really the right lock? I think it should be RTNL or
-iflist_mtx for the interface list.
+Thank you for the patch and having to look at it. I have some concerns
+with this approach. Let's analyze it further.
 
-(Not that this is necessarily a good idea - we perhaps should clean up
-and significantly reduce the number of locks used here.)
+In default the cooling devices in the thermal zone which is used by IPA
+do not have this 'lower' and 'upper' limits. They are set to
+THERMAL_NO_LIMIT in DT to give full control to IPA over the states.
 
-johannes
+This the function 'power_actor_set_power' actually translates granted
+power to the state that device will run for the next period.
+The IPA algorithm has already split the power budget.
+Now what happen when the 'lower' value will change the state to a state
+which consumes more power than was calculated in the IPA alg... It will
+became unstable.
 
+I would rather see a change which uses these 'lower' and 'upper' limits
+before the IPA do the calculation of the power budget. But this wasn't
+a requirement and we assumed that IPA has full control over the cooling
+device (which I described above with this DT THERMAL_NO_LIMIT).
+
+Is there a problem with your platform that it has to provide some
+minimal performance, so you tried to introduce this clamping?
+
+Regards,
+Lukasz
