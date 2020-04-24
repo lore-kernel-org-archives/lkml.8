@@ -2,137 +2,134 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF4BC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91063C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AB0A20700
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6572F20767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:41:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="k7ZnOXPk"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="J6iWt8Py"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbgDXLjl (ORCPT
+        id S1727001AbgDXLlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 07:39:41 -0400
-Received: from mail-dm6nam12on2040.outbound.protection.outlook.com ([40.107.243.40]:9838
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726247AbgDXLjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 07:39:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YYTcvTJ0GHS97nLj6A0BYGVgTqpikvJNHk/dSa+15BZw6m49d0rIzdSN0hwnMKqMrSRx5QFEzxXaTiVe/Und6OrvDP+VAOEHvWKb+WsYR3zMNMN/qS1sCGUxJ/An/Uhu2hp+UkmJgNPDNZvBs+no88HFYZ0kJEVOjclHIQaqeVbjICYtrg5gKfCpLoYz5y7VNTusMXUCRP9BJ3LSBVq9KAvuBPeK+Rg6IhuRP/8ACRmUe1RyxfdOPwbSI7Ozd82C2MtZjdV+CXW9rireP6swqY4dqnRvSEPntjpmkz6ONTFZLUoNrBs2PbsYWkGOzTeb2OyWo8Ek35tgg2+MUhdIlg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dSBW1tekicg4BuCmSsHJgHeeDMmRNRS0RXIhliKwzxk=;
- b=dVWkgAn1dwk/XrJ+niY24CtCjYRzNm8Bz76lpGkTIzfVrzIzwbJGfDMwPVh7DX8l4ZqF/YJg9+OKZrqPy8I50vfiiYgnjNl8yq9rHqAQ48W4Qp6Ma4yixxzyFp8XTpqTA48KyO9MuszaV9lQ87Akmc/znJ0eSJk41wcIPqmbgJhOg4LTFWIblha0nSX4e+h1XQEJNIizNyOTeB3ACfkOsDE448hj7poLrJfqQPxIOqLcld+G6qI3iX59c1MBUqrWy5jNaokahp0IyHynJd4Hwql1jHZxRZEHavamTSno121A8SaBd7kA2Q8tqTtlWhfoyodp9cVqnQI9Ex586tjgxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dSBW1tekicg4BuCmSsHJgHeeDMmRNRS0RXIhliKwzxk=;
- b=k7ZnOXPkJO+J3+r/rVimcttXUeZIdkg3WabUdmosoXOqZ8l+hjRuRTV4PtJoKZyEHNP1o/vyU8gX2wUV7RkpAnURX9owNPenun74P8EzqDoMOI1b0BaUZfyNo5AU/LnsxihgQouVYGcJmPWIc4u/bO+Pjjlg7C27DqEVOh9lRWg=
-Received: from MWHPR11MB1775.namprd11.prod.outlook.com (2603:10b6:300:10e::14)
- by MWHPR11MB1248.namprd11.prod.outlook.com (2603:10b6:300:27::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Fri, 24 Apr
- 2020 11:39:38 +0000
-Received: from MWHPR11MB1775.namprd11.prod.outlook.com
- ([fe80::81d5:b62b:3770:ffbe]) by MWHPR11MB1775.namprd11.prod.outlook.com
- ([fe80::81d5:b62b:3770:ffbe%10]) with mapi id 15.20.2937.020; Fri, 24 Apr
- 2020 11:39:38 +0000
-From:   Jerome Pouiller <Jerome.Pouiller@silabs.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
-Subject: Re: [PATCH] staging: wfx: check ssidlen and prevent an array overflow
-Thread-Topic: [PATCH] staging: wfx: check ssidlen and prevent an array
- overflow
-Thread-Index: AQHWGiVjqi9cHxb3rka9BW2YYfiv86iIJcWA
-Date:   Fri, 24 Apr 2020 11:39:38 +0000
-Message-ID: <2664933.6YeKyBzJok@pc-42>
-References: <20200424104235.GA416402@mwanda>
-In-Reply-To: <20200424104235.GA416402@mwanda>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jerome.Pouiller@silabs.com; 
-x-originating-ip: [82.67.86.106]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5f3c6385-33cf-4d46-3f7c-08d7e8442ba7
-x-ms-traffictypediagnostic: MWHPR11MB1248:
-x-microsoft-antispam-prvs: <MWHPR11MB124802B6C2A50C5199CC27AC93D00@MWHPR11MB1248.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 03838E948C
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1775.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(7916004)(39850400004)(366004)(376002)(136003)(346002)(396003)(4326008)(81156014)(316002)(26005)(5660300002)(86362001)(186003)(478600001)(6486002)(71200400001)(66556008)(64756008)(6506007)(66946007)(91956017)(66446008)(76116006)(66476007)(2906002)(54906003)(8936002)(8676002)(6916009)(6512007)(33716001)(66574012)(9686003)(39026012);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: silabs.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: IGyUvvSjo/R35ZIx/+DimfDjP+k7zp5wwqRSHcCpadGjjFy3TQWoIiBN1wAFzxF5QUN7f3JfXQ4B+C3aRnHkQ3T7swZV4itL9t8jzjL/r71CTuurGRK/ySHcsqgJDOfx3R0VfpF3P84SvI8FpSzY4irwwvcrusSNi2pSf6CIFS/fe1YPP08MYfV1aCKrWF80fxN6DmIdEzn8cAQL4fb/dNsnMVIB5LW7QfmbhhPCLTUqpd5DeU+IM1i4j+TH4KcbrVjFx2KIedRqvEwgazdlQjBq5xehQNsDeE9Dsp9rl98XsIl6Jwp+2oI7cgFcyjnhqou8AsiAh3TpckzqR2SnmwalKRO/0I95e1A5obKA9KKL9cxcMSYBjf+VfyXVxfSYyHwfX8/qvSGlKCU9rr4P4ezIPfGFvNsXk2F11t+uGtMFBQInOt3mLaOl2qpvXV8Lnr6mgdcGnzPn1ooPNyNimNAcIuR07LGKnBBFfR+MvTDWxbvV8oLmibpvY329xyJz
-x-ms-exchange-antispam-messagedata: Cr6SL4Z2asOjMvr1OEIzZsGF4czTsz1UlWoTWoUJP/EvmQFmY6PXsYK3PAlUzqEXK2fcztExIJhTjdk2fHWkd56dtSc7lLdMhCM3FDQPr7ree5EQtFtNjO3TTLyjWRWMA5hMlNuUVj5Vs6zqsHSOo4iUADDT4dtELjx5yYJrCXponlFuWZPFyqSOdhJfGQ6vt5DjBVXbHVAkLBUYy5VeE8VdOcP2npoSVKDQlF0h07OPfwM3155U7ESI42M7q4+UjMKcNYZjLhmrurqQIviUSXhp4A1o/BPVmji2vwVNhldYa4ERWvh1XqsSH3haBpu/YYoVfOoQSS/Dpq5zynzpFXdC0pCt/SA4dw2GTRfHfQu9wzKI+iqWLdpUZTHZH0wpuaDRir2j/gCIulDSDx/aDMrWW8dGOwG882d+fygRvhfyYBzoFX93aXRdCjLjNrQ+pbyF+zS4wHIBc8oZWE4gsVefAz8biXns49bSs7AH1e3JmAdDDaGumHVgHAoDw3L7fJ4fb/0fXH6fTg+2tqaj5ZcEIxhMDeKnngkRq9TaGQ+5DdC1U8IuvC0NmyriBxTryloA2bdOIzt/agbQ8hds9dYGam9Cfe7aZ4VyniFbBR0vQKdlNH4FqrR61aqwODmcwXoOEbawjmZDg/WCW9u408bv5zVSScOn+nxr/T2eRCIw8MKRWAfk70SYIwaaJdT0lIBDAXgHAHp2MISeXShgtwFktIn8eeOOMq862puAAg1EQdoKHipVfELHXA5OMfHH+yQBGF08zdmtxS+uN0RTl4ZjMjqGE4R0kNdDiwxXSHk=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <C9FC281DD080334480064C2A496FC52B@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 24 Apr 2020 07:41:23 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:54432 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726865AbgDXLlW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 07:41:22 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03OBWi4b029084;
+        Fri, 24 Apr 2020 13:41:06 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=f15cWn5l7+qnePYQkKeXeKN4S4ucsruNAsfQ5NRJgnw=;
+ b=J6iWt8Pyv/o+0QkN41DpefKdKHfaEICctClHv4A7K0E1jeD3OY6t7KuiCpqPXdQpHKTi
+ kB0LtSxI4ZUBJ5mp1FJVcglFZRtbGFMtdCh5Y0vt7Iwu9T3izsZk13yUvjktYwSts4pv
+ XZeXC4swut3fqjqkxE5Q60GIehyGJL2+w2X8qMehw0qFohRGhre+MShqtH+PdttmypEi
+ mT8PQdxMWTslx4Vto/iXhx7ipAWXrHhuzsssoyCT4uWQGrpsvsm6611No7o7FJMDsQtj
+ YNztTP2MAe+5pm166gIncvD4tcKAohbXc269wwqTOGLHn0yb2x6Ut6ZSGKijqc7vGDE9 0g== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30freh30hv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Apr 2020 13:41:05 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 75E6210002A;
+        Fri, 24 Apr 2020 13:41:05 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 67D662B3DA0;
+        Fri, 24 Apr 2020 13:41:05 +0200 (CEST)
+Received: from localhost (10.75.127.50) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 24 Apr 2020 13:41:04
+ +0200
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
+        <hugues.fruchet@st.com>, <mchehab@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <pavel@ucw.cz>, <len.brown@intel.com>
+CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-media@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [RFC 3/3] media: stm32-dcmi: Inform cpufreq governors about cpu load needs
+Date:   Fri, 24 Apr 2020 13:40:58 +0200
+Message-ID: <20200424114058.21199-4-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
+In-Reply-To: <20200424114058.21199-1-benjamin.gaignard@st.com>
+References: <20200424114058.21199-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5f3c6385-33cf-4d46-3f7c-08d7e8442ba7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2020 11:39:38.3016
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: iqnXI/lCcD04nsYtEuV0NYSat2LKvU2G+UTDZz/bRqz5ScoRvBtbabsgWZjSDaWc6i6Zt2C+sqvBD98E00UXSA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1248
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-24_04:2020-04-23,2020-04-24 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 24 April 2020 12:42:35 CEST Dan Carpenter wrote:
->=20
-> We need to cap "ssidlen" to prevent a memcpy() overflow.
->=20
-> Fixes: 40115bbc40e2 ("staging: wfx: implement the rest of mac80211 API")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
->  drivers/staging/wfx/sta.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/staging/wfx/sta.c b/drivers/staging/wfx/sta.c
-> index c73dbb3a0de8c..3bff0f1e3d9ba 100644
-> --- a/drivers/staging/wfx/sta.c
-> +++ b/drivers/staging/wfx/sta.c
-> @@ -479,7 +479,9 @@ static void wfx_do_join(struct wfx_vif *wvif)
->                 ssidie =3D ieee80211_bss_get_ie(bss, WLAN_EID_SSID);
->         if (ssidie) {
->                 ssidlen =3D ssidie[1];
-> -               memcpy(ssid, &ssidie[2], ssidie[1]);
-> +               if (ssidlen > IEEE80211_MAX_SSID_LEN)
-> +                       ssidlen =3D IEEE80211_MAX_SSID_LEN;
-I'd have a little preference for sizeof(ssid) instead of
-IEEE80211_MAX_SSID_LEN, but ok.
+When start streaming the CPU load could remain very low because almost
+all the capture pipeline is done in hardware (i.e. without using the CPU)
+and let believe to cpufreq governor that it could use lower frequencies.
+If the governor decides to use a too low frequency that becomes a problem
+when we need to acknowledge the interrupt during the blanking time.
 
-> +               memcpy(ssid, &ssidie[2], ssidlen);
->         }
->         rcu_read_unlock();
->=20
-> --
-> 2.26.1
->=20
+To avoid this problem, DCMI driver informs the cpufreq governors by adding
+a cpufreq minimum load QoS resquest.
 
-Reviewed-by: J=E9r=F4me Pouiller <jerome.pouiller@silabs.com>
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+ drivers/media/platform/stm32/stm32-dcmi.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---=20
-J=E9r=F4me Pouiller
+diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
+index b8931490b83b..774f2506b2f1 100644
+--- a/drivers/media/platform/stm32/stm32-dcmi.c
++++ b/drivers/media/platform/stm32/stm32-dcmi.c
+@@ -24,6 +24,7 @@
+ #include <linux/of_graph.h>
+ #include <linux/pinctrl/consumer.h>
+ #include <linux/platform_device.h>
++#include <linux/pm_qos.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/reset.h>
+ #include <linux/videodev2.h>
+@@ -173,6 +174,8 @@ struct stm32_dcmi {
+ 	struct media_device		mdev;
+ 	struct media_pad		vid_cap_pad;
+ 	struct media_pipeline		pipeline;
++
++	struct pm_qos_request		qos_request;
+ };
+ 
+ static inline struct stm32_dcmi *notifier_to_dcmi(struct v4l2_async_notifier *n)
+@@ -827,6 +830,9 @@ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 	else
+ 		reg_set(dcmi->regs, DCMI_IER, IT_OVR | IT_ERR);
+ 
++	cpufreq_minload_qos_add_request(&dcmi->qos_request,
++					CPUFREQ_GOV_QOS_MIN_LOAD_MAX_VALUE);
++
+ 	return 0;
+ 
+ err_pipeline_stop:
+@@ -859,6 +865,8 @@ static void dcmi_stop_streaming(struct vb2_queue *vq)
+ 	struct stm32_dcmi *dcmi = vb2_get_drv_priv(vq);
+ 	struct dcmi_buf *buf, *node;
+ 
++	cpufreq_minload_qos_remove_request(&dcmi->qos_request);
++
+ 	dcmi_pipeline_stop(dcmi);
+ 
+ 	media_pipeline_stop(&dcmi->vdev->entity);
+-- 
+2.15.0
 
