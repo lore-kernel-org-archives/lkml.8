@@ -2,139 +2,74 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C196C55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D59BCC2BA19
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E21E82074F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:18:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="FKDkjOvC"
+	by mail.kernel.org (Postfix) with ESMTP id B07CC20706
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:19:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbgDXBSE (ORCPT
+        id S1728183AbgDXBTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 21:18:04 -0400
-Received: from mail-eopbgr00055.outbound.protection.outlook.com ([40.107.0.55]:36823
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727063AbgDXBSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 21:18:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fF8cllWJmiMtXxZyIEjJt8NxM94KCns6IstlGberFlxKc19Th9nhyJVfS/QlUYTFRU3yhkj06hATdp3rRTlLniItBxYzpP2llq24aKSN5yMt8LovLDW/rHMPIH0PiSU/f20QLrTbH/eVeLFqh78n7EJRx+5s60KHJoLbG+99i2cpf4bcO89oPaQ49Qq2I8Zj3SwaSE5sd5CnJQ2KW1VE+u3tCeJH0kFGZQyUOMsv+rVopUwwsIWO/bBPhJ/FtjuM+Ng2zA8xiDmM/lR+NY9jrp4uJep7YLQsERDp02HNvmSnAKSZYSKuTN2JujEYUux2+b8mYPfZMF5FXozD9WZaLw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=s4qYH8rmO5kMFF9/lxLBbdWe1+49HoWOazS3y1+phKk=;
- b=kNgPqy7QOmms07OPPvVzPy2JayBkHVKJMsTXTvRgDrp6vVngprmP+m5+rCPkWzNkm/mrOE6LRYVRZsYXdy97hcdivVVn78Z3aO2cO2UmJPGZRDtPKHNoXzfKzNCUy3kFx2wwx0rqLDVe0I368beNfFx8xp40G9f44+g/Kp+BsQxIMMYu6SNb6lrWDbxIEU1WokbMDP0HdJk1x6KmIW8L/XA8JHpu47UNkNaA4OzpKRIOZ32K8CFO5DrioAjJUBSP6D090jC5ZW0uKbe9XM1e3aHKedJXkzukFCOav5+8ugL3nsH/sP3oweZt5X8hl9V6s26E8GMlkCiXoJ+c8/3/Jg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=s4qYH8rmO5kMFF9/lxLBbdWe1+49HoWOazS3y1+phKk=;
- b=FKDkjOvCIZAOrAPhUe0eEbywaLcpXrEiSuxx2uY7tfJCNiIn41/Uspp5ZJvrQKRbh584+ulIM3tzTczgCH3VTuLrhx6uEH3P906e/lDwfBvNrPQuuyP5rKbMvfKIn6YvUywVR0T1UKKpqL2x+CmcxPT1UcTBwf9bkvl64evrkdw=
-Received: from AM6PR05MB5014.eurprd05.prod.outlook.com (2603:10a6:20b:4::13)
- by AM6PR05MB5537.eurprd05.prod.outlook.com (2603:10a6:20b:30::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Fri, 24 Apr
- 2020 01:18:00 +0000
-Received: from AM6PR05MB5014.eurprd05.prod.outlook.com
- ([fe80::fdcf:854a:cffb:1ac3]) by AM6PR05MB5014.eurprd05.prod.outlook.com
- ([fe80::fdcf:854a:cffb:1ac3%7]) with mapi id 15.20.2921.030; Fri, 24 Apr 2020
- 01:18:00 +0000
-From:   Yanjun Zhu <yanjunz@mellanox.com>
-To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-Subject: RE: [PATCH] RDMA/rxe: check for error
-Thread-Topic: [PATCH] RDMA/rxe: check for error
-Thread-Index: AQHWGVy13PkgHRNx8kiMNYeLb1O0RKiHeXoQ
-Date:   Fri, 24 Apr 2020 01:17:59 +0000
-Message-ID: <AM6PR05MB5014AED9AF55149641D2E7FFD8D00@AM6PR05MB5014.eurprd05.prod.outlook.com>
-References: <20200423104813.20484-1-sudipm.mukherjee@gmail.com>
-In-Reply-To: <20200423104813.20484-1-sudipm.mukherjee@gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yanjunz@mellanox.com; 
-x-originating-ip: [118.201.220.138]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 375bc872-d738-4f32-b5e9-08d7e7ed541b
-x-ms-traffictypediagnostic: AM6PR05MB5537:
-x-microsoft-antispam-prvs: <AM6PR05MB553793FF999FA635CF039C13D8D00@AM6PR05MB5537.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3173;
-x-forefront-prvs: 03838E948C
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR05MB5014.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(346002)(39860400002)(376002)(366004)(136003)(2906002)(81156014)(316002)(52536014)(26005)(66446008)(64756008)(66476007)(66556008)(53546011)(6506007)(7696005)(33656002)(55016002)(9686003)(66946007)(110136005)(186003)(76116006)(86362001)(54906003)(4326008)(5660300002)(8676002)(8936002)(71200400001)(478600001);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fDL84t3H/QtwVTIcHosydBXjn60urCrP3bCLWwmLo+uZbhbD2QYSt3pSw/X21trau8Ow+hiHWKTkcW06MYThIUdnSem11KbZ2dYdSDa/nkkPUiCQAKoXbSMmydtGlkFiLlHVtrS77vRlWYBFOkK7AhzWHM4djU+fYF6ULHLhrNSBOwgDhok7YtGOLlrR+VbGh412chkjPSi6an9sSrq/VUWkskWHw6q07XkpZGIpoJGhxB9orzI6Ezha4p3BrfmA2G7d8nMeQnioyFo3InaC/sFR4HiynRUtRK+UA4IrGxlZ1OutooDevWWTY+a8y66wrLZfnmbXROCBFI8M4/nEs1uhD+e9TSaFbsVT/PPMPzrLHu475YDWa6Pjyy8C8ow0ioKBdmg2cLMrlKRnQPgfCvoq5yq2vKvARCVmiN9ljQv+AjUy7TfAiMIHPb2C2aNT
-x-ms-exchange-antispam-messagedata: n4ElyU08rkNXd6XEXf5V6pG9e3BhnVduStv8xd+lrtPO54qD/z+CByO+As4vOi99VEJsgRRw9FAs0FLPZN8WnPiv8wRm0GhYboyxhgqV0/os5VmQGJZMfEo9OhYbq0R20HsDvAEiTkv5+S76/4181g==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 23 Apr 2020 21:19:05 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:51541 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728101AbgDXBTE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 21:19:04 -0400
+Received: by mail-il1-f197.google.com with SMTP id p12so8004194iln.18
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 18:19:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=v2zkYldKkekixKO8WAt2/m+8khJWXoDi3M8ZXRlhJLs=;
+        b=Unc573GfwkpqgX7Omoi/9JORM3jqpD4DLeyXKLrIekz7c1P+YY+S3SuNQOgQubPe25
+         hX9d2RrXmKNwI2WEx0qP5Txjz+ZQiB5m/ivmKxVteHqKATl/9rt6OwJD7gIH3rpJY/CP
+         Okm2lJfoDeTXiaWfHLXveEPiWllsJhPva3vMXRa1ff/dlJ3puwtV0MbkcavP0AAl42MG
+         Y/sECtnaPnaVXEJ1EdghkyHsHGAn4HTqgJvLvE0Q3v9rvbZUBqIujljMrCwqrKQSh1sh
+         mXYBul4okYv90yTBt21DcbEVyI1+vi1iJteI1bEXUPz/VwkPYfYwktQ4mBlqvCMS3IVs
+         2uqg==
+X-Gm-Message-State: AGi0PuYYRbclQQQIuVRUzhdUayu1sa2WlNjlc2+2PXdLRKRysaIFFUVu
+        IAhgNvATQpEwTr3YwIABNXy2GlP/cPJy7BsWtTrSPtdrXZFL
+X-Google-Smtp-Source: APiQypLj4NW2u0003xdrqvbIZukQh+qr3wA2LYK9h5V6cNp+SK12Sh+q3xiLk280yC7yd+Nf8KNJ22Onr0OhnuFdlwrcIVMo4XnZ
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 375bc872-d738-4f32-b5e9-08d7e7ed541b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2020 01:17:59.9692
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5WRzNggIvhaeTafisgjQkccW2P34ZWZ9HrNQyI1Ku5rZZ4UX1sWSga6eTcxxP49g0Z5wse5nGn4bv34TvYtjKA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB5537
+X-Received: by 2002:a6b:7302:: with SMTP id e2mr5939972ioh.98.1587691142235;
+ Thu, 23 Apr 2020 18:19:02 -0700 (PDT)
+Date:   Thu, 23 Apr 2020 18:19:02 -0700
+In-Reply-To: <Pine.LNX.4.44L0.2004232059480.2101-100000@netrider.rowland.org>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000008bca8305a3ff2639@google.com>
+Subject: Re: WARNING in usbhid_raw_request/usb_submit_urb (3)
+From:   syzbot <syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        ingrassia@epigenesys.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, stern@rowland.harvard.edu,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks,
-Reviewed-by: Zhu Yanjun <yanjunz@mellanox.com>
+Hello,
 
------Original Message-----
-From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>=20
-Sent: Thursday, April 23, 2020 6:48 PM
-To: Yanjun Zhu <yanjunz@mellanox.com>; Doug Ledford <dledford@redhat.com>; =
-Jason Gunthorpe <jgg@ziepe.ca>
-Cc: linux-kernel@vger.kernel.org; linux-rdma@vger.kernel.org; Sudip Mukherj=
-ee <sudipm.mukherjee@gmail.com>
-Subject: [PATCH] RDMA/rxe: check for error
+syzbot has tested the proposed patch and the reproducer did not trigger crash:
 
-rxe_create_mmap_info() returns either NULL or an error value in ERR_PTR and=
- we only checked for NULL after return. We should be using IS_ERR_OR_NULL t=
-o check for both.
+Reported-and-tested-by: syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com
 
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
----
- drivers/infiniband/sw/rxe/rxe_queue.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Tested on:
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_queue.c b/drivers/infiniband/sw/=
-rxe/rxe_queue.c
-index ff92704de32f..ef438ce4fcfa 100644
---- a/drivers/infiniband/sw/rxe/rxe_queue.c
-+++ b/drivers/infiniband/sw/rxe/rxe_queue.c
-@@ -45,7 +45,7 @@ int do_mmap_info(struct rxe_dev *rxe, struct mminfo __use=
-r *outbuf,
-=20
- 	if (outbuf) {
- 		ip =3D rxe_create_mmap_info(rxe, buf_size, udata, buf);
--		if (!ip)
-+		if (IS_ERR_OR_NULL(ip))
- 			goto err1;
-=20
- 		err =3D copy_to_user(outbuf, &ip->info, sizeof(ip->info));
---
-2.11.0
+commit:         0fa84af8 Merge tag 'usb-serial-5.7-rc1' of https://git.ker..
+git tree:       https://github.com/google/kasan.git
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6b9c154b0c23aecf
+dashboard link: https://syzkaller.appspot.com/bug?extid=db339689b2101f6f6071
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=136ca310100000
 
+Note: testing is done by a robot and is best-effort only.
