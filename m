@@ -2,148 +2,211 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB93EC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 14:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EC5C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 14:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E6EC2071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 14:50:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB6AB2071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 14:50:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="qY42EKlv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JW615PGB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgDXOub (ORCPT
+        id S1727804AbgDXOux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 10:50:31 -0400
-Received: from mout.web.de ([212.227.17.12]:51399 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726301AbgDXOub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 10:50:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1587739819;
-        bh=cRrD7bXw1OP6+uzh2zUIpeEXLb+7KKe2QxrgCmY504A=;
-        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
-        b=qY42EKlvdt1ok5X5AUXEm5EMUVaKnnWtec8TnSccSTOmFYFIBxuPeVx0tmX2PxlX2
-         argY7p8JUbBELbzGyrID1QisCeVJgbkt9c+lbAO3cO3juRZil8uPd/Jo9gpXvaVpr0
-         0qHR/pkG9Ae9YQYY2bgUaZlftDhlOR7d0jjELQgc=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.48.129.82]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MDgDS-1jQHUj1FKo-00H8NS; Fri, 24
- Apr 2020 16:50:19 +0200
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "James E. J. Bottomley" <jejb@linux.ibm.com>,
-        Karan Tilak Kumar <kartilak@cisco.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Satish Kharat <satishkh@cisco.com>,
-        Sesidhar Baddela <sebaddel@cisco.com>
-Subject: Re: [PATCH] scsi: fnic: Use kmalloc instead of vmalloc for a small
- memory allocation
-To:     Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
-        linux-scsi@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <d9e5c4d7-43fd-13fd-688e-36f9f0d1466d@web.de>
-Date:   Fri, 24 Apr 2020 16:50:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 24 Apr 2020 10:50:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45754 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726920AbgDXOuv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 10:50:51 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40DCCC09B045
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 07:50:51 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id d17so11170104wrg.11
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 07:50:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=arbjr4f533qeCGCUfXjG1AwJZCWsc1TMbgG9gTC3+BU=;
+        b=JW615PGBkId3Rrx+sIS/Qtame0NNhCqmt0qNHU2XFbJURWQSEIB98K9+6A9yo9Xwwo
+         GVlxwOoYW0tgbXzt1dH6VxJpCED3uo/wSrBJPwF2J/YRLAjxEE5GTY6dC7fmCckxWh18
+         L6cZGp86UCIuw9xgcBy16AIkG14OfZu8mpSA9F1G0dBhNx5YzkdvnBcQLGMPHmy8G7/Y
+         /Ytol1fBWdvenECw8SxiLzwPHJW0+t+MRQL6dlXTCrd21KdWZS2FdCZrQfrw9ZaOcCRI
+         H3DwpwVK+1fO5Dqx2rJrMVgToIQ/tPEUh8g/EiLjowojJ5P1nPY2mjEQDk4l9UgE1wzz
+         iCIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=arbjr4f533qeCGCUfXjG1AwJZCWsc1TMbgG9gTC3+BU=;
+        b=NtmI08Le4xbV4Eez3Yt1g+q56I3d3q7AmC2qwjcSfParF42Gw2mJiR5Vo7Zj3oghHx
+         5VGATrLJDiVzMsZBXUQc1vi9jEr0P9/tugHN4aDl2SiuNvRRDfy4LAa1NAj5X4kibj5g
+         Kyymz5wDKrQF4aIhm9gHIMISD98mMuThTQHSil7r7kR7BOT/Dbw+PCUVey0QkrFCHyOC
+         tN55eBJvxfjUheRXgBWDRvbDF0crRGqjeRB5w+GOOyhxFcKNPTJQTL73hbL/rc9gTJW+
+         ZOhSl8q7UHW2dxLG67FoVgZHii23a7+XfNsWB1+k73bNLgh757leMLnY477Bd5t1qH9c
+         nRbw==
+X-Gm-Message-State: AGi0PuYihtIQM8/MCinUsheqDUZm+py+IfDz0KvoEZ8SD3Foca4FSoxe
+        C5KxVh1Lm8CojpZfRXcD3NAVpQ==
+X-Google-Smtp-Source: APiQypKNlSzxiPCXIPo6RVz6w6o8W/4DZM0rPEnuXAxixbYMV5Gd4ccyEgRYMSuw8bMnFvOrB6o8/w==
+X-Received: by 2002:a5d:5646:: with SMTP id j6mr12203073wrw.207.1587739849924;
+        Fri, 24 Apr 2020 07:50:49 -0700 (PDT)
+Received: from dell ([2.31.163.63])
+        by smtp.gmail.com with ESMTPSA id q187sm3088378wma.41.2020.04.24.07.50.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Apr 2020 07:50:49 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 15:50:47 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Christophe Kerello <christophe.kerello@st.com>
+Cc:     Marek Vasut <marex@denx.de>, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, tony@atomide.com,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 02/12] mfd: stm32-fmc2: add STM32 FMC2 controller
+ driver
+Message-ID: <20200424145047.GE8414@dell>
+References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
+ <1586966256-29548-3-git-send-email-christophe.kerello@st.com>
+ <20200424074517.GN3612@dell>
+ <8b625f1c-9ded-c07a-a20e-8cd44c1ca46d@denx.de>
+ <20200424105053.GC8414@dell>
+ <e5e6c279-28d0-f423-aa6d-5c7aca563352@denx.de>
+ <268ea231-eb4a-6144-c632-1bc8e9f21582@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Z1WT1zXAgroImd+tDcHTq7Ik4qlowLOI89IgagSpgwITcHesPu1
- /CpaGyzZk5rUVvzUy/xYmWnvRywltWeKPl0ToiiFNONEXEgubX+Yb3/9aovld7jZOwtXYLt
- q4xa2y59nBuWsahmQqLshtO0VQnGcWg8XCcB3mabEO11EDr+FrSUKjiqpb3aMkp/0IaIIa5
- WHYjC+zUNgV5LibGii6Zg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:NT1bDgA2jIM=:MwTubiKfccBoKftYsGhpj5
- dJv97SJOd1vS8aUwyhOOQNASbqStVGgE24UfA6g4/4RxnTXEddLg3IhmCimJCFAikwuT+rgX6
- swQP9oeYbHrCWJ8CehSuobRroCjstRTn8ttJzP1eXeCD+tCnx/w5nfDzFGXNNkx8JaOUQbQm7
- Uc3gKUeQhLdjSA8vw//0jQ7ijTwmrnfD85tPd7NdsJd9xut9BWTRHNJKNDvpanZYoW+OoMq6a
- tV9qZW706VMEqhAkSgoxxvPzJdVTFHtZRxAGAhFxmwjVHA0mjnQMTy97GISCMoJSxPQGAFF2R
- TJTYahe36OpazkCGUkACqN0i0ZHA3acvuWAFMsQJOaDuwMPay5VfWDGRogga4Aiw0GuMk4Cgu
- SvPww3ccLG8AHe04XnBGgCmz1XTChBKFq95PW3T+AujHXzMESTjSUL589/F31iTOaFKHQ6utT
- nIXF4I2GMtZ6rN7Cx0VgoqCBNIhOgEnN7WNFXtlnKVQojP7+J0iVLKYD0nUZXtHoizOXa/yV+
- PeArEbx49yVEvy0r5nIB9oCV3oyYQAuFdF2hJVnlkNkyPlDfM0yw3hba2fAFvxCHX2eYEpmu8
- EEVbTioNnnowx4/bnRTgPo7G+dPR+DSFI+gO/uq1YGcsBWwl8tgIkRGrsqK1KHoXzlbvr53uW
- Hyb6waCrjWm4gWX+kXRsyshDdxzRcPTaqivgYNg9xon+0c6Ao4aIG1lw53ZtCzt2L/PSunhmV
- dtv8VGRSWG6Fedz/irNCPqvGbjprtWO+aYF/C5pt425EE/PeyAeLaHm1DDApRDMmkJntgj79Y
- yl35DOV3X9DkiqoyHZpWT09SpJzErhvXyQS2uEOYQ7vqQHm0q02GZBoOZ1um2wKNci8X2DBHa
- V1YY3Bs2ma1hj4D9AkCm1wEMcpBvWeT51oe37r5zmz1KDod069JA1Kzy4BHQ00uls5MWfWoCS
- dguuzLZVANU5bPyJbgYwpqIxScqiS9ANrsYQ706DklExIGRxU8YXFxOe43sbyreLlm+FIZGxl
- F0tIorgYlXkaRHy6W6mtCsDU6KEc3KmB9EjSg3lNaAanEkaJQ6JUaIGg8Q1ikvlav43tlnJsg
- zNmFQUIfyxw21cWseBn2FDOO5GeDs4RK2jdrYGA5fHaFI4RRzdY8IieT3SOSBVJtOyaYUzCzF
- cjaww/bC5tC7NBv0GKBnOrV1GoGugZa+BXCYyR1pPD1JMPjH+smIDU6xfB89pZ7+nx6CKBxDj
- gAMTxyXlIDiG+wFRU
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <268ea231-eb4a-6144-c632-1bc8e9f21582@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> 'struct fc_trace_flag_type' is just a few bytes long. There is no need
-> to allocate such a structure with vmalloc. Using kmalloc instead.
+On Fri, 24 Apr 2020, Christophe Kerello wrote:
 
-Can such an adjustment be relevant for the specification of the tag =E2=80=
-=9CFixes=E2=80=9D?
+> 
+> 
+> On 4/24/20 1:06 PM, Marek Vasut wrote:
+> > On 4/24/20 12:50 PM, Lee Jones wrote:
+> > > On Fri, 24 Apr 2020, Marek Vasut wrote:
+> > > 
+> > > > On 4/24/20 9:45 AM, Lee Jones wrote:
+> > > > > On Wed, 15 Apr 2020, Christophe Kerello wrote:
+> > > > > 
+> > > > > > The driver adds the support for the STMicroelectronics FMC2 controller
+> > > > > > found on STM32MP SOCs.
+> > > > > > 
+> > > > > > The FMC2 functional block makes the interface with: synchronous and
+> > > > > > asynchronous static memories (such as PSNOR, PSRAM or other
+> > > > > > memory-mapped peripherals) and NAND flash memories.
+> > > > > > 
+> > > > > > Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+> > > > > > ---
+> > > > > > Changes in v2:
+> > > > > >   - remove ops from stm32_fmc2 structure
+> > > > > >   - add 2 APIs to manage FMC2 enable/disable
+> > > > > >   - add 2 APIs to manage FMC2 NWAIT shared signal
+> > > > > > 
+> > > > > >   drivers/mfd/Kconfig            |  12 +++
+> > > > > >   drivers/mfd/Makefile           |   1 +
+> > > > > >   drivers/mfd/stm32-fmc2.c       | 136 +++++++++++++++++++++++++
+> > > > > >   include/linux/mfd/stm32-fmc2.h | 225 +++++++++++++++++++++++++++++++++++++++++
+> > > > > >   4 files changed, 374 insertions(+)
+> > > > > >   create mode 100644 drivers/mfd/stm32-fmc2.c
+> > > > > >   create mode 100644 include/linux/mfd/stm32-fmc2.h
+> > > > > > 
+> > > > > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > > > > > index 2b20329..5260582 100644
+> > > > > > --- a/drivers/mfd/Kconfig
+> > > > > > +++ b/drivers/mfd/Kconfig
+> > > > > > @@ -1922,6 +1922,18 @@ config MFD_ROHM_BD71828
+> > > > > >   	  Also included is a Coulomb counter, a real-time clock (RTC), and
+> > > > > >   	  a 32.768 kHz clock gate.
+> > > > > > +config MFD_STM32_FMC2
+> > > > > > +	tristate "Support for FMC2 controllers on STM32MP SoCs"
+> > > > > > +	depends on MACH_STM32MP157 || COMPILE_TEST
+> > > > > > +	select MFD_CORE
+> > > > > > +	select REGMAP
+> > > > > > +	select REGMAP_MMIO
+> > > > > > +	help
+> > > > > > +	  Select this option to enable STM32 FMC2 driver used for FMC2 External
+> > > > > > +	  Bus Interface controller and FMC2 NAND flash controller. This driver
+> > > > > > +	  provides core support for the STM32 FMC2 controllers, in order to use
+> > > > > > +	  the actual functionality of the device other drivers must be enabled.
+> > > > > 
+> > > > > Not sure how many times I have to say this before people stop
+> > > > > attempting to pass these kinds of relationships off as MFDs:
+> > > > > 
+> > > > > A memory device and its bus is not an MFD.  In a similar vain to the
+> > > > > thousands of USB, I2C, SPI, PCI and the like devices that aren't MFDs
+> > > > > either.
+> > > > > 
+> > > > > Please find another way to associate your device with its bus.
+> > > > 
+> > > > This FMC2 is however an IP which can either operate external devices
+> > > > (like ethernet chip on this parallel bus) or external flashes (like NOR
+> > > > and NAND chips).
+> > > 
+> > > I'm sure that it *can*.  Although that's not its main purpose.
+> > 
+> > I use it to operate KSZ8851-16MLL ethernet chip, which has async bus
+> > interface. Linux just didn't have support for that mode of operation
+> > thus far and the FMC was used to operate NANDs and NORs only. This
+> > series, or rather, the first three patches in this series, add support
+> > for operating other bus devices, like this ethernet controller.
+> > 
+> > > The
+> > > clue is in the nomenclature ("Flexible *Memory* Controller").  Nor is
+> > > it how the device is being used in this submission:
+> > > 
+> > >    "The FMC2 functional block makes the interface with: synchronous and
+> > >     asynchronous static memories (such as PSNOR, PSRAM or other
+> > >     memory-mapped peripherals) and NAND flash memories."
+> > > 
+> > > As I mentioned, this is just another memory device and its bus.
+> > 
+> > I don't think it's _just_ a memory controller, it's more universal than
+> > that, see above. Note that SRAM interface basically boils down to
+> > anything which has external parallel bus, e.g. Davicom DM9000, that
+> > KSZ8851-16MLL etc.
+> > 
+> > > > Can you provide a suggestion how this should be handled, if not as MFD?
+> > > > It seems to me, that this is a Multi-Function Device .
+> > > 
+> > > Simply move it into the MTD or Memory subsystems and set up the
+> > > dependencies via Kconfig.
+> > > 
+> > > > If this discussion is a recurring topic, is there some documentation
+> > > > which explains how such devices should be handled ?
+> > > 
+> > > Not that I'm aware of.
+> > 
+> > I see.
+> > 
+> 
+> Hi Lee, Marek,
+> 
+> I will move this source code in the FMC2 bus driver. I think that I should
+> be able to manage the 2 controllers with 2 drivers (the FMC2 bus driver and
+> the FMC2 raw NAND driver). I will have to modify some part of the proposed
+> bindings, and some updates will have to be done in the FMC2 bus driver. All
+> these modifications will be part of V3.
 
+That sounds like a very reasonable solution.
 
-> While at it, axe a useless test when freeing the memory.
+From a purist's PoV, the bindings should not change.  As they should
+describe the hardware, rather than the implementation.
 
-I find it more appropriate to provide this source code improvement
-by a separate update step.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?id=3Db4f633221f0aeac102e463a4be=
-46a643b2e3b819#n138
-
-See also:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/sc=
-ripts/coccinelle/free/ifnullfree.cocci?id=3Db4f633221f0aeac102e463a4be46a6=
-43b2e3b819#n4
-
-Regards,
-Markus
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
