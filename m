@@ -2,105 +2,225 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0006DC55191
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3F2C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA02A20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:59:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="umkc6zh1"
+	by mail.kernel.org (Postfix) with ESMTP id 1545920728
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:00:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726919AbgDXL7K (ORCPT
+        id S1726941AbgDXMAi convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 07:59:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726793AbgDXL7J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 07:59:09 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DF72C09B048
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 04:59:09 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id f11so5040879ljp.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 04:59:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=S+yBMYNVRFyvJW4JlBM9svUKJeMIKoXS31YVPYoI3wk=;
-        b=umkc6zh1mpHsMuqE0JCi52u7o05OF2fe71Dt8DSMWSYuDhTZNIeSU8KSpWCAR+4HYN
-         W+cuBXKcBRS6BIy3ays0tX4EG5dMu1TDGHQhPmpaBRrtUH1632ksAT+l8zpfFv/LefeL
-         Mle/sbGDhs3vF85TXJE1q/w73QNqOrQ3NWkGfGwRpdgRfgwOP6stpUD6ldfZz5arqZJQ
-         n6ZihBAAGwmkD94DjecbGoWnA1YLozas39ny66F1etm25yxZ/h69wmKfbfBOOV+INzgX
-         DkKHUGL6wsDH5sXWXrk7dZp8VZVM6wJtrWUz6P+kUvrRSlcFy2BeYX1SvLPsec6jRXHG
-         7mTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=S+yBMYNVRFyvJW4JlBM9svUKJeMIKoXS31YVPYoI3wk=;
-        b=WvCNJFLbC9yEmoj+DJRUzsCRYVrELb8wzQMHAw5EFzkjJ5dVjXJib/Ip1ri5UEfnwr
-         cfM6u3mM2WfAApowNpFb66KyxNVZdrzsQAQMjAJE8TEIDDlUheIT14aXGJiIfiTKc3A0
-         VLXdE1T+JsoGtw3oiLqFpii39x80WXFaMB6LGlPjx9v4EBHwNKi7SUjEgacweQP9Y22r
-         bZBLrv3XGSf3hNZL6fz8Qddmj4D9/cIabMHPrfoiJZlgQ6TlshUA5o7cyEZlWB0TL2Lp
-         Q5uOTHadSDcD9vhVjciERlnH7V2lIMAdwW5Q2sn+XXxzW28UWTiDCUIjVHLbzMkzYcqy
-         sD4A==
-X-Gm-Message-State: AGi0PuaI9wtcIGUUlKQZyU363/g5D9pLQVtj0I6iQqJb6GbhPGFoq2ly
-        0zDbI1NIayFIH/3iugwpE5YDJW3CLMFWAw==
-X-Google-Smtp-Source: APiQypJA/Jj8k1RyumTDUcNNFRefy4LnrX/jcN1Gi5Qg6/1DPcTzIQMuZNAY7jj0ZHr6hpxhuzdBVw==
-X-Received: by 2002:a2e:8603:: with SMTP id a3mr5794332lji.153.1587729547414;
-        Fri, 24 Apr 2020 04:59:07 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:6b0:1584:1a81:c430:c3eb:7993])
-        by smtp.gmail.com with ESMTPSA id u2sm4390222lfk.67.2020.04.24.04.59.06
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 Apr 2020 04:59:06 -0700 (PDT)
-Subject: Re: [PATCH] dt-bindings: sh_eth: Sort compatible string in increasing
- number of the SoC
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Simon Horman <horms+renesas@verge.net.au>
-Cc:     Lad Prabhakar <prabhakar.csengg@gmail.com>, netdev@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1587724695-27295-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <c3e5be67-4e6e-e6c9-8de2-9cab13848dbb@cogentembedded.com>
-Date:   Fri, 24 Apr 2020 14:59:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Fri, 24 Apr 2020 08:00:38 -0400
+Received: from mga18.intel.com ([134.134.136.126]:21953 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726289AbgDXMAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:00:37 -0400
+IronPort-SDR: mJH0Eaw8fmESNRW7Eu99v9TsImszcCZOp8eLgyD1DLq1NbWd4E8oUef75u+Hk7x2lmaYQ5/n8v
+ BT4x/pvmz5bw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2020 05:00:36 -0700
+IronPort-SDR: 7SQfUFdykSk52lfzowMRtVogG8cjy7gr2+GGQDAT5t808LDU9xHPjYYreGy94hPZRX/dwumd+G
+ AQTaYsqap5pA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,311,1583222400"; 
+   d="scan'208";a="280777879"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by fmsmga004.fm.intel.com with ESMTP; 24 Apr 2020 05:00:36 -0700
+Received: from lcsmsx601.ger.corp.intel.com (10.109.210.10) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 24 Apr 2020 05:00:36 -0700
+Received: from hasmsx602.ger.corp.intel.com (10.184.107.142) by
+ LCSMSX601.ger.corp.intel.com (10.109.210.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 24 Apr 2020 15:00:33 +0300
+Received: from hasmsx602.ger.corp.intel.com ([10.184.107.142]) by
+ HASMSX602.ger.corp.intel.com ([10.184.107.142]) with mapi id 15.01.1713.004;
+ Fri, 24 Apr 2020 15:00:33 +0300
+From:   "Winkler, Tomas" <tomas.winkler@intel.com>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Joao Lima <Joao.Lima@synopsys.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 3/5] scsi: ufs: tc-dwc-pci: Use PDI ID to match Test Chip
+ type
+Thread-Topic: [PATCH 3/5] scsi: ufs: tc-dwc-pci: Use PDI ID to match Test Chip
+ type
+Thread-Index: AQHWGiy+8qJtsJXSSkCa8PgSHEOWd6iIK0Hg
+Date:   Fri, 24 Apr 2020 12:00:33 +0000
+Message-ID: <a0656591acea47e2b6765d2411f0a362@intel.com>
+References: <cover.1587727756.git.Jose.Abreu@synopsys.com>
+ <8427c06b92bae656ab3ef75c7edc980900cdf075.1587727756.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <8427c06b92bae656ab3ef75c7edc980900cdf075.1587727756.git.Jose.Abreu@synopsys.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+x-originating-ip: [10.184.70.1]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <1587724695-27295-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-
-   The bindings file is no longer called sh_eth, please adapt the subject to
-the new DT reality...
-
-On 04/24/2020 01:38 PM, Lad Prabhakar wrote:
-
-> Sort the items in the compatible string list in increasing number of SoC.
 > 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> In preparation for the addition of new Test Chips, we re-arrange the
+> initialization sequence so that we rely on PCI ID to match for given Test Chip
+> type.
+> 
+> Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+> 
+> ---
+> Cc: Joao Lima <Joao.Lima@synopsys.com>
+> Cc: Jose Abreu <Jose.Abreu@synopsys.com>
+> Cc: Alim Akhtar <alim.akhtar@samsung.com>
+> Cc: Avri Altman <avri.altman@wdc.com>
+> Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+> Cc: linux-scsi@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/scsi/ufs/tc-dwc-pci.c | 68 ++++++++++++++++++++++++++++-----------
+> ----
+>  1 file changed, 44 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/scsi/ufs/tc-dwc-pci.c b/drivers/scsi/ufs/tc-dwc-pci.c index
+> aeb11f7f0c91..74a2d80d32bd 100644
+> --- a/drivers/scsi/ufs/tc-dwc-pci.c
+> +++ b/drivers/scsi/ufs/tc-dwc-pci.c
+> @@ -14,6 +14,11 @@
+>  #include <linux/pci.h>
+>  #include <linux/pm_runtime.h>
+> 
+> +struct tc_dwc_data {
+> +	struct ufs_hba_variant_ops ops;
+> +	int (*setup)(struct pci_dev *pdev, struct tc_dwc_data *data); };
+> +
+>  /* Test Chip type expected values */
+>  #define TC_G210_20BIT 20
+>  #define TC_G210_40BIT 40
+> @@ -23,6 +28,20 @@ static int tc_type = TC_G210_INV;
+> module_param(tc_type, int, 0);  MODULE_PARM_DESC(tc_type, "Test Chip
+> Type (20 = 20-bit, 40 = 40-bit)");
+> 
+> +static int tc_dwc_g210_set_config(struct pci_dev *pdev, struct
+> +tc_dwc_data *data) {
+> +	if (tc_type == TC_G210_20BIT) {
+> +		data->ops.phy_initialization = tc_dwc_g210_config_20_bit;
+> +	} else if (tc_type == TC_G210_40BIT) {
+> +		data->ops.phy_initialization = tc_dwc_g210_config_40_bit;
+> +	} else {
+> +		dev_err(&pdev->dev, "test chip version not specified\n");
+> +		return -EPERM;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int tc_dwc_pci_suspend(struct device *dev)  {
+>  	return ufshcd_system_suspend(dev_get_drvdata(dev));
+> @@ -48,14 +67,6 @@ static int tc_dwc_pci_runtime_idle(struct device *dev)
+>  	return ufshcd_runtime_idle(dev_get_drvdata(dev));
+>  }
+> 
+> -/*
+> - * struct ufs_hba_dwc_vops - UFS DWC specific variant operations
+> - */
+> -static struct ufs_hba_variant_ops tc_dwc_pci_hba_vops = {
+> -	.name                   = "tc-dwc-pci",
+> -	.link_startup_notify	= ufshcd_dwc_link_startup_notify,
+> -};
+> -
+>  /**
+>   * tc_dwc_pci_shutdown - main function to put the controller in reset state
+>   * @pdev: pointer to PCI device handle
+> @@ -89,22 +100,11 @@ static void tc_dwc_pci_remove(struct pci_dev *pdev)
+> static int  tc_dwc_pci_probe(struct pci_dev *pdev, const struct pci_device_id
+> *id)  {
+> -	struct ufs_hba *hba;
+> +	struct tc_dwc_data *data = (struct tc_dwc_data *)id->driver_data;
+>  	void __iomem *mmio_base;
+> +	struct ufs_hba *hba;
+>  	int err;
+> 
+> -	/* Check Test Chip type and set the specific setup routine */
+> -	if (tc_type == TC_G210_20BIT) {
+> -		tc_dwc_pci_hba_vops.phy_initialization =
+> -						tc_dwc_g210_config_20_bit;
+> -	} else if (tc_type == TC_G210_40BIT) {
+> -		tc_dwc_pci_hba_vops.phy_initialization =
+> -						tc_dwc_g210_config_40_bit;
+> -	} else {
+> -		dev_err(&pdev->dev, "test chip version not specified\n");
+> -		return -EPERM;
+> -	}
+> -
+>  	err = pcim_enable_device(pdev);
+>  	if (err) {
+>  		dev_err(&pdev->dev, "pcim_enable_device failed\n"); @@ -
+> 127,7 +127,16 @@ tc_dwc_pci_probe(struct pci_dev *pdev, const struct
+> pci_device_id *id)
+>  		return err;
+>  	}
+> 
+> -	hba->vops = &tc_dwc_pci_hba_vops;
+> +	/* Check Test Chip type and set the specific setup routine */
+> +	if (data && data->setup) {
+> +		err = data->setup(pdev, data);
+> +		if (err)
+> +			return err;
+> +	} else {
+> +		return -ENOENT;
+> +	}
+> +
+> +	hba->vops = &data->ops;
+> 
+>  	err = ufshcd_init(hba, mmio_base, pdev->irq);
+>  	if (err) {
+> @@ -150,9 +159,20 @@ static const struct dev_pm_ops tc_dwc_pci_pm_ops
+> = {
+>  	.runtime_idle    = tc_dwc_pci_runtime_idle,
+>  };
+> 
+> +static struct tc_dwc_data tc_dwc_g210_data = {
 
-Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Constify the struct, if possible. 
 
-[...]
+> +	.setup = tc_dwc_g210_set_config,
+> +	.ops = {
+> +		.name = "tc-dwc-g210-pci",
+> +		.link_startup_notify = ufshcd_dwc_link_startup_notify,
+> +	},
+> +};
+> +
+> +#define PCI_DEVICE_ID_SYNOPSYS_TC_G210_1	0xB101
+> +#define PCI_DEVICE_ID_SYNOPSYS_TC_G210_2	0xB102
+> +
+>  static const struct pci_device_id tc_dwc_pci_tbl[] = {
+> -	{ PCI_VENDOR_ID_SYNOPSYS, 0xB101, PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+> 0 },
+> -	{ PCI_VENDOR_ID_SYNOPSYS, 0xB102, PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+> 0 },
+> +	{ PCI_DEVICE_DATA(SYNOPSYS, TC_G210_1, &tc_dwc_g210_data) },
+> +	{ PCI_DEVICE_DATA(SYNOPSYS, TC_G210_2, &tc_dwc_g210_data) },
+>  	{ }	/* terminate list */
+>  };
+> 
+> --
+> 2.7.4
 
-MBR, Sergei
