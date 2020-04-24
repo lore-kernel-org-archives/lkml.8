@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94756C55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70206C55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AE6120700
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50A2A20700
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:52:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgDXFwZ (ORCPT
+        id S1726617AbgDXFw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 01:52:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37006 "EHLO mx2.suse.de"
+        Fri, 24 Apr 2020 01:52:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37056 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726442AbgDXFwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 01:52:21 -0400
+        id S1726586AbgDXFw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 01:52:26 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id F2A62AD9A;
-        Fri, 24 Apr 2020 05:52:17 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 69B48AEA8;
+        Fri, 24 Apr 2020 05:52:23 +0000 (UTC)
 From:   Davidlohr Bueso <dave@stgolabs.net>
 To:     tglx@linutronix.de, pbonzini@redhat.com
 Cc:     peterz@infradead.org, maz@kernel.org, bigeasy@linutronix.de,
@@ -30,9 +30,9 @@ Cc:     peterz@infradead.org, maz@kernel.org, bigeasy@linutronix.de,
         will@kernel.org, joel@joelfernandes.org,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         dave@stgolabs.net, Davidlohr Bueso <dbueso@suse.de>
-Subject: [PATCH 1/5] rcuwait: Fix stale wake call name in comment
-Date:   Thu, 23 Apr 2020 22:48:33 -0700
-Message-Id: <20200424054837.5138-2-dave@stgolabs.net>
+Subject: [PATCH 3/5] rcuwait: Introduce prepare_to and finish_rcuwait
+Date:   Thu, 23 Apr 2020 22:48:35 -0700
+Message-Id: <20200424054837.5138-4-dave@stgolabs.net>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20200424054837.5138-1-dave@stgolabs.net>
 References: <20200424054837.5138-1-dave@stgolabs.net>
@@ -41,27 +41,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 'trywake' name was renamed to simply 'wake', update the comment.
+This allows further flexibility for some callers to implement
+ad-hoc versions of the generic rcuwait_wait_event(). For example,
+kvm will need this to maintain tracing semantics. The naming
+is of course similar to what waitqueue apis offer.
+
+Also go ahead and make use of rcu_assign_pointer() for both task
+writes as it will make the __rcu sparse people happy - this will
+be the special nil case, thus no added serialization.
 
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
 ---
- kernel/exit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/rcuwait.h | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 389a88cb3081..9f9015f3f6b0 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -236,7 +236,7 @@ void rcuwait_wake_up(struct rcuwait *w)
- 	/*
- 	 * Order condition vs @task, such that everything prior to the load
- 	 * of @task is visible. This is the condition as to why the user called
--	 * rcuwait_trywake() in the first place. Pairs with set_current_state()
-+	 * rcuwait_wake() in the first place. Pairs with set_current_state()
- 	 * barrier (A) in rcuwait_wait_event().
- 	 *
- 	 *    WAIT                WAKE
+diff --git a/include/linux/rcuwait.h b/include/linux/rcuwait.h
+index 6ebb23258a27..45bc6604e9b1 100644
+--- a/include/linux/rcuwait.h
++++ b/include/linux/rcuwait.h
+@@ -29,12 +29,25 @@ extern int rcuwait_wake_up(struct rcuwait *w);
+ 
+ /*
+  * The caller is responsible for locking around rcuwait_wait_event(),
+- * such that writes to @task are properly serialized.
++ * and [prepare_to/finish]_rcuwait() such that writes to @task are
++ * properly serialized.
+  */
++
++static inline void prepare_to_rcuwait(struct rcuwait *w)
++{
++	rcu_assign_pointer(w->task, current);
++}
++
++static inline void finish_rcuwait(struct rcuwait *w)
++{
++        rcu_assign_pointer(w->task, NULL);
++	__set_current_state(TASK_RUNNING);
++}
++
+ #define rcuwait_wait_event(w, condition, state)				\
+ ({									\
+ 	int __ret = 0;							\
+-	rcu_assign_pointer((w)->task, current);				\
++	prepare_to_rcuwait(w);						\
+ 	for (;;) {							\
+ 		/*							\
+ 		 * Implicit barrier (A) pairs with (B) in		\
+@@ -51,9 +64,7 @@ extern int rcuwait_wake_up(struct rcuwait *w);
+ 									\
+ 		schedule();						\
+ 	}								\
+-									\
+-	WRITE_ONCE((w)->task, NULL);					\
+-	__set_current_state(TASK_RUNNING);				\
++	finish_rcuwait(w);						\
+ 	__ret;								\
+ })
+ 
 -- 
 2.16.4
 
