@@ -2,184 +2,136 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2064C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C964C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0C4620700
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:31:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7991920776
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:33:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="zrtPPVVp"
+	dkim=pass (2048-bit key) header.d=stwcx.xyz header.i=@stwcx.xyz header.b="I81Vv1U9";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="144WcH05"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgDXPb6 (ORCPT
+        id S1727819AbgDXPdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:31:58 -0400
-Received: from gateway20.websitewelcome.com ([192.185.48.38]:41747 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726791AbgDXPb6 (ORCPT
+        Fri, 24 Apr 2020 11:33:01 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:37579 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726806AbgDXPdB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:31:58 -0400
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 48B87400C4A5A
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 09:14:37 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id S0J2j141c1s2xS0J2jcugt; Fri, 24 Apr 2020 10:31:56 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=9oBhUqx3p7upJ9svhLsfPjJ85Lebz4RAXJTbYph1Zos=; b=zrtPPVVpx7bHlIUQuTtitReEFv
-        CF6Gvc4vjG7tJasavzi8F89ek4kEmgwvgEbsNG4weOy1M/q30I1a1o0VyLJaWTbPyisZQJoZobdD/
-        +umipQ76/l8rugIfLAEhQ2uR8t5EDCqwTqHgFSXxA2a8yMGdE+l6pkPFHQlu3WX5vrGvBQg9rF5kE
-        cqfHTSreK086LQbka2tjVVwLydWHpUyzVnZBTrubIaQk+ePI5z8OHT1PhvxCnGDuK1vFMS9IRDUvJ
-        ZqIi89eJOpqx5+Zb0ezfAduEqTjFGDf5PkIpQAFnrvy+t9Ir7G0MaowpALiGxWDo41O2cJNIMVBoK
-        m2cSx2/w==;
-Received: from [201.166.178.29] (port=57820 helo=[192.168.43.132])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jS0J1-000ifQ-P1; Fri, 24 Apr 2020 10:31:55 -0500
-Subject: Re: remaining flexible-array conversions
-To:     Kees Cook <keescook@chromium.org>, Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-rdma@vger.kernel.org, clang-built-linux@googlegroups.com
-References: <6342c465-e34b-3e18-cc31-1d989926aebd@embeddedor.com>
- <20200424034704.GA12320@ubuntu-s3-xlarge-x86>
- <20200424121553.GE26002@ziepe.ca> <202004240824.F042AFFBF@keescook>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <da06212a-76d7-d68d-164e-9faafded5c09@embeddedor.com>
-Date:   Fri, 24 Apr 2020 10:36:02 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 24 Apr 2020 11:33:01 -0400
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id EED00144C;
+        Fri, 24 Apr 2020 11:32:59 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute7.internal (MEProxy); Fri, 24 Apr 2020 11:33:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stwcx.xyz; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=E3sMeHbCAsorKLNRBwtJuvMxe4s
+        X7oNFJA6uh6/V09o=; b=I81Vv1U9rffqzG+MziHsg01V2e+Ds8NzFDwTn3/cenD
+        S2WJV5ETTu67visXHThN51YGYN/Ta/m5LgtjaFHC3VIOOQcvfz7C9IKyo2Vr/7VZ
+        1PrdFpEBaX4po9f+TTGjICYwkNcjTG+o2XMCAhFLhpz77o8gH80mSkOouShoUuDi
+        Bq9F+6AW1KlMnquUi7nwrHK//v+TzRUFdC7rVrvUwKKElNS/4UNsTn3XfbTi+M2+
+        Di/A9kkLx8IZ2anydYuLcu7o7q52pSi0g0PFBlqzaMqEbRDHkgpdyhYCvkoIhvVZ
+        AiJ0xS438mYG30IQYO6LR37jWl+kYq/fiSRucXGlxFQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=E3sMeH
+        bCAsorKLNRBwtJuvMxe4sX7oNFJA6uh6/V09o=; b=144WcH05O2wtvJjQu9Gukd
+        pOq9fUoluzmpIiET82PYcq6jqyOLVaDnqlpkepnBcuSSIro58kVF2lwL1gmv9pxy
+        +tcF1Fl3LaH1XKaSCD+Yy7BQMketUSUmwg1cq6PNfm/dp4cKqISgWGc0oLN8BnsY
+        aZ1VeN9yH5JF2TjV2k7kbqswtnO0GD3PEUH9jCiD0nFE5zM3NB10PZ2+egoGPioV
+        8FnHSbZQrqGP0Zf7A1TsqC0HnMVSzk4s0JGdO34fWcPdoAnx00uOMeo5gKdjCqPF
+        tEwwhlXe5wj6znxOEoApx+R1CjlgxjjUfmHaaW442rg7dGMu7y30Gnfq1Q5rTkCg
+        ==
+X-ME-Sender: <xms:qgajXic365sAgtb2Qaaqpb9EHZ1IVctpppO7Zm6VIjiy7qPIqWKvIQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrhedugdekiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
+    hrlhcuvffnffculdefhedmnecujfgurhepfffhvffukfhfgggtuggjsehgtderredttddu
+    necuhfhrohhmpefrrghtrhhitghkucghihhllhhirghmshcuoehprghtrhhitghksehsth
+    iftgigrdighiiiqeenucfkphepudeiiedrudejiedruddvuddruddvfeenucevlhhushht
+    vghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehprghtrhhitghksehsth
+    iftgigrdighiii
+X-ME-Proxy: <xmx:qgajXvSGHJHDkQ9PVC6ziiJCVjzPUvYFVvfQpFeHcx_HXnmNH8_OGg>
+    <xmx:qgajXuKFcsfMEW1c1eZE6azbWbNp5w6XZ_40oHJQtS5_9P89lF1kPA>
+    <xmx:qgajXsKEZhE52YGGzsRVsSDnPTRCyhkAWTfsi5NXNKmCZzf23q_vQQ>
+    <xmx:qwajXgKrr-xmtJGDHvuhc5VuevbiRR7PGv_rktmhVCv-_lrERdudcA>
+Received: from localhost (mobile-166-176-121-123.mycingular.net [166.176.121.123])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 896013280060;
+        Fri, 24 Apr 2020 11:32:58 -0400 (EDT)
+Date:   Fri, 24 Apr 2020 10:32:57 -0500
+From:   Patrick Williams <patrick@stwcx.xyz>
+To:     Bjorn Ardo <bjorn.ardo@axis.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@axis.com
+Subject: Re: [PATCHv2] i2c: slave-eeprom: Make it possible to pre-load eeprom
+ data
+Message-ID: <20200424153257.GA3163924@heinlein.lan.stwcx.xyz>
+References: <20200424090443.26316-1-bjorn.ardo@axis.com>
+ <20200424100307.GB1959@kunai>
+ <5180b657-33ff-c182-8a16-82a35a61f647@axis.com>
 MIME-Version: 1.0
-In-Reply-To: <202004240824.F042AFFBF@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.166.178.29
-X-Source-L: No
-X-Exim-ID: 1jS0J1-000ifQ-P1
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.132]) [201.166.178.29]:57820
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 13
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
+Content-Disposition: inline
+In-Reply-To: <5180b657-33ff-c182-8a16-82a35a61f647@axis.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--mP3DRpeJDSE+ciuQ
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 4/24/20 10:24, Kees Cook wrote:
-> On Fri, Apr 24, 2020 at 09:15:53AM -0300, Jason Gunthorpe wrote:
->> On Thu, Apr 23, 2020 at 08:47:04PM -0700, Nathan Chancellor wrote:
->>> Hi Gustavo,
->>>
->>> On Wed, Apr 22, 2020 at 01:26:02PM -0500, Gustavo A. R. Silva wrote:
->>>> Hi Linus,
->>>>
->>>> Just wanted to ask you if you would agree on pulling the remaining
->>>> flexible-array conversions all at once, after they bake for a couple
->>>> of weeks in linux-next[1]
->>>>
->>>> This is not a disruptive change and there are no code generation
->>>> differences. So, I think it would make better use of everyone's time
->>>> if you pull this treewide patch[2] from my tree (after sending you a
->>>> proper pull-request, of course) sometime in the next couple of weeks.
->>>>
->>>> Notice that the treewide patch I mention here has been successfully
->>>> built (on top of v5.7-rc1) for multiple architectures (arm, arm64,
->>>> sparc, powerpc, ia64, s390, i386, nios2, c6x, xtensa, openrisc, mips,
->>>> parisc, x86_64, riscv, sh, sparc64) and 82 different configurations
->>>> with the help of the 0-day CI guys[3].
->>>>
->>>> What do you think?
->>>>
->>>> [1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=d496496793ff69c4a6b1262a0001eb5cd0a56544
->>>> [2] https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/commit/?h=for-next/kspp&id=d783301058f3d3605f9ad34f0192692ef572d663
->>>> [3] https://github.com/GustavoARSilva/linux-hardening/blob/master/cii/kernel-ci/kspp-fam0-20200420.md
->>>>
->>>> Thanks
->>>
->>> That patch in -next appears to introduce some warnings with clang when
->>> CONFIG_UAPI_HEADER_TEST is enabled (allyesconfig/allmodconfig exposed it
->>> for us with KernelCI [1]):
->>
->> Indeed, I've tried these conversions before and run into problems like
->> this, and more. Particularly in userspace these structs also get
->> embedded in other structs and the warnings explode.
->>
->> Please drop changes to ib_user_verbs.h from your series
-> 
-> We might need to make the UAPI changes separately (or not at all).
-> 
+On Fri, Apr 24, 2020 at 12:06:44PM +0200, Bjorn Ardo wrote:
+>=20
+> On 4/24/20 12:03 PM, Wolfram Sang wrote:
+> > On Fri, Apr 24, 2020 at 11:04:43AM +0200, Bj=F6rn Ard=F6 wrote:
+> >> If the slave eeprom has a "firmware-name" in devicetree, then
+> >> pre-load the data in the eeprom with this file. Otherwise we
+> >> init the eeprom with 0xFF.
+> >>
+> >> Signed-off-by: Bj=F6rn Ard=F6 <bjorn.ardo@axis.com>
+> > I like it a lot, thanks! Maybe we could add a SoB from Patrick for his
+> > 0xff-suggestion (but keeping you as the patch author).
+> >
+> > Is this okay for everyone?
+>=20
+>=20
+> OK for me!
+>=20
 
-I agree.  In the meantime I've dropped the changes for ib_user_verbs.h
-and will do the same for all the UAPI files.
+Fine by me, also.
 
---
-Gustavo
+--=20
+Patrick Williams
+
+--mP3DRpeJDSE+ciuQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEBGD9ii4LE9cNbqJBqwNHzC0AwRkFAl6jBqcACgkQqwNHzC0A
+wRkQGBAAhOJXizdAa1+dcsc7Ala89T+gaL6McSbjh9Prb51VZcO96nQN7EN1njR0
+nmzUBPLhejXf7HDjOeFqJXn/RyobhamrPxkCJWiKtH4fag+IKcoNOP2s41QblOMG
+LVFn1Hpag5AvyGrYjXcTB/4ofrzX8PFrejAhqbaL68XyNow+2LPlJQY5lGCE2Vtf
+Pbmu/HDGe2kGXIzq0pG2BNE2wHm+0rbG/BjOkDJPueDCdqV7WdKnaiOggYo85aFd
+4h73DH+s1pmdc1X23T5LMfNhsG2CuGywGwzL6Xq+NtRuR+gLRKyXTkmidCNg2bc1
+E5i7ofRZBukJWYDYz4A+0csfuVuVqso/4v3xnxJitwvG8l59Cwv4PYO2t2OP2OkM
+lpC43Vx7PQyHMAHRPNMGvlB+2lFP+dEUiADagGPSgse3F3Fz2bwkGoPflACJ3vDc
+5lVWZvWmQMEDITt3xlbYOIdayl47orbuHuAdWlOeEipGACt2AzbpSkiVkwSNWZrV
+VZG/me3pILyo+4/Nk21W98PX4uN63vbdKN0FxDzqutIEJR/4N5f/SY1D60mwlVW8
+Mw+QEcUwkwPLQ8BdgCEXup/dnc6rHJhma9yAJ/gktQ+x2XSwS+2Y9rzW6otnzLBw
+doJt464t73p7J9upoFqGpP6j2u6IpOGQMGJD2PpeXH898a0ndNs=
+=Xkmb
+-----END PGP SIGNATURE-----
+
+--mP3DRpeJDSE+ciuQ--
