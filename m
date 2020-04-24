@@ -2,72 +2,99 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 109AAC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 23:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C452C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 23:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E609220776
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 23:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5AAB2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 23:10:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587769807;
+	bh=PKcDmqJNikLgPVx9XOqFdwEmyrGOm/Dt0u+WQR2omNU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=wlDMVHB+RHUnopbPdChMu1/vs8Sw8f/Ei51ghbginAX399pKrUmbpOVG7gzr0j5M8
+	 Vw4uVUWLAzi5mQViGnQuxV3BLA+5Lzrvmn9qxTOoJm+8LwJIXmv9RpTECNq8dFrEFa
+	 m2my3ZhiKVGf5fjJ2BYvmem4955F1QlHfJL+hjdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbgDXXAt (ORCPT
+        id S1726061AbgDXXKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 19:00:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60308 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 19:10:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725874AbgDXXAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 19:00:48 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1725874AbgDXXKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 19:10:04 -0400
+Received: from localhost (mobile-166-175-187-210.mycingular.net [166.175.187.210])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFDAB20736;
-        Fri, 24 Apr 2020 23:00:47 +0000 (UTC)
-Date:   Fri, 24 Apr 2020 19:00:46 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Borislav Petkov <bp@alien8.de>, Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [BUGFIX PATCH 1/1] bootconfig: Fix to remove bootconfig data
- from initrd while boot
-Message-ID: <20200424190046.0471c3b5@gandalf.local.home>
-In-Reply-To: <158774605193.7423.573803007569761807.stgit@devnote2>
-References: <158774604073.7423.11492815214537711118.stgit@devnote2>
-        <158774605193.7423.573803007569761807.stgit@devnote2>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 937C420736;
+        Fri, 24 Apr 2020 23:10:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587769803;
+        bh=PKcDmqJNikLgPVx9XOqFdwEmyrGOm/Dt0u+WQR2omNU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=IuXcmnBHefd7aMWWM9O7FvD2ZAsgusvfcI55sfq2884hl8yhuAs9XW0hDSw31o51T
+         jDGfu5TdUsKODPC9hMhOKrhST3iNwvWs4wE92FUNbfSwwmzMEQDs9jEMFi+0IAvDvC
+         KtnpyA74GF4/bh3+xjKOjt1zo//ICo0b0fkR5AA8=
+Date:   Fri, 24 Apr 2020 18:10:02 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+Subject: Re: [PATCH v1 1/1] PCI/EDR: Change ACPI event message log level
+Message-ID: <20200424231002.GA218107@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <01afb4e01efbe455de0c445bef6cf3ffc59340d2.1586996350.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 25 Apr 2020 01:34:12 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
-
-> If there is a bootconfig data in the tail of initrd/initramfs,
-> initrd image sanity check caused an error while decompression
-> stage as follows.
+On Wed, Apr 15, 2020 at 05:38:32PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > 
-> [    0.883882] Unpacking initramfs...
-> [    2.696429] Initramfs unpacking failed: invalid magic at start of compressed archive
+> Currently we have pci_info() message in the beginning of
+> edr_handle_event() function, which will be printing
+> notification details every-time firmware sends ACPI SYSTEM
+> level events. This will pollute the dmesg logs for systems
+> that has lot for ACPI system level notifications. So change
+> the log-level to pci_dbg, and add a new info log for EDR
+> events.
 > 
-> This error will be ignored if CONFIG_BLK_DEV_RAM=n,
-> but CONFIG_BLK_DEV_RAM=y the kernel failed to mount rootfs
-> and causes a panic.
-> 
-> To fix this issue, shrink down the initrd_end for removing
-> tailing bootconfig data while boot the kernel.
-> 
-> Fixes: 7684b8582c24 ("bootconfig: Load boot config from the tail of initrd")
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: stable@vger.kernel.org
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > ---
+>  drivers/pci/pcie/edr.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pcie/edr.c b/drivers/pci/pcie/edr.c
+> index 594622a6cb16..e346c82559fa 100644
+> --- a/drivers/pci/pcie/edr.c
+> +++ b/drivers/pci/pcie/edr.c
+> @@ -148,11 +148,13 @@ static void edr_handle_event(acpi_handle handle, u32 event, void *data)
+>  	pci_ers_result_t estate = PCI_ERS_RESULT_DISCONNECT;
+>  	u16 status;
+>  
+> -	pci_info(pdev, "ACPI event %#x received\n", event);
+> +	pci_dbg(pdev, "ACPI event %#x received\n", event);
 
-Thanks Masami! I pulled this into my urgent queue.
+I agree this looks excessively verbose.  Do we even need a pci_dbg()
+message here?  Maybe a message like that would belong in ACPI?
+There is already an ACPI_DEBUG_PRINT() in
+acpi_ev_queue_notify_request() that would serve a similar purpose.
 
--- Steve
+>  	if (event != ACPI_NOTIFY_DISCONNECT_RECOVER)
+>  		return;
+>  
+> +	pci_info(pdev, "EDR event received\n");
+> +
+>  	/* Locate the port which issued EDR event */
+>  	edev = acpi_dpc_port_get(pdev);
+>  	if (!edev) {
+> -- 
+> 2.17.1
+> 
