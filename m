@@ -2,89 +2,100 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D73CC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F8BC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA07620704
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:43:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6512020706
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:44:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Fqx8dSb4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbgDXMnm (ORCPT
+        id S1727779AbgDXMoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:43:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41574 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726489AbgDXMnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:43:41 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AF8D2064C;
-        Fri, 24 Apr 2020 12:43:40 +0000 (UTC)
-Date:   Fri, 24 Apr 2020 08:43:39 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Mike Galbraith <efault@gmx.de>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH] sched: make p->prio independent of p->mm
-Message-ID: <20200424084339.189d4ee6@gandalf.local.home>
-In-Reply-To: <20200424021231.13676-1-hdanton@sina.com>
-References: <20200423040128.6120-1-hdanton@sina.com>
-        <20200423092620.GR20730@hirez.programming.kicks-ass.net>
-        <20200423141609.5224-1-hdanton@sina.com>
-        <20200424003028.14800-1-hdanton@sina.com>
-        <20200424021231.13676-1-hdanton@sina.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 24 Apr 2020 08:44:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54198 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727079AbgDXMoP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:44:15 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50C49C09B047
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 05:44:14 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id y24so10562986wma.4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 05:44:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=xOdCgu/2Jy1tRi9zrYa6LH0k7m/VVjyha5EYFTG8NAo=;
+        b=Fqx8dSb4SMac40DSvMTs7OdAWMYlayXuzLjkXiSvM/Hffc5WJknmgmnXLrrTHKpn2X
+         0LkAKofMeSpQHMPvFNZSJ1Muv0cvJEXfsrkTjZ8le0kNVd10v/kh0p0mGsoPn/Sd01EK
+         BE4vRSTePinMwUD/eZb/gMQ9AqXloYjTlbrsEFUpRzRz+z56zW9PSXgllsk4vUpjv9J0
+         2PgpgaEiqX/z+UR0BmAH9WVGA5kwS3s3kxg1mBDXq6nkX+IFlROXk79HQnmAlz300v/j
+         QxJCl5BQ9xbhC1Rh/MZKGylXN4Uj5ZrtMbxDzoDbay3FocxYJ1jarsL12w114sDejED0
+         CeVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=xOdCgu/2Jy1tRi9zrYa6LH0k7m/VVjyha5EYFTG8NAo=;
+        b=DhFVuUdezc3M8wvHV4R/PBrh6XtMPlqL14O2hB8aNOaV4xJmA3Gt4A0ejmlqDjbxDt
+         QRU+lOQkzh5H7fW7q+2Jg5h5nJHbqPnIGEKihda0RvDek35UTMT9PbKShCyQEkSqGvUG
+         356Xlf4CsgOw1kP1xFd1Rg4n5TrU87ZF5bu6Xh7Q07y7O3tmR0iWqPLAxRvmaXOj10IB
+         bKdGsB/qIhALHsza1/FFUBymGvPN/NhyRZDT4DO0eWkuDsWxeb+dlOt5CszFiHn7Ejd5
+         uybnEQtPazFcIkXrqna36abJEnA2ghXjmU7lvdJJ+DADZxnvhV7qGxqarVGqHvTjgHoG
+         XanA==
+X-Gm-Message-State: AGi0PuarT1toLVAiJkCreTXBLYwfeCOt+gVtDfsPBFlTUEv7gGzkXdNu
+        77vIo/dU/Ia4mEcjZCGHwWTBWg==
+X-Google-Smtp-Source: APiQypI4uWmGIsxURAuSlISBDYaM7+FkzOgegq+RzXjv0ah8X7qTCaEjsrJvykKg8cNJ2UGbrdaBFA==
+X-Received: by 2002:a1c:44b:: with SMTP id 72mr9777439wme.58.1587732253434;
+        Fri, 24 Apr 2020 05:44:13 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e35:2ec0:82b0:4460:3fd3:382:4a71])
+        by smtp.gmail.com with ESMTPSA id q184sm2692689wma.25.2020.04.24.05.44.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Apr 2020 05:44:12 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     khilman@baylibre.com, devicetree@vger.kernel.org
+Cc:     linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 1/2] dt-bindings: arm: amlogic: add odroid-c4 bindings
+Date:   Fri, 24 Apr 2020 14:44:05 +0200
+Message-Id: <20200424124406.13870-2-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20200424124406.13870-1-narmstrong@baylibre.com>
+References: <20200424124406.13870-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Apr 2020 10:12:31 +0800
-Hillf Danton <hdanton@sina.com> wrote:
+Add the board bindings for the Hardkernel Odroid-C4 single board computer.
 
-> Yes and if you agree, we send it home during the 5.8 cycle, or not before
-> fifo is reclaimed from modules.
-> 
-> In the spin it now looks like
-> 
-> --- a/include/linux/sched/prio.h
-> +++ b/include/linux/sched/prio.h
-> @@ -12,15 +12,12 @@
->   * tasks are in the range MAX_RT_PRIO..MAX_PRIO-1. Priority
->   * values are inverted: lower p->prio value means higher priority.
->   *
-> - * The MAX_USER_RT_PRIO value allows the actual maximum
-> - * RT priority to be separate from the value exported to
-> - * user-space.  This allows kernel threads to set their
-> - * priority to a value higher than any user task. Note:
-> - * MAX_RT_PRIO must not be smaller than MAX_USER_RT_PRIO.
-> + * Note: MAX_USER_RT_PRIO will be removed as early as 5.8,
-> + * don't use it in new code.
->   */
->  
-> -#define MAX_USER_RT_PRIO	100
-> -#define MAX_RT_PRIO		MAX_USER_RT_PRIO
-> +#define MAX_RT_PRIO		100
-> +#define MAX_USER_RT_PRIO	MAX_RT_PRIO
->  
->  #define MAX_PRIO		(MAX_RT_PRIO + NICE_WIDTH)
->  #define DEFAULT_PRIO		(MAX_RT_PRIO + NICE_WIDTH / 2)
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ Documentation/devicetree/bindings/arm/amlogic.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-No one has used it in years, I don't think we need this change. Just delete
-it in one go.
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
+index f74aba48cec1..11908b151e0a 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.yaml
++++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
+@@ -159,6 +159,7 @@ properties:
+           - enum:
+               - seirobotics,sei610
+               - khadas,vim3l
++              - hardkernel,odroid-c4
+           - const: amlogic,sm1
+ 
+       - description: Boards with the Amlogic Meson A1 A113L SoC
+-- 
+2.22.0
 
-Is making p->prio independent from p->mm needed for other changes? If not,
-then we can hold off this change until we do so, otherwise, I would keep
-your original patch as is, and then remove the extra check when we remove
-MAX_USER_RT_PRIO.
-
--- Steve
