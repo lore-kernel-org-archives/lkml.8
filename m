@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C51CFC55191
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B03A4C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6AF821775
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:24:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82F5A21569
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:25:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587731095;
-	bh=kmelNa/WUeSvKwE5V7Lp6PzWwjudjJxBSZmBMHF3McA=;
+	s=default; t=1587731101;
+	bh=qEu0WFBLwwFGr/j4YzQwcJbCKPVRRW4ytCD4XaDu31s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ie79vNKpgOrljE0RaGpxVB81K9Fx7kfOJw+9D3QVhsFmmnJhmkvvy19imuV3h7coX
-	 SpcSGQYhhST1W5OOlwTU2Xrp9v5roiTDXgdQw+HWVvaYMm1o9ZnRfsOeWT9MhKoMma
-	 h/tltFRMjRfIJ/HAJaP37j1E/e+Tkcp4DOELjJV4=
+	b=qjdz3UHASRSREHOBpTvwAJPQ7eIEqkoyA3z574arYngbYfT1j5lhmP3kGrOnqKekU
+	 /ro5xqvCcIycZHEA8FFV6DzniB1rJC0fyzGHJIvrErHNfxi/4Aye6SIQHs3AhB88QO
+	 Ul7K1wgWR0IYLmqqAPlSPyXXjixlHbUNBDdwv9MI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728576AbgDXMYy (ORCPT
+        id S1728604AbgDXMZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:24:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55804 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:25:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727079AbgDXMYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:24:51 -0400
+        id S1727056AbgDXMY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:24:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21E3620700;
-        Fri, 24 Apr 2020 12:24:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0629620776;
+        Fri, 24 Apr 2020 12:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587731090;
-        bh=kmelNa/WUeSvKwE5V7Lp6PzWwjudjJxBSZmBMHF3McA=;
+        s=default; t=1587731095;
+        bh=qEu0WFBLwwFGr/j4YzQwcJbCKPVRRW4ytCD4XaDu31s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p0q2eqFMikSA7T8QhXPks/0cXLuGyaP4M92fTSZz8FQ4Ccpfe9mGUrYN6+LyZYpR+
-         EmB+che0wTsjKrURKfVSUjhckblXF1DX6qvvuL6HPqhqA4gsE3BnvR6FhojLKqtxUB
-         lrY5Ne8YprcDdvvvUk5maHajroXK4CRsi5PzG5dI=
+        b=uCmT4qsVBxkSWei6tTRMpSAbJo6PcXAAcz3SJxLwFvjnst0z2Wxd4GG1n4SasXXLz
+         Wpr43a7boDZRtwTzuYNf6noxejy6Bt8/aM3BR5hvAM8rohOyv/H2AZowod4MXIQ1FB
+         PcRBTPwjUttmU15/ik+7VzYjD5DfbSz0PTJ4q5nA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Roy Spliet <nouveau@spliet.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.9 03/13] ALSA: hda: Keep the controller initialization even if no codecs found
-Date:   Fri, 24 Apr 2020 08:24:36 -0400
-Message-Id: <20200424122447.10882-3-sashal@kernel.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, Borislav Petkov <bp@suse.de>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.9 07/13] objtool: Support Clang non-section symbols in ORC dump
+Date:   Fri, 24 Apr 2020 08:24:40 -0400
+Message-Id: <20200424122447.10882-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200424122447.10882-1-sashal@kernel.org>
 References: <20200424122447.10882-1-sashal@kernel.org>
@@ -58,69 +61,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-[ Upstream commit 9479e75fca370a5220784f7596bf598c4dad0b9b ]
+[ Upstream commit 8782e7cab51b6bf01a5a86471dd82228af1ac185 ]
 
-Currently, when the HD-audio controller driver doesn't detect any
-codecs, it tries to abort the probe.  But this abort happens at the
-delayed probe, i.e. the primary probe call already returned success,
-hence the driver is never unbound until user does so explicitly.
-As a result, it may leave the HD-audio device in the running state
-without the runtime PM.  More badly, if the device is a HD-audio bus
-that is tied with a GPU, GPU cannot reach to the full power down and
-consumes unnecessarily much power.
+Historically, the relocation symbols for ORC entries have only been
+section symbols:
 
-This patch changes the logic after no-codec situation; it continues
-probing without the further codec initialization but keep the
-controller driver running normally.
+  .text+0: sp:sp+8 bp:(und) type:call end:0
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207043
-Tested-by: Roy Spliet <nouveau@spliet.org>
-Link: https://lore.kernel.org/r/20200413082034.25166-5-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+However, the Clang assembler is aggressive about stripping section
+symbols.  In that case we will need to use function symbols:
+
+  freezing_slow_path+0: sp:sp+8 bp:(und) type:call end:0
+
+In preparation for the generation of such entries in "objtool orc
+generate", add support for reading them in "objtool orc dump".
+
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/b811b5eb1a42602c3b523576dc5efab9ad1c174d.1585761021.git.jpoimboe@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ tools/objtool/orc_dump.c | 44 ++++++++++++++++++++++++----------------
+ 1 file changed, 27 insertions(+), 17 deletions(-)
 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index 5a578ebca1055..8b9d1c6574e43 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -1806,7 +1806,7 @@ static int azx_first_init(struct azx *chip)
- 	/* codec detection */
- 	if (!azx_bus(chip)->codec_mask) {
- 		dev_err(card->dev, "no codecs found!\n");
--		return -ENODEV;
-+		/* keep running the rest for the runtime PM */
+diff --git a/tools/objtool/orc_dump.c b/tools/objtool/orc_dump.c
+index c3343820916a6..7cbbbdd932f1d 100644
+--- a/tools/objtool/orc_dump.c
++++ b/tools/objtool/orc_dump.c
+@@ -78,7 +78,7 @@ int orc_dump(const char *_objname)
+ 	char *name;
+ 	size_t nr_sections;
+ 	Elf64_Addr orc_ip_addr = 0;
+-	size_t shstrtab_idx;
++	size_t shstrtab_idx, strtab_idx = 0;
+ 	Elf *elf;
+ 	Elf_Scn *scn;
+ 	GElf_Shdr sh;
+@@ -139,6 +139,8 @@ int orc_dump(const char *_objname)
+ 
+ 		if (!strcmp(name, ".symtab")) {
+ 			symtab = data;
++		} else if (!strcmp(name, ".strtab")) {
++			strtab_idx = i;
+ 		} else if (!strcmp(name, ".orc_unwind")) {
+ 			orc = data->d_buf;
+ 			orc_size = sh.sh_size;
+@@ -150,7 +152,7 @@ int orc_dump(const char *_objname)
+ 		}
  	}
  
- 	if (azx_acquire_irq(chip, 0) < 0)
-@@ -2129,9 +2129,11 @@ static int azx_probe_continue(struct azx *chip)
- #endif
+-	if (!symtab || !orc || !orc_ip)
++	if (!symtab || !strtab_idx || !orc || !orc_ip)
+ 		return 0;
  
- 	/* create codec instances */
--	err = azx_probe_codecs(chip, azx_max_codecs[chip->driver_type]);
--	if (err < 0)
--		goto out_free;
-+	if (bus->codec_mask) {
-+		err = azx_probe_codecs(chip, azx_max_codecs[chip->driver_type]);
-+		if (err < 0)
-+			goto out_free;
-+	}
+ 	if (orc_size % sizeof(*orc) != 0) {
+@@ -171,21 +173,29 @@ int orc_dump(const char *_objname)
+ 				return -1;
+ 			}
  
- #ifdef CONFIG_SND_HDA_PATCH_LOADER
- 	if (chip->fw) {
-@@ -2145,7 +2147,7 @@ static int azx_probe_continue(struct azx *chip)
- #endif
- 	}
- #endif
--	if ((probe_only[dev] & 1) == 0) {
-+	if (bus->codec_mask && !(probe_only[dev] & 1)) {
- 		err = azx_codec_configure(chip);
- 		if (err < 0)
- 			goto out_free;
+-			scn = elf_getscn(elf, sym.st_shndx);
+-			if (!scn) {
+-				WARN_ELF("elf_getscn");
+-				return -1;
+-			}
+-
+-			if (!gelf_getshdr(scn, &sh)) {
+-				WARN_ELF("gelf_getshdr");
+-				return -1;
+-			}
+-
+-			name = elf_strptr(elf, shstrtab_idx, sh.sh_name);
+-			if (!name || !*name) {
+-				WARN_ELF("elf_strptr");
+-				return -1;
++			if (GELF_ST_TYPE(sym.st_info) == STT_SECTION) {
++				scn = elf_getscn(elf, sym.st_shndx);
++				if (!scn) {
++					WARN_ELF("elf_getscn");
++					return -1;
++				}
++
++				if (!gelf_getshdr(scn, &sh)) {
++					WARN_ELF("gelf_getshdr");
++					return -1;
++				}
++
++				name = elf_strptr(elf, shstrtab_idx, sh.sh_name);
++				if (!name) {
++					WARN_ELF("elf_strptr");
++					return -1;
++				}
++			} else {
++				name = elf_strptr(elf, strtab_idx, sym.st_name);
++				if (!name) {
++					WARN_ELF("elf_strptr");
++					return -1;
++				}
+ 			}
+ 
+ 			printf("%s+%llx:", name, (unsigned long long)rela.r_addend);
 -- 
 2.20.1
 
