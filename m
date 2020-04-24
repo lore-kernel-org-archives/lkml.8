@@ -2,153 +2,99 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5FCC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06DB6C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFF0520706
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBD5820706
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:03:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hqoiJsHt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PAHXOs1h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbgDXQBT (ORCPT
+        id S1728160AbgDXQDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 12:01:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56894 "EHLO
+        Fri, 24 Apr 2020 12:03:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726699AbgDXQBS (ORCPT
+        with ESMTP id S1726698AbgDXQDW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 12:01:18 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45C61C09B046;
-        Fri, 24 Apr 2020 09:01:18 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f13so11445542wrm.13;
-        Fri, 24 Apr 2020 09:01:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=lWfBQsVyyMTVvcrJcEKSHvSl9LpE9cOW8DgSNhENSiQ=;
-        b=hqoiJsHtarLSfLuNoh2mk5rGbr4437zI0PLe307qCSes9jMu8tAazKqrs2ipjSJieQ
-         /jtiDiD/tchZWvtqUsyAm9RBjyo/OBYLFeHKnWDT3dyRW5+LLzdpd/EkWFlcBnpj/+hA
-         tAxzXNKJ3w0aYFZxHzrHrQcnY6Oset61qQu6j6TQ4QgABaiI4XyG3XqLpfBL/AFc+CnV
-         34jO36Q/yHuB07HhCeAyZlEtAVpVwKd42XbzNXjKjgKz19ddxxiT8eUWLtWqNGVw5kR+
-         gnt5tKRam3qGBHaB2EqhLc0TUbM8tBMGb2fXFOnBOOUB9gCpldmowrLGjBYEOc0Qp3ez
-         5KOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=lWfBQsVyyMTVvcrJcEKSHvSl9LpE9cOW8DgSNhENSiQ=;
-        b=P5eXOr4l8B2wWRZScKAEVjXcft8uU7eE897KCU9/MrHiAUP8wub5rFbRiw/bfRsi7Q
-         DnREM6SBNReY/Ei7SGe3J2sGF0C7nD5psXSS95+y4/LDWOOPogSiNXasX1W99xmRy5pE
-         HbtlcxbnYFg1QjDLU5lNSJEZQ57oxN9KB2/lLerEMj2ykZHBFladQBORy5bXtb7bjgf1
-         zKlqA6Nie2QIIktUMia1d8DGWJ4DJKqlg5f0U+MW7lqt567GJFIYqHZAM1fr0uYYJJjE
-         +GSQ3uGZWbujQ31v8Uvd4jB8NOjT8yp/RRLu7vH3x6RHq72MeTATCjLgddNVkqVD3MYj
-         K/Mw==
-X-Gm-Message-State: AGi0PubW5ukix2saW+PxNIVSNRmN+wywftOLMLI1Pjhzknd8+DvRh/bs
-        YA7B+n/JSCnQxiCYTyNmyKg=
-X-Google-Smtp-Source: APiQypLJHTBDw6IqdxWHWR7afcrBkn2zkMvkizxlImMyHITrN6NbkOPOzrZ+qSeym2lxAsxk3NVFbg==
-X-Received: by 2002:a5d:474b:: with SMTP id o11mr11772255wrs.391.1587744076764;
-        Fri, 24 Apr 2020 09:01:16 -0700 (PDT)
-Received: from debian.office.codethink.co.uk. ([78.40.148.180])
-        by smtp.gmail.com with ESMTPSA id u127sm3363017wme.8.2020.04.24.09.01.15
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 Apr 2020 09:01:16 -0700 (PDT)
-From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-To:     Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Subject: [PATCH v2] IB/rdmavt: return proper error code
-Date:   Fri, 24 Apr 2020 17:01:14 +0100
-Message-Id: <20200424160114.7139-1-sudipm.mukherjee@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Fri, 24 Apr 2020 12:03:22 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37742C09B046
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 09:03:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=GuD1sH7vk/ZSVXd9NBfQkK4zJMu2eCP8fwMoTYSOuU0=; b=PAHXOs1hjhelzQJU2Uo1C5f0lB
+        Schix1EIJa5i3uxeovl7c4zZYg31+r1bP4FEqXzUxdXekP3VJunEOEGIcERFq+hg6o14vTpCUFnaO
+        1kCg4EmyTzAOl50GN8fKQhdQCLF6Zjm3iie17I5NkC01tgGfDnKs8L9WPFYx/JJsnV2uCiEeosSG6
+        2euIbWh0vsVUnd1D0HKxIi37HV7pIOEp8G9CiQokCXP5ubF/fpzCFXllxjR9JeKhOlGXKymT94U/U
+        eplllKBzjizjDrF+XZo3glFLXPEbsuJH/m4FlS9XyoFiPH2a4OhtgJ0Yk10io00qKlb3tAuMqLwEU
+        yOpy8OFA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jS0nR-0001pq-7a; Fri, 24 Apr 2020 16:03:21 +0000
+Subject: Re: [PATCH] random: Document add_hwgenerator_randomness() with other
+ input functions
+To:     Mark Brown <broonie@kernel.org>, Theodore Ts'o <tytso@mit.edu>
+Cc:     linux-kernel@vger.kernel.org
+References: <20200424123959.45559-1-broonie@kernel.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <1465fdf4-3197-f184-04c2-8a0882f19557@infradead.org>
+Date:   Fri, 24 Apr 2020 09:03:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200424123959.45559-1-broonie@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 'ff23dfa13457' modified rvt_create_mmap_info() to return
-error code and also NULL but missed fixing codes which called
-rvt_create_mmap_info(). Modify rvt_create_mmap_info() to only return
-errorcode and fix error checking after rvt_create_mmap_info() was
-called.
+On 4/24/20 5:39 AM, Mark Brown wrote:
+> The section at the top of random.c which documents the input functions
+> available does not document add_hwgenerator_randomness() which might lead
+> a reader to overlook it. Add a brief note about it.
+> 
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
+>  drivers/char/random.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/char/random.c b/drivers/char/random.c
+> index 0d10e31fd342..ba2dc45bf718 100644
+> --- a/drivers/char/random.c
+> +++ b/drivers/char/random.c
+> @@ -228,6 +228,14 @@
+>   * particular randomness source.  They do this by keeping track of the
+>   * first and second order deltas of the event timings.
+>   *
+> + * There is also an interface for true hardware RNGs:
+> + *
+> + *	void add_hwgenerator_randomness(const char *buffer, size_t count,
+> + *				size_t entropy);
+> + *
+> + * This will credit entropy as specified by the caller, if the entropy
 
-Fixes: ff23dfa13457 ("IB: Pass only ib_udata in function prototypes")
-Cc: stable@vger.kernel.org [5.4+]
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
----
+Use a ';' or '.' instead of ','. (and "If" if a period is used)
 
- drivers/infiniband/sw/rdmavt/cq.c   | 4 ++--
- drivers/infiniband/sw/rdmavt/mmap.c | 2 +-
- drivers/infiniband/sw/rdmavt/qp.c   | 4 ++--
- drivers/infiniband/sw/rdmavt/srq.c  | 4 ++--
- 4 files changed, 7 insertions(+), 7 deletions(-)
+> + * pool is full it will block until more entropy is needed.
+> + *
+>   * Ensuring unpredictability at system startup
+>   * ============================================
+>   *
+> 
 
-diff --git a/drivers/infiniband/sw/rdmavt/cq.c b/drivers/infiniband/sw/rdmavt/cq.c
-index 5724cbbe38b1..04d2e72017fe 100644
---- a/drivers/infiniband/sw/rdmavt/cq.c
-+++ b/drivers/infiniband/sw/rdmavt/cq.c
-@@ -248,8 +248,8 @@ int rvt_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
- 	 */
- 	if (udata && udata->outlen >= sizeof(__u64)) {
- 		cq->ip = rvt_create_mmap_info(rdi, sz, udata, u_wc);
--		if (!cq->ip) {
--			err = -ENOMEM;
-+		if (IS_ERR(cq->ip)) {
-+			err = PTR_ERR(cq->ip);
- 			goto bail_wc;
- 		}
- 
-diff --git a/drivers/infiniband/sw/rdmavt/mmap.c b/drivers/infiniband/sw/rdmavt/mmap.c
-index 652f4a7efc1b..eba1d5e7f056 100644
---- a/drivers/infiniband/sw/rdmavt/mmap.c
-+++ b/drivers/infiniband/sw/rdmavt/mmap.c
-@@ -166,7 +166,7 @@ struct rvt_mmap_info *rvt_create_mmap_info(struct rvt_dev_info *rdi, u32 size,
- 
- 	ip = kmalloc_node(sizeof(*ip), GFP_KERNEL, rdi->dparms.node);
- 	if (!ip)
--		return ip;
-+		return ERR_PTR(-ENOMEM);
- 
- 	size = PAGE_ALIGN(size);
- 
-diff --git a/drivers/infiniband/sw/rdmavt/qp.c b/drivers/infiniband/sw/rdmavt/qp.c
-index 0e1b291d2cec..500a7ee04c44 100644
---- a/drivers/infiniband/sw/rdmavt/qp.c
-+++ b/drivers/infiniband/sw/rdmavt/qp.c
-@@ -1244,8 +1244,8 @@ struct ib_qp *rvt_create_qp(struct ib_pd *ibpd,
- 
- 			qp->ip = rvt_create_mmap_info(rdi, s, udata,
- 						      qp->r_rq.wq);
--			if (!qp->ip) {
--				ret = ERR_PTR(-ENOMEM);
-+			if (IS_ERR(qp->ip)) {
-+				ret = ERR_CAST(qp->ip);
- 				goto bail_qpn;
- 			}
- 
-diff --git a/drivers/infiniband/sw/rdmavt/srq.c b/drivers/infiniband/sw/rdmavt/srq.c
-index 24fef021d51d..f547c115af03 100644
---- a/drivers/infiniband/sw/rdmavt/srq.c
-+++ b/drivers/infiniband/sw/rdmavt/srq.c
-@@ -111,8 +111,8 @@ int rvt_create_srq(struct ib_srq *ibsrq, struct ib_srq_init_attr *srq_init_attr,
- 		u32 s = sizeof(struct rvt_rwq) + srq->rq.size * sz;
- 
- 		srq->ip = rvt_create_mmap_info(dev, s, udata, srq->rq.wq);
--		if (!srq->ip) {
--			ret = -ENOMEM;
-+		if (IS_ERR(srq->ip)) {
-+			ret = PTR_ERR(srq->ip);
- 			goto bail_wq;
- 		}
- 
+Otherwise looks good. Thanks.
+
 -- 
-2.11.0
+~Randy
 
