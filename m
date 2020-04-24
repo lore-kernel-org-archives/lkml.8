@@ -2,102 +2,107 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E30F6C5518A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F54C55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCC7220767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83B1A2075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:00:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PanBHZdv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M2gDZ0zk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726423AbgDXD7z (ORCPT
+        id S1726010AbgDXEAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 23:59:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57300 "EHLO
+        Fri, 24 Apr 2020 00:00:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725922AbgDXD7z (ORCPT
+        by vger.kernel.org with ESMTP id S1725816AbgDXEAQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 23:59:55 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 400C6C09B045
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 20:59:55 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id d24so3262461pll.8
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 20:59:55 -0700 (PDT)
+        Fri, 24 Apr 2020 00:00:16 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D396C09B045
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 21:00:16 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id c3so10160058otp.8
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 21:00:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=OUVxQF+oC0mlk6FQJe7RPNH97fg6Os38vM17nA7u2v4=;
-        b=PanBHZdvJgcCE2sQEDbfNptEXd2LoewP/cdztrIQJ8zsMm7qBCJ4rb14rKRxckCuIi
-         AkWLmrJwNMNwrrgknZ0p7Pe1Iet4XcWd5s2P1CYKGT9f/LtHoWlNU46SiDWtTAuxOwAC
-         3ggB+LyQNWc3vrRj14PUJVKS6IJJRgvGdtr2c=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OQlQ+wnlPPSwWGxz5tXdlEB85veCyI0bjca+7B/4SpM=;
+        b=M2gDZ0zkPA29rkaYlXI6Liui/LoGfVGgSS0fUKnxBaYab9Gifu73xEteUfQhLeYWot
+         fP2OqHtPfht6HZ3iP8vaDS6HFv04SU6XWD/7pGcXQkgNZneClfR5YuGmsy7gjbegawww
+         C/VJi4mUjdTuQFY9vSfaueDrZXnG4cbKLeCAotSM1RmSn+xXmWODtE/F+8sG7sgp6zt3
+         FvFp2wkOEDgPG1mndoKBLTGYetNFgasY1rnuGZZHrH4+hZ7HnSiS9OClZVnx32HcPGut
+         RmEPtvmToC7A5Nwi/Cfv9MbiRQBByqC/7oD3OihOJLYPn5mi3epfi3y4X3qWp+blCunL
+         471g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=OUVxQF+oC0mlk6FQJe7RPNH97fg6Os38vM17nA7u2v4=;
-        b=o5REcCDNrbNln2qM04/6Rit2IbJM+tNZQWPtnlL3YDjbQiQPeiWgIb4y53wpAmjtfk
-         rSdGhXBtwQtkRoL79b+DvwQ3t9HCnZ11C4EYyYpUhFWiPk4VFSvEY/de4k2O8uwXtXND
-         uwkOt1iWQdAR8EBLKOxcEbSbpLHso47fvrFCaf5KpnnAk19KDYX7Fhb7oLZ9WthwSlmV
-         p9f+C+v+d2yJJEG8j6D8Cee707sXbWPxSLUBn12CJUV8/mST7I/JtCyQWT8Rta+Zztu6
-         bXkrIwp1nZ1kkOr7ZbVHcA21hfYKBsX5b4eCU5TzifB1mjsUnZYxC5Zan+am1taT9VqG
-         UiKw==
-X-Gm-Message-State: AGi0PuarU4VD44hRRNkdiVTDV9XdB5GMj/2QizOjXfdzLFgJ7i3RNQZJ
-        GtRrerFaBEo4Hh2LHW3P/qCevg==
-X-Google-Smtp-Source: APiQypIfk8zyw99IbqgvbDJNXYALRVLhuXlRSJ7PIl3u+1588Xj4XFdbySV/wfLt2qod8HEst3vl+g==
-X-Received: by 2002:a17:90a:25cb:: with SMTP id k69mr4076138pje.93.1587700794708;
-        Thu, 23 Apr 2020 20:59:54 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id c3sm3662204pjc.43.2020.04.23.20.59.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2020 20:59:53 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OQlQ+wnlPPSwWGxz5tXdlEB85veCyI0bjca+7B/4SpM=;
+        b=P/orE+YiDl9bEaTnUJldVnyq8ITlS3W7sTdelo2mPIKg0HL7y3d0tKFM6HnvaIOC3b
+         GfcprmR/ZJlTkT0vFYt8HyXG75KdDthvKiDaqQak2W7n8vjVOwRewvVQ1dOOC5l7c1Y/
+         Jcy73VbJHjVvSsYaxBk1pCcJOn+gVzGosM8xEZuy0fmws3bmEbil2mAhnI+91+2WK43B
+         t3IIOwL0Ztse33fYKhYYmFWpl/f1/XZmEKq2CoiPZCHU2ttUMicMstFNiG2nUCbILOwH
+         XoxSyuJyHhj7A9RfTVRtEAxF1v/H1GrGkjCjID/ao6A8mDuvI9sIDNqMOomk74jhiYOK
+         kRWQ==
+X-Gm-Message-State: AGi0PuarkqEbhZ1J0tLJ74Gk/wmm31kNC/T2qRBL2OzpstEnedZsIfU+
+        c6+goxaEPc6E7ijSmLFm2bC72I5Jt6ow7UnVLKA7gg==
+X-Google-Smtp-Source: APiQypIxX1kzvQHlXAr2nzrZpN0ZouDGuzk2aruej4bW/gXfibDVkHVn2aj+k7p5tHa0hlFYNzGUq/3IQNt5/Uj+5Rg=
+X-Received: by 2002:a9d:3988:: with SMTP id y8mr5916871otb.352.1587700814858;
+ Thu, 23 Apr 2020 21:00:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200422145408.v4.5.I295cb72bc5334a2af80313cbe97cb5c9dcb1442c@changeid>
-References: <20200422145408.v4.1.Ic7096b3b9b7828cdd41cd5469a6dee5eb6abf549@changeid> <20200422145408.v4.5.I295cb72bc5334a2af80313cbe97cb5c9dcb1442c@changeid>
-Subject: Re: [PATCH v4 5/5] soc: qcom: rpmh-rsc: Remove the pm_lock
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     mka@chromium.org, mkshah@codeaurora.org, evgreen@chromium.org,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
+References: <20200423220056.29450-1-john.stultz@linaro.org> <jhj1rodyeu1.mognet@arm.com>
+In-Reply-To: <jhj1rodyeu1.mognet@arm.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Thu, 23 Apr 2020 21:00:04 -0700
+Message-ID: <CALAqxLWxKfebXTy+p=sbUq3wz8Hx1zMctnuO4H2H2e9LMpcoeA@mail.gmail.com>
+Subject: Re: [RFC][PATCH] serial: amba-pl011: Make sure we initialize the
+ port.lock spinlock
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rafael.j.wysocki@intel.com
-Date:   Thu, 23 Apr 2020 20:59:52 -0700
-Message-ID: <158770079266.135303.7831640949542355577@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Douglas Anderson (2020-04-22 14:55:03)
-> It has been postulated that the pm_lock is bad for performance because
-> a CPU currently running rpmh_flush() could block other CPUs from
-> coming out of idle.  Similarly CPUs coming out of / going into idle
-> all need to contend with each other for the spinlock just to update
-> the variable tracking who's in PM.
->=20
-> Let's optimize this a bit.  Specifically:
->=20
-> - Use a count rather than a bitmask.  This is faster to access and
->   also means we can use the atomic_inc_return() function to really
->   detect who the last one to enter PM was.
-> - Accept that it's OK if we race and are doing the flush (because we
->   think we're last) while another CPU is coming out of idle.  As long
->   as we block that CPU if/when it tries to do an active-only transfer
->   we're OK.
->=20
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
+On Thu, Apr 23, 2020 at 4:14 PM Valentin Schneider
+<valentin.schneider@arm.com> wrote:
+> On 23/04/20 23:00, John Stultz wrote:
+> > Which seems to be due to the fact that after allocating the uap
+> > structure, the pl011 code doesn't initialize the spinlock.
+> >
+> > This patch fixes it by initializing the spinlock and the warning
+> > has gone away.
+> >
+>
+> Thanks for having a look. It does seem like the reasonable thing to do, and
+> I no longer get the warning on h960.
+>
+> That said, I got more curious as this doesn't show up on my Juno (same
+> Image). Digging into it I see that uart_add_one_port() has a call to
+> uart_port_spin_lock_init() a few lines before uart_configure_port() (in
+> which the above warning gets triggered). That thing says:
+>
+>  * Ensure that the serial console lock is initialised early.
+>  * If this port is a console, then the spinlock is already initialised.
+>
+> Which requires me to ask: are we doing the right thing here?
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Hrm. All good points. Obviously from the details above the port->lock
+initialization shouldn't be done in the way this patch proposes, but
+I'm at a loss as to why we're hitting the issue. My guess is it is
+tripping over the console case, but didn't get initialized there
+properly?
+
+I'll try to trace through the code to see more about what's going on.
+
+thanks
+-john
