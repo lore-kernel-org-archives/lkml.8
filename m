@@ -7,64 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A665C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E420C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F38620767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0352120700
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:40:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="sfhdm+1t";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="yIktkNjP"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="ebLLrBJh";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="f+Wg3wvu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729130AbgDXPkd (ORCPT
+        id S1729147AbgDXPkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:40:33 -0400
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:52321 "EHLO
+        Fri, 24 Apr 2020 11:40:46 -0400
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:47567 "EHLO
         wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727109AbgDXPf7 (ORCPT
+        by vger.kernel.org with ESMTP id S1728323AbgDXPfz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:35:59 -0400
+        Fri, 24 Apr 2020 11:35:55 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 10269334;
-        Fri, 24 Apr 2020 11:35:58 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:35:59 -0400
+        by mailnew.west.internal (Postfix) with ESMTP id D96AE10EF;
+        Fri, 24 Apr 2020 11:35:53 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:35:54 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=gFHaVwmXarkqP
-        cB3RyF+e3O/1vaX9+yW/7kak31Bpq4=; b=sfhdm+1t7ELNMj+Ur68F3lc7PZqqI
-        AOm1DSHDu/l/2Gk67hvb6m17M9B4m/h0soYafyDLw+1JHRZXxcNbNSp07YDXyfIs
-        PFDn1rO3bhU1BfUfUtGdlyjHUHe6YluxcYDwUzi2swH6znnCr+ii9RMkRteSAHJb
-        7j/MNMLr5lFuS1ReVJKX2A5hu/qNN9mny4N55/sWMpNmZThZfwpZm35HSlmovwL+
-        I9KG1aOxljSbYouo5QVsKuJ02nKZjM/GqPoM6+yOeQZeoJzwzLrumj0iazPw9afR
-        t64wmks9dRH1TkXBXdbUHWv3M/PxMPnZKXE8JymJxDhX0kbdJCUb3Qmvg==
+        :mime-version:content-transfer-encoding; s=fm2; bh=H/2y1u+18pkIE
+        R5sI0A+gvL3htUncY5w9ZHNgfRxgqU=; b=ebLLrBJh8krPknOfeyfJbAgT3zERZ
+        /kzQTXf13Gt3sUPJDrxMsWDQbQ1Z08ZFhT/t8Ehj3ouNUwYiCPNxZW6YyddLWGqY
+        CiejB99bmXgPfAboHC2Gn1MhtCUAS4aWls7Y+rvb8uVvUCrHFoTI7GpJMiGwbHJq
+        1YDZsYykjfXTxQ3Wj0v65mnmTOOLv6aTfXIbWWowr6+I1lGfvpNbHsL9Si+DLVfs
+        xSMoXvYNKcCkG8OjZCQZE4tT0h3zGC1iz2+styGWBETGoWnqVNUbFAqDHNIYCKFa
+        k1FoqqhQGUFHua48jF+CjVUGHh7ItkeOojHkeX0FVjnKnwG4i9n4G5O1w==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=gFHaVwmXarkqPcB3RyF+e3O/1vaX9+yW/7kak31Bpq4=; b=yIktkNjP
-        IUAqxvYJrYerFJq7sOZn4v64pRc4dHTEaZhyrUFNwYTzAjX+txOmdEUbH+RLgOa9
-        /nxXfRG/gfJAbC7i+tMNq0NJm0wLDJFqVfnPOifK2A3drNkvuOR68yrCZ5SxhERX
-        icqk7VHX5piOqCCOnh5TKzOzzJQD3gdDB9f4QSF/IIaQIJsfi8Y/lf651nx/TIM/
-        0XIOHkpzY33NUD8bxNihQDH7T5gcs+22uLGUc4QzL7r4+mg3yUyfZK/flAycRnTB
-        bxLUGvQTaP/J+tk3p1a2vLjr0CWIs1KoUTxjG/zUKnAYQ5RySfKNZXeiSCIicPO6
-        OyVrKzIPJMuvuw==
-X-ME-Sender: <xms:XQejXl5yseylMA5ngZh6kt5oyhAWVJX0aXl0FV2XzxNh0nUJ_hFJOg>
+        fm2; bh=H/2y1u+18pkIER5sI0A+gvL3htUncY5w9ZHNgfRxgqU=; b=f+Wg3wvu
+        ch3X4niSmTlHa77iu9G1VXfR6U3Tilw4rAjHrZevtyn3M41EFhYfQBjZqwIip6sZ
+        2bQCYhI/9GGmXa5OQCzPIEYI8fmFAqyly3sTBiZBqClRU3DuaHwHf+rTEHqefcAw
+        h5O4wWxJTysVQjucIqEZVODVrcNwEHxQjt1q6xw2EABO7f240BjmQtqs5ppXVlNG
+        dQAc5RM0PVwQoXQrppcSInQXcYU+U/MqA2yeCk0nbytZEqMtOCSlplYO9XCFMpul
+        wZd6qv98gn5Xw6+0Ce4K0Cpj2D4pn4EgyOxPuROZ8UPTVjWO5Ny1KYQw3nv6y25k
+        A8TiZoiDg0Wkeg==
+X-ME-Sender: <xms:WQejXliTFc1BSGyxiIbeTusUeFLfc5avvMbVSL-zyzjA8ycZtpSc-w>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrhedugdekiecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
-    eprhgtuggvvhdrnhhrnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfu
-    ihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhord
-    htvggthh
-X-ME-Proxy: <xmx:XQejXr5baxiSofJPrz0rT8u2p4mCFPUWWjsiaKSM8nMY2J23ITolYA>
-    <xmx:XQejXpN6DfEYcJ_tkK6LQtEmUX0xGc49eSSaTpBPbASBzAxqoHZT2w>
-    <xmx:XQejXsfJx7s0YYryfA1RCWYvAXEDyXX0UjBbdksSAKOkzOE6wWD4eA>
-    <xmx:XQejXqT3SRXLh4DTEKJaNh5i77401Ry6HG30s1eAx783fSj7kXoAQM1tVq4>
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpeduleenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:WQejXkE_C9nWpvZxRCIo9KaATm_E73dm0boUEcndWofQEc-VJxKPVQ>
+    <xmx:WQejXkJwxpbmu7D9uEuvcLFh3ZY8HuPiA5N0PdN4TC4uETn2S7YQTg>
+    <xmx:WQejXiaLnOnwxUmChbpvU_lXtD6mueY9ZJpmgB_NQ5pXUGbIY87o5A>
+    <xmx:WQejXvG8qIcENaTpFtfoX_US2yQPBN5g3tp4SOODFYtvMJlwoso9lag2LME>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 448453065DA6;
-        Fri, 24 Apr 2020 11:35:57 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 1C82D328005E;
+        Fri, 24 Apr 2020 11:35:53 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -76,13 +75,10 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH v2 25/91] clk: bcm: Add BCM2711 DVP driver
-Date:   Fri, 24 Apr 2020 17:34:06 +0200
-Message-Id: <a1efabae8d7df30c987bff10544c2071e906e07a.1587742492.git-series.maxime@cerno.tech>
+        Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v2 22/91] reset: Move reset-simple header out of drivers/reset
+Date:   Fri, 24 Apr 2020 17:34:03 +0200
+Message-Id: <6f7651682a6dab539bd89c80704c8303bbae68bd.1587742492.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
 References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
@@ -93,181 +89,184 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The HDMI block has a block that controls clocks and reset signals to the
-HDMI0 and HDMI1 controllers.
+The reset-simple code can be useful for drivers outside of drivers/reset
+that have a few reset controls as part of their features. Let's move it to
+include/linux/reset.
 
-Let's expose that through a clock driver implementing a clock and reset
-provider.
-
-Cc: Michael Turquette <mturquette@baylibre.com>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-clk@vger.kernel.org
-Cc: devicetree@vger.kernel.org
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/clk/bcm/Kconfig           |   1 +-
- drivers/clk/bcm/Makefile          |   1 +-
- drivers/clk/bcm/clk-bcm2711-dvp.c | 127 +++++++++++++++++++++++++++++++-
- 3 files changed, 129 insertions(+)
- create mode 100644 drivers/clk/bcm/clk-bcm2711-dvp.c
+ drivers/reset/reset-simple.c        |  3 +--
+ drivers/reset/reset-simple.h        | 41 +------------------------------
+ drivers/reset/reset-socfpga.c       |  3 +--
+ drivers/reset/reset-sunxi.c         |  3 +--
+ drivers/reset/reset-uniphier-glue.c |  3 +--
+ include/linux/reset/reset-simple.h  | 41 ++++++++++++++++++++++++++++++-
+ 6 files changed, 45 insertions(+), 49 deletions(-)
+ delete mode 100644 drivers/reset/reset-simple.h
+ create mode 100644 include/linux/reset/reset-simple.h
 
-diff --git a/drivers/clk/bcm/Kconfig b/drivers/clk/bcm/Kconfig
-index 8c83977a7dc4..03bbd8040451 100644
---- a/drivers/clk/bcm/Kconfig
-+++ b/drivers/clk/bcm/Kconfig
-@@ -4,6 +4,7 @@ config CLK_BCM2835
- 	depends on ARCH_BCM2835 || ARCH_BRCMSTB || COMPILE_TEST
- 	depends on COMMON_CLK
- 	default ARCH_BCM2835 || ARCH_BRCMSTB
-+	select RESET_SIMPLE
- 	help
- 	  Enable common clock framework support for Broadcom BCM2835
- 	  SoCs.
-diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
-index 0070ddf6cdd2..2c1349062147 100644
---- a/drivers/clk/bcm/Makefile
-+++ b/drivers/clk/bcm/Makefile
-@@ -6,6 +6,7 @@ obj-$(CONFIG_CLK_BCM_KONA)	+= clk-kona-setup.o
- obj-$(CONFIG_CLK_BCM_KONA)	+= clk-bcm281xx.o
- obj-$(CONFIG_CLK_BCM_KONA)	+= clk-bcm21664.o
- obj-$(CONFIG_COMMON_CLK_IPROC)	+= clk-iproc-armpll.o clk-iproc-pll.o clk-iproc-asiu.o
-+obj-$(CONFIG_CLK_BCM2835)	+= clk-bcm2711-dvp.o
- obj-$(CONFIG_CLK_BCM2835)	+= clk-bcm2835.o
- obj-$(CONFIG_CLK_BCM2835)	+= clk-bcm2835-aux.o
- obj-$(CONFIG_CLK_RASPBERRYPI)	+= clk-raspberrypi.o
-diff --git a/drivers/clk/bcm/clk-bcm2711-dvp.c b/drivers/clk/bcm/clk-bcm2711-dvp.c
-new file mode 100644
-index 000000000000..c1c4b5857d32
---- /dev/null
-+++ b/drivers/clk/bcm/clk-bcm2711-dvp.c
-@@ -0,0 +1,127 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// Copyright 2020 Cerno
-+
-+#include <linux/clk-provider.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset-controller.h>
+diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
+index 067e7e7b34f1..c854aa351640 100644
+--- a/drivers/reset/reset-simple.c
++++ b/drivers/reset/reset-simple.c
+@@ -18,10 +18,9 @@
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/reset-controller.h>
 +#include <linux/reset/reset-simple.h>
+ #include <linux/spinlock.h>
+ 
+-#include "reset-simple.h"
+-
+ static inline struct reset_simple_data *
+ to_reset_simple_data(struct reset_controller_dev *rcdev)
+ {
+diff --git a/drivers/reset/reset-simple.h b/drivers/reset/reset-simple.h
+deleted file mode 100644
+index 08ccb25a55e6..000000000000
+--- a/drivers/reset/reset-simple.h
++++ /dev/null
+@@ -1,41 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-or-later */
+-/*
+- * Simple Reset Controller ops
+- *
+- * Based on Allwinner SoCs Reset Controller driver
+- *
+- * Copyright 2013 Maxime Ripard
+- *
+- * Maxime Ripard <maxime.ripard@free-electrons.com>
+- */
+-
+-#ifndef __RESET_SIMPLE_H__
+-#define __RESET_SIMPLE_H__
+-
+-#include <linux/io.h>
+-#include <linux/reset-controller.h>
+-#include <linux/spinlock.h>
+-
+-/**
+- * struct reset_simple_data - driver data for simple reset controllers
+- * @lock: spinlock to protect registers during read-modify-write cycles
+- * @membase: memory mapped I/O register range
+- * @rcdev: reset controller device base structure
+- * @active_low: if true, bits are cleared to assert the reset. Otherwise, bits
+- *              are set to assert the reset. Note that this says nothing about
+- *              the voltage level of the actual reset line.
+- * @status_active_low: if true, bits read back as cleared while the reset is
+- *                     asserted. Otherwise, bits read back as set while the
+- *                     reset is asserted.
+- */
+-struct reset_simple_data {
+-	spinlock_t			lock;
+-	void __iomem			*membase;
+-	struct reset_controller_dev	rcdev;
+-	bool				active_low;
+-	bool				status_active_low;
+-};
+-
+-extern const struct reset_control_ops reset_simple_ops;
+-
+-#endif /* __RESET_SIMPLE_H__ */
+diff --git a/drivers/reset/reset-socfpga.c b/drivers/reset/reset-socfpga.c
+index 96953992c2bb..bdd984296196 100644
+--- a/drivers/reset/reset-socfpga.c
++++ b/drivers/reset/reset-socfpga.c
+@@ -11,13 +11,12 @@
+ #include <linux/of_address.h>
+ #include <linux/platform_device.h>
+ #include <linux/reset-controller.h>
++#include <linux/reset/reset-simple.h>
+ #include <linux/reset/socfpga.h>
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
+ #include <linux/types.h>
+ 
+-#include "reset-simple.h"
+-
+ #define SOCFPGA_NR_BANKS	8
+ 
+ static int a10_reset_init(struct device_node *np)
+diff --git a/drivers/reset/reset-sunxi.c b/drivers/reset/reset-sunxi.c
+index e7f169e57bcf..e752594b6971 100644
+--- a/drivers/reset/reset-sunxi.c
++++ b/drivers/reset/reset-sunxi.c
+@@ -14,13 +14,12 @@
+ #include <linux/of_address.h>
+ #include <linux/platform_device.h>
+ #include <linux/reset-controller.h>
++#include <linux/reset/reset-simple.h>
+ #include <linux/reset/sunxi.h>
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
+ #include <linux/types.h>
+ 
+-#include "reset-simple.h"
+-
+ static int sunxi_reset_init(struct device_node *np)
+ {
+ 	struct reset_simple_data *data;
+diff --git a/drivers/reset/reset-uniphier-glue.c b/drivers/reset/reset-uniphier-glue.c
+index 2b188b3bb69a..027990b79f61 100644
+--- a/drivers/reset/reset-uniphier-glue.c
++++ b/drivers/reset/reset-uniphier-glue.c
+@@ -9,8 +9,7 @@
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/reset.h>
+-
+-#include "reset-simple.h"
++#include <linux/reset/reset-simple.h>
+ 
+ #define MAX_CLKS	2
+ #define MAX_RSTS	2
+diff --git a/include/linux/reset/reset-simple.h b/include/linux/reset/reset-simple.h
+new file mode 100644
+index 000000000000..08ccb25a55e6
+--- /dev/null
++++ b/include/linux/reset/reset-simple.h
+@@ -0,0 +1,41 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ * Simple Reset Controller ops
++ *
++ * Based on Allwinner SoCs Reset Controller driver
++ *
++ * Copyright 2013 Maxime Ripard
++ *
++ * Maxime Ripard <maxime.ripard@free-electrons.com>
++ */
 +
-+#define DVP_HT_RPI_SW_INIT	0x04
-+#define DVP_HT_RPI_MISC_CONFIG	0x08
++#ifndef __RESET_SIMPLE_H__
++#define __RESET_SIMPLE_H__
 +
-+#define NR_CLOCKS	2
-+#define NR_RESETS	6
++#include <linux/io.h>
++#include <linux/reset-controller.h>
++#include <linux/spinlock.h>
 +
-+struct clk_dvp {
-+	struct clk_hw_onecell_data	*data;
-+	struct reset_simple_data	reset;
++/**
++ * struct reset_simple_data - driver data for simple reset controllers
++ * @lock: spinlock to protect registers during read-modify-write cycles
++ * @membase: memory mapped I/O register range
++ * @rcdev: reset controller device base structure
++ * @active_low: if true, bits are cleared to assert the reset. Otherwise, bits
++ *              are set to assert the reset. Note that this says nothing about
++ *              the voltage level of the actual reset line.
++ * @status_active_low: if true, bits read back as cleared while the reset is
++ *                     asserted. Otherwise, bits read back as set while the
++ *                     reset is asserted.
++ */
++struct reset_simple_data {
++	spinlock_t			lock;
++	void __iomem			*membase;
++	struct reset_controller_dev	rcdev;
++	bool				active_low;
++	bool				status_active_low;
 +};
 +
-+static const struct clk_parent_data clk_dvp_parent = {
-+	.index	= 0,
-+};
++extern const struct reset_control_ops reset_simple_ops;
 +
-+static int clk_dvp_probe(struct platform_device *pdev)
-+{
-+	struct clk_hw_onecell_data *data;
-+	struct resource *res;
-+	struct clk_dvp *dvp;
-+	void __iomem *base;
-+	int ret;
-+
-+	dvp = devm_kzalloc(&pdev->dev, sizeof(*dvp), GFP_KERNEL);
-+	if (!dvp)
-+		return -ENOMEM;
-+	platform_set_drvdata(pdev, dvp);
-+
-+	dvp->data = devm_kzalloc(&pdev->dev,
-+				 struct_size(dvp->data, hws, NR_CLOCKS),
-+				 GFP_KERNEL);
-+	if (!dvp->data)
-+		return -ENOMEM;
-+	data = dvp->data;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	dvp->reset.rcdev.owner = THIS_MODULE;
-+	dvp->reset.rcdev.nr_resets = NR_RESETS;
-+	dvp->reset.rcdev.ops = &reset_simple_ops;
-+	dvp->reset.rcdev.of_node = pdev->dev.of_node;
-+	dvp->reset.membase = base + DVP_HT_RPI_SW_INIT;
-+	spin_lock_init(&dvp->reset.lock);
-+
-+	ret = reset_controller_register(&dvp->reset.rcdev);
-+	if (ret)
-+		return ret;
-+
-+	data->hws[0] = clk_hw_register_gate_parent_data(&pdev->dev,
-+							"hdmi0-108MHz",
-+							&clk_dvp_parent, 0,
-+							base + DVP_HT_RPI_MISC_CONFIG, 3,
-+							CLK_GATE_SET_TO_DISABLE,
-+							&dvp->reset.lock);
-+	if (IS_ERR(data->hws[0])) {
-+		ret = PTR_ERR(data->hws[0]);
-+		goto unregister_reset;
-+	}
-+
-+	data->hws[1] = clk_hw_register_gate_parent_data(&pdev->dev,
-+							"hdmi1-108MHz",
-+							&clk_dvp_parent, 0,
-+							base + DVP_HT_RPI_MISC_CONFIG, 4,
-+							CLK_GATE_SET_TO_DISABLE,
-+							&dvp->reset.lock);
-+	if (IS_ERR(data->hws[1])) {
-+		ret = PTR_ERR(data->hws[1]);
-+		goto unregister_clk0;
-+	}
-+
-+	data->num = NR_CLOCKS;
-+	ret = of_clk_add_hw_provider(pdev->dev.of_node, of_clk_hw_onecell_get,
-+				     data);
-+	if (ret)
-+		goto unregister_clk1;
-+
-+	return 0;
-+
-+unregister_clk1:
-+	clk_hw_unregister_gate(data->hws[1]);
-+
-+unregister_clk0:
-+	clk_hw_unregister_gate(data->hws[0]);
-+
-+unregister_reset:
-+	reset_controller_unregister(&dvp->reset.rcdev);
-+	return ret;
-+};
-+
-+static int clk_dvp_remove(struct platform_device *pdev)
-+{
-+	struct clk_dvp *dvp = platform_get_drvdata(pdev);
-+	struct clk_hw_onecell_data *data = dvp->data;
-+
-+	clk_hw_unregister_gate(data->hws[1]);
-+	clk_hw_unregister_gate(data->hws[0]);
-+	reset_controller_unregister(&dvp->reset.rcdev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id clk_dvp_dt_ids[] = {
-+	{ .compatible = "brcm,brcm2711-dvp", },
-+	{ /* sentinel */ }
-+};
-+
-+static struct platform_driver clk_dvp_driver = {
-+	.probe	= clk_dvp_probe,
-+	.remove	= clk_dvp_remove,
-+	.driver	= {
-+		.name		= "brcm2711-dvp",
-+		.of_match_table	= clk_dvp_dt_ids,
-+	},
-+};
-+module_platform_driver(clk_dvp_driver);
++#endif /* __RESET_SIMPLE_H__ */
 -- 
 git-series 0.9.1
