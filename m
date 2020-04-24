@@ -2,177 +2,126 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9223FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04046C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73B7B20CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:12:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="sBfUpkUA"
+	by mail.kernel.org (Postfix) with ESMTP id D31D92166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:14:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587694465;
+	bh=tLfSeWjcAbmpZjwhRv8iG+JTxOKMKBYB3Z2QItP84PI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XXqni70mVr75syqDcELgaK0uigmNaOabu1OG41u4tyxlA8QR7iDI/NilGM9jSt8PU
+	 o9amOWv3riRaYADT+E8gT9z0szNShWXdD9ABcX+t6oKijm6v5s8Zy0tVmJgtALzKa0
+	 nKEbmOuttR9/GWmQUWXkK8yHqphrX3IunrlD0Tm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbgDXCMR (ORCPT
+        id S1726371AbgDXCOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 22:12:17 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:6922 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726458AbgDXCMK (ORCPT
+        Thu, 23 Apr 2020 22:14:25 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45445 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726021AbgDXCOY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 22:12:10 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ea24a840000>; Thu, 23 Apr 2020 19:10:12 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 23 Apr 2020 19:12:09 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 23 Apr 2020 19:12:09 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 Apr
- 2020 02:12:09 +0000
-Received: from [10.2.165.49] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 Apr
- 2020 02:12:08 +0000
-Subject: Re: [RFC PATCH v9 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1587536339-4030-1-git-send-email-skomatineni@nvidia.com>
- <1587536339-4030-7-git-send-email-skomatineni@nvidia.com>
- <7e473fa9-0409-d868-e818-2e7928a8acca@gmail.com>
- <a83bfc89-35de-85b5-fe5f-71e62456f5e9@nvidia.com>
- <3691c4b5-1ecc-2ad3-23ed-72ef6b8d25fa@nvidia.com>
- <fce6dfbb-0b8d-319b-2d6f-976953a3c36c@gmail.com>
- <a2672be9-93c1-8363-6c0e-6d43c2bd59bc@nvidia.com>
- <492dafac-42aa-3caf-4d32-ba0e434b19c3@gmail.com>
- <39402a49-f39f-256c-31e7-afaa25d55664@nvidia.com>
- <8f01724e-95d4-e6d8-9e2d-bce4b8dd0177@nvidia.com>
- <5ad77b67-0dc6-3c6d-7df3-4c21c68b2b1e@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <8c8c0154-f790-f90f-e117-0d3df6823f20@nvidia.com>
-Date:   Thu, 23 Apr 2020 19:12:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 23 Apr 2020 22:14:24 -0400
+Received: by mail-pg1-f193.google.com with SMTP id s18so1212555pgl.12;
+        Thu, 23 Apr 2020 19:14:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=M1F8V/lQi2dXJLzkHN7r8+PIAY8isTqYFnnwe0dwlNw=;
+        b=kIOurenDXq+n0uVpWe1b6wJGWRaUCOrTEERcilNdBx0aUjhxzOik2Oj2fwUrZG7Frn
+         Nclx1eUMY6Z06rmqZqd0QasO5Uqoywp7f2ePhCUEe0JxyHZToNYIpBbMka+koGett9M/
+         oP4e9I4At9dP8UBjjcD0jnL656kQI9mj4Hx4z4fhzB+hQrjn/F6K2nTH3LUCo2NZmJQZ
+         hrlniBnt7RpSX5NDAOqxlzbT30/lycifs04SckNEoqqpbzf+VETuW4o1MyW+yc/rUUR+
+         weDpT5D27Lo2gpm2ogb02NtrkKNOq+BgmOwsvNpokAE17WMNr1RoyuIoKN4kgJT745Xm
+         F9ow==
+X-Gm-Message-State: AGi0PuZwCLuN8qaH1jfG3n3eAEFmfbEo51/Qr/stf4v26YBDKY8sRodC
+        L/enh4hXBVTCCTicz+10hUQ=
+X-Google-Smtp-Source: APiQypLCHWYVgjIyNhq18B8HX2SVUoSxZIeHK3EVSBOMwo6jLrgIE7YBN7by02GrbM3k16FZMxMzrg==
+X-Received: by 2002:a05:6a00:2b4:: with SMTP id q20mr7070390pfs.104.1587694463022;
+        Thu, 23 Apr 2020 19:14:23 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id h12sm3983291pfq.176.2020.04.23.19.14.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 19:14:21 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id D5BDE402A1; Fri, 24 Apr 2020 02:14:20 +0000 (UTC)
+Date:   Fri, 24 Apr 2020 02:14:20 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Jakub Kicinski <kubakici@wp.pl>
+Cc:     gregkh@linuxfoundation.org, akpm@linux-foundation.org,
+        josh@joshtriplett.org, rishabhb@codeaurora.org, maco@android.com,
+        andy.gross@linaro.org, david.brown@linaro.org,
+        bjorn.andersson@linaro.org, linux-wireless@vger.kernel.org,
+        keescook@chromium.org, shuah@kernel.org, mfuzzey@parkeon.com,
+        zohar@linux.vnet.ibm.com, dhowells@redhat.com,
+        pali.rohar@gmail.com, tiwai@suse.de, arend.vanspriel@broadcom.com,
+        zajec5@gmail.com, nbroeking@me.com, markivx@codeaurora.org,
+        broonie@kernel.org, dmitry.torokhov@gmail.com, dwmw2@infradead.org,
+        torvalds@linux-foundation.org, Abhay_Salunke@dell.com,
+        jewalt@lgsinnovations.com, cantabile.desu@gmail.com, ast@fb.com,
+        andresx7@gmail.com, dan.rue@linaro.org, brendanhiggins@google.com,
+        yzaikin@google.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH] firmware_loader: re-export fw_fallback_config into
+ firmware_loader's own namespace
+Message-ID: <20200424021420.GZ11244@42.do-not-panic.com>
+References: <20200423203140.19510-1-mcgrof@kernel.org>
+ <20200423180544.60d12af0@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 MIME-Version: 1.0
-In-Reply-To: <5ad77b67-0dc6-3c6d-7df3-4c21c68b2b1e@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587694212; bh=DqYjVu4skB6ZMteopOkElbiiu4dQEhuGp15nT0L9KSc=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=sBfUpkUAJUDZ/o29H5GkDSLlyWncUu5YW0xy869BbrEl3o7s1ALL9dMg/mlsL0VOx
-         b5czOj8+k0PNOp8eUnnyt/a4LgCH0mrXiezgKIwhHVuhqefLp38ttahGGdz3vr2mEM
-         5B4JEKFg+LfDDKc/Gi2Vl8Cv5kWStW0fW8LwSpF3joU+6y/YlInqDePFco0fnsKujF
-         7zlQP0BCisTyjYbnd1yhJwwBUvZnFl9B6X8Cgt3gWGcg/HSl+4Ks9rOXoAPnKVnUzI
-         d19lA5dQfkzS2jLDB/kwN8TY42eGwdGRRWdgGrKi35i48iDt8AmSRLiTe590CtJo/M
-         YZjunCL97qgpQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200423180544.60d12af0@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 23, 2020 at 06:05:44PM -0700, Jakub Kicinski wrote:
+> On Thu, 23 Apr 2020 20:31:40 +0000 Luis R. Rodriguez wrote:
+> > From: Luis Chamberlain <mcgrof@kernel.org>
+> > 
+> > Christoph's recent patch "firmware_loader: remove unused exports", which
+> > is not merged upstream yet, removed two exported symbols. One is fine to
+> > remove since only built-in code uses it but the other is incorrect.
+> > 
+> > If CONFIG_FW_LOADER=m so the firmware_loader is modular but
+> > CONFIG_FW_LOADER_USER_HELPER=y we fail at mostpost with:
+> > 
+> > ERROR: modpost: "fw_fallback_config" [drivers/base/firmware_loader/firmware_class.ko] undefined!
+> > 
+> > This happens because the variable fw_fallback_config is built into the
+> > kernel if CONFIG_FW_LOADER_USER_HELPER=y always, so we need to grant
+> > access to the firmware loader module by exporting it.
+> > 
+> > Instead of just exporting it as we used to, take advantage of the new
+> > kernel symbol namespacing functionality, and export the symbol only to
+> > the firmware loader private namespace. This would prevent misuses from
+> > other drivers and makes it clear the goal is to keep this private to
+> > the firmware loader alone.
+> > 
+> > Cc: Christoph Hellwig <hch@lst.de>
+> > Cc: Randy Dunlap <rdunlap@infradead.org>
+> > Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Fixes: "firmware_loader: remove unused exports"
+> 
+> Can't help but notice this strange form of the Fixes tag, is it
+> intentional?
 
-On 4/23/20 7:09 PM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> 24.04.2020 04:08, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 4/23/20 5:51 PM, Sowjanya Komatineni wrote:
->>> On 4/23/20 5:42 PM, Dmitry Osipenko wrote:
->>>> External email: Use caution opening links or attachments
->>>>
->>>>
->>>> 24.04.2020 02:50, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> On 4/23/20 4:25 PM, Dmitry Osipenko wrote:
->>>>>> External email: Use caution opening links or attachments
->>>>>>
->>>>>>
->>>>>> 24.04.2020 02:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82=
-:
->>>>>>> On 4/23/20 4:19 PM, Sowjanya Komatineni wrote:
->>>>>>>> On 4/23/20 4:16 PM, Dmitry Osipenko wrote:
->>>>>>>>> External email: Use caution opening links or attachments
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> 22.04.2020 09:18, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
-=82:
->>>>>>>>>> +static int chan_capture_kthread_start(void *data)
->>>>>>>>>> +{
->>>>>>>>>> +     struct tegra_vi_channel *chan =3D data;
->>>>>>>>>> +     struct tegra_channel_buffer *buf;
->>>>>>>>>> +     int err =3D 0;
->>>>>>>>>> +
->>>>>>>>>> +     set_freezable();
->>>>>>>>>> +
->>>>>>>>>> +     while (1) {
->>>>>>>>>> +             try_to_freeze();
->>>>>>>>>> +
->>>>>>>>>> + wait_event_interruptible(chan->start_wait,
->>>>>>>>>> + !list_empty(&chan->capture) ||
->>>>>>>>>> + kthread_should_stop());
->>>>>>>>>> +
->>>>>>>>>> +             if (kthread_should_stop())
->>>>>>>>>> +                     break;
->>>>>>>>>> +
->>>>>>>>>> +             /*
->>>>>>>>>> +              * Source is not streaming if error is non-zero.
->>>>>>>>>> +              * So, do not dequeue buffers on capture error.
->>>>>>>>>> +              */
->>>>>>>>>> +             if (err)
->>>>>>>>>> +                     continue;
->>>>>>>>> This will result in an endless loop, I suppose it wasn't the
->>>>>>>>> intention.
->>>>>>>> no it will not. on error we report vb2_queue_error which will do
->>>>>>>> streaming stop request.
->>>>>>>>
->>>>>>>> So thread will be stopped on streaming stop request thru kthread
->>>>>>>> stop
->>>>>>>> signal
->>>>>>> To be clear on error it reports vb2 queue error and waits for stop
->>>>>>> streaming to happen
->>>>>> If thread should exit on error, then it should do it on the actual
->>>>>> error. Otherwise it looks very error-prone.
->>>>> When v4l2 drivers indicate fatal error through vb2_queue_error, queue
->>>>> error flag  is set and wakes up all processes waiting on queue along
->>>>> with polling reporting  EPOLLERR and also reporting error for queuing
->>>>> and dequeuing buffers. Stream stop will surely happen which stops the
->>>>> thread.
->>>> This doesn't explain what is the point of continuing to loop instead o=
-f
->>>> exiting immediately on error.
->>> We are using 2 threads and when capture start error happens, we can
->>> stop capture_start thread immediately but capture_finish thread will
->>> still run for any outstanding buffers.
->>>
->>> So, as it makes no diff stopping both threads during stream stop which
->>> will definitely happen on error and when we don't dequeue buffers
->>>
->> Also there will be an issue if we break on error immediately during
->> stop_streaming -> kthread_stop()
->>
->> As stop streaming can happen any time, we do kthread_stop and in case of
->> error if we stop thread and on stop streaming kthread_stop might crash
->> as kthread_stop can only be called on running thread
->>
-> This a better explanation, but still it's not good that there could be a
-> busy loop within the thread.
->
-> Should be better to sleep if error is set.
->
-> wait_event_interruptible(chan->start_wait,
->                          (!err && !list_empty(&chan->capture)) ||
->                          kthread_should_stop());
-ok, will add err to wait condition to let it sleep
+Yeah, no there is no commit for the patch as the commit is ephemeral in
+a development tree not yet upstream, ie, not on Linus' tree yet. Using a
+commit here then makes no sense unless one wants to use a reference
+development tree in this case, as development trees are expected to
+rebase to move closer towards Linus' tree. When a tree rebases, the
+commit IDs change, and this is why the commit is ephemeral unless
+one uses a base tree / branch / tag.
+
+  Luis
