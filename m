@@ -2,127 +2,144 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B47C2C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9E9C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9564B20776
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0211320776
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:36:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=stwcx.xyz header.i=@stwcx.xyz header.b="m/rhcTuP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KDEewEuV"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="TPANBAfE";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="K2LORPcj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728525AbgDXPgV (ORCPT
+        id S1728577AbgDXPgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:36:21 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:40727 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728482AbgDXPgO (ORCPT
+        Fri, 24 Apr 2020 11:36:32 -0400
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:33797 "EHLO
+        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728482AbgDXPgY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:36:14 -0400
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
-        by mailout.west.internal (Postfix) with ESMTP id 900C0144F;
-        Fri, 24 Apr 2020 11:36:13 -0400 (EDT)
+        Fri, 24 Apr 2020 11:36:24 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 0EC6D144E;
+        Fri, 24 Apr 2020 11:36:22 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute7.internal (MEProxy); Fri, 24 Apr 2020 11:36:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stwcx.xyz; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=6AAlop7+XbnlGAq8sTAvjExYq4G
-        7z0bSUfLU7dnZmCI=; b=m/rhcTuP5+5z9laJf6pkwLG7oXf/bW253s0J/touRXN
-        Tk6ZpYaTLGzwjRh2qGj4IhlCN1fDhXe9xxVNmV46gIGebWJ70paPZDF5VsoUpNsb
-        ReBE51MGUR430xuz3MOXH7wq8K2FUPp5QR7pG0kk3aBm7x9AAwIvKaCCStWeqCYS
-        QRwjFtRBQuRRhM0HSanR9SlrBjvFp6GJ5fp6xaVk4pqoEy1uoLF2Uqc57uQEoTK8
-        6nkVqiy0CBrOdOgUpXwkfVMvYWuIhgee3bdwqWvuY4mvd19FEbvsYHFKqsbIfjn3
-        5WmJ4i1jIqcOLMb37Z0l/1eNAPSW7bsTybV0d7HxCKw==
+  by compute4.internal (MEProxy); Fri, 24 Apr 2020 11:36:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm2; bh=JNjtzlAqDA9+g
+        wfnpcyHMYWUnTOc/3kzSZCf4w6U+OU=; b=TPANBAfETOT2h3oOong+BLrk8KY+b
+        CnGjzxLnIkIw22U0zKGIo65vT8aT8Tz9SmIZk8uqrXalX/rhC97y9r6Fz+/QFOII
+        n/6BugrDOQ4G+7MyfNnkdHaGhjPhwS3gGI27kgld3e80jORHEwmmNTO+T4ZNNUPL
+        JVgiA8gaw1Vsr6OlX9dH8IvGGvRFgq3UiU/TinomGrTK++rx1MjY7/EzAl2IdNXb
+        9mhv9c0alK9cfRqXfPlecVf4It0XI8OUJL3YZLOUKtHT/mD9elz7hAsyosmfR3Vr
+        oPd3dZDUz9ioOB+o1PCB9seiqvfVHoMM+cd9zPDm34AhpgCNTrCx4EvXw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=6AAlop
-        7+XbnlGAq8sTAvjExYq4G7z0bSUfLU7dnZmCI=; b=KDEewEuVc/v76Gb+sf9/TB
-        OavFDSPmjjJeKz1amzbbjUxRjZnCBlXFMu1WeuQrWlCxjg316e6iiAAcpl8Y3oDe
-        GjU+vloCVjHoWZCAcBmXdi6YAlVb0aYdt0fLHTM/WqB64Hs1jRErQZp3pkC9DQ9i
-        gwA9JwqFFzOD5iNe3Ua2P+QUqEGbWCoFOA5K0qG9ceX4ceF5hbjLteCu+oLIgRbZ
-        CfzmVQ/RdWIRaJimUQYN3YRQ41Fbf4YrGcdl5DZnjYx6B0+mkmG8QF9qNLqM/lkU
-        y5Qjsl3jGFXjGaZYMFpyHh62leSzO84yKoVLP36bs8maYvupvABD4fqJ7PK9/CSA
-        ==
-X-ME-Sender: <xms:bQejXrPFU5ZZAOf7iHJMB_cRQEeuaGg2QPtp0dpIncJg0H9fD_lQaA>
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; bh=JNjtzlAqDA9+gwfnpcyHMYWUnTOc/3kzSZCf4w6U+OU=; b=K2LORPcj
+        Lre8C0ysdK2c9Ya5lTwcwUSlYvr/m5ULCYtuQark64ZHQ1MsYe7IntA7gEY5Hs4S
+        zI0rutJfvdfFmaC18p6L5OxqAVyk8Qo81aREyVj5ZMK1/f6o/PcrRoWCvNtzUTqd
+        5iUJ2eoRyZs0p5EhJ/8PUzqpnZpUaP0H/QyNj5na3Tp60+iDIcIFDC0zElZHgmmA
+        QVflBI1OJnAXo22HIxBCRM+tUQaXplAg4mB2y3DuFB6W6gzvObR0tUfC/bthcoML
+        2zSikw0se47dSIacjSUWKIv86jKPXaLqWZUKMwJpSqiX7Y2pXVurs8+yq0LSyOT3
+        gua+M6FB++HEHQ==
+X-ME-Sender: <xms:dgejXir_nbk6kf7mD4TSFkc2bFOW4LgTcRvGsz5rfRYwebGr2P41Ag>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrhedugdekiecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
-    hrlhcuvffnffculdefhedmnecujfgurhepfffhvffukfhfgggtuggjsehgtderredttddu
-    necuhfhrohhmpefrrghtrhhitghkucghihhllhhirghmshcuoehprghtrhhitghksehsth
-    iftgigrdighiiiqeenucfkphepudeiiedrudejiedruddvuddruddvfeenucevlhhushht
-    vghrufhiiigvpedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehprghtrhhitghksehsth
-    iftgigrdighiii
-X-ME-Proxy: <xmx:bQejXstPEUOaDgXNOf4qczVNs8p3o7wO_ZmnGVO5Bc-TXkSXnT59Fg>
-    <xmx:bQejXsA75-dbwVl_O2OnUDfEARIzfWSkebuFYWLim7ikIlsGZsWXGA>
-    <xmx:bQejXrbFQJkzUVNmGHzz1ZFDzqQMdsOsvEZXgxsBZOPWgZ2WL_ROrQ>
-    <xmx:bQejXvLoo6-e4fcFAj7c2Caa8YMhRbsEW6mjfe2ZxcI50klP9vYjXg>
-Received: from localhost (mobile-166-176-121-123.mycingular.net [166.176.121.123])
-        by mail.messagingengine.com (Postfix) with ESMTPA id BD2AF3065D9A;
-        Fri, 24 Apr 2020 11:36:12 -0400 (EDT)
-Date:   Fri, 24 Apr 2020 10:36:12 -0500
-From:   Patrick Williams <patrick@stwcx.xyz>
-To:     =?iso-8859-1?Q?Bj=F6rn_Ard=F6?= <bjorn.ardo@axis.com>
-Cc:     wsa@the-dreams.de, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@axis.com
-Subject: Re: [PATCHv3] i2c: slave-eeprom: Make it possible to pre-load eeprom
- data
-Message-ID: <20200424153612.GB3163924@heinlein.lan.stwcx.xyz>
-References: <20200424113036.15109-1-bjorn.ardo@axis.com>
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpeefkeenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:dgejXr1UWDKtDVJcot0RQoNdxUfQbHuvERKw_8fPiJG2KKBkaG4VLQ>
+    <xmx:dgejXmU9EOQGzXB1l4-PKgV-XAGpfSKjybmZeSmLtjVH3m5zEHGLZg>
+    <xmx:dgejXiKgxq4kmkH9XCPmKtFq9_jPddKb1zxvF4ndwwzM0wNdvHdW-w>
+    <xmx:dgejXjIiqJYNEp5Erv_DFD9clt_MMrtTA86G8LQfSIv0MFptbBC_8_sS4g0>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 4DFD33065DA3;
+        Fri, 24 Apr 2020 11:36:22 -0400 (EDT)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH v2 43/91] drm/vc4: crtc: Rename SoC data structures
+Date:   Fri, 24 Apr 2020 17:34:24 +0200
+Message-Id: <56fcb796f96befc5fe024a50520718a1cc76900c.1587742492.git-series.maxime@cerno.tech>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
+References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cvVnyQ+4j833TQvp"
-Content-Disposition: inline
-In-Reply-To: <20200424113036.15109-1-bjorn.ardo@axis.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Since we're going to introduce pixelvalve data structures for other SoCs
+than the BCM2835, let's rename the structures defined in the code to
+make it obvious which SoC we're targeting.
 
---cvVnyQ+4j833TQvp
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+---
+ drivers/gpu/drm/vc4/vc4_crtc.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-On Fri, Apr 24, 2020 at 01:30:36PM +0200, Bj=F6rn Ard=F6 wrote:
-> If the slave eeprom has a "firmware-name" in devicetree, then
-> pre-load the data in the eeprom with this file. Otherwise we
-> init the eeprom with 0xFF.
->=20
-> Signed-off-by: Bj=F6rn Ard=F6 <bjorn.ardo@axis.com>
-> ---
->  drivers/i2c/i2c-slave-eeprom.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
-
-Signed-off-by: Patrick Williams <patrick@stwcx.xyz>
-Reviewed-by: Patrick Williams <patrick@stwcx.xyz>
-
---=20
-Patrick Williams
-
---cvVnyQ+4j833TQvp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEBGD9ii4LE9cNbqJBqwNHzC0AwRkFAl6jB2sACgkQqwNHzC0A
-wRk3aA/+IkPleDbT17gsPCRIb3yMjTe8NI6LRNljsxO0S29zj8Tl30uNZ7JmnAoE
-WbxAyTlqS/2XXg6mxRaXdFbt+zghDGnElWi93VlLlUICvAx/or9f5xLP4cHRh8ey
-hgOC9VAkw9id8YOaBGoOqIJiqwzxjN1GlTXGOTuTKQQiT+KBTFzoy2Ei+7HPpyGP
-UOK/OwXwqjywkQ9stbM+hOVmm7v+YlkBshuiqYQEj9eXSQKxxyRP8yTGMLYiDLGS
-729I0btjqf0/sTseCeKRu5LJVjQrRJ/3n98QmGU+w+ri6mmiL2APY9cQ1YtkqreF
-HIXuGoBU4BAhN3way8UJFJp/mWhj/JCZ/r1LuCxw79K52BPhQMN8f796VOnfFivv
-TBAkoIZrfJTZL29nW0qxtVYS2T2GtIq2+ue3g2PB4r9FYGDMDIrQp8CY9G4kHiNU
-VjQQLiXlzGIMWgmmd56xN6LoyeAxxcNcBiAM7jp59ZHn7TOjo0Scolc95+fYGUqo
-lRiuD+6U0ku/BlxzoVBkETF2+5i0YKwVuEILyohmAOKkxtEB+nH0mknWbmomouIK
-chh7KMyKxafTIT1GcKEu3iLrJkwIDkbcdXYeev56UdCPn4Ju2QpCxI/GgJPjPvO0
-1s0iYweZcKnc+YyLAd/2lYTYAnIJjcXxSOnMUaK/l1hAW+J40as=
-=DIec
------END PGP SIGNATURE-----
-
---cvVnyQ+4j833TQvp--
+diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
+index 2131164779dd..9fdb0ccc4a28 100644
+--- a/drivers/gpu/drm/vc4/vc4_crtc.c
++++ b/drivers/gpu/drm/vc4/vc4_crtc.c
+@@ -1058,7 +1058,7 @@ static const struct drm_crtc_helper_funcs vc4_crtc_helper_funcs = {
+ 	.get_scanout_position = vc4_crtc_get_scanout_position,
+ };
+ 
+-static const struct vc4_crtc_data pv0_data = {
++static const struct vc4_crtc_data bcm2835_pv0_data = {
+ 	.hvs_channel = 0,
+ 	.debugfs_name = "crtc0_regs",
+ 	.encoder_types = {
+@@ -1067,7 +1067,7 @@ static const struct vc4_crtc_data pv0_data = {
+ 	},
+ };
+ 
+-static const struct vc4_crtc_data pv1_data = {
++static const struct vc4_crtc_data bcm2835_pv1_data = {
+ 	.hvs_channel = 2,
+ 	.debugfs_name = "crtc1_regs",
+ 	.encoder_types = {
+@@ -1076,7 +1076,7 @@ static const struct vc4_crtc_data pv1_data = {
+ 	},
+ };
+ 
+-static const struct vc4_crtc_data pv2_data = {
++static const struct vc4_crtc_data bcm2835_pv2_data = {
+ 	.hvs_channel = 1,
+ 	.debugfs_name = "crtc2_regs",
+ 	.encoder_types = {
+@@ -1086,9 +1086,9 @@ static const struct vc4_crtc_data pv2_data = {
+ };
+ 
+ static const struct of_device_id vc4_crtc_dt_match[] = {
+-	{ .compatible = "brcm,bcm2835-pixelvalve0", .data = &pv0_data },
+-	{ .compatible = "brcm,bcm2835-pixelvalve1", .data = &pv1_data },
+-	{ .compatible = "brcm,bcm2835-pixelvalve2", .data = &pv2_data },
++	{ .compatible = "brcm,bcm2835-pixelvalve0", .data = &bcm2835_pv0_data },
++	{ .compatible = "brcm,bcm2835-pixelvalve1", .data = &bcm2835_pv1_data },
++	{ .compatible = "brcm,bcm2835-pixelvalve2", .data = &bcm2835_pv2_data },
+ 	{}
+ };
+ 
+-- 
+git-series 0.9.1
