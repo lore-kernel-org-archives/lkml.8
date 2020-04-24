@@ -2,115 +2,86 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E9FC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACB6C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 354B1206B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3354A2075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:39:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e5he+uee"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VxJM0E4h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728816AbgDXRjg (ORCPT
+        id S1728896AbgDXRjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 13:39:36 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26678 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726908AbgDXRjf (ORCPT
+        Fri, 24 Apr 2020 13:39:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45370 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728838AbgDXRjj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 13:39:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587749975;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZgQK9XAbwzLmLV+qfkziGOTjqm2qDmPdwhUEm9j9Saw=;
-        b=e5he+ueev6OcgQ94bgpiMFiUAIxL669O/ae4dmCRddubqvcSeddFufYGcGONZqDz96sjbf
-        KEU6S66yEr15x/KNwrtx/AIP/fghAnfB+FzP5fcqJryZqmZs7aD1mWPNu7TkJIiA1+pCeV
-        MU8jmYxwkQMxA4x6+Grm9HIedGsiyiE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-178-sMY4QfKLNsezFEmtfeffSA-1; Fri, 24 Apr 2020 13:39:33 -0400
-X-MC-Unique: sMY4QfKLNsezFEmtfeffSA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CA670800D24;
-        Fri, 24 Apr 2020 17:39:31 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.22])
-        by smtp.corp.redhat.com (Postfix) with SMTP id A6B311001B2C;
-        Fri, 24 Apr 2020 17:39:29 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Fri, 24 Apr 2020 19:39:31 +0200 (CEST)
-Date:   Fri, 24 Apr 2020 19:39:28 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 2/2] proc: Ensure we see the exit of each process tid
- exactly
-Message-ID: <20200424173927.GB26802@redhat.com>
-References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
- <87ftcv1nqe.fsf@x220.int.ebiederm.org>
- <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
+        Fri, 24 Apr 2020 13:39:39 -0400
+Received: from mail-vk1-xa30.google.com (mail-vk1-xa30.google.com [IPv6:2607:f8b0:4864:20::a30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 431ABC09B047
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 10:39:38 -0700 (PDT)
+Received: by mail-vk1-xa30.google.com with SMTP id n128so2970564vke.5
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 10:39:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lVNykiux2SS49dq2HBWn7JsqkyYB+CbvxiXAjFY5utg=;
+        b=VxJM0E4h1WDU8yB5zcqRbndKTW6H2EPOMb4z3Kzl+8RsCCnjpf98olSU3A618vQhny
+         iTX3M/4OnwJYdl9bCDghHxyIHB1q+tDNhPf/9sFsROnEB2ep1LdyftyWzZ30bF4cy9nZ
+         OZ+VNTUPCf9JsY//tM6/EwcSdNYWqogiVXSuKp2LmyhdTUC++hhw01sZCikHupjdvJAn
+         F9Ln48Ahv+9/jXW+ANsRz2BKeo4CsXh5SKDzzFOvoN7PDj3YqRV0cZVMoUzwriv5biW7
+         tHjkAlf9g6plEEyqWSFL3kQ8W5kkAVr9O9QghKRRDkLYeRojzx4/ZPkDW8HILIG6l/Kb
+         h2LQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lVNykiux2SS49dq2HBWn7JsqkyYB+CbvxiXAjFY5utg=;
+        b=V/3I2nHvR89nHOBg7t3jYhZ2Im08XPbSwb1ySu8aWslMnylz5PioT82CDso+xjfbEF
+         nMhmlH0UNu5u7ZPRjpHh7TB379+kTUzSWYRdW7ct+/ylJrvo9GV4oDIsvyW+7WHjup2O
+         6S2sTSixpZxyg+6IGTHhuTPkTgsjGIRSkJRmsV3W8EvFdwIUP6IV/nUX40wL6oe68oTJ
+         Z49oIiUc96p5nJ0I0iIwfUos6N6cunP6SrCu6Kw5/OK6z+8utT1IaiRwvLbLEeXMN3v5
+         rTHZDB8MYfTXMvrtt0jtCJ/ddZYpeelkBxDnKiIGibQeL7S4dD8Yc+XCuEdh5L5feJmt
+         wAUQ==
+X-Gm-Message-State: AGi0Pua8ytVpj9rWetWutAuDNPdGgis0y+HnAvSnhnVHC6Q+Z+IGHHsM
+        EDhQLYBX4T+GUrYrct5SLWwJVKaEOGM1zN71cg==
+X-Google-Smtp-Source: APiQypL4bmtRtO/YcTxs3lS+V2EvfAlKlZUC0+uB+6jVx22DifGDKNum6YkWauX3Ba7XcbY2CQwsyHIFJs7LaHLVLtE=
+X-Received: by 2002:a1f:ce83:: with SMTP id e125mr9009637vkg.10.1587749976655;
+ Fri, 24 Apr 2020 10:39:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <CALjTZvaiCzPQT6Jrx4pFW6KuZj2WLSQQpCbU-sg1jEgscQAKFQ@mail.gmail.com>
+ <1587715859.28179.17.camel@suse.cz>
+In-Reply-To: <1587715859.28179.17.camel@suse.cz>
+From:   Rui Salvaterra <rsalvaterra@gmail.com>
+Date:   Fri, 24 Apr 2020 18:39:25 +0100
+Message-ID: <CALjTZvb_nzOXd09VXJDECu4b7xuS3tduQ1SXJ0BrpCMBp4qcRQ@mail.gmail.com>
+Subject: Re: [BISECTED] bug/regression, x86-64: completely unbootable machine
+To:     Giovanni Gherdovich <ggherdovich@suse.cz>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/23, Eric W. Biederman wrote:
+Hi, again,
+
+On Fri, 24 Apr 2020 at 09:11, Giovanni Gherdovich <ggherdovich@suse.cz> wrote:
 >
-> When the thread group leader changes during exec and the old leaders
-> thread is reaped proc_flush_pid
+> The problem you encountered is due to a bug where the code doesn't work on
+> machines with less than 4 physical CPU cores.
 
-This is off-topic, but let me mention this before I forget...
+Thinking about it more thoroughly, are you sure that's the bug I'm
+hitting? I'm asking because I have an i5-6200U (Skylake, also dual
+core, dual thread, like the i3-380M) laptop which runs 5.7-rc1/rc2
+just fine.
 
-Note that proc_flush_pid() does nothing if CONFIG_PROC_FS=n, this mean
-that in this case release_task() leaks thread_pid.
-
-> +void exchange_tids(struct task_struct *ntask, struct task_struct *otask)
-> +{
-> +	/* pid_links[PIDTYPE_PID].next is always NULL */
-> +	struct pid *npid = READ_ONCE(ntask->thread_pid);
-> +	struct pid *opid = READ_ONCE(otask->thread_pid);
-> +
-> +	rcu_assign_pointer(opid->tasks[PIDTYPE_PID].first, &ntask->pid_links[PIDTYPE_PID]);
-> +	rcu_assign_pointer(npid->tasks[PIDTYPE_PID].first, &otask->pid_links[PIDTYPE_PID]);
-> +	rcu_assign_pointer(ntask->thread_pid, opid);
-> +	rcu_assign_pointer(otask->thread_pid, npid);
-> +	WRITE_ONCE(ntask->pid_links[PIDTYPE_PID].pprev, &opid->tasks[PIDTYPE_PID].first);
-> +	WRITE_ONCE(otask->pid_links[PIDTYPE_PID].pprev, &npid->tasks[PIDTYPE_PID].first);
-> +	WRITE_ONCE(ntask->pid, pid_nr(opid));
-> +	WRITE_ONCE(otask->pid, pid_nr(npid));
-> +}
-
-Oh, at first glance this breaks posix-cpu-timers.c:lookup_task(), the last
-user of has_group_leader_pid().
-
-I think that we should change lookup_task() to return "struct *pid", this
-should simplify the code... Note that none of its callers needs task_struct.
-
-And, instead of thread_group_leader/has_group_leader_pid checks we should
-use pid_has_task(TGID).
-
-After that, this patch should kill has_group_leader_pid().
-
-What do you think?
-
-Oleg.
-
+Thanks,
+Rui
