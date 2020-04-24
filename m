@@ -2,291 +2,400 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7D5C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A099C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 182DF20736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FE9C20736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:37:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t7Z9WsJF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbgDXJhF (ORCPT
+        id S1726806AbgDXJhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 05:37:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50586 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726298AbgDXJhF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 05:37:05 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id EED6BAECE;
-        Fri, 24 Apr 2020 09:37:01 +0000 (UTC)
-Date:   Fri, 24 Apr 2020 11:37:01 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Peter Zijlstra <peterz@infradead.org>
-cc:     jpoimboe@redhat.com, alexandre.chartre@oracle.com,
-        linux-kernel@vger.kernel.org, jthierry@redhat.com,
-        tglx@linutronix.de, x86@kernel.org
-Subject: Re: [PATCH 4/8] objtool: Add support for intra-function calls
-In-Reply-To: <20200423152243.GV20730@hirez.programming.kicks-ass.net>
-Message-ID: <alpine.LSU.2.21.2004241102500.6175@pobox.suse.cz>
-References: <20200423125013.452964352@infradead.org> <20200423125042.794350465@infradead.org> <alpine.LSU.2.21.2004231619070.6520@pobox.suse.cz> <20200423152243.GV20730@hirez.programming.kicks-ass.net>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Fri, 24 Apr 2020 05:37:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53254 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726774AbgDXJhS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 05:37:18 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57EF5C09B045;
+        Fri, 24 Apr 2020 02:37:18 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id mq3so3693701pjb.1;
+        Fri, 24 Apr 2020 02:37:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rQRt850loFy2K9Mv2/2PkLvs7gcZ9pajqSB14vuunls=;
+        b=t7Z9WsJFCJ5IcdjM97Her8rVj9o55O/L5//QgMLLiESEtj/lD1CianuarVpWUpXPij
+         ptMRps06QQQIc9Y9+XeeGV1AF0ucfPd4wq3Y36JWLybskEz3XI7kx7IpHz6566fe2NH3
+         dFG19JvPQ6LmyTdGx1rVXjYXvyRfWVBDyE28oCVV8hJNP4Q6FCIspnGKEr/C2Pvf/FrX
+         Shq8wEruChQsu6H8R+Ylo2rj4Gq7xETqB5uCA//L3mDOlgKaut1mV0DYHhaMIcj2etqm
+         A45hcePVzjjjtzZj/AFp6oiZ5IJV6VBITAa13NhR06nt3a0XbheVj0BTsLhp5pK/BZ7z
+         jAwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rQRt850loFy2K9Mv2/2PkLvs7gcZ9pajqSB14vuunls=;
+        b=Jf4FRp1b8I/oyaHVyyHSMcPhfNqhGXIvEQM2NYfBYlTY7gMTO6P1OqpDMmRSw9nLbJ
+         UfbsMJDhdgxmNXal8io6gPIRmaoRsY0H9wq6tR5OACrh5yrfFoJI8G0pUyQTv4fbZsru
+         m/YKQium4PgxIZatTEJbmFJdM0ijOoWgUp1Ppvv6ZWrszUvJuOTUHh9t7zKWNGC5fzo8
+         NZVP2cSkvj0LALAY8TQiw/JkUFjpZFFWlY0tECeOApMxUI5yeDtKq938C4HLr4Mwax/l
+         cZoQehSbJDi4avPl3Bbgj3C1V8afhp/c9EDLh8HfrIdaZwQyQ2pEnULIUQ76GMLawUso
+         Q2EA==
+X-Gm-Message-State: AGi0Pub27wx7NSsXhbGpdYhB0y7ye4Xd4UXCMhDnAuMeSSSPcW9eStUW
+        OumwPn+zE88OT9FFzes2Zx4=
+X-Google-Smtp-Source: APiQypKXC+LULEclqOqk9htqfecuBhR0M2mDrUEpqyujQiDPXq/JpNlJbY52dzbd/1JzItb6VQQpGA==
+X-Received: by 2002:a17:90a:3781:: with SMTP id v1mr5017458pjb.83.1587721037541;
+        Fri, 24 Apr 2020 02:37:17 -0700 (PDT)
+Received: from localhost.localdomain (146.85.30.125.dy.iij4u.or.jp. [125.30.85.146])
+        by smtp.gmail.com with ESMTPSA id f76sm5080466pfa.167.2020.04.24.02.37.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Apr 2020 02:37:16 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     Hans Verkuil <hans.verkuil@cisco.com>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: [RFC][PATCH] v4l2-utils: test cache_hints for MMAP queues
+Date:   Fri, 24 Apr 2020 18:37:01 +0900
+Message-Id: <20200424093701.5109-1-sergey.senozhatsky@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Apr 2020, Peter Zijlstra wrote:
+	RFC version
 
-> On Thu, Apr 23, 2020 at 04:34:21PM +0200, Miroslav Benes wrote:
-> > >  /*
-> > >   * Find the destination instructions for all calls.
-> > >   */
-> > > @@ -715,10 +725,7 @@ static int add_call_destinations(struct
-> > >  				continue;
-> > >  
-> > >  			if (!insn->call_dest) {
-> > > -				WARN_FUNC("unsupported intra-function call",
-> > > -					  insn->sec, insn->offset);
-> > > -				if (retpoline)
-> > > -					WARN("If this is a retpoline, please patch it in with alternatives and annotate it with ANNOTATE_NOSPEC_ALTERNATIVE.");
-> > > +				WARN_FUNC("intra-function call", insn->sec, insn->offset);
-> > 
-> > "unsupported intra-function call"?
-> 
-> Well, I think the thinking was that intra-function calls are actually
-> supported, 'unannotated' perhaps ?
+The patch adds V4L2_FLAG_MEMORY_NON_CONSISTENT consistency
+attr test to VIDIOC_REQBUFS and VIDIOC_CREATE_BUFS ioctl-s,
+and V4L2_BUF_FLAG_NO_CACHE_INVALIDATE/V4L2_BUF_FLAG_NO_CACHE_CLEAN
+buffer cache management hints for MMAP queues.
 
-Ok, that would work too. Just keep it consistent with a new description in 
-tools/objtool/Documentation/stack-validation.txt added by the patch.
- 
-> > >  				return -1;
-> > >  			}
-> > >  
-> > > @@ -741,6 +748,12 @@ static int add_call_destinations(struct
-> > >  			}
-> > >  		} else
-> > >  			insn->call_dest = rela->sym;
-> > > +
-> > > +		/*
-> > > +		 * Whatever stack impact regular CALLs have, should be
-> > > +		 * undone by the RETURN of the called function.
-> > 
-> >  * Annotated intra-function CALLs are treated as JMPs with a stack_op.
-> >  * See read_intra_function_calls().
-> > 
-> > would make it a bit clearer.
-> 
-> That doesn't work for me; we want to explain why it is OK to delete
-> stack_ops for regular CALLs. The reason this is OK, is because they're
-> matched by RETURN.
-
-Yes. I meant to add the paragraph, not to replace it. Sorry about the 
-confusion. The point is to explain what "regular" also means in this 
-context.
-
-> > > +                */
-> > > +               remove_insn_ops(insn);
-> > >         }
-> > >  
-> > >         return 0;
-> > > @@ -1416,6 +1429,57 @@ static int read_instr_hints(struct objto
-> > >         return 0;
-> > >  }
-> > > 
-> > > +static int read_intra_function_calls(struct objtool_file *file)
-> > > +{
-> > > +       struct instruction *insn;
-> > > +       struct section *sec;
-> > > +       struct rela *rela;
-> > > +
-> > > +       sec = find_section_by_name(file->elf, ".rela.discard.intra_function_calls");
-> > > +       if (!sec)
-> > > +               return 0;
-> > > +
-> > > +       list_for_each_entry(rela, &sec->rela_list, list) {
-> > > +               unsigned long dest_off;
-> > > +
-> > > +               if (rela->sym->type != STT_SECTION) {
-> > > +                       WARN("unexpected relocation symbol type in %s",
-> > > +                            sec->name);
-> > > +                       return -1;
-> > > +               }
-> > > +
-> > > +               insn = find_insn(file, rela->sym->sec, rela->addend);
-> > > +               if (!insn) {
-> > > +                       WARN("bad .discard.intra_function_call entry");
-> > > +                       return -1;
-> > > +               }
-> > > +
-> > > +               if (insn->type != INSN_CALL) {
-> > > +                       WARN_FUNC("intra_function_call not a direct call",
-> > > +                                 insn->sec, insn->offset);
-> > > +                       return -1;
-> > > +               }
-> > > +
-> > > +               /*
-> > > +                * Treat intra-function CALLs as JMPs, but with a stack_op.
-> > > +                * Also see how setup_call_dest() strips stack_ops from normal
-> > > +                * CALLs.
-> > 
-> > /*
-> >  * Treat annotated intra-function CALLs as JMPs, but with a stack_op.
-> >  * Also see how add_call_destinations() strips stack_ops from normal
-> >  * CALLs.
-> >  */
-> > 
-> > ? (note added "annotated" and s/setup_call_dest/add_call_destinations/)
-> 
-> Unannotated intra-function calls are not allowed, so I don't see a
-> reason to make that distinction, but sure.
-
-Then it would be better to say something like
-
-/*
- * Treat intra-function CALLs as JMPs, but with a stack_op.
- * See add_call_destinations() for reference which also strips 
- * stack_ops from normal CALLs.
- */
-
-But in the end it is up to you for sure.
-
-> > > +                */
-> > > +               insn->type = INSN_JUMP_UNCONDITIONAL;
-> > 
-> > [...]
-> > 
-> > > @@ -2245,6 +2313,9 @@ static int validate_branch(struct objtoo
-> > >  				return 0;
-> > >  		}
-> > >  
-> > > +		if (handle_insn_ops(insn, &state))
-> > > +			return 1;
-> > > +
-> > >  		switch (insn->type) {
-> > >  
-> > >  		case INSN_RETURN:
-> > > @@ -2304,9 +2375,6 @@ static int validate_branch(struct objtoo
-> > >  			break;
-> > >  
-> > >  		case INSN_EXCEPTION_RETURN:
-> > > -			if (handle_insn_ops(insn, &state))
-> > > -				return 1;
-> > > -
-> > >  			/*
-> > >  			 * This handles x86's sync_core() case, where we use an
-> > >  			 * IRET to self. All 'normal' IRET instructions are in
-> > > @@ -2326,8 +2394,6 @@ static int validate_branch(struct objtoo
-> > >  			return 0;
-> > >  
-> > >  		case INSN_STACK:
-> > > -			if (handle_insn_ops(insn, &state))
-> > > -				return 1;
-> > >  			break;
-> > 
-> > So we could get rid of INSN_STACK now as Julien proposed, couldn't we? If 
-> > I am not missing something. handle_insn_ops() is called unconditionally 
-> > here for all insn types and you remove stack_ops when unneeded.
-> 
-> Yes, INSN_STACK can now go away in favour of NOPs with stack_ops.
-> Separate patch though.
-> 
-> > We could also go ahead with Julien's proposal to remove 
-> > INSN_EXCEPTION_RETURN hack and move it to tools/objtool/arch/x86/decode.c. 
-> 
-> I don't immediately see how; we don't have a symbol there.
-
-You can call find_symbol_by_offset() to get it, no? All the information 
-sohuld be available.
-
-If by symbol you mean the symbol containing the iret.
-
-Quoting Julien:
-"And the other suggestion is my other email was that you don't even need to add
-INSN_EXCEPTION_RETURN. You can keep IRET as INSN_CONTEXT_SWITCH by default and
-x86 decoder lookups the symbol conaining an iret. If it's a function symbol, it
-can just set the type to INSN_OTHER so that it caries on to the next
-instruction after having handled the stack_op."
-
-So something like (it is incomplete, does not compile and it may be 
-completely wrong, so sorry for wasting time in that case):
-
+Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 ---
+ utils/common/cv4l-helpers.h                 |   8 +-
+ utils/common/v4l-helpers.h                  |  10 +-
+ utils/common/v4l2-info.cpp                  |   1 +
+ utils/v4l2-compliance/v4l2-test-buffers.cpp | 118 +++++++++++++++++++-
+ 4 files changed, 124 insertions(+), 13 deletions(-)
 
-diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
-index 6340ea0dd527..be6520155cfd 100644
---- a/tools/objtool/arch/x86/decode.c
-+++ b/tools/objtool/arch/x86/decode.c
-@@ -100,6 +100,7 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 		      rex_x = 0, modrm = 0, modrm_mod = 0, modrm_rm = 0,
- 		      modrm_reg = 0, sib = 0;
- 	struct stack_op *op = NULL;
-+	struct symbol *sym;
+diff --git a/utils/common/cv4l-helpers.h b/utils/common/cv4l-helpers.h
+index 9505e334..9de0cdf0 100644
+--- a/utils/common/cv4l-helpers.h
++++ b/utils/common/cv4l-helpers.h
+@@ -753,17 +753,17 @@ public:
+ 	int g_fd(unsigned index, unsigned plane) const { return v4l_queue_g_fd(this, index, plane); }
+ 	void s_fd(unsigned index, unsigned plane, int fd) { v4l_queue_s_fd(this, index, plane, fd); }
  
- 	x86_64 = is_x86_64(elf);
- 	if (x86_64 == -1)
-@@ -496,22 +497,24 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 		*type = INSN_RETURN;
- 		break;
+-	int reqbufs(cv4l_fd *fd, unsigned count = 0)
++	int reqbufs(cv4l_fd *fd, unsigned count = 0, unsigned int flags = 0)
+ 	{
+-		return v4l_queue_reqbufs(fd->g_v4l_fd(), this, count);
++		return v4l_queue_reqbufs(fd->g_v4l_fd(), this, count, flags);
+ 	}
+ 	bool has_create_bufs(cv4l_fd *fd) const
+ 	{
+ 		return v4l_queue_has_create_bufs(fd->g_v4l_fd(), this);
+ 	}
+-	int create_bufs(cv4l_fd *fd, unsigned count, const v4l2_format *fmt = NULL)
++	int create_bufs(cv4l_fd *fd, unsigned count, const v4l2_format *fmt = NULL, unsigned int flags = 0)
+ 	{
+-		return v4l_queue_create_bufs(fd->g_v4l_fd(), this, count, fmt);
++		return v4l_queue_create_bufs(fd->g_v4l_fd(), this, count, fmt, flags);
+ 	}
+ 	int mmap_bufs(cv4l_fd *fd, unsigned from = 0)
+ 	{
+diff --git a/utils/common/v4l-helpers.h b/utils/common/v4l-helpers.h
+index b794ff88..53f7bec9 100644
+--- a/utils/common/v4l-helpers.h
++++ b/utils/common/v4l-helpers.h
+@@ -1513,7 +1513,7 @@ static inline int v4l_queue_querybufs(struct v4l_fd *f, struct v4l_queue *q, uns
+ }
  
--	case 0xcf: /* iret */
--		*type = INSN_EXCEPTION_RETURN;
--
--		ADD_OP(op) {
--			/* add $40, %rsp */
--			op->src.type = OP_SRC_ADD;
--			op->src.reg = CFI_SP;
--			op->src.offset = 5*8;
--			op->dest.type = OP_DEST_REG;
--			op->dest.reg = CFI_SP;
--		}
--		break;
--
- 	case 0xca: /* retf */
- 	case 0xcb: /* retf */
-+	case 0xcf: /* iret */
- 		*type = INSN_CONTEXT_SWITCH;
+ static inline int v4l_queue_reqbufs(struct v4l_fd *f,
+-		struct v4l_queue *q, unsigned count)
++		struct v4l_queue *q, unsigned count, unsigned int flags = 0)
+ {
+ 	struct v4l2_requestbuffers reqbufs;
+ 	int ret;
+@@ -1521,7 +1521,7 @@ static inline int v4l_queue_reqbufs(struct v4l_fd *f,
+ 	reqbufs.type = q->type;
+ 	reqbufs.memory = q->memory;
+ 	reqbufs.count = count;
+-	memset(reqbufs.reserved, 0, sizeof(reqbufs.reserved));
++	reqbufs.flags = flags;
+ 	/*
+ 	 * Problem: if REQBUFS returns an error, did it free any old
+ 	 * buffers or not?
+@@ -1545,7 +1545,8 @@ static inline bool v4l_queue_has_create_bufs(struct v4l_fd *f, const struct v4l_
+ }
+ 
+ static inline int v4l_queue_create_bufs(struct v4l_fd *f,
+-		struct v4l_queue *q, unsigned count, const struct v4l2_format *fmt)
++		struct v4l_queue *q, unsigned count,
++		const struct v4l2_format *fmt, unsigned int flags = 0)
+ {
+ 	struct v4l2_create_buffers createbufs;
+ 	int ret;
+@@ -1553,6 +1554,7 @@ static inline int v4l_queue_create_bufs(struct v4l_fd *f,
+ 	createbufs.format.type = q->type;
+ 	createbufs.memory = q->memory;
+ 	createbufs.count = count;
++	createbufs.flags = flags;
+ 	if (fmt) {
+ 		createbufs.format = *fmt;
+ 	} else {
+@@ -1731,7 +1733,7 @@ static inline void v4l_queue_free(struct v4l_fd *f, struct v4l_queue *q)
+ 	v4l_ioctl(f, VIDIOC_STREAMOFF, &q->type);
+ 	v4l_queue_release_bufs(f, q, 0);
+ 	v4l_queue_close_exported_fds(q);
+-	v4l_queue_reqbufs(f, q, 0);
++	v4l_queue_reqbufs(f, q, 0, 0);
+ }
+ 
+ static inline void v4l_queue_buffer_update(const struct v4l_queue *q,
+diff --git a/utils/common/v4l2-info.cpp b/utils/common/v4l2-info.cpp
+index 0aac8504..bca42bb4 100644
+--- a/utils/common/v4l2-info.cpp
++++ b/utils/common/v4l2-info.cpp
+@@ -206,6 +206,7 @@ static const flag_def bufcap_def[] = {
+ 	{ V4L2_BUF_CAP_SUPPORTS_REQUESTS, "requests" },
+ 	{ V4L2_BUF_CAP_SUPPORTS_ORPHANED_BUFS, "orphaned-bufs" },
+ 	{ V4L2_BUF_CAP_SUPPORTS_M2M_HOLD_CAPTURE_BUF, "m2m-hold-capture-buf" },
++	{ V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS, "cache-hints" },
+ 	{ 0, NULL }
+ };
+ 
+diff --git a/utils/v4l2-compliance/v4l2-test-buffers.cpp b/utils/v4l2-compliance/v4l2-test-buffers.cpp
+index 93df7034..c8be8024 100644
+--- a/utils/v4l2-compliance/v4l2-test-buffers.cpp
++++ b/utils/v4l2-compliance/v4l2-test-buffers.cpp
+@@ -381,8 +381,6 @@ int buffer::check(unsigned type, unsigned memory, unsigned index,
+ 	if (g_flags() & V4L2_BUF_FLAG_BFRAME)
+ 		frame_types++;
+ 	fail_on_test(frame_types > 1);
+-	fail_on_test(g_flags() & (V4L2_BUF_FLAG_NO_CACHE_INVALIDATE |
+-				  V4L2_BUF_FLAG_NO_CACHE_CLEAN));
+ 	if (g_flags() & V4L2_BUF_FLAG_QUEUED)
+ 		buf_states++;
+ 	if (g_flags() & V4L2_BUF_FLAG_DONE)
+@@ -534,6 +532,80 @@ static int testCanSetSameTimings(struct node *node)
+ 	return 0;
+ }
+ 
++static int setupMmap(struct node *node, cv4l_queue &q);
 +
-+		sym = find_symbol_by_offset(sec, offset);
-+		if (sym && sym->type == STT_FUNC) {
-+			*type = INSN_OTHER;
++static int testCacheHints(struct node *node, int m)
++{
++	struct v4l2_create_buffers crbufs = { };
++	struct v4l2_requestbuffers reqbufs = { };
++	bool cache_hints_cap = false;
++	cv4l_queue q;
++	cv4l_fmt fmt;
++	int ret;
 +
-+			ADD_OP(op) {
-+				/* add $40, %rsp */
-+				op->src.type = OP_SRC_ADD;
-+				op->src.reg = CFI_SP;
-+				op->src.offset = 5*8;
-+				op->dest.type = OP_DEST_REG;
-+				op->dest.reg = CFI_SP;
-+			}
++	q.init(node->g_type(), m);
++	/*
++	 * This will call driver's ->queue_setup() so then v4l can report
++	 * proper cache_hints capabilitues.
++	 */
++	ret = q.reqbufs(node, 2);
++	if (ret)
++		return ret;
++
++	/*
++	 * Cache hints cap is set for queues that support VB2_MMAP io_mode,
++	 * but that does not mean that those queues are initialized as
++	 * V4L2_MEMORY_MMAP queues. Thus even if we see cache_hints cap
++	 * queue can still ignore and clear V4L2_FLAG_MEMORY_NON_CONSISTENT.
++	 */
++	cache_hints_cap = q.g_capabilities() & V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS;
++
++	reqbufs.count = 2;
++	reqbufs.type = q.g_type();
++	reqbufs.memory = q.g_memory();
++	reqbufs.flags = V4L2_FLAG_MEMORY_NON_CONSISTENT;
++	fail_on_test(doioctl(node, VIDIOC_REQBUFS, &reqbufs));
++	if (cache_hints_cap)
++		fail_on_test(!(reqbufs.flags & V4L2_FLAG_MEMORY_NON_CONSISTENT));
++	else
++		fail_on_test(reqbufs.flags & V4L2_FLAG_MEMORY_NON_CONSISTENT);
++	q.reqbufs(node);
++
++	node->g_fmt(crbufs.format, q.g_type());
++	crbufs.count = 2;
++	crbufs.memory = q.g_memory();
++	crbufs.flags = V4L2_FLAG_MEMORY_NON_CONSISTENT;
++	fail_on_test(doioctl(node, VIDIOC_CREATE_BUFS, &crbufs));
++	if (cache_hints_cap)
++		fail_on_test(!(crbufs.flags & V4L2_FLAG_MEMORY_NON_CONSISTENT));
++	else
++		fail_on_test(crbufs.flags & V4L2_FLAG_MEMORY_NON_CONSISTENT);
++
++	if (cache_hints_cap) {
++		/* Different memory consistency model, should fail */
++		crbufs.count = 2;
++		crbufs.memory = q.g_memory();
++		crbufs.flags = 0;
++		fail_on_test(doioctl(node, VIDIOC_CREATE_BUFS, &crbufs) != EINVAL);
++	}
++	q.reqbufs(node);
++
++	/* For the time being only MMAP is tested */
++	if (m != V4L2_MEMORY_MMAP)
++		return 0;
++
++	node->g_fmt(fmt, q.g_type());
++	q.create_bufs(node, 2, &fmt, 0);
++	fail_on_test(setupMmap(node, q));
++
++	q.reqbufs(node);
++	q.create_bufs(node, 2, &fmt, V4L2_FLAG_MEMORY_NON_CONSISTENT);
++	fail_on_test(setupMmap(node, q));
++
++	q.reqbufs(node, 1);
++	return ret;
++}
++
+ int testReqBufs(struct node *node)
+ {
+ 	struct v4l2_create_buffers crbufs = { };
+@@ -676,8 +748,8 @@ int testReqBufs(struct node *node)
+ 			reqbufs.count = 0;
+ 			reqbufs.type = i;
+ 			reqbufs.memory = m;
++			reqbufs.flags = 0;
+ 			fail_on_test(doioctl(node, VIDIOC_REQBUFS, &reqbufs));
+-			fail_on_test(check_0(reqbufs.reserved, sizeof(reqbufs.reserved)));
+ 			q.reqbufs(node);
+ 
+ 			ret = q.create_bufs(node, 1);
+@@ -698,6 +770,7 @@ int testReqBufs(struct node *node)
+ 			node->g_fmt(crbufs.format, i);
+ 			crbufs.count = 0;
+ 			crbufs.memory = m;
++			crbufs.flags = 0;
+ 			fail_on_test(doioctl(node, VIDIOC_CREATE_BUFS, &crbufs));
+ 			fail_on_test(check_0(crbufs.reserved, sizeof(crbufs.reserved)));
+ 			fail_on_test(crbufs.index != q.g_buffers());
+@@ -721,6 +794,8 @@ int testReqBufs(struct node *node)
+ 					fmt.s_sizeimage(fmt.g_sizeimage(p) * 2, p);
+ 				fail_on_test(q.create_bufs(node, 1, &fmt));
+ 			}
++
++			printf("\ttest V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS: %s\n", ok(testCacheHints(node, m)));
+ 		}
+ 		fail_on_test(q.reqbufs(node));
+ 	}
+@@ -1176,14 +1251,22 @@ static int bufferOutputErrorTest(struct node *node, const buffer &orig_buf)
+ 
+ static int setupMmap(struct node *node, cv4l_queue &q)
+ {
++	bool cache_hints = q.g_capabilities() & V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS;
++
+ 	fail_on_test(q.mmap_bufs(node));
+ 	for (unsigned i = 0; i < q.g_buffers(); i++) {
+ 		buffer buf(q);
++		unsigned int flags;
+ 		int ret;
+ 
+ 		fail_on_test(buf.querybuf(node, i));
+ 		fail_on_test(buf.check(q, Unqueued, i));
+ 
++		flags = buf.g_flags();
++		flags |= V4L2_BUF_FLAG_NO_CACHE_INVALIDATE;
++		flags |= V4L2_BUF_FLAG_NO_CACHE_CLEAN;
++		buf.s_flags(flags);
++
+ 		for (unsigned p = 0; p < buf.g_num_planes(); p++) {
+ 			// Try a random offset
+ 			fail_on_test(node->mmap(buf.g_length(p),
+@@ -1220,6 +1303,14 @@ static int setupMmap(struct node *node, cv4l_queue &q)
+ 			buf.s_index(buf.g_index() - VIDEO_MAX_FRAME);
+ 			fail_on_test(buf.g_index() != i);
+ 		}
++		flags = buf.g_flags();
++		if (cache_hints) {
++			fail_on_test(!(flags & V4L2_BUF_FLAG_NO_CACHE_INVALIDATE));
++			fail_on_test(!(flags & V4L2_BUF_FLAG_NO_CACHE_CLEAN));
++		} else {
++			fail_on_test(flags & V4L2_BUF_FLAG_NO_CACHE_INVALIDATE);
++			fail_on_test(flags & V4L2_BUF_FLAG_NO_CACHE_CLEAN);
 +		}
- 		break;
+ 		fail_on_test(buf.querybuf(node, i));
+ 		fail_on_test(buf.check(q, Queued, i));
+ 		fail_on_test(!buf.dqbuf(node));
+@@ -1475,11 +1566,17 @@ static int setupUserPtr(struct node *node, cv4l_queue &q)
+ {
+ 	for (unsigned i = 0; i < q.g_buffers(); i++) {
+ 		buffer buf(q);
++		unsigned int flags;
+ 		int ret;
  
- 	case 0xe8:
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 802dba19a161..a5eedf5e9813 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2358,17 +2358,6 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+ 		fail_on_test(buf.querybuf(node, i));
+ 		fail_on_test(buf.check(q, Unqueued, i));
  
- 			break;
++		flags = buf.g_flags();
++		flags |= V4L2_BUF_FLAG_NO_CACHE_INVALIDATE;
++		flags |= V4L2_BUF_FLAG_NO_CACHE_CLEAN;
++		buf.s_flags(flags);
++
+ 		for (unsigned p = 0; p < buf.g_num_planes(); p++) {
+ 			// This should not work!
+ 			fail_on_test(node->mmap(buf.g_length(p), 0) != MAP_FAILED);
+@@ -1537,7 +1634,10 @@ static int setupUserPtr(struct node *node, cv4l_queue &q)
+ 			if (v4l_type_is_output(q.g_type()))
+ 				fail_on_test(!buf.g_bytesused(p));
+ 		}
+-		fail_on_test(buf.g_flags() & V4L2_BUF_FLAG_DONE);
++		flags = buf.g_flags();
++		fail_on_test(flags & V4L2_BUF_FLAG_NO_CACHE_INVALIDATE);
++		fail_on_test(flags & V4L2_BUF_FLAG_NO_CACHE_CLEAN);
++		fail_on_test(flags & V4L2_BUF_FLAG_DONE);
+ 		fail_on_test(buf.querybuf(node, i));
+ 		fail_on_test(buf.check(q, Queued, i));
+ 	}
+@@ -1732,12 +1832,17 @@ static int setupDmaBuf(struct node *expbuf_node, struct node *node,
+ 	fail_on_test(q.mmap_bufs(node));
+ 	for (unsigned i = 0; i < q.g_buffers(); i++) {
+ 		buffer buf(q);
++		unsigned int flags;
+ 		int ret;
  
--		case INSN_EXCEPTION_RETURN:
--			/*
--			 * This handles x86's sync_core() case, where we use an
--			 * IRET to self. All 'normal' IRET instructions are in
--			 * STT_NOTYPE entry symbols.
--			 */
--			if (func)
--				break;
--
--			return 0;
--
- 		case INSN_CONTEXT_SWITCH:
- 			if (func && (!next_insn || !next_insn->hint)) {
- 				WARN_FUNC("unsupported instruction in callable function",
+ 		buf.init(q, i);
+ 		fail_on_test(buf.querybuf(node, i));
+ 		for (unsigned p = 0; p < buf.g_num_planes(); p++)
+ 			buf.s_fd(q.g_fd(i, p), p);
++		flags = buf.g_flags();
++		flags |= V4L2_BUF_FLAG_NO_CACHE_INVALIDATE;
++		flags |= V4L2_BUF_FLAG_NO_CACHE_CLEAN;
++		buf.s_flags(flags);
+ 		ret = buf.prepare_buf(node, q);
+ 		if (ret != ENOTTY) {
+ 			fail_on_test(ret);
+@@ -1757,7 +1862,10 @@ static int setupDmaBuf(struct node *expbuf_node, struct node *node,
+ 			if (v4l_type_is_output(q.g_type()))
+ 				fail_on_test(!buf.g_bytesused(p));
+ 		}
+-		fail_on_test(buf.g_flags() & V4L2_BUF_FLAG_DONE);
++		flags = buf.g_flags();
++		fail_on_test(flags & V4L2_BUF_FLAG_NO_CACHE_INVALIDATE);
++		fail_on_test(flags & V4L2_BUF_FLAG_NO_CACHE_CLEAN);
++		fail_on_test(flags & V4L2_BUF_FLAG_DONE);
+ 		fail_on_test(buf.querybuf(node, i));
+ 		fail_on_test(buf.check(q, Queued, i));
+ 	}
+-- 
+2.26.2
+
