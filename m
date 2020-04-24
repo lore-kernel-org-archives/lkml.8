@@ -2,118 +2,79 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B66C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D078EC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D70AF20774
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:52:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587747132;
-	bh=lQE9T5LzPof7nBKO8GPRqY/ZDhq/5vz9BEA3Xz2iqkY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JJxpy0dr51fL9VIFsIspkzWgMPvfJ9OX+FMrb41CgiCRVAQVFP7FMCnpuKFfwD6b1
-	 ygy+VBLp4LEMNw+O5enm84o8arIQmqL/zDqb2E9vFDRX4xFeRaJoVE/EuJRjxggtrS
-	 UBDOsvnb41YOl5jfutu0OtE2j36pFOWl9ZAKPRH8=
+	by mail.kernel.org (Postfix) with ESMTP id 9966720728
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:53:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728640AbgDXQwM (ORCPT
+        id S1728267AbgDXQxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 12:52:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50280 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728019AbgDXQwL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 12:52:11 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98F7620728;
-        Fri, 24 Apr 2020 16:52:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587747131;
-        bh=lQE9T5LzPof7nBKO8GPRqY/ZDhq/5vz9BEA3Xz2iqkY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zwe6qKlD9HGccAzrGsOmDRlLxNKacRmL5rd1qt5514PO1CKcnllydC8GICKjA88rV
-         YrLEuwlJNm/UCVAvHoBWk/GNLWbaET2ahkD7U3XfIJ6OvRM/WwTJZ4usN1lTcKcUIh
-         DtEFqVHcfwAufNmZI4o2tnHzwRv8I1VOzVHvJEio=
-Date:   Fri, 24 Apr 2020 17:52:05 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH v4 00/11] Rework READ_ONCE() to improve codegen
-Message-ID: <20200424165204.GG21141@willie-the-truck>
-References: <20200421151537.19241-1-will@kernel.org>
- <CAHk-=wjjz927czq5zKkV1TUvajbWZGsPeFBSgnQftLNWmCcoSg@mail.gmail.com>
- <20200422081838.GA29541@willie-the-truck>
- <20200422113721.GA20730@hirez.programming.kicks-ass.net>
- <20200422122626.GA676@willie-the-truck>
- <20200424134238.GE21141@willie-the-truck>
- <CANpmjNP-r_18QwJcOHFtmPeGrN3gx-E=bj+_GaDYEaQ08DWgnw@mail.gmail.com>
+        Fri, 24 Apr 2020 12:53:49 -0400
+Received: from 8.mo179.mail-out.ovh.net ([46.105.75.26]:53729 "EHLO
+        8.mo179.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726753AbgDXQxt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 12:53:49 -0400
+X-Greylist: delayed 3601 seconds by postgrey-1.27 at vger.kernel.org; Fri, 24 Apr 2020 12:53:48 EDT
+Received: from player711.ha.ovh.net (unknown [10.108.42.145])
+        by mo179.mail-out.ovh.net (Postfix) with ESMTP id 8D3A3164F86
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 17:35:38 +0200 (CEST)
+Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
+        (Authenticated sender: steve@sk2.org)
+        by player711.ha.ovh.net (Postfix) with ESMTPSA id 676CC1196D5C9;
+        Fri, 24 Apr 2020 15:35:30 +0000 (UTC)
+From:   Stephen Kitt <steve@sk2.org>
+To:     Mike Marshall <hubcap@omnibond.com>,
+        Martin Brandenburg <martin@omnibond.com>,
+        Jonathan Corbet <corbet@lwn.net>, devel@lists.orangefs.org,
+        linux-doc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
+Subject: [PATCH] docs: orangefs: fix pvfs2tab literal block
+Date:   Fri, 24 Apr 2020 17:35:15 +0200
+Message-Id: <20200424153515.134500-1-steve@sk2.org>
+X-Mailer: git-send-email 2.25.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNP-r_18QwJcOHFtmPeGrN3gx-E=bj+_GaDYEaQ08DWgnw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 525232308669205942
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrhedugdekhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejuddurdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 05:54:10PM +0200, Marco Elver wrote:
-> On Fri, 24 Apr 2020 at 15:42, Will Deacon <will@kernel.org> wrote:
-> > On Wed, Apr 22, 2020 at 01:26:27PM +0100, Will Deacon wrote:
-> > > On Wed, Apr 22, 2020 at 01:37:21PM +0200, Peter Zijlstra wrote:
-> > > > So I'm obviously all for these patches; do note however that it collides
-> > > > most mighty with the KCSAN stuff, which I believe is still pending.
-> > >
-> > > That stuff has been pending for the last two releases afaict :/
-> > >
-> > > Anyway, I'm happy to either provide a branch with this series on, or do
-> > > the merge myself, or send this again based on something else. What works
-> > > best for you? The only thing I'd obviously like to avoid is tightly
-> > > coupling this to KCSAN if there's a chance of it missing the merge window
-> > > again.
-> >
-> > FWIW, I had a go at rebasing onto linux-next, just to get an idea for how
-> > bad it is. It's fairly bad, and I don't think it's fair to inflict it on
-> > sfr. I've included the interesting part of the resulting compiler.h below
-> > for you and the KCSAN crowd to take a look at (yes, there's room for
-> > subsequent cleanup, but I was focussing on the conflict resolution for now).
-> 
-> Thanks for the heads up. From what I can tell, your proposed change
-> may work fine for KCSAN. However, I've had trouble compiling this:
-> 
-> 1. kcsan_disable_current() / kcsan_enable_current() do not work as-is,
-> because READ_ONCE/WRITE_ONCE seems to be used from compilation units
-> where the KCSAN runtime is not available (e.g.
-> arch/x86/entry/vdso/Makefile which had to set KCSAN_SANITIZE := n for
-> that reason).
-> 2. Some new uaccess whitelist entries were needed.
-> 
-> I think this is what's needed:
-> https://lkml.kernel.org/r/20200424154730.190041-1-elver@google.com
-> 
-> With that you can change the calls to __kcsan_disable_current() /
-> __kcsan_enable_current() for READ_ONCE() and WRITE_ONCE(). After that,
-> I was able to compile, and my test suite passed.
+Following a merge fix-up, the literal block is introduced too early;
+this patch merges the localhost mention with the introduction, fixing
 
-Brill, thanks Marco! I'll take a look at your other patches, but I'm pretty
-stuck until we've figured out the merging plan for all of this.
+	Documentation/filesystems/orangefs.rst:124: WARNING: Literal block expected; none found.
 
-Will
+Signed-off-by: Stephen Kitt <steve@sk2.org>
+---
+ Documentation/filesystems/orangefs.rst | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/Documentation/filesystems/orangefs.rst b/Documentation/filesystems/orangefs.rst
+index e41369709c5b..463e37694250 100644
+--- a/Documentation/filesystems/orangefs.rst
++++ b/Documentation/filesystems/orangefs.rst
+@@ -119,9 +119,7 @@ it comes to that question::
+ 
+     /opt/ofs/bin/pvfs2-genconfig /etc/pvfs2.conf
+ 
+-Create an /etc/pvfs2tab file::
+-
+-Localhost is fine for your pvfs2tab file:
++Create an /etc/pvfs2tab file (localhost is fine)::
+ 
+     echo tcp://localhost:3334/orangefs /pvfsmnt pvfs2 defaults,noauto 0 0 > \
+ 	/etc/pvfs2tab
+-- 
+2.25.3
+
