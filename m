@@ -2,135 +2,193 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FUZZY_XPILL,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F49EC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CC5C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 228E220700
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D405920728
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:48:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ixfPudMz"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ZSjPsri7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726848AbgDXLoH (ORCPT
+        id S1726791AbgDXLsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 07:44:07 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:27826 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726247AbgDXLoG (ORCPT
+        Fri, 24 Apr 2020 07:48:09 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:55682 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726247AbgDXLsI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 07:44:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587728645;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TbNQCab5Ra8181T5/MK2gTcwXHvQ29jb9+DIlTHWC1I=;
-        b=ixfPudMzIo4bT9eATyTex1EZ6M1h3qcfWjVsqOL4lNEvwVY8Y+3iAy2T6BARQTwwIFTNYK
-        4QBtaR2W7G2LX8vKTXXFHJqh0b1NG5ioI+rq+J1qTF9KZteWLFfY6KttraJpm/nBrSrs9J
-        YujLX9PYEgQhn7Dd4RrRR+fqz0vz/rg=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-435-RaElWW2LND2M9fd_5j-zcA-1; Fri, 24 Apr 2020 07:44:04 -0400
-X-MC-Unique: RaElWW2LND2M9fd_5j-zcA-1
-Received: by mail-wr1-f71.google.com with SMTP id j22so4658965wrb.4
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 04:44:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=TbNQCab5Ra8181T5/MK2gTcwXHvQ29jb9+DIlTHWC1I=;
-        b=q92hvJjWDrwUEoR+78wsaVPDS+M2Xm81Z119Y+vcp3B8T8eKkCw7xs9pXFCpv+pclg
-         DFwgSwJeWR7ch1FUHvUbbJlgAae6WEz1YSI2pxlYeHd7/BHy9va0W9z6d3CpEFfypnSg
-         hwouycFxwEpvJG/DWCzbzjTWexK5dvRfkhA8qn9znP3RkO5/W2gG6o3cezeobNEcg+1p
-         S/SluKsRhFzKTSfIeBtD001v2q3UVy58rzITSOg/ecs31dyzr18iR2geerG925yu4zVH
-         cGLmMd2dfA3HNUQ3w5YJ48GqPAyUb08+kb8gBpjjSl0Rm/QA/0cGEZuaDXMNgpvQt4wL
-         83OQ==
-X-Gm-Message-State: AGi0PuZXEyA+kOLx8Scb+hu9X910c597ddm6yKwR3n1FQ+iJ3xcj/D31
-        455EYs6qHj4wb4/T5It0hIwUNMobs+M2gJpV9QFIV9tXx3X/6bb7W43hXZ1QHk91a4+N00Yf0UQ
-        pS6ZbCfIexF8CDPPRIfusjqRc
-X-Received: by 2002:a7b:c20f:: with SMTP id x15mr9286262wmi.2.1587728643009;
-        Fri, 24 Apr 2020 04:44:03 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLKFseMgm1aFXaNx8PZ04efUG3ucG4ytcFQhbEAim7FsrEWHqfaBejy54arQOfgTO8Su3O2yA==
-X-Received: by 2002:a7b:c20f:: with SMTP id x15mr9286230wmi.2.1587728642771;
-        Fri, 24 Apr 2020 04:44:02 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id h1sm2625970wme.42.2020.04.24.04.44.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 04:44:02 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH] KVM: nVMX: Store vmcs.EXIT_QUALIFICATION as an unsigned long, not u32
-In-Reply-To: <20200423001127.13490-1-sean.j.christopherson@intel.com>
-References: <20200423001127.13490-1-sean.j.christopherson@intel.com>
-Date:   Fri, 24 Apr 2020 13:44:00 +0200
-Message-ID: <87wo65nm67.fsf@vitty.brq.redhat.com>
+        Fri, 24 Apr 2020 07:48:08 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03OBko3N010590;
+        Fri, 24 Apr 2020 13:47:38 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=eDUxGG9O4i5CdabzQ9g1DJn7cKAT0JlJmvP3BX0WRjc=;
+ b=ZSjPsri72sQVac67WI7XcR73DLBOrEs+IFxub11JXnwGf/+djrmTBhHTPpY+jfiQ/WAJ
+ u32nNodWmPwoNX27zKntZ+3BHTLirru6VZddRYA+HX+41Kysw0D/eE5QzvjM0To7pD/3
+ zL/F/eiZLOilSNGdzRUyeNtn5Dip/94O0Oqi5WGfthyxetjorWr04UQMfZFrY730V6PK
+ ZhR/d3m8q4ZsaXGVo+NXpyXb3YGmJ4dzAA3LZOQ4+iCj3Bfn6NbBOEc3e3pPXNjpyuBl
+ SEbJvwzKhBXtYPy/9I0jWnbm2dZU1cWGOCgLAsZHRTt6hg+iqM3q8EPTDHvCkwGT38df qA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30freh31er-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Apr 2020 13:47:38 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EBD19100034;
+        Fri, 24 Apr 2020 13:47:36 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B19E52B47A0;
+        Fri, 24 Apr 2020 13:47:36 +0200 (CEST)
+Received: from [10.211.2.59] (10.75.127.51) by SFHDAG6NODE2.st.com
+ (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 24 Apr
+ 2020 13:47:35 +0200
+Subject: Re: [PATCH v2 02/12] mfd: stm32-fmc2: add STM32 FMC2 controller
+ driver
+To:     Marek Vasut <marex@denx.de>, Lee Jones <lee.jones@linaro.org>
+CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <tony@atomide.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <devicetree@vger.kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
+ <1586966256-29548-3-git-send-email-christophe.kerello@st.com>
+ <20200424074517.GN3612@dell> <8b625f1c-9ded-c07a-a20e-8cd44c1ca46d@denx.de>
+ <20200424105053.GC8414@dell> <e5e6c279-28d0-f423-aa6d-5c7aca563352@denx.de>
+From:   Christophe Kerello <christophe.kerello@st.com>
+Message-ID: <268ea231-eb4a-6144-c632-1bc8e9f21582@st.com>
+Date:   Fri, 24 Apr 2020 13:47:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <e5e6c279-28d0-f423-aa6d-5c7aca563352@denx.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG6NODE2.st.com
+ (10.75.127.17)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-24_04:2020-04-23,2020-04-24 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-> Use an unsigned long for 'exit_qual' in nested_vmx_reflect_vmexit(), the
-> EXIT_QUALIFICATION field is naturally sized, not a 32-bit field.
+
+On 4/24/20 1:06 PM, Marek Vasut wrote:
+> On 4/24/20 12:50 PM, Lee Jones wrote:
+>> On Fri, 24 Apr 2020, Marek Vasut wrote:
+>>
+>>> On 4/24/20 9:45 AM, Lee Jones wrote:
+>>>> On Wed, 15 Apr 2020, Christophe Kerello wrote:
+>>>>
+>>>>> The driver adds the support for the STMicroelectronics FMC2 controller
+>>>>> found on STM32MP SOCs.
+>>>>>
+>>>>> The FMC2 functional block makes the interface with: synchronous and
+>>>>> asynchronous static memories (such as PSNOR, PSRAM or other
+>>>>> memory-mapped peripherals) and NAND flash memories.
+>>>>>
+>>>>> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+>>>>> ---
+>>>>> Changes in v2:
+>>>>>   - remove ops from stm32_fmc2 structure
+>>>>>   - add 2 APIs to manage FMC2 enable/disable
+>>>>>   - add 2 APIs to manage FMC2 NWAIT shared signal
+>>>>>
+>>>>>   drivers/mfd/Kconfig            |  12 +++
+>>>>>   drivers/mfd/Makefile           |   1 +
+>>>>>   drivers/mfd/stm32-fmc2.c       | 136 +++++++++++++++++++++++++
+>>>>>   include/linux/mfd/stm32-fmc2.h | 225 +++++++++++++++++++++++++++++++++++++++++
+>>>>>   4 files changed, 374 insertions(+)
+>>>>>   create mode 100644 drivers/mfd/stm32-fmc2.c
+>>>>>   create mode 100644 include/linux/mfd/stm32-fmc2.h
+>>>>>
+>>>>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>>>>> index 2b20329..5260582 100644
+>>>>> --- a/drivers/mfd/Kconfig
+>>>>> +++ b/drivers/mfd/Kconfig
+>>>>> @@ -1922,6 +1922,18 @@ config MFD_ROHM_BD71828
+>>>>>   	  Also included is a Coulomb counter, a real-time clock (RTC), and
+>>>>>   	  a 32.768 kHz clock gate.
+>>>>>   
+>>>>> +config MFD_STM32_FMC2
+>>>>> +	tristate "Support for FMC2 controllers on STM32MP SoCs"
+>>>>> +	depends on MACH_STM32MP157 || COMPILE_TEST
+>>>>> +	select MFD_CORE
+>>>>> +	select REGMAP
+>>>>> +	select REGMAP_MMIO
+>>>>> +	help
+>>>>> +	  Select this option to enable STM32 FMC2 driver used for FMC2 External
+>>>>> +	  Bus Interface controller and FMC2 NAND flash controller. This driver
+>>>>> +	  provides core support for the STM32 FMC2 controllers, in order to use
+>>>>> +	  the actual functionality of the device other drivers must be enabled.
+>>>>
+>>>> Not sure how many times I have to say this before people stop
+>>>> attempting to pass these kinds of relationships off as MFDs:
+>>>>
+>>>> A memory device and its bus is not an MFD.  In a similar vain to the
+>>>> thousands of USB, I2C, SPI, PCI and the like devices that aren't MFDs
+>>>> either.
+>>>>
+>>>> Please find another way to associate your device with its bus.
+>>>
+>>> This FMC2 is however an IP which can either operate external devices
+>>> (like ethernet chip on this parallel bus) or external flashes (like NOR
+>>> and NAND chips).
+>>
+>> I'm sure that it *can*.  Although that's not its main purpose.
+> 
+> I use it to operate KSZ8851-16MLL ethernet chip, which has async bus
+> interface. Linux just didn't have support for that mode of operation
+> thus far and the FMC was used to operate NANDs and NORs only. This
+> series, or rather, the first three patches in this series, add support
+> for operating other bus devices, like this ethernet controller.
+> 
+>> The
+>> clue is in the nomenclature ("Flexible *Memory* Controller").  Nor is
+>> it how the device is being used in this submission:
+>>
+>>    "The FMC2 functional block makes the interface with: synchronous and
+>>     asynchronous static memories (such as PSNOR, PSRAM or other
+>>     memory-mapped peripherals) and NAND flash memories."
+>>
+>> As I mentioned, this is just another memory device and its bus.
+> 
+> I don't think it's _just_ a memory controller, it's more universal than
+> that, see above. Note that SRAM interface basically boils down to
+> anything which has external parallel bus, e.g. Davicom DM9000, that
+> KSZ8851-16MLL etc.
+> 
+>>> Can you provide a suggestion how this should be handled, if not as MFD?
+>>> It seems to me, that this is a Multi-Function Device .
+>>
+>> Simply move it into the MTD or Memory subsystems and set up the
+>> dependencies via Kconfig.
+>>
+>>> If this discussion is a recurring topic, is there some documentation
+>>> which explains how such devices should be handled ?
+>>
+>> Not that I'm aware of.
+> 
+> I see.
 >
-> The bug is most easily observed by doing VMXON (or any VMX instruction)
-> in L2 with a negative displacement, in which case dropping the upper
-> bits on nested VM-Exit results in L1 calculating the wrong virtual
-> address for the memory operand, e.g. "vmxon -0x8(%rbp)" yields:
->
->   Unhandled cpu exception 14 #PF at ip 0000000000400553
->   rbp=0000000000537000 cr2=0000000100536ff8
->
-> Fixes: fbdd50250396d ("KVM: nVMX: Move VM-Fail check out of nested_vmx_exit_reflected()")
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->
-> Sadly (for me), I can't blame a mishandled merge on this one.  Even more
-> embarassing is that this is actually the second instance where I botched
-> the size for exit_qual, you'd think I'd have double-checked everything
-> after the first one...
->
->  arch/x86/kvm/vmx/nested.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index f228339cd0a0..3f32f81f5c59 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -5814,7 +5814,8 @@ bool nested_vmx_reflect_vmexit(struct kvm_vcpu *vcpu)
->  {
->  	struct vcpu_vmx *vmx = to_vmx(vcpu);
->  	u32 exit_reason = vmx->exit_reason;
-> -	u32 exit_intr_info, exit_qual;
-> +	unsigned long exit_qual;
-> +	u32 exit_intr_info;
->  
->  	WARN_ON_ONCE(vmx->nested.nested_run_pending);
 
-Too late but
+Hi Lee, Marek,
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+I will move this source code in the FMC2 bus driver. I think that I 
+should be able to manage the 2 controllers with 2 drivers (the FMC2 bus 
+driver and the FMC2 raw NAND driver). I will have to modify some part of 
+the proposed bindings, and some updates will have to be done in the FMC2 
+bus driver. All these modifications will be part of V3.
 
-I also did 'git grep -W 'u32.*exit_qual' kvm/queue' and I can see a few
-more places where 'exit_qual' is u32:
-nested_vmx_check_guest_state()
-nested_vmx_enter_non_root_mode()
-vmx_set_nested_state()
-
-Being too lazy to check an even if there are no immediate issues with
-that, should we just use 'unsigned long' everywhere?
-
--- 
-Vitaly
-
+Regards,
+Christophe Kerello.
