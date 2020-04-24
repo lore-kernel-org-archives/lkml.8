@@ -2,128 +2,128 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A28B2C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA0BC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8031920857
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:16:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EFCE20857
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:18:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hfOZcWCA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nV1EfN6Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729175AbgDXTQ3 (ORCPT
+        id S1729225AbgDXTSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 15:16:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60472 "EHLO
+        Fri, 24 Apr 2020 15:18:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727022AbgDXTQ3 (ORCPT
+        by vger.kernel.org with ESMTP id S1726793AbgDXTSk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 15:16:29 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AB4CC09B048
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 12:16:28 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id x25so11855559wmc.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 12:16:28 -0700 (PDT)
+        Fri, 24 Apr 2020 15:18:40 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29D34C09B048
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 12:18:40 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id x15so5260918pfa.1
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 12:18:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=z8C+l34ylQ/fd4X7uZblckP7QFtPAfaKyL9kDot/4z4=;
-        b=hfOZcWCALviq/FPpDxJ2lRmuzD2k7d7BdrAIZwQNcD7ZpG6rqG6beBNBN419L9LgHv
-         qWjU1pqWXZMldct5Op1Mhn56WkPAnuYF8iYsZp1LvlJoAtnoR2IX23+YFb4QHUZQySXu
-         Tun26rsYLpcFezcxPqxzfXbSLofJAa4rioAzb3z7A90I9bDLzeN+dvso/uNDAWd+VjYM
-         HRjr0RMi5xnR/T8UmG9WG58ZA0169rBq20xYx13B4msc5HFIBd+4PsZTOzqNP1siOtH6
-         4++h0v99wy+7hTEm4DrOPbpy9+BPYqg+ZR3W7N72cnOWqgIVBmHxh32mbCDWUHPN6N44
-         hYgw==
+        d=google.com; s=20161025;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jTXhU16A9f20mBuu55i1N5tKQ/YnXN5h5AIwPuslRMg=;
+        b=nV1EfN6ZmE2x8RvvWY6vrJ3lW2X3dXiVzH8qROTf2wPgUd/QtmamqGhGr0UDOcbmjI
+         +6rLop62QemOx9h8egpv950FpzBITun6MisOH3EnHptSlUTXV8l59wxW9EDaLA3IQBHe
+         Lfge11AvQhw2vky8hRnIBXJ/9pswd8FTq3AKd+d2bPDmn1cyteXS/VwAvnSTKrthJPu4
+         CRJW44nNuiemqwDbtBeTTkafXsGi/LtlLz4WGOwpeJmZeh8DBV2ZhaB2mVmTVMN3wL8S
+         j2gAKGdjA89XX0JmDY+xzSjUgQKr4wEYZOIPtZ29eQaQLhToiU433biI3ilAFczq9lel
+         jptQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=z8C+l34ylQ/fd4X7uZblckP7QFtPAfaKyL9kDot/4z4=;
-        b=rxynrPwdrA9OYkEpPLY3VZrtWdOfEXnwhul3BdYfH6VZ6LtV4HmzwKm4DwHP/xA2M1
-         8s731UsuhSeDI4D6Y+kVLwSYDN3DV8zfHaIc/apVCOtmKJrS3xEMsW+fnvdqDvyRDzWX
-         clgkiv0Eek19gh/2PhTPQ79yRP8OV/P1YaUEEegxdQLc6+rPtr9SDSQFYxMC43E204pZ
-         iG8Y7+bULoFjQZHERLCrvMDyGPQrVtwRfUb7eMs+yux7+V/4G6dUjoQkxzL56QTfW2Gk
-         BEGG6dIB5VBjO+CUyJFNweCYBuT/bkEkPeF2PC1QiPe7HEhhi8Khq1eT976Dr2/0Xo66
-         BegA==
-X-Gm-Message-State: AGi0PuYywtO3dubES6WgM8sUFlHrV7WZdYSQ8L8DKwX3SaGbQDOd4ypL
-        WcaTQZKooNW8PHp7U2CBLm/AWwaBeRzDugK9lGEFFw==
-X-Google-Smtp-Source: APiQypI9iWjkNlysuw5QaKuCzf9HmzjnV2ROy4i4+cCk9La240gYY1Dav76tBMmZFXyjCeHhhtFoiPI8C2aIGFxIVXY=
-X-Received: by 2002:a1c:9d8c:: with SMTP id g134mr12074171wme.79.1587755787069;
- Fri, 24 Apr 2020 12:16:27 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jTXhU16A9f20mBuu55i1N5tKQ/YnXN5h5AIwPuslRMg=;
+        b=pTCYv4YZ3vcJZ5PmzebWp5ml4IZ7SMVDXEMSNt0eRE4DPhMbaqA/fHp6Tk5ycZG9Y/
+         ocP75r9xpcyKGJyVeXVMub9VKfgGmWCJcMjazBX0QdYw2nmFyVce0LC87YxuBDx8/YWu
+         JA+XNoBqWpCG6/XdV+ZKAShAXFG/qqOf7LDJHTRcLTodYFaB9u6CveWKCxNOHfrwtaBb
+         oeKv7BTzyFOiqFiMKjyQMGQeHeePs4+dNivB/NyRsGLxb1vylsRXZJh4oS7QPxR6q5Fl
+         25VTzjBRXg9Qo0axqxgKVErwhWGXNYXY9lRj2VTVk+a1ICFirLBYtWsV4LKqgQjAFuTi
+         EsTw==
+X-Gm-Message-State: AGi0PuaFdWQW2iOmBQyZjBUiYcfgOqN6IglDs5D2C0zRqIT0FPVIyRge
+        bJClxsvuQB60UlPAbbrxtzdMLA==
+X-Google-Smtp-Source: APiQypL3GF0IA3FPXvIB4BaH+YXLYmcQEL8UKsod6EOYXpS5VubITIDtjbXPSf2q4ZxlOxgWjuFXeQ==
+X-Received: by 2002:a63:5724:: with SMTP id l36mr818367pgb.317.1587755919194;
+        Fri, 24 Apr 2020 12:18:39 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:ce90:ab18:83b0:619])
+        by smtp.gmail.com with ESMTPSA id h6sm5306704pje.37.2020.04.24.12.18.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Apr 2020 12:18:38 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 12:18:32 -0700
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Matt Helsley <mhelsley@vmware.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] recordmcount: support >64k sections
+Message-ID: <20200424191832.GA231432@google.com>
+References: <20200422232417.72162-1-samitolvanen@google.com>
+ <20200423214734.GB9040@rlwimi.vmware.com>
 MIME-Version: 1.0
-References: <20200424190722.775284-1-lyude@redhat.com>
-In-Reply-To: <20200424190722.775284-1-lyude@redhat.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Fri, 24 Apr 2020 15:16:15 -0400
-Message-ID: <CADnq5_OhwMgkUNNE1gXJqSKxBMUkWU11oiOidE+SahUgatBzZA@mail.gmail.com>
-Subject: Re: [PATCH] drm/dp_mst: Fix drm_dp_send_dpcd_write() return code
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     Maling list - DRI developers <dri-devel@lists.freedesktop.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        David Airlie <airlied@linux.ie>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Sean Paul <sean@poorly.run>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200423214734.GB9040@rlwimi.vmware.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 3:07 PM Lyude Paul <lyude@redhat.com> wrote:
->
-> drm_dp_mst_wait_tx_reply() returns > 1 if time elapsed in
-> wait_event_timeout() before check_txmsg_state(mgr, txmsg) evaluated to
-> true. However, we make the mistake of returning this time from
-> drm_dp_send_dpcd_write() on success instead of returning the number of
-> bytes written - causing spontaneous failures during link probing:
->
-> [drm:drm_dp_send_link_address [drm_kms_helper]] *ERROR* GUID check on
-> 10:01 failed: 3975
->
-> Yikes! So, fix this by returning the number of bytes written on success
-> instead.
->
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> Fixes: cb897542c6d2 ("drm/dp_mst: Fix W=1 warnings")
-> Cc: Benjamin Gaignard <benjamin.gaignard@st.com>
-> Cc: Sean Paul <sean@poorly.run>
+Hi Matt,
 
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
+On Thu, Apr 23, 2020 at 02:47:34PM -0700, Matt Helsley wrote:
+> > +static unsigned int get_shnum(Elf_Ehdr const *ehdr, Elf_Shdr const *shdr0)
+> 
+> I noticed this returns an unsigned int ...
+> 
+> > +	Elf_Shdr *const shdr0 = (Elf_Shdr *)(old_shoff + (void *)ehdr);
+> > +	unsigned const old_shnum = get_shnum(ehdr, shdr0);
+> 
+> While this is not explicitly called out as an unsigned int. Perhaps we
+> could just make this and new_shnum explicit unsigned ints and then...
 
-> ---
->  drivers/gpu/drm/drm_dp_mst_topology.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-> index 03a1496f6120..21dc78cb4ba6 100644
-> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> @@ -3436,8 +3436,12 @@ static int drm_dp_send_dpcd_write(struct drm_dp_mst_topology_mgr *mgr,
->         drm_dp_queue_down_tx(mgr, txmsg);
->
->         ret = drm_dp_mst_wait_tx_reply(mstb, txmsg);
-> -       if (ret > 0 && txmsg->reply.reply_type == DP_SIDEBAND_REPLY_NAK)
-> -               ret = -EIO;
-> +       if (ret > 0) {
-> +               if (txmsg->reply.reply_type == DP_SIDEBAND_REPLY_NAK)
-> +                       ret = -EIO;
-> +               else
-> +                       ret = size;
-> +       }
->
->         kfree(txmsg);
->  fail_put:
-> --
-> 2.25.3
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > +	if (!ehdr->e_shnum || new_shnum >= SHN_LORESERVE) {
+> > +		ehdr->e_shnum = 0;
+> > +		shdr0->sh_size = w(new_shnum);
+> > +	} else
+> > +		ehdr->e_shnum = w2(2 + w2(ehdr->e_shnum));
+> 
+> If we make the unsigned int change proposed above can we reuse new_shnum
+> here like so:
+> 		ehdr->e_shnum = w2(new_shnum);
+> 
+> So this if/else is doing the inverse of get_shnum(). I think the code
+> could be cleaned up a little and prepare for moving to objtool by
+> putting it in a helper function.
+
+Sure, sounds good to me.
+
+> > +	for (relhdr = shdr0, k = nhdr; k; --k, ++relhdr) {
+> > +		if (relhdr->sh_type == SHT_SYMTAB)
+> > +			symtab = (void *)ehdr + relhdr->sh_offset;
+> > +		else if (relhdr->sh_type == SHT_SYMTAB_SHNDX)
+> > +			symtab_shndx = (void *)ehdr + relhdr->sh_offset;
+> > +
+> > +		if (symtab && symtab_shndx)
+> > +			break;
+> > +	}
+> 
+> Could you break this out into a helper function? find_symtab() maybe? Again, I think
+> that helper would go away with conversion to objtool.
+
+Agreed, this wouldn't be needed with libelf. I'll send v2 shortly.
+Thanks for the review!
+
+Sami
