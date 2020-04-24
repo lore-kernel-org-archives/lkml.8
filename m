@@ -2,309 +2,143 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D77E6C2BA19
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 00:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB16C55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 00:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A46C22087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 00:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B83A12087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 00:45:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fmu89ZUP"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gpboAXek"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbgDXAot (ORCPT
+        id S1728377AbgDXApR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 20:44:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55276 "EHLO
+        Thu, 23 Apr 2020 20:45:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728213AbgDXAot (ORCPT
+        with ESMTP id S1728151AbgDXApQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 20:44:49 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5260DC09B042;
-        Thu, 23 Apr 2020 17:44:49 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id h11so3093693plr.11;
-        Thu, 23 Apr 2020 17:44:49 -0700 (PDT)
+        Thu, 23 Apr 2020 20:45:16 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DCBFC09B042
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 17:45:15 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id p25so3920084pfn.11
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 17:45:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=/IkJb/MMZUEA8Z1/RSpT7PeJDUHsZdmZCfXGjsvU/uc=;
-        b=Fmu89ZUP5jfOOeCAiKzazV69FxgZwVwGUi4cL767wILw6nY8cuQ+xv/ACV5WBrfgqK
-         no7paEzqbJa+YJbhXps7u/WW19Gfms7v5/j/Hu/aga2I6MU+SxEKAZ3E5LptUDcjTC8+
-         K23v3P8rsFBqmySgjQUV7NoC9XYXbUQMW0fhCMQHvcFBcujc+4lB1tjY0GslSsnWG25E
-         4Wk/k1/14NlV73UEi7hmVFzgYi7kmnMRNpMhCMNUxQtWRp2yGiW5PRO7Qcj/mAzd7fcz
-         /XBrXRoKV58Is5VnCQuY0+XY503P3n35Shjp1MknNT4sgOrMF68nKkaUDgpq6A7IRWkT
-         107g==
+        bh=hOf+x2Y/Qe7ScdzUkVaxYfAFCfFShTVPAhN8bzkGnXg=;
+        b=gpboAXekQ409ikcKnsJINuleZnjwZW1LBae+1wFSPlBf4tiLiWDNQ50LbNngeu9sf/
+         Xgw9IU+pc6c9DnwvAakrbtb4HLsIk+0g2BZkddeMsg4+2/8PQEIz10vKTmoT/NhZiFmK
+         B48ElTPt8fsDWhuiJLmZE1NkMURXV9l0CNq1A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/IkJb/MMZUEA8Z1/RSpT7PeJDUHsZdmZCfXGjsvU/uc=;
-        b=oeePiJ3g3efEg5gwghh8UGJ66IO/eoqDbMjD97oLOSOpdCECH/1L0FknUZkQdRJNRR
-         LaAskywz3b3XScQ0uT/Jm0P6rKZBLqR52ymh7Htiglv3K1aI86WEBU/q00G0sIIdfDjg
-         d0eIxSi91u8ASo/SbkFhfve5/mwsdPADIR8CvdOlz2ucutFXE0opVlOgte1jNbLWZbLO
-         JwlFQtsYa9cimlLwRPv6zXLvY6dCIBn26Yrs1N353HlUthic0ofnVp1JddI8HOzvRrfZ
-         H3dIaYo3AlItp34LSCdN0NjjERGBF6MCB6hLaMTNQ5LQ8TdeIcZiFpu/NIhU3+L3gVzL
-         n1Ow==
-X-Gm-Message-State: AGi0PuaVO1ORQXaE+ZbhblhKU5g40+D4GAvL9W0iZma+JzdbDPvlrbNw
-        kbzCz+GnkeBp67WawjcCqUw=
-X-Google-Smtp-Source: APiQypJ2qyEhTXzxGYsORCKBFQKiFkFeE0bPOTZr0HeesOeiN9gN+sYakEB/zMk+O2aWJZIYOPVzUw==
-X-Received: by 2002:a17:902:988e:: with SMTP id s14mr6380826plp.179.1587689088693;
-        Thu, 23 Apr 2020 17:44:48 -0700 (PDT)
-Received: from js1304-desktop ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id i14sm3145542pgh.47.2020.04.23.17.44.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 Apr 2020 17:44:48 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 09:44:42 +0900
-From:   Joonsoo Kim <js1304@gmail.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH 16/18] mm: memcontrol: charge swapin pages on
- instantiation
-Message-ID: <20200424004441.GF13929@js1304-desktop>
-References: <20200420221126.341272-1-hannes@cmpxchg.org>
- <20200420221126.341272-17-hannes@cmpxchg.org>
+        bh=hOf+x2Y/Qe7ScdzUkVaxYfAFCfFShTVPAhN8bzkGnXg=;
+        b=tkWuqVPU1HnUPJVCSVwcqeHJCSus3TZNYm499d6HGu/o5zA6emnEs7eDWigm3jikxM
+         OP/hH3lCJm/i3q2ETnNR2E0b5cQWzlAHsQ3hM8pbvF3iNvM5V34KsQAkJcMeg0OV1O5H
+         OF5l/9i0egk5+IXYvgCGWtYrFAo68/V3Ge7OXpj6XztkUGoc3VOHvLXzc4tzef7eO+U7
+         g7LlqOO7rbYdf+/B0qnT8NGY4UrjpNArASuG0+eDOiFDRHYNjG446pTaeGR5ZxkaqH6V
+         cIf1Tjo4TtJDxLxtVurHAB7BlKBy6xI8x1OT8/g1cKCeub+4BXRt/H4LUsNsTslZx2+L
+         +vJQ==
+X-Gm-Message-State: AGi0PuYnw5XU5CgBJ7ANXF8z0GkcspXJ1zcMUyIkr1si7yDVfRIgq8xS
+        GVSO0KmDYv/oPSmcZxdvjh0Tng==
+X-Google-Smtp-Source: APiQypIyIZtDVKhOHp8Y5kuCR8rED5XYlhlovTxBBx+WS6MOfMqJu+zBJGNouJUoijlxSK6x5TwpPw==
+X-Received: by 2002:a63:41c2:: with SMTP id o185mr6315849pga.139.1587689114561;
+        Thu, 23 Apr 2020 17:45:14 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id y186sm3166133pgb.69.2020.04.23.17.45.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Apr 2020 17:45:13 -0700 (PDT)
+Date:   Thu, 23 Apr 2020 17:45:12 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: phy: qcom-qusb2: Fix defaults
+Message-ID: <20200424004512.GL199755@google.com>
+References: <20200423111015.1.Ifa8039b6f3031e9a69c4a526a6efc2f499f07292@changeid>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200420221126.341272-17-hannes@cmpxchg.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200423111015.1.Ifa8039b6f3031e9a69c4a526a6efc2f499f07292@changeid>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 06:11:24PM -0400, Johannes Weiner wrote:
-> Right now, users that are otherwise memory controlled can easily
-> escape their containment and allocate significant amounts of memory
-> that they're not being charged for. That's because swap readahead
-> pages are not being charged until somebody actually faults them into
-> their page table. This can be exploited with MADV_WILLNEED, which
-> triggers arbitrary readahead allocations without charging the pages.
+On Thu, Apr 23, 2020 at 11:10:27AM -0700, Douglas Anderson wrote:
+> The defaults listed in the bindings don't match what the code is
+> actually doing.  Presumably existing users care more about keeping
+> existing behavior the same, so change the bindings to match the code
+> in Linux.
 > 
-> There are additional problems with the delayed charging of swap pages:
+> The "qcom,preemphasis-level" default has been wrong for quite a long
+> time (May 2018).  The other two were recently added.
 > 
-> 1. To implement refault/workingset detection for anonymous pages, we
->    need to have a target LRU available at swapin time, but the LRU is
->    not determinable until the page has been charged.
+> As some evidence that these values are wrong, this is from the Linux
+> driver:
+> - qcom,preemphasis-level: sets "PORT_TUNE1", lower 2 bits.  Driver
+>   programs PORT_TUNE1 to 0x30 by default and (0x30 & 0x3) = 0.
+> - qcom,bias-ctrl-value: sets "PLL_BIAS_CONTROL_2", lower 6 bits.
+>   Driver programs PLL_BIAS_CONTROL_2 to 0x20 by default and (0x20 &
+>   0x3f) = 0x20 = 32.
+> - qcom,hsdisc-trim-value: sets "PORT_TUNE2", lower 2 bits.  Driver
+>   programs PORT_TUNE2 to 0x29 by default and (0x29 & 0x3) = 1.
 > 
-> 2. To implement per-cgroup LRU locking, we need page->mem_cgroup to be
->    stable when the page is isolated from the LRU; otherwise, the locks
->    change under us. But swapcache gets charged after it's already on
->    the LRU, and even if we cannot isolate it ourselves (since charging
->    is not exactly optional).
-> 
-> The previous patch ensured we always maintain cgroup ownership records
-> for swap pages. This patch moves the swapcache charging point from the
-> fault handler to swapin time to fix all of the above problems.
-> 
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> Fixes: 1e6f134eb67a ("dt-bindings: phy: qcom-qusb2: Add support for overriding Phy tuning parameters")
+> Fixes: a8b70ccf10e3 ("dt-bindings: phy-qcom-usb2: Add support to override tuning values")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > ---
->  mm/memory.c     | 15 ++++++---
->  mm/shmem.c      | 14 ++++----
->  mm/swap_state.c | 89 ++++++++++++++++++++++++++-----------------------
->  mm/swapfile.c   |  6 ----
->  4 files changed, 67 insertions(+), 57 deletions(-)
 > 
-> diff --git a/mm/memory.c b/mm/memory.c
-> index 3fa379d9b17d..5d266532fc40 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -3127,9 +3127,20 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
->  			page = alloc_page_vma(GFP_HIGHUSER_MOVABLE, vma,
->  							vmf->address);
->  			if (page) {
-> +				int err;
-> +
->  				__SetPageLocked(page);
->  				__SetPageSwapBacked(page);
->  				set_page_private(page, entry.val);
-> +
-> +				/* Tell memcg to use swap ownership records */
-> +				SetPageSwapCache(page);
-> +				err = mem_cgroup_charge(page, vma->vm_mm,
-> +							GFP_KERNEL, false);
-> +				ClearPageSwapCache(page);
-> +				if (err)
-> +					goto out_page;
-> +
->  				lru_cache_add_anon(page);
->  				swap_readpage(page, true);
->  			}
-> @@ -3191,10 +3202,6 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
->  		goto out_page;
->  	}
+>  Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+> index 144ae29e7141..f8bd28ff31c1 100644
+> --- a/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+> +++ b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+> @@ -97,7 +97,7 @@ then:
+>          - $ref: /schemas/types.yaml#/definitions/uint32
+>          - minimum: 0
+>            maximum: 63
+> -          default: 0
+> +          default: 32
 >  
-> -	if (mem_cgroup_charge(page, vma->vm_mm, GFP_KERNEL, true)) {
-> -		ret = VM_FAULT_OOM;
-> -		goto out_page;
-> -	}
->  	cgroup_throttle_swaprate(page, GFP_KERNEL);
+>      qcom,charge-ctrl-value:
+>       description:
+> @@ -130,7 +130,7 @@ then:
+>          - $ref: /schemas/types.yaml#/definitions/uint32
+>          - minimum: 0
+>            maximum: 3
+> -          default: 2
+> +          default: 0
 >  
->  	/*
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index 363bd11eba85..966f150a4823 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -623,13 +623,15 @@ static int shmem_add_to_page_cache(struct page *page,
->  	page->mapping = mapping;
->  	page->index = index;
+>      qcom,preemphasis-width:
+>        description:
+> @@ -152,7 +152,7 @@ then:
+>          - $ref: /schemas/types.yaml#/definitions/uint32
+>          - minimum: 0
+>            maximum: 3
+> -          default: 0
+> +          default: 1
 >  
-> -	error = mem_cgroup_charge(page, charge_mm, gfp, PageSwapCache(page));
-> -	if (error) {
-> -		if (!PageSwapCache(page) && PageTransHuge(page)) {
-> -			count_vm_event(THP_FILE_FALLBACK);
-> -			count_vm_event(THP_FILE_FALLBACK_CHARGE);
-> +	if (!PageSwapCache(page)) {
-> +		error = mem_cgroup_charge(page, charge_mm, gfp, false);
-> +		if (error) {
-> +			if (PageTransHuge(page)) {
-> +				count_vm_event(THP_FILE_FALLBACK);
-> +				count_vm_event(THP_FILE_FALLBACK_CHARGE);
-> +			}
-> +			goto error;
->  		}
-> -		goto error;
->  	}
->  	cgroup_throttle_swaprate(page, gfp);
->  
-> diff --git a/mm/swap_state.c b/mm/swap_state.c
-> index ebed37bbf7a3..f3b9073bfff3 100644
-> --- a/mm/swap_state.c
-> +++ b/mm/swap_state.c
-> @@ -360,12 +360,13 @@ struct page *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
->  			struct vm_area_struct *vma, unsigned long addr,
->  			bool *new_page_allocated)
->  {
-> -	struct page *found_page = NULL, *new_page = NULL;
->  	struct swap_info_struct *si;
-> -	int err;
-> +	struct page *page;
-> +
->  	*new_page_allocated = false;
->  
-> -	do {
-> +	for (;;) {
-> +		int err;
->  		/*
->  		 * First check the swap cache.  Since this is normally
->  		 * called after lookup_swap_cache() failed, re-calling
-> @@ -373,12 +374,12 @@ struct page *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
->  		 */
->  		si = get_swap_device(entry);
->  		if (!si)
-> -			break;
-> -		found_page = find_get_page(swap_address_space(entry),
-> -					   swp_offset(entry));
-> +			return NULL;
-> +		page = find_get_page(swap_address_space(entry),
-> +				     swp_offset(entry));
->  		put_swap_device(si);
-> -		if (found_page)
-> -			break;
-> +		if (page)
-> +			return page;
->  
->  		/*
->  		 * Just skip read ahead for unused swap slot.
-> @@ -389,21 +390,15 @@ struct page *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
->  		 * else swap_off will be aborted if we return NULL.
->  		 */
->  		if (!__swp_swapcount(entry) && swap_slot_cache_enabled)
-> -			break;
-> -
-> -		/*
-> -		 * Get a new page to read into from swap.
-> -		 */
-> -		if (!new_page) {
-> -			new_page = alloc_page_vma(gfp_mask, vma, addr);
-> -			if (!new_page)
-> -				break;		/* Out of memory */
-> -		}
-> +			return NULL;
->  
->  		/*
->  		 * Swap entry may have been freed since our caller observed it.
->  		 */
->  		err = swapcache_prepare(entry);
-> +		if (!err)
-> +			break;
-> +
->  		if (err == -EEXIST) {
->  			/*
->  			 * We might race against get_swap_page() and stumble
-> @@ -412,31 +407,43 @@ struct page *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
->  			 */
->  			cond_resched();
->  			continue;
-> -		} else if (err)		/* swp entry is obsolete ? */
-> -			break;
-> -
-> -		/* May fail (-ENOMEM) if XArray node allocation failed. */
-> -		__SetPageLocked(new_page);
-> -		__SetPageSwapBacked(new_page);
-> -		err = add_to_swap_cache(new_page, entry, gfp_mask & GFP_KERNEL);
-> -		if (likely(!err)) {
-> -			/* Initiate read into locked page */
-> -			SetPageWorkingset(new_page);
-> -			lru_cache_add_anon(new_page);
-> -			*new_page_allocated = true;
-> -			return new_page;
->  		}
-> -		__ClearPageLocked(new_page);
-> -		/*
-> -		 * add_to_swap_cache() doesn't return -EEXIST, so we can safely
-> -		 * clear SWAP_HAS_CACHE flag.
-> -		 */
-> -		put_swap_page(new_page, entry);
-> -	} while (err != -ENOMEM);
-> +		if (err)		/* swp entry is obsolete ? */
-> +			return NULL;
+>  required:
+>    - compatible
+> -- 
+> 2.26.1.301.g55bc3eb7cb9-goog
 
-"if (err)" is not needed since "!err" is already exiting the loop.
-
-> +	}
-> +
-> +	/*
-> +	 * The swap entry is ours to swap in. Prepare a new page.
-> +	 */
-> +
-> +	page = alloc_page_vma(gfp_mask, vma, addr);
-> +	if (!page)
-> +		goto fail_free;
-> +
-> +	__SetPageLocked(page);
-> +	__SetPageSwapBacked(page);
-> +
-> +	/* May fail (-ENOMEM) if XArray node allocation failed. */
-> +	if (add_to_swap_cache(page, entry, gfp_mask & GFP_KERNEL))
-> +		goto fail_unlock;
-> +
-> +	if (mem_cgroup_charge(page, NULL, gfp_mask & GFP_KERNEL, false))
-> +		goto fail_delete;
-> +
-
-I think that following order of operations is better than yours.
-
-1. page alloc
-2. memcg charge
-3. swapcache_prepare
-4. add_to_swap_cache
-
-Reason is that page allocation and memcg charging could take for a
-long time due to reclaim and other tasks waiting this swapcache page
-could be blocked inbetween swapcache_prepare() and add_to_swap_cache().
-
-Thanks.
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
