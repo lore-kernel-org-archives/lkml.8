@@ -2,81 +2,134 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B96C55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE7BCC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8AA92063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A75C2206CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:57:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VwYSGio2"
+	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="ZJ0Yq5Lu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728343AbgDXP4j (ORCPT
+        id S1728495AbgDXP5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:56:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56082 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727063AbgDXP4i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:56:38 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EC2BC09B046;
-        Fri, 24 Apr 2020 08:56:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ajLPeTZ2LB0Od4fQUmCVBUekxC2O/Q3IB9mDGtoNpBM=; b=VwYSGio2fYVXLWKk6BBR/yeb+K
-        Uhz5OLEmWuFsr4OeuNZvpOQFTXDq4hcrPDYAfXJPd+20xdm3B/CrKXlcMS+3fWF2gDp/e9wBDaNJQ
-        tVji0GDAUI+l/g/0j5Nimzs0SCcDAUbXKk7NMmxqSQGQOdLP3I995qtxCyWe+qS5faJSmWDMERuEd
-        m9Xu8M90m3cV/MyVDN8sQbWYm7fmr263RobJY/HjcWIYedCUxIFECQF+nqoQzmef8/Geq/RctviYT
-        mQ7EjcCRBCHlHuH6CQrLfYBf3/pB0lDc6wCQBHXDkq28fY8lewCXCNv3NlTQVwNVDmwPIZfzjMvF5
-        vOAjbtJA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jS0gp-0001eu-Q2; Fri, 24 Apr 2020 15:56:32 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6134730257C;
-        Fri, 24 Apr 2020 17:56:29 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 467B229B1ED2F; Fri, 24 Apr 2020 17:56:29 +0200 (CEST)
-Date:   Fri, 24 Apr 2020 17:56:29 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ben Hutchings <ben@decadent.org.uk>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        Jann Horn <jannh@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 3.16 246/247] futex: Fix inode life-time issue
-Message-ID: <20200424155629.GB13558@hirez.programming.kicks-ass.net>
-References: <lsq.1587743245.5555628@decadent.org.uk>
- <lsq.1587743246.9036831@decadent.org.uk>
+        Fri, 24 Apr 2020 11:57:11 -0400
+Received: from mail-mw2nam12on2062.outbound.protection.outlook.com ([40.107.244.62]:6057
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727050AbgDXP5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 11:57:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hCvGmF+TyADEL0qPCoCO+QirhePKWf2RVeWaeuyfxl3TRF/8/f9Aez8V1/B069cYGpFsv3R8ZtZAWKsdeG+ZiluOUmhA7Wi9G7zIVbrjYJ8K8eSPLhfBeGCQmO7miOumnshP556BvxdBk4jFGOj39GI/TMt4yM5LfAdtmVcsZN8Hr/ZzD2iWeksgwf+lD0UVj0p+mjOAsWOZkXxwkINqtijQbg0eO4fnpwkC8z/vntcxvyIJQsUmWO1ChMqlCQ6DR2hI7hkT/kctjtFYc2DFu1jaUVLZxn90fvLIm50pYW9uOHMJQ22InAxyXNyIUExIe9qO9zOB80FM6tSAkIuVig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1W01EC5/z1kilm8YM/Gbru8Kwc8Qz2Q5lBMqMUZB/6I=;
+ b=OtLjf8peTGLSe8eueyQsQE/k0P3xBGz1LZ6dSxUu9E6Gr498GcVLuf+0Kf4Tn1bc7+Z+q9u+C62//05surhg42SxmiTGX56f0pO/A+tD8AnqBeC/RLTwxH/Ha3NZ+xUUXWrnC/+F2yzlOpiuCQXKHoSEpzrw+fZTjR2kJMnAYMXObquAD9Ccn1xfHWAyH1tqe8c/IyuqE6YHPG0ZYYh/n1CTbG0sNoCkzqRfAJxhkaxbWbzqB6PNf+R/fyB/QtOAlepZrh1JDZyx+tAxs1z7vSOS6yIf6HbAsxUCaHZvM4H+yLRwt6qU/IVl6mkAOUK1OEDRwlSFJ1Gl0XX7/3ALHQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
+ dkim=pass header.d=micron.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1W01EC5/z1kilm8YM/Gbru8Kwc8Qz2Q5lBMqMUZB/6I=;
+ b=ZJ0Yq5LuoruMR/Yf+LARMLZiEyJKEkcQOTOeRhjuBHH2/q5SetDA4eJhPD9ASZ60rQeF6tvDPMXm4kRvlNP3IHZZKPlN5kotKvss5agGH5wGSvjDM1NTTH0MTM7cmQnvdRTn79o29nNH5HRNyQ3+lBqOn8izOMNiFNbNlWQ7AeY=
+Received: from SN6PR08MB5693.namprd08.prod.outlook.com (2603:10b6:805:f8::33)
+ by SN6PR08MB5072.namprd08.prod.outlook.com (2603:10b6:805:78::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Fri, 24 Apr
+ 2020 15:57:08 +0000
+Received: from SN6PR08MB5693.namprd08.prod.outlook.com
+ ([fe80::cca2:ac08:1fe6:732e]) by SN6PR08MB5693.namprd08.prod.outlook.com
+ ([fe80::cca2:ac08:1fe6:732e%6]) with mapi id 15.20.2921.030; Fri, 24 Apr 2020
+ 15:57:08 +0000
+From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Joao Lima <Joao.Lima@synopsys.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] [PATCH v2 1/5] scsi: ufs: Allow UFS 3.0 as a valid version
+Thread-Topic: [EXT] [PATCH v2 1/5] scsi: ufs: Allow UFS 3.0 as a valid version
+Thread-Index: AQHWGj6R0nTpmn6fGEWz3ZvyHz0xNaiIaq7A
+Date:   Fri, 24 Apr 2020 15:57:07 +0000
+Message-ID: <SN6PR08MB5693C397D88D16EC43E85490DBD00@SN6PR08MB5693.namprd08.prod.outlook.com>
+References: <cover.1587735561.git.Jose.Abreu@synopsys.com>
+ <c006813f8fc3052eef97d5216e4f31829d7cd10b.1587735561.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <c006813f8fc3052eef97d5216e4f31829d7cd10b.1587735561.git.Jose.Abreu@synopsys.com>
+Accept-Language: en-150, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYmVhbmh1b1xhcHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJhMjllMzViXG1zZ3NcbXNnLTNjNzU0MTJjLTg2NDQtMTFlYS04YjkyLWRjNzE5NjFmOWRkM1xhbWUtdGVzdFwzYzc1NDEyZC04NjQ0LTExZWEtOGI5Mi1kYzcxOTYxZjlkZDNib2R5LnR4dCIgc3o9Ijk1NCIgdD0iMTMyMzIyMTc0MjI5NTQ2NTMwIiBoPSJxNys0MDIwTmNmY1oyeHdKVnBhaFVvNlhWRmM9IiBpZD0iIiBibD0iMCIgYm89IjEiIGNpPSJjQUFBQUVSSFUxUlNSVUZOQ2dVQUFIQUFBQUFpQnR6K1VCcldBZUZZWTFBbUtDMjA0VmhqVUNZb0xiUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFCQUFBQWYzT0VLUUFBQUFBQUFBQUFBQUFBQUE9PSIvPjwvbWV0YT4=
+x-dg-rorf: true
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=beanhuo@micron.com; 
+x-originating-ip: [165.225.81.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5f760825-f4ad-4215-e82c-08d7e868245d
+x-ms-traffictypediagnostic: SN6PR08MB5072:|SN6PR08MB5072:|SN6PR08MB5072:
+x-microsoft-antispam-prvs: <SN6PR08MB50728FA33E29D061795D5550DBD00@SN6PR08MB5072.namprd08.prod.outlook.com>
+x-ms-exchange-transport-forked: True
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 03838E948C
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR08MB5693.namprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(396003)(366004)(39860400002)(346002)(7696005)(81156014)(26005)(6506007)(71200400001)(8676002)(4326008)(316002)(186003)(8936002)(55236004)(33656002)(478600001)(86362001)(52536014)(66946007)(76116006)(64756008)(9686003)(66476007)(66446008)(66556008)(2906002)(4744005)(5660300002)(54906003)(55016002)(110136005);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: micron.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: iwAz+eYjFSQ/AYuthL+j4LYuZ5B0tVuNl1MabNVXeV7BcQM11fol+VGu5ajuFABKxViYGn7Q1Yc5/RKFMyjgbw4ThRMzxiyLEPFozU3UPgcwK70uuN/2puewOXMQOMF+IzC+UrH/pJgbM8wjEcJTkLlef2FLJMtEaw8oHyWDftibcsI1N9ciFoQQrUO8jvsy4XMJq25Qt2TYxL5btS2EE0eFxpZ5OuOoNa/hiQbKYBOHWGu9iVXK72+x7D6RssbhAfGAcLHeJsiAvutPgYGvcxPLkPSJvQ4iG+DOKurmGcun6J93sN3nYPayV6bqkNDSEQ5PZ2e70ytdDMIFNQWsm7onrRbSVFQBYd/7v5lHxiVnWCoG02f/GC3XEfhTn22CrS+quubcgF7EBbiYPsnsJ/aGm6BnSLQa9TJOXdnJisu09GLNhEF7QvoEJjYn9/TL
+x-ms-exchange-antispam-messagedata: LjpujA2SSCsJbNzI8/KA9ViCleT4B+YvJPUDdl29FZxeB80A0CrbDKekrNrcA00BQ2SvO7Bhyfep2ToHmdnKo0Ia4vr2Klgk6vWiOP7ImXB30NHIzuymrz2wdTl0C5lp4f3G6ZdQR0lxTIiztWpDsw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <lsq.1587743246.9036831@decadent.org.uk>
+X-OriginatorOrg: micron.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5f760825-f4ad-4215-e82c-08d7e868245d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2020 15:57:07.8712
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: B9cGRMcmQSVx+XHnZ1VH1Od1ut0od6D//5adIvBi3eXHnKlHiYBmBYS4SPJRWMbBy1pSnY+fNCi77vnSHGgerw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR08MB5072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 04:51:31PM +0100, Ben Hutchings wrote:
-> 3.16.83-rc2 review patch.  If anyone has any objections, please let me know.
-> 
-> ------------------
-> 
-> From: Peter Zijlstra <peterz@infradead.org>
-> 
-> commit 8019ad13ef7f64be44d4f892af9c840179009254 upstream.
+Hi, Jose
 
-Please do not forget:
+> @@ -8441,7 +8441,8 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem
+> *mmio_base, unsigned int irq)
+>  	if ((hba->ufs_version !=3D UFSHCI_VERSION_10) &&
+>  	    (hba->ufs_version !=3D UFSHCI_VERSION_11) &&
+>  	    (hba->ufs_version !=3D UFSHCI_VERSION_20) &&
+> -	    (hba->ufs_version !=3D UFSHCI_VERSION_21))
+> +	    (hba->ufs_version !=3D UFSHCI_VERSION_21) &&
+> +	    (hba->ufs_version !=3D UFSHCI_VERSION_30))
 
-  8d67743653dc ("futex: Unbreak futex hashing")
+I don't think these checkups of UFSHCI version is necessary,  does the UFSH=
+CI have other version number except these?
+Is there somebody still v1.0 and v1.1?
 
-which fixes this fix.
+
+> @@ -104,6 +104,7 @@ enum {
+>  	UFSHCI_VERSION_11 =3D 0x00010100, /* 1.1 */
+>  	UFSHCI_VERSION_20 =3D 0x00000200, /* 2.0 */
+>  	UFSHCI_VERSION_21 =3D 0x00000210, /* 2.1 */
+> +	UFSHCI_VERSION_30 =3D 0x00000300, /* 3.0 */
+>  };
+>=20
+>  /*
+> --
+> 2.7.4
+
+//Bean
+
