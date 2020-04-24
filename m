@@ -2,96 +2,187 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 950DBC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D47DC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79A6E2071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A39C20774
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:34:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587746058;
+	bh=VvUlQIcjf7MPK8ecmUKDKNpjPFHq0I6euo6Cc6NiSbQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=li409qOH0yG3Al+Jptd+P+eYP/XE6IQrhT53VJp9n8KVyUr7U6bVyyj9Ka7tDDuaa
+	 owPEByz3+r27DaPS1q18tkiEKqpIZR6DTabKu4GiCFX94KIu6eOJToLOVCyW/tdECM
+	 Ml9hZ3sZkHiuWI4svZERljMhESzYHDx42NhUmXVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbgDXQeL (ORCPT
+        id S1728471AbgDXQeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 12:34:11 -0400
-Received: from mga03.intel.com ([134.134.136.65]:11407 "EHLO mga03.intel.com"
+        Fri, 24 Apr 2020 12:34:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727123AbgDXQeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 12:34:10 -0400
-IronPort-SDR: XExRAI9o+lqhrFYWuvEyikVXV1a3fByAKsXYyZtkQhv3xdj6aOzYfX3J8UTt3FQY25GehrAEoC
- C84fgaZWopGw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2020 09:34:10 -0700
-IronPort-SDR: ngvym3+L5ScyIZ1Lzg94Y3EyStWESL5cit+lM/KL/xmSGIspPVGp49mPFcyjBgcpwPUAyif5XG
- Xt7mXyPXJMjw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,311,1583222400"; 
-   d="scan'208";a="274647472"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002.jf.intel.com with ESMTP; 24 Apr 2020 09:34:07 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jS1HG-002sEv-MN; Fri, 24 Apr 2020 19:34:10 +0300
-Date:   Fri, 24 Apr 2020 19:34:10 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     Lukas Wunner <lukas@wunner.de>,
-        Syed Nayyar Waris <syednwaris@gmail.com>,
-        akpm@linux-foundation.org, arnd@arndb.de,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] bitops: Introduce the the for_each_set_clump macro
-Message-ID: <20200424163410.GD185537@smile.fi.intel.com>
-References: <20200424122521.GA5552@syed>
- <20200424141037.ersebbfe7xls37be@wunner.de>
- <CACG_h5prcXVdk6ecn2WoT1jas3K6UF+KCrxAM9u4_ZLSyPKCEA@mail.gmail.com>
- <20200424150058.xadjxaga3csh3br6@wunner.de>
- <20200424150828.GA5034@icarus>
+        id S1727123AbgDXQeQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 12:34:16 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F7D92071E;
+        Fri, 24 Apr 2020 16:34:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587746056;
+        bh=VvUlQIcjf7MPK8ecmUKDKNpjPFHq0I6euo6Cc6NiSbQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=U+jpKIGmHD5IFbm/dKIlRl51z/LYtMIzX3ea/yhKEvbzZjSVnK5dqz2/Qdvy4+fl7
+         pdpaIPQerQbcq6tRSRKTdYxObeuqHhtsamUu5Bj3JTEksLyKwVC5By92o8CJK7uKUf
+         aOJWrINHGa6n7asAkAlQ7eYWLFLmNDw/aiiNxWE4=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Borislav Petkov <bp@alien8.de>, Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [BUGFIX PATCH 1/1] bootconfig: Fix to remove bootconfig data from initrd while boot
+Date:   Sat, 25 Apr 2020 01:34:12 +0900
+Message-Id: <158774605193.7423.573803007569761807.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <158774604073.7423.11492815214537711118.stgit@devnote2>
+References: <158774604073.7423.11492815214537711118.stgit@devnote2>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200424150828.GA5034@icarus>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 11:09:26AM -0400, William Breathitt Gray wrote:
-> On Fri, Apr 24, 2020 at 05:00:58PM +0200, Lukas Wunner wrote:
-> > On Fri, Apr 24, 2020 at 08:22:38PM +0530, Syed Nayyar Waris wrote:
-> > > On Fri, Apr 24, 2020 at 7:40 PM Lukas Wunner <lukas@wunner.de> wrote:
-> > > > On Fri, Apr 24, 2020 at 05:55:21PM +0530, Syed Nayyar Waris wrote:
+If there is a bootconfig data in the tail of initrd/initramfs,
+initrd image sanity check caused an error while decompression
+stage as follows.
 
-...
+[    0.883882] Unpacking initramfs...
+[    2.696429] Initramfs unpacking failed: invalid magic at start of compressed archive
 
-> > > So, this function preserves the behaviour of earlier
-> > > bitmap_set_value8() function and also adds extra functionality to
-> > > that.
-> > 
-> > Please leave drivers as is which use exclusively 8-bit accesses,
-> > e.g. gpio-max3191x.c and gpio-74x164.c.  I'm fearing a performance
-> > regression if your new generic variant is used.  They work perfectly
-> > fine the way they are and I don't see any benefit this series may have
-> > for them.
-> > 
-> > If there are other drivers which benefit from the flexibility of your
-> > generic variant then I'm not opposed to changing those.
+This error will be ignored if CONFIG_BLK_DEV_RAM=n,
+but CONFIG_BLK_DEV_RAM=y the kernel failed to mount rootfs
+and causes a panic.
 
-> We can leave of course bitmap_set_value8 alone, but for 8-bit values the
-> difference in latency I suspect is primarily due to the conditional test
-> for the word boundaries. This latency is surely overshadowed by the I/O
-> latency of the GPIO drivers, so I don't think there's much harm in
-> changing those to use the generic function when the bottleneck will not
-> be due to the bitmap_set_value/bitmap_get_value operations.
+To fix this issue, shrink down the initrd_end for removing
+tailing bootconfig data while boot the kernel.
 
-Okay, how many new (non-8-bit) users this will target?
+Fixes: 7684b8582c24 ("bootconfig: Load boot config from the tail of initrd")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: stable@vger.kernel.org
+---
+ init/main.c |   62 +++++++++++++++++++++++++++++++++++++++++++----------------
+ 1 file changed, 45 insertions(+), 17 deletions(-)
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+diff --git a/init/main.c b/init/main.c
+index 295aec3a1a7a..f245a1f37401 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -258,6 +258,40 @@ static int __init loglevel(char *str)
+ 
+ early_param("loglevel", loglevel);
+ 
++static void *get_boot_config_from_initrd(u32 *_size, u32 *_csum)
++{
++	u32 size, csum;
++	char *data;
++	u32 *hdr;
++
++	if (!initrd_end)
++		return NULL;
++
++	data = (char *)initrd_end - BOOTCONFIG_MAGIC_LEN;
++	if (memcmp(data, BOOTCONFIG_MAGIC, BOOTCONFIG_MAGIC_LEN))
++		return NULL;
++
++	hdr = (u32 *)(data - 8);
++	size = hdr[0];
++	csum = hdr[1];
++
++	data = ((void *)hdr) - size;
++	if ((unsigned long)data < initrd_start) {
++		pr_err("bootconfig size %d is greater than initrd size %ld\n",
++			size, initrd_end - initrd_start);
++		return NULL;
++	}
++
++	/* Remove bootconfig from initramfs/initrd */
++	initrd_end = (unsigned long)data;
++	if (_size)
++		*_size = size;
++	if (_csum)
++		*_csum = csum;
++
++	return data;
++}
++
+ #ifdef CONFIG_BOOT_CONFIG
+ 
+ char xbc_namebuf[XBC_KEYLEN_MAX] __initdata;
+@@ -358,9 +392,12 @@ static void __init setup_boot_config(const char *cmdline)
+ 	int pos;
+ 	u32 size, csum;
+ 	char *data, *copy;
+-	u32 *hdr;
+ 	int ret;
+ 
++	data = get_boot_config_from_initrd(&size, &csum);
++	if (!data)
++		goto not_found;
++
+ 	strlcpy(tmp_cmdline, boot_command_line, COMMAND_LINE_SIZE);
+ 	parse_args("bootconfig", tmp_cmdline, NULL, 0, 0, 0, NULL,
+ 		   bootconfig_params);
+@@ -368,27 +405,12 @@ static void __init setup_boot_config(const char *cmdline)
+ 	if (!bootconfig_found)
+ 		return;
+ 
+-	if (!initrd_end)
+-		goto not_found;
+-
+-	data = (char *)initrd_end - BOOTCONFIG_MAGIC_LEN;
+-	if (memcmp(data, BOOTCONFIG_MAGIC, BOOTCONFIG_MAGIC_LEN))
+-		goto not_found;
+-
+-	hdr = (u32 *)(data - 8);
+-	size = hdr[0];
+-	csum = hdr[1];
+-
+ 	if (size >= XBC_DATA_MAX) {
+ 		pr_err("bootconfig size %d greater than max size %d\n",
+ 			size, XBC_DATA_MAX);
+ 		return;
+ 	}
+ 
+-	data = ((void *)hdr) - size;
+-	if ((unsigned long)data < initrd_start)
+-		goto not_found;
+-
+ 	if (boot_config_checksum((unsigned char *)data, size) != csum) {
+ 		pr_err("bootconfig checksum failed\n");
+ 		return;
+@@ -421,8 +443,14 @@ static void __init setup_boot_config(const char *cmdline)
+ not_found:
+ 	pr_err("'bootconfig' found on command line, but no bootconfig found\n");
+ }
++
+ #else
+-#define setup_boot_config(cmdline)	do { } while (0)
++
++static void setup_boot_config(const char *cmdline)
++{
++	/* Remove bootconfig data from initrd */
++	get_boot_config_from_initrd(NULL, NULL);
++}
+ 
+ static int __init warn_bootconfig(char *str)
+ {
 
