@@ -2,84 +2,101 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0101C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 304B9C2BA19
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9581020736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D853620736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:06:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dHa+D5vk"
+	dkim=pass (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b="U9LFZ78L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728482AbgDXBFf (ORCPT
+        id S1728497AbgDXBGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 21:05:35 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:52521 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726060AbgDXBFf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 21:05:35 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587690334; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=ShZafi+ANNOf8BzHrjTpL0wcGrk3vYLZaq3XFRW2kwI=; b=dHa+D5vky5/WTsAM/S9aTuIlldWXi8CucPcVxtLna60IO0SObWpjQIJmeXD/607kPloXu7gb
- UsJTmAbvHbtxPrbjA/6vu+119rJGCeIYNwhY8HJIX6i0lXya+gs7rBEzOCZe+XD0KoXi/UWj
- ez0lZufjlYq54t5WU++JPJ0xJm8=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea23b56.7f9bd04c6228-smtp-out-n03;
- Fri, 24 Apr 2020 01:05:26 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5CF38C433D2; Fri, 24 Apr 2020 01:05:26 +0000 (UTC)
-Received: from [192.168.142.6] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: clew)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 764B9C433CB;
-        Fri, 24 Apr 2020 01:05:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 764B9C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=clew@codeaurora.org
-Subject: Re: [PATCH 4/4] arm64: defconfig: Remove QCOM_GLINK_SSR
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        Sibi <sibis@codeaurora.org>,
-        Siddharth Gupta <sidgup@codeaurora.org>
-References: <20200423003736.2027371-1-bjorn.andersson@linaro.org>
- <20200423003736.2027371-5-bjorn.andersson@linaro.org>
-From:   Chris Lew <clew@codeaurora.org>
-Message-ID: <118d0c75-bfd7-ec34-2565-df33e8f2b35b@codeaurora.org>
-Date:   Thu, 23 Apr 2020 18:05:23 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 23 Apr 2020 21:06:10 -0400
+Received: from mx4.wp.pl ([212.77.101.12]:14026 "EHLO mx4.wp.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726970AbgDXBGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 21:06:10 -0400
+Received: (wp-smtpd smtp.wp.pl 27174 invoked from network); 24 Apr 2020 03:06:06 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
+          t=1587690367; bh=/hSyo49YRiswdFuJluGCPe5Woawb0dgbp7JtFdBsldQ=;
+          h=From:To:Cc:Subject;
+          b=U9LFZ78LU8I8/ljqSLrMbtvCxGfHe+pOk3U16YV4fQmf54PARXLYPHpOEiZHL0Wri
+           zcjCW5AD3eTm6xma5Dk31bQ5W2zqCBngV8qd4grMOZU5+QsD+OS7eVkQzTG+7apeSq
+           F8BwtwYCjo/NQko0cENvtFkiFVCwXAUXwPY0Xt7U=
+Received: from unknown (HELO kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com) (kubakici@wp.pl@[163.114.132.1])
+          (envelope-sender <kubakici@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <mcgrof@kernel.org>; 24 Apr 2020 03:06:06 +0200
+Date:   Thu, 23 Apr 2020 18:05:44 -0700
+From:   Jakub Kicinski <kubakici@wp.pl>
+To:     "Luis R. Rodriguez" <mcgrof@kernel.org>
+Cc:     gregkh@linuxfoundation.org, akpm@linux-foundation.org,
+        josh@joshtriplett.org, rishabhb@codeaurora.org, maco@android.com,
+        andy.gross@linaro.org, david.brown@linaro.org,
+        bjorn.andersson@linaro.org, linux-wireless@vger.kernel.org,
+        keescook@chromium.org, shuah@kernel.org, mfuzzey@parkeon.com,
+        zohar@linux.vnet.ibm.com, dhowells@redhat.com,
+        pali.rohar@gmail.com, tiwai@suse.de, arend.vanspriel@broadcom.com,
+        zajec5@gmail.com, nbroeking@me.com, markivx@codeaurora.org,
+        broonie@kernel.org, dmitry.torokhov@gmail.com, dwmw2@infradead.org,
+        torvalds@linux-foundation.org, Abhay_Salunke@dell.com,
+        jewalt@lgsinnovations.com, cantabile.desu@gmail.com, ast@fb.com,
+        andresx7@gmail.com, dan.rue@linaro.org, brendanhiggins@google.com,
+        yzaikin@google.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH] firmware_loader: re-export fw_fallback_config into
+ firmware_loader's own namespace
+Message-ID: <20200423180544.60d12af0@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200423203140.19510-1-mcgrof@kernel.org>
+References: <20200423203140.19510-1-mcgrof@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200423003736.2027371-5-bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-WP-MailID: 610e19f0c656a4f8e1af37bdefd7c399
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 0000003 [YUD0]                               
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/22/2020 5:37 PM, Bjorn Andersson wrote:
-> Remove the QCOM_GLINK_SSR option from the arm64 defconfig, as the module
-> is assimilated by QCOM_GLINK - which is selected by other means.
+On Thu, 23 Apr 2020 20:31:40 +0000 Luis R. Rodriguez wrote:
+> From: Luis Chamberlain <mcgrof@kernel.org>
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Christoph's recent patch "firmware_loader: remove unused exports", which
+> is not merged upstream yet, removed two exported symbols. One is fine to
+> remove since only built-in code uses it but the other is incorrect.
+> 
+> If CONFIG_FW_LOADER=m so the firmware_loader is modular but
+> CONFIG_FW_LOADER_USER_HELPER=y we fail at mostpost with:
+> 
+> ERROR: modpost: "fw_fallback_config" [drivers/base/firmware_loader/firmware_class.ko] undefined!
+> 
+> This happens because the variable fw_fallback_config is built into the
+> kernel if CONFIG_FW_LOADER_USER_HELPER=y always, so we need to grant
+> access to the firmware loader module by exporting it.
+> 
+> Instead of just exporting it as we used to, take advantage of the new
+> kernel symbol namespacing functionality, and export the symbol only to
+> the firmware loader private namespace. This would prevent misuses from
+> other drivers and makes it clear the goal is to keep this private to
+> the firmware loader alone.
+> 
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+> Fixes: "firmware_loader: remove unused exports"
 
-Acked-by: Chris Lew <clew@codeaurora.org>
+Can't help but notice this strange form of the Fixes tag, is it
+intentional?
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a 
-Linux Foundation Collaborative Project
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
