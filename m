@@ -2,153 +2,141 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE6FC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F7AC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AA062173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:41:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3039F2173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:41:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OvWTBqlk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T0keOgZ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728950AbgDXTlP (ORCPT
+        id S1729263AbgDXTlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 15:41:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36076 "EHLO
+        Fri, 24 Apr 2020 15:41:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726908AbgDXTlO (ORCPT
+        with ESMTP id S1726908AbgDXTls (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 15:41:14 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B91A5C09B049
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 12:41:14 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id w65so5259889pfc.12
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 12:41:14 -0700 (PDT)
+        Fri, 24 Apr 2020 15:41:48 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03652C09B048
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 12:41:48 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id u15so11210370ljd.3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 12:41:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Qbux80UTz0vA817hD4tP9hl9NHJsjLKh48SDL2L8F/o=;
-        b=OvWTBqlkP7TC/ZbPKUDwMuhgaD+AWHPGVEFsc9vkTNBX+V1qdIdW+igEYnSvFhaLK9
-         EICcoAcgtctkQZt8fWHFfCvAkpU/GgdvOGNstLWdDXD+s/lBR9H7+w5R7U9c7qLJntGH
-         1MJ0XEyyRX9XrKLk6IPcyxURkHmjOM2IKjOiM=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xEmEzSJAW12x5niGKKzPXSqsRmQBFq2lP6H8xvuac/8=;
+        b=T0keOgZ72bgaeEiqotFnnG+NMkzgKYHGXH4TyFbkmZQOJe1Y5iKcFbRjOuVS3LytBL
+         W6AnOWDW2QWZo3w+XoSlX7QKg7WFduDC+turDLabtmC3eHu2R+LW2LppYuJYXdj40rg7
+         CdC1QLOEEL0R1Cimqms8CMRslN8tW7OXjqcp181VPdrvY8W8QYwXkvlGnezntNU/aIQI
+         i6YsVJ+qBo1IpmfuneESoyprPvhhXr26CeMvNdDtUxyovd7PslG1FH6YR8sVB7ohtRad
+         QOWlk/axNwWA9QPd0lqbh3Eau8RDrkadohiHGyCxCHAzXRPCkwjqYlFo45dJvWYiXb2y
+         7ahA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Qbux80UTz0vA817hD4tP9hl9NHJsjLKh48SDL2L8F/o=;
-        b=DGtowlaWVpNuxNgdqvlQGVmUWOxJiGGZZ3prkB0sG+Yc6/lp3xM4/3jEUYFE0q6wvR
-         mo9WDSbLK61b/I7OHOsII3+XeuVGh63YWVuDiH9pm7l3JE+fwI7dXc7C5TPHySS+gCBf
-         zQTt1SaJSVSEq3CQ2OhJHFqXDM9DrUmH9MxEmn0oujuUGdbTt1dGCu0h4MUpiQzh4Ykj
-         z+0n1NkzeMBvdTyHeW21Gky1hj0cqic1r7CNFpvy4iPkHwoozG8asaaOkafXhA6/eUUd
-         3cFJeasiKaYQpXPf0NaM6r1xzWwHY7yjRugjCabN5LOO6VYCURwLSnSVwhA4LvmK6dva
-         cZww==
-X-Gm-Message-State: AGi0PuYOzoyZeeHpbYCeuqG3PBvMgqDRvjwsXaoESCBwWE+oegw15NlY
-        eMbX5Q/lMH0Ikm1Ovu++3y76Kg==
-X-Google-Smtp-Source: APiQypKUSiQYkB+1l3STtqMgcJ9AzHkpeWfGE0J7tpvxsaxtM/vlY9mCbgbOGUURLv/PRIWyx/N0Ew==
-X-Received: by 2002:a62:ed14:: with SMTP id u20mr11580549pfh.69.1587757274146;
-        Fri, 24 Apr 2020 12:41:14 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id nm22sm5212397pjb.38.2020.04.24.12.41.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Apr 2020 12:41:13 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 12:41:12 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
-        robh+dt@kernel.org, rjw@rjwysocki.net, saravanak@google.com,
-        sibis@codeaurora.org, rnayak@codeaurora.org,
-        bjorn.andersson@linaro.org, vincent.guittot@linaro.org,
-        jcrouse@codeaurora.org, evgreen@chromium.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 7/7] cpufreq: dt: Add support for interconnect
- bandwidth scaling
-Message-ID: <20200424194112.GD4525@google.com>
-References: <20200424155404.10746-1-georgi.djakov@linaro.org>
- <20200424155404.10746-8-georgi.djakov@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xEmEzSJAW12x5niGKKzPXSqsRmQBFq2lP6H8xvuac/8=;
+        b=K7AVGQowQJ6/H5nlw5L42Gq5ydaJoIZYYo6FeEPMdc7BrFzTHUN7uKbM2a3aQ1vcga
+         TTE5/a6dR425SPEFMQjuaRcgBtCrCW0c1hhzc5VWOdh+dao+vLm8cW+HY2+TER204lrN
+         B0bUa+N6H6V0iYvJnV9y/Ql4RxCdjnZe8SZt9A9d8azFRWDgsSqVq+0lN0torGBPv9RD
+         YqBeIYe3UHlcmsuheetdS5WyyBVm4GRsme8W1D88CMeTjLmYqBZrd6eDqk/0juxQb2vq
+         ep2h2+v6KuCp+qUAPrawVqFtNHEcnVil+GilDt1EQQAV5SJa4aQa27F3Deogvgm/MOpB
+         8J2A==
+X-Gm-Message-State: AGi0PuYLDf3X6rS4mxM9HQPbxM+octDPUSbZCetoG2qiMOhHDCMr7qo7
+        Oy5ER8UC3keWf5P8aZDNoUPLak3OMYuSUC2F4uN47Q==
+X-Google-Smtp-Source: APiQypI4Xi6+DbAAYIeOQPzrEcE/mxStfNg2RlTAQ/87ko7Y+RTOVwvrDrzFbofvytmtXUu0lTzmeVzRLH+KYXFDMfY=
+X-Received: by 2002:a2e:9791:: with SMTP id y17mr7027497lji.174.1587757306172;
+ Fri, 24 Apr 2020 12:41:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200424155404.10746-8-georgi.djakov@linaro.org>
+References: <20200328185916.98423-1-rajatja@google.com> <20200328185916.98423-3-rajatja@google.com>
+ <20200410164140.GA25924@bogus>
+In-Reply-To: <20200410164140.GA25924@bogus>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Fri, 24 Apr 2020 12:41:09 -0700
+Message-ID: <CACK8Z6G=oy9Gesazk1jJVhk22Dgm8_TGZCcpNndkv+WLqAe8hg@mail.gmail.com>
+Subject: Re: [PATCH v4 3/5] dt-bindings: input/atkbd.txt: Add binding for "function-row-physmap"
+To:     Rob Herring <robh@kernel.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Dmitry Torokhov <dtor@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Furquan Shaikh <furquan@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Benson Leung <bleung@google.com>,
+        Zentaro Kavanagh <zentaro@google.com>,
+        Dominik Behr <dbehr@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 06:54:04PM +0300, Georgi Djakov wrote:
-> In addition to clocks and regulators, some devices can scale the bandwidth
-> of their on-chip interconnect - for example between CPU and DDR memory. Add
-> support for that, so that platforms which support it can make use of it.
-> 
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
-> v7:
-> * Drop using dev_pm_opp_set_paths(), as it has been removed.
-> * Add Kconfig dependency on INTERCONNECT, as it can be module.
-> 
-> 
-> v2: https://lore.kernel.org/r/20190423132823.7915-6-georgi.djakov@linaro.org
-> 
->  drivers/cpufreq/Kconfig      |  1 +
->  drivers/cpufreq/cpufreq-dt.c | 15 +++++++++++++++
->  2 files changed, 16 insertions(+)
-> 
-> diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
-> index c3e6bd59e920..db2ad54ee67f 100644
-> --- a/drivers/cpufreq/Kconfig
-> +++ b/drivers/cpufreq/Kconfig
-> @@ -217,6 +217,7 @@ config CPUFREQ_DT
->  
->  config CPUFREQ_DT_PLATDEV
->  	bool
-> +	depends on INTERCONNECT || !INTERCONNECT
->  	help
->  	  This adds a generic DT based cpufreq platdev driver for frequency
->  	  management.  This creates a 'cpufreq-dt' platform device, on the
-> diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
-> index 26fe8dfb9ce6..4ecef3257532 100644
-> --- a/drivers/cpufreq/cpufreq-dt.c
-> +++ b/drivers/cpufreq/cpufreq-dt.c
-> @@ -13,6 +13,7 @@
->  #include <linux/cpufreq.h>
->  #include <linux/cpumask.h>
->  #include <linux/err.h>
-> +#include <linux/interconnect.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/pm_opp.h>
-> @@ -95,6 +96,7 @@ static int resources_available(void)
->  	struct device *cpu_dev;
->  	struct regulator *cpu_reg;
->  	struct clk *cpu_clk;
-> +	struct icc_path *cpu_path;
->  	int ret = 0;
->  	const char *name;
->  
-> @@ -121,6 +123,19 @@ static int resources_available(void)
->  
->  	clk_put(cpu_clk);
->  
-> +	cpu_path = of_icc_get(cpu_dev, NULL);
-> +	ret = PTR_ERR_OR_ZERO(cpu_path);
-> +	if (ret) {
-> +		if (ret == -EPROBE_DEFER)
-> +			dev_dbg(cpu_dev, "defer icc path: %d\n", ret);
-> +		else
-> +			dev_err(cpu_dev, "failed to get icc path: %d\n", ret);
-> +
-> +		return ret;
-> +	}
-> +
-> +	icc_put(cpu_path);
-> +
->  	name = find_supply_name(cpu_dev);
->  	/* Platform doesn't require regulator */
->  	if (!name)
+Hi,
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+On Fri, Apr 10, 2020 at 10:38 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Sat, Mar 28, 2020 at 11:59:14AM -0700, Rajat Jain wrote:
+> > Create the documentation for the new introduced property, that
+> > describes the function-row keys physical positions.
+> >
+> > Signed-off-by: Rajat Jain <rajatja@google.com>
+> > ---
+> > v4: Same as v3
+> > v3: same as v2
+> > v2: Remove the Change-Id from the commit log
+> >
+> >  .../devicetree/bindings/input/atkbd.txt       | 34 +++++++++++++++++++
+> >  1 file changed, 34 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/input/atkbd.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/input/atkbd.txt b/Documentation/devicetree/bindings/input/atkbd.txt
+> > new file mode 100644
+> > index 0000000000000..816653eb8e98d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/input/atkbd.txt
+> > @@ -0,0 +1,34 @@
+> > +Device tree bindings for AT / PS2 keyboard device
+> > +
+> > +Optional properties:
+> > +
+> > +     function-row-physmap:
+> > +                     An ordered array of the physical codes for the function
+> > +                     row keys. Arranged in order from left to right.
+>
+> A single optional property doesn't constitute a DT binding.
+>
+> > +
+> > +Example:
+> > +
+> > +     This is a sample ACPI _DSD node describing the property:
+>
+> Neither does this ACPI stuff.
+
+I assume this means a nack to the documentation patches.
+
+Dmitry, can you apply the other patches in the series?
+
+Thanks,
+
+Rajat
+
+>
+> Rob
