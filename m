@@ -2,148 +2,96 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC29C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B26C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC9CC2084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:15:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587723320;
-	bh=1CQ4YVRv2hptMYIZ2vyFq7ockdg1+3qtqMcz6/rIcWw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ioki3GvtSG06jo8kydk9LJ2/LvuuHXmirvbXEWZRO4F0yzEqd5bjmDJqs87gYiweq
-	 YC9kMBYb7x7QRZWGhHqzU53+653wOoy+4OMmigOR9ArfZsh+blh9uwYzciMOYo+jh7
-	 pzmviC9thucPEMa+RaFkTOl9KGNpjGz0eZ8cfKmU=
+	by mail.kernel.org (Postfix) with ESMTP id 3CB9920728
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:15:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jxGCXqkJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbgDXKPU (ORCPT
+        id S1727001AbgDXKPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 06:15:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43262 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726982AbgDXKPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 06:15:17 -0400
-Received: from localhost.localdomain (unknown [117.99.83.91])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BFE521569;
-        Fri, 24 Apr 2020 10:15:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587723317;
-        bh=1CQ4YVRv2hptMYIZ2vyFq7ockdg1+3qtqMcz6/rIcWw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Phwx+4VH+LLPa9c0y9/8hkSQRk6CngxvX3rE2ZNxMDFa7h08emSzSZfxZekgFZUDX
-         W46BLvNjdA+UL4+k6nsfGq3VpK7TJ+xiWt0eVlgt76u4Rv9NAf82NFHM5Fc87pomkj
-         boh+bqkSvXYAMgYogP0IK4kCOcNbI+DZA3igxAh4=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        =?UTF-8?q?Andreas=20B=C3=B6hler?= <dev@aboehler.at>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v10 5/5] usb: xhci: provide a debugfs hook for erasing rom
-Date:   Fri, 24 Apr 2020 15:44:10 +0530
-Message-Id: <20200424101410.2364219-6-vkoul@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200424101410.2364219-1-vkoul@kernel.org>
-References: <20200424101410.2364219-1-vkoul@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 24 Apr 2020 06:15:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59298 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726726AbgDXKPy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 06:15:54 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 425FEC09B045
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 03:15:53 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id o10so4423606pgb.6
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 03:15:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=kKqnTUenA/rrGtoXHPWbx59Tan7ETAeJu0G1PoePj8Q=;
+        b=jxGCXqkJid1cEbzBEHdxZAmk6SP0zwAOb26BSRaPOA6UiIS01PgdZvgAidmq7Vy2LM
+         P+VrNbtJXKvbGkOHiu10OPUlYwB6IM6dozMYqAt7/QUi8NZ7uY7AoWQUi/0s+pNg513e
+         VQmYhYVgMvui0Gns1IdMI8sWB9zHMfU/GMwr6gthtCdrJKZy56cM3H1D5xOjNgSz7ZTP
+         l3pFxITeDywBjGllqR5KPy2LpeoG05Qs5mLieXRsUuBvBvX4cONL95yYRR9u/fikIiBn
+         BXdkk0/RLepxrH6NO7WvXAsqDVPHXkc69UObcIOJpFcE5Vbq5wV32NbIK30dt/XaGHg1
+         id7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=kKqnTUenA/rrGtoXHPWbx59Tan7ETAeJu0G1PoePj8Q=;
+        b=cU3LBOGuuTdpLaAUpm/qlNg/uAoS+GyYWXiwxlYjJJtLIIcBdn4NwV/9i8WwMr5Ds4
+         RgTDQSFO8HlTOAgUnqaxX/8OJJ+CjpORpInB/9CDuvYKV2eahCgxQDntIhU9cVWOm7cn
+         5T5iO5Fklc23xXm1DwNseDxXRt8ss2qv8/SKSqajtmVrccFx9j/QULCvihSZupC7QbDH
+         sbH6vIqRh7c6t1bWvpk64RO1XmDJDwPVoEWYV+vYe6qP3XcdIm4/ymp0WulUqDTuAudj
+         /j1gMFx4SD1RjnPmlyPBm3+dcTuTwva+Q1ZV4VKR6xi7O9D4J2epnOq+jr0ilkzSpw88
+         10yQ==
+X-Gm-Message-State: AGi0PuZbsAJK4omjgMT9HqeBdGgD8RWXjKGw2o+JgHj8qDZm/bvNR/Rk
+        IDOpfZBX7bD32/J0owZYXUe8UuWeLyQM9g==
+X-Google-Smtp-Source: APiQypLVT/jJRAyLJCZsU721zNGW4Fe35u6Tl5hXfGOqTbzN5EGHV16pWlevVhBY+Fi/UlcbWeNANw==
+X-Received: by 2002:a62:76c3:: with SMTP id r186mr8806021pfc.190.1587723352734;
+        Fri, 24 Apr 2020 03:15:52 -0700 (PDT)
+Received: from localhost.localdomain ([223.104.63.47])
+        by smtp.gmail.com with ESMTPSA id 127sm5254252pfz.128.2020.04.24.03.15.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Apr 2020 03:15:52 -0700 (PDT)
+From:   Guixiong Wei <guixiongwei@gmail.com>
+To:     linux-graphics-maintainer@vmware.com, thellstrom@vmware.com,
+        airlied@linux.ie, daniel@ffwll.ch
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Guixiong Wei <guixiongwei@gmail.com>
+Subject: [PATCH] drm/vmwgfx: Fix parameter name in vmw_bo_init
+Date:   Sat, 25 Apr 2020 00:14:39 +1400
+Message-Id: <20200424101439.13572-1-guixiongwei@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-run "echo 1 > /sys/kernel/debug/renesas-usb/rom_erase" to erase firmware
-when driver is loaded.
+The parameter name should be interruptible instead of interuptable.
 
-Subsequent init of driver shall reload the firmware
-
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Guixiong Wei <guixiongwei@gmail.com>
 ---
- drivers/usb/host/xhci-pci-renesas.c | 33 +++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ drivers/gpu/drm/vmwgfx/vmwgfx_drv.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/host/xhci-pci-renesas.c b/drivers/usb/host/xhci-pci-renesas.c
-index 6bb537999754..193ebec24153 100644
---- a/drivers/usb/host/xhci-pci-renesas.c
-+++ b/drivers/usb/host/xhci-pci-renesas.c
-@@ -2,6 +2,7 @@
- /* Copyright (C) 2019-2020 Linaro Limited */
- 
- #include <linux/acpi.h>
-+#include <linux/debugfs.h>
- #include <linux/firmware.h>
- #include <linux/module.h>
- #include <linux/pci.h>
-@@ -160,6 +161,8 @@ static int renesas_fw_verify(const void *fw_data,
- 	return 0;
- }
- 
-+static void debugfs_init(struct pci_dev *pdev);
-+
- static bool renesas_check_rom(struct pci_dev *pdev)
- {
- 	u16 rom_status;
-@@ -173,6 +176,7 @@ static bool renesas_check_rom(struct pci_dev *pdev)
- 	rom_status &= RENESAS_ROM_STATUS_ROM_EXISTS;
- 	if (rom_status) {
- 		dev_dbg(&pdev->dev, "External ROM exists\n");
-+		debugfs_init(pdev);
- 		return true; /* External ROM exists */
- 	}
- 
-@@ -439,6 +443,34 @@ static void renesas_rom_erase(struct pci_dev *pdev)
- 	dev_dbg(&pdev->dev, "ROM Erase... Done success\n");
- }
- 
-+static int debugfs_rom_erase(void *data, u64 value)
-+{
-+	struct pci_dev *pdev = data;
-+
-+	if (value == 1) {
-+		dev_dbg(&pdev->dev, "Userspace requested ROM erase\n");
-+		renesas_rom_erase(pdev);
-+		return 0;
-+	}
-+	return -EINVAL;
-+}
-+DEFINE_DEBUGFS_ATTRIBUTE(rom_erase_ops, NULL, debugfs_rom_erase, "%llu\n");
-+
-+static struct dentry *debugfs_root;
-+
-+static void debugfs_init(struct pci_dev *pdev)
-+{
-+	debugfs_root = debugfs_create_dir("renesas_usb", NULL);
-+
-+	debugfs_create_file("rom_erase", 0200, debugfs_root,
-+			    pdev, &rom_erase_ops);
-+}
-+
-+static void debugfs_exit(void)
-+{
-+	debugfs_remove_recursive(debugfs_root);
-+}
-+
- static bool renesas_download_rom(struct pci_dev *pdev,
- 				 const u32 *fw, size_t step)
- {
-@@ -690,4 +722,5 @@ int renesas_xhci_check_request_fw(struct pci_dev *pdev,
- 
- void renesas_xhci_pci_exit(struct pci_dev *dev)
- {
-+	debugfs_exit();
- }
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
+index 8cdcd6e5f9e1..3596f3923ea3 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
+@@ -850,7 +850,7 @@ extern void vmw_bo_bo_free(struct ttm_buffer_object *bo);
+ extern int vmw_bo_init(struct vmw_private *dev_priv,
+ 		       struct vmw_buffer_object *vmw_bo,
+ 		       size_t size, struct ttm_placement *placement,
+-		       bool interuptable,
++		       bool interruptible,
+ 		       void (*bo_free)(struct ttm_buffer_object *bo));
+ extern int vmw_user_bo_verify_access(struct ttm_buffer_object *bo,
+ 				     struct ttm_object_file *tfile);
 -- 
-2.25.1
+2.17.1
 
