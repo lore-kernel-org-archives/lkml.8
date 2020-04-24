@@ -2,163 +2,145 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE042C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 21:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87755C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 21:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DAC22098B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 21:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 654762098B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 21:18:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mwHsCg60"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726090AbgDXVSl (ORCPT
+        id S1726121AbgDXVSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 17:18:41 -0400
-Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:9377 "EHLO
-        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726027AbgDXVSk (ORCPT
+        Fri, 24 Apr 2020 17:18:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51342 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbgDXVSy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 17:18:40 -0400
-X-Greylist: delayed 904 seconds by postgrey-1.27 at vger.kernel.org; Fri, 24 Apr 2020 17:18:40 EDT
-Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
- EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Fri, 24 Apr 2020 14:03:32 -0700
-Received: from mstunes-sid.eng.vmware.com (mstunes-sid.eng.vmware.com [10.118.100.24])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id CBB63405C8;
-        Fri, 24 Apr 2020 14:03:35 -0700 (PDT)
-From:   Mike Stunes <mstunes@vmware.com>
-To:     <joro@8bytes.org>
-CC:     <dan.j.williams@intel.com>, <dave.hansen@linux.intel.com>,
-        <hpa@zytor.com>, <jgross@suse.com>, <jroedel@suse.de>,
-        <jslaby@suse.cz>, <keescook@chromium.org>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <luto@kernel.org>,
-        <peterz@infradead.org>, <thellstrom@vmware.com>,
-        <thomas.lendacky@amd.com>,
-        <virtualization@lists.linux-foundation.org>, <x86@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>
-Subject: [PATCH] Allow RDTSC and RDTSCP from userspace
-Date:   Fri, 24 Apr 2020 14:03:16 -0700
-Message-ID: <20200424210316.848878-1-mstunes@vmware.com>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200319091407.1481-56-joro@8bytes.org>
-References: <20200319091407.1481-56-joro@8bytes.org>
+        Fri, 24 Apr 2020 17:18:54 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63741C09B04A
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 14:18:54 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id c3so14946727otp.8
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 14:18:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JH4b2yUgrRfNHWgcGuHimY3HuUAtZbHhYYgcbbN+n7w=;
+        b=mwHsCg60VWO11eWQt/hJEUGF5Xp645z/jo0zwnavgwRPqatslMnx6qZ2kCxzXmPbCv
+         mYYvK6kIhQHF94oCzIbl3vtdmsKBNlehlwowsOzDsPcLP5bhH6TZEIHgjcHyn0l9kSZi
+         OM9PPDJeTrO2h7DfVpH3Z8SI+AfJNy+z7plWwpPs5mUbxW0nnqp6yZ6nwFb6GAUJsxdY
+         egaeDfTbWlW5vSqNTS1JOjtz5Ao/BsnxtzpK3T4zYuTcLK3hfphYs5hbdpGasPIjNrZJ
+         0nnct1jkEy26bE47J1Nw26p8Hj5OsXzMgiD3Fqmd9vBffR7DHCdUQ72jKcX3egKfnl1v
+         kQlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JH4b2yUgrRfNHWgcGuHimY3HuUAtZbHhYYgcbbN+n7w=;
+        b=ULKRqIYCnI/0Z8R819bpFabCRAJwO5hyV9OYdXDx7Uc2BV97WX8GIshFJaDW7teXU5
+         hFoTX5NuPO09LqPMvJI8m569T3Ho8m7t0vYKohHznhVXWtk+tfvMczjFbuBCOI7omMpa
+         VrU8KJ1EeqBd3K/iLzqcZlJgn8y/Pt1lli+kslRm5b/OFp73iAZoGjfgcQhmiHf1w+lD
+         pqzvf8TTzSwiWU32K3vcoMUepet+8IBQ0YPqkCPK944zBe7YJinAKzqq9y3ZlpBg4olX
+         lLPnsraI6a3DT8xrLX2fzCHZSL/dA8Ht69JCfNyopRwsUhhQAFM1QEq+/JJzWgubEjnX
+         /6ZQ==
+X-Gm-Message-State: AGi0PuaEUnYTXKJ4mDGIyS5lVWkwHhg2VlfagfKuzkByEIEjiWnCcpTE
+        4JpdZ9CRQhHveeX/hEWjLzOnalVBdPWBY4G+9zFqwQ==
+X-Google-Smtp-Source: APiQypIGeacaBHNTvM766dTzv4dPNygP9HlkNLpttNTbMpzV41oh77j62R8ZTlR1RzHISXuwWyhoFgUUG5AfVD2+FyU=
+X-Received: by 2002:a9d:2622:: with SMTP id a31mr10002145otb.231.1587763133240;
+ Fri, 24 Apr 2020 14:18:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-Received-SPF: None (EX13-EDG-OU-002.vmware.com: mstunes@vmware.com does not
- designate permitted sender hosts)
+References: <20200424155404.10746-1-georgi.djakov@linaro.org> <20200424155404.10746-7-georgi.djakov@linaro.org>
+In-Reply-To: <20200424155404.10746-7-georgi.djakov@linaro.org>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Fri, 24 Apr 2020 14:18:17 -0700
+Message-ID: <CAGETcx9iAJRW9Y9orHNF-fC53nNob_vZKYUNEpwf_AeAdWCOjw@mail.gmail.com>
+Subject: Re: [PATCH v7 6/7] OPP: Update the bandwidth on OPP frequency changes
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Evan Green <evgreen@chromium.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joerg,
+On Fri, Apr 24, 2020 at 8:54 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
+>
+> If the OPP bandwidth values are populated, we want to switch also the
+> interconnect bandwidth in addition to frequency and voltage.
+>
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+> v7:
+> * Addressed review comments from Viresh.
+>
+> v2: https://lore.kernel.org/r/20190423132823.7915-5-georgi.djakov@linaro.org
+>
+>  drivers/opp/core.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index 8e86811eb7b2..66a8ea10f3de 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -808,7 +808,7 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
+>         unsigned long freq, old_freq, temp_freq;
+>         struct dev_pm_opp *old_opp, *opp;
+>         struct clk *clk;
+> -       int ret;
+> +       int ret, i;
+>
+>         opp_table = _find_opp_table(dev);
+>         if (IS_ERR(opp_table)) {
+> @@ -895,6 +895,17 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
+>                         dev_err(dev, "Failed to set required opps: %d\n", ret);
+>         }
+>
+> +       if (!ret && opp_table->paths) {
+> +               for (i = 0; i < opp_table->path_count; i++) {
+> +                       ret = icc_set_bw(opp_table->paths[i],
+> +                                        opp->bandwidth[i].avg,
+> +                                        opp->bandwidth[i].peak);
+> +                       if (ret)
+> +                               dev_err(dev, "Failed to set bandwidth[%d]: %d\n",
+> +                                       i, ret);
+> +               }
+> +       }
+> +
 
-I needed to allow RDTSC(P) from userspace and in early boot in order to
-get userspace started properly. Patch below.
+Hey Georgi,
 
----
-SEV-ES guests will need to execute rdtsc and rdtscp from userspace and
-during early boot. Move the rdtsc(p) #VC handler into common code and
-extend the #VC handlers.
+Thanks for getting this series going again and converging on the DT
+bindings! Will be nice to see this land finally.
 
-Signed-off-by: Mike Stunes <mstunes@vmware.com>
----
- arch/x86/boot/compressed/sev-es.c |  4 ++++
- arch/x86/kernel/sev-es-shared.c   | 23 +++++++++++++++++++++++
- arch/x86/kernel/sev-es.c          | 25 ++-----------------------
- 3 files changed, 29 insertions(+), 23 deletions(-)
+I skimmed through all the patches in the series and they mostly look
+good (if you address some of Matthias's comments).
 
-diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
-index 53c65fc09341..1d0290cc46c1 100644
---- a/arch/x86/boot/compressed/sev-es.c
-+++ b/arch/x86/boot/compressed/sev-es.c
-@@ -158,6 +158,10 @@ void boot_vc_handler(struct pt_regs *regs, unsigned long exit_code)
- 	case SVM_EXIT_CPUID:
- 		result = vc_handle_cpuid(boot_ghcb, &ctxt);
- 		break;
-+	case SVM_EXIT_RDTSC:
-+	case SVM_EXIT_RDTSCP:
-+		result = vc_handle_rdtsc(boot_ghcb, &ctxt, exit_code);
-+		break;
- 	default:
- 		result = ES_UNSUPPORTED;
- 		break;
-diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
-index a632b8f041ec..373ced468659 100644
---- a/arch/x86/kernel/sev-es-shared.c
-+++ b/arch/x86/kernel/sev-es-shared.c
-@@ -442,3 +442,26 @@ static enum es_result vc_handle_cpuid(struct ghcb *ghcb,
- 
- 	return ES_OK;
- }
-+
-+static enum es_result vc_handle_rdtsc(struct ghcb *ghcb,
-+				      struct es_em_ctxt *ctxt,
-+				      unsigned long exit_code)
-+{
-+	bool rdtscp = (exit_code == SVM_EXIT_RDTSCP);
-+	enum es_result ret;
-+
-+	ret = sev_es_ghcb_hv_call(ghcb, ctxt, exit_code, 0, 0);
-+	if (ret != ES_OK)
-+		return ret;
-+
-+	if (!(ghcb_is_valid_rax(ghcb) && ghcb_is_valid_rdx(ghcb) &&
-+	     (!rdtscp || ghcb_is_valid_rcx(ghcb))))
-+		return ES_VMM_ERROR;
-+
-+	ctxt->regs->ax = ghcb->save.rax;
-+	ctxt->regs->dx = ghcb->save.rdx;
-+	if (rdtscp)
-+		ctxt->regs->cx = ghcb->save.rcx;
-+
-+	return ES_OK;
-+}
-diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 409a7a2aa630..82199527d012 100644
---- a/arch/x86/kernel/sev-es.c
-+++ b/arch/x86/kernel/sev-es.c
-@@ -815,29 +815,6 @@ static enum es_result vc_handle_wbinvd(struct ghcb *ghcb,
- 	return sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_WBINVD, 0, 0);
- }
- 
--static enum es_result vc_handle_rdtsc(struct ghcb *ghcb,
--				      struct es_em_ctxt *ctxt,
--				      unsigned long exit_code)
--{
--	bool rdtscp = (exit_code == SVM_EXIT_RDTSCP);
--	enum es_result ret;
--
--	ret = sev_es_ghcb_hv_call(ghcb, ctxt, exit_code, 0, 0);
--	if (ret != ES_OK)
--		return ret;
--
--	if (!(ghcb_is_valid_rax(ghcb) && ghcb_is_valid_rdx(ghcb) &&
--	     (!rdtscp || ghcb_is_valid_rcx(ghcb))))
--		return ES_VMM_ERROR;
--
--	ctxt->regs->ax = ghcb->save.rax;
--	ctxt->regs->dx = ghcb->save.rdx;
--	if (rdtscp)
--		ctxt->regs->cx = ghcb->save.rcx;
--
--	return ES_OK;
--}
--
- static enum es_result vc_handle_rdpmc(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
- {
- 	enum es_result ret;
-@@ -1001,6 +978,8 @@ static enum es_result vc_context_filter(struct pt_regs *regs, long exit_code)
- 		/* List of #VC exit-codes we support in user-space */
- 		case SVM_EXIT_EXCP_BASE ... SVM_EXIT_LAST_EXCP:
- 		case SVM_EXIT_CPUID:
-+		case SVM_EXIT_RDTSC:
-+		case SVM_EXIT_RDTSCP:
- 			r = ES_OK;
- 			break;
- 		default:
--- 
-2.26.1
+My only comment is -- can we drop this patch please? I'd like to use
+devfreq governors for voting on bandwidth and this will effectively
+override whatever bandwidth decisions are made by the devfreq
+governor.
 
+If you really want to keep this, then maybe don't "get" the icc path
+by default in patch 4/7 and then let the device driver set the icc
+path if it wants the opp framework to manage the bandwidth too?
+
+-Saravana
