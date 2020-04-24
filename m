@@ -2,96 +2,239 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 474F4C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C9FC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D56F2098B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:00:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OcI9iHqB"
+	by mail.kernel.org (Postfix) with ESMTP id 031DA20781
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:02:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbgDXWAq (ORCPT
+        id S1726122AbgDXWCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 18:00:46 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:8834 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbgDXWAp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 18:00:45 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ea361170001>; Fri, 24 Apr 2020 14:58:47 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 24 Apr 2020 15:00:45 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 24 Apr 2020 15:00:45 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 Apr
- 2020 22:00:45 +0000
-Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 Apr
- 2020 22:00:43 +0000
-Subject: Re: [RFC PATCH v10 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1587700513-28449-1-git-send-email-skomatineni@nvidia.com>
- <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
- <3155e0d2-94b0-6e0a-bf35-b3560c201039@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <fffc09d1-a25f-2d6e-83bd-f7657dd2ff16@nvidia.com>
-Date:   Fri, 24 Apr 2020 15:00:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 24 Apr 2020 18:02:50 -0400
+Received: from v6.sk ([167.172.42.174]:59610 "EHLO v6.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725874AbgDXWCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 18:02:49 -0400
+Received: from localhost (v6.sk [IPv6:::1])
+        by v6.sk (Postfix) with ESMTP id 44208610A8;
+        Fri, 24 Apr 2020 22:02:47 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH v4] leds: ariel: Add driver for status LEDs on Dell Wyse 3020
+Date:   Sat, 25 Apr 2020 00:02:40 +0200
+Message-Id: <20200424220240.106055-1-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-In-Reply-To: <3155e0d2-94b0-6e0a-bf35-b3560c201039@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587765527; bh=FpcOx6PfCadj3eE4qyv+7F6UJr7IJK3I60weagCPMHA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=OcI9iHqBAt3zPDERTFGnL2DLtT5l+Ros3tkaBJ+lIiz2wCqoottbppfxw2J5GUIt0
-         6vqKxZu+WuaHwKEKrDuOtPHlrDLz1eIe+c8D0mDzO9LTkZf3nEpJpodJhQVoXCKCiv
-         llf+ryHkBozJqOMG2ThsHFRwTaxOqfnvVRVOvA7O3UvvTLzGyeAItPpnhyxHn0Wlq3
-         Tu0aLbLNQbSHOPf2vWWPERAWU6FXUsx/7dRG7rvaMDgxsfqa7aF/6L6/9SRPG1WI92
-         vMaEtoNzttKGX+64ZrVFUoZLHvuWJVIULkt0/CcysFySq1tqXyaS9Tr8bDtxOHcjx8
-         b48E17i3xbdqg==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This adds support for controlling the LEDs attached to the Embedded
+Controller on a Dell Wyse 3020 "Ariel" board.
 
-On 4/24/20 8:07 AM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> 24.04.2020 06:55, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->
-> Is this driver compiled as a single kernel module file?
->
->> +MODULE_AUTHOR("Sowjanya Komatineni <skomatineni@nvidia.com>");
->> +MODULE_DESCRIPTION("NVIDIA Tegra CSI Device Driver");
->> +MODULE_LICENSE("GPL v2");
-> ...
->> +MODULE_AUTHOR("Sowjanya Komatineni <skomatineni@nvidia.com>");
->> +MODULE_DESCRIPTION("NVIDIA Tegra Video Input Device Driver");
->> +MODULE_LICENSE("GPL v2");
-> I don't think that these macros are needed in that case.
-> The video.c should be enough, isn't it?
-yes these can be removed
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+
+---
+Changes since v3:
+- Actually use the loop iterator when registering the LEDs.
+- Move dev_get_regmap() above devm_kcalloc()
+
+Changes since v2:
+- Hopefully sending out the correct patch this time...
+
+Changes since v1:
+- Reduce code duplication with a loop
+- Drop "ariel:" prefix from led names
+- Do not print a message after a successful probe
+
+ drivers/leds/Kconfig      |  11 ++++
+ drivers/leds/Makefile     |   1 +
+ drivers/leds/leds-ariel.c | 133 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 145 insertions(+)
+ create mode 100644 drivers/leds/leds-ariel.c
+
+diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+index c664d84e1667..a20149e9581f 100644
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -83,6 +83,17 @@ config LEDS_APU
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called leds-apu.
+ 
++config LEDS_ARIEL
++	tristate "Dell Wyse 3020 status LED support"
++	depends on LEDS_CLASS
++	depends on (MACH_MMP3_DT && MFD_ENE_KB3930) || COMPILE_TEST
++	help
++	  This driver adds support for controlling the front panel status
++	  LEDs on Dell Wyse 3020 (Ariel) board via the KB3930 Embedded
++	  Controller.
++
++	  Say Y to if your machine is a Dell Wyse 3020 thin client.
++
+ config LEDS_AS3645A
+ 	tristate "AS3645A and LM3555 LED flash controllers support"
+ 	depends on I2C && LEDS_CLASS_FLASH
+diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+index 45235d5fb218..24127f2c4a16 100644
+--- a/drivers/leds/Makefile
++++ b/drivers/leds/Makefile
+@@ -12,6 +12,7 @@ obj-$(CONFIG_LEDS_AAT1290)		+= leds-aat1290.o
+ obj-$(CONFIG_LEDS_ADP5520)		+= leds-adp5520.o
+ obj-$(CONFIG_LEDS_AN30259A)		+= leds-an30259a.o
+ obj-$(CONFIG_LEDS_APU)			+= leds-apu.o
++obj-$(CONFIG_LEDS_ARIEL)		+= leds-ariel.o
+ obj-$(CONFIG_LEDS_AS3645A)		+= leds-as3645a.o
+ obj-$(CONFIG_LEDS_ASIC3)		+= leds-asic3.o
+ obj-$(CONFIG_LEDS_BCM6328)		+= leds-bcm6328.o
+diff --git a/drivers/leds/leds-ariel.c b/drivers/leds/leds-ariel.c
+new file mode 100644
+index 000000000000..bb68ba23a7d4
+--- /dev/null
++++ b/drivers/leds/leds-ariel.c
+@@ -0,0 +1,133 @@
++// SPDX-License-Identifier: BSD-2-Clause OR GPL-2.0-or-later
++/*
++ * Dell Wyse 3020 a.k.a. "Ariel" Embedded Controller LED Driver
++ *
++ * Copyright (C) 2020 Lubomir Rintel
++ */
++
++#include <linux/module.h>
++#include <linux/leds.h>
++#include <linux/regmap.h>
++#include <linux/of_platform.h>
++
++enum ec_index {
++	EC_BLUE_LED	= 0x01,
++	EC_AMBER_LED	= 0x02,
++	EC_GREEN_LED	= 0x03,
++};
++
++enum {
++	EC_LED_OFF	= 0x00,
++	EC_LED_STILL	= 0x01,
++	EC_LED_FADE	= 0x02,
++	EC_LED_BLINK	= 0x03,
++};
++
++struct ariel_led {
++	struct regmap *ec_ram;
++	enum ec_index ec_index;
++	struct led_classdev led_cdev;
++};
++
++#define led_cdev_to_ariel_led(c) container_of(c, struct ariel_led, led_cdev)
++
++static enum led_brightness ariel_led_get(struct led_classdev *led_cdev)
++{
++	struct ariel_led *led = led_cdev_to_ariel_led(led_cdev);
++	unsigned int led_status = 0;
++
++	if (regmap_read(led->ec_ram, led->ec_index, &led_status))
++		return LED_OFF;
++
++	if (led_status == EC_LED_STILL)
++		return LED_FULL;
++	else
++		return LED_OFF;
++}
++
++static void ariel_led_set(struct led_classdev *led_cdev,
++			  enum led_brightness brightness)
++{
++	struct ariel_led *led = led_cdev_to_ariel_led(led_cdev);
++
++	if (brightness == LED_OFF)
++		regmap_write(led->ec_ram, led->ec_index, EC_LED_OFF);
++	else
++		regmap_write(led->ec_ram, led->ec_index, EC_LED_STILL);
++}
++
++static int ariel_blink_set(struct led_classdev *led_cdev,
++			   unsigned long *delay_on, unsigned long *delay_off)
++{
++	struct ariel_led *led = led_cdev_to_ariel_led(led_cdev);
++
++	if (*delay_on == 0 && *delay_off == 0)
++		return -EINVAL;
++
++	if (*delay_on == 0) {
++		regmap_write(led->ec_ram, led->ec_index, EC_LED_OFF);
++	} else if (*delay_off == 0) {
++		regmap_write(led->ec_ram, led->ec_index, EC_LED_STILL);
++	} else {
++		*delay_on = 500;
++		*delay_off = 500;
++		regmap_write(led->ec_ram, led->ec_index, EC_LED_BLINK);
++	}
++
++	return 0;
++}
++
++#define NLEDS 3
++
++static int ariel_led_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct ariel_led *leds;
++	struct regmap *ec_ram;
++	int ret;
++	int i;
++
++	ec_ram = dev_get_regmap(dev->parent, "ec_ram");
++	if (!ec_ram)
++		return -ENODEV;
++
++	leds = devm_kcalloc(dev, NLEDS, sizeof(*leds), GFP_KERNEL);
++	if (!leds)
++		return -ENOMEM;
++
++	leds[0].ec_index = EC_BLUE_LED;
++	leds[0].led_cdev.name = "blue:power",
++	leds[0].led_cdev.default_trigger = "default-on";
++
++	leds[1].ec_index = EC_AMBER_LED;
++	leds[1].led_cdev.name = "amber:status",
++
++	leds[2].ec_index = EC_GREEN_LED;
++	leds[2].led_cdev.name = "green:status",
++	leds[2].led_cdev.default_trigger = "default-on";
++
++	for (i = 0; i < NLEDS; i++) {
++		leds[i].ec_ram = ec_ram;
++		leds[i].led_cdev.brightness_get = ariel_led_get;
++		leds[i].led_cdev.brightness_set = ariel_led_set;
++		leds[i].led_cdev.blink_set = ariel_blink_set;
++
++		ret = devm_led_classdev_register(dev, &leds[i].led_cdev);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
++static struct platform_driver ariel_led_driver = {
++	.probe = ariel_led_probe,
++	.driver = {
++		.name = "dell-wyse-ariel-led",
++	},
++};
++module_platform_driver(ariel_led_driver);
++
++MODULE_AUTHOR("Lubomir Rintel <lkundrak@v3.sk>");
++MODULE_DESCRIPTION("Dell Wyse 3020 Status LEDs Driver");
++MODULE_LICENSE("Dual BSD/GPL");
+-- 
+2.26.0
+
