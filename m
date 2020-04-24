@@ -2,112 +2,132 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBF9C55192
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5831EC55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F9972073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:15:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39E8A2076C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:16:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ISQ55rpH"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="hbylwVse"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726051AbgDXEPB (ORCPT
+        id S1726174AbgDXEQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 00:15:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59660 "EHLO
+        Fri, 24 Apr 2020 00:16:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbgDXEPB (ORCPT
+        with ESMTP id S1725823AbgDXEQ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 00:15:01 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A10CAC09B047
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 21:14:59 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id m18so10192764otq.9
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 21:14:59 -0700 (PDT)
+        Fri, 24 Apr 2020 00:16:29 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73E20C09B046
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 21:16:29 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id u5so8059725ilb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 21:16:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=joelfernandes.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=hNeKWP0wVVfHdvI2+GMr4lo7jLpNJp6SXOmf25ATHxg=;
-        b=ISQ55rpHtbLZWNBGVYOXEiLHbR5pvj+D+zK8Y3PA2yQf4kJxoU6V2GjCj1e1UqHgIJ
-         3962XuymntrbY9qOPUILjH6Dx/DkugOIU5QJNu85Krl0702HsDkr2HSlcIemnmF01jHJ
-         WGTrcdZW3AwCbIuoO0eu9W+vrKY3pddkXjIlqN6RzcxDM7NhtFjjg7xgOzQe4aW6Ui9Q
-         FRp3mttrtVpagGThU/dfrsG6mstBUrvmaWAM2Q95tgFnchoggwMBIL0DyE7vWkzPItKE
-         9CXZF6Qo7jlgzgvMU8I8hRnh76itJeU/QF4mMvWKLWeVpKRqmVKYwVvmfW4k2KEOA8Z4
-         g/1Q==
+        bh=2jAtHDJaXQSPoo3nlkU9v2knO6zODUCVprDxXUvahvs=;
+        b=hbylwVseW+Q4cQX5hp1JKipzdh1CUwDlAXJDMcFr7j/SKwjCcLigYjv9Qmninfrg1S
+         C8ZpA8YPu9+bb7UiaB6jK3I4/m6PH5iUK9JBywLRaL5d/gOk2U99cr+DGgdndrFWhsit
+         PyX/Z2IGQoRX/MmSv+q+uxCOYkTCbvmIH9Pck=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hNeKWP0wVVfHdvI2+GMr4lo7jLpNJp6SXOmf25ATHxg=;
-        b=ZMlbFEr4tpeL7B4Rk5DlIR1+jvVGz7XinxFWV97/AxUYANhDY/BMAHAAITgjYvUnJP
-         JPpvMjVYmiAHhwi52P+Vd6trFAVzP6wwJJJbslmzfNCxj0oa3cVb6TdZ12snpUPxLDze
-         Yo5uDQyusnFK6/0/Dq4gUMbGyawxgIb8FDqc+/rhov/vNEAY7mP6O7/sygV5niXqT3q6
-         EEJttX5JsG2eZYKHOOynvllMLvkEF3B1SXY5I3Xmt5m2Gh55IuZy23J5eJXExtcidu1e
-         vaOt/u8A/PQ3FmuJjrQattsuYQIM3mhC+FM5BTGJjS/0HLsP+uutZo1u0sQJvmekejnF
-         URVg==
-X-Gm-Message-State: AGi0Pub+dur7HP+79MrP1ugPUVFsnKe4s+S1+LKm02oDn5FNbXyqHUrg
-        yQZLY65wRbFoiS/SxGbgsRTuT4y5KOD+BswH0siIFw==
-X-Google-Smtp-Source: APiQypJnPanMwbARQX4Hfircqy0s3DCPTIopnJmsul/liN7lTudNu6VrdEx/D3Q3Iw+xpQYXZpHdyV5PmViGWlGfRw0=
-X-Received: by 2002:a54:4f02:: with SMTP id e2mr5867574oiy.10.1587701698779;
- Thu, 23 Apr 2020 21:14:58 -0700 (PDT)
+        bh=2jAtHDJaXQSPoo3nlkU9v2knO6zODUCVprDxXUvahvs=;
+        b=cCpJ+YSYek+tnUZsqq25q3zmm9GQoR6JBp1oZB4Drphe2YK8ZUF6+8rc/npb7jfUbB
+         CPiZIeGNn9HsUIDjQCVyL3TRMWsVSlp/BMkhTHhMsKCQdbsyIrkalwa4n/HaiTwX1pjG
+         yelg4VKKRC0r6/EKQk211lunJBel36wZv31tmdVMQqS4ic/JEoKDUl1F5jbj4LDZ7cR9
+         rKeEVAXupcG9NYa2qQp+7s1EsOjuHjLwvEfCvKqxY0o5LhaRBB341MdYL5uDmL7lRLDT
+         Xoo3JNaohEZ/EWm0v0WIFbMjp9MOCF2wtcY6HesDPWaIYza0gK/4I6DsP3zxbdO8xgND
+         d9CA==
+X-Gm-Message-State: AGi0Pub6V5syhgr9tLtxhIA9L9XL0QPt4vlHqEdWuHQudATVXKNJ9DUr
+        7DDCgjYKsnRKO+5WYRxTyf8dpr9qmtfkTDwejzBvsw==
+X-Google-Smtp-Source: APiQypLx9xEPu8dS1vDdvm9qb8bGXok/ZPGQ0Hw37lDg82ejq0fVG3kbMb6RrvqQdn/HyvHInL+Ow9CgUloYV2kC984=
+X-Received: by 2002:a92:194f:: with SMTP id e15mr7143517ilm.78.1587701788804;
+ Thu, 23 Apr 2020 21:16:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200421041815.1808-1-john.stultz@linaro.org> <CALAqxLUHLqoYAZRvF1HjHhOJPdztYh9oz=L0kEuYun7y6fBzGA@mail.gmail.com>
- <62be69b1-8349-aa16-b5d6-dcacbc4eb05c@ti.com>
-In-Reply-To: <62be69b1-8349-aa16-b5d6-dcacbc4eb05c@ti.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Thu, 23 Apr 2020 21:14:48 -0700
-Message-ID: <CALAqxLX4_gi6mo_HRhRUQvC0stXf4ya3aa1VOPqDdpV8_37iww@mail.gmail.com>
-Subject: Re: [RESEND x2][PATCH v2] phy: qcom-qusb2: Re add "qcom,sdm845-qusb2-phy"
- compat string
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
+References: <20200414194353.GQ17661@paulmck-ThinkPad-P72> <20200416103007.GA3925@pc636>
+ <20200416131745.GA90777@google.com> <20200416180100.GT17661@paulmck-ThinkPad-P72>
+ <20200422145752.GB362484@cmpxchg.org> <20200422153503.GQ17661@paulmck-ThinkPad-P72>
+ <20200423174831.GB389168@cmpxchg.org> <20200423180249.GT17661@paulmck-ThinkPad-P72>
+ <20200423182750.GA32451@pc636> <20200423192115.GV17661@paulmck-ThinkPad-P72> <20200423195955.GA476@pc636>
+In-Reply-To: <20200423195955.GA476@pc636>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Fri, 24 Apr 2020 00:16:16 -0400
+Message-ID: <CAEXW_YSt=yLDS4Fj7atqB_OYiKAvt2472eTKcytEkzVABUMPkQ@mail.gmail.com>
+Subject: Re: [PATCH RFC] rcu/tree: Refactor object allocation and try harder
+ for array allocation
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu <rcu@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 9:07 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> On 4/24/2020 9:35 AM, John Stultz wrote:
-> > On Mon, Apr 20, 2020 at 9:18 PM John Stultz <john.stultz@linaro.org> wrote:
-> >>
-> >> This patch fixes a regression in 5.7-rc1+
-> >>
-> >> In commit 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2
-> >> PHY support"), the change was made to add "qcom,qusb2-v2-phy"
-> >> as a generic compat string. However the change also removed
-> >> the "qcom,sdm845-qusb2-phy" compat string, which is documented
-> >> in the binding and already in use.
-> >>
-> >> This patch re-adds the "qcom,sdm845-qusb2-phy" compat string
-> >> which allows the driver to continue to work with existing dts
-> >> entries such as found on the db845c.
-> >
-> > I hate to be a bother on this, but I'd really like to see this
-> > regression resolved.  This fix missed rc1 and rc2, and it would be a
-> > shame to miss rc3 too.
-> >
-> > Do I have the right folks on the cc for this?
+Hi Vlad,
+I'm mostly on the same page, some more comments below:
+
+On Thu, Apr 23, 2020 at 4:00 PM Uladzislau Rezki <urezki@gmail.com> wrote:
+[snip]
+> a) Single argument(headless)
+> In this case we can make use an allocator with sleepable flags,
+> because we document that headleass variant must follow might_sleep()
+> annotation. For example __GFP_NORETRY | __GFP_NOWARN. __GFP_NORETRY
+> can do some light direct reclaim, thus the caller can call schedule().
+> To do such allocation we just drop our local spinlock.
+> If an allocation gets failed, we directly fall into synchronize_rcu()
+> i.e. inline freeing.
 >
-> Yes, I'll be merging this. Sorry for the delay.
+> I also call it sleepable case, that is (a).
+>
+> b) Double argument(with rcu_head)
+> This case we consider as it gets called from atomic context even though
+> it can be not. Why we consider such case as atomic: we just assume that.
+> The reason is to keep it simple, because it is not possible to detect whether
+> a current context is attomic or not(for all type of kernels), i mean the one
+> that calls kfree_rcu().
+>
+> In this case we do not have synchronize_rcu() option. Instead we have an
+> object with rcu_head inside. If an allocation gets failed we just make
+> use of rcu_head inside the object, regular queuing.
+>
+> In this case we do not need to hard in order to obtain memory. Therefore
+> my question was to Johannes what is best way here. Since we decided to
+> minimize reclaiming, whereas GFP_NOWAIT wakes up kswapd if no memory.
+> GFP_ATOMIC also is not good, because for (b) we do not need to waste
+> it.
 
-Thanks so much, sorry to be a nag! I was just worried it was slipping through.
+I think Johannes said that waking up kswapd is Ok. OTOH, I did not see
+the drawback in waking up kswapd to do background reclaim since it
+does not happen synchronously right? I think Johannes said we can do
+better than just waking kswapd by also doing light direct reclaim
+using __GFP_NORETRY but let me know if I missed something.
 
-thanks again!
--john
+> > Upon memory-allocation failure, the single-argument kfree_rcu() can leak
+> > the memory (it has presumably already splatted) and the double-argument
+> > kfree_rcu() can make use of the rcu_head structure that was provided.
+> >
+> For single argument we inline freeing into current context after
+> synchronize_rcu() because it follows might_sleep() annotation.
+
+Yes.
+
+Also, with the additional caching being planned, we could avoid the
+chances of hitting the synchronize_rcu inlining.
+
+Thanks,
+
+ - Joel
