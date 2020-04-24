@@ -2,120 +2,105 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AF3C55194
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BA3C55196
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89D0E20724
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72BF520724
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:19:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgDXJSJ (ORCPT
+        id S1726797AbgDXJTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 05:18:09 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:47618 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbgDXJSJ (ORCPT
+        Fri, 24 Apr 2020 05:19:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50418 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbgDXJTQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 05:18:09 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 538E31C021D; Fri, 24 Apr 2020 11:18:07 +0200 (CEST)
-Date:   Fri, 24 Apr 2020 11:18:06 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Dan Murphy <dmurphy@ti.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
-Subject: Re: [PATCH v3] leds: ariel: Add driver for status LEDs on Dell Wyse
- 3020
-Message-ID: <20200424091806.GA2647@amd>
-References: <20200322074134.79237-1-lkundrak@v3.sk>
- <ef7e8f03-0a43-156e-b86e-3ab3887f0245@ti.com>
- <20200417095041.GA448088@furthur.local>
+        Fri, 24 Apr 2020 05:19:16 -0400
+Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF1DCC09B045;
+        Fri, 24 Apr 2020 02:19:15 -0700 (PDT)
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.93)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1jRuU9-00FRAm-SI; Fri, 24 Apr 2020 11:19:01 +0200
+Message-ID: <89476ee074e782175d453038396543f193f8e5fd.camel@sipsolutions.net>
+Subject: Re: [PATCH 1/4] net: mac80211: util.c: Fix RCU list usage warnings
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     madhuparnabhowmik10@gmail.com, davem@davemloft.net, kuba@kernel.org
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, frextrite@gmail.com,
+        joel@joelfernandes.org, paulmck@kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Date:   Fri, 24 Apr 2020 11:18:59 +0200
+In-Reply-To: <20200409082822.27314-1-madhuparnabhowmik10@gmail.com> (sfid-20200409_102851_270381_8F58A5E1)
+References: <20200409082822.27314-1-madhuparnabhowmik10@gmail.com>
+         (sfid-20200409_102851_270381_8F58A5E1)
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="pWyiEgJYm5f9v55/"
-Content-Disposition: inline
-In-Reply-To: <20200417095041.GA448088@furthur.local>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---pWyiEgJYm5f9v55/
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> This patch fixes the following warning (CONIG_PROVE_RCU_LIST)
+> in ieee80211_check_combinations().
 
-Hi!
+Thanks, and sorry for the delay.
 
-> > > +enum ec_index {
-> > > +	EC_BLUE_LED	=3D 0x01,
-> > > +	EC_AMBER_LED	=3D 0x02,
-> >=20
-> > Defining the value after the 0x0 is unnecessary as enums are incremental
-> > only the first value needs to be defined if the following values are in
-> > numerical order
->=20
-> I believe this improves readability, especially in case such as this
-> where the actual numeric values matter.
->=20
-> > Can these also be #defined instead of an enum?=A0 Not requesting them t=
-o be
-> > just wondering about the design decision here.
->=20
-> It seems to be that this is what enums are for and theres is no need to
-> get the preprocessor involved?
->=20
-> I guess this might be a personal preference, but it seems to me that
-> both enums and preprocessor defines are used across the code base.
 
-enums are okay.
+> +++ b/net/mac80211/util.c
+> @@ -254,7 +254,7 @@ static void __ieee80211_wake_txqs(struct ieee80211_sub_if_data *sdata, int ac)
+>  
+>  	sdata->vif.txqs_stopped[ac] = false;
+>  
+> -	list_for_each_entry_rcu(sta, &local->sta_list, list) {
+> +	list_for_each_entry(sta, &local->sta_list, list) {
+>  		if (sdata != sta->sdata)
+>  			continue;
 
-> > > +	if (regmap_read(led->ec_ram, led->ec_index, &led_status))
-> > > +		return LED_OFF;
-> > > +
-> > > +	if (led_status =3D=3D EC_LED_STILL)
-> > > +		return LED_FULL;
-> > > +	else
-> > else is not needed here
-> > > +		return LED_OFF;
-> > > +}
->=20
-> Yes, but should it be dropped? To me it seems like explicit else is
-> better than implicit fallthrough. It is better when it's obvious that
-> the LED_OFF is returned precisely only when the status is not
-> EC_LED_STILL and that nothing ever happens afterwards -- and the
-> compiler/linter will warn when anything unreachable is added afterwards.
->=20
-> Not that it matters too much here. It's just that I've done this
-> deliberately because it seems more readable to be and would prefer to
-> leave it that way unless you really really care about that.
+In this case, for example, I don't even understand why the warning would
+happen, because certainly the only caller of this (_ieee80211_wake_txqs)
+does rcu_read_lock()?
 
-Both versions are okay. I may have tiny bit of preference for deleting
-the else, but...
+I'm also not convinced that the necessary lock is actually held here,
+this comes from a tasklet that doesn't hold any locks?
+ 
+I'd appreciate if you could add comments/explain why you think the
+changes were right, or ideally even add "lockdep_assert_held()"
+annotations. That would make it much easier to check this patch.
 
-Thank you,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+> @@ -3931,7 +3932,7 @@ int ieee80211_check_combinations(struct ieee80211_sub_if_data *sdata,
+>  		params.num_different_channels++;
+>  	}
+>  
+> -	list_for_each_entry_rcu(sdata_iter, &local->interfaces, list) {
+> +	list_for_each_entry(sdata_iter, &local->interfaces, list) {
+>  		struct wireless_dev *wdev_iter;
+>  
+>  		wdev_iter = &sdata_iter->wdev;
+> @@ -3982,7 +3983,7 @@ int ieee80211_max_num_channels(struct ieee80211_local *local)
+>  			ieee80211_chanctx_radar_detect(local, ctx);
+>  	}
+>  
+> -	list_for_each_entry_rcu(sdata, &local->interfaces, list)
+> +	list_for_each_entry(sdata, &local->interfaces, list)
+>  		params.iftype_num[sdata->wdev.iftype]++;
 
---pWyiEgJYm5f9v55/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+These changes correct, as far as I can tell, in that they rely on the
+RTNL now - but can you perhaps document that as well?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+There doesn't seem to be any multi-lock version of lockdep_assert_held()
+or is there? That'd be _really_ useful here, because I want to get rid
+of some RTNL reliance in the longer term, and having annotation here
+saying "either RTNL or iflist_mtx is fine" would be good.
 
-iEYEARECAAYFAl6irs4ACgkQMOfwapXb+vK8kwCcCDKtiMSJ18qVzInjas7lgLgy
-yIoAoIz4gszqMa7jJj2MT69quZ/KKDOB
-=rDXr
------END PGP SIGNATURE-----
+johannes
 
---pWyiEgJYm5f9v55/--
