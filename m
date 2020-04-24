@@ -2,164 +2,142 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A5C0C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2AAC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79E9920776
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:55:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eo/CklfQ"
+	by mail.kernel.org (Postfix) with ESMTP id 8108D2087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:56:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728110AbgDXNzx (ORCPT
+        id S1728211AbgDXN4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 09:55:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37138 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726301AbgDXNzw (ORCPT
+        Fri, 24 Apr 2020 09:56:02 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:56251 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726301AbgDXN4C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 09:55:52 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06675C09B045;
-        Fri, 24 Apr 2020 06:55:51 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id s63so10184703qke.4;
-        Fri, 24 Apr 2020 06:55:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=0nELBLZup0s5D1l0Lv39Pqz1btCovto3LKkmzE5O0+w=;
-        b=eo/CklfQwdjbJROv6WH8PW6uO9wFkpbUcBox0L1RitBiDj87hf2e94X7/YajUdB9hY
-         f/eMhEGXetxB1YrKuF4wLNdhjNWVga0YmioO8CwiH0uDJsBEFoXxN4NmRXfwO3RkAXFI
-         CffzGNga2pEomFdprTyBBAVPLXzx65lLLYMKKvXgEh02WIl/kwkuMm7O6bZ8DeWblile
-         THaSCaZJ12j2b31pX3mVbydeofpsBQ9MBemhvGVioiMt+Mt97mo+GUTLPd6nGt5ZvjB8
-         plesxp4MSPk6b1XBqpMVA9nkHwLL/mmV5u1u9lnCKz6+cAEq5cVe2rXLzHmI2IWkifC0
-         dXcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0nELBLZup0s5D1l0Lv39Pqz1btCovto3LKkmzE5O0+w=;
-        b=d2rMg53aA6is2cZsEYrJ7RUVAoN6tYsS2FFXUQEXEXDnQZvBq7ua1bEOui9lQaPX/9
-         LRel+6IwiFNezX2cqzhv8pchavy5LFWmlFz76QwxQSO/h6N/1xKnoCVn8zg6RbQ65gAg
-         oQFY9aUW2Y2dKBjs/27bSLHQIX6Gk8h/DjINfw80U6VlmY2yndYvnX1c1Yx2Llh9dFRH
-         Ds1Tq73XMwsmftjN/lduWUiOZL8jwD26HccPndhSy1deScB9sq0oqiaUIbMotTBTLYYs
-         X8DNVyWm+WadJuYIbm04LsUxRJWmrZX4a124Kddm345niDCtuwcirOzhEaC82BhFsHuv
-         nh4Q==
-X-Gm-Message-State: AGi0PuaHwCO/m+44KfLs284vPqKkmPmDMb79nNKaizRO13AOPmiac1K8
-        3wgLDIrXYetLsGrot2Ds20X3KBb0gp6aFQ==
-X-Google-Smtp-Source: APiQypIR5FVhNg4j6f5oUEc6Tpr/lQCwmz0mLuwo9n/RE6PP4h34A7xiJvb1Hm+Is636H9iQmFGacg==
-X-Received: by 2002:a37:4d43:: with SMTP id a64mr9203064qkb.491.1587736550183;
-        Fri, 24 Apr 2020 06:55:50 -0700 (PDT)
-Received: from icarus (072-189-064-225.res.spectrum.com. [72.189.64.225])
-        by smtp.gmail.com with ESMTPSA id c41sm4013966qta.96.2020.04.24.06.55.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 06:55:49 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 09:55:47 -0400
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     rrichter@marvell.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com
-Cc:     akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        Syed Nayyar Waris <syednwaris@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/6] gpio: thunderx: Utilize for_each_set_clump macro
-Message-ID: <20200424135547.GB3255@icarus>
-References: <20200424123050.GA5653@syed>
+        Fri, 24 Apr 2020 09:56:02 -0400
+X-Originating-IP: 93.29.109.196
+Received: from aptenodytes (196.109.29.93.rev.sfr.net [93.29.109.196])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 50BE640004;
+        Fri, 24 Apr 2020 13:55:53 +0000 (UTC)
+Date:   Fri, 24 Apr 2020 15:55:52 +0200
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hansverk@cisco.com>,
+        justin.swartz@risingedge.co.za, Johan Jonker <jbx6244@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 3/4] media: rockchip: rga: Add support for the PX30
+ compatible
+Message-ID: <20200424135552.GI610776@aptenodytes>
+References: <20200423200937.1039257-1-paul.kocialkowski@bootlin.com>
+ <20200423200937.1039257-4-paul.kocialkowski@bootlin.com>
+ <cf31ae67792aedf60ee4cf8002861edadc305314.camel@collabora.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="O3RTKUHj+75w1tg5"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3U8TY7m7wOx7RL1F"
 Content-Disposition: inline
-In-Reply-To: <20200424123050.GA5653@syed>
+In-Reply-To: <cf31ae67792aedf60ee4cf8002861edadc305314.camel@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---O3RTKUHj+75w1tg5
+--3U8TY7m7wOx7RL1F
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 24, 2020 at 06:00:50PM +0530, Syed Nayyar Waris wrote:
-> This patch reimplements the thunderx_gpio_set_multiple function in
-> drivers/gpio/gpio-thunderx.c to use the new for_each_set_clump macro.
-> Instead of looping for each bank in thunderx_gpio_set_multiple
-> function, now we can skip bank which is not set and save cycles.
+Hi Ezequiel,
+
+On Fri 24 Apr 20, 09:54, Ezequiel Garcia wrote:
+> Hey Paul,
 >=20
-> Cc: Robert Richter <rrichter@marvell.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
-> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
-> ---
->  drivers/gpio/gpio-thunderx.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
+> Thanks for the patch!
 >=20
-> diff --git a/drivers/gpio/gpio-thunderx.c b/drivers/gpio/gpio-thunderx.c
-> index 9f66dea..74aea25 100644
-> --- a/drivers/gpio/gpio-thunderx.c
-> +++ b/drivers/gpio/gpio-thunderx.c
-> @@ -275,12 +275,16 @@ static void thunderx_gpio_set_multiple(struct gpio_=
-chip *chip,
->  				       unsigned long *bits)
->  {
->  	int bank;
-> -	u64 set_bits, clear_bits;
-> +	u64 set_bits, clear_bits, gpio_mask;
-> +	const unsigned long bank_size =3D 64;
-> +	unsigned long offset;
-> +
->  	struct thunderx_gpio *txgpio =3D gpiochip_get_data(chip);
-> =20
-> -	for (bank =3D 0; bank <=3D chip->ngpio / 64; bank++) {
-> -		set_bits =3D bits[bank] & mask[bank];
-> -		clear_bits =3D ~bits[bank] & mask[bank];
-> +	for_each_set_clump(offset, gpio_mask, mask, chip->ngpio, bank_size) {
-> +		bank =3D offset / bank_size;
-> +		set_bits =3D bits[bank] & gpio_mask;
-> +		clear_bits =3D ~bits[bank] & gpio_mask;
->  		writeq(set_bits, txgpio->register_base + (bank * GPIO_2ND_BANK) + GPIO=
-_TX_SET);
->  		writeq(clear_bits, txgpio->register_base + (bank * GPIO_2ND_BANK) + GP=
-IO_TX_CLR);
->  	}
-> --=20
-> 2.7.4
+> On Thu, 2020-04-23 at 22:09 +0200, Paul Kocialkowski wrote:
+> > The PX30 SoC has a RGA block, so add the associated compatible to
+> > support it.
+> >=20
+> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > ---
+> >  drivers/media/platform/rockchip/rga/rga.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >=20
+> > diff --git a/drivers/media/platform/rockchip/rga/rga.c b/drivers/media/=
+platform/rockchip/rga/rga.c
+> > index 9d122429706e..4fb4615662b7 100644
+> > --- a/drivers/media/platform/rockchip/rga/rga.c
+> > +++ b/drivers/media/platform/rockchip/rga/rga.c
+> > @@ -955,6 +955,9 @@ static const struct dev_pm_ops rga_pm =3D {
+> >  };
+> > =20
+> >  static const struct of_device_id rockchip_rga_match[] =3D {
+> > +	{
+> > +		.compatible =3D "rockchip,px30-rga",
+> > +	},
+>=20
+> Please note that if you don't have anything px30-specific,
+> then you don't need the compatible in the driver.
+>=20
+> You can have something like:
+>=20
+> compatible =3D "rockchip,px30-rga", "rockchip,rk3288-rga"
+>=20
+> so you need to add it to the bindings. See Justin Swartz
+> recent patches for rk3228.
 
-We noticed in the original code that this set_multiple callback does not
-appear to work correctly on systems where BITS_PER_LONG =3D=3D 32. On those
-systems, the bits and mask values are 32-bit, but the for loop jumps 64
-bits at a time -- that means the loop is skipping the upper 32 gpio
-lines of every iteration.
+Thanks for the instruction!
 
-Is the gpio-thunderx driver only intended for 64-bit systems? Or this
-behavior a bug?
+I've been a bit confused about that because RK3399 has its own compatible
+(without a 2nd rk3288 compatible) although there's nothing different with it
+either. All of these rockchip platforms come with what they call "RGA2", th=
+at
+seems to have no variation across platforms (downstream rockchip even has a
+single compatible for it).
 
-William Breathitt Gray
+Should we add the rk3288 compatible to the rk3399 dtsi? I guess we
+can't remove it from the driver at this point, for backward compatibility
+with previous dts (what a strange idea...).
 
---O3RTKUHj+75w1tg5
+> Down the road, if you find something specific for px30,
+> you can make the driver aware.=20
+
+Makes sense, yes.
+
+Cheers,
+
+Paul
+
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--3U8TY7m7wOx7RL1F
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl6i7+IACgkQhvpINdm7
-VJJJ3g/+JasEZX7QcLN4AyHOdz21hlsLd6YpzdrSHjuSozMOoe4wmQsLaZ3fIvMc
-SAVdRMuKMtHxbDJrXyRIjvSB5h9Vk7iRt5l/CNawV38gnqaIgm25NLfRgFb6hUW3
-zxihXU6l3pSvx2ddyGLC2pxEliZe50Dba8m7D/KQnXu3CZLexk4BRdhyUZXvgDDB
-j1AbJGpISfdXGiD9A6bi6fmGj98+VusLQG71nN3NludQbTA6Sh8PzyyVs9zz72Ba
-nI628LxR+9057u0Jz3tWM9/8lxAqsFbHQyAnxBAo47KCgZvjtglMsWgqjT/sPqoY
-7ni1fYKcNyJgU2vAAkrxy7n3wFJty3/l/n53bqlR2DDFQ7HHKTC3S6tCeAIYLw8q
-MuYMNvmS3FdOd+cuj8+p1K15jlLcsYc/jz62piHgi9y59PE42aF5iyug4pXBC7Px
-RWokxksL9AszWvTan5fy09H1KQ8ZNufoqHsofIwRLPMb3sGIEETW1XCAMjkDfJcB
-5bPe+hXmOo35sRlpcqA7xg8d+UGrvmQh79hRAqa/9t08TjcEWj61XcXuz3hkPgeS
-xu3BfTGZSZF9/kEubfWqyPJ3MBe1iqqXeqyHruj097axD2SX7Leov6Ue0a4XKu9u
-v4BDQSmn7Hb6xdu0NWW8YYYxEh3eTKltY+hb3hvb3EeMWokV7CU=
-=0274
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl6i7+gACgkQ3cLmz3+f
+v9FiYAf/S2rf7jhG7m6KOPzamwQ3o9tzlswdBgoIl9QCOJ45gxp6WdL/pYTzIG5n
+699GzPx7eFLs9nig+3To7cjsatt1he0hyI4Y5VXrBYTJUINu7mPXrXOOOytT85mL
+9HNLhZJrvnDMRBdailFpY/nwYUq4TORps7ll3yMwOBWCIziyxU6ShuaS7UUcNfd6
+KQWa19k19huhhJ/WFG04lc1mjMQYzAM+DoLSn72KGTho3YYZjm8P9rvYgMTW5rF8
+kTX8Zd1CM6esAQhYji6CJQV4sKi0ZRCLz81dAf0chibWLcDbA9DyXgGX3A4GDIfR
+2rXiW1ggIZhknk09nPri7clhpqxSVQ==
+=GDWl
 -----END PGP SIGNATURE-----
 
---O3RTKUHj+75w1tg5--
+--3U8TY7m7wOx7RL1F--
