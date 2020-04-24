@@ -2,307 +2,151 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93ACEC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8D5C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A1222075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:54:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 381EF20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:54:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a84Vn/WP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ierhYQVQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728711AbgDXPya (ORCPT
+        id S1728759AbgDXPyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:54:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55726 "EHLO
+        Fri, 24 Apr 2020 11:54:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728659AbgDXPyY (ORCPT
+        with ESMTP id S1727089AbgDXPyT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:54:24 -0400
-Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56A1DC09B046
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 08:54:23 -0700 (PDT)
-Received: by mail-oo1-xc44.google.com with SMTP id q204so2210713ooq.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 08:54:23 -0700 (PDT)
+        Fri, 24 Apr 2020 11:54:19 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 346B9C09B046
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 08:54:18 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id g13so11456544wrb.8
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 08:54:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gTGRI3FJfF+tq+Z0A0eSR2IppflZUG2BNDm4aEz39zk=;
-        b=a84Vn/WP+lEYHjRzAWMm95thyGD0Qc7VUrIERyZ7fSsdCry3Vbc+ZJisYXzAth/V38
-         /lHIprpeNM8px4j3KwjuqQgsOOzBjWU4N6kw6SQAFeVgCvnnFBKbTaE847L906KV38JD
-         ywLfJ4oBJZR3jfi4/dpwlP3HzOrvGL7oNqD6ZBOyJ0oe2rIABKWjEHmfFOHquOhDjnyJ
-         TPF2ksLZZMyvdBPHFccC/L7q2jAGLgj0+zwEGif/oXsoQ9fyfRuq8zOPAWgXYzBgo6T0
-         6znASfkzJ2/S9E8NsHLU8nkf+OS5amNib8Fmbih4zFaqG141AinKnE+NjrjYOiW5GiDK
-         9tsA==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ANWXN+2Z3DDrWrVHhsInrxi4EvXPY/8IIalTrvooHG8=;
+        b=ierhYQVQtu+peHFc42kGYjWb//BJX4HxUct5NT4NbIFrjxEH8CyvRdBn6tFBhqOmmb
+         UZ9Z4We6ymLhwC+k6u7kLuDxlPVFOOQGvlAk+jPhjmdbCbjYVkCTzKw5zVCT4WE1l3l+
+         swhcNCjbycHGW70kjoSWISiktdL9x1hDHAk6tBNdNnJsxMGQ4uEldlTRgEQh5IyTb5+U
+         SM8pwVGCpglmLCRaWndJSlE80A10xg6vjnApxIpGL5/9aPpXdgx8QawNiSoyVf1jfWjp
+         lXs+QzmVRTk35lbTdx27DwApHTGihQQBam8yyp/jRZk32rizTuYPTdWUu6rc46nUFTTk
+         o51Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gTGRI3FJfF+tq+Z0A0eSR2IppflZUG2BNDm4aEz39zk=;
-        b=JPfONsAQNlzL0IWuk+VdX4tivY7I7YF5DQ39CvBLCpGaOusWWARNdxl9lAjW4GjnxS
-         fwW/ClV+1hlrDsUTPYysK/xTAaRuPSi7yqifGnrJRD6O5lDZNL4Myp4aJKolmrNO5KSQ
-         8o08MLMLKl8X6lEekuotMeDbT9PQ/wW52wloW9Uzta4IYksddi6xl3YH1RWyqtDv6U4m
-         pPiZg40Yu/jYc3mtFZuN0GMI64XlkyJgI5yEK/HorPqHT1bcvvAqxSDUSZo915W/vACM
-         TFGhjsUy+TrHJmaMquJrJF8NRYDZhncHXHWzZJO4qwcNywPEb92b6wcFm1sfyMNfFBkN
-         riRA==
-X-Gm-Message-State: AGi0PuYfBvxK0PCFc9wMf44hRNqFQu68JQ1bv4OprtLd+irjQ8sbO+YJ
-        2+8qqvYMK8BkFkn1/rzK25xICcVHpb3xDd5snu+ISkXwqPo=
-X-Google-Smtp-Source: APiQypKTrHtCOzYESsirN5eKEbQDWJgB4yKwdBbZm4OTFb2hfEtwnmGlqw5HIwNTo54SJorpC/4NVB5biYUqhwEHJuc=
-X-Received: by 2002:a4a:b141:: with SMTP id e1mr8455441ooo.54.1587743662399;
- Fri, 24 Apr 2020 08:54:22 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ANWXN+2Z3DDrWrVHhsInrxi4EvXPY/8IIalTrvooHG8=;
+        b=BRC7fZllEccqZ8O/qQFgI2oe9Q6dpm3/YViZX7ojUMssHmvGbSygD1Z8RAQVXcFqBU
+         cAazeLwr9O/6ZYsnWElomxY+EExI1cuj3fO3s6+DPj4qsQLoE0ao8G+lLFKwlO5j30QG
+         G8eLbsre/JFBX3f/MQVZj8KOpt8BK8lM3HU/OINsAdlcoxeVMIurvj0w1vdGbH5/lpCp
+         Orz8G+h5CAGRyqs+Dd/il9IJyZ+tbDtKLCuhcNP+2BrJQGLaK9hMya8n25+EdW6cqRM5
+         v581sQ6NYSPN3AUygWPdYuAp0CZfdYXp6ndy/DAGN5ShVRPWm7+tnTwKYOMbhzP5fHhq
+         eVkg==
+X-Gm-Message-State: AGi0Pua1Q6Qf226bde+p/X/Exq5qz6Df4K/6xqquwjotdOw3YC+pRMeA
+        2um/6QRp9Pj/dLwwU8i1kq94cw==
+X-Google-Smtp-Source: APiQypKrt1I/vfpXrZmkPsz9dzLuK18NN6O8r2S9WWku5sLnMIaDkgNIXVxKYk9wDEbtIfT8TGH1QA==
+X-Received: by 2002:adf:c109:: with SMTP id r9mr11837240wre.265.1587743656909;
+        Fri, 24 Apr 2020 08:54:16 -0700 (PDT)
+Received: from localhost.localdomain ([87.120.218.65])
+        by smtp.googlemail.com with ESMTPSA id z76sm3923583wmc.9.2020.04.24.08.54.15
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 Apr 2020 08:54:16 -0700 (PDT)
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+To:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
+        robh+dt@kernel.org, rjw@rjwysocki.net, saravanak@google.com,
+        sibis@codeaurora.org
+Cc:     rnayak@codeaurora.org, bjorn.andersson@linaro.org,
+        vincent.guittot@linaro.org, jcrouse@codeaurora.org,
+        evgreen@chromium.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        georgi.djakov@linaro.org
+Subject: [PATCH v7 7/7] cpufreq: dt: Add support for interconnect bandwidth scaling
+Date:   Fri, 24 Apr 2020 18:54:04 +0300
+Message-Id: <20200424155404.10746-8-georgi.djakov@linaro.org>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200424155404.10746-1-georgi.djakov@linaro.org>
+References: <20200424155404.10746-1-georgi.djakov@linaro.org>
 MIME-Version: 1.0
-References: <20200421151537.19241-1-will@kernel.org> <CAHk-=wjjz927czq5zKkV1TUvajbWZGsPeFBSgnQftLNWmCcoSg@mail.gmail.com>
- <20200422081838.GA29541@willie-the-truck> <20200422113721.GA20730@hirez.programming.kicks-ass.net>
- <20200422122626.GA676@willie-the-truck> <20200424134238.GE21141@willie-the-truck>
-In-Reply-To: <20200424134238.GE21141@willie-the-truck>
-From:   Marco Elver <elver@google.com>
-Date:   Fri, 24 Apr 2020 17:54:10 +0200
-Message-ID: <CANpmjNP-r_18QwJcOHFtmPeGrN3gx-E=bj+_GaDYEaQ08DWgnw@mail.gmail.com>
-Subject: Re: [PATCH v4 00/11] Rework READ_ONCE() to improve codegen
-To:     Will Deacon <will@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Apr 2020 at 15:42, Will Deacon <will@kernel.org> wrote:
->
-> Hi Peter,
->
-> [+KCSAN folks]
->
-> On Wed, Apr 22, 2020 at 01:26:27PM +0100, Will Deacon wrote:
-> > On Wed, Apr 22, 2020 at 01:37:21PM +0200, Peter Zijlstra wrote:
-> > > On Wed, Apr 22, 2020 at 09:18:39AM +0100, Will Deacon wrote:
-> > > > On Tue, Apr 21, 2020 at 11:42:56AM -0700, Linus Torvalds wrote:
-> > > > > On Tue, Apr 21, 2020 at 8:15 AM Will Deacon <will@kernel.org> wrote:
-> > > > > >
-> > > > > > It's me again. This is version four of the READ_ONCE() codegen improvement
-> > > > > > patches [...]
-> > > > >
-> > > > > Let's just plan on biting the bullet and do this for 5.8. I'm assuming
-> > > > > that I'll juet get a pull request from you?
-> > > >
-> > > > Sure thing, thanks. I'll get it into -next along with the arm64 bits for
-> > > > 5.8, but I'll send it as a separate pull when the time comes. I'll also
-> > > > include the sparc32 changes because otherwise the build falls apart and
-> > > > we'll get an army of angry robots yelling at us (they seem to form the
-> > > > majority of the active sparc32 user base afaict).
-> > >
-> > > So I'm obviously all for these patches; do note however that it collides
-> > > most mighty with the KCSAN stuff, which I believe is still pending.
-> >
-> > That stuff has been pending for the last two releases afaict :/
-> >
-> > Anyway, I'm happy to either provide a branch with this series on, or do
-> > the merge myself, or send this again based on something else. What works
-> > best for you? The only thing I'd obviously like to avoid is tightly
-> > coupling this to KCSAN if there's a chance of it missing the merge window
-> > again.
->
-> FWIW, I had a go at rebasing onto linux-next, just to get an idea for how
-> bad it is. It's fairly bad, and I don't think it's fair to inflict it on
-> sfr. I've included the interesting part of the resulting compiler.h below
-> for you and the KCSAN crowd to take a look at (yes, there's room for
-> subsequent cleanup, but I was focussing on the conflict resolution for now).
+In addition to clocks and regulators, some devices can scale the bandwidth
+of their on-chip interconnect - for example between CPU and DDR memory. Add
+support for that, so that platforms which support it can make use of it.
 
-Thanks for the heads up. From what I can tell, your proposed change
-may work fine for KCSAN. However, I've had trouble compiling this:
-
-1. kcsan_disable_current() / kcsan_enable_current() do not work as-is,
-because READ_ONCE/WRITE_ONCE seems to be used from compilation units
-where the KCSAN runtime is not available (e.g.
-arch/x86/entry/vdso/Makefile which had to set KCSAN_SANITIZE := n for
-that reason).
-2. Some new uaccess whitelist entries were needed.
-
-I think this is what's needed:
-https://lkml.kernel.org/r/20200424154730.190041-1-elver@google.com
-
-With that you can change the calls to __kcsan_disable_current() /
-__kcsan_enable_current() for READ_ONCE() and WRITE_ONCE(). After that,
-I was able to compile, and my test suite passed.
-
-Thanks,
--- Marco
-
-> So, I think the best bet is either for my changes to go into -tip on top
-> of the KCSAN stuff, or for the KCSAN stuff to be dropped from -next (it's
-> been there since at least January). Do you know if they are definitely
-> supposed to be going in for 5.8?
->
-> Any other ideas?
->
-> Cheers,
->
-> Will
->
-> --->8
->
-> /*
->  * Prevent the compiler from merging or refetching reads or writes. The
->  * compiler is also forbidden from reordering successive instances of
->  * READ_ONCE and WRITE_ONCE, but only when the compiler is aware of some
->  * particular ordering. One way to make the compiler aware of ordering is to
->  * put the two invocations of READ_ONCE or WRITE_ONCE in different C
->  * statements.
->  *
->  * These two macros will also work on aggregate data types like structs or
->  * unions.
->  *
->  * Their two major use cases are: (1) Mediating communication between
->  * process-level code and irq/NMI handlers, all running on the same CPU,
->  * and (2) Ensuring that the compiler does not fold, spindle, or otherwise
->  * mutilate accesses that either do not require ordering or that interact
->  * with an explicit memory barrier or atomic instruction that provides the
->  * required ordering.
->  */
-> #include <asm/barrier.h>
-> #include <linux/kasan-checks.h>
-> #include <linux/kcsan-checks.h>
->
-> /*
->  * Use __READ_ONCE() instead of READ_ONCE() if you do not require any
->  * atomicity or dependency ordering guarantees. Note that this may result
->  * in tears!
->  */
-> #define __READ_ONCE(x)  (*(const volatile __unqual_scalar_typeof(x) *)&(x))
->
-> #define __READ_ONCE_SCALAR(x)                                           \
-> ({                                                                      \
->         typeof(x) *__xp = &(x);                                         \
->         kcsan_check_atomic_read(__xp, sizeof(*__xp));                   \
->         kcsan_disable_current();                                        \
->         ({                                                              \
->                 __unqual_scalar_typeof(x) __x = __READ_ONCE(*__xp);     \
->                 kcsan_enable_current();                                 \
->                 smp_read_barrier_depends();                             \
->                 (typeof(x))__x;                                         \
->         });                                                             \
-> })
->
-> #define READ_ONCE(x)                                                    \
-> ({                                                                      \
->         compiletime_assert_rwonce_type(x);                              \
->         __READ_ONCE_SCALAR(x);                                          \
-> })
->
-> #define __WRITE_ONCE(x, val)                                            \
-> do {                                                                    \
->         *(volatile typeof(x) *)&(x) = (val);                            \
-> } while (0)
->
-> #define __WRITE_ONCE_SCALAR(x, val)                                     \
-> do {                                                                    \
->         typeof(x) *__xp = &(x);                                         \
->         kcsan_check_atomic_write(__xp, sizeof(*__xp));                  \
->         kcsan_disable_current();                                        \
->         __WRITE_ONCE(*__xp, val);                                       \
->         kcsan_enable_current();                                         \
-> } while (0)
->
-> #define WRITE_ONCE(x, val)                                              \
-> do {                                                                    \
->         compiletime_assert_rwonce_type(x);                              \
->         __WRITE_ONCE_SCALAR(x, val);                                    \
-> } while (0)
->
-> #ifdef CONFIG_KASAN
-> /*
->  * We can't declare function 'inline' because __no_sanitize_address conflicts
->  * with inlining. Attempt to inline it may cause a build failure.
->  *     https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67368
->  * '__maybe_unused' allows us to avoid defined-but-not-used warnings.
->  */
-> # define __no_kasan_or_inline __no_sanitize_address notrace __maybe_unused
-> # define __no_sanitize_or_inline __no_kasan_or_inline
-> #else
-> # define __no_kasan_or_inline __always_inline
-> #endif
->
-> #define __no_kcsan __no_sanitize_thread
-> #ifdef __SANITIZE_THREAD__
-> /*
->  * Rely on __SANITIZE_THREAD__ instead of CONFIG_KCSAN, to avoid not inlining in
->  * compilation units where instrumentation is disabled. The attribute 'noinline'
->  * is required for older compilers, where implicit inlining of very small
->  * functions renders __no_sanitize_thread ineffective.
->  */
-> # define __no_kcsan_or_inline __no_kcsan noinline notrace __maybe_unused
-> # define __no_sanitize_or_inline __no_kcsan_or_inline
-> #else
-> # define __no_kcsan_or_inline __always_inline
-> #endif
->
-> #ifndef __no_sanitize_or_inline
-> #define __no_sanitize_or_inline __always_inline
-> #endif
->
-> static __no_sanitize_or_inline
-> unsigned long __read_once_word_nocheck(const void *addr)
-> {
->         return __READ_ONCE(*(unsigned long *)addr);
-> }
->
-> /*
->  * Use READ_ONCE_NOCHECK() instead of READ_ONCE() if you need to load a
->  * word from memory atomically but without telling KASAN/KCSAN. This is
->  * usually used by unwinding code when walking the stack of a running process.
->  */
-> #define READ_ONCE_NOCHECK(x)                                            \
-> ({                                                                      \
->         unsigned long __x = __read_once_word_nocheck(&(x));             \
->         smp_read_barrier_depends();                                     \
->         __x;                                                            \
-> })
-
-Unconditionally loading an unsigned long doesn't seem right, and might
-also result in OOB reads.
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+---
+v7:
+* Drop using dev_pm_opp_set_paths(), as it has been removed.
+* Add Kconfig dependency on INTERCONNECT, as it can be module.
 
 
-> static __no_kasan_or_inline
-> unsigned long read_word_at_a_time(const void *addr)
-> {
->         kasan_check_read(addr, 1);
->         return *(unsigned long *)addr;
-> }
->
-> /**
->  * data_race - mark an expression as containing intentional data races
->  *
->  * This data_race() macro is useful for situations in which data races
->  * should be forgiven.  One example is diagnostic code that accesses
->  * shared variables but is not a part of the core synchronization design.
->  *
->  * This macro *does not* affect normal code generation, but is a hint
->  * to tooling that data races here are to be ignored.
->  */
-> #define data_race(expr)                                                        \
->         ({                                                                     \
->                 typeof(({ expr; })) __val;                                     \
->                 kcsan_disable_current();                                       \
->                 __val = ({ expr; });                                           \
->                 kcsan_enable_current();                                        \
->                 __val;                                                         \
->         })
+v2: https://lore.kernel.org/r/20190423132823.7915-6-georgi.djakov@linaro.org
+
+ drivers/cpufreq/Kconfig      |  1 +
+ drivers/cpufreq/cpufreq-dt.c | 15 +++++++++++++++
+ 2 files changed, 16 insertions(+)
+
+diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
+index c3e6bd59e920..db2ad54ee67f 100644
+--- a/drivers/cpufreq/Kconfig
++++ b/drivers/cpufreq/Kconfig
+@@ -217,6 +217,7 @@ config CPUFREQ_DT
+ 
+ config CPUFREQ_DT_PLATDEV
+ 	bool
++	depends on INTERCONNECT || !INTERCONNECT
+ 	help
+ 	  This adds a generic DT based cpufreq platdev driver for frequency
+ 	  management.  This creates a 'cpufreq-dt' platform device, on the
+diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
+index 26fe8dfb9ce6..4ecef3257532 100644
+--- a/drivers/cpufreq/cpufreq-dt.c
++++ b/drivers/cpufreq/cpufreq-dt.c
+@@ -13,6 +13,7 @@
+ #include <linux/cpufreq.h>
+ #include <linux/cpumask.h>
+ #include <linux/err.h>
++#include <linux/interconnect.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/pm_opp.h>
+@@ -95,6 +96,7 @@ static int resources_available(void)
+ 	struct device *cpu_dev;
+ 	struct regulator *cpu_reg;
+ 	struct clk *cpu_clk;
++	struct icc_path *cpu_path;
+ 	int ret = 0;
+ 	const char *name;
+ 
+@@ -121,6 +123,19 @@ static int resources_available(void)
+ 
+ 	clk_put(cpu_clk);
+ 
++	cpu_path = of_icc_get(cpu_dev, NULL);
++	ret = PTR_ERR_OR_ZERO(cpu_path);
++	if (ret) {
++		if (ret == -EPROBE_DEFER)
++			dev_dbg(cpu_dev, "defer icc path: %d\n", ret);
++		else
++			dev_err(cpu_dev, "failed to get icc path: %d\n", ret);
++
++		return ret;
++	}
++
++	icc_put(cpu_path);
++
+ 	name = find_supply_name(cpu_dev);
+ 	/* Platform doesn't require regulator */
+ 	if (!name)
