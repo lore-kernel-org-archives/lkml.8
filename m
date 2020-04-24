@@ -2,91 +2,137 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CA0C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB64C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F04E520736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:22:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="PhgTcim1"
+	by mail.kernel.org (Postfix) with ESMTP id 0803820767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:25:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587727510;
+	bh=jMRabbOYU0+i+Mp4IDehVLSW1V5c3YcEuzYz82B8Yuk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mwiof9f8VyYk/PxZKUkQejmZpWdMDWrJjxGiuIWG9D7gH1fAOB5MxapAC/DOvavc0
+	 n98auSEb8H91Jh+Ze1PefdjrgYDoVv08s7Xu1F8qAh/8VCgyDaCOOdXcx6iM7u3b8H
+	 /FgiWY+K3bO0aur0GKRDWuIbGR/bC7YeRoJ6JgEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbgDXLWR (ORCPT
+        id S1726872AbgDXLZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 07:22:17 -0400
-Received: from smtp1.axis.com ([195.60.68.17]:25426 "EHLO smtp1.axis.com"
+        Fri, 24 Apr 2020 07:25:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726289AbgDXLWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 07:22:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; l=534; q=dns/txt; s=axis-central1;
-  t=1587727337; x=1619263337;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=jLbwp4z2a8ywYtIlNFO6bEPpuvqBJMQUIkngUPj6OKQ=;
-  b=PhgTcim1dlGSCJLMLVJryO28X9eb9CMFEABgTbGmT8+O12yg6Y8uFP04
-   h0H134e15+vhYPBwbzk36YjiDj/6wKRb12I5SVDNXv0ddjM7Okff/3uoX
-   UaycZykOWDsKmxREz1noMa43QNQO8XpVMBJcZQyVx5Nq6Y3PPVRza2K/5
-   tsCD7QM5/jNyglUr6a2AYVIapyEoIxeARIWphEE5bjDuqlFrUZSTd6W8N
-   Y6ZxVLELxUsFgNSGSvsubTWmhrbBhQBHcZ6hmfX4jXSeGb95DvjVZkk7C
-   nzUBJA0SGNHmz2yZ3lx0KWW33Ps4NNZVe35wXtaFy012gxzUzfh9Vaf/L
-   Q==;
-IronPort-SDR: Mczf+wSEy9tXf4x1FqTOMvRi/WpV2jaYEX5zFbFC1ZTCtx6+CsBKXBbTeqEaeW0IN++enSIaV9
- LcHDwJDfVVX4SBoh72YG+Jokyo5YpwidvKEREb6BHHUl2aRfocorIVFoDKof9lYs+5uQlpkA1D
- dISFs6e9UX6Vv0bU1r8VPxKhe9styPW5i+3DLKx2h9A3WYPd0YXsBvq1qT+LJLAeQjTEecmZN8
- 9kVwYnOqULEl7TzSgReQvTLuRiEaFbXDLObOGL6665P/JfiTzGn8TuLra70qekGpkTIhYMFDTL
- mwc=
-X-IronPort-AV: E=Sophos;i="5.73,311,1583190000"; 
-   d="scan'208";a="8007496"
-Subject: Re: [PATCHv2] i2c: slave-eeprom: Make it possible to pre-load eeprom
- data
-To:     Wolfram Sang <wsa@the-dreams.de>
-CC:     <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <patrick@stwcx.xyz>, <kernel@axis.com>
-References: <20200424090443.26316-1-bjorn.ardo@axis.com>
- <20200424111337.GC1959@kunai>
-From:   Bjorn Ardo <bjorn.ardo@axis.com>
-Message-ID: <5038e4c1-440b-0a56-978b-a8c9fac061cc@axis.com>
-Date:   Fri, 24 Apr 2020 13:22:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726582AbgDXLZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 07:25:08 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48B7B20736;
+        Fri, 24 Apr 2020 11:25:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587727507;
+        bh=jMRabbOYU0+i+Mp4IDehVLSW1V5c3YcEuzYz82B8Yuk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=q7VhYJRYu2T4R8Z+FwEBdzfkZJaUQ697sedXWWcK80RJOIOIYHrPDacNCU1CL2hf4
+         PZMQ3B7egTzq8Ww/QMpP+mUwiJQ2yAn+8bVynnpTMCYjHrES57+RsVQMFSyivduqpA
+         CL4L/bnhEGchXUCF/trNAU0YG8fShliPWsdWsJZc=
+Date:   Fri, 24 Apr 2020 12:25:05 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     robh@kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        daniel.schwierzeck@gmail.com, hauke@hauke-m.de,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+Subject: Re: [PATCH 1/4] spi: lantiq: Synchronize interrupt handlers and
+ transfers
+Message-ID: <20200424112505.GD5850@sirena.org.uk>
+References: <cover.1587702428.git.eswara.kota@linux.intel.com>
+ <3bf88d24b9cad9f3df1da8ed65bf55c05693b0f2.1587702428.git.eswara.kota@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200424111337.GC1959@kunai>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.0.5.60]
-X-ClientProxiedBy: XBOX03.axis.com (10.0.5.17) To XBOX02.axis.com (10.0.5.16)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="lc9FT7cWel8HagAv"
+Content-Disposition: inline
+In-Reply-To: <3bf88d24b9cad9f3df1da8ed65bf55c05693b0f2.1587702428.git.eswara.kota@linux.intel.com>
+X-Cookie: Information is the inverse of entropy.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/24/20 1:13 PM, Wolfram Sang wrote:
 
-> On second look, two questions:
->
->> +	if (!error) {
->> +		int ret = request_firmware_into_buf(&fw, eeprom_data, &client->dev,
->> +						    eeprom->buffer, size);
->> +		if (ret)
->> +			return ret;
-> Aren't we leaking 'fw' here?
+--lc9FT7cWel8HagAv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Apr 24, 2020 at 06:42:30PM +0800, Dilip Kota wrote:
 
-As I can see in drivers/base/firmware_loader/main.c in function 
-_request_firmware, then the fw will be released internally if it returns 
-an error value.
+> Synchronize tx, rx and error interrupts by registering to the
+> same interrupt handler. Interrupt handler will recognize and process
+> the appropriate interrupt on the basis of interrupt status register.
+> Also, establish synchronization between the interrupt handler and
+> transfer operation by taking the locks and registering the interrupt
+> handler as thread IRQ which avoids the bottom half.
+> Fixes the wrongly populated interrupt register offsets too.
 
+This sounds like at least three different changes mixed together in one
+commit, it makes it quite hard to tell what's going on.  If nothing else
+the conversion from a workqueue to threaded interrupts should probably
+be split out from merging the interrupts.
 
-> Also, do we need 'error' and 'ret'? Can't we reuse one of them?
+> -static irqreturn_t lantiq_ssc_err_interrupt(int irq, void *data)
+> +static irqreturn_t lantiq_ssc_err_interrupt(struct lantiq_ssc_spi *spi)
+>  {
+> -	struct lantiq_ssc_spi *spi =3D data;
+>  	u32 stat =3D lantiq_ssc_readl(spi, LTQ_SPI_STAT);
+> =20
+> -	if (!(stat & LTQ_SPI_STAT_ERRORS))
+> -		return IRQ_NONE;
+> -
 
+Why drop this?
 
-Yes, I can fix that.
+> -	err =3D devm_request_irq(dev, rx_irq, lantiq_ssc_xmit_interrupt,
+> -			       0, LTQ_SPI_RX_IRQ_NAME, spi);
+> +	err =3D devm_request_threaded_irq(dev, rx_irq, NULL, lantiq_ssc_isr,
+> +					IRQF_ONESHOT, LTQ_SPI_RX_IRQ_NAME, spi);
+>  	if (err)
+>  		goto err_master_put;
+> =20
+> -	err =3D devm_request_irq(dev, tx_irq, lantiq_ssc_xmit_interrupt,
+> -			       0, LTQ_SPI_TX_IRQ_NAME, spi);
+> +	err =3D devm_request_threaded_irq(dev, tx_irq, NULL, lantiq_ssc_isr,
+> +					IRQF_ONESHOT, LTQ_SPI_TX_IRQ_NAME, spi);
+>  	if (err)
+>  		goto err_master_put;
+> =20
+> -	err =3D devm_request_irq(dev, err_irq, lantiq_ssc_err_interrupt,
+> -			       0, LTQ_SPI_ERR_IRQ_NAME, spi);
+> +	err =3D devm_request_threaded_irq(dev, err_irq, NULL, lantiq_ssc_isr,
+> +					IRQF_ONESHOT, LTQ_SPI_ERR_IRQ_NAME, spi);
 
+It's not clear to me that it's a benefit to combine all the interrupts
+unconditionally - obviously where they're shared we need to but could
+that be accomplished with IRQF_SHARED and even if it can't it seems like
+something conditional would be better.
 
-/BA
+--lc9FT7cWel8HagAv
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6izJAACgkQJNaLcl1U
+h9A9gAf9EAGD07QOzDrXXolg+XQmkRiTF70XBpUwy3VJ1Xi6JMYAHUNA3/Z2ssS5
+RrMUMyrJy+um1y4Zx+8+XV/+EfOmEPFVNeM+7cZ9hWrjtYpoIkaDonksboZz+T8h
+Q7cn2CDyQ4VRXbo8cc5Q4yApbKISswcMzf5UolZojAVWVNhMR7nQ5HUuwNWuuP7V
+08pOBLsc3/GtOWuXA5OGLF287UuMsWkiK9ySbxw8ppLN9wvQOOs2t7izOFVeLGJE
+4YnmncNquDPLjB9OdTEF/V2kmxvUoxNt8Nyn+kR/TX7xZYZ+i7L0Bb865IbaL0yl
+F17jaNiJyOzmR/CyFiyKoK+yq8GEvw==
+=2prX
+-----END PGP SIGNATURE-----
+
+--lc9FT7cWel8HagAv--
