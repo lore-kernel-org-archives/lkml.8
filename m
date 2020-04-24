@@ -2,102 +2,68 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1FBC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 21:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF580C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 21:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A87B2173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 21:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A19B7216FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 21:51:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726101AbgDXVun (ORCPT
+        id S1726124AbgDXVvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 17:50:43 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:41534 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbgDXVun (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 17:50:43 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 502391C0237; Fri, 24 Apr 2020 23:50:41 +0200 (CEST)
-Date:   Fri, 24 Apr 2020 23:50:40 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCHv6 0/4] n_gsm serdev support and protocol driver for
- droid4 modem
-Message-ID: <20200424215040.GA14087@amd>
-References: <20200421232752.3070-1-tony@atomide.com>
- <20200423114326.GQ18608@localhost>
+        Fri, 24 Apr 2020 17:51:01 -0400
+Received: from v6.sk ([167.172.42.174]:59602 "EHLO v6.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725874AbgDXVvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 17:51:01 -0400
+Received: from localhost (v6.sk [IPv6:::1])
+        by v6.sk (Postfix) with ESMTP id 8EC90610A8;
+        Fri, 24 Apr 2020 21:50:29 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH v2] dmaengine: mmp_tdma: Validate the transfer direction
+Date:   Fri, 24 Apr 2020 23:50:20 +0200
+Message-Id: <20200424215020.105281-1-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="PNTmBPCT7hxwcZjr"
-Content-Disposition: inline
-In-Reply-To: <20200423114326.GQ18608@localhost>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+We only support DMA_DEV_TO_MEM and DMA_MEM_TO_DEV. Let's not do
+undefined things with other values and reject them.
 
---PNTmBPCT7hxwcZjr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+---
+Changes since v1:
+- Replace the extra validation with is_slave_direction() in
+  _prep_dma_cyclic(), as Vinod Koul suggested.
 
-Hi!
+ drivers/dma/mmp_tdma.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-> > Here's v4 set of n_gsm serdev support patches, and the related protocol
-> > driver for the modem found on Motorola Mapphone phones and tablets
-> > like droid4.
-> >=20
-> > This series only adds basic character device support for the serdev
-> > driver. Other serdev consumer drivers for specific devices will be
-> > posted separately.
->=20
-> I'm still missing an architectural (design) overview here -- reviewer
-> time is a scarce resource.
->=20
-> I also suggested earlier that you include, at least as an RFC, one or
-> more of your child-device drivers so that we can see how this ends up
-> being used in the end (including an example devicetree).
+diff --git a/drivers/dma/mmp_tdma.c b/drivers/dma/mmp_tdma.c
+index 8947e4832ca3..dbc6a48424fa 100644
+--- a/drivers/dma/mmp_tdma.c
++++ b/drivers/dma/mmp_tdma.c
+@@ -429,6 +429,11 @@ static struct dma_async_tx_descriptor *mmp_tdma_prep_dma_cyclic(
+ 	int num_periods = buf_len / period_len;
+ 	int i = 0, buf = 0;
+ 
++	if (!is_slave_direction(direction)) {
++		dev_err(tdmac->dev, "unsupported transfer direction\n");
++		return NULL;
++	}
++
+ 	if (tdmac->status != DMA_COMPLETE) {
+ 		dev_err(tdmac->dev, "controller busy");
+ 		return NULL;
+-- 
+2.26.0
 
-Note that this is useful on its own: we have ofonod running on the top
-of this doing calls and SMSes.
-
-Tony: I know you have drivers depending on this somewhere (audio
-routing and GPS), but I can't find them. It is not droid4-pending-v5.6
-AFAICT. Do you have a pointer / could you publish them somewhere?
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---PNTmBPCT7hxwcZjr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl6jXzAACgkQMOfwapXb+vL1MgCgkfDgPdNCuH+IVEioBezNZBZW
-CdIAnR1+l1rBSV1qT6U8BWmkXXdKbSoT
-=NUS7
------END PGP SIGNATURE-----
-
---PNTmBPCT7hxwcZjr--
