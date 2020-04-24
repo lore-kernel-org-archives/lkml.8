@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F328C55191
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEEDBC55194
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5722320706
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0871215A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:23:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587731011;
-	bh=JEfPVeCIXS2ihp4wiKoaxqcfVeN9Aopia2uXZyuMbzs=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=G1nXpF7cmxWaSETgwhb4PSmwbLFLOUgHXqqkq3YGfALlgJqaOIg+e+QndFY4XzQfk
-	 /sgFw7ATAGR9x/l10v04hfQ6XgfJ+qDXq+ScC66BwqizFvu/nskEZ0VWgRvr5uV5O8
-	 at0BkRUxkQHgxhtfJnnw+dT9gvVNwLm7plpVpzAc=
+	s=default; t=1587731012;
+	bh=17Z6ur9/JVGYgU+ovwJDkUoJXP5IFKxDcHNAtxzeoZ4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=HcaaU3w8wKCeZ2xXBJG/DcJ54rDbkhoWNmj2mTuCtXd06Y1DFGByqwRvdp+Cd9aTx
+	 SFvtKt3HfLf/WMmFKc08eaJ3pohqbgB2vYe73QgorpSsa0VlUyNgEMIlQsBLaSIMk0
+	 hiaI/Qta2rDqbl9zAuUK99yW/LTM5U6qOB6MLWds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbgDXMXa (ORCPT
+        id S1728028AbgDXMXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:23:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53246 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:23:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727972AbgDXMX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:23:26 -0400
+        id S1728012AbgDXMXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:23:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E508A20776;
-        Fri, 24 Apr 2020 12:23:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5863521569;
+        Fri, 24 Apr 2020 12:23:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587731005;
-        bh=JEfPVeCIXS2ihp4wiKoaxqcfVeN9Aopia2uXZyuMbzs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=1qHOqCMSq1ywoYVvbwMuKBB/Bc/buIYS9oC344cyI8+ZzwH8qFxgEeHq13GZijqw2
-         VD2zfZjIChMjsMghVFiRAfh3B3LTPy1sxKSkRD5vlt++uOiHNN8hN2jywa47CkKCA5
-         TMnzJLAtN6Zu8JBtyXNqNr/YMeQKYk3ynfO4KIfo=
+        s=default; t=1587731009;
+        bh=17Z6ur9/JVGYgU+ovwJDkUoJXP5IFKxDcHNAtxzeoZ4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KBlyRuCiUynDv20CC259Yv9vAje/kEht69KMZX8HGIKEbqrLW/HlXa3ZYFVOfr6X/
+         PdcmNV9baHoGyYIjI58+8WX0rNKu23vhTv9CEAFxiN0tUghVj34aNNsPh8PNa4Y8K1
+         dgPR6LvRW+bz0BlOJCGO3/SQamhNl6RkVz3kxwyI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeremy Cline <jcline@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 01/26] libbpf: Initialize *nl_pid so gcc 10 is happy
-Date:   Fri, 24 Apr 2020 08:22:58 -0400
-Message-Id: <20200424122323.10194-1-sashal@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 05/26] afs: Fix length of dump of bad YFSFetchStatus record
+Date:   Fri, 24 Apr 2020 08:23:02 -0400
+Message-Id: <20200424122323.10194-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200424122323.10194-1-sashal@kernel.org>
+References: <20200424122323.10194-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,52 +58,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Cline <jcline@redhat.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 4734b0fefbbf98f8c119eb8344efa19dac82cd2c ]
+[ Upstream commit 3efe55b09a92a59ed8214db801683cf13c9742c4 ]
 
-Builds of Fedora's kernel-tools package started to fail with "may be
-used uninitialized" warnings for nl_pid in bpf_set_link_xdp_fd() and
-bpf_get_link_xdp_info() on the s390 architecture.
+Fix the length of the dump of a bad YFSFetchStatus record.  The function
+was copied from the AFS version, but the YFS variant contains bigger fields
+and extra information, so expand the dump to match.
 
-Although libbpf_netlink_open() always returns a negative number when it
-does not set *nl_pid, the compiler does not determine this and thus
-believes the variable might be used uninitialized. Assuage gcc's fears
-by explicitly initializing nl_pid.
-
-Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=1807781
-
-Signed-off-by: Jeremy Cline <jcline@redhat.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/20200404051430.698058-1-jcline@redhat.com
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/netlink.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/afs/yfsclient.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/lib/bpf/netlink.c b/tools/lib/bpf/netlink.c
-index ce3ec81b71c01..88416be2bf994 100644
---- a/tools/lib/bpf/netlink.c
-+++ b/tools/lib/bpf/netlink.c
-@@ -137,7 +137,7 @@ int bpf_set_link_xdp_fd(int ifindex, int fd, __u32 flags)
- 		struct ifinfomsg ifinfo;
- 		char             attrbuf[64];
- 	} req;
--	__u32 nl_pid;
-+	__u32 nl_pid = 0;
+diff --git a/fs/afs/yfsclient.c b/fs/afs/yfsclient.c
+index 31b236c6b1f76..39230880f372b 100644
+--- a/fs/afs/yfsclient.c
++++ b/fs/afs/yfsclient.c
+@@ -165,15 +165,15 @@ static void xdr_dump_bad(const __be32 *bp)
+ 	int i;
  
- 	sock = libbpf_netlink_open(&nl_pid);
- 	if (sock < 0)
-@@ -254,7 +254,7 @@ int bpf_get_link_xdp_id(int ifindex, __u32 *prog_id, __u32 flags)
- {
- 	struct xdp_id_md xdp_id = {};
- 	int sock, ret;
--	__u32 nl_pid;
-+	__u32 nl_pid = 0;
- 	__u32 mask;
+ 	pr_notice("YFS XDR: Bad status record\n");
+-	for (i = 0; i < 5 * 4 * 4; i += 16) {
++	for (i = 0; i < 6 * 4 * 4; i += 16) {
+ 		memcpy(x, bp, 16);
+ 		bp += 4;
+ 		pr_notice("%03x: %08x %08x %08x %08x\n",
+ 			  i, ntohl(x[0]), ntohl(x[1]), ntohl(x[2]), ntohl(x[3]));
+ 	}
  
- 	if (flags & ~XDP_FLAGS_MASK)
+-	memcpy(x, bp, 4);
+-	pr_notice("0x50: %08x\n", ntohl(x[0]));
++	memcpy(x, bp, 8);
++	pr_notice("0x60: %08x %08x\n", ntohl(x[0]), ntohl(x[1]));
+ }
+ 
+ /*
 -- 
 2.20.1
 
