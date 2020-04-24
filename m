@@ -2,246 +2,130 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F15C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC51C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E346A20774
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:47:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hdOLtALO"
+	by mail.kernel.org (Postfix) with ESMTP id 4E59B20781
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:47:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587750460;
+	bh=zIFV/KlcUwJeD/xf7nacfJWLfnf6jNQCQvPPdzxxsGM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NaXZPHUIXjhXGKv2bsIokOHVx8CTZK3p10kb88IvKSMnt4GHlSYe29ts8b3FHr/Zl
+	 WDdJJynowAkQLIjydUIHXymzb2RCtBceI2utobd869vykRI8RCCrb/omzOxsu1b5pS
+	 wv3DcRSnMuEF/LsgHqX/g8e8rnGz9gD0/N2G8o7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728915AbgDXRrR (ORCPT
+        id S1729059AbgDXRrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 13:47:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727804AbgDXRrR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 13:47:17 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30CFAC09B048
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 10:47:17 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id q10so10081518ile.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 10:47:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sKSSuyIM7h/aKoat8JN5p5oAc8dD6LwiiRcXuvb6FJg=;
-        b=hdOLtALOJIAdp5HOeuGfD+BemNASe/wQQZAed75Fun4hGIr2Un7/KLTVdtjYlwKadT
-         ySODLjD2TzaY8BERV7Dv8W9cuFn/q5m2NIuO7RBDwOQR6R9FjTLgBXfdkj2RjKCaYQMc
-         jfOvD6zWaFJFgI5E/ZRV1dnEH5d9aA+5wtTyViHeColV1N4d37gt5Msya84UVIeVY2m8
-         x+AohimdXrrxp432a2yKiVQ11FHpij94iNi/L2IO1OS1ZaOG7YPEe7momAoTA+WFHWwP
-         ZCmIcYfy120L2gIGEl4opndwOaK0IxHEQsO3SOe3Nrj/wQXrPuhpbClUGXQu03voc9kA
-         NHtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sKSSuyIM7h/aKoat8JN5p5oAc8dD6LwiiRcXuvb6FJg=;
-        b=PfFHhEihdp9GS05e79Um0ydo7lEibsPuBK/eJI6QSfwmcEMwfCEkCO8XBdAyefCigk
-         98IUuuvLVGyyrGg9Bnh2FyIXQYW+Pi5pa5ihTZw+RicqOtiQrZywrP/UWMwVUchhAGYK
-         HCUqdY2LZ5PrXVVq8M8GTKOs1mSBUKvbSvC/7Jl/aT96c9HY2oaiEcP2VArHKWdIxeUw
-         BnbFEw/PeydXWEt1R9V6sgBihh4vrz/5KKo4tE7Do53Cv6u3Sc2dx++cLCOAZslY/0kv
-         6G6Y6vAfKqtYnBxpDMqEAFYjQ/tutM8dcMCHH8CtvVAA6IFz68ej3b3rXmXE1fqlG7JW
-         U4UA==
-X-Gm-Message-State: AGi0PuaRtJSAnLbXfT7I/drBPP0s3mgDEOFrciHKvegd6MF6/kFfw+bk
-        3qTK8/fDS0zrVNIJ/D/sn02Qu+7TrbYA7Hv35p/yaQ==
-X-Google-Smtp-Source: APiQypL33upLDbmpcIlEJjk6eF3YQBM3XWRCo9LzVCPp+8D7H4R1+v6oXMkEL3oc6SzaHIc3QXUGu6X+yDnyEcH9CYs=
-X-Received: by 2002:a92:985d:: with SMTP id l90mr10067400ili.108.1587750435970;
- Fri, 24 Apr 2020 10:47:15 -0700 (PDT)
+        Fri, 24 Apr 2020 13:47:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46284 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728950AbgDXRrj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 13:47:39 -0400
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82FDA20781;
+        Fri, 24 Apr 2020 17:47:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587750458;
+        bh=zIFV/KlcUwJeD/xf7nacfJWLfnf6jNQCQvPPdzxxsGM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UMOT3Ojapa1dBHxAktqyUitNXqvf4pMLzuGtSJiSN6v074xjidUnl+RoJpSR1jB7j
+         30FRuTDX58zsQrXxCVA/CM51a2Dn8MTVngDUVwYH+7aufNr5KsleVf+OnsaSt+rXA2
+         a4u34bK0Zs/RxHQshxL8dpxa6EI6uvohAGirVYtg=
+Received: by mail-qt1-f174.google.com with SMTP id x12so8080813qts.9;
+        Fri, 24 Apr 2020 10:47:38 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYi8vqPCml4Sf1YvcFFTFmOu0RxjIKBnhnzympEAPGzFo2K2Gaq
+        J2D/neePDZ+rQMoJFIPnkqkLowAySbkB2eBAcQ==
+X-Google-Smtp-Source: APiQypKxRSyCnlYfhvX/bo/LFS6GoXJnWAMceyI9nEXpPmbsqGYUxw6bD4/7gyBUsMVwHnEnu+10GIJcorDTq1dtFi4=
+X-Received: by 2002:aed:3ac8:: with SMTP id o66mr10738923qte.110.1587750457652;
+ Fri, 24 Apr 2020 10:47:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200424171925.1178-1-sean.j.christopherson@intel.com>
-In-Reply-To: <20200424171925.1178-1-sean.j.christopherson@intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Fri, 24 Apr 2020 10:47:04 -0700
-Message-ID: <CALMp9eRG=L_dQfS_qpYhJ_86B-yyfYYg+pwcixQOfWT4hwCa1Q@mail.gmail.com>
-Subject: Re: [PATCH] KVM: nVMX: Tweak handling of failure code for nested
- VM-Enter failure
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200424130847.328584-1-jiaxun.yang@flygoat.com> <20200424130847.328584-2-jiaxun.yang@flygoat.com>
+In-Reply-To: <20200424130847.328584-2-jiaxun.yang@flygoat.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 24 Apr 2020 12:47:23 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKsZrsnn92XHL4QdFkAgFKqVTBZXDz9wVv-_7oywOOsBQ@mail.gmail.com>
+Message-ID: <CAL_JsqKsZrsnn92XHL4QdFkAgFKqVTBZXDz9wVv-_7oywOOsBQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/6] PCI: OF: Don't remap iospace on unsupported platform
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Paul Burton <paulburton@kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 10:19 AM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
+On Fri, Apr 24, 2020 at 8:09 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
 >
-> Use an enum for passing around the failure code for a failed VM-Enter
-> that results in VM-Exit to provide a level of indirection from the final
-> resting place of the failure code, vmcs.EXIT_QUALIFICATION.  The exit
-> qualification field is an unsigned long, e.g. passing around
-> 'u32 exit_qual' throws up red flags as it suggests KVM may be dropping
-> bits when reporting errors to L1.  This is a red herring because the
-> only defined failure codes are 0, 2, 3, and 4, i.e. don't come remotely
-> close to overflowing a u32.
+> There are some platforms that don't support I/O space remapping
+> like MIPS. However, our PCI code will try to remap iospace
+> unconditionally and reject io resources on these platforms.
 >
-> Setting vmcs.EXIT_QUALIFICATION on entry failure is further complicated
-> by the MSR load list, which returns the (1-based) entry that failed, and
-> the number of MSRs to load is a 32-bit VMCS field.  At first blush, it
-> would appear that overflowing a u32 is possible, but the number of MSRs
-> that can be loaded is hardcapped at 4096 (limited by MSR_IA32_VMX_MISC).
+> So we should remove I/O space remapping check and use a range
+> check instead on these platforms.
 >
-> In other words, there are two completely disparate types of data that
-> eventually get stuffed into vmcs.EXIT_QUALIFICATION, neither of which is
-> an 'unsigned long' in nature.  This was presumably the reasoning for
-> switching to 'u32' when the related code was refactored in commit
-> ca0bde28f2ed6 ("kvm: nVMX: Split VMCS checks from nested_vmx_run()").
->
-> Using an enum for the failure code addresses the technically-possible-
-> but-will-never-happen scenario where Intel defines a failure code that
-> doesn't fit in a 32-bit integer.  The enum variables and values will
-> either be automatically sized (gcc 5.4 behavior) or be subjected to some
-> combination of truncation.  The former case will simply work, while the
-> latter will trigger a compile-time warning unless the compiler is being
-> particularly unhelpful.
->
-> Separating the failure code from the failed MSR entry allows for
-> disassociating both from vmcs.EXIT_QUALIFICATION, which avoids the
-> conundrum where KVM has to choose between 'u32 exit_qual' and tracking
-> values as 'unsigned long' that have no business being tracked as such.
->
-> Opportunistically rename the variables in load_vmcs12_host_state() and
-> vmx_set_nested_state() to call out that they're ignored, and add a
-> comment in nested_vmx_load_msr() to call out that returning 'i + 1'
-> can't wrap.
->
-> No functional change intended.
->
-> Reported-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> --
+> v4: Fix a typo in commit message.
+> v5: Commit message massage
 > ---
->  arch/x86/include/asm/vmx.h | 10 ++++++----
->  arch/x86/kvm/vmx/nested.c  | 38 +++++++++++++++++++++-----------------
->  2 files changed, 27 insertions(+), 21 deletions(-)
+>  drivers/pci/of.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 >
-> diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
-> index 5e090d1f03f8..cd7de4b401fe 100644
-> --- a/arch/x86/include/asm/vmx.h
-> +++ b/arch/x86/include/asm/vmx.h
-> @@ -527,10 +527,12 @@ struct vmx_msr_entry {
->  /*
->   * Exit Qualifications for entry failure during or after loading guest state
->   */
-> -#define ENTRY_FAIL_DEFAULT             0
-> -#define ENTRY_FAIL_PDPTE               2
-> -#define ENTRY_FAIL_NMI                 3
-> -#define ENTRY_FAIL_VMCS_LINK_PTR       4
-> +enum vm_entry_failure_code {
-> +       ENTRY_FAIL_DEFAULT              = 0,
-> +       ENTRY_FAIL_PDPTE                = 2,
-> +       ENTRY_FAIL_NMI                  = 3,
-> +       ENTRY_FAIL_VMCS_LINK_PTR        = 4,
-> +};
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index 81ceeaa6f1d5..36e8761b66c6 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -547,12 +547,21 @@ int pci_parse_request_of_pci_ranges(struct device *dev,
 >
->  /*
->   * Exit Qualifications for EPT Violations
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index b516c24494e3..e66320997910 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -927,6 +927,7 @@ static u32 nested_vmx_load_msr(struct kvm_vcpu *vcpu, u64 gpa, u32 count)
->         }
->         return 0;
->  fail:
-> +       /* Note, max_msr_list_size is at most 4096, i.e. this can't wrap. */
->         return i + 1;
->  }
->
-> @@ -1122,7 +1123,7 @@ static bool nested_vmx_transition_mmu_sync(struct kvm_vcpu *vcpu)
->   * @entry_failure_code.
->   */
->  static int nested_vmx_load_cr3(struct kvm_vcpu *vcpu, unsigned long cr3, bool nested_ept,
-> -                              u32 *entry_failure_code)
-> +                              enum vm_entry_failure_code *entry_failure_code)
->  {
->         if (cr3 != kvm_read_cr3(vcpu) || (!nested_ept && pdptrs_changed(vcpu))) {
->                 if (CC(!nested_cr3_valid(vcpu, cr3))) {
-> @@ -2475,7 +2476,7 @@ static void prepare_vmcs02_rare(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
->   * is assigned to entry_failure_code on failure.
->   */
->  static int prepare_vmcs02(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
-> -                         u32 *entry_failure_code)
-> +                         enum vm_entry_failure_code *entry_failure_code)
->  {
->         struct vcpu_vmx *vmx = to_vmx(vcpu);
->         struct hv_enlightened_vmcs *hv_evmcs = vmx->nested.hv_evmcs;
-> @@ -2935,11 +2936,11 @@ static int nested_check_guest_non_reg_state(struct vmcs12 *vmcs12)
->
->  static int nested_vmx_check_guest_state(struct kvm_vcpu *vcpu,
->                                         struct vmcs12 *vmcs12,
-> -                                       u32 *exit_qual)
-> +                                       enum vm_entry_failure_code *entry_failure_code)
->  {
->         bool ia32e;
->
-> -       *exit_qual = ENTRY_FAIL_DEFAULT;
-> +       *entry_failure_code = ENTRY_FAIL_DEFAULT;
->
->         if (CC(!nested_guest_cr0_valid(vcpu, vmcs12->guest_cr0)) ||
->             CC(!nested_guest_cr4_valid(vcpu, vmcs12->guest_cr4)))
-> @@ -2954,7 +2955,7 @@ static int nested_vmx_check_guest_state(struct kvm_vcpu *vcpu,
->                 return -EINVAL;
->
->         if (nested_vmx_check_vmcs_link_ptr(vcpu, vmcs12)) {
-> -               *exit_qual = ENTRY_FAIL_VMCS_LINK_PTR;
-> +               *entry_failure_code = ENTRY_FAIL_VMCS_LINK_PTR;
->                 return -EINVAL;
->         }
->
-> @@ -3247,8 +3248,9 @@ enum nvmx_vmentry_status nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu,
->         struct vcpu_vmx *vmx = to_vmx(vcpu);
->         struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
->         bool evaluate_pending_interrupts;
-> +       enum vm_entry_failure_code entry_failure_code;
->         u32 exit_reason = EXIT_REASON_INVALID_STATE;
-> -       u32 exit_qual;
-> +       u32 failed_msr;
->
->         if (kvm_check_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu))
->                 kvm_vcpu_flush_tlb_current(vcpu);
-> @@ -3296,7 +3298,7 @@ enum nvmx_vmentry_status nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu,
->                         return NVMX_VMENTRY_VMFAIL;
->                 }
->
-> -               if (nested_vmx_check_guest_state(vcpu, vmcs12, &exit_qual))
-> +               if (nested_vmx_check_guest_state(vcpu, vmcs12, &entry_failure_code))
->                         goto vmentry_fail_vmexit;
->         }
->
-> @@ -3304,16 +3306,18 @@ enum nvmx_vmentry_status nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu,
->         if (vmcs12->cpu_based_vm_exec_control & CPU_BASED_USE_TSC_OFFSETTING)
->                 vcpu->arch.tsc_offset += vmcs12->tsc_offset;
->
-> -       if (prepare_vmcs02(vcpu, vmcs12, &exit_qual))
-> +       if (prepare_vmcs02(vcpu, vmcs12, &entry_failure_code))
->                 goto vmentry_fail_vmexit_guest_mode;
->
->         if (from_vmentry) {
->                 exit_reason = EXIT_REASON_MSR_LOAD_FAIL;
-> -               exit_qual = nested_vmx_load_msr(vcpu,
-> -                                               vmcs12->vm_entry_msr_load_addr,
-> -                                               vmcs12->vm_entry_msr_load_count);
-> -               if (exit_qual)
-> +               failed_msr = nested_vmx_load_msr(vcpu,
-> +                                                vmcs12->vm_entry_msr_load_addr,
-> +                                                vmcs12->vm_entry_msr_load_count);
-> +               if (failed_msr) {
-> +                       entry_failure_code = failed_msr;
+>                 switch (resource_type(res)) {
+>                 case IORESOURCE_IO:
+> +#if defined(PCI_IOBASE) && defined(CONFIG_MMU)
 
-This assignment is a bit dodgy from a type perspective, and suggests
-that perhaps a better type for the local variable is an
-undiscriminated union of the enumerated type and a sufficiently large
-unsigned integer type. But I won't be a stickler if you add a comment.
-:-)
+We already have the same condition in pci_remap_iospace(). All this
+does is suppress a WARN. If a WARN is not desired, then change it.
+Perhaps just a single line rather than backtrace would be okay.
+Whether to WARN or not shouldn't be a decision for firmware code.
+
+Though really, if I/O space can never be supported, then it's an error
+in your DT to describe it.
+
+>                         err = devm_pci_remap_iospace(dev, res, iobase);
+>                         if (err) {
+>                                 dev_warn(dev, "error %d: failed to map resource %pR\n",
+>                                          err, res);
+>                                 resource_list_destroy_entry(win);
+>                         }
+> +#else
+> +                       /* Simply check if IO is inside the range */
+
+Why do you care if it's never used?
+
+> +                       if (res->end > IO_SPACE_LIMIT) {
+> +                               dev_warn(dev, "resource %pR out of the I/O range\n",
+> +                                       res);
+> +                               resource_list_destroy_entry(win);
+> +                       }
+> +#endif
+>                         break;
+>                 case IORESOURCE_MEM:
+>                         res_valid |= !(res->flags & IORESOURCE_PREFETCH);
+> --
+> 2.26.0.rc2
+>
