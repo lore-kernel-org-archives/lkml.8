@@ -2,91 +2,147 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC892C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6281EC55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B136221569
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:23:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587756206;
-	bh=1XE+asI6TCoL0rz4MFDsR5ReG0o0aTPfQwiiqnch+tM=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=GuLasFhWR9N63RrLj7Bjv0XYcZBp5PWDlJNrcDpteo9giF9ENVtCu2AvfsXEGPY3M
-	 xoZoXZI9/2J/1HdYK2D6AsViA00SKiAk6//c7NgfRz+OCTyMPbEi6JINQ7P56Fk6eK
-	 Q/MOv9mi8UtuIwusZAPonoNqtgc9aPC5jY8B6+Ug=
+	by mail.kernel.org (Postfix) with ESMTP id 3C3592098B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:26:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aaVLBGt9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729237AbgDXTX0 (ORCPT
+        id S1729088AbgDXT0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 15:23:26 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35450 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbgDXTXZ (ORCPT
+        Fri, 24 Apr 2020 15:26:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33742 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727022AbgDXT0K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 15:23:25 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e26so14409221otr.2;
-        Fri, 24 Apr 2020 12:23:25 -0700 (PDT)
+        Fri, 24 Apr 2020 15:26:10 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4400C09B04A
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 12:26:09 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id a31so2382006pje.1
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 12:26:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6Ak3wRUTbhX3b+AZt5O65BJGsm25sMRWic48F76A9hM=;
+        b=aaVLBGt9xNHi+hCZ8vzCgEF7XWOZEZmPr0Phaz77zFbq5WMywT6yHSh9e8GCu8ociu
+         aGr7G3Cchq8usek7UA7iq6OS8pshLesDZoZqje7Aui6a8mp1OHLDByvI9C73O1SqdDiZ
+         mx0zwH44LI86AaesZXFM2Ajhmo0vIU9IhlS4Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=TKnErRwZ3k1+AjzoqZbolssLyNPVUP1KdGAXylkhrtI=;
-        b=LflXzOO9NkcCb+4NvdC7nXHw4ZXbTqjkfaUnOdKDc1QDDlC3rR3nTRv2NHZ2RCTXo4
-         e0gL1ZpKCd+/N7izkhR6XM2NuFBHDkNf1w4KQKsA7vqFRf1QF/eqc49i7DlJyrZeMTpH
-         r/JyThWj7wOnNmHUyymttgTUL0cU4QTVGvtXGKOQVrxo5RjBuyugC5YHUJPxa/UfdoWK
-         5az98jXagQH3YR9o25x8aWkDeQXoOLEOK3es+MwTDWqkEceX38J1UjDBudRZRDaLnKYW
-         e8kEHcbMt9NepdQK4PBgF7Vai71fjcvTzQmGwOaavEBarLkkRlEpZFh0hxz/qn7JmwZn
-         cmdA==
-X-Gm-Message-State: AGi0PuaJMu0TfES5mvsMKKypyJVRAzjq4maq4G3x2dbpU17cEvobjL+b
-        VHWlGKRNCkNkO19JMp9aSwvNNvZxbhrTkypJ4jKBAZbc
-X-Google-Smtp-Source: APiQypLWDrt/xHxPq8iDeU7/yn1DFow1jsWi4MEHyD3gZ/QCSM4rcDF5yy9/m52kic/gu5Zuv3cvNTAj94NPd1GA3Ck=
-X-Received: by 2002:aca:aa8c:: with SMTP id t134mr8689675oie.103.1587756205103;
- Fri, 24 Apr 2020 12:23:25 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6Ak3wRUTbhX3b+AZt5O65BJGsm25sMRWic48F76A9hM=;
+        b=XLHcB/sdrcIp5r5T0TyMGapdQmMIlAKVdJGr2PdAvte3cr1ss2DSl5/X8RLUHlDKbN
+         mmiAbRVXPMFlLeETwCbNGxU7SYRT91wWYKBg/TZ6jQmPo2o9GXYa6fiQcDB8aOOYJZKF
+         iHBudwd+UiqpP5G8aqtmywZcplsdmQLfJT+vblGe7dEqGh8bk3fqkh56Ps+u/JTR9cEZ
+         ZEsdev0bWMZ0k96fFORCGOdUsjvdyOVONG64pFKg9QdAC+bRBjJEWyr18sJDUyVfW5oc
+         2iMXCN2XUrzPjSrKdTQbZSDmCAkRLYsINtwtT/FB63tjpbAN2nqqAMBHmwv6Qs8wZ7ow
+         KL5g==
+X-Gm-Message-State: AGi0PuZT75zwalVYWgm2S6WJ6WWfUB8Lcdw126iisQHSMXlZX2Scd6LU
+        HT76vJRnCOIO8YMBxP5V/o/PrA==
+X-Google-Smtp-Source: APiQypL6ZHQVIk0jDGsuJs8ztATvWT/HuDC1iXb3RFCHlfbimDatC7NnMcHjF8PcL7UjBVc67o/vfw==
+X-Received: by 2002:a17:902:8b82:: with SMTP id ay2mr11186391plb.285.1587756369143;
+        Fri, 24 Apr 2020 12:26:09 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id g6sm5227594pjx.48.2020.04.24.12.26.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Apr 2020 12:26:08 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 12:26:07 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
+        robh+dt@kernel.org, rjw@rjwysocki.net, saravanak@google.com,
+        sibis@codeaurora.org, rnayak@codeaurora.org,
+        bjorn.andersson@linaro.org, vincent.guittot@linaro.org,
+        jcrouse@codeaurora.org, evgreen@chromium.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 5/7] OPP: Add sanity checks in _read_opp_key()
+Message-ID: <20200424192607.GB4525@google.com>
+References: <20200424155404.10746-1-georgi.djakov@linaro.org>
+ <20200424155404.10746-6-georgi.djakov@linaro.org>
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 24 Apr 2020 21:23:14 +0200
-Message-ID: <CAJZ5v0hHNpEjdzE4QVhpb7bi43VGHdJwY17n1_pTmcXwXNtPew@mail.gmail.com>
-Subject: [GIT PULL] PNP subsystem update for v5.7-rc2
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200424155404.10746-6-georgi.djakov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Fri, Apr 24, 2020 at 06:54:02PM +0300, Georgi Djakov wrote:
+> When we read the OPP keys, it would be nice to do some sanity checks
+> of the values we get from DT and see if they match with the information
+> that is populated in the OPP table. Let's pass a pointer of the table,
+> so that we can do some validation.
+> 
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+> v7:
+> New patch.
+> 
+>  drivers/opp/of.c | 19 ++++++++++++++++---
+>  1 file changed, 16 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+> index 978e445b0cdb..2b590fe2e69a 100644
+> --- a/drivers/opp/of.c
+> +++ b/drivers/opp/of.c
+> @@ -574,8 +574,8 @@ void dev_pm_opp_of_remove_table(struct device *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
+>  
+> -static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np,
+> -			 bool *rate_not_available)
+> +static int _read_opp_key(struct dev_pm_opp *new_opp, struct opp_table *table,
+> +			 struct device_node *np, bool *rate_not_available)
+>  {
+>  	struct property *peak, *avg;
+>  	u32 *peak_bw, *avg_bw;
+> @@ -603,6 +603,12 @@ static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np,
+>  		 * opp-avg-kBps = <path1_value path2_value>;
+>  		 */
+>  		count = peak->length / sizeof(u32);
+> +		if (table->path_count != count) {
+> +			pr_err("%s: Mismatch between opp-peak-kBps and paths (%d %d)\n",
+> +			       __func__, count, table->path_count);
+> +			return -EINVAL;
+> +		}
+> +
+>  		peak_bw = kmalloc_array(count, sizeof(*peak_bw), GFP_KERNEL);
+>  		if (!peak_bw)
+>  			return -ENOMEM;
+> @@ -624,6 +630,13 @@ static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np,
+>  	avg = of_find_property(np, "opp-avg-kBps", NULL);
+>  	if (peak && avg) {
+>  		count = avg->length / sizeof(u32);
+> +		if (table->path_count != count) {
+> +			pr_err("%s: Mismatch between opp-avg-kBps and paths (%d %d)\n",
+> +			       __func__, count, table->path_count);
+> +			ret = -EINVAL;
+> +			goto free_peak_bw;
+> +		}
+> +
+>  		avg_bw = kmalloc_array(count, sizeof(*avg_bw), GFP_KERNEL);
+>  		if (!avg_bw) {
+>  			ret = -ENOMEM;
+> @@ -695,7 +708,7 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
+>  	if (!new_opp)
+>  		return ERR_PTR(-ENOMEM);
+>  
+> -	ret = _read_opp_key(new_opp, np, &rate_not_available);
+> +	ret = _read_opp_key(new_opp, opp_table, np, &rate_not_available);
+>  	if (ret < 0) {
+>  		if (!opp_table->is_genpd)
+>  			dev_err(dev, "%s: opp key field not found\n", __func__);
 
-Please pull from the tag
-
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- pnp-5.7-rc3
-
-with top-most commit 01b2bafe57b19d9119413f138765ef57990921ce
-
- pnp: Use list_for_each_entry() instead of open coding
-
-on top of commit ae83d0b416db002fe95601e7f97f64b59514d936
-
- Linux 5.7-rc2
-
-to receive a PNP subsystem update for 5.7-rc3.
-
-This makes the PNP code use list_for_each_entry() in a few places
-instead of open-coding it (Jason Gunthorpe).
-
-Thanks!
-
-
----------------
-
-Jason Gunthorpe (1):
-      pnp: Use list_for_each_entry() instead of open coding
-
----------------
-
- include/linux/pnp.h | 29 +++++++++--------------------
- 1 file changed, 9 insertions(+), 20 deletions(-)
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
