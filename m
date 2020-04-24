@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C96AFC55191
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC38CC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AEAD21707
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D2D420700
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:24:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587731046;
-	bh=CriRCGClvamC+iFzH8OrWMWdqSTNirz+iZj25GHP8jc=;
+	s=default; t=1587731049;
+	bh=QpfX3JTibHDMAjB4NRzfy85HK0q7fBbBFotvXBCEJJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rSaAmND/sO27B4plc67NU7AE6cDeVE4dmPiNWADUTIn4Su2S7qwzI/xkOGv0GRpiv
-	 tWcVSz3JmXtYSU+r8eVLvWIEXqzNYglPghZaaZtBoQVOBcFoJaNy3ryJP+webw3oba
-	 2KgFrSQnYNDxhuqAIHNtHfdQleGIyBt1fwZwnU3s=
+	b=vrcE9Dycq/Q91i9XuAXgP8WaLt7VutjghQ4tqkeGMbob/EMP2qZS2hpViITEWJJTB
+	 Ir2liYn9xa09fYJS52Goy4ZkRuxJ0BMds81l8I8j/EzO49rHV85Pjr7JHZ5I5WYDBV
+	 h7JoNym2iQxmpTvTwWXkufgRJrUx1KEdTE5AGzI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbgDXMYF (ORCPT
+        id S1728283AbgDXMYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:24:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54294 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:24:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728240AbgDXMYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:24:01 -0400
+        id S1728260AbgDXMYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:24:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83B942168B;
-        Fri, 24 Apr 2020 12:24:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A266821582;
+        Fri, 24 Apr 2020 12:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587731041;
-        bh=CriRCGClvamC+iFzH8OrWMWdqSTNirz+iZj25GHP8jc=;
+        s=default; t=1587731044;
+        bh=QpfX3JTibHDMAjB4NRzfy85HK0q7fBbBFotvXBCEJJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CVLZLV67ee2Gn6DqPHhYI8cAcHw9+l3IPDVBh0hWVRz31DoLF0Odowsq5g6mFHoCy
-         TZM1ue+Dh8I4Z3rClY8NdrACd0T8G4Oa0bLBftfSa0LXT/44059bq85NcjPTwJRZK8
-         W9xUEqLF/UqhjxF8T4v9Tw3ZqRKNyCXhISJWsM6c=
+        b=QWDBx+JgiRInv48NlKaovoV/NwVAqyK/49A7sih/5uBQHDuFUgvb/UBkUd5WURlGL
+         ZO2dI6M5NYb7RjzFKSbbh4qm3Dy5K4oBgv970v/1pM4ikxXQL7ixgyz+wndkvpz0Pj
+         n5lpNjtGG71PuBAPha8m2fEya6gnVLn+Vs6zH+cA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Brian Foster <bfoster@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 04/18] xfs: fix partially uninitialized structure in xfs_reflink_remap_extent
-Date:   Fri, 24 Apr 2020 08:23:41 -0400
-Message-Id: <20200424122355.10453-4-sashal@kernel.org>
+Cc:     Bodo Stroesser <bstroesser@ts.fujitsu.com>,
+        Mike Christie <mchristi@redhat.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 07/18] scsi: target: fix PR IN / READ FULL STATUS for FC
+Date:   Fri, 24 Apr 2020 08:23:44 -0400
+Message-Id: <20200424122355.10453-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200424122355.10453-1-sashal@kernel.org>
 References: <20200424122355.10453-1-sashal@kernel.org>
@@ -59,36 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Darrick J. Wong" <darrick.wong@oracle.com>
+From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
 
-[ Upstream commit c142932c29e533ee892f87b44d8abc5719edceec ]
+[ Upstream commit 8fed04eb79a74cbf471dfaa755900a51b37273ab ]
 
-In the reflink extent remap function, it turns out that uirec (the block
-mapping corresponding only to the part of the passed-in mapping that got
-unmapped) was not fully initialized.  Specifically, br_state was not
-being copied from the passed-in struct to the uirec.  This could lead to
-unpredictable results such as the reflinked mapping being marked
-unwritten in the destination file.
+Creation of the response to READ FULL STATUS fails for FC based
+reservations. Reason is the too high loop limit (< 24) in
+fc_get_pr_transport_id(). The string representation of FC WWPN is 23 chars
+long only ("11:22:33:44:55:66:77:88"). So when i is 23, the loop body is
+executed a last time for the ending '\0' of the string and thus hex2bin()
+reports an error.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
+Link: https://lore.kernel.org/r/20200408132610.14623-3-bstroesser@ts.fujitsu.com
+Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+Reviewed-by: Mike Christie <mchristi@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_reflink.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/target/target_core_fabric_lib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
-index f3c393f309e19..6622652a85a80 100644
---- a/fs/xfs/xfs_reflink.c
-+++ b/fs/xfs/xfs_reflink.c
-@@ -1058,6 +1058,7 @@ xfs_reflink_remap_extent(
- 		uirec.br_startblock = irec->br_startblock + rlen;
- 		uirec.br_startoff = irec->br_startoff + rlen;
- 		uirec.br_blockcount = unmap_len - rlen;
-+		uirec.br_state = irec->br_state;
- 		unmap_len = rlen;
- 
- 		/* If this isn't a real mapping, we're done. */
+diff --git a/drivers/target/target_core_fabric_lib.c b/drivers/target/target_core_fabric_lib.c
+index 10fae26b44add..939c6212d2ac5 100644
+--- a/drivers/target/target_core_fabric_lib.c
++++ b/drivers/target/target_core_fabric_lib.c
+@@ -76,7 +76,7 @@ static int fc_get_pr_transport_id(
+ 	 * encoded TransportID.
+ 	 */
+ 	ptr = &se_nacl->initiatorname[0];
+-	for (i = 0; i < 24; ) {
++	for (i = 0; i < 23; ) {
+ 		if (!strncmp(&ptr[i], ":", 1)) {
+ 			i++;
+ 			continue;
 -- 
 2.20.1
 
