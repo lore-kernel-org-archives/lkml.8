@@ -2,247 +2,173 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7D6C55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EAFDC5518A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24C0220706
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBB1920706
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:45:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mlv1FjtV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YnyOdBqH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgDXDoL (ORCPT
+        id S1726479AbgDXDpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 23:44:11 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38834 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725823AbgDXDoK (ORCPT
+        Thu, 23 Apr 2020 23:45:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55018 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726027AbgDXDpR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 23:44:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587699848;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8+FaynttJGKaVYyS0qNRY9ywWcGRkdC9wCoLPRF1M+4=;
-        b=Mlv1FjtVOa+qO4GXN8ueI20IuIUuQQuX+oaeyeCADox+vmBfOCOjocr9mkrxfHSNdJpHcw
-        Xqai9aQJZ1DQgB8OVstzh8SJCUPWmMZ+p8KD94jA4e5lBtqzD/0H/sH7vTAzs17HA4Dni+
-        /t2k/Fck+45kqfu0+YH3n5NA032X/d0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-415-C7b04x9KNdGmVJEt-CSezQ-1; Thu, 23 Apr 2020 23:44:01 -0400
-X-MC-Unique: C7b04x9KNdGmVJEt-CSezQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C8820107ACF5;
-        Fri, 24 Apr 2020 03:43:59 +0000 (UTC)
-Received: from localhost (ovpn-12-92.pek2.redhat.com [10.72.12.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3C2596084A;
-        Fri, 24 Apr 2020 03:43:55 +0000 (UTC)
-Date:   Fri, 24 Apr 2020 11:43:53 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: compaction: VM_BUG_ON_PAGE(!zone_spans_pfn(page_zone(page), pfn))
-Message-ID: <20200424034353.GD4247@MiWiFi-R3L-srv>
-References: <8C537EB7-85EE-4DCF-943E-3CC0ED0DF56D@lca.pw>
+        Thu, 23 Apr 2020 23:45:17 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5935CC09B044;
+        Thu, 23 Apr 2020 20:45:17 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id n24so3242428plp.13;
+        Thu, 23 Apr 2020 20:45:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JB5F2gYh60IoGOjkNuPt8M6rDIMORhu/HwD2HTbUACQ=;
+        b=YnyOdBqHBW3zIEDo/UZkrLQABhBI6gV1VZEuSUNpFrKUcd8S1+qK58aObqnM7awSzS
+         tQane+WkXzDZvEbAJs5F0fzljzWYoCLX7Cl6FYEzpd8txlEEINpihzYrCKSGu551vuXb
+         NU8bQljhfmG9r6lnivzhuPlDtBLlcpJSGYvBXulJm1NG/n4yW5Y6kTij8WxViWdRrG9d
+         E7BOBxsc3PBx5Lo1dHccWVzYnsqgPMxFQ6Ecb46oZe//+bJLzOz3oBE6L3Ei+Q4abJ/8
+         nWn0ziTLsD2tFj8O2Pl3n2N8WF7olWAwc+kyNqi4mh+uk7xPqo2W8iHMJ+1WCiDjLyy4
+         ReXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=JB5F2gYh60IoGOjkNuPt8M6rDIMORhu/HwD2HTbUACQ=;
+        b=ADsT9Dkdjut5bd6CfAvPapOos1Ciui6hep7d823cDYEN1FFwo2yyuY1/l5o5LFCmlb
+         9QyZ70wWm5OyRQA3I4RnyMEl7DJg2fN3KHMREXK3wm9ZMU7pHa5XS+J2pTIuxq2uR5bs
+         8PtiqS/SkJCM/lptMHE+C1AMCbUaF4ITM6u0qK+AeC5l70jvh4jKzRzrPPCpWHG+SnfW
+         NWVLZlTgdFi0LFqGZV/2c+WGqy9y5/89A+yuP3WF/0rSeziYCAJbvHXFJidq3O4BGXOI
+         WLmFko7D1+IDIv2Vg66ZSrf/0DBaRNFmN+N5RUKrQ+8JCbXHvkb3xuOdHWm+C8ZfbpdQ
+         iz4A==
+X-Gm-Message-State: AGi0PuYp70JtW3BlN1OWfdAHKu2iU2gcVRdr5FKaGRrGRiWBCLQLlFmm
+        KqTsdmJ+GdqDiBFwvJSw5PE=
+X-Google-Smtp-Source: APiQypJ+5aL6PBUWpOeAdfD7TRdR3ufhvhOjGM7jVRnHbAca/Ew8gyez11PUeJSrvwUrt2/z7r59fQ==
+X-Received: by 2002:a17:902:7:: with SMTP id 7mr7219197pla.157.1587699916617;
+        Thu, 23 Apr 2020 20:45:16 -0700 (PDT)
+Received: from [10.230.188.26] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id z190sm4120813pfz.84.2020.04.23.20.45.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Apr 2020 20:45:15 -0700 (PDT)
+Subject: Re: [net-next PATCH v1 1/2] device property: Introduce
+ fwnode_phy_find_device()
+To:     Calvin Johnson <calvin.johnson@oss.nxp.com>, linux.cj@gmail.com,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>
+Cc:     Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        linux-acpi@vger.kernel.org,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Varun Sethi <V.Sethi@nxp.com>, Marcin Wojtas <mw@semihalf.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20200424031617.24033-1-calvin.johnson@oss.nxp.com>
+ <20200424031617.24033-2-calvin.johnson@oss.nxp.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <b583f6fb-e6fe-3320-41c6-e019a4e10388@gmail.com>
+Date:   Thu, 23 Apr 2020 20:45:03 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200424031617.24033-2-calvin.johnson@oss.nxp.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <8C537EB7-85EE-4DCF-943E-3CC0ED0DF56D@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/23/20 at 05:25pm, Qian Cai wrote:
-> Compaction starts to crash below on linux-next today. The faulty page b=
-elongs to Node 0 DMA32 zone.
-> I=E2=80=99ll continue to narrow it down, but just want to give a headup=
- in case someone could beat me to it.
->=20
-> Debug output from free_area_init_core()
-> [    0.000000] KK start page =3D ffffea0000000040, end page =3D ffffea0=
-000040000, nid =3D 0 DMA
-> [    0.000000] KK start page =3D ffffea0000040000, end page =3D ffffea0=
-004000000, nid =3D 0 DMA32
-> [    0.000000] KK start page =3D ffffea0004000000, end page =3D ffffea0=
-012000000, nid =3D 0 NORMAL
-> [    0.000000] KK start page =3D ffffea0012000000, end page =3D ffffea0=
-021fc0000, nid =3D 4 NORMAL
 
-Where are these printed? They are the direct mapping address of page?
 
->=20
-> I don=E2=80=99t understand how it could end up in such a situation. The=
-re are several recent patches look
-> more related than some others.
->=20
-> - mm: rework free_area_init*() funcitons
-> https://lore.kernel.org/linux-mm/20200412194859.12663-1-rppt@kernel.org=
-/
-> Could this somehow allow an invalid pfn to escape into the page allocat=
-or?
-> Especially, is it related to skip the checks in memmap_init_zone()?
-> https://lore.kernel.org/linux-mm/20200412194859.12663-16-rppt@kernel.or=
-g
+On 4/23/2020 8:16 PM, Calvin Johnson wrote:
+> Define fwnode_phy_find_device() to iterate an mdiobus and find the
+> phy device of the provided phy fwnode.
+> 
+> Signed-off-by: Calvin Johnson <calvin.johnson@oss.nxp.com>
 
-Possibly. In which arch is this happening? Do you have boot log?
-
->=20
-> # numactl -H
-> available: 8 nodes (0-7)
-> node 0 cpus: 0 1 16 17
-> node 0 size: 7951 MB
-> node 0 free: 4445 MB
-> node 1 cpus: 2 3 18 19
-> node 1 size: 0 MB
-> node 1 free: 0 MB
-> node 2 cpus: 4 5 20 21
-> node 2 size: 0 MB
-> node 2 free: 0 MB
-> node 3 cpus: 6 7 22 23
-> node 3 size: 0 MB
-> node 3 free: 0 MB
-> node 4 cpus: 8 9 24 25
-> node 4 size: 15354 MB
-> node 4 free: 78 MB
-> node 5 cpus: 10 11 26 27
-> node 5 size: 0 MB
-> node 5 free: 0 MB
-> node 6 cpus: 12 13 28 29
-> node 6 size: 0 MB
-> node 6 free: 0 MB
-> node 7 cpus: 14 15 30 31
-> node 7 size: 0 MB
-> node 7 free: 0 MB
-> node distances:
-> node   0   1   2   3   4   5   6   7=20
->   0:  10  16  16  16  32  32  32  32=20
->   1:  16  10  16  16  32  32  32  32=20
->   2:  16  16  10  16  32  32  32  32=20
->   3:  16  16  16  10  32  32  32  32=20
->   4:  32  32  32  32  10  16  16  16=20
->   5:  32  32  32  32  16  10  16  16=20
->   6:  32  32  32  32  16  16  10  16=20
->   7:  32  32  32  32  16  16  16  10
->=20
-> [ 6803.941550] LTP: starting swapping01 (swapping01 -i 5)
-> [ 6821.098489] page:ffffea0000aa0000 refcount:1 mapcount:0 mapping:0000=
-00002243743b index:0x0
-> [ 6821.107077] flags: 0x1fffe000001000(reserved)
-> [ 6821.111534] raw: 001fffe000001000 ffffea0000aa0008 ffffea0000aa0008 =
-0000000000000000
-> [ 6821.119365] raw: 0000000000000000 0000000000000000 00000001ffffffff =
-0000000000000000
-> [ 6821.127167] page dumped because: VM_BUG_ON_PAGE(!zone_spans_pfn(page=
-_zone(page), pfn))
-> [ 6821.135399] page_owner info is not present (never set?)
-> [ 6821.140717] ------------[ cut here ]------------
-> [ 6821.145372] kernel BUG at mm/page_alloc.c:533!
-> [ 6821.150075] invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN NOPT=
-I
-> [ 6821.150083] irq event stamp: 10075005
-> [ 6821.150102] hardirqs last  enabled at (10075005): [<ffffffff99ea403f=
->] do_page_fault+0x45f/0x9d7
-> [ 6821.156829] CPU: 17 PID: 218 Comm: kcompactd0 Not tainted 5.7.0-rc2-=
-next-20200423+ #7
-> [ 6821.160522] hardirqs last disabled at (10075004): [<ffffffff99e03ed1=
->] trace_hardirqs_off_thunk+0x1a/0x1c
-> [ 6821.160535] softirqs last  enabled at (10067158): [<ffffffff9ac00478=
->] __do_softirq+0x478/0x77f
-> [ 6821.169366] Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 G=
-en10, BIOS A40 03/09/2018
-> [ 6821.169378] RIP: 0010:set_pfnblock_flags_mask+0x150/0x210
-> [ 6821.177257] softirqs last disabled at (10067149): [<ffffffff99ed22a6=
->] irq_exit+0xd6/0xf0
-> [ 6821.218362] Code: 1a 49 8d 7f 38 e8 80 ee 05 00 48 8b 45 a0 48 8b 55=
- a8 48 03 50 78 49 39 d4 72 1d 48 c7 c6 80 ee ef 9a 4c 89 ef e8 70 73 fb =
-ff <0f> 0b 48 c7 c7 40 50 75 9b e8 c4 09 2b 00 4c 8b 65 d0 b9 3f 00 00
-> [ 6821.237457] RSP: 0018:ffffc900042ff858 EFLAGS: 00010282
-> [ 6821.242719] RAX: 0000000000000000 RBX: 0000000000000001 RCX: fffffff=
-f9a002382
-> [ 6821.249900] RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff888=
-4535b8e6c
-> [ 6821.257384] RBP: ffffc900042ff8b8 R08: ffffed108a6b8459 R09: ffffed1=
-08a6b8459
-> [ 6821.264566] R10: ffff8884535c22c7 R11: ffffed108a6b8458 R12: 0000000=
-00002a800
-> [ 6821.271748] R13: ffffea0000aa0000 R14: ffff88847fff3000 R15: ffff888=
-47fff3040
-> [ 6821.278930] FS:  0000000000000000(0000) GS:ffff888453580000(0000) kn=
-lGS:0000000000000000
-> [ 6821.287318] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 6821.293102] CR2: 00007fd1eb4a1000 CR3: 000000083154c000 CR4: 0000000=
-0003406e0
-> [ 6821.300283] Call Trace:
-> [ 6821.302752]  isolate_freepages+0xb20/0x1140
-> [ 6821.307167]  ? isolate_freepages_block+0x730/0x730
-> [ 6821.311993]  ? mark_held_locks+0x34/0xb0
-> [ 6821.315942]  ? free_unref_page+0x7d/0x90
-> [ 6821.319891]  ? free_unref_page+0x7d/0x90
-> [ 6821.323842]  ? check_flags.part.28+0x86/0x220
-> [ 6821.328234]  compaction_alloc+0xdd/0x100
-> [ 6821.332401]  migrate_pages+0x304/0x17e0
-> [ 6821.336277]  ? __ClearPageMovable+0x100/0x100
-> [ 6821.340674]  ? isolate_freepages+0x1140/0x1140
-> [ 6821.345153]  compact_zone+0x1249/0x1e90
-> [ 6821.349020]  ? compaction_suitable+0x260/0x260
-> [ 6821.353494]  kcompactd_do_work+0x231/0x650
-> [ 6821.357873]  ? sysfs_compact_node+0x80/0x80
-> [ 6821.362088]  ? finish_wait+0xe6/0x110
-> [ 6821.365775]  kcompactd+0x162/0x490
-> [ 6821.369202]  ? kcompactd_do_work+0x650/0x650
-> [ 6821.373501]  ? finish_wait+0x110/0x110
-> [ 6821.377280]  ? __kasan_check_read+0x11/0x20
-> [ 6821.381693]  ? __kthread_parkme+0xd4/0xf0
-> [ 6821.385729]  ? kcompactd_do_work+0x650/0x650
-> [ 6821.390027]  kthread+0x1f7/0x220
-> [ 6821.393280]  ? kthread_create_worker_on_cpu+0xc0/0xc0
-> [ 6821.398369]  ret_from_fork+0x27/0x50
-> [ 6821.401968] Modules linked in: brd vfat fat ext4 crc16 mbcache jbd2 =
-loop kvm_amd ses kvm enclosure dax_pmem dax_pmem_core irqbypass acpi_cpuf=
-req ip_tables x_tables xfs sd_mod smartpqi scsi_transport_sas tg3 firmwar=
-e_class libphy dm_mirror dm_region_hash dm_log dm_mod
-> [ 6821.426127] ---[ end trace 9783087562801ccf ]---
-> [ 6821.430800] RIP: 0010:set_pfnblock_flags_mask+0x150/0x210
-> [ 6821.436410] Code: 1a 49 8d 7f 38 e8 80 ee 05 00 48 8b 45 a0 48 8b 55=
- a8 48 03 50 78 49 39 d4 72 1d 48 c7 c6 80 ee ef 9a 4c 89 ef e8 70 73 fb =
-ff <0f> 0b 48 c7 c7 40 50 75 9b e8 c4 09 2b 00 4c 8b 65 d0 b9 3f 00 00
-> [ 6821.455319] RSP: 0018:ffffc900042ff858 EFLAGS: 00010282
-> [ 6821.460863] RAX: 0000000000000000 RBX: 0000000000000001 RCX: fffffff=
-f9a002382
-> [ 6821.468063] RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff888=
-4535b8e6c
-> [ 6821.475245] RBP: ffffc900042ff8b8 R08: ffffed108a6b8459 R09: ffffed1=
-08a6b8459
-> [ 6821.482675] R10: ffff8884535c22c7 R11: ffffed108a6b8458 R12: 0000000=
-00002a800
-> [ 6821.489877] R13: ffffea0000aa0000 R14: ffff88847fff3000 R15: ffff888=
-47fff3040
-> [ 6821.497062] FS:  0000000000000000(0000) GS:ffff888453580000(0000) kn=
-lGS:0000000000000000
-> [ 6821.505218] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 6821.511284] CR2: 00007fd1eb4a1000 CR3: 000000083154c000 CR4: 0000000=
-0003406e0
-> [ 6821.518487] Kernel panic - not syncing: Fatal exception
-> [ 6821.523876] Kernel Offset: 0x18e00000 from 0xffffffff81000000 (reloc=
-ation range: 0xffffffff80000000-0xffffffffbfffffff)
-> [ 6821.534915] ---[ end Kernel panic - not syncing: Fatal exception ]--=
--
->=20
-
+If you forget to update the MAINTAINERS file, or do not place this code
+under drivers/net/phy/* or drivers/of/of_mdio.c then this is going to
+completely escape the sight of the PHYLIB/PHYLINK maintainers...
+-- 
+Florian
