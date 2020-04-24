@@ -2,256 +2,148 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5AFC55192
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD1FC5518A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFB3420728
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:17:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="XW3M2aFB"
+	by mail.kernel.org (Postfix) with ESMTP id 445892075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:20:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587698405;
+	bh=CltaTqROm1xTaqQPclO45BRYa90yPgPqWZsPZssYXGs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TkQ65sd+xlOFRWCw32k0G+OTJAK1WKu3qL1XbjiJ/VtcLtKVL6d27dNc0cYzTkpCO
+	 97zSQ8yH70n7vnu9HvSPYGoMK6vMiSHZGGQfwFW66jFjhyyyT/fy+J6MTnUay/IOi2
+	 KzEvI3RTIduM6w1cjQkmUCHcDSSr0VS6isF4k4YY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgDXDRN (ORCPT
+        id S1726319AbgDXDUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 23:17:13 -0400
-Received: from mail-eopbgr60070.outbound.protection.outlook.com ([40.107.6.70]:10147
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725982AbgDXDRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 23:17:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=J+MVepNUuIh9zk7KH410HFWxE2BRA2UBMfuAYhPR4RtS7w1+Te3eZetqH9mxUkLnsL1kB9hEjbV4ijjZzobaR3zsOEYISOTNJmWOocI0AkNvyfY/FUBYVwTN4mcme2/mDm98etJt4/pcsJWfLezu/8yM3S2K1BjrDj57h2OcqdQI2PcRtT5xfPpTAiLWiDvjW98b+/EOuALAHGGJVGrN/7znHk9lKEHO6DSIj5KdgORXMxnOVqgAWOzPTvKe8om3zfAcYXM00wCYIVrRlHWx9IAuXfmLSeNkl80MV+gjbkE4zyr44GxfrFQUQjlYuT+j4gHYUMl8GTL9qLkzUvolhA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y9/MNzryNiA0YI6YTBBWyVkYklr4KblODpPO/QXSoA4=;
- b=mpHhYHgMUfporCBXXnNUCieJhK43TGMO2vlSOdXLtv7u4wFsu6JYTZIuXjp9/1W7lDmmaZoN7mnhvJEt8F9c5la+8+f27GKjioGiDMKSb1PMNXFcuX0ugQOgLr8kMcOCA0Z8uPc1ul1EdlSebD4BSpKVK/sD0WBiqRRe5ZnzIgJX7mI4bQha9T2pTmx9tKRc5/WteyqCTXOPi9P6PWMizea0LumZ3Ez6elzNOxrlhw1hTxtNlZwMiqTpPT9zp4Qw9hySnzbOfIOv2gQ16HqLyXbuJ1uypv3rXHZ4CxAWzOxhd4dtnUIKJBW9sHNE8Q2jUblUqMWyUHIcu90KTtcgRA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y9/MNzryNiA0YI6YTBBWyVkYklr4KblODpPO/QXSoA4=;
- b=XW3M2aFBPTzqsjppbpPYyHC3QDM52HCPGM1mYEKIlpbyqhtQL3+0u6KY0vyfdHvOlxH007CaO4j7roXl0GHpwzWQxmAuYhdupInwijbuMSZAOhW+lRA1wjXNA9kLA0yF+q4OoF2Cm2SIgUbVG/ekrIGV4COr4KkdvnOZBJ6xY4w=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=calvin.johnson@oss.nxp.com; 
-Received: from AM0PR04MB5636.eurprd04.prod.outlook.com (2603:10a6:208:130::22)
- by AM0PR04MB6788.eurprd04.prod.outlook.com (2603:10a6:208:18e::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Fri, 24 Apr
- 2020 03:17:07 +0000
-Received: from AM0PR04MB5636.eurprd04.prod.outlook.com
- ([fe80::c4fe:d4a4:f0e1:a75b]) by AM0PR04MB5636.eurprd04.prod.outlook.com
- ([fe80::c4fe:d4a4:f0e1:a75b%4]) with mapi id 15.20.2921.030; Fri, 24 Apr 2020
- 03:17:07 +0000
-From:   Calvin Johnson <calvin.johnson@oss.nxp.com>
-To:     linux.cj@gmail.com, Jeremy Linton <jeremy.linton@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Madalin Bucur <madalin.bucur@oss.nxp.com>
-Cc:     Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        linux-acpi@vger.kernel.org,
-        Diana Madalina Craciun <diana.craciun@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Varun Sethi <V.Sethi@nxp.com>, Marcin Wojtas <mw@semihalf.com>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
-        Calvin Johnson <calvin.johnson@oss.nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [net-next PATCH v1 2/2] phylink: introduce phylink_fwnode_phy_connect()
-Date:   Fri, 24 Apr 2020 08:46:17 +0530
-Message-Id: <20200424031617.24033-3-calvin.johnson@oss.nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200424031617.24033-1-calvin.johnson@oss.nxp.com>
-References: <20200424031617.24033-1-calvin.johnson@oss.nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR01CA0122.apcprd01.prod.exchangelabs.com
- (2603:1096:4:40::26) To AM0PR04MB5636.eurprd04.prod.outlook.com
- (2603:10a6:208:130::22)
+        Thu, 23 Apr 2020 23:20:04 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:50458 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726021AbgDXDUD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 23:20:03 -0400
+Received: by mail-pj1-f65.google.com with SMTP id t9so3394465pjw.0;
+        Thu, 23 Apr 2020 20:20:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/ZH9Ac1Wv4hWojn5xkvRonxutV2FsugtsUJq4hlyFEA=;
+        b=PnxH2jhhIDXJ6PLHs938LWZkEJEX9NUH1qukNaxoIQ2x/TjZ7KJq8LBGviiYcExSD1
+         7DQTg+bo81nXiVETuhwJHbhoTHMf3hOwEEx/4Nv2v7hFfLE1956LBIYvI8sGwGx433Qy
+         A2Gx1ovn1BZs9aRPOgsUmO779WHUNUtLbiRs79dN9lT4jH+x7q+6GAw3ZBb1eqNKg2CB
+         jzL8gxso4tTWK4SsNB6yZ2LC0y0Z6PGf+HDvQwm6hHkCHLwlcw8eb5iCjx/aprY7HbrC
+         3GnimgDvVjY8McCew58S7vIhrEHraHtbqADH6I5qUpSUOaXNJmtixRjjEAxK5pm4my2i
+         +hXA==
+X-Gm-Message-State: AGi0PuYyGe47pV4XWIIGxY3BYTrGe5i/MgUnes4Tfr8EejIM7I+k1ZnB
+        BssDmwpEFuyMxTjJhCoqIA8=
+X-Google-Smtp-Source: APiQypJg1Oxrz6E0AuvPBFm5A7ok+QMisdqXvZjdu4zhXFw/iM9e/WwuPweVrTHBWitBpiXEa8tkOw==
+X-Received: by 2002:a17:90a:24e7:: with SMTP id i94mr4175199pje.117.1587698401571;
+        Thu, 23 Apr 2020 20:20:01 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id c28sm4101785pfp.200.2020.04.23.20.19.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 20:20:00 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 459CA402A1; Fri, 24 Apr 2020 03:19:59 +0000 (UTC)
+Date:   Fri, 24 Apr 2020 03:19:59 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Jakub Kicinski <kubakici@wp.pl>, gregkh@linuxfoundation.org,
+        akpm@linux-foundation.org, josh@joshtriplett.org,
+        rishabhb@codeaurora.org, maco@android.com, andy.gross@linaro.org,
+        david.brown@linaro.org, bjorn.andersson@linaro.org,
+        linux-wireless@vger.kernel.org, keescook@chromium.org,
+        shuah@kernel.org, mfuzzey@parkeon.com, zohar@linux.vnet.ibm.com,
+        dhowells@redhat.com, pali.rohar@gmail.com, tiwai@suse.de,
+        arend.vanspriel@broadcom.com, zajec5@gmail.com, nbroeking@me.com,
+        markivx@codeaurora.org, broonie@kernel.org,
+        dmitry.torokhov@gmail.com, dwmw2@infradead.org,
+        torvalds@linux-foundation.org, Abhay_Salunke@dell.com,
+        jewalt@lgsinnovations.com, cantabile.desu@gmail.com, ast@fb.com,
+        andresx7@gmail.com, dan.rue@linaro.org, brendanhiggins@google.com,
+        yzaikin@google.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH] firmware_loader: re-export fw_fallback_config into
+ firmware_loader's own namespace
+Message-ID: <20200424031959.GB11244@42.do-not-panic.com>
+References: <20200423203140.19510-1-mcgrof@kernel.org>
+ <20200423180544.60d12af0@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <20200424021420.GZ11244@42.do-not-panic.com>
+ <20200424131556.1dbe18aa@canb.auug.org.au>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from lsv03152.swis.in-blr01.nxp.com (14.142.151.118) by SG2PR01CA0122.apcprd01.prod.exchangelabs.com (2603:1096:4:40::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Fri, 24 Apr 2020 03:17:02 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [14.142.151.118]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: a7299d29-0d20-4848-5bd4-08d7e7fdf828
-X-MS-TrafficTypeDiagnostic: AM0PR04MB6788:|AM0PR04MB6788:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB67888DA82E8DF6F9CB0746D5D2D00@AM0PR04MB6788.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3826;
-X-Forefront-PRVS: 03838E948C
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB5636.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(39860400002)(366004)(136003)(376002)(2616005)(8676002)(956004)(5660300002)(8936002)(81156014)(186003)(6506007)(16526019)(26005)(54906003)(86362001)(110136005)(52116002)(55236004)(2906002)(1076003)(316002)(478600001)(44832011)(66946007)(6512007)(6666004)(6486002)(1006002)(7416002)(4326008)(66556008)(6636002)(66476007)(110426005)(921003);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: oss.nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vnEj1LyxvZ0k2KqZj1LHumFR/Pvnpc0Jbb7lrNWh6NqymS/mI9J+iNlu/cqRjpYuNPEY+bhn2I0o+x0lrBPjObPXAC8/8s+Iw3DIGFUMQy0kyLbW11VY65QOhkUgQXKSHbOsato3wxulyRpucItGx/EUpPrfZzMBu596oue3E8GG5xJNPmYe1cW94qr5Qv05fHfsW+EefaZcF8TZX0UUUA2quJFvNhZUE6h5HxaVrPcqcRB0WduLnC9m713vVq9+NPsqUeADjGIR6yJnz2MytlE5yGMpB2ysXg8NHA+q0TRG6IYu+LFDE5Z5qLJfgn+byAnMIttk5WxDxtWshQvOzofPhPSvvEL+c/IiVjak2Kjthb+AB4shRJ4Zu+jjCs6Hb7z6iYKxt2azlLooMWzjfk8Vxw/MvVizk+eLh+gsi5qbESdiQtox1NNuj97dLWMULvKjTL1RbxKuekoqzDflJCjywQYGyJeV6ufvRb+aU3/Ud0Atp7V9Cf1/WbdEIBLkgM/Hz4baGz+lK+rukD6s2g==
-X-MS-Exchange-AntiSpam-MessageData: LGGVzHRPRElNxh2RRMsd2xSBPWp2otCYLj0MJgSKF6YSyJTnDzTg2TyyO7m97bjEYmfAyvzLluDjOh3zO+0VmNER0in2O1oRrbtioeZehhXwqFcWv2Hqde6xvQOWmPZVPv/ipUqRy6o4GuP/WQUk9g==
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a7299d29-0d20-4848-5bd4-08d7e7fdf828
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2020 03:17:07.4779
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GmO4DO/IwgrnjjStbhRpCbDeR27uRZP1pN811Lo1BiKTT0/XDlssPW0KzVKNrWwaUHYATgWAw1a7j1Q9vpT80A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6788
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Xm/fll+QQv+hsKip"
+Content-Disposition: inline
+In-Reply-To: <20200424131556.1dbe18aa@canb.auug.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Define phylink_fwnode_phy_connect() to connect phy specified by
-a fwnode to a phylink instance. This function will handle both
-DT and ACPI nodes.
 
-Signed-off-by: Calvin Johnson <calvin.johnson@oss.nxp.com>
----
+--Xm/fll+QQv+hsKip
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- drivers/net/phy/phylink.c | 90 +++++++++++++++++++++++++++++++++++++++
- include/linux/phylink.h   |  6 +++
- 2 files changed, 96 insertions(+)
+On Fri, Apr 24, 2020 at 01:15:56PM +1000, Stephen Rothwell wrote:
+> Hi Luis,
+>=20
+> On Fri, 24 Apr 2020 02:14:20 +0000 Luis Chamberlain <mcgrof@kernel.org> w=
+rote:
+> >
+> > > > Fixes: "firmware_loader: remove unused exports" =20
+> > >=20
+> > > Can't help but notice this strange form of the Fixes tag, is it
+> > > intentional? =20
+> >=20
+> > Yeah, no there is no commit for the patch as the commit is ephemeral in
+> > a development tree not yet upstream, ie, not on Linus' tree yet. Using a
+> > commit here then makes no sense unless one wants to use a reference
+> > development tree in this case, as development trees are expected to
+> > rebase to move closer towards Linus' tree. When a tree rebases, the
+> > commit IDs change, and this is why the commit is ephemeral unless
+> > one uses a base tree / branch / tag.
+>=20
+> That commit is in Greg's driver-core tree which never rebases, so the
+> SHA1 can be considered immutable.  This is (should be) true for most
+> trees that are published in linux-next (I know it is not true for some).
 
-diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
-index 34ca12aec61b..4f6552389ffb 100644
---- a/drivers/net/phy/phylink.c
-+++ b/drivers/net/phy/phylink.c
-@@ -18,6 +18,7 @@
- #include <linux/spinlock.h>
- #include <linux/timer.h>
- #include <linux/workqueue.h>
-+#include <linux/acpi.h>
- 
- #include "sfp.h"
- #include "swphy.h"
-@@ -961,6 +962,95 @@ int phylink_connect_phy(struct phylink *pl, struct phy_device *phy)
- }
- EXPORT_SYMBOL_GPL(phylink_connect_phy);
- 
-+/**
-+ * phylink_fwnode_phy_connect() - connect the PHY specified in the fwnode.
-+ * @pl: a pointer to a &struct phylink returned from phylink_create()
-+ * @fwnode: a pointer to a &struct fwnode_handle.
-+ * @flags: PHY-specific flags to communicate to the PHY device driver
-+ *
-+ * Connect the phy specified @fwnode to the phylink instance specified
-+ * by @pl. Actions specified in phylink_connect_phy() will be
-+ * performed.
-+ *
-+ * Returns 0 on success or a negative errno.
-+ */
-+int phylink_fwnode_phy_connect(struct phylink *pl,
-+			       struct fwnode_handle *fwnode,
-+			       u32 flags)
-+{
-+	struct device_node *dn = to_of_node(fwnode);
-+	struct fwnode_reference_args args;
-+	struct device_node *phy_node;
-+	struct phy_device *phy_dev;
-+	acpi_status status;
-+	int ret;
-+
-+	/* Fixed links and 802.3z are handled without needing a PHY */
-+	if (pl->cfg_link_an_mode == MLO_AN_FIXED ||
-+	    (pl->cfg_link_an_mode == MLO_AN_INBAND &&
-+	     phy_interface_mode_is_8023z(pl->link_interface)))
-+		return 0;
-+
-+	if (is_of_node(fwnode)) {
-+		phy_node = of_parse_phandle(dn, "phy-handle", 0);
-+		if (!phy_node)
-+			phy_node = of_parse_phandle(dn, "phy", 0);
-+		if (!phy_node)
-+			phy_node = of_parse_phandle(dn, "phy-device", 0);
-+
-+		if (!phy_node) {
-+			if (pl->cfg_link_an_mode == MLO_AN_PHY)
-+				return -ENODEV;
-+			return 0;
-+		}
-+
-+		phy_dev = of_phy_find_device(phy_node);
-+		/* We're done with the phy_node handle */
-+		of_node_put(phy_node);
-+	} else if (is_acpi_node(fwnode)) {
-+		status = acpi_node_get_property_reference(fwnode,
-+							  "phy-handle",
-+							  0, &args);
-+		if (ACPI_FAILURE(status))
-+			return -ENODEV;
-+		phy_dev = fwnode_phy_find_device(args.fwnode);
-+	}
-+	if (!phy_dev)
-+		return -ENODEV;
-+
-+	ret = phy_attach_direct(pl->netdev, phy_dev, flags,
-+				pl->link_interface);
-+	if (ret)
-+		return ret;
-+
-+	ret = phylink_bringup_phy(pl, phy_dev, pl->link_config.interface);
-+	if (ret)
-+		phy_detach(phy_dev);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(phylink_fwnode_phy_connect);
-+
-+/**
-+ * phylink_fwnode_phy_connect() - connect the PHY specified in the fwnode.
-+ * @pl: a pointer to a &struct phylink returned from phylink_create()
-+ * @dev: a pointer to a &struct device.
-+ * @flags: PHY-specific flags to communicate to the PHY device driver
-+ *
-+ * Connect the phy specified @fwnode to the phylink instance specified
-+ * by @pl. Actions specified in phylink_connect_phy() will be
-+ * performed.
-+ *
-+ * Returns 0 on success or a negative errno.
-+ */
-+int phylink_device_phy_connect(struct phylink *pl,
-+			       struct device *dev,
-+			       u32 flags)
-+{
-+	return phylink_fwnode_phy_connect(pl, dev_fwnode(dev), flags);
-+}
-+EXPORT_SYMBOL_GPL(phylink_device_phy_connect);
-+
- /**
-  * phylink_of_phy_connect() - connect the PHY specified in the DT mode.
-  * @pl: a pointer to a &struct phylink returned from phylink_create()
-diff --git a/include/linux/phylink.h b/include/linux/phylink.h
-index 3f8d37ec5503..c2966a067792 100644
---- a/include/linux/phylink.h
-+++ b/include/linux/phylink.h
-@@ -364,6 +364,12 @@ void phylink_add_pcs(struct phylink *, const struct phylink_pcs_ops *ops);
- void phylink_destroy(struct phylink *);
- 
- int phylink_connect_phy(struct phylink *, struct phy_device *);
-+int phylink_fwnode_phy_connect(struct phylink *pl,
-+			       struct fwnode_handle *fwnode,
-+			       u32 flags);
-+int phylink_device_phy_connect(struct phylink *pl,
-+			       struct device *dev,
-+			       u32 flags);
- int phylink_of_phy_connect(struct phylink *, struct device_node *, u32 flags);
- void phylink_disconnect_phy(struct phylink *);
- int phylink_fixed_state_cb(struct phylink *,
--- 
-2.17.1
+Cool, but once merged on Linus' tree, I think it gets yet-another-commit
+ID right? So someone looking for:
 
+git show commit-id-on-gregs-driver-core-tree
+
+It would not work? Or would it?
+
+  Luis
+
+--Xm/fll+QQv+hsKip
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEENnNq2KuOejlQLZofziMdCjCSiKcFAl6iWtIACgkQziMdCjCS
+iKfQBw/+Lzzb2oD/yCkznS2KCv3QtuujHr6furDP2sZuulh0i5pEYb/BuZAGsXtG
+UzziOSQlZvcl+p7LoC8iTBDh3MW9XPDU6nLNqQCKucnChjJTIRm4S/8Uv+YjHwGx
+z3K0510W+SHIBIfaqyabSdm6bdYa9hsiKUYT0OB2iuRds/YaMF0cIjcIbK9zBLQ2
+v/YfCzZdVc66TE1N9FgpUNPBEp9OBXE/inMgYuc2cf3Fos3JTxOyEe20mxky/Byo
+wvuAnHI2o/xkptwcM9ZvEooK64T5RWd6ZeCP4qV9WnZnbjaR9LjtjMcjRI/a5TyT
+vnzsZaG7Xbc/DGftHopb0697MZUwqC+zmIeVLH4pt/yVjQ2EJ0UneE9/GndRkYeZ
+h4qqDLGsWIa4Aa0yTplL9E1p6VQkI0jI4O098c03rVZDvNh1pDDfgxkSaPEe7EQ7
+pgmph857K4K1mARA/DwVbDqvTDplnmAxpEKoMqVEFNCqrbyADE2rT5j+pPmqfg5S
+ZB3FNreSHLP8TE6Q51PgSrsb5ZoSPLdVzgxb/V1Sp3+2OZDddOvyTNzdDx0MY2jp
+nG/IzaQdp2Rc48wAMrlAUoWEpANkL7ECzfpYhyW94zG3kTs0oxjxfa1jT9qY0L6S
+8SI8B7idrEZ+BDqS8TIoTRuHAiykVQJSf+BRcFGt3kFwb+90g08=
+=kP8g
+-----END PGP SIGNATURE-----
+
+--Xm/fll+QQv+hsKip--
