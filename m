@@ -2,90 +2,97 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CABF7C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F233AC55191
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AF8A20736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF3F520736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:18:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Le6o+K1q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726094AbgDXWSH (ORCPT
+        id S1726119AbgDXWSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 18:18:07 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:34019 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725874AbgDXWSH (ORCPT
+        Fri, 24 Apr 2020 18:18:09 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:47098 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbgDXWSI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 18:18:07 -0400
-Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 24 Apr 2020 15:17:57 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg01-sd.qualcomm.com with ESMTP; 24 Apr 2020 15:17:56 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id D1A8C4C90; Fri, 24 Apr 2020 15:17:56 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 15:17:56 -0700
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     linux-pwm@vger.kernel.org, David Collins <collinsd@codeaurora.org>,
-        David Airlie <airlied@linux.ie>,
-        intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-Subject: Re: [PATCH v13 01/11] drm/i915: Use 64-bit division macro
-Message-ID: <20200424221756.GB31118@codeaurora.org>
-References: <cover.1587523702.git.gurus@codeaurora.org>
- <4a3acf8673c08308848fb7ae73d992b6feb758d3.1587523702.git.gurus@codeaurora.org>
- <87ftctbe5l.fsf@intel.com>
+        Fri, 24 Apr 2020 18:18:08 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03OMHxjx002836;
+        Fri, 24 Apr 2020 17:17:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1587766679;
+        bh=T0axgPiXjr3H0jD2jMNWOwBKqepTY1vs30dGpSgzzyU=;
+        h=From:To:CC:Subject:Date;
+        b=Le6o+K1qyHGjNstdY23h1uG95X2FRGIw+09DNBkrR77CVVuaYQJ7Lqf5gHenCaKt9
+         YCd+pkI1hkz0R22ciU9As+KDL7xSpJYBRrGFWS1Xb0y0nFhxNw+hXp2o87VwCSggO1
+         Ck16VQvSx5eNE9RsfIpGM+Jve7b3wLhUeOGbAdts=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03OMHx2H056150
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 24 Apr 2020 17:17:59 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 24
+ Apr 2020 17:17:59 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 24 Apr 2020 17:17:59 -0500
+Received: from lelv0597.itg.ti.com (lelv0597.itg.ti.com [10.181.64.32])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03OMHx5P106506;
+        Fri, 24 Apr 2020 17:17:59 -0500
+Received: from localhost ([10.250.38.163])
+        by lelv0597.itg.ti.com (8.14.7/8.14.7) with ESMTP id 03OMHwDT081774;
+        Fri, 24 Apr 2020 17:17:58 -0500
+From:   "Andrew F. Davis" <afd@ti.com>
+To:     Sumit Semwal <sumit.semwal@linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Brian Starkey <Brian.Starkey@arm.com>
+CC:     <dri-devel@lists.freedesktop.org>,
+        <linaro-mm-sig@lists.linaro.org>, <linux-kernel@vger.kernel.org>,
+        "Andrew F . Davis" <afd@ti.com>
+Subject: [PATCH] dma-buf: heaps: Initialize during core instead of subsys
+Date:   Fri, 24 Apr 2020 18:17:58 -0400
+Message-ID: <20200424221758.15984-1-afd@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87ftctbe5l.fsf@intel.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 09:17:58AM +0300, Jani Nikula wrote:
-> On Tue, 21 Apr 2020, Guru Das Srinagesh <gurus@codeaurora.org> wrote:
-> > Since the PWM framework is switching struct pwm_state.duty_cycle's
-> > datatype to u64, prepare for this transition by using DIV_ROUND_UP_ULL
-> > to handle a 64-bit dividend.
-> >
-> > To: Jani Nikula <jani.nikula@linux.intel.com>
-> > Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-> > Cc: David Airlie <airlied@linux.ie>
-> > Cc: Daniel Vetter <daniel@ffwll.ch>
-> > Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> > Cc: "Ville Syrjälä" <ville.syrjala@linux.intel.com>
-> > Cc: intel-gfx@lists.freedesktop.org
-> > Cc: dri-devel@lists.freedesktop.org
-> >
-> 
-> Superfluous blank line.
+Some clients of DMA-Heaps probe earlier than subsys_initcall(), this
+can cause issues when these clients call dma_heap_add() before the
+core DMA-Heaps framework has initialized. DMA-Heaps should initialize
+during core startup to get ahead of all users.
 
-Will remove.
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+---
+ drivers/dma-buf/dma-heap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> Anyway, please preserve the existing acks and reviews [1] so people
-> don't have to do it again.
-> 
-> BR,
-> Jani.
-> 
-> [1] http://lore.kernel.org/r/87h7yleb0i.fsf@intel.com
+diff --git a/drivers/dma-buf/dma-heap.c b/drivers/dma-buf/dma-heap.c
+index afd22c9dbdcf..af6edfbeddfe 100644
+--- a/drivers/dma-buf/dma-heap.c
++++ b/drivers/dma-buf/dma-heap.c
+@@ -295,4 +295,4 @@ static int dma_heap_init(void)
+ 
+ 	return 0;
+ }
+-subsys_initcall(dma_heap_init);
++core_initcall(dma_heap_init);
+-- 
+2.17.1
 
-I dropped your Acked-by as the patch had to changed to resolve a merge
-conflict when I rebased to tip. Could you please re-review this patch?
-
-Thank you.
-
-Guru Das.
