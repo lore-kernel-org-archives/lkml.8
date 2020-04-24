@@ -2,182 +2,153 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57ACAC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5FCC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 297D82075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFF0520706
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:01:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AwIFz5K7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hqoiJsHt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728609AbgDXP5R (ORCPT
+        id S1727843AbgDXQBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:57:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56210 "EHLO
+        Fri, 24 Apr 2020 12:01:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727050AbgDXP5Q (ORCPT
+        with ESMTP id S1726699AbgDXQBS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:57:16 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8A08C09B046
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 08:57:16 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id g19so13180322otk.5
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 08:57:16 -0700 (PDT)
+        Fri, 24 Apr 2020 12:01:18 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45C61C09B046;
+        Fri, 24 Apr 2020 09:01:18 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f13so11445542wrm.13;
+        Fri, 24 Apr 2020 09:01:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LCU0zEm2bNycf7DvAmLbUzalJnJrzqnH9qv/4oyQ1dU=;
-        b=AwIFz5K7tVTOE6Yt6l5Ln/DRSrnqW54bzJdyn2UXO31svIPwz3zUkuSMOMo8wiZoVM
-         N843Az7pA9H9a7n44qO39uXdd2nOIWd6sfAqj4q1aOBxzpk/IK+LH0bjLnA77do5nfoJ
-         jwAQNHvAPdhvPDJ1jz17Wu6fcE2MzTKtkc9IjlPqrgajewe5pVai44xNaiFRsxcAnYyo
-         I02nBkA2G3+Se9P9PTUFtIicfDRJClCRAzu07GSx+5xFWTmWRutfp0kfNjqqhLg39OXa
-         V44HRoU7ZX2gYos4Igzqu+6RTE6EUSE61D846q8a0r+Tr1Fkg4LmmZMnPADXNP5s8LMQ
-         ehSA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=lWfBQsVyyMTVvcrJcEKSHvSl9LpE9cOW8DgSNhENSiQ=;
+        b=hqoiJsHtarLSfLuNoh2mk5rGbr4437zI0PLe307qCSes9jMu8tAazKqrs2ipjSJieQ
+         /jtiDiD/tchZWvtqUsyAm9RBjyo/OBYLFeHKnWDT3dyRW5+LLzdpd/EkWFlcBnpj/+hA
+         tAxzXNKJ3w0aYFZxHzrHrQcnY6Oset61qQu6j6TQ4QgABaiI4XyG3XqLpfBL/AFc+CnV
+         34jO36Q/yHuB07HhCeAyZlEtAVpVwKd42XbzNXjKjgKz19ddxxiT8eUWLtWqNGVw5kR+
+         gnt5tKRam3qGBHaB2EqhLc0TUbM8tBMGb2fXFOnBOOUB9gCpldmowrLGjBYEOc0Qp3ez
+         5KOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LCU0zEm2bNycf7DvAmLbUzalJnJrzqnH9qv/4oyQ1dU=;
-        b=aIiJaYlSJ1LzfAAIzLcBXtteTJz4myzmON5v25UZUa1ExYI8tcU4lJOLAdkRHzDfZc
-         jv6hgnLlP4fuupDd7B2l6oqvDzVMqnbdY1aO4LmFAHTlrT9vwt9SRz7x3q8dEWERo/Im
-         GpXdHC/eb2ILaGcR2lF0aUMf6bMj5nirMoVJBPYtFQfb9atxOb/MG3rhjY5S45nX8cTP
-         HEkwHvKIsGLIdqeCf/wYjjons++WDT9ZjhbZypb3stoXQNiHIYaaRfTrofE2NBXZVNdm
-         plzJcarG71djpgUnpQ39eBJXYj3aBCQVW0sKSyUKRDkRp3oLLwc3sE1smUmKh6jIvEpv
-         DnaA==
-X-Gm-Message-State: AGi0Pub40NBIRJsTRWQdWbPcWSSFZsx+8XKMxq46R+AAyHfExU13d9KB
-        pKDs+/uLfAqNcYOqhyEXnCrBQlLKMP2nP2CLecN23Yms
-X-Google-Smtp-Source: APiQypK61zpjEDwti64OS0v4uLFU2zyueuwLEPuBoJ5lyqauFtaPpjSbw+ReGx1u7/BsQt0gibfzwqQn/66n74Z1mew=
-X-Received: by 2002:a9d:7589:: with SMTP id s9mr7701270otk.251.1587743835871;
- Fri, 24 Apr 2020 08:57:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200424154730.190041-1-elver@google.com>
-In-Reply-To: <20200424154730.190041-1-elver@google.com>
-From:   Marco Elver <elver@google.com>
-Date:   Fri, 24 Apr 2020 17:57:04 +0200
-Message-ID: <CANpmjNOaUc8-Y4MMre5mWLjywTZ+B0B9L-cQijeYEMcw9Vapsw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] kcsan: Add __kcsan_{enable,disable}_current() variants
-To:     Marco Elver <elver@google.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Will Deacon <will@kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=lWfBQsVyyMTVvcrJcEKSHvSl9LpE9cOW8DgSNhENSiQ=;
+        b=P5eXOr4l8B2wWRZScKAEVjXcft8uU7eE897KCU9/MrHiAUP8wub5rFbRiw/bfRsi7Q
+         DnREM6SBNReY/Ei7SGe3J2sGF0C7nD5psXSS95+y4/LDWOOPogSiNXasX1W99xmRy5pE
+         HbtlcxbnYFg1QjDLU5lNSJEZQ57oxN9KB2/lLerEMj2ykZHBFladQBORy5bXtb7bjgf1
+         zKlqA6Nie2QIIktUMia1d8DGWJ4DJKqlg5f0U+MW7lqt567GJFIYqHZAM1fr0uYYJJjE
+         +GSQ3uGZWbujQ31v8Uvd4jB8NOjT8yp/RRLu7vH3x6RHq72MeTATCjLgddNVkqVD3MYj
+         K/Mw==
+X-Gm-Message-State: AGi0PubW5ukix2saW+PxNIVSNRmN+wywftOLMLI1Pjhzknd8+DvRh/bs
+        YA7B+n/JSCnQxiCYTyNmyKg=
+X-Google-Smtp-Source: APiQypLJHTBDw6IqdxWHWR7afcrBkn2zkMvkizxlImMyHITrN6NbkOPOzrZ+qSeym2lxAsxk3NVFbg==
+X-Received: by 2002:a5d:474b:: with SMTP id o11mr11772255wrs.391.1587744076764;
+        Fri, 24 Apr 2020 09:01:16 -0700 (PDT)
+Received: from debian.office.codethink.co.uk. ([78.40.148.180])
+        by smtp.gmail.com with ESMTPSA id u127sm3363017wme.8.2020.04.24.09.01.15
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 Apr 2020 09:01:16 -0700 (PDT)
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+To:     Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Subject: [PATCH v2] IB/rdmavt: return proper error code
+Date:   Fri, 24 Apr 2020 17:01:14 +0100
+Message-Id: <20200424160114.7139-1-sudipm.mukherjee@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Apr 2020 at 17:47, Marco Elver <elver@google.com> wrote:
->
-> The __kcsan_{enable,disable}_current() variants only call into KCSAN if
-> KCSAN is enabled for the current compilation unit. Note: This is
-> typically not what we want, as we usually want to ensure that even calls
-> into other functions still have KCSAN disabled.
->
-> These variants may safely be used in header files that are shared
-> between regular kernel code and code that does not link the KCSAN
-> runtime.
->
-> Signed-off-by: Marco Elver <elver@google.com>
-> ---
-> This is to help with the new READ_ONCE()/WRITE_ONCE():
-> https://lkml.kernel.org/r/20200424134238.GE21141@willie-the-truck
->
-> These should be using __kcsan_disable_current() and
-> __kcsan_enable_current(), instead of the non-'__' variants.
-> ---
+The commit 'ff23dfa13457' modified rvt_create_mmap_info() to return
+error code and also NULL but missed fixing codes which called
+rvt_create_mmap_info(). Modify rvt_create_mmap_info() to only return
+errorcode and fix error checking after rvt_create_mmap_info() was
+called.
 
-Paul: These 2 patches may want to be in the set for 5.8, depending on
-what Will wants to do.
+Fixes: ff23dfa13457 ("IB: Pass only ib_udata in function prototypes")
+Cc: stable@vger.kernel.org [5.4+]
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+---
 
-An alternative would be that Will takes my 2 patches and carries them,
-avoiding some complex patch-dependency. That is assuming his set of
-patches will go in -tip on top of KCSAN.
+ drivers/infiniband/sw/rdmavt/cq.c   | 4 ++--
+ drivers/infiniband/sw/rdmavt/mmap.c | 2 +-
+ drivers/infiniband/sw/rdmavt/qp.c   | 4 ++--
+ drivers/infiniband/sw/rdmavt/srq.c  | 4 ++--
+ 4 files changed, 7 insertions(+), 7 deletions(-)
 
-Thanks,
--- Marco
+diff --git a/drivers/infiniband/sw/rdmavt/cq.c b/drivers/infiniband/sw/rdmavt/cq.c
+index 5724cbbe38b1..04d2e72017fe 100644
+--- a/drivers/infiniband/sw/rdmavt/cq.c
++++ b/drivers/infiniband/sw/rdmavt/cq.c
+@@ -248,8 +248,8 @@ int rvt_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+ 	 */
+ 	if (udata && udata->outlen >= sizeof(__u64)) {
+ 		cq->ip = rvt_create_mmap_info(rdi, sz, udata, u_wc);
+-		if (!cq->ip) {
+-			err = -ENOMEM;
++		if (IS_ERR(cq->ip)) {
++			err = PTR_ERR(cq->ip);
+ 			goto bail_wc;
+ 		}
+ 
+diff --git a/drivers/infiniband/sw/rdmavt/mmap.c b/drivers/infiniband/sw/rdmavt/mmap.c
+index 652f4a7efc1b..eba1d5e7f056 100644
+--- a/drivers/infiniband/sw/rdmavt/mmap.c
++++ b/drivers/infiniband/sw/rdmavt/mmap.c
+@@ -166,7 +166,7 @@ struct rvt_mmap_info *rvt_create_mmap_info(struct rvt_dev_info *rdi, u32 size,
+ 
+ 	ip = kmalloc_node(sizeof(*ip), GFP_KERNEL, rdi->dparms.node);
+ 	if (!ip)
+-		return ip;
++		return ERR_PTR(-ENOMEM);
+ 
+ 	size = PAGE_ALIGN(size);
+ 
+diff --git a/drivers/infiniband/sw/rdmavt/qp.c b/drivers/infiniband/sw/rdmavt/qp.c
+index 0e1b291d2cec..500a7ee04c44 100644
+--- a/drivers/infiniband/sw/rdmavt/qp.c
++++ b/drivers/infiniband/sw/rdmavt/qp.c
+@@ -1244,8 +1244,8 @@ struct ib_qp *rvt_create_qp(struct ib_pd *ibpd,
+ 
+ 			qp->ip = rvt_create_mmap_info(rdi, s, udata,
+ 						      qp->r_rq.wq);
+-			if (!qp->ip) {
+-				ret = ERR_PTR(-ENOMEM);
++			if (IS_ERR(qp->ip)) {
++				ret = ERR_CAST(qp->ip);
+ 				goto bail_qpn;
+ 			}
+ 
+diff --git a/drivers/infiniband/sw/rdmavt/srq.c b/drivers/infiniband/sw/rdmavt/srq.c
+index 24fef021d51d..f547c115af03 100644
+--- a/drivers/infiniband/sw/rdmavt/srq.c
++++ b/drivers/infiniband/sw/rdmavt/srq.c
+@@ -111,8 +111,8 @@ int rvt_create_srq(struct ib_srq *ibsrq, struct ib_srq_init_attr *srq_init_attr,
+ 		u32 s = sizeof(struct rvt_rwq) + srq->rq.size * sz;
+ 
+ 		srq->ip = rvt_create_mmap_info(dev, s, udata, srq->rq.wq);
+-		if (!srq->ip) {
+-			ret = -ENOMEM;
++		if (IS_ERR(srq->ip)) {
++			ret = PTR_ERR(srq->ip);
+ 			goto bail_wq;
+ 		}
+ 
+-- 
+2.11.0
 
->  include/linux/kcsan-checks.h | 17 ++++++++++++++---
->  kernel/kcsan/core.c          |  7 +++++++
->  2 files changed, 21 insertions(+), 3 deletions(-)
->
-> diff --git a/include/linux/kcsan-checks.h b/include/linux/kcsan-checks.h
-> index ef95ddc49182..7b0b9c44f5f3 100644
-> --- a/include/linux/kcsan-checks.h
-> +++ b/include/linux/kcsan-checks.h
-> @@ -49,6 +49,7 @@ void kcsan_disable_current(void);
->   * Supports nesting.
->   */
->  void kcsan_enable_current(void);
-> +void kcsan_enable_current_nowarn(void); /* Safe in uaccess regions. */
->
->  /**
->   * kcsan_nestable_atomic_begin - begin nestable atomic region
-> @@ -149,6 +150,7 @@ static inline void __kcsan_check_access(const volatile void *ptr, size_t size,
->
->  static inline void kcsan_disable_current(void)         { }
->  static inline void kcsan_enable_current(void)          { }
-> +static inline void kcsan_enable_current_nowarn(void)   { }
->  static inline void kcsan_nestable_atomic_begin(void)   { }
->  static inline void kcsan_nestable_atomic_end(void)     { }
->  static inline void kcsan_flat_atomic_begin(void)       { }
-> @@ -165,15 +167,24 @@ static inline void kcsan_end_scoped_access(struct kcsan_scoped_access *sa) { }
->
->  #endif /* CONFIG_KCSAN */
->
-> +#ifdef __SANITIZE_THREAD__
->  /*
-> - * kcsan_*: Only calls into the runtime when the particular compilation unit has
-> - * KCSAN instrumentation enabled. May be used in header files.
-> + * Only calls into the runtime when the particular compilation unit has KCSAN
-> + * instrumentation enabled. May be used in header files.
->   */
-> -#ifdef __SANITIZE_THREAD__
->  #define kcsan_check_access __kcsan_check_access
-> +
-> +/*
-> + * Only use these to disable KCSAN for accesses in the current compilation unit;
-> + * calls into libraries may still perform KCSAN checks.
-> + */
-> +#define __kcsan_disable_current kcsan_disable_current
-> +#define __kcsan_enable_current kcsan_enable_current_nowarn
->  #else
->  static inline void kcsan_check_access(const volatile void *ptr, size_t size,
->                                       int type) { }
-> +static inline void __kcsan_enable_current(void)  { }
-> +static inline void __kcsan_disable_current(void) { }
->  #endif
->
->  /**
-> diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-> index 40919943617b..0a0f018cb154 100644
-> --- a/kernel/kcsan/core.c
-> +++ b/kernel/kcsan/core.c
-> @@ -625,6 +625,13 @@ void kcsan_enable_current(void)
->  }
->  EXPORT_SYMBOL(kcsan_enable_current);
->
-> +void kcsan_enable_current_nowarn(void)
-> +{
-> +       if (get_ctx()->disable_count-- == 0)
-> +               kcsan_disable_current();
-> +}
-> +EXPORT_SYMBOL(kcsan_enable_current_nowarn);
-> +
->  void kcsan_nestable_atomic_begin(void)
->  {
->         /*
-> --
-> 2.26.2.303.gf8c07b1a785-goog
->
