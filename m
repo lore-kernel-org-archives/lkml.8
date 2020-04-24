@@ -2,267 +2,105 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 544E9C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A20C2BA19
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 314012074F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA7222071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:17:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbgDXCPZ (ORCPT
+        id S1726332AbgDXCRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 22:15:25 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:44843 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726021AbgDXCPY (ORCPT
+        Thu, 23 Apr 2020 22:17:18 -0400
+Received: from m142-177.yeah.net ([123.58.177.142]:44876 "EHLO
+        m142-177.yeah.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726021AbgDXCRR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 22:15:24 -0400
-Received: from dread.disaster.area (pa49-195-157-175.pa.nsw.optusnet.com.au [49.195.157.175])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id C523B3A2D70;
-        Fri, 24 Apr 2020 12:15:17 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jRns4-0001a5-29; Fri, 24 Apr 2020 12:15:16 +1000
-Date:   Fri, 24 Apr 2020 12:15:16 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Jan Kara <jack@suse.cz>, Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH V10 04/11] Documentation/dax: Update Usage section
-Message-ID: <20200424021516.GB2040@dread.disaster.area>
-References: <20200422212102.3757660-1-ira.weiny@intel.com>
- <20200422212102.3757660-5-ira.weiny@intel.com>
- <20200423222720.GS27860@dread.disaster.area>
- <20200423232548.GA4088835@iweiny-DESK2.sc.intel.com>
+        Thu, 23 Apr 2020 22:17:17 -0400
+Received: from vivo.com (localhost [127.0.0.1])
+        by m142-177.yeah.net (Hmail) with ESMTP id C36DF6440FF;
+        Fri, 24 Apr 2020 10:17:11 +0800 (CST)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <AL*AuQC2CBe-OBb-gWCpSKps.3.1587694631785.Hmail.wenhu.wang@vivo.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     arnd@arndb.de, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@vivo.com
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2M10gaW86IGNvcnJlY3QgZG9jLW1pc21hdGNoZXMgZm9yIGlvIG1lbSBvcHM=?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 58.251.74.227
+In-Reply-To: <ef0a77eb-202c-6772-ab46-ebd2a393df32@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200423232548.GA4088835@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=ONQRW0k9raierNYdzxQi9Q==:117 a=ONQRW0k9raierNYdzxQi9Q==:17
-        a=kj9zAlcOel0A:10 a=cl8xLZFz6L8A:10 a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8
-        a=ms1Rwlcf2buM8j6gsPQA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Received: from wenhu.wang@vivo.com( [58.251.74.227) ] by ajax-webmail ( [127.0.0.1] ) ; Fri, 24 Apr 2020 10:17:11 +0800 (GMT+08:00)
+From:   =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
+Date:   Fri, 24 Apr 2020 10:17:11 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZTlVJSEpCQkJDTE9KSk9CQllXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMSEJMTE9LQ05DN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
+        WUc6N1E6Dio4STg5HlY0ORlWHCw4CygwCwhVSFVKTkNMTUJPTUhIQ01DVTMWGhIXVQweFRMOVQwa
+        FRw7DRINFFUYFBZFWVdZEgtZQVlOQ1VJTkpVTE9VSUlMWVdZCAFZQU5CTUg3Bg++
+X-HM-Tid: 0a71a9f97b816473kursc36df6440ff
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 04:25:48PM -0700, Ira Weiny wrote:
-> On Fri, Apr 24, 2020 at 08:27:20AM +1000, Dave Chinner wrote:
-> > On Wed, Apr 22, 2020 at 02:20:55PM -0700, ira.weiny@intel.com wrote:
-> > > +    Unless overridden by mount options (see (3)), if FS_XFLAG_DAX is set
-> > > +    and the fs is on pmem then it will enable S_DAX at inode load time;
-> > > +    if FS_XFLAG_DAX is not set, it will not enable S_DAX.
-> > 
-> > This is item 3), and needs to state that it is specific to regular
-> > files as DAX is not a method that can be used to access the
-> > directory structure.
-> 
-> In 1) S_DAX was defined as being a "file" access mode flag.  I could add
-> explicit verbiage in 1 to clarify that?
-
-A "file" can mean a block device, a symlink, a FIFO, etc. If you are
-talking about files containing -user data- then it is a "regular
-file" and not just a "file". Making sitinctions like this mean it is
-clear that S_DAX will not be set on directories and other types of
-files in directories...
-
-> > > +        ii> If the file still does not have the desired S_DAX access
-> > > +            mode, either unmount and remount the filesystem, or close
-> > > +            the file and use drop_caches.
-> > 
-> > .... don't have permissions to do either of these things...
-> > 
-> > Essentially, you may as well say "reboot the machine" at this point,
-> > because it's effectively the same thing from a production workload
-> > point of view...
-> > 
-> > Realistically, I'm not sure we should even say "programs must cause
-> > eviction", because that's something they cannot do directly without
-> > admin privileges nor is it something we want to occur randomly on
-> > production machines during production. i.e. this is something that
-> > should only be done in scheduled downtime by an administrator, not
-> > attempted by applications because DAX isn't immediately available.
-> > The admin is in charge here, not the "program".
-> 
-> I agree with everything you say.
-> 
-> But I feel a bit stuck here.  Without some type of documentation we are not
-> allowing FS_XFLAG_DAX to be changed on a file by the user.  Which is what we
-> were proposing before and we all disliked.
-
-For production systems, the admin is the "user" we are taking about.
-The program itself shouldn't be choosing the method of file data
-access; that's up to the administrator in charge of the system to
-set the policy how they want it to be set.
-
-i.e. there's a difference between the user/admin taking action to
-change a data access policy, and the application taking actions to
-override the policy that the admin has set.
-
-What I'm trying to say is that setting/clearing the DAX flags is an
--admin operation-, and part of the consideration of that admin
-operation is when the change should take effect.
-
-i.e. refering to "programs" as if they control the access mode is
-entirely the wrong way to be looking at persistent inode flags. They
-are an administration policy mechanism that belongs to the data set,
-not the application (or "program"). Managing data set storage and
-access policy is something administrators do, not the application...
-
-> So I feel like we need to say something about getting the inodes evicted.
-> perhaps by a 'drop cache' even requested of the admin???
-> 
-> Maybe this?
-> 
-> 
->  4. Programs that require a specific file access mode (DAX or not DAX)
->     can do one of the following:
-> 
->     (a) Set the parent directory FS_XFLAG_DAX as needed before file are
->         created; or
-> 
->     (b) Have the administrator set the desired behaviour via mount option; or
-> 
->     (c) Set or clear the file's FS_XFLAG_DAX flag as needed and wait for the
->         inode to be evicted from memory.
-> 
->         i> the only effective way of ensuring this is to request the admin drop
->            the file system caches.
-
-4. The DAX policy can be changed via:
-
-	a) Set the parent directory FS_XFLAG_DAX as needed before
-	   files are created
-
-	b) Set the appropriate dax="foo" mount option
-
-	c) Change the FS_XFLAG_DAX on existing regular files and
-	   directories. This has runtime constraints and limitations
-	   that are described in 5) below.
-
-5. When changing the DAX policy via toggling the persistent
-FS_XFLAG_DAX flag, the change in behaviour for existing regular
-files may not occur immediately. If the change must take effect
-immediately, the administrator needs to:
-
-	1. stop the application so there are no active references to
-	   the data set the policy change will affect
-	2. evict the data set from kernel caches so it will be
-	   re-instantiated when the application is restarted. This can
-	   be acheived by:
-		a. drop-caches
-		b. a filesystem unmount and mount cycle
-		c. a system reboot
-
-Hence if DAX access policy changes are required to take immediate
-effect, scheduled system-wide downtime will be required to guarantee
-the new policy change takes effect when the application is
-restarted.
-
-
-> <quote>
-> Enabling DAX on xfs
-> -------------------
-> 
-> Summary
-> -------
-> 
->  1. There exists an in-kernel file access mode flag S_DAX that corresponds to
->     the statx flag STATX_ATTR_DAX.  See the manpage for statx(2) for details
->     about this access mode.
-> 
->  2. There exists a regular file and directory inode flag FS_XFLAG_DAX.  It is
->     inherited from the parent directory FS_XFLAG_DAX inode flag at creation
->     time.  This advisory flag can be set or cleared at any time, but doing so
->     does not immediately affect the S_DAX state.
-
-2. There exists a persistent flag FS_XFLAG_DAX that can be applied to
-regular files and directories. This advisory flag can be set or
-cleared at any time, but doing so does not immediately affect the
-S_DAX state.
-
-3. If the persistent FS_XFLAG_DAX flag is set on a directory, this
-flag will be inherited by all regular files and sub directories that
-are subsequently created in this directory. Files and subdirectories
-that exist at the time this flag is set or cleared on the parent
-directory are not modified by this modification of the parent
-directory.
-
-
-> 
->  3. There exists dax mount options which can override FS_XFLAG_DAX in the
->     setting of the S_DAX flag.  Given underlying storage which supports DAX the
->     following hold.
-> 
->     "-o dax=inode"  means "follow FS_XFLAG_DAX" and is the default.
-> 
->     "-o dax=never"  means "never set S_DAX, ignore FS_XFLAG_DAX."
-> 
->     "-o dax=always" means "always set S_DAX ignore FS_XFLAG_DAX."
-> 
->     "-o dax"        is a legacy option which is an alias for "dax=always".
->     		    This may be removed in the future so "-o dax=always" is
-> 		    the preferred method for specifying this behavior.
-> 
->     NOTE: Setting and inheritance affect FS_XFLAG_DAX at all times even when
->     the file system is mounted with a dax option.  However, in-core inode
->     state (S_DAX) will continue to be overridden until the file system is
-
-s/continue to//
-
->     remounted with dax=inode and the inode is evicted.
-
-evicted from kernel memory.
-
-> 
->  4. Programs that require a specific file access mode (DAX or not DAX)
->     can do one of the following:
-> 
->     (a) Set the parent directory FS_XFLAG_DAX as needed before file are
->         created; or
-> 
->     (b) Have the administrator set the desired behaviour via mount option; or
-> 
->     (c) Set or clear the file's FS_XFLAG_DAX flag as needed and wait for the
->         inode to be evicted from memory.
-> 
-> 	i> the only effective way of ensuring this is to request the admin drop
-> 	   the file system caches.
-
-See my comments above.
-
-> 
-> 
-> Details
-> -------
-> 
-> There are 2 per-file dax flags.  One is a persistent inode setting (FS_XFLAG_DAX)
-> and the other is a volatile flag indicating the active state of the feature
-> (S_DAX).
-> 
-> FS_XFLAG_DAX is preserved within the file system.  This persistent config
-> setting can be set, cleared and/or queried using the FS_IOC_FS[GS]ETXATTR ioctl
-> (see ioctl_xfs_fsgetxattr(2)) or an utility such as 'xfs_io'.
-> 'chattr [-+]x'".
-
-Stray line.
-
-Cheers,
-
-Dave.
-
--- 
-Dave Chinner
-david@fromorbit.com
+Pk9uIDQvMjMvMjAgNzowOCBQTSwgV2FuZyBXZW5odSB3cm90ZToKPj4gTWlub3IgbWlzbWF0Y2hl
+cyBleGlzdCBiZXR3ZWVuIGZ1bnRpb24gZG9jdW1lbnRhdGlvbnMgYW5kIHBhcmFtZXRlcgo+PiBk
+ZWZpbml0aW9ucy4gQWxzbyBhIGRhc2ggJy0nIGlzIG5lZWRlZCBiZXR3ZWVuIGEgZnVuY3Rpb24g
+bmFtZSBhbmQKPj4gaXRzIGRlc2NyaXB0aW9uLgo+PiAKPj4gRnVuY3Rpb24gZGVmaW5pdGlvbnMg
+YXJlIGFzIGZvbGxvd2luZzoKPj4gc3RhdGljIGlubGluZSB2b2lkIG1lbXNldF9pbyh2b2xhdGls
+ZSB2b2lkIF9faW9tZW0gKmFkZHIsIGludCB2YWx1ZSwKPj4gCQkJICAgICBzaXplX3Qgc2l6ZSkK
+Pj4gc3RhdGljIGlubGluZSB2b2lkIG1lbWNweV9mcm9taW8odm9pZCAqYnVmZmVyLAo+PiAJCQkJ
+IGNvbnN0IHZvbGF0aWxlIHZvaWQgX19pb21lbSAqYWRkciwKPj4gCQkJCSBzaXplX3Qgc2l6ZSkK
+Pj4gc3RhdGljIGlubGluZSB2b2lkIG1lbWNweV90b2lvKHZvbGF0aWxlIHZvaWQgX19pb21lbSAq
+YWRkciwgY29uc3Qgdm9pZCAqYnVmZmVyLAo+PiAJCQkgICAgICAgc2l6ZV90IHNpemUpCj4+IAo+
+PiBSZXZpZXdlZC1ieTogUmFuZHkgRHVubGFwIDxyZHVubGFwQGluZnJhZGVhZC5vcmc+Cj4+IFNp
+Z25lZC1vZmYtYnk6IFdhbmcgV2VuaHUgPHdlbmh1LndhbmdAdml2by5jb20+Cj4KPlRoYW5rcyBm
+b3IgdGFraW5nIGNhcmUgb2YgdGhhdC4KPgoKVGhhbnggZm9yIHlvdXIgbm90aWNlLCBhY3R1YWxs
+eSBJIGhhZCBiZWVuIHRyeWluZyB0byBjb3ZlciBhbGwsIGFuZCBtYWlubHkKdGFyZ2V0ZWQgZm9y
+IGRpZmZlcmVudCBmaWxlcyBvZiB0aGUgc2FtZSBmdW5jdGlvbiBkZWZpbml0aW9ucy4gTWF5YmUg
+YXQgdGhlCmZpcnN0IGdsaW1wc2UsIG1lbXNldF9pbyB3YXMgb2ssIGFuZCBJIG1pc3NlZCBpdC4K
+ClJlZ2FyZHMsCldlbmh1Cgo+PiAtLS0KPj4gIGluY2x1ZGUvYXNtLWdlbmVyaWMvaW8uaCB8IDIy
+ICsrKysrKysrKysrLS0tLS0tLS0tLS0KPj4gIDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRpb25z
+KCspLCAxMSBkZWxldGlvbnMoLSkKPj4gCj4+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2FzbS1nZW5l
+cmljL2lvLmggYi9pbmNsdWRlL2FzbS1nZW5lcmljL2lvLmgKPj4gaW5kZXggZDM5YWM5OTdkZGE4
+Li44M2FjNDdiZmEzM2EgMTAwNjQ0Cj4+IC0tLSBhL2luY2x1ZGUvYXNtLWdlbmVyaWMvaW8uaAo+
+PiArKysgYi9pbmNsdWRlL2FzbS1nZW5lcmljL2lvLmgKPj4gQEAgLTEwNDksMTAgKzEwNDksMTAg
+QEAgc3RhdGljIGlubGluZSB2b2lkICpidXNfdG9fdmlydCh1bnNpZ25lZCBsb25nIGFkZHJlc3Mp
+Cj4+ICAjaWZuZGVmIG1lbXNldF9pbwo+PiAgI2RlZmluZSBtZW1zZXRfaW8gbWVtc2V0X2lvCj4+
+ICAvKioKPj4gLSAqIG1lbXNldF9pbwlTZXQgYSByYW5nZSBvZiBJL08gbWVtb3J5IHRvIGEgY29u
+c3RhbnQgdmFsdWUKPj4gKyAqIG1lbXNldF9pbyAtCVNldCBhIHJhbmdlIG9mIEkvTyBtZW1vcnkg
+dG8gYSBjb25zdGFudCB2YWx1ZQo+PiAgICogQGFkZHI6CVRoZSBiZWdpbm5pbmcgb2YgdGhlIEkv
+Ty1tZW1vcnkgcmFuZ2UgdG8gc2V0Cj4+IC0gKiBAdmFsOglUaGUgdmFsdWUgdG8gc2V0IHRoZSBt
+ZW1vcnkgdG8KPj4gLSAqIEBjb3VudDoJVGhlIG51bWJlciBvZiBieXRlcyB0byBzZXQKPj4gKyAq
+IEB2YWx1ZToJVGhlIHZhbHVlIHRvIHNldCB0aGUgbWVtb3J5IHRvCj4+ICsgKiBAc2l6ZToJVGhl
+IG51bWJlciBvZiBieXRlcyB0byBzZXQKPj4gICAqCj4+ICAgKiBTZXQgYSByYW5nZSBvZiBJL08g
+bWVtb3J5IHRvIGEgZ2l2ZW4gdmFsdWUuCj4+ICAgKi8KPj4gQEAgLTEwNjYsMTAgKzEwNjYsMTAg
+QEAgc3RhdGljIGlubGluZSB2b2lkIG1lbXNldF9pbyh2b2xhdGlsZSB2b2lkIF9faW9tZW0gKmFk
+ZHIsIGludCB2YWx1ZSwKPj4gICNpZm5kZWYgbWVtY3B5X2Zyb21pbwo+PiAgI2RlZmluZSBtZW1j
+cHlfZnJvbWlvIG1lbWNweV9mcm9taW8KPj4gIC8qKgo+PiAtICogbWVtY3B5X2Zyb21pbwlDb3B5
+IGEgYmxvY2sgb2YgZGF0YSBmcm9tIEkvTyBtZW1vcnkKPj4gLSAqIEBkc3Q6CQlUaGUgKFJBTSkg
+ZGVzdGluYXRpb24gZm9yIHRoZSBjb3B5Cj4+IC0gKiBAc3JjOgkJVGhlIChJL08gbWVtb3J5KSBz
+b3VyY2UgZm9yIHRoZSBkYXRhCj4+IC0gKiBAY291bnQ6CQlUaGUgbnVtYmVyIG9mIGJ5dGVzIHRv
+IGNvcHkKPj4gKyAqIG1lbWNweV9mcm9taW8gLQlDb3B5IGEgYmxvY2sgb2YgZGF0YSBmcm9tIEkv
+TyBtZW1vcnkKPj4gKyAqIEBidWZmZXI6CQlUaGUgKFJBTSkgZGVzdGluYXRpb24gZm9yIHRoZSBj
+b3B5Cj4+ICsgKiBAYWRkcjoJCVRoZSAoSS9PIG1lbW9yeSkgc291cmNlIGZvciB0aGUgZGF0YQo+
+PiArICogQHNpemU6CQlUaGUgbnVtYmVyIG9mIGJ5dGVzIHRvIGNvcHkKPj4gICAqCj4+ICAgKiBD
+b3B5IGEgYmxvY2sgb2YgZGF0YSBmcm9tIEkvTyBtZW1vcnkuCj4+ICAgKi8KPj4gQEAgLTEwODQs
+MTAgKzEwODQsMTAgQEAgc3RhdGljIGlubGluZSB2b2lkIG1lbWNweV9mcm9taW8odm9pZCAqYnVm
+ZmVyLAo+PiAgI2lmbmRlZiBtZW1jcHlfdG9pbwo+PiAgI2RlZmluZSBtZW1jcHlfdG9pbyBtZW1j
+cHlfdG9pbwo+PiAgLyoqCj4+IC0gKiBtZW1jcHlfdG9pbwkJQ29weSBhIGJsb2NrIG9mIGRhdGEg
+aW50byBJL08gbWVtb3J5Cj4+IC0gKiBAZHN0OgkJVGhlIChJL08gbWVtb3J5KSBkZXN0aW5hdGlv
+biBmb3IgdGhlIGNvcHkKPj4gLSAqIEBzcmM6CQlUaGUgKFJBTSkgc291cmNlIGZvciB0aGUgZGF0
+YQo+PiAtICogQGNvdW50OgkJVGhlIG51bWJlciBvZiBieXRlcyB0byBjb3B5Cj4+ICsgKiBtZW1j
+cHlfdG9pbyAtCUNvcHkgYSBibG9jayBvZiBkYXRhIGludG8gSS9PIG1lbW9yeQo+PiArICogQGFk
+ZHI6CQlUaGUgKEkvTyBtZW1vcnkpIGRlc3RpbmF0aW9uIGZvciB0aGUgY29weQo+PiArICogQGJ1
+ZmZlcjoJCVRoZSAoUkFNKSBzb3VyY2UgZm9yIHRoZSBkYXRhCj4+ICsgKiBAc2l6ZToJCVRoZSBu
+dW1iZXIgb2YgYnl0ZXMgdG8gY29weQo+PiAgICoKPj4gICAqIENvcHkgYSBibG9jayBvZiBkYXRh
+IHRvIEkvTyBtZW1vcnkuCj4+ICAgKi8KPj4gCj4KPgo+LS0gCj5+UmFuZHkKPgoNCg0K
