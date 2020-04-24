@@ -2,136 +2,163 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 169F1C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1271C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECE1620736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:00:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89EF320728
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 11:02:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZDvl6Cex"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgDXLA5 (ORCPT
+        id S1726831AbgDXLCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 07:00:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:59820 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726289AbgDXLA5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 07:00:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F3BF01FB;
-        Fri, 24 Apr 2020 04:00:55 -0700 (PDT)
-Received: from [10.57.33.170] (unknown [10.57.33.170])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 385363F6CF;
-        Fri, 24 Apr 2020 04:00:53 -0700 (PDT)
-Subject: Re: [PATCH v4 05/11] arm64: csum: Disable KASAN for do_csum()
-To:     David Laight <David.Laight@ACULAB.COM>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "kernel-team@android.com" <kernel-team@android.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-References: <20200421151537.19241-1-will@kernel.org>
- <20200421151537.19241-6-will@kernel.org>
- <20200422094951.GA54428@lakrids.cambridge.arm.com>
- <20200422104138.GA30265@willie-the-truck>
- <6efa0cc1-bd3e-b9b6-4e69-7ac05e6efe35@arm.com>
- <db86e9fa88754d59ac5f8d3f4fe0f9a3@AcuMS.aculab.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <a4ddb547-ea46-d79d-3088-a97b9a033997@arm.com>
-Date:   Fri, 24 Apr 2020 12:00:52 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 24 Apr 2020 07:02:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38360 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726489AbgDXLCq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 07:02:46 -0400
+Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AB14C09B045
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 04:02:46 -0700 (PDT)
+Received: by mail-ua1-x942.google.com with SMTP id s5so8999325uad.4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 04:02:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HEQC+zc6DWadDrh+ZHzHbWKwoF6aqL0hIqOxLyw9TN4=;
+        b=ZDvl6CexW9fr1PbbL25d535OAPCYxO6vtZW8yb8cFa320y0xvW9nIsS4c7zd1NneSU
+         aICxZkyFjDhuvRoxmverJSmKpl5PSdJ/n/X+hibs462m8q5C0TlGaw7b5F525uF3aOtx
+         5jWoKFvuOjy97HTuPJK+w/vLGwDEhc69m24Wzr+KobWn9BrUd0wEV7PJldo4TieQfcsr
+         xjACtTZIaiBVLtcLsRIDw5HVXY8i9L9Af5MzfiK2UVifTOIxMrtSIJmyOiUPHWtbVaQX
+         +KAgXCA3PP1uLJeypXU6efRjwOl/NeCFVNBCi4S4UD11vhW/feKCYa6ayHwE+xHwYVQS
+         gAkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HEQC+zc6DWadDrh+ZHzHbWKwoF6aqL0hIqOxLyw9TN4=;
+        b=KRqf3ZukW4n6TwKZD6dsy+ROXNTG0DUVq1CcsQ/mfX/dJqjO2h2By87WAis1QyWt2z
+         s9QO9lMScFKkIh4JGwlHZnwcA8wjGdlGxmhfLkwll5vUlfgR+No8klLypzh1DRmM/CUE
+         9jDN6EOaE9BL9aha7KkJ/qPGNh4bM7Y/2KmtN7qnuH54rcQ2mE7L1p+wjnNCZ3BkaHst
+         vn6RXClxWHV0uSh1zh7urM9ZWUQ8TehhB3VFPgRA4TmY0C+mpEynNMcsDrTna7F/3kUI
+         CM0dlDyLUpw4YOdmHPYbLc1g0lphk9aw5cSUERJYa/TYx4RdL8Y9U4cOdRl33Ozs39ae
+         Yk7g==
+X-Gm-Message-State: AGi0PuYXyucPrE1gZchy/OucEBWZ2kTrorbh2SETqaKUq5u5f3fHd+CI
+        5rKRV23rdzWtyMKWZ5Ij6TBHmrQo0JIZwchA2i8=
+X-Google-Smtp-Source: APiQypLAYP3M4WTMMbrtv0TIPLbSsl/+ylxPbD0Q59Fu36Wsny2ulaATuujzPdSegWiEfvjpsGf3JZtfeLx+bm3i0a4=
+X-Received: by 2002:ab0:1ea:: with SMTP id 97mr4835744ual.106.1587726165361;
+ Fri, 24 Apr 2020 04:02:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <db86e9fa88754d59ac5f8d3f4fe0f9a3@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20200424063551.14336-1-bernard@vivo.com>
+In-Reply-To: <20200424063551.14336-1-bernard@vivo.com>
+From:   Emil Velikov <emil.l.velikov@gmail.com>
+Date:   Fri, 24 Apr 2020 12:00:38 +0100
+Message-ID: <CACvgo53s8YM4rt1=1o+w1PbBeG54RRbg=Qpcmc66WXUtoe92Xw@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/arm: fixes pixel clock enabled with wrong format
+To:     Bernard Zhao <bernard@vivo.com>
+Cc:     Liviu Dudau <liviu.dudau@arm.com>,
+        Brian Starkey <brian.starkey@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        opensource.kernel@vivo.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-24 10:41 am, David Laight wrote:
-> From: Robin Murphy
->> Sent: 22 April 2020 12:02
-> ..
->> Sure - I have a nagging feeling that it could still do better WRT
->> pipelining the loads anyway, so I'm happy to come back and reconsider
->> the local codegen later. It certainly doesn't deserve to stand in the
->> way of cross-arch rework.
-> 
-> How fast does that loop actually run?
+Hi Bernard,
 
-I've not characterised it in detail, but faster than any of the other 
-attempts so far ;)
+On Fri, 24 Apr 2020 at 08:15, Bernard Zhao <bernard@vivo.com> wrote:
+>
+> The pixel clock is still enabled when the format is wrong.
+> no error branch handle, and also some register is not set
+> in this case, e.g: HDLCD_REG_<color>_SELECT. Maybe we
+> should disable this clock and throw an warn message when
+> this happened.
+> With this change, the code maybe a bit more readable.
+>
+> Signed-off-by: Bernard Zhao <bernard@vivo.com>
+>
+> Changes since V1:
+> *add format error handle, if format is not correct, throw
+> an warning message and disable this clock.
+>
+> Link for V1:
+> *https://lore.kernel.org/patchwork/patch/1228501/
+> ---
+>  drivers/gpu/drm/arm/hdlcd_crtc.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/arm/hdlcd_crtc.c b/drivers/gpu/drm/arm/hdlcd_crtc.c
+> index af67fefed38d..f3945dee2b7d 100644
+> --- a/drivers/gpu/drm/arm/hdlcd_crtc.c
+> +++ b/drivers/gpu/drm/arm/hdlcd_crtc.c
+> @@ -96,7 +96,7 @@ static int hdlcd_set_pxl_fmt(struct drm_crtc *crtc)
+>         }
+>
+>         if (WARN_ON(!format))
+> -               return 0;
+> +               return -EINVAL;
+>
+>         /* HDLCD uses 'bytes per pixel', zero means 1 byte */
+>         btpp = (format->bits_per_pixel + 7) / 8;
+> @@ -125,7 +125,7 @@ static int hdlcd_set_pxl_fmt(struct drm_crtc *crtc)
+>         return 0;
+>  }
+>
+> -static void hdlcd_crtc_mode_set_nofb(struct drm_crtc *crtc)
+> +static int hdlcd_crtc_mode_set_nofb(struct drm_crtc *crtc)
+>  {
+>         struct hdlcd_drm_private *hdlcd = crtc_to_hdlcd_priv(crtc);
+>         struct drm_display_mode *m = &crtc->state->adjusted_mode;
+> @@ -162,9 +162,10 @@ static void hdlcd_crtc_mode_set_nofb(struct drm_crtc *crtc)
+>
+>         err = hdlcd_set_pxl_fmt(crtc);
+>         if (err)
+> -               return;
+> +               return err;
+>
+>         clk_set_rate(hdlcd->clk, m->crtc_clock * 1000);
+> +       return 0;
+>  }
+>
+>  static void hdlcd_crtc_atomic_enable(struct drm_crtc *crtc,
+> @@ -173,7 +174,11 @@ static void hdlcd_crtc_atomic_enable(struct drm_crtc *crtc,
+>         struct hdlcd_drm_private *hdlcd = crtc_to_hdlcd_priv(crtc);
+>
+>         clk_prepare_enable(hdlcd->clk);
+> -       hdlcd_crtc_mode_set_nofb(crtc);
+> +       if (hdlcd_crtc_mode_set_nofb(crtc)) {
+> +               DRM_DEBUG_KMS("Invalid format, pixel clock enable failed!\n");
+> +               clk_disable_unprepare(hdlcd->clk);
+> +               return;
+> +       }
+This doesn't seem right. As far as I can tell, the state must be
+checked in the .atomic_check since .atomic_enable, intentionally,
+"cannot" fail.
 
-> To my mind it seems to do a lot of operations on each 64bit value.
-> I'd have thought that a loop based on:
-> 	sum64 = *ptr;
-> 	sum64_high = *ptr++ >> 32;
-> and then fixing up the result would be faster.
-> 
-> The x86-64 code is also bad!
-> On intel cpu prior to haswell a simple:
-> 	sum_64 += *ptr32++;
-> is faster than the current code.
-> (Although you can do a lot better even on ivy bridge.)
+HTH
+Emil
 
-The aim here is to minimise load bandwidth - most Arm cores can slurp 16 
-bytes from L1 in a single load as quickly as any smaller amount, so 
-nibbling away in little 32-bit chunks would result in up to 4x more load 
-cycles. Yes, the C code looks ridiculous, but the other trick is that 
-most of those operations don't actually exist. Since a __uint128_t is 
-really backed by any two 64-bit GPRs - or if you're careful, one 64-bit 
-GPR and the carry flag - all those shifts and rotations are in fact 
-resolved by register allocation, so what we end up with is a very neat 
-loop of essentially just loads and 64-bit accumulation:
 
-...
-  138:   a94030c3        ldp     x3, x12, [x6]
-  13c:   a9412cc8        ldp     x8, x11, [x6, #16]
-  140:   a94228c4        ldp     x4, x10, [x6, #32]
-  144:   a94324c7        ldp     x7, x9, [x6, #48]
-  148:   ab03018d        adds    x13, x12, x3
-  14c:   510100a5        sub     w5, w5, #0x40
-  150:   9a0c0063        adc     x3, x3, x12
-  154:   ab08016c        adds    x12, x11, x8
-  158:   9a0b0108        adc     x8, x8, x11
-  15c:   ab04014b        adds    x11, x10, x4
-  160:   9a0a0084        adc     x4, x4, x10
-  164:   ab07012a        adds    x10, x9, x7
-  168:   9a0900e7        adc     x7, x7, x9
-  16c:   ab080069        adds    x9, x3, x8
-  170:   9a080063        adc     x3, x3, x8
-  174:   ab070088        adds    x8, x4, x7
-  178:   9a070084        adc     x4, x4, x7
-  17c:   910100c6        add     x6, x6, #0x40
-  180:   ab040067        adds    x7, x3, x4
-  184:   9a040063        adc     x3, x3, x4
-  188:   ab010064        adds    x4, x3, x1
-  18c:   9a030023        adc     x3, x1, x3
-  190:   710100bf        cmp     w5, #0x40
-  194:   aa0303e1        mov     x1, x3
-  198:   54fffd0c        b.gt    138 <do_csum+0xd8>
-...
-
-Instruction-wise, that's about as good as it can get short of 
-maintaining multiple accumulators and moving the pairwise folding out of 
-the loop. The main thing that I think is still left on the table is that 
-the load-to-use distances are pretty short and there's clearly scope to 
-spread out and amortise the load cycles better, which stands to benefit 
-both big and little cores.
-
-Robin.
+>         hdlcd_write(hdlcd, HDLCD_REG_COMMAND, 1);
+>         drm_crtc_vblank_on(crtc);
+>  }
+> --
+> 2.26.2
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
