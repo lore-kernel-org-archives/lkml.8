@@ -2,159 +2,259 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3CBC55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A115FC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B86A72074F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 753ED20736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 09:30:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ejmiU1QY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbgDXJ3g (ORCPT
+        id S1726849AbgDXJaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 05:29:36 -0400
-Received: from mx.socionext.com ([202.248.49.38]:38703 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726582AbgDXJ3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 05:29:36 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 24 Apr 2020 18:29:34 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id A5B51180085;
-        Fri, 24 Apr 2020 18:29:34 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 24 Apr 2020 18:29:34 +0900
-Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 15DD91A12D0;
-        Fri, 24 Apr 2020 18:29:34 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v2] dt-bindings: spi: Convert UniPhier SPI controller to json-schema
-Date:   Fri, 24 Apr 2020 18:29:22 +0900
-Message-Id: <1587720562-15293-1-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 24 Apr 2020 05:30:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52172 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726523AbgDXJaf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 05:30:35 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BC42C09B045;
+        Fri, 24 Apr 2020 02:30:35 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id ay1so3552297plb.0;
+        Fri, 24 Apr 2020 02:30:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nOe4eSFf8uaQPFRnz/HB78krP+RHMm+yFvd35oui5EE=;
+        b=ejmiU1QYFN0TNxurB1zJMhR8EuFUTcFF7RduwDMofM3bvkWZj0mda+IXNsETZTme8o
+         DCMkE8Q3sK5LYgWvaGspC481L12yjveuTE74oW1D1I4s9lkLsTh5Puj8NDTC1ugCSzoP
+         xQN6LFcS2vBFkU3GhNyvMmFFV5CqJ5/80bDTq7lzPsDxHqcLyBv6udq4rFrGnsXhmTWL
+         sxKNjUJcTQxY25LCAKgpro0vVKkopOsdlBhuPwn0QUldqDqugP7a308wHsIXIe/bQNQ9
+         zdTMffVtyCnEMsQscc3lx0rlG7ifOmw5I7PyPqNQtPueBq8M0fNaUQ5qPug7doxfQbmM
+         I+Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nOe4eSFf8uaQPFRnz/HB78krP+RHMm+yFvd35oui5EE=;
+        b=dzF3cdHJB6IP6NRqqaQ8VSFL0DY3lZNklefzhfQLhng9D1wGi/xzcmMvaaKgPAQgAR
+         y0eOApJLOLRaeGomN7zg7moBtmz4RqFaL1/ACvP77OX2ctXIJBtDjtBlyOAkNDsALHH7
+         qY6hK6y6GqBWON0UQxheHpi8hOQrnU8BGSPKUBTsQ3WjMxCCl57inPUPWE/frgu7yd0R
+         30obsVsPz6JkDy4zOCXfT1UVq8mrocugDZCkgm7nvxqUOIzmnL8ZzBgpUwK+7VdiFMwj
+         uV72eT/kUzIiIAeQno4iPpTeapCm+4hq3CEAWilj4Qi8yOLt6zElqhjVZMjDOpwcHSaR
+         pPRQ==
+X-Gm-Message-State: AGi0PuZ9tkFbiEbcEl1Hsm5pUWjWIcHzYO/X2+/zsoCucVhChJSwl+/8
+        mkFf2mBOK5saWfytmv7K/4g=
+X-Google-Smtp-Source: APiQypJhrHHsRU/uH3PJZnexuFIJsytzrUPi3t+Wn5Z4iRIF0i263atdJFB9hYLExhT1Ysy5RFpCfA==
+X-Received: by 2002:a17:90a:a893:: with SMTP id h19mr5238698pjq.138.1587720634247;
+        Fri, 24 Apr 2020 02:30:34 -0700 (PDT)
+Received: from localhost.localdomain (146.85.30.125.dy.iij4u.or.jp. [125.30.85.146])
+        by smtp.gmail.com with ESMTPSA id 185sm5541315pfv.9.2020.04.24.02.30.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Apr 2020 02:30:33 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     Hans Verkuil <hans.verkuil@cisco.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: [PATCHv5 00/13] Implement V4L2_BUF_FLAG_NO_CACHE_* flags
+Date:   Fri, 24 Apr 2020 18:29:07 +0900
+Message-Id: <20200424092920.4801-1-sergey.senozhatsky@gmail.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert UniPhier SPI controller binding to DT schema format.
+Hello,
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
+	v5 with fixes and improvements.
 
-Changes since v1:
-- Put "#address-cells" and "#size-cells" into the required list
+I have a simple v4l-compliance patch now (will send it separately) which
+tests cache and consistency hints. I ran compliance against the vivid
+test driver, which was additionally extended with cache_hints module param:
+Trimmed v4l-compliance output:
 
- .../bindings/spi/socionext,uniphier-spi.yaml       | 57 ++++++++++++++++++++++
- .../devicetree/bindings/spi/spi-uniphier.txt       | 28 -----------
- 2 files changed, 57 insertions(+), 28 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/spi/socionext,uniphier-spi.yaml
- delete mode 100644 Documentation/devicetree/bindings/spi/spi-uniphier.txt
+- vivid with disabled cache hints support
 
-diff --git a/Documentation/devicetree/bindings/spi/socionext,uniphier-spi.yaml b/Documentation/devicetree/bindings/spi/socionext,uniphier-spi.yaml
-new file mode 100644
-index 0000000..c254092
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/socionext,uniphier-spi.yaml
-@@ -0,0 +1,57 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/socionext,uniphier-spi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Socionext UniPhier SPI controller
-+
-+description: |
-+  UniPhier SoCs have SCSSI which supports SPI single channel.
-+
-+maintainers:
-+  - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-+  - Keiji Hayashibara <hayashibara.keiji@socionext.com>
-+
-+allOf:
-+  - $ref: spi-controller.yaml#
-+
-+properties:
-+  "#address-cells": true
-+  "#size-cells": true
-+
-+  compatible:
-+    const: socionext,uniphier-scssi
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - resets
-+  - "#address-cells"
-+  - "#size-cells"
-+
-+examples:
-+  - |
-+    spi0: spi@54006000 {
-+        compatible = "socionext,uniphier-scssi";
-+        reg = <0x54006000 0x100>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        interrupts = <0 39 4>;
-+        clocks = <&peri_clk 11>;
-+        resets = <&peri_rst 11>;
-+    };
-diff --git a/Documentation/devicetree/bindings/spi/spi-uniphier.txt b/Documentation/devicetree/bindings/spi/spi-uniphier.txt
-deleted file mode 100644
-index e120157..0000000
---- a/Documentation/devicetree/bindings/spi/spi-uniphier.txt
-+++ /dev/null
-@@ -1,28 +0,0 @@
--Socionext UniPhier SPI controller driver
--
--UniPhier SoCs have SCSSI which supports SPI single channel.
--
--Required properties:
-- - compatible: should be "socionext,uniphier-scssi"
-- - reg: address and length of the spi master registers
-- - #address-cells: must be <1>, see spi-bus.txt
-- - #size-cells: must be <0>, see spi-bus.txt
-- - interrupts: a single interrupt specifier
-- - pinctrl-names: should be "default"
-- - pinctrl-0: pin control state for the default mode
-- - clocks: a phandle to the clock for the device
-- - resets: a phandle to the reset control for the device
--
--Example:
--
--spi0: spi@54006000 {
--	compatible = "socionext,uniphier-scssi";
--	reg = <0x54006000 0x100>;
--	#address-cells = <1>;
--	#size-cells = <0>;
--	interrupts = <0 39 4>;
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_spi0>;
--	clocks = <&peri_clk 11>;
--	resets = <&peri_rst 11>;
--};
+[..]
+Buffer ioctls (Input 3):
+	test V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS: OK
+	test V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS: OK
+	test V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS: OK
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+	test VIDIOC_EXPBUF: OK
+[..]
+
+- vivid with enabled cache hints (cache_hints=1,...)
+
+[..]
+Buffer ioctls (Input 3):
+	test V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS: OK
+	test V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS: OK
+	test V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS: OK
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+	test VIDIOC_EXPBUF: OK
+[..]
+
+
+v4l-compliance revealed that we cannot reliably report
+V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS, it's a bit special.
+Let's look at fill_buf_caps()
+
+	if (q->allow_cache_hints && q->io_modes & VB2_MMAP)
+		*caps |= V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS;
+
+There are several things here. First, if the queue is not setup yet
+(we didn't call driver's ->queue_setup()) then ->allow_cache_hints
+is expected to be 0. It's only in the ->queue_setup() that the driver
+sets ->allow_cache_hints for those queues that can benefit from cache
+management. What this means, is that if one does
+
+	q.init(node->g_type(), memory);
+	q.reqbufs(node);
+	q.g_capabilities();
+
+the cache hints cap will not be reported. We need to setup the queue
+
+	q.init(node->g_type(), memory);
+	q.reqbufs(node, 1);
+	q.g_capabilities();
+
+Second. Even if the queue is setup, we still can report wrong cache
+hint values. Let's look at the following code
+
+	fill_buf_caps(q, &p->capabilities);
+	if (!vb2_queue_allows_cache_hints(q))
+		p->flags &= ~V4L2_FLAG_MEMORY_NON_CONSISTENT;
+	ret = vb2_core_reqbufs(...);
+	return ret;
+
+The thing here is that vb2_core_reqbufs() and vb2_core_create_bufs()
+can re-initialize the queue and invoke ->queue_setup(), possibly
+changing its memory model, etc. so cache hints cap which we set or
+clear before vb2_core_reqbufs() and vb2_core_create_bufs() can become
+invalid after we call those functions. It's the same with
+``req->flags &= ~V4L2_FLAG_MEMORY_NON_CONSISTENT``, we cannot clear
+it before reqbufs()/create_bufs(). Therefore I added two simple
+functions which fixup cache hint cap and non_consistent flag after
+reqbufs()/create_bufs(). So the code looks like this now:
+
+	fill_buf_caps(q, &p->capabilities);
+	ret = vb2_core_reqbufs(...);
+	fixup_consistency_attr(q, &p->flags);
+	fixup_cache_hints_cap(q, &p->capabilities);
+	return ret;
+
+
+The rest is the pretty much the same.
+
+Previous series:
+v4 link: https://lore.kernel.org/lkml/20200302041213.27662-1-senozhatsky@chromium.org/
+v3 link: https://lore.kernel.org/lkml/20200226111529.180197-1-senozhatsky@chromium.org
+v2 link: https://lore.kernel.org/lkml/20200204025641.218376-1-senozhatsky@chromium.org/
+v1 link: https://lore.kernel.org/lkml/20191217032034.54897-1-senozhatsky@chromium.org/
+
+Series Intro
+========================================================================
+
+	This is a reworked version of the vb2 cache hints
+(V4L2_BUF_FLAG_NO_CACHE_INVALIDATE / V4L2_BUF_FLAG_NO_CACHE_CLEAN)
+support patch series which previsouly was developed by Sakari and
+Laurent [0].
+
+The patch set attempts to preserve the existing behvaiour - cache
+sync is performed in ->prepare() and ->finish() (unless the buffer
+is DMA exported). User space can request “default behavior” override
+with cache management hints, which are handled on a per-buffer basis
+and should be supplied with v4l2_buffer ->flags during buffer
+preparation. There are two possible hints:
+
+- V4L2_BUF_FLAG_NO_CACHE_INVALIDATE
+	No cache sync on ->finish()
+
+- V4L2_BUF_FLAG_NO_CACHE_CLEAN
+	No cache sync on ->prepare()
+
+In order to keep things on the safe side, we also require driver
+to explicitly state which of its queues (if any) support user space
+cache management hints (such queues should have ->allow_cache_hints
+bit set).
+
+The patch set also (to some extent) simplifies allocators' ->prepare()
+and ->finish() callbacks. Namely, we move cache management decision
+making to the upper - core - layer. For example, if, previously, we
+would have something like this
+
+	vb2_buffer_done()
+	  vb2_dc_finish()
+	    if (buf->db_attach)
+	      return;
+
+where each allocators' ->finish() callback would either bail
+out (DMA exported buffer, for instance) or sync, now that "bail
+out or sync" decision is made before we call into the allocator.
+
+Along with cache management hints, user space is also able to
+adjust queue's memory consistency attributes. Memory consistency
+attribute (dma_attrs) is per-queue, yet it plays its role on the
+allocator level, when we allocate buffers’ private memory (planes).
+For the time being, only one consistency attribute is supported:
+DMA_ATTR_NON_CONSISTENT.
+
+[0] https://www.mail-archive.com/linux-media@vger.kernel.org/msg112459.html
+
+Sergey Senozhatsky (13):
+  videobuf2: use explicit unsigned int in vb2_queue
+  videobuf2: add cache management members
+  videobuf2: handle V4L2 buffer cache flags
+  videobuf2: add V4L2_FLAG_MEMORY_NON_CONSISTENT flag
+  videobuf2: add queue memory consistency parameter
+  videobuf2: handle V4L2_FLAG_MEMORY_NON_CONSISTENT flag
+  videobuf2: factor out planes prepare/finish functions
+  videobuf2: do not sync caches when we are allowed not to
+  videobuf2: check ->synced flag in prepare() and finish()
+  videobuf2: add begin/end cpu_access callbacks to dma-contig
+  videobuf2: add begin/end cpu_access callbacks to dma-sg
+  videobuf2: don't test db_attach in dma-contig prepare and finish
+  media: vivid: add cache_hints module param
+
+ Documentation/admin-guide/media/vivid.rst     |   9 ++
+ .../userspace-api/media/v4l/buffer.rst        |  41 +++++-
+ .../media/v4l/vidioc-create-bufs.rst          |   7 +-
+ .../media/v4l/vidioc-reqbufs.rst              |  20 ++-
+ .../media/common/videobuf2/videobuf2-core.c   | 121 +++++++++++++-----
+ .../common/videobuf2/videobuf2-dma-contig.c   |  41 +++++-
+ .../media/common/videobuf2/videobuf2-dma-sg.c |  38 ++++--
+ .../media/common/videobuf2/videobuf2-v4l2.c   |  93 +++++++++++++-
+ drivers/media/dvb-core/dvb_vb2.c              |   2 +-
+ drivers/media/test-drivers/vivid/vivid-core.c |   9 ++
+ drivers/media/test-drivers/vivid/vivid-core.h |   1 +
+ .../media/test-drivers/vivid/vivid-meta-cap.c |   5 +
+ .../media/test-drivers/vivid/vivid-meta-out.c |   5 +
+ .../media/test-drivers/vivid/vivid-sdr-cap.c  |   7 +
+ .../test-drivers/vivid/vivid-touch-cap.c      |   5 +
+ .../media/test-drivers/vivid/vivid-vbi-cap.c  |   5 +
+ .../media/test-drivers/vivid/vivid-vbi-out.c  |   5 +
+ .../media/test-drivers/vivid/vivid-vid-cap.c  |   5 +
+ .../media/test-drivers/vivid/vivid-vid-out.c  |   5 +
+ drivers/media/v4l2-core/v4l2-compat-ioctl32.c |   9 +-
+ drivers/media/v4l2-core/v4l2-ioctl.c          |   5 +-
+ include/media/videobuf2-core.h                |  47 +++++--
+ include/uapi/linux/videodev2.h                |  13 +-
+ 23 files changed, 426 insertions(+), 72 deletions(-)
+
 -- 
-2.7.4
+2.26.2
 
