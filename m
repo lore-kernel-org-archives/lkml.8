@@ -2,169 +2,218 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8E8C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 07:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E26EFC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 07:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36E6F20700
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 07:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B74312075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 07:10:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rUq9ByqW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726577AbgDXHFT (ORCPT
+        id S1726557AbgDXHKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 03:05:19 -0400
-Received: from mail-m127108.qiye.163.com ([115.236.127.108]:3199 "EHLO
-        mail-m127108.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbgDXHFT (ORCPT
+        Fri, 24 Apr 2020 03:10:33 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:4799 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbgDXHKc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 03:05:19 -0400
-Received: from vivo.com (wm-13.qy.internal [127.0.0.1])
-        by mail-m127108.qiye.163.com (Hmail) with ESMTP id 879F78423A3;
-        Fri, 24 Apr 2020 15:05:10 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <AHIA-gAFCMi-wI-WAB9biKqO.3.1587711910539.Hmail.wenhu.wang@vivo.com>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     gregkh@linuxfoundation.org, arnd@arndb.de,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        oss@buserror.net, kernel@vivo.com, robh@kernel.org,
-        benh@kernel.crashing.org, paulus@samba.org,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2Myw1LzVdIHBvd2VycGM6IHN5c2Rldjogc3VwcG9ydCB1c2Vyc3BhY2UgYWNjZXNzIG9mIGZzbF84NXh4X3NyYW0=?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 58.251.74.226
-In-Reply-To: <0dfd17ca-d11e-9cf3-177e-bce0b8eace5c@c-s.fr>
+        Fri, 24 Apr 2020 03:10:32 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ea290720001>; Fri, 24 Apr 2020 00:08:34 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 24 Apr 2020 00:10:32 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 24 Apr 2020 00:10:32 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 Apr
+ 2020 07:10:32 +0000
+Received: from [10.26.73.231] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 Apr
+ 2020 07:10:29 +0000
+Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
+ for a long time
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        "Wolfram Sang" <wsa@the-dreams.de>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>
+CC:     <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200324191217.1829-1-digetx@gmail.com>
+ <20200324191217.1829-2-digetx@gmail.com>
+ <1e259e22-c300-663a-e537-18d854e0f478@nvidia.com>
+ <f59ba318-8e99-c486-fa4d-1ee28a7b203d@gmail.com>
+ <b01cec76-bb39-9fb5-8f6e-4023c075e6b3@gmail.com>
+ <8cd085e1-f9fd-6ec0-9f7a-d5463f176a63@nvidia.com>
+ <db1132ce-53a8-371c-98e0-cb7cd91d5c7d@gmail.com>
+ <fa344989-4cce-0d2c-dc93-4ca546823160@nvidia.com>
+ <bba0a93a-8ec4-eda6-97f3-fb2ab0b9b503@gmail.com>
+ <6f07e5c8-7916-7ea2-2fe7-d05f8f011471@nvidia.com>
+ <77a31b2f-f525-ba9e-f1ae-2b474465bde4@gmail.com>
+ <470b4de4-e98a-1bdc-049e-6259ad603507@nvidia.com>
+ <d2531fc1-b452-717d-af71-19497e14ef00@gmail.com>
+ <a5198024-7273-74c4-b4f4-3a29d042bc36@nvidia.com>
+ <f8fb1f7f-2497-033e-ff2c-c86c6caa9706@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <fd1ca178-1ea3-851f-20a6-10bf00453ce3@nvidia.com>
+Date:   Fri, 24 Apr 2020 08:10:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Received: from wenhu.wang@vivo.com( [58.251.74.226) ] by ajax-webmail ( [127.0.0.1] ) ; Fri, 24 Apr 2020 15:05:10 +0800 (GMT+08:00)
-From:   =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
-Date:   Fri, 24 Apr 2020 15:05:10 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VPQ0tLS0tLSkJLTEhPQllXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMT0tJTE9KSE9MN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
-        WUc6MzI6Vhw6PTg2ElYMMlYsOjlCGRIwCjRVSFVKTkNMTEpKQkpOTU9PVTMWGhIXVQweFRMOVQwa
-        FRw7DRINFFUYFBZFWVdZEgtZQVlOQ1VJTkpVTE9VSUlNWVdZCAFZQUpKS0lKNwY+
-X-HM-Tid: 0a71ab0122a5986ckuuu879f78423a3
+In-Reply-To: <f8fb1f7f-2497-033e-ff2c-c86c6caa9706@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587712115; bh=Vue2wSpWKstn9zp8TZY8tWYSPrb8qcAXPds/zrgMX3A=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=rUq9ByqWHrbIT8vZKHE3BWZXjB7b/gBRr9zQrjvZc6KYIgHNLUZWIWIp01BDAX6VD
+         ot9pXd7OpP74fC1qjrPZQrjcsC2Bu0QujWBGBeY/KCHlgL+4hFcn+Pauyxh9SGZig5
+         p8/5VDhBtSVXRJ0TIHMasHcxP0c+acBVrPXlfSBxm3d0Hi2gxym9yLU7JiT+i1DsCQ
+         eA/QIGbGEHRv40J5ATRCR5hmVAC4g3WWk8OSVG9fgbFjb74ajawnfCQCAdBrps19wl
+         okCE32wqG1rSqme1L3OCiePIxMT3wQ7P7IpnMPuqoik3JF6U4wlhSWNK9brKvJaqsK
+         Y/yRHxEP8RIqQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PkxlIDI0LzA0LzIwMjAgw6AgMDQ6NDUsIFdhbmcgV2VuaHUgYSDDqWNyaXTCoDoKPj4gTmV3IG1v
-ZHVsZSB3aGljaCByZWdpc3RlcnMgaXRzIG1lbW9yeSBhbGxvY2F0aW9uIGFuZCBmcmVlIEFQSXMg
-dG8gdGhlCj4+IHNyYW1fZHluYW1pYyBtb2R1bGUsIHdoaWNoIHdvdWxkIGNyZWF0ZSBhIGRldmlj
-ZSBvZiBzdHJ1Y3Qgc3JhbV9kZXZpY2UKPj4gdHlwZSB0byBhY3QgYXMgYW4gaW50ZXJmYWNlIGZv
-ciB1c2VyIGxldmVsIGFwcGxpY2F0aW9ucyB0byBhY2Nlc3MgdGhlCj4+IGJhY2tlbmQgaGFyZHdh
-cmUgZGV2aWNlLCBmc2xfODV4eF9jYWNoZV9zcmFtLCB3aGljaCBpcyBkcml2ZWQgYnkgdGhlCj4+
-IEZTTF84NVhYX0NBQ0hFX1NSQU0gbW9kdWxlLgo+PiAKPj4gU2lnbmVkLW9mZi1ieTogV2FuZyBX
-ZW5odSA8d2VuaHUud2FuZ0B2aXZvLmNvbT4KPj4gQ2M6IENocmlzdG9waGUgTGVyb3kgPGNocmlz
-dG9waGUubGVyb3lAYy1zLmZyPgo+PiBDYzogU2NvdHQgV29vZCA8b3NzQGJ1c2Vycm9yLm5ldD4K
-Pj4gQ2M6IE1pY2hhZWwgRWxsZXJtYW4gPG1wZUBlbGxlcm1hbi5pZC5hdT4KPj4gQ2M6IEdyZWcg
-S3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+Cj4+IENjOiBBcm5kIEJl
-cmdtYW5uIDxhcm5kQGFybmRiLmRlPgo+PiBDYzogbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5v
-cmcKPj4gLS0tCj4+ICAgLi4uL3Bvd2VycGMvaW5jbHVkZS9hc20vZnNsXzg1eHhfY2FjaGVfc3Jh
-bS5oIHwgIDQgKysKPj4gICBhcmNoL3Bvd2VycGMvcGxhdGZvcm1zLzg1eHgvS2NvbmZpZyAgICAg
-ICAgICAgfCAxMCArKysrKwo+PiAgIGFyY2gvcG93ZXJwYy9zeXNkZXYvTWFrZWZpbGUgICAgICAg
-ICAgICAgICAgICB8ICAxICsKPj4gICBhcmNoL3Bvd2VycGMvc3lzZGV2L2ZzbF84NXh4X2NhY2hl
-X2N0bHIuaCAgICAgfCAgNiArKysKPj4gICBhcmNoL3Bvd2VycGMvc3lzZGV2L2ZzbF84NXh4X2Nh
-Y2hlX3NyYW0uYyAgICAgfCAxMiArKysrKysKPj4gICBhcmNoL3Bvd2VycGMvc3lzZGV2L2ZzbF84
-NXh4X3NyYW1fdWFwaS5jICAgICAgfCAzOSArKysrKysrKysrKysrKysrKysrCj4+ICAgNiBmaWxl
-cyBjaGFuZ2VkLCA3MiBpbnNlcnRpb25zKCspCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gv
-cG93ZXJwYy9zeXNkZXYvZnNsXzg1eHhfc3JhbV91YXBpLmMKPgo+V2Ugc2hvdWxkbid0IGFkZCBt
-b3JlIHN0dWZmIGluIGFyY2gvcG93ZXJwYy9zeXNkZXYvCj4KPkVpdGhlciBpdCBpcyBkZWRpY2F0
-ZWQgdG8gODV4eCwgYW5kIGl0IHNob3VsZCBnbyBpbnRvIAo+YXJjaC9wb3dlcnBjL3BsYXRmb3Jt
-Lzg1eHgvICwgb3IgaXQgaXMgY29tbW9uIHRvIHNldmVyYWwgCj5wbGF0Zm9ybXMvYXJjaGl0ZWN0
-dXJlcyBhbmQgc2hvdWxkIGJlIG1vdmVkIHRvIGRyaXZlcnMvc29jL2ZzbC8KPgoKU3VyZSwgYWN0
-dWFsbHkgSSB0cmllZCB0byBmaW5kIGEgYmV0dGVyIHBsYWNlLCBidXQgZGlkIG5vdCByZWNvZ25p
-emUKdGhlIGRyaXZlci9zb2MuIFRoYW5rcywgYW5kIEkgd2lsbCBwdXQgZnNsXzg1eHhfc3JhbV91
-YXBpIHRoZXJlLgoKPj4gCj4+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvaW5jbHVkZS9hc20v
-ZnNsXzg1eHhfY2FjaGVfc3JhbS5oIGIvYXJjaC9wb3dlcnBjL2luY2x1ZGUvYXNtL2ZzbF84NXh4
-X2NhY2hlX3NyYW0uaAo+PiBpbmRleCAwMjM1YTA0NDdiYWEuLjk5Y2I3ZTIwMmMzOCAxMDA2NDQK
-Pj4gLS0tIGEvYXJjaC9wb3dlcnBjL2luY2x1ZGUvYXNtL2ZzbF84NXh4X2NhY2hlX3NyYW0uaAo+
-PiArKysgYi9hcmNoL3Bvd2VycGMvaW5jbHVkZS9hc20vZnNsXzg1eHhfY2FjaGVfc3JhbS5oCj4+
-IEBAIC0yNiw2ICsyNiwxMCBAQCBzdHJ1Y3QgbXBjODV4eF9jYWNoZV9zcmFtIHsKPj4gICAJdW5z
-aWduZWQgaW50IHNpemU7Cj4+ICAgCXJoX2luZm9fdCAqcmg7Cj4+ICAgCXNwaW5sb2NrX3QgbG9j
-azsKPj4gKwo+PiArI2lmZGVmIENPTkZJR19GU0xfODVYWF9TUkFNX1VBUEkKPj4gKwlzdHJ1Y3Qg
-ZGV2aWNlICpkZXY7Cj4+ICsjZW5kaWYKPj4gICB9Owo+PiAgIAo+PiAgIGV4dGVybiB2b2lkIG1w
-Yzg1eHhfY2FjaGVfc3JhbV9mcmVlKHZvaWQgKnB0cik7Cj4+IGRpZmYgLS1naXQgYS9hcmNoL3Bv
-d2VycGMvcGxhdGZvcm1zLzg1eHgvS2NvbmZpZyBiL2FyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvODV4
-eC9LY29uZmlnCj4+IGluZGV4IGZhM2QyOWRjYjU3ZS4uM2E2ZjZhZjk3M2ViIDEwMDY0NAo+PiAt
-LS0gYS9hcmNoL3Bvd2VycGMvcGxhdGZvcm1zLzg1eHgvS2NvbmZpZwo+PiArKysgYi9hcmNoL3Bv
-d2VycGMvcGxhdGZvcm1zLzg1eHgvS2NvbmZpZwo+PiBAQCAtMTYsNiArMTYsMTYgQEAgaWYgRlNM
-X1NPQ19CT09LRQo+PiAgIAo+PiAgIGlmIFBQQzMyCj4+ICAgCj4+ICtjb25maWcgRlNMXzg1WFhf
-U1JBTV9VQVBJCj4+ICsJdHJpc3RhdGUgIkZyZWVzY2FsZSBNUEM4NXh4IFNSQU0gVUFQSSBTdXBw
-b3J0Igo+PiArCWRlcGVuZHMgb24gRlNMX1NPQ19CT09LRSAmJiBTUkFNX0RZTkFNSUMKPgo+SXMg
-U1JBTV9EWU5BTUlDIHVzZWZ1bGwgb24gaXRzIG93biwgd2l0aG91dCBhIGRyaXZlciBsaWtlIHRo
-aXMgb25lID8gSXMgCj50aGF0IHdvcnRoIGFsbG93aW5nIHRpbnkgc2VsZWN0aW9uIG9mIGJvdGgg
-ZHJpdmVycyA/IFNob3VsZG4ndCBvbmUgb2YgCj50aGVtIGltcGx5IHRoZSBvdGhlciBvbmUgPwoK
-VHJ1ZWx5IHRoZSBtb2R1bGUgbGlrZSB0aGlzIGlzIHRoZSB0b3AgbGV2ZWwgc2VsZWN0aW9uLCBh
-bmQgU1JBTV9EWU5BTUlDCnNob3VsZCBiZSBzZWxlY3RlZCBieSBhbnkgY2FsbGVyIG1vZHVsZXMu
-IEFzIFNSQU1fRFlOQU1JQyBtYXkgYmUgdXNlZCBieQpvdGhlciBkcml2ZXJzKGluIHRoZSBmdXR1
-cmUsIGJ1dCBjdXJyZW50bHkgb25seSB1cyBoZXJlKSwgSSB0aGluayBtYWtlIGl0CnNlbGV0ZWQg
-YnkgdGhpcyBpcyBiZXR0ZXI/IChzaG93IGJlbG93KQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29j
-L2ZzbC9LY29uZmlnIGIvZHJpdmVycy9zb2MvZnNsL0tjb25maWcKaW5kZXggNGRmMzJiYzRjN2E2
-Li5jZWVlYmIyMmY2ZDMgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvc29jL2ZzbC9LY29uZmlnCisrKyBi
-L2RyaXZlcnMvc29jL2ZzbC9LY29uZmlnCkBAIC01MCw0ICs1MCwxNiBAQCBjb25maWcgRlNMX1JD
-UE0KIAkgIHRhc2tzIGFzc29jaWF0ZWQgd2l0aCBwb3dlciBtYW5hZ2VtZW50LCBzdWNoIGFzIHdh
-a2V1cCBzb3VyY2UgY29udHJvbC4KIAkgIE5vdGUgdGhhdCBjdXJyZW50bHkgdGhpcyBkcml2ZXIg
-d2lsbCBub3Qgc3VwcG9ydCBQb3dlclBDIGJhc2VkCiAJICBRb3JJUSBwcm9jZXNzb3IuCisKK2Nv
-bmZpZyBGU0xfODVYWF9TUkFNX1VBUEkKKwl0cmlzdGF0ZSAiRnJlZXNjYWxlIE1QQzg1eHggU1JB
-TSBVQVBJIFN1cHBvcnQiCisJZGVwZW5kcyBvbiBGU0xfU09DX0JPT0tFICYmIFBQQzMyCisJc2Vs
-ZWN0IEZTTF84NVhYX0NBQ0hFX1NSQU0KKwlzZWxlY3QgU1JBTV9EWU5BTUlDCisJaGVscAorCSAg
-VGhpcyByZWdpc3RlcnMgYSBkZXZpY2Ugb2Ygc3RydWN0IHNyYW1fZGV2aWNlIHR5cGUgd2hpY2gg
-d291bGQgYWN0IGFzCisJICBhbiBpbnRlcmZhY2UgZm9yIHVzZXIgbGV2ZWwgYXBwbGljYXRpb25z
-IHRvIGFjY2VzcyB0aGUgRnJlZXNjYWxlIDg1eHgKKwkgIENhY2hlLVNSQU0gbWVtb3J5IGR5bmFt
-aWNhbGx5LCBtZWFuaW5nIGFsbG9jYXRlIG9uIGRlbWFuZCBkeW5hbWljYWxseQorCSAgd2hpbGUg
-dGhleSBhcmUgcnVubmluZy4KKwogZW5kbWVudQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvZnNs
-L01ha2VmaWxlIGIvZHJpdmVycy9zb2MvZnNsL01ha2VmaWxlCmluZGV4IDkwNmYxY2Q4YWYwMS4u
-NzE2ZTM4Zjc1NzM1IDEwMDY0NAotLS0gYS9kcml2ZXJzL3NvYy9mc2wvTWFrZWZpbGUKKysrIGIv
-ZHJpdmVycy9zb2MvZnNsL01ha2VmaWxlCkBAIC0xMCwzICsxMCw0IEBAIG9iai0kKENPTkZJR19G
-U0xfUkNQTSkJCQkrPSByY3BtLm8KIG9iai0kKENPTkZJR19GU0xfR1VUUykJCQkrPSBndXRzLm8K
-IG9iai0kKENPTkZJR19GU0xfTUNfRFBJTykgCQkrPSBkcGlvLwogb2JqLSQoQ09ORklHX0RQQUEy
-X0NPTlNPTEUpCQkrPSBkcGFhMi1jb25zb2xlLm8KK29iai0kKENPTkZJR19GU0xfODVYWF9TUkFN
-X1VBUEkpCSs9IGZzbF84NXh4X3NyYW1fdWFwaS5vCgo+PiAgIAo+PiArI2lmZGVmIENPTkZJR19G
-U0xfODVYWF9TUkFNX1VBUEkKPj4gK2V4dGVybiBzdHJ1Y3QgbXBjODV4eF9jYWNoZV9zcmFtICpt
-cGM4NXh4X2dldF9jYWNoZV9zcmFtKHZvaWQpOwo+Cj4nZXh0ZXJuJyBrZXl3b3JrIGlzIG1lYW5p
-bmdsZXNzIGhlcmUsIHJlbW92ZSBpdC4KPgoKSSB3aWxsIHJlbW92ZSBpdCBpbiBwYXRjaCB2NC4K
-Cj4+ICsjZW5kaWYKPj4gKwo+PiAgIGV4dGVybiBpbnQgaW5zdGFudGlhdGVfY2FjaGVfc3JhbShz
-dHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpkZXYsCj4+ICAgCQlzdHJ1Y3Qgc3JhbV9wYXJhbWV0ZXJz
-IHNyYW1fcGFyYW1zKTsKPj4gICBleHRlcm4gdm9pZCByZW1vdmVfY2FjaGVfc3JhbShzdHJ1Y3Qg
-cGxhdGZvcm1fZGV2aWNlICpkZXYpOwo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL3N5c2Rl
-di9mc2xfODV4eF9jYWNoZV9zcmFtLmMgYi9hcmNoL3Bvd2VycGMvc3lzZGV2L2ZzbF84NXh4X2Nh
-Y2hlX3NyYW0uYwo+PiBpbmRleCAzZGU1YWM4MzgyYzAuLjAxNTZlYTYzYTNhMiAxMDA2NDQKPj4g
-LS0tIGEvYXJjaC9wb3dlcnBjL3N5c2Rldi9mc2xfODV4eF9jYWNoZV9zcmFtLmMKPj4gKysrIGIv
-YXJjaC9wb3dlcnBjL3N5c2Rldi9mc2xfODV4eF9jYWNoZV9zcmFtLmMKPj4gQEAgLTIzLDYgKzIz
-LDE0IEBACj4+ICAgCj4+ICAgc3RydWN0IG1wYzg1eHhfY2FjaGVfc3JhbSAqY2FjaGVfc3JhbTsK
-Pj4gICAKPj4gKwo+PiArI2lmZGVmIENPTkZJR19GU0xfODVYWF9TUkFNX1VBUEkKPj4gK3N0cnVj
-dCBtcGM4NXh4X2NhY2hlX3NyYW0gKm1wYzg1eHhfZ2V0X2NhY2hlX3NyYW0odm9pZCkKPj4gK3sK
-Pj4gKwlyZXR1cm4gY2FjaGVfc3JhbTsKPj4gK30KPj4gKyNlbmRpZgo+Cj5UaGlzIGZ1bmN0aW9u
-IGlzIG5vdCB3b3J0aCB0aGUgbWVzcyBvZiBhbiAjaWZkZWYgaW4gYSAuYyBmaWxlLgo+Y2FjaGVf
-c3JhbSBpcyBhbHJlYWR5IGdsb2JhbHkgdmlzaWJsZSwgc28gdGhpcyBmdW5jdGlvbiBzaG91bGQg
-Z28gaW4gCj5mc2xfODV4eF9jYWNoZV9jdGxyLmggYXMgYSAnc3RhdGljIGlubGluZScKPgoKWWVz
-LCBhbmQgSSB3aWxsIGNoYW5nZSBpdCBsaWtlIHRoaXMsIHdpdGggYW4gZXh0ZXJuIG9mIGNhY2hl
-X3NyYW0uCgogI2RlZmluZSBMMkNSX1NSQU1fWkVSTwkJMHgwMDAwMDAwMAkvKiBMMlNSQU0gemVy
-byBzaXplICovCkBAIC04MSw2ICs4MywxNSBAQCBzdHJ1Y3Qgc3JhbV9wYXJhbWV0ZXJzIHsKIAlw
-aHlzX2FkZHJfdCBzcmFtX29mZnNldDsKIH07CiAKKyNpZmRlZiBDT05GSUdfRlNMXzg1WFhfU1JB
-TV9VQVBJCitleHRlcm4gc3RydWN0IG1wYzg1eHhfY2FjaGVfc3JhbSAqY2FjaGVfc3JhbTsKKwor
-c3RhdGljIGlubGluZSBzdHJ1Y3QgbXBjODV4eF9jYWNoZV9zcmFtICptcGM4NXh4X2dldF9jYWNo
-ZV9zcmFtKHZvaWQpCit7CisJcmV0dXJuIGNhY2hlX3NyYW07Cit9CisjZW5kaWYKKwogZXh0ZXJu
-IGludCBpbnN0YW50aWF0ZV9jYWNoZV9zcmFtKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKmRldiwK
-Cj4+ICsKPj4gICB2b2lkICptcGM4NXh4X2NhY2hlX3NyYW1fYWxsb2ModW5zaWduZWQgaW50IHNp
-emUsCj4+ICAgCQkJCXBoeXNfYWRkcl90ICpwaHlzLCB1bnNpZ25lZCBpbnQgYWxpZ24pCj4+ICAg
-ewo+PiBAQCAtMTE1LDYgKzEyMywxMCBAQCBpbnQgaW5zdGFudGlhdGVfY2FjaGVfc3JhbShzdHJ1
-Y3QgcGxhdGZvcm1fZGV2aWNlICpkZXYsCj4+ICAgCXJoX2F0dGFjaF9yZWdpb24oY2FjaGVfc3Jh
-bS0+cmgsIDAsIGNhY2hlX3NyYW0tPnNpemUpOwo+PiAgIAlzcGluX2xvY2tfaW5pdCgmY2FjaGVf
-c3JhbS0+bG9jayk7Cj4+ICAgCj4+ICsjaWZkZWYgQ09ORklHX0ZTTF84NVhYX1NSQU1fVUFQSQo+
-PiArCWNhY2hlX3NyYW0tPmRldiA9ICZkZXYtPmRldjsKPj4gKyNlbmRpZgo+Cj4JQ2FuIHdlIGF2
-b2lkIHRoZSAjaWZkZWYgaW4gLmMgZmlsZSA/IChzZWUgCj5odHRwczovL3d3dy5rZXJuZWwub3Jn
-L2RvYy9odG1sL2xhdGVzdC9wcm9jZXNzL2NvZGluZy1zdHlsZS5odG1sI2NvbmRpdGlvbmFsLWNv
-bXBpbGF0aW9uKQo+CgpEZWZpbml0ZWx5LCBhbmQgSSB3aWxsIGNoYW5nZSBpdCBhcyBiZWxvdyBp
-biBwYXRjaCB2NDoKCisJaWYgKElTX0VOQUJMRUQoQ09ORklHX0ZTTF84NVhYX1NSQU1fVUFQSSkp
-CisJCWNhY2hlX3NyYW0tPmRldiA9ICZkZXYtPmRldjsKKwogCWRldl9pbmZvKCZkZXYtPmRldiwg
-IltiYXNlOjB4JWxseCwgc2l6ZToweCV4XSBjb25maWd1cmVkIGFuZCBsb2FkZWRcbiIsCgpUaGFu
-a3MsIGZvciB5b3VyIHN1Z2dlc3Rpb25zLCBhcyB0aGVzZSBhcmUgbWlub3IgbW9kaWZpY2F0aW9u
-cywKSSB3aWxsIHNlbmQgYSBuZXcgcGF0Y2ggc2VyaWVzIHY0IHNvb24uCgpSZWdhcmRzLApXZW5o
-dQ0KDQo=
+
+On 23/04/2020 17:33, Dmitry Osipenko wrote:
+> 23.04.2020 13:56, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>
+>> On 22/04/2020 15:07, Dmitry Osipenko wrote:
+>>
+>> ...
+>>
+>>>> So I think that part of the problem already existed prior to these
+>>>> patches. Without your patches I see ...
+>>>>
+>>>> [   59.543528] tegra-i2c 7000d000.i2c: i2c transfer timed out
+>>>
+>>> Does this I2C timeout happen with my patches? Could you please post ful=
+l
+>>> logs of an older and the recent kernel versions?
+>>
+>> I believe that it does, but I need to check.
+>>
+>>>> [   59.549036] vdd_sata,avdd_plle: failed to disable
+>>>>
+>>>> [   59.553778] Failed to disable avdd-plle: -110
+>>>>
+>>>> [   59.558150] tegra-pcie 3000.pcie: failed to disable regulators: -11=
+0
+>>>>
+>>>>
+>>>> However, now with your patches the i2c is failing to resume and this
+>>>> breaks system suspend completely for Tegra30. So far this is the only
+>>>> board that appears to break.
+>>>>
+>>>> So the above issue needs to be fixed and I will chat to Thierry about =
+this.
+>>>
+>>> Okay
+>>
+>> So I have been looking at this some more and this starting to all look a
+>> bit of a mess :-(
+>>
+>> Firstly, the Tegra PCI driver suspends late (noirq) as we know. The PCI
+>> driver will warn if it cannot disable the regulators when suspending but
+>> does not actually fail suspend. So this warning is just indicating that
+>> we were unable to disable the regulators.
+>>
+>> Now I don't see that we can ever disable the PCI regulators currently
+>> when entering suspend because ...
+>>
+>> 1. We are in the noirq phase and so we will not get the completion
+>>    interrupt for the I2C transfer. I know that you recently added the
+>>    atomic I2C transfer support, but we can get the regulator framework
+>>    to use this (I have not looked in much detail so far).
+>=20
+> That's not good :) I didn't realize that *all* interrupts of every
+> device are disabled before .noirq is invoked. It appeared to me that the
+> IRQs disabling and .noirq invocation is performed for the drivers one
+> after another, but now I see that it's not true.
+>=20
+> https://elixir.bootlin.com/linux/v5.7-rc2/source/drivers/base/power/main.=
+c#L1446
+>=20
+>> 2. Even if the regulator framework supported atomic I2C transfers, we
+>>    also have the problem that the I2C controller could be runtime-
+>>    suspended and pm_runtime_get_sync() will not work during during this
+>>    phase to resume it correctly. This is a problem that needs to be
+>>    fixed indeed!
+>=20
+> Could you please clarify why pm_runtime_get_sync() can't be used by the
+> I2C driver's in NOIRQ phase?
+
+Yes take a look at commit 1e2ef05bb8cf ("PM: Limit race conditions
+between runtime PM and system sleep (v2)").
+
+>> 3. Then we also have the possible dependency on the DMA driver that is
+>>    suspended during the noirq phase.
+>=20
+> Yes, this is correct.
+>=20
+> Again, some regulator drivers may do something on suspend too, although
+> looks like the current upstream Tegra devices are not affected by this
+> potential problem.
+>=20
+>> It could be argued that if the PCI regulators are never turned off
+>> (currently) then we should not even bother and this will likely resolve
+>> this for now. However, really we should try to fix that correctly.
+>=20
+> Yes, keeping PCI regulators always-enabled should be a good immediate
+> solution.
+
+I was thinking about that, and I am not sure it is. I don't think that
+the failure to send the I2C command should break suspend.
+
+> Also, the RPM's system suspend/resume needs to fixed for the pci-tegra
+> driver, like I already suggested before.
+
+Yes but I don't think that is the cause of the issue in this particular
+case.
+
+>> What I still don't understand is why your patch breaks resume. Even if
+>> the I2C transfer fails, and is deemed harmless by the client driver, we
+>> should still be able to suspend and resume correctly.
+>=20
+> If DMA is getting synchronized after DMA driver being suspended, then it
+> could be a problem.
+
+So I confirmed that DMA is not the issue in this case. I tested this by
+ensuring that DMA is never used. However, it is a potential problem
+indeed.
+
+> Could you please try to apply this hunk and see if it makes any
+> difference (I'll probably make it as proper patch):
+
+Per my tests, I don't believe that it will as disabling DMA does not
+resolve the problem.
+
+> It also could be that there is more than the suspend ordering problem,
+> but for now it is hard to tell without having a detailed log which
+> includes I2C/DMA/RPM traces.
+
+I have taken a look and I don't see any issues with ordering. I2C is
+suspended after PCI. This did not change.
+
+Cheers
+Jon
+
+--=20
+nvpublic
