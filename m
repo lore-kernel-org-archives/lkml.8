@@ -2,284 +2,124 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 795B3C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3B6C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D61D20728
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:22:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AAFC20767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:24:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eKG3Hdym"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728282AbgDXPWZ (ORCPT
+        id S1727089AbgDXPYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:22:25 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:44368 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727088AbgDXPWY (ORCPT
+        Fri, 24 Apr 2020 11:24:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51072 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726717AbgDXPYd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:22:24 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03OFCxLN018030;
-        Fri, 24 Apr 2020 11:22:21 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 30fxf6ej79-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Apr 2020 11:22:21 -0400
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 03OFMKvn008455
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Fri, 24 Apr 2020 11:22:20 -0400
-Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
- SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 24 Apr 2020 08:22:18 -0700
-Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
- SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 24 Apr 2020 08:22:18 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Fri, 24 Apr 2020 08:22:18 -0700
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03OFMG4P027806;
-        Fri, 24 Apr 2020 11:22:17 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH] iio: buffer: extend short-hand use for 'indio_dev->buffer'
-Date:   Fri, 24 Apr 2020 18:22:43 +0300
-Message-ID: <20200424152243.39410-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 24 Apr 2020 11:24:33 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38707C09B046
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 08:24:33 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id d17so4793089pgo.0
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 08:24:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=E79cAaOa1jAIKhm0eolCD7xppP0uJP83S6lzC3NSZOM=;
+        b=eKG3Hdym6dX90IJpRfeNbZD8YzKxLoNBu2/h/DqaezP+VwDgYrP5R3MNcJFeeEziJ9
+         pbkD/KmG+XohqARa9H4E7MJgMbbRakOiUvsmukaooDORSQDMBELfBtf2eb/MzIqLaV1l
+         w3andTI7sxJFmh76itc+2YmgOdGpAVx/dXwAY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=E79cAaOa1jAIKhm0eolCD7xppP0uJP83S6lzC3NSZOM=;
+        b=Np5LG8KTzKXIuvwHyuRXcmw0jpbnhAQdVmIWXeMgUnmwykCp6NWhux1uHuOntP10D4
+         ZZtzrKXTZSlf5LjHm2jzsfOUB4AJNawLiYcolYe078l/aL25pe1dIaq5qj67mHe7xZZl
+         SfZ8xj1CX1pqwrKFOg9wOvurzMs6bnzYa/DmDxAaCRVvhR4x4v13zLgX7H25tWHBIjfJ
+         D+MpaDkqDeNIVtLhNr9NZXNZ1cf29Z7Y9GM6IH3kSl2G1lgNlFdeD8nCXh18U/FP4lbx
+         xwx1y7cZasHfEfOPEPz35UcHEzX/PI8PNzhC6LQp5Sda9jyx0X1sUEXkhEQuuxES9i8M
+         dkPw==
+X-Gm-Message-State: AGi0PuZIScPeRcN6dh9KO1tU71nVk74NfIBlnB6+N1aILMjFwPl8izer
+        PwUA1I200KEvPF+om7ohEtJJXA==
+X-Google-Smtp-Source: APiQypKGW/K2soLIs9eAVY1OOgfXmUJJs+i18+vaEDRglxT5OIHxLWEnESyU5v5FNLGVig4bU6fu5Q==
+X-Received: by 2002:a63:1854:: with SMTP id 20mr10113175pgy.257.1587741872728;
+        Fri, 24 Apr 2020 08:24:32 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id r128sm6390567pfc.141.2020.04.24.08.24.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Apr 2020 08:24:31 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 08:24:30 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: remaining flexible-array conversions
+Message-ID: <202004240824.F042AFFBF@keescook>
+References: <6342c465-e34b-3e18-cc31-1d989926aebd@embeddedor.com>
+ <20200424034704.GA12320@ubuntu-s3-xlarge-x86>
+ <20200424121553.GE26002@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-24_08:2020-04-24,2020-04-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- priorityscore=1501 spamscore=0 lowpriorityscore=0 clxscore=1015 mlxscore=0
- suspectscore=2 bulkscore=0 impostorscore=0 mlxlogscore=866 phishscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004240121
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200424121553.GE26002@ziepe.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change is both cosmetic and a prequel to adding support for attaching
-multiple buffers per IIO device.
+On Fri, Apr 24, 2020 at 09:15:53AM -0300, Jason Gunthorpe wrote:
+> On Thu, Apr 23, 2020 at 08:47:04PM -0700, Nathan Chancellor wrote:
+> > Hi Gustavo,
+> > 
+> > On Wed, Apr 22, 2020 at 01:26:02PM -0500, Gustavo A. R. Silva wrote:
+> > > Hi Linus,
+> > > 
+> > > Just wanted to ask you if you would agree on pulling the remaining
+> > > flexible-array conversions all at once, after they bake for a couple
+> > > of weeks in linux-next[1]
+> > > 
+> > > This is not a disruptive change and there are no code generation
+> > > differences. So, I think it would make better use of everyone's time
+> > > if you pull this treewide patch[2] from my tree (after sending you a
+> > > proper pull-request, of course) sometime in the next couple of weeks.
+> > > 
+> > > Notice that the treewide patch I mention here has been successfully
+> > > built (on top of v5.7-rc1) for multiple architectures (arm, arm64,
+> > > sparc, powerpc, ia64, s390, i386, nios2, c6x, xtensa, openrisc, mips,
+> > > parisc, x86_64, riscv, sh, sparc64) and 82 different configurations
+> > > with the help of the 0-day CI guys[3].
+> > > 
+> > > What do you think?
+> > > 
+> > > [1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=d496496793ff69c4a6b1262a0001eb5cd0a56544
+> > > [2] https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/commit/?h=for-next/kspp&id=d783301058f3d3605f9ad34f0192692ef572d663
+> > > [3] https://github.com/GustavoARSilva/linux-hardening/blob/master/cii/kernel-ci/kspp-fam0-20200420.md
+> > > 
+> > > Thanks
+> > 
+> > That patch in -next appears to introduce some warnings with clang when
+> > CONFIG_UAPI_HEADER_TEST is enabled (allyesconfig/allmodconfig exposed it
+> > for us with KernelCI [1]):
+> 
+> Indeed, I've tried these conversions before and run into problems like
+> this, and more. Particularly in userspace these structs also get
+> embedded in other structs and the warnings explode.
+> 
+> Please drop changes to ib_user_verbs.h from your series
 
-The IIO buffer sysfs attrs are mostly designed to support only one attached
-buffer, and in order to support more, we need to centralize [in each attr
-function] the buffer which is being accessed.
+We might need to make the UAPI changes separately (or not at all).
 
-This also makes it a bit more uniform, as in some functions there is a
-short-hand 'buffer' variable and at the same time the 'indio_dev->buffer'
-is still access directly.
-
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/iio/industrialio-buffer.c | 61 +++++++++++++++++--------------
- 1 file changed, 34 insertions(+), 27 deletions(-)
-
-diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
-index 221157136af6..eae39eaf49af 100644
---- a/drivers/iio/industrialio-buffer.c
-+++ b/drivers/iio/industrialio-buffer.c
-@@ -189,10 +189,12 @@ __poll_t iio_buffer_poll(struct file *filp,
-  */
- void iio_buffer_wakeup_poll(struct iio_dev *indio_dev)
- {
--	if (!indio_dev->buffer)
-+	struct iio_buffer *buffer = indio_dev->buffer;
-+
-+	if (!buffer)
- 		return;
- 
--	wake_up(&indio_dev->buffer->pollq);
-+	wake_up(&buffer->pollq);
- }
- 
- void iio_buffer_init(struct iio_buffer *buffer)
-@@ -262,10 +264,11 @@ static ssize_t iio_scan_el_show(struct device *dev,
- {
- 	int ret;
- 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct iio_buffer *buffer = indio_dev->buffer;
- 
- 	/* Ensure ret is 0 or 1. */
- 	ret = !!test_bit(to_iio_dev_attr(attr)->address,
--		       indio_dev->buffer->scan_mask);
-+		       buffer->scan_mask);
- 
- 	return sprintf(buf, "%d\n", ret);
- }
-@@ -381,7 +384,7 @@ static ssize_t iio_scan_el_store(struct device *dev,
- 	if (ret < 0)
- 		return ret;
- 	mutex_lock(&indio_dev->mlock);
--	if (iio_buffer_is_active(indio_dev->buffer)) {
-+	if (iio_buffer_is_active(buffer)) {
- 		ret = -EBUSY;
- 		goto error_ret;
- 	}
-@@ -410,7 +413,9 @@ static ssize_t iio_scan_el_ts_show(struct device *dev,
- 				   char *buf)
- {
- 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
--	return sprintf(buf, "%d\n", indio_dev->buffer->scan_timestamp);
-+	struct iio_buffer *buffer = indio_dev->buffer;
-+
-+	return sprintf(buf, "%d\n", buffer->scan_timestamp);
- }
- 
- static ssize_t iio_scan_el_ts_store(struct device *dev,
-@@ -420,6 +425,7 @@ static ssize_t iio_scan_el_ts_store(struct device *dev,
- {
- 	int ret;
- 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct iio_buffer *buffer = indio_dev->buffer;
- 	bool state;
- 
- 	ret = strtobool(buf, &state);
-@@ -427,11 +433,11 @@ static ssize_t iio_scan_el_ts_store(struct device *dev,
- 		return ret;
- 
- 	mutex_lock(&indio_dev->mlock);
--	if (iio_buffer_is_active(indio_dev->buffer)) {
-+	if (iio_buffer_is_active(buffer)) {
- 		ret = -EBUSY;
- 		goto error_ret;
- 	}
--	indio_dev->buffer->scan_timestamp = state;
-+	buffer->scan_timestamp = state;
- error_ret:
- 	mutex_unlock(&indio_dev->mlock);
- 
-@@ -439,10 +445,10 @@ static ssize_t iio_scan_el_ts_store(struct device *dev,
- }
- 
- static int iio_buffer_add_channel_sysfs(struct iio_dev *indio_dev,
-+					struct iio_buffer *buffer,
- 					const struct iio_chan_spec *chan)
- {
- 	int ret, attrcount = 0;
--	struct iio_buffer *buffer = indio_dev->buffer;
- 
- 	ret = __iio_add_chan_devattr("index",
- 				     chan,
-@@ -518,7 +524,7 @@ static ssize_t iio_buffer_write_length(struct device *dev,
- 		return len;
- 
- 	mutex_lock(&indio_dev->mlock);
--	if (iio_buffer_is_active(indio_dev->buffer)) {
-+	if (iio_buffer_is_active(buffer)) {
- 		ret = -EBUSY;
- 	} else {
- 		buffer->access->set_length(buffer, val);
-@@ -539,7 +545,9 @@ static ssize_t iio_buffer_show_enable(struct device *dev,
- 				      char *buf)
- {
- 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
--	return sprintf(buf, "%d\n", iio_buffer_is_active(indio_dev->buffer));
-+	struct iio_buffer *buffer = indio_dev->buffer;
-+
-+	return sprintf(buf, "%d\n", iio_buffer_is_active(buffer));
- }
- 
- static unsigned int iio_storage_bytes_for_si(struct iio_dev *indio_dev,
-@@ -1129,6 +1137,7 @@ static ssize_t iio_buffer_store_enable(struct device *dev,
- 	int ret;
- 	bool requested_state;
- 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct iio_buffer *buffer = indio_dev->buffer;
- 	bool inlist;
- 
- 	ret = strtobool(buf, &requested_state);
-@@ -1138,17 +1147,15 @@ static ssize_t iio_buffer_store_enable(struct device *dev,
- 	mutex_lock(&indio_dev->mlock);
- 
- 	/* Find out if it is in the list */
--	inlist = iio_buffer_is_active(indio_dev->buffer);
-+	inlist = iio_buffer_is_active(buffer);
- 	/* Already in desired state */
- 	if (inlist == requested_state)
- 		goto done;
- 
- 	if (requested_state)
--		ret = __iio_update_buffers(indio_dev,
--					 indio_dev->buffer, NULL);
-+		ret = __iio_update_buffers(indio_dev, buffer, NULL);
- 	else
--		ret = __iio_update_buffers(indio_dev,
--					 NULL, indio_dev->buffer);
-+		ret = __iio_update_buffers(indio_dev, NULL, buffer);
- 
- done:
- 	mutex_unlock(&indio_dev->mlock);
-@@ -1190,7 +1197,7 @@ static ssize_t iio_buffer_store_watermark(struct device *dev,
- 		goto out;
- 	}
- 
--	if (iio_buffer_is_active(indio_dev->buffer)) {
-+	if (iio_buffer_is_active(buffer)) {
- 		ret = -EBUSY;
- 		goto out;
- 	}
-@@ -1207,11 +1214,9 @@ static ssize_t iio_dma_show_data_available(struct device *dev,
- 						char *buf)
- {
- 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
--	size_t bytes;
--
--	bytes = iio_buffer_data_available(indio_dev->buffer);
-+	struct iio_buffer *buffer = indio_dev->buffer;
- 
--	return sprintf(buf, "%zu\n", bytes);
-+	return sprintf(buf, "%zu\n", iio_buffer_data_available(buffer));
- }
- 
- static DEVICE_ATTR(length, S_IRUGO | S_IWUSR, iio_buffer_read_length,
-@@ -1292,7 +1297,7 @@ int iio_buffer_alloc_sysfs_and_mask(struct iio_dev *indio_dev)
- 			if (channels[i].scan_index < 0)
- 				continue;
- 
--			ret = iio_buffer_add_channel_sysfs(indio_dev,
-+			ret = iio_buffer_add_channel_sysfs(indio_dev, buffer,
- 							 &channels[i]);
- 			if (ret < 0)
- 				goto error_cleanup_dynamic;
-@@ -1332,20 +1337,22 @@ int iio_buffer_alloc_sysfs_and_mask(struct iio_dev *indio_dev)
- 	bitmap_free(buffer->scan_mask);
- error_cleanup_dynamic:
- 	iio_free_chan_devattr_list(&buffer->scan_el_dev_attr_list);
--	kfree(indio_dev->buffer->buffer_group.attrs);
-+	kfree(buffer->buffer_group.attrs);
- 
- 	return ret;
- }
- 
- void iio_buffer_free_sysfs_and_mask(struct iio_dev *indio_dev)
- {
--	if (!indio_dev->buffer)
-+	struct iio_buffer *buffer = indio_dev->buffer;
-+
-+	if (!buffer)
- 		return;
- 
--	bitmap_free(indio_dev->buffer->scan_mask);
--	kfree(indio_dev->buffer->buffer_group.attrs);
--	kfree(indio_dev->buffer->scan_el_group.attrs);
--	iio_free_chan_devattr_list(&indio_dev->buffer->scan_el_dev_attr_list);
-+	bitmap_free(buffer->scan_mask);
-+	kfree(buffer->buffer_group.attrs);
-+	kfree(buffer->scan_el_group.attrs);
-+	iio_free_chan_devattr_list(&buffer->scan_el_dev_attr_list);
- }
- 
- /**
 -- 
-2.17.1
-
+Kees Cook
