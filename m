@@ -2,146 +2,141 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE87C55191
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BE6C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBFB92071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 862C52071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:04:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbgDXKDJ (ORCPT
+        id S1726890AbgDXKEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 06:03:09 -0400
-Received: from sauhun.de ([88.99.104.3]:45848 "EHLO pokefinder.org"
+        Fri, 24 Apr 2020 06:04:23 -0400
+Received: from mga18.intel.com ([134.134.136.126]:16160 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726289AbgDXKDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 06:03:08 -0400
-Received: from localhost (p5486CE62.dip0.t-ipconnect.de [84.134.206.98])
-        by pokefinder.org (Postfix) with ESMTPSA id A16892C1FE8;
-        Fri, 24 Apr 2020 12:03:07 +0200 (CEST)
-Date:   Fri, 24 Apr 2020 12:03:07 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     =?utf-8?B?QmrDtnJuIEFyZMO2?= <bjorn.ardo@axis.com>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        patrick@stwcx.xyz, kernel@axis.com
-Subject: Re: [PATCHv2] i2c: slave-eeprom: Make it possible to pre-load eeprom
- data
-Message-ID: <20200424100307.GB1959@kunai>
-References: <20200424090443.26316-1-bjorn.ardo@axis.com>
+        id S1726489AbgDXKEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 06:04:23 -0400
+IronPort-SDR: lQNevgnSAYdpCRG7u5HvZw6CJRI9+B4RSG5cUKXCutorunxqVf/6ShU8VIIbDlLaLXpxuW+5Ks
+ +Z8u5G8iaR9g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2020 03:04:22 -0700
+IronPort-SDR: 0rZ8bHp+me5uUBc2xp4wacOWeGz9KMvj9xxyBNfUJ9cPDNC6hHi/MaFgNt6E34vFpUvmg9UlRC
+ +YWwO73fwrWQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,311,1583222400"; 
+   d="scan'208";a="366299723"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 24 Apr 2020 03:04:15 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 24 Apr 2020 13:04:15 +0300
+Date:   Fri, 24 Apr 2020 13:04:15 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Calvin Johnson <calvin.johnson@oss.nxp.com>
+Cc:     linux.cj@gmail.com, Jeremy Linton <jeremy.linton@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        linux-acpi@vger.kernel.org,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Varun Sethi <V.Sethi@nxp.com>, Marcin Wojtas <mw@semihalf.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [net-next PATCH v1 1/2] device property: Introduce
+ fwnode_phy_find_device()
+Message-ID: <20200424100415.GA1575367@kuha.fi.intel.com>
+References: <20200424031617.24033-1-calvin.johnson@oss.nxp.com>
+ <20200424031617.24033-2-calvin.johnson@oss.nxp.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mxv5cy4qt+RJ9ypb"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200424090443.26316-1-bjorn.ardo@axis.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200424031617.24033-2-calvin.johnson@oss.nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---mxv5cy4qt+RJ9ypb
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Apr 24, 2020 at 11:04:43AM +0200, Bj=C3=B6rn Ard=C3=B6 wrote:
-> If the slave eeprom has a "firmware-name" in devicetree, then
-> pre-load the data in the eeprom with this file. Otherwise we
-> init the eeprom with 0xFF.
->=20
-> Signed-off-by: Bj=C3=B6rn Ard=C3=B6 <bjorn.ardo@axis.com>
-
-I like it a lot, thanks! Maybe we could add a SoB from Patrick for his
-0xff-suggestion (but keeping you as the patch author).
-
-Is this okay for everyone?
-
+On Fri, Apr 24, 2020 at 08:46:16AM +0530, Calvin Johnson wrote:
+> Define fwnode_phy_find_device() to iterate an mdiobus and find the
+> phy device of the provided phy fwnode.
+> 
+> Signed-off-by: Calvin Johnson <calvin.johnson@oss.nxp.com>
 > ---
->  drivers/i2c/i2c-slave-eeprom.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->=20
-> diff --git a/drivers/i2c/i2c-slave-eeprom.c b/drivers/i2c/i2c-slave-eepro=
-m.c
-> index cb415b10642f..c846c96c25c9 100644
-> --- a/drivers/i2c/i2c-slave-eeprom.c
-> +++ b/drivers/i2c/i2c-slave-eeprom.c
-> @@ -18,6 +18,7 @@
->   */
-> =20
->  #include <linux/bitfield.h>
-> +#include <linux/firmware.h>
->  #include <linux/i2c.h>
->  #include <linux/init.h>
->  #include <linux/module.h>
-> @@ -120,6 +121,26 @@ static ssize_t i2c_slave_eeprom_bin_write(struct fil=
-e *filp, struct kobject *kob
->  	return count;
+> 
+>  drivers/base/property.c  | 41 ++++++++++++++++++++++++++++++++++++++++
+>  include/linux/property.h |  5 +++++
+>  2 files changed, 46 insertions(+)
+> 
+> diff --git a/drivers/base/property.c b/drivers/base/property.c
+> index 5f35c0ccf5e0..7c0c14c800b7 100644
+> --- a/drivers/base/property.c
+> +++ b/drivers/base/property.c
+> @@ -870,6 +870,47 @@ int device_get_phy_mode(struct device *dev)
 >  }
-> =20
-> +static int i2c_slave_init_eeprom_data(struct eeprom_data *eeprom, struct=
- i2c_client *client,
-> +					 unsigned int size)
+>  EXPORT_SYMBOL_GPL(device_get_phy_mode);
+>  
+> +/**
+> + * fwnode_phy_find_device - Give a phy fwnode to find the corresponding
+> + * phy_device on the mdiobus.
+> + * @phy_fwnode: Pointer to the phy's fwnode.
+> + *
+> + * If successful, returns a pointer to the phy_device with the embedded
+> + * struct device refcount incremented by one, or NULL on failure.
+> + */
+> +struct phy_device *fwnode_phy_find_device(struct fwnode_handle *phy_fwnode)
 > +{
-> +	const struct firmware *fw;
-> +	const char *eeprom_data;
-> +	int error =3D device_property_read_string(&client->dev, "firmware-name"=
-, &eeprom_data);
+> +	struct device *d;
+> +	struct mdio_device *mdiodev;
 > +
-> +	if (!error) {
-> +		int ret =3D request_firmware_into_buf(&fw, eeprom_data, &client->dev,
-> +						    eeprom->buffer, size);
-> +		if (ret)
-> +			return ret;
-> +		release_firmware(fw);
-> +	} else {
-> +		/* An empty eeprom typically has all bits set to 1 */
-> +		memset(eeprom->buffer, 0xFF, size);
+> +	if (!phy_fwnode)
+> +		return NULL;
+> +
+> +	d = bus_find_device_by_fwnode(&mdio_bus_type, phy_fwnode);
+> +	if (d) {
+> +		mdiodev = to_mdio_device(d);
+> +		if (mdiodev->flags & MDIO_DEVICE_FLAG_PHY)
+> +			return to_phy_device(d);
+> +		put_device(d);
 > +	}
-> +	return 0;
+> +
+> +	return NULL;
 > +}
+> +EXPORT_SYMBOL(fwnode_phy_find_device);
 > +
->  static int i2c_slave_eeprom_probe(struct i2c_client *client, const struc=
-t i2c_device_id *id)
->  {
->  	struct eeprom_data *eeprom;
-> @@ -138,6 +159,10 @@ static int i2c_slave_eeprom_probe(struct i2c_client =
-*client, const struct i2c_de
->  	spin_lock_init(&eeprom->buffer_lock);
->  	i2c_set_clientdata(client, eeprom);
-> =20
-> +	ret =3D i2c_slave_init_eeprom_data(eeprom, client, size);
-> +	if (ret)
-> +		return ret;
-> +
->  	sysfs_bin_attr_init(&eeprom->bin);
->  	eeprom->bin.attr.name =3D "slave-eeprom";
->  	eeprom->bin.attr.mode =3D S_IRUSR | S_IWUSR;
-> --=20
-> 2.11.0
->=20
+> +/**
+> + * device_phy_find_device - For the given device, get the phy_device
+> + * @dev: Pointer to the given device
+> + *
+> + * If successful, returns a pointer to the phy_device with the embedded
+> + * struct device refcount incremented by one, or NULL on failure.
+> + */
+> +struct phy_device *device_phy_find_device(struct device *dev)
+> +{
+> +	return fwnode_phy_find_device(dev_fwnode(dev));
+> +}
+> +EXPORT_SYMBOL_GPL(device_phy_find_device);
 
---mxv5cy4qt+RJ9ypb
-Content-Type: application/pgp-signature; name="signature.asc"
+Let's not put any more subsystem specific functions into property.c.
 
------BEGIN PGP SIGNATURE-----
+thanks,
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6iuVsACgkQFA3kzBSg
-KbZgGRAAhiDjxEOOQhxG7MB/NoVtyB/L03khm7opUem0TQ/whkYlaPZs71KoMcoI
-FFpC47PcWm9MdeHNx6TOB3nwR7tjwvvw2OoPjwV+SDovFohfEm0DiHIX2rv/+ewG
-hcyVSxk8y2QdMfBD/NCsXGiAGEunPS8HjhiflKGsJwGAgaLzlVwZx92Wy1rMeJDj
-QL9z2Y1kumkuaJ6h6KzlImUKthbwRpEBKpLlMNfVwIEwDwFtpceyQcHCz+dGK3Ts
-JY2JplVGNjxRqbjBkys9QjHHG80JvBQ4eeZlkuf0c6IQCf1eYythVLYuFW06ofpw
-oZ1GkmAhJHRIN5hUPds8dhLUbfwIM5RQ0GfjzCPN8WBqrbNdaQWP0JzwvWC3cSOe
-C2WrjXvjEgSNt2rRYXXP/qzsjbjsdaUsolhwsRELF4nTvG+CunT94fkY2J1Iz01G
-w4jvqSsXQliXpbRRukKVLoKJLsJ7sjVJSouLb9FUP1vfDQ78UMyTnnQGSyeR7Ovr
-0IXujl07RICLOCeANRt6EdtJxPVFhZeXmm1qXJhKALKUl/caPL4Hj9c1xCDaxkpU
-MlyldbvE00k7v69w6O8UUQixfJnZquKrL1DkLIE1ef6p7JX8Ujo4ZLzDXuoCU70N
-mrgeKXKJtIG5DPNs3iFO7GRb09PN9lIkvTy96jiW/CaCx0NWET0=
-=ayzE
------END PGP SIGNATURE-----
-
---mxv5cy4qt+RJ9ypb--
+-- 
+heikki
