@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92281C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE51BC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BFCB217BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D62020767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:28:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587731277;
-	bh=cQVFE2oXggkz34TEBtKvHUTAk0MrHQLs86Hg/SE6S/I=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=T52UiKZx0j3Bzs8e7rHDroRKEUPu39bCfS/pW8t00bU0oj798LlWhZuRBa5ysrX/N
-	 HpNNYwACLdGH2a+9DKMRLfYno8fK5650hMYZjUToTyKN44QYhG1p/a/MNtMDBFikVg
-	 rR8MJodyjbCiA+A0X5qLQl/90+kay9qtXtHHuBEY=
+	s=default; t=1587731282;
+	bh=5qRrk/qk1QSXAwev/EVg/ssIKECEKJ1TPHFWCiMyJVM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=aoKmYhdKp/LqDBpdfPnUEkyI4ApRH3uROTRIkfn4Hx4AS6NyihimvREIAcKYTWOUV
+	 sJMKDbfoKhzIBlz/N8H4ztYYn/4TTQL06oMWp8Opnjmfq6OkehmHgVclFi7t3DMY46
+	 OU0qUWj1BTbeAGotGvF7H59PggyS+4LVRvKnae5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728423AbgDXMY2 (ORCPT
+        id S1728560AbgDXM2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:24:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54806 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:28:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728377AbgDXMYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:24:21 -0400
+        id S1728414AbgDXMY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:24:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 617D121569;
-        Fri, 24 Apr 2020 12:24:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BBA821744;
+        Fri, 24 Apr 2020 12:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587731061;
-        bh=cQVFE2oXggkz34TEBtKvHUTAk0MrHQLs86Hg/SE6S/I=;
-        h=From:To:Cc:Subject:Date:From;
-        b=N2xjMA/7jb9BEyfQ2fySJTd5Hvpd1vinwJP6NZn/F9Wr4qOkZde2JQ5PkpmcwGKz0
-         nEoPwy8OxR9zGX9SvFYcXsenKZvjuyYqiyemveWwhOakGIAZUGRPxbpJiKoxVu+CEL
-         nak3StgrgZZDgh6DmkZBfZfepUuJcaUhyiVAm4j8=
+        s=default; t=1587731067;
+        bh=5qRrk/qk1QSXAwev/EVg/ssIKECEKJ1TPHFWCiMyJVM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WZc9OE9pLP93VqYKwlvX7qHLkTrRCbCxaxynxHVE90+p1wMcxf//dZi/qHad97h+I
+         BvwJ4/iZA6WrfPTGmLDpf0GjVXUFJZriJCQGrKlRgZ68MXWH/AalABHTnP3vlapQ1X
+         MyFEnr95UcuWwqfr8x2jVyiLK7aAQt0EIJD73Cq0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Olaf Hering <olaf@aepfle.de>, Wei Liu <wei.liu@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 01/21] x86: hyperv: report value of misc_features
-Date:   Fri, 24 Apr 2020 08:23:59 -0400
-Message-Id: <20200424122419.10648-1-sashal@kernel.org>
+Cc:     Li Bin <huawei.libin@huawei.com>,
+        Douglas Gilbert <dgilbert@interlog.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 06/21] scsi: sg: add sg_remove_request in sg_common_write
+Date:   Fri, 24 Apr 2020 08:24:04 -0400
+Message-Id: <20200424122419.10648-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200424122419.10648-1-sashal@kernel.org>
+References: <20200424122419.10648-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -56,36 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olaf Hering <olaf@aepfle.de>
+From: Li Bin <huawei.libin@huawei.com>
 
-[ Upstream commit 97d9f1c43bedd400301d6f1eff54d46e8c636e47 ]
+[ Upstream commit 849f8583e955dbe3a1806e03ecacd5e71cce0a08 ]
 
-A few kernel features depend on ms_hyperv.misc_features, but unlike its
-siblings ->features and ->hints, the value was never reported during boot.
+If the dxfer_len is greater than 256M then the request is invalid and we
+need to call sg_remove_request in sg_common_write.
 
-Signed-off-by: Olaf Hering <olaf@aepfle.de>
-Link: https://lore.kernel.org/r/20200407172739.31371-1-olaf@aepfle.de
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
+Link: https://lore.kernel.org/r/1586777361-17339-1-git-send-email-huawei.libin@huawei.com
+Fixes: f930c7043663 ("scsi: sg: only check for dxfer_len greater than 256M")
+Acked-by: Douglas Gilbert <dgilbert@interlog.com>
+Signed-off-by: Li Bin <huawei.libin@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/mshyperv.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/sg.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index c0201b11e9e2a..a6b323a3a6304 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -178,8 +178,8 @@ static void __init ms_hyperv_init_platform(void)
- 	ms_hyperv.misc_features = cpuid_edx(HYPERV_CPUID_FEATURES);
- 	ms_hyperv.hints    = cpuid_eax(HYPERV_CPUID_ENLIGHTMENT_INFO);
+diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
+index 3a406b40f1505..b5f589b7b43dc 100644
+--- a/drivers/scsi/sg.c
++++ b/drivers/scsi/sg.c
+@@ -809,8 +809,10 @@ sg_common_write(Sg_fd * sfp, Sg_request * srp,
+ 			"sg_common_write:  scsi opcode=0x%02x, cmd_size=%d\n",
+ 			(int) cmnd[0], (int) hp->cmd_len));
  
--	pr_info("Hyper-V: features 0x%x, hints 0x%x\n",
--		ms_hyperv.features, ms_hyperv.hints);
-+	pr_info("Hyper-V: features 0x%x, hints 0x%x, misc 0x%x\n",
-+		ms_hyperv.features, ms_hyperv.hints, ms_hyperv.misc_features);
+-	if (hp->dxfer_len >= SZ_256M)
++	if (hp->dxfer_len >= SZ_256M) {
++		sg_remove_request(sfp, srp);
+ 		return -EINVAL;
++	}
  
- 	ms_hyperv.max_vp_index = cpuid_eax(HVCPUID_IMPLEMENTATION_LIMITS);
- 	ms_hyperv.max_lp_index = cpuid_ebx(HVCPUID_IMPLEMENTATION_LIMITS);
+ 	k = sg_start_req(srp, cmnd);
+ 	if (k) {
 -- 
 2.20.1
 
