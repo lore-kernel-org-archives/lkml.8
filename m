@@ -2,322 +2,324 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7972FC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5B4C55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EDDA2166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:51:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="ARLOFE8m"
+	by mail.kernel.org (Postfix) with ESMTP id 4901D2166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 06:52:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726577AbgDXGvj (ORCPT
+        id S1726613AbgDXGwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 02:51:39 -0400
-Received: from mail-bn7nam10on2095.outbound.protection.outlook.com ([40.107.92.95]:44983
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726008AbgDXGvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 02:51:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Kyj0OEqJld9fxHTYwAxeN/i6O17nUPWE58XPXl6Ms8/1AfdgBCYnyYGW6e1ZMkZ8mzu4U+aXhV7IvYEgX0e9Bwv0yTd8ow/m2Wy7QFaKXUwSkkq+KHQSZjemBx6/TUeXqA3L4TOlYVtinsqWmegINW5Pkk/7cYye6EtC/CjjolJm5ByyR4Fj+pqkHFUE5c/7SLsQpfpRE5iGgdhYmtUvQTjpKr7EMXoDOtiobvdL3MuMlIU+a+EG1Kgcp7jDG26aHwv+0LAdz0qJ5DtNedbRUhtZpYL4P3ZQxTQ4nqKGDIQt+2VxR65lXhx8VJRcwhGeh9Kkh6DTGd62Qen0OUzPRA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5+K/zYEtWLLkYt899xdr3onmc+0JXgF4WWsPpVU9VTg=;
- b=hSXCyzO02VuyIy1N+/kDoPzwjsdVz05ESQJJNce/rv7psIl1MoleP51Hg9rhCFEfFwBMh0NoW+A/uv6sdMzJS558bGgYDimZi8Fzsf7bvtNGEQr8DT4z6Ku1+gRa9r3rTkDx374LYY9vQXSwESHzl55yFEHDiB11RWJBstI8bN/r+Fty+tM+vRIRGTY8PEbBw60REdaTvH4yCvaKOjfyeIk3tBEi6PRBjTaQua0FdIuf1f7/08Vatyul/++8mD44mpyOPFwCfMQgl5ZyHQuQePkIfMArZpo0m4VP3mmcVNCD2ktmoonRTiGc7lwpiPfzx/wYk65erdqXYapXbn1xJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
- header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5+K/zYEtWLLkYt899xdr3onmc+0JXgF4WWsPpVU9VTg=;
- b=ARLOFE8mpaLHhN1C6r48TU3yZc8DNeX/1uId0zrO+dPFItuJxk30Ma86t8eDAaG33EdJJ0letuA88cBEj+L9tVic8zxdPKBa+YC3+UXvqSEjhH6iqFAtVfm9EWYZmi+txw3MAF/UcOFQ1pDSAPEQMVF71BQneKPxO4zNIxOTWPg=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=xji@analogixsemi.com; 
-Received: from BY5PR04MB6739.namprd04.prod.outlook.com (2603:10b6:a03:229::8)
- by BY5PR04MB7107.namprd04.prod.outlook.com (2603:10b6:a03:22f::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.27; Fri, 24 Apr
- 2020 06:51:33 +0000
-Received: from BY5PR04MB6739.namprd04.prod.outlook.com
- ([fe80::4517:bcc8:a3bd:407f]) by BY5PR04MB6739.namprd04.prod.outlook.com
- ([fe80::4517:bcc8:a3bd:407f%6]) with mapi id 15.20.2921.030; Fri, 24 Apr 2020
- 06:51:33 +0000
-Date:   Fri, 24 Apr 2020 14:51:25 +0800
-From:   Xin Ji <xji@analogixsemi.com>
-To:     Nicolas Boichat <drinkcat@chromium.org>
-Cc:     devel@driverdev.osuosl.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Sheng Pan <span@analogixsemi.com>
-Subject: Re: [PATCH v7 2/2] drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to
- DP bridge driver
-Message-ID: <20200424065124.GA31922@xin-VirtualBox>
-References: <cover.1582529411.git.xji@analogixsemi.com>
- <a81adcf2e79d440edcb7b3989f31efcb80a6e9ff.1582529411.git.xji@analogixsemi.com>
- <CANMq1KBfB6tXFqYGvr=8fV_bpCV5GbVHeEbRs+fuaZba65-OPw@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANMq1KBfB6tXFqYGvr=8fV_bpCV5GbVHeEbRs+fuaZba65-OPw@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-ClientProxiedBy: HK2PR02CA0194.apcprd02.prod.outlook.com
- (2603:1096:201:21::30) To BY5PR04MB6739.namprd04.prod.outlook.com
- (2603:10b6:a03:229::8)
+        Fri, 24 Apr 2020 02:52:04 -0400
+Received: from mga04.intel.com ([192.55.52.120]:45630 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726008AbgDXGwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 02:52:04 -0400
+IronPort-SDR: gFjZVtNHM+s9m7K1G8eVxuvpUnbfUmRZMYPQLSfGvMMiL/XIfgqhDnxEkC5HJ2HBB1cAyiUOSy
+ Oht+wn5lmvlg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 23:52:03 -0700
+IronPort-SDR: koFR2hY+VSgkxsHe6kZw+5Qf5wtlmCWfXf1jqpjU+8eHl1bqpRMlTT+8PLid2OhfLrjLZLLeCk
+ JoUU1AvBHSwA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,310,1583222400"; 
+   d="scan'208";a="403205494"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 23 Apr 2020 23:52:02 -0700
+Received: from [10.249.228.69] (abudanko-mobl.ccr.corp.intel.com [10.249.228.69])
+        by linux.intel.com (Postfix) with ESMTP id 6BC855802C9;
+        Thu, 23 Apr 2020 23:51:59 -0700 (PDT)
+Subject: [PATCH v3 3/3] perf docs: introduce security.txt file to document
+ related issues
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>
+References: <d7cec72d-cc3c-381b-38cd-20e7242bfda8@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <66341a83-8f15-23c7-7ffa-88b55f24d585@linux.intel.com>
+Date:   Fri, 24 Apr 2020 09:51:58 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xin-VirtualBox (114.247.245.254) by HK2PR02CA0194.apcprd02.prod.outlook.com (2603:1096:201:21::30) with Microsoft SMTP Server (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.20.2937.13 via Frontend Transport; Fri, 24 Apr 2020 06:51:32 +0000
-X-Originating-IP: [114.247.245.254]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ed264fab-2b30-4a02-6b2b-08d7e81beced
-X-MS-TrafficTypeDiagnostic: BY5PR04MB7107:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BY5PR04MB710786FED4BB327686FFCAF5C7D00@BY5PR04MB7107.namprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-Forefront-PRVS: 03838E948C
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6739.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(39840400004)(366004)(396003)(136003)(346002)(376002)(2906002)(478600001)(6496006)(16526019)(186003)(66556008)(33716001)(54906003)(107886003)(26005)(316002)(66946007)(66476007)(86362001)(52116002)(4326008)(53546011)(9686003)(8676002)(1076003)(8936002)(55016002)(33656002)(5660300002)(6666004)(81156014)(956004)(7416002)(6916009);DIR:OUT;SFP:1102;
-Received-SPF: None (protection.outlook.com: analogixsemi.com does not
- designate permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: dbY7EGESs+tn09HUp2sN8PPgwYlku1KP7aFBdwU+tApM16rrFwQemUhUC9Ir+elbzAU2x0MAAkIYKI6aG3Tk4IwH9VTyIhUPCkC+ocWzfq2y9Ol1+H4UjROfVdZ7ZzrUHk79rk0xLa8bV2WmncWI68z63IgHKckY461grJY9nQ2z6yLJFYzM6UiyLAS7Yh4WXCIadCZ2kK5RcnL0h0CWKYhP7LbWEJR1cUTBJpQGkjsl0eeA3lKxfDkx+Y037ODZ/UMiEbedKu4vgUuro0W/me70/7OCWBo1nXo3bGKASZBqzqZ5ZXIpflmRScDaHoGqzu8yOA86rqhmE3jsliB/hDdTW5KBdE4DJQdePfL7WyJrv6/mefP9MPU3vvs2s98K1Jvt5WrGHY8DL97YLM3Fkz2XEiUan2Ahsjeewh/U/w/gu+2OpxcGw2qa3vjp+Y6n
-X-MS-Exchange-AntiSpam-MessageData: 41Esy56dCLI+1vaQ5wrReK5u2kT7ZJgNlTuarADgQIOfQ4Vj/osKy/yySe5pz8SSZSFF1bvlK3EzbwLnTADPbiND2Lguk5BKI4c5zF5oav0V1cMGjLo5KzZcsWLSe+bCYcOz6703Hxu1CCa+iRwMiQ==
-X-OriginatorOrg: analogixsemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ed264fab-2b30-4a02-6b2b-08d7e81beced
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2020 06:51:33.5745
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jPOzm+3x85Jm8M+E65WQnCj7ZCkIpB856jJxpBp18e28XjkBALQdOe4cO9+e+DOZn7avOkh3CED+vae5QcwLIg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR04MB7107
+In-Reply-To: <d7cec72d-cc3c-381b-38cd-20e7242bfda8@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 07:55:15PM +0800, Nicolas Boichat wrote:
-> Hi,
-> 
-> Just commenting on the mode_fixup function that was added in v7.
-> 
-> On Tue, Feb 25, 2020 at 2:15 PM Xin Ji <xji@analogixsemi.com> wrote:
-> >
-> > The ANX7625 is an ultra-low power 4K Mobile HD Transmitter designed
-> > for portable device. It converts MIPI DSI/DPI to DisplayPort 1.3 4K.
-> >
-> > The ANX7625 can support both USB Type-C PD feature and MIPI DSI/DPI
-> > to DP feature. This driver only enabled MIPI DSI/DPI to DP feature.
-> >
-> > Signed-off-by: Xin Ji <xji@analogixsemi.com>
-> > ---
-> >  drivers/gpu/drm/bridge/Makefile           |    2 +-
-> >  drivers/gpu/drm/bridge/analogix/Kconfig   |    6 +
-> >  drivers/gpu/drm/bridge/analogix/Makefile  |    1 +
-> >  drivers/gpu/drm/bridge/analogix/anx7625.c | 2172 +++++++++++++++++++++++++++++
-> >  drivers/gpu/drm/bridge/analogix/anx7625.h |  410 ++++++
-> >  5 files changed, 2590 insertions(+), 1 deletion(-)
-> >  create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.c
-> >  create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.h
-> >
-> > diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-> > index 4934fcf..bcd388a 100644
-> > --- a/drivers/gpu/drm/bridge/Makefile
-> > +++ b/drivers/gpu/drm/bridge/Makefile
-> [snip]
-> > +static bool anx7625_bridge_mode_fixup(struct drm_bridge *bridge,
-> > +                                     const struct drm_display_mode *mode,
-> > +                                     struct drm_display_mode *adj)
-> > +{
-> > +       struct anx7625_data *ctx = bridge_to_anx7625(bridge);
-> > +       struct device *dev = &ctx->client->dev;
-> > +       u32 hsync, hfp, hbp, hactive, hblanking;
-> > +       u32 adj_hsync, adj_hfp, adj_hbp, adj_hblanking, delta_adj;
-> > +       u32 vref, adj_clock;
-> > +
-> > +       DRM_DEV_DEBUG_DRIVER(dev, "drm mode fixup set\n");
-> > +
-> > +       mutex_lock(&ctx->lock);
-> 
-> Why do you need this lock?
-Seems no need this lock, I'll remove it.
-> 
-> > +
-> > +       hactive = mode->hdisplay;
-> 
-> This is never used, drop it?
-OK, I'll drop it.
-> 
-> > +       hsync = mode->hsync_end - mode->hsync_start;
-> > +       hfp = mode->hsync_start - mode->hdisplay;
-> > +       hbp = mode->htotal - mode->hsync_end;
-> > +       hblanking = mode->htotal - mode->hdisplay;
-> > +
-> > +       DRM_DEV_DEBUG_DRIVER(dev, "before mode fixup\n");
-> > +       DRM_DEV_DEBUG_DRIVER(dev, "hsync(%d),hfp(%d),hbp(%d),clock(%d)\n",
-> > +                            hsync,
-> > +                            hfp,
-> > +                            hbp,
-> > +                            adj->clock);
-> > +       DRM_DEV_DEBUG_DRIVER(dev, "hsync_start(%d),hsync_end(%d),htotal(%d)\n",
-> > +                            adj->hsync_start,
-> > +                            adj->hsync_end,
-> > +                            adj->htotal);
-> > +
-> > +       adj_hfp = hfp;
-> > +       adj_hsync = hsync;
-> > +       adj_hbp = hbp;
-> > +       adj_hblanking = hblanking;
-> > +
-> > +       /* plus 1 if hfp is odd */
-> 
-> A better way to word these comments is to say "hfp needs to be even",
-> otherwise, you're just repeating what we can already see in the code.
-OK
-> 
-> > +       if (hfp & 0x1) {
-> > +               adj_hfp = hfp + 1;
-> 
-> adj_hfp -= 1 for consistency?
-OK
-> 
-> > +               adj_hblanking += 1;
-> > +       }
-> > +
-> > +       /* minus 1 if hbp is odd */
-> > +       if (hbp & 0x1) {
-> > +               adj_hbp = hbp - 1;
-> 
-> ditto, adj_hbp -= 1;
-OK
-> 
-> > +               adj_hblanking -= 1;
-> > +       }
-> > +
-> > +       /* plus 1 if hsync is odd */
-> > +       if (hsync & 0x1) {
-> > +               if (adj_hblanking < hblanking)
-> > +                       adj_hsync = hsync + 1;
-> 
-> ditto
-OK
-> 
-> > +               else
-> > +                       adj_hsync = hsync - 1;
-> 
-> ditto
-OK
-> 
-> > +       }
-> > +
-> > +       /*
-> > +        * once illegal timing detected, use default HFP, HSYNC, HBP
-> > +        */
-> > +       if (hblanking < HBLANKING_MIN || (hfp < HP_MIN && hbp < HP_MIN)) {
-> 
-> should this be adj_hblanking/adj_hfp/adj_hbp?
-NO, need check original HFP and HBP, if they are not legal, driver need
-set default value to adj_hsync, adj_hfp, adj_hbp.
-> 
-> > +               adj_hsync = SYNC_LEN_DEF;
-> > +               adj_hfp = HFP_HBP_DEF;
-> > +               adj_hbp = HFP_HBP_DEF;
-> > +               vref = adj->clock * 1000 / (adj->htotal * adj->vtotal);
-> > +               if (hblanking < HBLANKING_MIN) {
-> > +                       delta_adj = HBLANKING_MIN - hblanking;
-> > +                       adj_clock = vref * delta_adj * adj->vtotal;
-> > +                       adj->clock += DIV_ROUND_UP(adj_clock, 1000);
-> > +               } else {
-> > +                       delta_adj = hblanking - HBLANKING_MIN;
-> > +                       adj_clock = vref * delta_adj * adj->vtotal;
-> > +                       adj->clock -= DIV_ROUND_UP(adj_clock, 1000);
-> > +               }
-> > +
-> > +               DRM_WARN("illegal hblanking timing, use default.\n");
-> > +               DRM_WARN("hfp(%d),hbp(%d),hsync(%d).\n", hfp, hbp, hsync);
-> 
-> How likely is it that this mode is going to work? Can you just return
-> false here to reject the mode?
-We want to set the default minimal Hblancking value, then it may display,
-otherwise. If we just return false, there is no display for sure.
-> 
-> > +       } else if (adj_hfp < HP_MIN) {
-> > +               /* adjust hfp if hfp less than HP_MIN */
-> > +               delta_adj = HP_MIN - adj_hfp;
-> > +               adj_hfp = HP_MIN;
-> > +
-> > +               /*
-> > +                * balance total HBlanking pixel, if HBP hasn't enough space,
-> 
-> "does not have enough space"
-OK
-> 
-> > +                * adjust HSYNC length, otherwize adjust HBP
-> 
-> otherwise
-OK
-> 
-> > +                */
-> > +               if ((adj_hbp - delta_adj) < HP_MIN)
-> > +                       /* hbp not enough space */
-> > +                       adj_hsync -= delta_adj;
-> > +               else
-> > +                       adj_hbp -= delta_adj;
-> > +       } else if (adj_hbp < HP_MIN) {
-> > +               delta_adj = HP_MIN - adj_hbp;
-> > +               adj_hbp = HP_MIN;
-> > +
-> > +               /*
-> > +                * balance total HBlanking pixel, if HBP hasn't enough space,
-> > +                * adjust HSYNC length, otherwize adjust HBP
-> > +                */
-> > +               if ((adj_hfp - delta_adj) < HP_MIN)
-> > +                       /* hbp not enough space */
-> > +                       adj_hsync -= delta_adj;
-> > +               else
-> > +                       adj_hfp -= delta_adj;
-> > +       }
-> > +
-> > +       DRM_DEV_DEBUG_DRIVER(dev, "after mode fixup\n");
-> > +       DRM_DEV_DEBUG_DRIVER(dev, "hsync(%d),hfp(%d),hbp(%d),clock(%d)\n",
-> 
-> Add spaces after commas in your debug strings (same above and below).
-OK
-> 
-> > +                            adj_hsync,
-> > +                            adj_hfp,
-> > +                            adj_hbp,
-> > +                            adj->clock);
-> 
-> Put these 4 on a single line.
-OK
-> 
-> > +
-> > +       /* reconstruct timing */
-> > +       adj->hsync_start = adj->hdisplay + adj_hfp;
-> > +       adj->hsync_end = adj->hsync_start + adj_hsync;
-> > +       adj->htotal = adj->hsync_end + adj_hbp;
-> > +       DRM_DEV_DEBUG_DRIVER(dev, "hsync_start(%d),hsync_end(%d),htotal(%d)\n",
-> > +                            adj->hsync_start,
-> > +                            adj->hsync_end,
-> > +                            adj->htotal);
-> > +
-> > +       mutex_unlock(&ctx->lock);
-> > +
-> > +       return true;
-> > +}
-> > +
-> > [snip]
+
+Publish instructions on how to apply LSM hooks for access control
+to perf_event_open() syscall on Fedora distro with Targeted SELinux
+policy and then manage access to the syscall.
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/perf/Documentation/security.txt | 237 ++++++++++++++++++++++++++
+ 1 file changed, 237 insertions(+)
+ create mode 100644 tools/perf/Documentation/security.txt
+
+diff --git a/tools/perf/Documentation/security.txt b/tools/perf/Documentation/security.txt
+new file mode 100644
+index 000000000000..4fe3b8b1958f
+--- /dev/null
++++ b/tools/perf/Documentation/security.txt
+@@ -0,0 +1,237 @@
++Overview
++========
++
++For general security related questions of perf_event_open() syscall usage,
++performance monitoring and observability operations by Perf see here:
++https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
++
++Enabling LSM based mandatory access control (MAC) to perf_event_open() syscall
++==============================================================================
++
++LSM hooks for mandatory access control for perf_event_open() syscall can be
++used starting from Linux v5.3. Below are the steps to extend Fedora (v31) with
++Targeted policy with perf_event_open() access control capabilities:
++
++1. Download selinux-policy SRPM package (e.g. selinux-policy-3.14.4-48.fc31.src.rpm on FC31)
++   and install it so rpmbuild directory would exist in the current working directory:
++
++   # rpm -Uhv selinux-policy-3.14.4-48.fc31.src.rpm
++
++2. Get into rpmbuild/SPECS directory and unpack the source code:
++
++   # rpmbuild -bp selinux-policy.spec
++
++3. Place patch below at rpmbuild/BUILD/selinux-policy-b86eaaf4dbcf2d51dd4432df7185c0eaf3cbcc02
++   directory and apply it:
++
++   # patch -p1 < selinux-policy-perf-events-perfmon.patch
++   patching file policy/flask/access_vectors
++   patching file policy/flask/security_classes
++   # cat selinux-policy-perf-events-perfmon.patch
++diff -Nura a/policy/flask/access_vectors b/policy/flask/access_vectors
++--- a/policy/flask/access_vectors	2020-02-04 18:19:53.000000000 +0300
+++++ b/policy/flask/access_vectors	2020-02-28 23:37:25.000000000 +0300
++@@ -174,6 +174,7 @@
++ 	wake_alarm
++ 	block_suspend
++ 	audit_read
+++	perfmon
++ }
++ 
++ #
++@@ -1099,3 +1100,15 @@
++ 
++ class xdp_socket
++ inherits socket
+++
+++class perf_event
+++{
+++	open
+++	cpu
+++	kernel
+++	tracepoint
+++	read
+++	write
+++}
+++
+++
++diff -Nura a/policy/flask/security_classes b/policy/flask/security_classes
++--- a/policy/flask/security_classes	2020-02-04 18:19:53.000000000 +0300
+++++ b/policy/flask/security_classes	2020-02-28 21:35:17.000000000 +0300
++@@ -200,4 +200,6 @@
++ 
++ class xdp_socket
++ 
+++class perf_event
+++
++ # FLASK
++
++4. Get into rpmbuild/SPECS directory and build policy packages from patched sources:
++
++   # rpmbuild --noclean --noprep -ba selinux-policy.spec
++
++   so you have this:
++
++   # ls -alh rpmbuild/RPMS/noarch/
++   total 33M
++   drwxr-xr-x. 2 root root 4.0K Mar 20 12:16 .
++   drwxr-xr-x. 3 root root 4.0K Mar 20 12:16 ..
++   -rw-r--r--. 1 root root 112K Mar 20 12:16 selinux-policy-3.14.4-48.fc31.noarch.rpm
++   -rw-r--r--. 1 root root 1.2M Mar 20 12:17 selinux-policy-devel-3.14.4-48.fc31.noarch.rpm
++   -rw-r--r--. 1 root root 2.3M Mar 20 12:17 selinux-policy-doc-3.14.4-48.fc31.noarch.rpm
++   -rw-r--r--. 1 root root  12M Mar 20 12:17 selinux-policy-minimum-3.14.4-48.fc31.noarch.rpm
++   -rw-r--r--. 1 root root 4.5M Mar 20 12:16 selinux-policy-mls-3.14.4-48.fc31.noarch.rpm
++   -rw-r--r--. 1 root root 111K Mar 20 12:16 selinux-policy-sandbox-3.14.4-48.fc31.noarch.rpm
++   -rw-r--r--. 1 root root  14M Mar 20 12:17 selinux-policy-targeted-3.14.4-48.fc31.noarch.rpm
++
++5. Install SELinux packages from Fedora repo, if not already done so, and
++   update with the patched rpms above:
++
++   # rpm -Uhv rpmbuild/RPMS/noarch/selinux-policy-*
++
++6. Enable SELinux Permissive mode for Targeted policy, if not already done so:
++
++   # cat /etc/selinux/config
++
++   # This file controls the state of SELinux on the system.
++   # SELINUX= can take one of these three values:
++   #     enforcing - SELinux security policy is enforced.
++   #     permissive - SELinux prints warnings instead of enforcing.
++   #     disabled - No SELinux policy is loaded.
++   SELINUX=permissive
++   # SELINUXTYPE= can take one of these three values:
++   #     targeted - Targeted processes are protected,
++   #     minimum - Modification of targeted policy. Only selected processes are protected.
++   #     mls - Multi Level Security protection.
++   SELINUXTYPE=targeted
++
++7. Enable filesystem SELinux labeling at the next reboot:
++
++   # touch /.autorelabel
++
++8. Reboot machine and it will label filesystems and load Targeted policy into the kernel;
++
++9. Login and check that dmesg output doesn't mention that perf_event class is unknown to SELinux subsystem;
++
++10. Check that SELinux is enabled and in Permissive mode
++
++    # getenforce
++    Permissive
++
++11. Turn SELinux into Enforcing mode:
++
++    # setenforce 1
++    # getenforce
++    Enforcing
++
++Opening access to perf_event_open() syscall on Fedora with SELinux
++==================================================================
++
++Access to performance monitoring and observability operations by Perf
++can be limited for superuser or CAP_PERFMON or CAP_SYS_ADMIN privileged
++processes. MAC policy settings (e.g. SELinux) can be loaded into the kernel
++and prevent unauthorized access to perf_event_open() syscall. In such case
++Perf tool provides a message similar to the one below:
++
++   # perf stat
++   Error:
++   Access to performance monitoring and observability operations is limited.
++   Enforced MAC policy settings (SELinux) can limit access to performance
++   monitoring and observability operations. Inspect system audit records for
++   more perf_event access control information and adjusting the policy.
++   Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
++   access to performance monitoring and observability operations for users
++   without CAP_PERFMON or CAP_SYS_ADMIN Linux capability.
++   perf_event_paranoid setting is -1:
++     -1: Allow use of (almost) all events by all users
++         Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
++   >= 0: Disallow raw and ftrace function tracepoint access
++   >= 1: Disallow CPU event access
++   >= 2: Disallow kernel profiling
++   To make the adjusted perf_event_paranoid setting permanent preserve it
++   in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
++
++To make sure that access is limited by MAC policy settings inspect system
++audit records using journalctl command or /var/log/audit/audit.log so the
++output would contain AVC denied records related to perf_event:
++
++   # journalctl --reverse --no-pager | grep perf_event
++
++   python3[1318099]: SELinux is preventing perf from open access on the perf_event labeled unconfined_t.
++                                         If you believe that perf should be allowed open access on perf_event labeled unconfined_t by default.
++   setroubleshoot[1318099]: SELinux is preventing perf from open access on the perf_event labeled unconfined_t. For complete SELinux messages run: sealert -l 4595ce5b-e58f-462c-9d86-3bc2074935de
++   audit[1318098]: AVC avc:  denied  { open } for  pid=1318098 comm="perf" scontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tcontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tclass=perf_event permissive=0
++
++In order to open access to perf_event_open() syscall MAC policy settings can
++require to be extended. On SELinux system this can be done by loading a special
++policy module extending base policy settings. Perf related policy module can
++be generated using the system audit records about blocking perf_event access.
++Run the command below to generate my-perf.te policy extension file with
++perf_event related rules:
++
++   # ausearch -c 'perf' --raw | audit2allow -M my-perf && cat my-perf.te
++
++   module my-perf 1.0;
++
++   require {
++        type unconfined_t;
++        class perf_event { cpu kernel open read tracepoint write };
++   }
++
++   #============= unconfined_t ==============
++   allow unconfined_t self:perf_event { cpu kernel open read tracepoint write };
++
++Now compile, pack and load my-perf.pp extension module into the kernel:
++
++   # checkmodule -M -m -o my-perf.mod my-perf.te
++   # semodule_package -o my-perf.pp -m my-perf.mod
++   # semodule -X 300 -i my-perf.pp
++
++After all those taken steps above access to perf_event_open() syscall should
++now be allowed by the policy settings. Check access running Perf like this:
++
++   # perf stat
++   ^C
++   Performance counter stats for 'system wide':
++
++         36,387.41 msec cpu-clock                 #    7.999 CPUs utilized
++             2,629      context-switches          #    0.072 K/sec
++                57      cpu-migrations            #    0.002 K/sec
++                 1      page-faults               #    0.000 K/sec
++       263,721,559      cycles                    #    0.007 GHz
++       175,746,713      instructions              #    0.67  insn per cycle
++        19,628,798      branches                  #    0.539 M/sec
++         1,259,201      branch-misses             #    6.42% of all branches
++
++       4.549061439 seconds time elapsed
++
++The generated perf-event.pp related policy extension module can be removed
++from the kernel using this command:
++
++   # semodule -X 300 -r my-perf
++
++Alternatively the module can be temporarily disabled and enabled back using
++these two commands:
++
++   # semodule -d my-perf
++   # semodule -e my-perf
++
++If something went wrong
++=======================
++
++To turn SELinux into Permissive mode:
++   # setenforce 0
++
++To fully disable SELinux during kernel boot [3] set kernel command line parameter selinux=0
++
++To remove SELinux labeling from local filesystems:
++   # find / -mount -print0 | xargs -0 setfattr -h -x security.selinux
++
++To fully turn SELinux off a machine set SELINUX=disabled at /etc/selinux/config file and reboot;
++
++Links
++=====
++
++[1] https://download-ib01.fedoraproject.org/pub/fedora/linux/updates/31/Everything/SRPMS/Packages/s/selinux-policy-3.14.4-49.fc31.src.rpm
++[2] https://docs.fedoraproject.org/en-US/Fedora/11/html/Security-Enhanced_Linux/sect-Security-Enhanced_Linux-Working_with_SELinux-Enabling_and_Disabling_SELinux.html
++[3] https://danwalsh.livejournal.com/10972.html
+-- 
+2.24.1
+
+
