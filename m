@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9DBC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0368EC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2225320728
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2DEB20736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:06:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587733600;
-	bh=yay0uhlPeCbb5DfEc5mFmXom1uk+kOvAdVyPNt6cF54=;
+	s=default; t=1587733602;
+	bh=0qpWo89t4RUFYtV0OfiC2khaAFGlZW45JvYFF4eliFA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KYuRgQe5j31qfZO+QL+AcK1qDW2wZ15Ewip3QxcjvvBStllpAWUjP+kJSDIhob4ZX
-	 0Y2NYlThnoWWsPqKLEI7m3NzSIA/lM85KEEtczYMS9GirgAJAL7vQZqGu5lTupvLU3
-	 rf8LW0QehDzC17q/8rPbbRwbvTKOg3XkgiyuqKzY=
+	b=t0chHb2A5sILVFid6imA2DlkB/Pydjp1FVVt1QcK/AlKLRVDhJwjT0fiy/b0pA86c
+	 4SBfZJow9vvQ9Hq0GcbgedEkJxl++5Rx5VSUDoucsFeRO3SeR0s7URe3Z50JOJJgj7
+	 d9lOAtFeiDmbLZLIjk62tDBC9SPHASRR8V4rOZ+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbgDXNGj (ORCPT
+        id S1728047AbgDXNGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 09:06:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57030 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 09:06:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726954AbgDXNGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 09:06:34 -0400
+        id S1727992AbgDXNGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 09:06:39 -0400
 Received: from e123331-lin.home (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E6CE2087E;
-        Fri, 24 Apr 2020 13:06:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B87F8208E4;
+        Fri, 24 Apr 2020 13:06:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587733594;
-        bh=yay0uhlPeCbb5DfEc5mFmXom1uk+kOvAdVyPNt6cF54=;
+        s=default; t=1587733598;
+        bh=0qpWo89t4RUFYtV0OfiC2khaAFGlZW45JvYFF4eliFA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wzbFd25zAetEclcdoX0kwTQWtGxGmfKmhaWLjUn3DiuagH9hEEBDwzVf33cvJ0Lr6
-         LFqMrxCBz0Q+g3SDG85TSN+SFDVTcZq/qrEFPYEe9jplA+g/G7roxGyfcA8FR18aGS
-         DlEEftcmrW23kLWKp68eQ8jYrTCMcjBbRygRt654=
+        b=G88DnnEY9scCFLQuSVLXFRGcseXSxJ4elTjGrjfD3o1tXcMF3L9mQpmPgLc5PzQN9
+         kEYFOBc/rGV75yo0pydkgBQLV/L0iCJgo4ZLF9CM0iQMM9N0/OKHIxVSRYCgsywOLZ
+         2KlI8jmZlyrMaj1Qflp5oLNOIF8qycnZzCJux+Hc=
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,9 +47,9 @@ Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
         Atish Patra <atish.patra@wdc.com>,
         Palmer Dabbelt <palmerdabbelt@google.com>,
         Zou Wei <zou_wei@huawei.com>
-Subject: [PATCH 10/33] efi/gop: Move variable declarations into loop block
-Date:   Fri, 24 Apr 2020 15:05:08 +0200
-Message-Id: <20200424130531.30518-11-ardb@kernel.org>
+Subject: [PATCH 12/33] efi/gop: Use helper macros for find_bits
+Date:   Fri, 24 Apr 2020 15:05:10 +0200
+Message-Id: <20200424130531.30518-13-ardb@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200424130531.30518-1-ardb@kernel.org>
 References: <20200424130531.30518-1-ardb@kernel.org>
@@ -60,54 +60,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arvind Sankar <nivedita@alum.mit.edu>
 
-Declare the variables inside the block where they're used.
+Use the __ffs/__fls macros to calculate the position and size of the
+mask.
 
-Get rid of a couple of redundant initializers.
+Correct type of mask to u32 instead of unsigned long.
 
 Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Link: https://lore.kernel.org/r/20200320020028.1936003-7-nivedita@alum.mit.edu
+Link: https://lore.kernel.org/r/20200320020028.1936003-9-nivedita@alum.mit.edu
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- drivers/firmware/efi/libstub/gop.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/firmware/efi/libstub/gop.c | 26 ++++++++------------------
+ 1 file changed, 8 insertions(+), 18 deletions(-)
 
 diff --git a/drivers/firmware/efi/libstub/gop.c b/drivers/firmware/efi/libstub/gop.c
-index a7d3efe36c78..0d195060a370 100644
+index 7b0baf9a912f..8bf424f35759 100644
 --- a/drivers/firmware/efi/libstub/gop.c
 +++ b/drivers/firmware/efi/libstub/gop.c
-@@ -88,16 +88,19 @@ setup_pixel_info(struct screen_info *si, u32 pixels_per_scan_line,
- static efi_graphics_output_protocol_t *
- find_gop(efi_guid_t *proto, unsigned long size, void **handles)
+@@ -5,6 +5,7 @@
+  *
+  * ----------------------------------------------------------------------- */
+ 
++#include <linux/bitops.h>
+ #include <linux/efi.h>
+ #include <linux/screen_info.h>
+ #include <asm/efi.h>
+@@ -12,27 +13,16 @@
+ 
+ #include "efistub.h"
+ 
+-static void find_bits(unsigned long mask, u8 *pos, u8 *size)
++static void find_bits(u32 mask, u8 *pos, u8 *size)
  {
--	efi_graphics_output_protocol_t *gop, *first_gop;
--	efi_graphics_output_protocol_mode_t *mode;
--	efi_graphics_output_mode_info_t *info = NULL;
--	efi_status_t status;
-+	efi_graphics_output_protocol_t *first_gop;
- 	efi_handle_t h;
- 	int i;
+-	u8 first, len;
+-
+-	first = 0;
+-	len = 0;
+-
+-	if (mask) {
+-		while (!(mask & 0x1)) {
+-			mask = mask >> 1;
+-			first++;
+-		}
+-
+-		while (mask & 0x1) {
+-			mask = mask >> 1;
+-			len++;
+-		}
++	if (!mask) {
++		*pos = *size = 0;
++		return;
+ 	}
  
- 	first_gop = NULL;
+-	*pos = first;
+-	*size = len;
++	/* UEFI spec guarantees that the set bits are contiguous */
++	*pos  = __ffs(mask);
++	*size = __fls(mask) - *pos + 1;
+ }
  
- 	for_each_efi_handle(h, handles, size, i) {
-+		efi_status_t status;
-+
-+		efi_graphics_output_protocol_t *gop;
-+		efi_graphics_output_protocol_mode_t *mode;
-+		efi_graphics_output_mode_info_t *info;
-+
- 		efi_guid_t conout_proto = EFI_CONSOLE_OUT_DEVICE_GUID;
- 		void *dummy = NULL;
- 
-@@ -136,7 +139,7 @@ static efi_status_t setup_gop(struct screen_info *si, efi_guid_t *proto,
- {
- 	efi_graphics_output_protocol_t *gop;
- 	efi_graphics_output_protocol_mode_t *mode;
--	efi_graphics_output_mode_info_t *info = NULL;
-+	efi_graphics_output_mode_info_t *info;
- 	efi_physical_addr_t fb_base;
- 
- 	gop = find_gop(proto, size, handles);
+ static void
 -- 
 2.17.1
 
