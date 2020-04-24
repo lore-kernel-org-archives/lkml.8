@@ -2,213 +2,99 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3630C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C525C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDC922064C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:15:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587734159;
-	bh=UfO8sRYKuo/pz1Q45H7AZOBfZwv38wx8cPJ/ibe3tPM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=aHVj9We/gzj+55OheUD3mywejIEEaL+vYV4pDG+689F64tGFBUY+c02NmTdkiz5v6
-	 Z2g4hUlAABwjQaNw1OGR+n2y7jyJTZSQ8EC0vbLAroxL60wrBOT07tCFCofGHM5Ztv
-	 oTmpdDIpRsaXfwZVyUab2RJFwdeffRUfuUboSidA=
+	by mail.kernel.org (Postfix) with ESMTP id 76D662064C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:16:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fDrLWAOe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgDXNP6 (ORCPT
+        id S1727829AbgDXNQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 09:15:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36366 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726301AbgDXNP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 09:15:58 -0400
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54E082064C;
-        Fri, 24 Apr 2020 13:15:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587734157;
-        bh=UfO8sRYKuo/pz1Q45H7AZOBfZwv38wx8cPJ/ibe3tPM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=W9lJ5dfY/6a5Tc7qyKlXFG0/YfXzha8L6ct/q39+9gIoZzU7cE/YdUvNrOvngXa/s
-         +C28giA6sHUStBr9u7PriK8PY8yUKSHB6dQ69hbBaXYBpAGXIbVH0Lw+53SdwkbNxc
-         R9kfc/7CVCIVbbsPzKcAdkKB6/QT4w0DHlFiE38Q=
-Received: by mail-io1-f43.google.com with SMTP id k6so10287089iob.3;
-        Fri, 24 Apr 2020 06:15:57 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZMtd/YppFIKHdRSM/NoCoyqvDpxRrUwrfgIGJwsebQv8kaWI3R
-        cLkLnN6vLiapr3jGuhmIWuIlBnsGfD9O254axwY=
-X-Google-Smtp-Source: APiQypKY/SzfZ+A1Se0pe3wJTUiJ3PKRGi+s4MQi4645cKSc5Z27DyuQpKXmBBrS31TBp6w+NQFGhM7HWek0QV9Na/I=
-X-Received: by 2002:a6b:5904:: with SMTP id n4mr8750114iob.142.1587734156649;
- Fri, 24 Apr 2020 06:15:56 -0700 (PDT)
+        Fri, 24 Apr 2020 09:16:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59278 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726301AbgDXNQr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 09:16:47 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB259C09B045
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 06:16:46 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id d24so3720326pll.8
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 06:16:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oa/oNHUWZOTRPTTfBqwCxMu6cnopDNrg7qX1yx+D0Es=;
+        b=fDrLWAOe45JA/LlPn6FGyX7H7o/h14fgDXB7FCyKQsisVv0+/iUotKI6wPbKEektvn
+         D/49HKMvtl9DVcaX4nX4fdoVtPTEu2ublJHjyzAqW2Ruyeph6+S9B5jV33MLS0rC5BtH
+         neGu6sihmDZD8pQcNqhRXd2fZZJtxMZcFp0OfwKTivAfvYIMT+/AXCsLYBUR0RpwmDdS
+         9xww8khHXsEbkeZ9rsiEwB3OG89vUAOkkDtWiYgbPvZ2K8l3VObxpT+ShS0semRQvTKa
+         hKUU5Ot6zpH9uSKbbLYrhdzcWNrxc/hBMcbLzrSbTO/rpPCyGzId1Kxep91t4RcDPR6X
+         eoEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oa/oNHUWZOTRPTTfBqwCxMu6cnopDNrg7qX1yx+D0Es=;
+        b=Ur2AugHJ6kVmsaV1zfxcdiafihtsgfOwvxs8jptqoiBFxiRWHP2HK9yQAezMpMwQ3T
+         WnTyCKegCNLbeBlbeUXdyW83Zs57vQDC4F11j0x6zZZLrYFF+wx3DJt3nQOmb3v8WJYW
+         Cs6enTyqUtHUA1m5N5ny4OH/rUpHHYF+DwTN3AbVLwk7b58p++HL2IoFUYRYGuG5GqlK
+         SdpOWuiFWx3yCg9J/VHYXTuesnc/KVXtfjK9kMtYPODN7Vk1XpNHf+LDtNm2BKwyxcB5
+         G2ff72k6dVP5Z90rHBt7j0KeB7E+n7j+pSZ/c3mrO3QrB7y4ByLzRXQxpUbXozSswE1X
+         wRsw==
+X-Gm-Message-State: AGi0PuZ4lITUn89N7D43NqXj5ftV89nGywXEuV7nSOH8WylMufY1fhw6
+        jNinVzZnGHcz5LCbeRt2wsgQlAPOdfZ3fMxosrBmbA==
+X-Google-Smtp-Source: APiQypJOrLgs+kDHqzamHAX8n4seNWcLkNNFQ+4WcajoZ8auNmbQkqAS/xpZ05CHq4HN9oZLQfmbVvdG3WHUmuh3v9E=
+X-Received: by 2002:a17:902:4c:: with SMTP id 70mr8948599pla.336.1587734206165;
+ Fri, 24 Apr 2020 06:16:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200424130531.30518-1-ardb@kernel.org> <20200424130531.30518-3-ardb@kernel.org>
-In-Reply-To: <20200424130531.30518-3-ardb@kernel.org>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 24 Apr 2020 15:15:45 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHxG_7Om=O5XJCAGrWEUnOBoNLvF20amSc=5JegCdFqew@mail.gmail.com>
-Message-ID: <CAMj1kXHxG_7Om=O5XJCAGrWEUnOBoNLvF20amSc=5JegCdFqew@mail.gmail.com>
-Subject: Re: [PATCH 02/33] efi/libstub: Make initrd file loader configurable
-To:     linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Atish Patra <atish.patra@wdc.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Zou Wei <zou_wei@huawei.com>
+References: <ca6b79b47313aa7ee9d8c24c5a7f595772764171.1587690539.git.andreyknvl@google.com>
+ <20200424084307.GQ2682@kadam>
+In-Reply-To: <20200424084307.GQ2682@kadam>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Fri, 24 Apr 2020 15:16:35 +0200
+Message-ID: <CAAeHK+zS3WcmPEr9+hYGTMrZUwXyn5489Ke4f1zpdvTa-U-s9Q@mail.gmail.com>
+Subject: Re: [PATCH USB 1/2] usb: raw-gadget: fix return value of ep read ioctls
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alan Stern <stern@rowland.harvard.edu>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Apr 2020 at 15:06, Ard Biesheuvel <ardb@kernel.org> wrote:
+On Fri, Apr 24, 2020 at 10:43 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
 >
-> Loading an initrd passed via the kernel command line is deprecated: it
-> is limited to files that reside in the same volume as the one the kernel
-> itself was loaded from, and we have more flexible ways to achieve the
-> same. So make it configurable so new architectures can decide not to
-> enable it.
+> On Fri, Apr 24, 2020 at 03:09:58AM +0200, Andrey Konovalov wrote:
+> > They must return the number of bytes transferred during the data stage.
+> >
+> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 >
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> ---
->  drivers/firmware/efi/Kconfig           | 11 ++++++++
->  drivers/firmware/efi/libstub/efistub.h | 38 ++++++++++++++++++++------
->  drivers/firmware/efi/libstub/file.c    | 32 +++++-----------------
->  3 files changed, 47 insertions(+), 34 deletions(-)
+> This was my mistake.  Please add a Fixes tag.
 >
-> diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
-> index 2a2b2b96a1dc..4e788dd55b03 100644
-> --- a/drivers/firmware/efi/Kconfig
-> +++ b/drivers/firmware/efi/Kconfig
-> @@ -124,6 +124,17 @@ config EFI_ARMSTUB_DTB_LOADER
->           functionality for bootloaders that do not have such support
->           this option is necessary.
+> Fixes: 068fbff4f860 ("usb: raw-gadget: Fix copy_to/from_user() checks")
 >
-> +config EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER
-> +       bool "Enable the command line initrd loader"
-> +       depends on EFI_GENERIC_STUB
+> I should have seen that bug...  I thought I was being careful and I
+> even singled out that part of the commit and mentioned it in the
+> commit message but I messed up.  Sorry.
 
-Right after hitting send, I realised this should be
+No worries, the bug was actually present before your change, but in a
+slightly different form. So FWIW we can also add:
 
-depends on EFI_GENERIC_STUB || X86
+Fixes: f2c2e717642c ("usb: gadget: add raw-gadget interface")
 
-Care to fix that up before applying, please?
-
-
-
-> +       default y
-> +       help
-> +         Select this config option to add support for the initrd= command
-> +         line parameter, allowing an initrd that resides on the same volume
-> +         as the kernel image to be loaded into memory.
-> +
-> +         This method is deprecated.
-> +
->  config EFI_BOOTLOADER_CONTROL
->         tristate "EFI Bootloader Control"
->         depends on EFI_VARS
-> diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-> index 67d26949fd26..7517683b31e9 100644
-> --- a/drivers/firmware/efi/libstub/efistub.h
-> +++ b/drivers/firmware/efi/libstub/efistub.h
-> @@ -651,15 +651,35 @@ efi_status_t efi_parse_options(char const *cmdline);
->  efi_status_t efi_setup_gop(struct screen_info *si, efi_guid_t *proto,
->                            unsigned long size);
->
-> -efi_status_t efi_load_dtb(efi_loaded_image_t *image,
-> -                         unsigned long *load_addr,
-> -                         unsigned long *load_size);
-> -
-> -efi_status_t efi_load_initrd(efi_loaded_image_t *image,
-> -                            unsigned long *load_addr,
-> -                            unsigned long *load_size,
-> -                            unsigned long soft_limit,
-> -                            unsigned long hard_limit);
-> +efi_status_t handle_cmdline_files(efi_loaded_image_t *image,
-> +                                 const efi_char16_t *optstr,
-> +                                 int optstr_size,
-> +                                 unsigned long soft_limit,
-> +                                 unsigned long hard_limit,
-> +                                 unsigned long *load_addr,
-> +                                 unsigned long *load_size);
-> +
-> +
-> +static inline efi_status_t efi_load_dtb(efi_loaded_image_t *image,
-> +                                       unsigned long *load_addr,
-> +                                       unsigned long *load_size)
-> +{
-> +       return handle_cmdline_files(image, L"dtb=", sizeof(L"dtb=") - 2,
-> +                                   ULONG_MAX, ULONG_MAX, load_addr, load_size);
-> +}
-> +
-> +static inline efi_status_t efi_load_initrd(efi_loaded_image_t *image,
-> +                                          unsigned long *load_addr,
-> +                                          unsigned long *load_size,
-> +                                          unsigned long soft_limit,
-> +                                          unsigned long hard_limit)
-> +{
-> +       if (!IS_ENABLED(CONFIG_EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER))
-> +               return EFI_SUCCESS;
-> +
-> +       return handle_cmdline_files(image, L"initrd=", sizeof(L"initrd=") - 2,
-> +                                   soft_limit, hard_limit, load_addr, load_size);
-> +}
->
->  efi_status_t efi_load_initrd_dev_path(unsigned long *load_addr,
->                                       unsigned long *load_size,
-> diff --git a/drivers/firmware/efi/libstub/file.c b/drivers/firmware/efi/libstub/file.c
-> index ea66b1f16a79..27e014ea4459 100644
-> --- a/drivers/firmware/efi/libstub/file.c
-> +++ b/drivers/firmware/efi/libstub/file.c
-> @@ -121,13 +121,13 @@ static int find_file_option(const efi_char16_t *cmdline, int cmdline_len,
->   * We only support loading a file from the same filesystem as
->   * the kernel image.
->   */
-> -static efi_status_t handle_cmdline_files(efi_loaded_image_t *image,
-> -                                        const efi_char16_t *optstr,
-> -                                        int optstr_size,
-> -                                        unsigned long soft_limit,
-> -                                        unsigned long hard_limit,
-> -                                        unsigned long *load_addr,
-> -                                        unsigned long *load_size)
-> +efi_status_t handle_cmdline_files(efi_loaded_image_t *image,
-> +                                 const efi_char16_t *optstr,
-> +                                 int optstr_size,
-> +                                 unsigned long soft_limit,
-> +                                 unsigned long hard_limit,
-> +                                 unsigned long *load_addr,
-> +                                 unsigned long *load_size)
->  {
->         const efi_char16_t *cmdline = image->load_options;
->         int cmdline_len = image->load_options_size / 2;
-> @@ -239,21 +239,3 @@ static efi_status_t handle_cmdline_files(efi_loaded_image_t *image,
->         efi_free(alloc_size, alloc_addr);
->         return status;
->  }
-> -
-> -efi_status_t efi_load_dtb(efi_loaded_image_t *image,
-> -                         unsigned long *load_addr,
-> -                         unsigned long *load_size)
-> -{
-> -       return handle_cmdline_files(image, L"dtb=", sizeof(L"dtb=") - 2,
-> -                                   ULONG_MAX, ULONG_MAX, load_addr, load_size);
-> -}
-> -
-> -efi_status_t efi_load_initrd(efi_loaded_image_t *image,
-> -                            unsigned long *load_addr,
-> -                            unsigned long *load_size,
-> -                            unsigned long soft_limit,
-> -                            unsigned long hard_limit)
-> -{
-> -       return handle_cmdline_files(image, L"initrd=", sizeof(L"initrd=") - 2,
-> -                                   soft_limit, hard_limit, load_addr, load_size);
-> -}
-> --
-> 2.17.1
->
+However raw-gadget is not present in any released kernel yet, so need
+of backporting AFAIU.
