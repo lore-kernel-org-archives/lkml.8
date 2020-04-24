@@ -4,48 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D981C55197
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 815F7C55191
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20A5620776
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60A002087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587731304;
-	bh=n96JY8p5St3+fpH8Wp/WSeY3nuirYJ85x/kTwjtgvUc=;
+	s=default; t=1587731306;
+	bh=Mi2EeL3jHCWIbg8Moz3TNZ/gICusH4EaR9zxNVDG98U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ehnvs6DMv2p9WYaohmPRrhcxQ5Z1p0mGFWlJm5uEel0mQ48WO9n/PhfZU14xriPrq
-	 Spfjpa4bZkqvtOsC1IuiCV1p6y4mKaZBMIAmf+E/t4h6/+9P4njL/XjpLkEsqIfs3S
-	 3/Xs96Qn1T+UKWGOsx9yib4RXRIqqrWL0mMLsy94=
+	b=hkO/MW9e/d2llJehn9PWngZkNZNGtuMpShhy34MG1pyZdeo1Rj0XGxM/TI61Xn+jY
+	 ZV5xwxXccIqEFZBkTk3rxCTfgHJs05uPT99OIg5YGEXxDwUBkNVJd2qwuPBFPpyMB/
+	 XjvRS+n+AZl5GEJrBXIecU8Kc8URsOkqYXFRWTPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728340AbgDXMYQ (ORCPT
+        id S1728323AbgDXMYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:24:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54570 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:24:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728296AbgDXMYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:24:11 -0400
+        id S1728277AbgDXMYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:24:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBCF6221EB;
-        Fri, 24 Apr 2020 12:24:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 193682168B;
+        Fri, 24 Apr 2020 12:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587731050;
-        bh=n96JY8p5St3+fpH8Wp/WSeY3nuirYJ85x/kTwjtgvUc=;
+        s=default; t=1587731047;
+        bh=Mi2EeL3jHCWIbg8Moz3TNZ/gICusH4EaR9zxNVDG98U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RSRMTg/x5xoWhRiHRHmzpOAI93T5Zqb2pXqPe6voykODpv2LxWolzHzcG+FKwbspq
-         TWTMKM1Egj7HLFZ4O7C19yCy0REGHeIzLTx0YlnCo2t+ySzqBPpUHYwsgrVLNdVD9L
-         WeBO+S0xddkwigcFcZRiK9XXG7DTW5T1heDglXJ0=
+        b=M8J3xbhelkcipkBzj21mrlm2P0TaRMJylbyMtxFpGB1tT4HLxGpTV7Shz+MnYQ3sx
+         fS0+Ip6YSIrDwab/hvR/YfxImV7pPSXSi4Iuwt0qmcWbUo8AorvM8DCWAoQf+XBwAK
+         8FNibasQQx3pA+BijkB7vmaQKT9Zi7XJca8A+7EU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hui Wang <hui.wang@canonical.com>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.19 12/18] ALSA: hda: call runtime_allow() for all hda controllers
-Date:   Fri, 24 Apr 2020 08:23:49 -0400
-Message-Id: <20200424122355.10453-12-sashal@kernel.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Borislav Petkov <bp@suse.de>,
+        Kees Cook <keescook@chromium.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 09/18] objtool: Fix CONFIG_UBSAN_TRAP unreachable warnings
+Date:   Fri, 24 Apr 2020 08:23:46 -0400
+Message-Id: <20200424122355.10453-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200424122355.10453-1-sashal@kernel.org>
 References: <20200424122355.10453-1-sashal@kernel.org>
@@ -58,45 +63,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-[ Upstream commit 9a6418487b566503c772cb6e7d3d44e652b019b0 ]
+[ Upstream commit bd841d6154f5f41f8a32d3c1b0bc229e326e640a ]
 
-Before the pci_driver->probe() is called, the pci subsystem calls
-runtime_forbid() and runtime_get_sync() on this pci dev, so only call
-runtime_put_autosuspend() is not enough to enable the runtime_pm on
-this device.
+CONFIG_UBSAN_TRAP causes GCC to emit a UD2 whenever it encounters an
+unreachable code path.  This includes __builtin_unreachable().  Because
+the BUG() macro uses __builtin_unreachable() after it emits its own UD2,
+this results in a double UD2.  In this case objtool rightfully detects
+that the second UD2 is unreachable:
 
-For controllers with vgaswitcheroo feature, the pci/quirks.c will call
-runtime_allow() for this dev, then the controllers could enter
-rt_idle/suspend/resume, but for non-vgaswitcheroo controllers like
-Intel hda controllers, the runtime_pm is not enabled because the
-runtime_allow() is not called.
+  init/main.o: warning: objtool: repair_env_string()+0x1c8: unreachable instruction
 
-Since it is no harm calling runtime_allow() twice, here let hda
-driver call runtime_allow() for all controllers. Then the runtime_pm
-is enabled on all controllers after the put_autosuspend() is called.
+We weren't able to figure out a way to get rid of the double UD2s, so
+just silence the warning.
 
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Link: https://lore.kernel.org/r/20200414142725.6020-1-hui.wang@canonical.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/6653ad73c6b59c049211bd7c11ed3809c20ee9f5.1585761021.git.jpoimboe@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/objtool/check.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index b2b2dba6d5f01..84894141eac53 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -2478,6 +2478,7 @@ static int azx_probe_continue(struct azx *chip)
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 9479c74af9baf..4613d796492ab 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -2086,14 +2086,27 @@ static bool ignore_unreachable_insn(struct instruction *insn)
+ 	    !strcmp(insn->sec->name, ".altinstr_aux"))
+ 		return true;
  
- 	if (azx_has_pm_runtime(chip)) {
- 		pm_runtime_use_autosuspend(&pci->dev);
-+		pm_runtime_allow(&pci->dev);
- 		pm_runtime_put_autosuspend(&pci->dev);
- 	}
++	if (!insn->func)
++		return false;
++
++	/*
++	 * CONFIG_UBSAN_TRAP inserts a UD2 when it sees
++	 * __builtin_unreachable().  The BUG() macro has an unreachable() after
++	 * the UD2, which causes GCC's undefined trap logic to emit another UD2
++	 * (or occasionally a JMP to UD2).
++	 */
++	if (list_prev_entry(insn, list)->dead_end &&
++	    (insn->type == INSN_BUG ||
++	     (insn->type == INSN_JUMP_UNCONDITIONAL &&
++	      insn->jump_dest && insn->jump_dest->type == INSN_BUG)))
++		return true;
++
+ 	/*
+ 	 * Check if this (or a subsequent) instruction is related to
+ 	 * CONFIG_UBSAN or CONFIG_KASAN.
+ 	 *
+ 	 * End the search at 5 instructions to avoid going into the weeds.
+ 	 */
+-	if (!insn->func)
+-		return false;
+ 	for (i = 0; i < 5; i++) {
  
+ 		if (is_kasan_insn(insn) || is_ubsan_insn(insn))
 -- 
 2.20.1
 
