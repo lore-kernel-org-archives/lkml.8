@@ -2,90 +2,77 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2229C55191
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1ABC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C672F20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:47:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="2LYDgwQ+"
+	by mail.kernel.org (Postfix) with ESMTP id 598CE20767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 13:48:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbgDXNri (ORCPT
+        id S1728297AbgDXNsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 09:47:38 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:60888 "EHLO vps0.lunn.ch"
+        Fri, 24 Apr 2020 09:48:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727950AbgDXNrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 09:47:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=u/aH99iW2COqVXOfn1R99fZmE2Jmf4kXRPLMJLjKuk8=; b=2LYDgwQ+LWiklz7ulF+m38Tpb1
-        /kOFFLZOuXbMOgNar7wcBbibtFKUJlIJhf/kqISuTb9qf/TSsEMUKhuNLgc7QkKdRP48bb+f4NHmJ
-        k0lpybcseCObwzsFagA54IJj+dC0PnVHC1ufFOD+L8VGbR2cxjEangyxdKd4SCRjas3Q=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jRyfx-004Z0x-Ot; Fri, 24 Apr 2020 15:47:29 +0200
-Date:   Fri, 24 Apr 2020 15:47:29 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Florinel Iordache <florinel.iordache@nxp.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, linux@armlinux.org.uk,
-        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, kuba@kernel.org,
-        corbet@lwn.net, shawnguo@kernel.org, leoyang.li@nxp.com,
-        madalin.bucur@oss.nxp.com, ioana.ciornei@nxp.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2 6/9] net: phy: add backplane kr driver support
-Message-ID: <20200424134729.GC1087366@lunn.ch>
-References: <1587732391-3374-1-git-send-email-florinel.iordache@nxp.com>
- <1587732391-3374-7-git-send-email-florinel.iordache@nxp.com>
+        id S1727010AbgDXNsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 09:48:25 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 608AB20728;
+        Fri, 24 Apr 2020 13:48:24 +0000 (UTC)
+Date:   Fri, 24 Apr 2020 09:48:22 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Zou Wei <zou_wei@huawei.com>
+Cc:     <mingo@redhat.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] tracing: Make tracing_snapshot_instance_cond()
+ static
+Message-ID: <20200424094822.5ae268fb@gandalf.local.home>
+In-Reply-To: <1587614905-48692-1-git-send-email-zou_wei@huawei.com>
+References: <1587614905-48692-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1587732391-3374-7-git-send-email-florinel.iordache@nxp.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +/* Backplane custom logging */
-> +#define bpdev_fn(fn)							\
-> +void bpdev_##fn(struct phy_device *phydev, char *fmt, ...)		\
-> +{									\
-> +	struct va_format vaf = {					\
-> +		.fmt = fmt,						\
-> +	};								\
-> +	va_list args;							\
-> +	va_start(args, fmt);						\
-> +	vaf.va = &args;							\
-> +	if (!phydev->attached_dev)					\
-> +		dev_##fn(&phydev->mdio.dev, "%pV", &vaf);		\
-> +	else								\
-> +		dev_##fn(&phydev->mdio.dev, "%s: %pV",			\
-> +			netdev_name(phydev->attached_dev), &vaf);	\
-> +	va_end(args);							\
-> +}
-> +
-> +bpdev_fn(err)
-> +EXPORT_SYMBOL(bpdev_err);
-> +
-> +bpdev_fn(warn)
-> +EXPORT_SYMBOL(bpdev_warn);
-> +
-> +bpdev_fn(info)
-> +EXPORT_SYMBOL(bpdev_info);
-> +
-> +bpdev_fn(dbg)
-> +EXPORT_SYMBOL(bpdev_dbg);
+On Thu, 23 Apr 2020 12:08:25 +0800
+Zou Wei <zou_wei@huawei.com> wrote:
 
-Didn't i say something about just using phydev_{err|warn|info|dbg}?
+> Fix the following sparse warning:
+> 
+> kernel/trace/trace.c:950:6: warning: symbol 'tracing_snapshot_instance_cond'
+> was not declared. Should it be static?
 
-       Andrew
+Thanks, I'll add it to my queue.
+
+-- Steve
+
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Zou Wei <zou_wei@huawei.com>
+> ---
+>  kernel/trace/trace.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 8d2b988..1424a89 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -947,7 +947,8 @@ int __trace_bputs(unsigned long ip, const char *str)
+>  EXPORT_SYMBOL_GPL(__trace_bputs);
+>  
+>  #ifdef CONFIG_TRACER_SNAPSHOT
+> -void tracing_snapshot_instance_cond(struct trace_array *tr, void *cond_data)
+> +static void tracing_snapshot_instance_cond(struct trace_array *tr,
+> +					   void *cond_data)
+>  {
+>  	struct tracer *tracer = tr->current_trace;
+>  	unsigned long flags;
+
