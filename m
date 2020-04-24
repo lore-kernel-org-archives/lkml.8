@@ -6,61 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA97C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A29C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F1BA20774
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EFBF20857
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:40:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587753623;
-	bh=XMHfIkXrfaPqnQ4CRxrw3tUHPN9cUoylQyWVU5X+sc0=;
+	s=default; t=1587753625;
+	bh=x4/hy+zhBT08d2cmGh72F5pmpw/vyCeEQFpqQ3nE420=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=cjA1pdDvGLqx/CyW0Eq/YD4/KfN/40t6Fy8coTKyOvISZ/k1JNln33qjwlJHkA6Q/
-	 0yJXceI5AMi4JBRyDIj58aWYO2zL7kjtQoYfdvR/in9YO1vz1JxOz/1FJY4tuBKeca
-	 i5zHhHE/lA2EgtTQrQ7ZH+1JAdkRRhURUGfUY/XI=
+	b=ZPP+lrkvEeeo64+8S2n21xat5iOmy71sUv/ucJfZVevqzZL7UOiQzBX7fUJEX3bnc
+	 sTmONEf28Cw7flpKiwFFR98OwXzoIyuC9mTlhlDoDUOIBCNlrCWugZBczq8SuDipiX
+	 rbQDzhZ/jNWSyuOVJDTr9HF3uUKx3qVgMtu6GHc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729057AbgDXSkW (ORCPT
+        id S1729127AbgDXSkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 14:40:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36520 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 14:40:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728932AbgDXSkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 14:40:21 -0400
-Subject: Re: [GIT PULL] arm64 fixes for 5.7-rc3
+        id S1728908AbgDXSkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 14:40:20 -0400
+Subject: Re: [GIT PULL] Kbuild fixes for v5.7-rc3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587753621;
-        bh=XMHfIkXrfaPqnQ4CRxrw3tUHPN9cUoylQyWVU5X+sc0=;
+        s=default; t=1587753620;
+        bh=x4/hy+zhBT08d2cmGh72F5pmpw/vyCeEQFpqQ3nE420=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=hE+octv3R7mBpFsh1sG84qTHjvJ7seFwa0b24D4Or+rImymdJKG74x0qEQolW1rQi
-         1Ot/vcss8IeZ7qFyNzKj1rgW2lcBWyrGFX7XC/2o6aUC5bjVbnP1MgkqWB9sHr/Giw
-         qe/0uMrGppNKJEa9NXpVN23w7pv9wxPlr4sUL3w8=
+        b=ZfsmsUxgalk+w368jN7tiv42SrqKJ3qtXNL5ua1ur/KWpVJWGyAnVwQuBuF7PlwCo
+         M3Jx0x105ghmrMSytk9+DIRYDCdYPUxOJfZ/YOxlHZcb2lRvBYOFSbn2kBwqSeuD5N
+         vxSm/NlLrV5cFRBTPhbd1xYcmpd2aHTz2bGOP1rA=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200424170440.GA29363@gaia>
-References: <20200424170440.GA29363@gaia>
+In-Reply-To: <CAK7LNAQRXn_n60K9LF=pBz0HHg55Lj-1p5gwwmT=YSOdMBXKCA@mail.gmail.com>
+References: <CAK7LNAQRXn_n60K9LF=pBz0HHg55Lj-1p5gwwmT=YSOdMBXKCA@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200424170440.GA29363@gaia>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
-X-PR-Tracked-Commit-Id: 59bff30ad6cec6b5babc8132eb8dcb48f1c82be0
+X-PR-Tracked-Message-Id: <CAK7LNAQRXn_n60K9LF=pBz0HHg55Lj-1p5gwwmT=YSOdMBXKCA@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+ tags/kbuild-fixes-v5.7
+X-PR-Tracked-Commit-Id: d9451798998df3a72dce1bc365bc9e76401b0d3a
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 4544db3f848f1d5d0f48d39c22c9636aecf73cf6
-Message-Id: <158775362098.26557.2207011730746868688.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: b9916af776013051a34ccf47bc5e13acffef16c3
+Message-Id: <158775362043.26557.16458024691321952772.pr-tracker-bot@kernel.org>
 Date:   Fri, 24 Apr 2020 18:40:20 +0000
-To:     Catalin Marinas <catalin.marinas@arm.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 24 Apr 2020 18:04:43 +0100:
+The pull request you sent on Sat, 25 Apr 2020 01:09:27 +0900:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
+> git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git tags/kbuild-fixes-v5.7
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/4544db3f848f1d5d0f48d39c22c9636aecf73cf6
+https://git.kernel.org/torvalds/c/b9916af776013051a34ccf47bc5e13acffef16c3
 
 Thank you!
 
