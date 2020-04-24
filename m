@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCF6C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70857C55197
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C7172168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5074A21775
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:24:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587731080;
-	bh=qEu0WFBLwwFGr/j4YzQwcJbCKPVRRW4ytCD4XaDu31s=;
+	s=default; t=1587731082;
+	bh=DHDc8HltG1BdWiLHKwuKbNTHzHVBSNJSqnUSXAbGIkY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mS7f7BuN2NIM+WWRuMNKzpxkvcZnxzc+clPC6iPp4HUtm4a7nnmmrzYkrERaIDH2o
-	 IJhKeQJMRFhGy/3NXTxLFnj9Twpag8ueBBvtQMteXQvnayYk2qdPMIe2to39NHV3pV
-	 pejacSDo8J1y7l8IaewU+roJqUFt2HJ8UbYGBhYo=
+	b=Znhk1W+YyQvambA6TA1dReBDG+aIPU7IbzeaPxNiga8ipIcpygMOH4WlFRbc7qs+k
+	 G9xOOskOyn0YP6TEPFtuizneacM4Yf0yOYsW2xUeNENBNZRmjceV5p0UHkBx6yQWNL
+	 9gDfnTvVcotlmM2vLEX5LfLo9tieCurERMs00Awg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728482AbgDXMYj (ORCPT
+        id S1728501AbgDXMYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:24:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55120 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:24:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728441AbgDXMYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:24:31 -0400
+        id S1728477AbgDXMYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:24:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A0672168B;
-        Fri, 24 Apr 2020 12:24:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C21920700;
+        Fri, 24 Apr 2020 12:24:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587731070;
-        bh=qEu0WFBLwwFGr/j4YzQwcJbCKPVRRW4ytCD4XaDu31s=;
+        s=default; t=1587731077;
+        bh=DHDc8HltG1BdWiLHKwuKbNTHzHVBSNJSqnUSXAbGIkY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yxajhCBit7rbI5tzPxL+8ROG+ttH1w863cHU089Pk+Ot1y4R2tqia0zDZLXbWZ5ci
-         5XuRvxWSzzsOj+O4U8FyB2Dy4iRwvZClS9CoIRcF8HPRCS2wBggVw136ZOfJ/puHXP
-         uQmI7rU8nxP0x2t1uPnHp+f7saeSVsvJIdwB8M5g=
+        b=ZmCBCtmqZYFv9jo52Njgf/8cM5336w1GJDY6bfo0NPzIX8sQRYkq9ODyTZlCwUJqS
+         SUYhtyw9lsAgpCOz4VAt9lLGiEkhk5+DzxHdPGPQvm/f3cSiF+aYDxZjsCpyk5yZbT
+         TN+9MgV7kENYUapNUWjsqfg2gM0yAfQy41nidSu0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, Borislav Petkov <bp@suse.de>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 08/21] objtool: Support Clang non-section symbols in ORC dump
-Date:   Fri, 24 Apr 2020 08:24:06 -0400
-Message-Id: <20200424122419.10648-8-sashal@kernel.org>
+Cc:     Roman Gushchin <guro@fb.com>, Andreas Dilger <adilger@dilger.ca>,
+        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 14/21] ext4: use non-movable memory for superblock readahead
+Date:   Fri, 24 Apr 2020 08:24:12 -0400
+Message-Id: <20200424122419.10648-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200424122419.10648-1-sashal@kernel.org>
 References: <20200424122419.10648-1-sashal@kernel.org>
@@ -61,109 +59,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Roman Gushchin <guro@fb.com>
 
-[ Upstream commit 8782e7cab51b6bf01a5a86471dd82228af1ac185 ]
+[ Upstream commit d87f639258a6a5980183f11876c884931ad93da2 ]
 
-Historically, the relocation symbols for ORC entries have only been
-section symbols:
+Since commit a8ac900b8163 ("ext4: use non-movable memory for the
+superblock") buffers for ext4 superblock were allocated using
+the sb_bread_unmovable() helper which allocated buffer heads
+out of non-movable memory blocks. It was necessarily to not block
+page migrations and do not cause cma allocation failures.
 
-  .text+0: sp:sp+8 bp:(und) type:call end:0
+However commit 85c8f176a611 ("ext4: preload block group descriptors")
+broke this by introducing pre-reading of the ext4 superblock.
+The problem is that __breadahead() is using __getblk() underneath,
+which allocates buffer heads out of movable memory.
 
-However, the Clang assembler is aggressive about stripping section
-symbols.  In that case we will need to use function symbols:
+It resulted in page migration failures I've seen on a machine
+with an ext4 partition and a preallocated cma area.
 
-  freezing_slow_path+0: sp:sp+8 bp:(und) type:call end:0
+Fix this by introducing sb_breadahead_unmovable() and
+__breadahead_gfp() helpers which use non-movable memory for buffer
+head allocations and use them for the ext4 superblock readahead.
 
-In preparation for the generation of such entries in "objtool orc
-generate", add support for reading them in "objtool orc dump".
-
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/b811b5eb1a42602c3b523576dc5efab9ad1c174d.1585761021.git.jpoimboe@redhat.com
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+Fixes: 85c8f176a611 ("ext4: preload block group descriptors")
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Link: https://lore.kernel.org/r/20200229001411.128010-1-guro@fb.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/orc_dump.c | 44 ++++++++++++++++++++++++----------------
- 1 file changed, 27 insertions(+), 17 deletions(-)
+ fs/buffer.c                 | 11 +++++++++++
+ fs/ext4/inode.c             |  2 +-
+ fs/ext4/super.c             |  2 +-
+ include/linux/buffer_head.h |  8 ++++++++
+ 4 files changed, 21 insertions(+), 2 deletions(-)
 
-diff --git a/tools/objtool/orc_dump.c b/tools/objtool/orc_dump.c
-index c3343820916a6..7cbbbdd932f1d 100644
---- a/tools/objtool/orc_dump.c
-+++ b/tools/objtool/orc_dump.c
-@@ -78,7 +78,7 @@ int orc_dump(const char *_objname)
- 	char *name;
- 	size_t nr_sections;
- 	Elf64_Addr orc_ip_addr = 0;
--	size_t shstrtab_idx;
-+	size_t shstrtab_idx, strtab_idx = 0;
- 	Elf *elf;
- 	Elf_Scn *scn;
- 	GElf_Shdr sh;
-@@ -139,6 +139,8 @@ int orc_dump(const char *_objname)
+diff --git a/fs/buffer.c b/fs/buffer.c
+index bdca7b10e239b..cae7f24a0410e 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -1398,6 +1398,17 @@ void __breadahead(struct block_device *bdev, sector_t block, unsigned size)
+ }
+ EXPORT_SYMBOL(__breadahead);
  
- 		if (!strcmp(name, ".symtab")) {
- 			symtab = data;
-+		} else if (!strcmp(name, ".strtab")) {
-+			strtab_idx = i;
- 		} else if (!strcmp(name, ".orc_unwind")) {
- 			orc = data->d_buf;
- 			orc_size = sh.sh_size;
-@@ -150,7 +152,7 @@ int orc_dump(const char *_objname)
++void __breadahead_gfp(struct block_device *bdev, sector_t block, unsigned size,
++		      gfp_t gfp)
++{
++	struct buffer_head *bh = __getblk_gfp(bdev, block, size, gfp);
++	if (likely(bh)) {
++		ll_rw_block(REQ_OP_READ, REQ_RAHEAD, 1, &bh);
++		brelse(bh);
++	}
++}
++EXPORT_SYMBOL(__breadahead_gfp);
++
+ /**
+  *  __bread_gfp() - reads a specified block and returns the bh
+  *  @bdev: the block_device to read from
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 10838b28c5bbd..c8a1c68c33ae5 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -4593,7 +4593,7 @@ static int __ext4_get_inode_loc(struct inode *inode,
+ 			if (end > table)
+ 				end = table;
+ 			while (b <= end)
+-				sb_breadahead(sb, b++);
++				sb_breadahead_unmovable(sb, b++);
  		}
+ 
+ 		/*
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index f5646bcad7702..074b9d43e24d8 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -4145,7 +4145,7 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+ 	/* Pre-read the descriptors into the buffer cache */
+ 	for (i = 0; i < db_count; i++) {
+ 		block = descriptor_loc(sb, logical_sb_block, i);
+-		sb_breadahead(sb, block);
++		sb_breadahead_unmovable(sb, block);
  	}
  
--	if (!symtab || !orc || !orc_ip)
-+	if (!symtab || !strtab_idx || !orc || !orc_ip)
- 		return 0;
+ 	for (i = 0; i < db_count; i++) {
+diff --git a/include/linux/buffer_head.h b/include/linux/buffer_head.h
+index afa37f807f12c..2e1077ea77db0 100644
+--- a/include/linux/buffer_head.h
++++ b/include/linux/buffer_head.h
+@@ -187,6 +187,8 @@ struct buffer_head *__getblk_gfp(struct block_device *bdev, sector_t block,
+ void __brelse(struct buffer_head *);
+ void __bforget(struct buffer_head *);
+ void __breadahead(struct block_device *, sector_t block, unsigned int size);
++void __breadahead_gfp(struct block_device *, sector_t block, unsigned int size,
++		  gfp_t gfp);
+ struct buffer_head *__bread_gfp(struct block_device *,
+ 				sector_t block, unsigned size, gfp_t gfp);
+ void invalidate_bh_lrus(void);
+@@ -319,6 +321,12 @@ sb_breadahead(struct super_block *sb, sector_t block)
+ 	__breadahead(sb->s_bdev, block, sb->s_blocksize);
+ }
  
- 	if (orc_size % sizeof(*orc) != 0) {
-@@ -171,21 +173,29 @@ int orc_dump(const char *_objname)
- 				return -1;
- 			}
- 
--			scn = elf_getscn(elf, sym.st_shndx);
--			if (!scn) {
--				WARN_ELF("elf_getscn");
--				return -1;
--			}
--
--			if (!gelf_getshdr(scn, &sh)) {
--				WARN_ELF("gelf_getshdr");
--				return -1;
--			}
--
--			name = elf_strptr(elf, shstrtab_idx, sh.sh_name);
--			if (!name || !*name) {
--				WARN_ELF("elf_strptr");
--				return -1;
-+			if (GELF_ST_TYPE(sym.st_info) == STT_SECTION) {
-+				scn = elf_getscn(elf, sym.st_shndx);
-+				if (!scn) {
-+					WARN_ELF("elf_getscn");
-+					return -1;
-+				}
++static inline void
++sb_breadahead_unmovable(struct super_block *sb, sector_t block)
++{
++	__breadahead_gfp(sb->s_bdev, block, sb->s_blocksize, 0);
++}
 +
-+				if (!gelf_getshdr(scn, &sh)) {
-+					WARN_ELF("gelf_getshdr");
-+					return -1;
-+				}
-+
-+				name = elf_strptr(elf, shstrtab_idx, sh.sh_name);
-+				if (!name) {
-+					WARN_ELF("elf_strptr");
-+					return -1;
-+				}
-+			} else {
-+				name = elf_strptr(elf, strtab_idx, sym.st_name);
-+				if (!name) {
-+					WARN_ELF("elf_strptr");
-+					return -1;
-+				}
- 			}
- 
- 			printf("%s+%llx:", name, (unsigned long long)rela.r_addend);
+ static inline struct buffer_head *
+ sb_getblk(struct super_block *sb, sector_t block)
+ {
 -- 
 2.20.1
 
