@@ -2,145 +2,152 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87755C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 21:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CCDC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 21:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 654762098B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 21:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8194D2098B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 21:20:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mwHsCg60"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LCBYIFOl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbgDXVSz (ORCPT
+        id S1726151AbgDXVUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 17:18:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51342 "EHLO
+        Fri, 24 Apr 2020 17:20:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbgDXVSy (ORCPT
+        with ESMTP id S1725970AbgDXVUg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 17:18:54 -0400
+        Fri, 24 Apr 2020 17:20:36 -0400
 Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63741C09B04A
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 14:18:54 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id c3so14946727otp.8
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 14:18:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 166D2C09B048
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 14:20:36 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id j4so14979669otr.11
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 14:20:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=JH4b2yUgrRfNHWgcGuHimY3HuUAtZbHhYYgcbbN+n7w=;
-        b=mwHsCg60VWO11eWQt/hJEUGF5Xp645z/jo0zwnavgwRPqatslMnx6qZ2kCxzXmPbCv
-         mYYvK6kIhQHF94oCzIbl3vtdmsKBNlehlwowsOzDsPcLP5bhH6TZEIHgjcHyn0l9kSZi
-         OM9PPDJeTrO2h7DfVpH3Z8SI+AfJNy+z7plWwpPs5mUbxW0nnqp6yZ6nwFb6GAUJsxdY
-         egaeDfTbWlW5vSqNTS1JOjtz5Ao/BsnxtzpK3T4zYuTcLK3hfphYs5hbdpGasPIjNrZJ
-         0nnct1jkEy26bE47J1Nw26p8Hj5OsXzMgiD3Fqmd9vBffR7DHCdUQ72jKcX3egKfnl1v
-         kQlg==
+        bh=1y5J+t1rkSodDRL2D6On5fzA32zFL6p5sBHGHG/X4BU=;
+        b=LCBYIFOlRnMK2jDl+54oNy6Wv9KmCIa4ziW3YhSidyxuGnOMwqTTw8xE9r3MX6ob9O
+         Mmg3nZVUUAVhAIiLTqYCEJ4OWvZ7RefAPNCFjAGHpnj5HdXdeLaEiESinpQoPOoZz+jo
+         9JEWZnenjuSTn9A2QvSE0q0+Utt89r26vZng/pW8VKrpzQt+a3vFy+e0bSppa8Y6OmJa
+         +7YgPl5AX/QAbFjJbIOIyDj5foGG2i0fNV2Ya36kkwFwYnltYpdZUyVFcau60fEHLbFA
+         h+KY/DJ1K0sh5XeYFrbVfqUd9U2XSkDWZBJDKzVQpvUmMoVL1FnwC05UBlU//14agJ2X
+         E42g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=JH4b2yUgrRfNHWgcGuHimY3HuUAtZbHhYYgcbbN+n7w=;
-        b=ULKRqIYCnI/0Z8R819bpFabCRAJwO5hyV9OYdXDx7Uc2BV97WX8GIshFJaDW7teXU5
-         hFoTX5NuPO09LqPMvJI8m569T3Ho8m7t0vYKohHznhVXWtk+tfvMczjFbuBCOI7omMpa
-         VrU8KJ1EeqBd3K/iLzqcZlJgn8y/Pt1lli+kslRm5b/OFp73iAZoGjfgcQhmiHf1w+lD
-         pqzvf8TTzSwiWU32K3vcoMUepet+8IBQ0YPqkCPK944zBe7YJinAKzqq9y3ZlpBg4olX
-         lLPnsraI6a3DT8xrLX2fzCHZSL/dA8Ht69JCfNyopRwsUhhQAFM1QEq+/JJzWgubEjnX
-         /6ZQ==
-X-Gm-Message-State: AGi0PuaEUnYTXKJ4mDGIyS5lVWkwHhg2VlfagfKuzkByEIEjiWnCcpTE
-        4JpdZ9CRQhHveeX/hEWjLzOnalVBdPWBY4G+9zFqwQ==
-X-Google-Smtp-Source: APiQypIGeacaBHNTvM766dTzv4dPNygP9HlkNLpttNTbMpzV41oh77j62R8ZTlR1RzHISXuwWyhoFgUUG5AfVD2+FyU=
-X-Received: by 2002:a9d:2622:: with SMTP id a31mr10002145otb.231.1587763133240;
- Fri, 24 Apr 2020 14:18:53 -0700 (PDT)
+        bh=1y5J+t1rkSodDRL2D6On5fzA32zFL6p5sBHGHG/X4BU=;
+        b=TE6Yt02LLwBFbvacXCF8H7cbQH1zzcDRyq6hbcPPiwQ4ac4pJrRzFH2VPHiWJzl1GV
+         zbjWznldmcRdyImEQVYTD78K7jh9QboOgVnaiIhrTn9qZds7aH2d3rKh2GKltOWeUVO0
+         xXO+ZDxPNIJ6PLTbNpFseOu35G/vkOhMEi40H3RKhiyudqNp3lLI70LqhB5EMGdM5+SW
+         XakL4P0AEtEEKmBw51Qzq2vG9HVo0hNbW747Az6wgzxmI2tHOS3GLx9pJ1OSK44qc1Iu
+         en/huz8ES22rhTQNgFIerzW/DgNrsp0scnZe1m4FZWf4mSha1ji0BC46VtqYzTjFCP4D
+         aZag==
+X-Gm-Message-State: AGi0PuYdtKGQFn2/09DwHtxuHQwNpYLvG5+fD4aOUlOa6Jz3gi65JsQ4
+        GXPhSuViHInhqpYprpkKNWLazC4VkirTDM5E2W8=
+X-Google-Smtp-Source: APiQypLhAY65mdyvjHIlIKThskIwVZqz00TDDg6W/dwxpuxHUzESsgwrjvzW3tZQMAZe4fe8HB+Fe3T8pZ71ICgz6wo=
+X-Received: by 2002:aca:d844:: with SMTP id p65mr8889936oig.126.1587763235367;
+ Fri, 24 Apr 2020 14:20:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200424155404.10746-1-georgi.djakov@linaro.org> <20200424155404.10746-7-georgi.djakov@linaro.org>
-In-Reply-To: <20200424155404.10746-7-georgi.djakov@linaro.org>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 24 Apr 2020 14:18:17 -0700
-Message-ID: <CAGETcx9iAJRW9Y9orHNF-fC53nNob_vZKYUNEpwf_AeAdWCOjw@mail.gmail.com>
-Subject: Re: [PATCH v7 6/7] OPP: Update the bandwidth on OPP frequency changes
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Evan Green <evgreen@chromium.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20200422042007.4836-1-tony.fischetti@gmail.com> <20200422071100.GS4247@MiWiFi-R3L-srv>
+In-Reply-To: <20200422071100.GS4247@MiWiFi-R3L-srv>
+From:   Tony Fischetti <tony.fischetti@gmail.com>
+Date:   Fri, 24 Apr 2020 17:20:24 -0400
+Message-ID: <CAOMV6SXDe+h+H1jm4GOFt2qPC_fvkbTJ0ZQOdCZX0LD9+esKDQ@mail.gmail.com>
+Subject: Re: [PATCH] x86/setup: Add boot messages about cmdline builtins
+To:     Baoquan He <bhe@redhat.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, dyoung@redhat.com, dave.hansen@linux.intel.com,
+        linux@roeck-us.net, Kees Cook <keescook@chromium.org>,
+        dan.j.williams@intel.com, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 8:54 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
->
-> If the OPP bandwidth values are populated, we want to switch also the
-> interconnect bandwidth in addition to frequency and voltage.
->
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
-> v7:
-> * Addressed review comments from Viresh.
->
-> v2: https://lore.kernel.org/r/20190423132823.7915-5-georgi.djakov@linaro.org
->
->  drivers/opp/core.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index 8e86811eb7b2..66a8ea10f3de 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -808,7 +808,7 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
->         unsigned long freq, old_freq, temp_freq;
->         struct dev_pm_opp *old_opp, *opp;
->         struct clk *clk;
-> -       int ret;
-> +       int ret, i;
->
->         opp_table = _find_opp_table(dev);
->         if (IS_ERR(opp_table)) {
-> @@ -895,6 +895,17 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
->                         dev_err(dev, "Failed to set required opps: %d\n", ret);
->         }
->
-> +       if (!ret && opp_table->paths) {
-> +               for (i = 0; i < opp_table->path_count; i++) {
-> +                       ret = icc_set_bw(opp_table->paths[i],
-> +                                        opp->bandwidth[i].avg,
-> +                                        opp->bandwidth[i].peak);
-> +                       if (ret)
-> +                               dev_err(dev, "Failed to set bandwidth[%d]: %d\n",
-> +                                       i, ret);
-> +               }
-> +       }
-> +
+I like the idea of printing the original one, printing the information
+about the cmdline manipulation, and, then, printing the final one at the
+end, too.
 
-Hey Georgi,
+The only problem is I don't know what to label the first printk so that it
+remains clear that it's not necessarily the _final_ one, yet.
 
-Thanks for getting this series going again and converging on the DT
-bindings! Will be nice to see this land finally.
+In either case, they should probably be changed to `pr_info`s, right?
 
-I skimmed through all the patches in the series and they mostly look
-good (if you address some of Matthias's comments).
 
-My only comment is -- can we drop this patch please? I'd like to use
-devfreq governors for voting on bandwidth and this will effectively
-override whatever bandwidth decisions are made by the devfreq
-governor.
+On Wed, Apr 22, 2020 at 3:11 AM Baoquan He <bhe@redhat.com> wrote:
+>
+> On 04/22/20 at 12:20am, Tony Fischetti wrote:
+> > While the ability to override or append to the boot command line has
+> > been added, the boot messages contain no information as to whether the
+> > cmdline was manipulated by the build-time options. This patch, for x86,
+> > adds boot messages specifying whether the cmdline was manipulated and
+> > waits for the potential changes to take place before printing the final
+> > boot command line.
+> >
+> > Signed-off-by: Tony Fischetti <tony.fischetti@gmail.com>
+> > ---
+> >  arch/x86/kernel/setup.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> > index 4b3fa6cd3106..28d77f01fd0d 100644
+> > --- a/arch/x86/kernel/setup.c
+> > +++ b/arch/x86/kernel/setup.c
+> > @@ -828,7 +828,6 @@ void __init setup_arch(char **cmdline_p)
+> >        */
+> >       __flush_tlb_all();
+> >  #else
+> > -     printk(KERN_INFO "Command line: %s\n", boot_command_line);
+> >       boot_cpu_data.x86_phys_bits = MAX_PHYSMEM_BITS;
+> >  #endif
+> >
+> > @@ -904,10 +903,12 @@ void __init setup_arch(char **cmdline_p)
+> >
+> >  #ifdef CONFIG_CMDLINE_BOOL
+> >  #ifdef CONFIG_CMDLINE_OVERRIDE
+> > +     pr_info("Overriding command line with builtin\n");
+> >       strlcpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
+> >  #else
+> >       if (builtin_cmdline[0]) {
+> >               /* append boot loader cmdline to builtin */
+> > +             pr_info("Appending command line to builtin\n");
+> >               strlcat(builtin_cmdline, " ", COMMAND_LINE_SIZE);
+> >               strlcat(builtin_cmdline, boot_command_line, COMMAND_LINE_SIZE);
+> >               strlcpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
+> > @@ -916,6 +917,7 @@ void __init setup_arch(char **cmdline_p)
+> >  #endif
+> >
+> >       strlcpy(command_line, boot_command_line, COMMAND_LINE_SIZE);
+> > +     pr_info("Command line: %s\n", command_line);
+>
+> Yeah, adding info to tell there's action on overriding or apending
+> command line looks good to me. Maybe keep the printing of the original
+> command, we can get the final command line from '/proc/cmdline' after
+> system boot, or just get it from the original cmdline + CONFIG_CMDLINE.
+> Or print the original cmdline and the final cmdline both.
+>
+> Personal opinion.
+>
+> >       *cmdline_p = command_line;
+> >
+> >       /*
+> > --
+> > 2.20.1
+> >
+>
 
-If you really want to keep this, then maybe don't "get" the icc path
-by default in patch 4/7 and then let the device driver set the icc
-path if it wants the opp framework to manage the bandwidth too?
 
--Saravana
+-- 
+--
+Tony Fischetti
+tony.fischetti@gmail.com
+(718) 431-4597
