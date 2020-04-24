@@ -2,220 +2,105 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4133FC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4D3C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C40920857
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:45:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EQkzd/o7"
+	by mail.kernel.org (Postfix) with ESMTP id 3C5432075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:47:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587754032;
+	bh=3DnuD4Zl9wa8w/vDHbLj6+0pA+nXALn2i2YRRevApPc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GFaoWyLFrQS0SV33mP/eZwdGsppD7ZqatRblVAVPFlxYyE0jGrrsuBOc6LIx9Lj7x
+	 qGUWxpHg3DjSI2c1O03YsnW4eGCLiNivyU306codGM1nxY2paEq1PHg2JCMYw8Iru+
+	 ijQXmq84C/NE36OnAcjLNBkl7CY/pAhKmtx1MAI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729417AbgDXSpf (ORCPT
+        id S1728990AbgDXSrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 14:45:35 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:34892 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729397AbgDXSpa (ORCPT
+        Fri, 24 Apr 2020 14:47:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727031AbgDXSrK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 14:45:30 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03OIjKZ2095355;
-        Fri, 24 Apr 2020 13:45:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587753920;
-        bh=UH5bBvBGVrJjTafJ+gSzJOdBHusIlSmwCEeBQbkbkZU=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=EQkzd/o73J4uLP5eHaM9zqdUohbUN1/szI6Z8qspz9uLmN0miLa+KbvpW4tYrZk8m
-         siwdFNslG92nFNfi9i2EDl1K26qONCYGTmZJVfN6kNZ3p6B4g4SQ2aBbSIe/2nGSkd
-         aqMVX+sCPsvq5zRgWKrVEsnuk2cVwtSuiCeG7HyE=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03OIjK3X086888;
-        Fri, 24 Apr 2020 13:45:20 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 24
- Apr 2020 13:45:19 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 24 Apr 2020 13:45:19 -0500
-Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03OIiAaM047967;
-        Fri, 24 Apr 2020 13:45:16 -0500
-From:   Pratyush Yadav <p.yadav@ti.com>
-To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-CC:     Pratyush Yadav <p.yadav@ti.com>, Sekhar Nori <nsekhar@ti.com>
-Subject: [PATCH v4 16/16] mtd: spi-nor: allow using MT35XU512ABA in Octal DTR mode
-Date:   Sat, 25 Apr 2020 00:14:10 +0530
-Message-ID: <20200424184410.8578-17-p.yadav@ti.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200424184410.8578-1-p.yadav@ti.com>
-References: <20200424184410.8578-1-p.yadav@ti.com>
+        Fri, 24 Apr 2020 14:47:10 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 834D7C09B049
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 11:47:10 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id l11so8549468lfc.5
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 11:47:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4xGKLkYDrbkxXaPDoAGMclBp7ffRJ6EszDQ3T54v3nc=;
+        b=MwEjKDGJj1MODwKnNzA+vLKGg1thtRHT3e3U4LHSFK+h9wYouw58019uyy6/KEmGky
+         24VnGgQr1b7rgt9D8CYnPjqHNk/6kz2e+VairFXVurg4X02ZtnTJl3DNdjL89KBLASEH
+         jDDJT1LRGx4BfhkYMobF+P34B+Sx/MgLFiZjc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4xGKLkYDrbkxXaPDoAGMclBp7ffRJ6EszDQ3T54v3nc=;
+        b=CQ5qLZm7sOQN1aNHN87pWkfjL1rFH/Q82f9PIbxZdL1J+TKvGym00WHaB6e9sGhpGs
+         5FAC+5+rqd34cUJAB9vux4Aw4flEL4u6/KPn37jBTgDpqj+2h6QGSv2rb9LzFEoz2wVV
+         mXuc667i+JBv6jIsQPUYQ5JLAMz+YN9GavllTw2smECUmC3jxJht8gidT6rzmLWJ9sLx
+         z98NT1R6Xcg6uPwQY5a6gIBfMPITZpuLciupXC/4kvlLPeo8611KzUhDsY06UCY0YnZx
+         /feC/6F7l27mH5sRjsI1DbjSZ4pdIgSok5EU8pXQfchJz9PHoaTipq0B5DZ0n7r5x3H8
+         RR9A==
+X-Gm-Message-State: AGi0PuY/hkZ4T5j5nWqcSJKC2qKwVbEj3r26BRch7vy/gEhWrqf3Vq/l
+        BA5LI/JhmOpANvrloYEXwPyboyY5bm4=
+X-Google-Smtp-Source: APiQypIBXSMCd+4z4ZSs1qmKNqqhjJ3Sx17B/vu8OfPFqbTcLaDN95hTDjDhfzwh3kpVyzbCidKwJQ==
+X-Received: by 2002:a19:4204:: with SMTP id p4mr7189707lfa.111.1587754028421;
+        Fri, 24 Apr 2020 11:47:08 -0700 (PDT)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
+        by smtp.gmail.com with ESMTPSA id x24sm4925395lfc.6.2020.04.24.11.47.07
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Apr 2020 11:47:07 -0700 (PDT)
+Received: by mail-lj1-f176.google.com with SMTP id e25so11028055ljg.5
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 11:47:07 -0700 (PDT)
+X-Received: by 2002:a2e:9a54:: with SMTP id k20mr4968653ljj.265.1587754027148;
+ Fri, 24 Apr 2020 11:47:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
+ <87ftcv1nqe.fsf@x220.int.ebiederm.org> <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
+ <CAHk-=wgXEJdkgGzZQzBDGk7ijjVdAVXe=G-mkFSVng_Hpwd4tQ@mail.gmail.com>
+ <87tv19tv65.fsf@x220.int.ebiederm.org> <CAHk-=wj-K3fqdMr-r8WgS8RKPuZOuFbPXCEUe9APrdShn99xsA@mail.gmail.com>
+In-Reply-To: <CAHk-=wj-K3fqdMr-r8WgS8RKPuZOuFbPXCEUe9APrdShn99xsA@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 24 Apr 2020 11:46:51 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg9RQ4rc-TmiP0-rdGPGje2uAX5aWh+=pFhfVdKq=u+aA@mail.gmail.com>
+Message-ID: <CAHk-=wg9RQ4rc-TmiP0-rdGPGje2uAX5aWh+=pFhfVdKq=u+aA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] proc: Ensure we see the exit of each process tid exactly
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since this flash doesn't have a Profile 1.0 table, the Octal DTR
-capabilities are enabled in the post SFDP fixup, along with the 8D-8D-8D
-fast read settings.
+On Fri, Apr 24, 2020 at 11:02 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+>  [..] even a "double cmpxchg" is
+> actually just a double-_sized_ one, not a two different locations
+> one
 
-Enable Octal DTR mode with 20 dummy cycles to allow running at the
-maximum supported frequency of 200Mhz.
+Historical accuracy side note: the 68020 actually had a CAS2 that was
+"two different locations".
 
-The flash supports the soft reset sequence. So, add the flag in the
-flash's info.
+Maybe somebody else did too.
 
-Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
----
- drivers/mtd/spi-nor/micron-st.c | 113 +++++++++++++++++++++++++++++++-
- 1 file changed, 112 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mtd/spi-nor/micron-st.c b/drivers/mtd/spi-nor/micron-st.c
-index 02c0b53f6097..5a1f0428032f 100644
---- a/drivers/mtd/spi-nor/micron-st.c
-+++ b/drivers/mtd/spi-nor/micron-st.c
-@@ -8,10 +8,121 @@
- 
- #include "core.h"
- 
-+#define SPINOR_OP_MT_DTR_RD	0xfd	/* Fast Read opcode in DTR mode */
-+#define SPINOR_OP_MT_RD_ANY_REG	0x85	/* Read volatile register */
-+#define SPINOR_OP_MT_WR_ANY_REG	0x81	/* Write volatile register */
-+#define SPINOR_REG_MT_CFR0V	0x00	/* For setting octal DTR mode */
-+#define SPINOR_REG_MT_CFR1V	0x01	/* For setting dummy cycles */
-+#define SPINOR_MT_DTR_NO_DQS	0xc7	/* Enable Octal DTR without DQS. */
-+#define SPINOR_MT_EXSPI		0xff	/* Enable Extended SPI (default) */
-+
-+static int spi_nor_micron_octal_dtr_enable(struct spi_nor *nor, bool enable)
-+{
-+	struct spi_mem_op op;
-+	u8 *buf = nor->bouncebuf;
-+	u8 addr_width;
-+	int ret;
-+
-+	if (enable)
-+		addr_width = 3;
-+	else
-+		addr_width = 4;
-+
-+	ret = spi_nor_write_enable(nor);
-+	if (ret)
-+		return ret;
-+
-+	if (enable)
-+		*buf = SPINOR_MT_DTR_NO_DQS;
-+	else
-+		*buf = SPINOR_MT_EXSPI;
-+	op = (struct spi_mem_op)
-+		SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_MT_WR_ANY_REG, 1),
-+			   SPI_MEM_OP_ADDR(addr_width, SPINOR_REG_MT_CFR0V, 1),
-+			   SPI_MEM_OP_NO_DUMMY,
-+			   SPI_MEM_OP_DATA_OUT(1, buf, 1));
-+
-+	if (!enable)
-+		spi_nor_spimem_setup_op(nor, &op, SNOR_PROTO_8_8_8_DTR);
-+
-+	ret = spi_mem_exec_op(nor->spimem, &op);
-+	if (ret) {
-+		dev_err(nor->dev, "Failed to enable octal DTR mode\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int mt35xu512aba_setup(struct spi_nor *nor,
-+			      const struct spi_nor_hwcaps *hwcaps)
-+{
-+	struct spi_mem_op op;
-+	u8 *buf = nor->bouncebuf;
-+	u8 addr_width = 3;
-+	int ret;
-+
-+	if (!nor->spimem) {
-+		dev_err(nor->dev,
-+			"operation not supported for non-spimem drivers\n");
-+		return -ENOTSUPP;
-+	}
-+
-+	/* Set dummy cycles for Fast Read to the default of 20. */
-+	ret = spi_nor_write_enable(nor);
-+	if (ret)
-+		return ret;
-+
-+	*buf = 20;
-+	op = (struct spi_mem_op)
-+		SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_MT_WR_ANY_REG, 1),
-+			   SPI_MEM_OP_ADDR(addr_width, SPINOR_REG_MT_CFR1V, 1),
-+			   SPI_MEM_OP_NO_DUMMY,
-+			   SPI_MEM_OP_DATA_OUT(1, buf, 1));
-+	ret = spi_mem_exec_op(nor->spimem, &op);
-+	if (ret)
-+		return ret;
-+
-+	ret = spi_nor_wait_till_ready(nor);
-+	if (ret)
-+		return ret;
-+
-+
-+	return spi_nor_default_setup(nor, hwcaps);
-+}
-+
-+static void mt35xu512aba_default_init(struct spi_nor *nor)
-+{
-+	nor->params->octal_dtr_enable = spi_nor_micron_octal_dtr_enable;
-+	nor->params->setup = mt35xu512aba_setup;
-+}
-+
-+static void mt35xu512aba_post_sfdp_fixup(struct spi_nor *nor)
-+{
-+	/* Set the Fast Read settings. */
-+	nor->params->hwcaps.mask |= SNOR_HWCAPS_READ_8_8_8_DTR;
-+	spi_nor_set_read_settings(&nor->params->reads[SNOR_CMD_READ_8_8_8_DTR],
-+				  0, 20, SPINOR_OP_MT_DTR_RD,
-+				  SNOR_PROTO_8_8_8_DTR);
-+
-+	nor->params->hwcaps.mask |= SNOR_HWCAPS_PP_8_8_8_DTR;
-+
-+	nor->cmd_ext_type = SPI_NOR_EXT_REPEAT;
-+	nor->params->rdsr_dummy = 8;
-+	nor->params->rdsr_addr_nbytes = 0;
-+}
-+
-+static struct spi_nor_fixups mt35xu512aba_fixups = {
-+	.default_init = mt35xu512aba_default_init,
-+	.post_sfdp = mt35xu512aba_post_sfdp_fixup,
-+};
-+
- static const struct flash_info micron_parts[] = {
- 	{ "mt35xu512aba", INFO(0x2c5b1a, 0, 128 * 1024, 512,
- 			       SECT_4K | USE_FSR | SPI_NOR_OCTAL_READ |
--			       SPI_NOR_4B_OPCODES) },
-+			       SPI_NOR_4B_OPCODES | SPI_NOR_OCTAL_DTR_READ |
-+			       SPI_NOR_SOFT_RESET)
-+		.fixups = &mt35xu512aba_fixups},
- 	{ "mt35xu02g", INFO(0x2c5b1c, 0, 128 * 1024, 2048,
- 			    SECT_4K | USE_FSR | SPI_NOR_OCTAL_READ |
- 			    SPI_NOR_4B_OPCODES) },
--- 
-2.25.0
-
+            Linus
