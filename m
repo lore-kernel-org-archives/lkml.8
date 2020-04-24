@@ -2,97 +2,207 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D22C55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F63EC55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28F5020776
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:53:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BCE02075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:54:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MrmZBBIC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o/w9qIEs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbgDXPxm (ORCPT
+        id S1728187AbgDXPyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:53:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55584 "EHLO
+        Fri, 24 Apr 2020 11:54:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726301AbgDXPxl (ORCPT
+        with ESMTP id S1727049AbgDXPyH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:53:41 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9453AC09B048
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 08:53:41 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id a32so4021166pje.5
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 08:53:41 -0700 (PDT)
+        Fri, 24 Apr 2020 11:54:07 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F0DAC09B046
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 08:54:07 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 188so11051467wmc.2
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 08:54:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=N0+d74YhkRo0RcT3ihN7Yp1K7rYS7rIY6Vw+q5Iylco=;
-        b=MrmZBBIC8M+G4yy4+vJVJKJEGAiam2pvKgOKZkPOmzTrAD9O5lPHsuzy6uXcDvFusQ
-         cUb+Hz660fQTAuyvk52y++edasHsMYbDuWR+rDjk95oNG4zsO0/ewtwuaMkJZY4EtmEO
-         fihNtSDDVrA02Yexf2/Gho+EvfOUEIjXj0P+rXF+5F22nNBpRC6RviHJURl3g8P05fp/
-         2yWw6TyeBXyqjGiFPG6lJpaj+oPQRqsDWLvCFC4+XYp+FFa4UTABs0ciNZlzG+vMFaPw
-         ja5BzpzPaxJ0vKHncKUPfYyaEef2OR2ntqU0DB4Eu+HUTeeZpF8vfo1uDzeOSMeseFJO
-         udeA==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ADrifka4jhigxTALfjwTYGfnpgXgMD4+a7Agmx5rILo=;
+        b=o/w9qIEsR+jr/v3slfQCnrCxYARzCrPSp9pGgpkQYlXsYkQqTqh5Ji/+MpmCSaLS7v
+         qKHbT2sNu/Pb2EjTHUgKbzkC/1MtWLpU3ixdlfcQZKcYuF26dD3heeBoqcTVwGATqcZl
+         AcN32liN1kpIyZ+HvwHkiq3cux6jxRru7nZGyTjNy47N8qAtif6IiMo45FWa+L6zjq4m
+         XLGqPlzFurqrLGpfGX0krk2zrVOCU5MhoV+9lfTJrk3gaT90QF23dKMEi7JaMBBLi7/W
+         yaezqte/sAZIbTiDiu3SA8Iwa4hxtfQd+ZjgfOzOTvVjFliw2MSetKNqqA77YYdqNUk3
+         cdkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=N0+d74YhkRo0RcT3ihN7Yp1K7rYS7rIY6Vw+q5Iylco=;
-        b=hXudfFQG3Dax/wCWwTcwUBgeXc0XJYI08T3eBGmhFmCQNpnjOXKO4OIB57C3b1f63C
-         nkCUueRVUVLhrjosvrTiQPFmj9+g9o8BXpcNm1AvK75k+LB4BCmYAjjyQCryb0itwQA6
-         icGNs6P/V59FOjbL8CISfn54DzZEUt1GGGXWfvjZXHIq8yj11OW3hGmh7xQytsPbT0vr
-         QIqWDLNPhKTJ3ksjXVIiqboWJ3suq68FU+Tyiu4pHEMzqFBSZ0LcfEEhGLpBLo8nJWrT
-         KHZ/CPdBwYhmcPtajdFZqgfkt7kZUtha4cmY2VfrU9Dqx9V4g3dDVddxFk7cIIORBQ/V
-         4LAA==
-X-Gm-Message-State: AGi0PuZX8nhHR+4QTFzE4mkhOfsjPDyJy9ggkZQo6fqdrdjGQG1FNvfA
-        if1TvG1ransFGhEtmli0y8U=
-X-Google-Smtp-Source: APiQypI0xbBs0yDgR9WbZEHtL87BHKaLqDQYsvXWkc/t1gT1RnBvwRJizllKfYpSh24fInXYu2TGhw==
-X-Received: by 2002:a17:90a:f985:: with SMTP id cq5mr6875260pjb.193.1587743621107;
-        Fri, 24 Apr 2020 08:53:41 -0700 (PDT)
-Received: from ubuntu.localdomain ([220.116.27.194])
-        by smtp.gmail.com with ESMTPSA id z5sm6071305pfn.142.2020.04.24.08.53.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 08:53:40 -0700 (PDT)
-From:   Youngjun Park <her0gyugyu@gmail.com>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     gregkh@linuxfoundation.org, her0gyu@naver.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] fs: fixup redundant indentation.
-Date:   Fri, 24 Apr 2020 08:53:34 -0700
-Message-Id: <20200424155334.17053-1-her0gyugyu@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ADrifka4jhigxTALfjwTYGfnpgXgMD4+a7Agmx5rILo=;
+        b=FIfZw1iuHYj4PYpnvR3c8iut9twNRHSKlL/vSf07+mbByRKTxUl0LMAPALxu/gb1el
+         dyJ+ybLfY8Q1PWeMftUXSLthJgshu7mVg5+lU/pHOd0KDJ4YvEi95t4edJJqMk4+Z5Ye
+         JRk3NevIhllmZXco6ZAPCo/h1taxduZLAIYZSr4e5mpD+PmmIXX7Tk1SD3suMGGJKVjE
+         jyAlFNu9jjdbq/gKNQIgHEZf24QHpio+IrFikkmSoJOZ6ikiZv302K1Ruxrjo8SQXIAx
+         +WKvHeQkSmoL4eT5OMXxhV3SZuDYQJjbotlt0K9ckKN6v97Kg+iIQMLPL0qEyP5fTYcr
+         /3Ew==
+X-Gm-Message-State: AGi0PuaG+WJPgGVSmVfsqkJAMej9KR2Tmr/KTEsl4lmOTUsPDnyhF73G
+        r+ccphx35euj0xq84eWPDKYx6A==
+X-Google-Smtp-Source: APiQypI10LpqQHNiTVHYn+3Mk1k8a0b6tul7ntLB01e7r3o7yyKMm+eFZUqWmrr9UyT6X72zGWwYhQ==
+X-Received: by 2002:a7b:ce09:: with SMTP id m9mr10474294wmc.156.1587743646215;
+        Fri, 24 Apr 2020 08:54:06 -0700 (PDT)
+Received: from localhost.localdomain ([87.120.218.65])
+        by smtp.googlemail.com with ESMTPSA id z76sm3923583wmc.9.2020.04.24.08.54.04
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 Apr 2020 08:54:05 -0700 (PDT)
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+To:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
+        robh+dt@kernel.org, rjw@rjwysocki.net, saravanak@google.com,
+        sibis@codeaurora.org
+Cc:     rnayak@codeaurora.org, bjorn.andersson@linaro.org,
+        vincent.guittot@linaro.org, jcrouse@codeaurora.org,
+        evgreen@chromium.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        georgi.djakov@linaro.org
+Subject: [PATCH v7 0/7] Introduce OPP bandwidth bindings
+Date:   Fri, 24 Apr 2020 18:53:57 +0300
+Message-Id: <20200424155404.10746-1-georgi.djakov@linaro.org>
+X-Mailer: git-send-email 2.26.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Youngjun Park <her0gyu@naver.com>
+Here is a proposal to extend the OPP bindings with bandwidth based on
+a few previous discussions [1] and patchsets from me [2][3] and Saravana
+[4][5][6][7][8][9].
 
-Signed-off-by: Youngjun Park <her0gyu@naver.com>
+Changes in v7:
+* This version is combination of both patchsets by Saravana and me, based
+on [3] and [9].
+* The latest version of DT bindings from Saravana is used here, with a
+minor change of using arrays instead of single integers for opp-peak-kBps
+and opp-avg-kBps. This is needed to support multiple interconnect paths.
+* The concept of having multiple OPP tables per device has been dropped,
+as it was nacked by Viresh.
+* Various reviews comments have been addressed and some patches are
+split, and there are also some new patches. Thanks to Viresh, Sibi and
+others for providing feedback!
 
-fixup redundant indentation on the label.
----
- fs/kernfs/file.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+With this version of the patchset, the CPU/GPU to DDR bandwidth scaling
+will look like this in DT:
 
-diff --git a/fs/kernfs/file.c b/fs/kernfs/file.c
-index 34366db3620d..7fb5d1e48ef7 100644
---- a/fs/kernfs/file.c
-+++ b/fs/kernfs/file.c
-@@ -544,7 +544,7 @@ static int kernfs_get_open_node(struct kernfs_node *kn,
- {
- 	struct kernfs_open_node *on, *new_on = NULL;
- 
-- retry:
-+retry:
- 	mutex_lock(&kernfs_open_file_mutex);
- 	spin_lock_irq(&kernfs_open_node_lock);
- 
--- 
-2.17.1
+One interconnect path (no change from Saravana's v6 patches):
+
+cpu@0 {
+	operating-points-v2 = <&cpu_opp_table>;
+	interconnects = <&noc1 MASTER1 &noc2 SLAVE1>,
+};
+
+cpu_opp_table: cpu_opp_table {
+	compatible = "operating-points-v2";
+
+	opp-800000000 {
+		opp-hz = /bits/ 64 <800000000>;
+		opp-peak-kBps = <1525000>;
+		opp-avg-kBps = <457000>;
+	};
+
+	opp-998400000 {
+		opp-hz = /bits/ 64 <998400000>;
+		opp-peak-kBps = <7614000>;
+		opp-avg-kBps = <2284000>;
+	};
+};
+
+Two interconnect paths:
+
+cpu@0 {
+	operating-points-v2 = <&cpu_opp_table>;
+	interconnects = <&noc1 MASTER1 &noc2 SLAVE1>,
+			<&noc3 MASTER2 &noc4 SLAVE2>;
+};
+
+cpu_opp_table: cpu_opp_table {
+	compatible = "operating-points-v2";
+
+	opp-800000000 {
+		opp-hz = /bits/ 64 <800000000>;
+		opp-peak-kBps = <1525000 2000>;
+		opp-avg-kBps = <457000 1000>;
+	};
+
+	opp-998400000 {
+		opp-hz = /bits/ 64 <998400000>;
+		opp-peak-kBps = <7614000 4000>;
+		opp-avg-kBps = <2284000 2000>;
+	};
+};
+
+------
+
+Every functional block on a SoC can contribute to the system power
+efficiency by expressing its own bandwidth needs (to memory or other SoC
+modules). This will allow the system to save power when high throughput
+is not required (and also provide maximum throughput when needed).
+
+There are at least three ways for a device to determine its bandwidth
+needs:
+	1. The device can dynamically calculate the needed bandwidth
+based on some known variable. For example: UART (baud rate), I2C (fast
+mode, high-speed mode, etc), USB (specification version, data transfer
+type), SDHC (SD standard, clock rate, bus-width), Video Encoder/Decoder
+(video format, resolution, frame-rate)
+
+	2. There is a hardware specific value. For example: hardware
+specific constant value (e.g. for PRNG) or use-case specific value that
+is hard-coded.
+
+	3. Predefined SoC/board specific bandwidth values. For example:
+CPU or GPU bandwidth is related to the current core frequency and both
+bandwidth and frequency are scaled together.
+
+This patchset is trying to address point 3 above by extending the OPP
+bindings to support predefined SoC/board bandwidth values and adds
+support in cpufreq-dt to scale the interconnect between the CPU and the
+DDR together with frequency and voltage.
+
+[1] https://patchwork.kernel.org/patch/10577315/
+[2] https://lore.kernel.org/r/20190313090010.20534-1-georgi.djakov@linaro.org/
+[3] https://lore.kernel.org/r/20190423132823.7915-1-georgi.djakov@linaro.org/
+[4] https://lore.kernel.org/r/20190608044339.115026-1-saravanak@google.com
+[5] https://lore.kernel.org/r/20190614041733.120807-1-saravanak@google.com
+[6] https://lore.kernel.org/r/20190703011020.151615-1-saravanak@google.com
+[7] https://lore.kernel.org/r/20190726231558.175130-1-saravanak@google.com
+[8] https://lore.kernel.org/r/20190807223111.230846-1-saravanak@google.com
+[9] https://lore.kernel.org/r/20191207002424.201796-1-saravanak@google.com
+
+Georgi Djakov (5):
+  interconnect: Add of_icc_get_by_index() helper function
+  OPP: Add support for parsing interconnect bandwidth
+  OPP: Add sanity checks in _read_opp_key()
+  OPP: Update the bandwidth on OPP frequency changes
+  cpufreq: dt: Add support for interconnect bandwidth scaling
+
+Saravana Kannan (2):
+  dt-bindings: opp: Introduce opp-peak-kBps and opp-avg-kBps bindings
+  OPP: Add helpers for reading the binding properties
+
+ Documentation/devicetree/bindings/opp/opp.txt |  20 ++-
+ .../devicetree/bindings/property-units.txt    |   4 +
+ drivers/cpufreq/Kconfig                       |   1 +
+ drivers/cpufreq/cpufreq-dt.c                  |  15 ++
+ drivers/interconnect/core.c                   |  68 +++++--
+ drivers/opp/Kconfig                           |   1 +
+ drivers/opp/core.c                            |  44 ++++-
+ drivers/opp/of.c                              | 170 ++++++++++++++++--
+ drivers/opp/opp.h                             |  10 ++
+ include/linux/interconnect.h                  |   6 +
+ include/linux/pm_opp.h                        |  12 ++
+ 11 files changed, 311 insertions(+), 40 deletions(-)
 
