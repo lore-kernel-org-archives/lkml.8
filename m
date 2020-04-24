@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EACF9C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A75C55191
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDC0C20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:26:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5E2120776
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:26:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587731164;
-	bh=OEI2R7+enJOr2IEcMB4Te9qDBFNBaSxgakT36s5/Vl0=;
+	s=default; t=1587731174;
+	bh=QyNy5j1CsOPfr/0z9kGW7RPnvW+TmRubAO7gJnwE054=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iNACqJwj7/3ZGqTOxcfUyduFPBmXEYahwyeWJ9Rjzjwse2MDozMt48Ox4D0btKZmG
-	 zo+EPEqPIo5L58GyDss1EmZaE41mWJk2Bg5svBqk5l0htbmEJRu1gWTp9OF7VAOfUC
-	 XNxPjQXCBnOS7UNTvWpoGb+ozYwg9TcFgVeMUKio=
+	b=XgJTE8levqZB7yFSQJf7x5wnhGFmaV1MbPZg452HWxJqIMGlYK3m/pRkAD2UQcnze
+	 LHzptsQaYVdmZqoSVydgzxB2JQQsz1TolPHY1+KQfwsUuPhF+LmXCBHRbdsecoJHU8
+	 2Xp3Tc125UkE6GT2W3o1C4LAG2NzLYd6JA+KsALc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbgDXM0D (ORCPT
+        id S1726698AbgDXM0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:26:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56016 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:26:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728614AbgDXMZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:25:01 -0400
+        id S1728595AbgDXMY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:24:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B35B21655;
-        Fri, 24 Apr 2020 12:25:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D0FC2087E;
+        Fri, 24 Apr 2020 12:24:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587731101;
-        bh=OEI2R7+enJOr2IEcMB4Te9qDBFNBaSxgakT36s5/Vl0=;
+        s=default; t=1587731099;
+        bh=QyNy5j1CsOPfr/0z9kGW7RPnvW+TmRubAO7gJnwE054=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=brpbhhRn3ih6sEYy222GBZ3PRI0F+5SVaL0mwAI9hSy1+FOG93P6Hg2QtlKP++jh3
-         LFiJ7iPKlC+1OBIHyTShcr9NdIzKMAdPy/Y7SI+x+yDN0SsLBq7Ydb9cU+FPE7Vm4e
-         R6BJRQ7PI0hf2WH4KquSU7E0jlVpwaoM0w/z5/QU=
+        b=Ns+9SCFDClEBGTtQ4RNbJnyXxlrnIezbxWphd33X1YhAKfXb0nBAmA6211NyxdXyR
+         gWRw1U3s/qW64E6lBDqy0aVFnHUQ6Q/qiuVQCCUZcMGIYDXWkOFxjC8jLAXvTlCeh2
+         O+DDaoyaGZqDRSzFybaLu2S2jSxqrLNBrvgRBWn0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Frank Rowand <frank.rowand@sony.com>,
-        "Erhard F ." <erhard_f@mailbox.org>, Rob Herring <robh@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 12/13] of: unittest: kmemleak on changeset destroy
-Date:   Fri, 24 Apr 2020 08:24:45 -0400
-Message-Id: <20200424122447.10882-12-sashal@kernel.org>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 10/13] net/cxgb4: Check the return from t4_query_params properly
+Date:   Fri, 24 Apr 2020 08:24:43 -0400
+Message-Id: <20200424122447.10882-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200424122447.10882-1-sashal@kernel.org>
 References: <20200424122447.10882-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,42 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-[ Upstream commit b3fb36ed694b05738d45218ea72cf7feb10ce2b1 ]
+[ Upstream commit c799fca8baf18d1bbbbad6c3b736eefbde8bdb90 ]
 
-kmemleak reports several memory leaks from devicetree unittest.
-This is the fix for problem 1 of 5.
+Positive return values are also failures that don't set val,
+although this probably can't happen. Fixes gcc 10 warning:
 
-of_unittest_changeset() reaches deeply into the dynamic devicetree
-functions.  Several nodes were left with an elevated reference
-count and thus were not properly cleaned up.  Fix the reference
-counts so that the memory will be freed.
+drivers/net/ethernet/chelsio/cxgb4/t4_hw.c: In function ‘t4_phy_fw_ver’:
+drivers/net/ethernet/chelsio/cxgb4/t4_hw.c:3747:14: warning: ‘val’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+ 3747 |  *phy_fw_ver = val;
 
-Fixes: 201c910bd689 ("of: Transactional DT support.")
-Reported-by: Erhard F. <erhard_f@mailbox.org>
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
+Fixes: 01b6961410b7 ("cxgb4: Add PHY firmware support for T420-BT cards")
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/of/unittest.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/chelsio/cxgb4/t4_hw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 92530525e3556..40d170c1ecd50 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -539,6 +539,10 @@ static void __init of_unittest_changeset(void)
- 	unittest(!of_changeset_revert(&chgset), "revert failed\n");
- 
- 	of_changeset_destroy(&chgset);
-+
-+	of_node_put(n1);
-+	of_node_put(n2);
-+	of_node_put(n21);
- #endif
- }
- 
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
+index b4b435276a18d..62bc2af9cde70 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
+@@ -3400,7 +3400,7 @@ int t4_phy_fw_ver(struct adapter *adap, int *phy_fw_ver)
+ 		 FW_PARAMS_PARAM_Z_V(FW_PARAMS_PARAM_DEV_PHYFW_VERSION));
+ 	ret = t4_query_params(adap, adap->mbox, adap->pf, 0, 1,
+ 			      &param, &val);
+-	if (ret < 0)
++	if (ret)
+ 		return ret;
+ 	*phy_fw_ver = val;
+ 	return 0;
 -- 
 2.20.1
 
