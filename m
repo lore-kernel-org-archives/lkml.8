@@ -2,108 +2,125 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B827C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1497C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 089A920706
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC4772075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:11:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XElZtWvW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZPPlj6Ke"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728153AbgDXPLV (ORCPT
+        id S1728159AbgDXPLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:11:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48998 "EHLO
+        Fri, 24 Apr 2020 11:11:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727886AbgDXPLQ (ORCPT
+        by vger.kernel.org with ESMTP id S1726908AbgDXPLv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:11:16 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40335C09B045;
-        Fri, 24 Apr 2020 08:11:16 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id u16so11190600wmc.5;
-        Fri, 24 Apr 2020 08:11:16 -0700 (PDT)
+        Fri, 24 Apr 2020 11:11:51 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01EE1C09B045;
+        Fri, 24 Apr 2020 08:11:51 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id h6so8012305lfc.0;
+        Fri, 24 Apr 2020 08:11:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=GSOYiwkqZKLb7y47h2QBV30Cg8CF5SiWC7cPuAELcE0=;
-        b=XElZtWvWYfo+l3n7mMqN1xxPqug0hipNIvwZbiMvLDeqdtBuwB/R/6eVVvDvJxBgcO
-         n+a23AuCg9C9WCRJyzvHwUZavxy47Fp07az0w1Kcn/xtsYYARq+oDFsMiZTSzhfnC5ig
-         2AChAZhyFp+edQTpegElq6dzHnqWvbqtu+i5ZuOf/NYmxkNDTIyCNhAMt7L06VkCxMdS
-         hWtnusjfCzjMpyUtFQuZR96Az07KImi9q8sgJi/2krbFS0lQMcOMClOTqwNFm5xxZX/V
-         9IsR2fdCccxkXJprwt9cKc7QCxOd3g/sYqt0v+mn95AcIUCMeWFvl4KmBZFP9NCROubp
-         Fzbw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NCKvIwAX2lyXMS3V6hPb1K5t940QaLImTpHp7o0dE7s=;
+        b=ZPPlj6KejWk1GgqB17PvtCeurdQHT9dJyPcc6ya8nlrJqICXXJUQxO5szQgOw9D+/u
+         EzCY3JkhGA7rbu8v44DxyBba204k0ftrATJ02TAt/4dBuMkIhzlclFO7ixNYvtCnYPXg
+         Vj0EF2QOxCYxovSVnTdHhWjKMdL8/W+aWrWL/gJUOeVJt0wZG22IH2UrHmgFuMjifPkq
+         o6c9HiQINryTwKeTLeh6Oc1MUYB0lJfma2zgJ0dHDoP7agJUrMAToOXKOwpxuM2+DsRN
+         ZkUCrzKMPvZ0c8knVIbQUhYNRU8Co59TjlKp1VzmDgG8/OU0M+2YV2UxHO/iiInjvNO5
+         v4sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=GSOYiwkqZKLb7y47h2QBV30Cg8CF5SiWC7cPuAELcE0=;
-        b=gYyo54wnDgcY02DyBCL/K8VbqCDzeiJkUrxfokMAgebcXOUTP8ic6DHQzxHzAzdoOT
-         u5hGvdVv+yb8Pxk/jR3Kt7pWQEXl0V2my+g4xilIjjaEaDWrsabh+znyhR+aY84NF0dq
-         HmrsjfYLqoNPXtkGrrVqRKpSq1GqgsOOLSkveqsKCp0YbqQVrdoVnC1h7H+bgHhGMTHd
-         co45uYmWQtzX32C87/5pc13HrC+6MeoDkv8SE5lfUtr6/vq54SUNf4iZh9cxQ26D0WLp
-         gasWTnS46Z1VwwrE/PsYlJKUoEXddSCW4uPBE9YZk6dItnmx2x67yE5VL+t7GySUn58U
-         JVAA==
-X-Gm-Message-State: AGi0PuYzamlMd5eqzQO/B12BaCzSj2AXolwJUk1MX3wt1rmnOStaN7ok
-        voFP1hNZfKvd7uivvEe2bMs=
-X-Google-Smtp-Source: APiQypLO0aRIuz+zgTRv7w4cBk8IwnBuB8JeO+edeOvmFEHyU5aHRBfNcBgiCNZ4D87S2qOgXE4Gdg==
-X-Received: by 2002:a7b:c181:: with SMTP id y1mr11303273wmi.83.1587741074999;
-        Fri, 24 Apr 2020 08:11:14 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id a125sm3215289wme.3.2020.04.24.08.11.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 Apr 2020 08:11:14 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] include: dt-bindings: rockchip: mark RK_GPIO defines as deprecated
-Date:   Fri, 24 Apr 2020 17:11:05 +0200
-Message-Id: <20200424151105.18736-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NCKvIwAX2lyXMS3V6hPb1K5t940QaLImTpHp7o0dE7s=;
+        b=eVDCK/OCE0ZjXSopaoKxFIMljHo9Zbspq6s/AONUIwq5PevvqxPCW4tvqCRJRc187K
+         aDIeWJxcC8bY9Uc4/Jvcj0Cn7XBCYE2wFQ3TIU3sArSuLs0pYJKtuzdeuadr+oyEGwV+
+         VsHXUkQL6W/HaXvhLtIRNSbFz9vkvzqkT+RwfZflcN25Hoq+ONoM5sfT9s1sd2l4B93c
+         SPzYAtTyQUJw1cbpEnVrEk4sffBy22TfHnOOX+JZ7LWe/0j8BuJplNLm8R/kbsFpRfi9
+         +VjJJpvNutrDMCThVPimu4QtQSkp/D5mt2xEdT6m6i7STOB+VYw9Pm1B5YWS9dSX4Oz9
+         I1tw==
+X-Gm-Message-State: AGi0PuZwiVl7PahJrtxuAg6PjrAV/bTYNbDzs/4zWgIUelM7uzEZ+B6t
+        sewlowr4PX3oMM7TioVqYlJDlU6s
+X-Google-Smtp-Source: APiQypL6Y5pP8frZ9lwc0gIlbRZu3rStQ/IZIVvDo4JJv6attpFW3Fvcwp2bbk7qQ+x9ipofzKGfEw==
+X-Received: by 2002:a05:6512:308c:: with SMTP id z12mr6528775lfd.195.1587741108845;
+        Fri, 24 Apr 2020 08:11:48 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id a26sm4679765lfl.66.2020.04.24.08.11.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Apr 2020 08:11:47 -0700 (PDT)
+Subject: Re: [RFC PATCH v10 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1587700513-28449-1-git-send-email-skomatineni@nvidia.com>
+ <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <6ca93ff9-ca59-544f-767c-4355d01a5c20@gmail.com>
+Date:   Fri, 24 Apr 2020 18:11:46 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The defines RK_GPIO0, RK_GPIO1, RK_GPIO2, RK_GPIO3,
-RK_GPIO4 and RK_GPIO6 are no longer used. Mark them as
-"deprecated" to prevent that someone start using them again.
+24.04.2020 06:55, Sowjanya Komatineni пишет:
+> Tegra210 contains a powerful Video Input (VI) hardware controller
+> which can support up to 6 MIPI CSI camera sensors.
+> 
+> Each Tegra CSI port can be one-to-one mapped to VI channel and can
+> capture from an external camera sensor connected to CSI or from
+> built-in test pattern generator.
+> 
+> Tegra210 supports built-in test pattern generator from CSI to VI.
+> 
+> This patch adds a v4l2 capture driver with media interface for
+> Tegra210 built-in CSI to VI test pattern generator.
+> 
+> This patch includes TPG support only and all the video pipeline
+> configuration happens through the video device node.
+> 
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/staging/media/Kconfig          |    2 +
+>  drivers/staging/media/Makefile         |    1 +
+>  drivers/staging/media/tegra/Kconfig    |   12 +
+>  drivers/staging/media/tegra/Makefile   |    8 +
+>  drivers/staging/media/tegra/TODO       |   10 +
+>  drivers/staging/media/tegra/common.h   |  259 ++++++++
+>  drivers/staging/media/tegra/csi.c      |  604 +++++++++++++++++
+>  drivers/staging/media/tegra/csi.h      |  144 ++++
+>  drivers/staging/media/tegra/tegra210.c |  708 ++++++++++++++++++++
+>  drivers/staging/media/tegra/tegra210.h |  190 ++++++
+>  drivers/staging/media/tegra/vi.c       | 1127 ++++++++++++++++++++++++++++++++
+>  drivers/staging/media/tegra/vi.h       |   72 ++
+>  drivers/staging/media/tegra/video.c    |  153 +++++
+>  drivers/staging/media/tegra/video.h    |   29 +
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- include/dt-bindings/pinctrl/rockchip.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+The media/tegra/ sounds a bit too generic, the media/tegra-vi/ path
+should better reflect the driver, IMO.
 
-diff --git a/include/dt-bindings/pinctrl/rockchip.h b/include/dt-bindings/pinctrl/rockchip.h
-index 6d6bac1c2..e379ec110 100644
---- a/include/dt-bindings/pinctrl/rockchip.h
-+++ b/include/dt-bindings/pinctrl/rockchip.h
-@@ -9,12 +9,12 @@
- #ifndef __DT_BINDINGS_ROCKCHIP_PINCTRL_H__
- #define __DT_BINDINGS_ROCKCHIP_PINCTRL_H__
- 
--#define RK_GPIO0	0
--#define RK_GPIO1	1
--#define RK_GPIO2	2
--#define RK_GPIO3	3
--#define RK_GPIO4	4
--#define RK_GPIO6	6
-+#define RK_GPIO0	0 /* deprecated */
-+#define RK_GPIO1	1 /* deprecated */
-+#define RK_GPIO2	2 /* deprecated */
-+#define RK_GPIO3	3 /* deprecated */
-+#define RK_GPIO4	4 /* deprecated */
-+#define RK_GPIO6	6 /* deprecated */
- 
- #define RK_PA0		0
- #define RK_PA1		1
--- 
-2.11.0
-
+It also should be better to name the compiled kernel module as tegra-vi,
+IMO.
