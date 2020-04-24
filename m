@@ -2,159 +2,146 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45EE0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B46C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AD3220728
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D96A20728
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 01:48:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="akJh+9zJ"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="fnuAxhYK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726117AbgDXBsF (ORCPT
+        id S1726151AbgDXBsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 21:48:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36928 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725884AbgDXBsE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 21:48:04 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BC86C09B042;
-        Thu, 23 Apr 2020 18:48:03 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id s10so3178831plr.1;
-        Thu, 23 Apr 2020 18:48:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MGkbBHDBYjLKC3UgNijYFRk2N5j9bbqTZ0w2Of4kTmU=;
-        b=akJh+9zJhU8DEFS2IA3LEnsbpeb6+b7mW3F8fHHPtGwj84mr0di07YbANYoqql0a15
-         9URfqHBZfzmXrsVMJWYFnKowoGS5EgMId7obOod9+9X2uLFutlwziIXdwcUo8xZB/lnM
-         BH13iBhGqj3XnyPTkhvrmueMp25KZr6q7BHCEHiRGPeUSacx2uoIGVcg7nx+/yyap5vV
-         0/2ZJAQqQQGdWXqTEEW19gCxHCZWgN29pYh5pum8maJHX6nGZuV+H9N1L1/wBCD6G3Ph
-         IwZRBaYXdtiYtxdDf19SIuL2NJx5e/DJanK+V8xJfxxfotTnTDNkZ0eO1zRGBwCVeZ5T
-         HpYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=MGkbBHDBYjLKC3UgNijYFRk2N5j9bbqTZ0w2Of4kTmU=;
-        b=ZK4KrX0DK4lehCbRb45+hhAvIT/2JyDuBn84GZnQI34ggh+o+uLr1KejkRALR7kHol
-         9EjpxFqkGAo804eZ0qJ6+w92+udu3/qtv7kLPT99cMnJnoCz1mddBgJfgWuxM+4JfDSO
-         M8FYybFNqGVrb00QebT+WL5r/1ZusUrgxxoDVKutxBD94UM1KZPkNzZWGvGYtYRCMYlf
-         alSRIf0e0/uL1N6xsAzDqX7K7zNrNdhmleLure7Jtn6rcc7FMi2pID+DsO9eZaW6ijjW
-         nw0NQyrnm61jE7PxgPtFDQRd9dXGWXU3E0lCneQmV1Ejta0hkd+T37e2s5PUHZpyMF29
-         qcbg==
-X-Gm-Message-State: AGi0PuaHF4Cj235hc17gMFQ9L7iktNrE+xulpO9MmaMR2IDXRvwGVpBV
-        fr0N6nXrsYZoZFd2eHpniG60S4f2
-X-Google-Smtp-Source: APiQypKi/N+NSsugS+PtGkQUHTrLtrqVRtdGBrCwYXNrgaLYGgxAgqdXEyj76TgDogOUYOOL66uk4A==
-X-Received: by 2002:a17:90a:bd85:: with SMTP id z5mr3068713pjr.105.1587692882510;
-        Thu, 23 Apr 2020 18:48:02 -0700 (PDT)
-Received: from [10.230.188.26] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id a138sm3893288pfd.32.2020.04.23.18.48.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 18:48:01 -0700 (PDT)
-Subject: Re: [PATCH net-next] net: systemport: suppress warnings on failed Rx
- SKB allocations
-To:     Doug Berger <opendmb@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1587683610-4342-1-git-send-email-opendmb@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <c0c2038c-c393-019e-3869-47b27a512a96@gmail.com>
-Date:   Thu, 23 Apr 2020 18:47:58 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <1587683610-4342-1-git-send-email-opendmb@gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Thu, 23 Apr 2020 21:48:36 -0400
+Received: from mail-eopbgr60066.outbound.protection.outlook.com ([40.107.6.66]:39211
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725983AbgDXBsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 21:48:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SKglV45DVe+4sbB7NneZ+3WgOdYTLmmvGZRdJaChFj3cipl9LqBjl6pt72ndWMRlim2ll9+5d7va3qlvM1N4NRh02CputuwgBeTtvIqqP6sp+9sYRtnK9O8PmbbyT1i+1w0NP7W/0SrV7twGGK9AqKAzlcTQDWf/oGUxe/hs+3K2YKZCyrnCuLAWSSLkb80kwSNEiU7Zs6BoQ+0f+2edM1Dd8QUxHP7Ckx1RVUlKefEYeuUtzzpIaDuikcMjVInCKzTEiQcjAbw0+2J8we6+1YhTZIYa6sx0sBbnjW6PilHIOiAm9Ekc5Sll2eU+juuMgXgK0FyexwjRWCbFzWXCNw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tAdfC+7//SVsOeukh5qKLzMjhoNGwMUIAErC2qIPCzU=;
+ b=WUNNlXk/bWsbQ6X9TpTgN2T/WQksUZGeVtu/fR4qxQ1FBjg6g6dwuiPhkDXG8mIctqx/TIMcmznDadtf2UxYUYOv5jGcDrmriM4RKDlHnS7Rv9AaXaLXZ+I5lTBhSk+UJD5vSyGPR117jDgncvoA5mliENxGiCnEpRhKMTPrC6Ztii9tESalB6ZMbOXI7b4NvrRPfSNe16A+LqJsxlLgbmeq2Tkw612N4yUvpL9MhQvjGFMzefkbiiVk+Sh+rWtmcLMj1/6jYW2ocQQUmU/DlE0poV70b0/U4Zcbn76+FOj5fDdeO/z/Svw8Rbd5Zjs+E1RvziwpFUS4XD+/wCfJbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tAdfC+7//SVsOeukh5qKLzMjhoNGwMUIAErC2qIPCzU=;
+ b=fnuAxhYKHVR36OCEhNky6295UGFS1lAQKAzws8n6sPr6q17ECtrx4gydWDSOJKgn0j4/77DasRpuYRuX5HdXJlAxPG9oO8GdPf9gcOxmZuErUwPdoYwxijS+2HSvaZKVpdO+vJRoJQbHreDDXk+6dSgilBv2PBDzULz1V9QW9/w=
+Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
+ by AM6PR04MB5621.eurprd04.prod.outlook.com (2603:10a6:20b:a6::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.28; Fri, 24 Apr
+ 2020 01:48:31 +0000
+Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
+ ([fe80::d9f7:5527:e89d:1ae3]) by AM6PR04MB4966.eurprd04.prod.outlook.com
+ ([fe80::d9f7:5527:e89d:1ae3%7]) with mapi id 15.20.2921.032; Fri, 24 Apr 2020
+ 01:48:31 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "linux@rempel-privat.de" <linux@rempel-privat.de>,
+        Peng Fan <peng.fan@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V2] dt-bindings: firmware: imx: Move system control into
+ dt-binding headfile
+Thread-Topic: [PATCH V2] dt-bindings: firmware: imx: Move system control into
+ dt-binding headfile
+Thread-Index: AQHWGYYRe2oEYWZQzkWEzy9+aCACI6iG28YwgABuTwCAADcLEA==
+Date:   Fri, 24 Apr 2020 01:48:31 +0000
+Message-ID: <AM6PR04MB49665B1D0657ADCCA3B10FF780D00@AM6PR04MB4966.eurprd04.prod.outlook.com>
+References: <1587656148-24581-1-git-send-email-Anson.Huang@nxp.com>
+ <AM6PR04MB4966AF54A95ACF4F33634AD080D30@AM6PR04MB4966.eurprd04.prod.outlook.com>
+ <DB3PR0402MB3916489B8ADCA1F487F7A748F5D30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB3916489B8ADCA1F487F7A748F5D30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=aisheng.dong@nxp.com; 
+x-originating-ip: [92.121.68.129]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 0dc484e1-7ccf-4931-d2d4-08d7e7f197e6
+x-ms-traffictypediagnostic: AM6PR04MB5621:|AM6PR04MB5621:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR04MB56213D28109A966B46BBDADD80D00@AM6PR04MB5621.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:655;
+x-forefront-prvs: 03838E948C
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(346002)(396003)(136003)(366004)(376002)(39860400002)(26005)(33656002)(7416002)(2906002)(44832011)(4326008)(5660300002)(71200400001)(478600001)(186003)(316002)(64756008)(66446008)(66946007)(66556008)(76116006)(7696005)(6506007)(110136005)(86362001)(81156014)(8676002)(9686003)(55016002)(53546011)(8936002)(52536014)(66476007)(921003);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Kg4i2WXkz1dmPgwZtthLn/YFQr/Z8kPWuW+C5o5LY9jeaP3GO0fn13qa8HIq8Cuaz2UDsM5v2hqBiOVQN3kDoVIk/p/YmJfxpfk6Pg5GnnfA9CTdhgK42S3wnZW0MTxoQASrE9O5iZ66fqc7zJoYOt6kFydnw6TVuy3DB68cg8qF+HMCNNnmcQN60KVhjZ3ZXz8OCAcLDVw6sCWAANfuFxwkpdbuLKyknhvWvX7sh3F0/IGrrOSm9ib3eJDMFI+dKCCdfgULtxjc7Y3RA7R7dgtHaVVMJRasbQlbwwtd7vs0zTSxSMS3Mb+WwmbclVc+PsNY0GZr002t63mnW4H9o9En+zM9RIkstIDx9Gzk3ldsjk9nMMCr9svLN7a+Y6naRaeR6igie0uQUymctdE2H7SgSJ2oIGfmm89j9rdU5c6bAc61uw06Kth7dc714lHsOP/pzNEmt1wmWNHpjsOjB8uMtpU6H7UmSzKqaICkIDc=
+x-ms-exchange-antispam-messagedata: MHPLN5rnmMVKthnhv52l7NOTMQx98jOOYChF0d9seHaUdcZg1+afL/aJlLoUc4BZOxnZ3qzx3NL9JyEJi23fYi6j43+rn82UH0JjmmzNgSL5XB8eCuJvtLAUakGY5O03lZvrq5Dmu5dzr3s4a/m1MQ==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0dc484e1-7ccf-4931-d2d4-08d7e7f197e6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2020 01:48:31.7162
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Gabms8SEZsFVJIQYVA4nHJq7R+r3mQhMewOlkC8hlaip8A3ut5M17fH3S3Z/PWRhWJhiqHgdbYEOWGoOKBIcOg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5621
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/23/2020 4:13 PM, Doug Berger wrote:
-> The driver is designed to drop Rx packets and reclaim the buffers
-> when an allocation fails, and the network interface needs to safely
-> handle this packet loss. Therefore, an allocation failure of Rx
-> SKBs is relatively benign.
-> 
-> However, the output of the warning message occurs with a high
-> scheduling priority that can cause excessive jitter/latency for
-> other high priority processing.
-> 
-> This commit suppresses the warning messages to prevent scheduling
-> problems while retaining the failure count in the statistics of
-> the network interface.
-> 
-> Signed-off-by: Doug Berger <opendmb@gmail.com>
-
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+PiBGcm9tOiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gU2VudDogRnJpZGF5
+LCBBcHJpbCAyNCwgMjAyMCA2OjI5IEFNDQo+IA0KPiA+IFN1YmplY3Q6IFJFOiBbUEFUQ0ggVjJd
+IGR0LWJpbmRpbmdzOiBmaXJtd2FyZTogaW14OiBNb3ZlIHN5c3RlbQ0KPiA+IGNvbnRyb2wgaW50
+byBkdC1iaW5kaW5nIGhlYWRmaWxlDQo+ID4NCj4gPiA+IEZyb206IEFuc29uIEh1YW5nIDxBbnNv
+bi5IdWFuZ0BueHAuY29tPg0KPiA+ID4gU2VudDogVGh1cnNkYXksIEFwcmlsIDIzLCAyMDIwIDEx
+OjM2IFBNDQo+ID4gPg0KPiA+ID4gaS5NWDggU29DcyBEVFMgZmlsZSBuZWVkcyBzeXN0ZW0gY29u
+dHJvbCBtYWNybyBkZWZpbml0aW9ucywgc28gbW92ZQ0KPiA+ID4gdGhlbSBpbnRvIGR0LWJpbmRp
+bmcgaGVhZGZpbGUsIHRoZW4NCj4gPiA+IGluY2x1ZGUvbGludXgvZmlybXdhcmUvaW14L3R5cGVz
+LmgNCj4gPiA+IGNhbiBiZSByZW1vdmVkIGFuZCB0aG9zZSBkcml2ZXJzIHVzaW5nIGl0IHNob3Vs
+ZCBiZSBjaGFuZ2VkIGFjY29yZGluZ2x5Lg0KPiA+ID4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IEFu
+c29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+DQo+ID4gWW91IHNlZW1zIGlnbm9y
+ZWQgbXkgY29tbWVudHMgaW4gVjEuDQo+ID4gVXN1YWxseSB3ZSdkIGJldHRlciB0byBrZWVwIG9y
+aWdpbmFsIGF1dGhvciB3aGVuIHNlbmRpbmcgcGF0Y2hlcyBpZiBubw0KPiA+IGZ1bmRhbWVudGFs
+IGNoYW5nZXMuDQo+IA0KPiBIZXJlIGlzIHRoZSBkZXRhaWxzLCB0aGUgYWltIG9mIHRoaXMgcGF0
+Y2ggaXMgdG8gZ2V0IHJpZCBvZiBiZWxvdyBwYXRjaCBpbiBpbnRlcm5hbA0KPiB0cmVlLCBJIGRp
+ZCBOT1QgY2hlY2sgdGhlIGRldGFpbHMgb2YgaW50ZXJuYWwgdHJlZSBhbmQgZGlkIHRoZSBwYXRj
+aCBtYW51YWxseSBhbmQNCj4gZGlkIE5PVCBjaGVjayBob3cgbWFueSBwYXRjaGVzIEkgbmVlZCBp
+biBpbnRlcm5hbCB0cmVlIGluIG9yZGVyIHRvIG1ha2UgdGhlDQo+IGJ1aWxkIHBhc3NlZC4gQWZ0
+ZXIgY2hlY2tpbmcgaXQsIGxvb2tzIGxpa2UgdGhlcmUgYXJlIDMgcGF0Y2hlcywgMiBhcmUgZnJv
+bSB5b3UsDQo+IGFuZCAxIGZyb20gSmFja3kuIFNpbmNlIHRoZXNlIHBhdGNoZXMgbmVlZCB0byBi
+ZSBzcXVhc2hlZCBpbnRvIDEgcGF0Y2gsIGFsc28gZml4DQo+IG1pbm9yIGNvbW1lbnQgaW4gY29k
+ZSBhbmQgaW1wcm92ZSB0aGUgY29tbWVudCwgc28sIHNob3VsZCBJIHB1dCB5b3UgYXMNCj4gYXV0
+aG9yIG9yIEphY2t5IGFzIGF1dGhvcj8/DQo+IA0KDQpBcyB0aGVyZSdyZSBubyBjb2RlIGNoYW5n
+ZXMsIGZvciBzdWNoIGEgY2FzZSwgd2UgdXN1YWxseSBrZWVwIG9yaWdpbiBhdXRob3INCmFuZCBh
+ZGQgSmFja3kgc2lnbm9mZiBhbmQgeW91IHNpZ25vZmYuDQoNClJlZ2FyZHMNCkFpc2hlbmcNCg0K
+PiBjb21taXQgY2I2NjAzOTk5MzY3YWVhZTU3MDA0NjM4YTRiOGU0M2VlNjE4ZGJlYw0KPiBBdXRo
+b3I6IEphY2t5IEJhaSA8cGluZy5iYWlAbnhwLmNvbT4NCj4gRGF0ZTogICBNb24gTWFyIDkgMTQ6
+NDE6NDQgMjAyMCArMDgwMA0KPiANCj4gICAgIHRoZXJtYWw6IGlteF9zY190aGVybWFsOiBmaXgg
+dGhlIGJ1aWxkIGJyZWFrIGNhdXNlZCBub24gZXhpc3RlbnQgdHlwZXMuaA0KPiANCj4gICAgIFRo
+ZSB0eXBlcy5oIGhhcyBiZWVuIG1vdmUgdG8gdGhlIGR0LWJpbmRpbmdzLywgc28gY29ycmVjdCB0
+aGUgaW5jbHVkZWQNCj4gICAgIGhlYWRlciBmaWxlIHRvIGZpeCB0aGUgYnVpbGQgYnJlYWsuDQo=
