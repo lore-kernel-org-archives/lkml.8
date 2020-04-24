@@ -2,139 +2,248 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E788AC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CB8C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B53CF20706
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:02:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28C9620706
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:03:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="81ayRhTc"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g9YIPlk5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgDXPCN (ORCPT
+        id S1726968AbgDXPD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:02:13 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:47940 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726890AbgDXPCM (ORCPT
+        Fri, 24 Apr 2020 11:03:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47772 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726698AbgDXPD2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 11:02:12 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03OEuvh7028071;
-        Fri, 24 Apr 2020 11:01:52 -0400
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2172.outbound.protection.outlook.com [104.47.59.172])
-        by mx0a-00128a01.pphosted.com with ESMTP id 30fxf6eg1r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Apr 2020 11:01:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cHDtQ4yoSnmnll7cQwMCvNiC22e0X7yZOcOPENnEMcPgSEROV4tnlGLTPOzRJLaaMwin3y9XuTNAJ5Nghcb1WFJPos/1qefiknnmAIhletAcXXbcHL7HrOM9IZf8t/Ckf7gsTIlSg4YhJsFUQH1GgZWhPA6vW9QZ/Wh6+1WwnYHVggEsSgRNzKR+wKp6lyAQGMfQeDZF12Mj2R9nAYmiARYA9lEQNR4KeSjxmGsxZMvBmYjK/UzjHgr3m9CE3mW5FWxXcG63pU1IggB/+kPvJ9yhv3ZJ3Rr1yT/7dxvjwcj3QzGCcooOB4dTkA08jToVRm7Utcq5y8sSDJV8SPsRXQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qCZbX2IomzgzvKyrCS43JV4KoOkOASN3ZpBMyGBfOY4=;
- b=LYuKvGII/aLWtIq7FWLmYoNI3TQhSoKtw2Dcqh6S9rGC2r6GrZtuo3Mmoo2yFZS1OcOU8BQ0qsuACU04RBoNg6GA8epMq1PlWcH+0TjyzKIAkn+cS31OV15f/s+DOGwb6pke8+ruxmQ1THlmXpLi78HEH68hByMfqdQP2o1aWj3jWGwwzJ484nneL3BVNpuNuJLm7vOgVMyi3LqQ4W//BMD99bR0i2YGCvtgieQDQpr6F7jsVs4sEUnH1t0w7SGlX5sdSubi+87eN+b9YjA+CWYAD6W12UjUZ/WM8pu3vC30RG0q6V+FfqC4DNU1F6H5vkK6mepOzKLWXswPUOZ+pQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
+        Fri, 24 Apr 2020 11:03:28 -0400
+Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63708C09B046
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 08:03:27 -0700 (PDT)
+Received: by mail-pg1-x549.google.com with SMTP id x16so8055758pgi.0
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 08:03:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qCZbX2IomzgzvKyrCS43JV4KoOkOASN3ZpBMyGBfOY4=;
- b=81ayRhTcPc2/hoJ6kkrnWseeDRXmG31TWd1jUGAEohBTiZvFOFoQwPjbdeqTIThyVPrHahOMEXBjSKOkACcYrTT1oe8ldxSjJYvFq9xBHAGSi7Q/2oUKk3kGx8pz2OgzbKnF8+YyLX9viZMlV+u1jyIDz60GZAP8ShwfwNqzATE=
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
- by DM6PR03MB5178.namprd03.prod.outlook.com (2603:10b6:5:240::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Fri, 24 Apr
- 2020 15:01:26 +0000
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::c47f:ceee:cfda:6a7f]) by DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::c47f:ceee:cfda:6a7f%3]) with mapi id 15.20.2937.020; Fri, 24 Apr 2020
- 15:01:26 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "lars@metafoo.de" <lars@metafoo.de>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "Bogdan, Dragos" <Dragos.Bogdan@analog.com>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "colin.king@canonical.com" <colin.king@canonical.com>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "jic23@kernel.org" <jic23@kernel.org>
-CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][next] iio: adc: ad7476: remove redundant null check on an
- array
-Thread-Topic: [PATCH][next] iio: adc: ad7476: remove redundant null check on
- an array
-Thread-Index: AQHWGjj1ltw2ltqHgkeNW0t7wHv4TaiIXgEA
-Date:   Fri, 24 Apr 2020 15:01:26 +0000
-Message-ID: <f2c6d3f3f8f884e87f1c9895fe99b77e8f4c1e3e.camel@analog.com>
-References: <20200424130419.22940-1-colin.king@canonical.com>
-In-Reply-To: <20200424130419.22940-1-colin.king@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [188.27.130.47]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7acce796-223d-4ac6-9ec8-08d7e8605cde
-x-ms-traffictypediagnostic: DM6PR03MB5178:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR03MB51783A13740F1E576AD85681F9D00@DM6PR03MB5178.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2958;
-x-forefront-prvs: 03838E948C
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4411.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(136003)(376002)(346002)(39860400002)(396003)(366004)(86362001)(8936002)(186003)(110136005)(36756003)(66946007)(6506007)(76116006)(26005)(91956017)(2906002)(66476007)(6486002)(4326008)(478600001)(81156014)(8676002)(4744005)(71200400001)(2616005)(6512007)(316002)(66446008)(64756008)(54906003)(5660300002)(66556008)(921003);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: M9PPFfZHVujVQ3t4XOPI5Mv096EAIIykmB08lo1fxqOcxRQOOpQfMWcxY9mQ96SnzjpLM3mAxYSPSN24CfB18txz7X9nWjX/+oQpmLr9rR/LvUqpapnPEb/wZIy82DDpKJkVgcUPzhQm/2jeScQQFnDcBtGuJNDmKvskzBbQ0bZs5G92fqgTShvzWDWWoxK2srIwYkxWEMxM/+dVQaD6LAqyiyf4FnHX3Kk2xB5/W5q+uHZDJMFphkks3RrbkZ6OjlWbVAvgtenV8+Am3XPGa0rKenA8P8htd9OipN+9PGa+jc6NVMwRRVJZXHk8R5PP8RYB5aDhCPoIcqQF5F6xQS/wKbUCNb6It7W+ir/TFaCB229vXyHzhAPWRmb+oeOAHnX1S93ROWtQ8y6il8jP8ZYivRRMs5DCbU9i26gNZjzniXYNjnUTsBPxuuriduB/TCzJ5LjrbI8IhAa0hREbKS8JtiTN+0BODD8i45pexCs=
-x-ms-exchange-antispam-messagedata: 8P8T2uVB6DrHOsxkgjEQl5cRvPXt1HHIVo7iWPxKQVyQAtviW1ZIxgzuetaRtDOtZByaATwIcqgsX+QF2Y5V1A6SoY12A4pgswfT6t8ToMjvWpnzdx+yBZtaUX4JUyCRDT91xcyhQXWeosCct0tE1Q==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <3E12146849D61B489196F3E4EF262CB0@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7acce796-223d-4ac6-9ec8-08d7e8605cde
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2020 15:01:26.7563
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QhcqSPFSBsDffIVTo/3Fy9jNQgK5OEiYfom+4TjD59UvT70tkbSJ277dNP8f2qV/9ktize709edwlQqS4XNIP+0bV2K18RG7fNiw1uQ8wkU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB5178
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-24_08:2020-04-24,2020-04-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- priorityscore=1501 spamscore=0 lowpriorityscore=0 clxscore=1015 mlxscore=0
- suspectscore=0 bulkscore=0 impostorscore=0 mlxlogscore=999 phishscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004240120
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Xkkqj+5WLu8COiZ/TfgDWy2Txx9eTlxx/bJwpEwcEjo=;
+        b=g9YIPlk5dCl7/qwmHnLf22yWze7QUqAwpoSl+oVbHvnY2+hjpeJjnrnRjKcAAEFhSP
+         aBeSs0bhg2EqhXVymdS2LzknKnlCnEMd6oEM0IONu6/hDEP3UNk65ApKCS7bGaz8K/Hj
+         LTHzeHAhYYsmU854WZitshEO7A/UeYTli83jA7Tsw+WsnLbF3p3SEYA86lHBNxmQxAeG
+         YOipft3BY574XW7iYWLsr+6/Sw9242uTZ9OYLyD6t2KUhUsqiIA3bqDAVc/StlOVAexv
+         PBrwqzjpRjqP0UALMzsPPNwtUhp/Qr98pg/VCVcFvghDKLXJtiBj3L3apf2P6p14snbO
+         mamg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Xkkqj+5WLu8COiZ/TfgDWy2Txx9eTlxx/bJwpEwcEjo=;
+        b=WhCOhUC/x+9uuEftGcwkxeY/2vbr7d+JPoEaxZNs8P30V8lVJ9azNb1W2J8tLI6xaq
+         iODFwMzD+fb4kO7779eDFR+UFigUPJ7TWGUApK/XsmJvLmFrh+z45MqT9MbA5gBrd00H
+         4pHqJSnhbcki/f7G65o02RsTgcerOjqmKlLl264SIACAA6DgfuwKDLEpne9kdvzlE/v1
+         85J7o4KGqQX6RnBvZ6swPLsKKegMAe0w9I7r2QtuL60YKqcN89gbEFi4HakxskAW5Y0h
+         ftSmAUlpMAATKSbJgY9rrPgxZCJX3A7g584d2gAEEbfESPL6ZWfV6rRI3AfPExzN2uoD
+         DQWg==
+X-Gm-Message-State: AGi0PuZQA9t7L4LgxsyWXmZ6XHDtfsikYkLh2Ksi17h2SvoMQzHiBDvQ
+        MjpCi1rdsYo7vJXTvFXYrzXWCsYU0A==
+X-Google-Smtp-Source: APiQypIeQr9l6rGMJxKwS/oF3yYj1Ak/i9u0uke+OPUcjKK3YwmwqocKr1AZrI6/LebqOsh7bpRFt+/L5w==
+X-Received: by 2002:a17:90a:1a46:: with SMTP id 6mr6502072pjl.111.1587740606455;
+ Fri, 24 Apr 2020 08:03:26 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 08:03:21 -0700
+Message-Id: <20200424150321.38617-1-sqazi@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
+Subject: [PATCH v3] block: Limit number of items taken from the I/O scheduler
+ in one go
+From:   Salman Qazi <sqazi@google.com>
+To:     Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jesse Barnes <jsbarnes@google.com>,
+        Gwendal Grignou <gwendal@google.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@lst.de>, Salman Qazi <sqazi@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTA0LTI0IGF0IDE0OjA0ICswMTAwLCBDb2xpbiBLaW5nIHdyb3RlOg0KPiBG
-cm9tOiBDb2xpbiBJYW4gS2luZyA8Y29saW4ua2luZ0BjYW5vbmljYWwuY29tPg0KPiANCj4gVGhl
-IG51bGwgY2hlY2sgb24gc3QtPmNoaXBfaW5mby0+Y29udnN0X2NoYW5uZWwgaXMgcmVkdW5kYW50
-IGJlY2F1c2UNCj4gY29udnN0X2NoYW5uZWwgaXMgYSAyIGVsZW1lbnQgYXJyYXkgb2Ygc3RydWN0
-IGlpb19jaGFuX3NwZWMgb2JqZWN0cw0KPiBhbmQgdGhpcyBjYW4gbmV2ZXIgYmUgbnVsbC4gRml4
-IHRoaXMgYnkgcmVtb3ZpbmcgdGhlIG51bGwgY2hlY2suDQo+IA0KDQpSZXZpZXdlZC1ieTogQWxl
-eGFuZHJ1IEFyZGVsZWFuIDxhbGV4YW5kcnUuYXJkZWxlYW5AYW5hbG9nLmNvbT4NCg0KPiBBZGRy
-ZXNzZXMtQ292ZXJpdHk6ICgiQXJyYXkgY29tcGFyZWQgYWdhaW5zdCAwIikNCj4gU2lnbmVkLW9m
-Zi1ieTogQ29saW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fub25pY2FsLmNvbT4NCj4gLS0tDQo+
-ICBkcml2ZXJzL2lpby9hZGMvYWQ3NDc2LmMgfCAyICstDQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBp
-bnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lp
-by9hZGMvYWQ3NDc2LmMgYi9kcml2ZXJzL2lpby9hZGMvYWQ3NDc2LmMNCj4gaW5kZXggZTk5ODRh
-MzhmYzRjLi40ZTgxNmQ3MTRhZDIgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvaWlvL2FkYy9hZDc0
-NzYuYw0KPiArKysgYi9kcml2ZXJzL2lpby9hZGMvYWQ3NDc2LmMNCj4gQEAgLTMwOSw3ICszMDks
-NyBAQCBzdGF0aWMgaW50IGFkNzQ3Nl9wcm9iZShzdHJ1Y3Qgc3BpX2RldmljZSAqc3BpKQ0KPiAg
-CWluZGlvX2Rldi0+bnVtX2NoYW5uZWxzID0gMjsNCj4gIAlpbmRpb19kZXYtPmluZm8gPSAmYWQ3
-NDc2X2luZm87DQo+ICANCj4gLQlpZiAoc3QtPmNvbnZzdF9ncGlvICYmIHN0LT5jaGlwX2luZm8t
-PmNvbnZzdF9jaGFubmVsKQ0KPiArCWlmIChzdC0+Y29udnN0X2dwaW8pDQo+ICAJCWluZGlvX2Rl
-di0+Y2hhbm5lbHMgPSBzdC0+Y2hpcF9pbmZvLT5jb252c3RfY2hhbm5lbDsNCj4gIAkvKiBTZXR1
-cCBkZWZhdWx0IG1lc3NhZ2UgKi8NCj4gIA0K
+Flushes bypass the I/O scheduler and get added to hctx->dispatch
+in blk_mq_sched_bypass_insert.  This can happen while a kworker is running
+hctx->run_work work item and is past the point in
+blk_mq_sched_dispatch_requests where hctx->dispatch is checked.
+
+The blk_mq_do_dispatch_sched call is not guaranteed to end in bounded time,
+because the I/O scheduler can feed an arbitrary number of commands.
+
+Since we have only one hctx->run_work, the commands waiting in
+hctx->dispatch will wait an arbitrary length of time for run_work to be
+rerun.
+
+A similar phenomenon exists with dispatches from the software queue.
+
+The solution is to poll hctx->dispatch in blk_mq_do_dispatch_sched and
+blk_mq_do_dispatch_ctx and return from the run_work handler and let it
+rerun.
+
+Signed-off-by: Salman Qazi <sqazi@google.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+---
+Changes since v2:
+
+* Added helper function __blk_mq_sched_dispatch_requests to remove goto
+* Replaced bool return value with int, using -EAGAIN to restart
+* Changes to comment formatting
+
+ block/blk-mq-sched.c | 64 +++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 51 insertions(+), 13 deletions(-)
+
+diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+index 74cedea56034..a86a34580772 100644
+--- a/block/blk-mq-sched.c
++++ b/block/blk-mq-sched.c
+@@ -84,12 +84,16 @@ void blk_mq_sched_restart(struct blk_mq_hw_ctx *hctx)
+  * Only SCSI implements .get_budget and .put_budget, and SCSI restarts
+  * its queue by itself in its completion handler, so we don't need to
+  * restart queue if .get_budget() returns BLK_STS_NO_RESOURCE.
++ *
++ * Returns -EAGAIN if hctx->dispatch was found non-empty and run_work has to
++ * be run again.  This is necessary to avoid starving flushes.
+  */
+-static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
++static int blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+ {
+ 	struct request_queue *q = hctx->queue;
+ 	struct elevator_queue *e = q->elevator;
+ 	LIST_HEAD(rq_list);
++	int ret = 0;
+ 
+ 	do {
+ 		struct request *rq;
+@@ -97,6 +101,11 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+ 		if (e->type->ops.has_work && !e->type->ops.has_work(hctx))
+ 			break;
+ 
++		if (!list_empty_careful(&hctx->dispatch)) {
++			ret = -EAGAIN;
++			break;
++		}
++
+ 		if (!blk_mq_get_dispatch_budget(hctx))
+ 			break;
+ 
+@@ -113,6 +122,8 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+ 		 */
+ 		list_add(&rq->queuelist, &rq_list);
+ 	} while (blk_mq_dispatch_rq_list(q, &rq_list, true));
++
++	return ret;
+ }
+ 
+ static struct blk_mq_ctx *blk_mq_next_ctx(struct blk_mq_hw_ctx *hctx,
+@@ -130,16 +141,25 @@ static struct blk_mq_ctx *blk_mq_next_ctx(struct blk_mq_hw_ctx *hctx,
+  * Only SCSI implements .get_budget and .put_budget, and SCSI restarts
+  * its queue by itself in its completion handler, so we don't need to
+  * restart queue if .get_budget() returns BLK_STS_NO_RESOURCE.
++ *
++ * Returns -EAGAIN if hctx->dispatch was found non-empty and run_work has to
++ * to be run again.  This is necessary to avoid starving flushes.
+  */
+-static void blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
++static int blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
+ {
+ 	struct request_queue *q = hctx->queue;
+ 	LIST_HEAD(rq_list);
+ 	struct blk_mq_ctx *ctx = READ_ONCE(hctx->dispatch_from);
++	int ret = 0;
+ 
+ 	do {
+ 		struct request *rq;
+ 
++		if (!list_empty_careful(&hctx->dispatch)) {
++			ret = -EAGAIN;
++			break;
++		}
++
+ 		if (!sbitmap_any_bit_set(&hctx->ctx_map))
+ 			break;
+ 
+@@ -165,21 +185,17 @@ static void blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
+ 	} while (blk_mq_dispatch_rq_list(q, &rq_list, true));
+ 
+ 	WRITE_ONCE(hctx->dispatch_from, ctx);
++	return ret;
+ }
+ 
+-void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
++int __blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+ {
+ 	struct request_queue *q = hctx->queue;
+ 	struct elevator_queue *e = q->elevator;
+ 	const bool has_sched_dispatch = e && e->type->ops.dispatch_request;
++	int ret = 0;
+ 	LIST_HEAD(rq_list);
+ 
+-	/* RCU or SRCU read lock is needed before checking quiesced flag */
+-	if (unlikely(blk_mq_hctx_stopped(hctx) || blk_queue_quiesced(q)))
+-		return;
+-
+-	hctx->run++;
+-
+ 	/*
+ 	 * If we have previous entries on our dispatch list, grab them first for
+ 	 * more fair dispatch.
+@@ -208,19 +224,41 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+ 		blk_mq_sched_mark_restart_hctx(hctx);
+ 		if (blk_mq_dispatch_rq_list(q, &rq_list, false)) {
+ 			if (has_sched_dispatch)
+-				blk_mq_do_dispatch_sched(hctx);
++				ret = blk_mq_do_dispatch_sched(hctx);
+ 			else
+-				blk_mq_do_dispatch_ctx(hctx);
++				ret = blk_mq_do_dispatch_ctx(hctx);
+ 		}
+ 	} else if (has_sched_dispatch) {
+-		blk_mq_do_dispatch_sched(hctx);
++		ret = blk_mq_do_dispatch_sched(hctx);
+ 	} else if (hctx->dispatch_busy) {
+ 		/* dequeue request one by one from sw queue if queue is busy */
+-		blk_mq_do_dispatch_ctx(hctx);
++		ret = blk_mq_do_dispatch_ctx(hctx);
+ 	} else {
+ 		blk_mq_flush_busy_ctxs(hctx, &rq_list);
+ 		blk_mq_dispatch_rq_list(q, &rq_list, false);
+ 	}
++
++	return ret;
++}
++
++void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
++{
++	struct request_queue *q = hctx->queue;
++
++	/* RCU or SRCU read lock is needed before checking quiesced flag */
++	if (unlikely(blk_mq_hctx_stopped(hctx) || blk_queue_quiesced(q)))
++		return;
++
++	hctx->run++;
++
++	/*
++	 * A return of -EAGAIN is an indication that hctx->dispatch is not
++	 * empty and we must run again in order to avoid starving flushes.
++	 */
++	if (__blk_mq_sched_dispatch_requests(hctx) == -EAGAIN) {
++		if (__blk_mq_sched_dispatch_requests(hctx) == -EAGAIN)
++			blk_mq_run_hw_queue(hctx, true);
++	}
+ }
+ 
+ bool blk_mq_sched_try_merge(struct request_queue *q, struct bio *bio,
+-- 
+2.26.2.303.gf8c07b1a785-goog
+
