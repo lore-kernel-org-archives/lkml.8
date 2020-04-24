@@ -2,122 +2,185 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF531C55192
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26405C2BA19
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D08D020728
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:38:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="Ddtvcj1n"
+	by mail.kernel.org (Postfix) with ESMTP id 03F9F2075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 02:39:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587695964;
+	bh=3XofbPImmjDSk5ArvXWyZQJQDj8runMsYJmFIgh3Uow=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wvP9JhNPABt8wzNDLqiTIWH0mIikZHUD9cd2YQWMPIYoo1+88ZVHbUWmxnoCXSkyb
+	 RPL+ww4qHiz2xppyQ5+vXteiEmny6S23oTmE4y0790lagSUXCbXje9OLtLQ4S/Ei0z
+	 qpW12wqW+qBe7yfFBgF8eDzjmSZECLv2M8qRDLC8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgDXCi6 (ORCPT
+        id S1726444AbgDXCjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 22:38:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44774 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbgDXCiz (ORCPT
+        Thu, 23 Apr 2020 22:39:23 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:55401 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726190AbgDXCjW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 22:38:55 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75F65C09B044
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 19:38:55 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id w29so6813057qtv.3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 19:38:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ldECbwkx2KzC+gjraTT+5K+gEB5icL0nRQIC9XPuGkU=;
-        b=Ddtvcj1n3A2iRjbjaGXKb42PeJjcfV41WkfP5jznQsOoAXtq4Aq0YAI+jC0sCsKnvx
-         3ZUlrZSEr3HUWZp9NZZUR0WJE+gtm9Uewof/FeE8jRb+3r2wee/XOWlmOAmQMF85e2cW
-         QBsM3r65qePLq09dyRU//VQ1HxsdWxOOkQ5hV/kB6m09C/86n/XsphQWiUecxZrtcy5j
-         EFolcHbY7QejWuMaqC22oW+PcDruwHWEGwRIKo9ovvU5K4MZuxo++hLjAlegnyZ2T3hU
-         mBUEvRefs3krgdLJT5E4/GkLAylz+osjnZ55rZwa2wXOUEN0L6QFj3VRgJErkjjZe4Gy
-         UfrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ldECbwkx2KzC+gjraTT+5K+gEB5icL0nRQIC9XPuGkU=;
-        b=fOG9egSqRKfFJmEA8CgK7k/2uQiwKzWtybPWhf6TqSlNKc5dSTPj3ajYZeQhqGPNna
-         Tz397xiyz8TjmjBHT6x01P3H57RYVK0l3zcv9ZMhPNL2wSWQ4v12+yEwNSJ6wYyevWRh
-         FUMfpJPb4KQx3mZhYmkcynboHeuuWs2HWPv9JUPi+ggrYIgcIMLtwK+5MYoP8Jif6J6o
-         abzWBGz3oR83ohA2SroWHOsmqiwAZ8bGa3dyWg4thd+1pdAQK1o69U6j0o/Fm/xHCu/k
-         2RRvxlXe19I1ERdEzql+OayF1oL237FRMnxeR2d/FZLjMrqMXtOSefs1V/YUKffTrQwP
-         n2ig==
-X-Gm-Message-State: AGi0PuYjJf6HvGndifa+jfeeDaxUpdJxMv7mZWunRs3glPXmIg9Bx2fz
-        orbdqQvB7dOSyor2hcPcPb8S5w==
-X-Google-Smtp-Source: APiQypJF/lU+gP1rF4zPkq/e1xGtqTYkCAApZ1rxn1wi2o2lKf14w530nRIMlfW+DykVCLSYhsCYQw==
-X-Received: by 2002:ac8:7552:: with SMTP id b18mr6922401qtr.312.1587695934661;
-        Thu, 23 Apr 2020 19:38:54 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::921])
-        by smtp.gmail.com with ESMTPSA id g92sm3250225qtd.42.2020.04.23.19.38.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2020 19:38:54 -0700 (PDT)
-Date:   Thu, 23 Apr 2020 22:38:52 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Shakeel Butt <shakeelb@google.com>, Roman Gushchin <guro@fb.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] memcg: optimize memory.numa_stat like memory.stat
-Message-ID: <20200424023852.GA464082@cmpxchg.org>
-References: <20200304022058.248270-1-shakeelb@google.com>
- <20200305204109.be23f5053e2368d3b8ccaa06@linux-foundation.org>
- <CALvZod7W-Qwa4BRKW0_Ts5f68fwkcqD72SF_4NqZRgEMgA_1-g@mail.gmail.com>
- <CALvZod4R68wNgzOF9dN=i6LwyUYMBhvM7SXaRJGW9Wn_SmeGGA@mail.gmail.com>
- <20200423161009.973c645420a4d17ded2a67ee@linux-foundation.org>
+        Thu, 23 Apr 2020 22:39:22 -0400
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 03O2d0QZ016819
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 11:39:01 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 03O2d0QZ016819
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587695941;
+        bh=K0CCqutUEwkhzK4mn2L62I8lFdwRFAH0wGb3WIospz4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ck/myLmrRNZ+S45Ipn0CD50jejBv1AjUxvBn5zmfcEP4GNXa37pzqQOHf/MU7EUMv
+         DeDnuNHSx6OJ3F9TpTwGkfCNG1tX/hAnbzkWSgnckcU0UGEzZ1ByFbdpkNZXOThHhM
+         Ab8S+RRI10ew3f+WrQImdKP9gr48PkqtYMrFtl7LFNWbZ2pwU2QPuykmdOUq5iLpmC
+         H2JVNVulPKgbAFy5ejnSS+EAm5CcdWXRN0C91By1cBAlsHY1zsnJVYJVQp7EaOPF5q
+         WEFpPPY0+cFM8+prh+IX5UOGlTZ/fGgJsd9yWDB/v+63CHYTmm/jrfsLsN1UfOuL6F
+         CuvUvdU9CkBeQ==
+X-Nifty-SrcIP: [209.85.222.45]
+Received: by mail-ua1-f45.google.com with SMTP id g10so8024866uae.5
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 19:39:01 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYujIwjSRhoQHILp/Mgu5ncP1C//HewDYKmnD5HN44mPitvJApm
+        jz3Do/qy7nRVw+vFgWo2qJ9Fh7lpDA/5tbjOoJw=
+X-Google-Smtp-Source: APiQypJk0Gh5f5oZqDVtQhaq5o+g301yOxcn+U2MXZ7yT9vJGWYvQrdurQcUiyuZoWHIwai292ZEsN79Bjr42VsdtFU=
+X-Received: by 2002:a67:6542:: with SMTP id z63mr6187125vsb.179.1587695940134;
+ Thu, 23 Apr 2020 19:39:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200423161009.973c645420a4d17ded2a67ee@linux-foundation.org>
+References: <20200419132142.173861-1-sedat.dilek@gmail.com>
+In-Reply-To: <20200419132142.173861-1-sedat.dilek@gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 24 Apr 2020 11:38:24 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATk1yfHdmGLvS2vwew1MgX2nFupgW7ZqHuk7ragBX5VQA@mail.gmail.com>
+Message-ID: <CAK7LNATk1yfHdmGLvS2vwew1MgX2nFupgW7ZqHuk7ragBX5VQA@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/2] kbuild: Rename and use BINUTILS_VERSION where needed
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 04:10:09PM -0700, Andrew Morton wrote:
-> From: Shakeel Butt <shakeelb@google.com>
-> Subject: mm/memcg: optimize memory.numa_stat like memory.stat
-> 
-> Currently reading memory.numa_stat traverses the underlying memcg tree
-> multiple times to accumulate the stats to present the hierarchical view of
-> the memcg tree.  However the kernel already maintains the hierarchical
-> view of the stats and use it in memory.stat.  Just use the same mechanism
-> in memory.numa_stat as well.
-> 
-> I ran a simple benchmark which reads root_mem_cgroup's memory.numa_stat
-> file in the presense of 10000 memcgs.  The results are:
-> 
-> Without the patch:
-> $ time cat /dev/cgroup/memory/memory.numa_stat > /dev/null
-> 
-> real    0m0.700s
-> user    0m0.001s
-> sys     0m0.697s
-> 
-> With the patch:
-> $ time cat /dev/cgroup/memory/memory.numa_stat > /dev/null
-> 
-> real    0m0.001s
-> user    0m0.001s
-> sys     0m0.000s
-> 
-> [akpm@linux-foundation.org: avoid forcing out-of-line code generation]
-> Link: http://lkml.kernel.org/r/20200304022058.248270-1-shakeelb@google.com
-> Signed-off-by: Shakeel Butt <shakeelb@google.com>
-> Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Roman Gushchin <guro@fb.com>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+On Sun, Apr 19, 2020 at 10:21 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+>
+> In the first patch I introduced LD_IS_BINUTILS Kconfig.
+>
+> To be consistent in naming convention I renamed from LD_VERSION
+> to BINUTILS_VERSION.
+>
+> So, we have the double "LD_IS_BINUTILS" and "BINUTILS_VERSION"
+> like "CC_IS_GCC" and "GCC_VERSION".
+>
+> For the same reason I renamed the shell script to detect the GNU ld
+> linker version.
+>
+> In Documentation/process/changes.rst we use "binutils" and GNU ld
+> binary is part of it (see [3]).
+>
+> The patches "init/kconfig: Add LD_VERSION Kconfig" (see [1]) and
+> "arm64: Kconfig: ptrauth: Add binutils version check to fix mismatch"
+> (see [2]) added checks for binutils >=2.23.1 whereas binutils
+> version 2.23 is minimum supported version (see [3]).
+>
+> I have renamed to BINUTILS_VERSION where needed.
 
-Ouch, yes. That makes sense.
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+
+I do not think this is the right thing to do.
+
+As the doc implies
+https://lore.kernel.org/lkml/20200224174129.2664-1-ndesaulniers@google.com/T/
+we support overriding CC, LD, ... etc. individually.
+(such a usage might be rare with LLVM=1 syntax supported, though)
+
+
+
+I'd rather want to stick to LD_VERSION
+instead of the version of the tool suite.
+
+
+
+config BINUTILS_VERSION
+       int
+       default $(shell,$(LD) --version |
+$(srctree)/scripts/binutils-version.sh) if LD_IS_BINUTILS
+
+
+This will leave BINUTILS_VERSION empty when LD=ld.lld,
+but it looks strange if binutils is still used for other tools.
+
+
+
+
+>
+> [1] https://git.kernel.org/linus/9553d16fa671b9621c5e2847d08bd90d3be3349c
+> [2] https://git.kernel.org/linus/15cd0e675f3f76b4d21c313795fe0c23df0ee20f
+> [3] https://git.kernel.org/linus/Documentation/process/changes.rst#n79
+>
+> Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
+> ---
+>  arch/arm64/Kconfig                             | 2 +-
+>  init/Kconfig                                   | 4 ++--
+>  scripts/{ld-version.sh => binutils-version.sh} | 0
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+>  rename scripts/{ld-version.sh => binutils-version.sh} (100%)
+>
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 40fb05d96c60..274ba9b3ac95 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -1504,7 +1504,7 @@ config ARM64_PTR_AUTH
+>         depends on (CC_HAS_SIGN_RETURN_ADDRESS || CC_HAS_BRANCH_PROT_PAC_RET) && AS_HAS_PAC
+>         # GCC 9.1 and later inserts a .note.gnu.property section note for PAC
+>         # which is only understood by binutils starting with version 2.33.1.
+> -       depends on !CC_IS_GCC || GCC_VERSION < 90100 || LD_VERSION >= 233010000
+> +       depends on !CC_IS_GCC || GCC_VERSION < 90100 || BINUTILS_VERSION >= 233010000
+>         depends on !CC_IS_CLANG || AS_HAS_CFI_NEGATE_RA_STATE
+>         depends on (!FUNCTION_GRAPH_TRACER || DYNAMIC_FTRACE_WITH_REGS)
+>         help
+> diff --git a/init/Kconfig b/init/Kconfig
+> index 520116efea0f..946db4786951 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -19,9 +19,9 @@ config GCC_VERSION
+>  config LD_IS_BINUTILS
+>         def_bool $(success,$(LD) -v | head -n 1 | grep -q 'GNU ld')
+>
+> -config LD_VERSION
+> +config BINUTILS_VERSION
+>         int
+> -       default $(shell,$(LD) --version | $(srctree)/scripts/ld-version.sh) if LD_IS_BINUTILS
+> +       default $(shell,$(LD) --version | $(srctree)/scripts/binutils-version.sh) if LD_IS_BINUTILS
+>
+>  config CC_IS_CLANG
+>         def_bool $(success,$(CC) --version | head -n 1 | grep -q clang)
+> diff --git a/scripts/ld-version.sh b/scripts/binutils-version.sh
+> similarity index 100%
+> rename from scripts/ld-version.sh
+> rename to scripts/binutils-version.sh
+> --
+> 2.26.1
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
