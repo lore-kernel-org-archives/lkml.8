@@ -2,78 +2,128 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D347C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F536C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C2FC20736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:09:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CUYxa2bE"
+	by mail.kernel.org (Postfix) with ESMTP id 3FCEC20736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:10:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587755451;
+	bh=MfFP+6c7B6JLpXC5m9+1qaniqSz/QSXG2thGgEplmH8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=EqlschpiOkBOdbse9VHY44jH+EjNLuH3vzBQMwovtcTVWCoUohNnfX2JdQu6RJkKF
+	 1vh1KlW6cZLgSmrp37v9sVx4MD0pPJQC83QhUG8lNcVrkBVQBQHI2DFlPg11nJ/z9p
+	 uUqW/0BGijd8zGhnxMMdv/7mnKAst6HiGoXG9eIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729129AbgDXTJR (ORCPT
+        id S1729217AbgDXTKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 15:09:17 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:42856 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727022AbgDXTJQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 15:09:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587755355;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HFFBEe1utqpGYAUFTLzFKc0LiqSB4f6/KeXu27tu+yY=;
-        b=CUYxa2bEoHsvOWG/u/t61/2g3xpyAvgZbV9+l//GUBniiJgvNFQDzstPELU7sQzP7+6hqH
-        LwZA8QPdtDAddL8Kgxb3xiuBPZmtBiMDGLNn4rEeuMoP1k9F6Yw/A34rwWq6jnyDen7nXP
-        cseNzdurtA9kxiEHawS7h6YuC+dKWL8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-170-0yGuAuCmMN2Y6AD-qTahsA-1; Fri, 24 Apr 2020 15:09:12 -0400
-X-MC-Unique: 0yGuAuCmMN2Y6AD-qTahsA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 24 Apr 2020 15:10:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55896 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726793AbgDXTKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 15:10:50 -0400
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BCE26107ACF4;
-        Fri, 24 Apr 2020 19:09:10 +0000 (UTC)
-Received: from treble (ovpn-114-29.rdu2.redhat.com [10.10.114.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A706960F8D;
-        Fri, 24 Apr 2020 19:09:09 +0000 (UTC)
-Date:   Fri, 24 Apr 2020 14:09:07 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     alexandre.chartre@oracle.com, linux-kernel@vger.kernel.org,
-        jthierry@redhat.com, tglx@linutronix.de, x86@kernel.org,
-        mbenes@suse.cz, arnd@arndb.de
-Subject: Re: [PATCH 6/8] x86: Simplify retpoline declaration
-Message-ID: <20200424190907.dywoslazrohhtago@treble>
-References: <20200423125013.452964352@infradead.org>
- <20200423125042.958927629@infradead.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EA6F20736;
+        Fri, 24 Apr 2020 19:10:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587755449;
+        bh=MfFP+6c7B6JLpXC5m9+1qaniqSz/QSXG2thGgEplmH8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=rgKmfrMj1o/4cX50G1dvBw6xSNKJvBJx+AAKL5ZgLFgW4rvrnAuV6UzfEioIptCjd
+         9sspRnYsWFw27CdTR4aZLzGR63oSGt56WkFjjhi088vk8cMIAZucbR00cL2/tdS1aS
+         vfSWnSopPuP5b6tP6Hc/Aaq/q1x/osY2VsrvDEso=
+Received: by mail-qv1-f49.google.com with SMTP id v10so5240142qvr.2;
+        Fri, 24 Apr 2020 12:10:49 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZUyrmeu1REItT1Jjyb17IjUZBay1s2UWH9yjrncNgQsqNMcOcx
+        TnFzHYvk1VbRU3HGBkU9vxi4KUxY4TUcGxAWhg==
+X-Google-Smtp-Source: APiQypL6nxwSwL1BSBuuHSRL7v8AeB98h/sxDCOI2obb6oGnVpTZ6TVIRL9TpJ9D4J0DlGUb56NPwcffqM7uZdaaWHA=
+X-Received: by 2002:a05:6214:227:: with SMTP id j7mr10830437qvt.85.1587755448530;
+ Fri, 24 Apr 2020 12:10:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200423125042.958927629@infradead.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <20200424130847.328584-1-jiaxun.yang@flygoat.com> <20200424130847.328584-6-jiaxun.yang@flygoat.com>
+In-Reply-To: <20200424130847.328584-6-jiaxun.yang@flygoat.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 24 Apr 2020 14:10:36 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+33XrBowgg+pSAFLu-KChYzuFKL6DJRrOPuq60nSFN4g@mail.gmail.com>
+Message-ID: <CAL_Jsq+33XrBowgg+pSAFLu-KChYzuFKL6DJRrOPuq60nSFN4g@mail.gmail.com>
+Subject: Re: [PATCH v5 5/6] MIPS: DTS: Loongson64: Add PCI Controller Node
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Paul Burton <paulburton@kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 02:47:23PM +0200, Peter Zijlstra wrote:
-> +#undef GEN
-> +#define GEN(reg) EXPORT_THUNK(reg)
-> +#include <asm/GEN-for-each-reg.h>
+On Fri, Apr 24, 2020 at 8:10 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+>
+> Add PCI Host controller node for Loongson64 with RS780E PCH dts.
+> Note that PCI interrupts are probed via legacy way, as different
+> machine have different interrupt arrangement, we can't cover all
+> of them in dt.
+>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> --
+> v2: Clean-up
+> ---
+>  arch/mips/boot/dts/loongson/rs780e-pch.dtsi | 17 ++++++++++++++++-
+>  1 file changed, 16 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
+> index 8687c4f7370a..5e68ceae20ca 100644
+> --- a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
+> +++ b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
+> @@ -5,10 +5,25 @@ bus@10000000 {
+>                 compatible = "simple-bus";
+>                 #address-cells = <2>;
+>                 #size-cells = <2>;
+> -               ranges = <0 0x10000000 0 0x10000000 0 0x10000000
+> +               ranges = <0 0x00000000 0 0x00000000 0 0x00010000 /* I/O Ports */
+
+You're changing the first entry, so bus@10000000 unit-address should change.
+
+Are i/o addresses really at 0x0 physical address?
+
+> +                               0 0x10000000 0 0x10000000 0 0x10000000
+>                                 0 0x40000000 0 0x40000000 0 0x40000000
+>                                 0xfd 0xfe000000 0xfd 0xfe000000  0 0x2000000 /* PCI Config Space */>;
+>
+> +               pci@1a000000 {
+> +                       compatible = "loongson,rs780e-pci";
+> +                       device_type = "pci";
+> +                       #address-cells = <3>;
+> +                       #size-cells = <2>;
 > +
+> +                       reg = <0 0x1a000000 0 0x02000000>;
+> +
+> +                       ranges = <0x01000000 0 0x00004000 0 0x00004000 0 0x00004000>,
+> +                                <0x02000000 0 0x40000000 0 0x40000000 0 0x40000000>;
+> +
+> +                       bus-range = <0x00 0xff>;
 
-Applying: x86: Simplify retpoline declaration
-.git/rebase-apply/patch:112: new blank line at EOF.
-+
-warning: 1 line adds whitespace errors.
+Not needed.
 
--- 
-Josh
-
+> +               };
+> +
+>                 isa {
+>                         compatible = "isa";
+>                         #address-cells = <2>;
+> --
+> 2.26.0.rc2
+>
