@@ -2,140 +2,141 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 272E7C55191
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38263C55197
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05B212071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10C312071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 10:43:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WfTaEa4o"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="piLvENvW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbgDXKnA (ORCPT
+        id S1726866AbgDXKn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 06:43:00 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55648 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726614AbgDXKm7 (ORCPT
+        Fri, 24 Apr 2020 06:43:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35326 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726815AbgDXKn2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 06:42:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587724978;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=pL+Y2FSl5usXnWFqFb9T8Nd7Bq7Qkybd1Lh3zGsmB9U=;
-        b=WfTaEa4oo21ukT1aFrp25t+dW9OMwLbFOkyLMOmSkZdevn5sWdRhS5Pdsc+VWQSpiCwffJ
-        goTGFwmQcanpfMbZEEqBz0pe/wQVL78qsvqAxlS4goe+I17nT4exUbj6Pe2WxMLBopFBU1
-        0p8fxpv3B8yLO2PMGxvICBkdgek5p8Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-486-vsW2AbJbOEuaFi50kmH8qQ-1; Fri, 24 Apr 2020 06:42:54 -0400
-X-MC-Unique: vsW2AbJbOEuaFi50kmH8qQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0D9D91005510;
-        Fri, 24 Apr 2020 10:42:53 +0000 (UTC)
-Received: from localhost (ovpn-114-136.ams2.redhat.com [10.36.114.136])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E20915D70B;
-        Fri, 24 Apr 2020 10:42:49 +0000 (UTC)
-Date:   Fri, 24 Apr 2020 11:42:48 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     virtualization@lists.linux-foundation.org,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Lance Digby <ldigby@redhat.com>
-Subject: Re: [PATCH] virtio-blk: handle block_device_operations callbacks
- after hot unplug
-Message-ID: <20200424104248.GB174193@stefanha-x1.localdomain>
-References: <20200423123717.139141-1-stefanha@redhat.com>
- <20200423141338.GA29646@infradead.org>
+        Fri, 24 Apr 2020 06:43:28 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F77EC09B045
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 03:43:27 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id g12so10136775wmh.3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 03:43:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dnKniRRBm6KLmX43VEEOIzRt6LvZaDlvdGMTuziUADI=;
+        b=piLvENvWl4DmoeSXfPxu8cdGgMrHv2thfba7D+KeyKcqRq/kNFVVmKom7MLokxYEuw
+         879epAZEr1e2PpWgseR+b75NAsekCVl6NCQoM153pJJCSpIeP+6b3oEHRZLWZiNP58hl
+         P9DroLVXk/DWSoF5KHOurjOqNB4LOM7EUPV4Gi6X5heKiiaM55ttbsdUycg2GLZQcxul
+         gF90xjqqxT8NIuixcLqed8aWxMKSXoOgeufFHqDlxj/esFD8joBr4w3NLmBGoxdujOlc
+         OLzS4B4TB0qg1ReZnFkVVNfYELkuLqzE0zceluUvZmW1Yd7rSGF0/vctUFq9hZkFtRje
+         8wZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dnKniRRBm6KLmX43VEEOIzRt6LvZaDlvdGMTuziUADI=;
+        b=BglyfiphYL0CLdKPmNWY9ycIPDItYUOGQBIVXhL67oDpkXNc0sJLtUKywAYF34nBug
+         QnhcsX5smMYXoih5C4+b0g54uzXZLOzcTqbcOPDRVRqiZ9xZL4QkYn2YATMN/bdZXYzv
+         +NCJeVK0Lm6BG2FU2LetHJYufinIubYQdygt+hq2h1KKu+EtVj3VrM8Cn0FZmYtjexK7
+         /YD64JPaMwLde22CO3sIhPoyf9CESyfPMkSxRngd6CBazfFt3TrXGsSZRSHJD7pOMthe
+         x8+hyCer9Ef1SgemBg6eStpG4BVwPqS72hTuLnPJcLe2++jSv64kQmwjw5eUj1EnNHCK
+         XayQ==
+X-Gm-Message-State: AGi0PuYZ3mmq2sEWbFu1mn8aN2jRlSGXu43h5clxcmqRZO/YHisMPTBF
+        sSxtTH1TY2bD+zjY791zcEaydg==
+X-Google-Smtp-Source: APiQypI2Afy4s5XfsjxxMEU/3JcXJfiG2GDyNW0Ogfm/BVtwSxQPPPiy1JiCL97MEDi+IXKQD3oz7Q==
+X-Received: by 2002:a1c:5448:: with SMTP id p8mr9189810wmi.173.1587725005656;
+        Fri, 24 Apr 2020 03:43:25 -0700 (PDT)
+Received: from [192.168.43.23] ([37.166.159.243])
+        by smtp.googlemail.com with ESMTPSA id t2sm2341981wmt.15.2020.04.24.03.43.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Apr 2020 03:43:24 -0700 (PDT)
+Subject: Re: [PATCH v6 09/10] thermal: devfreq_cooling: Refactor code and
+ switch to use Energy Model
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
+        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, rostedt@goodmis.org,
+        qperret@google.com, bsegall@google.com, mgorman@suse.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
+        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
+References: <20200410084210.24932-1-lukasz.luba@arm.com>
+ <20200410084210.24932-10-lukasz.luba@arm.com>
+ <20200423175708.GG65632@linaro.org>
+ <b93226ac-a1f1-c1d0-fc25-0bd0f336252a@arm.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <73fb5d45-d8ac-534f-fd38-619739130160@linaro.org>
+Date:   Fri, 24 Apr 2020 12:43:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200423141338.GA29646@infradead.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="wq9mPyueHGvFACwf"
-Content-Disposition: inline
+In-Reply-To: <b93226ac-a1f1-c1d0-fc25-0bd0f336252a@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---wq9mPyueHGvFACwf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 24/04/2020 12:02, Lukasz Luba wrote:
+> Hi Daniel,
+> 
+> On 4/23/20 6:57 PM, Daniel Lezcano wrote:
+>> On Fri, Apr 10, 2020 at 09:42:09AM +0100, Lukasz Luba wrote:
+>>> The overhauled Energy Model (EM) framework support also devfreq devices.
+>>> The unified API interface of the EM can be used in the thermal
+>>> subsystem to
+>>> not duplicate code. The power table now is taken from EM structure and
+>>> there is no need to maintain calculation for it locally. In case when
+>>> the
+>>> EM is not provided by the device a simple interface for cooling
+>>> device is
+>>> used.
+>>>
+>>> [lkp: Reported the build warning]
+>>> Reported-by: kbuild test robot <lkp@intel.com>
+>>> Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org> # for
+>>> tracing code
+>>> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+>>
+>> Is it possible to split this patch into smaller parts? It is hard to
+>> understand
+>> what is related to the em conversion and other changes which look not
+>> related
+>> so far.
+>>
+> 
+> No problem, I will do the split (it will be in the v7).
 
-On Thu, Apr 23, 2020 at 07:13:38AM -0700, Christoph Hellwig wrote:
-> On Thu, Apr 23, 2020 at 01:37:17PM +0100, Stefan Hajnoczi wrote:
-> > A virtio_blk block device can still be referenced after hot unplug by
-> > userspace processes that hold the file descriptor.  In this case
-> > virtblk_getgeo() can be invoked after virtblk_remove() was called.  For
-> > example, a program that has /dev/vdb open can call ioctl(HDIO_GETGEO)
-> > after hot unplug.
-> >=20
-> > Fix this by clearing vblk->disk->private_data and checking that the
-> > virtio_blk driver instance is still around in virtblk_getgeo().
-> >=20
-> > Note that the virtblk_getgeo() function itself is guaranteed to remain
-> > in memory after hot unplug because the virtio_blk module refcount is
-> > still held while a block device reference exists.
-> >=20
-> > Originally-by: Lance Digby <ldigby@redhat.com>
-> > Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
-> > ---
-> >  drivers/block/virtio_blk.c | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >=20
-> > diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-> > index 93468b7c6701..b50cdf37a6f7 100644
-> > --- a/drivers/block/virtio_blk.c
-> > +++ b/drivers/block/virtio_blk.c
-> > @@ -300,6 +300,10 @@ static int virtblk_getgeo(struct block_device *bd,=
- struct hd_geometry *geo)
-> >  {
-> >  =09struct virtio_blk *vblk =3D bd->bd_disk->private_data;
-> > =20
-> > +=09/* Driver instance has been removed */
-> > +=09if (!vblk)
-> > +=09=09return -ENOTTY;
->=20
-> If this ever hits you have a nasty race condition and this is not
-> going to fix it, as it could be removed just after this check as well.
+Thanks Lukasz
 
-Perhaps a better fix is to keep a refcount in struct virtio_blk and
-implement block_device_operations->release() to decrement the refcount.
 
-That way the struct virtio_blk stays around until all block device
-references are dropped.  This is similar to nbd_put() in
-drivers/block/nbd.c.
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-Stefan
-
---wq9mPyueHGvFACwf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl6iwqgACgkQnKSrs4Gr
-c8gkBQgAwHhtsW9ZXLDZXqp0Kkfsefk/q7JtsVeNejQKlMtOxFqaksestEjC6QvD
-i1eTIlK/eNKdy6dfYcLANEpE4GQWxfYcdRGjVFiEghbpyOxCqbhk+Tj2PYIEpczs
-Hs0l/nnEN07+hP7nI+owGGdpPN3USN8ZPGJyUOEVjPMT10wYbU5msh2sFnPGGAcU
-NbCMJQq6PaNij35r1AL8GdimGQ6lqjnMoTbL1ex9Jrf1KzBoYBBJckK/JkDd1v59
-5DsDbjTkDFcaRHKJzf3iuxg8a0AzGXQKudwiS2rGzVirxwVQN1RAi5yHBZnLJ0uT
-C0Q7z66olBCYP+IxjOpt5ZtA7X8H6A==
-=+zCT
------END PGP SIGNATURE-----
-
---wq9mPyueHGvFACwf--
-
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
