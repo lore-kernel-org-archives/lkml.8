@@ -2,93 +2,92 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 847B9C55191
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3574C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6353C20706
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:56:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A52620728
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:56:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587733010;
+	bh=ojIIWy9JMfPmCa27HaUOYJ4aM7y3il1Wr3U8tAfe1Ms=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=Fmt7KnpRaGzmZ89jzIptAmv1mqbjE12XP3bUup3b/7ZBw+RRI1KtYJrUG+dDo/qgG
+	 ACpvIXtpxIzCzfbCf6U0rSBi8VmVGLp73oOKePkvVRxUd8gy64rbawbXnqvGxa7lZH
+	 Q1shg2T4XfJqcA03CQ59qg/PELhgsEGvHxL/7QOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgDXM4p (ORCPT
+        id S1727109AbgDXM4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:56:45 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:50390 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727024AbgDXM4p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:56:45 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jRxsm-0006eo-Rx; Fri, 24 Apr 2020 12:56:40 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] drm/amdgpu: fix unlocks on error return path
-Date:   Fri, 24 Apr 2020 13:56:40 +0100
-Message-Id: <20200424125640.22656-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Fri, 24 Apr 2020 08:56:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51562 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726489AbgDXM4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:56:48 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84F0C20728;
+        Fri, 24 Apr 2020 12:56:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587733008;
+        bh=ojIIWy9JMfPmCa27HaUOYJ4aM7y3il1Wr3U8tAfe1Ms=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=QJnbDw300nTHFCRGaYItbiKss+Kh2oHLJKUgQn47TQ+IlgEptn8wjpY0A/AdG9cD5
+         Dr4JkFq6yyqqN1dqp/69MmeOnyDPUtQe0zpqGXGoBwYrnU1ShLRrv8gDlXwV8OFe+B
+         oonNabw+xoces6sFqU6ku/7jLD8Lnyjm3t58CtJU=
+Date:   Fri, 24 Apr 2020 13:56:45 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     leoyang.li@nxp.com, Peng Ma <peng.ma@nxp.com>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+In-Reply-To: <20200424061216.27445-1-peng.ma@nxp.com>
+References: <20200424061216.27445-1-peng.ma@nxp.com>
+Subject: Re: [PATCH] spi: spi-fsl-dspi: Adding shutdown hook
+Message-Id: <158773300537.30241.1154325901954580764.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Fri, 24 Apr 2020 14:12:16 +0800, Peng Ma wrote:
+> We need to ensure dspi controller could be stopped in order for kexec
+> to start the next kernel.
+> So add the shutdown operation support.
+> 
+> Signed-off-by: Peng Ma <peng.ma@nxp.com>
+> ---
+>  drivers/spi/spi-fsl-dspi.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> [...]
 
-Currently the error returns paths are unlocking lock kiq->ring_lock
-however it seems this should be dev->gfx.kiq.ring_lock as this
-is the lock that is being locked and unlocked around the ring
-operations.  This looks like a bug, fix it by unlocking the
-correct lock.
+Applied to
 
-[ Note: untested ]
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.8
 
-Addresses-Coverity: ("Missing unlock")
-Fixes: 82478876eaac ("drm/amdgpu: protect ring overrun")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c | 2 +-
- drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Thanks!
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c
-index b120f9160f13..edaa50d850a6 100644
---- a/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c
-@@ -430,7 +430,7 @@ static int gmc_v10_0_flush_gpu_tlb_pasid(struct amdgpu_device *adev,
- 		r = amdgpu_fence_emit_polling(ring, &seq, MAX_KIQ_REG_WAIT);
- 		if (r) {
- 			amdgpu_ring_undo(ring);
--			spin_unlock(&kiq->ring_lock);
-+			spin_unlock(&adev->gfx.kiq.ring_lock);
- 			return -ETIME;
- 		}
- 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
-index 0a6026308343..055ecba754ff 100644
---- a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
-@@ -624,7 +624,7 @@ static int gmc_v9_0_flush_gpu_tlb_pasid(struct amdgpu_device *adev,
- 		r = amdgpu_fence_emit_polling(ring, &seq, MAX_KIQ_REG_WAIT);
- 		if (r) {
- 			amdgpu_ring_undo(ring);
--			spin_unlock(&kiq->ring_lock);
-+			spin_unlock(&adev->gfx.kiq.ring_lock);
- 			return -ETIME;
- 		}
- 
--- 
-2.25.1
+[1/1] spi: spi-fsl-dspi: Adding shutdown hook
+      commit: dc234825997ec6ff05980ca9e2204f4ac3f8d695
 
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
