@@ -2,136 +2,139 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF5EC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CF8C55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 177602075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:37:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q6R/vIhn"
+	by mail.kernel.org (Postfix) with ESMTP id 94FDA20774
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:37:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587706636;
+	bh=UpjdYfWzhaIBWwT8pfBeT5E2eAvIuj0KkNBR5ForkP8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=B6b1ChZAMzZAHSMDW9L/NRkQE8SfLlYeKGefCdauUz2Kk/FRwtD42jBBFXUiWWKeL
+	 NRMkbnhEbP/two3+/vB4ffZMnIvUju2XzEbttiT7KnE8LDim8pJpInNxRE5bmSCZeo
+	 NbinkVQvpgckZRJ/IraMvfP69N++C00VOrc8I9GI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbgDXFhI (ORCPT
+        id S1726646AbgDXFhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 01:37:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44112 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725852AbgDXFhH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 01:37:07 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 903ADC09B045
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 22:37:07 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id w6so9672277qtt.21
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 22:37:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=ba6IqQSg7dp3Ida1PYjzOznOfgdID1kXp0iD3EB/4hc=;
-        b=Q6R/vIhnj9wkvl9/0VhPB4lOhFtXtTq4M2zoGYo16T+kbFVZz3q8RE2UMDc5j2hf6+
-         QycEowVAxCzg3Q7hLh05iteTdJOaJ5MGMklo0BQ5Sk/VcUhTma6EYKXbhIw27giX+3Yy
-         b0Yq3pNM9iL5hyq/Eov1X55QLaFVfwe7oIrs0V22vmg79UX1zSjg29FkmeRPojlQp2If
-         tNLsQcpXs1yzVd4n/RXhPq1yzxOvkCM0TOomjJwLjppnA0kLfXSlD4Qb/IqG/b/6rWNJ
-         jOgWIj9s1MG73e5rhLuG0xa2TS+N6yrDLz3IQyKwuTVei4bM9OVNZPljyPYCheDhEZa9
-         JjaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=ba6IqQSg7dp3Ida1PYjzOznOfgdID1kXp0iD3EB/4hc=;
-        b=IbUehGiB+eAy0IIuGEeVOZVl5PgWXXO28xL7IVtOT4NZi93iJQlM2SnVRPbK5sktkx
-         VnyWauVrghbqLd2CsWetAj/KKUzEwJG0mmvRZPCO4bCN2d3+IcfnXprPLxaN/mrBUj/Z
-         8FR1q+zO3JhGWKmBtVcShr+BX7PVEpdJ9tnchE00fWoJ2IZjxTXZYxjvRwC+lx5Ta1Jk
-         Rba3IelKSVqvI1nQ6mpCeygFSpMKzI4SsXzsWUyPFMX78w+qCjI66aAWggPkivOvakMV
-         VdM7yZ1vrJ58gGqWdwgqTNSAbnCpb1/sSQ1xWX/WSyfvz9OwJSeFmixHaFvyVirpTEn8
-         3dSg==
-X-Gm-Message-State: AGi0PuYHrVtGG/+7IKxrQvjX3EiS9uREgnMxXRr8IxuFDEw1T0qkI7uW
-        NllWsIuTWREtpgK306PstAmiSVmyIVY=
-X-Google-Smtp-Source: APiQypII/80USr8zG4fc+TTJkuFeFerRBO5LSzbcGR3CQZUXMc5HVz87ohksQS7lRIP9tsn47RRO/V7JLIs=
-X-Received: by 2002:ac8:66d8:: with SMTP id m24mr7780393qtp.175.1587706626733;
- Thu, 23 Apr 2020 22:37:06 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 01:36:51 -0400
-Message-Id: <20200424053651.61226-1-agoode@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
-Subject: [PATCH] media: uvcvideo: Ensure all probed info is returned to v4l2
-From:   Adam Goode <agoode@google.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Adam Goode <agoode@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 24 Apr 2020 01:37:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48358 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725852AbgDXFhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 01:37:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C808D2075A;
+        Fri, 24 Apr 2020 05:37:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587706634;
+        bh=UpjdYfWzhaIBWwT8pfBeT5E2eAvIuj0KkNBR5ForkP8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xRAZIkUacZko7ajq7cHgKyFBma9mq+G+xqKbHfA9RNyQ85imZkOzVX+M8T8pPEBpX
+         HjMiJaSUqzGWbQVIFLn8NU2K1bIYEo3FgiiElxYqvGeI0GunAOkV+dFb52E7hqyOuZ
+         mGR5wIQ88ku15rmA65YXFz2L+nTo8+7OdvZoqyLQ=
+Date:   Fri, 24 Apr 2020 07:37:11 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Hyunki Koo <hyunki00.koo@samsung.com>
+Cc:     robh+dt@kernel.org, linux-serial@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 0/3] 32-bit access for TX/RX hold registers for
+ samsung_tty driver
+Message-ID: <20200424053711.GB103562@kroah.com>
+References: <20200420013300.17249-1-hyunki00.koo@samsung.com>
+ <CGME20200420233607epcas2p305dbd652ab73592a32c17773c1fce329@epcas2p3.samsung.com>
+ <20200420233558.11879-1-hyunki00.koo@samsung.com>
+ <000a01d619d0$ee167730$ca436590$@samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000a01d619d0$ee167730$ca436590$@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-bFrameIndex and bFormatIndex can be negotiated by the camera during
-probing, resulting in the camera choosing a different format than
-expected. v4l2 can already accommodate such changes, but the code was
-not updating the proper fields.
+On Fri, Apr 24, 2020 at 09:40:18AM +0900, Hyunki Koo wrote:
+> On Sat, April 21, 2020 at 08:36:00 AM +0900, Hyunki Koo wrote:
+> > 
+> > Change in v8:
+> > - spit into 3 patch
+> >   [1/3] create the new functions with no functional change to the code as-
+> > is.
+> >   Replace rd_regb/wr_regb with rd_reg/wr_reg for general usage.
+> >   [2/3] add the new binding reg-io-width in device tree
+> >   [3/3] add the new funtinality of rd_reg / wr_reg and wr_reg_barrier
+> >         to support 32-bit access for the TX/RX hold registers UTXH and URXH.
+> > 
+> > Change in v7:
+> > - [1/2] correct build error on running 'make dt_binding_check'
+> > Documentation/devicetree/bindings/serial/samsung_uart.yaml:  mapping
+> > values are not allowed in this context
+> >   in "<unicode string>", line 36, column 13
+> >   Documentation/devicetree/bindings/Makefile:12: recipe for target
+> > 'Documentation/devicetree/bindings/serial/samsung_uart.example.dts'
+> > failed
+> >   make[1]: ***
+> > [Documentation/devicetree/bindings/serial/samsung_uart.example.dts]
+> > Error 1
+> >   make[1]: *** Waiting for unfinished jobs....
+> >   Makefile:1262: recipe for target 'dt_binding_check' failed
+> >   make: *** [dt_binding_check] Error 2
+> > - [2/2] add commit message of reviewed by and tested by in commit
+> > message
+> >   Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+> >   Tested on Odroid HC1 (Exynos5422):
+> >   Tested-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > 
+> > Change in v6:
+> > - [2/2] clean description of reg-io-width
+> >   allOf is not needed. Just enum [1, 2] is enough.
+> > 
+> > Changes in v5:
+> > - spit into 2 patch, newly added patch for dt-binding
+> >   [1/2] newly added dt-binding and go as first patch in this series.
+> >   [2/2] go as second patch in this series.
+> > 
+> > Changes in v4:
+> > - correct variable types and change misleading function name
+> > 
+> > Changes in v3:
+> > - line 2031: remove redundant init value  for ourport->port.iotype
+> > 
+> > Changes in v2:
+> > - line 954 : change rd_regl to rd_reg in for backward compatibility.
+> > - line 2031: Add init value for ourport->port.iotype  to UPIO_MEM
+> > 
+> > 
+> > Hyunki Koo (3):
+> >   serial: samsung: Replace rd_regb/wr_regb with rd_reg/wr_reg
+> >   dt-bindings: serial: Add reg-io-width compatible
+> >   tty: samsung_tty: 32-bit access for TX/RX hold registers
+> > 
+> >  .../devicetree/bindings/serial/samsung_uart.yaml   |  8 +++
+> >  drivers/tty/serial/samsung_tty.c                   | 76 ++++++++++++++++++---
+> > -
+> >  2 files changed, 72 insertions(+), 12 deletions(-)
+> > 
+> > --
+> > 2.15.0.rc1
+> 
+> Hi Greg KH
+> 
+> Can I ask is this series patch are acceptable or not?
+> Do you think, I have to do any further action  for this patch?
+> 
 
-Without such a change, v4l2 would potentially interpret the payload
-incorrectly, causing corrupted output. This was happening on the
-Elgato HD60 S+, which currently always renegotiates to format 1.
+It's been 3 days, give us a chance please...
 
-As an aside, the Elgato firmware is buggy and should not be renegotating,
-but it is still a valid thing for the camera to do. Both macOS and Windows
-will properly probe and read uncorrupted images from this camera.
+Also, I need to wait for the dt patch to be reviewed first before I can
+take any of this, so that's up to the DT maintainers.
 
-With this change, both qv4l2 and chromium can now read uncorrupted video
-from the Elgato HD60 S+.
+thanks,
 
-Signed-off-by: Adam Goode <agoode@google.com>
----
- drivers/media/usb/uvc/uvc_v4l2.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
-
-diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-index 0335e69b70ab..7f14096cb44d 100644
---- a/drivers/media/usb/uvc/uvc_v4l2.c
-+++ b/drivers/media/usb/uvc/uvc_v4l2.c
-@@ -247,11 +247,37 @@ static int uvc_v4l2_try_format(struct uvc_streaming *stream,
- 	if (ret < 0)
- 		goto done;
- 
-+	/* After the probe, update fmt with the values returned from
-+	 * negotiation with the device.
-+	 */
-+	for (i = 0; i < stream->nformats; ++i) {
-+		if (probe->bFormatIndex == stream->format[i].index) {
-+			format = &stream->format[i];
-+			break;
-+		}
-+	}
-+	if (i == stream->nformats) {
-+		uvc_trace(UVC_TRACE_FORMAT, "Unknown bFormatIndex %u.\n",
-+			  probe->bFormatIndex);
-+		return -EINVAL;
-+	}
-+	for (i = 0; i < format->nframes; ++i) {
-+		if (probe->bFrameIndex == format->frame[i].bFrameIndex) {
-+			frame = &format->frame[i];
-+			break;
-+		}
-+	}
-+	if (i == format->nframes) {
-+		uvc_trace(UVC_TRACE_FORMAT, "Unknown bFrameIndex %u.\n",
-+			  probe->bFrameIndex);
-+		return -EINVAL;
-+	}
- 	fmt->fmt.pix.width = frame->wWidth;
- 	fmt->fmt.pix.height = frame->wHeight;
- 	fmt->fmt.pix.field = V4L2_FIELD_NONE;
- 	fmt->fmt.pix.bytesperline = uvc_v4l2_get_bytesperline(format, frame);
- 	fmt->fmt.pix.sizeimage = probe->dwMaxVideoFrameSize;
-+	fmt->fmt.pix.pixelformat = format->fcc;
- 	fmt->fmt.pix.colorspace = format->colorspace;
- 
- 	if (uvc_format != NULL)
--- 
-2.25.3
-
+greg k-h
