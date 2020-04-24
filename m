@@ -2,129 +2,202 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E76C55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C800C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DACD420700
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:16:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="qlbIQJx4"
+	by mail.kernel.org (Postfix) with ESMTP id 7CE0120700
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:17:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587745032;
+	bh=yWXVNro5I0u4D9d7cF0jVM/W+4ylI+8/zO8G9gZnl8k=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=c9RYqS3ab8v3gevrIJ9Ol+zAH8vOTvoCmsg5nM+25tVNASPDbavX7sXCHX81uUnu9
+	 q7TnZAcwto5e2cb85jkxoep6kqdr5ANJyKaBnCrhwcDBFmTw/oyEwbe98bctfLAIqu
+	 EkoG9Ei/uo1xNqIXxGrIEx3Us0HoaKRCVxURrJfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728233AbgDXQQF (ORCPT
+        id S1728239AbgDXQRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 12:16:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59376 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726753AbgDXQQE (ORCPT
+        Fri, 24 Apr 2020 12:17:11 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44847 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726753AbgDXQRL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 12:16:04 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04500C09B046
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 09:16:02 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id 20so10672946qkl.10
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 09:16:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=NpF4ebF/mYc/rJmh8e1mUhjq/ubrH1/GxyUQdknJIGg=;
-        b=qlbIQJx48Hqu7w0gAnipO2M5dI+LZSShUdFRLUYQdJ2+pCW6pjcFCPv+MakyoqqUEK
-         Qm3GG+bdomT1A+nZhHBhHSJLP16cts35laZ7bQ20NqnwrOfBG+48ZA7ODiHFhzcJAQhY
-         wRWHv+l9wHefrjPabykyY51Cg9XQalxuVH4cIThTsW5iLoTEjJMah/I8Mg66re0StfZh
-         6Comod9ZQt2LH1UEkWSNQ54hmDWF1ZJOSPtela1cbfCwcqhAYB0BSorqm0mqi8jf6RR5
-         oTj0ptA4Xt9+1q3m+T0IxWlCUD/QWxQVBFovazS5BJx5w7oab/VRbC/HwwRy9SCZmMiV
-         jelA==
+        Fri, 24 Apr 2020 12:17:11 -0400
+Received: by mail-ot1-f67.google.com with SMTP id j4so13309073otr.11;
+        Fri, 24 Apr 2020 09:17:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=NpF4ebF/mYc/rJmh8e1mUhjq/ubrH1/GxyUQdknJIGg=;
-        b=O4l14gM0gPl07w9s7oZNC6OhcujnQ0Z0CJqBpTNm9fW95w2UNfdNUOBfSsHgGOPZ8W
-         oJSKbJT6p53Mg9HI4wzPc4x3I3zfXEs4QLqXvLs1j7cVHI3YCPAfCJOmkRxJ9rL19frq
-         8FzMIRg5WnNTAmIkuWZFNhrqexnLm9GpzAmoe6sim+LlZxVH+8bYe2u4wueV73anjpx4
-         l6D3HN/kyMv3rlgrGpOeL/dC3kOX3vnzX0q1ua6cOV68MebjC7lBDYMRODzzq04je6Am
-         9zkmf9u24Z0d2V/y6qjwVEFZG+iRjfoqZ/j/ZV4Io1m2my7pYr60I+4JLe88J+64Utk8
-         OF8g==
-X-Gm-Message-State: AGi0PuYSXxgjtkkj02XPEoJO8CGvcH7l+u5vPgwjtUGnA0MRKjVusn2Q
-        q1g5f248Vz6U6Nirbgu5XWUnIg==
-X-Google-Smtp-Source: APiQypIvAJav39D5U2ZXeodLcy5EzzRj0EKmLYvt7gwBvIUSBywr76ydugdStWM8PWVQDw4YSnbefg==
-X-Received: by 2002:a37:61cd:: with SMTP id v196mr9602979qkb.393.1587744961999;
-        Fri, 24 Apr 2020 09:16:01 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id j9sm1444329qkg.88.2020.04.24.09.16.00
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 Apr 2020 09:16:01 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH 2/2] mm/slub: Fix slab_mutex circular locking problem in
- slab_attr_store()
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20200424151225.10966-2-longman@redhat.com>
-Date:   Fri, 24 Apr 2020 12:16:00 -0400
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Juri Lelli <juri.lelli@redhat.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <0A3C34CA-F514-41C2-AC3F-E5925C7C0F9A@lca.pw>
-References: <20200424151225.10966-1-longman@redhat.com>
- <20200424151225.10966-2-longman@redhat.com>
-To:     Waiman Long <longman@redhat.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NhnUZSf5UlRx50w9PHpFzuqoGbduCG7D+ErtmW3uoCQ=;
+        b=A78sF6D0MmJ5tZctHqkvCTTZKI/B1KTZjEXcCwH7dwKV1FDjgP1gcLJbZtJcySFA6G
+         vwd1hH8DtRjM4GqINI/hl/JO6U+GOCLkIEzrfMdB481QJJ/QRL0loPELij4nfI8H65/8
+         I8ZRneDwrS6kQXbIkWgi9tlQ87pTk1FcbVVYfrmCX6wM0qnUNlmW/mL+vr6DCL8PKGfj
+         RqbnwxjRPXV32JpZQfdeh6KeNhmUn+Rz/PwSO3RWINh4vX6jnV45yHeXNiilyla571At
+         z6cPMwEPFGua8BtL7Eu4EFNxmLReDoHdYWSfrTgbogfZpUN46hHL7sVAVv606Lb1Jtvk
+         teow==
+X-Gm-Message-State: AGi0PuYEDkWNCW44+LfWibJm8VvONpmfdSwDESFL14bsMjGtfdl0N+V6
+        WAUITB15Jmg9S2TyJUMU4t+fWKE=
+X-Google-Smtp-Source: APiQypJwy/nD2OpvHdyhyYsbs/oAw9OJZfI1iZj2tpczoTndgavD9eW5KwnSv/0NBqnsHkauqg8K+g==
+X-Received: by 2002:aca:5dc4:: with SMTP id r187mr5009088oib.133.1587745030132;
+        Fri, 24 Apr 2020 09:17:10 -0700 (PDT)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id n6sm1677837oof.35.2020.04.24.09.17.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Apr 2020 09:17:09 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Iskren Chernev <iskren.chernev@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Saravanan Sekar <sravanhome@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH] dt-bindings: Fix erroneous 'additionalProperties'
+Date:   Fri, 24 Apr 2020 11:17:07 -0500
+Message-Id: <20200424161708.2906-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There's several cases of json-schema 'additionalProperties' at the wrong
+indentation level which has the effect of making them DT properties. This
+is harmless, but let's fix them so a meta-schema check for this can be
+added.
 
+In all the cases, either the 'additionalProperties' was extra or doesn't
+work because there's a $ref to more properties. In the latter case, we
+can use 'unevaluatedProperties' instead.
 
-> On Apr 24, 2020, at 11:12 AM, Waiman Long <longman@redhat.com> wrote:
->=20
-> diff --git a/mm/slub.c b/mm/slub.c
-> index 183ccc364ccf..255981180489 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -5567,13 +5567,30 @@ static ssize_t slab_attr_store(struct kobject =
-*kobj,
-> 		return -EIO;
->=20
-> 	err =3D attribute->store(s, buf, len);
-> -#ifdef CONFIG_MEMCG
-> -	if (slab_state >=3D FULL && err >=3D 0 && is_root_cache(s)) {
-> -		struct kmem_cache *c;
-> +#ifdef CONFIG_MEMCG_KMEM
-> +	if (slab_state >=3D FULL && err >=3D 0 && is_root_cache(s) &&
-> +	    !list_empty(&s->memcg_params.children)) {
-> +		struct kmem_cache *c, **pcaches;
-> +		int idx, max, cnt =3D 0;
-> +		size_t size =3D s->max_attr_size;
-> +		struct memcg_cache_array *arr;
-> +
-> +		/*
-> +		 * Make atomic update to s->max_attr_size.
-> +		 */
-> +		do {
-> +			if (len <=3D size)
-> +				break;
-> +		} while (!try_cmpxchg(&s->max_attr_size, &size, len));
->=20
+Reported-by: Iskren Chernev <iskren.chernev@gmail.com>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Saravanan Sekar <sravanhome@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/mfd/st,stpmic1.yaml       | 2 --
+ Documentation/devicetree/bindings/regulator/mps,mp5416.yaml | 1 -
+ .../devicetree/bindings/regulator/mps,mpq7920.yaml          | 3 ++-
+ .../bindings/regulator/rohm,bd71828-regulator.yaml          | 6 +++++-
+ .../bindings/regulator/rohm,bd71837-regulator.yaml          | 6 +++++-
+ .../bindings/regulator/rohm,bd71847-regulator.yaml          | 6 +++++-
+ 6 files changed, 17 insertions(+), 7 deletions(-)
 
-try_cmpxchg() is only available on x86.
-
-mm/slub.c: In function =E2=80=98slab_attr_store=E2=80=99:
-mm/slub.c:5613:13: error: implicit declaration of function =
-=E2=80=98try_cmpxchg=E2=80=99; did you mean =E2=80=98xa_cmpxchg=E2=80=99? =
-[-Werror=3Dimplicit-function-declaration]
-   } while (!try_cmpxchg(&s->max_attr_size, &size, len));
-             ^~~~~~~~~~~
-             xa_cmpxchg
+diff --git a/Documentation/devicetree/bindings/mfd/st,stpmic1.yaml b/Documentation/devicetree/bindings/mfd/st,stpmic1.yaml
+index f88d13d70441..be7faa6dc055 100644
+--- a/Documentation/devicetree/bindings/mfd/st,stpmic1.yaml
++++ b/Documentation/devicetree/bindings/mfd/st,stpmic1.yaml
+@@ -259,8 +259,6 @@ properties:
+ 
+     additionalProperties: false
+ 
+-  additionalProperties: false
+-
+ additionalProperties: false
+ 
+ required:
+diff --git a/Documentation/devicetree/bindings/regulator/mps,mp5416.yaml b/Documentation/devicetree/bindings/regulator/mps,mp5416.yaml
+index f0acce2029fd..3b019fa6db31 100644
+--- a/Documentation/devicetree/bindings/regulator/mps,mp5416.yaml
++++ b/Documentation/devicetree/bindings/regulator/mps,mp5416.yaml
+@@ -37,7 +37,6 @@ properties:
+         type: object
+ 
+     additionalProperties: false
+-  additionalProperties: false
+ 
+ required:
+   - compatible
+diff --git a/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml b/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
+index a682af0dc67e..ae6e7ab36c58 100644
+--- a/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
++++ b/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
+@@ -75,7 +75,8 @@ properties:
+             description: |
+               disables over voltage protection of this buck
+ 
+-      additionalProperties: false
++        unevaluatedProperties: false
++
+     additionalProperties: false
+ 
+ required:
+diff --git a/Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml b/Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
+index 71ce032b8cf8..1e52dafcb5c9 100644
+--- a/Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
++++ b/Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
+@@ -35,6 +35,8 @@ patternProperties:
+         description:
+           should be "ldo1", ..., "ldo7"
+ 
++    unevaluatedProperties: false
++
+   "^BUCK[1-7]$":
+     type: object
+     allOf:
+@@ -103,5 +105,7 @@ patternProperties:
+ 
+     required:
+       - regulator-name
+-  additionalProperties: false
++
++    unevaluatedProperties: false
++
+ additionalProperties: false
+diff --git a/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.yaml b/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.yaml
+index a323b1696eee..543d4b52397e 100644
+--- a/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.yaml
++++ b/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.yaml
+@@ -41,6 +41,8 @@ patternProperties:
+         description:
+           should be "ldo1", ..., "ldo7"
+ 
++    unevaluatedProperties: false
++
+   "^BUCK[1-8]$":
+     type: object
+     allOf:
+@@ -99,5 +101,7 @@ patternProperties:
+ 
+     required:
+       - regulator-name
+-  additionalProperties: false
++
++    unevaluatedProperties: false
++
+ additionalProperties: false
+diff --git a/Documentation/devicetree/bindings/regulator/rohm,bd71847-regulator.yaml b/Documentation/devicetree/bindings/regulator/rohm,bd71847-regulator.yaml
+index 526fd00bcb16..d797cc23406f 100644
+--- a/Documentation/devicetree/bindings/regulator/rohm,bd71847-regulator.yaml
++++ b/Documentation/devicetree/bindings/regulator/rohm,bd71847-regulator.yaml
+@@ -40,6 +40,8 @@ patternProperties:
+         description:
+           should be "ldo1", ..., "ldo6"
+ 
++    unevaluatedProperties: false
++
+   "^BUCK[1-6]$":
+     type: object
+     allOf:
+@@ -93,5 +95,7 @@ patternProperties:
+ 
+     required:
+       - regulator-name
+-  additionalProperties: false
++
++    unevaluatedProperties: false
++
+ additionalProperties: false
+-- 
+2.20.1
 
