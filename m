@@ -2,251 +2,161 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 678ABC55196
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8879C54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40DAC20700
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:22:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="eohtvaGF"
+	by mail.kernel.org (Postfix) with ESMTP id D2E5920700
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 16:22:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbgDXQWg (ORCPT
+        id S1728846AbgDXQWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 12:22:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60384 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728555AbgDXQWF (ORCPT
+        Fri, 24 Apr 2020 12:22:44 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:58612 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728325AbgDXQWB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 12:22:05 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE482C09B046;
-        Fri, 24 Apr 2020 09:22:04 -0700 (PDT)
-Received: from zn.tnic (p200300EC2F1D0400A18A6B210CB54187.dip0.t-ipconnect.de [IPv6:2003:ec:2f1d:400:a18a:6b21:cb5:4187])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C98B51EC0DA8;
-        Fri, 24 Apr 2020 18:22:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1587745323;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=1/3wK0YNoGRPgjYsn9oUGnsqgYhnz2Yh2ZUOTxwEzQ4=;
-        b=eohtvaGF3ILzwSoVe1lk9xga7qFL5WdSdne1qA/a3ULGzwdkQMm5a0/Bup1IZMzqWii64A
-        glshfR87GSezL1s683/XIbPr7Xkyl2NwkwffwIPRqkBDXw4zYeMM+Qbpp8068s/RG6Gsxo
-        BQSfhloSuc5+9wpmXaYJzZLIo/Ii/YI=
-Date:   Fri, 24 Apr 2020 18:21:57 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Aristeu Rozanski <aris@redhat.com>,
-        Matthias Brugger <mbrugger@suse.com>,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 04/10] EDAC/ghes: Make SMBIOS handle private data to
- ghes
-Message-ID: <20200424162157.GB6916@zn.tnic>
-References: <20200422115814.22205-1-rrichter@marvell.com>
- <20200422115814.22205-5-rrichter@marvell.com>
+        Fri, 24 Apr 2020 12:22:01 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jS15R-0004dV-QH; Fri, 24 Apr 2020 16:21:57 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-api@vger.kernel.org
+Cc:     Jonathan Corbet <corbet@lwn.net>, Serge Hallyn <serge@hallyn.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
+        Seth Forshee <seth.forshee@canonical.com>,
+        David Rheinsberg <david.rheinsberg@gmail.com>,
+        Tom Gundersen <teg@jklm.no>,
+        Christian Kellner <ckellner@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        =?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@ubuntu.com>,
+        linux-doc@vger.kernel.org, netdev@vger.kernel.org,
+        Steve Barber <smbarber@google.com>,
+        Dylan Reid <dgreid@google.com>,
+        Filipe Brandenburger <filbranden@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Benjamin Elder <bentheelder@google.com>,
+        Akihiro Suda <suda.kyoto@gmail.com>
+Subject: [PATCH v3 3/7] loop: use ns_capable for some loop operations
+Date:   Fri, 24 Apr 2020 18:20:48 +0200
+Message-Id: <20200424162052.441452-4-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200424162052.441452-1-christian.brauner@ubuntu.com>
+References: <20200424162052.441452-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200422115814.22205-5-rrichter@marvell.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 01:58:08PM +0200, Robert Richter wrote:
-> diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
-> index 39efce0df881..23adb7674f9b 100644
-> --- a/drivers/edac/ghes_edac.c
-> +++ b/drivers/edac/ghes_edac.c
-> @@ -15,6 +15,12 @@
->  #include "edac_module.h"
->  #include <ras/ras_event.h>
->  
-> +struct ghes_dimm {
+The following  LOOP_GET_STATUS, LOOP_SET_STATUS, and LOOP_SET_BLOCK_SIZE
+operations are now allowed in non-initial namespaces. Most other
+operations were already possible before.
 
-Simply struct dimm
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Seth Forshee <seth.forshee@canonical.com>
+Cc: Tom Gundersen <teg@jklm.no>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Christian Kellner <ckellner@redhat.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: David Rheinsberg <david.rheinsberg@gmail.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Reviewed-by: Serge Hallyn <serge@hallyn.com>
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+/* v2 */
+- Christian Brauner <christian.brauner@ubuntu.com>:
+  - Adapated loop_capable() based on changes in the loopfs
+    implementation patchset. Otherwise it is functionally equivalent to
+    the v1 version.
 
-> +	struct list_head entry;
-> +	struct dimm_info *dimm;
-> +	u16 handle;
-> +};
-> +
->  struct ghes_mci {
->  	struct mem_ctl_info *mci;
->  
-> @@ -42,6 +48,16 @@ static DEFINE_MUTEX(ghes_reg_mutex);
->   */
->  static DEFINE_SPINLOCK(ghes_lock);
->  
-> +/*
-> + * Locking:
-> + *
-> + *  dimms, ghes_dimm_pool:  ghes_reg_mutex
-> + *  ghes_dimm_list:         ghes_lock
-> + */
-> +static struct ghes_dimm *dimms;
-> +static LIST_HEAD(ghes_dimm_list);
-> +static LIST_HEAD(ghes_dimm_pool);
+/* v3 */
+unchanged
+---
+ drivers/block/loop.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
-Those are static lists, no need to prefix them with "ghes_". There's too
-much "ghes" in that code. :)
-
-> +
->  /* "ghes_edac.force_load=1" skips the platform check */
->  static bool __read_mostly force_load;
->  module_param(force_load, bool, 0);
-> @@ -72,11 +88,63 @@ struct memdev_dmi_entry {
->  	u16 conf_mem_clk_speed;
->  } __attribute__((__packed__));
->  
-> -struct ghes_edac_dimm_fill {
-> +struct dimm_fill {
-> +	struct list_head dimms;
->  	struct mem_ctl_info *mci;
->  	unsigned int count;
->  };
->  
-> +static int ghes_dimm_pool_create(int num_dimm)
-
-Yeah, drop "ghes_" here too. I'm not going to comment on this in the
-rest of the patchset but for the next version, please drop the "ghes_"
-prefix from static functions and members - it unnecessarily gets in the
-way when reading the code.
-
-> +{
-> +	struct ghes_dimm *ghes_dimm;
-> +
-> +	if (!num_dimm)
-> +		return 0;
-> +
-> +	lockdep_assert_held(ghes_reg_mutex);
-> +
-> +	dimms = kcalloc(num_dimm, sizeof(*dimms), GFP_KERNEL);
-> +	if (!dimms)
-> +		return -ENOMEM;
-> +
-> +	for (ghes_dimm = dimms; ghes_dimm < dimms + num_dimm; ghes_dimm++)
-
-And with the above shortening of names, this loop becomes:
-
-	for (d = dimms; d < dimms + num_dimms; d++)
-		list_add(&d->entry, &dimm_pool);
-
-Simple.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static void ghes_dimm_pool_destroy(void)
-> +{
-> +	lockdep_assert_held(ghes_reg_mutex);
-> +	INIT_LIST_HEAD(&ghes_dimm_pool);
-> +	kfree(dimms);
-> +}
-> +
-> +static struct ghes_dimm *ghes_dimm_alloc(struct dimm_info *dimm, u16 handle)
-> +{
-> +	struct ghes_dimm *ghes_dimm;
-> +
-> +	lockdep_assert_held(ghes_reg_mutex);
-
-The 0day bot caught it already - this needs to be a ptr. Please test
-with PROVE_LOCKING enabled before sending next time.
-
-> +
-> +	ghes_dimm = list_first_entry_or_null(&ghes_dimm_pool,
-> +					struct ghes_dimm, entry);
-
-Let that line stick out.
-
-> +
-> +	/* should be always non-zero */
-> +	if (!WARN_ON_ONCE(!ghes_dimm)) {
-> +		ghes_dimm->dimm = dimm;
-> +		ghes_dimm->handle = handle;
-> +		list_del(&ghes_dimm->entry);
-> +	}
-> +
-> +	return ghes_dimm;
-> +}
-> +
-> +static void ghes_dimm_release(struct list_head *dimms)
-> +{
-> +	lockdep_assert_held(ghes_reg_mutex);
-> +	list_splice(dimms, &ghes_dimm_pool);
-> +}
-> +
->  static void ghes_edac_count_dimms(const struct dmi_header *dh, void *arg)
->  {
->  	int *num_dimm = arg;
-
-...
-
-> @@ -547,12 +626,18 @@ int ghes_edac_register(struct ghes *ghes, struct device *dev)
->  
->  	spin_lock_irqsave(&ghes_lock, flags);
->  	ghes_pvt = pvt;
-> +	list_splice_tail(&dimm_fill.dimms, &ghes_dimm_list);
->  	spin_unlock_irqrestore(&ghes_lock, flags);
->  
->  	/* only set on success */
->  	refcount_set(&ghes_refcount, 1);
->  
->  unlock:
-> +	if (rc < 0) {
-> +		ghes_dimm_pool_destroy();
-> +		pr_err("Can't register at EDAC core: %d\n", rc);
-
-					with the EDAC core:
-
-> +	}
-> +
->  	mutex_unlock(&ghes_reg_mutex);
->  
->  	return rc;
-> @@ -562,6 +647,7 @@ void ghes_edac_unregister(struct ghes *ghes)
->  {
->  	struct mem_ctl_info *mci;
->  	unsigned long flags;
-> +	LIST_HEAD(dimm_list);
->  
->  	mutex_lock(&ghes_reg_mutex);
->  
-> @@ -574,14 +660,19 @@ void ghes_edac_unregister(struct ghes *ghes)
->  	spin_lock_irqsave(&ghes_lock, flags);
->  	mci = ghes_pvt ? ghes_pvt->mci : NULL;
->  	ghes_pvt = NULL;
-> +	list_splice_init(&ghes_dimm_list, &dimm_list);
-
-Why do you need to do this?
-
-Can't you simply do:
-
-	 ghes_dimm_release(&ghes_dimm_list);
-
-here?
-
-Btw, please add an explanation above ghes_dimm_list and ghes_dimm_pool
-what those are and what the rules are: stuff gets added on register to
-what list and freed on unreg from what list, etc. So that it is clear
-upon a quick glance.
-
-Thx.
-
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 0c99ee0b42a8..40705f5aeabd 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -1352,6 +1352,16 @@ void loopfs_evict_locked(struct loop_device *lo)
+ 	}
+ 	mutex_unlock(&loop_ctl_mutex);
+ }
++
++static bool loop_capable(const struct loop_device *lo, int cap)
++{
++	return ns_capable(loopfs_ns(lo), cap);
++}
++#else /* !CONFIG_BLK_DEV_LOOPFS */
++static inline bool loop_capable(const struct loop_device *lo, int cap)
++{
++	return capable(cap);
++}
+ #endif /* CONFIG_BLK_DEV_LOOPFS */
+ 
+ static int
+@@ -1368,7 +1378,7 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+ 		return err;
+ 	if (lo->lo_encrypt_key_size &&
+ 	    !uid_eq(lo->lo_key_owner, uid) &&
+-	    !capable(CAP_SYS_ADMIN)) {
++	    !loop_capable(lo, CAP_SYS_ADMIN)) {
+ 		err = -EPERM;
+ 		goto out_unlock;
+ 	}
+@@ -1499,7 +1509,7 @@ loop_get_status(struct loop_device *lo, struct loop_info64 *info)
+ 	memcpy(info->lo_crypt_name, lo->lo_crypt_name, LO_NAME_SIZE);
+ 	info->lo_encrypt_type =
+ 		lo->lo_encryption ? lo->lo_encryption->number : 0;
+-	if (lo->lo_encrypt_key_size && capable(CAP_SYS_ADMIN)) {
++	if (lo->lo_encrypt_key_size && loop_capable(lo, CAP_SYS_ADMIN)) {
+ 		info->lo_encrypt_key_size = lo->lo_encrypt_key_size;
+ 		memcpy(info->lo_encrypt_key, lo->lo_encrypt_key,
+ 		       lo->lo_encrypt_key_size);
+@@ -1723,7 +1733,7 @@ static int lo_ioctl(struct block_device *bdev, fmode_t mode,
+ 		return loop_clr_fd(lo);
+ 	case LOOP_SET_STATUS:
+ 		err = -EPERM;
+-		if ((mode & FMODE_WRITE) || capable(CAP_SYS_ADMIN)) {
++		if ((mode & FMODE_WRITE) || loop_capable(lo, CAP_SYS_ADMIN)) {
+ 			err = loop_set_status_old(lo,
+ 					(struct loop_info __user *)arg);
+ 		}
+@@ -1732,7 +1742,7 @@ static int lo_ioctl(struct block_device *bdev, fmode_t mode,
+ 		return loop_get_status_old(lo, (struct loop_info __user *) arg);
+ 	case LOOP_SET_STATUS64:
+ 		err = -EPERM;
+-		if ((mode & FMODE_WRITE) || capable(CAP_SYS_ADMIN)) {
++		if ((mode & FMODE_WRITE) || loop_capable(lo, CAP_SYS_ADMIN)) {
+ 			err = loop_set_status64(lo,
+ 					(struct loop_info64 __user *) arg);
+ 		}
+@@ -1742,7 +1752,7 @@ static int lo_ioctl(struct block_device *bdev, fmode_t mode,
+ 	case LOOP_SET_CAPACITY:
+ 	case LOOP_SET_DIRECT_IO:
+ 	case LOOP_SET_BLOCK_SIZE:
+-		if (!(mode & FMODE_WRITE) && !capable(CAP_SYS_ADMIN))
++		if (!(mode & FMODE_WRITE) && !loop_capable(lo, CAP_SYS_ADMIN))
+ 			return -EPERM;
+ 		/* Fall through */
+ 	default:
 -- 
-Regards/Gruss,
-    Boris.
+2.26.2
 
-https://people.kernel.org/tglx/notes-about-netiquette
