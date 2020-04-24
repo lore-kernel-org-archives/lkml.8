@@ -2,56 +2,56 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0FF8C55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82EE1C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95F1F20736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BA6220736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 17:24:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dvDCRdHc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f3Phw2Pj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgDXRYn (ORCPT
+        id S1728932AbgDXRYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 13:24:43 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26181 "EHLO
+        Fri, 24 Apr 2020 13:24:45 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34250 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728807AbgDXRYj (ORCPT
+        with ESMTP id S1728809AbgDXRYj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 Apr 2020 13:24:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
         s=mimecast20190719; t=1587749078;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=MucM5opZvyl4Z4L+ZeXePRz2z1atvDYyLaene/+Wtmk=;
-        b=dvDCRdHcojYQb/4TzgXBu5NGsT2V4hHc1bcbpkYAL/VFkl1fqqC1Is0kVVJ2qYdnAJOyWt
-        jqkqUYCo8q/DmpStMOv2Xo4rAwDIhDT8cWXBv+E3h5DU2cuI4LE3Xx0cUK3YYtjM5n18Bd
-        yeTRJ+z55UjaEPyzTKyjIrpjvtV19Fk=
+        bh=sbDmvfNcgt+2bJjYAeYhcGP2QN7WrEsbBIbocEGJVpE=;
+        b=f3Phw2PjBpKje/S7W5FI9eZZLLMmFHe2PPGojSdMOkrECi6k6LxpH7aWitaN4GrRiqyFN7
+        w+xzeSRENUc5vlWzMln9LF4X7VLRWQ8K5S5NTvv/11fdmGnGFpzDxfxAC2smLvl1h5emP1
+        jb21arUdm2MJ2XTWTavy84ExxJBUQ0c=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-244-CbvVGUzRPxGYh4gw5OFHQA-1; Fri, 24 Apr 2020 13:24:35 -0400
-X-MC-Unique: CbvVGUzRPxGYh4gw5OFHQA-1
+ us-mta-348-kUGgYStOOqaGGw-_lhTdTA-1; Fri, 24 Apr 2020 13:24:35 -0400
+X-MC-Unique: kUGgYStOOqaGGw-_lhTdTA-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 32AFC8BE49C;
-        Fri, 24 Apr 2020 17:24:26 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D30C38BE4B9;
+        Fri, 24 Apr 2020 17:24:22 +0000 (UTC)
 Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4B09C25277;
-        Fri, 24 Apr 2020 17:24:25 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E99851FDE1;
+        Fri, 24 Apr 2020 17:24:21 +0000 (UTC)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     wei.huang2@amd.com, cavery@redhat.com, vkuznets@redhat.com,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Oliver Upton <oupton@google.com>,
         Jim Mattson <jmattson@google.com>
-Subject: [PATCH v2 07/22] KVM: x86: Set KVM_REQ_EVENT if run is canceled with req_immediate_exit set
-Date:   Fri, 24 Apr 2020 13:24:01 -0400
-Message-Id: <20200424172416.243870-8-pbonzini@redhat.com>
+Subject: [PATCH v2 04/22] KVM: SVM: Implement check_nested_events for NMI
+Date:   Fri, 24 Apr 2020 13:23:58 -0400
+Message-Id: <20200424172416.243870-5-pbonzini@redhat.com>
 In-Reply-To: <20200424172416.243870-1-pbonzini@redhat.com>
 References: <20200424172416.243870-1-pbonzini@redhat.com>
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
@@ -60,42 +60,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Cathy Avery <cavery@redhat.com>
 
-Re-request KVM_REQ_EVENT if vcpu_enter_guest() bails after processing
-pending requests and an immediate exit was requested.  This fixes a bug
-where a pending event, e.g. VMX preemption timer, is delayed and/or lost
-if the exit was deferred due to something other than a higher priority
-_injected_ event, e.g. due to a pending nested VM-Enter.  This bug only
-affects the !injected case as kvm_x86_ops.cancel_injection() sets
-KVM_REQ_EVENT to redo the injection, but that's purely serendipitous
-behavior with respect to the deferred event.
+Migrate nested guest NMI intercept processing
+to new check_nested_events.
 
-Note, emulated preemption timer isn't the only event that can be
-affected, it simply happens to be the only event where not re-requesting
-KVM_REQ_EVENT is blatantly visible to the guest.
-
-Fixes: f4124500c2c13 ("KVM: nVMX: Fully emulate preemption timer")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Message-Id: <20200423022550.15113-4-sean.j.christopherson@intel.com>
+Signed-off-by: Cathy Avery <cavery@redhat.com>
+Message-Id: <20200414201107.22952-2-cavery@redhat.com>
+[Reorder clauses as NMIs have higher priority than IRQs; inject
+ immediate vmexit as is now done for IRQ vmexits. - Paolo]
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/x86.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/kvm/svm/nested.c | 21 +++++++++++++++++++++
+ arch/x86/kvm/svm/svm.c    |  6 ++----
+ arch/x86/kvm/svm/svm.h    | 15 ---------------
+ 3 files changed, 23 insertions(+), 19 deletions(-)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index ee934a88a267..8ebfebc807fd 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -8489,6 +8489,8 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 	return r;
+diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+index 266fde240493..c3650efd2e89 100644
+--- a/arch/x86/kvm/svm/nested.c
++++ b/arch/x86/kvm/svm/nested.c
+@@ -776,6 +776,20 @@ int nested_svm_check_exception(struct vcpu_svm *svm, unsigned nr,
+ 	return vmexit;
+ }
  
- cancel_injection:
-+	if (req_immediate_exit)
-+		kvm_make_request(KVM_REQ_EVENT, vcpu);
- 	kvm_x86_ops.cancel_injection(vcpu);
- 	if (unlikely(vcpu->arch.apic_attention))
- 		kvm_lapic_sync_from_vapic(vcpu);
++static bool nested_exit_on_nmi(struct vcpu_svm *svm)
++{
++	return (svm->nested.intercept & (1ULL << INTERCEPT_NMI));
++}
++
++static void nested_svm_nmi(struct vcpu_svm *svm)
++{
++	svm->vmcb->control.exit_code = SVM_EXIT_NMI;
++	svm->vmcb->control.exit_info_1 = 0;
++	svm->vmcb->control.exit_info_2 = 0;
++
++	nested_svm_vmexit(svm);
++}
++
+ static void nested_svm_intr(struct vcpu_svm *svm)
+ {
+ 	trace_kvm_nested_intr_vmexit(svm->vmcb->save.rip);
+@@ -798,6 +812,13 @@ static int svm_check_nested_events(struct kvm_vcpu *vcpu)
+ 		kvm_event_needs_reinjection(vcpu) || svm->nested.exit_required ||
+ 		svm->nested.nested_run_pending;
+ 
++	if (vcpu->arch.nmi_pending && nested_exit_on_nmi(svm)) {
++		if (block_nested_events)
++			return -EBUSY;
++		nested_svm_nmi(svm);
++		return 0;
++	}
++
+ 	if (kvm_cpu_has_interrupt(vcpu) && nested_exit_on_intr(svm)) {
+ 		if (block_nested_events)
+ 			return -EBUSY;
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 77440b5953e3..8e732eb0b5c9 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -3067,9 +3067,10 @@ static int svm_nmi_allowed(struct kvm_vcpu *vcpu)
+ 	struct vcpu_svm *svm = to_svm(vcpu);
+ 	struct vmcb *vmcb = svm->vmcb;
+ 	int ret;
++
+ 	ret = !(vmcb->control.int_state & SVM_INTERRUPT_SHADOW_MASK) &&
+ 	      !(svm->vcpu.arch.hflags & HF_NMI_MASK);
+-	ret = ret && gif_set(svm) && nested_svm_nmi(svm);
++	ret = ret && gif_set(svm);
+ 
+ 	return ret;
+ }
+@@ -3147,9 +3148,6 @@ static void enable_nmi_window(struct kvm_vcpu *vcpu)
+ 		return; /* STGI will cause a vm exit */
+ 	}
+ 
+-	if (svm->nested.exit_required)
+-		return; /* we're not going to run the guest yet */
+-
+ 	/*
+ 	 * Something prevents NMI from been injected. Single step over possible
+ 	 * problem (IRET or exception injection or interrupt shadow)
+diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+index 435f3328c99c..a2bc33aadb67 100644
+--- a/arch/x86/kvm/svm/svm.h
++++ b/arch/x86/kvm/svm/svm.h
+@@ -373,21 +373,6 @@ void disable_nmi_singlestep(struct vcpu_svm *svm);
+ #define NESTED_EXIT_DONE	1	/* Exit caused nested vmexit  */
+ #define NESTED_EXIT_CONTINUE	2	/* Further checks needed      */
+ 
+-/* This function returns true if it is save to enable the nmi window */
+-static inline bool nested_svm_nmi(struct vcpu_svm *svm)
+-{
+-	if (!is_guest_mode(&svm->vcpu))
+-		return true;
+-
+-	if (!(svm->nested.intercept & (1ULL << INTERCEPT_NMI)))
+-		return true;
+-
+-	svm->vmcb->control.exit_code = SVM_EXIT_NMI;
+-	svm->nested.exit_required = true;
+-
+-	return false;
+-}
+-
+ static inline bool svm_nested_virtualize_tpr(struct kvm_vcpu *vcpu)
+ {
+ 	return is_guest_mode(vcpu) && (vcpu->arch.hflags & HF_VINTR_MASK);
 -- 
 2.18.2
 
