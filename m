@@ -2,309 +2,100 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3ED3C54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A53AC55191
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC0C42098B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10CB020736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 22:15:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbgDXWML (ORCPT
+        id S1726076AbgDXWPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 18:12:11 -0400
-Received: from v6.sk ([167.172.42.174]:59654 "EHLO v6.sk"
+        Fri, 24 Apr 2020 18:15:22 -0400
+Received: from muru.com ([72.249.23.125]:51336 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725874AbgDXWMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 18:12:10 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 5E4C3610B0;
-        Fri, 24 Apr 2020 22:11:38 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v2 2/2] mfd: ene-kb3930: Add driver for ENE KB3930 Embedded Controller
-Date:   Sat, 25 Apr 2020 00:11:23 +0200
-Message-Id: <20200424221123.106527-3-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200424221123.106527-1-lkundrak@v3.sk>
-References: <20200424221123.106527-1-lkundrak@v3.sk>
+        id S1725874AbgDXWPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 18:15:21 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id D47FE80E7;
+        Fri, 24 Apr 2020 22:16:06 +0000 (UTC)
+Date:   Fri, 24 Apr 2020 15:15:15 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCHv6 0/4] n_gsm serdev support and protocol driver for
+ droid4 modem
+Message-ID: <20200424221515.GM37466@atomide.com>
+References: <20200421232752.3070-1-tony@atomide.com>
+ <20200423114326.GQ18608@localhost>
+ <20200424215040.GA14087@amd>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200424215040.GA14087@amd>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver provides access to the EC RAM of said embedded controller
-attached to the I2C bus as well as optionally supporting its slightly weird
-power-off/restart protocol.
+* Pavel Machek <pavel@denx.de> [200424 21:51]:
+> Hi!
+> 
+> > > Here's v4 set of n_gsm serdev support patches, and the related protocol
+> > > driver for the modem found on Motorola Mapphone phones and tablets
+> > > like droid4.
+> > > 
+> > > This series only adds basic character device support for the serdev
+> > > driver. Other serdev consumer drivers for specific devices will be
+> > > posted separately.
+> > 
+> > I'm still missing an architectural (design) overview here -- reviewer
+> > time is a scarce resource.
+> > 
+> > I also suggested earlier that you include, at least as an RFC, one or
+> > more of your child-device drivers so that we can see how this ends up
+> > being used in the end (including an example devicetree).
+> 
+> Note that this is useful on its own: we have ofonod running on the top
+> of this doing calls and SMSes.
 
-A particular implementation of the EC firmware can be identified by a
-model byte. If this driver identifies the Dell Ariel platform, it
-registers the appropriate cells.
+Yup.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
----
- drivers/mfd/Kconfig      |  10 ++
- drivers/mfd/Makefile     |   1 +
- drivers/mfd/ene-kb3930.c | 209 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 220 insertions(+)
- create mode 100644 drivers/mfd/ene-kb3930.c
+> Tony: I know you have drivers depending on this somewhere (audio
+> routing and GPS), but I can't find them. It is not droid4-pending-v5.6
+> AFAICT. Do you have a pointer / could you publish them somewhere?
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 0a59249198d3..dae18a2beab5 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -398,6 +398,16 @@ config MFD_DLN2
- 	  etc. must be enabled in order to use the functionality of
- 	  the device.
- 
-+config MFD_ENE_KB3930
-+	tristate "ENE KB3930 Embedded Controller support"
-+	depends on I2C
-+	depends on MACH_MMP3_DT || COMPILE_TEST
-+	select MFD_CORE
-+	help
-+	  This adds support for accessing the registers on ENE KB3930, Embedded
-+	  Controller. Additional drivers such as LEDS_ARIEL must be enabled in
-+	  order to use the functionality of the device.
-+
- config MFD_EXYNOS_LPASS
- 	tristate "Samsung Exynos SoC Low Power Audio Subsystem"
- 	depends on ARCH_EXYNOS || COMPILE_TEST
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index f935d10cbf0f..2d2f5bc12841 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_ARCH_BCM2835)	+= bcm2835-pm.o
- obj-$(CONFIG_MFD_BCM590XX)	+= bcm590xx.o
- obj-$(CONFIG_MFD_BD9571MWV)	+= bd9571mwv.o
- obj-$(CONFIG_MFD_CROS_EC_DEV)	+= cros_ec_dev.o
-+obj-$(CONFIG_MFD_ENE_KB3930)	+= ene-kb3930.o
- obj-$(CONFIG_MFD_EXYNOS_LPASS)	+= exynos-lpass.o
- 
- obj-$(CONFIG_HTC_PASIC3)	+= htc-pasic3.o
-diff --git a/drivers/mfd/ene-kb3930.c b/drivers/mfd/ene-kb3930.c
-new file mode 100644
-index 000000000000..1123f3a1c816
---- /dev/null
-+++ b/drivers/mfd/ene-kb3930.c
-@@ -0,0 +1,209 @@
-+// SPDX-License-Identifier: BSD-2-Clause OR GPL-2.0-or-later
-+/*
-+ * ENE KB3930 Embedded Controller Driver
-+ *
-+ * Copyright (C) 2020 Lubomir Rintel
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/i2c.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/delay.h>
-+#include <linux/reboot.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/core.h>
-+
-+enum {
-+	EC_DATA_IN	= 0x00,
-+	EC_RAM_OUT	= 0x80,
-+	EC_RAM_IN	= 0x81,
-+};
-+
-+enum {
-+	EC_MODEL_ID	= 0x30,
-+	EC_VERSION_MAJ	= 0x31,
-+	EC_VERSION_MIN	= 0x32,
-+};
-+
-+struct kb3930 {
-+	struct i2c_client *client;
-+	struct regmap *ec_ram;
-+	struct gpio_descs *off_gpios;
-+};
-+
-+struct kb3930 *global_kb3930;
-+
-+static void kb3930_off(struct kb3930 *priv, int poweroff)
-+{
-+	gpiod_direction_output(priv->off_gpios->desc[1], poweroff);
-+
-+	while (1) {
-+		mdelay(50);
-+		gpiod_direction_output(priv->off_gpios->desc[0], 0);
-+		mdelay(50);
-+		gpiod_direction_output(priv->off_gpios->desc[0], 1);
-+	}
-+}
-+
-+static int kb3930_restart(struct notifier_block *this,
-+			  unsigned long mode, void *cmd)
-+{
-+	kb3930_off(global_kb3930, 0);
-+	return NOTIFY_DONE;
-+}
-+
-+static void kb3930_power_off(void)
-+{
-+	kb3930_off(global_kb3930, 1);
-+}
-+
-+static struct notifier_block kb3930_restart_nb = {
-+	.notifier_call = kb3930_restart,
-+	.priority = 128,
-+};
-+
-+static const struct mfd_cell ariel_ec_cells[] = {
-+	{ .name = "dell-wyse-ariel-led", },
-+	{ .name = "dell-wyse-ariel-power", },
-+};
-+
-+static int kb3930_ec_ram_reg_write(void *context, unsigned int reg,
-+				   unsigned int val)
-+{
-+	struct kb3930 *priv = context;
-+
-+	return i2c_smbus_write_word_data(priv->client, EC_RAM_OUT,
-+					 (val << 8) | reg);
-+}
-+
-+static int kb3930_ec_ram_reg_read(void *context, unsigned int reg,
-+				  unsigned int *val)
-+{
-+	struct kb3930 *priv = context;
-+	int ret;
-+
-+	ret = i2c_smbus_write_word_data(priv->client, EC_RAM_IN, reg);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = i2c_smbus_read_word_data(priv->client, EC_DATA_IN);
-+	if (ret < 0)
-+		return ret;
-+
-+	*val = ret >> 8;
-+	return 0;
-+}
-+
-+static const struct regmap_config kb3930_ec_ram_regmap_config = {
-+	.name = "ec_ram",
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.reg_stride = 1,
-+	.max_register = 0xff,
-+	.reg_write = kb3930_ec_ram_reg_write,
-+	.reg_read = kb3930_ec_ram_reg_read,
-+	.fast_io = false,
-+};
-+
-+static int kb3930_probe(struct i2c_client *client,
-+			const struct i2c_device_id *id)
-+{
-+	struct device *dev = &client->dev;
-+	struct device_node *np = dev->of_node;
-+	struct kb3930 *priv;
-+	unsigned int model_id;
-+	int ret;
-+
-+	if (global_kb3930)
-+		return -EEXIST;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	global_kb3930 = priv;
-+	priv->client = client;
-+	i2c_set_clientdata(client, priv);
-+
-+	priv->ec_ram = devm_regmap_init(dev, NULL, priv,
-+					&kb3930_ec_ram_regmap_config);
-+	if (IS_ERR(priv->ec_ram))
-+		return PTR_ERR(priv->ec_ram);
-+
-+	ret = regmap_read(priv->ec_ram, EC_MODEL_ID, &model_id);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (model_id == 'J') {
-+		ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE,
-+					   ariel_ec_cells,
-+					   ARRAY_SIZE(ariel_ec_cells),
-+					   NULL, 0, NULL);
-+		if (ret < 0)
-+			return ret;
-+	} else {
-+		dev_err(dev, "unknown board model: %02x\n", model_id);
-+		return -ENODEV;
-+	}
-+
-+	if (of_property_read_bool (np, "system-power-controller")) {
-+		priv->off_gpios = devm_gpiod_get_array_optional(dev, "off",
-+								GPIOD_IN);
-+	}
-+	if (IS_ERR(priv->off_gpios))
-+		return PTR_ERR(priv->off_gpios);
-+	if (priv->off_gpios->ndescs < 2) {
-+		dev_err(dev, "invalid off-gpios property\n");
-+		return -EINVAL;
-+	}
-+	if (priv->off_gpios) {
-+		register_restart_handler(&kb3930_restart_nb);
-+		if (pm_power_off == NULL)
-+			pm_power_off = kb3930_power_off;
-+	}
-+
-+	dev_info(dev, "ENE KB3930 Embedded Controller\n");
-+	return 0;
-+}
-+
-+static int kb3930_remove(struct i2c_client *client)
-+{
-+	struct kb3930 *priv = i2c_get_clientdata(client);
-+
-+	if (priv->off_gpios) {
-+		if (pm_power_off == kb3930_power_off)
-+			pm_power_off = NULL;
-+		unregister_restart_handler(&kb3930_restart_nb);
-+	}
-+	global_kb3930 = NULL;
-+
-+	return 0;
-+}
-+
-+static const struct i2c_device_id kb3930_ids[] = {
-+	{ "kb3930", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, kb3930_ids);
-+
-+static const struct of_device_id kb3930_dt_ids[] = {
-+	{ .compatible = "ene,kb3930" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, kb3930_dt_ids);
-+
-+static struct i2c_driver kb3930_driver = {
-+	.probe = kb3930_probe,
-+	.remove = kb3930_remove,
-+	.driver = {
-+		.name = "ene-kb3930",
-+		.of_match_table = of_match_ptr(kb3930_dt_ids),
-+	},
-+	.id_table = kb3930_ids,
-+};
-+
-+module_i2c_driver(kb3930_driver);
-+
-+MODULE_AUTHOR("Lubomir Rintel <lkundrak@v3.sk>");
-+MODULE_DESCRIPTION("ENE KB3930 Embedded Controller Driver");
-+MODULE_LICENSE("Dual BSD/GPL");
--- 
-2.26.0
+Hmm they should be there in droid4-pending-v5.6 branch [0]:
 
+$ git log --abbrev=12 --pretty=format:"%h (\"%s\")" \
+	v5.6..droid4-pending-v5.6 | grep -i -e gsm -e mot -e mdm
+e09590a260a4 ("mfd: motmdm: Fix oops on unload of motorola-mdm")
+f9252f9ff6bd ("mfd: motmdm: Revert bad list change")
+d733dcaf4416 ("mfd: motmdm: Fix issue with receiving data before ddata is set")
+452d2b5d4c95 ("n_gsm: Build fixes for make randconfig build")
+6882b27ea92a ("phy: mapphone-mdm6600: Fix write timeouts with shorter GPIO toggle interval")
+58ff58c4b520 ("mfd: motmdm: Add basic DTMF support")
+e92b6f30e5ae ("ASoC: audio-graph-card: Add audio mixer for motorold mdm6600")
+c2caea5767d5 ("gnss: mot-mdm6600: Add support for Motorola Mapphone MDM6600 modem")
+a5f73b7b06f6 ("mfd: motmdm: Add Motorola TS 27.010 serdev driver for devices like droid4")
+6c311d5aeb0a ("dt-bindings: mfd: motmdm: Add binding for motorola-mdm")
+cd02274b920e ("tty: n_gsm: Add support for serdev drivers")
+a73a48321c98 ("phy: mapphone-mdm6600: Fix timeouts by adding wake-up handling")
+
+Regards,
+
+Tony
+
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git/log/?h=droid4-pending-v5.6
