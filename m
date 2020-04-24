@@ -2,96 +2,155 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CDCC55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 791BAC54FCB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04E7A20704
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B5592098B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 18:03:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="MUKlal7f"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="PZMDSLIH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728932AbgDXSDc (ORCPT
+        id S1728982AbgDXSDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 14:03:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728300AbgDXSDb (ORCPT
+        Fri, 24 Apr 2020 14:03:44 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17802 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728300AbgDXSDo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 14:03:31 -0400
-Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A07CEC09B049
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 11:03:30 -0700 (PDT)
-Received: by mail-io1-xd33.google.com with SMTP id o127so11331407iof.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 11:03:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=l9DZkzCjHWvWpAFUFEboMfl5JVZotMAsYoNk7iZWJS0=;
-        b=MUKlal7f0QTMDIbBD8mwNCPDsD4bz887lRmnK33mEet2P64rMi8Vdt/2i9wnUocIyI
-         XuuV8O8JLZM4TxpdTeaM6BzaVw2V3bIbeNprvtXp0QsdlQe9z+PyTQbZ6394kJ2tlf0r
-         wMNlD88pAn1GCrzaHbDY9MiyovI+WDXb70koPCM/7N3yIwXC24BfdxKgcj5gNZaRE4xD
-         9mDNc8xTTvOj7wQ27RdvrSPMxgT+dlxPvVhIJ6oB/EAp8mIBn/y1V4k5sHBFBj4taT21
-         jlirb9cG3XjaNWCBY6u/xNiEvOAPibinQFajatGA4cpvFm/xQlRMmuuSF6p81PgiiAzB
-         vIGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=l9DZkzCjHWvWpAFUFEboMfl5JVZotMAsYoNk7iZWJS0=;
-        b=VohpdsUBBQLEri0b6k/FNBUtcYu4dKl82V3+gjNKQvyZZXL4teI1l4A1y8hiOkjjnD
-         K7ts1wHVi4l40vUbZI5ElPirjyIQe4GvTvPo+PHQt/7bDjCYNDRyYlNZbMNHknqSTnn2
-         GedSqAoQVTTiVs3NA1McOJZot85JFSlGmnROE4s32LOls2rlTaYOVZb09nuYUZ0MFxxJ
-         x3pKI2rLGTxBt861HF37e7VUydcH65sqFOxHLialyAuTzH0AiqUmySv60OBlCHWed3N2
-         4w8ra78cOjUkjsQLLvdV5g+sD7MgQsPgVOw2RNerYlET0lYoQkE2BZQIUfDQr2aPqMFw
-         epRQ==
-X-Gm-Message-State: AGi0PuZ9Kl1qkNicZ2s7lXS/E/NxUffVDIY0LWSOAe+Ewd7lCgqwabMx
-        PtYxN8CmZXjMJsF0j3TDx1CaDK/FUrDYRA==
-X-Google-Smtp-Source: APiQypLiBb6pQAayp6kyLN7BnySABnVTZSw+CHHuZ4vQXAsd/3B4Bc5CFHJtmvahPb0r6NhZxQdEiQ==
-X-Received: by 2002:a02:a90e:: with SMTP id n14mr9230294jam.97.1587751409829;
-        Fri, 24 Apr 2020 11:03:29 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id g90sm2329941ila.19.2020.04.24.11.03.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Apr 2020 11:03:29 -0700 (PDT)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     io-uring <io-uring@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Subject: [GIT PULL] io_uring fix for 5.7-rc3
-Message-ID: <156f8353-5841-39ad-3bc2-af9cadac3c71@kernel.dk>
-Date:   Fri, 24 Apr 2020 12:03:28 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 24 Apr 2020 14:03:44 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1587751397; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=lwSKKc8bGEb08Yw9SQhy7JOaYUDCCnpIWNEoH4WfSQ3RFpxNt2R4VdiqkdhGys3P27TbMDGl/3nK43URBUL8mMOrL34WDuz12eEKXR59OC5MVSI+rTM4AByEXRyEAVgFckWrhqkkEIk1kt0p1nZU3Bjkcga2aD5npBltHqCcOUQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1587751397; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
+        bh=JFPPVC9jj5f6wCUGiIdI/tjl90bno75idKtqMqLKtKs=; 
+        b=LsB8yPdBkTFg5CXrr4OaIpJEK70qHZK81+3QsZeHUhFBvvhDY3MbZMXg8UlGBDbzpVmQJNVmZ7deO3Yig9C04cA/oFa6yRcUDw218hQtOdE9VG3ceHyYJudK/mwnWTVmyjJfjxakOLP2MxQICSQvWh4lv555rTr6fUpWVxqFjvU=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=flygoat.com;
+        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
+        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1587751397;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=JFPPVC9jj5f6wCUGiIdI/tjl90bno75idKtqMqLKtKs=;
+        b=PZMDSLIHrjQ5AXgEowlm2usG+vmi3H4R6zmuEZJyW/TKRLU5vq1Xrf/LI4kjJyBF
+        TthGf/iJvUQf6UGPQ+nC1ebyN4qyQCMeSs93rcg0jlKv3ZJTJsra8QkgIdAE7hXuzR1
+        Wlf4VlCwLcxePN0OuXB5DlxnBOBkEoRf0WnhUQeg=
+Received: from [127.0.0.1] (122.235.213.3 [122.235.213.3]) by mx.zoho.com.cn
+        with SMTPS id 1587751393295109.35899408288469; Sat, 25 Apr 2020 02:03:13 +0800 (CST)
+Date:   Sat, 25 Apr 2020 02:03:11 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Paul Burton <paulburton@kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH v5 1/6] PCI: OF: Don't remap iospace on unsupported platform
+User-Agent: K-9 Mail for Android
+Reply-to: jiaxun.yang@flygoat.com
+In-Reply-To: <CAL_JsqKsZrsnn92XHL4QdFkAgFKqVTBZXDz9wVv-_7oywOOsBQ@mail.gmail.com>
+References: <20200424130847.328584-1-jiaxun.yang@flygoat.com> <20200424130847.328584-2-jiaxun.yang@flygoat.com> <CAL_JsqKsZrsnn92XHL4QdFkAgFKqVTBZXDz9wVv-_7oywOOsBQ@mail.gmail.com>
+Message-ID: <D5CC0902-F84F-43F1-88E5-C03018B25050@flygoat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
-
-Single fixup for a change that went into -rc2, please pull.
 
 
-  git://git.kernel.dk/linux-block.git tags/io_uring-5.7-2020-04-24
+=E4=BA=8E 2020=E5=B9=B44=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881=
+:47:23, Rob Herring <robh+dt@kernel=2Eorg> =E5=86=99=E5=88=B0:
+>On Fri, Apr 24, 2020 at 8:09 AM Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>=
+ wrote:
+>>
+>> There are some platforms that don't support I/O space remapping
+>> like MIPS=2E However, our PCI code will try to remap iospace
+>> unconditionally and reject io resources on these platforms=2E
+>>
+>> So we should remove I/O space remapping check and use a range
+>> check instead on these platforms=2E
+>>
+>> Signed-off-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
+>> --
+>> v4: Fix a typo in commit message=2E
+>> v5: Commit message massage
+>> ---
+>>  drivers/pci/of=2Ec | 9 +++++++++
+>>  1 file changed, 9 insertions(+)
+>>
+>> diff --git a/drivers/pci/of=2Ec b/drivers/pci/of=2Ec
+>> index 81ceeaa6f1d5=2E=2E36e8761b66c6 100644
+>> --- a/drivers/pci/of=2Ec
+>> +++ b/drivers/pci/of=2Ec
+>> @@ -547,12 +547,21 @@ int pci_parse_request_of_pci_ranges(struct device=
+ *dev,
+>>
+>>                 switch (resource_type(res)) {
+>>                 case IORESOURCE_IO:
+>> +#if defined(PCI_IOBASE) && defined(CONFIG_MMU)
+>
+>We already have the same condition in pci_remap_iospace()=2E All this
+>does is suppress a WARN=2E If a WARN is not desired, then change it=2E
+>Perhaps just a single line rather than backtrace would be okay=2E
+>Whether to WARN or not shouldn't be a decision for firmware code=2E
+>
+>Though really, if I/O space can never be supported, then it's an error
+>in your DT to describe it=2E
 
+In MIPS world, we do have inb/oub family of I/O functions
+to support I/O space=2E But we're not using remap_iospace as it's breaking
+some of our assumptions=2E
+We have our own inb/outb implementation=2E
 
-----------------------------------------------------------------
-Xiaoguang Wang (1):
-      io_uring: only restore req->work for req that needs do completion
+In that case, I think make a range check instead of remapping would
+be more practical=2E
 
- fs/io_uring.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Thanks=2E
 
--- 
-Jens Axboe
+>
+>>                         err =3D devm_pci_remap_iospace(dev, res, iobase=
+);
+>>                         if (err) {
+>>                                 dev_warn(dev, "error %d: failed to map =
+resource %pR\n",
+>>                                          err, res);
+>>                                 resource_list_destroy_entry(win);
+>>                         }
+>> +#else
+>> +                       /* Simply check if IO is inside the range */
+>
+>Why do you care if it's never used?
+>
+>> +                       if (res->end > IO_SPACE_LIMIT) {
+>> +                               dev_warn(dev, "resource %pR out of the =
+I/O range\n",
+>> +                                       res);
+>> +                               resource_list_destroy_entry(win);
+>> +                       }
+>> +#endif
+>>                         break;
+>>                 case IORESOURCE_MEM:
+>>                         res_valid |=3D !(res->flags & IORESOURCE_PREFET=
+CH);
+>> --
+>> 2=2E26=2E0=2Erc2
+>>
 
+--=20
+Jiaxun Yang
