@@ -2,145 +2,239 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DEEC55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E49C55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F12E20706
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:47:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ltbf/q0u"
+	by mail.kernel.org (Postfix) with ESMTP id 51D7D20706
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 03:48:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgDXDrH (ORCPT
+        id S1726488AbgDXDsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 23:47:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55292 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726027AbgDXDrH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 23:47:07 -0400
-Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE342C09B044;
-        Thu, 23 Apr 2020 20:47:06 -0700 (PDT)
-Received: by mail-oo1-xc44.google.com with SMTP id e18so1826445oot.9;
-        Thu, 23 Apr 2020 20:47:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VMlZsZaFfxNa0cf7p8pZP+Z+Omdw/uMd+UOr6VK2CIo=;
-        b=Ltbf/q0uPwUn1CYXwQ8Cf2zfO0h6CzV8r7pwjK248IxDj6st4i5bcP+ACE156OuI5d
-         KFQ4g9Vnq9vRBxm0IRoTkSZzfsX2lQNRl/OqBv9Rxfz+SsVYdYQiK90IqoAt32qUIogI
-         ruz2d7c/nwjpPEHCvT+6hPbY2JOVkb1jRORDClD2BqckzNeeVt9uJR0aM1gIB3D5NV18
-         riah0c+gQUL1TiSPmNSDrELZ9B0Eqg68C8V6bqD93sttz5SXqumDGGo9Ir7OK3wc+b6P
-         mhx3Q5kd9bKY8z8Nx+tNnxvjNLKjPu1fi4vykdCi/3SLPpVo7e7APo6iXgnGjDAPwWRp
-         r4HQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VMlZsZaFfxNa0cf7p8pZP+Z+Omdw/uMd+UOr6VK2CIo=;
-        b=SMYR3p1NhQu31cI9EpuHOXHbcTq7W7e31paPZbCZNHIpR85NO/ZMjqWku0LxxkQ8a8
-         RYYBcfLEl4sy8P/+GKkeKHOYarNK0axy+R3HGb/y35WF+3jCCqYEyXlt6cOmWH2NUQfG
-         nvcwBFB99HY1M2RKst2AcQVVKmK/eNmmMh/AOEDf3tQW8ojycicR2wIjVxuOOH7NaOF8
-         BSmfZNtVE3J0Y+Ps1jPmWylnQzWVE2q3LoUhNnedCw98TLJwgiZEQbT6cJzluGmjTAbh
-         x9KvvKP9cpIay2UVRtGzz3JbGRmDM5/x3b5b9Hb1Y08PCC4mn0t4gcwE5n06pFPeuinK
-         M4+A==
-X-Gm-Message-State: AGi0Pubp/7BpABUfNrbG8MvT1n79BtsLJKeNO6Bk8qkwc73n0n4TlyJZ
-        Mzw/+3eU2aUEUach/W0xw0cs+fCpaHo=
-X-Google-Smtp-Source: APiQypJ6Rj/X+KndpeCiCjuowm+6u8o1RfDude6ez6QxAJsUl4Mz9YvaiRM8AAE4x1xIsofEG7FFwA==
-X-Received: by 2002:a4a:6743:: with SMTP id j3mr6339357oof.82.1587700026114;
-        Thu, 23 Apr 2020 20:47:06 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id x88sm1159008ota.44.2020.04.23.20.47.05
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 Apr 2020 20:47:05 -0700 (PDT)
-Date:   Thu, 23 Apr 2020 20:47:04 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-rdma@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: remaining flexible-array conversions
-Message-ID: <20200424034704.GA12320@ubuntu-s3-xlarge-x86>
-References: <6342c465-e34b-3e18-cc31-1d989926aebd@embeddedor.com>
+        Thu, 23 Apr 2020 23:48:30 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2892 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725823AbgDXDs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 23:48:29 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id DF85C2F4996050ACE8C5;
+        Fri, 24 Apr 2020 11:48:26 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.154) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Fri, 24 Apr 2020
+ 11:48:25 +0800
+Subject: Re: [PATCH] xfrm: policy: Only use mark as policy lookup key
+To:     Xin Long <lucien.xin@gmail.com>
+References: <20200421143149.45108-1-yuehaibing@huawei.com>
+ <20200422093344.GY13121@gauss3.secunet.de>
+ <1650fd55-dd70-f687-88b6-d32a04245915@huawei.com>
+ <CADvbK_cEgKCEGRJU1v=FAdFNoh3TzD+cZLiKUtsMLHJh3JqOfg@mail.gmail.com>
+ <02a56d2c-8d27-f53a-d9e3-c25bd03677c8@huawei.com>
+ <CADvbK_cScGYRuZfJPoQ+oQKRUk-cr6nOAdTX9cU7MKtw0DUEaA@mail.gmail.com>
+ <b392a477-2ab5-1045-a18c-4df915f78001@huawei.com>
+ <CADvbK_dAjP-Qa1L0zDyzG_25bwr-3xtiPLzY4_CeimKcarp9Tg@mail.gmail.com>
+CC:     Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        davem <davem@davemloft.net>, <kuba@kernel.org>,
+        network dev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jamal Hadi Salim <hadi@cyberus.ca>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <cb82c789-8eb5-e7bf-4f5a-4a8ec0672648@huawei.com>
+Date:   Fri, 24 Apr 2020 11:48:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6342c465-e34b-3e18-cc31-1d989926aebd@embeddedor.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CADvbK_dAjP-Qa1L0zDyzG_25bwr-3xtiPLzY4_CeimKcarp9Tg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.166.215.154]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gustavo,
-
-On Wed, Apr 22, 2020 at 01:26:02PM -0500, Gustavo A. R. Silva wrote:
-> Hi Linus,
+On 2020/4/23 17:43, Xin Long wrote:
+> On Thu, Apr 23, 2020 at 4:41 PM Yuehaibing <yuehaibing@huawei.com> wrote:
+>>
+>> On 2020/4/23 14:37, Xin Long wrote:
+>>> On Thu, Apr 23, 2020 at 10:26 AM Yuehaibing <yuehaibing@huawei.com> wrote:
+>>>>
+>>>> On 2020/4/22 23:41, Xin Long wrote:
+>>>>> On Wed, Apr 22, 2020 at 8:18 PM Yuehaibing <yuehaibing@huawei.com> wrote:
+>>>>>>
+>>>>>> On 2020/4/22 17:33, Steffen Klassert wrote:
+>>>>>>> On Tue, Apr 21, 2020 at 10:31:49PM +0800, YueHaibing wrote:
+>>>>>>>> While update xfrm policy as follow:
+>>>>>>>>
+>>>>>>>> ip -6 xfrm policy update src fd00::1/128 dst fd00::2/128 dir in \
+>>>>>>>>  priority 1 mark 0 mask 0x10
+>>>>>>>> ip -6 xfrm policy update src fd00::1/128 dst fd00::2/128 dir in \
+>>>>>>>>  priority 2 mark 0 mask 0x00
+>>>>>>>> ip -6 xfrm policy update src fd00::1/128 dst fd00::2/128 dir in \
+>>>>>>>>  priority 2 mark 0 mask 0x10
+>>>>>>>>
+>>>>>>>> We get this warning:
+>>>>>>>>
+>>>>>>>> WARNING: CPU: 0 PID: 4808 at net/xfrm/xfrm_policy.c:1548
+>>>>>>>> Kernel panic - not syncing: panic_on_warn set ...
+>>>>>>>> CPU: 0 PID: 4808 Comm: ip Not tainted 5.7.0-rc1+ #151
+>>>>>>>> Call Trace:
+>>>>>>>> RIP: 0010:xfrm_policy_insert_list+0x153/0x1e0
+>>>>>>>>  xfrm_policy_inexact_insert+0x70/0x330
+>>>>>>>>  xfrm_policy_insert+0x1df/0x250
+>>>>>>>>  xfrm_add_policy+0xcc/0x190 [xfrm_user]
+>>>>>>>>  xfrm_user_rcv_msg+0x1d1/0x1f0 [xfrm_user]
+>>>>>>>>  netlink_rcv_skb+0x4c/0x120
+>>>>>>>>  xfrm_netlink_rcv+0x32/0x40 [xfrm_user]
+>>>>>>>>  netlink_unicast+0x1b3/0x270
+>>>>>>>>  netlink_sendmsg+0x350/0x470
+>>>>>>>>  sock_sendmsg+0x4f/0x60
+>>>>>>>>
+>>>>>>>> Policy C and policy A has the same mark.v and mark.m, so policy A is
+>>>>>>>> matched in first round lookup while updating C. However policy C and
+>>>>>>>> policy B has same mark and priority, which also leads to matched. So
+>>>>>>>> the WARN_ON is triggered.
+>>>>>>>>
+>>>>>>>> xfrm policy lookup should only be matched when the found policy has the
+>>>>>>>> same lookup keys (mark.v & mark.m) no matter priority.
+>>>>>>>>
+>>>>>>>> Fixes: 7cb8a93968e3 ("xfrm: Allow inserting policies with matching mark and different priorities")
+>>>>>>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>>>>>>>> ---
+>>>>>>>>  net/xfrm/xfrm_policy.c | 16 +++++-----------
+>>>>>>>>  1 file changed, 5 insertions(+), 11 deletions(-)
+>>>>>>>>
+>>>>>>>> diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
+>>>>>>>> index 297b2fd..67d0469 100644
+>>>>>>>> --- a/net/xfrm/xfrm_policy.c
+>>>>>>>> +++ b/net/xfrm/xfrm_policy.c
+>>>>>>>> @@ -1436,13 +1436,7 @@ static void xfrm_policy_requeue(struct xfrm_policy *old,
+>>>>>>>>  static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
+>>>>>>>>                                 struct xfrm_policy *pol)
+>>>>>>>>  {
+>>>>>>>> -    u32 mark = policy->mark.v & policy->mark.m;
+>>>>>>>> -
+>>>>>>>> -    if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
+>>>>>>>> -            return true;
+>>>>>>>> -
+>>>>>>>> -    if ((mark & pol->mark.m) == pol->mark.v &&
+>>>>>>>> -        policy->priority == pol->priority)
+>>>>>>>
+>>>>>>> If you remove the priority check, you can't insert policies with matching
+>>>>>>> mark and different priorities anymore. This brings us back the old bug.
+>>>>>>
+>>>>>> Yes, this is true.
+>>>>>>
+>>>>>>>
+>>>>>>> I plan to apply the patch from Xin Long, this seems to be the right way
+>>>>>>> to address this problem.
+>>>>>>
+>>>>>> That still brings an issue, update like this:
+>>>>>>
+>>>>>> policy A (mark.v = 1, mark.m = 0, priority = 1)
+>>>>>> policy B (mark.v = 1, mark.m = 0, priority = 1)
+>>>>>>
+>>>>>> A and B will all in the list.
+>>>>> I think this is another issue even before:
+>>>>> 7cb8a93968e3 ("xfrm: Allow inserting policies with matching mark and
+>>>>> different priorities")
+>>>>>
+>>>>>>
+>>>>>> So should do this:
+>>>>>>
+>>>>>>  static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
+>>>>>>                                    struct xfrm_policy *pol)
+>>>>>>  {
+>>>>>> -       u32 mark = policy->mark.v & policy->mark.m;
+>>>>>> -
+>>>>>> -       if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
+>>>>>> -               return true;
+>>>>>> -
+>>>>>> -       if ((mark & pol->mark.m) == pol->mark.v &&
+>>>>>> +       if ((policy->mark.v & policy->mark.m) == (pol->mark.v & pol->mark.m) &&
+>>>>>>             policy->priority == pol->priority)
+>>>>>>                 return true;
+>>>>> "mark.v & mark.m" looks weird to me, it should be:
+>>>>> ((something & mark.m) == mark.v)
+>>>>>
+>>>>> So why should we just do this here?:
+>>>>> (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m &&
+>>>>>  policy->priority == pol->priority)
+>>>>
+>>>>
+>>>> This leads to this issue:
+>>>>
+>>>>  ip -6 xfrm policy add src fd00::1/128 dst fd00::2/128 dir in mark 0x00000001 mask 0x00000005
+>>>>  ip -6 xfrm policy add src fd00::1/128 dst fd00::2/128 dir in mark 0x00000001 mask 0x00000003
+>>>>
+>>>> the two policies will be in list, which should not be allowed.
+>>> I think these are two different policies.
+>>> For instance:
+>>> mark = 0x1234567b will match the 1st one only.
+>>> mark = 0x1234567d will match the 2st one only
+>>>
+>>> So these should have been allowed, no?
+>>
+>> If mark = 0x12345671, it may match different policy depends on the order of inserting,
+>>
+>> ip xfrm policy update src 172.16.2.0/24 dst 172.16.1.0/24 dir in ptype main \
+>> tmpl src 192.168.2.10 dst 192.168.1.20 proto esp mode tunnel mark 0x00000001 mask 0x00000005
+>>
+>> ip xfrm policy update src 172.16.2.0/24 dst 172.16.1.0/24 dir in ptype main \
+>> tmpl src 192.168.2.100 dst 192.168.1.100 proto esp mode beet mark 0x00000001 mask 0x00000003
+>>
+>> In fact, your case should use different priority to match.
+> Sorry, but it does match your above policies now, like in xfrm_policy_match(),
+> when fl->flowi_mark == 0x1234567b:
 > 
-> Just wanted to ask you if you would agree on pulling the remaining
-> flexible-array conversions all at once, after they bake for a couple
-> of weeks in linux-next[1]
+> (fl->flowi_mark & pol->mark.m) != pol->mark.v
+> 0x1234567b & 0x00000005 == 0x00000001
 > 
-> This is not a disruptive change and there are no code generation
-> differences. So, I think it would make better use of everyone's time
-> if you pull this treewide patch[2] from my tree (after sending you a
-> proper pull-request, of course) sometime in the next couple of weeks.
+> and when fl->flowi_mark ==  0x1234567d:
+> 0x1234567d & 0x00000003 ==  0x00000001
 > 
-> Notice that the treewide patch I mention here has been successfully
-> built (on top of v5.7-rc1) for multiple architectures (arm, arm64,
-> sparc, powerpc, ia64, s390, i386, nios2, c6x, xtensa, openrisc, mips,
-> parisc, x86_64, riscv, sh, sparc64) and 82 different configurations
-> with the help of the 0-day CI guys[3].
+> am I missing something?
+
+when fl->flowi_mark == 0x12345671
+
+0x12345671 & 0x00000005 == 0x00000001
+0x12345671 & 0x00000003 == 0x00000001
+
+This will match different policy depends on the order of policy inserting, it is not expected.
+
 > 
-> What do you think?
 > 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=d496496793ff69c4a6b1262a0001eb5cd0a56544
-> [2] https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/commit/?h=for-next/kspp&id=d783301058f3d3605f9ad34f0192692ef572d663
-> [3] https://github.com/GustavoARSilva/linux-hardening/blob/master/cii/kernel-ci/kspp-fam0-20200420.md
+>>
+>>>
+>>> I'm actually confused now.
+>>> does the mask work against its own value, or the other value?
+>>> as 'A == (mark.v&mark.m)' and '(A & mark.m) == mark.v' are different things.
+>>>
+>>> This can date back to Jamal's xfrm by MARK:
+>>>
+>>> https://lwn.net/Articles/375829/
+>>>
+>>> where it does 'm->v & m->m' in xfrm_mark_get() and
+>>> 'policy->mark.v & policy->mark.m' in xfrm_policy_insert() while
+>>> it does '(A & pol->mark.m) == pol->mark.v' in other places.
+>>>
+>>> Now I'm thinking 'm->v & m->m' is meaningless, by which if we get
+>>> a value != m->v, it means this mark can never be matched by any.
+>>>
+>>>   policy A (mark.v = 1, mark.m = 0, priority = 1)
+>>>   policy B (mark.v = 1, mark.m = 0, priority = 1)
+>>>
+>>> So probably we should avoid this case by check m->v == (m->v & m->m)
+>>> when adding a new policy.
+>>>
+>>> wdyt?
+>>>
+>>
 > 
-> Thanks
-> --
-> Gustavo
+> .
+> 
 
-That patch in -next appears to introduce some warnings with clang when
-CONFIG_UAPI_HEADER_TEST is enabled (allyesconfig/allmodconfig exposed it
-for us with KernelCI [1]):
-
-./usr/include/rdma/ib_user_verbs.h:436:34: warning: field 'base' with
-variable sized type 'struct ib_uverbs_create_cq_resp' not at the end of
-a struct or class is a GNU extension
-[-Wgnu-variable-sized-type-not-at-end]
-        struct ib_uverbs_create_cq_resp base;
-                                        ^
-./usr/include/rdma/ib_user_verbs.h:647:34: warning: field 'base' with
-variable sized type 'struct ib_uverbs_create_qp_resp' not at the end of
-a struct or class is a GNU extension
-[-Wgnu-variable-sized-type-not-at-end]
-        struct ib_uverbs_create_qp_resp base;
-                                        ^
-./usr/include/rdma/ib_user_verbs.h:743:29: warning: field 'base' with
-variable sized type 'struct ib_uverbs_modify_qp' not at the end of a
-struct or class is a GNU extension
-[-Wgnu-variable-sized-type-not-at-end]
-        struct ib_uverbs_modify_qp base;
-                                   ^
-3 warnings generated.
-
-I presume this is part of the point of the conversion since you mention
-a compiler warning when the flexible member is not at the end of a
-struct. How should they be fixed? That should probably happen before the
-patch gets merged.
-
-[1]: https://kernelci.org/build/id/5ea17b1b77113098348ec6db/logs/
-
-Cheers,
-Nathan
