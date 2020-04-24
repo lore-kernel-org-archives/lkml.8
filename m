@@ -2,148 +2,146 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05326C55192
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 433ECC55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D398F2076C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25B962084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:18:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbgDXFSQ (ORCPT
+        id S1726594AbgDXFSc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 01:18:16 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:32638 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726072AbgDXFSK (ORCPT
+        Fri, 24 Apr 2020 01:18:32 -0400
+Received: from m9a0014g.houston.softwaregrp.com ([15.124.64.90]:42151 "EHLO
+        m9a0014g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726010AbgDXFSc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 01:18:10 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03O548Ev004974;
-        Fri, 24 Apr 2020 01:17:58 -0400
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 30fxf6cua4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Apr 2020 01:17:57 -0400
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 03O5HuXu049540
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Fri, 24 Apr 2020 01:17:56 -0400
-Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
- ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 24 Apr 2020 01:17:55 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 24 Apr 2020 01:17:55 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Fri, 24 Apr 2020 01:17:55 -0400
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03O5HnSU025747;
-        Fri, 24 Apr 2020 01:17:53 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>, <lars@metafoo.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [RFC PATCH 3/4] iio: Allow channels to share storage elements
-Date:   Fri, 24 Apr 2020 08:18:17 +0300
-Message-ID: <20200424051818.6408-4-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200424051818.6408-1-alexandru.ardelean@analog.com>
-References: <20200424051818.6408-1-alexandru.ardelean@analog.com>
+        Fri, 24 Apr 2020 01:18:32 -0400
+Received: FROM m9a0014g.houston.softwaregrp.com (15.121.0.190) BY m9a0014g.houston.softwaregrp.com WITH ESMTP;
+ Fri, 24 Apr 2020 05:17:37 +0000
+Received: from M9W0067.microfocus.com (2002:f79:be::f79:be) by
+ M9W0067.microfocus.com (2002:f79:be::f79:be) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Fri, 24 Apr 2020 05:17:18 +0000
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (15.124.72.14) by
+ M9W0067.microfocus.com (15.121.0.190) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10 via Frontend Transport; Fri, 24 Apr 2020 05:17:18 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UPHo68CGeMShyf6N1G4kqdOJ7pwQXoM5taZ4LbCBZy5TkTiJtuZPrG0c6dEzhXzcC/kZYhi6ac3VjzFy6sc3R0giEjl0nv5j8UAmNwH8Bepg8l2FajtnolH2OWO5fHbHQr/zbzDvUpcs5eSIR8hmxbGijZR7Ls4qua/Oqk3+/xN8IxnUXUlgYeQnSzy+aW5vqcuVzTdIhbwvBFs1gz+T4HKpWwVSIIgsaTVOwDqcUSOQ1eL04Uye6b9O7VzKehUAx//10WgjdBiFiv0sYbmEiVmoCfVVcsK9oMkYYWTGhlcE2B3TzWz/O1ob/5wYmxJbW4dEvCJ17ZrjRaPJTF0dAQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TYGxmqrz5w6yYuWJ/IR46xZFeAuzr25uh7N26uY8vVM=;
+ b=LWR5YewHThz+99yPsHozBunmVfRcNEqEVTn9w7k/fS5iMTuqWxKMCMr4yYJkBTt/GloD1LAJz7IOKaco9yievvbPEbBde6djdo5kWYs9BAcZvqwmWknO6fHtdbmwgJZneQVF5V0elXSyxGJPimF1JLD8zLSznqvFNpY9WgDBMBCFDmN6v0EOTm+emmhzWVC6gzRA+wJv9tcpQTaMQfJ7JdPlljh1nyNHJR7p6W9AoJC5EL4xoSFhXB1RcmVguE13/T+uyl1HzlkEHUQPT6CDGCvhp8Xqs74iIHwzKGLt8FlKXdbm7UFz++u4UPFB3ks6dUbDjntcfLLt5szCK7Rr0A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: spf=none (sender IP is ) smtp.mailfrom=wqu@suse.com; 
+Received: from MN2PR18MB2416.namprd18.prod.outlook.com (2603:10b6:208:a9::25)
+ by MN2PR18MB3406.namprd18.prod.outlook.com (2603:10b6:208:161::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Fri, 24 Apr
+ 2020 05:17:17 +0000
+Received: from MN2PR18MB2416.namprd18.prod.outlook.com
+ ([fe80::8cf0:641e:631d:7a6]) by MN2PR18MB2416.namprd18.prod.outlook.com
+ ([fe80::8cf0:641e:631d:7a6%4]) with mapi id 15.20.2937.020; Fri, 24 Apr 2020
+ 05:17:17 +0000
+Subject: Re: linux-next: build failure after merge of the btrfs tree
+To:     <dsterba@suse.cz>, Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200421102520.53623f09@canb.auug.org.au>
+ <20200422212933.GS18421@suse.cz>
+From:   Qu Wenruo <wqu@suse.com>
+Autocrypt: addr=wqu@suse.com; keydata=
+ mQENBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAG0GFF1IFdlbnJ1byA8d3F1QHN1c2UuY29tPokBTQQTAQgAOAIbAwULCQgHAgYVCAkKCwIE
+ FgIDAQIeAQIXgBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJdnDWhAAoJEMI9kfOhJf6oZgoH
+ 90uqoGyUh5UWtiT9zjUcvlMTCpd/QSgwagDuY+tEdVPaKlcnTNAvZKWSit8VuocjrOFbTLwb
+ vZ43n5f/l/1QtwMgQei/RMY2XhW+totimzlHVuxVaIDwkF+zc+pUI6lDPnULZHS3mWhbVr9N
+ vZAAYVV7GesyyFpZiNm7GLvLmtEdYbc9OnIAOZb3eKfY3mWEs0eU0MxikcZSOYy3EWY3JES7
+ J9pFgBrCn4hF83tPH2sphh1GUFii+AUGBMY/dC6VgMKbCugg+u/dTZEcBXxD17m+UcbucB/k
+ F2oxqZBEQrb5SogdIq7Y9dZdlf1m3GRRJTX7eWefZw10HhFhs1mwx7kBDQRZ1YGvAQgAqlPr
+ YeBLMv3PAZ75YhQIwH6c4SNcB++hQ9TCT5gIQNw51+SQzkXIGgmzxMIS49cZcE4KXk/kHw5h
+ ieQeQZa60BWVRNXwoRI4ib8okgDuMkD5Kz1WEyO149+BZ7HD4/yK0VFJGuvDJR8T7RZwB69u
+ VSLjkuNZZmCmDcDzS0c/SJOg5nkxt1iTtgUETb1wNKV6yR9XzRkrEW/qShChyrS9fNN8e9c0
+ MQsC4fsyz9Ylx1TOY/IF/c6rqYoEEfwnpdlz0uOM1nA1vK+wdKtXluCa79MdfaeD/dt76Kp/
+ o6CAKLLcjU1Iwnkq1HSrYfY3HZWpvV9g84gPwxwxX0uXquHxLwARAQABiQE8BBgBCAAmAhsM
+ FiEELd9y5aWlW6idqkLhwj2R86El/qgFAl2cNa4FCQlqTn8ACgkQwj2R86El/qhXBAf/eXLP
+ HDNTkHRPxoDnwhscIHJDHlsszke25AFltJQ1adoaYCbsQVv4Mn5rQZ1Gon54IMdxBN3r/B08
+ rGVPatIfkycMCShr+rFHPKnExhQ7Wr555fq+sQ1GOwOhr1xLEqAhBMp28u9m8hnkqL36v+AF
+ hjTwRtS+tRMZfoG6n72xAj984l56G9NPfs/SOKl6HR0mCDXwJGZAOdtyRmqddi53SXi5N4H1
+ jWX1xFshp7nIkRm6hEpISEWr/KKLbAiKKbP0ql5tP5PinJeIBlDv4g/0+aGoGg4dELTnfEVk
+ jMC8cJ/LiIaR/OEOF9S2nSeTQoBmusTz+aqkbogvvYGam6uDYw==
+Message-ID: <9b0fe1ba-4db5-dfc9-3b7f-28e8b65430df@suse.com>
+Date:   Fri, 24 Apr 2020 13:17:10 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+In-Reply-To: <20200422212933.GS18421@suse.cz>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8BIT
+X-ClientProxiedBy: BYAPR08CA0051.namprd08.prod.outlook.com
+ (2603:10b6:a03:117::28) To MN2PR18MB2416.namprd18.prod.outlook.com
+ (2603:10b6:208:a9::25)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-24_01:2020-04-23,2020-04-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- priorityscore=1501 spamscore=0 lowpriorityscore=0 clxscore=1015 mlxscore=0
- suspectscore=0 bulkscore=0 impostorscore=0 mlxlogscore=999 phishscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004240037
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [0.0.0.0] (149.28.201.231) by BYAPR08CA0051.namprd08.prod.outlook.com (2603:10b6:a03:117::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Fri, 24 Apr 2020 05:17:14 +0000
+X-Originating-IP: [149.28.201.231]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3b671590-7242-4853-daba-08d7e80ec170
+X-MS-TrafficTypeDiagnostic: MN2PR18MB3406:
+X-Microsoft-Antispam-PRVS: <MN2PR18MB3406ED83B095E32E426138DCD6D00@MN2PR18MB3406.namprd18.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:792;
+X-Forefront-PRVS: 03838E948C
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR18MB2416.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(136003)(39860400002)(396003)(366004)(346002)(376002)(6666004)(31686004)(6486002)(2906002)(52116002)(316002)(16576012)(956004)(110136005)(2616005)(16526019)(6706004)(26005)(186003)(5660300002)(4744005)(86362001)(478600001)(81156014)(36756003)(8936002)(66476007)(8676002)(31696002)(66946007)(66556008)(78286006);DIR:OUT;SFP:1102;
+Received-SPF: None (protection.outlook.com: suse.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: PoqfAzU7xaYNAt4BsiHbyHjcO2VRv9XzMYt9Kw/8ButyAd2GolR6dQzc02+pMTdpU/sIDAkM/OdsQVnLLnC5+udRtSgE+fiLFWnTEpedHEsnHvYBK1gqcwKCILcgrbI5BF+wFJ07aAxgB+CyA+QC/dCFMOqbbXIOTRmHxtWN+qBwd+qTAs2veXZMmjw+kgTPrdVmnTqMjkJoH/+jN0LXURm03tQMDJO3OpboPxoVzboaX9bK2HHnpH1B3YUTQWGYLCLLjjNM1AvxWh6KV7jihveIJKnNaBK8a2CGFk0uiSQovo0SZU0qZsQPzVGPCjW5x6iNjuSUcZ55dGN45IP8rsTEjHOgCsjgKOIzNC4qucjGZfCwIK/PR3f0yjuaZELIMdnkuh5d7j0LfMaaELkZYtzFWL4hqh/8neKpttzIPSmg5704MrhJ/C65AAHLTufDnX8oBgetk7B3ylPUs4B2uB9bsykmM7WHS1PX40VAsgioEcQChxmMZcnB/FN035OL/UGcN+C8GUm7mcFhQ+3WHwfPYvthnWEw9v3npt4IB68=
+X-MS-Exchange-AntiSpam-MessageData: VSfugazuTg0IbMQ8rZnlJVr1izXVXL6zxi+IWz6y0Fk5lmH4iEGCdz9OeNQYA0satBaZTjunVR2fzO1HkaRkwGyTy2BqZ2k8wCvlK7yfN9QcoiD/QqCY4nUUEXHIztR2k4vGFmeA/ywK+rc17itxnQ==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b671590-7242-4853-daba-08d7e80ec170
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2020 05:17:17.2217
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 856b813c-16e5-49a5-85ec-6f081e13b527
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: HUsmhQq0C7Bc8H+LMoNpNYHCKiIE1AD3GFHPczUZa6GzJbhrvkfJDQTIr5A6zeF/
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3406
+X-OriginatorOrg: suse.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars-Peter Clausen <lars@metafoo.de>
 
-Currently each IIO channel has it's own storage element in the data stream
-each with its own unique scan index. This works for a lot of use-cases,
-but in some is not good enough to represent the hardware accurately. On
-those devices multiple separate pieces of information are stored within the
-same storage element and the storage element can't be further broken down
-into multiple storage elements (e.g. because the data is not aligned).
 
-This can for example be status bits stored in unused data bits. E.g. a
-14-bit ADC that stores its data in a 16-bit word and uses the two
-additional bits to convey status information like for example whether a
-overrange condition has happened. Currently this kind of extra status
-information is usually ignored and can only be used by applications that
-have special knowledge about the connected device and its data layout.
+On 2020/4/23 上午5:29, David Sterba wrote:
+> On Tue, Apr 21, 2020 at 10:25:20AM +1000, Stephen Rothwell wrote:
+>> After merging the btrfs tree, today's linux-next build (x86_64
+>> allmodconfig) failed like this:
+> 
+>> Caused by commit
+>>
+>>   8d80a063d508 ("btrfs: move on-disk structure definitions to btrfs_tree.h")
+>>
+>> They should probably all be __u8 ...
+>>
+>> I have applied the following patch for today.
+> 
+> I've removed the patch from the for-next branch.
+> 
+BTW, do I need to update the patch, or just move btrfs_tree.h to fs/btrfs?
 
-In addition to that some might also have data channels with less than 8
-bits that get packed into the same storage element.
-
-Allow two or more channels to use the same scan index, if they their
-storage element does have the same size.
-
-Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/iio/industrialio-core.c | 27 ++++++++++++++++++++-------
- 1 file changed, 20 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index f4daf19f2a3b..cdf59a51c917 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -1651,6 +1651,16 @@ static const struct file_operations iio_buffer_fileops = {
- 	.compat_ioctl = compat_ptr_ioctl,
- };
- 
-+static bool iio_chan_same_size(const struct iio_chan_spec *a,
-+	const struct iio_chan_spec *b)
-+{
-+	if (a->scan_type.storagebits != b->scan_type.storagebits)
-+		return false;
-+	if (a->scan_type.repeat != b->scan_type.repeat)
-+		return false;
-+	return true;
-+}
-+
- static int iio_check_unique_scan_index(struct iio_dev *indio_dev)
- {
- 	int i, j;
-@@ -1662,13 +1672,16 @@ static int iio_check_unique_scan_index(struct iio_dev *indio_dev)
- 	for (i = 0; i < indio_dev->num_channels - 1; i++) {
- 		if (channels[i].scan_index < 0)
- 			continue;
--		for (j = i + 1; j < indio_dev->num_channels; j++)
--			if (channels[i].scan_index == channels[j].scan_index) {
--				dev_err(&indio_dev->dev,
--					"Duplicate scan index %d\n",
--					channels[i].scan_index);
--				return -EINVAL;
--			}
-+		for (j = i + 1; j < indio_dev->num_channels; j++) {
-+			if (channels[i].scan_index != channels[j].scan_index)
-+				continue;
-+			if (iio_chan_same_size(&channels[i], &channels[j]))
-+				continue;
-+			dev_err(&indio_dev->dev,
-+				"Duplicate scan index %d\n",
-+				channels[i].scan_index);
-+			return -EINVAL;
-+		}
- 	}
- 
- 	return 0;
--- 
-2.17.1
-
+Thanks,
+Qu
