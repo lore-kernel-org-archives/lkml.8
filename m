@@ -2,164 +2,138 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97414C5518A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5709C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AE342076C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EEC42075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 04:57:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="e7aSL4FW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbgDXE4k (ORCPT
+        id S1726515AbgDXE5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 00:56:40 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:38278 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725823AbgDXE4k (ORCPT
+        Fri, 24 Apr 2020 00:57:53 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:39585 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbgDXE5x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 00:56:40 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03O4qul1024418;
-        Fri, 24 Apr 2020 00:56:24 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-00128a01.pphosted.com with ESMTP id 30fxf6csfu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Apr 2020 00:56:24 -0400
-Received: from m0167089.ppops.net (m0167089.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03O4tF9c030227;
-        Fri, 24 Apr 2020 00:56:24 -0400
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 30fxf6csfq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Apr 2020 00:56:24 -0400
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 03O4uNfR047659
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Fri, 24 Apr 2020 00:56:23 -0400
-Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
- ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 24 Apr 2020 00:56:22 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 24 Apr 2020 00:56:21 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Fri, 24 Apr 2020 00:56:21 -0400
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03O4uGpk017534;
-        Fri, 24 Apr 2020 00:56:18 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <lars@metafoo.de>, <jic23@kernel.org>, <pmeerw@pmeerw.net>,
-        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v4 1/7] iio: Use an early return in iio_device_alloc to simplify code.
-Date:   Fri, 24 Apr 2020 07:56:36 +0300
-Message-ID: <20200424045642.4903-2-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200424045642.4903-1-alexandru.ardelean@analog.com>
-References: <20200424045642.4903-1-alexandru.ardelean@analog.com>
+        Fri, 24 Apr 2020 00:57:53 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200424045750epoutp04230bedf9564766cd0d8c9085bd7aeef0~IqJ88tkaQ3074030740epoutp047
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 04:57:50 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200424045750epoutp04230bedf9564766cd0d8c9085bd7aeef0~IqJ88tkaQ3074030740epoutp047
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1587704270;
+        bh=AgT+mu/DbDkkraNd6kgFPOP710cAaa571GBMHlW3C9I=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=e7aSL4FW64sfdE438pT1pAjbiWb3esJRW0dITF/LGTppKxcMD2naDx68VIfUdrKVO
+         vLX3YR4j3FCGXt8eAc5lgXK46UbFeSZCJlWB6Ik1wREFXZwFf8otsnJybV4N8rMdGy
+         MPZZfSEtZoVMWLW0lC7Y+xoBsavxrRZSXiQBA+vs=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200424045749epcas1p222ea5c712e7d950fc414c1840bdbe444~IqJ8Lbj6y2408524085epcas1p27;
+        Fri, 24 Apr 2020 04:57:49 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.165]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 497hkN2dpVzMqYkb; Fri, 24 Apr
+        2020 04:57:48 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D6.4C.04744.CC172AE5; Fri, 24 Apr 2020 13:57:48 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200424045748epcas1p153c5dc5b2ab9e8da1daf7b10a51da6dc~IqJ6rkln20626706267epcas1p1q;
+        Fri, 24 Apr 2020 04:57:48 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200424045748epsmtrp1613e0000816a73e7d22947c2b291e0b6~IqJ6plV2E1101711017epsmtrp1g;
+        Fri, 24 Apr 2020 04:57:48 +0000 (GMT)
+X-AuditID: b6c32a38-26bff70000001288-ab-5ea271cc3b53
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        0E.5D.18461.BC172AE5; Fri, 24 Apr 2020 13:57:47 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200424045747epsmtip26d4f3532ac08cabdca2d9e9a685b0a3f~IqJ6Zdh2n1363113631epsmtip2c;
+        Fri, 24 Apr 2020 04:57:47 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     "'Stephen Rothwell'" <sfr@canb.auug.org.au>
+Cc:     "'Namjae Jeon'" <linkinjeon@kernel.org>,
+        "'Linux Next Mailing List'" <linux-next@vger.kernel.org>,
+        "'Linux Kernel Mailing List'" <linux-kernel@vger.kernel.org>
+In-Reply-To: <000001d619f4$9d7fee90$d87fcbb0$@samsung.com>
+Subject: RE: linux-next: manual merge of the exfat tree with Linus' tree
+Date:   Fri, 24 Apr 2020 13:57:47 +0900
+Message-ID: <000101d619f4$e62c5cf0$b28516d0$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-24_01:2020-04-23,2020-04-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- priorityscore=1501 spamscore=0 lowpriorityscore=0 clxscore=1015 mlxscore=0
- suspectscore=0 bulkscore=0 impostorscore=0 mlxlogscore=999 phishscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004240035
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQFjuEGWdDyIOjJKXJTh27xcMasqNgJJvlsfqVoq0HA=
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRTHeXa3u6s1uc1ZJ5NaF4w0plvbdFqTIgsjISvoQx+2rnpR6e6l
+        e2ekUSrFfM8kynwtJUsW4RDfsoamQhmimFnmh0rQyMLKovfXbdfIb79zzv885/k/zyEweTke
+        SmRZHQxnpVkKDxR3DkREq4aPNpnUBQsKQ+XFZsww3lOHG+42OpGhwzMh3SZOKpicxJPaXMV4
+        0se2tSnYIXZrJkOnM5ySsabZ0rOsGUZqzwHzDrM+Rq1RaeIMsZTSSlsYI5WYnKLalcV6p1HK
+        YzSb7U2l0DxPRSds5WzZDkaZaeMdRoqxp7N2jdoexdMWPtuaEZVms8Rr1OrNeq/yMJs5/ew1
+        speLjxfO35DmowtYCQoggNTBt1I3XoICCTnZjaBn9hImBB8Q9I2VIiH4jKDp1xT61/Ki6alE
+        KHgQDL0flArBHIL7Ezf9KpxUwe+fvbiPFWQ01JbOiX0ijLyOwDl9W+IrBJDxsOBy+TmYTILq
+        789FPhaT4eBpHfffUEbGwfCfK7jAK2CoekbsY4xcB13zdYsulPBt9ppEGBYPVTNnRIJGAbXF
+        Tr8hID9JoW/q92JDIoyMluACB8Pre+1SgUNhrsLpZcLLJ2Chd1FehODVF6PAWnja6pb4JBgZ
+        Aa090UJ6Pdz6UY+EsUHw9lOZRDhFBkVOuSAJh7MPB0QCr4GSwvfSc4iqWWKsZomxmiUGav4P
+        u4LELrSSsfOWDIbX2HVLf7sN+Vcx0tCN7owk9yOSQNRy2STXaJJL6GN8jqUfAYFRCpl7usEk
+        l6XTObkMZzNz2SzD9yO9990rsdCQNJt3sa0Os0a/WavVGnQxsTF6LbVKduEJa5KTGbSDOcIw
+        dob71yciAkLz0cGqjadmRaVbWhaqL+2bEP0Y3evKczakelpXVyzL26V9OOas9RTVOaqCH4/v
+        bhdtYiarjTmD8+6Gd1uM212XOwLrc8wYF7Y9L0Snu9piIsZSCvpPugs7Fadnht6yCQ0jBeTO
+        MP3jl7sT3jyzpA53fW8+H7R/w9dHeVMJD1TNZeG5lJjPpDWRGMfTfwErOAtuoAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFLMWRmVeSWpSXmKPExsWy7bCSvO7pwkVxBpfPmFtMnLaU2eLyrjls
+        FgcXtjFabN17ld2BxaPxxg02j02rOtk8Pm+SC2CO4rJJSc3JLEst0rdL4Mp4eO8VY0EvS0X7
+        29XsDYxTmbsYOTkkBEwkHiy6ydrFyMUhJLCbUaLx6k+ohLTEsRNngGwOIFtY4vDhYoia54wS
+        2w62sILUsAnoSvz7s58NxBYR0JeY3f2SBaSIWWA5o8T0l2vAEkIC3YwS63sNQWxOASuJj6tW
+        gTULC3hIzPx1nwnEZhFQldi7/jLYYl4BS4kz/xewQdiCEidnPmEBsZkFtCV6H7YyQtjyEtvf
+        zoE6VEHi59NlrBBHWElMf9LCBFEjIjG7s415AqPwLCSjZiEZNQvJqFlIWhYwsqxilEwtKM5N
+        zy02LDDMSy3XK07MLS7NS9dLzs/dxAiODi3NHYzbV33QO8TIxMF4iFGCg1lJhHfDw3lxQrwp
+        iZVVqUX58UWlOanFhxilOViUxHlvFC6MExJITyxJzU5NLUgtgskycXBKNTCtqj9cuN821UPo
+        PUvBy86Q3YseG7Kreax+c+ncllKBM7csN3ac2nifr2nhjs1m7/f/uMj3lWWt5TJGqyKHby4t
+        3XcU26d9/qLzl2tJp6LlFflKgf3VJvM8jrLm7wi2XvJW/MAdjlfFuzYtbOObuajFJ+bHg6YE
+        YzdHrnnVUhJM8w9ZawscXnBRxsvq4Nv7LSfbSuIvJIpUdlqvsjyzkC+4R+yGxm6xXpndnEx2
+        jXJtmp1rmzaxRk/ZkLvwt0v0hYcpAfyuTxmXnKkpPcfFJRNXnshp0fV1yS8tb7u5O5nrvmxr
+        vbxfxq5tayRT65X1HXt63YqST80/9WRanN3WeRsqToX+VbTqX53p6CJ9p1aJpTgj0VCLuag4
+        EQB/TEat/QIAAA==
+X-CMS-MailID: 20200424045748epcas1p153c5dc5b2ab9e8da1daf7b10a51da6dc
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200424045546epcas1p29c96627082a25905c9715790b5b2ea82
+References: <CGME20200424045546epcas1p29c96627082a25905c9715790b5b2ea82@epcas1p2.samsung.com>
+        <000001d619f4$9d7fee90$d87fcbb0$@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Hi all,
+Hi Stephen,
+> 
+> Today's linux-next merge of the exfat tree got conflicts in:
+> 
+>   fs/exfat/super.c
+>   fs/exfat/misc.c
+>   fs/exfat/exfat_fs.h
+> 
+> Various patches in the exfat tree have been added to Linus' tree overnight as different commits (an in
+> some cases slightly different patches.
+> Please rebase the exfat tree on top of commit
+Fixed with rebase!
+Thanks!
+> 
+>   81df1ad40644 ("exfat: truncate atimes to 2s granularity")
+> 
+> from Linus' tree (or do a backmerge of that commit).
 
-Noticed whilst reviewing Alexandru's patch to the same function.
-If we simply flip the logic and return NULL immediately after memory
-allocation failure we reduce the indent of the following block and
-end up with more 'idiomatic' kernel code.
-
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/iio/industrialio-core.c | 46 ++++++++++++++++-----------------
- 1 file changed, 23 insertions(+), 23 deletions(-)
-
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index f4daf19f2a3b..3c97090c2ab9 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -1492,7 +1492,7 @@ struct device_type iio_device_type = {
-  **/
- struct iio_dev *iio_device_alloc(int sizeof_priv)
- {
--	struct iio_dev *dev;
-+	struct iio_dev *indio_dev;
- 	size_t alloc_size;
- 
- 	alloc_size = sizeof(struct iio_dev);
-@@ -1503,30 +1503,30 @@ struct iio_dev *iio_device_alloc(int sizeof_priv)
- 	/* ensure 32-byte alignment of whole construct ? */
- 	alloc_size += IIO_ALIGN - 1;
- 
--	dev = kzalloc(alloc_size, GFP_KERNEL);
--
--	if (dev) {
--		dev->dev.groups = dev->groups;
--		dev->dev.type = &iio_device_type;
--		dev->dev.bus = &iio_bus_type;
--		device_initialize(&dev->dev);
--		dev_set_drvdata(&dev->dev, (void *)dev);
--		mutex_init(&dev->mlock);
--		mutex_init(&dev->info_exist_lock);
--		INIT_LIST_HEAD(&dev->channel_attr_list);
--
--		dev->id = ida_simple_get(&iio_ida, 0, 0, GFP_KERNEL);
--		if (dev->id < 0) {
--			/* cannot use a dev_err as the name isn't available */
--			pr_err("failed to get device id\n");
--			kfree(dev);
--			return NULL;
--		}
--		dev_set_name(&dev->dev, "iio:device%d", dev->id);
--		INIT_LIST_HEAD(&dev->buffer_list);
-+	indio_dev = kzalloc(alloc_size, GFP_KERNEL);
-+	if (!indio_dev)
-+		return NULL;
-+
-+	indio_dev->id = ida_simple_get(&iio_ida, 0, 0, GFP_KERNEL);
-+	if (indio_dev->id < 0) {
-+		/* cannot use a dev_err as the name isn't available */
-+		pr_err("failed to get device id\n");
-+		kfree(indio_dev);
-+		return NULL;
- 	}
- 
--	return dev;
-+	dev_set_name(&indio_dev->dev, "iio:device%d", indio_dev->id);
-+	indio_dev->dev.groups = indio_dev->groups;
-+	indio_dev->dev.type = &iio_device_type;
-+	indio_dev->dev.bus = &iio_bus_type;
-+	device_initialize(&indio_dev->dev);
-+	dev_set_drvdata(&indio_dev->dev, (void *)indio_dev);
-+	mutex_init(&indio_dev->mlock);
-+	mutex_init(&indio_dev->info_exist_lock);
-+	INIT_LIST_HEAD(&indio_dev->channel_attr_list);
-+	INIT_LIST_HEAD(&indio_dev->buffer_list);
-+
-+	return indio_dev;
- }
- EXPORT_SYMBOL(iio_device_alloc);
- 
--- 
-2.17.1
 
