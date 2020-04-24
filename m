@@ -2,128 +2,111 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA0BC54FD0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1257C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EFCE20857
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:18:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nV1EfN6Z"
+	by mail.kernel.org (Postfix) with ESMTP id B3B8B20857
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 19:19:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729225AbgDXTSk (ORCPT
+        id S1729257AbgDXTTu convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 15:18:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60812 "EHLO
+        Fri, 24 Apr 2020 15:19:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726793AbgDXTSk (ORCPT
+        by vger.kernel.org with ESMTP id S1726793AbgDXTTu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 15:18:40 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29D34C09B048
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 12:18:40 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id x15so5260918pfa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 12:18:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jTXhU16A9f20mBuu55i1N5tKQ/YnXN5h5AIwPuslRMg=;
-        b=nV1EfN6ZmE2x8RvvWY6vrJ3lW2X3dXiVzH8qROTf2wPgUd/QtmamqGhGr0UDOcbmjI
-         +6rLop62QemOx9h8egpv950FpzBITun6MisOH3EnHptSlUTXV8l59wxW9EDaLA3IQBHe
-         Lfge11AvQhw2vky8hRnIBXJ/9pswd8FTq3AKd+d2bPDmn1cyteXS/VwAvnSTKrthJPu4
-         CRJW44nNuiemqwDbtBeTTkafXsGi/LtlLz4WGOwpeJmZeh8DBV2ZhaB2mVmTVMN3wL8S
-         j2gAKGdjA89XX0JmDY+xzSjUgQKr4wEYZOIPtZ29eQaQLhToiU433biI3ilAFczq9lel
-         jptQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jTXhU16A9f20mBuu55i1N5tKQ/YnXN5h5AIwPuslRMg=;
-        b=pTCYv4YZ3vcJZ5PmzebWp5ml4IZ7SMVDXEMSNt0eRE4DPhMbaqA/fHp6Tk5ycZG9Y/
-         ocP75r9xpcyKGJyVeXVMub9VKfgGmWCJcMjazBX0QdYw2nmFyVce0LC87YxuBDx8/YWu
-         JA+XNoBqWpCG6/XdV+ZKAShAXFG/qqOf7LDJHTRcLTodYFaB9u6CveWKCxNOHfrwtaBb
-         oeKv7BTzyFOiqFiMKjyQMGQeHeePs4+dNivB/NyRsGLxb1vylsRXZJh4oS7QPxR6q5Fl
-         25VTzjBRXg9Qo0axqxgKVErwhWGXNYXY9lRj2VTVk+a1ICFirLBYtWsV4LKqgQjAFuTi
-         EsTw==
-X-Gm-Message-State: AGi0PuaFdWQW2iOmBQyZjBUiYcfgOqN6IglDs5D2C0zRqIT0FPVIyRge
-        bJClxsvuQB60UlPAbbrxtzdMLA==
-X-Google-Smtp-Source: APiQypL3GF0IA3FPXvIB4BaH+YXLYmcQEL8UKsod6EOYXpS5VubITIDtjbXPSf2q4ZxlOxgWjuFXeQ==
-X-Received: by 2002:a63:5724:: with SMTP id l36mr818367pgb.317.1587755919194;
-        Fri, 24 Apr 2020 12:18:39 -0700 (PDT)
-Received: from google.com ([2620:15c:201:2:ce90:ab18:83b0:619])
-        by smtp.gmail.com with ESMTPSA id h6sm5306704pje.37.2020.04.24.12.18.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 12:18:38 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 12:18:32 -0700
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Matt Helsley <mhelsley@vmware.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] recordmcount: support >64k sections
-Message-ID: <20200424191832.GA231432@google.com>
-References: <20200422232417.72162-1-samitolvanen@google.com>
- <20200423214734.GB9040@rlwimi.vmware.com>
+        Fri, 24 Apr 2020 15:19:50 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FD7EC09B048;
+        Fri, 24 Apr 2020 12:19:50 -0700 (PDT)
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1jS3rW-00040k-1m; Fri, 24 Apr 2020 21:19:46 +0200
+Date:   Fri, 24 Apr 2020 21:19:45 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Daniel Wagner <dwagner@suse.de>
+Subject: Re: [PREEMPT_RT] 8250 IRQ lockup when flooding serial console (was
+ Re: [ANNOUNCE] v5.4.28-rt19)
+Message-ID: <20200424191945.an42attvo7pdt3qz@linutronix.de>
+References: <20200330144712.cwcz5ejal4ankeoi@linutronix.de>
+ <nycvar.YEU.7.76.2004231017470.4730@gjva.wvxbf.pm>
+ <nycvar.YFH.7.76.2004231111550.19713@cbobk.fhfr.pm>
+ <20200423104559.rgplz6rqk6sg4kz7@linutronix.de>
+ <20200423160707.hqt5wjinzcec2yig@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200423214734.GB9040@rlwimi.vmware.com>
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200423160707.hqt5wjinzcec2yig@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matt,
+On 2020-04-23 18:07:07 [+0200], To Jiri Kosina wrote:
+> The IRQ4 is edge and in charge of ttyS0. It is handled by
+> handle_edge_irq() and after ->irq_ack(), the thread is woken up and then
+> we get another ->handle_edge_irq() for IRQ4. With larger PASS_LIMIT the
+> thread runs longer so note_interrupt() will make less IRQ_HANDLED based
+> on ->threads_handled_last. If it observes 100 handled within 100000
+> interrupts then the counters are reset again. On !RT it usually manages
+> to get >100 per 100000 interrupts so it appears good. On RT it gets less
+> and the interrupt gets disabled.
 
-On Thu, Apr 23, 2020 at 02:47:34PM -0700, Matt Helsley wrote:
-> > +static unsigned int get_shnum(Elf_Ehdr const *ehdr, Elf_Shdr const *shdr0)
-> 
-> I noticed this returns an unsigned int ...
-> 
-> > +	Elf_Shdr *const shdr0 = (Elf_Shdr *)(old_shoff + (void *)ehdr);
-> > +	unsigned const old_shnum = get_shnum(ehdr, shdr0);
-> 
-> While this is not explicitly called out as an unsigned int. Perhaps we
-> could just make this and new_shnum explicit unsigned ints and then...
+so the EDGE interrupt shouldn't retrigger unless something happened that
+*retriggers* the situation. I think the problem is that qemu is too
+fast. Based on tracing: The IRQ happens, the threaded-handler fires up.
+The threaded handler writes something into the TX FIFO. QEMU probably
+transmits that byte immediately so the FIFO is empty again *and* another
+interrupt is fired. It makes sense because I see one one byte written to
+the FIFO followed by an interrupt, followed by another byte, followed by
+an interrupt, ….
+This does not happen on real hardware because it takes some time to
+transmit the data so.
 
-> > +	if (!ehdr->e_shnum || new_shnum >= SHN_LORESERVE) {
-> > +		ehdr->e_shnum = 0;
-> > +		shdr0->sh_size = w(new_shnum);
-> > +	} else
-> > +		ehdr->e_shnum = w2(2 + w2(ehdr->e_shnum));
-> 
-> If we make the unsigned int change proposed above can we reuse new_shnum
-> here like so:
-> 		ehdr->e_shnum = w2(new_shnum);
-> 
-> So this if/else is doing the inverse of get_shnum(). I think the code
-> could be cleaned up a little and prepare for moving to objtool by
-> putting it in a helper function.
+I already dropped PASS_LIMIT from the RT queue so it might not trigger
+again. I think I'm going to make the chain-handler depend on ISA so it
+the thread is invoked more often.
+According to the comment it is/was required to handle some ISA issues.
+I'm not sure if back then there was no SA_SHARED handling in the IRQ
+core was limited or $REASON. As of today I don't see a reason to keep it
+for !ISA hardware. On Debian CONFIG_ISA_BUS is disabled, I guess the
+same is true for SUSE.
 
-Sure, sounds good to me.
+And with the hunk at the bottom it shouldn't trigger as well. So
+PASS_LIMIT and no custom handler is duct tape. This really stops the IRQ
+from being generated.
 
-> > +	for (relhdr = shdr0, k = nhdr; k; --k, ++relhdr) {
-> > +		if (relhdr->sh_type == SHT_SYMTAB)
-> > +			symtab = (void *)ehdr + relhdr->sh_offset;
-> > +		else if (relhdr->sh_type == SHT_SYMTAB_SHNDX)
-> > +			symtab_shndx = (void *)ehdr + relhdr->sh_offset;
-> > +
-> > +		if (symtab && symtab_shndx)
-> > +			break;
-> > +	}
-> 
-> Could you break this out into a helper function? find_symtab() maybe? Again, I think
-> that helper would go away with conversion to objtool.
-
-Agreed, this wouldn't be needed with libelf. I'll send v2 shortly.
-Thanks for the review!
-
-Sami
+diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+index e31217e8dce62..eadb12bf0e90b 100644
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -1741,6 +1741,7 @@ void serial8250_tx_chars(struct uart_8250_port *up)
+ 	}
+ 
+ 	count = up->tx_loadsz;
++	serial8250_clear_THRI(up);
+ 	do {
+ 		serial_out(up, UART_TX, xmit->buf[xmit->tail]);
+ 		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+@@ -1755,6 +1756,7 @@ void serial8250_tx_chars(struct uart_8250_port *up)
+ 		    !(serial_in(up, UART_LSR) & UART_LSR_THRE))
+ 			break;
+ 	} while (--count > 0);
++	serial8250_set_THRI(up);
+ 
+ 	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
+ 		uart_write_wakeup(port);
+ 
+Sebastian
