@@ -2,69 +2,131 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31DC8C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 23:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA41C55191
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 23:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F24E20776
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 23:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE54820776
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 23:30:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587771021;
-	bh=ISuRq13IYKhDPE2J7pCl085V6rP+LvrWMY2++avaavU=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=mfx24FYx11PSaqwb5HWwmPhB6oihMdj396i8HcyezPrkzDiVzPebuEBu34+0+3PmM
-	 s1rbb4hoiDxJgTpmJq3oPfXyLbAzP1P/EX/lPp9/KfDUU33RN1DV+BeMoGcoj8nAZc
-	 ljD77e50sALS4KDjf/gRUDc+hPsikbMYG2c2ZAOo=
+	s=default; t=1587771022;
+	bh=3wEKGv5ox3xBJSPG5UvCryAAs2g1WF/iqr0nCo6RjAs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=V4QO79Cm1oxREeRDwKCnQfs0DHPEboOWpasY7Vl03jfsM8RPJdhhBEsFod63uOKSU
+	 pZGJyxH/GobtBzgvyDJU5QE7W6LU5Ng4Cdm6hChgNDJHnx8Nb4HqVZytNN/rdmZidN
+	 ogKPX2otNLAe5sYHWyuvXRgy+tKfYsXPKEXgRJIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbgDXXaU (ORCPT
+        id S1726101AbgDXXaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 19:30:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40996 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbgDXXaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 Apr 2020 19:30:19 -0400
-Subject: Re: [GIT PULL] SCSI fixes for 5.7-rc2
+Received: from mail.kernel.org ([198.145.29.99]:40964 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725874AbgDXXaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 19:30:19 -0400
+Received: from localhost (mobile-166-175-187-210.mycingular.net [166.175.187.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F13E82076C;
+        Fri, 24 Apr 2020 23:30:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587771019;
-        bh=ISuRq13IYKhDPE2J7pCl085V6rP+LvrWMY2++avaavU=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=WnxUJX2dqkZvTLg1jZRkVxAMJMwjip+RCJhbjP3lYM9p2q5MY5glrMJ2mJA780Abt
-         qAIhAd3Qt8+690wq0UTcDr7qJKylAWzDXfGbVpjfMRuUmdf1j9K1B1TJ+G/gLXvVhB
-         zPl5lHuil6xmW3HFg7LGYjFOg9NDYrIAeequQjcU=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <1587766958.4513.19.camel@HansenPartnership.com>
-References: <1587766958.4513.19.camel@HansenPartnership.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <1587766958.4513.19.camel@HansenPartnership.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
-X-PR-Tracked-Commit-Id: fa17a6dc84d1eb6b62bcf981a4ddcc966b1a2c04
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 5ef58e29078261ef5195c7fee74768546b863182
-Message-Id: <158777101896.26626.5023469776276987063.pr-tracker-bot@kernel.org>
-Date:   Fri, 24 Apr 2020 23:30:18 +0000
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        s=default; t=1587771018;
+        bh=3wEKGv5ox3xBJSPG5UvCryAAs2g1WF/iqr0nCo6RjAs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ijJZnogwLtbiiPpXNEYBOe46Q77VEphxeEa+EJNqdaJPgJ8+BwQ8ZUhiqwd9BU4KT
+         KU7/Y+V732uEGy42LTEWPaEBkKN/eJ39B7ogi+HLr6ORH5cq/6bu4aIv+SwiM9PWXu
+         Sr3/76LZE+ZGEy1/I8uLeC/f9wYYT5wKsYGe4f2I=
+Date:   Fri, 24 Apr 2020 18:30:16 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jon Derrick <jonathan.derrick@intel.com>
+Cc:     linux-pci@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
+        Russell Currey <ruscur@russell.cc>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Frederick Lawler <fred@fredlawl.com>,
+        Rajat Jain <rajatja@google.com>,
+        "Patel, Mayurkumar" <mayurkumar.patel@intel.com>,
+        Olof Johansson <olof@lixom.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] PCI/AER: Allow Native AER Host Bridges to use AER
+Message-ID: <20200424233016.GA218665@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587418630-13562-2-git-send-email-jonathan.derrick@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 24 Apr 2020 15:22:38 -0700:
+Hi Jon,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+I'm glad you raised this because I think the way we handle
+FIRMWARE_FIRST is really screwed up.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/5ef58e29078261ef5195c7fee74768546b863182
+On Mon, Apr 20, 2020 at 03:37:09PM -0600, Jon Derrick wrote:
+> Some platforms have a mix of ports whose capabilities can be negotiated
+> by _OSC, and some ports which are not described by ACPI and instead
+> managed by Native drivers. The existing Firmware-First HEST model can
+> incorrectly tag these Native, Non-ACPI ports as Firmware-First managed
+> ports by advertising the HEST Global Flag and matching the type and
+> class of the port (aer_hest_parse).
+> 
+> If the port requests Native AER through the Host Bridge's capability
+> settings, the AER driver should honor those settings and allow the port
+> to bind. This patch changes the definition of Firmware-First to exclude
+> ports whose Host Bridges request Native AER.
+> 
+> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+> ---
+>  drivers/pci/pcie/aer.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index f4274d3..30fbd1f 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -314,6 +314,9 @@ int pcie_aer_get_firmware_first(struct pci_dev *dev)
+>  	if (pcie_ports_native)
+>  		return 0;
+>  
+> +	if (pci_find_host_bridge(dev->bus)->native_aer)
+> +		return 0;
 
-Thank you!
+I hope we don't have to complicate pcie_aer_get_firmware_first() by
+adding this "native_aer" check here.  I'm not sure what we actually
+*should* do based on FIRMWARE_FIRST, but I don't think the current
+uses really make sense.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+I think Linux makes too many assumptions based on the FIRMWARE_FIRST
+bit.  The ACPI spec really only says (ACPI v6.3, sec 18.3.2.4):
+
+  If set, FIRMWARE_FIRST indicates to the OSPM that system firmware
+  will handle errors from this source first.
+
+  If FIRMWARE_FIRST is set in the flags field, the Enabled field [of
+  the HEST AER structure] is ignored by the OSPM.
+
+I do not see anything there about who owns the AER Capability, but
+Linux assumes that if FIRMWARE_FIRST is set, firmware must own the AER
+Capability.  I think that's reading too much into the spec.
+
+We already have _OSC, which *does* explicitly talk about who owns the
+AER Capability, and I think we should rely on that.  If firmware
+doesn't want the OS to touch the AER Capability, it should decline to
+give ownership to the OS via _OSC.
+
+>  	if (!dev->__aer_firmware_first_valid)
+>  		aer_set_firmware_first(dev);
+>  	return dev->__aer_firmware_first;
+> -- 
+> 1.8.3.1
+> 
