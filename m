@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 544AFC55194
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDD7C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23F1E20736
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:29:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3CEB20736
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 12:29:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587731370;
-	bh=1sRtclu5YtF/BdA/p0xwCVoFQqyA2qzRIAsl+w9VUSc=;
+	s=default; t=1587731373;
+	bh=lX7GO5zZRgBAxgEabLCkym2MplVXRl3kwn5k981MtVQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oezFKZcTbmrL1pmtr32SRsD+fxPBralvIr+sJZSwJIRmX94o96baSx2K5ThEq3NcC
-	 nX/E8f/onfwhEE3CLDxLH1N/iBUJu9x5B27OoaYtKIisTQ0fqCMI3twX422dTxWq5F
-	 LvrBITXfsVmN3bhDFBkjJbpdLQ79OrNCoCz1AXFM=
+	b=OxNnKOT8EVytjKHaf/Od8v6OFIVcrMEOjx7BFM+kNfwKzvVHnLlnr4K7VMW3vKrTO
+	 ZVsWrWyyg/sWkeVcYghSfzWZ+nVDQAnbNLKBLLOcc8U4L4Y9B+nSnJn7ixMmOrdrVu
+	 Mg3HRov8asM0Lq5OJVDe4sNdTNXv6ehsweMaIoNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbgDXMX7 (ORCPT
+        id S1728745AbgDXM3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 08:23:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53966 "EHLO mail.kernel.org"
+        Fri, 24 Apr 2020 08:29:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728159AbgDXMXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:23:49 -0400
+        id S1728222AbgDXMX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:23:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADBF420776;
-        Fri, 24 Apr 2020 12:23:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B845B21707;
+        Fri, 24 Apr 2020 12:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587731029;
-        bh=1sRtclu5YtF/BdA/p0xwCVoFQqyA2qzRIAsl+w9VUSc=;
+        s=default; t=1587731038;
+        bh=lX7GO5zZRgBAxgEabLCkym2MplVXRl3kwn5k981MtVQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q3hL84gRdKAlKGRnO/1hQvw5TjsNssUbLma7puWD7BHahnGngSb6rWC2YT71Gn0TH
-         kmoBsO3Kjuq3vXpBh+oCU5hIhBvp8ukk4Nf1fzDHnliUDphU5iiMXxCepZaC5o9NnZ
-         /3T+IHnCbRdw5c3vqgs44x77U69GQM+tpjpT/gB8=
+        b=QChqZ+OroKrCBLGeumwXaCArE8Egs+a+VUymVnkFbMDaHidLHTAVdg/a38IfIKWrG
+         P+xWsIYVkNtjgAbUgFEj4jeF5Vb3B6sjwadUr7yRw9jHCzqTlj9h2zMypU84CtWDsl
+         eDvBGe7oANGNJavmGns/JvCswYxTnIYaeJjmKyVg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yangerkun <yangerkun@huawei.com>, Theodore Ts'o <tytso@mit.edu>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 22/26] ext4: use matching invalidatepage in ext4_writepage
-Date:   Fri, 24 Apr 2020 08:23:19 -0400
-Message-Id: <20200424122323.10194-22-sashal@kernel.org>
+Cc:     Olaf Hering <olaf@aepfle.de>, Wei Liu <wei.liu@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 02/18] x86: hyperv: report value of misc_features
+Date:   Fri, 24 Apr 2020 08:23:39 -0400
+Message-Id: <20200424122355.10453-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200424122323.10194-1-sashal@kernel.org>
-References: <20200424122323.10194-1-sashal@kernel.org>
+In-Reply-To: <20200424122355.10453-1-sashal@kernel.org>
+References: <20200424122355.10453-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,38 +58,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yangerkun <yangerkun@huawei.com>
+From: Olaf Hering <olaf@aepfle.de>
 
-[ Upstream commit c2a559bc0e7ed5a715ad6b947025b33cb7c05ea7 ]
+[ Upstream commit 97d9f1c43bedd400301d6f1eff54d46e8c636e47 ]
 
-Run generic/388 with journal data mode sometimes may trigger the warning
-in ext4_invalidatepage. Actually, we should use the matching invalidatepage
-in ext4_writepage.
+A few kernel features depend on ms_hyperv.misc_features, but unlike its
+siblings ->features and ->hints, the value was never reported during boot.
 
-Signed-off-by: yangerkun <yangerkun@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20200226041002.13914-1-yangerkun@huawei.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Olaf Hering <olaf@aepfle.de>
+Link: https://lore.kernel.org/r/20200407172739.31371-1-olaf@aepfle.de
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/inode.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/cpu/mshyperv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index b9473fcc110fd..7e0c77de551bb 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -2131,7 +2131,7 @@ static int ext4_writepage(struct page *page,
- 	bool keep_towrite = false;
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+index fc93ae3255153..f8b0fa2dbe374 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -214,8 +214,8 @@ static void __init ms_hyperv_init_platform(void)
+ 	ms_hyperv.misc_features = cpuid_edx(HYPERV_CPUID_FEATURES);
+ 	ms_hyperv.hints    = cpuid_eax(HYPERV_CPUID_ENLIGHTMENT_INFO);
  
- 	if (unlikely(ext4_forced_shutdown(EXT4_SB(inode->i_sb)))) {
--		ext4_invalidatepage(page, 0, PAGE_SIZE);
-+		inode->i_mapping->a_ops->invalidatepage(page, 0, PAGE_SIZE);
- 		unlock_page(page);
- 		return -EIO;
- 	}
+-	pr_info("Hyper-V: features 0x%x, hints 0x%x\n",
+-		ms_hyperv.features, ms_hyperv.hints);
++	pr_info("Hyper-V: features 0x%x, hints 0x%x, misc 0x%x\n",
++		ms_hyperv.features, ms_hyperv.hints, ms_hyperv.misc_features);
+ 
+ 	ms_hyperv.max_vp_index = cpuid_eax(HYPERV_CPUID_IMPLEMENT_LIMITS);
+ 	ms_hyperv.max_lp_index = cpuid_ebx(HYPERV_CPUID_IMPLEMENT_LIMITS);
 -- 
 2.20.1
 
