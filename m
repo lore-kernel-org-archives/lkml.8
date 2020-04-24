@@ -2,120 +2,178 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E47FC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41DDAC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F03F2074F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:48:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="NTI2QR7T"
+	by mail.kernel.org (Postfix) with ESMTP id 16ACC20700
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 05:50:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587707403;
+	bh=nhxPzwWstza5Dv1YQUD5mM+6vfBRwgbdPXmTUb21+aA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=aBeidibfsRgQZxdKVxCdTsTnkyPZl8rQWJiQrGXHg7yc2q9ZBXzbcCvDsdka7yNrH
+	 7GLiu0nJNHJFVQu/TqK4SdpWvJjWy54yLXy5pPpLHraf4LAgl2TVXXI9cBjlf0Sjbb
+	 aOgmlvb5axw4QZqha197SynIfr+VSRdmEwHN3m98=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726186AbgDXFsk (ORCPT
+        id S1726458AbgDXFuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 01:48:40 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:55582 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725554AbgDXFsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 01:48:39 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 497js06b8qz9txyr;
-        Fri, 24 Apr 2020 07:48:36 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=NTI2QR7T; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 4X1lg0f7G_A7; Fri, 24 Apr 2020 07:48:36 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 497js05Cywz9txyq;
-        Fri, 24 Apr 2020 07:48:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1587707316; bh=cZQkW+Y58ZRO8tjt7cTqj1sSHFk5R4wVIsrFQWlKZIw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=NTI2QR7TKfBvduozSqg2+d+f4DNwrWZfpSe2WaF9uBhapSa2TTOtwtg5+P9IUtA6/
-         o/i9Q7f2weg4R6Uzvh/lVwM3KAH7iCBdkRol0NOCPUOWmDmDmzOUuptd040xt3cLHw
-         PQKKiKLOP9Mv7IEGE5og9jB5UpliTIoljouq0bgk=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8F5708B775;
-        Fri, 24 Apr 2020 07:48:37 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id JHr5gnaN85CB; Fri, 24 Apr 2020 07:48:37 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id DC91D8B75E;
-        Fri, 24 Apr 2020 07:48:34 +0200 (CEST)
-Subject: Re: [PATCH v3 13/16] powerpc/watchpoint: Prepare handler to handle
- more than one watcnhpoint
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc:     mpe@ellerman.id.au, mikey@neuling.org, apopple@linux.ibm.com,
-        paulus@samba.org, npiggin@gmail.com,
-        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
-        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
-        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Fri, 24 Apr 2020 01:50:02 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:57904 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbgDXFuB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 01:50:01 -0400
+Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id 03O5nYpZ003914;
+        Fri, 24 Apr 2020 14:49:34 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 03O5nYpZ003914
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587707375;
+        bh=6yprhtuJH0JAt/nBxuXAxrTcgJRW5wwX4SHpcjUSzvY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=T7v+11aYsKt8WJBdz+nw9DIMku91mHdJZNOTBT1ZUAf07NfvNLEbhxtNDrd3zgzy/
+         mYt2+UMTf1OTOfMvYe+W0FrMzwR65xobk8yzm1ndwHe1dPepPTgYH8uV6QhajzWE2t
+         8WjLhu5OiWjgPhzW1T/jJhj8UQM3/rVvZldg8JbF0iPxXSH7l6vScNBOTjKZU6Sf++
+         2aFPjilLdq1ZTrTDhc/KhmWKlVgNt7xqDMJF36gkqlIkxwf6idKbDpXGVKb5ZgpZBG
+         gKJly+S4K0anq4Qq/FzJQCZX0UuHTNv6WZ70nH1AQrxW7J6zh4ihysazgr2sMJaSWT
+         9p925GXeuxxnw==
+X-Nifty-SrcIP: [126.90.202.47]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Ulf Magnusson <ulfalizer@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
         linux-kernel@vger.kernel.org
-References: <20200414031659.58875-1-ravi.bangoria@linux.ibm.com>
- <20200414031659.58875-14-ravi.bangoria@linux.ibm.com>
- <67349339-03df-091a-47f0-78c1b14c5981@c-s.fr>
- <f571127c-89b0-a333-be71-18f411dc6586@linux.ibm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <10ce2343-7fab-8cf8-488b-9768dbc8889a@c-s.fr>
-Date:   Fri, 24 Apr 2020 07:48:34 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Subject: [PATCH 1/2] kconfig: tests: remove randconfig test for choice in choice
+Date:   Fri, 24 Apr 2020 14:49:28 +0900
+Message-Id: <20200424054929.502485-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <f571127c-89b0-a333-be71-18f411dc6586@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ravi,
+Nesting choice statements does not make any sense.
 
-Le 24/04/2020 à 05:32, Ravi Bangoria a écrit :
-> Hi Christophe,
-> 
->>> @@ -101,14 +129,20 @@ static bool is_ptrace_bp(struct perf_event *bp)
->>>    */
->>>   void arch_unregister_hw_breakpoint(struct perf_event *bp)
->>>   {
->>> +    int i;
->>> +
->>
->> This declaration should be in the block using it.
->>
->>>       /*
->>>        * If the breakpoint is unregistered between a 
->>> hw_breakpoint_handler()
->>>        * and the single_step_dabr_instruction(), then cleanup the 
->>> breakpoint
->>>        * restoration variables to prevent dangling pointers.
->>>        * FIXME, this should not be using bp->ctx at all! Sayeth peterz.
->>>        */
->>> -    if (bp->ctx && bp->ctx->task && bp->ctx->task != ((void *)-1L))
->>> -        bp->ctx->task->thread.last_hit_ubp = NULL;
->>> +    if (bp->ctx && bp->ctx->task && bp->ctx->task != ((void *)-1L)) {
->>
->> Add declaration of 'int i' here.
-> 
-> How will that help? Keeping declaration at the start of function is also
-> common practice and I don't see any recommendation to move them inside
-> conditional block.
+Commit df8df5e4bc37 ("usb: get rid of 'choice' for legacy gadget
+drivers") got rid of the only user.
 
-Reducing the scope of local variables increases readability, you don't 
-have to scroll all up to the top of the function to see the declaration 
-of the variable.
+I will make it a syntax error. Remove the test in advance.
 
-common practice ? Are you sure ? Just have a look at fs/io_uring.c or 
-many other files in the kernel to see how uncommon your practice is.
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-Christophe
+ .../kconfig/tests/rand_nested_choice/Kconfig  | 35 -------------------
+ .../tests/rand_nested_choice/__init__.py      | 17 ---------
+ .../tests/rand_nested_choice/expected_stdout0 |  2 --
+ .../tests/rand_nested_choice/expected_stdout1 |  4 ---
+ .../tests/rand_nested_choice/expected_stdout2 |  5 ---
+ 5 files changed, 63 deletions(-)
+ delete mode 100644 scripts/kconfig/tests/rand_nested_choice/Kconfig
+ delete mode 100644 scripts/kconfig/tests/rand_nested_choice/__init__.py
+ delete mode 100644 scripts/kconfig/tests/rand_nested_choice/expected_stdout0
+ delete mode 100644 scripts/kconfig/tests/rand_nested_choice/expected_stdout1
+ delete mode 100644 scripts/kconfig/tests/rand_nested_choice/expected_stdout2
+
+diff --git a/scripts/kconfig/tests/rand_nested_choice/Kconfig b/scripts/kconfig/tests/rand_nested_choice/Kconfig
+deleted file mode 100644
+index 8350de7f732b..000000000000
+--- a/scripts/kconfig/tests/rand_nested_choice/Kconfig
++++ /dev/null
+@@ -1,35 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0
+-
+-choice
+-	prompt "choice"
+-
+-config A
+-	bool "A"
+-
+-config B
+-	bool "B"
+-
+-if B
+-choice
+-	prompt "sub choice"
+-
+-config C
+-	bool "C"
+-
+-config D
+-	bool "D"
+-
+-if D
+-choice
+-	prompt "subsub choice"
+-
+-config E
+-	bool "E"
+-
+-endchoice
+-endif # D
+-
+-endchoice
+-endif # B
+-
+-endchoice
+diff --git a/scripts/kconfig/tests/rand_nested_choice/__init__.py b/scripts/kconfig/tests/rand_nested_choice/__init__.py
+deleted file mode 100644
+index 9e4b2db53581..000000000000
+--- a/scripts/kconfig/tests/rand_nested_choice/__init__.py
++++ /dev/null
+@@ -1,17 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0
+-"""
+-Set random values recursively in nested choices.
+-
+-Kconfig can create a choice-in-choice structure by using 'if' statement.
+-randconfig should correctly set random choice values.
+-
+-Related Linux commit: 3b9a19e08960e5cdad5253998637653e592a3c29
+-"""
+-
+-
+-def test(conf):
+-    for i in range(20):
+-        assert conf.randconfig() == 0
+-        assert (conf.config_contains('expected_stdout0') or
+-                conf.config_contains('expected_stdout1') or
+-                conf.config_contains('expected_stdout2'))
+diff --git a/scripts/kconfig/tests/rand_nested_choice/expected_stdout0 b/scripts/kconfig/tests/rand_nested_choice/expected_stdout0
+deleted file mode 100644
+index 05450f3d4eb5..000000000000
+--- a/scripts/kconfig/tests/rand_nested_choice/expected_stdout0
++++ /dev/null
+@@ -1,2 +0,0 @@
+-CONFIG_A=y
+-# CONFIG_B is not set
+diff --git a/scripts/kconfig/tests/rand_nested_choice/expected_stdout1 b/scripts/kconfig/tests/rand_nested_choice/expected_stdout1
+deleted file mode 100644
+index 37ab29584157..000000000000
+--- a/scripts/kconfig/tests/rand_nested_choice/expected_stdout1
++++ /dev/null
+@@ -1,4 +0,0 @@
+-# CONFIG_A is not set
+-CONFIG_B=y
+-CONFIG_C=y
+-# CONFIG_D is not set
+diff --git a/scripts/kconfig/tests/rand_nested_choice/expected_stdout2 b/scripts/kconfig/tests/rand_nested_choice/expected_stdout2
+deleted file mode 100644
+index 849ff47e9848..000000000000
+--- a/scripts/kconfig/tests/rand_nested_choice/expected_stdout2
++++ /dev/null
+@@ -1,5 +0,0 @@
+-# CONFIG_A is not set
+-CONFIG_B=y
+-# CONFIG_C is not set
+-CONFIG_D=y
+-CONFIG_E=y
+-- 
+2.25.1
+
