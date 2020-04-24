@@ -2,233 +2,284 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D314C54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 795B3C54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F24B820728
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D61D20728
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 15:22:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbgDXPWV (ORCPT
+        id S1728282AbgDXPWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 24 Apr 2020 11:22:25 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:44368 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727088AbgDXPWY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 11:22:24 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03OFCxLN018030;
         Fri, 24 Apr 2020 11:22:21 -0400
-Received: from mga04.intel.com ([192.55.52.120]:12913 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726920AbgDXPWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 30fxf6ej79-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Apr 2020 11:22:21 -0400
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 03OFMKvn008455
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
         Fri, 24 Apr 2020 11:22:20 -0400
-IronPort-SDR: gkmLLEDGFVXVA+Pyahqqvl++4ENjVxKYf7KYBaT+rc4us59sjbWqGQhul84TbuQkDYWuBfjuk0
- eH3FUQl7UpDw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2020 08:22:19 -0700
-IronPort-SDR: lNZQXQ63t+XjMky3bU1cg+5d3JFTtZ1ZILO0XjPgq3c7HU32TVp1zDyK/1Hq4BIMeVbmnv0C20
- 40vaoszU990w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,311,1583222400"; 
-   d="scan'208";a="457375407"
-Received: from local-michael-cet-test.sh.intel.com (HELO localhost) ([10.239.159.128])
-  by fmsmga005.fm.intel.com with ESMTP; 24 Apr 2020 08:22:17 -0700
-Date:   Fri, 24 Apr 2020 23:24:19 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        jmattson@google.com, yu.c.zhang@linux.intel.com
-Subject: Re: [PATCH v11 8/9] KVM: VMX: Enable CET support for nested VM
-Message-ID: <20200424152419.GL24039@local-michael-cet-test>
-References: <20200326081847.5870-1-weijiang.yang@intel.com>
- <20200326081847.5870-9-weijiang.yang@intel.com>
- <20200423182906.GL17824@linux.intel.com>
+Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
+ SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 24 Apr 2020 08:22:18 -0700
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 24 Apr 2020 08:22:18 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Fri, 24 Apr 2020 08:22:18 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03OFMG4P027806;
+        Fri, 24 Apr 2020 11:22:17 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] iio: buffer: extend short-hand use for 'indio_dev->buffer'
+Date:   Fri, 24 Apr 2020 18:22:43 +0300
+Message-ID: <20200424152243.39410-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200423182906.GL17824@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-24_08:2020-04-24,2020-04-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ priorityscore=1501 spamscore=0 lowpriorityscore=0 clxscore=1015 mlxscore=0
+ suspectscore=2 bulkscore=0 impostorscore=0 mlxlogscore=866 phishscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004240121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 11:29:06AM -0700, Sean Christopherson wrote:
-> On Thu, Mar 26, 2020 at 04:18:45PM +0800, Yang Weijiang wrote:
-> > CET MSRs pass through guests for performance consideration.
-> > Configure the MSRs to match L0/L1 settings so that nested VM
-> > is able to run with CET.
-> > 
-> > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> > ---
-> >  arch/x86/kvm/vmx/nested.c | 41 +++++++++++++++++++++++++++++++++++++--
-> >  arch/x86/kvm/vmx/vmcs12.c |  6 ++++++
-> >  arch/x86/kvm/vmx/vmcs12.h | 14 ++++++++++++-
-> >  arch/x86/kvm/vmx/vmx.c    |  1 +
-> >  4 files changed, 59 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> > index e47eb7c0fbae..a71ef33de55f 100644
-> > --- a/arch/x86/kvm/vmx/nested.c
-> > +++ b/arch/x86/kvm/vmx/nested.c
-> > @@ -627,6 +627,41 @@ static inline bool nested_vmx_prepare_msr_bitmap(struct kvm_vcpu *vcpu,
-> >  	nested_vmx_disable_intercept_for_msr(msr_bitmap_l1, msr_bitmap_l0,
-> >  					     MSR_KERNEL_GS_BASE, MSR_TYPE_RW);
-> >  
-> > +	/* Pass CET MSRs to nested VM if L0 and L1 are set to pass-through. */
-> > +	if (!msr_write_intercepted_l01(vcpu, MSR_IA32_U_CET))
-> > +		nested_vmx_disable_intercept_for_msr(
-> > +					msr_bitmap_l1, msr_bitmap_l0,
-> > +					MSR_IA32_U_CET, MSR_TYPE_RW);
-> > +
-> > +	if (!msr_write_intercepted_l01(vcpu, MSR_IA32_PL3_SSP))
-> > +		nested_vmx_disable_intercept_for_msr(
-> > +					msr_bitmap_l1, msr_bitmap_l0,
-> > +					MSR_IA32_PL3_SSP, MSR_TYPE_RW);
-> > +
-> > +	if (!msr_write_intercepted_l01(vcpu, MSR_IA32_S_CET))
-> > +		nested_vmx_disable_intercept_for_msr(
-> > +					msr_bitmap_l1, msr_bitmap_l0,
-> > +					MSR_IA32_S_CET, MSR_TYPE_RW);
-> > +
-> > +	if (!msr_write_intercepted_l01(vcpu, MSR_IA32_PL0_SSP))
-> > +		nested_vmx_disable_intercept_for_msr(
-> > +					msr_bitmap_l1, msr_bitmap_l0,
-> > +					MSR_IA32_PL0_SSP, MSR_TYPE_RW);
-> > +
-> > +	if (!msr_write_intercepted_l01(vcpu, MSR_IA32_PL1_SSP))
-> > +		nested_vmx_disable_intercept_for_msr(
-> > +					msr_bitmap_l1, msr_bitmap_l0,
-> > +					MSR_IA32_PL1_SSP, MSR_TYPE_RW);
-> > +
-> > +	if (!msr_write_intercepted_l01(vcpu, MSR_IA32_PL2_SSP))
-> > +		nested_vmx_disable_intercept_for_msr(
-> > +					msr_bitmap_l1, msr_bitmap_l0,
-> > +					MSR_IA32_PL2_SSP, MSR_TYPE_RW);
-> > +
-> > +	if (!msr_write_intercepted_l01(vcpu, MSR_IA32_INT_SSP_TAB))
-> > +		nested_vmx_disable_intercept_for_msr(
-> > +					msr_bitmap_l1, msr_bitmap_l0,
-> > +					MSR_IA32_INT_SSP_TAB, MSR_TYPE_RW);
-> 
-> That's a lot of copy-paste.  Maybe add a helper to do the conditional l01
-> check and subsequent call to nested_vmx_disable_intercept_for_msr()?  It's
-> still a lot of boilerplate, but it's at least a little better.  Not sure
-> what a good name would be.
-> 
-> 	nested_vmx_update_intercept_for_msr(vcpu, MSR_IA32_U_CET,
-> 					    msr_bitmap_l1, msr_bitmap_l0,
-> 					    MSR_TYPE_RW);
->
-OK, I'll figure out how to make it nicer :-)
+This change is both cosmetic and a prequel to adding support for attaching
+multiple buffers per IIO device.
 
-> 
-> >  	/*
-> >  	 * Checking the L0->L1 bitmap is trying to verify two things:
-> >  	 *
-> > @@ -6040,7 +6075,8 @@ void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps)
-> >  	msrs->exit_ctls_high |=
-> >  		VM_EXIT_ALWAYSON_WITHOUT_TRUE_MSR |
-> >  		VM_EXIT_LOAD_IA32_EFER | VM_EXIT_SAVE_IA32_EFER |
-> > -		VM_EXIT_SAVE_VMX_PREEMPTION_TIMER | VM_EXIT_ACK_INTR_ON_EXIT;
-> > +		VM_EXIT_SAVE_VMX_PREEMPTION_TIMER | VM_EXIT_ACK_INTR_ON_EXIT |
-> > +		VM_EXIT_LOAD_HOST_CET_STATE;
-> >  
-> >  	/* We support free control of debug control saving. */
-> >  	msrs->exit_ctls_low &= ~VM_EXIT_SAVE_DEBUG_CONTROLS;
-> > @@ -6057,7 +6093,8 @@ void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps)
-> >  #endif
-> >  		VM_ENTRY_LOAD_IA32_PAT;
-> >  	msrs->entry_ctls_high |=
-> > -		(VM_ENTRY_ALWAYSON_WITHOUT_TRUE_MSR | VM_ENTRY_LOAD_IA32_EFER);
-> > +		(VM_ENTRY_ALWAYSON_WITHOUT_TRUE_MSR | VM_ENTRY_LOAD_IA32_EFER |
-> > +		 VM_ENTRY_LOAD_GUEST_CET_STATE);
-> 
-> This is wrong, the OR path is only for emulated stuff, I'm guessing you're
-> not planning on emulating CET :-)
-When I tested nested VM, if it's not "ORed" here, nested VM entry will
-fail, so what's your suggestion on this?
-> 
-> And I think this needs to be conditional based on supported_xss?
-Yes, a check is necessary.
+The IIO buffer sysfs attrs are mostly designed to support only one attached
+buffer, and in order to support more, we need to centralize [in each attr
+function] the buffer which is being accessed.
 
->  
-> >  	/* We support free control of debug control loading. */
-> >  	msrs->entry_ctls_low &= ~VM_ENTRY_LOAD_DEBUG_CONTROLS;
-> > diff --git a/arch/x86/kvm/vmx/vmcs12.c b/arch/x86/kvm/vmx/vmcs12.c
-> > index 53dfb401316d..82b82bebeee0 100644
-> > --- a/arch/x86/kvm/vmx/vmcs12.c
-> > +++ b/arch/x86/kvm/vmx/vmcs12.c
-> > @@ -141,6 +141,9 @@ const unsigned short vmcs_field_to_offset_table[] = {
-> >  	FIELD(GUEST_PENDING_DBG_EXCEPTIONS, guest_pending_dbg_exceptions),
-> >  	FIELD(GUEST_SYSENTER_ESP, guest_sysenter_esp),
-> >  	FIELD(GUEST_SYSENTER_EIP, guest_sysenter_eip),
-> > +	FIELD(GUEST_S_CET, guest_s_cet),
-> > +	FIELD(GUEST_SSP, guest_ssp),
-> > +	FIELD(GUEST_INTR_SSP_TABLE, guest_ssp_tbl),
-> >  	FIELD(HOST_CR0, host_cr0),
-> >  	FIELD(HOST_CR3, host_cr3),
-> >  	FIELD(HOST_CR4, host_cr4),
-> > @@ -153,5 +156,8 @@ const unsigned short vmcs_field_to_offset_table[] = {
-> >  	FIELD(HOST_IA32_SYSENTER_EIP, host_ia32_sysenter_eip),
-> >  	FIELD(HOST_RSP, host_rsp),
-> >  	FIELD(HOST_RIP, host_rip),
-> > +	FIELD(HOST_S_CET, host_s_cet),
-> > +	FIELD(HOST_SSP, host_ssp),
-> > +	FIELD(HOST_INTR_SSP_TABLE, host_ssp_tbl),
-> >  };
-> >  const unsigned int nr_vmcs12_fields = ARRAY_SIZE(vmcs_field_to_offset_table);
-> > diff --git a/arch/x86/kvm/vmx/vmcs12.h b/arch/x86/kvm/vmx/vmcs12.h
-> > index d0c6df373f67..62b7be68f05c 100644
-> > --- a/arch/x86/kvm/vmx/vmcs12.h
-> > +++ b/arch/x86/kvm/vmx/vmcs12.h
-> > @@ -118,7 +118,13 @@ struct __packed vmcs12 {
-> >  	natural_width host_ia32_sysenter_eip;
-> >  	natural_width host_rsp;
-> >  	natural_width host_rip;
-> > -	natural_width paddingl[8]; /* room for future expansion */
-> > +	natural_width host_s_cet;
-> > +	natural_width host_ssp;
-> > +	natural_width host_ssp_tbl;
-> > +	natural_width guest_s_cet;
-> > +	natural_width guest_ssp;
-> > +	natural_width guest_ssp_tbl;
-> > +	natural_width paddingl[2]; /* room for future expansion */
-> 
-> Tangetial topic, it'd be helpful if FIELD and FIELD64 had compile-time
-> assertions similar to vmcs_read*() to verify the size of the vmcs12 field
-> is correct.  In other words, I don't feel like reviewing all of these :-).
->
-OK, let me figure out how to polish them...
+This also makes it a bit more uniform, as in some functions there is a
+short-hand 'buffer' variable and at the same time the 'indio_dev->buffer'
+is still access directly.
 
-> >  	u32 pin_based_vm_exec_control;
-> >  	u32 cpu_based_vm_exec_control;
-> >  	u32 exception_bitmap;
-> > @@ -301,6 +307,12 @@ static inline void vmx_check_vmcs12_offsets(void)
-> >  	CHECK_OFFSET(host_ia32_sysenter_eip, 656);
-> >  	CHECK_OFFSET(host_rsp, 664);
-> >  	CHECK_OFFSET(host_rip, 672);
-> > +	CHECK_OFFSET(host_s_cet, 680);
-> > +	CHECK_OFFSET(host_ssp, 688);
-> > +	CHECK_OFFSET(host_ssp_tbl, 696);
-> > +	CHECK_OFFSET(guest_s_cet, 704);
-> > +	CHECK_OFFSET(guest_ssp, 712);
-> > +	CHECK_OFFSET(guest_ssp_tbl, 720);
-> >  	CHECK_OFFSET(pin_based_vm_exec_control, 744);
-> >  	CHECK_OFFSET(cpu_based_vm_exec_control, 748);
-> >  	CHECK_OFFSET(exception_bitmap, 752);
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index a3d01014b9e7..c2e950d378bd 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -7153,6 +7153,7 @@ static void nested_vmx_cr_fixed1_bits_update(struct kvm_vcpu *vcpu)
-> >  	cr4_fixed1_update(X86_CR4_PKE,        ecx, feature_bit(PKU));
-> >  	cr4_fixed1_update(X86_CR4_UMIP,       ecx, feature_bit(UMIP));
-> >  	cr4_fixed1_update(X86_CR4_LA57,       ecx, feature_bit(LA57));
-> > +	cr4_fixed1_update(X86_CR4_CET,	      ecx, feature_bit(SHSTK));
-> >  
-> >  #undef cr4_fixed1_update
-> >  }
-> > -- 
-> > 2.17.2
-> > 
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/iio/industrialio-buffer.c | 61 +++++++++++++++++--------------
+ 1 file changed, 34 insertions(+), 27 deletions(-)
+
+diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
+index 221157136af6..eae39eaf49af 100644
+--- a/drivers/iio/industrialio-buffer.c
++++ b/drivers/iio/industrialio-buffer.c
+@@ -189,10 +189,12 @@ __poll_t iio_buffer_poll(struct file *filp,
+  */
+ void iio_buffer_wakeup_poll(struct iio_dev *indio_dev)
+ {
+-	if (!indio_dev->buffer)
++	struct iio_buffer *buffer = indio_dev->buffer;
++
++	if (!buffer)
+ 		return;
+ 
+-	wake_up(&indio_dev->buffer->pollq);
++	wake_up(&buffer->pollq);
+ }
+ 
+ void iio_buffer_init(struct iio_buffer *buffer)
+@@ -262,10 +264,11 @@ static ssize_t iio_scan_el_show(struct device *dev,
+ {
+ 	int ret;
+ 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
++	struct iio_buffer *buffer = indio_dev->buffer;
+ 
+ 	/* Ensure ret is 0 or 1. */
+ 	ret = !!test_bit(to_iio_dev_attr(attr)->address,
+-		       indio_dev->buffer->scan_mask);
++		       buffer->scan_mask);
+ 
+ 	return sprintf(buf, "%d\n", ret);
+ }
+@@ -381,7 +384,7 @@ static ssize_t iio_scan_el_store(struct device *dev,
+ 	if (ret < 0)
+ 		return ret;
+ 	mutex_lock(&indio_dev->mlock);
+-	if (iio_buffer_is_active(indio_dev->buffer)) {
++	if (iio_buffer_is_active(buffer)) {
+ 		ret = -EBUSY;
+ 		goto error_ret;
+ 	}
+@@ -410,7 +413,9 @@ static ssize_t iio_scan_el_ts_show(struct device *dev,
+ 				   char *buf)
+ {
+ 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+-	return sprintf(buf, "%d\n", indio_dev->buffer->scan_timestamp);
++	struct iio_buffer *buffer = indio_dev->buffer;
++
++	return sprintf(buf, "%d\n", buffer->scan_timestamp);
+ }
+ 
+ static ssize_t iio_scan_el_ts_store(struct device *dev,
+@@ -420,6 +425,7 @@ static ssize_t iio_scan_el_ts_store(struct device *dev,
+ {
+ 	int ret;
+ 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
++	struct iio_buffer *buffer = indio_dev->buffer;
+ 	bool state;
+ 
+ 	ret = strtobool(buf, &state);
+@@ -427,11 +433,11 @@ static ssize_t iio_scan_el_ts_store(struct device *dev,
+ 		return ret;
+ 
+ 	mutex_lock(&indio_dev->mlock);
+-	if (iio_buffer_is_active(indio_dev->buffer)) {
++	if (iio_buffer_is_active(buffer)) {
+ 		ret = -EBUSY;
+ 		goto error_ret;
+ 	}
+-	indio_dev->buffer->scan_timestamp = state;
++	buffer->scan_timestamp = state;
+ error_ret:
+ 	mutex_unlock(&indio_dev->mlock);
+ 
+@@ -439,10 +445,10 @@ static ssize_t iio_scan_el_ts_store(struct device *dev,
+ }
+ 
+ static int iio_buffer_add_channel_sysfs(struct iio_dev *indio_dev,
++					struct iio_buffer *buffer,
+ 					const struct iio_chan_spec *chan)
+ {
+ 	int ret, attrcount = 0;
+-	struct iio_buffer *buffer = indio_dev->buffer;
+ 
+ 	ret = __iio_add_chan_devattr("index",
+ 				     chan,
+@@ -518,7 +524,7 @@ static ssize_t iio_buffer_write_length(struct device *dev,
+ 		return len;
+ 
+ 	mutex_lock(&indio_dev->mlock);
+-	if (iio_buffer_is_active(indio_dev->buffer)) {
++	if (iio_buffer_is_active(buffer)) {
+ 		ret = -EBUSY;
+ 	} else {
+ 		buffer->access->set_length(buffer, val);
+@@ -539,7 +545,9 @@ static ssize_t iio_buffer_show_enable(struct device *dev,
+ 				      char *buf)
+ {
+ 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+-	return sprintf(buf, "%d\n", iio_buffer_is_active(indio_dev->buffer));
++	struct iio_buffer *buffer = indio_dev->buffer;
++
++	return sprintf(buf, "%d\n", iio_buffer_is_active(buffer));
+ }
+ 
+ static unsigned int iio_storage_bytes_for_si(struct iio_dev *indio_dev,
+@@ -1129,6 +1137,7 @@ static ssize_t iio_buffer_store_enable(struct device *dev,
+ 	int ret;
+ 	bool requested_state;
+ 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
++	struct iio_buffer *buffer = indio_dev->buffer;
+ 	bool inlist;
+ 
+ 	ret = strtobool(buf, &requested_state);
+@@ -1138,17 +1147,15 @@ static ssize_t iio_buffer_store_enable(struct device *dev,
+ 	mutex_lock(&indio_dev->mlock);
+ 
+ 	/* Find out if it is in the list */
+-	inlist = iio_buffer_is_active(indio_dev->buffer);
++	inlist = iio_buffer_is_active(buffer);
+ 	/* Already in desired state */
+ 	if (inlist == requested_state)
+ 		goto done;
+ 
+ 	if (requested_state)
+-		ret = __iio_update_buffers(indio_dev,
+-					 indio_dev->buffer, NULL);
++		ret = __iio_update_buffers(indio_dev, buffer, NULL);
+ 	else
+-		ret = __iio_update_buffers(indio_dev,
+-					 NULL, indio_dev->buffer);
++		ret = __iio_update_buffers(indio_dev, NULL, buffer);
+ 
+ done:
+ 	mutex_unlock(&indio_dev->mlock);
+@@ -1190,7 +1197,7 @@ static ssize_t iio_buffer_store_watermark(struct device *dev,
+ 		goto out;
+ 	}
+ 
+-	if (iio_buffer_is_active(indio_dev->buffer)) {
++	if (iio_buffer_is_active(buffer)) {
+ 		ret = -EBUSY;
+ 		goto out;
+ 	}
+@@ -1207,11 +1214,9 @@ static ssize_t iio_dma_show_data_available(struct device *dev,
+ 						char *buf)
+ {
+ 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+-	size_t bytes;
+-
+-	bytes = iio_buffer_data_available(indio_dev->buffer);
++	struct iio_buffer *buffer = indio_dev->buffer;
+ 
+-	return sprintf(buf, "%zu\n", bytes);
++	return sprintf(buf, "%zu\n", iio_buffer_data_available(buffer));
+ }
+ 
+ static DEVICE_ATTR(length, S_IRUGO | S_IWUSR, iio_buffer_read_length,
+@@ -1292,7 +1297,7 @@ int iio_buffer_alloc_sysfs_and_mask(struct iio_dev *indio_dev)
+ 			if (channels[i].scan_index < 0)
+ 				continue;
+ 
+-			ret = iio_buffer_add_channel_sysfs(indio_dev,
++			ret = iio_buffer_add_channel_sysfs(indio_dev, buffer,
+ 							 &channels[i]);
+ 			if (ret < 0)
+ 				goto error_cleanup_dynamic;
+@@ -1332,20 +1337,22 @@ int iio_buffer_alloc_sysfs_and_mask(struct iio_dev *indio_dev)
+ 	bitmap_free(buffer->scan_mask);
+ error_cleanup_dynamic:
+ 	iio_free_chan_devattr_list(&buffer->scan_el_dev_attr_list);
+-	kfree(indio_dev->buffer->buffer_group.attrs);
++	kfree(buffer->buffer_group.attrs);
+ 
+ 	return ret;
+ }
+ 
+ void iio_buffer_free_sysfs_and_mask(struct iio_dev *indio_dev)
+ {
+-	if (!indio_dev->buffer)
++	struct iio_buffer *buffer = indio_dev->buffer;
++
++	if (!buffer)
+ 		return;
+ 
+-	bitmap_free(indio_dev->buffer->scan_mask);
+-	kfree(indio_dev->buffer->buffer_group.attrs);
+-	kfree(indio_dev->buffer->scan_el_group.attrs);
+-	iio_free_chan_devattr_list(&indio_dev->buffer->scan_el_dev_attr_list);
++	bitmap_free(buffer->scan_mask);
++	kfree(buffer->buffer_group.attrs);
++	kfree(buffer->scan_el_group.attrs);
++	iio_free_chan_devattr_list(&buffer->scan_el_dev_attr_list);
+ }
+ 
+ /**
+-- 
+2.17.1
+
