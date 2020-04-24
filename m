@@ -2,116 +2,109 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29CFCC2BA19
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 00:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA12C2BA19
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 00:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02FF52071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 00:31:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YFPVrqX/"
+	by mail.kernel.org (Postfix) with ESMTP id 6302E21473
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 00:37:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587688623;
+	bh=tC2001WkgCBwNlCeRGsPzZqCfwtG295aimilTWbtkPk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=l17JPxSyncmU2lBNm2Y9ZE+fKiCf/zPNHPdM2xHH+kxn1PmzoYhhm8wy4Mef7Brx2
+	 e4QZ2+QMVu1wvr5oXMmgNMAJCNtk0AxkqDf5s37VGO2ZYugLToSvd6Opc9YuKpMoEP
+	 /4bVRTC4nGpVweGdd7+svawooIzBfxwhCdzOAAdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728390AbgDXAa7 (ORCPT
+        id S1728287AbgDXAhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 20:30:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53126 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728151AbgDXAa6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 20:30:58 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E406C09B042;
-        Thu, 23 Apr 2020 17:30:58 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id y6so3242112pjc.4;
-        Thu, 23 Apr 2020 17:30:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=L5XArOSUZwIEnxR3eCf7lGVK2eb+Bi3jkepM1WeX9QE=;
-        b=YFPVrqX/oo9QxWP7xGzlaGJ9raYM+zVB0puskfyk362PScv39Lh67FW0q+PCC8NpeG
-         pbW8NfRzGNkrdsK4jdMh/G1k2wT9sziF6YTxoVNJ/wmwmKVvOXPga05yfPr+cbBNtnDI
-         QNRMbCkJyu5bU0tF+Gz2dR6hbULu4Z4ktTjvQUesjqAcBKSiBdYQGFv7OX83/2QS2vP6
-         70MjjYA9OMDctxic2eG+QCQV3QVT8WcivhAvczc5+vH6amZtwibpZCabA//sCP+ITktv
-         UJ6LOoeKeYB83s85iZxIxbmwLrOySFnUeMghkxwak+uK1NHrs8JDMAl9sHfTNN/+x9cj
-         HC4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=L5XArOSUZwIEnxR3eCf7lGVK2eb+Bi3jkepM1WeX9QE=;
-        b=ePZfndb0nhlhYgBGhnrSlhzmDxKcM18W1gR6YHCoG7vVNta0UBbXnpsDiV4qLB0NlK
-         KFsi/o2/6PNty1Ou99T+sojlWZPe5+pc4YVxy2asABDhPnYKbMX6M+qBqgjSxXGftW9g
-         AIrGwajTGDScj2mpOSff2Z36Nza4di8spiTaEyqEJxZAiVFttG5DKOzTWyLXRgFW1ukj
-         +gVgBQuU5IhnzXbJb7hwBPHT9EhRRhozD+jZNmXW1IZwIY+4Q21jEEiV5fADOeQTP7jD
-         EiwIjtJd1MFv8xgvEFovwIQH6H4JZF5awOhWXBzt8ir51/GQRUkgDSZ9+hU5UusOCC7/
-         QTQQ==
-X-Gm-Message-State: AGi0PubGhy6THhF7kQI5AROrG2I0W5CzHhhcM+WeK96rKDj1QKNSxlMS
-        2D8/fgNOIJbh2A0J4LBryQI=
-X-Google-Smtp-Source: APiQypI3JWqoZTZWFf/ZQssaQxK4U5EkPUiDF5YTIb5ST9FWlo/Kw86wh7/VtzgytUMI/y6cnR53Eg==
-X-Received: by 2002:a17:902:768b:: with SMTP id m11mr2702867pll.82.1587688258138;
-        Thu, 23 Apr 2020 17:30:58 -0700 (PDT)
-Received: from js1304-desktop ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id j26sm3816474pfr.215.2020.04.23.17.30.55
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 Apr 2020 17:30:57 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 09:30:52 +0900
-From:   Joonsoo Kim <js1304@gmail.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH 15/18] mm: memcontrol: make swap tracking an integral
- part of memory control
-Message-ID: <20200424003051.GE13929@js1304-desktop>
-References: <20200420221126.341272-1-hannes@cmpxchg.org>
- <20200420221126.341272-16-hannes@cmpxchg.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420221126.341272-16-hannes@cmpxchg.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Thu, 23 Apr 2020 20:37:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53578 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728151AbgDXAhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 20:37:02 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AB9F20724;
+        Fri, 24 Apr 2020 00:37:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587688621;
+        bh=tC2001WkgCBwNlCeRGsPzZqCfwtG295aimilTWbtkPk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=mCcuVeIxrvSePAS4k6nimdfYFtNup9/RbCL8uQOKtsUv1PIhP3zQ420IcUVF4qPOZ
+         hw+2Pte9WnQGQLDmBjLhybNgT1iYhcX0MiyH/qnxsrbvvvCaR3OyF9Gjs4DTYb0NOZ
+         9LMi8hZsa+qoYSJYWwj5+mK1ys6TNdGkeYA8GXFQ=
+Date:   Thu, 23 Apr 2020 17:37:00 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [RFC PATCH 4/4] mm: Add PG_zero support
+Message-Id: <20200423173700.b2c954b3960e4379a4f82e80@linux-foundation.org>
+In-Reply-To: <344a3a78-62ad-48fe-40cf-18993175d1e0@suse.cz>
+References: <20200412090945.GA19582@open-light-1.localdomain>
+        <20200412101223.GK21484@bombadil.infradead.org>
+        <5eb37d79-6420-fcb9-2b4c-6cc6194afcd9@linux.intel.com>
+        <20200413140537.eb674579cf8c71b4e20581ab@linux-foundation.org>
+        <344a3a78-62ad-48fe-40cf-18993175d1e0@suse.cz>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 06:11:23PM -0400, Johannes Weiner wrote:
-> Without swap page tracking, users that are otherwise memory controlled
-> can easily escape their containment and allocate significant amounts
-> of memory that they're not being charged for. That's because swap does
-> readahead, but without the cgroup records of who owned the page at
-> swapout, readahead pages don't get charged until somebody actually
-> faults them into their page table and we can identify an owner task.
-> This can be maliciously exploited with MADV_WILLNEED, which triggers
-> arbitrary readahead allocations without charging the pages.
-> 
-> Make swap swap page tracking an integral part of memcg and remove the
-> Kconfig options. In the first place, it was only made configurable to
-> allow users to save some memory. But the overhead of tracking cgroup
-> ownership per swap page is minimal - 2 byte per page, or 512k per 1G
-> of swap, or 0.04%. Saving that at the expense of broken containment
-> semantics is not something we should present as a coequal option.
-> 
-> The swapaccount=0 boot option will continue to exist, and it will
-> eliminate the page_counter overhead and hide the swap control files,
-> but it won't disable swap slot ownership tracking.
-> 
-> This patch makes sure we always have the cgroup records at swapin
-> time; the next patch will fix the actual bug by charging readahead
-> swap pages at swapin time rather than at fault time.
-> 
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+On Wed, 22 Apr 2020 16:09:00 +0200 Vlastimil Babka <vbabka@suse.cz> wrote:
 
-Reviewed-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> On 4/13/20 11:05 PM, Andrew Morton wrote:
+> > On Mon, 13 Apr 2020 08:11:59 -0700 Alexander Duyck <alexander.h.duyck@linux.intel.com> wrote:
+> > 
+> >> In addition, unlike madvising the page away there is a pretty 
+> >> significant performance penalty for having to clear the page a second 
+> >> time when the page is split or merged.
+> > 
+> > I wonder if there might be an issue with increased memory traffic (and
+> > increased energy consumption, etc).  If a page is zeroed immediately
+> > before getting data written into it (eg, plain old file write(),
+> > anonymous pagefault) then we can expect that those 4096 zeroes will be
+> > in CPU cache and mostly not written back.  But if that page was zeroed
+> > a "long" time ago, the caches will probably have been written back. 
+> > Net result: we go from 4k of memory traffic for a 4k page up to 8k of
+> > memory traffic?
+> 
+> Heh, I was quite sure that this is not the first time background zeroing is
+> proposed, so I went to google for it... and found that one BSD kernel actually
+> removed this functionality in 2016 [1] and this was one of the reasons.
+> 
+> [1]
+> https://gitweb.dragonflybsd.org/dragonfly.git/commitdiff/afd2da4dc9056ea79cdf15e8a9386a3d3998f33e
+
+Interesting.
+
+However this:
+
+  - Pre-zeroing a page leads to a cold-cache case on-use, forcing the fault
+    source (e.g. a userland program) to actually get the data from main
+    memory in its likely immediate use of the faulted page, reducing
+    performance.
+
+implies that BSD was zeroing with non-temporal stores which bypass the
+CPU cache.  And which presumably invalidate any part of the target
+memory which was already in cache.  We wouldn't do it that way so
+perhaps the results would differ.
+
 
