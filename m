@@ -2,173 +2,168 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7707DC54FCB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 14:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6475FC54FD0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 14:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60BDD2071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 14:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 468DA2075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 14:46:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727920AbgDXOqD (ORCPT
+        id S1727947AbgDXOq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 10:46:03 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58570 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726900AbgDXOqA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 10:46:00 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03OEXs8s090025;
-        Fri, 24 Apr 2020 10:45:51 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30jtk3xcwf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Apr 2020 10:45:51 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03OEjc79018177;
-        Fri, 24 Apr 2020 14:45:49 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma02fra.de.ibm.com with ESMTP id 30fs65h4yc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Apr 2020 14:45:49 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03OEjl9u58589366
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Apr 2020 14:45:47 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 012A6A4051;
-        Fri, 24 Apr 2020 14:45:47 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A7903A4040;
-        Fri, 24 Apr 2020 14:45:45 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.204.171])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 24 Apr 2020 14:45:45 +0000 (GMT)
-Message-ID: <1587739544.5190.14.camel@linux.ibm.com>
-Subject: Re: [PATCH 3/5] ima: Fix ima digest hash table key calculation
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>
-Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Date:   Fri, 24 Apr 2020 10:45:44 -0400
-In-Reply-To: <59a280b928db4c478f660d14c33cdd87@huawei.com>
-References: <20200325161116.7082-1-roberto.sassu@huawei.com>
-         <20200325161116.7082-3-roberto.sassu@huawei.com>
-         <1587588987.5165.20.camel@linux.ibm.com>
-         <11984a05a5624f64aed1ec6b0d0b75ff@huawei.com>
-         <1587660781.5610.15.camel@linux.ibm.com>
-         <59a280b928db4c478f660d14c33cdd87@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-24_07:2020-04-24,2020-04-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
- spamscore=0 mlxlogscore=999 bulkscore=0 clxscore=1011 lowpriorityscore=0
- priorityscore=1501 suspectscore=0 impostorscore=0 malwarescore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004240117
+        Fri, 24 Apr 2020 10:46:26 -0400
+Received: from mga05.intel.com ([192.55.52.43]:50190 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726872AbgDXOq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 10:46:26 -0400
+IronPort-SDR: mJJ2rrqmJflWUMSKnZursi+zbiU5GL+9B2Oan3LUfc+98ckEUXmphJoNKsS/5XMpqkXzd897kF
+ om0D3sJNwDqw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2020 07:46:25 -0700
+IronPort-SDR: dc/ovCJOroXtCeCVuyJiWfqaWNBHsarWs+X7LIcYDJwXCIGcyQcDvhc9il1r3ZaHPZkaeulybn
+ TStm3iJ3kRJw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,311,1583222400"; 
+   d="scan'208";a="457925573"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga006.fm.intel.com with ESMTP; 24 Apr 2020 07:46:25 -0700
+Date:   Fri, 24 Apr 2020 07:46:25 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Li RongQing <lirongqing@baidu.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, x86@kernel.org, hpa@zytor.com, bp@alien8.de,
+        mingo@redhat.com, tglx@linutronix.de, joro@8bytes.org,
+        jmattson@google.com, wanpengli@tencent.com, vkuznets@redhat.com,
+        pbonzini@redhat.com
+Subject: Re: [PATCH] [RFC] kvm: x86: emulate APERF/MPERF registers
+Message-ID: <20200424144625.GB30013@linux.intel.com>
+References: <1587704935-30960-1-git-send-email-lirongqing@baidu.com>
+ <20200424100143.GZ20730@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200424100143.GZ20730@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-04-24 at 12:18 +0000, Roberto Sassu wrote:
+On Fri, Apr 24, 2020 at 12:01:43PM +0200, Peter Zijlstra wrote:
+> On Fri, Apr 24, 2020 at 01:08:55PM +0800, Li RongQing wrote:
+> > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> > index 901cd1fdecd9..00e4993cb338 100644
+> > --- a/arch/x86/kvm/cpuid.c
+> > +++ b/arch/x86/kvm/cpuid.c
+> > @@ -558,7 +558,10 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+> >  	case 6: /* Thermal management */
+> >  		entry->eax = 0x4; /* allow ARAT */
+> >  		entry->ebx = 0;
+> > -		entry->ecx = 0;
+> > +		if (boot_cpu_has(X86_FEATURE_APERFMPERF))
+> > +			entry->ecx = 0x1;
+> > +		else
+> > +			entry->ecx = 0x0;
+> >  		entry->edx = 0;
+> >  		break;
+> >  	/* function 7 has additional index. */
+> 
+> AFAICT this is generic x86 code, that is, this will tell an AMD SVM
+> guest it has APERFMPERF on.
+> 
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index 91749f1254e8..f20216fc0b57 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -1064,6 +1064,11 @@ static inline void pt_save_msr(struct pt_ctx *ctx, u32 addr_range)
+> >  
+> >  static void pt_guest_enter(struct vcpu_vmx *vmx)
+> >  {
+> > +	struct kvm_vcpu *vcpu = &vmx->vcpu;
+> > +
+> > +	rdmsrl(MSR_IA32_MPERF, vcpu->arch.host_mperf);
+> > +	rdmsrl(MSR_IA32_APERF, vcpu->arch.host_aperf);
 
-> > On Thu, 2020-04-23 at 10:21 +0000, Roberto Sassu wrote:
-> > > > Hi Roberto, Krsysztof,
-> > > >
-> > > > On Wed, 2020-03-25 at 17:11 +0100, Roberto Sassu wrote:
-> > > > > From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
-> > > > >
-> > > > > Function hash_long() accepts unsigned long, while currently only one
-> > byte
-> > > > > is passed from ima_hash_key(), which calculates a key for ima_htable.
-> > > > Use
-> > > > > more bytes to avoid frequent collisions.
-> > > > >
-> > > > > Length of the buffer is not explicitly passed as a function parameter,
-> > > > > because this function expects a digest whose length is greater than
-> > the
-> > > > > size of unsigned long.
-> > > >
-> > > > Somehow I missed the original report of this problem https://lore.kern
-> > > > el.org/patchwork/patch/674684/.  This patch is definitely better, but
-> > > > how many unique keys are actually being used?  Is it anywhere near
-> > > > IMA_MEASURE_HTABLE_SIZE(512)?
-> > >
-> > > I did a small test (with 1043 measurements):
-> > >
-> > > slots: 250, max depth: 9 (without the patch)
-> > > slots: 448, max depth: 7 (with the patch)
-> > 
-> > 448 out of 512 slots are used.
-> > 
-> > >
-> > > Then, I increased the number of bits to 10:
-> > >
-> > > slots: 251, max depth: 9 (without the patch)
-> > > slots: 660, max depth: 4 (with the patch)
-> > 
-> > 660 out of 1024 slots are used.
-> > 
-> > I wonder if there is any benefit to hashing a digest, instead of just
-> > using the first bits.
-> 
-> Before I calculated max depth until there is a match, not the full depth.
-> 
-> #1
-> return hash_long(*((unsigned long *)digest), IMA_HASH_BITS);
-> #define IMA_HASH_BITS 9
-> 
-> Runtime measurements: 1488
-> Violations: 0
-> Slots (used/available): 484/512
-> Max depth hash table: 10
-> 
-> #2
-> return *(unsigned long *)digest % IMA_MEASURE_HTABLE_SIZE;
-> #define IMA_HASH_BITS 9
-> 
-> Runtime measurements: 1491
-> Violations: 2
-> Slots (used/available): 489/512
-> Max depth hash table: 10
-> 
-> #3
-> return hash_long(*((unsigned long *)digest), IMA_HASH_BITS);
-> #define IMA_HASH_BITS 10
-> 
-> Runtime measurements: 1489
-> Violations: 0
-> Slots (used/available): 780/1024
-> Max depth hash table: 6
-> 
-> #4
-> return *(unsigned long *)digest % IMA_MEASURE_HTABLE_SIZE;
-> #define IMA_HASH_BITS 10
-> 
-> Runtime measurements: 1489
-> Violations: 0
-> Slots (used/available): 793/1024
-> Max depth hash table: 6
+Why are these buried in Processor Trace code?  Is APERFMERF in any way
+dependent on PT?
 
-At least for this measurement list sample, there doesn't seem to be
-any benefit to hashing the digest.  In terms of increasing the number
-of slots, the additional memory is minimal and shouldn't negatively
-affect small embedded devices.  Please make sure checkpatch doesn't
-flag it.
+> > +
+> >  	if (vmx_pt_mode_is_system())
+> >  		return;
+> >  
+> > @@ -1081,6 +1086,15 @@ static void pt_guest_enter(struct vcpu_vmx *vmx)
+> >  
+> >  static void pt_guest_exit(struct vcpu_vmx *vmx)
+> >  {
+> > +	struct kvm_vcpu *vcpu = &vmx->vcpu;
+> > +	u64 perf;
+> > +
+> > +	rdmsrl(MSR_IA32_MPERF, perf);
+> > +	vcpu->arch.v_mperf += perf - vcpu->arch.host_mperf;
+> > +
+> > +	rdmsrl(MSR_IA32_APERF, perf);
+> > +	vcpu->arch.v_aperf += perf - vcpu->arch.host_aperf;
 
-thanks,
+This requires four RDMSRs per VMX transition.  Doing that unconditionally
+will drastically impact performance.  Not to mention that reading the MSRs
+without checking for host support will generate #GPs and WARNs on hardware
+without APERFMPERF.
 
-Mimi
+Assuming we're going forward with this, at an absolute minimum the RDMSRs
+need to be wrapped with checks on host _and_ guest support for the emulated
+behavior.  Given the significant overhead, this might even be something
+that should require an extra opt-in from userspace to enable.
+
+> > +
+> >  	if (vmx_pt_mode_is_system())
+> >  		return;
+> >  
+> > @@ -1914,6 +1928,12 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+> >  		    !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
+> >  			return 1;
+> >  		goto find_shared_msr;
+> > +	case MSR_IA32_MPERF:
+> > +		msr_info->data = vcpu->arch.v_mperf;
+> > +		break;
+> > +	case MSR_IA32_APERF:
+> > +		msr_info->data = vcpu->arch.v_aperf;
+> > +		break;
+> >  	default:
+> >  	find_shared_msr:
+> >  		msr = find_msr_entry(vmx, msr_info->index);
+> 
+> But then here you only emulate it for VMX, which then results in SVM
+> guests going wobbly.
+
+Ya.
+
+> Also, on Intel, the moment you advertise APERFMPERF, we'll try and read
+> MSR_PLATFORM_INFO / MSR_TURBO_RATIO_LIMIT*, I don't suppose you're
+> passing those through as well?
+
+AFAICT, the proposed patch isn't fully advertising APERFMPERF, it's
+advertising Turbo Boost / Dynamic Acceleration to the guest when APERFMPERF
+can be used by the host to emulate IDA.  The transliteration of the
+above code to be VMX-only is:
+
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 766303b31949..7e459b66b06e 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7191,6 +7191,9 @@ static __init void vmx_set_cpu_caps(void)
+        if (nested)
+                kvm_cpu_cap_set(X86_FEATURE_VMX);
+
++       if (boot_cpu_has(X86_FEATURE_APERFMPERF))
++               kvm_cpu_cap_set(X86_FEATURE_IDA);
++
+        /* CPUID 0x7 */
+        if (kvm_mpx_supported())
+                kvm_cpu_cap_check_and_set(X86_FEATURE_MPX);
+
+I have no clue as to whether that's sane/correct.
