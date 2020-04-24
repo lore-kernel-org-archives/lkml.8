@@ -2,97 +2,101 @@ Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 620A4C55186
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 457BAC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DCD820724
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:24:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A8E920724
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 08:27:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Llm0euZ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgDXIYl (ORCPT
+        id S1726665AbgDXI1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 04:24:41 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:56783 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726028AbgDXIYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 04:24:41 -0400
-Received: from [192.168.0.4] (ip5f5af075.dynamic.kabel-deutschland.de [95.90.240.117])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id C355F2002EE1A;
-        Fri, 24 Apr 2020 10:24:37 +0200 (CEST)
-Subject: Re: some questions about uploading a Linux kernel driver FusionRAID
-To:     Xiaosong Ma <xma@qf.org.qa>, song@kernel.org,
-        linux-raid@vger.kernel.org
-Cc:     ty-jiang18@mails.tsinghua.edu.cn,
-        Guangyan Zhang <gyzh@tsinghua.edu.cn>,
-        wei-jy19@mails.tsinghua.edu.cn, LKML <linux-kernel@vger.kernel.org>
-References: <6a7c0aba219642de8b3f1cc680d53d85@AM0P193MB0754.EURP193.PROD.OUTLOOK.COM>
- <CAKm37QWKVcPkF0fXKk2499CsYXfU3aMuMWgwa8Nk9HFzVxG7CA@mail.gmail.com>
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Message-ID: <eb742f1b-fbc2-a47f-dd1b-eec20463fa21@molgen.mpg.de>
-Date:   Fri, 24 Apr 2020 10:24:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 24 Apr 2020 04:27:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42418 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726324AbgDXI1h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 04:27:37 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE8A0C09B046
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 01:27:37 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id b62so9369054qkf.6
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 01:27:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=SsQ+D2rI1OnPTwHjFUheQipBCCDl58vu5wq2m4lDT2k=;
+        b=Llm0euZ0Odzy+9/UCDfssAY4EUmGFNo2iyGP7Tvhxb9yvATgfncYVYHLxXK8xV4z6f
+         IczPS0zgkcs67iw3o+ClCyLQg2z+r3gU9X+9V6pJEnkro+ITPaR6K6nqlAd09Iw3nRlY
+         THAVE5P4FFhrIyrXwW+NnlTxDMRnQSimXPkixlcIjnm9+PT81T7ACgqvoiIBwlhcYGYw
+         T0rQQ+obUaDaDb5WKS7ArKNVCUZiclWLuVElfmICvDdifJJ5MHiSCUNgKVCZgnYJ4Uug
+         DME7AKMsiKsCdV5mTqu4K6boiQHmFoGr+aOyteuRnSV0Cl43KNgIhGidzlywuPnP/ixY
+         kEIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=SsQ+D2rI1OnPTwHjFUheQipBCCDl58vu5wq2m4lDT2k=;
+        b=VsnwZ4o0AUSb9RHbXiaKc9rdOPhx92lQlcrph4rZwM5IiP7nAUXkbia0FEhlR5yr9K
+         80V0F0GA+sAHa6JX7yXfD0v8JniM0qKC7kPxbRj6HltI6jAd8d7vhv6B3gxrUXc4yi0H
+         JjmnliLMZBWwXUinp4G8Iq2ashpLN5Ggt2ARybGdqnIdNMoN+rQtVuOxcI9rDziiWshl
+         0TUn5xGyo07WB77YFsh8tLcppljYOA6ye9yZg1EdtGA4re7/GkrkDd9vMztKJjfihToz
+         YfQObC5baXt/hctBwyXAxVf2G422i1LITVn7jvJTcs3Z7io/cue4psmeZYJbGCszq3ml
+         uZ3g==
+X-Gm-Message-State: AGi0PuYE3f+ZB0NMcc5AD1wfwcBuLwEWSXVhpIF/LvFFQiAXFvbXH4kJ
+        q4H8KhN5VQssrIKr9NhOcgshR7PBZ71FgtAK71MB2Q==
+X-Google-Smtp-Source: APiQypJYn4PIi9liTr/E5NwZJztu5rgiBU/MpVcLd2iyDNpYpEC7B7NprZz1yYl0wEXmVUEDLwL+wWuuOspoH4eQkEc=
+X-Received: by 2002:a05:620a:12b6:: with SMTP id x22mr1017966qki.8.1587716856576;
+ Fri, 24 Apr 2020 01:27:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAKm37QWKVcPkF0fXKk2499CsYXfU3aMuMWgwa8Nk9HFzVxG7CA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 24 Apr 2020 10:27:25 +0200
+Message-ID: <CACT4Y+YTi4JCFRqOB9rgA22S+6xxTo87X41hj6Tdfro8K3ef7g@mail.gmail.com>
+Subject: selinux_netlink_send changes program behavior
+To:     Paul Moore <paul@paul-moore.com>, stephen.smalley.work@gmail.com,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        syzkaller <syzkaller@googlegroups.com>,
+        Willem de Bruijn <willemb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Xiaosong, dear Tsinghua,
+Hi SELinux maintainers,
 
+We've hit a case where a developer wasn't able to reproduce a kernel
+bug, it turned out to be a difference in behavior between SELinux and
+non-SELinux kernels.
+Condensed version: a program does sendmmsg on netlink socket with 2
+mmsghdr's, first is completely empty/zeros, second contains some
+actual payload. Without SELinux the first mmsghdr is treated as no-op
+and the kernel processes the second one (triggers bug). However the
+SELinux hook does:
 
-Am 22.04.20 um 14:26 schrieb Xiaosong Ma:
+static int selinux_netlink_send(struct sock *sk, struct sk_buff *skb)
+{
+    if (skb->len < NLMSG_HDRLEN) {
+        err = -EINVAL;
+        goto out;
+    }
 
-> This is Xiaosong Ma from Qatar Computing Research Institute. I am
-> writing to follow up with the questions posed by a co-author from
-> Tsinghua U, regarding upstreaming our alternative md implementation
-> that is designed to significantly reduce SSD RAID latency (both median
-> and tail) for large SSD pools (such as 20-disk or more).
+and fails processing on the first empty mmsghdr (does not happen
+without SELinux).
 
-Sorry for the late reply, and thank you for wanting to upstream the driver.
+Is this difference in behavior intentional/acceptable/should be fixed?
 
-> We read the Linux kernel upstreaming instructions, and believe that
-> our implementation has excellent separability from the current code
-> base (as a plug-and-play module with identical interfaces as md).
+Thanks
 
-Is there a chance to integrate it into the current driver, and then 
-choose it, when creating the RAID?
-
-> Meanwhile, we wonder whether there are standard test cases or
-> preferred applications that we should test our system with, before
-> doing code cleaning up. Your guidance is much appreciated.
-
-[…]
-> I am Tianyang JIANG, a PhD student from Tsinghua U. We finish a study
-> which focuses on achieving consistent low latency for SSD arrays,
-> especially timing tail latency in RAID level. We implement a Linux
-> kernel driver called FusionRAID and we are interested in uploading
-> codes to Linux upstream.
-> I notice that I should separate my changes and style-check my codes
-> before submitting. Are there any other issues I need to be aware of?
-> Thank you for your time.
-
-Is your code in some public git branch to be looked at already?
-
-Otherwise, I believe just posting the patch train with `git send-email` 
-and a cover letter, might be the best first step, so the developers can 
-comment early before you put too much time into refactoring.
-
-Some easy to reproduce test scripts to verify the performance benefits 
-would indeed be nice, but I do not know, if that can be integrated into 
-some Linux kernel test infrastructure already.
-
-
-Kind regards,
-
-Paul
+FTR, the C program is:
+https://gist.githubusercontent.com/dvyukov/dda1c547ca9121817159d29afa72aea2/raw/41b021d722947df4d8c48e2fc783591b44671ceb/gistfile1.txt
+kernel config:
+https://gist.githubusercontent.com/dvyukov/08bf2c2fd873a84a2c4c771740716183/raw/78fb3b1063b7ae37625468f32868869edbd1bd19/gistfile1.txt
+on upstream commit 50cc09c1 it triggers a KASAN bug without SELinux,
+but does not with SELinux.
