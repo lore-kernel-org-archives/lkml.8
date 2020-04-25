@@ -2,104 +2,87 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 784EAC54FCB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 18:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4830C54FCB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 18:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 548E420714
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 18:15:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587838551;
-	bh=cVK0toJnn9vOB9E2SmO9CBJWGgOYMugNbByNAh8ilkI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PoskVn/bLXNw23vYYfiYYAaIks8LGyRs15k47Rnm6rfnS/CYucCoBFeGefVw68Q0j
-	 JDU3zPNG3h5wtQpZwLhnGJWmU1iRkyWn6TVVmGr84YCEfcQ/685tr3QDCkELffUaPr
-	 qBKPgGxfwBbjN+GhK9sBlEteoEjTkBSg+QDXAwp4=
+	by mail.kernel.org (Postfix) with ESMTP id B927720704
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 18:18:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbgDYSPu (ORCPT
+        id S1726303AbgDYSSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 14:15:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50438 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726145AbgDYSPu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 14:15:50 -0400
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49AD421744
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 18:15:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587838549;
-        bh=cVK0toJnn9vOB9E2SmO9CBJWGgOYMugNbByNAh8ilkI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Td1w4w4h9ChWYz5sxGi7UkXFmK/KIcZI+NzSE/qXy5EHXewGWv3PHpGP8/taXuTC8
-         uWk+vEI7eTXTaXz696KMMjIcufWpDhgIKKqdFCb7AYkGEgWEYvLqqKw19we/BmxCNY
-         FwvAGN5IfcSyhd4VsaVVYwDtAW54CWFlJnBsZaMo=
-Received: by mail-wr1-f54.google.com with SMTP id t14so15496767wrw.12
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 11:15:49 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaRXSzcKD3PaWwfbu+qj94jwaH93yM6LTVhX3urwwYhcTYpIl6h
-        35z4NlELhAT7Hu47hBNUGz3esnZ9IlE7CI20Nj6Viw==
-X-Google-Smtp-Source: APiQypJ7rU7AYr+libqeVqePFVrceb06kci8UbSVnmOb7FS/p9cPbc3OPMNaylAH0ECs1JdRARhF0f+awt47YIcfzuo=
-X-Received: by 2002:adf:f648:: with SMTP id x8mr17727377wrp.257.1587838547579;
- Sat, 25 Apr 2020 11:15:47 -0700 (PDT)
+        Sat, 25 Apr 2020 14:18:40 -0400
+Received: from smtprelay0182.hostedemail.com ([216.40.44.182]:60430 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726145AbgDYSSj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 14:18:39 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id B46191802926E;
+        Sat, 25 Apr 2020 18:18:38 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: wine94_684a8c69f9151
+X-Filterd-Recvd-Size: 2277
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf11.hostedemail.com (Postfix) with ESMTPA;
+        Sat, 25 Apr 2020 18:18:36 +0000 (UTC)
+Message-ID: <38aeb1431d8245b0c37b5d3d7ec6d9e2f33c330e.camel@perches.com>
+Subject: Re: [PATCHv3 11/50] c6x: Add show_stack_loglvl()
+From:   Joe Perches <joe@perches.com>
+To:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
+        Mark Salter <msalter@redhat.com>, linux-c6x-dev@linux-c6x.org
+Date:   Sat, 25 Apr 2020 11:18:35 -0700
+In-Reply-To: <20200418201944.482088-12-dima@arista.com>
+References: <20200418201944.482088-1-dima@arista.com>
+         <20200418201944.482088-12-dima@arista.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-References: <20200319091407.1481-56-joro@8bytes.org> <20200424210316.848878-1-mstunes@vmware.com>
- <2c49061d-eb84-032e-8dcb-dd36a891ce90@intel.com> <ead88d04-1756-1190-2b37-b24f86422595@amd.com>
- <4d2ac222-a896-a60e-9b3c-b35aa7e81a97@intel.com> <20200425124909.GO30814@suse.de>
-In-Reply-To: <20200425124909.GO30814@suse.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sat, 25 Apr 2020 11:15:35 -0700
-X-Gmail-Original-Message-ID: <CALCETrWCiMkA37yf972h+fqsz1_dbfye8AbrkJxDPJzC+1PBEw@mail.gmail.com>
-Message-ID: <CALCETrWCiMkA37yf972h+fqsz1_dbfye8AbrkJxDPJzC+1PBEw@mail.gmail.com>
-Subject: Re: [PATCH] Allow RDTSC and RDTSCP from userspace
-To:     Joerg Roedel <jroedel@suse.de>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>,
-        Jiri Slaby <jslaby@suse.cz>, Kees Cook <keescook@chromium.org>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        X86 ML <x86@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 25, 2020 at 5:49 AM Joerg Roedel <jroedel@suse.de> wrote:
->
-> Hi Dave,
->
-> On Fri, Apr 24, 2020 at 03:53:09PM -0700, Dave Hansen wrote:
-> > Ahh, so any instruction that can have an instruction intercept set
-> > potentially needs to be able to tolerate a #VC?  Those instruction
-> > intercepts are under the control of the (untrusted relative to the
-> > guest) hypervisor, right?
-> >
-> > >From the main sev-es series:
-> >
-> > +#ifdef CONFIG_AMD_MEM_ENCRYPT
-> > +idtentry vmm_communication     do_vmm_communication    has_error_code=1
-> > +#endif
->
-> The next version of the patch-set (which I will hopefully have ready
-> next week) will have this changed. The #VC exception handler uses an IST
-> stack and is set to paranoid=1 and shift_ist. The IST stacks for the #VC
-> handler are only allocated when SEV-ES is active.
+On Sat, 2020-04-18 at 21:19 +0100, Dmitry Safonov wrote:
+> Currently, the log-level of show_stack() depends on a platform
+> realization. It creates situations where the headers are printed with
+> lower log level or higher than the stacktrace (depending on
+> a platform or user).
+[]
+> diff --git a/arch/c6x/kernel/traps.c b/arch/c6x/kernel/traps.c
+[]
+> @@ -344,12 +344,13 @@ asmlinkage int process_exception(struct pt_regs *regs)
+>  
+>  static int kstack_depth_to_print = 48;
+>  
+> -static void show_trace(unsigned long *stack, unsigned long *endstack)
+> +static void show_trace(unsigned long *stack, unsigned long *endstack,
+> +		       const char *loglvl)
+>  {
+>  	unsigned long addr;
+>  	int i;
+> 
+> -	pr_debug("Call trace:");
+> +	printk("%sCall trace:", loglvl);
 
-shift_ist is gross.  What's it for?  If it's not needed, I'd rather
-not use it, and I eventually want to get rid of it for #DB as well.
+These are not equivalent transforms as pr_debug
+is compiled to nothing unless DEBUG is defined
+or CONFIG_DYNAMIC_DEBUG is enabled.
 
---Andy
+Perhaps all the conversions should be checked
+for these "not the same" object code changes.
+
