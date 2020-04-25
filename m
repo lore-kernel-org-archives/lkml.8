@@ -2,182 +2,149 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 374BEC54FCB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 15:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E4FC55185
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 15:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E6C62071C
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 15:18:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="b2HK/aFj"
+	by mail.kernel.org (Postfix) with ESMTP id CFAA72071C
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 15:21:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587828067;
+	bh=XT458vq0XN1WLWI28Diyiv9sG8dG5RTg3qgKZyWEnqI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=tloVCiJkUrs/VG86+HN1NizitNKUacetYKpwMVCvOU50jKmkZIutyvIvPlkH7wbYL
+	 rszC7Wy1MYI1u93E0ovWs3J1SSrK91n+FQUnjW+Bwb/t56WAEuOFzOvgMsMVBP0uGY
+	 IzxNDuA/9I7wQCLFwKXMq/4kWnOxJTn6DKBg7RDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726200AbgDYPSt (ORCPT
+        id S1726151AbgDYPVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 11:18:49 -0400
-Received: from mout.gmx.net ([212.227.17.21]:53825 "EHLO mout.gmx.net"
+        Sat, 25 Apr 2020 11:21:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726143AbgDYPSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 11:18:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1587827919;
-        bh=V4mn8XWOidnV35lpF6k4PLGi3eJjtkJ7bFNpYDHAFrM=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=b2HK/aFjc/NgxS6heebeuWwbwZIfNCCAoaM5rua60nDkJ4gtc3mBKKWJwoGyxA7NM
-         rIMUfhxM+YuGff2CoDmpIo4w3IBTryflI8UntDPjLSWERAjrlAiYBKuaukQC/unqzH
-         nfcPEF69w4NTBd99/9IhmRIEEV4ArQNcNuoH/qMU=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
- (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1MysRu-1jFlbp2aos-00w0Sg; Sat, 25 Apr 2020 17:18:39 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Oscar Carter <oscar.carter@gmx.com>,
-        Malcolm Priestley <tvboxspy@gmail.com>,
-        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Joe Perches <joe@perches.com>
-Subject: [PATCH v2 3/3] staging: vt6656: Remove duplicate code in vnt_rf_table_download
-Date:   Sat, 25 Apr 2020 17:17:47 +0200
-Message-Id: <20200425151747.8199-4-oscar.carter@gmx.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200425151747.8199-1-oscar.carter@gmx.com>
-References: <20200425151747.8199-1-oscar.carter@gmx.com>
+        id S1726116AbgDYPVG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 11:21:06 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E65EF2071C;
+        Sat, 25 Apr 2020 15:21:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587828066;
+        bh=XT458vq0XN1WLWI28Diyiv9sG8dG5RTg3qgKZyWEnqI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=w2Z9xofFm6mP3p6Bw0TBrKkoMEtxca6iBgpF3jQXay+xV8dAyXts2Urhhmz/slMR/
+         yMGhTyTJGLtDP5GC+hnN5LdkDx7oSonXPhx3zysAkHfEE6q98yHgwinUTuNJ1RiWsv
+         cHFgEeh4gup0YcLboBlXX0hcg+YkFEx9Vg8SXxuU=
+Date:   Sat, 25 Apr 2020 16:21:01 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     Gwendal Grignou <gwendal@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH v2] drivers: counter: Add Cros EC Sync counter
+Message-ID: <20200425162101.21f7960e@archlinux>
+In-Reply-To: <20200420190810.GA16124@icarus>
+References: <20200413195514.192868-1-gwendal@chromium.org>
+        <20200414204814.GH7347@icarus>
+        <CAPUE2utas86PQdQem7bPsNL+xnHreepG8wbvbt2Vk5rtjoyn-A@mail.gmail.com>
+        <20200420190810.GA16124@icarus>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:O0CbRDf92e151EFq1Tr62g7Abu264JDJMB0TQsvFCf5to1J4tlu
- uGIVzKgrpivucPTVkS+I8nfkoGKr11imtK/QLaOPiAwHgbHVhFLLnn0eRvVZ2TTV5TZa+Nv
- gEPHNRtQNLnQqISLx141zUzA8Nl3+52wFDezmPueb6NiG7WAmCTSJoZQ8rOvupN0L3esxfa
- M5UVFcCM/0BzuP2kYL2SQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:P7XaABjktOo=:mYSAPT8yUikJd6o5uzjVjS
- gbDmQcWxXGAC3xuAmK3hAeKzD5YKhZJhVjMMF+yg2jcYjB8JDULAVnaKRBcJMh9ec4q6h4PF6
- CEySSeGjEhmGwmtuEMPmOLxBKvyMJL2djBRlky3xfOh1LEttp9n53cQQNo6MuhcXOnedf9/qH
- +BEJBfXN216SyRi64avQNC/DJNdNQr6j+AcFXrXfwXDvSCithxujcgasrnQ1JANNN1bAhBplD
- jax4KgkMOe06tajaEYYHJk4xoZwFihftT0rDkVFWruUkVZjxvswJ8lZG1CK8sksiPMkw917EW
- sKs930UIixEYuDP4Qi4MkEt3XURVG6HxiwTsW63KN5umAS1RQZzRDt0liXp5nUh1TxR52mRj8
- yO7QDclwdHx09pe47aBW8xQTyOqRaConXy73wmeVJJt7sKvs9d0DK/btMyed1VKsPoP9P9K3R
- J2HJuPUPi7v48hk/GbaPLo4iy+4QdURiKLPo2s8TfoS6FxJ8U4qNDuQ1LB2NLDdtd1F6xWfJ/
- 7gsqYOTmXJeG0upG49MLPpBUDcwCmYKlK5bOP6R93w5H4aMndwaLEVYh1CLDEJrTbKR08DV3S
- b1dU3f3fPIKssujyPnqo1ojgrWnFnXgSYd6U+5SjqJ9YU8Peum57VjYmZ97CNwQwGMP1hkQpi
- sEeYg/0K6k5Z56E4dh+fg50BZHeJVGDQyPZ77X2UxQL/kFQ4Q6wA9AZN+uWiSoPE85sHQMBGe
- YnDUMyDTnmqLopIob1+fNCwOr1P6xUwW52WiWmPx70oLhiddhPaMlIj52gfdZ06m1Nkqw9b+Z
- 9fwcWciwZnHR3EMLbtxiZ7p/RSxn05xsjtMvS2A8NmULgQIJGtF4KxBKoDERhejZGaaNMdNL4
- D07/Elpj2yPVoILjshnFKh1zXgI9bXB31S+O9P0L93c53q5XsGuoh0IhBSb+qte+ED+S2YhLb
- rBsTV/pfW2RojsptfcWpZBks1H93WVpgTyN7owe6EVtlQlCRT9Vopn/Zpnu3uL2QdNhyYlhYf
- /wi0RniHbiP51oNarAiZe8OSvYqvu6/dc+DUSt0MBYZVaKGUbMUi2RaEz8VuDdT5DJKxC1C55
- 9ZHbLxNoc1aUnEvk7HR+tXyHC+YN7Q3Ql2mU7l1g1RtS1lYGUZPyWqqysk6g5bG4zCH/OfJYq
- 2n1S+yVnMEZRVNgGf9EhBFEMrSLQTAjiLhmkzwN/1KYYVIbHXdeFBE2z2RhiiL5o1v67oLan9
- HtbuntM+1gcnL7P9x
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace three while loops with three calls to the vnt_control_out_blocks
-function. This way avoid repeat a functionality that already exists.
+On Mon, 20 Apr 2020 15:08:10 -0400
+William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
 
-Also remove the variables that now are not used.
+> On Mon, Apr 20, 2020 at 11:54:16AM -0700, Gwendal Grignou wrote:
+> > On Tue, Apr 14, 2020 at 1:48 PM William Breathitt Gray
+> > <vilhelm.gray@gmail.com> wrote:  
+> > >
+> > > On Mon, Apr 13, 2020 at 12:55:14PM -0700, Gwendal Grignou wrote:  
+> > > > When the camera vsync pin is connected to the embedded controller (EC) of
+> > > > a chromebook, the EC reports a sensor with a counter that increases
+> > > > at each GPIO rising edge.
+> > > >
+> > > > The sensor is presented using the counter subsystem.
+> > > > In addition, it is also presented via the IIO subsystem with a timestamp,
+> > > > allowing synchronisation with sensors connected to the same EC, for
+> > > > image stabilisation or augmented reality applications.  
+> > >
+> > > Hi Gwendal,
+> > >
+> > > Sorry for the delay. I have some changes requested below.
+> > >  
+> > > > To enable the counter:
+> > > > via counter ABI:
+> > > > echo "rising edge" > counterX/count0/signal_action
+> > > > via iio ABI
+> > > > echo 1 > iio:deviceY/en
+> > > >
+> > > > To disable the counter:
+> > > > via counter ABI:
+> > > > echo "none" > counterX/count0/signal_action
+> > > > via iio ABI
+> > > > echo 0 > iio:deviceY/en  
+> > >
+> > > Although in theory a user could manually disable the actions for a
+> > > Signal, this is a very roundabout way of actually disabling the Count.
+> > > It's better to expose an "enable" attribute to allow the users to
+> > > perform this functionality; for example:
+> > >
+> > > echo 0 > counterX/count0/enable
+> > > echo 1 > counterX/count0/enable
+> > >  
+> > > >
+> > > > To read the current counter value:
+> > > > via counter ABI:
+> > > > cat counterX/count0/count
+> > > > via iio ABI
+> > > > cat iio:deviceY/in_count_raw  
+> > >
+> > > I know we discussed this in the last review but it's still the same as
+> > > before: IIO_COUNT interface is deprecated so new drivers won't be
+> > > allowed to use it. You'll have to remove the IIO_COUNT code in this
+> > > driver and replace it with Counter subsystem equivalents.  
+> > I understand the need of a clean separation between counter and IIO subsystems.
+> > I will wait for counter to offer a way to gather timestamp'ed counts.
+> > Do you have a plan/proposed ABI you can share?
+> > 
+> > Thanks,
+> > 
+> > Gwendal.  
+> 
+> Hi Gwendal,
+> 
+> I'm working on a reimplementation of the internals of the Counter
+> subsystem: https://gitlab.com/vilhelmgray/iio/-/tree/counter_chardev
+> 
+> I'm hoping to submit it to the mailing list later this week if I don't
+> hit any delays; it'll include support as well for a character device
+> interface for userspace application.
+> 
+> Once those changes are merged into IIO, I'll submit a patch to add
+> timestamp support -- hopefully within a week or two after. Right now I
+> haven't yet chosen any specific format for timestamps, but I will likely
+> match the format IIO subsystem currently has for its timestamp support
+> so that migration is easier for these drivers.
+> 
 
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-=2D--
- drivers/staging/vt6656/rf.c | 65 +++++++------------------------------
- 1 file changed, 12 insertions(+), 53 deletions(-)
+Don't copy our crazy clock choosing stuff. That's legacy rubbish for
+compatibility with a silly choice I made a long time ago.  Pick
+a sensible clock type and stick to it.
 
-diff --git a/drivers/staging/vt6656/rf.c b/drivers/staging/vt6656/rf.c
-index 888b6fcb6e91..420e9869af76 100644
-=2D-- a/drivers/staging/vt6656/rf.c
-+++ b/drivers/staging/vt6656/rf.c
-@@ -769,7 +769,6 @@ int vnt_rf_table_download(struct vnt_private *priv)
- 	int ret;
- 	u16 length1 =3D 0, length2 =3D 0, length3 =3D 0;
- 	u8 *addr1 =3D NULL, *addr2 =3D NULL, *addr3 =3D NULL;
--	u16 length, value;
+Jonathan
 
- 	switch (priv->rf_type) {
- 	case RF_AL2230:
-@@ -822,40 +821,14 @@ int vnt_rf_table_download(struct vnt_private *priv)
- 		return ret;
-
- 	/* Channel Table 0 */
--	value =3D 0;
--	while (length2 > 0) {
--		if (length2 >=3D 64)
--			length =3D 64;
--		else
--			length =3D length2;
--
--		ret =3D vnt_control_out(priv, MESSAGE_TYPE_WRITE, value,
--				      MESSAGE_REQUEST_RF_CH0, length, addr2);
--		if (ret)
--			return ret;
--
--		length2 -=3D length;
--		value +=3D length;
--		addr2 +=3D length;
--	}
--
--	/* Channel table 1 */
--	value =3D 0;
--	while (length3 > 0) {
--		if (length3 >=3D 64)
--			length =3D 64;
--		else
--			length =3D length3;
--
--		ret =3D vnt_control_out(priv, MESSAGE_TYPE_WRITE, value,
--				      MESSAGE_REQUEST_RF_CH1, length, addr3);
--		if (ret)
--			return ret;
-+	ret =3D vnt_control_out_blocks(priv, VNT_REG_BLOCK_SIZE,
-+				     MESSAGE_REQUEST_RF_CH0, length2, addr2);
-+	if (ret)
-+		return ret;
-
--		length3 -=3D length;
--		value +=3D length;
--		addr3 +=3D length;
--	}
-+	/* Channel Table 1 */
-+	ret =3D vnt_control_out_blocks(priv, VNT_REG_BLOCK_SIZE,
-+				     MESSAGE_REQUEST_RF_CH1, length3, addr3);
-
- 	if (priv->rf_type =3D=3D RF_AIROHA7230) {
- 		length1 =3D CB_AL7230_INIT_SEQ * 3;
-@@ -869,25 +842,11 @@ int vnt_rf_table_download(struct vnt_private *priv)
- 		if (ret)
- 			return ret;
-
--		/* Channel Table 0 */
--		value =3D 0;
--		while (length2 > 0) {
--			if (length2 >=3D 64)
--				length =3D 64;
--			else
--				length =3D length2;
--
--			ret =3D vnt_control_out(priv, MESSAGE_TYPE_WRITE, value,
--					      MESSAGE_REQUEST_RF_CH2, length,
--					      addr2);
--			if (ret)
--				return ret;
--
--			length2 -=3D length;
--			value +=3D length;
--			addr2 +=3D length;
--		}
-+		/* Channel Table 2 */
-+		ret =3D vnt_control_out_blocks(priv, VNT_REG_BLOCK_SIZE,
-+					     MESSAGE_REQUEST_RF_CH2, length2,
-+					     addr2);
- 	}
-
--	return 0;
-+	return ret;
- }
-=2D-
-2.20.1
+> William Breathitt Gray
 
