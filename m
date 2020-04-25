@@ -2,127 +2,268 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 045A5C54FCB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 19:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C18C55191
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 19:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D655320714
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 19:19:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E96U6tNO"
+	by mail.kernel.org (Postfix) with ESMTP id 8284D2076C
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 19:21:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587842463;
+	bh=LpNy7YI6DNNIY3vMAFsbOYUnOt+NTGukKecCo9MX6wY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=stJyoWIR2HRbA9xOSjugcj/B+jPJxqBI0X17i+vS5RBo3a25S4cfU2Jn3tQCWTefR
+	 zF87rJLOFbYpBUn+C6Uv3PGxO/xPl0qRh3cZfUjrG4ukFvlrIxIwORo/kaXSs082kV
+	 ltDlAG5/Wl2fGE+bl7n0FyjVkSA7P3mKBpmuGiX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbgDYTTk (ORCPT
+        id S1726398AbgDYTVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 15:19:40 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:21981 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726005AbgDYTTk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 15:19:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587842379;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=KGEYiVi/N5jjAgrixEfeFIG/QsQOzD5jtvrhC/kRyL4=;
-        b=E96U6tNO9DdCKAaE+lOcIojJq38h2BmFa/mXkKbUY35vB34zOkfdqnnShrWHDLr9q37b2N
-        bGiBqJZ6D7E63ja+iCtyVmXPaWnf7/sk3PvpAjoDYEkPGOMcJcsybiraaXBWtDNEkdXWga
-        ULCX+Hs6qv3iFz/7cy3ST3Ywx5hPc+w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-375-TGwRrYgbOkq0dHhlg17iPQ-1; Sat, 25 Apr 2020 15:19:37 -0400
-X-MC-Unique: TGwRrYgbOkq0dHhlg17iPQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Sat, 25 Apr 2020 15:21:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726005AbgDYTVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 15:21:02 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E1C28800D24;
-        Sat, 25 Apr 2020 19:19:35 +0000 (UTC)
-Received: from treble.redhat.com (ovpn-114-29.rdu2.redhat.com [10.10.114.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5C2DE60300;
-        Sat, 25 Apr 2020 19:19:34 +0000 (UTC)
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Julien Thierry <jthierry@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] objtool: Fix infinite loop in for_offset_range()
-Date:   Sat, 25 Apr 2020 14:19:01 -0500
-Message-Id: <02b719674b031800b61e33c30b2e823183627c19.1587842122.git.jpoimboe@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B54C20714;
+        Sat, 25 Apr 2020 19:21:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587842461;
+        bh=LpNy7YI6DNNIY3vMAFsbOYUnOt+NTGukKecCo9MX6wY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=TYeBQAtAgCOkuCpF/GVdqVQN2LlGErTojb0uzbYAhaFyzqmHPpe2OpWKQEKYfOIab
+         pui1Z5KzJE4QfoxOWxgePrdnxveCpotGUJPazzrC4IvuMWXqIHIXyHD6XdcKxW9kUw
+         UjCK9N6ePlexbylfFsg5kDnn9hf1GmWpqc67Aqs4=
+Date:   Sat, 25 Apr 2020 20:20:57 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Cc:     Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>
+Subject: Re: [PATCH 4/6] Documentation: ABI: testing: scd30: document iio
+ attributes
+Message-ID: <20200425202057.5c8ad612@archlinux>
+In-Reply-To: <20200423155317.GB43448@arch>
+References: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
+        <20200422141135.86419-5-tomasz.duszynski@octakon.com>
+        <alpine.DEB.2.21.2004221818490.26800@vps.pmeerw.net>
+        <20200423155317.GB43448@arch>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Randy reported that objtool got stuck in an infinite loop when
-processing drivers/i2c/busses/i2c-parport.o.  It was caused by the
-following code:
+On Thu, 23 Apr 2020 17:53:17 +0200
+Tomasz Duszynski <tomasz.duszynski@octakon.com> wrote:
 
-  00000000000001fd <line_set>:
-   1fd:	48 b8 00 00 00 00 00 	movabs $0x0,%rax
-   204:	00 00 00
-  			1ff: R_X86_64_64	.rodata-0x8
-   207:	41 55                	push   %r13
-   209:	41 89 f5             	mov    %esi,%r13d
-   20c:	41 54                	push   %r12
-   20e:	49 89 fc             	mov    %rdi,%r12
-   211:	55                   	push   %rbp
-   212:	48 89 d5             	mov    %rdx,%rbp
-   215:	53                   	push   %rbx
-   216:	0f b6 5a 01          	movzbl 0x1(%rdx),%ebx
-   21a:	48 8d 34 dd 00 00 00 	lea    0x0(,%rbx,8),%rsi
-   221:	00
-  			21e: R_X86_64_32S	.rodata
-   222:	48 89 f1             	mov    %rsi,%rcx
-   225:	48 29 c1             	sub    %rax,%rcx
+> On Wed, Apr 22, 2020 at 06:40:17PM +0200, Peter Meerwald-Stadler wrote:
+> > On Wed, 22 Apr 2020, Tomasz Duszynski wrote:
+> >  
+> > > Add documentation for sensor specific iio attributes.  
+> >
+> > minor comments below  
+> 
+> Thanks.
+> 
+> >  
+> > > Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+> > > ---
+> > >  Documentation/ABI/testing/sysfs-bus-iio-scd30 | 97 +++++++++++++++++++
+> > >  1 file changed, 97 insertions(+)
+> > >  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-scd30
+> > >
+> > > diff --git a/Documentation/ABI/testing/sysfs-bus-iio-scd30 b/Documentation/ABI/testing/sysfs-bus-iio-scd30
+> > > new file mode 100644
+> > > index 000000000000..0431a718447d
+> > > --- /dev/null
+> > > +++ b/Documentation/ABI/testing/sysfs-bus-iio-scd30
+> > > @@ -0,0 +1,97 @@
+> > > +What:		/sys/bus/iio/devices/iio:deviceX/pressure_comp
+> > > +Date:		April 2020
+> > > +KernelVersion:	5.8
+> > > +Contact:	linux-iio@vger.kernel.org
+> > > +Description:
+> > > +		Given that sensor's CO2 measurement chamber has fixed volume
+> > > +		pressure changes will affect concentration readings. Writing
+> > > +		current ambient pressure here will allow senor to make necessary  
+> >
+> > sensor
+> >  
+> 
+> Okay.
+> 
+> > > +		adjustments. Upon reading previously set value is returned.
+> > > +		Units are millibars.  
+> >
+> > unit for pressure in IIO is kilopascal (e.g.
+> > /sys/bus/iio/devices/iio:deviceX/in_pressure_raw)
+> >  
+> 
+> My thinking here was that since these are sensor specific attributes
+> they don't need to stick to iio conventions and millibars were somewhat
+> more natural to use. But I guess that's just matter of habit.
 
-find_jump_table() saw the .rodata reference and tried to find a jump
-table associated with it (though there wasn't one).  The -0x8 rela
-addend is unusual.  It caused find_jump_table() to send a negative
-table_offset (unsigned 0xfffffffffffffff8) to find_rela_by_dest().
+You absolutely have to stick to standard units.  Userspace programs
+aren't going to come read your docs...
 
-The negative offset should have been harmless, but it actually threw
-for_offset_range() for a loop... literally.  When the mask value got
-incremented past the end value, it also wrapped to zero, causing the
-loop exit condition to remain true forever.
+For other sensors that take a calibration value like this we've reported
+them via an output channel.  For example the atlas-ph sensor has
+an 'output temp' channel used for this purpose.
 
-Prevent this scenario from happening by ensuring the incremented value
-is always >=3D the starting value.
+It's not ideal or totally intuitive but it does let us avoid expanding
+the overall ABI.  The argument was something along the lines of
+1) Imagine your sensor could control the pressure in the measurement space...
+2) An output channel would provide the value to set it to.
+3) Now instead we provide a means of saying 'what it is'
+4) End result is we write a value and the pressure in the chamber is
+   that value :)
 
-Fixes: 74b873e49d92 ("objtool: Optimize find_rela_by_dest_range()")
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
----
- tools/objtool/elf.h | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+As I said not ideal but the best we can do without having to define a lot
+of ABI just to deal with compensation factors.
 
-diff --git a/tools/objtool/elf.h b/tools/objtool/elf.h
-index 5e76ac38cf99..f753148f5dac 100644
---- a/tools/objtool/elf.h
-+++ b/tools/objtool/elf.h
-@@ -89,9 +89,10 @@ struct elf {
- #define OFFSET_STRIDE		(1UL << OFFSET_STRIDE_BITS)
- #define OFFSET_STRIDE_MASK	(~(OFFSET_STRIDE - 1))
-=20
--#define for_offset_range(_offset, _start, _end)		\
--	for (_offset =3D ((_start) & OFFSET_STRIDE_MASK);	\
--	     _offset <=3D ((_end) & OFFSET_STRIDE_MASK);	\
-+#define for_offset_range(_offset, _start, _end)			\
-+	for (_offset =3D ((_start) & OFFSET_STRIDE_MASK);		\
-+	     _offset >=3D ((_start) & OFFSET_STRIDE_MASK) &&	\
-+	     _offset <=3D ((_end) & OFFSET_STRIDE_MASK);		\
- 	     _offset +=3D OFFSET_STRIDE)
-=20
- static inline u32 sec_offset_hash(struct section *sec, unsigned long off=
-set)
---=20
-2.21.1
+This is a rare case where I would document the 'standard' ABI in here
+to make the point that it is actually providing an estimate of the pressure
+not controlling it...
+
+> 
+> So generally I am okay with reworking all attrs to accept values in iio
+> preferred units.
+> 
+> > > +
+> > > +What:		/sys/bus/iio/devices/iio:deviceX/pressure_comp_available
+> > > +Date:		April 2020
+> > > +KernelVersion:	5.8
+> > > +Contact:	linux-iio@vger.kernel.org
+> > > +Description:
+> > > +		The range of available values in millibars represented as the
+> > > +		minimum value, the step and the maximum value, all enclosed in
+> > > +		square brackets.
+> > > +
+> > > +What:		/sys/bus/iio/devices/iio:deviceX/meas_interval
+> > > +Date:		January 2020
+> > > +KernelVersion:	5.8
+> > > +Contact:	linux-iio@vger.kernel.org
+> > > +Description:
+> > > +		Amount of time between subsequent measurements. Writing this
+> > > +		attribute will change measurement interval. Upon reading
+> > > +		current measurement interval is returned. Units are seconds.
+
+Use the existing ABI sampling frequency which is sort of the inverse of this.
+
+> > > +
+> > > +What:		/sys/bus/iio/devices/iio:deviceX/meas_interval_available
+> > > +Date:		April 2020
+> > > +KernelVersion:	5.8
+> > > +Contact:	linux-iio@vger.kernel.org
+> > > +Description:
+> > > +		The range of available values in seconds represented as the
+> > > +		minimum value, the step and the maximum value, all enclosed in
+> > > +		square brackets.
+> > > +
+> > > +What:		/sys/bus/iio/devices/iio:deviceX/asc
+Spends some characters to easy of understanding ;)
+
+auto_calib_proc_enable maybe?  Or can we get away with the 'somewhat standard
+calibration (it's used in at least one other driver IIRC)
+
+> > > +Date:		April 2020
+> > > +KernelVersion:	5.8
+> > > +Contact:	linux-iio@vger.kernel.org
+> > > +Description:
+> > > +		Writing 1 or 0 to this attribute will respectively activate or
+> > > +		deactivate automatic self calibration procedure. Upon reading 1  
+> >
+> > deactivate automatic self calibration (asc) procedure
+> >  
+> 
+> That shouldn't be too difficult to realize what asc actually stands for after
+> reading this short description.
+> 
+> > > +		is returned if asc is ongoing, 0 otherwise.
+> > > +
+> > > +What:		/sys/bus/iio/devices/iio:deviceX/frc
+> > > +Date:		April 2020
+> > > +KernelVersion:	5.8
+> > > +Contact:	linux-iio@vger.kernel.org
+> > > +Description:
+> > > +		Forced recalibration is used to compensate for sensor drifts
+> > > +		when a reference value of CO2 concentration in close proximity
+> > > +		to the sensor is available. Writing attribute will set frc
+> > > +		value. Upon reading current frc is returned. Units are
+> > > +		millibars.
+
+Could we implement this by just writing to the main channel value?
+Bit of a clunky ABI but sort of logically fits in my head given we are basically
+forcing the value we read to be this one?
+
+> > > +
+> > > +What:		/sys/bus/iio/devices/iio:deviceX/frc_available
+> > > +Date:		April 2020
+> > > +KernelVersion:	5.8
+> > > +Contact:	linux-iio@vger.kernel.org
+> > > +Description:
+> > > +		The range of available values in millibars represented as the
+> > > +		minimum value, the step and the maximum value, all enclosed in
+> > > +		square brackets.
+> > > +
+> > > +What:		/sys/bus/iio/devices/iio:deviceX/temp_offset
+> > > +Date:		April 2020
+> > > +KernelVersion:	5.8
+> > > +Contact:	linux-iio@vger.kernel.org
+> > > +Description:
+> > > +		Sensor readings may be affected by ambient temperature.
+> > > +		Writing temperature offset will compensate for unwanted changes.
+> > > +		Note that written offset gets multiplied by a factor of 100
+> > > +		by a sensor internally.
+> > > +
+> > > +		For example, writing 10 here will correspond to 0.1 degree
+> > > +		Celsius.
+
+This sounds like a calibbias to me which is standard ABI.
+
+> > > +
+> > > +What:		/sys/bus/iio/devices/iio:deviceX/temp_offset_available
+> > > +Date:		April 2020
+> > > +KernelVersion:	5.8
+> > > +Contact:	linux-iio@vger.kernel.org
+> > > +Description:
+> > > +		The range of available values in degrees Celsius represented as
+> > > +		the minimum value, the step and the maximum value, all enclosed
+> > > +		in square brackets.
+
+Wrong units for temperature (which is an odd one as we
+lifted them from hwmon before learning the error of our ways and starting to use
+SI units as the base).
+
+
+> > > +
+> > > +What:		/sys/bus/iio/devices/iio:deviceX/reset
+> > > +Date:		April 2020
+> > > +KernelVersion:	5.8
+> > > +Contact:	linux-iio@vger.kernel.org
+> > > +Description:
+> > > +		Software reset mechanism forces sensor into the same state
+> > > +		as after powering up without the need for removing power supply.
+> > > +		Writing any value will reset sensor.
+
+Not seeing an argument here for why you might want to do that other than on
+power up or module probe to get the driver into a known state.
+So currently it's a no to this one - just don't expose it to userspace.
+
+
+> > >  
+> >
+> > --
+> >
+> > Peter Meerwald-Stadler
+> > Mobile: +43 664 24 44 418  
 
