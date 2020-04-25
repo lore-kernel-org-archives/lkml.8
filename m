@@ -2,119 +2,169 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F773C55191
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 16:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE611C54FCB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 16:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 713F520728
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 16:09:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587830958;
-	bh=D7BBrL9B2g9quMzqYC+c4PGNXXBaDGjBMYSEbY32ULE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=yVpBrAW9LQbNUqaOblbzBZCtIvj+c9kcoJ1B5JnVkvyvWadFu9EOVrMrdI6P+wlr+
-	 SKC0qc/uoX5Tv0r8sXoFma9NxFJb0g1uzH5U3+fafMlVNkheZLd5resnmxX9XQypC3
-	 FHTDPa7BFClt0KZGEk/NWmLPQGERhgd+ApNe0MK4=
+	by mail.kernel.org (Postfix) with ESMTP id A6A7220704
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 16:17:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="flkRGpoL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726185AbgDYQJR (ORCPT
+        id S1726148AbgDYQRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 12:09:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36916 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726076AbgDYQJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 12:09:17 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0BA32071E;
-        Sat, 25 Apr 2020 16:09:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587830957;
-        bh=D7BBrL9B2g9quMzqYC+c4PGNXXBaDGjBMYSEbY32ULE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=xeQTsz2HowrC1MlzlTj2hmjl0g1HBpL4QMQd4eQQgwiFaPnQ7oo0eo7dmBauz4T6o
-         WyGw0T6zCQL5UTFRIer4KBtK7MiIvEhSX8Ar0sDZZs8y61zG4OM9UCX1JhpKisa0au
-         X9EPrFUPlxq9/11HGewHL9ipn+z3Qbrosh3ReYCA=
-Date:   Sat, 25 Apr 2020 17:09:12 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Mathieu Othacehe <m.othacehe@gmail.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 4/4] iio: vcnl4000: Add buffer support for
- VCNL4010/20.
-Message-ID: <20200425170912.17c3435a@archlinux>
-In-Reply-To: <87tv1cos2q.fsf@gmail.com>
-References: <20200421075532.19192-1-m.othacehe@gmail.com>
-        <20200421075532.19192-5-m.othacehe@gmail.com>
-        <CAHp75VfXBgQad1oCBe+oqcC_oRa-3q8OBYcAOV8WfCo7n1wXWw@mail.gmail.com>
-        <87tv1cos2q.fsf@gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 25 Apr 2020 12:17:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57438 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726076AbgDYQRR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 12:17:17 -0400
+Received: from mx0b-00190b01.pphosted.com (mx0b-00190b01.pphosted.com [IPv6:2620:100:9005:57f::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D53A6C09B04D
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 09:17:16 -0700 (PDT)
+Received: from pps.filterd (m0122330.ppops.net [127.0.0.1])
+        by mx0b-00190b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03PG83dA012540;
+        Sat, 25 Apr 2020 17:17:10 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=jan2016.eng;
+ bh=yE8gezMKqzZQGT969c6mIeMNFgyLsfU3BI5rtoH1gdg=;
+ b=flkRGpoLVF3+DftY4HJkXeHNf6R5nGNh6teD2pR5RgqAQr49oiCkvuhwxFrthmogUsX+
+ W+bw5V+RnH8vcmwhK53o38F7M+cmwRVelsO/TG/lHJwNHQafmTrbF9L6zt576sty4anC
+ gIPpi+5Det7LFhR2OWpj1NHpeSnw8q+pzSSYf33/bDa8qDtydVe9VQKakL1eiAsdfNca
+ e75/pnxi48Hl4GzuCaMRHpLdI3F72XG5eJ6SEGBr1a/hjFasRzfNHG4fis0mbdJpmvue
+ /sS+RBkeW4/K8rkI3yfCgGXkiNNqEopIJeD5VkRPT1FnWk6zqXDV42mZdz0/nKOFPdCf /A== 
+Received: from prod-mail-ppoint5 (prod-mail-ppoint5.akamai.com [184.51.33.60] (may be forged))
+        by mx0b-00190b01.pphosted.com with ESMTP id 30mcuwhuyr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 25 Apr 2020 17:17:09 +0100
+Received: from pps.filterd (prod-mail-ppoint5.akamai.com [127.0.0.1])
+        by prod-mail-ppoint5.akamai.com (8.16.0.27/8.16.0.27) with SMTP id 03PGH90J030057;
+        Sat, 25 Apr 2020 09:17:09 -0700
+Received: from prod-mail-relay10.akamai.com ([172.27.118.251])
+        by prod-mail-ppoint5.akamai.com with ESMTP id 30mk688p7b-1;
+        Sat, 25 Apr 2020 09:17:09 -0700
+Received: from [0.0.0.0] (prod-ssh-gw01.bos01.corp.akamai.com [172.27.119.138])
+        by prod-mail-relay10.akamai.com (Postfix) with ESMTP id C10DC347F8;
+        Sat, 25 Apr 2020 16:17:08 +0000 (GMT)
+Subject: Re: [PATCH v2] eventpoll: fix missing wakeup for ovflist in
+ ep_poll_callback
+To:     Khazhismel Kumykov <khazhy@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Roman Penyaev <rpenyaev@suse.de>,
+        Alexander Viro <viro@zeniv.linux.org.uk>, Heiher <r@hev.cc>,
+        stable@vger.kernel.org
+References: <20200424025057.118641-1-khazhy@google.com>
+ <20200424190039.192373-1-khazhy@google.com>
+From:   Jason Baron <jbaron@akamai.com>
+Message-ID: <66f26e74-6c7b-28c2-8b3f-faf8ea5229d4@akamai.com>
+Date:   Sat, 25 Apr 2020 12:17:08 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200424190039.192373-1-khazhy@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-25_08:2020-04-24,2020-04-25 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-2002250000 definitions=main-2004250143
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-25_08:2020-04-24,2020-04-25 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 lowpriorityscore=0
+ malwarescore=0 suspectscore=0 adultscore=0 clxscore=1011 mlxlogscore=999
+ spamscore=0 impostorscore=0 priorityscore=1501 phishscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004250141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Apr 2020 10:14:21 +0200
-Mathieu Othacehe <m.othacehe@gmail.com> wrote:
 
-> >> +static int vcnl4010_buffer_predisable(struct iio_dev *indio_dev)
-> >> +{
-> >> +       struct vcnl4000_data *data = iio_priv(indio_dev);
-> >> +       int ret, ret_disable;
-> >> +
-> >> +       ret = i2c_smbus_write_byte_data(data->client, VCNL4010_INT_CTRL, 0);
-> >> +       if (ret < 0)
-> >> +               goto end;
-> >> +
-> >> +       ret = i2c_smbus_write_byte_data(data->client, VCNL4000_COMMAND, 0);
-> >> +
-> >> +end:  
-> >  
-> >> +       ret_disable = iio_triggered_buffer_predisable(indio_dev);
-> >> +       if (ret == 0)
-> >> +               ret = ret_disable;  
-> >
-> > What is this?
-> >
-> > Can't you rather call IIO API first, and then try to handle the rest?  
-> 
-> Well, iio_triggered_buffer_predisable will call free_irq which requires
-> that the interruption source is disabled, hence this strange pattern.
-> 
-> However, this may be some misunderstanding from me, but I noticed
-> something strange here. In a configuration with one CPU and
-> CONFIG_PREEMPT disabled, I have kernel lockups when disabling the
-> buffer.
-> 
-> This is because free_irq calls synchronize_irq that will wait for any
-> IRQ handler to be over. If the kthread handling the interruption is
-> still running, it has no chances to terminate, and synchronize_irq waits
-> forever. So maybe I'm missing something.
 
-That is indeed worrying.  The synchronize_irq is documented as
-sleeping if we have a threaded interrupt.  From a quick look I'd have
-expected the wait in there to result in the interrupt thread being able
-to complete whether or not we had preemption enabled.
+On 4/24/20 3:00 PM, Khazhismel Kumykov wrote:
+> In the event that we add to ovflist, before 339ddb53d373 we would be
+> woken up by ep_scan_ready_list, and did no wakeup in ep_poll_callback.
+> With that wakeup removed, if we add to ovflist here, we may never wake
+> up. Rather than adding back the ep_scan_ready_list wakeup - which was
+> resulting in unnecessary wakeups, trigger a wake-up in ep_poll_callback.
 
-I wonder what I'm missing...
+I'm just curious which 'wakeup' we are talking about here? There is:
+wake_up(&ep->wq) for the 'ep' and then there is the nested one via:
+ep_poll_safewake(ep, epi). It seems to me that its only about the later
+one being missing not both? Is your workload using nested epoll?
 
-Jonathan
+If so, it might make sense to just do the later, since the point of
+the original patch was to minimize unnecessary wakeups.
 
+Thanks,
+
+-Jason
 
 > 
-> Anyway, I'll send a v5 addressing your remarks.
+> We noticed that one of our workloads was missing wakeups starting with
+> 339ddb53d373 and upon manual inspection, this wakeup seemed missing to
+> me. With this patch added, we no longer see missing wakeups. I haven't
+> yet tried to make a small reproducer, but the existing kselftests in
+> filesystem/epoll passed for me with this patch.
 > 
-> Thanks,
+> Fixes: 339ddb53d373 ("fs/epoll: remove unnecessary wakeups of nested epoll")
 > 
-> Mathieu
-
+> Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
+> Reviewed-by: Roman Penyaev <rpenyaev@suse.de>
+> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> Cc: Heiher <r@hev.cc>
+> Cc: Jason Baron <jbaron@akamai.com>
+> Cc: <stable@vger.kernel.org>
+> ---
+> v2: use if/elif instead of goto + cleanup suggested by Roman
+>  fs/eventpoll.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+> index 8c596641a72b..d6ba0e52439b 100644
+> --- a/fs/eventpoll.c
+> +++ b/fs/eventpoll.c
+> @@ -1171,6 +1171,10 @@ static inline bool chain_epi_lockless(struct epitem *epi)
+>  {
+>  	struct eventpoll *ep = epi->ep;
+>  
+> +	/* Fast preliminary check */
+> +	if (epi->next != EP_UNACTIVE_PTR)
+> +		return false;
+> +
+>  	/* Check that the same epi has not been just chained from another CPU */
+>  	if (cmpxchg(&epi->next, EP_UNACTIVE_PTR, NULL) != EP_UNACTIVE_PTR)
+>  		return false;
+> @@ -1237,16 +1241,12 @@ static int ep_poll_callback(wait_queue_entry_t *wait, unsigned mode, int sync, v
+>  	 * chained in ep->ovflist and requeued later on.
+>  	 */
+>  	if (READ_ONCE(ep->ovflist) != EP_UNACTIVE_PTR) {
+> -		if (epi->next == EP_UNACTIVE_PTR &&
+> -		    chain_epi_lockless(epi))
+> +		if (chain_epi_lockless(epi))
+> +			ep_pm_stay_awake_rcu(epi);
+> +	} else if (!ep_is_linked(epi)) {
+> +		/* In the usual case, add event to ready list. */
+> +		if (list_add_tail_lockless(&epi->rdllink, &ep->rdllist))
+>  			ep_pm_stay_awake_rcu(epi);
+> -		goto out_unlock;
+> -	}
+> -
+> -	/* If this file is already in the ready list we exit soon */
+> -	if (!ep_is_linked(epi) &&
+> -	    list_add_tail_lockless(&epi->rdllink, &ep->rdllist)) {
+> -		ep_pm_stay_awake_rcu(epi);
+>  	}
+>  
+>  	/*
+> 
