@@ -2,143 +2,253 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DBDFC54FCB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 20:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABABC55194
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 20:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEE9D20728
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 20:11:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="snMZPzzy"
+	by mail.kernel.org (Postfix) with ESMTP id 32694206D4
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 20:23:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgDYULt (ORCPT
+        id S1726295AbgDYUXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 16:11:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbgDYULs (ORCPT
+        Sat, 25 Apr 2020 16:23:10 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:53508 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726190AbgDYUXK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 16:11:48 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5924FC09B04D
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 13:11:48 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id p8so6435731pgi.5
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 13:11:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=N2k1av1tyvdh6GZhcN5D4YMVgv3ZyjCy2t6rq6Gh3IE=;
-        b=snMZPzzyiHGucldZsOb4HyMr7AyHIgLiDE8tusGDu5dHaAbKHiDPfTq/C3t9cE4jB7
-         fEv5QnMzvGS0YF7M54Y4+r1QnP8MQ90yA8vMfMFl1r1+vcq7hLWd5EXEy8MgrjmmH2o4
-         xJYfd6hOkA1mP2627weH5mVrEhfFP36wE6ZkiLwuypOSLTiJfSImwGkgZmduRS9XZVk8
-         g82fvBxbKD0/rb3Gx2uDhxToarFa2CVBo90Nd20pz/jsLaLgiA9MuUi6rvrW1YL/2zsT
-         ULyQpF/wDHWDLsxyrZGs0dJh1RXy+t+aBiwLycI2yo57qkBz8kjUMb/yIpY1qPQGQNA0
-         32lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=N2k1av1tyvdh6GZhcN5D4YMVgv3ZyjCy2t6rq6Gh3IE=;
-        b=d0rKudM9ggHbWufiuUT4Epdt44Xtu+wYjyIJtQyN4TuAWhKaeJ0BM/a0Ri2Ikdt8YX
-         4rSC3Zb4+naN1/io245XZ6VNw+pLR7keZtKiNDVkUS7DN75LyDBRVFDBcLnNraeC82/U
-         3gYed5XDaIqn1hUk+gEoJm6GQ3vMF2XLb+MMdUtM4/emihAtbZjzmWHvjX1fVxGfmcn2
-         /biV0WLuetaEEMwzUV4sTSdovez3ETSwBEvuIijsLOkk8h+eW4V9gY6ytlFtm95q7G9w
-         R14pLinEIIff/qA/qUoTocxd49CRbKW1OPyOxaAZTm14vIWC7V92fU7acRIwgfUO0fyy
-         OmLw==
-X-Gm-Message-State: AGi0PuYputcOYsiRba02SNSXs6FqMhNZf/jLmCIGKvZ+nCkG3ZebhJaz
-        l3e1c2NpA1Ca5Og92bciSpM=
-X-Google-Smtp-Source: APiQypLA7CcCVqPz+pgp7tBCRZNdeaPlgiN2G3MAfcwL2tPJb5G80JNT4t9IIjZDyJgbIJlPjajF1g==
-X-Received: by 2002:a62:3803:: with SMTP id f3mr16459171pfa.322.1587845507846;
-        Sat, 25 Apr 2020 13:11:47 -0700 (PDT)
-Received: from anarsoul-thinkpad.lan (216-71-213-236.dyn.novuscom.net. [216.71.213.236])
-        by smtp.gmail.com with ESMTPSA id u188sm8746681pfu.33.2020.04.25.13.11.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Apr 2020 13:11:47 -0700 (PDT)
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Cc:     Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: [PATCH] ALSA: line6: Fix POD HD500 audio playback
-Date:   Sat, 25 Apr 2020 13:11:15 -0700
-Message-Id: <20200425201115.3430-1-anarsoul@gmail.com>
-X-Mailer: git-send-email 2.25.0
+        Sat, 25 Apr 2020 16:23:10 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id C17151C0238; Sat, 25 Apr 2020 22:23:07 +0200 (CEST)
+Date:   Sat, 25 Apr 2020 22:23:07 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v20 03/17] leds: multicolor: Introduce a multicolor class
+ definition
+Message-ID: <20200425202306.GA23926@amd>
+References: <20200423155524.13971-1-dmurphy@ti.com>
+ <20200423155524.13971-4-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="h31gzZEtNLTqOjlF"
+Content-Disposition: inline
+In-Reply-To: <20200423155524.13971-4-dmurphy@ti.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Apparently interface 1 is control interface akin to HD500X,
-setting LINE6_CAP_CONTROL and choosing it as ctrl_if fixes
-audio playback on POD HD500.
 
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
----
- sound/usb/line6/podhd.c | 22 +++++-----------------
- 1 file changed, 5 insertions(+), 17 deletions(-)
+--h31gzZEtNLTqOjlF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/sound/usb/line6/podhd.c b/sound/usb/line6/podhd.c
-index d37db32ecd3b..e39dc85c355a 100644
---- a/sound/usb/line6/podhd.c
-+++ b/sound/usb/line6/podhd.c
-@@ -21,8 +21,7 @@
- enum {
- 	LINE6_PODHD300,
- 	LINE6_PODHD400,
--	LINE6_PODHD500_0,
--	LINE6_PODHD500_1,
-+	LINE6_PODHD500,
- 	LINE6_PODX3,
- 	LINE6_PODX3LIVE,
- 	LINE6_PODHD500X,
-@@ -318,8 +317,7 @@ static const struct usb_device_id podhd_id_table[] = {
- 	/* TODO: no need to alloc data interfaces when only audio is used */
- 	{ LINE6_DEVICE(0x5057),    .driver_info = LINE6_PODHD300 },
- 	{ LINE6_DEVICE(0x5058),    .driver_info = LINE6_PODHD400 },
--	{ LINE6_IF_NUM(0x414D, 0), .driver_info = LINE6_PODHD500_0 },
--	{ LINE6_IF_NUM(0x414D, 1), .driver_info = LINE6_PODHD500_1 },
-+	{ LINE6_IF_NUM(0x414D, 0), .driver_info = LINE6_PODHD500 },
- 	{ LINE6_IF_NUM(0x414A, 0), .driver_info = LINE6_PODX3 },
- 	{ LINE6_IF_NUM(0x414B, 0), .driver_info = LINE6_PODX3LIVE },
- 	{ LINE6_IF_NUM(0x4159, 0), .driver_info = LINE6_PODHD500X },
-@@ -352,23 +350,13 @@ static const struct line6_properties podhd_properties_table[] = {
- 		.ep_audio_r = 0x82,
- 		.ep_audio_w = 0x01,
- 	},
--	[LINE6_PODHD500_0] = {
-+	[LINE6_PODHD500] = {
- 		.id = "PODHD500",
- 		.name = "POD HD500",
--		.capabilities	= LINE6_CAP_PCM
-+		.capabilities	= LINE6_CAP_PCM | LINE6_CAP_CONTROL
- 				| LINE6_CAP_HWMON,
- 		.altsetting = 1,
--		.ep_ctrl_r = 0x81,
--		.ep_ctrl_w = 0x01,
--		.ep_audio_r = 0x86,
--		.ep_audio_w = 0x02,
--	},
--	[LINE6_PODHD500_1] = {
--		.id = "PODHD500",
--		.name = "POD HD500",
--		.capabilities	= LINE6_CAP_PCM
--				| LINE6_CAP_HWMON,
--		.altsetting = 0,
-+		.ctrl_if = 1,
- 		.ep_ctrl_r = 0x81,
- 		.ep_ctrl_w = 0x01,
- 		.ep_audio_r = 0x86,
--- 
-2.25.0
+Hi!
 
+ting/sysfs-class-led-multicolor
+> new file mode 100644
+> index 000000000000..ada0dbecfeab
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
+> @@ -0,0 +1,42 @@
+> +What:		/sys/class/leds/<led>/multi_led_index
+> +Date:		March 2020
+> +KernelVersion:	5.8
+> +Contact:	Dan Murphy <dmurphy@ti.com>
+> +Description:	read
+> +		The multi_led_index array, when read, will output the LED colors
+> +		by name as they are indexed in the multi_led_intensity file.
+
+Can we make it multi_index? We are already in leds directory, and it
+is a bit shorter.
+
+> +What:		/sys/class/leds/<led>/num_multi_leds
+> +Date:		March 2020
+> +KernelVersion:	5.8
+> +Contact:	Dan Murphy <dmurphy@ti.com>
+> +Description:	read
+> +		The num_multi_leds indicates the number of LEDs defined in the
+> +		multi_led_intensity and multi_led_index files.
+
+Please drop this one.
+
+> +What:		/sys/class/leds/<led>/multi_led_intensity
+> +Date:		March 2020
+> +KernelVersion:	5.8
+> +Contact:	Dan Murphy <dmurphy@ti.com>
+> +Description:	read/write
+> +		Intensity level for the LED color within the array.
+> +		The intensities for each color must be entered based on the
+> +		multi_led_index array.
+
+And let this one be multi_intensity.
+
+> +For more details on hue and lightness notions please refer to
+> +https://en.wikipedia.org/wiki/CIECAM02.
+
+I'd drop this reference. multi_intensity file controls both hue and
+saturation AFAICT.
+
+> +Example:
+> +A user first writes the multi_led_intensity file with the brightness lev=
+els
+> +for each LED that are necessary to achieve a blueish violet output from a
+> +multicolor LED group.
+
+I don't believe we can guarantee that. 255/255/255 will produce
+different colors on different hardware (not white), and 43/226/138
+will also produce different colors....
+
+> +cat /sys/class/leds/multicolor:status/multi_led_index
+> +green blue red
+
+Hmm. We should really make sure LEDs are ordered as "red green
+blue". Yes, userspace should support any order, but...
+
+> +The user can control the brightness of that multicolor LED group by writ=
+ing the
+> +parent 'brightness' control.  Assuming a parent max_brightness of 255 th=
+e user
+
+delete "parent", twice?
+
+
+> +	for (i =3D 0; i < mcled_cdev->num_colors; i++)
+> +		mcled_cdev->multicolor_info[i].color_brightness =3D brightness *
+> +					  mcled_cdev->multicolor_info[i].color_led_intensity /
+> +					  led_cdev->max_brightness;
+
+It would be good to get this under ~80 characters. Perhaps shorter
+identifiers would help... shortening multicolor_ to mc_?
+
+> +static ssize_t multi_led_intensity_store(struct device *dev,
+> +				struct device_attribute *intensity_attr,
+> +				const char *buf, size_t size)
+> +{
+> +	struct led_classdev *led_cdev =3D dev_get_drvdata(dev);
+> +	struct led_classdev_mc *mcled_cdev =3D lcdev_to_mccdev(led_cdev);
+> +	int nrchars, offset =3D 0;
+> +	int intensity_value[LED_COLOR_ID_MAX];
+> +	int i;
+> +	ssize_t ret;
+> +
+> +	mutex_lock(&led_cdev->led_access);
+> +
+> +	for (i =3D 0; i < mcled_cdev->num_colors; i++) {
+> +		ret =3D sscanf(buf + offset, "%i%n",
+> +			     &intensity_value[i], &nrchars);
+> +		if (ret !=3D 1) {
+> +			dev_err(led_cdev->dev,
+
+dev_dbg, at most. It is user-triggerable.
+
+> +				"Incorrect number of LEDs expected %i values intensity was not appli=
+ed\n",
+> +				mcled_cdev->num_colors);
+> +			goto err_out;
+
+Should not we return -ERRNO to userspace on error?
+
+> +		}
+> +		offset +=3D nrchars;
+> +	}
+
+This checks for "not enough" intensities. Do we need check for "too
+many" intensities?
+
+> +static ssize_t multi_led_intensity_show(struct device *dev,
+> +			      struct device_attribute *intensity_attr,
+> +			      char *buf)
+> +{
+> +	struct led_classdev *led_cdev =3D dev_get_drvdata(dev);
+> +	struct led_classdev_mc *mcled_cdev =3D lcdev_to_mccdev(led_cdev);
+> +	int len =3D 0;
+> +	int i;
+> +
+> +	for (i =3D 0; i < mcled_cdev->num_colors; i++)
+> +		len +=3D sprintf(buf + len, "%d ",
+> +			    mcled_cdev->multicolor_info[i].color_led_intensity);
+> +
+> +	len +=3D sprintf(buf + len, "%s", "\n");
+
+This will result in extra " " before end of line.
+
+Please don't use "%s", "\n" to add single character. "\n" would be enough.
+
+
+> +	struct led_classdev *led_cdev =3D dev_get_drvdata(dev);
+> +	struct led_classdev_mc *mcled_cdev =3D lcdev_to_mccdev(led_cdev);
+> +	int len =3D 0;
+> +	int index;
+> +	int i;
+> +
+> +	for (i =3D 0; i < mcled_cdev->num_colors; i++) {
+> +		index =3D mcled_cdev->multicolor_info[i].color_index;
+> +		len +=3D sprintf(buf + len, "%s ", led_colors[index]);
+> +	}
+> +
+> +	len +=3D sprintf(buf + len, "%s", "\n");
+
+Same here.
+
+> +int led_classdev_multicolor_register_ext(struct device *parent,
+> +				     struct led_classdev_mc *mcled_cdev,
+> +				     struct led_init_data *init_data)
+> +{
+> +	struct led_classdev *led_cdev;
+> +
+> +	if (!mcled_cdev)
+> +		return -EINVAL;
+> +
+> +	if (!mcled_cdev->num_colors)
+> +		return -EINVAL;
+
+if (num_colors > max)... ?
+
+> +#ifndef __LINUX_MULTICOLOR_LEDS_H_INCLUDED
+> +#define __LINUX_MULTICOLOR_LEDS_H_INCLUDED
+
+Usual style is "_LINUX_MULTICOLOR_LEDS_H".
+
+> +#else
+> +
+> +static inline  int led_classdev_multicolor_register_ext(struct device *p=
+arent,
+
+double space after "inline".
+
+> +					    struct led_classdev_mc *mcled_cdev,
+> +					    struct led_init_data *init_data)
+> +{
+> +	return -EINVAL;
+> +}
+
+Do we need to include these stubs? I guess it is okay to have them,
+OTOH I'd expect drivers to depend on MULTICOLOR being available...
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--h31gzZEtNLTqOjlF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl6knCoACgkQMOfwapXb+vIlngCfVtVp+9AEDBtMLIKrXWNdHdO1
+U80AoLCygmEY8j6xNGdmLlZpdZ8FFP3i
+=wf6Q
+-----END PGP SIGNATURE-----
+
+--h31gzZEtNLTqOjlF--
