@@ -2,73 +2,144 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDA9C54FCB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 21:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47DAAC55194
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 21:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 976B62072B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 21:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E77A2072B
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 21:23:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbgDYVVF (ORCPT
+        id S1726371AbgDYVXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 17:21:05 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:47818 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbgDYVVF (ORCPT
+        Sat, 25 Apr 2020 17:23:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48324 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726220AbgDYVXt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 17:21:05 -0400
-Received: by mail-il1-f199.google.com with SMTP id a15so15201118ild.14
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 14:21:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=U51TFQW3hSk1SpLr90uyghSU1xkzsMwJ91s9V6q7YJY=;
-        b=OTXxuc/xjFpRWJm1rIIV6E8JFSS8XWh+I1nhBeDy/9wZLZIKWk8kzfer9FwGT10H7B
-         4XcqWMUiMvh+7ec0y8nWroqnh+PGR1qEHMcR1ZYLcnKTAXzWLsrvAmMEYTpby4AaiRjN
-         untQ4jfAqUtZxMfLg+G+QrUPQmsVTlQ1Jyb9X5AvgHZvNcIOQtmTyMtCBABR/5bFZPBh
-         xjJGu0y5cY7tFXOwAN/YS+4rN/KazVqMgWp8MC79IZ2X0+xFQbGfuN5x9Vfr+uxXfJ8q
-         OmJaEEplC91TBGFSM6gPtS9CXA/VC8r4bD0CyuDAPC9opeUkbRnv5n8njmX99r8FO9ja
-         Liag==
-X-Gm-Message-State: AGi0PuYi0rFTxSYMx8Sv3T0i20etLDvu+KFHAfxEg3vJInKPaPABP5nO
-        0APpVv5q1QxZJO6L8jjMACxXjx8r2uFyHs94/dWwf9jml4xQ
-X-Google-Smtp-Source: APiQypIAC1HTqMzZFACNNG6zbHQfbF1JUnrZ1yOTvHELhgt6yJFFqu8n47pdVYtm9RJj1pbcB06dq/tG2SZ0KG31gT5LEJ/M8JW+
+        Sat, 25 Apr 2020 17:23:49 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D97C1C09B04D;
+        Sat, 25 Apr 2020 14:23:48 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jSSGr-0004Jy-HJ; Sat, 25 Apr 2020 23:23:33 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id F334F10071F; Sat, 25 Apr 2020 23:23:32 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        megha.dey@linux.intel.com, maz@kernel.org, bhelgaas@google.com,
+        rafael@kernel.org, gregkh@linuxfoundation.org, hpa@zytor.com,
+        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
+        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH RFC 03/15] drivers/base: Allocate/free platform-msi interrupts by group
+In-Reply-To: <158751204550.36773.459505651659406529.stgit@djiang5-desk3.ch.intel.com>
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com> <158751204550.36773.459505651659406529.stgit@djiang5-desk3.ch.intel.com>
+Date:   Sat, 25 Apr 2020 23:23:32 +0200
+Message-ID: <87sggrtg2z.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-Received: by 2002:a92:5a5c:: with SMTP id o89mr14934397ilb.47.1587849664493;
- Sat, 25 Apr 2020 14:21:04 -0700 (PDT)
-Date:   Sat, 25 Apr 2020 14:21:04 -0700
-In-Reply-To: <Pine.LNX.4.44L0.2004251621590.4125-100000@netrider.rowland.org>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000357dce05a4240f67@google.com>
-Subject: Re: WARNING in usbhid_raw_request/usb_submit_urb (3)
-From:   syzbot <syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        ingrassia@epigenesys.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, stern@rowland.harvard.edu,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Dave Jiang <dave.jiang@intel.com> writes:
+> From: Megha Dey <megha.dey@linux.intel.com>
+> --- a/include/linux/msi.h
+> +++ b/include/linux/msi.h
+> @@ -135,6 +135,12 @@ enum platform_msi_type {
+>  	GEN_PLAT_MSI = 1,
+>  };
+>  
+> +struct platform_msi_group_entry {
+> +	unsigned int group_id;
+> +	struct list_head group_list;
+> +	struct list_head entry_list;
 
-syzbot has tested the proposed patch and the reproducer did not trigger crash:
+I surely told you before that struct members want to be written tabular.
 
-Reported-and-tested-by: syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com
+> +};
+> +
+>  /* Helpers to hide struct msi_desc implementation details */
+>  #define msi_desc_to_dev(desc)		((desc)->dev)
+>  #define dev_to_msi_list(dev)		(&(dev)->msi_list)
+> @@ -145,21 +151,31 @@ enum platform_msi_type {
+>  #define for_each_msi_entry_safe(desc, tmp, dev)	\
+>  	list_for_each_entry_safe((desc), (tmp), dev_to_msi_list((dev)), list)
+>  
+> -#define dev_to_platform_msi_list(dev)	(&(dev)->platform_msi_list)
+> -#define first_platform_msi_entry(dev)		\
+> -	list_first_entry(dev_to_platform_msi_list((dev)), struct msi_desc, list)
+> -#define for_each_platform_msi_entry(desc, dev)	\
+> -	list_for_each_entry((desc), dev_to_platform_msi_list((dev)), list)
+> -#define for_each_platform_msi_entry_safe(desc, tmp, dev)	\
+> -	list_for_each_entry_safe((desc), (tmp), dev_to_platform_msi_list((dev)), list)
+> +#define dev_to_platform_msi_group_list(dev)    (&(dev)->platform_msi_list)
+> +
+> +#define first_platform_msi_group_entry(dev)				\
+> +	list_first_entry(dev_to_platform_msi_group_list((dev)),		\
+> +			 struct platform_msi_group_entry, group_list)
+>  
+> -#define first_msi_entry_common(dev)	\
+> -	list_first_entry_select((dev)->platform_msi_type, dev_to_platform_msi_list((dev)),	\
+> +#define platform_msi_current_group_entry_list(dev)			\
+> +	(&((list_last_entry(dev_to_platform_msi_group_list((dev)),	\
+> +			    struct platform_msi_group_entry,		\
+> +			    group_list))->entry_list))
+> +
+> +#define first_msi_entry_current_group(dev)				\
+> +	list_first_entry_select((dev)->platform_msi_type,		\
+> +				platform_msi_current_group_entry_list((dev)),	\
+>  				dev_to_msi_list((dev)), struct msi_desc, list)
+>  
+> -#define for_each_msi_entry_common(desc, dev)	\
+> -	list_for_each_entry_select((dev)->platform_msi_type, desc, dev_to_platform_msi_list((dev)), \
+> -				   dev_to_msi_list((dev)), list)	\
+> +#define for_each_msi_entry_current_group(desc, dev)			\
+> +	list_for_each_entry_select((dev)->platform_msi_type, desc,	\
+> +				   platform_msi_current_group_entry_list((dev)),\
+> +				   dev_to_msi_list((dev)), list)
+> +
+> +#define for_each_platform_msi_entry_in_group(desc, platform_msi_group, group, dev)	\
+> +	list_for_each_entry((platform_msi_group), dev_to_platform_msi_group_list((dev)), group_list)	\
+> +		if (((platform_msi_group)->group_id) == (group))			\
+> +			list_for_each_entry((desc), (&(platform_msi_group)->entry_list), list)
 
-Tested on:
+Yet more unreadable macro maze to obfuscate what the code is actually
+doing. 
 
-commit:         0fa84af8 Merge tag 'usb-serial-5.7-rc1' of https://git.ker..
-git tree:       https://github.com/google/kasan.git
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6b9c154b0c23aecf
-dashboard link: https://syzkaller.appspot.com/bug?extid=db339689b2101f6f6071
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=12437828100000
+>  /* When an MSI domain is used as an intermediate domain */
+>  int msi_domain_prepare_irqs(struct irq_domain *domain, struct device *dev,
+> diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+> index bc5f9e32387f..899ade394ec8 100644
+> --- a/kernel/irq/msi.c
+> +++ b/kernel/irq/msi.c
+> @@ -320,7 +320,7 @@ int msi_domain_populate_irqs(struct irq_domain *domain, struct device *dev,
+>  	struct msi_desc *desc;
+>  	int ret = 0;
+>  
+> -	for_each_msi_entry_common(desc, dev) {
+> +	for_each_msi_entry_current_group(desc, dev) {
 
-Note: testing is done by a robot and is best-effort only.
+How is anyone supposed to figure out what the heck this means without
+going through several layers of macro maze and some magic type/group
+storage in struct device?
+
+Again, function arguments exist for a reason.
+
+Thanks,
+
+        tglx
