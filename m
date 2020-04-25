@@ -2,104 +2,85 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6775CC54FD0
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 02:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C775AC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 02:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4717B20748
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 02:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B49C2084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 02:18:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587780769;
-	bh=/Z9Nvrh9yVtz/IbeUrDospcDwpaq1h/TuaHzZKaZbWY=;
+	s=default; t=1587781127;
+	bh=+/xVjrg1YQaMoG8G2O+p2JLhT90x00i5C4LT2gABEl8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zVqHjCAkRWP4GL80v2+QjbciQyKO2HKtENlLQJdVp9tcLdyERk3CEmv1swW4ZGT6s
-	 Gr8tOh+4AiZQ0x3Qpl2ZEeiP2hOSEogCMuNM5K8nY86zcv9GFvd8/8NkVB5Wwodq2k
-	 KDokeRG2KUx2bp2UXD7j3oiFFhBnTWuJlMlw+YeA=
+	b=oPqr85w57Ui+8rHx0PUJ6HjZEf4zqyU/u/z/IXr30mbnPXQmFMBcYOwiZHnKOKZY3
+	 XEIJM4BBoN/8THVMZty88BBq3nN9OefU+RhNBb3cglDomsa6mYWnSwXK+YVLROxP/j
+	 XjwTXLWbO2PWWPzKis2gBG/iXzNgFbggkUooBW6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726165AbgDYCMs (ORCPT
+        id S1726116AbgDYCSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 22:12:48 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35089 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbgDYCMs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 22:12:48 -0400
-Received: by mail-pl1-f194.google.com with SMTP id f8so4445123plt.2;
-        Fri, 24 Apr 2020 19:12:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VAwc1AKSp5B7UhF/0ecMczbgaQzkFJn5Nyd0M+l9aDw=;
-        b=dYXnI45VAcpjeNM233aKG69gOsmF2zTlEKYC+KkYyoaQPlj0LU+uFLxFMScVP83PKZ
-         vLLNyXHSp/0tXRs81lRDNoRsy/RcCQDcnxY2TGZaX6ZCA0sHM1U+mQ1wZ84ANUxyowOV
-         UlxDsvUsdoLPyOL74sZ3qm76gPLOhdUgPpShPESi6IJpndqqq2yvfTJbKMVNiolmC5gL
-         wP+O0+IRxRGlY4uOOdCt1cq2nJ4OCJV4dLvevsjzR7lsm5R+6/QrGMRNraiUBVvSZBUo
-         M29KmjiGTeu6jYrh2FIEB5cR69oWoNNCruZmRIJmOu4HYnbMp7NNbzxXpFVNpq/2f2M4
-         /OTQ==
-X-Gm-Message-State: AGi0PuZJL1/f9io8Iki4o955oGR9C8Xrpd3kph8ebDBFrh1FcWGJLWkQ
-        6avQM6pXuRTzyq1qy2NBfG4=
-X-Google-Smtp-Source: APiQypJ6Xhv95ABdmHPLykZ9mxjB42z2LQ8WbeKbHCJrwPG+2THju9/ZzXNjNx28ihtiF5pgJ3dyIg==
-X-Received: by 2002:a17:90a:3327:: with SMTP id m36mr9760022pjb.116.1587780767473;
-        Fri, 24 Apr 2020 19:12:47 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id x26sm6744265pfo.218.2020.04.24.19.12.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 19:12:46 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 2E3E1403AB; Sat, 25 Apr 2020 02:12:45 +0000 (UTC)
-Date:   Sat, 25 Apr 2020 02:12:45 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 10/10] block: put_device() if device_add() fails
-Message-ID: <20200425021245.GF11244@42.do-not-panic.com>
-References: <20200419194529.4872-1-mcgrof@kernel.org>
- <20200419194529.4872-11-mcgrof@kernel.org>
- <85a18bcf-4bd0-a529-6c3c-46fcd23a350e@acm.org>
- <20200424223210.GD11244@42.do-not-panic.com>
- <d8e01420-5a0a-3c60-0b8c-46465437e255@acm.org>
+        Fri, 24 Apr 2020 22:18:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38834 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726032AbgDYCSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 22:18:46 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9989320776;
+        Sat, 25 Apr 2020 02:18:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587781126;
+        bh=+/xVjrg1YQaMoG8G2O+p2JLhT90x00i5C4LT2gABEl8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fmhczGs00Rlyc7NqWn3tSWDdPoAn2fELcXr+j64Kp8BATfKVtyLx6a9FhUYrtf9gf
+         ZMxNlZRHyQ/hPXPlH5YoCj0cCPFl54Tz4uaorBXOwnNHP6Dw1lj4q8WL1hdopi1Ypr
+         QotQbxp21x9SoVKRKVdxF0DushMOB9kWfUTTPrLo=
+Date:   Fri, 24 Apr 2020 19:18:35 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     syzbot <syzbot+9af6d43c1beabec8fd05@syzkaller.appspotmail.com>
+Cc:     dvyukov@google.com, gleb@kernel.org, gregkh@linuxfoundation.org,
+        gwshan@linux.vnet.ibm.com, hpa@zytor.com, jslaby@suse.com,
+        jslaby@suse.cz, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, mpe@ellerman.id.au, pbonzini@redhat.com,
+        ruscur@russell.cc, stewart@linux.vnet.ibm.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
+Subject: Re: KASAN: use-after-free Read in tty_open
+Message-ID: <20200425021835.GA849@sol.localdomain>
+References: <000000000000dd04830598d50133@google.com>
+ <0000000000002d42ee05a4127cfc@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d8e01420-5a0a-3c60-0b8c-46465437e255@acm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <0000000000002d42ee05a4127cfc@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 06:58:23PM -0700, Bart Van Assche wrote:
-> On 2020-04-24 15:32, Luis Chamberlain wrote:
-> > On Sun, Apr 19, 2020 at 04:40:45PM -0700, Bart Van Assche wrote:
-> >> On 4/19/20 12:45 PM, Luis Chamberlain wrote:
-> >>> Through code inspection I've found that we don't put_device() if
-> >>> device_add() fails, and this must be done to decrement its refcount.
-> >>
-> >> Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-> > 
-> > Turns out this is wrong, as bdi needs it still, we have can only remove
-> > it once all users are done, which should be at the disk_release() path.
-> > 
-> > I've found this while adding the errors paths missing.
+On Fri, Apr 24, 2020 at 05:23:03PM -0700, syzbot wrote:
+> syzbot suspects this bug was fixed by commit:
 > 
-> Hi Luis,
+> commit ca4463bf8438b403596edd0ec961ca0d4fbe0220
+> Author: Eric Biggers <ebiggers@google.com>
+> Date:   Sun Mar 22 03:43:04 2020 +0000
 > 
-> I had a look at the comments above device_add() before I added my
-> Reviewed-by. Now that I've had another look at these comments and also
-> at the device_add() implementation I agree that we don't need this patch.
+>     vt: vt_ioctl: fix VT_DISALLOCATE freeing in-use virtual console
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11594fc8100000
+> start commit:   07c4b9e9 Merge tag 'scsi-fixes' of git://git.kernel.org/pu..
+> git tree:       upstream
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=79f79de2a27d3e3d
+> dashboard link: https://syzkaller.appspot.com/bug?extid=9af6d43c1beabec8fd05
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=113886fae00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1263520ae00000
+> 
+> If the result looks correct, please mark the bug fixed by replying with:
+> 
+> #syz fix: vt: vt_ioctl: fix VT_DISALLOCATE freeing in-use virtual console
+> 
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
-Thanks for the confirmation. And just to note, we don't do then
-put_device() because we don't handle error paths properly. Once we do,
-we'll need to ensure we put_disk() just at the right place. I'm working
-on putting some final brush strokes on that now.
-
-   Luis
+#syz fix: vt: vt_ioctl: fix VT_DISALLOCATE freeing in-use virtual console
