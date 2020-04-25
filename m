@@ -2,120 +2,192 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BC5C55186
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 10:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B60C55194
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 10:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2C7F20704
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 10:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 450332071C
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 10:29:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="csoyJfuq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="N5zuGBG6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726152AbgDYK26 (ORCPT
+        id S1726169AbgDYK3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 06:28:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60118 "EHLO
+        Sat, 25 Apr 2020 06:29:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726050AbgDYK25 (ORCPT
+        by vger.kernel.org with ESMTP id S1726050AbgDYK3f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 06:28:57 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 025E7C09B04A;
-        Sat, 25 Apr 2020 03:28:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Pp1luny5nhZVX/a/szwM3I/s1d+y287YsSRFfWcwXHk=; b=csoyJfuqvyh99AsTN/1EwaJhH
-        Ip+4lR35nPAGIROfCklCQhE4hdORYTHa4SThXvp90RWaQ+wRng9/DKbJOui2HFpAAtkRnMzQTxUJ1
-        fwoLQbQr82qiWsE5pxJoQIRKbS7fM85n6+wk/semvn/RoYI1Bgv720JbJu+OWlOcPbV/GoaM1W5H+
-        j/kmmXzTluqHMXX3c6Hb1tTfDzrWnBr2CJdfFinZdftfNihNmrad+sFEQ/EqdcJIvZ/5EBms+3zZR
-        9NIDywP7sxUzrrQg8uSzfCTT+eZ36ldd9QQ3GgjbL3wojXcV3FwYGrjBpvx4vmTOHTEI3MKUAdLjs
-        mdDDL5mfA==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:43514)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jSI3G-00023N-Cq; Sat, 25 Apr 2020 11:28:50 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jSI3F-0004X1-B6; Sat, 25 Apr 2020 11:28:49 +0100
-Date:   Sat, 25 Apr 2020 11:28:49 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Florinel Iordache <florinel.iordache@nxp.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com,
-        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, kuba@kernel.org,
-        corbet@lwn.net, shawnguo@kernel.org, leoyang.li@nxp.com,
-        madalin.bucur@oss.nxp.com, ioana.ciornei@nxp.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2 1/9] doc: net: add backplane documentation
-Message-ID: <20200425102849.GX25745@shell.armlinux.org.uk>
-References: <1587732391-3374-1-git-send-email-florinel.iordache@nxp.com>
- <1587732391-3374-2-git-send-email-florinel.iordache@nxp.com>
-MIME-Version: 1.0
+        Sat, 25 Apr 2020 06:29:35 -0400
+Received: from mo6-p01-ob.smtp.rzone.de (mo6-p01-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5301::7])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 054ADC09B04A;
+        Sat, 25 Apr 2020 03:29:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587810571;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=/FOD/93/eYGrVTNiC/q4Xei2qHzqH9yqTTrJJvn0i3Y=;
+        b=N5zuGBG6voYMVN0YASuOB4WRHXCMue35swEyf9PefLYqHHVtdMuMplKgTxXRHsgk1a
+        k5a8BArdLt1Fd6BX/0AczpxW7PJqUP8ar2ZiRZD2TM+Mrs9y56wG+sFe+6Yf0ou105ox
+        p9JOHHIhyAv36neSXsqeH9iKwNEh+Perqyyiv3fWnDYWeXwY8W+D0ZpWI995Bj8LT40u
+        LwoKnfqKEQDBMntUvPTZ3I4UJYXjcw80SthTw72TCv6GA6YuBBnZsxzHxx2wyTdEw+Bo
+        O+zu66cE6c1N3Yb9x0v93oeduopLXoU1U2SpqGLLVPeTzjKDwq2vmXn8JpC4ZiAMWoNh
+        9GSQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAiw4yA"
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
+        with ESMTPSA id R0acebw3PATIFPD
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Sat, 25 Apr 2020 12:29:18 +0200 (CEST)
+Subject: Re: [PATCHv3] w1: omap-hdq: Simplify driver with PM runtime autosuspend
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1587732391-3374-2-git-send-email-florinel.iordache@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <A2AC3E81-49B2-4CF2-A7CF-6075AEB1B72D@goldelico.com>
+Date:   Sat, 25 Apr 2020 12:29:16 +0200
+Cc:     Evgeniy Polyakov <zbr@ioremap.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        "Andrew F . Davis" <afd@ti.com>, Vignesh R <vigneshr@ti.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <44AD9673-AE02-498F-A5CC-48499DF226E3@goldelico.com>
+References: <3197C3F0-DEB9-4221-AFBD-4F2A08C84C4C@goldelico.com> <20200417164340.3d9043d1@aktux> <6430AF54-849E-456B-8DB0-B4478BBDB78D@goldelico.com> <20200417150721.GL37466@atomide.com> <8E062482-5D5D-4837-9980-D6C708DD24D4@goldelico.com> <20200420150802.GR37466@atomide.com> <D1A77603-11FB-407F-B480-82C57E742C51@goldelico.com> <20200421085336.32cf8ffe@aktux> <20200421180220.GB37466@atomide.com> <70F19A6E-7B36-4873-9364-F284A14EE3A0@goldelico.com> <20200421182017.GC37466@atomide.com> <D3E40A6A-39B8-4F3F-9ABC-28EAE8D623A6@goldelico.com> <20200422120418.49a40c75@aktux> <6E3A50D9-0F15-4A56-8C5E-7CDC63E8AF9F@goldelico.com> <A2AC3E81-49B2-4CF2-A7CF-6075AEB1B72D@goldelico.com>
+To:     Andreas Kemnade <andreas@kemnade.info>,
+        Tony Lindgren <tony@atomide.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 03:46:23PM +0300, Florinel Iordache wrote:
-> +Supported platforms
-> +===================
-> +
-> +Ethernet Backplane is enabled on the following platforms:
-> +
-> +LS1046A
-> +LS1088A
-> +LS2088A
-> +LX2160A
-> \ No newline at end of file
+Hi,
 
-Please fix.
+> Am 24.04.2020 um 18:52 schrieb H. Nikolaus Schaller =
+<hns@goldelico.com>:
+>=20
+> Hi Tony and Andreas,
+>=20
+>> Am 22.04.2020 um 18:06 schrieb H. Nikolaus Schaller =
+<hns@goldelico.com>:
+>>=20
+>> Hi,
+>>=20
+>>> Am 22.04.2020 um 12:04 schrieb Andreas Kemnade =
+<andreas@kemnade.info>:
+>>>=20
+>>> On Tue, 21 Apr 2020 22:40:39 +0200
+>>> "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+>>>=20
+>>>> Hi Tony,
+>>>>=20
+>>>>=20
+>>>> I have added that and there might be a slightly different pattern
+>>>> (unless that is just by luck): the first two or three attempts to
+>>>> read the bq27xx/uevent did still time out. But then the next ones
+>>>> worked fine (with a response time of ca. 65 .. 230 ms).
+>=20
+> Now I have focussed on the hdq_read_byte() timeout and enabled more
+> driver debugging.
+>=20
+> Yes, there are a lot of "timeout waiting for RXCOMPLETE" reports.
+> Sometimes with ",0" and sometimes with ",1" (hdq_data->hdq_irqstatus).
+>=20
+...
 
-> diff --git a/Documentation/networking/phy.rst b/Documentation/networking/phy.rst
-> index 2561060..1f1ebf2 100644
-> --- a/Documentation/networking/phy.rst
-> +++ b/Documentation/networking/phy.rst
-> @@ -279,13 +279,22 @@ Some of the interface modes are described below:
->      XFI and SFI are not PHY interface types in their own right.
->  
->  ``PHY_INTERFACE_MODE_10GKR``
-> -    This is the IEEE 802.3 Clause 49 defined 10GBASE-R with Clause 73
-> -    autonegotiation. Please refer to the IEEE standard for further
-> -    information.
-> +    This is 10G Ethernet Backplane over single lane specified in
-> +    IEEE802.3ap-2007 Amendment 4: Ethernet Operation over Electrical
-> +    Backplanes which includes the new Clause 69 through Clause 74
-> +    including autonegotiation. 10GKR uses the same physical layer
-> +    encoding as 10GBASE-R defined in IEEE802.3 Clause 49. Please refer
-> +    to the IEEE standard for further information.
->  
->      Note: due to legacy usage, some 10GBASE-R usage incorrectly makes
->      use of this definition.
->  
-> +``PHY_INTERFACE_MODE_40GKR4``
-> +    This is 40G Ethernet Backplane over 4-lanes using the same main
-> +    standard used for Ethernet Operation over Electrical Backplanes
-> +    and additional specifications that define support for Ethernet
-> +    Backplane over 4-lanes specified in IEEE802.3ba-2010.
-> +
->  Pause frames / flow control
->  ===========================
->  
+> So I have no idea why it sometimes fails. A race?
+> Something not locked? Interrupt not delivered in time?
+>=20
+> The only thing I noticed in code is that hdq_write_byte() doesn't
+> use the hdq_mutex although they share the hdq_irqstatus.
+>=20
+> But hdq_write_byte() doesn't seem to be used for booting and
+> reading the bq27xxx.
 
-This ought to be in patch 3.
+It is. I had a bug in my printk.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+>=20
+> Another idea: there may occur two interrupts between call
+> to wait_event_timeout(hdq_data->hdq_irqstatus) and
+> status =3D hdq_data->hdq_irqstatus; and calling hdq_reset_irqstatus().
+>=20
+> These changes hdq_irqstatus. And at the end of the read
+> process hdq_irqstatus is set to 0 potentially wiping
+> out interrupt flags.
+>=20
+> Just two ideas where we may have missing some locking.
+>=20
+> There is one more observation: the hdq_read_byte()
+> code now also calls hdq_reset_irqstatus(hdq_data);
+> in the success case which the old code didn't. So
+> there may be an additional risk of loosing interrupts.
+
+After enabling more debugging I got this interesting snapshot:
+
+[ 1659.330627] omap_hdq 480b2000.1w: hdq_write_byte
+[ 1659.349914] omap_hdq 480b2000.1w: hdq_isr: 0
+[ 1659.563903] omap_hdq 480b2000.1w: TX wait elapsed
+[ 1659.568939] omap_hdq 480b2000.1w: TX failure:Ctrl status 0
+[ 1659.583831] omap_hdq 480b2000.1w: hdq_read_byte
+[ 1659.588684] omap_hdq 480b2000.1w: hdq_isr: 0
+[ 1659.793945] omap_hdq 480b2000.1w: timeout waiting for RXCOMPLETE, 0
+[ 1659.800659] omap_hdq 480b2000.1w: hdq_write_byte
+[ 1659.813812] omap_hdq 480b2000.1w: hdq_isr: 0
+[ 1660.023956] omap_hdq 480b2000.1w: TX wait elapsed
+[ 1660.028961] omap_hdq 480b2000.1w: TX failure:Ctrl status 0
+[ 1660.043823] omap_hdq 480b2000.1w: hdq_read_byte
+[ 1660.048675] omap_hdq 480b2000.1w: hdq_isr: 6
+[ 1660.053253] omap_hdq 480b2000.1w: hdq_write_byte
+[ 1660.074371] omap_hdq 480b2000.1w: hdq_isr: 2
+[ 1660.078948] omap_hdq 480b2000.1w: timeout waiting for =
+TXCOMPLETE/RXCOMPLETE, 2
+[ 1660.103851] omap_hdq 480b2000.1w: TX failure:Ctrl status 2
+[ 1660.109710] omap_hdq 480b2000.1w: hdq_read_byte
+[ 1660.124267] omap_hdq 480b2000.1w: hdq_isr: 1
+[ 1660.333953] omap_hdq 480b2000.1w: timeout waiting for RXCOMPLETE, 1
+[ 1660.340637] omap_hdq 480b2000.1w: hdq_write_byte
+[ 1660.355957] omap_hdq 480b2000.1w: hdq_isr: 4
+[ 1660.360565] omap_hdq 480b2000.1w: hdq_read_byte
+[ 1660.373809] omap_hdq 480b2000.1w: hdq_isr: 2
+[ 1660.378356] omap_hdq 480b2000.1w: hdq_write_byte
+[ 1660.385345] omap_hdq 480b2000.1w: hdq_isr: 4
+[ 1660.394287] omap_hdq 480b2000.1w: hdq_read_byte
+[ 1660.399078] omap_hdq 480b2000.1w: hdq_isr: 2
+[ 1660.413787] omap_hdq 480b2000.1w: hdq_write_byte
+[ 1660.420776] omap_hdq 480b2000.1w: hdq_isr: 4
+[ 1660.425537] omap_hdq 480b2000.1w: hdq_read_byte
+[ 1660.430297] omap_hdq 480b2000.1w: hdq_isr: 2
+
+It looks as if the hdq_write_byte commands fail!
+Then, there is of course no response from the bq27xxx
+and a hdq_read_byte will also fail.
+
+The things start to get "fixed" when the hdq_isr
+jumps to 6 indicating
+
+OMAP_HDQ_INT_STATUS_RXCOMPLETE | OMAP_HDQ_INT_STATUS_TXCOMPLETE
+
+So I am getting more inclined to believe that it is
+not a power management issue but some piggybacked
+change to how interrupts are handled.
+Especially hdq_reset_irqstatus.
+
+So I will add a printk to hdq_reset_irqstatus
+to see what value it had before being reset.
+
+And I wonder what the spinlock around setting
+hdq_reset_irqstatus =3D 0 is good for. This should
+be an atomic operation anyways.
+
+One more code observation: the goto out_err
+in omap_w1_write_byte is not needed.
+
+BR,
+Nikolaus
+
