@@ -2,151 +2,168 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3BCC54FCB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 15:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C00AC55185
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 15:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76D2620748
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 15:55:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="MyWUkHZZ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UCDRN4Jd"
+	by mail.kernel.org (Postfix) with ESMTP id 4AB5520767
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 15:57:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587830235;
+	bh=gA52eZgAsDc84/SjzzV/YYysCpBQGyT9fzrpoeb2il8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=StRSh6ggH8pIFs9FuDc9TWUgn+6/4YwBQZLmCpBBt5RVrXKWHOlFrelzkk9OGULy3
+	 bwnFNk0Ft9gBey6nCZfVyhUamcx3CG5nQgCaSAWFJBHjC50sPAGtzkhzRE1jjxIc/c
+	 d27snYQudt8JGmVEcQtoZICa19jyg725ylrPC0v0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726316AbgDYPzz (ORCPT
+        id S1726154AbgDYP5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 11:55:55 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:54085 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726118AbgDYPzm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 11:55:42 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 3AC8E5803BD;
-        Sat, 25 Apr 2020 11:55:41 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Sat, 25 Apr 2020 11:55:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alistair23.me;
-         h=from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=ILg74KFQ4/u/i
-        LEbpVIGKPDUn0lqkuyVDFTjVVQFF4M=; b=MyWUkHZZ+Mcwdt7tPDh4nOqgZAEVt
-        n8SU2n8ZR81Fv2JQ69Dyg1uEdGkMtEKpm/soc219ggCkilM6/1D9+OtmqfPOenjB
-        ldoLtqTsxpA3l58j2j2ws+Qsm4ncs+ahXHyZGwqLceD/yhD67JU+9FsvbJJ0KH0H
-        xKUJHUyoJjfvhIlvyuaPQBgQcyettaIm/ENgjGOFgP+fgXERqdExYTLQQvVQ3oZV
-        qCIkbphLwFFe8aJ50Ie2LVfwUjbiiN6EUeCKBKsMIpfGk9Xp/ZhqrJHuekKCLYaY
-        dduUrgJQ+SKwcqcQ2dEDydxkN8MCTy8Vkjd+XDRq0iFdlnkPfiOoL5EYw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=ILg74KFQ4/u/iLEbpVIGKPDUn0lqkuyVDFTjVVQFF4M=; b=UCDRN4Jd
-        LJ1aMZu0e0azt1QAd15mpQLEvkm7c3u+0gP103CIaOw4Q/XGpCcOEGGWyMJifCLg
-        9ohqiYsQi429Ig1oFNTzBFbW7VW/5MSqi2GRDxWR6smw/FieTf3ZS8BFdRFihbi+
-        50WCmvYm5421efcI5PBTNEhlHYua0qS7FC5QP1biymBNhbukf3tm84In2sOVExAh
-        GHl83AiZau8VJG05cv33yS4Of5eeOLPnRa0VbVUNsSBGGwqZRoTAq5tPACtbRGKN
-        JyzCbsnjkiymVnm4+scLO6k6toz5ie3GpFcSOEJ2WAC2mCqstpej7t2ACneO7mug
-        luZ/F72ZAiQlhg==
-X-ME-Sender: <xms:eV2kXi1pBLxDckTlLq0uQuE8lEyDr8jXdaOXJDDd04dyCcx-e5eu_Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrheeggdejvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtkeertd
-    ertddtnecuhfhrohhmpeetlhhishhtrghirhcuhfhrrghntghishcuoegrlhhishhtrghi
-    rhesrghlihhsthgrihhrvdefrdhmvgeqnecukfhppeejfedrleefrdekgedrvddtkeenuc
-    evlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepmhgrihhlfhhrohhmpegrlhhishht
-    rghirhesrghlihhsthgrihhrvdefrdhmvg
-X-ME-Proxy: <xmx:eV2kXqZrTsq_qRbUyCTF_6XuyPLGUjZ7BuDwiXHBjViahgBFV0hl6w>
-    <xmx:eV2kXm_x8CUI9jrkObOTtn3Yguxfh63r73e5LW3bdkcDWa5Q8iVRJg>
-    <xmx:eV2kXgZpYVI4tGkPcpJv3AmtMpyCUSWeZFa-C0lng4L1-U64Se0jcw>
-    <xmx:fV2kXi4qQrktnCVTQ7Iav98OQI_z_ThFrs3_xuZPYpAYfcQBnE1LSw>
-Received: from alistair-xps-14z.alistair23.me (c-73-93-84-208.hsd1.ca.comcast.net [73.93.84.208])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 921A03280067;
-        Sat, 25 Apr 2020 11:55:36 -0400 (EDT)
-From:   Alistair Francis <alistair@alistair23.me>
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-bluetooth@vger.kernel.org, mripard@kernel.org, wens@csie.org
-Cc:     anarsoul@gmail.com, devicetree@vger.kernel.org,
-        alistair23@gmail.com, linux-arm-kernel@lists.infradead.org,
-        Alistair Francis <alistair@alistair23.me>
-Subject: [DO-NOT-MERGE][PATCH v4 3/3] arm64: allwinner: Enable Bluetooth and WiFi on sopine baseboard
-Date:   Sat, 25 Apr 2020 08:55:31 -0700
-Message-Id: <20200425155531.2816584-3-alistair@alistair23.me>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200425155531.2816584-1-alistair@alistair23.me>
-References: <20200425155531.2816584-1-alistair@alistair23.me>
+        Sat, 25 Apr 2020 11:57:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58758 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726112AbgDYP5O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 11:57:14 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45EE020748;
+        Sat, 25 Apr 2020 15:57:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587830233;
+        bh=gA52eZgAsDc84/SjzzV/YYysCpBQGyT9fzrpoeb2il8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=J3qu8IPsYTHazwRGf6THITrGZiVnu4IrkmnnC75tWzjvP3+gXXt9+OLb6/olWN0im
+         TlLMEosHCrvVmpi5+UIvp4076vKoMXjjKt1v4VuXf5Zhy7XTB2Z2HNZLDiRaESjo6g
+         kQbHv6mep7XFvrz2/eCQvNOBBr62XlKe3P+oqhUM=
+Date:   Sat, 25 Apr 2020 16:57:09 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Mathieu Othacehe <m.othacehe@gmail.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Subject: Re: [PATCH v4 4/4] iio: vcnl4000: Add buffer support for
+ VCNL4010/20.
+Message-ID: <20200425165709.27c63f05@archlinux>
+In-Reply-To: <CAHp75VfXBgQad1oCBe+oqcC_oRa-3q8OBYcAOV8WfCo7n1wXWw@mail.gmail.com>
+References: <20200421075532.19192-1-m.othacehe@gmail.com>
+        <20200421075532.19192-5-m.othacehe@gmail.com>
+        <CAHp75VfXBgQad1oCBe+oqcC_oRa-3q8OBYcAOV8WfCo7n1wXWw@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sopine board has an optional RTL8723BS WiFi + BT module that can be
-connected to UART1. Add this to the device tree so that it will work
-for users if connected.
+On Tue, 21 Apr 2020 15:27:14 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-Signed-off-by: Alistair Francis <alistair@alistair23.me>
----
- .../allwinner/sun50i-a64-sopine-baseboard.dts | 29 +++++++++++++++++++
- 1 file changed, 29 insertions(+)
+> On Tue, Apr 21, 2020 at 10:59 AM Mathieu Othacehe <m.othacehe@gmail.com> wrote:
+> >
+> > The VCNL4010 and VCNL4020 chips are able to raise interrupts on data ready.
+> > Use it to provide triggered buffer support for proximity data.
+> >
+> > Those two chips also provide ambient light data. However, they are sampled
+> > at different rate than proximity data. As this is not handled by the IIO
+> > framework for now, and the sample frequencies of ambient light data are
+> > very low, do add buffer support for them.  
+> 
+> ...
+> 
+> > +static irqreturn_t vcnl4010_trigger_handler(int irq, void *p)
+> > +{
+> > +       struct iio_poll_func *pf = p;
+> > +       struct iio_dev *indio_dev = pf->indio_dev;
+> > +       struct vcnl4000_data *data = iio_priv(indio_dev);
+> > +       const unsigned long *active_scan_mask = indio_dev->active_scan_mask;
+> > +       u16 buffer[8] = {0}; /* 1x16-bit + ts */
+> > +       bool data_read = false;
+> > +       unsigned long isr;
+> > +       int val = 0;
+> > +       int ret;
+> > +
+> > +       ret = i2c_smbus_read_byte_data(data->client, VCNL4010_ISR);
+> > +       if (ret < 0)
+> > +               goto end;
+> > +
+> > +       isr = ret;
+> > +
+> > +       if (test_bit(0, active_scan_mask)) {
+> > +               if (test_bit(VCNL4010_INT_PROXIMITY, &isr)) {
+> > +                       ret = vcnl4000_read_data(data,
+> > +                                                VCNL4000_PS_RESULT_HI,
+> > +                                                &val);
+> > +                       if (ret < 0)
+> > +                               goto end;
+> > +
+> > +                       buffer[0] = val;
+> > +                       data_read = true;
+> > +               }
+> > +       }
+> > +
+> > +       ret = i2c_smbus_write_byte_data(data->client, VCNL4010_ISR,
+> > +                                       isr & VCNL4010_INT_DRDY);  
+> 
+> > +       if (ret < 0 || !data_read)  
+> 
+> I would split them, because they are logically different checks.
+> 
+> > +               goto end;
+> > +
+> > +       iio_push_to_buffers_with_timestamp(indio_dev, buffer,
+> > +                                          iio_get_time_ns(indio_dev));
+> > +
+> >  end:
+> > +       iio_trigger_notify_done(indio_dev->trig);
+> >         return IRQ_HANDLED;
+> >  }  
+> 
+> ...
+> 
+> > +static int vcnl4010_buffer_predisable(struct iio_dev *indio_dev)
+> > +{
+> > +       struct vcnl4000_data *data = iio_priv(indio_dev);
+> > +       int ret, ret_disable;
+> > +
+> > +       ret = i2c_smbus_write_byte_data(data->client, VCNL4010_INT_CTRL, 0);
+> > +       if (ret < 0)
+> > +               goto end;
+> > +
+> > +       ret = i2c_smbus_write_byte_data(data->client, VCNL4000_COMMAND, 0);
+> > +
+> > +end:  
+> 
+> > +       ret_disable = iio_triggered_buffer_predisable(indio_dev);
+> > +       if (ret == 0)
+> > +               ret = ret_disable;  
+> 
+> What is this?
+> 
+> Can't you rather call IIO API first, and then try to handle the rest?
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-index 2f6ea9f3f6a2..34357ba143cb 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-@@ -42,6 +42,11 @@ reg_vcc1v8: vcc1v8 {
- 		regulator-min-microvolt = <1800000>;
- 		regulator-max-microvolt = <1800000>;
- 	};
-+
-+	wifi_pwrseq: wifi_pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
-+	};
- };
- 
- &ac_power_supply {
-@@ -103,6 +108,17 @@ ext_rgmii_phy: ethernet-phy@1 {
- 	};
- };
- 
-+&mmc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins>;
-+	vmmc-supply = <&reg_dldo4>;
-+	vqmmc-supply = <&reg_eldo1>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+	non-removable;
-+	bus-width = <4>;
-+	status = "okay";
-+};
-+
- &mmc2 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc2_pins>;
-@@ -174,6 +190,19 @@ &uart0 {
- 	status = "okay";
- };
- 
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
-+	uart-has-rtscts = <1>;
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "realtek,rtl8723bs-bt";
-+		device-wake-gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* PL5 */
-+		host-wake-gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
-+	};
-+};
-+
- /* On Pi-2 connector */
- &uart2 {
- 	pinctrl-names = "default";
--- 
-2.26.0
+There is an additional complexity here. Alex is in the middle of trying
+to refactor all drivers to handle this in the same order so as to
+ultimately remote the need to explicitly make that call at all.
+
+So until that is sorted, I think that needs to be the last call made
+even if there isn't a driver related reason for the ordering.
+
+It's a big job with lots of complex corner cases so will be a little
+while yet I guess before we can do the core rework.
+
+Jonathan
+
+> 
+> > +       return ret;
+> > +}  
+> 
 
