@@ -2,152 +2,114 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEBBC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 03:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6E0C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 04:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB6BC2076C
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 03:59:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587787193;
-	bh=/C1ZInCmWAZmw35nVhjd/VZP2X4Bfrz2NM/ray1goZs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gL2fDUSLNx6hHKu6tHooko0TOSPyNiTOwujATOotXPe1ZcywGOyUJ3blnDPP4DNjH
-	 EqCicANr+R8y1Y8vUOF45orAkzoQjPi5tBRzYOV07NeSPvy6tKH7+9sdJBImwvo8XB
-	 djVvZCwFv681x45EuQ35QRXqxSSn/+wxprE3Ip90=
+	by mail.kernel.org (Postfix) with ESMTP id 879EA2076C
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 04:05:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xsmyrmaP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726117AbgDYD7w (ORCPT
+        id S1726098AbgDYEFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 23:59:52 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39120 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbgDYD7w (ORCPT
+        Sat, 25 Apr 2020 00:05:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57430 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725909AbgDYEFE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 23:59:52 -0400
-Received: by mail-pl1-f193.google.com with SMTP id k18so4504639pll.6;
-        Fri, 24 Apr 2020 20:59:51 -0700 (PDT)
+        Sat, 25 Apr 2020 00:05:04 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7882EC09B04A
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 21:05:04 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id i27so16255783ota.7
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 21:05:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5Ky0eyr9lLThTQVUeFvCBClSKtV93JYH6d8kHWt9AbY=;
+        b=xsmyrmaPpckFzclp7L+uXkwIuEQPI0AkgTZpagovbHJzVpyzvl7xsdYmVYyYlEd4cE
+         AjiV8KyC6Ha79JNisdzpuGRwzhZDpJXvfgeFJuewUZPJkxFcXxCnpGtwPjwdxZGk/71c
+         MhbiUOkwdbLhYOuWso0i8s+l+VBZ14EpWPC0/99g+6smIEjGvGvR8os79N2J+lzBtGbR
+         s3WnThEwyPG/GrvoUiJvodTdyImCxcINnatR+Ccr/k0wy7rU+6t5f/3q5oiOM8dhPEt4
+         OvMoxj3DtqdxI5smzsaTPVQ34HTBrcqo0Qud1AjDjgTzOBI3qqofJIk5n977BDQ7JWP7
+         Ve9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dDEQdduqyEgfM9DImQqMjrWboE5jm0ENHVrvQ2k14Ak=;
-        b=njzXqWfJCj+wc+WMmGrOn2jp2aO24qURuI7EoBL3akUHZCbu/zWm7QO+2+yoB1dVuu
-         9NuMX6jvkBmn06DqD37Bmc/wXenNZOQRnsGUwOcK5PBmjmDmLZvrX3BM6oB6MkdrQpUs
-         //PQKKLyKdu2RZYwejieLX+lF6siWZ+iWMjJORrE1ONg8ZHZu6Jvj+igg8Tz1cyaSSz2
-         3fateCoWQV5BV+erZ3dbZSFzJ6LQ0WBUqcR3ZqIttPlVxEhqlK9d60SOAQ1Ij+b8wzqR
-         Z5MZhugaXZ62qZCwb69k7xkKD+mFoXyilurh2Pza+UKj8IZNptAfbBUae8rLUYgGuc5C
-         6/wg==
-X-Gm-Message-State: AGi0Pub76yOnAurl6inqj5+EakzAmj9WN4U18i169ryBL9jPdTCSvkZZ
-        uOkmOgL3dZ2BGXUnJBJCZgw=
-X-Google-Smtp-Source: APiQypJSVI8J39Hhgtl8VpG+V/GfyNQ951YeD7kqLw3i7+qv25guwQSz5A2LEeMHm9/d3rz2heg4pQ==
-X-Received: by 2002:a17:90a:d0c3:: with SMTP id y3mr3994426pjw.25.1587787191386;
-        Fri, 24 Apr 2020 20:59:51 -0700 (PDT)
-Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
-        by smtp.gmail.com with ESMTPSA id 7sm6270235pga.15.2020.04.24.20.59.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 20:59:50 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 20:59:49 -0700
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: How to upload fpga firmware
-Message-ID: <20200425035949.GA11710@epycbox.lan>
-References: <20200422114432.GM1694@pengutronix.de>
- <20200423013648.GA2430@epycbox.lan>
- <20200423062331.GR1694@pengutronix.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5Ky0eyr9lLThTQVUeFvCBClSKtV93JYH6d8kHWt9AbY=;
+        b=HIzjij+0pP4mDmeTE9KAaD7rxWseYg5Ek1J5lyRv23pe/yy7g2BCFg/pPvaAJ1tWl0
+         mHOAaQMpq74WhiRijAg2kiX6fXl1iaKQ/ncb8Hfv96Jqb9CT8VkZ/pBKQZ3OGrYFwflw
+         Oq7K+g8Zd+QglBHSog1A3/su1l9//bpItwbwHG9HtPGe/2cbonEyGNlz5KOZNRqi1iCJ
+         VZx2+ZXcBZCjrTEGdUlSAApz7omSU41Uid0ltFKNQtDoUKnWkhFZ23IZ9V4B12PiDz4z
+         35VRkfvx2iLOkf5VP7Kdj2bn9bqLd5leGfotAjh1sRz+3kM6k3vNTzXJbsXNdmy+h2CE
+         yxnA==
+X-Gm-Message-State: AGi0PuZjFq/zmqyNCMxQHIUVioJ5eQcjhRDnnkfUVS4gAqstpemCt3Ew
+        M3ibjwKSMnT0SqibYrAL+/lHTQChWs75c17pUlqiGA==
+X-Google-Smtp-Source: APiQypJRrNuc6s4TK5Hy1LsXQFO4dVFdba3u8LGcLKEkJWGWHwnmvoiMEq4flU4dqofCtu9E0FvesLWDRf2qIs8Ff5g=
+X-Received: by 2002:aca:c311:: with SMTP id t17mr9055910oif.169.1587787503419;
+ Fri, 24 Apr 2020 21:05:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200423062331.GR1694@pengutronix.de>
+References: <20200423220056.29450-1-john.stultz@linaro.org> <jhj1rodyeu1.mognet@arm.com>
+In-Reply-To: <jhj1rodyeu1.mognet@arm.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Fri, 24 Apr 2020 21:04:50 -0700
+Message-ID: <CALAqxLW+CBMxj_5gCF5yLcX8dhM7Fg6oOL-zot0ZZT6PW6R04g@mail.gmail.com>
+Subject: Re: [RFC][PATCH] serial: amba-pl011: Make sure we initialize the
+ port.lock spinlock
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sascha,
+On Thu, Apr 23, 2020 at 4:14 PM Valentin Schneider
+<valentin.schneider@arm.com> wrote:
+> On 23/04/20 23:00, John Stultz wrote:
+> > Which seems to be due to the fact that after allocating the uap
+> > structure, the pl011 code doesn't initialize the spinlock.
+> >
+> > This patch fixes it by initializing the spinlock and the warning
+> > has gone away.
+> >
+>
+> Thanks for having a look. It does seem like the reasonable thing to do, and
+> I no longer get the warning on h960.
+>
+> That said, I got more curious as this doesn't show up on my Juno (same
+> Image). Digging into it I see that uart_add_one_port() has a call to
+> uart_port_spin_lock_init() a few lines before uart_configure_port() (in
+> which the above warning gets triggered). That thing says:
+>
+>  * Ensure that the serial console lock is initialised early.
+>  * If this port is a console, then the spinlock is already initialised.
+>
+> Which requires me to ask: are we doing the right thing here?
 
-On Thu, Apr 23, 2020 at 08:23:31AM +0200, Sascha Hauer wrote:
-> Hi Moritz,
-> 
-> On Wed, Apr 22, 2020 at 06:36:48PM -0700, Moritz Fischer wrote:
-> > Hi Sascha,
-> > 
-> > On Wed, Apr 22, 2020 at 01:44:32PM +0200, Sascha Hauer wrote:
-> > > Hi,
-> > > 
-> > > I wonder what can be done with the mainline state of drivers/fpga/. The
-> > > entry to the framework seems to be fpga_mgr_load(). The only user of
-> > > this function is fpga_region_program_fpga(). This in turn is only called
-> > > in response of applying a device tree overlay. A device tree overlay is
-> > > applied with of_overlay_fdt_apply() which has no users in the Kernel.
-> > 
-> > Yes. It is waiting for dt_overlays one way or another. I personally
-> > don't currently have the bandwidth to work actively on this.
-> > 
-> > > My current task is to load a firmware to a FPGA. The code all seems to
-> > > be there in the Kernel, it only lacks a way to trigger it. I am not very
-> > > interested in device tree overlays since the FPGA appears as a PCI
-> > > device (although applying a dtbo could enable the PCIe controller device
-> > > tree node). Is there some mainline way to upload FPGA firmware? At the
-> > > moment we are using the attached patch to trigger loading the firmware
-> > > from userspace. Would something like this be acceptable for mainline?
-> > 
-> > We've looked into this sort of patches over the years and never came to
-> > a general interface that really works.
-> > 
-> > The OPAE folks (and other users I know of) usually use FPGA Manager with
-> > a higher layer on top of it that moves the bitstream into the kernel via
-> > an ioctl().
-> > 
-> > One concept I had toyed with mentally, but haven't really gotten around
-> > to implement is a 'discoverable' region, that would deal with the
-> > necessary re-enumeration via a callback and have a sysfs interface
-> > similar to what the patch below has.
-> > This would essentially cover use-cases where you have a discoverable
-> > device implemented in FPGA logic, such as say an FPGA hanging off of
-> > PCIe bus that can get loaded over USB, a CPLD or some other side-band
-> > mechanism. After loading the image you'd have to rescan the PCIe bus -
-> > which - imho is the kernel's job.
-> > 
-> > What I really wanna avoid is creating another /dev/fpga0 / /dev/xdevcfg
-> > that completely leaves the kernel in the dark about the fact that it
-> > reconfigures a bit of hardware hanging off the bus.
-> 
-> Yes, makes sense. While this would suffice my needs at the moment it
-> really sounds like a dead end.
-> 
-> > 
-> > In my ideal world you'd create a pci driver that binds to your device,
-> > and creates mfd style subdevices for whatever you'd want your design to
-> > do. One of these devices would be an FPGA and a FPGA region attached to
-> > that FPGA manager. Your top level driver would co-ordinate the fact that
-> > you are re-programming parts of the FPGA and create / destroy devices as
-> > needed for the hardware contained in the bitstream.
-> 
-> In my case there is no pci device visible before loading the firmware,
-> so creating a pci driver is not an option. Maybe pci host controllers
-> could register themselves as fpga-bridges. With this we could put the
-> pci host controller (or the pci device, AFAIK there is a PCI device tree
-> binding) where the fpga is connected into the fpga-bridges phandles list
-> of the fpga-region.
+So I got a little bit of time to look at this before I got pulled off
+to other things (and now its Friday night, so I figured I'd reply
+before I forget it on Monday).
 
-Can you talk a bit more about the system you're working with? Is there
-some sort of sideband mechanism to load the image? What exposes the
-image loading capaibility? A CPLD, an ASIC, USB device, JTAG?
+I did check and lockdep is tripping when we add ttyAMA6 which is the
+serial console on the board. I wasn't able to trace back to why we
+hadn't already called spin_lock_init() in the console code, but it
+seems we haven't.
 
-What does the topology look like?
+Also I checked on HiKey as well, and there I'm seeing the same lockdep
+splat and this fix seems to resolve it. So more digging is needed. If
+anyone has a better idea of what might be awry or if the lock does
+need to be initialized in the driver (it's a bit inconsistent, I see
+some drivers do but others don't), let me know.
 
-Sideband  -----> FPGA
-PCIe      -----> FPGA
-
-It also depends a bit on the use-case: After you program the bitstream,
-do you need to runtime re-program it? Does it do partial
-reconfiguration? Are there subdevices inside your device, or is the
-whole thing a discoverable PCI device afterwards?
-
-Cheers,
-Moritz
+thanks
+-john
