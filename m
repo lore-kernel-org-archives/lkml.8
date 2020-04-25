@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C9CC55185
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 08:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DCBC55185
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 08:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BC4A21655
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 08:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0387A20700
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 08:53:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726143AbgDYIud (ORCPT
+        id S1726118AbgDYIxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 04:50:33 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:40366 "EHLO huawei.com"
+        Sat, 25 Apr 2020 04:53:50 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:56048 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725837AbgDYIuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 04:50:32 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 73750CDE3F05F8D7501A;
-        Sat, 25 Apr 2020 16:50:30 +0800 (CST)
-Received: from huawei.com (10.67.174.156) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Sat, 25 Apr 2020
- 16:50:20 +0800
+        id S1725837AbgDYIxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 04:53:49 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 64120748827E0978C76B;
+        Sat, 25 Apr 2020 16:53:47 +0800 (CST)
+Received: from huawei.com (10.67.174.156) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Sat, 25 Apr 2020
+ 16:53:40 +0800
 From:   ChenTao <chentao107@huawei.com>
-To:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>
-CC:     <linux@armlinux.org.uk>, <davem@davemloft.net>,
+To:     <yhchuang@realtek.com>, <kvalo@codeaurora.org>
+CC:     <davem@davemloft.net>, <linux-wireless@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <chentao107@huawei.com>
-Subject: [PATCH] net: phy: bcm54140: Make a bunch of functions static
-Date:   Sat, 25 Apr 2020 16:49:44 +0800
-Message-ID: <20200425084944.152130-1-chentao107@huawei.com>
+Subject: [PATCH] rtw88: mac: Make some functions static
+Date:   Sat, 25 Apr 2020 16:53:04 +0800
+Message-ID: <20200425085304.153077-1-chentao107@huawei.com>
 X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -45,50 +45,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fix the following warning:
 
-drivers/net/phy/bcm54140.c:663:5: warning:
-symbol 'bcm54140_did_interrupt' was not declared. Should it be static?
-drivers/net/phy/bcm54140.c:672:5: warning:
-symbol 'bcm54140_ack_intr' was not declared. Should it be static?
-drivers/net/phy/bcm54140.c:684:5: warning:
-symbol 'bcm54140_config_intr' was not declared. Should it be static?
+vers/net/wireless/realtek/rtw88/mac.c:699:5: warning:
+symbol '__rtw_download_firmware' was not declared. Should it be static?
+drivers/net/wireless/realtek/rtw88/mac.c:863:5: warning:
+symbol '__rtw_download_firmware_legacy' was not declared. Should it be static?
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: ChenTao <chentao107@huawei.com>
 ---
- drivers/net/phy/bcm54140.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/wireless/realtek/rtw88/mac.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/phy/bcm54140.c b/drivers/net/phy/bcm54140.c
-index 7341f0126cc4..c009ac2856a5 100644
---- a/drivers/net/phy/bcm54140.c
-+++ b/drivers/net/phy/bcm54140.c
-@@ -660,7 +660,7 @@ static int bcm54140_config_init(struct phy_device *phydev)
- 				  BCM54140_RDB_C_PWR_ISOLATE, 0);
+diff --git a/drivers/net/wireless/realtek/rtw88/mac.c b/drivers/net/wireless/realtek/rtw88/mac.c
+index 645207a01525..f5bf5bab9454 100644
+--- a/drivers/net/wireless/realtek/rtw88/mac.c
++++ b/drivers/net/wireless/realtek/rtw88/mac.c
+@@ -696,7 +696,7 @@ static void download_firmware_end_flow(struct rtw_dev *rtwdev)
+ 	rtw_write16(rtwdev, REG_MCUFW_CTRL, fw_ctrl);
  }
  
--int bcm54140_did_interrupt(struct phy_device *phydev)
-+static int bcm54140_did_interrupt(struct phy_device *phydev)
+-int __rtw_download_firmware(struct rtw_dev *rtwdev, struct rtw_fw_state *fw)
++static int __rtw_download_firmware(struct rtw_dev *rtwdev, struct rtw_fw_state *fw)
  {
- 	int ret;
- 
-@@ -669,7 +669,7 @@ int bcm54140_did_interrupt(struct phy_device *phydev)
- 	return (ret < 0) ? 0 : ret;
+ 	struct rtw_backup_info bckp[DLFW_RESTORE_REG_NUM];
+ 	const u8 *data = fw->firmware->data;
+@@ -860,7 +860,7 @@ static int download_firmware_validate_legacy(struct rtw_dev *rtwdev)
+ 	return -EINVAL;
  }
  
--int bcm54140_ack_intr(struct phy_device *phydev)
-+static int bcm54140_ack_intr(struct phy_device *phydev)
+-int __rtw_download_firmware_legacy(struct rtw_dev *rtwdev, struct rtw_fw_state *fw)
++static int __rtw_download_firmware_legacy(struct rtw_dev *rtwdev, struct rtw_fw_state *fw)
  {
- 	int reg;
+ 	int ret = 0;
  
-@@ -681,7 +681,7 @@ int bcm54140_ack_intr(struct phy_device *phydev)
- 	return 0;
- }
- 
--int bcm54140_config_intr(struct phy_device *phydev)
-+static int bcm54140_config_intr(struct phy_device *phydev)
- {
- 	struct bcm54140_priv *priv = phydev->priv;
- 	static const u16 port_to_imr_bit[] = {
 -- 
 2.22.0
 
