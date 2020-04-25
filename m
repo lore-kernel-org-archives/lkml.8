@@ -2,89 +2,109 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 934C8C54FCB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 12:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DF8C54FCB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 12:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A06C2063A
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 12:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 721672063A
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 12:49:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="LY62OJOK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726124AbgDYMtP (ORCPT
+        id S1726142AbgDYMtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 08:49:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43690 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726062AbgDYMtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 08:49:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 08E85AD10;
-        Sat, 25 Apr 2020 12:49:12 +0000 (UTC)
-Date:   Sat, 25 Apr 2020 14:49:09 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
-        Mike Stunes <mstunes@vmware.com>, joro@8bytes.org,
-        dan.j.williams@intel.com, dave.hansen@linux.intel.com,
-        hpa@zytor.com, jgross@suse.com, jslaby@suse.cz,
-        keescook@chromium.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, luto@kernel.org,
-        peterz@infradead.org, thellstrom@vmware.com,
-        virtualization@lists.linux-foundation.org, x86@kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [PATCH] Allow RDTSC and RDTSCP from userspace
-Message-ID: <20200425124909.GO30814@suse.de>
-References: <20200319091407.1481-56-joro@8bytes.org>
- <20200424210316.848878-1-mstunes@vmware.com>
- <2c49061d-eb84-032e-8dcb-dd36a891ce90@intel.com>
- <ead88d04-1756-1190-2b37-b24f86422595@amd.com>
- <4d2ac222-a896-a60e-9b3c-b35aa7e81a97@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4d2ac222-a896-a60e-9b3c-b35aa7e81a97@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sat, 25 Apr 2020 08:49:36 -0400
+Received: from mail.fudan.edu.cn ([202.120.224.73]:59872 "EHLO fudan.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726088AbgDYMtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 08:49:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
+        Message-Id; bh=DAdcVdFhvYQtNdDz2j5VouHrVTcU268GGkJ1EbD/0DQ=; b=L
+        Y62OJOK9qc1fqsgKluUcijz/WNZqMS5fj5XWYJiSfP+xyC+9BE014Of+qpuJiivE
+        dEhQ7Q9FYwkuQP7y5M05Cl6I3xCKestVctCA1C3XPoakpEC4tz1b3jEO8rQ6TTpv
+        Wsr+1O6bXezjqPlkyKmxqkupyXfALjdvG3ou0MkfkU=
+Received: from localhost.localdomain (unknown [120.229.255.80])
+        by app2 (Coremail) with SMTP id XQUFCgCXagjJMaRebPioAA--.2649S3;
+        Sat, 25 Apr 2020 20:49:15 +0800 (CST)
+From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>
+Subject: [PATCH] ASoC: davinci-mcasp: Fix dma_chan refcnt leak when getting dma type
+Date:   Sat, 25 Apr 2020 20:48:35 +0800
+Message-Id: <1587818916-38730-1-git-send-email-xiyuyang19@fudan.edu.cn>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: XQUFCgCXagjJMaRebPioAA--.2649S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Aw1xAr4Duw4xXr4kKFyUWrg_yoW8Xr1rpr
+        s8GFWFvry5tF43GFn5J395XF42kayYyry2kay8ta4rCF13Xryakr1aq34q9FWUArZ5Jw1x
+        WayYgr1rZ3W5ua7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl
+        6s0DM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+        0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
+        YxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+        AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+        17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+        IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq
+        3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+        nIWIevJa73UjIFyTuYvjfUOlksUUUUU
+X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
+davinci_mcasp_get_dma_type() invokes dma_request_chan(), which returns a
+reference of the specified dma_chan object to "chan" with increased
+refcnt.
 
-On Fri, Apr 24, 2020 at 03:53:09PM -0700, Dave Hansen wrote:
-> Ahh, so any instruction that can have an instruction intercept set
-> potentially needs to be able to tolerate a #VC?  Those instruction
-> intercepts are under the control of the (untrusted relative to the
-> guest) hypervisor, right?
-> 
-> >From the main sev-es series:
-> 
-> +#ifdef CONFIG_AMD_MEM_ENCRYPT
-> +idtentry vmm_communication     do_vmm_communication    has_error_code=1
-> +#endif
+When davinci_mcasp_get_dma_type() returns, local variable "chan" becomes
+invalid, so the refcount should be decreased to keep refcount balanced.
 
-The next version of the patch-set (which I will hopefully have ready
-next week) will have this changed. The #VC exception handler uses an IST
-stack and is set to paranoid=1 and shift_ist. The IST stacks for the #VC
-handler are only allocated when SEV-ES is active.
+The reference counting issue happens in one exception handling path of
+davinci_mcasp_get_dma_type(). When chan device is NULL, the function
+forgets to decrease the refcnt increased by dma_request_chan(), causing
+a refcnt leak.
 
-> That's a fun point because it means that the (untrusted) hypervisor can
-> cause endless faults.  I *guess* we have mitigation for this with our
-> stack guard pages, but it's still a bit nasty that the hypervisor can
-> arbitrarily land a guest in the double-fault handler.
-> 
-> It just all seems a bit weak for the hypervisor to be considered
-> untrusted.  But, it's _certainly_ a steep in the right direction from SEV.
+Fix this issue by calling dma_release_channel() when chan device is
+NULL.
 
-Yeah, a malicious hypervisor can do bad things to an SEV-ES VM, but it
-can't easily steal its secrets from memory or registers. The #VC handler
-does its best to just crash the VM if unexpected hypervisor behavior is
-detected.
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+---
+ sound/soc/ti/davinci-mcasp.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
+diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
+index 734ffe925c4d..7a7db743dc5b 100644
+--- a/sound/soc/ti/davinci-mcasp.c
++++ b/sound/soc/ti/davinci-mcasp.c
+@@ -1896,8 +1896,10 @@ static int davinci_mcasp_get_dma_type(struct davinci_mcasp *mcasp)
+ 				PTR_ERR(chan));
+ 		return PTR_ERR(chan);
+ 	}
+-	if (WARN_ON(!chan->device || !chan->device->dev))
++	if (WARN_ON(!chan->device || !chan->device->dev)) {
++		dma_release_channel(chan);
+ 		return -EINVAL;
++	}
+ 
+ 	if (chan->device->dev->of_node)
+ 		ret = of_property_read_string(chan->device->dev->of_node,
+-- 
+2.7.4
 
-Regards,
-
-	Joerg
