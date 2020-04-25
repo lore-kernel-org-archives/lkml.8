@@ -2,141 +2,109 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D06C54FCB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 17:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 225CFC54FCB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 17:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6341720728
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 17:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2F532074F
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 17:53:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="R1myo23W"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UpgWcg9e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbgDYRxA (ORCPT
+        id S1726385AbgDYRxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 13:53:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44024 "EHLO
+        Sat, 25 Apr 2020 13:53:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726061AbgDYRw7 (ORCPT
+        by vger.kernel.org with ESMTP id S1726061AbgDYRxP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 13:52:59 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5823C09B04D
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 10:52:59 -0700 (PDT)
-Received: from zn.tnic (p200300EC2F2A1100B46A3E12B0A6AFFD.dip0.t-ipconnect.de [IPv6:2003:ec:2f2a:1100:b46a:3e12:b0a6:affd])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D4BD71EC0CF3;
-        Sat, 25 Apr 2020 19:52:56 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1587837177;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=TpVMN9srSTRxzvdHGcL8+sKPNt7gpM//pRvQmGJNb+g=;
-        b=R1myo23W52fNK5banUDGZAMqtoKEU/6DDqsccMiQpe/spVb9kuw+4clgkM6kJTQ4luTcjE
-        uzvdFcE6YUUhVG3d5V+1sI9Tmua8HKBPjiQ7gREV6Hwe8YtF3IBCUgvz5V8OJC7itxgqx1
-        IsoJeTOOta5x06C5ENaQc8aSDwAfBI0=
-Date:   Sat, 25 Apr 2020 19:52:49 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Michael Matz <matz@suse.de>, Jakub Jelinek <jakub@redhat.com>,
-        Sergei Trofimovich <slyfox@gentoo.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kees Cook <keescook@chromium.org>,
-        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
-        =?utf-8?Q?Fr=C3=A9d=C3=A9ric_Pierret_=28fepitre=29?= 
-        <frederic.pierret@qubes-os.org>, boris.ostrovsky@oracle.com,
-        jgross@suse.com, linuxppc-dev@lists.ozlabs.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-Subject: Re: [PATCH] x86: Fix early boot crash on gcc-10, next try
-Message-ID: <20200425175249.GC24294@zn.tnic>
-References: <20200422192113.GG26846@zn.tnic>
- <CAKwvOdkbcO8RzoafON2mGiSy5P96P5+aY8GySysF2my7q+nTqw@mail.gmail.com>
- <20200422212605.GI26846@zn.tnic>
- <CAKwvOd=exxhfb8N6=1Q=wBUaYcRDEq3L1+TiHDLz+pxWg8OuwQ@mail.gmail.com>
- <20200423125300.GC26021@zn.tnic>
- <20200423161126.GD26021@zn.tnic>
- <20200425014657.GA2191784@rani.riverdale.lan>
- <20200425085759.GA24294@zn.tnic>
- <20200425150440.GA470719@rani.riverdale.lan>
- <20200425173140.GB24294@zn.tnic>
+        Sat, 25 Apr 2020 13:53:15 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51F37C09B04F
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 10:53:15 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id n16so6261716pgb.7
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 10:53:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mxsCUHvJidJhiJJhJNMycjU39aOd/yCTxZfhtIy2qU4=;
+        b=UpgWcg9eIyBGCuU1flBlioxSkBNuuizyQvlSNx1MvIPLntXpuLCT6/gnOyi4Q69Il8
+         jiMbElEjkB9TYlgkP2MyrFJNKaVP3avr1NidYBSz3HR2XZUoSF7KB1foYIekSTvpzQMt
+         XPkv+5EqsvGkb0KD7GTMauLLxJ55e+ZgfOM7I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mxsCUHvJidJhiJJhJNMycjU39aOd/yCTxZfhtIy2qU4=;
+        b=rweb32RVy1LQvCyxkil7khuZ7xTgWOMKZ4TyjTdSbRKTakHZqkMKeNnXxA7lgG/5wO
+         DMv3bpCCkb6ZFovYghpTPRXLQYRb/GXlLbjMo7GHxkFbCT2y8e5b8bujta3xoaDUmUpK
+         Q6nZrawXMmnlXg2BuvlhmtbcDg3L4o74z44Ud4+/Md4VzPWLBXcHGlEFhxs7AKJo86vS
+         P19090TGqqvArQJ5EscjSQ6nPH28fXaqMlPZojn+MY0yCSkcGtdFyy21/cMTBsOp59oL
+         0IPl2J6Pvu0+YjZJfCsP7NT1AMvI/mJu/tTMic7QEza2W7aQTtTcId4xJhgp+TvpVOWM
+         1RWg==
+X-Gm-Message-State: AGi0PuaVzTtCVfWovV7Kflh0UzmZiQoT+DF0m1nyR6XjZlNo3KE45hqc
+        h96+7/1hvepHzt4U4/ab9Bq73w==
+X-Google-Smtp-Source: APiQypLWC1/oB1xiCcvxiHfUPr1phpNzdnJKfr8nfxRQ3K6A4nRs9gSTe2ahMKHe/bAreT3IAEEGNw==
+X-Received: by 2002:aa7:985e:: with SMTP id n30mr14586895pfq.163.1587837194732;
+        Sat, 25 Apr 2020 10:53:14 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id v127sm8342148pfv.77.2020.04.25.10.53.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Apr 2020 10:53:14 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH v2 0/3] Even moar rpmh cleanups
+Date:   Sat, 25 Apr 2020 10:53:09 -0700
+Message-Id: <20200425175312.124892-1-swboyd@chromium.org>
+X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200425173140.GB24294@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 25, 2020 at 07:31:40PM +0200, Borislav Petkov wrote:
-> Hmm, that's what I was afraid of - having to sprinkle this around. Yah, let's
-> wait for compiler guys to have a look here and then maybe I'll convert that
-> thing to a macro called
-> 
-> 	compiler_prevent_tail_call_opt()
-> 
-> or so, so that it can be sprinkled around. ;-\
+Patches based on Doug's latest series[1] on top of linux-next. We remove
+the tcs_is_free() API and then do super micro optimizations on the irq
+handler. I haven't tested anything here so most likely there's a bug
+(again)!
 
-IOW, something like this (ontop) which takes care of the xen case too.
-If it needs to be used by all arches, then I'll split the patch:
+Changes from v1
+ * First patch became even moar complicated because it combines
+   find_free_tcs() with the check for a request in flight
+ * Fixed subject in patch 2
+ * Put back unsigned long for bitmap operation to silence compiler
+   warning
+ * Picked up review tags
 
----
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index 73bf8450afa1..4f275ac7830b 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -273,7 +273,7 @@ static void notrace start_secondary(void *unused)
- 	 * boot_init_stack_canary() and must not be checked before tail calling
- 	 * another function.
- 	 */
--	asm ("");
-+	prevent_tail_call_optimization();
- }
- 
- /**
-diff --git a/arch/x86/xen/smp_pv.c b/arch/x86/xen/smp_pv.c
-index 8fb8a50a28b4..f2adb63b2d7c 100644
---- a/arch/x86/xen/smp_pv.c
-+++ b/arch/x86/xen/smp_pv.c
-@@ -93,6 +93,7 @@ asmlinkage __visible void cpu_bringup_and_idle(void)
- 	cpu_bringup();
- 	boot_init_stack_canary();
- 	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
-+	prevent_tail_call_optimization();
- }
- 
- void xen_smp_intr_free_pv(unsigned int cpu)
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 034b0a644efc..73f889f64513 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -356,4 +356,7 @@ static inline void *offset_to_ptr(const int *off)
- /* &a[0] degrades to a pointer: a different type from an array */
- #define __must_be_array(a)	BUILD_BUG_ON_ZERO(__same_type((a), &(a)[0]))
- 
-+
-+#define prevent_tail_call_optimization()	asm("")
-+
- #endif /* __LINUX_COMPILER_H */
+Stephen Boyd (3):
+  soc: qcom: rpmh-rsc: Remove tcs_is_free() and find_free_tcs() APIs
+  soc: qcom: rpmh-rsc: Loop over fewer bits in irq handler
+  soc: qcom: rpmh-rsc: Fold WARN_ON() into if condition
 
+ drivers/soc/qcom/rpmh-rsc.c | 115 ++++++++++++------------------------
+ 1 file changed, 39 insertions(+), 76 deletions(-)
 
+Cc: Maulik Shah <mkshah@codeaurora.org>
+Cc: Douglas Anderson <dianders@chromium.org>
+
+[1] https://lore.kernel.org/r/20200424094610.v5.1.Ic7096b3b9b7828cdd41cd5469a6dee5eb6abf549@changeid
+
+base-commit: 02d8ecc18b8f392389ac9e7b785b0230ecb80833
+prerequisite-patch-id: 0d383ea46ef52ab4044886a7d88d85c3c506f4ed
+prerequisite-patch-id: a02b0b018404d1a0c79270ab567051656f123b23
+prerequisite-patch-id: e59d990462b004a9f8335e87c2d0d747afec49ea
+prerequisite-patch-id: 20cd04c9dbed8937de5d61f486616c5961b8ef99
+prerequisite-patch-id: bb479b9adbe28c58b3ac8f363a306de80b6dcb74
 -- 
-Regards/Gruss,
-    Boris.
+Sent by a computer, using git, on the internet
 
-https://people.kernel.org/tglx/notes-about-netiquette
