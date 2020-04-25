@@ -2,111 +2,129 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9813FC55191
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 23:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA69FC55185
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 23:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 672E620704
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 23:42:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587858178;
-	bh=Wa9pRor+FZOPY2ND7QNZBk7br1p7RSGFmR3CvEbaUMk=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=1IejIhTrODnkui9UfYJS4DjDBKjkLI8hFB7af++tDjtFxk+MUuFfOcW3Ji0kscY5j
-	 bDIsxUsBjKpn8TBb89YMnk70sYIad7VppzBFXiBF9yoNvS+9k4J+AkPRlju9LCwBQj
-	 mjvJuLAKtJApbjS/6b5osXW764K9NNyKo6WSFi/w=
+	by mail.kernel.org (Postfix) with ESMTP id B7FF22071E
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 23:44:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="AdwbSH1Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbgDYXm6 (ORCPT
+        id S1726233AbgDYXoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 19:42:58 -0400
-Received: from mail-oo1-f67.google.com ([209.85.161.67]:43293 "EHLO
-        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbgDYXm5 (ORCPT
+        Sat, 25 Apr 2020 19:44:25 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:5866 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726070AbgDYXoX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 19:42:57 -0400
-Received: by mail-oo1-f67.google.com with SMTP id h23so419743oos.10;
-        Sat, 25 Apr 2020 16:42:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=+HEWMzeY2Z+R1cn0KYsKeAg1YeSXi0Mg+04sBBJlfTc=;
-        b=tz/r5aaOuflm27DzF/ChBRPar3U51v+FA1eEjgWX5hf8XxkIkGFFSqpq1T1bGHzecr
-         /xnK8JDjFYDpWJEMTbVuUPE5XBJxj5dusMun4C7Ol7NLGodLYZ2gM2ygU+G9w5UaMJ4w
-         LeqIg+/lpbdH4qnD3YdyNzKJm5yMExMe7ENtA9ADjdpumSzplUToyIpOTHmLvOFO5+0P
-         wG09BIqp0E0BCJek1hmVps4I4Nitk2ftRap3Ur0TWYldtEDInmXZK1bu02fLwUHHyvfK
-         os1qnTV0qPU+mfv+j71DNWNwT+nMLOEtnaOuAluIRkZ8COdPyGQtRLKeFi1pPNN/SxOI
-         a4lg==
-X-Gm-Message-State: AGi0PuYUcC0n86kXcJOgLI7gKxKa8/SFJy/D72ZkBC6uyTwjvl74SawK
-        4o7RlBBIhKyFG85AS3meZw==
-X-Google-Smtp-Source: APiQypKkjbBTjqSUlR6x0aO3oupijTopSqVOPLVvsIWAyUpGQQf5McdNoXkpwHf8bLuV01Jz9zO9YA==
-X-Received: by 2002:a4a:9c8d:: with SMTP id z13mr13279565ooj.50.1587858175193;
-        Sat, 25 Apr 2020 16:42:55 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r67sm2818967oie.19.2020.04.25.16.42.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Apr 2020 16:42:54 -0700 (PDT)
-Received: (nullmailer pid 1923 invoked by uid 1000);
-        Sat, 25 Apr 2020 23:42:54 -0000
-Date:   Sat, 25 Apr 2020 18:42:53 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>
-Subject: [GIT PULL] Devicetree fixes for v5.7, take 2
-Message-ID: <20200425234253.GA32365@bogus>
+        Sat, 25 Apr 2020 19:44:23 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ea4cae00000>; Sat, 25 Apr 2020 16:42:24 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Sat, 25 Apr 2020 16:44:23 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Sat, 25 Apr 2020 16:44:23 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 25 Apr
+ 2020 23:44:23 +0000
+Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 25 Apr
+ 2020 23:44:21 +0000
+Subject: Re: [RFC PATCH v10 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1587700513-28449-1-git-send-email-skomatineni@nvidia.com>
+ <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
+ <3155e0d2-94b0-6e0a-bf35-b3560c201039@gmail.com>
+ <fffc09d1-a25f-2d6e-83bd-f7657dd2ff16@nvidia.com>
+ <e5602c48-a73e-8e71-188d-6a53ebf8e4a4@gmail.com>
+ <f6d62dde-9ab5-7001-0ff4-93ed70cb207f@nvidia.com>
+ <6568af00-3d65-4ddb-f003-7a4161d751a0@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <f3a122b9-3600-b1eb-be4f-39be79d979a5@nvidia.com>
+Date:   Sat, 25 Apr 2020 16:44:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <6568af00-3d65-4ddb-f003-7a4161d751a0@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587858144; bh=PiLaNp0bCg78WuOfTnePbhKvbw4eCJtNxZvWa9U+pnU=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=AdwbSH1QFw17nP9MW9B5o3x1LamyxnSbGvN0/w7vkDa/x9uOMnarvSZxFTCBmeFYD
+         k6nMwRjbqav+w4LRL3Sy/UXQtsVb5idRSRi9XleV0oKqrd21v8+cAZxwc4buphC6wt
+         bHxIcf/OCIzdhhFCN/ynnBAILZoAFNlnROlxoKgjykJerg8SW6qq4Q8yI1QzikKf3a
+         unFtMejpr1pGtvxGcnSF0rLKxP2jFE4wi30irOW6HDd9VIAZdbOertvlIqrC/VOR1+
+         BGkW4eKz7yBBTCBoTGgHShDahJZ5ZbPxda22PfLvgg9By/Bg7gDpOrHEbZjwi5r8u7
+         xJe3ApYVBquIQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
 
-Please pull a couple more DT fixes for v5.7-rc.
+On 4/25/20 4:40 PM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 26.04.2020 01:11, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 4/25/20 3:08 PM, Dmitry Osipenko wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> 25.04.2020 01:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> On 4/24/20 8:07 AM, Dmitry Osipenko wrote:
+>>>>> External email: Use caution opening links or attachments
+>>>>>
+>>>>>
+>>>>> 24.04.2020 06:55, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>>
+>>>>> Is this driver compiled as a single kernel module file?
+>>>>>
+>>>>>> +MODULE_AUTHOR("Sowjanya Komatineni <skomatineni@nvidia.com>");
+>>>>>> +MODULE_DESCRIPTION("NVIDIA Tegra CSI Device Driver");
+>>>>>> +MODULE_LICENSE("GPL v2");
+>>>>> ...
+>>>>>> +MODULE_AUTHOR("Sowjanya Komatineni <skomatineni@nvidia.com>");
+>>>>>> +MODULE_DESCRIPTION("NVIDIA Tegra Video Input Device Driver");
+>>>>>> +MODULE_LICENSE("GPL v2");
+>>>>> I don't think that these macros are needed in that case.
+>>>>> The video.c should be enough, isn't it?
+>>>> yes these can be removed
+>>> It will be nice to factor out the Tegra210-specific VI/CSI OPS into a
+>>> separate driver module (say tegra210-vi) to ease supporting of other
+>>> Tegra versions. Of course this could be done later on, although I
+>>> suppose the amount of hassle could be reduced if it's done from the
+>>> start.
+>> vi/csi.c are common drivers for all Tegras. All Tegra chip specific
+>> related programming for both vi and csi were already moved to Tegra210.c
+>> based on prior feedbacks.
+> Judging by the code's structure the VI/CSI drivers aren't planned to be
+> reused by older pre-Terga210 SoCs, correct?
+>
+> How much of the T210 code could be reused by T186/194?
 
-Rob
+vi/csi are common driver where soc structure should be populated for=20
+T186/T194
 
+Tegra210.c can't be reused for Tegra186/t194 as programming seq is a=20
+whole lot diff
 
-The following changes since commit 0903060fe590105b7d31901c1ed67614c08cee08:
-
-  kbuild: check libyaml installation for 'make dt_binding_check' (2020-04-17 10:45:23 -0500)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.7-2
-
-for you to fetch changes up to 4bc77b2d211e107fa54b1f39cd0d7dac5537b8cb:
-
-  dt-bindings: phy: qcom-qusb2: Fix defaults (2020-04-24 17:53:57 -0500)
-
-----------------------------------------------------------------
-Devicetree fixes for v5.7-rc, take 2:
-
-A couple of schema and kbuild fixes.
-
-----------------------------------------------------------------
-Douglas Anderson (1):
-      dt-bindings: phy: qcom-qusb2: Fix defaults
-
-Rob Herring (3):
-      dt-bindings: Re-enable core schemas for dtbs_check
-      dt-bindings: Fix command line length limit calling dt-mk-schema
-      dt-bindings: Fix erroneous 'additionalProperties'
-
- Documentation/devicetree/bindings/Makefile          | 21 ++++++++++++---------
- .../devicetree/bindings/mfd/st,stpmic1.yaml         |  2 --
- .../devicetree/bindings/phy/qcom,qusb2-phy.yaml     |  6 +++---
- .../devicetree/bindings/regulator/mps,mp5416.yaml   |  1 -
- .../devicetree/bindings/regulator/mps,mpq7920.yaml  |  3 ++-
- .../bindings/regulator/rohm,bd71828-regulator.yaml  |  6 +++++-
- .../bindings/regulator/rohm,bd71837-regulator.yaml  |  6 +++++-
- .../bindings/regulator/rohm,bd71847-regulator.yaml  |  6 +++++-
- 8 files changed, 32 insertions(+), 19 deletions(-)
