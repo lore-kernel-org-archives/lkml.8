@@ -2,93 +2,157 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D09EEC55185
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 22:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88BDEC55185
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 23:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A387B2072B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 22:48:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a19cRORN"
+	by mail.kernel.org (Postfix) with ESMTP id 6B8772072B
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 23:11:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbgDYWse (ORCPT
+        id S1726338AbgDYXLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 18:48:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33126 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726232AbgDYWse (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 18:48:34 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E70DBC09B04F
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 15:48:33 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id z6so5278365plk.10
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 15:48:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=INjGMVxgX7lD+RGHEgxoq3gDShE5KD3g4HVfvBFmby0=;
-        b=a19cRORNjk+/VdnJXmNiPknF3uo2PtEDXd+Wn4E4Yw2n5jXzONbHkfcL7Io7V4/h1A
-         hqComD/2KShYjSZxHRAydagOWbxq3YizLF44RZb5NMD2WtxFknT5vLn3qoKXRKx43h5E
-         obdJgZwA4bH5Uox8RuOWkBB9t/5HwOcUSuKEg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=INjGMVxgX7lD+RGHEgxoq3gDShE5KD3g4HVfvBFmby0=;
-        b=sccpy0/5ZeEOWYcRgHpu5Jhzm/CC0Mk4HWGQCAyT8ifyD0gJZekhn4JPOf+uGhSh5F
-         S/7SrBRIzXCahf0lSDsF/4ILwFTLT0K5t/MlCAZ+fyq0bdmzqtD1t5SLONRFd0Y60Rrm
-         NwD5B5GBBWpRTEFEE66cjliRdC2aVYbot9zEv00LUfaayaKXp6JKcEyzfKu0iC13GA6f
-         +sOj5IwMzqTaITzRISLnInDD6fRbqeo+sg33uXfVhkXSejU6k+/nvRM85qZD+EZgvDeB
-         r5MH2p7QQowRcfa+IeGVfvoQ5GgDaBL6Gb+c3T/W7rAKwOPIz/lmUm/DgIYlZ1zdTUfs
-         a4zw==
-X-Gm-Message-State: AGi0PuYO37muwYYTMpWtYIDcgr5+lggvsRlMgoMaet2RSBnbEHPaTrK0
-        ejmnkokKpop9CJlgitilerXnoQ==
-X-Google-Smtp-Source: APiQypLs6/BOi+uxr/spumGtn9iNGxndENmo4EqWuANXYqfmygIWEh2qromOmlkooNFsGiUVu4nPqA==
-X-Received: by 2002:a17:902:598f:: with SMTP id p15mr15950225pli.264.1587854913322;
-        Sat, 25 Apr 2020 15:48:33 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b15sm8864879pfd.139.2020.04.25.15.48.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Apr 2020 15:48:32 -0700 (PDT)
-Date:   Sat, 25 Apr 2020 15:48:31 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, linux-mm@kvack.org,
+        Sat, 25 Apr 2020 19:11:32 -0400
+Received: from mail-dm6nam11olkn2084.outbound.protection.outlook.com ([40.92.19.84]:27552
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726239AbgDYXLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 19:11:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MNDg9M58m4KPKIOcMbbuqV3CoTzVJfbVaYqMBzFOgpU2GeMbLO0gOLde1wTvg5+BMj3rzEzW7cRT6Wm2omWSIp57XWsyzGQY8B5aO+qOgLAScIFd/LbSoBReB61qw/5fNmXnx8bDJ2tR5tbac5d77oPq6Qj5Wqo6SpCYprNJAm9KnM6mA7gyIadh/peZbLU+b/sYtJO3fdExh2mvvwMkQzumudmpkB7wao9PtXp8ZMgvjUOK968i0LxXwbsBukThTqV34AyIgqnOu6+Y/GA6sOgCGuZGfAcsfnP0Z83ZcfBi2TbtLEzgdkBaV9xirLIhnQ/H7BZvc1UDvxfNznBsZw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=S0vXJVE32lpkWDnoBufx3otVqVnCBilyUb9wirqRsIQ=;
+ b=StunFb0/QsGW2I7DTb0pvV3IFRq5m9IlauD4J7x1U3GcN+ldh9gdtPL+uauI2Jn+vFVLX2nfXVCYJ1dRsvSvQ2PwZxK5UzUzJx3uP8gjW+fgzdALWSzzSf9Y25N/wX0VMDaKb8Snj4Wtr4wCVdFvitKC0xLnkfN89/iTqOTOQVQylAm9oZQO+x6WwqQv61UiCAHZmHxzo66TmvbwGrSXfT/JgA+yklju+wWkCmsPOMdtbPXH3n+x+h/jvFS2oH2I64P51o51wFYPcjjvlh+OC0eyjpHyV8EVhdJq/wmLGfIYTyyWKXH+iB+ND8EWndfebio4vXz9ssgmpQoMg18j6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
+ header.d=live.ca; arc=none
+Received: from CO1NAM11FT007.eop-nam11.prod.protection.outlook.com
+ (2a01:111:e400:3861::44) by
+ CO1NAM11HT021.eop-nam11.prod.protection.outlook.com (2a01:111:e400:3861::265)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.15; Sat, 25 Apr
+ 2020 23:11:28 +0000
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ (2a01:111:e400:3861::50) by CO1NAM11FT007.mail.protection.outlook.com
+ (2a01:111:e400:3861::131) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.15 via Frontend
+ Transport; Sat, 25 Apr 2020 23:11:28 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:AEF0FFCBC70ED89B5CEE39BBFD344B835AC0B34541CC669B770D3986EA2BFB6B;UpperCasedChecksum:1409D41779AA5219069FB68F99550B7C6EC4C1F5BBD0179917BCDCED26E06C41;SizeAsReceived:7782;Count:48
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2937.020; Sat, 25 Apr 2020
+ 23:11:28 +0000
+From:   Jonathan Bakker <xc-racer2@live.ca>
+To:     tomasz.figa@gmail.com, krzk@kernel.org, s.nawrocki@samsung.com,
+        linus.walleij@linaro.org, kgene@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/slub: do not place freelist pointer to middle of
- object if redzone is on
-Message-ID: <202004251547.0F8E6856B@keescook>
-References: <20200425091338.24283-1-changbin.du@gmail.com>
+Cc:     Jonathan Bakker <xc-racer2@live.ca>
+Subject: [PATCH] pinctrl: samsung: Save/restore eint_mask over suspend for EINT_TYPE GPIOs
+Date:   Sat, 25 Apr 2020 16:10:46 -0700
+Message-ID: <BN6PR04MB06600C848C2C1531F73DAD7BA3D10@BN6PR04MB0660.namprd04.prod.outlook.com>
+X-Mailer: git-send-email 2.20.1
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MWHPR2001CA0002.namprd20.prod.outlook.com
+ (2603:10b6:301:15::12) To BN6PR04MB0660.namprd04.prod.outlook.com
+ (2603:10b6:404:d9::21)
+X-Microsoft-Original-Message-ID: <20200425231046.7381-1-xc-racer2@live.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200425091338.24283-1-changbin.du@gmail.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from jon-hp-6570b.telus (2001:569:fb67:7300:9f89:4b96:de0b:cd14) by MWHPR2001CA0002.namprd20.prod.outlook.com (2603:10b6:301:15::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Sat, 25 Apr 2020 23:11:27 +0000
+X-Mailer: git-send-email 2.20.1
+X-Microsoft-Original-Message-ID: <20200425231046.7381-1-xc-racer2@live.ca>
+X-TMN:  [v4KQYPAa7LHoXyTQ3BJOLgpRKgDXt8UQgT+4jQWyjVcnrreUqbupHOgxGtTdkfv7]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 48
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: 18b11ac3-b476-4960-521a-08d7e96dfbda
+X-MS-TrafficTypeDiagnostic: CO1NAM11HT021:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: pavvT/rzneMqC9LlLgL9EVoAQZmJyDGsk83kporlgA2acwLSZ/C0kuZRcoHJO8gdEcD19/KerBHSKJpGx7tkNH5+2fZp+B+gisXMu/GlDvU3KdgQTuaAtwkrtFtb5mrHduVOXRytJF6In+s5N5cL2AyOxYYyBHCQTuo6TWX/m+tDlvZysk/3Ozg+GMUNZaQONxuBXeLLMsKICBaOIXEQGQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
+X-MS-Exchange-AntiSpam-MessageData: ss3lKa0wDOcFcr300byaVJm6hEj2f2NIpe3eDO495av7AU0Gqq+w157NNa16mk233k69qchCnjDC8qbU1ylmiHC0HUSpeBHvg1Pmg7ErGVc/yVpauGNvDQi68I2N8HJZsZJp5h6+A02OnkJtcda7db6YgekJtf9XmujQaD5fgkdAX5gL8U1TMkhGwVBnC582OqUdtaXMjWVPjEoY3pY75g==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 18b11ac3-b476-4960-521a-08d7e96dfbda
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Apr 2020 23:11:28.6898
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1NAM11HT021
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 25, 2020 at 05:13:38PM +0800, Changbin Du wrote:
-> The recent kernel fails to boot when slub redzone is turned on. This is
-> caused by commit 3202fa62fb ("slub: relocate freelist pointer to middle of
-> object") which relocates freelist pointer to middle of object. In this
-> case, get_track() gets a wrong address and then the redzone is overwritten.
+Currently, for EINT_TYPE GPIOs, the CON and FLTCON registers
+are saved and restored over a suspend/resume cycle.  However, the
+EINT_MASK registers are not.
 
-Hi! A fix for this is already in -next:
+On S5PV210 at the very least, these registers are not retained over
+suspend, leading to the interrupts remaining masked upon resume and
+therefore no interrupts being triggered for the device.  There should
+be no effect on any SoCs that do retain these registers as theoretically
+we would just be re-writing what was already there.
 
-https://www.ozlabs.org/~akpm/mmotm/broken-out/slub-avoid-redzone-when-choosing-freepointer-location.patch
+Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+---
+ drivers/pinctrl/samsung/pinctrl-exynos.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-the above doesn't disable the mitigation when using redzones, so I
-prefer that to this suggested solution.
-
+diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/samsung/pinctrl-exynos.c
+index 0599f5127b01..e6ddb54afaf2 100644
+--- a/drivers/pinctrl/samsung/pinctrl-exynos.c
++++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
+@@ -265,6 +265,7 @@ struct exynos_eint_gpio_save {
+ 	u32 eint_con;
+ 	u32 eint_fltcon0;
+ 	u32 eint_fltcon1;
++	u32 eint_mask;
+ };
+ 
+ /*
+@@ -608,10 +609,13 @@ static void exynos_pinctrl_suspend_bank(
+ 						+ 2 * bank->eint_offset);
+ 	save->eint_fltcon1 = readl(regs + EXYNOS_GPIO_EFLTCON_OFFSET
+ 						+ 2 * bank->eint_offset + 4);
++	save->eint_mask = readl(regs + bank->irq_chip->eint_mask
++						+ bank->eint_offset);
+ 
+ 	pr_debug("%s: save     con %#010x\n", bank->name, save->eint_con);
+ 	pr_debug("%s: save fltcon0 %#010x\n", bank->name, save->eint_fltcon0);
+ 	pr_debug("%s: save fltcon1 %#010x\n", bank->name, save->eint_fltcon1);
++	pr_debug("%s: save    mask %#010x\n", bank->name, save->eint_mask);
+ }
+ 
+ void exynos_pinctrl_suspend(struct samsung_pinctrl_drv_data *drvdata)
+@@ -653,6 +657,9 @@ static void exynos_pinctrl_resume_bank(
+ 	pr_debug("%s: fltcon1 %#010x => %#010x\n", bank->name,
+ 			readl(regs + EXYNOS_GPIO_EFLTCON_OFFSET
+ 			+ 2 * bank->eint_offset + 4), save->eint_fltcon1);
++	pr_debug("%s:    mask %#010x => %#010x\n", bank->name,
++			readl(regs + bank->irq_chip->eint_mask
++			+ bank->eint_offset), save->eint_mask);
+ 
+ 	writel(save->eint_con, regs + EXYNOS_GPIO_ECON_OFFSET
+ 						+ bank->eint_offset);
+@@ -660,6 +667,8 @@ static void exynos_pinctrl_resume_bank(
+ 						+ 2 * bank->eint_offset);
+ 	writel(save->eint_fltcon1, regs + EXYNOS_GPIO_EFLTCON_OFFSET
+ 						+ 2 * bank->eint_offset + 4);
++	writel(save->eint_mask, regs + bank->irq_chip->eint_mask
++						+ bank->eint_offset);
+ }
+ 
+ void exynos_pinctrl_resume(struct samsung_pinctrl_drv_data *drvdata)
 -- 
-Kees Cook
+2.20.1
+
