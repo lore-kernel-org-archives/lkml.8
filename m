@@ -2,294 +2,115 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F68AC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 00:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0037FC55191
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 00:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EFF02076C
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 00:14:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587773644;
-	bh=IZLivPbHsx9A+xPCq8dYZFfJHCkSOpE9AKsHblPFmXU=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=g2epiaQd5+FnS2o2YLopStAYEEkX4o2Mlp3bqnvH8RbvAcAepH2Y18SW9+bxlsGHy
-	 3VB3va38xTtZXQz9B+tMvDmbAwQ9s1uWPIo/V3c0jKOIyXW+0+is/IuVPDpuwHwNdr
-	 tSB6X6pO0s7hiesuJhj6ofxRIPAqSZ/zgPyyaGcQ=
+	by mail.kernel.org (Postfix) with ESMTP id D5F462074F
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 00:15:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o4Y/4BMZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbgDYAOD (ORCPT
+        id S1726124AbgDYAPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 20:14:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60528 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725851AbgDYAOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 20:14:02 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF6242076C;
-        Sat, 25 Apr 2020 00:14:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587773640;
-        bh=IZLivPbHsx9A+xPCq8dYZFfJHCkSOpE9AKsHblPFmXU=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=l7UjrE0bkLklSSxjmf64OLdR31M6YUr2qj8cmZktEEOfdDdwtKAatDEupeZSUjWeT
-         IfXSn3+JHTKUtTqpJH8B2IR7TmvjzYQpdBMVU0uBPG1WD8Mn50fHvozV0I13lCE2JT
-         5xxGNaXZ7R/ypeSMQXM2EVOH+iqFR2c4fsmHE2IU=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 7AF27352339B; Fri, 24 Apr 2020 17:14:00 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 17:14:00 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Sal Carrasco <scarrasco@linode.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: Introduction Email and RCU CPU Stalls
-Message-ID: <20200425001400.GE17661@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <CAL1oa3sbpn0+sbov-Jvhr1k1eo3wRzi70iNVFb4qQX4N08K-GA@mail.gmail.com>
+        Fri, 24 Apr 2020 20:15:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50332 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbgDYAPi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 20:15:38 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEF6FC09B049;
+        Fri, 24 Apr 2020 17:15:37 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id k28so9165989lfe.10;
+        Fri, 24 Apr 2020 17:15:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1N5YXbQL97SPK+hQrCQ0C0XPFOq+f8Ve7eYt4JHaFEo=;
+        b=o4Y/4BMZEVoOUbSDLvEQkeJjOW+h11pHfhICS7S0zllHKqAL+GAsqroYMdzInICDaN
+         CgET2odzvyaEFsgA/ld6/IbR28XRZp2h7RNFF1YoUC7X4bzWWtYCLspse2cqfMcwo1EM
+         FsWmiQqx/CUYX1ezGiMpZ4A1DsS+7VBE8ohiU1dCpryAuH8R6URzsMhuGHZYTLDjfdeq
+         W2iQ8O+39ckiYc8hu9+kVzI96OTkrKaW+gzotheG2bEbxPcwp1h+jN0j+6QbvA0WaJ6U
+         YZOOvhCPK3zmw37ch+ObIOMsLBGkaEUJfjL9My/EVVBjAj962mknxqPUMFP/D2f0UXfg
+         FErg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1N5YXbQL97SPK+hQrCQ0C0XPFOq+f8Ve7eYt4JHaFEo=;
+        b=EWWWr6ej5/T+BDvNktyxvtxOFp3/TBrNznZZcXHVgUv7Ld+icFAEhqiQcToL9UGU8J
+         ld6jAl1PfFtwS+GhKjpQukvYgghkQ3ArzjPWisPBXjBMkmyLkdoWXuYR2FdA/GvqE0qC
+         SdBeAYhCH6QmZoWs13bLvmCnOcLbyjEfiFRVMHnuS6aMgOPyeKGcHJViwuNfmTX9aKqr
+         fQTgCrqJp6q6dtgFyAL10S9DTDpK3ejkZtgkZK2EP2dL4WO8ka7iXfGD2X4tA3gAjkGQ
+         RYDSWosMDibgl4aCMrIFy31ylu6DyaSydbs+YPE9m61qsEvBwFvlR4mEh/6FgXkQyKwf
+         ykiA==
+X-Gm-Message-State: AGi0PuZj6xKjhJCL1WOBAdKcNC1IMYJ145bX+kne84zlMsbbPVNcv8vI
+        XKOvFWCPuIr+gTqHwNUDlwRleHJDgwqhc2bPdRU=
+X-Google-Smtp-Source: APiQypK9VG3bsKL4bwNuhVqet0lBfmbIBxlUQKrjGENUQGzudHH8lDNo67ol74aL8V6zGGnoY0jokBo87jJqF3mOnLY=
+X-Received: by 2002:ac2:4426:: with SMTP id w6mr7927786lfl.8.1587773736160;
+ Fri, 24 Apr 2020 17:15:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL1oa3sbpn0+sbov-Jvhr1k1eo3wRzi70iNVFb4qQX4N08K-GA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200422173630.8351-1-luke.r.nels@gmail.com>
+In-Reply-To: <20200422173630.8351-1-luke.r.nels@gmail.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Fri, 24 Apr 2020 17:15:23 -0700
+Message-ID: <CAADnVQJHKXgXg3WQc5L5LvV7VvvgU92evjQZSfAOmSoCH9M-yQ@mail.gmail.com>
+Subject: Re: [PATCH bpf v2 1/2] bpf, x86_32: Fix incorrect encoding in BPF_LDX zero-extension
+To:     Luke Nelson <lukenels@cs.washington.edu>
+Cc:     bpf <bpf@vger.kernel.org>, Brian Gerst <brgerst@gmail.com>,
+        Luke Nelson <luke.r.nels@gmail.com>,
+        Xi Wang <xi.wang@gmail.com>, Wang YanQing <udknight@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 03:05:27PM -0400, Sal Carrasco wrote:
-> Hi Paul,
-> 
-> I love your talks and all of the work that you’ve done around RCU CPU stall
-> warnings. I recently watched a youtube video where you talk about decoding
-> these inscrutable warnings (https://youtu.be/23_GOr8Sz-E) - they really are
-> inscrutable. It was really insightful and it is because of this video that
-> I am reaching out to you today.
-> 
-> My name is Sal Carrasco and I work for Linode(linode.com) as a part of the
-> Systems Engineering team. We’re a cloud hosting company that provides a
-> variety of infrastructure products with our main one being our compute
-> product which are Linux vms.
-> 
-> The reason that I am reaching out to you is because in your talk you
-> encourage people to reach out if they encounter these RCU stall warnings.
-> Therefore, I was wondering if you’d be willing to give us some of your time
-> to help decipher what we’re currently seeing across our fleet. We’ve
-> submitted a Kernel mailing list post with some relevant information (
-> https://lkml.org/lkml/2020/4/8/980) but no response yet. Also we’ve been
-> able to reliably trigger a NETDEV WATCHDOG followed by a WARNING on servers
-> using AMD Epyc processors. After the warnings some combination of [NMIs,
-> stuck kworkers, network device timeouts, rcu stalls] happens, and, in 99%
-> of cases, the system descends into madness and needs to be rebooted.
+On Wed, Apr 22, 2020 at 10:36 AM Luke Nelson <lukenels@cs.washington.edu> wrote:
+>
+> The current JIT uses the following sequence to zero-extend into the
+> upper 32 bits of the destination register for BPF_LDX BPF_{B,H,W},
+> when the destination register is not on the stack:
+>
+>   EMIT3(0xC7, add_1reg(0xC0, dst_hi), 0);
+>
+> The problem is that C7 /0 encodes a MOV instruction that requires a 4-byte
+> immediate; the current code emits only 1 byte of the immediate. This
+> means that the first 3 bytes of the next instruction will be treated as
+> the rest of the immediate, breaking the stream of instructions.
+>
+> This patch fixes the problem by instead emitting "xor dst_hi,dst_hi"
+> to clear the upper 32 bits. This fixes the problem and is more efficient
+> than using MOV to load a zero immediate.
+>
+> This bug may not be currently triggerable as BPF_REG_AX is the only
+> register not stored on the stack and the verifier uses it in a limited
+> way, and the verifier implements a zero-extension optimization. But the
+> JIT should avoid emitting incorrect encodings regardless.
+>
+> Fixes: 03f5781be2c7b ("bpf, x86_32: add eBPF JIT compiler for ia32")
+> Signed-off-by: Xi Wang <xi.wang@gmail.com>
+> Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
 
-I am not familiar with NETDEV WATCHDOG, so I will focus on the RCU CPU
-stall warning.  Nevertheless, it is quite possible that the NETDEV
-WATCHDOG issue more directly points at the problem and that the RCU
-CPU stall warning is a follow-on error.  So I would encourage you to
-look into the NETDEV WATCHDOG issue or contact someone familiar with
-this mechanism.
-
-But on to the RCU CPU stall warning...
-
-At a first glance, it looks like there might be trouble in get_counters(),
-perhaps an extremely long xt_entry_foreach() list.  But given that the
-system doesn't recover, perhaps this list is being corrupted so that the
-CPU never finds the end of the list.  For example, one of the entries
-might have negative ->next_offset.
-
-One way to check for the first situation would be to use something like
-ftrace or BPF to measure the typical time spent in this function.
-
-One way to check for the second situation would be to add bounds-checking
-code for the (pos) pointer.
-
-It is of course also possible that get_counters() is an innocent
-bystander, for example, with an interrupt having run for a very long time.
-But in that case, I would expect that some other CPU would have reported
-the stall, which did not happen here.  This is instead a self-detected
-stall warning.
-
-Hope this helps!
-
-							Thanx, Paul
-
-> Thanks,
-> Sal
-> 
-> ---------- Debugging information --------
-> 
-> We’ve encountered this on servers using AMD processors with any combination
-> of the following kernels: 4.14.x, 4.19.x, 5.4.x, 5.5.9, 5.6.1.
-> 
-> Steps to reproduce:
-> 
-> Host loaded with VMs running the following in a loop:
-> fio --name=randrw --rw=randrw --direct=1 --ioengine=libaio --bs=16k
-> --numjobs=8 --rwmixread=90 --size=1G --runtime=600
-> VMs running  playing back a pcap of outbound udp traffic in a loop:
-> timeout 600000 tcpreplay -t -i eth0 --loop 100000 /converted.pcap
-> On the host, in a loop:
-> stress-ng --cpu 120 --io 120 --hdd 5 --timeout 600
-> 
-> The host will stall within a few hours.
-> 
-> Example kernel output once the machine begins to stall:
-> 
-> [ 6755.833166] ------------[ cut here ]------------
-> [ 6755.836716] NETDEV WATCHDOG: eth1 (mlx5_core): transmit queue 19 timed
-> out
-> [ 6755.843728] WARNING: CPU: 15 PID: 30568 at net/sched/sch_generic.c:443
-> dev_watchdog+0x22f/0x240
-> [ 6755.851487] Modules linked in: cls_u32 sch_ingress act_police xt_u32
-> xt_physdev ebt_set xt_multiport xt_set nf_conntrack_netlink xt_CT
-> xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 tun ebt_comment
-> ebt_limit ebt_arp ebt_ip6 ebt_ip ip_set_hash_net ip_set ip6table_raw
-> ip6table_mangle ip6_tables iptable_raw iptable_filter ip_tables bpfilter
-> ebtable_nat 8021q mrp bonding amd64_edac_mod kvm_amd kvm irqbypass
-> crct10dif_pclmul crc32_pclmul mlx5_core crc32c_intel evdev fuse autofs4
-> [ 6755.893442] CPU: 15 PID: 30568 Comm: qemu-system-x86 Not tainted 5.5.9-1
-> #1
-> [ 6755.899410] Hardware name: Supermicro Super Server/H11DSi-NT, BIOS 1.1
-> 04/13/2018
-> [ 6755.905729] RIP: 0010:dev_watchdog+0x22f/0x240
-> [ 6755.908994] Code: c0 75 e4 eb 98 4c 89 ef c6 05 f3 19 eb 00 01 e8 17 7a
-> fb ff 89 d9 48 89 c2 4c 89 ee 48 c7 c7 48 d3 61 92 31 c0 e8 a1 ec 5b ff
-> <0f> 0b e9 75 ff ff ff 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00
-> [ 6755.926764] RSP: 0018:ffff8df80cbacec0 EFLAGS: 00010282
-> [ 6755.930823] RAX: 000000000000003e RBX: 0000000000000013 RCX:
-> 0000000000000000
-> [ 6755.936789] RDX: ffff8b3dafbe7480 RSI: ffff8b3dafbd8a18 RDI:
-> ffff8b3dafbd8a18
-> [ 6755.942753] RBP: ffff8b3d99d80440 R08: 0000000000000000 R09:
-> 0000000000000a4a
-> [ 6755.948717] R10: ffff8df81a243c40 R11: 0000000000000000 R12:
-> 00000000000001f8
-> [ 6755.954680] R13: ffff8b3d99d80000 R14: 0000000100628200 R15:
-> 0000000000000000
-> [ 6755.960643] FS:  00007f2ef5387000(0000) GS:ffff8b3dafbc0000(0000)
-> knlGS:0000000000000000
-> [ 6755.967570] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 6755.972283] CR2: 00007fffbd746d28 CR3: 0000001f119cc000 CR4:
-> 00000000003406e0
-> [ 6755.978403] Call Trace:
-> [ 6755.979673]  <IRQ>
-> [ 6755.980510]  ? dev_deactivate_queue.constprop.60+0x90/0x90
-> [ 6755.984829]  call_timer_fn+0x2d/0x140
-> [ 6755.987443]  run_timer_softirq+0x16a/0x1e0
-> [ 6755.990438]  ? __hrtimer_run_queues+0x11c/0x260
-> [ 6755.993800]  ? ktime_get+0x38/0x90
-> [ 6755.996028]  __do_softirq+0x117/0x2d0
-> [ 6755.998514]  do_softirq_own_stack+0x2a/0x40
-> [ 6756.001524]  </IRQ>
-> [ 6756.002469]  do_softirq.part.20+0x2b/0x30
-> [ 6756.005439]  __local_bh_enable_ip+0x59/0x60
-> [ 6756.008490]  tun_get_user+0xe87/0xfd0 [tun]
-> [ 6756.011511]  tun_chr_write_iter+0x4d/0x70 [tun]
-> [ 6756.014874]  do_iter_readv_writev+0x177/0x1b0
-> [ 6756.018061]  do_iter_write+0x87/0x1b0
-> [ 6756.020557]  vfs_writev+0x83/0x100
-> [ 6756.022790]  ? do_vfs_ioctl+0x8e/0x620
-> [ 6756.025408]  ? do_writev+0x51/0xe0
-> [ 6756.027637]  ? ksys_ioctl+0x6f/0x90
-> [ 6756.029948]  do_writev+0x51/0xe0
-> [ 6756.032003]  do_syscall_64+0x54/0x280
-> [ 6756.034505]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> [ 6756.038406] RIP: 0033:0x7f2ef20a72f0
-> [ 6756.040811] Code: 54 24 1c 48 89 74 24 10 89 7c 24 08 e8 09 39 01 00 48
-> 63 54 24 1c 41 89 c0 48 8b 74 24 10 48 63 7c 24 08 b8 14 00 00 00 0f 05
-> <48> 3d 00 f0 ff ff 77 17 44 89 c7 48 89 44 24 08 e8 3b 39 01 00 48
-> [ 6756.058563] RSP: 002b:00007fffbd748e20 EFLAGS: 00000293 ORIG_RAX:
-> 0000000000000014
-> [ 6756.064967] RAX: ffffffffffffffda RBX: 000055a3ce26ecd0 RCX:
-> 00007f2ef20a72f0
-> [ 6756.070940] RDX: 0000000000000001 RSI: 000055a3ce259e38 RDI:
-> 0000000000000012
-> [ 6756.076909] RBP: 000055a3ce26ecd0 R08: 0000000000000000 R09:
-> 000055a3cd0715c0
-> [ 6756.082881] R10: 0000000000000001 R11: 0000000000000293 R12:
-> 0000000000000001
-> [ 6756.088848] R13: 000055a3ce259e38 R14: 000055a3ce259e38 R15:
-> 0000000000000001
-> [ 6756.094813] ---[ end trace a91e624ca8f4292c ]---
-> [ 6756.098429] mlx5_core 0000:13:00.1 eth1: TX timeout detected
-> [ 6756.102952] mlx5_core 0000:13:00.1 eth1: TX timeout on queue: 19, SQ:
-> 0xab6, CQ: 0xd4a, SQ Cons: 0x3fd7 SQ Prod: 0x3fe6, usecs since last trans:
-> 27541000
-> [ 6756.115632] mlx5_core 0000:13:00.1 eth1: EQ 0x1a: Cons = 0x9c0e, irqn =
-> 0x120
-> [ 6775.300229] rcu: INFO: rcu_sched self-detected stall on CPU
-> [ 6775.304787] rcu: 85-....: (59999 ticks this GP)
-> idle=ca2/1/0x4000000000000002 softirq=7985603/7985603 fqs=14090
-> [ 6775.313959] (t=60013 jiffies g=687873 q=106209)
-> [ 6775.317527] NMI backtrace for cpu 85
-> [ 6775.319932] CPU: 85 PID: 23160 Comm: ebtables Tainted: G        W
->   5.5.9-1 #1
-> [ 6775.326520] Hardware name: Supermicro Super Server/H11DSi-NT, BIOS 1.1
-> 04/13/2018
-> [ 6775.332839] Call Trace:
-> [ 6775.334112]  <IRQ>
-> [ 6775.334957]  dump_stack+0x50/0x6b
-> [ 6775.337099]  nmi_cpu_backtrace+0x90/0xa0
-> [ 6775.339848]  ? lapic_can_unplug_cpu+0xa0/0xa0
-> [ 6775.343038]  nmi_trigger_cpumask_backtrace+0x6f/0x100
-> [ 6775.346926]  rcu_dump_cpu_stacks+0x8f/0xbf
-> [ 6775.349849]  rcu_sched_clock_irq+0x517/0x790
-> [ 6775.352947]  ? tick_init_highres+0x20/0x20
-> [ 6775.355875]  update_process_times+0x24/0x50
-> [ 6775.358891]  tick_sched_timer+0x51/0x160
-> [ 6775.361654]  __hrtimer_run_queues+0xec/0x260
-> [ 6775.364764]  hrtimer_interrupt+0x122/0x270
-> [ 6775.367689]  ? rcu_irq_enter+0x35/0x110
-> [ 6775.370498]  smp_apic_timer_interrupt+0x6a/0x140
-> [ 6775.373951]  apic_timer_interrupt+0xf/0x20
-> [ 6775.376887]  </IRQ>
-> [ 6775.377810] RIP: 0010:queued_write_lock_slowpath+0x51/0x80
-> [ 6775.382133] Code: ff 00 00 00 f0 0f b1 13 85 c0 74 32 f0 81 03 00 01 00
-> 00 ba ff 00 00 00 b9 00 01 00 00 8b 03 3d 00 01 00 00 74 0b f3 90 8b 03
-> <3d> 00 01 00 00 75 f5 89 c8 f0 0f b1 13 3d 00 01 00 00 75 df c6 43
-> [ 6775.399890] RSP: 0018:ffff8df85fc9bc70 EFLAGS: 00000206 ORIG_RAX:
-> ffffffffffffff13
-> [ 6775.406369] RAX: 0000000000003b00 RBX: ffff8b3d8743b39c RCX:
-> 0000000000000100
-> [ 6775.412419] RDX: 00000000000000ff RSI: ffff8df824d4c000 RDI:
-> ffff8b3d8743b3a0
-> [ 6775.418504] RBP: ffff8b3d8743b39c R08: 000ffffffffff000 R09:
-> 0000000000000000
-> [ 6775.424528] R10: ffff8df824d4c000 R11: 000000000000000a R12:
-> ffff8df824d42000
-> [ 6775.430505] R13: 00000000000009f3 R14: ffff8df8f73d5080 R15:
-> 00000000013ea8d0
-> [ 6775.436513]  copy_counters_to_user.part.13+0x3d/0xa0
-> [ 6775.440364]  copy_everything_to_user+0x4ca/0x510
-> [ 6775.443813]  do_ebt_get_ctl+0x9a/0x1b0
-> [ 6775.446487]  ? mem_cgroup_commit_charge+0x4a/0xa0
-> [ 6775.450027]  nf_getsockopt+0x48/0x60
-> [ 6775.452496]  ip_getsockopt+0x6d/0xb0
-> [ 6775.454906]  __sys_getsockopt+0x8d/0x100
-> [ 6775.457662]  __x64_sys_getsockopt+0x20/0x30
-> [ 6775.460673]  do_syscall_64+0x54/0x280
-> [ 6775.463172]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> [ 6775.467056] RIP: 0033:0x7f35e1d9f40a
-> [ 6775.469520] Code: 48 8b 0d 81 ba 2b 00 f7 d8 64 89 01 48 83 c8 ff c3 66
-> 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 49 89 ca b8 37 00 00 00 0f 05
-> <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 4e ba 2b 00 f7 d8 64 89 01 48
-> [ 6775.487403] RSP: 002b:00007fff5491c5e8 EFLAGS: 00000217 ORIG_RAX:
-> 0000000000000037
-> [ 6775.493810] RAX: ffffffffffffffda RBX: 00007fff5491c630 RCX:
-> 00007f35e1d9f40a
-> [ 6775.499781] RDX: 0000000000000081 RSI: 0000000000000000 RDI:
-> 0000000000000003
-> [ 6775.505750] RBP: 0000000000000000 R08: 00007fff5491c6ac R09:
-> 0000000000000000
-> [ 6775.511720] R10: 00007fff5491c630 R11: 0000000000000217 R12:
-> 00007f35e509a648
-> [ 6775.517695] R13: 00007fff5491c6ac R14: 0000000000000000 R15:
-> 0000000000000000
-> 
-> ______________________________________
-> *Salvador Carrasco*  |  Manager of Systems Operations  |  Linode
-> w: linode.com  |  e: scarrasco@linode.com
-> p: 609-380-7100 ext.1310 <(609)%20380-7100>
+Applied. Thanks
