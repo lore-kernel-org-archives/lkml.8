@@ -2,116 +2,448 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B99FC55191
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 14:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF30AC54FCB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 14:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9D1620704
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 14:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBF3620704
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 14:52:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nlMJCr+e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbgDYOvb (ORCPT
+        id S1726169AbgDYOwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 10:51:31 -0400
-Received: from muru.com ([72.249.23.125]:51402 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726087AbgDYOva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 10:51:30 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id C45DA8108;
-        Sat, 25 Apr 2020 14:52:16 +0000 (UTC)
-Date:   Sat, 25 Apr 2020 07:51:26 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     Suman Anna <s-anna@ti.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tero Kristo <t-kristo@ti.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        "H . Nikolaus Schaller" <hns@goldelico.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Keerthy <j-keerthy@ti.com>,
-        Ladislav Michl <ladis@linux-mips.org>,
-        Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH] clocksource: timer-ti-dm: Drop bogus
- omap_dm_timer_of_set_source()
-Message-ID: <20200425145126.GN37466@atomide.com>
-References: <20200213053504.22638-1-s-anna@ti.com>
- <7debff4f-8f64-ee7c-2fdd-879649e35eb0@ti.com>
+        Sat, 25 Apr 2020 10:52:34 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:36620 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbgDYOwe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 10:52:34 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03PEmiQo075187;
+        Sat, 25 Apr 2020 14:52:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=l2/an7nrpK2tcK4d90skvgCAMPPfiLAfC4j1zf4Vw3Q=;
+ b=nlMJCr+eULTFBOsOTxYX37wCpd/EQA4SjfcNnMr9atF27x7FKVqvytMebqQhmmHvb73d
+ Ca5j/GsCmlVhAXnOYaVR1Fgk81Ie18nUPvE8k64GlyN9jCLvghmv1Ugxou888RNKh4zd
+ bDq7ZpctoA6r2fxtERAkUkadDOnUiYyyx6jnIGFQtgjf3hChencE6KXPdWMOdNJgVlOF
+ RjdJnjDNTZW9Drx+ZEOvo1eBvQP5ewqIKWaSIfg+1wkHHknKdm8T0n9NEjKE9l7KNe8J
+ wkTFq1Vb0HB6kqJ7s0qQR2Q2PVh/35NYLpniQHq7JP9YBD9Cn5A4UcQBM2FHwYsblRwl Rw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 30md5ks2mb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 25 Apr 2020 14:52:24 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03PElpVC034677;
+        Sat, 25 Apr 2020 14:52:24 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 30mb89ujts-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 25 Apr 2020 14:52:24 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03PEqNij014660;
+        Sat, 25 Apr 2020 14:52:23 GMT
+Received: from [192.168.14.112] (/109.67.198.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 25 Apr 2020 07:52:22 -0700
+Subject: Re: [PATCH v1 05/15] nitro_enclaves: Handle PCI device command
+ requests
+To:     Andra Paraschiv <andraprs@amazon.com>, linux-kernel@vger.kernel.org
+Cc:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@amazon.com>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
+        ne-devel-upstream@amazon.com
+References: <20200421184150.68011-1-andraprs@amazon.com>
+ <20200421184150.68011-6-andraprs@amazon.com>
+From:   Liran Alon <liran.alon@oracle.com>
+Message-ID: <39060271-279b-546b-05a6-c5b2fd7ff5d0@oracle.com>
+Date:   Sat, 25 Apr 2020 17:52:17 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7debff4f-8f64-ee7c-2fdd-879649e35eb0@ti.com>
+In-Reply-To: <20200421184150.68011-6-andraprs@amazon.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9602 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 mlxscore=0 spamscore=0
+ phishscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004250133
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9602 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 bulkscore=0
+ adultscore=0 clxscore=1015 impostorscore=0 priorityscore=1501 phishscore=0
+ lowpriorityscore=0 mlxlogscore=999 suspectscore=2 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004250133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Lokesh Vutla <lokeshvutla@ti.com> [200425 09:15]:
-> Hi Tony, Suman,
-> 
-> On 13/02/20 11:05 AM, Suman Anna wrote:
-> > The function omap_dm_timer_of_set_source() was originally added in
-> > commit 31a7448f4fa8a ("ARM: OMAP: dmtimer: Add clock source from DT"),
-> > and is designed to set a clock source from DT using the clocks property
-> > of a timer node. This design choice is okay for clk provider nodes but
-> > otherwise is a bad design as typically the clocks property is used to
-> > specify the functional clocks for a device, and not its parents.
-> > 
-> > The timer nodes now all define a timer functional clock after the
-> > conversion to ti-sysc and the new clkctrl layout, and this results
-> > in an attempt to set the same functional clock as its parent when a
-> > consumer driver attempts to acquire any of these timers in the
-> > omap_dm_timer_prepare() function. This was masked and worked around
-> > in commit 983a5a43ec25 ("clocksource: timer-ti-dm: Fix pwm dmtimer
-> > usage of fck reparenting"). Fix all of this by simply dropping the
-> > entire function.
-> > 
-> > Any DT configuration of clock sources should be achieved using
-> > assigned-clocks and assigned-clock-parents properties provided
-> > by the Common Clock Framework.
-> > 
-> > Cc: Tony Lindgren <tony@atomide.com>
-> > Cc: Tero Kristo <t-kristo@ti.com>
-> > Cc: Neil Armstrong <narmstrong@baylibre.com>
-> > Cc: H. Nikolaus Schaller <hns@goldelico.com>
-> > Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > Cc: Keerthy <j-keerthy@ti.com>
-> > Cc: Ladislav Michl <ladis@linux-mips.org>
-> > Cc: Pavel Machek <pavel@ucw.cz>
-> > Cc: Sebastian Reichel <sre@kernel.org>
-> > Signed-off-by: Suman Anna <s-anna@ti.com>
-> > ---
-> > Hi Tony,
-> > 
-> > Do you have the history of why the 32 KHz source is set as parent during
-> > prepare? One of the current side-affects of this patch is that now instead
-> > of bailing out, the 32 KHz source is set, and consumers will still need
-> > to select their appropriate parent. Dropping that call should actually
-> > allow us to select the parents in the consumer nodes in dts files using
-> > the assigned-clocks and assigned-clock-parents properties. I prefer to
-> > drop it if you do not foresee any issues. For now, I do not anticipate
-> > any issues with omap-pwm-dmtimer with this patch.
-> > 
-> 
-> Sorry to bring up an old thread. But ping on this question by Suman. prepare()
-> is over writing any parent set by DT to 32KHz. Is it possible to know why
-> prepare is doing it? If there is no proper reason can we drop this setting all
-> together?
 
-For devicetree configured machines we should just configure the source
-clock with assigned-clock-parents as there may be device specific need
-for a specific source. So yeah, I'm all for dropping that code for device
-tree booting machines. For the old omap1 devices, the clock code still
-needs to configure it probably.
+On 21/04/2020 21:41, Andra Paraschiv wrote:
+> The Nitro Enclaves PCI device exposes a MMIO space that this driver
+> uses to submit command requests and to receive command replies e.g. for
+> enclave creation / termination or setting enclave resources.
+>
+> Add logic for handling PCI device command requests based on the given
+> command type.
+>
+> Register an MSI-X interrupt vector for command reply notifications to
+> handle this type of communication events.
+>
+> Signed-off-by: Alexandru-Catalin Vasile <lexnv@amazon.com>
+> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+> ---
+>   .../virt/amazon/nitro_enclaves/ne_pci_dev.c   | 264 ++++++++++++++++++
+>   1 file changed, 264 insertions(+)
+>
+> diff --git a/drivers/virt/amazon/nitro_enclaves/ne_pci_dev.c b/drivers/virt/amazon/nitro_enclaves/ne_pci_dev.c
+> index 8fbee95ea291..7453d129689a 100644
+> --- a/drivers/virt/amazon/nitro_enclaves/ne_pci_dev.c
+> +++ b/drivers/virt/amazon/nitro_enclaves/ne_pci_dev.c
+> @@ -40,6 +40,251 @@ static const struct pci_device_id ne_pci_ids[] = {
+>   
+>   MODULE_DEVICE_TABLE(pci, ne_pci_ids);
+>   
+> +/**
+> + * ne_submit_request - Submit command request to the PCI device based on the
+> + * command type.
+> + *
+> + * This function gets called with the ne_pci_dev mutex held.
+> + *
+> + * @pdev: PCI device to send the command to.
+> + * @cmd_type: command type of the request sent to the PCI device.
+> + * @cmd_request: command request payload.
+> + * @cmd_request_size: size of the command request payload.
+> + *
+> + * @returns: 0 on success, negative return value on failure.
+> + */
+> +static int ne_submit_request(struct pci_dev *pdev,
+> +			     enum ne_pci_dev_cmd_type cmd_type,
+> +			     void *cmd_request, size_t cmd_request_size)
+> +{
+> +	struct ne_pci_dev *ne_pci_dev = NULL;
+These local vars are unnecessarily initialized.
+> +
+> +	BUG_ON(!pdev);
+> +
+> +	ne_pci_dev = pci_get_drvdata(pdev);
+> +	BUG_ON(!ne_pci_dev);
+> +	BUG_ON(!ne_pci_dev->iomem_base);
+You should remove these defensive BUG_ON() calls.
+> +
+> +	if (WARN_ON(cmd_type <= INVALID_CMD || cmd_type >= MAX_CMD)) {
+> +		dev_err_ratelimited(&pdev->dev, "Invalid cmd type=%d\n",
+> +				    cmd_type);
+> +
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (WARN_ON(!cmd_request))
+> +		return -EINVAL;
+> +
+> +	if (WARN_ON(cmd_request_size > NE_SEND_DATA_SIZE)) {
+> +		dev_err_ratelimited(&pdev->dev,
+> +				    "Invalid req size=%ld for cmd type=%d\n",
+> +				    cmd_request_size, cmd_type);
+> +
+> +		return -EINVAL;
+> +	}
+It doesn't make sense to have WARN_ON() print error to dmesg on every 
+evaluation to true,
+together with using dev_err_ratelimited() which attempts to rate-limit 
+prints.
 
-The reason why the 32k source is the default is that it's always on and
-works for power management unlike the system clock which may be shut off
-during idle.
+Anyway, these conditions were already checked by ne_do_request(). Why 
+also check them here?
 
-Regards,
+> +
+> +	memcpy_toio(ne_pci_dev->iomem_base + NE_SEND_DATA, cmd_request,
+> +		    cmd_request_size);
+> +
+> +	iowrite32(cmd_type, ne_pci_dev->iomem_base + NE_COMMAND);
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * ne_retrieve_reply - Retrieve reply from the PCI device.
+> + *
+> + * This function gets called with the ne_pci_dev mutex held.
+> + *
+> + * @pdev: PCI device to receive the reply from.
+> + * @cmd_reply: command reply payload.
+> + * @cmd_reply_size: size of the command reply payload.
+> + *
+> + * @returns: 0 on success, negative return value on failure.
+> + */
+> +static int ne_retrieve_reply(struct pci_dev *pdev,
+> +			     struct ne_pci_dev_cmd_reply *cmd_reply,
+> +			     size_t cmd_reply_size)
+> +{
+> +	struct ne_pci_dev *ne_pci_dev = NULL;
+These local vars are unnecessarily initialized.
+> +
+> +	BUG_ON(!pdev);
+> +
+> +	ne_pci_dev = pci_get_drvdata(pdev);
+> +	BUG_ON(!ne_pci_dev);
+> +	BUG_ON(!ne_pci_dev->iomem_base);
+You should remove these defensive BUG_ON() calls.
+> +
+> +	if (WARN_ON(!cmd_reply))
+> +		return -EINVAL;
+> +
+> +	if (WARN_ON(cmd_reply_size > NE_RECV_DATA_SIZE)) {
+> +		dev_err_ratelimited(&pdev->dev, "Invalid reply size=%ld\n",
+> +				    cmd_reply_size);
+> +
+> +		return -EINVAL;
+> +	}
+It doesn't make sense to have WARN_ON() print error to dmesg on every 
+evaluation to true,
+together with using dev_err_ratelimited() which attempts to rate-limit 
+prints.
 
-Tony
+Anyway, these conditions were already checked by ne_do_request(). Why 
+also check them here?
+
+> +
+> +	memcpy_fromio(cmd_reply, ne_pci_dev->iomem_base + NE_RECV_DATA,
+> +		      cmd_reply_size);
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * ne_wait_for_reply - Wait for a reply of a PCI command.
+> + *
+> + * This function gets called with the ne_pci_dev mutex held.
+> + *
+> + * @pdev: PCI device for which a reply is waited.
+> + *
+> + * @returns: 0 on success, negative return value on failure.
+> + */
+> +static int ne_wait_for_reply(struct pci_dev *pdev)
+> +{
+> +	struct ne_pci_dev *ne_pci_dev = NULL;
+> +	int rc = -EINVAL;
+These local vars are unnecessarily initialized.
+> +
+> +	BUG_ON(!pdev);
+> +
+> +	ne_pci_dev = pci_get_drvdata(pdev);
+> +	BUG_ON(!ne_pci_dev);
+You should remove these defensive BUG_ON() calls.
+> +
+> +	/*
+> +	 * TODO: Update to _interruptible and handle interrupted wait event
+> +	 * e.g. -ERESTARTSYS, incoming signals + add / update timeout.
+> +	 */
+> +	rc = wait_event_timeout(ne_pci_dev->cmd_reply_wait_q,
+> +				atomic_read(&ne_pci_dev->cmd_reply_avail) != 0,
+> +				msecs_to_jiffies(DEFAULT_TIMEOUT_MSECS));
+> +	if (!rc) {
+> +		pr_err("Wait event timed out when waiting for PCI cmd reply\n");
+> +
+> +		return -ETIMEDOUT;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +int ne_do_request(struct pci_dev *pdev, enum ne_pci_dev_cmd_type cmd_type,
+> +		  void *cmd_request, size_t cmd_request_size,
+> +		  struct ne_pci_dev_cmd_reply *cmd_reply, size_t cmd_reply_size)
+This function is introduced in this patch but it is not used.
+It will cause compiling the kernel on this commit to raise 
+warnings/errors on unused functions.
+You should introduce functions on the patch that they are used.
+> +{
+> +	struct ne_pci_dev *ne_pci_dev = NULL;
+> +	int rc = -EINVAL;
+These local vars are unnecessarily initialized.
+> +
+> +	BUG_ON(!pdev);
+> +
+> +	ne_pci_dev = pci_get_drvdata(pdev);
+> +	BUG_ON(!ne_pci_dev);
+> +	BUG_ON(!ne_pci_dev->iomem_base);
+You should remove these defensive BUG_ON() calls.
+> +
+> +	if (WARN_ON(cmd_type <= INVALID_CMD || cmd_type >= MAX_CMD)) {
+> +		dev_err_ratelimited(&pdev->dev, "Invalid cmd type=%d\n",
+> +				    cmd_type);
+> +
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (WARN_ON(!cmd_request))
+> +		return -EINVAL;
+> +
+> +	if (WARN_ON(cmd_request_size > NE_SEND_DATA_SIZE)) {
+> +		dev_err_ratelimited(&pdev->dev,
+> +				    "Invalid req size=%ld for cmd type=%d\n",
+> +				    cmd_request_size, cmd_type);
+> +
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (WARN_ON(!cmd_reply))
+> +		return -EINVAL;
+> +
+> +	if (WARN_ON(cmd_reply_size > NE_RECV_DATA_SIZE)) {
+> +		dev_err_ratelimited(&pdev->dev, "Invalid reply size=%ld\n",
+> +				    cmd_reply_size);
+> +
+> +		return -EINVAL;
+> +	}
+I would consider specifying all these conditions in function 
+documentation instead of enforcing them at runtime on every function call.
+> +
+> +	/*
+> +	 * Use this mutex so that the PCI device handles one command request at
+> +	 * a time.
+> +	 */
+> +	mutex_lock(&ne_pci_dev->pci_dev_mutex);
+> +
+> +	atomic_set(&ne_pci_dev->cmd_reply_avail, 0);
+> +
+> +	rc = ne_submit_request(pdev, cmd_type, cmd_request, cmd_request_size);
+> +	if (rc < 0) {
+> +		dev_err_ratelimited(&pdev->dev,
+> +				    "Failure in submit cmd request [rc=%d]\n",
+> +				    rc);
+> +
+> +		mutex_unlock(&ne_pci_dev->pci_dev_mutex);
+> +
+> +		return rc;
+Consider leaving function with a goto to a label that unlocks mutex and 
+then return.
+> +	}
+> +
+> +	rc = ne_wait_for_reply(pdev);
+> +	if (rc < 0) {
+> +		dev_err_ratelimited(&pdev->dev,
+> +				    "Failure in wait cmd reply [rc=%d]\n",
+> +				    rc);
+> +
+> +		mutex_unlock(&ne_pci_dev->pci_dev_mutex);
+> +
+> +		return rc;
+> +	}
+> +
+> +	rc = ne_retrieve_reply(pdev, cmd_reply, cmd_reply_size);
+> +	if (rc < 0) {
+> +		dev_err_ratelimited(&pdev->dev,
+> +				    "Failure in retrieve cmd reply [rc=%d]\n",
+> +				    rc);
+> +
+> +		mutex_unlock(&ne_pci_dev->pci_dev_mutex);
+> +
+> +		return rc;
+> +	}
+> +
+> +	atomic_set(&ne_pci_dev->cmd_reply_avail, 0);
+> +
+> +	if (cmd_reply->rc < 0) {
+> +		dev_err_ratelimited(&pdev->dev,
+> +				    "Failure in cmd process logic [rc=%d]\n",
+> +				    cmd_reply->rc);
+> +
+> +		mutex_unlock(&ne_pci_dev->pci_dev_mutex);
+> +
+> +		return cmd_reply->rc;
+> +	}
+> +
+> +	mutex_unlock(&ne_pci_dev->pci_dev_mutex);
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * ne_reply_handler - Interrupt handler for retrieving a reply matching
+> + * a request sent to the PCI device for enclave lifetime management.
+> + *
+> + * @irq: received interrupt for a reply sent by the PCI device.
+> + * @args: PCI device private data structure.
+> + *
+> + * @returns: IRQ_HANDLED on handled interrupt, IRQ_NONE otherwise.
+> + */
+> +static irqreturn_t ne_reply_handler(int irq, void *args)
+> +{
+> +	struct ne_pci_dev *ne_pci_dev = (struct ne_pci_dev *)args;
+> +
+> +	atomic_set(&ne_pci_dev->cmd_reply_avail, 1);
+> +
+> +	/* TODO: Update to _interruptible. */
+> +	wake_up(&ne_pci_dev->cmd_reply_wait_q);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+>   /**
+>    * ne_setup_msix - Setup MSI-X vectors for the PCI device.
+>    *
+> @@ -75,8 +320,25 @@ static int ne_setup_msix(struct pci_dev *pdev, struct ne_pci_dev *ne_pci_dev)
+>   		goto err_alloc_irq_vecs;
+>   	}
+>   
+> +	/*
+> +	 * This IRQ gets triggered every time the PCI device responds to a
+> +	 * command request. The reply is then retrieved, reading from the MMIO
+> +	 * space of the PCI device.
+> +	 */
+> +	rc = request_irq(pci_irq_vector(pdev, NE_VEC_REPLY),
+> +			 ne_reply_handler, 0, "enclave_cmd", ne_pci_dev);
+> +	if (rc < 0) {
+> +		dev_err_ratelimited(&pdev->dev,
+> +				    "Failure in allocating irq reply [rc=%d]\n",
+> +				    rc);
+> +
+> +		goto err_req_irq_reply;
+> +	}
+> +
+>   	return 0;
+>   
+> +err_req_irq_reply:
+> +	pci_free_irq_vectors(pdev);
+>   err_alloc_irq_vecs:
+>   	return rc;
+>   }
+> @@ -232,6 +494,7 @@ static int ne_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>   
+>   err_ne_pci_dev_enable:
+>   err_ne_pci_dev_disable:
+> +	free_irq(pci_irq_vector(pdev, NE_VEC_REPLY), ne_pci_dev);
+>   	pci_free_irq_vectors(pdev);
+I suggest to introduce a ne_teardown_msix() utility. That is aimed to 
+cleanup after ne_setup_msix().
+>   err_setup_msix:
+>   	pci_iounmap(pdev, ne_pci_dev->iomem_base);
+> @@ -255,6 +518,7 @@ static void ne_remove(struct pci_dev *pdev)
+>   
+>   	pci_set_drvdata(pdev, NULL);
+>   
+> +	free_irq(pci_irq_vector(pdev, NE_VEC_REPLY), ne_pci_dev);
+>   	pci_free_irq_vectors(pdev);
+>   
+>   	pci_iounmap(pdev, ne_pci_dev->iomem_base);
