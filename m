@@ -2,129 +2,119 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B1FC55185
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 13:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9306FC54FCB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 14:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68B1720704
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 13:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61CE120714
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 14:00:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726169AbgDYNrB (ORCPT
+        id S1726112AbgDYOAX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 09:47:01 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:50032 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbgDYNrB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 09:47:01 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 6EA352A227C
-Message-ID: <c49a060e7f5da9564e375fdd47117d3f901e5d00.camel@collabora.com>
-Subject: Re: [PATCH v2 4/4] media: rockchip: rga: Only set output CSC mode
- for RGB input
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hansverk@cisco.com>,
-        justin.swartz@risingedge.co.za, Johan Jonker <jbx6244@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Date:   Sat, 25 Apr 2020 10:46:47 -0300
-In-Reply-To: <20200423200937.1039257-5-paul.kocialkowski@bootlin.com>
-References: <20200423200937.1039257-1-paul.kocialkowski@bootlin.com>
-         <20200423200937.1039257-5-paul.kocialkowski@bootlin.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.0-1 
+        Sat, 25 Apr 2020 10:00:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36782 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726050AbgDYOAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 10:00:23 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9575820714;
+        Sat, 25 Apr 2020 14:00:22 +0000 (UTC)
+Date:   Sat, 25 Apr 2020 10:00:20 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Tom Zanussi <zanussi@kernel.org>, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH 2/3] tracing/boottime: Fix kprobe event API usage
+Message-ID: <20200425100020.3ccaa586@oasis.local.home>
+In-Reply-To: <158779375766.6082.201939936008972838.stgit@devnote2>
+References: <158779373972.6082.16695832932765258919.stgit@devnote2>
+        <158779375766.6082.201939936008972838.stgit@devnote2>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+On Sat, 25 Apr 2020 14:49:17 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-Thanks a lot for the patch.
-
-I haven't had the chance to test this,
-but I'd say you are fixing a long time issue here.
-
-I really appreciate that.
-
-On Thu, 2020-04-23 at 22:09 +0200, Paul Kocialkowski wrote:
-> Setting the output CSC mode is required for a YUV output, but must not
-> be set when the input is also YUV. Doing this (as tested with a YUV420P
-> to YUV420P conversion) results in wrong colors.
+> Fix boottime kprobe events to use API correctly for
+> multiple events.
 > 
-> Adapt the logic to only set the CSC mode when the output is YUV and the
-> input is RGB.
+> For example, when we set a multiprobe kprobe events in
+> bootconfig like below,
 > 
-> Fixes: f7e7b48e6d79 ("[media] rockchip/rga: v4l2 m2m support")
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+>   ftrace.event.kprobes.myevent {
+>   	probes = "vfs_read $arg1 $arg2", "vfs_write $arg1 $arg2"
+>   }
+> 
+> This cause an error;
+> 
+>   trace_boot: Failed to add probe: p:kprobes/myevent (null)  vfs_read $arg1 $arg2  vfs_write $arg1 $arg2
+> 
+> This shows the 1st argument becomes NULL and multiprobes
+> are merged to 1 probe.
+> 
+> Fixes: 29a154810546 ("tracing: Change trace_boot to use kprobe_event interface")
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: stable@vger.kernel.org
 > ---
->  drivers/media/platform/rockchip/rga/rga-hw.c | 18 +++++++++++-------
->  1 file changed, 11 insertions(+), 7 deletions(-)
+>  kernel/trace/trace_boot.c |   20 ++++++++------------
+>  1 file changed, 8 insertions(+), 12 deletions(-)
 > 
-> diff --git a/drivers/media/platform/rockchip/rga/rga-hw.c b/drivers/media/platform/rockchip/rga/rga-hw.c
-> index 4be6dcf292ff..cbffcf986ccf 100644
-> --- a/drivers/media/platform/rockchip/rga/rga-hw.c
-> +++ b/drivers/media/platform/rockchip/rga/rga-hw.c
-> @@ -216,13 +216,17 @@ static void rga_cmd_set_trans_info(struct rga_ctx *ctx)
+> diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
+> index 06d7feb5255f..9de29bb45a27 100644
+> --- a/kernel/trace/trace_boot.c
+> +++ b/kernel/trace/trace_boot.c
+> @@ -95,24 +95,20 @@ trace_boot_add_kprobe_event(struct xbc_node *node, const char *event)
+>  	struct xbc_node *anode;
+>  	char buf[MAX_BUF_LEN];
+>  	const char *val;
+> -	int ret;
+> +	int ret = 0;
+>  
+> -	kprobe_event_cmd_init(&cmd, buf, MAX_BUF_LEN);
+> +	xbc_node_for_each_array_value(node, "probes", anode, val) {
+> +		kprobe_event_cmd_init(&cmd, buf, MAX_BUF_LEN);
+>  
+> -	ret = kprobe_event_gen_cmd_start(&cmd, event, NULL);
+> -	if (ret)
+> -		return ret;
+> +		ret = kprobe_event_gen_cmd_start(&cmd, event, val);
+> +		if (ret)
+> +			break;
+
+Should we break here? What about just printing an error message and
+continuing to the next probe. If I start up something with a typo in
+the first element, I lose all events. But if I have a typo in the last
+one, I get all but that one. I rather have it just fail on the ones that
+don't parse properly.
+
+-- Steve
+
+
+>  
+> -	xbc_node_for_each_array_value(node, "probes", anode, val) {
+> -		ret = kprobe_event_add_field(&cmd, val);
+> +		ret = kprobe_event_gen_cmd_end(&cmd);
+>  		if (ret)
+> -			return ret;
+> +			pr_err("Failed to add probe: %s\n", buf);
 >  	}
 >  
->  	if (ctx->out.fmt->hw_format >= RGA_COLOR_FMT_YUV422SP) {
-
-Since we are already here touching this code, would you mind
-adding another patch, to do some cleaning first?
-
-First, replace the nested ifs with a boolean operator.
-Then, introduce some IS_YUV (or IS_RGB) macro, making the above test
-more like IS_YUV(out_hw_format).
-
-Finally, perhaps a comment along the lines of your commit message:
-
-"""
-Setting the output CSC mode is required for a YUV output,
-but must not be set when the input is also YUV.
-"""
-
-Details up to you :-)
-
-After the clean-up patch, which would be just cosmetics,
-your fix should be cleaner and more clear.
-
-Thanks,
-Ezequiel
- 
-> -		switch (ctx->out.colorspace) {
-> -		case V4L2_COLORSPACE_REC709:
-> -			dst_info.data.csc_mode = RGA_SRC_CSC_MODE_BT709_R0;
-> -			break;
-> -		default:
-> -			dst_info.data.csc_mode = RGA_DST_CSC_MODE_BT601_R0;
-> -			break;
-> +		if (ctx->in.fmt->hw_format < RGA_COLOR_FMT_YUV422SP) {
-> +			switch (ctx->out.colorspace) {
-> +			case V4L2_COLORSPACE_REC709:
-> +				dst_info.data.csc_mode =
-> +					RGA_SRC_CSC_MODE_BT709_R0;
-> +				break;
-> +			default:
-> +				dst_info.data.csc_mode =
-> +					RGA_DST_CSC_MODE_BT601_R0;
-> +				break;
-> +			}
->  		}
->  	}
->  
-
+> -	ret = kprobe_event_gen_cmd_end(&cmd);
+> -	if (ret)
+> -		pr_err("Failed to add probe: %s\n", buf);
+> -
+>  	return ret;
+>  }
+>  #else
 
