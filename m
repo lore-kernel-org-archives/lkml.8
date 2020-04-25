@@ -2,168 +2,96 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C00AC55185
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 15:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B61B8C54FCB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 16:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AB5520767
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 15:57:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587830235;
-	bh=gA52eZgAsDc84/SjzzV/YYysCpBQGyT9fzrpoeb2il8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=StRSh6ggH8pIFs9FuDc9TWUgn+6/4YwBQZLmCpBBt5RVrXKWHOlFrelzkk9OGULy3
-	 bwnFNk0Ft9gBey6nCZfVyhUamcx3CG5nQgCaSAWFJBHjC50sPAGtzkhzRE1jjxIc/c
-	 d27snYQudt8JGmVEcQtoZICa19jyg725ylrPC0v0=
+	by mail.kernel.org (Postfix) with ESMTP id 8BCE42071E
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 16:00:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="l3Bv7Oj5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726154AbgDYP5O (ORCPT
+        id S1726152AbgDYQAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 11:57:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58758 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726112AbgDYP5O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 11:57:14 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45EE020748;
-        Sat, 25 Apr 2020 15:57:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587830233;
-        bh=gA52eZgAsDc84/SjzzV/YYysCpBQGyT9fzrpoeb2il8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=J3qu8IPsYTHazwRGf6THITrGZiVnu4IrkmnnC75tWzjvP3+gXXt9+OLb6/olWN0im
-         TlLMEosHCrvVmpi5+UIvp4076vKoMXjjKt1v4VuXf5Zhy7XTB2Z2HNZLDiRaESjo6g
-         kQbHv6mep7XFvrz2/eCQvNOBBr62XlKe3P+oqhUM=
-Date:   Sat, 25 Apr 2020 16:57:09 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Mathieu Othacehe <m.othacehe@gmail.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Subject: Re: [PATCH v4 4/4] iio: vcnl4000: Add buffer support for
- VCNL4010/20.
-Message-ID: <20200425165709.27c63f05@archlinux>
-In-Reply-To: <CAHp75VfXBgQad1oCBe+oqcC_oRa-3q8OBYcAOV8WfCo7n1wXWw@mail.gmail.com>
-References: <20200421075532.19192-1-m.othacehe@gmail.com>
-        <20200421075532.19192-5-m.othacehe@gmail.com>
-        <CAHp75VfXBgQad1oCBe+oqcC_oRa-3q8OBYcAOV8WfCo7n1wXWw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 25 Apr 2020 12:00:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54888 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbgDYQAn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 12:00:43 -0400
+Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06F4EC09B04D
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 09:00:41 -0700 (PDT)
+Received: by mail-ot1-x332.google.com with SMTP id m18so18086323otq.9
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 09:00:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=landley-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=aJowGujbLx9YHoHGEkmT5nMHlO6tS2Ov2OkuY7Bp1BA=;
+        b=l3Bv7Oj5K54EczsINK6LMtMkBrM8JRDuQVy6qvWE0aLQG+12c06xYGyLwrdCDAeG+E
+         U9Qy9NYrstNZtSmyifXYYIpz8xAHeYkfQ4zi0O4HWatXLreenCK0FEV7PtkRCMnr/IDh
+         fxZFHa427ONVTI49NJqhU+YImD272y/laUDW+BoWFME1R2jIa7rwctETIj1Cm8Us0vWF
+         cPc7igzFkbi5PoBiwFL9toQ7XeBWW5BIUMe2+zsITtqG5dAOhnazX9nkF8H1UP5h/Q34
+         O9m7hpPF8Pncm/1bFwi9lHEFdxeBnhhHc5JcNCojfk7X5jsxAkbZOYYcvMb+h3xPhqz8
+         /kmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aJowGujbLx9YHoHGEkmT5nMHlO6tS2Ov2OkuY7Bp1BA=;
+        b=YI+ucElCJ00kW1YwsyjlHUSt96zuB/KMSYrKZzPE2KlKLe+0W2SLiSAMsAKoDYLB41
+         Tf0O/HKPa3jiDIjYtkZEPglajwTpBTh8x46SoLgHP7J2To6Y2dbaE0Vjm2ftHnNjC793
+         quKFaZYOb5OiPr7NKwES4AL7UX+Io3ifvOiQXI7+EBc9pdgmAiG3DY5IU9KrVA3Q7gTF
+         4DE3WgGE84SfRYXSU9eA5qNtZroS9LFvVkk7LkecpTMs/vn96kQdljrRGDZx6CmrL+v1
+         LxxlwqhBbiiNp5e2puO4mKCbVe+JjFvNzKay0REtbCPXXe4js/8CvSpcInSV21SOkN+J
+         FSQQ==
+X-Gm-Message-State: AGi0PubPkNfQ3f/iBfRWvbrCRTuUmocT6GEQO/EfoKV9tje3JAdvAl8t
+        SAtatD4bKuqsV8ZNg8P38VHMCg==
+X-Google-Smtp-Source: APiQypIwBOSv8g6UXUE+etBF+ux/xNwS0QmCD3XxU/Hx2+E6+6uBzYCaWzUexCqyaeUOTvlPOhElkQ==
+X-Received: by 2002:aca:b2d6:: with SMTP id b205mr10968150oif.137.1587830441059;
+        Sat, 25 Apr 2020 09:00:41 -0700 (PDT)
+Received: from [192.168.86.21] ([136.62.4.88])
+        by smtp.gmail.com with ESMTPSA id k205sm2545514oih.15.2020.04.25.09.00.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 25 Apr 2020 09:00:40 -0700 (PDT)
+Subject: Re: [PATCHv3 31/50] sh: Add loglvl to printk_address()
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Dmitry Safonov <dima@arista.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org
+References: <20200418201944.482088-1-dima@arista.com>
+ <20200418201944.482088-32-dima@arista.com>
+ <20200420155237.1b6532c0d0c6940fccd1b762@linux-foundation.org>
+From:   Rob Landley <rob@landley.net>
+Message-ID: <92cf0382-bdb4-6966-5a77-2ade50fdc451@landley.net>
+Date:   Sat, 25 Apr 2020 11:06:41 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200420155237.1b6532c0d0c6940fccd1b762@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Apr 2020 15:27:14 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+On 4/20/20 5:52 PM, Andrew Morton wrote:
+> I guess it doesn't matter much, as sh seems to be rather dead.
 
-> On Tue, Apr 21, 2020 at 10:59 AM Mathieu Othacehe <m.othacehe@gmail.com> wrote:
-> >
-> > The VCNL4010 and VCNL4020 chips are able to raise interrupts on data ready.
-> > Use it to provide triggered buffer support for proximity data.
-> >
-> > Those two chips also provide ambient light data. However, they are sampled
-> > at different rate than proximity data. As this is not handled by the IIO
-> > framework for now, and the sample frequencies of ambient light data are
-> > very low, do add buffer support for them.  
-> 
-> ...
-> 
-> > +static irqreturn_t vcnl4010_trigger_handler(int irq, void *p)
-> > +{
-> > +       struct iio_poll_func *pf = p;
-> > +       struct iio_dev *indio_dev = pf->indio_dev;
-> > +       struct vcnl4000_data *data = iio_priv(indio_dev);
-> > +       const unsigned long *active_scan_mask = indio_dev->active_scan_mask;
-> > +       u16 buffer[8] = {0}; /* 1x16-bit + ts */
-> > +       bool data_read = false;
-> > +       unsigned long isr;
-> > +       int val = 0;
-> > +       int ret;
-> > +
-> > +       ret = i2c_smbus_read_byte_data(data->client, VCNL4010_ISR);
-> > +       if (ret < 0)
-> > +               goto end;
-> > +
-> > +       isr = ret;
-> > +
-> > +       if (test_bit(0, active_scan_mask)) {
-> > +               if (test_bit(VCNL4010_INT_PROXIMITY, &isr)) {
-> > +                       ret = vcnl4000_read_data(data,
-> > +                                                VCNL4000_PS_RESULT_HI,
-> > +                                                &val);
-> > +                       if (ret < 0)
-> > +                               goto end;
-> > +
-> > +                       buffer[0] = val;
-> > +                       data_read = true;
-> > +               }
-> > +       }
-> > +
-> > +       ret = i2c_smbus_write_byte_data(data->client, VCNL4010_ISR,
-> > +                                       isr & VCNL4010_INT_DRDY);  
-> 
-> > +       if (ret < 0 || !data_read)  
-> 
-> I would split them, because they are logically different checks.
-> 
-> > +               goto end;
-> > +
-> > +       iio_push_to_buffers_with_timestamp(indio_dev, buffer,
-> > +                                          iio_get_time_ns(indio_dev));
-> > +
-> >  end:
-> > +       iio_trigger_notify_done(indio_dev->trig);
-> >         return IRQ_HANDLED;
-> >  }  
-> 
-> ...
-> 
-> > +static int vcnl4010_buffer_predisable(struct iio_dev *indio_dev)
-> > +{
-> > +       struct vcnl4000_data *data = iio_priv(indio_dev);
-> > +       int ret, ret_disable;
-> > +
-> > +       ret = i2c_smbus_write_byte_data(data->client, VCNL4010_INT_CTRL, 0);
-> > +       if (ret < 0)
-> > +               goto end;
-> > +
-> > +       ret = i2c_smbus_write_byte_data(data->client, VCNL4000_COMMAND, 0);
-> > +
-> > +end:  
-> 
-> > +       ret_disable = iio_triggered_buffer_predisable(indio_dev);
-> > +       if (ret == 0)
-> > +               ret = ret_disable;  
-> 
-> What is this?
-> 
-> Can't you rather call IIO API first, and then try to handle the rest?
+The j-core guys are using it.
 
-There is an additional complexity here. Alex is in the middle of trying
-to refactor all drivers to handle this in the same order so as to
-ultimately remote the need to explicitly make that call at all.
-
-So until that is sorted, I think that needs to be the last call made
-even if there isn't a driver related reason for the ordering.
-
-It's a big job with lots of complex corner cases so will be a little
-while yet I guess before we can do the core rework.
-
-Jonathan
-
-> 
-> > +       return ret;
-> > +}  
-> 
-
+Rob
