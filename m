@@ -2,116 +2,84 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7D5C55185
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 11:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F26A8C55186
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 11:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 303EA20767
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 11:10:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCDE2206A2
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 11:11:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O5u+4P5u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbgDYLKB (ORCPT
+        id S1726271AbgDYLLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 07:10:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55232 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726059AbgDYLKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 07:10:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A3D3BAC24;
-        Sat, 25 Apr 2020 11:09:56 +0000 (UTC)
-Subject: Re: [PATCH] x86: Fix early boot crash on gcc-10, next try
-To:     Borislav Petkov <bp@alien8.de>,
-        Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Michael Matz <matz@suse.de>, Jakub Jelinek <jakub@redhat.com>,
-        Sergei Trofimovich <slyfox@gentoo.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kees Cook <keescook@chromium.org>,
-        =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>,
-        =?UTF-8?Q?Fr=c3=a9d=c3=a9ric_Pierret_=28fepitre=29?= 
-        <frederic.pierret@qubes-os.org>, boris.ostrovsky@oracle.com
-References: <alpine.LSU.2.21.2004201401120.11688@wotan.suse.de>
- <20200422102309.GA26846@zn.tnic>
- <CAKwvOd=Dza3UBfeUzs2RW6ko5fDr3jYeGQAYpJXqyEVns6DJHg@mail.gmail.com>
- <20200422192113.GG26846@zn.tnic>
- <CAKwvOdkbcO8RzoafON2mGiSy5P96P5+aY8GySysF2my7q+nTqw@mail.gmail.com>
- <20200422212605.GI26846@zn.tnic>
- <CAKwvOd=exxhfb8N6=1Q=wBUaYcRDEq3L1+TiHDLz+pxWg8OuwQ@mail.gmail.com>
- <20200423125300.GC26021@zn.tnic> <20200423161126.GD26021@zn.tnic>
- <20200425014657.GA2191784@rani.riverdale.lan>
- <20200425085759.GA24294@zn.tnic>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <1fbcc917-420a-10a6-26a6-047b0b1c4783@suse.com>
-Date:   Sat, 25 Apr 2020 13:09:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sat, 25 Apr 2020 07:11:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38440 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726059AbgDYLLC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 07:11:02 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AD12C09B04B;
+        Sat, 25 Apr 2020 04:11:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=XhkPbtyaqmMBG6aICROLPcfy5U+xk0OZN/pBlUuLuHY=; b=O5u+4P5udjw0lHyGwAIHIyJA8q
+        ytjTlNMbMxF4ZNJwIqFOEoSBxnGwcYFU6GjUmAAKDJ+si7gTkCax+kFnS/rp0flqBfaSkGJxXDGzN
+        UKAbF9lVnztuR3ea3DbP3qH+3Dj49pOJZgHSACe+4HJrA0+LnFE9bTtMAnogLiV1+IY0b2/J4MLtt
+        mpQB59fVaoUCLRdZ0BxOo2Bc75V/ApvwggSB79/NE/xE5CICVh1ZFhYhfuHsoegxQVdqszx9b9Fpf
+        Ijr3RBDx/DQrCBgpGOclmEmrTKgtgPqIcd90LHorb9f5dfzudxyFa/b5/3/6u9gE6xhSmkeNFLhIO
+        Ng05eJtg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jSIi0-0003jb-Ig; Sat, 25 Apr 2020 11:10:56 +0000
+Date:   Sat, 25 Apr 2020 04:10:56 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+Cc:     linux-scsi@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>,
+        Joao Lima <Joao.Lima@synopsys.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/5] scsi: ufs: Allow UFS 3.0 as a valid version
+Message-ID: <20200425111056.GA3384@infradead.org>
+References: <cover.1587727756.git.Jose.Abreu@synopsys.com>
+ <5c4281080538b74ca39cedb9112ffe71bf7a80b5.1587727756.git.Jose.Abreu@synopsys.com>
 MIME-Version: 1.0
-In-Reply-To: <20200425085759.GA24294@zn.tnic>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5c4281080538b74ca39cedb9112ffe71bf7a80b5.1587727756.git.Jose.Abreu@synopsys.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.04.20 10:57, Borislav Petkov wrote:
-> On Fri, Apr 24, 2020 at 09:46:57PM -0400, Arvind Sankar wrote:
->> The comment above boot_init_stack_canary's definition should be updated
->> to note that it needs to be called from a function that, in addition to
->> not returning, either has stackprotector disabled or avoids ending in a
->> tail call.
-> 
-> How's that?
-> 
-> diff --git a/arch/x86/include/asm/stackprotector.h b/arch/x86/include/asm/stackprotector.h
-> index 91e29b6a86a5..237a54f60d6b 100644
-> --- a/arch/x86/include/asm/stackprotector.h
-> +++ b/arch/x86/include/asm/stackprotector.h
-> @@ -55,8 +55,12 @@
->   /*
->    * Initialize the stackprotector canary value.
->    *
-> - * NOTE: this must only be called from functions that never return,
-> - * and it must always be inlined.
-> + * NOTE: this must only be called from functions that never return, it must
-> + * always be inlined and it should be called from a compilation unit for
-> + * which stack protector is disabled.
-> + *
-> + * Alternatively, the caller should not end with a function call which gets
-> + * tail-call optimized as that would lead to checking a modified canary value.
->    */
->   static __always_inline void boot_init_stack_canary(void)
->   {
-> 
->> There are also other calls that likely need to be fixed as well -- in
->> init/main.c, arch/x86/xen/smp_pv.c, and there is a powerpc version of
->> start_secondary in arch/powerpc/kernel/smp.c which may also be affected.
-> 
-> Yes, there was an attempt to fix former:
-> 
-> https://lkml.kernel.org/r/20200413123535.10884-1-frederic.pierret@qubes-os.org
-> 
-> I probably should point the folks to this thread. CCed.
-> 
-> Boris O, Jürgen, I'm guessing I should fix cpu_bringup_and_idle() too,
-> see:
-> 
-> https://lkml.kernel.org/r/20200423161126.GD26021@zn.tnic
-> 
-> or do you prefer a separate patch?
+On Fri, Apr 24, 2020 at 01:36:56PM +0200, Jose Abreu wrote:
+> Add a define for UFS version 3.0 and do not print an error message upon
+> probe when using this version.
 
-I'm fine with you including it in your patch.
+This doesn't really scale.  Version checks only make sense for a minimum
+supported version.  Rejecting newer versions is just a bad idea.
 
+> @@ -8441,7 +8441,8 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
+>  	if ((hba->ufs_version != UFSHCI_VERSION_10) &&
+>  	    (hba->ufs_version != UFSHCI_VERSION_11) &&
+>  	    (hba->ufs_version != UFSHCI_VERSION_20) &&
+> -	    (hba->ufs_version != UFSHCI_VERSION_21))
+> +	    (hba->ufs_version != UFSHCI_VERSION_21) &&
+> +	    (hba->ufs_version != UFSHCI_VERSION_30))
 
-Juergen
+i.e. this should become
+
+	if (hba->ufs_version < UFSHCI_VERSION_10)
+
+as an additional cleanup I think it makes more sense t use a UFSHCI_VER()
+macro similar to KERNEL_VERSION() or NVME_VS() instead of adding a new
+define for every version.
