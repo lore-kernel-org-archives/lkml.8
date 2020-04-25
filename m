@@ -2,114 +2,267 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE20C55185
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 10:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBF8C55186
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 10:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 073102071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 10:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0964E2098B
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 10:47:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aefTb9R0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="V9HxQjBM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726133AbgDYKnp (ORCPT
+        id S1726122AbgDYKrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 06:43:45 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52775 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726050AbgDYKnl (ORCPT
+        Sat, 25 Apr 2020 06:47:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34716 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726053AbgDYKrQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 06:43:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587811420;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zenMpg+2v4nQ44+/jX7Ww4Nj5mK/XgsXmzCGzWANwV8=;
-        b=aefTb9R06CSZey0rgWcce0Y8X8TNDdsjWPkZA4qniRj9xB035FnpTEJejLiT861s5D/enb
-        JFPPp8LvRl6H4UScjKFJGWomYyZies49OYgjM5tMb120wnFQ3cTEi1oI4tyn/ahOzH4qhQ
-        AW2tbYIrzt8ZVxqckYzIygHio/DLmUs=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-217-5dVvx2_jM4mVRBrX59UMDA-1; Sat, 25 Apr 2020 06:43:38 -0400
-X-MC-Unique: 5dVvx2_jM4mVRBrX59UMDA-1
-Received: by mail-wr1-f69.google.com with SMTP id v9so6488728wrt.7
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 03:43:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zenMpg+2v4nQ44+/jX7Ww4Nj5mK/XgsXmzCGzWANwV8=;
-        b=Q20uj/Eg5nykrD5defV2/RUk/RX2XmfiZe4CGJcjp+N34jsA6BpHYAT7b7QMy4RAZ2
-         GJRdKEvOTrR2i2Ch0QwdfrQ58bpX9Dn/AYeeGHDRErfmOA8UWJCEQYC5g4n9Rm9SxloP
-         6jqjPeU5XJQJndxqebrC7VlHXOXqWLjbEeqAgEpr51M5PVpxko+nifEEOENutzDeIwum
-         ERj5I0gTwY9sDCQWVKFq09GjYsP2yVtW0ie8Olej1jPK45eRWHDWeZEOQg6yF+a912Nq
-         u83jBjsU+/Grz3JR37opN1Pdlwq0/qe/0ruaiV6QbgHIfdfRst82xN63bOga88YHJgLJ
-         AFgQ==
-X-Gm-Message-State: AGi0PuaOTtl+R0ch5hXJgZwmEgVLvCTvWL/qdxBQ1nUYxYYM0pE30sQR
-        R/E8wSnnT29rUOjVtibVqtbcytWSWuaGlH/hg/ThrwitCBVH8/iVHxa+rYpxXNYQNtDOPpVB8TN
-        eeK5F0E8ZSO3ktvp+Thk7tPss
-X-Received: by 2002:a1c:f20c:: with SMTP id s12mr16485418wmc.83.1587811417047;
-        Sat, 25 Apr 2020 03:43:37 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJXYCKrMGcQbWZ4dmNlA4I3N70iZVCaAGf8WxW73pnTLMz5y0M53agpbgh6ZESeAQahxD4ccA==
-X-Received: by 2002:a1c:f20c:: with SMTP id s12mr16485405wmc.83.1587811416907;
-        Sat, 25 Apr 2020 03:43:36 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id x132sm7007951wmg.33.2020.04.25.03.43.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 25 Apr 2020 03:43:36 -0700 (PDT)
-Subject: Re: bdi: fix use-after-free for dev_name(bdi->dev) v3
-To:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk
-Cc:     yuyufen@huawei.com, tj@kernel.org, jack@suse.cz,
-        bvanassche@acm.org, tytso@mit.edu, gregkh@linuxfoundation.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200422073851.303714-1-hch@lst.de>
- <20200425075906.GA5250@lst.de>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <7bac482b-7940-e6a1-6256-194bc3393063@redhat.com>
-Date:   Sat, 25 Apr 2020 12:43:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sat, 25 Apr 2020 06:47:16 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3023EC09B04A;
+        Sat, 25 Apr 2020 03:47:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=UcPyzDSmAlpvs6USWTK+Q8/Nb28cO4vwEOAm0T/Tcak=; b=V9HxQjBM7jdzA3jGh8A32Siwg
+        wRpc0Dx9V24lqnL1AYO/AGAJznr983DYn+waOT2+IbyzigSPfs4faG8uX94IQSqdebDnL8rNALmy0
+        l8LDUlA0MfNdHI0I81ZAUzh5xPvp6/Y+PeKWwW41mMSb4cX0H93Ax5/ml9Jg//eBVzmawf4rO56DZ
+        qig/D+71rsBPh9IsrEZfMlBaSOnOPPPGvTvmRleVnwkr0jbWJKYIuqscrzGJ7UDUsAyP2OGOQe7VZ
+        lplPZRhyV3PkvWoynvykGSrlaLzJ9lO9p6c8Hun+TAFO4NXAfMCrKSv/3DguTs17JZBTWsSTDsYPK
+        NlQN61mkA==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:43516)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jSIKz-000287-OM; Sat, 25 Apr 2020 11:47:10 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jSIKx-0004Y1-SI; Sat, 25 Apr 2020 11:47:07 +0100
+Date:   Sat, 25 Apr 2020 11:47:07 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Florinel Iordache <florinel.iordache@nxp.com>
+Cc:     davem@davemloft.net, netdev@vger.kernel.org, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com,
+        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, kuba@kernel.org,
+        corbet@lwn.net, shawnguo@kernel.org, leoyang.li@nxp.com,
+        madalin.bucur@oss.nxp.com, ioana.ciornei@nxp.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2 6/9] net: phy: add backplane kr driver support
+Message-ID: <20200425104707.GY25745@shell.armlinux.org.uk>
+References: <1587732391-3374-1-git-send-email-florinel.iordache@nxp.com>
+ <1587732391-3374-7-git-send-email-florinel.iordache@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20200425075906.GA5250@lst.de>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587732391-3374-7-git-send-email-florinel.iordache@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Apr 24, 2020 at 03:46:28PM +0300, Florinel Iordache wrote:
+> Add support for backplane kr generic driver including link training
+> (ieee802.3ap/ba) and fixed equalization algorithm
 
-On 4/25/20 9:59 AM, Christoph Hellwig wrote:
-> Any more comments?  Are we ready to merge this now?
+This looks like it's still very much modelled on being a phylib driver,
+which I thought we discussed shouldn't be the case.
 
-Merging this fine with me.
+Some further comments inline, but given the size of this patch I haven't
+spent too long reviewing it.
 
-Regards,
+> diff --git a/drivers/net/phy/backplane/Kconfig b/drivers/net/phy/backplane/Kconfig
+> new file mode 100644
+> index 0000000..9ec54b5
+> --- /dev/null
+> +++ b/drivers/net/phy/backplane/Kconfig
+> @@ -0,0 +1,20 @@
+> +# SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
+> +config ETH_BACKPLANE
+> +	tristate "Ethernet Backplane support"
+> +	depends on OF_MDIO
+> +	help
+> +	  This module provides driver support for Ethernet Operation over
+> +	  Electrical Backplanes. It includes Backplane generic
+> +	  driver including support for Link Training (IEEE802.3ap/ba).
+> +	  Based on the link quality, a signal equalization is required.
+> +	  The standard specifies that a start-up algorithm should be in place
+> +	  in order to get the link up.
+> +
+> +config ETH_BACKPLANE_FIXED
+> +	tristate "Fixed: No Equalization algorithm"
+> +	depends on ETH_BACKPLANE
+> +	help
+> +	  This module provides a driver to setup fixed user configurable
+> +	  coefficient values for backplanes equalization. This means
+> +	  No Equalization algorithm is used to adapt the initial coefficients
+> +	  initially set by the user.
+> \ No newline at end of file
 
-Hans
+Please fix.
 
+> +static u32 le_ioread32(void __iomem *reg)
+> +{
+> +	return ioread32(reg);
+> +}
+> +
+> +static void le_iowrite32(u32 value, void __iomem *reg)
+> +{
+> +	iowrite32(value, reg);
+> +}
+> +
+> +static u32 be_ioread32(void __iomem *reg)
+> +{
+> +	return ioread32be(reg);
+> +}
+> +
+> +static void be_iowrite32(u32 value, void __iomem *reg)
+> +{
+> +	iowrite32be(value, reg);
+> +}
 
-> On Wed, Apr 22, 2020 at 09:38:42AM +0200, Christoph Hellwig wrote:
->> Hi all,
->>
->> the first three patches are my take on the proposal from Yufen Yu
->> to fix the use after free of the device name of the bdi device.
->>
->> The rest is vaguely related cleanups.
->>
->> Changes since v2:
->>   - switch vboxsf to a shorter bdi name
->>
->> Changes since v1:
->>   - use a static dev_name buffer inside struct backing_dev_info
-> ---end quoted text---
-> 
+Do these accessors really add any value - they just rename our existing
+accessors, and therefore make the learning curve to understand this
+code unnecessarily harder than it needs to be.
 
+> +/* Read AN Link Status */
+> +static int is_an_link_up(struct phy_device *phydev)
+> +{
+> +	struct backplane_device *bpdev = phydev->priv;
+> +	int ret, val = 0;
+> +
+> +	mutex_lock(&bpdev->bpphy_lock);
+> +
+> +	/* Read twice because Link_Status is LL (Latched Low) bit */
+> +	val = phy_read_mmd(phydev, MDIO_MMD_AN, MDIO_STAT1);
+> +	val = phy_read_mmd(phydev, MDIO_MMD_AN, MDIO_STAT1);
+
+What if an error occurs? while reading?
+
+Do you care if the link went down momentarily?
+
+> +/* backplane_write_mmd - Wrapper function for phy_write_mmd
+> + * for writing a register on an MMD on a given PHY.
+> + *
+> + * Same rules as for phy_write_mmd();
+> + */
+
+Exported functions ought to have proper kerneldoc documentation.
+
+> +int backplane_write_mmd(struct lane_device *lane, int devad, u32 regnum,
+> +			u16 val)
+> +{
+> +	struct backplane_device *bpdev = lane->bpdev;
+> +	struct phy_device *phydev = lane->phydev;
+> +	int mdio_addr = phydev->mdio.addr;
+> +	int err;
+> +
+> +	mutex_lock(&bpdev->bpphy_lock);
+> +
+> +	if (devad == MDIO_MMD_AN && backplane_is_multi_lane(bpdev)) {
+> +		/* Multilane AN: prepare mdio address
+> +		 * for writing phydev AN registers on respective lane
+> +		 * AN MDIO address offset for multilane is equal
+> +		 * to number of lanes
+> +		 */
+> +		phydev->mdio.addr = bpdev->num_lanes + lane->idx;
+> +	}
+> +
+> +	err = phy_write_mmd(phydev, devad, regnum, val);
+> +	if (err)
+> +		bpdev_err(phydev,
+> +			  "Writing PHY (%p) MMD = 0x%02x register = 0x%02x failed with error code: 0x%08x\n",
+> +			  phydev, devad, regnum, err);
+> +
+> +	if (devad == MDIO_MMD_AN && backplane_is_multi_lane(bpdev)) {
+> +		/* Multilane AN: restore mdio address */
+> +		phydev->mdio.addr = mdio_addr;
+> +	}
+> +
+> +	mutex_unlock(&bpdev->bpphy_lock);
+> +
+> +	return err;
+> +}
+> +EXPORT_SYMBOL(backplane_write_mmd);
+
+Consider EXPORT_SYMBOL_GPL().
+
+> +
+> +/* backplane_read_mmd - Wrapper function for phy_read_mmd
+> + * for reading a register from an MMD on a given PHY.
+> + *
+> + * Same rules as for phy_read_mmd();
+> + */
+> +int backplane_read_mmd(struct lane_device *lane, int devad, u32 regnum)
+> +{
+> +	struct backplane_device *bpdev = lane->bpdev;
+> +	struct phy_device *phydev = lane->phydev;
+> +	int mdio_addr = phydev->mdio.addr;
+> +	int ret;
+> +
+> +	mutex_lock(&bpdev->bpphy_lock);
+> +
+> +	if (devad == MDIO_MMD_AN && backplane_is_multi_lane(bpdev)) {
+> +		/* Multilane AN: prepare mdio address
+> +		 * for reading phydev AN registers on respective lane
+> +		 * AN MDIO address offset for multilane is equal to
+> +		 * number of lanes
+> +		 */
+> +		phydev->mdio.addr = bpdev->num_lanes + lane->idx;
+> +	}
+> +
+> +	ret = phy_read_mmd(phydev, devad, regnum);
+> +
+> +	if (devad == MDIO_MMD_AN && backplane_is_multi_lane(bpdev)) {
+> +		/* Multilane AN: restore mdio address */
+> +		phydev->mdio.addr = mdio_addr;
+> +	}
+> +
+> +	mutex_unlock(&bpdev->bpphy_lock);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(backplane_read_mmd);
+
+I think the above two functions are coding implementation specifics into
+what is trying to be a generic layer here.  What guarantee do we have
+that all KR PHYs will live at consecutive addresses for each lane?
+
+This brings me on to another issue - I thought we discussed the point of
+reusing struct phy_device, and we strongly recommended against it ?
+I think it would make more sense for struct lane_device to contain a
+'struct mdio_device' or maybe a new 'struct pcs_mdio_device' which
+points to the specific MDIO device for this lane.  That would have the
+nice effect of avoiding the implementation specifics here.
+
+> +bool backplane_is_mode_kr(phy_interface_t interface)
+> +{
+> +	return (interface >= PHY_INTERFACE_MODE_10GKR &&
+> +		interface <= PHY_INTERFACE_MODE_40GKR4);
+
+This really should not be here - you're reliant on no one
+inappropriately adding between these enumeration values - but this code
+is divorsed from its definition.  It should be in linux/phy.h to
+complement things like phy_interface_mode_is_rgmii() et.al.
+
+> +}
+> +EXPORT_SYMBOL(backplane_is_mode_kr);
+> +
+> +bool backplane_is_valid_mode(phy_interface_t interface)
+> +{
+> +	return (interface >= PHY_INTERFACE_MODE_10GKR &&
+> +		interface <= PHY_INTERFACE_MODE_40GKR4);
+
+Same problem - it looks the same as backplane_is_mode_kr().
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
