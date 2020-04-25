@@ -2,127 +2,111 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2EBC55196
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 23:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9813FC55191
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 23:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B54620704
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 23:40:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IQbOXHlH"
+	by mail.kernel.org (Postfix) with ESMTP id 672E620704
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 23:42:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587858178;
+	bh=Wa9pRor+FZOPY2ND7QNZBk7br1p7RSGFmR3CvEbaUMk=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=1IejIhTrODnkui9UfYJS4DjDBKjkLI8hFB7af++tDjtFxk+MUuFfOcW3Ji0kscY5j
+	 bDIsxUsBjKpn8TBb89YMnk70sYIad7VppzBFXiBF9yoNvS+9k4J+AkPRlju9LCwBQj
+	 mjvJuLAKtJApbjS/6b5osXW764K9NNyKo6WSFi/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726162AbgDYXkc (ORCPT
+        id S1726177AbgDYXm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 19:40:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41084 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbgDYXkb (ORCPT
+        Sat, 25 Apr 2020 19:42:58 -0400
+Received: from mail-oo1-f67.google.com ([209.85.161.67]:43293 "EHLO
+        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726070AbgDYXm5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 19:40:31 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5077DC061A0C;
-        Sat, 25 Apr 2020 16:40:29 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id e25so13770365ljg.5;
-        Sat, 25 Apr 2020 16:40:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oXCFuXGcaBQ8WLAWH+/JLqoQs+neD+DHrlmOTu9tXL8=;
-        b=IQbOXHlHkCu7gh8rfwhgj9HZNKCUQLeH2Lni5W3GzVszWa8GVfZbDBupilZJcN5XSG
-         Tg9ri4i0ctVPq7q4UkOlDQ/udd4zzcwfDDxboqkdTsdJN0MaY+tyVBXLdBAJe/+7phW2
-         tJJmabjvNQrLIUccyTaUtr5hrB1lFWkMyVOU5kb8mgOa8DXa7fs7ARtKwA4GbpgLTfe0
-         gHVJWQi3Iug2DcW4T+8IhbDsmoQDe7NCDtCflC7YH+HdRlLf0XjsA0WAOvQS52bfHWGx
-         UvNWEIvipjkVGE/pnJ2PikPmHtZ3zPS0HzY0f/CHGdbKor5E2pQbUbhpgMrghmDgcsJ9
-         91dg==
+        Sat, 25 Apr 2020 19:42:57 -0400
+Received: by mail-oo1-f67.google.com with SMTP id h23so419743oos.10;
+        Sat, 25 Apr 2020 16:42:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oXCFuXGcaBQ8WLAWH+/JLqoQs+neD+DHrlmOTu9tXL8=;
-        b=p1ILjsFsMedxcTYecuAqUb14z9srw9O31L7v9jSJTiwgOm1r80GCQVWQ6U6SdSNgxn
-         7tAQrDwSH21Bgm07Qy69V3rwCbpC5fXTGwrd79f25VFSo7U4kJOe4rYsf0KQTwY+yl1m
-         IqWL38U6jyDBOKNM4uB0YE49JaztbgtgfNPAJsuIi6pc0ZIGmqv2ZfxdxRk2t3kft98F
-         2IgSQeKrlLz7fl+alPUErvlSKvTwxeWovrS5p5Lz2sHBRMzQY8bTNfxcT582nyDCRI9R
-         0pZluz1ghdOP+IbCReu3Oda2muz16RCboE7IenPfXRfrcRL79EZ7frYiQJ8KlnNxj+jN
-         MTEg==
-X-Gm-Message-State: AGi0Pubc1gTeYtjaS/8HyiiabJsnFDPgfZ3MyVxejnShtz0mEUeJM+Vv
-        mPBV20MrpzijWl9xx7QxYDQj7wiW
-X-Google-Smtp-Source: APiQypLNo0neAkAtvVrRzROo1ho6aQk5r4PAgKk9VvmtcK5ppf92D3eFkbI75OLpWip6+gWq2ZpZ6w==
-X-Received: by 2002:a2e:b1c9:: with SMTP id e9mr10343719lja.102.1587858027350;
-        Sat, 25 Apr 2020 16:40:27 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id g3sm4210893ljk.27.2020.04.25.16.40.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 25 Apr 2020 16:40:26 -0700 (PDT)
-Subject: Re: [RFC PATCH v10 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1587700513-28449-1-git-send-email-skomatineni@nvidia.com>
- <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
- <3155e0d2-94b0-6e0a-bf35-b3560c201039@gmail.com>
- <fffc09d1-a25f-2d6e-83bd-f7657dd2ff16@nvidia.com>
- <e5602c48-a73e-8e71-188d-6a53ebf8e4a4@gmail.com>
- <f6d62dde-9ab5-7001-0ff4-93ed70cb207f@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <6568af00-3d65-4ddb-f003-7a4161d751a0@gmail.com>
-Date:   Sun, 26 Apr 2020 02:40:25 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=+HEWMzeY2Z+R1cn0KYsKeAg1YeSXi0Mg+04sBBJlfTc=;
+        b=tz/r5aaOuflm27DzF/ChBRPar3U51v+FA1eEjgWX5hf8XxkIkGFFSqpq1T1bGHzecr
+         /xnK8JDjFYDpWJEMTbVuUPE5XBJxj5dusMun4C7Ol7NLGodLYZ2gM2ygU+G9w5UaMJ4w
+         LeqIg+/lpbdH4qnD3YdyNzKJm5yMExMe7ENtA9ADjdpumSzplUToyIpOTHmLvOFO5+0P
+         wG09BIqp0E0BCJek1hmVps4I4Nitk2ftRap3Ur0TWYldtEDInmXZK1bu02fLwUHHyvfK
+         os1qnTV0qPU+mfv+j71DNWNwT+nMLOEtnaOuAluIRkZ8COdPyGQtRLKeFi1pPNN/SxOI
+         a4lg==
+X-Gm-Message-State: AGi0PuYUcC0n86kXcJOgLI7gKxKa8/SFJy/D72ZkBC6uyTwjvl74SawK
+        4o7RlBBIhKyFG85AS3meZw==
+X-Google-Smtp-Source: APiQypKkjbBTjqSUlR6x0aO3oupijTopSqVOPLVvsIWAyUpGQQf5McdNoXkpwHf8bLuV01Jz9zO9YA==
+X-Received: by 2002:a4a:9c8d:: with SMTP id z13mr13279565ooj.50.1587858175193;
+        Sat, 25 Apr 2020 16:42:55 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r67sm2818967oie.19.2020.04.25.16.42.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Apr 2020 16:42:54 -0700 (PDT)
+Received: (nullmailer pid 1923 invoked by uid 1000);
+        Sat, 25 Apr 2020 23:42:54 -0000
+Date:   Sat, 25 Apr 2020 18:42:53 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Frank Rowand <frowand.list@gmail.com>
+Subject: [GIT PULL] Devicetree fixes for v5.7, take 2
+Message-ID: <20200425234253.GA32365@bogus>
 MIME-Version: 1.0
-In-Reply-To: <f6d62dde-9ab5-7001-0ff4-93ed70cb207f@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-26.04.2020 01:11, Sowjanya Komatineni пишет:
-> 
-> On 4/25/20 3:08 PM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> 25.04.2020 01:00, Sowjanya Komatineni пишет:
->>> On 4/24/20 8:07 AM, Dmitry Osipenko wrote:
->>>> External email: Use caution opening links or attachments
->>>>
->>>>
->>>> 24.04.2020 06:55, Sowjanya Komatineni пишет:
->>>>
->>>> Is this driver compiled as a single kernel module file?
->>>>
->>>>> +MODULE_AUTHOR("Sowjanya Komatineni <skomatineni@nvidia.com>");
->>>>> +MODULE_DESCRIPTION("NVIDIA Tegra CSI Device Driver");
->>>>> +MODULE_LICENSE("GPL v2");
->>>> ...
->>>>> +MODULE_AUTHOR("Sowjanya Komatineni <skomatineni@nvidia.com>");
->>>>> +MODULE_DESCRIPTION("NVIDIA Tegra Video Input Device Driver");
->>>>> +MODULE_LICENSE("GPL v2");
->>>> I don't think that these macros are needed in that case.
->>>> The video.c should be enough, isn't it?
->>> yes these can be removed
->> It will be nice to factor out the Tegra210-specific VI/CSI OPS into a
->> separate driver module (say tegra210-vi) to ease supporting of other
->> Tegra versions. Of course this could be done later on, although I
->> suppose the amount of hassle could be reduced if it's done from the
->> start.
-> vi/csi.c are common drivers for all Tegras. All Tegra chip specific
-> related programming for both vi and csi were already moved to Tegra210.c
-> based on prior feedbacks.
+Linus,
 
-Judging by the code's structure the VI/CSI drivers aren't planned to be
-reused by older pre-Terga210 SoCs, correct?
+Please pull a couple more DT fixes for v5.7-rc.
 
-How much of the T210 code could be reused by T186/194?
+Rob
+
+
+The following changes since commit 0903060fe590105b7d31901c1ed67614c08cee08:
+
+  kbuild: check libyaml installation for 'make dt_binding_check' (2020-04-17 10:45:23 -0500)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.7-2
+
+for you to fetch changes up to 4bc77b2d211e107fa54b1f39cd0d7dac5537b8cb:
+
+  dt-bindings: phy: qcom-qusb2: Fix defaults (2020-04-24 17:53:57 -0500)
+
+----------------------------------------------------------------
+Devicetree fixes for v5.7-rc, take 2:
+
+A couple of schema and kbuild fixes.
+
+----------------------------------------------------------------
+Douglas Anderson (1):
+      dt-bindings: phy: qcom-qusb2: Fix defaults
+
+Rob Herring (3):
+      dt-bindings: Re-enable core schemas for dtbs_check
+      dt-bindings: Fix command line length limit calling dt-mk-schema
+      dt-bindings: Fix erroneous 'additionalProperties'
+
+ Documentation/devicetree/bindings/Makefile          | 21 ++++++++++++---------
+ .../devicetree/bindings/mfd/st,stpmic1.yaml         |  2 --
+ .../devicetree/bindings/phy/qcom,qusb2-phy.yaml     |  6 +++---
+ .../devicetree/bindings/regulator/mps,mp5416.yaml   |  1 -
+ .../devicetree/bindings/regulator/mps,mpq7920.yaml  |  3 ++-
+ .../bindings/regulator/rohm,bd71828-regulator.yaml  |  6 +++++-
+ .../bindings/regulator/rohm,bd71837-regulator.yaml  |  6 +++++-
+ .../bindings/regulator/rohm,bd71847-regulator.yaml  |  6 +++++-
+ 8 files changed, 32 insertions(+), 19 deletions(-)
