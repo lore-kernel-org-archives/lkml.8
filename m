@@ -2,169 +2,158 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5AEC55191
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 11:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC37C55186
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 11:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A5ED206EC
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 11:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BCE9206EC
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 11:42:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="KBSdOBng"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="rjR3ZDoE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726233AbgDYLmZ (ORCPT
+        id S1726307AbgDYLmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 07:42:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43282 "EHLO
+        Sat, 25 Apr 2020 07:42:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbgDYLmY (ORCPT
+        with ESMTP id S1726240AbgDYLmb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 07:42:24 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16FB8C09B04D
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 04:42:24 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id f11so8052914ljp.1
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 04:42:24 -0700 (PDT)
+        Sat, 25 Apr 2020 07:42:31 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69964C09B04D
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 04:42:30 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id b1so6552609qtt.1
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 04:42:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=antmicro.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=OmVccqbZBFAGvYE285z5vpBDUG7a3gigAjE4qLquOAA=;
-        b=KBSdOBngPsJBsjT1ruAEUcGyt0dC8W+10zgde9IFv/BXKJP1P6hnJbESFiYgQwuFom
-         FaP4F+PwgGEp7xb79xEhBwa7K6cW3/9l+gOc513S9hQ0PRTIBuEXS7xMQwfMbsfQpmFr
-         R2z0v12HNoHqzVpizuMLyrJD64fBprcupRMS8=
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:date:message-id:in-reply-to:references:user-agent
+         :subject:mime-version:content-transfer-encoding;
+        bh=hdIpK7ct63Z7jJE9Mjn72p6e0+1mT0sE49L6U7OVovk=;
+        b=rjR3ZDoEA1kMo0d7AI6FUigWYhXfwA/OOqMy5TRbBqa6IOibl6n2Ti+p4lW5q1ItqG
+         0k1YfDviLW8gxVE27X5Cha36KqTKPCDXK5YYpKiBp0sLWzjbn9Bu+3dVG9H+V36Lw61f
+         puwFoMVKKUv3pMvC01cxe3eYffVFqvcK8DmPvijZYSd2wefAkUC681LBzVE4POyvmFsF
+         IDJvZ3jpLY8zFLEY3qxysDBsfnx6qP1kWceF++4h/CpeztSKE7JP/TPemqDLX1j7V03s
+         MUK4FNSLinAHYN5d6LmzD6JDgTZcQCDcxpqL9sWvP68inaaZrGJ0/6eFoQR9p5xSi5P8
+         1aTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OmVccqbZBFAGvYE285z5vpBDUG7a3gigAjE4qLquOAA=;
-        b=crXqURxM7Cv/NnTfX9V87ncJQhABTkecv6c7hc2jIofJL816i/EJbhx7xMeJI3A72d
-         s/ZwTg7LuE7cjqcJwHrXn0poPSwhNUG8SozMVEavPjp/sc+MonYv/Bm5EkoSNpCgWXWw
-         wHKitErIzVvEzyzWfG234H1wPYIkzEIy/VF6Nhn9jiNTokYqmj68KB1cObb2vQIFcP8G
-         B9BIYhhwmof+MRg9N3UG1Ye6xbx4rW4AiqI0rLCXZr027myHQZCLFblxWNXmC4rlk1Ng
-         WvYT8cIPw6G7pK2upzdZJkgHdeCJMdpvNkxfJQZ8no3+P/kXvjJkDEn5vrGC7AHzTTLz
-         cbHg==
-X-Gm-Message-State: AGi0PuahqJKZfU8KEyb6T8Mjrq8UdqxCMjbQqcvivYVSuhs1UIvMEaO7
-        vgYIvP4m3HZ/AuifYDgFoIBQUw==
-X-Google-Smtp-Source: APiQypLIuh6Wx2YYEHW+X+0yYOAYZjZznzwLHj2f4QkO+MbgcYDHm/NdYofOExvM4GYvIJgUB4zcTg==
-X-Received: by 2002:a2e:2ac2:: with SMTP id q185mr267630ljq.125.1587814942576;
-        Sat, 25 Apr 2020 04:42:22 -0700 (PDT)
-Received: from localhost.localdomain (d79-196.icpnet.pl. [77.65.79.196])
-        by smtp.gmail.com with ESMTPSA id o3sm6613414lfl.78.2020.04.25.04.42.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Apr 2020 04:42:22 -0700 (PDT)
-Date:   Sat, 25 Apr 2020 13:42:17 +0200
-From:   Mateusz Holenko <mholenko@antmicro.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Cc:     Stafford Horne <shorne@gmail.com>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Mateusz Holenko <mholenko@antmicro.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Filip Kokosinski <fkokosinski@antmicro.com>,
-        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5 4/5] dt-bindings: serial: document LiteUART bindings
-Message-ID: <20200425133939.3508912-4-mholenko@antmicro.com>
-References: <20200425133939.3508912-0-mholenko@antmicro.com>
+        h=x-gm-message-state:from:to:cc:date:message-id:in-reply-to
+         :references:user-agent:subject:mime-version
+         :content-transfer-encoding;
+        bh=hdIpK7ct63Z7jJE9Mjn72p6e0+1mT0sE49L6U7OVovk=;
+        b=rho7ILE4w77V6ES4la9mpL8tU/GvtPazFTP/MqMEwEubFAF4fHNSpLIi0g0BULQ1ud
+         N/fd5vVOl2q7yYeDbfViG+HmXLptAapEQJc6UUNs5RRrZGhnsgnCzWzSYzVJUbOcFS+G
+         tNSDvsHPMfkxvBgTv5GQkt+de/keJWbBAujxYE6xmRZZa8R8FD5VWDLL0Jz1vDXTNkz6
+         Ahg2nZLOAv8Lr1qjmvPsGlOMFp9AEqg9hTJxy3OW688ZT2ebomvABinDx85LsvL/EUNl
+         aT6Wzcy4VmmEl9JOjVEAFjzxbtsWZBEmCurdW9yqje4JQktvX9ymVjFNfvAvezxql37O
+         eB+g==
+X-Gm-Message-State: AGi0PuZuwff4Cl68y8dv0qCcaSmK7fKI5okpBo4tf5wpSdU2s40szf6L
+        rv3/P/9Z1pLyBGIk45WgiJxy
+X-Google-Smtp-Source: APiQypLVrBD4XSPStNPmAY5ImhaRZtIADJ00vA6YTflmpLtPbulGc66vuPVFk8OlyA5rqRB2Xyc2DQ==
+X-Received: by 2002:ac8:6753:: with SMTP id n19mr14205963qtp.353.1587814949479;
+        Sat, 25 Apr 2020 04:42:29 -0700 (PDT)
+Received: from [192.168.7.212] (pool-71-245-238-133.bstnma.fios.verizon.net. [71.245.238.133])
+        by smtp.gmail.com with ESMTPSA id g47sm6161863qte.54.2020.04.25.04.42.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 25 Apr 2020 04:42:28 -0700 (PDT)
+From:   Paul Moore <paul@paul-moore.com>
+To:     Dmitry Vyukov <dvyukov@google.com>,
+        David Miller <davem@davemloft.net>, <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>
+CC:     Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>, <selinux@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller <syzkaller@googlegroups.com>,
+        Willem de Bruijn <willemb@google.com>
+Date:   Sat, 25 Apr 2020 07:42:26 -0400
+Message-ID: <171b1244748.27df.85c95baa4474aabc7814e68940a78392@paul-moore.com>
+In-Reply-To: <CACT4Y+b8HiV6KFuAPysZD=5hmyO4QisgxCKi4DHU3CfMPSP=yg@mail.gmail.com>
+References: <CACT4Y+YTi4JCFRqOB9rgA22S+6xxTo87X41hj6Tdfro8K3ef7g@mail.gmail.com>
+ <CAHC9VhQs6eJpX4oMrhBiDap-HhEsBBgmYWEou=ZH60YiA__T7w@mail.gmail.com>
+ <CACT4Y+b8HiV6KFuAPysZD=5hmyO4QisgxCKi4DHU3CfMPSP=yg@mail.gmail.com>
+User-Agent: AquaMail/1.24.0-1572 (build: 102400003)
+Subject: Re: selinux_netlink_send changes program behavior
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200425133939.3508912-0-mholenko@antmicro.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filip Kokosinski <fkokosinski@antmicro.com>
+On April 25, 2020 1:15:05 AM Dmitry Vyukov <dvyukov@google.com> wrote:
 
-Add documentation for LiteUART devicetree bindings.
+> On Fri, Apr 24, 2020 at 11:51 PM Paul Moore <paul@paul-moore.com> wrote:
+>>
+>> On Fri, Apr 24, 2020 at 4:27 AM Dmitry Vyukov <dvyukov@google.com> wrote=
+:
+>>> Hi SELinux maintainers,
+>>>
+>>> We've hit a case where a developer wasn't able to reproduce a kernel
+>>> bug, it turned out to be a difference in behavior between SELinux and
+>>> non-SELinux kernels.
+>>> Condensed version: a program does sendmmsg on netlink socket with 2
+>>> mmsghdr's, first is completely empty/zeros, second contains some
+>>> actual payload. Without SELinux the first mmsghdr is treated as no-op
+>>> and the kernel processes the second one (triggers bug). However the
+>>> SELinux hook does:
+>>>
+>>> static int selinux_netlink_send(struct sock *sk, struct sk_buff *skb)
+>>> {
+>>> if (skb->len < NLMSG_HDRLEN) {
+>>>  err =3D -EINVAL;
+>>>  goto out;
+>>> }
+>>>
+>>> and fails processing on the first empty mmsghdr (does not happen
+>>> without SELinux).
+>>>
+>>> Is this difference in behavior intentional/acceptable/should be fixed?
+>>
+>> From a practical perspective, SELinux is always going to need to do a
+>> length check as it needs to peek into the netlink message header for
+>> the message type so it can map that to the associated SELinux
+>> permissions.  So in that sense, the behavior is intentional and
+>> desired; however from a bug-for-bug compatibility perspective ... not
+>> so much.
+>>
+>> Ultimately, my it's-Friday-and-it's-been-a-long-week-ending-in-a-long-da=
+y
+>> thought is that this was a buggy operation to begin with and the bug
+>> was just caught in different parts of the kernel, depending on how it
+>> was configured.  It may not be ideal, but I can think of worse things
+>> (and arguably SELinux is doing the Right Thing).
+>
+> +netlink maintainers for intended semantics of empty netlink messages
+>
+> If it's a bug, or intended behavior depends on the intended
+> behavior... which I assume is not documented anywhere officially.
 
-Signed-off-by: Filip Kokosinski <fkokosinski@antmicro.com>
-Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
+Your original email gave the impression that there was a big in the non-SEL=
+inux case; if that is not the case my response changes.
 
-Notes:
-    No changes in v5.
+> However, most of the netlink families use netlink_rcv_skb, which does:
+>
+> int netlink_rcv_skb(struct sk_buff *skb, int (*cb)(struct sk_buff *,
+>                           struct nlmsghdr *,
+>                           struct netlink_ext_ack *))
+> {
+>    ...
+>    while (skb->len >=3D nlmsg_total_size(0)) {
+>    ...
+>       skb_pull(skb, msglen);
+>    }
+>    return 0;
+> }
+>
+> 1. How intentional is this while loop logic vs sloppy error checking?
+> 2. netlink_rcv_skb seems to be able to handle 2+ messages in the same
+> skb, while selinux_netlink_send only checks the first one... so can I
+> skip SELinux checks by putting a malicious message after a permitted
+> one?..
 
-    No changes in v4.
 
-    Changes in v3:
-    - added Reviewed-by tag
-    - patch number changed from 3 to 4
-    - removed changes in MAINTAINERS file (moved to patch #2)
-    
-    Changes in v2:
-    - binding description rewritten to a yaml schema file
-    - added interrupt line
-    - fixed unit address
-    - patch number changed from 2 to 3
-
- .../bindings/serial/litex,liteuart.yaml       | 38 +++++++++++++++++++
- 1 file changed, 38 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/litex,liteuart.yaml
-
-diff --git a/Documentation/devicetree/bindings/serial/litex,liteuart.yaml b/Documentation/devicetree/bindings/serial/litex,liteuart.yaml
-new file mode 100644
-index 000000000000..87bf846b170a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/litex,liteuart.yaml
-@@ -0,0 +1,38 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/serial/litex,liteuart.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: LiteUART serial controller
-+
-+maintainers:
-+  - Karol Gugala <kgugala@antmicro.com>
-+  - Mateusz Holenko <mholenko@antmicro.com>
-+
-+description: |
-+  LiteUART serial controller is a part of LiteX FPGA SoC builder. It supports
-+  multiple CPU architectures, currently including e.g. OpenRISC and RISC-V.
-+
-+properties:
-+  compatible:
-+    const: litex,liteuart
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    uart0: serial@e0001800 {
-+      compatible = "litex,liteuart";
-+      reg = <0xe0001800 0x100>;
-+      interrupts = <2>;
-+    };
--- 
-2.25.1
 
