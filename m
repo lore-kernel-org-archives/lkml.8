@@ -5,120 +5,98 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F3BC55191
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 12:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44713C54FCB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 12:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D11422063A
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 12:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16E082063A
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 12:53:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="pUIWEDU/"
+	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="mmGc5S7H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726182AbgDYMvb (ORCPT
+        id S1726119AbgDYMxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 08:51:31 -0400
-Received: from mail.fudan.edu.cn ([202.120.224.73]:37824 "EHLO fudan.edu.cn"
+        Sat, 25 Apr 2020 08:53:07 -0400
+Received: from mail.fudan.edu.cn ([202.120.224.10]:33742 "EHLO fudan.edu.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726062AbgDYMva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 08:51:30 -0400
+        id S1726060AbgDYMxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 08:53:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
-        Message-Id; bh=iPU8F8naBvun4kFZg++TDJSeJmoXcaco35nw4sV+KAo=; b=p
-        UIWEDU/0Nk33kf/Nb5s9ecvwQ8tG8Cu+XWCq2MisaH+YUZ2Jjs2q5swZ2tgXm+cr
-        wIJ5Dah9/3EwDAMWOcOIJ53FgbCu34l8OTkhANgBJiqpUHrojOfCn9O1Uwjz+pEZ
-        tPH5Orh2sXERCySaHVnoXMggizDJeH5yP0vD0fGryE=
+        Message-Id; bh=3x3DwWJCI+2MlJSDSyhbHkk4XxrI8fr7dE1IN+3TZW4=; b=m
+        mGc5S7HIPhoO5u02wjFKFmFqHgf1taSrSZZrUw1zCg6rROg21xJpM9PQ5of8Hduo
+        JqTM36mDK+/tR0tohY3J4ra3LCFCfffNqLrr6XnaVGWkBvo0ewTodh2QEC/faxEP
+        ar+OopLPYaiuUIfNz7jS+ipc0nWxaVPE5LT1+je0oI=
 Received: from localhost.localdomain (unknown [120.229.255.80])
-        by app2 (Coremail) with SMTP id XQUFCgDXh+A3MqReswCpAA--.15235S3;
-        Sat, 25 Apr 2020 20:51:05 +0800 (CST)
+        by app1 (Coremail) with SMTP id XAUFCgA3wZ2oMqReDmWNAA--.2685S3;
+        Sat, 25 Apr 2020 20:52:57 +0800 (CST)
 From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
-To:     John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Lorenz Bauer <lmb@cloudflare.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>,
+        linux-kernel@vger.kernel.org
 Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
         Xiyu Yang <xiyuyang19@fudan.edu.cn>,
         Xin Tan <tanxin.ctf@gmail.com>
-Subject: [PATCH] bpf: Fix sk_psock refcnt leak when receiving message
-Date:   Sat, 25 Apr 2020 20:50:40 +0800
-Message-Id: <1587819040-38793-1-git-send-email-xiyuyang19@fudan.edu.cn>
+Subject: [PATCH] configfs: Fix config_item refcnt leak in configfs_rmdir()
+Date:   Sat, 25 Apr 2020 20:52:26 +0800
+Message-Id: <1587819146-38856-1-git-send-email-xiyuyang19@fudan.edu.cn>
 X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: XQUFCgDXh+A3MqReswCpAA--.15235S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7uFyktF4rAF1fCw4xAF4Utwb_yoW8Ar1xpa
-        y2kayFvF18tFyUZwnxJFW8Jr1fW39rWa409rWrAa1fXFn8uw1fJFsYgr1avF40yrs2kr4Y
-        gr4DKF4FkFnxu3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9K14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+X-CM-TRANSID: XAUFCgA3wZ2oMqReDmWNAA--.2685S3
+X-Coremail-Antispam: 1UD129KBjvJXoWrKryxWr1xCryrZFWfKFyfWFg_yoW8JF1Dpr
+        45Krn8tFZYqF1rXr4DGasYgryrZ39rZFyIqF1fGw4rArn8Z34rArs0gw47GF1jvr95Ar13
+        ZFWrKF1FvFyDAFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
         rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
         1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl
         6s0DM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
         0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8Jw
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8Jw
         Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
-        YxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxEwVAFwVW5JwCF04k20xvY0x0EwIxGrw
-        CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
-        14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
-        IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxK
-        x2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
-        v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUYmiiDUUUU
+        YxC7MxkIecxEwVAFwVW5JwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
+        C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
+        wI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
+        v20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E
+        87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
+        IFyTuYvjfU5fHUUUUUU
 X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tcp_bpf_recvmsg() invokes sk_psock_get(), which returns a reference of
-the specified sk_psock object to "psock" with increased refcnt.
+configfs_rmdir() invokes configfs_get_config_item(), which returns a
+reference of the specified config_item object to "parent_item" with
+increased refcnt.
 
-When tcp_bpf_recvmsg() returns, local variable "psock" becomes invalid,
-so the refcount should be decreased to keep refcount balanced.
+When configfs_rmdir() returns, local variable "parent_item" becomes
+invalid, so the refcount should be decreased to keep refcount balanced.
 
-The reference counting issue happens in several exception handling paths
-of tcp_bpf_recvmsg(). When those error scenarios occur such as "flags"
-includes MSG_ERRQUEUE, the function forgets to decrease the refcnt
-increased by sk_psock_get(), causing a refcnt leak.
+The reference counting issue happens in one exception handling path of
+configfs_rmdir(). When down_write_killable() fails, the function forgets
+to decrease the refcnt increased by configfs_get_config_item(), causing
+a refcnt leak.
 
-Fix this issue by calling sk_psock_put() when those error scenarios
-occur.
+Fix this issue by calling config_item_put() when down_write_killable()
+fails.
 
 Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
 ---
- net/ipv4/tcp_bpf.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ fs/configfs/dir.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
-index 5a05327f97c1..feb6b90672c1 100644
---- a/net/ipv4/tcp_bpf.c
-+++ b/net/ipv4/tcp_bpf.c
-@@ -265,11 +265,15 @@ static int tcp_bpf_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 	psock = sk_psock_get(sk);
- 	if (unlikely(!psock))
- 		return tcp_recvmsg(sk, msg, len, nonblock, flags, addr_len);
--	if (unlikely(flags & MSG_ERRQUEUE))
-+	if (unlikely(flags & MSG_ERRQUEUE)) {
-+		sk_psock_put(sk, psock);
- 		return inet_recv_error(sk, msg, len, addr_len);
-+	}
- 	if (!skb_queue_empty(&sk->sk_receive_queue) &&
--	    sk_psock_queue_empty(psock))
-+	    sk_psock_queue_empty(psock)) {
-+		sk_psock_put(sk, psock);
- 		return tcp_recvmsg(sk, msg, len, nonblock, flags, addr_len);
-+	}
- 	lock_sock(sk);
- msg_bytes_ready:
- 	copied = __tcp_bpf_recvmsg(sk, psock, msg, len, flags);
+diff --git a/fs/configfs/dir.c b/fs/configfs/dir.c
+index cf7b7e1d5bd7..cb733652ecca 100644
+--- a/fs/configfs/dir.c
++++ b/fs/configfs/dir.c
+@@ -1519,6 +1519,7 @@ static int configfs_rmdir(struct inode *dir, struct dentry *dentry)
+ 		spin_lock(&configfs_dirent_lock);
+ 		configfs_detach_rollback(dentry);
+ 		spin_unlock(&configfs_dirent_lock);
++		config_item_put(parent_item);
+ 		return -EINTR;
+ 	}
+ 	frag->frag_dead = true;
 -- 
 2.7.4
 
