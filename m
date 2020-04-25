@@ -2,160 +2,123 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B70C54FCB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 12:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F3BC55191
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 12:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 794B32063A
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 12:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D11422063A
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 12:51:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="pUIWEDU/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbgDYMun (ORCPT
+        id S1726182AbgDYMvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 08:50:43 -0400
-Received: from smtprelay0133.hostedemail.com ([216.40.44.133]:33678 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726062AbgDYMun (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 08:50:43 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id C2D8A182CED2A;
-        Sat, 25 Apr 2020 12:50:41 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: size64_5e7406f83605
-X-Filterd-Recvd-Size: 4382
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf15.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 25 Apr 2020 12:50:40 +0000 (UTC)
-Message-ID: <b5aa72347748f35245f2fd0272ab3957179ed2eb.camel@perches.com>
-Subject: Re: [PATCH 1/3] staging: vt6656: Remove the local variable "array"
-From:   Joe Perches <joe@perches.com>
-To:     Oscar Carter <oscar.carter@gmx.com>,
-        Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Malcolm Priestley <tvboxspy@gmail.com>,
-        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Date:   Sat, 25 Apr 2020 05:50:39 -0700
-In-Reply-To: <20200425123844.7959-2-oscar.carter@gmx.com>
-References: <20200425123844.7959-1-oscar.carter@gmx.com>
-         <20200425123844.7959-2-oscar.carter@gmx.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Sat, 25 Apr 2020 08:51:31 -0400
+Received: from mail.fudan.edu.cn ([202.120.224.73]:37824 "EHLO fudan.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726062AbgDYMva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 08:51:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
+        Message-Id; bh=iPU8F8naBvun4kFZg++TDJSeJmoXcaco35nw4sV+KAo=; b=p
+        UIWEDU/0Nk33kf/Nb5s9ecvwQ8tG8Cu+XWCq2MisaH+YUZ2Jjs2q5swZ2tgXm+cr
+        wIJ5Dah9/3EwDAMWOcOIJ53FgbCu34l8OTkhANgBJiqpUHrojOfCn9O1Uwjz+pEZ
+        tPH5Orh2sXERCySaHVnoXMggizDJeH5yP0vD0fGryE=
+Received: from localhost.localdomain (unknown [120.229.255.80])
+        by app2 (Coremail) with SMTP id XQUFCgDXh+A3MqReswCpAA--.15235S3;
+        Sat, 25 Apr 2020 20:51:05 +0800 (CST)
+From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
+To:     John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Lorenz Bauer <lmb@cloudflare.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>
+Subject: [PATCH] bpf: Fix sk_psock refcnt leak when receiving message
+Date:   Sat, 25 Apr 2020 20:50:40 +0800
+Message-Id: <1587819040-38793-1-git-send-email-xiyuyang19@fudan.edu.cn>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: XQUFCgDXh+A3MqReswCpAA--.15235S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7uFyktF4rAF1fCw4xAF4Utwb_yoW8Ar1xpa
+        y2kayFvF18tFyUZwnxJFW8Jr1fW39rWa409rWrAa1fXFn8uw1fJFsYgr1avF40yrs2kr4Y
+        gr4DKF4FkFnxu3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9K14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl
+        6s0DM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+        0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8Jw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
+        YxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxEwVAFwVW5JwCF04k20xvY0x0EwIxGrw
+        CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
+        14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
+        IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxK
+        x2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
+        v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUYmiiDUUUU
+X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-04-25 at 14:38 +0200, Oscar Carter wrote:
-> Remove the local variable "array" and all the memcpy function calls
-> because this copy operation from different arrays to this variable is
-> unnecessary.
+tcp_bpf_recvmsg() invokes sk_psock_get(), which returns a reference of
+the specified sk_psock object to "psock" with increased refcnt.
 
-You might write here that vnt_control_out already does
-a kmemdup copy of its const char *buffer argument and
-this was made unnecessary by:
+When tcp_bpf_recvmsg() returns, local variable "psock" becomes invalid,
+so the refcount should be decreased to keep refcount balanced.
 
-commit 12ecd24ef93277e4e5feaf27b0b18f2d3828bc5e
-Author: Malcolm Priestley <tvboxspy@gmail.com>
-Date:   Sat Apr 22 11:14:57 2017 +0100
+The reference counting issue happens in several exception handling paths
+of tcp_bpf_recvmsg(). When those error scenarios occur such as "flags"
+includes MSG_ERRQUEUE, the function forgets to decrease the refcnt
+increased by sk_psock_get(), causing a refcnt leak.
 
-    staging: vt6656: use off stack for out buffer USB transfers.
-    
-    Since 4.9 mandated USB buffers be heap allocated this causes the driver
-    to fail.
-    
-    Since there is a wide range of buffer sizes use kmemdup to create
-    allocated buffer.
- 
+Fix this issue by calling sk_psock_put() when those error scenarios
+occur.
 
-> The same result can be achieved using the arrays directly.
-> 
-> Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-> ---
->  drivers/staging/vt6656/rf.c | 21 +++++----------------
->  1 file changed, 5 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/staging/vt6656/rf.c b/drivers/staging/vt6656/rf.c
-> index 06fa8867cfa3..82d3b6081b5b 100644
-> --- a/drivers/staging/vt6656/rf.c
-> +++ b/drivers/staging/vt6656/rf.c
-> @@ -770,7 +770,6 @@ int vnt_rf_table_download(struct vnt_private *priv)
->  	u16 length1 = 0, length2 = 0, length3 = 0;
->  	u8 *addr1 = NULL, *addr2 = NULL, *addr3 = NULL;
->  	u16 length, value;
-> -	u8 array[256];
-> 
->  	switch (priv->rf_type) {
->  	case RF_AL2230:
-> @@ -817,10 +816,8 @@ int vnt_rf_table_download(struct vnt_private *priv)
->  	}
-> 
->  	/* Init Table */
-> -	memcpy(array, addr1, length1);
-> -
->  	ret = vnt_control_out(priv, MESSAGE_TYPE_WRITE, 0,
-> -			      MESSAGE_REQUEST_RF_INIT, length1, array);
-> +			      MESSAGE_REQUEST_RF_INIT, length1, addr1);
->  	if (ret)
->  		goto end;
-> 
-> @@ -832,10 +829,8 @@ int vnt_rf_table_download(struct vnt_private *priv)
->  		else
->  			length = length2;
-> 
-> -		memcpy(array, addr2, length);
-> -
->  		ret = vnt_control_out(priv, MESSAGE_TYPE_WRITE, value,
-> -				      MESSAGE_REQUEST_RF_CH0, length, array);
-> +				      MESSAGE_REQUEST_RF_CH0, length, addr2);
->  		if (ret)
->  			goto end;
-> 
-> @@ -852,10 +847,8 @@ int vnt_rf_table_download(struct vnt_private *priv)
->  		else
->  			length = length3;
-> 
-> -		memcpy(array, addr3, length);
-> -
->  		ret = vnt_control_out(priv, MESSAGE_TYPE_WRITE, value,
-> -				      MESSAGE_REQUEST_RF_CH1, length, array);
-> +				      MESSAGE_REQUEST_RF_CH1, length, addr3);
->  		if (ret)
->  			goto end;
-> 
-> @@ -870,11 +863,9 @@ int vnt_rf_table_download(struct vnt_private *priv)
->  		addr1 = &al7230_init_table_amode[0][0];
->  		addr2 = &al7230_channel_table2[0][0];
-> 
-> -		memcpy(array, addr1, length1);
-> -
->  		/* Init Table 2 */
->  		ret = vnt_control_out(priv, MESSAGE_TYPE_WRITE, 0,
-> -				      MESSAGE_REQUEST_RF_INIT2, length1, array);
-> +				      MESSAGE_REQUEST_RF_INIT2, length1, addr1);
->  		if (ret)
->  			goto end;
-> 
-> @@ -886,11 +877,9 @@ int vnt_rf_table_download(struct vnt_private *priv)
->  			else
->  				length = length2;
-> 
-> -			memcpy(array, addr2, length);
-> -
->  			ret = vnt_control_out(priv, MESSAGE_TYPE_WRITE, value,
->  					      MESSAGE_REQUEST_RF_CH2, length,
-> -					      array);
-> +					      addr2);
->  			if (ret)
->  				goto end;
-> 
-> --
-> 2.20.1
-> 
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+---
+ net/ipv4/tcp_bpf.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
+index 5a05327f97c1..feb6b90672c1 100644
+--- a/net/ipv4/tcp_bpf.c
++++ b/net/ipv4/tcp_bpf.c
+@@ -265,11 +265,15 @@ static int tcp_bpf_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 	psock = sk_psock_get(sk);
+ 	if (unlikely(!psock))
+ 		return tcp_recvmsg(sk, msg, len, nonblock, flags, addr_len);
+-	if (unlikely(flags & MSG_ERRQUEUE))
++	if (unlikely(flags & MSG_ERRQUEUE)) {
++		sk_psock_put(sk, psock);
+ 		return inet_recv_error(sk, msg, len, addr_len);
++	}
+ 	if (!skb_queue_empty(&sk->sk_receive_queue) &&
+-	    sk_psock_queue_empty(psock))
++	    sk_psock_queue_empty(psock)) {
++		sk_psock_put(sk, psock);
+ 		return tcp_recvmsg(sk, msg, len, nonblock, flags, addr_len);
++	}
+ 	lock_sock(sk);
+ msg_bytes_ready:
+ 	copied = __tcp_bpf_recvmsg(sk, psock, msg, len, flags);
+-- 
+2.7.4
 
