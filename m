@@ -2,116 +2,242 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 355CBC55194
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 17:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96472C55191
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 17:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23F05206B6
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 17:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7654520728
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 17:59:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587837548;
+	bh=8ojAkugMKNr0HOcKJukOabtkpBS19lmg0Bp7/OoK854=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ksznaok7gpO3P9JcYLUh+F+nEaxSNYZcEYyla2aXjdG7HY4O+L1v3gM8Hy/axF6n5
+	 xZa+KHM2xDbaujAYz04Zy5cCfObXSNGW4V5eCYTVbnuOfTJZDZBOwxoMAaS8KMoFeI
+	 RXivw8HoMBWNMP5dYd82i7SmdQPxhNYXj/MemhAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbgDYR6s (ORCPT
+        id S1726377AbgDYR7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 13:58:48 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:48792 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbgDYR6r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 13:58:47 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
+        Sat, 25 Apr 2020 13:59:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44118 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726145AbgDYR7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 13:59:06 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 3E92980441;
-        Sat, 25 Apr 2020 19:58:44 +0200 (CEST)
-Date:   Sat, 25 Apr 2020 19:58:42 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: display: simple: Add IVO M133NWF4 R0
-Message-ID: <20200425175842.GA3773@ravnborg.org>
-References: <20200420215728.1927434-1-bjorn.andersson@linaro.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 71F94206B9;
+        Sat, 25 Apr 2020 17:59:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587837545;
+        bh=8ojAkugMKNr0HOcKJukOabtkpBS19lmg0Bp7/OoK854=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ijK40JRcybkPPANgc/j+K/mvBiXqVdVpC4A0IVbFoGLIR35detu+lb6LLUqffIkQk
+         qEb+VRZE8XI0kwbMVPe84pYWJkgzLRYGmM30lzkzGVkWExUBOLovRtHzwpPJOwb+hh
+         26YWCjngmupCdjRS8nkwBFl3h5xpTr8kdOhhaOUo=
+Date:   Sat, 25 Apr 2020 18:59:01 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/6] iio: chemical: scd30: add core driver
+Message-ID: <20200425185901.1611eca5@archlinux>
+In-Reply-To: <CAHp75Vdajf7Ci3ytxP7Qs9=fFaxvVBQoL5uh+HUDwxHS5r9MUg@mail.gmail.com>
+References: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
+        <20200422141135.86419-2-tomasz.duszynski@octakon.com>
+        <CAHp75VcbaGYj76qkDJnTnuG5SM215qVmFo7FLR6YzHA37PgF_g@mail.gmail.com>
+        <20200424190413.GA2731@arch>
+        <CAHp75Vdajf7Ci3ytxP7Qs9=fFaxvVBQoL5uh+HUDwxHS5r9MUg@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200420215728.1927434-1-bjorn.andersson@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=8nJEP1OIZ-IA:10 a=KKAkSRfTAAAA:8 a=e5mUnYsNAAAA:8
-        a=VT_5SEiLe_3rwrpvr8sA:9 a=wPNLvfGTeEIA:10 a=cvBusfyB2V15izCimMoJ:22
-        a=Vxmtnl_E_bksehYqCbjh:22
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Björn.
+On Sat, 25 Apr 2020 14:43:35 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-On Mon, Apr 20, 2020 at 02:57:27PM -0700, Bjorn Andersson wrote:
-> Define the vendor prefix for InfoVision Optoelectronics and add their
-> M133NWF4 R0 13.3" FHD (1920x1080) TFT LCD panel to the compatible list
-> of panel-simple.
+> On Fri, Apr 24, 2020 at 10:05 PM Tomasz Duszynski
+> <tomasz.duszynski@octakon.com> wrote:
+> > On Wed, Apr 22, 2020 at 10:49:44PM +0300, Andy Shevchenko wrote:  
+> > > On Wed, Apr 22, 2020 at 5:22 PM Tomasz Duszynski
+> > > <tomasz.duszynski@octakon.com> wrote:  
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ...
+> 
+> > > > Add Sensirion SCD30 carbon dioxide core driver.  
+> > >
+> > > And DocLink tar of Datasheet: with a link?  
+> >
+> > I never do this. These files change their location way too often to be
+> > worthwhile putting here. Nobody has that much time to fallow all this
+> > and keep respective files up to date.
+> >
+> > But that doesn't mean I can't drop a link here.
+> > https://developer.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/9.5_CO2/Sensirion_CO2_Sensors_SCD30_Interface_Description.pdf  
+> 
+> Yes, just make it a tag
+> 
+> DocLink: ....
+> 
+> ...
+> 
+> > > > +int scd30_probe(struct device *dev, int irq, const char *name, void *priv,
+> > > > +               int (*command)(struct scd30_state *state, enum scd30_cmd cmd,
+> > > > +                              u16 arg, char *rsp, int size));  
+> > >
+> > > My gosh.
+> > > Please, supply proper structure member in priv or alike.  
+> >
+> > Not sure it's worth the fuss. Wrapping all into structure means either
+> > copying respective members or more dereferences later on.  
+> 
+> At least you may introduce a typedef, because above really hurts my eyes.
+> 
+> ...
+> 
+> > > > +enum {
+> > > > +       CONC,
+> > > > +       TEMP,
+> > > > +       HR,
+> > > > +};  
+> > >
+> > > Way too generic names for anonymous enum.  
+> >
+> > I'd argue that they are pretty well understood abbreviations in iio generally
+> > and here specifically. But adding some prefix won't harm.  
+> 
+> Yes, prefix is what I was talking about.
+> 
+> ...
+> 
+> > > > +static int scd30_wait_meas_poll(struct scd30_state *state)
+> > > > +{
+> > > > +       int tries = 5;
+> > > > +
+> > > > +       while (tries--) {
+> > > > +               int ret;
+> > > > +               u16 val;
+> > > > +
+> > > > +               ret = scd30_command(state, CMD_MEAS_READY, 0, (char *)&val,
+> > > > +                                   sizeof(val));
+> > > > +               if (ret)
+> > > > +                       return -EIO;
+> > > > +
+> > > > +               /* new measurement available */
+> > > > +               if (val)
+> > > > +                       break;
+> > > > +
+> > > > +               msleep_interruptible(state->meas_interval * 250);
+> > > > +       }
+> > > > +
+> > > > +       if (tries == -1)
+> > > > +               return -ETIMEDOUT;  
+> > >
+> > > unsigned int tries = ...;
+> > >
+> > > do {
+> > >  ...
+> > > } while (--tries);
+> > > if (!tries)
+> > >   return ...;
+> > >
+> > > looks better and I guess less code in asm.
+> > >  
+> >
+> > You mean that one extra branch in case of while?  
+> 
+> There are few things:
+> a) do {} while notation immediately tells that at least one cycle of
+> body will be done (unconditionally);
+> b) it makes a loop variable unsigned and no need to check for specific
+> negative numbers;
+> c) it quite likely will generate slightly better assembly code.
+> 
+> >  But it comes to code
+> > itself it looks more compact. And I am okay with that.
+> >  
+> > > > +       return 0;
+> > > > +}  
+> 
+> ...
+> 
+> > > > +       if (kstrtou16(buf, 0, &val))
+> > > > +               return -EINVAL;  
+> > >
+> > > Shadowed error code. Don't do like this.  
+> >
+> > Integer parsing either returns EINVAL or ERANGE. Passing the latter to
+> > the user is not worth the trouble, especially because majority of writable attrs
+> > have a fellow _available attr.  
+> 
+> It's simple a bad coding practice. Please, change.
+> 
+> > > > +       if (kstrtou16(buf, 0, &val))
+> > > > +               return -EINVAL;  
+> > >
+> > > Ditto.
+> > >  
+> > > > +       if (kstrtou16(buf, 0, &val))
+> > > > +               return -EINVAL;  
+> > >
+> > > Ditto.  
+> 
+> ...
+> 
+> > > > +       if (kstrtou16(buf, 0, &val))
+> > > > +               return -EINVAL;  
+> > >
+> > > No shadowed error code, please. Check entire code.  
+> 
+> Same here.
+> 
+> ...
+> 
+> > > > +static IIO_DEVICE_ATTR_RW(pressure_comp, 0);
+> > > > +static IIO_DEVICE_ATTR_RO(pressure_comp_available, 0);
+> > > > +static IIO_DEVICE_ATTR_RW(meas_interval, 0);
+> > > > +static IIO_DEVICE_ATTR_RO(meas_interval_available, 0);
+> > > > +static IIO_DEVICE_ATTR_RW(asc, 0);
+> > > > +static IIO_DEVICE_ATTR_RW(frc, 0);
+> > > > +static IIO_DEVICE_ATTR_RO(frc_available, 0);
+> > > > +static IIO_DEVICE_ATTR_RW(temp_offset, 0);
+> > > > +static IIO_CONST_ATTR(temp_offset_available, "[0 1 65535]");
+> > > > +static IIO_DEVICE_ATTR_WO(reset, 0);  
+> > >
+> > > Do you need all of them? Doesn't  IIO core provides a tons of helpers for these?
+> > > Btw, where is ABI documentation? It's a show stopper.  
+> >
+> > They are sensor specific and none falls into a category of iio generic
+> > attrs. Maybe, except the measurement interval which could be represented as
+> > a SAMP_FREQ.  
+> 
+> IIO ABI becomes already a big pile of nodes and I hope we will become
+> stricter about adding new ones.
+Yes.  Starting point is they need to be documented or they can't be
+properly reviewed.
 
-I got OK for the vendor prefix on irc so patch is now added to
-drm-misc-next.
-Another time please use a dedicated patch for vendor-prefix
-so it is not hidden with other stuff. This way the chance
-to get the attention of the right people is better.
+Documentation/ABI/testing/sysfs-bus-iio-*
 
-Also added the panel-simple patch.
-Both pushed out now.
+> 
+> > But given that measurement interval spans from 2s to 1800s
+> > it becomes a little bit awkward to have it in Hz.  
+> 
+> > As for ABI that's in
+> > a separate patch.  
+> 
+> It's not good from bisectability point of view. If by some reason this
+> patch or documentation patch gets reverted, the other one will be
+> dangling.
+> Please, unify them.
+> 
 
-	Sam
-
-> ---
-> 
-> Changes since v1:
-> - Added this patch
-> 
->  .../devicetree/bindings/display/panel/panel-simple.yaml         | 2 ++
->  Documentation/devicetree/bindings/vendor-prefixes.yaml          | 2 ++
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-> index daf86ba18f47..31dc88f5b2a9 100644
-> --- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-> +++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-> @@ -129,6 +129,8 @@ properties:
->        - hannstar,hsd100pxn1
->          # Hitachi Ltd. Corporation 9" WVGA (800x480) TFT LCD panel
->        - hit,tx23d38vm0caa
-> +        # InfoVision Optoelectronics M133NWF4 R0 13.3" FHD (1920x1080) TFT LCD panel
-> +      - ivo,m133nwf4-r0
->          # Innolux AT043TN24 4.3" WQVGA TFT LCD panel
->        - innolux,at043tn24
->          # Innolux AT070TN92 7.0" WQVGA TFT LCD panel
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> index d3891386d671..31012f91fb9a 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -463,6 +463,8 @@ patternProperties:
->      description: Infineon Technologies
->    "^inforce,.*":
->      description: Inforce Computing
-> +  "^ivo,.*":
-> +    description: InfoVision Optoelectronics Kunshan Co. Ltd.
->    "^ingenic,.*":
->      description: Ingenic Semiconductor
->    "^innolux,.*":
-> -- 
-> 2.26.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
