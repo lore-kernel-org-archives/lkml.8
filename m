@@ -3,44 +3,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D2EC55191
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 20:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A82C55194
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 20:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3ECAE20728
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 20:31:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A7A72072B
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 20:37:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726348AbgDYUbr (ORCPT
+        id S1726359AbgDYUh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 16:31:47 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:55800 "EHLO
+        Sat, 25 Apr 2020 16:37:57 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:57272 "EHLO
         jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbgDYUbr (ORCPT
+        with ESMTP id S1726190AbgDYUh5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 16:31:47 -0400
+        Sat, 25 Apr 2020 16:37:57 -0400
 Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 8F1A51C023A; Sat, 25 Apr 2020 22:31:45 +0200 (CEST)
-Date:   Sat, 25 Apr 2020 22:31:45 +0200
+        id 2EC501C0239; Sat, 25 Apr 2020 22:37:55 +0200 (CEST)
+Date:   Sat, 25 Apr 2020 22:37:54 +0200
 From:   Pavel Machek <pavel@ucw.cz>
 To:     Dan Murphy <dmurphy@ti.com>
 Cc:     jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Subject: Re: [PATCH v20 09/17] ARM: dts: imx6dl-yapp4: Add reg property to
- the lp5562 channel node
-Message-ID: <20200425203145.GC23926@amd>
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v20 12/17] leds: lp55xx: Add multicolor framework support
+ to lp55xx
+Message-ID: <20200425203754.GD23926@amd>
 References: <20200423155524.13971-1-dmurphy@ti.com>
- <20200423155524.13971-10-dmurphy@ti.com>
+ <20200423155524.13971-13-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="uXxzq0nDebZQVNAZ"
+        protocol="application/pgp-signature"; boundary="OaZoDhBhXzo6bW1J"
 Content-Disposition: inline
-In-Reply-To: <20200423155524.13971-10-dmurphy@ti.com>
+In-Reply-To: <20200423155524.13971-13-dmurphy@ti.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -48,42 +44,42 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---uXxzq0nDebZQVNAZ
+--OaZoDhBhXzo6bW1J
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu 2020-04-23 10:55:16, Dan Murphy wrote:
-> Add the reg property to each channel node.  This update is
-> to accomodate the multicolor framework.  In addition to the
-> accomodation this allows the LEDs to be placed on any channel
-> and allow designs to skip channels as opposed to requiring
-> sequential order.
+On Thu 2020-04-23 10:55:19, Dan Murphy wrote:
+> Add multicolor framework support for the lp55xx family.
 >=20
 > Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> CC: Shawn Guo <shawnguo@kernel.org>
-> CC: Sascha Hauer <s.hauer@pengutronix.de>
-> CC: Pengutronix Kernel Team <kernel@pengutronix.de>
-> CC: Fabio Estevam <festevam@gmail.com>
-> CC: NXP Linux Team <linux-imx@nxp.com>
 
 Acked-by: Pavel Machek <pavel@ucw.cz>
 
+> @@ -159,6 +164,8 @@ struct lp55xx_chip {
+>   * struct lp55xx_led
+>   * @chan_nr         : Channel number
+>   * @cdev            : LED class device
+> + * @mc_cdev	    : Multi color class device
+> + * @color_components: Multi color LED map information
+
+Whitespace is funny here.
+								Pavel
 --=20
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
 g.html
 
---uXxzq0nDebZQVNAZ
+--OaZoDhBhXzo6bW1J
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iEYEARECAAYFAl6knjEACgkQMOfwapXb+vIRywCeLrJr9C+6ZAAzd/E0Rk1K1Iy4
-N/QAn01TeJXasIUxngFjU1pyDUYXGNG4
-=Yboa
+iEUEARECAAYFAl6kn6IACgkQMOfwapXb+vJnzQCYxQq5qrjkB8KwwXPFcDeEpFIM
++gCeOS/a5wMo4IAUUpp4RJmKCt6GJiw=
+=oWxZ
 -----END PGP SIGNATURE-----
 
---uXxzq0nDebZQVNAZ--
+--OaZoDhBhXzo6bW1J--
