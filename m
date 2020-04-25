@@ -2,157 +2,105 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88BDEC55185
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 23:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D9DC55185
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 23:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B8772072B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 23:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5536520706
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 23:13:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g3DJbJBC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgDYXLc (ORCPT
+        id S1726366AbgDYXNk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 19:11:32 -0400
-Received: from mail-dm6nam11olkn2084.outbound.protection.outlook.com ([40.92.19.84]:27552
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726239AbgDYXLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 19:11:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MNDg9M58m4KPKIOcMbbuqV3CoTzVJfbVaYqMBzFOgpU2GeMbLO0gOLde1wTvg5+BMj3rzEzW7cRT6Wm2omWSIp57XWsyzGQY8B5aO+qOgLAScIFd/LbSoBReB61qw/5fNmXnx8bDJ2tR5tbac5d77oPq6Qj5Wqo6SpCYprNJAm9KnM6mA7gyIadh/peZbLU+b/sYtJO3fdExh2mvvwMkQzumudmpkB7wao9PtXp8ZMgvjUOK968i0LxXwbsBukThTqV34AyIgqnOu6+Y/GA6sOgCGuZGfAcsfnP0Z83ZcfBi2TbtLEzgdkBaV9xirLIhnQ/H7BZvc1UDvxfNznBsZw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=S0vXJVE32lpkWDnoBufx3otVqVnCBilyUb9wirqRsIQ=;
- b=StunFb0/QsGW2I7DTb0pvV3IFRq5m9IlauD4J7x1U3GcN+ldh9gdtPL+uauI2Jn+vFVLX2nfXVCYJ1dRsvSvQ2PwZxK5UzUzJx3uP8gjW+fgzdALWSzzSf9Y25N/wX0VMDaKb8Snj4Wtr4wCVdFvitKC0xLnkfN89/iTqOTOQVQylAm9oZQO+x6WwqQv61UiCAHZmHxzo66TmvbwGrSXfT/JgA+yklju+wWkCmsPOMdtbPXH3n+x+h/jvFS2oH2I64P51o51wFYPcjjvlh+OC0eyjpHyV8EVhdJq/wmLGfIYTyyWKXH+iB+ND8EWndfebio4vXz9ssgmpQoMg18j6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
- header.d=live.ca; arc=none
-Received: from CO1NAM11FT007.eop-nam11.prod.protection.outlook.com
- (2a01:111:e400:3861::44) by
- CO1NAM11HT021.eop-nam11.prod.protection.outlook.com (2a01:111:e400:3861::265)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.15; Sat, 25 Apr
- 2020 23:11:28 +0000
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- (2a01:111:e400:3861::50) by CO1NAM11FT007.mail.protection.outlook.com
- (2a01:111:e400:3861::131) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.15 via Frontend
- Transport; Sat, 25 Apr 2020 23:11:28 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:AEF0FFCBC70ED89B5CEE39BBFD344B835AC0B34541CC669B770D3986EA2BFB6B;UpperCasedChecksum:1409D41779AA5219069FB68F99550B7C6EC4C1F5BBD0179917BCDCED26E06C41;SizeAsReceived:7782;Count:48
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2937.020; Sat, 25 Apr 2020
- 23:11:28 +0000
-From:   Jonathan Bakker <xc-racer2@live.ca>
-To:     tomasz.figa@gmail.com, krzk@kernel.org, s.nawrocki@samsung.com,
-        linus.walleij@linaro.org, kgene@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Jonathan Bakker <xc-racer2@live.ca>
-Subject: [PATCH] pinctrl: samsung: Save/restore eint_mask over suspend for EINT_TYPE GPIOs
-Date:   Sat, 25 Apr 2020 16:10:46 -0700
-Message-ID: <BN6PR04MB06600C848C2C1531F73DAD7BA3D10@BN6PR04MB0660.namprd04.prod.outlook.com>
-X-Mailer: git-send-email 2.20.1
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MWHPR2001CA0002.namprd20.prod.outlook.com
- (2603:10b6:301:15::12) To BN6PR04MB0660.namprd04.prod.outlook.com
- (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <20200425231046.7381-1-xc-racer2@live.ca>
+        Sat, 25 Apr 2020 19:13:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36964 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726238AbgDYXNk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 19:13:40 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F8E6C09B04F;
+        Sat, 25 Apr 2020 16:13:39 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id u15so13754201ljd.3;
+        Sat, 25 Apr 2020 16:13:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Vmbfgj+KhhWIRPQO0Y7xejCzKCfT3B/GizNa4s124Dc=;
+        b=g3DJbJBCWv485BsgVXF8GDfzccu5Psm5tUNZeup5nFWON4WGl4Gg1d1SJPl++9hzUK
+         O/UH5wrIicb/Bb+nKJKc0exlmi/XYPr6oKmEYO58rTs0qAvYKS85meiGYvTjBvbJGD3N
+         H9rO+PmxQ3HwDd7CLXe+kTqOTm7lV7g6fhYMXWcOag3UGufACtIbuaMgIeK1E7akULCe
+         QJVEktNeeh3zTjWeTDCyJTw7ubS0iqUw6fWk9wsjG6fgY9AdsBoPF9QTdTdt+7KYMSYF
+         sG6EnBXS22UKJt3ua+p2GirPNzBRrMCJial29nu240vgASd/pCcDhsnxdS5hKi3AUA49
+         xakA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Vmbfgj+KhhWIRPQO0Y7xejCzKCfT3B/GizNa4s124Dc=;
+        b=owlKnOK/Z4Ba1MeitAwQHr16HOC9uwtwePKxX1b1cuxZ6fa+TFvIQCL7qU3E0lUYsl
+         4lJ0dQfvv/u3fd8qhjiiLBMjn3gBWWS6uJz0n/kWssFXBbJhMe2mE3syKc8S7AwSTpcx
+         l88+i60r5rRCigms/NGDKH8TTTivvNBgP08FqbSrQqUosurGb8a3VihlVa9/DWnpxDDV
+         ljUM2vRGvtt5OHgn6BlwF3hK6tFGxkYRU1SG3hA5qeIIyhtD+Lx9cWuonH8jnW7N0k/2
+         KcodBkkmrl28JhL8jAuGnzfXTGJkUDPsqWx8ssgPzYBkcFG0LY/Wvtndu7jlnqrloLob
+         H/rw==
+X-Gm-Message-State: AGi0PuYTHDjh06+ED84WnIXqNMrXFRGCspFtdWsh+QmpOrDMUVmaFKPZ
+        xIi+95Jl6q3xTkWhxRn1m3xWx1of
+X-Google-Smtp-Source: APiQypLPLLlFK6SUt122hbClzC+1jGC5XEHeRT//ouxPvHt7RAx0CUb9YTAsKvpZj4H0ruXIT3YpAQ==
+X-Received: by 2002:a2e:9990:: with SMTP id w16mr9913314lji.194.1587856417724;
+        Sat, 25 Apr 2020 16:13:37 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id o6sm6917564lja.70.2020.04.25.16.13.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 25 Apr 2020 16:13:37 -0700 (PDT)
+Subject: Re: [RFC PATCH v10 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1587700513-28449-1-git-send-email-skomatineni@nvidia.com>
+ <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <fd5300fd-33af-babe-95d0-9669b66a8c06@gmail.com>
+Date:   Sun, 26 Apr 2020 02:13:36 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from jon-hp-6570b.telus (2001:569:fb67:7300:9f89:4b96:de0b:cd14) by MWHPR2001CA0002.namprd20.prod.outlook.com (2603:10b6:301:15::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Sat, 25 Apr 2020 23:11:27 +0000
-X-Mailer: git-send-email 2.20.1
-X-Microsoft-Original-Message-ID: <20200425231046.7381-1-xc-racer2@live.ca>
-X-TMN:  [v4KQYPAa7LHoXyTQ3BJOLgpRKgDXt8UQgT+4jQWyjVcnrreUqbupHOgxGtTdkfv7]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 48
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 18b11ac3-b476-4960-521a-08d7e96dfbda
-X-MS-TrafficTypeDiagnostic: CO1NAM11HT021:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: pavvT/rzneMqC9LlLgL9EVoAQZmJyDGsk83kporlgA2acwLSZ/C0kuZRcoHJO8gdEcD19/KerBHSKJpGx7tkNH5+2fZp+B+gisXMu/GlDvU3KdgQTuaAtwkrtFtb5mrHduVOXRytJF6In+s5N5cL2AyOxYYyBHCQTuo6TWX/m+tDlvZysk/3Ozg+GMUNZaQONxuBXeLLMsKICBaOIXEQGQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: ss3lKa0wDOcFcr300byaVJm6hEj2f2NIpe3eDO495av7AU0Gqq+w157NNa16mk233k69qchCnjDC8qbU1ylmiHC0HUSpeBHvg1Pmg7ErGVc/yVpauGNvDQi68I2N8HJZsZJp5h6+A02OnkJtcda7db6YgekJtf9XmujQaD5fgkdAX5gL8U1TMkhGwVBnC582OqUdtaXMjWVPjEoY3pY75g==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 18b11ac3-b476-4960-521a-08d7e96dfbda
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Apr 2020 23:11:28.6898
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1NAM11HT021
+In-Reply-To: <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, for EINT_TYPE GPIOs, the CON and FLTCON registers
-are saved and restored over a suspend/resume cycle.  However, the
-EINT_MASK registers are not.
+24.04.2020 06:55, Sowjanya Komatineni пишет:
+> +static int __maybe_unused vi_runtime_resume(struct device *dev)
+> +{
+> +	struct tegra_vi *vi = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	ret = regulator_enable(vi->vdd);
+> +	if (ret) {
+> +		dev_err(dev, "failed to enable VDD supply: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = clk_set_rate(vi->clk, vi->soc->vi_max_clk_hz);
+> +	if (ret) {
+> +		dev_err(dev, "failed to set vi clock rate: %d\n", ret);
+> +		goto disable_vdd;
+> +	}
 
-On S5PV210 at the very least, these registers are not retained over
-suspend, leading to the interrupts remaining masked upon resume and
-therefore no interrupts being triggered for the device.  There should
-be no effect on any SoCs that do retain these registers as theoretically
-we would just be re-writing what was already there.
-
-Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
----
- drivers/pinctrl/samsung/pinctrl-exynos.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/samsung/pinctrl-exynos.c
-index 0599f5127b01..e6ddb54afaf2 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
-@@ -265,6 +265,7 @@ struct exynos_eint_gpio_save {
- 	u32 eint_con;
- 	u32 eint_fltcon0;
- 	u32 eint_fltcon1;
-+	u32 eint_mask;
- };
- 
- /*
-@@ -608,10 +609,13 @@ static void exynos_pinctrl_suspend_bank(
- 						+ 2 * bank->eint_offset);
- 	save->eint_fltcon1 = readl(regs + EXYNOS_GPIO_EFLTCON_OFFSET
- 						+ 2 * bank->eint_offset + 4);
-+	save->eint_mask = readl(regs + bank->irq_chip->eint_mask
-+						+ bank->eint_offset);
- 
- 	pr_debug("%s: save     con %#010x\n", bank->name, save->eint_con);
- 	pr_debug("%s: save fltcon0 %#010x\n", bank->name, save->eint_fltcon0);
- 	pr_debug("%s: save fltcon1 %#010x\n", bank->name, save->eint_fltcon1);
-+	pr_debug("%s: save    mask %#010x\n", bank->name, save->eint_mask);
- }
- 
- void exynos_pinctrl_suspend(struct samsung_pinctrl_drv_data *drvdata)
-@@ -653,6 +657,9 @@ static void exynos_pinctrl_resume_bank(
- 	pr_debug("%s: fltcon1 %#010x => %#010x\n", bank->name,
- 			readl(regs + EXYNOS_GPIO_EFLTCON_OFFSET
- 			+ 2 * bank->eint_offset + 4), save->eint_fltcon1);
-+	pr_debug("%s:    mask %#010x => %#010x\n", bank->name,
-+			readl(regs + bank->irq_chip->eint_mask
-+			+ bank->eint_offset), save->eint_mask);
- 
- 	writel(save->eint_con, regs + EXYNOS_GPIO_ECON_OFFSET
- 						+ bank->eint_offset);
-@@ -660,6 +667,8 @@ static void exynos_pinctrl_resume_bank(
- 						+ 2 * bank->eint_offset);
- 	writel(save->eint_fltcon1, regs + EXYNOS_GPIO_EFLTCON_OFFSET
- 						+ 2 * bank->eint_offset + 4);
-+	writel(save->eint_mask, regs + bank->irq_chip->eint_mask
-+						+ bank->eint_offset);
- }
- 
- void exynos_pinctrl_resume(struct samsung_pinctrl_drv_data *drvdata)
--- 
-2.20.1
-
+Isn't setting clock rate using assigned-clocks in a device-tree enough?
+Could you please clarify why this vi_max_clk_hz is needed?
