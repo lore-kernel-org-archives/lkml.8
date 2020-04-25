@@ -2,102 +2,429 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D0BC55194
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 17:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91396C54FCB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 17:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3DC4206B6
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 17:02:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 653FE206B6
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 17:02:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F1xHEvaM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgDYRCw (ORCPT
+        id S1726410AbgDYRCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 13:02:52 -0400
-Received: from saturn.retrosnub.co.uk ([46.235.226.198]:56982 "EHLO
-        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbgDYRCu (ORCPT
+        Sat, 25 Apr 2020 13:02:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36298 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726156AbgDYRCy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 13:02:50 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id 142339E762F;
-        Sat, 25 Apr 2020 18:02:44 +0100 (BST)
-Date:   Sat, 25 Apr 2020 18:02:43 +0100
-From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "lars@metafoo.de" <lars@metafoo.de>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "Bogdan, Dragos" <Dragos.Bogdan@analog.com>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "colin.king@canonical.com" <colin.king@canonical.com>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][next] iio: adc: ad7476: remove redundant null check on
- an array
-Message-ID: <20200425180243.18ff7f13@archlinux>
-In-Reply-To: <20200425180110.3ffa5696@archlinux>
-References: <20200424130419.22940-1-colin.king@canonical.com>
-        <f2c6d3f3f8f884e87f1c9895fe99b77e8f4c1e3e.camel@analog.com>
-        <20200425180110.3ffa5696@archlinux>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 25 Apr 2020 13:02:54 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 165C2C09B04D;
+        Sat, 25 Apr 2020 10:02:54 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id k18so4983893pll.6;
+        Sat, 25 Apr 2020 10:02:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VBIKmrJmiLWT4Ougw5jkUobA+4SdhZWTwHOXjczvwT8=;
+        b=F1xHEvaM/b0ETQppnfeYOtPh30ENq2JghHVih6jnKJLKWHYcJGY+xrsuK3WO83ZqJx
+         z0pucKqy8sY00PZVachPpDczSX62gIOpqRdgHD7OuRop8AWrYpQGvcokOJluORRgY7wb
+         n5dmX1cCrT9fnHHz843nHVYboBmN/LopNAySkSD0CFmWcx7CxIf8zfM/aTqOf3Yxwg1A
+         JX5k+O0rLeXxIRNbnNoUDiwcgPwWpEkCR9Y/nRXtrg7iN13m/LgfT2yZ0KyUSgwTVbKA
+         8Lh6z2F/xT69/sqzw5bwuxS0R4qk9Y5ClcO2c7kBJCKOKCvG7RczXvIjsAGkaBZ1eoH4
+         5HZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=VBIKmrJmiLWT4Ougw5jkUobA+4SdhZWTwHOXjczvwT8=;
+        b=V0s9UTkJPyfDr+1+6YGN35vqOUS6c2YAoYcqldqFNeIy/qsUEdO0fHBA2RPnND6+s2
+         szmgIQTIJ7HJcW61KOo/2GoFeDo8xl2CNike95F55wi1Maos8vGsSJtkSWmsBQqcPGUG
+         oRvoe0JUzYYj49CU7H0yMb6Pd9aOJ/gJop/mc1r2odK/s10tDdAcQX4hjDPFqGbP0MPV
+         NurTmCYck/nUCahlMFqIiiK7C5urLMy/XQgSKQv/REjvoyXeAsTY079vsRhowXcnJpQU
+         EMLjWJFvpTrF0K+AbjuqZt3FviS6SPnyPJ3sgwo4Nb7n25xaI+cxSO8QC03GjSjnfviV
+         quJg==
+X-Gm-Message-State: AGi0PuaaK1Q2lm/XPru7PaDMddRTzU5tG5ZdEv4LUJm+yHLrz6/vC24m
+        Fzw3wviJD41Q+v3IETTMBiI=
+X-Google-Smtp-Source: APiQypLt+dLMSaesv3UmaS6qMNSUbYz8bicIkLNwhtfCAYBPi7k45+K175L6T0qLP+x69lMz7tEucw==
+X-Received: by 2002:a17:90a:a893:: with SMTP id h19mr13405208pjq.138.1587834173439;
+        Sat, 25 Apr 2020 10:02:53 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id z5sm8397473pfn.142.2020.04.25.10.02.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 25 Apr 2020 10:02:52 -0700 (PDT)
+Subject: Re: [PATCH v3 07/16] watchdog: add support for sl28cpld watchdog
+To:     Michael Walle <michael@walle.cc>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20200423174543.17161-1-michael@walle.cc>
+ <20200423174543.17161-8-michael@walle.cc>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <eaa00592-8b9b-458e-f445-c7f7b5bcd007@roeck-us.net>
+Date:   Sat, 25 Apr 2020 10:02:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200423174543.17161-8-michael@walle.cc>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 25 Apr 2020 18:01:10 +0100
-Jonathan Cameron <jic23@kernel.org> wrote:
+On 4/23/20 10:45 AM, Michael Walle wrote:
+> This adds support for the watchdog of the sl28cpld board management
+> controller. This is part of a multi-function device driver.
+> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
 
-> On Fri, 24 Apr 2020 15:01:26 +0000
-> "Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
-> 
-> > On Fri, 2020-04-24 at 14:04 +0100, Colin King wrote:  
-> > > From: Colin Ian King <colin.king@canonical.com>
-> > > 
-> > > The null check on st->chip_info->convst_channel is redundant because
-> > > convst_channel is a 2 element array of struct iio_chan_spec objects
-> > > and this can never be null. Fix this by removing the null check.
-> > >     
-> > 
-> > Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>  
-> Applied to the togreg branch of iio.git and pushed out as testing.
-> I didn't take this as a fix as it's not doing any harm in the meantime
-> whilst this patch goes the slow route.
-Just noticed this is in next only currently!  Hence can definitely
-got he slow route as doesn't apply to mainline :)
+Acked-by: Guenter Roeck <linux@roeck-us.net>
 
-Jonathan
-
+> ---
+>  drivers/watchdog/Kconfig        |  11 ++
+>  drivers/watchdog/Makefile       |   1 +
+>  drivers/watchdog/sl28cpld_wdt.c | 233 ++++++++++++++++++++++++++++++++
+>  3 files changed, 245 insertions(+)
+>  create mode 100644 drivers/watchdog/sl28cpld_wdt.c
 > 
-> Thanks,
-> 
-> Jonathan
-> 
-> >   
-> > > Addresses-Coverity: ("Array compared against 0")
-> > > Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> > > ---
-> > >  drivers/iio/adc/ad7476.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/iio/adc/ad7476.c b/drivers/iio/adc/ad7476.c
-> > > index e9984a38fc4c..4e816d714ad2 100644
-> > > --- a/drivers/iio/adc/ad7476.c
-> > > +++ b/drivers/iio/adc/ad7476.c
-> > > @@ -309,7 +309,7 @@ static int ad7476_probe(struct spi_device *spi)
-> > >  	indio_dev->num_channels = 2;
-> > >  	indio_dev->info = &ad7476_info;
-> > >  
-> > > -	if (st->convst_gpio && st->chip_info->convst_channel)
-> > > +	if (st->convst_gpio)
-> > >  		indio_dev->channels = st->chip_info->convst_channel;
-> > >  	/* Setup default message */
-> > >      
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 0663c604bd64..6c53c1d0f348 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -340,6 +340,17 @@ config MLX_WDT
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called mlx-wdt.
+>  
+> +config SL28CPLD_WATCHDOG
+> +	tristate "Kontron sl28 watchdog"
+> +	depends on MFD_SL28CPLD
+> +	select WATCHDOG_CORE
+> +	help
+> +	  Say Y here to include support for the watchdog timer
+> +	  on the Kontron sl28 CPLD.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called sl28cpld_wdt.
+> +
+>  # ALPHA Architecture
+>  
+>  # ARM Architecture
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index 6de2e4ceef19..b9ecdf2d7347 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -224,3 +224,4 @@ obj-$(CONFIG_MENF21BMC_WATCHDOG) += menf21bmc_wdt.o
+>  obj-$(CONFIG_MENZ069_WATCHDOG) += menz69_wdt.o
+>  obj-$(CONFIG_RAVE_SP_WATCHDOG) += rave-sp-wdt.o
+>  obj-$(CONFIG_STPMIC1_WATCHDOG) += stpmic1_wdt.o
+> +obj-$(CONFIG_SL28CPLD_WATCHDOG) += sl28cpld_wdt.o
+> diff --git a/drivers/watchdog/sl28cpld_wdt.c b/drivers/watchdog/sl28cpld_wdt.c
+> new file mode 100644
+> index 000000000000..2640084ace5c
+> --- /dev/null
+> +++ b/drivers/watchdog/sl28cpld_wdt.c
+> @@ -0,0 +1,233 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * sl28cpld watchdog driver.
+> + *
+> + * Copyright 2019 Kontron Europe GmbH
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/watchdog.h>
+> +
+> +/*
+> + * Watchdog timer block registers.
+> + */
+> +#define WDT_CTRL			0x00
+> +#define  WDT_CTRL_EN			BIT(0)
+> +#define  WDT_CTRL_LOCK			BIT(2)
+> +#define  WDT_CTRL_ASSERT_SYS_RESET	BIT(6)
+> +#define  WDT_CTRL_ASSERT_WDT_TIMEOUT	BIT(7)
+> +#define WDT_TIMEOUT			0x01
+> +#define WDT_KICK			0x02
+> +#define  WDT_KICK_VALUE			0x6b
+> +#define WDT_COUNT			0x03
+> +
+> +#define WDT_DEFAULT_TIMEOUT		10
+> +
+> +static bool nowayout = WATCHDOG_NOWAYOUT;
+> +module_param(nowayout, bool, 0);
+> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
+> +				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+> +
+> +static int timeout;
+> +module_param(timeout, int, 0);
+> +MODULE_PARM_DESC(timeout, "Initial watchdog timeout in seconds");
+> +
+> +struct sl28cpld_wdt {
+> +	struct watchdog_device wdd;
+> +	struct regmap *regmap;
+> +	u32 offset;
+> +	bool assert_wdt_timeout;
+> +};
+> +
+> +static int sl28cpld_wdt_ping(struct watchdog_device *wdd)
+> +{
+> +	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
+> +
+> +	return regmap_write(wdt->regmap, wdt->offset + WDT_KICK,
+> +			    WDT_KICK_VALUE);
+> +}
+> +
+> +static int sl28cpld_wdt_start(struct watchdog_device *wdd)
+> +{
+> +	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
+> +	unsigned int val;
+> +
+> +	val = WDT_CTRL_EN | WDT_CTRL_ASSERT_SYS_RESET;
+> +	if (wdt->assert_wdt_timeout)
+> +		val |= WDT_CTRL_ASSERT_WDT_TIMEOUT;
+> +	if (nowayout)
+> +		val |= WDT_CTRL_LOCK;
+> +
+> +	return regmap_update_bits(wdt->regmap, wdt->offset + WDT_CTRL,
+> +				  val, val);
+> +}
+> +
+> +static int sl28cpld_wdt_stop(struct watchdog_device *wdd)
+> +{
+> +	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
+> +
+> +	return regmap_update_bits(wdt->regmap, wdt->offset + WDT_CTRL,
+> +				  WDT_CTRL_EN, 0);
+> +}
+> +
+> +static unsigned int sl28cpld_wdt_get_timeleft(struct watchdog_device *wdd)
+> +{
+> +	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	ret = regmap_read(wdt->regmap, wdt->offset + WDT_COUNT, &val);
+> +
+> +	return (ret < 0) ? 0 : val;
+> +}
+> +
+> +static int sl28cpld_wdt_set_timeout(struct watchdog_device *wdd,
+> +				    unsigned int timeout)
+> +{
+> +	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
+> +	int ret;
+> +
+> +	ret = regmap_write(wdt->regmap, wdt->offset + WDT_TIMEOUT, timeout);
+> +	if (!ret)
+> +		wdd->timeout = timeout;
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct watchdog_info sl28cpld_wdt_info = {
+> +	.options = WDIOF_MAGICCLOSE | WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING,
+> +	.identity = "sl28cpld watchdog",
+> +};
+> +
+> +static struct watchdog_ops sl28cpld_wdt_ops = {
+> +	.owner = THIS_MODULE,
+> +	.start = sl28cpld_wdt_start,
+> +	.stop = sl28cpld_wdt_stop,
+> +	.ping = sl28cpld_wdt_ping,
+> +	.set_timeout = sl28cpld_wdt_set_timeout,
+> +	.get_timeleft = sl28cpld_wdt_get_timeleft,
+> +};
+> +
+> +static int sl28cpld_wdt_probe(struct platform_device *pdev)
+> +{
+> +	struct watchdog_device *wdd;
+> +	struct sl28cpld_wdt *wdt;
+> +	struct resource *res;
+> +	unsigned int status;
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	if (!pdev->dev.parent)
+> +		return -ENODEV;
+> +
+> +	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
+> +	if (!wdt)
+> +		return -ENOMEM;
+> +
+> +	wdt->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> +	if (!wdt->regmap)
+> +		return -ENODEV;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
+> +	if (!res)
+> +		return -EINVAL;
+> +	wdt->offset = res->start;
+> +
+> +	wdt->assert_wdt_timeout = device_property_read_bool(&pdev->dev,
+> +							    "kontron,assert-wdt-timeout-pin");
+> +
+> +	/* initialize struct watchdog_device */
+> +	wdd = &wdt->wdd;
+> +	wdd->parent = &pdev->dev;
+> +	wdd->info = &sl28cpld_wdt_info;
+> +	wdd->ops = &sl28cpld_wdt_ops;
+> +	wdd->min_timeout = 1;
+> +	wdd->max_timeout = 255;
+> +
+> +	watchdog_set_drvdata(wdd, wdt);
+> +	watchdog_stop_on_reboot(wdd);
+> +
+> +	/*
+> +	 * Read the status early, in case of an error, we haven't modified the
+> +	 * hardware.
+> +	 */
+> +	ret = regmap_read(wdt->regmap, wdt->offset + WDT_CTRL, &status);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/*
+> +	 * Initial timeout value, may be overwritten by device tree or module
+> +	 * parmeter in watchdog_init_timeout().
+> +	 *
+> +	 * Reading a zero here means that either the hardware has a default
+> +	 * value of zero (which is very unlikely and definitely a hardware
+> +	 * bug) or the bootloader set it to zero. In any case, we handle
+> +	 * this case gracefully and set out own timeout.
+> +	 */
+> +	ret = regmap_read(wdt->regmap, wdt->offset + WDT_TIMEOUT, &val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (val)
+> +		wdd->timeout = val;
+> +	else
+> +		wdd->timeout = WDT_DEFAULT_TIMEOUT;
+> +
+> +	watchdog_init_timeout(wdd, timeout, &pdev->dev);
+> +	sl28cpld_wdt_set_timeout(wdd, wdd->timeout);
+> +
+> +	/* if the watchdog is locked, we set nowayout */
+> +	if (status & WDT_CTRL_LOCK)
+> +		nowayout = true;
+> +	watchdog_set_nowayout(wdd, nowayout);
+> +
+> +	/*
+> +	 * If watchdog is already running, keep it enabled, but make
+> +	 * sure its mode is set correctly.
+> +	 */
+> +	if (status & WDT_CTRL_EN) {
+> +		sl28cpld_wdt_start(wdd);
+> +		set_bit(WDOG_HW_RUNNING, &wdd->status);
+> +	}
+> +
+> +	ret = devm_watchdog_register_device(&pdev->dev, wdd);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "failed to register watchdog device\n");
+> +		return ret;
+> +	}
+> +
+> +	dev_info(&pdev->dev, "initial timeout %d sec%s\n",
+> +		 wdd->timeout, nowayout ? ", nowayout" : "");
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id sl28cpld_wdt_of_match[] = {
+> +	{ .compatible = "kontron,sl28cpld-wdt" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, sl28cpld_wdt_of_match);
+> +
+> +static const struct platform_device_id sl28cpld_wdt_id_table[] = {
+> +	{ "sl28cpld-wdt" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(platform, sl28cpld_wdt_id_table);
+> +
+> +static struct platform_driver sl28cpld_wdt_driver = {
+> +	.probe = sl28cpld_wdt_probe,
+> +	.id_table = sl28cpld_wdt_id_table,
+> +	.driver = {
+> +		.name = KBUILD_MODNAME,
+> +		.of_match_table = sl28cpld_wdt_of_match,
+> +	},
+> +};
+> +module_platform_driver(sl28cpld_wdt_driver);
+> +
+> +MODULE_DESCRIPTION("sl28cpld Watchdog Driver");
+> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
+> +MODULE_LICENSE("GPL");
 > 
 
