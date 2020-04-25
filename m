@@ -2,84 +2,82 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD98C55194
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 21:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19823C55194
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 22:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88EC820714
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 21:52:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED47120706
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 22:08:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ctifTUoW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nkdAxr8G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbgDYVwD (ORCPT
+        id S1726327AbgDYWIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 17:52:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52658 "EHLO
+        Sat, 25 Apr 2020 18:08:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbgDYVwC (ORCPT
+        with ESMTP id S1726220AbgDYWIG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 17:52:02 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21DB8C09B04D;
-        Sat, 25 Apr 2020 14:52:02 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id y4so13645646ljn.7;
-        Sat, 25 Apr 2020 14:52:02 -0700 (PDT)
+        Sat, 25 Apr 2020 18:08:06 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21D44C09B04F;
+        Sat, 25 Apr 2020 15:08:06 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id t11so10679918lfe.4;
+        Sat, 25 Apr 2020 15:08:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=WTFn6rB9HKermcvkoC+LjOH1uLnCCCkq/7Yk0Bhk1hY=;
-        b=ctifTUoW5D6cpHfjxDauyqzluTWYK6w53t0tAtbRJh/7mTvp5osgtao5DHPC2ZCsfy
-         0F7bv5j5gdNFDHjT3Uljtsok3FdmdMmVROA9Fh3bFVTvCQM9oCZCHJrh7xinj+xzJ5mf
-         2LaIJ7d+q8TCT4nIn5Yk75z0c9HdCZISgMTC9sTxoEu/tUFN6ei8hIOQEPcOqN2ZOU5c
-         PPq9FFYlXI8ygNSc62Zt5sDTjtVkX1aKDRXyHxX/54Cf2UDmDH1TSv4KWjf1aL0CMtvF
-         PZRZywh0se+wPkMcMPh7zjCzqv7Z2p3H95x9ZIn61s8p3su56DYqCSA9VM9SBo0wbzc4
-         hqMw==
+        bh=stKhy/h17mAoYghX4I6mRLwgtGhKJwi/X0wHAwKsRfA=;
+        b=nkdAxr8G/h5QMxMQ9/0+z2TWsdx8OXFRV84cGL/0tawE+iOu7o/nCj4il4G4CQQWH2
+         YxQQPBwb7kFRDeoF7664tHtQtx7LXr/YR9YEUcoezdCu+5wjkOPKCV5vdI2TU8SZw/JC
+         Qt3QNALge3rxc3i+4l4vhGWNRhE9fRtFFXKBEz/k+TuQY80Oq1FSY8FeyS9FjFBigkgR
+         DYoNYP0BytvKxuz30uvOSaaNRcfh7YB5gnK1ritRDzK7YKrljKO62bccDfdpv6/+dma8
+         NYCZ/uyRbZ0tDxomDcTauOL/p0NlXLlbE1L116d24Syr5TNmuR+zgjGe48BgfIp18kyD
+         qjGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=WTFn6rB9HKermcvkoC+LjOH1uLnCCCkq/7Yk0Bhk1hY=;
-        b=YTF+Byc7sD4N/ZhacjDt21TQjaHK8z7Xq/kuaVaI7RuuzjFKV8Ly2gtSD6d0Icms12
-         70BnoSTeq6Y0GumsnAhbFiRAZublShuDEZgCF8UrBYIhEy39oFN9C1/V9ORiSL0wiDOQ
-         jRgnxX4lMxH6Nz3rTEyYhbY0SfbjuEqM9MAO1pAoiGCWfl0hHXKIM+CfoxrhzikPguCh
-         /4Ym22HJ9xu/Undof25Ic5lkw5g/J8+W7Np14SGoklsAt+STjJFldt/9G+5WdAhZfVRP
-         S23zEWDpoa8TQ1QPHJ5+LkMuU0+FzlcObDLf+JVaVZhdWIIUDKUMRSmGE8gLQOt7Ux5X
-         kblg==
-X-Gm-Message-State: AGi0PubWSRFoD4WbI6t1GA2XuQPbvSPXU5UcN7rjlrOaCOfTleb8AjsS
-        3bvPlKDU1XRZqBqFo21UP7M=
-X-Google-Smtp-Source: APiQypJYgN8HmjiAC+Az+JE+6s5LC3yyQ5KUiUc+DMuLZfUfxWBQXCbPiBkO2LCclFex5yr8qn5c0g==
-X-Received: by 2002:a2e:814e:: with SMTP id t14mr9632764ljg.204.1587851520651;
-        Sat, 25 Apr 2020 14:52:00 -0700 (PDT)
+        bh=stKhy/h17mAoYghX4I6mRLwgtGhKJwi/X0wHAwKsRfA=;
+        b=SzdVkcG9UZrxaR6+1QTZ49pHfiGzLkOvq/bdC5FmcVQehp20PKTTXYdJeZfOv01iGn
+         YoLLV4ZzgJ2FR/dQobgiXoi54r/qBXgU5QLH4EhzOfC7EzHOktnt0SgfvR0sTbv8duhm
+         fjvG/Yb1cnyjQvVRiDOCsOeCf1zb+O7vNmufWYJjzK4SSjz0ja6d/6bvtk9Ic88GMoDO
+         Pu0uJaeiT+r1zMuVOfLHZHN9dHR/5W88K3v45Gmxtgg+dLkkyPV8+jScwFJJ/RvNSwCQ
+         NyXO17/1N3ZCSYqZtvkPNK4g6TmM53K/YWvk/H5RVzV2/CuQN5XmRw7J59shXjgk8ryk
+         PPCQ==
+X-Gm-Message-State: AGi0PuZMoRlMFE53W223D+n4zNicXvo4CfSydhY+OT2W4/BEcDndW1Yz
+        VyAo+ZiBDaqJG9RF6b3PWVNjx8qV
+X-Google-Smtp-Source: APiQypJBj4/s4vaQgtuniB+FW/ntlwSg1bwGWcRhW63q5PuexDleztxn7q3vyN2ftsUWnXOncpip9w==
+X-Received: by 2002:ac2:52b9:: with SMTP id r25mr10877874lfm.156.1587852484346;
+        Sat, 25 Apr 2020 15:08:04 -0700 (PDT)
 Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id a26sm7599728lfl.66.2020.04.25.14.51.59
+        by smtp.googlemail.com with ESMTPSA id k2sm6889535ljg.7.2020.04.25.15.08.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 25 Apr 2020 14:51:59 -0700 (PDT)
-Subject: Re: [PATCH v5 6/6] drm/tegra: output: rgb: Wrap directly-connected
- panel into DRM bridge
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-References: <20200418170703.1583-1-digetx@gmail.com>
- <20200418170703.1583-7-digetx@gmail.com>
- <20200425170237.GA20498@ravnborg.org>
+        Sat, 25 Apr 2020 15:08:03 -0700 (PDT)
+Subject: Re: [RFC PATCH v10 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1587700513-28449-1-git-send-email-skomatineni@nvidia.com>
+ <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
+ <3155e0d2-94b0-6e0a-bf35-b3560c201039@gmail.com>
+ <fffc09d1-a25f-2d6e-83bd-f7657dd2ff16@nvidia.com>
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <f03c260b-54ae-93ed-69e8-de434e74ed82@gmail.com>
-Date:   Sun, 26 Apr 2020 00:51:58 +0300
+Message-ID: <e5602c48-a73e-8e71-188d-6a53ebf8e4a4@gmail.com>
+Date:   Sun, 26 Apr 2020 01:08:02 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200425170237.GA20498@ravnborg.org>
+In-Reply-To: <fffc09d1-a25f-2d6e-83bd-f7657dd2ff16@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -88,21 +86,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-25.04.2020 20:02, Sam Ravnborg пишет:
-> Hi Dmitry
+25.04.2020 01:00, Sowjanya Komatineni пишет:
 > 
-> On Sat, Apr 18, 2020 at 08:07:03PM +0300, Dmitry Osipenko wrote:
->> Currently Tegra DRM driver manually manages display panel, but this
->> management could be moved out into DRM core if we'll wrap panel into
->> DRM bridge. This patch wraps RGB panel into a DRM bridge and removes
->> manual handling of the panel from the RGB output code.
+> On 4/24/20 8:07 AM, Dmitry Osipenko wrote:
+>> External email: Use caution opening links or attachments
 >>
->> Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> 
-> This resulted in the expected simplifications - good.
-> Acked-by: Sam Ravnborg <sam@ravnborg.org>
+>>
+>> 24.04.2020 06:55, Sowjanya Komatineni пишет:
+>>
+>> Is this driver compiled as a single kernel module file?
+>>
+>>> +MODULE_AUTHOR("Sowjanya Komatineni <skomatineni@nvidia.com>");
+>>> +MODULE_DESCRIPTION("NVIDIA Tegra CSI Device Driver");
+>>> +MODULE_LICENSE("GPL v2");
+>> ...
+>>> +MODULE_AUTHOR("Sowjanya Komatineni <skomatineni@nvidia.com>");
+>>> +MODULE_DESCRIPTION("NVIDIA Tegra Video Input Device Driver");
+>>> +MODULE_LICENSE("GPL v2");
+>> I don't think that these macros are needed in that case.
+>> The video.c should be enough, isn't it?
+> yes these can be removed
 
-Hello Sam,
-
-Thank you for taking a look at this patch! :)
+It will be nice to factor out the Tegra210-specific VI/CSI OPS into a
+separate driver module (say tegra210-vi) to ease supporting of other
+Tegra versions. Of course this could be done later on, although I
+suppose the amount of hassle could be reduced if it's done from the start.
