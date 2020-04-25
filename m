@@ -2,157 +2,244 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D05AC54FCB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 15:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7246C55191
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 15:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03E852071C
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 15:04:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qsh9H7XU"
+	by mail.kernel.org (Postfix) with ESMTP id 967C220748
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 15:06:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587827184;
+	bh=bga0IhpxeIVSdMQABLw7GzIHt5kMpzE/TQwAoOIXu2w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=jjRKBwTBF8NGOEp23NMxAvtetZxgXx01E39WKzjl3VFZ+TUn2pK4/SqvlpDExzBgD
+	 lwu2PfBho2tOwUJJB2x2QLHfl6jL5rGQW8LdK1JXqJQATpLPJx6297HGlECeV5tTLE
+	 ZfLV0RUC/pyyAtloOZJMbkHljTD3EvmSJufa78fw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726132AbgDYPEr (ORCPT
+        id S1726145AbgDYPGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 11:04:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46270 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726102AbgDYPEq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 11:04:46 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67117C09B04B
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 08:04:46 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id o135so967062qke.6
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 08:04:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=aFNkj/X0ARFk1lHudyAFFChBsuWKz++VCQGA+5bkEF4=;
-        b=Qsh9H7XUkaGUDZISgiDxKbDqE0iw0p/pS6gA7oFdel3Wd2F3lv0ULO/fCkynQ67oCW
-         DqWtaidJKbBNrWGqbCP7qSK+SvwCC4f+9bp25MtF/7pRsPwDG6NvOxgGo3PFdQyTbK9U
-         HgmY8uxbNL+ONgb2jjOi9yfcQlHZ4sRWWDIWKmQ3rc7aa5T8kHU8NYYx0yOoV4TFOvBB
-         zcRXfwiHCdP6/1zuEF9vdLa2ESgC7uFkZYUp8cJLLXcV95+IwNuEuNW7EPeE5REcVFKe
-         FtkmVOk/yIUksd6uHUEdCrZ9voizXd/hkn4tOTB0RkHU/FlwCcm37vjPXni2YIZIKT0r
-         x0Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=aFNkj/X0ARFk1lHudyAFFChBsuWKz++VCQGA+5bkEF4=;
-        b=Q167AaacFgzvMt25+XlPliEsUI3oNnTwgxQOUloO0xVbC6m3mubIapPP28bJ8nB5kV
-         29H05ThLro+mJ+GSEAyHEzmXMmLJegmUQbOmTct1xVoLh5SM8aT3QZrddjVpvJbrkGkC
-         e//z9A/jFbyP7wLrSdoyRptys05e6IKGGTVniexeUllh+yHGWqxNsEzbpIfm+tO1Q4Be
-         fh00SrI33UUmlG4ImJQZskEjmhWrh/tjavFxvhoKwf7tq5asDBSRK951dHndnzg+Es7O
-         RPzFMunHuaXPFayIigGZMwtHZDC/Kp/TvPnT7YLvAGHPS4BOSIC5glTGMZqIulXAK99H
-         JHPg==
-X-Gm-Message-State: AGi0PuaESOI9iP+zsJcKvxW1wo54x8RBfN56FgHPYP0yqcBxz++O51o3
-        Xf7Vl/rGDvlJF7zLH6lqVv0=
-X-Google-Smtp-Source: APiQypKJgUBaip4pHz85dIJ60/YCLMMEy1fNhqdI2WcdwQ7f+6cxi9Dc6VyvXD4/F3xc3Z0mZd1YHQ==
-X-Received: by 2002:a37:e30e:: with SMTP id y14mr13686328qki.61.1587827085314;
-        Sat, 25 Apr 2020 08:04:45 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id p10sm5925035qtu.14.2020.04.25.08.04.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Apr 2020 08:04:43 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Sat, 25 Apr 2020 11:04:40 -0400
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Michael Matz <matz@suse.de>, Jakub Jelinek <jakub@redhat.com>,
-        Sergei Trofimovich <slyfox@gentoo.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kees Cook <keescook@chromium.org>,
-        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
-        =?utf-8?Q?Fr=C3=A9d=C3=A9ric_Pierret_=28fepitre=29?= 
-        <frederic.pierret@qubes-os.org>, boris.ostrovsky@oracle.com,
-        jgross@suse.com, linuxppc-dev@lists.ozlabs.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-Subject: Re: [PATCH] x86: Fix early boot crash on gcc-10, next try
-Message-ID: <20200425150440.GA470719@rani.riverdale.lan>
-References: <20200422102309.GA26846@zn.tnic>
- <CAKwvOd=Dza3UBfeUzs2RW6ko5fDr3jYeGQAYpJXqyEVns6DJHg@mail.gmail.com>
- <20200422192113.GG26846@zn.tnic>
- <CAKwvOdkbcO8RzoafON2mGiSy5P96P5+aY8GySysF2my7q+nTqw@mail.gmail.com>
- <20200422212605.GI26846@zn.tnic>
- <CAKwvOd=exxhfb8N6=1Q=wBUaYcRDEq3L1+TiHDLz+pxWg8OuwQ@mail.gmail.com>
- <20200423125300.GC26021@zn.tnic>
- <20200423161126.GD26021@zn.tnic>
- <20200425014657.GA2191784@rani.riverdale.lan>
- <20200425085759.GA24294@zn.tnic>
+        Sat, 25 Apr 2020 11:06:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48168 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726100AbgDYPGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 11:06:23 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A347E2071C;
+        Sat, 25 Apr 2020 15:06:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587827182;
+        bh=bga0IhpxeIVSdMQABLw7GzIHt5kMpzE/TQwAoOIXu2w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=q/H/4Jhx55yYSK3rSHxGUKkCsNd6PHfJrhdhVC/wWvDgwOWRLKgQP0Lec2PFus2q5
+         v77UFd6EUOmX7RPGpbAHC3EZy8v8km8EiUZZrDve1jeXSJr6ckPZVzgRi5YjtyasAE
+         kmyYEpi+DINM1vcu/Hc0YBJWcgKBiP8RgPACUcfI=
+Date:   Sat, 25 Apr 2020 16:06:18 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     ludovic.desroches@microchip.com
+Cc:     Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] iio: at91-sama5d2_adc: split
+ at91_adc_current_chan_is_touch() helper
+Message-ID: <20200425160618.292e4c34@archlinux>
+In-Reply-To: <20200419100943.voa26ggjr4wa6uce@ROU-LT-M43218B.mchp-main.com>
+References: <20200304084219.20810-1-alexandru.ardelean@analog.com>
+        <20200413180556.20638f3b@archlinux>
+        <9315e9a7-0703-b119-ca32-69f0c2fcc7de@microchip.com>
+        <20200415064352.yn7xkvjtsdcvnvni@ROU-LT-M43218B.mchp-main.com>
+        <20200418185853.35b07a7d@archlinux>
+        <20200419100943.voa26ggjr4wa6uce@ROU-LT-M43218B.mchp-main.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200425085759.GA24294@zn.tnic>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 25, 2020 at 10:57:59AM +0200, Borislav Petkov wrote:
-> On Fri, Apr 24, 2020 at 09:46:57PM -0400, Arvind Sankar wrote:
-> > The comment above boot_init_stack_canary's definition should be updated
-> > to note that it needs to be called from a function that, in addition to
-> > not returning, either has stackprotector disabled or avoids ending in a
-> > tail call.
-> 
-> How's that?
-> 
-> diff --git a/arch/x86/include/asm/stackprotector.h b/arch/x86/include/asm/stackprotector.h
-> index 91e29b6a86a5..237a54f60d6b 100644
-> --- a/arch/x86/include/asm/stackprotector.h
-> +++ b/arch/x86/include/asm/stackprotector.h
-> @@ -55,8 +55,12 @@
->  /*
->   * Initialize the stackprotector canary value.
->   *
-> - * NOTE: this must only be called from functions that never return,
-> - * and it must always be inlined.
-> + * NOTE: this must only be called from functions that never return, it must
-> + * always be inlined and it should be called from a compilation unit for
-> + * which stack protector is disabled.
-> + *
-> + * Alternatively, the caller should not end with a function call which gets
-> + * tail-call optimized as that would lead to checking a modified canary value.
->   */
->  static __always_inline void boot_init_stack_canary(void)
->  {
+On Sun, 19 Apr 2020 12:09:43 +0200
+ludovic.desroches@microchip.com wrote:
 
-I'd put the clause about stack protector being disabled and the
-tail-call one together, to make clear that you still need the never
-return and always inline bits. Also, this function is implemented by
-multiple arch's and they all have similar comments -- might be better to
-consolidate the comment in the generic (dummy) one in
-include/linux/stackprotector.h laying out the restrictions that arch
-implementations should follow?
+> On Sat, Apr 18, 2020 at 06:58:53PM +0100, Jonathan Cameron wrote:
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> > 
+> > On Wed, 15 Apr 2020 08:43:52 +0200
+> > ludovic.desroches@microchip.com wrote:
+> >   
+> > > On Tue, Apr 14, 2020 at 12:22:45PM +0000, Eugen Hristev - M18282 wrote:  
+> > > > On 13.04.2020 20:05, Jonathan Cameron wrote:  
+> > > > > On Wed, 4 Mar 2020 10:42:18 +0200
+> > > > > Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+> > > > >  
+> > > > >> This change moves the logic to check if the current channel is the
+> > > > >> touchscreen channel to a separate helper.
+> > > > >> This reduces some code duplication, but the main intent is to re-use this
+> > > > >> in the next patches.
+> > > > >>
+> > > > >> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>  
+> > > > > Eugen / Ludovic,
+> > > > >
+> > > > > Have you had a chance to look at this series?  
+> > > >
+> > > > Hi Jonathan,
+> > > >
+> > > > Does the patch apply correctly for you ?  
+> > >
+> > > No issue on my side to apply them (v5.7-rc1 and next).
+> > >  
+> > > > I will try to test it , if I manage to apply it.
+> > > > I can only test the ADC though because at this moment I do not have a
+> > > > touchscreen at disposal.  
+> > >
+> > > Same here, not able to test the touchscreen but it doesn't seem very risky.
+> > >  
+> > > >
+> > > > Meanwhile, the code looks good for me,
+> > > >
+> > > > Reviewed-by: Eugen Hristev <eugen.hristev@microchip.com>  
+> > >
+> > > You can add mine as well:
+> > >
+> > > Reviewed-by: Ludovic Desroches <ludovic.desroches@microchip.com>  
+> > 
+> > For both of you - tags for both patches or just this one?  
+> 
+> Sorry both patches for me, I just replied to patch 2/2 to ease the collection
+> of tags.
+> 
+> Ludovic
+
+Hi All,
+
+Some considerable fuzz due to Engen's patches going in first but the resulting diff
+looks right etc so I think I fixed it up correctly.
+
+Both patches applied to the togreg branch of iio.git and pushed out as
+testing for the autobuilders to play with it.
+
+Thanks,
+
+Jonathan
+
 
 > 
-> > There are also other calls that likely need to be fixed as well -- in
-> > init/main.c, arch/x86/xen/smp_pv.c, and there is a powerpc version of
-> > start_secondary in arch/powerpc/kernel/smp.c which may also be affected.
-> 
-> Yes, there was an attempt to fix former:
-> 
-> https://lkml.kernel.org/r/20200413123535.10884-1-frederic.pierret@qubes-os.org
+> > 
+> > Thanks,
+> > 
+> > Jonathan
+> >   
+> > >
+> > > Regards
+> > >
+> > > Ludovic
+> > >  
+> > > >
+> > > > By the way, I do not know if my two pending patches on this driver will
+> > > > conflict or not.
+> > > >
+> > > > Eugen
+> > > >  
+> > > > >
+> > > > > Thanks,
+> > > > >
+> > > > > Jonathan
+> > > > >  
+> > > > >> ---
+> > > > >>
+> > > > >> This patchset continues discussion:
+> > > > >>     https://lore.kernel.org/linux-iio/20191023082508.17583-1-alexandru.ardelean@analog.com/
+> > > > >> Apologies for the delay.
+> > > > >>
+> > > > >> Changelog v1 -> v2:
+> > > > >> * added patch 'iio: at91-sama5d2_adc: split at91_adc_current_chan_is_touch()
+> > > > >>    helper'
+> > > > >> * renamed at91_adc_buffer_postenable() -> at91_adc_buffer_preenable()
+> > > > >>    - at91_adc_buffer_postenable() - now just calls
+> > > > >>      iio_triggered_buffer_postenable() if the channel isn't the touchscreen
+> > > > >>      channel
+> > > > >> * renamed at91_adc_buffer_predisable() -> at91_adc_buffer_postdisable()
+> > > > >>    - at91_adc_buffer_predisable() - now just calls
+> > > > >>      iio_triggered_buffer_predisable() if the channel isn't the touchscreen
+> > > > >>      channel
+> > > > >>
+> > > > >>   drivers/iio/adc/at91-sama5d2_adc.c | 31 +++++++++++++++---------------
+> > > > >>   1 file changed, 15 insertions(+), 16 deletions(-)
+> > > > >>
+> > > > >> diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
+> > > > >> index a5c7771227d5..f2a74c47c768 100644
+> > > > >> --- a/drivers/iio/adc/at91-sama5d2_adc.c
+> > > > >> +++ b/drivers/iio/adc/at91-sama5d2_adc.c
+> > > > >> @@ -873,18 +873,24 @@ static int at91_adc_dma_start(struct iio_dev *indio_dev)
+> > > > >>        return 0;
+> > > > >>   }
+> > > > >>
+> > > > >> +static bool at91_adc_current_chan_is_touch(struct iio_dev *indio_dev)
+> > > > >> +{
+> > > > >> +     struct at91_adc_state *st = iio_priv(indio_dev);
+> > > > >> +
+> > > > >> +     return !!bitmap_subset(indio_dev->active_scan_mask,
+> > > > >> +                            &st->touch_st.channels_bitmask,
+> > > > >> +                            AT91_SAMA5D2_MAX_CHAN_IDX + 1);
+> > > > >> +}
+> > > > >> +
+> > > > >>   static int at91_adc_buffer_postenable(struct iio_dev *indio_dev)
+> > > > >>   {
+> > > > >>        int ret;
+> > > > >>        struct at91_adc_state *st = iio_priv(indio_dev);
+> > > > >>
+> > > > >>        /* check if we are enabling triggered buffer or the touchscreen */
+> > > > >> -     if (bitmap_subset(indio_dev->active_scan_mask,
+> > > > >> -                       &st->touch_st.channels_bitmask,
+> > > > >> -                       AT91_SAMA5D2_MAX_CHAN_IDX + 1)) {
+> > > > >> -             /* touchscreen enabling */
+> > > > >> +     if (at91_adc_current_chan_is_touch(indio_dev))
+> > > > >>                return at91_adc_configure_touch(st, true);
+> > > > >> -     }
+> > > > >> +
+> > > > >>        /* if we are not in triggered mode, we cannot enable the buffer. */
+> > > > >>        if (!(indio_dev->currentmode & INDIO_ALL_TRIGGERED_MODES))
+> > > > >>                return -EINVAL;
+> > > > >> @@ -906,12 +912,9 @@ static int at91_adc_buffer_predisable(struct iio_dev *indio_dev)
+> > > > >>        u8 bit;
+> > > > >>
+> > > > >>        /* check if we are disabling triggered buffer or the touchscreen */
+> > > > >> -     if (bitmap_subset(indio_dev->active_scan_mask,
+> > > > >> -                       &st->touch_st.channels_bitmask,
+> > > > >> -                       AT91_SAMA5D2_MAX_CHAN_IDX + 1)) {
+> > > > >> -             /* touchscreen disable */
+> > > > >> +     if (at91_adc_current_chan_is_touch(indio_dev))
+> > > > >>                return at91_adc_configure_touch(st, false);
+> > > > >> -     }
+> > > > >> +
+> > > > >>        /* if we are not in triggered mode, nothing to do here */
+> > > > >>        if (!(indio_dev->currentmode & INDIO_ALL_TRIGGERED_MODES))
+> > > > >>                return -EINVAL;
+> > > > >> @@ -1886,14 +1889,10 @@ static __maybe_unused int at91_adc_resume(struct device *dev)
+> > > > >>                return 0;
+> > > > >>
+> > > > >>        /* check if we are enabling triggered buffer or the touchscreen */
+> > > > >> -     if (bitmap_subset(indio_dev->active_scan_mask,
+> > > > >> -                       &st->touch_st.channels_bitmask,
+> > > > >> -                       AT91_SAMA5D2_MAX_CHAN_IDX + 1)) {
+> > > > >> -             /* touchscreen enabling */
+> > > > >> +     if (at91_adc_current_chan_is_touch(indio_dev))
+> > > > >>                return at91_adc_configure_touch(st, true);
+> > > > >> -     } else {
+> > > > >> +     else
+> > > > >>                return at91_adc_configure_trigger(st->trig, true);
+> > > > >> -     }
+> > > > >>
+> > > > >>        /* not needed but more explicit */
+> > > > >>        return 0;  
+> > > > >  
+> > > >  
+> >   
 
-There's also the one in init/main.c which is used by multiple
-architectures. On x86 at least, the call to arch_call_rest_init at the
-end of start_kernel does not get tail-call optimized by gcc-10, but I
-don't see anything that actually prevents that from happening. We should
-add the asm("") there as well I think, unless the compiler guys see
-something about this function that will always prevent the optimization?
-
-Cc'ing PPC list for powerpc start_secondary.
