@@ -2,258 +2,118 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C36C55194
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 21:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4192BC54FCB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 21:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 149B42071C
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 21:39:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E4842071C
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 21:42:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="CCa/g8Po"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgDYVjL convert rfc822-to-8bit (ORCPT
+        id S1726332AbgDYVmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 17:39:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50686 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbgDYVjK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 17:39:10 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43A16C09B04D;
-        Sat, 25 Apr 2020 14:39:10 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jSSVj-0004Pz-Or; Sat, 25 Apr 2020 23:38:55 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 2BC5010071F; Sat, 25 Apr 2020 23:38:55 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        megha.dey@linux.intel.com, maz@kernel.org, bhelgaas@google.com,
-        rafael@kernel.org, gregkh@linuxfoundation.org, hpa@zytor.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
-        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH RFC 04/15] drivers/base: Add support for a new IMS irq domain
-In-Reply-To: <158751205175.36773.1874642824360728883.stgit@djiang5-desk3.ch.intel.com>
-References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com> <158751205175.36773.1874642824360728883.stgit@djiang5-desk3.ch.intel.com>
-Date:   Sat, 25 Apr 2020 23:38:55 +0200
-Message-ID: <87pnbvtfdc.fsf@nanos.tec.linutronix.de>
+        Sat, 25 Apr 2020 17:42:51 -0400
+Received: from mout.gmx.net ([212.227.15.18]:60137 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726015AbgDYVmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 17:42:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1587850968;
+        bh=90DKm7dy3WqWMYgQ2eqHWwqp6FkxbBhEmccEhmdQmQw=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject;
+        b=CCa/g8PoXGNOzd7i67kVn5L3z4jS+dNtVaaLu2AD/SNNp512942F/Ned3yN+O+vak
+         s7+EkKk73/RXR+qWY+VqNu70f6fpEihdsND8K8F7ZYSQmNDxyGsGa98VsarwY0mwck
+         BkCTyMCXWMLLEh2VrnAvxb2c9Kod9psxm9FsSV3k=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ls3530.fritz.box ([92.116.179.136]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mxm3Q-1jGqKk26r0-00zBQ2; Sat, 25
+ Apr 2020 23:42:48 +0200
+Date:   Sat, 25 Apr 2020 23:42:47 +0200
+From:   Helge Deller <deller@gmx.de>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Laurent Vivier <laurent@vivier.eu>
+Subject: [RFC][PATCH] fs/signalfd.c: Fix inconsistent return codes for
+ signalfd4
+Message-ID: <20200425214247.GA9651@ls3530.fritz.box>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Provags-ID: V03:K1:+Ok7YXcplUInscS6eKhkONGqVj8fwqJQdPPBcYVAYsBEmmFpZw5
+ GYRasY1YfLaSHLtBXQHqsfZ+re539w6T3n2/7H+krwGFG/aJF5X4C0mTdorLS0ayfyr1SMQ
+ IGRmRMXGz1Xgc2iV76pTggNMDyfUfIIOrhFASUBK4Zl9NbKq9n72NX2X5OGL6/5s6rqPG/s
+ NE8UV1xxjmd8s0LkqnJog==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ymJxjS2622Y=:ejLq4NWmz1/isi33KgYnSD
+ prKQDql7c0AXeC7pxeZf0BvR4D1YoRbjeG1jEx4bN6NSY48Akx0J7es6ikII6CcV6+q0Olm9h
+ X1TS8m0/sVwdFq2qY9fY8x0nbWJBhFPrVicN0CBGYUyJR+EmROOQr7okDKHokQisuPeFUL15O
+ vXWjI7zOtJzytrsVzQu72i2tWG+kISmFFwbdZe2INyUSTIJW2B6xw1JanbZFM+Rj2kz9HfJR+
+ uLRa2UJfn0nJVYyFv8SytCkWwjf1oP1ae3PT90pi1mcafTyG4b9PNiI7CZdGYzzBX5RvEBItA
+ D7/EjHQafBpMC74TNjoDFkGF+Y41YPO6hr/1W4Ea+JQIfjLDlWtm2/rOkSKb6F6Nkra7HIE5o
+ +PwiN3Z3j3rv26bg2W967zc9az3ZLN/ILyp+o84ZKk2y10alPXfL79ETrJyXlBtIMhxG1r7gi
+ q+b/Y9M+2D53/C/BtDJgp4S3GO2VyKd1oswf2RHiyndeosBWZjcBm3gzYWjXd/Kfd192qKBVL
+ WMTYlI7ZZoaZSJ+pf9GnFQhKfaFDy+e1JmQzceF+J8FJq5Eag8hCSBn2Czge48PRdlOfWyCh2
+ QE0Ogeq3/WkI7JqIbHDm5DCrYvCjZZTxZPV9HWQ0LXxvu3Ng4xnydq9fXGr079USfd4zaQ5CM
+ asii+kE5898NkFkFha37grTbIGgQmwosuv15YEcqQY6RNdkJ+1rKoGuXiuINLNXfMtzHaYY7i
+ kMsqLS6e/IdD8qeUyXjt+KJ8w7Su+zyUVWPMNH0/l2Po1Hh9pfCm8APhJFBc3GQusaj45Y9Di
+ ExhaAusGh9QGCPd4i/q9GcFJebU0yS8BqnayxDNJbryBb1JQt6x+rnFtM3Ne8fRSMkAYozgo9
+ mGz6cgkcnt1aC6aJUVxg7ZptPwavnwsdqJoqc3/HBtngk0Sb2XerMcu+2R5e0SL9ym2+m6yl/
+ n5ApMVdpArzIucwkKsjDyQAAk6celKU5gUmY2qnN5cOxasRMGNPo5etM1iVFPY9cJhh4SbBnA
+ FuAHA6pUaSMvQbasA18urI63k1qSd5K47XsA9ycjADo9BROBsBdPjCpvsDKxqIibOBTJ07kw8
+ KF/xrV+R1QQI024dQNWnjMl8NliD9JlFNyt/AVclWT7hFUMPuh05pyDqj3kMVV1qzSiOrCjJu
+ aA6j4f/PQ8Tp4JhdQsY4EbjtpeOIl9M134I9OnT5WdsXkUbkWFUePKQrWdhipRK4PMhs/ry1F
+ c7ULWh6S3Oo6esfQX
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dave Jiang <dave.jiang@intel.com> writes:
-> From: Megha Dey <megha.dey@linux.intel.com>
->
-> Add support for the creation of a new IMS irq domain. It creates a new
-> irq chip associated with the IMS domain and adds the necessary domain
-> operations to it.
+The kernel provides a native and a compat implementation for the
+signalfd4() syscall.
 
-And how is a X86 specific thingy related to drivers/base?
+While looking into the qemu user emulation code, I noticed that in the
+kernel compat case, EFAULT is returned if the given user mask can't be
+accessed, while the native path returns EINVAL on such failure.
 
-> diff --git a/drivers/base/ims-msi.c b/drivers/base/ims-msi.c
+For the sake of consistency, this patch adjusts the native path to
+return the same error code (EFAULT) as the compat case.
 
-This sits in drivers base because IMS is architecture independent, right?
+Signed-off-by: Helge Deller <deller@gmx.de>
 
-> new file mode 100644
-> index 000000000000..738f6d153155
-> --- /dev/null
-> +++ b/drivers/base/ims-msi.c
-> @@ -0,0 +1,100 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Support for Device Specific IMS interrupts.
-> + *
-> + * Copyright © 2019 Intel Corporation.
-> + *
-> + * Author: Megha Dey <megha.dey@intel.com>
-> + */
-> +
-> +#include <linux/dmar.h>
-> +#include <linux/irq.h>
-> +#include <linux/mdev.h>
-> +#include <linux/pci.h>
-> +
-> +/*
-> + * Determine if a dev is mdev or not. Return NULL if not mdev device.
-> + * Return mdev's parent dev if success.
-> + */
-> +static inline struct device *mdev_to_parent(struct device *dev)
-> +{
-> +	struct device *ret = NULL;
-> +	struct device *(*fn)(struct device *dev);
-> +	struct bus_type *bus = symbol_get(mdev_bus_type);
+diff --git a/fs/signalfd.c b/fs/signalfd.c
+index 44b6845b071c..5b78719be445 100644
+=2D-- a/fs/signalfd.c
++++ b/fs/signalfd.c
+@@ -314,9 +314,10 @@ SYSCALL_DEFINE4(signalfd4, int, ufd, sigset_t __user =
+*, user_mask,
+ {
+ 	sigset_t mask;
 
-symbol_get()?
+-	if (sizemask !=3D sizeof(sigset_t) ||
+-	    copy_from_user(&mask, user_mask, sizeof(mask)))
++	if (sizemask !=3D sizeof(sigset_t))
+ 		return -EINVAL;
++	if (copy_from_user(&mask, user_mask, sizeof(mask)))
++		return -EFAULT;
+ 	return do_signalfd4(ufd, &mask, flags);
+ }
 
-> +
-> +	if (bus && dev->bus == bus) {
-> +		fn = symbol_get(mdev_dev_to_parent_dev);
+@@ -325,9 +326,10 @@ SYSCALL_DEFINE3(signalfd, int, ufd, sigset_t __user *=
+, user_mask,
+ {
+ 	sigset_t mask;
 
-What's wrong with simple function calls?
+-	if (sizemask !=3D sizeof(sigset_t) ||
+-	    copy_from_user(&mask, user_mask, sizeof(mask)))
++	if (sizemask !=3D sizeof(sigset_t))
+ 		return -EINVAL;
++	if (copy_from_user(&mask, user_mask, sizeof(mask)))
++		return -EFAULT;
+ 	return do_signalfd4(ufd, &mask, 0);
+ }
 
-> +		ret = fn(dev);
-> +		symbol_put(mdev_dev_to_parent_dev);
-> +		symbol_put(mdev_bus_type);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static irq_hw_number_t dev_ims_get_hwirq(struct msi_domain_info *info,
-> +					 msi_alloc_info_t *arg)
-> +{
-> +	return arg->ims_hwirq;
-> +}
-> +
-> +static int dev_ims_prepare(struct irq_domain *domain, struct device *dev,
-> +			   int nvec, msi_alloc_info_t *arg)
-> +{
-> +	if (dev_is_mdev(dev))
-> +		dev = mdev_to_parent(dev);
-
-This makes absolutely no sense. Somewhere you claimed that this is
-solely for mdev. Now this interface takes both a regular device and mdev.
-
-Lack of explanation seems to be a common scheme here.
-
-> +	init_irq_alloc_info(arg, NULL);
-> +	arg->dev = dev;
-> +	arg->type = X86_IRQ_ALLOC_TYPE_IMS;
-> +
-> +	return 0;
-> +}
-> +
-> +static void dev_ims_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc)
-> +{
-> +	arg->ims_hwirq = platform_msi_calc_hwirq(desc);
-> +}
-> +
-> +static struct msi_domain_ops dev_ims_domain_ops = {
-> +	.get_hwirq	= dev_ims_get_hwirq,
-> +	.msi_prepare	= dev_ims_prepare,
-> +	.set_desc	= dev_ims_set_desc,
-> +};
-> +
-> +static struct irq_chip dev_ims_ir_controller = {
-> +	.name			= "IR-DEV-IMS",
-> +	.irq_ack		= irq_chip_ack_parent,
-> +	.irq_retrigger		= irq_chip_retrigger_hierarchy,
-> +	.irq_set_vcpu_affinity	= irq_chip_set_vcpu_affinity_parent,
-> +	.flags			= IRQCHIP_SKIP_SET_WAKE,
-> +	.irq_write_msi_msg	= platform_msi_write_msg,
-> +};
-> +
-> +static struct msi_domain_info ims_ir_domain_info = {
-> +	.flags		= MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS,
-> +	.ops		= &dev_ims_domain_ops,
-> +	.chip		= &dev_ims_ir_controller,
-> +	.handler	= handle_edge_irq,
-> +	.handler_name	= "edge",
-> +};
-> +
-> +struct irq_domain *arch_create_ims_irq_domain(struct irq_domain *parent,
-> +					      const char *name)
-
-arch_create_ ???? In drivers/base ??? 
-
-> +{
-> +	struct fwnode_handle *fn;
-> +	struct irq_domain *domain;
-> +
-> +	fn = irq_domain_alloc_named_fwnode(name);
-> +	if (!fn)
-> +		return NULL;
-> +
-> +	domain = msi_create_irq_domain(fn, &ims_ir_domain_info, parent);
-> +	if (!domain)
-> +		return NULL;
-> +
-> +	irq_domain_update_bus_token(domain, DOMAIN_BUS_PLATFORM_MSI);
-> +	irq_domain_free_fwnode(fn);
-> +
-> +	return domain;
-> +}
-> diff --git a/drivers/base/platform-msi.c b/drivers/base/platform-msi.c
-> index 2696aa75983b..59160e8cbfb1 100644
-> --- a/drivers/base/platform-msi.c
-> +++ b/drivers/base/platform-msi.c
-> @@ -31,12 +31,11 @@ struct platform_msi_priv_data {
->  /* The devid allocator */
->  static DEFINE_IDA(platform_msi_devid_ida);
->  
-> -#ifdef GENERIC_MSI_DOMAIN_OPS
->  /*
->   * Convert an msi_desc to a globaly unique identifier (per-device
->   * devid + msi_desc position in the msi_list).
->   */
-> -static irq_hw_number_t platform_msi_calc_hwirq(struct msi_desc *desc)
-> +irq_hw_number_t platform_msi_calc_hwirq(struct msi_desc *desc)
->  {
->  	u32 devid;
->  
-> @@ -45,6 +44,7 @@ static irq_hw_number_t platform_msi_calc_hwirq(struct msi_desc *desc)
->  	return (devid << (32 - DEV_ID_SHIFT)) | desc->platform.msi_index;
->  }
->  
-> +#ifdef GENERIC_MSI_DOMAIN_OPS
->  static void platform_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc)
->  {
->  	arg->desc = desc;
-> @@ -76,7 +76,7 @@ static void platform_msi_update_dom_ops(struct msi_domain_info *info)
->  		ops->set_desc = platform_msi_set_desc;
->  }
->  
-> -static void platform_msi_write_msg(struct irq_data *data, struct msi_msg *msg)
-> +void platform_msi_write_msg(struct irq_data *data, struct msi_msg *msg)
->  {
->  	struct msi_desc *desc = irq_data_get_msi_desc(data);
->  	struct platform_msi_priv_data *priv_data;
-> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-> index b558d4cfd082..cecc6a6bdbef 100644
-> --- a/drivers/vfio/mdev/mdev_core.c
-> +++ b/drivers/vfio/mdev/mdev_core.c
-> @@ -33,6 +33,12 @@ struct device *mdev_parent_dev(struct mdev_device *mdev)
->  }
->  EXPORT_SYMBOL(mdev_parent_dev);
->  
-> +struct device *mdev_dev_to_parent_dev(struct device *dev)
-> +{
-> +	return to_mdev_device(dev)->parent->dev;
-> +}
-> +EXPORT_SYMBOL(mdev_dev_to_parent_dev);
-
-And this needs to be EXPORT_SYMBOL because this is designed to support
-non GPL drivers from the very beginning, right? Ditto for the other
-exports in this file.
-
-> diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_private.h
-> index 7d922950caaf..c21f1305a76b 100644
-> --- a/drivers/vfio/mdev/mdev_private.h
-> +++ b/drivers/vfio/mdev/mdev_private.h
-> @@ -36,7 +36,6 @@ struct mdev_device {
->  };
->  
->  #define to_mdev_device(dev)	container_of(dev, struct mdev_device, dev)
-> -#define dev_is_mdev(d)		((d)->bus == &mdev_bus_type)
-
-Moving stuff around 3 patches later makes tons of sense.
-  
-Thanks,
-
-        tglx
