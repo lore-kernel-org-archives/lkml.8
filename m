@@ -2,109 +2,86 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D62C54FCB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 13:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74958C54FCB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 13:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CAC720704
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 13:11:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="3gwSc1Ph"
+	by mail.kernel.org (Postfix) with ESMTP id 4A8EA206D4
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 13:18:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587820721;
+	bh=LjoquMDwEG/L1MjD6QvwNri81iJYMemhxJ/D4EVYwPM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=aQ0CO6q4QRrR2FS4qdRQTV1iIh0bkiyGHKZSHfBfndiBLf5lRQlLGu96QaLc886pb
+	 +ng1wCd3pn74a2xbcY+SO4xKu3SXy98gYXErb0yw9ZL7l9rD079biybX0V2X7TstiV
+	 bpqR8W6WacdqhTAJkb9m5/Ml/utPkIBEIbZm4XGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726126AbgDYNLK (ORCPT
+        id S1726143AbgDYNSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 09:11:10 -0400
-Received: from mail.fudan.edu.cn ([202.120.224.73]:40661 "EHLO fudan.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726060AbgDYNLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 09:11:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
-        Message-Id; bh=AKrwUNLoUnBI4lZ8DNjrGFoqJNkvYPc2pAwVusxmZ1M=; b=3
-        gwSc1PhnToVPHfPDkubDu9iFk2+7F9AVr4Yd/4NkmI4szxf0fioKGRBj3NTWYWci
-        GM+k3C14ZCq6OuCy2wEtf1FHJOsBZK3bewRNFEeOtVbi/BATkNaGbneCWoaLsB5R
-        1yayvqsl4B99lr65GXzsyB8iTsHhyjP3GfUe8W1xM8=
-Received: from localhost.localdomain (unknown [120.229.255.80])
-        by app2 (Coremail) with SMTP id XQUFCgBnF+DWNqReqbCpAA--.22753S3;
-        Sat, 25 Apr 2020 21:10:47 +0800 (CST)
-From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
-To:     Boris Pismenny <borisp@mellanox.com>,
-        Aviad Yehezkel <aviadye@mellanox.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Sat, 25 Apr 2020 09:18:40 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:65507 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbgDYNSk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 09:18:40 -0400
+Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id 03PDIDvH012736;
+        Sat, 25 Apr 2020 22:18:14 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 03PDIDvH012736
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587820694;
+        bh=4wJMY/yVTi4OrEzrVB0KyV0x5odpNOOIs5tMD7YU73I=;
+        h=From:To:Cc:Subject:Date:From;
+        b=cju21PMn5X7EMslYU0iOp1Mg4VGuvlYQ2z0pBe8h0aykXIX/S88l/xFg9KckL3wU5
+         tB70tBfguHZ6tey42fYn1k7ci3KB1VWhekA1TEXrM6wbKxYTevZl28C73KxYLdOsGp
+         IhqhMc9CjBc0oTDdf83NQryOD9+tQLaiJR7Bo9gh8YTF5KdgvtanEQJ9CsjD7oWwQ1
+         5ezT2Uq3HdoKymgfiBeULd0EibvN2QklxwgV8VdxZ9s+w1e7jA2IvW1MIm6s3fbfiQ
+         KhTj78UBewyaAsxMS+w+yGiZ91PTYmgtA4MSlw4L/holz3UwrDdnkGbwInE52NRj6W
+         UC7nepl5GfjEQ==
+X-Nifty-SrcIP: [126.90.202.47]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>
-Subject: [PATCH] net/tls: Fix sk_psock refcnt leak when in tls_data_ready()
-Date:   Sat, 25 Apr 2020 21:10:23 +0800
-Message-Id: <1587820223-40918-1-git-send-email-xiyuyang19@fudan.edu.cn>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: XQUFCgBnF+DWNqReqbCpAA--.22753S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7uFyktF48AryUZrWruFW8Crg_yoW8JFW3pw
-        4vk3y8Ca4YyFy8Z395AF18JF18Wan5XFyIkFW8C3WxZrnxWw4rA345KF17ZF1jyr4kZFZY
-        vr4j9F4FvFsxGaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9E14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl
-        6s0DM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-        0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8Jw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
-        YxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxEwVAFwVW5GwCF04k20xvY0x0EwIxGrw
-        CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
-        14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
-        IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxK
-        x2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
-        v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUjppB7UUUUU==
-X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
+Subject: [PATCH] kbuild: remove '/' target
+Date:   Sat, 25 Apr 2020 22:18:10 +0900
+Message-Id: <20200425131810.991717-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tls_data_ready() invokes sk_psock_get(), which returns a reference of
-the specified sk_psock object to "psock" with increased refcnt.
+This notice has been here for a while. Remove it entirely now.
 
-When tls_data_ready() returns, local variable "psock" becomes invalid,
-so the refcount should be decreased to keep refcount balanced.
-
-The reference counting issue happens in one exception handling path of
-tls_data_ready(). When "psock->ingress_msg" is empty but "psock" is not
-NULL, the function forgets to decrease the refcnt increased by
-sk_psock_get(), causing a refcnt leak.
-
-Fix this issue by calling sk_psock_put() on all paths when "psock" is
-not NULL.
-
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
- net/tls/tls_sw.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/net/tls/tls_sw.c b/net/tls/tls_sw.c
-index c98e602a1a2d..4eef5617e033 100644
---- a/net/tls/tls_sw.c
-+++ b/net/tls/tls_sw.c
-@@ -2081,8 +2081,9 @@ static void tls_data_ready(struct sock *sk)
- 	strp_data_ready(&ctx->strp);
+ Makefile | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 49b2709ff44e..95c2d8c2dfe8 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1650,10 +1650,6 @@ _emodinst_post: _emodinst_
+ clean-dirs := $(KBUILD_EXTMOD)
+ clean: rm-files := $(KBUILD_EXTMOD)/Module.symvers $(KBUILD_EXTMOD)/modules.nsdeps
  
- 	psock = sk_psock_get(sk);
--	if (psock && !list_empty(&psock->ingress_msg)) {
--		ctx->saved_data_ready(sk);
-+	if (psock) {
-+		if (!list_empty(&psock->ingress_msg))
-+			ctx->saved_data_ready(sk);
- 		sk_psock_put(sk, psock);
- 	}
- }
+-PHONY += /
+-/:
+-	@echo >&2 '"$(MAKE) /" is no longer supported. Please use "$(MAKE) ./" instead.'
+-
+ PHONY += help
+ help:
+ 	@echo  '  Building external modules.'
 -- 
-2.7.4
+2.25.1
 
