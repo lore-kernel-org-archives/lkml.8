@@ -2,107 +2,101 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 199C3C55185
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 07:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D6DC55186
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 07:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0354F20767
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 07:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3555820767
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 07:21:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IAw4PsmK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726127AbgDYHHS (ORCPT
+        id S1726126AbgDYHVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 03:07:18 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:60286 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbgDYHHR (ORCPT
+        Sat, 25 Apr 2020 03:21:37 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:48798 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726107AbgDYHVg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 03:07:17 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 61F541C0229; Sat, 25 Apr 2020 09:07:15 +0200 (CEST)
-Date:   Sat, 25 Apr 2020 09:07:14 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v6 1/4] lib: new helper kstrtodev_t()
-Message-ID: <20200425070714.GA21938@amd>
-References: <20200213091600.554-1-uwe@kleine-koenig.org>
- <20200213091600.554-2-uwe@kleine-koenig.org>
- <CAHp75VcStj5sE3f0uK2deOWC=ojfx-z1fbrh6Lu6jAor9F9PgA@mail.gmail.com>
- <20200220074901.ohcrisjgd26555ya@pengutronix.de>
- <CAHp75VcxXWputX1y90t8f-c0a3dw2CHU6=ebQ+o6e8Z1GymiDw@mail.gmail.com>
- <20200220105718.eoevd3kb63zzrotu@pengutronix.de>
+        Sat, 25 Apr 2020 03:21:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587799295;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=GLnr0m2mVETKPeWfL0iYJ5elKQI3FKKirhJwNjsAap0=;
+        b=IAw4PsmKvVqIb0sgcqESJbr1yewRHYspQhznWmWCCVYU+/7IkztRIc8b8xhS4pP2bUTP8F
+        SiiVkL3k9hNEoy5cWZe529WHUjIAIekVL19tcX7m3RubB/4BtaY1PAa9AdwUeNqhvmWViT
+        BCge8gJPr1s2EbREmxLp49hESUW2xF4=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-17-IWcl8bnQNTG45zJE7g6zkg-1; Sat, 25 Apr 2020 03:21:34 -0400
+X-MC-Unique: IWcl8bnQNTG45zJE7g6zkg-1
+Received: by mail-wr1-f69.google.com with SMTP id s11so6317521wru.6
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 00:21:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GLnr0m2mVETKPeWfL0iYJ5elKQI3FKKirhJwNjsAap0=;
+        b=fQcXA4vDOMqOWgWmAQTETe98bEb5n6VxsrvUi9yChEtFMc1+nrLpW8lTPPrNlfZpF9
+         i+nxA4yIK0yI7Cze2INeJGLRtQ8f7S2yMusXo0w6uFZW03e7YmfM1mJuBeue4Qqu5YE1
+         /kmiKWxTnvzs2Qo4NTdFuIEVUo9ZCdqcqPuOX4JYldaIZsQ1pT369vewSLcEHt8mBWi0
+         kyWDpcHPGTDCdhFgu5S1EuZtY3Jsno0/EjbJeDWeti76Ym4fqdWKM6zaQvaNxgIbmrTX
+         /zlSOT66y+UO5938Ubs9+Be09K4AbeeUUXUsqQXn8MD2GNdaVnmzgWTtA/fFXafaBvo1
+         pvMQ==
+X-Gm-Message-State: AGi0Pua+phDtMehjKC+ICXAtorkJJG2h8vWQz7ht8kR76UCcidbgqdQ3
+        cMaTveoE4oc2Xe/oqZLXFwceJ35Xy4fZiJhNqO5+A3scV5WfZJkqeQ1PIbGEr4lcndjUkr3+Asp
+        I7Wis4lCvgUINxyYprLmU6mme
+X-Received: by 2002:a1c:6402:: with SMTP id y2mr14852978wmb.116.1587799284859;
+        Sat, 25 Apr 2020 00:21:24 -0700 (PDT)
+X-Google-Smtp-Source: APiQypL4JnN8XmD5Fqhx0zlOQUyNh6Q7sMfKC21sn7xaAJ7eING3tm0vPSCkfvnXY3alByn/09trCw==
+X-Received: by 2002:a05:600c:218e:: with SMTP id e14mr15366922wme.140.1587799276137;
+        Sat, 25 Apr 2020 00:21:16 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:d0a0:f143:e9e4:2926? ([2001:b07:6468:f312:d0a0:f143:e9e4:2926])
+        by smtp.gmail.com with ESMTPSA id w18sm11290918wrn.55.2020.04.25.00.21.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 25 Apr 2020 00:21:15 -0700 (PDT)
+Subject: Re: [PATCH v2 00/22] KVM: Event fixes and cleanup
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Oliver Upton <oupton@google.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        wei.huang2@amd.com, cavery@redhat.com, vkuznets@redhat.com,
+        Jim Mattson <jmattson@google.com>
+References: <20200424172416.243870-1-pbonzini@redhat.com>
+ <20200424210242.GA80882@google.com> <20200424210539.GH30013@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <c92b29db-14a1-21f3-5484-23e308af4e99@redhat.com>
+Date:   Sat, 25 Apr 2020 09:21:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
-Content-Disposition: inline
-In-Reply-To: <20200220105718.eoevd3kb63zzrotu@pengutronix.de>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200424210539.GH30013@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 24/04/20 23:05, Sean Christopherson wrote:
+> On Fri, Apr 24, 2020 at 09:02:42PM +0000, Oliver Upton wrote:
+>> Paolo,
+>>
+>> I've only received patches 1-9 for this series, could you resend? :)
+> 
+> Same here, I was hoping they would magically show up.
 
---J/dobhs11T7y2rNN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+An SMTP server, in its infinite wisdom, decided that sending more than
+10 emails in a batch is "too much mail".  I sent the remaining 13
+patches now (in two batches).  Thanks for warning me!
 
-Hi!
+Paolo
 
-> > > > Why simple_strto*() can't be used?
-> > >
-> > > I didn't really consider it, but looking in more detail I don't like =
-it
-> > > much. Without having tried it I think simple_strtoull accepts
-> > > "1000000000000000000000000000000000000000000" returning some arbitrary
-> > > value without an error indication.
-> >=20
-> > So what? User has a lot of possibilities to shoot into the foot.
-> > Since you interpret this as device major:minor, not founding a device
-> > will be first level of error, next one when your code will try to do
-> > something out of it. It shouldn't be a problem of kstrtox generic
-> > helpers.
->=20
-> I fail to follow your argument here. In my eyes if the user writes a
-> valid major:minor it should work, and if they write an invalid one this
-> should result in an error and not a usage of a device that just happens
-> to have the major:minor that simple_strtoull happens to return for the
-> two components.
-
-Yes please. We don't allow feet shooting where it is easy to prevent,
-and that is the case here.
-
-Best regards,
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---J/dobhs11T7y2rNN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl6j4aIACgkQMOfwapXb+vLLpQCeLh/gVFRj+yr45muUNQpcw4Z9
-6YcAoIQg2AjbAFlgvSuiqmW5HGqLrwmR
-=9/gs
------END PGP SIGNATURE-----
-
---J/dobhs11T7y2rNN--
