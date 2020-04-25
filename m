@@ -2,113 +2,130 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3203C55194
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 17:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10745C54FCB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 17:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4169206A2
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 17:15:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZmeMVFa4"
+	by mail.kernel.org (Postfix) with ESMTP id EB53220714
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 17:23:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbgDYRPE (ORCPT
+        id S1726232AbgDYRXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 13:15:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38180 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726145AbgDYRPD (ORCPT
+        Sat, 25 Apr 2020 13:23:45 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:45892 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726145AbgDYRXo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 13:15:03 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8353C09B04D;
-        Sat, 25 Apr 2020 10:15:03 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id hi11so5245458pjb.3;
-        Sat, 25 Apr 2020 10:15:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ptuc5FZNVWukCEs5Hrts5YeBt29P4c401lvcj9WBH0w=;
-        b=ZmeMVFa4E0Z/XLac6ZRPXg7zKQwBJ4tf9pvfJE/l7ECgkj+ukXx71XiqtfdESqETEs
-         0NEk1/51KRLglqDV9yCiNlamx6x4ZPKayBJIL3nhoawzichsfb3ty45ugf8fVo/F6liu
-         ab3TDvXAUdENyvASiA3aRn1u1yldv81t6h0c04DnZcuaAiCgCzcu7+zqW+k+WTLf68SW
-         4Os6wV1Zv9RNq6SZLbFbwvAUyBayjE12Zz7iXOR8Ij/Vzg9Wsu4ieyyKtfAHksclZGeC
-         0iUXcRY0lISWorR6gWOcF0dLbTib576CB4NhSRQa4rTS76fpq4Id61zFxLXNxYKBqt96
-         YZqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ptuc5FZNVWukCEs5Hrts5YeBt29P4c401lvcj9WBH0w=;
-        b=OuXG8tyaxmKt1xhf55UDOXB9eo599ju4wk5D1fCm+A2BBMbXteW24n5PWLbBN9UvhZ
-         kYQNfmbjSi5/tTcNjdJTUKIW3+msvau5wMiVGAOLiFiJn0wvxGvt5/yqXk1awq4RXKqz
-         WzJR/vFuW3xbx0kTvG/597oHdp5BzzDJD6sKLTm7/Dxxi1P9IUuVAaV0rBCd259eQCLr
-         47M6meMFMmFuW3VcCj2UUDE6K/MpBtwpf60S+BR314A9TdVLuLXuZAE9gWi4lYdzSwU0
-         4eL1zlPZtFn+uuHu9WpXxVdDmOOYU53/uA8Fgj++LSRw8SNpuzhlKXdXI12X1N96V1tJ
-         U2Lg==
-X-Gm-Message-State: AGi0PuYMpt8MZBl9veWV6haIGJbuC5ujYO+TSkwJIvS/iJ0FQQ/ZiPwI
-        +rBIsWMsbqO+nycjRo9iJ/qXzdtmhrPpWOoYPWM=
-X-Google-Smtp-Source: APiQypLg1NAeHqe6aOeXb1RmvYHOFQRbDU3OEOKtVbNq0IrKCBfmPCg9q8o7xde559oPE0qV/GPHudfAu1bFgPfwjQY=
-X-Received: by 2002:a17:902:aa09:: with SMTP id be9mr15526982plb.18.1587834903128;
- Sat, 25 Apr 2020 10:15:03 -0700 (PDT)
+        Sat, 25 Apr 2020 13:23:44 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id AFB6C804B9;
+        Sat, 25 Apr 2020 19:23:40 +0200 (CEST)
+Date:   Sat, 25 Apr 2020 19:23:34 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        drinkcat@chromium.org, Jonas Karlman <jonas@kwiboo.se>,
+        David Airlie <airlied@linux.ie>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        dri-devel@lists.freedesktop.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        linux-mediatek@lists.infradead.org,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        hsinyi@chromium.org, matthias.bgg@gmail.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 0/7] Convert mtk-dsi to drm_bridge API and get EDID
+ for ps8640 bridge
+Message-ID: <20200425172334.GA30970@ravnborg.org>
+References: <20200417150614.2631786-1-enric.balletbo@collabora.com>
 MIME-Version: 1.0
-References: <20200421075532.19192-1-m.othacehe@gmail.com> <20200421075532.19192-4-m.othacehe@gmail.com>
- <CAHp75VcJ300S8r_f2cueYzB0OaLBJK9oJySgz5Jekb7dGFWnCw@mail.gmail.com> <20200425165223.0fc0e930@archlinux>
-In-Reply-To: <20200425165223.0fc0e930@archlinux>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 25 Apr 2020 20:14:51 +0300
-Message-ID: <CAHp75VebfouNqOJjiKY0zAdxG5d+_JmpO5aVYR_EqcjsmBeXyg@mail.gmail.com>
-Subject: Re: [PATCH v4 3/4] iio: vcnl4000: Add sampling frequency support for VCNL4010/20.
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Mathieu Othacehe <m.othacehe@gmail.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200417150614.2631786-1-enric.balletbo@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8 a=cm27Pg_UAAAA:8 a=D19gQVrFAAAA:8
+        a=7gkXJVJtAAAA:8 a=e5mUnYsNAAAA:8 a=C1xfsh8iGGs-51XnUgAA:9
+        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=xmb-EsYY8bH0VWELuYED:22
+        a=W4TVW4IDbPiebHqcZpNg:22 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 25, 2020 at 6:52 PM Jonathan Cameron <jic23@kernel.org> wrote:
-> On Tue, 21 Apr 2020 15:22:11 +0300
-> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > On Tue, Apr 21, 2020 at 10:56 AM Mathieu Othacehe <m.othacehe@gmail.com> wrote:
+On Fri, Apr 17, 2020 at 05:06:07PM +0200, Enric Balletbo i Serra wrote:
+> The PS8640 dsi-to-eDP bridge driver is using the panel bridge API,
+> however, not all the components in the chain have been ported to the
+> drm_bridge API. Actually, when a panel is attached the default panel's mode
+> is used, but in some cases we can't get display up if mode getting from
+> eDP control EDID is not chosen.
+> 
+> This series address that problem, first implements the .get_edid()
+> callback in the PS8640 driver (which is not used until the conversion is
+> done) and then, converts the Mediatek DSI driver to use the drm_bridge
+> API.
+> 
+> As far as I know, we're the only users of the mediatek dsi driver in
+> mainline, so should be safe to switch to the new chain of drm_bridge API
+> unconditionally.
+> 
+> The patches has been tested on a Acer Chromebook R13 (Elm) running a
+> Chrome OS userspace and checking that the valid EDID mode reported by
+> the bridge is selected.
+> 
+> [1] https://lore.kernel.org/lkml/20200210063523.133333-1-hsinyi@chromium.org/
+> 
+> Changes in v3:
+> - Replace s/bridge/next bridge/ for comment. (Laurent Pinchart)
+> - Add the bridge.type. (Laurent Pinchart)
+> - Use next_bridge field to store the panel bridge. (Laurent Pinchart)
+> - Add the bridge.type field. (Laurent Pinchart)
+> - This patch requires https://lkml.org/lkml/2020/4/16/2080 to work
+>   properly.
+This patch is now applied to drm-misc-next.
+IMO this patchset could go in now.
 
-...
 
-> > > +static const int vcnl4010_prox_sampling_frequency[][2] = {
-> > > +       {1, 950000},
-> > > +       {3, 906250},
-> > > +       {7, 812500},
-> > > +       {16, 625000},
-> > > +       {31, 250000},
-> > > +       {62, 500000},
-> > > +       {125, 0},
-> >
-> > > +       {250, 0}
-> >
-> > Leave comma here, potentially helpful if it will be extended.
->
-> Hi Andy,
->
-> Doesn't particularly matter either way, but given this is a list of the values
-> supported by the device, very unlikely it will be extended.
->
-> Games like trying to share the first part of a longer array between
-> multiple device types might occur, but those are usually really ugly.
+> - Move the bridge.type line to the patch that adds drm_bridge support. (Laurent Pinchart)
+> 
+> Changes in v2:
+> - Do not set connector_type for panel here. (Sam Ravnborg)
+> 
+> Enric Balletbo i Serra (7):
+>   drm/bridge: ps8640: Get the EDID from eDP control
+>   drm/bridge_connector: Set default status connected for eDP connectors
+>   drm/mediatek: mtk_dsi: Rename bridge to next_bridge
+>   drm/mediatek: mtk_dsi: Convert to bridge driver
+>   drm/mediatek: mtk_dsi: Use simple encoder
+>   drm/mediatek: mtk_dsi: Use the drm_panel_bridge API
+>   drm/mediatek: mtk_dsi: Create connector for bridges
+All patches:
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
 
-Good point. Though I would limit amount of entries by explicitly
-writing down the array size.
 
-> > > +};
-
--- 
-With Best Regards,
-Andy Shevchenko
+> 
+>  drivers/gpu/drm/bridge/parade-ps8640.c |  12 ++
+>  drivers/gpu/drm/drm_bridge_connector.c |   1 +
+>  drivers/gpu/drm/mediatek/mtk_dsi.c     | 276 ++++++++-----------------
+>  3 files changed, 96 insertions(+), 193 deletions(-)
+> 
+> -- 
+> 2.25.1
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
