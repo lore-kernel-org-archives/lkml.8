@@ -2,83 +2,83 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF11C55191
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 14:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 776FEC54FCB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 14:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D4DB2071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 14:40:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 548F920704
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 14:47:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726151AbgDYOkM (ORCPT
+        id S1726117AbgDYOr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 10:40:12 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:42826 "EHLO
+        Sat, 25 Apr 2020 10:47:56 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:43542 "EHLO
         asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbgDYOkM (ORCPT
+        with ESMTP id S1726062AbgDYOr4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 10:40:12 -0400
+        Sat, 25 Apr 2020 10:47:56 -0400
 Received: from ravnborg.org (unknown [158.248.194.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 67C242007C;
-        Sat, 25 Apr 2020 16:40:08 +0200 (CEST)
-Date:   Sat, 25 Apr 2020 16:40:06 +0200
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 8ECA320070;
+        Sat, 25 Apr 2020 16:47:53 +0200 (CEST)
+Date:   Sat, 25 Apr 2020 16:47:52 +0200
 From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, drinkcat@chromium.org,
         David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Rob Herring <robh+dt@kernel.org>, kernel@collabora.com
-Subject: Re: [PATCHv2 0/3] Add multiple AUO panels
-Message-ID: <20200425144006.GB32235@ravnborg.org>
-References: <20200415172725.84257-1-sebastian.reichel@collabora.com>
+        dri-devel@lists.freedesktop.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        laurent.pinchart@ideasonboard.com, hsinyi@chromium.org,
+        matthias.bgg@gmail.com, Collabora Kernel ML <kernel@collabora.com>
+Subject: Re: [PATCH 1/2] drm: panel: Set connector type for LP120UP1
+Message-ID: <20200425144752.GC32235@ravnborg.org>
+References: <20200416164404.2418426-1-enric.balletbo@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200415172725.84257-1-sebastian.reichel@collabora.com>
+In-Reply-To: <20200416164404.2418426-1-enric.balletbo@collabora.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 X-CMAE-Score: 0
 X-CMAE-Analysis: v=2.3 cv=ULXz4hXy c=1 sm=1 tr=0
         a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=e5mUnYsNAAAA:8 a=KIFCHchCShzuCEW-doMA:9
-        a=CjuIK1q_8ugA:10 a=Vxmtnl_E_bksehYqCbjh:22
+        a=kj9zAlcOel0A:10 a=QX4gbG5DAAAA:8 a=e5mUnYsNAAAA:8
+        a=IxUrriraKJGnn9GRWq8A:9 a=CjuIK1q_8ugA:10 a=AbAUZ8qAyYyZVLSsDulk:22
+        a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sebastian.
-
-On Wed, Apr 15, 2020 at 07:27:22PM +0200, Sebastian Reichel wrote:
-> Hi,
+On Thu, Apr 16, 2020 at 06:44:03PM +0200, Enric Balletbo i Serra wrote:
+> The LP120UP1 is a eDP panel, set the connector type accordingly.
 > 
-> Patches are more or less independent of each other. There
-> was a previous version for the 12" and 15" panels, which
-> was missing the DT binding update. The 19" patch is new,
-> for the previous 10" panel a different patch has been merged
-> in the meantime.
-> 
-> -- Sebastian
-> 
-> Sebastian Reichel (3):
->   drm/panel: simple: Add support for AUO G190EAN01 panel
->   drm/panel: simple: Add support for AUO G156XTN01.0 panel
->   drm/panel: simple: Add support for AUO G121EAN01.4 panel
-
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Thanks.
 Applied to drm-misc-next.
 
 	Sam
 
-
+> ---
 > 
->  .../bindings/display/panel/panel-simple.yaml  |  6 ++
->  drivers/gpu/drm/panel/panel-simple.c          | 89 +++++++++++++++++++
->  2 files changed, 95 insertions(+)
+>  drivers/gpu/drm/panel/panel-simple.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> index 3ad828eaefe1..6253635601bb 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -2168,6 +2168,7 @@ static const struct panel_desc lg_lp120up1 = {
+>  		.width = 267,
+>  		.height = 183,
+>  	},
+> +	.connector_type = DRM_MODE_CONNECTOR_eDP,
+>  };
+>  
+>  static const struct drm_display_mode lg_lp129qe_mode = {
 > -- 
 > 2.25.1
 > 
