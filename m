@@ -2,154 +2,122 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32597C55185
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 10:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C37BC55186
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 10:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1204920724
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 10:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CF4C2071E
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 10:41:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="I1hM0/iq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SW0/rxz6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbgDYKhS (ORCPT
+        id S1726100AbgDYKl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 06:37:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726050AbgDYKhR (ORCPT
+        Sat, 25 Apr 2020 06:41:27 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:54301 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726050AbgDYKl0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 06:37:17 -0400
-Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE688C09B04A;
-        Sat, 25 Apr 2020 03:37:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587811035;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=lHgOfYndEaX0qQHc0NsS77AGy8GRSm3/PHSzMoNzTaI=;
-        b=I1hM0/iqiTWh+kW2EBjTTyEcCIYtny+Kwt+Fl/NfT+g4YSyJzZj9ujkCYn7WKN7AVA
-        FtlpBC0LmG30PsKktevj603pWJGPPrHU9oBK3ZM1gXY6VUvPJnjt1MMhxnfm7huXjVOG
-        oiqBphTeDICpjrL1lvYXxYymBz3hTZTyLPTQ+fjFm6PRCojNeC3pT3YaOAbmPau/G+/K
-        A1wTegBOj823U/V5uVAq9j9jWiOMx90StF1xvQ4DaUiZhTlD9047mr08CIprqpZbWiKL
-        1ssMhsouuQTNBYj2oI4O8MdMODaWl7p+NqQTOMHT6e+nAI1wdu+I7PWeoYE5mVcMg34H
-        RPIw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAiw4yA"
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
-        with ESMTPSA id R0acebw3PAb2FQ4
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Sat, 25 Apr 2020 12:37:02 +0200 (CEST)
-Subject: Re: [PATCHv3] w1: omap-hdq: Simplify driver with PM runtime autosuspend
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <44AD9673-AE02-498F-A5CC-48499DF226E3@goldelico.com>
-Date:   Sat, 25 Apr 2020 12:37:01 +0200
-Cc:     Evgeniy Polyakov <zbr@ioremap.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        "Andrew F . Davis" <afd@ti.com>, Vignesh R <vigneshr@ti.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E8575FE4-4BC2-41B7-B574-339C58D9CB5E@goldelico.com>
-References: <3197C3F0-DEB9-4221-AFBD-4F2A08C84C4C@goldelico.com> <20200417164340.3d9043d1@aktux> <6430AF54-849E-456B-8DB0-B4478BBDB78D@goldelico.com> <20200417150721.GL37466@atomide.com> <8E062482-5D5D-4837-9980-D6C708DD24D4@goldelico.com> <20200420150802.GR37466@atomide.com> <D1A77603-11FB-407F-B480-82C57E742C51@goldelico.com> <20200421085336.32cf8ffe@aktux> <20200421180220.GB37466@atomide.com> <70F19A6E-7B36-4873-9364-F284A14EE3A0@goldelico.com> <20200421182017.GC37466@atomide.com> <D3E40A6A-39B8-4F3F-9ABC-28EAE8D623A6@goldelico.com> <20200422120418.49a40c75@aktux> <6E3A50D9-0F15-4A56-8C5E-7CDC63E8AF9F@goldelico.com> <A2AC3E81-49B2-4CF2-A7CF-6075AEB1B72D@goldelico.com> <44AD9673-AE02-498F-A5CC-48499DF226E3@goldelico.com>
-To:     Andreas Kemnade <andreas@kemnade.info>,
-        Tony Lindgren <tony@atomide.com>
-X-Mailer: Apple Mail (2.3124)
+        Sat, 25 Apr 2020 06:41:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587811285;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0FrIzgjmsdkrsW5Ow3+nivBsO872iMxrrZWBo1xRaiI=;
+        b=SW0/rxz6vorsoEaV+5N8AiyHPp5aiq3sOdD89Zv+kSE0t0jlJzvFx1RyfSvflp5kBmLeOv
+        802+vCGBpyhFH4SFwXgvCi/a+xZEcnqyed8nsCAGI36UqFaG4WhYWCtSgauN7UUt+/8exx
+        tb+4PCY+Cpe0DQLB0KCtlR+pS/eEK80=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-424-51GP5heuOROyBvzCG7LRpw-1; Sat, 25 Apr 2020 06:41:16 -0400
+X-MC-Unique: 51GP5heuOROyBvzCG7LRpw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 41B3F8014D5;
+        Sat, 25 Apr 2020 10:41:14 +0000 (UTC)
+Received: from treble (ovpn-114-29.rdu2.redhat.com [10.10.114.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2E33D6061B;
+        Sat, 25 Apr 2020 10:41:12 +0000 (UTC)
+Date:   Sat, 25 Apr 2020 05:41:10 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Dave Jones <dsj@fb.com>, Jann Horn <jannh@google.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v2 00/11] ORC fixes
+Message-ID: <20200425104110.3bx5xb57fssdvd4y@treble>
+References: <cover.1587808742.git.jpoimboe@redhat.com>
+ <20200425102512.GA12331@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200425102512.GA12331@gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Apr 25, 2020 at 12:25:12PM +0200, Ingo Molnar wrote:
+> 
+> * Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> 
+> > v2:
+> > - Dropped three patches which technically weren't fixes.  Will post them
+> >   later as part of another patch set with more improvements.
+> > - Removed show_iret_regs() declaration [mbenes]
+> > - Added Miroslav Reviewed-by, Linus Reported-by
+> > 
+> > v1 was here:
+> > https://lkml.kernel.org/r/cover.1584033751.git.jpoimboe@redhat.com
+> > 
+> > Jann Horn (1):
+> >   x86/entry/64: Fix unwind hints in rewind_stack_do_exit()
+> > 
+> > Josh Poimboeuf (9):
+> >   objtool: Fix stack offset tracking for indirect CFAs
+> >   x86/entry/64: Fix unwind hints in register clearing code
+> >   x86/entry/64: Fix unwind hints in kernel exit path
+> >   x86/entry/64: Fix unwind hints in __switch_to_asm()
+> >   x86/unwind/orc: Convert global variables to static
+> >   x86/unwind: Prevent false warnings for non-current tasks
+> >   x86/unwind/orc: Prevent unwinding before ORC initialization
+> >   x86/unwind/orc: Fix error path for bad ORC entry type
+> >   x86/unwind/orc: Fix premature unwind stoppage due to IRET frames
+> > 
+> > Miroslav Benes (1):
+> >   x86/unwind/orc: Don't skip the first frame for inactive tasks
+> 
+> Thanks for doing this. These ORC handling bugs IMHO look serious and 
+> widespread enough to warrant x86/urgent treatment, and the v2 series is 
+> fixes-only.
+> 
+> Any objections against targeting v5.7-rc3 with this, assuming that 
+> there's no problems found during review and it passes about a week of 
+> testing?
 
-> Am 25.04.2020 um 12:29 schrieb H. Nikolaus Schaller =
-<hns@goldelico.com>:
->=20
-> H
-> The things start to get "fixed" when the hdq_isr
-> jumps to 6 indicating
->=20
-> OMAP_HDQ_INT_STATUS_RXCOMPLETE | OMAP_HDQ_INT_STATUS_TXCOMPLETE
->=20
-> So I am getting more inclined to believe that it is
-> not a power management issue but some piggybacked
-> change to how interrupts are handled.
-> Especially hdq_reset_irqstatus.
->=20
-> So I will add a printk to hdq_reset_irqstatus
-> to see what value it had before being reset.
+Hi Ingo,
 
-I now did check the log during boot and there is the
-reverse situation. Initially it works but suddenly
-hdq_isr becomes 6 and then trouble starts.
+Due to other distractions, I unfortunately have been sitting on some of
+these fixes for several months -- notice some of the long Reported-by
+chains :-/
 
-So the key problem is that both, the RX and the TX
-interrupts may be set and then, the code resets
-everything to 0 and looses either one.
+They're good small localized fixes and I would agree it makes sense to
+target x86/urgent.
 
-I wonder if that is an issue by two processes reading
-hdq in parallel.
+Thanks!
 
-Another question is how independent command-writes + result-reads
-are properly serialized and locked so that they don't overlap?
+-- 
+Josh
 
-Maybe this is handled outside of the omap_hdq code.
-
-So what could be a fix?
-
-BR,
-Nikolaus
-=20
-[   17.026916] omap_hdq 480b2000.1w: omap_hdq_probe
-[   17.057739] omap_hdq 480b2000.1w: omap_hdq_probe 1
-[   17.062866] omap_hdq 480b2000.1w: omap_hdq_runtime_resume
-[   17.221374] omap_hdq 480b2000.1w: OMAP HDQ Hardware Rev 0.5. Driver =
-in Interrupt mode
-[   17.350860] omap_hdq 480b2000.1w: omap_hdq_probe 2
-[   17.372863] omap_hdq 480b2000.1w: omap_hdq_probe 3
-[   17.468444] omap_hdq 480b2000.1w: hdq_isr: 1
-[   17.473876] omap_hdq 480b2000.1w: Presence bit not set
-[   17.505249] omap_hdq 480b2000.1w: omap_hdq_probe 4
-[   17.576690] omap_hdq 480b2000.1w: omap_hdq_probe done
-[   17.697998] omap_hdq 480b2000.1w: hdq_write_byte
-[   17.704986] omap_hdq 480b2000.1w: hdq_isr: 4
-[   17.734954] omap_hdq 480b2000.1w: hdq_read_byte
-[   17.747528] omap_hdq 480b2000.1w: hdq_isr: 2
-[   17.752044] omap_hdq 480b2000.1w: hdq_write_byte
-[   17.759033] omap_hdq 480b2000.1w: hdq_isr: 4
-[   17.774414] omap_hdq 480b2000.1w: hdq_read_byte
-[   17.798767] omap_hdq 480b2000.1w: hdq_isr: 2
-[   17.803314] omap_hdq 480b2000.1w: hdq_write_byte
-[   17.821807] omap_hdq 480b2000.1w: hdq_isr: 4
-[   17.826385] omap_hdq 480b2000.1w: hdq_read_byte
-[   17.837646] omap_hdq 480b2000.1w: hdq_isr: 2
-[   17.842224] omap_hdq 480b2000.1w: hdq_write_byte
-[   17.849212] omap_hdq 480b2000.1w: hdq_isr: 4
-[   17.861877] omap_hdq 480b2000.1w: hdq_read_byte
-[   17.887573] omap_hdq 480b2000.1w: hdq_isr: 2
-[   17.892150] omap_hdq 480b2000.1w: hdq_write_byte
-[   17.899139] omap_hdq 480b2000.1w: hdq_isr: 4
-[   17.903686] omap_hdq 480b2000.1w: hdq_read_byte
-[   17.926177] omap_hdq 480b2000.1w: hdq_isr: 2
-[   17.945434] omap_hdq 480b2000.1w: hdq_write_byte
-[   17.953979] omap_hdq 480b2000.1w: hdq_isr: 4
-[   17.959503] omap_hdq 480b2000.1w: hdq_read_byte
-[   17.964294] omap_hdq 480b2000.1w: hdq_isr: 2
-[   17.984436] omap_hdq 480b2000.1w: hdq_write_byte
-[   18.017578] omap_hdq 480b2000.1w: hdq_isr: 6
-[   18.022521] omap_hdq 480b2000.1w: hdq_read_byte
-[   18.027282] omap_hdq 480b2000.1w: hdq_isr: 0
-[   18.287597] omap_hdq 480b2000.1w: timeout waiting for RXCOMPLETE, 0
-[   18.294250] omap_hdq 480b2000.1w: hdq_write_byte
-[   18.313720] omap_hdq 480b2000.1w: hdq_isr: 0
-[   18.537536] omap_hdq 480b2000.1w: TX wait elapsed
-[   18.542510] omap_hdq 480b2000.1w: TX failure:Ctrl status 0
-[   18.577697] omap_hdq 480b2000.1w: hdq_read_byte
-[   18.582489] omap_hdq 480b2000.1w: hdq_isr: 0
-[   18.787597] omap_hdq 480b2000.1w: timeout waiting for RXCOMPLETE, 0
