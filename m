@@ -2,83 +2,157 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB337C55185
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 15:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB2CC54FCB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 15:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E88B20748
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 15:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AF0720748
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 15:55:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="oLRotAyW";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cGUmEnNL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726185AbgDYPwp (ORCPT
+        id S1726228AbgDYPzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 11:52:45 -0400
-Received: from mailomta9-sa.btinternet.com ([213.120.69.15]:27432 "EHLO
-        sa-prd-fep-047.btinternet.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726076AbgDYPwo (ORCPT
+        Sat, 25 Apr 2020 11:55:44 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:44051 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726112AbgDYPzm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 11:52:44 -0400
-Received: from sa-prd-rgout-005.btmx-prd.synchronoss.net ([10.2.38.8])
-          by sa-prd-fep-047.btinternet.com with ESMTP
-          id <20200425155239.FQKM30279.sa-prd-fep-047.btinternet.com@sa-prd-rgout-005.btmx-prd.synchronoss.net>;
-          Sat, 25 Apr 2020 16:52:39 +0100
-Authentication-Results: btinternet.com;
-    auth=pass (LOGIN) smtp.auth=j.oldman998@btinternet.com
-X-Originating-IP: [31.51.225.56]
-X-OWM-Source-IP: 31.51.225.56 (GB)
-X-OWM-Env-Sender: j.oldman998@btinternet.com
-X-VadeSecure-score: verdict=clean score=0/300, class=clean
-X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgeduhedrheeggdejudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemuceutffkvffkuffjvffgnffgvefqofdpqfgfvfenuceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofestddtredtredttdenucfhrhhomheplfhohhhnucfqlhgumhgrnhcuoehjohhhnhdrohhlughmrghnsehpohhlvghhihhllhdrtghordhukheqnecukfhppeefuddrhedurddvvdehrdehieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhephhgvlhhopehhvghnrhihrdhhohhmvgdpihhnvghtpeefuddrhedurddvvdehrdehiedpmhgrihhlfhhrohhmpeeojhhohhhnrdholhgumhgrnhesphholhgvhhhilhhlrdgtohdruhhkqedprhgtphhtthhopeeojhhohhhnrdholhgumhgrnhesphholhgvhhhilhhlrdgtohdruhhkqedprhgtphhtthhopeeolhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgqedprhgtphhtthhopeeolhhinhhugidqfihirhgvlhgvshhssehvghgvrhdrkhgvrhhnvghlrdhorhhgqedprhgtphhtthhopeeomhessghuvghsrdgthheq
-X-RazorGate-Vade-Verdict: clean 0
-X-RazorGate-Vade-Classification: clean
-Received: from henry.home (31.51.225.56) by sa-prd-rgout-005.btmx-prd.synchronoss.net (5.8.340) (authenticated as j.oldman998@btinternet.com)
-        id 5E3A290C0D5574D3; Sat, 25 Apr 2020 16:52:39 +0100
-From:   John Oldman <john.oldman@polehill.co.uk>
-To:     m@bues.ch
-Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        John Oldman <john.oldman@polehill.co.uk>
-Subject: [PATCH] :ssb scan.c: Fixed block comments coding style issues
-Date:   Sat, 25 Apr 2020 16:52:33 +0100
-Message-Id: <20200425155233.19624-1-john.oldman@polehill.co.uk>
-X-Mailer: git-send-email 2.17.1
+        Sat, 25 Apr 2020 11:55:42 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 3BF3E5803BF;
+        Sat, 25 Apr 2020 11:55:41 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Sat, 25 Apr 2020 11:55:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alistair23.me;
+         h=from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=xudYb/gSOwoNebonFD9XGdvc59
+        XtcGplDNYOwu4XiUI=; b=oLRotAyWbPWDaOLtuIJgzBAtTHjhY7DmziVPQmclZl
+        WUo4BDGpu3mn2Ur5v5gJkCuI2FuyjbSV5vWiUO5y83wQqfcs0k3MAC7HufB+e1RG
+        dAYPuJ0HKdiIgqTwVBhFhSnrGzch43Kt7w0D+QArp5ixAgJBTZGgarIVdnLahwVx
+        +b18cyqBFvA85lzInhHG+3gxFQ7wPdh1+mvsn6HeOL/PYhI02pwsP7Tp9xGUTp16
+        bIcRDYlcnuDpmb9UV4Jt9+VpifYEPliJvzSE3rl+BlXuWbphsflPDjJv0byVxYqm
+        BM1JSHXt5UZduBdMGegE3V35ZWN6ce8c/prlQKKpHSpQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=xudYb/gSOwoNebonF
+        D9XGdvc59XtcGplDNYOwu4XiUI=; b=cGUmEnNLLNp/LIyM+YdFX1OIhSj5qWbs7
+        xdYdpL+kmZWHj45VdWNmP6C1NU15B0om5vI6EXHh5sE8H+fSyHN7xKeZXSjQHtQu
+        eGCe6mvlh0n7udr4Pk6Qjra5Et7eKo6F4CZ7tJobdRKloU4pDFu/iBf8c+dZ7Mub
+        7AQgWu39oJ/Lc/xaIzlt9a2hbX8YikFobNGkS1FRabHivuUwlXmI26XhptbpZM/5
+        0aCVCogvbXeMRGJ05zglZkDEQTtdBNHLzQ16CnoznJ362tK2jJnR0KCgXBVgd+DU
+        teqVfQCS3u85DKHxZ9lJKqrJrVPHx2KC+n1L6lwxJ3OTgiv+czeUw==
+X-ME-Sender: <xms:d12kXppr3YaNqcTfGxpZ5rYR479U31CJOFf3XhgySqVTuXtRy6toxw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrheeggdejvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffoggfgsedtkeertdertd
+    dtnecuhfhrohhmpeetlhhishhtrghirhcuhfhrrghntghishcuoegrlhhishhtrghirhes
+    rghlihhsthgrihhrvdefrdhmvgeqnecuffhomhgrihhnpeguvghvihgtvghtrhgvvgdroh
+    hrghenucfkphepjeefrdelfedrkeegrddvtdeknecuvehluhhsthgvrhfuihiivgeptden
+    ucfrrghrrghmpehmrghilhhfrhhomheprghlihhsthgrihhrsegrlhhishhtrghirhdvfe
+    drmhgv
+X-ME-Proxy: <xmx:d12kXv4hELo9Q_14xXo5RwPbJbeHJC6CGZmT8PWqL_06m5_k9nzW3g>
+    <xmx:d12kXhOaOxPF7zvZn5xNuD2T8hgV1wuO92RlonMqQtf_vsJcjpyQoA>
+    <xmx:d12kXpO1UE_kb03adDxVDTHdVyB2yIZCK8Hfs9t-grySCISP6JYpXA>
+    <xmx:fV2kXm3Cn9faCTDQ2kM13sFSBciBs76a6XS8akneDfGoC3iYzbTHgw>
+Received: from alistair-xps-14z.alistair23.me (c-73-93-84-208.hsd1.ca.comcast.net [73.93.84.208])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 041E83280063;
+        Sat, 25 Apr 2020 11:55:33 -0400 (EDT)
+From:   Alistair Francis <alistair@alistair23.me>
+To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-bluetooth@vger.kernel.org, mripard@kernel.org, wens@csie.org
+Cc:     anarsoul@gmail.com, devicetree@vger.kernel.org,
+        alistair23@gmail.com, linux-arm-kernel@lists.infradead.org,
+        Alistair Francis <alistair@alistair23.me>
+Subject: [PATCH v4 1/3] dt-bindings: net: bluetooth: Add rtl8723bs-bluetooth
+Date:   Sat, 25 Apr 2020 08:55:29 -0700
+Message-Id: <20200425155531.2816584-1-alistair@alistair23.me>
+X-Mailer: git-send-email 2.26.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixed coding style issues
+From: Vasily Khoruzhick <anarsoul@gmail.com>
 
-Signed-off-by: John Oldman <john.oldman@polehill.co.uk>
+Add binding document for bluetooth part of RTL8723BS/RTL8723CS
+
+Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+Signed-off-by: Alistair Francis <alistair@alistair23.me>
 ---
- drivers/ssb/scan.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ .../bindings/net/realtek-bluetooth.yaml       | 54 +++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/realtek-bluetooth.yaml
 
-diff --git a/drivers/ssb/scan.c b/drivers/ssb/scan.c
-index 6ceee98ed6ff..b97a5c32d44a 100644
---- a/drivers/ssb/scan.c
-+++ b/drivers/ssb/scan.c
-@@ -400,7 +400,8 @@ int ssb_bus_scan(struct ssb_bus *bus,
- #ifdef CONFIG_SSB_DRIVER_PCICORE
- 			if (bus->bustype == SSB_BUSTYPE_PCI) {
- 				/* Ignore PCI cores on PCI-E cards.
--				 * Ignore PCI-E cores on PCI cards. */
-+				 * Ignore PCI-E cores on PCI cards.
-+				 */
- 				if (dev->id.coreid == SSB_DEV_PCI) {
- 					if (pci_is_pcie(bus->host_pci))
- 						continue;
-@@ -421,7 +422,8 @@ int ssb_bus_scan(struct ssb_bus *bus,
- 				if (bus->host_pci->vendor == PCI_VENDOR_ID_BROADCOM &&
- 				    (bus->host_pci->device & 0xFF00) == 0x4300) {
- 					/* This is a dangling ethernet core on a
--					 * wireless device. Ignore it. */
-+					 * wireless device. Ignore it.
-+					 */
- 					continue;
- 				}
- 			}
+diff --git a/Documentation/devicetree/bindings/net/realtek-bluetooth.yaml b/Documentation/devicetree/bindings/net/realtek-bluetooth.yaml
+new file mode 100644
+index 000000000000..f15a5e5e4859
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/realtek-bluetooth.yaml
+@@ -0,0 +1,54 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/realtek-bluetooth.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: RTL8723BS/RTL8723CS/RTL8822CS Bluetooth Device Tree Bindings
++
++maintainers:
++  - Vasily Khoruzhick <anarsoul@gmail.com>
++  - Alistair Francis <alistair@alistair23.me>
++
++description:
++  RTL8723CS/RTL8723CS/RTL8822CS is WiFi + BT chip. WiFi part is connected over
++  SDIO, while BT is connected over serial. It speaks H5 protocol with few
++  extra commands to upload firmware and change module speed.
++
++properties:
++  compatible:
++    oneOf:
++      - const: "realtek,rtl8723bs-bt"
++      - const: "realtek,rtl8723cs-bt"
++      - const: "realtek,rtl8822cs-bt"
++
++  device-wake-gpios:
++    maxItems: 1
++    description: GPIO specifier, used to wakeup the BT module
++
++  enable-gpios:
++    maxItems: 1
++    description: GPIO specifier, used to enable the BT module
++
++  host-wake-gpios:
++    maxItems: 1
++    description: GPIO specifier, used to wakeup the host processor
++
++required:
++  - compatible
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    uart1 {
++        pinctrl-names = "default";
++        pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
++        uart-has-rtscts = <1>;
++
++        bluetooth {
++            compatible = "realtek,rtl8723bs-bt";
++            device-wake-gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* PL5 */
++            host-wakeup-gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
++        };
++    };
 -- 
-2.17.1
+2.26.0
 
