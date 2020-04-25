@@ -2,114 +2,169 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 598D1C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 01:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E076C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 02:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A4772084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 01:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFB2E20748
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 02:00:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="LsKFrte7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726107AbgDYB62 (ORCPT
+        id S1726124AbgDYCAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 21:58:28 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37592 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbgDYB61 (ORCPT
+        Fri, 24 Apr 2020 22:00:16 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:50428 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbgDYCAP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 21:58:27 -0400
-Received: by mail-pl1-f193.google.com with SMTP id c21so3609457plz.4;
-        Fri, 24 Apr 2020 18:58:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=n9CN/oQvEAYLNaAYRFLVAwCJwVMav9x9AK7qDWbYaXA=;
-        b=iqB+f2YirDKZx7JcEr7IjIIH+C5eQpl2T5V5V4fy5RNnDxUvoO5a8nOZl7T8e8ckmT
-         3/jvcQwQIkynV5hLQwIi7rO8V15ApU24sN0+sHiectHfpp/uuM9hV8N2YBVqCjVaAXw+
-         xlH6ajX/OT2lcvTd6TAdhZ5z+k88meE8asoHtKfOJhjvBOVOfCiyjQtKDMO+PiOhSmEI
-         5g/4JTReLBV6qlTlDIxC2bIBwDuSdsIaZs2wB1J1ay6hG7PBgUSNWhbFPZe7ToCseJcJ
-         rGvgT86D4btmhGLS1MWPNXsOtUgaVdV7HmXVJbEhVyQB1GdStVXQN6rJyaCdqLUYhle4
-         H6xg==
-X-Gm-Message-State: AGi0PubGf/OjTvml9rSJfm22KepYG3035Dv8ctEMa7tsxvQP5gM39iNf
-        ZV5DmIrDfsjEoHtsmcE5o9bFUT/F6H0=
-X-Google-Smtp-Source: APiQypL8gLi6c7jUPihStIJrQ6nZ/Vz/d+AKX48+0AeVfsVUKmTftjeoB8yFxiLdhLSLv4kA4VL5hw==
-X-Received: by 2002:a17:902:76c4:: with SMTP id j4mr12049211plt.177.1587779906365;
-        Fri, 24 Apr 2020 18:58:26 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:9d7d:6dae:7169:7912? ([2601:647:4000:d7:9d7d:6dae:7169:7912])
-        by smtp.gmail.com with ESMTPSA id 1sm7183266pff.180.2020.04.24.18.58.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Apr 2020 18:58:25 -0700 (PDT)
-Subject: Re: [PATCH v2 10/10] block: put_device() if device_add() fails
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20200419194529.4872-1-mcgrof@kernel.org>
- <20200419194529.4872-11-mcgrof@kernel.org>
- <85a18bcf-4bd0-a529-6c3c-46fcd23a350e@acm.org>
- <20200424223210.GD11244@42.do-not-panic.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <d8e01420-5a0a-3c60-0b8c-46465437e255@acm.org>
-Date:   Fri, 24 Apr 2020 18:58:23 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200424223210.GD11244@42.do-not-panic.com>
-Content-Type: text/plain; charset=utf-8
+        Fri, 24 Apr 2020 22:00:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1587780014; x=1619316014;
+  h=from:to:cc:date:message-id:references:in-reply-to:
+   content-id:content-transfer-encoding:mime-version:subject;
+  bh=tL421YGoXf0/XNLqGolhDAR7ZcKtVSLcXds/GPTHE+I=;
+  b=LsKFrte7/K9aTX8BoXL2L28JxO9HgDhKWTYnoqTVsulQLaef8gOI3/KT
+   8xkZjIOyg/oO+n8g3e9vbQ2DuzoN/I3Ei6oH6504CDoz+DTNgCbFczAtz
+   UemlssAqVEMMpVs4AGFu9RnMlzIV0WWggBLhXL8ObGVZQfZDt/+1nlehp
+   I=;
+IronPort-SDR: fGsY4L97XFbNl7zvbZSw29QHtEv403XS2sTeMz0Ed4AuMviGuFJvvsDWAaTb8b8qCXxltMBhbI
+ huc212jtYePw==
+X-IronPort-AV: E=Sophos;i="5.73,314,1583193600"; 
+   d="scan'208";a="31056636"
+Subject: Re: [PATCH v4 2/6] arch/x86/kvm: Refactor tlbflush and l1d flush
+Thread-Topic: [PATCH v4 2/6] arch/x86/kvm: Refactor tlbflush and l1d flush
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-807d4a99.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 25 Apr 2020 02:00:12 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-807d4a99.us-east-1.amazon.com (Postfix) with ESMTPS id 0D9ACA23F8;
+        Sat, 25 Apr 2020 02:00:08 +0000 (UTC)
+Received: from EX13D01UWB004.ant.amazon.com (10.43.161.157) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Sat, 25 Apr 2020 02:00:08 +0000
+Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
+ EX13d01UWB004.ant.amazon.com (10.43.161.157) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Sat, 25 Apr 2020 02:00:07 +0000
+Received: from EX13D01UWB002.ant.amazon.com ([10.43.161.136]) by
+ EX13d01UWB002.ant.amazon.com ([10.43.161.136]) with mapi id 15.00.1497.006;
+ Sat, 25 Apr 2020 02:00:07 +0000
+From:   "Singh, Balbir" <sblbir@amazon.com>
+To:     "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "keescook@chromium.org" <keescook@chromium.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "dave.hansen@intel.com" <dave.hansen@intel.com>
+Thread-Index: AQHWGXe0ZgF6A9jeiEmVmBjXs72EAaiIo1uAgAB0L4A=
+Date:   Sat, 25 Apr 2020 02:00:07 +0000
+Message-ID: <871aed902ea0932288c47059771aa8624db55907.camel@amazon.com>
+References: <20200423140125.7332-1-sblbir@amazon.com>
+         <20200423140125.7332-3-sblbir@amazon.com>
+         <e500fe9a-5c62-8304-92f1-18a2ee185fe4@amd.com>
+In-Reply-To: <e500fe9a-5c62-8304-92f1-18a2ee185fe4@amd.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.162.203]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <59453AADE751974EA8C3A1D86F2C8E62@amazon.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-24 15:32, Luis Chamberlain wrote:
-> On Sun, Apr 19, 2020 at 04:40:45PM -0700, Bart Van Assche wrote:
->> On 4/19/20 12:45 PM, Luis Chamberlain wrote:
->>> Through code inspection I've found that we don't put_device() if
->>> device_add() fails, and this must be done to decrement its refcount.
->>
->> Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-> 
-> Turns out this is wrong, as bdi needs it still, we have can only remove
-> it once all users are done, which should be at the disk_release() path.
-> 
-> I've found this while adding the errors paths missing.
-
-Hi Luis,
-
-I had a look at the comments above device_add() before I added my
-Reviewed-by. Now that I've had another look at these comments and also
-at the device_add() implementation I agree that we don't need this patch.
-
-Bart.
+T24gRnJpLCAyMDIwLTA0LTI0IGF0IDE0OjA0IC0wNTAwLCBUb20gTGVuZGFja3kgd3JvdGU6DQo+
+IENBVVRJT046IFRoaXMgZW1haWwgb3JpZ2luYXRlZCBmcm9tIG91dHNpZGUgb2YgdGhlIG9yZ2Fu
+aXphdGlvbi4gRG8gbm90DQo+IGNsaWNrIGxpbmtzIG9yIG9wZW4gYXR0YWNobWVudHMgdW5sZXNz
+IHlvdSBjYW4gY29uZmlybSB0aGUgc2VuZGVyIGFuZCBrbm93DQo+IHRoZSBjb250ZW50IGlzIHNh
+ZmUuDQo+IA0KPiANCj4gDQo+IE9uIDQvMjMvMjAgOTowMSBBTSwgQmFsYmlyIFNpbmdoIHdyb3Rl
+Og0KPiA+IFJlZmFjdG9yIHRoZSBleGlzdGluZyBhc3NlbWJseSBiaXRzIGludG8gc21hbGxlciBo
+ZWxwZXIgZnVuY3Rpb25zDQo+ID4gYW5kIGFsc28gYWJzdHJhY3QgTDFEX0ZMVVNIIGludG8gYSBo
+ZWxwZXIgZnVuY3Rpb24uIFVzZSB0aGVzZQ0KPiA+IGZ1bmN0aW9ucyBpbiBrdm0gZm9yIEwxRCBm
+bHVzaGluZy4NCj4gPiANCj4gPiBSZXZpZXdlZC1ieTogS2VlcyBDb29rIDxrZWVzY29va0BjaHJv
+bWl1bS5vcmc+DQo+ID4gU2lnbmVkLW9mZi1ieTogQmFsYmlyIFNpbmdoIDxzYmxiaXJAYW1hem9u
+LmNvbT4NCj4gPiAtLS0NCj4gPiAgIGFyY2gveDg2L2luY2x1ZGUvYXNtL2NhY2hlZmx1c2guaCB8
+ICAzICsrDQo+ID4gICBhcmNoL3g4Ni9rZXJuZWwvbDFkX2ZsdXNoLmMgICAgICAgfCA1NCArKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gICBhcmNoL3g4Ni9rdm0vdm14L3ZteC5j
+ICAgICAgICAgICAgfCAyOSArKy0tLS0tLS0tLS0tLS0tLQ0KPiA+ICAgMyBmaWxlcyBjaGFuZ2Vk
+LCA2MCBpbnNlcnRpb25zKCspLCAyNiBkZWxldGlvbnMoLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0
+IGEvYXJjaC94ODYvaW5jbHVkZS9hc20vY2FjaGVmbHVzaC5oDQo+ID4gYi9hcmNoL3g4Ni9pbmNs
+dWRlL2FzbS9jYWNoZWZsdXNoLmgNCj4gPiBpbmRleCBiYWM1NmZjZDk3OTAuLjIxY2MzYjI4ZmE2
+MyAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9jYWNoZWZsdXNoLmgNCj4g
+PiArKysgYi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9jYWNoZWZsdXNoLmgNCj4gPiBAQCAtOCw3ICs4
+LDEwIEBADQo+ID4gDQo+ID4gICAjZGVmaW5lIEwxRF9DQUNIRV9PUkRFUiA0DQo+ID4gICB2b2lk
+IGNsZmx1c2hfY2FjaGVfcmFuZ2Uodm9pZCAqYWRkciwgdW5zaWduZWQgaW50IHNpemUpOw0KPiA+
+ICt2b2lkIGwxZF9mbHVzaF9wb3B1bGF0ZV90bGIodm9pZCAqbDFkX2ZsdXNoX3BhZ2VzKTsNCj4g
+PiAgIHZvaWQgKmwxZF9mbHVzaF9hbGxvY19wYWdlcyh2b2lkKTsNCj4gPiAgIHZvaWQgbDFkX2Zs
+dXNoX2NsZWFudXBfcGFnZXModm9pZCAqbDFkX2ZsdXNoX3BhZ2VzKTsNCj4gPiArdm9pZCBsMWRf
+Zmx1c2hfc3codm9pZCAqbDFkX2ZsdXNoX3BhZ2VzKTsNCj4gPiAraW50IGwxZF9mbHVzaF9odyh2
+b2lkKTsNCj4gPiANCj4gPiAgICNlbmRpZiAvKiBfQVNNX1g4Nl9DQUNIRUZMVVNIX0ggKi8NCj4g
+PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL2wxZF9mbHVzaC5jIGIvYXJjaC94ODYva2Vy
+bmVsL2wxZF9mbHVzaC5jDQo+ID4gaW5kZXggZDYwNTg3OGM4ZjI4Li41ODcxNzk0Zjg5MGQgMTAw
+NjQ0DQo+ID4gLS0tIGEvYXJjaC94ODYva2VybmVsL2wxZF9mbHVzaC5jDQo+ID4gKysrIGIvYXJj
+aC94ODYva2VybmVsL2wxZF9mbHVzaC5jDQo+ID4gQEAgLTM0LDMgKzM0LDU3IEBAIHZvaWQgbDFk
+X2ZsdXNoX2NsZWFudXBfcGFnZXModm9pZCAqbDFkX2ZsdXNoX3BhZ2VzKQ0KPiA+ICAgICAgIGZy
+ZWVfcGFnZXMoKHVuc2lnbmVkIGxvbmcpbDFkX2ZsdXNoX3BhZ2VzLCBMMURfQ0FDSEVfT1JERVIp
+Ow0KPiA+ICAgfQ0KPiA+ICAgRVhQT1JUX1NZTUJPTF9HUEwobDFkX2ZsdXNoX2NsZWFudXBfcGFn
+ZXMpOw0KPiA+ICsNCj4gPiArLyoNCj4gPiArICogTm90IGFsbCB1c2VycyBvZiBsMWQgZmx1c2gg
+d291bGQgd2FudCB0byBwb3B1bGF0ZSB0aGUgVExCIGZpcnN0DQo+ID4gKyAqIHNwbGl0IG91dCB0
+aGUgZnVuY3Rpb24gc28gdGhhdCBjYWxsZXJzIGNhbiBvcHRpb25hbGx5IGZsdXNoIHRoZSBMMUQN
+Cj4gPiArICogY2FjaGUgdmlhIHN3IHdpdGhvdXQgcHJlZmV0Y2hpbmcgdGhlIFRMQi4NCj4gPiAr
+ICovDQo+ID4gK3ZvaWQgbDFkX2ZsdXNoX3BvcHVsYXRlX3RsYih2b2lkICpsMWRfZmx1c2hfcGFn
+ZXMpDQo+ID4gK3sNCj4gPiArICAgICBpbnQgc2l6ZSA9IFBBR0VfU0laRSA8PCBMMURfQ0FDSEVf
+T1JERVI7DQo+ID4gKw0KPiA+ICsgICAgIGFzbSB2b2xhdGlsZSgNCj4gPiArICAgICAgICAgICAg
+IC8qIEZpcnN0IGVuc3VyZSB0aGUgcGFnZXMgYXJlIGluIHRoZSBUTEIgKi8NCj4gPiArICAgICAg
+ICAgICAgICJ4b3JsICAgJSVlYXgsICUlZWF4XG4iDQo+ID4gKyAgICAgICAgICAgICAiLkxwb3B1
+bGF0ZV90bGI6XG5cdCINCj4gPiArICAgICAgICAgICAgICJtb3Z6YmwgKCVbZmx1c2hfcGFnZXNd
+LCAlJSIgX0FTTV9BWCAiKSwgJSVlY3hcblx0Ig0KPiA+ICsgICAgICAgICAgICAgImFkZGwgICAk
+NDA5NiwgJSVlYXhcblx0Ig0KPiA+ICsgICAgICAgICAgICAgImNtcGwgICAlJWVheCwgJVtzaXpl
+XVxuXHQiDQo+ID4gKyAgICAgICAgICAgICAiam5lICAgIC5McG9wdWxhdGVfdGxiXG5cdCINCj4g
+PiArICAgICAgICAgICAgICJ4b3JsICAgJSVlYXgsICUlZWF4XG5cdCINCj4gPiArICAgICAgICAg
+ICAgICJjcHVpZFxuXHQiDQo+ID4gKyAgICAgICAgICAgICA6OiBbZmx1c2hfcGFnZXNdICJyIiAo
+bDFkX2ZsdXNoX3BhZ2VzKSwNCj4gPiArICAgICAgICAgICAgICAgICBbc2l6ZV0gInIiIChzaXpl
+KQ0KPiA+ICsgICAgICAgICAgICAgOiAiZWF4IiwgImVieCIsICJlY3giLCAiZWR4Iik7DQo+ID4g
+K30NCj4gPiArRVhQT1JUX1NZTUJPTF9HUEwobDFkX2ZsdXNoX3BvcHVsYXRlX3RsYik7DQo+ID4g
+Kw0KPiA+ICtpbnQgbDFkX2ZsdXNoX2h3KHZvaWQpDQo+ID4gK3sNCj4gPiArICAgICBpZiAoc3Rh
+dGljX2NwdV9oYXMoWDg2X0ZFQVRVUkVfRkxVU0hfTDFEKSkgew0KPiA+ICsgICAgICAgICAgICAg
+d3Jtc3JsKE1TUl9JQTMyX0ZMVVNIX0NNRCwgTDFEX0ZMVVNIKTsNCj4gPiArICAgICAgICAgICAg
+IHJldHVybiAwOw0KPiA+ICsgICAgIH0NCj4gPiArICAgICByZXR1cm4gLUVOT1RTVVBQOw0KPiA+
+ICt9DQo+ID4gK0VYUE9SVF9TWU1CT0xfR1BMKGwxZF9mbHVzaF9odyk7DQo+ID4gKw0KPiA+ICt2
+b2lkIGwxZF9mbHVzaF9zdyh2b2lkICpsMWRfZmx1c2hfcGFnZXMpDQo+ID4gK3sNCj4gPiArICAg
+ICBpbnQgc2l6ZSA9IFBBR0VfU0laRSA8PCBMMURfQ0FDSEVfT1JERVI7DQo+ID4gKw0KPiA+ICsg
+ICAgIGFzbSB2b2xhdGlsZSgNCj4gPiArICAgICAgICAgICAgICAgICAgICAgLyogRmlsbCB0aGUg
+Y2FjaGUgKi8NCj4gPiArICAgICAgICAgICAgICAgICAgICAgInhvcmwgICAlJWVheCwgJSVlYXhc
+biINCj4gPiArICAgICAgICAgICAgICAgICAgICAgIi5MZmlsbF9jYWNoZTpcbiINCj4gPiArICAg
+ICAgICAgICAgICAgICAgICAgIm1vdnpibCAoJVtmbHVzaF9wYWdlc10sICUlIiBfQVNNX0FYICIp
+LCAlJWVjeFxuXHQiDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICJhZGRsICAgJDY0LCAlJWVh
+eFxuXHQiDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICJjbXBsICAgJSVlYXgsICVbc2l6ZV1c
+blx0Ig0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAiam5lICAgIC5MZmlsbF9jYWNoZVxuXHQi
+DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICJsZmVuY2VcbiINCj4gPiArICAgICAgICAgICAg
+ICAgICAgICAgOjogW2ZsdXNoX3BhZ2VzXSAiciIgKGwxZF9mbHVzaF9wYWdlcyksDQo+ID4gKyAg
+ICAgICAgICAgICAgICAgICAgIFtzaXplXSAiciIgKHNpemUpDQo+ID4gKyAgICAgICAgICAgICAg
+ICAgICAgIDogImVheCIsICJlY3giKTsNCj4gPiArfQ0KPiANCj4gSWYgdGhlIGFuc3dlciB0byBt
+eSBwcmV2aW91cyBxdWVzdGlvbiBpbiBwYXRjaCAxLzYgYWJvdXQgdGhlIGFsbG9jYXRpb24NCj4g
+YmVpbmcgdHdpY2UgdGhlIHNpemUgaXMgeWVzLCB0aGVuIGNvdWxkIHlvdSBhbGxvY2F0ZSB0aGUg
+Zmx1c2ggcGFnZXMgdGhlDQo+IHNhbWUgc2l6ZSBhcyB0aGUgY2FjaGUgYW5kIGp1c3Qgd3JpdGUg
+aXQgdHdpY2U/IFdvdWxkbid0IHRoYXQgYWNjb21wbGlzaA0KPiB0aGUgc2FtZSBnb2FsIGFuZCBw
+cm92aWRlIGEgcGVyZm9ybWFuY2UgaW1wcm92ZW1lbnQgd2l0aCAobW9zdGx5KSBub3cNCj4gcHJl
+c2VudCBMMUQgZW50cmllcyBvZiB0aGUgZmx1c2ggcGFnZXM/IEFsc28sIGNhbid0IHlvdSB1bnJv
+bGwgdGhpcyBsb29wIGENCj4gYml0IGFuZCBvcGVyYXRlIG9uIG11bHRpcGxlIGVudHJpZXMgaW4g
+ZWFjaCBsb29wLCByZWR1Y2luZyB0aGUgb3ZlcmFsbA0KPiBsb29waW5nIGNvbXBhcmVzIGFuZCBq
+dW1wcyBhcyBhbiBvcHRpbWl6YXRpb24/DQo+IA0KDQpZZXMsIEkgaGF2ZSBzb21lIG9wdGlvbnMg
+c3VnZ2VzdGVkIGluIG15IGFuc3dlciB0byB5b3VyIHF1ZXN0aW9uIGluIDEvNi4gRm9yDQpub3cg
+SSBkZWNpZGVkIHRvIHN0aWNrIHdpdGggdGhlIGFsZ29yaXRobSBhbHJlYWR5IHByZXNlbnQsIGJ1
+dCB3ZSBjb3VsZA0KZGVmaW5pdGVseSBvcHRpbWl6ZSBpdA0KDQpCYWxiaXINCg0KPiBUaGFua3Ms
+DQo+IFRvbQ0KPiANCg==
