@@ -2,82 +2,114 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45AC2C55191
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 01:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 598D1C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 01:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2786620776
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 01:51:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587779507;
-	bh=XDiPEBu19bAqC9o2a/qJ/zX5lVJzn8ZyaUm40VOxPd8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hSYrYa9Ix6aDdVJ4bW+Dk/EookFwRDRKiAauOeX+Q82Saw3U9OnqYElg2pamG1bBZ
-	 9E4Wlr2I1ThF4gtXnonRL3Iqd3eDwDkfUFCUVwIKR8uPeQx5NrCYBAdtJ27lrhfGht
-	 dhD2NiOBoSmJs8vXUQfbjQIMqRHms8KgK0H7QVKw=
+	by mail.kernel.org (Postfix) with ESMTP id 3A4772084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 01:58:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726122AbgDYBvq (ORCPT
+        id S1726107AbgDYB62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 21:51:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48488 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726032AbgDYBvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 21:51:46 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B41AC2076C;
-        Sat, 25 Apr 2020 01:51:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587779506;
-        bh=XDiPEBu19bAqC9o2a/qJ/zX5lVJzn8ZyaUm40VOxPd8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VJ1P8j9oUM/CmYw3hTheEbEkJtaJgxLfOzk4p8nQlttAz8+t12X6kWtzkjmhy6gB3
-         H05sp6knR66lxyn2JfyBDCq7oHOLT5948OBSJ2zxLxZz19OEj0ObfJOUcmTQlnCLlA
-         kDU443/v7TYFoyYnbXy5moZFFnkFbWwmDlqWF1C4=
-Date:   Fri, 24 Apr 2020 21:51:44 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-i2c@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.6 28/38] i2c: remove i2c_new_probed_device API
-Message-ID: <20200425015144.GF13035@sasha-vm>
-References: <20200424122237.9831-1-sashal@kernel.org>
- <20200424122237.9831-28-sashal@kernel.org>
- <20200424133635.GB4070@kunai>
+        Fri, 24 Apr 2020 21:58:28 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37592 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbgDYB61 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 21:58:27 -0400
+Received: by mail-pl1-f193.google.com with SMTP id c21so3609457plz.4;
+        Fri, 24 Apr 2020 18:58:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=n9CN/oQvEAYLNaAYRFLVAwCJwVMav9x9AK7qDWbYaXA=;
+        b=iqB+f2YirDKZx7JcEr7IjIIH+C5eQpl2T5V5V4fy5RNnDxUvoO5a8nOZl7T8e8ckmT
+         3/jvcQwQIkynV5hLQwIi7rO8V15ApU24sN0+sHiectHfpp/uuM9hV8N2YBVqCjVaAXw+
+         xlH6ajX/OT2lcvTd6TAdhZ5z+k88meE8asoHtKfOJhjvBOVOfCiyjQtKDMO+PiOhSmEI
+         5g/4JTReLBV6qlTlDIxC2bIBwDuSdsIaZs2wB1J1ay6hG7PBgUSNWhbFPZe7ToCseJcJ
+         rGvgT86D4btmhGLS1MWPNXsOtUgaVdV7HmXVJbEhVyQB1GdStVXQN6rJyaCdqLUYhle4
+         H6xg==
+X-Gm-Message-State: AGi0PubGf/OjTvml9rSJfm22KepYG3035Dv8ctEMa7tsxvQP5gM39iNf
+        ZV5DmIrDfsjEoHtsmcE5o9bFUT/F6H0=
+X-Google-Smtp-Source: APiQypL8gLi6c7jUPihStIJrQ6nZ/Vz/d+AKX48+0AeVfsVUKmTftjeoB8yFxiLdhLSLv4kA4VL5hw==
+X-Received: by 2002:a17:902:76c4:: with SMTP id j4mr12049211plt.177.1587779906365;
+        Fri, 24 Apr 2020 18:58:26 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:9d7d:6dae:7169:7912? ([2601:647:4000:d7:9d7d:6dae:7169:7912])
+        by smtp.gmail.com with ESMTPSA id 1sm7183266pff.180.2020.04.24.18.58.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Apr 2020 18:58:25 -0700 (PDT)
+Subject: Re: [PATCH v2 10/10] block: put_device() if device_add() fails
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20200419194529.4872-1-mcgrof@kernel.org>
+ <20200419194529.4872-11-mcgrof@kernel.org>
+ <85a18bcf-4bd0-a529-6c3c-46fcd23a350e@acm.org>
+ <20200424223210.GD11244@42.do-not-panic.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <d8e01420-5a0a-3c60-0b8c-46465437e255@acm.org>
+Date:   Fri, 24 Apr 2020 18:58:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200424133635.GB4070@kunai>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200424223210.GD11244@42.do-not-panic.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 03:36:35PM +0200, Wolfram Sang wrote:
->On Fri, Apr 24, 2020 at 08:22:26AM -0400, Sasha Levin wrote:
->> From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+On 2020-04-24 15:32, Luis Chamberlain wrote:
+> On Sun, Apr 19, 2020 at 04:40:45PM -0700, Bart Van Assche wrote:
+>> On 4/19/20 12:45 PM, Luis Chamberlain wrote:
+>>> Through code inspection I've found that we don't put_device() if
+>>> device_add() fails, and this must be done to decrement its refcount.
 >>
->> [ Upstream commit 3c1d1613be80c2e17f1ddf672df1d8a8caebfd0d ]
->>
->> All in-tree users have been converted to the new i2c_new_scanned_device
->> function, so remove this deprecated one.
->>
->> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
->> Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
->
->This should not be backported. It is only since this merge window that
->all in-tree users are converted!
+>> Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+> 
+> Turns out this is wrong, as bdi needs it still, we have can only remove
+> it once all users are done, which should be at the disk_release() path.
+> 
+> I've found this while adding the errors paths missing.
 
-Uh, I'm not sure how this snuck through. I've droped it, sorry!
+Hi Luis,
 
--- 
-Thanks,
-Sasha
+I had a look at the comments above device_add() before I added my
+Reviewed-by. Now that I've had another look at these comments and also
+at the device_add() implementation I agree that we don't need this patch.
+
+Bart.
