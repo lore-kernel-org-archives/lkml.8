@@ -7,117 +7,99 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4336EC55196
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 05:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D59C55185
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 06:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C86620724
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 05:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30BBC214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 06:07:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587793821;
-	bh=xczF0e7z8FWiMckLdrl4XzFmaLTbH+PmPrAqeH1cxA4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UtjwOeTXYM1bukraF1HJjRrlGF3lHscB2A/wRID+j+QGSkrR1LGXg5Ait8QD1u2tM
-	 2AnCbJn1ip1jk+Yz2Nl7JBa77ZqBr9HvbtR36p/Q94KV28L4lZe3H4M+vdJb2SDcvj
-	 C1I/+PPh/Fn1R1kCj5nK3wbRBuT7MvmZ5EYdsAGM=
+	s=default; t=1587794855;
+	bh=GS+sSuQVw4J5ZPENPNPNe3HsTwRYWBnEg8qgHdE+4j8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=UtqKbpEieH6CvBS0eMUfa4rr7E0xjrs1ys/0xnlCxhcQf41OdAtKd2p5vUVHRRR/X
+	 DaP4A7PI9us+uEt5pArR8+CqQArcRj+Iku5fB/lhAT+WFwB75hEa2gPMpL+6enLrZ6
+	 UK+r3CvgqLv0+xPGr5xUTRQKs9LwS6ySRaZm7/7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726152AbgDYFtV (ORCPT
+        id S1726110AbgDYGHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 01:49:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46302 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725837AbgDYFtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 01:49:20 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD34221655;
-        Sat, 25 Apr 2020 05:49:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587793760;
-        bh=xczF0e7z8FWiMckLdrl4XzFmaLTbH+PmPrAqeH1cxA4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kW1MT70/6d6ZaEUkvEi/4lYX+d/a6PK1ZeNJ1xR44zMzNWy+7A3rmMEJC2/d9nMf9
-         Z31TuAOU0CQJIzS7ey+pxR3S7PI5nZs585JLZEjcFmaRfOLTwfD0YRijycvx+BonRK
-         r08Ops6FQARlKY+KYjmvT3LppSQbFUaS4cMoRLU0=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 2/3] tracing/boottime: Fix kprobe event API usage
-Date:   Sat, 25 Apr 2020 14:49:17 +0900
-Message-Id: <158779375766.6082.201939936008972838.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <158779373972.6082.16695832932765258919.stgit@devnote2>
-References: <158779373972.6082.16695832932765258919.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
+        Sat, 25 Apr 2020 02:07:34 -0400
+Received: from conuserg-10.nifty.com ([210.131.2.77]:33398 "EHLO
+        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbgDYGHd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 02:07:33 -0400
+Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
+        by conuserg-10.nifty.com with ESMTP id 03P66gJ2004452;
+        Sat, 25 Apr 2020 15:06:42 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 03P66gJ2004452
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587794803;
+        bh=yZzQTZNfAphRos2xirV3K5SgA+kD4qCWGx5IWcuZTkc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ImG0kqf43CToIiAoBUgYMeNCsOFp3lmMjVtce5RsO7gasWFGSGv/t+1CkQf7/Qkjp
+         KtxUyTM9C6LrSZW5Paw5/MxFft9zjkaM/w51yo57xA270h7BRKCsMeZcUYeaitww9q
+         e0ss6Eu7loxSxy9px2uCTLt3/2Cf0xO1Zr0Xs8wmYDCDR0JkwmQHmSN+kYEoRvPJXZ
+         OHXWruX4LzlHvrTT9Udzn9wKLshj8SrVdxKVjB14gc04YdWKLVcSPBH1O9ZDhKqAx7
+         FIvtmZBCHsmFAwyJ2x2dPvzV/X51U6q0P1gq+nRReKBwXUbP+5T5P9JTHUi1YmEIST
+         0V6UuvmLj8COw==
+X-Nifty-SrcIP: [126.90.202.47]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Guan Xuetao <gxt@pku.edu.cn>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] unicore32: do not evaluate compiler's library path when cleaning
+Date:   Sat, 25 Apr 2020 15:06:40 +0900
+Message-Id: <20200425060640.823362-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix boottime kprobe events to use API correctly for
-multiple events.
+Since commit a83e4ca26af8 ("kbuild: remove cc-option switch from
+-Wframe-larger-than="), 'make ARCH=unicore32 clean' emits error
+messages as follows:
 
-For example, when we set a multiprobe kprobe events in
-bootconfig like below,
+  $ make ARCH=unicore32 clean
+  gcc: error: missing argument to '-Wframe-larger-than='
+  gcc: error: missing argument to '-Wframe-larger-than='
 
-  ftrace.event.kprobes.myevent {
-  	probes = "vfs_read $arg1 $arg2", "vfs_write $arg1 $arg2"
-  }
+We do not care compiler flags when cleaning.
 
-This cause an error;
+Use the '=' operator for lazy expansion because we do not use
+GNU_LIBC_A or GNU_LIBGCC_A when cleaning.
 
-  trace_boot: Failed to add probe: p:kprobes/myevent (null)  vfs_read $arg1 $arg2  vfs_write $arg1 $arg2
-
-This shows the 1st argument becomes NULL and multiprobes
-are merged to 1 probe.
-
-Fixes: 29a154810546 ("tracing: Change trace_boot to use kprobe_event interface")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: stable@vger.kernel.org
+Fixes: a83e4ca26af8 ("kbuild: remove cc-option switch from -Wframe-larger-than=")
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
- kernel/trace/trace_boot.c |   20 ++++++++------------
- 1 file changed, 8 insertions(+), 12 deletions(-)
 
-diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
-index 06d7feb5255f..9de29bb45a27 100644
---- a/kernel/trace/trace_boot.c
-+++ b/kernel/trace/trace_boot.c
-@@ -95,24 +95,20 @@ trace_boot_add_kprobe_event(struct xbc_node *node, const char *event)
- 	struct xbc_node *anode;
- 	char buf[MAX_BUF_LEN];
- 	const char *val;
--	int ret;
-+	int ret = 0;
+ arch/unicore32/lib/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/unicore32/lib/Makefile b/arch/unicore32/lib/Makefile
+index 098981a01841..5af06645b8f0 100644
+--- a/arch/unicore32/lib/Makefile
++++ b/arch/unicore32/lib/Makefile
+@@ -10,12 +10,12 @@ lib-y	+= strncpy_from_user.o strnlen_user.o
+ lib-y	+= clear_user.o copy_page.o
+ lib-y	+= copy_from_user.o copy_to_user.o
  
--	kprobe_event_cmd_init(&cmd, buf, MAX_BUF_LEN);
-+	xbc_node_for_each_array_value(node, "probes", anode, val) {
-+		kprobe_event_cmd_init(&cmd, buf, MAX_BUF_LEN);
+-GNU_LIBC_A		:= $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libc.a)
++GNU_LIBC_A		= $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libc.a)
+ GNU_LIBC_A_OBJS		:= memchr.o memcpy.o memmove.o memset.o
+ GNU_LIBC_A_OBJS		+= strchr.o strrchr.o
+ GNU_LIBC_A_OBJS		+= rawmemchr.o			# needed by strrchr.o
  
--	ret = kprobe_event_gen_cmd_start(&cmd, event, NULL);
--	if (ret)
--		return ret;
-+		ret = kprobe_event_gen_cmd_start(&cmd, event, val);
-+		if (ret)
-+			break;
+-GNU_LIBGCC_A		:= $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libgcc.a)
++GNU_LIBGCC_A		= $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libgcc.a)
+ GNU_LIBGCC_A_OBJS	:= _ashldi3.o _ashrdi3.o _lshrdi3.o
+ GNU_LIBGCC_A_OBJS	+= _divsi3.o _modsi3.o _ucmpdi2.o _umodsi3.o _udivsi3.o
  
--	xbc_node_for_each_array_value(node, "probes", anode, val) {
--		ret = kprobe_event_add_field(&cmd, val);
-+		ret = kprobe_event_gen_cmd_end(&cmd);
- 		if (ret)
--			return ret;
-+			pr_err("Failed to add probe: %s\n", buf);
- 	}
- 
--	ret = kprobe_event_gen_cmd_end(&cmd);
--	if (ret)
--		pr_err("Failed to add probe: %s\n", buf);
--
- 	return ret;
- }
- #else
+-- 
+2.25.1
 
