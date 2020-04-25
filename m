@@ -2,78 +2,200 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF639C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 01:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC30C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 01:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 959EF20857
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 01:45:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587779159;
-	bh=Bsxnl2K3A5XAIn6prZzLDll+iJkvSiJDNO68VKWaOG0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wkr6+/AVv8DPpKPBUvNu67aAX9YRdHLJdyMPIOUYGgJL+AQRkti8+sgjoCh60+NaO
-	 03AEKj1QgoLUt3eeJlCkm+xgpuDDRTmrv99Z/PPvXQP6yTaYmGltlFozJU8/duaXtt
-	 8I6dBkYP92/DNELdKhZiug7Ora1ajyO2gAtQzbus=
+	by mail.kernel.org (Postfix) with ESMTP id 4A91220776
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 01:47:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ro/13rop"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726117AbgDYBp6 (ORCPT
+        id S1726130AbgDYBrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 21:45:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43930 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbgDYBp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 21:45:58 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8FC720776;
-        Sat, 25 Apr 2020 01:45:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587779158;
-        bh=Bsxnl2K3A5XAIn6prZzLDll+iJkvSiJDNO68VKWaOG0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A6xJQGCHctBWbt0qg3tmipfzwSFl/LhY1h9HmPFtN+AURFrQ0SuKuJGoudCbVcPB2
-         +Lr7mG/FrKTLe528cp/UlqzbmYrrefFomy99fIorAT2Z8tkjQnXTuCbp5HLw/BfGmm
-         0XkxjTWUqVwn09sbQGA0wcCH/AsJDtbk1qt6NhMc=
-Date:   Fri, 24 Apr 2020 21:45:56 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        baolin.wang@linaro.org, kstewart@linuxfoundation.org,
-        tglx@linutronix.de, bradleybolen@gmail.com,
-        gregkh@linuxfoundation.org, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, anrao@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.4.33 0/2] Fix for long operation cmds busy detection
-Message-ID: <20200425014556.GD13035@sasha-vm>
-References: <1587758766-3274-1-git-send-email-skomatineni@nvidia.com>
+        Fri, 24 Apr 2020 21:47:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36166 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbgDYBrC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 21:47:02 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 496F8C09B049
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 18:47:01 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id w29so9631595qtv.3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 18:47:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=epmQdF3K+/5UFEAqHIAqosz9RuvSXw7j3oErS4DM4VQ=;
+        b=Ro/13ropbfUNMMDS0NGJvViiX+3yITYXYlIx/FZkE3byg7LpANFLjNMf3pwvTdtJoV
+         Ue0/Hlwr856KhHy7RzRPkno7zZavbxM84gfW1jXw1lTGLZiHhnShwslKfMcwPfzu7Tyt
+         iiRZLSKDQRYICb240fdmDprWC9iEfsF5jlQTay0+tU0t2GOlMT0Nl3LVO7qkkP8c4G2X
+         E29OIhFUpRFtg0I1oFKvHLkcbKm6MfhMvoCGEINkRz6hNo7rb0QvLhB8InzdI4E7sCzk
+         zkLe99EB5X7SvNEu3JN1d3Ab3x3KMgt9FrhY+mJz11rzCUBjtS1ZzACqqaq3SsMGkFTt
+         FWMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=epmQdF3K+/5UFEAqHIAqosz9RuvSXw7j3oErS4DM4VQ=;
+        b=K6apvFMXFnZmepM+IvmBwheZGXregL9SSZiee9nnxvi0mXptJMwIkMVRgYRyz/owVb
+         qaXXqnZM+4p+N0j/P0kGfZk/L79+hk+RxxG41XHXDkT70uhzUOWxfsQKTrc7NBolXXk0
+         zsb49xWFsfU15TOaWLqAaduNgsiw3bJTnwI9AOKAWjErEL9sjCFtupaLQTUd62UEcf2x
+         HRhE4q2724JCTzTXzxybtt5FXn48wYB9zc0JVQDSNx33SWEFCxhpg+tkcTI40lj/Nmg6
+         KYn8n4ZoaToUmRDVYrfUzpaPHSqtndm0mz9PALSoSNwl3qSjRuoUMHPJauijJpdWCoJ9
+         T0LQ==
+X-Gm-Message-State: AGi0Pub8MpFn7YG03731LQO68ALOzEY/bD0KQj/aWClc/Cte0khsD3yK
+        XmargDx68fV/Umvg/Xk6h7k=
+X-Google-Smtp-Source: APiQypLZeZI1JDN88NzyRhdRyOcwHbKtxqnL1/ZWGLRWk4Oqb/7UD1c4g/5jHez07G799b9TTpLylA==
+X-Received: by 2002:ac8:6799:: with SMTP id b25mr12574813qtp.54.1587779220263;
+        Fri, 24 Apr 2020 18:47:00 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id z26sm5022351qkg.39.2020.04.24.18.46.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Apr 2020 18:46:59 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Fri, 24 Apr 2020 21:46:57 -0400
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Michael Matz <matz@suse.de>, Jakub Jelinek <jakub@redhat.com>,
+        Sergei Trofimovich <slyfox@gentoo.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kees Cook <keescook@chromium.org>,
+        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>
+Subject: Re: [PATCH] x86: Fix early boot crash on gcc-10, next try
+Message-ID: <20200425014657.GA2191784@rani.riverdale.lan>
+References: <CAKwvOdkkbWgWmNthq5KijCdtatM9PEAaCknaq8US9w4qaDuwug@mail.gmail.com>
+ <alpine.LSU.2.21.2004201401120.11688@wotan.suse.de>
+ <20200422102309.GA26846@zn.tnic>
+ <CAKwvOd=Dza3UBfeUzs2RW6ko5fDr3jYeGQAYpJXqyEVns6DJHg@mail.gmail.com>
+ <20200422192113.GG26846@zn.tnic>
+ <CAKwvOdkbcO8RzoafON2mGiSy5P96P5+aY8GySysF2my7q+nTqw@mail.gmail.com>
+ <20200422212605.GI26846@zn.tnic>
+ <CAKwvOd=exxhfb8N6=1Q=wBUaYcRDEq3L1+TiHDLz+pxWg8OuwQ@mail.gmail.com>
+ <20200423125300.GC26021@zn.tnic>
+ <20200423161126.GD26021@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1587758766-3274-1-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200423161126.GD26021@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 01:06:04PM -0700, Sowjanya Komatineni wrote:
->This series is to backport the upstream patches that fixes busy detection
->for long operation mmc commands by implementing Tegra specific timeout
->callback to switch between finite and infinite HW busy detection wait
->modes.
->
->
->Sowjanya Komatineni (2):
->  sdhci: tegra: Implement Tegra specific set_timeout callback
->  sdhci: tegra: Enable MMC_CAP_WAIT_WHILE_BUSY host capability
+On Thu, Apr 23, 2020 at 06:12:24PM +0200, Borislav Petkov wrote:
+> Ok,
+> 
+> I have tried to summarize our odyssey so far and here's what I came up
+> with. Just built latest gcc from the git repo and it seems to work.
+> 
+> Next I need to come up with a slick way of testing the compiler...
+> 
+> Thx.
+> 
+> ---
+> From: Borislav Petkov <bp@suse.de>
+> 
+> ... or the odyssey of trying to disable the stack protector for the
+> function which generates the stack canary value.
+> 
+> The whole story started with Sergei reporting a boot crash with a kernel
+> built with gcc-10:
+> 
+>   Kernel panic — not syncing: stack-protector: Kernel stack is corrupted in: start_secondary
+>   CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.6.0-rc5—00235—gfffb08b37df9 #139
+>   Hardware name: Gigabyte Technology Co., Ltd. To be filled by O.E.M./H77M—D3H, BIOS F12 11/14/2013
+>   Call Trace:
+>     dump_stack
+>     panic
+>     ? start_secondary
+>     __stack_chk_fail
+>     start_secondary
+>     secondary_startup_64
+>   -—-[ end Kernel panic — not syncing: stack—protector: Kernel stack is corrupted in: start_secondary
+> 
+> This happens because gcc-10 tail-call optimizes the last function call
+> in start_secondary() - cpu_startup_entry() - and thus emits a stack
+> canary check which fails because the canary value changes after the
+> boot_init_stack_canary() call.
+> 
+> To fix that, the initial attempt was to mark the one function which
+> generates the stack canary with:
+> 
+>   __attribute__((optimize("-fno-stack-protector"))) ... start_secondary(void *unused)
+> 
+> however, using the optimize attribute doesn't work cumulatively
+> as the attribute does not add to but rather replaces previously
+> supplied optimization options - roughly all -fxxx options.
+> 
+> The key one among them being -fno-omit-frame-pointer and thus leading to
+> not present frame pointer - frame pointer which the kernel needs.
+> 
+> The next attempt to prevent compilers from tail-call optimizing
+> the last function call cpu_startup_entry(), shy of carving out
+> start_secondary() into a separate compilation unit and building it with
+> -fno-stack-protector, is this one.
+> 
+> The current solution is short and sweet, and reportedly, is supported by
+> both compilers so let's see how far we'll get this time.
+> 
+> Reported-by: Sergei Trofimovich <slyfox@gentoo.org>
+> Signed-off-by: Borislav Petkov <bp@suse.de>
+> Link: https://lkml.kernel.org/r/20200314164451.346497-1-slyfox@gentoo.org
+> ---
+>  arch/x86/kernel/smpboot.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+> index 3b9bf8c7e29d..e9f44727fccd 100644
+> --- a/arch/x86/kernel/smpboot.c
+> +++ b/arch/x86/kernel/smpboot.c
+> @@ -266,6 +266,14 @@ static void notrace start_secondary(void *unused)
+>  
+>  	wmb();
+>  	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
+> +
+> +	/*
+> +	 * Prevent tail call to cpu_startup_entry() because the stack protector
+> +	 * guard has been changed a couple of functions up, in
+> +	 * boot_init_stack_canary() and must not be checked before tail calling
+> +	 * another function.
+> +	 */
+> +	asm ("");
+>  }
+>  
+>  /**
+> -- 
+> 2.21.0
+> 
+> 
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> https://people.kernel.org/tglx/notes-about-netiquette
 
-What regression do these patches fix?
+The comment above boot_init_stack_canary's definition should be updated
+to note that it needs to be called from a function that, in addition to
+not returning, either has stackprotector disabled or avoids ending in a
+tail call.
 
--- 
-Thanks,
-Sasha
+There are also other calls that likely need to be fixed as well -- in
+init/main.c, arch/x86/xen/smp_pv.c, and there is a powerpc version of
+start_secondary in arch/powerpc/kernel/smp.c which may also be affected.
+
+Thanks.
