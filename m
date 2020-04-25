@@ -2,200 +2,166 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC30C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 01:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 389BEC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 01:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A91220776
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 01:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 021952076C
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 01:49:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ro/13rop"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="hT3Yt8x2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726130AbgDYBrD (ORCPT
+        id S1726147AbgDYBtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Apr 2020 21:47:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36166 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbgDYBrC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Apr 2020 21:47:02 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 496F8C09B049
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 18:47:01 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id w29so9631595qtv.3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 18:47:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=epmQdF3K+/5UFEAqHIAqosz9RuvSXw7j3oErS4DM4VQ=;
-        b=Ro/13ropbfUNMMDS0NGJvViiX+3yITYXYlIx/FZkE3byg7LpANFLjNMf3pwvTdtJoV
-         Ue0/Hlwr856KhHy7RzRPkno7zZavbxM84gfW1jXw1lTGLZiHhnShwslKfMcwPfzu7Tyt
-         iiRZLSKDQRYICb240fdmDprWC9iEfsF5jlQTay0+tU0t2GOlMT0Nl3LVO7qkkP8c4G2X
-         E29OIhFUpRFtg0I1oFKvHLkcbKm6MfhMvoCGEINkRz6hNo7rb0QvLhB8InzdI4E7sCzk
-         zkLe99EB5X7SvNEu3JN1d3Ab3x3KMgt9FrhY+mJz11rzCUBjtS1ZzACqqaq3SsMGkFTt
-         FWMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=epmQdF3K+/5UFEAqHIAqosz9RuvSXw7j3oErS4DM4VQ=;
-        b=K6apvFMXFnZmepM+IvmBwheZGXregL9SSZiee9nnxvi0mXptJMwIkMVRgYRyz/owVb
-         qaXXqnZM+4p+N0j/P0kGfZk/L79+hk+RxxG41XHXDkT70uhzUOWxfsQKTrc7NBolXXk0
-         zsb49xWFsfU15TOaWLqAaduNgsiw3bJTnwI9AOKAWjErEL9sjCFtupaLQTUd62UEcf2x
-         HRhE4q2724JCTzTXzxybtt5FXn48wYB9zc0JVQDSNx33SWEFCxhpg+tkcTI40lj/Nmg6
-         KYn8n4ZoaToUmRDVYrfUzpaPHSqtndm0mz9PALSoSNwl3qSjRuoUMHPJauijJpdWCoJ9
-         T0LQ==
-X-Gm-Message-State: AGi0Pub8MpFn7YG03731LQO68ALOzEY/bD0KQj/aWClc/Cte0khsD3yK
-        XmargDx68fV/Umvg/Xk6h7k=
-X-Google-Smtp-Source: APiQypLZeZI1JDN88NzyRhdRyOcwHbKtxqnL1/ZWGLRWk4Oqb/7UD1c4g/5jHez07G799b9TTpLylA==
-X-Received: by 2002:ac8:6799:: with SMTP id b25mr12574813qtp.54.1587779220263;
-        Fri, 24 Apr 2020 18:47:00 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id z26sm5022351qkg.39.2020.04.24.18.46.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 18:46:59 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Fri, 24 Apr 2020 21:46:57 -0400
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Michael Matz <matz@suse.de>, Jakub Jelinek <jakub@redhat.com>,
-        Sergei Trofimovich <slyfox@gentoo.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kees Cook <keescook@chromium.org>,
-        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>
-Subject: Re: [PATCH] x86: Fix early boot crash on gcc-10, next try
-Message-ID: <20200425014657.GA2191784@rani.riverdale.lan>
-References: <CAKwvOdkkbWgWmNthq5KijCdtatM9PEAaCknaq8US9w4qaDuwug@mail.gmail.com>
- <alpine.LSU.2.21.2004201401120.11688@wotan.suse.de>
- <20200422102309.GA26846@zn.tnic>
- <CAKwvOd=Dza3UBfeUzs2RW6ko5fDr3jYeGQAYpJXqyEVns6DJHg@mail.gmail.com>
- <20200422192113.GG26846@zn.tnic>
- <CAKwvOdkbcO8RzoafON2mGiSy5P96P5+aY8GySysF2my7q+nTqw@mail.gmail.com>
- <20200422212605.GI26846@zn.tnic>
- <CAKwvOd=exxhfb8N6=1Q=wBUaYcRDEq3L1+TiHDLz+pxWg8OuwQ@mail.gmail.com>
- <20200423125300.GC26021@zn.tnic>
- <20200423161126.GD26021@zn.tnic>
+        Fri, 24 Apr 2020 21:49:15 -0400
+Received: from mail-am6eur05on2048.outbound.protection.outlook.com ([40.107.22.48]:31585
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726032AbgDYBtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Apr 2020 21:49:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iZ8x9yPonWVwRq4sqGHe1ZLJ/anzUDlkwQAGBGDcbY8A+OpLcrK1URWoXAVuUNDHtCYqrWoWjOC9jm/NqPvTXV6Za/BGxtdf0vyTtMyknq47z/bKVsgM56NHbQJLZ5umPIupy1ueHWmC/5vHXGydfvf+YheEObuV3kLvJVCR2K0QDAmgejk7jxBbtjtmkbJ/9LWLVQGyNWqx0F43Uy0xsQhO4e4MI2xvqeAWVKHCF3xV5kXt5ekQKarfm2mklOjAMfsBz52QTCw7cXNmgul5YYrNsifAKLSzje17u/r+ZmF1k3R5O4gLLNCLCresFDuyIWmZOQHWiCOoWu+YgJepCg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7dnZGiG5qBwtoLOz+ZC3DNQU40pjcs0tUiE3zrkn2DI=;
+ b=cRm3/W69kJ7l0rwRMwQJdQbLATlngK7SQoeOK+2ceWk7mHRYTbA2G4YyArFvQwI/oUAKIbfOrbb7mNiCkwuwjoAz6C8Ht8UBKEU8WGQQRF5p/c5KRCDOmjeBhWCx3KfpgATZT4GWj+gW25TpiqAWl6LHBSHIKNDECIQNo0cMpZYZnQijvAxkAbzLK2kvjujFOOO5KJAGhAkVsfG9T04uHgNpMi5fVBFbk16cp61UNyNp1S6AcjwIdMCELYlsRwOIa+2DbBUCf73XFMh4ilZnNVpu7iqz3NsRl+MlO9xJKdy4jAIoJQRYp93Ic7ZfZ3ZJgS+k6oJVQm/uLAcAnLDIBg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7dnZGiG5qBwtoLOz+ZC3DNQU40pjcs0tUiE3zrkn2DI=;
+ b=hT3Yt8x2hlUM9hiBps/Z11P3aYfnbB1G/WUkDHehwXupbUi+x0KtKcUrJIXnsP0PzpcW7gAAadeqFoGpL9AR92qbqIzhNNMk6/rc4Fsu2b0fWxznVdrlc0s6A03PQmGMfHeHHSFRi1Twap+bsPNC4GobZJix0NsBWqN83HF0pDA=
+Received: from VE1PR04MB6496.eurprd04.prod.outlook.com (2603:10a6:803:11c::29)
+ by VE1PR04MB6719.eurprd04.prod.outlook.com (2603:10a6:803:128::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Sat, 25 Apr
+ 2020 01:49:08 +0000
+Received: from VE1PR04MB6496.eurprd04.prod.outlook.com
+ ([fe80::1479:38ea:d4f7:a173]) by VE1PR04MB6496.eurprd04.prod.outlook.com
+ ([fe80::1479:38ea:d4f7:a173%7]) with mapi id 15.20.2921.036; Sat, 25 Apr 2020
+ 01:49:08 +0000
+From:   Po Liu <po.liu@nxp.com>
+To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        "michael.chan@broadcom.com" <michael.chan@broadcom.com>,
+        "vishal@chelsio.com" <vishal@chelsio.com>,
+        "saeedm@mellanox.com" <saeedm@mellanox.com>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "jiri@mellanox.com" <jiri@mellanox.com>,
+        "idosch@mellanox.com" <idosch@mellanox.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "jhs@mojatatu.com" <jhs@mojatatu.com>,
+        "xiyou.wangcong@gmail.com" <xiyou.wangcong@gmail.com>,
+        "simon.horman@netronome.com" <simon.horman@netronome.com>,
+        "pablo@netfilter.org" <pablo@netfilter.org>,
+        "moshe@mellanox.com" <moshe@mellanox.com>,
+        "m-karicheri2@ti.com" <m-karicheri2@ti.com>,
+        "andre.guedes@linux.intel.com" <andre.guedes@linux.intel.com>,
+        "stephen@networkplumber.org" <stephen@networkplumber.org>
+Subject: RE: [EXT] Re: [v3,net-next  1/4] net: qos: introduce a gate control
+ flow action
+Thread-Topic: [EXT] Re: [v3,net-next  1/4] net: qos: introduce a gate control
+ flow action
+Thread-Index: AQHWGFNl1uy1t0tlFE2NuiTq9Lz8sqiG+0OAgACaOiCAAPkGAIAAhDNQ
+Date:   Sat, 25 Apr 2020 01:49:07 +0000
+Message-ID: <VE1PR04MB6496FB4F90A5DEDD1CACBA7492D10@VE1PR04MB6496.eurprd04.prod.outlook.com>
+References: <20200418011211.31725-5-Po.Liu@nxp.com>
+ <20200422024852.23224-1-Po.Liu@nxp.com>
+ <20200422024852.23224-2-Po.Liu@nxp.com> <878sim2jcs.fsf@intel.com>
+ <VE1PR04MB6496B9EA946877FB473E5D7892D00@VE1PR04MB6496.eurprd04.prod.outlook.com>
+ <874kt83ho7.fsf@intel.com>
+In-Reply-To: <874kt83ho7.fsf@intel.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is ) smtp.mailfrom=po.liu@nxp.com; 
+x-originating-ip: [221.221.133.215]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 0f506947-0d06-42f9-1ad9-08d7e8bad821
+x-ms-traffictypediagnostic: VE1PR04MB6719:|VE1PR04MB6719:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB67192AC93663022F2698BD6B92D10@VE1PR04MB6719.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0384275935
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6496.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(376002)(396003)(39860400002)(366004)(86362001)(26005)(64756008)(6506007)(7696005)(5660300002)(110136005)(52536014)(54906003)(316002)(4326008)(71200400001)(44832011)(33656002)(53546011)(186003)(76116006)(66556008)(66476007)(66446008)(66946007)(9686003)(478600001)(8676002)(55016002)(8936002)(2906002)(7416002)(81156014);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: mLkDtAhUBPLH18HY2RYnilEFBH0d4Kd4kcojVMeYU3+ekG5rZxI78nouzl2ZRG/d9KXOAN3dljHbE8voVh9kLOPfIcw6xzMEhHsgWLVLzPllusUjSro1VQmHnLzgbV+MjJ/wEEErIwHkUb/Hy6GpuIWy/kpyQpgTkJlBMTyJLlExm9wa4UvfX6evKp/nbUHUgBTJOREQE2xmPW1ivTBbSZbA8nDpKzflHlYYH/hdXu+TQ45PSUexL8CjkRYxzep19wnM8tLrF3y8xDI3O+sKWYI7lZ/Vq4VD+vUIAYQsK5Knrfv+D3h7j6RzozPRQAV/rzHKExRa8/ABf7QYtWmL3keZKHtMKFUQm8AmTgDR7Iob2pFviDKVuxOrh6v6YltWGdrNl1jYGq4vkfKZOKI7QhRfJU6nm81CEXHV3Fji/DiCKEM40vLm5oPk1P3uL2I9
+x-ms-exchange-antispam-messagedata: B4reaKBfwPbmgYRphwolGjfjj6O1E6Nik9AjogV4rhuiYxKqc/Zi9Y6xLciP3qYtXxoXGEtExr+ynod7f+3ntTAemF/7wFtMG+W6Ey1VVils/l1QiiSeb7mwCJeCkw3BsE6O+fVcK/GzoX0DFctJ8Ulp4Hv5igb6afHAmIvu5P5odDwk74P2kgd1WQLdqnLoxRLUTMgP9csGm/o8l6MUXCS8/5dJUM2UIkFck/6Rx4fO1pyRt+HzIxGNAKPbvNf8mV60prqy/fszYVR9TqsuGFRc7yRavD1LQmBoXSD7VzRalcCiixwuaHShlaY3pjegiVoCetgFEIsNSNGTxr+HiiUwiLrBVNc5URzau+44rK0WK3A4KvXKW3gcTl/bGuNOE+Gw/JvOvCUq1itjbGkNk+mNVh/n+J+/fM2M2RJA7MusnYIis0ybO713oYa6O0PLPv/UebJbjIRPdUBGZXC9yDW4Gj8K9jL3fPVZC1pyyk2v1lBFJgaED41GZJCofAfE8aOY3witprBgvkRViB+uiXXou20oO3oXNIMtZlMMnvfXpExC85RfVYCYo3M0JDDRpqa6Qla+ngzOMkHHHWKaBNrlo+xi3DRvC+Dbtk2hxzPlM9bz9kI/2mFWe7JMaaNd5h/7C723uyGn1jCy/OfZlqdSsj4bxNiLSzt6jXQYLkjQF7RtuV5S10OkKYiC1tNhPhW+ZJZSjupvZw9E2jW2PUQLEBrrJQJ1Am5hn7BbN44FGuR4FP/Kl9B6Yq08qSNWwx1PiaPelhS19MLAxb38FSiU+Tieg1MyYGsY/cLcyXbNZ0UCycxCCDiTWjafRfnc
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200423161126.GD26021@zn.tnic>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f506947-0d06-42f9-1ad9-08d7e8bad821
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2020 01:49:08.1824
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: SL1JzK5HL7x6B/Kdz7pNAA3DEcyVYLi7jqm+4KBNEputoSNbjFUTcv3mYihG+UE2
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6719
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 06:12:24PM +0200, Borislav Petkov wrote:
-> Ok,
-> 
-> I have tried to summarize our odyssey so far and here's what I came up
-> with. Just built latest gcc from the git repo and it seems to work.
-> 
-> Next I need to come up with a slick way of testing the compiler...
-> 
-> Thx.
-> 
-> ---
-> From: Borislav Petkov <bp@suse.de>
-> 
-> ... or the odyssey of trying to disable the stack protector for the
-> function which generates the stack canary value.
-> 
-> The whole story started with Sergei reporting a boot crash with a kernel
-> built with gcc-10:
-> 
->   Kernel panic — not syncing: stack-protector: Kernel stack is corrupted in: start_secondary
->   CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.6.0-rc5—00235—gfffb08b37df9 #139
->   Hardware name: Gigabyte Technology Co., Ltd. To be filled by O.E.M./H77M—D3H, BIOS F12 11/14/2013
->   Call Trace:
->     dump_stack
->     panic
->     ? start_secondary
->     __stack_chk_fail
->     start_secondary
->     secondary_startup_64
->   -—-[ end Kernel panic — not syncing: stack—protector: Kernel stack is corrupted in: start_secondary
-> 
-> This happens because gcc-10 tail-call optimizes the last function call
-> in start_secondary() - cpu_startup_entry() - and thus emits a stack
-> canary check which fails because the canary value changes after the
-> boot_init_stack_canary() call.
-> 
-> To fix that, the initial attempt was to mark the one function which
-> generates the stack canary with:
-> 
->   __attribute__((optimize("-fno-stack-protector"))) ... start_secondary(void *unused)
-> 
-> however, using the optimize attribute doesn't work cumulatively
-> as the attribute does not add to but rather replaces previously
-> supplied optimization options - roughly all -fxxx options.
-> 
-> The key one among them being -fno-omit-frame-pointer and thus leading to
-> not present frame pointer - frame pointer which the kernel needs.
-> 
-> The next attempt to prevent compilers from tail-call optimizing
-> the last function call cpu_startup_entry(), shy of carving out
-> start_secondary() into a separate compilation unit and building it with
-> -fno-stack-protector, is this one.
-> 
-> The current solution is short and sweet, and reportedly, is supported by
-> both compilers so let's see how far we'll get this time.
-> 
-> Reported-by: Sergei Trofimovich <slyfox@gentoo.org>
-> Signed-off-by: Borislav Petkov <bp@suse.de>
-> Link: https://lkml.kernel.org/r/20200314164451.346497-1-slyfox@gentoo.org
-> ---
->  arch/x86/kernel/smpboot.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-> index 3b9bf8c7e29d..e9f44727fccd 100644
-> --- a/arch/x86/kernel/smpboot.c
-> +++ b/arch/x86/kernel/smpboot.c
-> @@ -266,6 +266,14 @@ static void notrace start_secondary(void *unused)
->  
->  	wmb();
->  	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
-> +
-> +	/*
-> +	 * Prevent tail call to cpu_startup_entry() because the stack protector
-> +	 * guard has been changed a couple of functions up, in
-> +	 * boot_init_stack_canary() and must not be checked before tail calling
-> +	 * another function.
-> +	 */
-> +	asm ("");
->  }
->  
->  /**
-> -- 
-> 2.21.0
-> 
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
-
-The comment above boot_init_stack_canary's definition should be updated
-to note that it needs to be called from a function that, in addition to
-not returning, either has stackprotector disabled or avoids ending in a
-tail call.
-
-There are also other calls that likely need to be fixed as well -- in
-init/main.c, arch/x86/xen/smp_pv.c, and there is a powerpc version of
-start_secondary in arch/powerpc/kernel/smp.c which may also be affected.
-
-Thanks.
+DQoNCg0KQnIsDQpQbyBMaXUNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9t
+OiBWaW5pY2l1cyBDb3N0YSBHb21lcyA8dmluaWNpdXMuZ29tZXNAaW50ZWwuY29tPg0KPiBTZW50
+OiAyMDIwxOo01MIyNcjVIDE6NDENCj4gVG86IFBvIExpdSA8cG8ubGl1QG54cC5jb20+OyBkYXZl
+bUBkYXZlbWxvZnQubmV0OyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgbmV0ZGV2
+QHZnZXIua2VybmVsLm9yZw0KPiBDYzogQ2xhdWRpdSBNYW5vaWwgPGNsYXVkaXUubWFub2lsQG54
+cC5jb20+OyBWbGFkaW1pciBPbHRlYW4NCj4gPHZsYWRpbWlyLm9sdGVhbkBueHAuY29tPjsgQWxl
+eGFuZHJ1IE1hcmdpbmVhbg0KPiA8YWxleGFuZHJ1Lm1hcmdpbmVhbkBueHAuY29tPjsgbWljaGFl
+bC5jaGFuQGJyb2FkY29tLmNvbTsNCj4gdmlzaGFsQGNoZWxzaW8uY29tOyBzYWVlZG1AbWVsbGFu
+b3guY29tOyBsZW9uQGtlcm5lbC5vcmc7DQo+IGppcmlAbWVsbGFub3guY29tOyBpZG9zY2hAbWVs
+bGFub3guY29tOw0KPiBhbGV4YW5kcmUuYmVsbG9uaUBib290bGluLmNvbTsgVU5HTGludXhEcml2
+ZXJAbWljcm9jaGlwLmNvbTsNCj4ga3ViYUBrZXJuZWwub3JnOyBqaHNAbW9qYXRhdHUuY29tOyB4
+aXlvdS53YW5nY29uZ0BnbWFpbC5jb207DQo+IHNpbW9uLmhvcm1hbkBuZXRyb25vbWUuY29tOyBw
+YWJsb0BuZXRmaWx0ZXIub3JnOw0KPiBtb3NoZUBtZWxsYW5veC5jb207IG0ta2FyaWNoZXJpMkB0
+aS5jb207DQo+IGFuZHJlLmd1ZWRlc0BsaW51eC5pbnRlbC5jb207IHN0ZXBoZW5AbmV0d29ya3Bs
+dW1iZXIub3JnDQo+IFN1YmplY3Q6IFJFOiBbRVhUXSBSZTogW3YzLG5ldC1uZXh0IDEvNF0gbmV0
+OiBxb3M6IGludHJvZHVjZSBhIGdhdGUgY29udHJvbA0KPiBmbG93IGFjdGlvbg0KPiANCj4gQ2F1
+dGlvbjogRVhUIEVtYWlsDQo+IA0KPiBQbyBMaXUgPHBvLmxpdUBueHAuY29tPiB3cml0ZXM6DQo+
+IA0KPiA+Pg0KPiA+PiBPbmUgaWRlYSB0aGF0IGp1c3QgaGFwcGVuZWQsIGlmIHlvdSBmaW5kIGEg
+d2F5IHRvIGVuYWJsZSBSWA0KPiA+PiB0aW1lc3RhbXBpbmcgYW5kIGNhbiByZWx5IHRoYXQgYWxs
+IHBhY2tldHMgaGF2ZSBhIHRpbWVzdGFtcCwgdGhlIGNvZGUNCj4gPj4gY2FuIHNpbXBsaWZpZWQg
+YSBsb3QuIFlvdSB3b3VsZG4ndCBuZWVkIGFueSBocnRpbWVycywgYW5kIGRlY2lkaW5nIHRvDQo+
+ID4+IGRyb3Agb3Igbm90IGEgcGFja2V0IGJlY29tZXMgYSBjb3VwbGUgb2YgbWF0aGVtYXRpY2Fs
+IG9wZXJhdGlvbnMuDQo+IFNlZW1zIHdvcnRoIGEgdGhvdWdodC4NCj4gPg0KPiA+IFRoYW5rcyBm
+b3IgdGhlIGRpZmZlcmVudCBpZGVhcy4gVGhlIGJhc2ljIHByb2JsZW0gaXMgd2UgbmVlZCB0byBr
+bm93DQo+ID4gbm93IGlzIGEgY2xvc2UgdGltZSBvciBvcGVuIHRpbWUgaW4gYWN0aW9uLiBCdXQg
+SSBzdGlsbCBkb24ndCBrbm93IGENCj4gPiBiZXR0ZXIgd2F5IHRoYW4gaHJ0aW1lciB0byBzZXQg
+dGhlIGZsYWcuDQo+IA0KPiBUaGF0J3MgdGhlIHBvaW50LCBpZiB5b3UgaGF2ZSB0aGUgdGltZXN0
+YW1wIG9mIHdoZW4gdGhlIHBhY2tldCBhcnJpdmVkLA0KPiB5b3UgY2FuIGNhbGN1bGF0ZSBpZiB0
+aGUgZ2F0ZSBpcyBvcGVuIGFuZCBjbG9zZWQgYXQgdGhhdCBwb2ludC4gWW91IGRvbid0DQo+IG5l
+ZWQgdG8ga25vdyAibm93IiwgeW91IHdvcmsgb25seSBpbiB0ZXJtcyBvZiAic2tiLT50c3RhbXAi
+DQo+IChzdXBwb3NpbmcgdGhhdCdzIHdoZXJlIHRoZSB0aW1lc3RhbXAgaXMgc3RvcmVkKS4gSW4g
+b3RoZXIgd29yZHMsIGl0DQo+IGRvZXNuJ3QgbWF0dGVyIHdoZW4gdGhlIHBhY2tldCBhcnJpdmVz
+IGF0IHRoZSBxZGlzYyBhY3Rpb24sIGJ1dCB3aGVuIGl0DQo+IGFycml2ZWQgYXQgdGhlIGNvbnRy
+b2xsZXIsIGFuZCB0aGUgYWN0aW9ucyBzaG91bGQgYmUgdGFrZW4gYmFzZWQgb24gdGhhdA0KPiB0
+aW1lLg0KDQpJIGdldCB5b3VyIGlkZWEuIEJ1dCB0aGF0IHdvdWxkIHJlbHkgb24gdGhlIHNvZnR3
+YXJlIHRpbWVzdGFtcGluZyBvbiBkcml2ZXIgdG8gYmUgc2V0LiAgQnkgc2V0IGFsbCBzdHJlYW1z
+IG9yIGJ5IGZpbHRlcmVkIHN0cmVhbSBlYWNoIHRpbWUgc2V0IHdpdGggdGMgZmxvd2VyIGZpbHRl
+ci4gQWxzbyBob3cgdGhlIHZpcnR1ZSBuZXQgZml4IGl0IGlzIHVua25vdy4NCg0KPiANCj4gPg0K
+PiA+Pg0KPiA+PiBUaGUgcmVhbCBxdWVzdGlvbiBpczogaWYgcmVxdWlyaW5nIGZvciB0aGUgZHJp
+dmVyIHRvIHN1cHBvcnQgYXQgbGVhc3QNCj4gPj4gc29mdHdhcmUgUlggdGltZXN0YW1waW5nIGlz
+IGV4Y2Vzc2l2ZSAoZG9lc24ndCBzZWVtIHNvIHRvIG1lKS4NCj4gPg0KPiA+IEkgdW5kZXJzdGFu
+ZC4NCj4gPg0KPiA+Pg0KPiA+Pg0KPiA+PiBDaGVlcnMsDQo+ID4+IC0tDQo+ID4+IFZpbmljaXVz
+DQo+ID4NCj4gPiBUaGFua3MgYSBsb3QhDQo+ID4NCj4gPiBCciwNCj4gPiBQbyBMaXUNCj4gDQo+
+IC0tDQo+IFZpbmljaXVzDQo=
