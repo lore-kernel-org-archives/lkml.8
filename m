@@ -2,100 +2,111 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA5FC54FCB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 16:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A8DC55191
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 16:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3253B20714
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 16:56:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587833763;
-	bh=lWJRZMKU7ZKa8caQKiw8rpYmlkUz6xS+OTQG5tRamzw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=v8DvWlqu8jWIux80aY8EHbKRETdrdwg7myG0WAt85iz8vKTUmoxUsh6Ja7c7PiXFb
-	 PnKJUB0iyIcNnLvrPMrJw693q7xDTQzD0kXYQjTWJR9Cs01ximDC3/QWawWxVG1b57
-	 qkYQtAzZA3jkwgOqV9+44CiB8tb8q3NoIXrtgBQo=
+	by mail.kernel.org (Postfix) with ESMTP id 3DE2E206D4
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 16:58:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgDYQ4C (ORCPT
+        id S1726240AbgDYQ62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 12:56:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39388 "EHLO mail.kernel.org"
+        Sat, 25 Apr 2020 12:58:28 -0400
+Received: from muru.com ([72.249.23.125]:51424 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726155AbgDYQ4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 12:56:01 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0090C206D4;
-        Sat, 25 Apr 2020 16:55:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587833761;
-        bh=lWJRZMKU7ZKa8caQKiw8rpYmlkUz6xS+OTQG5tRamzw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=W55jGr8p11hbuSb/odaJ0GuELcrU19OL2GjGK3O0V9caZx78vnBTLm/iQ7Y3PyFzo
-         aBqQBaazWQS3ZctZkpdEDdENlD6EEYmHIGQIcVOgA7X/FQNxqTvAYuB+k7PxV/1cRW
-         nNFdIRLuO0nfmNJ8RUZZVIqtXyBWCoj7LESflanE=
-Date:   Sat, 25 Apr 2020 17:55:57 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     lars@metafoo.de, Michael.Hennerich@analog.com,
-        stefan.popa@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] iio: dac: ad5592r: Fix a typo in the name of a function
-Message-ID: <20200425175557.20cd9256@archlinux>
-In-Reply-To: <20200425070056.31664-1-christophe.jaillet@wanadoo.fr>
-References: <20200425070056.31664-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726155AbgDYQ62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 12:58:28 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 7877F8108;
+        Sat, 25 Apr 2020 16:59:14 +0000 (UTC)
+Date:   Sat, 25 Apr 2020 09:58:23 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCHv6 0/4] n_gsm serdev support and protocol driver for
+ droid4 modem
+Message-ID: <20200425165823.GO37466@atomide.com>
+References: <20200421232752.3070-1-tony@atomide.com>
+ <20200423114326.GQ18608@localhost>
+ <20200423153756.GE37466@atomide.com>
+ <20200423232722.GG37466@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200423232722.GG37466@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 25 Apr 2020 09:00:56 +0200
-Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
-
-> This module is related to AD5592R, not AD5593R, so be consistent in naming.
+* Tony Lindgren <tony@atomide.com> [200423 23:28]:
+> * Tony Lindgren <tony@atomide.com> [200423 15:38]:
+> > * Johan Hovold <johan@kernel.org> [200423 11:44]:
+> > > I'd rather see a generic implementation which can be used with other
+> > > modems and that continues to expose a /dev/gsmttyN interface to which we
+> > > could attach serdev clients instead (and not create a motmdm serdev
+> > > replica of sorts).
+> > 
+> > Yeah this should be doable quite easily actually without really any of
+> > the motorola driver code. It's a separate driver though, and not
+> > usable for this case because of the custom layer.
 > 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> Well here's a first take at the such a generic serdev-ngsm driver
+> that depends on patch 1/4 of this series. All this does is configure
+> a serial port for TS 27.010 adaption1, and brings up 16 /dev/gsmtty*
+> devices. So no custom options for the binding so far, and no support
+> for adding channel specific device drivers. But all that can be added
+> naturally later on.
 
-Applied
+Just to clarify the difference between the generic serdev-ngsm case
+and this modem..
 
-Thanks,
+In the generic case, channel specific Linux device drivers can just
+use gsm_serdev_write() directly for things like GNSS driver, SIM
+file system, audio and whatever the modems might have on separate
+channels.
 
-Jonathan
+This Motorola modem needs custom read and write functions because
+of the custom Motorola packet format on top of TS 27.010. So for
+example, the motmdm_write() function stuffs the packet header, and
+then just calls gsm_serdev_write().
 
-> ---
->  drivers/iio/dac/ad5592r.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iio/dac/ad5592r.c b/drivers/iio/dac/ad5592r.c
-> index 34ba059a77da..49308ad13c4b 100644
-> --- a/drivers/iio/dac/ad5592r.c
-> +++ b/drivers/iio/dac/ad5592r.c
-> @@ -98,7 +98,7 @@ static int ad5592r_reg_read(struct ad5592r_state *st, u8 reg, u16 *value)
->  	return 0;
->  }
->  
-> -static int ad5593r_gpio_read(struct ad5592r_state *st, u8 *value)
-> +static int ad5592r_gpio_read(struct ad5592r_state *st, u8 *value)
->  {
->  	int ret;
->  
-> @@ -121,7 +121,7 @@ static const struct ad5592r_rw_ops ad5592r_rw_ops = {
->  	.read_adc = ad5592r_read_adc,
->  	.reg_write = ad5592r_reg_write,
->  	.reg_read = ad5592r_reg_read,
-> -	.gpio_read = ad5593r_gpio_read,
-> +	.gpio_read = ad5592r_gpio_read,
->  };
->  
->  static int ad5592r_spi_probe(struct spi_device *spi)
+So for the generic channel specific drivers, the driver just needs
+to be able to do something like:
 
+Configure devicetree for the drivers/tty/serdev/serdev-ngsm.c
+to bring up the TS 27.010 port based on the compatible and
+whatever port specific properties we may want use.
+
+And then have the channel specific device drivers do something
+like this:
+
+gsm_serdev_ngsm_register();	/* TBD to add to serdev-ngsm.c */
+gsm_serdev_register_dlci();	/* Already patched for n_gsm.c */
+gsm_serdev_write();		/* Already patched for n_gsm.c */
+...
+gsm_serdev_unregister_dlci();	/* Already patched for n_gsm.c */
+gsm_serdev_ngsm_unregister();	/* TBD to add to serdev-ngsm.c */
+
+So I think we can limit the code in the generic serdev-ngsm.c to bring
+up the TS 27.010, and then allow whatever channel specific device
+drivers to register with it. I guess that should do for the generic
+API.
+
+Anybody got better suggestions?
+
+Regards,
+
+Tony
