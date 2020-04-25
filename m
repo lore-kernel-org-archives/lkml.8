@@ -2,100 +2,93 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD61CC55185
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 08:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F36F0C55186
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 08:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B65DC206B6
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 08:09:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iJ8LD2LW"
+	by mail.kernel.org (Postfix) with ESMTP id BAE962074F
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 08:15:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587802500;
+	bh=M/mbF7EtEsrt+Ekl8CDrUxehtR6wkl9tYW3cNKGfgHA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qx0+rC3oeCgH3Mkm4kDW3BtExBlujp90iuKT3U9m1Zi962IGJp2g+MnvygtafPhO4
+	 fNhVlf4Sng+02kMG+K35lBonj45JMqYDpd0cm14N2FIv2eHa3nuPiypwfZ1f6KSpjc
+	 AHZELd7su1bJrrtq5caNBquxjrQjWxvw7cudaBfk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbgDYII7 (ORCPT
+        id S1726132AbgDYIPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 04:08:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38500 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726098AbgDYII7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 04:08:59 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B3BCC09B049
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 01:08:59 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id p8so5808017pgi.5
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 01:08:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=x/0L4kaYgpW1Hu0stScHjMakMOesQShGMeTNHi19Rgw=;
-        b=iJ8LD2LWWz/lVjTnpI0bFX6zm7zN37+Ngfq3dtc72Ol3HI8AT83i7CKTGCbQwyI1Kl
-         eWSs4sYbGqCCrZRt/FyJ08p3dgb+clQ/Q0Q23mbwou9LXc8CHjK2yS3ADP9XOuc2TzKx
-         CvlNuWOQ2ekiu9dIP3ab7SoPK0fmuFQf4m5xbR5W/bhUXULTTKG3BGmj3s4aZWC51qUy
-         x2FOkcX+dwATUW2bSzSVGQJRT60Y8FvZMdA96cv3e9bOZoC5qY6VffbiCwKcAQPHXHKs
-         kFGqggygkBp5ChhoHGWvxUA2dfV0f3EG2Lv/hlAsvHn2Amhz/GEouYJ996BbpaZQzY2p
-         v5IA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=x/0L4kaYgpW1Hu0stScHjMakMOesQShGMeTNHi19Rgw=;
-        b=NwbpXmt1PPG/D5wA5sNcUbmbkh0iXOG/7Q8tA3CxpSNFRMBX2VZR0q7psmen/fgkQx
-         vre7+/UDEEpUrfab2PnAZsby1PTsyXwfgl0pxslVUK8bnE3kew798nL9wTlPurNc15m1
-         PH4kGx65Hgf95nZ7rA64GLLAIkvCAQVvF7sxI/oD8JhrXoPOSTpd6cM5WcsCeiLZxaB6
-         3+9nEZHdVVT5Ql8O0k1U26pm3w19u5rxVixCW7NZJcL6NMr5s+nrzedgc4Hx43bn5jLB
-         CZDRkjgyUgq7McMX03VXJYxsspPWGT6fsBjJixGmiX/Ht0iZEoRFYCRMpXfLKbFk+CE8
-         nrig==
-X-Gm-Message-State: AGi0PuZ/LqQkWChy+BEeK64DaFHba3uieJtH+TaCiuCx6lKHObRd4xq0
-        bq27wZa8y3So9XPcsYtNlLfC
-X-Google-Smtp-Source: APiQypKx4YIbSAMgdXn4vdtb9HU9+CtXijGGj8JxZPpCdKzOxmAhEi6e0ewMW0ekC3vvbgYv8WLBsw==
-X-Received: by 2002:a63:67c7:: with SMTP id b190mr13429627pgc.289.1587802138359;
-        Sat, 25 Apr 2020 01:08:58 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6108:9c45:6c48:a73c:e213:f218])
-        by smtp.gmail.com with ESMTPSA id r12sm6506504pgv.59.2020.04.25.01.08.53
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 25 Apr 2020 01:08:57 -0700 (PDT)
-Date:   Sat, 25 Apr 2020 13:38:50 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     davem@davemloft.net, smohanad@codeaurora.org, jhugo@codeaurora.org,
-        kvalo@codeaurora.org, bjorn.andersson@linaro.org,
-        hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clew@codeaurora.org
-Subject: Re: [PATCH v2 0/3] MHI bus improvements - Part 2
-Message-ID: <20200425080850.GB5257@Mani-XPS-13-9360>
-References: <20200402053610.9345-1-manivannan.sadhasivam@linaro.org>
- <20200402055526.GB2636682@kroah.com>
+        Sat, 25 Apr 2020 04:15:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54098 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726035AbgDYIO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 04:14:59 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D30C2071C;
+        Sat, 25 Apr 2020 08:14:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587802498;
+        bh=M/mbF7EtEsrt+Ekl8CDrUxehtR6wkl9tYW3cNKGfgHA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=q44T9fiNBYMX0iT5oV7P/Ty1WF9StvtGtMfuGCx5GIJ7WO5SLeGhuTgGaJbHtJ/0t
+         F/mdUQKudvKz01efde2WiEcLHvK9E8f2AaHr82zZ2O237nF0/Qtz3m2OCCeGMkPITc
+         wM/7G8bNniycF2bs06Ft2R6CoslrkW/HLVY7/X4E=
+Date:   Sat, 25 Apr 2020 10:14:55 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Luis R. Rodriguez" <mcgrof@kernel.org>
+Cc:     akpm@linux-foundation.org, josh@joshtriplett.org,
+        rishabhb@codeaurora.org, kubakici@wp.pl, maco@android.com,
+        david.brown@linaro.org, bjorn.andersson@linaro.org,
+        linux-wireless@vger.kernel.org, keescook@chromium.org,
+        shuah@kernel.org, mfuzzey@parkeon.com, zohar@linux.vnet.ibm.com,
+        dhowells@redhat.com, pali.rohar@gmail.com, tiwai@suse.de,
+        arend.vanspriel@broadcom.com, zajec5@gmail.com, nbroeking@me.com,
+        broonie@kernel.org, dmitry.torokhov@gmail.com, dwmw2@infradead.org,
+        torvalds@linux-foundation.org, Abhay_Salunke@dell.com,
+        jewalt@lgsinnovations.com, cantabile.desu@gmail.com, ast@fb.com,
+        andresx7@gmail.com, dan.rue@linaro.org, brendanhiggins@google.com,
+        yzaikin@google.com, sfr@canb.auug.org.au, rdunlap@infradead.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] firmware_loader: revert removal of the
+ fw_fallback_config export
+Message-ID: <20200425081455.GA2049758@kroah.com>
+References: <20200424184916.22843-1-mcgrof@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200402055526.GB2636682@kroah.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200424184916.22843-1-mcgrof@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
-
-On Thu, Apr 02, 2020 at 07:55:26AM +0200, Greg KH wrote:
-> On Thu, Apr 02, 2020 at 11:06:07AM +0530, Manivannan Sadhasivam wrote:
-> > Hi Greg,
-> > 
-> > Here are the remaining patches left from the pervious series. The QRTR MHI
-> > client driver has gone a bit of refactoring after incorporating comments from
-> > Bjorn and Chris while the MHI suspend/resume patch is unmodified.
+On Fri, Apr 24, 2020 at 06:49:15PM +0000, Luis R. Rodriguez wrote:
+> From: Luis Chamberlain <mcgrof@kernel.org>
 > 
-> It's the middle of the merge window, we can't do anything until after
-> -rc1 is out, so please be patient.
+> Christoph's patch removed two unsused exported symbols, however, one
+> symbol is used by the firmware_loader itself.  If CONFIG_FW_LOADER=m so
+> the firmware_loader is modular but CONFIG_FW_LOADER_USER_HELPER=y we fail
+> the build at mostpost.
 > 
+> ERROR: modpost: "fw_fallback_config" [drivers/base/firmware_loader/firmware_class.ko] undefined!
+> 
+> This happens because the variable fw_fallback_config is built into the
+> kernel if CONFIG_FW_LOADER_USER_HELPER=y always, so we need to grant
+> access to the firmware loader module by exporting it.
+> 
+> Revert only one hunk from his patch.
+> 
+> Fixes: 739604734bd8e4ad71 ("firmware_loader: remove unused exports")
 
-Can you please look into this series now?
+Fixes: 739604734bd8 ("firmware_loader: remove unused exports")
 
-Thanks,
-Mani
+No need to be over-eager with the number of digits...
 
-> greg k-h
+I'll fix this up when I apply it, thanks.
+
+greg k-h
