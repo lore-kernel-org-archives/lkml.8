@@ -2,96 +2,106 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B61B8C54FCB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 16:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A648C54FCB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 16:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BCE42071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 16:00:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="l3Bv7Oj5"
+	by mail.kernel.org (Postfix) with ESMTP id 5AC332071E
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 16:01:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726152AbgDYQAn (ORCPT
+        id S1726162AbgDYQBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 12:00:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54888 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbgDYQAn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 12:00:43 -0400
-Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06F4EC09B04D
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 09:00:41 -0700 (PDT)
-Received: by mail-ot1-x332.google.com with SMTP id m18so18086323otq.9
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 09:00:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=landley-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=aJowGujbLx9YHoHGEkmT5nMHlO6tS2Ov2OkuY7Bp1BA=;
-        b=l3Bv7Oj5K54EczsINK6LMtMkBrM8JRDuQVy6qvWE0aLQG+12c06xYGyLwrdCDAeG+E
-         U9Qy9NYrstNZtSmyifXYYIpz8xAHeYkfQ4zi0O4HWatXLreenCK0FEV7PtkRCMnr/IDh
-         fxZFHa427ONVTI49NJqhU+YImD272y/laUDW+BoWFME1R2jIa7rwctETIj1Cm8Us0vWF
-         cPc7igzFkbi5PoBiwFL9toQ7XeBWW5BIUMe2+zsITtqG5dAOhnazX9nkF8H1UP5h/Q34
-         O9m7hpPF8Pncm/1bFwi9lHEFdxeBnhhHc5JcNCojfk7X5jsxAkbZOYYcvMb+h3xPhqz8
-         /kmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aJowGujbLx9YHoHGEkmT5nMHlO6tS2Ov2OkuY7Bp1BA=;
-        b=YI+ucElCJ00kW1YwsyjlHUSt96zuB/KMSYrKZzPE2KlKLe+0W2SLiSAMsAKoDYLB41
-         Tf0O/HKPa3jiDIjYtkZEPglajwTpBTh8x46SoLgHP7J2To6Y2dbaE0Vjm2ftHnNjC793
-         quKFaZYOb5OiPr7NKwES4AL7UX+Io3ifvOiQXI7+EBc9pdgmAiG3DY5IU9KrVA3Q7gTF
-         4DE3WgGE84SfRYXSU9eA5qNtZroS9LFvVkk7LkecpTMs/vn96kQdljrRGDZx6CmrL+v1
-         LxxlwqhBbiiNp5e2puO4mKCbVe+JjFvNzKay0REtbCPXXe4js/8CvSpcInSV21SOkN+J
-         FSQQ==
-X-Gm-Message-State: AGi0PubPkNfQ3f/iBfRWvbrCRTuUmocT6GEQO/EfoKV9tje3JAdvAl8t
-        SAtatD4bKuqsV8ZNg8P38VHMCg==
-X-Google-Smtp-Source: APiQypIwBOSv8g6UXUE+etBF+ux/xNwS0QmCD3XxU/Hx2+E6+6uBzYCaWzUexCqyaeUOTvlPOhElkQ==
-X-Received: by 2002:aca:b2d6:: with SMTP id b205mr10968150oif.137.1587830441059;
-        Sat, 25 Apr 2020 09:00:41 -0700 (PDT)
-Received: from [192.168.86.21] ([136.62.4.88])
-        by smtp.gmail.com with ESMTPSA id k205sm2545514oih.15.2020.04.25.09.00.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 25 Apr 2020 09:00:40 -0700 (PDT)
-Subject: Re: [PATCHv3 31/50] sh: Add loglvl to printk_address()
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Dmitry Safonov <dima@arista.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org
-References: <20200418201944.482088-1-dima@arista.com>
- <20200418201944.482088-32-dima@arista.com>
- <20200420155237.1b6532c0d0c6940fccd1b762@linux-foundation.org>
-From:   Rob Landley <rob@landley.net>
-Message-ID: <92cf0382-bdb4-6966-5a77-2ade50fdc451@landley.net>
-Date:   Sat, 25 Apr 2020 11:06:41 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200420155237.1b6532c0d0c6940fccd1b762@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Sat, 25 Apr 2020 12:01:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51436 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726112AbgDYQBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 12:01:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D58D0AD9F;
+        Sat, 25 Apr 2020 16:01:39 +0000 (UTC)
+Message-ID: <1587830499.28179.66.camel@suse.cz>
+Subject: Re: [BISECTED] bug/regression, x86-64: completely unbootable machine
+From:   Giovanni Gherdovich <ggherdovich@suse.cz>
+To:     Rui Salvaterra <rsalvaterra@gmail.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
+Date:   Sat, 25 Apr 2020 18:01:39 +0200
+In-Reply-To: <CALjTZvb_nzOXd09VXJDECu4b7xuS3tduQ1SXJ0BrpCMBp4qcRQ@mail.gmail.com>
+References: <CALjTZvaiCzPQT6Jrx4pFW6KuZj2WLSQQpCbU-sg1jEgscQAKFQ@mail.gmail.com>
+         <1587715859.28179.17.camel@suse.cz>
+         <CALjTZvb_nzOXd09VXJDECu4b7xuS3tduQ1SXJ0BrpCMBp4qcRQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/20/20 5:52 PM, Andrew Morton wrote:
-> I guess it doesn't matter much, as sh seems to be rather dead.
+On Fri, 2020-04-24 at 18:39 +0100, Rui Salvaterra wrote:
+> Hi, again,
+> 
+> On Fri, 24 Apr 2020 at 09:11, Giovanni Gherdovich <ggherdovich@suse.cz> wrote:
+> > 
+> > The problem you encountered is due to a bug where the code doesn't work on
+> > machines with less than 4 physical CPU cores.
+> 
+> Thinking about it more thoroughly, are you sure that's the bug I'm
+> hitting? I'm asking because I have an i5-6200U (Skylake, also dual
+> core, dual thread, like the i3-380M) laptop which runs 5.7-rc1/rc2
+> just fine.
+> 
+> Thanks,
+> Rui
 
-The j-core guys are using it.
+There is an easy way to tell (besides compiling with those patches on top and
+check if it works): run the command "turbostat --interval 1 sleep 0", the
+output should tell you the content of the register MSR_TURBO_RATIO_LIMIT.
 
-Rob
+If bits 31:24 are zero, you see the bug (the code divides by that value),
+otherwise you don't. Some 2 cores / 4 threads CPU have a non-zero value there
+(even if it doesn't mean much), some others have zero instead.
+
+The Intel Software Developer Manual (SDM) says the register content is like
+this:
+
+    Bit Fields      Bit Description
+    7:0             Maximum turbo ratio limit of 1 core active.
+    15:8            Maximum turbo ratio limit of 2 core active.
+    23:16           Maximum turbo ratio limit of 3 core active.
+    31:24           Maximum turbo ratio limit of 4 core active.
+    39:32           Maximum turbo ratio limit of 5 core active.
+    47:40           Maximum turbo ratio limit of 6 core active.
+    55:48           Maximum turbo ratio limit of 7 core active.
+    63:56           Maximum turbo ratio limit of 8 core active.
+
+As I wrote above, some 2c/4t CPUs will say (correctly) their 4 cores turbo
+frequency is zero, such as this Intel Core i5-430M (Arrandale) where I've seen
+turbostat saying:
+
+    cpu1: MSR_TURBO_RATIO_LIMIT: 0x00001313
+    19 * 133.3 = 2533.3 MHz max turbo 2 active cores
+    19 * 133.3 = 2533.3 MHz max turbo 1 active cores
+
+On the contrary, my laptop has an Intel Core i5-5300U (Broadwell, also
+2 cores / 4 threads) and it has:
+
+    cpu3: MSR_TURBO_RATIO_LIMIT: 0x1b1b1b1b1b1d
+    27 * 100.0 = 2700.0 MHz max turbo 6 active cores
+    27 * 100.0 = 2700.0 MHz max turbo 5 active cores
+    27 * 100.0 = 2700.0 MHz max turbo 4 active cores
+    27 * 100.0 = 2700.0 MHz max turbo 3 active cores
+    27 * 100.0 = 2700.0 MHz max turbo 2 active cores
+    29 * 100.0 = 2900.0 MHz max turbo 1 active cores
+
+You can see above that the 4 cores turbo freq is declared as 2.7GHz even if
+it's nonsense because there aren't 4 cores. In any case, this cpu wouldn't
+trigger the bug, just as your skylake.
+
+
+Thanks,
+Giovanni
