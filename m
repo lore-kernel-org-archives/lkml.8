@@ -2,124 +2,143 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 640E3C54FCB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 20:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DBDFC54FCB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 20:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39B7A20728
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 20:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEE9D20728
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 20:11:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AQn26i5m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="snMZPzzy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726375AbgDYUIA (ORCPT
+        id S1726327AbgDYULt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 16:08:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36624 "EHLO
+        Sat, 25 Apr 2020 16:11:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726285AbgDYUIA (ORCPT
+        with ESMTP id S1726190AbgDYULs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 16:08:00 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DD92C09B04D
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 13:08:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=y0IGL0wQnsioL4agn4c4DRS773a5YjBvAsL0n8C1Fp0=; b=AQn26i5m9yZrqnZxVm5g7UUOnt
-        gj9iCN5/Tqc1H1bKfJVw5pZWEPkAQCCgoOemKas9Fy3lwaZGam9op0rB3PQDHAoo+ZIrrI/kYrZyF
-        q6x7R/Zd6FvwY47PfMQxPm4gR0awJ1ZkgYNq5vXwGxuG6h8Nr/AWU7iTQYlhiSPA07HBQKRuYSe2Z
-        0VgFcQxV3bvzwBx2VGN4473EHhBPehKY/+w8opWaTBAAl6zmCxIk16p9BqHS39upGZhGwNAp1xaUF
-        cmHYHdByqZh8tp0qqEvPUBQAVgcBBcylvFuUvZPH4a7L2enC0Kb7PA5mT24ursmP67vLy1ca5FXjT
-        sCEESHhA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jSR5h-0003au-EZ; Sat, 25 Apr 2020 20:07:57 +0000
-Subject: Re: [PATCH] objtool: Fix infinite loop in for_offset_range()
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Julien Thierry <jthierry@redhat.com>
-References: <02b719674b031800b61e33c30b2e823183627c19.1587842122.git.jpoimboe@redhat.com>
- <844c4770-5e33-d02c-32d9-200dc7bc4146@infradead.org>
-Message-ID: <ef00c23a-294d-5fea-d7ab-7f2834ec9beb@infradead.org>
-Date:   Sat, 25 Apr 2020 13:07:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sat, 25 Apr 2020 16:11:48 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5924FC09B04D
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 13:11:48 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id p8so6435731pgi.5
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 13:11:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=N2k1av1tyvdh6GZhcN5D4YMVgv3ZyjCy2t6rq6Gh3IE=;
+        b=snMZPzzyiHGucldZsOb4HyMr7AyHIgLiDE8tusGDu5dHaAbKHiDPfTq/C3t9cE4jB7
+         fEv5QnMzvGS0YF7M54Y4+r1QnP8MQ90yA8vMfMFl1r1+vcq7hLWd5EXEy8MgrjmmH2o4
+         xJYfd6hOkA1mP2627weH5mVrEhfFP36wE6ZkiLwuypOSLTiJfSImwGkgZmduRS9XZVk8
+         g82fvBxbKD0/rb3Gx2uDhxToarFa2CVBo90Nd20pz/jsLaLgiA9MuUi6rvrW1YL/2zsT
+         ULyQpF/wDHWDLsxyrZGs0dJh1RXy+t+aBiwLycI2yo57qkBz8kjUMb/yIpY1qPQGQNA0
+         32lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=N2k1av1tyvdh6GZhcN5D4YMVgv3ZyjCy2t6rq6Gh3IE=;
+        b=d0rKudM9ggHbWufiuUT4Epdt44Xtu+wYjyIJtQyN4TuAWhKaeJ0BM/a0Ri2Ikdt8YX
+         4rSC3Zb4+naN1/io245XZ6VNw+pLR7keZtKiNDVkUS7DN75LyDBRVFDBcLnNraeC82/U
+         3gYed5XDaIqn1hUk+gEoJm6GQ3vMF2XLb+MMdUtM4/emihAtbZjzmWHvjX1fVxGfmcn2
+         /biV0WLuetaEEMwzUV4sTSdovez3ETSwBEvuIijsLOkk8h+eW4V9gY6ytlFtm95q7G9w
+         R14pLinEIIff/qA/qUoTocxd49CRbKW1OPyOxaAZTm14vIWC7V92fU7acRIwgfUO0fyy
+         OmLw==
+X-Gm-Message-State: AGi0PuYputcOYsiRba02SNSXs6FqMhNZf/jLmCIGKvZ+nCkG3ZebhJaz
+        l3e1c2NpA1Ca5Og92bciSpM=
+X-Google-Smtp-Source: APiQypLA7CcCVqPz+pgp7tBCRZNdeaPlgiN2G3MAfcwL2tPJb5G80JNT4t9IIjZDyJgbIJlPjajF1g==
+X-Received: by 2002:a62:3803:: with SMTP id f3mr16459171pfa.322.1587845507846;
+        Sat, 25 Apr 2020 13:11:47 -0700 (PDT)
+Received: from anarsoul-thinkpad.lan (216-71-213-236.dyn.novuscom.net. [216.71.213.236])
+        by smtp.gmail.com with ESMTPSA id u188sm8746681pfu.33.2020.04.25.13.11.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Apr 2020 13:11:47 -0700 (PDT)
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Cc:     Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: [PATCH] ALSA: line6: Fix POD HD500 audio playback
+Date:   Sat, 25 Apr 2020 13:11:15 -0700
+Message-Id: <20200425201115.3430-1-anarsoul@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-In-Reply-To: <844c4770-5e33-d02c-32d9-200dc7bc4146@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/25/20 1:04 PM, Randy Dunlap wrote:
-> On 4/25/20 12:19 PM, Josh Poimboeuf wrote:
->> Randy reported that objtool got stuck in an infinite loop when
->> processing drivers/i2c/busses/i2c-parport.o.  It was caused by the
->> following code:
->>
->>   00000000000001fd <line_set>:
->>    1fd:	48 b8 00 00 00 00 00 	movabs $0x0,%rax
->>    204:	00 00 00
->>   			1ff: R_X86_64_64	.rodata-0x8
->>    207:	41 55                	push   %r13
->>    209:	41 89 f5             	mov    %esi,%r13d
->>    20c:	41 54                	push   %r12
->>    20e:	49 89 fc             	mov    %rdi,%r12
->>    211:	55                   	push   %rbp
->>    212:	48 89 d5             	mov    %rdx,%rbp
->>    215:	53                   	push   %rbx
->>    216:	0f b6 5a 01          	movzbl 0x1(%rdx),%ebx
->>    21a:	48 8d 34 dd 00 00 00 	lea    0x0(,%rbx,8),%rsi
->>    221:	00
->>   			21e: R_X86_64_32S	.rodata
->>    222:	48 89 f1             	mov    %rsi,%rcx
->>    225:	48 29 c1             	sub    %rax,%rcx
->>
->> find_jump_table() saw the .rodata reference and tried to find a jump
->> table associated with it (though there wasn't one).  The -0x8 rela
->> addend is unusual.  It caused find_jump_table() to send a negative
->> table_offset (unsigned 0xfffffffffffffff8) to find_rela_by_dest().
->>
->> The negative offset should have been harmless, but it actually threw
->> for_offset_range() for a loop... literally.  When the mask value got
->> incremented past the end value, it also wrapped to zero, causing the
->> loop exit condition to remain true forever.
->>
->> Prevent this scenario from happening by ensuring the incremented value
->> is always >= the starting value.
->>
->> Fixes: 74b873e49d92 ("objtool: Optimize find_rela_by_dest_range()")
->> Reported-by: Randy Dunlap <rdunlap@infradead.org>
->> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> 
-> Hi Josh,
-> 
-> When applied to linux-next 20200414 (where it was reported) and using
-> config-r2092, objtool still loops (I killed it after 6 minutes of CPU time).
+Apparently interface 1 is control interface akin to HD500X,
+setting LINE6_CAP_CONTROL and choosing it as ctrl_if fixes
+audio playback on POD HD500.
 
-Nope, scratch that. Operator error. Sorry.
+Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+---
+ sound/usb/line6/podhd.c | 22 +++++-----------------
+ 1 file changed, 5 insertions(+), 17 deletions(-)
 
-> When applied to linux-next 20200424 and using the same config-r2092 file,
-> objtool appears to terminate normally and the entire build does also.
-> 
-> Acked-by: Randy Dunlap <rdunlap@infradead.org>
-> Tested-by: Randy Dunlap <rdunlap@infradead.org>
-> 
-> thanks.
-> 
->> ---
-
-
+diff --git a/sound/usb/line6/podhd.c b/sound/usb/line6/podhd.c
+index d37db32ecd3b..e39dc85c355a 100644
+--- a/sound/usb/line6/podhd.c
++++ b/sound/usb/line6/podhd.c
+@@ -21,8 +21,7 @@
+ enum {
+ 	LINE6_PODHD300,
+ 	LINE6_PODHD400,
+-	LINE6_PODHD500_0,
+-	LINE6_PODHD500_1,
++	LINE6_PODHD500,
+ 	LINE6_PODX3,
+ 	LINE6_PODX3LIVE,
+ 	LINE6_PODHD500X,
+@@ -318,8 +317,7 @@ static const struct usb_device_id podhd_id_table[] = {
+ 	/* TODO: no need to alloc data interfaces when only audio is used */
+ 	{ LINE6_DEVICE(0x5057),    .driver_info = LINE6_PODHD300 },
+ 	{ LINE6_DEVICE(0x5058),    .driver_info = LINE6_PODHD400 },
+-	{ LINE6_IF_NUM(0x414D, 0), .driver_info = LINE6_PODHD500_0 },
+-	{ LINE6_IF_NUM(0x414D, 1), .driver_info = LINE6_PODHD500_1 },
++	{ LINE6_IF_NUM(0x414D, 0), .driver_info = LINE6_PODHD500 },
+ 	{ LINE6_IF_NUM(0x414A, 0), .driver_info = LINE6_PODX3 },
+ 	{ LINE6_IF_NUM(0x414B, 0), .driver_info = LINE6_PODX3LIVE },
+ 	{ LINE6_IF_NUM(0x4159, 0), .driver_info = LINE6_PODHD500X },
+@@ -352,23 +350,13 @@ static const struct line6_properties podhd_properties_table[] = {
+ 		.ep_audio_r = 0x82,
+ 		.ep_audio_w = 0x01,
+ 	},
+-	[LINE6_PODHD500_0] = {
++	[LINE6_PODHD500] = {
+ 		.id = "PODHD500",
+ 		.name = "POD HD500",
+-		.capabilities	= LINE6_CAP_PCM
++		.capabilities	= LINE6_CAP_PCM | LINE6_CAP_CONTROL
+ 				| LINE6_CAP_HWMON,
+ 		.altsetting = 1,
+-		.ep_ctrl_r = 0x81,
+-		.ep_ctrl_w = 0x01,
+-		.ep_audio_r = 0x86,
+-		.ep_audio_w = 0x02,
+-	},
+-	[LINE6_PODHD500_1] = {
+-		.id = "PODHD500",
+-		.name = "POD HD500",
+-		.capabilities	= LINE6_CAP_PCM
+-				| LINE6_CAP_HWMON,
+-		.altsetting = 0,
++		.ctrl_if = 1,
+ 		.ep_ctrl_r = 0x81,
+ 		.ep_ctrl_w = 0x01,
+ 		.ep_audio_r = 0x86,
 -- 
-~Randy
+2.25.0
 
