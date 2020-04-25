@@ -2,156 +2,129 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC60C55185
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 10:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC0FC55185
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 10:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 035BE20704
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 10:24:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e56uy6oq"
+	by mail.kernel.org (Postfix) with ESMTP id CC46A2071C
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 10:25:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587810319;
+	bh=IYbxD6rDnCzT0DVLR78cEsG65/KLxoU5AKSHsAkOnCU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cZIwtvWkgj/S/F1bXm3cHlnBMMYIiJd7YdqR+7bJNU+/zomK49bUGQjkKSg27RL8v
+	 +Y0olefi5XJEvu+G8+iMGQ7yCVdPjQ6fINpW9+Txi3jmXWT13DusZoabkiXQysUSKV
+	 /d/RS5Q/D5UHrUNdzRjt6iIzc1hVcgufhhG1Hl8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726141AbgDYKYl (ORCPT
+        id S1726130AbgDYKZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 06:24:41 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47556 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726107AbgDYKYk (ORCPT
+        Sat, 25 Apr 2020 06:25:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59544 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726062AbgDYKZR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 06:24:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587810278;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AiiGjxMSfR/3HcuLZdv0rh/BGKXUkSP2JfWB96AlEV4=;
-        b=e56uy6oq7GCXzI9LBQsCaTHhluggEXtKLCBU7J5jUlrLplKxrizVEi+oVcgk8jkyP8JaNa
-        gWK3siU95OCKvmQpHV5YfpMntL3UKW6erTw/sARyXSGFpcyw2K/b6XgF74dL/EpA+Mn/pR
-        QIBnNxIpsL3vFElAM6KQmb3gORwTnQo=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-337-th1I6Ms9NpKo7D4EBP8E4Q-1; Sat, 25 Apr 2020 06:24:29 -0400
-X-MC-Unique: th1I6Ms9NpKo7D4EBP8E4Q-1
-Received: by mail-wr1-f72.google.com with SMTP id d17so6457282wrr.17
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 03:24:29 -0700 (PDT)
+        Sat, 25 Apr 2020 06:25:17 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9A4DC09B04A
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 03:25:16 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id x17so13752683wrt.5
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 03:25:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MmQBP4V8E026I85UvyaH5GpmvHj/r/4y5r6vf11SObQ=;
+        b=m/do77aA3RFy5W9uSNoXIPr8AoTdcBWsHZDqWR7chAgFAyZmCMOZV4/36FzJABh2NS
+         km+ust9sXzLwnPthhSUZPtjb7m1QGH33G3GZplmLVt4IijWcgD2CGT41qxbc8LkOhb2Q
+         iFyHbsGHrxBtnPLohDnFIncfosQxvmsYd7rJzIEqg6D65PVW0F2k8qTmBBHpbKd8kY/J
+         DvwBO8Vi5uAxooHIPeu+zWrO9MYobFVuesKerKgnRURz8kCUATBntG9Obp9vIL7tReZ2
+         83Ij/McS19OUzUBOzNjj9EesxpaOS9194puTo8DJbmKeW7wd4sQd3jPQI8pZQEu1Q7Xr
+         p/Uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AiiGjxMSfR/3HcuLZdv0rh/BGKXUkSP2JfWB96AlEV4=;
-        b=n++8P0WDQNVMmjBWclSwkgyLPSRg3UO8NQxeEry7sUPwsNWSpz+qLtDg20Fk/N656W
-         Tvn4ST1M0tT7DJaik/PPG4kV0NHdQT8wSlgLEkV2gTPNactPloZSxccJGVLGP8BpbmNH
-         NmddZH1xKZ+mryWbd24Ky3z81ppeq+Y3tsxiymJ7sXoCeZ2FWBsYm/pGD6gHICBJ/Vit
-         D+AMmrGYxVJyDIBAULzxcMRcnMHxcgHHAtKpaCciDzgFRZ9uNsViQDtphny9Irj5yGxu
-         ZDIYDwgQa9hpYxTXKzZiIqlzctphuSZymUKz/8WNT20QYnkcch6kt1jBGEcJmx/Rqowk
-         Z5Ow==
-X-Gm-Message-State: AGi0PuZ/NwA0n5o+4KiDJ3giIcSzDMkR3yjNvL2IoJJO8XAcItAxNcCq
-        9q7hcad2f13bRf4zzPUb6LnpTp3fRhy5CGO/hlBgaXLf2hgcZCKeWGqPr68AWSLwqPvj/A2BeDt
-        9ZjhhPxx4beEDCRn0rS6k3T56
-X-Received: by 2002:a5d:5745:: with SMTP id q5mr17541307wrw.351.1587810268503;
-        Sat, 25 Apr 2020 03:24:28 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJCsnbfHqFriQbI24TXuIAXrqXN8iqz6uh+Ag2xVYIfCBS/H8oNA4RK58IzO9hfko5vLHJ96Q==
-X-Received: by 2002:a5d:5745:: with SMTP id q5mr17541287wrw.351.1587810268284;
-        Sat, 25 Apr 2020 03:24:28 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:d0a0:f143:e9e4:2926? ([2001:b07:6468:f312:d0a0:f143:e9e4:2926])
-        by smtp.gmail.com with ESMTPSA id t17sm11580360wro.2.2020.04.25.03.24.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 25 Apr 2020 03:24:27 -0700 (PDT)
-Subject: Re: [PATCH 5/5] kvm: Replace vcpu->swait with rcuwait
-To:     Davidlohr Bueso <dave@stgolabs.net>, tglx@linutronix.de
-Cc:     peterz@infradead.org, maz@kernel.org, bigeasy@linutronix.de,
-        rostedt@goodmis.org, torvalds@linux-foundation.org,
-        will@kernel.org, joel@joelfernandes.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paul Mackerras <paulus@ozlabs.org>,
-        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
-        Davidlohr Bueso <dbueso@suse.de>
-References: <20200424054837.5138-1-dave@stgolabs.net>
- <20200424054837.5138-6-dave@stgolabs.net>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <69af54bb-8632-fbf7-d774-da9a954ff1b7@redhat.com>
-Date:   Sat, 25 Apr 2020 12:24:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MmQBP4V8E026I85UvyaH5GpmvHj/r/4y5r6vf11SObQ=;
+        b=sWPZcuxN6xZbMe3YxCsmrUKLwLDEiaS9E2R6XJPiowvIxtIGcxCUNpxPCzO6K/b6M/
+         8McG6xvynBTmMIO4dFyXgInFLPeN5bpxI6CqT+dDsTbtxDGDBRFHYHfuWoCxH3WdaVD5
+         CxtvATLGDFaNjy2REFepNpcc02Zse7Q7VGcN+L3LQuvg1vYGkoGc7LAMMnIecRdDQkfL
+         FzqIsRjmF39SBnGimXtcDsCxe8yA2bs6lN8NKs4VFQ7CUGtVzLL/lSRVzyI8VA2Qh2Up
+         0fUmqo7kLf/scMUJ3ASqm6Umbj92cu1J3IC0xn8JkEzFJruY6RaQZoc5aYaRgDfy3Wwc
+         hWSA==
+X-Gm-Message-State: AGi0PuZyzMzmX9NUJ9sJmVhbM72bn0tAx+jbiHhtGNABCdrQJ1l06vPV
+        JuwF07kiQTiHzIxTi/gqMQY=
+X-Google-Smtp-Source: APiQypJpXL2nDvsoD9Y0v4Xp9bz4s3CPV4ivb18zEyS3/jC94Qdz/Q4/kwSTbU3E1JOEXmtlNU9CcQ==
+X-Received: by 2002:adf:9d83:: with SMTP id p3mr16927037wre.142.1587810315549;
+        Sat, 25 Apr 2020 03:25:15 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id q10sm11358449wrv.95.2020.04.25.03.25.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Apr 2020 03:25:14 -0700 (PDT)
+Date:   Sat, 25 Apr 2020 12:25:12 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Dave Jones <dsj@fb.com>, Jann Horn <jannh@google.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v2 00/11] ORC fixes
+Message-ID: <20200425102512.GA12331@gmail.com>
+References: <cover.1587808742.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200424054837.5138-6-dave@stgolabs.net>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1587808742.git.jpoimboe@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm squashing this in to keep the changes compared to the current code minimal,
-and queuing the series.
+
+* Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+
+> v2:
+> - Dropped three patches which technically weren't fixes.  Will post them
+>   later as part of another patch set with more improvements.
+> - Removed show_iret_regs() declaration [mbenes]
+> - Added Miroslav Reviewed-by, Linus Reported-by
+> 
+> v1 was here:
+> https://lkml.kernel.org/r/cover.1584033751.git.jpoimboe@redhat.com
+> 
+> Jann Horn (1):
+>   x86/entry/64: Fix unwind hints in rewind_stack_do_exit()
+> 
+> Josh Poimboeuf (9):
+>   objtool: Fix stack offset tracking for indirect CFAs
+>   x86/entry/64: Fix unwind hints in register clearing code
+>   x86/entry/64: Fix unwind hints in kernel exit path
+>   x86/entry/64: Fix unwind hints in __switch_to_asm()
+>   x86/unwind/orc: Convert global variables to static
+>   x86/unwind: Prevent false warnings for non-current tasks
+>   x86/unwind/orc: Prevent unwinding before ORC initialization
+>   x86/unwind/orc: Fix error path for bad ORC entry type
+>   x86/unwind/orc: Fix premature unwind stoppage due to IRET frames
+> 
+> Miroslav Benes (1):
+>   x86/unwind/orc: Don't skip the first frame for inactive tasks
+
+Thanks for doing this. These ORC handling bugs IMHO look serious and 
+widespread enough to warrant x86/urgent treatment, and the v2 series is 
+fixes-only.
+
+Any objections against targeting v5.7-rc3 with this, assuming that 
+there's no problems found during review and it passes about a week of 
+testing?
 
 Thanks,
 
-Paolo
-
-diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-index bbefa2a7f950..feca3118b17f 100644
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -230,10 +230,10 @@ static bool kvmppc_ipi_thread(int cpu)
- static void kvmppc_fast_vcpu_kick_hv(struct kvm_vcpu *vcpu)
- {
- 	int cpu;
--	struct rcuwait *wait;
-+	struct rcuwait *waitp;
- 
--	wait = kvm_arch_vcpu_get_wait(vcpu);
--	if (rcuwait_wake_up(wait))
-+	waitp = kvm_arch_vcpu_get_wait(vcpu);
-+	if (rcuwait_wake_up(waitp))
- 		++vcpu->stat.halt_wakeup;
- 
- 	cpu = READ_ONCE(vcpu->arch.thread_cpu);
-@@ -3814,7 +3814,10 @@ static void kvmppc_vcore_blocked(struct kvmppc_vcore *vc)
- 		}
- 	}
- 
-+	prepare_to_rcuwait(&vc->wait);
-+	set_current_state(TASK_INTERRUPTIBLE);
- 	if (kvmppc_vcore_check_block(vc)) {
-+		finish_rcuwait(&vc->wait);
- 		do_sleep = 0;
- 		/* If we polled, count this as a successful poll */
- 		if (vc->halt_poll_ns)
-@@ -3827,8 +3830,8 @@ static void kvmppc_vcore_blocked(struct kvmppc_vcore *vc)
- 	vc->vcore_state = VCORE_SLEEPING;
- 	trace_kvmppc_vcore_blocked(vc, 0);
- 	spin_unlock(&vc->lock);
--	rcuwait_wait_event(&vc->wait,
--			   kvmppc_vcore_check_block(vc), TASK_INTERRUPTIBLE);
-+	schedule();
-+	finish_rcuwait(&vc->wait);
- 	spin_lock(&vc->lock);
- 	vc->vcore_state = VCORE_INACTIVE;
- 	trace_kvmppc_vcore_blocked(vc, 1);
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 7c2d18c12d87..c671de51a753 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -2737,10 +2737,10 @@ EXPORT_SYMBOL_GPL(kvm_vcpu_block);
- 
- bool kvm_vcpu_wake_up(struct kvm_vcpu *vcpu)
- {
--	struct rcuwait *wait;
-+	struct rcuwait *waitp;
- 
--	wait = kvm_arch_vcpu_get_wait(vcpu);
--	if (rcuwait_wake_up(wait)) {
-+	waitp = kvm_arch_vcpu_get_wait(vcpu);
-+	if (rcuwait_wake_up(waitp)) {
- 		WRITE_ONCE(vcpu->ready, true);
- 		++vcpu->stat.halt_wakeup;
- 		return true;
-
+	Ingo
