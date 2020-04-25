@@ -6,79 +6,87 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 776FEC54FCB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 14:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19AE7C54FCB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 14:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 548F920704
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 14:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1FE420704
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 14:48:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726117AbgDYOr4 (ORCPT
+        id S1726135AbgDYOsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 10:47:56 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:43542 "EHLO
+        Sat, 25 Apr 2020 10:48:16 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:43578 "EHLO
         asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbgDYOr4 (ORCPT
+        with ESMTP id S1726087AbgDYOsP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 10:47:56 -0400
+        Sat, 25 Apr 2020 10:48:15 -0400
 Received: from ravnborg.org (unknown [158.248.194.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 8ECA320070;
-        Sat, 25 Apr 2020 16:47:53 +0200 (CEST)
-Date:   Sat, 25 Apr 2020 16:47:52 +0200
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 9EF6620082;
+        Sat, 25 Apr 2020 16:48:12 +0200 (CEST)
+Date:   Sat, 25 Apr 2020 16:48:11 +0200
 From:   Sam Ravnborg <sam@ravnborg.org>
 To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, drinkcat@chromium.org,
+Cc:     linux-kernel@vger.kernel.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        drinkcat@chromium.org, Jonas Karlman <jonas@kwiboo.se>,
         David Airlie <airlied@linux.ie>,
+        Neil Armstrong <narmstrong@baylibre.com>,
         dri-devel@lists.freedesktop.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        laurent.pinchart@ideasonboard.com, hsinyi@chromium.org,
-        matthias.bgg@gmail.com, Collabora Kernel ML <kernel@collabora.com>
-Subject: Re: [PATCH 1/2] drm: panel: Set connector type for LP120UP1
-Message-ID: <20200425144752.GC32235@ravnborg.org>
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        hsinyi@chromium.org, matthias.bgg@gmail.com,
+        Collabora Kernel ML <kernel@collabora.com>
+Subject: Re: [PATCH 2/2] drm/bridge: ps8640: Let panel to set the connector
+ type
+Message-ID: <20200425144811.GD32235@ravnborg.org>
 References: <20200416164404.2418426-1-enric.balletbo@collabora.com>
+ <20200416164404.2418426-2-enric.balletbo@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200416164404.2418426-1-enric.balletbo@collabora.com>
+In-Reply-To: <20200416164404.2418426-2-enric.balletbo@collabora.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 X-CMAE-Score: 0
 X-CMAE-Analysis: v=2.3 cv=ULXz4hXy c=1 sm=1 tr=0
         a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
         a=kj9zAlcOel0A:10 a=QX4gbG5DAAAA:8 a=e5mUnYsNAAAA:8
-        a=IxUrriraKJGnn9GRWq8A:9 a=CjuIK1q_8ugA:10 a=AbAUZ8qAyYyZVLSsDulk:22
+        a=CQXTL9UJpCP97K1xDI4A:9 a=CjuIK1q_8ugA:10 a=AbAUZ8qAyYyZVLSsDulk:22
         a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 06:44:03PM +0200, Enric Balletbo i Serra wrote:
-> The LP120UP1 is a eDP panel, set the connector type accordingly.
+On Thu, Apr 16, 2020 at 06:44:04PM +0200, Enric Balletbo i Serra wrote:
+> The panel connector type should be set by the panel not the bridge, so
+> remove the connector_type assignment.
 > 
 > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Thanks.
-Applied to drm-misc-next.
+
+Thanks, applied to drm-misc-next.
 
 	Sam
 
 > ---
 > 
->  drivers/gpu/drm/panel/panel-simple.c | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/gpu/drm/bridge/parade-ps8640.c | 2 --
+>  1 file changed, 2 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> index 3ad828eaefe1..6253635601bb 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -2168,6 +2168,7 @@ static const struct panel_desc lg_lp120up1 = {
->  		.width = 267,
->  		.height = 183,
->  	},
-> +	.connector_type = DRM_MODE_CONNECTOR_eDP,
->  };
+> diff --git a/drivers/gpu/drm/bridge/parade-ps8640.c b/drivers/gpu/drm/bridge/parade-ps8640.c
+> index 956b76e0a44d..13755d278db6 100644
+> --- a/drivers/gpu/drm/bridge/parade-ps8640.c
+> +++ b/drivers/gpu/drm/bridge/parade-ps8640.c
+> @@ -278,8 +278,6 @@ static int ps8640_probe(struct i2c_client *client)
+>  	if (!panel)
+>  		return -ENODEV;
 >  
->  static const struct drm_display_mode lg_lp129qe_mode = {
+> -	panel->connector_type = DRM_MODE_CONNECTOR_eDP;
+> -
+>  	ps_bridge->panel_bridge = devm_drm_panel_bridge_add(dev, panel);
+>  	if (IS_ERR(ps_bridge->panel_bridge))
+>  		return PTR_ERR(ps_bridge->panel_bridge);
 > -- 
 > 2.25.1
 > 
