@@ -2,84 +2,117 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F26A8C55186
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 11:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C60F5C55185
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 11:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCDE2206A2
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 11:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9478520714
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 11:14:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O5u+4P5u"
+	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="d3wmTxFC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbgDYLLC (ORCPT
+        id S1726116AbgDYLOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 07:11:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38440 "EHLO
+        Sat, 25 Apr 2020 07:14:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726059AbgDYLLC (ORCPT
+        by vger.kernel.org with ESMTP id S1726050AbgDYLOx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 07:11:02 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AD12C09B04B;
-        Sat, 25 Apr 2020 04:11:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=XhkPbtyaqmMBG6aICROLPcfy5U+xk0OZN/pBlUuLuHY=; b=O5u+4P5udjw0lHyGwAIHIyJA8q
-        ytjTlNMbMxF4ZNJwIqFOEoSBxnGwcYFU6GjUmAAKDJ+si7gTkCax+kFnS/rp0flqBfaSkGJxXDGzN
-        UKAbF9lVnztuR3ea3DbP3qH+3Dj49pOJZgHSACe+4HJrA0+LnFE9bTtMAnogLiV1+IY0b2/J4MLtt
-        mpQB59fVaoUCLRdZ0BxOo2Bc75V/ApvwggSB79/NE/xE5CICVh1ZFhYhfuHsoegxQVdqszx9b9Fpf
-        Ijr3RBDx/DQrCBgpGOclmEmrTKgtgPqIcd90LHorb9f5dfzudxyFa/b5/3/6u9gE6xhSmkeNFLhIO
-        Ng05eJtg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jSIi0-0003jb-Ig; Sat, 25 Apr 2020 11:10:56 +0000
-Date:   Sat, 25 Apr 2020 04:10:56 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     linux-scsi@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>,
-        Joao Lima <Joao.Lima@synopsys.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/5] scsi: ufs: Allow UFS 3.0 as a valid version
-Message-ID: <20200425111056.GA3384@infradead.org>
-References: <cover.1587727756.git.Jose.Abreu@synopsys.com>
- <5c4281080538b74ca39cedb9112ffe71bf7a80b5.1587727756.git.Jose.Abreu@synopsys.com>
+        Sat, 25 Apr 2020 07:14:53 -0400
+X-Greylist: delayed 78680 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 25 Apr 2020 04:14:52 PDT
+Received: from dvalin.narfation.org (dvalin.narfation.org [IPv6:2a00:17d8:100::8b1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4E1FC09B04B;
+        Sat, 25 Apr 2020 04:14:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
+        s=20121; t=1587813290;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=KumF6kh56EN8JU+7POkgR7Y2ujlsA83xKr4QGN/daXg=;
+        b=d3wmTxFC0t5ZVqdKAiC+GC/Lm6Thc6opDvrFvelDyKI1DXvCx+KpYYtcjNgP9n95smB8zi
+        2N5EHiMVHUJANDnUUr77SmLF2PmdkndLm/1uNnEgso1JGbjR6n5AR5FG4LCwqBDD1I70/5
+        JxLo+0k2l3VZF+8Qpj05Lsi9Wo+mU1I=
+From:   Sven Eckelmann <sven@narfation.org>
+To:     ath10k@lists.infradead.org
+Cc:     Linus =?ISO-8859-1?Q?L=FCssing?= <linus.luessing@c0d3.blue>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ben Greear <greearb@candelatech.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Linus =?ISO-8859-1?Q?L=FCssing?= <ll@simonwunderlich.de>,
+        mail@adrianschmutzler.de
+Subject: Re: [PATCH] ath10k: increase rx buffer size to 2048
+Date:   Sat, 25 Apr 2020 13:14:42 +0200
+Message-ID: <3097447.aZuNXRJysd@sven-edge>
+In-Reply-To: <3300912.TRQvxCK2vZ@bentobox>
+References: <20200205191043.21913-1-linus.luessing@c0d3.blue> <3300912.TRQvxCK2vZ@bentobox>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5c4281080538b74ca39cedb9112ffe71bf7a80b5.1587727756.git.Jose.Abreu@synopsys.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: multipart/signed; boundary="nextPart9684083.LlcNlZrpYr"; micalg="pgp-sha512"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 01:36:56PM +0200, Jose Abreu wrote:
-> Add a define for UFS version 3.0 and do not print an error message upon
-> probe when using this version.
+--nextPart9684083.LlcNlZrpYr
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 
-This doesn't really scale.  Version checks only make sense for a minimum
-supported version.  Rejecting newer versions is just a bad idea.
+On Wednesday, 1 April 2020 09:00:49 CEST Sven Eckelmann wrote:
+> On Wednesday, 5 February 2020 20:10:43 CEST Linus L=FCssing wrote:
+> > From: Linus L=FCssing <ll@simonwunderlich.de>
+> >=20
+> > Before, only frames with a maximum size of 1528 bytes could be
+> > transmitted between two 802.11s nodes.
+> >=20
+> > For batman-adv for instance, which adds its own header to each frame,
+> > we typically need an MTU of at least 1532 bytes to be able to transmit
+> > without fragmentation.
+> >=20
+> > This patch now increases the maxmimum frame size from 1528 to 1656
+> > bytes.
+> [...]
+>=20
+> @Kalle, I saw that this patch was marked as deferred [1] but I couldn't f=
+ind=20
+> any mail why it was done so. It seems like this currently creates real wo=
+rld=20
+> problems - so would be nice if you could explain shortly what is currentl=
+y=20
+> blocking its acceptance.
 
-> @@ -8441,7 +8441,8 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
->  	if ((hba->ufs_version != UFSHCI_VERSION_10) &&
->  	    (hba->ufs_version != UFSHCI_VERSION_11) &&
->  	    (hba->ufs_version != UFSHCI_VERSION_20) &&
-> -	    (hba->ufs_version != UFSHCI_VERSION_21))
-> +	    (hba->ufs_version != UFSHCI_VERSION_21) &&
-> +	    (hba->ufs_version != UFSHCI_VERSION_30))
+Ping?
 
-i.e. this should become
+Kind regards,
+	Sven
 
-	if (hba->ufs_version < UFSHCI_VERSION_10)
+> [1] https://patchwork.kernel.org/patch/11367055/
+--nextPart9684083.LlcNlZrpYr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
-as an additional cleanup I think it makes more sense t use a UFSHCI_VER()
-macro similar to KERNEL_VERSION() or NVME_VS() instead of adding a new
-define for every version.
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAl6kG6IACgkQXYcKB8Em
+e0blZhAAtUz1zZuJUiX3gvEu7u03vcUEh+9wxlrnYwC+XmWyXWZ0lswqB5egTyd0
+2XbsmAXldRfVz6HV/Gly3WGR2QBxVCkQPhEhDuUBDuNFnp/QL2+qnriubgRlDYSp
+lIVP1REqUJcADEM92Bec8vWub35lxIwMj3j/DpR9gQ/toJu9C/1Gnuw9i40WTF3i
+K+BMaPwR33aGAdTRDh1fK0zWcpuzRIOMGJf4HhoOgm3HU0K07P64UXC4x40uU1zi
+G7Tn6SekHgtio5DmRRualgp28QE69XK66W25mbLxaZQcvnUHuNEoMZC+bJh+kYkN
+pZiVdlUx6CM+CqSuztHCYT7Dgl3hC8KbTRAfVSY1M44NChglAIO3WXuHasyeqJHn
+n9BJ+q9+AcemX1whESG16iA10KMK/8PsRF9ynzM05W+JiwvDiTB0JbEfS0h4eur0
+dwiavSaAvnhoXV2bra4XxuqDxQWjagq11FCIpMg1U4WpuZSKit2K6hL31wHChsK7
+O03j+un9EU/UHlDRb4G2EM1UU3t6JngjUDlzPr1lNkVFCwiFO4wh4e8nm+GiRmuc
+yj1Wq7FREyBhhDbktr56SFLHoAluhshb2QRE+8yNAELZEi+mKS08kY/c6FVxPo63
+elfS4ktzDlNtkQO4agAAPAmIOijysXjj7mG8a+5A8vhX4Y+s6Ck=
+=2W59
+-----END PGP SIGNATURE-----
+
+--nextPart9684083.LlcNlZrpYr--
+
+
+
