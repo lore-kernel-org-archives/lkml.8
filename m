@@ -6,80 +6,88 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57979C55194
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 20:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACCAC55191
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 20:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AEF42074F
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 20:48:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D95432074F
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 20:54:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbgDYUs2 (ORCPT
+        id S1726349AbgDYUyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 16:48:28 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:59870 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbgDYUs1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 16:48:27 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 4BFFD1C0239; Sat, 25 Apr 2020 22:48:26 +0200 (CEST)
-Date:   Sat, 25 Apr 2020 22:48:25 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v20 00/17] Multicolor Framework (array edition)
-Message-ID: <20200425204825.GG23926@amd>
-References: <20200423155524.13971-1-dmurphy@ti.com>
+        Sat, 25 Apr 2020 16:54:11 -0400
+Received: from sauhun.de ([88.99.104.3]:37932 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726201AbgDYUyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 16:54:11 -0400
+Received: from localhost (p5486CACD.dip0.t-ipconnect.de [84.134.202.205])
+        by pokefinder.org (Postfix) with ESMTPSA id 5C7382C1FEE;
+        Sat, 25 Apr 2020 22:54:08 +0200 (CEST)
+Date:   Sat, 25 Apr 2020 22:54:08 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Vadim Pasternak <vadimp@mellanox.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] platform/mellanox: mlxreg-hotplug: convert to use
+ i2c_new_client_device()
+Message-ID: <20200425205407.GA6774@kunai>
+References: <20200326210952.12857-1-wsa+renesas@sang-engineering.com>
+ <20200326210952.12857-3-wsa+renesas@sang-engineering.com>
+ <CAHp75Vfw4_0ttE2F-WxdULf7hRGsQvqzCLdCNVy7RBaFdEsCGA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="AGZzQgpsuUlWC1xT"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="opJtzjQTFsWo+cga"
 Content-Disposition: inline
-In-Reply-To: <20200423155524.13971-1-dmurphy@ti.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <CAHp75Vfw4_0ttE2F-WxdULf7hRGsQvqzCLdCNVy7RBaFdEsCGA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---AGZzQgpsuUlWC1xT
+--opJtzjQTFsWo+cga
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
+On Fri, Mar 27, 2020 at 09:38:21AM +0200, Andy Shevchenko wrote:
+> On Thu, Mar 26, 2020 at 11:10 PM Wolfram Sang
+> <wsa+renesas@sang-engineering.com> wrote:
+> >
+> > Move away from the deprecated API and return the shiny new ERRPTR where
+> > useful.
+> >
+>=20
+> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-> This is the multi color LED framework.   This framework presents clustered
-> colored LEDs into an array and allows the user space to adjust the bright=
-ness
-> of the cluster using a single file write.  The individual colored LEDs
-> intensities are controlled via a single file that is an array of
-> LEDs
+Thanks, Andy! Is there a platform-x86-tree where this can go in? Or
+shall I take it via the I2C tree? Same question for the similar patch
+for x86/platform/intel-mid?
 
-Thanks for the series.
 
-I believe 6/, 11/, 15/, 16/ could be applied now. Should I do that?
-
-8..10/ might be ready, too... but I'm not relevant maintainer, so
-you'll need to push them separately. I added my acks.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---AGZzQgpsuUlWC1xT
+--opJtzjQTFsWo+cga
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iEYEARECAAYFAl6kohkACgkQMOfwapXb+vLpywCgtnFlcDBg/pxDI0KMk2G36Aqn
-m+wAn39TLf6iQqWHndo1xzZbd/hCybVK
-=r30Z
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6ko2sACgkQFA3kzBSg
+KbZL+BAAivHnLwlKT5ihGFOpYc2ysvV5Pe4TXJS4vuBDj2n+ETxpkYbEzhWiary6
+3yIsBzNbq/aDLYk91y5N+si7jj4oN/6hK754BNzHKplZahAaYxzZWn1FbqVejkcl
+/zawMYGz3KEpFsyYqxEVR/AbYz0bINF3xx9cKewdJoeA05ev15LicTgiOdK1aXg9
+6g4xvhRWYgLFdqCWcmiIKfUTEvrBWQxNxfQRTMjGTP6bMfq38JOdf+6hWMOQqHbG
+AG/vdQzUCoqh6dbmRC0Rmn9Yi27BWaOLpJwc7TGID9B0gzJIj8Z6VeXgN//d7BBb
+gc+uk7ZBlZlxsHElWoY6xInz8sipuTv+O5K30Tq7zVHQ6E/3IBCEDBYrWwyz5LxU
+cWN7F1wLUMXSywGVBWhtf8zwYt4u4OJygq+aEcj3DRr4ZziXtj77zLAZMjRQD+aA
+dtq/Ifu0rPI8zY4JbcxlXjuByJCULiUxmW9g21LlzKXtNKe+oj7d3TDmMw3+h65V
+Dvn2LWVWOQMNHmTtHN+qwXwkT2RnR2+mZq7c2Ucnn/W2gyML4sx+3DWc80uuDK/H
+xOfY5rdotVi/oo9NcLcPI8M8SN4O7pimyk1pmg61gdngHP+sLVes8E6kL8Ossgh9
+JCWBIW6Dky1Fi7reFbKGSVz3LUuoAU/oRjeXDwR/RatcfkkmrDM=
+=OCNg
 -----END PGP SIGNATURE-----
 
---AGZzQgpsuUlWC1xT--
+--opJtzjQTFsWo+cga--
