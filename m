@@ -2,140 +2,92 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E69C55185
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 05:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 205BAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 05:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02B2E20748
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 05:17:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rbhLhZvQ"
+	by mail.kernel.org (Postfix) with ESMTP id F1B2320748
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 05:18:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587791922;
+	bh=j1K62S8pEucAn03WC6C0hd7b4fKQOKT/CAfD5fewpt8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=uCmYbbLXL2MwBte8rbJtgPzOQ13WkS/OF5rgPsYMun3zddCg3qa/Ca3k3uGMtEPeI
+	 HhXlEQYegwvhBjoWQ6WcEPP0tDQFGjqowUR6aIoGbGEH8AbHdalHRUSANgSlcWAGeL
+	 z2hJ/QixU/o8SaReb394q0//v48KttVj3xL4h5+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726130AbgDYFPJ (ORCPT
+        id S1726146AbgDYFSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 01:15:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39944 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725909AbgDYFPH (ORCPT
+        Sat, 25 Apr 2020 01:18:41 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:62627 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbgDYFSl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 01:15:07 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72B80C09B04B
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 22:15:05 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id 23so7703522qkf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 22:15:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H1SBatyiXpIiTu8qbFEdAJrtrObabCrqo/oadnwsGtc=;
-        b=rbhLhZvQDnG6p+e0PJwLpEu/dK/fw/igKekR9oZcCnflWf7m0TDjvkmh2zlY2Jv+5j
-         w17JME6X4TKTpcDvBRLmVs49deqkl3eJyKh1L7vRMmxnfdsOYENY7JF9Whdd3EV1sXlw
-         c6glcoi7MT1uFTPCvpl9PN9cZ4LDTrB4oVbz/1sOgiOUHLE8sWHINGMxicPcLr2uMAR6
-         O2Z2F96Hglf1mJT3R+FvM3jHj0K3wNzZ+0skd/nSM8FWXhmOAOPvELMGo1vMwGBlSbz+
-         4EDDdd0s96V29n+ylk1YxweDQAJG1IJaXvpTu+NWrxKzLbWNk3R9kdM3yD7wZ2xjOvNS
-         ASeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H1SBatyiXpIiTu8qbFEdAJrtrObabCrqo/oadnwsGtc=;
-        b=iDfYAcHjD+iqMQK5X0HhbUf/xKXDd2U8TEC1n6NGkAuAPg/LD53XY8NN2FWxv1lajw
-         l3I5tGxMl5QFgc1/DOWUXxAH6O6hY4uaNKxX49VvSah638CUsvgMsPleUIc9WKHrYzW5
-         Xc7/3OlSEP53oYZIiNvjabVZayX6rxxpn0h5A4AVKo7bPbhkOIZk7rPv90vP9vcpyg4T
-         +gCfh/O9cEM9ix/I3UUQ/a7fOH1vKQotj1tkrM1lb2skQzENuuolJhjdGTTEhhkmgd6w
-         CUwuLq5MLkx7ivy+DBRI5x8lKUfNPLrTBym27lMIy8t8MnMeeIVhKkFZZUV9FOCtDCQ0
-         xhMQ==
-X-Gm-Message-State: AGi0PuYkZlXBe+O5AQZH0Y0m/q/ptLhIvsRHunhZUgWol4khWkAgbDKK
-        L2G6lmy0jdoRAr19Tudl7nLm4e0xz+MwZLPdOhZqeg==
-X-Google-Smtp-Source: APiQypKWjPa+EY2ioHZfTJG/+Df1shHqevoVywrRu+bXUnHcbJQlizj6CkbA7d5bq/V5+oeDZk48ITG0Le0/PUrjfNE=
-X-Received: by 2002:a05:620a:1362:: with SMTP id d2mr12003772qkl.256.1587791704265;
- Fri, 24 Apr 2020 22:15:04 -0700 (PDT)
+        Sat, 25 Apr 2020 01:18:41 -0400
+Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id 03P5IJQP026359;
+        Sat, 25 Apr 2020 14:18:20 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 03P5IJQP026359
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587791900;
+        bh=KgAwBNo7fb6wRf4pOmAZsdrwSddFEDStxa7L0h2/CiA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=HIgPF6uQMyfXx3eQHwhyHBgXNO8uvrIqtPNGL1m3bxUuhALx4IyIgdNVTz+ZHp+04
+         ZZgoqyk7JPx/z7EMJCuqAHJYGXf2oz8l4pumia9yy3wyu9WlmxBeLP/i/KC5eVsMT/
+         ZPL8UqK6ha0cbovJPE+iQlb/IFP6HNuu1CjPJdvN/u83UgabNeZfzDOniaxT3mM1FX
+         ewV+7oWFEx/jozCoapHcKYIml3BmHCHXZD912qPD3IfxApkOhb/W6e+GXCQ9nRpwao
+         zLyUQ49150VhtcHzyCEc+CDhxKx8bbu9QE7meEqsq4kS5BlPZ6X0E6NGKgkf+fiz6B
+         BIpzwZTQh3kQA==
+X-Nifty-SrcIP: [126.90.202.47]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        uclinux-h8-devel@lists.sourceforge.jp,
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH] h8300: suppress error messages for 'make clean'
+Date:   Sat, 25 Apr 2020 14:18:16 +0900
+Message-Id: <20200425051816.791423-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <CACT4Y+YTi4JCFRqOB9rgA22S+6xxTo87X41hj6Tdfro8K3ef7g@mail.gmail.com>
- <CAHC9VhQs6eJpX4oMrhBiDap-HhEsBBgmYWEou=ZH60YiA__T7w@mail.gmail.com>
-In-Reply-To: <CAHC9VhQs6eJpX4oMrhBiDap-HhEsBBgmYWEou=ZH60YiA__T7w@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Sat, 25 Apr 2020 07:14:52 +0200
-Message-ID: <CACT4Y+b8HiV6KFuAPysZD=5hmyO4QisgxCKi4DHU3CfMPSP=yg@mail.gmail.com>
-Subject: Re: selinux_netlink_send changes program behavior
-To:     Paul Moore <paul@paul-moore.com>,
-        David Miller <davem@davemloft.net>, kuba@kernel.org,
-        netdev <netdev@vger.kernel.org>
-Cc:     Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller <syzkaller@googlegroups.com>,
-        Willem de Bruijn <willemb@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 11:51 PM Paul Moore <paul@paul-moore.com> wrote:
->
-> On Fri, Apr 24, 2020 at 4:27 AM Dmitry Vyukov <dvyukov@google.com> wrote:
-> > Hi SELinux maintainers,
-> >
-> > We've hit a case where a developer wasn't able to reproduce a kernel
-> > bug, it turned out to be a difference in behavior between SELinux and
-> > non-SELinux kernels.
-> > Condensed version: a program does sendmmsg on netlink socket with 2
-> > mmsghdr's, first is completely empty/zeros, second contains some
-> > actual payload. Without SELinux the first mmsghdr is treated as no-op
-> > and the kernel processes the second one (triggers bug). However the
-> > SELinux hook does:
-> >
-> > static int selinux_netlink_send(struct sock *sk, struct sk_buff *skb)
-> > {
-> >     if (skb->len < NLMSG_HDRLEN) {
-> >         err = -EINVAL;
-> >         goto out;
-> >     }
-> >
-> > and fails processing on the first empty mmsghdr (does not happen
-> > without SELinux).
-> >
-> > Is this difference in behavior intentional/acceptable/should be fixed?
->
-> From a practical perspective, SELinux is always going to need to do a
-> length check as it needs to peek into the netlink message header for
-> the message type so it can map that to the associated SELinux
-> permissions.  So in that sense, the behavior is intentional and
-> desired; however from a bug-for-bug compatibility perspective ... not
-> so much.
->
-> Ultimately, my it's-Friday-and-it's-been-a-long-week-ending-in-a-long-day
-> thought is that this was a buggy operation to begin with and the bug
-> was just caught in different parts of the kernel, depending on how it
-> was configured.  It may not be ideal, but I can think of worse things
-> (and arguably SELinux is doing the Right Thing).
+'make ARCH=h8300 clean' emits error messages as follows:
 
-+netlink maintainers for intended semantics of empty netlink messages
+  $ make ARCH=h8300 clean
+  gcc: error: missing argument to '-Wframe-larger-than='
+  gcc: error: unrecognized command line option '-mint32'
 
-If it's a bug, or intended behavior depends on the intended
-behavior... which I assume is not documented anywhere officially.
-However, most of the netlink families use netlink_rcv_skb, which does:
+You can suppress the second one by setting the correct CROSS_COMPILE=,
+but we should not require any compiler for cleaning.
 
-int netlink_rcv_skb(struct sk_buff *skb, int (*cb)(struct sk_buff *,
-                           struct nlmsghdr *,
-                           struct netlink_ext_ack *))
-{
-    ...
-    while (skb->len >= nlmsg_total_size(0)) {
-    ...
-       skb_pull(skb, msglen);
-    }
-    return 0;
-}
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-1. How intentional is this while loop logic vs sloppy error checking?
-2. netlink_rcv_skb seems to be able to handle 2+ messages in the same
-skb, while selinux_netlink_send only checks the first one... so can I
-skip SELinux checks by putting a malicious message after a permitted
-one?..
+ arch/h8300/boot/compressed/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/h8300/boot/compressed/Makefile b/arch/h8300/boot/compressed/Makefile
+index 9e2701069bbe..5942793f77a0 100644
+--- a/arch/h8300/boot/compressed/Makefile
++++ b/arch/h8300/boot/compressed/Makefile
+@@ -18,7 +18,7 @@ CONFIG_MEMORY_START     ?= 0x00400000
+ CONFIG_BOOT_LINK_OFFSET ?= 0x00280000
+ IMAGE_OFFSET := $(shell printf "0x%08x" $$(($(CONFIG_MEMORY_START)+$(CONFIG_BOOT_LINK_OFFSET))))
+ 
+-LIBGCC := $(shell $(CROSS-COMPILE)$(CC) $(KBUILD_CFLAGS) -print-libgcc-file-name)
++LIBGCC := $(shell $(CROSS-COMPILE)$(CC) $(KBUILD_CFLAGS) -print-libgcc-file-name 2>/dev/null)
+ LDFLAGS_vmlinux := -Ttext $(IMAGE_OFFSET) -estartup -T $(obj)/vmlinux.lds \
+ 	--defsym output=$(CONFIG_MEMORY_START)
+ 
+-- 
+2.25.1
+
