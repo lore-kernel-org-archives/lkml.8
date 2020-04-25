@@ -2,167 +2,372 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E960C54FCB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 14:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C6EAC54FCB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 14:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD1DA206B9
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 14:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05775206B9
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 14:26:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="RXum/kcd"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="wBMDwiON"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726174AbgDYOYt (ORCPT
+        id S1726181AbgDYO0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 10:24:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40110 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726119AbgDYOYs (ORCPT
+        Sat, 25 Apr 2020 10:26:01 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:46050 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbgDYO0B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 10:24:48 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BEBDC09B04B
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 07:24:48 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id i10so14952667wrv.10
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 07:24:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=jnGMwqxDJTUwXxH8vie5J2AOeWeVUc9XLUd9uVmVOK0=;
-        b=RXum/kcdev5kFunjRwVnErwBSmTKoHcyC3Ak/1zmGj13o4Kf4pduDeug7NsGKFxVG4
-         0SU5XsgmKEyaYSnJ6TMEtVReSu2Ol3M5Kkkdxgpdwz0nUWYQlFDdFZ1qSneN1f1FPPO3
-         Qaetz1VEJcPpLmjtVrq1rMGf+BhEsQCLoZfgs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=jnGMwqxDJTUwXxH8vie5J2AOeWeVUc9XLUd9uVmVOK0=;
-        b=tBHZMs3RNB/Ck/xNe2qDDn0uYbaAJcIroPBQClaR/DuFGv0O47JMmDJhixIbHxUaEn
-         dTXRJXZqY5LfUkxlSpejM4N2hc5zACsGd9Tp2v/utxYHu33bbuxRMUgLvKWT1jOSxpS4
-         fGVbtO1e/YGfu9R6VHtb6ch1Kb+6yf8GXm2jGzF1jcqhV1NVxnN9offUP9jbI30TIR1E
-         Iv6r1J3LscLU0cv3zLVT4SqME1SJFDgZqTRn7wt79XOTTxiLWxKy8SrFKPrCpflN4Bvk
-         dIkDHrRYodQlTZXeKTIEf9BQudVgtKkFePZMmtCsw2LkUUaL6gw8KPb4ii0DZgBgTas/
-         QX5w==
-X-Gm-Message-State: AGi0PubGUTSZf/SKuB25qStvHedM4C2lgdx2N+bMOv98hgQXvPd9qJri
-        p0f87+O+5jUElwBz8bV6N+mREw==
-X-Google-Smtp-Source: APiQypJWu9LEffosU8ysy0XWABFIgtJCI/VVV2LrHyMeG66GzJRTnFyeyyWTmEc7h5wdBP1x5keG8A==
-X-Received: by 2002:adf:a11a:: with SMTP id o26mr16996447wro.284.1587824686568;
-        Sat, 25 Apr 2020 07:24:46 -0700 (PDT)
-Received: from cloudflare.com ([2a02:a310:c262:aa00:b35e:8938:2c2a:ba8b])
-        by smtp.gmail.com with ESMTPSA id o18sm12534047wrp.23.2020.04.25.07.24.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Apr 2020 07:24:45 -0700 (PDT)
-References: <1587819040-38793-1-git-send-email-xiyuyang19@fudan.edu.cn>
-User-agent: mu4e 1.1.0; emacs 26.3
-From:   Jakub Sitnicki <jakub@cloudflare.com>
-To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Cc:     John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Lorenz Bauer <lmb@cloudflare.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
-        Xin Tan <tanxin.ctf@gmail.com>
-Subject: Re: [PATCH] bpf: Fix sk_psock refcnt leak when receiving message
-In-reply-to: <1587819040-38793-1-git-send-email-xiyuyang19@fudan.edu.cn>
-Date:   Sat, 25 Apr 2020 16:24:44 +0200
-Message-ID: <87lfmjve1f.fsf@cloudflare.com>
+        Sat, 25 Apr 2020 10:26:01 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03PEMuq9031187;
+        Sat, 25 Apr 2020 14:25:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=09cauQ6AhJt/4gZtKxWRkuLDgm5fQOx5AAooS2mPOjc=;
+ b=wBMDwiONRiqAlXUJoytvHLtBQcWR46hcAusk2ygp7AeP8iOEPvlvofIa7/fiyolZlC0l
+ /XQRUMgIlSvX4otTtZxv2AM/vytVqC36s252mIcgzbtv+UfqD7/6RdIvHFwsEg54/VqB
+ PkgTWLr/2BRwXOGfNUHoKtXkVcXFBy9vGHOkMM+d7Rvnz8IZLSCXF9hfvEjhtJZVBotp
+ ibNci+hyWc6hPpvCULOeirAxGt4p+IcdiQ36vsmVbTlUFVDwDP48sYQzlEQxm4X7lceA
+ UrE17ekBzX49/VrvcBCqFf5MbRYkUKOX0uvgzN+UQuHwOYetGjbSlH8hoy4EACfoyVg1 WQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 30md5ks1ae-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 25 Apr 2020 14:25:56 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03PEMkfi071389;
+        Sat, 25 Apr 2020 14:25:56 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 30md12p6mf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 25 Apr 2020 14:25:56 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03PEPrfo003272;
+        Sat, 25 Apr 2020 14:25:53 GMT
+Received: from [192.168.14.112] (/109.67.198.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 25 Apr 2020 07:25:53 -0700
+Subject: Re: [PATCH v1 04/15] nitro_enclaves: Init PCI device driver
+To:     Andra Paraschiv <andraprs@amazon.com>, linux-kernel@vger.kernel.org
+Cc:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@amazon.com>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
+        ne-devel-upstream@amazon.com
+References: <20200421184150.68011-1-andraprs@amazon.com>
+ <20200421184150.68011-5-andraprs@amazon.com>
+From:   Liran Alon <liran.alon@oracle.com>
+Message-ID: <dbb58c31-f388-cd03-ff66-e77b027a7ba3@oracle.com>
+Date:   Sat, 25 Apr 2020 17:25:48 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200421184150.68011-5-andraprs@amazon.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9602 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 suspectscore=2
+ mlxscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004250129
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9602 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 bulkscore=0
+ adultscore=0 clxscore=1011 impostorscore=0 priorityscore=1501 phishscore=0
+ lowpriorityscore=0 mlxlogscore=999 suspectscore=2 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004250129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 25, 2020 at 02:50 PM CEST, Xiyu Yang wrote:
-> tcp_bpf_recvmsg() invokes sk_psock_get(), which returns a reference of
-> the specified sk_psock object to "psock" with increased refcnt.
->
-> When tcp_bpf_recvmsg() returns, local variable "psock" becomes invalid,
-> so the refcount should be decreased to keep refcount balanced.
->
-> The reference counting issue happens in several exception handling paths
-> of tcp_bpf_recvmsg(). When those error scenarios occur such as "flags"
-> includes MSG_ERRQUEUE, the function forgets to decrease the refcnt
-> increased by sk_psock_get(), causing a refcnt leak.
->
-> Fix this issue by calling sk_psock_put() when those error scenarios
-> occur.
->
-> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-> ---
->  net/ipv4/tcp_bpf.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
-> index 5a05327f97c1..feb6b90672c1 100644
-> --- a/net/ipv4/tcp_bpf.c
-> +++ b/net/ipv4/tcp_bpf.c
-> @@ -265,11 +265,15 @@ static int tcp_bpf_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
->  	psock = sk_psock_get(sk);
->  	if (unlikely(!psock))
->  		return tcp_recvmsg(sk, msg, len, nonblock, flags, addr_len);
-> -	if (unlikely(flags & MSG_ERRQUEUE))
-> +	if (unlikely(flags & MSG_ERRQUEUE)) {
-> +		sk_psock_put(sk, psock);
->  		return inet_recv_error(sk, msg, len, addr_len);
+
+On 21/04/2020 21:41, Andra Paraschiv wrote:
+> +
+> +/**
+> + * ne_setup_msix - Setup MSI-X vectors for the PCI device.
+> + *
+> + * @pdev: PCI device to setup the MSI-X for.
+> + * @ne_pci_dev: PCI device private data structure.
+> + *
+> + * @returns: 0 on success, negative return value on failure.
+> + */
+> +static int ne_setup_msix(struct pci_dev *pdev, struct ne_pci_dev *ne_pci_dev)
+> +{
+> +	int nr_vecs = 0;
+> +	int rc = -EINVAL;
+> +
+> +	BUG_ON(!ne_pci_dev);
+This kind of defensive programming does not align with Linux coding 
+convention.
+I think these BUG_ON() conditions should be removed.
+> +
+> +	nr_vecs = pci_msix_vec_count(pdev);
+> +	if (nr_vecs < 0) {
+> +		rc = nr_vecs;
+> +
+> +		dev_err_ratelimited(&pdev->dev,
+> +				    "Failure in getting vec count [rc=%d]\n",
+> +				    rc);
+> +
+> +		return rc;
 > +	}
->  	if (!skb_queue_empty(&sk->sk_receive_queue) &&
-> -	    sk_psock_queue_empty(psock))
-> +	    sk_psock_queue_empty(psock)) {
-> +		sk_psock_put(sk, psock);
->  		return tcp_recvmsg(sk, msg, len, nonblock, flags, addr_len);
+> +
+> +	rc = pci_alloc_irq_vectors(pdev, nr_vecs, nr_vecs, PCI_IRQ_MSIX);
+> +	if (rc < 0) {
+> +		dev_err_ratelimited(&pdev->dev,
+> +				    "Failure in alloc MSI-X vecs [rc=%d]\n",
+> +				    rc);
+> +
+> +		goto err_alloc_irq_vecs;
+You should just replace this with "return rc;" as no cleanup is required 
+here.
 > +	}
->  	lock_sock(sk);
->  msg_bytes_ready:
->  	copied = __tcp_bpf_recvmsg(sk, psock, msg, len, flags);
+> +
+> +	return 0;
+> +
+> +err_alloc_irq_vecs:
+> +	return rc;
+> +}
+> +
+> +/**
+> + * ne_pci_dev_enable - Select PCI device version and enable it.
+> + *
+> + * @pdev: PCI device to select version for and then enable.
+> + * @ne_pci_dev: PCI device private data structure.
+> + *
+> + * @returns: 0 on success, negative return value on failure.
+> + */
+> +static int ne_pci_dev_enable(struct pci_dev *pdev,
+> +			     struct ne_pci_dev *ne_pci_dev)
+> +{
+> +	u8 dev_enable_reply = 0;
+> +	u16 dev_version_reply = 0;
+> +
+> +	BUG_ON(!pdev);
+> +	BUG_ON(!ne_pci_dev);
+> +	BUG_ON(!ne_pci_dev->iomem_base);
+Same.
+> +
+> +	iowrite16(NE_VERSION_MAX, ne_pci_dev->iomem_base + NE_VERSION);
+> +
+> +	dev_version_reply = ioread16(ne_pci_dev->iomem_base + NE_VERSION);
+> +	if (dev_version_reply != NE_VERSION_MAX) {
+> +		dev_err_ratelimited(&pdev->dev,
+> +				    "Failure in pci dev version cmd\n");
+> +
+> +		return -EIO;
+> +	}
+> +
+> +	iowrite8(NE_ENABLE_ON, ne_pci_dev->iomem_base + NE_ENABLE);
+> +
+> +	dev_enable_reply = ioread8(ne_pci_dev->iomem_base + NE_ENABLE);
+> +	if (dev_enable_reply != NE_ENABLE_ON) {
+> +		dev_err_ratelimited(&pdev->dev,
+> +				    "Failure in pci dev enable cmd\n");
+> +
+> +		return -EIO;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * ne_pci_dev_disable - Disable PCI device.
+> + *
+> + * @pdev: PCI device to disable.
+> + * @ne_pci_dev: PCI device private data structure.
+> + *
+> + * @returns: 0 on success, negative return value on failure.
+> + */
+> +static int ne_pci_dev_disable(struct pci_dev *pdev,
+> +			      struct ne_pci_dev *ne_pci_dev)
+> +{
+> +	u8 dev_disable_reply = 0;
+> +
+> +	BUG_ON(!pdev);
+> +	BUG_ON(!ne_pci_dev);
+> +	BUG_ON(!ne_pci_dev->iomem_base);
+Same.
+> +
+> +	iowrite8(NE_ENABLE_OFF, ne_pci_dev->iomem_base + NE_ENABLE);
+> +
+> +	/*
+> +	 * TODO: Check for NE_ENABLE_OFF in a loop, to handle cases when the
+> +	 * device state is not immediately set to disabled and going through a
+> +	 * transitory state of disabling.
+> +	 */
+> +	dev_disable_reply = ioread8(ne_pci_dev->iomem_base + NE_ENABLE);
+> +	if (dev_disable_reply != NE_ENABLE_OFF) {
+> +		dev_err_ratelimited(&pdev->dev,
+> +				    "Failure in pci dev disable cmd\n");
+> +
+> +		return -EIO;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int ne_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> +{
+> +	struct ne_pci_dev *ne_pci_dev = NULL;
+> +	int rc = -EINVAL;
+Unnecessary variable initialization.
+ne_pci_dev and rc are initialized below always before they are used.
+> +
+> +	ne_pci_dev = kzalloc(sizeof(*ne_pci_dev), GFP_KERNEL);
+> +	if (!ne_pci_dev)
+> +		return -ENOMEM;
+> +
+> +	rc = pci_enable_device(pdev);
+> +	if (rc < 0) {
+> +		dev_err_ratelimited(&pdev->dev,
+> +				    "Failure in pci dev enable [rc=%d]\n", rc);
+> +
+Why is this dev_err_ratelimited() instead of dev_err()?
+Same for the rest of error printing in this probe() method and other 
+places in this patch.
+> +		goto err_pci_enable_dev;
+I find it confusing that the error labels are named based on the 
+failure-case they are used,
+instead of the action they do (i.e. Unwind previous successful operation 
+that requires unwinding).
+This doesn't seem to match Linux kernel coding convention.
+It also created an unnecessary 2 labels pointing to the same place in 
+cleanup code.
+> +	}
+> +
+> +	rc = pci_request_regions_exclusive(pdev, "ne_pci_dev");
+> +	if (rc < 0) {
+> +		dev_err_ratelimited(&pdev->dev,
+> +				    "Failure in pci request regions [rc=%d]\n",
+> +				    rc);
+> +
+> +		goto err_req_regions;
+> +	}
+> +
+> +	ne_pci_dev->iomem_base = pci_iomap(pdev, PCI_BAR_NE, 0);
+> +	if (!ne_pci_dev->iomem_base) {
+> +		rc = -ENOMEM;
+> +
+> +		dev_err_ratelimited(&pdev->dev,
+> +				    "Failure in pci bar mapping [rc=%d]\n", rc);
+> +
+> +		goto err_iomap;
+> +	}
+> +
+> +	rc = ne_setup_msix(pdev, ne_pci_dev);
+> +	if (rc < 0) {
+> +		dev_err_ratelimited(&pdev->dev,
+> +				    "Failure in pci dev msix setup [rc=%d]\n",
+> +				    rc);
+> +
+> +		goto err_setup_msix;
+> +	}
+> +
+> +	rc = ne_pci_dev_disable(pdev, ne_pci_dev);
+> +	if (rc < 0) {
+> +		dev_err_ratelimited(&pdev->dev,
+> +				    "Failure in ne_pci_dev disable [rc=%d]\n",
+> +				    rc);
+> +
+> +		goto err_ne_pci_dev_disable;
+> +	}
+It seems weird that we need to disable the device before enabling it on 
+the probe() method.
+Why can't we just enable the device without disabling it?
+> +
+> +	rc = ne_pci_dev_enable(pdev, ne_pci_dev);
+> +	if (rc < 0) {
+> +		dev_err_ratelimited(&pdev->dev,
+> +				    "Failure in ne_pci_dev enable [rc=%d]\n",
+> +				    rc);
+> +
+> +		goto err_ne_pci_dev_enable;
+> +	}
+> +
+> +	atomic_set(&ne_pci_dev->cmd_reply_avail, 0);
+> +	init_waitqueue_head(&ne_pci_dev->cmd_reply_wait_q);
+> +	INIT_LIST_HEAD(&ne_pci_dev->enclaves_list);
+> +	mutex_init(&ne_pci_dev->enclaves_list_mutex);
+> +	mutex_init(&ne_pci_dev->pci_dev_mutex);
+> +
+> +	pci_set_drvdata(pdev, ne_pci_dev);
+If you would have pci_set_drvdata() as one of the first operations in 
+ne_probe(), then you could have avoided
+passing both struct pci_dev  and struct ne_pci_dev parameters to 
+ne_setup_msix(), ne_pci_dev_enable() and ne_pci_dev_disable().
+Which would have been a bit more elegant.
+> +
+> +	return 0;
+> +
+> +err_ne_pci_dev_enable:
+> +err_ne_pci_dev_disable:
+> +	pci_free_irq_vectors(pdev);
+> +err_setup_msix:
+> +	pci_iounmap(pdev, ne_pci_dev->iomem_base);
+> +err_iomap:
+> +	pci_release_regions(pdev);
+> +err_req_regions:
+> +	pci_disable_device(pdev);
+> +err_pci_enable_dev:
+> +	kzfree(ne_pci_dev);
+An empty new-line is appropriate here.
+To separate the return statement from the cleanup logic.
+> +	return rc;
+> +}
+> +
+> +static void ne_remove(struct pci_dev *pdev)
+> +{
+> +	struct ne_pci_dev *ne_pci_dev = pci_get_drvdata(pdev);
+> +
+> +	if (!ne_pci_dev || !ne_pci_dev->iomem_base)
+> +		return;
+Why is this condition necessary?
+The ne_remove() function should be called only in case ne_probe() succeeded.
+In that case, both ne_pci_dev and ne_pci_dev->iomem_base should be non-NULL.
+> +
+> +	ne_pci_dev_disable(pdev, ne_pci_dev);
+> +
+> +	pci_set_drvdata(pdev, NULL);
+> +
+> +	pci_free_irq_vectors(pdev);
+> +
+> +	pci_iounmap(pdev, ne_pci_dev->iomem_base);
+> +
+> +	kzfree(ne_pci_dev);
+> +
+> +	pci_release_regions(pdev);
+> +
+> +	pci_disable_device(pdev);
+You should aspire to keep ne_remove() order of operations to be the 
+reverse order of operations done in ne_probe().
+Which would also nicely match the order of operations done in ne_probe() 
+cleanup.
+i.e. The following order:
 
-Thanks for the fix.
+pci_set_drvdata();
+ne_pci_dev_disable();
+pci_free_irq_vectors();
+pci_iounmap();
+pci_release_regions();
+pci_disable_device()
+kzfree();
 
-We can pull up the error queue read handling, that is the `flags &
-MSG_ERRQUEUE` branch, so that it happens before we grab a psock ref.
+-Liran
 
-The effect is the same because now, if we hit the !psock branch,
-tcp_recvmsg will first check if user wants to read the error queue
-anyway.
-
-That would translate to something like below, in addition to your
-changes.
-
-WDYT?
-
----8<---
-
-diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
-index 5a05327f97c1..99aa57bd1901 100644
---- a/net/ipv4/tcp_bpf.c
-+++ b/net/ipv4/tcp_bpf.c
-@@ -262,14 +262,17 @@ static int tcp_bpf_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 	struct sk_psock *psock;
- 	int copied, ret;
-
-+	if (unlikely(flags & MSG_ERRQUEUE))
-+		return inet_recv_error(sk, msg, len, addr_len);
-+
- 	psock = sk_psock_get(sk);
- 	if (unlikely(!psock))
- 		return tcp_recvmsg(sk, msg, len, nonblock, flags, addr_len);
--	if (unlikely(flags & MSG_ERRQUEUE))
--		return inet_recv_error(sk, msg, len, addr_len);
- 	if (!skb_queue_empty(&sk->sk_receive_queue) &&
- 	    sk_psock_queue_empty(psock))
-		return tcp_recvmsg(sk, msg, len, nonblock, flags, addr_len);
