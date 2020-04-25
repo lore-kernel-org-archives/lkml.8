@@ -2,122 +2,115 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C37BC55186
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 10:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C8CBC55191
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 10:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CF4C2071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 10:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C7CB2071E
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 10:43:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SW0/rxz6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XIK6D6eh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbgDYKl1 (ORCPT
+        id S1726121AbgDYKnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 06:41:27 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:54301 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726050AbgDYKl0 (ORCPT
+        Sat, 25 Apr 2020 06:43:43 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48732 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726087AbgDYKnl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 06:41:26 -0400
+        Sat, 25 Apr 2020 06:43:41 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587811285;
+        s=mimecast20190719; t=1587811419;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=0FrIzgjmsdkrsW5Ow3+nivBsO872iMxrrZWBo1xRaiI=;
-        b=SW0/rxz6vorsoEaV+5N8AiyHPp5aiq3sOdD89Zv+kSE0t0jlJzvFx1RyfSvflp5kBmLeOv
-        802+vCGBpyhFH4SFwXgvCi/a+xZEcnqyed8nsCAGI36UqFaG4WhYWCtSgauN7UUt+/8exx
-        tb+4PCY+Cpe0DQLB0KCtlR+pS/eEK80=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-424-51GP5heuOROyBvzCG7LRpw-1; Sat, 25 Apr 2020 06:41:16 -0400
-X-MC-Unique: 51GP5heuOROyBvzCG7LRpw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 41B3F8014D5;
-        Sat, 25 Apr 2020 10:41:14 +0000 (UTC)
-Received: from treble (ovpn-114-29.rdu2.redhat.com [10.10.114.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2E33D6061B;
-        Sat, 25 Apr 2020 10:41:12 +0000 (UTC)
-Date:   Sat, 25 Apr 2020 05:41:10 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Dave Jones <dsj@fb.com>, Jann Horn <jannh@google.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v2 00/11] ORC fixes
-Message-ID: <20200425104110.3bx5xb57fssdvd4y@treble>
-References: <cover.1587808742.git.jpoimboe@redhat.com>
- <20200425102512.GA12331@gmail.com>
+        bh=zX1gMKclpqnAEoBMDkK5PhMtrskM3KRZZa0iKX4TUNw=;
+        b=XIK6D6ehndPRXiFuJisdbweMTv3c5M+y7VQX4Mt4enBFRkBEp334BybcEffF6uaBLRlRev
+        kXrZTeZz0s/w9zEXTLvVl2OL892xd9YA7aedjY610iRc22GnTAt7wxtz6te9/NnRzvGJ1t
+        ISBmGgV/LXMhhk7/IF8boUBcOunXoVg=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-215-9R2PGDBqOam5g9pmCP4w9A-1; Sat, 25 Apr 2020 06:43:37 -0400
+X-MC-Unique: 9R2PGDBqOam5g9pmCP4w9A-1
+Received: by mail-wr1-f70.google.com with SMTP id g7so6490388wrw.18
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 03:43:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zX1gMKclpqnAEoBMDkK5PhMtrskM3KRZZa0iKX4TUNw=;
+        b=F5LE+oZGmhtji8kKUn5tFkFEmpxL147pXqubQeqe4LfZjQ9kP7xaZhWDe0v18kHEzg
+         /+OhRG1nSqrOFj5qGZxj6A8iVj8V4MAup8dyfwijZVaop0dALDfTW4dgrp7jh5/RZPeo
+         RWrCf1c9T5xCFgbqzTkGyMLwtQDBWV2aV1D8zY2Nrq9sxEIKE7nfdktcG5yPdwVxL0Vs
+         amsKHf8cuiPzh08aqIUaEzwMEttB3B9fRrxBhiHEXA2nEuHtq5NwCx31FAs5pADgnS80
+         CWEPAc/XS8Z3QCwYouI9EdTQ/noRby0IftcmB5caOK2iaAdj1fboAFIwlkl9GZ5slHRI
+         j3XA==
+X-Gm-Message-State: AGi0PubzbMtSgeHMGYIDi8H/F0umA7HDOkrc7ulxxzlLwkfnIT4nZPNT
+        KKPsUKBTimqCmSE78kptOLIdPYkvtJNgnqdXBv1XIyqQfpqatfvx43WpqeUx/o0aCTC3fv7WNiX
+        cqNio5OTxIIYKVjl0U19RbcWJ
+X-Received: by 2002:adf:ee88:: with SMTP id b8mr15892431wro.93.1587811416288;
+        Sat, 25 Apr 2020 03:43:36 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKA9B9pJGKX+0LgDRDvi6v5gXYIEKKnz5THJmcU6hGlhBUcL+S8FEF2XD5VredWlxBdzhvHSQ==
+X-Received: by 2002:adf:ee88:: with SMTP id b8mr15892412wro.93.1587811415984;
+        Sat, 25 Apr 2020 03:43:35 -0700 (PDT)
+Received: from [192.168.10.150] ([93.56.170.5])
+        by smtp.gmail.com with ESMTPSA id k17sm6631766wmi.10.2020.04.25.03.43.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 25 Apr 2020 03:43:35 -0700 (PDT)
+Subject: Re: [PATCH] kvm/eventfd: remove unneeded conversion to bool
+To:     Jason Yan <yanaijie@huawei.com>, peterx@redhat.com,
+        tglx@linutronix.de, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200420123805.4494-1-yanaijie@huawei.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <109d0871-7099-b476-8354-11a628a04b3d@redhat.com>
+Date:   Sat, 25 Apr 2020 12:43:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200425102512.GA12331@gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <20200420123805.4494-1-yanaijie@huawei.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 25, 2020 at 12:25:12PM +0200, Ingo Molnar wrote:
+On 20/04/20 14:38, Jason Yan wrote:
+> The '==' expression itself is bool, no need to convert it to bool again.
+> This fixes the following coccicheck warning:
 > 
-> * Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> virt/kvm/eventfd.c:724:38-43: WARNING: conversion to bool not needed
+> here
 > 
-> > v2:
-> > - Dropped three patches which technically weren't fixes.  Will post them
-> >   later as part of another patch set with more improvements.
-> > - Removed show_iret_regs() declaration [mbenes]
-> > - Added Miroslav Reviewed-by, Linus Reported-by
-> > 
-> > v1 was here:
-> > https://lkml.kernel.org/r/cover.1584033751.git.jpoimboe@redhat.com
-> > 
-> > Jann Horn (1):
-> >   x86/entry/64: Fix unwind hints in rewind_stack_do_exit()
-> > 
-> > Josh Poimboeuf (9):
-> >   objtool: Fix stack offset tracking for indirect CFAs
-> >   x86/entry/64: Fix unwind hints in register clearing code
-> >   x86/entry/64: Fix unwind hints in kernel exit path
-> >   x86/entry/64: Fix unwind hints in __switch_to_asm()
-> >   x86/unwind/orc: Convert global variables to static
-> >   x86/unwind: Prevent false warnings for non-current tasks
-> >   x86/unwind/orc: Prevent unwinding before ORC initialization
-> >   x86/unwind/orc: Fix error path for bad ORC entry type
-> >   x86/unwind/orc: Fix premature unwind stoppage due to IRET frames
-> > 
-> > Miroslav Benes (1):
-> >   x86/unwind/orc: Don't skip the first frame for inactive tasks
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> ---
+>  virt/kvm/eventfd.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Thanks for doing this. These ORC handling bugs IMHO look serious and 
-> widespread enough to warrant x86/urgent treatment, and the v2 series is 
-> fixes-only.
+> diff --git a/virt/kvm/eventfd.c b/virt/kvm/eventfd.c
+> index 67b6fc153e9c..0c4ede45e6bd 100644
+> --- a/virt/kvm/eventfd.c
+> +++ b/virt/kvm/eventfd.c
+> @@ -721,7 +721,7 @@ ioeventfd_in_range(struct _ioeventfd *p, gpa_t addr, int len, const void *val)
+>  		return false;
+>  	}
+>  
+> -	return _val == p->datamatch ? true : false;
+> +	return _val == p->datamatch;
+>  }
+>  
+>  /* MMIO/PIO writes trigger an event if the addr/val match */
 > 
-> Any objections against targeting v5.7-rc3 with this, assuming that 
-> there's no problems found during review and it passes about a week of 
-> testing?
 
-Hi Ingo,
+Queued, thanks.
 
-Due to other distractions, I unfortunately have been sitting on some of
-these fixes for several months -- notice some of the long Reported-by
-chains :-/
-
-They're good small localized fixes and I would agree it makes sense to
-target x86/urgent.
-
-Thanks!
-
--- 
-Josh
+Paolo
 
