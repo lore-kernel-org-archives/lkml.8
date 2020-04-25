@@ -2,133 +2,83 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21246C55191
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 15:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB337C55185
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 15:52:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F245C20767
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 15:52:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587829949;
-	bh=sSzcBJpJQDV6XFyy+Mxe6whwFoOrRKDwYzXXoWKA+Eg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=1b/H44pe5KpyUDM4tQ2VmZ5xL8Cc4/j4p3pzFgt8U47DkdkIy7MKez2otO4eA/GQH
-	 r0WcwYoVpVBSnDUzqnayZvjJCysWnhy1Cs9r2E8Hz9SLR357vdlk2+iSHvt53Z1KW6
-	 0foHH/rkqvQxfChoE7V/lnXQPl0d195qMqPStRGE=
+	by mail.kernel.org (Postfix) with ESMTP id 9E88B20748
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 15:52:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbgDYPw2 (ORCPT
+        id S1726185AbgDYPwp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 11:52:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56040 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726076AbgDYPw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 11:52:28 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3416520748;
-        Sat, 25 Apr 2020 15:52:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587829947;
-        bh=sSzcBJpJQDV6XFyy+Mxe6whwFoOrRKDwYzXXoWKA+Eg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Jd99gAHJsOwVZSzFyax2jkh18W+fjYSLNqtyhqF2PT7QyXptbdMHX6llBbNoltt+P
-         zZ7osfqjIMzLYdErQie9d8YJoB/g7j1ykdNjFo5uuI+85ZI2uVKn4vNmWIRh2sZEzX
-         NdCwAs/BcJQozbd4UlHatGkMwKxhVhhIwSp6gyzw=
-Date:   Sat, 25 Apr 2020 16:52:23 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Mathieu Othacehe <m.othacehe@gmail.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 3/4] iio: vcnl4000: Add sampling frequency support
- for VCNL4010/20.
-Message-ID: <20200425165223.0fc0e930@archlinux>
-In-Reply-To: <CAHp75VcJ300S8r_f2cueYzB0OaLBJK9oJySgz5Jekb7dGFWnCw@mail.gmail.com>
-References: <20200421075532.19192-1-m.othacehe@gmail.com>
-        <20200421075532.19192-4-m.othacehe@gmail.com>
-        <CAHp75VcJ300S8r_f2cueYzB0OaLBJK9oJySgz5Jekb7dGFWnCw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sat, 25 Apr 2020 11:52:45 -0400
+Received: from mailomta9-sa.btinternet.com ([213.120.69.15]:27432 "EHLO
+        sa-prd-fep-047.btinternet.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726076AbgDYPwo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 11:52:44 -0400
+Received: from sa-prd-rgout-005.btmx-prd.synchronoss.net ([10.2.38.8])
+          by sa-prd-fep-047.btinternet.com with ESMTP
+          id <20200425155239.FQKM30279.sa-prd-fep-047.btinternet.com@sa-prd-rgout-005.btmx-prd.synchronoss.net>;
+          Sat, 25 Apr 2020 16:52:39 +0100
+Authentication-Results: btinternet.com;
+    auth=pass (LOGIN) smtp.auth=j.oldman998@btinternet.com
+X-Originating-IP: [31.51.225.56]
+X-OWM-Source-IP: 31.51.225.56 (GB)
+X-OWM-Env-Sender: j.oldman998@btinternet.com
+X-VadeSecure-score: verdict=clean score=0/300, class=clean
+X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgeduhedrheeggdejudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemuceutffkvffkuffjvffgnffgvefqofdpqfgfvfenuceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofestddtredtredttdenucfhrhhomheplfhohhhnucfqlhgumhgrnhcuoehjohhhnhdrohhlughmrghnsehpohhlvghhihhllhdrtghordhukheqnecukfhppeefuddrhedurddvvdehrdehieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhephhgvlhhopehhvghnrhihrdhhohhmvgdpihhnvghtpeefuddrhedurddvvdehrdehiedpmhgrihhlfhhrohhmpeeojhhohhhnrdholhgumhgrnhesphholhgvhhhilhhlrdgtohdruhhkqedprhgtphhtthhopeeojhhohhhnrdholhgumhgrnhesphholhgvhhhilhhlrdgtohdruhhkqedprhgtphhtthhopeeolhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgqedprhgtphhtthhopeeolhhinhhugidqfihirhgvlhgvshhssehvghgvrhdrkhgvrhhnvghlrdhorhhgqedprhgtphhtthhopeeomhessghuvghsrdgthheq
+X-RazorGate-Vade-Verdict: clean 0
+X-RazorGate-Vade-Classification: clean
+Received: from henry.home (31.51.225.56) by sa-prd-rgout-005.btmx-prd.synchronoss.net (5.8.340) (authenticated as j.oldman998@btinternet.com)
+        id 5E3A290C0D5574D3; Sat, 25 Apr 2020 16:52:39 +0100
+From:   John Oldman <john.oldman@polehill.co.uk>
+To:     m@bues.ch
+Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        John Oldman <john.oldman@polehill.co.uk>
+Subject: [PATCH] :ssb scan.c: Fixed block comments coding style issues
+Date:   Sat, 25 Apr 2020 16:52:33 +0100
+Message-Id: <20200425155233.19624-1-john.oldman@polehill.co.uk>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Apr 2020 15:22:11 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+Fixed coding style issues
 
-> On Tue, Apr 21, 2020 at 10:56 AM Mathieu Othacehe <m.othacehe@gmail.com> wrote:
-> >
-> > Add sampling frequency support for proximity data on VCNL4010 and VCNL4020
-> > chips.  
-> 
-> Couple of nitpicks below.
-> 
-> ...
-> 
-> > +static const int vcnl4010_prox_sampling_frequency[][2] = {
-> > +       {1, 950000},
-> > +       {3, 906250},
-> > +       {7, 812500},
-> > +       {16, 625000},
-> > +       {31, 250000},
-> > +       {62, 500000},
-> > +       {125, 0},  
-> 
-> > +       {250, 0}  
-> 
-> Leave comma here, potentially helpful if it will be extended.
+Signed-off-by: John Oldman <john.oldman@polehill.co.uk>
+---
+ drivers/ssb/scan.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Hi Andy,
-
-Doesn't particularly matter either way, but given this is a list of the values
-supported by the device, very unlikely it will be extended.
-
-Games like trying to share the first part of a longer array between
-multiple device types might occur, but those are usually really ugly.
-
-Jonathan
-
-> 
-> > +};  
-> 
-> ...
-> 
-> > +static int vcnl4010_write_proxy_samp_freq(struct vcnl4000_data *data, int val,
-> > +                                         int val2)
-> > +{
-> > +       int i;
-> > +       const int len = ARRAY_SIZE(vcnl4010_prox_sampling_frequency);
-> > +
-> > +       for (i = 0; i < len; i++) {
-> > +               if (val <= vcnl4010_prox_sampling_frequency[i][0])
-> > +                       break;
-> > +       }
-> > +
-> > +       if (i == len)
-> > +               return -EINVAL;  
-> 
-> I would refactor this
-> 
->   unsigned int i = ARRAY_SIZE(vcnl4010_prox_sampling_frequency);
-> 
->   do {
->     if (val > vcnl4010_prox_sampling_frequency[i][0])
->       break;
->   } while (--i);
-> 
-> You won't need to go full array to return error in this case.
-> 
-> > +       return i2c_smbus_write_byte_data(data->client, VCNL4010_PROX_RATE, i);
-> > +}  
-> 
+diff --git a/drivers/ssb/scan.c b/drivers/ssb/scan.c
+index 6ceee98ed6ff..b97a5c32d44a 100644
+--- a/drivers/ssb/scan.c
++++ b/drivers/ssb/scan.c
+@@ -400,7 +400,8 @@ int ssb_bus_scan(struct ssb_bus *bus,
+ #ifdef CONFIG_SSB_DRIVER_PCICORE
+ 			if (bus->bustype == SSB_BUSTYPE_PCI) {
+ 				/* Ignore PCI cores on PCI-E cards.
+-				 * Ignore PCI-E cores on PCI cards. */
++				 * Ignore PCI-E cores on PCI cards.
++				 */
+ 				if (dev->id.coreid == SSB_DEV_PCI) {
+ 					if (pci_is_pcie(bus->host_pci))
+ 						continue;
+@@ -421,7 +422,8 @@ int ssb_bus_scan(struct ssb_bus *bus,
+ 				if (bus->host_pci->vendor == PCI_VENDOR_ID_BROADCOM &&
+ 				    (bus->host_pci->device & 0xFF00) == 0x4300) {
+ 					/* This is a dangling ethernet core on a
+-					 * wireless device. Ignore it. */
++					 * wireless device. Ignore it.
++					 */
+ 					continue;
+ 				}
+ 			}
+-- 
+2.17.1
 
