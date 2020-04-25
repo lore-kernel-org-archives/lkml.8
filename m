@@ -2,197 +2,140 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A3FC55186
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 05:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E69C55185
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 05:17:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D93DC20857
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 05:15:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02B2E20748
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 05:17:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="gLd7ltrm";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="5dVeQShV"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rbhLhZvQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbgDYFO6 (ORCPT
+        id S1726130AbgDYFPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 01:14:58 -0400
-Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:5014 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725909AbgDYFO5 (ORCPT
+        Sat, 25 Apr 2020 01:15:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39944 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725909AbgDYFPH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 01:14:57 -0400
-X-Greylist: delayed 2114 seconds by postgrey-1.27 at vger.kernel.org; Sat, 25 Apr 2020 01:14:57 EDT
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03P4ZGpD012115;
-        Fri, 24 Apr 2020 21:39:34 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type; s=proofpoint;
- bh=MqN/k1tn11u8dAwLdQH3r+vRyzKOV+MNaZ18+SCPNUc=;
- b=gLd7ltrmeHUxOxcSQLp7oDE7wRDY4Non2cfqujxia2IO8c7mz1Tl5VSoBU+luxKN2I6u
- X80lZer2DUHaTI1kbzfCz9YCINPKiN9CWt5+rA5kQ5fberjONwWTRSZhNqf5D45YRyIv
- BrS5J9FJehKAnPgFfFpKQTkuDgBVi/hVgFA2Xw5adN4dVd5pkWAL1Cr00q2ZYgphhhul
- /Eny7H6vwUXFterlyPastN8Oms659miUwHnXSN61aWPqTR/bj8ZTVKyfgfbnZt8OJS4n
- g4MnMnRk7R0UcG0G8g82xoWc3RzTRJR9DTGveB0BrcljwWqdqyAOe7KPX89JiWeuqurD ag== 
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2108.outbound.protection.outlook.com [104.47.58.108])
-        by mx0a-0014ca01.pphosted.com with ESMTP id 30fx3v56td-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Apr 2020 21:39:33 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=myZFcwrhIwoUzj/gUWKJPoPC/fSJ/hUV9OuOPRs1qJbjNnI+be6AsesN/eOjBlo3IQpDmAFHq1zN3y3OuAC1yJt3ZjzKWfQHssaKqWWhl1BcWAWGB6HDx0eX5W5MURp4qb5sPOLdaJ4ze79Y6UnbuuKbN6ONEfl6n/+FXseyxjAHtiKvGyqtPkaHr7uepKWTHnGKUR6OE2brCrUiPa2OaWa8PJiRfozqUAuusH/qrxLwJotgiUcp5LEOYgpAeADk2v0198z+m1cAg10lD10pSjr+AnP4Ps0lu0KiXauk2A/2Ydn2nAhuTYhW0RCWUCmTR+TBo3D+eB+f7BesVK0DcA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MqN/k1tn11u8dAwLdQH3r+vRyzKOV+MNaZ18+SCPNUc=;
- b=ic+BK9Oy0OaE3OseKXYojMxkF5W348KEDrIYyPvYbxTAXFpQodIRLbyIny7mfDtWOX9VToFZ52qoZqrEtJmhcV1rcqIst9sCSsdbXlCsyTzFIQxpQwIU+vK9ob2BaJe6MIt0fYE+tBVHkMuj+5ZBrOtuhsVEUI7tS39DzH7kco/wtWxLaRisiemv3oVb01EtBzVug/CafuuCWxIb4ynmH4H27jgAMiEZX8Xl+l658uBj5By5xqpfwGYu69JJbyEA18pOSn3fCV/8DTKqw/HZIVJJiuGthTecf95Wj1O9uXPQH0Y7UWDpNoXYUY2awnVK1+YhpcdjkQfvkPxYMhmyJQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 64.207.220.244) smtp.rcpttodomain=arm.com smtp.mailfrom=cadence.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MqN/k1tn11u8dAwLdQH3r+vRyzKOV+MNaZ18+SCPNUc=;
- b=5dVeQShVRRW1eELy9BHiq5jEhPvJsVzcl3zsmcRbCXIeAKmUKTBq/ZDROYuYro23C128G+lFqFm/W89mscDaweUYBIEA7DnsCE7uhoFpUI7CFckzUdF8bTIFqn6rP3XnSYz7e1l66vZNbl7hE5r7kc47kSpJ7Vm7oqmJwePGa3M=
-Received: from DM5PR2201CA0007.namprd22.prod.outlook.com (2603:10b6:4:14::17)
- by DM5PR07MB3433.namprd07.prod.outlook.com (2603:10b6:4:6a::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Sat, 25 Apr
- 2020 04:39:30 +0000
-Received: from DM6NAM12FT032.eop-nam12.prod.protection.outlook.com
- (2603:10b6:4:14:cafe::3f) by DM5PR2201CA0007.outlook.office365.com
- (2603:10b6:4:14::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend
- Transport; Sat, 25 Apr 2020 04:39:30 +0000
-Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
- 64.207.220.244 as permitted sender) receiver=protection.outlook.com;
- client-ip=64.207.220.244; helo=wcmailrelayl01.cadence.com;
-Received: from wcmailrelayl01.cadence.com (64.207.220.244) by
- DM6NAM12FT032.mail.protection.outlook.com (10.13.178.209) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2921.12 via Frontend Transport; Sat, 25 Apr 2020 04:39:29 +0000
-Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by wcmailrelayl01.cadence.com (8.14.7/8.14.4) with ESMTP id 03P4dMOt218050
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=OK);
-        Fri, 24 Apr 2020 21:39:24 -0700
-X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
-Received: from maileu3.global.cadence.com (10.160.88.99) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3; Sat, 25 Apr 2020 06:39:21 +0200
-Received: from vleu-orange.cadence.com (10.160.88.83) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Sat, 25 Apr 2020 06:39:21 +0200
-Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
-        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 03P4dLpY016488;
-        Sat, 25 Apr 2020 06:39:21 +0200
-Received: (from yamonkar@localhost)
-        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 03P4dKEF016479;
-        Sat, 25 Apr 2020 06:39:20 +0200
-From:   Yuti Amonkar <yamonkar@cadence.com>
-To:     <linux-kernel@vger.kernel.org>, <kishon@ti.com>,
-        <mark.rutland@arm.com>, <maxime@cerno.tech>
-CC:     <jsarha@ti.com>, <tomi.valkeinen@ti.com>, <praneeth@ti.com>,
-        <mparab@cadence.com>, <sjakhade@cadence.com>,
-        <yamonkar@cadence.com>
-Subject: [PATCH v1] phy: Add max_link_rate as a PHY attribute along with get/set APIs
-Date:   Sat, 25 Apr 2020 06:39:20 +0200
-Message-ID: <1587789560-16440-1-git-send-email-yamonkar@cadence.com>
-X-Mailer: git-send-email 2.4.5
+        Sat, 25 Apr 2020 01:15:07 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72B80C09B04B
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 22:15:05 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id 23so7703522qkf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Apr 2020 22:15:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H1SBatyiXpIiTu8qbFEdAJrtrObabCrqo/oadnwsGtc=;
+        b=rbhLhZvQDnG6p+e0PJwLpEu/dK/fw/igKekR9oZcCnflWf7m0TDjvkmh2zlY2Jv+5j
+         w17JME6X4TKTpcDvBRLmVs49deqkl3eJyKh1L7vRMmxnfdsOYENY7JF9Whdd3EV1sXlw
+         c6glcoi7MT1uFTPCvpl9PN9cZ4LDTrB4oVbz/1sOgiOUHLE8sWHINGMxicPcLr2uMAR6
+         O2Z2F96Hglf1mJT3R+FvM3jHj0K3wNzZ+0skd/nSM8FWXhmOAOPvELMGo1vMwGBlSbz+
+         4EDDdd0s96V29n+ylk1YxweDQAJG1IJaXvpTu+NWrxKzLbWNk3R9kdM3yD7wZ2xjOvNS
+         ASeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=H1SBatyiXpIiTu8qbFEdAJrtrObabCrqo/oadnwsGtc=;
+        b=iDfYAcHjD+iqMQK5X0HhbUf/xKXDd2U8TEC1n6NGkAuAPg/LD53XY8NN2FWxv1lajw
+         l3I5tGxMl5QFgc1/DOWUXxAH6O6hY4uaNKxX49VvSah638CUsvgMsPleUIc9WKHrYzW5
+         Xc7/3OlSEP53oYZIiNvjabVZayX6rxxpn0h5A4AVKo7bPbhkOIZk7rPv90vP9vcpyg4T
+         +gCfh/O9cEM9ix/I3UUQ/a7fOH1vKQotj1tkrM1lb2skQzENuuolJhjdGTTEhhkmgd6w
+         CUwuLq5MLkx7ivy+DBRI5x8lKUfNPLrTBym27lMIy8t8MnMeeIVhKkFZZUV9FOCtDCQ0
+         xhMQ==
+X-Gm-Message-State: AGi0PuYkZlXBe+O5AQZH0Y0m/q/ptLhIvsRHunhZUgWol4khWkAgbDKK
+        L2G6lmy0jdoRAr19Tudl7nLm4e0xz+MwZLPdOhZqeg==
+X-Google-Smtp-Source: APiQypKWjPa+EY2ioHZfTJG/+Df1shHqevoVywrRu+bXUnHcbJQlizj6CkbA7d5bq/V5+oeDZk48ITG0Le0/PUrjfNE=
+X-Received: by 2002:a05:620a:1362:: with SMTP id d2mr12003772qkl.256.1587791704265;
+ Fri, 24 Apr 2020 22:15:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-OrganizationHeadersPreserved: maileu3.global.cadence.com
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:64.207.220.244;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:wcmailrelayl01.cadence.com;PTR:unused.mynethost.com;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(396003)(136003)(39860400002)(36092001)(46966005)(36906005)(107886003)(4326008)(8936002)(2616005)(82310400002)(356005)(26005)(478600001)(47076004)(426003)(186003)(8676002)(336012)(82740400003)(81166007)(42186006)(2906002)(316002)(81156014)(70586007)(36756003)(110136005)(54906003)(70206006)(5660300002)(86362001);DIR:OUT;SFP:1101;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e721a722-3c4a-4cfd-3300-08d7e8d2a4be
-X-MS-TrafficTypeDiagnostic: DM5PR07MB3433:
-X-Microsoft-Antispam-PRVS: <DM5PR07MB343364FA9D38E2C05BE16CA2D2D10@DM5PR07MB3433.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-Forefront-PRVS: 0384275935
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: odHrzb9MVCrG/WVBQdbHVCbiVIaSdIZFTza8vhqY6X6pQFXypndeG0aVvg8/u7dgA59RgYXKRENwR9h7oe+VuFnm6/Re6VqHDbX1jgoC1I9g5ocxJruG1tc8001mM3m23b0SjmPQAaZINOR1jlm6egQCXkDp0/iBKvEzviAuaI9pBfS44ZdGol/ew0pbchcY2LXUguNYOeIqT51iWDPfiJaNa6/wHk0/uO1RzRc8L7bwkMa61PVKXGuIUUkr2VczX7ck0WqFt6K7CBloPxrKPERh/78mmzLJXiaSslscrgK9cLgVdzQB7S0/2NgFP11FdVtco+kdsbnYJqVBiPHCznVcDwjLvGJWdTgEw7jO5Kjs/ja4FZckpANV/VxOWmHjftt5qLC0OK9fNv1WJlwVmbClH5G9XU/1IC5eFXNxdWPS+qnq2tDVbpG+RX0EtQnwHIK6SOhL6RW7cKGTU7LgASilbQBfRWBZ5L2VsM58wgXUh/9F22MLH0fD6pDWJEuLlYuY+hT/RwIxb0rmjepMKQp5oxmO6mZX9mbNWfZzMVk=
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Apr 2020 04:39:29.9879
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e721a722-3c4a-4cfd-3300-08d7e8d2a4be
-X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[64.207.220.244];Helo=[wcmailrelayl01.cadence.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR07MB3433
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-25_01:2020-04-24,2020-04-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
- lowpriorityscore=0 priorityscore=1501 adultscore=0 malwarescore=0
- spamscore=0 suspectscore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
- clxscore=1011 impostorscore=0 phishscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004250038
+References: <CACT4Y+YTi4JCFRqOB9rgA22S+6xxTo87X41hj6Tdfro8K3ef7g@mail.gmail.com>
+ <CAHC9VhQs6eJpX4oMrhBiDap-HhEsBBgmYWEou=ZH60YiA__T7w@mail.gmail.com>
+In-Reply-To: <CAHC9VhQs6eJpX4oMrhBiDap-HhEsBBgmYWEou=ZH60YiA__T7w@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Sat, 25 Apr 2020 07:14:52 +0200
+Message-ID: <CACT4Y+b8HiV6KFuAPysZD=5hmyO4QisgxCKi4DHU3CfMPSP=yg@mail.gmail.com>
+Subject: Re: selinux_netlink_send changes program behavior
+To:     Paul Moore <paul@paul-moore.com>,
+        David Miller <davem@davemloft.net>, kuba@kernel.org,
+        netdev <netdev@vger.kernel.org>
+Cc:     Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller <syzkaller@googlegroups.com>,
+        Willem de Bruijn <willemb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch adds a pair of APIs that allow the generic PHY subsystem to
-provide information on the maximum value of link rate supported by the
-PHY. The PHY provider driver may use phy_set_max_link_rate() to set the
-maximum link rate that the PHY supports. The controller driver may then
-use phy_get_max_link_rate() to fetch the PHY link rate in order to
-properly configure the controller.
+On Fri, Apr 24, 2020 at 11:51 PM Paul Moore <paul@paul-moore.com> wrote:
+>
+> On Fri, Apr 24, 2020 at 4:27 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+> > Hi SELinux maintainers,
+> >
+> > We've hit a case where a developer wasn't able to reproduce a kernel
+> > bug, it turned out to be a difference in behavior between SELinux and
+> > non-SELinux kernels.
+> > Condensed version: a program does sendmmsg on netlink socket with 2
+> > mmsghdr's, first is completely empty/zeros, second contains some
+> > actual payload. Without SELinux the first mmsghdr is treated as no-op
+> > and the kernel processes the second one (triggers bug). However the
+> > SELinux hook does:
+> >
+> > static int selinux_netlink_send(struct sock *sk, struct sk_buff *skb)
+> > {
+> >     if (skb->len < NLMSG_HDRLEN) {
+> >         err = -EINVAL;
+> >         goto out;
+> >     }
+> >
+> > and fails processing on the first empty mmsghdr (does not happen
+> > without SELinux).
+> >
+> > Is this difference in behavior intentional/acceptable/should be fixed?
+>
+> From a practical perspective, SELinux is always going to need to do a
+> length check as it needs to peek into the netlink message header for
+> the message type so it can map that to the associated SELinux
+> permissions.  So in that sense, the behavior is intentional and
+> desired; however from a bug-for-bug compatibility perspective ... not
+> so much.
+>
+> Ultimately, my it's-Friday-and-it's-been-a-long-week-ending-in-a-long-day
+> thought is that this was a buggy operation to begin with and the bug
+> was just caught in different parts of the kernel, depending on how it
+> was configured.  It may not be ideal, but I can think of worse things
+> (and arguably SELinux is doing the Right Thing).
 
-Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
----
- include/linux/phy/phy.h | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
++netlink maintainers for intended semantics of empty netlink messages
 
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index bcee8eba62b3..a8b7b4a2b8de 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -119,6 +119,7 @@ struct phy_ops {
-  */
- struct phy_attrs {
- 	u32			bus_width;
-+	u32			max_link_rate;
- 	enum phy_mode		mode;
- };
- 
-@@ -231,6 +232,16 @@ static inline void phy_set_bus_width(struct phy *phy, int bus_width)
- {
- 	phy->attrs.bus_width = bus_width;
- }
-+
-+static inline int phy_get_max_link_rate(struct phy *phy)
-+{
-+	return phy->attrs.max_link_rate;
-+}
-+
-+static inline void phy_set_max_link_rate(struct phy *phy, int link_rate)
-+{
-+	phy->attrs.max_link_rate = link_rate;
-+}
- struct phy *phy_get(struct device *dev, const char *string);
- struct phy *phy_optional_get(struct device *dev, const char *string);
- struct phy *devm_phy_get(struct device *dev, const char *string);
-@@ -389,6 +400,16 @@ static inline void phy_set_bus_width(struct phy *phy, int bus_width)
- 	return;
- }
- 
-+static inline int phy_get_max_link_rate(struct phy *phy)
-+{
-+	return -ENOSYS;
-+}
-+
-+static inline void phy_set_max_link_rate(struct phy *phy, int link_rate)
-+{
-+	return;
-+}
-+
- static inline struct phy *phy_get(struct device *dev, const char *string)
- {
- 	return ERR_PTR(-ENOSYS);
--- 
-2.26.1
+If it's a bug, or intended behavior depends on the intended
+behavior... which I assume is not documented anywhere officially.
+However, most of the netlink families use netlink_rcv_skb, which does:
 
+int netlink_rcv_skb(struct sk_buff *skb, int (*cb)(struct sk_buff *,
+                           struct nlmsghdr *,
+                           struct netlink_ext_ack *))
+{
+    ...
+    while (skb->len >= nlmsg_total_size(0)) {
+    ...
+       skb_pull(skb, msglen);
+    }
+    return 0;
+}
+
+1. How intentional is this while loop logic vs sloppy error checking?
+2. netlink_rcv_skb seems to be able to handle 2+ messages in the same
+skb, while selinux_netlink_send only checks the first one... so can I
+skip SELinux checks by putting a malicious message after a permitted
+one?..
