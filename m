@@ -5,91 +5,110 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A773C55185
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 13:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 253BDC54FCB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 13:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D2E920704
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 13:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC5D920704
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 13:07:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="zmV6amTc"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="3Nq82/7A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726143AbgDYNFP (ORCPT
+        id S1726174AbgDYNHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 09:05:15 -0400
-Received: from mail.fudan.edu.cn ([202.120.224.73]:49637 "EHLO fudan.edu.cn"
+        Sat, 25 Apr 2020 09:07:24 -0400
+Received: from mail.fudan.edu.cn ([202.120.224.73]:56312 "EHLO fudan.edu.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726073AbgDYNFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 09:05:15 -0400
+        id S1726073AbgDYNHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 09:07:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
-        Message-Id; bh=b3kabGWnfNFyI0kGh5Ho2f4n4DJ0P9WeOICVw1fEAa0=; b=z
-        mV6amTcpJ8dIb1HSrsbWCS54si9wt2COGtn1r+qAHd+knrdkeAvl6CzTIO7EVAJ6
-        8q2V1CvJJTCQoTQWu13UhBt4B3I5ARQvWKPZPrqB/ZapVgVoghTzdlH6ceNWIU+l
-        KCiDM6MD2LzxXmRsN6rn7cW7IIfPPHLEfsu8FIJrRU=
+        Message-Id; bh=mWFjwvcAfXgLbxUP3xHE2jVdSD94EmPgOkeX90eA2Ok=; b=3
+        Nq82/7A27IoxgVywwfFSJsUywySGmqGqO4tCB1cLkMK5Dd+7O524Ce+7laBdO5pq
+        JOPYdcwP5uGODiyp7mtTfdntyvTl6dcPUnL7IGTUl79RXSWuETgBKjYkaf1CopdZ
+        CLia/QIRNL7epNO0KrOoGZXePNzM8Uo2twuxfLLHxU=
 Received: from localhost.localdomain (unknown [120.229.255.80])
-        by app2 (Coremail) with SMTP id XQUFCgD3_+N_NaReRXapAA--.3366S3;
-        Sat, 25 Apr 2020 21:05:06 +0800 (CST)
+        by app2 (Coremail) with SMTP id XQUFCgD3___2NaRe3oqpAA--.34609S3;
+        Sat, 25 Apr 2020 21:07:03 +0800 (CST)
 From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
+To:     Andrew Hendry <andrew.hendry@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
         Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>
-Subject: [PATCH] NFSv4: Remove unreachable error condition due to rpc_run_task()
-Date:   Sat, 25 Apr 2020 21:04:40 +0800
-Message-Id: <1587819881-39973-1-git-send-email-xiyuyang19@fudan.edu.cn>
+        Xin Tan <tanxin.ctf@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-x25@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu
+Subject: [PATCH v2] net/x25: Fix x25_neigh refcnt leak when x25 disconnect
+Date:   Sat, 25 Apr 2020 21:06:25 +0800
+Message-Id: <1587819994-40137-1-git-send-email-xiyuyang19@fudan.edu.cn>
 X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: XQUFCgD3_+N_NaReRXapAA--.3366S3
-X-Coremail-Antispam: 1UD129KBjvdXoWruF13tryDJrW8KryDuFy5twb_yoWfCwc_uF
-        yfXr97Z39rAF1DXr17Ka90ya4UW398tr10yan8G3W2y348Kay5AFWkZFn8JFW8urZ0vr4r
-        Cws5CFySv3yfujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbVxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr1j
-        6rxdM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-        0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVWUJVW8Jw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
-        YxC7MxkIecxEwVAFwVW5GwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
-        C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
-        wI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
-        v20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY
-        6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
-        73UjIFyTuYvjfUndgAUUUUU
+X-CM-TRANSID: XQUFCgD3___2NaRe3oqpAA--.34609S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZrykKr4DtryfXr43KrW7Arb_yoW8Jw4UpF
+        W2k397ZryqqF4kWF4kAFykWF1kC34qqw1UXrW5uw15Cr9rG39xArWYgrsIgr43ua93JFyj
+        vw10grsxAF4vk3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9E14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
+        JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IE
+        rcIFxwACI402YVCY1x02628vn2kIc2xKxwCY02Avz4vE14v_Xr4l42xK82IYc2Ij64vIr4
+        1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+        67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
+        8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAv
+        wI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
+        AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjppB7UUUUU==
 X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-nfs4_proc_layoutget() invokes rpc_run_task(), which return the value to
-"task". Since rpc_run_task() is impossible to return an ERR pointer,
-there is no need to add the IS_ERR() condition on "task" here. So we
-need to remove it.
+x25_connect() invokes x25_get_neigh(), which returns a reference of the
+specified x25_neigh object to "x25->neighbour" with increased refcnt.
+
+When x25 connect success and returns, the reference still be hold by
+"x25->neighbour", so the refcount should be decreased in
+x25_disconnect() to keep refcount balanced.
+
+The reference counting issue happens in x25_disconnect(), which forgets
+to decrease the refcnt increased by x25_get_neigh() in x25_connect(),
+causing a refcnt leak.
+
+Fix this issue by calling x25_neigh_put() before x25_disconnect()
+returns.
 
 Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
 ---
- fs/nfs/nfs4proc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Changes in v2:
+- Fix x25_neigh refcnt leak in x25_disconnect() rather than in
+x25_connect()
+---
+ net/x25/x25_subr.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 512afb1c7867..1c710a7834c2 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -9191,8 +9191,7 @@ nfs4_proc_layoutget(struct nfs4_layoutget *lgp, long *timeout)
- 	nfs4_init_sequence(&lgp->args.seq_args, &lgp->res.seq_res, 0, 0);
+diff --git a/net/x25/x25_subr.c b/net/x25/x25_subr.c
+index 8aa415a38814..8b1b06cabcbf 100644
+--- a/net/x25/x25_subr.c
++++ b/net/x25/x25_subr.c
+@@ -357,6 +357,10 @@ void x25_disconnect(struct sock *sk, int reason, unsigned char cause,
+ 		sk->sk_state_change(sk);
+ 		sock_set_flag(sk, SOCK_DEAD);
+ 	}
++	read_lock_bh(&x25_list_lock);
++	x25_neigh_put(x25->neighbour);
++	x25->neighbour = NULL;
++	read_unlock_bh(&x25_list_lock);
+ }
  
- 	task = rpc_run_task(&task_setup_data);
--	if (IS_ERR(task))
--		return ERR_CAST(task);
-+
- 	status = rpc_wait_for_completion_task(task);
- 	if (status != 0)
- 		goto out;
+ /*
 -- 
 2.7.4
 
