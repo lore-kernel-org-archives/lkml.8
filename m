@@ -2,155 +2,126 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 298B2C55191
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 17:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 322C4C54FCB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 17:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D4E020672
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 17:50:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UnpXZf/p"
+	by mail.kernel.org (Postfix) with ESMTP id DEC9F20672
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 17:51:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbgDYRuZ (ORCPT
+        id S1726371AbgDYRv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 13:50:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43620 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726061AbgDYRuY (ORCPT
+        Sat, 25 Apr 2020 13:51:57 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:51110 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726061AbgDYRv5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 13:50:24 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A625DC09B04D;
-        Sat, 25 Apr 2020 10:50:24 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id o185so6279935pgo.3;
-        Sat, 25 Apr 2020 10:50:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9/QIx+i/eRYyKxO5ZdGrT4Lvyj8gVgN5Twlj76RA4LI=;
-        b=UnpXZf/pYEbBAXXEd12+Pr3ZwsfycFi2qHe/qA9tlLXecbynjcMKjDIELwVCliCfET
-         rQhmas6SO84qqRSjcEd2Tc80fLyU4sGYqOGzcR1QrnIk57mMpq7Ph2Ezc6fUm/ouZ8yi
-         PK3KcS15q8ggm7OavPF6kcjd2ss8gPVMlWeuui6w/yX/R72XuVrKFhPrNF4Hy21JHtnv
-         tKbTIwFb9gZIkyiQKhfm33o1sAY6I4vIMPNj6QE+oXJ93N9cZUQmeZC3AC14m+4GukI4
-         W9Tar28Pd/jAsrVNTrugpVF8ZII58Kb8+ncHwRncJI1ASgaQwtrlwZ2rOdpEAgWrOpd4
-         Evjw==
+        Sat, 25 Apr 2020 13:51:57 -0400
+Received: by mail-pj1-f65.google.com with SMTP id t9so5288719pjw.0;
+        Sat, 25 Apr 2020 10:51:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9/QIx+i/eRYyKxO5ZdGrT4Lvyj8gVgN5Twlj76RA4LI=;
-        b=i490UrE5DGURbtZbR0E0QFl4BB/oMUtf7hfWXobgESFOKfxTckHMl15xioNUqXHX2T
-         rglu1uj+uFrbf9T9d3MRLzQM//hDed0YUOpNRom0mFDz62g1UK3fAJLmGv5O4SDjIlet
-         759vCI8K7a+X/UVnDDAWzEOxU4pihPvVvkrV+RGKvCg0tNxJ+TX74QT5+/oCTlwqdRPD
-         9nqYLGdbyaR2id3613Lp+U9BrDjFPWnWiYdY9uA5cK2Ftvi8AelmCD5qjPP/gdjJ6t+u
-         yzMzUndmZBhVhqfe7j8xvgMzCAXF5KK7dAhkHMZBpYlnrVpSyqr25BX+ELOCBJ6Fd9fX
-         uoKw==
-X-Gm-Message-State: AGi0PuZ5AqgRTOrMFlOC28FQAcWKg24nlqUF2q7qUbPOvmk6f38uNZlR
-        JneQRg5opkOK64u1+U6xVrc3vUQJ
-X-Google-Smtp-Source: APiQypJWL3Rx6/LNTBvbdLOOA1SN+geZWB8ce37VRwRJMZU/+SEsJXhEwTiojcU4dvlO0T4XD9pN4w==
-X-Received: by 2002:a63:cc:: with SMTP id 195mr14821173pga.373.1587837024243;
-        Sat, 25 Apr 2020 10:50:24 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z23sm8541883pfr.136.2020.04.25.10.50.23
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 25 Apr 2020 10:50:23 -0700 (PDT)
-Date:   Sat, 25 Apr 2020 10:50:22 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Stefan Riedmueller <s.riedmueller@phytec.de>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Support Opensource <support.opensource@diasemi.com>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] watchdog: da9063: Make use of pre-configured
- timeout during probe
-Message-ID: <20200425175022.GA43048@roeck-us.net>
-References: <20200403130728.39260-1-s.riedmueller@phytec.de>
- <20200403130728.39260-2-s.riedmueller@phytec.de>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=YOYpjIbi+oV00jOmN2uFU72RJjmnEToaQzfcciU/EQM=;
+        b=SRegaX7Lr0dA32l4dd2LaaVw13wUDk2xIOUUw+1flYWVM7IDqRQB8fpg8kADp9IcQs
+         49lafNEtrPqBggsF0O+c3y1B2mtQ7yhlJe/CF1a1n/BWFbcDLm01p74sGcldllTRcW8g
+         7VQ98LV/ed9hwV5LhpwLNAN1qLZLc2INbBh1V76AGyfo/NPtqSQEUgu7cwa9MdanbFXk
+         BmYGqDZWrKFyPWusuEyd2eSie1QCX10OreIhhRpnVpxjbbcsFqOoM0xxMICB4fYKRpeJ
+         /h3Ixf/edJCvTjRJj7hzfFCJGXpvfSqB4KXe3exUVZ2JEtBI775glLWY8QF1tM71YaLP
+         uu6g==
+X-Gm-Message-State: AGi0PuZ6GHPGKWc3/CTrwSEu5vLVsTtq2FfCN7oRor1Y+rWAYt7qHphZ
+        eKlpcYCv164qOjnWKE0qJDR7+k+Yk/c=
+X-Google-Smtp-Source: APiQypLyIdqdey0S7tINcmBiKFBGecZ1mzVKrvwLHIvRV7Y3vFsxibnx6YprZdbQ7HjTIc+co5PCCw==
+X-Received: by 2002:a17:902:b18d:: with SMTP id s13mr15065359plr.240.1587837114672;
+        Sat, 25 Apr 2020 10:51:54 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:9817:f6ce:d8be:3e60? ([2601:647:4000:d7:9817:f6ce:d8be:3e60])
+        by smtp.gmail.com with ESMTPSA id a21sm8550316pfk.39.2020.04.25.10.51.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 25 Apr 2020 10:51:53 -0700 (PDT)
+Subject: Re: [PATCH v2 5/5] scsi: ufs: UFS Host Performance Booster(HPB)
+ driver
+To:     Avri Altman <Avri.Altman@wdc.com>,
+        "huobean@gmail.com" <huobean@gmail.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>
+Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200416203126.1210-1-beanhuo@micron.com>
+ <20200416203126.1210-6-beanhuo@micron.com>
+ <8921adc3-0c1e-eb16-4a22-1a2a583fc8b3@acm.org>
+ <SN6PR04MB4640851C163648C54EB274C5FCD00@SN6PR04MB4640.namprd04.prod.outlook.com>
+ <SN6PR04MB4640ABB2BB5D2CE5AA2C3778FCD10@SN6PR04MB4640.namprd04.prod.outlook.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <12e8ad61-caa4-3d28-c1d7-febe99a488fb@acm.org>
+Date:   Sat, 25 Apr 2020 10:51:52 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200403130728.39260-2-s.riedmueller@phytec.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <SN6PR04MB4640ABB2BB5D2CE5AA2C3778FCD10@SN6PR04MB4640.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 03:07:27PM +0200, Stefan Riedmueller wrote:
-> The watchdog might already be running during boot with a timeout set by
-> e.g. the bootloader. Make use of this pre-configured timeout instead of
-> falling back to the default timeout if no device tree value is given.
+On 2020-04-25 01:59, Avri Altman wrote:
+> One last word for the community members that are not into ufs day-to-day:
 > 
-> Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
-> Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
-> ---
-> Changes in v2:
->  - Reworked patch to use the pre-configured timeout onyl as a fallback
->    instead of the default value.
->  - Removed info message.
-> ---
->  drivers/watchdog/da9063_wdt.c | 20 ++++++++++++++------
->  1 file changed, 14 insertions(+), 6 deletions(-)
+> HPB implementation made its first public appearance around 2018 as part of Google's Pixel3 and some VIVO models.
+> Since then, more and more mobile platforms are publically using HPB: Galaxy Note10,
+> Galaxy S20 and VIVO NEX3 (that is already using HPB2.0), some Xiaomi models etc.
 > 
-> diff --git a/drivers/watchdog/da9063_wdt.c b/drivers/watchdog/da9063_wdt.c
-> index 3d65e92a4e3f..423584252606 100644
-> --- a/drivers/watchdog/da9063_wdt.c
-> +++ b/drivers/watchdog/da9063_wdt.c
-> @@ -46,15 +46,16 @@ static unsigned int da9063_wdt_timeout_to_sel(unsigned int secs)
->  }
->  
->  /*
-> - * Return 0 if watchdog is disabled, else non zero.
-> + * Read the currently active timeout.
-> + * Zero means the watchdog is disabled.
->   */
-> -static unsigned int da9063_wdt_is_running(struct da9063 *da9063)
-> +static unsigned int da9063_wdt_read_timeout(struct da9063 *da9063)
->  {
->  	unsigned int val;
->  
->  	regmap_read(da9063->regmap, DA9063_REG_CONTROL_D, &val);
->  
-> -	return val & DA9063_TWDSCALE_MASK;
-> +	return wdt_timeout[val & DA9063_TWDSCALE_MASK];
->  }
->  
->  static int da9063_wdt_disable_timer(struct da9063 *da9063)
-> @@ -191,6 +192,7 @@ static int da9063_wdt_probe(struct platform_device *pdev)
->  	struct device *dev = &pdev->dev;
->  	struct da9063 *da9063;
->  	struct watchdog_device *wdd;
-> +	unsigned int timeout;
->  
->  	if (!dev->parent)
->  		return -EINVAL;
-> @@ -214,13 +216,19 @@ static int da9063_wdt_probe(struct platform_device *pdev)
->  	watchdog_set_restart_priority(wdd, 128);
->  	watchdog_set_drvdata(wdd, da9063);
->  
-> -	/* Set default timeout, maybe override it with DT value, scale it */
->  	wdd->timeout = DA9063_WDG_TIMEOUT;
-> +
-> +	/* Use pre-configured timeout if watchdog is already running. */
-> +	timeout = da9063_wdt_read_timeout(da9063);
-> +	if (timeout)
-> +		wdd->timeout = timeout;
-> +
-> +	/* Set timeout, maybe override it with DT value, scale it */
->  	watchdog_init_timeout(wdd, 0, dev);
->  	da9063_wdt_set_timeout(wdd, wdd->timeout);
->  
-> -	/* Change the timeout to the default value if the watchdog is running */
-> -	if (da9063_wdt_is_running(da9063)) {
-> +	/* Update timeout if the watchdog is already running. */
-> +	if (timeout) {
->  		da9063_wdt_update_timeout(da9063, wdd->timeout);
->  		set_bit(WDOG_HW_RUNNING, &wdd->status);
->  	}
+> On the other hand, HPB1.0 spec was just recently closed - not even as part of UFS3.1,
+> but only after - about 2 months ago. The industry is rushing forward, we've seen this many times.
+> 
+> The fact is that HPB is here to stay - either as a horde of out-of-tree implementations,
+> or as a standard acceptable mainline driver.
+
+Hi Avri,
+
+Thanks for the additional clarification. I think we need HPB support in
+the upstream kernel. A possible approach is to start a discussion about
+how to integrate HPB support in the upstream kernel and to defer posting
+new implementations until agreement about an approach has been achieved.
+Is there e.g. an alternative for avoiding deadlocks other than using the
+blk-mq reserved tag feature for the commands that manage the L2P tables?
+
+Thanks,
+
+Bart.
