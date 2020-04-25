@@ -2,104 +2,111 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C061C54FCB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 22:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF12EC54FCB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 22:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEA6320706
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 22:10:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587852644;
-	bh=xuqmIzDpOCho8iZFxLKt+Gkxw+5vPYAZTLSjtItPycU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=e1l2IVEOMkdFO8q4QM8QWPVaWC/+V7KBwoqCABoFDKq5m3/QhHKL75SZtWMGqMvcI
-	 fzk+ROo1LFOORz6vo8/qn5YDD+kQrhOXSpLfWJR7yb1iztkwYSDCGMWsAc0tWoH23j
-	 j4om2ebXet54bKaYDBzJfAShBcT+sb3Z6n5WIM6g=
+	by mail.kernel.org (Postfix) with ESMTP id 8D79D20706
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 22:11:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qXkJZuk7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgDYWKn (ORCPT
+        id S1726379AbgDYWLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 18:10:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726220AbgDYWKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 18:10:43 -0400
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1FBE21707
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 22:10:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587852642;
-        bh=xuqmIzDpOCho8iZFxLKt+Gkxw+5vPYAZTLSjtItPycU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=VQq6Mz7smcr3zNIcC9pKupyHyFvsFY8q4jW93o4Pvp61DKtny6S1PN1CVtESTMt1x
-         0YOy/VXa+OfZBvFpSU6eteA54tRtaoUDqUeg9gPjIMkG43XV6c3n6wN2gXYsQk4uLU
-         CqnubEshLb3LjDTEOxBI+/8+ibDs0pY1ir/VgnPY=
-Received: by mail-wr1-f46.google.com with SMTP id f13so15920628wrm.13
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 15:10:42 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYcua7VEg9rcGXJ/C5ppVCICWLpMtU3chXTDhdzI9NqFGnqk/u2
-        A8uBFPi19ZFVzCe948vnStP/brnxlTwvP4BFEBlKPA==
-X-Google-Smtp-Source: APiQypJY9gdxtTJ8GRawCUdcR1DxC8wlogE3i2vYIogcFwlTEoBRip4uY50PmovAxmm9X2kGA1bOgOh4cBwbd1QBjkA=
-X-Received: by 2002:a5d:62cc:: with SMTP id o12mr18433808wrv.75.1587852641044;
- Sat, 25 Apr 2020 15:10:41 -0700 (PDT)
+        Sat, 25 Apr 2020 18:11:55 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:1927 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726220AbgDYWLy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 18:11:54 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ea4b59d0000>; Sat, 25 Apr 2020 15:11:41 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sat, 25 Apr 2020 15:11:54 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sat, 25 Apr 2020 15:11:54 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 25 Apr
+ 2020 22:11:54 +0000
+Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 25 Apr
+ 2020 22:11:52 +0000
+Subject: Re: [RFC PATCH v10 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1587700513-28449-1-git-send-email-skomatineni@nvidia.com>
+ <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
+ <3155e0d2-94b0-6e0a-bf35-b3560c201039@gmail.com>
+ <fffc09d1-a25f-2d6e-83bd-f7657dd2ff16@nvidia.com>
+ <e5602c48-a73e-8e71-188d-6a53ebf8e4a4@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <f6d62dde-9ab5-7001-0ff4-93ed70cb207f@nvidia.com>
+Date:   Sat, 25 Apr 2020 15:11:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200425191032.GK21900@8bytes.org> <910AE5B4-4522-4133-99F7-64850181FBF9@amacapital.net>
- <20200425202316.GL21900@8bytes.org>
-In-Reply-To: <20200425202316.GL21900@8bytes.org>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sat, 25 Apr 2020 15:10:29 -0700
-X-Gmail-Original-Message-ID: <CALCETrW2Y6UFC=zvGbXEYqpsDyBh0DSEM4NQ+L=_pp4aOd6Fuw@mail.gmail.com>
-Message-ID: <CALCETrW2Y6UFC=zvGbXEYqpsDyBh0DSEM4NQ+L=_pp4aOd6Fuw@mail.gmail.com>
-Subject: Re: [PATCH] Allow RDTSC and RDTSCP from userspace
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Andy Lutomirski <luto@kernel.org>, Joerg Roedel <jroedel@suse.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tom Lendacky <Thomas.Lendacky@amd.com>,
-        Mike Stunes <mstunes@vmware.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <JGross@suse.com>,
-        Jiri Slaby <jslaby@suse.cz>, Kees Cook <keescook@chromium.org>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        X86 ML <x86@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <e5602c48-a73e-8e71-188d-6a53ebf8e4a4@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587852701; bh=M+2SLVtDyEOZG9XNt7U9Wdx7inYhYLLVw0PqKdlIUQ8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=qXkJZuk7r6LyMrT+wOSNjhCrklbWB1e2SV7oesMNqEqRM5b/VInmh0yb1aXS9CS4l
+         SztHqt0F7XVjAO6uQfM6DvVCJd5rryf1lFFwUb1bpXf1ung2gF5nMyzSO6T2CqFDt4
+         2pO6I5Rsu+iihq/MDDmyoXXKoewIqNe8NZ67ivJtb8Bb5757hRutLSb6ml+YjIgOiB
+         S7ZlRZ6c03O4FR8OwCoomrcZN/yfX0sIZnkGkNTrRtINrYATiguwsblcNGbpRotaAU
+         e2X6BDAWEIrMtotyVIFYGu1BlWwXCfnQBnRtRhw8UBSmvE9bzzmlRQ0v3S4VWjjZ+c
+         8ni16M1u9QoHg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 25, 2020 at 1:23 PM Joerg Roedel <joro@8bytes.org> wrote:
->
-> On Sat, Apr 25, 2020 at 12:47:31PM -0700, Andy Lutomirski wrote:
-> > I assume the race you mean is:
-> >
-> > #VC
-> > Immediate NMI before IST gets shifted
-> > #VC
-> >
-> > Kaboom.
-> >
-> > How are you dealing with this?  Ultimately, I think that NMI will need
-> > to turn off IST before engaging in any funny business. Let me ponder
-> > this a bit.
->
-> Right, I dealt with that by unconditionally shifting/unshifting the #VC IST entry
-> in do_nmi() (thanks to Davin Kaplan for the idea). It might cause
-> one of the IST stacks to be unused during nesting, but that is fine. The
-> stack memory for #VC is only allocated when SEV-ES is active (in an
-> SEV-ES VM).
 
-Blech.  It probably works, but still, yuck.  It's a bit sad that we
-seem to be growing more and more poorly designed happens-anywhere
-exception types at an alarming rate.  We seem to have #NM, #MC, #VC,
-#HV, and #DB.  This doesn't really scale.
-
---Andy
+On 4/25/20 3:08 PM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 25.04.2020 01:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 4/24/20 8:07 AM, Dmitry Osipenko wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> 24.04.2020 06:55, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>
+>>> Is this driver compiled as a single kernel module file?
+>>>
+>>>> +MODULE_AUTHOR("Sowjanya Komatineni <skomatineni@nvidia.com>");
+>>>> +MODULE_DESCRIPTION("NVIDIA Tegra CSI Device Driver");
+>>>> +MODULE_LICENSE("GPL v2");
+>>> ...
+>>>> +MODULE_AUTHOR("Sowjanya Komatineni <skomatineni@nvidia.com>");
+>>>> +MODULE_DESCRIPTION("NVIDIA Tegra Video Input Device Driver");
+>>>> +MODULE_LICENSE("GPL v2");
+>>> I don't think that these macros are needed in that case.
+>>> The video.c should be enough, isn't it?
+>> yes these can be removed
+> It will be nice to factor out the Tegra210-specific VI/CSI OPS into a
+> separate driver module (say tegra210-vi) to ease supporting of other
+> Tegra versions. Of course this could be done later on, although I
+> suppose the amount of hassle could be reduced if it's done from the start=
+.
+vi/csi.c are common drivers for all Tegras. All Tegra chip specific=20
+related programming for both vi and csi were already moved to Tegra210.c=20
+based on prior feedbacks.
