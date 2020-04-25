@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8502C55185
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 15:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 374BEC54FCB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 15:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C98422071C
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 15:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E6C62071C
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 15:18:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="X3I87GoS"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="b2HK/aFj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726155AbgDYPSn (ORCPT
+        id S1726200AbgDYPSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 11:18:43 -0400
-Received: from mout.gmx.net ([212.227.17.22]:46269 "EHLO mout.gmx.net"
+        Sat, 25 Apr 2020 11:18:49 -0400
+Received: from mout.gmx.net ([212.227.17.21]:53825 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726062AbgDYPSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 11:18:42 -0400
+        id S1726143AbgDYPSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 11:18:46 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1587827912;
-        bh=cA51MhRZpcPdbhzkfNM7piuf/X+QYuleTh22MsKRiKw=;
+        s=badeba3b8450; t=1587827919;
+        bh=V4mn8XWOidnV35lpF6k4PLGi3eJjtkJ7bFNpYDHAFrM=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=X3I87GoSnPyL8s2ODGDy2KCvF2hm5TvdAVuWW57qtfuAkYWr3Fa5XxA1Pg8/EYV6w
-         VnhIT4p0UqL0DZPBTJO9a5a0kdY3MkYV87MGmgoKKP5ByMZYOt89nBa3LPMeYN/MWP
-         QQB1piA/siKx46T30a9+GvXuw3DSply5kBJQzXvw=
+        b=b2HK/aFjc/NgxS6heebeuWwbwZIfNCCAoaM5rua60nDkJ4gtc3mBKKWJwoGyxA7NM
+         rIMUfhxM+YuGff2CoDmpIo4w3IBTryflI8UntDPjLSWERAjrlAiYBKuaukQC/unqzH
+         nfcPEF69w4NTBd99/9IhmRIEEV4ArQNcNuoH/qMU=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
  (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1M3UV8-1jSunt3qx0-000aUU; Sat, 25 Apr 2020 17:18:32 +0200
+ 1MysRu-1jFlbp2aos-00w0Sg; Sat, 25 Apr 2020 17:18:39 +0200
 From:   Oscar Carter <oscar.carter@gmx.com>
 To:     Forest Bond <forest@alittletooquiet.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -41,144 +41,143 @@ Cc:     Oscar Carter <oscar.carter@gmx.com>,
         Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
         Joe Perches <joe@perches.com>
-Subject: [PATCH v2 1/3] staging: vt6656: Remove the local variable "array"
-Date:   Sat, 25 Apr 2020 17:17:45 +0200
-Message-Id: <20200425151747.8199-2-oscar.carter@gmx.com>
+Subject: [PATCH v2 3/3] staging: vt6656: Remove duplicate code in vnt_rf_table_download
+Date:   Sat, 25 Apr 2020 17:17:47 +0200
+Message-Id: <20200425151747.8199-4-oscar.carter@gmx.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200425151747.8199-1-oscar.carter@gmx.com>
 References: <20200425151747.8199-1-oscar.carter@gmx.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:gtIJ+SEoH+JonF2jdvTPXSN3dsz/lsGn1B6tAzfDsVuUMy5GXqf
- +EFo2IDXEKIX3XWUU4gbokazSnCF8GiOV7ZOUIPpAiajjlkmT1z2TcogyDgLER5RRBlEJqU
- CN+yjZEqpH/QdgMRQTjFZjiAeNnVBIBcE3tmQXvXPloytKXxgDW/nnfFB2JRqROxZS8LwaV
- o4k5AQeaZzntR7thLRlSQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9mGWbtIyyQM=:6/HgujUBCrXsNwAZdHzf2r
- BzWK+7anO1LYpyw5gScTLiimGdwV6O+7ViUWsWz7r6/Q5GdbSDknO2Ax4vbSWgxJPg+DbdTwG
- JQ8p7GPry+jeSLmQNL3CtvFE/1jtdPoSVnFrbbFs0Tjw9cC1irUwuhYvPpsI0Mb0mpYsVLnV8
- V/KuJK5Yzn3696Nuv5cCY5nsMRJ9Y6YsrQNc77/kGH+i314vsB6LOic/SnmIMKfraIDy14KZ/
- RFV5iOsgU0FTRGki6We9M565/a9N8Se2/LE3ux0ib7W7PlbFLYIOySgAAKNgc8MOEtVHur8Wt
- e4ejuEi6F+MmXbHp4YMhs4w202G1TSFrAk1izgRAukYe5EvQfrc0i0DwyrupXpsrffKhS9qjI
- 0MIy0gEuECnOmCQnb7y7aURgmdjTu0oDsPXchNY06/+YdOR3e6BCtrJL4LM9QzTi7jLD+bJmc
- LFRWXvvFy79qPWc+AVqwnGnZ4obdDhWcCj7O2m1ZprHEsHF0HPl3OQzHJIlO3EqcxmQsc58Lw
- 7W/funJ/eba8OeE7/VmeQkL1zACvcHKaYOpDFYlAERXNIWbkKckWSSqu51eBKpdyZXp96nFs7
- 2N4QYXJRPYoDQ1HaQbXhGt+RCe5d20iOlLMUBi1zh/ARYbLgXXFP+ACsYs3LjXhRBAzNFrOTu
- 8T7h/Omtfa4h6tBd/Ub05R7zVqK698fAaA6JMeaoeybVYs67wXMtCJsZ3qPOAVb1WwMkcnVOe
- /V2PKMMuwedAcQuSfu+dhKFuf8eLvvU5btt+OMz8CZseoeme88jKGs+KMp40suuukGFiYYh3u
- y9mZQYQPFo4iAz7ImvtH4jlFj3hB3GYK2qR4NVYIoSATiugFtXXlBzV+jGcsM90ZsN8VuyhB+
- NxABjrbY3Tk9ArDRZ7zkkrf90t5XzpbSWVJ/pN2X0D44uF1dPPcK1sATgqejVP2cSICtR7Dlo
- jlUCmZMkiexuER6pCwvSra3k6HLiNpYgA9cp6t9nkf/LZz7BWrxCfwrqdkvCvsp39IT9G4wDr
- QqafgUx/99r+n0B6w/jex3jnOE1rjsiA2WOykilGJRqxUMeLyLrUCls2VrU+Rv5Vyq5Ej8jbe
- AfyFvlaIdwy/BDPq1AfKGyARzCOby8Q+V4odyRzA9yo4XdJlU5zF+oxQQgEHSjC6gcIRf+k+P
- 4KSqwg+ArfNWSqU+HXfmqsEKfib5GOzw+J+ahWacORYCsc2O4XHHQnku4KhMGDkVaNN+aQmUh
- llOrrBH0YkIwL7TZV
+X-Provags-ID: V03:K1:O0CbRDf92e151EFq1Tr62g7Abu264JDJMB0TQsvFCf5to1J4tlu
+ uGIVzKgrpivucPTVkS+I8nfkoGKr11imtK/QLaOPiAwHgbHVhFLLnn0eRvVZ2TTV5TZa+Nv
+ gEPHNRtQNLnQqISLx141zUzA8Nl3+52wFDezmPueb6NiG7WAmCTSJoZQ8rOvupN0L3esxfa
+ M5UVFcCM/0BzuP2kYL2SQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:P7XaABjktOo=:mYSAPT8yUikJd6o5uzjVjS
+ gbDmQcWxXGAC3xuAmK3hAeKzD5YKhZJhVjMMF+yg2jcYjB8JDULAVnaKRBcJMh9ec4q6h4PF6
+ CEySSeGjEhmGwmtuEMPmOLxBKvyMJL2djBRlky3xfOh1LEttp9n53cQQNo6MuhcXOnedf9/qH
+ +BEJBfXN216SyRi64avQNC/DJNdNQr6j+AcFXrXfwXDvSCithxujcgasrnQ1JANNN1bAhBplD
+ jax4KgkMOe06tajaEYYHJk4xoZwFihftT0rDkVFWruUkVZjxvswJ8lZG1CK8sksiPMkw917EW
+ sKs930UIixEYuDP4Qi4MkEt3XURVG6HxiwTsW63KN5umAS1RQZzRDt0liXp5nUh1TxR52mRj8
+ yO7QDclwdHx09pe47aBW8xQTyOqRaConXy73wmeVJJt7sKvs9d0DK/btMyed1VKsPoP9P9K3R
+ J2HJuPUPi7v48hk/GbaPLo4iy+4QdURiKLPo2s8TfoS6FxJ8U4qNDuQ1LB2NLDdtd1F6xWfJ/
+ 7gsqYOTmXJeG0upG49MLPpBUDcwCmYKlK5bOP6R93w5H4aMndwaLEVYh1CLDEJrTbKR08DV3S
+ b1dU3f3fPIKssujyPnqo1ojgrWnFnXgSYd6U+5SjqJ9YU8Peum57VjYmZ97CNwQwGMP1hkQpi
+ sEeYg/0K6k5Z56E4dh+fg50BZHeJVGDQyPZ77X2UxQL/kFQ4Q6wA9AZN+uWiSoPE85sHQMBGe
+ YnDUMyDTnmqLopIob1+fNCwOr1P6xUwW52WiWmPx70oLhiddhPaMlIj52gfdZ06m1Nkqw9b+Z
+ 9fwcWciwZnHR3EMLbtxiZ7p/RSxn05xsjtMvS2A8NmULgQIJGtF4KxBKoDERhejZGaaNMdNL4
+ D07/Elpj2yPVoILjshnFKh1zXgI9bXB31S+O9P0L93c53q5XsGuoh0IhBSb+qte+ED+S2YhLb
+ rBsTV/pfW2RojsptfcWpZBks1H93WVpgTyN7owe6EVtlQlCRT9Vopn/Zpnu3uL2QdNhyYlhYf
+ /wi0RniHbiP51oNarAiZe8OSvYqvu6/dc+DUSt0MBYZVaKGUbMUi2RaEz8VuDdT5DJKxC1C55
+ 9ZHbLxNoc1aUnEvk7HR+tXyHC+YN7Q3Ql2mU7l1g1RtS1lYGUZPyWqqysk6g5bG4zCH/OfJYq
+ 2n1S+yVnMEZRVNgGf9EhBFEMrSLQTAjiLhmkzwN/1KYYVIbHXdeFBE2z2RhiiL5o1v67oLan9
+ HtbuntM+1gcnL7P9x
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the local variable "array" and all the memcpy function calls
-because this copy operation from different arrays to this variable is
-unnecessary.
+Replace three while loops with three calls to the vnt_control_out_blocks
+function. This way avoid repeat a functionality that already exists.
 
-The vnt_control_out function already does a kmemdup copy of its const
-char *buffer argument and this was made unnecessary by:
-
-commit 12ecd24ef932
-("staging: vt6656: use off stack for out buffer USB transfers.")
-Author: Malcolm Priestley <tvboxspy@gmail.com>
-Date:   Sat Apr 22 11:14:57 2017 +0100
-
-    staging: vt6656: use off stack for out buffer USB transfers.
-
-    Since 4.9 mandated USB buffers be heap allocated this causes the drive=
-r
-    to fail.
-
-    Since there is a wide range of buffer sizes use kmemdup to create
-    allocated buffer.
-
-So, the same result can be achieved using the arrays directly.
+Also remove the variables that now are not used.
 
 Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
 =2D--
- drivers/staging/vt6656/rf.c | 21 +++++----------------
- 1 file changed, 5 insertions(+), 16 deletions(-)
+ drivers/staging/vt6656/rf.c | 65 +++++++------------------------------
+ 1 file changed, 12 insertions(+), 53 deletions(-)
 
 diff --git a/drivers/staging/vt6656/rf.c b/drivers/staging/vt6656/rf.c
-index 06fa8867cfa3..82d3b6081b5b 100644
+index 888b6fcb6e91..420e9869af76 100644
 =2D-- a/drivers/staging/vt6656/rf.c
 +++ b/drivers/staging/vt6656/rf.c
-@@ -770,7 +770,6 @@ int vnt_rf_table_download(struct vnt_private *priv)
+@@ -769,7 +769,6 @@ int vnt_rf_table_download(struct vnt_private *priv)
+ 	int ret;
  	u16 length1 =3D 0, length2 =3D 0, length3 =3D 0;
  	u8 *addr1 =3D NULL, *addr2 =3D NULL, *addr3 =3D NULL;
- 	u16 length, value;
--	u8 array[256];
+-	u16 length, value;
 
  	switch (priv->rf_type) {
  	case RF_AL2230:
-@@ -817,10 +816,8 @@ int vnt_rf_table_download(struct vnt_private *priv)
+@@ -822,40 +821,14 @@ int vnt_rf_table_download(struct vnt_private *priv)
+ 		return ret;
+
+ 	/* Channel Table 0 */
+-	value =3D 0;
+-	while (length2 > 0) {
+-		if (length2 >=3D 64)
+-			length =3D 64;
+-		else
+-			length =3D length2;
+-
+-		ret =3D vnt_control_out(priv, MESSAGE_TYPE_WRITE, value,
+-				      MESSAGE_REQUEST_RF_CH0, length, addr2);
+-		if (ret)
+-			return ret;
+-
+-		length2 -=3D length;
+-		value +=3D length;
+-		addr2 +=3D length;
+-	}
+-
+-	/* Channel table 1 */
+-	value =3D 0;
+-	while (length3 > 0) {
+-		if (length3 >=3D 64)
+-			length =3D 64;
+-		else
+-			length =3D length3;
+-
+-		ret =3D vnt_control_out(priv, MESSAGE_TYPE_WRITE, value,
+-				      MESSAGE_REQUEST_RF_CH1, length, addr3);
+-		if (ret)
+-			return ret;
++	ret =3D vnt_control_out_blocks(priv, VNT_REG_BLOCK_SIZE,
++				     MESSAGE_REQUEST_RF_CH0, length2, addr2);
++	if (ret)
++		return ret;
+
+-		length3 -=3D length;
+-		value +=3D length;
+-		addr3 +=3D length;
+-	}
++	/* Channel Table 1 */
++	ret =3D vnt_control_out_blocks(priv, VNT_REG_BLOCK_SIZE,
++				     MESSAGE_REQUEST_RF_CH1, length3, addr3);
+
+ 	if (priv->rf_type =3D=3D RF_AIROHA7230) {
+ 		length1 =3D CB_AL7230_INIT_SEQ * 3;
+@@ -869,25 +842,11 @@ int vnt_rf_table_download(struct vnt_private *priv)
+ 		if (ret)
+ 			return ret;
+
+-		/* Channel Table 0 */
+-		value =3D 0;
+-		while (length2 > 0) {
+-			if (length2 >=3D 64)
+-				length =3D 64;
+-			else
+-				length =3D length2;
+-
+-			ret =3D vnt_control_out(priv, MESSAGE_TYPE_WRITE, value,
+-					      MESSAGE_REQUEST_RF_CH2, length,
+-					      addr2);
+-			if (ret)
+-				return ret;
+-
+-			length2 -=3D length;
+-			value +=3D length;
+-			addr2 +=3D length;
+-		}
++		/* Channel Table 2 */
++		ret =3D vnt_control_out_blocks(priv, VNT_REG_BLOCK_SIZE,
++					     MESSAGE_REQUEST_RF_CH2, length2,
++					     addr2);
  	}
 
- 	/* Init Table */
--	memcpy(array, addr1, length1);
--
- 	ret =3D vnt_control_out(priv, MESSAGE_TYPE_WRITE, 0,
--			      MESSAGE_REQUEST_RF_INIT, length1, array);
-+			      MESSAGE_REQUEST_RF_INIT, length1, addr1);
- 	if (ret)
- 		goto end;
-
-@@ -832,10 +829,8 @@ int vnt_rf_table_download(struct vnt_private *priv)
- 		else
- 			length =3D length2;
-
--		memcpy(array, addr2, length);
--
- 		ret =3D vnt_control_out(priv, MESSAGE_TYPE_WRITE, value,
--				      MESSAGE_REQUEST_RF_CH0, length, array);
-+				      MESSAGE_REQUEST_RF_CH0, length, addr2);
- 		if (ret)
- 			goto end;
-
-@@ -852,10 +847,8 @@ int vnt_rf_table_download(struct vnt_private *priv)
- 		else
- 			length =3D length3;
-
--		memcpy(array, addr3, length);
--
- 		ret =3D vnt_control_out(priv, MESSAGE_TYPE_WRITE, value,
--				      MESSAGE_REQUEST_RF_CH1, length, array);
-+				      MESSAGE_REQUEST_RF_CH1, length, addr3);
- 		if (ret)
- 			goto end;
-
-@@ -870,11 +863,9 @@ int vnt_rf_table_download(struct vnt_private *priv)
- 		addr1 =3D &al7230_init_table_amode[0][0];
- 		addr2 =3D &al7230_channel_table2[0][0];
-
--		memcpy(array, addr1, length1);
--
- 		/* Init Table 2 */
- 		ret =3D vnt_control_out(priv, MESSAGE_TYPE_WRITE, 0,
--				      MESSAGE_REQUEST_RF_INIT2, length1, array);
-+				      MESSAGE_REQUEST_RF_INIT2, length1, addr1);
- 		if (ret)
- 			goto end;
-
-@@ -886,11 +877,9 @@ int vnt_rf_table_download(struct vnt_private *priv)
- 			else
- 				length =3D length2;
-
--			memcpy(array, addr2, length);
--
- 			ret =3D vnt_control_out(priv, MESSAGE_TYPE_WRITE, value,
- 					      MESSAGE_REQUEST_RF_CH2, length,
--					      array);
-+					      addr2);
- 			if (ret)
- 				goto end;
-
+-	return 0;
++	return ret;
+ }
 =2D-
 2.20.1
 
