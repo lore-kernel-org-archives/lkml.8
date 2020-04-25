@@ -2,144 +2,197 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBFFBC55185
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 08:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C3F4C55185
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 08:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B49322071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 08:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F19720661
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 08:43:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wimE45/T"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="N63HtYdE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgDYInI (ORCPT
+        id S1726140AbgDYInc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 04:43:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43740 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725837AbgDYInI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 04:43:08 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2915C09B04A
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 01:43:07 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id 131so9646580lfh.11
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 01:43:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ymKhdR3sym6qWBgeA4fIYtiq69uqrQtQw9UuLC9sywA=;
-        b=wimE45/T2z13zqy3gnIRC8mnALm84IcGSFthoxOi8WafyXtBV+U+chrM3mvQDm8H9W
-         3ixBfN/MgV0PtEjdBP1setFQ+VXqgYWKeVZLifeY/krUEHpds1hI3G5jl0BN6hCViZzi
-         cF1biaChR3oVN8LpbsC+VqBcQE3+ZIEbrzPtQXmXXR39Y61SL1RSII4RJ9HaBN/zLok+
-         jZEJ8Mv0gCsvDthMqvLRt44RIxO+9CCCIJ1U9JaNkKEZffqUmEZUW7Q+62nxRCZRQ49m
-         lg3df7OWxhpUlWc72ed13Y824cAKWnmzERD4C2dLeGJkGWwYPm6j5uSuDu1rgERcZhUI
-         1jmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ymKhdR3sym6qWBgeA4fIYtiq69uqrQtQw9UuLC9sywA=;
-        b=aoIeN3WXEXNPk4TUNO/KYlDiUi0Suwo1Ltj8QQ4KFwz0Rc+bk5dEGt6yAILmS28Ndd
-         dMGvJRdqhqg4r1ntcxeFutO1iae+vRowOcTeHlfj65Xmh8PR3gUOEqQnztDem03E0Fs8
-         9nmi4pULiELXf+xvib5c0cSJWzy8bXW9NYw9B9UYhylmRTBXwY5lM/nWT2yImSdmNKO/
-         LJ0RcYqIimQp7ShSfm48dxWjIEjrrb49RfZnC5vaf8kPDCGitTstjqq77Qq+Zorjd3lS
-         v49ROYr8JPekQNaE4xOGxAybhOnMsU0qFbqRS927OsrNB5hZSUmwOralR2IqqYlpJs5R
-         HWjg==
-X-Gm-Message-State: AGi0PuaaQx6jFkpW1wTiZOSYoCUjw1RqCZk0UDF+laBqSnQef5jl+f6q
-        SA67QHMePBXaQVY8yEXk0y5B5XHUDGOiYgnqGSA01A==
-X-Google-Smtp-Source: APiQypJHox3Z2AA2Nx1IckOkSqxv/KmHW2TFlSZVm6DDpcSt6AEVjGbVuhyGCeHtsBMEzfYOPu1zsUabKhCbpqNirhQ=
-X-Received: by 2002:a19:c7d8:: with SMTP id x207mr8921259lff.190.1587804186105;
- Sat, 25 Apr 2020 01:43:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200421004749.GC26573@shao2-debian> <20200425012306.13516-1-hdanton@sina.com>
-In-Reply-To: <20200425012306.13516-1-hdanton@sina.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Sat, 25 Apr 2020 10:42:54 +0200
-Message-ID: <CAKfTPtCvnDoDm9J611uk+fpyPqyh=zn1Rbo=L=MrqbD_jMOx5A@mail.gmail.com>
-Subject: Re: [LKP] [sched/fair] 6c8116c914: stress-ng.mmapfork.ops_per_sec
- -38.0% regression
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Tao Zhou <ouwen210@hotmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mel Gorman <mgorman@suse.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 25 Apr 2020 04:43:32 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:6153 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725837AbgDYInc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 04:43:32 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 498PhH6WfCz9txnX;
+        Sat, 25 Apr 2020 10:43:27 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=N63HtYdE; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id HV5eKAmw2_CY; Sat, 25 Apr 2020 10:43:27 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 498PhH5Sdmz9txnG;
+        Sat, 25 Apr 2020 10:43:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1587804207; bh=WlwmzwKPs6l4fBW4+vRYlvCwDuRIeDOPpK2TIW1/YUE=;
+        h=From:Subject:To:Cc:Date:From;
+        b=N63HtYdEVyRS/X4AUhOxWJ4h5thmpxiXp0DehLqnntpvBcjB+dSxtlWFbkaJavdTU
+         KmGK+iYedPgYGddZpjy6Afq7zbVhAnXxhTnDaWgXYweO92MOzJ+8SVtTD63KnOjLUb
+         x4UdGc4FdQDKcT4u4fSimeTJIlZ0PnuhpbVP3ggM=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E65C28B769;
+        Sat, 25 Apr 2020 10:43:28 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id yOWtdfFbLtWr; Sat, 25 Apr 2020 10:43:28 +0200 (CEST)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 966058B752;
+        Sat, 25 Apr 2020 10:43:28 +0200 (CEST)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 3C83765875; Sat, 25 Apr 2020 08:43:28 +0000 (UTC)
+Message-Id: <cover.1587804057.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v4 00/13] Modernise powerpc 40x
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, michal.simek@xilinx.com,
+        arnd@arndb.de
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Sat, 25 Apr 2020 08:43:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 25 Apr 2020 at 03:23, Hillf Danton <hdanton@sina.com> wrote:
->
->
-> Hi Xing
->
-> On Fri, 24 Apr 2020 16:15:45 +0800 Xing Zhengjun wrote:
-> >
-> > Hi Tao,
-> >
-> >     Do you have time to take a look at this? Thanks.
-> >
-> > On 4/21/2020 8:47 AM, kernel test robot wrote:
-> > >
-> > > Greeting,
-> > >
-> > > FYI, we noticed a 56.4% improvement of stress-ng.fifo.ops_per_sec due to commit:
-> > >
-> > >
-> > > commit: 6c8116c914b65be5e4d6f66d69c8142eb0648c22 ("sched/fair: Fix condition of avg_load calculation")
-> > > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-> > >
-> > > in testcase: stress-ng
-> > > on test machine: 88 threads Intel(R) Xeon(R) CPU E5-2699 v4 @ 2.20GHz with 128G memory
-> > > with following parameters:
-> > >
-> > >     nr_threads: 100%
-> > >     disk: 1HDD
-> > >     testtime: 1s
-> > >     class: scheduler
-> > >     cpufreq_governor: performance
-> > >     ucode: 0xb000038
-> > >     sc_pid_max: 4194304
-> > >
->
-> Here is a tiny workaround. If it makes a sense to you see if it helps
-> cure the regression.
->
-> Hillf
->
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -8744,6 +8744,16 @@ find_idlest_group(struct sched_domain *s
->
->         switch (local_sgs.group_type) {
->         case group_overloaded:
-> +               /*
-> +                * push the task if it helps cut the imbalance in the
-> +                * number of running tasks
-> +                */
-> +               if (local_sgs.sum_h_nr_running >
-> +                   idlest_sgs.sum_h_nr_running)
-> +                       return idlest;
-> +               else
-> +                       return NULL;
+v1 and v2 of this series were aiming at removing 40x entirely,
+but it led to protests.
 
-Taking into account nr_running when overloaded to bypass load
-comparison just break the fairness and the spread of load and will
-cause regression for other use cases
+v3 is trying to start modernising powerpc 40x:
+- Rework TLB miss handlers to not use PTE_ATOMIC_UPDATES and _PAGE_HWWRITE
+- Remove old versions of 40x processors, namely 403 and 405GP and associated
+errata.
+- Last two patches are trivial changes in TLB miss handlers to reduce number
+of scratch registers.
 
+v4:
+- Fixing a build failure with patch 2 due to a missing ;
+- There was in patch 5 some stuff belonging to patch 6. Moved them.
+- Rebased to today's powerpc/merge
 
+I would have liked to test it with QEMU, but I get the following error when
+trying to start QEMU for machine ref405ep.
 
-> +
->         case group_fully_busy:
->                 /*
->                  * When comparing groups across NUMA domains, it's possible for
-> --
->
+	qemu-system-ppc: Could not load PowerPC BIOS 'ppc405_rom.bin'
+
+Can someone help with that ?
+
+Christophe Leroy (12):
+  powerpc/40x: Rework 40x PTE access and TLB miss
+  powerpc/pgtable: Drop PTE_ATOMIC_UPDATES
+  powerpc/40x: Remove support for IBM 403GCX
+  powerpc/40x: Remove STB03xxx
+  powerpc/40x: Remove WALNUT
+  powerpc/40x: Remove EP405
+  powerpc/40x: Remove support for ISS Simulator
+  powerpc/40x: Remove support for IBM 405GP
+  powerpc/40x: Remove IBM405 Erratum #51
+  powerpc: Remove IBM405 Erratum #77
+  powerpc/40x: Avoid using r12 in TLB miss handlers
+  powerpc/40x: Don't save CR in SPRN_SPRG_SCRATCH6
+
+Michal Simek (1):
+  powerpc: Remove Xilinx PPC405/PPC440 support
+
+ Documentation/devicetree/bindings/xilinx.txt | 143 ------
+ Documentation/powerpc/bootwrapper.rst        |  28 +-
+ arch/powerpc/Kconfig.debug                   |   2 +-
+ arch/powerpc/boot/Makefile                   |  14 +-
+ arch/powerpc/boot/dts/Makefile               |   1 -
+ arch/powerpc/boot/dts/ep405.dts              | 230 ---------
+ arch/powerpc/boot/dts/virtex440-ml507.dts    | 406 ----------------
+ arch/powerpc/boot/dts/virtex440-ml510.dts    | 466 -------------------
+ arch/powerpc/boot/dts/walnut.dts             | 246 ----------
+ arch/powerpc/boot/ep405.c                    |  71 ---
+ arch/powerpc/boot/ops.h                      |   1 -
+ arch/powerpc/boot/serial.c                   |   5 -
+ arch/powerpc/boot/treeboot-walnut.c          |  81 ----
+ arch/powerpc/boot/uartlite.c                 |  79 ----
+ arch/powerpc/boot/virtex.c                   |  97 ----
+ arch/powerpc/boot/virtex405-head.S           |  31 --
+ arch/powerpc/boot/wrapper                    |   8 -
+ arch/powerpc/configs/40x/acadia_defconfig    |   1 -
+ arch/powerpc/configs/40x/ep405_defconfig     |  62 ---
+ arch/powerpc/configs/40x/kilauea_defconfig   |   1 -
+ arch/powerpc/configs/40x/klondike_defconfig  |   1 -
+ arch/powerpc/configs/40x/makalu_defconfig    |   1 -
+ arch/powerpc/configs/40x/obs600_defconfig    |   1 -
+ arch/powerpc/configs/40x/virtex_defconfig    |  75 ---
+ arch/powerpc/configs/44x/virtex5_defconfig   |  74 ---
+ arch/powerpc/configs/ppc40x_defconfig        |   9 -
+ arch/powerpc/configs/ppc44x_defconfig        |   8 -
+ arch/powerpc/include/asm/asm-405.h           |  19 -
+ arch/powerpc/include/asm/atomic.h            |  11 -
+ arch/powerpc/include/asm/bitops.h            |   4 -
+ arch/powerpc/include/asm/cache.h             |   2 +-
+ arch/powerpc/include/asm/cmpxchg.h           |  11 -
+ arch/powerpc/include/asm/futex.h             |   3 -
+ arch/powerpc/include/asm/nohash/32/pgtable.h |  33 --
+ arch/powerpc/include/asm/nohash/32/pte-40x.h |  23 +-
+ arch/powerpc/include/asm/nohash/64/pgtable.h |  27 --
+ arch/powerpc/include/asm/nohash/pgtable.h    |   2 -
+ arch/powerpc/include/asm/reg_booke.h         |  54 ---
+ arch/powerpc/include/asm/spinlock.h          |   4 -
+ arch/powerpc/include/asm/time.h              |  12 -
+ arch/powerpc/include/asm/xilinx_intc.h       |  16 -
+ arch/powerpc/include/asm/xilinx_pci.h        |  21 -
+ arch/powerpc/kernel/cputable.c               | 102 ----
+ arch/powerpc/kernel/entry_32.S               |  11 -
+ arch/powerpc/kernel/head_40x.S               | 316 +++----------
+ arch/powerpc/kernel/misc_32.S                |   9 -
+ arch/powerpc/kernel/setup-common.c           |   4 -
+ arch/powerpc/mm/nohash/40x.c                 |   4 +-
+ arch/powerpc/platforms/40x/Kconfig           |  76 ---
+ arch/powerpc/platforms/40x/Makefile          |   3 -
+ arch/powerpc/platforms/40x/ep405.c           | 123 -----
+ arch/powerpc/platforms/40x/virtex.c          |  54 ---
+ arch/powerpc/platforms/40x/walnut.c          |  65 ---
+ arch/powerpc/platforms/44x/Kconfig           |  40 +-
+ arch/powerpc/platforms/44x/Makefile          |   2 -
+ arch/powerpc/platforms/44x/virtex.c          |  60 ---
+ arch/powerpc/platforms/44x/virtex_ml510.c    |  30 --
+ arch/powerpc/platforms/Kconfig               |   4 -
+ arch/powerpc/sysdev/Makefile                 |   2 -
+ arch/powerpc/sysdev/xilinx_intc.c            |  88 ----
+ arch/powerpc/sysdev/xilinx_pci.c             | 132 ------
+ drivers/char/Kconfig                         |   2 +-
+ drivers/video/fbdev/Kconfig                  |   2 +-
+ 63 files changed, 83 insertions(+), 3430 deletions(-)
+ delete mode 100644 arch/powerpc/boot/dts/ep405.dts
+ delete mode 100644 arch/powerpc/boot/dts/virtex440-ml507.dts
+ delete mode 100644 arch/powerpc/boot/dts/virtex440-ml510.dts
+ delete mode 100644 arch/powerpc/boot/dts/walnut.dts
+ delete mode 100644 arch/powerpc/boot/ep405.c
+ delete mode 100644 arch/powerpc/boot/treeboot-walnut.c
+ delete mode 100644 arch/powerpc/boot/uartlite.c
+ delete mode 100644 arch/powerpc/boot/virtex.c
+ delete mode 100644 arch/powerpc/boot/virtex405-head.S
+ delete mode 100644 arch/powerpc/configs/40x/ep405_defconfig
+ delete mode 100644 arch/powerpc/configs/40x/virtex_defconfig
+ delete mode 100644 arch/powerpc/configs/44x/virtex5_defconfig
+ delete mode 100644 arch/powerpc/include/asm/asm-405.h
+ delete mode 100644 arch/powerpc/include/asm/xilinx_intc.h
+ delete mode 100644 arch/powerpc/include/asm/xilinx_pci.h
+ delete mode 100644 arch/powerpc/platforms/40x/ep405.c
+ delete mode 100644 arch/powerpc/platforms/40x/virtex.c
+ delete mode 100644 arch/powerpc/platforms/40x/walnut.c
+ delete mode 100644 arch/powerpc/platforms/44x/virtex.c
+ delete mode 100644 arch/powerpc/platforms/44x/virtex_ml510.c
+ delete mode 100644 arch/powerpc/sysdev/xilinx_intc.c
+ delete mode 100644 arch/powerpc/sysdev/xilinx_pci.c
+
+-- 
+2.25.0
+
