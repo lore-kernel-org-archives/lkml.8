@@ -2,163 +2,159 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF260C55186
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 11:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FFEC55185
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 11:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9BC820724
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 11:33:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587814435;
-	bh=SYxd73nQUMZjeLWpzSpdg5w7AuHva1OXElwUK4VsNKs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=V+Qf+QUSToE633LV1jxzaZOxFdqQbDE6RKcKXv8pBAWnISNRoxadeCu2yHuzUQEZS
-	 yWga2g2qwEgJr1YuGOKif4cuy2immGj/auM1bqP2sau5Lu1W53RaQ2LdrT9f5S6kZu
-	 1huL3Qo9BAvaOSszP8+PiB8U+JYKTah236FuRLyM=
+	by mail.kernel.org (Postfix) with ESMTP id F3D83206EC
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 11:41:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="kCLiymqA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726152AbgDYLdz (ORCPT
+        id S1726107AbgDYLli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 07:33:55 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:43909 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgDYLdy (ORCPT
+        Sat, 25 Apr 2020 07:41:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43136 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbgDYLlh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 07:33:54 -0400
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 03PBXbDN011969;
-        Sat, 25 Apr 2020 20:33:38 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 03PBXbDN011969
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587814418;
-        bh=dG+iXdxwux0aoUL0YhDT7q1iIB58sDtpm7CsNFPp8+U=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=U+ndnclBKGFmXwdrg9bgOkZ+/bM7uL6FBImZmdUZkPdpsTnKvJGm0U0Py05jb2h2N
-         4hpUnNC4Ly0x0eL0Y8qfmeJmx3e2YIq7ISoVYynwWnrGHnBVzIpERgrXvaAR2YpwL+
-         qEtVpi5kXlT2ekGo4JPEln8BL+0/Y2cRJ1+RRhtfY9vVKiZqE06UikEo5cI//imivR
-         EHpIkJxDD8vHSOsSvcuJR4eQTQQgkV5zG8Ukok8E0Xa05pOGO+Nx8GYsIOgedCGE+X
-         XOLV8f3klbMZvwSMTpAyXGqXKmkDuJNWpGpvm1eS5r7O4ecUve1sqknUHcfBbD723V
-         M3UjdHwmchrEA==
-X-Nifty-SrcIP: [209.85.222.47]
-Received: by mail-ua1-f47.google.com with SMTP id i5so12226348uaq.1;
-        Sat, 25 Apr 2020 04:33:38 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYcvvhNEmmf1Otk3NfzPH7lPVgh4xmobYEVf8ClFHN7JEv/uhsE
-        uasR9AEuqOicNkubW1vXnJLl88fyfBzBOqBXc0A=
-X-Google-Smtp-Source: APiQypJ5NYVnJgRv78uqQmCR6Eta6vzcl188CLoippSvmJj8BldNCyfL8nxQbnrUCMXYe7+qygOEyHFvQ7Dt1Njka/w=
-X-Received: by 2002:ab0:2e84:: with SMTP id f4mr10998232uaa.121.1587814417050;
- Sat, 25 Apr 2020 04:33:37 -0700 (PDT)
+        Sat, 25 Apr 2020 07:41:37 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E26D7C09B04C
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 04:41:35 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id j3so12620428ljg.8
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 04:41:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=antmicro.com; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=gPOslaJS03IHNZDUPg+ylYPnpp4lpO0hHiVIujLXKZQ=;
+        b=kCLiymqAQAvHEj/A6Vzpgk4xqpjkRSKnEdTF0U8KdlAvduMoXElnR8ohQE5BUHk4Pw
+         lksqxjsBpHNnpzuZZ5/Bb7Qwvtoo02CbpPrSKb1WZKbpcd5YfuLvUByStGloyum6aSCV
+         SCm5DqJMDLmpcdZgDM/o852SnCSgrnXLxy1tg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=gPOslaJS03IHNZDUPg+ylYPnpp4lpO0hHiVIujLXKZQ=;
+        b=XxMPyOXR7XyGBQ0AmatLira6aGcuc/yAcBAZH6CJrGqhMdn7dI4I2ZSWTfFV23BMpQ
+         OGFbRQwfqUg7cnkCXVw5ipQDYKbu6CiSXQxX8sxK5px3OQfn868H9N46feVgm6qZArMe
+         vi4iooXuEbLWBUPRZt7Vv4vv0NhF7V6Q1aL/1MU0ZwjvJ9g3qr2HUqwrnrdEF+D/LsRZ
+         mVAWlJWSOLZiUtyovoHpZP//kwIlsPcM11KT4Ke/ORmG36Jv2u7YwCWZjU8MBCwGl7fF
+         jgh50rLDFR1SVW1J/YIbLjOUz2521ehVViUiSOaRvCVpGtd1KUoZ2EaNVT12ATm9CmlT
+         +7aw==
+X-Gm-Message-State: AGi0PuYrk21Bqz0wnyMUePxSK+d0ZGBLmMcy+2e4+7BSy4qAAqQx9buj
+        ZNjRKWi7LDOAYV62dbrARnvT1g==
+X-Google-Smtp-Source: APiQypIaFK4AZ/WydTF7l0S/VD/LpaimsXEHmooK4ekIzyxedqtygTYOg6ubMv49Ytj7H8/UX4iuhQ==
+X-Received: by 2002:a2e:b012:: with SMTP id y18mr8675993ljk.238.1587814892733;
+        Sat, 25 Apr 2020 04:41:32 -0700 (PDT)
+Received: from localhost.localdomain (d79-196.icpnet.pl. [77.65.79.196])
+        by smtp.gmail.com with ESMTPSA id v3sm6454896lfo.62.2020.04.25.04.41.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Apr 2020 04:41:32 -0700 (PDT)
+Date:   Sat, 25 Apr 2020 13:41:26 +0200
+From:   Mateusz Holenko <mholenko@antmicro.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Cc:     Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mateusz Holenko <mholenko@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@antmicro.com>,
+        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/5] LiteX SoC controller and LiteUART serial driver
+Message-ID: <20200425133939.3508912-0-mholenko@antmicro.com>
 MIME-Version: 1.0
-References: <1587794858-938-1-git-send-email-pi3orama@163.com>
-In-Reply-To: <1587794858-938-1-git-send-email-pi3orama@163.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 25 Apr 2020 20:33:01 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQbUeH4jcQHnsp=6fYLoLpCqyMVJg+rN-6P2aO+a-UGYw@mail.gmail.com>
-Message-ID: <CAK7LNAQbUeH4jcQHnsp=6fYLoLpCqyMVJg+rN-6P2aO+a-UGYw@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Add $(strip ...) before compare make variable
- with string
-To:     Wang Nan <pi3orama@163.com>
-Cc:     Wang Nan <wangnan0@huawei.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 25, 2020 at 3:09 PM Wang Nan <pi3orama@163.com> wrote:
->
-> Some of ifneq in Makefile.build works improperly:
->
->  ifneq ($(a)$(b)$(c),)
->  ...
->  endif
->
-> Because some make vairable contains unintended spaces introduced by:
->
->  a := $(x) $(y)
+This patchset introduces support for LiteX SoC Controller
+and LiteUART - serial device from LiteX SoC builder
+(https://github.com/enjoy-digital/litex).
 
+In the following patchset I will add
+a new mor1kx-based (OpenRISC) platform that
+uses this device.
 
-Right.
-I made a mistake in commit 5f2fb52fac15a
+Later I plan to extend this platform by
+adding support for more devices from LiteX suite.
 
-$(hostprogs) always contains a space due to this line:
+Changes in v5:
+    - added Reviewed-by tag
+    - removed custom accessors from SoC Controller's driver
+    - fixed error checking in SoC Controller's driver
 
-hostprogs  += $(hostprogs-y) $(hostprogs-m)
+Changes in v4:
+    - fixed copyright headers
+    - fixed SoC Controller's yaml 
+    - simplified SoC Controller's driver
 
+Changes in v3:
+    - added Acked-by and Reviewed-by tags
+    - introduced LiteX SoC Controller driver
+    - removed endianness detection (handled now by LiteX SoC Controller driver)
+    - modified litex.h header
+    - DTS aliases for LiteUART made optional
+    - renamed SERIAL_LITEUART_NR_PORTS to SERIAL_LITEUART_MAX_PORTS
+    - changed PORT_LITEUART from 122 to 123
 
-This line will go away soon, though.
+Changes in v2:
+    - binding description rewritten to a yaml schema file
+    - added litex.h header with common register access functions
 
+Filip Kokosinski (3):
+  dt-bindings: vendor: add vendor prefix for LiteX
+  dt-bindings: serial: document LiteUART bindings
+  drivers/tty/serial: add LiteUART driver
 
+Pawel Czarnecki (2):
+  dt-bindings: soc: document LiteX SoC Controller bindings
+  drivers/soc/litex: add LiteX SoC Controller driver
 
->
-> This commit adds $(strip ...) to some potentially buggy ifneq.
->
-> Signed-off-by: Wang Nan <pi3orama@163.com>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Michal Marek <michal.lkml@markovi.net>
-> ---
->  scripts/Makefile.build | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-> index 9fcbfac..b2bc0db 100644
-> --- a/scripts/Makefile.build
-> +++ b/scripts/Makefile.build
-> @@ -46,7 +46,7 @@ include $(kbuild-file)
->  include scripts/Makefile.lib
->
->  # Do not include host rules unless needed
-> -ifneq ($(hostprogs)$(hostcxxlibs-y)$(hostcxxlibs-m),)
-> +ifneq ($(strip $(hostprogs) $(hostcxxlibs-y) $(hostcxxlibs-m)),)
-
-Only this one is correct.
-
-
->  include scripts/Makefile.host
->  endif
->
-> @@ -55,7 +55,7 @@ $(warning kbuild: Makefile.build is included improperly)
->  endif
->
->  ifeq ($(need-modorder),)
-> -ifneq ($(obj-m),)
-> +ifneq ($(strip $(obj-m)),)
-
-
-obj-m           := $(addprefix $(obj)/,$(obj-m))
-
-has always stripped away spaces.
-
-
-
->  $(warning $(patsubst %.o,'%.ko',$(obj-m)) will not be built even though obj-m is specified.)
->  $(warning You cannot use subdir-y/m to visit a module Makefile. Use obj-y/m instead.)
->  endif
-> @@ -512,7 +512,7 @@ obj-dirs := $(sort $(obj) $(patsubst %/,%, $(dir $(targets))))
->  # If targets exist, their directories apparently exist. Skip mkdir.
->  existing-dirs := $(sort $(patsubst %/,%, $(dir $(existing-targets))))
->  obj-dirs := $(strip $(filter-out $(existing-dirs), $(obj-dirs)))
-> -ifneq ($(obj-dirs),)
-
-
-The previous line has $(strip )
-
-
-
-> +ifneq ($(strip $(obj-dirs)),)
->  $(shell mkdir -p $(obj-dirs))
->  endif
->  endif
-> --
-> 2.7.4
->
->
-
+ .../bindings/serial/litex,liteuart.yaml       |  38 ++
+ .../soc/litex/litex,soc-controller.yaml       |  39 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   9 +
+ drivers/soc/Kconfig                           |   1 +
+ drivers/soc/Makefile                          |   1 +
+ drivers/soc/litex/Kconfig                     |  14 +
+ drivers/soc/litex/Makefile                    |   3 +
+ drivers/soc/litex/litex_soc_ctrl.c            | 197 +++++++++
+ drivers/tty/serial/Kconfig                    |  31 ++
+ drivers/tty/serial/Makefile                   |   1 +
+ drivers/tty/serial/liteuart.c                 | 411 ++++++++++++++++++
+ include/linux/litex.h                         |  45 ++
+ include/uapi/linux/serial_core.h              |   3 +
+ 14 files changed, 795 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serial/litex,liteuart.yaml
+ create mode 100644 Documentation/devicetree/bindings/soc/litex/litex,soc-controller.yaml
+ create mode 100644 drivers/soc/litex/Kconfig
+ create mode 100644 drivers/soc/litex/Makefile
+ create mode 100644 drivers/soc/litex/litex_soc_ctrl.c
+ create mode 100644 drivers/tty/serial/liteuart.c
+ create mode 100644 include/linux/litex.h
 
 -- 
-Best Regards
-Masahiro Yamada
+2.25.1
+
