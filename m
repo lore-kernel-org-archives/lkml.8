@@ -2,151 +2,98 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5780C55196
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 07:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C57C55185
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 07:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C02372098B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 07:03:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VneD+MYM"
+	by mail.kernel.org (Postfix) with ESMTP id 2933320857
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 07:04:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587798254;
+	bh=F2+6MvmGS8dTiCwdyXanmLMCmyfcjoCvYSppu0gTqLc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VxQ/T0S53m0XlNxlTA/640epuRJrQMkZlBl/rCOQ/yVJU3wSs1twueUmA7FETWkhH
+	 UGb3W9dTzqoWOyQHESqicIxmZoBejbKZhhioKstnPUdoMwDXlvwd6EY+rawbUkONhL
+	 xBZe3Nyx4itZPsoUeaPZ8msL5CDuAU7myYDI1Smo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726155AbgDYHCD (ORCPT
+        id S1726234AbgDYHEN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 03:02:03 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59189 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726097AbgDYHCC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 03:02:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587798121;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=tQ0DnedDERp8UnEgcFBdDKx3t9qOBvJdAkWOzvyaHK4=;
-        b=VneD+MYM0wsf45lLP43OBSdGaOStcQEKsYzl9VYIXjGSzVJjsuC0uMWv6IOmB+dUebdJ7B
-        fQjYekjQfk1oKx8jNrtIDEdrupkKMYBGHPiHV2uO380a0P1+ww8dTWSB+w7Hotqy8v4VpW
-        wvOuhVgMXdBty6cN8voXtMXP9ZAXIWM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-14-w35gB8JFPNqmo2pm04YuIw-1; Sat, 25 Apr 2020 03:01:59 -0400
-X-MC-Unique: w35gB8JFPNqmo2pm04YuIw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Sat, 25 Apr 2020 03:04:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50442 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726110AbgDYHEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 03:04:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B882845F;
-        Sat, 25 Apr 2020 07:01:57 +0000 (UTC)
-Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0CF125D9C5;
-        Sat, 25 Apr 2020 07:01:56 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     wei.huang2@amd.com, cavery@redhat.com, vkuznets@redhat.com,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Oliver Upton <oupton@google.com>,
-        Jim Mattson <jmattson@google.com>
-Subject: [PATCH v2 12/22] KVM: nSVM: Move SMI vmexit handling to svm_check_nested_events()
-Date:   Sat, 25 Apr 2020 03:01:44 -0400
-Message-Id: <20200425070154.251290-3-pbonzini@redhat.com>
-In-Reply-To: <20200424172416.243870-1-pbonzini@redhat.com>
-References: <20200424172416.243870-1-pbonzini@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        by mail.kernel.org (Postfix) with ESMTPSA id C30E520767;
+        Sat, 25 Apr 2020 07:04:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587798252;
+        bh=F2+6MvmGS8dTiCwdyXanmLMCmyfcjoCvYSppu0gTqLc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=s6yckjif2iVIYCwieYc6XK/kXtDa4ms7wVsnXpovmikGg041ItC2RRRfCt+lhzq7t
+         eYy3b1CcB+dcu0SZCsrxXGkOBAt9uGqZ272pWzkhnaNOA8jmI+k5R9HpQq3BxhMcfz
+         UBr8gvNAcAIcFCdZ/g9aUA4qVPnX2bwF6nKSPFgY=
+Date:   Sat, 25 Apr 2020 09:04:08 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     Sasha Levin <sashal@kernel.org>, adrian.hunter@intel.com,
+        ulf.hansson@linaro.org, baolin.wang@linaro.org,
+        kstewart@linuxfoundation.org, tglx@linutronix.de,
+        bradleybolen@gmail.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, anrao@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.4.33 0/2] Fix for long operation cmds busy detection
+Message-ID: <20200425070408.GB2042217@kroah.com>
+References: <1587758766-3274-1-git-send-email-skomatineni@nvidia.com>
+ <20200425014556.GD13035@sasha-vm>
+ <81be9ca0-5c61-6e94-8398-85354764b429@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <81be9ca0-5c61-6e94-8398-85354764b429@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unlike VMX, SVM allows a hypervisor to take a SMI vmexit without having
-any special SMM-monitor enablement sequence.  Therefore, it has to be
-handled like interrupts and NMIs.  Check for an unblocked SMI in
-svm_check_nested_events() so that pending SMIs are correctly prioritized
-over IRQs and NMIs when the latter events will trigger VM-Exit.
+On Fri, Apr 24, 2020 at 07:42:16PM -0700, Sowjanya Komatineni wrote:
+> 
+> On 4/24/20 6:45 PM, Sasha Levin wrote:
+> > External email: Use caution opening links or attachments
+> > 
+> > 
+> > On Fri, Apr 24, 2020 at 01:06:04PM -0700, Sowjanya Komatineni wrote:
+> > > This series is to backport the upstream patches that fixes busy
+> > > detection
+> > > for long operation mmc commands by implementing Tegra specific timeout
+> > > callback to switch between finite and infinite HW busy detection wait
+> > > modes.
+> > > 
+> > > 
+> > > Sowjanya Komatineni (2):
+> > >  sdhci: tegra: Implement Tegra specific set_timeout callback
+> > >  sdhci: tegra: Enable MMC_CAP_WAIT_WHILE_BUSY host capability
+> > 
+> > What regression do these patches fix?
+> > 
+> This isn't a regression as we don't have any known failures as of today with
+> the specific mmc devices we are using on our platforms.
 
-Note that there is no need to test explicitly for SMI vmexits, because
-guests always runs outside SMM and therefore can never get an SMI while
-they are blocked.
+Have you read:
+    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+?
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/svm/nested.c | 16 ++++++++++++++++
- arch/x86/kvm/svm/svm.c    |  8 --------
- arch/x86/kvm/svm/svm.h    |  5 +++++
- 3 files changed, 21 insertions(+), 8 deletions(-)
+> But this patch fixes a long outstanding bug for sdhci-tegra to handle long
+> busy wait for mmc command operations that may take longer than host max busy
+> timeout. So, this is something that's missing from the beginning and good to
+> have.
 
-diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index 748b01220aac..226d5a0d677b 100644
---- a/arch/x86/kvm/svm/nested.c
-+++ b/arch/x86/kvm/svm/nested.c
-@@ -776,6 +776,15 @@ int nested_svm_check_exception(struct vcpu_svm *svm, unsigned nr,
- 	return vmexit;
- }
- 
-+static void nested_svm_smi(struct vcpu_svm *svm)
-+{
-+	svm->vmcb->control.exit_code = SVM_EXIT_SMI;
-+	svm->vmcb->control.exit_info_1 = 0;
-+	svm->vmcb->control.exit_info_2 = 0;
-+
-+	nested_svm_vmexit(svm);
-+}
-+
- static void nested_svm_nmi(struct vcpu_svm *svm)
- {
- 	svm->vmcb->control.exit_code = SVM_EXIT_NMI;
-@@ -807,6 +816,13 @@ static int svm_check_nested_events(struct kvm_vcpu *vcpu)
- 		kvm_event_needs_reinjection(vcpu) || svm->nested.exit_required ||
- 		svm->nested.nested_run_pending;
- 
-+	if (vcpu->arch.smi_pending && nested_exit_on_smi(svm)) {
-+		if (block_nested_events)
-+			return -EBUSY;
-+		nested_svm_smi(svm);
-+		return 0;
-+	}
-+
- 	if (vcpu->arch.nmi_pending && nested_exit_on_nmi(svm)) {
- 		if (block_nested_events)
- 			return -EBUSY;
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 3f1f80737f9e..1f9577b281e6 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -3766,14 +3766,6 @@ static bool svm_smi_allowed(struct kvm_vcpu *vcpu)
- 	if (!gif_set(svm))
- 		return false;
- 
--	if (is_guest_mode(&svm->vcpu) &&
--	    svm->nested.intercept & (1ULL << INTERCEPT_SMI)) {
--		/* TODO: Might need to set exit_info_1 and exit_info_2 here */
--		svm->vmcb->control.exit_code = SVM_EXIT_SMI;
--		svm->nested.exit_required = true;
--		return false;
--	}
--
- 	return !is_smm(vcpu);
- }
- 
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index d8ae654340d4..4dc6d2b4b721 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -378,6 +378,11 @@ static inline bool svm_nested_virtualize_tpr(struct kvm_vcpu *vcpu)
- 	return is_guest_mode(vcpu) && (vcpu->arch.hflags & HF_VINTR_MASK);
- }
- 
-+static inline bool nested_exit_on_smi(struct vcpu_svm *svm)
-+{
-+	return (svm->nested.intercept & (1ULL << INTERCEPT_SMI));
-+}
-+
- static inline bool nested_exit_on_nmi(struct vcpu_svm *svm)
- {
- 	return (svm->nested.intercept & (1ULL << INTERCEPT_NMI));
--- 
-2.18.2
-
+So it's a new feature?
 
