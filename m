@@ -2,242 +2,215 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96472C55191
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 17:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23379C55191
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 18:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7654520728
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 17:59:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587837548;
-	bh=8ojAkugMKNr0HOcKJukOabtkpBS19lmg0Bp7/OoK854=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ksznaok7gpO3P9JcYLUh+F+nEaxSNYZcEYyla2aXjdG7HY4O+L1v3gM8Hy/axF6n5
-	 xZa+KHM2xDbaujAYz04Zy5cCfObXSNGW4V5eCYTVbnuOfTJZDZBOwxoMAaS8KMoFeI
-	 RXivw8HoMBWNMP5dYd82i7SmdQPxhNYXj/MemhAg=
+	by mail.kernel.org (Postfix) with ESMTP id 0477820714
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 18:07:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbgDYR7H (ORCPT
+        id S1726416AbgDYSHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 13:59:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44118 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726145AbgDYR7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 13:59:06 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71F94206B9;
-        Sat, 25 Apr 2020 17:59:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587837545;
-        bh=8ojAkugMKNr0HOcKJukOabtkpBS19lmg0Bp7/OoK854=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ijK40JRcybkPPANgc/j+K/mvBiXqVdVpC4A0IVbFoGLIR35detu+lb6LLUqffIkQk
-         qEb+VRZE8XI0kwbMVPe84pYWJkgzLRYGmM30lzkzGVkWExUBOLovRtHzwpPJOwb+hh
-         26YWCjngmupCdjRS8nkwBFl3h5xpTr8kdOhhaOUo=
-Date:   Sat, 25 Apr 2020 18:59:01 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/6] iio: chemical: scd30: add core driver
-Message-ID: <20200425185901.1611eca5@archlinux>
-In-Reply-To: <CAHp75Vdajf7Ci3ytxP7Qs9=fFaxvVBQoL5uh+HUDwxHS5r9MUg@mail.gmail.com>
-References: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
-        <20200422141135.86419-2-tomasz.duszynski@octakon.com>
-        <CAHp75VcbaGYj76qkDJnTnuG5SM215qVmFo7FLR6YzHA37PgF_g@mail.gmail.com>
-        <20200424190413.GA2731@arch>
-        <CAHp75Vdajf7Ci3ytxP7Qs9=fFaxvVBQoL5uh+HUDwxHS5r9MUg@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 25 Apr 2020 14:07:46 -0400
+Received: from mail-pf1-f169.google.com ([209.85.210.169]:44376 "EHLO
+        mail-pf1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726378AbgDYSHp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 14:07:45 -0400
+Received: by mail-pf1-f169.google.com with SMTP id p25so6456067pfn.11;
+        Sat, 25 Apr 2020 11:07:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=DygkneB8Wo1mZONnIrZ1eQSaeccTjeq3ViwRwwN9bPw=;
+        b=Dtld5B3dktwufmphgJx1Baa1L3KJeBd0JtZ9H43YfRLzHSnb5/Rz/7JI0Q9Pt784t0
+         KcfcvR6HwTbFMOy0OD3yQcmziinNhPH6c/KGApsdbXRiO3wg0R0JoNoetMMDR2GVkhac
+         9qF/1xOuAqQb4Y10Wr0txBEdCtjKhuvQlRgsHxqQEUyULrWaZUIFK284+EE7/lux1NEQ
+         XV+mG5eFgxYTIKYxeIfWD+os1b700fjB7uKpMPi7CKN/qACYoKiTeEx3xm15jFYv9SIc
+         7GkWOymzFXsQvzOWPGZGkT2tV3tbNa8REhKdZ6OT+PJ4YBmgPmIEpVtZ9IAWHVPmR5U1
+         LmxA==
+X-Gm-Message-State: AGi0PubZUsUpCGVTAocKXB1fBt/cv/T4M++CpPe4XC5fpq/3C8mN88ND
+        O25MAC9g7L/Pw3JgqZV0j3obtbxJEgE=
+X-Google-Smtp-Source: APiQypKhXgyyHDuseRPvP/VuJTW7WBQyQsd9eaKCfk5bn11sPToM4I3uAfs09OIB6zGC5bbrIFVmLA==
+X-Received: by 2002:a63:dc41:: with SMTP id f1mr15663150pgj.348.1587838062664;
+        Sat, 25 Apr 2020 11:07:42 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:9817:f6ce:d8be:3e60? ([2601:647:4000:d7:9817:f6ce:d8be:3e60])
+        by smtp.gmail.com with ESMTPSA id h11sm8471825pfo.120.2020.04.25.11.07.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 25 Apr 2020 11:07:41 -0700 (PDT)
+Subject: Re: [PATCH v2 5/5] scsi: ufs: UFS Host Performance Booster(HPB)
+ driver
+To:     huobean@gmail.com, alim.akhtar@samsung.com, avri.altman@wdc.com,
+        asutoshd@codeaurora.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, tomas.winkler@intel.com, cang@codeaurora.org
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200416203126.1210-1-beanhuo@micron.com>
+ <20200416203126.1210-6-beanhuo@micron.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <183528b9-f04b-40f5-269b-5897da113b97@acm.org>
+Date:   Sat, 25 Apr 2020 11:07:40 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200416203126.1210-6-beanhuo@micron.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 25 Apr 2020 14:43:35 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+On 2020-04-16 13:31, huobean@gmail.com wrote:
+> +static int ufshpb_execute_cmd(struct ufshpb_lu *hpb, unsigned char *cmd)
+> +{
+> +	struct scsi_sense_hdr sshdr;
+> +	struct scsi_device *sdp;
+> +	struct ufs_hba *hba;
+> +	int retries;
+> +	int ret = 0;
+> +
+> +	hba = hpb->hba;
+> +
+> +	sdp = hba->sdev_ufs_lu[hpb->lun];
+> +	if (!sdp) {
+> +		hpb_warn("%s UFSHPB cannot find scsi_device\n",  __func__);
+> +		return -ENODEV;
+> +	}
+> +
+> +	ret = scsi_device_get(sdp);
+> +	if (!ret && !scsi_device_online(sdp)) {
+> +		ret = -ENODEV;
+> +		scsi_device_put(sdp);
+> +		return ret;
+> +	}
+> +
+> +	for (retries = 3; retries > 0; --retries) {
+> +		ret = scsi_execute(sdp, cmd, DMA_NONE, NULL, 0, NULL, &sshdr,
+> +				   msecs_to_jiffies(30000), 3, 0, RQF_PM, NULL);
+> +		if (ret == 0)
+> +			break;
+> +	}
+> +
+> +	if (ret) {
+> +		if (driver_byte(ret) == DRIVER_SENSE &&
+> +		    scsi_sense_valid(&sshdr)) {
+> +			switch (sshdr.sense_key) {
+> +			case ILLEGAL_REQUEST:
+> +				hpb_err("ILLEGAL REQUEST asc=0x%x ascq=0x%x\n",
+> +					sshdr.asc, sshdr.ascq);
+> +				break;
+> +			default:
+> +				hpb_err("Unknown return code = %x\n", ret);
+> +				break;
+> +			}
+> +		}
+> +	}
+> +	scsi_device_put(sdp);
+> +
+> +	return ret;
+> +}
 
-> On Fri, Apr 24, 2020 at 10:05 PM Tomasz Duszynski
-> <tomasz.duszynski@octakon.com> wrote:
-> > On Wed, Apr 22, 2020 at 10:49:44PM +0300, Andy Shevchenko wrote:  
-> > > On Wed, Apr 22, 2020 at 5:22 PM Tomasz Duszynski
-> > > <tomasz.duszynski@octakon.com> wrote:  
-> 
-> ...
-> 
-> > > > Add Sensirion SCD30 carbon dioxide core driver.  
-> > >
-> > > And DocLink tar of Datasheet: with a link?  
-> >
-> > I never do this. These files change their location way too often to be
-> > worthwhile putting here. Nobody has that much time to fallow all this
-> > and keep respective files up to date.
-> >
-> > But that doesn't mean I can't drop a link here.
-> > https://developer.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/9.5_CO2/Sensirion_CO2_Sensors_SCD30_Interface_Description.pdf  
-> 
-> Yes, just make it a tag
-> 
-> DocLink: ....
-> 
-> ...
-> 
-> > > > +int scd30_probe(struct device *dev, int irq, const char *name, void *priv,
-> > > > +               int (*command)(struct scd30_state *state, enum scd30_cmd cmd,
-> > > > +                              u16 arg, char *rsp, int size));  
-> > >
-> > > My gosh.
-> > > Please, supply proper structure member in priv or alike.  
-> >
-> > Not sure it's worth the fuss. Wrapping all into structure means either
-> > copying respective members or more dereferences later on.  
-> 
-> At least you may introduce a typedef, because above really hurts my eyes.
-> 
-> ...
-> 
-> > > > +enum {
-> > > > +       CONC,
-> > > > +       TEMP,
-> > > > +       HR,
-> > > > +};  
-> > >
-> > > Way too generic names for anonymous enum.  
-> >
-> > I'd argue that they are pretty well understood abbreviations in iio generally
-> > and here specifically. But adding some prefix won't harm.  
-> 
-> Yes, prefix is what I was talking about.
-> 
-> ...
-> 
-> > > > +static int scd30_wait_meas_poll(struct scd30_state *state)
-> > > > +{
-> > > > +       int tries = 5;
-> > > > +
-> > > > +       while (tries--) {
-> > > > +               int ret;
-> > > > +               u16 val;
-> > > > +
-> > > > +               ret = scd30_command(state, CMD_MEAS_READY, 0, (char *)&val,
-> > > > +                                   sizeof(val));
-> > > > +               if (ret)
-> > > > +                       return -EIO;
-> > > > +
-> > > > +               /* new measurement available */
-> > > > +               if (val)
-> > > > +                       break;
-> > > > +
-> > > > +               msleep_interruptible(state->meas_interval * 250);
-> > > > +       }
-> > > > +
-> > > > +       if (tries == -1)
-> > > > +               return -ETIMEDOUT;  
-> > >
-> > > unsigned int tries = ...;
-> > >
-> > > do {
-> > >  ...
-> > > } while (--tries);
-> > > if (!tries)
-> > >   return ...;
-> > >
-> > > looks better and I guess less code in asm.
-> > >  
-> >
-> > You mean that one extra branch in case of while?  
-> 
-> There are few things:
-> a) do {} while notation immediately tells that at least one cycle of
-> body will be done (unconditionally);
-> b) it makes a loop variable unsigned and no need to check for specific
-> negative numbers;
-> c) it quite likely will generate slightly better assembly code.
-> 
-> >  But it comes to code
-> > itself it looks more compact. And I am okay with that.
-> >  
-> > > > +       return 0;
-> > > > +}  
-> 
-> ...
-> 
-> > > > +       if (kstrtou16(buf, 0, &val))
-> > > > +               return -EINVAL;  
-> > >
-> > > Shadowed error code. Don't do like this.  
-> >
-> > Integer parsing either returns EINVAL or ERANGE. Passing the latter to
-> > the user is not worth the trouble, especially because majority of writable attrs
-> > have a fellow _available attr.  
-> 
-> It's simple a bad coding practice. Please, change.
-> 
-> > > > +       if (kstrtou16(buf, 0, &val))
-> > > > +               return -EINVAL;  
-> > >
-> > > Ditto.
-> > >  
-> > > > +       if (kstrtou16(buf, 0, &val))
-> > > > +               return -EINVAL;  
-> > >
-> > > Ditto.  
-> 
-> ...
-> 
-> > > > +       if (kstrtou16(buf, 0, &val))
-> > > > +               return -EINVAL;  
-> > >
-> > > No shadowed error code, please. Check entire code.  
-> 
-> Same here.
-> 
-> ...
-> 
-> > > > +static IIO_DEVICE_ATTR_RW(pressure_comp, 0);
-> > > > +static IIO_DEVICE_ATTR_RO(pressure_comp_available, 0);
-> > > > +static IIO_DEVICE_ATTR_RW(meas_interval, 0);
-> > > > +static IIO_DEVICE_ATTR_RO(meas_interval_available, 0);
-> > > > +static IIO_DEVICE_ATTR_RW(asc, 0);
-> > > > +static IIO_DEVICE_ATTR_RW(frc, 0);
-> > > > +static IIO_DEVICE_ATTR_RO(frc_available, 0);
-> > > > +static IIO_DEVICE_ATTR_RW(temp_offset, 0);
-> > > > +static IIO_CONST_ATTR(temp_offset_available, "[0 1 65535]");
-> > > > +static IIO_DEVICE_ATTR_WO(reset, 0);  
-> > >
-> > > Do you need all of them? Doesn't  IIO core provides a tons of helpers for these?
-> > > Btw, where is ABI documentation? It's a show stopper.  
-> >
-> > They are sensor specific and none falls into a category of iio generic
-> > attrs. Maybe, except the measurement interval which could be represented as
-> > a SAMP_FREQ.  
-> 
-> IIO ABI becomes already a big pile of nodes and I hope we will become
-> stricter about adding new ones.
-Yes.  Starting point is they need to be documented or they can't be
-properly reviewed.
+If scsi_execute() would be changed into asynchronous SCSI command
+submission, can ufshpb_execute_cmd() be called from inside the UFS
+.queue_rq() callback instead of from workqueue context?
 
-Documentation/ABI/testing/sysfs-bus-iio-*
+The scsi_device_get() call looks misplaced. I think that call should
+happen before schedule_work() is called.
 
-> 
-> > But given that measurement interval spans from 2s to 1800s
-> > it becomes a little bit awkward to have it in Hz.  
-> 
-> > As for ABI that's in
-> > a separate patch.  
-> 
-> It's not good from bisectability point of view. If by some reason this
-> patch or documentation patch gets reverted, the other one will be
-> dangling.
-> Please, unify them.
-> 
+> +static int ufshpb_l2p_load_req(struct ufshpb_lu *hpb, struct request_queue *q,
+> +			       struct ufshpb_map_req *map_req)
+> +{
+> +	struct scsi_request *scsi_rq;
+> +	unsigned char cmd[16] = { };
+> +	struct request *req;
+> +	struct bio *bio;
+> +	int alloc_len;
+> +	int ret;
+> +
+> +	bio = &map_req->bio;
+> +
+> +	ret = ufshpb_add_bio_page(hpb, q, bio, map_req->bvec, map_req->mctx);
+> +	if (ret) {
+> +		hpb_err("ufshpb_add_bio_page() failed with ret %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	alloc_len = hpb->hba->hpb_geo.subregion_entry_sz;
+> +	/*
+> +	 * HPB Sub-Regions are equally sized except for the last one which is
+> +	 * smaller if the last hpb Region is not an integer multiple of
+> +	 * bHPBSubRegionSize.
+> +	 */
+> +	if (map_req->region == (hpb->lu_region_cnt - 1) &&
+> +	    map_req->subregion == (hpb->subregions_in_last_region - 1))
+> +		alloc_len = hpb->last_subregion_entry_size;
+> +
+> +	ufshpb_prepare_read_buf_cmd(cmd, map_req->region, map_req->subregion,
+> +				    alloc_len);
+> +	if (!map_req->req) {
+> +		map_req->req = blk_get_request(q, REQ_OP_SCSI_IN, 0);
+> +		if (IS_ERR(map_req->req))
+> +			return PTR_ERR(map_req->req);
+> +	}
+> +	req = map_req->req;
+> +	scsi_rq = scsi_req(req);
+> +
+> +	blk_rq_append_bio(req, &bio);
+> +
+> +	scsi_req_init(scsi_rq);
+> +
+> +	scsi_rq->cmd_len = COMMAND_SIZE(cmd[0]);
+> +	memcpy(scsi_rq->cmd, cmd, scsi_rq->cmd_len);
+> +	req->timeout = msecs_to_jiffies(30000);
+> +	req->end_io_data = (void *)map_req;
+> +
+> +	hpb_dbg(SCHEDULE_INFO, hpb, "ISSUE READ_BUFFER : (%d-%d) retry = %d\n",
+> +		map_req->region, map_req->subregion, map_req->retry_cnt);
+> +	hpb_trace(hpb, "%s: I RB %d - %d", DRIVER_NAME, map_req->region,
+> +		  map_req->subregion);
+> +
+> +	blk_execute_rq_nowait(q, NULL, req, 1, ufshpb_l2p_load_req_done);
+> +	map_req->req_issue_t = ktime_to_ns(ktime_get());
+> +
+> +	atomic64_inc(&hpb->status.map_req_cnt);
+> +
+> +	return 0;
+> +}
 
+Same question here: if 'req' would be submitted asynchronously, can
+ufshpb_l2p_load_req() be called directly from inside the UFS .queue_rq()
+callback instead of from workqueue context?
+
+Thanks,
+
+Bart.
