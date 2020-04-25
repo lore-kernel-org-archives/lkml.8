@@ -2,175 +2,96 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3F4C55194
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 22:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A6DC54FCB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 22:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30CD820706
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 22:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D67C20706
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 22:17:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="TblBEYYV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbgDYWOS (ORCPT
+        id S1726338AbgDYWRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 18:14:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726220AbgDYWOQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 18:14:16 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1CDAC09B04F;
-        Sat, 25 Apr 2020 15:14:15 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jST3e-0004cM-Tb; Sun, 26 Apr 2020 00:13:59 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 611E9100605; Sun, 26 Apr 2020 00:13:58 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        megha.dey@linux.intel.com, maz@kernel.org, bhelgaas@google.com,
-        rafael@kernel.org, gregkh@linuxfoundation.org, hpa@zytor.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
-        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH RFC 06/15] ims-msi: Enable IMS interrupts
-In-Reply-To: <158751206394.36773.12409950149228811741.stgit@djiang5-desk3.ch.intel.com>
-References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com> <158751206394.36773.12409950149228811741.stgit@djiang5-desk3.ch.intel.com>
-Date:   Sun, 26 Apr 2020 00:13:58 +0200
-Message-ID: <87imhntdqx.fsf@nanos.tec.linutronix.de>
+        Sat, 25 Apr 2020 18:17:41 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:54894 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726232AbgDYWRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 18:17:41 -0400
+Received: from zn.tnic (p200300EC2F2A110011AF566E608DBC7E.dip0.t-ipconnect.de [IPv6:2003:ec:2f2a:1100:11af:566e:608d:bc7e])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 882CE1EC0CFA;
+        Sun, 26 Apr 2020 00:17:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1587853059;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=dL/4+F/i9p4Rl9Mx/xjx1nvt6QzxFIox9qHe7WXmyFs=;
+        b=TblBEYYVBE117oRluNpJNENnYeOMCXqC/PfzHUdL+2vSRmqMvQy+meocoqlRkiQ6dm3Iwc
+        L2W0F0ifdIT+uqXVrfbz3xnhSFDCv99NuSUY4gzMe4QZkhhdVsZeF9dp1iEu+D0o330Nwx
+        iTAQdlLBKNKi+8JkcWTj55M/pDBeSUs=
+Date:   Sun, 26 Apr 2020 00:17:28 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Jakub Jelinek <jakub@redhat.com>, jgross@suse.com,
+        x86@kernel.org, Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, Michael Matz <matz@suse.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Sergei Trofimovich <slyfox@gentoo.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        =?utf-8?Q?Fr=C3=A9d=C3=A9ric_Pierret_=28fepitre=29?= 
+        <frederic.pierret@qubes-os.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
+        boris.ostrovsky@oracle.com
+Subject: Re: [PATCH] x86: Fix early boot crash on gcc-10, next try
+Message-ID: <20200425221728.GE24294@zn.tnic>
+References: <CAKwvOd=exxhfb8N6=1Q=wBUaYcRDEq3L1+TiHDLz+pxWg8OuwQ@mail.gmail.com>
+ <20200423125300.GC26021@zn.tnic>
+ <20200423161126.GD26021@zn.tnic>
+ <20200425014657.GA2191784@rani.riverdale.lan>
+ <20200425085759.GA24294@zn.tnic>
+ <20200425150440.GA470719@rani.riverdale.lan>
+ <20200425173140.GB24294@zn.tnic>
+ <20200425183701.GE17645@gate.crashing.org>
+ <20200425185313.GD24294@zn.tnic>
+ <20200425191549.GF17645@gate.crashing.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200425191549.GF17645@gate.crashing.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dave Jiang <dave.jiang@intel.com> writes:
->  
-> +struct irq_domain *dev_get_ims_domain(struct device *dev)
-> +{
-> +	struct irq_alloc_info info;
-> +
-> +	if (dev_is_mdev(dev))
-> +		dev = mdev_to_parent(dev);
-> +
-> +	init_irq_alloc_info(&info, NULL);
-> +	info.type = X86_IRQ_ALLOC_TYPE_IMS;
+On Sat, Apr 25, 2020 at 02:15:49PM -0500, Segher Boessenkool wrote:
+> My point is that you should explain at *every use* of this why you cannot
+> have tail calls *there*.  This is very unusual, after all.
+> 
+> There are *very* few places where you want to prevent tail calls, that's
+> why there is no attribute for it.
 
-So all IMS capabale devices run on X86? I thought these things are PCIe
-cards which can be plugged into any platform which supports PCIe.
+Well, there is only one reason *why* so far - to prevent the stack
+canary cookie from being checked before returning from the function
+which set it. That could be explained once over the macro definition so
+that it can be looked up.
 
-> +	info.dev = dev;
-> +
-> +	return irq_remapping_get_irq_domain(&info);
-> +}
-> +
->  static struct msi_domain_ops dev_ims_domain_ops = {
->  	.get_hwirq	= dev_ims_get_hwirq,
->  	.msi_prepare	= dev_ims_prepare,
-> diff --git a/drivers/base/platform-msi.c b/drivers/base/platform-msi.c
-> index 6d8840db4a85..204ce8041c17 100644
-> --- a/drivers/base/platform-msi.c
-> +++ b/drivers/base/platform-msi.c
-> @@ -118,6 +118,8 @@ static void platform_msi_free_descs(struct device *dev, int base, int nvec,
->  			kfree(platform_msi_group);
->  		}
->  	}
-> +
-> +	dev->platform_msi_type = 0;
+-- 
+Regards/Gruss,
+    Boris.
 
-I can clearly see the advantage of using '0' over 'NOT_PLAT_MSI'
-here. '0' is definitely more intuitive.
-
->  }
->  
->  static int platform_msi_alloc_descs_with_irq(struct device *dev, int virq,
-> @@ -205,18 +207,22 @@ platform_msi_alloc_priv_data(struct device *dev, unsigned int nvec,
->  	 * accordingly (which would impact the max number of MSI
->  	 * capable devices).
->  	 */
-> -	if (!dev->msi_domain || !platform_ops->write_msg || !nvec ||
-> -	    nvec > MAX_DEV_MSIS)
-> +	if (!platform_ops->write_msg || !nvec || nvec > MAX_DEV_MSIS)
->  		return ERR_PTR(-EINVAL);
-> -	if (dev->msi_domain->bus_token != DOMAIN_BUS_PLATFORM_MSI) {
-> -		dev_err(dev, "Incompatible msi_domain, giving up\n");
-> -		return ERR_PTR(-EINVAL);
-> -	}
-> +	if (dev->platform_msi_type == GEN_PLAT_MSI) {
-> +		if (!dev->msi_domain)
-> +			return ERR_PTR(-EINVAL);
-> +
-> +		if (dev->msi_domain->bus_token != DOMAIN_BUS_PLATFORM_MSI) {
-> +			dev_err(dev, "Incompatible msi_domain, giving up\n");
-> +			return ERR_PTR(-EINVAL);
-> +		}
->  
-> -	/* Already had a helping of MSI? Greed... */
-> -	if (!list_empty(platform_msi_current_group_entry_list(dev)))
-> -		return ERR_PTR(-EBUSY);
-> +		/* Already had a helping of MSI? Greed... */
-> +		if (!list_empty(platform_msi_current_group_entry_list(dev)))
-> +			return ERR_PTR(-EBUSY);
-> +	}
->  
->  	datap = kzalloc(sizeof(*datap), GFP_KERNEL);
->  	if (!datap)
-> @@ -254,6 +260,7 @@ static void platform_msi_free_priv_data(struct platform_msi_priv_data *data)
->  int platform_msi_domain_alloc_irqs(struct device *dev, unsigned int nvec,
->  				   const struct platform_msi_ops *platform_ops)
->  {
-> +	dev->platform_msi_type = GEN_PLAT_MSI;
->  	return platform_msi_domain_alloc_irqs_group(dev, nvec, platform_ops,
->  									NULL);
->  }
-> @@ -265,12 +272,18 @@ int platform_msi_domain_alloc_irqs_group(struct device *dev, unsigned int nvec,
->  {
->  	struct platform_msi_group_entry *platform_msi_group;
->  	struct platform_msi_priv_data *priv_data;
-> +	struct irq_domain *domain;
->  	int err;
->  
-> -	dev->platform_msi_type = GEN_PLAT_MSI;
-
-Groan. If you move the type assignment to the caller then do so in a
-separate patch. These all in one combo changes are simply not reviewable
-without getting nuts.
-
-> -	if (group_id)
-> +	if (!dev->platform_msi_type) {
-
-That's really consistent. If the caller does not store a type upfront
-then it becomes IMS automagically. Can you pretty please stop to think
-that this IMS stuff is the center of the universe? To be clear, it's
-just another variant of half thought out hardware design fail as all the
-other stuff we already have to support.
-
-Abusing dev->platform_msi_type to decide about the nature of the call
-and then decide that anything which does not set it upfront is IMS is
-really future proof.
-
->  		*group_id = ++dev->group_id;
-> +		dev->platform_msi_type = IMS;
-
-Oh a new type name 'IMS'. Well suited into the naming scheme. 
-
-> +		domain = dev_get_ims_domain(dev);
-
-No. This is completely inconsistent again and a blatant violation of
-layering.
-
-Thanks,
-
-        tglx
+https://people.kernel.org/tglx/notes-about-netiquette
