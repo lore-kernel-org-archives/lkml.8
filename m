@@ -2,289 +2,258 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75722C55191
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 21:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C36C55194
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 21:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 515852076C
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 21:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 149B42071C
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 21:39:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgDYV0v convert rfc822-to-8bit (ORCPT
+        id S1726327AbgDYVjL convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 17:26:51 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:41751 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbgDYV0u (ORCPT
+        Sat, 25 Apr 2020 17:39:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50686 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726015AbgDYVjK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 17:26:50 -0400
-Received: from [192.168.1.183] ([37.4.249.134]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MGz9p-1jOrQh1S3H-00E4KX; Sat, 25 Apr 2020 23:26:32 +0200
-Subject: Re: [PATCH v2 79/91] drm/vc4: hdmi: Deal with multiple debugfs files
-To:     Maxime Ripard <maxime@cerno.tech>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>
-Cc:     Tim Gover <tim.gover@raspberrypi.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        Phil Elwell <phil@raspberrypi.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
- <4cd617827cc28875ef36f3632122a83cff2ea4a7.1587742492.git-series.maxime@cerno.tech>
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-Autocrypt: addr=stefan.wahren@i2se.com; keydata=
- LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tClZlcnNpb246IEdudVBHIHYy
- CgptUUlOQkZ0NmdCTUJFQUN1Yi9wQmV2SHhidkplZnlaRzMySklObW4yYnNFUFgyNVY2ZmVq
- bXlZd21DR0tqRnRMCi9Eb1VNRVZIRHhDSjQ3Qk1YbzM0NGZIVjFDM0FudWRnTjFCZWhMb0J0
- TEh4bW5lQ3pnSDNLY1B0V1c3cHRqNEcKdEp2OUNRRFp5MjdTS29FUHh5YUk4Q0YweWdSeEpj
- NzJNOUk5d21zUFo1YlVIc0x1WVdNcVE3SmNSbVBzNkQ4ZwpCa2srOC95bmdFeU5FeHd4SnBS
- MXlsajVianhXREh5WVF2dUo1THpaS3VPOUxCM2xYVnNjNGJxWEVqYzZWRnVaCkZDQ2svc3lp
- by9ZaHNlOE4rUXN4N01RYWd6NHdLVWtRUWJmWGcxVnFrVG5BaXZYczQyVm5Ja211NWd6SXcv
- MHQKUkp2NTBGUmhIaHhweUtBSThCOG5oTjhRdng3TVZrUGM1dkRmZDN1R1lXNDdKUGhWUUJj
- VXdKd05rLzQ5RjllQQp2ZzJtdE1QRm5GT1JrV1VSdlArRzZGSmZtNitDdk92N1lmUDF1ZXdB
- aTRsbitKTzFnK2dqVklXbC9XSnB5MG5UCmlwZGZlSDlkSGtnU2lmUXVuWWN1Y2lzTXlvUmJG
- OTU1dENna0VZOUVNRWRZMXQ4aUdEaUNnWDZzNTBMSGJpM2sKNDUzdWFjcHhmUVhTYUF3UGtz
- bDhNa0NPc3YyZUVyNElOQ0hZUUR5WmljbEJ1dUNnOEVOYlI2QUdWdFpTUGNRYgplbnpTektS
- Wm9POUNhcUlEK2ZhdkxpQi9kaHptSEErOWJnSWhtWGZ2WFJMRFp6ZThwbzFkeXQzRTFzaFhp
- ZGRaClBBOE51SlZ6RUl0MmxtSTZWOHBaRHBuMjIxcmZLaml2UlFpYW9zNTRUZ1pqak1ZSTdu
- bko3ZTZ4endBUkFRQUIKdENCVGRHVm1ZVzRnVjJGb2NtVnVJRHgzWVdoeVpXNXpkRUJuYlhn
- dWJtVjBQb2tDTndRVEFRZ0FJUVVDWElkYwo0Z0liQXdVTENRZ0hBZ1lWQ0FrS0N3SUVGZ0lE
- QVFJZUFRSVhnQUFLQ1JDVWdld1BFWkR5MjFPVEQvOUdpWkxkCnRSWWNteVJKZ2x0aVFRekFp
- UWRjSUQ3OGxHb1dwL3grci92Y1U2YjZqdVl1ZVR3Z1Iwclc3djdsMklSQnlEN24KSEp4YSt0
- SVNvUVpCZ2hvbE1JZmI5TXRoR09KTENZNzdrL1FoQWhuMzJOR1prZWp3OXR6a3MvNDBtclpT
- VVQ4NApaeWJzUVhyTE0vSFI2VElJL0RlUEIwbktEM0ppcHBzMlVIUUQ5cUQySWpFd1NRUGxI
- akNPckVaaDQ1UFo3bTkrClo5M0x6aVRlc1dabFlRdUxpSndzNHJLcHRIVzFkL3dSZWxzaG1t
- NlFxY0wybDRDL2U0MGVEQjlncTRkU1poOVgKUEVZbGxpeU5RaDdhMkxTZHVtRTFyK2NTd0lq
- RS91ZHRSdmRPOWFLb0psT2JVSzVkTmpTUEg3d0tUYndkWGRZRApHUHdEaFhkNThOQXdyK1BY
- QmxQajB0STFMQ3ErTEJ4ZUt6aFdYK0dWcTlEb2pWanlVREV4Rk5Ga1h1b0M3ZzhtClY5VDB0
- ZUJpdVpSbm91WEt3VjJGcHRaT0hIN0JVRVd0a0t0aGgxZXRmT1dwaWdCemtVN2JQc2ZJWVQr
- cnk5dGIKMW9KK3Y0MVBOYXFaRW1QVXBKeHZmek5UN3Ayd01lRDdaajlmMHJ1YlJQdExBSjJR
- R2pyRkhzdVh3QU9xcHl6ZQoxOEVidHNZazBOMHp1SEVoY2orUEJJQmZoMFlJWWQ1MW9mNkdJ
- aU95UjlxMFhYdHBsVUo3VDIvSDF1UXFrWGxwCitnVzRWa2lmc2NJckl1eWZueFpXMTJlSXZq
- NnlicVdMN2FZS0dZbVQ2aUxDUGJIWXlZY2F5bDRFa0ZjckNGN0UKZTBXVC9zY1ZNaE8vNVgv
- SGFOQTVIQngvcjUycGdMY3Y0aTlNeExRbVUzUmxabUZ1SUZkaGFISmxiaUE4YzNSbApabUZ1
- TG5kaGFISmxia0JwTW5ObExtTnZiVDZKQWpnRUV3RUNBQ0lGQWx0NmdCTUNHd01HQ3drSUJ3
- TUNCaFVJCkFna0tDd1FXQWdNQkFoNEJBaGVBQUFvSkVKU0I3QThSa1BMYmpic1AvamdqYVNz
- NUh0bGtBSXZXUytGcm15N2MKaG5jT0F4TFRWL0Q2UkV3SU95R0poRkt3d29pck55UTJnOXZV
- YTNZQ1lDZjFmSjh3RWhhS09COWQwTHBNUm5MNApkRVQ4ZDgyMzhFL3BLK0hxTktpSXNKaHM2
- SnNLOFpnalZRR3JtbWZua0dyWisxdjBIQnV4ZGljZ0duUC9XdHVBClVsOGw2Mi9BTGJheXlq
- KzYxQ2xyc0V0UklhcU82N0xJWXdQaVBEUkkrWGlNek5pR3pIRi8xUTZHUjAyUkg2YTMKRjg5
- ejhhUHhjSGkxWnZDdDJ5a3o2VUVjaHpQMHI1Z3FGSisvTC9VcHU4ME1YaVk0djVlSWFCNTJn
- VlBnaXlNQQpsTDJkRHMxbUladm5yUkxSWTJ0YjNtQVlOa1Y1QjVJRFQzcGtXeTZrS281T0Nn
- SytZZFlPUjhGTloyb04ydDhPCnJLK1ZudGFLN01NU0tIbG1ZL3NPd3RSbEVoMU9CbXJjQ3dH
- d21wLzA1R2tSNDZmL0lzaFJWZUZPUmF3K0dBcXQKUDIrQ0ZhMkNOQS9JSG5aTm95aWtsRHpQ
- UUhVVUdzck5wcERyaFg5Sm1oQm1nMXYyeXdIMU5YdTFpRGZQMUJBdwpLZ29rdDVmNVVhUkY5
- c0FBNTN2V0V2YlVVTjllZXNGR0x6UFdkSkdRNWhwZC9WSDVJUXk5U0JyaC93SWNla3E1Cm4w
- a042cGJUSHhHRTUyU2kvTVZJa05UdURaM2FwbjJqbERaNHBPdHBCWEkydlAzYlBPK05pcUJa
- anNVM3R4TGkKV2R2MkZqeXp6NlhMUndlV1JZVkw1SGE2TER0eG9yMnZ1NlVQMDdwOXh6MXhS
- WmFPRFczb1lsSEZ6WXBhNFc1ZwpMSGIybEVrSXVVZlNjaWNHYmpqQXRDbFRkR1ZtWVc0Z1Yy
- Rm9jbVZ1SUR4emRHVm1ZVzR1ZDJGb2NtVnVRR2x1CkxYUmxZMmd1WTI5dFBva0NOd1FUQVFn
- QUlRVUNYSWRlaHdJYkF3VUxDUWdIQWdZVkNBa0tDd0lFRmdJREFRSWUKQVFJWGdBQUtDUkNV
- Z2V3UEVaRHkyeUhURC85VUY3UWxEa0d4elE3QWFDSTZOOTVpUWY4LzFvU1VhRE51Mlk2SQpL
- K0R6UXBiMVRiVE9yM1ZKd3dZOGEzT1d6NU5MU09MTVdlVnh0K29zTW1sUUlHdWJEM09EWko4
- aXpQbEcvSnJOCnQ1elNkbU41SUE1ZjNlc1dXUVZLdmdoWkFnVERxZHB2K1pIVzJFbXhuQUox
- dUxGWFhlUWQzVVpjQzVyMy9nL3YKU2FNbzl4ZWszSjVtTnVEbTcxbEVXc0FzL0JBY0ZjK3lu
- TGh4d0JXQld3c3Z3UjhiSHRKNURPTVd2YUt1RHNrcApJR0ZVZS9LYjJCK2pyYXZRM1RuNnMv
- SHFKTTBjZXhTSHo1cGUrMHNHdlArdDlKNzIzNEJGUXdlRkV4cmlleThVCkl4T3I0WEFiYWFi
- U3J5WW5VL3pWSDlVMWkyQUlRWk1XSkFldkN2VmdRL1UrTmVSaFh1ZGU5WVVtRE1EbzJzQjIK
- VkFGRUFxaUYyUVVIUEEybThhN0VPM3lmTDRyTWswaUh6TElLdmg2L3JIOFFDWThpM1h4VE5M
- OWlDTHpCV3UvTgpPbkNBYlMremx2TFphaVNNaDVFZnV4VHR2NFBsVmRFamY2MlArWkhJRDE2
- Z1VEd0VtYXpMQU1yeDY2NmpINWt1ClVDVFZ5bWJMMFR2Qis2TDZBUmw4QU55TTRBRG1rV2tw
- eU0yMmtDdUlTWUFFZlFSM3VXWFo5WWd4YVBNcWJWK3cKQnJoSmc0SGFONkM2eFRxR3YzcjRC
- MmFxYjc3L0NWb1JKMVo5Y3BIQ3dpT3pJYUFtdnl6UFU2TXhDRFhaOEZnWQpsVDR2MjNHNWlt
- SlAyemdYNXMrRjZBQ1VKOVVRUEQwdVRmK0o5RGEycitza2gvc1dPbloreWNvSE5CUXZvY1pF
- Ck5BSFFmN2tDRFFSYmVvQVRBUkFBMkhkMGZzRFZLNzJSTFNESGJ5ME9oZ0RjRGxWQk0yTSto
- WVlwTzNmWDFyKysKc2hpcVBLQ0hWQXNRNWJ4ZTdIbUppbUhhNEtLWXMya3YvbWx0L0NhdUNK
- Ly9wbWN5Y0JNN0d2d25Lem11WHp1QQpHbVZUWkM2V1I1TGtha0ZydEhPelZtc0VHcE52NVJj
- OWw2SFlGcExrYlNrVmk1U1BRWkp5K0VNZ01DRmdqclpmClZGNnlvdHdFMWFmN0hOdE1oTlBh
- TEROMW9VS0Y1aitSeVJnNWl3SnVDRGtuSGp3QlFWNHBndzIvNXZTOEE3WlEKdjJNYlcvVExF
- eXBLWGlmNzhJaGdBelh0RTJYck0xbi9vNlpINzFvUkZGS096NDJsRmR6ZHJTWDBZc3FYZ0hD
- WAo1Z0l0TGZxemoxcHNNYTlvMWVpTlRFbTFkVlFyVHFueXMwbDE4b2FsUk5zd1lsUW1uWUJ3
- cHdDa2FUSExNSHdLCmZHQmJvNWRMUEVzaHRWb3dJNm5zZ3FMVHlRSG1xSFlxVVpZSXBpZ21t
- QzNTd0JXWTFWNmZmVUVta3FwQUFDRW4KTDQvZ1Vnbjd5US81ZDBzZXFuQXEycFNCSE1VVW9D
- Y1R6RVFVV1ZraUR2M1JrN2hURm1oVHNNcTc4eHYyWFJzWApNUjZ5UWhTVFBGWkNZRFVFeEVs
- RXNTbzlGV0hXcjZ6SHlZY2M4cURMRnZHOUZQaG1RdVQyczlCbHg2Z0kzMjNHCm5FcTFsd1dQ
- SlZ6UDRqUWtKS0lBWHdGcHYrVzhDV0xxekRXT3ZkbHJEYVRhVk1zY0ZUZUg1VzZVcHJsNjVq
- cUYKUUdNcGNSR0NzOEdDVVcxM0gwSXlPdFF0d1dYQTRueStTTDgxcHZpQW1hU1hVOGxhS2FS
- dTkxVk9WYUY5ZjRzQQpFUUVBQVlrQ0h3UVlBUUlBQ1FVQ1czcUFFd0liREFBS0NSQ1VnZXdQ
- RVpEeTIrb1hELzljSEhSa0JaT2ZrbVNxCjE0U3Z4MDYyUHRVMEtWNDcwVFNucC9qV29ZSm5L
- SXczRzBtWElSZ3J0SDJkUHdwSWdWanNZeVJTVk1LbVNwdDUKWnJEZjlOdFRiTldnazhWb0xl
- WnpZRW8rSjNvUHFGclRNczNhWVl2N2U0K0pLNjk1WW5tUSttT0Q5bmlhOTE1dApyNUFaajk1
- VWZTVGx5VW15aWMxZDhvdnNmMWZQN1hDVVZSRmNSamZOZkRGMW9ML3BEZ01QNUdaMk93YVRl
- am15CkN1SGpNOElSMUNpYXZCcFlEbUJuVFlrN1B0aHk2YXRXdllsMGZ5L0NxYWpUS3N4Nytw
- OXh6aXU4WmZWWCtpS0IKQ2MrSGUrRURFZEdJRGh2TlovSVFIZk9CMlBVWFdHUytzOUZOVHhy
- L0E2bkxHWG5BOVk2dzkzaVBkWUl3eFM3SwpYTG9LSmVlMTBEamx6c1lzUmZsRk9XMFpPaVNp
- aElDWGlRVjF1cU02dHpGRzlndFJjaXVzNVVBdGhXYU8xT3dVClNDUW1mQ09tNGZ2TUlKSUE5
- cnh0b1M2T3FSUWNpRjNjcm1vMHJKQ3ROMmF3WmZnaThYRWlmN2Q2aGp2MEVLTTkKWFpvaUFa
- WVpEKy9pTG01VGFLV042b0dJdGkwVmpKdjhaWk9aT2ZDYjZ2cUZJa0pXK2FPdTRvclRMRk16
- MjhhbwpVM1F5V3BOQzhGRm1kWXNWdWE4czZnTjFOSWE2eTNxYS9aQjhiQS9pa3k1OUFFejRp
- RElScmdVek1FZzhBazdUCmZtMUtpWWVpVHRCRENvMjVCdlhqYnFzeXhrUUQxbmtSbTZGQVZ6
- RXVPUEllOEp1cVcyeEQ5aXhHWXZqVTVoa1IKZ0pwM2dQNWIrY25HM0xQcXF1UTJFNmdvS1VN
- TEFia0NEUVJiZmw5REFSQUFzRExjYStMbFAydm5mdEVHaHBjQQpCR1ZOUUVGbkdQckNhdVU2
- SGhOODA1V3RQVHRtc1JPdUp6cWdVVDBtcHFXSWZacTZzTXd5dkhLOVRzL0tIM0paClVWYlJD
- M3oyaDNLZmhIL0RhZjk1cGQ2bVBjL2g5dkYvT3kzK2VUV2hnR25QNmNBNWtsUitmTzFXaEc4
- VnJpWHYKck5lUkcyMHN6emplSG9jblNJY1Q1WHVaUjB1REhPaUd4T2l6MXNNUkZUR3h6R095
- MTlSOXJ2dTYzdGlJM2Q3dgpnYzc1T0NBZGtlQi9TZUNFbGFSdzBUZjdMWmJQampzRjI2M0JZ
- bk1mNGtrTkVLdnFXY1UyaWNNcCtxZXpqeW5CCnB2ZXVlMHJDVFFCWUFRbG9GQ1ZUR0hyV1dB
- NkQ0VzVPMkFmSWRJYzF1MUpDWnAyZjVMV1ZvVUZUVklyUW5RUVUKU0hDaWZyOU1aeExUdFBK
- ZFU1Mm9TUHczZGs0aExQOGlKSUx1dnYvYXZhakNzUVlIRXR3WXNiZUZaeGl1TGdscApBN1lj
- Sk5ObXBnQ3BNRDR3VWh2bEN0QUtOQlFXeXIyOTc2OThFUVRuNDZlQmVVNkttMkNpaFhrZ3dD
- eWY4ZXlLCkxFM3NYZXdhcTVrZ1pXdk5xNml1NXFZSVJCOXl3K2NYYzYwZE9aRE9scTkzWDVT
- QVJZemFvZXBrSHo0cmtMa1AKUG8rdENIeUhRUHNHblBYYzlXVDgwREM5Tm5KR2R2VWx5NXJk
- TUk0eHBaeWdlb2tqd293VlFsUFV1Y1M2TXluNwpmOHc4Y2dmQjdDMklBSWNEeDJwUC9IendY
- dmtDT1FOQTdtVjFsTTA4bitnVmtUcnpweGlwNURicTRDSW9ZeDJNCkpaVDhiR1JINlhqY1VE
- S2EwOVFoeVpzQUVRRUFBWWtFUkFRWUFRZ0FEd1VDVzM1ZlF3SWJBZ1VKQThKbkFBSXAKQ1JD
- VWdld1BFWkR5MjhGZElBUVpBUWdBQmdVQ1czNWZRd0FLQ1JCVnhETFBjVk1NamNkc0QvMFJo
- QXN1UVlPeQpyMTNCbDNOaFhrWUFaR3AyWkZER3VrZTdPU2tWOG9qT09UZFR5ei9jT1JHQ2J5
- ZEQrRGd2cUZ5VmRuT1hLZ08wCmxKbUd3ckdlTGRnZ0F2aDBpaHJwNU8wWVVKOWJCU1htR01t
- UVRZSC9BbUxUR2FkYnVqQ1dqNWZGVWtDeXd4aW0KSHV5MFBiMjRwelR2UzUwR1k1WStxSDBG
- SE5haWdka2tpV04zcnVnN0haRXUvQ3lsUFpqT1h6K0QxUVBNckV4dwo3ZC9NS2FiVis5YU5i
- UVlabGRJajk4UXd2VUYxS1N6YThqbFVJdnBoUnEyN0FUOGZER1lHUGZERU1nMmNCT2FlCkty
- N29uUXM0YjdhV082aWZEbHhRVHB6c3pvK0FuODA3Tk1TdFZFRmYrczNBaFZEM2U3bmY4SkJh
- dmJWckFlMGsKb20yNm96elBubnh6K2xxVlZ0dzZVazRYTUl6dGl4L0h3SFl3dUNuY1VYWndL
- MEkzeUFKd2pZd29vck9DaEozUwpFVWJKUVB0R3NneFJERXhWQkZlNk5MUC82MnhQOU82dGFj
- d09kYjBNbVAxYjM5cFJBVEM3YmdkMWxkVUxpNzVaCmxKckowL1NpVkVyb3FOWXk3OXRmbWdB
- WjJVeFptczlTckV5Nm85UVNmc24xYVh2K01QTDlKYUNHbWtQNnpiTFEKTm5kajBKY2FRbmtD
- MHZneWRPMUJtNk11OTZQOXVmbEtaY0FTNndtTE01SWRIT3lqTDg4d0h3anVjakFPQnRjdwpw
- MG9HVG5WT25Sc05ZU084VzhZWi9LZGJ1Nzg1ZGF6TXFKMmlOakFEdUJiZG02TjRqNUVkTW5r
- TG4wQklmUEpwCmRnbTR2bDJVcExqd1JHci9NM3dtbTVwdnMrNnVCN2hrL0ZKaUQvNGxsRU5Q
- NGVNMWg3U200aitWcTZOMSt6VEIKSVhKQWViSXFhc0RwNXlaUzdYcnk0STM2bjg1WEVZZkcw
- MWx0QXlob05WMkRPOFNJUlFwdWkydHErOVJQM1JLMQpKREJ4eEVKWTJFTzVKWjhNeGFQSFEw
- RFQwNWxSRmpLMkFsaGRFSXRqTGpwSjNmVW05c3FMeE1XeHpQNlV6M2lpCjJ1YTR1bnJ0Nk9D
- VHFRd2lqRi8zYlRXaXd2VkFBSG5NRlVpb1hzaEhhb2hWRGNWZm5lSU1mVjBiUUNYWWkzTnAK
- WTB2MFp3Y2lGSCtnU0M3cUQ2WE51aHBWR1NMNElpbGlGeS9TemNhSkV6QUhlTERTaFpQMkNX
- ZG5DNHZnbDM3dApocHg4aDU1WWhKbjZIU3VVelBnaGFLdFZCMmsrajdaZXlaK1NGeHA3SXVi
- SEN3TEhsUWhUNzVSd1EzaUF4S242CjBxajUxY1lUbnF4ZFpYVzZmSDNQa3VNellVNUdwcVIv
- MU9sNWMvd2ZJNmc2QW04eUtXLzBFVUx0K0tuNExGc1MKbTdZM201SDV2MTJVNkpCWXZWK3Ix
- M2paaW9zNEVFREU5M0Q1c05IMk1JeVJ6Q0RxMXpkZHQ0WHV5S0ZqUEtXMQo5aWJaRGZGVjdL
- dUNzdnVMMjNzQmMxc0NNb3ArRTFtVC9ReE9JQTZvRFQxTVFzdHdPVnVReURDdi9PdktTZ2Z6
- CjhGWEdMNkFQY2xqQ3FqOEFKaHhReXN4ZG9pUVA4bS92dStialdHR3Z4dzVzMWxncGlSRFRS
- VVBnY0pKTmFHWTIKVklEclpRaTROU2lOUTBOSWkrZGp1NGZOTW1DcFFxZzh0YkMzY0FhNnl3
- bTZvUUIxU0JobURYMmUxMWdSbGx1SQpPblRHUEUwSFRvM2w3MmxoYmc9PQo9cVpNVgotLS0t
- LUVORCBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCg==
-Message-ID: <63f9e71a-1beb-7a67-ea48-dbc579fa3161@i2se.com>
-Date:   Sat, 25 Apr 2020 23:26:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sat, 25 Apr 2020 17:39:10 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43A16C09B04D;
+        Sat, 25 Apr 2020 14:39:10 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jSSVj-0004Pz-Or; Sat, 25 Apr 2020 23:38:55 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 2BC5010071F; Sat, 25 Apr 2020 23:38:55 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        megha.dey@linux.intel.com, maz@kernel.org, bhelgaas@google.com,
+        rafael@kernel.org, gregkh@linuxfoundation.org, hpa@zytor.com,
+        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
+        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH RFC 04/15] drivers/base: Add support for a new IMS irq domain
+In-Reply-To: <158751205175.36773.1874642824360728883.stgit@djiang5-desk3.ch.intel.com>
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com> <158751205175.36773.1874642824360728883.stgit@djiang5-desk3.ch.intel.com>
+Date:   Sat, 25 Apr 2020 23:38:55 +0200
+Message-ID: <87pnbvtfdc.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <4cd617827cc28875ef36f3632122a83cff2ea4a7.1587742492.git-series.maxime@cerno.tech>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8BIT
-Content-Language: en-US
-X-Provags-ID: V03:K1:OSGym0FgU01qHze4de3XJl9PR5eMLKF5WsjmsRA2URdvYv8swWh
- ivVLUDNlhPuJU+0+mLtzS/9/QA2K8Zbd5scfOEFlBZ+uBUf8xbmbdKdAZYFqMDWJjVKhIY2
- Zrj7WfesnrpOTKJwp+p2chLxULDWg8iO0lPE9ZowBVArsAfEFq7BvzKhl7CtlMsIOzBtFTS
- PVZ4D3BE63EUTKzJDPQXQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:r9Zff1J6X8g=:Jra4JlhuveQR3R2bb/HVvM
- qPUYyvvY28d1SMvC6+ofvUoKnK/dz9yQdzv9xTlYJSxvMFjJFaiMvwimRMKIGlsJB/cBa06ep
- 4Nl6hM++TXkjI7yjMvbVhKYFJnMLvFREXlFO1f63Y3HhwE2KvHlvu+rL4hJTVbPTu5tDRwSOU
- oG9uKrzUKwTpPWh7I7KBeKmV4kUgu88iXIe7yOpDG9WKJeQgfL+mrhGu4nn88P8WDjUY8t77u
- KDRkSDyFZA85mT2Rlrc9zLdOoJXpZxq2arFsDdT6s03Rf66t3QV5qYp6TtcNq8VsomSceBoGZ
- eiD7Jv4Jxjk7FIo0EwqhBJUvW1eNNrrwliHSu42WczCYAtbxp6a+yR5jQV4gGvNhvgPoatqvF
- sqrE0dDQxC6Jl/DBu88H6mgsUOzgxm7nVaie1AFuPnmciZ46/iYOoxokKOQoRrw6XyDD3+UHz
- qTV3xTjPQAGm0mRumV/Y9wmi7o2wNlnsYNIJZ5oEdNIXwQ7Q/Vm13LwUcZC2BDZdSIsoNJ4FO
- /si5DaNXm1bhQXSoHyr69x/42XmFlS0/Brw2NL4N2sEfGNZHFjaazRj1zPJwG29HjP7l/KoiM
- dNuMWgr37D6uISF+HKzB3PKcAJdC86lCAPuXXAHdihUMTOy0pHlT6wcosaGFvNVlJxflOCKPi
- 5OCIfCBS9iMTMECIlS8/7vYWsf5WFB/RTgYVcfHlISprkygnntBUZ9X85cd36pgSqltSQ4XhB
- v232xF1T0rYCuUxCXeAQHkwTxNGPFKJICPntCCF45GoEWU/jaVgRb0QrwQ1Yaoz5W4rDeLDMv
- 8C2lkk2+HiAZAeHT1MzBxTODESU7ZTkQ7KbCew0Uva92a2eH1QGuhVddckaWrEidkEmsRb6
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
-
-Am 24.04.20 um 17:35 schrieb Maxime Ripard:
-> The HDMI driver was registering a single debugfs file so far with the name
-> hdmi_regs.
+Dave Jiang <dave.jiang@intel.com> writes:
+> From: Megha Dey <megha.dey@linux.intel.com>
 >
-> Obviously, this is not going to work anymore when will have multiple HDMI
-> controllers since we will end up trying to register two files with the same
-> name.
->
-> Let's use the ID to avoid that name conflict.
+> Add support for the creation of a new IMS irq domain. It creates a new
+> irq chip associated with the IMS domain and adds the necessary domain
+> operations to it.
 
-even with this patch there is a name conflict in debugfs using Linux
-5.7-rc1. Dave Stevenson addressed this by using different card names
-[1]. Since this patch won't apply anymore here is my suggestion:
+And how is a X86 specific thingy related to drivers/base?
 
-diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-index 29287ab..7209397 100644
---- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-+++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-@@ -1181,9 +1181,14 @@ static int vc4_hdmi_audio_init(struct vc4_hdmi
-*vc4_hdmi)
- 
-     card->dai_link = dai_link;
-     card->num_links = 1;
--    card->name = "vc4-hdmi";
-     card->dev = dev;
- 
-+    if (vc4_hdmi->variant->encoder_type == VC4_ENCODER_TYPE_HDMI1) {
-+        card->name = "vc4-hdmi1";
-+    } else {
-+        card->name = "vc4-hdmi";
-+    }
-+
-     /*
-      * Be careful, snd_soc_register_card() calls dev_set_drvdata() and
-      * stores a pointer to the snd card object in dev->driver_data. This
--- 
-2.7.4
+> diff --git a/drivers/base/ims-msi.c b/drivers/base/ims-msi.c
 
+This sits in drivers base because IMS is architecture independent, right?
 
-[1] -
-https://github.com/raspberrypi/linux/pull/3515/commits/82fe6c16811e5acc9bdbbf298db1b30f84b820d2
-
->
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> ---
->  drivers/gpu/drm/vc4/vc4_hdmi.c | 5 ++++-
->  drivers/gpu/drm/vc4/vc4_hdmi.h | 3 +++
->  2 files changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-> index aaf96420d0ec..aae5b10a2d11 100644
-> --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-> @@ -1377,7 +1377,9 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
->  	if (ret)
->  		goto err_destroy_encoder;
->  
-> -	vc4_debugfs_add_file(drm, "hdmi_regs", vc4_hdmi_debugfs_regs, vc4_hdmi);
-> +	vc4_debugfs_add_file(drm, variant->debugfs_name,
-> +			     vc4_hdmi_debugfs_regs,
-> +			     vc4_hdmi);
->  
->  	return 0;
->  
-> @@ -1439,6 +1441,7 @@ static int vc4_hdmi_dev_remove(struct platform_device *pdev)
->  
->  static const struct vc4_hdmi_variant bcm2835_variant = {
->  	.encoder_type		= VC4_ENCODER_TYPE_HDMI0,
-> +	.debugfs_name		= "hdmi_regs",
->  	.registers		= vc4_hdmi_fields,
->  	.num_registers		= ARRAY_SIZE(vc4_hdmi_fields),
->  
-> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdmi.h
-> index 4240c5ea7fde..22100820c81b 100644
-> --- a/drivers/gpu/drm/vc4/vc4_hdmi.h
-> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
-> @@ -30,6 +30,9 @@ struct vc4_hdmi_variant {
->  	/* Encoder Type for that controller */
->  	enum vc4_encoder_type encoder_type;
->  
-> +	/* Filename to expose the registers in debugfs */
-> +	const char *debugfs_name;
+> new file mode 100644
+> index 000000000000..738f6d153155
+> --- /dev/null
+> +++ b/drivers/base/ims-msi.c
+> @@ -0,0 +1,100 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Support for Device Specific IMS interrupts.
+> + *
+> + * Copyright © 2019 Intel Corporation.
+> + *
+> + * Author: Megha Dey <megha.dey@intel.com>
+> + */
 > +
->  	/* List of the registers available on that variant */
->  	const struct vc4_hdmi_register *registers;
->  
+> +#include <linux/dmar.h>
+> +#include <linux/irq.h>
+> +#include <linux/mdev.h>
+> +#include <linux/pci.h>
+> +
+> +/*
+> + * Determine if a dev is mdev or not. Return NULL if not mdev device.
+> + * Return mdev's parent dev if success.
+> + */
+> +static inline struct device *mdev_to_parent(struct device *dev)
+> +{
+> +	struct device *ret = NULL;
+> +	struct device *(*fn)(struct device *dev);
+> +	struct bus_type *bus = symbol_get(mdev_bus_type);
 
+symbol_get()?
+
+> +
+> +	if (bus && dev->bus == bus) {
+> +		fn = symbol_get(mdev_dev_to_parent_dev);
+
+What's wrong with simple function calls?
+
+> +		ret = fn(dev);
+> +		symbol_put(mdev_dev_to_parent_dev);
+> +		symbol_put(mdev_bus_type);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static irq_hw_number_t dev_ims_get_hwirq(struct msi_domain_info *info,
+> +					 msi_alloc_info_t *arg)
+> +{
+> +	return arg->ims_hwirq;
+> +}
+> +
+> +static int dev_ims_prepare(struct irq_domain *domain, struct device *dev,
+> +			   int nvec, msi_alloc_info_t *arg)
+> +{
+> +	if (dev_is_mdev(dev))
+> +		dev = mdev_to_parent(dev);
+
+This makes absolutely no sense. Somewhere you claimed that this is
+solely for mdev. Now this interface takes both a regular device and mdev.
+
+Lack of explanation seems to be a common scheme here.
+
+> +	init_irq_alloc_info(arg, NULL);
+> +	arg->dev = dev;
+> +	arg->type = X86_IRQ_ALLOC_TYPE_IMS;
+> +
+> +	return 0;
+> +}
+> +
+> +static void dev_ims_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc)
+> +{
+> +	arg->ims_hwirq = platform_msi_calc_hwirq(desc);
+> +}
+> +
+> +static struct msi_domain_ops dev_ims_domain_ops = {
+> +	.get_hwirq	= dev_ims_get_hwirq,
+> +	.msi_prepare	= dev_ims_prepare,
+> +	.set_desc	= dev_ims_set_desc,
+> +};
+> +
+> +static struct irq_chip dev_ims_ir_controller = {
+> +	.name			= "IR-DEV-IMS",
+> +	.irq_ack		= irq_chip_ack_parent,
+> +	.irq_retrigger		= irq_chip_retrigger_hierarchy,
+> +	.irq_set_vcpu_affinity	= irq_chip_set_vcpu_affinity_parent,
+> +	.flags			= IRQCHIP_SKIP_SET_WAKE,
+> +	.irq_write_msi_msg	= platform_msi_write_msg,
+> +};
+> +
+> +static struct msi_domain_info ims_ir_domain_info = {
+> +	.flags		= MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS,
+> +	.ops		= &dev_ims_domain_ops,
+> +	.chip		= &dev_ims_ir_controller,
+> +	.handler	= handle_edge_irq,
+> +	.handler_name	= "edge",
+> +};
+> +
+> +struct irq_domain *arch_create_ims_irq_domain(struct irq_domain *parent,
+> +					      const char *name)
+
+arch_create_ ???? In drivers/base ??? 
+
+> +{
+> +	struct fwnode_handle *fn;
+> +	struct irq_domain *domain;
+> +
+> +	fn = irq_domain_alloc_named_fwnode(name);
+> +	if (!fn)
+> +		return NULL;
+> +
+> +	domain = msi_create_irq_domain(fn, &ims_ir_domain_info, parent);
+> +	if (!domain)
+> +		return NULL;
+> +
+> +	irq_domain_update_bus_token(domain, DOMAIN_BUS_PLATFORM_MSI);
+> +	irq_domain_free_fwnode(fn);
+> +
+> +	return domain;
+> +}
+> diff --git a/drivers/base/platform-msi.c b/drivers/base/platform-msi.c
+> index 2696aa75983b..59160e8cbfb1 100644
+> --- a/drivers/base/platform-msi.c
+> +++ b/drivers/base/platform-msi.c
+> @@ -31,12 +31,11 @@ struct platform_msi_priv_data {
+>  /* The devid allocator */
+>  static DEFINE_IDA(platform_msi_devid_ida);
+>  
+> -#ifdef GENERIC_MSI_DOMAIN_OPS
+>  /*
+>   * Convert an msi_desc to a globaly unique identifier (per-device
+>   * devid + msi_desc position in the msi_list).
+>   */
+> -static irq_hw_number_t platform_msi_calc_hwirq(struct msi_desc *desc)
+> +irq_hw_number_t platform_msi_calc_hwirq(struct msi_desc *desc)
+>  {
+>  	u32 devid;
+>  
+> @@ -45,6 +44,7 @@ static irq_hw_number_t platform_msi_calc_hwirq(struct msi_desc *desc)
+>  	return (devid << (32 - DEV_ID_SHIFT)) | desc->platform.msi_index;
+>  }
+>  
+> +#ifdef GENERIC_MSI_DOMAIN_OPS
+>  static void platform_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc)
+>  {
+>  	arg->desc = desc;
+> @@ -76,7 +76,7 @@ static void platform_msi_update_dom_ops(struct msi_domain_info *info)
+>  		ops->set_desc = platform_msi_set_desc;
+>  }
+>  
+> -static void platform_msi_write_msg(struct irq_data *data, struct msi_msg *msg)
+> +void platform_msi_write_msg(struct irq_data *data, struct msi_msg *msg)
+>  {
+>  	struct msi_desc *desc = irq_data_get_msi_desc(data);
+>  	struct platform_msi_priv_data *priv_data;
+> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+> index b558d4cfd082..cecc6a6bdbef 100644
+> --- a/drivers/vfio/mdev/mdev_core.c
+> +++ b/drivers/vfio/mdev/mdev_core.c
+> @@ -33,6 +33,12 @@ struct device *mdev_parent_dev(struct mdev_device *mdev)
+>  }
+>  EXPORT_SYMBOL(mdev_parent_dev);
+>  
+> +struct device *mdev_dev_to_parent_dev(struct device *dev)
+> +{
+> +	return to_mdev_device(dev)->parent->dev;
+> +}
+> +EXPORT_SYMBOL(mdev_dev_to_parent_dev);
+
+And this needs to be EXPORT_SYMBOL because this is designed to support
+non GPL drivers from the very beginning, right? Ditto for the other
+exports in this file.
+
+> diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_private.h
+> index 7d922950caaf..c21f1305a76b 100644
+> --- a/drivers/vfio/mdev/mdev_private.h
+> +++ b/drivers/vfio/mdev/mdev_private.h
+> @@ -36,7 +36,6 @@ struct mdev_device {
+>  };
+>  
+>  #define to_mdev_device(dev)	container_of(dev, struct mdev_device, dev)
+> -#define dev_is_mdev(d)		((d)->bus == &mdev_bus_type)
+
+Moving stuff around 3 patches later makes tons of sense.
+  
+Thanks,
+
+        tglx
