@@ -2,117 +2,102 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 899A7C55185
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 09:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 997E4C55185
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 10:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 681C12071C
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 09:57:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587808678;
-	bh=Gx4DdGrKg0fE3BrKnN/CFjspd7+pDgAdzeyUs+KfyQg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Q2JeXmItfQJLia099d9hjjF3gsyy9zeuHIrC7+KhFE6c1GYWa21SXBc1kgPXaZOho
-	 5iLyL4IcVf5UZhCQedbSM8EqajVlYkjYOhNARjQGsAujBwE3ebSOx+qjxXsuRypuV1
-	 gxUDVpqVbsHQU5FYg6WC7mNyyzqCNVEk/gBOAM5o=
+	by mail.kernel.org (Postfix) with ESMTP id 6B34520714
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 10:03:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZH68DJtS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726107AbgDYJ55 (ORCPT
+        id S1726108AbgDYKD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 05:57:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53394 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726022AbgDYJ55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 05:57:57 -0400
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Sat, 25 Apr 2020 06:03:28 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40188 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726035AbgDYKD1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 06:03:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587809006;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=qOCa5O/JBWzIhQkLQAB3sV0bF/koEEFyGjb42S2sN2M=;
+        b=ZH68DJtStI9fYuK37X/Q97eSe65J36sxPwVq6B0F7FC9GIYppKuuzGMyxfxH9F9X4UrKPq
+        Au8meXFrribg8W2wFBOHUneYfTRaDjVFEdvqyzg0C86halUGEzFrFVptfT8G16qtBmDwD4
+        Of4il9Y2mxRio8a8TNQhYQw5pZFyOdI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-333-L5kzyss9MKqSTGXxEOp1_w-1; Sat, 25 Apr 2020 06:03:20 -0400
+X-MC-Unique: L5kzyss9MKqSTGXxEOp1_w-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A57F12071C;
-        Sat, 25 Apr 2020 09:57:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587808676;
-        bh=Gx4DdGrKg0fE3BrKnN/CFjspd7+pDgAdzeyUs+KfyQg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TWP+UrFyLLUZlNWtNRfo8qxlzlJTYjlYY7KDH/144oI+IhpV2emGEl31UV7Fnwhgm
-         +NDSSmk8CU1M4IBh9xqKVpqIq0f5lEH9RfZ33ToBjGHb+vMLO8j/X5CX1TwwniZT+X
-         +vEn8XP2rK61ARLBxv/DSfsspwPw0c1tPB4b2SjI=
-Received: by mail-io1-f41.google.com with SMTP id p10so13140622ioh.7;
-        Sat, 25 Apr 2020 02:57:56 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaOtYverzJjBxXEvgqSZAeo/RY4bEkT3jGWFMrNtP4W55jnuXna
-        06iO8g0ZhEd6f+ljEXY5PHZjnztFzebuaWRM1Qw=
-X-Google-Smtp-Source: APiQypKP7AhLgFeZOKjhExS5K0cfjNDs9Q+1ANtnVwXW7d1hsAxDTDxynkkvFYFWI7WCzE2+02kpATNKLdB2c9SAnFs=
-X-Received: by 2002:a5d:9b8a:: with SMTP id r10mr12620527iom.171.1587808676091;
- Sat, 25 Apr 2020 02:57:56 -0700 (PDT)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1E61D107ACCD;
+        Sat, 25 Apr 2020 10:03:19 +0000 (UTC)
+Received: from treble.redhat.com (ovpn-114-29.rdu2.redhat.com [10.10.114.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BDC376061E;
+        Sat, 25 Apr 2020 10:03:17 +0000 (UTC)
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Dave Jones <dsj@fb.com>, Jann Horn <jannh@google.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v2 00/11] ORC fixes
+Date:   Sat, 25 Apr 2020 05:02:59 -0500
+Message-Id: <cover.1587808742.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-References: <20200424130531.30518-1-ardb@kernel.org> <20200425082747.GA94804@gmail.com>
-In-Reply-To: <20200425082747.GA94804@gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Sat, 25 Apr 2020 11:57:45 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHSRfS3+PBWDZWBHCuidTKTAFb8c0Apfyw-1JrTbH=CRg@mail.gmail.com>
-Message-ID: <CAMj1kXHSRfS3+PBWDZWBHCuidTKTAFb8c0Apfyw-1JrTbH=CRg@mail.gmail.com>
-Subject: Re: [GIT PULL 00/33] EFI updates for v5.8
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Atish Patra <atish.patra@wdc.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Zou Wei <zou_wei@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 25 Apr 2020 at 10:27, Ingo Molnar <mingo@kernel.org> wrote:
->
->
-> * Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> > Hello Ingo, Thomas,
-> >
-> > Please pull the attached changes into tip/efi/next. There is some
-> > coordination going on with the RISC-V tree this time, so please take the
-> > patches in this exact order, and apply them onto v5.7-rc2 so the first
-> > three patches can serve as a shared stable base between the efi/core
-> > branch and the riscv tree.
-> >
-> > The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
-> >
-> >   Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
-> >
-> > are available in the Git repository at:
-> >
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-next
-> >
-> > for you to fetch changes up to 4eb8320bd1aaa7e69d039f2c251735e3ef0b9a38:
-> >
-> >   efi: Move arch_tables check to caller (2020-04-24 14:52:16 +0200)
-> >
-> > ----------------------------------------------------------------
-> > EFI changes for v5.8:
-> > - preliminary changes for RISC-V
-> > - add support for setting the resolution on the EFI framebuffer
-> > - simplify kernel image loading for arm64
-> > - Move .bss into .data via the linker script instead of relying on symbol
-> >   annotations.
-> > - Get rid of __pure getters to access global variables
-> > - Clean up the config table matching arrays
->
-> >  27 files changed, 895 insertions(+), 574 deletions(-)
-> >  create mode 100644 drivers/firmware/efi/libstub/alignedmem.c
-> >  rename drivers/firmware/efi/libstub/{arm-stub.c => efi-stub.c} (96%)
-> >  create mode 100644 drivers/firmware/efi/libstub/relocate.c
->
-> Pulled into tip:efi/core, thanks a lot Ard!
->
+v2:
+- Dropped three patches which technically weren't fixes.  Will post them
+  later as part of another patch set with more improvements.
+- Removed show_iret_regs() declaration [mbenes]
+- Added Miroslav Reviewed-by, Linus Reported-by
 
-Thanks Ingo
+v1 was here:
+https://lkml.kernel.org/r/cover.1584033751.git.jpoimboe@redhat.com
 
-I guess this means you didn't spot my remark regarding patch #3, which
-needs a Kconfig depends tweak for x86. I'll send that out as a
-followup patch.
+Jann Horn (1):
+  x86/entry/64: Fix unwind hints in rewind_stack_do_exit()
+
+Josh Poimboeuf (9):
+  objtool: Fix stack offset tracking for indirect CFAs
+  x86/entry/64: Fix unwind hints in register clearing code
+  x86/entry/64: Fix unwind hints in kernel exit path
+  x86/entry/64: Fix unwind hints in __switch_to_asm()
+  x86/unwind/orc: Convert global variables to static
+  x86/unwind: Prevent false warnings for non-current tasks
+  x86/unwind/orc: Prevent unwinding before ORC initialization
+  x86/unwind/orc: Fix error path for bad ORC entry type
+  x86/unwind/orc: Fix premature unwind stoppage due to IRET frames
+
+Miroslav Benes (1):
+  x86/unwind/orc: Don't skip the first frame for inactive tasks
+
+ arch/x86/entry/calling.h       |  40 ++++++------
+ arch/x86/entry/entry_64.S      |  14 ++---
+ arch/x86/include/asm/unwind.h  |   2 +-
+ arch/x86/kernel/dumpstack_64.c |   3 +-
+ arch/x86/kernel/unwind_frame.c |   3 +
+ arch/x86/kernel/unwind_orc.c   | 111 ++++++++++++++++++++++-----------
+ tools/objtool/check.c          |   2 +-
+ 7 files changed, 108 insertions(+), 67 deletions(-)
+
+--=20
+2.21.1
+
