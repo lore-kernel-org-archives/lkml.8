@@ -7,78 +7,78 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73497C54FCB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 13:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB792C54FCB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 13:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F23D2071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 13:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BFE620714
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 13:26:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dUNLV25q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OEMTf0Vs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726188AbgDYNTb (ORCPT
+        id S1726135AbgDYN0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 09:19:31 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:28975 "EHLO
+        Sat, 25 Apr 2020 09:26:39 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:56924 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726060AbgDYNTb (ORCPT
+        by vger.kernel.org with ESMTP id S1726092AbgDYN0i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 09:19:31 -0400
+        Sat, 25 Apr 2020 09:26:38 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587820770;
+        s=mimecast20190719; t=1587821196;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ZURiLBETOzpWxA+m+Ly+zcrAkCfuj4ARVrSBfsuIAdg=;
-        b=dUNLV25qYQXn5GRNAZJUuT0wBn5WdiFx4vknSkgb8ubRBPFbSV1C76wwMU2xh7f/rm7Fh+
-        vio3d3xSLO8HJW32bOUI9vnM9ctqIg2SBRHiMrmiluXIXhNg8+3VQ/olQY3tVMYUgb3zJS
-        LorlUJavV/ycQDqtSKqQBAP7w8xaKhY=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-134-WkiLUkXUPJCf9Iq7Z2YeZw-1; Sat, 25 Apr 2020 09:19:28 -0400
-X-MC-Unique: WkiLUkXUPJCf9Iq7Z2YeZw-1
-Received: by mail-wm1-f72.google.com with SMTP id 14so5825734wmo.9
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 06:19:27 -0700 (PDT)
+        bh=cfzDwm7LQsMeQjoNJKbPO8B9JT/oMVW7lxfykeUko+0=;
+        b=OEMTf0VsvLTX+jm+guEZ0jYYI89/znM46veQnYPpUQawvym1AOAGw6WbTD7jWPaQRhepUr
+        PASmhtKwAzlaR3Q+40oAnLTJAwE5WzXvLMqhvWEmZsRosl3Ce0Wk7Av8DoGBDDidluhn/g
+        Ss/A1Kn3W+diqqxJT75dG/bGlWLLHq4=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-335-C_HBNby0MeaZQwNG8djcSw-1; Sat, 25 Apr 2020 09:26:35 -0400
+X-MC-Unique: C_HBNby0MeaZQwNG8djcSw-1
+Received: by mail-wm1-f69.google.com with SMTP id 71so5849094wmb.8
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 06:26:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ZURiLBETOzpWxA+m+Ly+zcrAkCfuj4ARVrSBfsuIAdg=;
-        b=mLmiZSbtmAyVdNUdrlXF0eqHfeBEVi3D9106+FKC6avbbsUq8U6FgfxjFCiIZz75ib
-         ndBinPPCmhgRhQBYsT6YQolST+TCQzuvW36TmwuD8JQmQyTuTARRyNTD5rbl5YTc01o2
-         HxGI+WuhFmg84Bqc0RoxebISvCK0/RtJtBoCfYjyGuEqaY1870TOzShFgqj8IVblChw+
-         sATtb+q0zxACgto/alSuw9Y2yfw/Ki/56ohlW13hNNz3EyfxQJYV45wBwJp2DaHwWSG6
-         dRUd4MoU8u+eOCwZqQFyomjJcG1AwFv+RCLTNreZS+qlNEUf92LLWQuqPcHybqVEKTsZ
-         4hVQ==
-X-Gm-Message-State: AGi0PuZYL7XnbtK1krugeSunv52gldvd01yzIZcrbW4oLyADRg372pSn
-        Yl2xJdc1BVFEGjm3GnqoWzLt8pzLEvtnvfQuD+8xbaml4wCeNUiLjE9hnjyFOlIEi5VX0kaBMFu
-        a//dEs/8SFjaUK7h+KV65WMgw
-X-Received: by 2002:a7b:c642:: with SMTP id q2mr16619781wmk.41.1587820766823;
-        Sat, 25 Apr 2020 06:19:26 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJXwcuRtpHk4zpLOp3jvcBubezJLdQBQ3UTl4H8+n7Honsj/U58BP1wRrfhHGtK6n55KUIt+Q==
-X-Received: by 2002:a7b:c642:: with SMTP id q2mr16619766wmk.41.1587820766602;
-        Sat, 25 Apr 2020 06:19:26 -0700 (PDT)
+        bh=cfzDwm7LQsMeQjoNJKbPO8B9JT/oMVW7lxfykeUko+0=;
+        b=l7aFWZrXdaEFVbb517PkLkYA4y+58VsC6pf1gizIA31IYatzCLAyLKRAw2DX8fwUk0
+         ouqf/cM9qhUaG/gWqkgB40opVbEc3WhBaagn/zaLKFyNCOSC8qRiTYRRYYXaJo3PiCoz
+         iqmSfA3Ius6RwWZmHKHFgjexT8cGP14q75H1GUHlFX2y0usQ1dqNaUzYeLvTaiD0sYmx
+         teV4a2AE1vpAt1vuJH/m5MUOGVh+eYe57cmFTw41koctae7tyIlYdCaDrYGA0Z9VBBsi
+         7GRelZppqp0+9KEfrYOUWNXqDKR7PJ32IaNHaG2o5fHlElaUWUwPuD/mtS95663DhxNW
+         jBBw==
+X-Gm-Message-State: AGi0PubaJeQ0pbQPANpxUfk+JBSf+mtGws6QkcllK63BbjBD7zPCHmfW
+        FhsHj+C3rFXfoAyofXnitg0HwN1wd9yKl5STs7BpzHeod5WgiNB+9OzSrWP0xALRJTrYSA+rtnT
+        Th7sCvZjFA8buB1cl3DHnrM4a
+X-Received: by 2002:adf:e403:: with SMTP id g3mr17253248wrm.121.1587821193967;
+        Sat, 25 Apr 2020 06:26:33 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLF6eS81g1PIpJQKW71U4aeqAQqhpZHvv0qiPSVt+hRrX0IsXtReOkrHjuTuk2sr3eqBaHMSg==
+X-Received: by 2002:adf:e403:: with SMTP id g3mr17253227wrm.121.1587821193691;
+        Sat, 25 Apr 2020 06:26:33 -0700 (PDT)
 Received: from ?IPv6:2001:b07:6468:f312:d0a0:f143:e9e4:2926? ([2001:b07:6468:f312:d0a0:f143:e9e4:2926])
-        by smtp.gmail.com with ESMTPSA id a125sm7153885wme.3.2020.04.25.06.19.25
+        by smtp.gmail.com with ESMTPSA id a10sm1922597wrg.32.2020.04.25.06.26.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 25 Apr 2020 06:19:26 -0700 (PDT)
-Subject: Re: [PATCH v11 5/9] KVM: X86: Refresh CPUID once guest XSS MSR
- changes
+        Sat, 25 Apr 2020 06:26:33 -0700 (PDT)
+Subject: Re: [PATCH v11 2/9] KVM: VMX: Set guest CET MSRs per KVM and host
+ configuration
 To:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Yang Weijiang <weijiang.yang@intel.com>
 Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         jmattson@google.com, yu.c.zhang@linux.intel.com
 References: <20200326081847.5870-1-weijiang.yang@intel.com>
- <20200326081847.5870-6-weijiang.yang@intel.com>
- <20200423173450.GJ17824@linux.intel.com>
+ <20200326081847.5870-3-weijiang.yang@intel.com>
+ <20200423162749.GG17824@linux.intel.com>
 From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <6e1076a5-edbf-e8fe-dd99-fbb92f3cc8d0@redhat.com>
-Date:   Sat, 25 Apr 2020 15:19:24 +0200
+Message-ID: <d92b9fea-95b6-73ce-c3b5-47dad95c5d42@redhat.com>
+Date:   Sat, 25 Apr 2020 15:26:30 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200423173450.GJ17824@linux.intel.com>
+In-Reply-To: <20200423162749.GG17824@linux.intel.com>
 Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -87,24 +87,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/04/20 19:34, Sean Christopherson wrote:
->>  	if (!kvm_cpu_cap_has(X86_FEATURE_XSAVES))
->>  		supported_xss = 0;
->> +	else
->> +		supported_xss = host_xss & KVM_SUPPORTED_XSS;
-> Silly nit: I'd prefer to invert the check, e.g.
+On 23/04/20 18:27, Sean Christopherson wrote:
+>>  
+>> +static bool is_cet_mode_allowed(struct kvm_vcpu *vcpu, u32 mode_mask)
+> CET itself isn't a mode.  And since this ends up being an inner helper for
+> is_cet_supported(), I think __is_cet_supported() would be the way to go.
 > 
-> 	if (kvm_cpu_cap_has(X86_FEATURE_XSAVES))
-> 		supported_xss = host_xss & KVM_SUPPORTED_XSS;
-> 	else
-> 		supported_xss = 0;
-> 
+> Even @mode_mask is a bit confusing without the context of it being kernel
+> vs. user.  The callers are very readable, e.g. I'd much prefer passing the
+> mask as opposed to doing 'bool kernel'.  Maybe s/mode_mask/cet_mask?  That
+> doesn't exactly make things super clear, but at least the reader knows the
+> mask is for CET features.
 
-Also a nit: Linux coding style should be
-
-	supported_xss = 0;
-	if (kvm_cpu_cap_has(X86_FEATURE_XSAVES))
-		supported_xss = host_xss & KVM_SUPPORTED_XSS;
+What about is_cet_state_supported and xss_states?
 
 Paolo
+
+>> +{
+>> +	return ((supported_xss & mode_mask) &&
+>> +		(guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
+>> +		guest_cpuid_has(vcpu, X86_FEATURE_IBT)));
+>> +}
 
