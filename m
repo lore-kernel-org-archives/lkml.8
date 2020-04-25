@@ -2,107 +2,113 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 572B3C55191
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 18:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44171C54FCB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 18:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36C89206ED
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 18:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F564206ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 18:53:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I/nqQv4P"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="J1HDIxyv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726239AbgDYSwj (ORCPT
+        id S1726316AbgDYSxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 14:52:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53246 "EHLO
+        Sat, 25 Apr 2020 14:53:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726145AbgDYSwi (ORCPT
+        by vger.kernel.org with ESMTP id S1726145AbgDYSxW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 14:52:38 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7B64C09B04D;
-        Sat, 25 Apr 2020 11:52:38 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id h11so5067723plr.11;
-        Sat, 25 Apr 2020 11:52:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e5aMK2w5+Vqp54D9P1CUzu4V0aJIFIn99GKnzqvS3pY=;
-        b=I/nqQv4PsSCinTp2bGWPZKkw/qhM+PwatB+57nhF/lbed55Qg2wt0pD/QNJmUYIxiA
-         leW3VMuvuYbLA7R0w0EZMW4raL6BvVARRQ3u0fOJ7nHG0GUkY0P8ugTM1i7GDU8SeAbk
-         RETJKLJuRfEO2+gmLObJ43fA9/QKTppyx40ZE1JnuC0t7f7eO2/QLQddOAQtblS6C4+X
-         G6l+LPfFRigHggyPgXrFLP671kHeawEPw4wXld/PEJ9XkXW8u/x3hXrA15y+PM0F/6hz
-         sxuU0ArrKBaK27/5iI6cGRo4dCyb6XId42F8+1t3PNktvZ6erN3BShVBMrUQmhuJFUfY
-         KR7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e5aMK2w5+Vqp54D9P1CUzu4V0aJIFIn99GKnzqvS3pY=;
-        b=RxthsJxq3vSURSGrY5kGWkBv+j1Y047sFRoTpjtZaepwkc8fhzSyoqdt1b1fZ9O6k/
-         6IxfVzaFT6iv2jpAsQFVJs7mCHj++Gh8vcIceQDdvC1fqUGvmucHugrwjNSnRTQrpYUC
-         g4MMXCAEicWVn9MZxLXafPKnrIMRrSTU2scnVKoKFpiJa92Edff9uHNKVCTOSIj+creC
-         IRzYwio1AgpGwtUfnvtbJKl8A0NxdAYlTv8lAWxNtjHpBc5JJeHWlLN/S+QAlsJPW4Xb
-         4NcCnCejDNvI+GipHvYy3uWx1FhgeChZu+vcQ185wiLv6thjI/Klb10lUxi4Vuw4m4jZ
-         BDag==
-X-Gm-Message-State: AGi0PuaDZub/rmv/texAAv6/T8vlLawL+MANi5NnHG5PNNXDPMMPK41/
-        2D+sfk9I2azPfVwmr+wEDd3wVaaaByBIIvBPjzzR03qlm/A=
-X-Google-Smtp-Source: APiQypJj1jonQSlBM68iDTHvO7nXzVE6SAE8XStQ5gZkbJB7NZXoA1Z82+2FBKmkUqxG4TtXnXibucMBWyCgXUCuSro=
-X-Received: by 2002:a17:90a:2401:: with SMTP id h1mr14321206pje.1.1587840758078;
- Sat, 25 Apr 2020 11:52:38 -0700 (PDT)
+        Sat, 25 Apr 2020 14:53:22 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 154A3C09B04D
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 11:53:22 -0700 (PDT)
+Received: from zn.tnic (p200300EC2F2A1100B46A3E12B0A6AFFD.dip0.t-ipconnect.de [IPv6:2003:ec:2f2a:1100:b46a:3e12:b0a6:affd])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8527F1EC0C84;
+        Sat, 25 Apr 2020 20:53:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1587840800;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=iTbPHyhUCYp1hsTKDTL6Rkak9xj3g4rssRfqZNkVLdA=;
+        b=J1HDIxyv/9Q6KrgTFyzUaS9MzUgSTqUl1CHKzxt9TsfuRWCgenOsqkBAUiSvooHmIFgoYR
+        xTFg4Y4kCmZjWDIrRtDZdBKr0CU76/YyCxbHLM8CBk0vP11S/rVp9yFpSmoUqaXMTtJMbC
+        uoQ0v7K3Cuy7iuezi+zng5kYLFXuv0o=
+Date:   Sat, 25 Apr 2020 20:53:13 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Jakub Jelinek <jakub@redhat.com>, jgross@suse.com,
+        x86@kernel.org, Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, Michael Matz <matz@suse.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Sergei Trofimovich <slyfox@gentoo.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        =?utf-8?Q?Fr=C3=A9d=C3=A9ric_Pierret_=28fepitre=29?= 
+        <frederic.pierret@qubes-os.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
+        boris.ostrovsky@oracle.com
+Subject: Re: [PATCH] x86: Fix early boot crash on gcc-10, next try
+Message-ID: <20200425185313.GD24294@zn.tnic>
+References: <CAKwvOdkbcO8RzoafON2mGiSy5P96P5+aY8GySysF2my7q+nTqw@mail.gmail.com>
+ <20200422212605.GI26846@zn.tnic>
+ <CAKwvOd=exxhfb8N6=1Q=wBUaYcRDEq3L1+TiHDLz+pxWg8OuwQ@mail.gmail.com>
+ <20200423125300.GC26021@zn.tnic>
+ <20200423161126.GD26021@zn.tnic>
+ <20200425014657.GA2191784@rani.riverdale.lan>
+ <20200425085759.GA24294@zn.tnic>
+ <20200425150440.GA470719@rani.riverdale.lan>
+ <20200425173140.GB24294@zn.tnic>
+ <20200425183701.GE17645@gate.crashing.org>
 MIME-Version: 1.0
-References: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
- <20200422141135.86419-2-tomasz.duszynski@octakon.com> <CAHp75VcbaGYj76qkDJnTnuG5SM215qVmFo7FLR6YzHA37PgF_g@mail.gmail.com>
- <20200424190413.GA2731@arch> <CAHp75Vdajf7Ci3ytxP7Qs9=fFaxvVBQoL5uh+HUDwxHS5r9MUg@mail.gmail.com>
- <20200425184130.GA37271@arch>
-In-Reply-To: <20200425184130.GA37271@arch>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 25 Apr 2020 21:52:25 +0300
-Message-ID: <CAHp75Vez8wSaYHbXmvfXUS5N+vScQqHGg055DNKrEnCunP7awA@mail.gmail.com>
-Subject: Re: [PATCH 1/6] iio: chemical: scd30: add core driver
-To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Cc:     linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200425183701.GE17645@gate.crashing.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 25, 2020 at 9:42 PM Tomasz Duszynski
-<tomasz.duszynski@octakon.com> wrote:
-> On Sat, Apr 25, 2020 at 02:43:35PM +0300, Andy Shevchenko wrote:
-> > On Fri, Apr 24, 2020 at 10:05 PM Tomasz Duszynski
-> > <tomasz.duszynski@octakon.com> wrote:
-> > > On Wed, Apr 22, 2020 at 10:49:44PM +0300, Andy Shevchenko wrote:
-> > > > On Wed, Apr 22, 2020 at 5:22 PM Tomasz Duszynski
-> > > > <tomasz.duszynski@octakon.com> wrote:
+On Sat, Apr 25, 2020 at 01:37:01PM -0500, Segher Boessenkool wrote:
+> That is a lot more typing then
+> 	asm("");
 
-...
+That's why a macro with a hopefully more descriptive name would be
+telling more than a mere asm("").
 
-> > > As for ABI that's in
-> > > a separate patch.
-> >
-> > It's not good from bisectability point of view. If by some reason this
-> > patch or documentation patch gets reverted, the other one will be
-> > dangling.
-> > Please, unify them.
-> >
->
-> Huh? Reverting core and leaving leftovers would be wrong and pointless.
+> but more seriously, you probably should explain why you do not want a
+> tail call *anyway*, and in such a comment you can say that is what the
+> asm is for.
 
-Exactly my point why it should be one patch. To secure impossibility
-to do pointless reverts.
+Yes, the final version will have a comment and the whole spiel. This
+diff is just me polling the maintainers: "do you want this for your arch
+too?" Well, the PPC maintainers only, actually.
 
+The other call in init/main.c would be for everybody.
+
+> I don't see anything that prevents the tailcall in current code either,
+> fwiw.
+
+Right, and I don't see a reason why gcc-10 would do that optimization on
+x86 only but I better ask first.
+
+Thx.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
