@@ -2,239 +2,189 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D06DC55194
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 21:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FFCBC55191
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 21:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40AD420714
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 21:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A8652076C
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 21:17:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aTc2WkqE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726306AbgDYVOK (ORCPT
+        id S1726359AbgDYVRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 17:14:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46822 "EHLO
+        Sat, 25 Apr 2020 17:17:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgDYVOJ (ORCPT
+        with ESMTP id S1726232AbgDYVRg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 17:14:09 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BDF7C09B04D;
-        Sat, 25 Apr 2020 14:14:09 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jSS7N-0004FG-8Z; Sat, 25 Apr 2020 23:13:45 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 8643610071F; Sat, 25 Apr 2020 23:13:44 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        megha.dey@linux.intel.com, maz@kernel.org, bhelgaas@google.com,
-        rafael@kernel.org, gregkh@linuxfoundation.org, hpa@zytor.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
-        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH RFC 02/15] drivers/base: Introduce a new platform-msi list
-In-Reply-To: <158751203902.36773.2662739280103265908.stgit@djiang5-desk3.ch.intel.com>
-References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com> <158751203902.36773.2662739280103265908.stgit@djiang5-desk3.ch.intel.com>
-Date:   Sat, 25 Apr 2020 23:13:44 +0200
-Message-ID: <87v9lntgjb.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Sat, 25 Apr 2020 17:17:36 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C9D3C09B04D;
+        Sat, 25 Apr 2020 14:17:36 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id w6so12962577ilg.1;
+        Sat, 25 Apr 2020 14:17:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:message-id:in-reply-to:references:subject
+         :mime-version:content-transfer-encoding;
+        bh=DMTOydMpRriyk5poOOa/mWXO2SbWr0zgXFb+fmKpOOk=;
+        b=aTc2WkqEkWRoJQ9XHZfrTRixADF+C0aie+v+pbxuGDyfDSKn/3Z+tpLJpXPD9Mk7UZ
+         ZXAZSZ0SFkQ28v24pEz3HBEzHe+m1TnK9T10tOmFpLLBHx0BVG4G+13x4Ew8b56wrw0I
+         W6hq6VkgyopKknJCtko/zs9ontu4d1gOghpuL/syCnhwLGOwRe0+B8ZL9v0BO20Z0YgX
+         auJYSPlHUs0Cq8PrzF3MD1TsT67coPyFJUTCAVRfB3FgoAavQDDBh9W+kIqCaGbXwoam
+         +2oBT83FjcMM54vRFL8CTW428ET2ZXpq5grTNeC7eAv/ER1dGRXEjbDm7rp7N9azOaU7
+         av7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
+         :references:subject:mime-version:content-transfer-encoding;
+        bh=DMTOydMpRriyk5poOOa/mWXO2SbWr0zgXFb+fmKpOOk=;
+        b=Hs2WQ6JIXYLucuJOzCPREEnhB/2aGv4KkhdPM1VYm4DjoolMfCASp/G0kF6maJGdf5
+         P7bZ8an66BSswr2+Iz9hN0aL8laprcwPbDnxMgO/UrMJN7QfVmySIL0JbHppjfZxdMME
+         S0EK3yw1ZeXgof9mO8n+AalMlkilGTx7hiyNUi2lWyuRNZ+6KvsDqkB8cTE5cdQxu+QN
+         dcgZVjlXc2meTD/ooN8Ta/5dzkSc99n6h2rwVzdsoUKgV8MMhZvNmyVEoK+Wr/DkxJc7
+         mKzj77pFVOKHWmeIzUasQMq1qgvY4tAChganT2U+D22auQklpNVoi9Ci/oMYUXyWVETd
+         pXnw==
+X-Gm-Message-State: AGi0PuaxQaMuMQBKXd7Hpv4GnV6YQXnrLW3ATEpyAIo4SIet0awgRdyQ
+        5JQqsQFgm7VO4vl6B5Sixsk=
+X-Google-Smtp-Source: APiQypIGaKeQReVRW/j+PBEZREDTmR+YStA/ggA2K3eUkrKf0p/XvBt+0FYftodip/86Le1RgKBRaQ==
+X-Received: by 2002:a92:5c57:: with SMTP id q84mr15092593ilb.203.1587849455802;
+        Sat, 25 Apr 2020 14:17:35 -0700 (PDT)
+Received: from localhost ([184.63.162.180])
+        by smtp.gmail.com with ESMTPSA id m22sm1141877iow.35.2020.04.25.14.17.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Apr 2020 14:17:34 -0700 (PDT)
+Date:   Sat, 25 Apr 2020 14:17:26 -0700
+From:   John Fastabend <john.fastabend@gmail.com>
+To:     Jakub Sitnicki <jakub@cloudflare.com>,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Cc:     John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Lorenz Bauer <lmb@cloudflare.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
+        Xin Tan <tanxin.ctf@gmail.com>
+Message-ID: <5ea4a8e6c0482_144b2b0bbf3245c4b@john-XPS-13-9370.notmuch>
+In-Reply-To: <87lfmjve1f.fsf@cloudflare.com>
+References: <1587819040-38793-1-git-send-email-xiyuyang19@fudan.edu.cn>
+ <87lfmjve1f.fsf@cloudflare.com>
+Subject: Re: [PATCH] bpf: Fix sk_psock refcnt leak when receiving message
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dave Jiang <dave.jiang@intel.com> writes:
+Jakub Sitnicki wrote:
+> On Sat, Apr 25, 2020 at 02:50 PM CEST, Xiyu Yang wrote:
+> > tcp_bpf_recvmsg() invokes sk_psock_get(), which returns a reference of
+> > the specified sk_psock object to "psock" with increased refcnt.
+> >
+> > When tcp_bpf_recvmsg() returns, local variable "psock" becomes invalid,
+> > so the refcount should be decreased to keep refcount balanced.
+> >
+> > The reference counting issue happens in several exception handling paths
+> > of tcp_bpf_recvmsg(). When those error scenarios occur such as "flags"
+> > includes MSG_ERRQUEUE, the function forgets to decrease the refcnt
+> > increased by sk_psock_get(), causing a refcnt leak.
+> >
+> > Fix this issue by calling sk_psock_put() when those error scenarios
+> > occur.
+> >
+> > Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+> > Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+> > ---
 
-> From: Megha Dey <megha.dey@linux.intel.com>
->
-> This is a preparatory patch to introduce Interrupt Message Store (IMS).
->
-> The struct device has a linked list ('msi_list') of the MSI (msi/msi-x,
-> platform-msi) descriptors of that device. This list holds only 1 type
-> of descriptor since it is not possible for a device to support more
-> than one of these descriptors concurrently.
->
-> However, with the introduction of IMS, a device can support IMS as well
-> as MSI-X at the same time. Instead of sharing this list between IMS (a
-> type of platform-msi) and MSI-X descriptors, introduce a new linked list,
-> platform_msi_list, which will hold all the platform-msi descriptors.
->
-> Thus, msi_list will point to the MSI/MSIX descriptors of a device, while
-> platform_msi_list will point to the platform-msi descriptors of a
-> device.
+Thanks Xiyu and Xin. Please add a Fixes tag,
 
-Will point?
+Fixes: e7a5f1f1cd000 ("bpf/sockmap: Read psock ingress_msg before sk_receive_queue")
 
-You're failing to explain that this actually converts the existing
-platform code over to this new list. This also lacks an explanation why
-this is not a functional change.
+> >  net/ipv4/tcp_bpf.c | 8 ++++++--
+> >  1 file changed, 6 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
+> > index 5a05327f97c1..feb6b90672c1 100644
+> > --- a/net/ipv4/tcp_bpf.c
+> > +++ b/net/ipv4/tcp_bpf.c
+> > @@ -265,11 +265,15 @@ static int tcp_bpf_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+> >  	psock = sk_psock_get(sk);
+> >  	if (unlikely(!psock))
+> >  		return tcp_recvmsg(sk, msg, len, nonblock, flags, addr_len);
+> > -	if (unlikely(flags & MSG_ERRQUEUE))
+> > +	if (unlikely(flags & MSG_ERRQUEUE)) {
+> > +		sk_psock_put(sk, psock);
+> >  		return inet_recv_error(sk, msg, len, addr_len);
+> > +	}
+> >  	if (!skb_queue_empty(&sk->sk_receive_queue) &&
+> > -	    sk_psock_queue_empty(psock))
+> > +	    sk_psock_queue_empty(psock)) {
+> > +		sk_psock_put(sk, psock);
+> >  		return tcp_recvmsg(sk, msg, len, nonblock, flags, addr_len);
+> > +	}
+> >  	lock_sock(sk);
+> >  msg_bytes_ready:
+> >  	copied = __tcp_bpf_recvmsg(sk, psock, msg, len, flags);
+> 
+> Thanks for the fix.
+> 
+> We can pull up the error queue read handling, that is the `flags &
+> MSG_ERRQUEUE` branch, so that it happens before we grab a psock ref.
+> 
+> The effect is the same because now, if we hit the !psock branch,
+> tcp_recvmsg will first check if user wants to read the error queue
+> anyway.
+> 
+> That would translate to something like below, in addition to your
+> changes.
+> 
+> WDYT?
 
-> Signed-off-by: Megha Dey <megha.dey@linux.intel.com>
+Sure that seems slightly nicer to me. Xiyu do you mind sending a
+v2 with that change.
 
-Lacks an SOB from you.... 
+Thanks again,
+John
 
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index 139cdf7e7327..5a0116d1a8d0 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -1984,6 +1984,7 @@ void device_initialize(struct device *dev)
->  	set_dev_node(dev, -1);
->  #ifdef CONFIG_GENERIC_MSI_IRQ
->  	INIT_LIST_HEAD(&dev->msi_list);
-> +	INIT_LIST_HEAD(&dev->platform_msi_list);
-
-> --- a/drivers/base/platform-msi.c
-> +++ b/drivers/base/platform-msi.c
-> @@ -110,7 +110,8 @@ static void platform_msi_free_descs(struct device *dev, int base, int nvec)
->  {
->  	struct msi_desc *desc, *tmp;
->  
-> -	list_for_each_entry_safe(desc, tmp, dev_to_msi_list(dev), list) {
-> +	list_for_each_entry_safe(desc, tmp, dev_to_platform_msi_list(dev),
-> +				 list) {
->  		if (desc->platform.msi_index >= base &&
->  		    desc->platform.msi_index < (base + nvec)) {
->  			list_del(&desc->list);
->  	datap = kzalloc(sizeof(*datap), GFP_KERNEL);
-> @@ -255,6 +256,8 @@ int platform_msi_domain_alloc_irqs(struct device *dev, unsigned int nvec,
->  	struct platform_msi_priv_data *priv_data;
->  	int err;
->  
-> +	dev->platform_msi_type = GEN_PLAT_MSI;
-
-What the heck is GEN_PLAT_MSI? Can you please use
-
-   1) A proper name space starting with PLATFORM_MSI_ or such
-
-   2) A proper suffix which is self explaining.
-
-instead of coming up with nonsensical garbage which even lacks any
-explanation at the place where it is defined.
-
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index ac8e37cd716a..cbcecb14584e 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -567,6 +567,8 @@ struct device {
->  #endif
->  #ifdef CONFIG_GENERIC_MSI_IRQ
->  	struct list_head	msi_list;
-> +	struct list_head	platform_msi_list;
-> +	unsigned int		platform_msi_type;
-
-You use an enum for the types so why are you not using an enum for the
-struct member which stores it?
-
->  
-> +/**
-> + * list_entry_select - get the correct struct for this entry based on condition
-> + * @condition:	the condition to choose a particular &struct list head pointer
-> + * @ptr_a:      the &struct list_head pointer if @condition is not met.
-> + * @ptr_b:      the &struct list_head pointer if @condition is met.
-> + * @type:       the type of the struct this is embedded in.
-> + * @member:     the name of the list_head within the struct.
-> + */
-> +#define list_entry_select(condition, ptr_a, ptr_b, type, member)\
-> +	(condition) ? list_entry(ptr_a, type, member) :		\
-> +		      list_entry(ptr_b, type, member)
-
-This is related to $Subject in which way? It's not a entirely new
-process rule that infrastructure changes which touch a completely
-different subsystem have to be separate and explained and justified on
-their own.
-
->  
-> +enum platform_msi_type {
-> +	NOT_PLAT_MSI = 0,
-
-NOT_PLAT_MSI? Not used anywhere and of course equally self explaining as
-the other one.
-
-> +	GEN_PLAT_MSI = 1,
-> +};
+> 
+> ---8<---
+> 
+> diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
+> index 5a05327f97c1..99aa57bd1901 100644
+> --- a/net/ipv4/tcp_bpf.c
+> +++ b/net/ipv4/tcp_bpf.c
+> @@ -262,14 +262,17 @@ static int tcp_bpf_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+>  	struct sk_psock *psock;
+>  	int copied, ret;
+> 
+> +	if (unlikely(flags & MSG_ERRQUEUE))
+> +		return inet_recv_error(sk, msg, len, addr_len);
 > +
->  /* Helpers to hide struct msi_desc implementation details */
->  #define msi_desc_to_dev(desc)		((desc)->dev)
->  #define dev_to_msi_list(dev)		(&(dev)->msi_list)
-> @@ -140,6 +145,22 @@ struct msi_desc {
->  #define for_each_msi_entry_safe(desc, tmp, dev)	\
->  	list_for_each_entry_safe((desc), (tmp), dev_to_msi_list((dev)), list)
->  
-> +#define dev_to_platform_msi_list(dev)	(&(dev)->platform_msi_list)
-> +#define first_platform_msi_entry(dev)		\
-> +	list_first_entry(dev_to_platform_msi_list((dev)), struct msi_desc, list)
-> +#define for_each_platform_msi_entry(desc, dev)	\
-> +	list_for_each_entry((desc), dev_to_platform_msi_list((dev)), list)
-> +#define for_each_platform_msi_entry_safe(desc, tmp, dev)	\
-> +	list_for_each_entry_safe((desc), (tmp), dev_to_platform_msi_list((dev)), list)
+>  	psock = sk_psock_get(sk);
+>  	if (unlikely(!psock))
+>  		return tcp_recvmsg(sk, msg, len, nonblock, flags, addr_len);
+> -	if (unlikely(flags & MSG_ERRQUEUE))
+> -		return inet_recv_error(sk, msg, len, addr_len);
+>  	if (!skb_queue_empty(&sk->sk_receive_queue) &&
+>  	    sk_psock_queue_empty(psock))
+> 		return tcp_recvmsg(sk, msg, len, nonblock, flags, addr_len);
 
-New lines to seperate macros are bad for readability, right? 
 
-> +#define first_msi_entry_common(dev)	\
-> +	list_first_entry_select((dev)->platform_msi_type, dev_to_platform_msi_list((dev)),	\
-> +				dev_to_msi_list((dev)), struct msi_desc, list)
-> +
-> +#define for_each_msi_entry_common(desc, dev)	\
-> +	list_for_each_entry_select((dev)->platform_msi_type, desc, dev_to_platform_msi_list((dev)), \
-> +				   dev_to_msi_list((dev)), list)	\
-> +
->  #ifdef CONFIG_IRQ_MSI_IOMMU
->  static inline const void *msi_desc_get_iommu_cookie(struct msi_desc *desc)
->  {
-> diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
-> index eb95f6106a1e..bc5f9e32387f 100644
-> --- a/kernel/irq/msi.c
-> +++ b/kernel/irq/msi.c
-> @@ -320,7 +320,7 @@ int msi_domain_populate_irqs(struct irq_domain *domain, struct device *dev,
->  	struct msi_desc *desc;
->  	int ret = 0;
->  
-> -	for_each_msi_entry(desc, dev) {
-> +	for_each_msi_entry_common(desc, dev) {
-
-This is absolutely unreadable. What's common here? You hide the decision
-which list to iterate behind a misnomed macro. 
-
-And looking at the implementation:
-
-> +#define for_each_msi_entry_common(desc, dev)	\
-> +	list_for_each_entry_select((dev)->platform_msi_type, desc, dev_to_platform_msi_list((dev)), \
-> +				   dev_to_msi_list((dev)), list)	\
-
-So you implicitely make the decision based on:
-
-   (dev)->platform_msi_type != 0
-
-What? How is that ever supposed to work? The changelog says:
-
-> However, with the introduction of IMS, a device can support IMS as well
-> as MSI-X at the same time. Instead of sharing this list between IMS (a
-> type of platform-msi) and MSI-X descriptors, introduce a new linked list,
-> platform_msi_list, which will hold all the platform-msi descriptors.
-
-So you are not serious about storing the decision in the device struct
-and then calling into common code?
-
-That's insane at best. There is absolutely ZERO explanation how this is
-supposed to work and why this could even be remotely correct and safe.
-
-Ever heard of the existance of function arguments?
-
-Sorry, this is just voodoo programming and not going anywhere.
-
-Thanks,
-
-        tglx
