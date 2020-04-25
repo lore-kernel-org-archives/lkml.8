@@ -2,448 +2,236 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF30AC54FCB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 14:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E98C55191
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 14:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBF3620704
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 14:52:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nlMJCr+e"
+	by mail.kernel.org (Postfix) with ESMTP id 9DE102071E
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 14:52:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587826375;
+	bh=+13CHPNmfmCKf+0SVFYF37GqQiMCAaZRQBxv+QtM87o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=AhN2tsAUxV8elLmefYxNU8R6ZySJIiGOp5gjKPududoLzNBAo8+8rCj0uaw5/tW1g
+	 Hn/gjIckUnaTexlTSjcvf6jhViJyZwmgVW3qeOGO1FdiCDgccWCyLXFTqfYpvP2UzD
+	 hoh8DqLDOK5WlYAYeYb2+Delz5kaZDTN/RYlpWmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726169AbgDYOwe (ORCPT
+        id S1726191AbgDYOwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 10:52:34 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:36620 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbgDYOwe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 10:52:34 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03PEmiQo075187;
-        Sat, 25 Apr 2020 14:52:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=l2/an7nrpK2tcK4d90skvgCAMPPfiLAfC4j1zf4Vw3Q=;
- b=nlMJCr+eULTFBOsOTxYX37wCpd/EQA4SjfcNnMr9atF27x7FKVqvytMebqQhmmHvb73d
- Ca5j/GsCmlVhAXnOYaVR1Fgk81Ie18nUPvE8k64GlyN9jCLvghmv1Ugxou888RNKh4zd
- bDq7ZpctoA6r2fxtERAkUkadDOnUiYyyx6jnIGFQtgjf3hChencE6KXPdWMOdNJgVlOF
- RjdJnjDNTZW9Drx+ZEOvo1eBvQP5ewqIKWaSIfg+1wkHHknKdm8T0n9NEjKE9l7KNe8J
- wkTFq1Vb0HB6kqJ7s0qQR2Q2PVh/35NYLpniQHq7JP9YBD9Cn5A4UcQBM2FHwYsblRwl Rw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 30md5ks2mb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 25 Apr 2020 14:52:24 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03PElpVC034677;
-        Sat, 25 Apr 2020 14:52:24 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 30mb89ujts-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 25 Apr 2020 14:52:24 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03PEqNij014660;
-        Sat, 25 Apr 2020 14:52:23 GMT
-Received: from [192.168.14.112] (/109.67.198.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 25 Apr 2020 07:52:22 -0700
-Subject: Re: [PATCH v1 05/15] nitro_enclaves: Handle PCI device command
- requests
-To:     Andra Paraschiv <andraprs@amazon.com>, linux-kernel@vger.kernel.org
-Cc:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@amazon.com>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Alexander Graf <graf@amazon.de>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
-        ne-devel-upstream@amazon.com
-References: <20200421184150.68011-1-andraprs@amazon.com>
- <20200421184150.68011-6-andraprs@amazon.com>
-From:   Liran Alon <liran.alon@oracle.com>
-Message-ID: <39060271-279b-546b-05a6-c5b2fd7ff5d0@oracle.com>
-Date:   Sat, 25 Apr 2020 17:52:17 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Sat, 25 Apr 2020 10:52:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41376 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726097AbgDYOwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 10:52:54 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F3D720714;
+        Sat, 25 Apr 2020 14:52:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587826373;
+        bh=+13CHPNmfmCKf+0SVFYF37GqQiMCAaZRQBxv+QtM87o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=OulI3xUdPjn50jbNzvZ8tMsNtjmM9jrKFZ+7nIv5avHBRDKjJg553M1LtNyHlYByI
+         ITdynEsnKVHySeySGiFrmI0Wf0B105B8OhH1eQjh9LABM8joxhNK6yaYpiti3Sd2Pe
+         TQ7Km1tat6aYfVrW2QxsyXgqmD2kTu/3+FgVeXkc=
+Date:   Sat, 25 Apr 2020 15:52:49 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     <Eugen.Hristev@microchip.com>
+Cc:     <linux-iio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <Ludovic.Desroches@microchip.com>,
+        <alexandru.ardelean@analog.com>
+Subject: Re: [PATCH v3 2/3] iio: adc: at91-sama5d2_adc: handle unfinished
+ conversions
+Message-ID: <20200425155249.15fb855f@archlinux>
+In-Reply-To: <1580216189-27418-3-git-send-email-eugen.hristev@microchip.com>
+References: <1580216189-27418-1-git-send-email-eugen.hristev@microchip.com>
+        <1580216189-27418-3-git-send-email-eugen.hristev@microchip.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200421184150.68011-6-andraprs@amazon.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9602 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 mlxscore=0 spamscore=0
- phishscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004250133
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9602 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 bulkscore=0
- adultscore=0 clxscore=1015 impostorscore=0 priorityscore=1501 phishscore=0
- lowpriorityscore=0 mlxlogscore=999 suspectscore=2 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004250133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 28 Jan 2020 12:57:40 +0000
+<Eugen.Hristev@microchip.com> wrote:
 
-On 21/04/2020 21:41, Andra Paraschiv wrote:
-> The Nitro Enclaves PCI device exposes a MMIO space that this driver
-> uses to submit command requests and to receive command replies e.g. for
-> enclave creation / termination or setting enclave resources.
->
-> Add logic for handling PCI device command requests based on the given
-> command type.
->
-> Register an MSI-X interrupt vector for command reply notifications to
-> handle this type of communication events.
->
-> Signed-off-by: Alexandru-Catalin Vasile <lexnv@amazon.com>
-> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+> From: Eugen Hristev <eugen.hristev@microchip.com>
+> 
+> It can happen that on IRQ trigger, not all conversions are done if
+> we are enabling multiple channels.
+> The IRQ is triggered on first EOC (end of channel), but it can happen
+> that not all channels are done. This leads into erroneous reports to
+> userspace (zero values or previous values).
+> To solve this, in trigger handler, check if the mask of done channels
+> is the same as the mask of active scan channels.
+> If it's the same, proceed and push to buffers. Otherwise, use usleep
+> to sleep until the conversion is done or we timeout.
+> Normally, it should happen that in a short time fashion, all channels are
+> ready, since the first IRQ triggered.
+> If a hardware fault happens (for example the clock suddently dissappears),
+> the handler will not be completed, in which case we do not report anything to
+> userspace anymore.
+> Also, change from using the EOC interrupts to DRDY interrupt.
+> This helps with the fact that not 'n' interrupt statuses are enabled,
+> each being able to trigger an interrupt, and instead only data ready
+> interrupt can wake up the CPU. Like this, when data is ready, check in
+> handler which and how many channels are done. While the DRDY is raised,
+> other IRQs cannot occur. Once the channel data is being read, we ack the
+> IRQ and finish the conversion.
+> 
+> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+
+Applied this and patch 3 to the togreg branch of iio.git and pushed out as testing.
+
+Thanks for reminding me about these.  Were still in the queue but I might
+have forgotten to check this far back!
+
+Jonathan
+
 > ---
->   .../virt/amazon/nitro_enclaves/ne_pci_dev.c   | 264 ++++++++++++++++++
->   1 file changed, 264 insertions(+)
->
-> diff --git a/drivers/virt/amazon/nitro_enclaves/ne_pci_dev.c b/drivers/virt/amazon/nitro_enclaves/ne_pci_dev.c
-> index 8fbee95ea291..7453d129689a 100644
-> --- a/drivers/virt/amazon/nitro_enclaves/ne_pci_dev.c
-> +++ b/drivers/virt/amazon/nitro_enclaves/ne_pci_dev.c
-> @@ -40,6 +40,251 @@ static const struct pci_device_id ne_pci_ids[] = {
->   
->   MODULE_DEVICE_TABLE(pci, ne_pci_ids);
->   
-> +/**
-> + * ne_submit_request - Submit command request to the PCI device based on the
-> + * command type.
-> + *
-> + * This function gets called with the ne_pci_dev mutex held.
-> + *
-> + * @pdev: PCI device to send the command to.
-> + * @cmd_type: command type of the request sent to the PCI device.
-> + * @cmd_request: command request payload.
-> + * @cmd_request_size: size of the command request payload.
-> + *
-> + * @returns: 0 on success, negative return value on failure.
-> + */
-> +static int ne_submit_request(struct pci_dev *pdev,
-> +			     enum ne_pci_dev_cmd_type cmd_type,
-> +			     void *cmd_request, size_t cmd_request_size)
+> Changes in v3:
+> - rewrite some code as suggested by Jonathan (w.r.t. state and dma enabled in
+> configure_trigger
+> - move back enable_irq in reenable_trigger : looks like it was a leftover,
+> thanks Jonathan
+> 
+> Changes in v2:
+> - move start of conversion to threaded irq, removed specific at91 pollfunc
+> - add timeout to channel mask readiness check in trigger handler
+> - use DRDY irq instead of EOC irqs.
+> - move enable irq after DRDY has been acked in reenable_trigger
+> 
+>  drivers/iio/adc/at91-sama5d2_adc.c | 62 +++++++++++++++++++++++++++++---------
+>  1 file changed, 48 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
+> index 2a6950a..49c2b9d 100644
+> --- a/drivers/iio/adc/at91-sama5d2_adc.c
+> +++ b/drivers/iio/adc/at91-sama5d2_adc.c
+> @@ -8,6 +8,7 @@
+>  
+>  #include <linux/bitops.h>
+>  #include <linux/clk.h>
+> +#include <linux/delay.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/dmaengine.h>
+>  #include <linux/interrupt.h>
+> @@ -100,6 +101,8 @@
+>  #define AT91_SAMA5D2_IER_YRDY   BIT(21)
+>  /* Interrupt Enable Register - TS pressure measurement ready */
+>  #define AT91_SAMA5D2_IER_PRDY   BIT(22)
+> +/* Interrupt Enable Register - Data ready */
+> +#define AT91_SAMA5D2_IER_DRDY   BIT(24)
+>  /* Interrupt Enable Register - general overrun error */
+>  #define AT91_SAMA5D2_IER_GOVRE BIT(25)
+>  /* Interrupt Enable Register - Pen detect */
+> @@ -486,6 +489,21 @@ static inline int at91_adc_of_xlate(struct iio_dev *indio_dev,
+>  	return at91_adc_chan_xlate(indio_dev, iiospec->args[0]);
+>  }
+>  
+> +static unsigned int at91_adc_active_scan_mask_to_reg(struct iio_dev *indio_dev)
 > +{
-> +	struct ne_pci_dev *ne_pci_dev = NULL;
-These local vars are unnecessarily initialized.
+> +	u32 mask = 0;
+> +	u8 bit;
 > +
-> +	BUG_ON(!pdev);
-> +
-> +	ne_pci_dev = pci_get_drvdata(pdev);
-> +	BUG_ON(!ne_pci_dev);
-> +	BUG_ON(!ne_pci_dev->iomem_base);
-You should remove these defensive BUG_ON() calls.
-> +
-> +	if (WARN_ON(cmd_type <= INVALID_CMD || cmd_type >= MAX_CMD)) {
-> +		dev_err_ratelimited(&pdev->dev, "Invalid cmd type=%d\n",
-> +				    cmd_type);
-> +
-> +		return -EINVAL;
+> +	for_each_set_bit(bit, indio_dev->active_scan_mask,
+> +			 indio_dev->num_channels) {
+> +		struct iio_chan_spec const *chan =
+> +			 at91_adc_chan_get(indio_dev, bit);
+> +		mask |= BIT(chan->channel);
 > +	}
 > +
-> +	if (WARN_ON(!cmd_request))
-> +		return -EINVAL;
-> +
-> +	if (WARN_ON(cmd_request_size > NE_SEND_DATA_SIZE)) {
-> +		dev_err_ratelimited(&pdev->dev,
-> +				    "Invalid req size=%ld for cmd type=%d\n",
-> +				    cmd_request_size, cmd_type);
-> +
-> +		return -EINVAL;
-> +	}
-It doesn't make sense to have WARN_ON() print error to dmesg on every 
-evaluation to true,
-together with using dev_err_ratelimited() which attempts to rate-limit 
-prints.
-
-Anyway, these conditions were already checked by ne_do_request(). Why 
-also check them here?
-
-> +
-> +	memcpy_toio(ne_pci_dev->iomem_base + NE_SEND_DATA, cmd_request,
-> +		    cmd_request_size);
-> +
-> +	iowrite32(cmd_type, ne_pci_dev->iomem_base + NE_COMMAND);
-> +
-> +	return 0;
+> +	return mask & GENMASK(11, 0);
 > +}
 > +
-> +/**
-> + * ne_retrieve_reply - Retrieve reply from the PCI device.
-> + *
-> + * This function gets called with the ne_pci_dev mutex held.
-> + *
-> + * @pdev: PCI device to receive the reply from.
-> + * @cmd_reply: command reply payload.
-> + * @cmd_reply_size: size of the command reply payload.
-> + *
-> + * @returns: 0 on success, negative return value on failure.
-> + */
-> +static int ne_retrieve_reply(struct pci_dev *pdev,
-> +			     struct ne_pci_dev_cmd_reply *cmd_reply,
-> +			     size_t cmd_reply_size)
-> +{
-> +	struct ne_pci_dev *ne_pci_dev = NULL;
-These local vars are unnecessarily initialized.
+>  static void at91_adc_config_emr(struct at91_adc_state *st)
+>  {
+>  	/* configure the extended mode register */
+> @@ -746,25 +764,23 @@ static int at91_adc_configure_trigger(struct iio_trigger *trig, bool state)
+>  			at91_adc_writel(st, AT91_SAMA5D2_COR, cor);
+>  		}
+>  
+> -		if (state) {
+> +		if (state)
+>  			at91_adc_writel(st, AT91_SAMA5D2_CHER,
+>  					BIT(chan->channel));
+> -			/* enable irq only if not using DMA */
+> -			if (!st->dma_st.dma_chan) {
+> -				at91_adc_writel(st, AT91_SAMA5D2_IER,
+> -						BIT(chan->channel));
+> -			}
+> -		} else {
+> -			/* disable irq only if not using DMA */
+> -			if (!st->dma_st.dma_chan) {
+> -				at91_adc_writel(st, AT91_SAMA5D2_IDR,
+> -						BIT(chan->channel));
+> -			}
+> +		else
+>  			at91_adc_writel(st, AT91_SAMA5D2_CHDR,
+>  					BIT(chan->channel));
+> -		}
+>  	}
+>  
+> +	/* Nothing to do if using DMA */
+> +	if (st->dma_st.dma_chan)
+> +		return 0;
 > +
-> +	BUG_ON(!pdev);
+> +	if (state)
+> +		at91_adc_writel(st, AT91_SAMA5D2_IER, AT91_SAMA5D2_IER_DRDY);
+> +	else
+> +		at91_adc_writel(st, AT91_SAMA5D2_IDR, AT91_SAMA5D2_IER_DRDY);
 > +
-> +	ne_pci_dev = pci_get_drvdata(pdev);
-> +	BUG_ON(!ne_pci_dev);
-> +	BUG_ON(!ne_pci_dev->iomem_base);
-You should remove these defensive BUG_ON() calls.
+>  	return 0;
+>  }
+>  
+> @@ -781,6 +797,7 @@ static int at91_adc_reenable_trigger(struct iio_trigger *trig)
+>  
+>  	/* Needed to ACK the DRDY interruption */
+>  	at91_adc_readl(st, AT91_SAMA5D2_LCDR);
 > +
-> +	if (WARN_ON(!cmd_reply))
-> +		return -EINVAL;
-> +
-> +	if (WARN_ON(cmd_reply_size > NE_RECV_DATA_SIZE)) {
-> +		dev_err_ratelimited(&pdev->dev, "Invalid reply size=%ld\n",
-> +				    cmd_reply_size);
-> +
-> +		return -EINVAL;
-> +	}
-It doesn't make sense to have WARN_ON() print error to dmesg on every 
-evaluation to true,
-together with using dev_err_ratelimited() which attempts to rate-limit 
-prints.
-
-Anyway, these conditions were already checked by ne_do_request(). Why 
-also check them here?
-
-> +
-> +	memcpy_fromio(cmd_reply, ne_pci_dev->iomem_base + NE_RECV_DATA,
-> +		      cmd_reply_size);
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * ne_wait_for_reply - Wait for a reply of a PCI command.
-> + *
-> + * This function gets called with the ne_pci_dev mutex held.
-> + *
-> + * @pdev: PCI device for which a reply is waited.
-> + *
-> + * @returns: 0 on success, negative return value on failure.
-> + */
-> +static int ne_wait_for_reply(struct pci_dev *pdev)
-> +{
-> +	struct ne_pci_dev *ne_pci_dev = NULL;
-> +	int rc = -EINVAL;
-These local vars are unnecessarily initialized.
-> +
-> +	BUG_ON(!pdev);
-> +
-> +	ne_pci_dev = pci_get_drvdata(pdev);
-> +	BUG_ON(!ne_pci_dev);
-You should remove these defensive BUG_ON() calls.
+>  	return 0;
+>  }
+>  
+> @@ -1015,6 +1032,22 @@ static void at91_adc_trigger_handler_nodma(struct iio_dev *indio_dev,
+>  	int i = 0;
+>  	int val;
+>  	u8 bit;
+> +	u32 mask = at91_adc_active_scan_mask_to_reg(indio_dev);
+> +	unsigned int timeout = 50;
 > +
 > +	/*
-> +	 * TODO: Update to _interruptible and handle interrupted wait event
-> +	 * e.g. -ERESTARTSYS, incoming signals + add / update timeout.
+> +	 * Check if the conversion is ready. If not, wait a little bit, and
+> +	 * in case of timeout exit with an error.
 > +	 */
-> +	rc = wait_event_timeout(ne_pci_dev->cmd_reply_wait_q,
-> +				atomic_read(&ne_pci_dev->cmd_reply_avail) != 0,
-> +				msecs_to_jiffies(DEFAULT_TIMEOUT_MSECS));
-> +	if (!rc) {
-> +		pr_err("Wait event timed out when waiting for PCI cmd reply\n");
-> +
-> +		return -ETIMEDOUT;
+> +	while ((at91_adc_readl(st, AT91_SAMA5D2_ISR) & mask) != mask &&
+> +	       timeout) {
+> +		usleep_range(50, 100);
+> +		timeout--;
 > +	}
 > +
-> +	return 0;
-> +}
-> +
-> +int ne_do_request(struct pci_dev *pdev, enum ne_pci_dev_cmd_type cmd_type,
-> +		  void *cmd_request, size_t cmd_request_size,
-> +		  struct ne_pci_dev_cmd_reply *cmd_reply, size_t cmd_reply_size)
-This function is introduced in this patch but it is not used.
-It will cause compiling the kernel on this commit to raise 
-warnings/errors on unused functions.
-You should introduce functions on the patch that they are used.
-> +{
-> +	struct ne_pci_dev *ne_pci_dev = NULL;
-> +	int rc = -EINVAL;
-These local vars are unnecessarily initialized.
-> +
-> +	BUG_ON(!pdev);
-> +
-> +	ne_pci_dev = pci_get_drvdata(pdev);
-> +	BUG_ON(!ne_pci_dev);
-> +	BUG_ON(!ne_pci_dev->iomem_base);
-You should remove these defensive BUG_ON() calls.
-> +
-> +	if (WARN_ON(cmd_type <= INVALID_CMD || cmd_type >= MAX_CMD)) {
-> +		dev_err_ratelimited(&pdev->dev, "Invalid cmd type=%d\n",
-> +				    cmd_type);
-> +
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (WARN_ON(!cmd_request))
-> +		return -EINVAL;
-> +
-> +	if (WARN_ON(cmd_request_size > NE_SEND_DATA_SIZE)) {
-> +		dev_err_ratelimited(&pdev->dev,
-> +				    "Invalid req size=%ld for cmd type=%d\n",
-> +				    cmd_request_size, cmd_type);
-> +
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (WARN_ON(!cmd_reply))
-> +		return -EINVAL;
-> +
-> +	if (WARN_ON(cmd_reply_size > NE_RECV_DATA_SIZE)) {
-> +		dev_err_ratelimited(&pdev->dev, "Invalid reply size=%ld\n",
-> +				    cmd_reply_size);
-> +
-> +		return -EINVAL;
-> +	}
-I would consider specifying all these conditions in function 
-documentation instead of enforcing them at runtime on every function call.
-> +
-> +	/*
-> +	 * Use this mutex so that the PCI device handles one command request at
-> +	 * a time.
-> +	 */
-> +	mutex_lock(&ne_pci_dev->pci_dev_mutex);
-> +
-> +	atomic_set(&ne_pci_dev->cmd_reply_avail, 0);
-> +
-> +	rc = ne_submit_request(pdev, cmd_type, cmd_request, cmd_request_size);
-> +	if (rc < 0) {
-> +		dev_err_ratelimited(&pdev->dev,
-> +				    "Failure in submit cmd request [rc=%d]\n",
-> +				    rc);
-> +
-> +		mutex_unlock(&ne_pci_dev->pci_dev_mutex);
-> +
-> +		return rc;
-Consider leaving function with a goto to a label that unlocks mutex and 
-then return.
-> +	}
-> +
-> +	rc = ne_wait_for_reply(pdev);
-> +	if (rc < 0) {
-> +		dev_err_ratelimited(&pdev->dev,
-> +				    "Failure in wait cmd reply [rc=%d]\n",
-> +				    rc);
-> +
-> +		mutex_unlock(&ne_pci_dev->pci_dev_mutex);
-> +
-> +		return rc;
-> +	}
-> +
-> +	rc = ne_retrieve_reply(pdev, cmd_reply, cmd_reply_size);
-> +	if (rc < 0) {
-> +		dev_err_ratelimited(&pdev->dev,
-> +				    "Failure in retrieve cmd reply [rc=%d]\n",
-> +				    rc);
-> +
-> +		mutex_unlock(&ne_pci_dev->pci_dev_mutex);
-> +
-> +		return rc;
-> +	}
-> +
-> +	atomic_set(&ne_pci_dev->cmd_reply_avail, 0);
-> +
-> +	if (cmd_reply->rc < 0) {
-> +		dev_err_ratelimited(&pdev->dev,
-> +				    "Failure in cmd process logic [rc=%d]\n",
-> +				    cmd_reply->rc);
-> +
-> +		mutex_unlock(&ne_pci_dev->pci_dev_mutex);
-> +
-> +		return cmd_reply->rc;
-> +	}
-> +
-> +	mutex_unlock(&ne_pci_dev->pci_dev_mutex);
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * ne_reply_handler - Interrupt handler for retrieving a reply matching
-> + * a request sent to the PCI device for enclave lifetime management.
-> + *
-> + * @irq: received interrupt for a reply sent by the PCI device.
-> + * @args: PCI device private data structure.
-> + *
-> + * @returns: IRQ_HANDLED on handled interrupt, IRQ_NONE otherwise.
-> + */
-> +static irqreturn_t ne_reply_handler(int irq, void *args)
-> +{
-> +	struct ne_pci_dev *ne_pci_dev = (struct ne_pci_dev *)args;
-> +
-> +	atomic_set(&ne_pci_dev->cmd_reply_avail, 1);
-> +
-> +	/* TODO: Update to _interruptible. */
-> +	wake_up(&ne_pci_dev->cmd_reply_wait_q);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
->   /**
->    * ne_setup_msix - Setup MSI-X vectors for the PCI device.
->    *
-> @@ -75,8 +320,25 @@ static int ne_setup_msix(struct pci_dev *pdev, struct ne_pci_dev *ne_pci_dev)
->   		goto err_alloc_irq_vecs;
->   	}
->   
-> +	/*
-> +	 * This IRQ gets triggered every time the PCI device responds to a
-> +	 * command request. The reply is then retrieved, reading from the MMIO
-> +	 * space of the PCI device.
-> +	 */
-> +	rc = request_irq(pci_irq_vector(pdev, NE_VEC_REPLY),
-> +			 ne_reply_handler, 0, "enclave_cmd", ne_pci_dev);
-> +	if (rc < 0) {
-> +		dev_err_ratelimited(&pdev->dev,
-> +				    "Failure in allocating irq reply [rc=%d]\n",
-> +				    rc);
-> +
-> +		goto err_req_irq_reply;
-> +	}
-> +
->   	return 0;
->   
-> +err_req_irq_reply:
-> +	pci_free_irq_vectors(pdev);
->   err_alloc_irq_vecs:
->   	return rc;
->   }
-> @@ -232,6 +494,7 @@ static int ne_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->   
->   err_ne_pci_dev_enable:
->   err_ne_pci_dev_disable:
-> +	free_irq(pci_irq_vector(pdev, NE_VEC_REPLY), ne_pci_dev);
->   	pci_free_irq_vectors(pdev);
-I suggest to introduce a ne_teardown_msix() utility. That is aimed to 
-cleanup after ne_setup_msix().
->   err_setup_msix:
->   	pci_iounmap(pdev, ne_pci_dev->iomem_base);
-> @@ -255,6 +518,7 @@ static void ne_remove(struct pci_dev *pdev)
->   
->   	pci_set_drvdata(pdev, NULL);
->   
-> +	free_irq(pci_irq_vector(pdev, NE_VEC_REPLY), ne_pci_dev);
->   	pci_free_irq_vectors(pdev);
->   
->   	pci_iounmap(pdev, ne_pci_dev->iomem_base);
+> +	/* Cannot read data, not ready. Continue without reporting data */
+> +	if (!timeout)
+> +		return;
+>  
+>  	for_each_set_bit(bit, indio_dev->active_scan_mask,
+>  			 indio_dev->num_channels) {
+> @@ -1281,7 +1314,8 @@ static irqreturn_t at91_adc_interrupt(int irq, void *private)
+>  		status = at91_adc_readl(st, AT91_SAMA5D2_XPOSR);
+>  		status = at91_adc_readl(st, AT91_SAMA5D2_YPOSR);
+>  		status = at91_adc_readl(st, AT91_SAMA5D2_PRESSR);
+> -	} else if (iio_buffer_enabled(indio) && !st->dma_st.dma_chan) {
+> +	} else if (iio_buffer_enabled(indio) &&
+> +		   (status & AT91_SAMA5D2_IER_DRDY)) {
+>  		/* triggered buffer without DMA */
+>  		disable_irq_nosync(irq);
+>  		iio_trigger_poll(indio->trig);
+
