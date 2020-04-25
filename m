@@ -4,59 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA0CC55185
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 23:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E23C55185
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 23:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E498720672
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 23:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED80820672
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 23:52:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbgDYXv2 (ORCPT
+        id S1726323AbgDYXwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 19:51:28 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:47487 "EHLO ozlabs.org"
+        Sat, 25 Apr 2020 19:52:05 -0400
+Received: from ozlabs.org ([203.11.71.1]:50813 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726117AbgDYXvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 19:51:17 -0400
+        id S1726092AbgDYXwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 19:52:05 -0400
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 498nql587Wz9sSJ; Sun, 26 Apr 2020 09:51:15 +1000 (AEST)
+        id 498nrg046wz9sSJ; Sun, 26 Apr 2020 09:52:02 +1000 (AEST)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: 94c0b013c98583614e1ad911e8795ca36da34a85
-In-Reply-To: <20200416221908.7886-1-chris.packham@alliedtelesis.co.nz>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        benh@kernel.crashing.org, christophe.leroy@c-s.fr,
-        tglx@linutronix.de, paulus@samba.org, cai@lca.pw, oss@buserror.net
+X-powerpc-patch-commit: 45591da765885f7320a111d290b3a28a23eed359
+In-Reply-To: <20200422154129.11f988fd@canb.auug.org.au>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] powerpc/setup_64: Set cache-line-size based on cache-block-size
-Message-Id: <498nql587Wz9sSJ@ozlabs.org>
-Date:   Sun, 26 Apr 2020 09:51:15 +1000 (AEST)
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Haren Myneni <haren@linux.ibm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the powerpc tree
+Message-Id: <498nrg046wz9sSJ@ozlabs.org>
+Date:   Sun, 26 Apr 2020 09:52:02 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-04-16 at 22:19:08 UTC, Chris Packham wrote:
-> If {i,d}-cache-block-size is set and {i,d}-cache-line-size is not, use
-> the block-size value for both. Per the devicetree spec cache-line-size
-> is only needed if it differs from the block size.
+On Wed, 2020-04-22 at 05:41:29 UTC, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Originally the code would fallback from block size to line size. An
-> error message was printed if both properties were missing.
+> After merging the powerpc tree, today's linux-next build (powerpc
+> allyesconfig) failed like this:
 > 
-> Later the code was refactored to use clearer names and logic but it
-> inadvertently made line size a required property. This caused the
-> default values to be used and in turn leads to Power9 systems using the
-> wrong size.
+> In file included from <command-line>:32:
+> ./usr/include/asm/vas-api.h:15:2: error: unknown type name '__u32'
+>    15 |  __u32 version;
+>       |  ^~~~~
+> ./usr/include/asm/vas-api.h:16:2: error: unknown type name '__s16'
+>    16 |  __s16 vas_id; /* specific instance of vas or -1 for default */
+>       |  ^~~~~
+> ./usr/include/asm/vas-api.h:17:2: error: unknown type name '__u16'
+>    17 |  __u16 reserved1;
+>       |  ^~~~~
+> ./usr/include/asm/vas-api.h:18:2: error: unknown type name '__u64'
+>    18 |  __u64 flags; /* Future use */
+>       |  ^~~~~
+> ./usr/include/asm/vas-api.h:19:2: error: unknown type name '__u64'
+>    19 |  __u64 reserved2[6];
+>       |  ^~~~~
 > 
-> Fixes: bd067f83b084 ("powerpc/64: Fix naming of cache block vs. cache lin=
-> e")
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> Caused by commit
+> 
+>   45f25a79fe50 ("powerpc/vas: Define VAS_TX_WIN_OPEN ioctl API")
+> 
+> uapi headers should be self contained.  I have added the following patch
+> for today:
+> 
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Wed, 22 Apr 2020 15:28:26 +1000
+> Subject: [PATCH] powerpc/vas: uapi headers should be self contained
+> 
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 
-Applied to powerpc fixes, thanks.
+Applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/94c0b013c98583614e1ad911e8795ca36da34a85
+https://git.kernel.org/powerpc/c/45591da765885f7320a111d290b3a28a23eed359
 
 cheers
