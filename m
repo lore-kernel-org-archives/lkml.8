@@ -2,118 +2,117 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4192BC54FCB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 21:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EB8C54FCB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 21:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E4842071C
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 21:42:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="CCa/g8Po"
+	by mail.kernel.org (Postfix) with ESMTP id 1FF3220714
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 21:49:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbgDYVmv (ORCPT
+        id S1726348AbgDYVtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 17:42:51 -0400
-Received: from mout.gmx.net ([212.227.15.18]:60137 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726015AbgDYVmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 17:42:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1587850968;
-        bh=90DKm7dy3WqWMYgQ2eqHWwqp6FkxbBhEmccEhmdQmQw=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject;
-        b=CCa/g8PoXGNOzd7i67kVn5L3z4jS+dNtVaaLu2AD/SNNp512942F/Ned3yN+O+vak
-         s7+EkKk73/RXR+qWY+VqNu70f6fpEihdsND8K8F7ZYSQmNDxyGsGa98VsarwY0mwck
-         BkCTyMCXWMLLEh2VrnAvxb2c9Kod9psxm9FsSV3k=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ls3530.fritz.box ([92.116.179.136]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mxm3Q-1jGqKk26r0-00zBQ2; Sat, 25
- Apr 2020 23:42:48 +0200
-Date:   Sat, 25 Apr 2020 23:42:47 +0200
-From:   Helge Deller <deller@gmx.de>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Laurent Vivier <laurent@vivier.eu>
-Subject: [RFC][PATCH] fs/signalfd.c: Fix inconsistent return codes for
- signalfd4
-Message-ID: <20200425214247.GA9651@ls3530.fritz.box>
+        Sat, 25 Apr 2020 17:49:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52332 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726015AbgDYVtz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 17:49:55 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49004C09B04D;
+        Sat, 25 Apr 2020 14:49:55 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jSSgD-0004U7-FC; Sat, 25 Apr 2020 23:49:45 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id D0EAA10071F; Sat, 25 Apr 2020 23:49:44 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        megha.dey@linux.intel.com, maz@kernel.org, bhelgaas@google.com,
+        rafael@kernel.org, gregkh@linuxfoundation.org, hpa@zytor.com,
+        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
+        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH RFC 05/15] ims-msi: Add mask/unmask routines
+In-Reply-To: <158751205785.36773.16321096654677399376.stgit@djiang5-desk3.ch.intel.com>
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com> <158751205785.36773.16321096654677399376.stgit@djiang5-desk3.ch.intel.com>
+Date:   Sat, 25 Apr 2020 23:49:44 +0200
+Message-ID: <87lfmjtevb.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Provags-ID: V03:K1:+Ok7YXcplUInscS6eKhkONGqVj8fwqJQdPPBcYVAYsBEmmFpZw5
- GYRasY1YfLaSHLtBXQHqsfZ+re539w6T3n2/7H+krwGFG/aJF5X4C0mTdorLS0ayfyr1SMQ
- IGRmRMXGz1Xgc2iV76pTggNMDyfUfIIOrhFASUBK4Zl9NbKq9n72NX2X5OGL6/5s6rqPG/s
- NE8UV1xxjmd8s0LkqnJog==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ymJxjS2622Y=:ejLq4NWmz1/isi33KgYnSD
- prKQDql7c0AXeC7pxeZf0BvR4D1YoRbjeG1jEx4bN6NSY48Akx0J7es6ikII6CcV6+q0Olm9h
- X1TS8m0/sVwdFq2qY9fY8x0nbWJBhFPrVicN0CBGYUyJR+EmROOQr7okDKHokQisuPeFUL15O
- vXWjI7zOtJzytrsVzQu72i2tWG+kISmFFwbdZe2INyUSTIJW2B6xw1JanbZFM+Rj2kz9HfJR+
- uLRa2UJfn0nJVYyFv8SytCkWwjf1oP1ae3PT90pi1mcafTyG4b9PNiI7CZdGYzzBX5RvEBItA
- D7/EjHQafBpMC74TNjoDFkGF+Y41YPO6hr/1W4Ea+JQIfjLDlWtm2/rOkSKb6F6Nkra7HIE5o
- +PwiN3Z3j3rv26bg2W967zc9az3ZLN/ILyp+o84ZKk2y10alPXfL79ETrJyXlBtIMhxG1r7gi
- q+b/Y9M+2D53/C/BtDJgp4S3GO2VyKd1oswf2RHiyndeosBWZjcBm3gzYWjXd/Kfd192qKBVL
- WMTYlI7ZZoaZSJ+pf9GnFQhKfaFDy+e1JmQzceF+J8FJq5Eag8hCSBn2Czge48PRdlOfWyCh2
- QE0Ogeq3/WkI7JqIbHDm5DCrYvCjZZTxZPV9HWQ0LXxvu3Ng4xnydq9fXGr079USfd4zaQ5CM
- asii+kE5898NkFkFha37grTbIGgQmwosuv15YEcqQY6RNdkJ+1rKoGuXiuINLNXfMtzHaYY7i
- kMsqLS6e/IdD8qeUyXjt+KJ8w7Su+zyUVWPMNH0/l2Po1Hh9pfCm8APhJFBc3GQusaj45Y9Di
- ExhaAusGh9QGCPd4i/q9GcFJebU0yS8BqnayxDNJbryBb1JQt6x+rnFtM3Ne8fRSMkAYozgo9
- mGz6cgkcnt1aC6aJUVxg7ZptPwavnwsdqJoqc3/HBtngk0Sb2XerMcu+2R5e0SL9ym2+m6yl/
- n5ApMVdpArzIucwkKsjDyQAAk6celKU5gUmY2qnN5cOxasRMGNPo5etM1iVFPY9cJhh4SbBnA
- FuAHA6pUaSMvQbasA18urI63k1qSd5K47XsA9ycjADo9BROBsBdPjCpvsDKxqIibOBTJ07kw8
- KF/xrV+R1QQI024dQNWnjMl8NliD9JlFNyt/AVclWT7hFUMPuh05pyDqj3kMVV1qzSiOrCjJu
- aA6j4f/PQ8Tp4JhdQsY4EbjtpeOIl9M134I9OnT5WdsXkUbkWFUePKQrWdhipRK4PMhs/ry1F
- c7ULWh6S3Oo6esfQX
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kernel provides a native and a compat implementation for the
-signalfd4() syscall.
+Dave Jiang <dave.jiang@intel.com> writes:
+>  
+> +static u32 __dev_ims_desc_mask_irq(struct msi_desc *desc, u32 flag)
 
-While looking into the qemu user emulation code, I noticed that in the
-kernel compat case, EFAULT is returned if the given user mask can't be
-accessed, while the native path returns EINVAL on such failure.
+...mask_irq()? This is doing both mask and unmask depending on the
+availability of the ops callbacks. 
 
-For the sake of consistency, this patch adjusts the native path to
-return the same error code (EFAULT) as the compat case.
+> +{
+> +	u32 mask_bits = desc->platform.masked;
+> +	const struct platform_msi_ops *ops;
+> +
+> +	ops = desc->platform.msi_priv_data->ops;
+> +	if (!ops)
+> +		return 0;
+> +
+> +	if (flag) {
 
-Signed-off-by: Helge Deller <deller@gmx.de>
+flag? Darn, this has a clear boolean meaning of mask or unmask and 'u32
+flag' is the most natural and obvious self explaining expression for
+this, right?
 
-diff --git a/fs/signalfd.c b/fs/signalfd.c
-index 44b6845b071c..5b78719be445 100644
-=2D-- a/fs/signalfd.c
-+++ b/fs/signalfd.c
-@@ -314,9 +314,10 @@ SYSCALL_DEFINE4(signalfd4, int, ufd, sigset_t __user =
-*, user_mask,
- {
- 	sigset_t mask;
+> +		if (ops->irq_mask)
+> +			mask_bits = ops->irq_mask(desc);
+> +	} else {
+> +		if (ops->irq_unmask)
+> +			mask_bits = ops->irq_unmask(desc);
+> +	}
+> +
+> +	return mask_bits;
 
--	if (sizemask !=3D sizeof(sigset_t) ||
--	    copy_from_user(&mask, user_mask, sizeof(mask)))
-+	if (sizemask !=3D sizeof(sigset_t))
- 		return -EINVAL;
-+	if (copy_from_user(&mask, user_mask, sizeof(mask)))
-+		return -EFAULT;
- 	return do_signalfd4(ufd, &mask, flags);
- }
+What's mask_bits? This is about _ONE_ IMS interrupt. Can it have
+multiple mask bits and if so then the explanation which I decoded by
+crystal ball probably looks like this:
 
-@@ -325,9 +326,10 @@ SYSCALL_DEFINE3(signalfd, int, ufd, sigset_t __user *=
-, user_mask,
- {
- 	sigset_t mask;
+Bit  0:  Don't know whether it's masked
+Bit  1:  Perhaps it's masked
+Bit  2:  Probably it's masked
+Bit  3:  Mostly masked
+...
+Bit 31:  Fully masked
 
--	if (sizemask !=3D sizeof(sigset_t) ||
--	    copy_from_user(&mask, user_mask, sizeof(mask)))
-+	if (sizemask !=3D sizeof(sigset_t))
- 		return -EINVAL;
-+	if (copy_from_user(&mask, user_mask, sizeof(mask)))
-+		return -EFAULT;
- 	return do_signalfd4(ufd, &mask, 0);
- }
+Or something like that. Makes a lot of sense in a XKCD cartoon at least.
 
+> +}
+> +
+> +/**
+> + * dev_ims_mask_irq - Generic irq chip callback to mask IMS interrupts
+> + * @data: pointer to irqdata associated to that interrupt
+> + */
+> +static void dev_ims_mask_irq(struct irq_data *data)
+> +{
+> +	struct msi_desc *desc = irq_data_get_msi_desc(data);
+> +
+> +	desc->platform.masked = __dev_ims_desc_mask_irq(desc, 1);
+
+The purpose of this masked information is?
+
+Thanks,
+
+        tglx
