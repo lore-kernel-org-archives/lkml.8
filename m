@@ -2,107 +2,112 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A0DC54FCB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 23:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB848C54FCB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 23:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05C1D2072B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 23:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A4EA20714
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 23:26:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YvCZdT56"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R4zw41r/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgDYXUM (ORCPT
+        id S1726355AbgDYX0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 19:20:12 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3060 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726238AbgDYXUL (ORCPT
+        Sat, 25 Apr 2020 19:26:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38866 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbgDYX0C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 19:20:11 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ea4c59e0000>; Sat, 25 Apr 2020 16:19:58 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sat, 25 Apr 2020 16:20:11 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sat, 25 Apr 2020 16:20:11 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 25 Apr
- 2020 23:20:05 +0000
-Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 25 Apr
- 2020 23:20:04 +0000
+        Sat, 25 Apr 2020 19:26:02 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6B9EC09B04F;
+        Sat, 25 Apr 2020 16:26:01 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id u10so10765112lfo.8;
+        Sat, 25 Apr 2020 16:26:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/jw/1D+GGEln9SrW+XCVfxjT9M41jB/QZVTrC66fZqA=;
+        b=R4zw41r/oZxE/7yhjWkZE2pGdlLUlO4KvSs7lezZqupEfRt2S5+y7Rx/OQ4dR6CD2u
+         cb6RiNMgypHQRYKewq/qK6umZX6ieNxGforzCQtaLnBq4vPKGiEiseSFYjdPY9GKJcQC
+         9UbmHyUycdG4UN0ja8o3ophTB6f4zUfdu3lVSdKuw7ruTCNfqF+5JcRTPRYzLqAeapUE
+         wSY1LFsjRjWzwS9iXRqWrRnPnNhLhiaJ7QW/Rem6+yVbCx2b7Bu18NNcpcTpQ/Q2mhoi
+         wdhNwx7qw2z8zyACro3ANUs0zroAzSg+eQQwonE6NmohpxP2WIn5iJS3O570ntzTAixT
+         AFHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/jw/1D+GGEln9SrW+XCVfxjT9M41jB/QZVTrC66fZqA=;
+        b=YPnLsU/t2s4XgSrJqte3IlJnLnCLFzya0LkiCLm1xtMfH+pXUa9DRnWXPNoTNEcVhH
+         L+aGnD00lxKTAXKiBxtmQf2CwF0xRSMWgWxA1ldiDsH6YHxBiEoDqK/Naay5XTTx66d3
+         juTF9VKRbCO5u20jRjUGvb75um8S52s/psq+yRKu3ZnjZY7GqszYyj4iNot93jvY36KS
+         JjH0kHcprq7PVsTJ8KpzeUgOawx81vk9cmIG0aY7HJdwgZwWGuSVDHpop9aM7N1cuhK8
+         vP1emjuEGmlYwGHbsF2uqZjmPvqqFYYLhiaOilHm3BLpmxWfXLTg2y1gFUdC+0SUFYt9
+         PlLA==
+X-Gm-Message-State: AGi0PuaQVFeZP1cmZF0mYo4kBlNFpdlXAKb7Ku/cOT6KfcpdiLpF58tT
+        dtEKajBUDH6MWFr38C7Wwb3kleie
+X-Google-Smtp-Source: APiQypIdxkV1iQ9K4fzuVqyXoMNdDMxa/LeuR/nRA9XrfyQKnfymHu+I2YwWuAj5Oaes4LufrDT/xg==
+X-Received: by 2002:a05:6512:304e:: with SMTP id b14mr10189185lfb.119.1587857159926;
+        Sat, 25 Apr 2020 16:25:59 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id v8sm7590902lfp.85.2020.04.25.16.25.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 25 Apr 2020 16:25:59 -0700 (PDT)
 Subject: Re: [RFC PATCH v10 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <1587700513-28449-1-git-send-email-skomatineni@nvidia.com>
  <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
  <fd5300fd-33af-babe-95d0-9669b66a8c06@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <d6b92c10-92d6-b0e6-1475-429b63ff61d7@nvidia.com>
-Date:   Sat, 25 Apr 2020 16:19:47 -0700
+Message-ID: <2983577f-fec9-f24c-0563-6d1f0e1dd5d8@gmail.com>
+Date:   Sun, 26 Apr 2020 02:25:58 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
 In-Reply-To: <fd5300fd-33af-babe-95d0-9669b66a8c06@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587856798; bh=37bwKz8PDVAT3Z+9gtG8kKeaUYEOxghtuKi7TNhemZs=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=YvCZdT56apjLL/cvdA6pL/4z1TVnhZx5x2F5nKEsmGJCHctutV68/VLbWVrwFXndt
-         q2HsQ6uveVhIWGb6spdGuY/E7LDvLaoYryKGYBOJvyxlbUZBpr7F7SltECts7WQufz
-         6VJNlMGq+RvV7GIefuIb5koVzzimbAlVOEb7JiKSxo9k3iUFuX69srdZdK9QUJsP2x
-         slqC0tv4SWWvv+Plp7a43ZYVISdBIgZzHtfZ3PP2ZeACZvqsgfTlJPe/V1JE/4B1zI
-         2q7bHGeyjWUNHnTKvlyxEcm0bkoQZnPZ7mvLlGt68/BuBMvkW+/mH4hpIPjF2U4OZG
-         fZ+8TC9AmvAVQ==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 4/25/20 4:13 PM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> 24.04.2020 06:55, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+26.04.2020 02:13, Dmitry Osipenko пишет:
+> 24.04.2020 06:55, Sowjanya Komatineni пишет:
 >> +static int __maybe_unused vi_runtime_resume(struct device *dev)
 >> +{
->> +     struct tegra_vi *vi =3D dev_get_drvdata(dev);
->> +     int ret;
+>> +	struct tegra_vi *vi = dev_get_drvdata(dev);
+>> +	int ret;
 >> +
->> +     ret =3D regulator_enable(vi->vdd);
->> +     if (ret) {
->> +             dev_err(dev, "failed to enable VDD supply: %d\n", ret);
->> +             return ret;
->> +     }
+>> +	ret = regulator_enable(vi->vdd);
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to enable VDD supply: %d\n", ret);
+>> +		return ret;
+>> +	}
 >> +
->> +     ret =3D clk_set_rate(vi->clk, vi->soc->vi_max_clk_hz);
->> +     if (ret) {
->> +             dev_err(dev, "failed to set vi clock rate: %d\n", ret);
->> +             goto disable_vdd;
->> +     }
+>> +	ret = clk_set_rate(vi->clk, vi->soc->vi_max_clk_hz);
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to set vi clock rate: %d\n", ret);
+>> +		goto disable_vdd;
+>> +	}
+> 
 > Isn't setting clock rate using assigned-clocks in a device-tree enough?
 > Could you please clarify why this vi_max_clk_hz is needed?
+> 
 
-Max clock rate with sensor support will be 998Mhz.
-
-Later when sensor support is added, based on TPG or Sensor mode clock=20
-rate will be set here
-
+In that case it should be wrong to set the clock rate in the RPM
+callback because RPM works asynchronously and RPM may not be suspended
+on TGP -> sensor source switch.
