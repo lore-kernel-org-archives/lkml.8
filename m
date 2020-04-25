@@ -2,114 +2,88 @@ Return-Path: <SRS0=hCRD=6J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE6EC54FCB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 16:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 382B8C55194
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 16:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C894206D4
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 16:54:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZB7oVq7f"
+	by mail.kernel.org (Postfix) with ESMTP id 0FD1B20714
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Apr 2020 16:55:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587833707;
+	bh=JjChTrtA0oJ6ePhjEidISsO81puxuHkvJCnWPoasV2c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=S1MagE9hG79pIpS6on0zqAL5dxk/9TFHE6dpzCCGG2DmJd5NQu/QRo2vjggH7jM8W
+	 D4+6eW7WIUX0hzM6b0bGa1iCPcaxhIxoizAJgd8+qogCGbjk1dw4NMy2yMkQ1cTmzW
+	 VuF7WWR7hlWphYjt2JkMQ97iHHt34yix72OV7r6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726201AbgDYQyL (ORCPT
+        id S1726261AbgDYQzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 12:54:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34934 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbgDYQyL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 12:54:11 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FFDAC09B04D;
-        Sat, 25 Apr 2020 09:54:11 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id fu13so4626738pjb.5;
-        Sat, 25 Apr 2020 09:54:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Ni7dX1B7pi70mNP8/hgrlsRSdpbg/0CNNTaHtJC2aBI=;
-        b=ZB7oVq7fsOIznxNS7UZhzn6Makn3MVh/Kbd5M1MhKtQ7IVzXRT8b0T4OR+HsFLeDf0
-         16s/BRqJ0tII4C67qPq3tbfd4TaxpWmqVNhsJk6kdtBGJs3+9/VfQX54W+zowmirKHOW
-         Y7Z8uS4tho7igDx/US3ImS4KKFPXagoW7E4uf7LBZ9XAp1dkVAJpZn5beBXkT9ZsXWRd
-         inkzCrJnV5djMsXdzOMzVJ2czjDS28tW0tmxjhUqStCZfKIla7I3Isar0lJpXG9jjHqS
-         cgrSaMTd7T5VodoQzTM8VqAUwz/DzbOgrKECm4z/RJYhcRfiGYcwmbKFuhHa2yevxBon
-         KDVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Ni7dX1B7pi70mNP8/hgrlsRSdpbg/0CNNTaHtJC2aBI=;
-        b=TniSzqkuAIikBqVmFkZ0EWsSgEIlptNHDRribHWKYbV58m2NsXThliq5tE9AZZainV
-         gkZ/URaNBu0eRbvSVBZFst87ey36k2A9UnxBlqEGHAqCzdJe9cf6FAuqmKVrk/baOUtV
-         gdirXzrbAfQ/ecSrWjZttn2qhuyPyW15bk6WltuiHd50Ibq5X2mNl7uG99qkwyitZZY2
-         ZImx5JtcogBMtrRR3EOXQtbCCPQiyC5flevYZxuOfpthfv1X+7ObPF/kU3aGyTvpBdoL
-         tA6uTeoGIagipXDSsXyHy+5/iy+H89piLfhTvQGZG+YmK4x5BebME9+VNNd7hnA7ci7e
-         R1+g==
-X-Gm-Message-State: AGi0PuYXzw55qXXDNuipZCcC1U4szsjgpTVBveezQM7g0YI+xQaPSezT
-        V0fd8KtR4zfCNunZ/1OZXxA=
-X-Google-Smtp-Source: APiQypJhvMOXcEqGt6tXZHSLN+DNe9cAdJX+NSPOYfKzDd5EYKyzLqQq0zW6vraDp2ui3eyKU00toQ==
-X-Received: by 2002:a17:902:a5ca:: with SMTP id t10mr7463608plq.300.1587833649881;
-        Sat, 25 Apr 2020 09:54:09 -0700 (PDT)
-Received: from ?IPv6:2601:647:4700:9b2:6553:6836:584f:1008? ([2601:647:4700:9b2:6553:6836:584f:1008])
-        by smtp.gmail.com with ESMTPSA id v1sm7424946pjs.36.2020.04.25.09.54.08
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 25 Apr 2020 09:54:09 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [RFC PATCH 1/3] kvm: x86: Rename KVM_DEBUGREG_RELOAD to
- KVM_DEBUGREG_NEED_RELOAD
-From:   Nadav Amit <nadav.amit@gmail.com>
-In-Reply-To: <85cb5946-2109-28a0-578d-bed31d1b8298@redhat.com>
-Date:   Sat, 25 Apr 2020 09:54:07 -0700
-Cc:     Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        kvm <kvm@vger.kernel.org>, Nadav Amit <namit@cs.technion.ac.il>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <08C6D1FB-A4F7-49FA-AC46-5323C104840A@gmail.com>
-References: <20200416101509.73526-1-xiaoyao.li@intel.com>
- <20200416101509.73526-2-xiaoyao.li@intel.com>
- <85cb5946-2109-28a0-578d-bed31d1b8298@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Sat, 25 Apr 2020 12:55:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39270 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726152AbgDYQzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 12:55:04 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91CCB206D4;
+        Sat, 25 Apr 2020 16:55:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587833704;
+        bh=JjChTrtA0oJ6ePhjEidISsO81puxuHkvJCnWPoasV2c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HbrDkR+BPdXmHiPtxrnTJ4qX3w2V5OSeBsbMwy3n39kNV+jOJVi1Sgjird+eIr3Wp
+         lK8Gv114NK7/2Q+aIb7AJZ+G5krVjYafBOFyStPRttxL+MQxXYGmHz//wegZPOeA16
+         q3kpgwzafpCtbpQHxwbBe2kD8InE+RjafBGoIWlg=
+Date:   Sat, 25 Apr 2020 17:54:58 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     lars@metafoo.de, Michael.Hennerich@analog.com,
+        stefan.popa@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] iio: dac: ad5593r: Fix a typo in MODULE_DESCRIPTION
+Message-ID: <20200425175458.4ba655e0@archlinux>
+In-Reply-To: <20200425065653.31203-1-christophe.jaillet@wanadoo.fr>
+References: <20200425065653.31203-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Apr 25, 2020, at 1:07 AM, Paolo Bonzini <pbonzini@redhat.com> =
-wrote:
->=20
-> On 16/04/20 12:15, Xiaoyao Li wrote:
->> To make it more clear that the flag means DRn (except DR7) need to be
->> reloaded before vm entry.
->>=20
->> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
->=20
-> I wonder if KVM_DEBUGREG_RELOAD is needed at all.  It should be easy =
-to
-> write selftests for it, using the testcase in commit message
-> 172b2386ed16 and the information in commit ae561edeb421.
+On Sat, 25 Apr 2020 08:56:53 +0200
+Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
 
-I must be missing something, since I did not follow this thread and =
-other
-KVM changes very closely.
+> This module is related to AD5593R, not AD5592R.
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Applied.
 
-Yet, for the record, I added KVM_DEBUGREG_RELOAD due to real experienced
-issues that I had while running Intel=E2=80=99s fuzzing tests on KVM: =
-IIRC, the DRs
-were not reloaded after an INIT event that clears them.
+Thanks,
 
-Personally, I would prefer that a test for that, if added, would be =
-added
-to KVM-unit-tests, based on Liran=E2=80=99s INIT test. This would allow =
-to confirm
-bare-metal behaves as the VM.
+Jonathan
+
+> ---
+>  drivers/iio/dac/ad5593r.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/dac/ad5593r.c b/drivers/iio/dac/ad5593r.c
+> index 44ea3b8117d0..1fbe9c019c7f 100644
+> --- a/drivers/iio/dac/ad5593r.c
+> +++ b/drivers/iio/dac/ad5593r.c
+> @@ -134,5 +134,5 @@ static struct i2c_driver ad5593r_driver = {
+>  module_i2c_driver(ad5593r_driver);
+>  
+>  MODULE_AUTHOR("Paul Cercueil <paul.cercueil@analog.com>");
+> -MODULE_DESCRIPTION("Analog Devices AD5592R multi-channel converters");
+> +MODULE_DESCRIPTION("Analog Devices AD5593R multi-channel converters");
+>  MODULE_LICENSE("GPL v2");
 
