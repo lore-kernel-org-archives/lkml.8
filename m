@@ -2,90 +2,59 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC912C55186
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 03:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE388C55185
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 03:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD64620714
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 03:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67FAB2071E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 03:30:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726119AbgDZDYl (ORCPT
+        id S1726156AbgDZDaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 23:24:41 -0400
-Received: from smtpbguseast2.qq.com ([54.204.34.130]:44348 "EHLO
-        smtpbguseast2.qq.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbgDZDYl (ORCPT
+        Sat, 25 Apr 2020 23:30:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48164 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726089AbgDZDaH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 23:24:41 -0400
-X-QQ-mid: bizesmtp11t1587871473t879fh72
-Received: from wuxy.bitland.com.cn (unknown [103.100.115.75])
-        by esmtp6.qq.com (ESMTP) with 
-        id ; Sun, 26 Apr 2020 11:24:12 +0800 (CST)
-X-QQ-SSF: 01400000002000Z0ZM30B00A0000000
-X-QQ-FEAT: STDtK/lFkpah7mmZ8kZTATOOmbwdzlpfhSmcEuCzt/BbX3eeyOMrgDyxhhU7n
-        gWY2i5mzls1hckLHM71jlLv6CniFhddgwh5D6xVYoJlBcJeKzWa58GhiqC7XIBf/LJtxBl1
-        yv61qHVM21FUNeWQHRxY8/TTz/brNpDbHV7GtxKNItzof5I7iJM0b1hMhPs2AV6FGHQrphK
-        cjFWcT5qBJFxgk3fXoM1Dei35q4SZ9vPPUFxhwOhxhC7eftus2RGkFBKYV84WbMtm5SXasg
-        dI1StDpyD2d268ONRPo8FJbbyZiPIXz20FR/x5q2veZlSLhghjYHKjsILDjTfj/kXQYtv4T
-        IUQyy0q
-X-QQ-GoodBg: 2
-From:   wuxy@bitland.com.cn
-To:     drinkcat@chromium.org, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     wuxy <wuxy@bitland.corp-partner.google.com>
-Subject: [PATCH] [v3]mtd: spi-nor: winbond: add 1.8v SPI NOR Flash IDs
-Date:   Sun, 26 Apr 2020 11:24:10 +0800
-Message-Id: <20200426032410.10425-1-wuxy@bitland.com.cn>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:bitland.com.cn:qybgforeign:qybgforeign7
-X-QQ-Bgrelay: 1
+        Sat, 25 Apr 2020 23:30:07 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2817EC061A0C;
+        Sat, 25 Apr 2020 20:30:07 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id BEEF7159F836B;
+        Sat, 25 Apr 2020 20:30:03 -0700 (PDT)
+Date:   Sat, 25 Apr 2020 20:29:59 -0700 (PDT)
+Message-Id: <20200425.202959.1368122664226619442.davem@davemloft.net>
+To:     tanhuazhong@huawei.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        salil.mehta@huawei.com, yisen.zhuang@huawei.com,
+        linuxarm@huawei.com, kuba@kernel.org
+Subject: Re: [PATCH net-next 0/8] net: hns3: refactor for MAC table
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1587694993-25183-1-git-send-email-tanhuazhong@huawei.com>
+References: <1587694993-25183-1-git-send-email-tanhuazhong@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 25 Apr 2020 20:30:04 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: wuxy <wuxy@bitland.corp-partner.google.com>
+From: Huazhong Tan <tanhuazhong@huawei.com>
+Date: Fri, 24 Apr 2020 10:23:05 +0800
 
-Winbond has new 1.8V SPI NOR Flash IDs,we need to use the SPI
-flash ID in kukui series,this patch can support the new flash IDs.
-This patch copied from:https://patchwork.ozlabs.org/patch/1150756/,
-The original patch is invalid,so re-submit a new patch for this.
+> This patchset refactors the MAC table management, configure
+> the MAC address asynchronously, instead of synchronously.
+> Base on this change, it also refines the handle of promisc
+> mode and filter table entries restoring after reset.
 
-TEST=boot to shell,get the spi information from 'dmesg'.
-
-Signed-off-by: Xingyu Wu <wuxy@bitland.corp-partner.google.com>
----
- drivers/mtd/spi-nor/winbond.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/mtd/spi-nor/winbond.c b/drivers/mtd/spi-nor/winbond.c
-index 17deabad57e1..cda4f8847bd6 100644
---- a/drivers/mtd/spi-nor/winbond.c
-+++ b/drivers/mtd/spi-nor/winbond.c
-@@ -61,6 +61,15 @@ static const struct flash_info winbond_parts[] = {
- 			     SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
- 	{ "w25m512jv", INFO(0xef7119, 0, 64 * 1024, 1024,
- 			    SECT_4K | SPI_NOR_QUAD_READ | SPI_NOR_DUAL_READ) },
-+	{ "w25q64jwxxIM", INFO(0xef8017, 0, 64 * 1024, 128,
-+			    SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
-+			    SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
-+	{ "w25q128jwxxIM", INFO(0xef8018, 0, 64 * 1024, 256,
-+			    SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
-+			    SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
-+	{ "w25q256jwxxIM", INFO(0xef8019, 0, 64 * 1024, 512,
-+			    SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
-+			    SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
- };
- 
- /**
--- 
-2.20.1
-
-
-
+Series applied, thanks.
