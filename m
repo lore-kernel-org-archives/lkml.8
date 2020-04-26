@@ -2,146 +2,89 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 426C9C55199
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 21:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8789FC55194
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 21:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20F6E2071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 21:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BB7E2071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 21:14:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="ioyxdgjk"
+	dkim=pass (4096-bit key) header.d=kolabnow.com header.i=@kolabnow.com header.b="LZWsCG8h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726398AbgDZVAO (ORCPT
+        id S1726265AbgDZVOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 17:00:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40884 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726188AbgDZVAO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 17:00:14 -0400
-Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5713C061A0F;
-        Sun, 26 Apr 2020 14:00:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587934810;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=tBYDlL7NzsOjZoE8VbUARgLNfJnA9ln8lbc1BWfhqMY=;
-        b=ioyxdgjksphjE/lgw3XV/4d4tS9NkGCZK81PjoM0Vhy1ONEL1TNPSRJdwmbLA1OzNH
-        V1EkPNj5fBScYUyfVy4WfxfAWq7n2eLTogwCSQE+Sv9pxBaw4Myxmth2q4tPnP4QzLuJ
-        sicQp+NNP0Y2cb4uiGNF2ISTAP8mfa9rBe5VwvLoegITAJ/6BnEwfRp/d7tP3nyU/1rp
-        S7VbqbTrcZ8DJ4/l+gErg52rN0+bitsgyUltsq02uy8MMNQVpOJL2rrPRdou5PKebGsX
-        puz2HrWtDc4a8yYDM1J0El7/uh1wEpBez83OkRsPIuw0lK1GG1fXbArpT/udiPXYUStl
-        Ax3w==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PtwDOjwps="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
-        with ESMTPSA id R0acebw3QKxSHt5
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Sun, 26 Apr 2020 22:59:28 +0200 (CEST)
-Subject: Re: [PATCH v7 01/12] dt-bindings: add img,pvrsgx.yaml for Imagination GPUs
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <9d9998cc-33bf-7d8f-658b-8d6218338135@gmail.com>
-Date:   Sun, 26 Apr 2020 22:59:28 +0200
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <0D48517E-8F66-4B27-953B-1C27F8A8DE0A@goldelico.com>
-References: <cover.1587760454.git.hns@goldelico.com> <3a451e360fed84bc40287678b4d6be13821cfbc0.1587760454.git.hns@goldelico.com> <9d9998cc-33bf-7d8f-658b-8d6218338135@gmail.com>
-To:     Philipp Rossak <embed3d@gmail.com>
-X-Mailer: Apple Mail (2.3124)
+        Sun, 26 Apr 2020 17:14:38 -0400
+Received: from mx.kolabnow.com ([95.128.36.41]:48700 "EHLO mx.kolabnow.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725996AbgDZVOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 17:14:38 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by ext-mx-out002.mykolab.com (Postfix) with ESMTP id 4C88E6A8;
+        Sun, 26 Apr 2020 23:14:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kolabnow.com; h=
+        content-transfer-encoding:mime-version:message-id:date:date
+        :subject:subject:from:from:received:received:received; s=
+        dkim20160331; t=1587935673; x=1589750074; bh=PUbdbUVGrBs4ZElJBZl
+        Vmlmv/2PeGf9jWHZAjk18zDo=; b=LZWsCG8hFeH0X8aLtbsR4eSiq7WOvT6u7ys
+        yNe0dfOW2XWL7ZSqpFeQYy5feTwdDS0kPd+gNvKj3ahxk1nl0bG9WPMkkarYCsSz
+        BypXnkq3MzTvEOLdrSZNA0iCxLZ8j10nDbuT/70DOYSf0Z4z3/AyPpUYKu8P/h0l
+        pvQhX9M0Ukm96Y+/4T2uimf8T02OZY5bBPBZGx4DDhqXP/BtDVICUDWXX/oVaeDB
+        wUGqZcF0nsl9opz1bhvVhpMH/UP+uK8+COZDSv0H5sQy16X67AczEEY5L+Lkq+Sa
+        LeYHL/aVg5Hftr0QMcGEZmMPYX3Jyl69N/s3YicYdZv2h7+CAMCBL8+z1taMsW4a
+        4NhoiN0SMLxRW5O9TjfGBMaHsdZadfu0ingMlhm3JWs/cZ+tBGAiprrpboX0ChY6
+        ySAaLbjVic2Js2N8aoCPtaXMgyh/hqfE0D5D8yuPGQB+8ss550jWEvrE3OmjA94X
+        6g6fQuY49QZTE5aGwcOy9UK1t4J3E9xgAKT8VJH75iiSv8VXSnl56gjR0S8803E8
+        6/wCE9gSoWudemjcdcbjLUqU5BUgg7zoxz5jdqIp/OGYIhDm/+Y95rfeVuA6tC+R
+        YIduwxKxEUJEUZn5szg/kz44ofNL60pZw1vRdz9AUxRW5Nu6qkFkszUy7sLfBSSI
+        nRbIjBK8=
+X-Virus-Scanned: amavisd-new at mykolab.com
+Received: from mx.kolabnow.com ([127.0.0.1])
+        by localhost (ext-mx-out002.mykolab.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id zna_Bt9pMEqd; Sun, 26 Apr 2020 23:14:33 +0200 (CEST)
+Received: from int-mx001.mykolab.com (unknown [10.9.13.1])
+        by ext-mx-out002.mykolab.com (Postfix) with ESMTPS id 98E90489;
+        Sun, 26 Apr 2020 23:14:33 +0200 (CEST)
+Received: from ext-subm002.mykolab.com (unknown [10.9.6.2])
+        by int-mx001.mykolab.com (Postfix) with ESMTPS id 2D1CB1ED1;
+        Sun, 26 Apr 2020 23:14:33 +0200 (CEST)
+From:   Federico Vaga <federico.vaga@vaga.pv.it>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Federico Vaga <federico.vaga@vaga.pv.it>
+Subject: [PATCH] doc:locking: remove info about old behavior of locktorture
+Date:   Sun, 26 Apr 2020 23:14:29 +0200
+Message-Id: <20200426211429.29133-1-federico.vaga@vaga.pv.it>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Philipp,
+It is not useful to know what was the default at some point in the
+past: remove the information.
 
-> Am 26.04.2020 um 21:36 schrieb Philipp Rossak <embed3d@gmail.com>:
->=20
-> Hi Nikolaus,
->=20
-> On 24.04.20 22:34, H. Nikolaus Schaller wrote:
->> The Imagination PVR/SGX GPU is part of several SoC from
->> multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo,
->> Allwinner A83 and others.
->> With this binding, we describe how the SGX processor is
->> interfaced to the SoC (registers and interrupt).
->> The interface also consists of clocks, reset, power but
->> information from data sheets is vague and some SoC integrators
->> (TI) deciced to use a PRCM wrapper (ti,sysc) which does
->> all clock, reset and power-management through registers
->> outside of the sgx register block.
->> Therefore all these properties are optional.
->> Tested by make dt_binding_check
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> ---
->>  .../devicetree/bindings/gpu/img,pvrsgx.yaml   | 150 =
-++++++++++++++++++
->>  1 file changed, 150 insertions(+)
->>  create mode 100644 =
-Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
->> diff --git a/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml =
-b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
->> new file mode 100644
->> index 000000000000..33a9c4c6e784
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
->> @@ -0,0 +1,150 @@
->> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/gpu/img,pvrsgx.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Imagination PVR/SGX GPU
->> +
+Signed-off-by: Federico Vaga <federico.vaga@vaga.pv.it>
+---
+ Documentation/locking/locktorture.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-...
-
->> +      - description: SGX544-112 based SoC
->> +        items:
->> +          - const: ti,omap4470-sgx544-112
->> +          - const: img,sgx544-112
->> +          - const: img,sgx544
->> +
->> +      - description: SGX544-115 based SoC
->> +        items:
->> +          - enum:
->> +            - allwinner,sun8i-a31-sgx544-115
->> +            - allwinner,sun8i-a31s-sgx544-115
-> those two bindings are wrong.
-> It should be allwinner,sun6i-a31-sgx544-115 and =
-allwinner,sun6i-a31s-sgx544-115. I did a copy paste error in the patches =
-that I provided for this series.
-
-Ok, noted for v8.
-
-BR and thanks,
-Nikolaus
+diff --git a/Documentation/locking/locktorture.rst b/Documentation/locking/locktorture.rst
+index 5bcb99ba7bd9..8012a74555e7 100644
+--- a/Documentation/locking/locktorture.rst
++++ b/Documentation/locking/locktorture.rst
+@@ -110,7 +110,7 @@ stutter
+ 		  same period of time.  Defaults to "stutter=5", so as
+ 		  to run and pause for (roughly) five-second intervals.
+ 		  Specifying "stutter=0" causes the test to run continuously
+-		  without pausing, which is the old default behavior.
++		  without pausing.
+ 
+ shuffle_interval
+ 		  The number of seconds to keep the test threads affinitied
+-- 
+2.25.4
 
