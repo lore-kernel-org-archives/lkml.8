@@ -2,144 +2,129 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77879C55185
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1614C55185
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:52:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 578FC2071E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:49:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="U2815cJ7"
+	by mail.kernel.org (Postfix) with ESMTP id 92A0A20724
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:52:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587869566;
+	bh=BIkOKEcWv+IB06M0P0fTuKQEF8gCOgIkDGgnL0v0TME=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=V2HZXHcwqkY8gV6ggnTMkylKrXm7jYFn1xg1atUv5Q/B/hOYPWsOsjaFdqCM81taI
+	 9J46TOCUuKqnNGLbEXm3eE8MeZH4rdQibedWaPGHaQWIYrMKyg4PPyyqdIlKiNZR2R
+	 rxFuqBi+/GDNcsx39ysaYB7ZtSlapnUKY9DuZ6VE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726141AbgDZCtU (ORCPT
+        id S1726121AbgDZCwp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 22:49:20 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9249 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725952AbgDZCtU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 22:49:20 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ea4f6380000>; Sat, 25 Apr 2020 19:47:20 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sat, 25 Apr 2020 19:49:19 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sat, 25 Apr 2020 19:49:19 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 26 Apr
- 2020 02:49:19 +0000
-Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 26 Apr
- 2020 02:49:18 +0000
-Subject: Re: [RFC PATCH v10 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <sakari.ailus@iki.fi>,
-        <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1587700513-28449-1-git-send-email-skomatineni@nvidia.com>
- <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
- <6ca93ff9-ca59-544f-767c-4355d01a5c20@gmail.com>
- <62546d1f-eca5-06be-2bc2-e45ccd53830a@xs4all.nl>
- <50fd1016-ca8b-ec5d-e5a8-f257138b152e@gmail.com>
- <658c4232-94d9-3051-8c93-bff7046cf5f2@nvidia.com>
- <03426915-25ea-69b4-bc64-f87f3046d33f@nvidia.com>
- <aabaecc4-3494-0137-7d2b-853304bfa68b@gmail.com>
- <09f20441-fec6-7496-2edc-c69db535e441@nvidia.com>
- <61799fab-858c-8b0d-ba7d-846cd041e044@gmail.com>
- <3a9707b5-b260-6137-f475-fc88d271010f@nvidia.com>
- <a7407ed7-f35e-b3e9-ad26-3e83f0ed462b@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <024fc70f-9a65-3fc4-1387-d0b15f3f74e7@nvidia.com>
-Date:   Sat, 25 Apr 2020 19:48:59 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sat, 25 Apr 2020 22:52:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55428 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725952AbgDZCwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 22:52:45 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A0C22071E;
+        Sun, 26 Apr 2020 02:52:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587869564;
+        bh=BIkOKEcWv+IB06M0P0fTuKQEF8gCOgIkDGgnL0v0TME=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wlKMojDUEUSAwzluVKn1k06s32mLf7evh26qtfKEzaF9kCISji1VgSDTkwIXxWVdL
+         IT1hVz6BImbXQ38o/vWIt5uqJbZSO6fFSUA5BJ6FfHQRV3XgTi1YDMR6fnYV+eBRBp
+         zsUrdbjY1oDm5SGZB1ohystSMDnBPZEDKmeiqqqY=
+Date:   Sat, 25 Apr 2020 22:52:43 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Andi Kleen <ak@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Bae, Chang Seok" <chang.seok.bae@intel.com>,
+        "Metzger, Markus T" <markus.t.metzger@intel.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, "bp@alien8.de" <bp@alien8.de>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        Pedro Alves <palves@redhat.com>,
+        Simon Marchi <simark@simark.ca>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v9 00/17] Enable FSGSBASE instructions
+Message-ID: <20200426025243.GJ13035@sasha-vm>
+References: <20200421195629.GE608746@tassilo.jf.intel.com>
+ <5957D3CC-B54B-4A1A-998A-0E6F58589CF4@amacapital.net>
+ <20200421205119.GK1809@sasha-vm>
+ <CALCETrUGuvMgvcsUWsdmUr-=6c6BpRpOKC1MN+E16g17U7vyMQ@mail.gmail.com>
+ <20200423040850.GY1809@sasha-vm>
+ <87ftcrtckg.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <a7407ed7-f35e-b3e9-ad26-3e83f0ed462b@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587869240; bh=7ma9Ne94nzVP84OdxWY4OAMr6LnpzfZrrK0+ZrNYkwU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=U2815cJ7zAChWBiRw2df4HuvACjujsWdxoECjY/y5ihlz5bEcqgZ1yR84z4daF5nS
-         G2kC5uYwALDKO7e2UpPA4WPixn7A8lgQO0IhNc3Bx+GmUkJfprVVwLwLSq0FllVbph
-         sCZxqzcCLhYUym+WZEr2FFcy5cZTJofSqMJYK/e0kqrIZHvyUxTE2EyCihrO1T4AEs
-         n1q1Hpv2lBSdyBGJMksHlfoGbbPs6DLlQvJbTu9vv7pl50ICVwGaBPCzkbSmbAmDml
-         Xlr5VFiJcEFaPDqJ67TvTY2VHRum4zK2YYFGMrH3pXJubWNPGvscCWf7eK11LUNGrp
-         amV0QmzdRFr6w==
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <87ftcrtckg.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 4/25/20 7:38 PM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> 26.04.2020 05:19, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 4/25/20 7:10 PM, Dmitry Osipenko wrote:
->>> External email: Use caution opening links or attachments
+On Sun, Apr 26, 2020 at 12:39:27AM +0200, Thomas Gleixner wrote:
+>Sasha Levin <sashal@kernel.org> writes:
+>> On Wed, Apr 22, 2020 at 04:00:16PM -0700, Andy Lutomirski wrote:
 >>>
->>>
->>> 26.04.2020 04:43, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> ...
->>>>> It looks to me that at least all those hardcoded HW format IDs do not
->>>>> match the older SoCs.
->>>> TPG hard coded formats are supported on prior Tegra.
->>>>
->>>> Other supported formats are SoC dependent and  part of soc data in the
->>>> driver already.
->>> But I don't see where that SoC-dependent definition is made in
->>> terga210.c. That tegra_image_format enum looks T210-specific, isn't it?
->>>
->>> ...
->> Video formats which are SoC variants are made soc specific in driver
->> already tegra_vi_soc structure member video_formats
+>>>gdb and rr are certainly a good start.  If patches show up, I'll take a look.
 >>
->> tegra_image_format enum is same for T210 and T186
->>
->> For T194, enums will be diff and will have diff TEGRA194_VIDEO_FORMAT
->> using corresponding Tegra194 video format enums
-> But it is also not the same for older SoCs, correct? All the
-> T210-specific things should be separated better, unique parts shouldn't
-> be kept in the common code.
+>> I'm sorry, but what patches are we talking about?
 >
-> Hence the tegra_image_format should be renamed to tegra210_image_format
-> and moved out to t210.h, since it's not common. But then you'll probably
-> need to rename all TEGRA_ defines to TEGRA210_ to make t210.h reusable
-> by T186.
-
-We can't make t210.h reusable for t186 as all register defines are diff.
-
-only video format enums are same b/w them so to reuse that for t186 I=20
-had that in common.
-
-Regarding defines, will change prefix as Tegra210
-
+>About patches which:
 >
-> Also, in the end it may not worth the effort to share anything at all,
-> it could be cleaner to have a bit of duplication. Although, I have no
-> idea how T186 code will look like and what other parts of T210 could be
-> reused by T186. All this needs to be taken into account in order to
-> avoid struggling with the code's reshuffling in the future.
+>  - Are rebased to current upstream
 
-Currently as image formats are same for t210 and t186 I had them in=20
-common.h and for t194 where they are diff new enums will be added.
+v10 of this series was sent a few days ago and is rebased on top of
+v5.7-rc1:
+https://lore.kernel.org/lkml/20200423232207.5797-1-sashal@kernel.org/ .
 
-Other tegra210 soc specific only are all part of tegra210.c/h
+>  - Addressed the outstanding review comments
 
+I saw a review that Andy has just sent on patch #1 from the new series,
+I'll address that.
+
+>  - Have proper documentation in the changelog of the user space visible
+>    ABI changes why it does not break any existing usage and having the
+>    relevant people who maintain tools which utilize the affected
+>    interfaces Cc'ed on submission.
+
+The cover letter has references to mail correspondence with maintainers
+of these tools that are affected by this change. Each of those exchanges
+goes over what FSGSBASE does and answers any specific questions those
+maintainers had.
+
+If you want it out of the cover letter and into one of the patches I'd
+be happy to do that. If you want me to go chase down another userspace
+which we might be breaking just let me know which.
+
+I didn't want to have them on the Cc line as they have already acked
+this change from their end and I wanted to avoid additional noise. I'll
+be happy to add them back to the next spin of this.
+
+>  - Made sure that the cleanups I did when merging them initially have
+>    been picked up. I'm not going to waste another couple of days on
+>    this mess just to revert it because it hadn't seen any serious
+>    testing in development.
+
+Based on your revert
+(https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=x86/cpu&id=049331f277fef1c3f2527c2c9afa1d285e9a1247)
+I believe that we have all the relevant patches in the series.
+
+I'll also add here that several groups at Microsoft have been running
+workloads that heavily exercise the functionality added by this patch.
+I'd say that it has gotten a solid round of testing for the past few
+months.
+
+-- 
+Thanks,
+Sasha
