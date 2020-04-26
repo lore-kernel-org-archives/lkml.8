@@ -2,198 +2,232 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 214BAC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 06:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C98C55196
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 06:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2A32206DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 06:53:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587884016;
-	bh=AX72LrszXZVr3GndLIzHGcqKzv1x/vpPvEudF3/4TvU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m2nh3fFzgcv6TqvkSOtWXfwuw/M/kj1LNrMJiFQPC48Z0DW5aZhSqPEZnLtL8/wFg
-	 8OkP9RC9OsxKKokYtbm2R1gCqHy7CsC1j/GoejzWvDmw+07OTNy2HtTPZtEqr0oDDj
-	 d8Mmv+zPoj5jlM5JkQ7nL+Iv/JCGJmJML2C43F9A=
+	by mail.kernel.org (Postfix) with ESMTP id 653922071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 06:59:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IPf5nC//"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbgDZGxf (ORCPT
+        id S1726170AbgDZG7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 02:53:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55584 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725864AbgDZGxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 02:53:34 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Sun, 26 Apr 2020 02:59:02 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:30208 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726107AbgDZG7C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 02:59:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587884340;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nzpyfv1Z6VEBidKjguuGbAmxFY96l0LyJXnhGt0vsLM=;
+        b=IPf5nC//xW/YUDkf3cSN5GYGMqO4rCFUz8LqthGaYzwAkCNMWAiBhg2mZRiT7opDVSd1hU
+        ZUco65lwoP+Tz38RtCbAwSsui/eqqEltOcrEG7MVjdizU3oVlepmtjAQBxQR0IiJfPZIYY
+        Iu1pVIlC42OnJY8ei99N4ZwHyfZ1wZM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-496-aJ0xuxzYOcqNo5y_I5t1WQ-1; Sun, 26 Apr 2020 02:58:53 -0400
+X-MC-Unique: aJ0xuxzYOcqNo5y_I5t1WQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63F1B206B6;
-        Sun, 26 Apr 2020 06:53:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587884014;
-        bh=AX72LrszXZVr3GndLIzHGcqKzv1x/vpPvEudF3/4TvU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gljatc4u33OL5OuVaTllZP9PkbFfwTwkMAavfoa1DUFT1JAWb5UcpFBLjl1daoEJC
-         euW/AlmgKN/fS9xkDkCfGsXO7Vr20FZ/KpbVFWxJWWZ1DsbAyAKUpuC4FmG/xMgy2H
-         2IXB54siLdZtgYVxLNS6k7btgpKOz78DbuUtkGTY=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Borislav Petkov <bp@alien8.de>, Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [BUGFIX PATCH v2 1/1] bootconfig: Fix to remove bootconfig data from initrd while boot
-Date:   Sun, 26 Apr 2020 15:53:30 +0900
-Message-Id: <158788401014.24243.17424755854115077915.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200424195833.1487a1a0@oasis.local.home>
-References: <20200424195833.1487a1a0@oasis.local.home>
-User-Agent: StGit/0.17.1-dirty
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 89CE91005510;
+        Sun, 26 Apr 2020 06:58:51 +0000 (UTC)
+Received: from [10.72.13.103] (ovpn-13-103.pek2.redhat.com [10.72.13.103])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 506925D9CD;
+        Sun, 26 Apr 2020 06:58:44 +0000 (UTC)
+Subject: Re: [PATCH V2 1/2] vdpa: Support config interrupt in vhost_vdpa
+To:     Zhu Lingshan <lingshan.zhu@intel.com>, mst@redhat.com,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     lulu@redhat.com, dan.daly@intel.com, cunming.liang@intel.com
+References: <1587881384-2133-1-git-send-email-lingshan.zhu@intel.com>
+ <1587881384-2133-2-git-send-email-lingshan.zhu@intel.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <055fb826-895d-881b-719c-228d0cc9a7bf@redhat.com>
+Date:   Sun, 26 Apr 2020 14:58:43 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1587881384-2133-2-git-send-email-lingshan.zhu@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If there is a bootconfig data in the tail of initrd/initramfs,
-initrd image sanity check caused an error while decompression
-stage as follows.
 
-[    0.883882] Unpacking initramfs...
-[    2.696429] Initramfs unpacking failed: invalid magic at start of compressed archive
+On 2020/4/26 =E4=B8=8B=E5=8D=882:09, Zhu Lingshan wrote:
+> This commit implements config interrupt support in
+> vhost_vdpa layer.
+>
+> Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
+> ---
+>   drivers/vhost/vdpa.c       | 47 +++++++++++++++++++++++++++++++++++++=
++++++++++
+>   drivers/vhost/vhost.c      |  2 +-
+>   drivers/vhost/vhost.h      |  2 ++
+>   include/uapi/linux/vhost.h |  2 ++
+>   4 files changed, 52 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
+> index 421f02a..b94e349 100644
+> --- a/drivers/vhost/vdpa.c
+> +++ b/drivers/vhost/vdpa.c
+> @@ -21,6 +21,7 @@
+>   #include <linux/nospec.h>
+>   #include <linux/vhost.h>
+>   #include <linux/virtio_net.h>
+> +#include <linux/kernel.h>
+>  =20
+>   #include "vhost.h"
+>  =20
+> @@ -70,6 +71,7 @@ struct vhost_vdpa {
+>   	int nvqs;
+>   	int virtio_id;
+>   	int minor;
+> +	struct eventfd_ctx *config_ctx;
+>   };
+>  =20
+>   static DEFINE_IDA(vhost_vdpa_ida);
+> @@ -101,6 +103,17 @@ static irqreturn_t vhost_vdpa_virtqueue_cb(void *p=
+rivate)
+>   	return IRQ_HANDLED;
+>   }
+>  =20
+> +static irqreturn_t vhost_vdpa_config_cb(void *private)
+> +{
+> +	struct vhost_vdpa *v =3D private;
+> +	struct eventfd_ctx *config_ctx =3D v->config_ctx;
+> +
+> +	if (config_ctx)
+> +		eventfd_signal(config_ctx, 1);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+>   static void vhost_vdpa_reset(struct vhost_vdpa *v)
+>   {
+>   	struct vdpa_device *vdpa =3D v->vdpa;
+> @@ -288,6 +301,36 @@ static long vhost_vdpa_get_vring_num(struct vhost_=
+vdpa *v, u16 __user *argp)
+>   	return 0;
+>   }
+>  =20
+> +static void vhost_vdpa_config_put(struct vhost_vdpa *v)
+> +{
+> +	if (v->config_ctx)
+> +		eventfd_ctx_put(v->config_ctx);
+> +}
+> +
+> +static long vhost_vdpa_set_config_call(struct vhost_vdpa *v, u32 __use=
+r *argp)
+> +{
+> +	struct vdpa_callback cb;
+> +	u32 fd;
+> +	struct eventfd_ctx *ctx;
+> +
+> +	cb.callback =3D vhost_vdpa_config_cb;
+> +	cb.private =3D v->vdpa;
+> +	if (copy_from_user(&fd, argp, sizeof(fd)))
+> +		return  -EFAULT;
+> +
+> +	ctx =3D fd =3D=3D VHOST_FILE_UNBIND ? NULL : eventfd_ctx_fdget(fd);
+> +	swap(ctx, v->config_ctx);
+> +
+> +	if (!IS_ERR_OR_NULL(ctx))
+> +		eventfd_ctx_put(ctx);
+> +
+> +	if (IS_ERR(v->config_ctx))
+> +		return PTR_ERR(v->config_ctx);
+> +
+> +	v->vdpa->config->set_config_cb(v->vdpa, &cb);
+> +
+> +	return 0;
+> +}
+>   static long vhost_vdpa_vring_ioctl(struct vhost_vdpa *v, unsigned int=
+ cmd,
+>   				   void __user *argp)
+>   {
+> @@ -398,6 +441,9 @@ static long vhost_vdpa_unlocked_ioctl(struct file *=
+filep,
+>   	case VHOST_SET_LOG_FD:
+>   		r =3D -ENOIOCTLCMD;
+>   		break;
+> +	case VHOST_VDPA_SET_CONFIG_CALL:
+> +		r =3D vhost_vdpa_set_config_call(v, argp);
+> +		break;
+>   	default:
+>   		r =3D vhost_dev_ioctl(&v->vdev, cmd, argp);
+>   		if (r =3D=3D -ENOIOCTLCMD)
+> @@ -734,6 +780,7 @@ static int vhost_vdpa_release(struct inode *inode, =
+struct file *filep)
+>   	vhost_dev_stop(&v->vdev);
+>   	vhost_vdpa_iotlb_free(v);
+>   	vhost_vdpa_free_domain(v);
+> +	vhost_vdpa_config_put(v);
+>   	vhost_dev_cleanup(&v->vdev);
+>   	kfree(v->vdev.vqs);
+>   	mutex_unlock(&d->mutex);
+> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> index d450e16..e8f5b20 100644
+> --- a/drivers/vhost/vhost.c
+> +++ b/drivers/vhost/vhost.c
+> @@ -1590,7 +1590,7 @@ long vhost_vring_ioctl(struct vhost_dev *d, unsig=
+ned int ioctl, void __user *arg
+>   			r =3D -EFAULT;
+>   			break;
+>   		}
+> -		ctx =3D f.fd =3D=3D -1 ? NULL : eventfd_ctx_fdget(f.fd);
+> +		ctx =3D f.fd =3D=3D VHOST_FILE_UNBIND ? NULL : eventfd_ctx_fdget(f.f=
+d);
+>   		if (IS_ERR(ctx)) {
+>   			r =3D PTR_ERR(ctx);
+>   			break;
+> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+> index 1813821..8663139 100644
+> --- a/drivers/vhost/vhost.h
+> +++ b/drivers/vhost/vhost.h
+> @@ -18,6 +18,8 @@
+>   typedef void (*vhost_work_fn_t)(struct vhost_work *work);
+>  =20
+>   #define VHOST_WORK_QUEUED 1
+> +#define VHOST_FILE_UNBIND -1
 
-This error will be ignored if CONFIG_BLK_DEV_RAM=n,
-but CONFIG_BLK_DEV_RAM=y the kernel failed to mount rootfs
-and causes a panic.
 
-To fix this issue, shrink down the initrd_end for removing
-tailing bootconfig data while boot the kernel.
+I think it's better to document this in uapi.
 
-Fixes: 7684b8582c24 ("bootconfig: Load boot config from the tail of initrd")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: stable@vger.kernel.org
----
- Changes in v2:
-	- Make new functions __init.
-	- Do nothing if CONFIG_BLK_DEV_INITRD=n
----
- init/main.c |   69 ++++++++++++++++++++++++++++++++++++++++++++---------------
- 1 file changed, 52 insertions(+), 17 deletions(-)
 
-diff --git a/init/main.c b/init/main.c
-index 295aec3a1a7a..f55cb15f23d2 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -258,6 +258,47 @@ static int __init loglevel(char *str)
- 
- early_param("loglevel", loglevel);
- 
-+#ifdef CONFIG_BLK_DEV_INITRD
-+static void * __init get_boot_config_from_initrd(u32 *_size, u32 *_csum)
-+{
-+	u32 size, csum;
-+	char *data;
-+	u32 *hdr;
-+
-+	if (!initrd_end)
-+		return NULL;
-+
-+	data = (char *)initrd_end - BOOTCONFIG_MAGIC_LEN;
-+	if (memcmp(data, BOOTCONFIG_MAGIC, BOOTCONFIG_MAGIC_LEN))
-+		return NULL;
-+
-+	hdr = (u32 *)(data - 8);
-+	size = hdr[0];
-+	csum = hdr[1];
-+
-+	data = ((void *)hdr) - size;
-+	if ((unsigned long)data < initrd_start) {
-+		pr_err("bootconfig size %d is greater than initrd size %ld\n",
-+			size, initrd_end - initrd_start);
-+		return NULL;
-+	}
-+
-+	/* Remove bootconfig from initramfs/initrd */
-+	initrd_end = (unsigned long)data;
-+	if (_size)
-+		*_size = size;
-+	if (_csum)
-+		*_csum = csum;
-+
-+	return data;
-+}
-+#else
-+static void * __init get_boot_config_from_initrd(u32 *_size, u32 *_csum)
-+{
-+	return NULL;
-+}
-+#endif
-+
- #ifdef CONFIG_BOOT_CONFIG
- 
- char xbc_namebuf[XBC_KEYLEN_MAX] __initdata;
-@@ -358,9 +399,12 @@ static void __init setup_boot_config(const char *cmdline)
- 	int pos;
- 	u32 size, csum;
- 	char *data, *copy;
--	u32 *hdr;
- 	int ret;
- 
-+	data = get_boot_config_from_initrd(&size, &csum);
-+	if (!data)
-+		goto not_found;
-+
- 	strlcpy(tmp_cmdline, boot_command_line, COMMAND_LINE_SIZE);
- 	parse_args("bootconfig", tmp_cmdline, NULL, 0, 0, 0, NULL,
- 		   bootconfig_params);
-@@ -368,27 +412,12 @@ static void __init setup_boot_config(const char *cmdline)
- 	if (!bootconfig_found)
- 		return;
- 
--	if (!initrd_end)
--		goto not_found;
--
--	data = (char *)initrd_end - BOOTCONFIG_MAGIC_LEN;
--	if (memcmp(data, BOOTCONFIG_MAGIC, BOOTCONFIG_MAGIC_LEN))
--		goto not_found;
--
--	hdr = (u32 *)(data - 8);
--	size = hdr[0];
--	csum = hdr[1];
--
- 	if (size >= XBC_DATA_MAX) {
- 		pr_err("bootconfig size %d greater than max size %d\n",
- 			size, XBC_DATA_MAX);
- 		return;
- 	}
- 
--	data = ((void *)hdr) - size;
--	if ((unsigned long)data < initrd_start)
--		goto not_found;
--
- 	if (boot_config_checksum((unsigned char *)data, size) != csum) {
- 		pr_err("bootconfig checksum failed\n");
- 		return;
-@@ -421,8 +450,14 @@ static void __init setup_boot_config(const char *cmdline)
- not_found:
- 	pr_err("'bootconfig' found on command line, but no bootconfig found\n");
- }
-+
- #else
--#define setup_boot_config(cmdline)	do { } while (0)
-+
-+static void __init setup_boot_config(const char *cmdline)
-+{
-+	/* Remove bootconfig data from initrd */
-+	get_boot_config_from_initrd(NULL, NULL);
-+}
- 
- static int __init warn_bootconfig(char *str)
- {
+> +
+>   struct vhost_work {
+>   	struct llist_node	  node;
+>   	vhost_work_fn_t		  fn;
+> diff --git a/include/uapi/linux/vhost.h b/include/uapi/linux/vhost.h
+> index 9fe72e4..345acb3 100644
+> --- a/include/uapi/linux/vhost.h
+> +++ b/include/uapi/linux/vhost.h
+> @@ -140,4 +140,6 @@
+>   /* Get the max ring size. */
+>   #define VHOST_VDPA_GET_VRING_NUM	_IOR(VHOST_VIRTIO, 0x76, __u16)
+>  =20
+> +/* Set event fd for config interrupt*/
+> +#define VHOST_VDPA_SET_CONFIG_CALL	_IOW(VHOST_VIRTIO, 0x77, u32)
+>   #endif
+
+
+Should be "int" instead of "u32".
+
+Thanks
 
