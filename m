@@ -2,76 +2,78 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CFEC54FD0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A7BC55191
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:21:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB532071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9C622071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:21:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="CeHRTrxn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726146AbgDZLRW (ORCPT
+        id S1726155AbgDZLV4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 07:17:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726122AbgDZLRV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 07:17:21 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D0D7C061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 04:17:21 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jSfHc-0002gR-9r; Sun, 26 Apr 2020 13:17:12 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id A8650100605; Sun, 26 Apr 2020 13:17:11 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Fenghua Yu <fenghua.yu@intel.com>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Jacob Jun Pan <jacob.jun.pan@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Sohil Mehta <sohil.mehta@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
-        iommu@lists.linux-foundation.org,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>
-Subject: Re: [PATCH 3/7] x86/fpu/xstate: Add supervisor PASID state for ENQCMD feature
-In-Reply-To: <1585596788-193989-4-git-send-email-fenghua.yu@intel.com>
-References: <1585596788-193989-1-git-send-email-fenghua.yu@intel.com> <1585596788-193989-4-git-send-email-fenghua.yu@intel.com>
-Date:   Sun, 26 Apr 2020 13:17:11 +0200
-Message-ID: <87v9lmsdhk.fsf@nanos.tec.linutronix.de>
+        Sun, 26 Apr 2020 07:21:56 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:16137 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726122AbgDZLVz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 07:21:55 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 49958c0Vx8z2F;
+        Sun, 26 Apr 2020 13:21:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1587900114; bh=rHc+7GEhCh5Gaeh58d+UY8RHi5ge0/5hEbRQ7cgAMvs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CeHRTrxnxUMAx4Ee8DWFLMB9rD5U4mhjHqhYBO5tlj9p5636GJ6a7meNDU9X/5y7V
+         lTAs7Fs7BYhlp+HIid/d1+f/C7s2DsNy02WfUEY7qgMLksfQ7KRYAmUNmxs7JRcZrp
+         g9+EOYPuV0Q46fy7EIvfYXO6lQXkZ/2U/WipR/eCEXnmF380jyn4SLToiyQgSpITq9
+         +VXgxRRPnDVbTc/82RMPACy/jSZy8ySFouV9ldsh3zYHwrIw+fqIXIfuSHZb/N54KH
+         taFE7n88aQ/kk40wtgxqiXevDO+JtP3TjTWGgzjmHRaite4QeOq0C+rUk9WkgAJfHi
+         o0bg0wiDx/Chg==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Sun, 26 Apr 2020 13:21:50 +0200
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Rob Herring <robh+dt@kernel.org>,
+        Scott Liu <scott.liu@emc.com.tw>,
+        David Heidelberg <david@ixit.cz>, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/9] input: elants: remove unused axes
+Message-ID: <20200426112150.GA16230@qmqm.qmqm.pl>
+References: <cover.1586784389.git.mirq-linux@rere.qmqm.pl>
+ <62e897b0d6f6054dae26c853a9a1f1fb6d3c420b.1586784389.git.mirq-linux@rere.qmqm.pl>
+ <20200426045200.GN125362@dtor-ws>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200426045200.GN125362@dtor-ws>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fenghua Yu <fenghua.yu@intel.com> writes:
-> From: Yu-cheng Yu <yu-cheng.yu@intel.com>
->
-> The IA32_PASID MSR is used when a task submits work via the ENQCMD
-> instruction.
+On Sat, Apr 25, 2020 at 09:52:00PM -0700, Dmitry Torokhov wrote:
+> On Mon, Apr 13, 2020 at 03:32:23PM +0200, Micha³ Miros³aw wrote:
+> > Driver only ever reports MT events. Clear capabilities of all others.
+> This is not true. input_mt_sync_frame() calls
+> input_mt_report_pointer_emulation() which does emut single-touch events
+> for the benefit of older userspace (or userspace that is not interested
+> in multitouch).
 
-Is used?
+Oh, I didn't notice that. Looking at the code, I see that
+input_mt_init_slots() sets up the emulated axes in this case.
 
-> The per task MSR is stored in the task's supervisor FPU
+Do you need me to update the commitmsg?
 
-per task MSR? Lot's of MSRs ....
-
-> PASID state and is context switched by XSAVES/XRSTORS.
->
+Best Regards,
+Micha³ Miros³aw
