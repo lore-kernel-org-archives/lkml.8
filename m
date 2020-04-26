@@ -6,41 +6,42 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E75C2C55199
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 20:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B22C54FCB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 20:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB7912075B
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 20:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A86B2206BF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 20:37:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbgDZU2S (ORCPT
+        id S1726234AbgDZUh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 16:28:18 -0400
-Received: from smtprelay0208.hostedemail.com ([216.40.44.208]:50652 "EHLO
+        Sun, 26 Apr 2020 16:37:28 -0400
+Received: from smtprelay0198.hostedemail.com ([216.40.44.198]:51304 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726176AbgDZU2R (ORCPT
+        by vger.kernel.org with ESMTP id S1726176AbgDZUh2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 16:28:17 -0400
+        Sun, 26 Apr 2020 16:37:28 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id E605C182CED5B;
-        Sun, 26 Apr 2020 20:28:16 +0000 (UTC)
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 5FA14182CED34;
+        Sun, 26 Apr 2020 20:37:27 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: bomb38_8261953751d37
-X-Filterd-Recvd-Size: 1958
+X-HE-Tag: bite55_40f3731081a4e
+X-Filterd-Recvd-Size: 2161
 Received: from XPS-9350.home (unknown [47.151.136.130])
         (Authenticated sender: joe@perches.com)
-        by omf03.hostedemail.com (Postfix) with ESMTPA;
-        Sun, 26 Apr 2020 20:28:15 +0000 (UTC)
-Message-ID: <6a051ca29c9017f1c6fefc5d2894c8dd4542a208.camel@perches.com>
-Subject: Re: [PATCH v2 2/3] floppy: add defines for sizes of cmd & reply
- buffers of floppy_raw_cmd
+        by omf08.hostedemail.com (Postfix) with ESMTPA;
+        Sun, 26 Apr 2020 20:37:26 +0000 (UTC)
+Message-ID: <0480c38b2e164ab0c25aae2db628c221ea0da111.camel@perches.com>
+Subject: Re: [PATCH 5/5] coresight: Avoid casting void pointers
 From:   Joe Perches <joe@perches.com>
-To:     Denis Efremov <efremov@linux.com>, linux-block@vger.kernel.org
-Cc:     Willy Tarreau <w@1wt.eu>, Christoph Hellwig <hch@infradead.org>,
-        linux-kernel@vger.kernel.org
-Date:   Sun, 26 Apr 2020 13:28:14 -0700
-In-Reply-To: <20200426130728.63399-3-efremov@linux.com>
-References: <20200426130728.63399-1-efremov@linux.com>
-         <20200426130728.63399-3-efremov@linux.com>
+To:     Stephen Boyd <swboyd@chromium.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>
+Date:   Sun, 26 Apr 2020 13:37:25 -0700
+In-Reply-To: <20200426185805.14923-6-swboyd@chromium.org>
+References: <20200426185805.14923-1-swboyd@chromium.org>
+         <20200426185805.14923-6-swboyd@chromium.org>
 Content-Type: text/plain; charset="ISO-8859-1"
 User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
@@ -50,29 +51,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-04-26 at 16:07 +0300, Denis Efremov wrote:
-> Use FD_RAW_CMD_SIZE, FD_RAW_REPLY_SIZE defines instead of magic numbers
-> for cmd & reply buffers of struct floppy_raw_cmd. Remove local to
-> floppy.c MAX_REPLIES define, as it is now FD_RAW_REPLY_SIZE.
-> FD_RAW_CMD_FULLSIZE added as we allow command to also fill reply_count
-> and reply fields.
+On Sun, 2020-04-26 at 11:58 -0700, Stephen Boyd wrote:
+> We don't need to cast void pointers, such as the amba_id data. Assign to
+> a local variable to make the code prettier and also return NULL instead
+> of 0 to make sparse happy.
 []
-> diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+> diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
 []
-> @@ -1847,7 +1846,7 @@ static void show_floppy(int fdc)
->  			output_log[(i + output_log_pos) % OLOGSIZE].jiffies);
->  	pr_info("last result at %lu\n", resultjiffies);
->  	pr_info("last redo_fd_request at %lu\n", lastredo);
-> -	print_hex_dump(KERN_INFO, "", DUMP_PREFIX_NONE, 16, 1,
-> +	print_hex_dump(KERN_INFO, "", DUMP_PREFIX_NONE, FD_RAW_REPLY_SIZE, 1,
->  		       reply_buffer, resultsize, true);
+> @@ -206,9 +206,12 @@ cti_remove_assoc_from_csdev(struct coresight_device *csdev) {}
+>  /* extract the data value from a UCI structure given amba_id pointer. */
+>  static inline void *coresight_get_uci_data(const struct amba_id *id)
+>  {
+> -	if (id->data)
+> -		return ((struct amba_cs_uci_id *)(id->data))->data;
+> -	return 0;
+> +	struct amba_cs_uci_id *uci_id = id->data;
+> +
+> +	if (uci_id)
+> +		return id->data;
 
-FD_RAW_REPLY_SIZE happens to be 16, but it's misleading
-to use it here.
+Missing one more level of indirection here yes?
 
-This use of 16 is not for FD_RAW_REPLY_SIZE, but the
-width of the line
-being dumped, and this value must be
-either 16 or 32.
+		return uci_id->data;
+
+> +
+> +	return NULL;
+>  }
+
+And this code would generally be written to return the expected
+value at the bottom of the function and any unusual return
+early like:
+
+static inline void *coresight_get_uci_data(const struct amba_id *id)
+{
+	struct amba_cs_uci_id *uci_id = id->data;
+
+	if (!uci_id)
+		return NULL;
+
+	return uci_id->data;
+}
 
 
