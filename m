@@ -2,81 +2,138 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60117C54FCB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 15:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F062C55194
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 15:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AAFB2070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 15:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 676732070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 15:25:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbgDZPYF (ORCPT
+        id S1726184AbgDZPZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 11:24:05 -0400
-Received: from mga11.intel.com ([192.55.52.93]:33140 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbgDZPYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 11:24:04 -0400
-IronPort-SDR: Wq4YJGgG6hY8AaNEELigyNFYTOAzxaXs5Q/WCwXNBL2oi4N+7cWPf6Fgrh2dMexvKNiV1yMsJ6
- OLl4RcYhCO2g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2020 08:24:04 -0700
-IronPort-SDR: JmsvbkoBHJVoSBiAi1qGKYGCqKECjqnfcNyiAXoeiPUYvm27D424r2oCl+DHUBH2TlE0r6PKyL
- t/rFUAVfNTkg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,320,1583222400"; 
-   d="scan'208";a="281440105"
-Received: from local-michael-cet-test.sh.intel.com (HELO localhost) ([10.239.159.128])
-  by fmsmga004.fm.intel.com with ESMTP; 26 Apr 2020 08:24:02 -0700
-Date:   Sun, 26 Apr 2020 23:26:01 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jmattson@google.com,
-        yu.c.zhang@linux.intel.com
-Subject: Re: [PATCH v11 2/9] KVM: VMX: Set guest CET MSRs per KVM and host
- configuration
-Message-ID: <20200426152600.GC29493@local-michael-cet-test.sh.intel.com>
-References: <20200326081847.5870-1-weijiang.yang@intel.com>
- <20200326081847.5870-3-weijiang.yang@intel.com>
- <20200423162749.GG17824@linux.intel.com>
- <d92b9fea-95b6-73ce-c3b5-47dad95c5d42@redhat.com>
+        Sun, 26 Apr 2020 11:25:01 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:49150 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgDZPZB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 11:25:01 -0400
+Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id 4bbe76b27600f444; Sun, 26 Apr 2020 17:24:59 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Todd E Brandt <todd.e.brandt@linux.intel.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] Revert "cpu/hotplug: Ignore pm_wakeup_pending() for disable_nonboot_cpus()"
+Date:   Sun, 26 Apr 2020 17:24:58 +0200
+Message-ID: <26038947.HFycnDbHsR@kreacher>
+In-Reply-To: <20200409112742.3581-1-qais.yousef@arm.com>
+References: <20200409112742.3581-1-qais.yousef@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d92b9fea-95b6-73ce-c3b5-47dad95c5d42@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 25, 2020 at 03:26:30PM +0200, Paolo Bonzini wrote:
-> On 23/04/20 18:27, Sean Christopherson wrote:
-> >>  
-> >> +static bool is_cet_mode_allowed(struct kvm_vcpu *vcpu, u32 mode_mask)
-> > CET itself isn't a mode.  And since this ends up being an inner helper for
-> > is_cet_supported(), I think __is_cet_supported() would be the way to go.
-> > 
-> > Even @mode_mask is a bit confusing without the context of it being kernel
-> > vs. user.  The callers are very readable, e.g. I'd much prefer passing the
-> > mask as opposed to doing 'bool kernel'.  Maybe s/mode_mask/cet_mask?  That
-> > doesn't exactly make things super clear, but at least the reader knows the
-> > mask is for CET features.
+On Thursday, April 9, 2020 1:27:40 PM CEST Qais Yousef wrote:
+> This issue was fixed already by:
 > 
-> What about is_cet_state_supported and xss_states?
->
-It's good for me, I'll change them accordingly, thank you for review!
+> commit d66b16f5df4b ("arm64: Don't use disable_nonboot_cpus()")
+> commit dddf3578e0d4 ("ARM: Don't use disable_nonboot_cpus()")
+> 
+> The only caller of disable_nonboot_cpus() is x86, which is in a proper
+> suspend/resume path and due to the reverted patch lost its ability to
+> early abort due to a pending wakeup.
+> 
+> The fix that is being reverted is arguably a better one to backport to
+> stable trees. But it highlights the confusion about using
+> disable_nonboot_cpus() API.
+> 
+> This is a preparation to remove disable_nonboot_cpus() in favor of
+> freeze_secondary_cpus().
+> 
+> This reverts commit e98eac6ff1b45e4e73f2e6031b37c256ccb5d36b.
+> 
+> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+> CC: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> CC: Len Brown <len.brown@intel.com>
+> CC: Pavel Machek <pavel@ucw.cz>
+> CC: Ingo Molnar <mingo@redhat.com>
+> CC: Borislav Petkov <bp@alien8.de>
+> CC: "H. Peter Anvin" <hpa@zytor.com>
+> CC: x86@kernel.org
+> CC: Todd E Brandt <todd.e.brandt@linux.intel.com>
+> CC: linux-pm@vger.kernel.org
+> CC: linux-kernel@vger.kernel.org
+> ---
+>  include/linux/cpu.h | 12 +++---------
+>  kernel/cpu.c        |  4 ++--
+>  2 files changed, 5 insertions(+), 11 deletions(-)
+> 
+> diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+> index beaed2dc269e..9ead281157d3 100644
+> --- a/include/linux/cpu.h
+> +++ b/include/linux/cpu.h
+> @@ -144,18 +144,12 @@ static inline void get_online_cpus(void) { cpus_read_lock(); }
+>  static inline void put_online_cpus(void) { cpus_read_unlock(); }
+>  
+>  #ifdef CONFIG_PM_SLEEP_SMP
+> -int __freeze_secondary_cpus(int primary, bool suspend);
+> -static inline int freeze_secondary_cpus(int primary)
+> -{
+> -	return __freeze_secondary_cpus(primary, true);
+> -}
+> -
+> +extern int freeze_secondary_cpus(int primary);
+>  static inline int disable_nonboot_cpus(void)
+>  {
+> -	return __freeze_secondary_cpus(0, false);
+> +	return freeze_secondary_cpus(0);
+>  }
+> -
+> -void enable_nonboot_cpus(void);
+> +extern void enable_nonboot_cpus(void);
+>  
+>  static inline int suspend_disable_secondary_cpus(void)
+>  {
+> diff --git a/kernel/cpu.c b/kernel/cpu.c
+> index 12ae636e9cb6..30848496cbc7 100644
+> --- a/kernel/cpu.c
+> +++ b/kernel/cpu.c
+> @@ -1327,7 +1327,7 @@ void bringup_nonboot_cpus(unsigned int setup_max_cpus)
+>  #ifdef CONFIG_PM_SLEEP_SMP
+>  static cpumask_var_t frozen_cpus;
+>  
+> -int __freeze_secondary_cpus(int primary, bool suspend)
+> +int freeze_secondary_cpus(int primary)
+>  {
+>  	int cpu, error = 0;
+>  
+> @@ -1352,7 +1352,7 @@ int __freeze_secondary_cpus(int primary, bool suspend)
+>  		if (cpu == primary)
+>  			continue;
+>  
+> -		if (suspend && pm_wakeup_pending()) {
+> +		if (pm_wakeup_pending()) {
+>  			pr_info("Wakeup pending. Abort CPU freeze\n");
+>  			error = -EBUSY;
+>  			break;
+> 
 
-> Paolo
-> 
-> >> +{
-> >> +	return ((supported_xss & mode_mask) &&
-> >> +		(guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
-> >> +		guest_cpuid_has(vcpu, X86_FEATURE_IBT)));
-> >> +}
+I would do this the other way around:
+
+1. Make x86 call freeze_secondary_cpus() directly, rename
+   enable_nonboot_cpus() and drop disable_nonboot_cpus().
+2. Get rid of __freeze_secondary_cpus().
+
+
+
