@@ -2,129 +2,111 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAA3C55199
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 15:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26655C54FCB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 15:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C2442074F
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 15:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00CAE206DD
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 15:39:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NYVYUIdX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QJQd9lMF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726196AbgDZPge (ORCPT
+        id S1726166AbgDZPjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 11:36:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47262 "EHLO
+        Sun, 26 Apr 2020 11:39:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726143AbgDZPgd (ORCPT
+        by vger.kernel.org with ESMTP id S1726143AbgDZPjq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 11:36:33 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D1C3C09B050
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 08:36:33 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id b2so14882872ljp.4
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 08:36:33 -0700 (PDT)
+        Sun, 26 Apr 2020 11:39:46 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A6D5C061A0F;
+        Sun, 26 Apr 2020 08:39:46 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id u6so14893422ljl.6;
+        Sun, 26 Apr 2020 08:39:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X77CRMCQDDgdc4Bur39RULXQxF3a/MrJ/qM13TQRcl0=;
-        b=NYVYUIdXiXEUEPYYT3I/R1qAnkPPt3cT7aB7wcoSmtGOcWinkwL3B4FAZKsqUsBC+7
-         EbE20jkfrnneUQiwAC3g3XB+K72YRxyC7g9/b3z8XqRwKEs7Phsfd9nQiLH0aY5a4sPy
-         YpSzGv+bVifsrIV7RfYcYTkf/rKBasnwAMVUHprWphf0HsikZIOwrJ16GBbbvY1+ObKA
-         VGvJ+y7WwtkxvVTJTuf8cZI1zMMyyY+sqfhGajVIPN+M2rDln91qxhZ+ewxRuOrRrKJV
-         mdxDKAYaguUjc/Dg6MV3ccxQP/KAwqmIJPUqWulw+eEM1J2C6XmPJZ5zx39OHRyBhDOK
-         qXyg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jr8sEIhRsWxfNNacf5SYVNwcphsrv+FjrP7kBOirJTk=;
+        b=QJQd9lMFsyuz1Ad9tC5dPDSbuz6E7T5RKFr1HOh2wjDqGYctUrgypDeDcRSGTieMwJ
+         H6NnO4Yc/l0rFQoe8Bj4EtY9otDJShrEeHsg8ZY7iK0Q995Hjle4LFDmqUVFn5H3rdBs
+         GNSsSiIdkfqN4Tdx0I8K5P+SpiTGzDh25zUai67okAzGRsG9EkokYvgGv/rn0xtoK9a8
+         0Gkuc5k6yNwoWZTAFfsNKt/w29uNdsCn0Lg5VEo2XOLojmlpR2mWBs0ZGxyRYRxkNXBS
+         z/UNMaqn8r70R2FS7fXtGgul7YHRlSVoqpX27u8WdbQhiJhHt0XD17hW1Ji11tp83YTq
+         RBBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X77CRMCQDDgdc4Bur39RULXQxF3a/MrJ/qM13TQRcl0=;
-        b=Mq/gk6ljG+4TDPpBLehddL4OykPmbfLCJVIhzjhuQ9+F2j20Cc4ZkQ4dsNJJf+7zQ4
-         EMhFFHTBYcwFSyxKQsUb6BqxiugKfbfvQR1Z4ZTA6fAWhU/OSPgDihrHg5crIxnigQjn
-         I5LsMDE0K+aOlbSwH3AM/jpLYp7hp2tf774ldlA7VSlMij2cyMOPyjjT9Pkh7oQhxTqy
-         AcY053LCpCguZNLr1bYVb1GmoMWO7Oz7UQ+HvQEFascVwj+eE+bGmRdPUXxk4Ibcwyb9
-         dRZhH69+qBtS+12knR17YenKRZrYV716IO1/nskWx/HHRKEcbkV38zqhjDR7Sy3KbsTb
-         1/8Q==
-X-Gm-Message-State: AGi0PuaEw7YFQ2hZ3jkOYVh2R1LpPOi8GCgLmz7mn+SyDsDJFUmw/ilI
-        abNICYx1ON/TTffW/UNTUlzW4yVpg+fZB5dmIZzXAQ==
-X-Google-Smtp-Source: APiQypKj/Im70RltLS80+jbqf0SqRD8efu2GTat9yvLZn+7xqD3hNXs33YaVw72fniLFc/ebyiVe0IHjroY93q9fxEE=
-X-Received: by 2002:a2e:553:: with SMTP id 80mr11651325ljf.147.1587915391895;
- Sun, 26 Apr 2020 08:36:31 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jr8sEIhRsWxfNNacf5SYVNwcphsrv+FjrP7kBOirJTk=;
+        b=tjR3HcMYBX/Z5f8ErUJ7NJnjWp234rSpWfrNabOWyQTineVcet3WrcQ1XnDrzIuqu+
+         XJ2myYayb3t059Unu92naSPNtTaw7dP/R45p9ZziKchXXWkUI4gAyckXm6gqHvAjnlDN
+         JcdE+wnbNons8sBKJ2BhdKMf1OgEoqQHZTB2GVPPQfHqdLQcgbhVuKrVQ+3JK/fk4Tld
+         sYeRne59vcu4zvQJD6Pdm64L80DZ/DoNy8QtZieWawKNbr8CphCVvZ/0Sj4t2ZgGCeDz
+         QLDvx2xOv8mo2IhfBjuja6pKk8SIpROr9aadNYW4Aw35ttkMWrrRfJrhlxGI+TAuirGC
+         ELcQ==
+X-Gm-Message-State: AGi0Puaz/g7GIuLQb7CaBpVKCvor8lYqpvwGzVDXzxLnr8w0iMhf1Npg
+        OP0VbpGBrwyYoN2W8hW/tEfcH7PA
+X-Google-Smtp-Source: APiQypK8caj6y5XA1W01MZCky8HR8ADFsCb7Xckwi9U/CjM8blPmWEzu1XrQ5Kcu9YpZutFtVEF1WQ==
+X-Received: by 2002:a2e:3c10:: with SMTP id j16mr11618254lja.2.1587915584390;
+        Sun, 26 Apr 2020 08:39:44 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id a26sm9307079lfl.66.2020.04.26.08.39.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 26 Apr 2020 08:39:43 -0700 (PDT)
+Subject: Re: [PATCH v3 3/9] input: elants: remove unused axes
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Henrik Rydberg <rydberg@bitmath.org>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Rob Herring <robh+dt@kernel.org>,
+        Scott Liu <scott.liu@emc.com.tw>,
+        David Heidelberg <david@ixit.cz>, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1586784389.git.mirq-linux@rere.qmqm.pl>
+ <62e897b0d6f6054dae26c853a9a1f1fb6d3c420b.1586784389.git.mirq-linux@rere.qmqm.pl>
+ <20200426045200.GN125362@dtor-ws> <20200426112150.GA16230@qmqm.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <a9828df8-c974-3bc2-6ecf-962489cf1189@gmail.com>
+Date:   Sun, 26 Apr 2020 18:39:41 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200423064808.10468-1-etienne.carriere@linaro.org>
- <20200423064808.10468-2-etienne.carriere@linaro.org> <CAL_JsqKvQasaBCHC2s68WmtfwGN+t349tzmF=ySkuYz11HzksQ@mail.gmail.com>
-In-Reply-To: <CAL_JsqKvQasaBCHC2s68WmtfwGN+t349tzmF=ySkuYz11HzksQ@mail.gmail.com>
-From:   Etienne Carriere <etienne.carriere@linaro.org>
-Date:   Sun, 26 Apr 2020 17:36:20 +0200
-Message-ID: <CAN5uoS-zizF_by6WDtF7j9MrGsRt1fir5w+r1cN1QNzDUf8zgQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] dt-bindings: arm: Add secure-clocks binding description
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200426112150.GA16230@qmqm.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 25 Apr 2020 at 00:06, Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Thu, Apr 23, 2020 at 1:49 AM Etienne Carriere
-> <etienne.carriere@linaro.org> wrote:
-> >
-> > Describe how clocks property can leverage secure- property prefix
-> > for clocks handled exclusively or shared by secure and non-secure
-> > worlds.
-> >
-> > Signed-off-by: Etienne Carriere <etienne.carriere@linaro.org>
-> > ---
-> >  .../devicetree/bindings/arm/secure.txt        | 19 +++++++++++++++++++
-> >  1 file changed, 19 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/secure.txt b/Documentation/devicetree/bindings/arm/secure.txt
-> > index f27bbff2c780..9bc94921f2a6 100644
-> > --- a/Documentation/devicetree/bindings/arm/secure.txt
-> > +++ b/Documentation/devicetree/bindings/arm/secure.txt
-> > @@ -53,6 +53,25 @@ Valid Secure world properties
-> >     status = "disabled";                             /* disabled in both */
-> >     status = "disabled"; secure-status = "disabled"; /* disabled in both */
-> >
-> > +- secure-clocks : specifies the Phandle list secure world shall use
-> > +  for the related clocks whereas property "clocks" specifies the
-> > +  clock Phandle list non-secure shall use for the that clocks.
-> > +  This configuration can apply for example when a hardware clock is
-> > +  shared by the 2 worlds and the hardware implements a specific interface
-> > +  for each world, i.e.:
-> > +
-> > +  clocks = <&clk DMA_NS>;      /* NS relies on clock handle DMA_NS */
-> > +  secure-clocks = <&clk DMA_S>;        /* S relies on clock handle DMA_S */
->
-> The device has to know what it's clocks are for and should know if
-> some clocks are secure only.
->
-> > +  Another example where use of "clocks" and "secure-clocks" can apply
-> > +  is when hardware implements a clock that secure and non-secure must
-> > +  share, as a shared GPIO bank clock, and secure world relies on clock
-> > +  device driver whereas non-secure world relies on a software service
-> > +  exposed by secure world as SCMI clock device. I.e.:
-> > +
-> > +  clocks = <&scmi_clk 2>;      /* NS relies on SCMI resources */
-> > +  secure-clocks= <&clk 5>;     /* S accesses the SoC reset interfaces */
->
-> If you have this case, I don't think this is the solution. I don't
-> think it scales well and you probably need separate DTs. It's
-> something to solve in the system DT project.
+26.04.2020 14:21, Michał Mirosław пишет:
+> On Sat, Apr 25, 2020 at 09:52:00PM -0700, Dmitry Torokhov wrote:
+>> On Mon, Apr 13, 2020 at 03:32:23PM +0200, Michał Mirosław wrote:
+>>> Driver only ever reports MT events. Clear capabilities of all others.
+>> This is not true. input_mt_sync_frame() calls
+>> input_mt_report_pointer_emulation() which does emut single-touch events
+>> for the benefit of older userspace (or userspace that is not interested
+>> in multitouch).
+> 
+> Oh, I didn't notice that. Looking at the code, I see that
+> input_mt_init_slots() sets up the emulated axes in this case.
+> 
+> Do you need me to update the commitmsg?
 
-Acked,
+I tried Ubuntu 12.04 that uses ancient libinput (or whatever it was back
+then), which doesn't support MT. Mouse doesn't move at all with this
+patch being applied. Without this patch mouse moves, but it's not usable
+because the cursor's position is wrong, i.e. mouse position doesn't
+match the screen touches.
 
-Thanks,
-Etienne
-
->
-> Rob
+This means that input_mt_report_pointer_emulation() doesn't set up
+everything needed for the legacy pointer emulation.
