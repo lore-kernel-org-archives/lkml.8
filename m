@@ -2,81 +2,106 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45110C55199
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 19:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2331EC55194
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 19:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33A8A206BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 19:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06DE12071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 19:49:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="QGQ8lVY0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726250AbgDZTsn (ORCPT
+        id S1726296AbgDZTt5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 15:48:43 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:55360 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbgDZTsn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 15:48:43 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 7F9EB1C0244; Sun, 26 Apr 2020 21:48:41 +0200 (CEST)
-Date:   Sun, 26 Apr 2020 21:48:40 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v20 03/17] leds: multicolor: Introduce a multicolor class
- definition
-Message-ID: <20200426194840.GA17668@duo.ucw.cz>
-References: <20200423155524.13971-1-dmurphy@ti.com>
- <20200423155524.13971-4-dmurphy@ti.com>
- <20200425202306.GA23926@amd>
- <a19ff014-32f1-eb18-ceb6-581503821fcc@gmail.com>
+        Sun, 26 Apr 2020 15:49:57 -0400
+Received: from mout.gmx.net ([212.227.17.21]:46519 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726171AbgDZTt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 15:49:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1587930592;
+        bh=f8Rl3upU2cRQsGsRVWr741bAGe6+dxkQS+/WJM7bXJU=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=QGQ8lVY0i5tohLKOoVD3RJ0dSObw6G0GpmvsxCGFaTfXCevQHMgz5Oa9NC5rDQx6b
+         0cqpCbY6m/ebxrRDFo5t4HEdZ/9VyWMB6crL9TOGaM0OcfIxTY43Gq1i+o+CsR0UKW
+         Nc/LyBIKoZ9k+OaE6IVIUYWA90OGiPFLebm8hjfc=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from LT02.fritz.box ([84.119.33.226]) by mail.gmx.com (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1N6bfq-1j8EAA1Zd8-0185iK; Sun, 26
+ Apr 2020 21:49:52 +0200
+From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>
+Subject: [PATCH 1/1] efi/libstub: setup_graphics() do not return random data
+Date:   Sun, 26 Apr 2020 21:49:46 +0200
+Message-Id: <20200426194946.112768-1-xypron.glpk@gmx.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
-Content-Disposition: inline
-In-Reply-To: <a19ff014-32f1-eb18-ceb6-581503821fcc@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:KBERLvPF/oK8jHQChRbe2qHTupabdkJ/eSIrpQk9wQfiJYoEQPT
+ /ypp3Bk3MHszy/3Icl6IHppfMWcRomEnXCjpb5oG1MceoqmaOdTGO0gRdp2lLEaPfQyTGbY
+ AQPZgDOvNQ1Cpf3HYeVg8kdbtxsjQ75EmmmK+SumJTPlGFfCIWPiLed1l7cz1vytklOotK8
+ 1urWoVx/SwKqV+17xbzMA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6JXg6lru20U=:f67Vjgkza4wfqij7pu58ky
+ Y0LxYPJNuZPS7LxoPL2NzLSxKGAoYJs689zXD/wlp5iX8q2ArpYLcJn5cqfQbVRnM6778QR7j
+ 0stcc79LXLamcJ+gmgIL7gTNXtCO8QkcUgXdvE9cCBtsv+L31gatSHaxHyltCftY2hAHepZpQ
+ 0T40A167fUMeIyUxEW0TlVAWhABkkHdoDo+eYYcqbCvIN99QGQE2T140tE907U/RzzMnzrSSc
+ /Ya/LFxY+VCqIrCqoiwr+Tu5nQekZvlPeeqMC5caLIhHuBGoOZtVnl4lQFO/sj7VI2OuEErdz
+ Lh8MXMW2NY+WdTy2t/WcHxSfVF5EqUGw4L8ffe3IPxGRB4V7JTSbLph9jT+LUr7oLzC6onNx2
+ KW4dKVlzU1i924uM368z8umkxj2ENudJnVm47PwtJQwqcfxh9Qnk9Nuy0Beupxp+hpDnd17qT
+ 2/+k9Hh+ZsjAqrzRNfS1G2j9ai+k3oSDhueNfM800bTYyZkIC1xJjEbgaNFqtcu/QyTizLgbh
+ C/OSpyL5FYj5tQtF5yhLB+jnlAVNMjBTY1i9muMqeS8c7EvdtwOtmfoIU+7nQIu0jWUFzSI2I
+ zQnJPOUUiVhmbOA4y9PVaOW6n7nwxaxrYcaE6d/VFSvE8+2JkSDwzshk1od4IX8sfgQiD2SCr
+ r5ZlcqpK1b9kd12bqLijE7gGNHlrQ9lL524W0d8VJPMq5sbOosOIzLheOFL++mrUSDsYNiz0s
+ M8aWY0VbACltKV8RSEOrTNvGlBp8IOynqk+ans54G/d86ODbQr+vOagVeB0TDzvq+j+XZeqKc
+ +nRx5/NJT3DdbMGCbbGQaxdqjmv8FFyN6gi9IOHLU0WcYJIQce6ioT6gUi9o/ycLFaQ6KtLDS
+ dKA7uzw968VcDywTbl+fHM1h2CZ7hCyQir0TymYlmzyK6TFv3bGGyGLEvzAaVBQgzoZLHGqqm
+ JtYLX4Nn66V7C6iBdsH4mjtQ9uWnnQRuAaSkXL8clRJ6ZCnlgRpQY5PESYZKI9QA4Coz7q0KT
+ Eh0DNP1W/Ykk/Z9G9nID3/RLjlsyPfkZQM1LLrKrgqn0D0Fy22HOar9dKZ7DZ5lvnm3aFSj3b
+ 3CQEO7mEOvls+swDDkqf6p1/YPREur4pK5Rg78o1Yx8Ry0poH9QoDI6atHQCluPffuGlf+2O7
+ mru8fRx/yZIwyR0jnj6u5sFePj/2Qk/u3GI8nYPZ4pBeUxe5A1TBtKDoBEc3GQZJm0irtdk2E
+ +fFLcuRhiOOVds5SW
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Currently setup_graphics() ignores the return value of efi_setup_gop(). As
+AllocatePool() does not zero out memory the screen information table will
+contain random data in this case.
 
---UugvWAfsgieZRqgk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+We should free the screen information table if efi_setup_gop() returns an
+error code.
 
-Hi!
+Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+=2D--
+ drivers/firmware/efi/libstub/efi-stub.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-> > Do we need to include these stubs? I guess it is okay to have them,
-> > OTOH I'd expect drivers to depend on MULTICOLOR being available...
->=20
-> Single driver can support both monochrome and multicolor LED class,
-> which is chosen basing on DT. In this regard having no-ops for LED mc
-> class is justified since it is a superset of monochrome LED class.
+diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/ef=
+i/libstub/efi-stub.c
+index ee225b323687..60377e5ceab3 100644
+=2D-- a/drivers/firmware/efi/libstub/efi-stub.c
++++ b/drivers/firmware/efi/libstub/efi-stub.c
+@@ -55,7 +55,11 @@ static struct screen_info *setup_graphics(void)
+ 		si =3D alloc_screen_info();
+ 		if (!si)
+ 			return NULL;
+-		efi_setup_gop(si, &gop_proto, size);
++		status =3D efi_setup_gop(si, &gop_proto, size);
++		if (status !=3D EFI_SUCCESS) {
++			free_screen_info(si);
++			return NULL;
++		}
+ 	}
+ 	return si;
+ }
+=2D-
+2.26.2
 
-Ok, makes sense.
-
-Best regards,
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---UugvWAfsgieZRqgk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXqXlmAAKCRAw5/Bqldv6
-8nK4AJ4rhy+wGHqevOWd+5jK8x3+agAoHwCeNDL98RczQOuBPloBa5zNETAjeFM=
-=vnHD
------END PGP SIGNATURE-----
-
---UugvWAfsgieZRqgk--
