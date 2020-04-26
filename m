@@ -2,126 +2,248 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B29C55191
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B98C55191
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6951C2071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F11E2071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:18:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587892703;
+	bh=3CoP6ogGXHk1LfA8Jc1kZHx/pSDuBXwS1LqQpBbUBjA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=BhOGYj/n21fBc6W0AANLWcyXRB4OqrwEOlliK+NHTamgLGIzqy/lJNR2ftDHSjltZ
+	 iorrrC/JijAtIv/UzSahNtx5Nhe8mlXwxzX1OSBz1SMJmtkhOcIIRcA+2YWmSgEEUg
+	 iRvvrVN2Bd9oIcJJk4A9C85gId44cru4Nf2fYKTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726146AbgDZJSO (ORCPT
+        id S1726163AbgDZJSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 05:18:14 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:40368 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726132AbgDZJSN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 05:18:13 -0400
-Received: by mail-io1-f72.google.com with SMTP id k4so17079868ios.7
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 02:18:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=6vjTaIhg0HKYZTo/0/3anwAnw5cVaooRrEtl+peewHI=;
-        b=Ix7CgHhPGri1AHSfmlSU6kzLsM97CHWunZHuGWW7AHLnaCrS32GrjT6LOnf8RtbPyq
-         h58kDaHOAS+Ci2k8KAbHC08hhdyq1Wh7JyfO2/x9Ug9lQi0OGCNPtI1Z/A4x4FRk0WbM
-         IdF5TzngXljuUuoE8peOM+nXfUXKVkq2xcpNfMF2Soa33WrfxNFJUiAY9oB1mG83sQAA
-         z1yoUp3jyyQVK7pQZ/8oR8IN38YSJjGFpv/wE1dBzQGak2skpP2sqQ+U8nHHqGrFB0cy
-         40Dc32K0G3k4URJk9bdsVdOnCesaVW3l19G+WjaoI/KfMJ7Lq5B9tR6cpBR1fjDWP135
-         yUww==
-X-Gm-Message-State: AGi0Pubv7i8huP/vw74AT1LpLTKPhk9hmnRcn9rywShlNthnzff+WkJA
-        50K0A0l8c/+VhZQwS9SYeLIHmOnpNTv3TeqeLONCX8SJGTOX
-X-Google-Smtp-Source: APiQypLh7tYlwedJVLAFbWRCg24jej5lpBRVN2xHrPXC82I6g8gyxbzXGvYF6N5s2dtwlnOTfNhtBL2Wm31JbOhojvhVHce9vy5/
+        Sun, 26 Apr 2020 05:18:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49030 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726143AbgDZJSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 05:18:17 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8054F2080C;
+        Sun, 26 Apr 2020 09:18:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587892696;
+        bh=3CoP6ogGXHk1LfA8Jc1kZHx/pSDuBXwS1LqQpBbUBjA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=g/lG9j40LiZ6Csb+ZhFUn/wOnUKjGECSwr5Vs2XwBjvxGDgabSEOIUCPypDAZ80xW
+         EFqbTXWkPqBghf6O8gh8zOQG3MjNs/TV4ntCIiyoPHnt0shlFrWX9Pxr1n3DcRx3NL
+         wPIY0CbcIrtURQ3623vzWZeVWbGJGRbBr+hgDXwQ=
+Date:   Sun, 26 Apr 2020 10:18:12 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Mathieu Othacehe <m.othacehe@gmail.com>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 3/4] iio: vcnl4000: Add sampling frequency support
+ for VCNL4010/20.
+Message-ID: <20200426101812.22a3cdec@archlinux>
+In-Reply-To: <20200422130856.1722-4-m.othacehe@gmail.com>
+References: <20200422130856.1722-1-m.othacehe@gmail.com>
+        <20200422130856.1722-4-m.othacehe@gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:dca:: with SMTP id l10mr15654457ilj.215.1587892692712;
- Sun, 26 Apr 2020 02:18:12 -0700 (PDT)
-Date:   Sun, 26 Apr 2020 02:18:12 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e405c105a42e13ec@google.com>
-Subject: WARNING in drop_nlink
-From:   syzbot <syzbot+df958cf5688a96ad3287@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, 22 Apr 2020 15:08:55 +0200
+Mathieu Othacehe <m.othacehe@gmail.com> wrote:
 
-syzbot found the following crash on:
+> Add sampling frequency support for proximity data on VCNL4010 and VCNL4020
+> chips.
+> 
+> Signed-off-by: Mathieu Othacehe <m.othacehe@gmail.com>
+One possible suggestion inline seeing as you'll be doing a v6.
+I'm not that fussed if you would rather leave it for now though.
 
-HEAD commit:    189522da Merge tag 'for_linus' of git://git.kernel.org/pub..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16747530100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=78a7d8adda44b4b
-dashboard link: https://syzkaller.appspot.com/bug?extid=df958cf5688a96ad3287
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11e45dbfe00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11b5b36fe00000
+Jonathan
 
-Bisection is inconclusive: the bug happens on the oldest tested release.
+> ---
+>  drivers/iio/light/vcnl4000.c | 112 ++++++++++++++++++++++++++++++++++-
+>  1 file changed, 111 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
+> index 4041608910d0..aefb549953ad 100644
+> --- a/drivers/iio/light/vcnl4000.c
+> +++ b/drivers/iio/light/vcnl4000.c
+> @@ -86,6 +86,19 @@
+>  #define VCNL4010_INT_DRDY \
+>  	(BIT(VCNL4010_INT_PROXIMITY) | BIT(VCNL4010_INT_ALS))
+>  
+> +#define VCNL4010_PROXIMITY_SAMPLING_FREQUENCY_AVAILABLE  \
+> +	"1.95 3.90 7.81 16.62 31.25 62.5 125 250"
+> +
+> +static const int vcnl4010_prox_sampling_frequency[][2] = {
+> +	{1, 950000},
+> +	{3, 906250},
+> +	{7, 812500},
+> +	{16, 625000},
+> +	{31, 250000},
+> +	{62, 500000},
+> +	{125, 0},
+> +	{250, 0},
+> +};
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12a81dc8100000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=11a81dc8100000
-console output: https://syzkaller.appspot.com/x/log.txt?x=16a81dc8100000
+I mentioned in my (late) review for v4 that this lends itself
+to using the read_avail callback.  However that can always come
+as a follow up patch as there is nothing 'wrong' with what you
+do here as such.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+df958cf5688a96ad3287@syzkaller.appspotmail.com
+>  
+>  #define VCNL4000_SLEEP_DELAY_MS	2000 /* before we enter pm_runtime_suspend */
+>  
+> @@ -366,6 +379,24 @@ static int vcnl4200_measure_proximity(struct vcnl4000_data *data, int *val)
+>  	return vcnl4200_measure(data, &data->vcnl4200_ps, val);
+>  }
+>  
+> +static int vcnl4010_read_proxy_samp_freq(struct vcnl4000_data *data, int *val,
+> +					 int *val2)
+> +{
+> +	int ret;
+> +
+> +	ret = i2c_smbus_read_byte_data(data->client, VCNL4010_PROX_RATE);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (ret >= ARRAY_SIZE(vcnl4010_prox_sampling_frequency))
+> +		return -EINVAL;
+> +
+> +	*val = vcnl4010_prox_sampling_frequency[ret][0];
+> +	*val2 = vcnl4010_prox_sampling_frequency[ret][1];
+> +
+> +	return 0;
+> +}
+> +
+>  static bool vcnl4010_is_in_periodic_mode(struct vcnl4000_data *data)
+>  {
+>  	int ret;
+> @@ -459,11 +490,75 @@ static int vcnl4010_read_raw(struct iio_dev *indio_dev,
+>  
+>  		iio_device_release_direct_mode(indio_dev);
+>  		return ret;
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		switch (chan->type) {
+> +		case IIO_PROXIMITY:
+> +			ret = vcnl4010_read_proxy_samp_freq(data, val, val2);
+> +			if (ret < 0)
+> +				return ret;
+> +			return IIO_VAL_INT_PLUS_MICRO;
+> +		default:
+> +			return -EINVAL;
+> +		}
+>  	default:
+>  		return -EINVAL;
+>  	}
+>  }
+>  
+> +static int vcnl4010_write_proxy_samp_freq(struct vcnl4000_data *data, int val,
+> +					  int val2)
+> +{
+> +	const unsigned int len = ARRAY_SIZE(vcnl4010_prox_sampling_frequency);
+> +	unsigned int i = len;
+> +
+> +	do {
+> +		if (val > vcnl4010_prox_sampling_frequency[i][0])
+> +			break;
+> +	} while (--i);
+> +
+> +	if (i == len)
+> +		return -EINVAL;
+> +
+> +	return i2c_smbus_write_byte_data(data->client, VCNL4010_PROX_RATE, i);
+> +}
+> +
+> +static int vcnl4010_write_raw(struct iio_dev *indio_dev,
+> +			      struct iio_chan_spec const *chan,
+> +			      int val, int val2, long mask)
+> +{
+> +	int ret;
+> +	struct vcnl4000_data *data = iio_priv(indio_dev);
+> +
+> +	ret = iio_device_claim_direct_mode(indio_dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Protect against event capture. */
+> +	if (vcnl4010_is_in_periodic_mode(data)) {
+> +		ret = -EBUSY;
+> +		goto end;
+> +	}
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		switch (chan->type) {
+> +		case IIO_PROXIMITY:
+> +			ret = vcnl4010_write_proxy_samp_freq(data, val, val2);
+> +			goto end;
+> +		default:
+> +			ret = -EINVAL;
+> +			goto end;
+> +		}
+> +	default:
+> +		ret = -EINVAL;
+> +		goto end;
+> +	}
+> +
+> +end:
+> +	iio_device_release_direct_mode(indio_dev);
+> +	return ret;
+> +}
+> +
+>  static int vcnl4010_read_event(struct iio_dev *indio_dev,
+>  			       const struct iio_chan_spec *chan,
+>  			       enum iio_event_type type,
+> @@ -668,23 +763,38 @@ static const struct iio_chan_spec vcnl4010_channels[] = {
+>  	}, {
+>  		.type = IIO_PROXIMITY,
+>  		.scan_index = 0,
+> -		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+> +			BIT(IIO_CHAN_INFO_SAMP_FREQ),
+>  		.event_spec = vcnl4000_event_spec,
+>  		.num_event_specs = ARRAY_SIZE(vcnl4000_event_spec),
+>  		.ext_info = vcnl4000_ext_info,
+>  	},
+>  };
+>  
+> +static IIO_CONST_ATTR(in_proximity_sampling_frequency_available,
+> +		      VCNL4010_PROXIMITY_SAMPLING_FREQUENCY_AVAILABLE);
+> +
+> +static struct attribute *vcnl4010_attributes[] = {
+> +	&iio_const_attr_in_proximity_sampling_frequency_available.dev_attr.attr,
+> +	NULL
+> +};
+> +
+> +static const struct attribute_group vcnl4010_attribute_group = {
+> +	.attrs = vcnl4010_attributes,
+> +};
+> +
+>  static const struct iio_info vcnl4000_info = {
+>  	.read_raw = vcnl4000_read_raw,
+>  };
+>  
+>  static const struct iio_info vcnl4010_info = {
+>  	.read_raw = vcnl4010_read_raw,
+> +	.write_raw = vcnl4010_write_raw,
+>  	.read_event_value = vcnl4010_read_event,
+>  	.write_event_value = vcnl4010_write_event,
+>  	.read_event_config = vcnl4010_read_event_config,
+>  	.write_event_config = vcnl4010_write_event_config,
+> +	.attrs    = &vcnl4010_attribute_group,
+>  };
+>  
+>  static const struct vcnl4000_chip_spec vcnl4000_chip_spec_cfg[] = {
 
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 7023 at fs/inode.c:303 drop_nlink+0xb9/0x100 fs/inode.c:303
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 7023 Comm: syz-executor433 Not tainted 5.7.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1e9/0x30e lib/dump_stack.c:118
- panic+0x264/0x7a0 kernel/panic.c:221
- __warn+0x209/0x210 kernel/panic.c:582
- report_bug+0x1ac/0x2d0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:175 [inline]
- do_error_trap+0xca/0x1c0 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:drop_nlink+0xb9/0x100 fs/inode.c:303
-Code: 49 8b 1e 48 8d bb b8 07 00 00 be 08 00 00 00 e8 fd 65 ef ff f0 48 ff 83 b8 07 00 00 5b 41 5c 41 5e 41 5f 5d c3 e8 f7 b8 b1 ff <0f> 0b eb 8a 44 89 e1 80 e1 07 80 c1 03 38 c1 0f 8c 63 ff ff ff 4c
-RSP: 0018:ffffc900015d7da0 EFLAGS: 00010293
-RAX: ffffffff81c1a899 RBX: 1ffff11010d63ab1 RCX: ffff8880a7e88200
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: ffffffff81c1a81e R09: ffffed1010d63ab9
-R10: ffffed1010d63ab9 R11: 0000000000000000 R12: ffff888086b1d588
-R13: 1ffff110114efcf2 R14: ffff888086b1d540 R15: dffffc0000000000
- inode_dec_link_count include/linux/fs.h:2210 [inline]
- minix_unlink+0xc7/0x100 fs/minix/namei.c:164
- vfs_unlink+0x30c/0x5a0 fs/namei.c:3809
- do_unlinkat+0x377/0x7e0 fs/namei.c:3873
- do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x449ac7
-Code: 0f 1f 00 b8 58 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 ad cd fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 b8 57 00 00 00 0f 05 <48> 3d 01 f0 ff ff 0f 83 8d cd fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffe753dcec8 EFLAGS: 00000246 ORIG_RAX: 0000000000000057
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000449ac7
-RDX: 0000000001fb39e3 RSI: 00007ffe753dcee0 RDI: 00007ffe753dcf70
-RBP: 0000000000000002 R08: 0000000000000000 R09: 000000000000000d
-R10: 0000000000000003 R11: 0000000000000246 R12: 0000000001fb3980
-R13: 00007ffe753de060 R14: 0000000000000000 R15: 0000000000000000
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
