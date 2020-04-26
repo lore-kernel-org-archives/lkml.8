@@ -2,142 +2,137 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C137C55199
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E066C55191
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D05720706
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:01:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="SOJ0e9h/"
+	by mail.kernel.org (Postfix) with ESMTP id 1FAA920706
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:02:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726141AbgDZLBd (ORCPT
+        id S1726170AbgDZLCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 07:01:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33084 "EHLO
+        Sun, 26 Apr 2020 07:02:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726119AbgDZLBc (ORCPT
+        by vger.kernel.org with ESMTP id S1726119AbgDZLC3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 07:01:32 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BB20C09B04F
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 04:01:32 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id x4so16277828wmj.1
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 04:01:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=RrhmdO0DLNjfBMDoqT4uy73PlihIJnZjBGcOAEACVLQ=;
-        b=SOJ0e9h/vfQZL3fIsHaTnpWUyWcPJ8BtfMjph1KCE0tRbZP2i7AlCnU653nkIXiOPP
-         aa5Dx1YA180Z/TBpL3G0M3ywHrcwihnMg6zk5p6RMuMq+8uQaz9BGSOfEI5kbP5NYQw4
-         MOxZmXM9onjxNbW9ZgymV65EkkoAwY3XJh0t8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=RrhmdO0DLNjfBMDoqT4uy73PlihIJnZjBGcOAEACVLQ=;
-        b=VEZHzb5GFplmVxArOL9PU9UcWITvTk02UsnNpxDXQ0DXPS8ivIvbZgkd9uqHC6vLCf
-         6vSkcoQ3wDG2Qz9UInC/ta+wEV0ZSpfqo/KelfkiN2073mZlw/DC63baL60r2A1AY/2t
-         lrb8BMgaqAAWV8/8iKR3w6rYc+Qwp0ywe2UXJ2cVmBa4NnrrROSAeTcFeAyUJdDHvnlx
-         LGRPNUioOt+dMz0wBXioEnkCSxjX8BshXLljggqM3afWD1lvqvz75Ku+G0pVtYdf+K7q
-         EM8Ddlzgo9h8+qjZqnptzL8NKYsGjy9mplrVYeGe5fVn9fCz3XE7WH707Q94HJ2xfdfS
-         dpsw==
-X-Gm-Message-State: AGi0PuZCoui/YeAj4MqEtZaM4S3NRO3aqrInN9sZbY7A5K9QHaWP5QG/
-        MSq4wxwIhVlRx45WYj4iWMOy5g==
-X-Google-Smtp-Source: APiQypKNGHSJziLKlpT3nTU2sPDDe98lUcVdHC0Mf29p4r46R6e+U+gqONTPjIa3F/qs3ED7pv8Upw==
-X-Received: by 2002:a7b:c3d4:: with SMTP id t20mr21410207wmj.170.1587898891012;
-        Sun, 26 Apr 2020 04:01:31 -0700 (PDT)
-Received: from cloudflare.com ([2a02:a310:c262:aa00:b35e:8938:2c2a:ba8b])
-        by smtp.gmail.com with ESMTPSA id v7sm10002236wmg.3.2020.04.26.04.01.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Apr 2020 04:01:30 -0700 (PDT)
-References: <1587872115-42805-1-git-send-email-xiyuyang19@fudan.edu.cn>
-User-agent: mu4e 1.1.0; emacs 26.3
-From:   Jakub Sitnicki <jakub@cloudflare.com>
-To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Cc:     John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Lorenz Bauer <lmb@cloudflare.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Lingpeng Chen <forrest0579@gmail.com>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
-        Xin Tan <tanxin.ctf@gmail.com>
-Subject: Re: [PATCH v2] bpf: Fix sk_psock refcnt leak when receiving message
-In-reply-to: <1587872115-42805-1-git-send-email-xiyuyang19@fudan.edu.cn>
-Date:   Sun, 26 Apr 2020 13:01:29 +0200
-Message-ID: <87k122v7cm.fsf@cloudflare.com>
+        Sun, 26 Apr 2020 07:02:29 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD9B5C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 04:02:29 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jSf37-0002WT-Ej; Sun, 26 Apr 2020 13:02:13 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id D4334100605; Sun, 26 Apr 2020 13:02:12 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Fenghua Yu <fenghua.yu@intel.com>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Jacob Jun Pan <jacob.jun.pan@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
+        iommu@lists.linux-foundation.org, Fenghua Yu <fenghua.yu@intel.com>
+Subject: Re: [PATCH 1/7] docs: x86: Add a documentation for ENQCMD
+In-Reply-To: <1585596788-193989-2-git-send-email-fenghua.yu@intel.com>
+References: <1585596788-193989-1-git-send-email-fenghua.yu@intel.com> <1585596788-193989-2-git-send-email-fenghua.yu@intel.com>
+Date:   Sun, 26 Apr 2020 13:02:12 +0200
+Message-ID: <87368qtsqz.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 05:35 AM CEST, Xiyu Yang wrote:
-> tcp_bpf_recvmsg() invokes sk_psock_get(), which returns a reference of
-> the specified sk_psock object to "psock" with increased refcnt.
->
-> When tcp_bpf_recvmsg() returns, local variable "psock" becomes invalid,
-> so the refcount should be decreased to keep refcount balanced.
->
-> The reference counting issue happens in several exception handling paths
-> of tcp_bpf_recvmsg(). When those error scenarios occur such as "flags"
-> includes MSG_ERRQUEUE, the function forgets to decrease the refcnt
-> increased by sk_psock_get(), causing a refcnt leak.
->
-> Fix this issue by calling sk_psock_put() or pulling up the error queue
-> read handling when those error scenarios occur.
->
-> Fixes: e7a5f1f1cd000 ("bpf/sockmap: Read psock ingress_msg before sk_receive_queue")
-> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-> ---
-> Changes in v2:
-> - Add Fixes tag
-> - Pull up the error queue read handling
-> ---
->  net/ipv4/tcp_bpf.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
->
-> diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
-> index 5a05327f97c1..ff96466ea6da 100644
-> --- a/net/ipv4/tcp_bpf.c
-> +++ b/net/ipv4/tcp_bpf.c
-> @@ -262,14 +262,17 @@ static int tcp_bpf_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
->  	struct sk_psock *psock;
->  	int copied, ret;
->  
-> +	if (unlikely(flags & MSG_ERRQUEUE))
-> +		return inet_recv_error(sk, msg, len, addr_len);
-> +
->  	psock = sk_psock_get(sk);
->  	if (unlikely(!psock))
->  		return tcp_recvmsg(sk, msg, len, nonblock, flags, addr_len);
-> -	if (unlikely(flags & MSG_ERRQUEUE))
-> -		return inet_recv_error(sk, msg, len, addr_len);
->  	if (!skb_queue_empty(&sk->sk_receive_queue) &&
-> -	    sk_psock_queue_empty(psock))
-> +	    sk_psock_queue_empty(psock)) {
-> +		sk_psock_put(sk, psock);
->  		return tcp_recvmsg(sk, msg, len, nonblock, flags, addr_len);
-> +	}
->  	lock_sock(sk);
->  msg_bytes_ready:
->  	copied = __tcp_bpf_recvmsg(sk, psock, msg, len, flags);
+Fenghua Yu <fenghua.yu@intel.com> writes:
 
-Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
+s/Add a documentation/Add documentation/
+
+> From: Ashok Raj <ashok.raj@intel.com>
+>
+> ENQCMD and Data Streaming Accelerator (DSA) and all of their associated
+> features are a complicated stack with lots of interconnected pieces.
+> This documentation provides a big picture overview for all of the
+> features.
+>
+> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> Co-developed-by: Fenghua Yu <fenghua.yu@intel.com>
+> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
+> ---
+>  Documentation/x86/enqcmd.rst | 185 +++++++++++++++++++++++++++++++++++
+
+How is that hooked up into the Documentation index?
+
+ Documentation/x86/enqcmd.rst: WARNING: document isn't included in any toctree
+
+> +++ b/Documentation/x86/enqcmd.rst
+> @@ -0,0 +1,185 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +Improved Device Interaction Overview
+
+So the document is about ENQCMD, right? Can you please make that in some
+way consistently named?
+
+> +
+> +== Background ==
+
+This lacks any docbook formatting.... The resulting HTML looks like ...
+
+> +
+> +Shared Virtual Addressing (SVA) allows the processor and device to use the
+> +same virtual addresses avoiding the need for software to translate virtual
+> +addresses to physical addresses. ENQCMD is a new instruction on Intel
+> +platforms that allows user applications to directly notify hardware of new
+> +work, much like doorbells are used in some hardware, but carries a payload
+> +that carries the PASID and some additional device specific commands
+> +along with it.
+
+Sorry that's not background information, that's an agglomeration of
+words.
+
+Can you please explain properly what's the background of SVA, how it
+differs from regular device addressing and what kind of requirements it
+has?
+
+ENQCMD is not related to background. It's part of the new technology.
+
+> +== Address Space Tagging ==
+> +
+> +A new MSR (MSR_IA32_PASID) allows an application address space to be
+> +associated with what the PCIe spec calls a Process Address Space ID
+> +(PASID). This PASID tag is carried along with all requests between
+> +applications and devices and allows devices to interact with the process
+> +address space.
+
+Sigh. The important part here is not the MSR. The important part is to
+explain what PASID is and where it comes from. Documentation has similar
+rules as changelogs:
+
+      1) Provide context
+
+      2) Explain requirements
+      
+      3) Explain implementation
+
+The pile you provided is completely backwards and unstructured.
+
+Thanks,
+
+        tglx
