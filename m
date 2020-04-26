@@ -2,133 +2,116 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9FCC55199
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0CBC54FCB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED6220706
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 670582064C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:08:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UNfbk6ks"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZGfYaozg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbgDZQHg (ORCPT
+        id S1726185AbgDZQIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 12:07:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52066 "EHLO
+        Sun, 26 Apr 2020 12:08:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725778AbgDZQHg (ORCPT
+        by vger.kernel.org with ESMTP id S1725778AbgDZQIk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 12:07:36 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA1B8C061A0F;
-        Sun, 26 Apr 2020 09:07:35 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id r26so17545056wmh.0;
-        Sun, 26 Apr 2020 09:07:35 -0700 (PDT)
+        Sun, 26 Apr 2020 12:08:40 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D3E1C061A0F;
+        Sun, 26 Apr 2020 09:08:39 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id b2so14936542ljp.4;
+        Sun, 26 Apr 2020 09:08:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Z46jKueF8apft1rykN4CZSqYJRnUDAIwCvJSBs+4w9c=;
-        b=UNfbk6ksCqtl9x14pfIyUFu/6dyc/ftwvOJWHJIsk2qjkH8ez3UpillV6ZFS97/8D6
-         iL6ZJ5DrG+yPA0omZF2dmRkev8o914YHTqGWCbW9HXBQ5ujKnJy04jfgw98a3VQa16dZ
-         BWYvSs36x2De6nWOE2bKEq81zZBcoN1q27RsdRU65B2bLMA2o0N+jqP7A1tDMuTLg5Y8
-         d2On1PG8/rhe8+Ltda0EH/BlEAFjS1yp02Esv/yBdep3N2KckvZwz/FqwAE89DlLQDo/
-         hR5GuYQu8OzsePq0fui9yBmC0vIDdmzTm1L7JmQH3kNtQcrH7c1h5gKYu8jw+RiIel9M
-         LPhQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=b9kk4vl45+yZfIOFMLozV6PyfATmkyRQJ6xZ8G56ZKQ=;
+        b=ZGfYaozgkdnfK55JvLARbIVWkAHmE+BnX1DiWw7pO/OUdvPkivcUUXX34rml3PDerf
+         COC4ZHbfmlXquZla3mRNiKsRj0Gbq4XL9RgJyikfhdd9LUJx9WVhLnLjU+U7vM2QpUJr
+         4BMSDqO/el4LTSF+8W7wWlm5wlCjfet1sMvt+wZ1HvCNWA8e6LE0tUVC2yOLYMHh5tpj
+         6Z6q/rP6YjYCz79/6pEtklfRKQaybAEbkgEklM7i1XoRexDF+Pa5zRecyM87wKhc4q+V
+         o+ei78RZqBcpYahe/rxjlpyFgUgBrKq0uZmEHwj+Aj/4zUGWeUgS5StjtMGq44rHYEeB
+         Tn/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Z46jKueF8apft1rykN4CZSqYJRnUDAIwCvJSBs+4w9c=;
-        b=dw72+xcj63qWznIKiJIMH2jFvvR7umG1murRyTWzfX6wM0xeqFstyAWjYuX2fik5my
-         p9700O+JZJ5Ao6bR1xgio2Y3jGYzfWw+geHMLGZZvWvEepPAtZyXcxFZIgGQziXtRAFI
-         CDlUsznDHZibqtXaMTmlsmfQeren/mwpjBSGtS5X1sUHsmUwSN0AaE7LlVy6KstUyLNy
-         WNrQCSPRBNlEeXYEehJ6J6GWijbOa+JHqXmceHNPdwVUI6FhGf7r9GqBjUnurzvlT9Ac
-         rmJzujUCJw0ebj4JYyFDnhhukIPeCfOlk+QClB1UNRUlpzQA9Nm50GYsoP+ldP9C9/cm
-         v6FA==
-X-Gm-Message-State: AGi0Pua5+AVaKjQsoQINhPz4Gd1C7gqT85bMY/vPymgUPhsuOJEWr7Vv
-        YVnwgiSsWDNaofKB3nzO3fw7D49A
-X-Google-Smtp-Source: APiQypKAd+JPL+aRE/uAR++T3XOU/Xa9B6yjPMdB0ygN9EAAwu5YVAC0xw1lV4b7/ytIdjIMXwb7oQ==
-X-Received: by 2002:a05:600c:4401:: with SMTP id u1mr21113074wmn.31.1587917254426;
-        Sun, 26 Apr 2020 09:07:34 -0700 (PDT)
-Received: from [192.168.1.23] (afcl109.neoplus.adsl.tpnet.pl. [95.49.63.109])
-        by smtp.gmail.com with ESMTPSA id p190sm11870398wmp.38.2020.04.26.09.07.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 26 Apr 2020 09:07:33 -0700 (PDT)
-Subject: Re: [PATCH v20 12/17] leds: lp55xx: Add multicolor framework support
- to lp55xx
-To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200423155524.13971-1-dmurphy@ti.com>
- <20200423155524.13971-13-dmurphy@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <24aa265c-46ca-1643-7781-9ddbf734405b@gmail.com>
-Date:   Sun, 26 Apr 2020 18:07:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=b9kk4vl45+yZfIOFMLozV6PyfATmkyRQJ6xZ8G56ZKQ=;
+        b=KIjYyFuMrvPvz7GOvQybUPwNdGSr/zuZi0/bvwLDTXzJ670urICOkngBE9zBAvEySu
+         tcwf57vPfhAIARosIJz7rSELKdNoWmet0QnLPgEBi4tifxTGP40r8BGDrBh/XTNAIG1z
+         WKbJ/44jX5VwRpz7LvRlZgngsqx8R+kkcDS1py3KZcKM7Og1BJotMULr3Bl0DBvzMeFl
+         HiuWRupNzOLF8LnwR7z5wvrHjT/QjaPEkMai2UAxGzcbX+ut6OVv4dROiQBK+hbq3bNl
+         AgfCUwJtHfyOYuFC4GQfUsdCss5M6BeUWKkPI86nlJ7L1eZcWHt8WfQrXxbFSi8Q4iPR
+         +jhg==
+X-Gm-Message-State: AGi0PuZcj6Mq1Yj6p/BNOzybpr7uC/fn33RRPpIQ/bKfX2+H7tSH0XJZ
+        2xWI35IC3ykiShbSprfqulx2NaC0dELgArPnmWc=
+X-Google-Smtp-Source: APiQypKqBU3rGhiEO1mO9gk9syX6teWk3R7poC2ly0NQL2QkCZd3eU185uQRC4yn6mfzJkbQZW5KzYDcy7klPauIAXc=
+X-Received: by 2002:a2e:b80b:: with SMTP id u11mr11911427ljo.212.1587917317736;
+ Sun, 26 Apr 2020 09:08:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200423155524.13971-13-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200420184750.218489-1-zenczykowski@gmail.com>
+In-Reply-To: <20200420184750.218489-1-zenczykowski@gmail.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Sun, 26 Apr 2020 09:08:26 -0700
+Message-ID: <CAADnVQ+oVnmpMbmt482pUs+Nb8tny3_WGPbqTtWvVpCJZsbEKQ@mail.gmail.com>
+Subject: Re: [PATCH] net: bpf: make bpf_ktime_get_ns() available to non GPL programs
+To:     =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <zenczykowski@gmail.com>
+Cc:     =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <maze@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Linux Network Development Mailing List 
+        <netdev@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
+On Mon, Apr 20, 2020 at 11:47 AM Maciej =C5=BBenczykowski
+<zenczykowski@gmail.com> wrote:
+>
+> From: Maciej =C5=BBenczykowski <maze@google.com>
+>
+> The entire implementation is in kernel/bpf/helpers.c:
+>
+> BPF_CALL_0(bpf_ktime_get_ns) {
+>        /* NMI safe access to clock monotonic */
+>        return ktime_get_mono_fast_ns();
+> }
+>
+> const struct bpf_func_proto bpf_ktime_get_ns_proto =3D {
+>        .func           =3D bpf_ktime_get_ns,
+>        .gpl_only       =3D false,
+>        .ret_type       =3D RET_INTEGER,
+> };
+>
+> and this was presumably marked GPL due to kernel/time/timekeeping.c:
+>   EXPORT_SYMBOL_GPL(ktime_get_mono_fast_ns);
+>
+> and while that may make sense for kernel modules (although even that
+> is doubtful), there is currently AFAICT no other source of time
+> available to ebpf.
+>
+> Furthermore this is really just equivalent to clock_gettime(CLOCK_MONOTON=
+IC)
+> which is exposed to userspace (via vdso even to make it performant)...
+>
+> As such, I see no reason to keep the GPL restriction.
+> (In the future I'd like to have access to time from Apache licensed ebpf =
+code)
+>
+> Signed-off-by: Maciej =C5=BBenczykowski <maze@google.com>
 
-One nit below.
-
-On 4/23/20 5:55 PM, Dan Murphy wrote:
-> Add multicolor framework support for the lp55xx family.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->   drivers/leds/Kconfig                      |   1 +
->   drivers/leds/leds-lp5521.c                |  14 +-
->   drivers/leds/leds-lp5523.c                |  14 +-
->   drivers/leds/leds-lp5562.c                |  13 +-
->   drivers/leds/leds-lp55xx-common.c         | 178 +++++++++++++++++++---
->   drivers/leds/leds-lp55xx-common.h         |  11 +-
->   drivers/leds/leds-lp8501.c                |  14 +-
->   include/linux/platform_data/leds-lp55xx.h |   8 +
->   8 files changed, 207 insertions(+), 46 deletions(-)
-> 
-[...]
-> diff --git a/drivers/leds/leds-lp55xx-common.h b/drivers/leds/leds-lp55xx-common.h
-> index b9b1041e8143..a9d7ba3f2fd1 100644
-> --- a/drivers/leds/leds-lp55xx-common.h
-> +++ b/drivers/leds/leds-lp55xx-common.h
-> @@ -12,6 +12,8 @@
->   #ifndef _LEDS_LP55XX_COMMON_H
->   #define _LEDS_LP55XX_COMMON_H
->   
-> +#include <linux/led-class-multicolor.h>
-> +
->   enum lp55xx_engine_index {
->   	LP55XX_ENGINE_INVALID,
->   	LP55XX_ENGINE_1,
-> @@ -109,6 +111,9 @@ struct lp55xx_device_config {
->   	/* access brightness register */
->   	int (*brightness_fn)(struct lp55xx_led *led);
->   
-> +	/* perform brightness value to multiple LEDs */
-> +	int (*multicolor_brightness_fn)(struct lp55xx_led *led);
-
-Isn't some word missing here? IMO it should be rephrased.
-Maybe "write multi color brightness to hw" ?
-
->   	/* current setting function */
->   	void (*set_led_current) (struct lp55xx_led *led, u8 led_current);
->   
-[...]
--- 
-Best regards,
-Jacek Anaszewski
+The issue of compatibility with apache licensed bpf progs was
+brought up few times in the past.
+The patch indeed will clear this hurdle.
+Applied.
