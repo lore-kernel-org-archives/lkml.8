@@ -2,105 +2,221 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6077CC55191
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 10:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EB2C5519A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 10:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45A882071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 10:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D543C2075B
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 10:10:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587895842;
+	bh=62zWONP1tVdmx+iA+uL9MyNp4BzfJwlRcK/j2cjUtvU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=QApKwB8PFbeiEOiUcMwnyty1NpRNdJZ7QTHKolL92+2viTZqsFSTmBQVxE8ViqJ2g
+	 OhJPZxGtY9gJ10yjn5NvZVBnXQnoRMcDBussw6vHWSBcEIZQFwMvMWRNOA3zW5yrYR
+	 L/UxyFQWSdMTRNFPL1MdE2UpuAGjKCO0QJYNl4Eo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726165AbgDZKEm (ORCPT
+        id S1726137AbgDZKKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 06:04:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52494 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726132AbgDZKEl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 06:04:41 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73253C061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 03:04:41 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jSe93-000217-Ui; Sun, 26 Apr 2020 12:04:18 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id B379A100605; Sun, 26 Apr 2020 12:04:16 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Andi Kleen <ak@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Bae\, Chang Seok" <chang.seok.bae@intel.com>,
-        "Metzger\, Markus T" <markus.t.metzger@intel.com>,
-        "hpa\@zytor.com" <hpa@zytor.com>, "bp\@alien8.de" <bp@alien8.de>,
-        "Hansen\, Dave" <dave.hansen@intel.com>,
-        "Luck\, Tony" <tony.luck@intel.com>,
-        Pedro Alves <palves@redhat.com>,
-        Simon Marchi <simark@simark.ca>,
-        "Shankar\, Ravi V" <ravi.v.shankar@intel.com>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v9 00/17] Enable FSGSBASE instructions
-In-Reply-To: <20200426025243.GJ13035@sasha-vm>
-References: <20200421195629.GE608746@tassilo.jf.intel.com> <5957D3CC-B54B-4A1A-998A-0E6F58589CF4@amacapital.net> <20200421205119.GK1809@sasha-vm> <CALCETrUGuvMgvcsUWsdmUr-=6c6BpRpOKC1MN+E16g17U7vyMQ@mail.gmail.com> <20200423040850.GY1809@sasha-vm> <87ftcrtckg.fsf@nanos.tec.linutronix.de> <20200426025243.GJ13035@sasha-vm>
-Date:   Sun, 26 Apr 2020 12:04:16 +0200
-Message-ID: <878siitvfj.fsf@nanos.tec.linutronix.de>
+        Sun, 26 Apr 2020 06:10:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49480 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726117AbgDZKKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 06:10:42 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 638842071C;
+        Sun, 26 Apr 2020 10:10:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587895841;
+        bh=62zWONP1tVdmx+iA+uL9MyNp4BzfJwlRcK/j2cjUtvU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=YOYrnqb2rXEyGOQOX8ZbihNaXjbiEDriHNNsTB3thMJv0queNqB0h6RX5G4bmQIra
+         mZUBuOjqSqOXuM1E+8ggR9FGFXdCwFeVXxeBgvjAavU39pGPaJ88jSV8xjhujtAeju
+         TU2e7wcwPNtIEDUhV5fd4kMCTLSd6BFrqMvMf/VE=
+Date:   Sun, 26 Apr 2020 11:10:37 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <lars@metafoo.de>, <pmeerw@pmeerw.net>
+Subject: Re: [PATCH v5 5/6] iio: core: add simple centralized mechanism for
+ ioctl() handlers
+Message-ID: <20200426111037.076b984d@archlinux>
+In-Reply-To: <20200426073817.33307-6-alexandru.ardelean@analog.com>
+References: <20200426073817.33307-1-alexandru.ardelean@analog.com>
+        <20200426073817.33307-6-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sasha Levin <sashal@kernel.org> writes:
-> On Sun, Apr 26, 2020 at 12:39:27AM +0200, Thomas Gleixner wrote:
->>  - Addressed the outstanding review comments
->
-> I saw a review that Andy has just sent on patch #1 from the new series,
-> I'll address that.
+On Sun, 26 Apr 2020 10:38:16 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-Please look at the last version from Intel as well whether there is anything
-outstanding.
+> The aim of this is to reduce the organization violation of ioctl() calls in
+> IIO core. Currently, since the chardev is split across files, event ioctl()
+> calls need to be called in buffer ioctl() calls.
+> 
+> The 'industrialio-core.c' file will provide a 'iio_device_ioctl()' which
+> will iterate over a list of ioctls registered with the IIO device. These
+> can be event ioctl() or buffer ioctl() calls, or something else.
+> This is needed, since there is currently one chardev per IIO device and
+> that is used for both event handling and reading from the buffer.
+> 
+> Each ioctl() will have to return a IIO_IOCTL_UNHANDLED code (which is
+> positive 1), if the ioctl() did not handle the call in any. This eliminates
+> any potential ambiguities; if we were to have used error codes it would
+> have been uncertain whether they were actual errors, or whether
+> the registered ioctl() doesn't service the command.
+> 
+> If any ioctl() returns 0, it was considered that it was serviced
+> successfully and the loop will exit.
+> 
+> One assumption for all registered ioctl() handlers is that they are
+> statically allocated, so the iio_device_unregister() which just remove all
+> of them from the device's ioctl() handler list.
+> 
+> Also, something that is a bit hard to do [at this point] and may not be
+> worth the effort of doing, is to check whether registered ioctl()
+> calls/commands overlap. This should be unlikely to happen, and should get
+> caught at review time. Though, new ioctl() calls would likely not be added
+> too often.
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
->>  - Have proper documentation in the changelog of the user space visible
->>    ABI changes why it does not break any existing usage and having the
->>    relevant people who maintain tools which utilize the affected
->>    interfaces Cc'ed on submission.
->
-> The cover letter has references to mail correspondence with maintainers
-> of these tools that are affected by this change. Each of those exchanges
-> goes over what FSGSBASE does and answers any specific questions those
-> maintainers had.
->
-> If you want it out of the cover letter and into one of the patches I'd
-> be happy to do that. If you want me to go chase down another userspace
-> which we might be breaking just let me know which.
+A question on locking inline. Otherwise this looks fairly clean and simple
+to me.
 
-Yes, please add the information to the changelogs. That's where it
-really belongs.
+Jonathan
 
-> I didn't want to have them on the Cc line as they have already acked
-> this change from their end and I wanted to avoid additional noise. I'll
-> be happy to add them back to the next spin of this.
->
->>  - Made sure that the cleanups I did when merging them initially have
->>    been picked up. I'm not going to waste another couple of days on
->>    this mess just to revert it because it hadn't seen any serious
->>    testing in development.
->
-> Based on your revert
-> (https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=x86/cpu&id=049331f277fef1c3f2527c2c9afa1d285e9a1247)
-> I believe that we have all the relevant patches in the series.
 
-Ok.
+> ---
+>  drivers/iio/iio_core.h          | 14 ++++++++++++++
+>  drivers/iio/industrialio-core.c | 33 +++++++++++++++++++++++++++++++++
+>  include/linux/iio/iio.h         |  2 ++
+>  3 files changed, 49 insertions(+)
+> 
+> diff --git a/drivers/iio/iio_core.h b/drivers/iio/iio_core.h
+> index a527a66be9e5..34c3e19229d8 100644
+> --- a/drivers/iio/iio_core.h
+> +++ b/drivers/iio/iio_core.h
+> @@ -17,6 +17,20 @@ struct iio_dev;
+>  
+>  extern struct device_type iio_device_type;
+>  
+> +#define IIO_IOCTL_UNHANDLED	1
+> +struct iio_ioctl_handler {
+> +	struct list_head entry;
+> +	long (*ioctl)(struct iio_dev *indio_dev, struct file *filp,
+> +		      unsigned int cmd, unsigned long arg);
+> +};
+> +
+> +long iio_device_ioctl(struct iio_dev *indio_dev, struct file *filp,
+> +		      unsigned int cmd, unsigned long arg);
+> +
+> +void iio_device_ioctl_handler_register(struct iio_dev *indio_dev,
+> +				       struct iio_ioctl_handler *h);
+> +void iio_device_ioctl_handler_unregister(struct iio_ioctl_handler *h);
+> +
+>  int __iio_add_chan_devattr(const char *postfix,
+>  			   struct iio_chan_spec const *chan,
+>  			   ssize_t (*func)(struct device *dev,
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index aec585cc8453..79e8fa8ff70b 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -1531,6 +1531,7 @@ struct iio_dev *iio_device_alloc(int sizeof_priv)
+>  	}
+>  	dev_set_name(&dev->dev, "iio:device%d", dev->id);
+>  	INIT_LIST_HEAD(&dev->buffer_list);
+> +	INIT_LIST_HEAD(&dev->ioctl_handlers);
+>  
+>  	return dev;
+>  }
+> @@ -1584,6 +1585,33 @@ struct iio_dev *devm_iio_device_alloc(struct device *dev, int sizeof_priv)
+>  }
+>  EXPORT_SYMBOL_GPL(devm_iio_device_alloc);
+>  
+> +void iio_device_ioctl_handler_register(struct iio_dev *indio_dev,
+> +				       struct iio_ioctl_handler *h)
+> +{
+> +	/* this assumes that all ioctl() handlers are statically allocated */
+> +	list_add_tail(&h->entry, &indio_dev->ioctl_handlers);
+> +}
+> +
+> +long iio_device_ioctl(struct iio_dev *indio_dev, struct file *filp,
+> +		      unsigned int cmd, unsigned long arg)
+> +{
+> +	struct iio_ioctl_handler *h;
+> +	int ret;
+> +
+> +	if (!indio_dev->info)
+> +		return -ENODEV;
+> +
+> +	list_for_each_entry(h, &indio_dev->ioctl_handlers, entry) {
+> +		ret = h->ioctl(indio_dev, filp, cmd, arg);
+> +		if (ret == 0)
+> +			return 0;
+> +		if (ret != IIO_IOCTL_UNHANDLED)
+> +			return ret;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+>  static int iio_check_unique_scan_index(struct iio_dev *indio_dev)
+>  {
+>  	int i, j;
+> @@ -1695,6 +1723,8 @@ EXPORT_SYMBOL(__iio_device_register);
+>   **/
+>  void iio_device_unregister(struct iio_dev *indio_dev)
+>  {
+> +	struct iio_ioctl_handler *h, *t;
+> +
+>  	if (indio_dev->chrdev)
+>  		cdev_device_del(indio_dev->chrdev, &indio_dev->dev);
+>  	else
+> @@ -1708,6 +1738,9 @@ void iio_device_unregister(struct iio_dev *indio_dev)
+>  
+>  	iio_disable_all_buffers(indio_dev);
+>  
+> +	list_for_each_entry_safe(h, t, &indio_dev->ioctl_handlers, entry)
+> +		list_del(&h->entry);
+> +
 
-Thanks,
+Is there any chance anything is walking that list whilst we are deleting it?
+I think this needs to happen under a lock as does the walk.
 
-        tglx
+>  	indio_dev->info = NULL;
+>  
+>  	iio_device_wakeup_eventset(indio_dev);
+> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+> index 52992be44e9e..b6ca8d85629e 100644
+> --- a/include/linux/iio/iio.h
+> +++ b/include/linux/iio/iio.h
+> @@ -488,6 +488,7 @@ struct iio_buffer_setup_ops {
+>   * @currentmode:	[DRIVER] current operating mode
+>   * @dev:		[DRIVER] device structure, should be assigned a parent
+>   *			and owner
+> + * @ioctl_handlers:	[INTERN] list of registered ioctl handlers
+>   * @event_interface:	[INTERN] event chrdevs associated with interrupt lines
+>   * @buffer:		[DRIVER] any buffer present
+>   * @buffer_list:	[INTERN] list of all buffers currently attached
+> @@ -529,6 +530,7 @@ struct iio_dev {
+>  	int				modes;
+>  	int				currentmode;
+>  	struct device			dev;
+> +	struct list_head		ioctl_handlers;
+>  
+>  	struct iio_event_interface	*event_interface;
+>  
+
