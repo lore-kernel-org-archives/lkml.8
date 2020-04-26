@@ -6,34 +6,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D97FC55186
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D552C55185
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8399F20706
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 373B720706
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:15:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726390AbgDZCPU (ORCPT
+        id S1726404AbgDZCPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 22:15:20 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:50422 "EHLO huawei.com"
+        Sat, 25 Apr 2020 22:15:22 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3294 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726230AbgDZCPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 22:15:14 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 4E55B79F431BDBD024F4;
+        id S1726196AbgDZCPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 22:15:13 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 26F4AEB0D30F6222F3A2;
         Sun, 26 Apr 2020 10:15:12 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.487.0; Sun, 26 Apr 2020 10:15:02 +0800
+ 14.3.487.0; Sun, 26 Apr 2020 10:15:01 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
+        Jian Shen <shenjian15@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 9/9] net: hns3: remove an unnecessary check in hclge_set_umv_space()
-Date:   Sun, 26 Apr 2020 10:13:48 +0800
-Message-ID: <1587867228-9955-10-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 5/9] net: hns3: add support for dumping UC and MC MAC list
+Date:   Sun, 26 Apr 2020 10:13:44 +0800
+Message-ID: <1587867228-9955-6-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1587867228-9955-1-git-send-email-tanhuazhong@huawei.com>
 References: <1587867228-9955-1-git-send-email-tanhuazhong@huawei.com>
@@ -46,28 +47,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since hclge_set_umv_space() is only called by hclge_init_umv_space(),
-parameter 'allocated_size' will not be NULL.
+From: Jian Shen <shenjian15@huawei.com>
 
+This patch adds support for dumping entries of UC and MC MAC list,
+which help checking whether a MAC address being added into hardware
+or not.
+
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c |  2 +
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c | 51 ++++++++++++++++++++++
+ 2 files changed, 53 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index c74990a..e2fec83 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -7227,8 +7227,7 @@ static int hclge_set_umv_space(struct hclge_dev *hdev, u16 space_size,
- 		return ret;
- 	}
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
+index c934f32..fe7fb56 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
+@@ -262,6 +262,8 @@ static void hns3_dbg_help(struct hnae3_handle *h)
+ 	dev_info(&h->pdev->dev, "dump mac tnl status\n");
+ 	dev_info(&h->pdev->dev, "dump loopback\n");
+ 	dev_info(&h->pdev->dev, "dump qs shaper [qs id]\n");
++	dev_info(&h->pdev->dev, "dump uc mac list <func id>\n");
++	dev_info(&h->pdev->dev, "dump mc mac list <func id>\n");
  
--	if (allocated_size)
--		*allocated_size = le32_to_cpu(desc.data[1]);
-+	*allocated_size = le32_to_cpu(desc.data[1]);
- 
- 	return 0;
+ 	memset(printf_buf, 0, HNS3_DBG_BUF_LEN);
+ 	strncat(printf_buf, "dump reg [[bios common] [ssu <port_id>]",
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
+index 66c1ad3..6cfa825 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
+@@ -1441,6 +1441,49 @@ static void hclge_dbg_dump_qs_shaper(struct hclge_dev *hdev,
+ 	hclge_dbg_dump_qs_shaper_single(hdev, qsid);
  }
+ 
++static int hclge_dbg_dump_mac_list(struct hclge_dev *hdev, const char *cmd_buf,
++				   bool is_unicast)
++{
++	struct hclge_mac_node *mac_node, *tmp;
++	struct hclge_vport *vport;
++	struct list_head *list;
++	u32 func_id;
++	int ret;
++
++	ret = kstrtouint(cmd_buf, 0, &func_id);
++	if (ret < 0) {
++		dev_err(&hdev->pdev->dev,
++			"dump mac list: bad command string, ret = %d\n", ret);
++		return -EINVAL;
++	}
++
++	if (func_id >= hdev->num_alloc_vport) {
++		dev_err(&hdev->pdev->dev,
++			"function id(%u) is out of range(0-%u)\n", func_id,
++			hdev->num_alloc_vport - 1);
++		return -EINVAL;
++	}
++
++	vport = &hdev->vport[func_id];
++
++	list = is_unicast ? &vport->uc_mac_list : &vport->mc_mac_list;
++
++	dev_info(&hdev->pdev->dev, "vport %u %s mac list:\n",
++		 func_id, is_unicast ? "uc" : "mc");
++	dev_info(&hdev->pdev->dev, "mac address              state\n");
++
++	spin_lock_bh(&vport->mac_list_lock);
++
++	list_for_each_entry_safe(mac_node, tmp, list, node) {
++		dev_info(&hdev->pdev->dev, "%pM         %d\n",
++			 mac_node->mac_addr, mac_node->state);
++	}
++
++	spin_unlock_bh(&vport->mac_list_lock);
++
++	return 0;
++}
++
+ int hclge_dbg_run_cmd(struct hnae3_handle *handle, const char *cmd_buf)
+ {
+ #define DUMP_REG	"dump reg"
+@@ -1485,6 +1528,14 @@ int hclge_dbg_run_cmd(struct hnae3_handle *handle, const char *cmd_buf)
+ 	} else if (strncmp(cmd_buf, "dump qs shaper", 14) == 0) {
+ 		hclge_dbg_dump_qs_shaper(hdev,
+ 					 &cmd_buf[sizeof("dump qs shaper")]);
++	} else if (strncmp(cmd_buf, "dump uc mac list", 16) == 0) {
++		hclge_dbg_dump_mac_list(hdev,
++					&cmd_buf[sizeof("dump uc mac list")],
++					true);
++	} else if (strncmp(cmd_buf, "dump mc mac list", 16) == 0) {
++		hclge_dbg_dump_mac_list(hdev,
++					&cmd_buf[sizeof("dump mc mac list")],
++					false);
+ 	} else {
+ 		dev_info(&hdev->pdev->dev, "unknown command\n");
+ 		return -EINVAL;
 -- 
 2.7.4
 
