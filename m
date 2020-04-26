@@ -2,144 +2,117 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C04C55191
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 07:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8125EC55199
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 07:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 588EE208FE
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 07:38:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 623702071E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 07:39:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ctu0ANVf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726152AbgDZHiS (ORCPT
+        id S1726335AbgDZHjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 03:38:18 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:65460 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726128AbgDZHiR (ORCPT
+        Sun, 26 Apr 2020 03:39:01 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52663 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726282AbgDZHjA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 03:38:17 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03Q7bXKV003705;
-        Sun, 26 Apr 2020 03:38:02 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 30mj452m9k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 26 Apr 2020 03:38:02 -0400
-Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 03Q7c0k5013203
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Sun, 26 Apr 2020 03:38:00 -0400
-Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
- SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Sun, 26 Apr 2020 00:37:59 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Sun, 26 Apr 2020 00:37:58 -0700
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03Q7bqdv011885;
-        Sun, 26 Apr 2020 03:37:56 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <lars@metafoo.de>, <jic23@kernel.org>, <pmeerw@pmeerw.net>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v5 3/6] iio: core: register chardev only if needed
-Date:   Sun, 26 Apr 2020 10:38:14 +0300
-Message-ID: <20200426073817.33307-4-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200426073817.33307-1-alexandru.ardelean@analog.com>
-References: <20200426073817.33307-1-alexandru.ardelean@analog.com>
+        Sun, 26 Apr 2020 03:39:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587886738;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Vop1t3sjK9amtXfGYvpa+yLGCJ32ZxdBV2IWmBKObrI=;
+        b=Ctu0ANVfJq59rA7cSGUn8iXYfL5IlDpdJSZcliIfiUctoVK0utI3jQtINa4EQRXvOkMW/8
+        ChucMRziEgNEwVQ8tcaTgiMXmueKr4ox+47bK2gYchD6jutKot4HHZ6eM6eKjJgxEi65DB
+        1uZaSolo6ND/J0MLfYcob5lKRbq5Bbs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-161-gqr-8FTQPiaXw8kYIrJ86A-1; Sun, 26 Apr 2020 03:38:52 -0400
+X-MC-Unique: gqr-8FTQPiaXw8kYIrJ86A-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8E2D6872FE0;
+        Sun, 26 Apr 2020 07:38:50 +0000 (UTC)
+Received: from [10.72.13.103] (ovpn-13-103.pek2.redhat.com [10.72.13.103])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1FAA960300;
+        Sun, 26 Apr 2020 07:38:43 +0000 (UTC)
+Subject: Re: [PATCH V2 1/2] vdpa: Support config interrupt in vhost_vdpa
+To:     Zhu Lingshan <lingshan.zhu@linux.intel.com>,
+        Zhu Lingshan <lingshan.zhu@intel.com>, mst@redhat.com,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     lulu@redhat.com, dan.daly@intel.com, cunming.liang@intel.com
+References: <1587881384-2133-1-git-send-email-lingshan.zhu@intel.com>
+ <1587881384-2133-2-git-send-email-lingshan.zhu@intel.com>
+ <055fb826-895d-881b-719c-228d0cc9a7bf@redhat.com>
+ <e345cc85-aa9d-1173-8308-f0a301fca2b2@redhat.com>
+ <fb51aa36-9a58-fd50-a4fa-4cc887357367@linux.intel.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <b34df002-344c-f011-dce0-fee882f62af2@redhat.com>
+Date:   Sun, 26 Apr 2020 15:38:42 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-25_14:2020-04-24,2020-04-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- suspectscore=0 malwarescore=0 spamscore=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 bulkscore=0 mlxlogscore=999 clxscore=1015
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004260070
+In-Reply-To: <fb51aa36-9a58-fd50-a4fa-4cc887357367@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The final intent is to localize all buffer ops into the
-industrialio-buffer.c file, to be able to add support for multiple buffers
-per IIO device.
 
-We only need a chardev if we need to support buffers and/or events.
+On 2020/4/26 =E4=B8=8B=E5=8D=883:24, Zhu Lingshan wrote:
+>
+>
+> On 4/26/2020 3:03 PM, Jason Wang wrote:
+>>
+>> On 2020/4/26 =E4=B8=8B=E5=8D=882:58, Jason Wang wrote:
+>>>>
+>>>> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+>>>> index 1813821..8663139 100644
+>>>> --- a/drivers/vhost/vhost.h
+>>>> +++ b/drivers/vhost/vhost.h
+>>>> @@ -18,6 +18,8 @@
+>>>> =C2=A0 typedef void (*vhost_work_fn_t)(struct vhost_work *work);
+>>>> =C2=A0 =C2=A0 #define VHOST_WORK_QUEUED 1
+>>>> +#define VHOST_FILE_UNBIND -1
+>>>
+>>>
+>>> I think it's better to document this in uapi.=20
+>>
+>>
+>> I meant e.g in vhost_vring_file, we had a comment of unbinding:
+>>
+>> struct vhost_vring_file {
+>> =C2=A0=C2=A0=C2=A0 unsigned int index;
+>> =C2=A0=C2=A0=C2=A0 int fd; /* Pass -1 to unbind from file. */
+>>
+>> };
+> I think it is better to use an int fd than vhost_vring_file, to avoid t=
+he confusions,
+> so if we add#define VHOST_FILE_UNBIND -1 in the uapi header, can it doc=
+ument itself?
+> Thanks
 
-With this change, a chardev will be created only if an IIO buffer is
-attached OR an event_interface is configured.
 
-Otherwise, no chardev will be created, and the IIO device will get
-registered with the 'device_add()' call.
+I think so.
 
-Quite a lot of IIO devices don't really need a chardev, so this is a minor
-improvement to the IIO core, as the IIO device will take up (slightly)
-fewer resources.
+Thanks
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/iio/industrialio-core.c | 25 ++++++++++++++++++++++---
- 1 file changed, 22 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index 32c489139cd2..a65022396329 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -1682,6 +1682,15 @@ static int iio_check_unique_scan_index(struct iio_dev *indio_dev)
- 
- static const struct iio_buffer_setup_ops noop_ring_setup_ops;
- 
-+static const struct file_operations iio_event_fileops = {
-+	.release = iio_chrdev_release,
-+	.open = iio_chrdev_open,
-+	.owner = THIS_MODULE,
-+	.llseek = noop_llseek,
-+	.unlocked_ioctl = iio_ioctl,
-+	.compat_ioctl = compat_ptr_ioctl,
-+};
-+
- int __iio_device_register(struct iio_dev *indio_dev, struct module *this_mod)
- {
- 	int ret;
-@@ -1732,11 +1741,18 @@ int __iio_device_register(struct iio_dev *indio_dev, struct module *this_mod)
- 		indio_dev->setup_ops == NULL)
- 		indio_dev->setup_ops = &noop_ring_setup_ops;
- 
--	cdev_init(&indio_dev->chrdev, &iio_buffer_fileops);
-+	if (indio_dev->buffer)
-+		cdev_init(&indio_dev->chrdev, &iio_buffer_fileops);
-+	else if (indio_dev->event_interface)
-+		cdev_init(&indio_dev->chrdev, &iio_event_fileops);
- 
- 	indio_dev->chrdev.owner = this_mod;
- 
--	ret = cdev_device_add(&indio_dev->chrdev, &indio_dev->dev);
-+	if (indio_dev->buffer || indio_dev->event_interface)
-+		ret = cdev_device_add(&indio_dev->chrdev, &indio_dev->dev);
-+	else
-+		ret = device_add(&indio_dev->dev);
-+
- 	if (ret < 0)
- 		goto error_unreg_eventset;
- 
-@@ -1760,7 +1776,10 @@ EXPORT_SYMBOL(__iio_device_register);
-  **/
- void iio_device_unregister(struct iio_dev *indio_dev)
- {
--	cdev_device_del(&indio_dev->chrdev, &indio_dev->dev);
-+	if (indio_dev->buffer || indio_dev->event_interface)
-+		cdev_device_del(&indio_dev->chrdev, &indio_dev->dev);
-+	else
-+		device_del(&indio_dev->dev);
- 
- 	mutex_lock(&indio_dev->info_exist_lock);
- 
--- 
-2.17.1
+>>
+>> Thanks
+>>
 
