@@ -2,79 +2,85 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 712CDC54FCB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 14:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EC8C5519E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 15:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4164E2071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 14:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C14472192A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 15:03:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587913421;
+	bh=p3Mga8iTwm/dBrCD1R6Ne3Zt3/Mk4u7B8EbWFRU5Lf4=;
+	h=Date:From:To:To:To:Cc:Cc:Cc:Cc:Subject:In-Reply-To:References:
+	 List-ID:From;
+	b=hG8bUtzwRVaTvDql2sNrndSAiZiMJE/hUhKNVlbL/vLbL1KNqQd8aPVVtt9LoFe5E
+	 zV1DfW/9bXxQU9niWcB8Arf57Z74BbcKYmV7KHiALi0FnLkjFw255YEgz+LHTDP43k
+	 /2qookTAj1QnTZBmpB7lXC6njShkO1h0JSbFhttY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbgDZO7g (ORCPT
+        id S1726188AbgDZPDl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 10:59:36 -0400
-Received: from mga06.intel.com ([134.134.136.31]:48182 "EHLO mga06.intel.com"
+        Sun, 26 Apr 2020 11:03:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbgDZO7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 10:59:36 -0400
-IronPort-SDR: LR5R21ZKq+B/+KF5wIgYUwzpsufH6rXEothLAi1aCHTIfOmkCadkrEloajInnWqBVxRR/QiIfj
- NQmjJOsKTPCA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2020 07:59:35 -0700
-IronPort-SDR: 0VZlp+zIAal2YY0pMZDqdYId5ON4XSw9lKB/dKAZONJgK+YufDbnC2Yk2Yk2YK5oDsJoDGBVpL
- DitxnCQh7Lyw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,320,1583222400"; 
-   d="scan'208";a="281436273"
-Received: from local-michael-cet-test.sh.intel.com (HELO localhost) ([10.239.159.128])
-  by fmsmga004.fm.intel.com with ESMTP; 26 Apr 2020 07:59:19 -0700
-Date:   Sun, 26 Apr 2020 23:01:17 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jmattson@google.com,
-        yu.c.zhang@linux.intel.com
-Subject: Re: [PATCH v11 5/9] KVM: X86: Refresh CPUID once guest XSS MSR
- changes
-Message-ID: <20200426150117.GA29493@local-michael-cet-test.sh.intel.com>
-References: <20200326081847.5870-1-weijiang.yang@intel.com>
- <20200326081847.5870-6-weijiang.yang@intel.com>
- <20200423173450.GJ17824@linux.intel.com>
- <6e1076a5-edbf-e8fe-dd99-fbb92f3cc8d0@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6e1076a5-edbf-e8fe-dd99-fbb92f3cc8d0@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        id S1725876AbgDZPDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 11:03:40 -0400
+Received: from localhost (unknown [137.135.114.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D166208FE;
+        Sun, 26 Apr 2020 15:03:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587913420;
+        bh=p3Mga8iTwm/dBrCD1R6Ne3Zt3/Mk4u7B8EbWFRU5Lf4=;
+        h=Date:From:To:To:To:Cc:Cc:Cc:Cc:Subject:In-Reply-To:References:
+         From;
+        b=s2hOukVstWVsQ+/QU8H8bhLLXlmYxAxonbuK/RSBvE/xIB+iZzR75p/8tUqCvZnUS
+         dR9W6nUhlsSqL/W1+o+PzCntj368pMCkQt4mnT7vPvDxoCYb7dqithbk4hdke+HA9j
+         JvL6T8mMOwO/1O3pGuxFrXdCeQn9/L8iELbCRo9M=
+Date:   Sun, 26 Apr 2020 15:03:39 +0000
+From:   Sasha Levin <sashal@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+To:     linux-pm@vger.kernel.org, rjw@rjwysocki.net, len.brown@intel.com
+Cc:     linux-kernel@vger.kernel.org, ming.lei@redhat.com
+Cc:     Bart Van Assche <bvanassche@acm.org>
+Cc:     stable@vger.kernel.org
+Cc:     stable@vger.kernel.org
+Subject: Re: [PATCH] PM: hibernate: Freeze kernel threads in software_resume()
+In-Reply-To: <20200424034016.42046-1-decui@microsoft.com>
+References: <20200424034016.42046-1-decui@microsoft.com>
+Message-Id: <20200426150340.1D166208FE@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 25, 2020 at 03:19:24PM +0200, Paolo Bonzini wrote:
-> On 23/04/20 19:34, Sean Christopherson wrote:
-> >>  	if (!kvm_cpu_cap_has(X86_FEATURE_XSAVES))
-> >>  		supported_xss = 0;
-> >> +	else
-> >> +		supported_xss = host_xss & KVM_SUPPORTED_XSS;
-> > Silly nit: I'd prefer to invert the check, e.g.
-> > 
-> > 	if (kvm_cpu_cap_has(X86_FEATURE_XSAVES))
-> > 		supported_xss = host_xss & KVM_SUPPORTED_XSS;
-> > 	else
-> > 		supported_xss = 0;
-> > 
-> 
-> Also a nit: Linux coding style should be
-> 
-> 	supported_xss = 0;
-> 	if (kvm_cpu_cap_has(X86_FEATURE_XSAVES))
-> 		supported_xss = host_xss & KVM_SUPPORTED_XSS;
-> 
-> Paolo
-Ah, I should follow the coding style, thank you Paolo!
+Hi
+
+[This is an automated email]
+
+This commit has been processed because it contains a -stable tag.
+The stable tag indicates that it's relevant for the following trees: all
+
+The bot has tested the following trees: v5.6.7, v5.4.35, v4.19.118, v4.14.177, v4.9.220, v4.4.220.
+
+v5.6.7: Build OK!
+v5.4.35: Build OK!
+v4.19.118: Build OK!
+v4.14.177: Build OK!
+v4.9.220: Build OK!
+v4.4.220: Failed to apply! Possible dependencies:
+    ea00f4f4f00c ("PM / sleep: make PM notifiers called symmetrically")
+    fe12c00d21bb ("PM / hibernate: Introduce test_resume mode for hibernation")
+
+
+NOTE: The patch will not be queued to stable trees until it is upstream.
+
+How should we proceed with this patch?
+
+-- 
+Thanks
+Sasha
