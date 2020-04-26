@@ -2,166 +2,137 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B55AC55191
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF00C55191
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E65672098B
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9A082070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:21:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HeBXVGsG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726165AbgDZFTF convert rfc822-to-8bit (ORCPT
+        id S1726188AbgDZFVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 01:19:05 -0400
-Received: from mga01.intel.com ([192.55.52.88]:51368 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725765AbgDZFTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 01:19:04 -0400
-IronPort-SDR: hStMhTZAkqFLa55C01+YYoGLp99FdLDXZ8kddbY0rv/j5Xk+ZJx62WhereHrmJgXp7WCdWB0so
- /sQYssz8qgPQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2020 22:19:04 -0700
-IronPort-SDR: 7oUFACyYMaI58TCLvNzIfWtr9icVHR6F93W0fNWs0ro27ExULtxG2c/75WZ1yLrb25XmRP1XIf
- nGedbiD9SlZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,318,1583222400"; 
-   d="scan'208";a="256851019"
-Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
-  by orsmga003.jf.intel.com with ESMTP; 25 Apr 2020 22:19:03 -0700
-Received: from fmsmsx119.amr.corp.intel.com (10.18.124.207) by
- fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sat, 25 Apr 2020 22:19:03 -0700
-Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
- FMSMSX119.amr.corp.intel.com (10.18.124.207) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sat, 25 Apr 2020 22:19:03 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX151.ccr.corp.intel.com ([169.254.3.22]) with mapi id 14.03.0439.000;
- Sun, 26 Apr 2020 13:18:58 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-CC:     "Raj, Ashok" <ashok.raj@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: RE: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-Thread-Topic: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-Thread-Index: AQHWGDVStT24LxQ110qc/YDRWdRX86iDuewAgACI/wCAAD7wgIAAnasAgAFwKICAAOPOMIAAQj8AgACkdbD//7b+gIACl9WQ
-Date:   Sun, 26 Apr 2020 05:18:59 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
-References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
- <20200421235442.GO11945@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D86EE26@SHSMSX104.ccr.corp.intel.com>
- <20200422115017.GQ11945@mellanox.com> <20200422211436.GA103345@otc-nc-03>
- <20200423191217.GD13640@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D8960F9@SHSMSX104.ccr.corp.intel.com>
- <20200424124444.GJ13640@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D8A808B@SHSMSX104.ccr.corp.intel.com>
- <20200424181203.GU13640@mellanox.com>
-In-Reply-To: <20200424181203.GU13640@mellanox.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Sun, 26 Apr 2020 01:21:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37032 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726107AbgDZFVM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 01:21:12 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34C8CC061A0C;
+        Sat, 25 Apr 2020 22:21:11 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id f11so9486470ljp.1;
+        Sat, 25 Apr 2020 22:21:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zP7niTtzeJGKIv5s1G7Pa9omvsdhZPwjcaRy9li5ChA=;
+        b=HeBXVGsGwmxmfLl4Bllc669KN5N3xeVaFgWVjdPiqYWFa9XrTqBFrkpyk65QKeYjou
+         qSwVvgi6xGJzItYagGSNgSYV6l2D8Z8GPlLVYleMwczQtJWa2Q5RSQkaeoiGlWEkpFs8
+         gQyRGyl8xIwIV0wnbyrSkPh2pJouGrve0sVXZl6ubAaZODQ1QBYdyotCqTh4iLs2ULNi
+         LRx3JUMU31ezN1ToZNBSvuALuPPoDNO40O+Q8/YknxeaAoXtWvpjqWTcPRKzFCTliTTY
+         TD7MkBePxVXWbHMlzp5CjHv4EqO/k+JdnCAnQn7llMK89Og6PMWKcT4bSsD7W61dV56r
+         hQVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zP7niTtzeJGKIv5s1G7Pa9omvsdhZPwjcaRy9li5ChA=;
+        b=EEvE25N0ezG0NEuTq+FPZJ+pdkeXUVjtPu9iKw55QbV7KxiYDvJmNPQgV6jzVPnVq/
+         4FeLyWFrcgbUgMv5TpwrNpHikZsyFM2TTB3YmkUIU65dMnEkIzRk4t6hmn10f2V2LlLb
+         Nqj9JwmqnDSixpNM2nFXxWwWSxb4U0bThESOpgw3qDTd9YRxGyQsCSgiZnr1NvvDMKvK
+         in5obPUuX0/R/tA5ZxtSk4wYkmotWnlDGRpq5VChjVelyvZir/6nkYYKI/d5Kasj337X
+         +iJJpzyqWSb/Dzt25o3gZtnDpjWjHAf6D2YRkGfUk2c0fIlhfmW0cNkwNlB6oLt+O4QR
+         F8aw==
+X-Gm-Message-State: AGi0PuY0FWHBCFajtC5D0PzVhPHx0r8T9bQ/CF4oT/oJ/yLLQDdMwANu
+        Tf5Cyu8rLt7qYefpwUCNfjtK+87/
+X-Google-Smtp-Source: APiQypICQSLBRYsThN7tnhA1wR2mO6hNSAvM7vRQlT0Jl/bWCqRhREBIaEaKVxRedtObPWxZwGvVJQ==
+X-Received: by 2002:a2e:8689:: with SMTP id l9mr10699402lji.193.1587878469301;
+        Sat, 25 Apr 2020 22:21:09 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id m15sm2216471lji.21.2020.04.25.22.21.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 25 Apr 2020 22:21:08 -0700 (PDT)
+Subject: Re: [PATCH v3 7/9] input: elants: support 0x66 reply opcode for
+ reporting touches
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Henrik Rydberg <rydberg@bitmath.org>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Rob Herring <robh+dt@kernel.org>,
+        Scott Liu <scott.liu@emc.com.tw>,
+        David Heidelberg <david@ixit.cz>, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1586784389.git.mirq-linux@rere.qmqm.pl>
+ <f442f4e0e79d4acaff8481729bee73d33f77a9ef.1586784389.git.mirq-linux@rere.qmqm.pl>
+ <20200426051503.GS125362@dtor-ws>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <e3c9bf37-2a47-43f4-bd4b-13724000dbd2@gmail.com>
+Date:   Sun, 26 Apr 2020 08:21:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200426051503.GS125362@dtor-ws>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Jason Gunthorpe <jgg@mellanox.com>
-> Sent: Saturday, April 25, 2020 2:12 AM
+26.04.2020 08:15, Dmitry Torokhov пишет:
+> On Mon, Apr 13, 2020 at 03:32:26PM +0200, Michał Mirosław wrote:
+>> From: Dmitry Osipenko <digetx@gmail.com>
+>>
+>> eKTF3624 touchscreen firmware uses two variants of the reply opcodes for
+>> reporting touch events: one is 0x63 (used by older firmware) and other is
+>> 0x66 (used by newer firmware). The 0x66 variant is equal to 0x63 of
+>> eKTH3500, while 0x63 needs small adjustment of the touch pressure value.
+>>
+>> Nexus 7 tablet device has eKTF3624 touchscreen and it uses 0x66 opcode for
+>> reporting touch events, let's support it now. Other devices, eg. ASUS TF300T,
+>> use 0x63.
+>>
+>> Note: CMD_HEADER_REK is used for replying to calibration requests, it has
+>> the same 0x66 opcode number which eKTF3624 uses for reporting touches.
+>> The calibration replies are handled separately from the the rest of the
+>> commands in the driver by entering into ELAN_WAIT_RECALIBRATION state
+>> and thus this change shouldn't change the old behavior.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> Tested-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+>> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+>> ---
+>>  drivers/input/touchscreen/elants_i2c.c | 11 ++++++++++-
+>>  1 file changed, 10 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
+>> index 2b936e920874..9751139e8507 100644
+>> --- a/drivers/input/touchscreen/elants_i2c.c
+>> +++ b/drivers/input/touchscreen/elants_i2c.c
+>> @@ -60,6 +60,15 @@
+>>  #define QUEUE_HEADER_NORMAL	0X63
+>>  #define QUEUE_HEADER_WAIT	0x64
+>>  
+>> +/*
+>> + * Depending on firmware version, eKTF3624 touchscreens may utilize one of
+>> + * these opcodes for the touch events: 0x63 and 0x66. The 0x63 is used by
+>> + * older firmware version and differs from 0x66 such that touch pressure
+>> + * value needs to be adjusted.
 > 
-> > > > idxd is just the first device that supports Scalable IOV. We have a
-> > > > lot more coming later, in different types. Then putting such
-> > > > emulation in user space means that Qemu needs to support all those
-> > > > vendor specific interfaces for every new device which supports
-> > >
-> > > It would be very sad to see an endless amount of device emulation code
-> > > crammed into the kernel. Userspace is where device emulation is
-> > > supposed to live. For security
-> >
-> > I think providing an unified abstraction to userspace is also important,
-> > which is what VFIO provides today. The merit of using one set of VFIO
-> > API to manage all kinds of mediated devices and VF devices is a major
-> > gain. Instead, inventing a new vDPA-like interface for every Scalable-IOV
-> > or equivalent device is just overkill and doesn't scale. Also the actual
-> > emulation code in idxd driver is actually small, if putting aside the PCI
-> > config space part for which I already explained most logic could be shared
-> > between mdev device drivers.
-> 
-> If it was just config space you might have an argument, VFIO already
-> does some config space mangling, but emulating BAR space is out of
-> scope of VFIO, IMHO.
+> Who is responsible for the adjustment? Where does it happen?
 
-out of scope of vfio-pci, but in scope of vfio-mdev. btw I feel that most
-of your objections are actually related to the general idea of vfio-mdev.
-Scalable IOV just uses PASID to harden DMA isolation in mediated
-pass-through usage which vfio-mdev enables. Then are you just opposing
-the whole vfio-mdev? If not, I'm curious about the criteria in your mind 
-about when using vfio-mdev is good...
 
-> 
-> I also think it is disingenuous to pretend this is similar to
-> SR-IOV. SR-IOV is self contained and the BAR does not require
-> emulation. What you have here sounds like it is just an ordinary
-
-technically Scalable IOV is definitely different from SR-IOV. It's 
-simpler in hardware. And we're not emulating SR-IOV. The point
-is just in usage-wise we want to present a consistent user 
-experience just like passing through a PCI endpoint (PF or VF) device
-through vfio eco-system, including various userspace VMMs (Qemu,
-firecracker, rust-vmm, etc.), middleware (Libvirt), and higher level 
-management stacks. 
-
-> multi-queue device with the ability to PASID tag queues for IOMMU
-> handling. This is absolutely not SRIOV - it is much closer to VDPA,
-> which isn't using mdev.
-> 
-> Further, I disagree with your assessment that this doesn't scale. You
-> already said you plan a normal user interface for idxd, so instead of
-> having a single sane user interface (ala VDPA) idxd now needs *two*. If
-> this is the general pattern of things to come, it is a bad path.
-> 
-> The only thing we get out of this is someone doesn't have to write a
-> idxd emulation driver in qemu, instead they have to write it in the
-> kernel. I don't see how that is a win for the ecosystem.
-> 
-
-No. The clear win is on leveraging classic VFIO iommu and its eco-system
-as explained above.
-
-Thanks
-Kevin
+Please see the patch #2 ("support old touch report format") which adds
+support for parsing of the older packet format that requires the
+pressure value adjustment.
