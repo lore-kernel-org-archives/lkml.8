@@ -2,133 +2,159 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE727C5519A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32993C5519A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C422820700
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14B242080C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:34:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587893688;
+	bh=kR/2T0w9mJ2ALzxxWE7yrQhRXtKJQ4uWeSGOt4AfhqM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sQrPA7zhwIKnKcu7VKz8xrC838BD6IIBo5ruxKES1YOSadXt6Stw8BeDi9aKwTEEr
+	 /eqYwVFwmJn19AVPhB5upPOnElX+e9mtwgnkV0V7Md/hX9kh7XTp2q3coOR7XvEHfD
+	 lQt5i9q5zJm0mAYuzP8n5ZY3LasIdLZQ42wR1XtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbgDZJbF (ORCPT
+        id S1726146AbgDZJer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 05:31:05 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:58560 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725806AbgDZJbF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 05:31:05 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxdurGVKVeJFwsAA--.12S2;
-        Sun, 26 Apr 2020 17:30:46 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH] MIPS: Loongson: Add support for perf tool
-Date:   Sun, 26 Apr 2020 17:30:45 +0800
-Message-Id: <1587893445-9656-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9AxdurGVKVeJFwsAA--.12S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7KFyDAFW8Cw15ZFWxtF1xGrg_yoW8Kw13pF
-        4aywsxKFWkJrn5uw1Yk3ykury3JFWxtFZrGr4UJ3yUZryDZ3WkZFs3Zr4DGF4rJa97A3Wf
-        u3Wvgr1jvF97CrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkS14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_GFWl
-        42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
-        WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAK
-        I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
-        4UMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAI
-        cVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfU1zuWDUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Sun, 26 Apr 2020 05:34:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57254 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725806AbgDZJer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 05:34:47 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EBD920700;
+        Sun, 26 Apr 2020 09:34:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587893686;
+        bh=kR/2T0w9mJ2ALzxxWE7yrQhRXtKJQ4uWeSGOt4AfhqM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Fho/YBffK/t7UX26k+VLGEZmmfe9aTKeWH1BSRttXhmqktyT/BqwPnW/Mh/D33Y0f
+         KHd41pE2W33CpmB0/233MxFgvQf1TOUDfI/5Q1vm71pEgQTAUvkTon2hc/3ho6eX8I
+         tKPh1C2RP3iZnSb/8JSamvLoR1OCBR80op9zKYpA=
+Date:   Sun, 26 Apr 2020 10:34:41 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v11 1/2] iio: proximity: provide device tree binding
+ document
+Message-ID: <20200426103441.6d822c7c@archlinux>
+In-Reply-To: <20200422160509.7117-2-i.mikhaylov@yadro.com>
+References: <20200422160509.7117-1-i.mikhaylov@yadro.com>
+        <20200422160509.7117-2-i.mikhaylov@yadro.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to use perf tool on the Loongson platform, we should enable kernel
-support for various performance events provided by software and hardware,
-so add CONFIG_PERF_EVENTS=y to loongson3_defconfig.
+On Wed, 22 Apr 2020 19:05:08 +0300
+Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
 
-E.g. without this patch:
+> Mostly standard i2c driver with some additional led-current option
+> for vcnl3020.
+> 
+> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Hm. I missed on previous versions that the title of this patch doesn't
+match the dt-bindings standard.  Please look at other bindings patches.
 
-[loongson@localhost perf]$ ./perf list
+e.g. dt-bindings: proximity: Add docs for vcnl3020 
 
-List of pre-defined events (to be used in -e):
+One other comment inline from me.
+> ---
+>  .../bindings/iio/proximity/vcnl3020.yaml      | 64 +++++++++++++++++++
+>  1 file changed, 64 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml b/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+> new file mode 100644
+> index 000000000000..ac47770609d2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+> @@ -0,0 +1,64 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/proximity/vcnl3020.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Integrated Proximity Sensor With Infrared Emitter
+> +
+> +maintainers:
+> +  - Ivan Mikhaylov <i.mikhaylov@yadro.com>
+> +
+> +description: |
+> +  The VCNL3020 is a fully integrated proximity sensor. Fully integrated means
+> +  that the infrared emitter is included in the package. It has 16-bit
+> +  resolution. It includes a signal processing IC and features standard I2C
+> +  communication interface. It features an interrupt function.
+> +
+> +  Specifications about the devices can be found at:
+> +  https://www.vishay.com/docs/84150/vcnl3020.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - vishay,vcnl3020
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  vdd-supply:
+> +    description: Regulator that provides power to the sensor
+> +
+> +  vddio-supply:
+> +    description: Regulator that provides power to the bus
+> +
+> +  vishay,led-current-microamp:
+> +    description:
+> +      IR LED current value with valid Range = 0 to 20d. e.g. 0 = 0 mA,
+> +      1 = 10 mA, 20 = 200 mA. LED Current is limited to 200 mA for values
+> +      higher than decimal 20.
+The text doesn't add anything to the enum which fully defines the values.
+I'd go with something simple like:
 
-  duration_time                                      [Tool event]
+	 The drive current for the LED used in proximity sensing.
 
-  rNNN                                               [Raw hardware event descriptor]
-  cpu/t1=v1[,t2=v2,t3 ...]/modifier                  [Raw hardware event descriptor]
-   (see 'man perf-list' on how to encode it)
-
-  mem:<addr>[/len][:access]                          [Hardware breakpoint]
-
-With this patch:
-
-[loongson@localhost perf]$ ./perf list
-
-List of pre-defined events (to be used in -e):
-
-  branch-instructions OR branches                    [Hardware event]
-  branch-misses                                      [Hardware event]
-  cpu-cycles OR cycles                               [Hardware event]
-  instructions                                       [Hardware event]
-
-  alignment-faults                                   [Software event]
-  bpf-output                                         [Software event]
-  context-switches OR cs                             [Software event]
-  cpu-clock                                          [Software event]
-  cpu-migrations OR migrations                       [Software event]
-  dummy                                              [Software event]
-  emulation-faults                                   [Software event]
-  major-faults                                       [Software event]
-  minor-faults                                       [Software event]
-  page-faults OR faults                              [Software event]
-  task-clock                                         [Software event]
-
-  duration_time                                      [Tool event]
-
-  L1-dcache-load-misses                              [Hardware cache event]
-  L1-dcache-store-misses                             [Hardware cache event]
-  L1-icache-load-misses                              [Hardware cache event]
-  branch-load-misses                                 [Hardware cache event]
-  branch-loads                                       [Hardware cache event]
-  dTLB-load-misses                                   [Hardware cache event]
-  dTLB-store-misses                                  [Hardware cache event]
-  iTLB-load-misses                                   [Hardware cache event]
-
-  rNNN                                               [Raw hardware event descriptor]
-  cpu/t1=v1[,t2=v2,t3 ...]/modifier                  [Raw hardware event descriptor]
-   (see 'man perf-list' on how to encode it)
-
-  mem:<addr>[/len][:access]                          [Hardware breakpoint]
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/mips/configs/loongson3_defconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/mips/configs/loongson3_defconfig b/arch/mips/configs/loongson3_defconfig
-index 51675f5..6768c16 100644
---- a/arch/mips/configs/loongson3_defconfig
-+++ b/arch/mips/configs/loongson3_defconfig
-@@ -21,6 +21,7 @@ CONFIG_SYSFS_DEPRECATED=y
- CONFIG_RELAY=y
- CONFIG_BLK_DEV_INITRD=y
- CONFIG_EMBEDDED=y
-+CONFIG_PERF_EVENTS=y
- CONFIG_MACH_LOONGSON64=y
- CONFIG_SMP=y
- CONFIG_HZ_256=y
--- 
-2.1.0
+> +    enum: [0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000,
+> +          100000, 110000, 120000, 130000, 140000, 150000, 160000, 170000,
+> +          180000, 190000, 200000]
+> +    default: 20000
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        proximity@13 {
+> +              compatible = "vishay,vcnl3020";
+> +              reg = <0x13>;
+> +              vishay,led-current-microamp = <200000>;
+> +        };
+> +    };
 
