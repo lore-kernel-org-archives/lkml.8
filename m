@@ -2,101 +2,105 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8C7C55186
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 01:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE5C8C55186
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 01:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D693A206DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 01:04:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jPdl+CRu"
+	by mail.kernel.org (Postfix) with ESMTP id B8D5920706
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 01:05:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587863139;
+	bh=TW9WOI1NaKEA7K+nsipDf0IuvMnVChZsi71PeMPMFD0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=yn5+Cj5aTYSeifR8c51Qc7O4w9vHvEXC8//mpyLIqGO17DUWkffLmXocMh+G6ODcy
+	 4MSZTv5F+SpF7skzMbidNWTDBF0pD+hGGlK9xi0RKhIPqch/HQURRdStCqvNAAZyhO
+	 FzwZKkFethpIqqcKIETsgxM11vcZv8g4L5YPSRxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726122AbgDZBEV (ORCPT
+        id S1726135AbgDZBFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 21:04:21 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:7250 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbgDZBEU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 21:04:20 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ea4dd9d0000>; Sat, 25 Apr 2020 18:02:21 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sat, 25 Apr 2020 18:04:20 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sat, 25 Apr 2020 18:04:20 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 26 Apr
- 2020 01:04:20 +0000
-Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 26 Apr
- 2020 01:04:18 +0000
-Subject: Re: [RFC PATCH v10 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1587700513-28449-1-git-send-email-skomatineni@nvidia.com>
- <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
- <ae7a4614-c84c-f5dd-d0a5-4090e1bf5a9d@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <64b636af-a63f-6c5e-5d66-d481f79660c2@nvidia.com>
-Date:   Sat, 25 Apr 2020 18:04:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <ae7a4614-c84c-f5dd-d0a5-4090e1bf5a9d@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587862941; bh=VNhJYVm5RUzNojdXqak0dh5Q/KOm805oU3Sr5ZNtA84=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=jPdl+CRuVcIeXZS/MqiiI4UTmP+6IjnTImWyG/16xb1vlvT5DKf/ozaBMy0x17ckL
-         kyh7dPa83EoerauLJQhVsAlRhp45f7grmF8rK3yOzwht4Q8+gY9vXvEUs2xESinbij
-         C7gbhw90U/F+UL/TtR8ZlBjCI7pR3hXSg+6epTz7SoWhu8pgSvvGB8qHWV59Ie2OFO
-         p/GxyywN+V6OlIJ8DdDU7GjRfChkBJetq1h4hYVvQJx994hkv4MsEO/4gY7GB5sS+U
-         r1GjIFrTCfrOMTW9KBuUAGlUF0xhtIZbA0N7mOZX+xr9s/4UBX9oMzFFlbWqX0+xVU
-         CokQhhT5bwgfQ==
+        Sat, 25 Apr 2020 21:05:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40764 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725962AbgDZBFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 21:05:38 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BEDC206DD;
+        Sun, 26 Apr 2020 01:05:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587863138;
+        bh=TW9WOI1NaKEA7K+nsipDf0IuvMnVChZsi71PeMPMFD0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=xyssavs7qBvNOpyHvBtiegJkq8Wqg9HwnL8VSZPm/f8KpEORw/jy4AReSAPnbTyaS
+         c0Cw8kBn/g+AbZeu0VCV07nAEV8i657DrVx4QfURgeCFg0zIN8wLlvc0ertQQb0mih
+         zxkGvbWu7NndBLJ4agHVO4dFK7txamla8RvIHWDs=
+Date:   Sat, 25 Apr 2020 18:05:37 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Zong Li <zong.li@sifive.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        paul.walmsley@sifive.com, palmer@dabbelt.com,
+        linux-riscv@lists.infradead.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/4] riscv: support DEBUG_WX
+Message-Id: <20200425180537.063e976b232f8771e22f7ee1@linux-foundation.org>
+In-Reply-To: <282e266311bced080bc6f7c255b92f87c1eb65d6.1587455584.git.zong.li@sifive.com>
+References: <cover.1587455584.git.zong.li@sifive.com>
+        <282e266311bced080bc6f7c255b92f87c1eb65d6.1587455584.git.zong.li@sifive.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 21 Apr 2020 16:17:13 +0800 Zong Li <zong.li@sifive.com> wrote:
 
-On 4/25/20 4:29 PM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> 24.04.2020 06:55, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> +static int tegra_csi_init(struct host1x_client *client)
->> +{
->> +     struct tegra_csi *csi =3D host1x_client_to_csi(client);
->> +     struct tegra_video_device *vid =3D dev_get_drvdata(client->host);
->> +     int ret;
->> +
->> +     INIT_LIST_HEAD(&csi->csi_chans);
->> +
->> +     ret =3D pm_runtime_get_sync(csi->dev);
->> +     if (ret < 0) {
->> +             dev_err(csi->dev, "failed to get runtime PM: %d\n", ret);
->> +             pm_runtime_put_noidle(csi->dev);
->> +             return ret;
->> +     }
-> The whole point of RPM is to keep hardware enabled only when needed,
-> i.e. during of the capture process in this case. You should move all RPM
-> handling to the capture start / stop functions.
-Will move it to handle during stream start/stop
+> Support DEBUG_WX to check whether there are mapping with write and
+> execute permission at the same time.
+> 
+> --- a/arch/riscv/include/asm/ptdump.h
+> +++ b/arch/riscv/include/asm/ptdump.h
+> @@ -8,4 +8,10 @@
+>  
+>  void ptdump_check_wx(void);
+>  
+> +#ifdef CONFIG_DEBUG_WX
+> +#define debug_checkwx() ptdump_check_wx()
+> +#else
+> +#define debug_checkwx() do { } while (0)
+> +#endif
+> +
+>  #endif /* _ASM_RISCV_PTDUMP_H */
+
+It's preferred to implement things in regular C, unless they MUST be
+implemented in the preprocessor.  So...
+
+--- a/arch/riscv/include/asm/ptdump.h~riscv-support-debug_wx-fix
++++ a/arch/riscv/include/asm/ptdump.h
+@@ -9,9 +9,14 @@
+ void ptdump_check_wx(void);
+ 
+ #ifdef CONFIG_DEBUG_WX
+-#define debug_checkwx() ptdump_check_wx()
++static inline void debug_checkwx(void)
++{
++	ptdump_check_wx();
++}
+ #else
+-#define debug_checkwx() do { } while (0)
++static inline void debug_checkwx(void)
++{
++}
+ #endif
+ 
+ #endif /* _ASM_RISCV_PTDUMP_H */
+_
+
