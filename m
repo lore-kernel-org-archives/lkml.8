@@ -2,375 +2,136 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEDBC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A81CC55191
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 824A42098B
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 258C32078E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:57:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="DU7Ap7+V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbgDZFyi (ORCPT
+        id S1726131AbgDZF5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 01:54:38 -0400
-Received: from mga06.intel.com ([134.134.136.31]:57441 "EHLO mga06.intel.com"
+        Sun, 26 Apr 2020 01:57:07 -0400
+Received: from mout.web.de ([212.227.15.14]:32917 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726249AbgDZFyY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 01:54:24 -0400
-IronPort-SDR: VzlFhdTEuODkHES7tfpAmc32rgPV+BZoxxhmEoRh4UDEESOCIqyPZo5lnA3C7j5WNjjPtmYdzz
- 8fGjRrMxHLXA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2020 22:54:23 -0700
-IronPort-SDR: OkT3JFTLADkNjn3UowLHjtWAG/8+lfmHPe7Y3tdnmzHkWlptAPlMqa7rHtAf79YOBGXzoBP6cc
- KBC96wVpnPDQ==
-X-IronPort-AV: E=Sophos;i="5.73,319,1583222400"; 
-   d="scan'208";a="458418423"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2020 22:54:22 -0700
-From:   ira.weiny@intel.com
-To:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org
-Subject: [PATCH 3/5] arch/kunmap: Remove duplicate kunmap implementations
-Date:   Sat, 25 Apr 2020 22:54:04 -0700
-Message-Id: <20200426055406.134198-4-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200426055406.134198-1-ira.weiny@intel.com>
-References: <20200426055406.134198-1-ira.weiny@intel.com>
+        id S1725468AbgDZF5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 01:57:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1587880612;
+        bh=injEwugg8OHM9hp03WhgiBQmv8FzKG2/4scOcHkHnBg=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=DU7Ap7+VYQ8dE8VuZVZb/qR8TWce3er27w2n4X3tQiQueBeiRXiWiPraWGgLIr0b4
+         VwgauDjYGEd7lGHdb0eeO7dnBp58pJZlQ6CQN2vjM4QtQGDAbmmMkhtce1JWeQJFQv
+         JginYHtNczBU9LYZ+neB3BtZNocRT4XuMB1luu6U=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.52.156]) by smtp.web.de (mrweb001
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0M5fhI-1jHohX3LNA-00xf7T; Sun, 26
+ Apr 2020 07:56:51 +0200
+Subject: Re: mm/slub: do not place freelist pointer to middle of object if
+ redzone is on
+To:     Changbin Du <changbin.du@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org, Christoph Lameter <cl@linux.com>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Kees Cook <keescook@chromium.org>,
+        Pekka Enberg <penberg@kernel.org>
+References: <ca36745b-1939-2640-aeed-390c8c39114e@web.de>
+ <20200425235105.sye7fsbndbv24b46@mail.google.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
+ +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
+ mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
+ lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
+ YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
+ GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
+ rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
+ 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
+ jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
+ BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
+ cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
+ Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
+ g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
+ OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
+ CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
+ LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
+ sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
+ kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
+ i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
+ g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
+ q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
+ NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
+ nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
+ 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
+ 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
+ wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
+ riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
+ DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
+ fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
+ 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
+ xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
+ qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
+ Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
+ Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
+ +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
+ hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
+ /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
+ tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
+ qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
+ Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
+ x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
+ pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
+Message-ID: <dc9bcaad-ee13-5359-5d99-7ecb8cb1d46b@web.de>
+Date:   Sun, 26 Apr 2020 07:56:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200425235105.sye7fsbndbv24b46@mail.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:isG7+/FvLFT00wPC8n3rPHTTacFfTdbCfAe+hDJQWErpHLiUDzB
+ JasNmP+JQ3IdEWzgSfpmEwWIWiNZVfCboP39VSVCBPQ5G52Hj16gvtfyrQb77WTAv1Bkq99
+ YtfaW3StSUEGqYjjq6+8fUlDwZcsi+YpNQWVsYnqHP5EIf79cNHYrb/Mlkow8O/EkgTrHQG
+ njFmWD8lbc0NeowHoTXvg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:uzS6JyizmUY=:B+5sfz0Y2GgO4wQEJYdChX
+ EXDR0dF2RqlUNpIWOqobmxYIeWkUdkuE5vPd3bcNcTQ8NEM/rUbAIipsMLBppV5nCphYrVBuY
+ U2uWDKh+m44o36WmXK4FIYTLbqmyxFhMoOeDldHTwgyrWJCqxEnKUe6gDHmrzHoLs8ovnYc4N
+ J6nCTpwz/JKPaDvcw7p+RxKD/PpLD2skygyFqU8KOzc3UZqoOeSG5n3huWMpxEWyVVzPTX4bq
+ GkgBVntz3PGYsj9Q/gnSdA6b4FiVPM9TK2JVPI8dlkjIDRJ+YFWdU++2l5s2UmC/Y4wljVTTQ
+ vF2TucbC1S8F5l9uqlDd09NS5+pqylllyiXtCcmhUYPABOq0YfyOoOf9KRM/GculrEB1vDQR2
+ phKAkqxZwQDQ4oIkpjMEFqazZqyiP+22bJENWUFQZ4DkIh216ohowQFtraxSLEplNgZcL5ThS
+ yw0A9zEFw5DL6KjRQ61UPKNi6cxN32LJbq0ARPdD0kYqvKwt+zKfzyr9SqaxGASwPVgr2EuFJ
+ 0m/DdDo7gM0hNY43XU+gsrpR/dmyDucKpH38CgBgCpseXjmbG7N/vAHDiCooWNanPWaSAk0ZD
+ fwpMySqYKyGbffhY9ZV15S09HUGCoiYRiZaLZ85n2YRW6JeWrcLOU0M3xQv3rfetoOhg8CFuH
+ tLi60geqoF4NVcCWeWJTqRxppRvEztf27mEzMlMD45b4/V55Mmpj4dETDSZKXrT7lQFagnhFd
+ QBNk1wrwmIiYtXr+o+/e34ZBakSFpVt979SfA1VXQD2ufcaL+DChqv8VlONjU6S4snzuNi7D4
+ b9G4XrQvwmrEdEE0mSDs0RYAdk+GvvNtm+SPrD+C1MXKY0U476w1XB+v0RnREBNwh9+YOmQM2
+ o+n6eFxYwQFGsGUHxZOd0HVML21Ig2SsPfnHlk4YfUgs2FHSjHwnvodQAJp/slHxvb9BpQ+4j
+ q6pfBensTL6+QCs0PEbQn/kJ22UWCxJWuasVfDVUtsInpmlrGC45+1ePDgn1X0rz6grwl5RqL
+ fbKMDlg47BVDLnYzuKzzakEOKTLU61G1jfNGLsftJe5dCBVNh7NZVgr2QevETfVapCkvAxBlU
+ 7HSf7OEeGZyshTwj0qMdndfKN9DvT75rloJH/ZAChEVoeOvCjj2I9MPs0q6FeUIiEgNlE/9dw
+ W0RIZC2LyIKRK+krTST+5OmGtXm3aq+1rpUjXA3R+GpyCmRkqiqFwNltpxMzFfRTE5688zD4m
+ E2URbPK2nh27MIJYv
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+>>> Fixes: 3202fa62fb ("slub: relocate freelist pointer to middle of objec=
+t")
+=E2=80=A6
+> I used to give 12 charactors, but this time I lost two. :)
 
-All architectures do exactly the same thing for kunmap(); remove all the
-duplicate definitions and lift the call to the core.
+Would you like to improve details for the change description
+also at another place?
 
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
----
- arch/arc/include/asm/highmem.h        |  9 ---------
- arch/arm/include/asm/highmem.h        |  1 -
- arch/arm/mm/highmem.c                 |  9 ---------
- arch/csky/include/asm/highmem.h       |  1 -
- arch/csky/mm/highmem.c                |  9 ---------
- arch/microblaze/include/asm/highmem.h |  8 --------
- arch/mips/include/asm/highmem.h       |  1 -
- arch/mips/mm/highmem.c                |  9 ---------
- arch/nds32/include/asm/highmem.h      |  1 -
- arch/nds32/mm/highmem.c               | 10 ----------
- arch/powerpc/include/asm/highmem.h    |  8 --------
- arch/sparc/include/asm/highmem.h      |  8 --------
- arch/x86/include/asm/highmem.h        |  2 --
- arch/x86/mm/highmem_32.c              |  9 ---------
- arch/xtensa/include/asm/highmem.h     |  8 --------
- include/linux/highmem.h               |  8 ++++++++
- 16 files changed, 8 insertions(+), 93 deletions(-)
-
-diff --git a/arch/arc/include/asm/highmem.h b/arch/arc/include/asm/highmem.h
-index 96eb67c86961..c03a911c9f21 100644
---- a/arch/arc/include/asm/highmem.h
-+++ b/arch/arc/include/asm/highmem.h
-@@ -41,15 +41,6 @@ static inline void flush_cache_kmaps(void)
- 	flush_cache_all();
- }
- 
--static inline void kunmap(struct page *page)
--{
--	might_sleep();
--	if (!PageHighMem(page))
--		return;
--	kunmap_high(page);
--}
--
--
- #endif
- 
- #endif
-diff --git a/arch/arm/include/asm/highmem.h b/arch/arm/include/asm/highmem.h
-index c917522541de..829e3b969819 100644
---- a/arch/arm/include/asm/highmem.h
-+++ b/arch/arm/include/asm/highmem.h
-@@ -62,7 +62,6 @@ static inline void *kmap_high_get(struct page *page)
-  * when CONFIG_HIGHMEM is not set.
-  */
- #ifdef CONFIG_HIGHMEM
--extern void kunmap(struct page *page);
- extern void *kmap_atomic(struct page *page);
- extern void __kunmap_atomic(void *kvaddr);
- extern void *kmap_atomic_pfn(unsigned long pfn);
-diff --git a/arch/arm/mm/highmem.c b/arch/arm/mm/highmem.c
-index e8ba37c36590..c700b32350ee 100644
---- a/arch/arm/mm/highmem.c
-+++ b/arch/arm/mm/highmem.c
-@@ -31,15 +31,6 @@ static inline pte_t get_fixmap_pte(unsigned long vaddr)
- 	return *ptep;
- }
- 
--void kunmap(struct page *page)
--{
--	might_sleep();
--	if (!PageHighMem(page))
--		return;
--	kunmap_high(page);
--}
--EXPORT_SYMBOL(kunmap);
--
- void *kmap_atomic(struct page *page)
- {
- 	unsigned int idx;
-diff --git a/arch/csky/include/asm/highmem.h b/arch/csky/include/asm/highmem.h
-index 4caeff143748..a0e7c43731a0 100644
---- a/arch/csky/include/asm/highmem.h
-+++ b/arch/csky/include/asm/highmem.h
-@@ -34,7 +34,6 @@ extern void kunmap_high(struct page *page);
- 
- #define ARCH_HAS_KMAP
- extern void *kmap(struct page *page);
--extern void kunmap(struct page *page);
- extern void *kmap_atomic(struct page *page);
- extern void __kunmap_atomic(void *kvaddr);
- extern void *kmap_atomic_pfn(unsigned long pfn);
-diff --git a/arch/csky/mm/highmem.c b/arch/csky/mm/highmem.c
-index 5fb0bd855444..69b1931986ae 100644
---- a/arch/csky/mm/highmem.c
-+++ b/arch/csky/mm/highmem.c
-@@ -22,15 +22,6 @@ void *kmap(struct page *page)
- }
- EXPORT_SYMBOL(kmap);
- 
--void kunmap(struct page *page)
--{
--	might_sleep();
--	if (!PageHighMem(page))
--		return;
--	kunmap_high(page);
--}
--EXPORT_SYMBOL(kunmap);
--
- void *kmap_atomic(struct page *page)
- {
- 	unsigned long vaddr;
-diff --git a/arch/microblaze/include/asm/highmem.h b/arch/microblaze/include/asm/highmem.h
-index 8c5bfd228bd8..1cbd52a0e39b 100644
---- a/arch/microblaze/include/asm/highmem.h
-+++ b/arch/microblaze/include/asm/highmem.h
-@@ -55,14 +55,6 @@ extern void kunmap_high(struct page *page);
- extern void *kmap_atomic_prot(struct page *page, pgprot_t prot);
- extern void __kunmap_atomic(void *kvaddr);
- 
--static inline void kunmap(struct page *page)
--{
--	might_sleep();
--	if (!PageHighMem(page))
--		return;
--	kunmap_high(page);
--}
--
- static inline void *kmap_atomic(struct page *page)
- {
- 	return kmap_atomic_prot(page, kmap_prot);
-diff --git a/arch/mips/include/asm/highmem.h b/arch/mips/include/asm/highmem.h
-index c30bbb88fcfe..af9a66300628 100644
---- a/arch/mips/include/asm/highmem.h
-+++ b/arch/mips/include/asm/highmem.h
-@@ -50,7 +50,6 @@ extern void kunmap_high(struct page *page);
- 
- #define ARCH_HAS_KMAP
- extern void *kmap(struct page *page);
--extern void kunmap(struct page *page);
- extern void *kmap_atomic(struct page *page);
- extern void __kunmap_atomic(void *kvaddr);
- extern void *kmap_atomic_pfn(unsigned long pfn);
-diff --git a/arch/mips/mm/highmem.c b/arch/mips/mm/highmem.c
-index 3867dbe9ef32..c3c9fe962f0f 100644
---- a/arch/mips/mm/highmem.c
-+++ b/arch/mips/mm/highmem.c
-@@ -21,15 +21,6 @@ void *kmap(struct page *page)
- }
- EXPORT_SYMBOL(kmap);
- 
--void kunmap(struct page *page)
--{
--	might_sleep();
--	if (!PageHighMem(page))
--		return;
--	kunmap_high(page);
--}
--EXPORT_SYMBOL(kunmap);
--
- /*
-  * kmap_atomic/kunmap_atomic is significantly faster than kmap/kunmap because
-  * no global lock is needed and because the kmap code must perform a global TLB
-diff --git a/arch/nds32/include/asm/highmem.h b/arch/nds32/include/asm/highmem.h
-index b13654a79069..e455e2624247 100644
---- a/arch/nds32/include/asm/highmem.h
-+++ b/arch/nds32/include/asm/highmem.h
-@@ -53,7 +53,6 @@ extern void kmap_init(void);
-  * when CONFIG_HIGHMEM is not set.
-  */
- #ifdef CONFIG_HIGHMEM
--extern void kunmap(struct page *page);
- extern void *kmap_atomic(struct page *page);
- extern void __kunmap_atomic(void *kvaddr);
- extern void *kmap_atomic_pfn(unsigned long pfn);
-diff --git a/arch/nds32/mm/highmem.c b/arch/nds32/mm/highmem.c
-index d0cde53b84ae..f9348bec0ecb 100644
---- a/arch/nds32/mm/highmem.c
-+++ b/arch/nds32/mm/highmem.c
-@@ -10,16 +10,6 @@
- #include <asm/fixmap.h>
- #include <asm/tlbflush.h>
- 
--void kunmap(struct page *page)
--{
--	might_sleep();
--	if (!PageHighMem(page))
--		return;
--	kunmap_high(page);
--}
--
--EXPORT_SYMBOL(kunmap);
--
- void *kmap_atomic(struct page *page)
- {
- 	unsigned int idx;
-diff --git a/arch/powerpc/include/asm/highmem.h b/arch/powerpc/include/asm/highmem.h
-index f14e4feef6d5..08e02a4f3a8f 100644
---- a/arch/powerpc/include/asm/highmem.h
-+++ b/arch/powerpc/include/asm/highmem.h
-@@ -63,14 +63,6 @@ extern void kunmap_high(struct page *page);
- extern void *kmap_atomic_prot(struct page *page, pgprot_t prot);
- extern void __kunmap_atomic(void *kvaddr);
- 
--static inline void kunmap(struct page *page)
--{
--	might_sleep();
--	if (!PageHighMem(page))
--		return;
--	kunmap_high(page);
--}
--
- static inline void *kmap_atomic(struct page *page)
- {
- 	return kmap_atomic_prot(page, kmap_prot);
-diff --git a/arch/sparc/include/asm/highmem.h b/arch/sparc/include/asm/highmem.h
-index 2ff1192047f7..b3ee234b2a8f 100644
---- a/arch/sparc/include/asm/highmem.h
-+++ b/arch/sparc/include/asm/highmem.h
-@@ -52,14 +52,6 @@ void kmap_init(void) __init;
- 
- void kunmap_high(struct page *page);
- 
--static inline void kunmap(struct page *page)
--{
--	might_sleep();
--	if (!PageHighMem(page))
--		return;
--	kunmap_high(page);
--}
--
- void *kmap_atomic(struct page *page);
- void __kunmap_atomic(void *kvaddr);
- 
-diff --git a/arch/x86/include/asm/highmem.h b/arch/x86/include/asm/highmem.h
-index c916a28a9738..102cdcde74cb 100644
---- a/arch/x86/include/asm/highmem.h
-+++ b/arch/x86/include/asm/highmem.h
-@@ -60,8 +60,6 @@ extern unsigned long highstart_pfn, highend_pfn;
- 
- extern void kunmap_high(struct page *page);
- 
--void kunmap(struct page *page);
--
- void *kmap_atomic_prot(struct page *page, pgprot_t prot);
- void *kmap_atomic(struct page *page);
- void __kunmap_atomic(void *kvaddr);
-diff --git a/arch/x86/mm/highmem_32.c b/arch/x86/mm/highmem_32.c
-index 12591a81b85c..c4ebfd0ae401 100644
---- a/arch/x86/mm/highmem_32.c
-+++ b/arch/x86/mm/highmem_32.c
-@@ -4,15 +4,6 @@
- #include <linux/swap.h> /* for totalram_pages */
- #include <linux/memblock.h>
- 
--void kunmap(struct page *page)
--{
--	might_sleep();
--	if (!PageHighMem(page))
--		return;
--	kunmap_high(page);
--}
--EXPORT_SYMBOL(kunmap);
--
- /*
-  * kmap_atomic/kunmap_atomic is significantly faster than kmap/kunmap because
-  * no global lock is needed and because the kmap code must perform a global TLB
-diff --git a/arch/xtensa/include/asm/highmem.h b/arch/xtensa/include/asm/highmem.h
-index fac4f48bde6c..ae9e0ffbdb80 100644
---- a/arch/xtensa/include/asm/highmem.h
-+++ b/arch/xtensa/include/asm/highmem.h
-@@ -75,14 +75,6 @@ static inline void *kmap(struct page *page)
- 	return kmap_generic(page);
- }
- 
--static inline void kunmap(struct page *page)
--{
--	might_sleep();
--	if (!PageHighMem(page))
--		return;
--	kunmap_high(page);
--}
--
- static inline void flush_cache_kmaps(void)
- {
- 	flush_cache_all();
-diff --git a/include/linux/highmem.h b/include/linux/highmem.h
-index 2f7f710b7e7d..1a3b7690c78c 100644
---- a/include/linux/highmem.h
-+++ b/include/linux/highmem.h
-@@ -52,6 +52,14 @@ static inline void *kmap(struct page *page)
- }
- #endif
- 
-+static inline void kunmap(struct page *page)
-+{
-+	might_sleep();
-+	if (!PageHighMem(page))
-+		return;
-+	kunmap_high(page);
-+}
-+
- /* declarations for linux/mm/highmem.c */
- unsigned int nr_free_highpages(void);
- extern atomic_long_t _totalhigh_pages;
--- 
-2.25.1
-
+Regards,
+Markus
