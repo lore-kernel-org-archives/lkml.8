@@ -2,117 +2,150 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F3CC55199
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 10:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD3AC55199
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 10:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8576220700
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 10:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E61020700
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 10:28:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587896936;
+	bh=pn5qHg+Pn44zc/IxGMp8ZLIkBtQLw6+PAtpwlocbLF0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=jZzFilI/jO02Z2yAggLbsxhpW2jd+IFptzRCOAtLleYJ21U0QyCJPLjeJbZzh0vJA
+	 w4LAeJHfxPYOQIhPsSG48x+Gw1qwuQkxtyy1MVC/yxjYC8ohVVxVaF+7bq1XVL8ACV
+	 nmBIcDvsBk+GvxIhtdjUP1HhPGZOcj03Z3zU743s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726182AbgDZK1m (ORCPT
+        id S1726156AbgDZK24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 06:27:42 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3305 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726116AbgDZK1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 06:27:42 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D2826C434DE7060B6EB2;
-        Sun, 26 Apr 2020 18:27:38 +0800 (CST)
-Received: from [127.0.0.1] (10.166.213.7) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Sun, 26 Apr 2020
- 18:27:34 +0800
-Subject: Re: [PATCH] ray_cs: use true,false for bool variable
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        <kvalo@codeaurora.org>, <davem@davemloft.net>,
-        <adobriyan@gmail.com>, <tglx@linutronix.de>,
-        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200426094103.23213-1-yanaijie@huawei.com>
- <9c67aee9-ece6-01f0-895a-e690b967d819@cogentembedded.com>
-From:   Jason Yan <yanaijie@huawei.com>
-Message-ID: <0b7407e4-c7ad-f97b-0050-9086f245c6cc@huawei.com>
-Date:   Sun, 26 Apr 2020 18:27:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Sun, 26 Apr 2020 06:28:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726116AbgDZK2z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 06:28:55 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 316E0206B6;
+        Sun, 26 Apr 2020 10:28:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587896934;
+        bh=pn5qHg+Pn44zc/IxGMp8ZLIkBtQLw6+PAtpwlocbLF0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=YgD3/h4WC3J4acQyimUkxzGdYUHVcmqK9SZDPUOM6+Csq+N7XM2Zq4DM/KPLNNfjP
+         tPfkR6JlaUuVwAQQD37Vqh+SCwQCJgkSXoJ9+3cJZu+2IRcjrwxOAXUMMK+bn42dYk
+         O9bMe267usJ5sarWZ1uRSpKWB/lXby8jzaAldggI=
+Date:   Sun, 26 Apr 2020 11:28:51 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <lars@metafoo.de>
+Subject: Re: [RFC PATCH 3/4] iio: Allow channels to share storage elements
+Message-ID: <20200426112851.65001a89@archlinux>
+In-Reply-To: <20200424051818.6408-4-alexandru.ardelean@analog.com>
+References: <20200424051818.6408-1-alexandru.ardelean@analog.com>
+        <20200424051818.6408-4-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <9c67aee9-ece6-01f0-895a-e690b967d819@cogentembedded.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.166.213.7]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 24 Apr 2020 08:18:17 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
+> From: Lars-Peter Clausen <lars@metafoo.de>
+> 
+> Currently each IIO channel has it's own storage element in the data stream
+> each with its own unique scan index. This works for a lot of use-cases,
+> but in some is not good enough to represent the hardware accurately. On
+> those devices multiple separate pieces of information are stored within the
+> same storage element and the storage element can't be further broken down
+> into multiple storage elements (e.g. because the data is not aligned).
+> 
+> This can for example be status bits stored in unused data bits. E.g. a
+> 14-bit ADC that stores its data in a 16-bit word and uses the two
+> additional bits to convey status information like for example whether a
+> overrange condition has happened. Currently this kind of extra status
+> information is usually ignored and can only be used by applications that
+> have special knowledge about the connected device and its data layout.
 
-在 2020/4/26 17:47, Sergei Shtylyov 写道:
-> Hello!
-> 
-> On 26.04.2020 12:41, Jason Yan wrote:
-> 
->> Fix the following coccicheck warning:
->>
->> drivers/net/wireless/ray_cs.c:2797:5-14: WARNING: Comparison of 0/1 to
->> bool variable
->> drivers/net/wireless/ray_cs.c:2798:2-11: WARNING: Assignment of 0/1 to
->> bool variable
->>
->> Signed-off-by: Jason Yan <yanaijie@huawei.com>
->> ---
->>   drivers/net/wireless/ray_cs.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/net/wireless/ray_cs.c 
->> b/drivers/net/wireless/ray_cs.c
->> index c1d542bfa530..f9402424accd 100644
->> --- a/drivers/net/wireless/ray_cs.c
->> +++ b/drivers/net/wireless/ray_cs.c
->> @@ -2794,8 +2794,8 @@ static int __init init_ray_cs(void)
->>       proc_create_data("driver/ray_cs/translate", 0200, NULL, 
->> &int_proc_ops,
->>                &translate);
->>   #endif
->> -    if (translate != 0)
->> -        translate = 1;
->> +    if (!translate)
-> 
->     That inverts the original logic, no?
+Hmm. The problem with this (and the reason I have resisted this in the past)
+is that this fundamentally breaks the existing ABI.  Whilst we have never
+explicitly stated that this can't be done (I think) a lot of code may
+assume it.
 
-Oh, yes.
+Are we sure this doesn't break existing userspace in weird and wonderful
+ways?   I'm sure someone does stuff 'in place' on the incoming data
+streams for example which this would break.
 
-> 
->> +        translate = true;
-> 
->     Actually, that whole comparison/assignment doesn't make sense, if we 
-> use bool...
-> 
+Also does the demux work with these if we have multiple consumers?  Seems
+unlikely that it will do it efficiently if at all.
 
-So may be we can do this:
-
-diff --git a/drivers/net/wireless/ray_cs.c b/drivers/net/wireless/ray_cs.c
-index c1d542bfa530..9ea695459342 100644
---- a/drivers/net/wireless/ray_cs.c
-+++ b/drivers/net/wireless/ray_cs.c
-@@ -2794,8 +2794,7 @@ static int __init init_ray_cs(void)
-         proc_create_data("driver/ray_cs/translate", 0200, NULL, 
-&int_proc_ops,
-                          &translate);
-  #endif
--       if (translate != 0)
--               translate = 1;
-+       translate == !!translate;
-         return 0;
-  } /* init_ray_cs */
-
-> [...]
+J
 > 
-> MBR, Sergei
+> In addition to that some might also have data channels with less than 8
+> bits that get packed into the same storage element.
 > 
-> .
+> Allow two or more channels to use the same scan index, if they their
+> storage element does have the same size.
+> 
+> Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
+>  drivers/iio/industrialio-core.c | 27 ++++++++++++++++++++-------
+>  1 file changed, 20 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index f4daf19f2a3b..cdf59a51c917 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -1651,6 +1651,16 @@ static const struct file_operations iio_buffer_fileops = {
+>  	.compat_ioctl = compat_ptr_ioctl,
+>  };
+>  
+> +static bool iio_chan_same_size(const struct iio_chan_spec *a,
+> +	const struct iio_chan_spec *b)
+> +{
+> +	if (a->scan_type.storagebits != b->scan_type.storagebits)
+> +		return false;
+> +	if (a->scan_type.repeat != b->scan_type.repeat)
+> +		return false;
+> +	return true;
+> +}
+> +
+>  static int iio_check_unique_scan_index(struct iio_dev *indio_dev)
+>  {
+>  	int i, j;
+> @@ -1662,13 +1672,16 @@ static int iio_check_unique_scan_index(struct iio_dev *indio_dev)
+>  	for (i = 0; i < indio_dev->num_channels - 1; i++) {
+>  		if (channels[i].scan_index < 0)
+>  			continue;
+> -		for (j = i + 1; j < indio_dev->num_channels; j++)
+> -			if (channels[i].scan_index == channels[j].scan_index) {
+> -				dev_err(&indio_dev->dev,
+> -					"Duplicate scan index %d\n",
+> -					channels[i].scan_index);
+> -				return -EINVAL;
+> -			}
+> +		for (j = i + 1; j < indio_dev->num_channels; j++) {
+> +			if (channels[i].scan_index != channels[j].scan_index)
+> +				continue;
+> +			if (iio_chan_same_size(&channels[i], &channels[j]))
+> +				continue;
+> +			dev_err(&indio_dev->dev,
+> +				"Duplicate scan index %d\n",
+> +				channels[i].scan_index);
+> +			return -EINVAL;
+> +		}
+>  	}
+>  
+>  	return 0;
 
