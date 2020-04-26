@@ -7,115 +7,218 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4365C55194
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 21:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 567DBC55194
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 22:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A31C32071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 21:53:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 271EB206DD
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 22:04:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gz4u1B/S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z5cUhERY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbgDZVxr (ORCPT
+        id S1726340AbgDZWED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 17:53:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49178 "EHLO
+        Sun, 26 Apr 2020 18:04:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726184AbgDZVxq (ORCPT
+        with ESMTP id S1726188AbgDZWEC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 17:53:46 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 402E5C061A0F;
-        Sun, 26 Apr 2020 14:53:46 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id s10so6214716plr.1;
-        Sun, 26 Apr 2020 14:53:46 -0700 (PDT)
+        Sun, 26 Apr 2020 18:04:02 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44833C061A0F;
+        Sun, 26 Apr 2020 15:04:02 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id x4so17453729wmj.1;
+        Sun, 26 Apr 2020 15:04:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=H5D1PG6e/lMszq0Rf949EFEkle4oIskhG7vE9vM9dC4=;
-        b=gz4u1B/Skr8dsJGByTK2XWhiRHHeIiJZhyUTcQxEMw5oTN+clJwfvrhHWwRaMgDPks
-         SMs+QJlwZcv4XoMltJQ/o7qXuTkMuSfpQdq4HxDJBXB1/Brawn81miRiltA44CJozitD
-         4/CP/nB3W0TUJfCo2rr6dGLiBAvgxJgcgpsFtrfASPAlOec4eLvqfib9DRtnJAFMUmDU
-         JIsUDSHkLXGpVaSiKplTehHcZ+1gNn/HtN1XqWTqzQ53K/4TPUCPgx3OR0moFSueWT16
-         epWZKE9C2Q3NooFtA+t+7twpfMYGy3NXlHU/op6j2ucEvcAcjn00qPEOyYTlMZ0JwEwZ
-         +oEA==
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=10nCqrCYFDyrtgChLL6xzRI0axcD1xMee62SXKtI59A=;
+        b=Z5cUhERYPECk1zSBRsNqEpfg4QLC+jr6VodoG80Euva8IjlBjoCPLPQ7qYxrFMWJMt
+         rgKFzXUrXPd8FaK3VgiPf01BPwVdEmxW9+MkAWGJBWv5/PfPr5eOM7IqXLdw0GWFYeGU
+         k5zZuR/wnNFgP5DF4Ms8Ui/rVrirOhYWhQvzMTtDSXOQGDHNcV6YtG0gCjxpM4oreSNV
+         WOManQGK0kWbhzjsTn2zxyCtDDdKECulUZ3nAMLis9yMZXujcmBTP+i2Mtmj/O8EmzBJ
+         8ewiJc4vXJEEHJCFuO/uMQePXos36VgTfVeCF/WcGZRKudoLz2ZHElDSnCjKDS02J2/y
+         fFZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=H5D1PG6e/lMszq0Rf949EFEkle4oIskhG7vE9vM9dC4=;
-        b=I3lNpitHO6vpe0BYxvrQqKNvXjQQbDEkNtFH8sNLq1mxcJ+AIUDJkBI4KFkQxLWIAo
-         iklrekpb6q26WBlkiGh3T+HFfepa85nv7SOgjeW6qQuALVC75CKEr6vi4GJcrD7vgvg3
-         K2oTsWCiHAfO+pRBqKseRgy286SVeJWGwIs7pGKp5wWkLfu8hwjGamk8v8u6Ir3O9B7e
-         zGcMMggptAC7Y+46YVKqQvAvQNIVx98trWae9pyN/nhK1kvkA5RMgI5BvR7zdQHiC05Y
-         6PYbHyp4p6s/psvXaL5ljRWpyuFeks5gzWoqXewIFXdmtmVCcXMQg3u3JhaBHUdwDovd
-         63RA==
-X-Gm-Message-State: AGi0PuakV54nrAg1mNaUHuo3MsQKu5kHRhT0o6j9tDgTZja0geni1mnY
-        iJsXq7CxrgFQaLkoDbD3RA4=
-X-Google-Smtp-Source: APiQypLlLPgA6Ou9oUq3eMaI0CVQsG9UrGKGpXBdsliinmBgCNXAyiE4zSfQmRisUhR9LgkPSFMytg==
-X-Received: by 2002:a17:90a:6d03:: with SMTP id z3mr20045920pjj.32.1587938024753;
-        Sun, 26 Apr 2020 14:53:44 -0700 (PDT)
-Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
-        by smtp.gmail.com with ESMTPSA id 67sm954454pfx.108.2020.04.26.14.53.43
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=10nCqrCYFDyrtgChLL6xzRI0axcD1xMee62SXKtI59A=;
+        b=eBGHtnaIDZorEi7S8ue81SbnJTDYiS3NJYum/2Igy9l/JfhjoJJECDxZuA0om7S6pK
+         rbNKQAprxE686dbO1N6qr09BeHrJvkKY1mK2L7c0f7uni2foTJGIFUs3pJtiAVdaPOFI
+         ac/OFVf90wFMJtJktaV8RLUue6s1VFdf0mIdD6ezdG2H/6P0Fet/lem2CU+2uvIkQkQW
+         FuJ6o2C64Hqx/05wvd8F5ecWF/HEhgpkXotl4zqsyKdU7cHEaysrUxeYoUOtCfMc778v
+         WeVi6bSjaN7ai/GSWXE7TmaTw/9O+PykvQUHGgY4x6SbpKNyl2POsR6x196kKeuivXya
+         r7OQ==
+X-Gm-Message-State: AGi0PuZluek4t8yCibyam8AxpMCmoVYwTswCRKmdMrnMktoJ0REUW628
+        qEpSJ4K/BIzH4iVc2if+vtnkrHlm
+X-Google-Smtp-Source: APiQypL7N6oX8EuE4UOebcwreaU8Nx4yovgWlwmiqrC1Uyma/1vZuSTDyFfLUdgF4qPRmWECjf6ULw==
+X-Received: by 2002:a7b:c3d4:: with SMTP id t20mr23787478wmj.170.1587938640886;
+        Sun, 26 Apr 2020 15:04:00 -0700 (PDT)
+Received: from [192.168.3.2] (ip5f5bfcc8.dynamic.kabel-deutschland.de. [95.91.252.200])
+        by smtp.gmail.com with ESMTPSA id g6sm18319434wrw.34.2020.04.26.15.03.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 26 Apr 2020 14:53:44 -0700 (PDT)
-Subject: Re: INFO: rcu detected stall in wg_packet_tx_worker
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     syzbot <syzbot+0251e883fe39e7a0cb0a@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        jhs@mojatatu.com,
-        =?UTF-8?B?SmnFmcOtIFDDrXJrbw==?= <jiri@resnulli.us>,
-        Krzysztof Kozlowski <krzk@kernel.org>, kuba@kernel.org,
-        kvalo@codeaurora.org, leon@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, syzkaller-bugs@googlegroups.com,
-        Thomas Gleixner <tglx@linutronix.de>, vivien.didelot@gmail.com,
-        Cong Wang <xiyou.wangcong@gmail.com>
-References: <0000000000005fd19505a4355311@google.com>
- <e40c443e-74aa-bad4-7be8-4cdddfdf3eaf@gmail.com>
- <CAHmME9ov2ae08UTzwKL7enquChzDNxpg4c=ppnJqS2QF6ZAn_Q@mail.gmail.com>
- <f2eb18ea-b32a-4b64-0417-9b5b2df98e33@gmail.com>
- <29bd64f4-5fe0-605e-59cc-1afa199b1141@gmail.com>
- <CAHmME9rR-_KvENZyBrRhYNWD+hVD-FraxPJiofsmuXBh651QXw@mail.gmail.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <85e76f66-f807-ad12-df9d-0805b68133fa@gmail.com>
-Date:   Sun, 26 Apr 2020 14:53:42 -0700
+        Sun, 26 Apr 2020 15:04:00 -0700 (PDT)
+Subject: Re: [PATCH v2 5/5] scsi: ufs: UFS Host Performance Booster(HPB)
+ driver
+To:     Bart Van Assche <bvanassche@acm.org>, alim.akhtar@samsung.com,
+        avri.altman@wdc.com, asutoshd@codeaurora.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, tomas.winkler@intel.com, cang@codeaurora.org
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200416203126.1210-1-beanhuo@micron.com>
+ <20200416203126.1210-6-beanhuo@micron.com>
+ <183528b9-f04b-40f5-269b-5897da113b97@acm.org>
+From:   Bean Huo <huobean@gmail.com>
+Message-ID: <e53f3b2c-37ec-2bab-83ff-702dd3b2b813@gmail.com>
+Date:   Mon, 27 Apr 2020 00:03:59 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <CAHmME9rR-_KvENZyBrRhYNWD+hVD-FraxPJiofsmuXBh651QXw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <183528b9-f04b-40f5-269b-5897da113b97@acm.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 25.04.20 20:07, Bart Van Assche wrote:
+> On 2020-04-16 13:31, huobean@gmail.com wrote:
+>> +static int ufshpb_execute_cmd(struct ufshpb_lu *hpb, unsigned char *cmd)
+>> +{
+>> +	struct scsi_sense_hdr sshdr;
+>> +	struct scsi_device *sdp;
+>> +	struct ufs_hba *hba;
+>> +	int retries;
+>> +	int ret = 0;
+>> +
+>> +	hba = hpb->hba;
+>> +
+>> +	sdp = hba->sdev_ufs_lu[hpb->lun];
+>> +	if (!sdp) {
+>> +		hpb_warn("%s UFSHPB cannot find scsi_device\n",  __func__);
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	ret = scsi_device_get(sdp);
+>> +	if (!ret && !scsi_device_online(sdp)) {
+>> +		ret = -ENODEV;
+>> +		scsi_device_put(sdp);
+>> +		return ret;
+>> +	}
+>> +
+>> +	for (retries = 3; retries > 0; --retries) {
+>> +		ret = scsi_execute(sdp, cmd, DMA_NONE, NULL, 0, NULL, &sshdr,
+>> +				   msecs_to_jiffies(30000), 3, 0, RQF_PM, NULL);
+>> +		if (ret == 0)
+>> +			break;
+>> +	}
+>> +
+>> +	if (ret) {
+>> +		if (driver_byte(ret) == DRIVER_SENSE &&
+>> +		    scsi_sense_valid(&sshdr)) {
+>> +			switch (sshdr.sense_key) {
+>> +			case ILLEGAL_REQUEST:
+>> +				hpb_err("ILLEGAL REQUEST asc=0x%x ascq=0x%x\n",
+>> +					sshdr.asc, sshdr.ascq);
+>> +				break;
+>> +			default:
+>> +				hpb_err("Unknown return code = %x\n", ret);
+>> +				break;
+>> +			}
+>> +		}
+>> +	}
+>> +	scsi_device_put(sdp);
+>> +
+>> +	return ret;
+>> +}
+> If scsi_execute() would be changed into asynchronous SCSI command
+> submission, can ufshpb_execute_cmd() be called from inside the UFS
+> .queue_rq() callback instead of from workqueue context?
+>
+> The scsi_device_get() call looks misplaced. I think that call should
+> happen before schedule_work() is called.
+>
+>> +static int ufshpb_l2p_load_req(struct ufshpb_lu *hpb, struct request_queue *q,
+>> +			       struct ufshpb_map_req *map_req)
+>> +{
+>> +	struct scsi_request *scsi_rq;
+>> +	unsigned char cmd[16] = { };
+>> +	struct request *req;
+>> +	struct bio *bio;
+>> +	int alloc_len;
+>> +	int ret;
+>> +
+>> +	bio = &map_req->bio;
+>> +
+>> +	ret = ufshpb_add_bio_page(hpb, q, bio, map_req->bvec, map_req->mctx);
+>> +	if (ret) {
+>> +		hpb_err("ufshpb_add_bio_page() failed with ret %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	alloc_len = hpb->hba->hpb_geo.subregion_entry_sz;
+>> +	/*
+>> +	 * HPB Sub-Regions are equally sized except for the last one which is
+>> +	 * smaller if the last hpb Region is not an integer multiple of
+>> +	 * bHPBSubRegionSize.
+>> +	 */
+>> +	if (map_req->region == (hpb->lu_region_cnt - 1) &&
+>> +	    map_req->subregion == (hpb->subregions_in_last_region - 1))
+>> +		alloc_len = hpb->last_subregion_entry_size;
+>> +
+>> +	ufshpb_prepare_read_buf_cmd(cmd, map_req->region, map_req->subregion,
+>> +				    alloc_len);
+>> +	if (!map_req->req) {
+>> +		map_req->req = blk_get_request(q, REQ_OP_SCSI_IN, 0);
+>> +		if (IS_ERR(map_req->req))
+>> +			return PTR_ERR(map_req->req);
+>> +	}
+>> +	req = map_req->req;
+>> +	scsi_rq = scsi_req(req);
+>> +
+>> +	blk_rq_append_bio(req, &bio);
+>> +
+>> +	scsi_req_init(scsi_rq);
+>> +
+>> +	scsi_rq->cmd_len = COMMAND_SIZE(cmd[0]);
+>> +	memcpy(scsi_rq->cmd, cmd, scsi_rq->cmd_len);
+>> +	req->timeout = msecs_to_jiffies(30000);
+>> +	req->end_io_data = (void *)map_req;
+>> +
+>> +	hpb_dbg(SCHEDULE_INFO, hpb, "ISSUE READ_BUFFER : (%d-%d) retry = %d\n",
+>> +		map_req->region, map_req->subregion, map_req->retry_cnt);
+>> +	hpb_trace(hpb, "%s: I RB %d - %d", DRIVER_NAME, map_req->region,
+>> +		  map_req->subregion);
+>> +
+>> +	blk_execute_rq_nowait(q, NULL, req, 1, ufshpb_l2p_load_req_done);
+>> +	map_req->req_issue_t = ktime_to_ns(ktime_get());
+>> +
+>> +	atomic64_inc(&hpb->status.map_req_cnt);
+>> +
+>> +	return 0;
+>> +}
+> Same question here: if 'req' would be submitted asynchronously, can
+> ufshpb_l2p_load_req() be called directly from inside the UFS .queue_rq()
+> callback instead of from workqueue context?
+>
+> Thanks,
+>
+> Bart.
 
-On 4/26/20 1:46 PM, Jason A. Donenfeld wrote:
+Hi, Bart
+Thanks very much.
+If I understood the Christoph's the second question correctly. Enqueue 
+HPB requests to the
+scsi_device->request_queueu, and fly back to SCSI schedule, it's 
+unacceptable. I don't like this
+implementation way either. Also, the latency of the L2P table update is 
+higher. I will change it
+in the RFC patch.
 
-> 
-> Ah, whew, okay. I had just begun instrumenting sfq (the highly
-> technical term for "adding printks everywhere") to figure out what's
-> going on. Looks like you've got a handle on it, so I'll let you have
-> at it.
-
-Yes, syzbot manages to put a zero in q->scaled_quantum
-
-I will send a fix.
-
-> 
-> On the brighter side, it seems like Dmitry's and my effort to get full
-> coverage of WireGuard has paid off in the sense that tons of packets
-> wind up being shoveled through it in one way or another, which is
-> good.
-> 
-
-Sure !
+thanks,
+Bean
