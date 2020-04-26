@@ -2,43 +2,46 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 741D7C54FCB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE76C55194
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AE4B20706
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 399582078E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:11:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="WayrEexr"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="qhWbMAj1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbgDZQLN (ORCPT
+        id S1726263AbgDZQLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 12:11:13 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:17927 "EHLO rere.qmqm.pl"
+        Sun, 26 Apr 2020 12:11:17 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:53269 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725778AbgDZQLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 12:11:13 -0400
+        id S1726147AbgDZQLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 12:11:14 -0400
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 499CZN6VgbzDY;
-        Sun, 26 Apr 2020 18:11:08 +0200 (CEST)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 499CZS4FX2zwy;
+        Sun, 26 Apr 2020 18:11:12 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1587917471; bh=lW+UudkTFUycbxUnIAx69LGP6rnC1AOjQDgAtlPusuo=;
-        h=Date:From:Subject:To:Cc:From;
-        b=WayrEexrtR0uCH3knxVoYQs2BV87/3dN/AdkV7TKMF/SU2gJyFdcHLJkmY8F4CypG
-         ZI+PwH/jywZtHpiVXB7ejYj6lxScL1GaGuFHu8EQn3654eYODsmlJKKsD1Uxgk0utH
-         tqA1AVJfENAmAqcgxccTLJHBS8Ia6BPn5HPBMbppKk571V3fd2DWLKO75FjRjMiUjr
-         9ox58wHrkwAmTMw17rNfqVQO9km4aFvggoOnDEiDmG9OM4ZvLodHqIQsoc3W+HC5TR
-         auyUhlpV4jEJMRHdxkIBlNGIi9/PNRajf1Z/AUrZaI5PIdq7aeEEn2hMWZ80g3W282
-         v+I/n/fmdsodQ==
+        t=1587917472; bh=CwKwDqHozyOsjEK6g3w7VBZ5aPUk7eO/fS7f3oLeEwM=;
+        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
+        b=qhWbMAj1dh5k4NOME70xiMs5ULECYhANEI5Sdq/4VFYSPQw7JNNqzJNao1Y4pai3Y
+         BpGPkihFaPsORRxzi6gY2xE2dDtEJEikGoUg5kQtmu6xnAaGQe+QOIgDXFmntqfkoU
+         V0HHKlj0Zhbk30/LdCM3g+iaUUeRI6Yxm1mlcB0NjNZvNesXaTpGbo1xFzc1MhVUm5
+         9PtXh68uMOSKrDrv/IHBdyUd9iyqFguDvhE84jEHVJ55DdgjnnbECcG7VZMEyCuz+A
+         ZzYWq4K1sFhV7XQS8gxHjgQdX3XmCVbQMdY1MEZorAfQ1F0y6HaXLH4hGEnXlMgQD4
+         ZePNwPPOTCNPA==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Sun, 26 Apr 2020 18:11:07 +0200
-Message-Id: <cover.1587916846.git.mirq-linux@rere.qmqm.pl>
+Date:   Sun, 26 Apr 2020 18:11:12 +0200
+Message-Id: <b6cb0f810eec2d5c6245d6128502eebd342ca02a.1587916846.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <cover.1587916846.git.mirq-linux@rere.qmqm.pl>
+References: <cover.1587916846.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v4 00/10] input: elants: Support Asus TF300T touchscreen
+Subject: [PATCH v4 03/10] input: elants: remove unused axes
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -56,42 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series cleans up the driver a bit and implements changes needed to
-support EKTF3624-based touchscreen used in Asus TF300T and similar
-Tegra3-based tablets.
+Driver only ever reports MT events and input_mt_init_slots() sets up
+emulated axes already.  Clear the capabilities not generated directly
+and move MT axes setup, so they are visible by input_mt_init_slots().
 
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
 ---
-v2: extended with Dmitry's patches (replaced v1 patches 3 and 4)
-v3: rebased for v5.7-rc1
-v4: rebased onto v5.7-rc2+ (current Linus' master)
-    update "remove unused axes" and "refactor
-      elants_i2c_execute_command()" patches after review
-    add David's patch converting DT binding to YAML
+v4: reword commitmsg; reorder axis setup
 ---
+ drivers/input/touchscreen/elants_i2c.c | 26 ++++++++------------------
+ 1 file changed, 8 insertions(+), 18 deletions(-)
 
-David Heidelberg (1):
-  dt-bindings: input: touchscreen: elants_i2c: convert to YAML
-
-Dmitry Osipenko (3):
-  input: elants: support 0x66 reply opcode for reporting touches
-  dt-bindings: input: elants-i2c: Document common touchscreen properties
-  dt-bindings: input: elants-i2c: Document eKTF3624
-
-Michał Mirosław (6):
-  input: elants: document some registers and values
-  input: elants: support old touch report format
-  input: elants: remove unused axes
-  input: elants: override touchscreen info with DT properties
-  input: elants: refactor elants_i2c_execute_command()
-  input: elants: read touchscreen size for EKTF3624
-
- .../devicetree/bindings/input/elants_i2c.txt  |  34 --
- .../input/touchscreen/elan,elants_i2c.yaml    |  69 ++++
- drivers/input/touchscreen/elants_i2c.c        | 380 +++++++++++-------
- 3 files changed, 314 insertions(+), 169 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/input/elants_i2c.txt
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/elan,elants_i2c.yaml
-
+diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
+index ddebd3741145..58aa9b7dbcbf 100644
+--- a/drivers/input/touchscreen/elants_i2c.c
++++ b/drivers/input/touchscreen/elants_i2c.c
+@@ -1312,25 +1312,7 @@ static int elants_i2c_probe(struct i2c_client *client,
+ 	ts->input->name = "Elan Touchscreen";
+ 	ts->input->id.bustype = BUS_I2C;
+ 
+-	__set_bit(BTN_TOUCH, ts->input->keybit);
+-	__set_bit(EV_ABS, ts->input->evbit);
+-	__set_bit(EV_KEY, ts->input->evbit);
+-
+-	/* Single touch input params setup */
+-	input_set_abs_params(ts->input, ABS_X, 0, ts->x_max, 0, 0);
+-	input_set_abs_params(ts->input, ABS_Y, 0, ts->y_max, 0, 0);
+-	input_set_abs_params(ts->input, ABS_PRESSURE, 0, 255, 0, 0);
+-	input_abs_set_res(ts->input, ABS_X, ts->x_res);
+-	input_abs_set_res(ts->input, ABS_Y, ts->y_res);
+-
+ 	/* Multitouch input params setup */
+-	error = input_mt_init_slots(ts->input, MAX_CONTACT_NUM,
+-				    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED);
+-	if (error) {
+-		dev_err(&client->dev,
+-			"failed to initialize MT slots: %d\n", error);
+-		return error;
+-	}
+ 
+ 	input_set_abs_params(ts->input, ABS_MT_POSITION_X, 0, ts->x_max, 0, 0);
+ 	input_set_abs_params(ts->input, ABS_MT_POSITION_Y, 0, ts->y_max, 0, 0);
+@@ -1340,6 +1322,14 @@ static int elants_i2c_probe(struct i2c_client *client,
+ 	input_abs_set_res(ts->input, ABS_MT_POSITION_Y, ts->y_res);
+ 	input_abs_set_res(ts->input, ABS_MT_TOUCH_MAJOR, 1);
+ 
++	error = input_mt_init_slots(ts->input, MAX_CONTACT_NUM,
++				    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED);
++	if (error) {
++		dev_err(&client->dev,
++			"failed to initialize MT slots: %d\n", error);
++		return error;
++	}
++
+ 	error = input_register_device(ts->input);
+ 	if (error) {
+ 		dev_err(&client->dev,
 -- 
 2.20.1
 
