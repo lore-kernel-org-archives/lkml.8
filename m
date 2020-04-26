@@ -2,133 +2,172 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6E6C5519A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 10:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CADFC5519B
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 10:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 289CC2070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 10:47:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cO16BoF/"
+	by mail.kernel.org (Postfix) with ESMTP id 697B12070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 10:47:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587898057;
+	bh=JtQjnWUbwyz4+fwS23njQst6S5pkA8XEFHZr58lmIs8=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=JHtjZUbBtIUdcraERSfqdVMthTOLMhy9T/SLLSrxDSXL+A52Mm3jQtgKQSAc3fSPm
+	 o+0AgNQS7KVJmpQzXtDqDwfxCZAfPMTamW7I+iRiNuZ4b41bcZlNW4EWHQLne+JtKK
+	 PSKMiYGrGMalrvfLibO5mK2aBgVbvtJQE9chlaac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbgDZKr2 (ORCPT
+        id S1726217AbgDZKrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 06:47:28 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:57588 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726146AbgDZKr1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 06:47:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587898045;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rR1VWAX5n/MzP2zWX8Dox7ig/TvsvH/ThCSY7sIXksw=;
-        b=cO16BoF/DtP0qwtMropNdth8UtneFMXS6ZfMGz3X0mCZjLe0+uClp1NLBHKiTpJm4MHZqP
-        Ir6yd7Xbchwt3juLpEs4MXA/bKAzQvA5ZcSnYNuMk8P6+NCU0/kKMPuD00WrRXJOEnGkxx
-        Z1D76X3s5eiKv3vvh8YRqlnQkvNBt5E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-268-oY_6SS6PNzqWjCWyv53M5A-1; Sun, 26 Apr 2020 06:47:21 -0400
-X-MC-Unique: oY_6SS6PNzqWjCWyv53M5A-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Sun, 26 Apr 2020 06:47:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35670 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726140AbgDZKre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 06:47:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B7C11107ACCA;
-        Sun, 26 Apr 2020 10:47:19 +0000 (UTC)
-Received: from x1.localdomain.com (ovpn-112-32.ams2.redhat.com [10.36.112.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2356E5D716;
-        Sun, 26 Apr 2020 10:47:17 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] platform/x86: i2c-multi-instantiate: Add flag for passing fwnode
-Date:   Sun, 26 Apr 2020 12:47:12 +0200
-Message-Id: <20200426104713.216896-2-hdegoede@redhat.com>
-In-Reply-To: <20200426104713.216896-1-hdegoede@redhat.com>
-References: <20200426104713.216896-1-hdegoede@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 968B32070A;
+        Sun, 26 Apr 2020 10:47:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587898053;
+        bh=JtQjnWUbwyz4+fwS23njQst6S5pkA8XEFHZr58lmIs8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=GIg7YHfkXATA0ETK1WyjoQp51Ptd0CCqK8RY5z6geftyn8QQGeaMyQPCIb65ncyUk
+         9gyU+lFZz7Fb12tLDBrSPPgUEgxVn9vlnNJj4rVx96lunfm8ZAuXQ4wTnMQAWJ4Sed
+         7nrtxPFd/afNyyBrecYKbfGdsUN/Q5ExmfXWOdbo=
+Date:   Sun, 26 Apr 2020 12:47:30 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     devel@linuxdriverproject.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Staging/IIO driver fixes for 5.7-rc3
+Message-ID: <20200426104730.GA2120674@kroah.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In some cases the driver for the i2c_client-s which i2c-multi-instantiate
-instantiates may need access some fields / methods from to the ACPI fwnod=
-e
-for which i2c_clients are being instantiated.
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
 
-An example of this are CPLM3218 ACPI device-s. These contain CPM0 and
-CPM1 packages with various information (e.g. register init values) which
-the driver needs.
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
 
-Passing the fwnode through the i2c_board_info struct also gives the
-i2c-core access to it, and if we do not pass an IRQ then the i2c-core
-will use the fwnode to get an IRQ, see i2c_acpi_get_irq().
+are available in the Git repository at:
 
-This is a problem when there is only an IRQ for 1 of the clients describe=
-d
-in the ACPI device we are instantiating clients for. If we unconditionall=
-y
-pass the fwnode, then i2c_acpi_get_irq() will assign the same IRQ to all
-clients instantiated, leading to kernel-oopses like this (BSG1160 device)=
-:
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git staging-5.7-rc3
 
-[   27.340557] genirq: Flags mismatch irq 76. 00002001 (bmc150_magn_event=
-) vs. 00000001 (bmc150_accel_event)
-[   27.340567] Call Trace:
-...
+for you to fetch changes up to 664ba5180234593b4b8517530e8198bf2f7359e2:
 
-So we cannot simply always pass the fwnode. This commit adds a PASS_FWNOD=
-E
-flag, which can be used to pass the fwnode in cases where we do not have
-the IRQ problem and the driver for the instantiated client(s) needs acces=
-s
-to the fwnode.
+  staging: vt6656: Fix calling conditions of vnt_set_bss_mode (2020-04-23 13:47:34 +0200)
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/i2c-multi-instantiate.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+----------------------------------------------------------------
+Staging/IIO driver fixes for 5.7-rc3
 
-diff --git a/drivers/platform/x86/i2c-multi-instantiate.c b/drivers/platf=
-orm/x86/i2c-multi-instantiate.c
-index 6acc8457866e..dcafb1a29d17 100644
---- a/drivers/platform/x86/i2c-multi-instantiate.c
-+++ b/drivers/platform/x86/i2c-multi-instantiate.c
-@@ -20,6 +20,8 @@
- #define IRQ_RESOURCE_GPIO	1
- #define IRQ_RESOURCE_APIC	2
-=20
-+#define PASS_FWNODE		BIT(2)
-+
- struct i2c_inst_data {
- 	const char *type;
- 	unsigned int flags;
-@@ -93,6 +95,10 @@ static int i2c_multi_inst_probe(struct platform_device=
- *pdev)
- 		snprintf(name, sizeof(name), "%s-%s.%d", dev_name(dev),
- 			 inst_data[i].type, i);
- 		board_info.dev_name =3D name;
-+
-+		if (inst_data[i].flags & PASS_FWNODE)
-+			board_info.fwnode =3D dev->fwnode;
-+
- 		switch (inst_data[i].flags & IRQ_RESOURCE_TYPE) {
- 		case IRQ_RESOURCE_GPIO:
- 			ret =3D acpi_dev_gpio_irq_get(adev, inst_data[i].irq_idx);
---=20
-2.26.0
+Here are some small staging and IIO driver fixes for 5.7-rc3
 
+Lots of tiny things for reported issues in staging and IIO drivers,
+including a counter driver fix as well (the iio drivers seem to be tied
+to those).  Full details of the fixes are in the shortlog.
+
+All of these have been in linux-next for a while with no reported
+issues.
+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+----------------------------------------------------------------
+Alexandre Belloni (1):
+      iio: adc: ti-ads8344: properly byte swap value
+
+Alexandru Ardelean (2):
+      iio: adc: ad7192: fix null pointer de-reference crash during probe
+      MAINTAINERS: remove Stefan Popa's email
+
+Colin Ian King (1):
+      iio: dac: ad5770r: fix off-by-one check on maximum number of channels
+
+Fabrice Gasnier (1):
+      dt-bindings: iio: adc: stm32-adc: fix id relative path
+
+Greg Kroah-Hartman (1):
+      Merge tag 'iio-fixes-for-5.7a' of git://git.kernel.org/.../jic23/iio into staging-linus
+
+Ian Abbott (1):
+      staging: comedi: dt2815: fix writing hi byte of analog output
+
+Jean-Baptiste Maneyrol (1):
+      iio: imu: inv_mpu6050: fix suspend/resume with runtime power
+
+Lars Engebretsen (1):
+      iio: core: remove extra semi-colon from devm_iio_device_register() macro
+
+Lars-Peter Clausen (4):
+      iio: xilinx-xadc: Fix ADC-B powerdown
+      iio: xilinx-xadc: Fix clearing interrupt when enabling trigger
+      iio: xilinx-xadc: Fix sequencer configuration for aux channels in simultaneous mode
+      iio: xilinx-xadc: Make sure not exceed maximum samplerate
+
+Lary Gibaud (1):
+      iio: st_sensors: rely on odr mask to know if odr can be set
+
+Lorenzo Bianconi (3):
+      iio: imu: st_lsm6dsx: fix read misalignment on untagged FIFO
+      iio: imu: st_lsm6dsx: specify slave odr in slv_odr
+      iio: imu: st_lsm6dsx: flush hw FIFO before resetting the device
+
+Luis Mendes (1):
+      staging: gasket: Fix incongruency in handling of sysfs entries creation
+
+Malcolm Priestley (5):
+      staging: vt6656: Power save stop wake_up_count wrap around.
+      staging: vt6656: Don't set RCR_MULTICAST or RCR_BROADCAST by default.
+      staging: vt6656: Fix drivers TBTT timing counter.
+      staging: vt6656: Fix pairwise key entry save.
+      staging: vt6656: Fix calling conditions of vnt_set_bss_mode
+
+Mircea Caprioru (1):
+      iio: core: Fix handling of 'dB'
+
+Olivier Moysan (1):
+      iio: adc: stm32-adc: fix sleep in atomic context
+
+Syed Nayyar Waris (1):
+      counter: 104-quad-8: Add lock guards - generic interface
+
+Xiyu Yang (1):
+      staging: comedi: Fix comedi_device refcnt leak in comedi_open
+
+YueHaibing (1):
+      iio:ad7797: Use correct attribute_group
+
+ .../devicetree/bindings/iio/adc/st,stm32-adc.yaml  |   2 +-
+ MAINTAINERS                                        |  15 +-
+ drivers/counter/104-quad-8.c                       | 194 +++++++++++++++++----
+ drivers/iio/adc/ad7192.c                           |  63 +++++--
+ drivers/iio/adc/ad7793.c                           |   2 +-
+ drivers/iio/adc/stm32-adc.c                        |  31 +++-
+ drivers/iio/adc/ti-ads8344.c                       |   6 +-
+ drivers/iio/adc/xilinx-xadc-core.c                 |  95 +++++++---
+ drivers/iio/common/st_sensors/st_sensors_core.c    |   2 +-
+ drivers/iio/dac/ad5770r.c                          |   2 +-
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c         |  11 +-
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h            |   3 +
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c     |  23 ++-
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c       |  24 ++-
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c       |  29 ++-
+ drivers/iio/industrialio-core.c                    |   7 +-
+ drivers/staging/comedi/comedi_fops.c               |   4 +-
+ drivers/staging/comedi/drivers/dt2815.c            |   3 +
+ drivers/staging/gasket/gasket_sysfs.c              |   3 +-
+ drivers/staging/gasket/gasket_sysfs.h              |   4 -
+ drivers/staging/vt6656/key.c                       |  14 +-
+ drivers/staging/vt6656/main_usb.c                  |  31 ++--
+ drivers/staging/vt6656/usbpipe.c                   |   3 +-
+ include/linux/iio/iio.h                            |   2 +-
+ 24 files changed, 429 insertions(+), 144 deletions(-)
