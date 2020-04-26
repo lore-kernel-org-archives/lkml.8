@@ -2,117 +2,219 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8125EC55199
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 07:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47AB1C55199
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 07:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 623702071E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 07:39:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ctu0ANVf"
+	by mail.kernel.org (Postfix) with ESMTP id 2615C2071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 07:39:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgDZHjB (ORCPT
+        id S1726349AbgDZHja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 03:39:01 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52663 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726282AbgDZHjA (ORCPT
+        Sun, 26 Apr 2020 03:39:30 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64708 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726154AbgDZHj3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 03:39:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587886738;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Vop1t3sjK9amtXfGYvpa+yLGCJ32ZxdBV2IWmBKObrI=;
-        b=Ctu0ANVfJq59rA7cSGUn8iXYfL5IlDpdJSZcliIfiUctoVK0utI3jQtINa4EQRXvOkMW/8
-        ChucMRziEgNEwVQ8tcaTgiMXmueKr4ox+47bK2gYchD6jutKot4HHZ6eM6eKjJgxEi65DB
-        1uZaSolo6ND/J0MLfYcob5lKRbq5Bbs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-161-gqr-8FTQPiaXw8kYIrJ86A-1; Sun, 26 Apr 2020 03:38:52 -0400
-X-MC-Unique: gqr-8FTQPiaXw8kYIrJ86A-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8E2D6872FE0;
-        Sun, 26 Apr 2020 07:38:50 +0000 (UTC)
-Received: from [10.72.13.103] (ovpn-13-103.pek2.redhat.com [10.72.13.103])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1FAA960300;
-        Sun, 26 Apr 2020 07:38:43 +0000 (UTC)
-Subject: Re: [PATCH V2 1/2] vdpa: Support config interrupt in vhost_vdpa
-To:     Zhu Lingshan <lingshan.zhu@linux.intel.com>,
-        Zhu Lingshan <lingshan.zhu@intel.com>, mst@redhat.com,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     lulu@redhat.com, dan.daly@intel.com, cunming.liang@intel.com
-References: <1587881384-2133-1-git-send-email-lingshan.zhu@intel.com>
- <1587881384-2133-2-git-send-email-lingshan.zhu@intel.com>
- <055fb826-895d-881b-719c-228d0cc9a7bf@redhat.com>
- <e345cc85-aa9d-1173-8308-f0a301fca2b2@redhat.com>
- <fb51aa36-9a58-fd50-a4fa-4cc887357367@linux.intel.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <b34df002-344c-f011-dce0-fee882f62af2@redhat.com>
-Date:   Sun, 26 Apr 2020 15:38:42 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 26 Apr 2020 03:39:29 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03Q7Vobx017138;
+        Sun, 26 Apr 2020 03:39:28 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30n562s4ur-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 26 Apr 2020 03:39:27 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03Q7Ze4e005122;
+        Sun, 26 Apr 2020 07:39:26 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03ams.nl.ibm.com with ESMTP id 30mcu5hcxy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 26 Apr 2020 07:39:26 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03Q7dNJ061604060
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 26 Apr 2020 07:39:23 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6080D5204F;
+        Sun, 26 Apr 2020 07:39:23 +0000 (GMT)
+Received: from localhost (unknown [9.145.15.30])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 072A552050;
+        Sun, 26 Apr 2020 07:39:22 +0000 (GMT)
+Date:   Sun, 26 Apr 2020 09:39:21 +0200
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [GIT PULL] s390 updates for 5.7-rc3
+Message-ID: <your-ad-here.call-01587886761-ext-5453@work.hours>
 MIME-Version: 1.0
-In-Reply-To: <fb51aa36-9a58-fd50-a4fa-4cc887357367@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-25_14:2020-04-24,2020-04-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
+ bulkscore=0 lowpriorityscore=0 suspectscore=2 clxscore=1015 malwarescore=0
+ phishscore=0 impostorscore=0 spamscore=0 priorityscore=1501 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004260064
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Linus,
 
-On 2020/4/26 =E4=B8=8B=E5=8D=883:24, Zhu Lingshan wrote:
->
->
-> On 4/26/2020 3:03 PM, Jason Wang wrote:
->>
->> On 2020/4/26 =E4=B8=8B=E5=8D=882:58, Jason Wang wrote:
->>>>
->>>> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
->>>> index 1813821..8663139 100644
->>>> --- a/drivers/vhost/vhost.h
->>>> +++ b/drivers/vhost/vhost.h
->>>> @@ -18,6 +18,8 @@
->>>> =C2=A0 typedef void (*vhost_work_fn_t)(struct vhost_work *work);
->>>> =C2=A0 =C2=A0 #define VHOST_WORK_QUEUED 1
->>>> +#define VHOST_FILE_UNBIND -1
->>>
->>>
->>> I think it's better to document this in uapi.=20
->>
->>
->> I meant e.g in vhost_vring_file, we had a comment of unbinding:
->>
->> struct vhost_vring_file {
->> =C2=A0=C2=A0=C2=A0 unsigned int index;
->> =C2=A0=C2=A0=C2=A0 int fd; /* Pass -1 to unbind from file. */
->>
->> };
-> I think it is better to use an int fd than vhost_vring_file, to avoid t=
-he confusions,
-> so if we add#define VHOST_FILE_UNBIND -1 in the uapi header, can it doc=
-ument itself?
-> Thanks
+please pull s390 changes for 5.7-rc3.
 
+Thank you,
+Vasily
 
-I think so.
+The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
 
-Thanks
+  Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
 
+are available in the Git repository at:
 
->>
->> Thanks
->>
+  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.7-3
 
+for you to fetch changes up to 673deb0beba5d39c2e0bc6536e00b03b6ef59cc0:
+
+  s390/protvirt: fix compilation issue (2020-04-25 10:17:24 +0200)
+
+----------------------------------------------------------------
+s390 fixes for 5.7-rc3
+
+- Add few notrace annotations to avoid potential crashes when switching
+  ftrace tracers.
+
+- Avoid setting affinity for floating irqs in pci code.
+
+- Fix build issue found by kbuild test robot.
+
+----------------------------------------------------------------
+Claudio Imbrenda (1):
+      s390/protvirt: fix compilation issue
+
+Niklas Schnelle (1):
+      s390/pci: do not set affinity for floating irqs
+
+Philipp Rudo (1):
+      s390/ftrace: fix potential crashes when switching tracers
+
+ arch/s390/boot/uv.c      | 2 --
+ arch/s390/kernel/diag.c  | 2 +-
+ arch/s390/kernel/smp.c   | 4 ++--
+ arch/s390/kernel/trace.c | 2 +-
+ arch/s390/kernel/uv.c    | 3 ++-
+ arch/s390/pci/pci_irq.c  | 5 +++--
+ 6 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/arch/s390/boot/uv.c b/arch/s390/boot/uv.c
+index 8fde561f1d07..f887a479cdc7 100644
+--- a/arch/s390/boot/uv.c
++++ b/arch/s390/boot/uv.c
+@@ -7,9 +7,7 @@
+ #ifdef CONFIG_PROTECTED_VIRTUALIZATION_GUEST
+ int __bootdata_preserved(prot_virt_guest);
+ #endif
+-#if IS_ENABLED(CONFIG_KVM)
+ struct uv_info __bootdata_preserved(uv_info);
+-#endif
+ 
+ void uv_query_info(void)
+ {
+diff --git a/arch/s390/kernel/diag.c b/arch/s390/kernel/diag.c
+index 61f2b0412345..ccba63aaeb47 100644
+--- a/arch/s390/kernel/diag.c
++++ b/arch/s390/kernel/diag.c
+@@ -133,7 +133,7 @@ void diag_stat_inc(enum diag_stat_enum nr)
+ }
+ EXPORT_SYMBOL(diag_stat_inc);
+ 
+-void diag_stat_inc_norecursion(enum diag_stat_enum nr)
++void notrace diag_stat_inc_norecursion(enum diag_stat_enum nr)
+ {
+ 	this_cpu_inc(diag_stat.counter[nr]);
+ 	trace_s390_diagnose_norecursion(diag_map[nr].code);
+diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
+index 7eaabbab2213..10dbb12eb14d 100644
+--- a/arch/s390/kernel/smp.c
++++ b/arch/s390/kernel/smp.c
+@@ -403,7 +403,7 @@ int smp_find_processor_id(u16 address)
+ 	return -1;
+ }
+ 
+-bool arch_vcpu_is_preempted(int cpu)
++bool notrace arch_vcpu_is_preempted(int cpu)
+ {
+ 	if (test_cpu_flag_of(CIF_ENABLED_WAIT, cpu))
+ 		return false;
+@@ -413,7 +413,7 @@ bool arch_vcpu_is_preempted(int cpu)
+ }
+ EXPORT_SYMBOL(arch_vcpu_is_preempted);
+ 
+-void smp_yield_cpu(int cpu)
++void notrace smp_yield_cpu(int cpu)
+ {
+ 	if (!MACHINE_HAS_DIAG9C)
+ 		return;
+diff --git a/arch/s390/kernel/trace.c b/arch/s390/kernel/trace.c
+index 490b52e85014..11a669f3cc93 100644
+--- a/arch/s390/kernel/trace.c
++++ b/arch/s390/kernel/trace.c
+@@ -14,7 +14,7 @@ EXPORT_TRACEPOINT_SYMBOL(s390_diagnose);
+ 
+ static DEFINE_PER_CPU(unsigned int, diagnose_trace_depth);
+ 
+-void trace_s390_diagnose_norecursion(int diag_nr)
++void notrace trace_s390_diagnose_norecursion(int diag_nr)
+ {
+ 	unsigned long flags;
+ 	unsigned int *depth;
+diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
+index c86d654351d1..4c0677fc8904 100644
+--- a/arch/s390/kernel/uv.c
++++ b/arch/s390/kernel/uv.c
+@@ -23,10 +23,11 @@
+ int __bootdata_preserved(prot_virt_guest);
+ #endif
+ 
++struct uv_info __bootdata_preserved(uv_info);
++
+ #if IS_ENABLED(CONFIG_KVM)
+ int prot_virt_host;
+ EXPORT_SYMBOL(prot_virt_host);
+-struct uv_info __bootdata_preserved(uv_info);
+ EXPORT_SYMBOL(uv_info);
+ 
+ static int __init prot_virt_setup(char *val)
+diff --git a/arch/s390/pci/pci_irq.c b/arch/s390/pci/pci_irq.c
+index fbe97ab2e228..743f257cf2cb 100644
+--- a/arch/s390/pci/pci_irq.c
++++ b/arch/s390/pci/pci_irq.c
+@@ -115,7 +115,6 @@ static struct irq_chip zpci_irq_chip = {
+ 	.name = "PCI-MSI",
+ 	.irq_unmask = pci_msi_unmask_irq,
+ 	.irq_mask = pci_msi_mask_irq,
+-	.irq_set_affinity = zpci_set_irq_affinity,
+ };
+ 
+ static void zpci_handle_cpu_local_irq(bool rescan)
+@@ -276,7 +275,9 @@ int arch_setup_msi_irqs(struct pci_dev *pdev, int nvec, int type)
+ 		rc = -EIO;
+ 		if (hwirq - bit >= msi_vecs)
+ 			break;
+-		irq = __irq_alloc_descs(-1, 0, 1, 0, THIS_MODULE, msi->affinity);
++		irq = __irq_alloc_descs(-1, 0, 1, 0, THIS_MODULE,
++				(irq_delivery == DIRECTED) ?
++				msi->affinity : NULL);
+ 		if (irq < 0)
+ 			return -ENOMEM;
+ 		rc = irq_set_msi_desc(irq, msi);
