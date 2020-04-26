@@ -2,39 +2,40 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3C7C55196
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88700C55191
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E76B7206BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ADB72074F
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:54:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726226AbgDZFyW (ORCPT
+        id S1726262AbgDZFyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 01:54:22 -0400
-Received: from mga05.intel.com ([192.55.52.43]:34948 "EHLO mga05.intel.com"
+        Sun, 26 Apr 2020 01:54:24 -0400
+Received: from mga12.intel.com ([192.55.52.136]:61093 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725468AbgDZFyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 01:54:21 -0400
-IronPort-SDR: mhbP6M0vOROTf19G/v4XotjAsT4ouLrU2kIiSnOHMqit70Y+/7WaUpLvABrkzh/MUw5yK8jjAK
- 2dcdVo/YkC0w==
+        id S1725468AbgDZFyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 01:54:22 -0400
+IronPort-SDR: 8JM4+t1gtS5CauTdvh737TsizdImx9w9xW5PdDi5kzMuNn5db252RyRuQcAN4yk4RCtrM2Xhtb
+ soMqIYPX2Xnw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2020 22:54:21 -0700
-IronPort-SDR: /cZ3umTa8B8PLh9tjA9EP3+bxl80qczghY2Si7yQnbojuyuxqol2zAYPUansPdHYwpezKRfg9s
- EcpTlSW8XTMQ==
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2020 22:54:22 -0700
+IronPort-SDR: 5vI0aC2WJoqaA1rHDNfx4RDyW1Iy/jFdcIF6pYkCY1G8ZX2vahQBBRAQFahQ7DWdPPgIrwO58B
+ 3sdyElhYKHjQ==
 X-IronPort-AV: E=Sophos;i="5.73,319,1583222400"; 
-   d="scan'208";a="281313737"
+   d="scan'208";a="260317587"
 Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2020 22:54:20 -0700
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2020 22:54:21 -0700
 From:   ira.weiny@intel.com
 To:     linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>
 Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
         Helge Deller <deller@gmx.de>,
@@ -49,16 +50,17 @@ Cc:     Ira Weiny <ira.weiny@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Chris Zankel <chris@zankel.net>,
         Max Filippov <jcmvbkbc@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
         linux-snps-arc@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
         linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
         linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
         linux-xtensa@linux-xtensa.org
-Subject: [PATCH 0/5] Remove duplicated kmap code
-Date:   Sat, 25 Apr 2020 22:54:01 -0700
-Message-Id: <20200426055406.134198-1-ira.weiny@intel.com>
+Subject: [PATCH 1/5] arch/kmap: Remove BUG_ON()
+Date:   Sat, 25 Apr 2020 22:54:02 -0700
+Message-Id: <20200426055406.134198-2-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200426055406.134198-1-ira.weiny@intel.com>
+References: <20200426055406.134198-1-ira.weiny@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -68,44 +70,191 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-The kmap infrastructure has been copied almost verbatim to every architecture.
-This series consolidates obvious duplicated code.  (k[un]map_atmoic has some
-additional duplication between some of the architectures but the differences
-were such to not warrant further changes.)
+Replace the use of BUG_ON(in_interrupt()) in the kmap() and kunmap()
+in favor of might_sleep().
 
-0day built successfully to cover all the architectures I can't readily build.
+Besides the benefits of might_sleep(), this normalizes the
+implementations such that they can be made generic in subsequent
+patches.
 
-Ira Weiny (5):
-  arch/kmap: Remove BUG_ON()
-  arch/kmap: Remove redundant arch specific kmaps
-  arch/kunmap: Remove duplicate kunmap implementations
-  arch/kmap_atomic: Consolidate duplicate code
-  arch/kunmap_atomic: Consolidate duplicate code
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+---
+ arch/arc/include/asm/highmem.h        | 2 +-
+ arch/arc/mm/highmem.c                 | 2 +-
+ arch/arm/mm/highmem.c                 | 2 +-
+ arch/csky/mm/highmem.c                | 2 +-
+ arch/microblaze/include/asm/highmem.h | 2 +-
+ arch/mips/mm/highmem.c                | 2 +-
+ arch/nds32/mm/highmem.c               | 2 +-
+ arch/powerpc/include/asm/highmem.h    | 2 +-
+ arch/sparc/include/asm/highmem.h      | 4 ++--
+ arch/x86/mm/highmem_32.c              | 3 +--
+ arch/xtensa/include/asm/highmem.h     | 4 ++--
+ 11 files changed, 13 insertions(+), 14 deletions(-)
 
- arch/arc/include/asm/highmem.h        | 11 -------
- arch/arc/mm/highmem.c                 | 20 ++-----------
- arch/arm/include/asm/highmem.h        |  3 --
- arch/arm/mm/highmem.c                 | 28 ++----------------
- arch/csky/include/asm/highmem.h       |  3 +-
- arch/csky/mm/highmem.c                | 28 ++++--------------
- arch/microblaze/include/asm/highmem.h | 17 -----------
- arch/microblaze/mm/highmem.c          | 10 ++-----
- arch/mips/include/asm/highmem.h       |  3 +-
- arch/mips/mm/highmem.c                | 25 +++-------------
- arch/nds32/include/asm/highmem.h      |  3 --
- arch/nds32/mm/highmem.c               | 31 ++------------------
- arch/parisc/include/asm/cacheflush.h  |  2 --
- arch/powerpc/include/asm/highmem.h    | 17 -----------
- arch/powerpc/mm/highmem.c             |  9 ++----
- arch/sparc/include/asm/highmem.h      | 17 -----------
- arch/sparc/mm/highmem.c               |  9 ++----
- arch/x86/include/asm/highmem.h        |  4 ---
- arch/x86/mm/highmem_32.c              | 30 ++------------------
- arch/xtensa/include/asm/highmem.h     | 14 +--------
- arch/xtensa/mm/highmem.c              | 10 ++-----
- include/linux/highmem.h               | 41 +++++++++++++++++++++++++--
- 22 files changed, 75 insertions(+), 260 deletions(-)
-
+diff --git a/arch/arc/include/asm/highmem.h b/arch/arc/include/asm/highmem.h
+index 1af00accb37f..042e92921c4c 100644
+--- a/arch/arc/include/asm/highmem.h
++++ b/arch/arc/include/asm/highmem.h
+@@ -45,7 +45,7 @@ static inline void flush_cache_kmaps(void)
+ 
+ static inline void kunmap(struct page *page)
+ {
+-	BUG_ON(in_interrupt());
++	might_sleep();
+ 	if (!PageHighMem(page))
+ 		return;
+ 	kunmap_high(page);
+diff --git a/arch/arc/mm/highmem.c b/arch/arc/mm/highmem.c
+index fc8849e4f72e..39ef7b9a3aa9 100644
+--- a/arch/arc/mm/highmem.c
++++ b/arch/arc/mm/highmem.c
+@@ -51,7 +51,7 @@ static pte_t * fixmap_page_table;
+ 
+ void *kmap(struct page *page)
+ {
+-	BUG_ON(in_interrupt());
++	might_sleep();
+ 	if (!PageHighMem(page))
+ 		return page_address(page);
+ 
+diff --git a/arch/arm/mm/highmem.c b/arch/arm/mm/highmem.c
+index a76f8ace9ce6..cc6eb79ef20c 100644
+--- a/arch/arm/mm/highmem.c
++++ b/arch/arm/mm/highmem.c
+@@ -42,7 +42,7 @@ EXPORT_SYMBOL(kmap);
+ 
+ void kunmap(struct page *page)
+ {
+-	BUG_ON(in_interrupt());
++	might_sleep();
+ 	if (!PageHighMem(page))
+ 		return;
+ 	kunmap_high(page);
+diff --git a/arch/csky/mm/highmem.c b/arch/csky/mm/highmem.c
+index 813129145f3d..690d678649d1 100644
+--- a/arch/csky/mm/highmem.c
++++ b/arch/csky/mm/highmem.c
+@@ -29,7 +29,7 @@ EXPORT_SYMBOL(kmap);
+ 
+ void kunmap(struct page *page)
+ {
+-	BUG_ON(in_interrupt());
++	might_sleep();
+ 	if (!PageHighMem(page))
+ 		return;
+ 	kunmap_high(page);
+diff --git a/arch/microblaze/include/asm/highmem.h b/arch/microblaze/include/asm/highmem.h
+index 332c78e15198..99ced7278b5c 100644
+--- a/arch/microblaze/include/asm/highmem.h
++++ b/arch/microblaze/include/asm/highmem.h
+@@ -66,7 +66,7 @@ static inline void *kmap(struct page *page)
+ 
+ static inline void kunmap(struct page *page)
+ {
+-	BUG_ON(in_interrupt());
++	might_sleep();
+ 	if (!PageHighMem(page))
+ 		return;
+ 	kunmap_high(page);
+diff --git a/arch/mips/mm/highmem.c b/arch/mips/mm/highmem.c
+index d08e6d7d533b..edd889f6cede 100644
+--- a/arch/mips/mm/highmem.c
++++ b/arch/mips/mm/highmem.c
+@@ -28,7 +28,7 @@ EXPORT_SYMBOL(kmap);
+ 
+ void kunmap(struct page *page)
+ {
+-	BUG_ON(in_interrupt());
++	might_sleep();
+ 	if (!PageHighMem(page))
+ 		return;
+ 	kunmap_high(page);
+diff --git a/arch/nds32/mm/highmem.c b/arch/nds32/mm/highmem.c
+index 022779af6148..4c7c28e994ea 100644
+--- a/arch/nds32/mm/highmem.c
++++ b/arch/nds32/mm/highmem.c
+@@ -24,7 +24,7 @@ EXPORT_SYMBOL(kmap);
+ 
+ void kunmap(struct page *page)
+ {
+-	BUG_ON(in_interrupt());
++	might_sleep();
+ 	if (!PageHighMem(page))
+ 		return;
+ 	kunmap_high(page);
+diff --git a/arch/powerpc/include/asm/highmem.h b/arch/powerpc/include/asm/highmem.h
+index a4b65b186ec6..529512f6d65a 100644
+--- a/arch/powerpc/include/asm/highmem.h
++++ b/arch/powerpc/include/asm/highmem.h
+@@ -74,7 +74,7 @@ static inline void *kmap(struct page *page)
+ 
+ static inline void kunmap(struct page *page)
+ {
+-	BUG_ON(in_interrupt());
++	might_sleep();
+ 	if (!PageHighMem(page))
+ 		return;
+ 	kunmap_high(page);
+diff --git a/arch/sparc/include/asm/highmem.h b/arch/sparc/include/asm/highmem.h
+index 18d776925c45..7dd2d4b3f980 100644
+--- a/arch/sparc/include/asm/highmem.h
++++ b/arch/sparc/include/asm/highmem.h
+@@ -55,7 +55,7 @@ void kunmap_high(struct page *page);
+ 
+ static inline void *kmap(struct page *page)
+ {
+-	BUG_ON(in_interrupt());
++	might_sleep();
+ 	if (!PageHighMem(page))
+ 		return page_address(page);
+ 	return kmap_high(page);
+@@ -63,7 +63,7 @@ static inline void *kmap(struct page *page)
+ 
+ static inline void kunmap(struct page *page)
+ {
+-	BUG_ON(in_interrupt());
++	might_sleep();
+ 	if (!PageHighMem(page))
+ 		return;
+ 	kunmap_high(page);
+diff --git a/arch/x86/mm/highmem_32.c b/arch/x86/mm/highmem_32.c
+index 0a1898b8552e..8af66382672b 100644
+--- a/arch/x86/mm/highmem_32.c
++++ b/arch/x86/mm/highmem_32.c
+@@ -15,8 +15,7 @@ EXPORT_SYMBOL(kmap);
+ 
+ void kunmap(struct page *page)
+ {
+-	if (in_interrupt())
+-		BUG();
++	might_sleep();
+ 	if (!PageHighMem(page))
+ 		return;
+ 	kunmap_high(page);
+diff --git a/arch/xtensa/include/asm/highmem.h b/arch/xtensa/include/asm/highmem.h
+index 04e9340eac4b..413848cc1e56 100644
+--- a/arch/xtensa/include/asm/highmem.h
++++ b/arch/xtensa/include/asm/highmem.h
+@@ -73,7 +73,7 @@ static inline void *kmap(struct page *page)
+ 	 */
+ 	BUILD_BUG_ON(PKMAP_BASE <
+ 		     TLBTEMP_BASE_1 + TLBTEMP_SIZE);
+-	BUG_ON(in_interrupt());
++	might_sleep();
+ 	if (!PageHighMem(page))
+ 		return page_address(page);
+ 	return kmap_high(page);
+@@ -81,7 +81,7 @@ static inline void *kmap(struct page *page)
+ 
+ static inline void kunmap(struct page *page)
+ {
+-	BUG_ON(in_interrupt());
++	might_sleep();
+ 	if (!PageHighMem(page))
+ 		return;
+ 	kunmap_high(page);
 -- 
 2.25.1
 
