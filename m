@@ -2,212 +2,149 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4447BC54FCB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 13:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D488C54FCB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 13:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12C692071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 13:38:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="LDAiQz7M"
+	by mail.kernel.org (Postfix) with ESMTP id 2125F2071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 13:43:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726151AbgDZNiR (ORCPT
+        id S1726165AbgDZNnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 09:38:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57264 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbgDZNiQ (ORCPT
+        Sun, 26 Apr 2020 09:43:18 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:53208 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726149AbgDZNnP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 09:38:16 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DFA7C061A0F
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 06:38:16 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id g12so17203824wmh.3
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 06:38:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AKeJsfVQBTmRJ5DMftJ0126mlRY+cjmcCtKvFup4ozY=;
-        b=LDAiQz7MYSSfMUnc0M3PtEkFizLlN5hTiL5JRxWtoyeXmT71fiHPcnk4OsCeezFvM7
-         23TSEk2irysoDe0OEvORA1LkzD6X2g9oSmxvSpNlIyeIk6WHyTDSUZYeRSyGiJoks2Hm
-         4hgkQuJajNgYXWT02+aRTAZdsGQqY73d3WQj3OkutChq/qqyrIB/0GtMoEaGawVX4qQS
-         4AmWxNXtUVaNxC6rsxBFcz5OEZXJTVGstj5XUxIiWOA/DTm087YGDReBmK9zKwWEjPWR
-         VI0IZXVURX+pc+DaMJ/NBNgUqojonhR8oDblVkkOcRRI3Jj4TwNmwcLscQzERxVWwhV5
-         w6WA==
+        Sun, 26 Apr 2020 09:43:15 -0400
+Received: by mail-il1-f197.google.com with SMTP id l9so8226956ili.19
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 06:43:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AKeJsfVQBTmRJ5DMftJ0126mlRY+cjmcCtKvFup4ozY=;
-        b=V5uTybqcuINggjAzJ3wSBG/qm9VsQqGywoRpdsCTuOVuAMczW/WrzEHF6w9n2708KX
-         mk08JipO5XjTkJ/nKClcZrpOopztKjZpoSkASt9dkCN/t5ALUy6GD1wLLs/NFTViTiYU
-         1wjagwcb13Jscps3AzlLVm7ccXS0L8IhLJN6ezF8MaKq2Hdi2L0M2BPCi2U97+uaOgU2
-         hnoWxAtfdxUVXW/QU0tZW0fXcov4l92g5nqW+5DxRjPmPSiNlzmuxXs2Jmv3rZmCKa8p
-         6CycMftb8GK4UsceuraPbD6tIMPoOO/e84LaMBr3tCgyuXDXUsvQyfAVMdUSO3N5Caaz
-         rHFQ==
-X-Gm-Message-State: AGi0PuYLJRn+bul4uwf48DaxuXJMLEsSNqGfIMToIYwcyx75F1Uvr83D
-        eBcXAmOLw8WbtUL3ZlYWKH1XfQPYxxwCpQeVE8d9Og==
-X-Google-Smtp-Source: APiQypLYcPLROTkqB8LzsYssjIU4lEHWA65Pc9cTE+Y39E81HNfUzw/chX6hgTuZNKJOX8E7TCXt+lUBH8wLC3x+xqg=
-X-Received: by 2002:a1c:9d0d:: with SMTP id g13mr21978860wme.102.1587908294824;
- Sun, 26 Apr 2020 06:38:14 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=rlJAfwbPqtPWQJVZIPkomN7KJEtdzrl3Ui0y/x3Z8hs=;
+        b=KI4pz7ISn0D9f4RwP5wegczAcY30Uhbr8UHy+0LNrb3h0O64/3O9waNfkjOqyKQrNb
+         cnkpMJVf3O6NPfhH+sz6QhK3WJv6VcKMwtNE/59SCN8UlQiPiL44Qrj2tRns4QeIX3EZ
+         tbIjoxHunEFOiYRo6LkXfcDT85W+kFHJmkYzzYAKF0t46jj0e3ARLhclGNbMr3gD91TW
+         uQW9UFXoUpiWK12iNr6az7pFN5LlyDWC7BWQjfhBaSEQPWO1xMNkcCn6MIYq2yNtDhWp
+         9FJCN7sh08JRXbgFLZBgTyAzMFVPm7jfqBKSNdFNvYwOuME7yDl36NI0bHTaLRRHWTw7
+         aLRA==
+X-Gm-Message-State: AGi0PuZzfflY3YKT3MPiigNkX2aLErDLTnFKU3RChRH+8gS/0vccroVS
+        OtsKLHDSzrFv2e7yoFKHHmJ71MSt0QWC92AOwSPB31cdbPsA
+X-Google-Smtp-Source: APiQypKxs5VGnvM1qXq+lYJKi9Um6WY+7O0zommb3ly8Y5J38otFgmbS3FSL4vxdihxPch6+sK5nNtt+xHbSN3izMbjCgJLBOJWR
 MIME-Version: 1.0
-References: <20200426110740.123638-1-zong.li@sifive.com> <CAAhSdy3FCdzLV-nH03T=PBxB2tdZXhRrugcC2NcoA=22qpv+Lw@mail.gmail.com>
- <CANXhq0qW9ORoZ5qc5g8ikO9QdeYX=p0fwoP8pyFFkk02a7imnw@mail.gmail.com>
-In-Reply-To: <CANXhq0qW9ORoZ5qc5g8ikO9QdeYX=p0fwoP8pyFFkk02a7imnw@mail.gmail.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Sun, 26 Apr 2020 19:08:03 +0530
-Message-ID: <CAAhSdy2f2-SQP6TdgxA0HM2ft3eBJd6kEkB--RH=2gUuLktXLQ@mail.gmail.com>
-Subject: Re: [PATCH] irqchip/sifive-plic: allow many cores to handle IRQs
-To:     Zong Li <zong.li@sifive.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        David Abdurachmanov <david.abdurachmanov@sifive.com>,
-        Marc Zyngier <maz@kernel.org>
+X-Received: by 2002:a02:9642:: with SMTP id c60mr16053970jai.87.1587908593710;
+ Sun, 26 Apr 2020 06:43:13 -0700 (PDT)
+Date:   Sun, 26 Apr 2020 06:43:13 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000aa012505a431c7d9@google.com>
+Subject: WARNING in ib_unregister_device_queued
+From:   syzbot <syzbot+4088ed905e4ae2b0e13b@syzkaller.appspotmail.com>
+To:     dledford@redhat.com, jgg@ziepe.ca, kamalheib1@gmail.com,
+        leon@kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        parav@mellanox.com, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Mark Z
+Hello,
 
-On Sun, Apr 26, 2020 at 6:49 PM Zong Li <zong.li@sifive.com> wrote:
->
-> On Sun, Apr 26, 2020 at 8:47 PM Anup Patel <anup@brainfault.org> wrote:
-> >
-> > On Sun, Apr 26, 2020 at 4:37 PM Zong Li <zong.li@sifive.com> wrote:
-> > >
-> > > Currently, driver forces the IRQs to be handled by only one core. This
-> > > patch provides the way to enable others cores to handle IRQs if needed,
-> > > so users could decide how many cores they wanted on default by boot
-> > > argument.
-> > >
-> > > Use 'irqaffinity' boot argument to determine affinity. If there is no
-> > > irqaffinity in dts or kernel configuration, use irq default affinity,
-> > > so all harts would try to claim IRQ.
-> > >
-> > > For example, add irqaffinity=0 in chosen node to set irq affinity to
-> > > hart 0. It also supports more than one harts to handle irq, such as set
-> > > irqaffinity=0,3,4.
-> > >
-> > > You can change IRQ affinity from user-space using procfs. For example,
-> > > you can make CPU0 and CPU2 serve IRQ together by the following command:
-> > >
-> > > echo 4 > /proc/irq/<x>/smp_affinity
-> > >
-> > > Signed-off-by: Zong Li <zong.li@sifive.com>
-> > > ---
-> > >  drivers/irqchip/irq-sifive-plic.c | 21 +++++++--------------
-> > >  1 file changed, 7 insertions(+), 14 deletions(-)
-> > >
-> > > diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-> > > index d0a71febdadc..bc1440d54185 100644
-> > > --- a/drivers/irqchip/irq-sifive-plic.c
-> > > +++ b/drivers/irqchip/irq-sifive-plic.c
-> > > @@ -111,15 +111,12 @@ static inline void plic_irq_toggle(const struct cpumask *mask,
-> > >  static void plic_irq_unmask(struct irq_data *d)
-> > >  {
-> > >         struct cpumask amask;
-> > > -       unsigned int cpu;
-> > >         struct plic_priv *priv = irq_get_chip_data(d->irq);
-> > >
-> > >         cpumask_and(&amask, &priv->lmask, cpu_online_mask);
-> > > -       cpu = cpumask_any_and(irq_data_get_affinity_mask(d),
-> > > -                                          &amask);
-> > > -       if (WARN_ON_ONCE(cpu >= nr_cpu_ids))
-> > > -               return;
-> > > -       plic_irq_toggle(cpumask_of(cpu), d, 1);
-> > > +       cpumask_and(&amask, &amask, irq_data_get_affinity_mask(d));
-> > > +
-> > > +       plic_irq_toggle(&amask, d, 1);
-> > >  }
-> > >
-> > >  static void plic_irq_mask(struct irq_data *d)
-> > > @@ -133,24 +130,20 @@ static void plic_irq_mask(struct irq_data *d)
-> > >  static int plic_set_affinity(struct irq_data *d,
-> > >                              const struct cpumask *mask_val, bool force)
-> > >  {
-> > > -       unsigned int cpu;
-> > >         struct cpumask amask;
-> > >         struct plic_priv *priv = irq_get_chip_data(d->irq);
-> > >
-> > >         cpumask_and(&amask, &priv->lmask, mask_val);
-> > >
-> > >         if (force)
-> > > -               cpu = cpumask_first(&amask);
-> > > +               cpumask_copy(&amask, mask_val);
-> > >         else
-> > > -               cpu = cpumask_any_and(&amask, cpu_online_mask);
-> > > -
-> > > -       if (cpu >= nr_cpu_ids)
-> > > -               return -EINVAL;
-> > > +               cpumask_and(&amask, &amask, cpu_online_mask);
-> > >
-> > >         plic_irq_toggle(&priv->lmask, d, 0);
-> > > -       plic_irq_toggle(cpumask_of(cpu), d, 1);
-> > > +       plic_irq_toggle(&amask, d, 1);
-> > >
-> > > -       irq_data_update_effective_affinity(d, cpumask_of(cpu));
-> > > +       irq_data_update_effective_affinity(d, &amask);
-> > >
-> > >         return IRQ_SET_MASK_OK_DONE;
-> > >  }
-> > > --
-> > > 2.26.1
-> > >
-> >
-> > I strongly oppose (NACK) this patch due to performance reasons.
-> >
-> > In PLIC, if we enable an IRQ X for N CPUs then when IRQ X occurs:
-> > 1) All N CPUs will take interrupt
-> > 2) All N CPUs will try to read PLIC CLAIM register
-> > 3) Only one of the CPUs will see IRQ X using the CLAIM register
-> > but other N - 1 CPUs will see no interrupt and return back to what
-> > they were doing. In other words, N - 1 CPUs will just waste CPU
-> > every time IRQ X occurs.
-> >
-> > Example1, one Application doing heavy network traffic will
-> > degrade performance of other applications because with every
-> > network RX/TX interrupt N-1 CPUs will waste CPU trying to
-> > process network interrupt.
-> >
-> > Example1, one Application doing heavy MMC/SD traffic will
-> > degrade performance of other applications because with every
-> > SPI read/write interrupt N-1 CPUs will waste CPU trying to
-> > process it.
-> >
-> > In fact, the current PLIC approach is actually a performance
-> > optimization. This implementation also works fine with in-kernel
-> > load-balancer and user space load balancer.
-> >
->
-> Yes, it's exactly, I know what you pointed out. But the idea of this
-> patch is just providing a way that users could enable other cores if
-> they wanted, it could still enable only one core by this change. The
-> purpose here is thinking of flexible use, rather than limitation.
-> Maybe it would be a happy medium that we make the default case enable
-> only one core? It is a good open discussion.
+syzbot found the following crash on:
 
-Making the default case as enable only one core is just a work-around.
+HEAD commit:    b9663b7c net: stmmac: Enable SERDES power up/down sequence
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=166bf717e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5d351a1019ed81a2
+dashboard link: https://syzkaller.appspot.com/bug?extid=4088ed905e4ae2b0e13b
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-As-per my understanding, if we set affinity mask of N CPUs for IRQ X
-then it does not mean all N CPUs should receive IRQ X rather it means
-that exactly one of the N CPUs will receive IRQ X and the IRQ receiving
-CPU will be fixed (reflected by effective affinity returned by the driver).
+Unfortunately, I don't have any reproducer for this crash yet.
 
-If we ignore above semantics and still provide a mechanism to target
-IRQ X to N CPUs then most likely someone will try and run into
-performance issues.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+4088ed905e4ae2b0e13b@syzkaller.appspotmail.com
 
-Please don't go this path. The performance impact in case of Guest/VM
-is even worst because PLIC is trap-n-emulated by hypervisors as MMIO
-device.
+rdma_rxe: ignoring netdev event = 10 for netdevsim0
+infiniband  yz2: set down
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 22753 at drivers/infiniband/core/device.c:1565 ib_unregister_device_queued+0x122/0x160 drivers/infiniband/core/device.c:1565
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 22753 Comm: syz-executor.5 Not tainted 5.7.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ __warn.cold+0x2f/0x35 kernel/panic.c:582
+ report_bug+0x27b/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:175 [inline]
+ fixup_bug arch/x86/kernel/traps.c:170 [inline]
+ do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:ib_unregister_device_queued+0x122/0x160 drivers/infiniband/core/device.c:1565
+Code: fb e8 72 e2 d4 fb 48 89 ef e8 2a c3 c1 fe 48 83 c4 08 5b 5d e9 5f e2 d4 fb e8 5a e2 d4 fb 0f 0b e9 46 ff ff ff e8 4e e2 d4 fb <0f> 0b e9 6f ff ff ff 48 89 ef e8 2f a9 12 fc e9 16 ff ff ff 48 c7
+RSP: 0018:ffffc900072ef290 EFLAGS: 00010246
+RAX: 0000000000040000 RBX: ffff8880a6a24000 RCX: ffffc90013201000
+RDX: 0000000000040000 RSI: ffffffff859e51b2 RDI: ffff8880a6a24310
+RBP: 0000000000000019 R08: ffff88808d21c280 R09: ffffed1014d449bb
+R10: ffff8880a6a24dd3 R11: ffffed1014d449ba R12: 0000000000000006
+R13: ffff88805988c000 R14: 0000000000000000 R15: ffffffff8a44f8c0
+ rxe_notify+0x77/0xd0 drivers/infiniband/sw/rxe/rxe_net.c:605
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ rollback_registered_many+0x75c/0xe70 net/core/dev.c:8828
+ rollback_registered+0xf2/0x1c0 net/core/dev.c:8873
+ unregister_netdevice_queue net/core/dev.c:9969 [inline]
+ unregister_netdevice_queue+0x1d7/0x2b0 net/core/dev.c:9962
+ unregister_netdevice include/linux/netdevice.h:2725 [inline]
+ nsim_destroy+0x35/0x60 drivers/net/netdevsim/netdev.c:330
+ __nsim_dev_port_del+0x144/0x1e0 drivers/net/netdevsim/dev.c:934
+ nsim_dev_port_del_all+0x86/0xe0 drivers/net/netdevsim/dev.c:947
+ nsim_dev_reload_destroy+0x77/0x110 drivers/net/netdevsim/dev.c:1123
+ nsim_dev_reload_down+0x6e/0xd0 drivers/net/netdevsim/dev.c:703
+ devlink_reload+0xbd/0x3b0 net/core/devlink.c:2797
+ devlink_nl_cmd_reload+0x2f7/0x7c0 net/core/devlink.c:2832
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:673 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:718 [inline]
+ genl_rcv_msg+0x627/0xdf0 net/netlink/genetlink.c:735
+ netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
+ genl_rcv+0x24/0x40 net/netlink/genetlink.c:746
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2416
+ __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45c829
+Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f6fae1cac78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000004fcc00 RCX: 000000000045c829
+RDX: 0000000000000000 RSI: 0000000020000800 RDI: 0000000000000006
+RBP: 000000000078c040 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000905 R14: 00000000004cbaab R15: 00007f6fae1cb6d4
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-Regards,
-Anup
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
