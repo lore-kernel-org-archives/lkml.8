@@ -2,121 +2,96 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCF6C5519A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 08:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA21C55199
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 08:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C557208FE
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 08:55:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587891322;
-	bh=I+BF0dVWvC9Dx4ICRolhqOlkdDoEIrBgqe/2wouDFAg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=L+UAi60zIVX5ZdtUnIf+4Li/RvukSokUETAVvb8TaDgmAA0PFJMi/TyU3c2wwiWYI
-	 rWLYmRDTqfqLt7ikX27A5fHayhiL+Q86KHWBZ3FhTlLpGti6y4pcxGO++Gq1VJrIRd
-	 xNm/HB3V6QnPpMKKBZ4I8x40ZFy5z6aMXNUyhlIA=
+	by mail.kernel.org (Postfix) with ESMTP id E10232192A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 08:57:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726143AbgDZIzV (ORCPT
+        id S1726135AbgDZI5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 04:55:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37146 "EHLO mail.kernel.org"
+        Sun, 26 Apr 2020 04:57:35 -0400
+Received: from sauhun.de ([88.99.104.3]:43910 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726108AbgDZIzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 04:55:20 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4461220700;
-        Sun, 26 Apr 2020 08:55:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587891319;
-        bh=I+BF0dVWvC9Dx4ICRolhqOlkdDoEIrBgqe/2wouDFAg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=k5qpJhBHlm582Hqxj6EuPSw56og/ROWMhQxe/xlRDf9ryQ/m+ZMWgxttZB8w1nW14
-         8qItfG4TTG0aDhg/43aiqRjpnwvHG0xQ816k/Dc++o+hxNTh28HZ56bU7Ou1YVPiE7
-         9Cc7f+lmXUiKUlXvhnv/N8+G+i/T/1jbDa+5PhrQ=
-Date:   Sun, 26 Apr 2020 09:55:14 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Leslie =?UTF-8?B?SHNpYQ==?=(=?UTF-8?B?5aSP6YKm6YCyX1BlZ2F0cm9u?=)" 
-        <Leslie_Hsia@pegatroncorp.com>
-Cc:     "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "Hermes =?UTF-8?B?SHNpZWg=?=( =?UTF-8?B?6Kyd5pe75YqtX1BlZ2F0cm9u?=)" 
-        <Hermes_Hsieh@pegatroncorp.com>,
-        "jesse.sung@canonical.com" <jesse.sung@canonical.com>
-Subject: Re: [PATCH] subsystem: Amplifier driver for TAS5805M,Texas
- instruments
-Message-ID: <20200426095514.28aaecad@archlinux>
-In-Reply-To: <754706C925201D4896E92CCAD6B38E4401F0F6B825@PTW-EX-38.PEGA.CORP.PEGATRON>
-References: <754706C925201D4896E92CCAD6B38E4401F0F6B825@PTW-EX-38.PEGA.CORP.PEGATRON>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726108AbgDZI5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 04:57:34 -0400
+Received: from localhost (p54B33954.dip0.t-ipconnect.de [84.179.57.84])
+        by pokefinder.org (Postfix) with ESMTPSA id B40FB2C01E8;
+        Sun, 26 Apr 2020 10:57:32 +0200 (CEST)
+Date:   Sun, 26 Apr 2020 10:57:32 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Vadim Pasternak <vadimp@mellanox.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] platform/mellanox: mlxreg-hotplug: convert to use
+ i2c_new_client_device()
+Message-ID: <20200426085732.GM1262@kunai>
+References: <20200326210952.12857-1-wsa+renesas@sang-engineering.com>
+ <20200326210952.12857-3-wsa+renesas@sang-engineering.com>
+ <CAHp75Vfw4_0ttE2F-WxdULf7hRGsQvqzCLdCNVy7RBaFdEsCGA@mail.gmail.com>
+ <20200425205407.GA6774@kunai>
+ <CAHp75VeRcT31WbVM6qXHFtT5aF+d6SbAVWVrH8g1_+ruNvv2sQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="bPrm2PuLP7ysUh6c"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VeRcT31WbVM6qXHFtT5aF+d6SbAVWVrH8g1_+ruNvv2sQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Apr 2020 06:58:17 +0000
-Leslie Hsia(=E5=A4=8F=E9=82=A6=E9=80=B2_Pegatron) <Leslie_Hsia@pegatroncorp=
-.com> wrote:
 
->   *   Author: Leslie Hsia
->   *   Amplifier driver for TAS5805M, initial the amplifier and set the so=
-und's parameter.
->   *   Signed-off-by: Leslie Hsia <Leslie_Hsia@pegatroncorp.com<mailto:Les=
-lie_Hsia@pegatroncorp.com>>
->=20
->       -------------------------------------------------------------------=
-------------------------------
->=20
->   *   Hi Jonathan,
-> tas5805m only needs to be initialized via i2c port, this driver doesn't u=
-se any ALSA API,
-> so we put this driver into this path
+--bPrm2PuLP7ysUh6c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'm still unconvinced. This is very much an audio part so people
-aren't going to expect to find it in IIO.  Mark?=20
 
-Also please ensure next version of code is sent inline.  See
-Documentation/process/submitting-patches
+> > Thanks, Andy! Is there a platform-x86-tree where this can go in? Or
+> > shall I take it via the I2C tree?
+>=20
+> platform/mellanox usually goes via other trees, so, feel free to carry on.
 
-Jonathan
+Then, I will pick it.
 
+> > Same question for the similar patch
+> > for x86/platform/intel-mid?
 >=20
->=20
->=20
-> This e-mail and its attachment may contain information that is confidenti=
-al or privileged, and are solely for the use of the individual to whom this=
- e-mail is addressed. If you are not the intended recipient or have receive=
-d it accidentally, please immediately notify the sender by reply e-mail and=
- destroy all copies of this email and its attachment. Please be advised tha=
-t any unauthorized use, disclosure, distribution or copying of this email o=
-r its attachment is strictly prohibited.
->=20
-> =E6=9C=AC=E9=9B=BB=E5=AD=90=E9=83=B5=E4=BB=B6=E5=8F=8A=E5=85=B6=E9=99=84=
-=E4=BB=B6=E5=8F=AF=E8=83=BD=E5=90=AB=E6=9C=89=E6=A9=9F=E5=AF=86=E6=88=96=E4=
-=BE=9D=E6=B3=95=E5=8F=97=E7=89=B9=E6=AE=8A=E7=AE=A1=E5=88=B6=E4=B9=8B=E8=B3=
-=87=E8=A8=8A=EF=BC=8C=E5=83=85=E4=BE=9B=E6=9C=AC=E9=9B=BB=E5=AD=90=E9=83=B5=
-=E4=BB=B6=E4=B9=8B=E5=8F=97=E6=96=87=E8=80=85=E4=BD=BF=E7=94=A8=E3=80=82=E5=
-=8F=B0=E7=AB=AF=E5=A6=82=E9=9D=9E=E6=9C=AC=E9=9B=BB=E5=AD=90=E9=83=B5=E4=BB=
-=B6=E4=B9=8B=E5=8F=97=E6=96=87=E8=80=85=E6=88=96=E8=AA=A4=E6=94=B6=E6=9C=AC=
-=E9=9B=BB=E5=AD=90=E9=83=B5=E4=BB=B6=EF=BC=8C=E8=AB=8B=E7=AB=8B=E5=8D=B3=E5=
-=9B=9E=E8=A6=86=E9=83=B5=E4=BB=B6=E9=80=9A=E7=9F=A5=E5=AF=84=E4=BB=B6=E4=BA=
-=BA=EF=BC=8C=E4=B8=A6=E9=8A=B7=E6=AF=80=E6=9C=AC=E9=9B=BB=E5=AD=90=E9=83=B5=
-=E4=BB=B6=E4=B9=8B=E6=89=80=E6=9C=89=E8=A4=87=E6=9C=AC=E5=8F=8A=E9=99=84=E4=
-=BB=B6=E3=80=82=E4=BB=BB=E4=BD=95=E6=9C=AA=E7=B6=93=E6=8E=88=E6=AC=8A=E8=80=
-=8C=E4=BD=BF=E7=94=A8=E3=80=81=E6=8F=AD=E9=9C=B2=E3=80=81=E6=95=A3=E4=BD=88=
-=E6=88=96=E8=A4=87=E8=A3=BD=E6=9C=AC=E9=9B=BB=E5=AD=90=E9=83=B5=E4=BB=B6=E6=
-=88=96=E5=85=B6=E9=99=84=E4=BB=B6=E4=B9=8B=E8=A1=8C=E7=82=BA=EF=BC=8C=E7=9A=
-=86=E5=9A=B4=E6=A0=BC=E7=A6=81=E6=AD=A2 =E3=80=82
->=20
+> TIP maintainers usually take this. If I didn't tag it, feel free to add m=
+y Rb.
 
+You tagged it. Thanks for the heads up, I will wait some more here.
+
+
+--bPrm2PuLP7ysUh6c
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6lTPgACgkQFA3kzBSg
+Kbb8Dg//RCWJJbV9Q6WfPGy9g9VmcsyK6+V5O/YA10m4mxzXVuPEZhB1sm2Lc40Y
+TrTYA+BZEwCgzpkK0NKNnX0OrF5hvTl8vF9iIu4bhMrrw0aRNHKGC+cb3VjtE98k
+zYOm9Q4hX+/F68101o44/A53+19nEG1Qs69VWWpsG5xHquJWTGFYQAEG3Z9Ht9sU
+vOvMvGsNFRGKOItnGaRwse/Rqhhvsj5PLdn61OhGal786Jqk84KnEPyWjp7kFdFv
+apKmaFgZ+hA32PY3RgqmvMduO4/VGz3VxgvIujbDnxm6UPNptgwBYJwaSozEAmU7
+Up7/1iKM/g4lymnmrn8h4xSRYNW9BA6swLkQCNjimER+ulQ28tNdSo9dFmA2/Il0
+/iGc8dm1lo8ufJ3hWsSZwAJzEqjnFs46jbZtS/XKF2dW81HGhro8u63eskRxCFhP
+dO65rQLEV1iTCPJunz2h+TNWcmqnADqNJTWvF+CtaoAvEvhfnKJ0kkmyHOZWF7kZ
+mc3P0RmaZlKVnltH2idjjipRdyZgxBGIn4xz4ashtbntgETtcp2iBulDWmqOpSws
+Lo+2k/QWg+yWBnrfEKEXSpOU5q+5unhacdvJLFrmk4/N4VFDVIe0OCAjSgRAkgor
+daPg8ZAWh5RES3mbACXsNaLWEh45tclp5qLQrvXNXGNohxARWFw=
+=YQ04
+-----END PGP SIGNATURE-----
+
+--bPrm2PuLP7ysUh6c--
