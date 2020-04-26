@@ -2,110 +2,101 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B65BC54FCB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 15:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E125C55194
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 15:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66C79206DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 15:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AC9120700
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 15:51:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IK2kussi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sDZrN2+0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726226AbgDZPml (ORCPT
+        id S1726179AbgDZPvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 11:42:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48210 "EHLO
+        Sun, 26 Apr 2020 11:51:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726143AbgDZPml (ORCPT
+        by vger.kernel.org with ESMTP id S1725818AbgDZPvF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 11:42:41 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AEBBC061A0F
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 08:42:41 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id t11so7372839pgg.2
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 08:42:41 -0700 (PDT)
+        Sun, 26 Apr 2020 11:51:05 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E4DBC061A0F;
+        Sun, 26 Apr 2020 08:51:04 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id 7so5871025pjo.0;
+        Sun, 26 Apr 2020 08:51:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=U9e36U4j2X7eLfQLdeS7lmCHJFrR+c6ZsIBLujeFkfE=;
-        b=IK2kussi05mfDqvtB2uLv221Q+nClXK5c64/mJOXUeE6zQg/OwRxen8KZfJMGCij7N
-         dQhAileWB8ig7Apr+lX4x4EpVD5kqBwFEviXFFm5r70yaV9cH6+PjKjvhej5qWWEuJG+
-         ScMuyy+EmpezZcX7YIw/5E+KlrvqFQQV1i7OA1S8FlsM7k6YIbNoMCSWZAPbkbLqE6fs
-         eldqxj+8bklwT+gXJ6YmLdIg6z8sHMxNEHLFeSuSUWIsfCB+0zPfS3i9PxgExPEcWZLR
-         t/U1/dd2IDDj82ku7i0OJfDp4QLd3nNFjGrUiInC04UIFBnBuGwvkXYeeOrN9GUQ0HfS
-         rUgg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=0tREdJmgxZBE3LuxNv5lLUb9+sRKgXBjmxyZW6AGnrE=;
+        b=sDZrN2+0H3oWhbgC3FN3dRrI+vnpl/bE9yHq8HRC57KvZN2rYMU2YRLxV5qkKH1pVy
+         2CEb2u+YbK6heFjgQNutKPxZDTi5bZft3ysYJscFcqPkt8EWoFfFqhuyhD0IhGc8xijs
+         6wBlKoRXKVlSpCr6KqKzheomL5/Rk8Uw0UScYFq1VovEbNlisshNYBWu+C6YDqSBequT
+         Nf1a7uOegzBkQrYV5IEgEwdyvM4q9w7PHzBJ0CpZzGPF6MdO/lGw3QUREHszldPK3GpU
+         3qL0nrO8xVS4zdE/prR/cCJxxB3lAoKG3awGlwXr7pm9T42nRAtkMY+zlPZstgEgzkuG
+         OVZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=U9e36U4j2X7eLfQLdeS7lmCHJFrR+c6ZsIBLujeFkfE=;
-        b=fPhheemr9AqqikI6peEOVG3b4MT24EUFfbAaTtKT6KGSZC33YbYLjf7J9HJtKvWKVK
-         yz+4lQykXqVnaJE7ul6kXm+tkMY22GmuruhnQveQ+al/sr3HCiaM6nwGRgv1omaUwYqE
-         izg+P5PiIAMlCKeZGytbHFBldnCJyCt4gMgpxNgPjFpgnCj92uCA0gdfP8BGus4SRuuS
-         F3JxOI3FRwnxWovJH1Lc+glfVxjZt1VMxdxt9E++TmI+9AyPIaJinQCaXgg79p5aba/o
-         MLCVcTSiTbqy7xlQHK47TuvN1q7q1Nn2wW2JBISg+c0IfwJubLo8s3aD86F6jgr5bGhp
-         cX3g==
-X-Gm-Message-State: AGi0PuYAnCvDrSt502cl53/MlSNqvXqPhnJUxtq2vZkRCIt9Ie+o4egz
-        WoKTj5IRQjRzS/Ni6Wpe+ipJih7BT/paEA==
-X-Google-Smtp-Source: APiQypJkJjGx0j8sPZrEDJ41uv0E4jI4jcEL1jI4MhZZvM5nLqE868BGDQtH2Z8Jkw/3+xokv+Fdow==
-X-Received: by 2002:a62:5402:: with SMTP id i2mr19837716pfb.89.1587915760257;
-        Sun, 26 Apr 2020 08:42:40 -0700 (PDT)
-Received: from debian.debian-2 ([154.223.71.61])
-        by smtp.gmail.com with ESMTPSA id b9sm10065898pfp.12.2020.04.26.08.42.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 26 Apr 2020 08:42:39 -0700 (PDT)
-Date:   Sun, 26 Apr 2020 23:42:35 +0800
-From:   Bo YU <tsu.yubo@gmail.com>
-To:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
-Subject: [PATCH -next] include/linux: delete duplicated kernel.h in nodemask.h
-Message-ID: <20200426154230.xwglw6k5c3kwyco5@debian.debian-2>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0tREdJmgxZBE3LuxNv5lLUb9+sRKgXBjmxyZW6AGnrE=;
+        b=J+ORCmupeyj3uD6Bw5dJFOI4X6Ios2IAmNio4K4lpPwh/im9BPvrj1bUJ99u11KGkO
+         +368kKWlKsLW6phX19dWFPLmlEZDPxTk2o2Ci+LZyCdqrN3nKiPA4TGIKebuq9IXqpKM
+         qUD1TX1t6e+oDgfyb8k+djZy7+RWRJDOOM1JZ+RkJJxp8zOIjpLIKtB/O2NFlBbmJ4oz
+         hXsqQ+4pvc2EaCgvspGMniGlFjIoYNp/EzivLUHkF2ptCVTAaGb1GPFXwSJsRFcUGLKn
+         x4q3DTaGaaCYVy0HWGFPQrORfBs+4coC0qYoyWkiM+37Y2Hq+S/tZaL9/9/A0U9xgBKa
+         n76Q==
+X-Gm-Message-State: AGi0Puad/gRXHfvymfzVjwphgNS4Lo/DEpF9QWJqOxz7rCoTPsj4Zbm7
+        +i9f+syGJQXAcER2Xaak1cQ=
+X-Google-Smtp-Source: APiQypK/TQCrX63vJaNJa+pMMCMrbYitizNxouXhoQm6uhpCCnnkEGp/tWQ1QRiNM4UdLfeHiDtWOw==
+X-Received: by 2002:a17:90a:23cd:: with SMTP id g71mr17811667pje.174.1587916263895;
+        Sun, 26 Apr 2020 08:51:03 -0700 (PDT)
+Received: from ast-mbp ([2620:10d:c090:400::5:9db4])
+        by smtp.gmail.com with ESMTPSA id j5sm1088560pfh.58.2020.04.26.08.51.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Apr 2020 08:51:02 -0700 (PDT)
+Date:   Sun, 26 Apr 2020 08:51:00 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: pass kernel pointers to the sysctl ->proc_handler method v3
+Message-ID: <20200426155100.bcbqnrilk45ugzva@ast-mbp>
+References: <20200424064338.538313-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20200424064338.538313-1-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In nodemask.h, it includes bitmap.h which has included kernel.h,
-so delete kernel.h from nodemask file.
+On Fri, Apr 24, 2020 at 08:43:33AM +0200, Christoph Hellwig wrote:
+> Hi all,
+> 
+> this series changes the sysctl ->proc_handler methods to take kernel
+> pointers.  This simplifies some of the pointer handling in the methods
+> (which could probably be further simplified now), and gets rid of the
+> set_fs address space overrides used by bpf.
+> 
+> Changes since v2:
+>  - free the buffer modified by BPF
+>  - move pid_max and friends to pid.h
+> 
+> Changes since v1:
+>  - drop a patch merged by Greg
+>  - don't copy data out on a write
+>  - fix buffer allocation in bpf
 
-Signed-off-by: Bo YU <tsu.yubo@gmail.com>
----
-BTW, I do not get maintainer of the get_maintainer file, so i do
-not know who can accept the patch if it is right.
----
- include/linux/nodemask.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/include/linux/nodemask.h b/include/linux/nodemask.h
-index 27e7fa36f707..980b48e05d05 100644
---- a/include/linux/nodemask.h
-+++ b/include/linux/nodemask.h
-@@ -46,7 +46,7 @@
-  * int next_node(node, mask)		Next node past 'node', or MAX_NUMNODES
-  * int next_node_in(node, mask)		Next node past 'node', or wrap to first,
-  *					or MAX_NUMNODES
-- * int first_unset_node(mask)		First node not set in mask, or
-+ * int first_unset_node(mask)		First node not set in mask, or
-  *					MAX_NUMNODES
-  *
-  * nodemask_t nodemask_of_node(node)	Return nodemask with bit 'node' set
-@@ -90,7 +90,6 @@
-  * for such situations. See below and CPUMASK_ALLOC also.
-  */
-
--#include <linux/kernel.h>
- #include <linux/threads.h>
- #include <linux/bitmap.h>
- #include <linux/numa.h>
---
-2.11.0
-
+The set looks good to me.
+Should I take it via bpf-next tree ?
