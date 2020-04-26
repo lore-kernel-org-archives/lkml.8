@@ -2,137 +2,138 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E066C55191
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 299C7C55191
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FAA920706
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A2362075B
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:03:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jb5kIK10"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726170AbgDZLCa (ORCPT
+        id S1726249AbgDZLDZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 07:02:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33236 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726119AbgDZLC3 (ORCPT
+        Sun, 26 Apr 2020 07:03:25 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:38084 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726119AbgDZLDK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 07:02:29 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD9B5C061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 04:02:29 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jSf37-0002WT-Ej; Sun, 26 Apr 2020 13:02:13 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id D4334100605; Sun, 26 Apr 2020 13:02:12 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Fenghua Yu <fenghua.yu@intel.com>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Jacob Jun Pan <jacob.jun.pan@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Sohil Mehta <sohil.mehta@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
-        iommu@lists.linux-foundation.org, Fenghua Yu <fenghua.yu@intel.com>
-Subject: Re: [PATCH 1/7] docs: x86: Add a documentation for ENQCMD
-In-Reply-To: <1585596788-193989-2-git-send-email-fenghua.yu@intel.com>
-References: <1585596788-193989-1-git-send-email-fenghua.yu@intel.com> <1585596788-193989-2-git-send-email-fenghua.yu@intel.com>
-Date:   Sun, 26 Apr 2020 13:02:12 +0200
-Message-ID: <87368qtsqz.fsf@nanos.tec.linutronix.de>
+        Sun, 26 Apr 2020 07:03:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587898988;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=XDnRW1OXXiAC0WD3am+tOEpqeaV+ob+FQwHX7z++4IU=;
+        b=Jb5kIK1033u5YHF0V+mDQv1chLHvWyY4Ff4eS+FGEAr5Kt+HJtdFGrdOkaq+d3lHmYMBWP
+        Y5tcfuvXRqc5qrazHAAXarbczgVtc+wMWOyR12BlLkF82TDuQ43+HKbHETDKhCCKnRsrC2
+        x+Nd1a8eJAxDe59nmxWPK6QMDqm7Qzs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-142-YDclGxIiMfmhZqMzga3eaw-1; Sun, 26 Apr 2020 07:03:05 -0400
+X-MC-Unique: YDclGxIiMfmhZqMzga3eaw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B45B480B713;
+        Sun, 26 Apr 2020 11:03:02 +0000 (UTC)
+Received: from x1.localdomain.com (ovpn-112-32.ams2.redhat.com [10.36.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 45DF01001281;
+        Sun, 26 Apr 2020 11:02:58 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Kevin Tsai <ktsai@capellamicro.com>,
+        Jonathan Cameron <jic23@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+Subject: [PATCH 1/8] iio: light: cm32181: Add some extra register defines
+Date:   Sun, 26 Apr 2020 13:02:49 +0200
+Message-Id: <20200426110256.218186-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fenghua Yu <fenghua.yu@intel.com> writes:
+These come from a newer version of cm32181.c, which is floating around
+the net, with a copyright of:
 
-s/Add a documentation/Add documentation/
+ * Copyright (C) 2014 Capella Microsystems Inc.
+ * Author: Kevin Tsai <ktsai@capellamicro.com>
+ *
+ * This program is free software; you can redistribute it and/or modify i=
+t
+ * under the terms of the GNU General Public License version 2, as publis=
+hed
+ * by the Free Software Foundation.
 
-> From: Ashok Raj <ashok.raj@intel.com>
->
-> ENQCMD and Data Streaming Accelerator (DSA) and all of their associated
-> features are a complicated stack with lots of interconnected pieces.
-> This documentation provides a big picture overview for all of the
-> features.
->
-> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-> Co-developed-by: Fenghua Yu <fenghua.yu@intel.com>
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> ---
->  Documentation/x86/enqcmd.rst | 185 +++++++++++++++++++++++++++++++++++
+Note that this removes the bogus CM32181_CMD_ALS_ENABLE define, there
+is no enable bit, only a disable bit and enabled is the absence of
+being disabled.
 
-How is that hooked up into the Documentation index?
+This is a preparation patch for adding support for the older
+CM3218 model of the light sensor.
 
- Documentation/x86/enqcmd.rst: WARNING: document isn't included in any toctree
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/iio/light/cm32181.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-> +++ b/Documentation/x86/enqcmd.rst
-> @@ -0,0 +1,185 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +Improved Device Interaction Overview
+diff --git a/drivers/iio/light/cm32181.c b/drivers/iio/light/cm32181.c
+index 5f4fb5674fa0..ee386afe811e 100644
+--- a/drivers/iio/light/cm32181.c
++++ b/drivers/iio/light/cm32181.c
+@@ -18,6 +18,9 @@
+=20
+ /* Registers Address */
+ #define CM32181_REG_ADDR_CMD		0x00
++#define CM32181_REG_ADDR_WH		0x01
++#define CM32181_REG_ADDR_WL		0x02
++#define CM32181_REG_ADDR_TEST		0x03
+ #define CM32181_REG_ADDR_ALS		0x04
+ #define CM32181_REG_ADDR_STATUS		0x06
+ #define CM32181_REG_ADDR_ID		0x07
+@@ -26,9 +29,13 @@
+ #define CM32181_CONF_REG_NUM		0x01
+=20
+ /* CMD register */
+-#define CM32181_CMD_ALS_ENABLE		0x00
+-#define CM32181_CMD_ALS_DISABLE		0x01
+-#define CM32181_CMD_ALS_INT_EN		0x02
++#define CM32181_CMD_ALS_DISABLE		BIT(0)
++#define CM32181_CMD_ALS_INT_EN		BIT(1)
++#define CM32181_CMD_ALS_THRES_WINDOW	BIT(2)
++
++#define CM32181_CMD_ALS_PERS_SHIFT	4
++#define CM32181_CMD_ALS_PERS_MASK	(0x03 << CM32181_CMD_ALS_PERS_SHIFT)
++#define CM32181_CMD_ALS_PERS_DEFAULT	(0x01 << CM32181_CMD_ALS_PERS_SHIFT=
+)
+=20
+ #define CM32181_CMD_ALS_IT_SHIFT	6
+ #define CM32181_CMD_ALS_IT_MASK		(0x0F << CM32181_CMD_ALS_IT_SHIFT)
+@@ -82,7 +89,7 @@ static int cm32181_reg_init(struct cm32181_chip *cm3218=
+1)
+ 		return -ENODEV;
+=20
+ 	/* Default Values */
+-	cm32181->conf_regs[CM32181_REG_ADDR_CMD] =3D CM32181_CMD_ALS_ENABLE |
++	cm32181->conf_regs[CM32181_REG_ADDR_CMD] =3D
+ 			CM32181_CMD_ALS_IT_DEFAULT | CM32181_CMD_ALS_SM_DEFAULT;
+ 	cm32181->calibscale =3D CM32181_CALIBSCALE_DEFAULT;
+=20
+--=20
+2.26.0
 
-So the document is about ENQCMD, right? Can you please make that in some
-way consistently named?
-
-> +
-> +== Background ==
-
-This lacks any docbook formatting.... The resulting HTML looks like ...
-
-> +
-> +Shared Virtual Addressing (SVA) allows the processor and device to use the
-> +same virtual addresses avoiding the need for software to translate virtual
-> +addresses to physical addresses. ENQCMD is a new instruction on Intel
-> +platforms that allows user applications to directly notify hardware of new
-> +work, much like doorbells are used in some hardware, but carries a payload
-> +that carries the PASID and some additional device specific commands
-> +along with it.
-
-Sorry that's not background information, that's an agglomeration of
-words.
-
-Can you please explain properly what's the background of SVA, how it
-differs from regular device addressing and what kind of requirements it
-has?
-
-ENQCMD is not related to background. It's part of the new technology.
-
-> +== Address Space Tagging ==
-> +
-> +A new MSR (MSR_IA32_PASID) allows an application address space to be
-> +associated with what the PCIe spec calls a Process Address Space ID
-> +(PASID). This PASID tag is carried along with all requests between
-> +applications and devices and allows devices to interact with the process
-> +address space.
-
-Sigh. The important part here is not the MSR. The important part is to
-explain what PASID is and where it comes from. Documentation has similar
-rules as changelogs:
-
-      1) Provide context
-
-      2) Explain requirements
-      
-      3) Explain implementation
-
-The pile you provided is completely backwards and unstructured.
-
-Thanks,
-
-        tglx
