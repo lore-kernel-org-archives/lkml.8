@@ -2,145 +2,137 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC262C55199
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03AD3C55194
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB07B2078E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5BB320728
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:12:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="X9fW6FBC"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="LWezrIIm";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KZ6D79+Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgDZQLw (ORCPT
+        id S1726413AbgDZQMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 12:11:52 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:34109 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbgDZQLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 12:11:13 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 499CZR22W2zHm;
-        Sun, 26 Apr 2020 18:11:11 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1587917471; bh=s7KQlRyugBM05JaQhecEWkzu2aQ/yAHXfPNAOMMUGQg=;
-        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=X9fW6FBCHVbiOmS5BPaNY8ZOl64pR7nMXV8nFMSz3D2c9qOPZuFUcsHcdEt6691XY
-         FxUHDsXypxxM6KFWc6+tGCdEJcHdfhz5NgdMuxcfVmmEc1TD9T86naV/sjx1mKmWFl
-         ZDHpwiVkTEpnacjlztBrUOY/oL/1kh2vJ4+sCOiyZE82Ib1gXS9plBdE5by5Iqg71w
-         nweLQaxPKHrXVPEdmlSmT9nTJOXEqu2F/P/O+oblmqxh6I6FEOQqmB03cGZfktOtJr
-         zVzbvphzwEajAXrL73jDGPHMNrTnNQ0BJwV1qQhjKUiBZrUsy0WrqTEGOtb57+FITS
-         naJRhuE3jyuZA==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Sun, 26 Apr 2020 18:11:11 +0200
-Message-Id: <86fc067022c4a33c1e0cdd55be4f997faea43af3.1587916846.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <cover.1587916846.git.mirq-linux@rere.qmqm.pl>
-References: <cover.1587916846.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v4 01/10] input: elants: document some registers and values
+        Sun, 26 Apr 2020 12:12:03 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:46465 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726144AbgDZQMC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 12:12:02 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id E5B8C5C00D3;
+        Sun, 26 Apr 2020 12:12:00 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Sun, 26 Apr 2020 12:12:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm2; bh=DstDy5l5rdsJcISzdP+t1d2X6d
+        9z/JjBvqVJ7i0o2xw=; b=LWezrIImXKV5NwJ6YSYinDnl9kcK1aYg0DBdgxB3mN
+        PP9CMayJ6NF1TOgIdc0MW0n75595w3H91aK1sQygeodISKszD8lTD//r5UoyiozP
+        aVz84eTEMR+9aEMFPNoiJZdHaWatsJXS6GzEc9AJ6ASi/0bCiGM244fcV2RpqpSQ
+        0xSQWY264Oywd1iR1vQ/BoWUu/2L9ZM4ML67Wfrs+JpNnQV0UCUohczExLPQieoj
+        PPxYMKD+JRb8VkOZbxIhtbF9pU0MDK/adjBq9VA34dIhJFQzrUxcADWMnCi5i0Y/
+        K1P9f2k4Ve2YumQtWw7quQA4OrkPz8Zg4NX+zWqk1n5w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=DstDy5l5rdsJcISzd
+        P+t1d2X6d9z/JjBvqVJ7i0o2xw=; b=KZ6D79+YC8NS6f5MTQmDTWis+kzyY42Q9
+        /271i3tc3M+/XcvYGzVxSZ75kTKiDnRshnLRr3Tr4uNmreq8B4DMZgZJjNSXh4q9
+        tRHvm5/xNK7ipiFPKMxBxe8lr5d8Zi5v5Kl3ZZd5RSCJ9nSQIEswBao8ZlOQwQ4L
+        o9z1uCrxu89WmhwpxSWXij8fXMeGo7/GKhv6XoNKP3umXylybv85kDOj0TBrUrXb
+        0kWmKn0bGQPzKYzAQXiezJz3htZ1X0JE3G7lNqO79/TRBEcE0DIriC5Sv7kOXdYB
+        vBuIpcyH5Ry+NBxtYOY+Uqrhf3v9MhSqr7o+6IAMoSZDPIdzVfJCw==
+X-ME-Sender: <xms:zLKlXvGduu1BG4f0Y_p6zO24-N9Xaugjvwkmb0DkiUVMBXXGZIj-mw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrheejgdellecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghlucfj
+    ohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukfhppeejtd
+    drudefhedrudegkedrudehudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhep
+    mhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
+X-ME-Proxy: <xmx:zLKlXjnPZpJwS3sGVc6St_4U7QIo6lkTTlzyi5gRTyljjlaEaSDvuw>
+    <xmx:zLKlXl3whgDWeGBB9fIQWcpipHr8cuTPU47aDjOb6Uq89A_UJ9ZBqA>
+    <xmx:zLKlXpzFf1pQe2ouGRLgLarcesc0MLdNdL3bkRuEZYw0-usa-Ja56Q>
+    <xmx:0LKlXp362ElMk5nDw4AFv8e_1VLp3xq5rR1obrK3b-MedR9XLT7XyA>
+Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 780AD3280060;
+        Sun, 26 Apr 2020 12:11:56 -0400 (EDT)
+From:   Samuel Holland <samuel@sholland.org>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, Samuel Holland <samuel@sholland.org>
+Subject: [PATCH v2] arm64: dts: allwinner: a64: Remove unused SPDIF sound card
+Date:   Sun, 26 Apr 2020 11:16:05 -0500
+Message-Id: <20200426161605.52121-1-samuel@sholland.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        James Chen <james.chen@emc.com.tw>,
-        Johnny Chuang <johnny.chuang@emc.com.tw>,
-        Rob Herring <robh+dt@kernel.org>,
-        Scott Liu <scott.liu@emc.com.tw>,
-        David Heidelberg <david@ixit.cz>,
-        Dmitry Osipenko <digetx@gmail.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add information found in downstream kernels, to make the code less
-magic.
+As of v5.7-rc2, Linux now prints the following message at boot:
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
+  [   33.848525] platform sound_spdif: deferred probe pending
+
+This is because sound_spdif is waiting on its CPU DAI &spdif to probe,
+but &spdif is disabled in the device tree.
+
+Exposure of the SPDIF pin is board-specific functionality, so the sound
+card and codec DAI belong in the individual board DTS, not the SoC DTSI.
+In fact, no in-tree A64 board DTS enables &spdif, so let's remove the
+card and DAI entirely.
+
+This reverts commit 78e071370a86473f25923e03b51cbbadacf8be0f.
+
+Signed-off-by: Samuel Holland <samuel@sholland.org>
 ---
- drivers/input/touchscreen/elants_i2c.c | 29 +++++++++++++++++++++-----
- 1 file changed, 24 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
-index 14c577c16b16..b528bd687cca 100644
---- a/drivers/input/touchscreen/elants_i2c.c
-+++ b/drivers/input/touchscreen/elants_i2c.c
-@@ -79,7 +79,11 @@
+Changes since v1:
+ - Remove the node instead of disabling it
+ - Also remove the codec DAI
+
+---
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 18 ------------------
+ 1 file changed, 18 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 31143fe64d91..c26cc1fcaffd 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -154,24 +154,6 @@ link_codec: simple-audio-card,codec {
+ 		};
+ 	};
  
- #define HEADER_REPORT_10_FINGER	0x62
- 
--/* Header (4 bytes) plus 3 fill 10-finger packets */
-+/* Power state */
-+#define PWR_STATE_DEEP_SLEEP	0
-+#define PWR_STATE_NORMAL	1
-+
-+/* Header (4 bytes) plus 3 full 10-finger packets */
- #define MAX_PACKET_SIZE		169
- 
- #define BOOT_TIME_DELAY_MS	50
-@@ -89,10 +93,21 @@
- #define E_ELAN_INFO_BC_VER	0x10
- #define E_ELAN_INFO_TEST_VER	0xE0
- #define E_ELAN_INFO_FW_ID	0xF0
-+#define E_POWER_MODE		0x40
-+#define E_POWER_STATE		0x50
-+#define E_INFO_X_RES		0x60
-+#define E_INFO_Y_RES		0x63
- #define E_INFO_OSR		0xD6
- #define E_INFO_PHY_SCAN		0xD7
- #define E_INFO_PHY_DRIVER	0xD8
- 
-+/* FW write command, 0x54 0x?? 0x0, 0x01 */
-+#define E_POWER_MODE_BATTERY	0x40
-+#define E_POWER_MODE_AC		0x41
-+#define E_POWER_MODE_USB	0x42
-+#define E_POWER_STATE_SLEEP	0x50
-+#define E_POWER_STATE_RESUME	0x58
-+
- #define MAX_RETRIES		3
- #define MAX_FW_UPDATE_RETRIES	30
- 
-@@ -237,8 +252,8 @@ static int elants_i2c_calibrate(struct elants_data *ts)
- {
- 	struct i2c_client *client = ts->client;
- 	int ret, error;
--	static const u8 w_flashkey[] = { 0x54, 0xC0, 0xE1, 0x5A };
--	static const u8 rek[] = { 0x54, 0x29, 0x00, 0x01 };
-+	static const u8 w_flashkey[] = { CMD_HEADER_WRITE, 0xC0, 0xE1, 0x5A };
-+	static const u8 rek[] = { CMD_HEADER_WRITE, 0x29, 0x00, 0x01 };
- 	static const u8 rek_resp[] = { CMD_HEADER_REK, 0x66, 0x66, 0x66 };
- 
- 	disable_irq(client->irq);
-@@ -1357,7 +1372,9 @@ static int __maybe_unused elants_i2c_suspend(struct device *dev)
- {
- 	struct i2c_client *client = to_i2c_client(dev);
- 	struct elants_data *ts = i2c_get_clientdata(client);
--	const u8 set_sleep_cmd[] = { 0x54, 0x50, 0x00, 0x01 };
-+	const u8 set_sleep_cmd[] = {
-+		CMD_HEADER_WRITE, E_POWER_STATE_SLEEP, 0x00, 0x01
-+	};
- 	int retry_cnt;
- 	int error;
- 
-@@ -1394,7 +1411,9 @@ static int __maybe_unused elants_i2c_resume(struct device *dev)
- {
- 	struct i2c_client *client = to_i2c_client(dev);
- 	struct elants_data *ts = i2c_get_clientdata(client);
--	const u8 set_active_cmd[] = { 0x54, 0x58, 0x00, 0x01 };
-+	const u8 set_active_cmd[] = {
-+		CMD_HEADER_WRITE, E_POWER_STATE_RESUME, 0x00, 0x01
-+	};
- 	int retry_cnt;
- 	int error;
- 
+-	sound_spdif {
+-		compatible = "simple-audio-card";
+-		simple-audio-card,name = "On-board SPDIF";
+-
+-		simple-audio-card,cpu {
+-			sound-dai = <&spdif>;
+-		};
+-
+-		simple-audio-card,codec {
+-			sound-dai = <&spdif_out>;
+-		};
+-	};
+-
+-	spdif_out: spdif-out {
+-		#sound-dai-cells = <0>;
+-		compatible = "linux,spdif-dit";
+-	};
+-
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 		allwinner,erratum-unknown1;
 -- 
-2.20.1
+2.24.1
 
