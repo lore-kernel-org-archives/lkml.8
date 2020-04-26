@@ -2,123 +2,103 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1792C5519A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 08:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BC3C55199
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 08:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC9E12071E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 08:20:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587889254;
-	bh=32JPrJrGuDRD2wkuFtj2MYt27oiR4LTyT2PFdhPaclQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ADGB9xjWbb82v69v6ENoIMHMqCXzv5/u7rzpTIaGvTbQL5fzdXH8reQWFl2yXQAaz
-	 mksKEM0IFyPI7+nyy9TM66W1ur0QflhTvxnqDATLhOIDt2TDoNcEUPe5b6ml3MMKgL
-	 gLEsAd5a6SSMP8nzV7oRk5/tUo38Od9PDTEBbV/0=
+	by mail.kernel.org (Postfix) with ESMTP id D733A21841
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 08:27:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MliPMSo4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726185AbgDZIUy (ORCPT
+        id S1726154AbgDZI1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 04:20:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56216 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726121AbgDZIUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 04:20:53 -0400
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C5D7217BA
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 08:20:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587889253;
-        bh=32JPrJrGuDRD2wkuFtj2MYt27oiR4LTyT2PFdhPaclQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0tLZar1QUA+vvcNySsyW0rfaxWr2woQV7fXM/l6uVDEwEdBMdtgw//+P20sNglhU3
-         iyD7SKLm3Iz9jffpJMcaScYEERBIum/EprF3MM1+3GfpD5aXy7yoPfl3eygBsfKVpA
-         XSP2CPssF5zHqiaYcKY2fqCuFWxFRkkcTZMUh+mk=
-Received: by mail-ej1-f50.google.com with SMTP id a2so11425437ejx.5
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 01:20:53 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYmSfSya8hSBCzEIYFyKWsSy1BfaYzYlZrhBF1ebjEJXt7D2h3V
-        zt4rpbw8ChhjFVazAFutEoRm8Tb3scGMtARFsQ==
-X-Google-Smtp-Source: APiQypIeMlhVPVvjZ/EzBhYNkJSsKB75b0ue/XkSPqE14oZvx51BpCqy/qg7FEkcuFRxAPFavqIR3TDtbcx1mHFl0LQ=
-X-Received: by 2002:a17:906:eb90:: with SMTP id mh16mr14806818ejb.201.1587889251405;
- Sun, 26 Apr 2020 01:20:51 -0700 (PDT)
+        Sun, 26 Apr 2020 04:27:43 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:8346 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726108AbgDZI1n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 04:27:43 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ea545870000>; Sun, 26 Apr 2020 01:25:43 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 26 Apr 2020 01:27:42 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 26 Apr 2020 01:27:42 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 26 Apr
+ 2020 08:27:42 +0000
+Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 26 Apr
+ 2020 08:27:41 +0000
+Subject: Re: [RFC PATCH v10 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <sakari.ailus@iki.fi>,
+        <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1587700513-28449-1-git-send-email-skomatineni@nvidia.com>
+ <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
+ <6ca93ff9-ca59-544f-767c-4355d01a5c20@gmail.com>
+ <62546d1f-eca5-06be-2bc2-e45ccd53830a@xs4all.nl>
+ <50fd1016-ca8b-ec5d-e5a8-f257138b152e@gmail.com>
+ <658c4232-94d9-3051-8c93-bff7046cf5f2@nvidia.com>
+ <03426915-25ea-69b4-bc64-f87f3046d33f@nvidia.com>
+ <aabaecc4-3494-0137-7d2b-853304bfa68b@gmail.com>
+ <09f20441-fec6-7496-2edc-c69db535e441@nvidia.com>
+ <61799fab-858c-8b0d-ba7d-846cd041e044@gmail.com>
+ <7dfca778-e402-3a6f-617c-dd8448187a13@gmail.com>
+ <be48a991-3047-6ee3-8d6f-85979752d86f@nvidia.com>
+ <edad2953-ff4c-7c3c-4550-a3638a714c65@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <78bc2a89-d570-34b0-87b5-78d161d11315@nvidia.com>
+Date:   Sun, 26 Apr 2020 01:27:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200420135045.27984-1-yuehaibing@huawei.com>
-In-Reply-To: <20200420135045.27984-1-yuehaibing@huawei.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Sun, 26 Apr 2020 16:20:39 +0800
-X-Gmail-Original-Message-ID: <CAAOTY__km=QZQACp8g-Qr+aWZ4r0Yp7O5j7u8ZTpDpTXXfUdNw@mail.gmail.com>
-Message-ID: <CAAOTY__km=QZQACp8g-Qr+aWZ4r0Yp7O5j7u8ZTpDpTXXfUdNw@mail.gmail.com>
-Subject: Re: [PATCH -next] drm/mediatek: Fix Kconfig warning
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        CK Hu <ck.hu@mediatek.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <edad2953-ff4c-7c3c-4550-a3638a714c65@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587889543; bh=O2FyQJa75n11NYmNXq86zgUw7lxEjvNtxEQBNjA/0lY=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=MliPMSo4xAXa8zc2m33os5Uq1L4i8Z8tS4H16pEd06ERovvXtkFvKDS8RiW10QhAv
+         uk3Qk/Ty0PShwKoMzndRJdHuiWUfycxUoQzBAIZEJeQGrH7fmV9qEPI+opfZGnAo/j
+         FASAT+jETw/phnUt+e2UV8bYXpaBqo+jczsuCb0pD0kpaDbK62pXYH66/UWXpseNv3
+         xr26SBJpbxkfwpGh2/ryi+juSUU8sIAp8l1l2TOsNKkXaAlkqJjwxZftqL2VWNo83x
+         Y/4QLpOdaS9hjMdd0Xuy8uE83WUONAlUEDAx229wjO0lPw5Caqis51nqdfol71BSVv
+         i524P9A5u03Cg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, YueHaibing:
 
-YueHaibing <yuehaibing@huawei.com> =E6=96=BC 2020=E5=B9=B44=E6=9C=8820=E6=
-=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=8810:04=E5=AF=AB=E9=81=93=EF=BC=
-=9A
+On 4/25/20 10:51 PM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
 >
-> WARNING: unmet direct dependencies detected for MTK_MMSYS
->   Depends on [n]: (ARCH_MEDIATEK [=3Dy] || COMPILE_TEST [=3Dn]) && COMMON=
-_CLK_MT8173_MMSYS [=3Dn]
->   Selected by [y]:
->   - DRM_MEDIATEK [=3Dy] && HAS_IOMEM [=3Dy] && DRM [=3Dy] && (ARCH_MEDIAT=
-EK [=3Dy] || ARM && COMPILE_TEST [=3Dn]) && COMMON_CLK [=3Dy] && HAVE_ARM_S=
-MCCC [=3Dy] && OF [=3Dy]
 >
-> Add missing dependcy COMMON_CLK_MT8173_MMSYS to fix this.
+> 26.04.2020 07:47, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> So, probably what we have regarding structure is ok except video formats
+>> I will move to Tegra210 and change defines to use Tegra210 prefix.
+> If those defines aren't reusable by T186, then you could move them all
+> to t210.c.
 
-From the code relationship, mediatek drm has relation with mediatek
-mmsys, and mediatek mmsys has relation with medaitek clock.
-So I think it's better that CONFIG_MTK_MMSYS select
-CONFIG_COMMON_CLK_MT8173_MMSYS.
+ok, will combine defines and soc specific programming into tegra210.c
 
-Regards,
-Chun-Kuang.
+Also will then get rid of common.h with video formats moving to tegra210
 
->
-> Fixes: 2c758e301ed9 ("soc / drm: mediatek: Move routing control to mmsys =
-device")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/gpu/drm/mediatek/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/gpu/drm/mediatek/Kconfig b/drivers/gpu/drm/mediatek/=
-Kconfig
-> index c420f5a3d33b..4d9b5540de68 100644
-> --- a/drivers/gpu/drm/mediatek/Kconfig
-> +++ b/drivers/gpu/drm/mediatek/Kconfig
-> @@ -6,6 +6,7 @@ config DRM_MEDIATEK
->         depends on COMMON_CLK
->         depends on HAVE_ARM_SMCCC
->         depends on OF
-> +       depends on COMMON_CLK_MT8173_MMSYS
->         select DRM_GEM_CMA_HELPER
->         select DRM_KMS_HELPER
->         select DRM_MIPI_DSI
-> --
-> 2.17.1
->
->
