@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D00C7C883
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A73C3C7C884
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 515372070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8335F2071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:42:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FTIcmnch"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="YPzC335g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgDZRmV (ORCPT
+        id S1726515AbgDZRmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 13:42:21 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:22857 "EHLO
+        Sun, 26 Apr 2020 13:42:51 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:22862 "EHLO
         mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726398AbgDZRmQ (ORCPT
+        with ESMTP id S1726403AbgDZRmQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 26 Apr 2020 13:42:16 -0400
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200426174213epoutp026cd5fd33bd39c5ccbaed3db662281226~Jb37HovI51534515345epoutp02b
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 17:42:13 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200426174213epoutp026cd5fd33bd39c5ccbaed3db662281226~Jb37HovI51534515345epoutp02b
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200426174214epoutp02a1ed6ce0608d6ee62e9b7f1f8a79beeb~Jb37i7Fl31534515345epoutp02c
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 17:42:14 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200426174214epoutp02a1ed6ce0608d6ee62e9b7f1f8a79beeb~Jb37i7Fl31534515345epoutp02c
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1587922933;
-        bh=hdIUvvbePa3Q37fIHJTSn4JBE+dveoUYBG/MIUarT20=;
+        s=mail20170921; t=1587922934;
+        bh=x/NJP4BcylUgWL3qK+Vpk3L9Gg4VlYVDP50hn5tTzsY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FTIcmnchwhbUqbBbPV4m0uXDpukrtWiYFLZDjXifJ+jYD4tjT2zbTasiUAGV7mKA2
-         jM0Xx9auyHjZtFn5mu0AOJ3n25HUHagx8vFVJoOqznpoLH1njqCSojiupNAMOZF/qc
-         Pvo0tZpmtHHdr5jGgKiX+5YhqjhHT4NO2N3m2ZaM=
+        b=YPzC335gWq4FKNsmz4zUxj0cx408Mr/ywT3mXo5TyE3MztXpYcDfulROseqeyo+oO
+         T4IbUfLj5pVrvMysj/a3s24ZGkyUuYdQ49GsBOAFKDsB8sUwEUl4tvrH854qMp8a2J
+         WbZ+qed6nwPrqLY8oe/d6wi3Ctz1V8p71ZYQjO7g=
 Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
         epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-        20200426174212epcas5p2e4299be66e9be666b205ca1505a8c93f~Jb351DaOZ0368603686epcas5p2h;
-        Sun, 26 Apr 2020 17:42:12 +0000 (GMT)
+        20200426174213epcas5p22d1d871bcae20c22c9a300c05f935d0e~Jb37Clgx40053600536epcas5p2g;
+        Sun, 26 Apr 2020 17:42:13 +0000 (GMT)
 Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
         epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        2A.DE.04736.4F7C5AE5; Mon, 27 Apr 2020 02:42:12 +0900 (KST)
+        0B.DE.04736.5F7C5AE5; Mon, 27 Apr 2020 02:42:13 +0900 (KST)
 Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
         epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200426174211epcas5p39d7a1ca820bacb5638b5ba63c1585a53~Jb34pmrRB0554805548epcas5p3I;
-        Sun, 26 Apr 2020 17:42:11 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        20200426174213epcas5p3f5b403eafe77d98cbe0b92ccb3fd56b2~Jb36kVMSB0554805548epcas5p3J;
+        Sun, 26 Apr 2020 17:42:13 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
         epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200426174211epsmtrp1b3fa4d32da4374f8b78882ee99bc11ba~Jb34o63qH0798907989epsmtrp1R;
-        Sun, 26 Apr 2020 17:42:11 +0000 (GMT)
-X-AuditID: b6c32a4b-acbff70000001280-00-5ea5c7f4d9d8
+        20200426174213epsmtrp1d2367c630dce0e0840a41cf3c6625fe5~Jb36jh32o0798907989epsmtrp1S;
+        Sun, 26 Apr 2020 17:42:13 +0000 (GMT)
+X-AuditID: b6c32a4b-acbff70000001280-02-5ea5c7f5bffd
 Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C4.DC.25866.3F7C5AE5; Mon, 27 Apr 2020 02:42:11 +0900 (KST)
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        AB.FF.18461.5F7C5AE5; Mon, 27 Apr 2020 02:42:13 +0900 (KST)
 Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
         [107.108.73.139]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200426174209epsmtip1186371e78e14c021fcf10087b552abe0~Jb32uhjaf2626126261epsmtip1i;
-        Sun, 26 Apr 2020 17:42:09 +0000 (GMT)
+        20200426174211epsmtip10673fa7d201900c15d21f4d9f9dad6d5~Jb34tKWaM2817828178epsmtip1K;
+        Sun, 26 Apr 2020 17:42:11 +0000 (GMT)
 From:   Alim Akhtar <alim.akhtar@samsung.com>
 To:     robh@kernel.org
 Cc:     devicetree@vger.kernel.org, linux-scsi@vger.kernel.org,
@@ -65,126 +65,99 @@ Cc:     devicetree@vger.kernel.org, linux-scsi@vger.kernel.org,
         cang@codeaurora.org, linux-samsung-soc@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Alim Akhtar <alim.akhtar@samsung.com>
-Subject: [PATCH v7 04/10] scsi: ufs: introduce UFSHCD_QUIRK_PRDT_BYTE_GRAN
- quirk
-Date:   Sun, 26 Apr 2020 23:00:18 +0530
-Message-Id: <20200426173024.63069-5-alim.akhtar@samsung.com>
+Subject: [PATCH v7 05/10] scsi: ufs: add quirk to fix abnormal ocs fatal
+ error
+Date:   Sun, 26 Apr 2020 23:00:19 +0530
+Message-Id: <20200426173024.63069-6-alim.akhtar@samsung.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200426173024.63069-1-alim.akhtar@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAKsWRmVeSWpSXmKPExsWy7bCmuu6X40vjDD43yFo8mLeNzeLlz6ts
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnleLIzCtJLcpLzFFi42LZdlhTXffr8aVxBhNP6Fs8mLeNzeLlz6ts
         Fp/WL2O1mH/kHKvF+fMb2C1ubjnKYrHp8TVWi8u75rBZzDi/j8mi+/oONovlx/8xWfzfs4Pd
         YunWm4wOvB6X+3qZPDat6mTz2Lyk3qPl5H4Wj49Pb7F49G1ZxejxeZOcR/uBbqYAjigum5TU
-        nMyy1CJ9uwSujAWTpjAVPBGt2NWxmKWBsUGoi5GTQ0LARKJ7/RW2LkYuDiGB3YwSu28dYYRw
-        PjFKnH1/nhnC+cwocaFxLjNMy5HLU6ESuxglnhy8DtXSwiTRt34GO0gVm4C2xN3pW5hAbBEB
-        YYkj39oYQWxmgRtMEg9WuoDYwgJBEh/ar4PVsAioSlw5dZQFxOYVsJG4u/QbE8Q2eYnVGw6A
-        beYUsJU4NWMXE8gyCYFODomn75tYIYpcJLbv7YBqEJZ4dXwLO4QtJfGyvw3I5gCysyV6dhlD
-        hGskls47xgJh20scuDKHBaSEWUBTYv0ufYgz+SR6fz9hgujklehogwaXqkTzu6tQndISE7u7
-        WSFKPCReXNSDhMIERomGOfPYJjDKzkIYuoCRcRWjZGpBcW56arFpgXFearlecWJucWleul5y
-        fu4mRnA60fLewbjpnM8hRgEORiUeXo7tS+OEWBPLiitzDzFKcDArifDGlCyKE+JNSaysSi3K
-        jy8qzUktPsQozcGiJM47ifVqjJBAemJJanZqakFqEUyWiYNTqoGxrPw3i+3XPwmZz/nVI1hO
-        b/ohVX2P95B3ztonM/U8c8zbjbM6p/0I3vL++ryJmRlnXbIfMQZyrsy0tuYLnPgnwP7K+/bb
-        hUuNFpWpz7g9XdHTu//x9vJrOfvPv7qmFu29fO8aM1NTRvXF7secQ6IMl667rfrTeUbnI4U3
-        e78+eDA10TRA5G+qEktxRqKhFnNRcSIAj/Z+ziMDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrILMWRmVeSWpSXmKPExsWy7bCSnO7n40vjDNZ2cVg8mLeNzeLlz6ts
-        Fp/WL2O1mH/kHKvF+fMb2C1ubjnKYrHp8TVWi8u75rBZzDi/j8mi+/oONovlx/8xWfzfs4Pd
-        YunWm4wOvB6X+3qZPDat6mTz2Lyk3qPl5H4Wj49Pb7F49G1ZxejxeZOcR/uBbqYAjigum5TU
-        nMyy1CJ9uwSujAWTpjAVPBGt2NWxmKWBsUGoi5GTQ0LAROLI5anMXYxcHEICOxglTvzbzwyR
-        kJa4vnECO4QtLLHy33N2iKImJonPJy6zgSTYBLQl7k7fwgRiiwAVHfnWxghiMws8Y5I49bC0
-        i5GDQ1ggQOL2/jiQMIuAqsSVU0dZQGxeARuJu0u/MUHMl5dYveEA2F5OAVuJUzN2MYG0CgHV
-        TF/vP4GRbwEjwypGydSC4tz03GLDAqO81HK94sTc4tK8dL3k/NxNjOBQ1tLawbhn1Qe9Q4xM
-        HIyHGCU4mJVEeGNKFsUJ8aYkVlalFuXHF5XmpBYfYpTmYFES5/06a2GckEB6YklqdmpqQWoR
-        TJaJg1OqgWl5Y5HNs53BO/cfny3KU/zKccbGK1MvhX9f9PpA/uVL8/nb3c/sMejXWtW9PaLh
-        km23fcZnp83HWKz0Lkd1Ch29efFz14ooDb+HCS1M5tHdx6UdIiVW1c33v345wOXu1StvbM6v
-        LN3+x8jpUHrNknWPZr/VulnJMaM/+IhndlbL/m3p5yT1tqTkON/zPu8eJXKfR+CCTtqHxKLZ
-        yzzrciZc/xJdYPNSP/vqdwNHLgvWRVelTJaZFghX8cbKb8ydes5YZIeUyzubWUIz19XOL9Xa
-        lxmcvaFpQ0tfTqvX/YiWW+sVD6tx6RUIS9t4WmjotPDv5Gx6ynhCqCXJ/dE1ZaPmEyWT2nr0
-        P/zkqN90QImlOCPRUIu5qDgRAKdtDlfUAgAA
-X-CMS-MailID: 20200426174211epcas5p39d7a1ca820bacb5638b5ba63c1585a53
+        nMyy1CJ9uwSujFMXdzAWXOetmPastoFxIXcXIyeHhICJRNejW4xdjFwcQgK7GSVaNs9kg3A+
+        MUrc3bOSFcL5xihxeu5kFpiWRVffQVXtZZRoXPGbCcJpYZLoPHgLrIpNQFvi7vQtTCC2iICw
+        xJFvbYwgNrPADSaJBytdQGxhgQCJBxN62EBsFgFViS1r/rGC2LwCNhIXHi9hhtgmL7F6wwEw
+        m1PAVuLUjF1MEPFODonT7+IhbBeJzrMboOqFJV4d38IOYUtJvOxvA7I5gOxsiZ5dxhDhGoml
+        845BPWMvceDKHBaQEmYBTYn1u/QhruST6P39hAmik1eio00IolpVovndVahOaYmJ3d2sELaH
+        xJnNW6ChMIFRYtKhVrYJjLKzEKYuYGRcxSiZWlCcm55abFpgnJdarlecmFtcmpeul5yfu4kR
+        nEy0vHcwbjrnc4hRgINRiYeXY/vSOCHWxLLiytxDjBIczEoivDEli+KEeFMSK6tSi/Lji0pz
+        UosPMUpzsCiJ805ivRojJJCeWJKanZpakFoEk2Xi4JRqYPQPXsbi77fnwI91cc90GUt2pAhs
+        sXHtY3T+KurYsf8T50PeO+Zfbh1XWn3j1eQd5auad259bb8951HgyYU/W4zO7px4Zkby7kdC
+        8oedbCd+ffyKaWeCfK/7o8dqEcUuHy/GfKxs5LWNWP/oqNBNvRDnSYf38fd+KHE2kSwN41zx
+        s1ptZ2y5RYASS3FGoqEWc1FxIgClp2bjIgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrILMWRmVeSWpSXmKPExsWy7bCSnO7X40vjDD4/4rd4MG8bm8XLn1fZ
+        LD6tX8ZqMf/IOVaL8+c3sFvc3HKUxWLT42usFpd3zWGzmHF+H5NF9/UdbBbLj/9jsvi/Zwe7
+        xdKtNxkdeD0u9/UyeWxa1cnmsXlJvUfLyf0sHh+f3mLx6NuyitHj8yY5j/YD3UwBHFFcNimp
+        OZllqUX6dglcGacu7mAsuM5bMe1ZbQPjQu4uRk4OCQETiUVX37F1MXJxCAnsZpR4e/49G0RC
+        WuL6xgnsELawxMp/z9khipqYJGa82c8EkmAT0Ja4O30LmC0CVHTkWxsjiM0s8IxJ4tTDUhBb
+        WMBPouXDf2YQm0VAVWLLmn+sIDavgI3EhcdLmCEWyEus3nAAzOYUsJU4NWMX0EwOoGU2EtPX
+        +09g5FvAyLCKUTK1oDg3PbfYsMAwL7Vcrzgxt7g0L10vOT93EyM4lLU0dzBuX/VB7xAjEwfj
+        IUYJDmYlEd6YkkVxQrwpiZVVqUX58UWlOanFhxilOViUxHlvFC6MExJITyxJzU5NLUgtgsky
+        cXBKNTAlLUl58eV5fE3WweRjeyL0F020uThbiaNpeUrppVuOM/6c3OMintHw9ucmO0+NnSo3
+        5wZ/a2XZ4LBEoszgv1ICa8UyB+8Pib/1brM5O/RzK2ZWcy2ZZ8Gzvuh/eKvez9CszIXOnO9M
+        8nt8nGOPF4faneL/7Krzt7717Fr+D9/mvTGtdlt1draAWueXh6lKE1WdF2s7Nc9y1fevrTj2
+        7KHFkXn/76s1b2xMmf/0tnKU9E/XCv+ccw5Fole+T/62OlTd3IxfRvXV8b/zn3y59fP83oCA
+        GwlzP8Rqf/c7M/NQ55OTGp4HK3I+TWydxFzXX/s5/MUM/bo70h41M90Oz/KbbLxt9pxf1jlF
+        QtcPWrUpsRRnJBpqMRcVJwIAZ+voQNQCAAA=
+X-CMS-MailID: 20200426174213epcas5p3f5b403eafe77d98cbe0b92ccb3fd56b2
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 CMS-TYPE: 105P
-X-CMS-RootMailID: 20200426174211epcas5p39d7a1ca820bacb5638b5ba63c1585a53
+X-CMS-RootMailID: 20200426174213epcas5p3f5b403eafe77d98cbe0b92ccb3fd56b2
 References: <20200426173024.63069-1-alim.akhtar@samsung.com>
-        <CGME20200426174211epcas5p39d7a1ca820bacb5638b5ba63c1585a53@epcas5p3.samsung.com>
+        <CGME20200426174213epcas5p3f5b403eafe77d98cbe0b92ccb3fd56b2@epcas5p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some UFS host controllers like Exynos uses granularities of PRDT length and
-offset as bytes, whereas others uses actual segment count. This patch
-adds a quirk to handle the same.
+From: Kiwoong Kim <kwmad.kim@samsung.com>
 
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Some controller like Exynos determines if FATAL ERROR (0x7)
+in OCS field in UTRD occurs for values other than GOOD (0x0)
+in STATUS field in response upiu as well as errors that a
+host controller can't cover.
+This patch is to prevent from reporting command results in
+those cases.
+
 Signed-off-by: Kiwoong Kim <kwmad.kim@samsung.com>
 Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
 ---
- drivers/scsi/ufs/ufshcd.c | 30 +++++++++++++++++++++++-------
- drivers/scsi/ufs/ufshcd.h |  6 ++++++
- 2 files changed, 29 insertions(+), 7 deletions(-)
+ drivers/scsi/ufs/ufshcd.c | 6 ++++++
+ drivers/scsi/ufs/ufshcd.h | 6 ++++++
+ 2 files changed, 12 insertions(+)
 
 diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index ee30ed6cc805..ba093d0d0942 100644
+index ba093d0d0942..33ebffa8257d 100644
 --- a/drivers/scsi/ufs/ufshcd.c
 +++ b/drivers/scsi/ufs/ufshcd.c
-@@ -2151,8 +2151,14 @@ static int ufshcd_map_sg(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
- 		return sg_segments;
+@@ -4794,6 +4794,12 @@ ufshcd_transfer_rsp_status(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
+ 	/* overall command status of utrd */
+ 	ocs = ufshcd_get_tr_ocs(lrbp);
  
- 	if (sg_segments) {
--		lrbp->utr_descriptor_ptr->prd_table_length =
--			cpu_to_le16((u16)sg_segments);
++	if (hba->quirks & UFSHCD_QUIRK_BROKEN_OCS_FATAL_ERROR) {
++		if (be32_to_cpu(lrbp->ucd_rsp_ptr->header.dword_1) &
++					MASK_RSP_UPIU_RESULT)
++			ocs = OCS_SUCCESS;
++	}
 +
-+		if (hba->quirks & UFSHCD_QUIRK_PRDT_BYTE_GRAN)
-+			lrbp->utr_descriptor_ptr->prd_table_length =
-+				cpu_to_le16((sg_segments *
-+					sizeof(struct ufshcd_sg_entry)));
-+		else
-+			lrbp->utr_descriptor_ptr->prd_table_length =
-+				cpu_to_le16((u16) (sg_segments));
- 
- 		prd_table = (struct ufshcd_sg_entry *)lrbp->ucd_prdt_ptr;
- 
-@@ -3500,11 +3506,21 @@ static void ufshcd_host_memory_configure(struct ufs_hba *hba)
- 				cpu_to_le32(upper_32_bits(cmd_desc_element_addr));
- 
- 		/* Response upiu and prdt offset should be in double words */
--		utrdlp[i].response_upiu_offset =
--			cpu_to_le16(response_offset >> 2);
--		utrdlp[i].prd_table_offset = cpu_to_le16(prdt_offset >> 2);
--		utrdlp[i].response_upiu_length =
--			cpu_to_le16(ALIGNED_UPIU_SIZE >> 2);
-+		if (hba->quirks & UFSHCD_QUIRK_PRDT_BYTE_GRAN) {
-+			utrdlp[i].response_upiu_offset =
-+				cpu_to_le16(response_offset);
-+			utrdlp[i].prd_table_offset =
-+				cpu_to_le16(prdt_offset);
-+			utrdlp[i].response_upiu_length =
-+				cpu_to_le16(ALIGNED_UPIU_SIZE);
-+		} else {
-+			utrdlp[i].response_upiu_offset =
-+				cpu_to_le16(response_offset >> 2);
-+			utrdlp[i].prd_table_offset =
-+				cpu_to_le16(prdt_offset >> 2);
-+			utrdlp[i].response_upiu_length =
-+				cpu_to_le16(ALIGNED_UPIU_SIZE >> 2);
-+		}
- 
- 		ufshcd_init_lrb(hba, &hba->lrb[i], i);
- 	}
+ 	switch (ocs) {
+ 	case OCS_SUCCESS:
+ 		result = ufshcd_get_req_rsp(lrbp->ucd_rsp_ptr);
 diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index f8d08cb9caf7..a9b9ace9fc72 100644
+index a9b9ace9fc72..e1d09c2c4302 100644
 --- a/drivers/scsi/ufs/ufshcd.h
 +++ b/drivers/scsi/ufs/ufshcd.h
-@@ -535,6 +535,12 @@ enum ufshcd_quirks {
- 	 * enabled via HCE register.
+@@ -541,6 +541,12 @@ enum ufshcd_quirks {
+ 	 * resolution of the values of PRDTO and PRDTL in UTRD as byte.
  	 */
- 	UFSHCI_QUIRK_BROKEN_HCE				= 1 << 8,
+ 	UFSHCD_QUIRK_PRDT_BYTE_GRAN			= 1 << 9,
 +
 +	/*
-+	 * This quirk needs to be enabled if the host controller regards
-+	 * resolution of the values of PRDTO and PRDTL in UTRD as byte.
++	 * This quirk needs to be enabled if the host controller reports
++	 * OCS FATAL ERROR with device error through sense data
 +	 */
-+	UFSHCD_QUIRK_PRDT_BYTE_GRAN			= 1 << 9,
++	UFSHCD_QUIRK_BROKEN_OCS_FATAL_ERROR		= 1 << 10,
  };
  
  enum ufshcd_caps {
