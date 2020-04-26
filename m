@@ -2,236 +2,98 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D710EC54FCB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 15:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F820C55194
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 15:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A65E72070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 15:21:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="fKbv3cWk"
+	by mail.kernel.org (Postfix) with ESMTP id 788F42074F
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 15:22:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726182AbgDZPVt (ORCPT
+        id S1726206AbgDZPV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 11:21:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44960 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbgDZPVt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 11:21:49 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97C14C061A0F
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 08:21:47 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id v4so13976381wme.1
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 08:21:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Oec0onKReyMxClDdJY4/0WsT5jFsmRnzuCNfEJGndcY=;
-        b=fKbv3cWkTUyDAeQhb386kJbwXWqxg0I/EcVVdTNgbFlmukh7OcHDr2el0Z133lHTDQ
-         rxS5IcZtRpqE7nRsGYrFhrIxnCFwjYWP8IHg976WeSQXCo84T11bEpYW+0MFzEOk508C
-         E4HMKA28awoKmTVPkiBCsjG4JdS9bGt2ybDf2ODOKYwVBpEWqTihfRcew5iQt5iUkV21
-         S2GF1loV+k1tDi3VZLnM44qJcJSKXqPVN37UynAL89yRacAXTShmZBdmSemblCffHmOI
-         7istGl3jc1IU3ewbbuDUApzG8AQHnda1YIXrVCYAMfUc1oFW80T6k3GjL1gYAof3SA5p
-         qoxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Oec0onKReyMxClDdJY4/0WsT5jFsmRnzuCNfEJGndcY=;
-        b=CJlka0ytl0sZAxP/RP9zrIsWVeJj9/TFzVM7qYTLuVIIzBnj939HoMv68uRI+i+Bp5
-         gCXlgnm/z2j6+IIilq6niTe73QWbbSZ+uwiqrDb2qj1hh/6nYphDOHdsWeUdOuHpiobR
-         kRDSsw/5DPbStn2lsxpmdcCi2K2E3Fxw+Tl+v7OTSD4n7EyldzlOajj+LESpOOlbBYmi
-         RStknDowXl5XeoP+CDkk21BneCpTkNy0ENEdNVGNTZMWxAHsVMwsPzv0m0RkLtEKeoZV
-         ob7h95Admy6y+k58YTjCn+DftA9G+vMtNFSSSxY+dF7lSKuR+Xea2QiJcxmdlkTl6PlP
-         2HRQ==
-X-Gm-Message-State: AGi0PubfdNg6N/pcFIjBHy18zYbqEguHAY85x86O0oFLeH1x72aH1R3J
-        gTnoc+EDygpVtSAKCUb8g9i8/hb2DEodSfXg68czgA==
-X-Google-Smtp-Source: APiQypJbk1KuqjHN1WWjZ35IfpPcCrrEJbET0XHjFL6wF5iUqZ47hcKHcFlXnzwn/3ge4BYKCgPzZPxodt9DTgzjh68=
-X-Received: by 2002:a1c:7301:: with SMTP id d1mr22595992wmb.26.1587914505976;
- Sun, 26 Apr 2020 08:21:45 -0700 (PDT)
+        Sun, 26 Apr 2020 11:21:59 -0400
+Received: from mga05.intel.com ([192.55.52.43]:21919 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725975AbgDZPV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 11:21:59 -0400
+IronPort-SDR: RmKVuRa1uw4cDWtWO87frShgmoj5CBkUMIv6TH0WDrxYFUTh17Z3p47NuzJez113sW/jcw2Ft2
+ 5wJeBu1UUpVg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2020 08:21:59 -0700
+IronPort-SDR: qMXhH6Y5Ppw8jvrNSDZgkysrFGrNKvsu1BDnfineDYgmgqgkeGPoppM5NhhbJ6iDYO0ORtkQXQ
+ Uf3vE0MNh/Zg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,320,1583222400"; 
+   d="scan'208";a="248616221"
+Received: from unknown (HELO localhost) ([10.239.159.128])
+  by fmsmga008.fm.intel.com with ESMTP; 26 Apr 2020 08:21:57 -0700
+Date:   Sun, 26 Apr 2020 23:23:55 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sean.j.christopherson@intel.com,
+        jmattson@google.com, yu.c.zhang@linux.intel.com
+Subject: Re: [PATCH v11 7/9] KVM: X86: Add userspace access interface for CET
+ MSRs
+Message-ID: <20200426152355.GB29493@local-michael-cet-test.sh.intel.com>
+References: <20200326081847.5870-1-weijiang.yang@intel.com>
+ <20200326081847.5870-8-weijiang.yang@intel.com>
+ <08457f11-f0ac-ff4b-80b7-e5380624eca0@redhat.com>
 MIME-Version: 1.0
-References: <20200426110740.123638-1-zong.li@sifive.com> <CAAhSdy3FCdzLV-nH03T=PBxB2tdZXhRrugcC2NcoA=22qpv+Lw@mail.gmail.com>
- <CANXhq0qW9ORoZ5qc5g8ikO9QdeYX=p0fwoP8pyFFkk02a7imnw@mail.gmail.com>
- <CAAhSdy2f2-SQP6TdgxA0HM2ft3eBJd6kEkB--RH=2gUuLktXLQ@mail.gmail.com> <CANXhq0pDYa2QfGZX87d5gyO5V2uzA3-ttPZXf7s1EkMUcG37Cw@mail.gmail.com>
-In-Reply-To: <CANXhq0pDYa2QfGZX87d5gyO5V2uzA3-ttPZXf7s1EkMUcG37Cw@mail.gmail.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Sun, 26 Apr 2020 20:51:34 +0530
-Message-ID: <CAAhSdy188_Kkfsz2bX05T3Rr12XDNtwGiwfqaT2TFVW7auGUaw@mail.gmail.com>
-Subject: Re: [PATCH] irqchip/sifive-plic: allow many cores to handle IRQs
-To:     Zong Li <zong.li@sifive.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        David Abdurachmanov <david.abdurachmanov@sifive.com>,
-        Marc Zyngier <maz@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <08457f11-f0ac-ff4b-80b7-e5380624eca0@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 8:42 PM Zong Li <zong.li@sifive.com> wrote:
+On Sat, Apr 25, 2020 at 05:31:59PM +0200, Paolo Bonzini wrote:
+> On 26/03/20 09:18, Yang Weijiang wrote:
+> > There're two different places storing Guest CET states, states
+> > managed with XSAVES/XRSTORS, as restored/saved
+> > in previous patch, can be read/write directly from/to the MSRs.
+> > For those stored in VMCS fields, they're access via vmcs_read/
+> > vmcs_write.
+> > 
+> > To correctly read/write the CET MSRs, it's necessary to check
+> > whether the kernel FPU context switch happened and reload guest
+> > FPU context if needed.
+> 
+> I have one question here, it may be just a misunderstanding.
+> 
+> As I understand it, the PLx_SSP MSRs are only used when the current
+> privilege level changes; the processor has a hidden SSP register for the
+> current privilege level, and the SSP can be accessed via VMCS only.
 >
-> On Sun, Apr 26, 2020 at 9:38 PM Anup Patel <anup@brainfault.org> wrote:
-> >
-> > +Mark Z
-> >
-> > On Sun, Apr 26, 2020 at 6:49 PM Zong Li <zong.li@sifive.com> wrote:
-> > >
-> > > On Sun, Apr 26, 2020 at 8:47 PM Anup Patel <anup@brainfault.org> wrote:
-> > > >
-> > > > On Sun, Apr 26, 2020 at 4:37 PM Zong Li <zong.li@sifive.com> wrote:
-> > > > >
-> > > > > Currently, driver forces the IRQs to be handled by only one core. This
-> > > > > patch provides the way to enable others cores to handle IRQs if needed,
-> > > > > so users could decide how many cores they wanted on default by boot
-> > > > > argument.
-> > > > >
-> > > > > Use 'irqaffinity' boot argument to determine affinity. If there is no
-> > > > > irqaffinity in dts or kernel configuration, use irq default affinity,
-> > > > > so all harts would try to claim IRQ.
-> > > > >
-> > > > > For example, add irqaffinity=0 in chosen node to set irq affinity to
-> > > > > hart 0. It also supports more than one harts to handle irq, such as set
-> > > > > irqaffinity=0,3,4.
-> > > > >
-> > > > > You can change IRQ affinity from user-space using procfs. For example,
-> > > > > you can make CPU0 and CPU2 serve IRQ together by the following command:
-> > > > >
-> > > > > echo 4 > /proc/irq/<x>/smp_affinity
-> > > > >
-> > > > > Signed-off-by: Zong Li <zong.li@sifive.com>
-> > > > > ---
-> > > > >  drivers/irqchip/irq-sifive-plic.c | 21 +++++++--------------
-> > > > >  1 file changed, 7 insertions(+), 14 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-> > > > > index d0a71febdadc..bc1440d54185 100644
-> > > > > --- a/drivers/irqchip/irq-sifive-plic.c
-> > > > > +++ b/drivers/irqchip/irq-sifive-plic.c
-> > > > > @@ -111,15 +111,12 @@ static inline void plic_irq_toggle(const struct cpumask *mask,
-> > > > >  static void plic_irq_unmask(struct irq_data *d)
-> > > > >  {
-> > > > >         struct cpumask amask;
-> > > > > -       unsigned int cpu;
-> > > > >         struct plic_priv *priv = irq_get_chip_data(d->irq);
-> > > > >
-> > > > >         cpumask_and(&amask, &priv->lmask, cpu_online_mask);
-> > > > > -       cpu = cpumask_any_and(irq_data_get_affinity_mask(d),
-> > > > > -                                          &amask);
-> > > > > -       if (WARN_ON_ONCE(cpu >= nr_cpu_ids))
-> > > > > -               return;
-> > > > > -       plic_irq_toggle(cpumask_of(cpu), d, 1);
-> > > > > +       cpumask_and(&amask, &amask, irq_data_get_affinity_mask(d));
-> > > > > +
-> > > > > +       plic_irq_toggle(&amask, d, 1);
-> > > > >  }
-> > > > >
-> > > > >  static void plic_irq_mask(struct irq_data *d)
-> > > > > @@ -133,24 +130,20 @@ static void plic_irq_mask(struct irq_data *d)
-> > > > >  static int plic_set_affinity(struct irq_data *d,
-> > > > >                              const struct cpumask *mask_val, bool force)
-> > > > >  {
-> > > > > -       unsigned int cpu;
-> > > > >         struct cpumask amask;
-> > > > >         struct plic_priv *priv = irq_get_chip_data(d->irq);
-> > > > >
-> > > > >         cpumask_and(&amask, &priv->lmask, mask_val);
-> > > > >
-> > > > >         if (force)
-> > > > > -               cpu = cpumask_first(&amask);
-> > > > > +               cpumask_copy(&amask, mask_val);
-> > > > >         else
-> > > > > -               cpu = cpumask_any_and(&amask, cpu_online_mask);
-> > > > > -
-> > > > > -       if (cpu >= nr_cpu_ids)
-> > > > > -               return -EINVAL;
-> > > > > +               cpumask_and(&amask, &amask, cpu_online_mask);
-> > > > >
-> > > > >         plic_irq_toggle(&priv->lmask, d, 0);
-> > > > > -       plic_irq_toggle(cpumask_of(cpu), d, 1);
-> > > > > +       plic_irq_toggle(&amask, d, 1);
-> > > > >
-> > > > > -       irq_data_update_effective_affinity(d, cpumask_of(cpu));
-> > > > > +       irq_data_update_effective_affinity(d, &amask);
-> > > > >
-> > > > >         return IRQ_SET_MASK_OK_DONE;
-> > > > >  }
-> > > > > --
-> > > > > 2.26.1
-> > > > >
-> > > >
-> > > > I strongly oppose (NACK) this patch due to performance reasons.
-> > > >
-> > > > In PLIC, if we enable an IRQ X for N CPUs then when IRQ X occurs:
-> > > > 1) All N CPUs will take interrupt
-> > > > 2) All N CPUs will try to read PLIC CLAIM register
-> > > > 3) Only one of the CPUs will see IRQ X using the CLAIM register
-> > > > but other N - 1 CPUs will see no interrupt and return back to what
-> > > > they were doing. In other words, N - 1 CPUs will just waste CPU
-> > > > every time IRQ X occurs.
-> > > >
-> > > > Example1, one Application doing heavy network traffic will
-> > > > degrade performance of other applications because with every
-> > > > network RX/TX interrupt N-1 CPUs will waste CPU trying to
-> > > > process network interrupt.
-> > > >
-> > > > Example1, one Application doing heavy MMC/SD traffic will
-> > > > degrade performance of other applications because with every
-> > > > SPI read/write interrupt N-1 CPUs will waste CPU trying to
-> > > > process it.
-> > > >
-> > > > In fact, the current PLIC approach is actually a performance
-> > > > optimization. This implementation also works fine with in-kernel
-> > > > load-balancer and user space load balancer.
-> > > >
-> > >
-> > > Yes, it's exactly, I know what you pointed out. But the idea of this
-> > > patch is just providing a way that users could enable other cores if
-> > > they wanted, it could still enable only one core by this change. The
-> > > purpose here is thinking of flexible use, rather than limitation.
-> > > Maybe it would be a happy medium that we make the default case enable
-> > > only one core? It is a good open discussion.
-> >
-> > Making the default case as enable only one core is just a work-around.
-> >
-> > As-per my understanding, if we set affinity mask of N CPUs for IRQ X
-> > then it does not mean all N CPUs should receive IRQ X rather it means
-> > that exactly one of the N CPUs will receive IRQ X and the IRQ receiving
-> > CPU will be fixed (reflected by effective affinity returned by the driver).
->
-> is there a case that we only bundle the IRQ to CPU0, but CPU0 is more
-> much busy than other CPUs, and it would be better if another CPU could
-> take the IRQ?
+> These patches do not allow saving/restoring this hidden register.
+> However, this should be necessary in order to migrate the virtual
+> machine.  The simplest way to plumb this is through a KVM-specific MSR
+> in arch/x86/include/uapi/asm/kvm_para.h.  This MSR should only be
+> accessible to userspace, i.e. only if msr_info->host_initiated.
+Thanks for raising the issue!
+I checked SDM again, yes, it's neccessary to save the current SSP for
+migration case, I'll follow your advice to add it as custom MSR.
+ 
+> Testing CET in the state-test selftest is a bit hard because you have to
+> set up S_CET and the shadow stack, but it would be great to have a
+> separate test similar to tools/testing/selftests/x86_64/smm_test.  It's
+> not an absolute requirement for merging, but if you can put it on your
+> todo list it would be better.
+> 
+What's the purpose of the selftest? Is it just for Shadow Stack SSP
+state transitions in various cases? e.g., L0 SSP<--->L3 SSP,
+L0 SSP1<--->L0 SSP2? We now have the KVM unit-test for CET functionalities,
+i.e., Shadow Stack and Indirect Branch Tracking for user-mode, I can put the
+state test app into the todo list as current patchset is mainly for user-mode
+protection, the supervisor-mode CET protection is the next step.
 
-This is a common problem across architectures.
-
-To tackle this, we typically run irqbalance daemon in user-space which will
-change IRQ affinity based on CPU load.
-
-Refer, https://linux.die.net/man/1/irqbalance
-
->
-> >
-> > If we ignore above semantics and still provide a mechanism to target
-> > IRQ X to N CPUs then most likely someone will try and run into
-> > performance issues.
-> >
-> > Please don't go this path. The performance impact in case of Guest/VM
-> > is even worst because PLIC is trap-n-emulated by hypervisors as MMIO
-> > device.
->
-> OK, I won't persist in that, just wanna figure out the situation.
->
-> >
-> > Regards,
-> > Anup
-
-Regards,
-Anup
+> Thanks,
+> 
+> Paolo
