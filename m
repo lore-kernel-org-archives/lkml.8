@@ -5,185 +5,126 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
 	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F63C5519A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 18:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFED5C55199
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 18:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6EFE20700
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 18:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABF6C20700
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 18:37:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726429AbgDZSgq (ORCPT
+        id S1726512AbgDZShK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 14:36:46 -0400
-Received: from mail-co1nam11olkn2035.outbound.protection.outlook.com ([40.92.18.35]:10112
+        Sun, 26 Apr 2020 14:37:10 -0400
+Received: from mail-co1nam11olkn2103.outbound.protection.outlook.com ([40.92.18.103]:10179
         "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726398AbgDZSgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 14:36:41 -0400
+        id S1726345AbgDZSgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 14:36:44 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PvqjvSQo9eYJbRnQKSyVz+lPVH/YneWv2bEKDGUh/FK1XC06u9Qmj+xwP9ShJiZvHSW0RPMK9xY/ir8qXl+SYCmrBVj80zbqMMCdwuratH2mBi2dWCs1sxQLlYrGpxGWxHYhc2646QB3D1cseV1n4S8BTM36hPub4wi9e6iXwnZtvJTE7QsnadPUqoxmWXPyGQiRQfvq+63nDvkmnWCDqsBqW4K9+O2BTGAg2rBYAp/ysQr4LbzXTjUfxK/wUA3Op/RdfbNmOdxiWg9Wu/jehfhsT1SUsHayYJ/KWc1iZ4zMRY7yKojUWdOl9jk8JCbBuyRNlDoeVjHpuQFisvTHYg==
+ b=cXFxn/GC6iCA597b9HQGWV/5rTZ0OJo4QhhVa2GNKFzjIzts1ltVoqXWtBDr2BFKozn6h3ijAZdjugq8OEarHvLt7YDBxzIs1PtaBUSOvLEUfPRhXNyNNferANYb5WfPi0j5rSxobTx6JMDDBcd7oqU5vW/LBQGcfYPKqwtfiKAhceIoWzS5DCFh2dNQC/L38T0nEFR6qsZGbAMH/PVvndCi/76VTu/TEix5TryHv7PP62DlYnAO+zZWpwsHo2Uhk7E/dN8MtDty81CxVkcPx1Kv0XUdaXCe7XZKxhWmid1heVLZ+4tAFvcF6hpJQ8OyPsrpna4AJam0xntKVqc6sQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3ANvzOSC6QBgJ3h9QyuwoRjD/dFEnablZURsNl5Ry/Q=;
- b=JzgV5ee8298hARcMEBBxNlkmfckXj+DU8ljumAsnnWLMJywVbdUmNClHVxTFPf0geY+Lf/EcvA+G+jmAnNXMdOOmFLfp0D9Zyfo1WxS3NG90L5j4OyMsL5f8toGLH8Z2/4AjEfV3iPQfGljnRqXPXywCIq6L8418bv20Nh8V+zfLpCMBqbqM2Ad1gNJwgWGWc/OTNyF26bS5tkSAF/RkPKv41bDwFWjaeRXjWPZeqcrQNnV7xlUuYO5uKCrPXtEpASJgrPvFcuQ9v8SjgMGCnSu50nt6eP4yfY8NljhVcBQtgXA6XKPiBbwrrKWjDhthttPkuZuTlAADhFEFM/R4aQ==
+ bh=p6zvREwrSfcQ2mTsahshIeEGoLaFDehzGGiKa1r+zvY=;
+ b=Qrmq1WN9LbG41Fm2Xm93BGbF/Yz+FkZQUZT8PCaKvkFJmpM5h6FyiJo0yX3icbYQ8FWLACU6GLwO2CB8InxeqE9nLao1+RYOECAj1uXLdFYNS5r3TSPYJB9cxbVuZU303lXPCQY5vy+386ot/wkFyBlJje0liD/bwByb4xUHTnHEWh2Jyjv12vESlRZIjJDwM/HcEQ0cOVa+LYq/tfb9X2tuxy0KaoYQzZ3RcDv1YIemsAyGPM29K+hPDPsKglHuFX9qnm9LIWrYMxT8NM5B1170CfqN831tkT2V4s5zltbhLqR2HpYOdkRuvvHOeBc8atg1yg7BqVlXE/Wv/KdRmg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
  header.d=live.ca; arc=none
 Received: from CO1NAM11FT036.eop-nam11.prod.protection.outlook.com
- (2a01:111:e400:3861::44) by
- CO1NAM11HT181.eop-nam11.prod.protection.outlook.com (2a01:111:e400:3861::187)
+ (2a01:111:e400:3861::53) by
+ CO1NAM11HT028.eop-nam11.prod.protection.outlook.com (2a01:111:e400:3861::249)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.15; Sun, 26 Apr
- 2020 18:36:39 +0000
+ 2020 18:36:42 +0000
 Received: from BN6PR04MB0660.namprd04.prod.outlook.com
  (2a01:111:e400:3861::41) by CO1NAM11FT036.mail.protection.outlook.com
  (2a01:111:e400:3861::124) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.15 via Frontend
- Transport; Sun, 26 Apr 2020 18:36:39 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:4034047005717F4C81398863669A381DADEF24AE78B70DF6F03E6C1B3BB9044B;UpperCasedChecksum:E332E393AF75C0DE442CEDA33790EFF753C373611BD052E64E8DB0F9E72704B4;SizeAsReceived:9048;Count:50
+ Transport; Sun, 26 Apr 2020 18:36:42 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:C30222A728FCB00F506623A3DA3398881AD914B8E41EB9698F63970A0F4CB6C9;UpperCasedChecksum:F5B3EDDC3FDB3E8DCAB7D9F326048977CF029D0D3A93BD84B6DED6389AD0976E;SizeAsReceived:7807;Count:50
 Received: from BN6PR04MB0660.namprd04.prod.outlook.com
  ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
  ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2937.020; Sun, 26 Apr 2020
- 18:36:39 +0000
+ 18:36:42 +0000
 From:   Jonathan Bakker <xc-racer2@live.ca>
 To:     kgene@kernel.org, krzk@kernel.org, robh+dt@kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        Jonathan Bakker <xc-racer2@live.ca>
-Subject: [PATCH 07/13] arm: dts: s5pv210: galaxys: Add si470x fmradio
-Date:   Sun, 26 Apr 2020 11:35:58 -0700
-Message-ID: <BN6PR04MB0660205C8F173BF98B4D0DC1A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+Cc:     Jonathan Bakker <xc-racer2@live.ca>
+Subject: [PATCH 09/13] arm: dts: s5pv210: Add an ADC node
+Date:   Sun, 26 Apr 2020 11:36:00 -0700
+Message-ID: <BN6PR04MB0660AAB00F5D36E2FEE22DE8A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200426183604.28494-1-xc-racer2@live.ca>
 References: <20200426183604.28494-1-xc-racer2@live.ca>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 X-ClientProxiedBy: CO2PR05CA0096.namprd05.prod.outlook.com
  (2603:10b6:104:1::22) To BN6PR04MB0660.namprd04.prod.outlook.com
  (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <20200426183604.28494-8-xc-racer2@live.ca>
+X-Microsoft-Original-Message-ID: <20200426183604.28494-10-xc-racer2@live.ca>
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from jon-hp-6570b.telus (2001:569:fb67:7300:9f89:4b96:de0b:cd14) by CO2PR05CA0096.namprd05.prod.outlook.com (2603:10b6:104:1::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.7 via Frontend Transport; Sun, 26 Apr 2020 18:36:37 +0000
+Received: from jon-hp-6570b.telus (2001:569:fb67:7300:9f89:4b96:de0b:cd14) by CO2PR05CA0096.namprd05.prod.outlook.com (2603:10b6:104:1::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.7 via Frontend Transport; Sun, 26 Apr 2020 18:36:41 +0000
 X-Mailer: git-send-email 2.20.1
-X-Microsoft-Original-Message-ID: <20200426183604.28494-8-xc-racer2@live.ca>
-X-TMN:  [7JOn8Uv2lYGIafiOEz7enJgYbAB8vFX0wgp8CpG+glcKUP7lRvolmQTR72Xnh63E]
+X-Microsoft-Original-Message-ID: <20200426183604.28494-10-xc-racer2@live.ca>
+X-TMN:  [VRDXn4FcQRU24MAOdrQJp/j/s3d34NttbYCH/Lx7mvI4i8d6RGpOMObhLvhjDZMK]
 X-MS-PublicTrafficType: Email
 X-IncomingHeaderCount: 50
 X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: ecc70036-b410-49b1-e922-08d7ea10c1c2
-X-MS-TrafficTypeDiagnostic: CO1NAM11HT181:
+X-MS-Office365-Filtering-Correlation-Id: 65775caf-f194-4dba-c60d-08d7ea10c3b0
+X-MS-TrafficTypeDiagnostic: CO1NAM11HT028:
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: htBOo5DI70WIXqNQAbGASwvQOVlFlA9rGHxiDIh9kTdiNPsZfxUXBGpSbJnULAixd9xaJ3z1fFLmiHHOe6qb4iT1DBSUdaK3MATGCYynIdcM1UDcKiELFgULRAEXGIlmwIK7Izi13GrEmt53Z+yl9syVf+vBv+6Gnd3oJa4LUFchJsdZ7YjNvDEi3BJhvp5IMR48KvtrTO6ZgQrr48NbGA==
+X-Microsoft-Antispam-Message-Info: Z8R/x7pWGVeNW9b5eTTPvbgtbMgTEqe67OBOuTYKvAXEMStsCP1yJwttKeKqgysfe0OxhsM+mbZeF7/4mrNy6ceW24170Mn1o4xKE5U62PsYcaxj5umq/l0Wzgw1p2TRQJ7nlhWmxXEsgPrfj4iHIRNpRP0FRzo2MAgU/7hc91cWevr0+ntVmibRpuqXh73wqV7O4j/xWKznC8F0CyvNQg==
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: +8XU+TalfQQ99O3Kn5SgSfEtBScItEvMXVHXv/z65E3aK+5KCqwZi3eN5NzuLP6Q58hu1iZo9tRRmlXAQrS7G7fWzZuiTx/7zmmbm7DZbD91t6wQ/HvIeUplfjRc9eA3lYzSZkyizb1LQEkA44gD/Veeh6VHw2unf0zyJzb+wnr6iE530WvAo2l50oGzw0amYqDDHK6iPmFcGpFtiJFnZA==
+X-MS-Exchange-AntiSpam-MessageData: Zwj/PmcbmHDRG1oQdW9itFAQ9lB0vrSko8q/VxQ/HuXCUC4um487dCISTFkDClb+1puuqGH4iabC3/acpXukJhrsMoXXrGRajrPgWXjMhTtPoT2Sjr1MNLMqxWTOG0tkDuWvurlMQoZ5a8Ue+vVv6Qyn26+ovILtn+2HFYnopVANHNR3cin8H4eEGBANC4HWXjL8lVZ0pbjbiKTgQJR+zg==
 X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ecc70036-b410-49b1-e922-08d7ea10c1c2
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Apr 2020 18:36:39.2794
+X-MS-Exchange-CrossTenant-Network-Message-Id: 65775caf-f194-4dba-c60d-08d7ea10c3b0
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Apr 2020 18:36:42.5760
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1NAM11HT181
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1NAM11HT028
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+The exynos-adc driver now supports the S5PV210, so add the DT
+node so that devices can use it.
 
-Add support for the Silicon Labs si4709 fmradio, which can be found
-on Galaxy S GT-i9000 (but not most other Galaxy S variants).
-
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
 Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
 ---
- arch/arm/boot/dts/s5pv210-aries.dtsi  |  2 +-
- arch/arm/boot/dts/s5pv210-galaxys.dts | 47 +++++++++++++++++++++++++++
- 2 files changed, 48 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/s5pv210.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm/boot/dts/s5pv210-aries.dtsi b/arch/arm/boot/dts/s5pv210-aries.dtsi
-index ef966d13d83d..12575d64aa06 100644
---- a/arch/arm/boot/dts/s5pv210-aries.dtsi
-+++ b/arch/arm/boot/dts/s5pv210-aries.dtsi
-@@ -11,7 +11,7 @@
- / {
- 	compatible = "samsung,aries", "samsung,s5pv210";
- 
--	aliases {
-+	aliases: aliases {
- 		i2c4 = &i2c_sound;
- 		i2c5 = &i2c_accel;
- 		i2c6 = &i2c_pmic;
-diff --git a/arch/arm/boot/dts/s5pv210-galaxys.dts b/arch/arm/boot/dts/s5pv210-galaxys.dts
-index 2eff1e66a2a5..f5c13eb8ae71 100644
---- a/arch/arm/boot/dts/s5pv210-galaxys.dts
-+++ b/arch/arm/boot/dts/s5pv210-galaxys.dts
-@@ -49,12 +49,59 @@
- 			wakeup-source;
+diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
+index 2ad642f51fd9..b3b6ad2889f9 100644
+--- a/arch/arm/boot/dts/s5pv210.dtsi
++++ b/arch/arm/boot/dts/s5pv210.dtsi
+@@ -159,6 +159,18 @@
+ 			};
  		};
- 	};
-+
-+	i2c_fmradio: i2c-gpio-8 {
-+		compatible = "i2c-gpio";
-+		sda-gpios = <&gpd1 2 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+		scl-gpios = <&gpd1 3 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+		i2c-gpio,delay-us = <2>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&fm_i2c_pins>;
-+
-+		fmradio@10 {
-+			compatible = "silabs,si470x";
-+			reg = <0x10>;
-+			interrupt-parent = <&gpj2>;
-+			interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
-+			reset-gpios = <&gpj2 5 GPIO_ACTIVE_HIGH>;
-+
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&fm_irq &fm_rst>;
+ 
++		adc: adc@126c0000 {
++			compatible = "samsung,s5pv210-adc";
++			reg = <0xe1700000 0x1000>;
++			interrupt-parent = <&vic2>;
++			interrupts = <23>, <24>;
++			clocks = <&clocks CLK_TSADC>;
++			clock-names = "adc";
++			#io-channel-cells = <1>;
++			io-channel-ranges;
++			status = "disabled";
 +		};
-+	};
-+};
 +
-+&aliases {
-+	i2c8 = &i2c_fmradio;
- };
- 
- &pinctrl0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sleep_cfg>;
- 
-+	fm_i2c_pins: fm-i2c-pins {
-+		samsung,pins = "gpd1-2", "gpd1-3";
-+		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
-+	};
-+
-+	fm_irq: fm-irq {
-+		samsung,pins = "gpj2-4";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_INPUT>;
-+		samsung,pin-pud = <S3C64XX_PIN_PULL_UP>;
-+		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
-+	};
-+
-+	fm_rst: fm-rst {
-+		samsung,pins = "gpj2-5";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-+		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
-+	};
-+
- 	massmemory_en: massmemory-en {
- 		samsung,pins = "gpj2-7";
- 		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+ 		spi0: spi@e1300000 {
+ 			compatible = "samsung,s5pv210-spi";
+ 			reg = <0xe1300000 0x1000>;
 -- 
 2.20.1
 
