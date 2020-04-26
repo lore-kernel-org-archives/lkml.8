@@ -2,160 +2,338 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D631C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B599FC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3750120700
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:41:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D57B2071E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:45:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="WqJDCwK0";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="WqJDCwK0"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="VfXw3pMr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbgDZFej (ORCPT
+        id S1726154AbgDZFpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 01:34:39 -0400
-Received: from mail-eopbgr60065.outbound.protection.outlook.com ([40.107.6.65]:26894
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725765AbgDZFei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 01:34:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zT8xM7TuDYqVUNcAOsMT5tS9oDCeWHXj2KiKZYrJ4Ns=;
- b=WqJDCwK0cnrItllZf8uVmzKiW/oJfIr1jQ3QBaw0PFVPO2QtwKrO9eo8yNtUmY55LuMzB5TACmWJ1FYHzQiXzusXfF/P/5O1JvURAkrErFKmr93h4yhQbF7AgQBedWK0eVgasjdLI9sQEANmYs4ZY07ZWt4kgytyXCNdRGJr1Mo=
-Received: from AM4PR0202CA0004.eurprd02.prod.outlook.com
- (2603:10a6:200:89::14) by AM4PR0802MB2371.eurprd08.prod.outlook.com
- (2603:10a6:200:5d::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Sun, 26 Apr
- 2020 05:34:34 +0000
-Received: from AM5EUR03FT033.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:200:89:cafe::42) by AM4PR0202CA0004.outlook.office365.com
- (2603:10a6:200:89::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend
- Transport; Sun, 26 Apr 2020 05:34:34 +0000
-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
- action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM5EUR03FT033.mail.protection.outlook.com (10.152.16.99) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2937.19 via Frontend Transport; Sun, 26 Apr 2020 05:34:34 +0000
-Received: ("Tessian outbound 11763d234d54:v54"); Sun, 26 Apr 2020 05:34:34 +0000
-X-CR-MTA-TID: 64aa7808
-Received: from e29db73a4fc4.2
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id C91A35D0-4721-4EF1-A49A-6D38629E106B.1;
-        Sun, 26 Apr 2020 05:34:29 +0000
-Received: from EUR01-HE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id e29db73a4fc4.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Sun, 26 Apr 2020 05:34:29 +0000
+        Sun, 26 Apr 2020 01:45:10 -0400
+Received: from mga03.intel.com ([134.134.136.65]:32061 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725765AbgDZFpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 01:45:09 -0400
+IronPort-SDR: ZzVLVBAN4kYaSwYR9vYBXaiRxJvx71PMHi/0gRYTEqYXBqmJniVcGjWv0ZPQW5UxtKD4Wa/hJO
+ QqkClJfcj/8Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2020 22:45:09 -0700
+IronPort-SDR: KUYlz9wjv2LdBj671xqSihojbOnn4/ZstjEKwwHCwl1R3uwZ8VLRQcMgsjuVvJgHnaKaLRxi7X
+ exLJJh7YVDeg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,318,1583222400"; 
+   d="scan'208";a="431313250"
+Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
+  by orsmga005.jf.intel.com with ESMTP; 25 Apr 2020 22:45:09 -0700
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX104.amr.corp.intel.com (10.22.225.131) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 25 Apr 2020 22:45:08 -0700
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sat, 25 Apr 2020 22:45:07 -0700
+Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Sat, 25 Apr 2020 22:45:07 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.103)
+ by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 25 Apr 2020 22:45:06 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AGaUDnSfBdDJbKhAHAcrjxOGOc6uj680BiRTG9eU1rmYYWQ3DE0OzdXfIecUB5cO2Xqo+saVpCNHs2+LZ8nVEUwtzsg2kUWPri08oHVhboScg0tc197VkJL9weftJRaav+MIpcLi8Y+sN8KDBrRVRKze3OVAxQGyV42T0lEm3YPSicDWyFGCscHWhf7NhJ9SW2n5m29Xn+19Uz527Hry1Z5+0J8yNcVO8ZQsPu46cax9xovjnn1tNhN+aVRDg6RqvRuVtf/aSnKJTSzEAON8Qcx4cqRK4goaVloRRW2GTvKeZ5gZr4ogQq2MPUTAVUwa5p6e8ksitFJJxBMz6Y+g6w==
+ b=ETlmeNQhyg8Q91MHSky8ZqzNNwzcMDQ6k785sVg2kSJ37ulHZ/+ZWBmoWZSWFhrh0EALNvPXRXI7XbVgKCUDpyXxL4MPa322F2VY6iuvR5LU0wfxhHvPpwontE+9kk9fEDsiHbsvzx5B6xjNbjN2Or+3fViH8B7z6BaAimkz+zu7oOWKSIYjOQ+WbZZgNDB/ABY3WqSw6K/bzm5IySprzd86cq85CAlqH4CbJYw5/EEE43Gg4cH1tfkA8kFyXk96naodbFh7jDph15TxfgtglsdwM3bSo9JApfSH2oKIG4VMVfhFGO6xuycizEsLQr/agOiEQKQNQ5I1mMf1OcWQSQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zT8xM7TuDYqVUNcAOsMT5tS9oDCeWHXj2KiKZYrJ4Ns=;
- b=l/LeFP7KAsgz87CfvU+T6gY2R3Nyp4b9WVxhgNhRDNR4ckWSPuX+3p2OIjLa2Fl1JQxhxXDv3mzklk3YPhS6O8UR7ClHnpWuCtr7voxOqjjS9XjQzZlcspOfi0WAfk57dJkNgq3PwkbJHQhokyWG5/s0XRKRYDwj/dMj5zOnnMc9k60T4bDROG7sUh8hSQNKg5ltccN/MVEkKV+vB3nzrpltuC218MC79PXdZTUIrUvzM8CPbHb75bRY2IZuiXaYgYovXs8bAN3VHdvBo7RgzclGP/2Y7rFpPzQLcmRJd89Cgm8PogdZDp5QI2QzT54ep1xJQD6GIpNakkWF4jJbXg==
+ bh=jUTlwl2D3Vud9WCUQM4KMXhP+GL4anWXe5T1lnA3tBA=;
+ b=QpMjJ/byv3rzTZcK/7FEDZ2+2xhIRiVmonV3lOEyf1aWeeYKca46SS3iij1XD/myEjKQJF7FNIOs2H4+PAMSm6br8bP101q+3e2l/dpEceHc9VYiS9/MLnTWIQbSKKDZzpjlWdekd8nbs+azpyGp0nAeZOo1ajKPaCW/EAmzqU3N900gui7VtRlbQYmqMCc9obPDnNA9EiXDpKEjQAvui7bPEbxX2ofp+/7ieK1H0WafjUh+pjbktIgQw8niVXXoymWFHDcsygnKRBpJBQFQtZtvojp9NxmshQGtDICltD/tRuKg7tUbBx3naybZvN8kv8Zw+fmEanfvLWNwoDT3Ow==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zT8xM7TuDYqVUNcAOsMT5tS9oDCeWHXj2KiKZYrJ4Ns=;
- b=WqJDCwK0cnrItllZf8uVmzKiW/oJfIr1jQ3QBaw0PFVPO2QtwKrO9eo8yNtUmY55LuMzB5TACmWJ1FYHzQiXzusXfF/P/5O1JvURAkrErFKmr93h4yhQbF7AgQBedWK0eVgasjdLI9sQEANmYs4ZY07ZWt4kgytyXCNdRGJr1Mo=
-Received: from DB6PR0802MB2533.eurprd08.prod.outlook.com (2603:10a6:4:a0::12)
- by DB6PR0802MB2456.eurprd08.prod.outlook.com (2603:10a6:4:a1::8) with
+ bh=jUTlwl2D3Vud9WCUQM4KMXhP+GL4anWXe5T1lnA3tBA=;
+ b=VfXw3pMr8euyUlsQQ3mFgikbhoNw/mD0DHZhgXkgJN6ha7MoyDHUbxcbslGkr5cYcoC0Zh/Yl3hnuNuompiJeHUtjwmJB3lDDeUMT+6Tnr3DOyCo91hczVRN0VTNIXPVul5HGB72PD2SDsvbPRYJWQAnwvmLjrz5Q2ycpBJ62BI=
+Received: from CH2PR11MB4198.namprd11.prod.outlook.com (2603:10b6:610:3b::31)
+ by CH2PR11MB4360.namprd11.prod.outlook.com (2603:10b6:610:3f::25) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Sun, 26 Apr
- 2020 05:34:27 +0000
-Received: from DB6PR0802MB2533.eurprd08.prod.outlook.com
- ([fe80::b959:1879:c050:3117]) by DB6PR0802MB2533.eurprd08.prod.outlook.com
- ([fe80::b959:1879:c050:3117%8]) with mapi id 15.20.2937.020; Sun, 26 Apr 2020
- 05:34:26 +0000
-From:   Hadar Gat <Hadar.Gat@arm.com>
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     kernel list <linux-kernel@vger.kernel.org>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        Ofir Drang <Ofir.Drang@arm.com>,
-        Gilad Ben Yossef <Gilad.BenYossef@arm.com>, nd <nd@arm.com>
-Subject: RE: Arm CryptoCell driver -- default Y, even on machines where it is
- obviously useless
-Thread-Topic: Arm CryptoCell driver -- default Y, even on machines where it is
- obviously useless
-Thread-Index: AQHWFW48sqdeVFxZnkOUS/sdJEIQwah/VA9QgAsPKACAAIpqEA==
-Date:   Sun, 26 Apr 2020 05:34:26 +0000
-Message-ID: <DB6PR0802MB25335509FA5B8EF19736A96AE9AE0@DB6PR0802MB2533.eurprd08.prod.outlook.com>
-References: <20200418104343.GA5132@amd>
- <DB6PR0802MB2533670AFC1473E5C5EDAD28E9D60@DB6PR0802MB2533.eurprd08.prod.outlook.com>
- <20200425211818.GB27781@amd>
-In-Reply-To: <20200425211818.GB27781@amd>
+ 2020 05:45:05 +0000
+Received: from CH2PR11MB4198.namprd11.prod.outlook.com
+ ([fe80::e5c8:f6c6:53d:3d99]) by CH2PR11MB4198.namprd11.prod.outlook.com
+ ([fe80::e5c8:f6c6:53d:3d99%3]) with mapi id 15.20.2937.020; Sun, 26 Apr 2020
+ 05:45:05 +0000
+From:   "Wang, Rander" <rander.wang@intel.com>
+To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        "Kale, Sanyog R" <sanyog.r.kale@intel.com>,
+        "Pierre-Louis Bossart" <pierre-louis.bossart@linux.intel.com>
+CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] soundwire: intel: Remove unused function
+Thread-Topic: [PATCH v2] soundwire: intel: Remove unused function
+Thread-Index: AQHWG11EBZG50fJ2wkiGOSAo6dQ2RKiK4tbA
+Date:   Sun, 26 Apr 2020 05:45:04 +0000
+Message-ID: <CH2PR11MB4198D1B209828E59B1AF10DFF0AE0@CH2PR11MB4198.namprd11.prod.outlook.com>
+References: <20200425235448.3946-1-sudipm.mukherjee@gmail.com>
+In-Reply-To: <20200425235448.3946-1-sudipm.mukherjee@gmail.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-ts-tracking-id: a6f58350-9a03-4f83-9c20-2a60193ac274.1
-x-checkrecipientchecked: true
-Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=Hadar.Gat@arm.com; 
-x-originating-ip: [84.109.179.203]
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=rander.wang@intel.com; 
+x-originating-ip: [134.191.221.114]
 x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: b7856cd2-d71c-46a4-73d4-08d7e9a380ad
-x-ms-traffictypediagnostic: DB6PR0802MB2456:|DB6PR0802MB2456:|AM4PR0802MB2371:
+x-ms-office365-filtering-correlation-id: 4ea2e5c2-a0bd-4b80-7a46-08d7e9a4f890
+x-ms-traffictypediagnostic: CH2PR11MB4360:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <AM4PR0802MB2371FE60C47E1F9C9659E497E9AE0@AM4PR0802MB2371.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-nodisclaimer: true
-x-ms-oob-tlc-oobclassifiers: OLM:1751;OLM:1751;
+x-microsoft-antispam-prvs: <CH2PR11MB436002C0EC982673D908083EF0AE0@CH2PR11MB4360.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
 x-forefront-prvs: 03853D523D
-X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0802MB2533.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(366004)(136003)(39860400002)(346002)(478600001)(33656002)(316002)(26005)(71200400001)(4744005)(7696005)(186003)(76116006)(64756008)(66946007)(54906003)(86362001)(66446008)(66556008)(66476007)(52536014)(6506007)(55016002)(6916009)(9686003)(4326008)(5660300002)(2906002)(8676002)(81156014)(8936002);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: RMnagF46PGgGPp2ovnWTIgZJbVIwXM9crMvpu5xbPhcpHpCZAtbd429m+XEQYtFwUEVXu0Re7wf0QzGTe7lOYa4rIu3RLH9+7YfhXSQTNKlUVCAUuoa/7a83k3PW9OwAgx+S4fBfOHcMR1XcFvTUI4lBpadRWXy6OiFnD/04ty7qDcFK10J5wMVp1pZj3bt0tS/16fb879Sa1lV4uswi7D14eaQsXyFy7HAWKzTAxGfLlBCeSEsj2byI8RC7VWtAjiiiThbMFBnWr3rIXMvxgpN1HBJSMnJDoXD9Hux6wrPnGHBqAC0yRSA2iS91CGhDDRf+NoN92gbJfrMIS3zC3QkS0lBplYciyrswQerg+mbO6qstrwh+N5yGNZJvqiJjtDcPn5ioUkMHg6ouaiEZIcIRKZeb++mGuDo+couG7rwWLC7jxxQSKyqEdlC8bDeI
-x-ms-exchange-antispam-messagedata: 95PSBiA2/KLfHGog58e4uChD3s8TY7nUO4uEhGyQrAYusLvPFEUcA8jy45pHvlRbF35/a8niMMU8a/8U2muUA8T9DqEryppwtRu1+E5kxtI1A2YVuAg+y5mZTmLUpqevjCQoeClsxh9K1RDq5ijZTlGMG2CcVNk5x3Q+xMHnQWLtrfmbfrXkrYFnBGvZM7ztCYtaeJVwewSX3uGY1/W8nv1tPFWQaB6iDaZiwyFbLEzhqdLyYUv7Y7kOxYDDpBq+tRn7bBLuc1a4Rsy5u++5hte1mC7aLYl/15w3MtxlLqZ0kn96szP/NVAjE176cpwP0c3Nwl4OSBIYi9U6hCEc4k1zj2cGKO+GoLiq6uFOVm7HIaQOjiFQnczOYqdj1PLNPtt01GWFaTrYjG2og2OkzYXsaaku5UGRuDm8lFbDfnOROx78NJXHmoRnt97hmSmjV14Oy6vHlV73lpzTBcn0h0dUygB/PSdD+CKGojb8o+zYUNo1fCMZUxsXvNYWbhSrXHsYGmGk0DGpLGNuPQc8aeLOEph6eBkHokBr7Cva+uu89KZ8LEhoxTddsn3IDZdBLApK/IqwPSt0aG05XlpDYkl3s3LJwZWfexJNeWtp1nfr3Ia5qz8TQ5knk0tC5N/EVURRjwfGWJdENhoFn84BUF8feRcDRQ//rGarPBT+VR8dtULqcmuWd2hsCNPMdJ2Qwnbrh2laCN5Vb9iOFvq+8hKar3QCn9Mme8sI2WXJavQmkoqrVFx1zX34cfa2MLMK5n6nmy48khvOgJWylJ7s0now8+ID/4wTOtWfuF+DkS4=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR11MB4198.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(136003)(376002)(346002)(396003)(39850400004)(52536014)(26005)(4326008)(316002)(6506007)(33656002)(55016002)(9686003)(110136005)(54906003)(186003)(7696005)(8936002)(86362001)(5660300002)(66946007)(66476007)(66446008)(478600001)(76116006)(53546011)(66556008)(64756008)(8676002)(71200400001)(2906002)(81156014);DIR:OUT;SFP:1102;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Mpskl7hAVNJpV5i+LG89V4cvFz90ExB1i+2KTo0dWNu2bxnCniobCijO703bhk0WzkK2CcDGH6H+JwxIpxrijP4TMy7N5opTlH+GrXblvVlIzA+S5ZQVwmwq9TGLQGGFLLcf0C+ijRUXP30YK57lK2sYbsSwZZwTis8dj8jFtZnyRQ8g15uLDLKPOwLO3URNZqLNxT/KtbntNWazh3lqBhqlMAOCV4mQfa1eF8tIoAlhLBMo1v5zEjnnhWiAMXv9OYks6OpXXZxGnL3Vp+e9HIez4c0WEz/SXjkYgqoeQL8+8V1anKogb7EE9JVqX8b/X9ljRLRf1ck5GDTE0SHnZTvXxu8K1IOGc2Zyd0oMH/PJwCo5A+rtiEqmiBk29MBOnB0AevmFGb55OXoCOPA+pkoYvn7tcni/o/3YAe/+5/KZDoiZKhzRfQ1WwqscEj6o
+x-ms-exchange-antispam-messagedata: H+FVhPdHSzhRl7agx66EHc/yaF/RVz5N1v6cT63JWGoPNFo0A+/wysuEYFWFa96E9U77FKRDxcCSSOO/TxeV5qMANRloaRIks5MXJys/GiFyBK/Gh2AMoRx2x6fPiPVelPffSzicZcct+cKXbVSYhVEmEJwHAx1Aydci6Vpl2elCXoigCoHD+ao/zTE10KA6eLLrmHfHEg0h2MvzuUVXan0O3jKiPH8p+V0vw9tMteSZoWB3W0rW5We9XHD/WRuNqdNDy3XZI17u3LGn005gmZNlEKEGBNUardZ1saE+Hwi8+mRCSScIARY4Y1x6lrK4XGHKSjCktzIxrE6DuqCQis7azhIj0/A8LtWVwqPiItRVd2KS1hMaxSZgeczp5qIkYcTOSSDRHQdZmgaYCIRKdPiknyeuKVdPtDLuqAZyQ4/P8ii/bviRYQyu99c0pym7FxdtN2/U6FcazpHP8hdmTGiAn0dM6NmRsAP388ehG7b64YwNOKA+23LV8UcAyRhW73fVL0zJkv27rfTs32jULMxezDorv1+XwHrugELWaPrqHLYafipFEtcp01Nn5Gc6mpohIIghckZSPHR4sIPtm5U2nCFXJbyn3SlHt1UIcoUoU3IDzhRECxXua/Gt0WeoDbOZhB8+6B9XON21uMRzvNN9maJ7UNgzL7gNX6GpQE477xPKbnt6rrhkLlsrHiPZWp/3wnuCaisirIHRuyBLJ/KPYN8dRdxJfN3ObZOjV3Tu00mfsnlh7sUsAa5Wv1H8PB9qrPP2/EQ8Nub8cpHdosc4oi/9Hzcpx+GR6ayWn9AO9FDn5jybsIG8+wqSw01f
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0802MB2456
-Original-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Hadar.Gat@arm.com; 
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT033.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(39850400004)(376002)(396003)(46966005)(6862004)(81166007)(36906005)(186003)(52536014)(86362001)(4744005)(316002)(7696005)(5660300002)(70586007)(4326008)(6506007)(336012)(82310400002)(478600001)(26005)(2906002)(70206006)(54906003)(47076004)(81156014)(33656002)(9686003)(8936002)(55016002)(82740400003)(356005)(8676002);DIR:OUT;SFP:1101;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: b318a9fe-75e2-4e38-971d-08d7e9a37c1c
-X-Forefront-PRVS: 03853D523D
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rtL2N9Db14Ff6ded7b8TetEVpHRMaIKpB+32D0U/x3Jt8L/tt2K1nyyy0Te8LnxV/Qs4yg2S5ilBfTGAOx2HKxH7d09nm/PsmmEPUub1hT/4tGHzEy5716892DOBr22WONcBEfdHAZRyV1XJ0NL8yZfadnhnrxyqi8HDFDui8n3mBo6ui5t8MbOVYUfyTsyXhCx5kDpzTtFihFzWGcjCYUqwXk2x66y+GYIPPW7K/NAS1pS4ht8NujfFQkzGRBQBclOXg+L+vAHJ6SurSuQmAYj6fMP+t7ArvWyyJxqytOPT2aKjN4kqB0141YIGGUaSO6rwGwI1KY/9IdpH38wXlhEJ4xXolU5jsJNlsrXw9Fg5lm+7Ni37RixXZTyBkviwQkMCFqk6F/7ez82FX3kzLA1N6rfLC8JjkeepTMkp/k1YzoPZJfp1mYt8eFq0oF7I+VLnBitMxtbKSdJB5btcOyIiSWqJLu8Jcx9bn8ic2zZYrsGM6CfMBPIpvg7jG84S/iD16kP7k30CD1P+KCXd1Q==
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Apr 2020 05:34:34.3173
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4ea2e5c2-a0bd-4b80-7a46-08d7e9a4f890
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Apr 2020 05:45:04.8591
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b7856cd2-d71c-46a4-73d4-08d7e9a380ad
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR0802MB2371
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nnJ+B+gnQ9H3uMwOiywLrv8BBVUOhhC55PVHnlDMC7hDliA0HdAYcYlrwKnVRi1rCz+Qbq1A47a6NB/R7QyyWw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR11MB4360
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFBhdmVsIE1hY2hlayA8cGF2
-ZWxAdWN3LmN6Pg0KPiBTZW50OiBTdW5kYXksIDI2IEFwcmlsIDIwMjAgMDoxOA0KPiANCj4gT24g
-U2F0IDIwMjAtMDQtMTggMjA6MzE6MDAsIEhhZGFyIEdhdCB3cm90ZToNCj4gPiBIaSBQYXZlbCwN
-Cj4gPiBJIHRoaW5rIHlvdSBnb3QgaXQgcmlnaHQuLg0KPiA+IEluZGVlZCwgQXJtIENyeXB0b0Nl
-bGwgQ0NUUk5HIGRyaXZlciBjb3VsZG4ndCBiZSB1c2VkIGFuZCBvYnZpb3VzbHkNCj4gdXNlbGVz
-cyBpZiB0aGUgQXJtIENyeXB0b0NlbGwgSFcgZG9lcyBub3QgZXhpc3QgaW4gdGhlIHN5c3RlbS4N
-Cj4gDQo+IFl1cC4uIFNvLi4gY2FuIGF1dGhvcnMgZml4IGl0IHNvbWVob3c/DQo+IA0KDQpZZXMu
-IEknbSBvbiBpdC4NCg==
+It is used by sound/soc/sof/intel/hda.c.   Please check history of alsa-dev=
+el mail list. Bard Liao is working on it.
+
+> -----Original Message-----
+> From: Alsa-devel <alsa-devel-bounces@alsa-project.org> On Behalf Of Sudip
+> Mukherjee
+> Sent: Sunday, April 26, 2020 7:55 AM
+> To: Vinod Koul <vkoul@kernel.org>; Kale, Sanyog R <sanyog.r.kale@intel.co=
+m>;
+> Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> Cc: alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org; Sudip
+> Mukherjee <sudipm.mukherjee@gmail.com>
+> Subject: [PATCH v2] soundwire: intel: Remove unused function
+>=20
+> The function sdw_intel_init() is not used anywhere, remove it for now.
+> And that makes sdw_intel_add_controller(), sdw_intel_acpi_cb() and link_m=
+ask
+> unused, so remove them as well.
+>=20
+> Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+> ---
+>  drivers/soundwire/intel_init.c | 162 -----------------------------------=
+------
+>  1 file changed, 162 deletions(-)
+>=20
+> diff --git a/drivers/soundwire/intel_init.c b/drivers/soundwire/intel_ini=
+t.c index
+> ad7053463889..d90929a5043b 100644
+> --- a/drivers/soundwire/intel_init.c
+> +++ b/drivers/soundwire/intel_init.c
+> @@ -23,10 +23,6 @@
+>  #define SDW_LINK_BASE		0x30000
+>  #define SDW_LINK_SIZE		0x10000
+>=20
+> -static int link_mask;
+> -module_param_named(sdw_link_mask, link_mask, int, 0444); -
+> MODULE_PARM_DESC(sdw_link_mask, "Intel link mask (one bit per link)");
+> -
+>  static int sdw_intel_cleanup_pdev(struct sdw_intel_ctx *ctx)  {
+>  	struct sdw_intel_link_res *link =3D ctx->links; @@ -47,164 +43,6 @@
+> static int sdw_intel_cleanup_pdev(struct sdw_intel_ctx *ctx)
+>  	return 0;
+>  }
+>=20
+> -static struct sdw_intel_ctx
+> -*sdw_intel_add_controller(struct sdw_intel_res *res) -{
+> -	struct platform_device_info pdevinfo;
+> -	struct platform_device *pdev;
+> -	struct sdw_intel_link_res *link;
+> -	struct sdw_intel_ctx *ctx;
+> -	struct acpi_device *adev;
+> -	int ret, i;
+> -	u8 count;
+> -	u32 caps;
+> -
+> -	if (acpi_bus_get_device(res->handle, &adev))
+> -		return NULL;
+> -
+> -	/* Found controller, find links supported */
+> -	count =3D 0;
+> -	ret =3D fwnode_property_read_u8_array(acpi_fwnode_handle(adev),
+> -					    "mipi-sdw-master-count", &count,
+> 1);
+> -
+> -	/* Don't fail on error, continue and use hw value */
+> -	if (ret) {
+> -		dev_err(&adev->dev,
+> -			"Failed to read mipi-sdw-master-count: %d\n", ret);
+> -		count =3D SDW_MAX_LINKS;
+> -	}
+> -
+> -	/* Check SNDWLCAP.LCOUNT */
+> -	caps =3D ioread32(res->mmio_base + SDW_SHIM_BASE +
+> SDW_SHIM_LCAP);
+> -	caps &=3D GENMASK(2, 0);
+> -
+> -	/* Check HW supported vs property value and use min of two */
+> -	count =3D min_t(u8, caps, count);
+> -
+> -	/* Check count is within bounds */
+> -	if (count > SDW_MAX_LINKS) {
+> -		dev_err(&adev->dev, "Link count %d exceeds max %d\n",
+> -			count, SDW_MAX_LINKS);
+> -		return NULL;
+> -	} else if (!count) {
+> -		dev_warn(&adev->dev, "No SoundWire links detected\n");
+> -		return NULL;
+> -	}
+> -
+> -	dev_dbg(&adev->dev, "Creating %d SDW Link devices\n", count);
+> -
+> -	ctx =3D kzalloc(sizeof(*ctx), GFP_KERNEL);
+> -	if (!ctx)
+> -		return NULL;
+> -
+> -	ctx->count =3D count;
+> -	ctx->links =3D kcalloc(ctx->count, sizeof(*ctx->links), GFP_KERNEL);
+> -	if (!ctx->links)
+> -		goto link_err;
+> -
+> -	link =3D ctx->links;
+> -
+> -	/* Create SDW Master devices */
+> -	for (i =3D 0; i < count; i++) {
+> -		if (link_mask && !(link_mask & BIT(i))) {
+> -			dev_dbg(&adev->dev,
+> -				"Link %d masked, will not be enabled\n", i);
+> -			link++;
+> -			continue;
+> -		}
+> -
+> -		link->registers =3D res->mmio_base + SDW_LINK_BASE
+> -					+ (SDW_LINK_SIZE * i);
+> -		link->shim =3D res->mmio_base + SDW_SHIM_BASE;
+> -		link->alh =3D res->mmio_base + SDW_ALH_BASE;
+> -
+> -		link->ops =3D res->ops;
+> -		link->dev =3D res->dev;
+> -
+> -		memset(&pdevinfo, 0, sizeof(pdevinfo));
+> -
+> -		pdevinfo.parent =3D res->parent;
+> -		pdevinfo.name =3D "int-sdw";
+> -		pdevinfo.id =3D i;
+> -		pdevinfo.fwnode =3D acpi_fwnode_handle(adev);
+> -
+> -		pdev =3D platform_device_register_full(&pdevinfo);
+> -		if (IS_ERR(pdev)) {
+> -			dev_err(&adev->dev,
+> -				"platform device creation failed: %ld\n",
+> -				PTR_ERR(pdev));
+> -			goto pdev_err;
+> -		}
+> -
+> -		link->pdev =3D pdev;
+> -		link++;
+> -	}
+> -
+> -	return ctx;
+> -
+> -pdev_err:
+> -	sdw_intel_cleanup_pdev(ctx);
+> -link_err:
+> -	kfree(ctx);
+> -	return NULL;
+> -}
+> -
+> -static acpi_status sdw_intel_acpi_cb(acpi_handle handle, u32 level,
+> -				     void *cdata, void **return_value)
+> -{
+> -	struct sdw_intel_res *res =3D cdata;
+> -	struct acpi_device *adev;
+> -	acpi_status status;
+> -	u64 adr;
+> -
+> -	status =3D acpi_evaluate_integer(handle, METHOD_NAME__ADR, NULL,
+> &adr);
+> -	if (ACPI_FAILURE(status))
+> -		return AE_OK; /* keep going */
+> -
+> -	if (acpi_bus_get_device(handle, &adev)) {
+> -		pr_err("%s: Couldn't find ACPI handle\n", __func__);
+> -		return AE_NOT_FOUND;
+> -	}
+> -
+> -	res->handle =3D handle;
+> -
+> -	/*
+> -	 * On some Intel platforms, multiple children of the HDAS
+> -	 * device can be found, but only one of them is the SoundWire
+> -	 * controller. The SNDW device is always exposed with
+> -	 * Name(_ADR, 0x40000000), with bits 31..28 representing the
+> -	 * SoundWire link so filter accordingly
+> -	 */
+> -	if ((adr & GENMASK(31, 28)) >> 28 !=3D SDW_LINK_TYPE)
+> -		return AE_OK; /* keep going */
+> -
+> -	/* device found, stop namespace walk */
+> -	return AE_CTRL_TERMINATE;
+> -}
+> -
+> -/**
+> - * sdw_intel_init() - SoundWire Intel init routine
+> - * @parent_handle: ACPI parent handle
+> - * @res: resource data
+> - *
+> - * This scans the namespace and creates SoundWire link controller device=
+s
+> - * based on the info queried.
+> - */
+> -static void *sdw_intel_init(acpi_handle *parent_handle,
+> -			    struct sdw_intel_res *res)
+> -{
+> -	acpi_status status;
+> -
+> -	status =3D acpi_walk_namespace(ACPI_TYPE_DEVICE,
+> -				     parent_handle, 1,
+> -				     sdw_intel_acpi_cb,
+> -				     NULL, res, NULL);
+> -	if (ACPI_FAILURE(status))
+> -		return NULL;
+> -
+> -	return sdw_intel_add_controller(res);
+> -}
+> -
+>  /**
+>   * sdw_intel_exit() - SoundWire Intel exit
+>   * @arg: callback context
+> --
+> 2.11.0
+
