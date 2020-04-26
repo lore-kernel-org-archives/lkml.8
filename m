@@ -2,385 +2,212 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 270F2C55194
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 13:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4447BC54FCB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 13:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00F1F2074F
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 13:33:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587907991;
-	bh=zhOlG8j2k9ooGL3hB98wIBmbEm7872tfTszggUSAgyQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=m3fvTJcdbEMRHgbee7QsvkC7dbuaxtzmHZYfyzAxKxBNHBcf4YUbcwxJqqz+XJUzz
-	 oFLQ6UHwH5W4IxUqDH4JP2k0oO79nm0drSzndZxvqUN6XLTK54h2W7KWtp4eBfSr41
-	 KKBQTzDKMX9qWOxlWq+zg1PjGb38ixXk7zq8mPbU=
+	by mail.kernel.org (Postfix) with ESMTP id 12C692071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 13:38:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="LDAiQz7M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726162AbgDZNdK (ORCPT
+        id S1726151AbgDZNiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 09:33:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56846 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbgDZNdK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 09:33:10 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A37D2071C;
-        Sun, 26 Apr 2020 13:33:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587907988;
-        bh=zhOlG8j2k9ooGL3hB98wIBmbEm7872tfTszggUSAgyQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FvmpOCWheE0WmP5Ch9fkaEvI2RSAX/XMDp5ylbnM3b5IHzRrnA/KbL6/lIZAzmaOH
-         GFXKQWmbf/258P19m0V80HbSdpI7gRM6iWHpwSpOX8/6IYZiuctldFxvzH+vPH1Wz8
-         +92a0JDoJLFfsbvH2jidhphmdvAJ/DQHxM9WMVC4=
-Date:   Sun, 26 Apr 2020 21:33:02 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Parthiban Nallathambi <parthiban@linumiz.com>
-Cc:     robh+dt@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: dts: imx6ull: add MYiR MYS-6ULX SBC
-Message-ID: <20200426133300.GE30501@dragon>
-References: <20200408184351.135716-1-parthiban@linumiz.com>
+        Sun, 26 Apr 2020 09:38:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57264 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbgDZNiQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 09:38:16 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DFA7C061A0F
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 06:38:16 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id g12so17203824wmh.3
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 06:38:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AKeJsfVQBTmRJ5DMftJ0126mlRY+cjmcCtKvFup4ozY=;
+        b=LDAiQz7MYSSfMUnc0M3PtEkFizLlN5hTiL5JRxWtoyeXmT71fiHPcnk4OsCeezFvM7
+         23TSEk2irysoDe0OEvORA1LkzD6X2g9oSmxvSpNlIyeIk6WHyTDSUZYeRSyGiJoks2Hm
+         4hgkQuJajNgYXWT02+aRTAZdsGQqY73d3WQj3OkutChq/qqyrIB/0GtMoEaGawVX4qQS
+         4AmWxNXtUVaNxC6rsxBFcz5OEZXJTVGstj5XUxIiWOA/DTm087YGDReBmK9zKwWEjPWR
+         VI0IZXVURX+pc+DaMJ/NBNgUqojonhR8oDblVkkOcRRI3Jj4TwNmwcLscQzERxVWwhV5
+         w6WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AKeJsfVQBTmRJ5DMftJ0126mlRY+cjmcCtKvFup4ozY=;
+        b=V5uTybqcuINggjAzJ3wSBG/qm9VsQqGywoRpdsCTuOVuAMczW/WrzEHF6w9n2708KX
+         mk08JipO5XjTkJ/nKClcZrpOopztKjZpoSkASt9dkCN/t5ALUy6GD1wLLs/NFTViTiYU
+         1wjagwcb13Jscps3AzlLVm7ccXS0L8IhLJN6ezF8MaKq2Hdi2L0M2BPCi2U97+uaOgU2
+         hnoWxAtfdxUVXW/QU0tZW0fXcov4l92g5nqW+5DxRjPmPSiNlzmuxXs2Jmv3rZmCKa8p
+         6CycMftb8GK4UsceuraPbD6tIMPoOO/e84LaMBr3tCgyuXDXUsvQyfAVMdUSO3N5Caaz
+         rHFQ==
+X-Gm-Message-State: AGi0PuYLJRn+bul4uwf48DaxuXJMLEsSNqGfIMToIYwcyx75F1Uvr83D
+        eBcXAmOLw8WbtUL3ZlYWKH1XfQPYxxwCpQeVE8d9Og==
+X-Google-Smtp-Source: APiQypLYcPLROTkqB8LzsYssjIU4lEHWA65Pc9cTE+Y39E81HNfUzw/chX6hgTuZNKJOX8E7TCXt+lUBH8wLC3x+xqg=
+X-Received: by 2002:a1c:9d0d:: with SMTP id g13mr21978860wme.102.1587908294824;
+ Sun, 26 Apr 2020 06:38:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200408184351.135716-1-parthiban@linumiz.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200426110740.123638-1-zong.li@sifive.com> <CAAhSdy3FCdzLV-nH03T=PBxB2tdZXhRrugcC2NcoA=22qpv+Lw@mail.gmail.com>
+ <CANXhq0qW9ORoZ5qc5g8ikO9QdeYX=p0fwoP8pyFFkk02a7imnw@mail.gmail.com>
+In-Reply-To: <CANXhq0qW9ORoZ5qc5g8ikO9QdeYX=p0fwoP8pyFFkk02a7imnw@mail.gmail.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Sun, 26 Apr 2020 19:08:03 +0530
+Message-ID: <CAAhSdy2f2-SQP6TdgxA0HM2ft3eBJd6kEkB--RH=2gUuLktXLQ@mail.gmail.com>
+Subject: Re: [PATCH] irqchip/sifive-plic: allow many cores to handle IRQs
+To:     Zong Li <zong.li@sifive.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        David Abdurachmanov <david.abdurachmanov@sifive.com>,
+        Marc Zyngier <maz@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 08:43:51PM +0200, Parthiban Nallathambi wrote:
-> Add support for the MYiR imx6ULL based single board computer
-> equipped with on board 256MB NAND & RAM. The board also
-> provides expansion header for expansion board, but this
-> commit adds only support for SBC.
-> 
-> Signed-off-by: Parthiban Nallathambi <parthiban@linumiz.com>
-> ---
->  arch/arm/boot/dts/Makefile                       |   1 +
->  arch/arm/boot/dts/imx6ull-myir-mys-6ulx-nand.dts |  19 ++
->  arch/arm/boot/dts/imx6ull-myir-mys-6ulx.dtsi     | 247 +++++++++++++++++++++++
->  3 files changed, 267 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx6ull-myir-mys-6ulx-nand.dts
->  create mode 100644 arch/arm/boot/dts/imx6ull-myir-mys-6ulx.dtsi
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index e8dd99201397..eab86051d782 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -612,6 +612,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
->  	imx6ull-14x14-evk.dtb \
->  	imx6ull-colibri-eval-v3.dtb \
->  	imx6ull-colibri-wifi-eval-v3.dtb \
-> +	imx6ull-myir-mys-6ulx-nand.dtb \
->  	imx6ull-opos6uldev.dtb \
->  	imx6ull-phytec-segin-ff-rdk-nand.dtb \
->  	imx6ull-phytec-segin-ff-rdk-emmc.dtb \
-> diff --git a/arch/arm/boot/dts/imx6ull-myir-mys-6ulx-nand.dts b/arch/arm/boot/dts/imx6ull-myir-mys-6ulx-nand.dts
-> new file mode 100644
-> index 000000000000..6eaba8a8d7a9
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx6ull-myir-mys-6ulx-nand.dts
-> @@ -0,0 +1,19 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2020 Linumiz
-> + * Author: Parthiban Nallathambi <parthiban@linumiz.com>
-> + */
-> +
-> +/dts-v1/;
-> +#include "imx6ull.dtsi"
-> +#include "imx6ull-myir-mys-6ulx.dtsi"
-> +
-> +/ {
-> +	model = "MYiR i.MX6ULL MYS-6ULX Single Board Computer with NAND";
-> +	compatible = "myir,imx6ul-mys-6ulx-nand", "myir,imx6ul-mys-6ulx",
-> +		     "fsl,imx6ull";
++Mark Z
 
-Any new compatible needs to be documented.
+On Sun, Apr 26, 2020 at 6:49 PM Zong Li <zong.li@sifive.com> wrote:
+>
+> On Sun, Apr 26, 2020 at 8:47 PM Anup Patel <anup@brainfault.org> wrote:
+> >
+> > On Sun, Apr 26, 2020 at 4:37 PM Zong Li <zong.li@sifive.com> wrote:
+> > >
+> > > Currently, driver forces the IRQs to be handled by only one core. This
+> > > patch provides the way to enable others cores to handle IRQs if needed,
+> > > so users could decide how many cores they wanted on default by boot
+> > > argument.
+> > >
+> > > Use 'irqaffinity' boot argument to determine affinity. If there is no
+> > > irqaffinity in dts or kernel configuration, use irq default affinity,
+> > > so all harts would try to claim IRQ.
+> > >
+> > > For example, add irqaffinity=0 in chosen node to set irq affinity to
+> > > hart 0. It also supports more than one harts to handle irq, such as set
+> > > irqaffinity=0,3,4.
+> > >
+> > > You can change IRQ affinity from user-space using procfs. For example,
+> > > you can make CPU0 and CPU2 serve IRQ together by the following command:
+> > >
+> > > echo 4 > /proc/irq/<x>/smp_affinity
+> > >
+> > > Signed-off-by: Zong Li <zong.li@sifive.com>
+> > > ---
+> > >  drivers/irqchip/irq-sifive-plic.c | 21 +++++++--------------
+> > >  1 file changed, 7 insertions(+), 14 deletions(-)
+> > >
+> > > diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+> > > index d0a71febdadc..bc1440d54185 100644
+> > > --- a/drivers/irqchip/irq-sifive-plic.c
+> > > +++ b/drivers/irqchip/irq-sifive-plic.c
+> > > @@ -111,15 +111,12 @@ static inline void plic_irq_toggle(const struct cpumask *mask,
+> > >  static void plic_irq_unmask(struct irq_data *d)
+> > >  {
+> > >         struct cpumask amask;
+> > > -       unsigned int cpu;
+> > >         struct plic_priv *priv = irq_get_chip_data(d->irq);
+> > >
+> > >         cpumask_and(&amask, &priv->lmask, cpu_online_mask);
+> > > -       cpu = cpumask_any_and(irq_data_get_affinity_mask(d),
+> > > -                                          &amask);
+> > > -       if (WARN_ON_ONCE(cpu >= nr_cpu_ids))
+> > > -               return;
+> > > -       plic_irq_toggle(cpumask_of(cpu), d, 1);
+> > > +       cpumask_and(&amask, &amask, irq_data_get_affinity_mask(d));
+> > > +
+> > > +       plic_irq_toggle(&amask, d, 1);
+> > >  }
+> > >
+> > >  static void plic_irq_mask(struct irq_data *d)
+> > > @@ -133,24 +130,20 @@ static void plic_irq_mask(struct irq_data *d)
+> > >  static int plic_set_affinity(struct irq_data *d,
+> > >                              const struct cpumask *mask_val, bool force)
+> > >  {
+> > > -       unsigned int cpu;
+> > >         struct cpumask amask;
+> > >         struct plic_priv *priv = irq_get_chip_data(d->irq);
+> > >
+> > >         cpumask_and(&amask, &priv->lmask, mask_val);
+> > >
+> > >         if (force)
+> > > -               cpu = cpumask_first(&amask);
+> > > +               cpumask_copy(&amask, mask_val);
+> > >         else
+> > > -               cpu = cpumask_any_and(&amask, cpu_online_mask);
+> > > -
+> > > -       if (cpu >= nr_cpu_ids)
+> > > -               return -EINVAL;
+> > > +               cpumask_and(&amask, &amask, cpu_online_mask);
+> > >
+> > >         plic_irq_toggle(&priv->lmask, d, 0);
+> > > -       plic_irq_toggle(cpumask_of(cpu), d, 1);
+> > > +       plic_irq_toggle(&amask, d, 1);
+> > >
+> > > -       irq_data_update_effective_affinity(d, cpumask_of(cpu));
+> > > +       irq_data_update_effective_affinity(d, &amask);
+> > >
+> > >         return IRQ_SET_MASK_OK_DONE;
+> > >  }
+> > > --
+> > > 2.26.1
+> > >
+> >
+> > I strongly oppose (NACK) this patch due to performance reasons.
+> >
+> > In PLIC, if we enable an IRQ X for N CPUs then when IRQ X occurs:
+> > 1) All N CPUs will take interrupt
+> > 2) All N CPUs will try to read PLIC CLAIM register
+> > 3) Only one of the CPUs will see IRQ X using the CLAIM register
+> > but other N - 1 CPUs will see no interrupt and return back to what
+> > they were doing. In other words, N - 1 CPUs will just waste CPU
+> > every time IRQ X occurs.
+> >
+> > Example1, one Application doing heavy network traffic will
+> > degrade performance of other applications because with every
+> > network RX/TX interrupt N-1 CPUs will waste CPU trying to
+> > process network interrupt.
+> >
+> > Example1, one Application doing heavy MMC/SD traffic will
+> > degrade performance of other applications because with every
+> > SPI read/write interrupt N-1 CPUs will waste CPU trying to
+> > process it.
+> >
+> > In fact, the current PLIC approach is actually a performance
+> > optimization. This implementation also works fine with in-kernel
+> > load-balancer and user space load balancer.
+> >
+>
+> Yes, it's exactly, I know what you pointed out. But the idea of this
+> patch is just providing a way that users could enable other cores if
+> they wanted, it could still enable only one core by this change. The
+> purpose here is thinking of flexible use, rather than limitation.
+> Maybe it would be a happy medium that we make the default case enable
+> only one core? It is a good open discussion.
 
-> +};
-> +
-> +&gpmi {
-> +	status = "okay";
-> +};
-> diff --git a/arch/arm/boot/dts/imx6ull-myir-mys-6ulx.dtsi b/arch/arm/boot/dts/imx6ull-myir-mys-6ulx.dtsi
-> new file mode 100644
-> index 000000000000..f0a514187c21
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx6ull-myir-mys-6ulx.dtsi
-> @@ -0,0 +1,247 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2020 Linumiz
-> + * Author: Parthiban Nallathambi <parthiban@linumiz.com>
-> + */
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/pwm/pwm.h>
-> +
-> +/ {
-> +	model = "MYiR MYS-6ULX Single Board Computer";
-> +	compatible = "myir,imx6ull-mys-6ulx", "fsl,imx6ull";
-> +
-> +	chosen {
-> +		stdout-path = &uart1;
-> +	};
-> +
-> +	regulators: regulators {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
+Making the default case as enable only one core is just a work-around.
 
-Drop the container node and put fixed regulator nodes directly under
-root.  Suggest to use name schema below:
+As-per my understanding, if we set affinity mask of N CPUs for IRQ X
+then it does not mean all N CPUs should receive IRQ X rather it means
+that exactly one of the N CPUs will receive IRQ X and the IRQ receiving
+CPU will be fixed (reflected by effective affinity returned by the driver).
 
-	regulator-xxx {
-		...
-	};
+If we ignore above semantics and still provide a mechanism to target
+IRQ X to N CPUs then most likely someone will try and run into
+performance issues.
 
-Shawn
+Please don't go this path. The performance impact in case of Guest/VM
+is even worst because PLIC is trap-n-emulated by hypervisors as MMIO
+device.
 
-> +
-> +		vdd_5v: regulator@0 {
-> +			compatible = "regulator-fixed";
-> +			regulator-name = "VDD_5V";
-> +			regulator-min-microvolt = <5000000>;
-> +			regulator-max-microvolt = <5000000>;
-> +			regulator-always-on;
-> +			regulator-boot-on;
-> +		};
-> +
-> +		vdd_3v3: regulator@1 {
-> +			compatible = "regulator-fixed";
-> +			regulator-name = "VDD_3V3";
-> +			regulator-min-microvolt = <3300000>;
-> +			regulator-max-microvolt = <3300000>;
-> +			regulator-always-on;
-> +			vin-supply = <&vdd_5v>;
-> +		};
-> +	};
-> +};
-> +
-> +&fec1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_enet1>;
-> +	phy-mode = "rmii";
-> +	phy-handle = <&ethphy0>;
-> +	phy-supply = <&vdd_3v3>;
-> +	status = "okay";
-> +
-> +	mdio: mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		ethphy0: ethernet-phy@0 {
-> +			reg = <0>;
-> +			compatible = "ethernet-phy-ieee802.3-c22";
-> +			interrupt-parent = <&gpio5>;
-> +			interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&clks IMX6UL_CLK_ENET_REF>;
-> +			clock-names = "rmii-ref";
-> +			status = "okay";
-> +		};
-> +	};
-> +};
-> +
-> +&gpmi {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_gpmi_nand>;
-> +	nand-on-flash-bbt;
-> +	status = "disabled";
-> +};
-> +
-> +&uart1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart1>;
-> +	status = "okay";
-> +};
-> +
-> +&usbotg1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_usb_otg1_id>;
-> +	dr_mode = "otg";
-> +	status = "okay";
-> +};
-> +
-> +&usbotg2 {
-> +	dr_mode = "host";
-> +	disable-over-current;
-> +	status = "okay";
-> +};
-> +
-> +&usdhc1 {
-> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-> +	pinctrl-0 = <&pinctrl_usdhc1>;
-> +	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
-> +	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
-> +	cd-gpios = <&gpio1 19 GPIO_ACTIVE_LOW>;
-> +	no-1-8-v;
-> +	keep-power-in-suspend;
-> +	wakeup-source;
-> +	vmmc-supply = <&vdd_3v3>;
-> +	status = "okay";
-> +};
-> +
-> +&usdhc2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_usdhc2>;
-> +	pinctrl-1 = <&pinctrl_usdhc2_100mhz>;
-> +	pinctrl-2 = <&pinctrl_usdhc2_200mhz>;
-> +	bus-width = <8>;
-> +	non-removable;
-> +	keep-power-in-suspend;
-> +	vmmc-supply = <&vdd_3v3>;
-> +	status = "disabled";
-> +};
-> +
-> +&iomuxc {
-> +	pinctrl_enet1: enet1grp {
-> +		fsl,pins = <
-> +			MX6UL_PAD_GPIO1_IO06__ENET1_MDIO	0x1b0b0
-> +			MX6UL_PAD_GPIO1_IO07__ENET1_MDC		0x1b0b0
-> +			MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN	0x1b0b0
-> +			MX6UL_PAD_ENET1_RX_ER__ENET1_RX_ER	0x1b0b0
-> +			MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00	0x1b0b0
-> +			MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01	0x1b0b0
-> +			MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN	0x1b0b0
-> +			MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00	0x1b0b0
-> +			MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01	0x1b0b0
-> +			MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1	0x4001b031
-> +			MX6UL_PAD_SNVS_TAMPER5__GPIO5_IO05	0x1b0b0
-> +		>;
-> +	};
-> +
-> +	pinctrl_gpmi_nand: gpminandgrp {
-> +		fsl,pins = <
-> +			MX6UL_PAD_NAND_CLE__RAWNAND_CLE		0x0b0b1
-> +			MX6UL_PAD_NAND_ALE__RAWNAND_ALE		0x0b0b1
-> +			MX6UL_PAD_NAND_WP_B__RAWNAND_WP_B	0x0b0b1
-> +			MX6UL_PAD_NAND_READY_B__RAWNAND_READY_B	0x0b000
-> +			MX6UL_PAD_NAND_CE0_B__RAWNAND_CE0_B	0x0b0b1
-> +			MX6UL_PAD_NAND_RE_B__RAWNAND_RE_B	0x0b0b1
-> +			MX6UL_PAD_NAND_WE_B__RAWNAND_WE_B	0x0b0b1
-> +			MX6UL_PAD_NAND_DATA00__RAWNAND_DATA00	0x0b0b1
-> +			MX6UL_PAD_NAND_DATA01__RAWNAND_DATA01	0x0b0b1
-> +			MX6UL_PAD_NAND_DATA02__RAWNAND_DATA02	0x0b0b1
-> +			MX6UL_PAD_NAND_DATA03__RAWNAND_DATA03	0x0b0b1
-> +			MX6UL_PAD_NAND_DATA04__RAWNAND_DATA04	0x0b0b1
-> +			MX6UL_PAD_NAND_DATA05__RAWNAND_DATA05	0x0b0b1
-> +			MX6UL_PAD_NAND_DATA06__RAWNAND_DATA06	0x0b0b1
-> +			MX6UL_PAD_NAND_DATA07__RAWNAND_DATA07	0x0b0b1
-> +		>;
-> +	};
-> +
-> +	pinctrl_uart1: uart1grp {
-> +		fsl,pins = <
-> +			MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX	0x1b0b1
-> +			MX6UL_PAD_UART1_RX_DATA__UART1_DCE_RX	0x1b0b1
-> +		>;
-> +	};
-> +
-> +	pinctrl_usb_otg1_id: usbotg1idgrp {
-> +		fsl,pins = <
-> +			MX6UL_PAD_GPIO1_IO00__ANATOP_OTG1_ID	0x17059
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc1: usdhc1grp {
-> +		fsl,pins = <
-> +			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x17059
-> +			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x10059
-> +			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x17059
-> +			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x17059
-> +			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x17059
-> +			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x17059
-> +			MX6UL_PAD_UART1_RTS_B__GPIO1_IO19	0x17059
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
-> +		fsl,pins = <
-> +			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x170b9
-> +			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x100b9
-> +			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x170b9
-> +			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x170b9
-> +			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x170b9
-> +			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x170b9
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
-> +		fsl,pins = <
-> +			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x170f9
-> +			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x100f9
-> +			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x170f9
-> +			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x170f9
-> +			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x170f9
-> +			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x170f9
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc2: usdhc2grp {
-> +		fsl,pins = <
-> +			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x10069
-> +			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x17059
-> +			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x17059
-> +			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x17059
-> +			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x17059
-> +			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x17059
-> +			MX6UL_PAD_NAND_DATA04__USDHC2_DATA4	0x17059
-> +			MX6UL_PAD_NAND_DATA05__USDHC2_DATA5	0x17059
-> +			MX6UL_PAD_NAND_DATA06__USDHC2_DATA6	0x17059
-> +			MX6UL_PAD_NAND_DATA07__USDHC2_DATA7	0x17059
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
-> +		fsl,pins = <
-> +			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x100b9
-> +			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x170b9
-> +			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x170b9
-> +			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x170b9
-> +			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x170b9
-> +			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x170b9
-> +			MX6UL_PAD_NAND_DATA04__USDHC2_DATA4	0x170b9
-> +			MX6UL_PAD_NAND_DATA05__USDHC2_DATA5	0x170b9
-> +			MX6UL_PAD_NAND_DATA06__USDHC2_DATA6	0x170b9
-> +			MX6UL_PAD_NAND_DATA07__USDHC2_DATA7	0x170b9
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
-> +		fsl,pins = <
-> +			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x100f9
-> +			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x170f9
-> +			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x170f9
-> +			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x170f9
-> +			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x170f9
-> +			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x170f9
-> +			MX6UL_PAD_NAND_DATA04__USDHC2_DATA4	0x170f9
-> +			MX6UL_PAD_NAND_DATA05__USDHC2_DATA5	0x170f9
-> +			MX6UL_PAD_NAND_DATA06__USDHC2_DATA6	0x170f9
-> +			MX6UL_PAD_NAND_DATA07__USDHC2_DATA7	0x170f9
-> +		>;
-> +	};
-> +};
-> -- 
-> 2.11.0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Regards,
+Anup
