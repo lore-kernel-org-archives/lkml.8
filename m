@@ -2,163 +2,88 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=CHARSET_FARAWAY_HEADER,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 709BFC55191
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 08:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 495A4C55199
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 08:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A2962071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 08:29:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30C462071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 08:30:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726156AbgDZI3y (ORCPT
+        id S1726179AbgDZIas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 04:29:54 -0400
-Received: from smtpout1.mo528.mail-out.ovh.net ([46.105.34.251]:43733 "EHLO
-        smtpout1.mo528.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726108AbgDZI3y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 04:29:54 -0400
-Received: from pro2.mail.ovh.net (unknown [10.108.1.157])
-        by mo528.mail-out.ovh.net (Postfix) with ESMTPS id C5AB15AE098D;
-        Sun, 26 Apr 2020 10:29:50 +0200 (CEST)
-Received: from localhost (89.70.31.203) by DAG2EX1.emp2.local (172.16.2.11)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Sun, 26 Apr
- 2020 10:29:50 +0200
-Date:   Sun, 26 Apr 2020 10:28:25 +0200
-From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-CC:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>
-Subject: Re: [PATCH 5/6] dt-bindings: iio: scd30: add device binding file
-Message-ID: <20200426082825.GA3282@arch>
-References: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
- <20200422141135.86419-6-tomasz.duszynski@octakon.com>
- <20200425202341.53e614d8@archlinux>
+        Sun, 26 Apr 2020 04:30:48 -0400
+Received: from mx22.baidu.com ([220.181.50.185]:50150 "EHLO baidu.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726141AbgDZIas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 04:30:48 -0400
+Received: from Bc-Mail-Ex13.internal.baidu.com (unknown [172.31.51.53])
+        by Forcepoint Email with ESMTPS id 0CDCC1A3C048E6D289AF;
+        Sun, 26 Apr 2020 16:30:27 +0800 (CST)
+Received: from BJHW-Mail-Ex13.internal.baidu.com (10.127.64.36) by
+ Bc-Mail-Ex13.internal.baidu.com (172.31.51.53) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1531.3; Sun, 26 Apr 2020 16:30:26 +0800
+Received: from BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) by
+ BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) with mapi id
+ 15.01.1713.004; Sun, 26 Apr 2020 16:30:26 +0800
+From:   "Li,Rongqing" <lirongqing@baidu.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>
+Subject: =?gb2312?B?tPC4tDogW1BBVENIXSBbUkZDXSBrdm06IHg4NjogZW11bGF0ZSBBUEVSRi9N?=
+ =?gb2312?Q?PERF_registers?=
+Thread-Topic: [PATCH] [RFC] kvm: x86: emulate APERF/MPERF registers
+Thread-Index: AQHWGh9bZdasuQhOo023NQfHi2P1S6iLC0mA
+Date:   Sun, 26 Apr 2020 08:30:26 +0000
+Message-ID: <4fecc02b00f6469e81ffc40de4f7188c@baidu.com>
+References: <1587704935-30960-1-git-send-email-lirongqing@baidu.com>
+ <20200424100143.GZ20730@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200424100143.GZ20730@hirez.programming.kicks-ass.net>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.22.198.27]
+x-baidu-bdmsfe-datecheck: 1_Bc-Mail-Ex13_2020-04-26 16:30:26:950
+x-baidu-bdmsfe-viruscheck: Bc-Mail-Ex13_GRAY_Inside_WithoutAtta_2020-04-26
+ 16:30:26:919
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20200425202341.53e614d8@archlinux>
-X-Originating-IP: [89.70.31.203]
-X-ClientProxiedBy: DAG2EX2.emp2.local (172.16.2.12) To DAG2EX1.emp2.local
- (172.16.2.11)
-X-Ovh-Tracer-Id: 5079497430882606162
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: 0
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrheejgddtiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecunecujfgurhepfffhvffukfhfgggtuggjihesthdtredttddtjeenucfhrhhomhepvfhomhgrshiiucffuhhsiiihnhhskhhiuceothhomhgrshiirdguuhhsiiihnhhskhhisehotghtrghkohhnrdgtohhmqeenucffohhmrghinhepuggvvhhitggvthhrvggvrdhorhhgnecukfhppedtrddtrddtrddtpdekledrjedtrdefuddrvddtfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehprhhovddrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomhdprhgtphhtthhopehrohgshhdoughtsehkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 25, 2020 at 08:23:41PM +0100, Jonathan Cameron wrote:
-> On Wed, 22 Apr 2020 16:11:34 +0200
-> Tomasz Duszynski <tomasz.duszynski@octakon.com> wrote:
->
-> > Add SCD30 sensor binding file.
-> >
-> > Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
-> > ---
-> >  .../iio/chemical/sensirion,scd30.yaml         | 71 +++++++++++++++++++
-> >  1 file changed, 71 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml b/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
-> > new file mode 100644
-> > index 000000000000..b092b2530c76
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
-> > @@ -0,0 +1,71 @@
-> > +# SPDX-License-Identifier: GPL-2.0
->
-> Dual license preferred with BSD for bindings.
->
-
-Okay.
-
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iio/chemical/sensirion,scd30.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Sensirion SCD30 carbon dioxide sensor
-> > +
-> > +maintainers:
-> > +  - Tomasz Duszynski <tomasz.duszynski@octakon.com>
-> > +
-> > +description: |
-> > +  Air quality sensor capable of measuring co2 concentration, temperature
-> > +  and relative humidity.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - sensirion,scd30
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  vdd-supply: true
-> > +
-> > +  sensirion,sel-gpios:
-> > +    description: GPIO connected to the SEL line
-> > +    maxItems: 1
-> > +
-> > +  sensirion,pwm-gpios:
-> > +    description: GPIO connected to the PWM line
-> > +    maxItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - vdd-supply
->
-> Only enable it I think in the driver.  Should be fine with a stub regulator
-> as provided if we don't specify one in the dt binding because it's not
-> controllable and we are lazy.
->
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    # include <dt-bindings/gpio/gpio.h>
-> > +    # include <dt-bindings/interrupt-controller/irq.h>
-> > +    i2c {
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +
-> > +      scd30@61 {
-> > +        compatible = "sensirion,scd30";
-> > +        reg = <0x61>;
-> > +        vdd-supply = <&vdd>;
-> > +        interrupt-parrent = <&gpio0>;
-> > +        interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-> > +      };
-> > +    };
-> > +  - |
-> > +    # include <dt-bindings/gpio/gpio.h>
->
-> Why gpio?
->
-
-That shouldn't be here. I have some local changes where I use sel-gpios hence
-this include.
-
-> > +    # include <dt-bindings/interrupt-controller/irq.h>
-> > +    serial {
-> > +      scd30 {
-> > +        compatible = "sensirion,scd30";
-> > +        vdd-supply = <&vdd>;
-> > +        interrupt-parrent = <&gpio0>;
-> > +        interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-> > +      };
-> > +    };
-> > +
-> > +...
->
+PiANCj4gQnV0IHRoZW4gaGVyZSB5b3Ugb25seSBlbXVsYXRlIGl0IGZvciBWTVgsIHdoaWNoIHRo
+ZW4gcmVzdWx0cyBpbiBTVk0gZ3Vlc3RzDQo+IGdvaW5nIHdvYmJseS4NCj4gDQo+IEFsc28sIG9u
+IEludGVsLCB0aGUgbW9tZW50IHlvdSBhZHZlcnRpc2UgQVBFUkZNUEVSRiwgd2UnbGwgdHJ5IGFu
+ZCByZWFkDQo+IE1TUl9QTEFURk9STV9JTkZPIC8gTVNSX1RVUkJPX1JBVElPX0xJTUlUKiwgSSBk
+b24ndCBzdXBwb3NlIHlvdSdyZQ0KPiBwYXNzaW5nIHRob3NlIHRocm91Z2ggYXMgd2VsbD8NCj4g
+DQoNCmluaXRfZnJlcV9pbnZhcmlhbmNlKHZvaWQpIGlzIHRyeWluZyByZWFkIE1TUl9QTEFURk9S
+TV9JTkZPIC8gTVNSX1RVUkJPX1JBVElPX0xJTUlUKiwNCnNob3VsZCB3ZSBhZGQgYSBjaGVjayBv
+ZiB0dXJibyBzdGF0dXMgaW4gaW5pdF9mcmVxX2ludmFyaWFuY2UsIHRvIGF2b2lkIHRoZSByZWFk
+aW5nPw0KDQpJdCBpcyB1bm5lY2Vzc2FyeSB0byBjYWxsIGludGVsX3NldF9tYXhfZnJlcV9yYXRp
+byAgSWYgdHVyYm8gaXMgZGlzYWJsZWQNCg0KZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9z
+bXBib290LmMgYi9hcmNoL3g4Ni9rZXJuZWwvc21wYm9vdC5jDQppbmRleCBmZTNhYjk2MzJmM2Iu
+LjU0ZmI4ODMyMzI5MyAxMDA2NDQNCi0tLSBhL2FyY2gveDg2L2tlcm5lbC9zbXBib290LmMNCisr
+KyBiL2FyY2gveDg2L2tlcm5lbC9zbXBib290LmMNCkBAIC0yMDA5LDYgKzIwMDksOSBAQCBzdGF0
+aWMgdm9pZCBpbml0X2ZyZXFfaW52YXJpYW5jZSh2b2lkKQ0KICAgICAgICBpZiAoc21wX3Byb2Nl
+c3Nvcl9pZCgpICE9IDAgfHwgIWJvb3RfY3B1X2hhcyhYODZfRkVBVFVSRV9BUEVSRk1QRVJGKSkN
+CiAgICAgICAgICAgICAgICByZXR1cm47DQogDQorICAgICAgIGlmICh0dXJib19kaXNhYmxlZCgp
+KQ0KKyAgICAgICAgICAgICAgIHJldHVybjsNCisNCiAgICAgICAgaWYgKGJvb3RfY3B1X2RhdGEu
+eDg2X3ZlbmRvciA9PSBYODZfVkVORE9SX0lOVEVMKQ0KICAgICAgICAgICAgICAgIHJldCA9IGlu
+dGVsX3NldF9tYXhfZnJlcV9yYXRpbygpOw0KDQotTGkNCg==
