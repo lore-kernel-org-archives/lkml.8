@@ -2,197 +2,355 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C2FC55194
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 12:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D991AC55191
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 13:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3F8D20700
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 12:59:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b1hZWwDc"
+	by mail.kernel.org (Postfix) with ESMTP id C075E2074F
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 13:01:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbgDZM7s (ORCPT
+        id S1726176AbgDZNB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 08:59:48 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:42187 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726146AbgDZM7q (ORCPT
+        Sun, 26 Apr 2020 09:01:29 -0400
+Received: from mout-p-202.mailbox.org ([80.241.56.172]:62214 "EHLO
+        mout-p-202.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726142AbgDZNB2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 08:59:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587905984;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=cS6N3dz+H92wTTUjeik0cWhJVJMk8JtsySToZ32DZB8=;
-        b=b1hZWwDcqvovp/B4plVziw8M8d1M81CA6YyEM7aWHu30eZqdLPuKZq8m23icuhdYUByfPD
-        iVYftsvse8U3/BmHAvGKDQJHBFTQmvMuKp64scTVRBrL+AkbBxxzhZOJXzNvU9j2pScbyk
-        y64eq1bRt2H8SSinPN9JVdYU+OFCS2g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-295-L1Gr5bIyNaSAU5A4TdMIqA-1; Sun, 26 Apr 2020 08:59:40 -0400
-X-MC-Unique: L1Gr5bIyNaSAU5A4TdMIqA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Sun, 26 Apr 2020 09:01:28 -0400
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1CAF545F;
-        Sun, 26 Apr 2020 12:59:36 +0000 (UTC)
-Received: from thuth.remote.csb (ovpn-112-33.ams2.redhat.com [10.36.112.33])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 26AC460C05;
-        Sun, 26 Apr 2020 12:59:19 +0000 (UTC)
-Subject: Re: [PATCH v2 1/7] KVM: s390: clean up redundant 'kvm_run' parameters
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Cc:     pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org,
-        mpe@ellerman.id.au, benh@kernel.crashing.org,
-        frankja@linux.ibm.com, david@redhat.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, sean.j.christopherson@intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com, maz@kernel.org,
-        james.morse@arm.com, julien.thierry.kdev@gmail.com,
-        suzuki.poulose@arm.com, christoffer.dall@arm.com,
-        peterx@redhat.com, kvm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200422125810.34847-1-tianjia.zhang@linux.alibaba.com>
- <20200422125810.34847-2-tianjia.zhang@linux.alibaba.com>
- <20200422154543.2efba3dd.cohuck@redhat.com>
- <dc5e0fa3-558b-d606-bda9-ed281cf9e9ae@de.ibm.com>
- <20200422180403.03f60b0c.cohuck@redhat.com>
- <5e1e126d-f1b0-196c-594b-4289d0afb9a8@linux.alibaba.com>
- <20200423123901.72a4c6a4.cohuck@redhat.com>
- <71344f73-c34f-a373-49d1-5d839c6be5f6@linux.alibaba.com>
- <1d73b700-4a20-3d7a-66d1-29b5afa03f4d@de.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <73f6ecd0-ac47-eaad-0e4f-2d41c2b34450@redhat.com>
-Date:   Sun, 26 Apr 2020 14:59:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4997MS4qqFzQlKB;
+        Sun, 26 Apr 2020 15:01:24 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
+        with ESMTP id 8JlkoUFgfQI2; Sun, 26 Apr 2020 15:01:18 +0200 (CEST)
+From:   Hagen Paul Pfeifer <hagen@jauu.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     Florian Weimer <fweimer@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Hagen Paul Pfeifer <hagen@jauu.net>,
+        Christian Brauner <christian@brauner.io>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+        Brian Gerst <brgerst@gmail.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sargun Dhillon <sargun@sargun.me>, linux-api@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Subject: [RFC] ptrace, pidfd: add pidfd_ptrace syscall
+Date:   Sun, 26 Apr 2020 15:01:00 +0200
+Message-Id: <20200426130100.306246-1-hagen@jauu.net>
 MIME-Version: 1.0
-In-Reply-To: <1d73b700-4a20-3d7a-66d1-29b5afa03f4d@de.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: A24BE1742
+X-Rspamd-Score: 3.37 / 15.00 / 15.00
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/04/2020 13.00, Christian Borntraeger wrote:
->=20
->=20
-> On 23.04.20 12:58, Tianjia Zhang wrote:
->>
->>
->> On 2020/4/23 18:39, Cornelia Huck wrote:
->>> On Thu, 23 Apr 2020 11:01:43 +0800
->>> Tianjia Zhang <tianjia.zhang@linux.alibaba.com> wrote:
->>>
->>>> On 2020/4/23 0:04, Cornelia Huck wrote:
->>>>> On Wed, 22 Apr 2020 17:58:04 +0200
->>>>> Christian Borntraeger <borntraeger@de.ibm.com> wrote:
->>>>> =C2=A0=C2=A0
->>>>>> On 22.04.20 15:45, Cornelia Huck wrote:
->>>>>>> On Wed, 22 Apr 2020 20:58:04 +0800
->>>>>>> Tianjia Zhang <tianjia.zhang@linux.alibaba.com> wrote:
->>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
->>>>>>>> In the current kvm version, 'kvm_run' has been included in the '=
-kvm_vcpu'
->>>>>>>> structure. Earlier than historical reasons, many kvm-related fun=
-ction
->>>>>>>
->>>>>>> s/Earlier than/For/ ?
->>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
->>>>>>>> parameters retain the 'kvm_run' and 'kvm_vcpu' parameters at the=
- same time.
->>>>>>>> This patch does a unified cleanup of these remaining redundant p=
-arameters.
->>>>>>>>
->>>>>>>> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
->>>>>>>> ---
->>>>>>>> =C2=A0=C2=A0 arch/s390/kvm/kvm-s390.c | 37 +++++++++++++++++++++=
-+---------------
->>>>>>>> =C2=A0=C2=A0 1 file changed, 22 insertions(+), 15 deletions(-)
->>>>>>>>
->>>>>>>> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
->>>>>>>> index e335a7e5ead7..d7bb2e7a07ff 100644
->>>>>>>> --- a/arch/s390/kvm/kvm-s390.c
->>>>>>>> +++ b/arch/s390/kvm/kvm-s390.c
->>>>>>>> @@ -4176,8 +4176,9 @@ static int __vcpu_run(struct kvm_vcpu *vcp=
-u)
->>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return rc;
->>>>>>>> =C2=A0=C2=A0 }
->>>>>>>> =C2=A0=C2=A0 -static void sync_regs_fmt2(struct kvm_vcpu *vcpu, =
-struct kvm_run *kvm_run)
->>>>>>>> +static void sync_regs_fmt2(struct kvm_vcpu *vcpu)
->>>>>>>> =C2=A0=C2=A0 {
->>>>>>>> +=C2=A0=C2=A0=C2=A0 struct kvm_run *kvm_run =3D vcpu->run;
->>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct runtime_instr_cb *ri=
-ccb;
->>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct gs_cb *gscb;
->>>>>>>> =C2=A0=C2=A0 @@ -4235,7 +4236,7 @@ static void sync_regs_fmt2(st=
-ruct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if =
-(vcpu->arch.gs_enabled) {
->>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 current->thread.gs_cb =3D (struct gs_cb *)
->>>>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- &vcpu->run->s.regs.gscb;
->>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- &kvm_run->s.regs.gscb;
->>>>>>>
->>>>>>> Not sure if these changes (vcpu->run-> =3D> kvm_run->) are really=
- worth
->>>>>>> it. (It seems they amount to at least as much as the changes adve=
-rtised
->>>>>>> in the patch description.)
->>>>>>>
->>>>>>> Other opinions?
->>>>>>
->>>>>> Agreed. It feels kind of random. Maybe just do the first line (mov=
-e kvm_run from the
->>>>>> function parameter list into the variable declaration)? Not sure i=
-f this is better.
->>>>>> =C2=A0=20
->>>>>
->>>>> There's more in this patch that I cut... but I think just moving
->>>>> kvm_run from the parameter list would be much less disruptive.
->>>>> =C2=A0=C2=A0=20
->>>>
->>>> I think there are two kinds of code(`vcpu->run->` and `kvm_run->`), =
-but
->>>> there will be more disruptive, not less.
->>>
->>> I just fail to see the benefit; sure, kvm_run-> is convenient, but th=
-e
->>> current code is just fine, and any rework should be balanced against
->>> the cost (e.g. cluttering git annotate).
->>>
->>
->> cluttering git annotate ? Does it mean Fix xxxx ("comment"). Is it pos=
-sible to solve this problem by splitting this patch?
->=20
-> No its about breaking git blame (and bugfix backports) for just a cosme=
-tic improvement.
+Working on a safety-critical stress testing tool, using ptrace in an
+rather uncommon way (stop, peeking memory, ...) for a bunch of
+applications in an automated way I realized that once opened processes
+where restarted and PIDs recycled.  Resulting in monitoring and
+manipulating the wrong processes.
 
-It could be slightly more than a cosmetic improvement (depending on the
-smartness of the compiler): vcpu->run-> are two dereferences, while
-kvm_run-> is only one dereference. So it could be slightly more compact
-and faster code.
+With the advent of pidfd we are now able to stick with one stable handle
+to identifying processes exactly. We now have the ability to get this
+race free. Sending signals now works like a charm, next step is to
+extend the functionality also for ptrace.
 
- Thomas
+API:
+         long pidfd_ptrace(int pidfd, enum __ptrace_request request,
+                           void *addr, void *data, unsigned flags);
+
+Based on original ptrace, the following API changes where made:
+
+- Process identificator (pidfd) is now moved as first argument, this is aligned
+  with pidfd_send_signal(int pidfd, ...) because potential future pidfd_* will have
+  one thing in common: the pid identifier. I think is natural to have
+  this argument upfront
+- Add an additional flags argument, not used now - but you never know
+
+All other arguments are identical compared to ptrace - no other
+modifications where made.
+
+Currently there are some pieces missing! This is just an early proposal
+for a new syscall. Still missing:
+- support for every architecture
+- re-use shared functions and move to common place
+- perf syscall registration
+- selftests
+- ...
+
+Signed-off-by: Hagen Paul Pfeifer <hagen@jauu.net>
+Cc: Christian Brauner <christian@brauner.io>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Sami Tolvanen <samitolvanen@google.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Aleksa Sarai <cyphar@cyphar.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Sargun Dhillon <sargun@sargun.me>
+Cc: linux-api@vger.kernel.org
+Cc: linux-arch@vger.kernel.org
+---
+ arch/x86/entry/syscalls/syscall_32.tbl |   1 +
+ arch/x86/entry/syscalls/syscall_64.tbl |   1 +
+ include/linux/syscalls.h               |   2 +
+ include/uapi/asm-generic/unistd.h      |   4 +-
+ kernel/ptrace.c                        | 129 ++++++++++++++++++++-----
+ kernel/sys_ni.c                        |   1 +
+ 6 files changed, 115 insertions(+), 23 deletions(-)
+
+diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
+index 54581ac671b4..593f7fab90eb 100644
+--- a/arch/x86/entry/syscalls/syscall_32.tbl
++++ b/arch/x86/entry/syscalls/syscall_32.tbl
+@@ -442,3 +442,4 @@
+ 435	i386	clone3			sys_clone3
+ 437	i386	openat2			sys_openat2
+ 438	i386	pidfd_getfd		sys_pidfd_getfd
++438	i386	pidfd_ptrace		sys_pidfd_ptrace
+diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
+index 37b844f839bc..cd76d8343510 100644
+--- a/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/arch/x86/entry/syscalls/syscall_64.tbl
+@@ -359,6 +359,7 @@
+ 435	common	clone3			sys_clone3
+ 437	common	openat2			sys_openat2
+ 438	common	pidfd_getfd		sys_pidfd_getfd
++439	common	pidfd_ptrace		sys_pidfd_ptrace
+ 
+ #
+ # x32-specific system call numbers start at 512 to avoid cache impact
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index 1815065d52f3..254b071a5334 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -1003,6 +1003,8 @@ asmlinkage long sys_pidfd_send_signal(int pidfd, int sig,
+ 				       siginfo_t __user *info,
+ 				       unsigned int flags);
+ asmlinkage long sys_pidfd_getfd(int pidfd, int fd, unsigned int flags);
++asmlinkage long sys_pidfd_ptrace(int pidfd, long request, unsigned long addr,
++		                 unsigned long data, unsigned int flags);
+ 
+ /*
+  * Architecture-specific system calls
+diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
+index 3a3201e4618e..64749a6f156e 100644
+--- a/include/uapi/asm-generic/unistd.h
++++ b/include/uapi/asm-generic/unistd.h
+@@ -855,9 +855,11 @@ __SYSCALL(__NR_clone3, sys_clone3)
+ __SYSCALL(__NR_openat2, sys_openat2)
+ #define __NR_pidfd_getfd 438
+ __SYSCALL(__NR_pidfd_getfd, sys_pidfd_getfd)
++#define __NR_pidfd_getfd 439
++__SYSCALL(__NR_pidfd_ptrace, sys_pidfd_ptrace)
+ 
+ #undef __NR_syscalls
+-#define __NR_syscalls 439
++#define __NR_syscalls 440
+ 
+ /*
+  * 32 bit systems traditionally used different
+diff --git a/kernel/ptrace.c b/kernel/ptrace.c
+index 43d6179508d6..8f4e99247742 100644
+--- a/kernel/ptrace.c
++++ b/kernel/ptrace.c
+@@ -29,6 +29,7 @@
+ #include <linux/regset.h>
+ #include <linux/hw_breakpoint.h>
+ #include <linux/cn_proc.h>
++#include <linux/proc_fs.h>
+ #include <linux/compat.h>
+ #include <linux/sched/signal.h>
+ 
+@@ -1239,48 +1240,132 @@ int ptrace_request(struct task_struct *child, long request,
+ #define arch_ptrace_attach(child)	do { } while (0)
+ #endif
+ 
++static inline long ptrace_call(struct task_struct *task, long request, unsigned long addr,
++		               unsigned long data)
++{
++	long ret;
++
++	if (request == PTRACE_ATTACH || request == PTRACE_SEIZE) {
++		ret = ptrace_attach(task, request, addr, data);
++		/*
++		 * Some architectures need to do book-keeping after
++		 * a ptrace attach.
++		 */
++		if (!ret)
++			arch_ptrace_attach(task);
++		goto out;
++	}
++
++	ret = ptrace_check_attach(task, request == PTRACE_KILL ||
++				  request == PTRACE_INTERRUPT);
++	if (ret < 0)
++		goto out;
++
++	ret = arch_ptrace(task, request, addr, data);
++	if (ret || request != PTRACE_DETACH)
++		ptrace_unfreeze_traced(task);
++
++ out:
++	put_task_struct(task);
++	return ret;
++}
++
+ SYSCALL_DEFINE4(ptrace, long, request, long, pid, unsigned long, addr,
+ 		unsigned long, data)
+ {
+-	struct task_struct *child;
++	struct task_struct *task;
+ 	long ret;
+ 
+ 	if (request == PTRACE_TRACEME) {
+ 		ret = ptrace_traceme();
+ 		if (!ret)
+ 			arch_ptrace_attach(current);
+-		goto out;
++		return ret;
+ 	}
+ 
+-	child = find_get_task_by_vpid(pid);
+-	if (!child) {
++	task = find_get_task_by_vpid(pid);
++	if (!task) {
+ 		ret = -ESRCH;
+ 		goto out;
+ 	}
+ 
+-	if (request == PTRACE_ATTACH || request == PTRACE_SEIZE) {
+-		ret = ptrace_attach(child, request, addr, data);
+-		/*
+-		 * Some architectures need to do book-keeping after
+-		 * a ptrace attach.
+-		 */
++
++	ret = ptrace_call(task, request, addr, data);
++out:
++	return ret;
++}
++
++static struct pid *pidfd_to_pid(const struct file *file)
++{
++	struct pid *pid;
++
++	pid = pidfd_pid(file);
++	if (!IS_ERR(pid))
++		return pid;
++
++	return tgid_pidfd_to_pid(file);
++}
++
++static bool access_pidfd_pidns(struct pid *pid)
++{
++	struct pid_namespace *active = task_active_pid_ns(current);
++	struct pid_namespace *p = ns_of_pid(pid);
++
++	for (;;) {
++		if (!p)
++			return false;
++		if (p == active)
++			break;
++		p = p->parent;
++	}
++
++	return true;
++}
++
++SYSCALL_DEFINE5(pidfd_ptrace, int, pidfd, long, request, unsigned long, addr,
++		unsigned long, data, unsigned int, flags)
++{
++	long ret;
++	struct fd f;
++	struct pid *pid;
++	struct task_struct *task;
++
++	/* Enforce flags be set to 0 until we add an extension. */
++	if (flags)
++		return -EINVAL;
++
++	if (request == PTRACE_TRACEME) {
++		ret = ptrace_traceme();
+ 		if (!ret)
+-			arch_ptrace_attach(child);
+-		goto out_put_task_struct;
++			arch_ptrace_attach(current);
++		goto out;
+ 	}
+ 
+-	ret = ptrace_check_attach(child, request == PTRACE_KILL ||
+-				  request == PTRACE_INTERRUPT);
+-	if (ret < 0)
+-		goto out_put_task_struct;
++	f = fdget(pidfd);
++	if (!f.file)
++		return -EBADF;
+ 
+-	ret = arch_ptrace(child, request, addr, data);
+-	if (ret || request != PTRACE_DETACH)
+-		ptrace_unfreeze_traced(child);
++	/* Is this a pidfd? */
++	pid = pidfd_to_pid(f.file);
++	if (IS_ERR(pid)) {
++		ret = PTR_ERR(pid);
++		goto err;
++	}
+ 
+- out_put_task_struct:
+-	put_task_struct(child);
+- out:
++	ret = -EINVAL;
++	if (!access_pidfd_pidns(pid))
++		goto err;
++
++	task = pid_task(pid, PIDTYPE_PID);
++	if (!task) {
++		ret = -EINVAL;
++		goto err;
++	}
++
++	ret = ptrace_call(task, request, addr, data);
++err:
++	fdput(f);
++out:
+ 	return ret;
+ }
+ 
+diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
+index 3b69a560a7ac..f7795294b8c4 100644
+--- a/kernel/sys_ni.c
++++ b/kernel/sys_ni.c
+@@ -166,6 +166,7 @@ COND_SYSCALL(delete_module);
+ COND_SYSCALL(syslog);
+ 
+ /* kernel/ptrace.c */
++COND_SYSCALL_COMPAT(pidfd_ptrace);
+ 
+ /* kernel/sched/core.c */
+ 
+-- 
+2.26.2
 
