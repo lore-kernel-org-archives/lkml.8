@@ -2,77 +2,129 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F48C54FCB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0C2C55194
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ACBB20700
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:32:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C58920700
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:35:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i1/aeuQx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726223AbgDZQcI (ORCPT
+        id S1726185AbgDZQf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 12:32:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55854 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726144AbgDZQcI (ORCPT
+        Sun, 26 Apr 2020 12:35:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56428 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726147AbgDZQfz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 12:32:08 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC8B2C061A0F
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 09:32:07 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jSkCC-0005h7-K4; Sun, 26 Apr 2020 18:31:56 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 7405C100605; Sun, 26 Apr 2020 18:31:55 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Davidlohr Bueso <dave@stgolabs.net>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 2/2] locking/rtmutex: optimize rt_mutex_cmpxchgs
-In-Reply-To: <1587135032-188866-2-git-send-email-alex.shi@linux.alibaba.com>
-References: <1587135032-188866-1-git-send-email-alex.shi@linux.alibaba.com> <1587135032-188866-2-git-send-email-alex.shi@linux.alibaba.com>
-Date:   Sun, 26 Apr 2020 18:31:55 +0200
-Message-ID: <87k122ryx0.fsf@nanos.tec.linutronix.de>
+        Sun, 26 Apr 2020 12:35:55 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75D5FC061A0F;
+        Sun, 26 Apr 2020 09:35:55 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id w145so11781730lff.3;
+        Sun, 26 Apr 2020 09:35:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=chvzGb22w/xcfuOSVALd3W/Z7BSLnEOHRuy2SgipTtI=;
+        b=i1/aeuQxrp7pq08b3zW+tT16ElxsTJ8jYeOiFIqM6yMeJNwP5Yug3Z4VYbp+cMYTKJ
+         fTT2FDHkZbXLNgnhGBwDH/bXS4W1+ioplqfiBuihBmaJz/wALusY8i5eH8UPjO1vwcDj
+         BIkXsxkNm3CvDPABq6hnZu5DD9Lazrn0VaCqkGw4tqiP8QhWiPRTmWUfz1GH0NMwMB6+
+         A6a7/5NsG7ez92BlcRiAMrH4/0AtgD6zk/+qdkRI3b3JI5jzGSM50bgm5mhwU3+n4Rck
+         nicG6vEWGPbsYDak89tHCyqhUnm79V5IMb/r79aC0BkS3DHe3zFbbGbiQshN90SymUk5
+         Urww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=chvzGb22w/xcfuOSVALd3W/Z7BSLnEOHRuy2SgipTtI=;
+        b=gCeAnlrphEcQHb++B2T+buHV0iSY2j13Yq3MhJalRPCaGeCsHSEj83rkxVTAaEyIls
+         Jc//3IjbKcOEouh4H5RjbwRWYpsrXD7Ydb3YZarz6V7hZ00aWw6HSbb5QkxNcTMCLe2G
+         Uj1ZeCGDoanV2/0l/XuQK19yZyBn3X/3QB70rCfbYKZDh+kFiVTAknRFb1B3wrB2FqHs
+         xoH+INgebVNK1Nw3po72+Fk57KZqpaZ3nWoBgAljWvEHukTz8fmh6f3No+cUvTXYRERd
+         disdFtvitX8br20yz/vzVXE3ZhljAvv9LOselfSG17W5wxrl/8077ZKLh57BWQPwsTT9
+         rU4A==
+X-Gm-Message-State: AGi0PuZaimZJHaM+o5ey7MBO/UpWs/tp7DTx/u1pHDlq3enMk/uymRCt
+        cPrqGq8g1lbaStQQxgXlGXt0AGtA
+X-Google-Smtp-Source: APiQypJ2Oi5GryydFbN+P4YGg7PUq4QJWZbVDteCxC1022EUilUkwX+q41voPv+WzeNxBu1oRONkqA==
+X-Received: by 2002:ac2:4d12:: with SMTP id r18mr12869471lfi.181.1587918953615;
+        Sun, 26 Apr 2020 09:35:53 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id z65sm9525650lfa.37.2020.04.26.09.35.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 26 Apr 2020 09:35:52 -0700 (PDT)
+Subject: Re: [PATCH v4 03/10] input: elants: remove unused axes
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Rob Herring <robh+dt@kernel.org>,
+        Scott Liu <scott.liu@emc.com.tw>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1587916846.git.mirq-linux@rere.qmqm.pl>
+ <b6cb0f810eec2d5c6245d6128502eebd342ca02a.1587916846.git.mirq-linux@rere.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <0f66e93c-9c71-73d0-90b8-15e0802a79c5@gmail.com>
+Date:   Sun, 26 Apr 2020 19:35:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <b6cb0f810eec2d5c6245d6128502eebd342ca02a.1587916846.git.mirq-linux@rere.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alex Shi <alex.shi@linux.alibaba.com> writes:
+26.04.2020 19:11, Michał Mirosław пишет:
+> Driver only ever reports MT events and input_mt_init_slots() sets up
+> emulated axes already.  Clear the capabilities not generated directly
+> and move MT axes setup, so they are visible by input_mt_init_slots().
+> 
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+> Tested-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+> v4: reword commitmsg; reorder axis setup
+> ---
 
-> Checking l->owner first to skip time cost cmpxchgs.
+Legacy pointer emulation doesn't work using v4. I think it will be
+better to drop this patch for now and add this hunk to the patch #4:
 
-I don't see what that buys.
+--- >8 ---
+diff --git a/drivers/input/touchscreen/elants_i2c.c
+b/drivers/input/touchscreen/elants_i2c.c
+index 060c60c04f25..3644b5b48081 100644
+--- a/drivers/input/touchscreen/elants_i2c.c
++++ b/drivers/input/touchscreen/elants_i2c.c
+@@ -1414,6 +1414,8 @@ static int elants_i2c_probe(struct i2c_client *client,
+ 	input_abs_set_res(ts->input, ABS_X, ts->x_res);
+ 	input_abs_set_res(ts->input, ABS_Y, ts->y_res);
 
-It actually adds an extra conditional in the non-contended case, which
-is the case we are optimizing for.
++	touchscreen_parse_properties(ts->input, false, &ts->prop);
++
+ 	/* Multitouch input params setup */
+ 	error = input_mt_init_slots(ts->input, MAX_CONTACT_NUM,
+ 				    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED);
+--- >8 ---
 
-In the contended case, i.e. when l->owner != c the cmpxchg cost is
-completely irrelevant compared to the slowpath costs.
+This hunk makes the DT properties to be applied for the legacy pointer,
+fixing the cursor position on Nexus 7 device using Ubuntu 12.04. The MT
+still works fine using Ubuntu 20.04.
 
->  #ifndef CONFIG_DEBUG_RT_MUTEXES
-> -# define rt_mutex_cmpxchg_acquire(l,c,n) (cmpxchg_acquire(&l->owner, c, n) == c)
-> -# define rt_mutex_cmpxchg_release(l,c,n) (cmpxchg_release(&l->owner, c, n) == c)
-> +# define rt_mutex_cmpxchg_acquire(l, c, n)	\
-> +			(l->owner == c && cmpxchg_acquire(&l->owner, c, n) == c)
-> +# define rt_mutex_cmpxchg_release(l, c, n)	\
-> +			(l->owner == c && cmpxchg_release(&l->owner, c, n) == c)
-
-This kind of micro-optimizing is more than dubious especially w/o
-numbers backing up the benefit.
-
-Thanks,
-
-        tglx
+Maybe input_mt_init_slots() could be changed to set up all the
+properties that are needed for the legacy pointer, but I'm not 100% sure
+because not very familiar with that code. Perhaps Dmitry Torokhov could
+clarify?
