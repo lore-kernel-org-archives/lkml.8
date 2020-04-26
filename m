@@ -2,136 +2,105 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B224C55191
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 10:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6077CC55191
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 10:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 549792071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 10:01:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ikirOJ+7"
+	by mail.kernel.org (Postfix) with ESMTP id 45A882071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 10:04:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726156AbgDZKBf (ORCPT
+        id S1726165AbgDZKEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 06:01:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52014 "EHLO
+        Sun, 26 Apr 2020 06:04:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726112AbgDZKBe (ORCPT
+        by vger.kernel.org with ESMTP id S1726132AbgDZKEl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 06:01:34 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A2D6C061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 03:01:33 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id k28so11308685lfe.10
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 03:01:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=hcdO585ed6dhWyG//gXm3cGKsbtOyJyZqsLOBSwj2N8=;
-        b=ikirOJ+7rRXxs7SrNlgEkDaZVMrjyvtQ7PidEJ7ixIVmpogc62gfDDT06j3E1/98JZ
-         KhniI335e7UHyv+Eg17tUeY03z++QOQl/7LaVaUUK50gywj0Cc7yIcmTMMm6X6QuqGSE
-         4zGMveRX/DfWj/KjsRo5XL5rPuhu7RAPSYZAWTPqbc6TCGa8np90xgfvZPE7oA90AZ9e
-         dB+uQhKy8eL54f9DvEM7QVbUr0weEAB9vDUmW9ISF+z8J5m21YmfQ6aH5ld4dwrWYk7m
-         T3dvULpTNzVlQ4odqRdZiera/2YRFPYD8GcSDC1gUIPKAAhApNQwHshRgAMJMLyZeZCv
-         I9wA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=hcdO585ed6dhWyG//gXm3cGKsbtOyJyZqsLOBSwj2N8=;
-        b=fCBtNBhv8vb0XobxDYL9p2IDtP2ZvZk1TZvglzEPF4eTWi+28GXVRHvC7etutciJ/D
-         vQBKH2fvfa3izntvjo/Xt/4HNIIhxRdTY2GN7z0gbCjrRJ8RTysL8A2aXxHlBTxNAKn3
-         EiIc9Xm7dj6AR9TAFrDFq8aYJJ9yQBqZnNyMZ9rSbuengEjGQHHif7+NIDzCXf/CosR9
-         rXYXxNdzQ7M4TbuJXQDjTXxJBXBjL80xKa6ytZ/RJu+vavNSWFahyoikNA677x4N2TVc
-         yvRcpDzGQJAZSz4138nvOMPjIC8I/0UR9KpSIaYuiaJhP1oILXv7IDyRVUVYSX05Qkf1
-         9iGw==
-X-Gm-Message-State: AGi0PublJPaE9TgByokhstz0vqb4E4j6melR++JSyoCvfkI5pp565xKB
-        axCzKQkoIIP+e4w+bzWpYKU=
-X-Google-Smtp-Source: APiQypIMfzDbnEekij6Jd1FoTOd3sfpBap33rPZO9O0+3qrG9qvTIfqWdSKX24mM8n0Op4LXD1VC0Q==
-X-Received: by 2002:ac2:5f5b:: with SMTP id 27mr12062370lfz.136.1587895291405;
-        Sun, 26 Apr 2020 03:01:31 -0700 (PDT)
-Received: from e123311-lin.cambridge.arm.com (static-91-225-135-18.devs.futuro.pl. [91.225.135.18])
-        by smtp.gmail.com with ESMTPSA id r206sm8720231lff.65.2020.04.26.03.01.30
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 26 Apr 2020 03:01:30 -0700 (PDT)
-From:   Michal Orzel <michalorzel.eng@gmail.com>
-To:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, airlied@linux.ie, daniel@ffwll.ch
-Cc:     Michal Orzel <michalorzel.eng@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm: Replace drm_modeset_lock/unlock_all with DRM_MODESET_LOCK_ALL_* helpers
-Date:   Sun, 26 Apr 2020 12:01:22 +0200
-Message-Id: <1587895282-2808-1-git-send-email-michalorzel.eng@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Sun, 26 Apr 2020 06:04:41 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73253C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 03:04:41 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jSe93-000217-Ui; Sun, 26 Apr 2020 12:04:18 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id B379A100605; Sun, 26 Apr 2020 12:04:16 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Andi Kleen <ak@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Bae\, Chang Seok" <chang.seok.bae@intel.com>,
+        "Metzger\, Markus T" <markus.t.metzger@intel.com>,
+        "hpa\@zytor.com" <hpa@zytor.com>, "bp\@alien8.de" <bp@alien8.de>,
+        "Hansen\, Dave" <dave.hansen@intel.com>,
+        "Luck\, Tony" <tony.luck@intel.com>,
+        Pedro Alves <palves@redhat.com>,
+        Simon Marchi <simark@simark.ca>,
+        "Shankar\, Ravi V" <ravi.v.shankar@intel.com>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v9 00/17] Enable FSGSBASE instructions
+In-Reply-To: <20200426025243.GJ13035@sasha-vm>
+References: <20200421195629.GE608746@tassilo.jf.intel.com> <5957D3CC-B54B-4A1A-998A-0E6F58589CF4@amacapital.net> <20200421205119.GK1809@sasha-vm> <CALCETrUGuvMgvcsUWsdmUr-=6c6BpRpOKC1MN+E16g17U7vyMQ@mail.gmail.com> <20200423040850.GY1809@sasha-vm> <87ftcrtckg.fsf@nanos.tec.linutronix.de> <20200426025243.GJ13035@sasha-vm>
+Date:   Sun, 26 Apr 2020 12:04:16 +0200
+Message-ID: <878siitvfj.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As suggested by the TODO list for the kernel DRM subsystem, replace
-the deprecated functions that take/drop modeset locks with new helpers.
+Sasha Levin <sashal@kernel.org> writes:
+> On Sun, Apr 26, 2020 at 12:39:27AM +0200, Thomas Gleixner wrote:
+>>  - Addressed the outstanding review comments
+>
+> I saw a review that Andy has just sent on patch #1 from the new series,
+> I'll address that.
 
-Signed-off-by: Michal Orzel <michalorzel.eng@gmail.com>
----
- drivers/gpu/drm/drm_mode_object.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+Please look at the last version from Intel as well whether there is anything
+outstanding.
 
-diff --git a/drivers/gpu/drm/drm_mode_object.c b/drivers/gpu/drm/drm_mode_object.c
-index 35c2719..901b078 100644
---- a/drivers/gpu/drm/drm_mode_object.c
-+++ b/drivers/gpu/drm/drm_mode_object.c
-@@ -402,12 +402,13 @@ int drm_mode_obj_get_properties_ioctl(struct drm_device *dev, void *data,
- {
- 	struct drm_mode_obj_get_properties *arg = data;
- 	struct drm_mode_object *obj;
-+	struct drm_modeset_acquire_ctx ctx;
- 	int ret = 0;
- 
- 	if (!drm_core_check_feature(dev, DRIVER_MODESET))
- 		return -EOPNOTSUPP;
- 
--	drm_modeset_lock_all(dev);
-+	DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, 0, ret);
- 
- 	obj = drm_mode_object_find(dev, file_priv, arg->obj_id, arg->obj_type);
- 	if (!obj) {
-@@ -427,7 +428,7 @@ int drm_mode_obj_get_properties_ioctl(struct drm_device *dev, void *data,
- out_unref:
- 	drm_mode_object_put(obj);
- out:
--	drm_modeset_unlock_all(dev);
-+	DRM_MODESET_LOCK_ALL_END(ctx, ret);
- 	return ret;
- }
- 
-@@ -449,12 +450,13 @@ static int set_property_legacy(struct drm_mode_object *obj,
- {
- 	struct drm_device *dev = prop->dev;
- 	struct drm_mode_object *ref;
-+	struct drm_modeset_acquire_ctx ctx;
- 	int ret = -EINVAL;
- 
- 	if (!drm_property_change_valid_get(prop, prop_value, &ref))
- 		return -EINVAL;
- 
--	drm_modeset_lock_all(dev);
-+	DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, 0, ret);
- 	switch (obj->type) {
- 	case DRM_MODE_OBJECT_CONNECTOR:
- 		ret = drm_connector_set_obj_prop(obj, prop, prop_value);
-@@ -468,7 +470,7 @@ static int set_property_legacy(struct drm_mode_object *obj,
- 		break;
- 	}
- 	drm_property_change_valid_put(prop, ref);
--	drm_modeset_unlock_all(dev);
-+	DRM_MODESET_LOCK_ALL_END(ctx, ret);
- 
- 	return ret;
- }
--- 
-2.7.4
+>>  - Have proper documentation in the changelog of the user space visible
+>>    ABI changes why it does not break any existing usage and having the
+>>    relevant people who maintain tools which utilize the affected
+>>    interfaces Cc'ed on submission.
+>
+> The cover letter has references to mail correspondence with maintainers
+> of these tools that are affected by this change. Each of those exchanges
+> goes over what FSGSBASE does and answers any specific questions those
+> maintainers had.
+>
+> If you want it out of the cover letter and into one of the patches I'd
+> be happy to do that. If you want me to go chase down another userspace
+> which we might be breaking just let me know which.
 
+Yes, please add the information to the changelogs. That's where it
+really belongs.
+
+> I didn't want to have them on the Cc line as they have already acked
+> this change from their end and I wanted to avoid additional noise. I'll
+> be happy to add them back to the next spin of this.
+>
+>>  - Made sure that the cleanups I did when merging them initially have
+>>    been picked up. I'm not going to waste another couple of days on
+>>    this mess just to revert it because it hadn't seen any serious
+>>    testing in development.
+>
+> Based on your revert
+> (https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=x86/cpu&id=049331f277fef1c3f2527c2c9afa1d285e9a1247)
+> I believe that we have all the relevant patches in the series.
+
+Ok.
+
+Thanks,
+
+        tglx
