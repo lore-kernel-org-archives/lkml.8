@@ -7,65 +7,66 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B5FC54FCB
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80785C55194
 	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 21:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40B2420700
+	by mail.kernel.org (Postfix) with ESMTP id 60D9F2071C
 	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 21:50:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="Jp65FI7L"
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="OwNMupnS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbgDZVt4 (ORCPT
+        id S1726444AbgDZVt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 17:49:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48548 "EHLO
+        Sun, 26 Apr 2020 17:49:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbgDZVtw (ORCPT
+        with ESMTP id S1726385AbgDZVty (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 17:49:52 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E260CC061A10
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 14:49:51 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id pg17so12450496ejb.9
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 14:49:51 -0700 (PDT)
+        Sun, 26 Apr 2020 17:49:54 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1E55C09B054
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 14:49:53 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id p16so11993911edm.10
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 14:49:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cloud.ionos.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Nk7EV8qONapDcMrz48oPwtLT8Zin9+cq+j0iMab0m4A=;
-        b=Jp65FI7Lo+Cn8/FOgWCuXZHNnKbn3DioxWHStDkNrmH2gVOtVcURqIHsod5j6u5BLR
-         /bzkNSBHvR65E7Cc8qY4fKAkGe64M3OAQyMWt4e89dAlgVvLImCOAq02qBwmXSn+VHvK
-         T3Ei+CxAHR2A+azyaRyZCEtKDP0LyhjtDBp4T4MPxOCW8FBvLTK1mMFO06vPCAhZC/UZ
-         4Y365TApm81j5lGrkPGBW0G54qzQUXcDXG2jNf7vIprZiYAlXUdj7DbHP0JH2jfk4bsF
-         p7Jkpb1gKLj0A7hYSunF2Dox+xkU5KikPl1Pl0jESVe7A/kkxilmSAif+MqAH2hA6/up
-         oM+w==
+        bh=je11VssEqcRjDcQQUY7TMs+S/p8Pe+y4zVJlfwO1AIY=;
+        b=OwNMupnSJkBuaJfMXeCgM1rYXjTmzIAla+tSBp7FYda6Z0do31Tv6/LqXGLMcBBWhG
+         nqjIhBJEalueOvj9V2LZ+TuLLeFNIXzVb6OK45n66rzci+x/eJxewCUOYOo06dTayDKj
+         B5iJ94emWcTjwQbgVlPIpz9Lz++7r/aQF//fpjSxu2/XNpEhrL+lHBErqiCynz5SbjB2
+         iW4ERClUfrgtnD0QmDonsDibcZjmNyxtpI2M/DaGWxbm7W5qNx0fPMGF44KjexJ6P8/1
+         2LGOGXLbZT3PVyAX3yAvtCf/8vJUr85wyASdWC+0wMGkNwBqVxwGJ+99/wys6z7wxDo+
+         YYVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Nk7EV8qONapDcMrz48oPwtLT8Zin9+cq+j0iMab0m4A=;
-        b=kDJcjl26REnKpsl5tUr2AMGG32mNwKCMxy74nZb02BMFfOKOK+0UIQaQLes00MdutR
-         OFajnVASbgyf/PDstVRi/2x5T6WNQl6jV2eZwH4jH/0bsbdraTZ0iItRgrQstIC8gAyE
-         zDiKkEo+xAmdSM8bCNUdAElC0i7LlSK9Jw8KGmuxAh2MOtdrqXVzZ851a84YsErH50e9
-         s8zABPFtlph6B+cA30JbTFrAkZQMOuCD1EJCDGMGfxors9H+LlVAprXgYoaXEmyan6ko
-         RtLL8tF7yZi4jAApfJNky2yLzbju78Y0PwIgDPXWmS9Bm/d87SElG8IOnlVvRwScw9AC
-         Bwrw==
-X-Gm-Message-State: AGi0PubvbkUEDXuRFNemy4aGS05VsbBDwEKi1vxTSlfswuGkSBdw+Bir
-        6hOWEP0hNVvFU5l0pvlZRY4QcA==
-X-Google-Smtp-Source: APiQypIPM3/WHEI2bnt8PhQVPXZZ9xFUarLWq3VdADMkJuzy3kZOX2mY6i1kz2a/wwgLRKeFp4qKZQ==
-X-Received: by 2002:a17:906:6b05:: with SMTP id q5mr16557099ejr.329.1587937790675;
-        Sun, 26 Apr 2020 14:49:50 -0700 (PDT)
+        bh=je11VssEqcRjDcQQUY7TMs+S/p8Pe+y4zVJlfwO1AIY=;
+        b=HyV8IovVgT0t7aD2QRnv7h9fcxLz4jKHsEpwU23y2ypSYXmfK9235OkE1zmC+FxYgl
+         iGzxuMqqgmZJr98sQZzlKXtuSJvtchXpv7Ng9HPt92OHfXQGddbRyQOIBmxthemi1LdE
+         ppK9RxZhIjbO10vYfMkFzhBDwtN6W5UMuw/j8KBeersA3D69yxUJrHhALirzuXON/bWf
+         93s2OFVfcvdDQLLE4JZx7LMGpQhNcjIeRWca5deyROtbXMPpHxZGQf0kPywY7H3XAOzs
+         rM/If+xyny8gXbNQHNN3Nmqa4QIhU1UafAMUTL4WNhqCbGpEQzqNteO73vHavH/7v4yz
+         TA6g==
+X-Gm-Message-State: AGi0PuZUtGLn3/26skEaBP3QWUHF+R8puoXSfjtiLYdiwmQhKmRbObZD
+        ABKrQgBkWo50Ph3XqhLY1fFWeg==
+X-Google-Smtp-Source: APiQypLeC6iTKrMS3r2CPJ1hgROOG19gCAO83wMvAt7p0NE0/jtP9fk8m1Bkoh+kIZpagKS8bUmlOQ==
+X-Received: by 2002:a50:99c4:: with SMTP id n4mr16930973edb.187.1587937792458;
+        Sun, 26 Apr 2020 14:49:52 -0700 (PDT)
 Received: from ls00508.pb.local ([2001:1438:4010:2540:fab1:56ff:feab:56b1])
-        by smtp.gmail.com with ESMTPSA id ce18sm2270108ejb.61.2020.04.26.14.49.49
+        by smtp.gmail.com with ESMTPSA id ce18sm2270108ejb.61.2020.04.26.14.49.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Apr 2020 14:49:50 -0700 (PDT)
+        Sun, 26 Apr 2020 14:49:51 -0700 (PDT)
 From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     hch@infradead.org, david@fromorbit.com, willy@infradead.org,
         Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: [RFC PATCH 4/9] fs/buffer.c: use set/clear_fs_page_private
-Date:   Sun, 26 Apr 2020 23:49:20 +0200
-Message-Id: <20200426214925.10970-5-guoqing.jiang@cloud.ionos.com>
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org
+Subject: [RFC PATCH 6/9] iomap: use set/clear_fs_page_private
+Date:   Sun, 26 Apr 2020 23:49:22 +0200
+Message-Id: <20200426214925.10970-7-guoqing.jiang@cloud.ionos.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200426214925.10970-1-guoqing.jiang@cloud.ionos.com>
 References: <20200426214925.10970-1-guoqing.jiang@cloud.ionos.com>
@@ -75,69 +76,60 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Since the new pair function is introduced, we can call them to clean the
-code in buffer.c.
+code in iomap.
 
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc: linux-xfs@vger.kernel.org
 Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 ---
- fs/buffer.c | 16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
+ fs/iomap/buffered-io.c | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
-diff --git a/fs/buffer.c b/fs/buffer.c
-index a60f60396cfa..1d9b32e77c2b 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -123,14 +123,6 @@ void __wait_on_buffer(struct buffer_head * bh)
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index 89e21961d1ad..cc48bf4f1193 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -59,24 +59,18 @@ iomap_page_create(struct inode *inode, struct page *page)
+ 	 * migrate_page_move_mapping() assumes that pages with private data have
+ 	 * their count elevated by 1.
+ 	 */
+-	get_page(page);
+-	set_page_private(page, (unsigned long)iop);
+-	SetPagePrivate(page);
+-	return iop;
++	return (struct iomap_page *)set_fs_page_private(page, iop);
  }
- EXPORT_SYMBOL(__wait_on_buffer);
  
--static void
--__clear_page_buffers(struct page *page)
--{
+ static void
+ iomap_page_release(struct page *page)
+ {
+-	struct iomap_page *iop = to_iomap_page(page);
++	struct iomap_page *iop = clear_fs_page_private(page);
+ 
+ 	if (!iop)
+ 		return;
+ 	WARN_ON_ONCE(atomic_read(&iop->read_count));
+ 	WARN_ON_ONCE(atomic_read(&iop->write_count));
 -	ClearPagePrivate(page);
 -	set_page_private(page, 0);
 -	put_page(page);
--}
--
- static void buffer_io_error(struct buffer_head *bh, char *msg)
- {
- 	if (!test_bit(BH_Quiet, &bh->b_state))
-@@ -906,7 +898,7 @@ link_dev_buffers(struct page *page, struct buffer_head *head)
- 		bh = bh->b_this_page;
- 	} while (bh);
- 	tail->b_this_page = head;
--	attach_page_buffers(page, head);
-+	set_fs_page_private(page, head);
+ 	kfree(iop);
  }
  
- static sector_t blkdev_max_block(struct block_device *bdev, unsigned int size)
-@@ -1580,7 +1572,7 @@ void create_empty_buffers(struct page *page,
- 			bh = bh->b_this_page;
- 		} while (bh != head);
+@@ -556,11 +550,9 @@ iomap_migrate_page(struct address_space *mapping, struct page *newpage,
+ 
+ 	if (page_has_private(page)) {
+ 		ClearPagePrivate(page);
+-		get_page(newpage);
+-		set_page_private(newpage, page_private(page));
++		set_fs_page_private(newpage, (void *)page_private(page));
+ 		set_page_private(page, 0);
+ 		put_page(page);
+-		SetPagePrivate(newpage);
  	}
--	attach_page_buffers(page, head);
-+	set_fs_page_private(page, head);
- 	spin_unlock(&page->mapping->private_lock);
- }
- EXPORT_SYMBOL(create_empty_buffers);
-@@ -2567,7 +2559,7 @@ static void attach_nobh_buffers(struct page *page, struct buffer_head *head)
- 			bh->b_this_page = head;
- 		bh = bh->b_this_page;
- 	} while (bh != head);
--	attach_page_buffers(page, head);
-+	set_fs_page_private(page, head);
- 	spin_unlock(&page->mapping->private_lock);
- }
  
-@@ -3227,7 +3219,7 @@ drop_buffers(struct page *page, struct buffer_head **buffers_to_free)
- 		bh = next;
- 	} while (bh != head);
- 	*buffers_to_free = head;
--	__clear_page_buffers(page);
-+	clear_fs_page_private(page);
- 	return 1;
- failed:
- 	return 0;
+ 	if (mode != MIGRATE_SYNC_NO_COPY)
 -- 
 2.17.1
 
