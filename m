@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F68BC55186
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9813EC55196
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F64E20706
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7810D2076C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:15:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbgDZCPS (ORCPT
+        id S1726416AbgDZCPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 22:15:18 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3295 "EHLO huawei.com"
+        Sat, 25 Apr 2020 22:15:34 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3296 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726191AbgDZCPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 22:15:16 -0400
+        id S1726285AbgDZCPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 22:15:18 -0400
 Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 206285497D5067D7535E;
+        by Forcepoint Email with ESMTP id 2C08A1DF509EC5172F2E;
         Sun, 26 Apr 2020 10:15:12 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.487.0; Sun, 26 Apr 2020 10:15:01 +0800
+ 14.3.487.0; Sun, 26 Apr 2020 10:15:02 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
@@ -32,9 +32,9 @@ CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
         Jian Shen <shenjian15@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 6/9] net: hns3: refactor the promisc mode setting
-Date:   Sun, 26 Apr 2020 10:13:45 +0800
-Message-ID: <1587867228-9955-7-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 8/9] net: hns3: optimize the filter table entries handling when resetting
+Date:   Sun, 26 Apr 2020 10:13:47 +0800
+Message-ID: <1587867228-9955-9-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1587867228-9955-1-git-send-email-tanhuazhong@huawei.com>
 References: <1587867228-9955-1-git-send-email-tanhuazhong@huawei.com>
@@ -49,432 +49,515 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jian Shen <shenjian15@huawei.com>
 
-As the HNS3 driver doesn't update the MAC address directly in
-function hns3_set_rx_mode() now, it can't know whether the
-MAC table is full from __dev_uc_sync() and __dev_mc_sync(),
-so it's senseless to handle the overflow promisc here.
+Currently, the PF driver removes all (including its VFs') MAC/VLAN
+flow director table entries when resetting, and restores them after
+reset completed.
 
-This patch removes the handle of overflow promisc from function
-hns3_set_rx_mode(), and updates the promisc mode in the service
-task.
+In fact, the hardware will clear all table entries only in IMP
+reset and global reset. So driver only needs to restore the table
+entries in these cases, and needs do nothing when PF reset, FLR
+or other function level reset.
+
+This patch optimizes it by removing unnecessary table entries clear
+and restoring handling in the reset flow, and doing the restoring
+after reset completed.
 
 Signed-off-by: Jian Shen <shenjian15@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hnae3.h        |  3 +
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    | 42 +++-------
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.h    |  1 +
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c |  2 +-
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 89 ++++++++++++++++++----
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  4 +
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  | 26 +++++++
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h  |  1 +
- 8 files changed, 122 insertions(+), 46 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h    |  5 ++
+ drivers/net/ethernet/hisilicon/hns3/hnae3.h        |  5 --
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    | 33 --------
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.h    |  9 ---
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 89 +++++++++++-----------
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  1 +
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c | 28 ++++++-
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  | 29 ++++---
+ 8 files changed, 94 insertions(+), 105 deletions(-)
 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
+index 948e67e..21a7361 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
+@@ -45,6 +45,7 @@ enum HCLGE_MBX_OPCODE {
+ 	HCLGE_MBX_GET_MEDIA_TYPE,       /* (VF -> PF) get media type */
+ 	HCLGE_MBX_PUSH_PROMISC_INFO,	/* (PF -> VF) push vf promisc info */
+ 	HCLGE_MBX_VF_UNINIT,            /* (VF -> PF) vf is unintializing */
++	HCLGE_MBX_HANDLE_VF_TBL,	/* (VF -> PF) store/clear hw table */
+ 
+ 	HCLGE_MBX_GET_VF_FLR_STATUS = 200, /* (M7 -> PF) get vf flr status */
+ 	HCLGE_MBX_PUSH_LINK_STATUS,	/* (M7 -> PF) get port link status */
+@@ -70,6 +71,10 @@ enum hclge_mbx_vlan_cfg_subcode {
+ 	HCLGE_MBX_GET_PORT_BASE_VLAN_STATE,	/* get port based vlan state */
+ };
+ 
++enum hclge_mbx_tbl_cfg_subcode {
++	HCLGE_MBX_VPORT_LIST_CLEAR,
++};
++
+ #define HCLGE_MBX_MAX_MSG_SIZE	14
+ #define HCLGE_MBX_MAX_RESP_DATA_SIZE	8U
+ #define HCLGE_MBX_MAX_RING_CHAIN_PARAM_NUM	4
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-index 5587605..a56f8d6 100644
+index a56f8d6..6291aa9 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
 +++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-@@ -270,6 +270,8 @@ struct hnae3_ae_dev {
-  *   Set loopback
-  * set_promisc_mode
-  *   Set promisc mode
-+ * request_update_promisc_mode
-+ *   request to hclge(vf) to update promisc mode
-  * set_mtu()
-  *   set mtu
-  * get_pauseparam()
-@@ -408,6 +410,7 @@ struct hnae3_ae_ops {
+@@ -233,7 +233,6 @@ struct hnae3_ae_dev {
+ 	struct list_head node;
+ 	u32 flag;
+ 	unsigned long hw_err_reset_req;
+-	enum hnae3_reset_type reset_type;
+ 	void *priv;
+ };
  
- 	int (*set_promisc_mode)(struct hnae3_handle *handle, bool en_uc_pmc,
- 				bool en_mc_pmc);
-+	void (*request_update_promisc_mode)(struct hnae3_handle *handle);
- 	int (*set_mtu)(struct hnae3_handle *handle, int new_mtu);
- 
- 	void (*get_pauseparam)(struct hnae3_handle *handle,
+@@ -356,8 +355,6 @@ struct hnae3_ae_dev {
+  *   Set vlan filter config of Ports
+  * set_vf_vlan_filter()
+  *   Set vlan filter config of vf
+- * restore_vlan_table()
+- *   Restore vlan filter entries after reset
+  * enable_hw_strip_rxvtag()
+  *   Enable/disable hardware strip vlan tag of packets received
+  * set_gro_en
+@@ -528,7 +525,6 @@ struct hnae3_ae_ops {
+ 				struct ethtool_rxnfc *cmd);
+ 	int (*get_fd_all_rules)(struct hnae3_handle *handle,
+ 				struct ethtool_rxnfc *cmd, u32 *rule_locs);
+-	int (*restore_fd_rules)(struct hnae3_handle *handle);
+ 	void (*enable_fd)(struct hnae3_handle *handle, bool enable);
+ 	int (*add_arfs_entry)(struct hnae3_handle *handle, u16 queue_id,
+ 			      u16 flow_id, struct flow_keys *fkeys);
+@@ -542,7 +538,6 @@ struct hnae3_ae_ops {
+ 	void (*set_timer_task)(struct hnae3_handle *handle, bool enable);
+ 	int (*mac_connect_phy)(struct hnae3_handle *handle);
+ 	void (*mac_disconnect_phy)(struct hnae3_handle *handle);
+-	void (*restore_vlan_table)(struct hnae3_handle *handle);
+ 	int (*get_vf_config)(struct hnae3_handle *handle, int vf,
+ 			     struct ifla_vf_info *ivf);
+ 	int (*set_vf_link_state)(struct hnae3_handle *handle, int vf,
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 341e8b5..6b9535c 100644
+index 6b9535c..c79d6a3 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -601,34 +601,25 @@ static void hns3_nic_set_rx_mode(struct net_device *netdev)
- {
- 	struct hnae3_handle *h = hns3_get_handle(netdev);
- 	u8 new_flags;
--	int ret;
+@@ -2102,7 +2102,6 @@ static int hns3_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
  
- 	new_flags = hns3_get_netdev_flags(netdev);
+ 	ae_dev->pdev = pdev;
+ 	ae_dev->flag = ent->driver_data;
+-	ae_dev->reset_type = HNAE3_NONE_RESET;
+ 	hns3_get_dev_capability(pdev, ae_dev);
+ 	pci_set_drvdata(pdev, ae_dev);
  
--	ret = __dev_uc_sync(netdev, hns3_nic_uc_sync, hns3_nic_uc_unsync);
--	if (ret) {
--		netdev_err(netdev, "sync uc address fail\n");
--		if (ret == -ENOSPC)
--			new_flags |= HNAE3_OVERFLOW_UPE;
--	}
--
--	if (netdev->flags & IFF_MULTICAST) {
--		ret = __dev_mc_sync(netdev, hns3_nic_mc_sync,
--				    hns3_nic_mc_unsync);
--		if (ret) {
--			netdev_err(netdev, "sync mc address fail\n");
--			if (ret == -ENOSPC)
--				new_flags |= HNAE3_OVERFLOW_MPE;
--		}
--	}
-+	__dev_uc_sync(netdev, hns3_nic_uc_sync, hns3_nic_uc_unsync);
-+	__dev_mc_sync(netdev, hns3_nic_mc_sync, hns3_nic_mc_unsync);
- 
- 	/* User mode Promisc mode enable and vlan filtering is disabled to
--	 * let all packets in. MAC-VLAN Table overflow Promisc enabled and
--	 * vlan fitering is enabled
-+	 * let all packets in.
- 	 */
--	hns3_enable_vlan_filter(netdev, new_flags & HNAE3_VLAN_FLTR);
- 	h->netdev_flags = new_flags;
--	hns3_update_promisc_mode(netdev, new_flags);
-+	hns3_request_update_promisc_mode(h);
-+}
-+
-+void hns3_request_update_promisc_mode(struct hnae3_handle *handle)
-+{
-+	const struct hnae3_ae_ops *ops = handle->ae_algo->ops;
-+
-+	if (ops->request_update_promisc_mode)
-+		ops->request_update_promisc_mode(handle);
+@@ -3936,17 +3935,6 @@ static void hns3_uninit_phy(struct net_device *netdev)
+ 		h->ae_algo->ops->mac_disconnect_phy(h);
  }
  
- int hns3_update_promisc_mode(struct net_device *netdev, u8 promisc_flags)
-@@ -4467,15 +4458,6 @@ static int hns3_reset_notify_init_enet(struct hnae3_handle *handle)
- static int hns3_reset_notify_restore_enet(struct hnae3_handle *handle)
+-static int hns3_restore_fd_rules(struct net_device *netdev)
+-{
+-	struct hnae3_handle *h = hns3_get_handle(netdev);
+-	int ret = 0;
+-
+-	if (h->ae_algo->ops->restore_fd_rules)
+-		ret = h->ae_algo->ops->restore_fd_rules(h);
+-
+-	return ret;
+-}
+-
+ static void hns3_del_all_fd_rules(struct net_device *netdev, bool clear_list)
+ {
+ 	struct hnae3_handle *h = hns3_get_handle(netdev);
+@@ -4346,7 +4334,6 @@ static void hns3_restore_coal(struct hns3_nic_priv *priv)
+ 
+ static int hns3_reset_notify_down_enet(struct hnae3_handle *handle)
+ {
+-	struct hnae3_ae_dev *ae_dev = pci_get_drvdata(handle->pdev);
+ 	struct hnae3_knic_private_info *kinfo = &handle->kinfo;
+ 	struct net_device *ndev = kinfo->netdev;
+ 	struct hns3_nic_priv *priv = netdev_priv(ndev);
+@@ -4354,13 +4341,6 @@ static int hns3_reset_notify_down_enet(struct hnae3_handle *handle)
+ 	if (test_and_set_bit(HNS3_NIC_STATE_RESETTING, &priv->state))
+ 		return 0;
+ 
+-	/* it is cumbersome for hardware to pick-and-choose entries for deletion
+-	 * from table space. Hence, for function reset software intervention is
+-	 * required to delete the entries
+-	 */
+-	if (hns3_dev_ongoing_func_reset(ae_dev))
+-		hns3_del_all_fd_rules(ndev, false);
+-
+ 	if (!netif_running(ndev))
+ 		return 0;
+ 
+@@ -4455,16 +4435,6 @@ static int hns3_reset_notify_init_enet(struct hnae3_handle *handle)
+ 	return ret;
+ }
+ 
+-static int hns3_reset_notify_restore_enet(struct hnae3_handle *handle)
+-{
+-	struct net_device *netdev = handle->kinfo.netdev;
+-
+-	if (handle->ae_algo->ops->restore_vlan_table)
+-		handle->ae_algo->ops->restore_vlan_table(handle);
+-
+-	return hns3_restore_fd_rules(netdev);
+-}
+-
+ static int hns3_reset_notify_uninit_enet(struct hnae3_handle *handle)
  {
  	struct net_device *netdev = handle->kinfo.netdev;
--	bool vlan_filter_enable;
--	int ret;
--
--	ret = hns3_update_promisc_mode(netdev, handle->netdev_flags);
--	if (ret)
--		return ret;
--
--	vlan_filter_enable = netdev->flags & IFF_PROMISC ? false : true;
--	hns3_enable_vlan_filter(netdev, vlan_filter_enable);
- 
- 	if (handle->ae_algo->ops->restore_vlan_table)
- 		handle->ae_algo->ops->restore_vlan_table(handle);
+@@ -4514,9 +4484,6 @@ static int hns3_reset_notify(struct hnae3_handle *handle,
+ 	case HNAE3_UNINIT_CLIENT:
+ 		ret = hns3_reset_notify_uninit_enet(handle);
+ 		break;
+-	case HNAE3_RESTORE_CLIENT:
+-		ret = hns3_reset_notify_restore_enet(handle);
+-		break;
+ 	default:
+ 		break;
+ 	}
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-index 4b3f0ab..53bc0ed 100644
+index 53bc0ed..240ba06 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-@@ -658,6 +658,7 @@ void hns3_set_vector_coalesce_rl(struct hns3_enet_tqp_vector *tqp_vector,
+@@ -576,15 +576,6 @@ static inline void hns3_write_reg(void __iomem *base, u32 reg, u32 value)
+ 	writel(value, reg_addr + reg);
+ }
  
- void hns3_enable_vlan_filter(struct net_device *netdev, bool enable);
- int hns3_update_promisc_mode(struct net_device *netdev, u8 promisc_flags);
-+void hns3_request_update_promisc_mode(struct hnae3_handle *handle);
+-static inline bool hns3_dev_ongoing_func_reset(struct hnae3_ae_dev *ae_dev)
+-{
+-	return (ae_dev && (ae_dev->reset_type == HNAE3_FUNC_RESET ||
+-			   ae_dev->reset_type == HNAE3_FLR_RESET ||
+-			   ae_dev->reset_type == HNAE3_VF_FUNC_RESET ||
+-			   ae_dev->reset_type == HNAE3_VF_FULL_RESET ||
+-			   ae_dev->reset_type == HNAE3_VF_PF_FUNC_RESET));
+-}
+-
+ #define hns3_read_dev(a, reg) \
+ 	hns3_read_reg((a)->io_base, (reg))
  
- #ifdef CONFIG_HNS3_DCB
- void hns3_dcbnl_setup(struct hnae3_handle *handle);
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-index 6a0734b..4d9c85f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-@@ -99,7 +99,7 @@ static int hns3_lp_setup(struct net_device *ndev, enum hnae3_loop loop, bool en)
- 		h->ae_algo->ops->set_promisc_mode(h, true, true);
- 	} else {
- 		/* recover promisc mode before loopback test */
--		hns3_update_promisc_mode(ndev, h->netdev_flags);
-+		hns3_request_update_promisc_mode(h);
- 		vlan_filter_enable = ndev->flags & IFF_PROMISC ? false : true;
- 		hns3_enable_vlan_filter(ndev, vlan_filter_enable);
- 	}
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index c3205ae..71ff0fa 100644
+index 177ef5e..c74990a 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
 @@ -69,6 +69,7 @@ static enum hnae3_reset_type hclge_get_reset_level(struct hnae3_ae_dev *ae_dev,
  static int hclge_set_default_loopback(struct hclge_dev *hdev);
  
  static void hclge_sync_mac_table(struct hclge_dev *hdev);
-+static void hclge_sync_promisc_mode(struct hclge_dev *hdev);
++static void hclge_restore_hw_table(struct hclge_dev *hdev);
+ static void hclge_sync_promisc_mode(struct hclge_dev *hdev);
  
  static struct hnae3_ae_algo ae_algo;
- 
-@@ -3975,6 +3976,7 @@ static void hclge_periodic_service_task(struct hclge_dev *hdev)
- 	 */
- 	hclge_update_link_status(hdev);
- 	hclge_sync_mac_table(hdev);
-+	hclge_sync_promisc_mode(hdev);
- 
- 	if (time_is_after_jiffies(hdev->last_serv_processed + HZ)) {
- 		delta = jiffies - hdev->last_serv_processed;
-@@ -4724,7 +4726,8 @@ static int hclge_cmd_set_promisc_mode(struct hclge_dev *hdev,
- 	ret = hclge_cmd_send(&hdev->hw, &desc, 1);
+@@ -3731,22 +3732,13 @@ static int hclge_reset_stack(struct hclge_dev *hdev)
  	if (ret)
- 		dev_err(&hdev->pdev->dev,
--			"Set promisc mode fail, status is %d.\n", ret);
-+			"failed to set vport %d promisc mode, ret = %d.\n",
-+			param->vf_id, ret);
+ 		return ret;
  
- 	return ret;
- }
-@@ -4774,6 +4777,14 @@ static int hclge_set_promisc_mode(struct hnae3_handle *handle, bool en_uc_pmc,
- 					    en_bc_pmc);
+-	ret = hclge_notify_client(hdev, HNAE3_INIT_CLIENT);
+-	if (ret)
+-		return ret;
+-
+-	return hclge_notify_client(hdev, HNAE3_RESTORE_CLIENT);
++	return hclge_notify_client(hdev, HNAE3_INIT_CLIENT);
  }
  
-+static void hclge_request_update_promisc_mode(struct hnae3_handle *handle)
-+{
-+	struct hclge_vport *vport = hclge_get_vport(handle);
-+	struct hclge_dev *hdev = vport->back;
-+
-+	set_bit(HCLGE_STATE_PROMISC_CHANGED, &hdev->state);
-+}
-+
- static int hclge_get_fd_mode(struct hclge_dev *hdev, u8 *fd_mode)
+ static int hclge_reset_prepare(struct hclge_dev *hdev)
  {
- 	struct hclge_get_fd_mode_cmd *req;
-@@ -6972,17 +6983,11 @@ static int hclge_get_mac_vlan_cmd_status(struct hclge_vport *vport,
- 	}
+-	struct hnae3_ae_dev *ae_dev = pci_get_drvdata(hdev->pdev);
+ 	int ret;
  
- 	if (op == HCLGE_MAC_VLAN_ADD) {
--		if ((!resp_code) || (resp_code == 1)) {
-+		if (!resp_code || resp_code == 1)
- 			return 0;
--		} else if (resp_code == HCLGE_ADD_UC_OVERFLOW) {
--			dev_err(&hdev->pdev->dev,
--				"add mac addr failed for uc_overflow.\n");
--			return -ENOSPC;
--		} else if (resp_code == HCLGE_ADD_MC_OVERFLOW) {
--			dev_err(&hdev->pdev->dev,
--				"add mac addr failed for mc_overflow.\n");
-+		else if (resp_code == HCLGE_ADD_UC_OVERFLOW ||
-+			 resp_code == HCLGE_ADD_MC_OVERFLOW)
- 			return -ENOSPC;
--		}
+-	/* Initialize ae_dev reset status as well, in case enet layer wants to
+-	 * know if device is undergoing reset
+-	 */
+-	ae_dev->reset_type = hdev->reset_type;
+ 	hdev->rst_stats.reset_cnt++;
+ 	/* perform reset of the stack & ae device for a client */
+ 	ret = hclge_notify_roce_client(hdev, HNAE3_DOWN_CLIENT);
+@@ -3808,7 +3800,6 @@ static int hclge_reset_rebuild(struct hclge_dev *hdev)
+ 	hdev->last_reset_time = jiffies;
+ 	hdev->rst_stats.reset_fail_cnt = 0;
+ 	hdev->rst_stats.reset_done_cnt++;
+-	ae_dev->reset_type = HNAE3_NONE_RESET;
+ 	clear_bit(HCLGE_STATE_RST_FAIL, &hdev->state);
  
- 		dev_err(&hdev->pdev->dev,
- 			"add mac addr failed for undefined, code=%u.\n",
-@@ -7448,8 +7453,9 @@ int hclge_add_uc_addr_common(struct hclge_vport *vport,
- 			return ret;
- 		}
+ 	/* if default_reset_request has a higher level reset request,
+@@ -6942,8 +6933,14 @@ int hclge_vport_start(struct hclge_vport *vport)
+ 	set_bit(HCLGE_VPORT_STATE_ALIVE, &vport->state);
+ 	vport->last_active_jiffies = jiffies;
  
--		dev_err(&hdev->pdev->dev, "UC MAC table full(%u)\n",
--			hdev->priv_umv_size);
-+		if (!(vport->overflow_promisc_flags & HNAE3_OVERFLOW_UPE))
-+			dev_err(&hdev->pdev->dev, "UC MAC table full(%u)\n",
-+				hdev->priv_umv_size);
- 
- 		return -ENOSPC;
- 	}
-@@ -7543,7 +7549,9 @@ int hclge_add_mc_addr_common(struct hclge_vport *vport,
- 		return status;
- 	status = hclge_add_mac_vlan_tbl(vport, &req, desc);
- 
--	if (status == -ENOSPC)
-+	/* if already overflow, not to print each time */
-+	if (status == -ENOSPC &&
-+	    !(vport->overflow_promisc_flags & HNAE3_OVERFLOW_MPE))
- 		dev_err(&hdev->pdev->dev, "mc mac vlan table is full\n");
- 
- 	return status;
-@@ -7638,12 +7646,16 @@ static void hclge_unsync_vport_mac_list(struct hclge_vport *vport,
- 	}
- }
- 
--static void hclge_sync_from_add_list(struct list_head *add_list,
-+static bool hclge_sync_from_add_list(struct list_head *add_list,
- 				     struct list_head *mac_list)
- {
- 	struct hclge_mac_node *mac_node, *tmp, *new_node;
-+	bool all_added = true;
- 
- 	list_for_each_entry_safe(mac_node, tmp, add_list, node) {
-+		if (mac_node->state == HCLGE_MAC_TO_ADD)
-+			all_added = false;
-+
- 		/* if the mac address from tmp_add_list is not in the
- 		 * uc/mc_mac_list, it means have received a TO_DEL request
- 		 * during the time window of adding the mac address into mac
-@@ -7666,6 +7678,8 @@ static void hclge_sync_from_add_list(struct list_head *add_list,
- 			kfree(mac_node);
- 		}
- 	}
-+
-+	return all_added;
- }
- 
- static void hclge_sync_from_del_list(struct list_head *del_list,
-@@ -7693,12 +7707,30 @@ static void hclge_sync_from_del_list(struct list_head *del_list,
- 	}
- }
- 
-+static void hclge_update_overflow_flags(struct hclge_vport *vport,
-+					enum HCLGE_MAC_ADDR_TYPE mac_type,
-+					bool is_all_added)
-+{
-+	if (mac_type == HCLGE_MAC_ADDR_UC) {
-+		if (is_all_added)
-+			vport->overflow_promisc_flags &= ~HNAE3_OVERFLOW_UPE;
-+		else
-+			vport->overflow_promisc_flags |= HNAE3_OVERFLOW_UPE;
-+	} else {
-+		if (is_all_added)
-+			vport->overflow_promisc_flags &= ~HNAE3_OVERFLOW_MPE;
-+		else
-+			vport->overflow_promisc_flags |= HNAE3_OVERFLOW_MPE;
+-	if (test_bit(vport->vport_id, hdev->vport_config_block))
+-		hclge_restore_mac_table_common(vport);
++	if (test_bit(vport->vport_id, hdev->vport_config_block)) {
++		if (vport->vport_id) {
++			hclge_restore_mac_table_common(vport);
++			hclge_restore_vport_vlan_table(vport);
++		} else {
++			hclge_restore_hw_table(hdev);
++		}
 +	}
-+}
-+
- static void hclge_sync_vport_mac_table(struct hclge_vport *vport,
- 				       enum HCLGE_MAC_ADDR_TYPE mac_type)
+ 
+ 	clear_bit(vport->vport_id, hdev->vport_config_block);
+ 
+@@ -8789,39 +8786,34 @@ void hclge_uninit_vport_vlan_table(struct hclge_dev *hdev)
+ 	}
+ }
+ 
+-static void hclge_restore_vlan_table(struct hnae3_handle *handle)
++void hclge_restore_vport_vlan_table(struct hclge_vport *vport)
  {
- 	struct hclge_mac_node *mac_node, *tmp, *new_node;
- 	struct list_head tmp_add_list, tmp_del_list;
- 	struct list_head *list;
-+	bool all_added;
+-	struct hclge_vport *vport = hclge_get_vport(handle);
+ 	struct hclge_vport_vlan_cfg *vlan, *tmp;
+ 	struct hclge_dev *hdev = vport->back;
+ 	u16 vlan_proto;
+-	u16 state, vlan_id;
+-	int i;
++	u16 vlan_id;
++	u16 state;
++	int ret;
  
- 	INIT_LIST_HEAD(&tmp_add_list);
- 	INIT_LIST_HEAD(&tmp_del_list);
-@@ -7752,9 +7784,11 @@ static void hclge_sync_vport_mac_table(struct hclge_vport *vport,
- 	spin_lock_bh(&vport->mac_list_lock);
+-	for (i = 0; i < hdev->num_alloc_vport; i++) {
+-		vport = &hdev->vport[i];
+-		vlan_proto = vport->port_base_vlan_cfg.vlan_info.vlan_proto;
+-		vlan_id = vport->port_base_vlan_cfg.vlan_info.vlan_tag;
+-		state = vport->port_base_vlan_cfg.state;
++	vlan_proto = vport->port_base_vlan_cfg.vlan_info.vlan_proto;
++	vlan_id = vport->port_base_vlan_cfg.vlan_info.vlan_tag;
++	state = vport->port_base_vlan_cfg.state;
  
- 	hclge_sync_from_del_list(&tmp_del_list, list);
--	hclge_sync_from_add_list(&tmp_add_list, list);
-+	all_added = hclge_sync_from_add_list(&tmp_add_list, list);
+-		if (state != HNAE3_PORT_BASE_VLAN_DISABLE) {
+-			hclge_set_vlan_filter_hw(hdev, htons(vlan_proto),
+-						 vport->vport_id, vlan_id,
+-						 false);
+-			continue;
+-		}
+-
+-		list_for_each_entry_safe(vlan, tmp, &vport->vlan_list, node) {
+-			int ret;
++	if (state != HNAE3_PORT_BASE_VLAN_DISABLE) {
++		clear_bit(vport->vport_id, hdev->vlan_table[vlan_id]);
++		hclge_set_vlan_filter_hw(hdev, htons(vlan_proto),
++					 vport->vport_id, vlan_id,
++					 false);
++		return;
++	}
  
+-			if (!vlan->hd_tbl_status)
+-				continue;
+-			ret = hclge_set_vlan_filter_hw(hdev, htons(ETH_P_8021Q),
+-						       vport->vport_id,
+-						       vlan->vlan_id, false);
+-			if (ret)
+-				break;
+-		}
++	list_for_each_entry_safe(vlan, tmp, &vport->vlan_list, node) {
++		ret = hclge_set_vlan_filter_hw(hdev, htons(ETH_P_8021Q),
++					       vport->vport_id,
++					       vlan->vlan_id, false);
++		if (ret)
++			break;
++		vlan->hd_tbl_status = true;
+ 	}
+ }
+ 
+@@ -8856,6 +8848,18 @@ void hclge_restore_mac_table_common(struct hclge_vport *vport)
  	spin_unlock_bh(&vport->mac_list_lock);
-+
-+	hclge_update_overflow_flags(vport, mac_type, all_added);
  }
  
- static bool hclge_need_sync_mac_table(struct hclge_vport *vport)
-@@ -11052,6 +11086,30 @@ static int hclge_gro_en(struct hnae3_handle *handle, bool enable)
- 	return hclge_config_gro(hdev, enable);
- }
- 
-+static void hclge_sync_promisc_mode(struct hclge_dev *hdev)
++static void hclge_restore_hw_table(struct hclge_dev *hdev)
 +{
 +	struct hclge_vport *vport = &hdev->vport[0];
 +	struct hnae3_handle *handle = &vport->nic;
-+	u8 tmp_flags = 0;
-+	int ret;
 +
-+	if (vport->last_promisc_flags != vport->overflow_promisc_flags) {
-+		set_bit(HCLGE_STATE_PROMISC_CHANGED, &hdev->state);
-+		vport->last_promisc_flags = vport->overflow_promisc_flags;
-+	}
++	hclge_restore_mac_table_common(vport);
++	hclge_restore_vport_vlan_table(vport);
++	set_bit(HCLGE_STATE_PROMISC_CHANGED, &hdev->state);
 +
-+	if (test_bit(HCLGE_STATE_PROMISC_CHANGED, &hdev->state)) {
-+		tmp_flags = handle->netdev_flags | vport->last_promisc_flags;
-+		ret = hclge_set_promisc_mode(handle, tmp_flags & HNAE3_UPE,
-+					     tmp_flags & HNAE3_MPE);
-+		if (!ret) {
-+			clear_bit(HCLGE_STATE_PROMISC_CHANGED, &hdev->state);
-+			hclge_enable_vlan_filter(handle,
-+						 tmp_flags & HNAE3_VLAN_FLTR);
-+		}
-+	}
++	hclge_restore_fd_entries(handle);
 +}
 +
- static const struct hnae3_ae_ops hclge_ops = {
- 	.init_ae_dev = hclge_init_ae_dev,
- 	.uninit_ae_dev = hclge_uninit_ae_dev,
-@@ -11064,6 +11122,7 @@ static const struct hnae3_ae_ops hclge_ops = {
- 	.get_vector = hclge_get_vector,
- 	.put_vector = hclge_put_vector,
- 	.set_promisc_mode = hclge_set_promisc_mode,
-+	.request_update_promisc_mode = hclge_request_update_promisc_mode,
- 	.set_loopback = hclge_set_loopback,
- 	.start = hclge_ae_start,
- 	.stop = hclge_ae_stop,
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-index 5fcbc3d..85180f4 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-@@ -217,6 +217,7 @@ enum HCLGE_DEV_STATE {
- 	HCLGE_STATE_STATISTICS_UPDATING,
- 	HCLGE_STATE_CMD_DISABLE,
- 	HCLGE_STATE_LINK_UPDATING,
-+	HCLGE_STATE_PROMISC_CHANGED,
- 	HCLGE_STATE_RST_FAIL,
- 	HCLGE_STATE_MAX
- };
-@@ -931,6 +932,9 @@ struct hclge_vport {
- 	u32 mps; /* Max packet size */
- 	struct hclge_vf_info vf_info;
- 
-+	u8 overflow_promisc_flags;
-+	u8 last_promisc_flags;
-+
- 	spinlock_t mac_list_lock; /* protect mac address need to add/detele */
- 	struct list_head uc_mac_list;   /* Store VF unicast table */
- 	struct list_head mc_mac_list;   /* Store VF multicast table */
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-index 05d485a..fea197f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-@@ -1164,6 +1164,27 @@ static int hclgevf_set_promisc_mode(struct hnae3_handle *handle, bool en_uc_pmc,
- 					    en_bc_pmc);
- }
- 
-+static void hclgevf_request_update_promisc_mode(struct hnae3_handle *handle)
-+{
-+	struct hclgevf_dev *hdev = hclgevf_ae_get_hdev(handle);
-+
-+	set_bit(HCLGEVF_STATE_PROMISC_CHANGED, &hdev->state);
-+}
-+
-+static void hclgevf_sync_promisc_mode(struct hclgevf_dev *hdev)
-+{
-+	struct hnae3_handle *handle = &hdev->nic;
-+	bool en_uc_pmc = handle->netdev_flags & HNAE3_UPE;
-+	bool en_mc_pmc = handle->netdev_flags & HNAE3_MPE;
-+	int ret;
-+
-+	if (test_bit(HCLGEVF_STATE_PROMISC_CHANGED, &hdev->state)) {
-+		ret = hclgevf_set_promisc_mode(handle, en_uc_pmc, en_mc_pmc);
-+		if (!ret)
-+			clear_bit(HCLGEVF_STATE_PROMISC_CHANGED, &hdev->state);
-+	}
-+}
-+
- static int hclgevf_tqp_enable(struct hclgevf_dev *hdev, unsigned int tqp_id,
- 			      int stream_id, bool enable)
+ int hclge_en_hw_strip_rxvtag(struct hnae3_handle *handle, bool enable)
  {
-@@ -2203,6 +2224,8 @@ static void hclgevf_periodic_service_task(struct hclgevf_dev *hdev)
- 
- 	hclgevf_sync_mac_table(hdev);
- 
-+	hclgevf_sync_promisc_mode(hdev);
-+
- 	hdev->last_serv_processed = jiffies;
- 
- out:
-@@ -2986,6 +3009,8 @@ static int hclgevf_reset_hdev(struct hclgevf_dev *hdev)
- 		return ret;
+ 	struct hclge_vport *vport = hclge_get_vport(handle);
+@@ -10352,13 +10356,12 @@ static int hclge_reset_ae_dev(struct hnae3_ae_dev *ae_dev)
+ 	 */
+ 	if (hdev->reset_type == HNAE3_IMP_RESET ||
+ 	    hdev->reset_type == HNAE3_GLOBAL_RESET) {
++		memset(hdev->vlan_table, 0, sizeof(hdev->vlan_table));
++		memset(hdev->vf_vlan_full, 0, sizeof(hdev->vf_vlan_full));
+ 		bitmap_set(hdev->vport_config_block, 0, hdev->num_alloc_vport);
+ 		hclge_reset_umv_space(hdev);
  	}
  
-+	set_bit(HCLGEVF_STATE_PROMISC_CHANGED, &hdev->state);
+-	memset(hdev->vlan_table, 0, sizeof(hdev->vlan_table));
+-	memset(hdev->vf_vlan_full, 0, sizeof(hdev->vf_vlan_full));
+-
+ 	ret = hclge_cmd_init(hdev);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Cmd queue init failed\n");
+@@ -11191,7 +11194,6 @@ static const struct hnae3_ae_ops hclge_ops = {
+ 	.get_fd_rule_cnt = hclge_get_fd_rule_cnt,
+ 	.get_fd_rule_info = hclge_get_fd_rule_info,
+ 	.get_fd_all_rules = hclge_get_all_rules,
+-	.restore_fd_rules = hclge_restore_fd_entries,
+ 	.enable_fd = hclge_enable_fd,
+ 	.add_arfs_entry = hclge_add_fd_entry_by_arfs,
+ 	.dbg_run_cmd = hclge_dbg_run_cmd,
+@@ -11204,7 +11206,6 @@ static const struct hnae3_ae_ops hclge_ops = {
+ 	.set_timer_task = hclge_set_timer_task,
+ 	.mac_connect_phy = hclge_mac_connect_phy,
+ 	.mac_disconnect_phy = hclge_mac_disconnect_phy,
+-	.restore_vlan_table = hclge_restore_vlan_table,
+ 	.get_vf_config = hclge_get_vf_config,
+ 	.set_vf_link_state = hclge_set_vf_link_state,
+ 	.set_vf_spoofchk = hclge_set_vf_spoofchk,
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+index 8e69651..913c4f6 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+@@ -1001,6 +1001,7 @@ void hclge_rm_vport_all_mac_table(struct hclge_vport *vport, bool is_del_list,
+ void hclge_rm_vport_all_vlan_table(struct hclge_vport *vport, bool is_del_list);
+ void hclge_uninit_vport_vlan_table(struct hclge_dev *hdev);
+ void hclge_restore_mac_table_common(struct hclge_vport *vport);
++void hclge_restore_vport_vlan_table(struct hclge_vport *vport);
+ int hclge_update_port_base_vlan_cfg(struct hclge_vport *vport, u16 state,
+ 				    struct hclge_vlan_info *vlan_info);
+ int hclge_push_vf_port_base_vlan_info(struct hclge_vport *vport, u8 vfid,
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
+index 0efc045..ac70faf 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
+@@ -629,6 +629,23 @@ static void hclge_handle_ncsi_error(struct hclge_dev *hdev)
+ 	ae_dev->ops->reset_event(hdev->pdev, NULL);
+ }
+ 
++static void hclge_handle_vf_tbl(struct hclge_vport *vport,
++				struct hclge_mbx_vf_to_pf_cmd *mbx_req)
++{
++	struct hclge_dev *hdev = vport->back;
++	struct hclge_vf_vlan_cfg *msg_cmd;
 +
- 	dev_info(&hdev->pdev->dev, "Reset done\n");
++	msg_cmd = (struct hclge_vf_vlan_cfg *)&mbx_req->msg;
++	if (msg_cmd->subcode == HCLGE_MBX_VPORT_LIST_CLEAR) {
++		hclge_rm_vport_all_mac_table(vport, true, HCLGE_MAC_ADDR_UC);
++		hclge_rm_vport_all_mac_table(vport, true, HCLGE_MAC_ADDR_MC);
++		hclge_rm_vport_all_vlan_table(vport, true);
++	} else {
++		dev_warn(&hdev->pdev->dev, "Invalid cmd(%u)\n",
++			 msg_cmd->subcode);
++	}
++}
++
+ void hclge_mbx_handler(struct hclge_dev *hdev)
+ {
+ 	struct hclge_cmq_ring *crq = &hdev->hw.cmq.crq;
+@@ -636,6 +653,7 @@ void hclge_mbx_handler(struct hclge_dev *hdev)
+ 	struct hclge_mbx_vf_to_pf_cmd *req;
+ 	struct hclge_vport *vport;
+ 	struct hclge_desc *desc;
++	bool is_del = false;
+ 	unsigned int flag;
+ 	int ret = 0;
  
- 	return 0;
-@@ -3470,6 +3495,7 @@ static const struct hnae3_ae_ops hclgevf_ops = {
- 	.set_timer_task = hclgevf_set_timer_task,
- 	.get_link_mode = hclgevf_get_link_mode,
- 	.set_promisc_mode = hclgevf_set_promisc_mode,
-+	.request_update_promisc_mode = hclgevf_request_update_promisc_mode,
- };
+@@ -753,11 +771,12 @@ void hclge_mbx_handler(struct hclge_dev *hdev)
+ 			break;
+ 		case HCLGE_MBX_GET_VF_FLR_STATUS:
+ 		case HCLGE_MBX_VF_UNINIT:
+-			hclge_rm_vport_all_mac_table(vport, true,
++			is_del = req->msg.code == HCLGE_MBX_VF_UNINIT;
++			hclge_rm_vport_all_mac_table(vport, is_del,
+ 						     HCLGE_MAC_ADDR_UC);
+-			hclge_rm_vport_all_mac_table(vport, true,
++			hclge_rm_vport_all_mac_table(vport, is_del,
+ 						     HCLGE_MAC_ADDR_MC);
+-			hclge_rm_vport_all_vlan_table(vport, true);
++			hclge_rm_vport_all_vlan_table(vport, is_del);
+ 			break;
+ 		case HCLGE_MBX_GET_MEDIA_TYPE:
+ 			hclge_get_vf_media_type(vport, &resp_msg);
+@@ -771,6 +790,9 @@ void hclge_mbx_handler(struct hclge_dev *hdev)
+ 		case HCLGE_MBX_NCSI_ERROR:
+ 			hclge_handle_ncsi_error(hdev);
+ 			break;
++		case HCLGE_MBX_HANDLE_VF_TBL:
++			hclge_handle_vf_tbl(vport, req);
++			break;
+ 		default:
+ 			dev_err(&hdev->pdev->dev,
+ 				"un-supported mailbox message, code = %u\n",
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+index fea197f..32341dc 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+@@ -1777,10 +1777,6 @@ static int hclgevf_reset_stack(struct hclgevf_dev *hdev)
+ 	if (ret)
+ 		return ret;
  
- static struct hnae3_ae_algo ae_algovf = {
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
-index 0222d9b..f19583c 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
-@@ -148,6 +148,7 @@ enum hclgevf_states {
- 	HCLGEVF_STATE_MBX_HANDLING,
- 	HCLGEVF_STATE_CMD_DISABLE,
- 	HCLGEVF_STATE_LINK_UPDATING,
-+	HCLGEVF_STATE_PROMISC_CHANGED,
- 	HCLGEVF_STATE_RST_FAIL,
- };
+-	ret = hclgevf_notify_client(hdev, HNAE3_RESTORE_CLIENT);
+-	if (ret)
+-		return ret;
+-
+ 	/* clear handshake status with IMP */
+ 	hclgevf_reset_handshake(hdev, false);
  
+@@ -1860,13 +1856,8 @@ static void hclgevf_reset_err_handle(struct hclgevf_dev *hdev)
+ 
+ static int hclgevf_reset_prepare(struct hclgevf_dev *hdev)
+ {
+-	struct hnae3_ae_dev *ae_dev = pci_get_drvdata(hdev->pdev);
+ 	int ret;
+ 
+-	/* Initialize ae_dev reset status as well, in case enet layer wants to
+-	 * know if device is undergoing reset
+-	 */
+-	ae_dev->reset_type = hdev->reset_type;
+ 	hdev->rst_stats.rst_cnt++;
+ 
+ 	rtnl_lock();
+@@ -1881,7 +1872,6 @@ static int hclgevf_reset_prepare(struct hclgevf_dev *hdev)
+ 
+ static int hclgevf_reset_rebuild(struct hclgevf_dev *hdev)
+ {
+-	struct hnae3_ae_dev *ae_dev = pci_get_drvdata(hdev->pdev);
+ 	int ret;
+ 
+ 	hdev->rst_stats.hw_rst_done_cnt++;
+@@ -1896,7 +1886,6 @@ static int hclgevf_reset_rebuild(struct hclgevf_dev *hdev)
+ 	}
+ 
+ 	hdev->last_reset_time = jiffies;
+-	ae_dev->reset_type = HNAE3_NONE_RESET;
+ 	hdev->rst_stats.rst_done_cnt++;
+ 	hdev->rst_stats.rst_fail_cnt = 0;
+ 	clear_bit(HCLGEVF_STATE_RST_FAIL, &hdev->state);
+@@ -2974,6 +2963,15 @@ static int hclgevf_pci_reset(struct hclgevf_dev *hdev)
+ 	return ret;
+ }
+ 
++static int hclgevf_clear_vport_list(struct hclgevf_dev *hdev)
++{
++	struct hclge_vf_to_pf_msg send_msg;
++
++	hclgevf_build_send_msg(&send_msg, HCLGE_MBX_HANDLE_VF_TBL,
++			       HCLGE_MBX_VPORT_LIST_CLEAR);
++	return hclgevf_send_mbx_msg(hdev, &send_msg, false, NULL, 0);
++}
++
+ static int hclgevf_reset_hdev(struct hclgevf_dev *hdev)
+ {
+ 	struct pci_dev *pdev = hdev->pdev;
+@@ -3083,6 +3081,15 @@ static int hclgevf_init_hdev(struct hclgevf_dev *hdev)
+ 		goto err_config;
+ 	}
+ 
++	/* ensure vf tbl list as empty before init*/
++	ret = hclgevf_clear_vport_list(hdev);
++	if (ret) {
++		dev_err(&pdev->dev,
++			"failed to clear tbl list configuration, ret = %d.\n",
++			ret);
++		goto err_config;
++	}
++
+ 	ret = hclgevf_init_vlan_config(hdev);
+ 	if (ret) {
+ 		dev_err(&hdev->pdev->dev,
 -- 
 2.7.4
 
