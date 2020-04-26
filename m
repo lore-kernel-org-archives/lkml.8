@@ -2,116 +2,147 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5004EC55199
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E99C54FCB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC132071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D5B32071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:52:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OM7T5Oc6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="hCd69Z0a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbgDZQra (ORCPT
+        id S1726182AbgDZQwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 12:47:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58198 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbgDZQr3 (ORCPT
+        Sun, 26 Apr 2020 12:52:21 -0400
+Received: from gateway23.websitewelcome.com ([192.185.49.219]:13017 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726144AbgDZQwU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 12:47:29 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 492A2C061A0F;
-        Sun, 26 Apr 2020 09:47:29 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id f18so15011857lja.13;
-        Sun, 26 Apr 2020 09:47:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=XIkuGkmw9unvvxymgGhCNFr2UVR4Jh5aeD7lzIpidEw=;
-        b=OM7T5Oc6RcvIDmJ0EmhtESuQbfEIF25wxn9f1W12Bqxo9LRUClCKN+3ac2TZ6J7Ll5
-         4IjORngNdQ4LmV3JE9e7YgviJsb+JyZainh9S6pcSIo3/5rufbUD9/I7eZF5zpZW3JTn
-         OPiL5U4+gKzeNw7LYJXULFiF1NOoEHjnGWVsDzbvhktbFMsOOvW9AfHNe166wu7VRoar
-         AKdz7Bor33GWkksMaLvpnyO26ib0FVcX6dwhWbAZQVb781QAF6DJD/DMjuiC174DoHt0
-         ge8V/h53Q0rwTNgSoP0cYOhyQlPHSUKh+6p+fm0AAwY+uAixbckhCOjdMKhSTtSQ7HyD
-         OFgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XIkuGkmw9unvvxymgGhCNFr2UVR4Jh5aeD7lzIpidEw=;
-        b=miRfApw1YqBDUN5Q0hWpckHcV+eq2R9+WJHaJTluHJb5LP4RE445hQMD7uTO7/WHYl
-         J+G06JA4F6djftqqgsU9Zsxbq+FFNxa42zDjNvfhb0Qgheqbpj4USUnA5MLw8AmvybPL
-         1c1dtzpA0vC0XuSPo2LerQt1UnpZP/slMEVWHBqVxUCnnnIKpGcqiQVWDP/aKRJbuIPz
-         d72q8PSL7A8xYLuMxGSiUYVXWMkZ87EIo1pVoD0JJqyGtlY5B6kcuVI/9R5I5KrNHcoQ
-         X/iYEVUKL/nsRnbgP6Y7XiUqDTdbmFxhYh045q/j+7EFWaXpkfzdLzv0paAMsB6TyvT4
-         axJw==
-X-Gm-Message-State: AGi0PuY5CO+erhEWdk2TI+PAKUoM/TdegyUcS2nkmJvp6JbFTdqO/USD
-        toQR/69Fxmw6LmCFSCgPQqAdIiXg3nKowDjwjJY=
-X-Google-Smtp-Source: APiQypK7ydtH+WbSCc6iA/8pM6MH+ukVgQxtx61oskxMnJyaHkCliwaOwxdh4t/Lob99DzKljAWXWNB8/BA1nHquj1A=
-X-Received: by 2002:a2e:7508:: with SMTP id q8mr11718876ljc.234.1587919647737;
- Sun, 26 Apr 2020 09:47:27 -0700 (PDT)
+        Sun, 26 Apr 2020 12:52:20 -0400
+X-Greylist: delayed 1487 seconds by postgrey-1.27 at vger.kernel.org; Sun, 26 Apr 2020 12:52:20 EDT
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id 2256ACA1
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 11:27:32 -0500 (CDT)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id Sk7wjo3p8Sl8qSk7wjDrod; Sun, 26 Apr 2020 11:27:32 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=nOj2osYNQXr8K1shlwowWOqo3kkVH+1V33i1mSrzbOo=; b=hCd69Z0a5Rcuo1M10ME1Q2NPgW
+        UF4Wfuj7T5NVxEK02KOESbe0ypBal3zFywClY6U8ETSSPA4oQ5BIC2ekU08ym/i06bW0ElDx206O4
+        j6zpUiE13vw7p0IhEjrBXKkHdkTkQGDM2azno7fzsiC0qxEkn6tbkZ4vo9wDkCneWBdJSLN4nDu7L
+        3LO+xkH3PZvRDuVQqyaA9R2t1aHlFr17/1lBa0UGjj4cOgr52e+GMJazf9FvgK2rp9jd9L4zWJK5J
+        EjD7qvS1GerElJCgRF9I7v9ZcVgLjY5kI4Rb3mPMkW7PDSw2vpXLB33nwHxtE9t89exZffR0wLzyR
+        ACzZpapQ==;
+Received: from [191.31.197.205] (port=46284 helo=[192.168.15.9])
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1jSk7v-001MdU-Ou; Sun, 26 Apr 2020 13:27:31 -0300
+Subject: Re: [PATCH v3 3/3] ARM: dts: Add Caninos Loucos Labrador
+To:     =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        edgar.righi@lsitec.org.br, igor.lima@lsitec.org.br,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org
+References: <20200229104358.GB19610@mani>
+ <20200320035104.26139-1-matheus@castello.eng.br>
+ <20200320035104.26139-4-matheus@castello.eng.br>
+ <20200405065137.GC8912@Mani-XPS-13-9360>
+ <df32c750-a097-9210-6e13-db7db49836b5@castello.eng.br>
+ <2dca5a4e-933c-0a43-e86f-21b55d75a586@suse.de>
+From:   Matheus Castello <matheus@castello.eng.br>
+Message-ID: <f9e48fba-0da8-7ba9-d44a-7909067a1df1@castello.eng.br>
+Date:   Sun, 26 Apr 2020 13:27:27 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200420202643.87198-1-zenczykowski@gmail.com> <20200426163125.rnxwntthcrx5qejf@ast-mbp>
-In-Reply-To: <20200426163125.rnxwntthcrx5qejf@ast-mbp>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Sun, 26 Apr 2020 09:47:16 -0700
-Message-ID: <CAADnVQ+FM2Rb2uHPMjXnSGmQo2WMfV7f_sikADHPhnHMq0aK9w@mail.gmail.com>
-Subject: Re: [PATCH] net: bpf: add bpf_ktime_get_boot_ns()
-To:     =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <zenczykowski@gmail.com>
-Cc:     =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <maze@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Linux Network Development Mailing List 
-        <netdev@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <2dca5a4e-933c-0a43-e86f-21b55d75a586@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.31.197.205
+X-Source-L: No
+X-Exim-ID: 1jSk7v-001MdU-Ou
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.9]) [191.31.197.205]:46284
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 10
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 9:31 AM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Mon, Apr 20, 2020 at 01:26:43PM -0700, Maciej =C5=BBenczykowski wrote:
-> > From: Maciej =C5=BBenczykowski <maze@google.com>
-> >
-> > On a device like a cellphone which is constantly suspending
-> > and resuming CLOCK_MONOTONIC is not particularly useful for
-> > keeping track of or reacting to external network events.
-> > Instead you want to use CLOCK_BOOTTIME.
-> >
-> > Hence add bpf_ktime_get_boot_ns() as a mirror of bpf_ktime_get_ns()
-> > based around CLOCK_BOOTTIME instead of CLOCK_MONOTONIC.
-> >
-> > Signed-off-by: Maciej =C5=BBenczykowski <maze@google.com>
-> ...
-> > diff --git a/net/core/filter.c b/net/core/filter.c
-> > index 755867867e57..ec567d1e6fb9 100644
-> > --- a/net/core/filter.c
-> > +++ b/net/core/filter.c
-> > @@ -6009,6 +6009,8 @@ bpf_base_func_proto(enum bpf_func_id func_id)
-> >               return &bpf_tail_call_proto;
-> >       case BPF_FUNC_ktime_get_ns:
-> >               return &bpf_ktime_get_ns_proto;
-> > +     case BPF_FUNC_ktime_get_boot_ns:
-> > +             return &bpf_ktime_get_boot_ns_proto;
-> >       default:
-> >               break;
-> >       }
->
-> That part got moved into kernel/bpf/helpers.c in the mean time.
-> I fixed it up and applied. Thanks
->
-> In the future please cc bpf@vger for all bpf related patches.
+Hi Andreas,
 
-The order of comments for bpf_ktime_get_boot_ns
-was also incorrect.
-Most selftests were broken.
-I fixed it up as well.
+thanks for the review.
+
+Em 4/26/20 8:58 AM, Andreas Färber escreveu:
+> Hi Matheus,
+> 
+> Am 23.04.20 um 17:20 schrieb Matheus Castello:
+>> Em 4/5/20 3:51 AM, Manivannan Sadhasivam escreveu:
+>>> On Fri, Mar 20, 2020 at 12:51:04AM -0300, Matheus Castello wrote:
+>>>> Add Device Trees for Caninos Loucos Labrador CoM and base board.
+>>>> Based on the work of Andreas Färber on Lemaker Guitar device tree.
+>>>>
+>>>> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+>>>
+>>> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>>>
+>>> Will queue the series for v5.8 once Andreas is happy with it.
+>>
+>> do you have any more concerns about these patches? Let me know.
+> 
+> I've reviewed the preceding two patches. This one here looks okay,
+> 
+> Reviewed-by: Andreas Färber <afaerber@suse.de>
+> 
+> but see 2/3 - model here does contain M and your .dtsi is named -v2 - 
+> what's the difference to v1? If it's big enough to warrant a separate 
+> .dtsi, you should consider whether a versioned compatible string may be 
+> needed, too (likely in addition to, not instead of a generic one). No v1 
+> info on the website.
+> 
+
+The difference between v1 and v2 is the model and vendor of the DRAM and 
+storage eMMC. But that had no impact on the software.
+
+Checking examples on "/Documentation/devicetree/bindings/arm/" I saw 
+that some add enum descriptions for both the base board and system on 
+module, keeping in const only the vendor prefix of the SoC. And in the 
+device tree both have the model property description. I liked this 
+example, I think I will follow it in v4.
+
+About "-bb-" in the file name and description: on PCB is written 
+"Labrador Base-M v1.0a", so with that I think it is better to leave only 
+base on the name.
+
+I will send the v4, thank you very much for the review.
+
+BR,
+Matheus Castello
+
+> Thanks,
+> Andreas
+> 
