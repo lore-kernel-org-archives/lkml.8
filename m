@@ -2,172 +2,90 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D651C55185
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 03:25:50 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E301D2075B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC912C55186
 	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 03:25:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ks7qKABL"
+Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
+	by mail.kernel.org (Postfix) with ESMTP id CD64620714
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 03:25:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726155AbgDZDZs (ORCPT
+        id S1726119AbgDZDYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 23:25:48 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36535 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726121AbgDZDZs (ORCPT
+        Sat, 25 Apr 2020 23:24:41 -0400
+Received: from smtpbguseast2.qq.com ([54.204.34.130]:44348 "EHLO
+        smtpbguseast2.qq.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbgDZDYl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 23:25:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587871546;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xeVCSVVAGo0Z4+nT2s2gLtAX66uKIDuBw9cn9Gzx2mE=;
-        b=Ks7qKABL7+eZd5yuCyv64OjG5A4WxTUbZVVQUwEL13SYjCaB49SiyFkuyThg7NRelp5sH8
-        hElcj4udkuYUwrNddaCdrwNANVOg0qKaimibzeXdL5bzafacRIgUVyd6pi/BI5TXNldXSe
-        jP56qAJMtTkNtkyf3ptyixOZ3Zax2po=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-338-hFEJfXROPcGf0r9lcBgsYA-1; Sat, 25 Apr 2020 23:25:42 -0400
-X-MC-Unique: hFEJfXROPcGf0r9lcBgsYA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 71F6E1800D4A;
-        Sun, 26 Apr 2020 03:25:41 +0000 (UTC)
-Received: from [10.72.13.103] (ovpn-13-103.pek2.redhat.com [10.72.13.103])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DBEA25C1C3;
-        Sun, 26 Apr 2020 03:25:35 +0000 (UTC)
-Subject: Re: [PATCH 2/2] vdpa: implement config interrupt in IFCVF
-To:     Zhu Lingshan <lingshan.zhu@intel.com>, mst@redhat.com,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     lulu@redhat.com, dan.daly@intel.com, cunming.liang@intel.com
-References: <1587722659-1300-1-git-send-email-lingshan.zhu@intel.com>
- <1587722659-1300-3-git-send-email-lingshan.zhu@intel.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <bb909a20-3f14-427d-ee40-129a1844486b@redhat.com>
-Date:   Sun, 26 Apr 2020 11:25:34 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sat, 25 Apr 2020 23:24:41 -0400
+X-QQ-mid: bizesmtp11t1587871473t879fh72
+Received: from wuxy.bitland.com.cn (unknown [103.100.115.75])
+        by esmtp6.qq.com (ESMTP) with 
+        id ; Sun, 26 Apr 2020 11:24:12 +0800 (CST)
+X-QQ-SSF: 01400000002000Z0ZM30B00A0000000
+X-QQ-FEAT: STDtK/lFkpah7mmZ8kZTATOOmbwdzlpfhSmcEuCzt/BbX3eeyOMrgDyxhhU7n
+        gWY2i5mzls1hckLHM71jlLv6CniFhddgwh5D6xVYoJlBcJeKzWa58GhiqC7XIBf/LJtxBl1
+        yv61qHVM21FUNeWQHRxY8/TTz/brNpDbHV7GtxKNItzof5I7iJM0b1hMhPs2AV6FGHQrphK
+        cjFWcT5qBJFxgk3fXoM1Dei35q4SZ9vPPUFxhwOhxhC7eftus2RGkFBKYV84WbMtm5SXasg
+        dI1StDpyD2d268ONRPo8FJbbyZiPIXz20FR/x5q2veZlSLhghjYHKjsILDjTfj/kXQYtv4T
+        IUQyy0q
+X-QQ-GoodBg: 2
+From:   wuxy@bitland.com.cn
+To:     drinkcat@chromium.org, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     wuxy <wuxy@bitland.corp-partner.google.com>
+Subject: [PATCH] [v3]mtd: spi-nor: winbond: add 1.8v SPI NOR Flash IDs
+Date:   Sun, 26 Apr 2020 11:24:10 +0800
+Message-Id: <20200426032410.10425-1-wuxy@bitland.com.cn>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <1587722659-1300-3-git-send-email-lingshan.zhu@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:bitland.com.cn:qybgforeign:qybgforeign7
+X-QQ-Bgrelay: 1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: wuxy <wuxy@bitland.corp-partner.google.com>
 
-On 2020/4/24 =E4=B8=8B=E5=8D=886:04, Zhu Lingshan wrote:
-> This commit implements config interrupt support
-> in IFC VF
->
-> Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
-> ---
->   drivers/vdpa/ifcvf/ifcvf_base.c |  3 +++
->   drivers/vdpa/ifcvf/ifcvf_base.h |  2 ++
->   drivers/vdpa/ifcvf/ifcvf_main.c | 22 +++++++++++++++++++++-
->   3 files changed, 26 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/vdpa/ifcvf/ifcvf_base.c b/drivers/vdpa/ifcvf/ifcvf=
-_base.c
-> index b61b06e..c825d99 100644
-> --- a/drivers/vdpa/ifcvf/ifcvf_base.c
-> +++ b/drivers/vdpa/ifcvf/ifcvf_base.c
-> @@ -185,6 +185,9 @@ void ifcvf_set_status(struct ifcvf_hw *hw, u8 statu=
-s)
->  =20
->   void ifcvf_reset(struct ifcvf_hw *hw)
->   {
-> +	hw->config_cb.callback =3D NULL;
-> +	hw->config_cb.private =3D NULL;
-> +
->   	ifcvf_set_status(hw, 0);
->   	/* flush set_status, make sure VF is stopped, reset */
->   	ifcvf_get_status(hw);
-> diff --git a/drivers/vdpa/ifcvf/ifcvf_base.h b/drivers/vdpa/ifcvf/ifcvf=
-_base.h
-> index e803070..76928b0 100644
-> --- a/drivers/vdpa/ifcvf/ifcvf_base.h
-> +++ b/drivers/vdpa/ifcvf/ifcvf_base.h
-> @@ -81,6 +81,8 @@ struct ifcvf_hw {
->   	void __iomem *net_cfg;
->   	struct vring_info vring[IFCVF_MAX_QUEUE_PAIRS * 2];
->   	void __iomem * const *base;
-> +	char config_msix_name[256];
-> +	struct vdpa_callback config_cb;
->   };
->  =20
->   struct ifcvf_adapter {
-> diff --git a/drivers/vdpa/ifcvf/ifcvf_main.c b/drivers/vdpa/ifcvf/ifcvf=
-_main.c
-> index 8d54dc5..f7baeca 100644
-> --- a/drivers/vdpa/ifcvf/ifcvf_main.c
-> +++ b/drivers/vdpa/ifcvf/ifcvf_main.c
-> @@ -18,6 +18,16 @@
->   #define DRIVER_AUTHOR   "Intel Corporation"
->   #define IFCVF_DRIVER_NAME       "ifcvf"
->  =20
-> +static irqreturn_t ifcvf_config_changed(int irq, void *arg)
-> +{
-> +	struct ifcvf_hw *vf =3D arg;
-> +
-> +	if (vf->config_cb.callback)
-> +		return vf->config_cb.callback(vf->config_cb.private);
-> +
-> +	return IRQ_HANDLED;
+Winbond has new 1.8V SPI NOR Flash IDs,we need to use the SPI
+flash ID in kukui series,this patch can support the new flash IDs.
+This patch copied from:https://patchwork.ozlabs.org/patch/1150756/,
+The original patch is invalid,so re-submit a new patch for this.
+
+TEST=boot to shell,get the spi information from 'dmesg'.
+
+Signed-off-by: Xingyu Wu <wuxy@bitland.corp-partner.google.com>
+---
+ drivers/mtd/spi-nor/winbond.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/drivers/mtd/spi-nor/winbond.c b/drivers/mtd/spi-nor/winbond.c
+index 17deabad57e1..cda4f8847bd6 100644
+--- a/drivers/mtd/spi-nor/winbond.c
++++ b/drivers/mtd/spi-nor/winbond.c
+@@ -61,6 +61,15 @@ static const struct flash_info winbond_parts[] = {
+ 			     SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+ 	{ "w25m512jv", INFO(0xef7119, 0, 64 * 1024, 1024,
+ 			    SECT_4K | SPI_NOR_QUAD_READ | SPI_NOR_DUAL_READ) },
++	{ "w25q64jwxxIM", INFO(0xef8017, 0, 64 * 1024, 128,
++			    SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
++			    SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
++	{ "w25q128jwxxIM", INFO(0xef8018, 0, 64 * 1024, 256,
++			    SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
++			    SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
++	{ "w25q256jwxxIM", INFO(0xef8019, 0, 64 * 1024, 512,
++			    SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
++			    SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
+ };
+ 
+ /**
+-- 
+2.20.1
 
 
-So it looks to me the current support of VIRTIO_NET_F_STATUS is broken=20
-without this patch.
-
-We probably need to patch to disable it.
-
-Thanks
-
-
-> +}
-> +
->   static irqreturn_t ifcvf_intr_handler(int irq, void *arg)
->   {
->   	struct vring_info *vring =3D arg;
-> @@ -256,7 +266,10 @@ static void ifcvf_vdpa_set_config(struct vdpa_devi=
-ce *vdpa_dev,
->   static void ifcvf_vdpa_set_config_cb(struct vdpa_device *vdpa_dev,
->   				     struct vdpa_callback *cb)
->   {
-> -	/* We don't support config interrupt */
-> +	struct ifcvf_hw *vf =3D vdpa_to_vf(vdpa_dev);
-> +
-> +	vf->config_cb.callback =3D cb->callback;
-> +	vf->config_cb.private =3D cb->private;
->   }
->  =20
->   /*
-> @@ -292,6 +305,13 @@ static int ifcvf_request_irq(struct ifcvf_adapter =
-*adapter)
->   	struct ifcvf_hw *vf =3D &adapter->vf;
->   	int vector, i, ret, irq;
->  =20
-> +	snprintf(vf->config_msix_name, 256, "ifcvf[%s]-config\n",
-> +		pci_name(pdev));
-> +	vector =3D 0;
-> +	irq =3D pci_irq_vector(pdev, vector);
-> +	ret =3D devm_request_irq(&pdev->dev, irq,
-> +			       ifcvf_config_changed, 0,
-> +			       vf->config_msix_name, vf);
->  =20
->   	for (i =3D 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
->   		snprintf(vf->vring[i].msix_name, 256, "ifcvf[%s]-%d\n",
 
