@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF72EC55199
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 18:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED9BC54FCB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 18:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA3F720A8B
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 18:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B92BA21775
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 18:43:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgDZSnQ (ORCPT
+        id S1726500AbgDZSnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 14:43:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47922 "EHLO
+        Sun, 26 Apr 2020 14:43:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726491AbgDZSnK (ORCPT
+        by vger.kernel.org with ESMTP id S1726410AbgDZSnB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 14:43:10 -0400
+        Sun, 26 Apr 2020 14:43:01 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1EE9C061A0F;
-        Sun, 26 Apr 2020 11:43:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 687D6C061A41;
+        Sun, 26 Apr 2020 11:43:01 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jSmF0-0007E9-2P; Sun, 26 Apr 2020 20:42:58 +0200
+        id 1jSmEx-0007Eb-I7; Sun, 26 Apr 2020 20:42:55 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B1C041C03A9;
-        Sun, 26 Apr 2020 20:42:54 +0200 (CEST)
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 33C051C0178;
+        Sun, 26 Apr 2020 20:42:55 +0200 (CEST)
 Date:   Sun, 26 Apr 2020 18:42:54 -0000
 From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/mm] x86/cpu: Uninline CR4 accessors
+Subject: [tip: x86/mm] x86/tlb: Uninline __get_current_cr3_fast()
 Cc:     Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>,
         Alexandre Chartre <alexandre.chartre@oracle.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200421092558.939985695@linutronix.de>
-References: <20200421092558.939985695@linutronix.de>
+        Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200421092558.848064318@linutronix.de>
+References: <20200421092558.848064318@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <158792657431.28353.5998160034997742089.tip-bot2@tip-bot2>
+Message-ID: <158792657479.28353.17566281114631962456.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,163 +61,94 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/mm branch of tip:
 
-Commit-ID:     d8f0b35331c4423e033f81f10eb5e0c7e4e1dcec
-Gitweb:        https://git.kernel.org/tip/d8f0b35331c4423e033f81f10eb5e0c7e4e1dcec
+Commit-ID:     8c5cc19e94703182647dfccc164e4437a04539c8
+Gitweb:        https://git.kernel.org/tip/8c5cc19e94703182647dfccc164e4437a04539c8
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Tue, 21 Apr 2020 11:20:29 +02:00
+AuthorDate:    Tue, 21 Apr 2020 11:20:28 +02:00
 Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Fri, 24 Apr 2020 18:46:42 +02:00
+CommitterDate: Fri, 24 Apr 2020 15:55:50 +02:00
 
-x86/cpu: Uninline CR4 accessors
+x86/tlb: Uninline __get_current_cr3_fast()
 
 cpu_tlbstate is exported because various TLB-related functions need
 access to it, but cpu_tlbstate is sensitive information which should
 only be accessed by well-contained kernel functions and not be directly
 exposed to modules.
 
-The various CR4 accessors require cpu_tlbstate as the CR4 shadow cache
-is located there.
-
-In preparation for unexporting cpu_tlbstate, create a builtin function
-for manipulating CR4 and rework the various helpers to use it.
+In preparation for unexporting cpu_tlbstate move __get_current_cr3_fast()
+into the x86 TLB management code.
 
 No functional change.
-
- [ bp: push the export of native_write_cr4() only when CONFIG_LKTDM=m to
-   the last patch in the series. ]
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Borislav Petkov <bp@suse.de>
 Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200421092558.939985695@linutronix.de
+Acked-by: Andy Lutomirski <luto@kernel.org>
+Link: https://lkml.kernel.org/r/20200421092558.848064318@linutronix.de
 ---
- arch/x86/include/asm/tlbflush.h | 36 ++++----------------------------
- arch/x86/kernel/cpu/common.c    | 23 +++++++++++++++++++-
- arch/x86/kernel/process.c       | 11 ++++++++++-
- 3 files changed, 38 insertions(+), 32 deletions(-)
+ arch/x86/include/asm/mmu_context.h | 19 +------------------
+ arch/x86/mm/tlb.c                  | 20 ++++++++++++++++++++
+ 2 files changed, 21 insertions(+), 18 deletions(-)
 
-diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
-index 6f66d84..d804030 100644
---- a/arch/x86/include/asm/tlbflush.h
-+++ b/arch/x86/include/asm/tlbflush.h
-@@ -276,37 +276,25 @@ static inline bool nmi_uaccess_okay(void)
- 
- #define nmi_uaccess_okay nmi_uaccess_okay
- 
-+void cr4_update_irqsoff(unsigned long set, unsigned long clear);
-+unsigned long cr4_read_shadow(void);
-+
- /* Initialize cr4 shadow for this CPU. */
- static inline void cr4_init_shadow(void)
- {
- 	this_cpu_write(cpu_tlbstate.cr4, __read_cr4());
+diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
+index 4e55370..9608536 100644
+--- a/arch/x86/include/asm/mmu_context.h
++++ b/arch/x86/include/asm/mmu_context.h
+@@ -225,24 +225,7 @@ static inline bool arch_vma_access_permitted(struct vm_area_struct *vma,
+ 	return __pkru_allows_pkey(vma_pkey(vma), write);
  }
  
--static inline void __cr4_set(unsigned long cr4)
+-/*
+- * This can be used from process context to figure out what the value of
+- * CR3 is without needing to do a (slow) __read_cr3().
+- *
+- * It's intended to be used for code like KVM that sneakily changes CR3
+- * and needs to restore it.  It needs to be used very carefully.
+- */
+-static inline unsigned long __get_current_cr3_fast(void)
 -{
--	lockdep_assert_irqs_disabled();
--	this_cpu_write(cpu_tlbstate.cr4, cr4);
--	__write_cr4(cr4);
+-	unsigned long cr3 = build_cr3(this_cpu_read(cpu_tlbstate.loaded_mm)->pgd,
+-		this_cpu_read(cpu_tlbstate.loaded_mm_asid));
+-
+-	/* For now, be very restrictive about when this can be called. */
+-	VM_WARN_ON(in_nmi() || preemptible());
+-
+-	VM_BUG_ON(cr3 != __read_cr3());
+-	return cr3;
 -}
--
- /* Set in this cpu's CR4. */
- static inline void cr4_set_bits_irqsoff(unsigned long mask)
- {
--	unsigned long cr4;
--
--	cr4 = this_cpu_read(cpu_tlbstate.cr4);
--	if ((cr4 | mask) != cr4)
--		__cr4_set(cr4 | mask);
-+	cr4_update_irqsoff(mask, 0);
++unsigned long __get_current_cr3_fast(void);
+ 
+ typedef struct {
+ 	struct mm_struct *mm;
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index 66f96f2..ea6f98a 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -844,6 +844,26 @@ void flush_tlb_kernel_range(unsigned long start, unsigned long end)
  }
  
- /* Clear in this cpu's CR4. */
- static inline void cr4_clear_bits_irqsoff(unsigned long mask)
- {
--	unsigned long cr4;
--
--	cr4 = this_cpu_read(cpu_tlbstate.cr4);
--	if ((cr4 & ~mask) != cr4)
--		__cr4_set(cr4 & ~mask);
-+	cr4_update_irqsoff(0, mask);
- }
- 
- /* Set in this cpu's CR4. */
-@@ -329,20 +317,6 @@ static inline void cr4_clear_bits(unsigned long mask)
- 	local_irq_restore(flags);
- }
- 
--static inline void cr4_toggle_bits_irqsoff(unsigned long mask)
--{
--	unsigned long cr4;
--
--	cr4 = this_cpu_read(cpu_tlbstate.cr4);
--	__cr4_set(cr4 ^ mask);
--}
--
--/* Read the CR4 shadow. */
--static inline unsigned long cr4_read_shadow(void)
--{
--	return this_cpu_read(cpu_tlbstate.cr4);
--}
--
  /*
-  * Mark all other ASIDs as invalid, preserves the current.
-  */
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index bed0cb8..82042f4 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -387,7 +387,28 @@ set_register:
- 			  bits_missing);
- 	}
- }
--EXPORT_SYMBOL(native_write_cr4);
-+EXPORT_SYMBOL_GPL(native_write_cr4);
-+
-+void cr4_update_irqsoff(unsigned long set, unsigned long clear)
++ * This can be used from process context to figure out what the value of
++ * CR3 is without needing to do a (slow) __read_cr3().
++ *
++ * It's intended to be used for code like KVM that sneakily changes CR3
++ * and needs to restore it.  It needs to be used very carefully.
++ */
++unsigned long __get_current_cr3_fast(void)
 +{
-+	unsigned long newval, cr4 = this_cpu_read(cpu_tlbstate.cr4);
++	unsigned long cr3 = build_cr3(this_cpu_read(cpu_tlbstate.loaded_mm)->pgd,
++		this_cpu_read(cpu_tlbstate.loaded_mm_asid));
 +
-+	lockdep_assert_irqs_disabled();
++	/* For now, be very restrictive about when this can be called. */
++	VM_WARN_ON(in_nmi() || preemptible());
 +
-+	newval = (cr4 & ~clear) | set;
-+	if (newval != cr4) {
-+		this_cpu_write(cpu_tlbstate.cr4, newval);
-+		__write_cr4(newval);
-+	}
++	VM_BUG_ON(cr3 != __read_cr3());
++	return cr3;
 +}
-+EXPORT_SYMBOL(cr4_update_irqsoff);
++EXPORT_SYMBOL_GPL(__get_current_cr3_fast);
 +
-+/* Read the CR4 shadow. */
-+unsigned long cr4_read_shadow(void)
-+{
-+	return this_cpu_read(cpu_tlbstate.cr4);
-+}
-+EXPORT_SYMBOL_GPL(cr4_read_shadow);
- 
- void cr4_init(void)
- {
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index 9da70b2..f2eab49 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -612,6 +612,17 @@ void speculation_ctrl_update_current(void)
- 	preempt_enable();
- }
- 
-+static inline void cr4_toggle_bits_irqsoff(unsigned long mask)
-+{
-+	unsigned long newval, cr4 = this_cpu_read(cpu_tlbstate.cr4);
-+
-+	newval = cr4 ^ mask;
-+	if (newval != cr4) {
-+		this_cpu_write(cpu_tlbstate.cr4, newval);
-+		__write_cr4(newval);
-+	}
-+}
-+
- void __switch_to_xtra(struct task_struct *prev_p, struct task_struct *next_p)
- {
- 	unsigned long tifp, tifn;
++/*
+  * arch_tlbbatch_flush() performs a full TLB flush regardless of the active mm.
+  * This means that the 'struct flush_tlb_info' that describes which mappings to
+  * flush is actually fixed. We therefore set a single fixed struct and use it in
