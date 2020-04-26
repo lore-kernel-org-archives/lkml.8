@@ -2,127 +2,71 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B142EC55199
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 19:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FBDC54FCB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 19:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 958A62070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 19:43:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="bYO8K8Ue"
+	by mail.kernel.org (Postfix) with ESMTP id 0EA66206BF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 19:44:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbgDZTnV (ORCPT
+        id S1726285AbgDZToL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 15:43:21 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:55279 "EHLO mail.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbgDZTnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 15:43:20 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id e76007a9;
-        Sun, 26 Apr 2020 19:31:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=Q95WupxJotcACUWONTVu7EW65Ro=; b=bYO8K8
-        UeSNbeGbha+u6Z+X4OWjAckkt578muPBYfljxTemQveUyZ4Y4KqM3k5XP3wLRZN3
-        3mYbpBfLS7i0PpncwzhsYoncBN8ReR5a/OkMjlGMooXNhMaeWFyl3aNqIi+dVcW5
-        XrVcNxNrpXIIa/A+YYSAurfsFS7n25G0dWk+n5zm0J3HEeTWS6Hdyhd4Zjk3oKgS
-        qha1334mjnFs+Z7o8hcpMwI+D1TUO1jYj++hJNUACygOipLiP2fRE42PDXMcXzTA
-        Y+QNHPHPi3Uxr0XHqfQ2KNxqhX4lR1zeaTfSN33UxQOu1cyFzO8lQwRfVgdy23uG
-        5kPRxtnoVNbQkuyA==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id a45018e5 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Sun, 26 Apr 2020 19:31:46 +0000 (UTC)
-Received: by mail-il1-f172.google.com with SMTP id u189so14740028ilc.4;
-        Sun, 26 Apr 2020 12:43:11 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZQXvRTigFAKCzD2TWIRZvSoUg3vp2NAHEMQqTqxxE5VOtNh79Z
-        +ttimxxB8QjU2QwSPSjkWAgyaP/sAGKcWREV1t4=
-X-Google-Smtp-Source: APiQypJhdrWBdGhX+odG4xvM1xd9YLFfY6dps9KqG4u5HpuETWThfLmwYZGpIfmkBCsKnMx1fb9tGxaDOvBguexuC5A=
-X-Received: by 2002:a92:5c82:: with SMTP id d2mr18807878ilg.231.1587930190268;
- Sun, 26 Apr 2020 12:43:10 -0700 (PDT)
+        Sun, 26 Apr 2020 15:44:11 -0400
+Received: from smtp06.smtpout.orange.fr ([80.12.242.128]:60153 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726176AbgDZToK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 15:44:10 -0400
+Received: from localhost.localdomain ([93.23.12.11])
+        by mwinf5d64 with ME
+        id XXk72200Q0EJ3pp03Xk7zB; Sun, 26 Apr 2020 21:44:09 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 26 Apr 2020 21:44:09 +0200
+X-ME-IP: 93.23.12.11
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, maitysanchayan@gmail.com, robh@kernel.org
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] iio: dac: vf610: Fix an error handling path in 'vf610_dac_probe()'
+Date:   Sun, 26 Apr 2020 21:44:03 +0200
+Message-Id: <20200426194403.41913-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <0000000000005fd19505a4355311@google.com> <e40c443e-74aa-bad4-7be8-4cdddfdf3eaf@gmail.com>
-In-Reply-To: <e40c443e-74aa-bad4-7be8-4cdddfdf3eaf@gmail.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Sun, 26 Apr 2020 13:42:58 -0600
-X-Gmail-Original-Message-ID: <CAHmME9ov2ae08UTzwKL7enquChzDNxpg4c=ppnJqS2QF6ZAn_Q@mail.gmail.com>
-Message-ID: <CAHmME9ov2ae08UTzwKL7enquChzDNxpg4c=ppnJqS2QF6ZAn_Q@mail.gmail.com>
-Subject: Re: INFO: rcu detected stall in wg_packet_tx_worker
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     syzbot <syzbot+0251e883fe39e7a0cb0a@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        jhs@mojatatu.com,
-        =?UTF-8?B?SmnFmcOtIFDDrXJrbw==?= <jiri@resnulli.us>,
-        Krzysztof Kozlowski <krzk@kernel.org>, kuba@kernel.org,
-        kvalo@codeaurora.org, leon@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, syzkaller-bugs@googlegroups.com,
-        Thomas Gleixner <tglx@linutronix.de>, vivien.didelot@gmail.com,
-        Cong Wang <xiyou.wangcong@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 1:40 PM Eric Dumazet <eric.dumazet@gmail.com> wrote:
->
->
->
-> On 4/26/20 10:57 AM, syzbot wrote:
-> > syzbot has bisected this bug to:
-> >
-> > commit e7096c131e5161fa3b8e52a650d7719d2857adfd
-> > Author: Jason A. Donenfeld <Jason@zx2c4.com>
-> > Date:   Sun Dec 8 23:27:34 2019 +0000
-> >
-> >     net: WireGuard secure network tunnel
-> >
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15258fcfe00000
-> > start commit:   b2768df2 Merge branch 'for-linus' of git://git.kernel.org/..
-> > git tree:       upstream
-> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=17258fcfe00000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=13258fcfe00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=b7a70e992f2f9b68
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=0251e883fe39e7a0cb0a
-> > userspace arch: i386
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15f5f47fe00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11e8efb4100000
-> >
-> > Reported-by: syzbot+0251e883fe39e7a0cb0a@syzkaller.appspotmail.com
-> > Fixes: e7096c131e51 ("net: WireGuard secure network tunnel")
-> >
-> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> >
->
-> I have not looked at the repro closely, but WireGuard has some workers
-> that might loop forever, cond_resched() might help a bit.
+A call to 'vf610_dac_exit()' is missing in an error handling path.
 
-I'm working on this right now. Having a bit difficult of a time
-getting it to reproduce locally...
+Fixes: 1b983bf42fad ("iio: dac: vf610_dac: Add IIO DAC driver for Vybrid SoC")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Un-tested.
+Proposal based on function names and functions called in the remove function
+---
+ drivers/iio/dac/vf610_dac.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-The reports show the stall happening always at:
+diff --git a/drivers/iio/dac/vf610_dac.c b/drivers/iio/dac/vf610_dac.c
+index 71f8a5c471c4..7f1e9317c3f3 100644
+--- a/drivers/iio/dac/vf610_dac.c
++++ b/drivers/iio/dac/vf610_dac.c
+@@ -223,6 +223,7 @@ static int vf610_dac_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ error_iio_device_register:
++	vf610_dac_exit(info);
+ 	clk_disable_unprepare(info->clk);
+ 
+ 	return ret;
+-- 
+2.25.1
 
-static struct sk_buff *
-sfq_dequeue(struct Qdisc *sch)
-{
-       struct sfq_sched_data *q = qdisc_priv(sch);
-       struct sk_buff *skb;
-       sfq_index a, next_a;
-       struct sfq_slot *slot;
-
-       /* No active slots */
-       if (q->tail == NULL)
-               return NULL;
-
-next_slot:
-       a = q->tail->next;
-       slot = &q->slots[a];
-
-Which is kind of interesting, because it's not like that should block
-or anything, unless there's some kasan faulting happening.
