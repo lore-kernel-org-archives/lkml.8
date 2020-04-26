@@ -2,146 +2,284 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B34C54FCB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 13:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D47B1C55194
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 13:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5564920700
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 13:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B04DE2074F
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 13:11:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="rEN2U32g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbgDZNI2 (ORCPT
+        id S1726189AbgDZNL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 09:08:28 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35295 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgDZNIY (ORCPT
+        Sun, 26 Apr 2020 09:11:28 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:45354 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbgDZNL2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 09:08:24 -0400
-Received: by mail-lj1-f193.google.com with SMTP id g4so14690234ljl.2;
-        Sun, 26 Apr 2020 06:08:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KqhP1IZD0rJb6u6gP/e9HC5zJzCBcsPMyaLVpJZsqD4=;
-        b=XjFqbMhTFw6I3hYRZYw6FS7AY8aYnqyv3bJ5EOqGvhlRJGDZqBpKdMmyyezBQ2ymXQ
-         79ZlD43v7d0gZMcN2amZe89AFkFnYdAlFnMfiI2dvLdu/uJGr/CXyrXSS2OL/xzVWPBw
-         Su3IDGEOqEL0ro4J2s4zvYjcGvgfYlWeNSO0VY8e51KsQvq/MYXknWn65SWIB/NEOf88
-         YomfbrcO5JdFNf+tmtcXPSzydoEvkJeM2maVEAqZoADy2YSP7AMupbV1E4livSWUs0tZ
-         OR2enSHgeqfX2pw1T6psACDbUL1qq/1GlNpQ1ge8Iutjb9Kbp9EA4D+4g4ffO7m0u0qb
-         qEXA==
-X-Gm-Message-State: AGi0PuZnLzwpY7UlfoYpZouSwetUYKX3fEgwrUMQC233oflPz3RGpLez
-        1o8UIax5DzM5Vx+D1fPHjylBXBVkOHs=
-X-Google-Smtp-Source: APiQypIvtjCdhzqmTqyRppstszegxNCVRgcToRc/Vivyyg1DLqbMx6EsxnfNe6CW7L0aif2WbYAQag==
-X-Received: by 2002:a2e:2a82:: with SMTP id q124mr11975552ljq.155.1587906501607;
-        Sun, 26 Apr 2020 06:08:21 -0700 (PDT)
-Received: from localhost.localdomain ([213.87.147.211])
-        by smtp.googlemail.com with ESMTPSA id l8sm7983371ljo.5.2020.04.26.06.08.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Apr 2020 06:08:21 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     linux-block@vger.kernel.org
-Cc:     Denis Efremov <efremov@linux.com>, Willy Tarreau <w@1wt.eu>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] floppy: suppress UBSAN warning in setup_rw_floppy()
-Date:   Sun, 26 Apr 2020 16:07:28 +0300
-Message-Id: <20200426130728.63399-4-efremov@linux.com>
-X-Mailer: git-send-email 2.25.3
-In-Reply-To: <20200426130728.63399-1-efremov@linux.com>
-References: <20200426130728.63399-1-efremov@linux.com>
+        Sun, 26 Apr 2020 09:11:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1587906685; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IFur6tajK4evwgOz4FV0teTEfHnn4a4S53gL4pRIx+U=;
+        b=rEN2U32g4D6thtpQpuPow1CDCbmEFbpF31YB4DZy6fORR2TPLIw36Orji5bSif5fm2MrpK
+        udDOBDl+Y+AfopNc9b4VD6Dw5fR0YGbvkw7ICPiK7OtKY4orL3vMMV1BBGF4NHP2hSM9qN
+        GmHBhnKjl+9m1iS5TByvVx2BY/RnJl0=
+Date:   Sun, 26 Apr 2020 15:11:11 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v7 01/12] dt-bindings: add img,pvrsgx.yaml for Imagination
+ GPUs
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?iso-8859-1?q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Philipp Rossak <embed3d@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Message-Id: <NMCE9Q.LWG45P20NBVJ@crapouillou.net>
+In-Reply-To: <3a451e360fed84bc40287678b4d6be13821cfbc0.1587760454.git.hns@goldelico.com>
+References: <cover.1587760454.git.hns@goldelico.com>
+        <3a451e360fed84bc40287678b4d6be13821cfbc0.1587760454.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UBSAN: array-index-out-of-bounds in drivers/block/floppy.c:1521:45
-index 16 is out of range for type 'unsigned char [16]'
-Call Trace:
-...
- setup_rw_floppy+0x5c3/0x7f0
- floppy_ready+0x2be/0x13b0
- process_one_work+0x2c1/0x5d0
- worker_thread+0x56/0x5e0
- kthread+0x122/0x170
- ret_from_fork+0x35/0x40
+Hi Nikolaus,
 
-From include/uapi/linux/fd.h:
-struct floppy_raw_cmd {
-	...
-	unsigned char cmd_count;
-	unsigned char cmd[16];
-	unsigned char reply_count;
-	unsigned char reply[16];
-	...
-}
+Le ven. 24 avril 2020 =E0 22:34, H. Nikolaus Schaller=20
+<hns@goldelico.com> a =E9crit :
+> The Imagination PVR/SGX GPU is part of several SoC from
+> multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo,
+> Allwinner A83 and others.
+>=20
+> With this binding, we describe how the SGX processor is
+> interfaced to the SoC (registers and interrupt).
+>=20
+> The interface also consists of clocks, reset, power but
+> information from data sheets is vague and some SoC integrators
+> (TI) deciced to use a PRCM wrapper (ti,sysc) which does
+> all clock, reset and power-management through registers
+> outside of the sgx register block.
+>=20
+> Therefore all these properties are optional.
+>=20
+> Tested by make dt_binding_check
+>=20
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+>  .../devicetree/bindings/gpu/img,pvrsgx.yaml   | 150=20
+> ++++++++++++++++++
+>  1 file changed, 150 insertions(+)
+>  create mode 100644=20
+> Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml=20
+> b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
+> new file mode 100644
+> index 000000000000..33a9c4c6e784
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
+> @@ -0,0 +1,150 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpu/img,pvrsgx.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Imagination PVR/SGX GPU
+> +
+> +maintainers:
+> +  - H. Nikolaus Schaller <hns@goldelico.com>
+> +
+> +description: |+
+> +  This binding describes the Imagination SGX5 series of 3D=20
+> accelerators which
+> +  are found in several different SoC like TI OMAP, Sitara, Ingenic=20
+> JZ4780,
+> +  Allwinner A83, and Intel Poulsbo and CedarView and more.
+> +
+> +  For an extensive list see:=20
+> https://en.wikipedia.org/wiki/PowerVR#Implementations
+> +
+> +  The SGX node is usually a child node of some DT node belonging to=20
+> the SoC
+> +  which handles clocks, reset and general address space mapping of=20
+> the SGX
+> +  register area. If not, an optional clock can be specified here.
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: '^gpu@[a-f0-9]+$'
+> +  compatible:
+> +    oneOf:
+> +      - description: SGX530-121 based SoC
+> +        items:
+> +          - enum:
+> +            - ti,omap3-sgx530-121 # BeagleBoard A/B/C, OpenPandora=20
+> 600MHz and similar
+> +          - const: img,sgx530-121
+> +          - const: img,sgx530
+> +
+> +      - description: SGX530-125 based SoC
+> +        items:
+> +          - enum:
+> +            - ti,am3352-sgx530-125 # BeagleBone Black
+> +            - ti,am3517-sgx530-125
+> +            - ti,am4-sgx530-125
+> +            - ti,omap3-sgx530-125 # BeagleBoard XM, GTA04,=20
+> OpenPandora 1GHz and similar
+> +            - ti,ti81xx-sgx530-125
+> +          - const: ti,omap3-sgx530-125
+> +          - const: img,sgx530-125
+> +          - const: img,sgx530
+> +
+> +      - description: SGX535-116 based SoC
+> +        items:
+> +          - const: intel,poulsbo-gma500-sgx535 # Atom Z5xx
+> +          - const: img,sgx535-116
+> +          - const: img,sgx535
+> +
+> +      - description: SGX540-116 based SoC
+> +        items:
+> +          - const: intel,medfield-gma-sgx540 # Atom Z24xx
+> +          - const: img,sgx540-116
+> +          - const: img,sgx540
+> +
+> +      - description: SGX540-120 based SoC
+> +        items:
+> +          - enum:
+> +            - samsung,s5pv210-sgx540-120
+> +            - ti,omap4-sgx540-120 # Pandaboard, Pandaboard ES and=20
+> similar
+> +          - const: img,sgx540-120
+> +          - const: img,sgx540
+> +
+> +      - description: SGX540-130 based SoC
+> +        items:
+> +          - enum:
+> +            - ingenic,jz4780-sgx540-130 # CI20
+> +          - const: img,sgx540-130
+> +          - const: img,sgx540
+> +
+> +      - description: SGX544-112 based SoC
+> +        items:
+> +          - const: ti,omap4470-sgx544-112
+> +          - const: img,sgx544-112
+> +          - const: img,sgx544
+> +
+> +      - description: SGX544-115 based SoC
+> +        items:
+> +          - enum:
+> +            - allwinner,sun8i-a31-sgx544-115
+> +            - allwinner,sun8i-a31s-sgx544-115
+> +            - allwinner,sun8i-a83t-sgx544-115 # Banana-Pi-M3=20
+> (Allwinner A83T) and similar
+> +          - const: img,sgx544-115
+> +          - const: img,sgx544
+> +
+> +      - description: SGX544-116 based SoC
+> +        items:
+> +          - enum:
+> +            - ti,dra7-sgx544-116 # DRA7
+> +            - ti,omap5-sgx544-116 # OMAP5 UEVM, Pyra Handheld and=20
+> similar
+> +          - const: img,sgx544-116
+> +          - const: img,sgx544
+> +
+> +      - description: SGX545 based SoC
+> +        items:
+> +          - const: intel,cedarview-gma3600-sgx545 # Atom N2600, D2500
+> +          - const: img,sgx545-116
+> +          - const: img,sgx545
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  interrupt-names:
+> +    maxItems: 1
+> +    items:
+> +      - const: sgx
+> +
+> +  clocks:
+> +    maxItems: 4
+> +
+> +  clock-names:
+> +    maxItems: 4
+> +    items:
+> +      - const: core
+> +      - const: sys
+> +      - const: mem
+> +      - const: hyd
+> +
+> +  sgx-supply: true
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
 
-This out-of-bounds access is intentional. The command in struct
-floppy_raw_cmd may take up the space initially intended for the reply
-and the reply count. It is needed for long 82078 commands such as
-RESTORE, which takes 17 command bytes. Initial cmd size is not enough
-and since struct setup_rw_floppy is a part of uapi we check that
-cmd_count is in [0:16+1+16] in raw_cmd_copyin().
+By not making 'clocks' required you make it possible to create broken=20
+bindings; according to your schema, a GPU node without a 'clocks' for=20
+the JZ4780 would be perfectly valid.
 
-The patch adds union with original cmd,reply_count,reply fields and
-fullcmd field of equivalent size. The cmd accesses are turned to
-fullcmd where appropriate to suppress UBSAN warning.
+It's possible to forbid the presence of the 'clocks' property on some=20
+implementations, and require it on others.
+See how it's done for instance on=20
+Documentation/devicetree/bindings/serial/samsung_uart.yaml.
 
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- drivers/block/floppy.c  |  4 ++--
- include/uapi/linux/fd.h | 11 ++++++++---
- 2 files changed, 10 insertions(+), 5 deletions(-)
+-Paul
 
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index 052ba457956e..1b22aab6cd9b 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -1072,7 +1072,7 @@ static void setup_DMA(void)
- 
- 		pr_info("zero dma transfer size:");
- 		for (i = 0; i < raw_cmd->cmd_count; i++)
--			pr_cont("%x,", raw_cmd->cmd[i]);
-+			pr_cont("%x,", raw_cmd->fullcmd[i]);
- 		pr_cont("\n");
- 		cont->done(0);
- 		fdc_state[current_fdc].reset = 1;
-@@ -1518,7 +1518,7 @@ static void setup_rw_floppy(void)
- 
- 	r = 0;
- 	for (i = 0; i < raw_cmd->cmd_count; i++)
--		r |= output_byte(current_fdc, raw_cmd->cmd[i]);
-+		r |= output_byte(current_fdc, raw_cmd->fullcmd[i]);
- 
- 	debugt(__func__, "rw_command");
- 
-diff --git a/include/uapi/linux/fd.h b/include/uapi/linux/fd.h
-index 2e9c2c1c18e6..8b80c63b971c 100644
---- a/include/uapi/linux/fd.h
-+++ b/include/uapi/linux/fd.h
-@@ -371,9 +371,14 @@ struct floppy_raw_cmd {
- 	 */
- 
- 	unsigned char cmd_count;
--	unsigned char cmd[FD_RAW_CMD_SIZE];
--	unsigned char reply_count;
--	unsigned char reply[FD_RAW_REPLY_SIZE];
-+	union {
-+		struct {
-+			unsigned char cmd[FD_RAW_CMD_SIZE];
-+			unsigned char reply_count;
-+			unsigned char reply[FD_RAW_REPLY_SIZE];
-+		};
-+		unsigned char fullcmd[FD_RAW_CMD_FULLSIZE];
-+	};
- 	int track;
- 	int resultcode;
- 
--- 
-2.25.3
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |+
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    gpu: gpu@fe00 {
+> +      compatible =3D "ti,omap5-sgx544-116", "img,sgx544-116",=20
+> "img,sgx544";
+> +      reg =3D <0xfe00 0x200>;
+> +      interrupts =3D <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+> +    };
+> +
+> +...
+> --
+> 2.25.1
+>=20
+
 
