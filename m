@@ -2,86 +2,164 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6508C55194
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08EFEC54FD0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 12:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5235206CD
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEF582071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 12:00:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587902459;
+	bh=tpyO3m4TPWhYdl0DNQvYLij22ofFQibUNuz6A936P5o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=JMKdheX4lnxuMU3UJjhpNUCW6upuAWmph4AblwyFj6yljqJ01JGo8nEp+DcbNTNE1
+	 sUsm+kWpKJXk/3B2lPe0PypcMiy1PAOw6NbxWc3+kZpYRz0r8WQpyoQNATokOlGMXT
+	 g1WTiuimIrMOshYEuzBPnMqiCPc7xP600LNdSh1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726150AbgDZL6Q (ORCPT
+        id S1726155AbgDZMA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 07:58:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35752 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726125AbgDZL6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 07:58:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 2B6DEAA55;
-        Sun, 26 Apr 2020 11:58:12 +0000 (UTC)
-Subject: Re: [PATCH v3 3/3] ARM: dts: Add Caninos Loucos Labrador
-To:     Matheus Castello <matheus@castello.eng.br>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        edgar.righi@lsitec.org.br, igor.lima@lsitec.org.br,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org
-References: <20200229104358.GB19610@mani>
- <20200320035104.26139-1-matheus@castello.eng.br>
- <20200320035104.26139-4-matheus@castello.eng.br>
- <20200405065137.GC8912@Mani-XPS-13-9360>
- <df32c750-a097-9210-6e13-db7db49836b5@castello.eng.br>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <2dca5a4e-933c-0a43-e86f-21b55d75a586@suse.de>
-Date:   Sun, 26 Apr 2020 13:58:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 26 Apr 2020 08:00:58 -0400
+Received: from mail-oo1-f65.google.com ([209.85.161.65]:33837 "EHLO
+        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbgDZMA5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 08:00:57 -0400
+Received: by mail-oo1-f65.google.com with SMTP id q204so3222802ooq.1;
+        Sun, 26 Apr 2020 05:00:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1ybWhQKicq3BRCiYVQDh4zWliFFrm/KJg+jIJlyUI9M=;
+        b=ej2BtiMWjS/6fppDztqzCZYy09Qnh4QSrZLZKOUCDxkrg/uDfa1bWAQFX0sBhxJ2Lr
+         1s5Ntg09X10k284ICoJ2f0XZIYt0GUV7In/MCOWmQfX591iAdfB7KD+oulO+Nh79D8LZ
+         gRvux9h0Bx72Yoechl3a6gyrpxeDG33nGI4ybjcvfwMLA8IkPufktewWeYICZhOjXGkL
+         HLVufYEibkdAslV6cllqQrx7EWF+jjjBEwn7eBonNeVAwzKZB5lp3lxfw0xBvbN/o2Lg
+         wKOUg0/Pk6FY3153/rGO6CsCBkUJv6IxYrTRojThhPjKjHn0GqFgb4yc25HaemDy/uq8
+         7sVw==
+X-Gm-Message-State: AGi0PuZsO3kQr/1FIm1vbrOT4RSq0Y27NQhQiYF9jnHkyRs6X/8nrG5Q
+        L+cSNpdqfb8cmFnqZt04XiGkEJWxnMIkAoH6c2o=
+X-Google-Smtp-Source: APiQypKyZxkcHfEhyM8+pOq/fmWQIy9udg2kWP9Mm+fknlDDSKT2EaVjrffZSGqWcxhe2HznqDzwgkIT3THf3/jVgJ0=
+X-Received: by 2002:a4a:a286:: with SMTP id h6mr15108432ool.38.1587902455878;
+ Sun, 26 Apr 2020 05:00:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <df32c750-a097-9210-6e13-db7db49836b5@castello.eng.br>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200426104713.216896-1-hdegoede@redhat.com> <20200426104713.216896-3-hdegoede@redhat.com>
+In-Reply-To: <20200426104713.216896-3-hdegoede@redhat.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Sun, 26 Apr 2020 14:00:44 +0200
+Message-ID: <CAJZ5v0iZ-8rnC3fLsYYb4ieAVKXc6_W3_Cnxfy3vQR3CEufucg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ACPI / scan: Create platform device for CPLM3218 ACPI nodes
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matheus,
+On Sun, Apr 26, 2020 at 12:47 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Some CPLM3218 ACPI nodes also put the SMBus Alert Response Address (0x0c)
+> in their ACPI resource table; and they put it there as the first entry,
+> here is an example from the CPLM3218 device in the DSDT of an Asus T100TA:
+>
+>  Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
+>  {
+>      Name (SBUF, ResourceTemplate ()
+>      {
+>          I2cSerialBusV2 (0x000C, ControllerInitiated, 0x00061A80,
+>              AddressingMode7Bit, "\\_SB.I2C3",
+>              0x00, ResourceConsumer, , Exclusive,
+>              )
+>          I2cSerialBusV2 (0x0048, ControllerInitiated, 0x00061A80,
+>              AddressingMode7Bit, "\\_SB.I2C3",
+>              0x00, ResourceConsumer, , Exclusive,
+>              )
+>          Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+>          {
+>              0x00000033,
+>          }
+>      })
+>      Return (SBUF) /* \_SB_.I2C3.ALSD._CRS.SBUF */
+>  }
+>
+> The actual I2C address of the sensor in this case is the 0x48 address
+> from the second resource-table entry. On some other devices
+> (e.g. HP X2 Bay Trail models, Acer SW5-012) the CPLM3218 node contains
+> only 1 I2C resource.
+>
+> Add the CPLM3218 to the I2C multi instantiate list, so that the
+> i2c-multi-instantiate.c driver can handle it.
+>
+> Note in the case where there are 2 I2C resources we simply instatiate
+> i2c-clients for both and let the cm32181 driver figure out that the
+> first one is not the one it wants.
+>
+> Doing things this way is actually desirable because on devices where
+> there are 2 I2C resources it seems that we first need to do a SMBus
+> read of the 0x0c address before the sensor will respond to I2C transfers
+> on its actual address.
+>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Am 23.04.20 um 17:20 schrieb Matheus Castello:
-> Em 4/5/20 3:51 AM, Manivannan Sadhasivam escreveu:
->> On Fri, Mar 20, 2020 at 12:51:04AM -0300, Matheus Castello wrote:
->>> Add Device Trees for Caninos Loucos Labrador CoM and base board.
->>> Based on the work of Andreas Färber on Lemaker Guitar device tree.
->>>
->>> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
->>
->> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->>
->> Will queue the series for v5.8 once Andreas is happy with it.
-> 
-> do you have any more concerns about these patches? Let me know.
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-I've reviewed the preceding two patches. This one here looks okay,
+for the scan.c change and I'm expecting platform/x86 to take care of
+this series.
 
-Reviewed-by: Andreas Färber <afaerber@suse.de>
+Thanks!
 
-but see 2/3 - model here does contain M and your .dtsi is named -v2 - 
-what's the difference to v1? If it's big enough to warrant a separate 
-.dtsi, you should consider whether a versioned compatible string may be 
-needed, too (likely in addition to, not instead of a generic one). No v1 
-info on the website.
-
-Thanks,
-Andreas
-
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+> ---
+>  drivers/acpi/scan.c                          | 1 +
+>  drivers/platform/x86/i2c-multi-instantiate.c | 7 +++++++
+>  2 files changed, 8 insertions(+)
+>
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index 6d3448895382..937d72fc212c 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -1544,6 +1544,7 @@ static bool acpi_device_enumeration_by_parent(struct acpi_device *device)
+>         static const struct acpi_device_id i2c_multi_instantiate_ids[] = {
+>                 {"BSG1160", },
+>                 {"BSG2150", },
+> +               {"CPLM3218", },
+>                 {"INT33FE", },
+>                 {"INT3515", },
+>                 {}
+> diff --git a/drivers/platform/x86/i2c-multi-instantiate.c b/drivers/platform/x86/i2c-multi-instantiate.c
+> index dcafb1a29d17..e1cdc44e6f57 100644
+> --- a/drivers/platform/x86/i2c-multi-instantiate.c
+> +++ b/drivers/platform/x86/i2c-multi-instantiate.c
+> @@ -180,6 +180,12 @@ static const struct i2c_inst_data int3515_data[]  = {
+>         {}
+>  };
+>
+> +static const struct i2c_inst_data cplm3218_data[]  = {
+> +       { "cm32181", PASS_FWNODE },
+> +       { "cm32181", PASS_FWNODE },
+> +       {}
+> +};
+> +
+>  /*
+>   * Note new device-ids must also be added to i2c_multi_instantiate_ids in
+>   * drivers/acpi/scan.c: acpi_device_enumeration_by_parent().
+> @@ -187,6 +193,7 @@ static const struct i2c_inst_data int3515_data[]  = {
+>  static const struct acpi_device_id i2c_multi_inst_acpi_ids[] = {
+>         { "BSG1160", (unsigned long)bsg1160_data },
+>         { "BSG2150", (unsigned long)bsg2150_data },
+> +       { "CPLM3218", (unsigned long)cplm3218_data },
+>         { "INT3515", (unsigned long)int3515_data },
+>         { }
+>  };
+> --
+> 2.26.0
+>
