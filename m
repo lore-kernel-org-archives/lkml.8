@@ -2,169 +2,110 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E162C55194
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 14:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DD4C54FCB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 14:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 213152070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 14:37:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="A81Nss2X"
+	by mail.kernel.org (Postfix) with ESMTP id 759692070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 14:41:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbgDZOhk (ORCPT
+        id S1726174AbgDZOlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 10:37:40 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:35430 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726140AbgDZOhk (ORCPT
+        Sun, 26 Apr 2020 10:41:49 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55746 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725876AbgDZOlt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 10:37:40 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587911858; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=ui6MOHK4ycwTBeNfWOrKG5eJnPzmTryDDwOQywkBnZM=; b=A81Nss2XN/W0OWppPjxBIDbwqu275bYo1FqJYTPDtmdAHhjsp0BifSa4xGuHFpsd1GJsJMxw
- 9SISYwInOUBuH/oBaubK+33yxpIUdQWoCSzemSme1eplt7UgbzE2N4SZEUExPPbHUsceH9Vr
- YZKEC+2IuMzn8FNBe5N6iNfVNas=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea59cb2.7f47d0539f80-smtp-out-n01;
- Sun, 26 Apr 2020 14:37:38 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 06938C432C2; Sun, 26 Apr 2020 14:37:37 +0000 (UTC)
-Received: from blr-ubuntu-311.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BDF9AC433D2;
-        Sun, 26 Apr 2020 14:37:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BDF9AC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCH] coresight: dynamic-replicator: Fix handling of multiple connections
-Date:   Sun, 26 Apr 2020 20:07:25 +0530
-Message-Id: <20200426143725.18116-1-saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
+        Sun, 26 Apr 2020 10:41:49 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03QEXVXZ055062
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 10:41:48 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mg14yp70-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 10:41:48 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Sun, 26 Apr 2020 15:40:54 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 26 Apr 2020 15:40:51 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03QEffVI60686488
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 26 Apr 2020 14:41:42 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E5E59A4051;
+        Sun, 26 Apr 2020 14:41:41 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 19B54A4040;
+        Sun, 26 Apr 2020 14:41:41 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.207.229])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Sun, 26 Apr 2020 14:41:40 +0000 (GMT)
+Date:   Sun, 26 Apr 2020 17:41:39 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, Baoquan He <bhe@redhat.com>
+Subject: Re: compaction: VM_BUG_ON_PAGE(!zone_spans_pfn(page_zone(page), pfn))
+References: <8C537EB7-85EE-4DCF-943E-3CC0ED0DF56D@lca.pw>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <8C537EB7-85EE-4DCF-943E-3CC0ED0DF56D@lca.pw>
+X-TM-AS-GCONF: 00
+x-cbid: 20042614-4275-0000-0000-000003C662A9
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20042614-4276-0000-0000-000038DBF2BE
+Message-Id: <20200426144139.GA340887@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-26_04:2020-04-24,2020-04-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ suspectscore=21 lowpriorityscore=0 spamscore=0 phishscore=0
+ priorityscore=1501 adultscore=0 bulkscore=0 mlxlogscore=897 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004260131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 30af4fb619e5 ("coresight: dynamic-replicator:
-Handle multiple connections"), we do not make sure that
-the other port is disabled when the dynamic replicator is
-enabled. This is seen to cause the CPU hardlockup atleast
-on SC7180 SoC with the following topology when enabling ETM
-with ETR as the sink via sysfs. Since there is no trace id
-logic in coresight yet to make use of multiple sinks in
-parallel for different trace sessions, disable the other
-port when one port is turned on.
+Hi,
 
-       etm0_out
-	  |
-   apss_funnel_in0
-          |
-  apss_merge_funnel_in
-          |
-      funnel1_in4
-	  |
-   merge_funnel_in1
-	  |
-    swao_funnel_in
-          |
-        etf_in
-	  |
-  swao_replicator_in
-          |
-   replicator_in
-	  |
-        etr_in
+On Thu, Apr 23, 2020 at 05:25:56PM -0400, Qian Cai wrote:
+> Compaction starts to crash below on linux-next today. The faulty page belongs to Node 0 DMA32 zone.
+> I’ll continue to narrow it down, but just want to give a headup in case someone could beat me to it.
+> 
+> Debug output from free_area_init_core()
+> [    0.000000] KK start page = ffffea0000000040, end page = ffffea0000040000, nid = 0 DMA
+> [    0.000000] KK start page = ffffea0000040000, end page = ffffea0004000000, nid = 0 DMA32
+> [    0.000000] KK start page = ffffea0004000000, end page = ffffea0012000000, nid = 0 NORMAL
+> [    0.000000] KK start page = ffffea0012000000, end page = ffffea0021fc0000, nid = 4 NORMAL
+> 
+> I don’t understand how it could end up in such a situation. There are several recent patches look
+> more related than some others.
 
-  Kernel panic - not syncing: Watchdog detected hard LOCKUP on cpu 0
-  CPU: 7 PID: 0 Comm: swapper/7 Tainted: G S  B             5.4.25 #100
-  Hardware name: Qualcomm Technologies, Inc. SC7180 IDP (DT)
-  Call trace:
-   dump_backtrace+0x0/0x188
-   show_stack+0x20/0x2c
-   dump_stack+0xdc/0x144
-   panic+0x168/0x370
-   arch_seccomp_spec_mitigate+0x0/0x14
-   watchdog_timer_fn+0x68/0x290
-   __hrtimer_run_queues+0x264/0x498
-   hrtimer_interrupt+0xf0/0x22c
-   arch_timer_handler_phys+0x40/0x50
-   handle_percpu_devid_irq+0x8c/0x158
-   __handle_domain_irq+0x84/0xc4
-   gic_handle_irq+0x100/0x1c4
-   el1_irq+0xbc/0x180
-   arch_cpu_idle+0x3c/0x5c
-   default_idle_call+0x1c/0x38
-   do_idle+0x100/0x280
-   cpu_startup_entry+0x24/0x28
-   secondary_start_kernel+0x15c/0x170
-  SMP: stopping secondary CPUs
+Can you please add "mminit_loglevel=4 memblock=debug" to the kernel
+command line?
 
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Tested-by: Stephen Boyd <swboyd@chromium.org>
----
-Changes since RFC:
- * Reworded commit text and included the topology on SC7180.
----
- .../hwtracing/coresight/coresight-replicator.c    | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+> - mm: rework free_area_init*() funcitons
+> https://lore.kernel.org/linux-mm/20200412194859.12663-1-rppt@kernel.org/
+> Could this somehow allow an invalid pfn to escape into the page allocator?
+> Especially, is it related to skip the checks in memmap_init_zone()?
+> https://lore.kernel.org/linux-mm/20200412194859.12663-16-rppt@kernel.org
 
-diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
-index e7dc1c31d20d..f4eaa38f8f43 100644
---- a/drivers/hwtracing/coresight/coresight-replicator.c
-+++ b/drivers/hwtracing/coresight/coresight-replicator.c
-@@ -66,14 +66,16 @@ static int dynamic_replicator_enable(struct replicator_drvdata *drvdata,
- 				     int inport, int outport)
- {
- 	int rc = 0;
--	u32 reg;
-+	u32 reg0, reg1;
- 
- 	switch (outport) {
- 	case 0:
--		reg = REPLICATOR_IDFILTER0;
-+		reg0 = REPLICATOR_IDFILTER0;
-+		reg1 = REPLICATOR_IDFILTER1;
- 		break;
- 	case 1:
--		reg = REPLICATOR_IDFILTER1;
-+		reg0 = REPLICATOR_IDFILTER1;
-+		reg1 = REPLICATOR_IDFILTER0;
- 		break;
- 	default:
- 		WARN_ON(1);
-@@ -87,8 +89,11 @@ static int dynamic_replicator_enable(struct replicator_drvdata *drvdata,
- 		rc = coresight_claim_device_unlocked(drvdata->base);
- 
- 	/* Ensure that the outport is enabled. */
--	if (!rc)
--		writel_relaxed(0x00, drvdata->base + reg);
-+	if (!rc) {
-+		writel_relaxed(0x00, drvdata->base + reg0);
-+		writel_relaxed(0xff, drvdata->base + reg1);
-+	}
-+
- 	CS_LOCK(drvdata->base);
- 
- 	return rc;
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Sincerely yours,
+Mike.
+
