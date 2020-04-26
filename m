@@ -2,89 +2,241 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A4EC55191
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 08:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CDBC55199
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 08:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01AE42071E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 08:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87DC42071E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 08:20:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbgDZIQy (ORCPT
+        id S1726142AbgDZIUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 04:16:54 -0400
-Received: from sauhun.de ([88.99.104.3]:43276 "EHLO pokefinder.org"
+        Sun, 26 Apr 2020 04:20:32 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:42160 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726112AbgDZIQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 04:16:54 -0400
-Received: from localhost (p54B33954.dip0.t-ipconnect.de [84.179.57.84])
-        by pokefinder.org (Postfix) with ESMTPSA id 84CD02C01E8;
-        Sun, 26 Apr 2020 10:16:52 +0200 (CEST)
-Date:   Sun, 26 Apr 2020 10:16:52 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: busses: remove unneeded conversion to bool
-Message-ID: <20200426081652.GH1262@kunai>
-References: <20200420042816.18989-1-yanaijie@huawei.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="LZFKeWUZP29EKQNE"
-Content-Disposition: inline
-In-Reply-To: <20200420042816.18989-1-yanaijie@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726122AbgDZIUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 04:20:31 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D8128200B9F;
+        Sun, 26 Apr 2020 10:20:29 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 597CC200BA3;
+        Sun, 26 Apr 2020 10:20:23 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id AAC1140246;
+        Sun, 26 Apr 2020 16:20:15 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, rui.zhang@intel.com, daniel.lezcano@linaro.org,
+        amit.kucheria@verdurent.com, robh+dt@kernel.org,
+        leonard.crestez@nxp.com, linux@rempel-privat.de, peng.fan@nxp.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V5 1/2] dt-bindings: firmware: imx: Move system control into dt-binding headfile
+Date:   Sun, 26 Apr 2020 16:11:43 +0800
+Message-Id: <1587888704-7158-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Dong Aisheng <aisheng.dong@nxp.com>
 
---LZFKeWUZP29EKQNE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+i.MX8 SoCs DTS file needs system control macro definitions, so move them
+into dt-binding headfile, then include/linux/firmware/imx/types.h can be
+removed and those drivers using it should be changed accordingly.
 
-On Mon, Apr 20, 2020 at 12:28:16PM +0800, Jason Yan wrote:
-> The '>' expression itself is bool, no need to convert it to bool again.
-> This fixes the following coccicheck warning:
->=20
-> drivers/i2c/busses/i2c-qup.c:960:48-53: WARNING: conversion to bool not n=
-eeded here
-> drivers/i2c/busses/i2c-qup.c:962:47-52: WARNING: conversion to bool not n=
-eeded here
-> drivers/i2c/busses/i2c-qup.c:1531:29-34: WARNING: conversion to bool not =
-needed here
-> drivers/i2c/busses/i2c-qup.c:1533:29-34: WARNING: conversion to bool not =
-needed here
->=20
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+Signed-off-by: Jacky Bai <ping.bai@nxp.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V4:
+	- Use another patch for new added system controls and PM clock types.
+---
+ drivers/firmware/imx/imx-scu.c          |  1 -
+ drivers/thermal/imx_sc_thermal.c        |  2 +-
+ include/dt-bindings/firmware/imx/rsrc.h | 51 ++++++++++++++++++++++++++
+ include/linux/firmware/imx/sci.h        |  1 -
+ include/linux/firmware/imx/types.h      | 65 ---------------------------------
+ 5 files changed, 52 insertions(+), 68 deletions(-)
+ delete mode 100644 include/linux/firmware/imx/types.h
 
-Applied to for-next, thanks! But please fix $subject to have the driver
-name "qup" next time.
+diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-scu.c
+index f71eaa5..f3340fa 100644
+--- a/drivers/firmware/imx/imx-scu.c
++++ b/drivers/firmware/imx/imx-scu.c
+@@ -8,7 +8,6 @@
+  */
+ 
+ #include <linux/err.h>
+-#include <linux/firmware/imx/types.h>
+ #include <linux/firmware/imx/ipc.h>
+ #include <linux/firmware/imx/sci.h>
+ #include <linux/interrupt.h>
+diff --git a/drivers/thermal/imx_sc_thermal.c b/drivers/thermal/imx_sc_thermal.c
+index b2b68c9..b01d28e 100644
+--- a/drivers/thermal/imx_sc_thermal.c
++++ b/drivers/thermal/imx_sc_thermal.c
+@@ -3,9 +3,9 @@
+  * Copyright 2018-2020 NXP.
+  */
+ 
++#include <dt-bindings/firmware/imx/rsrc.h>
+ #include <linux/err.h>
+ #include <linux/firmware/imx/sci.h>
+-#include <linux/firmware/imx/types.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
+diff --git a/include/dt-bindings/firmware/imx/rsrc.h b/include/dt-bindings/firmware/imx/rsrc.h
+index 4e61f64..cdcda00 100644
+--- a/include/dt-bindings/firmware/imx/rsrc.h
++++ b/include/dt-bindings/firmware/imx/rsrc.h
+@@ -547,4 +547,55 @@
+ #define IMX_SC_R_ATTESTATION		545
+ #define IMX_SC_R_LAST			546
+ 
++/*
++ * Defines for SC CONTROL
++ */
++#define IMX_SC_C_TEMP				0
++#define IMX_SC_C_TEMP_HI			1
++#define IMX_SC_C_TEMP_LOW			2
++#define IMX_SC_C_PXL_LINK_MST1_ADDR		3
++#define IMX_SC_C_PXL_LINK_MST2_ADDR		4
++#define IMX_SC_C_PXL_LINK_MST_ENB		5
++#define IMX_SC_C_PXL_LINK_MST1_ENB		6
++#define IMX_SC_C_PXL_LINK_MST2_ENB		7
++#define IMX_SC_C_PXL_LINK_SLV1_ADDR		8
++#define IMX_SC_C_PXL_LINK_SLV2_ADDR		9
++#define IMX_SC_C_PXL_LINK_MST_VLD		10
++#define IMX_SC_C_PXL_LINK_MST1_VLD		11
++#define IMX_SC_C_PXL_LINK_MST2_VLD		12
++#define IMX_SC_C_SINGLE_MODE			13
++#define IMX_SC_C_ID				14
++#define IMX_SC_C_PXL_CLK_POLARITY		15
++#define IMX_SC_C_LINESTATE			16
++#define IMX_SC_C_PCIE_G_RST			17
++#define IMX_SC_C_PCIE_BUTTON_RST		18
++#define IMX_SC_C_PCIE_PERST			19
++#define IMX_SC_C_PHY_RESET			20
++#define IMX_SC_C_PXL_LINK_RATE_CORRECTION	21
++#define IMX_SC_C_PANIC				22
++#define IMX_SC_C_PRIORITY_GROUP			23
++#define IMX_SC_C_TXCLK				24
++#define IMX_SC_C_CLKDIV				25
++#define IMX_SC_C_DISABLE_50			26
++#define IMX_SC_C_DISABLE_125			27
++#define IMX_SC_C_SEL_125			28
++#define IMX_SC_C_MODE				29
++#define IMX_SC_C_SYNC_CTRL0			30
++#define IMX_SC_C_KACHUNK_CNT			31
++#define IMX_SC_C_KACHUNK_SEL			32
++#define IMX_SC_C_SYNC_CTRL1			33
++#define IMX_SC_C_DPI_RESET			34
++#define IMX_SC_C_MIPI_RESET			35
++#define IMX_SC_C_DUAL_MODE			36
++#define IMX_SC_C_VOLTAGE			37
++#define IMX_SC_C_PXL_LINK_SEL			38
++#define IMX_SC_C_OFS_SEL			39
++#define IMX_SC_C_OFS_AUDIO			40
++#define IMX_SC_C_OFS_PERIPH			41
++#define IMX_SC_C_OFS_IRQ			42
++#define IMX_SC_C_RST0				43
++#define IMX_SC_C_RST1				44
++#define IMX_SC_C_SEL0				45
++#define IMX_SC_C_LAST				46
++
+ #endif /* __DT_BINDINGS_RSCRC_IMX_H */
+diff --git a/include/linux/firmware/imx/sci.h b/include/linux/firmware/imx/sci.h
+index 17ba4e4..3fa418a 100644
+--- a/include/linux/firmware/imx/sci.h
++++ b/include/linux/firmware/imx/sci.h
+@@ -11,7 +11,6 @@
+ #define _SC_SCI_H
+ 
+ #include <linux/firmware/imx/ipc.h>
+-#include <linux/firmware/imx/types.h>
+ 
+ #include <linux/firmware/imx/svc/misc.h>
+ #include <linux/firmware/imx/svc/pm.h>
+diff --git a/include/linux/firmware/imx/types.h b/include/linux/firmware/imx/types.h
+deleted file mode 100644
+index 8082110..0000000
+--- a/include/linux/firmware/imx/types.h
++++ /dev/null
+@@ -1,65 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+ */
+-/*
+- * Copyright (C) 2016 Freescale Semiconductor, Inc.
+- * Copyright 2017~2018 NXP
+- *
+- * Header file containing types used across multiple service APIs.
+- */
+-
+-#ifndef _SC_TYPES_H
+-#define _SC_TYPES_H
+-
+-/*
+- * This type is used to indicate a control.
+- */
+-enum imx_sc_ctrl {
+-	IMX_SC_C_TEMP = 0,
+-	IMX_SC_C_TEMP_HI = 1,
+-	IMX_SC_C_TEMP_LOW = 2,
+-	IMX_SC_C_PXL_LINK_MST1_ADDR = 3,
+-	IMX_SC_C_PXL_LINK_MST2_ADDR = 4,
+-	IMX_SC_C_PXL_LINK_MST_ENB = 5,
+-	IMX_SC_C_PXL_LINK_MST1_ENB = 6,
+-	IMX_SC_C_PXL_LINK_MST2_ENB = 7,
+-	IMX_SC_C_PXL_LINK_SLV1_ADDR = 8,
+-	IMX_SC_C_PXL_LINK_SLV2_ADDR = 9,
+-	IMX_SC_C_PXL_LINK_MST_VLD = 10,
+-	IMX_SC_C_PXL_LINK_MST1_VLD = 11,
+-	IMX_SC_C_PXL_LINK_MST2_VLD = 12,
+-	IMX_SC_C_SINGLE_MODE = 13,
+-	IMX_SC_C_ID = 14,
+-	IMX_SC_C_PXL_CLK_POLARITY = 15,
+-	IMX_SC_C_LINESTATE = 16,
+-	IMX_SC_C_PCIE_G_RST = 17,
+-	IMX_SC_C_PCIE_BUTTON_RST = 18,
+-	IMX_SC_C_PCIE_PERST = 19,
+-	IMX_SC_C_PHY_RESET = 20,
+-	IMX_SC_C_PXL_LINK_RATE_CORRECTION = 21,
+-	IMX_SC_C_PANIC = 22,
+-	IMX_SC_C_PRIORITY_GROUP = 23,
+-	IMX_SC_C_TXCLK = 24,
+-	IMX_SC_C_CLKDIV = 25,
+-	IMX_SC_C_DISABLE_50 = 26,
+-	IMX_SC_C_DISABLE_125 = 27,
+-	IMX_SC_C_SEL_125 = 28,
+-	IMX_SC_C_MODE = 29,
+-	IMX_SC_C_SYNC_CTRL0 = 30,
+-	IMX_SC_C_KACHUNK_CNT = 31,
+-	IMX_SC_C_KACHUNK_SEL = 32,
+-	IMX_SC_C_SYNC_CTRL1 = 33,
+-	IMX_SC_C_DPI_RESET = 34,
+-	IMX_SC_C_MIPI_RESET = 35,
+-	IMX_SC_C_DUAL_MODE = 36,
+-	IMX_SC_C_VOLTAGE = 37,
+-	IMX_SC_C_PXL_LINK_SEL = 38,
+-	IMX_SC_C_OFS_SEL = 39,
+-	IMX_SC_C_OFS_AUDIO = 40,
+-	IMX_SC_C_OFS_PERIPH = 41,
+-	IMX_SC_C_OFS_IRQ = 42,
+-	IMX_SC_C_RST0 = 43,
+-	IMX_SC_C_RST1 = 44,
+-	IMX_SC_C_SEL0 = 45,
+-	IMX_SC_C_LAST
+-};
+-
+-#endif /* _SC_TYPES_H */
+-- 
+2.7.4
 
-
---LZFKeWUZP29EKQNE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6lQ3AACgkQFA3kzBSg
-KbbPmQ//REatWshvQZ2+D9K9K+XGNUsZXGd1r3Vhl+QLR5zlQK1pcxW5p72VHXPj
-/f7wEZqhCawEKcY6VUbBFquHyZipMoUS7DUKsZa2r0fBLjAyY5rxGc/q/tWs4iHB
-PlBvoo0XBPLAwGr54mpiFju5PHuU6kQfhA/hPp9++anIq7WJwqxT7lJf9GM7w7Tz
-/FHZkBBFONE4yN0tD0h70JiJosrvGciJ62ymkCdqOGOO2Zt7SDmT4T0EZjPijIsk
-7IX0wevyCgqZkmxdLlFlPawh+0gbyp8larSYelNQBVw58o5hGK7JeSgIa0qyZIBq
-lZ+O5eO+0pMHONdNcjIbznJXhTMXcn28u2fegpMT3ku/YS0SenJ/QoqIK80J16/a
-3avxEVxSlOYcIXf5+OH+HtL7xfZCLwtalVu2rWwcpIikJGyD2axNz0B/c9FozQHo
-Ox80wyCkRzDVvL99fo9vBJe8/MLNezlZzlpINkmPIkjNv5ZR3cYzSs0W4ckKXTjA
-ABI4lQhQstVucG070SdxF6zJInWi+su2hLBqBT5DQ7ECt1BmoWFP7YWEBOaY9z31
-KkG6BK+DaScpka0liHt1Gy85p/lXBsKY/o5F9n8/1NsUniZ9blHqju6mNfTzLEDI
-oPHxnBR9jN/+vEq5GfgHQKnCQ0hd0jLGmpzvugbLNj0KOjf9g+U=
-=ouID
------END PGP SIGNATURE-----
-
---LZFKeWUZP29EKQNE--
