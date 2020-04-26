@@ -2,123 +2,158 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5916CC55186
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 01:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA613C55186
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 01:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2698520706
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 01:35:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89E0E206CD
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 01:43:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="geKeVi1E"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="VNtcJaAy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726110AbgDZBfg (ORCPT
+        id S1726119AbgDZBnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 21:35:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725931AbgDZBff (ORCPT
+        Sat, 25 Apr 2020 21:43:39 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:5803 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725931AbgDZBni (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 21:35:35 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A203C061A0C
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 18:35:35 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id 188so15598620wmc.2
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 18:35:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zMJDJfeA5eXVGIqjbISZ5/ttz+CXriZ4CrIpCaO+pAs=;
-        b=geKeVi1ESc3wgnvG5vOZQFy9X/ZWBsQpQi1t9jZr9fa0vHFfkz6AWIrjqd3uLqmbxs
-         RhWMBBY26+jaaOpEjXO3cVWxGnX/o0uJ6ZHIw8Mw5eiolk6OkaHJ8t4oFj3K/jiJdgc3
-         fEnHYvia3Bqhj/CuJIFSJGRjwD5vtyAXP/MdZZzWVo7U3/UNXPwgTeviTxr3MUPzMTBy
-         yMj36e94EeDUQg3heg7Ms4UM0bMhIiMBYV0opZFSeCYApmTPmCy0w82bwyPwmZwHoBoV
-         5ImB4NvrgtxXbN36xhVEE8haLDx4SfgRIaMa9eFRAbiohkkG0IcPP1ZUhfIlNBuy4yPF
-         n10g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zMJDJfeA5eXVGIqjbISZ5/ttz+CXriZ4CrIpCaO+pAs=;
-        b=r80njAac7MTeIlHc51nLzHRd0hBr3YB6PhxjZUOnRg02B664mjYtBXC5u4cblSYaiu
-         TlmvEluERgxyzQXBvCog2OZtuE4hlfJ5Lj3RHJ9tZcKWX7Uwr4UBEkJC9wDejB7u04vH
-         prw6TisXfDOjaK+Q2Vh2TNNqLkoJW9yslZJZBH/LJMipqcaBIOwFu6ELV26FMpHqAuUu
-         pnAq1IUdTg4tyxv2mj0msrxr1eVjssekZIUZcqEipLGlnzj9Ay1/sDm1oTohmJt6yOG5
-         jATu8dKjN5UA4wIXPq8DCydGrFpGJ2VwdX3vvAcFNGzdOwXt1Ew6PTJqO6ttOe6A8r7d
-         5nnw==
-X-Gm-Message-State: AGi0Puafj5VTpQ7XC9NkGsOcjjAwDlGNTsSMqbmJDGyZiNwXzyE+GQPg
-        r8PXOl6kQp/B6FDqVOT9vBfVKnBE/+p0eQ==
-X-Google-Smtp-Source: APiQypJE7SFdAWoHbLgBRL511YDWby4053psGjZArCo2Zm03OZhAKVCRp5Bv1FwWzBHL5Am8ZDx6XA==
-X-Received: by 2002:a05:600c:441a:: with SMTP id u26mr19757889wmn.154.1587864933945;
-        Sat, 25 Apr 2020 18:35:33 -0700 (PDT)
-Received: from localhost.localdomain ([89.208.134.182])
-        by smtp.gmail.com with ESMTPSA id e13sm5482885wrp.15.2020.04.25.18.35.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Apr 2020 18:35:33 -0700 (PDT)
-From:   Leonid Bloch <lb.workbox@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Leonid Bloch <lb.workbox@gmail.com>
-Subject: [PATCH] rtc: Do not sync CMOS clock when CONFIG_RTC_SYSTOHC is not set
-Date:   Sun, 26 Apr 2020 04:35:21 +0300
-Message-Id: <20200426013521.43087-1-lb.workbox@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Sat, 25 Apr 2020 21:43:38 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ea4e73d0000>; Sat, 25 Apr 2020 18:43:25 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sat, 25 Apr 2020 18:43:38 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sat, 25 Apr 2020 18:43:38 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 26 Apr
+ 2020 01:43:38 +0000
+Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 26 Apr
+ 2020 01:43:36 +0000
+Subject: Re: [RFC PATCH v10 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <sakari.ailus@iki.fi>,
+        <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1587700513-28449-1-git-send-email-skomatineni@nvidia.com>
+ <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
+ <6ca93ff9-ca59-544f-767c-4355d01a5c20@gmail.com>
+ <62546d1f-eca5-06be-2bc2-e45ccd53830a@xs4all.nl>
+ <50fd1016-ca8b-ec5d-e5a8-f257138b152e@gmail.com>
+ <658c4232-94d9-3051-8c93-bff7046cf5f2@nvidia.com>
+ <03426915-25ea-69b4-bc64-f87f3046d33f@nvidia.com>
+ <aabaecc4-3494-0137-7d2b-853304bfa68b@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <09f20441-fec6-7496-2edc-c69db535e441@nvidia.com>
+Date:   Sat, 25 Apr 2020 18:43:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <aabaecc4-3494-0137-7d2b-853304bfa68b@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587865405; bh=fIaSaG+JMolsYjsCT2iZAB7fnW0LWdosDfY/M747Esc=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=VNtcJaAygaSdM6ObESj0yxBpYZ7JvWDke+X1IU21UvNnQ+0G6Gg5c5GOZbAxGoWZX
+         /B5H8ZUkbIA+Cr9bwz2GochyQ3KGz8ZBNqgtJ1pNUDsl2ZcmEUBql6YpukuyE/SVQq
+         j164MRTWJEw6SRT9gM+HflJQfL3lER3kgtzydbTx388jdaKkyUJUP+ZME7VpsDOcvY
+         TnNKWnR5BDiPH/wkG3O/SRnIlvs++h7qgdmuRnbCz/zrlyvAYYiZXXfSRV3T7FUHiV
+         kiVoAyuBWSzj3bkDssTEeaIM7jikXywGKPK7mnsBityTSFh/hoSPkduxjhZIZpgxg6
+         Q3Q9v+23xrLJw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to documentation in 'drivers/rtc/Kconfig', if
-'CONFIG_RTC_SYSTOHC' is set, then:
 
-'''
-The system time (wall clock) will be stored in the RTC specified by
-RTC_HCTOSYS_DEVICE approximately every 11 minutes if userspace reports
-synchronized NTP status.
-'''
+On 4/25/20 6:26 PM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 26.04.2020 04:08, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 4/25/20 5:41 PM, Sowjanya Komatineni wrote:
+>>> On 4/25/20 5:36 PM, Dmitry Osipenko wrote:
+>>>> External email: Use caution opening links or attachments
+>>>>
+>>>>
+>>>> 25.04.2020 12:36, Hans Verkuil =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> ...
+>>>>>> The media/tegra/ sounds a bit too generic, the media/tegra-vi/ path
+>>>>>> should better reflect the driver, IMO.
+>>>>>>
+>>>>>> It also should be better to name the compiled kernel module as
+>>>>>> tegra-vi,
+>>>>>> IMO.
+>>>>>>
+>>>>> The driver name and the directory should be in sync, so either
+>>>>> tegra-video
+>>>>> or tegra-vi for both. I have no preference myself, as long as they
+>>>>> are the
+>>>>> same.
+>>>>>
+>>>>> This can be done as a follow-up patch.
+>>>> Given that this driver isn't going to be reused by older pre-Tegra210
+>>>> SoCs, perhaps it will also be worthwhile to name it as tegra210-vi or
+>>>> tegra210-video.
+>>> Can you explain what do you meant by can't be reused for pre-tegra210
+>>> or for tegra186/194?
+> It looks to me that at least all those hardcoded HW format IDs do not
+> match the older SoCs.
 
-However in reality, even if 'CONFIG_RTC_SYSTOHC' is not set, the RTC
-is still sometimes synced with the system time: at least when the RTC
-driver is 'rtc_cmos', in certain situations. This commit prevents that.
+TPG hard coded formats are supported on prior Tegra.
 
-Signed-off-by: Leonid Bloch <lb.workbox@gmail.com>
----
- kernel/time/ntp.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Other supported formats are SoC dependent and=C2=A0 part of soc data in the=
+=20
+driver already.
 
-diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
-index 069ca78fb0bf..58260ca75c64 100644
---- a/kernel/time/ntp.c
-+++ b/kernel/time/ntp.c
-@@ -535,9 +535,6 @@ static void sync_rtc_clock(void)
- 	struct timespec64 adjust, now;
- 	int rc;
- 
--	if (!IS_ENABLED(CONFIG_RTC_SYSTOHC))
--		return;
--
- 	ktime_get_real_ts64(&now);
- 
- 	adjust = now;
-@@ -613,6 +610,9 @@ static bool sync_cmos_clock(void)
-  */
- static void sync_hw_clock(struct work_struct *work)
- {
-+	if (!IS_ENABLED(CONFIG_RTC_SYSTOHC))
-+		return;
-+
- 	if (!ntp_synced())
- 		return;
- 
--- 
-2.26.2
+>>> support for other tegra's can be added to same tegra-video driver.
+>>> tegra-video host1x driver can be updated to add other tegra's vi and
+>>> csi compatibles to host1x subdevs and vi and csi driver can be updated
+>>> to add other tegra soc data and need to add coresponding
+>>> tegra186/194/xxx.c file with tegra specific prog sequence
+>>>
+>> Same tegra-video.ko can be used for all tegra soc as driver supports
+>> adding other soc related as well.
+> Well, I'm still not sure why you would want to have all the unnecessary
+> code of a different SoCs shared within the same kernel module, it will
+> be quite be a lot wasted space in comparison to a used part of the driver=
+.
+>
+> The driver will need to have a bit better separation if it's supposed to
+> have a common core for all SoCs. Each incompatible VI/CSI hardware
+> version should have its own kernel module.
 
+currently other Tegra host1x driver (drm) also does similar. Single=20
+module for all Tegra SoCs.
+
+With current tegra-video, all the v4l2 related common part of=20
+implementation is same for all tegra's and only=20
+tegra210.c/tegra186.c/tegra194.c will have corresponding tegra soc=20
+specific vi/csi programming sequence.
+
+>> Also was thinking instead of renaming media/tegra as media/tegra-vi,
+>> probably we can rename as media/tegra-video so it will be inline with
+>> module name we already chosen and also mainly we have vi and csi with in
+>> that so instead of tegra-vi probably we can use media/tegra-video?
+> The tegra-video should be okay, although the "video" part sounds a bit
+> too broad since video could mean a lot of things. I think downstream
+> kernel uses (or at least used) the tegra-camera name for the driver,
+> perhaps it could be a reasonable variant as well.
+prior feedback suggests not to use camera variant instead to use video
