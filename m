@@ -2,55 +2,74 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EDAC5519A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 08:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE883C55199
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2963920663
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 08:58:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587891517;
-	bh=n03uHDRrKMIWpH7lNl9PB7N8W2kFYUcb/NUNoedGpjg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=a6FZkduG+6T6UjmT9/tBVknB+cMQRRo1KK167ozPSREv503d6U8AD/H2c1G8qtgnx
-	 Czl1gmbq+hKIwfmc1RMvnWkcLclMq7d+Os1bvCFh4UxN2OSfSA4HXdB4okKHI3Tn1j
-	 B6tnynJJvGYfsjce5Eg1eyXXFznUNkbPdP4XIcwQ=
+	by mail.kernel.org (Postfix) with ESMTP id 81A772080C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:01:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bk4mcskw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726165AbgDZI6g (ORCPT
+        id S1726128AbgDZJBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 04:58:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726108AbgDZI6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 04:58:36 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 875C220661;
-        Sun, 26 Apr 2020 08:58:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587891515;
-        bh=n03uHDRrKMIWpH7lNl9PB7N8W2kFYUcb/NUNoedGpjg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=zTx30wGGQzjRpKe/fS2lGLAFIClU5VocViAEZREwHQqLVw8PYm6srEGL+8X36uYd1
-         FmjkVOp3i9HamTBp8OuFWaTmQYoDt7f80ouDaC82vkXFV4X1dYamMPvkIIgsemMQTB
-         IU+ONCMuV78to7xgMW7VPqzdbttUpY1gl2+oPHQk=
-Date:   Sun, 26 Apr 2020 09:58:31 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Mathieu Othacehe <m.othacehe@gmail.com>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/4] iio: vcnl4000: Factorize data reading and
- writing.
-Message-ID: <20200426095831.1472fbc9@archlinux>
-In-Reply-To: <20200422130856.1722-2-m.othacehe@gmail.com>
-References: <20200422130856.1722-1-m.othacehe@gmail.com>
-        <20200422130856.1722-2-m.othacehe@gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 26 Apr 2020 05:01:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42698 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726108AbgDZJBG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 05:01:06 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A065C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 02:01:05 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id k13so16814900wrw.7
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 02:01:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lofCixorE1bp5llJD+FvSikURJhRCNWg0J3fJX4vNDM=;
+        b=Bk4mcskwFHsT1BmbuQgaiutJtFhGwIoRjaWAEgImHaQM01JegOkcDCclIZ9rT4llDc
+         tsdrw038OsZwtSLxdgt3OgdMysZ50619/sHkEdZK/u0dJERv7AqbLYYLCnSC53LG0pZY
+         EH3EGmKYTpEI2S3k89x0/eLZQKzu+fLcHIW2ltAOIRsMShHgx4wshungQ8BDHEuoe1hG
+         Ndg833dWgoALduxIIvyYiTEEnY6DiFTZQ+pLzAEGn4zbzOQciQaDkgv4C5VpAtplMh8c
+         ewIC26hDiBUTbIZiGO+s7Gg0hl3EevB0EI2FHHoSN2ZYkjMM4I86OCSBrUJKcjOzqMq5
+         SdLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lofCixorE1bp5llJD+FvSikURJhRCNWg0J3fJX4vNDM=;
+        b=gr831nM/R1kVmhJlyIA2DIjQcTho5RAYodQpajxl/aJq6t/lzeeaI7M+UueN97RdYl
+         PZ5ksC/s4yCA4lU/g+g414Qlv2YKOj7pGHOHWlyLsJ1vTO9Ozd/hZyWxSbyzoensCAPc
+         497HvIXteQLQJW+oxdK5NdOnQI7zO46GETrOwDC1NkDZ7XXfkTmKYVChqDTBVWPy/B0Y
+         mg0vnWbeRrL6FzvkBNAorqzWQfdcqmPgb8VWQbQZ7oU5D80cPC/iNCQMS09IHPUNz3TI
+         z1jpwEOznDma2Zd+ULAC0/N1zMmC5AZcvsnKBYq9mstliEVI3X8TacOFRFBFJS75eFaB
+         xppQ==
+X-Gm-Message-State: AGi0PuaN8AmYvWR6Y8dZpJETKwRkgms2CY4OaSsAg7RqCNFZhxIx/fXw
+        9whxK639ydcWMCQk2AHoS34kcso=
+X-Google-Smtp-Source: APiQypI71HGTs54P/TxnneGNFp8lga5qawL7mlRMWUO5Ukrqh5CMfENlf7RhT1RVMrv+kaGESvjciQ==
+X-Received: by 2002:adf:f343:: with SMTP id e3mr20544863wrp.51.1587891663751;
+        Sun, 26 Apr 2020 02:01:03 -0700 (PDT)
+Received: from localhost (catv-176-63-31-101.catv.broadband.hu. [176.63.31.101])
+        by smtp.gmail.com with ESMTPSA id m14sm15871089wrs.76.2020.04.26.02.01.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Apr 2020 02:01:02 -0700 (PDT)
+Date:   Sun, 26 Apr 2020 11:00:18 +0200
+From:   =?UTF-8?B?TcOhdHnDoXMgSsOhbm9z?= <mjanos5@gmail.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
+        trivial@kernel.org
+Subject: [PATCH] TIMER Refactoring: avoid unnecessary recalculation of cpu
+ skew and remove duplication
+Message-ID: <20200426110018.7bb67f03@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -59,79 +78,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Apr 2020 15:08:53 +0200
-Mathieu Othacehe <m.othacehe@gmail.com> wrote:
+commit 2a31a3b1db7898cf2360b628fa8717d85aac3e22
+Author: Matyas Janos <mjanos5@gmail.com>
+Date:   Tue Oct 18 21:20:31 2016 +0200
 
-> Factorize data reading in vcnl4000_measure into a vcnl4000_read_data
-> function. Also add a vcnl4000_write_data function.
-> 
-> Signed-off-by: Mathieu Othacehe <m.othacehe@gmail.com>
-> ---
->  drivers/iio/light/vcnl4000.c | 29 +++++++++++++++++++++++++----
->  1 file changed, 25 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
-> index 58e97462e803..695a81e95d8d 100644
-> --- a/drivers/iio/light/vcnl4000.c
-> +++ b/drivers/iio/light/vcnl4000.c
-> @@ -215,11 +215,34 @@ static int vcnl4200_init(struct vcnl4000_data *data)
->  	return 0;
->  };
->  
-> +static int vcnl4000_read_data(struct vcnl4000_data *data, u8 data_reg, int *val)
-> +{
-> +	s32 ret;
-> +
-> +	ret = i2c_smbus_read_word_data(data->client, data_reg);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	*val = be16_to_cpu(ret);
-> +	return 0;
-> +}
-> +
-> +static int vcnl4000_write_data(struct vcnl4000_data *data, u8 data_reg, int val)
-> +{
-> +	__be16 be_val;
-> +
-> +	if (val > U16_MAX)
-> +		return -ERANGE;
-> +
-> +	be_val = cpu_to_be16(val);
-> +	return i2c_smbus_write_word_data(data->client, data_reg, be_val);
-> +}
-> +
-> +
+Refactoring: avoid unnecessary recalculation of cpu skew and remove duplication
 
-Nitpick: One line is plenty.  I can tidy this up whilst applying if
-we don't go to v6 for other reasons.
-
-Otherwise this looks fine.
-
-Jonathan
-
-
->  static int vcnl4000_measure(struct vcnl4000_data *data, u8 req_mask,
->  				u8 rdy_mask, u8 data_reg, int *val)
->  {
->  	int tries = 20;
-> -	__be16 buf;
->  	int ret;
->  
->  	mutex_lock(&data->vcnl4000_lock);
-> @@ -246,13 +269,11 @@ static int vcnl4000_measure(struct vcnl4000_data *data, u8 req_mask,
->  		goto fail;
->  	}
->  
-> -	ret = i2c_smbus_read_i2c_block_data(data->client,
-> -		data_reg, sizeof(buf), (u8 *) &buf);
-> +	ret = vcnl4000_read_data(data, data_reg, val);
->  	if (ret < 0)
->  		goto fail;
->  
->  	mutex_unlock(&data->vcnl4000_lock);
-> -	*val = be16_to_cpu(buf);
->  
->  	return 0;
->  
-
+Signed-off-by: Matyas Janos <mjanos5@gmail.com>
+---
+diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+index a5221abb4594..f6de4d68e652 100644
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -275,6 +275,7 @@ static unsigned long round_jiffies_common(unsigned long j, int cpu,
+ {
+ 	int rem;
+ 	unsigned long original = j;
++	unsigned long cpu_skew = cpu * 3;
+ 
+ 	/*
+ 	 * We don't want all cpus firing their timers at once hitting the
+@@ -284,7 +285,7 @@ static unsigned long round_jiffies_common(unsigned long j, int cpu,
+ 	 * The skew is done by adding 3*cpunr, then round, then subtract this
+ 	 * extra offset again.
+ 	 */
+-	j += cpu * 3;
++	j += cpu_skew;
+ 
+ 	rem = j % HZ;
+ 
+@@ -295,13 +296,13 @@ static unsigned long round_jiffies_common(unsigned long j, int cpu,
+ 	 * as cutoff for this rounding as an extreme upper bound for this.
+ 	 * But never round down if @force_up is set.
+ 	 */
+-	if (rem < HZ/4 && !force_up) /* round down */
+-		j = j - rem;
+-	else /* round up */
+-		j = j - rem + HZ;
++	j -= rem; /* round down by default */
++
++	if (rem >= HZ / 4 || force_up)
++		j += HZ; /* round up */
+ 
+ 	/* now that we have rounded, subtract the extra skew again */
+-	j -= cpu * 3;
++	j -= cpu_skew;
+ 
+ 	/*
+ 	 * Make sure j is still in the future. Otherwise return the
