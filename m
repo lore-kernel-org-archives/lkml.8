@@ -2,237 +2,177 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1069C55185
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 03:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A0EC55186
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 03:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65864206ED
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 03:07:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b/dEGlsO"
+	by mail.kernel.org (Postfix) with ESMTP id D358C2078E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 03:11:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587870662;
+	bh=5ufY2WNf1d+9zTXd2f3aMGdsxjO3ggnK7WB1Ct27mWo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DBiL+qzJKqx1pOldQ4JUbynoToOheASaiW494e/A7EXHisXRMftBwURkLhJTsC1f/
+	 AA61IF+Y0zp6x2QhpFSCU7froGIf9PYSdf6FleglePHK9odbZtfaY96NZ8a3r5iMWW
+	 ky4Z3sPkUjTBc4Do6rfVSYeWDxj7VE//l/U0pcKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbgDZDHR (ORCPT
+        id S1726139AbgDZDLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 23:07:17 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59535 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726092AbgDZDHR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 23:07:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587870435;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=s1MicnzhZx2u3w8NPjiKXXdCFazde/j1mUrPvZOE1Hk=;
-        b=b/dEGlsOxK6jgFJcfu/M7CunUrpqMTaMchq9Fe4OBTFmg38JKxY1OrulLoJvu3Iovn0zpo
-        4SUyEWao2rFEkQivK4wBEPBi+WKOfaFwPLGvZCfU5RSsd3PLk0YAFifUETGSOGH4Z+J3xa
-        OkZ9Zmpdu7/LlVckX6ILSs3DDk/W1eE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-438-wWW3QRZlNf-4qS8M6O2DLQ-1; Sat, 25 Apr 2020 23:07:13 -0400
-X-MC-Unique: wWW3QRZlNf-4qS8M6O2DLQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Sat, 25 Apr 2020 23:11:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34442 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726092AbgDZDLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 23:11:01 -0400
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6812F800D24;
-        Sun, 26 Apr 2020 03:07:11 +0000 (UTC)
-Received: from [10.72.13.103] (ovpn-13-103.pek2.redhat.com [10.72.13.103])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5F5B75D9CC;
-        Sun, 26 Apr 2020 03:07:05 +0000 (UTC)
-Subject: Re: [PATCH 1/2] vdpa: Support config interrupt in vhost_vdpa
-To:     Zhu Lingshan <lingshan.zhu@intel.com>, mst@redhat.com,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     lulu@redhat.com, dan.daly@intel.com, cunming.liang@intel.com
-References: <1587722659-1300-1-git-send-email-lingshan.zhu@intel.com>
- <1587722659-1300-2-git-send-email-lingshan.zhu@intel.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <cb656c27-22a8-3a18-9e3a-68fa0c3ff06b@redhat.com>
-Date:   Sun, 26 Apr 2020 11:07:03 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        by mail.kernel.org (Postfix) with ESMTPSA id E206E215A4
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 03:11:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587870661;
+        bh=5ufY2WNf1d+9zTXd2f3aMGdsxjO3ggnK7WB1Ct27mWo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=AoOgEJ/PCHpNCNceEnPC+l4jFraujO8GwZ54QALOYlUi1eslUYlJQgZFhAtDYYnI0
+         bCvLruNMB2ngmXYg3t5f5++qHEQG0q1JS7kqvHCkKNSF2AF2Vnr8A183mi/bzybxgf
+         /DcO8p2mpk5dVMyUGCfO9UZ3/lOPIOwXq7BD7iNk=
+Received: by mail-ed1-f50.google.com with SMTP id l3so10772404edq.13
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 20:11:00 -0700 (PDT)
+X-Gm-Message-State: AGi0PubQ9+GA/2ungjJl6/iI5b6VYf858Ll0TruHz3Q4CU1DA1PxQFzm
+        09CBNDvyWqMPTVhxa7cpyYKIA9HkhFZH4Opn1Q==
+X-Google-Smtp-Source: APiQypKzGcK+rktzR+tfPW/JO9EwaomlqVHqX5FQ7TR3YoCZvSXlsx8Rq/Mgm42CxzCH2NCu/qfo70XhLlXeJ46XxG8=
+X-Received: by 2002:aa7:c649:: with SMTP id z9mr14002618edr.288.1587870659255;
+ Sat, 25 Apr 2020 20:10:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1587722659-1300-2-git-send-email-lingshan.zhu@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <20200226112723.649954-1-enric.balletbo@collabora.com>
+In-Reply-To: <20200226112723.649954-1-enric.balletbo@collabora.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Sun, 26 Apr 2020 11:10:48 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_9tfwd-cqxkwUWXM-B7vuLZoKjF6DhFgZZM3QZp1pmCAg@mail.gmail.com>
+Message-ID: <CAAOTY_9tfwd-cqxkwUWXM-B7vuLZoKjF6DhFgZZM3QZp1pmCAg@mail.gmail.com>
+Subject: Re: [PATCH] drm/mediatek: Remove debug messages for function calls
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        CK Hu <ck.hu@mediatek.com>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi, Enric:
 
-On 2020/4/24 =E4=B8=8B=E5=8D=886:04, Zhu Lingshan wrote:
-> This commit implements config interrupt support in
-> vhost_vdpa layer.
+Enric Balletbo i Serra <enric.balletbo@collabora.com> =E6=96=BC 2020=E5=B9=
+=B42=E6=9C=8826=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=887:27=E5=AF=AB=
+=E9=81=93=EF=BC=9A
 >
-> Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
+> Equivalent information can be nowadays obtained using function tracer.
+
+Applied to mediatek-drm-next [1], thanks.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/chunkuang.hu/linux.git/=
+log/?h=3Dmediatek-drm-next
+
+Regards,
+Chun-Kuang.
+
 >
-> Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
-
-
-One should be sufficient.
-
-
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 > ---
->   drivers/vhost/vdpa.c             | 53 +++++++++++++++++++++++++++++++=
-+++++++++
->   include/uapi/linux/vhost.h       |  2 ++
->   include/uapi/linux/vhost_types.h |  2 ++
->   3 files changed, 57 insertions(+)
 >
-> diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
-> index 421f02a..f1f69bf 100644
-> --- a/drivers/vhost/vdpa.c
-> +++ b/drivers/vhost/vdpa.c
-> @@ -21,6 +21,7 @@
->   #include <linux/nospec.h>
->   #include <linux/vhost.h>
->   #include <linux/virtio_net.h>
-> +#include <linux/kernel.h>
->  =20
->   #include "vhost.h"
->  =20
-> @@ -70,6 +71,7 @@ struct vhost_vdpa {
->   	int nvqs;
->   	int virtio_id;
->   	int minor;
-> +	struct eventfd_ctx *config_ctx;
->   };
->  =20
->   static DEFINE_IDA(vhost_vdpa_ida);
-> @@ -101,6 +103,17 @@ static irqreturn_t vhost_vdpa_virtqueue_cb(void *p=
-rivate)
->   	return IRQ_HANDLED;
->   }
->  =20
-> +static irqreturn_t vhost_vdpa_config_cb(void *private)
-> +{
-> +	struct vhost_vdpa *v =3D private;
-> +	struct eventfd_ctx *config_ctx =3D v->config_ctx;
-> +
-> +	if (config_ctx)
-> +		eventfd_signal(config_ctx, 1);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
->   static void vhost_vdpa_reset(struct vhost_vdpa *v)
->   {
->   	struct vdpa_device *vdpa =3D v->vdpa;
-> @@ -288,6 +301,42 @@ static long vhost_vdpa_get_vring_num(struct vhost_=
-vdpa *v, u16 __user *argp)
->   	return 0;
->   }
->  =20
-> +static void vhost_vdpa_config_put(struct vhost_vdpa *v)
-> +{
-> +	if (v->config_ctx)
-> +		eventfd_ctx_put(v->config_ctx);
-> +}
-> +
-> +static long vhost_vdpa_set_config_call(struct vhost_vdpa *v, u32 __use=
-r *argp)
-> +{
-> +	struct vdpa_callback cb;
-> +	vhost_config_file file;
-> +	struct eventfd_ctx *ctx;
-> +
-> +	cb.callback =3D vhost_vdpa_config_cb;
-> +	cb.private =3D v->vdpa;
-> +	if (copy_from_user(&file, argp, sizeof(file)))
-> +		return  -EFAULT;
-> +
-> +	if (file.fd =3D=3D -1) {
-> +		vhost_vdpa_config_put(v);
-> +		v->config_ctx =3D NULL;
-> +		return PTR_ERR(v->config_ctx);
-> +	}
-> +
-> +	ctx =3D eventfd_ctx_fdget(file.fd);
-
-
-You may simply did ctx =3D f.fd =3D=3D -1 ? NULL : eventfd_ctx_fdget(f.fd=
-);
-
-Then there's no need for the specialized action for -1 above.
-
-
-> +	swap(ctx, v->config_ctx);
-> +
-> +	if (!IS_ERR_OR_NULL(ctx))
-> +		eventfd_ctx_put(ctx);
-> +
-> +	if (IS_ERR(v->config_ctx))
-> +		return PTR_ERR(v->config_ctx);
-> +
-> +	v->vdpa->config->set_config_cb(v->vdpa, &cb);
-> +
-> +	return 0;
-> +}
->   static long vhost_vdpa_vring_ioctl(struct vhost_vdpa *v, unsigned int=
- cmd,
->   				   void __user *argp)
->   {
-> @@ -398,6 +447,9 @@ static long vhost_vdpa_unlocked_ioctl(struct file *=
-filep,
->   	case VHOST_SET_LOG_FD:
->   		r =3D -ENOIOCTLCMD;
->   		break;
-> +	case VHOST_VDPA_SET_CONFIG_CALL:
-> +		r =3D vhost_vdpa_set_config_call(v, argp);
-> +		break;
->   	default:
->   		r =3D vhost_dev_ioctl(&v->vdev, cmd, argp);
->   		if (r =3D=3D -ENOIOCTLCMD)
-> @@ -734,6 +786,7 @@ static int vhost_vdpa_release(struct inode *inode, =
-struct file *filep)
->   	vhost_dev_stop(&v->vdev);
->   	vhost_vdpa_iotlb_free(v);
->   	vhost_vdpa_free_domain(v);
-> +	vhost_vdpa_config_put(v);
->   	vhost_dev_cleanup(&v->vdev);
->   	kfree(v->vdev.vqs);
->   	mutex_unlock(&d->mutex);
-> diff --git a/include/uapi/linux/vhost.h b/include/uapi/linux/vhost.h
-> index 9fe72e4..c474a35 100644
-> --- a/include/uapi/linux/vhost.h
-> +++ b/include/uapi/linux/vhost.h
-> @@ -140,4 +140,6 @@
->   /* Get the max ring size. */
->   #define VHOST_VDPA_GET_VRING_NUM	_IOR(VHOST_VIRTIO, 0x76, __u16)
->  =20
-> +/* Set event fd for config interrupt*/
-> +#define VHOST_VDPA_SET_CONFIG_CALL	_IOW(VHOST_VIRTIO, 0x77, vhost_conf=
-ig_file)
->   #endif
-> diff --git a/include/uapi/linux/vhost_types.h b/include/uapi/linux/vhos=
-t_types.h
-> index 669457c..6759aefb 100644
-> --- a/include/uapi/linux/vhost_types.h
-> +++ b/include/uapi/linux/vhost_types.h
-> @@ -27,6 +27,8 @@ struct vhost_vring_file {
->  =20
->   };
->  =20
-> +typedef struct vhost_vring_file vhost_config_file;
-> +
-
-
-I wonder maybe this is the best approach. Maybe it's better to use=20
-vhost_vring_file or just use a int (but need document the -1 action).
-
-Thanks
-
-
->   struct vhost_vring_addr {
->   	unsigned int index;
->   	/* Option flags. */
-
+>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 5 -----
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.c  | 2 --
+>  2 files changed, 7 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/me=
+diatek/mtk_drm_crtc.c
+> index a236499123aa..882c690d3f13 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> @@ -192,7 +192,6 @@ static int mtk_crtc_ddp_clk_enable(struct mtk_drm_crt=
+c *mtk_crtc)
+>         int ret;
+>         int i;
+>
+> -       DRM_DEBUG_DRIVER("%s\n", __func__);
+>         for (i =3D 0; i < mtk_crtc->ddp_comp_nr; i++) {
+>                 ret =3D clk_prepare_enable(mtk_crtc->ddp_comp[i]->clk);
+>                 if (ret) {
+> @@ -212,7 +211,6 @@ static void mtk_crtc_ddp_clk_disable(struct mtk_drm_c=
+rtc *mtk_crtc)
+>  {
+>         int i;
+>
+> -       DRM_DEBUG_DRIVER("%s\n", __func__);
+>         for (i =3D 0; i < mtk_crtc->ddp_comp_nr; i++)
+>                 clk_disable_unprepare(mtk_crtc->ddp_comp[i]->clk);
+>  }
+> @@ -257,7 +255,6 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *=
+mtk_crtc)
+>         int ret;
+>         int i;
+>
+> -       DRM_DEBUG_DRIVER("%s\n", __func__);
+>         if (WARN_ON(!crtc->state))
+>                 return -EINVAL;
+>
+> @@ -298,7 +295,6 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *=
+mtk_crtc)
+>                 goto err_mutex_unprepare;
+>         }
+>
+> -       DRM_DEBUG_DRIVER("mediatek_ddp_ddp_path_setup\n");
+>         for (i =3D 0; i < mtk_crtc->ddp_comp_nr - 1; i++) {
+>                 mtk_ddp_add_comp_to_path(mtk_crtc->config_regs,
+>                                          mtk_crtc->ddp_comp[i]->id,
+> @@ -348,7 +344,6 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc =
+*mtk_crtc)
+>         struct drm_crtc *crtc =3D &mtk_crtc->base;
+>         int i;
+>
+> -       DRM_DEBUG_DRIVER("%s\n", __func__);
+>         for (i =3D 0; i < mtk_crtc->ddp_comp_nr; i++) {
+>                 mtk_ddp_comp_stop(mtk_crtc->ddp_comp[i]);
+>                 if (i =3D=3D 1)
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/med=
+iatek/mtk_drm_drv.c
+> index 17f118ee0e57..4934834977b3 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> @@ -570,7 +570,6 @@ static int mtk_drm_sys_suspend(struct device *dev)
+>         int ret;
+>
+>         ret =3D drm_mode_config_helper_suspend(drm);
+> -       DRM_DEBUG_DRIVER("mtk_drm_sys_suspend\n");
+>
+>         return ret;
+>  }
+> @@ -582,7 +581,6 @@ static int mtk_drm_sys_resume(struct device *dev)
+>         int ret;
+>
+>         ret =3D drm_mode_config_helper_resume(drm);
+> -       DRM_DEBUG_DRIVER("mtk_drm_sys_resume\n");
+>
+>         return ret;
+>  }
+> --
+> 2.25.0
+>
+>
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
