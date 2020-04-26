@@ -2,73 +2,106 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4ECBC54FCB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 22:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB26C54FCB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 22:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1E2B2070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 22:19:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skogtun.org header.i=@skogtun.org header.b="jMv03MAh"
+	by mail.kernel.org (Postfix) with ESMTP id 2D62A2070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 22:21:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbgDZWTr (ORCPT
+        id S1726373AbgDZWU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 18:19:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbgDZWTr (ORCPT
+        Sun, 26 Apr 2020 18:20:59 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:47482 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725999AbgDZWU6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 18:19:47 -0400
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [IPv6:2a01:5b40:0:3005::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DDE7C061A0F
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 15:19:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=skogtun.org
-        ; s=ds201912; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:Cc:References:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=F/y0or3JoEsWto7InGi9nTcZFDuoRRWXC7eq5TTRmRs=; b=jMv03MAhKuTRL2wutX8JGQEeGC
-        pjxMxAmHNvSe4cyYtz3CkW+XWkBPIV+6+NI3wn9rW4B9DNfC0j3kEzrNCiiyLmz6cj4pQlq/g92df
-        s/7Kfk2S80rJgFMktJRrVacsxGA7lXX8qLvKhoY1JerxcssqcWa87EpMYkGHMXIjnY5BF9uoQhSWN
-        Tv9TSSxke0H1cb0VsYymcsmvUDSD1JoWerr3mktiA6Fuu0CScFcxsFVG2HuvaNwqOn2h7dNB+JH7k
-        NT4gzgeC+MjGqkxcqUSySluNDSc8t6FDupXPl6Bu0yaG/E4VjvI7RGkiNBgxIPOUZGAFZ1U762HGf
-        bjVlqNDg==;
-Received: from [2a01:79c:cebf:7fb0:d967:6cf9:736f:4613] (port=42354)
-        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <harald@skogtun.org>)
-        id 1jSpcl-0001w6-5c; Mon, 27 Apr 2020 00:19:43 +0200
-Subject: Re: Linux 5.7-rc3
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <CAHk-=wiDq0imdGHZwCnvWM1bc8r++==fB4BDrfenAB9_CZ45+w@mail.gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>
-From:   Harald Arnesen <harald@skogtun.org>
-Message-ID: <4db6aa99-5c63-c8c7-921c-5136ae6643d6@skogtun.org>
-Date:   Mon, 27 Apr 2020 00:19:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 26 Apr 2020 18:20:58 -0400
+Received: from dread.disaster.area (pa49-195-157-175.pa.nsw.optusnet.com.au [49.195.157.175])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 3F5B8821542;
+        Mon, 27 Apr 2020 08:20:54 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jSpdu-0008Lc-3Y; Mon, 27 Apr 2020 08:20:54 +1000
+Date:   Mon, 27 Apr 2020 08:20:54 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hch@infradead.org, willy@infradead.org, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
+Subject: Re: [RFC PATCH 3/9] btrfs: use set/clear_fs_page_private
+Message-ID: <20200426222054.GA2005@dread.disaster.area>
+References: <20200426214925.10970-1-guoqing.jiang@cloud.ionos.com>
+ <20200426214925.10970-4-guoqing.jiang@cloud.ionos.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wiDq0imdGHZwCnvWM1bc8r++==fB4BDrfenAB9_CZ45+w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200426214925.10970-4-guoqing.jiang@cloud.ionos.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=QIgWuTDL c=1 sm=1 tr=0
+        a=ONQRW0k9raierNYdzxQi9Q==:117 a=ONQRW0k9raierNYdzxQi9Q==:17
+        a=kj9zAlcOel0A:10 a=cl8xLZFz6L8A:10 a=FOH2dFAWAAAA:8 a=maIFttP_AAAA:8
+        a=iox4zFpeAAAA:8 a=VwQbUJbxAAAA:8 a=UgJECxHJAAAA:8 a=7-415B0cAAAA:8
+        a=MCBEIW9Q5ncSm9xiMmgA:9 a=CjuIK1q_8ugA:10 a=i3VuKzQdj-NEYjvDI-p3:22
+        a=qR24C9TJY6iBuJVj_x8Y:22 a=WzC6qhA0u3u7Ye7llzcV:22
+        a=AjGcO6oz07-iQ99wixmX:22 a=-El7cUbtino8hM1DCn8D:22
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds [26.04.2020 23:43]:
+On Sun, Apr 26, 2020 at 11:49:19PM +0200, Guoqing Jiang wrote:
+> Since the new pair function is introduced, we can call them to clean the
+> code in btrfs.
+> 
+> Cc: Chris Mason <clm@fb.com>
+> Cc: Josef Bacik <josef@toxicpanda.com>
+> Cc: David Sterba <dsterba@suse.com>
+> Cc: linux-btrfs@vger.kernel.org
+> Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 
-> Giovanni Gherdovich (3):
->       x86, sched: Bail out of frequency invariance if base frequency is unknown
->       x86, sched: Account for CPUs with less than 4 cores in freq. invariance
->       x86, sched: Move check for CPU type to caller function
+....
 
-This fixes the oops during boot on my ThinkPad T510i.
+>  void set_page_extent_mapped(struct page *page)
+>  {
+> -	if (!PagePrivate(page)) {
+> -		SetPagePrivate(page);
+> -		get_page(page);
+> -		set_page_private(page, EXTENT_PAGE_PRIVATE);
+> -	}
+> +	if (!PagePrivate(page))
+> +		set_fs_page_private(page, (void *)EXTENT_PAGE_PRIVATE);
+
+Change the definition of EXTENT_PAGE_PRIVATE so the cast is not
+needed? Nothing ever reads EXTENT_PAGE_PRIVATE; it's only there to
+set the private flag for other code to check and release the extent
+mapping reference to the page...
+
+> @@ -8331,11 +8328,9 @@ static int btrfs_migratepage(struct address_space *mapping,
+>  
+>  	if (page_has_private(page)) {
+>  		ClearPagePrivate(page);
+> -		get_page(newpage);
+> -		set_page_private(newpage, page_private(page));
+> +		set_fs_page_private(newpage, (void *)page_private(page));
+>  		set_page_private(page, 0);
+>  		put_page(page);
+> -		SetPagePrivate(newpage);
+>  	}
+
+This is just:
+		set_fs_page_private(newpage, clear_fs_page_private(page));
+
+Cheers,
+
+Dave.
+
 -- 
-Hilsen Harald
+Dave Chinner
+david@fromorbit.com
