@@ -2,86 +2,75 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DFCDC55199
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 19:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74184C54FCB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 20:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEC61206BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 19:58:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="DGuTRLwA"
+	by mail.kernel.org (Postfix) with ESMTP id 5AD952070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 20:00:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726233AbgDZT6f (ORCPT
+        id S1726264AbgDZUAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 15:58:35 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:36819 "EHLO mail.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbgDZT6e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 15:58:34 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 2286339d;
-        Sun, 26 Apr 2020 19:47:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=Tji6nhcoiQ4mNmbOVGUplvpgPlU=; b=DGuTRL
-        wAO4D7sQUj9rbyz5PQi4REziJ46zX8MAl/xxRdTvZs2GH1bzQEziClrBWTGpuSkw
-        DPpoKoZR4iViGSmbg66NJO6XCo7IITjOxhlf7+2dmnasfxtwXGznREWzMVa1QbK+
-        Sa0fFXVJc5XAPokH8Unv4P8r9iAa2kYN4xTQOU0QC89t8QW3RYSCcI8xXRfmwqb8
-        RYK8R36Lqs8LKbUEzkbEJRrqxHIIdt+ccEchMmBIJw0bcUElJVsb1BAB/zewQuaJ
-        9yPA/s/jJdX9fjxGevj7o5Ak9Tdr1N+IpuNsChcFuo76b7u3kw4WW9nKKic99m3T
-        DRKjz9W+M5OZHF4A==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id e650dba7 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Sun, 26 Apr 2020 19:47:07 +0000 (UTC)
-Received: by mail-io1-f53.google.com with SMTP id e9so16582671iok.9;
-        Sun, 26 Apr 2020 12:58:32 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZckDh7XgB7kdP5EAVLDndxt1+eDBhH863a3APzR0tnXrJXwrMf
-        b5gP1fTdUZ9baPwdhSELyA7vC+JGJzB+0ZguzpQ=
-X-Google-Smtp-Source: APiQypJhlOdeUIY7eyvappiPYS4AodHmJxQ4hDLTjQ93EdBxFvUDW6WI3qbfdHV2mBNdM+uKlj5w7Qt4ca+CDLryJek=
-X-Received: by 2002:a6b:7114:: with SMTP id q20mr17580244iog.79.1587931111259;
- Sun, 26 Apr 2020 12:58:31 -0700 (PDT)
+        Sun, 26 Apr 2020 16:00:22 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:57658 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbgDZUAW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 16:00:22 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: krisman)
+        with ESMTPSA id 8605C2A092E
+From:   Gabriel Krisman Bertazi <krisman@collabora.com>
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     agk@redhat.com, dm-devel@redhat.com, linux-kernel@vger.kernel.org,
+        khazhy@google.com, kernel@collabora.com
+Subject: Re: [PATCH 0/2] Historical Service Time Path Selector
+Organization: Collabora
+References: <20200416211336.2423618-1-krisman@collabora.com>
+        <20200423205947.GA13657@lobo>
+Date:   Sun, 26 Apr 2020 16:00:17 -0400
+In-Reply-To: <20200423205947.GA13657@lobo> (Mike Snitzer's message of "Thu, 23
+        Apr 2020 16:59:47 -0400")
+Message-ID: <855zdm2f1q.fsf@collabora.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-References: <0000000000005fd19505a4355311@google.com> <e40c443e-74aa-bad4-7be8-4cdddfdf3eaf@gmail.com>
- <CAHmME9ov2ae08UTzwKL7enquChzDNxpg4c=ppnJqS2QF6ZAn_Q@mail.gmail.com> <CAHmME9rxYkDhH3Fj-U24Ho7oGcdABK9hXsACPDQ1rz9WUcEuSQ@mail.gmail.com>
-In-Reply-To: <CAHmME9rxYkDhH3Fj-U24Ho7oGcdABK9hXsACPDQ1rz9WUcEuSQ@mail.gmail.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Sun, 26 Apr 2020 13:58:20 -0600
-X-Gmail-Original-Message-ID: <CAHmME9rzqNVf24jw8YxJfck2m=4ZUSfVx1w5LUP4qNxQv2Purw@mail.gmail.com>
-Message-ID: <CAHmME9rzqNVf24jw8YxJfck2m=4ZUSfVx1w5LUP4qNxQv2Purw@mail.gmail.com>
-Subject: Re: INFO: rcu detected stall in wg_packet_tx_worker
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     syzbot <syzbot+0251e883fe39e7a0cb0a@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        jhs@mojatatu.com,
-        =?UTF-8?B?SmnFmcOtIFDDrXJrbw==?= <jiri@resnulli.us>,
-        Krzysztof Kozlowski <krzk@kernel.org>, kuba@kernel.org,
-        kvalo@codeaurora.org, leon@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, syzkaller-bugs@googlegroups.com,
-        Thomas Gleixner <tglx@linutronix.de>, vivien.didelot@gmail.com,
-        Cong Wang <xiyou.wangcong@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 1:52 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+Mike Snitzer <snitzer@redhat.com> writes:
+
 >
-> It looks like part of the issue might be that I call
-> udp_tunnel6_xmit_skb while holding rcu_read_lock_bh, in
-> drivers/net/wireguard/socket.c. But I think there's good reason to do
-> so, and udp_tunnel6_xmit_skb should be rcu safe. In fact,
-> every.single.other user of udp_tunnel6_xmit_skb in the kernel uses it
-> with rcu locked. So, hm...
+> Looks like you've put a lot of time to this and I'd be happy to help
+> you get this to land upstream.
+>
+> But... (you knew there'd be at least one "but" right? ;) I'm not
+> liking making this path selector request-based specific.  All other
+> selectors up to this point are request-based vs bio-based agnostic.
+>
+> Would you be open to dropping patch 1/2 and replacing it with
+> something like the following patch?
+>
+> Then you'd pass 'u64 start_time_ns' into the path_selector_type's
+> .end_io (and possibly .start_io).
 
-In the syzkaller log, it looks like several runs are hitting:
+I think it is fine.
 
-run #0: crashed: INFO: rcu detected stall in netlink_sendmsg
+Kind of a MD newbie question, but if I understand correctly,
+dm_start_time_ns_from_clone is only for bio based multipath, and we just
+pass req->io_start_time directly on request based multipath, right?  If
+I understand the code correctly, start_io_acct is only called for the
+bio level DM.
 
-And other runs are hitting yet different functions. So actually, it's
-not clear that this is the fault of the call to udp_tunnel6_xmit_skb.
+I will update the patches, do a quick round of tests with BIO based and
+send a v2.
+
+Thanks a lot,
+
+-- 
+Gabriel Krisman Bertazi
