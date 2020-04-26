@@ -2,85 +2,110 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4D2C55194
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 23:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C47C5519A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 23:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79E4D2098B
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 23:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84E932070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 23:25:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbgDZXT1 (ORCPT
+        id S1726384AbgDZXZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 19:19:27 -0400
-Received: from smtprelay0208.hostedemail.com ([216.40.44.208]:59630 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726196AbgDZXT1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 19:19:27 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 877ED1802926E;
-        Sun, 26 Apr 2020 23:19:26 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: mass24_18171631e960e
-X-Filterd-Recvd-Size: 2230
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf06.hostedemail.com (Postfix) with ESMTPA;
-        Sun, 26 Apr 2020 23:19:25 +0000 (UTC)
-Message-ID: <7835ce311322434328099d3c9a22b0a5b281c6e4.camel@perches.com>
-Subject: Re: [PATCH v2 3/3] floppy: suppress UBSAN warning in
- setup_rw_floppy()
-From:   Joe Perches <joe@perches.com>
-To:     Denis Efremov <efremov@linux.com>, linux-block@vger.kernel.org
-Cc:     Willy Tarreau <w@1wt.eu>, Christoph Hellwig <hch@infradead.org>,
-        linux-kernel@vger.kernel.org
-Date:   Sun, 26 Apr 2020 16:19:24 -0700
-In-Reply-To: <20200426130728.63399-4-efremov@linux.com>
-References: <20200426130728.63399-1-efremov@linux.com>
-         <20200426130728.63399-4-efremov@linux.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Sun, 26 Apr 2020 19:25:27 -0400
+Received: from muru.com ([72.249.23.125]:51484 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726202AbgDZXZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 19:25:26 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id CD61C8107;
+        Sun, 26 Apr 2020 23:26:11 +0000 (UTC)
+Date:   Sun, 26 Apr 2020 16:25:20 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Pavel Machek <pavel@denx.de>, Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCHv6 0/4] n_gsm serdev support and protocol driver for
+ droid4 modem
+Message-ID: <20200426232520.GP37466@atomide.com>
+References: <20200421232752.3070-1-tony@atomide.com>
+ <20200423114326.GQ18608@localhost>
+ <20200424215040.GA14087@amd>
+ <20200424221515.GM37466@atomide.com>
+ <20200426200718.GA22980@amd>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200426200718.GA22980@amd>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-04-26 at 16:07 +0300, Denis Efremov wrote:
-> UBSAN: array-index-out-of-bounds in drivers/block/floppy.c:1521:45
-> index 16 is out of range for type 'unsigned char [16]'
-[]
-> This out-of-bounds access is intentional. The command in struct
-> floppy_raw_cmd may take up the space initially intended for the reply
-> and the reply count. It is needed for long 82078 commands such as
-> RESTORE, which takes 17 command bytes. Initial cmd size is not enough
-> and since struct setup_rw_floppy is a part of uapi we check that
-> cmd_count is in [0:16+1+16] in raw_cmd_copyin().
+* Pavel Machek <pavel@ucw.cz> [200426 20:08]:
+> Hi!
 > 
-> The patch adds union with original cmd,reply_count,reply fields and
-> fullcmd field of equivalent size. The cmd accesses are turned to
-> fullcmd where appropriate to suppress UBSAN warning.
-[]
-> diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-[]
-> @@ -1072,7 +1072,7 @@ static void setup_DMA(void)
->  
->  		pr_info("zero dma transfer size:");
->  		for (i = 0; i < raw_cmd->cmd_count; i++)
-> -			pr_cont("%x,", raw_cmd->cmd[i]);
-> +			pr_cont("%x,", raw_cmd->fullcmd[i]);
->  		pr_cont("\n");
+> > > > > Here's v4 set of n_gsm serdev support patches, and the related protocol
+> > > > > driver for the modem found on Motorola Mapphone phones and tablets
+> > > > > like droid4.
+> > > > > 
+> > > > > This series only adds basic character device support for the serdev
+> > > > > driver. Other serdev consumer drivers for specific devices will be
+> > > > > posted separately.
+> > > > 
+> > > > I'm still missing an architectural (design) overview here -- reviewer
+> > > > time is a scarce resource.
+> > > > 
+> > > > I also suggested earlier that you include, at least as an RFC, one or
+> > > > more of your child-device drivers so that we can see how this ends up
+> > > > being used in the end (including an example devicetree).
+> > > 
+> > > Note that this is useful on its own: we have ofonod running on the top
+> > > of this doing calls and SMSes.
+> > 
+> > Yup.
+> > 
+> > > Tony: I know you have drivers depending on this somewhere (audio
+> > > routing and GPS), but I can't find them. It is not droid4-pending-v5.6
+> > > AFAICT. Do you have a pointer / could you publish them somewhere?
+> > 
+> > Hmm they should be there in droid4-pending-v5.6 branch [0]:
+> > 
+> > $ git log --abbrev=12 --pretty=format:"%h (\"%s\")" \
+> > 	v5.6..droid4-pending-v5.6 | grep -i -e gsm -e mot -e mdm
+> > e09590a260a4 ("mfd: motmdm: Fix oops on unload of motorola-mdm")
+> > f9252f9ff6bd ("mfd: motmdm: Revert bad list change")
+> > d733dcaf4416 ("mfd: motmdm: Fix issue with receiving data before ddata is set")
+> > 452d2b5d4c95 ("n_gsm: Build fixes for make randconfig build")
+> > 6882b27ea92a ("phy: mapphone-mdm6600: Fix write timeouts with shorter GPIO toggle interval")
+> > 58ff58c4b520 ("mfd: motmdm: Add basic DTMF support")
+> > e92b6f30e5ae ("ASoC: audio-graph-card: Add audio mixer for motorold mdm6600")
+> > c2caea5767d5 ("gnss: mot-mdm6600: Add support for Motorola Mapphone MDM6600 modem")
+> > a5f73b7b06f6 ("mfd: motmdm: Add Motorola TS 27.010 serdev driver for devices like droid4")
+> > 6c311d5aeb0a ("dt-bindings: mfd: motmdm: Add binding for motorola-mdm")
+> > cd02274b920e ("tty: n_gsm: Add support for serdev drivers")
+> > a73a48321c98 ("phy: mapphone-mdm6600: Fix timeouts by adding wake-up handling")
+> 
+> Here's better try at getting gnss to work on top of linux-next... but
+> still no luck.
 
-slightly unrelated trivia: perhaps better as:
+Hmm that's about all it should take. Presumably you already tried
+diffing the related files against droid4-pending-v5.6 branch.
 
-		print_hex_dump(KERN_INFO, "zero dma transfer size: ",
-			       DUMP_PREFIX_NONE, 16, 1,
-			       raw_cmd->fullcmd, raw_cmd->cmd_count, false);
+I'm moving around things to work with a generic serdev-ngsm.c driver
+so I'm inbetween patches right now and don't have it working either
+probably for a few more days.
 
-to avoid pr_cont use.
+Regards,
 
-
+Tony
