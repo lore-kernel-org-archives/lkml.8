@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F6CC55199
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 18:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77293C55194
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 18:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7FED21775
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 18:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62A1020A8B
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 18:43:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgDZSnE (ORCPT
+        id S1726486AbgDZSnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 14:43:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47862 "EHLO
+        Sun, 26 Apr 2020 14:43:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726335AbgDZSm5 (ORCPT
+        by vger.kernel.org with ESMTP id S1726404AbgDZSnB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 14:42:57 -0400
+        Sun, 26 Apr 2020 14:43:01 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11F70C061A0F;
-        Sun, 26 Apr 2020 11:42:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E279FC061A10;
+        Sun, 26 Apr 2020 11:43:00 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jSmEr-0007A3-B4; Sun, 26 Apr 2020 20:42:49 +0200
+        id 1jSmEw-0007E3-Iu; Sun, 26 Apr 2020 20:42:54 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D85461C0178;
-        Sun, 26 Apr 2020 20:42:48 +0200 (CEST)
-Date:   Sun, 26 Apr 2020 18:42:48 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3AD5F1C0178;
+        Sun, 26 Apr 2020 20:42:54 +0200 (CEST)
+Date:   Sun, 26 Apr 2020 18:42:53 -0000
 From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/mm] x86/tlb: Uninline nmi_uaccess_okay()
+Subject: [tip: x86/mm] x86/cr4: Sanitize CR4.PCE update
 Cc:     Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>,
         Alexandre Chartre <alexandre.chartre@oracle.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200421092600.052543007@linutronix.de>
-References: <20200421092600.052543007@linutronix.de>
+In-Reply-To: <20200421092559.049499158@linutronix.de>
+References: <20200421092559.049499158@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <158792656847.28353.4934739152990460407.tip-bot2@tip-bot2>
+Message-ID: <158792657377.28353.3722593728596584201.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,22 +60,22 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/mm branch of tip:
 
-Commit-ID:     af5c40c6ee057c5354930abdc4d34be013d0e9e0
-Gitweb:        https://git.kernel.org/tip/af5c40c6ee057c5354930abdc4d34be013d0e9e0
+Commit-ID:     cb2a02355b042ec3ef11d0ba2a46742678e41632
+Gitweb:        https://git.kernel.org/tip/cb2a02355b042ec3ef11d0ba2a46742678e41632
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Tue, 21 Apr 2020 11:20:40 +02:00
+AuthorDate:    Tue, 21 Apr 2020 11:20:30 +02:00
 Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Sun, 26 Apr 2020 18:47:05 +02:00
+CommitterDate: Fri, 24 Apr 2020 19:01:17 +02:00
 
-x86/tlb: Uninline nmi_uaccess_okay()
+x86/cr4: Sanitize CR4.PCE update
 
-cpu_tlbstate is exported because various TLB-related functions need
-access to it, but cpu_tlbstate is sensitive information which should
-only be accessed by well-contained kernel functions and not be directly
-exposed to modules.
+load_mm_cr4_irqsoff() is really a strange name for a function which has
+only one purpose: Update the CR4.PCE bit depending on the perf state.
 
-nmi_access_ok() is the last inline function which requires access to
-cpu_tlbstate. Move it into the TLB code.
+Rename it to update_cr4_pce_mm(), move it into the tlb code and provide a
+function which can be invoked by the perf smp function calls.
+
+Another step to remove exposure of cpu_tlbstate.
 
 No functional change.
 
@@ -83,96 +83,120 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Borislav Petkov <bp@suse.de>
 Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200421092600.052543007@linutronix.de
+Link: https://lkml.kernel.org/r/20200421092559.049499158@linutronix.de
 ---
- arch/x86/include/asm/tlbflush.h | 33 +--------------------------------
- arch/x86/mm/tlb.c               | 32 +++++++++++++++++++++++++++++++-
- 2 files changed, 33 insertions(+), 32 deletions(-)
+ arch/x86/events/core.c             | 11 +++--------
+ arch/x86/include/asm/mmu_context.h | 14 +-------------
+ arch/x86/mm/tlb.c                  | 22 +++++++++++++++++++++-
+ 3 files changed, 25 insertions(+), 22 deletions(-)
 
-diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
-index 917deea..1c17f5a 100644
---- a/arch/x86/include/asm/tlbflush.h
-+++ b/arch/x86/include/asm/tlbflush.h
-@@ -247,38 +247,7 @@ struct tlb_state {
- };
- DECLARE_PER_CPU_SHARED_ALIGNED(struct tlb_state, cpu_tlbstate);
- 
--/*
-- * Blindly accessing user memory from NMI context can be dangerous
-- * if we're in the middle of switching the current user task or
-- * switching the loaded mm.  It can also be dangerous if we
-- * interrupted some kernel code that was temporarily using a
-- * different mm.
-- */
--static inline bool nmi_uaccess_okay(void)
--{
--	struct mm_struct *loaded_mm = this_cpu_read(cpu_tlbstate.loaded_mm);
--	struct mm_struct *current_mm = current->mm;
--
--	VM_WARN_ON_ONCE(!loaded_mm);
--
--	/*
--	 * The condition we want to check is
--	 * current_mm->pgd == __va(read_cr3_pa()).  This may be slow, though,
--	 * if we're running in a VM with shadow paging, and nmi_uaccess_okay()
--	 * is supposed to be reasonably fast.
--	 *
--	 * Instead, we check the almost equivalent but somewhat conservative
--	 * condition below, and we rely on the fact that switch_mm_irqs_off()
--	 * sets loaded_mm to LOADED_MM_SWITCHING before writing to CR3.
--	 */
--	if (loaded_mm != current_mm)
--		return false;
--
--	VM_WARN_ON_ONCE(current_mm->pgd != __va(read_cr3_pa()));
--
--	return true;
--}
--
-+bool nmi_uaccess_okay(void);
- #define nmi_uaccess_okay nmi_uaccess_okay
- 
- void cr4_update_irqsoff(unsigned long set, unsigned long clear);
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index aabf8c7..45426ae 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -1094,6 +1094,38 @@ void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
- 	put_cpu();
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index a619763..30d2b1d 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -2162,11 +2162,6 @@ static int x86_pmu_event_init(struct perf_event *event)
+ 	return err;
  }
  
-+/*
-+ * Blindly accessing user memory from NMI context can be dangerous
-+ * if we're in the middle of switching the current user task or
-+ * switching the loaded mm.  It can also be dangerous if we
-+ * interrupted some kernel code that was temporarily using a
-+ * different mm.
-+ */
-+bool nmi_uaccess_okay(void)
+-static void refresh_pce(void *ignored)
+-{
+-	load_mm_cr4_irqsoff(this_cpu_read(cpu_tlbstate.loaded_mm));
+-}
+-
+ static void x86_pmu_event_mapped(struct perf_event *event, struct mm_struct *mm)
+ {
+ 	if (!(event->hw.flags & PERF_X86_EVENT_RDPMC_ALLOWED))
+@@ -2185,7 +2180,7 @@ static void x86_pmu_event_mapped(struct perf_event *event, struct mm_struct *mm)
+ 	lockdep_assert_held_write(&mm->mmap_sem);
+ 
+ 	if (atomic_inc_return(&mm->context.perf_rdpmc_allowed) == 1)
+-		on_each_cpu_mask(mm_cpumask(mm), refresh_pce, NULL, 1);
++		on_each_cpu_mask(mm_cpumask(mm), cr4_update_pce, NULL, 1);
+ }
+ 
+ static void x86_pmu_event_unmapped(struct perf_event *event, struct mm_struct *mm)
+@@ -2195,7 +2190,7 @@ static void x86_pmu_event_unmapped(struct perf_event *event, struct mm_struct *m
+ 		return;
+ 
+ 	if (atomic_dec_and_test(&mm->context.perf_rdpmc_allowed))
+-		on_each_cpu_mask(mm_cpumask(mm), refresh_pce, NULL, 1);
++		on_each_cpu_mask(mm_cpumask(mm), cr4_update_pce, NULL, 1);
+ }
+ 
+ static int x86_pmu_event_idx(struct perf_event *event)
+@@ -2253,7 +2248,7 @@ static ssize_t set_attr_rdpmc(struct device *cdev,
+ 		else if (x86_pmu.attr_rdpmc == 2)
+ 			static_branch_dec(&rdpmc_always_available_key);
+ 
+-		on_each_cpu(refresh_pce, NULL, 1);
++		on_each_cpu(cr4_update_pce, NULL, 1);
+ 		x86_pmu.attr_rdpmc = val;
+ 	}
+ 
+diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
+index 9608536..2985d06 100644
+--- a/arch/x86/include/asm/mmu_context.h
++++ b/arch/x86/include/asm/mmu_context.h
+@@ -24,21 +24,9 @@ static inline void paravirt_activate_mm(struct mm_struct *prev,
+ #endif	/* !CONFIG_PARAVIRT_XXL */
+ 
+ #ifdef CONFIG_PERF_EVENTS
+-
+ DECLARE_STATIC_KEY_FALSE(rdpmc_never_available_key);
+ DECLARE_STATIC_KEY_FALSE(rdpmc_always_available_key);
+-
+-static inline void load_mm_cr4_irqsoff(struct mm_struct *mm)
+-{
+-	if (static_branch_unlikely(&rdpmc_always_available_key) ||
+-	    (!static_branch_unlikely(&rdpmc_never_available_key) &&
+-	     atomic_read(&mm->context.perf_rdpmc_allowed)))
+-		cr4_set_bits_irqsoff(X86_CR4_PCE);
+-	else
+-		cr4_clear_bits_irqsoff(X86_CR4_PCE);
+-}
+-#else
+-static inline void load_mm_cr4_irqsoff(struct mm_struct *mm) {}
++void cr4_update_pce(void *ignored);
+ #endif
+ 
+ #ifdef CONFIG_MODIFY_LDT_SYSCALL
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index ea6f98a..3d9d819 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -272,6 +272,26 @@ static void cond_ibpb(struct task_struct *next)
+ 	}
+ }
+ 
++#ifdef CONFIG_PERF_EVENTS
++static inline void cr4_update_pce_mm(struct mm_struct *mm)
 +{
-+	struct mm_struct *loaded_mm = this_cpu_read(cpu_tlbstate.loaded_mm);
-+	struct mm_struct *current_mm = current->mm;
-+
-+	VM_WARN_ON_ONCE(!loaded_mm);
-+
-+	/*
-+	 * The condition we want to check is
-+	 * current_mm->pgd == __va(read_cr3_pa()).  This may be slow, though,
-+	 * if we're running in a VM with shadow paging, and nmi_uaccess_okay()
-+	 * is supposed to be reasonably fast.
-+	 *
-+	 * Instead, we check the almost equivalent but somewhat conservative
-+	 * condition below, and we rely on the fact that switch_mm_irqs_off()
-+	 * sets loaded_mm to LOADED_MM_SWITCHING before writing to CR3.
-+	 */
-+	if (loaded_mm != current_mm)
-+		return false;
-+
-+	VM_WARN_ON_ONCE(current_mm->pgd != __va(read_cr3_pa()));
-+
-+	return true;
++	if (static_branch_unlikely(&rdpmc_always_available_key) ||
++	    (!static_branch_unlikely(&rdpmc_never_available_key) &&
++	     atomic_read(&mm->context.perf_rdpmc_allowed)))
++		cr4_set_bits_irqsoff(X86_CR4_PCE);
++	else
++		cr4_clear_bits_irqsoff(X86_CR4_PCE);
 +}
 +
- static ssize_t tlbflush_read_file(struct file *file, char __user *user_buf,
- 			     size_t count, loff_t *ppos)
++void cr4_update_pce(void *ignored)
++{
++	cr4_update_pce_mm(this_cpu_read(cpu_tlbstate.loaded_mm));
++}
++
++#else
++static inline void cr4_update_pce_mm(struct mm_struct *mm) { }
++#endif
++
+ void switch_mm_irqs_off(struct mm_struct *prev, struct mm_struct *next,
+ 			struct task_struct *tsk)
  {
+@@ -440,7 +460,7 @@ void switch_mm_irqs_off(struct mm_struct *prev, struct mm_struct *next,
+ 	this_cpu_write(cpu_tlbstate.loaded_mm_asid, new_asid);
+ 
+ 	if (next != real_prev) {
+-		load_mm_cr4_irqsoff(next);
++		cr4_update_pce_mm(next);
+ 		switch_ldt(real_prev, next);
+ 	}
+ }
