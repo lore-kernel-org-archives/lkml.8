@@ -2,110 +2,188 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DD4C54FCB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 14:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D4EC55194
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 14:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 759692070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 14:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F32206DD
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 14:45:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=displaylink.com header.i=@displaylink.com header.b="atP5rfBL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726174AbgDZOlt (ORCPT
+        id S1726165AbgDZOpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 10:41:49 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55746 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725876AbgDZOlt (ORCPT
+        Sun, 26 Apr 2020 10:45:39 -0400
+Received: from eu-smtp-delivery-167.mimecast.com ([207.82.80.167]:29566 "EHLO
+        eu-smtp-delivery-167.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726140AbgDZOpj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 10:41:49 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03QEXVXZ055062
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 10:41:48 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mg14yp70-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 10:41:48 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Sun, 26 Apr 2020 15:40:54 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sun, 26 Apr 2020 15:40:51 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03QEffVI60686488
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 26 Apr 2020 14:41:42 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E5E59A4051;
-        Sun, 26 Apr 2020 14:41:41 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 19B54A4040;
-        Sun, 26 Apr 2020 14:41:41 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.207.229])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Sun, 26 Apr 2020 14:41:40 +0000 (GMT)
-Date:   Sun, 26 Apr 2020 17:41:39 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, Baoquan He <bhe@redhat.com>
-Subject: Re: compaction: VM_BUG_ON_PAGE(!zone_spans_pfn(page_zone(page), pfn))
-References: <8C537EB7-85EE-4DCF-943E-3CC0ED0DF56D@lca.pw>
+        Sun, 26 Apr 2020 10:45:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=displaylink.com;
+        s=mimecast20151025; t=1587912337;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+MqrV7PzcGM+Tx8r0dwdcXCPpTW8yidqSPETSRomd5w=;
+        b=atP5rfBLlF3vvtQRTx5vwThnaLkFMCiYd+xe3XcdoZGdYdGCgKxlvJUbrW7HrwVVeh1tiE
+        2rJg6EL+GECF/4jXgVIs/wg3f6qpKuZOxGINA+flrM+9R6CBqpf+qs9z0ouLRN+1jWnODj
+        xFdPDVvBg/ub4bZu6JALjV1Z4rlNsS0=
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com
+ (mail-vi1eur05lp2169.outbound.protection.outlook.com [104.47.17.169])
+ (Using TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-144-VGW5YQGFM9aJprls0MNvFA-1; Sun, 26 Apr 2020 15:45:35 +0100
+X-MC-Unique: VGW5YQGFM9aJprls0MNvFA-1
+Received: from VI1PR1001MB1056.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:800:64::13) by VI1PR1001MB1438.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:800:de::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Sun, 26 Apr
+ 2020 14:45:32 +0000
+Received: from VI1PR1001MB1056.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::8cba:c335:a57e:9dfd]) by VI1PR1001MB1056.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::8cba:c335:a57e:9dfd%5]) with mapi id 15.20.2937.023; Sun, 26 Apr 2020
+ 14:45:32 +0000
+Subject: Re: [External] Re: [PATCH v5 5/8] usb: mausb_host: Introduce PAL
+ processing
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, mausb-host-devel@displaylink.com
+References: <Pine.LNX.4.44L0.2004261025550.15458-100000@netrider.rowland.org>
+From:   Vladimir Stankovic <vladimir.stankovic@displaylink.com>
+Message-ID: <871dcf46-19f8-f152-99c0-8185832ed109@displaylink.com>
+Date:   Sun, 26 Apr 2020 16:45:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+In-Reply-To: <Pine.LNX.4.44L0.2004261025550.15458-100000@netrider.rowland.org>
+Content-Language: en-US
+X-ClientProxiedBy: LO2P265CA0324.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a4::24) To VI1PR1001MB1056.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:800:64::13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8C537EB7-85EE-4DCF-943E-3CC0ED0DF56D@lca.pw>
-X-TM-AS-GCONF: 00
-x-cbid: 20042614-4275-0000-0000-000003C662A9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20042614-4276-0000-0000-000038DBF2BE
-Message-Id: <20200426144139.GA340887@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-26_04:2020-04-24,2020-04-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
- suspectscore=21 lowpriorityscore=0 spamscore=0 phishscore=0
- priorityscore=1501 adultscore=0 bulkscore=0 mlxlogscore=897 mlxscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004260131
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.0.17] (94.189.199.177) by LO2P265CA0324.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:a4::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Sun, 26 Apr 2020 14:45:31 +0000
+X-Originating-IP: [94.189.199.177]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 907d431f-0edc-4c98-0535-08d7e9f078a0
+X-MS-TrafficTypeDiagnostic: VI1PR1001MB1438:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR1001MB14388E3210BB3A31D7EB153091AE0@VI1PR1001MB1438.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 03853D523D
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR1001MB1056.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39830400003)(136003)(396003)(376002)(346002)(31686004)(8676002)(478600001)(81156014)(44832011)(2906002)(52116002)(8936002)(6486002)(316002)(4326008)(31696002)(956004)(2616005)(186003)(16526019)(86362001)(26005)(107886003)(66476007)(66946007)(66556008)(36756003)(16576012)(6916009)(5660300002);DIR:OUT;SFP:1101;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: NwOOE+bKjDFwFWay3COg3uT+NVTfrk3q4ZwLBhMUyyqG8IWNDSOJO6qjiOBtfTlmLUoGutDJoOQU88KM+FoCTMXH9Rnr59exFwWbqMWP6pa0xCApf0rhKWtHPQQH1XRmzk+/DdAK/DGIPvH09al65FTUyj9NHBo7nI9ziy02pTn3txgqrh1Kr+PeYruvFV7qwMO/oXakNNZZhQofzg9MbEuayC9Q7ZB2kFn181WUPm3PEiYyPgXTR529PuTzuAOIcLimhJdymLrbGDbFWnSx7Ba0zVpNDE/mZqWlClnZrrC9ABxs7v384h2NME2MMOVyoQbMYL8cm0P5Ci9sHSiogg5hG5xoIh9rv/9qIDwsSY0+hFFbmLGob2B80mEKgNUUCn8VGvZ5zN/wlZxUW+9Nuu1CqGQKPTlCMLa1s4xwouTEmZb7Fp0ZlLAfTzoGZCNX
+X-MS-Exchange-AntiSpam-MessageData: jpdJ6GFQPBJHKGdA8oI6NJ92eKcqOIIjilZr8XBkvS/R5rM4YBMMBN53vA8R1ScUb/huSUQ2Ji9bs9po2g07E8ZcIe7Ms747GbRsm2nsnDSRQBp7GpJH+MTBo7TskdoZvPPLZARvYFEkC1GFvWbMbl/0uzJKkOgJUczB6G/3WOgMolcw7JtLADOhGDjMXy8h+RFd/RnJ30bj0vA0paKaCu0QY7AIsXfMmwtsj30OAIjwQRT4XyHUGFdf/Lw7MkzGe/ZnSSGjqltfUQJK/uCFTYm+v8XZq+jrZyATH7kcFDQg09S1upMva0gCsCOdPml2s+ysVkQSi16XiInKXiIrAiBjMu2kCFIF3/QcCDfPhINTmhRedXMVmNMarkazg+YXPef8yI6IHX9FIX784OJ4btML0YsPvWxn7dneLKD8roBEq5rnUGSqcqWMNY1km5W6T29P3VDcMe8YMu3Eojc18/Gp6lDOzBVT4bp7CT52bJDVLMlTtuWEgXVb1gNt51CV/fRg98k4SvSHWQ8DNGVp6/+8Si/TJwNwFpNKjNk/6HqQxl8r4ZHge535/jlrZmCM01pwdhbceN8DEk6wPCNS4A5UGOGktgMvFk7HR96rQM526NozS+ZUshrvEZpz+ylnKggh4aLGwtE1x8VWeR3b1Byzm1iXrQzbjvntGIO+vp2qpkMMre2is3d9mR++ZLPeGxlxFZGFBN5F468LUWaJ7jk1hv5cEW+KNoGejT5XMCI1J8MECMSvR9hfgYVIaUv2as/R7C4jiFjVqJGnlGYZrxXfr4sIhYsfpqyWrU5RShI=
+X-OriginatorOrg: displaylink.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 907d431f-0edc-4c98-0535-08d7e9f078a0
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Apr 2020 14:45:32.2819
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a4bda75a-b444-4312-9c90-44a7c4b2c91a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dZndGvEIfEDDzfbU14aVUg7Z4Q/7OC/otbmsEOmmmpFAQAvhdWi4pTF5N6bqfaOQ1BoOLrwCQJp4sx3BURs1TClIgNx1GJh1lqrCV/j2r0fx3CikiCSuaHUNuirGL7yw
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR1001MB1438
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: displaylink.com
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 26.4.20. 16:31, Alan Stern wrote:
+> On Sun, 26 Apr 2020, Vladimir Stankovic wrote:
+>=20
+>> On 26.4.20. 02:32, Alan Stern wrote:
+>>> On Sat, 25 Apr 2020 vladimir.stankovic@displaylink.com wrote:
+>>>
+>>>> Protocol adaptation layer (PAL) implementation has been added to
+>>>> introduce MA-USB structures and logic.
+>>>>
+>>>> Signed-off-by: Vladimir Stankovic <vladimir.stankovic@displaylink.com>
+>>>
+>>> ...
+>>>
+>>>> +=09/*
+>>>> +=09 * Masking URB_SHORT_NOT_OK flag as SCSI driver is adding it where=
+ it
+>>>> +=09 * should not, so it is breaking the USB drive on the linux
+>>>> +=09 */
+>>>> +=09urb->transfer_flags &=3D ~URB_SHORT_NOT_OK;
+>>>
+>>> Removing the SHORT_NOT_OK flag is _not_ a valid thing to do.  It will=
+=20
+>>> cause drivers to malfunction.
+>>>
+>>> Can you please explain this comment?
+>>>
+>>> =09What SCSI driver?
+>>>
+>>> =09When is the flag being added?
+>>>
+>>> =09How does it break USB drives?
+>>>
+>>> =09Why haven't you already reported this problem to the=20
+>>> =09appropriate maintainers?
+>>>
+>>> Alan Stern
+>>>
+>>
+>> Hi,
+>>
+>> Issue that removal of SHORT_NOT_OK flag addressed is linked to particula=
+r
+>> set of Kingston USB 3.0 flash drives (super speed) - other USB flash dri=
+ves
+>> haven't had this flag set. Without this "fix", those Kingston flash driv=
+es
+>> are not being enumerated properly.
+>=20
+> Please explain in detail how the enumeration of these Kingston flash
+> drives fails.  Or if such an explanation has already been posted,
+> please provide a link to it.
 
-On Thu, Apr 23, 2020 at 05:25:56PM -0400, Qian Cai wrote:
-> Compaction starts to crash below on linux-next today. The faulty page belongs to Node 0 DMA32 zone.
-> I’ll continue to narrow it down, but just want to give a headup in case someone could beat me to it.
-> 
-> Debug output from free_area_init_core()
-> [    0.000000] KK start page = ffffea0000000040, end page = ffffea0000040000, nid = 0 DMA
-> [    0.000000] KK start page = ffffea0000040000, end page = ffffea0004000000, nid = 0 DMA32
-> [    0.000000] KK start page = ffffea0004000000, end page = ffffea0012000000, nid = 0 NORMAL
-> [    0.000000] KK start page = ffffea0012000000, end page = ffffea0021fc0000, nid = 4 NORMAL
-> 
-> I don’t understand how it could end up in such a situation. There are several recent patches look
-> more related than some others.
+Will reproduce the issue once again (w/o the fix) and run through the event=
+s.
+Issue has been noticed during early development, and addressed right away.
+>=20
+>> This particular line was added in the early stage of development, during
+>> enumeration process implementation. The reason why it remained in the co=
+de
+>> since is because we haven't noticed any side-effects, even with various
+>> USB devices being attached to remote MA-USB device, including flash driv=
+es,
+>> cameras, wireless mice, etc.
+>=20
+> Come to think of it, the SHORT_NOT_OK flag is mainly used with HCDs
+> that don't have scatter-gather support.  Since your mausb driver does
+> support scatter-gather, you most likely won't encounter any problems=20
+> unless you go looking for them specifically.
+>=20
+>> The problem has been reported, and is actively being investigated.
+>=20
+> Where was the problem reported (URL to a mailing list archive)?  Who is
+> investigating it?
 
-Can you please add "mminit_loglevel=4 memblock=debug" to the kernel
-command line?
+Ticket has been submitted to DisplayLink's internal issue-tracking system
+and is being investigated by mausb-host-devel team.
+>=20
+>> As soon as it gets addressed properly (w/o global negation of the flag),
+>> a new patch will be pushed.
+>=20
+> Thank you.
+>=20
+> Alan Stern
+>=20
 
-> - mm: rework free_area_init*() funcitons
-> https://lore.kernel.org/linux-mm/20200412194859.12663-1-rppt@kernel.org/
-> Could this somehow allow an invalid pfn to escape into the page allocator?
-> Especially, is it related to skip the checks in memmap_init_zone()?
-> https://lore.kernel.org/linux-mm/20200412194859.12663-16-rppt@kernel.org
 
-
--- 
-Sincerely yours,
-Mike.
+--=20
+Regards,
+Vladimir.
 
