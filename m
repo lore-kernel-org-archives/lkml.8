@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BBC4C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 06:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 759E7C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 06:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70FB82084D
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 06:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AFB721556
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 06:48:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbgDZGrz (ORCPT
+        id S1726355AbgDZGrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sun, 26 Apr 2020 02:47:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50392 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726269AbgDZGrx (ORCPT
+        by vger.kernel.org with ESMTP id S1726262AbgDZGrx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 26 Apr 2020 02:47:53 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F254C09B053;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 242EEC09B051;
         Sat, 25 Apr 2020 23:47:53 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jSb4o-0008Sy-8y; Sun, 26 Apr 2020 08:47:42 +0200
+        id 1jSb4p-0008U9-5N; Sun, 26 Apr 2020 08:47:43 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id EA0231C0178;
-        Sun, 26 Apr 2020 08:47:41 +0200 (CEST)
-Date:   Sun, 26 Apr 2020 06:47:41 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D98831C0178;
+        Sun, 26 Apr 2020 08:47:42 +0200 (CEST)
+Date:   Sun, 26 Apr 2020 06:47:42 -0000
 From:   "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/unwind/orc: Convert global variables to static
+Subject: [tip: x86/urgent] x86/entry/64: Fix unwind hints in __switch_to_asm()
 Cc:     Miroslav Benes <mbenes@suse.cz>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Ingo Molnar <mingo@kernel.org>,
@@ -46,10 +46,10 @@ Cc:     Miroslav Benes <mbenes@suse.cz>,
         Thomas Gleixner <tglx@linutronix.de>,
         Vince Weaver <vincent.weaver@maine.edu>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <43ae310bf7822b9862e571f36ae3474cfde8f301.1587808742.git.jpoimboe@redhat.com>
-References: <43ae310bf7822b9862e571f36ae3474cfde8f301.1587808742.git.jpoimboe@redhat.com>
+In-Reply-To: <03d0411920d10f7418f2e909210d8e9a3b2ab081.1587808742.git.jpoimboe@redhat.com>
+References: <03d0411920d10f7418f2e909210d8e9a3b2ab081.1587808742.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-Message-ID: <158788366146.28353.15541509747149730.tip-bot2@tip-bot2>
+Message-ID: <158788366248.28353.11684653234432670379.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -65,19 +65,25 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/urgent branch of tip:
 
-Commit-ID:     153eb2223c794251b28400f3f74862e090d23f16
-Gitweb:        https://git.kernel.org/tip/153eb2223c794251b28400f3f74862e090d23f16
+Commit-ID:     96c64806b4bf35f5edb465cafa6cec490e424a30
+Gitweb:        https://git.kernel.org/tip/96c64806b4bf35f5edb465cafa6cec490e424a30
 Author:        Josh Poimboeuf <jpoimboe@redhat.com>
-AuthorDate:    Sat, 25 Apr 2020 05:03:05 -05:00
+AuthorDate:    Sat, 25 Apr 2020 05:03:03 -05:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Sat, 25 Apr 2020 12:22:28 +02:00
 
-x86/unwind/orc: Convert global variables to static
+x86/entry/64: Fix unwind hints in __switch_to_asm()
 
-These variables aren't used outside of unwind_orc.c, make them static.
+UNWIND_HINT_FUNC has some limitations: specifically, it doesn't reset
+all the registers to undefined.  This causes objtool to get confused
+about the RBP push in __switch_to_asm(), resulting in bad ORC data.
 
-Also annotate some of them with '__ro_after_init', as applicable.
+While __switch_to_asm() does do some stack magic, it's otherwise a
+normal callable-from-C function, so just annotate it as a function,
+which makes objtool happy and allows it to produces the correct hints
+automatically.
 
+Fixes: 8c1f75587a18 ("x86/entry/64: Add unwind hint annotations")
 Reviewed-by: Miroslav Benes <mbenes@suse.cz>
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
@@ -87,30 +93,31 @@ Cc: Jann Horn <jannh@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Vince Weaver <vincent.weaver@maine.edu>
-Link: https://lore.kernel.org/r/43ae310bf7822b9862e571f36ae3474cfde8f301.1587808742.git.jpoimboe@redhat.com
+Link: https://lore.kernel.org/r/03d0411920d10f7418f2e909210d8e9a3b2ab081.1587808742.git.jpoimboe@redhat.com
 ---
- arch/x86/kernel/unwind_orc.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/x86/entry/entry_64.S | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index e9cc182..64889da 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -15,12 +15,12 @@ extern int __stop_orc_unwind_ip[];
- extern struct orc_entry __start_orc_unwind[];
- extern struct orc_entry __stop_orc_unwind[];
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index 6b0d679..34a5889 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -279,8 +279,7 @@ SYM_CODE_END(entry_SYSCALL_64)
+  * %rdi: prev task
+  * %rsi: next task
+  */
+-SYM_CODE_START(__switch_to_asm)
+-	UNWIND_HINT_FUNC
++SYM_FUNC_START(__switch_to_asm)
+ 	/*
+ 	 * Save callee-saved registers
+ 	 * This must match the order in inactive_task_frame
+@@ -321,7 +320,7 @@ SYM_CODE_START(__switch_to_asm)
+ 	popq	%rbp
  
--static DEFINE_MUTEX(sort_mutex);
--int *cur_orc_ip_table = __start_orc_unwind_ip;
--struct orc_entry *cur_orc_table = __start_orc_unwind;
-+static bool orc_init __ro_after_init;
-+static unsigned int lookup_num_blocks __ro_after_init;
+ 	jmp	__switch_to
+-SYM_CODE_END(__switch_to_asm)
++SYM_FUNC_END(__switch_to_asm)
  
--unsigned int lookup_num_blocks;
--bool orc_init;
-+static DEFINE_MUTEX(sort_mutex);
-+static int *cur_orc_ip_table = __start_orc_unwind_ip;
-+static struct orc_entry *cur_orc_table = __start_orc_unwind;
- 
- static inline unsigned long orc_ip(const int *ip)
- {
+ /*
+  * A newly forked process directly context switches into this address.
