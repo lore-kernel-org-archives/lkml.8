@@ -7,86 +7,79 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE58C55196
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8C5C55191
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC1C82078E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAF582074F
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:07:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lk08lOod"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dkKLYsBl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726131AbgDZFEh (ORCPT
+        id S1726142AbgDZFHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 01:04:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34450 "EHLO
+        Sun, 26 Apr 2020 01:07:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbgDZFEg (ORCPT
+        with ESMTP id S1726101AbgDZFHW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 01:04:36 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 378A5C061A0C;
-        Sat, 25 Apr 2020 22:04:36 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id h4so487485ljg.12;
-        Sat, 25 Apr 2020 22:04:36 -0700 (PDT)
+        Sun, 26 Apr 2020 01:07:22 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D98EC061A0C;
+        Sat, 25 Apr 2020 22:07:22 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id w20so14102889ljj.0;
+        Sat, 25 Apr 2020 22:07:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Jpl7xDzEjZpRj4OeC+RLSFTb9t6nhtmzKhq/lP/2QzY=;
-        b=lk08lOodHLUX2qR4dGDrsvCaOqDfedNREeSDPRItglaV92NhElgD/A2zAX4SzXb8w/
-         xzOXP0/C04kYdQy9jZd82ztnS72u6n2/Wrs47cKNmj8KBMgJ8tP3KqQ3BHXhE/tQVxI8
-         UafzQXZvqqR7I51ba1x8xUAwGgQK8WDn0qiLtf7F8tWdvV/mUG/WYEv4NXNvHLr2ma5Y
-         8JfJqJrFVNbm/t5S0FqE3uEj/yWC+NK0sK9Tk9+iaZA9dCM4CICNqG0wMdgNNl2rmzU3
-         JGuIj+6E42j3LfV7EO72eMKjH73d3geNX23eshLE7prJbTpFeu6jFEJ5hmqNSylkqSo7
-         0soA==
+        bh=bYYfhlVc230cUEQXLUimh3+Fbi6Q5/VVVFCJXS/e1K0=;
+        b=dkKLYsBlbtZ2hV8zfc4gt/zlOJ/n1OEoeDDmLcszlBhZfJm2sj7ObGRDY21mFC54RG
+         /y4UF2UmG0Ppi2bS2rGhDx1JpL15Snna5zyDoNCwxAFflZN516PmfI6pYFBMd8soxsD0
+         g2SzV9wno4alLR39NvmlTa55fp+udqO2MSBV+25Ubn//EO2yERJGjZ09OKBZjtKSR0H2
+         OghnKZMfC0k/SlU4jv8Rms8R8VQm3wmV9R80fTPYaiRlWzdLUJSpUCde4mrB3iK2XUhC
+         CwJf1LocGz2XMEcEl+JSazH03agK9KN7vkMaGnNLRfGSM6qX/0jvS52zBAzo6Nh4Y009
+         aI4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Jpl7xDzEjZpRj4OeC+RLSFTb9t6nhtmzKhq/lP/2QzY=;
-        b=Nvfmrc4JUbzNJo9fKqAKpVNy63cWaOwjhqnB9adK35Z9Hjuq7NHIbrWMRQriMkZJLh
-         VxSiE+lLsKWz/CCnAh9TlET0C/tJMZIJD6QgCHvwOJkUr8BvV9Ro+WQMYAiY6svEuunz
-         TmDzKSjN63MEnJcOX/EkAhGZCTWxstC//Mta4YXuIN1/Sfiu2eaz5ycMkcytldxLRnkS
-         MIzw9ml5D1Bfcjmtto0I2RaiRT/t4Q7tDxfJDMIMRCaepDDpMMOMt9XAm7fzw67TK11m
-         qY9MjAUljOopEo9viBC5r99hgl0OpJsRMLK6+KYf1JYASnBiQOdH+rMibL/wxiZ2VRAi
-         +lsw==
-X-Gm-Message-State: AGi0PuZa+m/U7lzXbdp25zyQA50+hIZXHbjisXjKFj1bbzy6Svodkk6O
-        9IK58lX5uCLvnsknussnrUVLz2RS
-X-Google-Smtp-Source: APiQypL3MAcM9ATk9Fo4jFjpYaJVQbuE2SQ+G8mN3carEqxIAwiTogLzwe/Y9mW5Ihm05s37bE4b5Q==
-X-Received: by 2002:a2e:3208:: with SMTP id y8mr10602007ljy.282.1587877474324;
-        Sat, 25 Apr 2020 22:04:34 -0700 (PDT)
+        bh=bYYfhlVc230cUEQXLUimh3+Fbi6Q5/VVVFCJXS/e1K0=;
+        b=uYNgd88PtclN/qdBdQp6CbGMZoks/8nmsx/vSvRDTox6DMMG1pClhOXhJpa70ShwJ5
+         WrODzLJLodyTkM9m/NwzQsvTngEyaceKpvHgz1FZdxm/t3YT8ujvabqmeXpP47FEFLlv
+         Yzmdg2rupH3s8F05kruv1KRb3SH/azC/pbQPHdlZQDODUMYz5RIHc6f4T0uvYuJffPCs
+         kFs15u8yoL+zUVYaB0jvCMN27HB/BjSeTyTuMUyITHVQnmzKkPfDF1oqPIz4B6z7g+TI
+         8yCw8cN/457bApv6xIRPNXPokZ/OyF1Z3S2irsAuELbkJm2QGzaspr0m6sMbCNsB2Cu+
+         7y3w==
+X-Gm-Message-State: AGi0PuYPO/EellOo6CbevEldvDNdyRGdu23Jgi0g86p29VaqvyLk1wdP
+        yEHmQGf16oSjn7orGkPMdsXEZqjF
+X-Google-Smtp-Source: APiQypIqgtbtJgJApRmtsyeSUhTODKYJQijT+HhroXaWxQr/sBAzQTCyJ/JiqoIFJrQmCRNIpE5+hQ==
+X-Received: by 2002:a2e:8e98:: with SMTP id z24mr10780045ljk.134.1587877640551;
+        Sat, 25 Apr 2020 22:07:20 -0700 (PDT)
 Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id p2sm7679321lji.40.2020.04.25.22.04.33
+        by smtp.googlemail.com with ESMTPSA id j24sm6388931ljg.60.2020.04.25.22.07.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 25 Apr 2020 22:04:33 -0700 (PDT)
-Subject: Re: [RFC PATCH v10 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, frankc@nvidia.com, sakari.ailus@iki.fi,
-        helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1587700513-28449-1-git-send-email-skomatineni@nvidia.com>
- <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
- <6ca93ff9-ca59-544f-767c-4355d01a5c20@gmail.com>
- <62546d1f-eca5-06be-2bc2-e45ccd53830a@xs4all.nl>
- <50fd1016-ca8b-ec5d-e5a8-f257138b152e@gmail.com>
- <658c4232-94d9-3051-8c93-bff7046cf5f2@nvidia.com>
- <03426915-25ea-69b4-bc64-f87f3046d33f@nvidia.com>
- <aabaecc4-3494-0137-7d2b-853304bfa68b@gmail.com>
- <09f20441-fec6-7496-2edc-c69db535e441@nvidia.com>
- <61799fab-858c-8b0d-ba7d-846cd041e044@gmail.com>
- <7dfca778-e402-3a6f-617c-dd8448187a13@gmail.com>
- <be48a991-3047-6ee3-8d6f-85979752d86f@nvidia.com>
+        Sat, 25 Apr 2020 22:07:20 -0700 (PDT)
+Subject: Re: [PATCH v3 3/9] input: elants: remove unused axes
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Henrik Rydberg <rydberg@bitmath.org>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Rob Herring <robh+dt@kernel.org>,
+        Scott Liu <scott.liu@emc.com.tw>,
+        David Heidelberg <david@ixit.cz>, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1586784389.git.mirq-linux@rere.qmqm.pl>
+ <62e897b0d6f6054dae26c853a9a1f1fb6d3c420b.1586784389.git.mirq-linux@rere.qmqm.pl>
+ <20200426045200.GN125362@dtor-ws>
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <5410cdf5-6379-36f5-21c1-028097e9e9d7@gmail.com>
-Date:   Sun, 26 Apr 2020 08:04:32 +0300
+Message-ID: <9658bf1f-6339-cf47-9843-a1ac5a0de9d6@gmail.com>
+Date:   Sun, 26 Apr 2020 08:07:19 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <be48a991-3047-6ee3-8d6f-85979752d86f@nvidia.com>
+In-Reply-To: <20200426045200.GN125362@dtor-ws>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -95,24 +88,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-26.04.2020 07:47, Sowjanya Komatineni пишет:
-...
->> Although, you're right that tegra_drm is compiled as a single module.
->> That's not good, I'm actually not sure now whether it is possible to
->> modularize host1x drivers properly without changing the whole host1x bus.
+26.04.2020 07:52, Dmitry Torokhov пишет:
+> On Mon, Apr 13, 2020 at 03:32:23PM +0200, Michał Mirosław wrote:
+>> Driver only ever reports MT events. Clear capabilities of all others.
 > 
-> We already went thru driver structure changes during earlier versions
-> and internal feedbacks.
-> 
-> Not sure of restructuring again now. Also reg wastage of space, tegra
-> specific implementation is not huge also for T186 and later we have
-> RTCPU firmware that driver communicates with and it light weight. Based
-> on internal discussion, no upstream support for prior Tegra210.
+> This is not true. input_mt_sync_frame() calls
+> input_mt_report_pointer_emulation() which does emut single-touch events
+> for the benefit of older userspace (or userspace that is not interested
+> in multitouch).
 
-NVIDIA doesn't support older SoCs in downstream, but this doesn't apply
-to the upstream where anyone could write a driver.
-
-> So, probably what we have regarding structure is ok except video formats
-> I will move to Tegra210 and change defines to use Tegra210 prefix.
-
-Seems so.
+That's a good catch, thank you very much for the clarification!
