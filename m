@@ -6,34 +6,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FD7C5519B
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB25C55199
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E455020700
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 852CA20700
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:43:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbgDZJnL (ORCPT
+        id S1726512AbgDZJn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 05:43:11 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:33536 "EHLO huawei.com"
+        Sun, 26 Apr 2020 05:43:26 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2910 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726251AbgDZJnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 05:43:10 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 701EC3D6693913F477B6;
-        Sun, 26 Apr 2020 17:43:07 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Sun, 26 Apr 2020
- 17:43:01 +0800
+        id S1726251AbgDZJn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 05:43:26 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B569892C8BB359192DCB;
+        Sun, 26 Apr 2020 17:43:20 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Sun, 26 Apr 2020
+ 17:43:11 +0800
 From:   Jason Yan <yanaijie@huawei.com>
-To:     <mpe@ellerman.id.au>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <wsa@the-dreams.de>,
-        <linux-i2c@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-kernel@vger.kernel.org>
+To:     <peter.ujfalusi@ti.com>, <jarkko.nikula@bitmer.com>,
+        <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <rafael.j.wysocki@intel.com>,
+        <tglx@linutronix.de>, <alsa-devel@alsa-project.org>,
+        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC:     Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH] i2c: powermac: use true,false for bool variable
-Date:   Sun, 26 Apr 2020 17:42:28 +0800
-Message-ID: <20200426094228.23829-1-yanaijie@huawei.com>
+Subject: [PATCH] ASoC: ti: remove comparison to bool in omap_mcbsp_dai_set_dai_fmt()
+Date:   Sun, 26 Apr 2020 17:42:38 +0800
+Message-ID: <20200426094238.23914-1-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -45,31 +46,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In i2c_powermac_register_devices(), variable 'found_onyx' is bool and
-assigned '0' and 'true' in different places. Use 'false' instead of '0'.
-This fixes the following coccicheck warning:
+Fix the following coccicheck warning:
 
-drivers/i2c/busses/i2c-powermac.c:318:6-16: WARNING: Assignment of 0/1
-to bool variable
+sound/soc/ti/omap-mcbsp.c:1188:5-11: WARNING: Comparison to bool
 
 Signed-off-by: Jason Yan <yanaijie@huawei.com>
 ---
- drivers/i2c/busses/i2c-powermac.c | 2 +-
+ sound/soc/ti/omap-mcbsp.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-powermac.c b/drivers/i2c/busses/i2c-powermac.c
-index d565714c1f13..00a6fd42c1ae 100644
---- a/drivers/i2c/busses/i2c-powermac.c
-+++ b/drivers/i2c/busses/i2c-powermac.c
-@@ -315,7 +315,7 @@ static void i2c_powermac_register_devices(struct i2c_adapter *adap,
- {
- 	struct i2c_client *newdev;
- 	struct device_node *node;
--	bool found_onyx = 0;
-+	bool found_onyx = false;
+diff --git a/sound/soc/ti/omap-mcbsp.c b/sound/soc/ti/omap-mcbsp.c
+index 3d41ca2238d4..0348963f4df7 100644
+--- a/sound/soc/ti/omap-mcbsp.c
++++ b/sound/soc/ti/omap-mcbsp.c
+@@ -1185,7 +1185,7 @@ static int omap_mcbsp_dai_set_dai_fmt(struct snd_soc_dai *cpu_dai,
+ 	default:
+ 		return -EINVAL;
+ 	}
+-	if (inv_fs == true)
++	if (inv_fs)
+ 		regs->pcr0 ^= FSXP | FSRP;
  
- 	/*
- 	 * In some cases we end up with the via-pmu node itself, in this
+ 	return 0;
 -- 
 2.21.1
 
