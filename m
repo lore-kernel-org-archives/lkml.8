@@ -2,72 +2,95 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5360CC55194
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 565D9C55199
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C6B62071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:26:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AF0F2071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:30:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="dgRGP6dm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbgDZR0d (ORCPT
+        id S1726184AbgDZR37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 13:26:33 -0400
-Received: from 50-87-157-213.static.tentacle.fi ([213.157.87.50]:34536 "EHLO
-        bitmer.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725976AbgDZR0d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 13:26:33 -0400
-X-Greylist: delayed 1701 seconds by postgrey-1.27 at vger.kernel.org; Sun, 26 Apr 2020 13:26:32 EDT
-Received: from 88-114-185-20.elisa-laajakaista.fi ([88.114.185.20] helo=[192.168.1.42])
-        by bitmer.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <jarkko.nikula@bitmer.com>)
-        id 1jSkbS-0003UA-FT; Sun, 26 Apr 2020 19:58:02 +0300
-Subject: Re: [PATCH] ASoC: ti: remove comparison to bool in
- omap_mcbsp_dai_set_dai_fmt()
-To:     Jason Yan <yanaijie@huawei.com>, peter.ujfalusi@ti.com,
-        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, rafael.j.wysocki@intel.com, tglx@linutronix.de,
-        alsa-devel@alsa-project.org, linux-omap@vger.kernel.org,
+        Sun, 26 Apr 2020 13:29:59 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:44143 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725976AbgDZR37 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 13:29:59 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 499FKH6VGkzDY;
+        Sun, 26 Apr 2020 19:29:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1587922197; bh=VPkMbWlP/qIhkgThtdNrl172mDp6KFzQO6+Nt4E1ZKc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dgRGP6dm1WxB/ewGd/mZ7Jzxh5tjn2b7JfNrvbbBItnxgJdPsOiFWv/lIFQr1X3DE
+         sLBMX73cmK6MPi5mCRAUqKuQTyx6jmbvYywGQ3JxbiM0q0TV7cpC3YDQKYLcbB+6l2
+         YX5xB3t/BrmHH5zJTX5l2oClyWpjPhk4xP/wRuuhbPkAAKhZGyUyZcTBuYjWYrlLOp
+         JZhMqwEwYv6oBct6KImH0v18HDJF8GZP0PCb0lUTn/BvCzZ7C0vEpJayqO57UDbUGR
+         NX1arHlruR64WhzS987mX/wgy9JGLGdFN04poFXfpOrztEzrTpPeIo3h69mUXMDzf5
+         zfqF96se59c+g==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Sun, 26 Apr 2020 19:29:54 +0200
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     David Heidelberg <david@ixit.cz>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Rob Herring <robh+dt@kernel.org>,
+        Scott Liu <scott.liu@emc.com.tw>, linux-input@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20200426094238.23914-1-yanaijie@huawei.com>
-From:   Jarkko Nikula <jarkko.nikula@bitmer.com>
-Message-ID: <718c9a90-b5ff-f538-1152-c9b585095f3c@bitmer.com>
-Date:   Sun, 26 Apr 2020 19:57:59 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Subject: Re: [PATCH v4 03/10] input: elants: remove unused axes
+Message-ID: <20200426172954.GA15436@qmqm.qmqm.pl>
+References: <cover.1587916846.git.mirq-linux@rere.qmqm.pl>
+ <b6cb0f810eec2d5c6245d6128502eebd342ca02a.1587916846.git.mirq-linux@rere.qmqm.pl>
+ <0f66e93c-9c71-73d0-90b8-15e0802a79c5@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200426094238.23914-1-yanaijie@huawei.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0f66e93c-9c71-73d0-90b8-15e0802a79c5@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/26/20 12:42 PM, Jason Yan wrote:
-> Fix the following coccicheck warning:
+On Sun, Apr 26, 2020 at 07:35:47PM +0300, Dmitry Osipenko wrote:
+> 26.04.2020 19:11, Michał Mirosław пишет:
+> > Driver only ever reports MT events and input_mt_init_slots() sets up
+> > emulated axes already.  Clear the capabilities not generated directly
+> > and move MT axes setup, so they are visible by input_mt_init_slots().
+> > 
+> > Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> > Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+> > Tested-by: Dmitry Osipenko <digetx@gmail.com>
+> > ---
+> > v4: reword commitmsg; reorder axis setup
+> > ---
 > 
-> sound/soc/ti/omap-mcbsp.c:1188:5-11: WARNING: Comparison to bool
-> 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> ---
->  sound/soc/ti/omap-mcbsp.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/sound/soc/ti/omap-mcbsp.c b/sound/soc/ti/omap-mcbsp.c
-> index 3d41ca2238d4..0348963f4df7 100644
-> --- a/sound/soc/ti/omap-mcbsp.c
-> +++ b/sound/soc/ti/omap-mcbsp.c
-> @@ -1185,7 +1185,7 @@ static int omap_mcbsp_dai_set_dai_fmt(struct snd_soc_dai *cpu_dai,
->  	default:
->  		return -EINVAL;
->  	}
-> -	if (inv_fs == true)
-> +	if (inv_fs)
->  		regs->pcr0 ^= FSXP | FSRP;
->  
-Acked-by: Jarkko Nikula <jarkko.nikula@bitmer.com>
+> Legacy pointer emulation doesn't work using v4. I think it will be
+> better to drop this patch for now and add this hunk to the patch #4:
+
+Have you tried it together with the next patch? It adds
+touchscreen_parse_properties() to initialize axes also from DT, and
+should be equivalent to the hunk you proposed.
+
+[...]
+> Maybe input_mt_init_slots() could be changed to set up all the
+> properties that are needed for the legacy pointer, but I'm not 100% sure
+> because not very familiar with that code. Perhaps Dmitry Torokhov could
+> clarify?
+
+The code of input_mt_init_slots() looks like it does initialize the
+properties needed. What does evtest return with and without the patches?
+
+Best Regards
+Michał Mirosław
