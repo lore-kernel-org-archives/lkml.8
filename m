@@ -2,40 +2,76 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C25EEC54FCB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 19:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C6BC55199
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 19:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A03732070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 19:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C2582070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 19:08:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NEYzbPbC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbgDZTDP (ORCPT
+        id S1726215AbgDZTIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 15:03:15 -0400
-Received: from smtp06.smtpout.orange.fr ([80.12.242.128]:24499 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbgDZTDP (ORCPT
+        Sun, 26 Apr 2020 15:08:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51886 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726166AbgDZTIt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 15:03:15 -0400
-Received: from localhost.localdomain ([93.23.12.11])
-        by mwinf5d64 with ME
-        id XX3A2200a0EJ3pp03X3BmA; Sun, 26 Apr 2020 21:03:12 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 26 Apr 2020 21:03:12 +0200
-X-ME-IP: 93.23.12.11
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     richard.gong@linux.intel.com, gregkh@linuxfoundation.org,
-        atull@kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] firmware: stratix10-svc: Fix some error handling paths in 'stratix10_svc_drv_probe()'
-Date:   Sun, 26 Apr 2020 21:03:07 +0200
-Message-Id: <20200426190307.40840-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Sun, 26 Apr 2020 15:08:49 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AECBC061A0F;
+        Sun, 26 Apr 2020 12:08:47 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id r17so11982806lff.2;
+        Sun, 26 Apr 2020 12:08:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=V/4kgm18MPKyif9QF7RKPNqTGNQbBIVS8DbK5GTpM+Y=;
+        b=NEYzbPbCKaVbsoswB64nzatO6wDRbdWqn7IQh9ZuWnEwcaGh/609EU7KJ0UAae1ymd
+         cBAV1IuKXEHn+cHCE2b51SzVkIj0d1zkofuQkdRWwZ5BQ6IxBX643e9n29V5p2+GpJyw
+         1jT94pNCQeMhPDoFqtk16TO7KLGvHvc1Wb9z0OJVjmUXWpY2VTZGkrXEoW3S7o8GxX+8
+         zREaXQyCJzEAI59rQNYnVStrPZKtIuvi9RcIafYxwuy/bjEw1n4FRSl9LiNKccvMdx1X
+         1HhkLjvwYtX+AGwerusZQU+CyiQft9ZhH+ZulqoDLCr2HxtxzmIaZVfv83XtZkisrU7D
+         PKUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=V/4kgm18MPKyif9QF7RKPNqTGNQbBIVS8DbK5GTpM+Y=;
+        b=Y55lRGGNBYSJ/piPsh3P9bKGfH5QBlVR1MZW+3b/UnuBB1I8AisA4ctKXH+JwyOM/Q
+         g79/yrXBtb2m71IKg4K0vrBYubKAXMmmr9thicGBYZKV7mKXPdFEtTQw2xY5mG8CKtmb
+         BEqSITlkfvnKK2UEHXhDCmZLVVTjDOi+s/eI4vuvGtmQ6dmYORclpZo4kmETW61/ORrO
+         HgNkc8x/m9N3S70WSfe7jtDfTA7k1NNJt06sCDOGmq+Apq98D4FCcAWmedU+MJDhPBw9
+         oG6GIjpM/eyHaZTzTENOT8AbZjte5AZsdNUc7RoyAYFFmTjOSP2+0dgPlKxnzftDExhD
+         GT8w==
+X-Gm-Message-State: AGi0Pub67Qy+AisSpPqAEsqsFgFRsQJTVuSsmTQXOdWhGm9jGue/+Zho
+        J/FmKSJx+PL2Heh35HtfIYg=
+X-Google-Smtp-Source: APiQypIF5PNYEJ5NTpcX4aInGwC+Ef+A12wqHzFlGoXoI+AbOjsCJZfV4gc1ewtK6Ao1r9PSEoEO9g==
+X-Received: by 2002:a19:7507:: with SMTP id y7mr13173859lfe.121.1587928126145;
+        Sun, 26 Apr 2020 12:08:46 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.gmail.com with ESMTPSA id h24sm9351933lji.99.2020.04.26.12.08.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Apr 2020 12:08:45 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1] dmaengine: tegra-apb: Ensure that clock is enabled during of DMA synchronization
+Date:   Sun, 26 Apr 2020 22:08:35 +0300
+Message-Id: <20200426190835.21950-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -43,56 +79,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If an error occurs after calling 'kfifo_alloc()', the allocated memory
-should be freed with 'kfifo_free()', as already done in the remove
-function.
+DMA synchronization hook checks whether interrupt is raised by testing
+corresponding bit in a hardware status register, and thus, clock should
+be enabled in this case, otherwise CPU may hang if synchronization is
+invoked while Runtime PM is in suspended state. This patch resumes the RPM
+during of the DMA synchronization process in order to avoid potential
+problems. It is a minor clean up of a previous commit, no real problem is
+fixed by this patch because currently RPM is always in a resumed state
+while DMA is synchronized, although this may change in the future.
 
-Fixes: b5dc75c915cd ("firmware: stratix10-svc: extend svc to support new RSU features")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Fixes: 6697255f239f ("dmaengine: tegra-apb: Improve DMA synchronization")
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/firmware/stratix10-svc.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ drivers/dma/tegra20-apb-dma.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/firmware/stratix10-svc.c b/drivers/firmware/stratix10-svc.c
-index d5f0769f3761..cc9df9589195 100644
---- a/drivers/firmware/stratix10-svc.c
-+++ b/drivers/firmware/stratix10-svc.c
-@@ -1043,24 +1043,31 @@ static int stratix10_svc_drv_probe(struct platform_device *pdev)
- 
- 	/* add svc client device(s) */
- 	svc = devm_kzalloc(dev, sizeof(*svc), GFP_KERNEL);
--	if (!svc)
--		return -ENOMEM;
-+	if (!svc) {
-+		ret = -ENOMEM;
-+		goto err_free_kfifo;
+diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+index a42c0b4d14ac..55fc7400f717 100644
+--- a/drivers/dma/tegra20-apb-dma.c
++++ b/drivers/dma/tegra20-apb-dma.c
+@@ -816,6 +816,13 @@ static bool tegra_dma_eoc_interrupt_deasserted(struct tegra_dma_channel *tdc)
+ static void tegra_dma_synchronize(struct dma_chan *dc)
+ {
+ 	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
++	int err;
++
++	err = pm_runtime_get_sync(tdc->tdma->dev);
++	if (err < 0) {
++		dev_err(tdc2dev(tdc), "Failed to synchronize DMA: %d\n", err);
++		return;
 +	}
  
- 	svc->stratix10_svc_rsu = platform_device_alloc(STRATIX10_RSU, 0);
- 	if (!svc->stratix10_svc_rsu) {
- 		dev_err(dev, "failed to allocate %s device\n", STRATIX10_RSU);
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto err_free_kfifo;
- 	}
+ 	/*
+ 	 * CPU, which handles interrupt, could be busy in
+@@ -825,6 +832,8 @@ static void tegra_dma_synchronize(struct dma_chan *dc)
+ 	wait_event(tdc->wq, tegra_dma_eoc_interrupt_deasserted(tdc));
  
- 	ret = platform_device_add(svc->stratix10_svc_rsu);
- 	if (ret) {
- 		platform_device_put(svc->stratix10_svc_rsu);
--		return ret;
-+		goto err_free_kfifo;
- 	}
- 	dev_set_drvdata(dev, svc);
- 
- 	pr_info("Intel Service Layer Driver Initialized\n");
- 
-+	return 0;
+ 	tasklet_kill(&tdc->tasklet);
 +
-+err_free_kfifo:
-+	kfifo_free(&controller->svc_fifo);
- 	return ret;
++	pm_runtime_put(tdc->tdma->dev);
  }
  
+ static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_channel *tdc,
 -- 
-2.25.1
+2.26.0
 
