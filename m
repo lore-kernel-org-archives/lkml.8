@@ -2,156 +2,96 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E37AEC55191
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B93C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C367F2074F
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:12:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A33E72070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:14:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kBRDOi5n"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dE9WJfjB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbgDZFM6 (ORCPT
+        id S1726156AbgDZFOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 01:12:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35756 "EHLO
+        Sun, 26 Apr 2020 01:14:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbgDZFM5 (ORCPT
+        with ESMTP id S1725765AbgDZFOT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 01:12:57 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85A23C061A0C;
-        Sat, 25 Apr 2020 22:12:57 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id w3so5565359plz.5;
-        Sat, 25 Apr 2020 22:12:57 -0700 (PDT)
+        Sun, 26 Apr 2020 01:14:19 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51711C061A0C
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 22:14:19 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id h69so6930201pgc.8
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 22:14:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=bTnYIaXCznXChV+MpXcHpI6ZlmfvW//sWW/RWexRGj8=;
-        b=kBRDOi5nUO1f/k0iKEGfnNHlbAA/UE46issqMq2x5EvpUU0Q0sQHml/UpGvE5GPcju
-         /CpxzDRYc7Zl55eP4/szMAhMCMrpHT9TwpuTGNPKrtjqXU1RswWGELOaF44XdtQdM/8G
-         bHYquQLqdPFR8ntWb7Xg0D36tqMlhfSU7sGH/tgAK60Escg8GxEC4DVFpOHQQY3RdY47
-         ik3tkyTiYRjt9oy9L0bJ0KdyeSw59Hf6p/1Nup+T7uNlQzevYtfQFn6yQiCV8U/hcYys
-         8a6v9HjtfZiAgk7XmQP0wZjrYJP3zjq4QAA+T3XWXJj0es8hge05g4I18VsC/5dnPAGN
-         uiKQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=12uxQMnj/xorOVraxIuxKqG0ikLSCSe0tDZ4Q3keD2Y=;
+        b=dE9WJfjBPyyDWJb/hdWWXcl709aUr7YKYSL9exsJDNeZhfMyW63hnNZVUtokUEaScb
+         4djzY4EXjwhz7PPxDU83fWj7zTCc8KVgsdtSJotqgH4fKo76uf2v+40MN7O2+7v0j7yo
+         qIx4W2283eDCBMg1TQA4vp1n2f36NfuLdY3qSkur0bgukSEgB08/QEIcIiOlCu/a0Y2v
+         yjb9k1lnLADrWG7wDHQKriywK9YYWuY5usr3rXCmxWeSn+0Xz1alvXXTonKjOksea3k4
+         HcmXaMqnAbocB7kZtzBRf1nNhlJi4K6vNG6mIoVbI4KjGr5TgNQQuV9C/eEBzSCB0Yd0
+         Qqjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=bTnYIaXCznXChV+MpXcHpI6ZlmfvW//sWW/RWexRGj8=;
-        b=tCYnRTf/1wtvNePXQ37PojoND7IhvQD1cglBDX4J1glLVe+TAcVhs5Lnngcvx9qyBG
-         m5M7cjqMuxqn0gUur8iizO8EmztqYHOoedtsi23UcyIaHvJX8YzCLTVZj8npghZoPZTq
-         jX/qz3zsodyGbKfIjO4f4OP360BHZgeX9MJxstwDRTe7GKojfSG2cVPD7teD4RDTe2PA
-         4ULjbIMwrP6RnLWc2jUcnuqlJdRKYKT623opV1VGIw0pYV9wwf7TSk/3WDk2RKWBsYj5
-         Zjz+DZaulfOVGsnU+Fg7C6GKIARR8XEtsKa+SO2LVQAk1Hau9q+/mC0UQ3neJh6Ve6sl
-         PCow==
-X-Gm-Message-State: AGi0PuZlGLBPIAoJemQSBnQW1dBGVB15dQdjCqV3U1RuFP0Zty+L/l2P
-        2rPneYGJAXK7dp3+BX0Ynv4=
-X-Google-Smtp-Source: APiQypJvKrNIoq54zM7ItzWvxPgPmUjltkzUe/vbC5X9rQ9ObfKBqKCTb9tN/4fsjG9pCVnc+v3i2w==
-X-Received: by 2002:a17:902:b617:: with SMTP id b23mr18235167pls.194.1587877976985;
-        Sat, 25 Apr 2020 22:12:56 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id m7sm9392310pfb.48.2020.04.25.22.12.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Apr 2020 22:12:56 -0700 (PDT)
-Date:   Sat, 25 Apr 2020 22:12:54 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        James Chen <james.chen@emc.com.tw>,
-        Johnny Chuang <johnny.chuang@emc.com.tw>,
-        Rob Herring <robh+dt@kernel.org>,
-        Scott Liu <scott.liu@emc.com.tw>,
-        David Heidelberg <david@ixit.cz>, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/9] input: elants: override touchscreen info with DT
- properties
-Message-ID: <20200426051254.GR125362@dtor-ws>
-References: <cover.1586784389.git.mirq-linux@rere.qmqm.pl>
- <cb3834494e837289fa792615925f06dbd91c1f75.1586784389.git.mirq-linux@rere.qmqm.pl>
- <20200426051122.GQ125362@dtor-ws>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200426051122.GQ125362@dtor-ws>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=12uxQMnj/xorOVraxIuxKqG0ikLSCSe0tDZ4Q3keD2Y=;
+        b=RxjPbfIFXJuFLq6uTsABpSomjFf8o12DxZ7069nfJEUi5qf5H81vpKUiYtgpvH83L6
+         EpauT/x8t/kJ3oBFghL4ffMfVmx3susHpwuV2fsj44YxgyQfYwVEcEqD+92ItB0MDXNf
+         8uGOUpt0luTNj+i7YCoF5pqAA16YNylmggJGJfGNRtj5Zx4Q1jovplcxNcOGawORSv4K
+         ZvpVX78EUV4LwOuwr4AsbbiBbwkL5c2GwrovFshX+ihAOsoKifI2hVwjwifZVl1VcZ6d
+         IOyAsNbMH7WFKF40rJ1aPUOG+gAFOAPxEU5lA9/ejhPBgkKjh7wHQxYYkg7iD3Qa7CM9
+         1PPA==
+X-Gm-Message-State: AGi0PuZHtlvxaRFqBf/Fcijy+a/01D9D8t0Za/H58gYYnJF0+nJ2ZqRb
+        pUxZcuDorCo7mDdgUnM6gwA=
+X-Google-Smtp-Source: APiQypKUAzBp+I5Bsw7YDCJ9vG2flxRk50phihRGt65KIyG/PE5fUwWy54UAjJqZLWauP8Eu6VqMZw==
+X-Received: by 2002:aa7:8429:: with SMTP id q9mr17324813pfn.205.1587878058873;
+        Sat, 25 Apr 2020 22:14:18 -0700 (PDT)
+Received: from localhost ([43.224.245.179])
+        by smtp.gmail.com with ESMTPSA id q7sm630417pgs.13.2020.04.25.22.14.17
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 25 Apr 2020 22:14:18 -0700 (PDT)
+From:   zhouchuangao <chuangaozhou@gmail.com>
+X-Google-Original-From: zhouchuangao <zhouchuangao@xiaomi.com>
+To:     gregkh@linuxfoundation.org
+Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org,
+        zhouchuangao <zhouchuangao@xiaomi.com>
+Subject: [PATCH] driver/base/soc: Use kobj_to_dev() API
+Date:   Sun, 26 Apr 2020 13:13:51 +0800
+Message-Id: <1587878031-16591-1-git-send-email-zhouchuangao@xiaomi.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 25, 2020 at 10:11:22PM -0700, Dmitry Torokhov wrote:
-> On Mon, Apr 13, 2020 at 03:32:24PM +0200, Michał Mirosław wrote:
-> > Allow overriding of information from hardware and support additional
-> > common DT properties like axis inversion. This is required for eg.
-> > Nexus 7 and TF300T where the programmed values in firmware differ
-> > from reality.
-> > 
-> > Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> > [moved "prop" before DMA buffer]
-> > Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> 
-> This needs a companion patch for the DT bindings.
+Use kobj_to_dev() API instead of container_of().
 
-Ah, sorry, I missed the fact that it was later in the sequence.
+Signed-off-by: zhouchuangao <zhouchuangao@xiaomi.com>
+---
+ drivers/base/soc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> > ---
-> >  drivers/input/touchscreen/elants_i2c.c | 7 +++++--
-> >  1 file changed, 5 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
-> > index fcd3d189f184..87d686ce08f2 100644
-> > --- a/drivers/input/touchscreen/elants_i2c.c
-> > +++ b/drivers/input/touchscreen/elants_i2c.c
-> > @@ -32,6 +32,7 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/firmware.h>
-> >  #include <linux/input/mt.h>
-> > +#include <linux/input/touchscreen.h>
-> >  #include <linux/acpi.h>
-> >  #include <linux/of.h>
-> >  #include <linux/gpio/consumer.h>
-> > @@ -150,6 +151,7 @@ struct elants_data {
-> >  	unsigned int y_res;
-> >  	unsigned int x_max;
-> >  	unsigned int y_max;
-> > +	struct touchscreen_properties prop;
-> >  
-> >  	enum elants_state state;
-> >  	enum elants_iap_mode iap_mode;
-> > @@ -894,8 +896,7 @@ static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf,
-> >  
-> >  			input_mt_slot(input, i);
-> >  			input_mt_report_slot_state(input, MT_TOOL_FINGER, true);
-> > -			input_event(input, EV_ABS, ABS_MT_POSITION_X, x);
-> > -			input_event(input, EV_ABS, ABS_MT_POSITION_Y, y);
-> > +			touchscreen_report_pos(input, &ts->prop, x, y, true);
-> >  			input_event(input, EV_ABS, ABS_MT_PRESSURE, p);
-> >  			input_event(input, EV_ABS, ABS_MT_TOUCH_MAJOR, w);
-> >  
-> > @@ -1329,6 +1330,8 @@ static int elants_i2c_probe(struct i2c_client *client,
-> >  	input_abs_set_res(ts->input, ABS_MT_POSITION_Y, ts->y_res);
-> >  	input_abs_set_res(ts->input, ABS_MT_TOUCH_MAJOR, 1);
-> >  
-> > +	touchscreen_parse_properties(ts->input, true, &ts->prop);
-> > +
-> >  	error = input_register_device(ts->input);
-> >  	if (error) {
-> >  		dev_err(&client->dev,
-> > -- 
-> > 2.20.1
-> > 
-> 
-> -- 
-> Dmitry
-
+diff --git a/drivers/base/soc.c b/drivers/base/soc.c
+index 4af11a4..a5bae55 100644
+--- a/drivers/base/soc.c
++++ b/drivers/base/soc.c
+@@ -46,7 +46,7 @@ static umode_t soc_attribute_mode(struct kobject *kobj,
+ 				struct attribute *attr,
+ 				int index)
+ {
+-	struct device *dev = container_of(kobj, struct device, kobj);
++	struct device *dev = kobj_to_dev(kobj);
+ 	struct soc_device *soc_dev = container_of(dev, struct soc_device, dev);
+ 
+ 	if ((attr == &dev_attr_machine.attr)
 -- 
-Dmitry
+2.7.4
+
