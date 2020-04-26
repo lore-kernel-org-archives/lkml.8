@@ -2,136 +2,166 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A81CC55191
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D8FC55191
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 06:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 258C32078E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:57:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="DU7Ap7+V"
+	by mail.kernel.org (Postfix) with ESMTP id EED7D2070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 06:08:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726131AbgDZF5H (ORCPT
+        id S1726143AbgDZGIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 01:57:07 -0400
-Received: from mout.web.de ([212.227.15.14]:32917 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725468AbgDZF5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 01:57:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1587880612;
-        bh=injEwugg8OHM9hp03WhgiBQmv8FzKG2/4scOcHkHnBg=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=DU7Ap7+VYQ8dE8VuZVZb/qR8TWce3er27w2n4X3tQiQueBeiRXiWiPraWGgLIr0b4
-         VwgauDjYGEd7lGHdb0eeO7dnBp58pJZlQ6CQN2vjM4QtQGDAbmmMkhtce1JWeQJFQv
-         JginYHtNczBU9LYZ+neB3BtZNocRT4XuMB1luu6U=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.52.156]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0M5fhI-1jHohX3LNA-00xf7T; Sun, 26
- Apr 2020 07:56:51 +0200
-Subject: Re: mm/slub: do not place freelist pointer to middle of object if
- redzone is on
-To:     Changbin Du <changbin.du@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org, Christoph Lameter <cl@linux.com>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Kees Cook <keescook@chromium.org>,
-        Pekka Enberg <penberg@kernel.org>
-References: <ca36745b-1939-2640-aeed-390c8c39114e@web.de>
- <20200425235105.sye7fsbndbv24b46@mail.google.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <dc9bcaad-ee13-5359-5d99-7ecb8cb1d46b@web.de>
-Date:   Sun, 26 Apr 2020 07:56:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 26 Apr 2020 02:08:16 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:36776 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725468AbgDZGIP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 02:08:15 -0400
+Received: by mail-il1-f198.google.com with SMTP id l15so16125409ilj.3
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 23:08:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=QyNKLTN58Ugk/DWSxRQyYsBPGSFn2k5C9pT4xBIXNpc=;
+        b=an+yVoQ4cNk9s3gdVRuUGdOnMIYXhIZdCs+BpoaRDZmA2q1bR0uTcqrIjFNmS9b0N2
+         ktYGLK/12ll4KR39DdBcsJ1F+w3G5o6MdswEwn6toD9qES38ufYxSCKnDgOOg2oNSSd7
+         xMyWarhSoiq7yikSX+jNJP/dc6BSYhYUJxB00XKjlhkkMUCB+50D4vKbmAR/KcktmS6K
+         hZoIeNhrTJah29MuTxU/C+yUjQ/dC9MYG9hNfgiAyd+M983JQUa+o1ifFqeeSnsAtIJh
+         pnI8OZc+l4TUnXAVhlUOw/OkCmRO1vARHOwn87xoMJLuwHdq4AHhYDl426uSS6arLB5z
+         YQIQ==
+X-Gm-Message-State: AGi0PubikAwp3i1QmigZfKvGDuB07gRqJMGOWrsgsWA4Zjc06+V6NED3
+        ftrUS4M2T7A0igum5xVn9mTOU0JHVig5GA0hL5ZzjJwueKbj
+X-Google-Smtp-Source: APiQypIjOx2y7kTNaamViFv55RSK11j+fCGL7KTnjQN/VQieHZsjItWskJ/judSz/vDYkpRp69B0IgTHx4MuIvxA9Gh/ic5xEalU
 MIME-Version: 1.0
-In-Reply-To: <20200425235105.sye7fsbndbv24b46@mail.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:isG7+/FvLFT00wPC8n3rPHTTacFfTdbCfAe+hDJQWErpHLiUDzB
- JasNmP+JQ3IdEWzgSfpmEwWIWiNZVfCboP39VSVCBPQ5G52Hj16gvtfyrQb77WTAv1Bkq99
- YtfaW3StSUEGqYjjq6+8fUlDwZcsi+YpNQWVsYnqHP5EIf79cNHYrb/Mlkow8O/EkgTrHQG
- njFmWD8lbc0NeowHoTXvg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:uzS6JyizmUY=:B+5sfz0Y2GgO4wQEJYdChX
- EXDR0dF2RqlUNpIWOqobmxYIeWkUdkuE5vPd3bcNcTQ8NEM/rUbAIipsMLBppV5nCphYrVBuY
- U2uWDKh+m44o36WmXK4FIYTLbqmyxFhMoOeDldHTwgyrWJCqxEnKUe6gDHmrzHoLs8ovnYc4N
- J6nCTpwz/JKPaDvcw7p+RxKD/PpLD2skygyFqU8KOzc3UZqoOeSG5n3huWMpxEWyVVzPTX4bq
- GkgBVntz3PGYsj9Q/gnSdA6b4FiVPM9TK2JVPI8dlkjIDRJ+YFWdU++2l5s2UmC/Y4wljVTTQ
- vF2TucbC1S8F5l9uqlDd09NS5+pqylllyiXtCcmhUYPABOq0YfyOoOf9KRM/GculrEB1vDQR2
- phKAkqxZwQDQ4oIkpjMEFqazZqyiP+22bJENWUFQZ4DkIh216ohowQFtraxSLEplNgZcL5ThS
- yw0A9zEFw5DL6KjRQ61UPKNi6cxN32LJbq0ARPdD0kYqvKwt+zKfzyr9SqaxGASwPVgr2EuFJ
- 0m/DdDo7gM0hNY43XU+gsrpR/dmyDucKpH38CgBgCpseXjmbG7N/vAHDiCooWNanPWaSAk0ZD
- fwpMySqYKyGbffhY9ZV15S09HUGCoiYRiZaLZ85n2YRW6JeWrcLOU0M3xQv3rfetoOhg8CFuH
- tLi60geqoF4NVcCWeWJTqRxppRvEztf27mEzMlMD45b4/V55Mmpj4dETDSZKXrT7lQFagnhFd
- QBNk1wrwmIiYtXr+o+/e34ZBakSFpVt979SfA1VXQD2ufcaL+DChqv8VlONjU6S4snzuNi7D4
- b9G4XrQvwmrEdEE0mSDs0RYAdk+GvvNtm+SPrD+C1MXKY0U476w1XB+v0RnREBNwh9+YOmQM2
- o+n6eFxYwQFGsGUHxZOd0HVML21Ig2SsPfnHlk4YfUgs2FHSjHwnvodQAJp/slHxvb9BpQ+4j
- q6pfBensTL6+QCs0PEbQn/kJ22UWCxJWuasVfDVUtsInpmlrGC45+1ePDgn1X0rz6grwl5RqL
- fbKMDlg47BVDLnYzuKzzakEOKTLU61G1jfNGLsftJe5dCBVNh7NZVgr2QevETfVapCkvAxBlU
- 7HSf7OEeGZyshTwj0qMdndfKN9DvT75rloJH/ZAChEVoeOvCjj2I9MPs0q6FeUIiEgNlE/9dw
- W0RIZC2LyIKRK+krTST+5OmGtXm3aq+1rpUjXA3R+GpyCmRkqiqFwNltpxMzFfRTE5688zD4m
- E2URbPK2nh27MIJYv
+X-Received: by 2002:a05:6e02:141:: with SMTP id j1mr16475865ilr.100.1587881292868;
+ Sat, 25 Apr 2020 23:08:12 -0700 (PDT)
+Date:   Sat, 25 Apr 2020 23:08:12 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000068331605a42b6c22@google.com>
+Subject: KMSAN: uninit-value in __crc32c_le_base (2)
+From:   syzbot <syzbot+5dee08649ac6f0707a43@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, glider@google.com,
+        herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>> Fixes: 3202fa62fb ("slub: relocate freelist pointer to middle of objec=
-t")
-=E2=80=A6
-> I used to give 12 charactors, but this time I lost two. :)
+Hello,
 
-Would you like to improve details for the change description
-also at another place?
+syzbot found the following crash on:
 
-Regards,
-Markus
+HEAD commit:    9535d09e page_alloc: drop a call to kmsan_split_page()
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=10445b58100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a5915107b3106aaa
+dashboard link: https://syzkaller.appspot.com/bug?extid=5dee08649ac6f0707a43
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+userspace arch: i386
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17b1f930100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=112a03f0100000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+5dee08649ac6f0707a43@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: uninit-value in crc32_body lib/crc32.c:121 [inline]
+BUG: KMSAN: uninit-value in crc32_le_generic lib/crc32.c:179 [inline]
+BUG: KMSAN: uninit-value in __crc32c_le_base+0xbdd/0xd10 lib/crc32.c:202
+CPU: 0 PID: 8830 Comm: syz-executor078 Not tainted 5.6.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ crc32_body lib/crc32.c:121 [inline]
+ crc32_le_generic lib/crc32.c:179 [inline]
+ __crc32c_le_base+0xbdd/0xd10 lib/crc32.c:202
+ chksum_update+0xb2/0x110 crypto/crc32c_generic.c:88
+ crypto_shash_update+0x4e9/0x550 crypto/shash.c:106
+ shash_ahash_update crypto/shash.c:246 [inline]
+ shash_async_update+0x113/0x1d0 crypto/shash.c:254
+ crypto_ahash_update include/crypto/hash.h:547 [inline]
+ hash_sendpage+0x8ef/0xdf0 crypto/algif_hash.c:168
+ kernel_sendpage net/socket.c:3791 [inline]
+ sock_sendpage+0x1e1/0x2c0 net/socket.c:950
+ pipe_to_sendpage+0x38c/0x4c0 fs/splice.c:458
+ splice_from_pipe_feed fs/splice.c:512 [inline]
+ __splice_from_pipe+0x539/0xed0 fs/splice.c:636
+ splice_from_pipe fs/splice.c:671 [inline]
+ generic_splice_sendpage+0x1d5/0x2d0 fs/splice.c:844
+ do_splice_from fs/splice.c:863 [inline]
+ direct_splice_actor+0x19e/0x200 fs/splice.c:1037
+ splice_direct_to_actor+0x8a9/0x11e0 fs/splice.c:992
+ do_splice_direct+0x342/0x580 fs/splice.c:1080
+ do_sendfile+0xff5/0x1d10 fs/read_write.c:1520
+ __do_compat_sys_sendfile fs/read_write.c:1602 [inline]
+ __se_compat_sys_sendfile+0x301/0x3c0 fs/read_write.c:1585
+ __ia32_compat_sys_sendfile+0x11a/0x160 fs/read_write.c:1585
+ do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+ do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
+ entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7f34d99
+Code: 90 e8 0b 00 00 00 f3 90 0f ae e8 eb f9 8d 74 26 00 89 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000ffe3de3c EFLAGS: 00000296 ORIG_RAX: 00000000000000bb
+RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 0000000000000003
+RDX: 0000000000000000 RSI: 00000000ffffffff RDI: 0000000000000004
+RBP: 0000000020000480 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+
+Uninit was stored to memory at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
+ kmsan_memcpy_memmove_metadata+0x272/0x2e0 mm/kmsan/kmsan.c:247
+ kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:267
+ kmsan_copy_to_user+0x50/0x90 mm/kmsan/kmsan_hooks.c:262
+ _copy_to_user+0x15a/0x1f0 lib/usercopy.c:33
+ copy_to_user include/linux/uaccess.h:174 [inline]
+ proc_put_long kernel/sysctl.c:2260 [inline]
+ __do_proc_dointvec+0xed3/0x1a70 kernel/sysctl.c:2385
+ do_proc_dointvec kernel/sysctl.c:2412 [inline]
+ proc_dointvec+0x139/0x160 kernel/sysctl.c:2572
+ proc_do_sync_ports+0x26a/0x500 net/netfilter/ipvs/ip_vs_ctl.c:1803
+ proc_sys_call_handler+0xa92/0xd00 fs/proc/proc_sysctl.c:616
+ proc_sys_read+0xc6/0xe0 fs/proc/proc_sysctl.c:630
+ do_loop_readv_writev fs/read_write.c:714 [inline]
+ do_iter_read+0x8df/0xe10 fs/read_write.c:935
+ vfs_readv+0x1ee/0x280 fs/read_write.c:1053
+ kernel_readv fs/splice.c:365 [inline]
+ default_file_splice_read+0xb1d/0x11d0 fs/splice.c:422
+ do_splice_to fs/splice.c:892 [inline]
+ splice_direct_to_actor+0x5d8/0x11e0 fs/splice.c:971
+ do_splice_direct+0x342/0x580 fs/splice.c:1080
+ do_sendfile+0xff5/0x1d10 fs/read_write.c:1520
+ __do_compat_sys_sendfile fs/read_write.c:1602 [inline]
+ __se_compat_sys_sendfile+0x301/0x3c0 fs/read_write.c:1585
+ __ia32_compat_sys_sendfile+0x11a/0x160 fs/read_write.c:1585
+ do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+ do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
+ entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
+
+Local variable ----tmp.i@__do_proc_dointvec created at:
+ proc_put_long kernel/sysctl.c:2256 [inline]
+ __do_proc_dointvec+0xd1b/0x1a70 kernel/sysctl.c:2385
+ proc_put_long kernel/sysctl.c:2256 [inline]
+ __do_proc_dointvec+0xd1b/0x1a70 kernel/sysctl.c:2385
+=====================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
