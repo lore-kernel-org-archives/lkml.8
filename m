@@ -2,136 +2,111 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F24C55191
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 07:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9A4C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 07:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFF3A2071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 07:08:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6541A2071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 07:09:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587884965;
+	bh=3qtJaBd6XIB2amTUo4PU0+6xaG1Zb4hRCgS0P/J/yns=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FGDc8wAeDODHh51tvONZ0nkvZOr7o1eACoGe3TQveKipu2YBoRX3DHIhC59besZJN
+	 2wxlg3GRiYRXzBXhAeIBEhK7r74Xi9ByLiDzzXzTdeBwnmLBIn42//AOeDmUNkGmEA
+	 8OMMYfWbSIt2BcZp/C1ZGk2PrOhfXd20B2Z9GiUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbgDZHIi (ORCPT
+        id S1726279AbgDZHJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 03:08:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49444 "EHLO mx2.suse.de"
+        Sun, 26 Apr 2020 03:09:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725864AbgDZHIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 03:08:37 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id C4D0DABAD;
-        Sun, 26 Apr 2020 07:08:34 +0000 (UTC)
-Subject: Re: [PATCH] vt: vt_ioctl: Add new ioctl to read vt switch lock state
-To:     Johannes Hostert <jojohostert@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Eric Biggers <ebiggers@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        linux-kernel@vger.kernel.org
-References: <20200425231436.535671-1-jojohostert@gmail.com>
-From:   Jiri Slaby <jslaby@suse.com>
-Autocrypt: addr=jslaby@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <ea60aefe-f294-7e58-b53c-5f1e72b7af9e@suse.com>
-Date:   Sun, 26 Apr 2020 09:08:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1725864AbgDZHJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 03:09:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 085AF20700;
+        Sun, 26 Apr 2020 07:09:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587884962;
+        bh=3qtJaBd6XIB2amTUo4PU0+6xaG1Zb4hRCgS0P/J/yns=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bm3w4KoyopNUxpSlp7YV5eXlCnDHBgh7ezsQxDgwieXDfGZpS3z36JJKaEJ3JeWA6
+         iWJ+VB9+ihsBya/ZntmDND58SM3XIUQjlFaaxvpL2vcQZqJu/+mLARlH1zcBRtHk+Z
+         TbQPkqOui78R2dxBydxUgBnreiL1ZBZjaM1j+pHM=
+Date:   Sun, 26 Apr 2020 09:09:19 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     xujialu <xujialu@vimux.org>
+Cc:     corbet@lwn.net, linux-kernel@vger.kernel.org, masahiroy@kernel.org,
+        akpm@linux-foundation.org, mchehab+huawei@kernel.org
+Subject: Re: [PATCH] scripts: gtags_files_generator.sh
+Message-ID: <20200426070919.GB2084805@kroah.com>
+References: <20200425080343.GA2048673@kroah.com>
+ <20200426024436.7534-1-xujialu@vimux.org>
 MIME-Version: 1.0
-In-Reply-To: <20200425231436.535671-1-jojohostert@gmail.com>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200426024436.7534-1-xujialu@vimux.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26. 04. 20, 1:14, Johannes Hostert wrote:
-> The existing ioctls VT_LOCKSWITCH and VT_UNLOCKSWITCH can be used to
-> allow/disallow switching the virtual terminal. However, no mechanism
-> exists that allows software to read this lock state.
+On Sun, Apr 26, 2020 at 10:44:36AM +0800, xujialu wrote:
+> Add a script to generate a more precise gtags.files from *.cmd files.
 > 
-> Userspace programs that try to switch to another virtual terminal
-> like chvt have no mechanism to figure out whether they will be able
-> to actually switch the terminal. When eg. chvt is run while terminal
-> switching is disabled, it simply sleeps forever waiting for the target
-> terminal to become active.
+> For navigating linux sources, it will be more efficient if gtags/cscope
+> just collects source files that needed for compilation. The kernel
+> makefiles already create *.cmd files that contain the files we needed,
+> then just extracts files list from them and into gtags.files cause it's
+> the the default name list file for gtags.
 > 
-> This commit introduces a new ioctl VT_GETLOCKSWITCH that allows
-> reading the current state of the switch lock flag. Userspace
-> software can then use that flag and handle not being able to switch
-> virtual terminals.
+> make defconfig
+> make
+> scripts/gtags_files_generator.sh
+> gtags [-f gtags.files]
 > 
-> Example program using this:
+> Enjoy with vim+gtags. :)
 > 
-> #include <linux/vt.h>
-> #include <sys/ioctl.h>
-> #include <fcntl.h>
-> #include <stdio.h>
-> #include <errno.h>
-> #include <error.h>
-> #include <unistd.h>
-> const char* console_device = "/dev/tty0";
-> int main(int argc, char* argv[]) {
-> 	int fd;
-> 	while ((fd = open(console_device, O_RDWR)) == -1 && errno == EINTR);
-> 	if (fd < 0)
-> 		error(1, errno, "Opening %s", console_device);
->         int ret;
-> 	while ((ret = ioctl(fd, VT_GETLOCKSWITCH, 1)) == -1 && errno == EINTR);
-> 	if (ret == -1)
-> 		error(1, errno, "%s: VT_GETLOCKSWITCH", console_device);
+> Here is a log for comparison with 'make gtags':
+> 
+> $ time make ARCH=arm cscope
+>   GEN     cscope
+> 
+> real	1m20.600s
+> user	1m36.004s
+> sys	0m8.192s
+> $ wc -l cscope.files
+> 31201 cscope.files		#collected too many files we don't care
+> 
+> $ time ./scripts/gtags_files_generator.sh
+> 
+> Succeed, 3716 gtags.files listed!
+> 
+> real	0m1.593s		#collected files only we care
+> user	0m1.704s
+> sys	0m0.256s
+> 				#collected also dts and dtsi
+> $ grep dts gtags.files
+> arch/arm/boot/dts/xxxxxx-clocks.dtsi
+> arch/arm/boot/dts/xxxxxx.dtsi
+> arch/arm/boot/dts/xxxxxxxx.dts
+> arch/arm/boot/dts/xxxxxxxx.dtsi
+> 
+> Signed-off-by: xujialu <xujialu@vimux.org>
+> ---
+>  scripts/gtags_files_generator.sh | 48 ++++++++++++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>  create mode 100755 scripts/gtags_files_generator.sh
 
-And now if you do VT_LOCKSWITCH even when VT_GETLOCKSWITCH returns 0,
-vt_dont_switch can be 1 already.
+As this is a new version, you need to properly version your patch, as is
+documented, please do that.
 
-So NACK.
+Also, you seem to be ignoring my previous questions/comments, which
+makes me want to just ignore this patch :(
 
-Please don't add another racy ioctl. Introduce VT_LOCKSWITCH_NONBLOCK or
-something like that instead (like respecting O_NONBLOCK).
-
-thanks,
--- 
-js
-suse labs
+greg k-h
