@@ -2,223 +2,144 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7714C54FCB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 15:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FE7C54FCB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 15:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F42A20700
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 15:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 410792070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 15:19:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="XoggSe5R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bq6h4Tyz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbgDZPMm (ORCPT
+        id S1726166AbgDZPTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 11:12:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43548 "EHLO
+        Sun, 26 Apr 2020 11:19:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726142AbgDZPMm (ORCPT
+        with ESMTP id S1725975AbgDZPTx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 11:12:42 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3B66C061A0F
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 08:12:41 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id z17so21692553oto.4
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 08:12:41 -0700 (PDT)
+        Sun, 26 Apr 2020 11:19:53 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2271C061A0F
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 08:19:53 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id b1so8521988qtt.1
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 08:19:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5MJobZzjC3UzmZaJmBYX9H7IZHTy4bZggyl33EIe0U4=;
-        b=XoggSe5RFNFkWGHDq3JWWN6v1izCQVePy52e95L2qwx/G8ytl9dYcdrQraeNKGNsj9
-         sN9luEFeZXIQM5dsIwHHS7FHmMdQ+pG2sQb8Mt2XbdxmLeqpv+/AZDMm4KTHTxnxPNP+
-         kI2OuXwlMMF9Fx5KmG32rQu69z41i2+JUicIKwQGPhtB4eOLqMCXDstRu4KREX+gMlvC
-         U8w0u5PMelb5ot+GL+fbuoImHIfPfLBoM8yA+Gs36irmC4q/ZjycTjVp9W2lN5uSmLzT
-         hTsojbast+sCC/PTIsRkS2ikBVKPs5SGoaMX/b+TRuxtYc3nQf+aZ33xDZu6lmGtSAlr
-         Y4dA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=8ZWSGdX2c877cgHrdn+1pgMsM7ftlK0aUwzgQsojEoM=;
+        b=Bq6h4TyzEtquKkwmgwsPqGZ4Y94CMA78QaeUILL+aY4WYaxGGhcIMYfXw96HmEJTE3
+         YhO204RJ8WhOTcxlqp1hRH2ivEfiPR+1ZyzuuRP4lwM06pRM1crEKNjcpxPv/LcbVusF
+         G9ubRNrM193gsQzOouDyWbC3huFhcnRlGbKJKReNqSc0AG94lU/RM5dBK+cgN95+uIA4
+         GUlQiEnCwG/RTo5bEJWZb3h0Js0/eiGlxpwp8OT5JC+dWQ9VOhLpSxzKFhPz4/YyXF8o
+         /uCTNyLh7AcRJ7uvLJptwqWrwDbyK6bT1XUHy023ZYZEfiggqyOJyPYxdFyqkprtk1mk
+         PGHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5MJobZzjC3UzmZaJmBYX9H7IZHTy4bZggyl33EIe0U4=;
-        b=lw++GCjtV2b5qRp5RHSXEH/+LLpFowqZvdRzrYMBLdBS3dyTVMwTdkY4wRe0zQAAox
-         DGiETATqF+7yateaGO6k6HZdh9Kc1J5W4q6drBnCuLQdPXPPgrkWbN10p8NeN1gZQgPL
-         OI/92KOT5Zj++De0GDKTnpgVeP+5a8qiMwuqIwiZpL0dfQZUDPfSUMlTLWEQeV5jlhfb
-         QTh0I5Z428UxaJoODQy7EGkU/NW+uXSElxYAypeTbsrhbMeWEyg3UDhuZZECnDkECk2q
-         f3v4na/p4bi9BscK+RMuqt9Q1S6VW60ExBb3cLXCkAs7c2cDV6Ms9X75iSO/RucDTayZ
-         2b7w==
-X-Gm-Message-State: AGi0PuZ/tjLEBcLEl+dPWu2WZEdAfrQ2O5S8U78F2mJW6AEfI4ryroqt
-        e/UaD6lPfTq4fo4ld4tbQkBMwlKEpdXkOSU1JMkvZnzr
-X-Google-Smtp-Source: APiQypJdo5FvYScqHy/yISKJQ1beBBChfSgxZKZKh/Qwsv42gJhPlkUIGH6Awaz6fttT7RWrqSjYUHDNoMvsvao3Yv8=
-X-Received: by 2002:a05:6808:24e:: with SMTP id m14mr12504192oie.116.1587913960909;
- Sun, 26 Apr 2020 08:12:40 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=8ZWSGdX2c877cgHrdn+1pgMsM7ftlK0aUwzgQsojEoM=;
+        b=WTFg1m3WV8UZgh3yDreI8MmHmJPcjUVVw3wgcX0r6SoBoIK/zUzTOTbHtyTjpXhRaM
+         T2kwHNa9yT3gHgLUbtQulcVupT3PBvgub3BMcoouGosYkQ44mWWsFtbGxKkWCmcC/2/R
+         0cfr/t0xosyVjGYb+omWq+G45k2O+0GY9A3fDMO5uDwmcuonijecrFO25+/t+hG3wHTt
+         IADEokTdCxpcZGHSonsycsfWmQf1IUZ+EYUXf/Q4JyTyq6eW4pju+Vglm3x/30iBMY1j
+         VvQtwjgEebxrB3qo+TroLew3Zu5G+hLIgkctwJFgtPCCbxoVf0+GXPWKQfYJDQzcwaWU
+         Cdwg==
+X-Gm-Message-State: AGi0PuaAMG62148+RMtO31gwqPTOYNq1zJOIKwvA3FXRiI4CUuxT6lTE
+        0SOXD5FFJYkUhJVLd81RK3/BLkDD
+X-Google-Smtp-Source: APiQypI7uwhXJtsXpxkV4VR3/8HRnJdeLuu44Nr0lFQBZbSOO/wEiJxrb/iS/SP2Us5KoQwQmvo0cg==
+X-Received: by 2002:aed:2ce6:: with SMTP id g93mr19899873qtd.264.1587914392813;
+        Sun, 26 Apr 2020 08:19:52 -0700 (PDT)
+Received: from [10.0.2.15] (CPEac9e17937810-CM64777dd8e660.cpe.net.cable.rogers.com. [174.112.203.120])
+        by smtp.gmail.com with ESMTPSA id x55sm8115275qtk.3.2020.04.26.08.19.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 26 Apr 2020 08:19:52 -0700 (PDT)
+Subject: Re: [PATCH] rapidio: Avoid data race between file operation callbacks
+ and mport_cdev_add().
+To:     madhuparnabhowmik10@gmail.com, mporter@kernel.crashing.org,
+        akpm@linux-foundation.org, dan.carpenter@oracle.com,
+        hubcap@omnibond.com, tglx@linutronix.de, ira.weiny@intel.com,
+        allison@lohutok.net
+Cc:     linux-kernel@vger.kernel.org, andrianov@ispras.ru,
+        ldv-project@linuxtesting.org
+References: <20200426112950.1803-1-madhuparnabhowmik10@gmail.com>
+From:   "alex.b" <alex.bou9@gmail.com>
+Message-ID: <2a0d3c96-c332-2c95-db10-ffba78f9c9a3@gmail.com>
+Date:   Sun, 26 Apr 2020 11:19:51 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200426110740.123638-1-zong.li@sifive.com> <CAAhSdy3FCdzLV-nH03T=PBxB2tdZXhRrugcC2NcoA=22qpv+Lw@mail.gmail.com>
- <CANXhq0qW9ORoZ5qc5g8ikO9QdeYX=p0fwoP8pyFFkk02a7imnw@mail.gmail.com> <CAAhSdy2f2-SQP6TdgxA0HM2ft3eBJd6kEkB--RH=2gUuLktXLQ@mail.gmail.com>
-In-Reply-To: <CAAhSdy2f2-SQP6TdgxA0HM2ft3eBJd6kEkB--RH=2gUuLktXLQ@mail.gmail.com>
-From:   Zong Li <zong.li@sifive.com>
-Date:   Sun, 26 Apr 2020 23:12:30 +0800
-Message-ID: <CANXhq0pDYa2QfGZX87d5gyO5V2uzA3-ttPZXf7s1EkMUcG37Cw@mail.gmail.com>
-Subject: Re: [PATCH] irqchip/sifive-plic: allow many cores to handle IRQs
-To:     Anup Patel <anup@brainfault.org>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        David Abdurachmanov <david.abdurachmanov@sifive.com>,
-        Marc Zyngier <maz@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200426112950.1803-1-madhuparnabhowmik10@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 9:38 PM Anup Patel <anup@brainfault.org> wrote:
+On 2020-04-26 7:29 a.m., madhuparnabhowmik10@gmail.com wrote:
+> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 >
-> +Mark Z
+> Fields of md(mport_dev) are set after cdev_device_add().
+> However, the file operation callbacks can be called after
+> cdev_device_add() and therefore accesses to fields of md in the
+> callbacks can race with the rest of the mport_cdev_add() function.
 >
-> On Sun, Apr 26, 2020 at 6:49 PM Zong Li <zong.li@sifive.com> wrote:
-> >
-> > On Sun, Apr 26, 2020 at 8:47 PM Anup Patel <anup@brainfault.org> wrote:
-> > >
-> > > On Sun, Apr 26, 2020 at 4:37 PM Zong Li <zong.li@sifive.com> wrote:
-> > > >
-> > > > Currently, driver forces the IRQs to be handled by only one core. This
-> > > > patch provides the way to enable others cores to handle IRQs if needed,
-> > > > so users could decide how many cores they wanted on default by boot
-> > > > argument.
-> > > >
-> > > > Use 'irqaffinity' boot argument to determine affinity. If there is no
-> > > > irqaffinity in dts or kernel configuration, use irq default affinity,
-> > > > so all harts would try to claim IRQ.
-> > > >
-> > > > For example, add irqaffinity=0 in chosen node to set irq affinity to
-> > > > hart 0. It also supports more than one harts to handle irq, such as set
-> > > > irqaffinity=0,3,4.
-> > > >
-> > > > You can change IRQ affinity from user-space using procfs. For example,
-> > > > you can make CPU0 and CPU2 serve IRQ together by the following command:
-> > > >
-> > > > echo 4 > /proc/irq/<x>/smp_affinity
-> > > >
-> > > > Signed-off-by: Zong Li <zong.li@sifive.com>
-> > > > ---
-> > > >  drivers/irqchip/irq-sifive-plic.c | 21 +++++++--------------
-> > > >  1 file changed, 7 insertions(+), 14 deletions(-)
-> > > >
-> > > > diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-> > > > index d0a71febdadc..bc1440d54185 100644
-> > > > --- a/drivers/irqchip/irq-sifive-plic.c
-> > > > +++ b/drivers/irqchip/irq-sifive-plic.c
-> > > > @@ -111,15 +111,12 @@ static inline void plic_irq_toggle(const struct cpumask *mask,
-> > > >  static void plic_irq_unmask(struct irq_data *d)
-> > > >  {
-> > > >         struct cpumask amask;
-> > > > -       unsigned int cpu;
-> > > >         struct plic_priv *priv = irq_get_chip_data(d->irq);
-> > > >
-> > > >         cpumask_and(&amask, &priv->lmask, cpu_online_mask);
-> > > > -       cpu = cpumask_any_and(irq_data_get_affinity_mask(d),
-> > > > -                                          &amask);
-> > > > -       if (WARN_ON_ONCE(cpu >= nr_cpu_ids))
-> > > > -               return;
-> > > > -       plic_irq_toggle(cpumask_of(cpu), d, 1);
-> > > > +       cpumask_and(&amask, &amask, irq_data_get_affinity_mask(d));
-> > > > +
-> > > > +       plic_irq_toggle(&amask, d, 1);
-> > > >  }
-> > > >
-> > > >  static void plic_irq_mask(struct irq_data *d)
-> > > > @@ -133,24 +130,20 @@ static void plic_irq_mask(struct irq_data *d)
-> > > >  static int plic_set_affinity(struct irq_data *d,
-> > > >                              const struct cpumask *mask_val, bool force)
-> > > >  {
-> > > > -       unsigned int cpu;
-> > > >         struct cpumask amask;
-> > > >         struct plic_priv *priv = irq_get_chip_data(d->irq);
-> > > >
-> > > >         cpumask_and(&amask, &priv->lmask, mask_val);
-> > > >
-> > > >         if (force)
-> > > > -               cpu = cpumask_first(&amask);
-> > > > +               cpumask_copy(&amask, mask_val);
-> > > >         else
-> > > > -               cpu = cpumask_any_and(&amask, cpu_online_mask);
-> > > > -
-> > > > -       if (cpu >= nr_cpu_ids)
-> > > > -               return -EINVAL;
-> > > > +               cpumask_and(&amask, &amask, cpu_online_mask);
-> > > >
-> > > >         plic_irq_toggle(&priv->lmask, d, 0);
-> > > > -       plic_irq_toggle(cpumask_of(cpu), d, 1);
-> > > > +       plic_irq_toggle(&amask, d, 1);
-> > > >
-> > > > -       irq_data_update_effective_affinity(d, cpumask_of(cpu));
-> > > > +       irq_data_update_effective_affinity(d, &amask);
-> > > >
-> > > >         return IRQ_SET_MASK_OK_DONE;
-> > > >  }
-> > > > --
-> > > > 2.26.1
-> > > >
-> > >
-> > > I strongly oppose (NACK) this patch due to performance reasons.
-> > >
-> > > In PLIC, if we enable an IRQ X for N CPUs then when IRQ X occurs:
-> > > 1) All N CPUs will take interrupt
-> > > 2) All N CPUs will try to read PLIC CLAIM register
-> > > 3) Only one of the CPUs will see IRQ X using the CLAIM register
-> > > but other N - 1 CPUs will see no interrupt and return back to what
-> > > they were doing. In other words, N - 1 CPUs will just waste CPU
-> > > every time IRQ X occurs.
-> > >
-> > > Example1, one Application doing heavy network traffic will
-> > > degrade performance of other applications because with every
-> > > network RX/TX interrupt N-1 CPUs will waste CPU trying to
-> > > process network interrupt.
-> > >
-> > > Example1, one Application doing heavy MMC/SD traffic will
-> > > degrade performance of other applications because with every
-> > > SPI read/write interrupt N-1 CPUs will waste CPU trying to
-> > > process it.
-> > >
-> > > In fact, the current PLIC approach is actually a performance
-> > > optimization. This implementation also works fine with in-kernel
-> > > load-balancer and user space load balancer.
-> > >
-> >
-> > Yes, it's exactly, I know what you pointed out. But the idea of this
-> > patch is just providing a way that users could enable other cores if
-> > they wanted, it could still enable only one core by this change. The
-> > purpose here is thinking of flexible use, rather than limitation.
-> > Maybe it would be a happy medium that we make the default case enable
-> > only one core? It is a good open discussion.
+> One such example is INIT_LIST_HEAD(&md->portwrites) in
+> mport_cdev_add(), the list is initialised after cdev_device_add().
+> This can race with list_add_tail(&pw_filter->md_node,&md->portwrites)
+> in rio_mport_add_pw_filter() which is called by unlocked_ioctl.
 >
-> Making the default case as enable only one core is just a work-around.
+> To avoid such data races use cdev_device_add() after initializing md.
 >
-> As-per my understanding, if we set affinity mask of N CPUs for IRQ X
-> then it does not mean all N CPUs should receive IRQ X rather it means
-> that exactly one of the N CPUs will receive IRQ X and the IRQ receiving
-> CPU will be fixed (reflected by effective affinity returned by the driver).
+> Found by Linux Driver Verification project (linuxtesting.org).
+>
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> ---
+>   drivers/rapidio/devices/rio_mport_cdev.c | 14 +++++++-------
+>   1 file changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/rapidio/devices/rio_mport_cdev.c b/drivers/rapidio/devices/rio_mport_cdev.c
+> index 8155f59ece38..40296378e5ee 100644
+> --- a/drivers/rapidio/devices/rio_mport_cdev.c
+> +++ b/drivers/rapidio/devices/rio_mport_cdev.c
+> @@ -2379,13 +2379,6 @@ static struct mport_dev *mport_cdev_add(struct rio_mport *mport)
+>   	cdev_init(&md->cdev, &mport_fops);
+>   	md->cdev.owner = THIS_MODULE;
+>   
+> -	ret = cdev_device_add(&md->cdev, &md->dev);
+> -	if (ret) {
+> -		rmcd_error("Failed to register mport %d (err=%d)",
+> -		       mport->id, ret);
+> -		goto err_cdev;
+> -	}
+> -
+>   	INIT_LIST_HEAD(&md->doorbells);
+>   	spin_lock_init(&md->db_lock);
+>   	INIT_LIST_HEAD(&md->portwrites);
+> @@ -2405,6 +2398,13 @@ static struct mport_dev *mport_cdev_add(struct rio_mport *mport)
+>   #else
+>   	md->properties.transfer_mode |= RIO_TRANSFER_MODE_TRANSFER;
+>   #endif
+> +
+> +	ret = cdev_device_add(&md->cdev, &md->dev);
+> +	if (ret) {
+> +		rmcd_error("Failed to register mport %d (err=%d)",
+> +		       mport->id, ret);
+> +		goto err_cdev;
+> +	}
+>   	ret = rio_query_mport(mport, &attr);
+>   	if (!ret) {
+>   		md->properties.flags = attr.flags;
 
-is there a case that we only bundle the IRQ to CPU0, but CPU0 is more
-much busy than other CPUs, and it would be better if another CPU could
-take the IRQ?
+Acked-by: Alexandre Bounine <alex.bou9@gmail.com>
 
->
-> If we ignore above semantics and still provide a mechanism to target
-> IRQ X to N CPUs then most likely someone will try and run into
-> performance issues.
->
-> Please don't go this path. The performance impact in case of Guest/VM
-> is even worst because PLIC is trap-n-emulated by hypervisors as MMIO
-> device.
 
-OK, I won't persist in that, just wanna figure out the situation.
-
->
-> Regards,
-> Anup
