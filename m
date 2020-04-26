@@ -2,96 +2,136 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14246C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 07:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F24C55191
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 07:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCEC720700
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 07:03:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="duEnkYC4"
+	by mail.kernel.org (Postfix) with ESMTP id DFF3A2071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 07:08:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbgDZHDl (ORCPT
+        id S1726271AbgDZHIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 03:03:41 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44416 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726125AbgDZHDl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 03:03:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587884620;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=r0+g/GeTH0GPDYkRAev7qPNvYtgSpKx3yr1KGRbtER4=;
-        b=duEnkYC4Okvi9AI0bjKhdmK+tlkVXIopRbL+YQHi5W1kqnNVkKgzfh3e0u6oH+1VXkMRS5
-        DAd9bb96iwUiQQ1tTfuOZZK/IKP7JnHsI/zb7AFx+UvfV5Ql8+9Sk8k+sQiqtszOPJ9FjL
-        AWoOLO0LF3gDL0WpgJOQKjtBSaLQeDY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-286-akSujXFqO_it7sC_Ec1N1g-1; Sun, 26 Apr 2020 03:03:37 -0400
-X-MC-Unique: akSujXFqO_it7sC_Ec1N1g-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 86FF6108BD10;
-        Sun, 26 Apr 2020 07:03:36 +0000 (UTC)
-Received: from [10.72.13.103] (ovpn-13-103.pek2.redhat.com [10.72.13.103])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C22375D714;
-        Sun, 26 Apr 2020 07:03:30 +0000 (UTC)
-Subject: Re: [PATCH V2 1/2] vdpa: Support config interrupt in vhost_vdpa
-From:   Jason Wang <jasowang@redhat.com>
-To:     Zhu Lingshan <lingshan.zhu@intel.com>, mst@redhat.com,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     lulu@redhat.com, dan.daly@intel.com, cunming.liang@intel.com
-References: <1587881384-2133-1-git-send-email-lingshan.zhu@intel.com>
- <1587881384-2133-2-git-send-email-lingshan.zhu@intel.com>
- <055fb826-895d-881b-719c-228d0cc9a7bf@redhat.com>
-Message-ID: <e345cc85-aa9d-1173-8308-f0a301fca2b2@redhat.com>
-Date:   Sun, 26 Apr 2020 15:03:29 +0800
+        Sun, 26 Apr 2020 03:08:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49444 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725864AbgDZHIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 03:08:37 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id C4D0DABAD;
+        Sun, 26 Apr 2020 07:08:34 +0000 (UTC)
+Subject: Re: [PATCH] vt: vt_ioctl: Add new ioctl to read vt switch lock state
+To:     Johannes Hostert <jojohostert@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Eric Biggers <ebiggers@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        linux-kernel@vger.kernel.org
+References: <20200425231436.535671-1-jojohostert@gmail.com>
+From:   Jiri Slaby <jslaby@suse.com>
+Autocrypt: addr=jslaby@suse.com; prefer-encrypt=mutual; keydata=
+ mQINBE6S54YBEACzzjLwDUbU5elY4GTg/NdotjA0jyyJtYI86wdKraekbNE0bC4zV+ryvH4j
+ rrcDwGs6tFVrAHvdHeIdI07s1iIx5R/ndcHwt4fvI8CL5PzPmn5J+h0WERR5rFprRh6axhOk
+ rSD5CwQl19fm4AJCS6A9GJtOoiLpWn2/IbogPc71jQVrupZYYx51rAaHZ0D2KYK/uhfc6neJ
+ i0WqPlbtIlIrpvWxckucNu6ZwXjFY0f3qIRg3Vqh5QxPkojGsq9tXVFVLEkSVz6FoqCHrUTx
+ wr+aw6qqQVgvT/McQtsI0S66uIkQjzPUrgAEtWUv76rM4ekqL9stHyvTGw0Fjsualwb0Gwdx
+ ReTZzMgheAyoy/umIOKrSEpWouVoBt5FFSZUyjuDdlPPYyPav+hpI6ggmCTld3u2hyiHji2H
+ cDpcLM2LMhlHBipu80s9anNeZhCANDhbC5E+NZmuwgzHBcan8WC7xsPXPaiZSIm7TKaVoOcL
+ 9tE5aN3jQmIlrT7ZUX52Ff/hSdx/JKDP3YMNtt4B0cH6ejIjtqTd+Ge8sSttsnNM0CQUkXps
+ w98jwz+Lxw/bKMr3NSnnFpUZaxwji3BC9vYyxKMAwNelBCHEgS/OAa3EJoTfuYOK6wT6nadm
+ YqYjwYbZE5V/SwzMbpWu7Jwlvuwyfo5mh7w5iMfnZE+vHFwp/wARAQABtBxKaXJpIFNsYWJ5
+ IDxqc2xhYnlAc3VzZS5jb20+iQI4BBMBAgAiBQJOkujrAhsDBgsJCAcDAgYVCAIJCgsEFgID
+ AQIeAQIXgAAKCRC9JbEEBrRwSc1VD/9CxnyCYkBrzTfbi/F3/tTstr3cYOuQlpmufoEjCIXx
+ PNnBVzP7XWPaHIUpp5tcweG6HNmHgnaJScMHHyG83nNAoCEPihyZC2ANQjgyOcnzDOnW2Gzf
+ 8v34FDQqj8CgHulD5noYBrzYRAss6K42yUxUGHOFI1Ky1602OCBRtyJrMihio0gNuC1lE4YZ
+ juGZEU6MYO1jKn8QwGNpNKz/oBs7YboU7bxNTgKrxX61cSJuknhB+7rHOQJSXdY02Tt31R8G
+ diot+1lO/SoB47Y0Bex7WGTXe13gZvSyJkhZa5llWI/2d/s1aq5pgrpMDpTisIpmxFx2OEkb
+ jM95kLOs/J8bzostEoEJGDL4u8XxoLnOEjWyT82eKkAe4j7IGQlA9QQR2hCMsBdvZ/EoqTcd
+ SqZSOto9eLQkjZLz0BmeYIL8SPkgnVAJ/FEK44NrHUGzjzdkE7a0jNvHt8ztw6S+gACVpysi
+ QYo2OH8hZGaajtJ8mrgN2Lxg7CpQ0F6t/N1aa/+A2FwdRw5sHBqA4PH8s0Apqu66Q94YFzzu
+ 8OWkSPLgTjtyZcez79EQt02u8xH8dikk7API/PYOY+462qqbahpRGaYdvloaw7tOQJ224pWJ
+ 4xePwtGyj4raAeczOcBQbKKW6hSH9iz7E5XUdpJqO3iZ9psILk5XoyO53wwhsLgGcrkCDQRO
+ kueGARAAz5wNYsv5a9z1wuEDY5dn+Aya7s1tgqN+2HVTI64F3l6Yg753hF8UzTZcVMi3gzHC
+ ECvKGwpBBwDiJA2V2RvJ6+Jis8paMtONFdPlwPaWlbOv4nHuZfsidXkk7PVCr4/6clZggGNQ
+ qEjTe7Hz2nnwJiKXbhmnKfYXlxftT6KdjyUkgHAs8Gdz1nQCf8NWdQ4P7TAhxhWdkAoOIhc4
+ OQapODd+FnBtuL4oCG0c8UzZ8bDZVNR/rYgfNX54FKdqbM84FzVewlgpGjcUc14u5Lx/jBR7
+ ttZv07ro88Ur9GR6o1fpqSQUF/1V+tnWtMQoDIna6p/UQjWiVicQ2Tj7TQgFr4Fq8ZDxRb10
+ Zbeds+t+45XlRS9uexJDCPrulJ2sFCqKWvk3/kf3PtUINDR2G4k228NKVN/aJQUGqCTeyaWf
+ fU9RiJU+sw/RXiNrSL2q079MHTWtN9PJdNG2rPneo7l0axiKWIk7lpSaHyzBWmi2Arj/nuHf
+ Maxpc708aCecB2p4pUhNoVMtjUhKD4+1vgqiWKI6OsEyZBRIlW2RRcysIwJ648MYejvf1dzv
+ mVweUa4zfIQH/+G0qPKmtst4t/XLjE/JN54XnOD/TO1Fk0pmJyASbHJQ0EcecEodDHPWP6bM
+ fQeNlm1eMa7YosnXwbTurR+nPZk+TYPndbDf1U0j8n0AEQEAAYkCHwQYAQIACQUCTpLnhgIb
+ DAAKCRC9JbEEBrRwSTe1EACA74MWlvIhrhGWd+lxbXsB+elmL1VHn7Ovj3qfaMf/WV3BE79L
+ 5A1IDyp0AGoxv1YjgE1qgA2ByDQBLjb0yrS1ppYqQCOSQYBPuYPVDk+IuvTpj/4rN2v3R5RW
+ d6ozZNRBBsr4qHsnCYZWtEY2pCsOT6BE28qcbAU15ORMq0nQ/yNh3s/WBlv0XCP1gvGOGf+x
+ UiE2YQEsGgjs8v719sguok8eADBbfmumerh/8RhPKRuTWxrXdNq/pu0n7hA6Btx7NYjBnnD8
+ lV8Qlb0lencEUBXNFDmdWussMAlnxjmKhZyb30m1IgjFfG30UloZzUGCyLkr/53JMovAswmC
+ IHNtXHwb58Ikn1i2U049aFso+WtDz4BjnYBqCL1Y2F7pd8l2HmDqm2I4gubffSaRHiBbqcSB
+ lXIjJOrd6Q66u5+1Yv32qk/nOL542syYtFDH2J5wM2AWvfjZH1tMOVvVMu5Fv7+0n3x/9shY
+ ivRypCapDfcWBGGsbX5eaXpRfInaMTGaU7wmWO44Z5diHpmQgTLOrN9/MEtdkK6OVhAMVenI
+ w1UnZnA+ZfaZYShi5oFTQk3vAz7/NaA5/bNHCES4PcDZw7Y/GiIh/JQR8H1JKZ99or9LjFeg
+ HrC8YQ1nzkeDfsLtYM11oC3peHa5AiXLmCuSC9ammQ3LhkfET6N42xTu2A==
+Message-ID: <ea60aefe-f294-7e58-b53c-5f1e72b7af9e@suse.com>
+Date:   Sun, 26 Apr 2020 09:08:33 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <055fb826-895d-881b-719c-228d0cc9a7bf@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200425231436.535671-1-jojohostert@gmail.com>
+Content-Type: text/plain; charset=iso-8859-2
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 26. 04. 20, 1:14, Johannes Hostert wrote:
+> The existing ioctls VT_LOCKSWITCH and VT_UNLOCKSWITCH can be used to
+> allow/disallow switching the virtual terminal. However, no mechanism
+> exists that allows software to read this lock state.
+> 
+> Userspace programs that try to switch to another virtual terminal
+> like chvt have no mechanism to figure out whether they will be able
+> to actually switch the terminal. When eg. chvt is run while terminal
+> switching is disabled, it simply sleeps forever waiting for the target
+> terminal to become active.
+> 
+> This commit introduces a new ioctl VT_GETLOCKSWITCH that allows
+> reading the current state of the switch lock flag. Userspace
+> software can then use that flag and handle not being able to switch
+> virtual terminals.
+> 
+> Example program using this:
+> 
+> #include <linux/vt.h>
+> #include <sys/ioctl.h>
+> #include <fcntl.h>
+> #include <stdio.h>
+> #include <errno.h>
+> #include <error.h>
+> #include <unistd.h>
+> const char* console_device = "/dev/tty0";
+> int main(int argc, char* argv[]) {
+> 	int fd;
+> 	while ((fd = open(console_device, O_RDWR)) == -1 && errno == EINTR);
+> 	if (fd < 0)
+> 		error(1, errno, "Opening %s", console_device);
+>         int ret;
+> 	while ((ret = ioctl(fd, VT_GETLOCKSWITCH, 1)) == -1 && errno == EINTR);
+> 	if (ret == -1)
+> 		error(1, errno, "%s: VT_GETLOCKSWITCH", console_device);
 
-On 2020/4/26 =E4=B8=8B=E5=8D=882:58, Jason Wang wrote:
->>
->> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
->> index 1813821..8663139 100644
->> --- a/drivers/vhost/vhost.h
->> +++ b/drivers/vhost/vhost.h
->> @@ -18,6 +18,8 @@
->> =C2=A0 typedef void (*vhost_work_fn_t)(struct vhost_work *work);
->> =C2=A0 =C2=A0 #define VHOST_WORK_QUEUED 1
->> +#define VHOST_FILE_UNBIND -1
->
->
-> I think it's better to document this in uapi.=20
+And now if you do VT_LOCKSWITCH even when VT_GETLOCKSWITCH returns 0,
+vt_dont_switch can be 1 already.
 
+So NACK.
 
-I meant e.g in vhost_vring_file, we had a comment of unbinding:
+Please don't add another racy ioctl. Introduce VT_LOCKSWITCH_NONBLOCK or
+something like that instead (like respecting O_NONBLOCK).
 
-struct vhost_vring_file {
- =C2=A0=C2=A0=C2=A0 unsigned int index;
- =C2=A0=C2=A0=C2=A0 int fd; /* Pass -1 to unbind from file. */
-
-};
-
-Thanks
-
+thanks,
+-- 
+js
+suse labs
