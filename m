@@ -2,255 +2,128 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F081C55186
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F08BC55191
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A72620724
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:42:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE9C520714
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:43:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726159AbgDZCmJ (ORCPT
+        id S1726196AbgDZCnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 22:42:09 -0400
-Received: from mga17.intel.com ([192.55.52.151]:61816 "EHLO mga17.intel.com"
+        Sat, 25 Apr 2020 22:43:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:36906 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726090AbgDZCmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 22:42:08 -0400
-IronPort-SDR: 4sm4Km0Pq0U73z9aEVocn/kgf0jdNQk3FwFCe0HzltAM9NXC3NSbPAtW4C+06NYgpJPxHWNoeR
- 5g3lFuhVsong==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2020 19:42:07 -0700
-IronPort-SDR: hNsSuUGfpl72auDXpvaZ1yJrgMerMII+XB8uukMj3+FYx9LeUdvc25eAfuJyanG12kSI2WxcIg
- 3rXjaBYkpf7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,318,1583222400"; 
-   d="scan'208";a="247012510"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 25 Apr 2020 19:42:06 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jSXF7-0007Rs-C8; Sun, 26 Apr 2020 10:42:05 +0800
-Date:   Sun, 26 Apr 2020 10:41:55 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:efi/core] BUILD SUCCESS
- 4da0b2b7e67524cc206067865666899bc02e1cb0
-Message-ID: <5ea4f4f3.T6oS8rJP9s/pg+5o%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726090AbgDZCnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 22:43:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 88A7A31B;
+        Sat, 25 Apr 2020 19:43:39 -0700 (PDT)
+Received: from [10.163.1.45] (unknown [10.163.1.45])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 61C1D3F73D;
+        Sat, 25 Apr 2020 19:43:29 -0700 (PDT)
+Subject: Re: [PATCH 3/3] mm/hugetlb: Introduce HAVE_ARCH_CLEAR_HUGEPAGE_FLAGS
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1586864670-21799-1-git-send-email-anshuman.khandual@arm.com>
+ <1586864670-21799-4-git-send-email-anshuman.khandual@arm.com>
+ <20200425175511.7a68efb5e2f4436fe0328c1d@linux-foundation.org>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <87d37591-caa2-b82b-392a-3a29b2c7e9a6@arm.com>
+Date:   Sun, 26 Apr 2020 08:13:17 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20200425175511.7a68efb5e2f4436fe0328c1d@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  efi/core
-branch HEAD: 4da0b2b7e67524cc206067865666899bc02e1cb0  efi/libstub: Re-enable command line initrd loading for x86
 
-elapsed time: 747m
 
-configs tested: 188
-configs skipped: 0
+On 04/26/2020 06:25 AM, Andrew Morton wrote:
+> On Tue, 14 Apr 2020 17:14:30 +0530 Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+> 
+>> There are multiple similar definitions for arch_clear_hugepage_flags() on
+>> various platforms. This introduces HAVE_ARCH_CLEAR_HUGEPAGE_FLAGS for those
+>> platforms that need to define their own arch_clear_hugepage_flags() while
+>> also providing a generic fallback definition for others to use. This help
+>> reduce code duplication.
+>>
+>> ...
+>>
+>> --- a/include/linux/hugetlb.h
+>> +++ b/include/linux/hugetlb.h
+>> @@ -544,6 +544,10 @@ static inline int is_hugepage_only_range(struct mm_struct *mm,
+>>  }
+>>  #endif
+>>  
+>> +#ifndef HAVE_ARCH_CLEAR_HUGEPAGE_FLAGS
+>> +static inline void arch_clear_hugepage_flags(struct page *page) { }
+>> +#endif
+>> +
+>>  #ifndef arch_make_huge_pte
+>>  static inline pte_t arch_make_huge_pte(pte_t entry, struct vm_area_struct *vma,
+>>  				       struct page *page, int writable)
+> 
+> This is the rather old-school way of doing it.  The Linus-suggested way is
+> 
+> #ifndef arch_clear_hugepage_flags
+> static inline void arch_clear_hugepage_flags(struct page *page)
+> {
+> }
+> #define arch_clear_hugepage_flags arch_clear_hugepage_flags
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Do we need that above line here ? Is not that implicit.
 
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm                              allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-sparc                            allyesconfig
-s390                          debug_defconfig
-csky                                defconfig
-riscv                            allyesconfig
-xtensa                       common_defconfig
-powerpc                             defconfig
-ia64                                defconfig
-ia64                             allyesconfig
-i386                             allyesconfig
-i386                             alldefconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                              allnoconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                        generic_defconfig
-ia64                          tiger_defconfig
-ia64                         bigsur_defconfig
-ia64                             alldefconfig
-nds32                               defconfig
-nds32                             allnoconfig
-alpha                               defconfig
-nios2                         3c120_defconfig
-nios2                         10m50_defconfig
-c6x                        evmc6678_defconfig
-c6x                              allyesconfig
-openrisc                 simple_smp_defconfig
-openrisc                    or1ksim_defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-h8300                    h8300h-sim_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-xtensa                          iss_defconfig
-mips                             allyesconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                           32r2_defconfig
-mips                             allmodconfig
-mips                malta_kvm_guest_defconfig
-mips                         tb0287_defconfig
-mips                       capcella_defconfig
-mips                           ip32_defconfig
-mips                  decstation_64_defconfig
-mips                      loongson3_defconfig
-mips                          ath79_defconfig
-mips                        bcm63xx_defconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-mips                            ar7_defconfig
-parisc                            allnoconfig
-parisc                generic-64bit_defconfig
-parisc                generic-32bit_defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-parisc               randconfig-a001-20200426
-mips                 randconfig-a001-20200426
-alpha                randconfig-a001-20200426
-m68k                 randconfig-a001-20200426
-nds32                randconfig-a001-20200426
-nios2                randconfig-a001-20200424
-c6x                  randconfig-a001-20200424
-h8300                randconfig-a001-20200424
-sparc64              randconfig-a001-20200424
-microblaze           randconfig-a001-20200424
-nios2                randconfig-a001-20200426
-c6x                  randconfig-a001-20200426
-h8300                randconfig-a001-20200426
-sparc64              randconfig-a001-20200426
-microblaze           randconfig-a001-20200426
-sh                   randconfig-a001-20200424
-csky                 randconfig-a001-20200424
-s390                 randconfig-a001-20200424
-xtensa               randconfig-a001-20200424
-openrisc             randconfig-a001-20200424
-i386                 randconfig-b002-20200426
-x86_64               randconfig-b001-20200426
-i386                 randconfig-b001-20200426
-i386                 randconfig-b003-20200426
-x86_64               randconfig-b003-20200426
-x86_64               randconfig-a001-20200426
-i386                 randconfig-a003-20200426
-x86_64               randconfig-a003-20200426
-i386                 randconfig-a002-20200426
-i386                 randconfig-a001-20200426
-x86_64               randconfig-a002-20200426
-i386                 randconfig-c002-20200424
-i386                 randconfig-c001-20200424
-x86_64               randconfig-c001-20200424
-i386                 randconfig-c003-20200424
-x86_64               randconfig-c003-20200424
-x86_64               randconfig-d002-20200426
-i386                 randconfig-d002-20200426
-i386                 randconfig-d001-20200426
-i386                 randconfig-d003-20200426
-i386                 randconfig-e003-20200426
-x86_64               randconfig-e003-20200426
-i386                 randconfig-e002-20200426
-i386                 randconfig-e001-20200426
-x86_64               randconfig-e001-20200426
-i386                 randconfig-f002-20200425
-i386                 randconfig-f003-20200425
-x86_64               randconfig-f003-20200425
-i386                 randconfig-f001-20200425
-x86_64               randconfig-f001-20200425
-x86_64               randconfig-f002-20200426
-i386                 randconfig-f002-20200426
-x86_64               randconfig-f003-20200426
-i386                 randconfig-f003-20200426
-i386                 randconfig-f001-20200426
-x86_64               randconfig-f001-20200426
-i386                 randconfig-g003-20200426
-i386                 randconfig-g001-20200426
-x86_64               randconfig-g001-20200426
-x86_64               randconfig-g002-20200426
-i386                 randconfig-g002-20200426
-x86_64               randconfig-g003-20200426
-i386                 randconfig-h003-20200426
-x86_64               randconfig-h001-20200426
-x86_64               randconfig-h003-20200426
-x86_64               randconfig-h002-20200426
-i386                 randconfig-h001-20200426
-i386                 randconfig-h002-20200426
-sparc                randconfig-a001-20200426
-ia64                 randconfig-a001-20200426
-powerpc              randconfig-a001-20200426
-arm                  randconfig-a001-20200426
-arm64                randconfig-a001-20200426
-arc                  randconfig-a001-20200426
-sparc                randconfig-a001-20200425
-ia64                 randconfig-a001-20200425
-powerpc              randconfig-a001-20200425
-arm                  randconfig-a001-20200425
-arc                  randconfig-a001-20200425
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                       zfcpdump_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                                allnoconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+> #endif
+> 
+> And the various arch headers do
+> 
+> static inline void arch_clear_hugepage_flags(struct page *page)
+> {
+> 	<some implementation>
+> }
+> #define arch_clear_hugepage_flags arch_clear_hugepage_flags
+> 
+> It's a small difference - mainly to avoid adding two variables to the
+> overall namespace where one would do.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Understood, will change and resend.
+
+> 
+> 
