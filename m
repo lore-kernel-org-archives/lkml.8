@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C178C55194
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 18:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6480FC55194
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 18:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 181D4208FE
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 18:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 460EC208FE
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 18:43:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726572AbgDZSnk (ORCPT
+        id S1726581AbgDZSnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 14:43:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47864 "EHLO
+        Sun, 26 Apr 2020 14:43:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726342AbgDZSm5 (ORCPT
+        by vger.kernel.org with ESMTP id S1726315AbgDZSm4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 14:42:57 -0400
+        Sun, 26 Apr 2020 14:42:56 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C1DAC061A10;
-        Sun, 26 Apr 2020 11:42:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E5CAC061A0F;
+        Sun, 26 Apr 2020 11:42:56 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jSmEt-0007C2-Ex; Sun, 26 Apr 2020 20:42:51 +0200
+        id 1jSmEq-00079N-O7; Sun, 26 Apr 2020 20:42:48 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 122AA1C0178;
-        Sun, 26 Apr 2020 20:42:51 +0200 (CEST)
-Date:   Sun, 26 Apr 2020 18:42:50 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 639571C0330;
+        Sun, 26 Apr 2020 20:42:48 +0200 (CEST)
+Date:   Sun, 26 Apr 2020 18:42:48 -0000
 From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/mm] x86/tlb: Move flush_tlb_others() out of line
+Subject: [tip: x86/mm] x86/tlb: Move PCID helpers where they are used
 Cc:     Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>,
         Alexandre Chartre <alexandre.chartre@oracle.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200421092559.641957686@linutronix.de>
-References: <20200421092559.641957686@linutronix.de>
+In-Reply-To: <20200421092600.145772183@linutronix.de>
+References: <20200421092600.145772183@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <158792657057.28353.13010874775801822359.tip-bot2@tip-bot2>
+Message-ID: <158792656800.28353.11560387286755262359.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,133 +60,308 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/mm branch of tip:
 
-Commit-ID:     29def599b38bb8a10f48f83821dd990615300b04
-Gitweb:        https://git.kernel.org/tip/29def599b38bb8a10f48f83821dd990615300b04
+Commit-ID:     6c9b7d79a801074837c683fc996e231266ca47ae
+Gitweb:        https://git.kernel.org/tip/6c9b7d79a801074837c683fc996e231266ca47ae
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Tue, 21 Apr 2020 11:20:36 +02:00
+AuthorDate:    Tue, 21 Apr 2020 11:20:41 +02:00
 Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Sun, 26 Apr 2020 11:10:25 +02:00
+CommitterDate: Sun, 26 Apr 2020 18:49:44 +02:00
 
-x86/tlb: Move flush_tlb_others() out of line
+x86/tlb: Move PCID helpers where they are used
 
-cpu_tlbstate is exported because various TLB-related functions need
-access to it, but cpu_tlbstate is sensitive information which should
-only be accessed by well-contained kernel functions and not be directly
-exposed to modules.
-
-As a last step, move __flush_tlb_others() out of line and hide the
-native function. The latter can be static when CONFIG_PARAVIRT is
-disabled.
-
-No functional change.
+Aside of the fact that they are used only in the TLB code, especially
+having the comment close to the actual implementation makes a lot of
+sense.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Borislav Petkov <bp@suse.de>
 Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200421092559.641957686@linutronix.de
+Link: https://lkml.kernel.org/r/20200421092600.145772183@linutronix.de
 ---
- arch/x86/include/asm/paravirt.h |  6 ++++--
- arch/x86/include/asm/tlbflush.h | 10 ++++------
- arch/x86/mm/tlb.c               | 11 +++++++++--
- 3 files changed, 17 insertions(+), 10 deletions(-)
+ arch/x86/include/asm/tlbflush.h | 133 +------------------------------
+ arch/x86/mm/tlb.c               | 120 ++++++++++++++++++++++++++++-
+ 2 files changed, 126 insertions(+), 127 deletions(-)
 
-diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
-index dcd6517..5ca5d29 100644
---- a/arch/x86/include/asm/paravirt.h
-+++ b/arch/x86/include/asm/paravirt.h
-@@ -50,6 +50,8 @@ static inline void slow_down_io(void)
- void native_flush_tlb_local(void);
- void native_flush_tlb_global(void);
- void native_flush_tlb_one_user(unsigned long addr);
-+void native_flush_tlb_others(const struct cpumask *cpumask,
-+			     const struct flush_tlb_info *info);
- 
- static inline void __flush_tlb_local(void)
- {
-@@ -66,8 +68,8 @@ static inline void __flush_tlb_one_user(unsigned long addr)
- 	PVOP_VCALL1(mmu.flush_tlb_one_user, addr);
- }
- 
--static inline void flush_tlb_others(const struct cpumask *cpumask,
--				    const struct flush_tlb_info *info)
-+static inline void __flush_tlb_others(const struct cpumask *cpumask,
-+				      const struct flush_tlb_info *info)
- {
- 	PVOP_VCALL2(mmu.flush_tlb_others, cpumask, info);
- }
 diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
-index bbb94f0..d064ae8 100644
+index 1c17f5a..f973121 100644
 --- a/arch/x86/include/asm/tlbflush.h
 +++ b/arch/x86/include/asm/tlbflush.h
-@@ -140,10 +140,14 @@ static inline unsigned long build_cr3_noflush(pgd_t *pgd, u16 asid)
- 	return __sme_pa(pgd) | kern_pcid(asid) | CR3_NOFLUSH;
- }
+@@ -13,133 +13,6 @@
+ #include <asm/pti.h>
+ #include <asm/processor-flags.h>
  
-+struct flush_tlb_info;
-+
- void flush_tlb_local(void);
- void flush_tlb_global(void);
- void flush_tlb_one_user(unsigned long addr);
- void flush_tlb_one_kernel(unsigned long addr);
-+void flush_tlb_others(const struct cpumask *cpumask,
-+		      const struct flush_tlb_info *info);
+-/*
+- * The x86 feature is called PCID (Process Context IDentifier). It is similar
+- * to what is traditionally called ASID on the RISC processors.
+- *
+- * We don't use the traditional ASID implementation, where each process/mm gets
+- * its own ASID and flush/restart when we run out of ASID space.
+- *
+- * Instead we have a small per-cpu array of ASIDs and cache the last few mm's
+- * that came by on this CPU, allowing cheaper switch_mm between processes on
+- * this CPU.
+- *
+- * We end up with different spaces for different things. To avoid confusion we
+- * use different names for each of them:
+- *
+- * ASID  - [0, TLB_NR_DYN_ASIDS-1]
+- *         the canonical identifier for an mm
+- *
+- * kPCID - [1, TLB_NR_DYN_ASIDS]
+- *         the value we write into the PCID part of CR3; corresponds to the
+- *         ASID+1, because PCID 0 is special.
+- *
+- * uPCID - [2048 + 1, 2048 + TLB_NR_DYN_ASIDS]
+- *         for KPTI each mm has two address spaces and thus needs two
+- *         PCID values, but we can still do with a single ASID denomination
+- *         for each mm. Corresponds to kPCID + 2048.
+- *
+- */
+-
+-/* There are 12 bits of space for ASIDS in CR3 */
+-#define CR3_HW_ASID_BITS		12
+-
+-/*
+- * When enabled, PAGE_TABLE_ISOLATION consumes a single bit for
+- * user/kernel switches
+- */
+-#ifdef CONFIG_PAGE_TABLE_ISOLATION
+-# define PTI_CONSUMED_PCID_BITS	1
+-#else
+-# define PTI_CONSUMED_PCID_BITS	0
+-#endif
+-
+-#define CR3_AVAIL_PCID_BITS (X86_CR3_PCID_BITS - PTI_CONSUMED_PCID_BITS)
+-
+-/*
+- * ASIDs are zero-based: 0->MAX_AVAIL_ASID are valid.  -1 below to account
+- * for them being zero-based.  Another -1 is because PCID 0 is reserved for
+- * use by non-PCID-aware users.
+- */
+-#define MAX_ASID_AVAILABLE ((1 << CR3_AVAIL_PCID_BITS) - 2)
+-
+-/*
+- * 6 because 6 should be plenty and struct tlb_state will fit in two cache
+- * lines.
+- */
+-#define TLB_NR_DYN_ASIDS	6
+-
+-/*
+- * Given @asid, compute kPCID
+- */
+-static inline u16 kern_pcid(u16 asid)
+-{
+-	VM_WARN_ON_ONCE(asid > MAX_ASID_AVAILABLE);
+-
+-#ifdef CONFIG_PAGE_TABLE_ISOLATION
+-	/*
+-	 * Make sure that the dynamic ASID space does not confict with the
+-	 * bit we are using to switch between user and kernel ASIDs.
+-	 */
+-	BUILD_BUG_ON(TLB_NR_DYN_ASIDS >= (1 << X86_CR3_PTI_PCID_USER_BIT));
+-
+-	/*
+-	 * The ASID being passed in here should have respected the
+-	 * MAX_ASID_AVAILABLE and thus never have the switch bit set.
+-	 */
+-	VM_WARN_ON_ONCE(asid & (1 << X86_CR3_PTI_PCID_USER_BIT));
+-#endif
+-	/*
+-	 * The dynamically-assigned ASIDs that get passed in are small
+-	 * (<TLB_NR_DYN_ASIDS).  They never have the high switch bit set,
+-	 * so do not bother to clear it.
+-	 *
+-	 * If PCID is on, ASID-aware code paths put the ASID+1 into the
+-	 * PCID bits.  This serves two purposes.  It prevents a nasty
+-	 * situation in which PCID-unaware code saves CR3, loads some other
+-	 * value (with PCID == 0), and then restores CR3, thus corrupting
+-	 * the TLB for ASID 0 if the saved ASID was nonzero.  It also means
+-	 * that any bugs involving loading a PCID-enabled CR3 with
+-	 * CR4.PCIDE off will trigger deterministically.
+-	 */
+-	return asid + 1;
+-}
+-
+-/*
+- * Given @asid, compute uPCID
+- */
+-static inline u16 user_pcid(u16 asid)
+-{
+-	u16 ret = kern_pcid(asid);
+-#ifdef CONFIG_PAGE_TABLE_ISOLATION
+-	ret |= 1 << X86_CR3_PTI_PCID_USER_BIT;
+-#endif
+-	return ret;
+-}
+-
+-struct pgd_t;
+-static inline unsigned long build_cr3(pgd_t *pgd, u16 asid)
+-{
+-	if (static_cpu_has(X86_FEATURE_PCID)) {
+-		return __sme_pa(pgd) | kern_pcid(asid);
+-	} else {
+-		VM_WARN_ON_ONCE(asid != 0);
+-		return __sme_pa(pgd);
+-	}
+-}
+-
+-static inline unsigned long build_cr3_noflush(pgd_t *pgd, u16 asid)
+-{
+-	VM_WARN_ON_ONCE(asid > MAX_ASID_AVAILABLE);
+-	/*
+-	 * Use boot_cpu_has() instead of this_cpu_has() as this function
+-	 * might be called during early boot. This should work even after
+-	 * boot because all CPU's the have same capabilities:
+-	 */
+-	VM_WARN_ON_ONCE(!boot_cpu_has(X86_FEATURE_PCID));
+-	return __sme_pa(pgd) | kern_pcid(asid) | CR3_NOFLUSH;
+-}
+-
+ struct flush_tlb_info;
  
- #ifdef CONFIG_PARAVIRT
+ void __flush_tlb_all(void);
+@@ -153,6 +26,12 @@ void flush_tlb_others(const struct cpumask *cpumask,
  #include <asm/paravirt.h>
-@@ -418,9 +422,6 @@ static inline void flush_tlb_page(struct vm_area_struct *vma, unsigned long a)
- 	flush_tlb_mm_range(vma->vm_mm, a, a + PAGE_SIZE, PAGE_SHIFT, false);
- }
- 
--void native_flush_tlb_others(const struct cpumask *cpumask,
--			     const struct flush_tlb_info *info);
--
- static inline u64 inc_mm_tlb_gen(struct mm_struct *mm)
- {
- 	/*
-@@ -442,9 +443,6 @@ static inline void arch_tlbbatch_add_mm(struct arch_tlbflush_unmap_batch *batch,
- extern void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch);
- 
- #ifndef CONFIG_PARAVIRT
--#define flush_tlb_others(mask, info)	\
--	native_flush_tlb_others(mask, info)
--
- #define paravirt_tlb_remove_table(tlb, page) \
- 	tlb_remove_page(tlb, (void *)(page))
  #endif
+ 
++/*
++ * 6 because 6 should be plenty and struct tlb_state will fit in two cache
++ * lines.
++ */
++#define TLB_NR_DYN_ASIDS	6
++
+ struct tlb_context {
+ 	u64 ctx_id;
+ 	u64 tlb_gen;
 diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index ad217ed..209799d 100644
+index 45426ae..cf81902 100644
 --- a/arch/x86/mm/tlb.c
 +++ b/arch/x86/mm/tlb.c
-@@ -25,6 +25,7 @@
- # define __flush_tlb_local		native_flush_tlb_local
- # define __flush_tlb_global		native_flush_tlb_global
- # define __flush_tlb_one_user(addr)	native_flush_tlb_one_user(addr)
-+# define __flush_tlb_others(msk, info)	native_flush_tlb_others(msk, info)
- #endif
+@@ -49,6 +49,126 @@
+ #define LAST_USER_MM_IBPB	0x1UL
  
  /*
-@@ -715,8 +716,8 @@ static bool tlb_is_not_lazy(int cpu, void *data)
- 	return !per_cpu(cpu_tlbstate.is_lazy, cpu);
- }
- 
--void native_flush_tlb_others(const struct cpumask *cpumask,
--			     const struct flush_tlb_info *info)
-+STATIC_NOPV void native_flush_tlb_others(const struct cpumask *cpumask,
-+					 const struct flush_tlb_info *info)
- {
- 	count_vm_tlb_event(NR_TLB_REMOTE_FLUSH);
- 	if (info->end == TLB_FLUSH_ALL)
-@@ -766,6 +767,12 @@ void native_flush_tlb_others(const struct cpumask *cpumask,
- 				(void *)info, 1, cpumask);
- }
- 
-+void flush_tlb_others(const struct cpumask *cpumask,
-+		      const struct flush_tlb_info *info)
++ * The x86 feature is called PCID (Process Context IDentifier). It is similar
++ * to what is traditionally called ASID on the RISC processors.
++ *
++ * We don't use the traditional ASID implementation, where each process/mm gets
++ * its own ASID and flush/restart when we run out of ASID space.
++ *
++ * Instead we have a small per-cpu array of ASIDs and cache the last few mm's
++ * that came by on this CPU, allowing cheaper switch_mm between processes on
++ * this CPU.
++ *
++ * We end up with different spaces for different things. To avoid confusion we
++ * use different names for each of them:
++ *
++ * ASID  - [0, TLB_NR_DYN_ASIDS-1]
++ *         the canonical identifier for an mm
++ *
++ * kPCID - [1, TLB_NR_DYN_ASIDS]
++ *         the value we write into the PCID part of CR3; corresponds to the
++ *         ASID+1, because PCID 0 is special.
++ *
++ * uPCID - [2048 + 1, 2048 + TLB_NR_DYN_ASIDS]
++ *         for KPTI each mm has two address spaces and thus needs two
++ *         PCID values, but we can still do with a single ASID denomination
++ *         for each mm. Corresponds to kPCID + 2048.
++ *
++ */
++
++/* There are 12 bits of space for ASIDS in CR3 */
++#define CR3_HW_ASID_BITS		12
++
++/*
++ * When enabled, PAGE_TABLE_ISOLATION consumes a single bit for
++ * user/kernel switches
++ */
++#ifdef CONFIG_PAGE_TABLE_ISOLATION
++# define PTI_CONSUMED_PCID_BITS	1
++#else
++# define PTI_CONSUMED_PCID_BITS	0
++#endif
++
++#define CR3_AVAIL_PCID_BITS (X86_CR3_PCID_BITS - PTI_CONSUMED_PCID_BITS)
++
++/*
++ * ASIDs are zero-based: 0->MAX_AVAIL_ASID are valid.  -1 below to account
++ * for them being zero-based.  Another -1 is because PCID 0 is reserved for
++ * use by non-PCID-aware users.
++ */
++#define MAX_ASID_AVAILABLE ((1 << CR3_AVAIL_PCID_BITS) - 2)
++
++/*
++ * Given @asid, compute kPCID
++ */
++static inline u16 kern_pcid(u16 asid)
 +{
-+	__flush_tlb_others(cpumask, info);
++	VM_WARN_ON_ONCE(asid > MAX_ASID_AVAILABLE);
++
++#ifdef CONFIG_PAGE_TABLE_ISOLATION
++	/*
++	 * Make sure that the dynamic ASID space does not confict with the
++	 * bit we are using to switch between user and kernel ASIDs.
++	 */
++	BUILD_BUG_ON(TLB_NR_DYN_ASIDS >= (1 << X86_CR3_PTI_PCID_USER_BIT));
++
++	/*
++	 * The ASID being passed in here should have respected the
++	 * MAX_ASID_AVAILABLE and thus never have the switch bit set.
++	 */
++	VM_WARN_ON_ONCE(asid & (1 << X86_CR3_PTI_PCID_USER_BIT));
++#endif
++	/*
++	 * The dynamically-assigned ASIDs that get passed in are small
++	 * (<TLB_NR_DYN_ASIDS).  They never have the high switch bit set,
++	 * so do not bother to clear it.
++	 *
++	 * If PCID is on, ASID-aware code paths put the ASID+1 into the
++	 * PCID bits.  This serves two purposes.  It prevents a nasty
++	 * situation in which PCID-unaware code saves CR3, loads some other
++	 * value (with PCID == 0), and then restores CR3, thus corrupting
++	 * the TLB for ASID 0 if the saved ASID was nonzero.  It also means
++	 * that any bugs involving loading a PCID-enabled CR3 with
++	 * CR4.PCIDE off will trigger deterministically.
++	 */
++	return asid + 1;
 +}
 +
- /*
-  * See Documentation/x86/tlb.rst for details.  We choose 33
-  * because it is large enough to cover the vast majority (at
++/*
++ * Given @asid, compute uPCID
++ */
++static inline u16 user_pcid(u16 asid)
++{
++	u16 ret = kern_pcid(asid);
++#ifdef CONFIG_PAGE_TABLE_ISOLATION
++	ret |= 1 << X86_CR3_PTI_PCID_USER_BIT;
++#endif
++	return ret;
++}
++
++static inline unsigned long build_cr3(pgd_t *pgd, u16 asid)
++{
++	if (static_cpu_has(X86_FEATURE_PCID)) {
++		return __sme_pa(pgd) | kern_pcid(asid);
++	} else {
++		VM_WARN_ON_ONCE(asid != 0);
++		return __sme_pa(pgd);
++	}
++}
++
++static inline unsigned long build_cr3_noflush(pgd_t *pgd, u16 asid)
++{
++	VM_WARN_ON_ONCE(asid > MAX_ASID_AVAILABLE);
++	/*
++	 * Use boot_cpu_has() instead of this_cpu_has() as this function
++	 * might be called during early boot. This should work even after
++	 * boot because all CPU's the have same capabilities:
++	 */
++	VM_WARN_ON_ONCE(!boot_cpu_has(X86_FEATURE_PCID));
++	return __sme_pa(pgd) | kern_pcid(asid) | CR3_NOFLUSH;
++}
++
++/*
+  * We get here when we do something requiring a TLB invalidation
+  * but could not go invalidate all of the contexts.  We do the
+  * necessary invalidation by clearing out the 'ctx_id' which
