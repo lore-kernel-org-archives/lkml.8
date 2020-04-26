@@ -2,150 +2,255 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D4CC55186
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F081C55186
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2FD020714
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:42:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=daemons-net.20150623.gappssmtp.com header.i=@daemons-net.20150623.gappssmtp.com header.b="pzZUWK2z"
+	by mail.kernel.org (Postfix) with ESMTP id 0A72620724
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:42:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726152AbgDZCmB (ORCPT
+        id S1726159AbgDZCmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 22:42:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40736 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726108AbgDZCl7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 22:41:59 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 362C1C09B04F
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 19:41:58 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id 145so6966092pfw.13
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Apr 2020 19:41:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daemons-net.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8IYtAFbciShiT0fdAfMZ7efWbaDf5FVfgYocgiOQmLY=;
-        b=pzZUWK2zE3hDKPt0z+xKXHSnYR5OsS66t3vLlXJdGANDheH4kv3ix2G7IwwIfuM/++
-         5cx+gvqppJ7Sw9M9gr67rXDNiV9ZBcy87U30CzoqgLnT1bofMIpVfFcBhnTOU0srlMiB
-         14ahowJMGii7i3/TcN4bmLIAbz6dRnUDgZwF2eWv+iYYegH7WJQEEWsWPbANIE+fxQyN
-         qzU3Zb6hlWv4PuQfdZ+RBs4Hh8tnh/52iVG04WpcV3xamYthlY8mLoFfASV1u+NR8Hwv
-         u+gok2cabH2OyWHTzPU7NoyIwPgAYV09NyQy1SxMjU8t70QtLfcsfYSUlV69pTZ+MhEQ
-         Jy5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8IYtAFbciShiT0fdAfMZ7efWbaDf5FVfgYocgiOQmLY=;
-        b=MC8pTH9QIaP2J/nbyiAqoh4k92UD2M05zoreQJHkNgdxU3JKbO2f5BPr/2JblKoVGT
-         vAYDTVhHn8FdWSnSQXFAwTuhZZyWciv4HO7xg3s7G37hHL+hjaBN9ALphvdoQumITxCl
-         dQYY0c6pJo5Zm8lroFRx4wmx0QTCtHe2fXWiIuHmKy3jzki6h/4RJCNYDuV3zS63AHHp
-         OeyqLHDd/SxBBTdg5c5HPeWm7Uzxwj+zgI1I0yhR+s8dzSoJHoooIwynZx9WbEYWL9ht
-         PvBR9tsPoJsMRiK9lBWTv4ifapmC6uUDZ3YZXBuZMenBozy6QhMqeW+Bxlu9yoGptc2H
-         OPXg==
-X-Gm-Message-State: AGi0PuZggSDfOz8i7hb0ixfGhxmipCswlqBVorDs3e0sfktWKH2zfJyB
-        VI7O+aw8cVv4t5+y5ksYxUjf
-X-Google-Smtp-Source: APiQypKanNvXzEfJDheKFu5G0bbgJXwkyIReS7EZeZs81CHXrv8w7saQmPQLndnf0ytO7863V9mstA==
-X-Received: by 2002:a63:7901:: with SMTP id u1mr16081297pgc.409.1587868917553;
-        Sat, 25 Apr 2020 19:41:57 -0700 (PDT)
-Received: from arctic-shiba-lx ([47.156.151.166])
-        by smtp.gmail.com with ESMTPSA id 13sm9074035pfv.95.2020.04.25.19.41.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Apr 2020 19:41:56 -0700 (PDT)
-Date:   Sat, 25 Apr 2020 19:41:48 -0700
-From:   Clay McClure <clay@daemons.net>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Networking <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: cpts: Condition WARN_ON on PTP_1588_CLOCK
-Message-ID: <20200426024148.GA7518@arctic-shiba-lx>
-References: <6fef3a00-6c18-b775-d1b4-dfd692261bd3@ti.com>
- <20200420093610.GA28162@arctic-shiba-lx>
- <CAK8P3a36ZxNJxUS4UzrwJiMx8UrgYPkcv4X6yYw7EC4jRBbbGQ@mail.gmail.com>
- <20200420170051.GB11862@localhost>
- <CAK8P3a11CqpDJzjy5QfV-ebHgRxUu8SRVTJPPmsus1O1+OL72Q@mail.gmail.com>
- <20200420211819.GA16930@localhost>
- <CAK8P3a18540y3zqR=mqKhj-goinN3c-FGKvAnTHnLgBxiPa4mA@mail.gmail.com>
- <20200420213406.GB20996@localhost>
- <CAK8P3a22aSbpcVK-cZ6rhnPgbYEGU3z__G9xk1EexOPZd5Hmzw@mail.gmail.com>
- <c04458ed-29ee-1797-3a11-7f3f560553e6@ti.com>
+        Sat, 25 Apr 2020 22:42:09 -0400
+Received: from mga17.intel.com ([192.55.52.151]:61816 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726090AbgDZCmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 22:42:08 -0400
+IronPort-SDR: 4sm4Km0Pq0U73z9aEVocn/kgf0jdNQk3FwFCe0HzltAM9NXC3NSbPAtW4C+06NYgpJPxHWNoeR
+ 5g3lFuhVsong==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2020 19:42:07 -0700
+IronPort-SDR: hNsSuUGfpl72auDXpvaZ1yJrgMerMII+XB8uukMj3+FYx9LeUdvc25eAfuJyanG12kSI2WxcIg
+ 3rXjaBYkpf7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,318,1583222400"; 
+   d="scan'208";a="247012510"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga007.fm.intel.com with ESMTP; 25 Apr 2020 19:42:06 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jSXF7-0007Rs-C8; Sun, 26 Apr 2020 10:42:05 +0800
+Date:   Sun, 26 Apr 2020 10:41:55 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:efi/core] BUILD SUCCESS
+ 4da0b2b7e67524cc206067865666899bc02e1cb0
+Message-ID: <5ea4f4f3.T6oS8rJP9s/pg+5o%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c04458ed-29ee-1797-3a11-7f3f560553e6@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 02:16:11PM +0300, Grygorii Strashko wrote:
-> 
-> On 21/04/2020 00:42, Arnd Bergmann wrote:
-> >
-> > On Mon, Apr 20, 2020 at 11:34 PM Richard Cochran
-> > >
-> > > To be clear, do you all see a need to change the stubbed version of
-> > > ptp_clock_register() or not?
-> > 
-> > No, if the NULL return is only meant to mean "nothing wrong, keep going
-> > wihtout an object", that's fine with me. It does occasionally confuse driver
-> > writers (as seen here), so it's not a great interface, but there is no general
-> > solution to make it better.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  efi/core
+branch HEAD: 4da0b2b7e67524cc206067865666899bc02e1cb0  efi/libstub: Re-enable command line initrd loading for x86
 
-That's why in my first patch I condition the WARN_ON() on PTP_1588_CLOCK,
-since without that the null pointer here is not an error:
+elapsed time: 747m
 
-	void cpts_unregister(struct cpts *cpts)                                         
-	{                                                                               
-		if (WARN_ON(!cpts->clock))                                              
-			return;                                                         
+configs tested: 188
+configs skipped: 0
 
-Grygorii's question (paraphrasing: "why would you ever do that?")
-prompted my second patch, making the broken configuration obvious by
-emitting an error during `ifup`, instead of just a warning during
-`ifdown`.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-But I think Grygorii is on to something here:
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm                              allmodconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+arm                           efm32_defconfig
+arm                         at91_dt_defconfig
+arm                        shmobile_defconfig
+arm64                               defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                           sunxi_defconfig
+arm                        multi_v7_defconfig
+sparc                            allyesconfig
+s390                          debug_defconfig
+csky                                defconfig
+riscv                            allyesconfig
+xtensa                       common_defconfig
+powerpc                             defconfig
+ia64                                defconfig
+ia64                             allyesconfig
+i386                             allyesconfig
+i386                             alldefconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                        generic_defconfig
+ia64                          tiger_defconfig
+ia64                         bigsur_defconfig
+ia64                             alldefconfig
+nds32                               defconfig
+nds32                             allnoconfig
+alpha                               defconfig
+nios2                         3c120_defconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+c6x                              allyesconfig
+openrisc                 simple_smp_defconfig
+openrisc                    or1ksim_defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+h8300                    h8300h-sim_defconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+arc                                 defconfig
+arc                              allyesconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+xtensa                          iss_defconfig
+mips                             allyesconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+mips                malta_kvm_guest_defconfig
+mips                         tb0287_defconfig
+mips                       capcella_defconfig
+mips                           ip32_defconfig
+mips                  decstation_64_defconfig
+mips                      loongson3_defconfig
+mips                          ath79_defconfig
+mips                        bcm63xx_defconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+mips                            ar7_defconfig
+parisc                            allnoconfig
+parisc                generic-64bit_defconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+parisc               randconfig-a001-20200426
+mips                 randconfig-a001-20200426
+alpha                randconfig-a001-20200426
+m68k                 randconfig-a001-20200426
+nds32                randconfig-a001-20200426
+nios2                randconfig-a001-20200424
+c6x                  randconfig-a001-20200424
+h8300                randconfig-a001-20200424
+sparc64              randconfig-a001-20200424
+microblaze           randconfig-a001-20200424
+nios2                randconfig-a001-20200426
+c6x                  randconfig-a001-20200426
+h8300                randconfig-a001-20200426
+sparc64              randconfig-a001-20200426
+microblaze           randconfig-a001-20200426
+sh                   randconfig-a001-20200424
+csky                 randconfig-a001-20200424
+s390                 randconfig-a001-20200424
+xtensa               randconfig-a001-20200424
+openrisc             randconfig-a001-20200424
+i386                 randconfig-b002-20200426
+x86_64               randconfig-b001-20200426
+i386                 randconfig-b001-20200426
+i386                 randconfig-b003-20200426
+x86_64               randconfig-b003-20200426
+x86_64               randconfig-a001-20200426
+i386                 randconfig-a003-20200426
+x86_64               randconfig-a003-20200426
+i386                 randconfig-a002-20200426
+i386                 randconfig-a001-20200426
+x86_64               randconfig-a002-20200426
+i386                 randconfig-c002-20200424
+i386                 randconfig-c001-20200424
+x86_64               randconfig-c001-20200424
+i386                 randconfig-c003-20200424
+x86_64               randconfig-c003-20200424
+x86_64               randconfig-d002-20200426
+i386                 randconfig-d002-20200426
+i386                 randconfig-d001-20200426
+i386                 randconfig-d003-20200426
+i386                 randconfig-e003-20200426
+x86_64               randconfig-e003-20200426
+i386                 randconfig-e002-20200426
+i386                 randconfig-e001-20200426
+x86_64               randconfig-e001-20200426
+i386                 randconfig-f002-20200425
+i386                 randconfig-f003-20200425
+x86_64               randconfig-f003-20200425
+i386                 randconfig-f001-20200425
+x86_64               randconfig-f001-20200425
+x86_64               randconfig-f002-20200426
+i386                 randconfig-f002-20200426
+x86_64               randconfig-f003-20200426
+i386                 randconfig-f003-20200426
+i386                 randconfig-f001-20200426
+x86_64               randconfig-f001-20200426
+i386                 randconfig-g003-20200426
+i386                 randconfig-g001-20200426
+x86_64               randconfig-g001-20200426
+x86_64               randconfig-g002-20200426
+i386                 randconfig-g002-20200426
+x86_64               randconfig-g003-20200426
+i386                 randconfig-h003-20200426
+x86_64               randconfig-h001-20200426
+x86_64               randconfig-h003-20200426
+x86_64               randconfig-h002-20200426
+i386                 randconfig-h001-20200426
+i386                 randconfig-h002-20200426
+sparc                randconfig-a001-20200426
+ia64                 randconfig-a001-20200426
+powerpc              randconfig-a001-20200426
+arm                  randconfig-a001-20200426
+arm64                randconfig-a001-20200426
+arc                  randconfig-a001-20200426
+sparc                randconfig-a001-20200425
+ia64                 randconfig-a001-20200425
+powerpc              randconfig-a001-20200425
+arm                  randconfig-a001-20200425
+arc                  randconfig-a001-20200425
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                       zfcpdump_defconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                             alldefconfig
+s390                                defconfig
+sh                          rsk7269_defconfig
+sh                               allmodconfig
+sh                            titan_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
 
-> Another question is that CPTS completely nonfunctional in this case and
-> it was never expected that somebody will even try to use/run such
-> configuration (except for random build purposes).
-
-So, let's not allow it. In my view, commit d1cbfd771ce8 ("ptp_clock:
-Allow for it to be optional") went a bit too far, and converted even
-clearly PTP-specific modules from `select` to `imply` PTP_1588_CLOCK,
-which is what made this broken configuration possible. I suggest
-reverting that change, just for the PTP-specific modules under
-drivers/net/ethernet.
-
-I audited all drivers that call `ptp_clock_register()`; it looks like
-these should `select` (instead of merely `imply`) PTP_1588_CLOCK:
-
-    NET_DSA_MV88E6XXX_PTP
-    NET_DSA_SJA1105_PTP
-    MACB_USE_HWSTAMP
-    CAVIUM_PTP
-    TI_CPTS_MOD
-    PTP_1588_CLOCK_IXP46X
-
-Note how they all reference PTP or timestamping in their name, which is
-a clue that they depend on PTP_1588_CLOCK.
-
-I have a patch for this, but first, a procedural question: does mailing
-list etiquette dictate that I reply to this thread with the new patch,
-or does it begin a new thread?
-
--- 
-Clay
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
