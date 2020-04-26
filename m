@@ -2,164 +2,176 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A3BC55191
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 983E9C5519A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE9BD20700
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77AA02084D
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:39:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jtx4Mp4g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbgDZJgn (ORCPT
+        id S1726156AbgDZJjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 05:36:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58476 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726112AbgDZJgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 05:36:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 00F74ACC4;
-        Sun, 26 Apr 2020 09:36:39 +0000 (UTC)
-Subject: Re: [PATCH V2] bcache: fix potential deadlock problem in
- btree_gc_coalesce
-To:     Zhiqiang Liu <liuzhiqiang26@huawei.com>, kmo@daterainc.com,
-        linux-bcache@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "wubo (T)" <wubo40@huawei.com>,
-        Mingfangsen <mingfangsen@huawei.com>,
-        Yanxiaodan <yanxiaodan@huawei.com>,
-        linfeilong <linfeilong@huawei.com>,
-        renxudong <renxudong1@huawei.com>
-References: <8a6f5fe3-33f9-48e2-e347-05781c3295fd@huawei.com>
-From:   Coly Li <colyli@suse.de>
-Autocrypt: addr=colyli@suse.de; keydata=
- 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
-Message-ID: <e01be1b7-e59c-24e2-3923-917d27fa097a@suse.de>
-Date:   Sun, 26 Apr 2020 17:36:35 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <8a6f5fe3-33f9-48e2-e347-05781c3295fd@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Sun, 26 Apr 2020 05:39:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48590 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726112AbgDZJjU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 05:39:20 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15E4DC061A0C;
+        Sun, 26 Apr 2020 02:39:18 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id t4so427760plr.0;
+        Sun, 26 Apr 2020 02:39:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=YVsxCnebxifmDBwxjT1fH4HMDs9oBu6XSeSoPFuESmw=;
+        b=jtx4Mp4gTuzQyxoO7zkNiYH6cfBfU58l9H3W6+KFourVv/nZdNRu8IpL8gIXLTrtI7
+         xY++WEqTRi32qBFF/Fh0HaUyMib8F8PS/9VslS9Y6P3X5EdpigAR/blaB3/8Bf7G3zQ1
+         HTLtIFAf7Da+Ha2WyqAPoFpxByFY/zB+YChtROfDbfoyBX9/NxQf0YKXNIuWD+YrXCdX
+         yf/AXhmWwWpzwP/GF7VrspNzWCT9WalV0GomfNY1daGBI3veN6a2v1mUOdkqMM0TzZkY
+         RHx4Q722sl+8Eqkhq0OG/0dC5pAYAoC35JJN8/fozgbYDZVw/9tlCbzSQUbb6wyH8kxb
+         OnGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=YVsxCnebxifmDBwxjT1fH4HMDs9oBu6XSeSoPFuESmw=;
+        b=UThqFg7vziqYVbJroEAwfTWQSHH+aII2uc/yJay3gb+40ouDr8ejDe4B5A3K8J22L9
+         aina6c7N7/xhr+9B63d3vd69INoypf+Oqg+S/4LZfql/oZuvy7OAZs9h5Y4gQQwuXr6A
+         gM+nvgywTqyUao750VSkXxtdqOcqKZ2ViXxjvGruXVrGC2FUNkoFbuDKil2EO05z/0tO
+         bJNNrBCfIMUJIU9/y7XVU87F3tTGXDzfrIZCq1zQhH8Xr94ZMfgAYTSrpVD7drO4RNLY
+         1hSheGpG84N56mVpY85g2oAocfUvP4p2Ie6VKtaHGF7qt6vL7kaGBn6DC2+un3k9tDQ1
+         H+ag==
+X-Gm-Message-State: AGi0PuYqZEOHx9L1fpxzi6fMdtlzoHaEPL8f9u3dIsIY/sQCVinIDKjV
+        jhIkahaXO2ZxSl9KJ+8+6fU=
+X-Google-Smtp-Source: APiQypLwkX+HozorDPIzAYErvQqpXWR22PEjsHsIpDHCfNLEEVEbD686I5Olw3lY2GjIqQNdx7qW8Q==
+X-Received: by 2002:a17:90a:20ea:: with SMTP id f97mr17157742pjg.157.1587893957380;
+        Sun, 26 Apr 2020 02:39:17 -0700 (PDT)
+Received: from localhost.localdomain ([45.135.186.129])
+        by smtp.gmail.com with ESMTPSA id m129sm1835245pga.47.2020.04.26.02.39.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Apr 2020 02:39:16 -0700 (PDT)
+From:   Baolin Wang <baolin.wang7@gmail.com>
+To:     axboe@kernel.dk, ulf.hansson@linaro.org, adrian.hunter@intel.com
+Cc:     arnd@arndb.de, linus.walleij@linaro.org, paolo.valente@linaro.org,
+        ming.lei@redhat.com, orsonzhai@gmail.com, zhang.lyra@gmail.com,
+        baolin.wang7@gmail.com, linux-mmc@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v2 0/7] Add MMC packed request support
+Date:   Sun, 26 Apr 2020 17:38:53 +0800
+Message-Id: <cover.1587888520.git.baolin.wang7@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/26 16:06, Zhiqiang Liu wrote:
-> From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-> 
-> coccicheck reports:
->   drivers/md//bcache/btree.c:1538:1-7: preceding lock on line 1417
-> 
-> btree_gc_coalesce func is designed to coalesce two adjacent nodes in
-> new_nodes[GC_MERGE_NODES] and finally release one node. All nodes`write_lock,
-> new_nodes[i]->write_lock, are holded before coalescing adjacent nodes,
-> and them will be released after coalescing successfully.
-> 
-> However, if the coalescing process fails, such as no enough space of new_nodes[1]
-> to fit all of the remaining keys in new_nodes[0] and realloc keylist failed, we
-> will goto to out_nocoalesce tag directly without releasing new_nodes[i]->write_lock.
-> Then, a deadlock will occur after calling btree_node_free to free new_nodes[i],
-> which also try to acquire new_nodes[i]->write_lock.
-> 
-> Here, we add a new tag 'out_unlock_nocoalesce' before out_nocoalesce tag to release
-> new_nodes[i]->write_lock when coalescing process fails.
-> 
-> --
-> V1->V2: rewrite commit log (suggested by Coly Li) and rename the patch
-> 
-> Fixes: 2a285686c1 ("bcache: btree locking rework")
-> Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Hi All,
 
-OK, I will add it to my for-test queue.
+Now some SD/MMC controllers can support packed command or packed request,
+that means it can package multiple requests to host controller to be handled
+at one time, which can improve the I/O performence. Thus this patch set
+tries to add the MMC packed request function to support packed request or
+packed command.
 
-Thanks.
+In this patch set, I extanded commit_rqs() to do batch processing suggested
+by Ming, to allow dispatching a batch of requests to hardware and expanded
+the MMC software queue to support packed request. I also implemented the
+SD host ADMA3 transfer mode to support packed request. The ADMA3 transfer
+mode can process a multi-block data transfer by using a pair of command
+descriptor and ADMA2 descriptor. In future we can easily expand the MMC
+packed function to support packed command.
 
-Coly Li
+Below are some comparison data between packed request and non-packed request
+with fio tool. The fio command I used is like below with changing the
+'--rw' parameter and enabling the direct IO flag to measure the actual hardware
+transfer speed. I tested 5 times for each case and output a average speed.
 
+./fio --filename=/dev/mmcblk0p30 --direct=1 --iodepth=20 --rw=read --bs=4K --size=512M --group_reporting --numjobs=20 --name=test_read
 
-> ---
->  drivers/md/bcache/btree.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
-> index fa872df4e770..cad8b0b97e33 100644
-> --- a/drivers/md/bcache/btree.c
-> +++ b/drivers/md/bcache/btree.c
-> @@ -1447,7 +1447,7 @@ static int btree_gc_coalesce(struct btree *b, struct btree_op *op,
->  			if (__set_blocks(n1, n1->keys + n2->keys,
->  					 block_bytes(b->c)) >
->  			    btree_blocks(new_nodes[i]))
-> -				goto out_nocoalesce;
-> +				goto out_unlock_nocoalesce;
-> 
->  			keys = n2->keys;
->  			/* Take the key of the node we're getting rid of */
-> @@ -1476,7 +1476,7 @@ static int btree_gc_coalesce(struct btree *b, struct btree_op *op,
-> 
->  		if (__bch_keylist_realloc(&keylist,
->  					  bkey_u64s(&new_nodes[i]->key)))
-> -			goto out_nocoalesce;
-> +			goto out_unlock_nocoalesce;
-> 
->  		bch_btree_node_write(new_nodes[i], &cl);
->  		bch_keylist_add(&keylist, &new_nodes[i]->key);
-> @@ -1522,6 +1522,10 @@ static int btree_gc_coalesce(struct btree *b, struct btree_op *op,
->  	/* Invalidated our iterator */
->  	return -EINTR;
-> 
-> +out_unlock_nocoalesce:
-> +	for (i = 0; i < nodes; i++)
-> +		mutex_unlock(&new_nodes[i]->write_lock);
-> +
->  out_nocoalesce:
->  	closure_sync(&cl);
-> 
+My eMMC card working at HS400 Enhanced strobe mode:
+[    2.229856] mmc0: new HS400 Enhanced strobe MMC card at address 0001
+[    2.237566] mmcblk0: mmc0:0001 HBG4a2 29.1 GiB
+[    2.242621] mmcblk0boot0: mmc0:0001 HBG4a2 partition 1 4.00 MiB
+[    2.249110] mmcblk0boot1: mmc0:0001 HBG4a2 partition 2 4.00 MiB
+[    2.255307] mmcblk0rpmb: mmc0:0001 HBG4a2 partition 3 4.00 MiB, chardev (248:0)
+
+1. Non-packed request
+1) Sequential read:
+Speed: 59.2MiB/s, 60.4MiB/s, 63.6MiB/s, 60.3MiB/s, 59.9MiB/s
+Average speed: 60.68MiB/s
+
+2) Random read:
+Speed: 31.3MiB/s, 31.4MiB/s, 31.5MiB/s, 31.3MiB/s, 31.3MiB/s
+Average speed: 31.36MiB/s
+
+3) Sequential write:
+Speed: 71MiB/s, 71.8MiB/s, 72.3MiB/s, 72.2MiB/s, 71MiB/s
+Average speed: 71.66MiB/s
+
+4) Random write:
+Speed: 68.9MiB/s, 68.7MiB/s, 68.8MiB/s, 68.6MiB/s, 68.8MiB/s
+Average speed: 68.76MiB/s
+
+2. Packed request
+1) Sequential read:
+Speed: 230MiB/s, 230MiB/s, 229MiB/s, 230MiB/s, 229MiB/s
+Average speed: 229.6MiB/s
+
+2) Random read:
+Speed: 181MiB/s, 181MiB/s, 181MiB/s, 180MiB/s, 181MiB/s
+Average speed: 180.8MiB/s
+
+3) Sequential write:
+Speed: 175MiB/s, 171MiB/s, 171MiB/s, 172MiB/s, 171MiB/s
+Average speed: 172MiB/s
+
+4) Random write:
+Speed: 169MiB/s, 169MiB/s, 171MiB/s, 167MiB/s, 170MiB/s
+Average speed: 169.2MiB/s
+
+From above data, we can see the packed request can improve the performance
+greatly. Any comments are welcome. Thanks a lot.
+
+Changes from RFC v1:
+ - Re-implement the batch processing according to Ming's suggestion
+ - Remove the bd.last validation in MMC block.c, since we always get bd.last == false
+ according to the new batch processing method.
+
+Baolin Wang (6):
+  mmc: Add MMC packed request support for MMC software queue
+  mmc: host: sdhci: Introduce ADMA3 transfer mode
+  mmc: host: sdhci: Factor out the command configuration
+  mmc: host: sdhci: Remove redundant sg_count member of struct
+    sdhci_host
+  mmc: host: sdhci: Add MMC packed request support
+  mmc: host: sdhci-sprd: Add MMC packed request support
+
+Ming Lei (1):
+  block: Extand commit_rqs() to do batch processing
+
+ block/blk-mq-sched.c          |  29 +-
+ block/blk-mq.c                |  15 +-
+ drivers/mmc/core/block.c      |  14 +
+ drivers/mmc/core/core.c       |  26 ++
+ drivers/mmc/core/core.h       |   2 +
+ drivers/mmc/core/queue.c      |  19 +-
+ drivers/mmc/host/mmc_hsq.c    | 292 +++++++++++++++++---
+ drivers/mmc/host/mmc_hsq.h    |  25 +-
+ drivers/mmc/host/sdhci-sprd.c |  30 +-
+ drivers/mmc/host/sdhci.c      | 504 +++++++++++++++++++++++++++++-----
+ drivers/mmc/host/sdhci.h      |  61 +++-
+ include/linux/blk-mq.h        |   1 +
+ include/linux/mmc/core.h      |   6 +
+ include/linux/mmc/host.h      |   9 +
+ 14 files changed, 900 insertions(+), 133 deletions(-)
+
+-- 
+2.17.1
 
