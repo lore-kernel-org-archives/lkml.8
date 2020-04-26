@@ -2,125 +2,79 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CD6C55185
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 01:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF124C55185
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 01:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98B22206BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 01:08:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fWHUgPyU"
+	by mail.kernel.org (Postfix) with ESMTP id C89C0206DD
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 01:12:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726147AbgDZBIq (ORCPT
+        id S1726146AbgDZBMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 21:08:46 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:7411 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbgDZBIq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 21:08:46 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ea4dea60000>; Sat, 25 Apr 2020 18:06:46 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sat, 25 Apr 2020 18:08:45 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sat, 25 Apr 2020 18:08:45 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 26 Apr
- 2020 01:08:45 +0000
-Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 26 Apr
- 2020 01:08:44 +0000
-Subject: Re: [RFC PATCH v10 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <sakari.ailus@iki.fi>,
-        <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1587700513-28449-1-git-send-email-skomatineni@nvidia.com>
- <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
- <6ca93ff9-ca59-544f-767c-4355d01a5c20@gmail.com>
- <62546d1f-eca5-06be-2bc2-e45ccd53830a@xs4all.nl>
- <50fd1016-ca8b-ec5d-e5a8-f257138b152e@gmail.com>
- <658c4232-94d9-3051-8c93-bff7046cf5f2@nvidia.com>
-Message-ID: <03426915-25ea-69b4-bc64-f87f3046d33f@nvidia.com>
-Date:   Sat, 25 Apr 2020 18:08:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sat, 25 Apr 2020 21:12:40 -0400
+Received: from mga14.intel.com ([192.55.52.115]:56108 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725962AbgDZBMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 21:12:39 -0400
+IronPort-SDR: Ohg5ZgjfqGPCzbG9hMZU1spJUefCZctE3/xpvi1nIal1E9PAaQIOLbARWtdEzNwdCFNySTaT8I
+ MKa+K5/j/Trw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2020 18:12:39 -0700
+IronPort-SDR: E0PaXR6SgtLoPZZ6Fl30EBuRJNdficUP+tz/52yiPZcHuZ702sL2SzLvUa75IZj/qLDqmv0lZV
+ /UXgXJyt7Ycw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,318,1583222400"; 
+   d="scan'208";a="275033011"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 25 Apr 2020 18:12:38 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jSVqX-0004u5-Kl; Sun, 26 Apr 2020 09:12:37 +0800
+Date:   Sun, 26 Apr 2020 09:12:02 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/microcode] BUILD SUCCESS
+ 9adbf3c609af92a57a73000a3cb8f4c2d307dfa3
+Message-ID: <5ea4dfe2.ahqjhJBQsD3Deak2%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <658c4232-94d9-3051-8c93-bff7046cf5f2@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587863206; bh=92MRw1LvU1KIc1wN0RoVrY6gmU+4rftF+SanSTPgbKE=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=fWHUgPyUC3inioYVyMaglDD/GVdsNsf480njQsTzQmOnTY+KOz/Q5mDLFC8mgY1om
-         vLgWcUpUSq2Yj6aI0/lthGzv2DE5gy3rxc0PA7ErDfN7SxccDH/7r0rk60vnQQzXEm
-         yw0W0Sb/lis0JOz1CZbHnC5yyuUWy6cSc+bvBT9Eg6bUmgO6ZKyEZM/4whD6h64dnX
-         N6PZOCleVkOTFhpKmPT8KPRMb7KKuF9n8r+BCkDJ6kZ/NhXeRK1qi1ef9G2dnb3w7e
-         +LsBeoEiKLzP4DptYuPtdldrFsVVNOntiuRnbQXQR/OlLewDNH9d+1qhcSjjjmceY/
-         mi3o0eFNMc9wQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/microcode
+branch HEAD: 9adbf3c609af92a57a73000a3cb8f4c2d307dfa3  x86/microcode: Fix return value for microcode late loading
 
-On 4/25/20 5:41 PM, Sowjanya Komatineni wrote:
->
-> On 4/25/20 5:36 PM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> 25.04.2020 12:36, Hans Verkuil =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> ...
->>>> The media/tegra/ sounds a bit too generic, the media/tegra-vi/ path
->>>> should better reflect the driver, IMO.
->>>>
->>>> It also should be better to name the compiled kernel module as=20
->>>> tegra-vi,
->>>> IMO.
->>>>
->>> The driver name and the directory should be in sync, so either=20
->>> tegra-video
->>> or tegra-vi for both. I have no preference myself, as long as they=20
->>> are the
->>> same.
->>>
->>> This can be done as a follow-up patch.
->> Given that this driver isn't going to be reused by older pre-Tegra210
->> SoCs, perhaps it will also be worthwhile to name it as tegra210-vi or
->> tegra210-video.
->
-> Can you explain what do you meant by can't be reused for pre-tegra210=20
-> or for tegra186/194?
->
-> support for other tegra's can be added to same tegra-video driver.=20
-> tegra-video host1x driver can be updated to add other tegra's vi and=20
-> csi compatibles to host1x subdevs and vi and csi driver can be updated=20
-> to add other tegra soc data and need to add coresponding=20
-> tegra186/194/xxx.c file with tegra specific prog sequence
->
-Same tegra-video.ko can be used for all tegra soc as driver supports=20
-adding other soc related as well.
+elapsed time: 4642m
 
-Also was thinking instead of renaming media/tegra as media/tegra-vi,=20
-probably we can rename as media/tegra-video so it will be inline with=20
-module name we already chosen and also mainly we have vi and csi with in=20
-that so instead of tegra-vi probably we can use media/tegra-video?
+configs tested: 12
+configs skipped: 97
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+i386                             allyesconfig
+i386                             alldefconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+x86_64                                   rhel
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                         rhel-7.2-clear
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-7.6
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
