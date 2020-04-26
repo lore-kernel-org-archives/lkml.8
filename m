@@ -2,99 +2,84 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C485DC55199
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 19:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98825C55194
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 19:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2C8D20700
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 19:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B76E20700
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 19:40:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N9KWcFUX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KCgMIiRV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726264AbgDZThW (ORCPT
+        id S1726260AbgDZTkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 15:37:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56278 "EHLO
+        Sun, 26 Apr 2020 15:40:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726188AbgDZThW (ORCPT
+        by vger.kernel.org with ESMTP id S1726171AbgDZTkw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 15:37:22 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00E1BC061A0F;
-        Sun, 26 Apr 2020 12:37:21 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id x4so17195877wmj.1;
-        Sun, 26 Apr 2020 12:37:21 -0700 (PDT)
+        Sun, 26 Apr 2020 15:40:52 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44C97C061A0F;
+        Sun, 26 Apr 2020 12:40:52 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id p25so7740436pfn.11;
+        Sun, 26 Apr 2020 12:40:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gynnlawwP2L58lK7U6nOs2p5nD3J7jQ46S/46O9Sglk=;
-        b=N9KWcFUX8Mo/Kasy1wW9DyZlzZceVD/CE6XLQh316tO+ezDNx6lxerDWRM/EUjewsb
-         4J6UUjQVwoQZoMogoMySyTkErWUdm6SGsSbkDApKXQgCp2pamxe0toej7Q9ucGa5Gnm+
-         eyeiVusmZD1eHS0aHgb+8Vd//q3bCIKayqqkJfAniMmlEtfl8hi8vOsomkq+Z51LPgD6
-         42K5gO6TEH+vJnmiIm9m1+lLbqOQOEigtxE9AsFksajKLQtUPtFpwqYx2WEqqcMq2ps5
-         ugdFvLiH4WejoukGnW7oEvK94R4t7p3Mv082cGW82m+xC2av6Qby6gQLO/lQbETB7Iy4
-         VC6Q==
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=H3bSNoVE7kUEh9CP8BuePh5I5E+2JQHAHwnaXwmFeVY=;
+        b=KCgMIiRVrBCOnzghlR2dsLJbbzYko6IrzAemhM7hdB3JyQiDwrdwz0UYFTYcr+bD9P
+         VknO0MLDgb9dS5G7XKFRN/HlrAMb1lGQ8Z2OXBCvbLVEIFjY73fTgFGa8Kocb9aeX7yU
+         Rh5k98TCNcRrT9TPEWoWReNLkMB/9vag8QWxtw4IFiOEkiDwAtxqLDwIBJhCpNNJ05r8
+         mSROQTCjFglH+fF2axD7f2cSWxYrQlCffZRYOI2db5jaaulB4SIiJ3LS0uU59b+A/IQp
+         PdBpmYXSaCr7sNaQn5W+q+apT4QwluPHqinC0tip5hsr86ifXw6wsatstvlAk16At/RG
+         xI2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=gynnlawwP2L58lK7U6nOs2p5nD3J7jQ46S/46O9Sglk=;
-        b=j8LyRp1s6o0tUGvZppaRCiqPzzu+wyDjEJwH3Gmpp90icEL/kO2ZSGd7Pn653Y9EHn
-         746/1VEG0TTfNWijn36nXLJu3nWhaRk87355wl8m0UQBEQBfQnM6IwHfgVv8psH7MKn3
-         XqY2CNyNWFAAcm4aySZhhXpDFVuQRusHwPW8HHHgLw9I3Vv7y+MBia7WQV7/iAlPT+Hz
-         VHLZj3yWjztNnLlsHLp0svH6vEROY5iwS8SFErCTvdkQsvnPq2mDVObvq3iPKWMvgcrM
-         N0ahqofk+vm5e9XHkGha8BELYGNEFWy0ud7ibkdQQHCWuzpnKeiLX2Q2jV4mMjKLrKC5
-         HueQ==
-X-Gm-Message-State: AGi0PuZFUCn1S0WfhBmc3zHWP3D5LGJX4I4ugEiehGqkHuyRG6QhroQJ
-        zumC9FZ2SyGia83KWBWg4syeIN8t
-X-Google-Smtp-Source: APiQypJ4XTrddxqN2RyHulQ7/hn1xjaKln3zjHBlhZG5Q7i33l263UZT1BbEIAIIf8Ni9zos7CKCXg==
-X-Received: by 2002:a1c:6241:: with SMTP id w62mr21919075wmb.27.1587929840265;
-        Sun, 26 Apr 2020 12:37:20 -0700 (PDT)
-Received: from ?IPv6:2a02:810d:340:2e50:10d8:ba05:5002:2dff? ([2a02:810d:340:2e50:10d8:ba05:5002:2dff])
-        by smtp.gmail.com with ESMTPSA id y10sm12138259wma.5.2020.04.26.12.37.18
+        bh=H3bSNoVE7kUEh9CP8BuePh5I5E+2JQHAHwnaXwmFeVY=;
+        b=lMidh3HHKjtkbgVlGcymUe3+V+vOSdLTLLeb7jhl8lybHhVg0nX/Emt1Qn09geiX26
+         UwEKFbelueyqPm2KIcnJua/4vrw4S2nBNa+SoU9XpIi2fuNZTgBF6dvPxR3N+3BcZ3q/
+         iwegXXuH/NtfFHuMo/nGM5xRZRjaIoWZBaGtNlC7j30DGo46gWNWUlm5cJyI1X+FN/32
+         Y9N/6SHzTOnolUNqBF1yHI6j9IsjYRx56Mg/BVH4GGfz1gfs7aJFMWqQzkh+Ccjw+WBh
+         2dBPpxoxedu8ckE8YDsunjLblyqpNUyCzE5yf0HoWReIzZqJInwcXYBH8bQMMO74KLs1
+         66uw==
+X-Gm-Message-State: AGi0PuZLSGHVgDxCtxv3/votAJcsh++/JHvfZFNIqb6QKIk1Gq8ER0gL
+        FUEETgq8LePGJEtmSq1mAcg=
+X-Google-Smtp-Source: APiQypJLYJcz5LPgYCZyIiNMMLKSOhKclKuSQV3sLKlwdVUE6F0yEtlu+buCV+He/R5QndNxqMJWkQ==
+X-Received: by 2002:a63:f91f:: with SMTP id h31mr19709057pgi.218.1587930050424;
+        Sun, 26 Apr 2020 12:40:50 -0700 (PDT)
+Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id s199sm10825123pfs.124.2020.04.26.12.40.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 26 Apr 2020 12:37:19 -0700 (PDT)
-Subject: Re: [PATCH v7 01/12] dt-bindings: add img,pvrsgx.yaml for Imagination
- GPUs
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Jonathan Bakker <xc-racer2@live.ca>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-References: <cover.1587760454.git.hns@goldelico.com>
- <3a451e360fed84bc40287678b4d6be13821cfbc0.1587760454.git.hns@goldelico.com>
-From:   Philipp Rossak <embed3d@gmail.com>
-Message-ID: <9d9998cc-33bf-7d8f-658b-8d6218338135@gmail.com>
-Date:   Sun, 26 Apr 2020 21:36:58 +0200
+        Sun, 26 Apr 2020 12:40:49 -0700 (PDT)
+Subject: Re: INFO: rcu detected stall in wg_packet_tx_worker
+To:     syzbot <syzbot+0251e883fe39e7a0cb0a@syzkaller.appspotmail.com>,
+        Jason@zx2c4.com, davem@davemloft.net, f.fainelli@gmail.com,
+        gregkh@linuxfoundation.org, jhs@mojatatu.com, jiri@resnulli.us,
+        krzk@kernel.org, kuba@kernel.org, kvalo@codeaurora.org,
+        leon@kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        shuah@kernel.org, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, vivien.didelot@gmail.com,
+        xiyou.wangcong@gmail.com
+References: <0000000000005fd19505a4355311@google.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <e40c443e-74aa-bad4-7be8-4cdddfdf3eaf@gmail.com>
+Date:   Sun, 26 Apr 2020 12:40:47 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <3a451e360fed84bc40287678b4d6be13821cfbc0.1587760454.git.hns@goldelico.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <0000000000005fd19505a4355311@google.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -102,127 +87,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nikolaus,
-
-On 24.04.20 22:34, H. Nikolaus Schaller wrote:
-> The Imagination PVR/SGX GPU is part of several SoC from
-> multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo,
-> Allwinner A83 and others.
-> 
-> With this binding, we describe how the SGX processor is
-> interfaced to the SoC (registers and interrupt).
-> 
-> The interface also consists of clocks, reset, power but
-> information from data sheets is vague and some SoC integrators
-> (TI) deciced to use a PRCM wrapper (ti,sysc) which does
-> all clock, reset and power-management through registers
-> outside of the sgx register block.
-> 
-> Therefore all these properties are optional.
-> 
-> Tested by make dt_binding_check
-> 
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> ---
->   .../devicetree/bindings/gpu/img,pvrsgx.yaml   | 150 ++++++++++++++++++
->   1 file changed, 150 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
-> new file mode 100644
-> index 000000000000..33a9c4c6e784
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
-> @@ -0,0 +1,150 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpu/img,pvrsgx.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Imagination PVR/SGX GPU
-> +
-> +maintainers:
-> +  - H. Nikolaus Schaller <hns@goldelico.com>
-> +
-> +description: |+
-> +  This binding describes the Imagination SGX5 series of 3D accelerators which
-> +  are found in several different SoC like TI OMAP, Sitara, Ingenic JZ4780,
-> +  Allwinner A83, and Intel Poulsbo and CedarView and more.
-> +
-> +  For an extensive list see: https://en.wikipedia.org/wiki/PowerVR#Implementations
-> +
-> +  The SGX node is usually a child node of some DT node belonging to the SoC
-> +  which handles clocks, reset and general address space mapping of the SGX
-> +  register area. If not, an optional clock can be specified here.
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: '^gpu@[a-f0-9]+$'
-> +  compatible:
-> +    oneOf:
-> +      - description: SGX530-121 based SoC
-> +        items:
-> +          - enum:
-> +            - ti,omap3-sgx530-121 # BeagleBoard A/B/C, OpenPandora 600MHz and similar
-> +          - const: img,sgx530-121
-> +          - const: img,sgx530
-> +
-> +      - description: SGX530-125 based SoC
-> +        items:
-> +          - enum:
-> +            - ti,am3352-sgx530-125 # BeagleBone Black
-> +            - ti,am3517-sgx530-125
-> +            - ti,am4-sgx530-125
-> +            - ti,omap3-sgx530-125 # BeagleBoard XM, GTA04, OpenPandora 1GHz and similar
-> +            - ti,ti81xx-sgx530-125
-> +          - const: ti,omap3-sgx530-125
-> +          - const: img,sgx530-125
-> +          - const: img,sgx530
-> +
-> +      - description: SGX535-116 based SoC
-> +        items:
-> +          - const: intel,poulsbo-gma500-sgx535 # Atom Z5xx
-> +          - const: img,sgx535-116
-> +          - const: img,sgx535
-> +
-> +      - description: SGX540-116 based SoC
-> +        items:
-> +          - const: intel,medfield-gma-sgx540 # Atom Z24xx
-> +          - const: img,sgx540-116
-> +          - const: img,sgx540
-> +
-> +      - description: SGX540-120 based SoC
-> +        items:
-> +          - enum:
-> +            - samsung,s5pv210-sgx540-120
-> +            - ti,omap4-sgx540-120 # Pandaboard, Pandaboard ES and similar
-> +          - const: img,sgx540-120
-> +          - const: img,sgx540
-> +
-> +      - description: SGX540-130 based SoC
-> +        items:
-> +          - enum:
-> +            - ingenic,jz4780-sgx540-130 # CI20
-> +          - const: img,sgx540-130
-> +          - const: img,sgx540
-> +
-> +      - description: SGX544-112 based SoC
-> +        items:
-> +          - const: ti,omap4470-sgx544-112
-> +          - const: img,sgx544-112
-> +          - const: img,sgx544
-> +
-> +      - description: SGX544-115 based SoC
-> +        items:
-> +          - enum:
-> +            - allwinner,sun8i-a31-sgx544-115
-> +            - allwinner,sun8i-a31s-sgx544-115
-those two bindings are wrong.
-It should be allwinner,sun6i-a31-sgx544-115 and 
-allwinner,sun6i-a31s-sgx544-115. I did a copy paste error in the patches 
-that I provided for this series.
 
 
-Cheers,
-Philipp
+On 4/26/20 10:57 AM, syzbot wrote:
+> syzbot has bisected this bug to:
+> 
+> commit e7096c131e5161fa3b8e52a650d7719d2857adfd
+> Author: Jason A. Donenfeld <Jason@zx2c4.com>
+> Date:   Sun Dec 8 23:27:34 2019 +0000
+> 
+>     net: WireGuard secure network tunnel
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15258fcfe00000
+> start commit:   b2768df2 Merge branch 'for-linus' of git://git.kernel.org/..
+> git tree:       upstream
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=17258fcfe00000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13258fcfe00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=b7a70e992f2f9b68
+> dashboard link: https://syzkaller.appspot.com/bug?extid=0251e883fe39e7a0cb0a
+> userspace arch: i386
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15f5f47fe00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11e8efb4100000
+> 
+> Reported-by: syzbot+0251e883fe39e7a0cb0a@syzkaller.appspotmail.com
+> Fixes: e7096c131e51 ("net: WireGuard secure network tunnel")
+> 
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> 
+
+I have not looked at the repro closely, but WireGuard has some workers
+that might loop forever, cond_resched() might help a bit.
+
+diff --git a/drivers/net/wireguard/receive.c b/drivers/net/wireguard/receive.c
+index da3b782ab7d31df11e381529b144bcc494234a38..349a71e1907e081c61967c77c9f25a6ec5e57a24 100644
+--- a/drivers/net/wireguard/receive.c
++++ b/drivers/net/wireguard/receive.c
+@@ -518,6 +518,7 @@ void wg_packet_decrypt_worker(struct work_struct *work)
+                                &PACKET_CB(skb)->keypair->receiving)) ?
+                                PACKET_STATE_CRYPTED : PACKET_STATE_DEAD;
+                wg_queue_enqueue_per_peer_napi(skb, state);
++               cond_resched();
+        }
+ }
+ 
+diff --git a/drivers/net/wireguard/send.c b/drivers/net/wireguard/send.c
+index 7348c10cbae3db54bfcb31f23c2753185735f876..f5b88693176c84b4bfdf8c4e05071481a3ce45b5 100644
+--- a/drivers/net/wireguard/send.c
++++ b/drivers/net/wireguard/send.c
+@@ -281,6 +281,7 @@ void wg_packet_tx_worker(struct work_struct *work)
+ 
+                wg_noise_keypair_put(keypair, false);
+                wg_peer_put(peer);
++               cond_resched();
+        }
+ }
+ 
