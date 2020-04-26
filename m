@@ -2,88 +2,85 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=CHARSET_FARAWAY_HEADER,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 495A4C55199
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 08:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DC5C55191
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 08:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30C462071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 08:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A3512071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 08:32:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726179AbgDZIas (ORCPT
+        id S1726188AbgDZIcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 04:30:48 -0400
-Received: from mx22.baidu.com ([220.181.50.185]:50150 "EHLO baidu.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726141AbgDZIas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 04:30:48 -0400
-Received: from Bc-Mail-Ex13.internal.baidu.com (unknown [172.31.51.53])
-        by Forcepoint Email with ESMTPS id 0CDCC1A3C048E6D289AF;
-        Sun, 26 Apr 2020 16:30:27 +0800 (CST)
-Received: from BJHW-Mail-Ex13.internal.baidu.com (10.127.64.36) by
- Bc-Mail-Ex13.internal.baidu.com (172.31.51.53) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1531.3; Sun, 26 Apr 2020 16:30:26 +0800
-Received: from BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) by
- BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) with mapi id
- 15.01.1713.004; Sun, 26 Apr 2020 16:30:26 +0800
-From:   "Li,Rongqing" <lirongqing@baidu.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>
-Subject: =?gb2312?B?tPC4tDogW1BBVENIXSBbUkZDXSBrdm06IHg4NjogZW11bGF0ZSBBUEVSRi9N?=
- =?gb2312?Q?PERF_registers?=
-Thread-Topic: [PATCH] [RFC] kvm: x86: emulate APERF/MPERF registers
-Thread-Index: AQHWGh9bZdasuQhOo023NQfHi2P1S6iLC0mA
-Date:   Sun, 26 Apr 2020 08:30:26 +0000
-Message-ID: <4fecc02b00f6469e81ffc40de4f7188c@baidu.com>
-References: <1587704935-30960-1-git-send-email-lirongqing@baidu.com>
- <20200424100143.GZ20730@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200424100143.GZ20730@hirez.programming.kicks-ass.net>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.22.198.27]
-x-baidu-bdmsfe-datecheck: 1_Bc-Mail-Ex13_2020-04-26 16:30:26:950
-x-baidu-bdmsfe-viruscheck: Bc-Mail-Ex13_GRAY_Inside_WithoutAtta_2020-04-26
- 16:30:26:919
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Sun, 26 Apr 2020 04:32:07 -0400
+Received: from sauhun.de ([88.99.104.3]:43590 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725794AbgDZIcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 04:32:07 -0400
+Received: from localhost (p54B33954.dip0.t-ipconnect.de [84.179.57.84])
+        by pokefinder.org (Postfix) with ESMTPSA id 77B902C01E8;
+        Sun, 26 Apr 2020 10:32:05 +0200 (CEST)
+Date:   Sun, 26 Apr 2020 10:32:05 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Aishwarya R <aishwaryarj100@gmail.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        linux-i2c@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: powermac: Simplify reading the "reg" and
+ "i2c-address" property
+Message-ID: <20200426083205.GJ1262@kunai>
+References: <20200408100354.17782-1-aishwaryarj100@gmail.com>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="QnBU6tTI9sljzm9u"
+Content-Disposition: inline
+In-Reply-To: <20200408100354.17782-1-aishwaryarj100@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiANCj4gQnV0IHRoZW4gaGVyZSB5b3Ugb25seSBlbXVsYXRlIGl0IGZvciBWTVgsIHdoaWNoIHRo
-ZW4gcmVzdWx0cyBpbiBTVk0gZ3Vlc3RzDQo+IGdvaW5nIHdvYmJseS4NCj4gDQo+IEFsc28sIG9u
-IEludGVsLCB0aGUgbW9tZW50IHlvdSBhZHZlcnRpc2UgQVBFUkZNUEVSRiwgd2UnbGwgdHJ5IGFu
-ZCByZWFkDQo+IE1TUl9QTEFURk9STV9JTkZPIC8gTVNSX1RVUkJPX1JBVElPX0xJTUlUKiwgSSBk
-b24ndCBzdXBwb3NlIHlvdSdyZQ0KPiBwYXNzaW5nIHRob3NlIHRocm91Z2ggYXMgd2VsbD8NCj4g
-DQoNCmluaXRfZnJlcV9pbnZhcmlhbmNlKHZvaWQpIGlzIHRyeWluZyByZWFkIE1TUl9QTEFURk9S
-TV9JTkZPIC8gTVNSX1RVUkJPX1JBVElPX0xJTUlUKiwNCnNob3VsZCB3ZSBhZGQgYSBjaGVjayBv
-ZiB0dXJibyBzdGF0dXMgaW4gaW5pdF9mcmVxX2ludmFyaWFuY2UsIHRvIGF2b2lkIHRoZSByZWFk
-aW5nPw0KDQpJdCBpcyB1bm5lY2Vzc2FyeSB0byBjYWxsIGludGVsX3NldF9tYXhfZnJlcV9yYXRp
-byAgSWYgdHVyYm8gaXMgZGlzYWJsZWQNCg0KZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9z
-bXBib290LmMgYi9hcmNoL3g4Ni9rZXJuZWwvc21wYm9vdC5jDQppbmRleCBmZTNhYjk2MzJmM2Iu
-LjU0ZmI4ODMyMzI5MyAxMDA2NDQNCi0tLSBhL2FyY2gveDg2L2tlcm5lbC9zbXBib290LmMNCisr
-KyBiL2FyY2gveDg2L2tlcm5lbC9zbXBib290LmMNCkBAIC0yMDA5LDYgKzIwMDksOSBAQCBzdGF0
-aWMgdm9pZCBpbml0X2ZyZXFfaW52YXJpYW5jZSh2b2lkKQ0KICAgICAgICBpZiAoc21wX3Byb2Nl
-c3Nvcl9pZCgpICE9IDAgfHwgIWJvb3RfY3B1X2hhcyhYODZfRkVBVFVSRV9BUEVSRk1QRVJGKSkN
-CiAgICAgICAgICAgICAgICByZXR1cm47DQogDQorICAgICAgIGlmICh0dXJib19kaXNhYmxlZCgp
-KQ0KKyAgICAgICAgICAgICAgIHJldHVybjsNCisNCiAgICAgICAgaWYgKGJvb3RfY3B1X2RhdGEu
-eDg2X3ZlbmRvciA9PSBYODZfVkVORE9SX0lOVEVMKQ0KICAgICAgICAgICAgICAgIHJldCA9IGlu
-dGVsX3NldF9tYXhfZnJlcV9yYXRpbygpOw0KDQotTGkNCg==
+
+--QnBU6tTI9sljzm9u
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Apr 08, 2020 at 03:33:53PM +0530, Aishwarya R wrote:
+> Use of_property_read_u32 to read the "reg" and "i2c-address" property
+> instead of using of_get_property to check the return values.
+>=20
+> Signed-off-by: Aishwarya R <aishwaryarj100@gmail.com>
+
+Applied to for-next, thanks!
+
+
+--QnBU6tTI9sljzm9u
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6lRwUACgkQFA3kzBSg
+KbYkkRAAj6PdEqcV4sRmSLua5W0PhREgd+RUQQZg1RlhYnXmuIBl9ZyY2yPCvOEA
+VdI/VDX2iVDBNSbdsV5RbBKjuenjPMr7yi1AUXlB8TRwME//QtTTAc7XmAkHGQi3
+ERFJS1umTANHaI5Axlrap2W3vlE2mFgE8rzK9Q+1c08QAlxoK4egQdLOlsZ8wbkI
+GyB+lu1xhLsBaKBxErublzua26wa6BMVqIKcnHbtID1TmKnd7bHTO2ZKC00yzuGt
+nN8BS5eGVm3Gd06nBt55C3wyxRVJonsE3hJFN534aZbG4fiS1ugvK0IrvDjBdyWr
+gIsUCrSyOVeDORSdLx4y6NBUFPJw5AcmkipInfOCDRb9cqCaKw+Iha9BajpKX7qs
+lHZCHBpfLvcb+JMN4ZgwbWsjRWSCd99nQvj/0EF0WuU8bvsznIVNwTmRF+anMFWT
+TGwV/jM5k/u/cJ0YbF2jUhGMrMmqL4BYYWQh6zJMSefQac/llzkxN6Iye4Fzdybs
+wuzQE6dR3ae9qiWAn6YTVkbnlClBULBI1ao1qzFdCfb5e1Pk291YIdHb8uX6uvH3
+PWg9fm5pONMdaN+Zg+W9bTYESoraDkaL8dc3yGNi4BWJ85+6X/HDgoNNYGinZIS0
+4FwchlniK/1tv0dSldHOzLkFgtfeK30xAJObEyDxFhH6CH9x2I8=
+=xMJl
+-----END PGP SIGNATURE-----
+
+--QnBU6tTI9sljzm9u--
