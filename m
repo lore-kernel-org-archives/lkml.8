@@ -2,103 +2,107 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A37B1C55191
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 451D2C55191
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BB8C206CD
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:50:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23925206CD
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:50:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="nq2CSnz9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbgDZLu2 (ORCPT
+        id S1726316AbgDZLup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 07:50:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34706 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726131AbgDZLu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 07:50:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 000ABAB64;
-        Sun, 26 Apr 2020 11:50:24 +0000 (UTC)
-Subject: Re: [PATCH v3 2/3] dt-bindings: arm: actions: Document Caninos Loucos
- Labrador
-To:     Matheus Castello <matheus@castello.eng.br>
-Cc:     manivannan.sadhasivam@linaro.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, edgar.righi@lsitec.org.br,
-        igor.lima@lsitec.org.br, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-actions@lists.infradead.org
-References: <20200229104358.GB19610@mani>
- <20200320035104.26139-1-matheus@castello.eng.br>
- <20200320035104.26139-3-matheus@castello.eng.br>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <99c5fa14-cc2d-3692-fc6e-8e3fa77c5ab0@suse.de>
-Date:   Sun, 26 Apr 2020 13:50:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 26 Apr 2020 07:50:45 -0400
+Received: from vultr.net.flygoat.com ([149.28.68.211]:59902 "EHLO
+        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726131AbgDZLup (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 07:50:45 -0400
+Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 0925920CE5;
+        Sun, 26 Apr 2020 11:50:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1587901844; bh=JH5fmaVAU3zVjpRZJe3S98l22Af+YjDXkuSE9/t9KHI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nq2CSnz9kzmXuDisFD3lv+o6xbKbvM5qsWLOTHxUqlSVbcVga3JA5BWa90lENTLX5
+         0NNMV0r4glJaZwe6HfhvoJmANWGj7mkMxYd/BVxNTTG5aRqgcJyW5/PnM65YZo8/AD
+         girea5tWjHOO8+WrvZN8O6nxPlzubhy/LQy7zFrXBcOx4VBKegCfQnP1yY1U+lVy3d
+         tmj4G6COah4gLB21nb0kNUBONrKXn3yJfhsh2vYnnMyikH+jgDHWtvzqqM1XUGkHyh
+         BSWrtY0fkbYhtw53WuBPTZg6aynxb833bt+/t+LWWRNMMm8UuwZtk9HVh5lBY4zTO8
+         ftWbszQZBm4MQ==
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Kitt <steve@sk2.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Daniel Silsby <dansilsby@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        John Garry <john.garry@huawei.com>,
+        Wei Xu <xuwei5@hisilicon.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH 3/4] lib: logic_pio: Introduce MMIO_LOWER_RESERVED
+Date:   Sun, 26 Apr 2020 19:47:36 +0800
+Message-Id: <20200426114806.1176629-4-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.26.0.rc2
+In-Reply-To: <20200426114806.1176629-1-jiaxun.yang@flygoat.com>
+References: <20200426114806.1176629-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200320035104.26139-3-matheus@castello.eng.br>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ linux-actions
+That would allow platforms reserve some lower address in PIO MMIO range
+to deal with legacy drivers with hardcoded I/O ports that can't be
+managed by logic_pio.
 
-Am 20.03.20 um 04:51 schrieb Matheus Castello:
-> Update the documentation to add the Caninos Loucos Labrador. Labrador
-> project consists of a computer on module based on the Actions Semi S500
-> processor and the Labrador base board.
-> 
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> ---
->   Documentation/devicetree/bindings/arm/actions.yaml | 5 +++++
->   1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/actions.yaml b/Documentation/devicetree/bindings/arm/actions.yaml
-> index ace3fdaa8396..1b131ceb884a 100644
-> --- a/Documentation/devicetree/bindings/arm/actions.yaml
-> +++ b/Documentation/devicetree/bindings/arm/actions.yaml
-> @@ -24,6 +24,11 @@ properties:
->                 - lemaker,guitar-bb-rev-b # LeMaker Guitar Base Board rev. B
->             - const: lemaker,guitar
->             - const: actions,s500
-> +      - items:
-> +          - enum:
-> +              - caninos,labrador-bb # Caninos Loucos Labrador Base Board
-> +          - const: caninos,labrador
-> +          - const: actions,s500
-> 
->         # The Actions Semi S700 is a quad-core ARM Cortex-A53 SoC.
->         - items:
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+ lib/logic_pio.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Now that you chose to stick with caninos rather than lsi prefix, the 
-sort order compared to lemaker remains wrong.
-
-Looking at https://caninosloucos.org/en/labrador-en/ there's a "CORE 
-BOARD V2.0" and a "BASE BOARD M V1.0".
-
-Assuming the v2 is not software-relevant, shouldn't the M be reflected 
-in the compatible string? For example, "caninos,labrador-core" and 
-"caninos,labrador-m"? You're free to use -bb-m of course, but no need to 
-copy LeMaker -bb naming for your board. What does your PCB say?
-
-Also note that other recent bindings have been using a description 
-attribute - not sure whether we can apply that a) to the SoM and b) to 
-the base board here. Please compare other in-tree bindings.
-
-Regards,
-Andreas
-
+diff --git a/lib/logic_pio.c b/lib/logic_pio.c
+index f511a99bb389..57fff1cb7063 100644
+--- a/lib/logic_pio.c
++++ b/lib/logic_pio.c
+@@ -20,6 +20,10 @@
+ static LIST_HEAD(io_range_list);
+ static DEFINE_MUTEX(io_range_mutex);
+ 
++#ifndef MMIO_LOWER_RESERVED
++#define MMIO_LOWER_RESERVED	0
++#endif
++
+ /* Consider a kernel general helper for this */
+ #define in_range(b, first, len)        ((b) >= (first) && (b) < (first) + (len))
+ 
+@@ -36,7 +40,7 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
+ 	struct logic_pio_hwaddr *range;
+ 	resource_size_t start;
+ 	resource_size_t end;
+-	resource_size_t mmio_end = 0;
++	resource_size_t mmio_end = MMIO_LOWER_RESERVED;
+ 	resource_size_t iio_sz = MMIO_UPPER_LIMIT;
+ 	int ret = 0;
+ 
 -- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+2.26.0.rc2
+
