@@ -2,258 +2,126 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86879C55191
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 12:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4CD5C55194
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 12:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65B6120700
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 12:18:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 809702084D
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 12:22:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pAi9kUho"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UIYrkagM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726163AbgDZMSR (ORCPT
+        id S1726171AbgDZMWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 08:18:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44922 "EHLO
+        Sun, 26 Apr 2020 08:22:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbgDZMSR (ORCPT
+        with ESMTP id S1726139AbgDZMWy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 08:18:17 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CB2CC061A0E;
-        Sun, 26 Apr 2020 05:18:17 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id i16so14049808ils.12;
-        Sun, 26 Apr 2020 05:18:17 -0700 (PDT)
+        Sun, 26 Apr 2020 08:22:54 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24EA7C061A0E;
+        Sun, 26 Apr 2020 05:22:54 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k18so5790734pll.6;
+        Sun, 26 Apr 2020 05:22:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=pnYdgmQFzwhGmDvDPiH/jDwjweMNfoD46y/Y/YmZg10=;
-        b=pAi9kUhoZ/Qjs8l84NpVVssFY8uSsu6LKAwtrc3pq83VPsGi48uUd/NV12A9px1xae
-         g4LubnCzeRTAW3FSOwhW1SgNb98QvW1B0qi1cVcQsvc5DUpGwlMmcq+QgRQU2NBGg0F5
-         lS/lTGusPWyVcGrfbryvjemU/W2dQVX1C/X2u3hcZ3X4aJkhN024LnrhuKj3ZDcNfXpN
-         VGdtN2YZ44gfUGTf9rQE+Ec37V5rAoBNI6EHVSQo0qP6ZlZd79KhUr9ZA61vfXA7SEqe
-         ihsNWxVNf00/cVSS1U8WLDnvpbhxKUE1sVTTRfyxYCRcGVLW75Qh8IcNfjtkLipXtFQF
-         vR0g==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=4S8zgV7XFaPRlIUcL6FdOxo2c6BERJKn7P5owdMD51w=;
+        b=UIYrkagM8A+vY0jCDIzlzjcYA3gn1/9l36CcVVkpsh2vq2kD3S54r/eGwl8mZxChCn
+         FvPULi7I89o3uQrS1llT7ul9kIrJIK8JsHLmKEZTG80QNiu7QCEtHMkQ/NmHvwN/moeT
+         w78EMsaImenuhFvTd7N6PTNjTpMsRym9zYaQh1PFf/Dqdjgol6OFK8+hiWbRc+KFm676
+         DwMFu6uWOfr0fa+gz6uTjnY4A2xG9VHYUG3qGw4TkifrPrHVM5oKb1WWXLXbycVKGNqU
+         sPKUcpAMQvVjvjLwcIYhhBWbZSTi2SWQndW/3WP5lzWxVN/ibfo4oF0doctX/T268jNU
+         o4nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pnYdgmQFzwhGmDvDPiH/jDwjweMNfoD46y/Y/YmZg10=;
-        b=LXvZEwMBa6LglJA386xg9A1xlFsYkdYj7iAeF+kHE9KllyogymQRE3KQ74TTz8K2Pd
-         3ZFDUIfsojzbyL7/1coHQnGNJzAwL80NnBzaaID2l1Gil7TVZDCHMfWjmUPnUoL+aEoq
-         DOy9x28PZQrwn2FrcOWvRyrGumBpl/sIaCLaOiXAZjohATDA5L1nop+DuDWPLaq9UQ13
-         /t/KY4uYybXpITXAjyN1SVG9G4M8kwHL773nUgsJe6P0Iu2LtCtGr9YrMS1dhdEUjIIh
-         Ar5ZD+efE2JRqZ+XTb9PcyLdS8Zn9Fx1NAqGA9cJKbrcFBLexOAA++LOo65YmkTz68X7
-         hELQ==
-X-Gm-Message-State: AGi0PuYGDYOKLiG27eBa4T5s/9FSeKyftrtOsGc9rmwwKOu2zJy9Y3WI
-        3q+KY5px0QK43ciU06ZhfkqKcHxz6IFJrmvNve0=
-X-Google-Smtp-Source: APiQypKrdPuEZGu5BM7WAtgp8dotSKhkd5VuYDkUEwAH98HM5hfJjwS7qSjm3rozkhfzgkjuuzZn6yfB/RvFoZbagQw=
-X-Received: by 2002:a92:3a48:: with SMTP id h69mr16189042ila.150.1587903496623;
- Sun, 26 Apr 2020 05:18:16 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=4S8zgV7XFaPRlIUcL6FdOxo2c6BERJKn7P5owdMD51w=;
+        b=XV6uIkPn0c3rpYokxiWgs0kpPWlrLwpRLtWaeadb8kJKC2eu3DPZmlpzs4S8BlSTru
+         Dle37RBqFnr2+4Kqvp+4CQIWG5ybrE2mqgZ6RirhOvs/FfA1Op2AfXWCYF6WT4p3wVWo
+         wkg+/S6z4eKAIpfMHyKKcm5bzeN9JwQOJaEZY7UqWO+1NWg5bZ8KVYVXWHWumgxU2YCG
+         8OwNX409QRtLEg2Ns50qAELyE9mU88B0gwZ9osdobopvZiN2JTn8WTbpa1X3m+f3S52l
+         5SGYItXgqP+xG86R8nQ0qscWYPhmv+9T/+M9BzvHYWwpVLd+0vW5/Q9VXAM7JqvwylQ0
+         3uow==
+X-Gm-Message-State: AGi0PuaisWsrrIdk5ddT8OriAb24M2sXtrHBMoNGTj9R/zgbPOyMDZe3
+        cw0qbjKVokg9F0XbDyUZN0k=
+X-Google-Smtp-Source: APiQypL9ctpEP1iqDyJ1Hld+OLaScFvnWLGgjEdQgr1I3xLriI/KIOSCHlB6o9Q0wE4Jj9kurhLVSQ==
+X-Received: by 2002:a17:90a:fd89:: with SMTP id cx9mr17229092pjb.64.1587903773587;
+        Sun, 26 Apr 2020 05:22:53 -0700 (PDT)
+Received: from debian.debian-2 ([154.223.71.61])
+        by smtp.gmail.com with ESMTPSA id gl4sm9265433pjb.42.2020.04.26.05.22.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 26 Apr 2020 05:22:52 -0700 (PDT)
+Date:   Sun, 26 Apr 2020 20:22:45 +0800
+From:   Bo YU <tsu.yubo@gmail.com>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH -next] block/genhd: align title and output
+Message-ID: <20200426122237.j2ah64uoivp26ioj@debian.debian-2>
 MIME-Version: 1.0
-References: <20200426121709.1216-1-peron.clem@gmail.com>
-In-Reply-To: <20200426121709.1216-1-peron.clem@gmail.com>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Sun, 26 Apr 2020 14:18:05 +0200
-Message-ID: <CAJiuCcfA1f6Q8QN-Y0X5WDKciczLAJ7TWNGr5x3N7X0VGtL2NQ@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: h6: Use dedicated CPU OPP table
- for Tanix TX6
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Piotr Oniszczuk <warpme@o2.pl>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Warpme,
+Before the patch:
 
-On Sun, 26 Apr 2020 at 14:17, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com=
-> wrote:
->
-> Tanix TX6 has a fixed regulator. As DVFS is instructed to change
-> voltage to meet OPP table. The DVFS is not working as expected.
->
-> Introduce a dedicated OPP Table where voltage are equals to
-> the fixed regulator.
->
-> Reported-by: Piotr Oniszczuk <warpme@o2.pl>
-> Fixes: add1e27fb703 ("arm64: dts: allwinner: h6: Enable CPU opp tables fo=
-r Tanix TX6")
-> Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+major minor  #blocks  name
 
-Could you confirm this patch fixed your issue?
+ 254        0   57671680 vda
+ 254        1   57670656 vda1
 
-If yes could you add your tested-by tag ?
+After the patch:
 
-Thanks,
-Clement
+major minor   #blocks    name
 
-> ---
->  .../sun50i-h6-tanix-tx6-cpu-opp.dtsi          | 116 ++++++++++++++++++
->  .../dts/allwinner/sun50i-h6-tanix-tx6.dts     |   2 +-
->  2 files changed, 117 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6-cpu=
--opp.dtsi
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6-cpu-opp.dt=
-si b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6-cpu-opp.dtsi
-> new file mode 100644
-> index 000000000000..062940115563
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6-cpu-opp.dtsi
-> @@ -0,0 +1,116 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +// Copyright (C) 2020 Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> +
-> +/ {
-> +       cpu_opp_table: cpu-opp-table {
-> +               compatible =3D "allwinner,sun50i-h6-operating-points";
-> +               nvmem-cells =3D <&cpu_speed_grade>;
-> +               opp-shared;
-> +
-> +               opp@480000000 {
-> +                       clock-latency-ns =3D <244144>; /* 8 32k periods *=
-/
-> +                       opp-hz =3D /bits/ 64 <480000000>;
-> +
-> +                       opp-microvolt-speed0 =3D <1135000>;
-> +                       opp-microvolt-speed1 =3D <1135000>;
-> +                       opp-microvolt-speed2 =3D <1135000>;
-> +               };
-> +
-> +               opp@720000000 {
-> +                       clock-latency-ns =3D <244144>; /* 8 32k periods *=
-/
-> +                       opp-hz =3D /bits/ 64 <720000000>;
-> +
-> +                       opp-microvolt-speed0 =3D <1135000>;
-> +                       opp-microvolt-speed1 =3D <1135000>;
-> +                       opp-microvolt-speed2 =3D <1135000>;
-> +               };
-> +
-> +               opp@816000000 {
-> +                       clock-latency-ns =3D <244144>; /* 8 32k periods *=
-/
-> +                       opp-hz =3D /bits/ 64 <816000000>;
-> +
-> +                       opp-microvolt-speed0 =3D <1135000>;
-> +                       opp-microvolt-speed1 =3D <1135000>;
-> +                       opp-microvolt-speed2 =3D <1135000>;
-> +               };
-> +
-> +               opp@888000000 {
-> +                       clock-latency-ns =3D <244144>; /* 8 32k periods *=
-/
-> +                       opp-hz =3D /bits/ 64 <888000000>;
-> +
-> +                       opp-microvolt-speed0 =3D <1135000>;
-> +                       opp-microvolt-speed1 =3D <1135000>;
-> +                       opp-microvolt-speed2 =3D <1135000>;
-> +               };
-> +
-> +               opp@1080000000 {
-> +                       clock-latency-ns =3D <244144>; /* 8 32k periods *=
-/
-> +                       opp-hz =3D /bits/ 64 <1080000000>;
-> +
-> +                       opp-microvolt-speed0 =3D <1135000>;
-> +                       opp-microvolt-speed1 =3D <1135000>;
-> +                       opp-microvolt-speed2 =3D <1135000>;
-> +               };
-> +
-> +               opp@1320000000 {
-> +                       clock-latency-ns =3D <244144>; /* 8 32k periods *=
-/
-> +                       opp-hz =3D /bits/ 64 <1320000000>;
-> +
-> +                       opp-microvolt-speed0 =3D <1135000>;
-> +                       opp-microvolt-speed1 =3D <1135000>;
-> +                       opp-microvolt-speed2 =3D <1135000>;
-> +               };
-> +
-> +               opp@1488000000 {
-> +                       clock-latency-ns =3D <244144>; /* 8 32k periods *=
-/
-> +                       opp-hz =3D /bits/ 64 <1488000000>;
-> +
-> +                       opp-microvolt-speed0 =3D <1135000>;
-> +                       opp-microvolt-speed1 =3D <1135000>;
-> +                       opp-microvolt-speed2 =3D <1135000>;
-> +               };
-> +
-> +               opp@1608000000 {
-> +                       clock-latency-ns =3D <244144>; /* 8 32k periods *=
-/
-> +                       opp-hz =3D /bits/ 64 <1608000000>;
-> +
-> +                       opp-microvolt-speed0 =3D <1135000>;
-> +                       opp-microvolt-speed1 =3D <1135000>;
-> +                       opp-microvolt-speed2 =3D <1135000>;
-> +               };
-> +
-> +               opp@1704000000 {
-> +                       clock-latency-ns =3D <244144>; /* 8 32k periods *=
-/
-> +                       opp-hz =3D /bits/ 64 <1704000000>;
-> +
-> +                       opp-microvolt-speed0 =3D <1135000>;
-> +                       opp-microvolt-speed1 =3D <1135000>;
-> +                       opp-microvolt-speed2 =3D <1135000>;
-> +               };
-> +
-> +               opp@1800000000 {
-> +                       clock-latency-ns =3D <244144>; /* 8 32k periods *=
-/
-> +                       opp-hz =3D /bits/ 64 <1800000000>;
-> +
-> +                       opp-microvolt-speed0 =3D <1135000>;
-> +                       opp-microvolt-speed1 =3D <1135000>;
-> +                       opp-microvolt-speed2 =3D <1135000>;
-> +               };
-> +       };
-> +};
-> +
-> +&cpu0 {
-> +       operating-points-v2 =3D <&cpu_opp_table>;
-> +};
-> +
-> +&cpu1 {
-> +       operating-points-v2 =3D <&cpu_opp_table>;
-> +};
-> +
-> +&cpu2 {
-> +       operating-points-v2 =3D <&cpu_opp_table>;
-> +};
-> +
-> +&cpu3 {
-> +       operating-points-v2 =3D <&cpu_opp_table>;
-> +};
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts b/arch=
-/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-> index be81330db14f..3eaa4f49e3d3 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-> @@ -4,7 +4,7 @@
->  /dts-v1/;
->
->  #include "sun50i-h6.dtsi"
-> -#include "sun50i-h6-cpu-opp.dtsi"
-> +#inlcude "sun50i-h6-tanix-tx6-cpu-opp.dtsi"
->
->  #include <dt-bindings/gpio/gpio.h>
->
-> --
-> 2.20.1
->
+254   0       57671680   vda
+254   1       57670656   vda1
+
+According to LDD3,major device maximun number is 12 bit,as it has 4 char
+placeholders.minor device maximum number is 20 bit(7 char palceholders)
+and keeping 10 char palceholders for blocks tag.If want to keep
+palceholder's numbers dynamiclly, There is more tricks to do that.  So i
+keep it simple.
+
+Signed-off-by: Bo YU <tsu.yubo@gmail.com>
+---
+ block/genhd.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/block/genhd.c b/block/genhd.c
+index 06b642b23a07..63a483cf76b9 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -1151,7 +1151,7 @@ static void *show_partition_start(struct seq_file *seqf, loff_t *pos)
+
+ 	p = disk_seqf_start(seqf, pos);
+ 	if (!IS_ERR_OR_NULL(p) && !*pos)
+-		seq_puts(seqf, "major minor  #blocks  name\n\n");
++		seq_puts(seqf, "major minor   #blocks    name\n\n");
+ 	return p;
+ }
+
+@@ -1172,7 +1172,7 @@ static int show_partition(struct seq_file *seqf, void *v)
+ 	/* show the full disk and all non-0 size partitions of it */
+ 	disk_part_iter_init(&piter, sgp, DISK_PITER_INCL_PART0);
+ 	while ((part = disk_part_iter_next(&piter)))
+-		seq_printf(seqf, "%4d  %7d %10llu %s\n",
++		seq_printf(seqf, "%-4d  %-7d %-10llu %s\n",
+ 			   MAJOR(part_devt(part)), MINOR(part_devt(part)),
+ 			   (unsigned long long)part_nr_sects_read(part) >> 1,
+ 			   disk_name(sgp, part->partno, buf));
+--
+2.11.0
+
