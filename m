@@ -2,135 +2,170 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F37FAC55196
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D823C55186
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF39D20748
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:10:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pert3oBZ"
+	by mail.kernel.org (Postfix) with ESMTP id 3824A2076C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:15:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726147AbgDZCK4 (ORCPT
+        id S1726189AbgDZCPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 22:10:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35998 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726101AbgDZCKz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 22:10:55 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0623EC061A0C;
-        Sat, 25 Apr 2020 19:10:55 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id f18so13900445lja.13;
-        Sat, 25 Apr 2020 19:10:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ejX76MV7B/vpfNwLttmX8i7aY8yYW3D6qvt0Zq0zF9A=;
-        b=Pert3oBZT9bm9OSxFoG7i/qdZCiH84yrHo+9RFNoMWF/ct15BLCeAyOZBW6VSCIzl5
-         8AMWA4xmw+OCHTNaroP/Ne82MMzXDsBWKd3xIkwiWZ7P3cgLCLidgLVTv+oNdLJLbwM2
-         zZcWvDfeOm11Rc2tQ57hYvT2WPHNbl9Xok/Tvl5Jql0UxSHRNhOjkqjM0/MA+bXTFcdq
-         yhEXqaTXkHoSIiTmqoEjGVFfgkhFfZyzm5hC5aB9zBchuIjP6iaw9An+xxBVweaU0gOJ
-         pDjVipSR+QtO+x5G3cIzejlr0J9mAguQWQPcVHEjU7RER9QJoDZjTtwmb8CpM0OvmqTD
-         Bxtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ejX76MV7B/vpfNwLttmX8i7aY8yYW3D6qvt0Zq0zF9A=;
-        b=tQrOa8iNRZjUlhqECUkxR3LuwHShPVWou5+0XgGV0hsSHCQAJ54036dUk+WxLvXFyB
-         t5doC44VgDalnrv0HaI8LXSBewkl89hO4wmjUrXg7X4QXTzsM/1jK3PfCG8AP8GMhpp1
-         LJuKeaxAGcHPJBKxPkwM/axzyCjy9btA5VQevHvAINv/41Wg3sKGl6sqcylB94k8LM8x
-         Bj3f6XrxQaFy2mJPomkfqun5I+vZmdEkWqBtRoiAx/UwStn7dWHWs4WBvDrh6gg9kQmk
-         Vh/C60/siwMxpY4Gm4daKZ07XEr84hmyWES5gr+1KsK8UQuB3T9rJ39lJ37YrKGmq5QO
-         6tAg==
-X-Gm-Message-State: AGi0Pub3zKEH/68S49SsYYMOXFblh0moGbZsCp988jkKUJ1H6/6rNzoZ
-        /GLCulEkuhfDcq++4GcEM6x93BI4
-X-Google-Smtp-Source: APiQypJEikJi85v3up0OBfbJN/g72TVEOllWbTiHmbtrrvjCqQd0C92gwdppBPO/ZEhkF8wo8AhBrA==
-X-Received: by 2002:a2e:8056:: with SMTP id p22mr10465457ljg.266.1587867053161;
-        Sat, 25 Apr 2020 19:10:53 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id b73sm8110124lfg.86.2020.04.25.19.10.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 25 Apr 2020 19:10:52 -0700 (PDT)
-Subject: Re: [RFC PATCH v10 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, frankc@nvidia.com, sakari.ailus@iki.fi,
-        helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1587700513-28449-1-git-send-email-skomatineni@nvidia.com>
- <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
- <6ca93ff9-ca59-544f-767c-4355d01a5c20@gmail.com>
- <62546d1f-eca5-06be-2bc2-e45ccd53830a@xs4all.nl>
- <50fd1016-ca8b-ec5d-e5a8-f257138b152e@gmail.com>
- <658c4232-94d9-3051-8c93-bff7046cf5f2@nvidia.com>
- <03426915-25ea-69b4-bc64-f87f3046d33f@nvidia.com>
- <aabaecc4-3494-0137-7d2b-853304bfa68b@gmail.com>
- <09f20441-fec6-7496-2edc-c69db535e441@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <61799fab-858c-8b0d-ba7d-846cd041e044@gmail.com>
-Date:   Sun, 26 Apr 2020 05:10:51 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sat, 25 Apr 2020 22:15:11 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2898 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726100AbgDZCPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 22:15:10 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 1932F630D5F1A356162D;
+        Sun, 26 Apr 2020 10:15:07 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.487.0; Sun, 26 Apr 2020 10:14:59 +0800
+From:   Huazhong Tan <tanhuazhong@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
+        <linuxarm@huawei.com>, <kuba@kernel.org>,
+        Jian Shen <shenjian15@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 1/9] net: hns3: refine for unicast MAC VLAN space management
+Date:   Sun, 26 Apr 2020 10:13:40 +0800
+Message-ID: <1587867228-9955-2-git-send-email-tanhuazhong@huawei.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1587867228-9955-1-git-send-email-tanhuazhong@huawei.com>
+References: <1587867228-9955-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <09f20441-fec6-7496-2edc-c69db535e441@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-26.04.2020 04:43, Sowjanya Komatineni пишет:
-...
->> It looks to me that at least all those hardcoded HW format IDs do not
->> match the older SoCs.
-> 
-> TPG hard coded formats are supported on prior Tegra.
-> 
-> Other supported formats are SoC dependent and  part of soc data in the
-> driver already.
+From: Jian Shen <shenjian15@huawei.com>
 
-But I don't see where that SoC-dependent definition is made in
-terga210.c. That tegra_image_format enum looks T210-specific, isn't it?
+Currently, firmware helps manage the unicast MAC VLAN table
+space for each PF. PF just needs to tell firmware its wanted
+space when initializing, and unnecessary to free it when
+un-intializing. So this patch removes the umv space free handle,
+and removes the forward statement of hclge_set_umv_space()
+by defining hclge_init_umv_space() after it.
 
-...
->> The driver will need to have a bit better separation if it's supposed to
->> have a common core for all SoCs. Each incompatible VI/CSI hardware
->> version should have its own kernel module.
-> 
-> currently other Tegra host1x driver (drm) also does similar. Single
-> module for all Tegra SoCs.
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+---
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 72 ++++++++--------------
+ 1 file changed, 24 insertions(+), 48 deletions(-)
 
-DRM driver has a proper separation of the sub-drivers where sub-driver
-won't load on unsupported hardware. The tegra-video driver should do the
-same, i.e. VI and CSI should be individual drivers (and not OPS). There
-could be a some common core, but for now it's not obvious to me what
-that core should be, maybe just the video.c.
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 0618f22..ccf269a 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -62,8 +62,6 @@ static int hclge_init_vlan_config(struct hclge_dev *hdev);
+ static void hclge_sync_vlan_filter(struct hclge_dev *hdev);
+ static int hclge_reset_ae_dev(struct hnae3_ae_dev *ae_dev);
+ static bool hclge_get_hw_reset_stat(struct hnae3_handle *handle);
+-static int hclge_set_umv_space(struct hclge_dev *hdev, u16 space_size,
+-			       u16 *allocated_size, bool is_alloc);
+ static void hclge_rfs_filter_expire(struct hclge_dev *hdev);
+ static void hclge_clear_arfs_rules(struct hnae3_handle *handle);
+ static enum hnae3_reset_type hclge_get_reset_level(struct hnae3_ae_dev *ae_dev,
+@@ -7196,50 +7194,6 @@ static int hclge_add_mac_vlan_tbl(struct hclge_vport *vport,
+ 	return cfg_status;
+ }
+ 
+-static int hclge_init_umv_space(struct hclge_dev *hdev)
+-{
+-	u16 allocated_size = 0;
+-	int ret;
+-
+-	ret = hclge_set_umv_space(hdev, hdev->wanted_umv_size, &allocated_size,
+-				  true);
+-	if (ret)
+-		return ret;
+-
+-	if (allocated_size < hdev->wanted_umv_size)
+-		dev_warn(&hdev->pdev->dev,
+-			 "Alloc umv space failed, want %u, get %u\n",
+-			 hdev->wanted_umv_size, allocated_size);
+-
+-	mutex_init(&hdev->umv_mutex);
+-	hdev->max_umv_size = allocated_size;
+-	/* divide max_umv_size by (hdev->num_req_vfs + 2), in order to
+-	 * preserve some unicast mac vlan table entries shared by pf
+-	 * and its vfs.
+-	 */
+-	hdev->priv_umv_size = hdev->max_umv_size / (hdev->num_req_vfs + 2);
+-	hdev->share_umv_size = hdev->priv_umv_size +
+-			hdev->max_umv_size % (hdev->num_req_vfs + 2);
+-
+-	return 0;
+-}
+-
+-static int hclge_uninit_umv_space(struct hclge_dev *hdev)
+-{
+-	int ret;
+-
+-	if (hdev->max_umv_size > 0) {
+-		ret = hclge_set_umv_space(hdev, hdev->max_umv_size, NULL,
+-					  false);
+-		if (ret)
+-			return ret;
+-		hdev->max_umv_size = 0;
+-	}
+-	mutex_destroy(&hdev->umv_mutex);
+-
+-	return 0;
+-}
+-
+ static int hclge_set_umv_space(struct hclge_dev *hdev, u16 space_size,
+ 			       u16 *allocated_size, bool is_alloc)
+ {
+@@ -7268,6 +7222,30 @@ static int hclge_set_umv_space(struct hclge_dev *hdev, u16 space_size,
+ 	return 0;
+ }
+ 
++static int hclge_init_umv_space(struct hclge_dev *hdev)
++{
++	u16 allocated_size = 0;
++	int ret;
++
++	ret = hclge_set_umv_space(hdev, hdev->wanted_umv_size, &allocated_size,
++				  true);
++	if (ret)
++		return ret;
++
++	if (allocated_size < hdev->wanted_umv_size)
++		dev_warn(&hdev->pdev->dev,
++			 "failed to alloc umv space, want %u, get %u\n",
++			 hdev->wanted_umv_size, allocated_size);
++
++	mutex_init(&hdev->umv_mutex);
++	hdev->max_umv_size = allocated_size;
++	hdev->priv_umv_size = hdev->max_umv_size / (hdev->num_alloc_vport + 1);
++	hdev->share_umv_size = hdev->priv_umv_size +
++			hdev->max_umv_size % (hdev->num_alloc_vport + 1);
++
++	return 0;
++}
++
+ static void hclge_reset_umv_space(struct hclge_dev *hdev)
+ {
+ 	struct hclge_vport *vport;
+@@ -10041,8 +10019,6 @@ static void hclge_uninit_ae_dev(struct hnae3_ae_dev *ae_dev)
+ 	if (mac->phydev)
+ 		mdiobus_unregister(mac->mdio_bus);
+ 
+-	hclge_uninit_umv_space(hdev);
+-
+ 	/* Disable MISC vector(vector0) */
+ 	hclge_enable_vector(&hdev->misc_vector, false);
+ 	synchronize_irq(hdev->misc_vector.vector_irq);
+-- 
+2.7.4
 
-> With current tegra-video, all the v4l2 related common part of
-> implementation is same for all tegra's and only
-> tegra210.c/tegra186.c/tegra194.c will have corresponding tegra soc
-> specific vi/csi programming sequence.
-
-This code shouldn't be shared within the same driver module, IMO.
-
-
->> The tegra-video should be okay, although the "video" part sounds a bit
->> too broad since video could mean a lot of things. I think downstream
->> kernel uses (or at least used) the tegra-camera name for the driver,
->> perhaps it could be a reasonable variant as well.
-> prior feedback suggests not to use camera variant instead to use video
-
-Alright, then the tegra-video should be fine.
