@@ -2,164 +2,123 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08EFEC54FD0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 12:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2787CC55194
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 12:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEF582071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 12:00:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587902459;
-	bh=tpyO3m4TPWhYdl0DNQvYLij22ofFQibUNuz6A936P5o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JMKdheX4lnxuMU3UJjhpNUCW6upuAWmph4AblwyFj6yljqJ01JGo8nEp+DcbNTNE1
-	 sUsm+kWpKJXk/3B2lPe0PypcMiy1PAOw6NbxWc3+kZpYRz0r8WQpyoQNATokOlGMXT
-	 g1WTiuimIrMOshYEuzBPnMqiCPc7xP600LNdSh1Q=
+	by mail.kernel.org (Postfix) with ESMTP id 0526F2087E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 12:04:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sfuva1sx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726155AbgDZMA6 (ORCPT
+        id S1726162AbgDZMEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 08:00:58 -0400
-Received: from mail-oo1-f65.google.com ([209.85.161.65]:33837 "EHLO
-        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbgDZMA5 (ORCPT
+        Sun, 26 Apr 2020 08:04:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbgDZMEs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 08:00:57 -0400
-Received: by mail-oo1-f65.google.com with SMTP id q204so3222802ooq.1;
-        Sun, 26 Apr 2020 05:00:56 -0700 (PDT)
+        Sun, 26 Apr 2020 08:04:48 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55E2DC061A0E;
+        Sun, 26 Apr 2020 05:04:48 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id u16so17075434wmc.5;
+        Sun, 26 Apr 2020 05:04:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DJJgAhfk7oMElKUFRIFXFOYn/qywwEUjFDBuFThEtAQ=;
+        b=sfuva1sxBAzZHPvMiK3XuIgAyvFBdMlVYiBHcD57MfQ6+50qw2HX4NmbS1P1I8eKKZ
+         /aMgB6u6q36iOGdnSL+BiS0R0gtIYIwuTng8Aqz8O66NHAfRaTAdCEAg01mQBr9SrKWf
+         0OckZWSg/C0ujFHCTQzzYIZ1NB/kinnelZK9nPLzlowzGZLn/qqnhxYB9MEWY5L5boJW
+         a3BnY5WcUie1SWiCN40liJeF42CZR3g0F/J76siR9kwYFzvaeYOzbaGtU2JyeBT8VG/T
+         B1JCreV3F0iK4bHSFNsHtrSCEzoe2s3Ub/em30d6/p3ZKWec8gpRhsGuit6HksSHc9Ub
+         C+Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1ybWhQKicq3BRCiYVQDh4zWliFFrm/KJg+jIJlyUI9M=;
-        b=ej2BtiMWjS/6fppDztqzCZYy09Qnh4QSrZLZKOUCDxkrg/uDfa1bWAQFX0sBhxJ2Lr
-         1s5Ntg09X10k284ICoJ2f0XZIYt0GUV7In/MCOWmQfX591iAdfB7KD+oulO+Nh79D8LZ
-         gRvux9h0Bx72Yoechl3a6gyrpxeDG33nGI4ybjcvfwMLA8IkPufktewWeYICZhOjXGkL
-         HLVufYEibkdAslV6cllqQrx7EWF+jjjBEwn7eBonNeVAwzKZB5lp3lxfw0xBvbN/o2Lg
-         wKOUg0/Pk6FY3153/rGO6CsCBkUJv6IxYrTRojThhPjKjHn0GqFgb4yc25HaemDy/uq8
-         7sVw==
-X-Gm-Message-State: AGi0PuZsO3kQr/1FIm1vbrOT4RSq0Y27NQhQiYF9jnHkyRs6X/8nrG5Q
-        L+cSNpdqfb8cmFnqZt04XiGkEJWxnMIkAoH6c2o=
-X-Google-Smtp-Source: APiQypKyZxkcHfEhyM8+pOq/fmWQIy9udg2kWP9Mm+fknlDDSKT2EaVjrffZSGqWcxhe2HznqDzwgkIT3THf3/jVgJ0=
-X-Received: by 2002:a4a:a286:: with SMTP id h6mr15108432ool.38.1587902455878;
- Sun, 26 Apr 2020 05:00:55 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DJJgAhfk7oMElKUFRIFXFOYn/qywwEUjFDBuFThEtAQ=;
+        b=hFjqGoLgpdXmeAZCBCU4PbS2aWBWqQzcv8sTGcJN40UMpvwZSlX793CJa/Mn4h/cRe
+         9zKUoFTf8SAtHVq81SIyYE4DyfzKg+55yJ5UCxEC3DlIyZb/VHoieJDE54aJqRsM8gJz
+         qP5kEfdyNze76K9OCfw1J9lxZjyo1eg4XeMoGbbe6W+6HKMNkhJp+FMcUZyduYZDL6B5
+         oinFoFgadqHrwu2kBZzlBY6fVfLVewJG6R2earGbWff6e8uSCoB+DcLRE/QatEGd8PsR
+         Fy0VKG93/MwgcnyiAhJe26UnRtwWaSkeY+pwufoyY2vsl6y++2F+eUrjoPFfaLfzCut5
+         k9gA==
+X-Gm-Message-State: AGi0PuZhoSMXh3zuw8lDkpIM7qizhpu/1hXeGmASa9BsSNDZcSW0aJX7
+        vinCo5dIk7eByHloAXdrm1o=
+X-Google-Smtp-Source: APiQypJpOD8D5Q3WlZ2OFG6gGKUKug+LlEpJrzk93HqNzrSsg2E8ZE0xp0/y6N/oThQlA3vs6r+5eA==
+X-Received: by 2002:a1c:1985:: with SMTP id 127mr22090541wmz.13.1587902686745;
+        Sun, 26 Apr 2020 05:04:46 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0:59f6:22c5:d1f3:662d])
+        by smtp.gmail.com with ESMTPSA id s24sm11120026wmj.28.2020.04.26.05.04.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Apr 2020 05:04:45 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [RFT PATCH 0/7] Add Allwinner H3/H5/A64 HDMI audio
+Date:   Sun, 26 Apr 2020 14:04:35 +0200
+Message-Id: <20200426120442.11560-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200426104713.216896-1-hdegoede@redhat.com> <20200426104713.216896-3-hdegoede@redhat.com>
-In-Reply-To: <20200426104713.216896-3-hdegoede@redhat.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Sun, 26 Apr 2020 14:00:44 +0200
-Message-ID: <CAJZ5v0iZ-8rnC3fLsYYb4ieAVKXc6_W3_Cnxfy3vQR3CEufucg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ACPI / scan: Create platform device for CPLM3218 ACPI nodes
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 12:47 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Some CPLM3218 ACPI nodes also put the SMBus Alert Response Address (0x0c)
-> in their ACPI resource table; and they put it there as the first entry,
-> here is an example from the CPLM3218 device in the DSDT of an Asus T100TA:
->
->  Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
->  {
->      Name (SBUF, ResourceTemplate ()
->      {
->          I2cSerialBusV2 (0x000C, ControllerInitiated, 0x00061A80,
->              AddressingMode7Bit, "\\_SB.I2C3",
->              0x00, ResourceConsumer, , Exclusive,
->              )
->          I2cSerialBusV2 (0x0048, ControllerInitiated, 0x00061A80,
->              AddressingMode7Bit, "\\_SB.I2C3",
->              0x00, ResourceConsumer, , Exclusive,
->              )
->          Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
->          {
->              0x00000033,
->          }
->      })
->      Return (SBUF) /* \_SB_.I2C3.ALSD._CRS.SBUF */
->  }
->
-> The actual I2C address of the sensor in this case is the 0x48 address
-> from the second resource-table entry. On some other devices
-> (e.g. HP X2 Bay Trail models, Acer SW5-012) the CPLM3218 node contains
-> only 1 I2C resource.
->
-> Add the CPLM3218 to the I2C multi instantiate list, so that the
-> i2c-multi-instantiate.c driver can handle it.
->
-> Note in the case where there are 2 I2C resources we simply instatiate
-> i2c-clients for both and let the cm32181 driver figure out that the
-> first one is not the one it wants.
->
-> Doing things this way is actually desirable because on devices where
-> there are 2 I2C resources it seems that we first need to do a SMBus
-> read of the 0x0c address before the sensor will respond to I2C transfers
-> on its actual address.
->
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Hi,
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+This is some work done by Marcus Cooper and Jernej Škrabec.
+These patches are present in LibreElec kernel and have been
+tested by LE users.
 
-for the scan.c change and I'm expecting platform/x86 to take care of
-this series.
+I have rework them to follow kernel rules but I can't test
+them as I don't have H3, H5 or A64 boards.
 
-Thanks!
+If some sunxi users could confirm they worked as expected!
 
-> ---
->  drivers/acpi/scan.c                          | 1 +
->  drivers/platform/x86/i2c-multi-instantiate.c | 7 +++++++
->  2 files changed, 8 insertions(+)
->
-> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> index 6d3448895382..937d72fc212c 100644
-> --- a/drivers/acpi/scan.c
-> +++ b/drivers/acpi/scan.c
-> @@ -1544,6 +1544,7 @@ static bool acpi_device_enumeration_by_parent(struct acpi_device *device)
->         static const struct acpi_device_id i2c_multi_instantiate_ids[] = {
->                 {"BSG1160", },
->                 {"BSG2150", },
-> +               {"CPLM3218", },
->                 {"INT33FE", },
->                 {"INT3515", },
->                 {}
-> diff --git a/drivers/platform/x86/i2c-multi-instantiate.c b/drivers/platform/x86/i2c-multi-instantiate.c
-> index dcafb1a29d17..e1cdc44e6f57 100644
-> --- a/drivers/platform/x86/i2c-multi-instantiate.c
-> +++ b/drivers/platform/x86/i2c-multi-instantiate.c
-> @@ -180,6 +180,12 @@ static const struct i2c_inst_data int3515_data[]  = {
->         {}
->  };
->
-> +static const struct i2c_inst_data cplm3218_data[]  = {
-> +       { "cm32181", PASS_FWNODE },
-> +       { "cm32181", PASS_FWNODE },
-> +       {}
-> +};
-> +
->  /*
->   * Note new device-ids must also be added to i2c_multi_instantiate_ids in
->   * drivers/acpi/scan.c: acpi_device_enumeration_by_parent().
-> @@ -187,6 +193,7 @@ static const struct i2c_inst_data int3515_data[]  = {
->  static const struct acpi_device_id i2c_multi_inst_acpi_ids[] = {
->         { "BSG1160", (unsigned long)bsg1160_data },
->         { "BSG2150", (unsigned long)bsg2150_data },
-> +       { "CPLM3218", (unsigned long)cplm3218_data },
->         { "INT3515", (unsigned long)int3515_data },
->         { }
->  };
-> --
-> 2.26.0
->
+This serie goes in top off "Add H6 I2S support"[0].
+You can find a branch for testing here[1].
+
+Thanks,
+Clement
+
+0: https://lwn.net/Articles/817914/
+1: https://github.com/clementperon/linux/tree/allwinner_hdmi
+
+Marcus Cooper (7):
+  arm: dts: sunxi: h3/h5: Add DAI node for HDMI
+  arm: dts: sunxi: h3/h5: Add HDMI audio
+  arm64: dts: allwinner: a64: Add DAI node for HDMI
+  arm64: dts: allwinner: a64: Add HDMI audio
+  arm: sun8i: h3: Add HDMI audio to Orange Pi 2
+  arm: sun8i: h3: Add HDMI audio to Beelink X2
+  arm64: dts: allwinner: a64: Add HDMI audio to Pine64
+
+ arch/arm/boot/dts/sun8i-h3-beelink-x2.dts     |  8 +++++
+ arch/arm/boot/dts/sun8i-h3-orangepi-2.dts     |  8 +++++
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi            | 34 ++++++++++++++++++
+ .../boot/dts/allwinner/sun50i-a64-pine64.dts  |  8 +++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 35 +++++++++++++++++++
+ 5 files changed, 93 insertions(+)
+
+-- 
+2.20.1
+
