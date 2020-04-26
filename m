@@ -2,338 +2,126 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B599FC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C16FC55191
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D57B2071E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 184552074F
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:48:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="VfXw3pMr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UWcZWOoW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726154AbgDZFpK (ORCPT
+        id S1726184AbgDZFsj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 01:45:10 -0400
-Received: from mga03.intel.com ([134.134.136.65]:32061 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725765AbgDZFpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 01:45:09 -0400
-IronPort-SDR: ZzVLVBAN4kYaSwYR9vYBXaiRxJvx71PMHi/0gRYTEqYXBqmJniVcGjWv0ZPQW5UxtKD4Wa/hJO
- QqkClJfcj/8Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2020 22:45:09 -0700
-IronPort-SDR: KUYlz9wjv2LdBj671xqSihojbOnn4/ZstjEKwwHCwl1R3uwZ8VLRQcMgsjuVvJgHnaKaLRxi7X
- exLJJh7YVDeg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,318,1583222400"; 
-   d="scan'208";a="431313250"
-Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
-  by orsmga005.jf.intel.com with ESMTP; 25 Apr 2020 22:45:09 -0700
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX104.amr.corp.intel.com (10.22.225.131) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sat, 25 Apr 2020 22:45:08 -0700
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sat, 25 Apr 2020 22:45:07 -0700
-Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Sat, 25 Apr 2020 22:45:07 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.103)
- by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sat, 25 Apr 2020 22:45:06 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ETlmeNQhyg8Q91MHSky8ZqzNNwzcMDQ6k785sVg2kSJ37ulHZ/+ZWBmoWZSWFhrh0EALNvPXRXI7XbVgKCUDpyXxL4MPa322F2VY6iuvR5LU0wfxhHvPpwontE+9kk9fEDsiHbsvzx5B6xjNbjN2Or+3fViH8B7z6BaAimkz+zu7oOWKSIYjOQ+WbZZgNDB/ABY3WqSw6K/bzm5IySprzd86cq85CAlqH4CbJYw5/EEE43Gg4cH1tfkA8kFyXk96naodbFh7jDph15TxfgtglsdwM3bSo9JApfSH2oKIG4VMVfhFGO6xuycizEsLQr/agOiEQKQNQ5I1mMf1OcWQSQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jUTlwl2D3Vud9WCUQM4KMXhP+GL4anWXe5T1lnA3tBA=;
- b=QpMjJ/byv3rzTZcK/7FEDZ2+2xhIRiVmonV3lOEyf1aWeeYKca46SS3iij1XD/myEjKQJF7FNIOs2H4+PAMSm6br8bP101q+3e2l/dpEceHc9VYiS9/MLnTWIQbSKKDZzpjlWdekd8nbs+azpyGp0nAeZOo1ajKPaCW/EAmzqU3N900gui7VtRlbQYmqMCc9obPDnNA9EiXDpKEjQAvui7bPEbxX2ofp+/7ieK1H0WafjUh+pjbktIgQw8niVXXoymWFHDcsygnKRBpJBQFQtZtvojp9NxmshQGtDICltD/tRuKg7tUbBx3naybZvN8kv8Zw+fmEanfvLWNwoDT3Ow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jUTlwl2D3Vud9WCUQM4KMXhP+GL4anWXe5T1lnA3tBA=;
- b=VfXw3pMr8euyUlsQQ3mFgikbhoNw/mD0DHZhgXkgJN6ha7MoyDHUbxcbslGkr5cYcoC0Zh/Yl3hnuNuompiJeHUtjwmJB3lDDeUMT+6Tnr3DOyCo91hczVRN0VTNIXPVul5HGB72PD2SDsvbPRYJWQAnwvmLjrz5Q2ycpBJ62BI=
-Received: from CH2PR11MB4198.namprd11.prod.outlook.com (2603:10b6:610:3b::31)
- by CH2PR11MB4360.namprd11.prod.outlook.com (2603:10b6:610:3f::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Sun, 26 Apr
- 2020 05:45:05 +0000
-Received: from CH2PR11MB4198.namprd11.prod.outlook.com
- ([fe80::e5c8:f6c6:53d:3d99]) by CH2PR11MB4198.namprd11.prod.outlook.com
- ([fe80::e5c8:f6c6:53d:3d99%3]) with mapi id 15.20.2937.020; Sun, 26 Apr 2020
- 05:45:05 +0000
-From:   "Wang, Rander" <rander.wang@intel.com>
-To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        "Kale, Sanyog R" <sanyog.r.kale@intel.com>,
-        "Pierre-Louis Bossart" <pierre-louis.bossart@linux.intel.com>
-CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] soundwire: intel: Remove unused function
-Thread-Topic: [PATCH v2] soundwire: intel: Remove unused function
-Thread-Index: AQHWG11EBZG50fJ2wkiGOSAo6dQ2RKiK4tbA
-Date:   Sun, 26 Apr 2020 05:45:04 +0000
-Message-ID: <CH2PR11MB4198D1B209828E59B1AF10DFF0AE0@CH2PR11MB4198.namprd11.prod.outlook.com>
-References: <20200425235448.3946-1-sudipm.mukherjee@gmail.com>
-In-Reply-To: <20200425235448.3946-1-sudipm.mukherjee@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=rander.wang@intel.com; 
-x-originating-ip: [134.191.221.114]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4ea2e5c2-a0bd-4b80-7a46-08d7e9a4f890
-x-ms-traffictypediagnostic: CH2PR11MB4360:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR11MB436002C0EC982673D908083EF0AE0@CH2PR11MB4360.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-forefront-prvs: 03853D523D
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR11MB4198.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(136003)(376002)(346002)(396003)(39850400004)(52536014)(26005)(4326008)(316002)(6506007)(33656002)(55016002)(9686003)(110136005)(54906003)(186003)(7696005)(8936002)(86362001)(5660300002)(66946007)(66476007)(66446008)(478600001)(76116006)(53546011)(66556008)(64756008)(8676002)(71200400001)(2906002)(81156014);DIR:OUT;SFP:1102;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Mpskl7hAVNJpV5i+LG89V4cvFz90ExB1i+2KTo0dWNu2bxnCniobCijO703bhk0WzkK2CcDGH6H+JwxIpxrijP4TMy7N5opTlH+GrXblvVlIzA+S5ZQVwmwq9TGLQGGFLLcf0C+ijRUXP30YK57lK2sYbsSwZZwTis8dj8jFtZnyRQ8g15uLDLKPOwLO3URNZqLNxT/KtbntNWazh3lqBhqlMAOCV4mQfa1eF8tIoAlhLBMo1v5zEjnnhWiAMXv9OYks6OpXXZxGnL3Vp+e9HIez4c0WEz/SXjkYgqoeQL8+8V1anKogb7EE9JVqX8b/X9ljRLRf1ck5GDTE0SHnZTvXxu8K1IOGc2Zyd0oMH/PJwCo5A+rtiEqmiBk29MBOnB0AevmFGb55OXoCOPA+pkoYvn7tcni/o/3YAe/+5/KZDoiZKhzRfQ1WwqscEj6o
-x-ms-exchange-antispam-messagedata: H+FVhPdHSzhRl7agx66EHc/yaF/RVz5N1v6cT63JWGoPNFo0A+/wysuEYFWFa96E9U77FKRDxcCSSOO/TxeV5qMANRloaRIks5MXJys/GiFyBK/Gh2AMoRx2x6fPiPVelPffSzicZcct+cKXbVSYhVEmEJwHAx1Aydci6Vpl2elCXoigCoHD+ao/zTE10KA6eLLrmHfHEg0h2MvzuUVXan0O3jKiPH8p+V0vw9tMteSZoWB3W0rW5We9XHD/WRuNqdNDy3XZI17u3LGn005gmZNlEKEGBNUardZ1saE+Hwi8+mRCSScIARY4Y1x6lrK4XGHKSjCktzIxrE6DuqCQis7azhIj0/A8LtWVwqPiItRVd2KS1hMaxSZgeczp5qIkYcTOSSDRHQdZmgaYCIRKdPiknyeuKVdPtDLuqAZyQ4/P8ii/bviRYQyu99c0pym7FxdtN2/U6FcazpHP8hdmTGiAn0dM6NmRsAP388ehG7b64YwNOKA+23LV8UcAyRhW73fVL0zJkv27rfTs32jULMxezDorv1+XwHrugELWaPrqHLYafipFEtcp01Nn5Gc6mpohIIghckZSPHR4sIPtm5U2nCFXJbyn3SlHt1UIcoUoU3IDzhRECxXua/Gt0WeoDbOZhB8+6B9XON21uMRzvNN9maJ7UNgzL7gNX6GpQE477xPKbnt6rrhkLlsrHiPZWp/3wnuCaisirIHRuyBLJ/KPYN8dRdxJfN3ObZOjV3Tu00mfsnlh7sUsAa5Wv1H8PB9qrPP2/EQ8Nub8cpHdosc4oi/9Hzcpx+GR6ayWn9AO9FDn5jybsIG8+wqSw01f
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 26 Apr 2020 01:48:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41234 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725468AbgDZFsi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 01:48:38 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EA9EC061A0C;
+        Sat, 25 Apr 2020 22:48:38 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id e25so14116491ljg.5;
+        Sat, 25 Apr 2020 22:48:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=m7HiNqLn3J/gsFjOdcSAbHc3Y3mwvXU4rS9bPdUqyFs=;
+        b=UWcZWOoWYTZwloPgnvhrPXFkv2EvrB8ok4AbuTFc10NPFW/R2DIp5ncu7vn3FzFGuF
+         NCZV6xTX++uJrFVmdQ657jFAFP15iyCtqjdW6mzaI5O5Viv7jhpmk8cwCV3Axa07Umck
+         mmT3Ft8yfnvN/di8BLoNNxJ8rDU37/siT+aZrwLiHb0U9KkfCC9gAjCfX8vYiDP8UL2N
+         D4wcpOCZg1hsa4TQdrUx7r7W0fDzYdE0zJBzgnOMRALIFyyVS9ioLqiwP9bzigq1MHuW
+         zTbWW+EuTd3x2EMpGAbYoR8Ke2bDooLkGfULNTALpc+SiePLKdxrpQjsfaD3R+quvOxv
+         1Zig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=m7HiNqLn3J/gsFjOdcSAbHc3Y3mwvXU4rS9bPdUqyFs=;
+        b=bFQwXlXXbDIjzQqa33G4YyAdiZxZNcypD0C0v1XNoMl3LkPuApDiH83F1+gFA99QHR
+         2zYzGp49eonzNCx+nSD9ql9G48llVun70ry9omwcWMWs8FZnpb7nxRjOUuJIn2wmKf/K
+         3rjrMInyzvt4LWJUhRF7zRm9Igsu5JZXKpgkKTZ4cvo9heVbArLRLV4yWspIWUFaskeB
+         n+iXYpZ4LpIzK5C+uMjJ7e+533jA6nf83UaZdZgtOHEiJuVa2nwb2eRUHeodD8ugUy02
+         CAbyKlz8O5VR6EqhnQdfwZdgTLd6WRWJdsYTkpx0D0JaecQW5GKCOj8PEWjKTlV2t2SU
+         vd8A==
+X-Gm-Message-State: AGi0PuYApccmhvqQ91y8mmQthgd9WWqCp0fmiNmHxeYqeCuVx91nPVb5
+        nhn2HXvmdQ5j7h2FeLB/6WK0yZrP
+X-Google-Smtp-Source: APiQypKPQ+TZrCqsMJwkrhi4u35tNs8adR9qrOHk+RNlaOJ/nfoyAjazMmKr9ulLiZDeCVKB9KCc2Q==
+X-Received: by 2002:a2e:593:: with SMTP id 141mr10060776ljf.271.1587880116541;
+        Sat, 25 Apr 2020 22:48:36 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id 14sm8005199lfz.8.2020.04.25.22.48.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 25 Apr 2020 22:48:35 -0700 (PDT)
+Subject: Re: [RFC PATCH v10 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, frankc@nvidia.com, sakari.ailus@iki.fi,
+        helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1587700513-28449-1-git-send-email-skomatineni@nvidia.com>
+ <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
+ <6ca93ff9-ca59-544f-767c-4355d01a5c20@gmail.com>
+ <62546d1f-eca5-06be-2bc2-e45ccd53830a@xs4all.nl>
+ <50fd1016-ca8b-ec5d-e5a8-f257138b152e@gmail.com>
+ <658c4232-94d9-3051-8c93-bff7046cf5f2@nvidia.com>
+ <03426915-25ea-69b4-bc64-f87f3046d33f@nvidia.com>
+ <aabaecc4-3494-0137-7d2b-853304bfa68b@gmail.com>
+ <09f20441-fec6-7496-2edc-c69db535e441@nvidia.com>
+ <61799fab-858c-8b0d-ba7d-846cd041e044@gmail.com>
+ <99a5c82a-bd84-5c80-e6d7-7b6f2858aa78@gmail.com>
+ <8c4f5e88-b47a-6b5c-b579-1b28be19feb5@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <01949632-c7e9-2b44-2c52-2d40e1632347@gmail.com>
+Date:   Sun, 26 Apr 2020 08:48:34 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4ea2e5c2-a0bd-4b80-7a46-08d7e9a4f890
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Apr 2020 05:45:04.8591
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nnJ+B+gnQ9H3uMwOiywLrv8BBVUOhhC55PVHnlDMC7hDliA0HdAYcYlrwKnVRi1rCz+Qbq1A47a6NB/R7QyyWw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR11MB4360
-X-OriginatorOrg: intel.com
+In-Reply-To: <8c4f5e88-b47a-6b5c-b579-1b28be19feb5@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is used by sound/soc/sof/intel/hda.c.   Please check history of alsa-dev=
-el mail list. Bard Liao is working on it.
+26.04.2020 07:23, Sowjanya Komatineni пишет:
+> 
+> On 4/25/20 7:19 PM, Dmitry Osipenko wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> 26.04.2020 05:10, Dmitry Osipenko пишет:
+>> ...
+>>>> currently other Tegra host1x driver (drm) also does similar. Single
+>>>> module for all Tegra SoCs.
+>>> DRM driver has a proper separation of the sub-drivers where sub-driver
+>>> won't load on unsupported hardware. The tegra-video driver should do the
+>>> same, i.e. VI and CSI should be individual drivers (and not OPS). There
+>>> could be a some common core, but for now it's not obvious to me what
+>>> that core should be, maybe just the video.c.
+>> Maybe video.c csi.c vi.c could be moved into a separate module, somewhat
+>> like a common driver framework. Then the individual CSI/VI drivers will
+>> use those common helpers.. Just a quick thought.
+> 
+> structure of driver is based on prior feedback.
+> 
+> How about instead of re-structuring whole driver again, probably we can
+> use conditional compatibles and also corresponding tegra210.o in
+> Makefile based on ARCH_TEGRA?
+> 
+> #if defined(CONFIG_ARCH_TEGRA_210_SOC)
+>     { .compatible = "nvidia,tegra210-vi", .data = &tegra210_vi_soc },
+> #endif
 
-> -----Original Message-----
-> From: Alsa-devel <alsa-devel-bounces@alsa-project.org> On Behalf Of Sudip
-> Mukherjee
-> Sent: Sunday, April 26, 2020 7:55 AM
-> To: Vinod Koul <vkoul@kernel.org>; Kale, Sanyog R <sanyog.r.kale@intel.co=
-m>;
-> Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> Cc: alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org; Sudip
-> Mukherjee <sudipm.mukherjee@gmail.com>
-> Subject: [PATCH v2] soundwire: intel: Remove unused function
->=20
-> The function sdw_intel_init() is not used anywhere, remove it for now.
-> And that makes sdw_intel_add_controller(), sdw_intel_acpi_cb() and link_m=
-ask
-> unused, so remove them as well.
->=20
-> Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-> ---
->  drivers/soundwire/intel_init.c | 162 -----------------------------------=
-------
->  1 file changed, 162 deletions(-)
->=20
-> diff --git a/drivers/soundwire/intel_init.c b/drivers/soundwire/intel_ini=
-t.c index
-> ad7053463889..d90929a5043b 100644
-> --- a/drivers/soundwire/intel_init.c
-> +++ b/drivers/soundwire/intel_init.c
-> @@ -23,10 +23,6 @@
->  #define SDW_LINK_BASE		0x30000
->  #define SDW_LINK_SIZE		0x10000
->=20
-> -static int link_mask;
-> -module_param_named(sdw_link_mask, link_mask, int, 0444); -
-> MODULE_PARM_DESC(sdw_link_mask, "Intel link mask (one bit per link)");
-> -
->  static int sdw_intel_cleanup_pdev(struct sdw_intel_ctx *ctx)  {
->  	struct sdw_intel_link_res *link =3D ctx->links; @@ -47,164 +43,6 @@
-> static int sdw_intel_cleanup_pdev(struct sdw_intel_ctx *ctx)
->  	return 0;
->  }
->=20
-> -static struct sdw_intel_ctx
-> -*sdw_intel_add_controller(struct sdw_intel_res *res) -{
-> -	struct platform_device_info pdevinfo;
-> -	struct platform_device *pdev;
-> -	struct sdw_intel_link_res *link;
-> -	struct sdw_intel_ctx *ctx;
-> -	struct acpi_device *adev;
-> -	int ret, i;
-> -	u8 count;
-> -	u32 caps;
-> -
-> -	if (acpi_bus_get_device(res->handle, &adev))
-> -		return NULL;
-> -
-> -	/* Found controller, find links supported */
-> -	count =3D 0;
-> -	ret =3D fwnode_property_read_u8_array(acpi_fwnode_handle(adev),
-> -					    "mipi-sdw-master-count", &count,
-> 1);
-> -
-> -	/* Don't fail on error, continue and use hw value */
-> -	if (ret) {
-> -		dev_err(&adev->dev,
-> -			"Failed to read mipi-sdw-master-count: %d\n", ret);
-> -		count =3D SDW_MAX_LINKS;
-> -	}
-> -
-> -	/* Check SNDWLCAP.LCOUNT */
-> -	caps =3D ioread32(res->mmio_base + SDW_SHIM_BASE +
-> SDW_SHIM_LCAP);
-> -	caps &=3D GENMASK(2, 0);
-> -
-> -	/* Check HW supported vs property value and use min of two */
-> -	count =3D min_t(u8, caps, count);
-> -
-> -	/* Check count is within bounds */
-> -	if (count > SDW_MAX_LINKS) {
-> -		dev_err(&adev->dev, "Link count %d exceeds max %d\n",
-> -			count, SDW_MAX_LINKS);
-> -		return NULL;
-> -	} else if (!count) {
-> -		dev_warn(&adev->dev, "No SoundWire links detected\n");
-> -		return NULL;
-> -	}
-> -
-> -	dev_dbg(&adev->dev, "Creating %d SDW Link devices\n", count);
-> -
-> -	ctx =3D kzalloc(sizeof(*ctx), GFP_KERNEL);
-> -	if (!ctx)
-> -		return NULL;
-> -
-> -	ctx->count =3D count;
-> -	ctx->links =3D kcalloc(ctx->count, sizeof(*ctx->links), GFP_KERNEL);
-> -	if (!ctx->links)
-> -		goto link_err;
-> -
-> -	link =3D ctx->links;
-> -
-> -	/* Create SDW Master devices */
-> -	for (i =3D 0; i < count; i++) {
-> -		if (link_mask && !(link_mask & BIT(i))) {
-> -			dev_dbg(&adev->dev,
-> -				"Link %d masked, will not be enabled\n", i);
-> -			link++;
-> -			continue;
-> -		}
-> -
-> -		link->registers =3D res->mmio_base + SDW_LINK_BASE
-> -					+ (SDW_LINK_SIZE * i);
-> -		link->shim =3D res->mmio_base + SDW_SHIM_BASE;
-> -		link->alh =3D res->mmio_base + SDW_ALH_BASE;
-> -
-> -		link->ops =3D res->ops;
-> -		link->dev =3D res->dev;
-> -
-> -		memset(&pdevinfo, 0, sizeof(pdevinfo));
-> -
-> -		pdevinfo.parent =3D res->parent;
-> -		pdevinfo.name =3D "int-sdw";
-> -		pdevinfo.id =3D i;
-> -		pdevinfo.fwnode =3D acpi_fwnode_handle(adev);
-> -
-> -		pdev =3D platform_device_register_full(&pdevinfo);
-> -		if (IS_ERR(pdev)) {
-> -			dev_err(&adev->dev,
-> -				"platform device creation failed: %ld\n",
-> -				PTR_ERR(pdev));
-> -			goto pdev_err;
-> -		}
-> -
-> -		link->pdev =3D pdev;
-> -		link++;
-> -	}
-> -
-> -	return ctx;
-> -
-> -pdev_err:
-> -	sdw_intel_cleanup_pdev(ctx);
-> -link_err:
-> -	kfree(ctx);
-> -	return NULL;
-> -}
-> -
-> -static acpi_status sdw_intel_acpi_cb(acpi_handle handle, u32 level,
-> -				     void *cdata, void **return_value)
-> -{
-> -	struct sdw_intel_res *res =3D cdata;
-> -	struct acpi_device *adev;
-> -	acpi_status status;
-> -	u64 adr;
-> -
-> -	status =3D acpi_evaluate_integer(handle, METHOD_NAME__ADR, NULL,
-> &adr);
-> -	if (ACPI_FAILURE(status))
-> -		return AE_OK; /* keep going */
-> -
-> -	if (acpi_bus_get_device(handle, &adev)) {
-> -		pr_err("%s: Couldn't find ACPI handle\n", __func__);
-> -		return AE_NOT_FOUND;
-> -	}
-> -
-> -	res->handle =3D handle;
-> -
-> -	/*
-> -	 * On some Intel platforms, multiple children of the HDAS
-> -	 * device can be found, but only one of them is the SoundWire
-> -	 * controller. The SNDW device is always exposed with
-> -	 * Name(_ADR, 0x40000000), with bits 31..28 representing the
-> -	 * SoundWire link so filter accordingly
-> -	 */
-> -	if ((adr & GENMASK(31, 28)) >> 28 !=3D SDW_LINK_TYPE)
-> -		return AE_OK; /* keep going */
-> -
-> -	/* device found, stop namespace walk */
-> -	return AE_CTRL_TERMINATE;
-> -}
-> -
-> -/**
-> - * sdw_intel_init() - SoundWire Intel init routine
-> - * @parent_handle: ACPI parent handle
-> - * @res: resource data
-> - *
-> - * This scans the namespace and creates SoundWire link controller device=
-s
-> - * based on the info queried.
-> - */
-> -static void *sdw_intel_init(acpi_handle *parent_handle,
-> -			    struct sdw_intel_res *res)
-> -{
-> -	acpi_status status;
-> -
-> -	status =3D acpi_walk_namespace(ACPI_TYPE_DEVICE,
-> -				     parent_handle, 1,
-> -				     sdw_intel_acpi_cb,
-> -				     NULL, res, NULL);
-> -	if (ACPI_FAILURE(status))
-> -		return NULL;
-> -
-> -	return sdw_intel_add_controller(res);
-> -}
-> -
->  /**
->   * sdw_intel_exit() - SoundWire Intel exit
->   * @arg: callback context
-> --
-> 2.11.0
-
+Yes, allowing user to disable the unneeded code should be good.
