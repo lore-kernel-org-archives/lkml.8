@@ -2,134 +2,117 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2176BC54FCB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 20:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EABC54FCB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 20:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9FD32071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 20:55:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587934531;
-	bh=VJHXeugh1nAiRtbmY8jzPcFMwDfoWlm6nzLm9OEyQgY=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=moo0/tWmhoaediacybmJ00a/1egH9FJdNJTexwZWfSqTc536xDKEeLgKVV8ifB39h
-	 vwD4B/vyhovKOsC1pzyi3K75kyTpBz7tJopEKhxxIIk3ZtMfTiyEi/wNzF7O8Qoply
-	 qRdUcR6lRuzD5873ZiWZ4BZed3MINzHeglb4EJl4=
+	by mail.kernel.org (Postfix) with ESMTP id 563DE2070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 20:56:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbgDZUza (ORCPT
+        id S1726360AbgDZU4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 16:55:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58630 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726177AbgDZUz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 16:55:29 -0400
-Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B78212070A;
-        Sun, 26 Apr 2020 20:55:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587934529;
-        bh=VJHXeugh1nAiRtbmY8jzPcFMwDfoWlm6nzLm9OEyQgY=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=g1AUu5Qyv3diummDl72l9tHEK/TclBhF1s4W+BL0A9qUhVbkicIKKswEgrMXnLdBv
-         KcDyPiq62Ovgo5/OyEfHPqib1cUlOCBHKKD+lVFxwwkxUykD9C0etkVB4OyQxNT8Q0
-         kaQuJf8jf7D888y/dXTS6pALr53zzCvNCbB/4Sik=
-Message-ID: <6346950cfc8eb0a6ca76e3b742f913f6561b0feb.camel@kernel.org>
-Subject: Re: [PATCH 2/3] tracing/boottime: Fix kprobe event API usage
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>
-Date:   Sun, 26 Apr 2020 15:55:26 -0500
-In-Reply-To: <158779375766.6082.201939936008972838.stgit@devnote2>
-References: <158779373972.6082.16695832932765258919.stgit@devnote2>
-         <158779375766.6082.201939936008972838.stgit@devnote2>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Sun, 26 Apr 2020 16:56:43 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:36453 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726177AbgDZU4n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 16:56:43 -0400
+Received: (qmail 2181 invoked by uid 500); 26 Apr 2020 16:56:41 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 26 Apr 2020 16:56:41 -0400
+Date:   Sun, 26 Apr 2020 16:56:41 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     Vladimir Stankovic <vladimir.stankovic@displaylink.com>
+cc:     gregkh@linuxfoundation.org, <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <mausb-host-devel@displaylink.com>
+Subject: Re: [External] Re: [PATCH v5 5/8] usb: mausb_host: Introduce PAL
+ processing
+In-Reply-To: <871dcf46-19f8-f152-99c0-8185832ed109@displaylink.com>
+Message-ID: <Pine.LNX.4.44L0.2004261655390.1962-100000@netrider.rowland.org>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masami,
+On Sun, 26 Apr 2020, Vladimir Stankovic wrote:
 
-On Sat, 2020-04-25 at 14:49 +0900, Masami Hiramatsu wrote:
-> Fix boottime kprobe events to use API correctly for
-> multiple events.
+> On 26.4.20. 16:31, Alan Stern wrote:
+> > On Sun, 26 Apr 2020, Vladimir Stankovic wrote:
+> > 
+> >> On 26.4.20. 02:32, Alan Stern wrote:
+> >>> On Sat, 25 Apr 2020 vladimir.stankovic@displaylink.com wrote:
+> >>>
+> >>>> Protocol adaptation layer (PAL) implementation has been added to
+> >>>> introduce MA-USB structures and logic.
+> >>>>
+> >>>> Signed-off-by: Vladimir Stankovic <vladimir.stankovic@displaylink.com>
+> >>>
+> >>> ...
+> >>>
+> >>>> +	/*
+> >>>> +	 * Masking URB_SHORT_NOT_OK flag as SCSI driver is adding it where it
+> >>>> +	 * should not, so it is breaking the USB drive on the linux
+> >>>> +	 */
+> >>>> +	urb->transfer_flags &= ~URB_SHORT_NOT_OK;
+> >>>
+> >>> Removing the SHORT_NOT_OK flag is _not_ a valid thing to do.  It will 
+> >>> cause drivers to malfunction.
+> >>>
+> >>> Can you please explain this comment?
+> >>>
+> >>> 	What SCSI driver?
+> >>>
+> >>> 	When is the flag being added?
+> >>>
+> >>> 	How does it break USB drives?
+> >>>
+> >>> 	Why haven't you already reported this problem to the 
+> >>> 	appropriate maintainers?
+> >>>
+> >>> Alan Stern
+> >>>
+> >>
+> >> Hi,
+> >>
+> >> Issue that removal of SHORT_NOT_OK flag addressed is linked to particular
+> >> set of Kingston USB 3.0 flash drives (super speed) - other USB flash drives
+> >> haven't had this flag set. Without this "fix", those Kingston flash drives
+> >> are not being enumerated properly.
+> > 
+> > Please explain in detail how the enumeration of these Kingston flash
+> > drives fails.  Or if such an explanation has already been posted,
+> > please provide a link to it.
 > 
-> For example, when we set a multiprobe kprobe events in
-> bootconfig like below,
+> Will reproduce the issue once again (w/o the fix) and run through the events.
+> Issue has been noticed during early development, and addressed right away.
+> > 
+> >> This particular line was added in the early stage of development, during
+> >> enumeration process implementation. The reason why it remained in the code
+> >> since is because we haven't noticed any side-effects, even with various
+> >> USB devices being attached to remote MA-USB device, including flash drives,
+> >> cameras, wireless mice, etc.
+> > 
+> > Come to think of it, the SHORT_NOT_OK flag is mainly used with HCDs
+> > that don't have scatter-gather support.  Since your mausb driver does
+> > support scatter-gather, you most likely won't encounter any problems 
+> > unless you go looking for them specifically.
+> > 
+> >> The problem has been reported, and is actively being investigated.
+> > 
+> > Where was the problem reported (URL to a mailing list archive)?  Who is
+> > investigating it?
 > 
->   ftrace.event.kprobes.myevent {
->   	probes = "vfs_read $arg1 $arg2", "vfs_write $arg1 $arg2"
->   }
-> 
-> This cause an error;
-> 
->   trace_boot: Failed to add probe: p:kprobes/myevent (null)  vfs_read
-> $arg1 $arg2  vfs_write $arg1 $arg2
-> 
-> This shows the 1st argument becomes NULL and multiprobes
-> are merged to 1 probe.
-> 
-> Fixes: 29a154810546 ("tracing: Change trace_boot to use kprobe_event
-> interface")
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: stable@vger.kernel.org
+> Ticket has been submitted to DisplayLink's internal issue-tracking system
+> and is being investigated by mausb-host-devel team.
 
-Thanks for fixing this!
+Okay.  What SCSI driver does the comment refer to?  Is it something 
+internal to DisplayLink or is it part of the regular Linux kernel?
 
-Reviewed-by: Tom Zanussi <zanussi@kernel.org>
-
-
-> ---
->  kernel/trace/trace_boot.c |   20 ++++++++------------
->  1 file changed, 8 insertions(+), 12 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
-> index 06d7feb5255f..9de29bb45a27 100644
-> --- a/kernel/trace/trace_boot.c
-> +++ b/kernel/trace/trace_boot.c
-> @@ -95,24 +95,20 @@ trace_boot_add_kprobe_event(struct xbc_node
-> *node, const char *event)
->  	struct xbc_node *anode;
->  	char buf[MAX_BUF_LEN];
->  	const char *val;
-> -	int ret;
-> +	int ret = 0;
->  
-> -	kprobe_event_cmd_init(&cmd, buf, MAX_BUF_LEN);
-> +	xbc_node_for_each_array_value(node, "probes", anode, val) {
-> +		kprobe_event_cmd_init(&cmd, buf, MAX_BUF_LEN);
->  
-> -	ret = kprobe_event_gen_cmd_start(&cmd, event, NULL);
-> -	if (ret)
-> -		return ret;
-> +		ret = kprobe_event_gen_cmd_start(&cmd, event, val);
-> +		if (ret)
-> +			break;
->  
-> -	xbc_node_for_each_array_value(node, "probes", anode, val) {
-> -		ret = kprobe_event_add_field(&cmd, val);
-> +		ret = kprobe_event_gen_cmd_end(&cmd);
->  		if (ret)
-> -			return ret;
-> +			pr_err("Failed to add probe: %s\n", buf);
->  	}
->  
-> -	ret = kprobe_event_gen_cmd_end(&cmd);
-> -	if (ret)
-> -		pr_err("Failed to add probe: %s\n", buf);
-> -
->  	return ret;
->  }
->  #else
-> 
+Alan Stern
 
