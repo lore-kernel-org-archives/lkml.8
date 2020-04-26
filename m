@@ -2,144 +2,102 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0C5C5519A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 18:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E299C54FCB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 18:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9A462080C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 18:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 520DA20700
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 18:34:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W5t38Muo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726230AbgDZSeB (ORCPT
+        id S1726264AbgDZSeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 14:34:01 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:51877 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbgDZSeA (ORCPT
+        Sun, 26 Apr 2020 14:34:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46572 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726152AbgDZSeo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 14:34:00 -0400
-Received: by mail-pj1-f68.google.com with SMTP id mq3so6416053pjb.1;
-        Sun, 26 Apr 2020 11:34:00 -0700 (PDT)
+        Sun, 26 Apr 2020 14:34:44 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF844C061A0F;
+        Sun, 26 Apr 2020 11:34:43 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id l11so11933142lfc.5;
+        Sun, 26 Apr 2020 11:34:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=IJA3egWUkcH53DSGZF3Rx64iad0H2gjWQyiaH0PngKM=;
+        b=W5t38MuoqcCRHvRZgnRc+03hf99DZKM/CjB28LEFGDDAkrxqZtYGCsPP0l7Rts9pG1
+         lB2rkzANukrWyLQ/T8ClmqVEZ6rIj8Y+fG/5ZwK4fh14Ul7CaRaYWKFIu3dqqimjKaFq
+         nx4CvyEbsWPfKAwKMhuG7OShQB+P8iqXpnbhPqOq0BBqKeCOG5YxFAeQXsqdWuiGw9TR
+         /x+J1xZzLAdVK0DCQgpOCy6kkq44aZteNP+KljlNQ1KIAitsHAULZZA/H8Biyt1fX3qI
+         ZRQ3g1j08QALhSfUZL6O9ZAMoMU8M53OI1VMq14VicBOycO9fbhZQ4UkoIfbFaWhj6Fk
+         qosA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=qXzckTHEzLqfjoEm4W9i8PdnLcL+nCVxfBPlrAmSpss=;
-        b=rM0/zQkKYgAmBc9xZJdbveWBXmeDPhvT1m6xGHcoXVNjr9q6ker4zf3vHAmN+xpbyK
-         c0INPJWei63ZMT7wHsbUN44cfuVyQ2hPpuu54OH8qE2sdFv/NthiN9Ry5SdIYRxc3i1i
-         n4eP8hqyhDwV1WsFqgid8RVa22ke0gUehkyGLLSq6pBFvWreCSVoR4YIwPb+/L12Sbhc
-         lFrxxKnRHiVT0uQ0pDgwE0L8XIDVtCqcYe345lTTJt0eklDj29CIISCBYDiMCRAkDjqW
-         RFRI18mcSuljDU3Asm75poexQ+V88lIIOPAAczRvkDXx1wycD/qk8wtup3P614ODdkBK
-         7+7Q==
-X-Gm-Message-State: AGi0PuaM3C76dvJn2d8hnZBqNZpkIl3mJe79gVZFsIXH7SjIRsFR164F
-        x+na0UPcJJ0hoPjF+WuQugue1jI6ACg=
-X-Google-Smtp-Source: APiQypIXp0UkWpZqGK0QlcZ5upJJhQ7wmtOcL8MPgX9Ev22J1fLNQSBPnPW4EjdGJAC4GHXQIhHIKw==
-X-Received: by 2002:a17:90a:3767:: with SMTP id u94mr19971131pjb.23.1587926039349;
-        Sun, 26 Apr 2020 11:33:59 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:612a:373a:aa97:7fa7? ([2601:647:4000:d7:612a:373a:aa97:7fa7])
-        by smtp.gmail.com with ESMTPSA id g1sm9302760pjt.25.2020.04.26.11.33.57
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IJA3egWUkcH53DSGZF3Rx64iad0H2gjWQyiaH0PngKM=;
+        b=N1Ej0qaoa6ADxN/fwooMQjnEMzKvj4o7B77g0voSftUrEeLqgjyhwBmCJoTP4c+v7H
+         lIJkhqtOqo1GLGVVekFngfL650Wb0mqfKIhtdw70sAPgw2zpwNj2PlIYsiwaEqTdKDwC
+         ban72ILhrPsfkmqST4iqYIgQaV8zcxHtX+3jLIt6HkMxGDGR5lKFV00zzhHZ0LhZDQMk
+         C6/daApYcyaPADxpvs6dzlgbepRwdNTpyH2WSKXyNC3+VylR8OE5GbTjhW6B2zkTlOQ+
+         YaT6Ebo8wrjtjaShmwSJhlgx9p5DCp5/eyy3ioFUiYQTRJQ5xQNrZeReYIPa6NN6x2Ey
+         5DYQ==
+X-Gm-Message-State: AGi0PuYzYIhF6GRs52KSSDT89H3p2RWECc4FMQ8E2aG69mqJ88n5cqYE
+        6ZC38lWg39D5UPTzJVS5qNCGpwHZ
+X-Google-Smtp-Source: APiQypJ9SO+wBsO9oo2kvUbxzl/+VZq/cDoh9Dqpv7hTZ1BI6T9ubAy3+aiBoq3RPNVRjwXuP/HR2w==
+X-Received: by 2002:ac2:4187:: with SMTP id z7mr13046308lfh.113.1587926082198;
+        Sun, 26 Apr 2020 11:34:42 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id b25sm8180281ljp.105.2020.04.26.11.34.41
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 26 Apr 2020 11:33:58 -0700 (PDT)
-Subject: Re: [PATCH] PM: hibernate: Freeze kernel threads in software_resume()
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>, decui@microsoft.com
-Cc:     linux-pm@vger.kernel.org, len.brown@intel.com, pavel@ucw.cz,
-        mikelley@microsoft.com, longli@microsoft.com,
-        linux-kernel@vger.kernel.org, ming.lei@redhat.com,
-        wei.liu@kernel.org, sthemmin@microsoft.com, haiyangz@microsoft.com,
-        kys@microsoft.com, stable@vger.kernel.org
-References: <20200424034016.42046-1-decui@microsoft.com>
- <2420808.aENraY2TMt@kreacher>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <08f28683-4978-3e3c-e85a-303f6e46ef55@acm.org>
-Date:   Sun, 26 Apr 2020 11:33:56 -0700
+        Sun, 26 Apr 2020 11:34:41 -0700 (PDT)
+Subject: Re: [PATCH v5 03/10] input: elants: remove unused axes
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Rob Herring <robh+dt@kernel.org>,
+        Scott Liu <scott.liu@emc.com.tw>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1587923061.git.mirq-linux@rere.qmqm.pl>
+ <d5eee8cd305adb144a11264d70da94f7b6570366.1587923061.git.mirq-linux@rere.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <72732d30-f915-8189-9ab1-9def5b7d0721@gmail.com>
+Date:   Sun, 26 Apr 2020 21:34:40 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <2420808.aENraY2TMt@kreacher>
+In-Reply-To: <d5eee8cd305adb144a11264d70da94f7b6570366.1587923061.git.mirq-linux@rere.qmqm.pl>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-26 09:24, Rafael J. Wysocki wrote:
-> On Friday, April 24, 2020 5:40:16 AM CEST Dexuan Cui wrote:
->> Currently the kernel threads are not frozen in software_resume(), so
->> between dpm_suspend_start(PMSG_QUIESCE) and resume_target_kernel(),
->> system_freezable_power_efficient_wq can still try to submit SCSI
->> commands and this can cause a panic since the low level SCSI driver
->> (e.g. hv_storvsc) has quiesced the SCSI adapter and can not accept
->> any SCSI commands: https://lkml.org/lkml/2020/4/10/47
->>
->> At first I posted a fix (https://lkml.org/lkml/2020/4/21/1318) trying
->> to resolve the issue from hv_storvsc, but with the help of
->> Bart Van Assche, I realized it's better to fix software_resume(),
->> since this looks like a generic issue, not only pertaining to SCSI.
->>
->> Cc: Bart Van Assche <bvanassche@acm.org>
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Dexuan Cui <decui@microsoft.com>
->> ---
->>  kernel/power/hibernate.c | 7 +++++++
->>  1 file changed, 7 insertions(+)
->>
->> diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
->> index 86aba8706b16..30bd28d1d418 100644
->> --- a/kernel/power/hibernate.c
->> +++ b/kernel/power/hibernate.c
->> @@ -898,6 +898,13 @@ static int software_resume(void)
->>  	error = freeze_processes();
->>  	if (error)
->>  		goto Close_Finish;
->> +
->> +	error = freeze_kernel_threads();
->> +	if (error) {
->> +		thaw_processes();
->> +		goto Close_Finish;
->> +	}
->> +
->>  	error = load_image_and_restore();
->>  	thaw_processes();
->>   Finish:
+26.04.2020 20:47, Michał Mirosław пишет:
+> Driver only ever reports MT events and input_mt_init_slots() sets up
+> emulated axes already.  Clear the capabilities not generated directly
+> and move MT axes setup, so they are visible by input_mt_init_slots().
 > 
-> Applied as a fix for 5.7-rc4, thanks!
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+> Tested-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+> v4: reword commitmsg; reorder axis setup
+> ---
 
-Hi Rafael,
-
-What is not clear to me is how kernel threads are thawed after
-load_image_and_restore() has finished? Should a comment perhaps be added
-above the freeze_kernel_threads() call that explains how
-thaw_kernel_threads() is invoked after load_image_and_restore() has
-finished?
-
-Thanks,
-
-Bart.
+v5 applies cleanly to the current linux-next and everything working fine
+on both Ubuntu 12.04 and 20.04! Thank you very much :)
