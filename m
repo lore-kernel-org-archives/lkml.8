@@ -2,151 +2,368 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAC3C55196
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 01:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B83C6C55186
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 01:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84A2820714
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 01:26:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vBJ5DG8+"
+	by mail.kernel.org (Postfix) with ESMTP id 92B8020714
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 01:26:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726165AbgDZB0I (ORCPT
+        id S1726208AbgDZB0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 21:26:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57338 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726070AbgDZB0F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 21:26:05 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C6D7C061A0C;
-        Sat, 25 Apr 2020 18:26:05 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id r17so10883080lff.2;
-        Sat, 25 Apr 2020 18:26:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PJ5SdqUzErX47qSo76sTAhtveEg7L+g5fhu/mwEX3I0=;
-        b=vBJ5DG8+dP+Cx1VxxxUelWljxWOWbM+gc9+WKjPz4Xg/QKvMNRRWEdH8k9njOcLneE
-         VUUgUxHcnQZ4J0ATZri26BWe1zmYsRIWo5iut9TiHrkFicVmIii3ssUtXHaxB3fEIQ2J
-         G6GbEjSKkmBq9WiJgdT5aJLm3GVUwG+T6LvHmikxRxyAwTg96+y//ZjIy8qkCO2LMfWj
-         8S7Ak6H8HiCweY/Of8wqf8NdQ4ycewLFud5KJR1ETSWeKF8JiGkJqzOVwEsqaXDcjIyW
-         wiITGvumXXlMMblzi/iCN0UJBR1380YjcWWx1YfOISXzsSA+o46JG+/XorbRfEWONOuU
-         Lmiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PJ5SdqUzErX47qSo76sTAhtveEg7L+g5fhu/mwEX3I0=;
-        b=bVaQncy8WXMNOumoDyt9EDZPY0H4w4ivFiH4ghh5sNuT8uMmGPH2VDPQbnde/VNGBx
-         EHphaSc7oSTCvz0oT2u+4xvk+kGXGZMPvlta+QFN5tHpnC4vhqQs3MzW/x9GRGCxq4O+
-         gtkvd+1jPkjU2jWdK/zplZyG5I4R017a6qDnp1pT2O5i6fDidPardPXfTPm7v4hb/xu3
-         ABHfxJJfX17VULcUqv0JpkIa6Acczn4bwWVufmgr896ri24JA+5K6HV1+Ifu8RFXNmDQ
-         e7GB5tOWjUhIeO2pvN2XaQGil2+pWSQd9DULwKJHso5OVKV5VPdTxMagYnfkjsVXhrSC
-         nTmg==
-X-Gm-Message-State: AGi0PubedVS7LV2mLwrUihNtZr/85KvJ76ZAPEAK02LNco5vvKeT0QXK
-        cJkRRmKZi/dRCcHxBslwiGrXRtoi
-X-Google-Smtp-Source: APiQypJTDyUc+mABc9irWwCHesc3rz7Cj2W8V7E9oQG8pDGxeL7odSzpXMgzkH+QHT9fK0HCxDueHw==
-X-Received: by 2002:ac2:5c45:: with SMTP id s5mr11155627lfp.28.1587864363200;
-        Sat, 25 Apr 2020 18:26:03 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id m23sm7143408ljb.87.2020.04.25.18.26.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 25 Apr 2020 18:26:02 -0700 (PDT)
-Subject: Re: [RFC PATCH v10 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, frankc@nvidia.com, sakari.ailus@iki.fi,
-        helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1587700513-28449-1-git-send-email-skomatineni@nvidia.com>
- <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
- <6ca93ff9-ca59-544f-767c-4355d01a5c20@gmail.com>
- <62546d1f-eca5-06be-2bc2-e45ccd53830a@xs4all.nl>
- <50fd1016-ca8b-ec5d-e5a8-f257138b152e@gmail.com>
- <658c4232-94d9-3051-8c93-bff7046cf5f2@nvidia.com>
- <03426915-25ea-69b4-bc64-f87f3046d33f@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <aabaecc4-3494-0137-7d2b-853304bfa68b@gmail.com>
-Date:   Sun, 26 Apr 2020 04:26:01 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sat, 25 Apr 2020 21:26:23 -0400
+Received: from mga03.intel.com ([134.134.136.65]:25864 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726070AbgDZB0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 21:26:22 -0400
+IronPort-SDR: ItVgivpNAIhpHqcQlonFAAyILkiuaYL+UEYNe6b4lHI74OLD1e4VeRk1UEKZqlQRD9pwv+l78/
+ +VdfyOxXviYg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2020 18:26:21 -0700
+IronPort-SDR: d9kRVeEH17cFZbQrlgJfhxT8wke4/NPkT3R2ltcAOnqRluC1d8VOYl7nqXeMstr6swS6Ou/30o
+ veuDr3L5OMTg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,318,1583222400"; 
+   d="scan'208";a="281269814"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 25 Apr 2020 18:26:19 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jSW3n-0009Vj-81; Sun, 26 Apr 2020 09:26:19 +0800
+Date:   Sun, 26 Apr 2020 09:25:27 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/vdso] BUILD SUCCESS
+ cd2f45b7514cdddabbf3f81a98a20ae02f99efa1
+Message-ID: <5ea4e307.puJ5QkZz8qzD2O3q%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <03426915-25ea-69b4-bc64-f87f3046d33f@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-26.04.2020 04:08, Sowjanya Komatineni пишет:
-> 
-> On 4/25/20 5:41 PM, Sowjanya Komatineni wrote:
->>
->> On 4/25/20 5:36 PM, Dmitry Osipenko wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> 25.04.2020 12:36, Hans Verkuil пишет:
->>> ...
->>>>> The media/tegra/ sounds a bit too generic, the media/tegra-vi/ path
->>>>> should better reflect the driver, IMO.
->>>>>
->>>>> It also should be better to name the compiled kernel module as
->>>>> tegra-vi,
->>>>> IMO.
->>>>>
->>>> The driver name and the directory should be in sync, so either
->>>> tegra-video
->>>> or tegra-vi for both. I have no preference myself, as long as they
->>>> are the
->>>> same.
->>>>
->>>> This can be done as a follow-up patch.
->>> Given that this driver isn't going to be reused by older pre-Tegra210
->>> SoCs, perhaps it will also be worthwhile to name it as tegra210-vi or
->>> tegra210-video.
->>
->> Can you explain what do you meant by can't be reused for pre-tegra210
->> or for tegra186/194?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/vdso
+branch HEAD: cd2f45b7514cdddabbf3f81a98a20ae02f99efa1  x86/vdso/Makefile: Add vobjs32
 
-It looks to me that at least all those hardcoded HW format IDs do not
-match the older SoCs.
+elapsed time: 5748m
 
->> support for other tegra's can be added to same tegra-video driver.
->> tegra-video host1x driver can be updated to add other tegra's vi and
->> csi compatibles to host1x subdevs and vi and csi driver can be updated
->> to add other tegra soc data and need to add coresponding
->> tegra186/194/xxx.c file with tegra specific prog sequence
->>
-> Same tegra-video.ko can be used for all tegra soc as driver supports
-> adding other soc related as well.
+configs tested: 301
+configs skipped: 125
 
-Well, I'm still not sure why you would want to have all the unnecessary
-code of a different SoCs shared within the same kernel module, it will
-be quite be a lot wasted space in comparison to a used part of the driver.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-The driver will need to have a bit better separation if it's supposed to
-have a common core for all SoCs. Each incompatible VI/CSI hardware
-version should have its own kernel module.
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+arm64                            allmodconfig
+arm                              allmodconfig
+arm                           efm32_defconfig
+arm                         at91_dt_defconfig
+arm                        shmobile_defconfig
+arm64                               defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                           sunxi_defconfig
+arm                        multi_v7_defconfig
+sparc                            allyesconfig
+sh                  sh7785lcr_32bit_defconfig
+mips                      fuloong2e_defconfig
+i386                                defconfig
+um                           x86_64_defconfig
+riscv                            allmodconfig
+parisc                            allnoconfig
+s390                       zfcpdump_defconfig
+nds32                               defconfig
+parisc                generic-64bit_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                             alldefconfig
+i386                              debian-10.3
+ia64                          tiger_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                        generic_defconfig
+ia64                         bigsur_defconfig
+ia64                             allyesconfig
+ia64                             alldefconfig
+nios2                         3c120_defconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+xtensa                          iss_defconfig
+c6x                              allyesconfig
+xtensa                       common_defconfig
+openrisc                 simple_smp_defconfig
+openrisc                    or1ksim_defconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+h8300                    h8300h-sim_defconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+arc                                 defconfig
+arc                              allyesconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+mips                      malta_kvm_defconfig
+mips                            ar7_defconfig
+mips                             allyesconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+mips                malta_kvm_guest_defconfig
+mips                         tb0287_defconfig
+mips                       capcella_defconfig
+mips                           ip32_defconfig
+mips                  decstation_64_defconfig
+mips                      loongson3_defconfig
+mips                          ath79_defconfig
+mips                        bcm63xx_defconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+parisc               randconfig-a001-20200423
+alpha                randconfig-a001-20200423
+mips                 randconfig-a001-20200423
+m68k                 randconfig-a001-20200423
+riscv                randconfig-a001-20200423
+nds32                randconfig-a001-20200423
+parisc               randconfig-a001-20200422
+mips                 randconfig-a001-20200422
+alpha                randconfig-a001-20200422
+m68k                 randconfig-a001-20200422
+riscv                randconfig-a001-20200422
+nds32                randconfig-a001-20200422
+parisc               randconfig-a001-20200421
+alpha                randconfig-a001-20200421
+mips                 randconfig-a001-20200421
+m68k                 randconfig-a001-20200421
+riscv                randconfig-a001-20200421
+nds32                randconfig-a001-20200421
+parisc               randconfig-a001-20200424
+alpha                randconfig-a001-20200424
+m68k                 randconfig-a001-20200424
+riscv                randconfig-a001-20200424
+nds32                randconfig-a001-20200424
+nios2                randconfig-a001-20200422
+h8300                randconfig-a001-20200422
+c6x                  randconfig-a001-20200422
+sparc64              randconfig-a001-20200422
+microblaze           randconfig-a001-20200422
+nios2                randconfig-a001-20200423
+h8300                randconfig-a001-20200423
+c6x                  randconfig-a001-20200423
+sparc64              randconfig-a001-20200423
+microblaze           randconfig-a001-20200423
+nios2                randconfig-a001-20200421
+h8300                randconfig-a001-20200421
+c6x                  randconfig-a001-20200421
+sparc64              randconfig-a001-20200421
+microblaze           randconfig-a001-20200421
+sh                   randconfig-a001-20200422
+csky                 randconfig-a001-20200422
+s390                 randconfig-a001-20200422
+xtensa               randconfig-a001-20200422
+openrisc             randconfig-a001-20200422
+sh                   randconfig-a001-20200423
+csky                 randconfig-a001-20200423
+xtensa               randconfig-a001-20200423
+openrisc             randconfig-a001-20200423
+sh                   randconfig-a001-20200421
+csky                 randconfig-a001-20200421
+s390                 randconfig-a001-20200421
+xtensa               randconfig-a001-20200421
+openrisc             randconfig-a001-20200421
+x86_64               randconfig-a001-20200422
+i386                 randconfig-a003-20200422
+x86_64               randconfig-a003-20200422
+i386                 randconfig-a002-20200422
+i386                 randconfig-a001-20200422
+x86_64               randconfig-a002-20200422
+i386                 randconfig-b002-20200422
+i386                 randconfig-b001-20200422
+x86_64               randconfig-b001-20200422
+i386                 randconfig-b003-20200422
+x86_64               randconfig-b003-20200422
+i386                 randconfig-b002-20200421
+i386                 randconfig-b001-20200421
+x86_64               randconfig-b001-20200421
+i386                 randconfig-b003-20200421
+x86_64               randconfig-b002-20200421
+x86_64               randconfig-b003-20200421
+i386                 randconfig-c002-20200423
+i386                 randconfig-c001-20200423
+x86_64               randconfig-c002-20200423
+x86_64               randconfig-c001-20200423
+i386                 randconfig-c003-20200423
+x86_64               randconfig-c003-20200423
+i386                 randconfig-c002-20200425
+i386                 randconfig-c001-20200425
+x86_64               randconfig-c002-20200425
+x86_64               randconfig-c001-20200425
+i386                 randconfig-c003-20200425
+x86_64               randconfig-c003-20200425
+i386                 randconfig-c002-20200421
+i386                 randconfig-c001-20200421
+x86_64               randconfig-c002-20200421
+x86_64               randconfig-c001-20200421
+i386                 randconfig-c003-20200421
+x86_64               randconfig-c003-20200421
+x86_64               randconfig-d002-20200422
+i386                 randconfig-d002-20200422
+i386                 randconfig-d001-20200422
+i386                 randconfig-d003-20200422
+x86_64               randconfig-d001-20200424
+i386                 randconfig-d002-20200424
+i386                 randconfig-d001-20200424
+x86_64               randconfig-d003-20200424
+i386                 randconfig-d003-20200424
+x86_64               randconfig-d001-20200423
+x86_64               randconfig-d002-20200423
+i386                 randconfig-d002-20200423
+i386                 randconfig-d001-20200423
+x86_64               randconfig-d003-20200423
+i386                 randconfig-d003-20200423
+x86_64               randconfig-d001-20200421
+x86_64               randconfig-d002-20200421
+i386                 randconfig-d002-20200421
+i386                 randconfig-d001-20200421
+x86_64               randconfig-d003-20200421
+i386                 randconfig-d003-20200421
+x86_64               randconfig-a001-20200424
+i386                 randconfig-a003-20200424
+x86_64               randconfig-a003-20200424
+i386                 randconfig-a002-20200424
+i386                 randconfig-a001-20200424
+x86_64               randconfig-a002-20200424
+i386                 randconfig-e003-20200422
+x86_64               randconfig-e003-20200422
+i386                 randconfig-e002-20200422
+i386                 randconfig-e001-20200422
+x86_64               randconfig-e001-20200422
+x86_64               randconfig-e002-20200423
+i386                 randconfig-e003-20200423
+x86_64               randconfig-e003-20200423
+i386                 randconfig-e002-20200423
+i386                 randconfig-e001-20200423
+x86_64               randconfig-e001-20200423
+x86_64               randconfig-e002-20200421
+i386                 randconfig-e003-20200421
+x86_64               randconfig-e003-20200421
+i386                 randconfig-e002-20200421
+i386                 randconfig-e001-20200421
+x86_64               randconfig-e001-20200421
+i386                 randconfig-f002-20200421
+i386                 randconfig-f003-20200421
+x86_64               randconfig-f003-20200421
+i386                 randconfig-f001-20200421
+x86_64               randconfig-f001-20200421
+x86_64               randconfig-f002-20200422
+i386                 randconfig-f002-20200422
+x86_64               randconfig-f003-20200422
+i386                 randconfig-f003-20200422
+i386                 randconfig-f001-20200422
+x86_64               randconfig-f001-20200422
+x86_64               randconfig-f002-20200424
+i386                 randconfig-f002-20200424
+i386                 randconfig-f003-20200424
+x86_64               randconfig-f003-20200424
+i386                 randconfig-f001-20200424
+x86_64               randconfig-f001-20200424
+i386                 randconfig-g003-20200422
+x86_64               randconfig-g001-20200422
+i386                 randconfig-g001-20200422
+x86_64               randconfig-g002-20200422
+i386                 randconfig-g002-20200422
+x86_64               randconfig-g003-20200422
+i386                 randconfig-g003-20200423
+x86_64               randconfig-g001-20200423
+i386                 randconfig-g001-20200423
+i386                 randconfig-g002-20200423
+x86_64               randconfig-g003-20200423
+i386                 randconfig-h003-20200424
+x86_64               randconfig-h001-20200424
+x86_64               randconfig-h003-20200424
+x86_64               randconfig-h002-20200424
+i386                 randconfig-h001-20200424
+i386                 randconfig-h002-20200424
+i386                 randconfig-h003-20200422
+x86_64               randconfig-h001-20200422
+x86_64               randconfig-h003-20200422
+x86_64               randconfig-h002-20200422
+i386                 randconfig-h001-20200422
+i386                 randconfig-h002-20200422
+i386                 randconfig-h003-20200421
+x86_64               randconfig-h001-20200421
+x86_64               randconfig-h003-20200421
+i386                 randconfig-h002-20200421
+i386                 randconfig-h001-20200421
+sparc                randconfig-a001-20200423
+ia64                 randconfig-a001-20200423
+arm                  randconfig-a001-20200423
+arm64                randconfig-a001-20200423
+arc                  randconfig-a001-20200423
+sparc                randconfig-a001-20200422
+ia64                 randconfig-a001-20200422
+powerpc              randconfig-a001-20200422
+arm                  randconfig-a001-20200422
+arm64                randconfig-a001-20200422
+arc                  randconfig-a001-20200422
+sparc                randconfig-a001-20200421
+ia64                 randconfig-a001-20200421
+powerpc              randconfig-a001-20200421
+arm                  randconfig-a001-20200421
+arc                  randconfig-a001-20200421
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+s390                          debug_defconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                             alldefconfig
+s390                                defconfig
+sh                          rsk7269_defconfig
+sh                               allmodconfig
+sh                            titan_defconfig
+sh                                allnoconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                         rhel-7.2-clear
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-7.6
 
-> Also was thinking instead of renaming media/tegra as media/tegra-vi,
-> probably we can rename as media/tegra-video so it will be inline with
-> module name we already chosen and also mainly we have vi and csi with in
-> that so instead of tegra-vi probably we can use media/tegra-video?
-
-The tegra-video should be okay, although the "video" part sounds a bit
-too broad since video could mean a lot of things. I think downstream
-kernel uses (or at least used) the tegra-camera name for the driver,
-perhaps it could be a reasonable variant as well.
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
