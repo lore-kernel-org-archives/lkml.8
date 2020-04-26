@@ -2,116 +2,153 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B1DC55199
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 13:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C719AC54FCB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 14:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E32E220700
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 13:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A979C206DD
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 14:09:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgDZNqz (ORCPT
+        id S1726185AbgDZOJP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 09:46:55 -0400
-Received: from elvis.franken.de ([193.175.24.41]:55778 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgDZNqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 09:46:54 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jShcS-0000jA-01; Sun, 26 Apr 2020 15:46:52 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id E22A5C0301; Sun, 26 Apr 2020 15:45:31 +0200 (CEST)
-Date:   Sun, 26 Apr 2020 15:45:31 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH] MIPS: Loongson: Add support for perf tool
-Message-ID: <20200426134531.GB8299@alpha.franken.de>
-References: <1587893445-9656-1-git-send-email-yangtiezhu@loongson.cn>
+        Sun, 26 Apr 2020 10:09:15 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:54042 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgDZOJP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 10:09:15 -0400
+Received: by mail-il1-f200.google.com with SMTP id 9so16689750ill.20
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 07:09:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=pgeHEmJ3Yp5PttG/VcLln/3EKq6Mf1M6+5x9rIZGbsw=;
+        b=t7PHT/VWyTVSgfftrEAVFwEJIjyiDtnsTat5ZwTmz40z6RQO5+W59l2GOyapXUJ8r9
+         KEOt3nhUPW7XHSbBlduoJSicf/gP1RL+CrD0GRw1h//unNwWm/QYTw5Is7wYLvpKlCti
+         KFcfhF/wQHJlhkBbZW++JgEqPQZ5hY+2IbFtdl3tUnvjVwlNQ43Kzhwh3MFEhdzsobwU
+         qraz1pc7v6KmPwt2YwkMqc7acxDNnMXSDGe+Nbs8pXhUuHTppJXihvtCj7KjspEGUOxw
+         nxP8B9Y0SRVteg/zJcS3DFcNuTw7toG65YbZI1EZC1lJczmKORdD8EV6B5YXyRyNdwdr
+         57dw==
+X-Gm-Message-State: AGi0PubHwxYA4+R7eIfmg16W/hzivTbzjw1dpkIjlf/SAbUfSb2tx8G1
+        hfsytgbLIZXMra91/DvqQBOZrsdwnT4PdOUBDGuC2fjbE8+3
+X-Google-Smtp-Source: APiQypL+PzGPwqLflshfjZEe5EdryYwoMXXQIi2SWV2/7YPKn/nYZKzHseEjYIbC6fFFALLP7S/TGK8emecnu/FlaGlICw6/MSoX
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1587893445-9656-1-git-send-email-yangtiezhu@loongson.cn>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Received: by 2002:a5e:8e44:: with SMTP id r4mr16796312ioo.47.1587910152288;
+ Sun, 26 Apr 2020 07:09:12 -0700 (PDT)
+Date:   Sun, 26 Apr 2020 07:09:12 -0700
+In-Reply-To: <000000000000f1377e05a3630d32@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009000aa05a4322411@google.com>
+Subject: Re: KMSAN: uninit-value in sctp_ootb_pkt_new
+From:   syzbot <syzbot+6751381fe5a26df5b74d@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, glider@google.com, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
+        marcelo.leitner@gmail.com, netdev@vger.kernel.org,
+        nhorman@tuxdriver.com, syzkaller-bugs@googlegroups.com,
+        vyasevich@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 05:30:45PM +0800, Tiezhu Yang wrote:
-> In order to use perf tool on the Loongson platform, we should enable kernel
-> support for various performance events provided by software and hardware,
-> so add CONFIG_PERF_EVENTS=y to loongson3_defconfig.
-> 
-> E.g. without this patch:
-> 
-> [loongson@localhost perf]$ ./perf list
-> 
-> List of pre-defined events (to be used in -e):
-> 
->   duration_time                                      [Tool event]
-> 
->   rNNN                                               [Raw hardware event descriptor]
->   cpu/t1=v1[,t2=v2,t3 ...]/modifier                  [Raw hardware event descriptor]
->    (see 'man perf-list' on how to encode it)
-> 
->   mem:<addr>[/len][:access]                          [Hardware breakpoint]
-> 
-> With this patch:
-> 
-> [loongson@localhost perf]$ ./perf list
-> 
-> List of pre-defined events (to be used in -e):
-> 
->   branch-instructions OR branches                    [Hardware event]
->   branch-misses                                      [Hardware event]
->   cpu-cycles OR cycles                               [Hardware event]
->   instructions                                       [Hardware event]
-> 
->   alignment-faults                                   [Software event]
->   bpf-output                                         [Software event]
->   context-switches OR cs                             [Software event]
->   cpu-clock                                          [Software event]
->   cpu-migrations OR migrations                       [Software event]
->   dummy                                              [Software event]
->   emulation-faults                                   [Software event]
->   major-faults                                       [Software event]
->   minor-faults                                       [Software event]
->   page-faults OR faults                              [Software event]
->   task-clock                                         [Software event]
-> 
->   duration_time                                      [Tool event]
-> 
->   L1-dcache-load-misses                              [Hardware cache event]
->   L1-dcache-store-misses                             [Hardware cache event]
->   L1-icache-load-misses                              [Hardware cache event]
->   branch-load-misses                                 [Hardware cache event]
->   branch-loads                                       [Hardware cache event]
->   dTLB-load-misses                                   [Hardware cache event]
->   dTLB-store-misses                                  [Hardware cache event]
->   iTLB-load-misses                                   [Hardware cache event]
-> 
->   rNNN                                               [Raw hardware event descriptor]
->   cpu/t1=v1[,t2=v2,t3 ...]/modifier                  [Raw hardware event descriptor]
->    (see 'man perf-list' on how to encode it)
-> 
->   mem:<addr>[/len][:access]                          [Hardware breakpoint]
-> 
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  arch/mips/configs/loongson3_defconfig | 1 +
->  1 file changed, 1 insertion(+)
+syzbot has found a reproducer for the following crash on:
 
-applied to mips-next.
+HEAD commit:    bfa90a4a kmsan: remove __GFP_NO_KMSAN_SHADOW
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=13ab7fbfe00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a5915107b3106aaa
+dashboard link: https://syzkaller.appspot.com/bug?extid=6751381fe5a26df5b74d
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=138df47fe00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=158a182fe00000
 
-Thomas.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+6751381fe5a26df5b74d@syzkaller.appspotmail.com
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+batman_adv: batadv0: Interface activated: batadv_slave_1
+=====================================================
+BUG: KMSAN: uninit-value in __arch_swab32 arch/x86/include/uapi/asm/swab.h:10 [inline]
+BUG: KMSAN: uninit-value in __fswab32 include/uapi/linux/swab.h:60 [inline]
+BUG: KMSAN: uninit-value in sctp_ootb_pkt_new+0x202/0x540 net/sctp/sm_statefuns.c:6256
+CPU: 0 PID: 8800 Comm: syz-executor949 Not tainted 5.6.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ __arch_swab32 arch/x86/include/uapi/asm/swab.h:10 [inline]
+ __fswab32 include/uapi/linux/swab.h:60 [inline]
+ sctp_ootb_pkt_new+0x202/0x540 net/sctp/sm_statefuns.c:6256
+ sctp_sf_tabort_8_4_8+0xe6/0x7e0 net/sctp/sm_statefuns.c:3372
+ sctp_sf_do_5_1B_init+0x6be/0x1b60 net/sctp/sm_statefuns.c:338
+ sctp_do_sm+0x2b4/0x9a30 net/sctp/sm_sideeffect.c:1153
+ sctp_endpoint_bh_rcv+0xd54/0xfe0 net/sctp/endpointola.c:395
+ sctp_inq_push+0x300/0x420 net/sctp/inqueue.c:80
+ sctp_rcv+0x48b9/0x5410 net/sctp/input.c:256
+ ip_protocol_deliver_rcu+0x700/0xbc0 net/ipv4/ip_input.c:204
+ ip_local_deliver_finish net/ipv4/ip_input.c:231 [inline]
+ NF_HOOK include/linux/netfilter.h:307 [inline]
+ ip_local_deliver+0x62a/0x7c0 net/ipv4/ip_input.c:252
+ dst_input include/net/dst.h:442 [inline]
+ ip_rcv_finish net/ipv4/ip_input.c:428 [inline]
+ NF_HOOK include/linux/netfilter.h:307 [inline]
+ ip_rcv+0x6cf/0x750 net/ipv4/ip_input.c:538
+ __netif_receive_skb_one_core net/core/dev.c:5187 [inline]
+ __netif_receive_skb net/core/dev.c:5301 [inline]
+ netif_receive_skb_internal net/core/dev.c:5391 [inline]
+ netif_receive_skb+0xbb5/0xf20 net/core/dev.c:5450
+ tun_rx_batched include/linux/skbuff.h:4351 [inline]
+ tun_get_user+0x6aef/0x6f60 drivers/net/tun.c:1997
+ tun_chr_write_iter+0x1f2/0x360 drivers/net/tun.c:2026
+ call_write_iter include/linux/fs.h:1902 [inline]
+ new_sync_write fs/read_write.c:483 [inline]
+ __vfs_write+0xa5a/0xca0 fs/read_write.c:496
+ vfs_write+0x44a/0x8f0 fs/read_write.c:558
+ ksys_write+0x267/0x450 fs/read_write.c:611
+ __do_sys_write fs/read_write.c:623 [inline]
+ __se_sys_write+0x92/0xb0 fs/read_write.c:620
+ __x64_sys_write+0x4a/0x70 fs/read_write.c:620
+ do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x443659
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 10 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fff60095968 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000003172 RCX: 0000000000443659
+RDX: 000000000000002e RSI: 00000000200000c0 RDI: 0000000000000003
+RBP: 00007fff60095990 R08: 0000000000000000 R09: 0000000000000000
+R10: 000000000000aa14 R11: 0000000000000246 R12: 656c6c616b7a7973
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+
+Uninit was created at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
+ kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:80
+ slab_alloc_node mm/slub.c:2801 [inline]
+ __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4420
+ __kmalloc_reserve net/core/skbuff.c:142 [inline]
+ __alloc_skb+0x2fd/0xac0 net/core/skbuff.c:210
+ alloc_skb include/linux/skbuff.h:1081 [inline]
+ alloc_skb_with_frags+0x18c/0xa70 net/core/skbuff.c:5764
+ sock_alloc_send_pskb+0xada/0xc60 net/core/sock.c:2245
+ tun_alloc_skb drivers/net/tun.c:1529 [inline]
+ tun_get_user+0x10ae/0x6f60 drivers/net/tun.c:1843
+ tun_chr_write_iter+0x1f2/0x360 drivers/net/tun.c:2026
+ call_write_iter include/linux/fs.h:1902 [inline]
+ new_sync_write fs/read_write.c:483 [inline]
+ __vfs_write+0xa5a/0xca0 fs/read_write.c:496
+ vfs_write+0x44a/0x8f0 fs/read_write.c:558
+ ksys_write+0x267/0x450 fs/read_write.c:611
+ __do_sys_write fs/read_write.c:623 [inline]
+ __se_sys_write+0x92/0xb0 fs/read_write.c:620
+ __x64_sys_write+0x4a/0x70 fs/read_write.c:620
+ do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+=====================================================
+
