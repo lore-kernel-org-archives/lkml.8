@@ -2,82 +2,84 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5548C55199
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 20:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E82C55194
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 20:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D43432071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 20:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E0882075B
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 20:24:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbgDZUYB (ORCPT
+        id S1726336AbgDZUYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 16:24:01 -0400
-Received: from smtp06.smtpout.orange.fr ([80.12.242.128]:47926 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgDZUYB (ORCPT
+        Sun, 26 Apr 2020 16:24:13 -0400
+Received: from smtprelay0052.hostedemail.com ([216.40.44.52]:50342 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726179AbgDZUYN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 16:24:01 -0400
-Received: from localhost.localdomain ([93.23.12.11])
-        by mwinf5d64 with ME
-        id XYPx2200C0EJ3pp03YPyzM; Sun, 26 Apr 2020 22:23:59 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 26 Apr 2020 22:23:59 +0200
-X-ME-IP: 93.23.12.11
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     ulf.hansson@linaro.org, drake@endlessm.com,
-        kamlesh.gurudasani@gmail.com, colin.king@canonical.com,
-        linux@rempel-privat.de
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] mmc: alcor: Fix a resource leak in an error handling path in 'alcor_pci_sdmmc_drv_probe()'
-Date:   Sun, 26 Apr 2020 22:23:55 +0200
-Message-Id: <20200426202355.43055-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Sun, 26 Apr 2020 16:24:13 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 1A6CC182CED28;
+        Sun, 26 Apr 2020 20:24:12 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: scale38_5ebf617f6af44
+X-Filterd-Recvd-Size: 2001
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf13.hostedemail.com (Postfix) with ESMTPA;
+        Sun, 26 Apr 2020 20:24:10 +0000 (UTC)
+Message-ID: <b7c2d0f041ca7abcb5be7c1cb07b1162d4e170a6.camel@perches.com>
+Subject: Re: [PATCH v2 1/3] floppy: add FD_AUTODETECT_SIZE define for struct
+ floppy_drive_params
+From:   Joe Perches <joe@perches.com>
+To:     Denis Efremov <efremov@linux.com>, linux-block@vger.kernel.org
+Cc:     Willy Tarreau <w@1wt.eu>, Christoph Hellwig <hch@infradead.org>,
+        linux-kernel@vger.kernel.org
+Date:   Sun, 26 Apr 2020 13:24:09 -0700
+In-Reply-To: <20200426130728.63399-2-efremov@linux.com>
+References: <20200426130728.63399-1-efremov@linux.com>
+         <20200426130728.63399-2-efremov@linux.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If 'devm_request_threaded_irq()' fails, resources allocated by
-'mmc_alloc_host()' must be freed.
+On Sun, 2020-04-26 at 16:07 +0300, Denis Efremov wrote:
+> Use FD_AUTODETECT_SIZE for autodetect buffer size in struct
+> floppy_drive_params instead of a magic number.
 
-Fixes: c5413ad815a6 ("mmc: add new Alcor Micro Cardreader SD/MMC driver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/mmc/host/alcor.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+trivia:
 
-diff --git a/drivers/mmc/host/alcor.c b/drivers/mmc/host/alcor.c
-index 1aee485d56d4..026ca9194ce5 100644
---- a/drivers/mmc/host/alcor.c
-+++ b/drivers/mmc/host/alcor.c
-@@ -1104,7 +1104,7 @@ static int alcor_pci_sdmmc_drv_probe(struct platform_device *pdev)
- 
- 	if (ret) {
- 		dev_err(&pdev->dev, "Failed to get irq for data line\n");
--		return ret;
-+		goto free_host;
- 	}
- 
- 	mutex_init(&host->cmd_mutex);
-@@ -1116,6 +1116,10 @@ static int alcor_pci_sdmmc_drv_probe(struct platform_device *pdev)
- 	dev_set_drvdata(&pdev->dev, host);
- 	mmc_add_host(mmc);
- 	return 0;
-+
-+free_host:
-+	mmc_free_host(mmc);
-+	return ret;
- }
- 
- static int alcor_pci_sdmmc_drv_remove(struct platform_device *pdev)
--- 
-2.25.1
+> diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+[]
+> @@ -2076,7 +2076,8 @@ static int next_valid_format(int drive)
+>  
+>  	probed_format = drive_state[drive].probed_format;
+>  	while (1) {
+> -		if (probed_format >= 8 || !drive_params[drive].autodetect[probed_format]) {
+> +		if (probed_format >= FD_AUTODETECT_SIZE ||
+> +			!drive_params[drive].autodetect[probed_format]) {
+
+floppy.c almost exclusively uses multi-line statement
+alignment to open parenthesis.  It'd be nicer to keep
+using that style.
+
+
+>  			drive_state[drive].probed_format = 0;
+>  			return 1;
+>  		}
+> @@ -3445,13 +3446,13 @@ static int fd_getgeo(struct block_device *bdev, struct hd_geometry *geo)
+>  	return 0;
+>  }
+>  
+> -static bool valid_floppy_drive_params(const short autodetect[8],
+> +static bool valid_floppy_drive_params(const short autodetect[FD_AUTODETECT_SIZE],
+>  		int native_format)
+> 
 
