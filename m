@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA74C54FCB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD90DC55194
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B7B92071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:11:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92BC12071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:11:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726233AbgDZRLI (ORCPT
+        id S1726252AbgDZRLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 13:11:08 -0400
-Received: from mga03.intel.com ([134.134.136.65]:17076 "EHLO mga03.intel.com"
+        Sun, 26 Apr 2020 13:11:11 -0400
+Received: from mga06.intel.com ([134.134.136.31]:54269 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbgDZRLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726151AbgDZRLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 26 Apr 2020 13:11:08 -0400
-IronPort-SDR: KEbeLrc8YTSXC+cloBmDQUwpHYN0NEc4N5+U/sttfxPEc3C3npGDFUlQ1+DZswTDnPQuzYTikj
- PYBYBgfCAaVA==
+IronPort-SDR: z2D+uEsKNkHIgagz6F9HYbD5e5ckaDncuR5c6+/91QCkQ8AdZDvEPLcEQUD74oTNegmFeKbP1t
+ z+igAlJT+FvQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2020 10:11:07 -0700
-IronPort-SDR: +m807TE/n0OwHjvAGncuwc7pppXmJocd1+TEzOwgP6Fe+U88H4h2n0zTun0XD2zMQ8/bSVJ837
- kXfte+XI0VJA==
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2020 10:11:07 -0700
+IronPort-SDR: uGFMqmG+IQmzC2V+9Ib3qwc1VVAJnI9cDv3XCKw37Jh3PqfcR254qaT45tFghM5Pc1GIyz5s3u
+ 114ge0OvOOQQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,320,1583222400"; 
-   d="scan'208";a="256988692"
+   d="scan'208";a="431461814"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 26 Apr 2020 10:11:06 -0700
+  by orsmga005.jf.intel.com with ESMTP; 26 Apr 2020 10:11:06 -0700
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1jSko5-000DL8-Eb; Mon, 27 Apr 2020 01:11:05 +0800
-Date:   Mon, 27 Apr 2020 01:10:31 +0800
+        id 1jSko5-000DL3-DT; Mon, 27 Apr 2020 01:11:05 +0800
+Date:   Mon, 27 Apr 2020 01:10:49 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     "x86-ml" <x86@kernel.org>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/urgent] BUILD SUCCESS
- 53fb6e990d782ded62d7c76d566e107c03393b74
-Message-ID: <5ea5c087.EKIcQjSIt6mXM/F4%lkp@intel.com>
+Subject: [tip:master] BUILD SUCCESS
+ c3dc7597138308cc4bf7bd3bd440683bd355f821
+Message-ID: <5ea5c099.Xizey1csfLn+Lb5x%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -51,12 +51,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/urgent
-branch HEAD: 53fb6e990d782ded62d7c76d566e107c03393b74  objtool: Fix infinite loop in for_offset_range()
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
+branch HEAD: c3dc7597138308cc4bf7bd3bd440683bd355f821  Merge branch 'x86/urgent'
 
 elapsed time: 518m
 
-configs tested: 173
+configs tested: 168
 configs skipped: 0
 
 The following configs have been built successfully.
@@ -76,7 +76,6 @@ arm                          exynos_defconfig
 arm                        multi_v5_defconfig
 arm                           sunxi_defconfig
 arm                        multi_v7_defconfig
-sparc                            allyesconfig
 i386                              allnoconfig
 i386                             allyesconfig
 i386                                defconfig
@@ -98,10 +97,10 @@ c6x                              allyesconfig
 xtensa                       common_defconfig
 openrisc                 simple_smp_defconfig
 openrisc                    or1ksim_defconfig
+nds32                               defconfig
 nds32                             allnoconfig
 csky                                defconfig
 alpha                               defconfig
-nds32                               defconfig
 h8300                       h8s-sim_defconfig
 h8300                     edosk2674_defconfig
 m68k                       m5475evb_defconfig
@@ -109,14 +108,18 @@ m68k                             allmodconfig
 h8300                    h8300h-sim_defconfig
 m68k                           sun3_defconfig
 m68k                          multi_defconfig
+arc                                 defconfig
+arc                              allyesconfig
 powerpc                             defconfig
 powerpc                       ppc64_defconfig
 powerpc                          rhel-kconfig
-powerpc                           allnoconfig
-arc                                 defconfig
-arc                              allyesconfig
 microblaze                      mmu_defconfig
 microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+mips                            ar7_defconfig
+mips                             allyesconfig
 mips                malta_kvm_guest_defconfig
 mips                         tb0287_defconfig
 mips                       capcella_defconfig
@@ -125,10 +128,6 @@ mips                  decstation_64_defconfig
 mips                      loongson3_defconfig
 mips                          ath79_defconfig
 mips                        bcm63xx_defconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-mips                            ar7_defconfig
-mips                             allyesconfig
 mips                         64r6el_defconfig
 mips                              allnoconfig
 mips                           32r2_defconfig
@@ -144,16 +143,17 @@ alpha                randconfig-a001-20200426
 m68k                 randconfig-a001-20200426
 riscv                randconfig-a001-20200426
 nds32                randconfig-a001-20200426
-nios2                randconfig-a001-20200426
-c6x                  randconfig-a001-20200426
-h8300                randconfig-a001-20200426
-sparc64              randconfig-a001-20200426
-microblaze           randconfig-a001-20200426
 sh                   randconfig-a001-20200426
 csky                 randconfig-a001-20200426
 s390                 randconfig-a001-20200426
 xtensa               randconfig-a001-20200426
 openrisc             randconfig-a001-20200426
+x86_64               randconfig-a001-20200426
+i386                 randconfig-a003-20200426
+x86_64               randconfig-a003-20200426
+i386                 randconfig-a002-20200426
+i386                 randconfig-a001-20200426
+x86_64               randconfig-a002-20200426
 i386                 randconfig-b002-20200426
 x86_64               randconfig-b001-20200426
 i386                 randconfig-b001-20200426
@@ -167,12 +167,6 @@ x86_64               randconfig-d002-20200426
 i386                 randconfig-d002-20200426
 i386                 randconfig-d001-20200426
 i386                 randconfig-d003-20200426
-x86_64               randconfig-a001-20200426
-i386                 randconfig-a003-20200426
-x86_64               randconfig-a003-20200426
-i386                 randconfig-a002-20200426
-i386                 randconfig-a001-20200426
-x86_64               randconfig-a002-20200426
 i386                 randconfig-e003-20200426
 x86_64               randconfig-e003-20200426
 i386                 randconfig-e002-20200426
@@ -220,6 +214,7 @@ sh                               allmodconfig
 sh                            titan_defconfig
 sh                  sh7785lcr_32bit_defconfig
 sh                                allnoconfig
+sparc                            allyesconfig
 sparc                               defconfig
 sparc64                             defconfig
 sparc64                           allnoconfig
