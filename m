@@ -2,121 +2,113 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C388C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 06:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E49E6C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 06:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F8CC21835
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 06:48:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B89CF2071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 06:53:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587884009;
+	bh=ocyXOAlF5MJp6iFfXegqRFvhLRY7Eu71pUrCpQNg5aY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=OxdkEXBd20bUfFdAsNSybObEoDVCYthfvLvkTAt4MOM+8TtjY7gd/t4sywo/GP6UY
+	 NacaAgBuZq5USjN65e0VNCrH24YB3YmGCRSUsphFB+Y6PgRwgmLPsziwWz88n1Frnq
+	 ruoi8lyxjLEnonKHKsj1KWsmKlCSBUdFuWmE40Ds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726306AbgDZGrx (ORCPT
+        id S1726128AbgDZGx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 02:47:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726253AbgDZGrx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 02:47:53 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1997BC09B04F;
-        Sat, 25 Apr 2020 23:47:53 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jSb4m-0008Qv-Py; Sun, 26 Apr 2020 08:47:40 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 64CB31C0334;
-        Sun, 26 Apr 2020 08:47:40 +0200 (CEST)
-Date:   Sun, 26 Apr 2020 06:47:40 -0000
-From:   "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/unwind/orc: Prevent unwinding before ORC initialization
-Cc:     Miroslav Benes <mbenes@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Sun, 26 Apr 2020 02:53:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55456 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725864AbgDZGx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 02:53:28 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C0762070A;
+        Sun, 26 Apr 2020 06:53:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587884008;
+        bh=ocyXOAlF5MJp6iFfXegqRFvhLRY7Eu71pUrCpQNg5aY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=0QGxkdtIZCC/7znYOukkDxqYTosWvgsXXWe3UJ1w+yUFCcfAkIyfFZPcM7Lx6U0Cl
+         YQ3jQr3egOr8OYHWpmQ8pzVQTpJ1Bf3MxtX6SXSDuUc/X3uxCVUT4excETplpVrUhb
+         Nu1DWfF5FsK5POAE/jExS6sANTYJHbrUzWNg73SQ=
+Date:   Sun, 26 Apr 2020 15:53:23 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Borislav Petkov <bp@alien8.de>, Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>, Dave Jones <dsj@fb.com>,
-        Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <069d1499ad606d85532eb32ce39b2441679667d5.1587808742.git.jpoimboe@redhat.com>
-References: <069d1499ad606d85532eb32ce39b2441679667d5.1587808742.git.jpoimboe@redhat.com>
-MIME-Version: 1.0
-Message-ID: <158788366000.28353.11850032447179748567.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [BUGFIX PATCH 1/1] bootconfig: Fix to remove bootconfig data
+ from initrd while boot
+Message-Id: <20200426155323.9c68b487ea7c289e12c22484@kernel.org>
+In-Reply-To: <20200424195833.1487a1a0@oasis.local.home>
+References: <158774604073.7423.11492815214537711118.stgit@devnote2>
+        <158774605193.7423.573803007569761807.stgit@devnote2>
+        <20200424195833.1487a1a0@oasis.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Fri, 24 Apr 2020 19:58:33 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Commit-ID:     98d0c8ebf77e0ba7c54a9ae05ea588f0e9e3f46e
-Gitweb:        https://git.kernel.org/tip/98d0c8ebf77e0ba7c54a9ae05ea588f0e9e3f46e
-Author:        Josh Poimboeuf <jpoimboe@redhat.com>
-AuthorDate:    Sat, 25 Apr 2020 05:03:08 -05:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 25 Apr 2020 12:22:29 +02:00
+> On Sat, 25 Apr 2020 01:34:12 +0900
+> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> 
+> > If there is a bootconfig data in the tail of initrd/initramfs,
+> > initrd image sanity check caused an error while decompression
+> > stage as follows.
+> > 
+> > [    0.883882] Unpacking initramfs...
+> > [    2.696429] Initramfs unpacking failed: invalid magic at start of compressed archive
+> > 
+> > This error will be ignored if CONFIG_BLK_DEV_RAM=n,
+> > but CONFIG_BLK_DEV_RAM=y the kernel failed to mount rootfs
+> > and causes a panic.
+> > 
+> > To fix this issue, shrink down the initrd_end for removing
+> > tailing bootconfig data while boot the kernel.
+> > 
+> > Fixes: 7684b8582c24 ("bootconfig: Load boot config from the tail of initrd")
+> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > Cc: stable@vger.kernel.org
+> > ---
+> >  init/main.c |   62 +++++++++++++++++++++++++++++++++++++++++++----------------
+> >  1 file changed, 45 insertions(+), 17 deletions(-)
+> > 
+> > 
+> 
+> A build with
+> 
+>  $ make allnoconfig
+> 
+> Produces this:
+> 
+>   MODPOST vmlinux.o
+>   MODINFO modules.builtin.modinfo
+>   GEN     modules.builtin
+>   LD      vmlinux
+> ld: init/main.o: in function `start_kernel':
+> main.c:(.init.text+0x37f): undefined reference to `initrd_end'
+> ld: main.c:(.init.text+0x3a7): undefined reference to `initrd_start'
+> ld: main.c:(.init.text+0x3ae): undefined reference to `initrd_end'
+> make[1]: *** [/work/git/linux-trace.git/Makefile:1106: vmlinux] Error 1
 
-x86/unwind/orc: Prevent unwinding before ORC initialization
+Oops, that depends on initrd. OK, I'll fix it.
 
-If the unwinder is called before the ORC data has been initialized,
-orc_find() returns NULL, and it tries to fall back to using frame
-pointers.  This can cause some unexpected warnings during boot.
+Thanks!
 
-Move the 'orc_init' check from orc_find() to __unwind_init(), so that it
-doesn't even try to unwind from an uninitialized state.
-
-Fixes: ee9f8fce9964 ("x86/unwind: Add the ORC unwinder")
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Dave Jones <dsj@fb.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Link: https://lore.kernel.org/r/069d1499ad606d85532eb32ce39b2441679667d5.1587808742.git.jpoimboe@redhat.com
----
- arch/x86/kernel/unwind_orc.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index e9f5a20..cb11567 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -148,9 +148,6 @@ static struct orc_entry *orc_find(unsigned long ip)
- {
- 	static struct orc_entry *orc;
- 
--	if (!orc_init)
--		return NULL;
--
- 	if (ip == 0)
- 		return &null_orc_entry;
- 
-@@ -591,6 +588,9 @@ EXPORT_SYMBOL_GPL(unwind_next_frame);
- void __unwind_start(struct unwind_state *state, struct task_struct *task,
- 		    struct pt_regs *regs, unsigned long *first_frame)
- {
-+	if (!orc_init)
-+		goto done;
-+
- 	memset(state, 0, sizeof(*state));
- 	state->task = task;
- 
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
