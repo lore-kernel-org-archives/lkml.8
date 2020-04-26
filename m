@@ -2,107 +2,90 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F1FC55199
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDAFC54FCB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1646F206DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:06:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Ybd/6Lup"
+	by mail.kernel.org (Postfix) with ESMTP id 1F8872071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:07:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587920845;
+	bh=m/VKesCt+bSjvJbxbM7RgCA5iwVllI10bgTkvbJ77BQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LsAyNqHtXJgNTrZF4fTyXRlUtN+kj50sN1Tfy0NWuNY0RgA/wUwL/jN3d1D2LzWlv
+	 HvLCup83kVD3bK3PyHf7XYaDC/3adUmf1wswFsmjeoSsB2F+qyW92zXCCjr9m306NH
+	 Cd9CTXpNvaxfPq9q0gWZJhGGQ0XpZxQfuj4kBGMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726196AbgDZRGy (ORCPT
+        id S1726204AbgDZRHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 13:06:54 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:45962 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbgDZRGy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 13:06:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1587920811; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jTqCfxZBmTk09D67QB/ptZSM/wzN2C9X9u64qCP4L04=;
-        b=Ybd/6LupQKabv0CLwPuklV2cLPT+1BYCbip7YvN2vRxljCCsK8W+b/ryb0r4GWtbTQOzer
-        T3v4Fjg9/9aEuO++arc6fxNvxB0TfeQkVvQkkbh32M8kiMLGwRaTGUXJniBvOccf3fCaOR
-        0i5Eu2tdYj3KR/s7gkra/EzzdnEjnqU=
-Date:   Sun, 26 Apr 2020 19:06:40 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 1/3] PM: introduce pm_ptr() macro
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>, Pavel Machek <pavel@ucw.cz>,
-        Len Brown <len.brown@intel.com>, od@zcrc.me,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Message-Id: <4JNE9Q.Y5HBZ952XKLI@crapouillou.net>
-In-Reply-To: <2708095.iQXV2FnTNx@kreacher>
-References: <20200413123207.74552-1-paul@crapouillou.net>
-        <2708095.iQXV2FnTNx@kreacher>
+        Sun, 26 Apr 2020 13:07:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50394 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726143AbgDZRHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 13:07:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2538206DD;
+        Sun, 26 Apr 2020 17:07:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587920843;
+        bh=m/VKesCt+bSjvJbxbM7RgCA5iwVllI10bgTkvbJ77BQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cFGxIVfTY+0wzn3ctsM/1XSTavz4OoQyJ5MhlQ4Rzl2/13oTi9RZdwPSiNXCsa8/Y
+         /6yS6AGbt96EmBEuySmvWZL+AKEiEqclFAE3N8TtUNTjz5/NyYiqzCjiSy8eBlkIS2
+         7FcDVl6aBxlifq9E4BrpnKPbmaaI9n3AppCpTEIs=
+Date:   Sun, 26 Apr 2020 19:07:19 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     John Oldman <john.oldman@polehill.co.uk>
+Cc:     devel@driverdev.osuosl.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] Staging: mt7621-dma: mtk-hsdma.c: Fix Missing a blank
+ line after declarations
+Message-ID: <20200426170719.GA2138855@kroah.com>
+References: <20200426161319.23941-1-john.oldman@polehill.co.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200426161319.23941-1-john.oldman@polehill.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael,
+On Sun, Apr 26, 2020 at 05:13:19PM +0100, John Oldman wrote:
+> Fixed coding style issue
 
-Le dim. 26 avril 2020 =E0 17:40, Rafael J. Wysocki <rjw@rjwysocki.net> a=20
-=E9crit :
-> On Monday, April 13, 2020 2:32:05 PM CEST Paul Cercueil wrote:
->>  This macro is analogous to the infamous of_match_ptr(). If CONFIG_PM
->>  is enabled, this macro will resolve to its argument, otherwise to=20
->> NULL.
->=20
-> Well, this is going to result in quite a bit of unused code being
-> added to the kernels built with CONFIG_PM unset.
->=20
-> Is there any way to avoid that somehow?
+No you didn't :)
 
-Using __maybe_unused on the dev_pm_ops struct and the callbacks, as=20
-long as they are static, they should be dropped by the compiler when=20
-CONFIG_PM is not set.
+> 
+> Signed-off-by: John Oldman <john.oldman@polehill.co.uk>
+> ---
+>  drivers/staging/mt7621-dma/mtk-hsdma.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/staging/mt7621-dma/mtk-hsdma.c b/drivers/staging/mt7621-dma/mtk-hsdma.c
+> index 14592ed9ce98..dd35d0bce6ca 100644
+> --- a/drivers/staging/mt7621-dma/mtk-hsdma.c
+> +++ b/drivers/staging/mt7621-dma/mtk-hsdma.c
+> @@ -157,6 +157,7 @@ struct mtk_hsdam_engine {
+>  	struct device_dma_parameters dma_parms;
+>  	void __iomem *base;
+>  	struct tasklet_struct task;
+> +
+>  	volatile unsigned long chan_issued;
+>  
+>  	struct mtk_hsdma_chan chan[1];
 
--Paul
+This file seems to be the "does the submitter look at the patch they are
+sending" litmus test.
 
->=20
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  ---
->>=20
->>  Notes:
->>      v2: Remove pm_sleep_ptr() macro
->>=20
->>   include/linux/pm.h | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>=20
->>  diff --git a/include/linux/pm.h b/include/linux/pm.h
->>  index e057d1fa2469..1c0eec06905d 100644
->>  --- a/include/linux/pm.h
->>  +++ b/include/linux/pm.h
->>  @@ -374,6 +374,12 @@ const struct dev_pm_ops name =3D { \
->>   	SET_RUNTIME_PM_OPS(suspend_fn, resume_fn, idle_fn) \
->>   }
->>=20
->>  +#ifdef CONFIG_PM
->>  +#define pm_ptr(_ptr) (_ptr)
->>  +#else
->>  +#define pm_ptr(_ptr) NULL
->>  +#endif
->>  +
->>   /*
->>    * PM_EVENT_ messages
->>    *
->>=20
->=20
->=20
->=20
->=20
+Does that really do what you think it does?
 
+thanks,
 
+greg k-h
