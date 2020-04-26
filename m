@@ -2,168 +2,116 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 857F4C54FCB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 13:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B1DC55199
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 13:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C77B20700
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 13:45:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Ec6Ezo7a"
+	by mail.kernel.org (Postfix) with ESMTP id E32E220700
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 13:46:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbgDZNp6 (ORCPT
+        id S1726204AbgDZNqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 09:45:58 -0400
-Received: from mout.web.de ([212.227.15.4]:55533 "EHLO mout.web.de"
+        Sun, 26 Apr 2020 09:46:55 -0400
+Received: from elvis.franken.de ([193.175.24.41]:55778 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbgDZNp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 09:45:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1587908745;
-        bh=5W3b2E7k21ZMiqMvB1KOtLfzNi5N75REcK7+gb02gX8=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=Ec6Ezo7avK9humZh5lhiNUnAjStzh5lwOWOVqN7L//ztNhuVH7qIlsH4LkwJ9UNVA
-         kRiUHrQY0gN/rQ0eY2e6tB3Hg9JGDdtg2vj0SX80ZtpwTWcRK0pe0cPvmscSVY3qgJ
-         ciwASOg0ikWl9jZmjyYOhdiZwo+HL2V4OugN11KY=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.52.156]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lcxfc-1ikbMH0S92-00iCYy; Sun, 26
- Apr 2020 15:45:45 +0200
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Chris Lew <clew@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hemant Kumar <hemantk@codeaurora.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Siddartha Mohanadoss <smohanad@codeaurora.org>
-Subject: Re: [PATCH v2 2/3] net: qrtr: Add MHI transport layer
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <85591553-f1f2-a7c9-9c5a-58f74ebeaf38@web.de>
-Date:   Sun, 26 Apr 2020 15:45:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726140AbgDZNqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 09:46:54 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jShcS-0000jA-01; Sun, 26 Apr 2020 15:46:52 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id E22A5C0301; Sun, 26 Apr 2020 15:45:31 +0200 (CEST)
+Date:   Sun, 26 Apr 2020 15:45:31 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH] MIPS: Loongson: Add support for perf tool
+Message-ID: <20200426134531.GB8299@alpha.franken.de>
+References: <1587893445-9656-1-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:hto1Oe3KMF6Kn2QN25fgiQmcX5MG3/poqV5HXZ2jMTIUTyxQiAB
- 01h21WniyZQ9WtX3+1r20BJ4M/Rg2ggp3OQZ0iPxLDyU+Pphyn3+3xF+is9E0msK0fFRoFE
- J3cuEiRfnMcwqT2+YhxLlliWCikynUPDOOjdxre+U6ZWunbAaoz7u/oZxUwmhiYaD7Grp1h
- vo0Q1AKichEah3p+hziTw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Fb0qtxIs6Ms=:YHKnr7XW/87wD9cd9K/HTg
- P6QbfCkfZvuD4Bm0nV/xpj173rwzMycOC9YCwIY8Bzgqev+fTIW7YIOhRNEXGFx1cu0VtcH8v
- lZOw5qysrB7KlC3ARMWTaTKLfUuK7ao+JW35Quj2IjvkP19aS++yUyh9uaxuD9Q4qXsS+WPjd
- Yx/YtQ03CqpI3COoQfCXNgX6lknMuDR0MBdOechbiQ/cqXdWAhSVcNZue+4cQGAL7lYT2Uqnw
- yHjIiII8A+W7WQnIPtjKjnigBAkrARNAKh3p9/vQ0g/6sm43WhsqEDiClB99Z+P8b5i2Q5Pzt
- HyWzPlsfyTqxG7tEZHX6HJZ+vs/T9aoIyumtZjrx7gnulupJuBP3f+bf1vz2LKsXhjoyLOBib
- jxJxGGfS6fWIsgRSMtCRpjLKsIf0tCDcF6pl7M9L50HY0WbSC7wpOZSsVGfah979+j/YoVzp5
- BhWwIc3aVhzB0ZT1ONEzS+8WscDmHaOhsqw9mCXYs93TbpZo9YW4apMmf1gya/Ba90z26UHcY
- 1C858lA0sfz5C5fzoaopnCBGaS93MmK2dF3Qf5P2uYCp5GHSYc68d8uoNcBef/G33W55tl6JX
- D0xo1SvUsBXc9UEd2u51P+XV6oja6fyKlXuBs64VWQPx29UtGnkxGqKsUf9jhBt3RXSkU5lKm
- pxg4lsIgnqdc4r1S8AF2I7ObhtwbUid3N5NC4tZ3vAlLsI0rY29gkZFbZFkE9KBxTzW4yP6r2
- CfyAzEEnVIETKMXjwz/nP82iXiKhPwmWTlFZS5iC7J8OIrAp0DDXbEAQqe2hrdSXAXTgKfUZe
- zfqVcML7mggF9ISAw3UormBUzGVGdK+DzrHBA//wWYyl5W/7xZ5pjv+wv9mkUhqIF8waCgiHs
- PRNfRx1bzuH9NkWTE5zz9m5FpADIQL/q1i3cViOsMOb6ELoTyXIEHa1OZ8kmnvM1s+9DCPWDA
- SNT/bYbdYKfFlFjiu7cQRVfuYv0c8+UtWkGFw+Iq5HqwtdtVjLYqUzWmLw3PuLS6QBMctLKht
- /g2XQVnFraJSVyXXa2oz1ACiE2p36rKfEO/tfbsdKANGMUuTnOOQfCQ8UgQrFlFiS+ERCj6vE
- vY62+KOKa2fSDaPeMgOPmNsOAxDrK7Mav4RT8mmfM7kX1h04z7l7n2UcfQU/k/ISu5T4AZ75c
- Zd9lxwc2ugI+e2Q79RiRn8KBpVU3l9LEX7/ZB0+3NBybWI6sSM6FkHMwNc4jkSHb7X24LWs6c
- SxLXFhUm+7rRI0YEB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587893445-9656-1-git-send-email-yangtiezhu@loongson.cn>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Hence, this commit adds MHI transport layer support to QRTR for
-> transferring the QMI messages over IPC Router.
+On Sun, Apr 26, 2020 at 05:30:45PM +0800, Tiezhu Yang wrote:
+> In order to use perf tool on the Loongson platform, we should enable kernel
+> support for various performance events provided by software and hardware,
+> so add CONFIG_PERF_EVENTS=y to loongson3_defconfig.
+> 
+> E.g. without this patch:
+> 
+> [loongson@localhost perf]$ ./perf list
+> 
+> List of pre-defined events (to be used in -e):
+> 
+>   duration_time                                      [Tool event]
+> 
+>   rNNN                                               [Raw hardware event descriptor]
+>   cpu/t1=v1[,t2=v2,t3 ...]/modifier                  [Raw hardware event descriptor]
+>    (see 'man perf-list' on how to encode it)
+> 
+>   mem:<addr>[/len][:access]                          [Hardware breakpoint]
+> 
+> With this patch:
+> 
+> [loongson@localhost perf]$ ./perf list
+> 
+> List of pre-defined events (to be used in -e):
+> 
+>   branch-instructions OR branches                    [Hardware event]
+>   branch-misses                                      [Hardware event]
+>   cpu-cycles OR cycles                               [Hardware event]
+>   instructions                                       [Hardware event]
+> 
+>   alignment-faults                                   [Software event]
+>   bpf-output                                         [Software event]
+>   context-switches OR cs                             [Software event]
+>   cpu-clock                                          [Software event]
+>   cpu-migrations OR migrations                       [Software event]
+>   dummy                                              [Software event]
+>   emulation-faults                                   [Software event]
+>   major-faults                                       [Software event]
+>   minor-faults                                       [Software event]
+>   page-faults OR faults                              [Software event]
+>   task-clock                                         [Software event]
+> 
+>   duration_time                                      [Tool event]
+> 
+>   L1-dcache-load-misses                              [Hardware cache event]
+>   L1-dcache-store-misses                             [Hardware cache event]
+>   L1-icache-load-misses                              [Hardware cache event]
+>   branch-load-misses                                 [Hardware cache event]
+>   branch-loads                                       [Hardware cache event]
+>   dTLB-load-misses                                   [Hardware cache event]
+>   dTLB-store-misses                                  [Hardware cache event]
+>   iTLB-load-misses                                   [Hardware cache event]
+> 
+>   rNNN                                               [Raw hardware event descriptor]
+>   cpu/t1=v1[,t2=v2,t3 ...]/modifier                  [Raw hardware event descriptor]
+>    (see 'man perf-list' on how to encode it)
+> 
+>   mem:<addr>[/len][:access]                          [Hardware breakpoint]
+> 
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  arch/mips/configs/loongson3_defconfig | 1 +
+>  1 file changed, 1 insertion(+)
 
-I suggest to reconsider software development consequences around
-another implementation detail.
+applied to mips-next.
 
+Thomas.
 
-=E2=80=A6
-> +static int qcom_mhi_qrtr_send(struct qrtr_endpoint *ep, struct sk_buff =
-*skb)
-> +{
-=E2=80=A6
-> +	rc =3D mhi_queue_skb(qdev->mhi_dev, DMA_TO_DEVICE, skb, skb->len,
-> +			   MHI_EOT);
-> +	if (rc) {
-> +		kfree_skb(skb);
-> +		return rc;
-> +	}
-=E2=80=A6
-> +}
-
-I propose again to add a jump target so that a bit of exception handling c=
-ode
-can be better reused at the end of this function implementation.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/coding-style.rst?id=3Db2768df24ec400dd4f7fa79542f797e9=
-04812053#n450
-
-+	if (rc)
-+		goto free_skb;
-=E2=80=A6
-+	return rc;
-+
-+free_skb:
-+	kfree_skb(skb);
-+	return rc;
-+}
-
-
-Regards,
-Markus
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
