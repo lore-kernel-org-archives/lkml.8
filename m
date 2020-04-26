@@ -2,114 +2,136 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8D1C55199
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE9EC54FCB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FA90206DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EF0E20700
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:20:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="HyqOJRb8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="e8A/1clU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726200AbgDZRL4 (ORCPT
+        id S1726165AbgDZRUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 13:11:56 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17718 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726151AbgDZRL4 (ORCPT
+        Sun, 26 Apr 2020 13:20:16 -0400
+Received: from gateway33.websitewelcome.com ([192.185.147.108]:36127 "EHLO
+        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726150AbgDZRUP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 13:11:56 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1587921034; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=Yo5Lp5gpVcEH9T0DplkYcWSGVqNPmOJB8w1dulm+cUUL/qFCsLlTdzgECR+Fk3uZwq8jtbdgnYS887/J9g/bh/BTpP0AqOpw9aQYQikgO2UyCx7AsoHSjdEG46x2wxP47mzjHAkRUEYjgu7eoQRjiex2+TAWhtyWwbS1cKSma4w=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1587921034; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=3moL8OMLSDXgd7jsrnGn07s4xflMblHhr/DKN/+Jgj8=; 
-        b=ByXAtlm6lFexh/TJuMEmjkcMW8atxhm/pq49bLwMkjd486rEoYKRXk13nLvXm6Oe7DQ3JTVOG5OGZxJcqzSHMHJh4fV1+5OGlj8RHq8fAGBRPrXr5vK5F5pvAtlXEfCxCB38AHBI7DV57HlJXPK/DgPy3nntA/btnBSQ5xpzgbw=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=flygoat.com;
-        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
-        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1587921034;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=3moL8OMLSDXgd7jsrnGn07s4xflMblHhr/DKN/+Jgj8=;
-        b=HyqOJRb8u/FN3VfxphaILwfF2/URAmGanE+n86+Gt1XpwWQFv2Qjd95fn69hHwl+
-        WSGExIgg8ZtTwxDp8tr9qg1/IY+uROZkVmb+DOvyFmdKuUKyxjv+OLlakCvGSS4tWeP
-        1kYdeGmLcw10Ko1Y267jxoIPn1TIZian1HP3U+dY=
-Received: from [127.0.0.1] (122.235.213.3 [122.235.213.3]) by mx.zoho.com.cn
-        with SMTPS id 1587921032291865.6888527356479; Mon, 27 Apr 2020 01:10:32 +0800 (CST)
-Date:   Mon, 27 Apr 2020 01:10:29 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Guoyun Sun <sunguoyun@loongson.cn>
-CC:     Paul Burton <paulburton@kernel.org>,
-        Daniel Silsby <dansilsby@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Dmitry Korotin <dkorotin@wavecomp.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Price <steven.price@arm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        TieZhu Yang <yangtiezhu@loongson.cn>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH] mips/mm: Add page soft dirty tracking
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20200426165441.GA10053@alpha.franken.de>
-References: <1587460527-13986-1-git-send-email-sunguoyun@loongson.cn> <20200426165441.GA10053@alpha.franken.de>
-Message-ID: <92510286-5E77-40EB-8356-17CCA21E8391@flygoat.com>
+        Sun, 26 Apr 2020 13:20:15 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway33.websitewelcome.com (Postfix) with ESMTP id EA53219D9401
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 11:58:47 -0500 (CDT)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id SkcBjKDvVAGTXSkcBjdGy0; Sun, 26 Apr 2020 11:58:47 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=3afp7XxE1GlxY/Ju1j3y2JMSguq9JL32ykPeH5k4AAE=; b=e8A/1clUau5xhwJsVZL/XinyHG
+        K+NKJwhcDIzLEepjZNEnvkt07zus5UaGa8Gwvkv24REMgFQapaFmx4O0A2Ptmi96gDizht5r/Dh00
+        g5/TTyU3Z6QYEdDaf2snZ1eAmeqjL8IPFdrySd3U6YiXmnZPRJi3w597ivbbSaBIjitrcXpqK4mZx
+        DbQ27XappymmQ2+AidWd+M+ebvUuCdEgpnXGyHJkr8WzGMADrOMJPKo0xOwfY8Vgu8Wlk+DCCRG8o
+        3IMlCWyMMQaH1/64dBZ407bRGK0Ps9kBjsoJnmb4zMJCS15aJdMGDXQNohclyc2sxt6Wt03aK482c
+        36fD6CLA==;
+Received: from [191.31.197.205] (port=35482 helo=castello.castello)
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1jSkcB-001TTf-BY; Sun, 26 Apr 2020 13:58:47 -0300
+From:   Matheus Castello <matheus@castello.eng.br>
+To:     afaerber@suse.de, manivannan.sadhasivam@linaro.org,
+        mark.rutland@arm.com, robh+dt@kernel.org
+Cc:     edgar.righi@lsitec.org.br, igor.lima@lsitec.org.br,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org,
+        Matheus Castello <matheus@castello.eng.br>
+Subject: [PATCH v4 0/3] Add Caninos Loucos Labrador CoM and Base Board Device Tree
+Date:   Sun, 26 Apr 2020 13:58:32 -0300
+Message-Id: <20200426165835.105970-1-matheus@castello.eng.br>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <f9e48fba-0da8-7ba9-d44a-7909067a1df1@castello.eng.br>
+References: <f9e48fba-0da8-7ba9-d44a-7909067a1df1@castello.eng.br>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.31.197.205
+X-Source-L: No
+X-Exim-ID: 1jSkcB-001TTf-BY
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (castello.castello) [191.31.197.205]:35482
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 15
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Thanks Andreas, Mani and Rob for your time reviewing it.
 
+Changes since v3:
+(Suggested by Andreas Färber)
+- Fix sort on actions.yaml
+- Change the file owl-s500-labrador-bb.dts to owl-s500-labrador-base-m.dts
+- Add description for both the SoM and Base Board
+- Add Model description for both the SoM and Base Board
 
-=E4=BA=8E 2020=E5=B9=B44=E6=9C=8827=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881=
-2:54:42, Thomas Bogendoerfer <tsbogend@alpha=2Efranken=2Ede> =E5=86=99=E5=
-=88=B0:
->On Tue, Apr 21, 2020 at 05:15:27PM +0800, Guoyun Sun wrote:
->> User space checkpoint and restart tool (CRIU) needs the page's change
->> to be soft tracked=2E This allows to do a pre checkpoint and then dump
->> only touched pages=2E
->>=20
->> Signed-off-by: Guoyun Sun <sunguoyun@loongson=2Ecn>
->> ---
->>  arch/mips/Kconfig                    |  1 +
->>  arch/mips/include/asm/pgtable-bits=2Eh |  8 ++++--
->>  arch/mips/include/asm/pgtable=2Eh      | 48 ++++++++++++++++++++++++++=
-++++++++--
->
->this breaks all 32bit builds where CPU support RIXI, because it overflows
->pgtable_bits=2E
+Changes since v2:
+(Suggested by Andreas Färber)
+- Sort the entries alphabetically on vendor-prefixes.yaml
+- Improve commit description
+- Add Edgar Bernardi Righi and Igor Ruschi from Caninos team as CC
 
-Probably make a fixup patch to guard
-_PAGE_SOFT_DIRTY_SHIFT with
-CONFIG_HAVE_ARCH_SOFT_DIRTY
-would be a better option?
+Caninos Loucos Labrador is a Brazilian project of open System on Modules and
+Base Boards based on Lemaker Guitar. Is an initiative of LSI-TEC a non-profit
+organization.
 
-Btw: It's really selfish that only enable SOFT_DIRTY for Loongson
-but occupied a bit in pagetable for all MIPS systems=2E
+The Labrador CoM v2 is based on Actions Semi S500 processor with 16GB eMMC and
+2GB RAM.
 
-I'd suggest select HAVE_ARCH_SOFT_DIRTY for all 64BIT MIPS systems=2E
-Or provide config options to let expert users decide what feature they nee=
-d=2E
+This series adds the initial work for device tree files and also adds the
+vendor-prefix for the Caninos program. The work was based on the Andreas Färber
+device trees for Lemaker Guitar, thanks Andreas.
 
-Thanks=2E
+Tested on my Caninos Labrador v2, only earlycon serial output is available for
+now, using the fake clock. I have already worked on something here to add the
+clocks and pinctrl nodes to owl-s500.dtsi, but I would like to first add the
+initial device tree files and then work on the other patches calmly.
 
->
->Thomas=2E
->
+Stay safe,
+Matheus Castello
 
---=20
-Jiaxun Yang
+Matheus Castello (3):
+  dt-bindings: Add vendor prefix for Caninos Loucos
+  dt-bindings: arm: actions: Document Caninos Loucos Labrador
+  ARM: dts: Add Caninos Loucos Labrador
+
+ .../devicetree/bindings/arm/actions.yaml      | 11 ++++--
+ .../devicetree/bindings/vendor-prefixes.yaml  |  2 ++
+ arch/arm/boot/dts/Makefile                    |  1 +
+ .../arm/boot/dts/owl-s500-labrador-base-m.dts | 34 +++++++++++++++++++
+ arch/arm/boot/dts/owl-s500-labrador-v2.dtsi   | 22 ++++++++++++
+ 5 files changed, 67 insertions(+), 3 deletions(-)
+ create mode 100644 arch/arm/boot/dts/owl-s500-labrador-base-m.dts
+ create mode 100644 arch/arm/boot/dts/owl-s500-labrador-v2.dtsi
+
+--
+2.25.0
+
