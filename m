@@ -2,163 +2,133 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8883C55191
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE727C5519A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90F992087E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:25:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587893104;
-	bh=vwWrS+F2vR1/Yb++bTK7d2fnjWVZse9eyfCNAFo6btw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ybkbaTXGrGooXN8bQDUYmveZvRU+CPg739ILNPNk9bzXqdFxjAY2+NuD+wwrTaI2r
-	 rRdz9sJREhNRa26DGnnLJ0DOTtMs4m+8TlQXOby8nodtPzzhqEHroI9SAXLUSIO09Q
-	 Tz6xiuW+UfUBgUJJkhsJmfWV0xt6jVDvf0Ng7VSU=
+	by mail.kernel.org (Postfix) with ESMTP id C422820700
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:31:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726137AbgDZJZE (ORCPT
+        id S1726140AbgDZJbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 05:25:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52326 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725806AbgDZJZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 05:25:03 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD8C62071C;
-        Sun, 26 Apr 2020 09:25:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587893102;
-        bh=vwWrS+F2vR1/Yb++bTK7d2fnjWVZse9eyfCNAFo6btw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SXC7plH3nsqld8xWbU3inOs/rpTzwn6viuKkLhMBQW6/aoBQeycBeLJoh3DoY8G5n
-         PS5jADt+14X/I45r5Y1wwxqbHOLDgKl5yIPEVKHmhN4KQU4B8qN6zLiU03zAdZSXOX
-         LoMU3T+cb6H+zb01gShtd9AJHQ1cmLbb8jNCY8w4=
-Date:   Sun, 26 Apr 2020 10:24:58 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Mathieu Othacehe <m.othacehe@gmail.com>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/4] iio: vcnl4000: Factorize data reading and
- writing.
-Message-ID: <20200426102458.24ae84d7@archlinux>
-In-Reply-To: <20200426095831.1472fbc9@archlinux>
-References: <20200422130856.1722-1-m.othacehe@gmail.com>
-        <20200422130856.1722-2-m.othacehe@gmail.com>
-        <20200426095831.1472fbc9@archlinux>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sun, 26 Apr 2020 05:31:05 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:58560 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725806AbgDZJbF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 05:31:05 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxdurGVKVeJFwsAA--.12S2;
+        Sun, 26 Apr 2020 17:30:46 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH] MIPS: Loongson: Add support for perf tool
+Date:   Sun, 26 Apr 2020 17:30:45 +0800
+Message-Id: <1587893445-9656-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9AxdurGVKVeJFwsAA--.12S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7KFyDAFW8Cw15ZFWxtF1xGrg_yoW8Kw13pF
+        4aywsxKFWkJrn5uw1Yk3ykury3JFWxtFZrGr4UJ3yUZryDZ3WkZFs3Zr4DGF4rJa97A3Wf
+        u3Wvgr1jvF97CrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkS14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_GFWl
+        42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
+        WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAK
+        I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
+        4UMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAI
+        cVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfU1zuWDUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 26 Apr 2020 09:58:31 +0100
-Jonathan Cameron <jic23@kernel.org> wrote:
+In order to use perf tool on the Loongson platform, we should enable kernel
+support for various performance events provided by software and hardware,
+so add CONFIG_PERF_EVENTS=y to loongson3_defconfig.
 
-> On Wed, 22 Apr 2020 15:08:53 +0200
-> Mathieu Othacehe <m.othacehe@gmail.com> wrote:
-> 
-> > Factorize data reading in vcnl4000_measure into a vcnl4000_read_data
-> > function. Also add a vcnl4000_write_data function.
-> > 
-> > Signed-off-by: Mathieu Othacehe <m.othacehe@gmail.com>
+E.g. without this patch:
 
-Gah. I'm clearly blind but thankfully sparse gave a warning on a __be16
-cast that got me to look more closely at the code.  As it turns out, the
-existing code won't work on be16 platforms...
+[loongson@localhost perf]$ ./perf list
 
-> > ---
-> >  drivers/iio/light/vcnl4000.c | 29 +++++++++++++++++++++++++----
-> >  1 file changed, 25 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
-> > index 58e97462e803..695a81e95d8d 100644
-> > --- a/drivers/iio/light/vcnl4000.c
-> > +++ b/drivers/iio/light/vcnl4000.c
-> > @@ -215,11 +215,34 @@ static int vcnl4200_init(struct vcnl4000_data *data)
-> >  	return 0;
-> >  };
-> >  
-> > +static int vcnl4000_read_data(struct vcnl4000_data *data, u8 data_reg, int *val)
-> > +{
-> > +	s32 ret;
-> > +
-> > +	ret = i2c_smbus_read_word_data(data->client, data_reg);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	*val = be16_to_cpu(ret);
-This is wrong.  I2C has a defined byte order and the i2 master will return
-the bytes in that order for i2c_smbus_read_word_data calls.
+List of pre-defined events (to be used in -e):
 
-Now, not all i2c devices actually obey the specification from Philips so
-sometimes it's necessary to swap the bytes to reflect that.  However, you
-have to do it unconditionally because if you have a be16 platform the wire
-order will still be assumed to be le16 and an incorrect swap will have been
-applied (so we have to swap back again).
+  duration_time                                      [Tool event]
 
-Anyhow, this is common enough that we have i2c_smbus_read_word_swapped
-to deal with it.  Also similar for the write equivalent.
+  rNNN                                               [Raw hardware event descriptor]
+  cpu/t1=v1[,t2=v2,t3 ...]/modifier                  [Raw hardware event descriptor]
+   (see 'man perf-list' on how to encode it)
 
-Interesting to note that the driver is currently broken so we should
-do this fix as a precursor patch so we can backport to stable.
+  mem:<addr>[/len][:access]                          [Hardware breakpoint]
 
-Jonathan
+With this patch:
 
-> > +	return 0;
-> > +}
-> > +
-> > +static int vcnl4000_write_data(struct vcnl4000_data *data, u8 data_reg, int val)
-> > +{
-> > +	__be16 be_val;
-> > +
-> > +	if (val > U16_MAX)
-> > +		return -ERANGE;
-> > +
-> > +	be_val = cpu_to_be16(val);
-> > +	return i2c_smbus_write_word_data(data->client, data_reg, be_val);
-> > +}
-> > +
-> > +  
-> 
-> Nitpick: One line is plenty.  I can tidy this up whilst applying if
-> we don't go to v6 for other reasons.
-> 
-> Otherwise this looks fine.
-> 
-> Jonathan
-> 
-> 
-> >  static int vcnl4000_measure(struct vcnl4000_data *data, u8 req_mask,
-> >  				u8 rdy_mask, u8 data_reg, int *val)
-> >  {
-> >  	int tries = 20;
-> > -	__be16 buf;
-> >  	int ret;
-> >  
-> >  	mutex_lock(&data->vcnl4000_lock);
-> > @@ -246,13 +269,11 @@ static int vcnl4000_measure(struct vcnl4000_data *data, u8 req_mask,
-> >  		goto fail;
-> >  	}
-> >  
-> > -	ret = i2c_smbus_read_i2c_block_data(data->client,
-> > -		data_reg, sizeof(buf), (u8 *) &buf);
-> > +	ret = vcnl4000_read_data(data, data_reg, val);
-> >  	if (ret < 0)
-> >  		goto fail;
-> >  
-> >  	mutex_unlock(&data->vcnl4000_lock);
-> > -	*val = be16_to_cpu(buf);
-> >  
-> >  	return 0;
-> >    
-> 
+[loongson@localhost perf]$ ./perf list
+
+List of pre-defined events (to be used in -e):
+
+  branch-instructions OR branches                    [Hardware event]
+  branch-misses                                      [Hardware event]
+  cpu-cycles OR cycles                               [Hardware event]
+  instructions                                       [Hardware event]
+
+  alignment-faults                                   [Software event]
+  bpf-output                                         [Software event]
+  context-switches OR cs                             [Software event]
+  cpu-clock                                          [Software event]
+  cpu-migrations OR migrations                       [Software event]
+  dummy                                              [Software event]
+  emulation-faults                                   [Software event]
+  major-faults                                       [Software event]
+  minor-faults                                       [Software event]
+  page-faults OR faults                              [Software event]
+  task-clock                                         [Software event]
+
+  duration_time                                      [Tool event]
+
+  L1-dcache-load-misses                              [Hardware cache event]
+  L1-dcache-store-misses                             [Hardware cache event]
+  L1-icache-load-misses                              [Hardware cache event]
+  branch-load-misses                                 [Hardware cache event]
+  branch-loads                                       [Hardware cache event]
+  dTLB-load-misses                                   [Hardware cache event]
+  dTLB-store-misses                                  [Hardware cache event]
+  iTLB-load-misses                                   [Hardware cache event]
+
+  rNNN                                               [Raw hardware event descriptor]
+  cpu/t1=v1[,t2=v2,t3 ...]/modifier                  [Raw hardware event descriptor]
+   (see 'man perf-list' on how to encode it)
+
+  mem:<addr>[/len][:access]                          [Hardware breakpoint]
+
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/mips/configs/loongson3_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/mips/configs/loongson3_defconfig b/arch/mips/configs/loongson3_defconfig
+index 51675f5..6768c16 100644
+--- a/arch/mips/configs/loongson3_defconfig
++++ b/arch/mips/configs/loongson3_defconfig
+@@ -21,6 +21,7 @@ CONFIG_SYSFS_DEPRECATED=y
+ CONFIG_RELAY=y
+ CONFIG_BLK_DEV_INITRD=y
+ CONFIG_EMBEDDED=y
++CONFIG_PERF_EVENTS=y
+ CONFIG_MACH_LOONGSON64=y
+ CONFIG_SMP=y
+ CONFIG_HZ_256=y
+-- 
+2.1.0
 
