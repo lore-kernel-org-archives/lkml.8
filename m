@@ -2,154 +2,294 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CCFC54FD0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD13AC55191
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4833D206CD
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:07:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="HLnbjquS"
+	by mail.kernel.org (Postfix) with ESMTP id B2E87206CD
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:12:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbgDZLHs (ORCPT
+        id S1726140AbgDZLMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 07:07:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34048 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725965AbgDZLHr (ORCPT
+        Sun, 26 Apr 2020 07:12:33 -0400
+Received: from smtpout1.mo528.mail-out.ovh.net ([46.105.34.251]:50401 "EHLO
+        smtpout1.mo528.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725965AbgDZLMd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 07:07:47 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1906BC061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 04:07:46 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id z6so5744257plk.10
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 04:07:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7gIwHNQfsxht5gpgEgzCAHjsGxOYw3xhYl1Xs6VhjBg=;
-        b=HLnbjquSwdq8Zce53mLav/jtVfvzN14OZHNuRVisauGAC6ptI2k0GHl6JT1NXPh0Kn
-         RLq80zMB0jjYecdumep/9J+S+WUIDzojDCAcCb5HwHlgZcE/w9OtcQu+eJwAWjobuhQz
-         ZTslBtePnTSz6vIr8CqDpSUFd0hl+0EomF+Ep7uxlJXzrQfzhe5egIh3YiCF0OY0+gLB
-         hH1irCG0eqEIxRVdkXvIfWxaGoWWmM3FZ6KFeRy9yP2R9ACr69aavfVDqQgCBfm3v68x
-         g/vjJUKaOig9Aryskj8AN6yhqGiE2yWc/a1cQO8ewp23vdIX0Yx5ZRNI5/6gc6OsF1W6
-         lkVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7gIwHNQfsxht5gpgEgzCAHjsGxOYw3xhYl1Xs6VhjBg=;
-        b=iTp+tUGLu8K3bZIi3zIF0IcSpHxuI0atWZ9ZxO77gT0mHiEPfpsBvuqL3RUxz69WiJ
-         Y1GP2vaUl61XOgnz/y/iuEi5sW+ojxBT1DsY4NW/lDNfcTP9JJwdmMR5PDm5edEtt8rz
-         FGs+UjSsblZsuEegBy61c44lEX1faDvAN4LIw9D3f553FXfwj+Jnf/wDp8xxUtNhoaGc
-         iA9G79BZWw96Q7s7XVoWnoykbJXa3446JJv6w5c724P7pEQc1y1YhVNVF2FJ24WhzDgA
-         XDxZ+IVOxJpoMlZw737eVUfjP7WswU9zK7yJuOiV3YuMR0HiBGo074Rx1MRLR/oCiSR9
-         2b6w==
-X-Gm-Message-State: AGi0PuZjx4QIoFLy6Td70K5HIL+/IDr53c03IrlC8FLQn9ne6KvYK+VL
-        7BPpKz/jX0a0B0CE6gy+uY2cjw==
-X-Google-Smtp-Source: APiQypLU2/3p37XU8avcrm/98FrcDbT+mjIivFbW6du/XkbUrmrGn2/M/rztjac2fQUXtvTY5oJMsg==
-X-Received: by 2002:a17:902:ed13:: with SMTP id b19mr18817426pld.254.1587899265549;
-        Sun, 26 Apr 2020 04:07:45 -0700 (PDT)
-Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
-        by smtp.gmail.com with ESMTPSA id h31sm9123564pjb.33.2020.04.26.04.07.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Apr 2020 04:07:44 -0700 (PDT)
-From:   Zong Li <zong.li@sifive.com>
-To:     palmer@dabbelt.com, paul.walmsley@sifive.com,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        anup@brainfault.org
-Cc:     david.abdurachmanov@sifive.com, Zong Li <zong.li@sifive.com>
-Subject: [PATCH] irqchip/sifive-plic: allow many cores to handle IRQs
-Date:   Sun, 26 Apr 2020 19:07:40 +0800
-Message-Id: <20200426110740.123638-1-zong.li@sifive.com>
-X-Mailer: git-send-email 2.26.1
+        Sun, 26 Apr 2020 07:12:33 -0400
+Received: from pro2.mail.ovh.net (unknown [10.109.138.25])
+        by mo528.mail-out.ovh.net (Postfix) with ESMTPS id B070B5AE2A86;
+        Sun, 26 Apr 2020 13:12:29 +0200 (CEST)
+Received: from localhost (89.70.31.203) by DAG2EX1.emp2.local (172.16.2.11)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Sun, 26 Apr
+ 2020 13:12:29 +0200
+Date:   Sun, 26 Apr 2020 13:11:04 +0200
+From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+CC:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>
+Subject: Re: [PATCH 4/6] Documentation: ABI: testing: scd30: document iio
+ attributes
+Message-ID: <20200426111104.GB3282@arch>
+References: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
+ <20200422141135.86419-5-tomasz.duszynski@octakon.com>
+ <alpine.DEB.2.21.2004221818490.26800@vps.pmeerw.net>
+ <20200423155317.GB43448@arch>
+ <20200425202057.5c8ad612@archlinux>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20200425202057.5c8ad612@archlinux>
+X-Originating-IP: [89.70.31.203]
+X-ClientProxiedBy: DAG3EX2.emp2.local (172.16.2.22) To DAG2EX1.emp2.local
+ (172.16.2.11)
+X-Ovh-Tracer-Id: 7826411728179190866
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrheejgdefkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkfhggtggujghisehttdertddttdejnecuhfhrohhmpefvohhmrghsiicuffhushiihihnshhkihcuoehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomheqnecukfhppedtrddtrddtrddtpdekledrjedtrdefuddrvddtfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehprhhovddrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomhdprhgtphhtthhopehrohgshhdoughtsehkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, driver forces the IRQs to be handled by only one core. This
-patch provides the way to enable others cores to handle IRQs if needed,
-so users could decide how many cores they wanted on default by boot
-argument.
+On Sat, Apr 25, 2020 at 08:20:57PM +0100, Jonathan Cameron wrote:
+> On Thu, 23 Apr 2020 17:53:17 +0200
+> Tomasz Duszynski <tomasz.duszynski@octakon.com> wrote:
+>
+> > On Wed, Apr 22, 2020 at 06:40:17PM +0200, Peter Meerwald-Stadler wrote:
+> > > On Wed, 22 Apr 2020, Tomasz Duszynski wrote:
+> > >
+> > > > Add documentation for sensor specific iio attributes.
+> > >
+> > > minor comments below
+> >
+> > Thanks.
+> >
+> > >
+> > > > Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+> > > > ---
+> > > >  Documentation/ABI/testing/sysfs-bus-iio-scd30 | 97 +++++++++++++++++++
+> > > >  1 file changed, 97 insertions(+)
+> > > >  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-scd30
+> > > >
+> > > > diff --git a/Documentation/ABI/testing/sysfs-bus-iio-scd30 b/Documentation/ABI/testing/sysfs-bus-iio-scd30
+> > > > new file mode 100644
+> > > > index 000000000000..0431a718447d
+> > > > --- /dev/null
+> > > > +++ b/Documentation/ABI/testing/sysfs-bus-iio-scd30
+> > > > @@ -0,0 +1,97 @@
+> > > > +What:		/sys/bus/iio/devices/iio:deviceX/pressure_comp
+> > > > +Date:		April 2020
+> > > > +KernelVersion:	5.8
+> > > > +Contact:	linux-iio@vger.kernel.org
+> > > > +Description:
+> > > > +		Given that sensor's CO2 measurement chamber has fixed volume
+> > > > +		pressure changes will affect concentration readings. Writing
+> > > > +		current ambient pressure here will allow senor to make necessary
+> > >
+> > > sensor
+> > >
+> >
+> > Okay.
+> >
+> > > > +		adjustments. Upon reading previously set value is returned.
+> > > > +		Units are millibars.
+> > >
+> > > unit for pressure in IIO is kilopascal (e.g.
+> > > /sys/bus/iio/devices/iio:deviceX/in_pressure_raw)
+> > >
+> >
+> > My thinking here was that since these are sensor specific attributes
+> > they don't need to stick to iio conventions and millibars were somewhat
+> > more natural to use. But I guess that's just matter of habit.
+>
+> You absolutely have to stick to standard units.  Userspace programs
+> aren't going to come read your docs...
+>
+> For other sensors that take a calibration value like this we've reported
+> them via an output channel.  For example the atlas-ph sensor has
+> an 'output temp' channel used for this purpose.
+>
 
-Use 'irqaffinity' boot argument to determine affinity. If there is no
-irqaffinity in dts or kernel configuration, use irq default affinity,
-so all harts would try to claim IRQ.
+Fair enough.
 
-For example, add irqaffinity=0 in chosen node to set irq affinity to
-hart 0. It also supports more than one harts to handle irq, such as set
-irqaffinity=0,3,4.
+> It's not ideal or totally intuitive but it does let us avoid expanding
+> the overall ABI.  The argument was something along the lines of
+> 1) Imagine your sensor could control the pressure in the measurement space...
+> 2) An output channel would provide the value to set it to.
+> 3) Now instead we provide a means of saying 'what it is'
+> 4) End result is we write a value and the pressure in the chamber is
+>    that value :)
+>
+> As I said not ideal but the best we can do without having to define a lot
+> of ABI just to deal with compensation factors.
+>
+> This is a rare case where I would document the 'standard' ABI in here
+> to make the point that it is actually providing an estimate of the pressure
+> not controlling it...
+>
+> >
+> > So generally I am okay with reworking all attrs to accept values in iio
+> > preferred units.
+> >
+> > > > +
+> > > > +What:		/sys/bus/iio/devices/iio:deviceX/pressure_comp_available
+> > > > +Date:		April 2020
+> > > > +KernelVersion:	5.8
+> > > > +Contact:	linux-iio@vger.kernel.org
+> > > > +Description:
+> > > > +		The range of available values in millibars represented as the
+> > > > +		minimum value, the step and the maximum value, all enclosed in
+> > > > +		square brackets.
+> > > > +
+> > > > +What:		/sys/bus/iio/devices/iio:deviceX/meas_interval
+> > > > +Date:		January 2020
+> > > > +KernelVersion:	5.8
+> > > > +Contact:	linux-iio@vger.kernel.org
+> > > > +Description:
+> > > > +		Amount of time between subsequent measurements. Writing this
+> > > > +		attribute will change measurement interval. Upon reading
+> > > > +		current measurement interval is returned. Units are seconds.
+>
+> Use the existing ABI sampling frequency which is sort of the inverse of this.
+>
 
-You can change IRQ affinity from user-space using procfs. For example,
-you can make CPU0 and CPU2 serve IRQ together by the following command:
+Was thinking about it but long periods in Hz simply don't look appealing :).
 
-echo 4 > /proc/irq/<x>/smp_affinity
+No other strong opinions so I'll rework that.
 
-Signed-off-by: Zong Li <zong.li@sifive.com>
----
- drivers/irqchip/irq-sifive-plic.c | 21 +++++++--------------
- 1 file changed, 7 insertions(+), 14 deletions(-)
+> > > > +
+> > > > +What:		/sys/bus/iio/devices/iio:deviceX/meas_interval_available
+> > > > +Date:		April 2020
+> > > > +KernelVersion:	5.8
+> > > > +Contact:	linux-iio@vger.kernel.org
+> > > > +Description:
+> > > > +		The range of available values in seconds represented as the
+> > > > +		minimum value, the step and the maximum value, all enclosed in
+> > > > +		square brackets.
+> > > > +
+> > > > +What:		/sys/bus/iio/devices/iio:deviceX/asc
+> Spends some characters to easy of understanding ;)
+>
+> auto_calib_proc_enable maybe?  Or can we get away with the 'somewhat standard
+> calibration (it's used in at least one other driver IIRC)
+>
 
-diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-index d0a71febdadc..bc1440d54185 100644
---- a/drivers/irqchip/irq-sifive-plic.c
-+++ b/drivers/irqchip/irq-sifive-plic.c
-@@ -111,15 +111,12 @@ static inline void plic_irq_toggle(const struct cpumask *mask,
- static void plic_irq_unmask(struct irq_data *d)
- {
- 	struct cpumask amask;
--	unsigned int cpu;
- 	struct plic_priv *priv = irq_get_chip_data(d->irq);
- 
- 	cpumask_and(&amask, &priv->lmask, cpu_online_mask);
--	cpu = cpumask_any_and(irq_data_get_affinity_mask(d),
--					   &amask);
--	if (WARN_ON_ONCE(cpu >= nr_cpu_ids))
--		return;
--	plic_irq_toggle(cpumask_of(cpu), d, 1);
-+	cpumask_and(&amask, &amask, irq_data_get_affinity_mask(d));
-+
-+	plic_irq_toggle(&amask, d, 1);
- }
- 
- static void plic_irq_mask(struct irq_data *d)
-@@ -133,24 +130,20 @@ static void plic_irq_mask(struct irq_data *d)
- static int plic_set_affinity(struct irq_data *d,
- 			     const struct cpumask *mask_val, bool force)
- {
--	unsigned int cpu;
- 	struct cpumask amask;
- 	struct plic_priv *priv = irq_get_chip_data(d->irq);
- 
- 	cpumask_and(&amask, &priv->lmask, mask_val);
- 
- 	if (force)
--		cpu = cpumask_first(&amask);
-+		cpumask_copy(&amask, mask_val);
- 	else
--		cpu = cpumask_any_and(&amask, cpu_online_mask);
--
--	if (cpu >= nr_cpu_ids)
--		return -EINVAL;
-+		cpumask_and(&amask, &amask, cpu_online_mask);
- 
- 	plic_irq_toggle(&priv->lmask, d, 0);
--	plic_irq_toggle(cpumask_of(cpu), d, 1);
-+	plic_irq_toggle(&amask, d, 1);
- 
--	irq_data_update_effective_affinity(d, cpumask_of(cpu));
-+	irq_data_update_effective_affinity(d, &amask);
- 
- 	return IRQ_SET_MASK_OK_DONE;
- }
--- 
-2.26.1
+Just self_calibration would do?
 
+> > > > +Date:		April 2020
+> > > > +KernelVersion:	5.8
+> > > > +Contact:	linux-iio@vger.kernel.org
+> > > > +Description:
+> > > > +		Writing 1 or 0 to this attribute will respectively activate or
+> > > > +		deactivate automatic self calibration procedure. Upon reading 1
+> > >
+> > > deactivate automatic self calibration (asc) procedure
+> > >
+> >
+> > That shouldn't be too difficult to realize what asc actually stands for after
+> > reading this short description.
+> >
+> > > > +		is returned if asc is ongoing, 0 otherwise.
+> > > > +
+> > > > +What:		/sys/bus/iio/devices/iio:deviceX/frc
+> > > > +Date:		April 2020
+> > > > +KernelVersion:	5.8
+> > > > +Contact:	linux-iio@vger.kernel.org
+> > > > +Description:
+> > > > +		Forced recalibration is used to compensate for sensor drifts
+> > > > +		when a reference value of CO2 concentration in close proximity
+> > > > +		to the sensor is available. Writing attribute will set frc
+> > > > +		value. Upon reading current frc is returned. Units are
+> > > > +		millibars.
+>
+> Could we implement this by just writing to the main channel value?
+> Bit of a clunky ABI but sort of logically fits in my head given we are basically
+> forcing the value we read to be this one?
+>
+
+So the similar to the pressure compensation. Okay.
+
+> > > > +
+> > > > +What:		/sys/bus/iio/devices/iio:deviceX/frc_available
+> > > > +Date:		April 2020
+> > > > +KernelVersion:	5.8
+> > > > +Contact:	linux-iio@vger.kernel.org
+> > > > +Description:
+> > > > +		The range of available values in millibars represented as the
+> > > > +		minimum value, the step and the maximum value, all enclosed in
+> > > > +		square brackets.
+> > > > +
+> > > > +What:		/sys/bus/iio/devices/iio:deviceX/temp_offset
+> > > > +Date:		April 2020
+> > > > +KernelVersion:	5.8
+> > > > +Contact:	linux-iio@vger.kernel.org
+> > > > +Description:
+> > > > +		Sensor readings may be affected by ambient temperature.
+> > > > +		Writing temperature offset will compensate for unwanted changes.
+> > > > +		Note that written offset gets multiplied by a factor of 100
+> > > > +		by a sensor internally.
+> > > > +
+> > > > +		For example, writing 10 here will correspond to 0.1 degree
+> > > > +		Celsius.
+>
+> This sounds like a calibbias to me which is standard ABI.
+>
+
+Right, that could work.
+
+> > > > +
+> > > > +What:		/sys/bus/iio/devices/iio:deviceX/temp_offset_available
+> > > > +Date:		April 2020
+> > > > +KernelVersion:	5.8
+> > > > +Contact:	linux-iio@vger.kernel.org
+> > > > +Description:
+> > > > +		The range of available values in degrees Celsius represented as
+> > > > +		the minimum value, the step and the maximum value, all enclosed
+> > > > +		in square brackets.
+>
+> Wrong units for temperature (which is an odd one as we
+> lifted them from hwmon before learning the error of our ways and starting to use
+> SI units as the base).
+>
+
+Does calibbias have _available counterpart?
+
+>
+> > > > +
+> > > > +What:		/sys/bus/iio/devices/iio:deviceX/reset
+> > > > +Date:		April 2020
+> > > > +KernelVersion:	5.8
+> > > > +Contact:	linux-iio@vger.kernel.org
+> > > > +Description:
+> > > > +		Software reset mechanism forces sensor into the same state
+> > > > +		as after powering up without the need for removing power supply.
+> > > > +		Writing any value will reset sensor.
+>
+> Not seeing an argument here for why you might want to do that other than on
+> power up or module probe to get the driver into a known state.
+> So currently it's a no to this one - just don't expose it to userspace.
+>
+
+If one writes some odd configuration (though allowed) into sensor, for example
+out of sheer curiosity and then writes the sane values back sensor needs some
+time to recover (i.e start reporting valid measurements again).
+
+So rationale here was that after reset sensor recovers immediately. I'd
+say that reset is sometimes useful. Perhaps that could be exported by
+means of iio debug api?
+
+>
+> > > >
+> > >
+> > > --
+> > >
+> > > Peter Meerwald-Stadler
+> > > Mobile: +43 664 24 44 418
+>
