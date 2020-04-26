@@ -2,117 +2,163 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70347C55191
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8883C55191
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 580BD2071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90F992087E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:25:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587893104;
+	bh=vwWrS+F2vR1/Yb++bTK7d2fnjWVZse9eyfCNAFo6btw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ybkbaTXGrGooXN8bQDUYmveZvRU+CPg739ILNPNk9bzXqdFxjAY2+NuD+wwrTaI2r
+	 rRdz9sJREhNRa26DGnnLJ0DOTtMs4m+8TlQXOby8nodtPzzhqEHroI9SAXLUSIO09Q
+	 Tz6xiuW+UfUBgUJJkhsJmfWV0xt6jVDvf0Ng7VSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbgDZJU7 (ORCPT
+        id S1726137AbgDZJZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 05:20:59 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35707 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbgDZJU7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 05:20:59 -0400
-Received: by mail-ot1-f68.google.com with SMTP id e26so20843362otr.2;
-        Sun, 26 Apr 2020 02:20:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6hQ0FsSv9PtPNzLad/ImWLAXQBaBJZp6Df5to0tE7AE=;
-        b=aUh1F5DwbU9XkJZlIcIi3D4H/wFjPqyGQIq9InaCKHQsSzGdf+VO3hW1TWoPiVSIJO
-         HwTFYKJ4ZRDdeANtt1ajBAmm+rPPnPpw4djzoUKbf+mfkfgIIDWtdBmj8Y+eEV1iS83b
-         3Zp2D1bo8pCQDW6DPTzoXMDFWUAagPj4gyY6WpEnOYphg7P6rQ0K4l8HRwWkBZaeV9Rt
-         By61noCuG7rHXicRCqpPcBaSn8TgY+IxalCyWcioTA/ceVaehAKclDTczh/2rh3ZmrOs
-         cDy/XCHwZPcWysEPcDRPuRDv/RN/S1yXOJe9lAaEW+assCGKwpCCnlVgi47p8AH7Biz6
-         5yQg==
-X-Gm-Message-State: AGi0PuZwrYZXrRHy6aOe5QKfPm5BCuqORvQdFhRFzUTn4KMgQKzRv16j
-        vrcho5Wi6z53t0LUezZ3XgdUb0DA9/qSJButXi8=
-X-Google-Smtp-Source: APiQypKQG3K6apgv6LUHl8XSpm0aMLUqsS9zYhTD6QAGXod32cnW+tdIzAk+LKDkdDN1UIHF0UEYKJyiPIrEEv5maY4=
-X-Received: by 2002:a9d:7990:: with SMTP id h16mr8510307otm.145.1587892858245;
- Sun, 26 Apr 2020 02:20:58 -0700 (PDT)
+        Sun, 26 Apr 2020 05:25:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52326 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725806AbgDZJZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 05:25:03 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD8C62071C;
+        Sun, 26 Apr 2020 09:25:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587893102;
+        bh=vwWrS+F2vR1/Yb++bTK7d2fnjWVZse9eyfCNAFo6btw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=SXC7plH3nsqld8xWbU3inOs/rpTzwn6viuKkLhMBQW6/aoBQeycBeLJoh3DoY8G5n
+         PS5jADt+14X/I45r5Y1wwxqbHOLDgKl5yIPEVKHmhN4KQU4B8qN6zLiU03zAdZSXOX
+         LoMU3T+cb6H+zb01gShtd9AJHQ1cmLbb8jNCY8w4=
+Date:   Sun, 26 Apr 2020 10:24:58 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Mathieu Othacehe <m.othacehe@gmail.com>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/4] iio: vcnl4000: Factorize data reading and
+ writing.
+Message-ID: <20200426102458.24ae84d7@archlinux>
+In-Reply-To: <20200426095831.1472fbc9@archlinux>
+References: <20200422130856.1722-1-m.othacehe@gmail.com>
+        <20200422130856.1722-2-m.othacehe@gmail.com>
+        <20200426095831.1472fbc9@archlinux>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200425044655.166257-1-davidgow@google.com>
-In-Reply-To: <20200425044655.166257-1-davidgow@google.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sun, 26 Apr 2020 11:20:46 +0200
-Message-ID: <CAMuHMdWki-BjeF_SEOV0Lq1vKX1uWyaztj7_jjycyeiyKB4tnw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: of: Build fails if CONFIG_OF_DYNAMIC enabled
- without CONFIG_OF_GPIO
-To:     David Gow <davidgow@google.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Frank Rowand <frank.rowand@sony.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+On Sun, 26 Apr 2020 09:58:31 +0100
+Jonathan Cameron <jic23@kernel.org> wrote:
 
-On Sat, Apr 25, 2020 at 6:47 AM David Gow <davidgow@google.com> wrote:
-> The symbol 'gpio_of_notifier' doesn't exist without both CONFIG_OF_GPIO
-> and CONFIG_OF_DYNAMIC enabled, but is referenced when only
-> CONFIG_OF_DYNAMIC is enabled.
->
-> This broke building with 'make ARCH=um allyesconfig':
+> On Wed, 22 Apr 2020 15:08:53 +0200
+> Mathieu Othacehe <m.othacehe@gmail.com> wrote:
+> 
+> > Factorize data reading in vcnl4000_measure into a vcnl4000_read_data
+> > function. Also add a vcnl4000_write_data function.
+> > 
+> > Signed-off-by: Mathieu Othacehe <m.othacehe@gmail.com>
 
-Right, so you have CONFIG_OF=y, but CONFIG_OF_GPIO=n, as the latter
-depends on HAS_IOMEM, which is not set for UML.
+Gah. I'm clearly blind but thankfully sparse gave a warning on a __be16
+cast that got me to look more closely at the code.  As it turns out, the
+existing code won't work on be16 platforms...
 
-Interestingly, the latter dependency claims to have been added because
-gpiolib-of.c uses ioremap()/iounmap(). However, it seems to have never
-called ioremap(), only of_iomap() and iounmap().
-of_iomap() itself is available, as it depends on OF_ADDRESS, which
-depends on HAS_IOMEM || UML.  Interestingly, of_iomap() calls ioremap(),
-without a dependency on HAS_IOMEM?
+> > ---
+> >  drivers/iio/light/vcnl4000.c | 29 +++++++++++++++++++++++++----
+> >  1 file changed, 25 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
+> > index 58e97462e803..695a81e95d8d 100644
+> > --- a/drivers/iio/light/vcnl4000.c
+> > +++ b/drivers/iio/light/vcnl4000.c
+> > @@ -215,11 +215,34 @@ static int vcnl4200_init(struct vcnl4000_data *data)
+> >  	return 0;
+> >  };
+> >  
+> > +static int vcnl4000_read_data(struct vcnl4000_data *data, u8 data_reg, int *val)
+> > +{
+> > +	s32 ret;
+> > +
+> > +	ret = i2c_smbus_read_word_data(data->client, data_reg);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	*val = be16_to_cpu(ret);
+This is wrong.  I2C has a defined byte order and the i2 master will return
+the bytes in that order for i2c_smbus_read_word_data calls.
 
-So perhaps the dependency of CONFIG_OF_GPIO on HAS_IOMEM can be
-dropped these days, solving this issue as well?
+Now, not all i2c devices actually obey the specification from Philips so
+sometimes it's necessary to swap the bytes to reflect that.  However, you
+have to do it unconditionally because if you have a be16 platform the wire
+order will still be assumed to be le16 and an incorrect swap will have been
+applied (so we have to swap back again).
 
-> ---------------
-> /usr/bin/ld: drivers/gpio/gpiolib.o: in function `gpiolib_dev_init':
-> ./drivers/gpio/gpiolib.c:5293: undefined reference to `gpio_of_notifier'
-> collect2: error: ld returned 1 exit status
-> ---------------
->
-> Fixes: 63636d956c45 ("gpio: of: Add DT overlay support for GPIO hogs")
-> Signed-off-by: David Gow <davidgow@google.com>
+Anyhow, this is common enough that we have i2c_smbus_read_word_swapped
+to deal with it.  Also similar for the write equivalent.
 
-Anyway:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Interesting to note that the driver is currently broken so we should
+do this fix as a precursor patch so we can backport to stable.
 
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -5289,8 +5289,9 @@ static int __init gpiolib_dev_init(void)
->         gpiolib_initialized = true;
->         gpiochip_setup_devs();
->
-> -       if (IS_ENABLED(CONFIG_OF_DYNAMIC))
-> -               WARN_ON(of_reconfig_notifier_register(&gpio_of_notifier));
-> +#if IS_ENABLED(CONFIG_OF_DYNAMIC) && IS_ENABLED(CONFIG_OF_GPIO)
-> +       WARN_ON(of_reconfig_notifier_register(&gpio_of_notifier));
-> +#endif /* CONFIG_OF_DYNAMIC && CONFIG_OF_GPIO */
->
->         return ret;
->  }
+Jonathan
 
-Gr{oetje,eeting}s,
+> > +	return 0;
+> > +}
+> > +
+> > +static int vcnl4000_write_data(struct vcnl4000_data *data, u8 data_reg, int val)
+> > +{
+> > +	__be16 be_val;
+> > +
+> > +	if (val > U16_MAX)
+> > +		return -ERANGE;
+> > +
+> > +	be_val = cpu_to_be16(val);
+> > +	return i2c_smbus_write_word_data(data->client, data_reg, be_val);
+> > +}
+> > +
+> > +  
+> 
+> Nitpick: One line is plenty.  I can tidy this up whilst applying if
+> we don't go to v6 for other reasons.
+> 
+> Otherwise this looks fine.
+> 
+> Jonathan
+> 
+> 
+> >  static int vcnl4000_measure(struct vcnl4000_data *data, u8 req_mask,
+> >  				u8 rdy_mask, u8 data_reg, int *val)
+> >  {
+> >  	int tries = 20;
+> > -	__be16 buf;
+> >  	int ret;
+> >  
+> >  	mutex_lock(&data->vcnl4000_lock);
+> > @@ -246,13 +269,11 @@ static int vcnl4000_measure(struct vcnl4000_data *data, u8 req_mask,
+> >  		goto fail;
+> >  	}
+> >  
+> > -	ret = i2c_smbus_read_i2c_block_data(data->client,
+> > -		data_reg, sizeof(buf), (u8 *) &buf);
+> > +	ret = vcnl4000_read_data(data, data_reg, val);
+> >  	if (ret < 0)
+> >  		goto fail;
+> >  
+> >  	mutex_unlock(&data->vcnl4000_lock);
+> > -	*val = be16_to_cpu(buf);
+> >  
+> >  	return 0;
+> >    
+> 
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
