@@ -2,82 +2,128 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD80C55194
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B94F5C55199
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2C222070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CE512070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:41:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="ieiRqUv2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="itNedcZm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbgDZRlB (ORCPT
+        id S1726296AbgDZRlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 13:41:01 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:29302 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726154AbgDZRlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 13:41:00 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 499FZ24YmjzDY;
-        Sun, 26 Apr 2020 19:40:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1587922858; bh=JLGALo/UiOILtQBtpA+1RzP50dZmtkvUbk0MBxCAtU0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ieiRqUv2js6Xx6/zbV8hMN8z+1T9FYsNDWeCarKZS1/Oh2yvV5RLnsSV1QgE2RUHM
-         cDTbxCis/xvaoXbm0Ioxrw7hJ1B1hyMccty2yA8IxWS1qcIbtkx2AMrvGapHdHE6Ho
-         dzEGoOYZ9pCoiGlU3UrHFw0AjBNJd+ukplwczjZEtfnKVcZKZcy+JjC+gez33gZ3jB
-         okVb2isuyh31bZanGwX/fylOrAW/9902SQVaP+mfUUtp/dSnLXpspvSV+bf0QeZOTY
-         qT0r/7GecdxJCaTKVfVgYakw1Q99n0fkpIAVq3WkjJIWuGQe/pMwb/6DQgSiKfsZSV
-         GYX5vrlali/Lg==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Sun, 26 Apr 2020 19:40:57 +0200
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     David Heidelberg <david@ixit.cz>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        James Chen <james.chen@emc.com.tw>,
-        Johnny Chuang <johnny.chuang@emc.com.tw>,
-        Rob Herring <robh+dt@kernel.org>,
-        Scott Liu <scott.liu@emc.com.tw>, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 05/10] input: elants: refactor
- elants_i2c_execute_command()
-Message-ID: <20200426174057.GB15436@qmqm.qmqm.pl>
-References: <cover.1587916846.git.mirq-linux@rere.qmqm.pl>
- <4e5bf76e695388d6aeefa00552675c0617c044f1.1587916846.git.mirq-linux@rere.qmqm.pl>
- <127c4cf0-9bf0-60a4-bc48-28988ae24967@gmail.com>
+        Sun, 26 Apr 2020 13:41:13 -0400
+Received: from vultr.net.flygoat.com ([149.28.68.211]:59984 "EHLO
+        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726154AbgDZRlM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 13:41:12 -0400
+Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 3EFD320497;
+        Sun, 26 Apr 2020 17:41:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1587922872; bh=CFOqPhCNifZKIhPop2Z/lA4KDKrcXNJ4tww+sR6tyHI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=itNedcZm96N+XAGkLKBAbE9PYTNjOgkB74X6QCk0HwYQULEQ96oFQTUiEHO0hKxDM
+         nwAzj9j9Y24JWZ9i10XlfwyY/LkPCDRT6P6HLVIDyD7VHrzS4gjT8m7HVi5rg0eXJe
+         40TxrUeMwtHpZiZhF9zmeb8GzcAEUTkM+bcH8l7tKuyHaR3ZX0NLpEIE+k05flZUwT
+         wRACBWPXd/aOGEnGgPOfX9vpGo3PvDqNrW2c4OyW4eXSm129FfmlkK18e8iekLhOwb
+         RLIndEhHY0l5d+vtiLTsDtjhSqwTorLfur8z/inhF754BZeZp/D09ybFxAmfpbReQi
+         ZFAjknFXvS/og==
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     akpm@linux-foundation.org
+Cc:     sunguoyun@loongson.cn, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
+        Daniel Silsby <dansilsby@gmail.com>,
+        Dmitry Korotin <dkorotin@wavecomp.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] mips/mm: Guard SOFT_DIRTY bit with config option
+Date:   Mon, 27 Apr 2020 01:40:55 +0800
+Message-Id: <20200426174058.1181837-1-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.26.0.rc2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <127c4cf0-9bf0-60a4-bc48-28988ae24967@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 07:24:14PM +0300, Dmitry Osipenko wrote:
-> 26.04.2020 19:11, Michał Mirosław пишет:
-> > Apply some DRY-ing to elants_i2c_execute_command() callers.  This pulls
-> > polling and error printk()s into a single function.
-> > 
-> > Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> > ---
-> > v4: return 0 on success; use %pe for error code
-> > ---
-> >  drivers/input/touchscreen/elants_i2c.c | 189 +++++++++++++------------
-> >  1 file changed, 96 insertions(+), 93 deletions(-)
-> 
-> This patch doesn't apply to the recent linux-next, it needs to be rebased.
+After guarding SOFT_DIRTY with config option, it won't occupy
+precious page table bit on systems that didn't enable SOFT_DIRTY.
 
-I'm rebasing against for-linus brach at [1]. Will send v5 shortly.
+It can prevent page btis overflow on MIPS32R2 systems with RIXI
+enabled.
 
-[1] git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Reported-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+---
+ arch/mips/include/asm/pgtable-bits.h | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/arch/mips/include/asm/pgtable-bits.h b/arch/mips/include/asm/pgtable-bits.h
+index d43fb6f8af14..e26dc41a8a68 100644
+--- a/arch/mips/include/asm/pgtable-bits.h
++++ b/arch/mips/include/asm/pgtable-bits.h
+@@ -55,7 +55,9 @@ enum pgtable_bits {
+ #if defined(CONFIG_ARCH_HAS_PTE_SPECIAL)
+ 	_PAGE_SPECIAL_SHIFT,
+ #endif
++#if defined(CONFIG_HAVE_ARCH_SOFT_DIRTY)
+ 	_PAGE_SOFT_DIRTY_SHIFT,
++#endif
+ };
+ 
+ /*
+@@ -85,7 +87,9 @@ enum pgtable_bits {
+ #if defined(CONFIG_ARCH_HAS_PTE_SPECIAL)
+ 	_PAGE_SPECIAL_SHIFT,
+ #endif
++#if defined(CONFIG_HAVE_ARCH_SOFT_DIRTY)
+ 	_PAGE_SOFT_DIRTY_SHIFT,
++#endif
+ };
+ 
+ #elif defined(CONFIG_CPU_R3K_TLB)
+@@ -101,7 +105,9 @@ enum pgtable_bits {
+ #if defined(CONFIG_ARCH_HAS_PTE_SPECIAL)
+ 	_PAGE_SPECIAL_SHIFT,
+ #endif
++#if defined(CONFIG_HAVE_ARCH_SOFT_DIRTY)
+ 	_PAGE_SOFT_DIRTY_SHIFT,
++#endif
+ 
+ 	/* Used by TLB hardware (placed in EntryLo) */
+ 	_PAGE_GLOBAL_SHIFT = 8,
+@@ -128,7 +134,9 @@ enum pgtable_bits {
+ #if defined(CONFIG_ARCH_HAS_PTE_SPECIAL)
+ 	_PAGE_SPECIAL_SHIFT,
+ #endif
++#if defined(CONFIG_HAVE_ARCH_SOFT_DIRTY)
+ 	_PAGE_SOFT_DIRTY_SHIFT,
++#endif
+ 	/* Used by TLB hardware (placed in EntryLo*) */
+ #if defined(CONFIG_CPU_HAS_RIXI)
+ 	_PAGE_NO_EXEC_SHIFT,
+@@ -155,7 +163,11 @@ enum pgtable_bits {
+ #else
+ # define _PAGE_SPECIAL		0
+ #endif
+-#define _PAGE_SOFT_DIRTY	(1 << _PAGE_SOFT_DIRTY_SHIFT)
++#if defined(CONFIG_HAVE_ARCH_SOFT_DIRTY)
++# define _PAGE_SOFT_DIRTY	(1 << _PAGE_SOFT_DIRTY_SHIFT)
++#else
++# define _PAGE_SOFT_DIRTY	0
++#endif
+ 
+ /* Used by TLB hardware (placed in EntryLo*) */
+ #if defined(CONFIG_XPA)
+-- 
+2.26.0.rc2
+
