@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57300C55191
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 06:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BBC4C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 06:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F7D321556
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 06:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70FB82084D
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 06:48:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgDZGr4 (ORCPT
+        id S1726381AbgDZGrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 02:47:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50396 "EHLO
+        Sun, 26 Apr 2020 02:47:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726270AbgDZGrx (ORCPT
+        by vger.kernel.org with ESMTP id S1726269AbgDZGrx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 26 Apr 2020 02:47:53 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35368C09B054;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F254C09B053;
         Sat, 25 Apr 2020 23:47:53 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jSb4q-0008VM-89; Sun, 26 Apr 2020 08:47:44 +0200
+        id 1jSb4o-0008Sy-8y; Sun, 26 Apr 2020 08:47:42 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D5CDB1C0178;
-        Sun, 26 Apr 2020 08:47:43 +0200 (CEST)
-Date:   Sun, 26 Apr 2020 06:47:43 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id EA0231C0178;
+        Sun, 26 Apr 2020 08:47:41 +0200 (CEST)
+Date:   Sun, 26 Apr 2020 06:47:41 -0000
 From:   "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/entry/64: Fix unwind hints in register clearing code
+Subject: [tip: x86/urgent] x86/unwind/orc: Convert global variables to static
 Cc:     Miroslav Benes <mbenes@suse.cz>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Ingo Molnar <mingo@kernel.org>,
@@ -46,10 +46,10 @@ Cc:     Miroslav Benes <mbenes@suse.cz>,
         Thomas Gleixner <tglx@linutronix.de>,
         Vince Weaver <vincent.weaver@maine.edu>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <68fd3d0bc92ae2d62ff7879d15d3684217d51f08.1587808742.git.jpoimboe@redhat.com>
-References: <68fd3d0bc92ae2d62ff7879d15d3684217d51f08.1587808742.git.jpoimboe@redhat.com>
+In-Reply-To: <43ae310bf7822b9862e571f36ae3474cfde8f301.1587808742.git.jpoimboe@redhat.com>
+References: <43ae310bf7822b9862e571f36ae3474cfde8f301.1587808742.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-Message-ID: <158788366345.28353.4484839996256078679.tip-bot2@tip-bot2>
+Message-ID: <158788366146.28353.15541509747149730.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -65,28 +65,19 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/urgent branch of tip:
 
-Commit-ID:     06a9750edcffa808494d56da939085c35904e618
-Gitweb:        https://git.kernel.org/tip/06a9750edcffa808494d56da939085c35904e618
+Commit-ID:     153eb2223c794251b28400f3f74862e090d23f16
+Gitweb:        https://git.kernel.org/tip/153eb2223c794251b28400f3f74862e090d23f16
 Author:        Josh Poimboeuf <jpoimboe@redhat.com>
-AuthorDate:    Sat, 25 Apr 2020 05:03:01 -05:00
+AuthorDate:    Sat, 25 Apr 2020 05:03:05 -05:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 25 Apr 2020 12:22:27 +02:00
+CommitterDate: Sat, 25 Apr 2020 12:22:28 +02:00
 
-x86/entry/64: Fix unwind hints in register clearing code
+x86/unwind/orc: Convert global variables to static
 
-The PUSH_AND_CLEAR_REGS macro zeroes each register immediately after
-pushing it.  If an NMI or exception hits after a register is cleared,
-but before the UNWIND_HINT_REGS annotation, the ORC unwinder will
-wrongly think the previous value of the register was zero.  This can
-confuse the unwinding process and cause it to exit early.
+These variables aren't used outside of unwind_orc.c, make them static.
 
-Because ORC is simpler than DWARF, there are a limited number of unwind
-annotation states, so it's not possible to add an individual unwind hint
-after each push/clear combination.  Instead, the register clearing
-instructions need to be consolidated and moved to after the
-UNWIND_HINT_REGS annotation.
+Also annotate some of them with '__ro_after_init', as applicable.
 
-Fixes: 3f01daecd545 ("x86/entry/64: Introduce the PUSH_AND_CLEAN_REGS macro")
 Reviewed-by: Miroslav Benes <mbenes@suse.cz>
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
@@ -96,82 +87,30 @@ Cc: Jann Horn <jannh@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Vince Weaver <vincent.weaver@maine.edu>
-Link: https://lore.kernel.org/r/68fd3d0bc92ae2d62ff7879d15d3684217d51f08.1587808742.git.jpoimboe@redhat.com
+Link: https://lore.kernel.org/r/43ae310bf7822b9862e571f36ae3474cfde8f301.1587808742.git.jpoimboe@redhat.com
 ---
- arch/x86/entry/calling.h | 40 ++++++++++++++++++++-------------------
- 1 file changed, 21 insertions(+), 19 deletions(-)
+ arch/x86/kernel/unwind_orc.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/entry/calling.h b/arch/x86/entry/calling.h
-index 0789e13..1c7f13b 100644
---- a/arch/x86/entry/calling.h
-+++ b/arch/x86/entry/calling.h
-@@ -98,13 +98,6 @@ For 32-bit we have the following conventions - kernel is built with
- #define SIZEOF_PTREGS	21*8
+diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+index e9cc182..64889da 100644
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -15,12 +15,12 @@ extern int __stop_orc_unwind_ip[];
+ extern struct orc_entry __start_orc_unwind[];
+ extern struct orc_entry __stop_orc_unwind[];
  
- .macro PUSH_AND_CLEAR_REGS rdx=%rdx rax=%rax save_ret=0
--	/*
--	 * Push registers and sanitize registers of values that a
--	 * speculation attack might otherwise want to exploit. The
--	 * lower registers are likely clobbered well before they
--	 * could be put to use in a speculative execution gadget.
--	 * Interleave XOR with PUSH for better uop scheduling:
--	 */
- 	.if \save_ret
- 	pushq	%rsi		/* pt_regs->si */
- 	movq	8(%rsp), %rsi	/* temporarily store the return address in %rsi */
-@@ -114,34 +107,43 @@ For 32-bit we have the following conventions - kernel is built with
- 	pushq   %rsi		/* pt_regs->si */
- 	.endif
- 	pushq	\rdx		/* pt_regs->dx */
--	xorl	%edx, %edx	/* nospec   dx */
- 	pushq   %rcx		/* pt_regs->cx */
--	xorl	%ecx, %ecx	/* nospec   cx */
- 	pushq   \rax		/* pt_regs->ax */
- 	pushq   %r8		/* pt_regs->r8 */
--	xorl	%r8d, %r8d	/* nospec   r8 */
- 	pushq   %r9		/* pt_regs->r9 */
--	xorl	%r9d, %r9d	/* nospec   r9 */
- 	pushq   %r10		/* pt_regs->r10 */
--	xorl	%r10d, %r10d	/* nospec   r10 */
- 	pushq   %r11		/* pt_regs->r11 */
--	xorl	%r11d, %r11d	/* nospec   r11*/
- 	pushq	%rbx		/* pt_regs->rbx */
--	xorl    %ebx, %ebx	/* nospec   rbx*/
- 	pushq	%rbp		/* pt_regs->rbp */
--	xorl    %ebp, %ebp	/* nospec   rbp*/
- 	pushq	%r12		/* pt_regs->r12 */
--	xorl	%r12d, %r12d	/* nospec   r12*/
- 	pushq	%r13		/* pt_regs->r13 */
--	xorl	%r13d, %r13d	/* nospec   r13*/
- 	pushq	%r14		/* pt_regs->r14 */
--	xorl	%r14d, %r14d	/* nospec   r14*/
- 	pushq	%r15		/* pt_regs->r15 */
--	xorl	%r15d, %r15d	/* nospec   r15*/
- 	UNWIND_HINT_REGS
-+
- 	.if \save_ret
- 	pushq	%rsi		/* return address on top of stack */
- 	.endif
-+
-+	/*
-+	 * Sanitize registers of values that a speculation attack might
-+	 * otherwise want to exploit. The lower registers are likely clobbered
-+	 * well before they could be put to use in a speculative execution
-+	 * gadget.
-+	 */
-+	xorl	%edx,  %edx	/* nospec dx  */
-+	xorl	%ecx,  %ecx	/* nospec cx  */
-+	xorl	%r8d,  %r8d	/* nospec r8  */
-+	xorl	%r9d,  %r9d	/* nospec r9  */
-+	xorl	%r10d, %r10d	/* nospec r10 */
-+	xorl	%r11d, %r11d	/* nospec r11 */
-+	xorl	%ebx,  %ebx	/* nospec rbx */
-+	xorl	%ebp,  %ebp	/* nospec rbp */
-+	xorl	%r12d, %r12d	/* nospec r12 */
-+	xorl	%r13d, %r13d	/* nospec r13 */
-+	xorl	%r14d, %r14d	/* nospec r14 */
-+	xorl	%r15d, %r15d	/* nospec r15 */
-+
- .endm
+-static DEFINE_MUTEX(sort_mutex);
+-int *cur_orc_ip_table = __start_orc_unwind_ip;
+-struct orc_entry *cur_orc_table = __start_orc_unwind;
++static bool orc_init __ro_after_init;
++static unsigned int lookup_num_blocks __ro_after_init;
  
- .macro POP_REGS pop_rdi=1 skip_r11rcx=0
+-unsigned int lookup_num_blocks;
+-bool orc_init;
++static DEFINE_MUTEX(sort_mutex);
++static int *cur_orc_ip_table = __start_orc_unwind_ip;
++static struct orc_entry *cur_orc_table = __start_orc_unwind;
+ 
+ static inline unsigned long orc_ip(const int *ip)
+ {
