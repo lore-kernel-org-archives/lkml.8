@@ -2,176 +2,121 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D91C55199
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57663C54FCB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26CCC206DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 302AF206DD
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:49:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="Y/vJnF/c"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="pdUqdKvE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbgDZRsZ (ORCPT
+        id S1726226AbgDZRtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 13:48:25 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:36981 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726156AbgDZRrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 13:47:52 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 499Fjy22TwzsC;
-        Sun, 26 Apr 2020 19:47:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1587923270; bh=IthshsP+Hrk4TIyx4kPla8Gk2+PcSLRsErz0s+IVwRw=;
-        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=Y/vJnF/cUUDU3asO4Wal1m3ownNLmcBjBzOjr0Y2woAL++piRzg0hSbGDeMqtKGTN
-         AZ2SsnXm36o5PDsZl6muNEj6ABCGh2YO4AW8TSxXt0RBEC1NTHXIv8bOnrEyWEg15R
-         yzf6XkQhGW0/YjkadPUrtMKcXBCUWnl0ampGoPc3DCBRvU+A+ZoVq6OH8PP+3a+oSW
-         o/SvVAacLgkvqCgYzXHj1D2l8pib10AfKLRwZF45QOx7zLEAhiRp1S+xL4BN83trxC
-         wTYMv30hMhy2IvTHVLjXA9lWZiqsL70VO3FyGrEnLkX7lCVr1dnAJqbXr4kpVYad8s
-         rA5Ih2tzED/NA==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Sun, 26 Apr 2020 19:47:49 +0200
-Message-Id: <0c2d8ebf44062bf84bc6e65a0445948fb6d1da63.1587923061.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <cover.1587923061.git.mirq-linux@rere.qmqm.pl>
-References: <cover.1587923061.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v5 02/10] input: elants: support old touch report format
+        Sun, 26 Apr 2020 13:49:51 -0400
+Received: from gateway34.websitewelcome.com ([192.185.149.72]:15577 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726154AbgDZRtv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 13:49:51 -0400
+X-Greylist: delayed 1649 seconds by postgrey-1.27 at vger.kernel.org; Sun, 26 Apr 2020 13:49:50 EDT
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id 1553630A1DF5
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 11:59:28 -0500 (CDT)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id Skcqj8pAS8vkBSkcqjsxCP; Sun, 26 Apr 2020 11:59:28 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=e+jJxdcYJ/hbFBY+xD9PXWL+/xiGmlod4Jp6X2xhM4Q=; b=pdUqdKvEoQiXcCIa/mtQVbSCLh
+        z5hYqIvXV0mJ5uKgPq6owU8zXlWBFNIJhLGhrRUD8XD/VtHDnsthk81EFzxKrdiPrcw4QsaXiavHK
+        /3PtccT7GK7bTa5BKbSGRJOpaXF860Uo6uiz2M2FazsimupI38iwdockxjdPKR+8Cs2y7KlnH8JVN
+        Bg2gu7/IE7FRopdHr+WuLjxlluAOgMolo7RHgTrL1eGtN8BiVD7oVhDbQFHHCC1Bpe/XTw8zPrqG4
+        YxenjeuY2344IJ0bBg8PgclRIDZuYbDOfwbWPrUOJLksFNL46/rfMceV9WCON9N/lvuPuokmMe/vz
+        iK6Lw7Jg==;
+Received: from [191.31.197.205] (port=35482 helo=castello.castello)
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1jSkcp-001TTf-G5; Sun, 26 Apr 2020 13:59:27 -0300
+From:   Matheus Castello <matheus@castello.eng.br>
+To:     afaerber@suse.de, manivannan.sadhasivam@linaro.org,
+        mark.rutland@arm.com, robh+dt@kernel.org
+Cc:     edgar.righi@lsitec.org.br, igor.lima@lsitec.org.br,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org,
+        Matheus Castello <matheus@castello.eng.br>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v4 1/3] dt-bindings: Add vendor prefix for Caninos Loucos
+Date:   Sun, 26 Apr 2020 13:58:33 -0300
+Message-Id: <20200426165835.105970-2-matheus@castello.eng.br>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200426165835.105970-1-matheus@castello.eng.br>
+References: <f9e48fba-0da8-7ba9-d44a-7909067a1df1@castello.eng.br>
+ <20200426165835.105970-1-matheus@castello.eng.br>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-To:     David Heidelberg <david@ixit.cz>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        James Chen <james.chen@emc.com.tw>,
-        Johnny Chuang <johnny.chuang@emc.com.tw>,
-        Rob Herring <robh+dt@kernel.org>,
-        Scott Liu <scott.liu@emc.com.tw>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.31.197.205
+X-Source-L: No
+X-Exim-ID: 1jSkcp-001TTf-G5
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (castello.castello) [191.31.197.205]:35482
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 28
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support ELAN touchpad sensor with older firmware as found on eg. Asus
-Transformer Pads.
+The Caninos Loucos Program develops Single Board Computers with an open
+structure. The Program wants to form a community of developers to use
+IoT technologies and disseminate the learning of embedded systems in
+Brazil.
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
+It is an initiative of the Technological Integrated Systems Laboratory
+(LSI-TEC) with the support of Polytechnic School of the University of
+São Paulo (Poli-USP) and Jon "Maddog" Hall.
+
+Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Andreas Färber <afaerber@suse.de>
 ---
- drivers/input/touchscreen/elants_i2c.c | 36 ++++++++++++++++++--------
- 1 file changed, 25 insertions(+), 11 deletions(-)
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
-index d2175fb6209a..6c2b336d92bf 100644
---- a/drivers/input/touchscreen/elants_i2c.c
-+++ b/drivers/input/touchscreen/elants_i2c.c
-@@ -68,6 +68,7 @@
- #define CMD_HEADER_REK		0x66
- 
- /* FW position data */
-+#define PACKET_SIZE_OLD		40
- #define PACKET_SIZE		55
- #define MAX_CONTACT_NUM		10
- #define FW_POS_HEADER		0
-@@ -855,7 +856,8 @@ static int elants_i2c_fw_update(struct elants_data *ts)
-  * Event reporting.
-  */
- 
--static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf)
-+static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf,
-+				size_t report_len)
- {
- 	struct input_dev *input = ts->input;
- 	unsigned int n_fingers;
-@@ -868,7 +870,8 @@ static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf)
- 			buf[FW_POS_STATE];
- 
- 	dev_dbg(&ts->client->dev,
--		"n_fingers: %u, state: %04x\n",  n_fingers, finger_state);
-+		"n_fingers: %u, state: %04x, report_len: %zu\n",
-+		n_fingers, finger_state, report_len);
- 
- 	/* Note: all fingers have the same tool type */
- 	tool_type = buf[FW_POS_TOOL_TYPE] & BIT(0) ?
-@@ -882,8 +885,16 @@ static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf)
- 			pos = &buf[FW_POS_XY + i * 3];
- 			x = (((u16)pos[0] & 0xf0) << 4) | pos[1];
- 			y = (((u16)pos[0] & 0x0f) << 8) | pos[2];
--			p = buf[FW_POS_PRESSURE + i];
--			w = buf[FW_POS_WIDTH + i];
-+			if (report_len == PACKET_SIZE_OLD) {
-+				w = buf[FW_POS_WIDTH + i / 2];
-+				w >>= 4 * (~i & 1);	// little-endian-nibbles
-+				w |= w << 4;
-+				w |= !w;
-+				p = w;
-+			} else {
-+				p = buf[FW_POS_PRESSURE + i];
-+				w = buf[FW_POS_WIDTH + i];
-+			}
- 
- 			dev_dbg(&ts->client->dev, "i=%d x=%d y=%d p=%d w=%d\n",
- 				i, x, y, p, w);
-@@ -916,7 +927,8 @@ static u8 elants_i2c_calculate_checksum(u8 *buf)
- 	return checksum;
- }
- 
--static void elants_i2c_event(struct elants_data *ts, u8 *buf)
-+static void elants_i2c_event(struct elants_data *ts, u8 *buf,
-+			     size_t report_len)
- {
- 	u8 checksum = elants_i2c_calculate_checksum(buf);
- 
-@@ -930,7 +942,7 @@ static void elants_i2c_event(struct elants_data *ts, u8 *buf)
- 			 "%s: unknown packet type: %02x\n",
- 			 __func__, buf[FW_POS_HEADER]);
- 	else
--		elants_i2c_mt_event(ts, buf);
-+		elants_i2c_mt_event(ts, buf, report_len);
- }
- 
- static irqreturn_t elants_i2c_irq(int irq, void *_dev)
-@@ -988,7 +1000,8 @@ static irqreturn_t elants_i2c_irq(int irq, void *_dev)
- 			break;
- 
- 		case QUEUE_HEADER_SINGLE:
--			elants_i2c_event(ts, &ts->buf[HEADER_SIZE]);
-+			elants_i2c_event(ts, &ts->buf[HEADER_SIZE],
-+					 ts->buf[FW_HDR_LENGTH]);
- 			break;
- 
- 		case QUEUE_HEADER_NORMAL:
-@@ -1001,17 +1014,18 @@ static irqreturn_t elants_i2c_irq(int irq, void *_dev)
- 			}
- 
- 			report_len = ts->buf[FW_HDR_LENGTH] / report_count;
--			if (report_len != PACKET_SIZE) {
-+			if (report_len != PACKET_SIZE &&
-+			    report_len != PACKET_SIZE_OLD) {
- 				dev_err(&client->dev,
--					"mismatching report length: %*ph\n",
-+					"unsupported report length: %*ph\n",
- 					HEADER_SIZE, ts->buf);
- 				break;
- 			}
- 
- 			for (i = 0; i < report_count; i++) {
- 				u8 *buf = ts->buf + HEADER_SIZE +
--							i * PACKET_SIZE;
--				elants_i2c_event(ts, buf);
-+					  i * report_len;
-+				elants_i2c_event(ts, buf, report_len);
- 			}
- 			break;
- 
--- 
-2.20.1
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index d3891386d671..a20a05e3deaa 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -167,6 +167,8 @@ patternProperties:
+     description: CALAO Systems SAS
+   "^calxeda,.*":
+     description: Calxeda
++  "^caninos,.*":
++    description: Caninos Loucos Program
+   "^capella,.*":
+     description: Capella Microsystems, Inc
+   "^cascoda,.*":
+--
+2.25.0
 
