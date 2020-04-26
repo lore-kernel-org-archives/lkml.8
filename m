@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C2DEC55199
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 10:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E296C55199
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 10:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B80C2070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 10:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B4F02070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 10:41:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FR+v67a5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EpGT0O9I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726264AbgDZKld (ORCPT
+        id S1726307AbgDZKlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 06:41:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58208 "EHLO
+        Sun, 26 Apr 2020 06:41:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726238AbgDZKl2 (ORCPT
+        by vger.kernel.org with ESMTP id S1726117AbgDZKl0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 06:41:28 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33223C061A0E;
-        Sun, 26 Apr 2020 03:41:28 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id d17so16965327wrg.11;
-        Sun, 26 Apr 2020 03:41:28 -0700 (PDT)
+        Sun, 26 Apr 2020 06:41:26 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06942C061A0C;
+        Sun, 26 Apr 2020 03:41:26 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id v8so13607364wma.0;
+        Sun, 26 Apr 2020 03:41:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=71OS66q5+Ejt0CVM9F9Xc2Ppa++y7UNFVHd3OthRIGY=;
-        b=FR+v67a5vKi3Hi1SzdTPcg1Q7Pe8jxEePGV1F1w9NbO6dK80/OuhFYLMpclxdb/1Q0
-         6DynEz+yJoNi2ER6HHZKsk62dWeWeU7eYZ2slAYA8hJ4a8zyXBqdzH5TFfqPADg6i3uN
-         1CysICUqjJ3O8dbKrljmN1MYDMv4iRUPRkDTadTa4U56L+cB2mEJ9k8SD4axMMWYib2T
-         ceRmq9WsEG3pGS1H2nX0gRri/blZg4tueISMglmoQjRoELyXziX4NZGnLzztH7hW3wRt
-         Ngrcd4mOSSnFAKzE4Gd35LQL5cPxyY8KWZFmbfEQExpo48splnDre75XOj5k7r8Q+eHD
-         S9Jg==
+        bh=gPmRG0eokqpdl/q2VMZgNzJBd9cVrpLdjOI8ETo+m6A=;
+        b=EpGT0O9Iarn76rrEIWIz78idcptdCG/Ex0bRkE0WB14Sp3hBUGQsGfpbJz2soHss1S
+         /6r+2EqiqnXv98wkZN7flIEf6HlTQfO/CVxJ5vf0kchFY3vZzzwrQEkH0sSjAve6amxg
+         6jSNxGlqrfmsePNfMBCh9yRL1Xp3EDoqLnMWlGpgKwfaEtL3751QfsdxZ85KsSfbT8Pb
+         ytTLHsDCB0wKayozdQp47VkK3ykTeaDMOm3oIfIop8R9rXanGyVX0uzPzuqJjzBYmisi
+         6s2CEQc1KyudTuYsY657g0DiNqHh4xOupY0Cza2WgP7ao3Efj8CmIzRGBSBriWg5fihR
+         bDNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=71OS66q5+Ejt0CVM9F9Xc2Ppa++y7UNFVHd3OthRIGY=;
-        b=dzXD9mxBP7TvmgOnXQkJLwKM6IVIWVxUsoHVrTx7xsU2vXIW2CXmPVpIu7FbeUDKYN
-         JZ5KkoJNCpaRmP9Q3NnZUDL/i65iTLBsqb471ZsMjAJiCihVwnCXZREpft17BLT6U6JD
-         GgD3ChN6zYz/rl+xpQJzqwXgAfuGM+k7xYKAPvj03tz0LQqC2OD7AnJhpzhOQpRVPN7O
-         RjtoZOuqWf3nxRNiDq1FmmVuKWMgAwqhmQb0xxRfumOqnvpjt60U3luI8/0Of6bCiJHu
-         zrF6vxBNSMK8Oh8ktj0lpo8LoG4VFJT5/s4eos27+8ldZVoqNBtrfY0QWK6G2kj+w+Fy
-         pNng==
-X-Gm-Message-State: AGi0Pub2haCj/Uz8RZJtNo+l+ksdefrF2iZkSSTWavz7n7zbDesFPdb8
-        akBhmQxIh1a4/t2G5Z6NIoY=
-X-Google-Smtp-Source: APiQypIrb0ZxEV1ggjSVaYJASumLobe3vmR2rfufWmAZ4oevbrbzCjEoc15o2VgveWQNLhbia1Eu4Q==
-X-Received: by 2002:a5d:574b:: with SMTP id q11mr15947218wrw.324.1587897686721;
-        Sun, 26 Apr 2020 03:41:26 -0700 (PDT)
+        bh=gPmRG0eokqpdl/q2VMZgNzJBd9cVrpLdjOI8ETo+m6A=;
+        b=fJMAB25Arb9SNEDuGKGUKoSRT/h2xvj+IPRQAkdYSckzY+iMTuqAngDYC3O2XPfY8H
+         zaYnrPl2Tg/75quHUGIDbmUnjtKN0HaBYMQ9WoU6bVrHiXDmFXwK6LmZNJC19/rcB10I
+         Hn5wRFxDE+Yu3eiVTAnBWnt7gyCWnQkYSgMJwhizaEXCb89GnuyndEyMQqcoh1vB/E6t
+         17L5nIgLoeYg3T9ThnRLjIRAINopjFAAlzkNvs/PbPIuJuP7YnTMzgtBhnKhUzKHwAlH
+         SMkxTEBkiNew/5w3SOQiM95kS4Rk/aaUXEdv57GHSE/n7cd2stCe69Yosh2pYUOWS6ut
+         8QwQ==
+X-Gm-Message-State: AGi0PuZ08uBnjdYoo8C8SD9l4u8KCLpxV/Hffd35f2gg1ixEF0Idf3Ln
+        5nn6AQ48kUc/HP/CljAq58U=
+X-Google-Smtp-Source: APiQypI6n/5+7cpoIEtCz+tkkyK76+2/yd5WP4fqwKKPC90tfsehNHzeXrlr753fWnjqoEVUFPBkCw==
+X-Received: by 2002:a1c:24d4:: with SMTP id k203mr20537615wmk.49.1587897684680;
+        Sun, 26 Apr 2020 03:41:24 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0:59f6:22c5:d1f3:662d])
-        by smtp.gmail.com with ESMTPSA id y10sm10491793wma.5.2020.04.26.03.41.25
+        by smtp.gmail.com with ESMTPSA id y10sm10491793wma.5.2020.04.26.03.41.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Apr 2020 03:41:26 -0700 (PDT)
+        Sun, 26 Apr 2020 03:41:23 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>,
@@ -69,12 +69,11 @@ To:     Liam Girdwood <lgirdwood@gmail.com>,
         Takashi Iwai <tiwai@suse.com>
 Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
         Marcus Cooper <codekipper@gmail.com>,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v3 7/7] arm64: dts: sun50i-h6: Add HDMI audio to H6 DTSI
-Date:   Sun, 26 Apr 2020 12:41:15 +0200
-Message-Id: <20200426104115.22630-8-peron.clem@gmail.com>
+Subject: [PATCH v3 5/7] ASoc: sun4i-i2s: Add 20 and 24 bit support
+Date:   Sun, 26 Apr 2020 12:41:13 +0200
+Message-Id: <20200426104115.22630-6-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200426104115.22630-1-peron.clem@gmail.com>
 References: <20200426104115.22630-1-peron.clem@gmail.com>
@@ -86,73 +85,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+From: Marcus Cooper <codekipper@gmail.com>
 
-Add a simple-soundcard to link audio between HDMI and I2S.
+Extend the functionality of the driver to include support of 20 and
+24 bits per sample.
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 Signed-off-by: Marcus Cooper <codekipper@gmail.com>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 31 ++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ sound/soc/sunxi/sun4i-i2s.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index a5ee68388bd3..558fe63739cb 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -88,6 +88,24 @@
- 			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
- 	};
+diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+index 8ea08b49e7fe..277bf566c154 100644
+--- a/sound/soc/sunxi/sun4i-i2s.c
++++ b/sound/soc/sunxi/sun4i-i2s.c
+@@ -577,6 +577,9 @@ static int sun4i_i2s_hw_params(struct snd_pcm_substream *substream,
+ 	case 16:
+ 		width = DMA_SLAVE_BUSWIDTH_2_BYTES;
+ 		break;
++	case 32:
++		width = DMA_SLAVE_BUSWIDTH_4_BYTES;
++		break;
+ 	default:
+ 		dev_err(dai->dev, "Unsupported physical sample width: %d\n",
+ 			params_physical_width(params));
+@@ -1063,6 +1066,10 @@ static int sun4i_i2s_dai_probe(struct snd_soc_dai *dai)
+ 	return 0;
+ }
  
-+	sound_hdmi: sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,name = "allwinner-hdmi";
-+		simple-audio-card,mclk-fs = <128>;
-+		simple-audio-card,frame-inversion;
++#define SUN4I_FORMATS	(SNDRV_PCM_FMTBIT_S16_LE | \
++			 SNDRV_PCM_FMTBIT_S20_LE | \
++			 SNDRV_PCM_FMTBIT_S24_LE)
 +
-+		simple-audio-card,codec {
-+			sound-dai = <&hdmi>;
-+		};
-+
-+		simple-audio-card,cpu {
-+			sound-dai = <&i2s1>;
-+			dai-tdm-slot-num = <2>;
-+			dai-tdm-slot-width = <32>;
-+		};
-+	};
-+
- 	soc {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
-@@ -581,6 +599,18 @@
- 			};
- 		};
- 
-+		i2s1: i2s@5091000 {
-+			#sound-dai-cells = <0>;
-+			compatible = "allwinner,sun50i-h6-i2s";
-+			reg = <0x05091000 0x1000>;
-+			interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_I2S1>, <&ccu CLK_I2S1>;
-+			clock-names = "apb", "mod";
-+			dmas = <&dma 4>, <&dma 4>;
-+			resets = <&ccu RST_BUS_I2S1>;
-+			dma-names = "rx", "tx";
-+		};
-+
- 		spdif: spdif@5093000 {
- 			#sound-dai-cells = <0>;
- 			compatible = "allwinner,sun50i-h6-spdif";
-@@ -711,6 +741,7 @@
- 		};
- 
- 		hdmi: hdmi@6000000 {
-+			#sound-dai-cells = <0>;
- 			compatible = "allwinner,sun50i-h6-dw-hdmi";
- 			reg = <0x06000000 0x10000>;
- 			reg-io-width = <1>;
+ static struct snd_soc_dai_driver sun4i_i2s_dai = {
+ 	.probe = sun4i_i2s_dai_probe,
+ 	.capture = {
+@@ -1070,14 +1077,14 @@ static struct snd_soc_dai_driver sun4i_i2s_dai = {
+ 		.channels_min = 1,
+ 		.channels_max = 8,
+ 		.rates = SNDRV_PCM_RATE_8000_192000,
+-		.formats = SNDRV_PCM_FMTBIT_S16_LE,
++		.formats = SUN4I_FORMATS,
+ 	},
+ 	.playback = {
+ 		.stream_name = "Playback",
+ 		.channels_min = 1,
+ 		.channels_max = 8,
+ 		.rates = SNDRV_PCM_RATE_8000_192000,
+-		.formats = SNDRV_PCM_FMTBIT_S16_LE,
++		.formats = SUN4I_FORMATS,
+ 	},
+ 	.ops = &sun4i_i2s_dai_ops,
+ 	.symmetric_rates = 1,
 -- 
 2.20.1
 
