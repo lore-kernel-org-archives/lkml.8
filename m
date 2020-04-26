@@ -2,89 +2,142 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 194CCC55199
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 10:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C137C55199
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB6B22070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 10:53:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D05720706
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:01:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="SOJ0e9h/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726151AbgDZKxi (ORCPT
+        id S1726141AbgDZLBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 06:53:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49118 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726119AbgDZKxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 06:53:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id ED4C7AD71;
-        Sun, 26 Apr 2020 10:53:34 +0000 (UTC)
-Subject: Re: [PATCH v3 1/3] dt-bindings: Add vendor prefix for Caninos Loucos
-To:     Matheus Castello <matheus@castello.eng.br>,
-        manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
-Cc:     mark.rutland@arm.com, edgar.righi@lsitec.org.br,
-        igor.lima@lsitec.org.br, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-actions@lists.infradead.org
-References: <20200229104358.GB19610@mani>
- <20200320035104.26139-1-matheus@castello.eng.br>
- <20200320035104.26139-2-matheus@castello.eng.br>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <c805072b-17ec-d02b-20ad-548a372341f9@suse.de>
-Date:   Sun, 26 Apr 2020 12:53:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 26 Apr 2020 07:01:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726119AbgDZLBc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 07:01:32 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BB20C09B04F
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 04:01:32 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id x4so16277828wmj.1
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 04:01:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=RrhmdO0DLNjfBMDoqT4uy73PlihIJnZjBGcOAEACVLQ=;
+        b=SOJ0e9h/vfQZL3fIsHaTnpWUyWcPJ8BtfMjph1KCE0tRbZP2i7AlCnU653nkIXiOPP
+         aa5Dx1YA180Z/TBpL3G0M3ywHrcwihnMg6zk5p6RMuMq+8uQaz9BGSOfEI5kbP5NYQw4
+         MOxZmXM9onjxNbW9ZgymV65EkkoAwY3XJh0t8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=RrhmdO0DLNjfBMDoqT4uy73PlihIJnZjBGcOAEACVLQ=;
+        b=VEZHzb5GFplmVxArOL9PU9UcWITvTk02UsnNpxDXQ0DXPS8ivIvbZgkd9uqHC6vLCf
+         6vSkcoQ3wDG2Qz9UInC/ta+wEV0ZSpfqo/KelfkiN2073mZlw/DC63baL60r2A1AY/2t
+         lrb8BMgaqAAWV8/8iKR3w6rYc+Qwp0ywe2UXJ2cVmBa4NnrrROSAeTcFeAyUJdDHvnlx
+         LGRPNUioOt+dMz0wBXioEnkCSxjX8BshXLljggqM3afWD1lvqvz75Ku+G0pVtYdf+K7q
+         EM8Ddlzgo9h8+qjZqnptzL8NKYsGjy9mplrVYeGe5fVn9fCz3XE7WH707Q94HJ2xfdfS
+         dpsw==
+X-Gm-Message-State: AGi0PuZCoui/YeAj4MqEtZaM4S3NRO3aqrInN9sZbY7A5K9QHaWP5QG/
+        MSq4wxwIhVlRx45WYj4iWMOy5g==
+X-Google-Smtp-Source: APiQypKNGHSJziLKlpT3nTU2sPDDe98lUcVdHC0Mf29p4r46R6e+U+gqONTPjIa3F/qs3ED7pv8Upw==
+X-Received: by 2002:a7b:c3d4:: with SMTP id t20mr21410207wmj.170.1587898891012;
+        Sun, 26 Apr 2020 04:01:31 -0700 (PDT)
+Received: from cloudflare.com ([2a02:a310:c262:aa00:b35e:8938:2c2a:ba8b])
+        by smtp.gmail.com with ESMTPSA id v7sm10002236wmg.3.2020.04.26.04.01.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Apr 2020 04:01:30 -0700 (PDT)
+References: <1587872115-42805-1-git-send-email-xiyuyang19@fudan.edu.cn>
+User-agent: mu4e 1.1.0; emacs 26.3
+From:   Jakub Sitnicki <jakub@cloudflare.com>
+To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Cc:     John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Lorenz Bauer <lmb@cloudflare.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Lingpeng Chen <forrest0579@gmail.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
+        Xin Tan <tanxin.ctf@gmail.com>
+Subject: Re: [PATCH v2] bpf: Fix sk_psock refcnt leak when receiving message
+In-reply-to: <1587872115-42805-1-git-send-email-xiyuyang19@fudan.edu.cn>
+Date:   Sun, 26 Apr 2020 13:01:29 +0200
+Message-ID: <87k122v7cm.fsf@cloudflare.com>
 MIME-Version: 1.0
-In-Reply-To: <20200320035104.26139-2-matheus@castello.eng.br>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 20.03.20 um 04:51 schrieb Matheus Castello:
-> The Caninos Loucos Program develops Single Board Computers with an open
-> structure. The Program wants to form a community of developers to use
-> IoT technologies and disseminate the learning of embedded systems in
-> Brazil.
-> 
-> It is an initiative of the Technological Integrated Systems Laboratory
-> (LSI-TEC) with the support of Polytechnic School of the University of
-> São Paulo (Poli-USP) and Jon "Maddog" Hall.
-> 
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+On Sun, Apr 26, 2020 at 05:35 AM CEST, Xiyu Yang wrote:
+> tcp_bpf_recvmsg() invokes sk_psock_get(), which returns a reference of
+> the specified sk_psock object to "psock" with increased refcnt.
+>
+> When tcp_bpf_recvmsg() returns, local variable "psock" becomes invalid,
+> so the refcount should be decreased to keep refcount balanced.
+>
+> The reference counting issue happens in several exception handling paths
+> of tcp_bpf_recvmsg(). When those error scenarios occur such as "flags"
+> includes MSG_ERRQUEUE, the function forgets to decrease the refcnt
+> increased by sk_psock_get(), causing a refcnt leak.
+>
+> Fix this issue by calling sk_psock_put() or pulling up the error queue
+> read handling when those error scenarios occur.
+>
+> Fixes: e7a5f1f1cd000 ("bpf/sockmap: Read psock ingress_msg before sk_receive_queue")
+> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
 > ---
->   Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> index 9e67944bec9c..16ee382dc6b2 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -165,6 +165,8 @@ patternProperties:
->       description: CALAO Systems SAS
->     "^calxeda,.*":
->       description: Calxeda
-> +  "^caninos,.*":
-> +    description: Caninos Loucos Program
->     "^capella,.*":
->       description: Capella Microsystems, Inc
->     "^cascoda,.*":
+> Changes in v2:
+> - Add Fixes tag
+> - Pull up the error queue read handling
+> ---
+>  net/ipv4/tcp_bpf.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+>
+> diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
+> index 5a05327f97c1..ff96466ea6da 100644
+> --- a/net/ipv4/tcp_bpf.c
+> +++ b/net/ipv4/tcp_bpf.c
+> @@ -262,14 +262,17 @@ static int tcp_bpf_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+>  	struct sk_psock *psock;
+>  	int copied, ret;
+>  
+> +	if (unlikely(flags & MSG_ERRQUEUE))
+> +		return inet_recv_error(sk, msg, len, addr_len);
+> +
+>  	psock = sk_psock_get(sk);
+>  	if (unlikely(!psock))
+>  		return tcp_recvmsg(sk, msg, len, nonblock, flags, addr_len);
+> -	if (unlikely(flags & MSG_ERRQUEUE))
+> -		return inet_recv_error(sk, msg, len, addr_len);
+>  	if (!skb_queue_empty(&sk->sk_receive_queue) &&
+> -	    sk_psock_queue_empty(psock))
+> +	    sk_psock_queue_empty(psock)) {
+> +		sk_psock_put(sk, psock);
+>  		return tcp_recvmsg(sk, msg, len, nonblock, flags, addr_len);
+> +	}
+>  	lock_sock(sk);
+>  msg_bytes_ready:
+>  	copied = __tcp_bpf_recvmsg(sk, psock, msg, len, flags);
 
-Reviewed-by: Andreas Färber <afaerber@suse.de>
-
-Thanks,
-Andreas
-
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
