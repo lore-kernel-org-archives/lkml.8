@@ -2,210 +2,114 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1BFC55199
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28269C54FCB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DF02206DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:24:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01A7120700
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:31:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bG8hqFeM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R5AkkzWh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726259AbgDZQYX (ORCPT
+        id S1726176AbgDZQbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 12:24:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54662 "EHLO
+        Sun, 26 Apr 2020 12:31:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726146AbgDZQYV (ORCPT
+        by vger.kernel.org with ESMTP id S1726144AbgDZQba (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 12:24:21 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18B29C061A0F;
-        Sun, 26 Apr 2020 09:24:21 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id y24so17605685wma.4;
-        Sun, 26 Apr 2020 09:24:21 -0700 (PDT)
+        Sun, 26 Apr 2020 12:31:30 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B317AC061A0F;
+        Sun, 26 Apr 2020 09:31:30 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id e6so6265507pjt.4;
+        Sun, 26 Apr 2020 09:31:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2FSIBGKb8N23CdS4eZEpPYbf1u7aJ6F81ThCyPR7vaM=;
-        b=bG8hqFeMjAs1s7psjEGM8VNstrlaioDV7KG0xPCw/DI7PZVuZPUNxhf92qckFSorPD
-         hSk42AoIjy+G9trimASfQAdNq6SAfJENYu1uyf6xZYuaYuqkBD0r5kOy66gdEyI6Z10M
-         83PAJq4YxvQTigibxBLbTdMkBDtnoeK2RsSzVls/pe9qbSoRd7gg55pmCpPWivCzlLbA
-         jGfBFURtU9jGa0T7Ix6gC2z/pqBhdRPeye1fJoOBsjUHQUxvjQFhwtLECQf60tPbNPX0
-         7UlsJWOAYqBljPhmRYuqKF1CZmO8/7qlAaDJg48ptdGoJSAfOQyTQxsslH8o5rVp1uQf
-         e84A==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=JftPLIptlGdZQu6glQqL9kYGbquEnJgxe+P0oVuYl+k=;
+        b=R5AkkzWhmKtVHFAab9dLU+POlmMCVkok7ZkJ5yko8Grt5RGlW8ECa88J+LGU2HLF/n
+         yk7Qcu/xSrEuq/NJWrDYuURPtOj0/Vh1wagNVv3JHnqFal4AL0jEHldYZbXcrPnP5GDE
+         NgbEcoWgOpOcAFOAVws7uYyl2WmMceqwSZOObU2w9+PnUtyqNZfE0c8j3GS9majzYcLM
+         nPS2JCKJ8gi7oByY8nLXYjUUSvj/uC3fAomE4iVSGnIviQtopEKFVomaXPC2w4TfO4Iv
+         S+KwsvNi+BKJjcJGqjIPzArNNu87lyBT0k+5iewF2OxQKmFuur21VkKa23FsoXsbDn7p
+         lq1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2FSIBGKb8N23CdS4eZEpPYbf1u7aJ6F81ThCyPR7vaM=;
-        b=fohdVTbCBC1GWhv16QrOZasz8Hyvg2BLwynCccqcA8ZoI+XNkDHcjMk6YdspW9Kr3o
-         9Pn2boSiXpp9ByBuQt2hNsC0NW4TcPdZwE1omKyDd18tRkrQgSxrYDKYOJec6xbRHFjV
-         yyIdQrXf/IJjo6bbQNFUsQgxWYsJ6J/n2wG3hD4eFVjD/o/e/pgYc2vQRiJh4LNxkIK0
-         I1sjDU74YNnlY0xGvrhkFA3jGKWuxrc0DKaJfk+Z8vwXtuC7EpIN8c2T8dS4pF3A+8d4
-         Dw6ZBSxxYMK0ObySGUiwfttasiMqTioKDRyOjza1NcLNTlxQ79ihAQuwFmJGLP9OKdNg
-         Oajw==
-X-Gm-Message-State: AGi0Pubb9Th3ES/UbGrCvzvAWj++nXWZVTAWJmkALrI68Sguk9Pro459
-        2fq31mZQegHcamVqUGzvZipd4+SA
-X-Google-Smtp-Source: APiQypI6O0pVSBPH3EAc6Gt9qNDpExt9txPY19Yu3FivCObpz9U34rAfzu0Mm6JHBF1p+9QkzgHDiw==
-X-Received: by 2002:a1c:c2d6:: with SMTP id s205mr22676525wmf.90.1587918259609;
-        Sun, 26 Apr 2020 09:24:19 -0700 (PDT)
-Received: from [192.168.1.23] (afcl109.neoplus.adsl.tpnet.pl. [95.49.63.109])
-        by smtp.gmail.com with ESMTPSA id e21sm18182225wrc.1.2020.04.26.09.24.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 26 Apr 2020 09:24:19 -0700 (PDT)
-Subject: Re: [PATCH v20 03/17] leds: multicolor: Introduce a multicolor class
- definition
-To:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200423155524.13971-1-dmurphy@ti.com>
- <20200423155524.13971-4-dmurphy@ti.com> <20200425202306.GA23926@amd>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <a19ff014-32f1-eb18-ceb6-581503821fcc@gmail.com>
-Date:   Sun, 26 Apr 2020 18:24:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=JftPLIptlGdZQu6glQqL9kYGbquEnJgxe+P0oVuYl+k=;
+        b=bgQT+LGK/4LX2R4LtfJ+GyGiZZQ0FYerJrBE/9PX3Bpo4ayQEQWJeSU64Fz0nhUeX1
+         s263WeCQU5YUrl08wtMoFjit8elqip9BYJd8rXJJfG3BKzMZWvqkRnOnnR89ZyA+Maro
+         PE0qTsCAUsNOwAiD2WirN3KGrCm25iiRLmZZRPmKycVlqLmSMeh0m+cZKAj2jbOdxyVW
+         wJ0YpENHQPA1zYJ+Ah9UgoCGhkixsPY3yzBL8gFvsrl4IaSMjQFiNGqyECwZlLsq2JMc
+         6xQCSMqXn1TBGVo1QoFcfC1YA2jT4sV/im6qhOHIWdsBeN4SvT7CdzsVh5q4ntTD5F00
+         AngQ==
+X-Gm-Message-State: AGi0PuagXAFcIigDTYbLReWLFeVfiSx9UUZ/yV5qmlUKUo75GvwKctiI
+        /2NmyV5e70Mm2EGPENWdvxs=
+X-Google-Smtp-Source: APiQypIi/usw1t/zGxkUpQ4mu2qvt0uw/9W9UaSvCjZagIQB1lwnXigFitQliB/x2kZ1aMOJppffiA==
+X-Received: by 2002:a17:902:a40e:: with SMTP id p14mr18334010plq.297.1587918689044;
+        Sun, 26 Apr 2020 09:31:29 -0700 (PDT)
+Received: from ast-mbp ([2620:10d:c090:400::5:9db4])
+        by smtp.gmail.com with ESMTPSA id u12sm10307839pfc.15.2020.04.26.09.31.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Apr 2020 09:31:28 -0700 (PDT)
+Date:   Sun, 26 Apr 2020 09:31:25 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Maciej =?utf-8?Q?=C5=BBenczykowski?= <zenczykowski@gmail.com>
+Cc:     Maciej =?utf-8?Q?=C5=BBenczykowski?= <maze@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Linux Network Development Mailing List 
+        <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>, bpf@vger.kernel.org
+Subject: Re: [PATCH] net: bpf: add bpf_ktime_get_boot_ns()
+Message-ID: <20200426163125.rnxwntthcrx5qejf@ast-mbp>
+References: <20200420202643.87198-1-zenczykowski@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200425202306.GA23926@amd>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200420202643.87198-1-zenczykowski@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Mon, Apr 20, 2020 at 01:26:43PM -0700, Maciej Żenczykowski wrote:
+> From: Maciej Żenczykowski <maze@google.com>
+> 
+> On a device like a cellphone which is constantly suspending
+> and resuming CLOCK_MONOTONIC is not particularly useful for
+> keeping track of or reacting to external network events.
+> Instead you want to use CLOCK_BOOTTIME.
+> 
+> Hence add bpf_ktime_get_boot_ns() as a mirror of bpf_ktime_get_ns()
+> based around CLOCK_BOOTTIME instead of CLOCK_MONOTONIC.
+> 
+> Signed-off-by: Maciej Żenczykowski <maze@google.com>
+...
+> diff --git a/net/core/filter.c b/net/core/filter.c
+> index 755867867e57..ec567d1e6fb9 100644
+> --- a/net/core/filter.c
+> +++ b/net/core/filter.c
+> @@ -6009,6 +6009,8 @@ bpf_base_func_proto(enum bpf_func_id func_id)
+>  		return &bpf_tail_call_proto;
+>  	case BPF_FUNC_ktime_get_ns:
+>  		return &bpf_ktime_get_ns_proto;
+> +	case BPF_FUNC_ktime_get_boot_ns:
+> +		return &bpf_ktime_get_boot_ns_proto;
+>  	default:
+>  		break;
+>  	}
 
-On 4/25/20 10:23 PM, Pavel Machek wrote:
-> Hi!
-> 
-[...]
->> +	for (i = 0; i < mcled_cdev->num_colors; i++)
->> +		mcled_cdev->multicolor_info[i].color_brightness = brightness *
->> +					  mcled_cdev->multicolor_info[i].color_led_intensity /
->> +					  led_cdev->max_brightness;
-> 
-> It would be good to get this under ~80 characters. Perhaps shorter
-> identifiers would help... shortening multicolor_ to mc_?
+That part got moved into kernel/bpf/helpers.c in the mean time.
+I fixed it up and applied. Thanks
 
-
-And color_led_intensity to led_intensity.
-
-> 
->> +static ssize_t multi_led_intensity_store(struct device *dev,
->> +				struct device_attribute *intensity_attr,
->> +				const char *buf, size_t size)
->> +{
->> +	struct led_classdev *led_cdev = dev_get_drvdata(dev);
->> +	struct led_classdev_mc *mcled_cdev = lcdev_to_mccdev(led_cdev);
->> +	int nrchars, offset = 0;
->> +	int intensity_value[LED_COLOR_ID_MAX];
->> +	int i;
->> +	ssize_t ret;
->> +
->> +	mutex_lock(&led_cdev->led_access);
->> +
->> +	for (i = 0; i < mcled_cdev->num_colors; i++) {
->> +		ret = sscanf(buf + offset, "%i%n",
->> +			     &intensity_value[i], &nrchars);
->> +		if (ret != 1) {
->> +			dev_err(led_cdev->dev,
-> 
-> dev_dbg, at most. It is user-triggerable.
-> 
->> +				"Incorrect number of LEDs expected %i values intensity was not applied\n",
->> +				mcled_cdev->num_colors);
->> +			goto err_out;
-> 
-> Should not we return -ERRNO to userspace on error?
-> 
->> +		}
->> +		offset += nrchars;
->> +	}
-> 
-> This checks for "not enough" intensities. Do we need check for "too
-> many" intensities?
-> 
->> +static ssize_t multi_led_intensity_show(struct device *dev,
->> +			      struct device_attribute *intensity_attr,
->> +			      char *buf)
->> +{
->> +	struct led_classdev *led_cdev = dev_get_drvdata(dev);
->> +	struct led_classdev_mc *mcled_cdev = lcdev_to_mccdev(led_cdev);
->> +	int len = 0;
->> +	int i;
->> +
->> +	for (i = 0; i < mcled_cdev->num_colors; i++)
->> +		len += sprintf(buf + len, "%d ",
->> +			    mcled_cdev->multicolor_info[i].color_led_intensity);
->> +
->> +	len += sprintf(buf + len, "%s", "\n");
-> 
-> This will result in extra " " before end of line.
-> 
-> Please don't use "%s", "\n" to add single character. "\n" would be enough.
-> 
-> 
->> +	struct led_classdev *led_cdev = dev_get_drvdata(dev);
->> +	struct led_classdev_mc *mcled_cdev = lcdev_to_mccdev(led_cdev);
->> +	int len = 0;
->> +	int index;
->> +	int i;
->> +
->> +	for (i = 0; i < mcled_cdev->num_colors; i++) {
->> +		index = mcled_cdev->multicolor_info[i].color_index;
->> +		len += sprintf(buf + len, "%s ", led_colors[index]);
->> +	}
->> +
->> +	len += sprintf(buf + len, "%s", "\n");
-> 
-> Same here.
-> 
->> +int led_classdev_multicolor_register_ext(struct device *parent,
->> +				     struct led_classdev_mc *mcled_cdev,
->> +				     struct led_init_data *init_data)
->> +{
->> +	struct led_classdev *led_cdev;
->> +
->> +	if (!mcled_cdev)
->> +		return -EINVAL;
->> +
->> +	if (!mcled_cdev->num_colors)
->> +		return -EINVAL;
-> 
-> if (num_colors > max)... ?
-> 
->> +#ifndef __LINUX_MULTICOLOR_LEDS_H_INCLUDED
->> +#define __LINUX_MULTICOLOR_LEDS_H_INCLUDED
-> 
-> Usual style is "_LINUX_MULTICOLOR_LEDS_H".
-> 
->> +#else
->> +
->> +static inline  int led_classdev_multicolor_register_ext(struct device *parent,
-> 
-> double space after "inline".
-> 
->> +					    struct led_classdev_mc *mcled_cdev,
->> +					    struct led_init_data *init_data)
->> +{
->> +	return -EINVAL;
->> +}
-> 
-> Do we need to include these stubs? I guess it is okay to have them,
-> OTOH I'd expect drivers to depend on MULTICOLOR being available...
-
-Single driver can support both monochrome and multicolor LED class,
-which is chosen basing on DT. In this regard having no-ops for LED mc
-class is justified since it is a superset of monochrome LED class.
-
--- 
-Best regards,
-Jacek Anaszewski
+In the future please cc bpf@vger for all bpf related patches.
