@@ -2,88 +2,101 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E76A2C55194
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72201C55194
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C88502078E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:24:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51BC520728
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:24:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uQUuL+cG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726185AbgDZQYR (ORCPT
+        id S1726229AbgDZQYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 12:24:17 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:58234 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726146AbgDZQYR (ORCPT
+        Sun, 26 Apr 2020 12:24:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54650 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726146AbgDZQYS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 12:24:17 -0400
-Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id 5c6f423f88d0ad3c; Sun, 26 Apr 2020 18:24:14 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     decui@microsoft.com
-Cc:     linux-pm@vger.kernel.org, len.brown@intel.com, pavel@ucw.cz,
-        bvanassche@acm.org, mikelley@microsoft.com, longli@microsoft.com,
-        linux-kernel@vger.kernel.org, ming.lei@redhat.com,
-        wei.liu@kernel.org, sthemmin@microsoft.com, haiyangz@microsoft.com,
-        kys@microsoft.com, stable@vger.kernel.org
-Subject: Re: [PATCH] PM: hibernate: Freeze kernel threads in software_resume()
-Date:   Sun, 26 Apr 2020 18:24:14 +0200
-Message-ID: <2420808.aENraY2TMt@kreacher>
-In-Reply-To: <20200424034016.42046-1-decui@microsoft.com>
-References: <20200424034016.42046-1-decui@microsoft.com>
+        Sun, 26 Apr 2020 12:24:18 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38F5DC061A0F;
+        Sun, 26 Apr 2020 09:24:18 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id w145so11766571lff.3;
+        Sun, 26 Apr 2020 09:24:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=1rwgSnwTVJnobIMor+102bHXnC1wPqkfj6KAxAT+DoA=;
+        b=uQUuL+cGnRzSkkTGBaXaQude2WmhJRUb1BbC6AwPx2ObLoeSenfug8YbQWWABgjbsj
+         BGjMnKRYgwspj+GA/ahMaIF9jWIxdygzqvn8/Xlovvv17kczxBioqQT8qUepsEuvql+G
+         54bNZyQPLQRYwUPTDdQWpHWMLGlY663jSPKvLd/UBGWB2iuepmyZWALug/toqilOtB+n
+         B63MKljV79LHu4t5Dfklhe5V6jScD6Mo5KgHLYVtQYX3hM6joiGsGzLtnrRKNcKSgDTw
+         2PzzrdKC6NwHB4BUYo0+05kp9AIsn1gWaDAwm0oLityScAMEEehWFaz9TrzPhcNjrkgT
+         CySA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1rwgSnwTVJnobIMor+102bHXnC1wPqkfj6KAxAT+DoA=;
+        b=SlQsOjsE8xDLgJDFBu3SVcgFcvHQkxfOxX0YqHPJP9gKyM81S9p8Nlc/gLuny9yQzv
+         Kn2y6KvPbeP43glTtRPnOHNL+TpfdYdb70shIp80OdeTYRJ/u7weQBEh5/8Vi/K6bG5F
+         CsRsZvODjdj/n6fZiR8ineEaf1C1iJRoms3bA2gGSRMLLrYMsyMsPMJmLu9TcDGsSYeo
+         /uwDf4z/12zCRniN1IcIqH9mOR/0Bw1e1j1oBpZXRXi20aVqm1Fr2vdLvjhOQvurnEjX
+         qRC2odRjPSq54wZII0UP8FeiRm9o7DrJzhA4Yo4Qiz/D7lWAmtGnHHgs/WIU4ntApyO6
+         yncw==
+X-Gm-Message-State: AGi0Pub31glLeXtBh8MkYNpxKvo0pfQaNZAYyYFGuvXQK21cVZhCCtqm
+        vNUdTOfVuioMM8oov2cNfr5Y7AX4
+X-Google-Smtp-Source: APiQypKM7C0pF6ZwQpzWgt7uDDQQApNfqA25SL9MCa4irTNQfjpNpV8b7vDpLy7L9I4+ALxHKc0SjQ==
+X-Received: by 2002:ac2:51c9:: with SMTP id u9mr13125082lfm.184.1587918256433;
+        Sun, 26 Apr 2020 09:24:16 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id h6sm7882990ljj.29.2020.04.26.09.24.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 26 Apr 2020 09:24:15 -0700 (PDT)
+Subject: Re: [PATCH v4 05/10] input: elants: refactor
+ elants_i2c_execute_command()
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Rob Herring <robh+dt@kernel.org>,
+        Scott Liu <scott.liu@emc.com.tw>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1587916846.git.mirq-linux@rere.qmqm.pl>
+ <4e5bf76e695388d6aeefa00552675c0617c044f1.1587916846.git.mirq-linux@rere.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <127c4cf0-9bf0-60a4-bc48-28988ae24967@gmail.com>
+Date:   Sun, 26 Apr 2020 19:24:14 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <4e5bf76e695388d6aeefa00552675c0617c044f1.1587916846.git.mirq-linux@rere.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, April 24, 2020 5:40:16 AM CEST Dexuan Cui wrote:
-> Currently the kernel threads are not frozen in software_resume(), so
-> between dpm_suspend_start(PMSG_QUIESCE) and resume_target_kernel(),
-> system_freezable_power_efficient_wq can still try to submit SCSI
-> commands and this can cause a panic since the low level SCSI driver
-> (e.g. hv_storvsc) has quiesced the SCSI adapter and can not accept
-> any SCSI commands: https://lkml.org/lkml/2020/4/10/47
+26.04.2020 19:11, Michał Mirosław пишет:
+> Apply some DRY-ing to elants_i2c_execute_command() callers.  This pulls
+> polling and error printk()s into a single function.
 > 
-> At first I posted a fix (https://lkml.org/lkml/2020/4/21/1318) trying
-> to resolve the issue from hv_storvsc, but with the help of
-> Bart Van Assche, I realized it's better to fix software_resume(),
-> since this looks like a generic issue, not only pertaining to SCSI.
-> 
-> Cc: Bart Van Assche <bvanassche@acm.org>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 > ---
->  kernel/power/hibernate.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
-> index 86aba8706b16..30bd28d1d418 100644
-> --- a/kernel/power/hibernate.c
-> +++ b/kernel/power/hibernate.c
-> @@ -898,6 +898,13 @@ static int software_resume(void)
->  	error = freeze_processes();
->  	if (error)
->  		goto Close_Finish;
-> +
-> +	error = freeze_kernel_threads();
-> +	if (error) {
-> +		thaw_processes();
-> +		goto Close_Finish;
-> +	}
-> +
->  	error = load_image_and_restore();
->  	thaw_processes();
->   Finish:
-> 
+> v4: return 0 on success; use %pe for error code
+> ---
+>  drivers/input/touchscreen/elants_i2c.c | 189 +++++++++++++------------
+>  1 file changed, 96 insertions(+), 93 deletions(-)
 
-Applied as a fix for 5.7-rc4, thanks!
-
-
-
+This patch doesn't apply to the recent linux-next, it needs to be rebased.
