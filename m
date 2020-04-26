@@ -2,163 +2,107 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9355C54FCB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F1FC55199
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA28B206DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:04:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1646F206DD
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:06:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Ybd/6Lup"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbgDZREi (ORCPT
+        id S1726196AbgDZRGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 13:04:38 -0400
-Received: from wind.enjellic.com ([76.10.64.91]:42236 "EHLO wind.enjellic.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726143AbgDZREi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 13:04:38 -0400
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 03QGvrsi012077;
-        Sun, 26 Apr 2020 11:57:53 -0500
-Received: (from greg@localhost)
-        by wind.enjellic.com (8.15.2/8.15.2/Submit) id 03QGvrY2012076;
-        Sun, 26 Apr 2020 11:57:53 -0500
-Date:   Sun, 26 Apr 2020 11:57:53 -0500
-From:   "Dr. Greg" <greg@enjellic.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-sgx@vger.kernel.org,
-        akpm@linux-foundation.org, dave.hansen@intel.com,
-        sean.j.christopherson@intel.com, nhorman@redhat.com,
-        npmccallum@redhat.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com
-Subject: Re: [PATCH v29 00/20] Intel SGX foundations
-Message-ID: <20200426165753.GA11046@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Sun, 26 Apr 2020 11:57:54 -0500 (CDT)
+        Sun, 26 Apr 2020 13:06:54 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:45962 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726143AbgDZRGy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 13:06:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1587920811; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jTqCfxZBmTk09D67QB/ptZSM/wzN2C9X9u64qCP4L04=;
+        b=Ybd/6LupQKabv0CLwPuklV2cLPT+1BYCbip7YvN2vRxljCCsK8W+b/ryb0r4GWtbTQOzer
+        T3v4Fjg9/9aEuO++arc6fxNvxB0TfeQkVvQkkbh32M8kiMLGwRaTGUXJniBvOccf3fCaOR
+        0i5Eu2tdYj3KR/s7gkra/EzzdnEjnqU=
+Date:   Sun, 26 Apr 2020 19:06:40 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 1/3] PM: introduce pm_ptr() macro
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>, Pavel Machek <pavel@ucw.cz>,
+        Len Brown <len.brown@intel.com>, od@zcrc.me,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Message-Id: <4JNE9Q.Y5HBZ952XKLI@crapouillou.net>
+In-Reply-To: <2708095.iQXV2FnTNx@kreacher>
+References: <20200413123207.74552-1-paul@crapouillou.net>
+        <2708095.iQXV2FnTNx@kreacher>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 12:52:56AM +0300, Jarkko Sakkinen wrote:
+Hi Rafael,
 
-Good day, I hope the weekend is going well for everyone.
+Le dim. 26 avril 2020 =E0 17:40, Rafael J. Wysocki <rjw@rjwysocki.net> a=20
+=E9crit :
+> On Monday, April 13, 2020 2:32:05 PM CEST Paul Cercueil wrote:
+>>  This macro is analogous to the infamous of_match_ptr(). If CONFIG_PM
+>>  is enabled, this macro will resolve to its argument, otherwise to=20
+>> NULL.
+>=20
+> Well, this is going to result in quite a bit of unused code being
+> added to the kernels built with CONFIG_PM unset.
+>=20
+> Is there any way to avoid that somehow?
 
-> Intel(R) SGX is a set of CPU instructions that can be used by applications
-> to set aside private regions of code and data. The code outside the enclave
-> is disallowed to access the memory inside the enclave by the CPU access
-> control.
->
-> ... [ elided ] ..
-> 
-> The current implementation requires that the firmware sets
-> IA32_SGXLEPUBKEYHASH* MSRs as writable so that ultimately the kernel can
-> decide what enclaves it wants run. The implementation does not create
-> any bottlenecks to support read-only MSRs later on.
+Using __maybe_unused on the dev_pm_ops struct and the callbacks, as=20
+long as they are static, they should be dropped by the compiler when=20
+CONFIG_PM is not set.
 
-It seems highly unlikely that a driver implementation with any type of
-support for read-only launch control registers would ever get into the
-kernel.  All one needs to do is review the conversations that Matthew
-Garrett's lockdown patches engender to get a sense of that, ie:
+-Paul
 
-https://lwn.net/Articles/818277/
+>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>=20
+>>  Notes:
+>>      v2: Remove pm_sleep_ptr() macro
+>>=20
+>>   include/linux/pm.h | 6 ++++++
+>>   1 file changed, 6 insertions(+)
+>>=20
+>>  diff --git a/include/linux/pm.h b/include/linux/pm.h
+>>  index e057d1fa2469..1c0eec06905d 100644
+>>  --- a/include/linux/pm.h
+>>  +++ b/include/linux/pm.h
+>>  @@ -374,6 +374,12 @@ const struct dev_pm_ops name =3D { \
+>>   	SET_RUNTIME_PM_OPS(suspend_fn, resume_fn, idle_fn) \
+>>   }
+>>=20
+>>  +#ifdef CONFIG_PM
+>>  +#define pm_ptr(_ptr) (_ptr)
+>>  +#else
+>>  +#define pm_ptr(_ptr) NULL
+>>  +#endif
+>>  +
+>>   /*
+>>    * PM_EVENT_ messages
+>>    *
+>>=20
+>=20
+>=20
+>=20
+>=20
 
-As a result, the proposed SGX driver needs support for cryptographic
-policy management before it goes into the kernel.  Either the patch
-that we have offered or something equivalent.
 
-Absent that, the driver won't address the full needs of the
-development community implementing runtimes.  In addition it also
-poses security and privacy issues that are well documented in the
-literature.
-
-As an aside, for those who haven't spent the last 5+ years of their
-life working with this technology.  SGX2 hardware platforms have the
-ability to allow unrestricted code execution in enclave context.  No
-amount of LSM or IMA interventions can provide any control over that.
-
-In fact, the Confidential Computing Consortium, sponsored by none
-other then the Linux Foundation, has at its fundamental tenant, the
-notion of developing an eco-system that allows the execution of code
-and processing of data, over which, the owner or administrator of the
-platform has no visibility or control.  It would seem only logical
-that adversarial interests would indulge themseleves in those
-capabilities as well.
-
-With respect to SGX and these issues, cryptographic policy management
-is important for the same reason that 2-factor authentication is now
-considered standard practice in the security industry.
-
-We appreciate, Jarkko, that you feel that such infrastructure is
-optional, like virtualization support, and is something that can go in
-after the driver is mainlined.  As the diffstat for our patch points
-out, the proposed support has virtually no impact on the driver, the
-same cannot be said for virtualization capabilities.
-
-Moreover, adding support for key based policy management later would
-require the addition of another ioctl in order to avoid ABI
-compatibility issues.  The current initialization ioctl is best
-suited, from an engineering perspective, to support this type of
-infrastructure.  In fact, the necessary support was removed from the
-ioctl for political reasons rather then for any valid engineering
-rationale on flexible launch control platforms, particularly with our
-patch or an equivalent approach.
-
-For the benefit of the kernel community at large, I will follow up this
-e-mail with a copy of our patch for review.  In case anyone misses it,
-or it is corrupted, the patch can be pulled from the following URL:
-
-ftp://ftp.enjellic.com/pub/sgx/kernel/SFLC-current.patch
-
-We believe the patch or an equivalent approach deserves consideration
-for the following reasons:
-
-1.) It does not modify the default behavior of the driver. ie. any
-enclave will be initialized that is presented.
-
-2.) It enables needed functionality only at the discretion and control
-of the platform owner/administrator.
-
-3.) The impact on the architecture of the driver is negligible.
-
-In closing, it is important to note that the proposed SGX driver is
-not available as a module.  This effectively excludes any alternative
-implementations of the driver without replacement of the kernel at
-large.  It also means that any platform, with SGX hardware support,
-running a kernel with this driver, has the potential for the
-security/privacy issues noted above.
-
-If key based policy management is not allowed, then the driver needs
-to be re-architected to have modular support so that alternative
-implementations or the absence of any driver support are at least
-tenable.
-
-Hopefully this is a reasoned technical approach to what has been a
-long standing issue surrounding this technology.
-
-Best wishes for a productive week.
-
-Dr. Greg
-
-As always,
-Dr. Greg Wettstein, Ph.D, Worker      SGX secured infrastructure and
-Enjellic Systems Development, LLC     autonomously self-defensive
-4206 N. 19th Ave.                     platforms.
-Fargo, ND  58102
-PH: 701-281-1686                      EMAIL: greg@enjellic.com
-------------------------------------------------------------------------------
-"Opportunity is missed by most people because it is dressed in overalls
- and looks like work."
-                                -- Thomas Edison
