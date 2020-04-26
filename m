@@ -7,67 +7,66 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2460C55199
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 21:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C5FC55194
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 21:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A12772071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 21:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B1832071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 21:50:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="Gm5iEQRG"
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="PQHhUt4Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbgDZVuM (ORCPT
+        id S1726502AbgDZVuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 17:50:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48584 "EHLO
+        Sun, 26 Apr 2020 17:50:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbgDZVt5 (ORCPT
+        with ESMTP id S1726380AbgDZVtx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 17:49:57 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB25BC061A0F
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 14:49:55 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id w2so12012590edx.4
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 14:49:55 -0700 (PDT)
+        Sun, 26 Apr 2020 17:49:53 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9C77C09B050
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 14:49:52 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id q8so12479976eja.2
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 14:49:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cloud.ionos.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=qimnPXc/z1dTWaJyW3qhOlSkB0/PAvYb4yEUYXtkvBs=;
-        b=Gm5iEQRGXjL2eUupRJ1Bh30r73SUBX84ADcBLaYreiF3hSkQEWeKNIEUgAFgJLtLMv
-         wPfZtMjOqDacKdHwqWjWK8uVQ188OIkqVCt146DjBGGH399nUPOYIlJkSW4dfDknFdUF
-         7MZbSYWDEpgvMg69WJ+M7z5zshqFGp9auxPkebka7dLFCiHYBwsu5dsfZgALElUrvwf8
-         DMOqEwdKpZ2bPipHuh1KAjPEo3Qe2sEvSDGUJU0QwVaiR6GH/gZlDzprRcFZ2Ke6EyZ9
-         yUX9cBs8ilZZTyPKS+PUWadroC9CcJIR2cNNDoHBKSUR8zw2YRZtoZQ+7apQE5HafRd2
-         Sbfw==
+        bh=EVShq73FSgP/iPd7sAu/gmu6WN22oBRzfyOsdhWlH7E=;
+        b=PQHhUt4QYQ2lcD4jntv56PBlw8VdGuIt0HSBR79UTYajgyZK0++h/tPZu2kqq35XIu
+         VQv5xha59bI/qnB/aXKoYi6BjZIINrM77x90Cgp6DjnmaHXEsm8ljA77zdoEMfWSD+fI
+         3f4bUgA12mwtiRNTtGM3Q13n5EcbuVHKwT8C2ih3iEjeaa9/d4NW/1V0gsbc1ikhBIDI
+         /1LZ5Vzn6deZu3/DnXr2bR20wJJjvM+5C9qPDftdJdgSrwBaTLd+3F3ISpapRW24rpKR
+         y2Lt4zcbxvN74rzniBO05POHASY5jnQlgLyAqNPyp9MtgdgEeV9UXduqimBOYxBDV6BO
+         cn+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=qimnPXc/z1dTWaJyW3qhOlSkB0/PAvYb4yEUYXtkvBs=;
-        b=t1vIvw5/UMw2afz+fWLSsvnJjA15OjHo2wypOCbrTHBE7x/Oi31gR+UORfmR+n5wFg
-         Yg1W7x/cvvZAAtsrXv4iOGGJKvs2M8lUxIbLM4ddqWJ9XEPoHY3PyBvZBEsXONhgI5IW
-         3Gl9q7cPBgEPOva6ocEo6R8YLcsAUoTUnfFyf1o6btg9rDFK1+bjhLV5l4v/TH9Lek04
-         YVg3DA0XmDxk1Y3Y3Umoo0fpa3z+kh3egrBL2XtCJm0L9QRrbzC8otrTikMV5Xb/Khqo
-         9aP8lG/UCzp0w8ZvCkp34zfhzjEzig10tNpoUK/GSGx4yDDYQIPpKp6ZfAFgmjNrWuys
-         k7eA==
-X-Gm-Message-State: AGi0PuawqIAT5fA3JAKZCmxfH/KP89dm/IlIow7RjGuTkO0gssuVVEg8
-        ITz2lcusXj1D8QiHe7Fp10iedQ==
-X-Google-Smtp-Source: APiQypIxdj3EgE49EVNEoQZtKa8LHmNouU6TNbFXBP16dEsDxvsw1UYgQ/dUsGDgJvJe0Ig5v2bGJQ==
-X-Received: by 2002:a50:c3c2:: with SMTP id i2mr15735367edf.93.1587937794634;
-        Sun, 26 Apr 2020 14:49:54 -0700 (PDT)
+        bh=EVShq73FSgP/iPd7sAu/gmu6WN22oBRzfyOsdhWlH7E=;
+        b=umOuDypJHET/6hgmPC55dAbTMncT++gF+q32KdS17o/hbzAnDwSmNM/GnFPFCTOyIZ
+         o9Ss1efnvbdWGqNUyQsRHLOTPd6AN6n+ZXqBpC/ZKS4r4udVJek5lvnZqe8my6EtESGv
+         HvEhgxUspV2j59YswBE++dhJL5ayz387T1yIXgd9g1ZT2E6teZJSVYmu+4EvBQHG3VJh
+         YlhTWx8K7huzbALkS63i7POMmB57qfoMi+K5Dzk0zlHoGXuNPLYKSQCnY666PHTAQiqq
+         Ui/OsNlK+0Oh9fMpVp+ufiqXE6tHg5RgYH8QH/Q6X/gsA9MZuqegjK286fbNMJvcWlL1
+         7BGg==
+X-Gm-Message-State: AGi0Pub8qg6aouLlluBOKoVuM0Nrzdw8cDfsxiO7oA65IxQUdfzsXO9v
+        kEhhpfEppaGmfX9FFN3IY1//7g==
+X-Google-Smtp-Source: APiQypIEBGSwt/5p1EI0EPh1JLjp11svK9dHJaYN2weAh6ctv9R1LUU52PMHSz/H21K9Jnelbw7huw==
+X-Received: by 2002:a17:906:7e5a:: with SMTP id z26mr17585240ejr.168.1587937791521;
+        Sun, 26 Apr 2020 14:49:51 -0700 (PDT)
 Received: from ls00508.pb.local ([2001:1438:4010:2540:fab1:56ff:feab:56b1])
-        by smtp.gmail.com with ESMTPSA id ce18sm2270108ejb.61.2020.04.26.14.49.53
+        by smtp.gmail.com with ESMTPSA id ce18sm2270108ejb.61.2020.04.26.14.49.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Apr 2020 14:49:54 -0700 (PDT)
+        Sun, 26 Apr 2020 14:49:50 -0700 (PDT)
 From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     hch@infradead.org, david@fromorbit.com, willy@infradead.org,
         Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Martin Brandenburg <martin@omnibond.com>,
-        devel@lists.orangefs.org
-Subject: [RFC PATCH 8/9] orangefs: use set/clear_fs_page_private
-Date:   Sun, 26 Apr 2020 23:49:24 +0200
-Message-Id: <20200426214925.10970-9-guoqing.jiang@cloud.ionos.com>
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [RFC PATCH 5/9] f2fs: use set/clear_fs_page_private
+Date:   Sun, 26 Apr 2020 23:49:21 +0200
+Message-Id: <20200426214925.10970-6-guoqing.jiang@cloud.ionos.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200426214925.10970-1-guoqing.jiang@cloud.ionos.com>
 References: <20200426214925.10970-1-guoqing.jiang@cloud.ionos.com>
@@ -77,84 +76,42 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Since the new pair function is introduced, we can call them to clean the
-code in orangefs.
+code in f2fs.h.
 
-Cc: Mike Marshall <hubcap@omnibond.com>
-Cc: Martin Brandenburg <martin@omnibond.com>
-Cc: devel@lists.orangefs.org
+Cc: Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: Chao Yu <chao@kernel.org>
+Cc: linux-f2fs-devel@lists.sourceforge.net
 Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 ---
- fs/orangefs/inode.c | 24 ++++++------------------
- 1 file changed, 6 insertions(+), 18 deletions(-)
+ fs/f2fs/f2fs.h | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-diff --git a/fs/orangefs/inode.c b/fs/orangefs/inode.c
-index 12ae630fbed7..893099d36e20 100644
---- a/fs/orangefs/inode.c
-+++ b/fs/orangefs/inode.c
-@@ -64,9 +64,7 @@ static int orangefs_writepage_locked(struct page *page,
- 	}
- 	if (wr) {
- 		kfree(wr);
--		set_page_private(page, 0);
--		ClearPagePrivate(page);
--		put_page(page);
-+		clear_fs_page_private(page);
- 	}
- 	return ret;
- }
-@@ -409,9 +407,7 @@ static int orangefs_write_begin(struct file *file,
- 	wr->len = len;
- 	wr->uid = current_fsuid();
- 	wr->gid = current_fsgid();
--	SetPagePrivate(page);
--	set_page_private(page, (unsigned long)wr);
--	get_page(page);
-+	set_fs_page_private(page, wr);
- okay:
- 	return 0;
- }
-@@ -460,17 +456,13 @@ static void orangefs_invalidatepage(struct page *page,
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index ba470d5687fe..70ad8c51e0fc 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -3051,19 +3051,12 @@ static inline void f2fs_set_page_private(struct page *page,
+ 	if (PagePrivate(page))
+ 		return;
  
- 	if (offset == 0 && length == PAGE_SIZE) {
- 		kfree((struct orangefs_write_range *)page_private(page));
--		set_page_private(page, 0);
--		ClearPagePrivate(page);
--		put_page(page);
-+		clear_fs_page_private(page);
- 		return;
- 	/* write range entirely within invalidate range (or equal) */
- 	} else if (page_offset(page) + offset <= wr->pos &&
- 	    wr->pos + wr->len <= page_offset(page) + offset + length) {
- 		kfree((struct orangefs_write_range *)page_private(page));
--		set_page_private(page, 0);
--		ClearPagePrivate(page);
--		put_page(page);
-+		clear_fs_page_private(page);
- 		/* XXX is this right? only caller in fs */
- 		cancel_dirty_page(page);
- 		return;
-@@ -537,9 +529,7 @@ static void orangefs_freepage(struct page *page)
+-	get_page(page);
+-	SetPagePrivate(page);
+-	set_page_private(page, data);
++	set_fs_page_private(page, (void *)data);
+ }
+ 
+ static inline void f2fs_clear_page_private(struct page *page)
  {
- 	if (PagePrivate(page)) {
- 		kfree((struct orangefs_write_range *)page_private(page));
--		set_page_private(page, 0);
--		ClearPagePrivate(page);
--		put_page(page);
-+		clear_fs_page_private(page);
- 	}
+-	if (!PagePrivate(page))
+-		return;
+-
+-	set_page_private(page, 0);
+-	ClearPagePrivate(page);
+-	f2fs_put_page(page, 0);
++	clear_fs_page_private(page);
  }
  
-@@ -740,9 +730,7 @@ vm_fault_t orangefs_page_mkwrite(struct vm_fault *vmf)
- 	wr->len = PAGE_SIZE;
- 	wr->uid = current_fsuid();
- 	wr->gid = current_fsgid();
--	SetPagePrivate(page);
--	set_page_private(page, (unsigned long)wr);
--	get_page(page);
-+	set_fs_page_private(page, wr);
- okay:
- 
- 	file_update_time(vmf->vma->vm_file);
+ /*
 -- 
 2.17.1
 
