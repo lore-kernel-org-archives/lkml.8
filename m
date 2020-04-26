@@ -2,218 +2,89 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A17C5519A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 10:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 194CCC55199
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 10:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 234D42084D
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 10:50:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587898237;
-	bh=v4fChj3LpwH4K2rCU498iCs5BoJmqy8Myo+qfvH8RkM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=am1m1WhztGVaeC4cBIoy1gkvhIhdFDnQdRqLrwAgqY7ec8+t9toz7MTn1J0q2Gpjw
-	 82PXrJzoK60ddrsKSeeDENBVAg28VqXv62nYNyowOgf6IEepa+8McM5VVKTR2ltLlR
-	 skmN0mT+S1ilRC1q8konmOgvuTkhPpcurmKGRsM8=
+	by mail.kernel.org (Postfix) with ESMTP id EB6B22070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 10:53:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726174AbgDZKug (ORCPT
+        id S1726151AbgDZKxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 06:50:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37134 "EHLO mail.kernel.org"
+        Sun, 26 Apr 2020 06:53:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49118 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726125AbgDZKug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 06:50:36 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B75C2071C;
-        Sun, 26 Apr 2020 10:50:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587898235;
-        bh=v4fChj3LpwH4K2rCU498iCs5BoJmqy8Myo+qfvH8RkM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=u/FD5Ybr4FiV0nDtwbEJdKBTAgDw3P1AubrDhGR5u7nAwk4Hf50e0Rl+JdNY2E/Ey
-         svjQ909AvOWIwz1nGmIdrZvDVsCtvrQkbHjob+RcAnOBAqWDa7OtMeCxqVvP9UAbNe
-         5SY8gkzr4dnYCiB+8cegqYkwx59zj6RqRh4lYfC0=
-Date:   Sun, 26 Apr 2020 11:50:31 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Sa, Nuno" <Nuno.Sa@analog.com>
-Cc:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lars@metafoo.de" <lars@metafoo.de>
-Subject: Re: [RFC PATCH 4/4] iio: Track enabled channels on a per channel
- basis
-Message-ID: <20200426115031.2eb0bb3c@archlinux>
-In-Reply-To: <CY4PR03MB33506FD8C2BF3921FE9BA2DD99D00@CY4PR03MB3350.namprd03.prod.outlook.com>
-References: <20200424051818.6408-1-alexandru.ardelean@analog.com>
-        <20200424051818.6408-5-alexandru.ardelean@analog.com>
-        <CY4PR03MB33506FD8C2BF3921FE9BA2DD99D00@CY4PR03MB3350.namprd03.prod.outlook.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726119AbgDZKxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 06:53:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id ED4C7AD71;
+        Sun, 26 Apr 2020 10:53:34 +0000 (UTC)
+Subject: Re: [PATCH v3 1/3] dt-bindings: Add vendor prefix for Caninos Loucos
+To:     Matheus Castello <matheus@castello.eng.br>,
+        manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
+Cc:     mark.rutland@arm.com, edgar.righi@lsitec.org.br,
+        igor.lima@lsitec.org.br, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-actions@lists.infradead.org
+References: <20200229104358.GB19610@mani>
+ <20200320035104.26139-1-matheus@castello.eng.br>
+ <20200320035104.26139-2-matheus@castello.eng.br>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <c805072b-17ec-d02b-20ad-548a372341f9@suse.de>
+Date:   Sun, 26 Apr 2020 12:53:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200320035104.26139-2-matheus@castello.eng.br>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Apr 2020 07:51:05 +0000
-"Sa, Nuno" <Nuno.Sa@analog.com> wrote:
+Am 20.03.20 um 04:51 schrieb Matheus Castello:
+> The Caninos Loucos Program develops Single Board Computers with an open
+> structure. The Program wants to form a community of developers to use
+> IoT technologies and disseminate the learning of embedded systems in
+> Brazil.
+> 
+> It is an initiative of the Technological Integrated Systems Laboratory
+> (LSI-TEC) with the support of Polytechnic School of the University of
+> São Paulo (Poli-USP) and Jon "Maddog" Hall.
+> 
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> ---
+>   Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index 9e67944bec9c..16ee382dc6b2 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -165,6 +165,8 @@ patternProperties:
+>       description: CALAO Systems SAS
+>     "^calxeda,.*":
+>       description: Calxeda
+> +  "^caninos,.*":
+> +    description: Caninos Loucos Program
+>     "^capella,.*":
+>       description: Capella Microsystems, Inc
+>     "^cascoda,.*":
 
-> > From: linux-iio-owner@vger.kernel.org <linux-iio-owner@vger.kernel.org>
-> > On Behalf Of Alexandru Ardelean
-> > Sent: Freitag, 24. April 2020 07:18
-> > To: linux-iio@vger.kernel.org; linux-kernel@vger.kernel.org
-> > Cc: jic23@kernel.org; lars@metafoo.de; Ardelean, Alexandru
-> > <alexandru.Ardelean@analog.com>
-> > Subject: [RFC PATCH 4/4] iio: Track enabled channels on a per channel b=
-asis
-> >=20
-> > From: Lars-Peter Clausen <lars@metafoo.de>
-> >=20
-> > Now that we support multiple channels with the same scan index we can no
-> > longer use the scan mask to track which channels have been enabled.
-> > Otherwise it is not possible to enable channels with the same scan index
-> > independently.
-> >=20
-> > Introduce a new channel mask which is used instead of the scan mask to
-> > track which channels are enabled. Whenever the channel mask is changed a
-> > new scan mask is computed based on it.
-> >=20
-> > Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-> > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > ---
-> >  drivers/iio/industrialio-buffer.c | 62 +++++++++++++++++++++----------
-> >  drivers/iio/inkern.c              | 19 +++++++++-
-> >  include/linux/iio/buffer_impl.h   |  3 ++
-> >  include/linux/iio/consumer.h      |  2 +
-> >  4 files changed, 64 insertions(+), 22 deletions(-)
-> >=20
-> > diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrial=
-io-buffer.c
-> > index c06691281287..1821a3e32fb3 100644
-> > --- a/drivers/iio/industrialio-buffer.c
-> > +++ b/drivers/iio/industrialio-buffer.c
-> > @@ -216,12 +216,20 @@ int iio_buffer_alloc_scanmask(struct iio_buffer
-> > *buffer,
-> >  	if (buffer->scan_mask =3D=3D NULL)
-> >  		return -ENOMEM;
-> >=20
-> > +	buffer->channel_mask =3D bitmap_zalloc(indio_dev->num_channels,
-> > +					     GFP_KERNEL);
-> > +	if (buffer->channel_mask =3D=3D NULL) {
-> > +		bitmap_free(buffer->scan_mask);
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> >  	return 0;
-> >  }
-> >  EXPORT_SYMBOL_GPL(iio_buffer_alloc_scanmask);
-> >=20
-> >  void iio_buffer_free_scanmask(struct iio_buffer *buffer)
-> >  {
-> > +	bitmap_free(buffer->channel_mask);
-> >  	bitmap_free(buffer->scan_mask);
-> >  }
-> >  EXPORT_SYMBOL_GPL(iio_buffer_free_scanmask);
-> > @@ -285,7 +293,7 @@ static ssize_t iio_scan_el_show(struct device *dev,
-> >=20
-> >  	/* Ensure ret is 0 or 1. */
-> >  	ret =3D !!test_bit(to_iio_dev_attr(attr)->address,
-> > -		       indio_dev->buffer->scan_mask);
-> > +		       indio_dev->buffer->channel_mask);
-> >=20
-> >  	return sprintf(buf, "%d\n", ret);
-> >  }
-> > @@ -330,11 +338,12 @@ static bool iio_validate_scan_mask(struct iio_dev
-> > *indio_dev,
-> >   * buffers might request, hence this code only verifies that the
-> >   * individual buffers request is plausible.
-> >   */
-> > -static int iio_scan_mask_set(struct iio_dev *indio_dev,
-> > -		      struct iio_buffer *buffer, int bit)
-> > +static int iio_channel_mask_set(struct iio_dev *indio_dev,
-> > +				struct iio_buffer *buffer, int bit)
-> >  {
-> >  	const unsigned long *mask;
-> >  	unsigned long *trialmask;
-> > +	unsigned int ch;
-> >=20
-> >  	trialmask =3D bitmap_zalloc(indio_dev->masklength, GFP_KERNEL);
-> >  	if (trialmask =3D=3D NULL)
-> > @@ -343,8 +352,11 @@ static int iio_scan_mask_set(struct iio_dev
-> > *indio_dev,
-> >  		WARN(1, "Trying to set scanmask prior to registering
-> > buffer\n");
-> >  		goto err_invalid_mask;
-> >  	}
-> > -	bitmap_copy(trialmask, buffer->scan_mask, indio_dev- =20
-> > >masklength); =20
-> > -	set_bit(bit, trialmask);
-> > +
-> > +	set_bit(bit, buffer->channel_mask);
-> > +
-> > +	for_each_set_bit(ch, buffer->channel_mask, indio_dev- =20
-> > >num_channels) =20
-> > +		set_bit(indio_dev->channels[ch].scan_index, trialmask); =20
->=20
-> So, here if the channels all have the same scan_index, we will end up wit=
-h a scan_mask which is
-> different that channel_mask, right? I saw that in our internal driver's w=
-e then just access the
-> channel_mask field directly to know what pieces/channels do we need to en=
-able prior to
-> buffering, which implies including buffer_impl.h.
-Given that we handle the demux only at the level of scan elements that won'=
-t work in general
-(even if it wasn't a horrible layering issue).
+Reviewed-by: Andreas Färber <afaerber@suse.de>
 
->=20
-> So, for me it would make sense to compute scan_mask so that it will be th=
-e same as channel_mask
-> (hmm but that would be a problem when computing the buffer size...) and d=
-rivers can correctly use
-> ` validate_scan_mask ()` cb. Alternatively, we need to expose channel_mas=
-k either on a new cb or
-> change the ` validate_scan_mask ()` footprint.=20
+Thanks,
+Andreas
 
-Excellent points. We need to address support for:
-
-1) available_scan_mask - if we have complicated rules on mixtures of channe=
-ls inside
-   a given buffer element.
-
-2) channel enabling though I'm sort of inclined to say that if you are usin=
-g this approach
-   you only get information on channels that make up a scan mask element.  =
-Tough luck you
-   may end up enabling more than you'd like.
-
-It might be possible to make switch to using a channel mask but given the c=
-hannel index is
-implicit that is going to be at least a little bit nasty.
-
-How much does it hurt to not have the ability to separately control channel=
-s within
-a given buffer element?   Userspace can enable / disable them but reality i=
-s you'll
-get data for all the channels in a buffer element if any of them are enable=
-d.
-
-Given the demux will copy the whole element anyway (don't want to waste tim=
-e doing
-masking inside an element), userspace might get these extra channels anyway=
- if another
-consumer has enabled them.
-
-Jonathan
-
-
->=20
-> - Nuno S=C3=A1
-
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
