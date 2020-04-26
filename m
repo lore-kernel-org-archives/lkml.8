@@ -2,132 +2,100 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A503C55191
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 03:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D2EC55185
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 03:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15F8F2071E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 03:36:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="GvoIkko8"
+	by mail.kernel.org (Postfix) with ESMTP id 2D4E62071E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 03:39:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726169AbgDZDg5 (ORCPT
+        id S1726141AbgDZDjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 23:36:57 -0400
-Received: from mail.fudan.edu.cn ([202.120.224.73]:42553 "EHLO fudan.edu.cn"
+        Sat, 25 Apr 2020 23:39:47 -0400
+Received: from mx22.baidu.com ([220.181.50.185]:57196 "EHLO baidu.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726100AbgDZDg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 23:36:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
-        Message-Id; bh=cj5cv4jNx8jyM4cS8bEE5q0CelqTOx1baSzDTYeEatY=; b=G
-        voIkko8LVAyfrekmjpFAf9/7U3wIYCb4Ad/k9oNWJvyLPiXU5/9eKa/TG67V9bCy
-        nOLPDL2k/+MS6b2/kK/AyOJaobXc9ctePo8Kv5XEVSMqeBpSNixuIYWh7dWWS8nG
-        ycli1sOLVs9hLk117hOe7nfpMf2SyTsWqUACRQaZ6k=
-Received: from localhost.localdomain (unknown [120.229.255.83])
-        by app2 (Coremail) with SMTP id XQUFCgCXagiUAaVe6j+3AA--.21353S3;
-        Sun, 26 Apr 2020 11:35:51 +0800 (CST)
-From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
-To:     John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Lorenz Bauer <lmb@cloudflare.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Lingpeng Chen <forrest0579@gmail.com>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>
-Subject: [PATCH v2] bpf: Fix sk_psock refcnt leak when receiving message
-Date:   Sun, 26 Apr 2020 11:35:15 +0800
-Message-Id: <1587872115-42805-1-git-send-email-xiyuyang19@fudan.edu.cn>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: XQUFCgCXagiUAaVe6j+3AA--.21353S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7uFyktF4rAF1fCw4xXF48Xrb_yoW8ZrW5pa
-        y7C3sYvF1jyFWUZws3JFW8Jr1fu3yDG348uryrAa1fX3W5uw13JF1Fgr1Y9F40yr40kr45
-        Xr4UKF4FkFnxu37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9F14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
-        JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
-        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IE
-        rcIFxwACI402YVCY1x02628vn2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-        kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-        67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-        CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E
-        3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcS
-        sGvfC2KfnxnUUI43ZEXa7VUby8BUUUUUU==
-X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
+        id S1725945AbgDZDjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 23:39:47 -0400
+X-Greylist: delayed 1025 seconds by postgrey-1.27 at vger.kernel.org; Sat, 25 Apr 2020 23:39:46 EDT
+Received: from BJHW-Mail-Ex15.internal.baidu.com (unknown [10.127.64.38])
+        by Forcepoint Email with ESMTPS id B363084C3B2F5DB7D264;
+        Sun, 26 Apr 2020 11:24:13 +0800 (CST)
+Received: from BJHW-Mail-Ex13.internal.baidu.com (10.127.64.36) by
+ BJHW-Mail-Ex15.internal.baidu.com (10.127.64.38) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Sun, 26 Apr 2020 11:24:13 +0800
+Received: from BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) by
+ BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) with mapi id
+ 15.01.1713.004; Sun, 26 Apr 2020 11:24:13 +0800
+From:   "Li,Rongqing" <lirongqing@baidu.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "Borislav Petkov" <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Joerg Roedel <joro@8bytes.org>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdIFtSRkNdIGt2bTogeDg2OiBlbXVsYXRlIEFQRVJG?=
+ =?utf-8?Q?/MPERF_registers?=
+Thread-Topic: [PATCH] [RFC] kvm: x86: emulate APERF/MPERF registers
+Thread-Index: AQHWGh9bZdasuQhOo023NQfHi2P1S6iH0+aAgAAbkwCAAAF0AIACzsUw
+Date:   Sun, 26 Apr 2020 03:24:13 +0000
+Message-ID: <fd2a8092edf54a85979e5781dc354690@baidu.com>
+References: <1587704935-30960-1-git-send-email-lirongqing@baidu.com>
+ <20200424100143.GZ20730@hirez.programming.kicks-ass.net>
+ <20200424144625.GB30013@linux.intel.com>
+ <CALMp9eQtSrZMRQtxa_Z5WmjayWzJYhSrpNkQbqK5b7Ufxg-cMA@mail.gmail.com>
+ <ce51d5f9-aa7b-233b-883d-802d9b00e090@redhat.com>
+In-Reply-To: <ce51d5f9-aa7b-233b-883d-802d9b00e090@redhat.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.22.198.27]
+x-baidu-bdmsfe-datecheck: 1_BJHW-Mail-Ex15_2020-04-26 11:24:13:665
+x-baidu-bdmsfe-viruscheck: BJHW-Mail-Ex15_GRAY_Inside_WithoutAtta_2020-04-26
+ 11:24:13:634
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tcp_bpf_recvmsg() invokes sk_psock_get(), which returns a reference of
-the specified sk_psock object to "psock" with increased refcnt.
-
-When tcp_bpf_recvmsg() returns, local variable "psock" becomes invalid,
-so the refcount should be decreased to keep refcount balanced.
-
-The reference counting issue happens in several exception handling paths
-of tcp_bpf_recvmsg(). When those error scenarios occur such as "flags"
-includes MSG_ERRQUEUE, the function forgets to decrease the refcnt
-increased by sk_psock_get(), causing a refcnt leak.
-
-Fix this issue by calling sk_psock_put() or pulling up the error queue
-read handling when those error scenarios occur.
-
-Fixes: e7a5f1f1cd000 ("bpf/sockmap: Read psock ingress_msg before sk_receive_queue")
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
----
-Changes in v2:
-- Add Fixes tag
-- Pull up the error queue read handling
----
- net/ipv4/tcp_bpf.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
-index 5a05327f97c1..ff96466ea6da 100644
---- a/net/ipv4/tcp_bpf.c
-+++ b/net/ipv4/tcp_bpf.c
-@@ -262,14 +262,17 @@ static int tcp_bpf_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 	struct sk_psock *psock;
- 	int copied, ret;
- 
-+	if (unlikely(flags & MSG_ERRQUEUE))
-+		return inet_recv_error(sk, msg, len, addr_len);
-+
- 	psock = sk_psock_get(sk);
- 	if (unlikely(!psock))
- 		return tcp_recvmsg(sk, msg, len, nonblock, flags, addr_len);
--	if (unlikely(flags & MSG_ERRQUEUE))
--		return inet_recv_error(sk, msg, len, addr_len);
- 	if (!skb_queue_empty(&sk->sk_receive_queue) &&
--	    sk_psock_queue_empty(psock))
-+	    sk_psock_queue_empty(psock)) {
-+		sk_psock_put(sk, psock);
- 		return tcp_recvmsg(sk, msg, len, nonblock, flags, addr_len);
-+	}
- 	lock_sock(sk);
- msg_bytes_ready:
- 	copied = __tcp_bpf_recvmsg(sk, psock, msg, len, flags);
--- 
-2.7.4
-
+DQoNCj4gLS0tLS3pgq7ku7bljp/ku7YtLS0tLQ0KPiDlj5Hku7bkuro6IFBhb2xvIEJvbnppbmkg
+W21haWx0bzpwYm9uemluaUByZWRoYXQuY29tXQ0KPiDlj5HpgIHml7bpl7Q6IDIwMjDlubQ05pyI
+MjXml6UgMDozMA0KPiDmlLbku7bkuro6IEppbSBNYXR0c29uIDxqbWF0dHNvbkBnb29nbGUuY29t
+PjsgU2VhbiBDaHJpc3RvcGhlcnNvbg0KPiA8c2Vhbi5qLmNocmlzdG9waGVyc29uQGludGVsLmNv
+bT4NCj4g5oqE6YCBOiBQZXRlciBaaWpsc3RyYSA8cGV0ZXJ6QGluZnJhZGVhZC5vcmc+OyBMaSxS
+b25ncWluZw0KPiA8bGlyb25ncWluZ0BiYWlkdS5jb20+OyBMS01MIDxsaW51eC1rZXJuZWxAdmdl
+ci5rZXJuZWwub3JnPjsga3ZtIGxpc3QNCj4gPGt2bUB2Z2VyLmtlcm5lbC5vcmc+OyB0aGUgYXJj
+aC94ODYgbWFpbnRhaW5lcnMgPHg4NkBrZXJuZWwub3JnPjsgSCAuDQo+IFBldGVyIEFudmluIDxo
+cGFAenl0b3IuY29tPjsgQm9yaXNsYXYgUGV0a292IDxicEBhbGllbjguZGU+OyBJbmdvIE1vbG5h
+cg0KPiA8bWluZ29AcmVkaGF0LmNvbT47IFRob21hcyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4
+LmRlPjsgSm9lcmcgUm9lZGVsDQo+IDxqb3JvQDhieXRlcy5vcmc+OyBXYW5wZW5nIExpIDx3YW5w
+ZW5nbGlAdGVuY2VudC5jb20+OyBWaXRhbHkgS3V6bmV0c292DQo+IDx2a3V6bmV0c0ByZWRoYXQu
+Y29tPg0KPiDkuLvpopg6IFJlOiBbUEFUQ0hdIFtSRkNdIGt2bTogeDg2OiBlbXVsYXRlIEFQRVJG
+L01QRVJGIHJlZ2lzdGVycw0KPiANCj4gT24gMjQvMDQvMjAgMTg6MjUsIEppbSBNYXR0c29uIHdy
+b3RlOg0KPiA+PiBBc3N1bWluZyB3ZSdyZSBnb2luZyBmb3J3YXJkIHdpdGggdGhpcywgYXQgYW4g
+YWJzb2x1dGUgbWluaW11bSB0aGUNCj4gPj4gUkRNU1JzIG5lZWQgdG8gYmUgd3JhcHBlZCB3aXRo
+IGNoZWNrcyBvbiBob3N0IF9hbmRfIGd1ZXN0IHN1cHBvcnQgZm9yDQo+ID4+IHRoZSBlbXVsYXRl
+ZCBiZWhhdmlvci4gIEdpdmVuIHRoZSBzaWduaWZpY2FudCBvdmVyaGVhZCwgdGhpcyBtaWdodA0K
+PiA+PiBldmVuIGJlIHNvbWV0aGluZyB0aGF0IHNob3VsZCByZXF1aXJlIGFuIGV4dHJhIG9wdC1p
+biBmcm9tIHVzZXJzcGFjZSB0bw0KPiBlbmFibGUuDQo+ID4NCj4gPiBJIHdvdWxkIGxpa2UgdG8g
+c2VlIHBlcmZvcm1hbmNlIGRhdGEgYmVmb3JlIGVuYWJsaW5nIHRoaXMgdW5jb25kaXRpb25hbGx5
+Lg0KPiANCj4gSSB3b3VsZG4ndCB3YW50IHRoaXMgdG8gYmUgZW5hYmxlZCB1bmNvbmRpdGlvbmFs
+bHkgYW55d2F5LCBiZWNhdXNlIHlvdSBuZWVkIHRvDQo+IHRha2UgaW50byBhY2NvdW50IGxpdmUg
+bWlncmF0aW9uIHRvIGFuZCBmcm9tIHByb2Nlc3NvcnMgdGhhdCBkbyBub3QgaGF2ZQ0KPiBBUEVS
+Ri9NUEVSRiBzdXBwb3J0Lg0KPiANCj4gUGFvbG8NCg0KSSB3aWxsIGFkZCBhIGt2bSBwYXJhbWV0
+ZXIgdG8gY29uc2lkZXIgd2hldGhlciBlbmFibGUgTVBFUkYvQVBFUkYgZW11bGF0aW9ucywgYW5k
+IG1ha2UgZGVmYXVsdCB2YWx1ZSB0byBmYWxzZQ0KDQpUaGFua3MNCg0KLUxpDQoNCg==
