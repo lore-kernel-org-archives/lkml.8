@@ -2,138 +2,184 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F062C55194
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 15:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F42BC54FCB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 15:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 676732070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 15:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E602C2078E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 15:25:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbgDZPZB (ORCPT
+        id S1726228AbgDZPZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 11:25:01 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:49150 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgDZPZB (ORCPT
+        Sun, 26 Apr 2020 11:25:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45508 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbgDZPZU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 11:25:01 -0400
-Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id 4bbe76b27600f444; Sun, 26 Apr 2020 17:24:59 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Todd E Brandt <todd.e.brandt@linux.intel.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] Revert "cpu/hotplug: Ignore pm_wakeup_pending() for disable_nonboot_cpus()"
-Date:   Sun, 26 Apr 2020 17:24:58 +0200
-Message-ID: <26038947.HFycnDbHsR@kreacher>
-In-Reply-To: <20200409112742.3581-1-qais.yousef@arm.com>
-References: <20200409112742.3581-1-qais.yousef@arm.com>
+        Sun, 26 Apr 2020 11:25:20 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61767C061A0F
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 08:25:20 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jSj9W-0004rs-Tl; Sun, 26 Apr 2020 17:25:07 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 541F0100605; Sun, 26 Apr 2020 17:25:06 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Fenghua Yu <fenghua.yu@intel.com>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Jacob Jun Pan <jacob.jun.pan@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
+        iommu@lists.linux-foundation.org, Fenghua Yu <fenghua.yu@intel.com>
+Subject: Re: [PATCH 6/7] x86/traps: Fix up invalid PASID
+In-Reply-To: <1585596788-193989-7-git-send-email-fenghua.yu@intel.com>
+References: <1585596788-193989-1-git-send-email-fenghua.yu@intel.com> <1585596788-193989-7-git-send-email-fenghua.yu@intel.com>
+Date:   Sun, 26 Apr 2020 17:25:06 +0200
+Message-ID: <87mu6ys20d.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, April 9, 2020 1:27:40 PM CEST Qais Yousef wrote:
-> This issue was fixed already by:
-> 
-> commit d66b16f5df4b ("arm64: Don't use disable_nonboot_cpus()")
-> commit dddf3578e0d4 ("ARM: Don't use disable_nonboot_cpus()")
-> 
-> The only caller of disable_nonboot_cpus() is x86, which is in a proper
-> suspend/resume path and due to the reverted patch lost its ability to
-> early abort due to a pending wakeup.
-> 
-> The fix that is being reverted is arguably a better one to backport to
-> stable trees. But it highlights the confusion about using
-> disable_nonboot_cpus() API.
-> 
-> This is a preparation to remove disable_nonboot_cpus() in favor of
-> freeze_secondary_cpus().
-> 
-> This reverts commit e98eac6ff1b45e4e73f2e6031b37c256ccb5d36b.
-> 
-> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-> CC: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> CC: Len Brown <len.brown@intel.com>
-> CC: Pavel Machek <pavel@ucw.cz>
-> CC: Ingo Molnar <mingo@redhat.com>
-> CC: Borislav Petkov <bp@alien8.de>
-> CC: "H. Peter Anvin" <hpa@zytor.com>
-> CC: x86@kernel.org
-> CC: Todd E Brandt <todd.e.brandt@linux.intel.com>
-> CC: linux-pm@vger.kernel.org
-> CC: linux-kernel@vger.kernel.org
-> ---
->  include/linux/cpu.h | 12 +++---------
->  kernel/cpu.c        |  4 ++--
->  2 files changed, 5 insertions(+), 11 deletions(-)
-> 
-> diff --git a/include/linux/cpu.h b/include/linux/cpu.h
-> index beaed2dc269e..9ead281157d3 100644
-> --- a/include/linux/cpu.h
-> +++ b/include/linux/cpu.h
-> @@ -144,18 +144,12 @@ static inline void get_online_cpus(void) { cpus_read_lock(); }
->  static inline void put_online_cpus(void) { cpus_read_unlock(); }
+Fenghua Yu <fenghua.yu@intel.com> writes:
+> A #GP fault is generated when ENQCMD instruction is executed without
+> a valid PASID value programmed in.
+
+Programmed in what?
+
+> The #GP fault handler will initialize the current thread's PASID MSR.
+>
+> The following heuristic is used to avoid decoding the user instructions
+> to determine the precise reason for the #GP fault:
+> 1) If the mm for the process has not been allocated a PASID, this #GP
+>    cannot be fixed.
+> 2) If the PASID MSR is already initialized, then the #GP was for some
+>    other reason
+> 3) Try initializing the PASID MSR and returning. If the #GP was from
+>    an ENQCMD this will fix it. If not, the #GP fault will be repeated
+>    and we will hit case "2".
+>
+> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+
+Just for the record I also suggested to have a proper errorcode in the
+#GP for ENQCMD and I surely did not suggest to avoid decoding the user
+instructions.
+
+>  void __free_pasid(struct mm_struct *mm);
+> +bool __fixup_pasid_exception(void);
 >  
->  #ifdef CONFIG_PM_SLEEP_SMP
-> -int __freeze_secondary_cpus(int primary, bool suspend);
-> -static inline int freeze_secondary_cpus(int primary)
-> -{
-> -	return __freeze_secondary_cpus(primary, true);
-> -}
-> -
-> +extern int freeze_secondary_cpus(int primary);
->  static inline int disable_nonboot_cpus(void)
->  {
-> -	return __freeze_secondary_cpus(0, false);
-> +	return freeze_secondary_cpus(0);
+>  #endif /* _ASM_X86_IOMMU_H */
+> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+> index 6ef00eb6fbb9..369b5ba94635 100644
+> --- a/arch/x86/kernel/traps.c
+> +++ b/arch/x86/kernel/traps.c
+> @@ -56,6 +56,7 @@
+>  #include <asm/umip.h>
+>  #include <asm/insn.h>
+>  #include <asm/insn-eval.h>
+> +#include <asm/iommu.h>
+>  
+>  #ifdef CONFIG_X86_64
+>  #include <asm/x86_init.h>
+> @@ -488,6 +489,16 @@ static enum kernel_gp_hint get_kernel_gp_address(struct pt_regs *regs,
+>  	return GP_CANONICAL;
 >  }
-> -
-> -void enable_nonboot_cpus(void);
-> +extern void enable_nonboot_cpus(void);
 >  
->  static inline int suspend_disable_secondary_cpus(void)
->  {
-> diff --git a/kernel/cpu.c b/kernel/cpu.c
-> index 12ae636e9cb6..30848496cbc7 100644
-> --- a/kernel/cpu.c
-> +++ b/kernel/cpu.c
-> @@ -1327,7 +1327,7 @@ void bringup_nonboot_cpus(unsigned int setup_max_cpus)
->  #ifdef CONFIG_PM_SLEEP_SMP
->  static cpumask_var_t frozen_cpus;
+> +static bool fixup_pasid_exception(void)
+> +{
+> +	if (!IS_ENABLED(CONFIG_INTEL_IOMMU_SVM))
+> +		return false;
+> +	if (!static_cpu_has(X86_FEATURE_ENQCMD))
+> +		return false;
+> +
+> +	return __fixup_pasid_exception();
+> +}
+> +
+>  #define GPFSTR "general protection fault"
 >  
-> -int __freeze_secondary_cpus(int primary, bool suspend)
-> +int freeze_secondary_cpus(int primary)
->  {
->  	int cpu, error = 0;
+>  dotraplinkage void do_general_protection(struct pt_regs *regs, long error_code)
+> @@ -499,6 +510,12 @@ dotraplinkage void do_general_protection(struct pt_regs *regs, long error_code)
+>  	int ret;
 >  
-> @@ -1352,7 +1352,7 @@ int __freeze_secondary_cpus(int primary, bool suspend)
->  		if (cpu == primary)
->  			continue;
+>  	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
+> +
+> +	if (user_mode(regs) && fixup_pasid_exception()) {
+> +		cond_local_irq_enable(regs);
+
+The point of this conditional irq enable _AFTER_ calling into the fixup
+function is? Also what's the reason for keeping interrupts disabled
+while calling into that function? Comments exist for a reason.
+
+> +		return;
+> +	}
+> +
+>  	cond_local_irq_enable(regs);
 >  
-> -		if (suspend && pm_wakeup_pending()) {
-> +		if (pm_wakeup_pending()) {
->  			pr_info("Wakeup pending. Abort CPU freeze\n");
->  			error = -EBUSY;
->  			break;
-> 
+>  	if (static_cpu_has(X86_FEATURE_UMIP)) {
+> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+> index da718a49e91e..5ed39a022adb 100644
+> --- a/drivers/iommu/intel-svm.c
+> +++ b/drivers/iommu/intel-svm.c
+> @@ -759,3 +759,40 @@ void __free_pasid(struct mm_struct *mm)
+>  	 */
+>  	ioasid_free(pasid);
+>  }
+> +
+> +/*
+> + * Fix up the PASID MSR if possible.
+> + *
+> + * But if the #GP was due to another reason, a second #GP might be triggered
+> + * to force proper behavior.
+> + */
+> +bool __fixup_pasid_exception(void)
+> +{
+> +	struct mm_struct *mm;
+> +	bool ret = true;
+> +	u64 pasid_msr;
+> +	int pasid;
+> +
+> +	mm = get_task_mm(current);
 
-I would do this the other way around:
+Why do you need a reference to current->mm ?
 
-1. Make x86 call freeze_secondary_cpus() directly, rename
-   enable_nonboot_cpus() and drop disable_nonboot_cpus().
-2. Get rid of __freeze_secondary_cpus().
+> +	/* This #GP was triggered from user mode. So mm cannot be NULL. */
+> +	pasid = mm->context.pasid;
+> +	/* Ensure this process has been bound to a PASID. */
+> +	if (!pasid) {
+> +		ret = false;
+> +		goto out;
+> +	}
+> +
+> +	/* Check to see if the PASID MSR has already been set for this task. */
+> +	rdmsrl(MSR_IA32_PASID, pasid_msr);
+> +	if (pasid_msr & MSR_IA32_PASID_VALID) {
+> +		ret = false;
+> +		goto out;
+> +	}
+> +
+> +	/* Fix up the MSR. */
+> +	wrmsrl(MSR_IA32_PASID, pasid | MSR_IA32_PASID_VALID);
+> +out:
+> +	mmput(mm);
 
+Thanks,
 
-
+        tglx
