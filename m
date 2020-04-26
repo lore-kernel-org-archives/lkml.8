@@ -2,109 +2,136 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18677C55186
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F57C55196
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBA7F2076C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4601D20706
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 02:19:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fY2iSJMC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726434AbgDZCP7 (ORCPT
+        id S1726177AbgDZCTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Apr 2020 22:15:59 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2897 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726098AbgDZCPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Apr 2020 22:15:10 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1E4877C31D0918A63385;
-        Sun, 26 Apr 2020 10:15:07 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.487.0; Sun, 26 Apr 2020 10:15:00 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, <kuba@kernel.org>,
-        Jian Shen <shenjian15@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 2/9] net: hns3: remove unnecessary parameter 'is_alloc' in hclge_set_umv_space()
-Date:   Sun, 26 Apr 2020 10:13:41 +0800
-Message-ID: <1587867228-9955-3-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1587867228-9955-1-git-send-email-tanhuazhong@huawei.com>
-References: <1587867228-9955-1-git-send-email-tanhuazhong@huawei.com>
+        Sat, 25 Apr 2020 22:19:40 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:6440 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbgDZCTj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Apr 2020 22:19:39 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ea4efae0000>; Sat, 25 Apr 2020 19:19:26 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sat, 25 Apr 2020 19:19:39 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sat, 25 Apr 2020 19:19:39 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 26 Apr
+ 2020 02:19:39 +0000
+Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 26 Apr
+ 2020 02:19:36 +0000
+Subject: Re: [RFC PATCH v10 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <sakari.ailus@iki.fi>,
+        <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1587700513-28449-1-git-send-email-skomatineni@nvidia.com>
+ <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
+ <6ca93ff9-ca59-544f-767c-4355d01a5c20@gmail.com>
+ <62546d1f-eca5-06be-2bc2-e45ccd53830a@xs4all.nl>
+ <50fd1016-ca8b-ec5d-e5a8-f257138b152e@gmail.com>
+ <658c4232-94d9-3051-8c93-bff7046cf5f2@nvidia.com>
+ <03426915-25ea-69b4-bc64-f87f3046d33f@nvidia.com>
+ <aabaecc4-3494-0137-7d2b-853304bfa68b@gmail.com>
+ <09f20441-fec6-7496-2edc-c69db535e441@nvidia.com>
+ <61799fab-858c-8b0d-ba7d-846cd041e044@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <3a9707b5-b260-6137-f475-fc88d271010f@nvidia.com>
+Date:   Sat, 25 Apr 2020 19:19:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+In-Reply-To: <61799fab-858c-8b0d-ba7d-846cd041e044@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587867566; bh=1MfBi+G+LzJwO7xglD1bMaMrBMfEyvyC00SZ3J576ts=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=fY2iSJMCEw10PSKDcovUub9kfACa3tIE/BFOdRshAJIAOLC8dWOAPfb2HoqdKbclv
+         Gr0zglJtPtla6eqepenN4yZG9oiYZVvRpifH8AElavOEXAfdKkFxHVVHei7Upo8PU4
+         1F4cZlfWmP8HD1vEcstmkjW+Nj9GnQnsY+xvVzyCOh74XU/YY0Ak4rPzhMzwD0Kpss
+         Q8bFK9m32OZ8jMPh36lnLRpZVPAi1vectuPSlADVbFW72UyMNG3xb2ZDmtU93613oC
+         BRDeSfKxWsLsgaIOYp2WWjTzyo/0tQFEPCMV67hfkoZdRXnU6lq/mywqeOFc/nTgDT
+         UDV7WJ7r/GjYg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
 
-Since hclge_set_umv_space() is only called by hclge_init_umv_space(),
-so parameter 'is_alloc' is redundant.
+On 4/25/20 7:10 PM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 26.04.2020 04:43, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> ...
+>>> It looks to me that at least all those hardcoded HW format IDs do not
+>>> match the older SoCs.
+>> TPG hard coded formats are supported on prior Tegra.
+>>
+>> Other supported formats are SoC dependent and  part of soc data in the
+>> driver already.
+> But I don't see where that SoC-dependent definition is made in
+> terga210.c. That tegra_image_format enum looks T210-specific, isn't it?
+>
+> ...
 
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
+Video formats which are SoC variants are made soc specific in driver=20
+already tegra_vi_soc structure member video_formats
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index ccf269a..fe6e60a 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -7195,7 +7195,7 @@ static int hclge_add_mac_vlan_tbl(struct hclge_vport *vport,
- }
- 
- static int hclge_set_umv_space(struct hclge_dev *hdev, u16 space_size,
--			       u16 *allocated_size, bool is_alloc)
-+			       u16 *allocated_size)
- {
- 	struct hclge_umv_spc_alc_cmd *req;
- 	struct hclge_desc desc;
-@@ -7203,20 +7203,17 @@ static int hclge_set_umv_space(struct hclge_dev *hdev, u16 space_size,
- 
- 	req = (struct hclge_umv_spc_alc_cmd *)desc.data;
- 	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_MAC_VLAN_ALLOCATE, false);
--	if (!is_alloc)
--		hnae3_set_bit(req->allocate, HCLGE_UMV_SPC_ALC_B, 1);
- 
- 	req->space_size = cpu_to_le32(space_size);
- 
- 	ret = hclge_cmd_send(&hdev->hw, &desc, 1);
- 	if (ret) {
--		dev_err(&hdev->pdev->dev,
--			"%s umv space failed for cmd_send, ret =%d\n",
--			is_alloc ? "allocate" : "free", ret);
-+		dev_err(&hdev->pdev->dev, "failed to set umv space, ret = %d\n",
-+			ret);
- 		return ret;
- 	}
- 
--	if (is_alloc && allocated_size)
-+	if (allocated_size)
- 		*allocated_size = le32_to_cpu(desc.data[1]);
- 
- 	return 0;
-@@ -7227,8 +7224,7 @@ static int hclge_init_umv_space(struct hclge_dev *hdev)
- 	u16 allocated_size = 0;
- 	int ret;
- 
--	ret = hclge_set_umv_space(hdev, hdev->wanted_umv_size, &allocated_size,
--				  true);
-+	ret = hclge_set_umv_space(hdev, hdev->wanted_umv_size, &allocated_size);
- 	if (ret)
- 		return ret;
- 
--- 
-2.7.4
+tegra_image_format enum is same for T210 and T186
 
+For T194, enums will be diff and will have diff TEGRA194_VIDEO_FORMAT=20
+using corresponding Tegra194 video format enums
+
+>>> The driver will need to have a bit better separation if it's supposed t=
+o
+>>> have a common core for all SoCs. Each incompatible VI/CSI hardware
+>>> version should have its own kernel module.
+>> currently other Tegra host1x driver (drm) also does similar. Single
+>> module for all Tegra SoCs.
+> DRM driver has a proper separation of the sub-drivers where sub-driver
+> won't load on unsupported hardware. The tegra-video driver should do the
+> same, i.e. VI and CSI should be individual drivers (and not OPS). There
+> could be a some common core, but for now it's not obvious to me what
+> that core should be, maybe just the video.c.
+>
+>> With current tegra-video, all the v4l2 related common part of
+>> implementation is same for all tegra's and only
+>> tegra210.c/tegra186.c/tegra194.c will have corresponding tegra soc
+>> specific vi/csi programming sequence.
+> This code shouldn't be shared within the same driver module, IMO.
+>
+>
+>>> The tegra-video should be okay, although the "video" part sounds a bit
+>>> too broad since video could mean a lot of things. I think downstream
+>>> kernel uses (or at least used) the tegra-camera name for the driver,
+>>> perhaps it could be a reasonable variant as well.
+>> prior feedback suggests not to use camera variant instead to use video
+> Alright, then the tegra-video should be fine.
