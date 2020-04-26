@@ -2,170 +2,82 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 213B4C54FCB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD80C55194
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 009B62070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:40:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587922840;
-	bh=tnlXImV+PXCRk6++M2i8k6bZqjcOqZLN/srygYIFlH4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WgNm/wbJwDS+AebsYLpnq+44xfMFauJc+Xsm20jEF1cBdqAsgpuP1vIUhs9rW5tg9
-	 ZrF1Zrc5E6DM9W0OhOUUR2nkh5SVenJbhfI1+gQWUoOXyZ5Jw5wP6OcpdL2ajcLh2l
-	 fcLn8z2vi4s8p/wYjdDcvcTINA8qhg13jtU+ABi8=
+	by mail.kernel.org (Postfix) with ESMTP id F2C222070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 17:41:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="ieiRqUv2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726259AbgDZRkj (ORCPT
+        id S1726271AbgDZRlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 13:40:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38148 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726154AbgDZRkh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 13:40:37 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E580C061A0F
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 10:40:37 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id a21so15115458ljb.9
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 10:40:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Dtrc1LxUXrGUTeYL+CIuPg7oi+xXAsX+zAakCRKGiTs=;
-        b=gWkMPLVnPEbeWIBml8xtUosL0GHDXmBQiDAFLjIwwAlYDi29kGpQkrjnC64dJybCS7
-         BiJ+6Syhkqkbm6+KIFNNzKiJeiMMp5xN3JWU/LjVbJIt4pWvSyvfzWxfecXPDDM7OAJ6
-         lflbEU3okvfCmduQIp/pfmXaU9P0WDZ7eJ6ic=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Dtrc1LxUXrGUTeYL+CIuPg7oi+xXAsX+zAakCRKGiTs=;
-        b=eoggxDVPQ5pIx9nokYfqfw4BxcccdVYDVzGPtloXbdyMuoryc43lF9qjnyEE+kwJvg
-         zkR4BN3yxlgO68KhkeTBRGNEAR3a9K4FF5v22/AHIj5LgDo+7Wq6JaaYN7fJpVa+16Al
-         epnASu1LQ5CgHdX15rVY9xw1aVxZBGZq1psY1bZSggSF583FYgzvHgY3b2Eq92rCz5wa
-         bMEN/fA32NDHdXh5dHyNmA4ij5anx7dVNPjib8DiUdA9RZgpoX5iMkVPlYK9vPcxJA2A
-         ek3kNl7wSlrcTif5F2QTYa8SXDb3CnPzBZeDm3CHEKDN9u4DAPzSwsqXMrHH70u30IHd
-         byvg==
-X-Gm-Message-State: AGi0PubIU1SYGY+ccz1RCyeRx7LRtfy6cHVQvwFVHSpCKy5OexQvOFNP
-        B/Dj3mpwaCQWtoWg/IvIt/25NCzsg3U=
-X-Google-Smtp-Source: APiQypJXZz1gefmsjSv4+GYm32tEgusgTrhN4TOsA8RsSTOxTAZR+9EYOZ2hBZ4Sh5Y/oAo6MYrYaA==
-X-Received: by 2002:a2e:9a54:: with SMTP id k20mr10321087ljj.265.1587922834680;
-        Sun, 26 Apr 2020 10:40:34 -0700 (PDT)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id k18sm11200565lfg.81.2020.04.26.10.40.33
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 26 Apr 2020 10:40:33 -0700 (PDT)
-Received: by mail-lj1-f174.google.com with SMTP id y4so15134672ljn.7
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 10:40:33 -0700 (PDT)
-X-Received: by 2002:a2e:9a54:: with SMTP id k20mr10321031ljj.265.1587922833220;
- Sun, 26 Apr 2020 10:40:33 -0700 (PDT)
+        Sun, 26 Apr 2020 13:41:01 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:29302 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726154AbgDZRlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 13:41:00 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 499FZ24YmjzDY;
+        Sun, 26 Apr 2020 19:40:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1587922858; bh=JLGALo/UiOILtQBtpA+1RzP50dZmtkvUbk0MBxCAtU0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ieiRqUv2js6Xx6/zbV8hMN8z+1T9FYsNDWeCarKZS1/Oh2yvV5RLnsSV1QgE2RUHM
+         cDTbxCis/xvaoXbm0Ioxrw7hJ1B1hyMccty2yA8IxWS1qcIbtkx2AMrvGapHdHE6Ho
+         dzEGoOYZ9pCoiGlU3UrHFw0AjBNJd+ukplwczjZEtfnKVcZKZcy+JjC+gez33gZ3jB
+         okVb2isuyh31bZanGwX/fylOrAW/9902SQVaP+mfUUtp/dSnLXpspvSV+bf0QeZOTY
+         qT0r/7GecdxJCaTKVfVgYakw1Q99n0fkpIAVq3WkjJIWuGQe/pMwb/6DQgSiKfsZSV
+         GYX5vrlali/Lg==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Sun, 26 Apr 2020 19:40:57 +0200
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     David Heidelberg <david@ixit.cz>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Rob Herring <robh+dt@kernel.org>,
+        Scott Liu <scott.liu@emc.com.tw>, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 05/10] input: elants: refactor
+ elants_i2c_execute_command()
+Message-ID: <20200426174057.GB15436@qmqm.qmqm.pl>
+References: <cover.1587916846.git.mirq-linux@rere.qmqm.pl>
+ <4e5bf76e695388d6aeefa00552675c0617c044f1.1587916846.git.mirq-linux@rere.qmqm.pl>
+ <127c4cf0-9bf0-60a4-bc48-28988ae24967@gmail.com>
 MIME-Version: 1.0
-References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
- <87ftcv1nqe.fsf@x220.int.ebiederm.org> <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
- <20200424173927.GB26802@redhat.com> <87mu6ymkea.fsf_-_@x220.int.ebiederm.org> <875zdmmj4y.fsf_-_@x220.int.ebiederm.org>
-In-Reply-To: <875zdmmj4y.fsf_-_@x220.int.ebiederm.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 26 Apr 2020 10:40:17 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whvktUC9VbzWLDw71BHbV4ofkkuAYsrB5Rmxnhc-=kSeQ@mail.gmail.com>
-Message-ID: <CAHk-=whvktUC9VbzWLDw71BHbV4ofkkuAYsrB5Rmxnhc-=kSeQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/6] rculist: Add hlist_swap_before_rcu
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <127c4cf0-9bf0-60a4-bc48-28988ae24967@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 7:14 AM Eric W. Biederman <ebiederm@xmission.com> wrote:
->
-> To support this add hlist_swap_before_rcu.  An hlist primitive that
-> will allow swaping the leading sections of two tasks.  For exchanging
-> the task pids it will just be swapping the hlist_heads of two single
-> entry lists.  But the functionality is more general.
+On Sun, Apr 26, 2020 at 07:24:14PM +0300, Dmitry Osipenko wrote:
+> 26.04.2020 19:11, Michał Mirosław пишет:
+> > Apply some DRY-ing to elants_i2c_execute_command() callers.  This pulls
+> > polling and error printk()s into a single function.
+> > 
+> > Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> > ---
+> > v4: return 0 on success; use %pe for error code
+> > ---
+> >  drivers/input/touchscreen/elants_i2c.c | 189 +++++++++++++------------
+> >  1 file changed, 96 insertions(+), 93 deletions(-)
+> 
+> This patch doesn't apply to the recent linux-next, it needs to be rebased.
 
-So I have no problems with the series now - the code is much more
-understandable. Partly because of the split-up, partly because of the
-comments, and partly because you explained the special case and why it
-was a valid thing to do...
+I'm rebasing against for-linus brach at [1]. Will send v5 shortly.
 
-However, I did start thinking about this case again.
-
-I still don't think the "swap entry" macro is necessarily useful in
-_general_ - any time it's an actual individual entry, that swap macro
-doesn't really work.
-
-So the only reason it works here is because you're actually swapping
-the whole list.
-
-But that, in turn, shouldn't be using that "first node" model at all,
-it should use the hlist_head. That would have made it a lot more
-obvious what is actually going on to me.
-
-Now, the comment very much talks about the head case, but the code
-still looks like it's swapping a non-head thing.
-
-I guess the code technically _works_ with "swap two list ends", but
-does that actually really make sense as an operation?
-
-So I no longer hate how this patch looks, but I wonder if we should
-just make the whole "this node is the *first* node" a bit more
-explicit in both the caller and in the swapping code.
-
-It could be as simple as replacing just the conceptual types and
-names, so instead of some "pnode1" double-indirect node pointer, we'd
-have
-
-        struct hlist_head *left_head = container_of(left->pprev,
-struct hlist_head, first);
-        struct hlist_head *right_head = container_of(right->pprev,
-struct hlist_head, first);
-
-and then the code would do
-
-        rcu_assign_pointer(right_head->first, left);
-        rcu_assign_pointer(left_head->first, right);
-        WRITE_ONCE(left->pprev,  &right_head->first);
-        WRITE_ONCE(right->pprev,  &left_head->first);
-
-which should generate the exact same code, but makes it clear that
-what we're doing is switching the whole hlist when given the first
-entries.
-
-Doesn't that make what it actually does a lot more understandable? The
-*pnode1/pnode2 games are somewhat opaque, but with that type and name
-change and using "container_of()", the code now fairly naturally reads
-as "oh, we're changing the first pointers in the list heads, and
-making the nodes point back to them" .
-
-Again - the current function _works_ with swapping two hlists in the
-middle (not two entries - it swaps the whole list starting at that
-entry!), so your current patch is in some ways "more generic". I'm
-just suggesting that the generic case doesn't make much sense, and
-that the "we know the first entries, swap the lists" actually is what
-the real use is, and writing it as such makes the code easier to
-understand.
-
-But I'm not going to insist on this, so this is more an RFC. Maybe
-people disagree, and/or have an actual use case for that "break two
-hlists in the middle, swap the ends" that I find unlikely...
-
-(NOTE: My "convert to hlist_head" code _works_ for that case too
-because the code generation is the same! But it would be really really
-confusing for that code to be used for anything but the first entry).
-
-                       Linus
+[1] git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git
