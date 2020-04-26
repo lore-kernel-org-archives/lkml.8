@@ -2,71 +2,81 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FBDC54FCB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 19:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45110C55199
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 19:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA66206BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 19:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33A8A206BF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 19:48:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726285AbgDZToL (ORCPT
+        id S1726250AbgDZTsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 15:44:11 -0400
-Received: from smtp06.smtpout.orange.fr ([80.12.242.128]:60153 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726176AbgDZToK (ORCPT
+        Sun, 26 Apr 2020 15:48:43 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:55360 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbgDZTsn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 15:44:10 -0400
-Received: from localhost.localdomain ([93.23.12.11])
-        by mwinf5d64 with ME
-        id XXk72200Q0EJ3pp03Xk7zB; Sun, 26 Apr 2020 21:44:09 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 26 Apr 2020 21:44:09 +0200
-X-ME-IP: 93.23.12.11
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, maitysanchayan@gmail.com, robh@kernel.org
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] iio: dac: vf610: Fix an error handling path in 'vf610_dac_probe()'
-Date:   Sun, 26 Apr 2020 21:44:03 +0200
-Message-Id: <20200426194403.41913-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Sun, 26 Apr 2020 15:48:43 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 7F9EB1C0244; Sun, 26 Apr 2020 21:48:41 +0200 (CEST)
+Date:   Sun, 26 Apr 2020 21:48:40 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v20 03/17] leds: multicolor: Introduce a multicolor class
+ definition
+Message-ID: <20200426194840.GA17668@duo.ucw.cz>
+References: <20200423155524.13971-1-dmurphy@ti.com>
+ <20200423155524.13971-4-dmurphy@ti.com>
+ <20200425202306.GA23926@amd>
+ <a19ff014-32f1-eb18-ceb6-581503821fcc@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
+Content-Disposition: inline
+In-Reply-To: <a19ff014-32f1-eb18-ceb6-581503821fcc@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A call to 'vf610_dac_exit()' is missing in an error handling path.
 
-Fixes: 1b983bf42fad ("iio: dac: vf610_dac: Add IIO DAC driver for Vybrid SoC")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Un-tested.
-Proposal based on function names and functions called in the remove function
----
- drivers/iio/dac/vf610_dac.c | 1 +
- 1 file changed, 1 insertion(+)
+--UugvWAfsgieZRqgk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/iio/dac/vf610_dac.c b/drivers/iio/dac/vf610_dac.c
-index 71f8a5c471c4..7f1e9317c3f3 100644
---- a/drivers/iio/dac/vf610_dac.c
-+++ b/drivers/iio/dac/vf610_dac.c
-@@ -223,6 +223,7 @@ static int vf610_dac_probe(struct platform_device *pdev)
- 	return 0;
- 
- error_iio_device_register:
-+	vf610_dac_exit(info);
- 	clk_disable_unprepare(info->clk);
- 
- 	return ret;
--- 
-2.25.1
+Hi!
 
+> > Do we need to include these stubs? I guess it is okay to have them,
+> > OTOH I'd expect drivers to depend on MULTICOLOR being available...
+>=20
+> Single driver can support both monochrome and multicolor LED class,
+> which is chosen basing on DT. In this regard having no-ops for LED mc
+> class is justified since it is a superset of monochrome LED class.
+
+Ok, makes sense.
+
+Best regards,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--UugvWAfsgieZRqgk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXqXlmAAKCRAw5/Bqldv6
+8nK4AJ4rhy+wGHqevOWd+5jK8x3+agAoHwCeNDL98RczQOuBPloBa5zNETAjeFM=
+=vnHD
+-----END PGP SIGNATURE-----
+
+--UugvWAfsgieZRqgk--
