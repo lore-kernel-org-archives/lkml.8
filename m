@@ -2,160 +2,214 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8C9C55199
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 22:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC843C5519A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 23:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49F9E2084D
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 22:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A88320728
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 23:15:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ezBGeWRz"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="DcUWKOT0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbgDZWsj (ORCPT
+        id S1726349AbgDZXPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 18:48:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726234AbgDZWsj (ORCPT
+        Sun, 26 Apr 2020 19:15:10 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:12268 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726281AbgDZXPJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 18:48:39 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 407C7C061A0F;
-        Sun, 26 Apr 2020 15:48:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:References:To:From:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description;
-        bh=AkOxz0hYzToBQAdMTy1OFCG6DGIoX6S2ij8wphXo/3c=; b=ezBGeWRzUcAo6P/ZWshB/Psy6a
-        oXrNcJlTmb+ZkdaGM6ieKZ8fCWBo7lPew6jFB+sVvrRSWj3oSa5T8wMl7FNEZW/LCGqyeUHxJ8kpO
-        9dOXYJcnKnQYch3u0n/81yksJSl7TIJBKQRW1NlsTSSLRK3uCIifsyFQ7/COcx9NH1ApPHUcco3R1
-        9mUcwPheC14zKa0th+YBtKFQN6YdmE5nw8r6tB7CnOei0LgF3ST5lM0Fw/zgzLUwagTX3jbH5YkLe
-        NdgU2+0MQGPSdsHUggDWWoE+7WeoCNpvK76s0NbKRX8JEsp2Ob5VdC22kCv7faW3LwQtBxlksTy4e
-        8zQ/vyAQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jSq4i-0007ek-Qq; Sun, 26 Apr 2020 22:48:36 +0000
-Subject: Re: mmotm 2020-04-26-00-15 uploaded (mm/madvise.c)
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     akpm@linux-foundation.org, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        Minchan Kim <minchan@kernel.org>
-References: <20200426071602.ZmQ_9C0ql%akpm@linux-foundation.org>
- <bec3b7bd-0829-b430-be1a-f61da01ac4ac@infradead.org>
-Message-ID: <39bcdbb6-cac8-aa3b-c543-041f9c28c730@infradead.org>
-Date:   Sun, 26 Apr 2020 15:48:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 26 Apr 2020 19:15:09 -0400
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200426231505epoutp0278cdee2cee80150d631e1b9d87d52c25~JgajHrLn81759317593epoutp02a
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 23:15:05 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200426231505epoutp0278cdee2cee80150d631e1b9d87d52c25~JgajHrLn81759317593epoutp02a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1587942905;
+        bh=cvNmp41/296JfLyww5sqs0RBNkEyWA2TmxYFpGfDdRE=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=DcUWKOT03GCsWw0fa+yJYbv4yuekhpTeuEtSYO5MfyheJ7xrGKSX5AD+QHWMrM9Nh
+         Q16rJJ4wYaBREWgm3M6KJB1hdTTpFQNrv1Wm6fu7770pQk+gM/KhqFoUVVxrrmBz8B
+         Pvm3Kd+qbaMWTDn1/s8NNfI/x+WpaPHbGc6CmwfI=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas2p4.samsung.com (KnoxPortal) with ESMTP id
+        20200426231505epcas2p4a39e84353b3d847ec8eb0169a0d0ead0~Jgai8XNWs2703627036epcas2p4H;
+        Sun, 26 Apr 2020 23:15:05 +0000 (GMT)
+Received: from epsmges2p4.samsung.com (unknown [182.195.40.183]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 499NzW1ZZfzMqYlr; Sun, 26 Apr
+        2020 23:15:03 +0000 (GMT)
+Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
+        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        9C.80.04647.7F516AE5; Mon, 27 Apr 2020 08:15:03 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200426231502epcas2p4b2482716833122c6b7cf314a9e094ad5~JgagnSQY72841328413epcas2p4y;
+        Sun, 26 Apr 2020 23:15:02 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200426231502epsmtrp16d77d3184c36f5e8159390e3e7724613~JgagmL9XQ2945029450epsmtrp1Q;
+        Sun, 26 Apr 2020 23:15:02 +0000 (GMT)
+X-AuditID: b6c32a48-88dff70000001227-71-5ea615f788e0
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        58.C1.25866.6F516AE5; Mon, 27 Apr 2020 08:15:02 +0900 (KST)
+Received: from KORCO004660 (unknown [12.36.155.199]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200426231502epsmtip12e6873a59c6ccb67b81ad35276b3f96f~Jgagdy_Qj2067720677epsmtip1Q;
+        Sun, 26 Apr 2020 23:15:02 +0000 (GMT)
+From:   "Hyunki Koo" <hyunki00.koo@samsung.com>
+To:     "'Greg KH'" <gregkh@linuxfoundation.org>
+Cc:     <robh+dt@kernel.org>, <linux-serial@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200424053711.GB103562@kroah.com>
+Subject: RE: [PATCH v8 0/3] 32-bit access for TX/RX hold registers for
+ samsung_tty driver
+Date:   Mon, 27 Apr 2020 08:15:02 +0900
+Message-ID: <000001d61c20$837914d0$8a6b3e70$@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <bec3b7bd-0829-b430-be1a-f61da01ac4ac@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQLkGOxny2DlkaWSmHdwQHeE1CDJ+wFPPr0wAw52+mwDJ5UScQCvjpF1pi5nRLA=
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjm82w7R2vxNbVeRtQ4UaClbubWsdSuhJGEpFCkqCd3Umm3ztks
+        Lcqw1pQuCoW1btrSqERzdl1UMoVKLLqAdC9IbSaBJWUWUTueRf573ud9n+99nu/7KEJVo1BT
+        JRY7x1tYE62IkF3rjFkYNxrdlKf98ZRiznQ9kjOVnlYF88x3UsH0eA6SzL7bXeRSebr3YpUi
+        /e6pZjJ9xDszk9hoSinmWCPHazhLodVYYilKpddk5a/I1xu0ujhdMrOQ1lhYM5dKr8zIjFtV
+        YgqupDWlrMkRpDJZQaAT0lJ4q8POaYqtgj2V5mxGk02ns8ULrFlwWIriC63mRTqtNlEfnCww
+        FXue30e2RvV2/812VIGORFWjcApwErRcOiyvRhGUCt9AcNUTIKXiKwLvvv0KqRhB8Me5l/wn
+        qWiuD0l8CNrOHwkTGyo8iKDxrUbEChwHzzx943wUng+unvsyERN4O4zU/Brnw7EWHt9qQyKO
+        xDlQ+bGBELEMz4GmXmdwhqKUOBmqnywWaSWeCg+O94WOmQdNDUOE5EcDY/1NcmnVWghcrldI
+        M1FwospJiD4BfyGh6s2HkGAl3KrsRRKOhE/3roSCqWHwsDOEd8MdZy0piQ8gGBvul0uNBeAe
+        2I9EcwSOgVZfgggBz4aulyFvU8DV+ZuUaCW4nCpJOBdavgfCJDwDmvt9ZA2i3ROSuSckc09I
+        4P6/qx7JLqJpnE0wF3FCoi1p4lt70fhvjE2/gToeZfgRphA9WUldb8xTydlSoczsR0ARdJQy
+        1342T6U0smXlHG/N5x0mTvAjffDeawl1dKE1+Lct9nydPtFg0CbrGb0hkaGnK72TXuSqcBFr
+        57ZwnI3j/+nCqHB1Beqm+EWrgXIddZS1+vzbNmhfmzYZXhhfBd5scl1/T+5o33p0RcbPWeu3
+        UptjPzQHynuzWETqRuuWre8//TA7afHwtCR11QBlGIrGhwoeJOe21XWHpZ2r/bxzaI/+x0hN
+        /Gjf4LEDdcsv5ERnrdqx6xufzUR0DDi53HXvJq9eUjZrKS0TilldLMEL7F+hmZv1owMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPLMWRmVeSWpSXmKPExsWy7bCSnO430WVxBof+6VnMP3KO1aJ58Xo2
+        i8u75rBZnFncy27RuvcIuwOrx6ZVnWwe++euYff4vEkugDmKyyYlNSezLLVI3y6BK2P93E7G
+        gheSFV2LVjE2MF4V7mLk5JAQMJFoWLOAtYuRi0NIYAejxJN389ggEjISE14sYYawhSXutxyB
+        KnrOKHHr6xawIjYBXYnLi58wgdgiAjoSHWdOsIDYzAI1Er+OH2SEaJjMJLHkaSPYJE4BA4kL
+        uzcygtjCApESUw6fAouzCKhKLLvWBjSIg4NXwFKi66I1SJhXQFDi5MwnUDO1JZ7efApnL1v4
+        Guo4BYmfT5exQtzgJ/FiwwI2iBoRidmdbcwTGIVnIRk1C8moWUhGzULSsoCRZRWjZGpBcW56
+        brFhgVFearlecWJucWleul5yfu4mRnCcaGntYNyz6oPeIUYmDsZDjBIczEoivDEli+KEeFMS
+        K6tSi/Lji0pzUosPMUpzsCiJ836dtTBOSCA9sSQ1OzW1ILUIJsvEwSnVwDRBOPG1pjpHW0T7
+        wr3G1YuE+yx2CxSInfnyPbqYqdvTILpncoKgU4uyA0Mi9+kETfkoB+2KN7fz+RXaflbsKQnI
+        PnKr5/jsdI2dLTtz9qgb1dWn7pRUZy+PPNLQeNnjfXDoClfWlEQmZTnPfr/zc1tD1zXHlk3j
+        ilr7WNr4m+abAjuD7x++32C/tHryMzZ5x+3JX05LPRGMfLNhgnxaQXbaVtXt8wQb2naUxj2O
+        3Pkpzu3LJ6YTX5OcZv+90D6N40KpAqfmxOKbXuwKC1epT2juMVza2s55n3eR0A+OCQ2nm1Yk
+        eUw5dKT57rKems+B1nHsSp8tBE8n5DdqZXE6WJQcyihP9eW2uKKr3qLEUpyRaKjFXFScCAAA
+        MqBSAgMAAA==
+X-CMS-MailID: 20200426231502epcas2p4b2482716833122c6b7cf314a9e094ad5
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200420233607epcas2p305dbd652ab73592a32c17773c1fce329
+References: <20200420013300.17249-1-hyunki00.koo@samsung.com>
+        <CGME20200420233607epcas2p305dbd652ab73592a32c17773c1fce329@epcas2p3.samsung.com>
+        <20200420233558.11879-1-hyunki00.koo@samsung.com>
+        <000a01d619d0$ee167730$ca436590$@samsung.com>
+        <20200424053711.GB103562@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/26/20 10:26 AM, Randy Dunlap wrote:
-> On 4/26/20 12:16 AM, akpm@linux-foundation.org wrote:
->> The mm-of-the-moment snapshot 2020-04-26-00-15 has been uploaded to
->>
->>    http://www.ozlabs.org/~akpm/mmotm/
->>
->> mmotm-readme.txt says
->>
->> README for mm-of-the-moment:
->>
->> http://www.ozlabs.org/~akpm/mmotm/
->>
->> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
->> more than once a week.
->>
->> You will need quilt to apply these patches to the latest Linus release (5.x
->> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
->> http://ozlabs.org/~akpm/mmotm/series
->>
->> The file broken-out.tar.gz contains two datestamp files: .DATE and
->> .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
->> followed by the base kernel version against which this patch series is to
->> be applied.
-> 
-> Hi,
-> I'm seeing lots of build failures in mm/madvise.c.
-> 
-> Is Minchin's patch only partially applied or is it just missing some pieces?
-> 
-> a.  mm/madvise.c needs to #include <linux/uio.h>
-> 
-> b.  looks like the sys_process_madvise() prototype in <linux/syscalls.h>
-> has not been updated:
-> 
-> In file included from ../mm/madvise.c:11:0:
-> ../include/linux/syscalls.h:239:18: error: conflicting types for ‘sys_process_madvise’
->   asmlinkage long sys##name(__MAP(x,__SC_DECL,__VA_ARGS__)) \
->                   ^
-> ../include/linux/syscalls.h:225:2: note: in expansion of macro ‘__SYSCALL_DEFINEx’
->   __SYSCALL_DEFINEx(x, sname, __VA_ARGS__)
->   ^~~~~~~~~~~~~~~~~
-> ../include/linux/syscalls.h:219:36: note: in expansion of macro ‘SYSCALL_DEFINEx’
->  #define SYSCALL_DEFINE6(name, ...) SYSCALL_DEFINEx(6, _##name, __VA_ARGS__)
->                                     ^~~~~~~~~~~~~~~
-> ../mm/madvise.c:1295:1: note: in expansion of macro ‘SYSCALL_DEFINE6’
->  SYSCALL_DEFINE6(process_madvise, int, which, pid_t, upid,
->  ^~~~~~~~~~~~~~~
-> In file included from ../mm/madvise.c:11:0:
-> ../include/linux/syscalls.h:880:17: note: previous declaration of ‘sys_process_madvise’ was here
->  asmlinkage long sys_process_madvise(int which, pid_t pid, unsigned long start,
->                  ^~~~~~~~~~~~~~~~~~~
+On Fri, Apr 24, 2020 at 02:37:18PM +0900, Greg KH wrote:
+> On Fri, Apr 24, 2020 at 09:40:18AM +0900, Hyunki Koo wrote:
+> > On Sat, April 21, 2020 at 08:36:00 AM +0900, Hyunki Koo wrote:
+> > >
+> > > Change in v8:
+> > > - spit into 3 patch
+> > >   =5B1/3=5D create the new functions with no functional change to the
+> > > code as- is.
+> > >   Replace rd_regb/wr_regb with rd_reg/wr_reg for general usage.
+> > >   =5B2/3=5D add the new binding reg-io-width in device tree
+> > >   =5B3/3=5D add the new funtinality of rd_reg / wr_reg and wr_reg_bar=
+rier
+> > >         to support 32-bit access for the TX/RX hold registers UTXH an=
+d
+> URXH.
+> > >
+> > > Change in v7:
+> > > - =5B1/2=5D correct build error on running 'make dt_binding_check'
+> > > Documentation/devicetree/bindings/serial/samsung_uart.yaml:
+> mapping
+> > > values are not allowed in this context
+> > >   in =22<unicode string>=22, line 36, column 13
+> > >   Documentation/devicetree/bindings/Makefile:12: recipe for target
+> > >
+> 'Documentation/devicetree/bindings/serial/samsung_uart.example.dts'
+> > > failed
+> > >   make=5B1=5D: ***
+> > >
+> =5BDocumentation/devicetree/bindings/serial/samsung_uart.example.dts=5D
+> > > Error 1
+> > >   make=5B1=5D: *** Waiting for unfinished jobs....
+> > >   Makefile:1262: recipe for target 'dt_binding_check' failed
+> > >   make: *** =5Bdt_binding_check=5D Error 2
+> > > - =5B2/2=5D add commit message of reviewed by and tested by in commit
+> > > message
+> > >   Reviewed-by: Krzysztof Kozlowski <krzk=40kernel.org>
+> > >   Tested on Odroid HC1 (Exynos5422):
+> > >   Tested-by: Krzysztof Kozlowski <krzk=40kernel.org>
+> > >
+> > > Change in v6:
+> > > - =5B2/2=5D clean description of reg-io-width
+> > >   allOf is not needed. Just enum =5B1, 2=5D is enough.
+> > >
+> > > Changes in v5:
+> > > - spit into 2 patch, newly added patch for dt-binding
+> > >   =5B1/2=5D newly added dt-binding and go as first patch in this seri=
+es.
+> > >   =5B2/2=5D go as second patch in this series.
+> > >
+> > > Changes in v4:
+> > > - correct variable types and change misleading function name
+> > >
+> > > Changes in v3:
+> > > - line 2031: remove redundant init value  for ourport->port.iotype
+> > >
+> > > Changes in v2:
+> > > - line 954 : change rd_regl to rd_reg in for backward compatibility.
+> > > - line 2031: Add init value for ourport->port.iotype  to UPIO_MEM
+> > >
+> > >
+> > > Hyunki Koo (3):
+> > >   serial: samsung: Replace rd_regb/wr_regb with rd_reg/wr_reg
+> > >   dt-bindings: serial: Add reg-io-width compatible
+> > >   tty: samsung_tty: 32-bit access for TX/RX hold registers
+> > >
+> > >  .../devicetree/bindings/serial/samsung_uart.yaml   =7C  8 +++
+> > >  drivers/tty/serial/samsung_tty.c                   =7C 76
+> ++++++++++++++++++---
+> > > -
+> > >  2 files changed, 72 insertions(+), 12 deletions(-)
+> > >
+> > > --
+> > > 2.15.0.rc1
+> >
+> > Hi Greg KH
+> >
+> > Can I ask is this series patch are acceptable or not?
+> > Do you think, I have to do any further action  for this patch?
+> >
+>=20
+> It's been 3 days, give us a chance please...
+>=20
+> Also, I need to wait for the dt patch to be reviewed first before I can t=
+ake
+> any of this, so that's up to the DT maintainers.
+>=20
+> thanks,
+>=20
+> greg k-h
 
-I had to add 2 small patches to have clean madvise.c builds:
+Sorry to disturb you and Thank you for your answer,
+I will wait.
 
-
----
- include/linux/syscalls.h |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
---- mmotm-2020-0426-0015.orig/include/linux/syscalls.h
-+++ mmotm-2020-0426-0015/include/linux/syscalls.h
-@@ -876,9 +876,9 @@ asmlinkage long sys_munlockall(void);
- asmlinkage long sys_mincore(unsigned long start, size_t len,
- 				unsigned char __user * vec);
- asmlinkage long sys_madvise(unsigned long start, size_t len, int behavior);
--
--asmlinkage long sys_process_madvise(int which, pid_t pid, unsigned long start,
--			size_t len, int behavior, unsigned long flags);
-+asmlinkage long sys_process_madvise(int which, pid_t upid,
-+		const struct iovec __user *vec, unsigned long vlen,
-+		int behavior, unsigned long flags);
- asmlinkage long sys_remap_file_pages(unsigned long start, unsigned long size,
- 			unsigned long prot, unsigned long pgoff,
- 			unsigned long flags);
-
----
-and
----
- mm/madvise.c |    2 ++
- 1 file changed, 2 insertions(+)
-
---- mmotm-2020-0426-0015.orig/mm/madvise.c
-+++ mmotm-2020-0426-0015/mm/madvise.c
-@@ -23,12 +23,14 @@
- #include <linux/file.h>
- #include <linux/blkdev.h>
- #include <linux/backing-dev.h>
-+#include <linux/compat.h>
- #include <linux/pagewalk.h>
- #include <linux/swap.h>
- #include <linux/swapops.h>
- #include <linux/shmem_fs.h>
- #include <linux/mmu_notifier.h>
- #include <linux/sched/mm.h>
-+#include <linux/uio.h>
- 
- #include <asm/tlb.h>
- 
