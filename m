@@ -6,35 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB25C55199
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC400C5519A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 852CA20700
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9685720700
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 09:43:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbgDZJn0 (ORCPT
+        id S1726522AbgDZJnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 05:43:26 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2910 "EHLO huawei.com"
+        Sun, 26 Apr 2020 05:43:32 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:33930 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726251AbgDZJn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 05:43:26 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B569892C8BB359192DCB;
-        Sun, 26 Apr 2020 17:43:20 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Sun, 26 Apr 2020
- 17:43:11 +0800
+        id S1726251AbgDZJnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 05:43:31 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id EC4C64095CE78C2A81DE;
+        Sun, 26 Apr 2020 17:43:29 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Sun, 26 Apr 2020
+ 17:43:23 +0800
 From:   Jason Yan <yanaijie@huawei.com>
-To:     <peter.ujfalusi@ti.com>, <jarkko.nikula@bitmer.com>,
-        <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <rafael.j.wysocki@intel.com>,
-        <tglx@linutronix.de>, <alsa-devel@alsa-project.org>,
-        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+To:     <sre@kernel.org>, <linus.walleij@linaro.org>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC:     Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH] ASoC: ti: remove comparison to bool in omap_mcbsp_dai_set_dai_fmt()
-Date:   Sun, 26 Apr 2020 17:42:38 +0800
-Message-ID: <20200426094238.23914-1-yanaijie@huawei.com>
+Subject: [PATCH] power: supply: ab8500_fg: remove comparison to bool
+Date:   Sun, 26 Apr 2020 17:42:50 +0800
+Message-ID: <20200426094250.23995-1-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -48,26 +45,26 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fix the following coccicheck warning:
 
-sound/soc/ti/omap-mcbsp.c:1188:5-11: WARNING: Comparison to bool
+drivers/power/supply/ab8500_fg.c:2402:5-24: WARNING: Comparison to bool
 
 Signed-off-by: Jason Yan <yanaijie@huawei.com>
 ---
- sound/soc/ti/omap-mcbsp.c | 2 +-
+ drivers/power/supply/ab8500_fg.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/ti/omap-mcbsp.c b/sound/soc/ti/omap-mcbsp.c
-index 3d41ca2238d4..0348963f4df7 100644
---- a/sound/soc/ti/omap-mcbsp.c
-+++ b/sound/soc/ti/omap-mcbsp.c
-@@ -1185,7 +1185,7 @@ static int omap_mcbsp_dai_set_dai_fmt(struct snd_soc_dai *cpu_dai,
- 	default:
- 		return -EINVAL;
- 	}
--	if (inv_fs == true)
-+	if (inv_fs)
- 		regs->pcr0 ^= FSXP | FSRP;
+diff --git a/drivers/power/supply/ab8500_fg.c b/drivers/power/supply/ab8500_fg.c
+index b96f90a82ecf..751c4f6c7487 100644
+--- a/drivers/power/supply/ab8500_fg.c
++++ b/drivers/power/supply/ab8500_fg.c
+@@ -2399,7 +2399,7 @@ static void ab8500_fg_reinit_work(struct work_struct *work)
+ 	struct ab8500_fg *di = container_of(work, struct ab8500_fg,
+ 		fg_reinit_work.work);
  
- 	return 0;
+-	if (di->flags.calibrate == false) {
++	if (!di->flags.calibrate) {
+ 		dev_dbg(di->dev, "Resetting FG state machine to init.\n");
+ 		ab8500_fg_clear_cap_samples(di);
+ 		ab8500_fg_calc_cap_discharge_voltage(di, true);
 -- 
 2.21.1
 
