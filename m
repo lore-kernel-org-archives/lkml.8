@@ -2,153 +2,112 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C719AC54FCB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 14:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69277C55194
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 14:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A979C206DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 14:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 491012074F
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 14:24:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g1gufUtj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726185AbgDZOJP (ORCPT
+        id S1726188AbgDZOYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 10:09:15 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:54042 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgDZOJP (ORCPT
+        Sun, 26 Apr 2020 10:24:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36088 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbgDZOYE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 10:09:15 -0400
-Received: by mail-il1-f200.google.com with SMTP id 9so16689750ill.20
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 07:09:12 -0700 (PDT)
+        Sun, 26 Apr 2020 10:24:04 -0400
+Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FB88C061A0F;
+        Sun, 26 Apr 2020 07:24:04 -0700 (PDT)
+Received: by mail-yb1-xb34.google.com with SMTP id a7so2345442ybs.4;
+        Sun, 26 Apr 2020 07:24:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=v+nxHzSn6RRIKSvsGs/i9HYR2TbbasmboUuFVsF8RDE=;
+        b=g1gufUtjqrUv8RN0imWn4ul6dAdUrZNtnpfy348wGsFbP5NuuOUUXYZs8F8WpIkKkF
+         N1u8amih9R1V69ve6xvKcHEYwdS2QP2UCrZ5SQ5e9qGVT5spl/VYLWQRSEz6M/Z/T1yQ
+         tNDIch9u4u/33y2xA4MKtGcefFwDsJjDxHAG9Pu/LN54MLyEQh0sh/K46P41jQi2/Xg2
+         fR6W6n7SvS3oCxo66YOkRCRrxtCdABlp+wmUwVJxKBsN+vFhXECkna9eb8jA3v17cc3p
+         p6Gwyah8Eth2U+FFZ39Hto5Q5kM8GeP95TzThNbWitgeYo75EfP0WpTaWpp6krvthHuo
+         Y5xQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=pgeHEmJ3Yp5PttG/VcLln/3EKq6Mf1M6+5x9rIZGbsw=;
-        b=t7PHT/VWyTVSgfftrEAVFwEJIjyiDtnsTat5ZwTmz40z6RQO5+W59l2GOyapXUJ8r9
-         KEOt3nhUPW7XHSbBlduoJSicf/gP1RL+CrD0GRw1h//unNwWm/QYTw5Is7wYLvpKlCti
-         KFcfhF/wQHJlhkBbZW++JgEqPQZ5hY+2IbFtdl3tUnvjVwlNQ43Kzhwh3MFEhdzsobwU
-         qraz1pc7v6KmPwt2YwkMqc7acxDNnMXSDGe+Nbs8pXhUuHTppJXihvtCj7KjspEGUOxw
-         nxP8B9Y0SRVteg/zJcS3DFcNuTw7toG65YbZI1EZC1lJczmKORdD8EV6B5YXyRyNdwdr
-         57dw==
-X-Gm-Message-State: AGi0PubHwxYA4+R7eIfmg16W/hzivTbzjw1dpkIjlf/SAbUfSb2tx8G1
-        hfsytgbLIZXMra91/DvqQBOZrsdwnT4PdOUBDGuC2fjbE8+3
-X-Google-Smtp-Source: APiQypL+PzGPwqLflshfjZEe5EdryYwoMXXQIi2SWV2/7YPKn/nYZKzHseEjYIbC6fFFALLP7S/TGK8emecnu/FlaGlICw6/MSoX
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=v+nxHzSn6RRIKSvsGs/i9HYR2TbbasmboUuFVsF8RDE=;
+        b=L7hAbBKgttt9dyKnzNxg7I+FjjlBx9hPPKRaZlLblftuYD6PcwW/0lEtEAtjSoBlYn
+         8f/aInWun2+ZQv5nA9nNpmQj/jBy7C2fUREjb5rvirljlf5mgyypX8D/NbmPw7etJ0Pi
+         kg89jW35boHaFVaCIfztjnnGFHPvQShVwAVw6eq5vnWNQuId6L8qrIPWWad3NI+A1AQ/
+         9Slbok/xac5vvNE9r/jX1kXZg5nXRZpBmyYUhTpR9lMT891WvRSiwjtm61jPe3xZl791
+         ew/kJEaJc5pY9tRvApONyaOMafmS7BbOu7nvWSp+jcJaoolQ7l8K5r60sh39TjZnfQX5
+         uwaA==
+X-Gm-Message-State: AGi0PuYltcgyj9Sr9S/rw6721RKIsxr9pFVA06t9vBOK4RMQV2xryEYw
+        K0UpcKdUoQRG52WygxrqJgCKbVawcMPq3TRSVolv0z6V8EY=
+X-Google-Smtp-Source: APiQypLK2KTB6MPtOleHAa1EMpJ+w5SuWl4SNiDvfAbY54FmKOQRss+iSpRN7+rnibiLd9DlSkP8N9CJIffDOfSBBhM=
+X-Received: by 2002:a25:42ce:: with SMTP id p197mr27532907yba.167.1587911042158;
+ Sun, 26 Apr 2020 07:24:02 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a5e:8e44:: with SMTP id r4mr16796312ioo.47.1587910152288;
- Sun, 26 Apr 2020 07:09:12 -0700 (PDT)
-Date:   Sun, 26 Apr 2020 07:09:12 -0700
-In-Reply-To: <000000000000f1377e05a3630d32@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009000aa05a4322411@google.com>
-Subject: Re: KMSAN: uninit-value in sctp_ootb_pkt_new
-From:   syzbot <syzbot+6751381fe5a26df5b74d@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, glider@google.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
-        marcelo.leitner@gmail.com, netdev@vger.kernel.org,
-        nhorman@tuxdriver.com, syzkaller-bugs@googlegroups.com,
-        vyasevich@gmail.com
+From:   Steve French <smfrench@gmail.com>
+Date:   Sun, 26 Apr 2020 09:23:51 -0500
+Message-ID: <CAH2r5mvFb--OkoyHwPeML_CoRH=UfbFLRhUcoGBSKbLgok2VXg@mail.gmail.com>
+Subject: [GIT PULL] CIFS/SMB3 Fixes
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     CIFS <linux-cifs@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+Please pull the following changes since commit
+ae83d0b416db002fe95601e7f97f64b59514d936:
 
-HEAD commit:    bfa90a4a kmsan: remove __GFP_NO_KMSAN_SHADOW
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=13ab7fbfe00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a5915107b3106aaa
-dashboard link: https://syzkaller.appspot.com/bug?extid=6751381fe5a26df5b74d
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=138df47fe00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=158a182fe00000
+  Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6751381fe5a26df5b74d@syzkaller.appspotmail.com
+are available in the Git repository at:
 
-batman_adv: batadv0: Interface activated: batadv_slave_1
-=====================================================
-BUG: KMSAN: uninit-value in __arch_swab32 arch/x86/include/uapi/asm/swab.h:10 [inline]
-BUG: KMSAN: uninit-value in __fswab32 include/uapi/linux/swab.h:60 [inline]
-BUG: KMSAN: uninit-value in sctp_ootb_pkt_new+0x202/0x540 net/sctp/sm_statefuns.c:6256
-CPU: 0 PID: 8800 Comm: syz-executor949 Not tainted 5.6.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- __arch_swab32 arch/x86/include/uapi/asm/swab.h:10 [inline]
- __fswab32 include/uapi/linux/swab.h:60 [inline]
- sctp_ootb_pkt_new+0x202/0x540 net/sctp/sm_statefuns.c:6256
- sctp_sf_tabort_8_4_8+0xe6/0x7e0 net/sctp/sm_statefuns.c:3372
- sctp_sf_do_5_1B_init+0x6be/0x1b60 net/sctp/sm_statefuns.c:338
- sctp_do_sm+0x2b4/0x9a30 net/sctp/sm_sideeffect.c:1153
- sctp_endpoint_bh_rcv+0xd54/0xfe0 net/sctp/endpointola.c:395
- sctp_inq_push+0x300/0x420 net/sctp/inqueue.c:80
- sctp_rcv+0x48b9/0x5410 net/sctp/input.c:256
- ip_protocol_deliver_rcu+0x700/0xbc0 net/ipv4/ip_input.c:204
- ip_local_deliver_finish net/ipv4/ip_input.c:231 [inline]
- NF_HOOK include/linux/netfilter.h:307 [inline]
- ip_local_deliver+0x62a/0x7c0 net/ipv4/ip_input.c:252
- dst_input include/net/dst.h:442 [inline]
- ip_rcv_finish net/ipv4/ip_input.c:428 [inline]
- NF_HOOK include/linux/netfilter.h:307 [inline]
- ip_rcv+0x6cf/0x750 net/ipv4/ip_input.c:538
- __netif_receive_skb_one_core net/core/dev.c:5187 [inline]
- __netif_receive_skb net/core/dev.c:5301 [inline]
- netif_receive_skb_internal net/core/dev.c:5391 [inline]
- netif_receive_skb+0xbb5/0xf20 net/core/dev.c:5450
- tun_rx_batched include/linux/skbuff.h:4351 [inline]
- tun_get_user+0x6aef/0x6f60 drivers/net/tun.c:1997
- tun_chr_write_iter+0x1f2/0x360 drivers/net/tun.c:2026
- call_write_iter include/linux/fs.h:1902 [inline]
- new_sync_write fs/read_write.c:483 [inline]
- __vfs_write+0xa5a/0xca0 fs/read_write.c:496
- vfs_write+0x44a/0x8f0 fs/read_write.c:558
- ksys_write+0x267/0x450 fs/read_write.c:611
- __do_sys_write fs/read_write.c:623 [inline]
- __se_sys_write+0x92/0xb0 fs/read_write.c:620
- __x64_sys_write+0x4a/0x70 fs/read_write.c:620
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x443659
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 10 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fff60095968 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000000003172 RCX: 0000000000443659
-RDX: 000000000000002e RSI: 00000000200000c0 RDI: 0000000000000003
-RBP: 00007fff60095990 R08: 0000000000000000 R09: 0000000000000000
-R10: 000000000000aa14 R11: 0000000000000246 R12: 656c6c616b7a7973
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+  git://git.samba.org/sfrench/cifs-2.6.git tags/5.7-rc2-smb3-fixes
 
-Uninit was created at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
- kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:80
- slab_alloc_node mm/slub.c:2801 [inline]
- __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4420
- __kmalloc_reserve net/core/skbuff.c:142 [inline]
- __alloc_skb+0x2fd/0xac0 net/core/skbuff.c:210
- alloc_skb include/linux/skbuff.h:1081 [inline]
- alloc_skb_with_frags+0x18c/0xa70 net/core/skbuff.c:5764
- sock_alloc_send_pskb+0xada/0xc60 net/core/sock.c:2245
- tun_alloc_skb drivers/net/tun.c:1529 [inline]
- tun_get_user+0x10ae/0x6f60 drivers/net/tun.c:1843
- tun_chr_write_iter+0x1f2/0x360 drivers/net/tun.c:2026
- call_write_iter include/linux/fs.h:1902 [inline]
- new_sync_write fs/read_write.c:483 [inline]
- __vfs_write+0xa5a/0xca0 fs/read_write.c:496
- vfs_write+0x44a/0x8f0 fs/read_write.c:558
- ksys_write+0x267/0x450 fs/read_write.c:611
- __do_sys_write fs/read_write.c:623 [inline]
- __se_sys_write+0x92/0xb0 fs/read_write.c:620
- __x64_sys_write+0x4a/0x70 fs/read_write.c:620
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-=====================================================
+for you to fetch changes up to 0fe0781f29dd8ab618999e6bda33c782ebbdb109:
 
+  cifs: fix uninitialised lease_key in open_shroot() (2020-04-22 20:29:11 -0500)
+
+----------------------------------------------------------------
+Five cifs/smb3 fixes: two for DFS reconnect failover,  one lease fix
+for stable and the others to
+fix a missing spinlock during reconnect
+
+Regression test results:
+http://smb3-test-rhel-75.southcentralus.cloudapp.azure.com/#/builders/2/builds/345
+----------------------------------------------------------------
+Paulo Alcantara (3):
+      cifs: do not share tcons with DFS
+      cifs: ensure correct super block for DFS reconnect
+      cifs: fix uninitialised lease_key in open_shroot()
+
+Ronnie Sahlberg (1):
+      cifs: protect updating server->dstaddr with a spinlock
+
+Steve French (1):
+      cifs: minor update to comments around the cifs_tcp_ses_lock mutex
+
+ fs/cifs/cifsglob.h |  3 +-
+ fs/cifs/connect.c  |  6 ++++
+ fs/cifs/misc.c     | 82 +++++++++++++++++++++++++++++++++++++++++++-----------
+ fs/cifs/smb2ops.c  |  5 ++++
+ 4 files changed, 78 insertions(+), 18 deletions(-)
+
+
+-- 
+Thanks,
+
+Steve
