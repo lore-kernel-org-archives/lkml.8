@@ -2,146 +2,106 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 954C3C55191
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFBDC55194
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D9DE2075B
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABDBF206CD
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 11:49:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="fH+VvyM6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbgDZLrA (ORCPT
+        id S1726271AbgDZLtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 07:47:00 -0400
-Received: from mga05.intel.com ([192.55.52.43]:11883 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726228AbgDZLqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 07:46:53 -0400
-IronPort-SDR: GM65Awuqw23W0eRExFNLQ8hrxwKNhDlJdTUtXt8ZjVlHo2ZNkV4a9TAoQ8MnH9ZI/k2kPFTDuf
- 6YS6JuF08Qyw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2020 04:46:52 -0700
-IronPort-SDR: uoXCr6IRVu738d0l769dyIzvyOpqL6kQ0HeQUcVfrtfwXEkgqQrQHldYHd1uTyUM4lFDfg227i
- Nrd3vaxICfHQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,320,1583222400"; 
-   d="scan'208";a="275155067"
-Received: from unknown (HELO localhost.localdomain.bj.intel.com) ([10.240.193.79])
-  by orsmga002.jf.intel.com with ESMTP; 26 Apr 2020 04:46:49 -0700
-From:   Zhu Lingshan <lingshan.zhu@intel.com>
-To:     mst@redhat.com, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        jasowang@redhat.com
-Cc:     lulu@redhat.com, dan.daly@intel.com, cunming.liang@intel.com,
-        Zhu Lingshan <lingshan.zhu@intel.com>
-Subject: [PATCH V4 3/3] vdpa: implement config interrupt in IFCVF
-Date:   Sun, 26 Apr 2020 19:43:26 +0800
-Message-Id: <1587901406-27400-4-git-send-email-lingshan.zhu@intel.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1587901406-27400-1-git-send-email-lingshan.zhu@intel.com>
-References: <1587901406-27400-1-git-send-email-lingshan.zhu@intel.com>
+        Sun, 26 Apr 2020 07:49:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40440 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbgDZLtW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 07:49:22 -0400
+Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F665C061A0E;
+        Sun, 26 Apr 2020 04:49:20 -0700 (PDT)
+Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 89E4420CDC;
+        Sun, 26 Apr 2020 11:49:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1587901757; bh=r1y8SvWtc1gITjpG4/8SCMLhvpr+40ZG9Q9GWxOeYcU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fH+VvyM6my7OULyg0hlzUAoDF2Byd/WxGPNJBUYurFDCPOFSsANyB8eP2lxDP6n54
+         f8UugSOSk8MD9KuLNmZoIME02cQSxbmgI3eiOuTdj9ZxikG8UrHUfp732mEvVsQAEm
+         iHRIdzKrzPUXefgq5cD0tgKW5m2oELmHIWfbXwcJ/IslP3dHqu6KfpxtAuh8n+jzpM
+         vdjSrLlMVUchz0cu7vum/vWG5eStHnXMZKndk9UAyYhs0ahXPRR20IzOSLlIyxsmMz
+         q467ekCEZiXekKKwJ1Lb4lcR0z1CYz4o+7QeERsATa6iOfhMdq68SHYZNxGwXx/Kpi
+         1awAYIadNQrdg==
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Kitt <steve@sk2.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Daniel Silsby <dansilsby@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Wei Xu <xuwei5@hisilicon.com>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] MIPS: Loongson64: Use logic_pio 
+Date:   Sun, 26 Apr 2020 19:47:33 +0800
+Message-Id: <20200426114806.1176629-1-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.26.0.rc2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit implements config interrupt support
-in IFC VF
+To add I/O ports for PCI host bridge via devicetree, we have to use
+logic_pio mechanism.
+That would require convert I/O ports into virt memory map.
 
-Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
----
- drivers/vdpa/ifcvf/ifcvf_base.c |  3 +++
- drivers/vdpa/ifcvf/ifcvf_base.h |  3 +++
- drivers/vdpa/ifcvf/ifcvf_main.c | 22 +++++++++++++++++++++-
- 3 files changed, 27 insertions(+), 1 deletion(-)
+Jiaxun Yang (4):
+  MIPS: Massage address spaces headers
+  MIPS: Introduce PCI_IO_VMMAP
+  lib: logic_pio: Introduce MMIO_LOWER_RESERVED
+  MIPS: Loongson64: Enable PCI_IO_VMMAP
 
-diff --git a/drivers/vdpa/ifcvf/ifcvf_base.c b/drivers/vdpa/ifcvf/ifcvf_base.c
-index b61b06e..c825d99 100644
---- a/drivers/vdpa/ifcvf/ifcvf_base.c
-+++ b/drivers/vdpa/ifcvf/ifcvf_base.c
-@@ -185,6 +185,9 @@ void ifcvf_set_status(struct ifcvf_hw *hw, u8 status)
- 
- void ifcvf_reset(struct ifcvf_hw *hw)
- {
-+	hw->config_cb.callback = NULL;
-+	hw->config_cb.private = NULL;
-+
- 	ifcvf_set_status(hw, 0);
- 	/* flush set_status, make sure VF is stopped, reset */
- 	ifcvf_get_status(hw);
-diff --git a/drivers/vdpa/ifcvf/ifcvf_base.h b/drivers/vdpa/ifcvf/ifcvf_base.h
-index e803070..23ac47d 100644
---- a/drivers/vdpa/ifcvf/ifcvf_base.h
-+++ b/drivers/vdpa/ifcvf/ifcvf_base.h
-@@ -27,6 +27,7 @@
- 		((1ULL << VIRTIO_NET_F_MAC)			| \
- 		 (1ULL << VIRTIO_F_ANY_LAYOUT)			| \
- 		 (1ULL << VIRTIO_F_VERSION_1)			| \
-+		 (1ULL << VIRTIO_NET_F_STATUS)			| \
- 		 (1ULL << VIRTIO_F_ORDER_PLATFORM)		| \
- 		 (1ULL << VIRTIO_F_IOMMU_PLATFORM)		| \
- 		 (1ULL << VIRTIO_NET_F_MRG_RXBUF))
-@@ -81,6 +82,8 @@ struct ifcvf_hw {
- 	void __iomem *net_cfg;
- 	struct vring_info vring[IFCVF_MAX_QUEUE_PAIRS * 2];
- 	void __iomem * const *base;
-+	char config_msix_name[256];
-+	struct vdpa_callback config_cb;
- };
- 
- struct ifcvf_adapter {
-diff --git a/drivers/vdpa/ifcvf/ifcvf_main.c b/drivers/vdpa/ifcvf/ifcvf_main.c
-index 8d54dc5..f7baeca 100644
---- a/drivers/vdpa/ifcvf/ifcvf_main.c
-+++ b/drivers/vdpa/ifcvf/ifcvf_main.c
-@@ -18,6 +18,16 @@
- #define DRIVER_AUTHOR   "Intel Corporation"
- #define IFCVF_DRIVER_NAME       "ifcvf"
- 
-+static irqreturn_t ifcvf_config_changed(int irq, void *arg)
-+{
-+	struct ifcvf_hw *vf = arg;
-+
-+	if (vf->config_cb.callback)
-+		return vf->config_cb.callback(vf->config_cb.private);
-+
-+	return IRQ_HANDLED;
-+}
-+
- static irqreturn_t ifcvf_intr_handler(int irq, void *arg)
- {
- 	struct vring_info *vring = arg;
-@@ -256,7 +266,10 @@ static void ifcvf_vdpa_set_config(struct vdpa_device *vdpa_dev,
- static void ifcvf_vdpa_set_config_cb(struct vdpa_device *vdpa_dev,
- 				     struct vdpa_callback *cb)
- {
--	/* We don't support config interrupt */
-+	struct ifcvf_hw *vf = vdpa_to_vf(vdpa_dev);
-+
-+	vf->config_cb.callback = cb->callback;
-+	vf->config_cb.private = cb->private;
- }
- 
- /*
-@@ -292,6 +305,13 @@ static int ifcvf_request_irq(struct ifcvf_adapter *adapter)
- 	struct ifcvf_hw *vf = &adapter->vf;
- 	int vector, i, ret, irq;
- 
-+	snprintf(vf->config_msix_name, 256, "ifcvf[%s]-config\n",
-+		pci_name(pdev));
-+	vector = 0;
-+	irq = pci_irq_vector(pdev, vector);
-+	ret = devm_request_irq(&pdev->dev, irq,
-+			       ifcvf_config_changed, 0,
-+			       vf->config_msix_name, vf);
- 
- 	for (i = 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
- 		snprintf(vf->vring[i].msix_name, 256, "ifcvf[%s]-%d\n",
+ arch/mips/Kconfig                           |  4 ++
+ arch/mips/include/asm/addrspace.h           |  4 +-
+ arch/mips/include/asm/io.h                  | 40 ++++++++++++++++----
+ arch/mips/include/asm/mach-generic/spaces.h | 42 +++++++++++++++------
+ arch/mips/include/asm/page-def.h            | 28 ++++++++++++++
+ arch/mips/include/asm/page.h                | 21 -----------
+ arch/mips/include/asm/pgtable-32.h          |  2 -
+ arch/mips/include/asm/pgtable-64.h          | 10 +----
+ arch/mips/include/asm/sync.h                |  2 +
+ arch/mips/kernel/cps-vec.S                  |  3 +-
+ arch/mips/kernel/setup.c                    |  2 +
+ arch/mips/lib/iomap-pci.c                   |  2 +-
+ arch/mips/lib/uncached.c                    |  6 +--
+ arch/mips/loongson64/init.c                 | 12 ++++--
+ arch/mips/loongson64/pci.c                  |  2 +-
+ lib/logic_pio.c                             |  6 ++-
+ 16 files changed, 122 insertions(+), 64 deletions(-)
+ create mode 100644 arch/mips/include/asm/page-def.h
+
 -- 
-1.8.3.1
+2.26.0.rc2
 
