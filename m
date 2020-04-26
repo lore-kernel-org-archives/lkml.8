@@ -7,66 +7,71 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C5FC55194
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 21:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3818BC54FCB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 21:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B1832071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 21:50:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F6A12071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 21:50:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="PQHhUt4Q"
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="VAfCURwT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726502AbgDZVuW (ORCPT
+        id S1726520AbgDZVud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 17:50:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48568 "EHLO
+        Sun, 26 Apr 2020 17:50:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbgDZVtx (ORCPT
+        with ESMTP id S1726215AbgDZVtu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 17:49:53 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9C77C09B050
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 14:49:52 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id q8so12479976eja.2
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 14:49:52 -0700 (PDT)
+        Sun, 26 Apr 2020 17:49:50 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5A4EC061A10
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 14:49:48 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id p16so11993836edm.10
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 14:49:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cloud.ionos.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=EVShq73FSgP/iPd7sAu/gmu6WN22oBRzfyOsdhWlH7E=;
-        b=PQHhUt4QYQ2lcD4jntv56PBlw8VdGuIt0HSBR79UTYajgyZK0++h/tPZu2kqq35XIu
-         VQv5xha59bI/qnB/aXKoYi6BjZIINrM77x90Cgp6DjnmaHXEsm8ljA77zdoEMfWSD+fI
-         3f4bUgA12mwtiRNTtGM3Q13n5EcbuVHKwT8C2ih3iEjeaa9/d4NW/1V0gsbc1ikhBIDI
-         /1LZ5Vzn6deZu3/DnXr2bR20wJJjvM+5C9qPDftdJdgSrwBaTLd+3F3ISpapRW24rpKR
-         y2Lt4zcbxvN74rzniBO05POHASY5jnQlgLyAqNPyp9MtgdgEeV9UXduqimBOYxBDV6BO
-         cn+w==
+        bh=aGrqSyBlWee4qlVzfbrxmXDEIitY77BfW8OPiMV+fGw=;
+        b=VAfCURwTPIE4rJfC8KB4FYWrz+JTx0GQK6awVyjDZRrnwDaaVDjgUgtGtQZznZmmxi
+         wFl7jNmlcKuqIyO8p7/DqWXiTjP4SvaWAQzjxmulMXt8Ts4RDHfUM3ELErJt0x5C73AC
+         zJywnyx9Cz5oWsMeQfO4c5ejUQ+vDm3Amp7tf72mheUEv9saFlblV0qG8GxVzGe8BxvY
+         XbgofnU5SgEU582wK1e9C5GxLR0JqVzv67TRQVvRHms797+XWJFR5orBv3ADbbrwceBM
+         E7ucIimM6ELJKj4Xxei35ZC9m3xzeGhs+QRaifvldaOwSBMIrEuwBPzLsQUyxEp4i+95
+         N6LA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=EVShq73FSgP/iPd7sAu/gmu6WN22oBRzfyOsdhWlH7E=;
-        b=umOuDypJHET/6hgmPC55dAbTMncT++gF+q32KdS17o/hbzAnDwSmNM/GnFPFCTOyIZ
-         o9Ss1efnvbdWGqNUyQsRHLOTPd6AN6n+ZXqBpC/ZKS4r4udVJek5lvnZqe8my6EtESGv
-         HvEhgxUspV2j59YswBE++dhJL5ayz387T1yIXgd9g1ZT2E6teZJSVYmu+4EvBQHG3VJh
-         YlhTWx8K7huzbALkS63i7POMmB57qfoMi+K5Dzk0zlHoGXuNPLYKSQCnY666PHTAQiqq
-         Ui/OsNlK+0Oh9fMpVp+ufiqXE6tHg5RgYH8QH/Q6X/gsA9MZuqegjK286fbNMJvcWlL1
-         7BGg==
-X-Gm-Message-State: AGi0Pub8qg6aouLlluBOKoVuM0Nrzdw8cDfsxiO7oA65IxQUdfzsXO9v
-        kEhhpfEppaGmfX9FFN3IY1//7g==
-X-Google-Smtp-Source: APiQypIEBGSwt/5p1EI0EPh1JLjp11svK9dHJaYN2weAh6ctv9R1LUU52PMHSz/H21K9Jnelbw7huw==
-X-Received: by 2002:a17:906:7e5a:: with SMTP id z26mr17585240ejr.168.1587937791521;
-        Sun, 26 Apr 2020 14:49:51 -0700 (PDT)
+        bh=aGrqSyBlWee4qlVzfbrxmXDEIitY77BfW8OPiMV+fGw=;
+        b=HOOQRG74WRPQ7aQ0jb2MVK369ydiX2/p8IFT1BWMY/spKQObfRm8fL07uTAtnzab6e
+         3NeTbmzTQGl5nODQlU3vumUdBVmVG7U96ADzq5qxwWXr3W1iJOFzxF3ZOYTXt6HdbRxz
+         td0fHe7WCGfdIyrQUMQH6BSZWxtaL9EGTKuwiQve9/NsgVpxQz2eAPeQbsq5RAPspcpu
+         B/AQ0sRHBxgo9faHtNr1fJvemyn7kvyWyFUYTz1XH4chrFXqhvT/E2PMPtliLyh6dOdQ
+         4h7LHiAvrcZOzcWl9qdQbT3zh6wSj7KyzXlWA4U1N/nMhT1Z3H1BXgQwQXLd3Su9j3YB
+         Q0hw==
+X-Gm-Message-State: AGi0PuYarReI7lRIHR+kf9zPUm/gq7hWox0ObUsVd3gcWz3pcRoXmvVd
+        vP3ZAvDZLIgARZF3gYf5tr5jlA==
+X-Google-Smtp-Source: APiQypL9pOXchtRNeUI9SqBMUqUJAL/dQ0McZChbYcK3Npoe5VpBYEa/V2WAwgwMmnQc4QcKjJFF6w==
+X-Received: by 2002:a05:6402:356:: with SMTP id r22mr17183505edw.3.1587937787466;
+        Sun, 26 Apr 2020 14:49:47 -0700 (PDT)
 Received: from ls00508.pb.local ([2001:1438:4010:2540:fab1:56ff:feab:56b1])
-        by smtp.gmail.com with ESMTPSA id ce18sm2270108ejb.61.2020.04.26.14.49.50
+        by smtp.gmail.com with ESMTPSA id ce18sm2270108ejb.61.2020.04.26.14.49.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Apr 2020 14:49:50 -0700 (PDT)
+        Sun, 26 Apr 2020 14:49:46 -0700 (PDT)
 From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     hch@infradead.org, david@fromorbit.com, willy@infradead.org,
         Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [RFC PATCH 5/9] f2fs: use set/clear_fs_page_private
-Date:   Sun, 26 Apr 2020 23:49:21 +0200
-Message-Id: <20200426214925.10970-6-guoqing.jiang@cloud.ionos.com>
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: [RFC PATCH 1/9] include/linux/pagemap.h: introduce set/clear_fs_page_private
+Date:   Sun, 26 Apr 2020 23:49:17 +0200
+Message-Id: <20200426214925.10970-2-guoqing.jiang@cloud.ionos.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200426214925.10970-1-guoqing.jiang@cloud.ionos.com>
 References: <20200426214925.10970-1-guoqing.jiang@cloud.ionos.com>
@@ -75,43 +80,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the new pair function is introduced, we can call them to clean the
-code in f2fs.h.
+The logic in attach_page_buffers and  __clear_page_buffers are quite
+paired, but
 
-Cc: Jaegeuk Kim <jaegeuk@kernel.org>
-Cc: Chao Yu <chao@kernel.org>
-Cc: linux-f2fs-devel@lists.sourceforge.net
+1. they are located in different files.
+
+2. attach_page_buffers is implemented in buffer_head.h, so it could be
+   used by other files. But __clear_page_buffers is static function in
+   buffer.c and other potential users can't call the function, md-bitmap
+   even copied the function.
+
+So, introduce the new set/clear_fs_page_private to replace them since
+they are mostly used in fs layer. With the new pair of function, we will
+remove the usage of attach_page_buffers and  __clear_page_buffers in
+next patches.
+
+Suggested-by: Matthew Wilcox <willy@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc: William Kucharski <william.kucharski@oracle.com> 
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Andreas Gruenbacher <agruenba@redhat.com>
+Cc: Yang Shi <yang.shi@linux.alibaba.com>
+Cc: Yafang Shao <laoar.shao@gmail.com>
 Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 ---
- fs/f2fs/f2fs.h | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+ include/linux/pagemap.h | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index ba470d5687fe..70ad8c51e0fc 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -3051,19 +3051,12 @@ static inline void f2fs_set_page_private(struct page *page,
- 	if (PagePrivate(page))
- 		return;
- 
--	get_page(page);
--	SetPagePrivate(page);
--	set_page_private(page, data);
-+	set_fs_page_private(page, (void *)data);
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index a8f7bd8ea1c6..2a165ea647fe 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -205,6 +205,28 @@ static inline int page_cache_add_speculative(struct page *page, int count)
+ 	return __page_cache_add_speculative(page, count);
  }
  
- static inline void f2fs_clear_page_private(struct page *page)
- {
--	if (!PagePrivate(page))
--		return;
--
--	set_page_private(page, 0);
--	ClearPagePrivate(page);
--	f2fs_put_page(page, 0);
-+	clear_fs_page_private(page);
- }
- 
- /*
++static inline void *set_fs_page_private(struct page *page, void *data)
++{
++	get_page(page);
++	set_page_private(page, (unsigned long)data);
++	SetPagePrivate(page);
++
++	return data;
++}
++
++static inline void *clear_fs_page_private(struct page *page)
++{
++	void *data = (void *)page_private(page);
++
++	if (!PagePrivate(page))
++		return NULL;
++	ClearPagePrivate(page);
++	set_page_private(page, 0);
++	put_page(page);
++
++	return data;
++}
++
+ #ifdef CONFIG_NUMA
+ extern struct page *__page_cache_alloc(gfp_t gfp);
+ #else
 -- 
 2.17.1
 
