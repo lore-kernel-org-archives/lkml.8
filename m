@@ -2,103 +2,110 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A21C55196
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3C7C55196
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 656EA21707
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:51:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QsL3MOnL"
+	by mail.kernel.org (Postfix) with ESMTP id E76B7206BF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 05:54:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726213AbgDZFvW (ORCPT
+        id S1726226AbgDZFyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 01:51:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725468AbgDZFvW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 01:51:22 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D71DC061A0C;
-        Sat, 25 Apr 2020 22:51:20 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id f11so9513667ljp.1;
-        Sat, 25 Apr 2020 22:51:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9l6cZQwVi62pvIqETuB/BI3xEqSyHGo+hbBw6siI59Q=;
-        b=QsL3MOnLLUGvNM05WV+aiR2DQodDwGyBvcnEjIIYEp5CoUMxgK1io1QLNt9b10HmHj
-         AR0sd3DwFgI9Ggl3T/ll2g/MlH+SthYXi27cEZz27VNqly0cSjXXiQHiyIF5q/OM8zJn
-         FMK2+uPTJwTP+B1IvySGsI22KFmjqqnA+u2OIvpbGBDiU7sFFIXzR5M9JFcVh9gsJigg
-         7/VGyKEBWHxmFHQzf17z6xwRYvl9pjo/n8xyvOwW5A4FUv2dagWYdR46b0356C1ZLxj5
-         suaF4uIhPTaCA/7qfrarUHdTemtlNJdnBGH+KvV7Awe2AeMYlKS/FM9I4KkOd2as40pk
-         B1Ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9l6cZQwVi62pvIqETuB/BI3xEqSyHGo+hbBw6siI59Q=;
-        b=e7NB006wz98AZJ1BxHR7W39BfK0B/KUGBBSYqsYwu+nYTGAufekaQWLIPFp1Hlzv1X
-         8SdJFE3YIdaiSKYPmwIebQXeScWIXk85RRNjRE8+E2KWay+2aNWspxRlIMFtYHtzCgbd
-         KzOSt3QM4FrQl8N3AbsKTSTiCxuHrcNKKi/d8tYnqwa5tOS5I25Y5t0doZWEiIwpZgbV
-         +yrSP3/TPRysWCEXQvQTWPwrrWM1pnFXgo6W+DAdds4Ig6PnfZx5o5n4RV7QcYzx5AvO
-         5mz+LuDyQEKbLKgEfat5YOf5St5SA2tuCH0ygl9c6unvb5LoGCOTXHHjeJFz0I/g6CNw
-         m49A==
-X-Gm-Message-State: AGi0PuZ07W3+6mei2wM6ILsBOcUV9owcahizx0OT6bDC79h1b35Czfv2
-        BEk1oSO06LIXRod73L6atQrIGzZq
-X-Google-Smtp-Source: APiQypKbEXF0/MPHXCyXmrFS0UvNJxZgw+x9UT0Pv1dZWn7VGPCfOJZMhJH//mO4lcNdeMODvcw1bQ==
-X-Received: by 2002:a2e:8056:: with SMTP id p22mr10800739ljg.266.1587880278443;
-        Sat, 25 Apr 2020 22:51:18 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id i20sm8771214lfe.15.2020.04.25.22.51.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 25 Apr 2020 22:51:17 -0700 (PDT)
-Subject: Re: [RFC PATCH v10 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, frankc@nvidia.com, sakari.ailus@iki.fi,
-        helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1587700513-28449-1-git-send-email-skomatineni@nvidia.com>
- <1587700513-28449-7-git-send-email-skomatineni@nvidia.com>
- <6ca93ff9-ca59-544f-767c-4355d01a5c20@gmail.com>
- <62546d1f-eca5-06be-2bc2-e45ccd53830a@xs4all.nl>
- <50fd1016-ca8b-ec5d-e5a8-f257138b152e@gmail.com>
- <658c4232-94d9-3051-8c93-bff7046cf5f2@nvidia.com>
- <03426915-25ea-69b4-bc64-f87f3046d33f@nvidia.com>
- <aabaecc4-3494-0137-7d2b-853304bfa68b@gmail.com>
- <09f20441-fec6-7496-2edc-c69db535e441@nvidia.com>
- <61799fab-858c-8b0d-ba7d-846cd041e044@gmail.com>
- <7dfca778-e402-3a6f-617c-dd8448187a13@gmail.com>
- <be48a991-3047-6ee3-8d6f-85979752d86f@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <edad2953-ff4c-7c3c-4550-a3638a714c65@gmail.com>
-Date:   Sun, 26 Apr 2020 08:51:16 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 26 Apr 2020 01:54:22 -0400
+Received: from mga05.intel.com ([192.55.52.43]:34948 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725468AbgDZFyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 01:54:21 -0400
+IronPort-SDR: mhbP6M0vOROTf19G/v4XotjAsT4ouLrU2kIiSnOHMqit70Y+/7WaUpLvABrkzh/MUw5yK8jjAK
+ 2dcdVo/YkC0w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2020 22:54:21 -0700
+IronPort-SDR: /cZ3umTa8B8PLh9tjA9EP3+bxl80qczghY2Si7yQnbojuyuxqol2zAYPUansPdHYwpezKRfg9s
+ EcpTlSW8XTMQ==
+X-IronPort-AV: E=Sophos;i="5.73,319,1583222400"; 
+   d="scan'208";a="281313737"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2020 22:54:20 -0700
+From:   ira.weiny@intel.com
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org
+Subject: [PATCH 0/5] Remove duplicated kmap code
+Date:   Sat, 25 Apr 2020 22:54:01 -0700
+Message-Id: <20200426055406.134198-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <be48a991-3047-6ee3-8d6f-85979752d86f@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-26.04.2020 07:47, Sowjanya Komatineni пишет:
-> 
-> So, probably what we have regarding structure is ok except video formats
-> I will move to Tegra210 and change defines to use Tegra210 prefix.
+From: Ira Weiny <ira.weiny@intel.com>
 
-If those defines aren't reusable by T186, then you could move them all
-to t210.c.
+The kmap infrastructure has been copied almost verbatim to every architecture.
+This series consolidates obvious duplicated code.  (k[un]map_atmoic has some
+additional duplication between some of the architectures but the differences
+were such to not warrant further changes.)
+
+0day built successfully to cover all the architectures I can't readily build.
+
+Ira Weiny (5):
+  arch/kmap: Remove BUG_ON()
+  arch/kmap: Remove redundant arch specific kmaps
+  arch/kunmap: Remove duplicate kunmap implementations
+  arch/kmap_atomic: Consolidate duplicate code
+  arch/kunmap_atomic: Consolidate duplicate code
+
+ arch/arc/include/asm/highmem.h        | 11 -------
+ arch/arc/mm/highmem.c                 | 20 ++-----------
+ arch/arm/include/asm/highmem.h        |  3 --
+ arch/arm/mm/highmem.c                 | 28 ++----------------
+ arch/csky/include/asm/highmem.h       |  3 +-
+ arch/csky/mm/highmem.c                | 28 ++++--------------
+ arch/microblaze/include/asm/highmem.h | 17 -----------
+ arch/microblaze/mm/highmem.c          | 10 ++-----
+ arch/mips/include/asm/highmem.h       |  3 +-
+ arch/mips/mm/highmem.c                | 25 +++-------------
+ arch/nds32/include/asm/highmem.h      |  3 --
+ arch/nds32/mm/highmem.c               | 31 ++------------------
+ arch/parisc/include/asm/cacheflush.h  |  2 --
+ arch/powerpc/include/asm/highmem.h    | 17 -----------
+ arch/powerpc/mm/highmem.c             |  9 ++----
+ arch/sparc/include/asm/highmem.h      | 17 -----------
+ arch/sparc/mm/highmem.c               |  9 ++----
+ arch/x86/include/asm/highmem.h        |  4 ---
+ arch/x86/mm/highmem_32.c              | 30 ++------------------
+ arch/xtensa/include/asm/highmem.h     | 14 +--------
+ arch/xtensa/mm/highmem.c              | 10 ++-----
+ include/linux/highmem.h               | 41 +++++++++++++++++++++++++--
+ 22 files changed, 75 insertions(+), 260 deletions(-)
+
+-- 
+2.25.1
+
