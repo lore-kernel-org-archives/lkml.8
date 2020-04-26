@@ -2,188 +2,235 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D4EC55194
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 14:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A73BC54FCB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 14:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9F32206DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 14:45:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=displaylink.com header.i=@displaylink.com header.b="atP5rfBL"
+	by mail.kernel.org (Postfix) with ESMTP id 3911F206DD
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 14:55:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726165AbgDZOpj (ORCPT
+        id S1726156AbgDZOzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 10:45:39 -0400
-Received: from eu-smtp-delivery-167.mimecast.com ([207.82.80.167]:29566 "EHLO
-        eu-smtp-delivery-167.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726140AbgDZOpj (ORCPT
+        Sun, 26 Apr 2020 10:55:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40934 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbgDZOzr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 10:45:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=displaylink.com;
-        s=mimecast20151025; t=1587912337;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+MqrV7PzcGM+Tx8r0dwdcXCPpTW8yidqSPETSRomd5w=;
-        b=atP5rfBLlF3vvtQRTx5vwThnaLkFMCiYd+xe3XcdoZGdYdGCgKxlvJUbrW7HrwVVeh1tiE
-        2rJg6EL+GECF/4jXgVIs/wg3f6qpKuZOxGINA+flrM+9R6CBqpf+qs9z0ouLRN+1jWnODj
-        xFdPDVvBg/ub4bZu6JALjV1Z4rlNsS0=
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com
- (mail-vi1eur05lp2169.outbound.protection.outlook.com [104.47.17.169])
- (Using TLS) by relay.mimecast.com with ESMTP id
- uk-mta-144-VGW5YQGFM9aJprls0MNvFA-1; Sun, 26 Apr 2020 15:45:35 +0100
-X-MC-Unique: VGW5YQGFM9aJprls0MNvFA-1
-Received: from VI1PR1001MB1056.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:800:64::13) by VI1PR1001MB1438.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:800:de::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Sun, 26 Apr
- 2020 14:45:32 +0000
-Received: from VI1PR1001MB1056.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::8cba:c335:a57e:9dfd]) by VI1PR1001MB1056.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::8cba:c335:a57e:9dfd%5]) with mapi id 15.20.2937.023; Sun, 26 Apr 2020
- 14:45:32 +0000
-Subject: Re: [External] Re: [PATCH v5 5/8] usb: mausb_host: Introduce PAL
- processing
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, mausb-host-devel@displaylink.com
-References: <Pine.LNX.4.44L0.2004261025550.15458-100000@netrider.rowland.org>
-From:   Vladimir Stankovic <vladimir.stankovic@displaylink.com>
-Message-ID: <871dcf46-19f8-f152-99c0-8185832ed109@displaylink.com>
-Date:   Sun, 26 Apr 2020 16:45:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-In-Reply-To: <Pine.LNX.4.44L0.2004261025550.15458-100000@netrider.rowland.org>
-Content-Language: en-US
-X-ClientProxiedBy: LO2P265CA0324.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a4::24) To VI1PR1001MB1056.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:800:64::13)
+        Sun, 26 Apr 2020 10:55:47 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CE7DC061A0F
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 07:55:47 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jSigo-0004b4-Ao; Sun, 26 Apr 2020 16:55:26 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 633A2100605; Sun, 26 Apr 2020 16:55:25 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Fenghua Yu <fenghua.yu@intel.com>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Jacob Jun Pan <jacob.jun.pan@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
+        iommu@lists.linux-foundation.org, Fenghua Yu <fenghua.yu@intel.com>
+Subject: Re: [PATCH 5/7] x86/mmu: Allocate/free PASID
+In-Reply-To: <1585596788-193989-6-git-send-email-fenghua.yu@intel.com>
+References: <1585596788-193989-1-git-send-email-fenghua.yu@intel.com> <1585596788-193989-6-git-send-email-fenghua.yu@intel.com>
+Date:   Sun, 26 Apr 2020 16:55:25 +0200
+Message-ID: <87pnbus3du.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.0.17] (94.189.199.177) by LO2P265CA0324.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:a4::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Sun, 26 Apr 2020 14:45:31 +0000
-X-Originating-IP: [94.189.199.177]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 907d431f-0edc-4c98-0535-08d7e9f078a0
-X-MS-TrafficTypeDiagnostic: VI1PR1001MB1438:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR1001MB14388E3210BB3A31D7EB153091AE0@VI1PR1001MB1438.EURPRD10.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 03853D523D
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR1001MB1056.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39830400003)(136003)(396003)(376002)(346002)(31686004)(8676002)(478600001)(81156014)(44832011)(2906002)(52116002)(8936002)(6486002)(316002)(4326008)(31696002)(956004)(2616005)(186003)(16526019)(86362001)(26005)(107886003)(66476007)(66946007)(66556008)(36756003)(16576012)(6916009)(5660300002);DIR:OUT;SFP:1101;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: NwOOE+bKjDFwFWay3COg3uT+NVTfrk3q4ZwLBhMUyyqG8IWNDSOJO6qjiOBtfTlmLUoGutDJoOQU88KM+FoCTMXH9Rnr59exFwWbqMWP6pa0xCApf0rhKWtHPQQH1XRmzk+/DdAK/DGIPvH09al65FTUyj9NHBo7nI9ziy02pTn3txgqrh1Kr+PeYruvFV7qwMO/oXakNNZZhQofzg9MbEuayC9Q7ZB2kFn181WUPm3PEiYyPgXTR529PuTzuAOIcLimhJdymLrbGDbFWnSx7Ba0zVpNDE/mZqWlClnZrrC9ABxs7v384h2NME2MMOVyoQbMYL8cm0P5Ci9sHSiogg5hG5xoIh9rv/9qIDwsSY0+hFFbmLGob2B80mEKgNUUCn8VGvZ5zN/wlZxUW+9Nuu1CqGQKPTlCMLa1s4xwouTEmZb7Fp0ZlLAfTzoGZCNX
-X-MS-Exchange-AntiSpam-MessageData: jpdJ6GFQPBJHKGdA8oI6NJ92eKcqOIIjilZr8XBkvS/R5rM4YBMMBN53vA8R1ScUb/huSUQ2Ji9bs9po2g07E8ZcIe7Ms747GbRsm2nsnDSRQBp7GpJH+MTBo7TskdoZvPPLZARvYFEkC1GFvWbMbl/0uzJKkOgJUczB6G/3WOgMolcw7JtLADOhGDjMXy8h+RFd/RnJ30bj0vA0paKaCu0QY7AIsXfMmwtsj30OAIjwQRT4XyHUGFdf/Lw7MkzGe/ZnSSGjqltfUQJK/uCFTYm+v8XZq+jrZyATH7kcFDQg09S1upMva0gCsCOdPml2s+ysVkQSi16XiInKXiIrAiBjMu2kCFIF3/QcCDfPhINTmhRedXMVmNMarkazg+YXPef8yI6IHX9FIX784OJ4btML0YsPvWxn7dneLKD8roBEq5rnUGSqcqWMNY1km5W6T29P3VDcMe8YMu3Eojc18/Gp6lDOzBVT4bp7CT52bJDVLMlTtuWEgXVb1gNt51CV/fRg98k4SvSHWQ8DNGVp6/+8Si/TJwNwFpNKjNk/6HqQxl8r4ZHge535/jlrZmCM01pwdhbceN8DEk6wPCNS4A5UGOGktgMvFk7HR96rQM526NozS+ZUshrvEZpz+ylnKggh4aLGwtE1x8VWeR3b1Byzm1iXrQzbjvntGIO+vp2qpkMMre2is3d9mR++ZLPeGxlxFZGFBN5F468LUWaJ7jk1hv5cEW+KNoGejT5XMCI1J8MECMSvR9hfgYVIaUv2as/R7C4jiFjVqJGnlGYZrxXfr4sIhYsfpqyWrU5RShI=
-X-OriginatorOrg: displaylink.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 907d431f-0edc-4c98-0535-08d7e9f078a0
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Apr 2020 14:45:32.2819
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a4bda75a-b444-4312-9c90-44a7c4b2c91a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dZndGvEIfEDDzfbU14aVUg7Z4Q/7OC/otbmsEOmmmpFAQAvhdWi4pTF5N6bqfaOQ1BoOLrwCQJp4sx3BURs1TClIgNx1GJh1lqrCV/j2r0fx3CikiCSuaHUNuirGL7yw
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR1001MB1438
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: displaylink.com
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.4.20. 16:31, Alan Stern wrote:
-> On Sun, 26 Apr 2020, Vladimir Stankovic wrote:
->=20
->> On 26.4.20. 02:32, Alan Stern wrote:
->>> On Sat, 25 Apr 2020 vladimir.stankovic@displaylink.com wrote:
->>>
->>>> Protocol adaptation layer (PAL) implementation has been added to
->>>> introduce MA-USB structures and logic.
->>>>
->>>> Signed-off-by: Vladimir Stankovic <vladimir.stankovic@displaylink.com>
->>>
->>> ...
->>>
->>>> +=09/*
->>>> +=09 * Masking URB_SHORT_NOT_OK flag as SCSI driver is adding it where=
- it
->>>> +=09 * should not, so it is breaking the USB drive on the linux
->>>> +=09 */
->>>> +=09urb->transfer_flags &=3D ~URB_SHORT_NOT_OK;
->>>
->>> Removing the SHORT_NOT_OK flag is _not_ a valid thing to do.  It will=
-=20
->>> cause drivers to malfunction.
->>>
->>> Can you please explain this comment?
->>>
->>> =09What SCSI driver?
->>>
->>> =09When is the flag being added?
->>>
->>> =09How does it break USB drives?
->>>
->>> =09Why haven't you already reported this problem to the=20
->>> =09appropriate maintainers?
->>>
->>> Alan Stern
->>>
->>
->> Hi,
->>
->> Issue that removal of SHORT_NOT_OK flag addressed is linked to particula=
-r
->> set of Kingston USB 3.0 flash drives (super speed) - other USB flash dri=
-ves
->> haven't had this flag set. Without this "fix", those Kingston flash driv=
-es
->> are not being enumerated properly.
->=20
-> Please explain in detail how the enumeration of these Kingston flash
-> drives fails.  Or if such an explanation has already been posted,
-> please provide a link to it.
+Fenghua Yu <fenghua.yu@intel.com> writes:
 
-Will reproduce the issue once again (w/o the fix) and run through the event=
-s.
-Issue has been noticed during early development, and addressed right away.
->=20
->> This particular line was added in the early stage of development, during
->> enumeration process implementation. The reason why it remained in the co=
-de
->> since is because we haven't noticed any side-effects, even with various
->> USB devices being attached to remote MA-USB device, including flash driv=
-es,
->> cameras, wireless mice, etc.
->=20
-> Come to think of it, the SHORT_NOT_OK flag is mainly used with HCDs
-> that don't have scatter-gather support.  Since your mausb driver does
-> support scatter-gather, you most likely won't encounter any problems=20
-> unless you go looking for them specifically.
->=20
->> The problem has been reported, and is actively being investigated.
->=20
-> Where was the problem reported (URL to a mailing list archive)?  Who is
-> investigating it?
+> PASID is shared by all threads in a process. So the logical place to keep
+> track of it is in the "mm". Add the field to the architecture specific
+> mm_context_t structure.
+>
+> A PASID is allocated for an "mm" the first time any thread attaches
+> to an SVM capable device. Later device atatches (whether to the same
 
-Ticket has been submitted to DisplayLink's internal issue-tracking system
-and is being investigated by mausb-host-devel team.
->=20
->> As soon as it gets addressed properly (w/o global negation of the flag),
->> a new patch will be pushed.
->=20
-> Thank you.
->=20
-> Alan Stern
->=20
+atatches?
 
+> device or another SVM device) will re-use the same PASID.
+>
+> The PASID is freed when the process exits (so no need to keep
+> reference counts on how many SVM devices are sharing the PASID).
 
---=20
-Regards,
-Vladimir.
+I'm not buying that. If there is an outstanding request with the PASID
+of a process then tearing down the process address space and freeing the
+PASID (which might be reused) is fundamentally broken.
 
+> +void __free_pasid(struct mm_struct *mm);
+> +
+>  #endif /* _ASM_X86_IOMMU_H */
+> diff --git a/arch/x86/include/asm/mmu.h b/arch/x86/include/asm/mmu.h
+> index bdeae9291e5c..137bf51f19e6 100644
+> --- a/arch/x86/include/asm/mmu.h
+> +++ b/arch/x86/include/asm/mmu.h
+> @@ -50,6 +50,10 @@ typedef struct {
+>  	u16 pkey_allocation_map;
+>  	s16 execute_only_pkey;
+>  #endif
+> +
+> +#ifdef CONFIG_INTEL_IOMMU_SVM
+> +	int pasid;
+
+int? It's a value which gets programmed into the MSR along with the
+valid bit (bit 31) set. 
+
+>  extern void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+> index d7f2a5358900..da718a49e91e 100644
+> --- a/drivers/iommu/intel-svm.c
+> +++ b/drivers/iommu/intel-svm.c
+> @@ -226,6 +226,45 @@ static LIST_HEAD(global_svm_list);
+>  	list_for_each_entry((sdev), &(svm)->devs, list)	\
+>  		if ((d) != (sdev)->dev) {} else
+>  
+> +/*
+> + * If this mm already has a PASID we can use it. Otherwise allocate a new one.
+> + * Let the caller know if we did an allocation via 'new_pasid'.
+> + */
+> +static int alloc_pasid(struct intel_svm *svm, struct mm_struct *mm,
+> +		       int pasid_max,  bool *new_pasid, int flags)
+
+Again, data types please. flags are generally unsigned and not plain
+int. Also pasid_max is certainly not plain int either.
+
+> +{
+> +	int pasid;
+> +
+> +	/*
+> +	 * Reuse the PASID if the mm already has a PASID and not a private
+> +	 * PASID is requested.
+> +	 */
+> +	if (mm && mm->context.pasid && !(flags & SVM_FLAG_PRIVATE_PASID)) {
+> +		/*
+> +		 * Once a PASID is allocated for this mm, the PASID
+> +		 * stays with the mm until the mm is dropped. Reuse
+> +		 * the PASID which has been already allocated for the
+> +		 * mm instead of allocating a new one.
+> +		 */
+> +		ioasid_set_data(mm->context.pasid, svm);
+
+So if the PASID is reused several times for different SVMs then every
+time ioasid_data->private is set to a different SVM. How is that
+supposed to work?
+
+> +		*new_pasid = false;
+> +
+> +		return mm->context.pasid;
+> +	}
+> +
+> +	/*
+> +	 * Allocate a new pasid. Do not use PASID 0, reserved for RID to
+> +	 * PASID.
+> +	 */
+> +	pasid = ioasid_alloc(NULL, PASID_MIN, pasid_max - 1, svm);
+
+ioasid_alloc() uses ioasid_t which is
+
+typedef unsigned int ioasid_t;
+
+Can we please have consistent types and behaviour all over the place?
+
+> +	if (pasid == INVALID_IOASID)
+> +		return -ENOSPC;
+> +
+> +	*new_pasid = true;
+> +
+> +	return pasid;
+> +}
+> +
+>  int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_ops *ops)
+>  {
+>  	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
+> @@ -324,6 +363,8 @@ int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_
+>  	init_rcu_head(&sdev->rcu);
+>  
+>  	if (!svm) {
+> +		bool new_pasid;
+> +
+>  		svm = kzalloc(sizeof(*svm), GFP_KERNEL);
+>  		if (!svm) {
+>  			ret = -ENOMEM;
+> @@ -335,15 +376,13 @@ int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_
+>  		if (pasid_max > intel_pasid_max_id)
+>  			pasid_max = intel_pasid_max_id;
+>  
+> -		/* Do not use PASID 0, reserved for RID to PASID */
+> -		svm->pasid = ioasid_alloc(NULL, PASID_MIN,
+> -					  pasid_max - 1, svm);
+> -		if (svm->pasid == INVALID_IOASID) {
+> +		svm->pasid = alloc_pasid(svm, mm, pasid_max, &new_pasid, flags);
+> +		if (svm->pasid < 0) {
+>  			kfree(svm);
+>  			kfree(sdev);
+> -			ret = -ENOSPC;
+
+ret gets magically initialized to an error return value, right?
+
+>  			goto out;
+>  		}
+> +
+>  		svm->notifier.ops = &intel_mmuops;
+>  		svm->mm = mm;
+>  		svm->flags = flags;
+> @@ -353,7 +392,8 @@ int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_
+>  		if (mm) {
+>  			ret = mmu_notifier_register(&svm->notifier, mm);
+>  			if (ret) {
+> -				ioasid_free(svm->pasid);
+> +				if (new_pasid)
+> +					ioasid_free(svm->pasid);
+>  				kfree(svm);
+>  				kfree(sdev);
+>  				goto out;
+> @@ -371,12 +411,21 @@ int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_
+>  		if (ret) {
+>  			if (mm)
+>  				mmu_notifier_unregister(&svm->notifier, mm);
+> -			ioasid_free(svm->pasid);
+> +			if (new_pasid)
+> +				ioasid_free(svm->pasid);
+>  			kfree(svm);
+>  			kfree(sdev);
+
+So there are 3 places now freeing svm ad sdev and 2 of them
+conditionally free svm->pasid. Can you please rewrite that to have a
+proper error exit path instead of glueing that stuff into the existing
+mess?
+
+>  			goto out;
+>  		}
+>  
+> +		if (mm && new_pasid && !(flags & SVM_FLAG_PRIVATE_PASID)) {
+> +			/*
+> +			 * Track the new pasid in the mm. The pasid will be
+> +			 * freed at process exit. Don't track requested
+> +			 * private PASID in the mm.
+
+What happens to private PASIDs?
+
+Thanks,
+
+        tglx
