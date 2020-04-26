@@ -2,116 +2,96 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0CBC54FCB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 741D7C54FCB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 670582064C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:08:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AE4B20706
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 16:11:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZGfYaozg"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="WayrEexr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726185AbgDZQIl (ORCPT
+        id S1726191AbgDZQLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 12:08:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52228 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725778AbgDZQIk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 12:08:40 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D3E1C061A0F;
-        Sun, 26 Apr 2020 09:08:39 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id b2so14936542ljp.4;
-        Sun, 26 Apr 2020 09:08:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=b9kk4vl45+yZfIOFMLozV6PyfATmkyRQJ6xZ8G56ZKQ=;
-        b=ZGfYaozgkdnfK55JvLARbIVWkAHmE+BnX1DiWw7pO/OUdvPkivcUUXX34rml3PDerf
-         COC4ZHbfmlXquZla3mRNiKsRj0Gbq4XL9RgJyikfhdd9LUJx9WVhLnLjU+U7vM2QpUJr
-         4BMSDqO/el4LTSF+8W7wWlm5wlCjfet1sMvt+wZ1HvCNWA8e6LE0tUVC2yOLYMHh5tpj
-         6Z6q/rP6YjYCz79/6pEtklfRKQaybAEbkgEklM7i1XoRexDF+Pa5zRecyM87wKhc4q+V
-         o+ei78RZqBcpYahe/rxjlpyFgUgBrKq0uZmEHwj+Aj/4zUGWeUgS5StjtMGq44rHYEeB
-         Tn/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=b9kk4vl45+yZfIOFMLozV6PyfATmkyRQJ6xZ8G56ZKQ=;
-        b=KIjYyFuMrvPvz7GOvQybUPwNdGSr/zuZi0/bvwLDTXzJ670urICOkngBE9zBAvEySu
-         tcwf57vPfhAIARosIJz7rSELKdNoWmet0QnLPgEBi4tifxTGP40r8BGDrBh/XTNAIG1z
-         WKbJ/44jX5VwRpz7LvRlZgngsqx8R+kkcDS1py3KZcKM7Og1BJotMULr3Bl0DBvzMeFl
-         HiuWRupNzOLF8LnwR7z5wvrHjT/QjaPEkMai2UAxGzcbX+ut6OVv4dROiQBK+hbq3bNl
-         AgfCUwJtHfyOYuFC4GQfUsdCss5M6BeUWKkPI86nlJ7L1eZcWHt8WfQrXxbFSi8Q4iPR
-         +jhg==
-X-Gm-Message-State: AGi0PuZcj6Mq1Yj6p/BNOzybpr7uC/fn33RRPpIQ/bKfX2+H7tSH0XJZ
-        2xWI35IC3ykiShbSprfqulx2NaC0dELgArPnmWc=
-X-Google-Smtp-Source: APiQypKqBU3rGhiEO1mO9gk9syX6teWk3R7poC2ly0NQL2QkCZd3eU185uQRC4yn6mfzJkbQZW5KzYDcy7klPauIAXc=
-X-Received: by 2002:a2e:b80b:: with SMTP id u11mr11911427ljo.212.1587917317736;
- Sun, 26 Apr 2020 09:08:37 -0700 (PDT)
+        Sun, 26 Apr 2020 12:11:13 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:17927 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725778AbgDZQLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 12:11:13 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 499CZN6VgbzDY;
+        Sun, 26 Apr 2020 18:11:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1587917471; bh=lW+UudkTFUycbxUnIAx69LGP6rnC1AOjQDgAtlPusuo=;
+        h=Date:From:Subject:To:Cc:From;
+        b=WayrEexrtR0uCH3knxVoYQs2BV87/3dN/AdkV7TKMF/SU2gJyFdcHLJkmY8F4CypG
+         ZI+PwH/jywZtHpiVXB7ejYj6lxScL1GaGuFHu8EQn3654eYODsmlJKKsD1Uxgk0utH
+         tqA1AVJfENAmAqcgxccTLJHBS8Ia6BPn5HPBMbppKk571V3fd2DWLKO75FjRjMiUjr
+         9ox58wHrkwAmTMw17rNfqVQO9km4aFvggoOnDEiDmG9OM4ZvLodHqIQsoc3W+HC5TR
+         auyUhlpV4jEJMRHdxkIBlNGIi9/PNRajf1Z/AUrZaI5PIdq7aeEEn2hMWZ80g3W282
+         v+I/n/fmdsodQ==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Sun, 26 Apr 2020 18:11:07 +0200
+Message-Id: <cover.1587916846.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH v4 00/10] input: elants: Support Asus TF300T touchscreen
 MIME-Version: 1.0
-References: <20200420184750.218489-1-zenczykowski@gmail.com>
-In-Reply-To: <20200420184750.218489-1-zenczykowski@gmail.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Sun, 26 Apr 2020 09:08:26 -0700
-Message-ID: <CAADnVQ+oVnmpMbmt482pUs+Nb8tny3_WGPbqTtWvVpCJZsbEKQ@mail.gmail.com>
-Subject: Re: [PATCH] net: bpf: make bpf_ktime_get_ns() available to non GPL programs
-To:     =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <zenczykowski@gmail.com>
-Cc:     =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <maze@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Linux Network Development Mailing List 
-        <netdev@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     David Heidelberg <david@ixit.cz>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Rob Herring <robh+dt@kernel.org>,
+        Scott Liu <scott.liu@emc.com.tw>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 11:47 AM Maciej =C5=BBenczykowski
-<zenczykowski@gmail.com> wrote:
->
-> From: Maciej =C5=BBenczykowski <maze@google.com>
->
-> The entire implementation is in kernel/bpf/helpers.c:
->
-> BPF_CALL_0(bpf_ktime_get_ns) {
->        /* NMI safe access to clock monotonic */
->        return ktime_get_mono_fast_ns();
-> }
->
-> const struct bpf_func_proto bpf_ktime_get_ns_proto =3D {
->        .func           =3D bpf_ktime_get_ns,
->        .gpl_only       =3D false,
->        .ret_type       =3D RET_INTEGER,
-> };
->
-> and this was presumably marked GPL due to kernel/time/timekeeping.c:
->   EXPORT_SYMBOL_GPL(ktime_get_mono_fast_ns);
->
-> and while that may make sense for kernel modules (although even that
-> is doubtful), there is currently AFAICT no other source of time
-> available to ebpf.
->
-> Furthermore this is really just equivalent to clock_gettime(CLOCK_MONOTON=
-IC)
-> which is exposed to userspace (via vdso even to make it performant)...
->
-> As such, I see no reason to keep the GPL restriction.
-> (In the future I'd like to have access to time from Apache licensed ebpf =
-code)
->
-> Signed-off-by: Maciej =C5=BBenczykowski <maze@google.com>
+This series cleans up the driver a bit and implements changes needed to
+support EKTF3624-based touchscreen used in Asus TF300T and similar
+Tegra3-based tablets.
 
-The issue of compatibility with apache licensed bpf progs was
-brought up few times in the past.
-The patch indeed will clear this hurdle.
-Applied.
+---
+v2: extended with Dmitry's patches (replaced v1 patches 3 and 4)
+v3: rebased for v5.7-rc1
+v4: rebased onto v5.7-rc2+ (current Linus' master)
+    update "remove unused axes" and "refactor
+      elants_i2c_execute_command()" patches after review
+    add David's patch converting DT binding to YAML
+---
+
+David Heidelberg (1):
+  dt-bindings: input: touchscreen: elants_i2c: convert to YAML
+
+Dmitry Osipenko (3):
+  input: elants: support 0x66 reply opcode for reporting touches
+  dt-bindings: input: elants-i2c: Document common touchscreen properties
+  dt-bindings: input: elants-i2c: Document eKTF3624
+
+Michał Mirosław (6):
+  input: elants: document some registers and values
+  input: elants: support old touch report format
+  input: elants: remove unused axes
+  input: elants: override touchscreen info with DT properties
+  input: elants: refactor elants_i2c_execute_command()
+  input: elants: read touchscreen size for EKTF3624
+
+ .../devicetree/bindings/input/elants_i2c.txt  |  34 --
+ .../input/touchscreen/elan,elants_i2c.yaml    |  69 ++++
+ drivers/input/touchscreen/elants_i2c.c        | 380 +++++++++++-------
+ 3 files changed, 314 insertions(+), 169 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/input/elants_i2c.txt
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/elan,elants_i2c.yaml
+
+-- 
+2.20.1
+
