@@ -2,145 +2,120 @@ Return-Path: <SRS0=PEot=6K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3818BC54FCB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 21:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4365C55194
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 21:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F6A12071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 21:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A31C32071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Apr 2020 21:53:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="VAfCURwT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gz4u1B/S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbgDZVud (ORCPT
+        id S1726369AbgDZVxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 17:50:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48548 "EHLO
+        Sun, 26 Apr 2020 17:53:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbgDZVtu (ORCPT
+        with ESMTP id S1726184AbgDZVxq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 17:49:50 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5A4EC061A10
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 14:49:48 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id p16so11993836edm.10
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 14:49:48 -0700 (PDT)
+        Sun, 26 Apr 2020 17:53:46 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 402E5C061A0F;
+        Sun, 26 Apr 2020 14:53:46 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id s10so6214716plr.1;
+        Sun, 26 Apr 2020 14:53:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=aGrqSyBlWee4qlVzfbrxmXDEIitY77BfW8OPiMV+fGw=;
-        b=VAfCURwTPIE4rJfC8KB4FYWrz+JTx0GQK6awVyjDZRrnwDaaVDjgUgtGtQZznZmmxi
-         wFl7jNmlcKuqIyO8p7/DqWXiTjP4SvaWAQzjxmulMXt8Ts4RDHfUM3ELErJt0x5C73AC
-         zJywnyx9Cz5oWsMeQfO4c5ejUQ+vDm3Amp7tf72mheUEv9saFlblV0qG8GxVzGe8BxvY
-         XbgofnU5SgEU582wK1e9C5GxLR0JqVzv67TRQVvRHms797+XWJFR5orBv3ADbbrwceBM
-         E7ucIimM6ELJKj4Xxei35ZC9m3xzeGhs+QRaifvldaOwSBMIrEuwBPzLsQUyxEp4i+95
-         N6LA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=H5D1PG6e/lMszq0Rf949EFEkle4oIskhG7vE9vM9dC4=;
+        b=gz4u1B/Skr8dsJGByTK2XWhiRHHeIiJZhyUTcQxEMw5oTN+clJwfvrhHWwRaMgDPks
+         SMs+QJlwZcv4XoMltJQ/o7qXuTkMuSfpQdq4HxDJBXB1/Brawn81miRiltA44CJozitD
+         4/CP/nB3W0TUJfCo2rr6dGLiBAvgxJgcgpsFtrfASPAlOec4eLvqfib9DRtnJAFMUmDU
+         JIsUDSHkLXGpVaSiKplTehHcZ+1gNn/HtN1XqWTqzQ53K/4TPUCPgx3OR0moFSueWT16
+         epWZKE9C2Q3NooFtA+t+7twpfMYGy3NXlHU/op6j2ucEvcAcjn00qPEOyYTlMZ0JwEwZ
+         +oEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=aGrqSyBlWee4qlVzfbrxmXDEIitY77BfW8OPiMV+fGw=;
-        b=HOOQRG74WRPQ7aQ0jb2MVK369ydiX2/p8IFT1BWMY/spKQObfRm8fL07uTAtnzab6e
-         3NeTbmzTQGl5nODQlU3vumUdBVmVG7U96ADzq5qxwWXr3W1iJOFzxF3ZOYTXt6HdbRxz
-         td0fHe7WCGfdIyrQUMQH6BSZWxtaL9EGTKuwiQve9/NsgVpxQz2eAPeQbsq5RAPspcpu
-         B/AQ0sRHBxgo9faHtNr1fJvemyn7kvyWyFUYTz1XH4chrFXqhvT/E2PMPtliLyh6dOdQ
-         4h7LHiAvrcZOzcWl9qdQbT3zh6wSj7KyzXlWA4U1N/nMhT1Z3H1BXgQwQXLd3Su9j3YB
-         Q0hw==
-X-Gm-Message-State: AGi0PuYarReI7lRIHR+kf9zPUm/gq7hWox0ObUsVd3gcWz3pcRoXmvVd
-        vP3ZAvDZLIgARZF3gYf5tr5jlA==
-X-Google-Smtp-Source: APiQypL9pOXchtRNeUI9SqBMUqUJAL/dQ0McZChbYcK3Npoe5VpBYEa/V2WAwgwMmnQc4QcKjJFF6w==
-X-Received: by 2002:a05:6402:356:: with SMTP id r22mr17183505edw.3.1587937787466;
-        Sun, 26 Apr 2020 14:49:47 -0700 (PDT)
-Received: from ls00508.pb.local ([2001:1438:4010:2540:fab1:56ff:feab:56b1])
-        by smtp.gmail.com with ESMTPSA id ce18sm2270108ejb.61.2020.04.26.14.49.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Apr 2020 14:49:46 -0700 (PDT)
-From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     hch@infradead.org, david@fromorbit.com, willy@infradead.org,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        William Kucharski <william.kucharski@oracle.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: [RFC PATCH 1/9] include/linux/pagemap.h: introduce set/clear_fs_page_private
-Date:   Sun, 26 Apr 2020 23:49:17 +0200
-Message-Id: <20200426214925.10970-2-guoqing.jiang@cloud.ionos.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200426214925.10970-1-guoqing.jiang@cloud.ionos.com>
-References: <20200426214925.10970-1-guoqing.jiang@cloud.ionos.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=H5D1PG6e/lMszq0Rf949EFEkle4oIskhG7vE9vM9dC4=;
+        b=I3lNpitHO6vpe0BYxvrQqKNvXjQQbDEkNtFH8sNLq1mxcJ+AIUDJkBI4KFkQxLWIAo
+         iklrekpb6q26WBlkiGh3T+HFfepa85nv7SOgjeW6qQuALVC75CKEr6vi4GJcrD7vgvg3
+         K2oTsWCiHAfO+pRBqKseRgy286SVeJWGwIs7pGKp5wWkLfu8hwjGamk8v8u6Ir3O9B7e
+         zGcMMggptAC7Y+46YVKqQvAvQNIVx98trWae9pyN/nhK1kvkA5RMgI5BvR7zdQHiC05Y
+         6PYbHyp4p6s/psvXaL5ljRWpyuFeks5gzWoqXewIFXdmtmVCcXMQg3u3JhaBHUdwDovd
+         63RA==
+X-Gm-Message-State: AGi0PuakV54nrAg1mNaUHuo3MsQKu5kHRhT0o6j9tDgTZja0geni1mnY
+        iJsXq7CxrgFQaLkoDbD3RA4=
+X-Google-Smtp-Source: APiQypLlLPgA6Ou9oUq3eMaI0CVQsG9UrGKGpXBdsliinmBgCNXAyiE4zSfQmRisUhR9LgkPSFMytg==
+X-Received: by 2002:a17:90a:6d03:: with SMTP id z3mr20045920pjj.32.1587938024753;
+        Sun, 26 Apr 2020 14:53:44 -0700 (PDT)
+Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id 67sm954454pfx.108.2020.04.26.14.53.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 26 Apr 2020 14:53:44 -0700 (PDT)
+Subject: Re: INFO: rcu detected stall in wg_packet_tx_worker
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     syzbot <syzbot+0251e883fe39e7a0cb0a@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        jhs@mojatatu.com,
+        =?UTF-8?B?SmnFmcOtIFDDrXJrbw==?= <jiri@resnulli.us>,
+        Krzysztof Kozlowski <krzk@kernel.org>, kuba@kernel.org,
+        kvalo@codeaurora.org, leon@kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, syzkaller-bugs@googlegroups.com,
+        Thomas Gleixner <tglx@linutronix.de>, vivien.didelot@gmail.com,
+        Cong Wang <xiyou.wangcong@gmail.com>
+References: <0000000000005fd19505a4355311@google.com>
+ <e40c443e-74aa-bad4-7be8-4cdddfdf3eaf@gmail.com>
+ <CAHmME9ov2ae08UTzwKL7enquChzDNxpg4c=ppnJqS2QF6ZAn_Q@mail.gmail.com>
+ <f2eb18ea-b32a-4b64-0417-9b5b2df98e33@gmail.com>
+ <29bd64f4-5fe0-605e-59cc-1afa199b1141@gmail.com>
+ <CAHmME9rR-_KvENZyBrRhYNWD+hVD-FraxPJiofsmuXBh651QXw@mail.gmail.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <85e76f66-f807-ad12-df9d-0805b68133fa@gmail.com>
+Date:   Sun, 26 Apr 2020 14:53:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <CAHmME9rR-_KvENZyBrRhYNWD+hVD-FraxPJiofsmuXBh651QXw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The logic in attach_page_buffers and  __clear_page_buffers are quite
-paired, but
 
-1. they are located in different files.
 
-2. attach_page_buffers is implemented in buffer_head.h, so it could be
-   used by other files. But __clear_page_buffers is static function in
-   buffer.c and other potential users can't call the function, md-bitmap
-   even copied the function.
+On 4/26/20 1:46 PM, Jason A. Donenfeld wrote:
 
-So, introduce the new set/clear_fs_page_private to replace them since
-they are mostly used in fs layer. With the new pair of function, we will
-remove the usage of attach_page_buffers and  __clear_page_buffers in
-next patches.
+> 
+> Ah, whew, okay. I had just begun instrumenting sfq (the highly
+> technical term for "adding printks everywhere") to figure out what's
+> going on. Looks like you've got a handle on it, so I'll let you have
+> at it.
 
-Suggested-by: Matthew Wilcox <willy@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc: William Kucharski <william.kucharski@oracle.com> 
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Andreas Gruenbacher <agruenba@redhat.com>
-Cc: Yang Shi <yang.shi@linux.alibaba.com>
-Cc: Yafang Shao <laoar.shao@gmail.com>
-Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
----
- include/linux/pagemap.h | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+Yes, syzbot manages to put a zero in q->scaled_quantum
 
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index a8f7bd8ea1c6..2a165ea647fe 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -205,6 +205,28 @@ static inline int page_cache_add_speculative(struct page *page, int count)
- 	return __page_cache_add_speculative(page, count);
- }
- 
-+static inline void *set_fs_page_private(struct page *page, void *data)
-+{
-+	get_page(page);
-+	set_page_private(page, (unsigned long)data);
-+	SetPagePrivate(page);
-+
-+	return data;
-+}
-+
-+static inline void *clear_fs_page_private(struct page *page)
-+{
-+	void *data = (void *)page_private(page);
-+
-+	if (!PagePrivate(page))
-+		return NULL;
-+	ClearPagePrivate(page);
-+	set_page_private(page, 0);
-+	put_page(page);
-+
-+	return data;
-+}
-+
- #ifdef CONFIG_NUMA
- extern struct page *__page_cache_alloc(gfp_t gfp);
- #else
--- 
-2.17.1
+I will send a fix.
 
+> 
+> On the brighter side, it seems like Dmitry's and my effort to get full
+> coverage of WireGuard has paid off in the sense that tons of packets
+> wind up being shoveled through it in one way or another, which is
+> good.
+> 
+
+Sure !
