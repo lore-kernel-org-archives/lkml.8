@@ -2,127 +2,117 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC13CC5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 624D0C55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C665220575
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 416C720656
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:19:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587986360;
+	bh=Yu0+6vmy1gZqJei6s8N1pKoxn3NJdnoVEX9RSHmQP4E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=h2X7c624yXzTbH9D7N44HEwwDfp8fO0o958k7RIe2fRbhnjTAg5+++1iIV/etUwDS
+	 Pow4RYrdWbdBgp8n/vAXmgmC4f3jeSql48HyixiUG49A2DgodFslSkTWRfrl6pZVMZ
+	 GD8cCJLkpMDr+VB5jokUdYF4bRmRkxUnWGnfXy14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbgD0LS6 (ORCPT
+        id S1727018AbgD0LTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 07:18:58 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42155 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726504AbgD0LS5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 07:18:57 -0400
-Received: by mail-ot1-f67.google.com with SMTP id m18so25419462otq.9;
-        Mon, 27 Apr 2020 04:18:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CXoIxJ0w84+gaX7lsp/3b8bY8viRFcnPlJWfzHbiZf8=;
-        b=mteN7XTr4EBwrrONWMEYcxD6AFays0+0pgkurGjIlgteLqhhLOTNLP6D2Su5PGIbcZ
-         +UNkqmQiEUPV0KbZ117LEMUf1cP25ORvMgtlnOvdzXRhKsyAaMuF6Nx2qF7Kz4XRH2jy
-         4vWV8F8bnH8bhRzUVfPSz24l72c/vng3qNA8eL4bTTnRmuAJ4/TTCF8PSm/urj727vb5
-         kmEk9wdiy+vOcdanyCO4hl7xcTvzIAGkjiSuSfYRvBwfdkxowgh5LDypVQB1d3T/m+M0
-         49+9vIIknViMRuwJWoPgHPN613DCQxo8i3DIbKTieiwmWFep1Iizipq1n6nINQe+aJf2
-         sE5w==
-X-Gm-Message-State: AGi0PuZI1H6LztnpE0zhoLuIexgK1uPRLMpO/pnv6E/p0cfraHwGQRdO
-        THsRpVEI54FLyjC9LA42oZmn5KFTaH7mEou812A=
-X-Google-Smtp-Source: APiQypL5O90eZiVP91Spazxw9kNLM/oUk/UxGHPayskHGw0X4cu3MGkQ9jx0LWUyAkboJxHXtR2bszWrIXRFKtjKifw=
-X-Received: by 2002:a9d:564:: with SMTP id 91mr17871599otw.250.1587986335286;
- Mon, 27 Apr 2020 04:18:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <1587678050-23468-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdXwsUAaeY+b6t-nqPE8kL-p+F4HqXE2mujP0eXPjrbooQ@mail.gmail.com> <CA+V-a8sH4sLN1XuRM+SgbbN5O38wrtMyk5QEXEPhV5tOkbchJw@mail.gmail.com>
-In-Reply-To: <CA+V-a8sH4sLN1XuRM+SgbbN5O38wrtMyk5QEXEPhV5tOkbchJw@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 27 Apr 2020 13:18:44 +0200
-Message-ID: <CAMuHMdXW1YQMUzzTGcyz2d=NxkcLtLasTqgZH0CRufQx=vfT0g@mail.gmail.com>
-Subject: Re: [PATCH 00/10] Add RZ/G1H support.
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Marian-Cristian Rotariu 
-        <marian-cristian.rotariu.rb@bp.renesas.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+        Mon, 27 Apr 2020 07:19:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35748 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726504AbgD0LTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 07:19:19 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25D57205C9;
+        Mon, 27 Apr 2020 11:19:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587986358;
+        bh=Yu0+6vmy1gZqJei6s8N1pKoxn3NJdnoVEX9RSHmQP4E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mLdUFEoQu+rt5NOviGBZcZJzCpczuW5FeibZRhKl1c2ZOvvlWtThRtr8WjvHotEag
+         UpuxbnPJ+Vjv+WGmHnfeg89n43x3G445Fwv+YakTlI9REOUiJNob+d9FVDswOIovB2
+         MnptV7VNmVWadrQ6qCPKiKvqaV1Rr7AUXmlv7KZc=
+Date:   Mon, 27 Apr 2020 12:19:16 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        YueHaibing <yuehaibing@huawei.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: Re: linux-next: build failure after merge of the sound-asoc tree
+Message-ID: <20200427111916.GA4272@sirena.org.uk>
+References: <20200423155539.4492a0cc@canb.auug.org.au>
+ <20200423113041.GI4808@sirena.org.uk>
+ <20200423230400.2cb1a285@canb.auug.org.au>
+ <20200423142114.GJ4808@sirena.org.uk>
+ <87a72zgn2m.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
+Content-Disposition: inline
+In-Reply-To: <87a72zgn2m.fsf@mpe.ellerman.id.au>
+X-Cookie: Secrecy is the beginning of tyranny.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
 
-On Mon, Apr 27, 2020 at 12:31 PM Lad, Prabhakar
-<prabhakar.csengg@gmail.com> wrote:
-> On Mon, Apr 27, 2020 at 10:28 AM Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
-> > On Thu, Apr 23, 2020 at 11:41 PM Lad Prabhakar
-> > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > > This patch series aims to add support for Renesas RZ/G1H (r8a7742) SoC.
-> > >
-> > > RZ/G1H SoC is similar to R-Car Gen2 H2 SoC.
-> > >
-> > > This patch set is based on renesas-drivers/master-v5.7-rc1.
-> >
-> > Thanks for your series!
-> >
-> > Looks mostly OK to me.
-> Thank you for the review. After fixing patch 8/10 shall I just post a
-> v2 with a single patch or the entire series ?
+--HcAYCG3uE/tztfnV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-A single v2 patch is fine.  The clock driver goes in through a different
-tree anyway/
+On Sun, Apr 26, 2020 at 09:30:57AM +1000, Michael Ellerman wrote:
+> Mark Brown <broonie@kernel.org> writes:
 
-> > The missing code part seems to be the introduction of the main
-> > CONFIG_ARCH_R8A7742 symbol?
-> >
-> I was planning to post them once these patches were reviewed, just
-> didn't wanted to flood with too many patches.
->
-> for enabling r8a7742 SoC in multi_v7_defconfig should this be only
-> sent out wen its accepted in shmobile_defconfig or can it be part of
-> same series as below ?
->
-> 05ba50a4cf99 ARM: multi_v7_defconfig: Enable r8a7742 SoC
-> 99b69d08729a ARM: shmobile: defconfig: Enable r8a7742 SoC
-> 6b7bcd6635c7 ARM: debug-ll: Add support for r8a7742
-> 1cf4e52e3a0e soc: renesas: Add Renesas R8A7742 config option
+> > I am doing that but that still doesn't mean that the architectures
+> > shouldn't be updated - to me this is like the architectures that don't
+> > implement standard APIs, we should fix the issues they bring up but it'd
+> > be a lot less noisy to sidestep the issue.
 
-It can be part of the same series.
+> I don't think it's really like architectures that don't implement
+> standard APIs.
 
-> > I assume you plan to submit the DTS for v5.8, too, so I'll have to be
-> > careful and apply the binding definitions to a separate shared branch?
-> >
-> Yes I do plan to submit the DTS changes for v5.8.
+> It's more like architectures not building code they don't need, AFAICS
+> none of the drivers under there can ever be used on powerpc.
 
-Thanks. Looking forward to it!
+That's generally the reason people give for not doing the standard APIs
+- there were a few architectures that didn't have DMA hardware so didn't
+even have stubs for the DMA API for example, until those were added you
+used to end up with build testing tripping over them constantly.  It's
+much rarer to have an incompatible implementation of the same thing.
 
-Gr{oetje,eeting}s,
+> Similarly we don't build drivers/acpi.
 
-                        Geert
+ACPI has stubs so doesn't cause issues here.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> But if there's a good reason that we should be building it then I'm
+> happy to take a patch adding it.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+The build coverage seems useful.
+
+--HcAYCG3uE/tztfnV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6mv7AACgkQJNaLcl1U
+h9C2uAf+Jws7pFf+23DtTiIuLnLp0xfnX1awFhQkI1eCP9tvACqRtjcDHFIMRPsL
+1jpb5QPnVkQz6WjKRz1QUV/PF9+svvzhPfrspY9EgOrar8ZPdAMFiFLZf2/685I/
+a0JHSUpOMTDEi134N9dst/B2q/t8flhRu+OXErxfvVisIaV5lC38Gr8TN627WgRp
+JALiCYQjcWSa14nCRO9nwxBL40zCEamOYGj9LV4SEVaP4zneTf83pYo2PZCdbZ7m
+YmOFaC9bMIcZMaKK8xz2N/EDWnvQtd7DSs2j63k/d7WPrA9ZtnTQ1pnnoszkV/ye
+BPA/o3glq9QOHgo5vMRPyKymT+r7nQ==
+=xYU4
+-----END PGP SIGNATURE-----
+
+--HcAYCG3uE/tztfnV--
