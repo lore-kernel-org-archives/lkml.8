@@ -2,320 +2,167 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC38C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76029C5519A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3616B2064C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54BD9206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:28:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="I6JmHCAw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgD0K0o (ORCPT
+        id S1726945AbgD0K2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 06:26:44 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64390 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726507AbgD0K0n (ORCPT
+        Mon, 27 Apr 2020 06:28:17 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:33592 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726485AbgD0K2P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 06:26:43 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03RA1LDf045450;
-        Mon, 27 Apr 2020 06:26:36 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30mfbrj1vx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Apr 2020 06:26:36 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03RA20EY048916;
-        Mon, 27 Apr 2020 06:26:35 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30mfbrj1vq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Apr 2020 06:26:35 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03RAPDot004392;
-        Mon, 27 Apr 2020 10:26:35 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma03dal.us.ibm.com with ESMTP id 30mcu6xump-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Apr 2020 10:26:35 +0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03RAQYpJ35258810
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Apr 2020 10:26:34 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8E48C124052;
-        Mon, 27 Apr 2020 10:26:34 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CB568124058;
-        Mon, 27 Apr 2020 10:26:33 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.85.119.238])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 27 Apr 2020 10:26:33 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 666D62E30A9; Mon, 27 Apr 2020 15:56:26 +0530 (IST)
-Date:   Mon, 27 Apr 2020 15:56:26 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     Abhishek Goel <huntbag@linux.vnet.ibm.com>
-Cc:     linuxppc-dev@ozlabs.org, linux-kernel@vger.kernel.org,
-        npiggin@gmail.com, ego@linux.vnet.ibm.com, svaidy@linux.ibm.com,
-        mpe@ellerman.id.au, oohall@gmail.com, mikey@neuling.org,
-        psampat@linux.ibm.com
-Subject: Re: [RFC 1/3] powernv/cpuidle : Support for pre-entry and post exit
- of stop state in firmware
-Message-ID: <20200427102626.GC29708@in.ibm.com>
-Reply-To: ego@linux.vnet.ibm.com
-References: <20200427021027.114582-1-huntbag@linux.vnet.ibm.com>
+        Mon, 27 Apr 2020 06:28:15 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03RASC6I053238;
+        Mon, 27 Apr 2020 05:28:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1587983292;
+        bh=OIoRkEDtSdqjO07eoDGoCXzJPcwcaFncwmq6XymLSwQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=I6JmHCAwl0UmdN6MVgBG7ihi8V0D6OjmzdLnTWGgj6DEW/JyGj09c7o7gPOXG63LQ
+         naaPd8fQRButejVsBYVlpq3/tXzzgdkTzhyFc4mJ6Z4tZofTAoBHmht/0+yhHcjnQb
+         iTAIDeLMxwe7MBTmSvRRDvqkKTSn5tY2T86GfoNc=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03RASC93101456
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 27 Apr 2020 05:28:12 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 27
+ Apr 2020 05:28:12 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 27 Apr 2020 05:28:12 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RAS9l5043373;
+        Mon, 27 Apr 2020 05:28:10 -0500
+Subject: Re: [PATCH] arm64: dts: ti: k3-am65-main: Add ehrpwm nodes
+To:     Vignesh Raghavendra <vigneshr@ti.com>, Nishanth Menon <nm@ti.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200322112630.25541-1-vigneshr@ti.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <0ebef6a3-7b0e-fc3a-3101-7e1a135093b0@ti.com>
+Date:   Mon, 27 Apr 2020 13:28:09 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200427021027.114582-1-huntbag@linux.vnet.ibm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-27_05:2020-04-24,2020-04-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
- mlxscore=0 lowpriorityscore=0 mlxlogscore=999 priorityscore=1501
- impostorscore=0 malwarescore=0 suspectscore=0 adultscore=0 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004270086
+In-Reply-To: <20200322112630.25541-1-vigneshr@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Abhishek,
-
-On Sun, Apr 26, 2020 at 09:10:25PM -0500, Abhishek Goel wrote:
-> This patch provides kernel framework fro opal support of save restore
-> of sprs in idle stop loop. Opal support for stop states is needed to
-> selectively enable stop states or to introduce a quirk quickly in case
-> a buggy stop state is present.
+On 22/03/2020 13:26, Vignesh Raghavendra wrote:
+> Add DT nodes for all ehrpwm instances present on AM654 EVM.
 > 
-> We make a opal call from kernel if firmware-stop-support for stop
-> states is present and enabled. All the quirks for pre-entry of stop
-> state is handled inside opal. A call from opal is made into kernel
-> where we execute stop afer saving of NVGPRs.
-> After waking up from 0x100 vector in kernel, we enter back into opal.
-> All the quirks in post exit path, if any, are then handled in opal,
-> from where we return successfully back to kernel.
-> For deep stop states in which additional SPRs are lost, saving and
-> restoration will be done in OPAL.
-> 
-> This idea was first proposed by Nick here:
-> https://patchwork.ozlabs.org/patch/1208159/
-> 
-> The corresponding skiboot patch for this kernel patch is here:
-> https://patchwork.ozlabs.org/project/skiboot/list/?series=172831
-> 
-> When we callback from OPAL into kernel, r13 is clobbered. So, to
-> access PACA we need to restore it from HSPRGO. In future we can
-> handle this into OPAL as in here:
-> https://patchwork.ozlabs.org/patch/1245275/
-> 
-> Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
-> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 > ---
 > 
->  v1->v2 : No change in this patch.
+> clk driver and bindings has been merged to clk-next tree.
+
+Queued up for 5.8, thanks.
+
+-Tero
+
 > 
->  arch/powerpc/include/asm/opal-api.h        |  8 ++++-
->  arch/powerpc/include/asm/opal.h            |  3 ++
->  arch/powerpc/kernel/idle_book3s.S          |  5 +++
->  arch/powerpc/platforms/powernv/idle.c      | 37 ++++++++++++++++++++++
->  arch/powerpc/platforms/powernv/opal-call.c |  2 ++
->  5 files changed, 54 insertions(+), 1 deletion(-)
+>   arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 60 ++++++++++++++++++++++++
+>   1 file changed, 60 insertions(+)
 > 
-> diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
-> index c1f25a760eb1..a2c782c99c9e 100644
-> --- a/arch/powerpc/include/asm/opal-api.h
-> +++ b/arch/powerpc/include/asm/opal-api.h
-> @@ -214,7 +214,9 @@
->  #define OPAL_SECVAR_GET				176
->  #define OPAL_SECVAR_GET_NEXT			177
->  #define OPAL_SECVAR_ENQUEUE_UPDATE		178
-> -#define OPAL_LAST				178
-> +#define OPAL_REGISTER_OS_OPS			181
-> +#define OPAL_CPU_IDLE				182
-> +#define OPAL_LAST				182
-> 
->  #define QUIESCE_HOLD			1 /* Spin all calls at entry */
->  #define QUIESCE_REJECT			2 /* Fail all calls with OPAL_BUSY */
-> @@ -1181,6 +1183,10 @@ struct opal_mpipl_fadump {
->  	struct	opal_mpipl_region region[];
->  } __packed;
-> 
-> +struct opal_os_ops {
-> +	__be64 os_idle_stop;
-> +};
+> diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+> index e5df20a2d2f9..da6427bed801 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+> @@ -285,6 +285,12 @@ serdes_mux: mux-controller {
+>   			mux-reg-masks = <0x4080 0x3>, /* SERDES0 lane select */
+>   					<0x4090 0x3>; /* SERDES1 lane select */
+>   		};
 > +
->  #endif /* __ASSEMBLY__ */
-> 
->  #endif /* __OPAL_API_H */
-> diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
-> index 9986ac34b8e2..3c340bc4df8e 100644
-> --- a/arch/powerpc/include/asm/opal.h
-> +++ b/arch/powerpc/include/asm/opal.h
-> @@ -400,6 +400,9 @@ void opal_powercap_init(void);
->  void opal_psr_init(void);
->  void opal_sensor_groups_init(void);
-> 
-> +extern int64_t opal_register_os_ops(struct opal_os_ops *os_ops);
-> +extern int64_t opal_cpu_idle(__be64 srr1_addr, uint64_t psscr);
+> +		ehrpwm_tbclk: syscon@4140 {
+> +			compatible = "ti,am654-ehrpwm-tbclk", "syscon";
+> +			reg = <0x4140 0x18>;
+> +			#clock-cells = <1>;
+> +		};
+>   	};
+>   
+>   	dwc3_0: dwc3@4000000 {
+> @@ -742,4 +748,58 @@ csi2_0: port@0 {
+>   			};
+>   		};
+>   	};
 > +
->  #endif /* __ASSEMBLY__ */
-> 
->  #endif /* _ASM_POWERPC_OPAL_H */
-> diff --git a/arch/powerpc/kernel/idle_book3s.S b/arch/powerpc/kernel/idle_book3s.S
-> index 22f249b6f58d..8d287d1d06c0 100644
-> --- a/arch/powerpc/kernel/idle_book3s.S
-> +++ b/arch/powerpc/kernel/idle_book3s.S
-> @@ -49,6 +49,8 @@ _GLOBAL(isa300_idle_stop_noloss)
->   */
->  _GLOBAL(isa300_idle_stop_mayloss)
->  	mtspr 	SPRN_PSSCR,r3
-> +	mr	r6, r13
-> +	mfspr	r13, SPRN_HSPRG0
->  	std	r1,PACAR1(r13)
->  	mflr	r4
->  	mfcr	r5
-> @@ -74,6 +76,7 @@ _GLOBAL(isa300_idle_stop_mayloss)
->  	std	r31,-8*18(r1)
->  	std	r4,-8*19(r1)
->  	std	r5,-8*20(r1)
-> +	std	r6,-8*21(r1)
->  	/* 168 bytes */
->  	PPC_STOP
->  	b	.	/* catch bugs */
-> @@ -91,8 +94,10 @@ _GLOBAL(idle_return_gpr_loss)
->  	ld	r1,PACAR1(r13)
->  	ld	r4,-8*19(r1)
->  	ld	r5,-8*20(r1)
-> +	ld	r6,-8*21(r1)
->  	mtlr	r4
->  	mtcr	r5
-> +	mr	r13,r6
->  	/*
->  	 * KVM nap requires r2 to be saved, rather than just restoring it
->  	 * from PACATOC. This could be avoided for that less common case
-> diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
-> index 78599bca66c2..1841027b25c5 100644
-> --- a/arch/powerpc/platforms/powernv/idle.c
-> +++ b/arch/powerpc/platforms/powernv/idle.c
-> @@ -35,6 +35,7 @@
->  static u32 supported_cpuidle_states;
->  struct pnv_idle_states_t *pnv_idle_states;
->  int nr_pnv_idle_states;
-> +static bool firmware_stop_supported;
-> 
->  /*
->   * The default stop state that will be used by ppc_md.power_save
-> @@ -602,6 +603,25 @@ struct p9_sprs {
->  	u64 uamor;
->  };
-> 
-> +/*
-> + * This function is called from OPAL if firmware support for stop
-> + * states is present and enabled. It provides a fallback for idle
-> + * stop states via OPAL.
-> + */
-> +static uint64_t os_idle_stop(uint64_t psscr, bool save_gprs)
-> +{
-> +	/*
-> +	 * For lite state which does not lose even GPRS we call
-> +	 * idle_stop_noloss while for all other states we call
-> +	 * idle_stop_mayloss. Saving and restoration of other additional
-> +	 * SPRs if required is handled in OPAL. All the quirks are also
-> +	 * handled in OPAL.
-> +	 */
-> +	if (!save_gprs)
-> +		return isa300_idle_stop_noloss(psscr);
-
-I think PSSCR[ESL|EC] = 0 case is an overkill to go into OPAL and come
-back via a callback. That can be handled in the kernel itself.
-
-
-
-> +	return isa300_idle_stop_mayloss(psscr);
-> +}
+> +	ehrpwm0: pwm@3000000 {
+> +		compatible = "ti,am654-ehrpwm", "ti,am3352-ehrpwm";
+> +		#pwm-cells = <3>;
+> +		reg = <0x0 0x3000000 0x0 0x100>;
+> +		power-domains = <&k3_pds 40 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&ehrpwm_tbclk 0>, <&k3_clks 40 0>;
+> +		clock-names = "tbclk", "fck";
+> +	};
 > +
->  static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
->  {
->  	int cpu = raw_smp_processor_id();
-> @@ -613,6 +633,16 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
->  	unsigned long mmcr0 = 0;
->  	struct p9_sprs sprs = {}; /* avoid false used-uninitialised */
->  	bool sprs_saved = false;
-> +	int rc = 0;
+> +	ehrpwm1: pwm@3010000 {
+> +		compatible = "ti,am654-ehrpwm", "ti,am3352-ehrpwm";
+> +		#pwm-cells = <3>;
+> +		reg = <0x0 0x3010000 0x0 0x100>;
+> +		power-domains = <&k3_pds 41 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&ehrpwm_tbclk 1>, <&k3_clks 41 0>;
+> +		clock-names = "tbclk", "fck";
+> +	};
 > +
-> +	/*
-> +	 * Kernel takes decision whether to make OPAL call or not. This logic
-> +	 * will be combined with the logic for BE opal to take decision.
-> +	 */
-> +	if (firmware_stop_supported) {
-> +		rc = opal_cpu_idle(cpu_to_be64(__pa(&srr1)), (uint64_t) psscr);
-
-Couple of comments here. 
-
-   1) If PSSCR[ESL|EC] = 0, the current code expects mmu_on=true. When
-      we make an OPAL call and come back into the kernel via the
-      callback today, we will be in real-mode, with mmu turned off.
-
-   2) You seem to be choosing the opal cpuidle support as the default
-      case, and not as a fallback. Thus, with this patch you will miss
-      out on the deep stop-state support.
-
-
-> +		goto out;
-> +	}
-> 
->  	if (!(psscr & (PSSCR_EC|PSSCR_ESL))) {
->  		/* EC=ESL=0 case */
-> @@ -1232,6 +1262,10 @@ static int pnv_parse_cpuidle_dt(void)
->  		pr_warn("opal: PowerMgmt Node not found\n");
->  		return -ENODEV;
->  	}
+> +	ehrpwm2: pwm@3020000 {
+> +		compatible = "ti,am654-ehrpwm", "ti,am3352-ehrpwm";
+> +		#pwm-cells = <3>;
+> +		reg = <0x0 0x3020000 0x0 0x100>;
+> +		power-domains = <&k3_pds 42 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&ehrpwm_tbclk 2>, <&k3_clks 42 0>;
+> +		clock-names = "tbclk", "fck";
+> +	};
 > +
-> +	if (of_device_is_compatible(np, "firmware-stop-supported"))
-> +		firmware_stop_supported = true;
-
-IMO, at least for POWER9 generation, you need to do this only when
-"idle-stop" device-tree cpu-feature is unavailable.
-
-
+> +	ehrpwm3: pwm@3030000 {
+> +		compatible = "ti,am654-ehrpwm", "ti,am3352-ehrpwm";
+> +		#pwm-cells = <3>;
+> +		reg = <0x0 0x3030000 0x0 0x100>;
+> +		power-domains = <&k3_pds 43 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&ehrpwm_tbclk 3>, <&k3_clks 43 0>;
+> +		clock-names = "tbclk", "fck";
+> +	};
 > +
->  	nr_idle_states = of_property_count_u32_elems(np,
->  						"ibm,cpu-idle-state-flags");
+> +	ehrpwm4: pwm@3040000 {
+> +		compatible = "ti,am654-ehrpwm", "ti,am3352-ehrpwm";
+> +		#pwm-cells = <3>;
+> +		reg = <0x0 0x3040000 0x0 0x100>;
+> +		power-domains = <&k3_pds 44 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&ehrpwm_tbclk 4>, <&k3_clks 44 0>;
+> +		clock-names = "tbclk", "fck";
+> +	};
+> +
+> +	ehrpwm5: pwm@3050000 {
+> +		compatible = "ti,am654-ehrpwm", "ti,am3352-ehrpwm";
+> +		#pwm-cells = <3>;
+> +		reg = <0x0 0x3050000 0x0 0x100>;
+> +		power-domains = <&k3_pds 45 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&ehrpwm_tbclk 5>, <&k3_clks 45 0>;
+> +		clock-names = "tbclk", "fck";
+> +	};
+>   };
 > 
-> @@ -1326,6 +1360,7 @@ static int pnv_parse_cpuidle_dt(void)
-> 
->  static int __init pnv_init_idle_states(void)
->  {
-> +	struct opal_os_ops os_ops;
->  	int cpu;
->  	int rc = 0;
-> 
-> @@ -1349,6 +1384,8 @@ static int __init pnv_init_idle_states(void)
->  		}
->  	}
-> 
-> +	os_ops.os_idle_stop = be64_to_cpu(os_idle_stop);
-> +	rc = opal_register_os_ops((struct opal_os_ops *)(&os_ops));
->  	/* In case we error out nr_pnv_idle_states will be zero */
->  	nr_pnv_idle_states = 0;
->  	supported_cpuidle_states = 0;
-> diff --git a/arch/powerpc/platforms/powernv/opal-call.c b/arch/powerpc/platforms/powernv/opal-call.c
-> index 5cd0f52d258f..c885e607ba62 100644
-> --- a/arch/powerpc/platforms/powernv/opal-call.c
-> +++ b/arch/powerpc/platforms/powernv/opal-call.c
-> @@ -293,3 +293,5 @@ OPAL_CALL(opal_mpipl_query_tag,			OPAL_MPIPL_QUERY_TAG);
->  OPAL_CALL(opal_secvar_get,			OPAL_SECVAR_GET);
->  OPAL_CALL(opal_secvar_get_next,			OPAL_SECVAR_GET_NEXT);
->  OPAL_CALL(opal_secvar_enqueue_update,		OPAL_SECVAR_ENQUEUE_UPDATE);
-> +OPAL_CALL(opal_register_os_ops,			OPAL_REGISTER_OS_OPS);
-> +OPAL_CALL(opal_cpu_idle,			OPAL_CPU_IDLE);
-> -- 
-> 2.17.1
-> 
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
