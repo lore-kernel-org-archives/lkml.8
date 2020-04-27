@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E22C55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9B4C55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F58B20728
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C622087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:37:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgD0Ihk (ORCPT
+        id S1726830AbgD0Iho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 04:37:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:59900 "EHLO foss.arm.com"
+        Mon, 27 Apr 2020 04:37:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:59922 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725899AbgD0Ihj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 04:37:39 -0400
+        id S1725899AbgD0Iho (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 04:37:44 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02AAA113E;
-        Mon, 27 Apr 2020 01:37:39 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F00011B3;
+        Mon, 27 Apr 2020 01:37:43 -0700 (PDT)
 Received: from dell3630.arm.com (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5DA873F68F;
-        Mon, 27 Apr 2020 01:37:35 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4FAD93F68F;
+        Mon, 27 Apr 2020 01:37:39 -0700 (PDT)
 From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
 To:     Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -40,9 +40,9 @@ Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
         Morten Rasmussen <morten.rasmussen@arm.com>,
         Valentin Schneider <valentin.schneider@arm.com>,
         Qais Yousef <qais.yousef@arm.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/6] sched/deadline: Optimize dl_bw_cpus()
-Date:   Mon, 27 Apr 2020 10:37:05 +0200
-Message-Id: <20200427083709.30262-3-dietmar.eggemann@arm.com>
+Subject: [PATCH v2 3/6] sched/deadline: Add dl_bw_capacity()
+Date:   Mon, 27 Apr 2020 10:37:06 +0200
+Message-Id: <20200427083709.30262-4-dietmar.eggemann@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200427083709.30262-1-dietmar.eggemann@arm.com>
 References: <20200427083709.30262-1-dietmar.eggemann@arm.com>
@@ -51,39 +51,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Return the weight of the rd (root domain) span in case it is a subset
-of the cpu_active_mask.
+Capacity-aware SCHED_DEADLINE admission control needs rd (root domain)
+CPU capacity sum.
 
-Continue to compute the number of CPUs over rd span and cpu_active_mask
-when in hotplug.
+The design of this function follows that of dl_bw_cpus().
+
+That is, return the rd CPU capacity sum in case the rd span a subset of
+the cpu_active_mask.
+
+Compute the CPU capacity sum over rd span and cpu_active_mask when in
+hotplug.
 
 Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
 ---
- kernel/sched/deadline.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ kernel/sched/deadline.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
 diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index 504d2f51b0d6..4ae22bfc37ae 100644
+index 4ae22bfc37ae..eb23e6921d94 100644
 --- a/kernel/sched/deadline.c
 +++ b/kernel/sched/deadline.c
-@@ -54,10 +54,16 @@ static inline struct dl_bw *dl_bw_of(int i)
- static inline int dl_bw_cpus(int i)
- {
- 	struct root_domain *rd = cpu_rq(i)->rd;
--	int cpus = 0;
-+	int cpus;
+@@ -69,6 +69,25 @@ static inline int dl_bw_cpus(int i)
  
- 	RCU_LOCKDEP_WARN(!rcu_read_lock_sched_held(),
- 			 "sched RCU must be held");
+ 	return cpus;
+ }
++
++static inline unsigned long dl_bw_capacity(int i)
++{
++	struct root_domain *rd = cpu_rq(i)->rd;
++	unsigned long cap;
++
++	RCU_LOCKDEP_WARN(!rcu_read_lock_sched_held(),
++			 "sched RCU must be held");
 +
 +	if (cpumask_subset(rd->span, cpu_active_mask))
-+		return cpumask_weight(rd->span);
++		return rd->sum_cpu_capacity;
 +
-+	cpus = 0;
++	cap = 0;
 +
- 	for_each_cpu_and(i, rd->span, cpu_active_mask)
- 		cpus++;
++	for_each_cpu_and(i, rd->span, cpu_active_mask)
++		cap += capacity_orig_of(i);
++
++	return cap;
++}
+ #else
+ static inline struct dl_bw *dl_bw_of(int i)
+ {
+@@ -79,6 +98,11 @@ static inline int dl_bw_cpus(int i)
+ {
+ 	return 1;
+ }
++
++static inline unsigned long dl_bw_capacity(int i)
++{
++	return SCHED_CAPACITY_SCALE;
++}
+ #endif
  
+ static inline
 -- 
 2.17.1
 
