@@ -2,168 +2,114 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AEFC54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D90C4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54C9C206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:27:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="mfty3xKf"
+	by mail.kernel.org (Postfix) with ESMTP id D5768206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:28:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588019281;
+	bh=d3NnitaxAGg+vCMdnEMNb8t8IqXAlbbqQRiS9YQrdIs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ScvMBQ5h1qPFvYQqvs/MKLQ6LmdWmcyxg/cu/pmUTT44KRgAwqu6MFzKinG6+VvwU
+	 arI9ZZDau54R9IE/o7Hyq6TGPOj55Gff5X9XTloYjvTzEzqnHvcaMh6HrB4+2Mo1vP
+	 LMFl4uOtpGGGlV88qZ5/CskyXfUBzp/am7MhJOxg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgD0U1j (ORCPT
+        id S1726828AbgD0U2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 16:27:39 -0400
-Received: from mail.efficios.com ([167.114.26.124]:46638 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbgD0U1j (ORCPT
+        Mon, 27 Apr 2020 16:28:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34352 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726205AbgD0U2A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 16:27:39 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 0C69325D7FA;
-        Mon, 27 Apr 2020 16:27:38 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id zpJz7Q7A6GVa; Mon, 27 Apr 2020 16:27:37 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id B71DB25DD91;
-        Mon, 27 Apr 2020 16:27:37 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com B71DB25DD91
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1588019257;
-        bh=iQGZNhQE4d0xrSqlbr6eWjSmtSNujZgcs81rb84xW6E=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=mfty3xKf3nu2USKAtDeqd3+9emnR6p4RFXFttDr0/JbNPJyKlQu1kviz4T1Xy+Lmu
-         Ohj0fIHuJeOpkyRFf0di8t6r5azHT5b6IGbfaW84OFmYwHqg7T2554GyVG22R1TnlH
-         +isP1dQRAQzHlPUcQjmVb7tZCF6vZtS7Ufjrvbl61R/9ceO2l6mgEP80d9qTBUFosm
-         CDapR7iTZOyafGHNz+AHuNCtY80UavNKoRHaRopxTeyEEbCT8SZES0Jrjgyq3Fibhd
-         oEcCEmfan7RKcY90Q3FWduJIvgOieeK1LtnBiP/T7wGhtNQH9szmDp3B7K93vytZ+j
-         VR+bjXJ7TrOVw==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id q_MBrq2xLTdb; Mon, 27 Apr 2020 16:27:37 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id A03B825DCBF;
-        Mon, 27 Apr 2020 16:27:37 -0400 (EDT)
-Date:   Mon, 27 Apr 2020 16:27:37 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fw@deneb.enyo.de>
-Cc:     Michael Kerrisk <mtk.manpages@gmail.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Carlos O'Donell <carlos@redhat.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
-        Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>
-Message-ID: <122741024.71528.1588019257574.JavaMail.zimbra@efficios.com>
-In-Reply-To: <2102127737.70791.1588008377292.JavaMail.zimbra@efficios.com>
-References: <20200326155633.18236-1-mathieu.desnoyers@efficios.com> <20200326155633.18236-6-mathieu.desnoyers@efficios.com> <87ees9z417.fsf@mid.deneb.enyo.de> <284293396.70630.1588005648556.JavaMail.zimbra@efficios.com> <87zhawvphv.fsf@mid.deneb.enyo.de> <2102127737.70791.1588008377292.JavaMail.zimbra@efficios.com>
-Subject: Re: [PATCH glibc 5/9] glibc: Perform rseq(2) registration at C
- startup and thread creation (v17)
+        Mon, 27 Apr 2020 16:28:00 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B7BFC0610D5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 13:28:00 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id l19so19057610lje.10
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 13:27:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ai+rmEpn02qg4BdEO/ZE6kOX/94j7td8pRB+ptKEnVM=;
+        b=O1lgqypRxFfC+vFZsk3/9/KPI2PcZLA1mM/B20gc8yvnWS47pxSazg3digWF06v8IL
+         RKAAvSH2pMe/bStrBhAr1F9weq0Mr/w01Euy1dRvf3JlL/YV1rIWnHbyzEnsfoJAv5qf
+         C2xIbuvQvx9oklaGI3hdIGJx3zSFp3Uf5kvuY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ai+rmEpn02qg4BdEO/ZE6kOX/94j7td8pRB+ptKEnVM=;
+        b=l0XoAEH6iOBGYfDRJaVuHfVtceI/RUIhpJ4dMwc1glgHQ9JIkbXsNdM0cm7/xoNHAH
+         z8In7/blGQtbwUberfgLLHXPcJzhnx//aSSuHnnd0BUfAH14pKUEqZgua8fTa3fzcUxF
+         4FzTu88XYLSGPBAy4gnAluVjncl94jKmidhYksqnILsS9b9KBOrsYuOm8hBtG1xeDRJ6
+         YuOv83tD2/DkwnHPmDgWp1yXJ8gSEWftZVSdYIaCC80fjEjF6EQbHfArMq2wyjZBHJ4u
+         FtLjKjVRyHkonoCagPS5DHOc2oETGZnVQQaIU8zDViiSrDWL14zAvzmOcL2DKXQv9+Bo
+         aDag==
+X-Gm-Message-State: AGi0PuYsrYz7jMJhvWt7C+FoI9aLxhpG++BCCVCnP+31dGe+qFInQOBT
+        EJjAZSKWfvZeYAZ2I9TXXAdDyEHFm6E=
+X-Google-Smtp-Source: APiQypL6C59oVRZAwRVZ1iwn5u2WFSib7mGWYznCCB43lrnBtTU4zfT+7B9pOspvhk4EFGkCCQT60g==
+X-Received: by 2002:a2e:2245:: with SMTP id i66mr15634106lji.191.1588019277860;
+        Mon, 27 Apr 2020 13:27:57 -0700 (PDT)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
+        by smtp.gmail.com with ESMTPSA id m15sm5631294lji.21.2020.04.27.13.27.56
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 13:27:57 -0700 (PDT)
+Received: by mail-lj1-f171.google.com with SMTP id e25so19076343ljg.5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 13:27:56 -0700 (PDT)
+X-Received: by 2002:a2e:3017:: with SMTP id w23mr15585804ljw.150.1588019276500;
+ Mon, 27 Apr 2020 13:27:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3918 (ZimbraWebClient - FF75 (Linux)/8.8.15_GA_3895)
-Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v17)
-Thread-Index: NB5tGkGbwSwj6uwD4kCQxwPloIWw0/vi9NhR
+References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
+ <87ftcv1nqe.fsf@x220.int.ebiederm.org> <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
+ <20200424173927.GB26802@redhat.com> <87mu6ymkea.fsf_-_@x220.int.ebiederm.org>
+ <875zdmmj4y.fsf_-_@x220.int.ebiederm.org> <CAHk-=whvktUC9VbzWLDw71BHbV4ofkkuAYsrB5Rmxnhc-=kSeQ@mail.gmail.com>
+ <878sihgfzh.fsf@x220.int.ebiederm.org>
+In-Reply-To: <878sihgfzh.fsf@x220.int.ebiederm.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 27 Apr 2020 13:27:40 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjSM9mgsDuX=ZTy2L+S7wGrxZMcBn054As_Jyv8FQvcvQ@mail.gmail.com>
+Message-ID: <CAHk-=wjSM9mgsDuX=ZTy2L+S7wGrxZMcBn054As_Jyv8FQvcvQ@mail.gmail.com>
+Subject: Re: [PATCH v3 3/6] rculist: Add hlist_swap_before_rcu
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Apr 27, 2020, at 1:26 PM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
-[...]
->>> We don't mind that user-space uses that pointer, but we never want the kernel
->>> to touch that pointer rather than the 32/64-bit-aware fields. One possibility
->>> would be to do:
->>>
->>>     union
->>>       {
->>>         uint64_t ptr64;
->>> #ifdef __LP64__
->>>         uint64_t ptr;
->>> #else
->>>         struct
->>>           {
->>> #if (defined (__BYTE_ORDER) && (__BYTE_ORDER == __BIG_ENDIAN)) || defined
->>> (__BIG_ENDIAN)
->>>             uint32_t padding; /* Initialized to zero.  */
->>>             uint32_t ptr32;
->>> #else /* LITTLE */
->>>             uint32_t ptr32;
->>>             uint32_t padding; /* Initialized to zero.  */
->>> #endif /* ENDIAN */
->>>           } ptr;
->>> #endif
->>>
->>> #ifndef __KERNEL__
->>>      const struct rseq_cs *uptr;
->>> #endif
->>>       } rseq_cs;
->>>
->>> in the union, so only user-space can see that field. Thoughts ?
->> 
->> I think this depends on where the x32 question lands.
-> 
-> x32 should not be an issue as explained above, so I'm very open to
-> add this "uptr" for user-space only.
+On Mon, Apr 27, 2020 at 7:32 AM Eric W. Biederman <ebiederm@xmission.com> wrote:
+>
+> Would hlists_swap_heads_rcu be noticably better?
 
-Actually, the snippet above is broken on 32-bit. It needs to be:
+Edited out most of the rest because I think we're in agreement and
+it's not a huge deal.
 
-    union
-      {
-        uint64_t ptr64;
-#ifdef __LP64__
-        uint64_t ptr;
-# ifndef __KERNEL__
-        const struct rseq_cs *uptr;
-# endif
-#else   
-        struct
-          {
-#if (defined (__BYTE_ORDER) && (__BYTE_ORDER == __BIG_ENDIAN)) || defined (__BIG_ENDIAN)
-            uint32_t padding; /* Initialized to zero.  */
-            uint32_t ptr32;
-#else /* LITTLE */
-            uint32_t ptr32;
-            uint32_t padding; /* Initialized to zero.  */
-#endif /* ENDIAN */
-          } ptr;
-# ifndef __KERNEL__
-        struct
-          {
-#  if (defined (__BYTE_ORDER) && (__BYTE_ORDER == __BIG_ENDIAN)) || defined (__BIG_ENDIAN)
-            uint32_t padding; /* Initialized to zero.  */
-            const struct rseq_cs *uptr32;
-#  else /* LITTLE */
-            const struct rseq_cs *uptr32;
-            uint32_t padding; /* Initialized to zero.  */
-#  endif /* ENDIAN */
-          } uptr;
-# endif
-#endif
-      } rseq_cs;
+And yes, I think it might be nice to just call it "swap_heads()" and
+make the naming match what the user wants, so that people who don't
+care about the implementation can just guess from the function name.
 
-I'll leave this out of the patchset for now as we'd need more feedback on its
-usefulness.
+But I also think that by now it's mostly bikeshedding, and I'm
+probably also now biased by the fact that I have looked at that code
+and read your explanations so it's all fresh in my mind.
 
-Thanks,
+A year from now, when I've forgotten the details, who knows which part
+I'd find confusing? ;)
 
-Mathieu
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+               Linus
