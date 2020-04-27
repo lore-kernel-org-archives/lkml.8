@@ -2,271 +2,262 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E84FC4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0C0C4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BCD620775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6717F20728
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:44:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lZIJCLa+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mvAJsBF6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbgD0SoE (ORCPT
+        id S1726611AbgD0SoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 14:44:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46040 "EHLO
+        Mon, 27 Apr 2020 14:44:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbgD0SoD (ORCPT
+        with ESMTP id S1726362AbgD0SoI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 14:44:03 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9327C0610D5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 11:44:03 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id j14so21685913ybt.10
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 11:44:03 -0700 (PDT)
+        Mon, 27 Apr 2020 14:44:08 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAA63C0610D5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 11:44:06 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id j1so21792332wrt.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 11:44:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=tUPZR8jYBc9v0xao/MABE2wsoNahfX3099p1cY3Tx9I=;
-        b=lZIJCLa+TvQTi89lCRezZep/+7/9ZWTuSARZ1PUJMboOoDXBMqWkSqvNkma50SOQV/
-         DSvlOUH6OdjsjwrIf3+NroE6VDbQd0EBzWjoB9jv/ncM7JDj9zKofuW8Y4shDCUr/073
-         JP//OKFXcbyTo6zqlt58oGm+VtKHwZxY/Fcad3Cv/ig+1crdCTroUUn6IWcut6gtOW8o
-         2pKGYd9pd7B2+ApuCAFXVj1npCz4ulWWqbkzSCr4AYWCcHHhXofHbhXGp7yc9P1vmNdT
-         R8hjKxMO6uPGW64bRBvfxWAT8tK4lYWmEyDmxSBfAoYhVPeJvNF7iiNdj1V90i6KprO2
-         iCvg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=0Se2gPfDV6dVLvV3dXJUZA0zMn+AJUdOhH51aQhU8nY=;
+        b=mvAJsBF6xtNVqZlDIr30mT2dIhPkFK1Re5Y61Bsb3yJir9WZZZBw1V4vW/rgAeJ/o4
+         oJYSrGUy7rAmuzyWJIEE9ohlmS9i+PyO1wfkmP2MmNUtgiQyehwDRVnfyImwoWBoZbRE
+         4P9w5m0G8BMJ9fdhzUe2015uC/D38gq0dLRWRJGpQIlxIphl/zb18ESMDvwBmCWQc88O
+         OOGvEFhnylQ2GfIJFRHXh4VOhcjccDIgv4GBI8pZOsoxh7Ii2wVvBlAvOiS/pI1kxQcm
+         9IQCriUOal/bQkOU5FpgG4fNmNmfawIvG0q4PPAIOAWpYQUnLi3sYEn8uodsn1Q3jEXg
+         epVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=tUPZR8jYBc9v0xao/MABE2wsoNahfX3099p1cY3Tx9I=;
-        b=fWpi+zr2ToV3/j5W9QRLBL6EnSCBBnP7XUyx39FFObpdlYFx1+6XfXjSlD/8WsnbjX
-         DNsyl5Fqu/kRhA1aGXmATj+muiPQmbp2xSV+9qcjLkRv6z9DRmm5nAfeZXijbuUBavIL
-         O4cWAWxZyuCJchFsY9bYmj8OPbnu/B91oaM7Xfywt+wayfVi8h1+DNHm/M8GsYyQAy4x
-         igijXpUBF9Kj8h7CAg9OrmbBi+Fq/49X6vwZcjssPi3md6DpzElHEkkW0KvvqCawTMw8
-         XzQrTyx0GxEQe5IItSzDsyqNvE+1LAup+yWcxCKTkMoUpKV/4BfEZ+zznWeG40eGvLxC
-         GI+A==
-X-Gm-Message-State: AGi0PuZ0yHArRQbZmIktkrx9ft8w2rod5sB3EpUo5udJp+jD9PMKrdqR
-        7CZHFeNt15PK88fh5CHA69S1aEilhOs=
-X-Google-Smtp-Source: APiQypKo+1K46gA5Mu7rAXthGEDVu9OINkjfOa7QcJ7hbSFQOr/t9jxSe52Fx9HCXlqWkoQlGh73wu3Ihkg=
-X-Received: by 2002:a25:3252:: with SMTP id y79mr38694008yby.274.1588013042905;
- Mon, 27 Apr 2020 11:44:02 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 11:43:58 -0700
-Message-Id: <20200427184358.191624-1-surenb@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
-Subject: [PATCH 1/1] kthread: break dependency between worker->lock and task_struct->pi_lock
-From:   Suren Baghdasaryan <surenb@google.com>
-To:     surenb@google.com
-Cc:     peterz@infradead.org, mingo@redhat.com, hannes@cmpxchg.org,
-        will@kernel.org, akpm@linux-foundation.org, tglx@linutronix.de,
-        ben.dooks@codethink.co.uk, cl@rock-chips.com, ke.wang@unisoc.com,
-        shakeelb@google.com, linux-kernel@vger.kernel.org,
-        kernel-team@android.com
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0Se2gPfDV6dVLvV3dXJUZA0zMn+AJUdOhH51aQhU8nY=;
+        b=SBD/c5dwzuJX/FTtbE3zSVH4l0BEiGDM084qgjyT51n+UVxuU3/9fp2vU8dbXQn+hX
+         +Ds1dc2eYCQJk2Z41fuz3LIl5f9z7BuouOGxpLw2ExZXsBgXkRQjm5ONPVJ8fjoVortx
+         +0ncLMcPX7AjFGENjnbxi3+UqzPDKl2ZzitEtVYURD8RHs+2zRL+trHwtyfRjoHRwGuu
+         B7lUACuGi7S5rBcna60tgWgZb1Y1cPOrC8nG8+f3v/jlDCpoB7sMJuoySMrtjGBNJ01a
+         Ax+iZLuIygg8jXWoJFyZsAFUnZlvrTPtq3RLfg/jDvBLhVQ8GbV6yr3e6Y7occbhJfHP
+         X1WQ==
+X-Gm-Message-State: AGi0PuZsXNhcGkRYCwEHPRDj8gl+7Np2OPnCBaPtFxqiruSDQV4qpibR
+        dUkSg73qLFlsywVWXYIkAQQlM/bldVbvgmUZFJseSw==
+X-Google-Smtp-Source: APiQypKiKwKYtbSbOSLIBpG/gIsOpmDej3C0UjThZPtiVEfG/LmwWku50637FeQfIQxYOBGMc4idFWIHgW3d8v+gsW0=
+X-Received: by 2002:adf:fe45:: with SMTP id m5mr30783793wrs.124.1588013045413;
+ Mon, 27 Apr 2020 11:44:05 -0700 (PDT)
+MIME-Version: 1.0
+References: <PSXP216MB0438D2AF96CE0D4F83F48C4D80AE0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <MN2PR12MB4488E4909C1488FB507E0BF5F7AF0@MN2PR12MB4488.namprd12.prod.outlook.com>
+ <s5ho8rdnems.wl-tiwai@suse.de> <PSXP216MB04387BF6B5F8DA84749E5D6F80AF0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <CADnq5_M=QEqxuCKjb_qZvFSvwM5eLEFfsepxYYXoouFoe5bn7A@mail.gmail.com> <s5h4kt4ojrf.wl-tiwai@suse.de>
+In-Reply-To: <s5h4kt4ojrf.wl-tiwai@suse.de>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Mon, 27 Apr 2020 14:43:54 -0400
+Message-ID: <CADnq5_MMQ5_MjEg=bkJJGMJP53RjB3yxvOW0nUDeWxzg3Q0pVQ@mail.gmail.com>
+Subject: Re: [PATCH 0/1] Fiji GPU audio register timeout when in BACO state
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        Takashi Iwai <tiwai@suse.com>, Lukas Wunner <lukas@wunner.de>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A number of kthread-related functions indirectly take task_struct->pi_lock
-while holding worker->lock in the call chain like this:
-    spin_lock(&worker->lock)
-    kthread_insert_work
-    wake_up_process
-    try_to_wake_up
-    raw_spin_lock_irqsave(&p->pi_lock, flags)
+On Mon, Apr 27, 2020 at 2:39 PM Takashi Iwai <tiwai@suse.de> wrote:
+>
+> On Mon, 27 Apr 2020 20:28:12 +0200,
+> Alex Deucher wrote:
+> >
+> > On Mon, Apr 27, 2020 at 2:07 PM Nicholas Johnson
+> > <nicholas.johnson-opensource@outlook.com.au> wrote:
+> > >
+> > > On Mon, Apr 27, 2020 at 05:15:55PM +0200, Takashi Iwai wrote:
+> > > > On Mon, 27 Apr 2020 16:22:21 +0200,
+> > > > Deucher, Alexander wrote:
+> > > > >
+> > > > > [AMD Public Use]
+> > > > >
+> > > > > > -----Original Message-----
+> > > > > > From: Nicholas Johnson <nicholas.johnson-opensource@outlook.com=
+.au>
+> > > > > > Sent: Sunday, April 26, 2020 12:02 PM
+> > > > > > To: linux-kernel@vger.kernel.org
+> > > > > > Cc: Deucher, Alexander <Alexander.Deucher@amd.com>; Koenig, Chr=
+istian
+> > > > > > <Christian.Koenig@amd.com>; Zhou, David(ChunMing)
+> > > > > > <David1.Zhou@amd.com>; Nicholas Johnson <nicholas.johnson-
+> > > > > > opensource@outlook.com.au>
+> > > > > > Subject: [PATCH 0/1] Fiji GPU audio register timeout when in BA=
+CO state
+> > > > > >
+> > > > > > Hi all,
+> > > > > >
+> > > > > > Since Linux v5.7-rc1 / commit 4fdda2e66de0 ("drm/amdgpu/runpm: =
+enable
+> > > > > > runpm on baco capable VI+ asics"), my AMD R9 Nano has been usin=
+g runpm /
+> > > > > > BACO. You can tell visually when it sleeps, because the fan on =
+the graphics
+> > > > > > card is switched off to save power. It did not spin down the fa=
+n in v5.6.x.
+> > > > > >
+> > > > > > This is great (I love it), except that when it is sleeping, the=
+ PCIe audio function
+> > > > > > of the GPU has issues if anything tries to access it. You get d=
+mesg errors such
+> > > > > > as these:
+> > > > > >
+> > > > > > snd_hda_intel 0000:08:00.1: spurious response 0x0:0x0, last cmd=
+=3D0x170500
+> > > > > > snd_hda_intel 0000:08:00.1: azx_get_response timeout, switching=
+ to polling
+> > > > > > mode: last cmd=3D0x001f0500 snd_hda_intel 0000:08:00.1: No resp=
+onse from
+> > > > > > codec, disabling MSI: last cmd=3D0x001f0500 snd_hda_intel 0000:=
+08:00.1: No
+> > > > > > response from codec, resetting bus: last cmd=3D0x001f0500
+> > > > > > snd_hda_codec_hdmi hdaudioC1D0: Unable to sync register 0x2f0d0=
+0. -11
+> > > > > >
+> > > > > > The above is with the Fiji XT GPU at 0000:08:00.0 in a Thunderb=
+olt enclosure
+> > > > > > (not that Thunderbolt should affect it, but I feel I should men=
+tion it just in
+> > > > > > case). I dropped a lot of duplicate dmesg lines, as some of the=
+m repeated a
+> > > > > > lot of times before the driver gave up.
+> > > > > >
+> > > > > > I offer this patch to disable runpm for Fiji while a fix is fou=
+nd, if you decide
+> > > > > > that is the best approach. Regardless, I will gladly test any p=
+atches you come
+> > > > > > up with instead and confirm that the above issue has been fixed=
+.
+> > > > > >
+> > > > > > I cannot tell if any other GPUs are affected. The only other ca=
+rds to which I
+> > > > > > have access are a couple of AMD R9 280X (Tahiti XT), which use =
+radeon driver
+> > > > > > instead of amdgpu driver.
+> > > > >
+> > > > > Adding a few more people.  Do you know what is accessing the audi=
+o?  The audio should have a dependency on the GPU device.  The GPU won't en=
+ter runtime pm until the audio has entered runtime pm and vice versa on res=
+ume. Please attach a copy of your dmesg output and lspci output.
+> > >
+> > > pci 0000:08:00.1: D0 power state depends on 0000:08:00.0
+> > > The above must be the dependency of which you speak from dmesg.
+> > >
+> > > Accessing the audio? I did not have a single method for triggering it=
+.
+> > > Sometimes it happened on shutdown. Sometimes when restarting gdm.
+> > > Sometimes when playing with audio settings in Cinnamon Desktop. But m=
+ost
+> > > often when changing displays. It might have something to do with the
+> > > audio device associated with a monitor being created when the monitor=
+ is
+> > > found. If an audio device is created, then pulseaudio might touch it.
+> > > Sorry, this is a very verbose "not quite sure".
+> > >
+> > > To trigger the bug, this time I did the following:
+> > >
+> > > 1. Boot laptop without Fiji and log in
+> > >
+> > > 2. Attach Fiji via Thunderbolt (no displays attached to Fiji) and
+> > > approve Thunderbolt device
+> > >
+> > > 3. Log in again because the session gets killed when GPU is hot-added
+> > >
+> > > 4. Wait for Fiji to fall asleep (fan stops)
+> > >
+> > > 5. Open "dmesg -w" on laptop display
+> > >
+> > > 6. Attach display to DisplayPort on Fiji (it should still stay asleep=
+)
+> > >
+> > > 7. Do WindowsKey+P to activate external display. The error appears in
+> > > dmesg window that instant.
+> > >
+> > > Could it be a race condition when waking the card up?
+> > >
+> > > I cannot get the graphics card fan to spin down if the Thunderbolt
+> > > enclosure is attached at boot time. It only does it if hot-added.
+> > >
+> > > If you think it will help, I can take out the Fiji and put it in a te=
+st
+> > > rig and try to replicate the issue without Thunderbolt, but it looks
+> > > like it will not spin the fan down if Fiji is attached at boot time.
+> > >
+> > > Question, why would the fan not spin down if Fiji is attached at boot
+> > > time, and how would one make the said fan turn off? Aside from being
+> > > useful for pinning down the audio register issue, I would like to mak=
+e
+> > > sure the power savings are realised whenever the GPU is not being use=
+d.
+> >
+> > Presumably something is using the device.  Maybe a framebuffer console
+> > or X?  Or maybe the something like tlp has disabled runtime pm on your
+> > device?  You can see the current status by reading the files in
+> > /sys/class/drm/cardX/device/power/ .  Replace cardX with card0, card1,
+> > etc. depending on which device is the radeon card.
+> >
+> > FWIW, I have a fiji board in a desktop system and it worked fine when
+> > this code was enabled.
+>
+> Is the new DC code used for Fiji boards?  IIRC, the audio component
+> binding from amdgpu is enabled only for DC, and without the audio
+> component binding the runtime PM won't be linked up, hence you can't
+> power up GPU from the audio side access automatically.
+>
 
-This lock dependency exists whenever kthread_insert_work is called either
-directly or indirectly via __kthread_queue_delayed_work in the following
-functions:
-    kthread_queue_work
-    kthread_delayed_work_timer_fn
-    kthread_queue_delayed_work
-    kthread_flush_work
-    kthread_mod_delayed_work
+Yes, DC is enabled by default for all cards with runtime pm enabled.
 
-This creates possibilities for circular dependencies like the one reported
-at: https://lkml.org/lkml/2020/4/24/954
-Break this lock dependency by moving task wakeup after worker->lock has
-been released.
+Alex
 
-Reported-by: Ke Wang <ke.wang@unisoc.com>
-Reported-by: Shakeel Butt <shakeelb@google.com>
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Tested-by: Shakeel Butt <shakeelb@google.com>
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
----
- kernel/kthread.c | 44 +++++++++++++++++++++++++++++++++-----------
- 1 file changed, 33 insertions(+), 11 deletions(-)
-
-diff --git a/kernel/kthread.c b/kernel/kthread.c
-index bfbfa481be3a..7a93654072bb 100644
---- a/kernel/kthread.c
-+++ b/kernel/kthread.c
-@@ -9,6 +9,7 @@
- #include <uapi/linux/sched/types.h>
- #include <linux/sched.h>
- #include <linux/sched/task.h>
-+#include <linux/sched/wake_q.h>
- #include <linux/kthread.h>
- #include <linux/completion.h>
- #include <linux/err.h>
-@@ -806,14 +807,15 @@ static void kthread_insert_work_sanity_check(struct kthread_worker *worker,
- /* insert @work before @pos in @worker */
- static void kthread_insert_work(struct kthread_worker *worker,
- 				struct kthread_work *work,
--				struct list_head *pos)
-+				struct list_head *pos,
-+				struct wake_q_head *wake_q)
- {
- 	kthread_insert_work_sanity_check(worker, work);
- 
- 	list_add_tail(&work->node, pos);
- 	work->worker = worker;
- 	if (!worker->current_work && likely(worker->task))
--		wake_up_process(worker->task);
-+		wake_q_add(wake_q, worker->task);
- }
- 
- /**
-@@ -831,15 +833,19 @@ static void kthread_insert_work(struct kthread_worker *worker,
- bool kthread_queue_work(struct kthread_worker *worker,
- 			struct kthread_work *work)
- {
--	bool ret = false;
-+	DEFINE_WAKE_Q(wake_q);
- 	unsigned long flags;
-+	bool ret = false;
- 
- 	raw_spin_lock_irqsave(&worker->lock, flags);
- 	if (!queuing_blocked(worker, work)) {
--		kthread_insert_work(worker, work, &worker->work_list);
-+		kthread_insert_work(worker, work, &worker->work_list, &wake_q);
- 		ret = true;
- 	}
- 	raw_spin_unlock_irqrestore(&worker->lock, flags);
-+
-+	wake_up_q(&wake_q);
-+
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(kthread_queue_work);
-@@ -857,6 +863,7 @@ void kthread_delayed_work_timer_fn(struct timer_list *t)
- 	struct kthread_delayed_work *dwork = from_timer(dwork, t, timer);
- 	struct kthread_work *work = &dwork->work;
- 	struct kthread_worker *worker = work->worker;
-+	DEFINE_WAKE_Q(wake_q);
- 	unsigned long flags;
- 
- 	/*
-@@ -873,15 +880,18 @@ void kthread_delayed_work_timer_fn(struct timer_list *t)
- 	/* Move the work from worker->delayed_work_list. */
- 	WARN_ON_ONCE(list_empty(&work->node));
- 	list_del_init(&work->node);
--	kthread_insert_work(worker, work, &worker->work_list);
-+	kthread_insert_work(worker, work, &worker->work_list, &wake_q);
- 
- 	raw_spin_unlock_irqrestore(&worker->lock, flags);
-+
-+	wake_up_q(&wake_q);
- }
- EXPORT_SYMBOL(kthread_delayed_work_timer_fn);
- 
- static void __kthread_queue_delayed_work(struct kthread_worker *worker,
- 					 struct kthread_delayed_work *dwork,
--					 unsigned long delay)
-+					 unsigned long delay,
-+					 struct wake_q_head *wake_q)
- {
- 	struct timer_list *timer = &dwork->timer;
- 	struct kthread_work *work = &dwork->work;
-@@ -895,7 +905,7 @@ static void __kthread_queue_delayed_work(struct kthread_worker *worker,
- 	 * on that there's no such delay when @delay is 0.
- 	 */
- 	if (!delay) {
--		kthread_insert_work(worker, work, &worker->work_list);
-+		kthread_insert_work(worker, work, &worker->work_list, wake_q);
- 		return;
- 	}
- 
-@@ -928,17 +938,21 @@ bool kthread_queue_delayed_work(struct kthread_worker *worker,
- 				unsigned long delay)
- {
- 	struct kthread_work *work = &dwork->work;
-+	DEFINE_WAKE_Q(wake_q);
- 	unsigned long flags;
- 	bool ret = false;
- 
- 	raw_spin_lock_irqsave(&worker->lock, flags);
- 
- 	if (!queuing_blocked(worker, work)) {
--		__kthread_queue_delayed_work(worker, dwork, delay);
-+		__kthread_queue_delayed_work(worker, dwork, delay, &wake_q);
- 		ret = true;
- 	}
- 
- 	raw_spin_unlock_irqrestore(&worker->lock, flags);
-+
-+	wake_up_q(&wake_q);
-+
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(kthread_queue_delayed_work);
-@@ -967,6 +981,7 @@ void kthread_flush_work(struct kthread_work *work)
- 		KTHREAD_WORK_INIT(fwork.work, kthread_flush_work_fn),
- 		COMPLETION_INITIALIZER_ONSTACK(fwork.done),
- 	};
-+	DEFINE_WAKE_Q(wake_q);
- 	struct kthread_worker *worker;
- 	bool noop = false;
- 
-@@ -979,15 +994,18 @@ void kthread_flush_work(struct kthread_work *work)
- 	WARN_ON_ONCE(work->worker != worker);
- 
- 	if (!list_empty(&work->node))
--		kthread_insert_work(worker, &fwork.work, work->node.next);
-+		kthread_insert_work(worker, &fwork.work, work->node.next,
-+				    &wake_q);
- 	else if (worker->current_work == work)
- 		kthread_insert_work(worker, &fwork.work,
--				    worker->work_list.next);
-+				    worker->work_list.next, &wake_q);
- 	else
- 		noop = true;
- 
- 	raw_spin_unlock_irq(&worker->lock);
- 
-+	wake_up_q(&wake_q);
-+
- 	if (!noop)
- 		wait_for_completion(&fwork.done);
- }
-@@ -1065,6 +1083,7 @@ bool kthread_mod_delayed_work(struct kthread_worker *worker,
- 			      unsigned long delay)
- {
- 	struct kthread_work *work = &dwork->work;
-+	DEFINE_WAKE_Q(wake_q);
- 	unsigned long flags;
- 	int ret = false;
- 
-@@ -1083,9 +1102,12 @@ bool kthread_mod_delayed_work(struct kthread_worker *worker,
- 
- 	ret = __kthread_cancel_work(work, true, &flags);
- fast_queue:
--	__kthread_queue_delayed_work(worker, dwork, delay);
-+	__kthread_queue_delayed_work(worker, dwork, delay, &wake_q);
- out:
- 	raw_spin_unlock_irqrestore(&worker->lock, flags);
-+
-+	wake_up_q(&wake_q);
-+
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(kthread_mod_delayed_work);
--- 
-2.26.2.303.gf8c07b1a785-goog
-
+>
+> Takashi
+>
+> >
+> > Alex
+> >
+> > >
+> > > >
+> > > > Also, please retest with the fresh 5.7-rc3.  There was a known
+> > > > regression regarding HD-audio PM in 5.7-rc1/rc2, and it's been fixe=
+d
+> > > > there (commit 8d6762af302d).
+> > > Linux v5.7-rc3 still has the same problem, unfortunately.
+> > >
+> > > The dmesg is attached.
+> > >
+> > > Thanks for your replies. Kind regards,
+> > > Nicholas
+> > >
+> > > >
+> > > >
+> > > > thanks,
+> > > >
+> > > > Takashi
+> > > _______________________________________________
+> > > amd-gfx mailing list
+> > > amd-gfx@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+> >
