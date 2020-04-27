@@ -2,103 +2,284 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5C3C55194
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 02:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9224C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 02:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA5122080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 02:08:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bhyxtfon"
+	by mail.kernel.org (Postfix) with ESMTP id 971C2206B9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 02:10:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726458AbgD0CIf (ORCPT
+        id S1726431AbgD0CKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 22:08:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726084AbgD0CIf (ORCPT
+        Sun, 26 Apr 2020 22:10:47 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:62000 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726084AbgD0CKr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 22:08:35 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E52BFC061A0F;
-        Sun, 26 Apr 2020 19:08:34 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id h69so7969434pgc.8;
-        Sun, 26 Apr 2020 19:08:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=YqeGjbRkHRifTCZxJaGXA8PQirJ4wk+R8m4oliZtO60=;
-        b=bhyxtfonS87CdrkvwBFz7qAvJHCPO6Rn/C3NENzutjkE0TyO2ONhgDJwj42DQ+0OZ2
-         9iVUNYDH+SOjmdpAixY+DhgpBefl4GLAU4fwJfLKBzYzBKYC/9evYFL+oSYhVvO23E0/
-         figzvrO3K1W4jY0XwRQo2HDjDjlcEpbqI/+0GXhsrNqEWzz1pAZS+s+5UQwdy3DPW+gI
-         G2eUWmf+a2rh0l3BzRtGZHMlg6B3ei5Um2HMY8JIV+KVjFcD7EKEdjm/pn4q03W3gVzP
-         U7zb2o54shedAYyTIFgu5bVLdEdNxoLxSUeR5mtERNR+NGhhbS9HadKwp7zfmDKf4t8a
-         mELg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YqeGjbRkHRifTCZxJaGXA8PQirJ4wk+R8m4oliZtO60=;
-        b=cn398Vo4Jys4ax44cvsZk7MQwZWXIb7UQtGeuB3Cf1DhpzUjXI4A2B3pKfbbU0OgTO
-         kMltV4VJvQK3VrLJYexRo4qqU+lBH+7dz92iOr5hmVoLvL2uMdKTgOUg5xY1qP1Tfkg9
-         rxAy5PNqW8A0AHvDkuZBJaaJOjPaE6JPDirikure1Zsisp7OEIQBdqaUUYRRTRln1qRI
-         U3mtbxdlASGh+UbXFtSpV0FHG7lNukTUvOp7VMIepDnbOvn/JSX+hEZ6cOdNcFlcUs0J
-         dJHbsQryRdzxpJWPDBiwXNxiF5t1CGmhtY06LX83Mp+M9FfbqEbFXdBD3UOCnDLcRTHj
-         oyvw==
-X-Gm-Message-State: AGi0PuYoFqLR7s5Q0AiPm0Mzb7NWiWwWsfsHXmHv2kMeHn/CvIvMhbS4
-        ch+ZYuZp7XWPYA4Me0JFias=
-X-Google-Smtp-Source: APiQypIgoHEyUq1+TMBpUyg8ytGcXIuJu5TdZvBYUuJudAgiYk8L7e2CQv/p6vKvur6+C8wXxd9iPA==
-X-Received: by 2002:a63:1510:: with SMTP id v16mr4873757pgl.17.1587953313922;
-        Sun, 26 Apr 2020 19:08:33 -0700 (PDT)
-Received: from Ryzen-7-3700X.localdomain ([45.152.182.77])
-        by smtp.gmail.com with ESMTPSA id d29sm9179662pgm.83.2020.04.26.19.08.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Apr 2020 19:08:33 -0700 (PDT)
-Date:   Sun, 26 Apr 2020 19:08:30 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        linux-kbuild@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        Sedat Dilek <sedat.dilek@gmail.com>
-Subject: Re: [PATCH v3 3/4] MIPS: VDSO: Use $(LD) instead of $(CC) to link
- VDSO
-Message-ID: <20200427020830.GA260@Ryzen-7-3700X.localdomain>
-References: <20200419202128.20571-1-natechancellor@gmail.com>
- <20200423171807.29713-1-natechancellor@gmail.com>
- <20200423171807.29713-3-natechancellor@gmail.com>
- <20200426162737.GA9322@alpha.franken.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200426162737.GA9322@alpha.franken.de>
+        Sun, 26 Apr 2020 22:10:47 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03R21hA5018203;
+        Sun, 26 Apr 2020 22:10:41 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30me4uxjr1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 26 Apr 2020 22:10:40 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03R229wd019277;
+        Sun, 26 Apr 2020 22:10:40 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30me4uxjqa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 26 Apr 2020 22:10:40 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03R2A4Cc025737;
+        Mon, 27 Apr 2020 02:10:38 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 30mcu5jth7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Apr 2020 02:10:38 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03R2AZfE62063000
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Apr 2020 02:10:36 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D9279A405C;
+        Mon, 27 Apr 2020 02:10:35 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5D32EA405F;
+        Mon, 27 Apr 2020 02:10:34 +0000 (GMT)
+Received: from ltc-wspoon6.aus.stglabs.ibm.com (unknown [9.40.193.95])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 27 Apr 2020 02:10:34 +0000 (GMT)
+From:   Abhishek Goel <huntbag@linux.vnet.ibm.com>
+To:     linuxppc-dev@ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     npiggin@gmail.com, ego@linux.vnet.ibm.com, svaidy@linux.ibm.com,
+        mpe@ellerman.id.au, oohall@gmail.com, mikey@neuling.org,
+        psampat@linux.ibm.com, Abhishek Goel <huntbag@linux.vnet.ibm.com>
+Subject: [RFC 1/3] powernv/cpuidle : Support for pre-entry and post exit of stop state in firmware
+Date:   Sun, 26 Apr 2020 21:10:25 -0500
+Message-Id: <20200427021027.114582-1-huntbag@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-26_11:2020-04-24,2020-04-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
+ lowpriorityscore=0 priorityscore=1501 malwarescore=0 mlxlogscore=999
+ suspectscore=0 impostorscore=0 bulkscore=0 spamscore=0 mlxscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004270011
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 06:27:37PM +0200, Thomas Bogendoerfer wrote:
-> On Thu, Apr 23, 2020 at 10:18:06AM -0700, Nathan Chancellor wrote:
-> > Currently, the VDSO is being linked through $(CC). This does not match
-> > how the rest of the kernel links objects, which is through the $(LD)
-> > variable.
-> 
-> this causes build errors for me when (cross) compiling a big endian target:
-> 
-> target is little endian
-> mips64-linux-gnu-ld: arch/mips/vdso/elf.o: endianness incompatible with that of the selected emulation
-> mips64-linux-gnu-ld: failed to merge target specific data of file arch/mips/vdso/elf.o
+This patch provides kernel framework fro opal support of save restore
+of sprs in idle stop loop. Opal support for stop states is needed to
+selectively enable stop states or to introduce a quirk quickly in case
+a buggy stop state is present.
 
-Thanks for the report. I will look into it tomorrow and hopefully have a
-v4 by then.
+We make a opal call from kernel if firmware-stop-support for stop
+states is present and enabled. All the quirks for pre-entry of stop
+state is handled inside opal. A call from opal is made into kernel
+where we execute stop afer saving of NVGPRs.
+After waking up from 0x100 vector in kernel, we enter back into opal.
+All the quirks in post exit path, if any, are then handled in opal,
+from where we return successfully back to kernel.
+For deep stop states in which additional SPRs are lost, saving and
+restoration will be done in OPAL.
 
-Cheers,
-Nathan
+This idea was first proposed by Nick here:
+https://patchwork.ozlabs.org/patch/1208159/
+
+The corresponding skiboot patch for this kernel patch is here:
+https://patchwork.ozlabs.org/project/skiboot/list/?series=172831
+
+When we callback from OPAL into kernel, r13 is clobbered. So, to
+access PACA we need to restore it from HSPRGO. In future we can
+handle this into OPAL as in here:
+https://patchwork.ozlabs.org/patch/1245275/
+
+Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+---
+
+ v1->v2 : No change in this patch.
+
+ arch/powerpc/include/asm/opal-api.h        |  8 ++++-
+ arch/powerpc/include/asm/opal.h            |  3 ++
+ arch/powerpc/kernel/idle_book3s.S          |  5 +++
+ arch/powerpc/platforms/powernv/idle.c      | 37 ++++++++++++++++++++++
+ arch/powerpc/platforms/powernv/opal-call.c |  2 ++
+ 5 files changed, 54 insertions(+), 1 deletion(-)
+
+diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
+index c1f25a760eb1..a2c782c99c9e 100644
+--- a/arch/powerpc/include/asm/opal-api.h
++++ b/arch/powerpc/include/asm/opal-api.h
+@@ -214,7 +214,9 @@
+ #define OPAL_SECVAR_GET				176
+ #define OPAL_SECVAR_GET_NEXT			177
+ #define OPAL_SECVAR_ENQUEUE_UPDATE		178
+-#define OPAL_LAST				178
++#define OPAL_REGISTER_OS_OPS			181
++#define OPAL_CPU_IDLE				182
++#define OPAL_LAST				182
+ 
+ #define QUIESCE_HOLD			1 /* Spin all calls at entry */
+ #define QUIESCE_REJECT			2 /* Fail all calls with OPAL_BUSY */
+@@ -1181,6 +1183,10 @@ struct opal_mpipl_fadump {
+ 	struct	opal_mpipl_region region[];
+ } __packed;
+ 
++struct opal_os_ops {
++	__be64 os_idle_stop;
++};
++
+ #endif /* __ASSEMBLY__ */
+ 
+ #endif /* __OPAL_API_H */
+diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
+index 9986ac34b8e2..3c340bc4df8e 100644
+--- a/arch/powerpc/include/asm/opal.h
++++ b/arch/powerpc/include/asm/opal.h
+@@ -400,6 +400,9 @@ void opal_powercap_init(void);
+ void opal_psr_init(void);
+ void opal_sensor_groups_init(void);
+ 
++extern int64_t opal_register_os_ops(struct opal_os_ops *os_ops);
++extern int64_t opal_cpu_idle(__be64 srr1_addr, uint64_t psscr);
++
+ #endif /* __ASSEMBLY__ */
+ 
+ #endif /* _ASM_POWERPC_OPAL_H */
+diff --git a/arch/powerpc/kernel/idle_book3s.S b/arch/powerpc/kernel/idle_book3s.S
+index 22f249b6f58d..8d287d1d06c0 100644
+--- a/arch/powerpc/kernel/idle_book3s.S
++++ b/arch/powerpc/kernel/idle_book3s.S
+@@ -49,6 +49,8 @@ _GLOBAL(isa300_idle_stop_noloss)
+  */
+ _GLOBAL(isa300_idle_stop_mayloss)
+ 	mtspr 	SPRN_PSSCR,r3
++	mr	r6, r13
++	mfspr	r13, SPRN_HSPRG0
+ 	std	r1,PACAR1(r13)
+ 	mflr	r4
+ 	mfcr	r5
+@@ -74,6 +76,7 @@ _GLOBAL(isa300_idle_stop_mayloss)
+ 	std	r31,-8*18(r1)
+ 	std	r4,-8*19(r1)
+ 	std	r5,-8*20(r1)
++	std	r6,-8*21(r1)
+ 	/* 168 bytes */
+ 	PPC_STOP
+ 	b	.	/* catch bugs */
+@@ -91,8 +94,10 @@ _GLOBAL(idle_return_gpr_loss)
+ 	ld	r1,PACAR1(r13)
+ 	ld	r4,-8*19(r1)
+ 	ld	r5,-8*20(r1)
++	ld	r6,-8*21(r1)
+ 	mtlr	r4
+ 	mtcr	r5
++	mr	r13,r6
+ 	/*
+ 	 * KVM nap requires r2 to be saved, rather than just restoring it
+ 	 * from PACATOC. This could be avoided for that less common case
+diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
+index 78599bca66c2..1841027b25c5 100644
+--- a/arch/powerpc/platforms/powernv/idle.c
++++ b/arch/powerpc/platforms/powernv/idle.c
+@@ -35,6 +35,7 @@
+ static u32 supported_cpuidle_states;
+ struct pnv_idle_states_t *pnv_idle_states;
+ int nr_pnv_idle_states;
++static bool firmware_stop_supported;
+ 
+ /*
+  * The default stop state that will be used by ppc_md.power_save
+@@ -602,6 +603,25 @@ struct p9_sprs {
+ 	u64 uamor;
+ };
+ 
++/*
++ * This function is called from OPAL if firmware support for stop
++ * states is present and enabled. It provides a fallback for idle
++ * stop states via OPAL.
++ */
++static uint64_t os_idle_stop(uint64_t psscr, bool save_gprs)
++{
++	/*
++	 * For lite state which does not lose even GPRS we call
++	 * idle_stop_noloss while for all other states we call
++	 * idle_stop_mayloss. Saving and restoration of other additional
++	 * SPRs if required is handled in OPAL. All the quirks are also
++	 * handled in OPAL.
++	 */
++	if (!save_gprs)
++		return isa300_idle_stop_noloss(psscr);
++	return isa300_idle_stop_mayloss(psscr);
++}
++
+ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
+ {
+ 	int cpu = raw_smp_processor_id();
+@@ -613,6 +633,16 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
+ 	unsigned long mmcr0 = 0;
+ 	struct p9_sprs sprs = {}; /* avoid false used-uninitialised */
+ 	bool sprs_saved = false;
++	int rc = 0;
++
++	/*
++	 * Kernel takes decision whether to make OPAL call or not. This logic
++	 * will be combined with the logic for BE opal to take decision.
++	 */
++	if (firmware_stop_supported) {
++		rc = opal_cpu_idle(cpu_to_be64(__pa(&srr1)), (uint64_t) psscr);
++		goto out;
++	}
+ 
+ 	if (!(psscr & (PSSCR_EC|PSSCR_ESL))) {
+ 		/* EC=ESL=0 case */
+@@ -1232,6 +1262,10 @@ static int pnv_parse_cpuidle_dt(void)
+ 		pr_warn("opal: PowerMgmt Node not found\n");
+ 		return -ENODEV;
+ 	}
++
++	if (of_device_is_compatible(np, "firmware-stop-supported"))
++		firmware_stop_supported = true;
++
+ 	nr_idle_states = of_property_count_u32_elems(np,
+ 						"ibm,cpu-idle-state-flags");
+ 
+@@ -1326,6 +1360,7 @@ static int pnv_parse_cpuidle_dt(void)
+ 
+ static int __init pnv_init_idle_states(void)
+ {
++	struct opal_os_ops os_ops;
+ 	int cpu;
+ 	int rc = 0;
+ 
+@@ -1349,6 +1384,8 @@ static int __init pnv_init_idle_states(void)
+ 		}
+ 	}
+ 
++	os_ops.os_idle_stop = be64_to_cpu(os_idle_stop);
++	rc = opal_register_os_ops((struct opal_os_ops *)(&os_ops));
+ 	/* In case we error out nr_pnv_idle_states will be zero */
+ 	nr_pnv_idle_states = 0;
+ 	supported_cpuidle_states = 0;
+diff --git a/arch/powerpc/platforms/powernv/opal-call.c b/arch/powerpc/platforms/powernv/opal-call.c
+index 5cd0f52d258f..c885e607ba62 100644
+--- a/arch/powerpc/platforms/powernv/opal-call.c
++++ b/arch/powerpc/platforms/powernv/opal-call.c
+@@ -293,3 +293,5 @@ OPAL_CALL(opal_mpipl_query_tag,			OPAL_MPIPL_QUERY_TAG);
+ OPAL_CALL(opal_secvar_get,			OPAL_SECVAR_GET);
+ OPAL_CALL(opal_secvar_get_next,			OPAL_SECVAR_GET_NEXT);
+ OPAL_CALL(opal_secvar_enqueue_update,		OPAL_SECVAR_ENQUEUE_UPDATE);
++OPAL_CALL(opal_register_os_ops,			OPAL_REGISTER_OS_OPS);
++OPAL_CALL(opal_cpu_idle,			OPAL_CPU_IDLE);
+-- 
+2.17.1
+
