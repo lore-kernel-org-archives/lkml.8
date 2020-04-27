@@ -2,149 +2,180 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FE7C4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6D8C54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BBAB206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22D55214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:50:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ZSmL+PjA"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="XgxUF9Vy";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="pbNz3UCZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbgD0Tt5 (ORCPT
+        id S1726698AbgD0TuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 15:49:57 -0400
-Received: from gateway31.websitewelcome.com ([192.185.144.219]:28733 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725919AbgD0Tt5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 15:49:57 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id D89302189
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 14:49:55 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id T9lLjfVjUAGTXT9lLjyLUz; Mon, 27 Apr 2020 14:49:55 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=d0MbhRJ5eD5Y7+MhsOSEX8wmNhxsr/DO77LwRTLGH3A=; b=ZSmL+PjA81Nrs3oA6zFvWX8UD
-        szqbmabAC2zJN0+NbVZIJZS9fl4YVzBjZN9U9oeVNwK17BJwciwyrNoUS/WMLt9JVWAhPE/u9VV7N
-        W9Tlz2agUZaTpuFHYuQzJnbMiIg7E36Uykv2YGBSH4BoMNERDWPKMXhL7ArqZmOP+c7o0hDOlYo3y
-        U3nGorclYR1qwzuAzQ6EG6bubV3EN4J+b0Dwc4Ewxa2VrGSv9hEZv7LIseCy1l3ck/uuqgO/+8HWQ
-        VCX8gak32LTN7skd94nuBR8xceCcvA6Td7/QEkWXrA8edxzXY42nfzmFchibgzOEgZa1F6eiVokCd
-        OayKG4aIw==;
-Received: from [201.162.241.110] (port=6103 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jT9lL-000zx6-BA; Mon, 27 Apr 2020 14:49:55 -0500
-Date:   Mon, 27 Apr 2020 14:54:13 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org, Joe Perches <joe@perches.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH v2 2/3] mtd: lpddr: Replace printk with pr_notice
-Message-ID: <ff48ce07ef208ba65b858f09279a3b36031d64d2.1588016644.git.gustavo@embeddedor.com>
-References: <cover.1588016644.git.gustavo@embeddedor.com>
+        Mon, 27 Apr 2020 15:50:08 -0400
+Received: from mail.z3ntu.xyz ([128.199.32.197]:53132 "EHLO mail.z3ntu.xyz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725919AbgD0TuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 15:50:08 -0400
+Received: by mail.z3ntu.xyz (Postfix, from userid 182)
+        id 2477BC4D5F; Mon, 27 Apr 2020 19:50:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1588017006; bh=Tp5K0z6qXk66LE+x4u+qGGY18uOXh/OQIqEnu5hZFXg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=XgxUF9Vyf52xMS3BxfBY340LUDK+q6P4zfeGyNkRPGJKJQRuEZGKkmG0IywjstE1d
+         YVcJ9+L4y5alvyz8HYnMnGGK4DFZbOaBEAlB4W4a5FkUo1+pKkTPrO74965c1gSPvB
+         CzMwQ+WPAlGueZT+gRjdaruDvji8BV4n3DcFcQBY=
+Received: from g550jk.localnet (80-110-124-168.cgn.dynamic.surfer.at [80.110.124.168])
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 78112C4C9D;
+        Mon, 27 Apr 2020 19:49:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1588016997; bh=Tp5K0z6qXk66LE+x4u+qGGY18uOXh/OQIqEnu5hZFXg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=pbNz3UCZ4ArCYHMDrSstU3Ei+42CwaW2E6sA6fEd4B3Ds5xdLdg87gkkHJ9EOuxWv
+         mS2RG4rD+ZiBT0uF6/g0Pg0aaIWZ2wXShtqffynnT1izO8Y+ukVdAv2nsgM/fFDyHa
+         qmOYcX/5wTQ3Uo/gIOWSwWoN0t/79F4nq+fL/Pzs=
+From:   Luca Weiss <luca@z3ntu.xyz>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH v3 2/2] leds: add sgm3140 driver
+Date:   Mon, 27 Apr 2020 21:49:54 +0200
+Message-ID: <318932736.Jt2qlLCP7m@g550jk>
+In-Reply-To: <20200427095102.GA21572@duo.ucw.cz>
+References: <20200421191354.1443017-1-luca@z3ntu.xyz> <20200421191354.1443017-3-luca@z3ntu.xyz> <20200427095102.GA21572@duo.ucw.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1588016644.git.gustavo@embeddedor.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.241.110
-X-Source-L: No
-X-Exim-ID: 1jT9lL-000zx6-BA
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.162.241.110]:6103
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 31
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: multipart/signed; boundary="nextPart4979951.K97e9W9pSL"; micalg="pgp-sha256"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pr_notice is preferred over printk.
+--nextPart4979951.K97e9W9pSL
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Also, coalesce formats as coalescing is part of coding-style:
-"never break user-visible strings such as printk messages"
+On Montag, 27. April 2020 11:51:02 CEST Pavel Machek wrote:
+> Hi!
+> 
+> > Add a driver for the SGMICRO SGM3140 Buck/Boost Charge Pump LED driver.
+> > 
+> > This device is controlled by two GPIO pins, one for enabling and the
+> > second one for switching between torch and flash mode.
+> > 
+> > Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> 
+> Thanks, applied, but... I may remove it again.
+> 
+> > +++ b/drivers/leds/leds-sgm3140.c
+> > @@ -0,0 +1,320 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> 
+> Would you consider GPL-2+?
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
-Changes in v2:
- - Coalesce formats and update changelog text, accordingly.
+I don't really have a preference either way but GPL-2.0-or-later is fine for 
+me.
 
- include/linux/mtd/pfow.h | 27 +++++++++++----------------
- 1 file changed, 11 insertions(+), 16 deletions(-)
+> 
+> > +#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
+> > +static void sgm3140_init_v4l2_flash_config(struct sgm3140 *priv,
+> 
+> Ok.
+> 
+> > +static int sgm3140_probe(struct platform_device *pdev)
+> > +{
+> 
+> ...
+> 
+> > +	led_cdev->brightness_set_blocking = sgm3140_brightness_set;
+> > +	led_cdev->max_brightness = LED_ON;
+> 
+> Don't do this, unless you really have 255 levels of brightness.
 
-diff --git a/include/linux/mtd/pfow.h b/include/linux/mtd/pfow.h
-index c65d7a3be3c6..cd21c6768065 100644
---- a/include/linux/mtd/pfow.h
-+++ b/include/linux/mtd/pfow.h
-@@ -127,31 +127,26 @@ static inline void print_drs_error(unsigned dsr)
- 	int prog_status = (dsr & DSR_RPS) >> 8;
- 
- 	if (!(dsr & DSR_AVAILABLE))
--		printk(KERN_NOTICE"DSR.15: (0) Device not Available\n");
-+		pr_notice("DSR.15: (0) Device not Available\n");
- 	if ((prog_status & 0x03) == 0x03)
--		printk(KERN_NOTICE"DSR.9,8: (11) Attempt to program invalid "
--						"half with 41h command\n");
-+		pr_notice("DSR.9,8: (11) Attempt to program invalid half with 41h command\n");
- 	else if (prog_status & 0x02)
--		printk(KERN_NOTICE"DSR.9,8: (10) Object Mode Program attempt "
--					"in region with Control Mode data\n");
-+		pr_notice("DSR.9,8: (10) Object Mode Program attempt in region with Control Mode data\n");
- 	else if (prog_status &  0x01)
--		printk(KERN_NOTICE"DSR.9,8: (01) Program attempt in region "
--						"with Object Mode data\n");
-+		pr_notice("DSR.9,8: (01) Program attempt in region with Object Mode data\n");
- 	if (!(dsr & DSR_READY_STATUS))
--		printk(KERN_NOTICE"DSR.7: (0) Device is Busy\n");
-+		pr_notice("DSR.7: (0) Device is Busy\n");
- 	if (dsr & DSR_ESS)
--		printk(KERN_NOTICE"DSR.6: (1) Erase Suspended\n");
-+		pr_notice("DSR.6: (1) Erase Suspended\n");
- 	if (dsr & DSR_ERASE_STATUS)
--		printk(KERN_NOTICE"DSR.5: (1) Erase/Blank check error\n");
-+		pr_notice("DSR.5: (1) Erase/Blank check error\n");
- 	if (dsr & DSR_PROGRAM_STATUS)
--		printk(KERN_NOTICE"DSR.4: (1) Program Error\n");
-+		pr_notice("DSR.4: (1) Program Error\n");
- 	if (dsr & DSR_VPPS)
--		printk(KERN_NOTICE"DSR.3: (1) Vpp low detect, operation "
--					"aborted\n");
-+		pr_notice("DSR.3: (1) Vpp low detect, operation aborted\n");
- 	if (dsr & DSR_PSS)
--		printk(KERN_NOTICE"DSR.2: (1) Program suspended\n");
-+		pr_notice("DSR.2: (1) Program suspended\n");
- 	if (dsr & DSR_DPS)
--		printk(KERN_NOTICE"DSR.1: (1) Aborted Erase/Program attempt "
--					"on locked block\n");
-+		pr_notice("DSR.1: (1) Aborted Erase/Program attempt on locked block\n");
- }
- #endif /* __LINUX_MTD_PFOW_H */
--- 
-2.26.0
+LED_ON is 1, so the brightness available is 0 - 1.
+
+> 
+> > +	/* Create V4L2 Flash subdev */
+> > +	priv->v4l2_flash = v4l2_flash_init(&pdev->dev,
+> > +					   child_node,
+> > +					   fled_cdev, NULL,
+> > +					   &v4l2_sd_cfg);
+> > +	if (IS_ERR(priv->v4l2_flash)) {
+> 
+> Does this need some #ifdef guards?
+
+v4l2_flash_init has a NULL-returning version when CONFIG_V4L2_FLASH_LED_CLASS 
+is not defined (see https://elixir.bootlin.com/linux/latest/source/include/
+media/v4l2-flash-led-class.h#L166 )
+
+> 
+> > +		ret = PTR_ERR(priv->v4l2_flash);
+> > +		goto err;
+> > +	}
+> > +
+> > +	return ret;
+> 
+> Should this return 0?
+
+ret should be 0 here, so it shouldn't matter much.
+
+> 
+> > +err:
+> > +	fwnode_handle_put(child_node);
+> > +	return ret;
+> > +}
+> 
+> Does non-error path needs handle_put, too?
+
+I don't think so, I'm passing child_node to v4l2_flash_init which then saves 
+the pointer to v4l2_subdev->fwnode. 
+
+The devm_led_classdev_flash_register_ext function also seems to store the 
+pointer (led_cdev->dev->fwnode = init_data->fwnode; in 
+led_classdev_register_ext)
+
+> 
+> Best regards,
+> 								
+	Pavel
+
+Regards,
+Luca
+--nextPart4979951.K97e9W9pSL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEObrSLwgs2pG6FY/6cthDuJ1N11YFAl6nN2IACgkQcthDuJ1N
+11aAZBAA0i4n3JlvsQXSwCK/Fm8tiPmVsJPyFwa/Pt2f4xSUnBtjbBxnkdEt6MhK
+SnYIfBNZAjnTcNQeIObdGMjJ6nhMVk3zqXD8P2QfxQJL3I9izpjQv0cDsMzmFrsk
+JKjWeBCayt/AjhOU5pF48nOe6MDAzNNP+Eg1He2HMzJi43klsuRBtqadn6AzTgWz
+xaCX+BcZDdMZv+ZaJOfUkRkWVEjN2OvIRBSj3uIZMZ09+fTMSUgy26aWyxWMjMYX
+N+jqlBzVfp+UBBHcE3vwTqwlVfn4f5cNlhIAN+g9QtTAZ5/1gH7uMzIAaqZamvJp
+5ckBQvoz07051RkHmlbc5RrJf1rMuVJvnSlFw+MI5jGg7q0GmL6qTE9E8d46KT/8
+L9FV3uHJzeaos5DkGAZ40T0UmB130RzfvIpXcnq6r8dpTatduGHae1Rli8+bsTuL
+CFMywEMutthCiC9ql+FVByTlysTNRZO9V8ca3CwTFVDy90AxfjkZg5Wclo4wkE+o
+3Pj106n1C8jqfRX9dhO79LlcnG6+DOzim0+V+S78pHBPrvzQMVBLExC+VWZiia2a
+Ptk0vbKes2A6BRWWjSNFPun0X1aryXDl3gk3YAeBAN14tjMpepx8JrnzPGRpMD3a
+7rm2xshmhiGC1ncqGW8WUosoEc61IOHXZPN1Pz6osY1RXCm2zzY=
+=y4oW
+-----END PGP SIGNATURE-----
+
+--nextPart4979951.K97e9W9pSL--
+
+
 
