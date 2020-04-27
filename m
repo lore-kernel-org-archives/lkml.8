@@ -2,110 +2,111 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0EAC4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 779E3C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69B14205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:41:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Awr/3rYc"
+	by mail.kernel.org (Postfix) with ESMTP id 5AE1E205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:41:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588016481;
+	bh=PblMWBtQoFDJTZU5sYrsa18EQC2ghwnYCorJeG/zksQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=dglaEWwGeEbnbPPltpMPBzIH1UGs0OigoymC/fuwI8nt3MX0QDRGXJ76z9PcwewnU
+	 jpJAgiesKopqfrW/G1IzMOcKB8+IuZ/4gx90GDutbu2UI1xR3oEnG9l+TN8/2qdmLd
+	 WFqwl9rKWhcCHPv5s75zRDVGagi1iP2IJX3Ir+s8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgD0TlE (ORCPT
+        id S1726679AbgD0TlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 15:41:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55162 "EHLO
+        Mon, 27 Apr 2020 15:41:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725919AbgD0TlE (ORCPT
+        by vger.kernel.org with ESMTP id S1726587AbgD0TlU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 15:41:04 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCE79C0610D5;
-        Mon, 27 Apr 2020 12:41:03 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id c3so28359739otp.8;
-        Mon, 27 Apr 2020 12:41:03 -0700 (PDT)
+        Mon, 27 Apr 2020 15:41:20 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBE83C0610D5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 12:41:19 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id l11so14884866lfc.5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 12:41:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=KJgjJqfYxYx1DamhB8SHVDVYVYMTaoNULn4soSfif8o=;
-        b=Awr/3rYcBw7IUNxOE2pHd9iUsxf+b+0F5oivdZ0gMq4uA1hkZgEw1VVHuOGZWBnp5Z
-         TIp3PNk6UW5NbnIkEyua/1uxF661Lz1zCOl9fCPsE3eF7ib9CcqRstWRMzX2YN0RApif
-         J7mPUujaPVFsvPRM81KcDC9mr8hcliXZUi+4Ba1c9w6Gcf4P569SoJofFY4DJ2b78UPs
-         djVyHuPPLi2KmetXOMEjR4ccGdlKV5P7Y/xwSjYA5ais585oWyKjE53PS0pf1SuiJsdC
-         J/1ZckW+XEo9p1xknc3mqgDPAeU1CrRqUmjkHFzbCfawVx3NTMkqZ72cJl2Gw189Ywum
-         2XYw==
+        bh=/diWUIXgSQwef0RKUapiKWcDC4ZexJVcsy5yNjXeH6I=;
+        b=W+iws1Uhvb61PrxQjvV/PFk7COkKMfJT3gvdmPLDy0AkzMWVNNtRkNa0mIQQ8RS46h
+         wtemENd3mU9RrYEkZPK9CWqOUc2sgBxg2g/Yks8pTCsCdB0FAAwwrV8M7mcKVgAN1jLN
+         uWE2KNsGAcoRArxjWyEFkcLzSTLfR54TY0Ay8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=KJgjJqfYxYx1DamhB8SHVDVYVYMTaoNULn4soSfif8o=;
-        b=IrsKeFfhexGH9Ed/VZXB7fbFz1HwnAuCiaSbLXnYlzZXNGEgX2JI/XzJoJPDEl/K4z
-         hREdBFCyw5mKaUbvHFvLYbrTdisAfakT110O555rnf9UZsOzNnV7qGKHqDxU/BNT0pPX
-         tKqrCy4NXk5izIIuBaJcDtTDDz8R8YKYGXOWS26KicFdEZUFxAt/KChflE0PV9l67oqS
-         M5eKsJk/Qai3d/+2NNr2pa4wMRklK0JKrp30AjezMuD+NrXzjq1aONF3PFWdCY4tNpyS
-         c+9PY8n6sLTfnHzBjs2BHdvGlDgcmUiPBuUUoMk/XET+IwhSPimwDWdMCAILrF7KSXB/
-         XjgA==
-X-Gm-Message-State: AGi0PuZZNrjO+G+xK/OHDChNgC4Jx5sZWlhdXAmVnnf+phRnkrcGnVGo
-        q5fvr+Fq/Ud7bTSASeqEpXuZ0FBmQSCRYQOdrsE=
-X-Google-Smtp-Source: APiQypJ1FMuh3neyv5Ove0+Oveml6rJ7zmUzQYEa8VLdUSSnKo/+3+qY5TyFQK4Y9SO0B4S0U5QMWyP+fowj5p+NOTE=
-X-Received: by 2002:aca:5e0b:: with SMTP id s11mr213497oib.160.1588016463282;
- Mon, 27 Apr 2020 12:41:03 -0700 (PDT)
+        bh=/diWUIXgSQwef0RKUapiKWcDC4ZexJVcsy5yNjXeH6I=;
+        b=MiL3Cm9lUTtPq8L8PiEjnL1nFRFCM/oqmg8ODRAYWl0t/3/Jw0DzBObibRst23aC9M
+         +bQbppt5f/soSYdMnbIB5IFrHpIlz6+objZLJVKqmwkDeXnMm12sZTOy1wUoF7eL0ZRt
+         gyDzlfVkYg0AKbEW4Jy2lYXn1BGydjvgazr6QQczi6v1lnFRzfel6p41TadZp3djMuif
+         odjgqfRZwJ1LDmALgpr+RjE961RYxwNnRjWgjPFiBdpLr0Y6n85MZueQoIAMx6Jd8a5X
+         r/w3t4H6lMdr2R8FHsKF0Mcpo1LJmjFvphj/DI6TYX9FBQvbg6s3pEnKcJJ6f1gBFW40
+         ml1g==
+X-Gm-Message-State: AGi0PuZT+l5AKHnctQyThSZAMmz9mMXAf6aefTOGbsGL6SR82umMqSvd
+        SYb+CO1RdUSrWkxUwuoJP2ZxQsPZzA4=
+X-Google-Smtp-Source: APiQypJkho1O0fFpn9dcV9E+yRhmuFKrrMcj9DJMNKqM5Easxnl44wgM0XxXvgoS217b1qmSBubShg==
+X-Received: by 2002:a19:2d1d:: with SMTP id k29mr16461534lfj.46.1588016476467;
+        Mon, 27 Apr 2020 12:41:16 -0700 (PDT)
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
+        by smtp.gmail.com with ESMTPSA id a28sm11769027lfr.4.2020.04.27.12.41.14
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 12:41:15 -0700 (PDT)
+Received: by mail-lf1-f50.google.com with SMTP id 198so14916822lfo.7
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 12:41:14 -0700 (PDT)
+X-Received: by 2002:a05:6512:14a:: with SMTP id m10mr16317524lfo.152.1588016474219;
+ Mon, 27 Apr 2020 12:41:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200326200634.222009-1-dancol@google.com> <20200401213903.182112-1-dancol@google.com>
- <CAKOZueuu=bGt4O0xjiV=9_PC_8Ey8pa3NjtJ7+O-nHCcYbLnEg@mail.gmail.com>
- <alpine.LRH.2.21.2004230253530.12318@namei.org> <02468636-c981-2502-d4f4-58afbf8506b1@schaufler-ca.com>
-In-Reply-To: <02468636-c981-2502-d4f4-58afbf8506b1@schaufler-ca.com>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Mon, 27 Apr 2020 15:40:51 -0400
-Message-ID: <CAEjxPJ4WKu9L4Bey1YVo3-tb0Td7Lz5WYw=d1jJ-TN5j5QMcAg@mail.gmail.com>
-Subject: Re: [PATCH v5 0/3] SELinux support for anonymous inodes and UFFD
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     James Morris <jmorris@namei.org>,
-        Daniel Colascione <dancol@google.com>,
-        Tim Murray <timmurray@google.com>,
-        SElinux list <selinux@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Paul Moore <paul@paul-moore.com>,
-        Nick Kralevich <nnk@google.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        John Johansen <john.johansen@canonical.com>
+References: <20200425133504.GA11354@nishad> <20200427155617.GY6749@magnolia>
+ <20200427172959.GB3936841@kroah.com> <515362d10c06567f35f0d5b7c3f2e121769fb04b.camel@perches.com>
+ <20200427174611.GA4035548@kroah.com> <791a97d5d4dfd11af533a0bbd6ae27d1a2d479ee.camel@perches.com>
+ <20200427183629.GA20158@kroah.com> <16b209d0b0c8034db62f8d4d0a260a00f0aa5d5e.camel@perches.com>
+In-Reply-To: <16b209d0b0c8034db62f8d4d0a260a00f0aa5d5e.camel@perches.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 27 Apr 2020 12:40:58 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgN=Ox112_O=GQ-kwMxYduix9gZFsr1GXXJWLpDpNDm5g@mail.gmail.com>
+Message-ID: <CAHk-=wgN=Ox112_O=GQ-kwMxYduix9gZFsr1GXXJWLpDpNDm5g@mail.gmail.com>
+Subject: Re: [PATCH] xfs: Use the correct style for SPDX License Identifier
+To:     Joe Perches <joe@perches.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Nishad Kamdar <nishadkamdar@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 1:17 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
+On Mon, Apr 27, 2020 at 11:59 AM Joe Perches <joe@perches.com> wrote:
 >
-> On 4/22/2020 9:55 AM, James Morris wrote:
-> > On Mon, 13 Apr 2020, Daniel Colascione wrote:
-> >
-> >> On Wed, Apr 1, 2020 at 2:39 PM Daniel Colascione <dancol@google.com> wrote:
-> >>> Changes from the fourth version of the patch:
-> >>
-> >> Is there anything else that needs to be done before merging this patch series?
-> > The vfs changes need review and signoff from the vfs folk, the SELinux
-> > changes by either Paul or Stephen, and we also need signoff on the LSM
-> > hooks from other major LSM authors (Casey and John, at a minimum).
->
-> You can add my
->
->         Acked-by: Casey Schaufler <casey@schaufler-ca.com>
->
-> for this patchset.
+> There's no real reason not to prefer the latest versions
+> over the deprecated ones.
 
-This version of the series addresses all of my comments, so you can add my
-Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+Joe, your pedantic approach is really hard to work with. Please work on it.
 
-I don't know though how to get a response from the vfs folks; the
-series has been posted repeatedly without any
-response by them.
+The fact is, there *is * a reason to avoid the pedantic "change to new
+version" - pointless churn.
+
+We have a lot of the original style spdx markers, because those are
+what we started with. And changing them is pointless.
+
+I know you love your scripts to change things around, but to everybody
+else it tends to be just extra work and noise.
+
+              Linus
