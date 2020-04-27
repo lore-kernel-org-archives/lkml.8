@@ -2,136 +2,69 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF7EC4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D31CFC54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2A702070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:46:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588020407;
-	bh=S0JGqMXyfhwp4pwnB+rzqtWpJTu9aRY8xFng4Qs4J64=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eI2tzVcdg4TMpxhQsZvyl1YckUpwQEgmFcGibuvdgH14awRx55wxbAZ37t1vqL7nH
-	 JaJoYPjUIptuCc9fUZ+a75ZOi9O5HU4EVHKv3P6ZUe73lmsVKg4Q5JytHqeoUGDSPP
-	 4YIeMooZmtFUumLXhPSw37YBF2xcB16cGWB3FOOU=
+	by mail.kernel.org (Postfix) with ESMTP id BC0552070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:50:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgD0Uqr (ORCPT
+        id S1726678AbgD0UuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 16:46:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37260 "EHLO
+        Mon, 27 Apr 2020 16:50:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726233AbgD0Uqq (ORCPT
+        by vger.kernel.org with ESMTP id S1726233AbgD0UuQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 16:46:46 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70B3FC0610D5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 13:46:44 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id t11so15007306lfe.4
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 13:46:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dWR2+QPOvDM4Hcpn5wbulNRTutKr2RiZhAYOOOoHLGE=;
-        b=XXUouBL3HsVdD5w4SVkh5b5D8g9+OFHyEx+DyQoaqHU6zlLiC7Dv4gWIn8To8ExMgw
-         NntG+tgahRdl4PgQkAptOglp72S4qq9gaTpBKYXOGyoVBKVhhZlHK+aoAtOs0FgfdNnG
-         Q4eXzMDYFO1E9IXcsn+dcaRD4uEyvCywvcRfE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dWR2+QPOvDM4Hcpn5wbulNRTutKr2RiZhAYOOOoHLGE=;
-        b=McutMoyy8u7finb679WxfYPejebul/aUgMUtTSnIGtYBjHUlZHYqs2bdCnqLX2ChNB
-         thDAaHLI2oVNIqufk0AkoFH9uVUlG6JCAOoEP3ai80pMb0hXZCtzm0lwVsa4bZh1hBJI
-         QQ6YXc8f4Ovza5/7x61ZfNjNc7dAegEtNJFWDBGba8W9I+ljfWWvTcD7iFapM3aLtO49
-         977OIO7CaX4R4oRZ038OIPV2n+WMuSBHG5csWnuEahxQElv7m2+Xxpqg96unw2u+rAO/
-         RcphQUhsHnYtr+IoZhbt0Yk3cunMsUym7fJlu1wY+r4No1FhxXUmvaegO/czopEcXa5J
-         Ph3g==
-X-Gm-Message-State: AGi0PuZU+WhymPPWg/WtA9T1gJaD6Loo1r5TxSpw4GKK4O/xYCSyDZ4I
-        dAHBMUEv/bUYhGvqKKed2wHeioT88RY=
-X-Google-Smtp-Source: APiQypJhDfxcdP4Ub0wCcaMrGE1KL7Kre6rARAO1kTHkvlHXEm6ltjCwzseUWom4Xu+g2ySHuogURQ==
-X-Received: by 2002:ac2:4213:: with SMTP id y19mr15620705lfh.99.1588020402519;
-        Mon, 27 Apr 2020 13:46:42 -0700 (PDT)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id r9sm10176766ljh.36.2020.04.27.13.46.41
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Apr 2020 13:46:41 -0700 (PDT)
-Received: by mail-lf1-f46.google.com with SMTP id t11so15007240lfe.4
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 13:46:41 -0700 (PDT)
-X-Received: by 2002:a19:240a:: with SMTP id k10mr16839809lfk.30.1588020401250;
- Mon, 27 Apr 2020 13:46:41 -0700 (PDT)
+        Mon, 27 Apr 2020 16:50:16 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96E09C0610D5;
+        Mon, 27 Apr 2020 13:50:16 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jTAhN-00D2oe-Sy; Mon, 27 Apr 2020 20:49:54 +0000
+Date:   Mon, 27 Apr 2020 21:49:53 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jeremy Kerr <jk@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/5] powerpc/spufs: simplify spufs core dumping
+Message-ID: <20200427204953.GY23230@ZenIV.linux.org.uk>
+References: <20200427200626.1622060-1-hch@lst.de>
+ <20200427200626.1622060-2-hch@lst.de>
 MIME-Version: 1.0
-References: <20200425133504.GA11354@nishad> <20200427155617.GY6749@magnolia>
- <20200427172959.GB3936841@kroah.com> <515362d10c06567f35f0d5b7c3f2e121769fb04b.camel@perches.com>
- <20200427174611.GA4035548@kroah.com> <791a97d5d4dfd11af533a0bbd6ae27d1a2d479ee.camel@perches.com>
- <20200427183629.GA20158@kroah.com> <16b209d0b0c8034db62f8d4d0a260a00f0aa5d5e.camel@perches.com>
- <CAHk-=wgN=Ox112_O=GQ-kwMxYduix9gZFsr1GXXJWLpDpNDm5g@mail.gmail.com> <fdcc8aa5a506ba9c6a3e6e68a7147161424985bf.camel@perches.com>
-In-Reply-To: <fdcc8aa5a506ba9c6a3e6e68a7147161424985bf.camel@perches.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 27 Apr 2020 13:46:25 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi2bdXuYhC9bd9FShtcf_u-6RUb3Qr_aXq3XtbCxR5NGQ@mail.gmail.com>
-Message-ID: <CAHk-=wi2bdXuYhC9bd9FShtcf_u-6RUb3Qr_aXq3XtbCxR5NGQ@mail.gmail.com>
-Subject: Re: [PATCH] xfs: Use the correct style for SPDX License Identifier
-To:     Joe Perches <joe@perches.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Nishad Kamdar <nishadkamdar@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427200626.1622060-2-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 1:39 PM Joe Perches <joe@perches.com> wrote:
->
-> > The fact is, there *is * a reason to avoid the pedantic "change to new
-> > version" - pointless churn.
->
-> Have you *looked* at this proposed change?
->
-> It just changes // SPDX comments to /* */ in .h files.
+On Mon, Apr 27, 2020 at 10:06:21PM +0200, Christoph Hellwig wrote:
 
-That's not what I was reacting to - it was you arguing with Greg about
-how we use the legacy format.
+> @@ -1988,7 +1984,12 @@ static ssize_t spufs_mbox_info_read(struct file *file, char __user *buf,
+>  	if (ret)
+>  		return ret;
+>  	spin_lock(&ctx->csa.register_lock);
+> -	ret = __spufs_mbox_info_read(ctx, buf, len, pos);
+> +	/* EOF if there's no entry in the mbox */
+> +	if (ctx->csa.prob.mb_stat_R & 0x0000ff) {
+> +		ret = simple_read_from_buffer(buf, len, pos,
+> +				&ctx->csa.prob.pu_mb_R,
+> +				sizeof(ctx->csa.prob.pu_mb_R));
+> +	}
+>  	spin_unlock(&ctx->csa.register_lock);
+>  	spu_release_saved(ctx);
 
-I really don't care at all about the comment character choices
-(either), but wanted to point out that as far as the kernel is
-concerned, the "deprecated" spdx keys simply arent' deprecated, they
-are just as valid.
-
-> Piecemeal changes aren't great.
-
-Piecemeal changes are fine, when the change doesn't have to be done AT ALL.
-
-There is simply no point in EVER changing "GPL-2.0" into
-"GPL-2.0-only" etc, unless the thing is then touched for some other
-reason (which it may never be).
-
-Scripted changes are not as useful as you think. They often cause
-unnecessary noise in other respects.
-
-I'm constantly seeing stupid pointless work due to irrelevant patches
-that then show up in "get_maintainer" output because they show up as
-changes to drivbers that nobody cares about.
-
-Or "git blame -C" things that I have to ignore and go past that
-history because the scripted change showed an (uninteresting) change.
-
-The fact is, pointless churn is BAD. It's a real expense. The whole
-"get it over with once" argument is simply completely wrong.
-
-There are real advantages to "don't touch stuff that doesn't actively
-need touching".
-
-              Linus
+Again, this really needs fixing.  Preferably - as a separate commit preceding
+this series, so that it could be backported.  simple_read_from_buffer() is
+a blocking operation.  Yes, I understand that mainline has the same bug;
+it really does need to be fixed and having to backport this series is not
+a good idea, for obvious reasons.
