@@ -8,76 +8,77 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DE8C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D12C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0CCE2098B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41DBB206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:40:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bBvWnAwP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bvNNv/co"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbgD0Nkz (ORCPT
+        id S1727894AbgD0Nk6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 09:40:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54738 "EHLO
+        Mon, 27 Apr 2020 09:40:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727829AbgD0Nks (ORCPT
+        with ESMTP id S1727844AbgD0Nku (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 09:40:48 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EF4EC0610D5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 06:40:48 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id k1so20636592wrx.4
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 06:40:48 -0700 (PDT)
+        Mon, 27 Apr 2020 09:40:50 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7E3CC0610D5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 06:40:50 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id k1so20636781wrx.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 06:40:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=wMGGl/RQGQGl3Tw0MqZYpAx5bAhfZ7cMnl8wQSYyYX4=;
-        b=bBvWnAwPttxWPqi+FB6EnQYGIS6iy13c+V47NjPym6tFachGQ8LlSVV9d1LZt1IgJ2
-         kuyHenHVCmuM1sO4Bo639XJGxVLEArIpXUSh4A5ixGh8kUypH4lr61WoufBhV93u66+L
-         NB5m/QXHT3nmCUjtDvbix1e8pGtMFjO/lbwFm1zVjiMy2wun/YDRmXr2jse+dqLUrcO4
-         CmuGweedt9tVddX0SRbaOekAZ44OGSwH9fi5TgdRJAEobfCHQ+bdHAErWCHQFuscHkzc
-         tDyld+9CQczAB6hD+2SBretDJsa9Aih2DXwENjIe9jtC4mQsZxtQLntvE5WRt305CR4W
-         dgQg==
+        bh=HsHK9y0GL9/8Kp1lq4dl22la5baTSZpqCWLJ4R7b1d8=;
+        b=bvNNv/coGQwtz6bglmhoEFGQeNrnsBIaXBjjnub6HRiiFqVJHHcf3srmeXdkOJqFgv
+         vNa3kK4G6apoNQENR6qz/uPwIKBA90ZJF6/la9vYinvJZdHZR2O/Xv8riO4Sl0HfWyki
+         M/IQFDGv9e5zZ1u8gR8PxQvoC28Mshm/gtL1N9200B7lw1pxVumGDsI8JXz+bCVhWhpL
+         TH6gs3LiW7Txlk9o4e98JprWUIimun7eSfb7iB5xNWNpJFGCzKLh8T3qwrufQHH8GtkK
+         eq4EJkuM/0CWWCN9GWqZp1B9rz6WqDl2JbW9iRA8Pw55iHyRbBS5phWBoYfdt5Gpy8Ei
+         0DOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=wMGGl/RQGQGl3Tw0MqZYpAx5bAhfZ7cMnl8wQSYyYX4=;
-        b=JG3wfyAwO+jFGze8NcL88QuxrAmzSx9BKTBvbH6guRLKm3RcAqXGvPQw3ZTwRJqyc+
-         jKxlcQPpvx5X/wyBsVqNl3UGRX2Y+fzKN38OZGcYJ8MabWFdGBa6vOB/PJTfmyEHzTbZ
-         tYMRsQSkg2Z0zmj4v0Kzt5HGN5Z1dceY3Jk91PWvAzh3w8zOeEmmVe2SaUROwE2p/kB+
-         Za9eT71OMTzMgudSWgnGCi1CEGWbW+m1RU5XDR/JYKDaw8MjLEFizekgALVXLu6yLS0c
-         Nj98SCAf1cn1GdY112RwJlrYh9SxxpO9UVGi764+FuWKgjCoFceWLAr7UDj7xqualFRT
-         2nDA==
-X-Gm-Message-State: AGi0PuaRfhK0r+eIhExNGPJxm4nkv5jOfAwAoR0DETbjr8U3QOYydnNI
-        ZOG2RVWa/fGuBS918F1Y9h8=
-X-Google-Smtp-Source: APiQypJ+vpd3j8uFk33qsEeNwSqj96zUOachqA2BOBjSIjOt1H2vebbvjiOSu5MZ7Av6DR3rhS+zWA==
-X-Received: by 2002:a5d:6188:: with SMTP id j8mr26599361wru.119.1587994847336;
-        Mon, 27 Apr 2020 06:40:47 -0700 (PDT)
+        bh=HsHK9y0GL9/8Kp1lq4dl22la5baTSZpqCWLJ4R7b1d8=;
+        b=Si8PTYXmuzkrdOSbrajh5FNzK0bGmgPe04ZKxS6ErdmQo9eZ4QzFi33h8/15/6uCwv
+         O5bujN6/8FW3gXffItbti6+MrGH2pi7ONf6Ell6ZfT19s36xQojLxHMHE2ck/79h6+WP
+         PENLrJKhOL9p6uK2GdTc9TKg0aCGtvy6PQmpeyUzi+oX3el4FxPsLZGog7+e/+fgA+pt
+         usPvYKCpkWkeBblv8wY1wA8wyaCXwlaNgf+5brGcs6tEeDFkdzlcGIv+A3kH1lSPX8jH
+         +5OOUvBCJfoZRzE9hgQI6qyhunxui4gydu6mVBL9/3HkTWuVvYQSC9oHEsXL5I5dFUXr
+         Ch6A==
+X-Gm-Message-State: AGi0PuZY8pY8DrMo/ZF5oTtLeyC6IeGeN8IDRgJpr4nPhlUxrxyTMBDa
+        jhGKA1ka1HzDNWkB5iVUjXU=
+X-Google-Smtp-Source: APiQypIiO4KsC066dkupF2hUWSNHdQ/YFtWDO4yT2K2Eh/66bW28IM5dPBE4nk0mIdNwY3gDWHuxQw==
+X-Received: by 2002:a5d:5651:: with SMTP id j17mr26810575wrw.406.1587994849457;
+        Mon, 27 Apr 2020 06:40:49 -0700 (PDT)
 Received: from linuxdev2.toradex.int (31-10-206-124.static.upc.ch. [31.10.206.124])
-        by smtp.gmail.com with ESMTPSA id g186sm16290640wme.7.2020.04.27.06.40.46
+        by smtp.gmail.com with ESMTPSA id g186sm16290640wme.7.2020.04.27.06.40.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 06:40:46 -0700 (PDT)
+        Mon, 27 Apr 2020 06:40:48 -0700 (PDT)
 From:   Max Krummenacher <max.oss.09@gmail.com>
 X-Google-Original-From: Max Krummenacher <max.krummenacher@toradex.com>
 List-Id: <soc.lore.kernel.org>
 To:     Max Krummenacher <max.krummenacher@toradex.com>, soc@kernel.org
 Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Will Deacon <will@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Anson Huang <Anson.Huang@nxp.com>,
+        linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
         Olof Johansson <olof@lixom.net>,
         Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH v3 2/5] arm64: defconfig: add DRM_DISPLAY_CONNECTOR
-Date:   Mon, 27 Apr 2020 15:40:00 +0200
-Message-Id: <20200427134003.45188-3-max.krummenacher@toradex.com>
+Subject: [PATCH v3 4/5] arm64: defconfig: add MEDIA_PLATFORM_SUPPORT
+Date:   Mon, 27 Apr 2020 15:40:02 +0200
+Message-Id: <20200427134003.45188-5-max.krummenacher@toradex.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200427134003.45188-1-max.krummenacher@toradex.com>
 References: <20200427134003.45188-1-max.krummenacher@toradex.com>
@@ -88,33 +89,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DRM_DISPLAY_CONNECTOR. This got introduced with the bridge rework
-Which renamed among others DRM_DUMB_VGA_DAC.
+Commit 06b93644f4d1 ("media: Kconfig: add an option to filter in/out
+platform drivers") adds a new Kconfig symbol which now hides drivers
+currently enabled in the arm64 defconfig. Enable it to get those
+drivers back.
 
 Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
 
 ---
 
-Changes in v3: None
-Changes in v2:
-- additional patch adding DRM_DISPLAY_CONNECTOR as recommended by Geert and Laurent
+Changes in v3:
+- new patch: added 'arm64: defconfig: add MEDIA_PLATFORM_SUPPORT' now
+  needed for some enabled drivers or these drivers will silently not
+  be built.
+
+Changes in v2: None
 
  arch/arm64/configs/defconfig | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 5033cfdde3d8d..218aa4fa74734 100644
+index b8259814065dc..472aa82b9feee 100644
 --- a/arch/arm64/configs/defconfig
 +++ b/arch/arm64/configs/defconfig
-@@ -615,6 +615,7 @@ CONFIG_DRM_PANEL_LVDS=m
- CONFIG_DRM_PANEL_SIMPLE=m
- CONFIG_DRM_SIMPLE_BRIDGE=m
- CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA=m
-+CONFIG_DRM_DISPLAY_CONNECTOR=m
- CONFIG_DRM_SII902X=m
- CONFIG_DRM_THINE_THC63LVD1024=m
- CONFIG_DRM_TI_SN65DSI86=m
+@@ -569,6 +569,7 @@ CONFIG_MEDIA_DIGITAL_TV_SUPPORT=y
+ CONFIG_MEDIA_SDR_SUPPORT=y
+ CONFIG_MEDIA_CONTROLLER=y
+ CONFIG_VIDEO_V4L2_SUBDEV_API=y
++CONFIG_MEDIA_PLATFORM_SUPPORT=y
+ # CONFIG_DVB_NET is not set
+ CONFIG_MEDIA_USB_SUPPORT=y
+ CONFIG_USB_VIDEO_CLASS=m
 -- 
 2.20.1
 
