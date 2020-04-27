@@ -2,104 +2,193 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2004BC5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FA4C5519B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2E6D2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D078E2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:56:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="z62B+eAr"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ZxAicqBE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726639AbgD0Izx (ORCPT
+        id S1726755AbgD0I4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 04:55:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38452 "EHLO
+        Mon, 27 Apr 2020 04:56:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726003AbgD0Izw (ORCPT
+        with ESMTP id S1726539AbgD0I4N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 04:55:52 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ABF2C061A41
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 01:55:52 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id 131so13103940lfh.11
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 01:55:52 -0700 (PDT)
+        Mon, 27 Apr 2020 04:56:13 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF657C061A10
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 01:56:11 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id k13so19559873wrw.7
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 01:56:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=WD5CEB84PYGnkljL91GU2HcSm2iIFIOGAEJsr9kazRQ=;
-        b=z62B+eAr+yM46IxeY8gnFq4+/05zI8Pp7FzGBNxc+cOimcXV9BbkiB9B8YMHwNB43m
-         iEraiix7QoT9Pk+EHtQtZI32w9hTCaYnSYKM1UbwJTH841lEx45GP0Z8vW/mxgtjHZnO
-         2tlsS6THKasOoUi2Gngvwcx/jd4NWcGG1pyfZ25RPkEqy+zW14qoWpZ4/MvGGgU+LSTf
-         N2yyppMDSVk9XZk2d9mTojaCCkiCleasYPN2oCt9WTJG2UHFAeTqZXxvs8X/pX4Be8Dt
-         lK5G5cceSluGCOLNmwpMC/zDT21VL/KzoX/SpPVaM3t+CbhiC5qRKnbS7MEFKNI0dAar
-         ZxdQ==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=lnRwjXbCLNSgqmF0eAVoEuS/w3gfoX8hHq6Rr+bVouI=;
+        b=ZxAicqBE7gtw4KlxJ6AGM4EEvTxs4P5QWqjTN/QP75l4jYbxhStBX5mNkEp5kiu8m1
+         MFnZyigewABW+VSPUWQolDAw6v9IVj+nJFatqky/wUAeJeSbF8CqrWCiUtOblkyW6dna
+         YCgGyMLANbV4OXkW8KxF0XTMa0iHgCLBPkNQWHpx/XV7/iGj/lmp69XFcM+iGliXQyMs
+         lLwhayZDtTD3yqPZzlaTTUKRMECVfI3OORRUeSyYil1GxMAisl/BrOAqqL7jMvgV+oPD
+         LtlKIJA91Bs2XS1TdnI6szBJ82MUm9DqBKJuJzmJuBzp2+p8I2Scmko96n9BbUUnkCBt
+         7cEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WD5CEB84PYGnkljL91GU2HcSm2iIFIOGAEJsr9kazRQ=;
-        b=RSyf+CSbgMmbQPc3VCCwye4bpAEGjg4IMLeOJPKQbgZzIU8atV72KKujzzmiFpxUFd
-         Opc09i9mZ/GrhKoAVFVik4GQmI5XmQFa/CspUlzzdAAWFPJtg9BqKo9f7H1kAM80eGyE
-         w+nTVxnmDtofrBDdgTdCpXdyXeIXupYnIwggUVHTKd0zCip0iQIisjYrcF2WVuKA0vi/
-         wEQPJC/lB1WzGkRv1Gg2LB1/zAEw3awIWTMhQKETg92sGh47EMG8gDu+pzfGz9LGXbW5
-         Ysp0LEZlQ7EFAltYC4e7ycUgRdHdLV1BAPNBDeFDqF8X+JUOHrBy8sPb9mQpRRYnMqom
-         hqOA==
-X-Gm-Message-State: AGi0PuY4y9a4h0i3wvYpaUczuWNL99prLkLwX06g2a8M4yxdEJYUJmch
-        ObbvPQeoUJwRofHy9fv0N2w3xSM4Bcblkg==
-X-Google-Smtp-Source: APiQypKg8ICDhALT6WfGHqbNjZJaOhMacL43TYecRqgG/lMHD2ZFu4RjWmIrjEPtdmDqejxbHtNtMQ==
-X-Received: by 2002:a05:6512:74:: with SMTP id i20mr14801520lfo.104.1587977749779;
-        Mon, 27 Apr 2020 01:55:49 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:468e:1152:9c79:cdeb:725:5fa4? ([2a00:1fa0:468e:1152:9c79:cdeb:725:5fa4])
-        by smtp.gmail.com with ESMTPSA id y9sm4001767ljy.31.2020.04.27.01.55.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Apr 2020 01:55:48 -0700 (PDT)
-Subject: Re: [PATCH 2/2] mips/mm: Enable SOFT_DIRTY for all 64bit systems
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, akpm@linux-foundation.org
-Cc:     sunguoyun@loongson.cn,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>,
-        Dmitry Korotin <dkorotin@wavecomp.com>,
-        Daniel Silsby <dansilsby@gmail.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200426174058.1181837-1-jiaxun.yang@flygoat.com>
- <20200426174058.1181837-2-jiaxun.yang@flygoat.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <2f94a9ce-74a2-29a0-3b1c-d4b2906e2750@cogentembedded.com>
-Date:   Mon, 27 Apr 2020 11:55:44 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=lnRwjXbCLNSgqmF0eAVoEuS/w3gfoX8hHq6Rr+bVouI=;
+        b=MnrviUsYl2BoxZz1lNRktFc5AQOLJOGvwFJMaayPKbw9FNZp53tp/pm0QZPXIDGKWL
+         stHSoi5LZo6AfaNmffhlpzlwiHzVWvB1s4NB0y+gPfnC+Hf6KSNm5fzfH505cNcz/VrU
+         +vPYRclyZxwPqnyp3IFV1QlyiMvUbkuvN0M+zO6+uLZOn0/DI/h+9WG8z5ZF76i4NfiI
+         AwBfJunqv+HKSD/XEtpQQbxCFPW+ykggVn54IteoCF+6oB2WFUtCoa6ZhpMqWLOymTRJ
+         Fv5qISCsWTpqsvxN0N3OJ/HAOFJWZRPZQWrOMXlLLZOjfnQTKTWQ/81bdHo43CsJKTQ6
+         wbxw==
+X-Gm-Message-State: AGi0PuY54yWmaBjwUElfDTsOYZ5L4ww6WoPetw0sAIUlaCtHOtXwA5bC
+        rPfUCDfA4QI+P3kBHDz9B+qL5A==
+X-Google-Smtp-Source: APiQypLhubdjTPL7ywGgfEzi/OUKoNJ/LWk7kYZWC+WQcIxs4uRm7LCF9Ze4GDVIaPy2SAZAs5y+XQ==
+X-Received: by 2002:a5d:4092:: with SMTP id o18mr26042449wrp.227.1587977770645;
+        Mon, 27 Apr 2020 01:56:10 -0700 (PDT)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id e2sm20113767wrv.89.2020.04.27.01.56.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 01:56:09 -0700 (PDT)
+References: <20200328003249.1248978-1-martin.blumenstingl@googlemail.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-mmc@vger.kernel.org, ulf.hansson@linaro.org,
+        robh+dt@kernel.org
+Cc:     mark.rutland@arm.com, jianxin.pan@amlogic.com,
+        linux-kernel@vger.kernel.org, yinxin_1989@aliyun.com,
+        linux-arm-kernel@lists.infradead.org, lnykww@gmail.com
+Subject: Re: [PATCH v5 0/3] Amlogic 32-bit Meson SoC SDHC MMC controller driver
+In-reply-to: <20200328003249.1248978-1-martin.blumenstingl@googlemail.com>
+Date:   Mon, 27 Apr 2020 10:56:08 +0200
+Message-ID: <1jblnd2tp3.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20200426174058.1181837-2-jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
 
-On 26.04.2020 20:40, Jiaxun Yang wrote:
+On Sat 28 Mar 2020 at 01:32, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
 
-> 64bit systems always have enough page table bits.
-> So we can safely enable it for all of them instead of for Loongson
-> only.
-> 
-> If oneday 32bit systems get 64bit PTEs than we can drop this
-> limition.
+> Hello,
+>
+> this is the patchset for a driver for the Amlogic "SDHC" MMC controller
+> found on Meson6, Meson8, Meson8b and Meson8m2 SoCs.
+>
+> The public S805 (Meson8b) datasheet has some documentation starting on
+> page 74: [0]
+>
+> It's performance is still not as good as the driver from Amlogic's 3.10
+> kernel, but it does not corrupt data anymore (as RFC v1 did).
+>
+> Special thanks to the people who supported me off-list - you are
+> amazing and deserve to be mentioned here:
+> - Xin Yin who helped me fix two more write corruption problems. I am
+>   hoping that he will reply with Reviewed-by, Tested-by and Bug-fixed-by
+> - Jianxin Pan for sharing some of the internal workings of this MMC
+>   controller with me
+> - Wei Wang for spotting the initial write corruption problem and helping
+>   test this driver on his board. I have his permission to add his
+>   Tested-by (off-list, he's Cc'ed so if there's any problem he can speak
+>   up)
+>
+>
+> Changes since v4 at [4]:
+> - move the four clkin clock inputs to the start of the clock-names list
+>   as suggested by Rob, affects patch #1
+> - fixed #include statement in dt-bindings example in patch #1
+>
+> Changes since v3 at [3]:
+> - split the clock bits into a separate clock controller driver because
+>   of two reasons: 1) it keeps the MMC controller driver mostly clean of
+>   the clock bits
 
-    Limitation?
+If the register is in the MMC controller register space and the MMC
+driver is the driver using these clocks, it is where the clocks belong.
+I don't get why it could be an issue ?
 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-[...]
+Is the clock block is shared with another device, like on the Gx family ?
 
-MBR, Sergei
+> 2) the pure clock controller can use
+>   devm_clk_hw_register() (instead of devm_clk_register(), which is
+>   deprecated) and the MMC controller can act as a pure clock consumer.
+
+Why can't you use devm_clk_hw_register in an MMC driver ?
+Unless I missed something, it is provided by clk-provider.h, which can be
+included by any driver.
+
+I'm not sure I understand why the support for this device is split in
+two drivers. Using CCF clocks out of "drivers/clk" is encouraged.
+
+>   This also affects the dt-bindings which is why I dropped Rob's
+>   Reviewed-by. Thanks to Ulf for the suggestions
+>
+> Changes since v2 at [2]:
+> - rebased on top of v5.5-rc1
+> - added Rob's and Xin Yin's Reviewed-by and Tested-by (thank you!)
+> - (note: Kevin had v2 of this series in -next for a few days so the
+>    build test robots could play with it. I haven't received any negative
+>    feedback in that time)
+>
+> Changes since RFC v1 at [1]:
+> - don't set MESON_SDHC_MISC_MANUAL_STOP to fix one of three write
+>   corruption problems. the out-of-tree 3.10 "reference" driver doesn't
+>   set it either
+> - check against data->flags instead of cmd->flags when testing for
+>   MMC_DATA_WRITE as spotted by Xin Yin (many thanks!). This fixes
+>   another write corruption problem
+> - clear the FIFOs after successfully transferring data as suggested by
+>   Xin Yin (many thanks!). This is what the 3.10 driver did and fixes yet
+>   another write corruption problem
+> - integrate the clock suggestions from Jianxin Pan so the driver is now
+>   able to set up the clocks correctly for all known cases. documentation
+>   is also added to the patch description. Thank you Jianxin for the
+>   help!
+> - set the correct max_busy_timeout as suggested by Jianxin Pan (thanks!)
+> - convert the dt-bindings to .yaml (which is why I didn't add Rob's
+>   Reviewed-by)
+> - switch to struct clk_parent_data as part of newer common clock
+>   framework APIs to simplify the clock setup
+> - dropped CMD23 support because it seems to hurt read and write
+>   performance by 10-20% in my tests. it's not clear why, but for now we
+>   can live without this.
+> - use devm_platform_ioremap_resource instead of open-coding it
+>
+>
+> [0] https://dn.odroid.com/S805/Datasheet/S805_Datasheet%20V0.8%2020150126.pdf
+> [1] https://patchwork.kernel.org/cover/11035505/
+> [2] http://lists.infradead.org/pipermail/linux-amlogic/2019-November/014576.html
+> [3] https://patchwork.kernel.org/cover/11283179/
+> [4] https://patchwork.kernel.org/cover/11329017/
+>
+> Martin Blumenstingl (3):
+>   dt-bindings: mmc: Document the Amlogic Meson SDHC MMC host controller
+>   clk: meson: add a driver for the Meson8/8b/8m2 SDHC clock controller
+>   mmc: host: meson-mx-sdhc: new driver for the Amlogic Meson SDHC host
+>
+>  .../bindings/mmc/amlogic,meson-mx-sdhc.yaml   |   83 ++
+>  drivers/clk/meson/Kconfig                     |    9 +
+>  drivers/clk/meson/Makefile                    |    1 +
+>  drivers/clk/meson/meson-mx-sdhc.c             |  212 ++++
+>  drivers/mmc/host/Kconfig                      |   14 +
+>  drivers/mmc/host/Makefile                     |    1 +
+>  drivers/mmc/host/meson-mx-sdhc.c              | 1064 +++++++++++++++++
+>  .../dt-bindings/clock/meson-mx-sdhc-clkc.h    |    8 +
+>  8 files changed, 1392 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml
+>  create mode 100644 drivers/clk/meson/meson-mx-sdhc.c
+>  create mode 100644 drivers/mmc/host/meson-mx-sdhc.c
+>  create mode 100644 include/dt-bindings/clock/meson-mx-sdhc-clkc.h
+
