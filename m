@@ -2,127 +2,127 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07628C4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A194C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D563C208FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:58:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Y4Qr+iAw"
+	by mail.kernel.org (Postfix) with ESMTP id 24F54214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:59:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbgD0S6J (ORCPT
+        id S1726747AbgD0S7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 14:58:09 -0400
-Received: from gateway23.websitewelcome.com ([192.185.48.104]:34680 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726302AbgD0S6I (ORCPT
+        Mon, 27 Apr 2020 14:59:20 -0400
+Received: from smtprelay0161.hostedemail.com ([216.40.44.161]:59244 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726260AbgD0S7U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 14:58:08 -0400
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id 8047C8504
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 13:58:06 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id T8xCjA7V9EfyqT8xCj07d8; Mon, 27 Apr 2020 13:58:06 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=RzfMdFPhf7q/zyx+Rmk6dI0yIoKjxCN+NpRpWfhaeHQ=; b=Y4Qr+iAwLN+7yQ96ZNqapVo6W
-        e9mVZErjxJaiCXC6baXIdV3whVzvEIlkU/uuOfbBHVzYGDOnJvvoeq0SAuMzukg1UXwGIkPnpoZar
-        ik6Sj0jGtmzzbI9BfcAlNlL+3vzShYVYgAY2vTyePDq0fFTtB7rBS30GSp853POIttI7+BysnDaox
-        aKl21I2snLLtqbXA69pCdjvv3Cui60NlIiSYjjbBlZCcp8oKxl5wlVqJ1qP6ZFOql3wO8txKq6oB0
-        t8Krm8rZzWzcEllhBL7+5UzSSK3eTJe0WlVPQQN7nNQB6BlcHeItLaPwd+xmydescHLNiUZudiObJ
-        e9YSY7mCA==;
-Received: from [201.162.241.110] (port=9503 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jT8xB-000Zkw-VZ; Mon, 27 Apr 2020 13:58:06 -0500
-Date:   Mon, 27 Apr 2020 14:02:22 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org, Joe Perches <joe@perches.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH 1/3] mtd: lpddr: Fix bad logic in print_drs_error
-Message-ID: <68edaa1aa3c8b4ddecad2f093404c4693d1e2a17.1588013366.git.gustavo@embeddedor.com>
-References: <cover.1588013366.git.gustavo@embeddedor.com>
+        Mon, 27 Apr 2020 14:59:20 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 437DD182CF668;
+        Mon, 27 Apr 2020 18:59:19 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: price03_8b5bd9a9cf130
+X-Filterd-Recvd-Size: 4152
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf09.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 27 Apr 2020 18:59:17 +0000 (UTC)
+Message-ID: <16b209d0b0c8034db62f8d4d0a260a00f0aa5d5e.camel@perches.com>
+Subject: Re: [PATCH] xfs: Use the correct style for SPDX License Identifier
+From:   Joe Perches <joe@perches.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Nishad Kamdar <nishadkamdar@gmail.com>,
+        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 27 Apr 2020 11:59:16 -0700
+In-Reply-To: <20200427183629.GA20158@kroah.com>
+References: <20200425133504.GA11354@nishad> <20200427155617.GY6749@magnolia>
+         <20200427172959.GB3936841@kroah.com>
+         <515362d10c06567f35f0d5b7c3f2e121769fb04b.camel@perches.com>
+         <20200427174611.GA4035548@kroah.com>
+         <791a97d5d4dfd11af533a0bbd6ae27d1a2d479ee.camel@perches.com>
+         <20200427183629.GA20158@kroah.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1588013366.git.gustavo@embeddedor.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.241.110
-X-Source-L: No
-X-Exim-ID: 1jT8xB-000Zkw-VZ
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.162.241.110]:9503
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 13
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update logic for broken test. Use a more common logging style.
+On Mon, 2020-04-27 at 20:36 +0200, Greg Kroah-Hartman wrote:
+> On Mon, Apr 27, 2020 at 11:01:38AM -0700, Joe Perches wrote:
+> > On Mon, 2020-04-27 at 19:46 +0200, Greg Kroah-Hartman wrote:
+> > > On Mon, Apr 27, 2020 at 10:41:58AM -0700, Joe Perches wrote:
+> > > > On Mon, 2020-04-27 at 19:29 +0200, Greg Kroah-Hartman wrote:
+[]
+> > > > > I thought we were supposed to use 'GPL-2.0-or-newer' because 'GPL-2.0+'
+> > > > > > is deprecated in some newer version of the SPDX standard?
+> > > > > > 
+> > > > > > <shrug>
+> > > > > 
+> > > > > The kernel follows the "older" SPDX standard, but will accept either,
+> > > > > it's up to the author.  It is all documented in LICENSES/ if people
+> > > > > really want to make sure.
+> > > > 
+> > > > I think the kernel should prefer the "newer" SPDX standard
+> > > > for any/all changes to these lines.
+> > > > ---
+> > > >  LICENSES/preferred/GPL-2.0 | 8 ++++----
+> > > >  1 file changed, 4 insertions(+), 4 deletions(-)
+> > > > 
+> > > > diff --git a/LICENSES/preferred/GPL-2.0 b/LICENSES/preferred/GPL-2.0
+> > > > index ff0812..c50f93 100644
+> > > > --- a/LICENSES/preferred/GPL-2.0
+> > > > +++ b/LICENSES/preferred/GPL-2.0
+> > > > @@ -8,13 +8,13 @@ Usage-Guide:
+> > > >    tag/value pairs into a comment according to the placement
+> > > >    guidelines in the licensing rules documentation.
+> > > >    For 'GNU General Public License (GPL) version 2 only' use:
+> > > > -    SPDX-License-Identifier: GPL-2.0
+> > > > -  or
+> > > >      SPDX-License-Identifier: GPL-2.0-only
+> > > > +  or the deprecated alternative
+> > > > +    SPDX-License-Identifier: GPL-2.0
+> > > >    For 'GNU General Public License (GPL) version 2 or any later version' use:
+> > > > -    SPDX-License-Identifier: GPL-2.0+
+> > > > -  or
+> > > >      SPDX-License-Identifier: GPL-2.0-or-later
+> > > > +  or the deprecated alternative
+> > > > +    SPDX-License-Identifier: GPL-2.0+
+> > > >  License-Text:
+> > > 
+> > > At the moment, I do not, as the current ones are not "depreciated" at
+> > > all.
+> > 
+> > https://spdx.org/licenses/
+> > 
+> > shows the GPL-2.0 and GPL-2.0+ as deprecated.
+> > 
+> > https://spdx.org/licenses/GPL-2.0.html
+> > https://spdx.org/licenses/GPL-2.0+.html
+> > 
+> 
+> Again, we are not using the "new" version of the SPDX specification just
+> yet.  We started out using one specific version, let's get the whole
+> kernel converted first before worrying about trying to keep up with
+> their newer releases please.  We still have a ways to go...
 
-It appears the logic in this function is broken for the
-consecutive tests of
+It seems you refer to yourself using the majestic plural.
 
-        if (prog_status & 0x3)
-                ...
-        else if (prog_status & 0x2)
-                ...
-        else (prog_status & 0x1)
-                ...
+There's already ~80% use of SPDX-License-Identifier and the
+-only versions are already about 25% of the existing uses.
 
-Likely the first test should be
+There's no real reason not to prefer the latest versions
+over the deprecated ones.
 
-        if ((prog_status & 0x3) == 0x3)
-
-Found by inspection of include files using printk.
-
-Fixes: eb3db27507f7 ("[MTD] LPDDR PFOW definition")
-Cc: stable@vger.kernel.org
-Reported-by: Joe Perches <joe@perches.com>
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- include/linux/mtd/pfow.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/mtd/pfow.h b/include/linux/mtd/pfow.h
-index 122f3439e1af..c65d7a3be3c6 100644
---- a/include/linux/mtd/pfow.h
-+++ b/include/linux/mtd/pfow.h
-@@ -128,7 +128,7 @@ static inline void print_drs_error(unsigned dsr)
- 
- 	if (!(dsr & DSR_AVAILABLE))
- 		printk(KERN_NOTICE"DSR.15: (0) Device not Available\n");
--	if (prog_status & 0x03)
-+	if ((prog_status & 0x03) == 0x03)
- 		printk(KERN_NOTICE"DSR.9,8: (11) Attempt to program invalid "
- 						"half with 41h command\n");
- 	else if (prog_status & 0x02)
--- 
-2.26.0
 
