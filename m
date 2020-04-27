@@ -2,218 +2,131 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 715C5C55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 05:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D95C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AC972075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 05:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 145272080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:00:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XOIoBjSv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbgD0F6H (ORCPT
+        id S1726429AbgD0GAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 01:58:07 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:44034 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726221AbgD0F6H (ORCPT
+        Mon, 27 Apr 2020 02:00:47 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:18019 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726237AbgD0GAq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 01:58:07 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 27 Apr 2020 02:00:46 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587967246; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=NMpBrJ+MWAxIYH4EAuywwnTikdBRWVUi+Ksjf8AeqQo=; b=XOIoBjSvslRPA+sRuwGSfK+qcW+VtCAgY7VmBChCdHchdnae1tSHv5L0wo2UosbMgKwGv67n
+ VCALHaM0+UQ2IVVwkI0iLW6vfhwArkn0v0eHFcgwJuTEgyrxAtyuEMoWbNAdkt8kdeGavqna
+ zxbOaUaq5hlUI4S0aNgR+kxXtsU=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea674fd.7f18450cdab0-smtp-out-n05;
+ Mon, 27 Apr 2020 06:00:29 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 54CCAC433BA; Mon, 27 Apr 2020 06:00:29 +0000 (UTC)
+Received: from sayalil-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id CC27680487;
-        Mon, 27 Apr 2020 07:58:01 +0200 (CEST)
-Date:   Mon, 27 Apr 2020 07:57:55 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        devicetree@vger.kernel.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Collabora Kernel ML <kernel@collabora.com>
-Subject: Re: [PATCH] get_maintainer: Add email addresses from .yaml files
-Message-ID: <20200427055755.GA21898@ravnborg.org>
-References: <87d082jtfn.fsf@collabora.com>
- <20200420175909.GA5810@ravnborg.org>
- <CAL_JsqJXa8QxQmLfkCO8_SSsgYm2nTFW1J6wx4bGbZgAy8Sxog@mail.gmail.com>
- <9a32f150f85f851d04afd148b2a9a5cf203f7ce1.camel@perches.com>
- <7beaedfd63017973b910dd21cac13ecb42dbe503.camel@perches.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7beaedfd63017973b910dd21cac13ecb42dbe503.camel@perches.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=8nJEP1OIZ-IA:10 a=IJv9LcIfAAAA:8 a=7gkXJVJtAAAA:8
-        a=e66IHeAwct5_nrS6dCUA:9 a=wPNLvfGTeEIA:10 a=cmr4hm9N53k6aw-X_--Q:22
-        a=E9Po1WZjFZOl8hwRPBS3:22
+        (Authenticated sender: sayalil)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 09865C433D2;
+        Mon, 27 Apr 2020 06:00:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 09865C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sayalil@codeaurora.org
+From:   Sayali Lokhande <sayalil@codeaurora.org>
+To:     jaegeuk@kernel.org, yuchao0@huawei.com,
+        linux-f2fs-devel@lists.sourceforge.net
+Cc:     stummala@codeaurora.org, linux-kernel@vger.kernel.org,
+        Sayali Lokhande <sayalil@codeaurora.org>
+Subject: [PATCH V2] f2fs: Avoid double lock for cp_rwsem during checkpoint
+Date:   Mon, 27 Apr 2020 11:30:04 +0530
+Message-Id: <1587967204-24824-1-git-send-email-sayalil@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe.
+There could be a scenario where f2fs_sync_node_pages gets
+called during checkpoint, which in turn tries to flush
+inline data and calls iput(). This results in deadlock as
+iput() tries to hold cp_rwsem, which is already held at the
+beginning by checkpoint->block_operations().
 
-On Sun, Apr 26, 2020 at 10:40:52PM -0700, Joe Perches wrote:
-> .yaml files can contain maintainer/author addresses and it seems
-> unlikely or unnecessary that individual MAINTAINER file section
-> entries for each .yaml file will be created.
-> 
-> So dd the email addresses found in .yaml files to the default
-     ^
-     add
+Call stack :
 
-> get_maintainer output.
-> 
-> The email addresses are marked with "(in file)" when using the
-> "--roles" or "--rolestats" options.
-> 
-> Miscellanea:
-> 
-> o Change $file_emails to $email_file_emails to avoid visual
->   naming conflicts with @file_emails
-> 
-> Signed-off-by: Joe Perches <joe@perches.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-Tested-by: Sam Ravnborg <sam@ravnborg.org>
+Thread A		Thread B
+f2fs_write_checkpoint()
+- block_operations(sbi)
+ - f2fs_lock_all(sbi);
+  - down_write(&sbi->cp_rwsem);
 
-The patch did not apply on top of -rc3, but it was trivial to fix.
-Tested and works like a charm.
-Thanks for doing this!
+                        - open()
+                         - igrab()
+                        - write() write inline data
+                        - unlink()
+- f2fs_sync_node_pages()
+ - if (is_inline_node(page))
+  - flush_inline_data()
+   - ilookup()
+     page = f2fs_pagecache_get_page()
+     if (!page)
+      goto iput_out;
+     iput_out:
 
-	Sam
+    - iput()
+       iput(inode);
+       - f2fs_evict_inode()
+        - f2fs_truncate_blocks()
+         - f2fs_lock_op()
+           - down_read(&sbi->cp_rwsem);
 
-> ---
->  scripts/get_maintainer.pl | 44 +++++++++++++++++++++++++++++---------------
->  1 file changed, 29 insertions(+), 15 deletions(-)
-> 
-> diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
-> index 6cbcd1..6d973f 100755
-> --- a/scripts/get_maintainer.pl
-> +++ b/scripts/get_maintainer.pl
-> @@ -57,7 +57,7 @@ my $status = 0;
->  my $letters = "";
->  my $keywords = 1;
->  my $sections = 0;
-> -my $file_emails = 0;
-> +my $email_file_emails = 0;
->  my $from_filename = 0;
->  my $pattern_depth = 0;
->  my $self_test = undef;
-> @@ -69,6 +69,12 @@ my $vcs_used = 0;
->  
->  my $exit = 0;
->  
-> +my @files = ();
-> +my @fixes = ();			# If a patch description includes Fixes: lines
-> +my @range = ();
-> +my @keyword_tvi = ();
-> +my @file_emails = ();
-> +
->  my %commit_author_hash;
->  my %commit_signer_hash;
->  
-> @@ -266,7 +272,7 @@ if (!GetOptions(
->  		'pattern-depth=i' => \$pattern_depth,
->  		'k|keywords!' => \$keywords,
->  		'sections!' => \$sections,
-> -		'fe|file-emails!' => \$file_emails,
-> +		'fe|file-emails!' => \$email_file_emails,
->  		'f|file' => \$from_filename,
->  		'find-maintainer-files' => \$find_maintainer_files,
->  		'mpath|maintainer-path=s' => \$maintainer_path,
-> @@ -424,6 +430,22 @@ sub read_all_maintainer_files {
->      }
->  }
->  
-> +sub maintainers_in_file {
-> +    my ($file) = @_;
-> +
-> +    return if ($file =~ m@\bMAINTAINERS$@);
-> +
-> +    if (-f $file && ($email_file_emails || $file =~ /\.yaml$/)) {
-> +	open(my $f, '<', $file)
-> +	    or die "$P: Can't open $file: $!\n";
-> +	my $text = do { local($/) ; <$f> };
-> +	close($f);
-> +
-> +	my @poss_addr = $text =~ m$[A-Za-zÀ-ÿ\"\' \,\.\+-]*\s*[\,]*\s*[\(\<\{]{0,1}[A-Za-z0-9_\.\+-]+\@[A-Za-z0-9\.-]+\.[A-Za-z0-9]+[\)\>\}]{0,1}$g;
-> +	push(@file_emails, clean_file_emails(@poss_addr));
-> +    }
-> +}
-> +
->  #
->  # Read mail address map
->  #
-> @@ -504,12 +526,6 @@ sub read_mailmap {
->  
->  ## use the filenames on the command line or find the filenames in the patchfiles
->  
-> -my @files = ();
-> -my @fixes = ();			# If a patch description includes Fixes: lines
-> -my @range = ();
-> -my @keyword_tvi = ();
-> -my @file_emails = ();
-> -
->  if (!@ARGV) {
->      push(@ARGV, "&STDIN");
->  }
-> @@ -527,7 +543,7 @@ foreach my $file (@ARGV) {
->  	$file =~ s/^\Q${cur_path}\E//;	#strip any absolute path
->  	$file =~ s/^\Q${lk_path}\E//;	#or the path to the lk tree
->  	push(@files, $file);
-> -	if ($file ne "MAINTAINERS" && -f $file && ($keywords || $file_emails)) {
-> +	if ($file ne "MAINTAINERS" && -f $file && $keywords) {
->  	    open(my $f, '<', $file)
->  		or die "$P: Can't open $file: $!\n";
->  	    my $text = do { local($/) ; <$f> };
-> @@ -539,10 +555,6 @@ foreach my $file (@ARGV) {
->  		    }
->  		}
->  	    }
-> -	    if ($file_emails) {
-> -		my @poss_addr = $text =~ m$[A-Za-zÀ-ÿ\"\' \,\.\+-]*\s*[\,]*\s*[\(\<\{]{0,1}[A-Za-z0-9_\.\+-]+\@[A-Za-z0-9\.-]+\.[A-Za-z0-9]+[\)\>\}]{0,1}$g;
-> -		push(@file_emails, clean_file_emails(@poss_addr));
-> -	    }
->  	}
->      } else {
->  	my $file_cnt = @files;
-> @@ -923,6 +935,8 @@ sub get_maintainers {
->  		print("\n");
->  	    }
->  	}
-> +
-> +	maintainers_in_file($file);
->      }
->  
->      if ($keywords) {
-> @@ -1835,7 +1849,7 @@ tm toggle maintainers
->  tg toggle git entries
->  tl toggle open list entries
->  ts toggle subscriber list entries
-> -f  emails in file       [$file_emails]
-> +f  emails in file       [$email_file_emails]
->  k  keywords in file     [$keywords]
->  r  remove duplicates    [$email_remove_duplicates]
->  p# pattern match depth  [$pattern_depth]
-> @@ -1960,7 +1974,7 @@ EOT
->  		bool_invert(\$email_git_all_signature_types);
->  		$rerun = 1;
->  	    } elsif ($sel eq "f") {
-> -		bool_invert(\$file_emails);
-> +		bool_invert(\$email_file_emails);
->  		$rerun = 1;
->  	    } elsif ($sel eq "r") {
->  		bool_invert(\$email_remove_duplicates);
-> 
+Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
+---
+ fs/f2fs/checkpoint.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+index 5ba649e..97b6378 100644
+--- a/fs/f2fs/checkpoint.c
++++ b/fs/f2fs/checkpoint.c
+@@ -1219,21 +1219,19 @@ static int block_operations(struct f2fs_sb_info *sbi)
+ 		goto retry_flush_quotas;
+ 	}
+ 
+-retry_flush_nodes:
+ 	down_write(&sbi->node_write);
+ 
+ 	if (get_pages(sbi, F2FS_DIRTY_NODES)) {
+ 		up_write(&sbi->node_write);
++		up_write(&sbi->node_change);
++		f2fs_unlock_all(sbi);
+ 		atomic_inc(&sbi->wb_sync_req[NODE]);
+ 		err = f2fs_sync_node_pages(sbi, &wbc, false, FS_CP_NODE_IO);
+ 		atomic_dec(&sbi->wb_sync_req[NODE]);
+-		if (err) {
+-			up_write(&sbi->node_change);
+-			f2fs_unlock_all(sbi);
++		if (err)
+ 			goto out;
+-		}
+ 		cond_resched();
+-		goto retry_flush_nodes;
++		goto retry_flush_quotas;
+ 	}
+ 
+ 	/*
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
