@@ -2,104 +2,74 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6D4C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94580C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C5B920775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7400E20775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:20:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgD0STG (ORCPT
+        id S1726567AbgD0SU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 14:19:06 -0400
-Received: from mga07.intel.com ([134.134.136.100]:60964 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725995AbgD0STG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 14:19:06 -0400
-IronPort-SDR: r8hrnD4xEQX1NDqO/iu7uKHjsAi08s3lzBcBATeDGb/wY4epqo3xGV85hPrppI5oMiym4415zX
- vEX6GgPs+BGA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 11:19:05 -0700
-IronPort-SDR: hSKJ2wdAprtTNItd6V6pDBVhSbvJd5aRenMEOiIvofuY60dco2kW9JvJpMOq/llW/NPn/9bOPv
- CnlV9y/RuQng==
-X-IronPort-AV: E=Sophos;i="5.73,325,1583222400"; 
-   d="scan'208";a="247480665"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 11:19:04 -0700
-Date:   Mon, 27 Apr 2020 11:19:03 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     He Zhe <zhe.he@windriver.com>
-Cc:     bp@alien8.de, tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        x86@kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/mce: Add compat_ioctl assignment to make it
- compatible with 32-bit system
-Message-ID: <20200427181903.GA14473@agluck-desk2.amr.corp.intel.com>
-References: <1583303947-49858-1-git-send-email-zhe.he@windriver.com>
- <1f449e01-3207-b699-b91f-d1c04626a447@windriver.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1f449e01-3207-b699-b91f-d1c04626a447@windriver.com>
+        Mon, 27 Apr 2020 14:20:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42312 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726228AbgD0SU5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 14:20:57 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4524AC0610D5;
+        Mon, 27 Apr 2020 11:20:57 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 14F2C15D54880;
+        Mon, 27 Apr 2020 11:20:55 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 11:20:54 -0700 (PDT)
+Message-Id: <20200427.112054.486660514927430577.davem@davemloft.net>
+To:     xiyuyang19@fudan.edu.cn
+Cc:     andrew.hendry@gmail.com, kuba@kernel.org, tanxin.ctf@gmail.com,
+        gregkh@linuxfoundation.org, allison@lohutok.net,
+        tglx@linutronix.de, linux-x25@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yuanxzhang@fudan.edu.cn, kjlu@umn.edu
+Subject: Re: [PATCH v2] net/x25: Fix x25_neigh refcnt leak when x25
+ disconnect
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1587819994-40137-1-git-send-email-xiyuyang19@fudan.edu.cn>
+References: <1587819994-40137-1-git-send-email-xiyuyang19@fudan.edu.cn>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 27 Apr 2020 11:20:55 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 04:40:31PM +0800, He Zhe wrote:
-> Can this be considered for the moment?
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Date: Sat, 25 Apr 2020 21:06:25 +0800
+
+> x25_connect() invokes x25_get_neigh(), which returns a reference of the
+> specified x25_neigh object to "x25->neighbour" with increased refcnt.
 > 
-> Thanks,
-> Zhe
+> When x25 connect success and returns, the reference still be hold by
+> "x25->neighbour", so the refcount should be decreased in
+> x25_disconnect() to keep refcount balanced.
 > 
-> On 3/4/20 2:39 PM, zhe.he@windriver.com wrote:
-> > From: He Zhe <zhe.he@windriver.com>
-> >
-> > 32-bit user-space program would get errors like the following from ioctl
-> > syscall due to missing compat_ioctl.
-> > MCE_GET_RECORD_LEN: Inappropriate ioctl for device
-> >
-> > compat_ptr_ioctl is provided as a generic implementation of .compat_ioctl
-> > file operation to ioctl functions that either ignore the argument or pass
-> > a pointer to a compatible data type.
-
-I'm not super-familiar with the compat ioctl bits.  But this looks plausible.
-
-All three of the ioctl's for this driver have a "pointer to integer" for the
-"return" value.  And "int" is a compatible type between i386 and x86_64.
-
-I don't have a system setup to build a 32-bit binary to test the theory,
-but I assume that you have built something that tests all three:
-
-	MCE_GET_RECORD_LEN
-	MCE_GET_LOG_LEN
-	MCE_GETCLEAR_FLAGS
-
-So I guess:
-
-Acked-by: Tony Luck <tony.luck@intel.com>
-
-> >
-> > Signed-off-by: He Zhe <zhe.he@windriver.com>
-> > ---
-> >  arch/x86/kernel/cpu/mce/dev-mcelog.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/arch/x86/kernel/cpu/mce/dev-mcelog.c b/arch/x86/kernel/cpu/mce/dev-mcelog.c
-> > index 7c8958d..6c9b91b7 100644
-> > --- a/arch/x86/kernel/cpu/mce/dev-mcelog.c
-> > +++ b/arch/x86/kernel/cpu/mce/dev-mcelog.c
-> > @@ -328,6 +328,7 @@ static const struct file_operations mce_chrdev_ops = {
-> >  	.write			= mce_chrdev_write,
-> >  	.poll			= mce_chrdev_poll,
-> >  	.unlocked_ioctl		= mce_chrdev_ioctl,
-> > +	.compat_ioctl		= compat_ptr_ioctl,
-> >  	.llseek			= no_llseek,
-> >  };
-> >  
+> The reference counting issue happens in x25_disconnect(), which forgets
+> to decrease the refcnt increased by x25_get_neigh() in x25_connect(),
+> causing a refcnt leak.
 > 
+> Fix this issue by calling x25_neigh_put() before x25_disconnect()
+> returns.
+> 
+> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+
+Applied.
