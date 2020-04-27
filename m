@@ -2,167 +2,157 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	SUBJ_ALL_CAPS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E09DC55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E86C55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C7FE2064C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AFFD2064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:21:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aPlJ/LL3"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="NGSABjbF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgD0NTz (ORCPT
+        id S1727814AbgD0NVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 09:19:55 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56542 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727010AbgD0NTy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 09:19:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587993592;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yT6OpqrHhtjj38PhYWZNLuSW0UlygZ75Mb7wSWJbJz8=;
-        b=aPlJ/LL3xE7SQ5hbp+Gk3wIRLLtf7uRFjL2Y1W7jT4TqACGfTYmQDpjeUlW1mw+ORAofGM
-        SdEboDTyP4ahhOxBZJ8cH4+X0mGaaF40BkLkhz4px+lmhnCKhDvnrvDxAKS72pSK/Eg8qQ
-        3KKiSaY0CjR3TOdNf4XknH9fOhbOVm0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-351-6uf19V3fO6OsdruwAkISWw-1; Mon, 27 Apr 2020 09:19:49 -0400
-X-MC-Unique: 6uf19V3fO6OsdruwAkISWw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A06A31895957;
-        Mon, 27 Apr 2020 13:19:45 +0000 (UTC)
-Received: from x1.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 756BA6106A;
-        Mon, 27 Apr 2020 13:19:40 +0000 (UTC)
-Date:   Mon, 27 Apr 2020 07:19:39 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-Message-ID: <20200427071939.06aa300e@x1.home>
-In-Reply-To: <20200427115818.GE13640@mellanox.com>
-References: <20200422115017.GQ11945@mellanox.com>
-        <20200422211436.GA103345@otc-nc-03>
-        <20200423191217.GD13640@mellanox.com>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D8960F9@SHSMSX104.ccr.corp.intel.com>
-        <20200424124444.GJ13640@mellanox.com>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D8A808B@SHSMSX104.ccr.corp.intel.com>
-        <20200424181203.GU13640@mellanox.com>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
-        <20200426191357.GB13640@mellanox.com>
-        <20200426214355.29e19d33@x1.home>
-        <20200427115818.GE13640@mellanox.com>
-Organization: Red Hat
+        Mon, 27 Apr 2020 09:21:22 -0400
+Received: from mail-eopbgr1310115.outbound.protection.outlook.com ([40.107.131.115]:43952
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726651AbgD0NVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 09:21:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CItuy1cqN8+MVlb+aL0L6v4/FBPWcvVPKttb+lFOg+TszrnV0MWRx+47G27RCu8nurwZYOFIFSKwkGs4guvj9oRFHwGg+LNk4uEiX/69S+fayjfnnlc+ZchZ20GP8BHeXbJNQmvAC4PqtBmsvD3amQkG1VSP9PM0E8tSpjJuMxx9ttWUB/hE345vjcvfW67lFrO3ewqHxWflIPCDL566piLQLfI8LY7wy4dk4TW7I0C7X+V+4tlmaznYItkKG8DFS7r6pt3IMNFgjmQUIaCIa3qai/3t6RlCSAQ42Oa2SNfEcQ3ui/u1fXsbi2G1HpAjnwRRKcbDgFLnKu2u53YFtg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qcJIpyftj+669IYyd8PWOSybRTk2PfOnt/54JMJycOY=;
+ b=UDdCvkltYMh/6dWQZ7mkw3fXRfvC3+xjgwwUrs27/SFS+REj5mEdqCBc6P14sca7epuBS062xz5Srrhl6RKOfZYklHxh0++4R7RIQrO1YD2rGHN3bH5GQ1RGCNv+fmH+x1HXDLasf42E9IW6k0ilAB+Xq6CraEMCUf0peWmnlhIP+PE2Xzlq0g2hW4qNTVBrQi0aYmndF0ycB+JVl/jhFpaekVQdvSjV8BbllVQ8owlA06J8vJ7A35sClZw6nGuH4S3m6vh+IfKNgvrIL9WRYxWOc1poufaGJmRGs0sejc+IJ2z19jYKJZihhKSMVP517CSO1HRwW9BriCsjEegHLA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qcJIpyftj+669IYyd8PWOSybRTk2PfOnt/54JMJycOY=;
+ b=NGSABjbFqsgo9bAqNNvmdgWfI6FD+5IOpJZFG1skvH2gZtK+1gWDGC5lYwFcvtojLdMauq4fOLXY3Gf8H+Czqsdur/BzNep9q91Qq9Kw8x3hHJx/ApVpaiNAocQOf14YbQTOoVd+YINfSKNyoD13c0L3iBdEw6/m+pDgV/IAaYs=
+Received: from TY2PR01MB2924.jpnprd01.prod.outlook.com (20.177.98.81) by
+ TY2PR01MB2234.jpnprd01.prod.outlook.com (52.133.182.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2937.22; Mon, 27 Apr 2020 13:21:16 +0000
+Received: from TY2PR01MB2924.jpnprd01.prod.outlook.com
+ ([fe80::15c5:58a4:5913:d859]) by TY2PR01MB2924.jpnprd01.prod.outlook.com
+ ([fe80::15c5:58a4:5913:d859%7]) with mapi id 15.20.2937.023; Mon, 27 Apr 2020
+ 13:21:15 +0000
+From:   Gareth Williams <gareth.williams.jx@renesas.com>
+To:     Gareth Williams <gareth.williams.jx@renesas.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Vivek Unune <npcomplete13@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+CC:     Phil Edworthy <phil.edworthy@renesas.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 0/3]
+Thread-Topic: [PATCH 0/3]
+Thread-Index: AQHWHGzvXFhntU7vAESnsWWN43lNnKiM8Q4w
+Date:   Mon, 27 Apr 2020 13:21:15 +0000
+Message-ID: <TY2PR01MB2924A29DED5C3AD29950D863DFAF0@TY2PR01MB2924.jpnprd01.prod.outlook.com>
+References: <1587975709-2092-1-git-send-email-gareth.williams.jx@renesas.com>
+In-Reply-To: <1587975709-2092-1-git-send-email-gareth.williams.jx@renesas.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=gareth.williams.jx@renesas.com; 
+x-originating-ip: [79.64.184.175]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: abca37ea-b24f-4a6d-ada6-08d7eaaddd44
+x-ms-traffictypediagnostic: TY2PR01MB2234:|TY2PR01MB2234:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TY2PR01MB22345E80EB465787E438AD65DFAF0@TY2PR01MB2234.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0386B406AA
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB2924.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(396003)(39860400002)(366004)(136003)(2906002)(5660300002)(478600001)(71200400001)(76116006)(66556008)(316002)(9686003)(66476007)(66946007)(66446008)(54906003)(110136005)(64756008)(55016002)(4326008)(33656002)(7696005)(186003)(6506007)(81156014)(8676002)(8936002)(7416002)(52536014)(86362001)(26005)(921003);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 4nq0VGgTlC90TaNfh0o3sKJ4gGwVNzl31gYu2LD8X7cgos6we06NLX6Pc/su7FmMlyAR2F+gvS+MIUe3uqLNcXVmYM0o6FUmnAoRFhEJiyaeJ7M6xjEhASGdWV+QwyGOoX8lu9yxk2EXErh4fAZ2cyegI3xXl2h1k46Lamw165uvY5QfF4f+u1rRGSbZ4AYI+7hSymZIpNXlUI0vASzp0NUFajbX+l872/EkIma2qbEC/y9eBTj9nD+55Oe0lRfXcJNAXOa/zMIDBDTFMAMV3nv0BEVN1Z9bLFUaGTSH8FjywE/UnEAqGTx9AUPFd/lOz19pJunn35cg3zh7kKb/fs7gnFubgXWwkJn3kH8uHkJbuZPleL9ZRRvDXIYVra/hoEX0XlWHFqOVXGxzbrr1YLzFGEDnRgZAsQvvTaKb03328f/QkJojweYWULYsKMk+wQTCr6MmSA6GB0zdv7W+hMmbZeluB0xkvrhb3zEx1KQ=
+x-ms-exchange-antispam-messagedata: wv9FVRUGdG1J4a9yKYTiKrc4WdJ+kbY/tL+yPDRerP3RNF1C3FudEQ54YbTZu2Ewb9m7LIjHDkS24b9nTfyAQg+D6dq0WLraC4MdTwseG5krQoa3XJ+SGSylvEO5p7RSNmEWQxy/+cY3STzDMhFMoORv46WzTJYCyKEwTI3x+9XqG+EOH+mUS0eq2DhzC89JYR4n9QoJGGH82bh+V5jcsJDjLzz5dD9A/KMW/sx+5WvbK51n+xqV/Ke0PEoNu1kXuClTP6lNuH5xbeP/JI0FkOktW9K7Y7H/Cook6j2InIOXC6r4iRbwfGKwom/V3cmyLWp1EMiw+YOI+SpSsZsKfdp+QufdKFijJ6XYB4O0OFiJWObtHewgbTXgnZ5OiImKl8Cn+0OqQx7S0j3kO1elSmTH3NG5dRT80aIIAGbhFLoP8CGWfMRtdsZkLOEO4601v+PFNhEIW8Us9sOS98gcFefrC11dWEW7oIq6+cjw4urM/gVTWsWficfxpMl/j9DMQHPPKhhAWmggiuHZ0KYUKUVO4SuzLcCdYsYIMU+eJuDKQK3++IsKiqU+IVWgk/PEOmcS3fV7qGLaXeV8O7JT4s6R8Gfo9rzBNsWX2ShDYmE+1bxno4Bp0HUKFlw4qBXOXmrTOMCTh5jhDhHXQq9rbxk4jv/DLECpTC+AXtJiZHyhb8/oMhP0A3rXkoMJl8tLLvjgYTquvmnfXCGYk5qTc86ELkY0/p+F/sEBs1CFKM8nK6P0ldkuBJMIqKkLq1XAhNO7/T6QZyJn+zncXOL63Sr8OEcvR6LA1cqLJKhjZJY=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: abca37ea-b24f-4a6d-ada6-08d7eaaddd44
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Apr 2020 13:21:15.7002
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1fe1q6nfh6UHzk9Oji9cDYVqD/v+Jl+ylU9ojoA/ALg4zW4Zj6VRXSdU1CkSFadctSq97n9xtBkiIDQZB2aP+DZmmL/LRuy9uLnSoz1b5gQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB2234
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Apr 2020 08:58:18 -0300
-Jason Gunthorpe <jgg@mellanox.com> wrote:
+Hi All,
 
-> On Sun, Apr 26, 2020 at 09:43:55PM -0600, Alex Williamson wrote:
-> > On Sun, 26 Apr 2020 16:13:57 -0300
-> > Jason Gunthorpe <jgg@mellanox.com> wrote:
-> >   
-> > > On Sun, Apr 26, 2020 at 05:18:59AM +0000, Tian, Kevin wrote:
-> > >   
-> > > > > > I think providing an unified abstraction to userspace is also important,
-> > > > > > which is what VFIO provides today. The merit of using one set of VFIO
-> > > > > > API to manage all kinds of mediated devices and VF devices is a major
-> > > > > > gain. Instead, inventing a new vDPA-like interface for every Scalable-IOV
-> > > > > > or equivalent device is just overkill and doesn't scale. Also the actual
-> > > > > > emulation code in idxd driver is actually small, if putting aside the PCI
-> > > > > > config space part for which I already explained most logic could be shared
-> > > > > > between mdev device drivers.    
-> > > > > 
-> > > > > If it was just config space you might have an argument, VFIO already
-> > > > > does some config space mangling, but emulating BAR space is out of
-> > > > > scope of VFIO, IMHO.    
-> > > > 
-> > > > out of scope of vfio-pci, but in scope of vfio-mdev. btw I feel that most
-> > > > of your objections are actually related to the general idea of
-> > > > vfio-mdev.    
-> > > 
-> > > There have been several abusive proposals of vfio-mdev, everything
-> > > from a way to create device drivers to this kind of generic emulation
-> > > framework.
-> > >   
-> > > > Scalable IOV just uses PASID to harden DMA isolation in mediated
-> > > > pass-through usage which vfio-mdev enables. Then are you just opposing
-> > > > the whole vfio-mdev? If not, I'm curious about the criteria in your mind 
-> > > > about when using vfio-mdev is good...    
-> > > 
-> > > It is appropriate when non-PCI standard techniques are needed to do
-> > > raw device assignment, just like VFIO.
-> > > 
-> > > Basically if vfio-pci is already doing it then it seems reasonable
-> > > that vfio-mdev should do the same. This mission creep where vfio-mdev
-> > > gains functionality far beyond VFIO is the problem.  
-> > 
-> > Ehm, vfio-pci emulates BARs too.  We also emulate FLR, power
-> > management, DisINTx, and VPD.  FLR, PM, and VPD all have device
-> > specific quirks in the host kernel, and I've generally taken the stance
-> > that would should take advantage of those quirks, not duplicate them in
-> > userspace and not invent new access mechanisms/ioctls for each of them.
-> > Emulating DisINTx is convenient since we must have a mechanism to mask
-> > INTx, whether it's at the device or the APIC, so we can pretend the
-> > hardware supports it.  BAR emulation is really too trivial to argue
-> > about, the BARs mean nothing to the physical device mapping, they're
-> > simply scratch registers that we mask out the alignment bits on read.
-> > vfio-pci is a mix of things that we decide are too complicated or
-> > irrelevant to emulate in the kernel and things that take advantage of
-> > shared quirks or are just too darn easy to worry about.  BARs fall into
-> > that latter category, any sort of mapping into VM address spaces is
-> > necessarily done in userspace, but scratch registers that are masked on
-> > read, *shrug*, vfio-pci does that.  Thanks,  
-> 
-> It is not trivial masking. It is a 2000 line patch doing comprehensive
-> emulation.
+I noticed some API changes that were not present when I first wrote this dr=
+iver.=20
+This will need correcting so I will send out a second version and respond=20
+to Sam Ravnborg's feedback at the same time. I recommend waiting for that
+version before reviewing as this will not function on Linux-next otherwise.
 
-Not sure what you're referring to, I see about 30 lines of code in
-vdcm_vidxd_cfg_write() that specifically handle writes to the 4 BARs in
-config space and maybe a couple hundred lines of code in total handling
-config space emulation.  Thanks,
+Gareth
 
-Alex
+On Mon, Apr 27, 2020 at 09:21:49AM +0100, Gareth Williams wrote:
+>=20
+> This series adds DRM support for the Digital Blocks db9000 LCD controller=
+ with
+> RZ/N1 specific changes and updates simple-panel to include the associated
+> panel. As this has not previously been documented, also include a yaml fi=
+le to
+> provide this.
+>=20
+> Gareth Williams (3):
+>   drm/db9000: Add Digital Blocks DB9000 LCD Controller
+>   drm/db9000: Add bindings documentation for LCD controller
+>   drm/panel: simple: Add Newhaven ATXL#-CTP panel
+>=20
+>  .../devicetree/bindings/display/db9000,du.yaml     |  87 ++
+>  .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+>  drivers/gpu/drm/Kconfig                            |   2 +
+>  drivers/gpu/drm/Makefile                           |   1 +
+>  drivers/gpu/drm/digital-blocks/Kconfig             |  13 +
+>  drivers/gpu/drm/digital-blocks/Makefile            |   3 +
+>  drivers/gpu/drm/digital-blocks/db9000-du.c         | 953
+> +++++++++++++++++++++
+>  drivers/gpu/drm/digital-blocks/db9000-du.h         | 192 +++++
+>  drivers/gpu/drm/panel/panel-simple.c               |  27 +
+>  9 files changed, 1280 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/display/db9000,du.yaml
+>  create mode 100644 drivers/gpu/drm/digital-blocks/Kconfig
+>  create mode 100644 drivers/gpu/drm/digital-blocks/Makefile
+>  create mode 100644 drivers/gpu/drm/digital-blocks/db9000-du.c
+>  create mode 100644 drivers/gpu/drm/digital-blocks/db9000-du.h
+>=20
+> --
+> 2.7.4
 
