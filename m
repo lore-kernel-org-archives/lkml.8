@@ -2,118 +2,191 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A2EC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 03:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD6CC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 03:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0695F206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 03:00:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="i3WibM9N"
+	by mail.kernel.org (Postfix) with ESMTP id 386372080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 03:00:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbgD0DA3 (ORCPT
+        id S1726512AbgD0DAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 23:00:29 -0400
-Received: from sonic309-49.consmr.mail.ne1.yahoo.com ([66.163.184.175]:43109
-        "EHLO sonic309-49.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726316AbgD0DA2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 23:00:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1587956427; bh=yMtBR0rm2a1xYW8LqyJyGdANirdUSCJfFg7gnN6WtO0=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=i3WibM9NgUesbBthFewLOkZuDpFKqDGNjF18vk9spN975ysCcL/YzlvyNXPwbmuR2J2XiHp0kvnmrGqvu7+YAa+7bU6Ub3r81NR06ImhNIOmafctTbHJdZkIbkDOPyYMd2gAOgmJSdHzMZzH6h5S0XIoa8IDA8QL9RnoFZL0V9qAo6J642m9bLadTS5sQ/BpYM/oSSuhpHA5cBx8pjzyu4wMaoimSdN7mYow8GJq0eLX2tQlKdrPqGSDvGoy+2MGkwFRBJvBWrg2GK//tcp+VhHHUnJ0LWzLV0jTKpyYPQRr+YNxdc+q/8BLerOwqkHYRScjiQNjmmeEQxeBpnoMuw==
-X-YMail-OSG: .gqvD30VM1n0mnRHSW5S0XixLLCBKdoDUGQVg0kmQjQN61NM7mSNUaVYh53fTrZ
- KUhm19yhEB1tWWLYrJCdknvFxJdpgEEAhYBzyzbdFQIY672s4vvG04I4cglbsGOMzyN8Lp__9RXO
- 3IyG8907H768v2qQAc3rq6Ik5hweJ943UI7onfngOQyde1B._8ns5auyYyAQmGpWTgEROW004aHu
- 7JjM6WnQTa4HOFh9Ihvp3cbHRoqBMmxddIn1R8MwCusPM_BjOWOIEiyiXHO9i6uQiD12OUk4etyF
- xj._CfP5S5YAlfwdCJlATx7SsGmq4uonpClqJCPIhPjiuSXSadKpe01H8Lmvd0ajfuSQLRkW6dgY
- khbcFCypSc1irFks7AkT0FCvMt3.lx1WgkN9u3qLUAVpExWZJPmtpobus878spudm9nFRue4eU0O
- Lsenp_qnXWzzNBwk9b2B1.4bNlZiUQTlWTFSRWqRdjAlrlBHvypyc7raQw8YJTlgbkiUG25bJAIr
- XKi2GUsmxZ.pMZa46USWIA8XoS8BIi6lrvoXSt.UcySagn0594nF9TR98nWqhsSJ0fvJBUkwdr1_
- 6eE5j_w4TKIB5Y8BZ2ddqy.DAGWflIdDUsZTbHNtOmiN4CfofP8Z0VWvh8cxBtfecZunAnEu37fh
- lmQBF19erE8ltU2XGKtFXXadAEhjeAmWrs3pk2Y9neiFZZwj1_.T2lRTstcRn5Ylcrwlo46UZ1wj
- fGWqODJrJwQ8rfLm6n1Dn9Um1qDfj3Yfrdu1oeJjUox_eX8vR23sD4d1ScWA4XTTfAh844uMWLC8
- vBxnDEhHRcrp6Wf432Jv9r.l6DX4Unmd.RAoQ5UXWrqnAoKyoIsX9mpiuLMVqmE2A2r0PYGgU8fN
- oY_BvSkqfXC0w4yM8Da1ksUaQNnr6xxlsirgm9wSvw371O_Epx8r30iirfjSAdjkzH2O8R2Pr7XS
- _NBIZ9GHXaTInDjJcZOWxpaQ2Qs7b0._FlUc5g0PexGOg6Si3SWDKyHrNnsijQcgQ4xK6liJUBUK
- U1Oc2ofAHdxMWnNhKUfEv.tKu2t1EnNLlm.w4kO29pKYncfMVHRpvM.teaQ3AL15o.QaZEsDbx9o
- dOpfh3x6kUJ0_ht4RX7cVxOXOWkGjY_QUKsfz76QVLXJ4IfX3Ne5gYkm6tLYppJRvWImnEF6wJtn
- NxxHGJnAqmvUrCb8b41UnqAQeqSGoUHnT.QU65ibXGEq3Rzhg6ryYGFosa9_btbpwmrStpfOvQ5U
- MxV0lufRxqI6zAyk_PNJKzWzyjDvyB1ENhNIOJFRGmTUr6BrJhB6wQlDSopJI_cnDtiI3AZBp4eD
- zy10YvbLAhHwEFZry.gvbdCIW4_rCFHbvvImcy9mrNZUyZK1fGyJXkxSweGiDpuRwZUvNlkNsa5u
- FiU0AXSJkyOr7XsfZzKWWvhIBhQsN3bfUfMOpSG79fqnDuq5xcaawRMBaZOo2OCBkMKUbwh1HN_N
- WHa8v4PiPls5Pz2FAeNBj
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.ne1.yahoo.com with HTTP; Mon, 27 Apr 2020 03:00:27 +0000
-Received: by smtp403.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID e9d3497fa89bdec9eee2b7b512753607;
-          Mon, 27 Apr 2020 02:58:10 +0000 (UTC)
-Date:   Mon, 27 Apr 2020 10:58:02 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hch@infradead.org, willy@infradead.org,
-        Mike Marshall <hubcap@omnibond.com>,
-        Martin Brandenburg <martin@omnibond.com>,
-        devel@lists.orangefs.org
-Subject: Re: [RFC PATCH 8/9] orangefs: use set/clear_fs_page_private
-Message-ID: <20200427025752.GA3979@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20200426214925.10970-1-guoqing.jiang@cloud.ionos.com>
- <20200426214925.10970-9-guoqing.jiang@cloud.ionos.com>
- <20200426222455.GB2005@dread.disaster.area>
+        Sun, 26 Apr 2020 23:00:37 -0400
+Received: from mga05.intel.com ([192.55.52.43]:23386 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726316AbgD0DAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 23:00:36 -0400
+IronPort-SDR: a7ct3EM+3j20Im5tCGCrMV3xSpcvdoGy0vGlROG8Zx7vfYSopQqttnwNfqUl51r3uQvRJdi73+
+ BnJD3EcwrMHw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2020 20:00:35 -0700
+IronPort-SDR: dpPP1rqsPr3sXMDGIVVoEwTMQ6xiPqCrbYC2spUvn0BDsRhrjHKfHEuQJaxHDn8akkaQqcJNy+
+ 9tKuSW3D/BlQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,321,1583222400"; 
+   d="scan'208";a="292293649"
+Received: from yhex-mobl2.ccr.corp.intel.com (HELO yhuang-mobile.ccr.corp.intel.com) ([10.254.212.42])
+  by fmsmga002.fm.intel.com with ESMTP; 26 Apr 2020 20:00:32 -0700
+From:   Huang Ying <ying.huang@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Huang Ying <ying.huang@intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Hugh Dickins <hughd@google.com>
+Subject: [PATCH] swap: Try to scan more free slots even when fragmented
+Date:   Mon, 27 Apr 2020 11:00:23 +0800
+Message-Id: <20200427030023.264780-1-ying.huang@intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200426222455.GB2005@dread.disaster.area>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Mailer: WebService/1.1.15756 hermes Apache-HttpAsyncClient/4.1.4 (Java/11.0.6)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 08:24:55AM +1000, Dave Chinner wrote:
-> On Sun, Apr 26, 2020 at 11:49:24PM +0200, Guoqing Jiang wrote:
-> > Since the new pair function is introduced, we can call them to clean the
-> > code in orangefs.
-> > 
-> > Cc: Mike Marshall <hubcap@omnibond.com>
-> > Cc: Martin Brandenburg <martin@omnibond.com>
-> > Cc: devel@lists.orangefs.org
-> > Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-> > ---
-> >  fs/orangefs/inode.c | 24 ++++++------------------
-> >  1 file changed, 6 insertions(+), 18 deletions(-)
-> > 
-> > diff --git a/fs/orangefs/inode.c b/fs/orangefs/inode.c
-> > index 12ae630fbed7..893099d36e20 100644
-> > --- a/fs/orangefs/inode.c
-> > +++ b/fs/orangefs/inode.c
-> > @@ -64,9 +64,7 @@ static int orangefs_writepage_locked(struct page *page,
-> >  	}
-> >  	if (wr) {
-> >  		kfree(wr);
-> > -		set_page_private(page, 0);
-> > -		ClearPagePrivate(page);
-> > -		put_page(page);
-> > +		clear_fs_page_private(page);
-> 
-> THis is a pre-existing potential use-after-free vector. The wr
-> pointer held in the page->private needs to be cleared from the page
-> before it is freed.
+Now, the scalability of swap code will drop much when the swap device
+becomes fragmented, because the swap slots allocation batching stops
+working.  To solve the problem, in this patch, we will try to scan a
+little more swap slots with restricted effort to batch the swap slots
+allocation even if the swap device is fragmented.  Test shows that the
+benchmark score can increase up to 37.1% with the patch.  Details are
+as follows.
 
-I'm not familar with orangefs. In my opinion, generally all temporary
-page->private access (r/w) should be properly protected by some locks,
-most of time I think it could be at least page lock since .migratepage,
-.invalidatepage, .releasepage, .. (such paths) are already called with
-page locked (honestly I'm interested in this topic, please correct me
-if I'm wrong).
+The swap code has a per-cpu cache of swap slots.  These batch swap
+space allocations to improve swap subsystem scaling.  In the following
+code path,
 
-I agree that the suggested modification is more clear and easy to read.
+  add_to_swap()
+    get_swap_page()
+      refill_swap_slots_cache()
+        get_swap_pages()
+	  scan_swap_map_slots()
 
-Thanks,
-Gao Xiang
+scan_swap_map_slots() and get_swap_pages() can return multiple swap
+slots for each call.  These slots will be cached in the per-CPU swap
+slots cache, so that several following swap slot requests will be
+fulfilled there to avoid the lock contention in the lower level swap
+space allocation/freeing code path.
 
+But this only works when there are free swap clusters.  If a swap
+device becomes so fragmented that there's no free swap clusters,
+scan_swap_map_slots() and get_swap_pages() will return only one swap
+slot for each call in the above code path.  Effectively, this falls
+back to the situation before the swap slots cache was introduced, the
+heavy lock contention on the swap related locks kills the scalability.
+
+Why does it work in this way?  Because the swap device could be large,
+and the free swap slot scanning could be quite time consuming, to
+avoid taking too much time to scanning free swap slots, the
+conservative method was used.
+
+In fact, this can be improved via scanning a little more free slots
+with strictly restricted effort.  Which is implemented in this patch.
+In scan_swap_map_slots(), after the first free swap slot is gotten, we
+will try to scan a little more, but only if we haven't scanned too
+many slots (< LATENCY_LIMIT).  That is, the added scanning latency is
+strictly restricted.
+
+To test the patch, we have run 16-process pmbench memory benchmark on
+a 2-socket server machine with 48 cores.  Multiple ram disks are
+configured as the swap devices.  The pmbench working-set size is much
+larger than the available memory so that swapping is triggered.  The
+memory read/write ratio is 80/20 and the accessing pattern is random,
+so the swap space becomes highly fragmented during the test.  In the
+original implementation, the lock contention on swap related locks is
+very heavy.  The perf profiling data of the lock contention code path
+is as following,
+
+_raw_spin_lock.get_swap_pages.get_swap_page.add_to_swap:             21.03
+_raw_spin_lock_irq.shrink_inactive_list.shrink_lruvec.shrink_node:    1.92
+_raw_spin_lock_irq.shrink_active_list.shrink_lruvec.shrink_node:      1.72
+_raw_spin_lock.free_pcppages_bulk.drain_pages_zone.drain_pages:       0.69
+
+While after applying this patch, it becomes,
+
+_raw_spin_lock_irq.shrink_inactive_list.shrink_lruvec.shrink_node:    4.89
+_raw_spin_lock_irq.shrink_active_list.shrink_lruvec.shrink_node:      3.85
+_raw_spin_lock.free_pcppages_bulk.drain_pages_zone.drain_pages:       1.1
+_raw_spin_lock_irqsave.pagevec_lru_move_fn.__lru_cache_add.do_swap_page: 0.88
+
+That is, the lock contention on the swap locks is eliminated.
+
+And the pmbench score increases 37.1%.  The swapin throughput
+increases 45.7% from 2.02 GB/s to 2.94 GB/s.  While the swapout
+throughput increases 45.3% from 2.04 GB/s to 2.97 GB/s.
+
+Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Hugh Dickins <hughd@google.com>
+---
+ mm/swapfile.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index ee9bd89857a2..a0a123e59ce6 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -739,6 +739,7 @@ static int scan_swap_map_slots(struct swap_info_struct *si,
+ 	unsigned long last_in_cluster = 0;
+ 	int latency_ration = LATENCY_LIMIT;
+ 	int n_ret = 0;
++	bool scanned_many = false;
+ 
+ 	/*
+ 	 * We try to cluster swap pages by allocating them sequentially
+@@ -870,6 +871,25 @@ static int scan_swap_map_slots(struct swap_info_struct *si,
+ 		goto checks;
+ 	}
+ 
++	/*
++	 * Even if there's no free clusters available (fragmented),
++	 * try to scan a little more quickly with lock held unless we
++	 * have scanned too many slots already.
++	 */
++	if (!scanned_many) {
++		unsigned long scan_limit;
++
++		if (offset < scan_base)
++			scan_limit = scan_base;
++		else
++			scan_limit = si->highest_bit;
++		for (; offset <= scan_limit && --latency_ration > 0;
++		     offset++) {
++			if (!si->swap_map[offset])
++				goto checks;
++		}
++	}
++
+ done:
+ 	si->flags -= SWP_SCANNING;
+ 	return n_ret;
+@@ -889,6 +909,7 @@ static int scan_swap_map_slots(struct swap_info_struct *si,
+ 		if (unlikely(--latency_ration < 0)) {
+ 			cond_resched();
+ 			latency_ration = LATENCY_LIMIT;
++			scanned_many = true;
+ 		}
+ 	}
+ 	offset = si->lowest_bit;
+@@ -905,6 +926,7 @@ static int scan_swap_map_slots(struct swap_info_struct *si,
+ 		if (unlikely(--latency_ration < 0)) {
+ 			cond_resched();
+ 			latency_ration = LATENCY_LIMIT;
++			scanned_many = true;
+ 		}
+ 		offset++;
+ 	}
+-- 
+2.25.1
 
