@@ -2,163 +2,156 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E95C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A93C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19600206D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C634206D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:33:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fvHmORI8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbgD0RdG (ORCPT
+        id S1726509AbgD0RdN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 13:33:06 -0400
-Received: from smtprelay0226.hostedemail.com ([216.40.44.226]:53156 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726213AbgD0RdG (ORCPT
+        Mon, 27 Apr 2020 13:33:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34830 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbgD0RdM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 13:33:06 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 1D04C1802915B;
-        Mon, 27 Apr 2020 17:33:05 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: hot35_721b618e1162e
-X-Filterd-Recvd-Size: 4856
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf12.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 27 Apr 2020 17:33:04 +0000 (UTC)
-Message-ID: <e2c8b5ea654600ac36949f8f0621913ceaf96ddc.camel@perches.com>
-Subject: Re: [RFC PATCH] mtd: lpddr: Fix bad logic in print_drs_error
-From:   Joe Perches <joe@perches.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Mon, 27 Apr 2020 10:33:02 -0700
-In-Reply-To: <20200427152913.47a48b46@xps13>
-References: <2e19547dcec386b47923211896f43053b60ebc60.camel@perches.com>
-         <20200427152913.47a48b46@xps13>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Mon, 27 Apr 2020 13:33:12 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2641C0610D5;
+        Mon, 27 Apr 2020 10:33:12 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id e6so7721347pjt.4;
+        Mon, 27 Apr 2020 10:33:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=gU5i7xmKV34tR5F18itWfVo5V/gDkXmz2Qiw6wo4HPA=;
+        b=fvHmORI8FOw7Qnvkc8nYVBXsWY9A+k7s1JKSy4iw5c1skxBXGFDtcccC7ybwQcyeQE
+         EHBSUbeOMHCY5hqkQMLi3XZPTl1OUBUyf+EoSspklOMMGi8oN/AsOwEbTxO5G0q1As9L
+         nMGdi5+JyGZbp9fhH7Qc7RcDKyIvqyrj+O4LGRVhayF5I1r9BH4pFJGaoUsvyk3i3GaF
+         4NIFdbygiyXpXLRs/Kw6iE0vqEnACIG/5DPNZAsEIIhlVpNi7x2GMZdiy0mAe52+YVDc
+         a561/fl228wTi8k9iGW6QYhCd0hrOZycroUO7r4O6iz7ZtvdESTuNL0wVDIU5cSSNG/n
+         UZFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=gU5i7xmKV34tR5F18itWfVo5V/gDkXmz2Qiw6wo4HPA=;
+        b=QoKvvscu/jN/IjBFa7ts520Dbxx72suUAK7RdUBVXh2/vNzzkHkEA09C4aJ4qT/DV6
+         n2KQ2IuhO+bY/Mgp6mV6HwMNaMSg6I3k5GzL5QKaygF9cFb/uZGIYAYIoVreWfBu4GwV
+         aKdzjR5qM9zpxRFqAcuNhvCI9GnzMTAqec9cJq6316gEhEVf4E1yCTgv5I+Qx5fDrZV6
+         fuamcu+rOSDw+6m91GU10n/uk290njJo+nbgm9XuOWplXwFCdoue3hLZhifvLnnlZB58
+         xlRKw2jCg7cxk6oB6beawRcvTeAXTN2FIpSLxeAMl7Ls9Jpw2tcoQVBChivabjQ0iHXm
+         TK+A==
+X-Gm-Message-State: AGi0Pub7WryJCIsBRKqNaSuf2irr2NPqiyIWYbCVjzW/fQjCvLnDrqf9
+        EsEw64frgtwgLeiNXU/ERxihYNa2JHiIFdZ+UM0=
+X-Google-Smtp-Source: APiQypLuzTP1I0aucyGGrv5MdEMHvOrysU+8xgEZbNToy2ArdtXmL+44edA6Rtf4T72RL+fcuOcvArSe8zmt+BW0BBo=
+X-Received: by 2002:a17:90a:224b:: with SMTP id c69mr25228026pje.8.1588008792167;
+ Mon, 27 Apr 2020 10:33:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200426104713.216896-1-hdegoede@redhat.com> <20200426104713.216896-2-hdegoede@redhat.com>
+ <CAHp75VdOd6C36oR7HAnqrKiinVBr4YcqqJ=dv3NpR3=Xp0QQ-Q@mail.gmail.com>
+ <b5bdffb4-0af2-abb7-21f7-2f5da56d5dc6@redhat.com> <CAHp75VegakBqAzxn1e+MzF3EgB6fNya3L0eZHMh11yct6HHNKw@mail.gmail.com>
+ <66619a61-c398-5a8a-4ee0-13dbe5d2c559@redhat.com>
+In-Reply-To: <66619a61-c398-5a8a-4ee0-13dbe5d2c559@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 27 Apr 2020 20:33:05 +0300
+Message-ID: <CAHp75VcBf1OYQ=W+k1ygHnXkNbA+NuZoiSOQOq6g7SJNc2iFiA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] platform/x86: i2c-multi-instantiate: Add flag for
+ passing fwnode
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-04-27 at 15:29 +0200, Miquel Raynal wrote:
-> Hi Joe,
+On Mon, Apr 27, 2020 at 6:06 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> On 4/27/20 3:18 PM, Andy Shevchenko wrote:
+> > On Mon, Apr 27, 2020 at 3:51 PM Hans de Goede <hdegoede@redhat.com> wro=
+te:
+> >> On 4/26/20 7:59 PM, Andy Shevchenko wrote:
+> >>> On Sun, Apr 26, 2020 at 1:47 PM Hans de Goede <hdegoede@redhat.com> w=
+rote:
 
-Hello Miquel.
+> >>>> In some cases the driver for the i2c_client-s which i2c-multi-instan=
+tiate
+> >>>> instantiates may need access some fields / methods from to the ACPI =
+fwnode
+> >>>> for which i2c_clients are being instantiated.
+> >>>>
+> >>>> An example of this are CPLM3218 ACPI device-s. These contain CPM0 an=
+d
+> >>>> CPM1 packages with various information (e.g. register init values) w=
+hich
+> >>>> the driver needs.
+> >>>>
+> >>>> Passing the fwnode through the i2c_board_info struct also gives the
+> >>>> i2c-core access to it, and if we do not pass an IRQ then the i2c-cor=
+e
+> >>>> will use the fwnode to get an IRQ, see i2c_acpi_get_irq().
+> >>>
+> >>> I'm wondering, can we rather do it in the same way like we do for
+> >>> GPIO/APIC case here.
+> >>> Introduce IRQ_RESOURCE_SHARED (or so) and
+> >>>
+> >>> case _SHARED:
+> >>>    irq =3D i2c_acpi_get_irq();
+> >>> ...
+> >>>
+> >>> ?
+> >>
+> >> I think you are miss-understanding the problem. The problem is not tha=
+t
+> >> we want to share the IRQ, the problem is that we want to pass the sing=
+le
+> >> IRQ in the resources to only 1 of the instantiated I2C-clients. But if=
+ we
+> >> do not pass an IRQ (we leave it at 0) and we do pass the fwnode then
+> >> i2c-core-base.c will see that there is an ACPI-node attached to the
+> >> device and will call i2c_acpi_get_irq().
+> >
+> > Do we know ahead which device should take IRQ resource and which should=
+ not?
+> > Can we use current _NONE flag for them?
+>
+> The problem is not internal to i2c-multi-instantiate.c, the problem
+> (once we pass a fwnode) is the API between i2c-multi-instantiate.c and
+> the i2c-core. For the IRQ_RESOURCE_NONE case i2c-multi-instantiate.c
+> sets board_info.irq to 0, which is the correct way to specify that
+> we do not have an IRQ, but if don't pass an IRQ then the i2c-core
+> will try to find one itself.  And once we pass the fwnode, then
+> the "try to find one itself" code will call i2c_acpi_get_irq()
+> and find the same IRQ for clients we instantiate, leading to
+> the earlier mentioned IRQ conflict.
 
-> Joe Perches <joe@perches.com> wrote on Mon, 30 Mar 2020 12:56:59 -0700:
-> 
-> > Update logic for broken test.
-> > Use a more common logging style.
-> > 
-> > Miscellanea:
-> > 
-> > o Coalesce formats
-> > 
-> > Signed-off-by: Joe Perches <joe@perches.com>
-> > ---
-> > 
-> > Found by inspection of include files using printk.
-> > 
-> > It appears the logic in this function is broken for the
-> > consecutive tests of
-> > 
-> > 	if (prog_status & 0x3)
-> > 		...
-> > 	else if (prog_status & 0x2)
-> > 		...
-> > 	else (prog_status & 0x1)
-> > 		...
-> > 
-> > Likely the first test should be
-> > 
-> > 	if ((prog_status & 0x3) == 0x3)
-> 
-> I had a hard time understanding the patch just with the commit log, I
-> think the above text is as important.
-> 
-> In fact, would you mind doing the printk->pr_notice in a first patch,
-> and fix the wrong condition in a separate change?
-> 
-> > And this function is only used in drivers/mtd/lpddr/lpddr_cmds.c
-> > perhaps it should be moved there.
-> 
-> Agreed, do not hesitate to move the function as suggested in a third
-> patch.
+I'm missing something here. Why we need to pass an fwnode in the first plac=
+e?
+Seems you would like to access to methods from the driver.
+But if you simple enumerate the driver in ACPI multi-instantiate won't
+be needed.
 
-You are the maintainer here no?
+As far as I understand, the actual driver consumes *both* I=C2=B2C
+resources. It's not a multi-instantiate in this case.
 
-I think you (or perhaps the author Alexey Korolev but he hasn't
-been active in a decade) should be doing all this.
 
-I just identified the logic defect.
-
-> >  include/linux/mtd/pfow.h | 31 ++++++++++++++-----------------
-> >  1 file changed, 14 insertions(+), 17 deletions(-)
-> > 
-> > diff --git a/include/linux/mtd/pfow.h b/include/linux/mtd/pfow.h
-> > index 122f343..1c08e75 100644
-> > --- a/include/linux/mtd/pfow.h
-> > +++ b/include/linux/mtd/pfow.h
-> > @@ -127,31 +127,28 @@ static inline void print_drs_error(unsigned dsr)
-> >  	int prog_status = (dsr & DSR_RPS) >> 8;
-> >  
-> >  	if (!(dsr & DSR_AVAILABLE))
-> > -		printk(KERN_NOTICE"DSR.15: (0) Device not Available\n");
-> > -	if (prog_status & 0x03)
-> > -		printk(KERN_NOTICE"DSR.9,8: (11) Attempt to program invalid "
-> > -						"half with 41h command\n");
-> > +		pr_notice("DSR.15: (0) Device not Available\n");
-> > +
-> > +	if ((prog_status & 0x03) == 0x03)
-> > +		pr_notice("DSR.9,8: (11) Attempt to program invalid half with 41h command\n");
-> >  	else if (prog_status & 0x02)
-> > -		printk(KERN_NOTICE"DSR.9,8: (10) Object Mode Program attempt "
-> > -					"in region with Control Mode data\n");
-> > +		pr_notice("DSR.9,8: (10) Object Mode Program attempt in region with Control Mode data\n");
-> >  	else if (prog_status &  0x01)
-> > -		printk(KERN_NOTICE"DSR.9,8: (01) Program attempt in region "
-> > -						"with Object Mode data\n");
-> > +		pr_notice("DSR.9,8: (01) Program attempt in region with Object Mode data\n");
-> > +
-> >  	if (!(dsr & DSR_READY_STATUS))
-> > -		printk(KERN_NOTICE"DSR.7: (0) Device is Busy\n");
-> > +		pr_notice("DSR.7: (0) Device is Busy\n");
-> >  	if (dsr & DSR_ESS)
-> > -		printk(KERN_NOTICE"DSR.6: (1) Erase Suspended\n");
-> > +		pr_notice("DSR.6: (1) Erase Suspended\n");
-> >  	if (dsr & DSR_ERASE_STATUS)
-> > -		printk(KERN_NOTICE"DSR.5: (1) Erase/Blank check error\n");
-> > +		pr_notice("DSR.5: (1) Erase/Blank check error\n");
-> >  	if (dsr & DSR_PROGRAM_STATUS)
-> > -		printk(KERN_NOTICE"DSR.4: (1) Program Error\n");
-> > +		pr_notice("DSR.4: (1) Program Error\n");
-> >  	if (dsr & DSR_VPPS)
-> > -		printk(KERN_NOTICE"DSR.3: (1) Vpp low detect, operation "
-> > -					"aborted\n");
-> > +		pr_notice("DSR.3: (1) Vpp low detect, operation aborted\n");
-> >  	if (dsr & DSR_PSS)
-> > -		printk(KERN_NOTICE"DSR.2: (1) Program suspended\n");
-> > +		pr_notice("DSR.2: (1) Program suspended\n");
-> >  	if (dsr & DSR_DPS)
-> > -		printk(KERN_NOTICE"DSR.1: (1) Aborted Erase/Program attempt "
-> > -					"on locked block\n");
-> > +		pr_notice("DSR.1: (1) Aborted Erase/Program attempt on locked block\n");
-> >  }
-> >  #endif /* __LINUX_MTD_PFOW_H */
-> > 
-> > 
-> 
-> Thanks,
-> Miquèl
-
+--=20
+With Best Regards,
+Andy Shevchenko
