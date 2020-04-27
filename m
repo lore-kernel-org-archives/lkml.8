@@ -2,316 +2,324 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 214A8C5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F423C5519A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3B2F20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECF7920663
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:45:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="wkvZ/2OE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726870AbgD0Jor (ORCPT
+        id S1726929AbgD0Jpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 05:44:47 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2104 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726349AbgD0Jor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 05:44:47 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 1C9DCBF8E98470DDCA16;
-        Mon, 27 Apr 2020 10:44:45 +0100 (IST)
-Received: from localhost (10.47.88.126) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 27 Apr
- 2020 10:44:44 +0100
-Date:   Mon, 27 Apr 2020 10:44:26 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>
-Subject: Re: [PATCH 4/6] Documentation: ABI: testing: scd30: document iio
- attributes
-Message-ID: <20200427104426.000010bf@Huawei.com>
-In-Reply-To: <20200426111104.GB3282@arch>
-References: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
-        <20200422141135.86419-5-tomasz.duszynski@octakon.com>
-        <alpine.DEB.2.21.2004221818490.26800@vps.pmeerw.net>
-        <20200423155317.GB43448@arch>
-        <20200425202057.5c8ad612@archlinux>
-        <20200426111104.GB3282@arch>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 27 Apr 2020 05:45:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46262 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726821AbgD0Jph (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 05:45:37 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DF47C061BD3
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 02:45:37 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id m13so25062313otf.6
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 02:45:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=p/dkv8siYLu4BZqbzo9AEk9hetqwaOBV9gfUD96SYV4=;
+        b=wkvZ/2OEzPmpzA1KGxW4Nr+32KgW8NQ3ymID5WWYJRWgS2Iqd28pDmJ1ydEcabxmEJ
+         aMjxgUqk6DmpOe8Nq6FL9BwtAvgu4as/EpD+xJokAl+rmfPCznstgiVZjQOqTo9nga3x
+         TZIwHcyjSEDL25xgeyK+DxhXbwkG8t1iJaNIM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p/dkv8siYLu4BZqbzo9AEk9hetqwaOBV9gfUD96SYV4=;
+        b=Nv147QaKQ9/9rharjKDcu0JCw14NrbpCVHkT+cvVVw+aKMiTiKIWigaiAvnljxtMcb
+         tLRzpzVWzBjfiu+vHH89y6LyKxBeb3uzinw25xlmohGjaYpdRGOQCT9iOhZ/FRtTIEJI
+         8oifFJOzSO9dUBmFArPbPVgr3Ydjy/nw2lu8ufdu2tEgDdWy2Y9lT7etDwgVxpDTgnws
+         5BV5am16uPy6m5kb403f6RMdxRB42KoV/Z8xemOjyPLl/J8MrSqInPonZyP9Aa6173m9
+         QuP4TX9tkPhX83qM92Bt8ioCi0XPPW8ccgDun3DD1d3El3I49xOmMtplSRSkG8GQLntx
+         w/ZQ==
+X-Gm-Message-State: AGi0PuZ6g2Cjz+sJ0WqkvKFry4IL4bXawKpOsHKVEEOUJ5RAI7+FwSHX
+        pssktK+J9m4YHYOY9TuDtMN3gdWHTcS5j7eG+AGt1A==
+X-Google-Smtp-Source: APiQypJb/0wG6doOweC6/06XgmGhy6G6Ty+M8bIB3K5ZRqyxCXC7fCfVf3fNxWjDKvYlAslCazWdOEbT8BFYiIP3+mg=
+X-Received: by 2002:aca:5492:: with SMTP id i140mr13417819oib.13.1587980736077;
+ Mon, 27 Apr 2020 02:45:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.88.126]
-X-ClientProxiedBy: lhreml736-chm.china.huawei.com (10.201.108.87) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <20200424185556.7358-1-lmb@cloudflare.com> <20200424185556.7358-2-lmb@cloudflare.com>
+ <20200426173324.5zg7isugereb5ert@ast-mbp.dhcp.thefacebook.com>
+In-Reply-To: <20200426173324.5zg7isugereb5ert@ast-mbp.dhcp.thefacebook.com>
+From:   Lorenz Bauer <lmb@cloudflare.com>
+Date:   Mon, 27 Apr 2020 10:45:24 +0100
+Message-ID: <CACAyw98nK_Vkstp-vEqNwKXtoCRnTOPr7Eh+ziH56tJGbnPsig@mail.gmail.com>
+Subject: Re: [PATCH 1/1] selftests/bpf: add cls_redirect classifier
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Theo Julienne <theojulienne@github.com>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tomasz,
+On Sun, 26 Apr 2020 at 18:33, Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Fri, Apr 24, 2020 at 07:55:55PM +0100, Lorenz Bauer wrote:
+> > cls_redirect is a TC clsact based replacement for the glb-redirect iptables
+> > module available at [1]. It enables what GitHub calls "second chance"
+> > flows [2], similarly proposed by the Beamer paper [3]. In contrast to
+> > glb-redirect, it also supports migrating UDP flows as long as connected
+> > sockets are used. cls_redirect is in production at Cloudflare, as part of
+> > our own L4 load balancer.
+>
+> This is awesome. Thank you for contributing!
+> Applied.
+>
+> > There are two major distinctions from glb-redirect: first, cls_redirect
+> > relies on receiving encapsulated packets directly from a router. This is
+> > because we don't have access to the neighbour tables from BPF, yet. See
+>
+> Let's make it available then :)
 
-Replies inline.
+Yes, I've been dragging my feet on this. It seems like the fib_lookup does
+almost what we want, but I need to experiment with it. In the best case,
+we'd have a helper that does the following:
 
-On Sun, 26 Apr 2020 13:11:04 +0200
-Tomasz Duszynski <tomasz.duszynski@octakon.com> wrote:
+* Try and find a neighbour
+* Return it if one exists
+* Otherwise, asynchronously trigger neighbour discovery (if it makes sense)
+* And return the default gateway
 
-> On Sat, Apr 25, 2020 at 08:20:57PM +0100, Jonathan Cameron wrote:
-> > On Thu, 23 Apr 2020 17:53:17 +0200
-> > Tomasz Duszynski <tomasz.duszynski@octakon.com> wrote:
-> >  
-> > > On Wed, Apr 22, 2020 at 06:40:17PM +0200, Peter Meerwald-Stadler wrote:  
-> > > > On Wed, 22 Apr 2020, Tomasz Duszynski wrote:
-> > > >  
-> > > > > Add documentation for sensor specific iio attributes.  
-> > > >
-> > > > minor comments below  
-> > >
-> > > Thanks.
-> > >  
-> > > >  
-> > > > > Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
-> > > > > ---
-> > > > >  Documentation/ABI/testing/sysfs-bus-iio-scd30 | 97 +++++++++++++++++++
-> > > > >  1 file changed, 97 insertions(+)
-> > > > >  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-scd30
-> > > > >
-> > > > > diff --git a/Documentation/ABI/testing/sysfs-bus-iio-scd30 b/Documentation/ABI/testing/sysfs-bus-iio-scd30
-> > > > > new file mode 100644
-> > > > > index 000000000000..0431a718447d
-> > > > > --- /dev/null
-> > > > > +++ b/Documentation/ABI/testing/sysfs-bus-iio-scd30
-> > > > > @@ -0,0 +1,97 @@
-> > > > > +What:		/sys/bus/iio/devices/iio:deviceX/pressure_comp
-> > > > > +Date:		April 2020
-> > > > > +KernelVersion:	5.8
-> > > > > +Contact:	linux-iio@vger.kernel.org
-> > > > > +Description:
-> > > > > +		Given that sensor's CO2 measurement chamber has fixed volume
-> > > > > +		pressure changes will affect concentration readings. Writing
-> > > > > +		current ambient pressure here will allow senor to make necessary  
-> > > >
-> > > > sensor
-> > > >  
-> > >
-> > > Okay.
-> > >  
-> > > > > +		adjustments. Upon reading previously set value is returned.
-> > > > > +		Units are millibars.  
-> > > >
-> > > > unit for pressure in IIO is kilopascal (e.g.
-> > > > /sys/bus/iio/devices/iio:deviceX/in_pressure_raw)
-> > > >  
-> > >
-> > > My thinking here was that since these are sensor specific attributes
-> > > they don't need to stick to iio conventions and millibars were somewhat
-> > > more natural to use. But I guess that's just matter of habit.  
+I should probably start a new thread about this on the list.
+
+>
+> > The code base started it's life on v4.19, so there are most likely still
+> > hold overs from old workarounds. In no particular order:
 > >
-> > You absolutely have to stick to standard units.  Userspace programs
-> > aren't going to come read your docs...
+> > - The function buf_off is required to defeat a clang optimization
+> >   that leads to the verifier rejecting the program due to pointer
+> >   arithmetic in the wrong order.
 > >
-> > For other sensors that take a calibration value like this we've reported
-> > them via an output channel.  For example the atlas-ph sensor has
-> > an 'output temp' channel used for this purpose.
-> >  
-> 
-> Fair enough.
-> 
-> > It's not ideal or totally intuitive but it does let us avoid expanding
-> > the overall ABI.  The argument was something along the lines of
-> > 1) Imagine your sensor could control the pressure in the measurement space...
-> > 2) An output channel would provide the value to set it to.
-> > 3) Now instead we provide a means of saying 'what it is'
-> > 4) End result is we write a value and the pressure in the chamber is
-> >    that value :)
+> > - The function pkt_parse_ipv6 is force inlined, because it would
+> >   otherwise be rejected due to returning a pointer to stack memory.
 > >
-> > As I said not ideal but the best we can do without having to define a lot
-> > of ABI just to deal with compensation factors.
+> > - The functions fill_tuple and classify_tcp contain kludges, because
+> >   we've run out of function arguments.
 > >
-> > This is a rare case where I would document the 'standard' ABI in here
-> > to make the point that it is actually providing an estimate of the pressure
-> > not controlling it...
-> >  
-> > >
-> > > So generally I am okay with reworking all attrs to accept values in iio
-> > > preferred units.
-> > >  
-> > > > > +
-> > > > > +What:		/sys/bus/iio/devices/iio:deviceX/pressure_comp_available
-> > > > > +Date:		April 2020
-> > > > > +KernelVersion:	5.8
-> > > > > +Contact:	linux-iio@vger.kernel.org
-> > > > > +Description:
-> > > > > +		The range of available values in millibars represented as the
-> > > > > +		minimum value, the step and the maximum value, all enclosed in
-> > > > > +		square brackets.
-> > > > > +
-> > > > > +What:		/sys/bus/iio/devices/iio:deviceX/meas_interval
-> > > > > +Date:		January 2020
-> > > > > +KernelVersion:	5.8
-> > > > > +Contact:	linux-iio@vger.kernel.org
-> > > > > +Description:
-> > > > > +		Amount of time between subsequent measurements. Writing this
-> > > > > +		attribute will change measurement interval. Upon reading
-> > > > > +		current measurement interval is returned. Units are seconds.  
-> >
-> > Use the existing ABI sampling frequency which is sort of the inverse of this.
-> >  
-> 
-> Was thinking about it but long periods in Hz simply don't look appealing :).
-> 
-> No other strong opinions so I'll rework that.
+> > - The logic in general is rather nested, due to verifier restrictions.
+> >   I think this is either because the verifier loses track of constants
+> >   on the stack, or because it can't track enum like variables.
+>
+> Have you tried undoing these workarounds to check the latest verifier?
+> If they're still needed we certainly have to improve the verifier.
+>
+> > +#include "test_cls_redirect.skel.h"
+>
+> Do you use skeleton internally as well or was it just for selftests? ;)
 
-Agreed it can look a bit odd, but we don't want to have multiple controls for the
-same thing so we are stuck with it.
+Only for selftests :) Our internal tooling is all Go based. skeleton
+is really nice
+though, so I'll make sure to steal some ideas!
 
-> 
-> > > > > +
-> > > > > +What:		/sys/bus/iio/devices/iio:deviceX/meas_interval_available
-> > > > > +Date:		April 2020
-> > > > > +KernelVersion:	5.8
-> > > > > +Contact:	linux-iio@vger.kernel.org
-> > > > > +Description:
-> > > > > +		The range of available values in seconds represented as the
-> > > > > +		minimum value, the step and the maximum value, all enclosed in
-> > > > > +		square brackets.
-> > > > > +
-> > > > > +What:		/sys/bus/iio/devices/iio:deviceX/asc  
-> > Spends some characters to easy of understanding ;)
-> >
-> > auto_calib_proc_enable maybe?  Or can we get away with the 'somewhat standard
-> > calibration (it's used in at least one other driver IIRC)
-> >  
-> 
-> Just self_calibration would do?
+>
+> > +_Static_assert(
+> > +     sizeof(flow_ports_t) !=
+> > +             offsetofend(struct bpf_sock_tuple, ipv4.dport) -
+> > +                     offsetof(struct bpf_sock_tuple, ipv4.sport) - 1,
+> > +     "flow_ports_t must match sport and dport in struct bpf_sock_tuple");
+>
+> Nice. I didn't realize clang supports it. Of course it should.
+>
+> > +/* Linux packet pointers are either aligned to NET_IP_ALIGN (aka 2 bytes),
+> > + * or not aligned if the arch supports efficient unaligned access.
+> > + *
+> > + * Since the verifier ensures that eBPF packet accesses follow these rules,
+> > + * we can tell LLVM to emit code as if we always had a larger alignment.
+> > + * It will yell at us if we end up on a platform where this is not valid.
+> > + */
+> > +typedef uint8_t *net_ptr __attribute__((align_value(8)));
+>
+> Wow. I didn't know about this attribute.
+> I wonder whether it can help Daniel's memcpy hack.
 
-I'll think a bit more on this one but probably fine.
+Yes, I think so.
 
-> 
-> > > > > +Date:		April 2020
-> > > > > +KernelVersion:	5.8
-> > > > > +Contact:	linux-iio@vger.kernel.org
-> > > > > +Description:
-> > > > > +		Writing 1 or 0 to this attribute will respectively activate or
-> > > > > +		deactivate automatic self calibration procedure. Upon reading 1  
-> > > >
-> > > > deactivate automatic self calibration (asc) procedure
-> > > >  
-> > >
-> > > That shouldn't be too difficult to realize what asc actually stands for after
-> > > reading this short description.
-> > >  
-> > > > > +		is returned if asc is ongoing, 0 otherwise.
-> > > > > +
-> > > > > +What:		/sys/bus/iio/devices/iio:deviceX/frc
-> > > > > +Date:		April 2020
-> > > > > +KernelVersion:	5.8
-> > > > > +Contact:	linux-iio@vger.kernel.org
-> > > > > +Description:
-> > > > > +		Forced recalibration is used to compensate for sensor drifts
-> > > > > +		when a reference value of CO2 concentration in close proximity
-> > > > > +		to the sensor is available. Writing attribute will set frc
-> > > > > +		value. Upon reading current frc is returned. Units are
-> > > > > +		millibars.  
-> >
-> > Could we implement this by just writing to the main channel value?
-> > Bit of a clunky ABI but sort of logically fits in my head given we are basically
-> > forcing the value we read to be this one?
-> >  
-> 
-> So the similar to the pressure compensation. Okay.
-> 
-> > > > > +
-> > > > > +What:		/sys/bus/iio/devices/iio:deviceX/frc_available
-> > > > > +Date:		April 2020
-> > > > > +KernelVersion:	5.8
-> > > > > +Contact:	linux-iio@vger.kernel.org
-> > > > > +Description:
-> > > > > +		The range of available values in millibars represented as the
-> > > > > +		minimum value, the step and the maximum value, all enclosed in
-> > > > > +		square brackets.
-> > > > > +
-> > > > > +What:		/sys/bus/iio/devices/iio:deviceX/temp_offset
-> > > > > +Date:		April 2020
-> > > > > +KernelVersion:	5.8
-> > > > > +Contact:	linux-iio@vger.kernel.org
-> > > > > +Description:
-> > > > > +		Sensor readings may be affected by ambient temperature.
-> > > > > +		Writing temperature offset will compensate for unwanted changes.
-> > > > > +		Note that written offset gets multiplied by a factor of 100
-> > > > > +		by a sensor internally.
-> > > > > +
-> > > > > +		For example, writing 10 here will correspond to 0.1 degree
-> > > > > +		Celsius.  
-> >
-> > This sounds like a calibbias to me which is standard ABI.
-> >  
-> 
-> Right, that could work.
-> 
-> > > > > +
-> > > > > +What:		/sys/bus/iio/devices/iio:deviceX/temp_offset_available
-> > > > > +Date:		April 2020
-> > > > > +KernelVersion:	5.8
-> > > > > +Contact:	linux-iio@vger.kernel.org
-> > > > > +Description:
-> > > > > +		The range of available values in degrees Celsius represented as
-> > > > > +		the minimum value, the step and the maximum value, all enclosed
-> > > > > +		in square brackets.  
-> >
-> > Wrong units for temperature (which is an odd one as we
-> > lifted them from hwmon before learning the error of our ways and starting to use
-> > SI units as the base).
-> >  
-> 
-> Does calibbias have _available counterpart?
+> > +
+> > +typedef struct buf {
+> > +     struct __sk_buff *skb;
+> > +     net_ptr head;
+> > +     /* NB: tail musn't have alignment other than 1, otherwise
+> > +     * LLVM will go and eliminate code, e.g. when checking packet lengths.
+> > +     */
+> > +     uint8_t *const tail;
+> > +} buf_t;
+> > +
+> > +static size_t buf_off(const buf_t *buf)
+> > +{
+> > +     /* Clang seems to optimize constructs like
+> > +      *    a - b + c
+> > +      * if c is known:
+> > +      *    r? = c
+> > +      *    r? -= b
+> > +      *    r? += a
+> > +      *
+> > +      * This is a problem if a and b are packet pointers,
+> > +      * since the verifier allows subtracting two pointers to
+> > +      * get a scalar, but not a scalar and a pointer.
+> > +      *
+> > +      * Use inline asm to break this optimization.
+> > +      */
+> > +     size_t off = (size_t)buf->head;
+> > +     asm("%0 -= %1" : "+r"(off) : "r"(buf->skb->data));
+> > +     return off;
+> > +}
+>
+> We need to look into this one.
+> This part is not gated by allow_ptr_leaks.
+> if (dst_reg == off_reg) {
+>         /* scalar -= pointer.  Creates an unknown scalar */
+>         verbose(env, "R%d tried to subtract pointer from scalar\n",
+>                 dst);
+>         return -EACCES;
+> }
+> Hopefully not too hard to fix.
+>
+> > +
+> > +static bool pkt_skip_ipv6_extension_headers(buf_t *pkt,
+> > +                                         const struct ipv6hdr *ipv6,
+> > +                                         uint8_t *upper_proto,
+> > +                                         bool *is_fragment)
+> > +{
+> > +     /* We understand five extension headers.
+> > +      * https://tools.ietf.org/html/rfc8200#section-4.1 states that all
+> > +      * headers should occur once, except Destination Options, which may
+> > +      * occur twice. Hence we give up after 6 headers.
+> > +      */
+> > +     struct {
+> > +             uint8_t next;
+> > +             uint8_t len;
+> > +     } exthdr = {
+> > +             .next = ipv6->nexthdr,
+> > +     };
+> > +     *is_fragment = false;
+> > +
+> > +#pragma clang loop unroll(full)
+> > +     for (int i = 0; i < 6; i++) {
+>
+> unroll is still needed even with bounded loop support in the verifier?
 
-It might not be documented yet (as not sure it's been used) but any attribute has
-an available counterpart.  That's effectively standard ABI.
+I've just tried removing this on bpf-next. pkt_ipv4_checksum works
+without the pragma,
+pkt_skip_ipv6_extension_headers fails with the following message:
 
-> 
-> >  
-> > > > > +
-> > > > > +What:		/sys/bus/iio/devices/iio:deviceX/reset
-> > > > > +Date:		April 2020
-> > > > > +KernelVersion:	5.8
-> > > > > +Contact:	linux-iio@vger.kernel.org
-> > > > > +Description:
-> > > > > +		Software reset mechanism forces sensor into the same state
-> > > > > +		as after powering up without the need for removing power supply.
-> > > > > +		Writing any value will reset sensor.  
-> >
-> > Not seeing an argument here for why you might want to do that other than on
-> > power up or module probe to get the driver into a known state.
-> > So currently it's a no to this one - just don't expose it to userspace.
-> >  
-> 
-> If one writes some odd configuration (though allowed) into sensor, for example
-> out of sheer curiosity and then writes the sane values back sensor needs some
-> time to recover (i.e start reporting valid measurements again).
-> 
-> So rationale here was that after reset sensor recovers immediately. I'd
-> say that reset is sometimes useful. Perhaps that could be exported by
-> means of iio debug api?
+libbpf: load bpf program failed: Invalid argument
+libbpf: -- BEGIN DUMP LOG ---
+libbpf:
+476: for (int i = 0; i < 6; i++) {
+477: switch (exthdr.next) {
+back-edge from insn 476 to 477
+processed 0 insns (limit 1000000) max_states_per_insn 0 total_states 0
+peak_states 0 mark_read 0
 
-Debugfs would be fine
+libbpf: -- END LOG --
+libbpf: failed to load program 'classifier/cls_redirect'
+libbpf: failed to load object 'test_cls_redirect'
+libbpf: failed to load BPF skeleton 'test_cls_redirect': -4007
+test_cls_redirect:FAIL:385
+#10 cls_redirect:FAIL
+Summary: 0/0 PASSED, 0 SKIPPED, 1 FAILED
 
-> 
-> >  
-> > > > >  
-> > > >
-> > > > --
-> > > >
-> > > > Peter Meerwald-Stadler
-> > > > Mobile: +43 664 24 44 418  
-> >  
+>
+>
+> > +/* This function has to be inlined, because the verifier otherwise rejects it
+> > + * due to returning a pointer to the stack. This is technically correct, since
+> > + * scratch is allocated on the stack. However, this usage should be safe since
+> > + * it's the callers stack after all.
+> > + */
+>
+> Interesting. The verifier can recognize that ptr to stack can be safe in some cases.
+> When I added that check I didn't think that the code can be as tricky as this :)
+>
+> > +static verdict_t process_ipv4(buf_t *pkt, metrics_t *metrics)
+> > +{
+> > +     switch (ipv4->protocol) {
+> > +     case IPPROTO_ICMP:
+> > +             return process_icmpv4(pkt, metrics);
+> > +
+> > +     case IPPROTO_TCP:
+> > +             return process_tcp(pkt, ipv4, sizeof(*ipv4), metrics);
+> > +
+> > +     case IPPROTO_UDP:
+> > +             return process_udp(pkt, ipv4, sizeof(*ipv4), metrics);
+> > +
+> > +     default:
+> > +             metrics->errors_total_unknown_l4_proto++;
+> > +             return INVALID;
+> > +     }
+> > +}
+> > +
+> > +static verdict_t process_ipv6(buf_t *pkt, metrics_t *metrics)
+> > +     if (is_fragment) {
+> > +             metrics->errors_total_fragmented_ip++;
+> > +             return INVALID;
+> > +     }
+> > +
+> > +     switch (l4_proto) {
+> > +     case IPPROTO_ICMPV6:
+> > +             return process_icmpv6(pkt, metrics);
+> > +
+> > +     case IPPROTO_TCP:
+> > +             return process_tcp(pkt, ipv6, sizeof(*ipv6), metrics);
+> > +
+> > +     case IPPROTO_UDP:
+> > +             return process_udp(pkt, ipv6, sizeof(*ipv6), metrics);
+> > +
+> > +     default:
+> > +             metrics->errors_total_unknown_l4_proto++;
+> > +             return INVALID;
+> > +     }
+> > +}
+> > +
+> > +SEC("classifier/cls_redirect")
+> > +int cls_redirect(struct __sk_buff *skb)
+> > +{
+> ...
+> > +     verdict_t verdict;
+> > +     switch (encap->gue.proto_ctype) {
+> > +     case IPPROTO_IPIP:
+> > +             verdict = process_ipv4(&pkt, metrics);
+> > +             break;
+> > +
+> > +     case IPPROTO_IPV6:
+> > +             verdict = process_ipv6(&pkt, metrics);
+> > +             break;
+>
+> The code flow looks pretty clean.
+> I didn't find the copy-paste of ipv[46] -> tcp/udp
+> you were mentioning.
+> So that old issue is now gone?
 
+The biggest offenders are fill_tuple (which is purely a hack) as well
+as classify_tcp.
+I'd really like to call classify_tcp from cls_redirect(), using saved
+packet pointers and lengths.
+Right now the function is called starting from process_ipv4 and
+process_ipv6, which
+means all of those arguments have to be passed down somehow.
 
+-- 
+Lorenz Bauer  |  Systems Engineer
+6th Floor, County Hall/The Riverside Building, SE1 7PB, UK
+
+www.cloudflare.com
