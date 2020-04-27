@@ -2,210 +2,120 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99235C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF36C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67D4F2076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:26:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B65E2076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:28:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xTCYIbf7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OUYBdPcB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbgD0R0m (ORCPT
+        id S1726030AbgD0R2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 13:26:42 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:39610 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726262AbgD0R0m (ORCPT
+        Mon, 27 Apr 2020 13:28:10 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58510 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725963AbgD0R2K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 13:26:42 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03RHNNun032176;
-        Mon, 27 Apr 2020 17:25:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=2uE+mNBlryTX8hj4mQm6UWx/K31ONdvabCMIKOLtOyU=;
- b=xTCYIbf7r5dai610kYmRfslwcsdHMEa6nYuPYmpMy+7WUkM9840zuWRmT2v1MiaH6Cad
- +fYWXCh8PyDfm6g+dIyG7BXcw3P9PeZXXougO6mlOLOylsBzYtMAlZzBzlRJJatu4I9N
- /AveFv2IyJQslCKqyCxuN+21YY9yrbN47PRg98fdwJ2kPrlLeXvj0DTMFDZB9ZWRvRM7
- Ed+D9rxwrxjP3D1PFlRuVFcuOx+bDZYZm4iIaDJw0NmlAZ9XtPZO6joC0Rr+di/qtUTo
- oTv+6hlYH5+uyVoe6FV6yxjUAbpvIRv9bN/idQ6mOzjti7KgZTFrdQJIrHma1+l6CzbV yA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 30p2p00ddv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Apr 2020 17:25:18 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03RHMbqg085782;
-        Mon, 27 Apr 2020 17:25:18 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 30mxpdrdfm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Apr 2020 17:25:18 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03RHP5vx008462;
-        Mon, 27 Apr 2020 17:25:05 GMT
-Received: from [192.168.2.157] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 27 Apr 2020 10:25:05 -0700
-Subject: Re: [PATCH v3 2/4] hugetlbfs: move hugepagesz= parsing to arch
- independent code
-To:     Sandipan Das <sandipan.osd@gmail.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "David S.Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Longpeng <longpeng2@huawei.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Mina Almasry <almasrymina@google.com>,
-        Peter Xu <peterx@redhat.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20200417185049.275845-1-mike.kravetz@oracle.com>
- <20200417185049.275845-3-mike.kravetz@oracle.com>
- <7583dfcc-62d8-2a54-6eef-bcb4e01129b3@gmail.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <5a380060-38db-b690-1003-678ca0f28f07@oracle.com>
-Date:   Mon, 27 Apr 2020 10:25:02 -0700
+        Mon, 27 Apr 2020 13:28:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588008488;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AIdh8aRRTeVMDlIVe128qbh6x+vMtm/fPvnZdxCsjFc=;
+        b=OUYBdPcBz41whDEAW3YRly0U+ea4oFKl2SXHUGsadCFtZ3WFkoCMwbBCelbSB8AGAoEcuu
+        OJ62nniLq2bh7gYVNFEqnuSd099PCFLZzCtrysmAq57SGm1pS0mrhGRjuahmTXN817xOfd
+        WJxaczEMMjJM7m09EextrrkE6H3bbtg=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-161-gSnzpcViNRy5xByVCJ0PFg-1; Mon, 27 Apr 2020 13:28:06 -0400
+X-MC-Unique: gSnzpcViNRy5xByVCJ0PFg-1
+Received: by mail-wm1-f71.google.com with SMTP id q5so137831wmc.9
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 10:28:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AIdh8aRRTeVMDlIVe128qbh6x+vMtm/fPvnZdxCsjFc=;
+        b=mDUdGm3IrZ6vIzuG3326hMgXVemgqP1/y9hyOAWvKderE6zaUaIfYzcEzXlh3F0J6z
+         6LTaLT60cW1PyhtmYA+4S9XETkM8+461crxeyDI7rH/cY+35zcwcL5nJvvy9yAAKwWD+
+         a94bBa0jMarXiNsyt8UU91b3zMlIP/mJElHAa0oz2wljLxRwfadGsAyCeQPiUn3Prb1C
+         Ot0YeD+aa6NI12TQrYanvFpANtMFfIPXlsz13tZrQ3YeOgTeJYG5gwuUh8tWIrRm5HvF
+         TFHDUOPEpLDgKlEXOsK+2fqmLk7GxKEyc/pphmXSakM3KZ6vDMnsL5zeU8kXUdqRWhtY
+         9OlA==
+X-Gm-Message-State: AGi0Pua0637Xcwt9aYe0j8RMasOVXjOhuQJfUi1rmi5vp2DptcQOW8E9
+        mSJx27Zj6nDmClH0ouwJeiZ0hJpXVgpXyuVj5i35s7ygdRF1Nlxe0pIjMH5VVr9USzphCPFCbHB
+        agJxBcxYccJVzixC+B4rAlbcc
+X-Received: by 2002:adf:fe51:: with SMTP id m17mr28105887wrs.414.1588008485621;
+        Mon, 27 Apr 2020 10:28:05 -0700 (PDT)
+X-Google-Smtp-Source: APiQypK7mAxrF469/q2T6gwPBIgiv6em6qBY0yYH5Pgcqs55CxifERpdCZbEIn1L7QLLUTzS2XWc8w==
+X-Received: by 2002:adf:fe51:: with SMTP id m17mr28105867wrs.414.1588008485367;
+        Mon, 27 Apr 2020 10:28:05 -0700 (PDT)
+Received: from [192.168.10.150] ([93.56.170.5])
+        by smtp.gmail.com with ESMTPSA id s14sm15422654wmh.18.2020.04.27.10.28.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 10:28:04 -0700 (PDT)
+Subject: Re: [PATCH] KVM: VMX: Use accessor to read vmcs.INTR_INFO when
+ handling exception
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200427171837.22613-1-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <8123dc4b-a449-a92c-85a1-c255fa2bbbca@redhat.com>
+Date:   Mon, 27 Apr 2020 19:28:02 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <7583dfcc-62d8-2a54-6eef-bcb4e01129b3@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200427171837.22613-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 bulkscore=0 adultscore=0 phishscore=0 suspectscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004270142
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 clxscore=1011
- bulkscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0 malwarescore=0
- mlxscore=0 suspectscore=0 mlxlogscore=999 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004270142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/26/20 10:04 PM, Sandipan Das wrote:
-> Hi Mike,
+On 27/04/20 19:18, Sean Christopherson wrote:
+> Use vmx_get_intr_info() when grabbing the cached vmcs.INTR_INFO in
+> handle_exception_nmi() to ensure the cache isn't stale.  Bypassing the
+> caching accessor doesn't cause any known issues as the cache is always
+> refreshed by handle_exception_nmi_irqoff(), but the whole point of
+> adding the proper caching mechanism was to avoid such dependencies.
 > 
-> On 18/04/20 12:20 am, Mike Kravetz wrote:
->> Now that architectures provide arch_hugetlb_valid_size(), parsing
->> of "hugepagesz=" can be done in architecture independent code.
->> Create a single routine to handle hugepagesz= parsing and remove
->> all arch specific routines.  We can also remove the interface
->> hugetlb_bad_size() as this is no longer used outside arch independent
->> code.
->>
->> This also provides consistent behavior of hugetlbfs command line
->> options.  The hugepagesz= option should only be specified once for
->> a specific size, but some architectures allow multiple instances.
->> This appears to be more of an oversight when code was added by some
->> architectures to set up ALL huge pages sizes.
->>
->> [...]
->>
->> diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
->> index de54d2a37830..2c3fa0a7787b 100644
->> --- a/arch/powerpc/mm/hugetlbpage.c
->> +++ b/arch/powerpc/mm/hugetlbpage.c
->> @@ -589,21 +589,6 @@ static int __init add_huge_page_size(unsigned long long size)
->>  	return 0;
->>  }
->>  
->> -static int __init hugepage_setup_sz(char *str)
->> -{
->> -	unsigned long long size;
->> -
->> -	size = memparse(str, &str);
->> -
->> -	if (add_huge_page_size(size) != 0) {
->> -		hugetlb_bad_size();
->> -		pr_err("Invalid huge page size specified(%llu)\n", size);
->> -	}
->> -
->> -	return 1;
->> -}
->> -__setup("hugepagesz=", hugepage_setup_sz);
->> -
->> [...]
+> Fixes: 8791585837f6 ("KVM: VMX: Cache vmcs.EXIT_INTR_INFO using arch avail_reg flags")
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> This isn't working as expected on powerpc64.
-> 
->   [    0.000000] Kernel command line: root=UUID=dc7b49cf-95a2-4996-8e7d-7c64ddc7a6ff hugepagesz=16G hugepages=2 
->   [    0.000000] HugeTLB: huge pages not supported, ignoring hugepagesz = 16G
->   [    0.000000] HugeTLB: huge pages not supported, ignoring hugepages = 2
->   [    0.284177] HugeTLB registered 16.0 MiB page size, pre-allocated 0 pages
->   [    0.284182] HugeTLB registered 16.0 GiB page size, pre-allocated 0 pages
->   [    2.585062]     hugepagesz=16G
->   [    2.585063]     hugepages=2
-> 
-> The "huge pages not supported" messages are under a !hugepages_supported()
-> condition which checks if HPAGE_SHIFT is non-zero. On powerpc64, HPAGE_SHIFT
-> comes from the hpage_shift variable. At this point, it is still zero and yet
-> to be set. Hence the check fails. The reason being hugetlbpage_init_default(),
-> which sets hpage_shift, it now called after hugepage_setup_sz().
-
-Thanks for catching this Sandipan.
-
-In the new arch independent version of hugepages_setup, I added the following
-code in patch 4 off this series:
-
-> +static int __init hugepages_setup(char *s)
->  {
->  	unsigned long *mhp;
->  	static unsigned long *last_mhp;
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 3ab6ca6062ce..7bddcb24f6f3 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -4677,7 +4677,7 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
+>  	u32 vect_info;
 >  
-> +	if (!hugepages_supported()) {
-> +		pr_warn("HugeTLB: huge pages not supported, ignoring hugepages = %s\n", s);
-> +		return 0;
-> +	}
-> +
->  	if (!parsed_valid_hugepagesz) {
+>  	vect_info = vmx->idt_vectoring_info;
+> -	intr_info = vmx->exit_intr_info;
+> +	intr_info = vmx_get_intr_info(vcpu);
+>  
+>  	if (is_machine_check(intr_info) || is_nmi(intr_info))
+>  		return 1; /* handled by handle_exception_nmi_irqoff() */
+> 
 
-In fact, I added it to the beginning of all the hugetlb command line parsing
-routines.  My 'thought' was to warn early if hugetlb pages were not supported.
-Previously, the first check for hugepages_supported() was in hugetlb_init()
-which ran after hugetlbpage_init_default().
+Hasn't this been applied already?
 
-The easy solution is to remove all the hugepages_supported() checks from
-command line parsing routines and rely on the later check in hugetlb_init().
+Paolo
 
-Another reason for adding those early checks was to possibly prevent the
-preallocation of gigantic pages at command line parsing time.   Gigantic
-pages are allocated at command line parsing time as they need to be allocated
-with the bootmem allocator.  My concern is that there could be some strange
-configuration where !hugepages_supported(), yet we allocate gigantic pages
-from bootmem that can not be used or freeed later.
-
-powerpc is the only architecture which has it's own alloc_bootmem_huge_page
-routine.  So, it handles this potential issue.
-
-I'll send out a fix shortly.
--- 
-Mike Kravetz
