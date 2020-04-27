@@ -2,117 +2,95 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20639C55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9E4C5519B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F110A206CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:46:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="P/lpHRdZ"
+	by mail.kernel.org (Postfix) with ESMTP id D689320663
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:47:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbgD0Jq4 (ORCPT
+        id S1726830AbgD0JrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 05:46:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46470 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726948AbgD0Jqz (ORCPT
+        Mon, 27 Apr 2020 05:47:19 -0400
+Received: from 60-251-196-230.HINET-IP.hinet.net ([60.251.196.230]:19828 "EHLO
+        ironport.ite.com.tw" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726003AbgD0JrS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 05:46:55 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8362C0610D6
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 02:46:53 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id e25so16869954ljg.5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 02:46:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=UiB8Sz4YfAvbHdDR7SWAyV+bAGQjoJnQnsYXO+tF1Jw=;
-        b=P/lpHRdZrhWFk5hitl3BMEiBmG5w4opF0Oalc7Vj/JoILMg5y36ElUeI+8OqWPcNzr
-         YghOBqFT5ur+fYkEaQP1DXOdxTjngMaA6419pL6Wo8lYNLTZ/Q1+lF20AKOJHiG6E5r6
-         zs44vu2HOocwuzkTfmPJMGGoYFkG5TIGY8zGtoOoboq0uxJnQ5ivErKgaCD+EBfQ8hck
-         ep5kHSOtNdPFTS8mI1crRmYKZ8zFxpL+hk51g4gnMMNrmYjI9TtYVcSodtRa2/bJlUtL
-         wAkkoDHecXlBGiqiOuiHjlOXNxx/FvMzbAirJDyJhkyH6h5Ay0rzua9icwCF7VuqFAPE
-         ioOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UiB8Sz4YfAvbHdDR7SWAyV+bAGQjoJnQnsYXO+tF1Jw=;
-        b=kBwDneig+zP/sSgIzzp+EuI/8w69bZrTxcXmHHK10EB6hXEBtVx0GFftsVwnpXfJgD
-         I2yorF8o1sbb0p1T8j33A3bu/Ez2GXU3Wn8b48eYV3S5A/CZ1+bzIyzPBblf9oH06NV/
-         fQdE7oPgx9tpglboqggXmcFxegRwyiFGvIeNbNM35OMcEq1wy4EluFHxxDfX9bb7qmZR
-         1ejsJ49GuMc/DY2DFyRQzw2z8H9YytFw5NFyLinfEib6kX3OflCFfW1vFR9RSjur9aZ5
-         yf4luZUR18q/8DQhGvIcAOUzOdGmuj3oqiR7R5U6jWFy97kvkiGbnba0WFnmqCfTWmUi
-         wB3Q==
-X-Gm-Message-State: AGi0Pub4oO2c76WW+J1gE9h5qrpziGut+H8jN6581pJNwKHq0fZpT1Jl
-        qQ/ueW2NcVki7r19aU8aHeXxtg==
-X-Google-Smtp-Source: APiQypKroMeYJY/wQUfBYPTmpEXq29J4Z1z4LHIzXUP4q2GwmDpeJ5RcHUo8V2suYyqKrVSqw83gSA==
-X-Received: by 2002:a2e:9c09:: with SMTP id s9mr14002613lji.169.1587980812467;
-        Mon, 27 Apr 2020 02:46:52 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:468e:1152:9c79:cdeb:725:5fa4? ([2a00:1fa0:468e:1152:9c79:cdeb:725:5fa4])
-        by smtp.gmail.com with ESMTPSA id r9sm8794099ljh.36.2020.04.27.02.46.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Apr 2020 02:46:51 -0700 (PDT)
-Subject: Re: [PATCH net-next v4 02/11] bridge: mrp: Update Kconfig
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>,
-        nikolay@cumulusnetworks.com, davem@davemloft.net, jiri@resnulli.us,
-        ivecera@redhat.com, kuba@kernel.org, roopa@cumulusnetworks.com,
-        olteanv@gmail.com, andrew@lunn.ch, UNGLinuxDriver@microchip.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bridge@lists.linux-foundation.org
-References: <20200426132208.3232-1-horatiu.vultur@microchip.com>
- <20200426132208.3232-3-horatiu.vultur@microchip.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <ea7b30af-57b7-4cad-b73a-a13cf762c742@cogentembedded.com>
-Date:   Mon, 27 Apr 2020 12:46:47 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 27 Apr 2020 05:47:18 -0400
+X-Greylist: delayed 911 seconds by postgrey-1.27 at vger.kernel.org; Mon, 27 Apr 2020 05:47:17 EDT
+IronPort-SDR: 03tNGgORm4fYJDbu4RNLVwBLIPVqQqd9fHfvk56lkvOModc0w26hJvlRnmRqBNxqFJ+g0Mmyrj
+ 12/d/rTrCqgg==
+Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
+  by ironport.ite.com.tw with ESMTP; 27 Apr 2020 17:32:05 +0800
+Received: from CSBMAIL1.internal.ite.com.tw (csbmail1.internal.ite.com.tw [192.168.65.58])
+        by mse.ite.com.tw with ESMTP id 03R9W1f1045929;
+        Mon, 27 Apr 2020 17:32:01 +0800 (GMT-8)
+        (envelope-from allen.chen@ite.com.tw)
+Received: from allen-VirtualBox.internal.ite.com.tw (192.168.70.14) by
+ CSBMAIL1.internal.ite.com.tw (192.168.65.58) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Mon, 27 Apr 2020 17:32:00 +0800
+From:   allen <allen.chen@ite.com.tw>
+CC:     Allen Chen <allen.chen@ite.com.tw>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh@kernel.org>, Sam Ravnborg <sam@ravnborg.org>,
+        Stephan Gerhold <stephan@gerhold.net>
+Subject: [PATCH v9 0/3] IT6505 cover letter
+Date:   Mon, 27 Apr 2020 17:16:51 +0800
+Message-ID: <1587979103-5630-1-git-send-email-allen.chen@ite.com.tw>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-In-Reply-To: <20200426132208.3232-3-horatiu.vultur@microchip.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [192.168.70.14]
+X-ClientProxiedBy: CSBMAIL1.internal.ite.com.tw (192.168.65.58) To
+ CSBMAIL1.internal.ite.com.tw (192.168.65.58)
+X-TM-SNTS-SMTP: FF59412277EA3E11F0A6463377A2F20CD0C999F653F3C73A7397EFBC782DDE7E2000:8
+X-MAIL: mse.ite.com.tw 03R9W1f1045929
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+The IT6505 is a high-performance DisplayPort 1.1a transmitter, fully compliant with DisplayPort 1.1a, HDCP 1.3 specifications. The IT6505 supports color depth of up to 36 bits (12 bits/color) and ensures robust transmission of high-quality uncompressed video content, along with uncompressed and compressed digital audio content.
 
-On 26.04.2020 16:21, Horatiu Vultur wrote:
+This series contains document bindings, revert commit, add vendor prefix, Kconfig to control the function enable or not.
 
-> Add the option BRIDGE_MRP to allow to build in or not MRP support.
-> The default value is N.
-> 
-> Reviewed-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> ---
->   net/bridge/Kconfig | 12 ++++++++++++
->   1 file changed, 12 insertions(+)
-> 
-> diff --git a/net/bridge/Kconfig b/net/bridge/Kconfig
-> index e4fb050e2078..51a6414145d2 100644
-> --- a/net/bridge/Kconfig
-> +++ b/net/bridge/Kconfig
-> @@ -61,3 +61,15 @@ config BRIDGE_VLAN_FILTERING
->   	  Say N to exclude this support and reduce the binary size.
->   
->   	  If unsure, say Y.
-> +
-> +config BRIDGE_MRP
-> +	bool "MRP protocol"
-> +	depends on BRIDGE
-> +	default n
+Allen Chen (1):
+  WIP: drm/bridge: add it6505 driver
 
-    Not needed, N is the default default. :-)
+allen (2):
+  dt-bindings: Add vendor prefix for ITE Tech. Inc.
+  WIP: dt-bindings: Add binding for IT6505.
 
-[...]
+ .../bindings/display/bridge/ite,it6505.yaml        |   91 +
+ .../devicetree/bindings/vendor-prefixes.yaml       |    2 +-
+ drivers/gpu/drm/bridge/Kconfig                     |    7 +
+ drivers/gpu/drm/bridge/Makefile                    |    1 +
+ drivers/gpu/drm/bridge/ite-it6505.c                | 3136 ++++++++++++++++++++
+ 5 files changed, 3236 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
+ create mode 100644 drivers/gpu/drm/bridge/ite-it6505.c
 
-MBR, Sergei
+-- 
+1.9.1
+
