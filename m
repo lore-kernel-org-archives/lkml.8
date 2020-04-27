@@ -2,136 +2,204 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B01D1C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01336C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F4FF206D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:10:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fiouDYCk"
+	by mail.kernel.org (Postfix) with ESMTP id DD52A2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:12:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgD0UKs (ORCPT
+        id S1725919AbgD0UMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 16:10:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59832 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726205AbgD0UKr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 16:10:47 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78B1BC0610D5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 13:10:47 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id l78so19452967qke.7
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 13:10:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3l2kWyAVHOWSuEUbycrT6AidP4si2/zy60pGuFCsUSE=;
-        b=fiouDYCkHG4Eg7BHAQ8IO87s4LQMvzFHPr+C/vQRhOvTumCFZlYSShWEon1hlRmqk1
-         PwGf/ZMdo7nWIUUdMc1fPHGRL3KxrCORb2J1B21nuRjtx1i9SjDjCUDei3VNO8ninfRu
-         za1eREQ39+btOBBApTp3XECZGBjOnweWxH65KW9KCmcggEI3YsJwHgvDg9oy8P3I0TBU
-         TsR+WpF76BbyuhrsXHUE6piBOV3UEoqtI4IBq37NKXOciILX8+9kleluJq3XpdGwZNQB
-         1IT3JvFA943ipf8AUEpPgF/guw4uYQ+DhtGv63/GgBLo8a07o/CyXKUm81D1HeNjv0lJ
-         GewA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3l2kWyAVHOWSuEUbycrT6AidP4si2/zy60pGuFCsUSE=;
-        b=oOjHH6qG/C7LhiIoy/YLk35bnLjfLoWm0EKmEIA+KCF13VTOvx2myu2WO46GUzwdyg
-         WreQ7i1IijEkCxsGUvC6/BUcPxsLW2AFbHTWLMIdSNEpuefcuefbWYovBiofEuXsEi4p
-         znZW7Zf2FpBdn0mjSLWSWrJPbWiYZgPseY5SqbmrxexnTQ/EC+gVjD3wDsXn1Q2dlUlx
-         SAWs0gnfpmzelOCpD1cVfzTRlIXEooJQROp3slyAjIKdOMJMpEUfemglpvROWEiXktq6
-         lVfyGe2gAkggM2iqmKY6NVeZIsJSS18idAN0FqeXat5K6XgrQrAvcjuz61Fm8lydC9+a
-         oiFg==
-X-Gm-Message-State: AGi0PubGlXmV+GWgTOotWasZ+UYji9NcNwMxUAo9sWbfGzEx9kww5dkY
-        HH+d4rhBS5luoyb3ELxZsQ0=
-X-Google-Smtp-Source: APiQypKjxDYkx92awVftkfSXuPbisbGOLN1xeev4lT01j1fX1LHfj1aFnxHaT7WAIBOz4F6o03IZZQ==
-X-Received: by 2002:ae9:ef0b:: with SMTP id d11mr23730219qkg.403.1588018246551;
-        Mon, 27 Apr 2020 13:10:46 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id m12sm643597qtu.42.2020.04.27.13.10.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 13:10:45 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C1102409A3; Mon, 27 Apr 2020 17:10:43 -0300 (-03)
-Date:   Mon, 27 Apr 2020 17:10:43 -0300
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>, Jiri Olsa <jolsa@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V6 08/15] ftrace: Add perf text poke events for ftrace
- trampolines
-Message-ID: <20200427201043.GP19437@kernel.org>
-References: <20200405201327.7332-1-adrian.hunter@intel.com>
- <20200405201327.7332-9-adrian.hunter@intel.com>
- <20200421134504.GQ20730@hirez.programming.kicks-ass.net>
- <ce16611a-8b6c-765d-c254-5bb98493b082@intel.com>
- <20200422114659.GE20730@hirez.programming.kicks-ass.net>
- <76de871f-fb0a-6918-68a9-94aa7b049d6b@intel.com>
+        Mon, 27 Apr 2020 16:12:39 -0400
+Received: from mga09.intel.com ([134.134.136.24]:27097 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726285AbgD0UMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 16:12:38 -0400
+IronPort-SDR: y2yfBt5icar2QeaXqxKou1J0qCBHWJJSHJ33CTeOpJiknHkxxRBC3oMVqiCIQg7esu7jim02km
+ IvzJMno/tldg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 13:12:38 -0700
+IronPort-SDR: YBiqKDU6yALRocwGMfAP5WdABSpYbxOMw94dJKnOcHjyDm/PQNZwcV+8e63r+ViAUTAQzF2MWh
+ 3uvOvlkaS+iA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,325,1583222400"; 
+   d="scan'208";a="404431049"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga004.jf.intel.com with ESMTP; 27 Apr 2020 13:12:37 -0700
+Date:   Mon, 27 Apr 2020 13:11:42 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Jacob Jun Pan <jacob.jun.pan@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, iommu@lists.linux-foundation.org
+Subject: Re: [PATCH 6/7] x86/traps: Fix up invalid PASID
+Message-ID: <20200427201141.GA242333@romley-ivt3.sc.intel.com>
+References: <1585596788-193989-1-git-send-email-fenghua.yu@intel.com>
+ <1585596788-193989-7-git-send-email-fenghua.yu@intel.com>
+ <87mu6ys20d.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <76de871f-fb0a-6918-68a9-94aa7b049d6b@intel.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <87mu6ys20d.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Apr 27, 2020 at 10:23:05AM +0300, Adrian Hunter escreveu:
-> On 22/04/20 2:46 pm, Peter Zijlstra wrote:
-> > On Wed, Apr 22, 2020 at 10:39:06AM +0300, Adrian Hunter wrote:
-> >> On 21/04/20 4:45 pm, Peter Zijlstra wrote:
-> >>> On Sun, Apr 05, 2020 at 11:13:20PM +0300, Adrian Hunter wrote:
-> >>>> Add perf text poke events for ftrace trampolines when created and when
-> >>>> freed.
-> >>>
-> >>> Maybe also put in a little more detail on the various events. Because
-> >>> arch_ftrace_update_trampoline() can also generate text_poke_bp() events,
-> >>> to update an existing trampoline.
-> >>>
-> >>> A diagram, like with the kprobes thing perhaps.
-> >>
-> >> How about adding this:
-> >>
-> >> There can be 3 text_poke events for ftrace trampolines:
-> >>
-> >> 1. NULL -> trampoline
-> >>    By ftrace_update_trampoline() when !ops->trampoline
-> >>    Trampoline created
-> >>
-> >> 2. [e.g. on x86] CALL rel32 -> CALL rel32
-> >>    By arch_ftrace_update_trampoline() when ops->trampoline and
-> >>                         ops->flags & FTRACE_OPS_FL_ALLOC_TRAMP
-> >>    [e.g. on x86] via text_poke_bp() which generates text poke events
-> >>    Trampoline-called function target updated
-> >>
-> >> 3. trampoline -> NULL
-> >>    By ftrace_trampoline_free() when ops->trampoline and
-> >>                  ops->flags & FTRACE_OPS_FL_ALLOC_TRAMP
-> >>    Trampoline freed
-> > 
-> > Yes, very nice. Thanks!
+On Sun, Apr 26, 2020 at 05:25:06PM +0200, Thomas Gleixner wrote:
+> Fenghua Yu <fenghua.yu@intel.com> writes:
+> > A #GP fault is generated when ENQCMD instruction is executed without
+> > a valid PASID value programmed in.
 > 
-> Arnaldo, do you have this patchset on your radar?
+> Programmed in what?
 
-Now it is, will look it into it,
+Will change to "...programmed in the PASID MSR".
 
-- Arnaldo
+> 
+> > The #GP fault handler will initialize the current thread's PASID MSR.
+> >
+> > The following heuristic is used to avoid decoding the user instructions
+> > to determine the precise reason for the #GP fault:
+> > 1) If the mm for the process has not been allocated a PASID, this #GP
+> >    cannot be fixed.
+> > 2) If the PASID MSR is already initialized, then the #GP was for some
+> >    other reason
+> > 3) Try initializing the PASID MSR and returning. If the #GP was from
+> >    an ENQCMD this will fix it. If not, the #GP fault will be repeated
+> >    and we will hit case "2".
+> >
+> > Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+> 
+> Just for the record I also suggested to have a proper errorcode in the
+> #GP for ENQCMD and I surely did not suggest to avoid decoding the user
+> instructions.
+> 
+> >  void __free_pasid(struct mm_struct *mm);
+> > +bool __fixup_pasid_exception(void);
+> >  
+> >  #endif /* _ASM_X86_IOMMU_H */
+> > diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+> > index 6ef00eb6fbb9..369b5ba94635 100644
+> > --- a/arch/x86/kernel/traps.c
+> > +++ b/arch/x86/kernel/traps.c
+> > @@ -56,6 +56,7 @@
+> >  #include <asm/umip.h>
+> >  #include <asm/insn.h>
+> >  #include <asm/insn-eval.h>
+> > +#include <asm/iommu.h>
+> >  
+> >  #ifdef CONFIG_X86_64
+> >  #include <asm/x86_init.h>
+> > @@ -488,6 +489,16 @@ static enum kernel_gp_hint get_kernel_gp_address(struct pt_regs *regs,
+> >  	return GP_CANONICAL;
+> >  }
+> >  
+> > +static bool fixup_pasid_exception(void)
+> > +{
+> > +	if (!IS_ENABLED(CONFIG_INTEL_IOMMU_SVM))
+> > +		return false;
+> > +	if (!static_cpu_has(X86_FEATURE_ENQCMD))
+> > +		return false;
+> > +
+> > +	return __fixup_pasid_exception();
+> > +}
+> > +
+> >  #define GPFSTR "general protection fault"
+> >  
+> >  dotraplinkage void do_general_protection(struct pt_regs *regs, long error_code)
+> > @@ -499,6 +510,12 @@ dotraplinkage void do_general_protection(struct pt_regs *regs, long error_code)
+> >  	int ret;
+> >  
+> >  	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
+> > +
+> > +	if (user_mode(regs) && fixup_pasid_exception()) {
+> > +		cond_local_irq_enable(regs);
+> 
+> The point of this conditional irq enable _AFTER_ calling into the fixup
+> function is? Also what's the reason for keeping interrupts disabled
+> while calling into that function? Comments exist for a reason.
+
+irq needs to be disabled because the fixup function requires to disable
+preempt in order to update the PASID MSR on the faulting CPU.
+
+Will add comments here.
+
+> 
+> > +		return;
+> > +	}
+> > +
+> >  	cond_local_irq_enable(regs);
+> >  
+> >  	if (static_cpu_has(X86_FEATURE_UMIP)) {
+> > diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+> > index da718a49e91e..5ed39a022adb 100644
+> > --- a/drivers/iommu/intel-svm.c
+> > +++ b/drivers/iommu/intel-svm.c
+> > @@ -759,3 +759,40 @@ void __free_pasid(struct mm_struct *mm)
+> >  	 */
+> >  	ioasid_free(pasid);
+> >  }
+> > +
+> > +/*
+> > + * Fix up the PASID MSR if possible.
+> > + *
+> > + * But if the #GP was due to another reason, a second #GP might be triggered
+> > + * to force proper behavior.
+> > + */
+> > +bool __fixup_pasid_exception(void)
+> > +{
+> > +	struct mm_struct *mm;
+> > +	bool ret = true;
+> > +	u64 pasid_msr;
+> > +	int pasid;
+> > +
+> > +	mm = get_task_mm(current);
+> 
+> Why do you need a reference to current->mm ?
+
+The PASID for the address space is per mm and is stored in mm.
+To get the PASID, we need to get the mm and the pasid=mm->context.pasid.
+
+
+> 
+> > +	/* This #GP was triggered from user mode. So mm cannot be NULL. */
+> > +	pasid = mm->context.pasid;
+> > +	/* Ensure this process has been bound to a PASID. */
+> > +	if (!pasid) {
+> > +		ret = false;
+> > +		goto out;
+> > +	}
+> > +
+> > +	/* Check to see if the PASID MSR has already been set for this task. */
+> > +	rdmsrl(MSR_IA32_PASID, pasid_msr);
+> > +	if (pasid_msr & MSR_IA32_PASID_VALID) {
+> > +		ret = false;
+> > +		goto out;
+> > +	}
+> > +
+> > +	/* Fix up the MSR. */
+> > +	wrmsrl(MSR_IA32_PASID, pasid | MSR_IA32_PASID_VALID);
+> > +out:
+> > +	mmput(mm);
+
+Thanks,
+
+-Fenghua
+
