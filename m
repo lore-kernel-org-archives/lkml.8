@@ -2,117 +2,124 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F60C54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC5D1C4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EDA72168B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CA53214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:16:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OS71vo6P"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CngydgbF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgD0SQH (ORCPT
+        id S1726550AbgD0SQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 14:16:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41504 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726228AbgD0SQH (ORCPT
+        Mon, 27 Apr 2020 14:16:28 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56193 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725963AbgD0SQ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 14:16:07 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EC49C0610D5;
-        Mon, 27 Apr 2020 11:16:07 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id x2so17647679ilp.13;
-        Mon, 27 Apr 2020 11:16:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cmLQU8rm1MaDWTn/mChW2COr9I5pa8fmPALHO00ydSY=;
-        b=OS71vo6P5vRGR7AIQ9CH2o0GTvUWbKTixJVTcs8LBpJy78MN68wS+w1L/NE2W7QQ0A
-         aT7sxCcpIFOPqcZDHmn7H+jdLo9NrBNf7E8pdvxvhTEORZeDHUbNdFnjyXc/NckLS8U0
-         Fcyz8/Jm9yBAsfkM0QSWqYbYadsnwxVb9kzDFpCuUg1pOYe7FDMmxxwNJPsMOlPpYllr
-         4KBARKthF33uAlP1AcLoagxMY1RvIEdLoTW7UUzvR7F1yVQJqv1GEn+6aDTNmjYcwxn0
-         76w/tx7QqpRKlJ7VFipVo9CMKljrrDXIoVcx/+OqNjWFl9LWUWII2yr06aDbQ5Pu6L/U
-         uPsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cmLQU8rm1MaDWTn/mChW2COr9I5pa8fmPALHO00ydSY=;
-        b=egZ6Lw6YujGwfgdau/RnCrP0WjwoNGDmrtbmAUOO4wwctpIJY49wRkc/rg6zraEGpU
-         1lgJDHFCT/kzLyM/LjLWqCslMPT78XNv0s9Fmv4mPVeEuUJfTLys+tJFkXHvzlu6GAhF
-         HZ6gRNhWq/qhs4/CZOat6DSBfypHrxy5JgsPgv9GEXNfadzNs6HnQlOygF3HAMGI15op
-         m8C3bSdpv5HUQlX2SsSp1iwuZGMxX8OX/SF5l88hKDaoSaSzN4be7b3V0opI5Br5khYX
-         uzH9u+Elda8lQvOYofeNk2Gpr7hiCBuPgHJHbSNjFvHhw+/V32sC4SjVEElQScyR05Qw
-         t6ww==
-X-Gm-Message-State: AGi0Pua8zxMyUKCNeA9mE9IgCGtzZKj72QCyW/SvOUXVa3lxSs2/8ggy
-        t94814Zan1YFriPLDZQXVIcPMd487ygs3Fboc/J9p1fK
-X-Google-Smtp-Source: APiQypLEFdWzJWGk/lNHboue27tEM3hzSIhfOKIUkk9TPbjUAgDLUVW2lGpgBWDg32c6b08IKL9eiTEpm2bkOIzlDUo=
-X-Received: by 2002:a92:d846:: with SMTP id h6mr19975276ilq.248.1588011366489;
- Mon, 27 Apr 2020 11:16:06 -0700 (PDT)
+        Mon, 27 Apr 2020 14:16:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588011387;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=u5dCro9WjZmhKkCxB8zwZkWvc6RXiKYMRKmddyP7nOQ=;
+        b=CngydgbFqnA6k3wfMB2Szp0HMuY/9yRInKFqevN8js/h3vMH3dPh5DNcUWRv0OqKyBqD4z
+        wzDKPyhjjSPo1y9lwiGumyONzRDWdVjahOVBDY8wO4ZVzlx+nAmkRl1EGE46n9vRC8V05j
+        YpEPRXK6TP+VOgvf7tDN8KblDGCyzuw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-474-xqSl2fuGM_q-PCBcurqp7g-1; Mon, 27 Apr 2020 14:16:25 -0400
+X-MC-Unique: xqSl2fuGM_q-PCBcurqp7g-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 06C42107ACF4;
+        Mon, 27 Apr 2020 18:16:24 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-112-176.rdu2.redhat.com [10.10.112.176])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6EF3210013A1;
+        Mon, 27 Apr 2020 18:16:18 +0000 (UTC)
+Subject: Re: [PATCH 2/2] mm/slub: Fix slab_mutex circular locking problem in
+ slab_attr_store()
+To:     Qian Cai <cai@lca.pw>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Juri Lelli <juri.lelli@redhat.com>
+References: <20200424151225.10966-1-longman@redhat.com>
+ <20200424151225.10966-2-longman@redhat.com>
+ <0A3C34CA-F514-41C2-AC3F-E5925C7C0F9A@lca.pw>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <9fee780e-2c32-bb6a-08c0-cae8fdc58e9f@redhat.com>
+Date:   Mon, 27 Apr 2020 14:16:18 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200426081211.10876-1-wsa+renesas@sang-engineering.com>
-In-Reply-To: <20200426081211.10876-1-wsa+renesas@sang-engineering.com>
-From:   Kamal Dasu <kdasu.kdev@gmail.com>
-Date:   Mon, 27 Apr 2020 14:15:54 -0400
-Message-ID: <CAC=U0a2p+vGfzTJOBaAuFUWh1azJC49cundYAOG0C5JjMgQtzA@mail.gmail.com>
-Subject: Re: [PATCH RFT] i2c: brcmstb: properly check NACK condition
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0A3C34CA-F514-41C2-AC3F-E5925C7C0F9A@lca.pw>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 4:12 AM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
+On 4/24/20 12:16 PM, Qian Cai wrote:
 >
-> From: Wolfram Sang <wsa@the-dreams.de>
+>> On Apr 24, 2020, at 11:12 AM, Waiman Long <longman@redhat.com> wrote:
+>>
+>> diff --git a/mm/slub.c b/mm/slub.c
+>> index 183ccc364ccf..255981180489 100644
+>> --- a/mm/slub.c
+>> +++ b/mm/slub.c
+>> @@ -5567,13 +5567,30 @@ static ssize_t slab_attr_store(struct kobject =
+*kobj,
+>> 		return -EIO;
+>>
+>> 	err =3D attribute->store(s, buf, len);
+>> -#ifdef CONFIG_MEMCG
+>> -	if (slab_state >=3D FULL && err >=3D 0 && is_root_cache(s)) {
+>> -		struct kmem_cache *c;
+>> +#ifdef CONFIG_MEMCG_KMEM
+>> +	if (slab_state >=3D FULL && err >=3D 0 && is_root_cache(s) &&
+>> +	    !list_empty(&s->memcg_params.children)) {
+>> +		struct kmem_cache *c, **pcaches;
+>> +		int idx, max, cnt =3D 0;
+>> +		size_t size =3D s->max_attr_size;
+>> +		struct memcg_cache_array *arr;
+>> +
+>> +		/*
+>> +		 * Make atomic update to s->max_attr_size.
+>> +		 */
+>> +		do {
+>> +			if (len <=3D size)
+>> +				break;
+>> +		} while (!try_cmpxchg(&s->max_attr_size, &size, len));
+>>
+> try_cmpxchg() is only available on x86.
 >
-> cppcheck rightfully complains about:
+> mm/slub.c: In function =E2=80=98slab_attr_store=E2=80=99:
+> mm/slub.c:5613:13: error: implicit declaration of function =E2=80=98try=
+_cmpxchg=E2=80=99; did you mean =E2=80=98xa_cmpxchg=E2=80=99? [-Werror=3D=
+implicit-function-declaration]
+>     } while (!try_cmpxchg(&s->max_attr_size, &size, len));
+>               ^~~~~~~~~~~
+>               xa_cmpxchg
 >
-> drivers/i2c/busses/i2c-brcmstb.c:319:7: warning: Condition 'CMD_RD' is always true [knownConditionTrueFalse]
-> drivers/i2c/busses/i2c-brcmstb.c:319:17: warning: Condition 'CMD_WR' is always false [knownConditionTrueFalse]
->  if ((CMD_RD || CMD_WR) &&
->
-> Compare the values to the 'cmd' variable.
->
-> Fixes: dd1aa2524bc5 ("i2c: brcmstb: Add Broadcom settop SoC i2c controller driver")
-> Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Oh, sorry about that. Will fix it and send out v2.
 
-Reviewed-by: Kamal Dasu <kdasu.kdev@gmail.com>
+Cheers,
+Longman
 
- ---
->
-> Not tested on HW.
->
->  drivers/i2c/busses/i2c-brcmstb.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/i2c/busses/i2c-brcmstb.c b/drivers/i2c/busses/i2c-brcmstb.c
-> index d4e0a0f6732a..ba766d24219e 100644
-> --- a/drivers/i2c/busses/i2c-brcmstb.c
-> +++ b/drivers/i2c/busses/i2c-brcmstb.c
-> @@ -316,7 +316,7 @@ static int brcmstb_send_i2c_cmd(struct brcmstb_i2c_dev *dev,
->                 goto cmd_out;
->         }
->
-> -       if ((CMD_RD || CMD_WR) &&
-> +       if ((cmd == CMD_RD || cmd == CMD_WR) &&
->             bsc_readl(dev, iic_enable) & BSC_IIC_EN_NOACK_MASK) {
->                 rc = -EREMOTEIO;
->                 dev_dbg(dev->device, "controller received NOACK intr for %s\n",
-> --
-> 2.20.1
->
