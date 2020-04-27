@@ -2,126 +2,78 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B912C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70641C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 350AE2087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:56:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="ktrFiqZy"
+	by mail.kernel.org (Postfix) with ESMTP id 5735C20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:56:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbgD0Oz7 (ORCPT
+        id S1728128AbgD0O4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 10:55:59 -0400
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:46626 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726651AbgD0Oz6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 10:55:58 -0400
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id F06CB2E0DEC;
-        Mon, 27 Apr 2020 17:55:51 +0300 (MSK)
-Received: from iva4-7c3d9abce76c.qloud-c.yandex.net (iva4-7c3d9abce76c.qloud-c.yandex.net [2a02:6b8:c0c:4e8e:0:640:7c3d:9abc])
-        by mxbackcorp2j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id F0tEcqNMpb-toHG4qg0;
-        Mon, 27 Apr 2020 17:55:51 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1587999351; bh=H7dCXaMeeM1AF2bYRY1Lq3DIQoyRXWX0piVU+eJYfvg=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=ktrFiqZycvqUOCLhaDihKuXqEcXjeeucE5/OD2LIdjFi4fVpCwxGKWypMzE4LLRFr
-         gVn8Vc33KuuybDPshohLbAcRErcCM6irXHpD9jrAcx87XREu3wW/B8lZL4+zsPoWCf
-         ff5uJLIoEj946qG0dmdzf/Z/dX+OExxAh3x9W1Bw=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b080:7208::1:1])
-        by iva4-7c3d9abce76c.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id KRR2uBQ19L-toWKZ9W2;
-        Mon, 27 Apr 2020 17:55:50 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH] tracing/x86: fix trace event registration for syscalls
- without arguments
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Brian Gerst <brgerst@gmail.com>, linux-kernel@vger.kernel.org
-Cc:     Dominik Brodowski <linux@dominikbrodowski.net>,
-        Andy Lutomirski <luto@kernel.org>
-References: <158636958997.7900.16485049455470033557.stgit@buzz>
- <87368pq97n.fsf@nanos.tec.linutronix.de>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <1727d83e-5a3d-952e-d7e8-0e3d52bbafa2@yandex-team.ru>
-Date:   Mon, 27 Apr 2020 17:55:50 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 27 Apr 2020 10:56:03 -0400
+Received: from v6.sk ([167.172.42.174]:60332 "EHLO v6.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726651AbgD0O4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 10:56:02 -0400
+Received: from localhost (v6.sk [IPv6:::1])
+        by v6.sk (Postfix) with ESMTP id 49CE4610A7;
+        Mon, 27 Apr 2020 14:55:30 +0000 (UTC)
+Date:   Mon, 27 Apr 2020 16:55:27 +0200
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] mfd: Add ENE KB3930 Embedded Controller driver
+Message-ID: <20200427145527.GA71654@furthur.local>
+References: <20200424221123.106527-1-lkundrak@v3.sk>
+ <20200427064824.GB3559@dell>
 MIME-Version: 1.0
-In-Reply-To: <87368pq97n.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427064824.GB3559@dell>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 27/04/2020 17.44, Thomas Gleixner wrote:
-> Konstantin Khlebnikov <khlebnikov@yandex-team.ru> writes:
+On Mon, Apr 27, 2020 at 07:48:24AM +0100, Lee Jones wrote:
+> On Sat, 25 Apr 2020, Lubomir Rintel wrote:
 > 
->> Syscalls without arguments now has no ABI subs, instead of that macro
+> > Hi,
+> > 
+> > please take a look at the following patch set and consider applying it
+> > to the MFD tree. It a new driver with DT binding documentation changes,
+> > utilized by the LED driver submitted here:
+> > 
+> > https://lore.kernel.org/lkml/20200424220240.106055-1-lkundrak@v3.sk/
 > 
-> What is 'ABI subs'?
-
-typo. ABI stubs
-
-That commmit d2b5de495ee9 ("x86/entry: Refactor SYSCALL_DEFINE0 macros")
-
-replaced usual wrapper
-
-long __x64_syscall()
-{	
-	return __do_sys_syscall();
-}
-
-with alias
-
-long __x64_syscall() __alias__(__do_sys_syscall);
-
-And now symbol lookup for entry point return "__do_sys_syscall"
-rather than "__x64_syscall" and ftrace magic cannot determine
-syscall number for entry point and vise versa.
-
+> What is this?  The subject suggests this is a cover-letter for a
+> patch-set, but the patches are not attached to it.  If this is the
+> case, please ensure that you send it --threaded using
 > 
->> SYSCALL_DEFINE0() defines __abi_sys_name as aliase to __do_sys_name.
->>
->> As a result in find_syscall_meta() kallsyms_lookup() returns
->> "__do_sys_name" which does not match with declared trace event.
->>
->> Also see commit 1c758a2202a6 ("tracing/x86: Update syscall trace events
->> to handle new prefixed syscall func names")
->>
->> Fixes: d2b5de495ee9 ("x86/entry: Refactor SYSCALL_DEFINE0 macros")
->> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
->> ---
->>   arch/x86/include/asm/ftrace.h |    5 +++--
->>   1 file changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
->> index 85be2f506272..70b96cae5b42 100644
->> --- a/arch/x86/include/asm/ftrace.h
->> +++ b/arch/x86/include/asm/ftrace.h
->> @@ -61,11 +61,12 @@ static inline bool arch_syscall_match_sym_name(const char *sym, const char *name
->>   {
->>   	/*
->>   	 * Compare the symbol name with the system call name. Skip the
->> -	 * "__x64_sys", "__ia32_sys" or simple "sys" prefix.
->> +	 * "__x64_sys", "__ia32_sys", "__do_sys" or simple "sys" prefix.
->>   	 */
->>   	return !strcmp(sym + 3, name + 3) ||
->>   		(!strncmp(sym, "__x64_", 6) && !strcmp(sym + 9, name + 3)) ||
->> -		(!strncmp(sym, "__ia32_", 7) && !strcmp(sym + 10, name + 3));
->> +		(!strncmp(sym, "__ia32_", 7) && !strcmp(sym + 10, name + 3)) ||
->> +		(!strncmp(sym, "__do_sys", 8) && !strcmp(sym + 8, name + 3));
->>   }
->>   
->>   #ifndef COMPILE_OFFSETS
+>  `git send-email`
+> 
+> If it's just a random plea to go look at some set posted onto a
+> mailing list without me on Cc, then no.  Please send the set again,
+> properly, with me listed as a recipient.
+
+It indeed is a cover letter for a patch set, it had the patches chained to
+it, with you as a recipient, and it was sent with git send-email. If you
+haven't recevied them then I have no idea why. I do apologize in case it's
+my fault.
+
+Perhaps your spam filter dropped them? In that case I'm wondering what
+could bump the spam score for the patches, but not the cover letter.
+In any case, the archive received them:
+
+https://lore.kernel.org/lkml/20200424221123.106527-1-lkundrak@v3.sk/
+
+I wouldn't mind resending the messages, but I'd prefer to understand
+what happened to them first.
+
+Lubo
