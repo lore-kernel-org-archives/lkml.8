@@ -7,73 +7,71 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0A2C4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F03C4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6EDF206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05B06206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:21:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qU56nduM"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FYRBJC/l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgD0UVg (ORCPT
+        id S1726930AbgD0UVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 16:21:36 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:56786 "EHLO
+        Mon, 27 Apr 2020 16:21:40 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:56864 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726654AbgD0UVf (ORCPT
+        with ESMTP id S1726654AbgD0UVj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 16:21:35 -0400
+        Mon, 27 Apr 2020 16:21:39 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03RKIvRQ007709;
-        Mon, 27 Apr 2020 20:21:28 GMT
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03RKIxlL007768;
+        Mon, 27 Apr 2020 20:21:34 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2020-01-29;
- bh=H14jPY9l1j2xxxqPK9+sMxTRCWagVVKludjxZMM69bI=;
- b=qU56nduMucvoKGGpi8DV90kSrJRZRwW6qPKaeuU58KFbNjkiXgGX4kkGPzIuMg0aVqUH
- 6GyWysU4ALheWoUy68QwC/paD458XaUlgJ4iece9VPkZoHJDp5Tj04pWsor6VRsvDECe
- I+xqS/RB14s3hmy/xirpOMBC789wujhjxD7kqpnTZen72QaoYLmnzB/g9mVzMrA9R6i8
- bGwNclu0mMI5pfbq5Qj30cTEGd6oaRyHJnDrMrQnc3jgR6LHPW49BCqiI7DXs+WvJsYc
- TyBopYYxvyOpnfx4ChQuGX+GWeX9UQ4kK8faJmV9DI0TQ3smdx7bsNSlhnuSS6f78Egt NA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 30nucfuw00-1
+ bh=Fws9Ngq7eUEIp37zcQ03w/49nH+NTWXsBsv5Ody5mmI=;
+ b=FYRBJC/ltHcn81Wuis25poyTIAtcjIJkhjzr9+skbY+G0Sv5HqA1I3+a3VEv+yHKFwx9
+ mwLPPFKAwQ29RBARsTnXBssVjSTDdBDX9jrO377WZQwwo7cK4bHOCXoDPYr5wNpI07gp
+ BzSt2Ae71Etgu+YJOraLAu03MXdNsWe272AEwP2OmsTihep4HqKmvzVDuPFHJf2lJld2
+ mlW1kyariPywXWAVrIBViM0bvrjlrTbzaT+yPelS5VPDgz+FvpU2/ZnD1kffD1Fjpmv4
+ 33QV03j9QsJ+lLjHxrgXeX3KdLFfquf9C01qdQ+Y1Uc77aoj4aCoV2rc3ZwIrEKwTIis 2g== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 30nucfuw0e-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Apr 2020 20:21:28 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03RKBxgn078378;
-        Mon, 27 Apr 2020 20:21:28 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 30mxrr0666-1
+        Mon, 27 Apr 2020 20:21:34 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03RKCtUu104225;
+        Mon, 27 Apr 2020 20:21:34 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 30my0agkb6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Apr 2020 20:21:28 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03RKLRWA029811;
-        Mon, 27 Apr 2020 20:21:27 GMT
+        Mon, 27 Apr 2020 20:21:33 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03RKLWCW006422;
+        Mon, 27 Apr 2020 20:21:32 GMT
 Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 27 Apr 2020 13:21:27 -0700
+        with ESMTP ; Mon, 27 Apr 2020 13:21:32 -0700
 From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     skashyap@marvell.com, linux-kernel@vger.kernel.org,
-        jejb@linux.ibm.com, QLogic-Storage-Upstream@qlogic.com,
-        jhasan@marvell.com, linux-scsi@vger.kernel.org,
-        Jason Yan <yanaijie@huawei.com>
+To:     jejb@linux.ibm.com, Jason Yan <yanaijie@huawei.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH] scsi: bnx2fc: remove unneeded semicolon in bnx2fc_fcoe.c
-Date:   Mon, 27 Apr 2020 16:21:16 -0400
-Message-Id: <158777063305.4076.1053092723665230286.b4-ty@oracle.com>
+Subject: Re: [PATCH] scsi: sgiwd93: remove unneeded semicolon in sgiwd93.c
+Date:   Mon, 27 Apr 2020 16:21:21 -0400
+Message-Id: <158777063305.4076.8101834754472414433.b4-ty@oracle.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200421034019.27949-1-yanaijie@huawei.com>
-References: <20200421034019.27949-1-yanaijie@huawei.com>
+In-Reply-To: <20200421034029.28030-1-yanaijie@huawei.com>
+References: <20200421034029.28030-1-yanaijie@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 suspectscore=0
- mlxlogscore=856 malwarescore=0 bulkscore=0 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004270164
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0
+ suspectscore=0 adultscore=0 mlxlogscore=928 bulkscore=0 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004270164
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
- mlxlogscore=926 impostorscore=0 suspectscore=0 malwarescore=0
+ mlxlogscore=999 impostorscore=0 suspectscore=0 malwarescore=0
  lowpriorityscore=0 mlxscore=0 spamscore=0 adultscore=0 phishscore=0
  bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2003020000 definitions=main-2004270164
@@ -82,17 +80,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Apr 2020 11:40:19 +0800, Jason Yan wrote:
+On Tue, 21 Apr 2020 11:40:29 +0800, Jason Yan wrote:
 
 > Fix the following coccicheck warning:
 > 
-> drivers/scsi/bnx2fc/bnx2fc_fcoe.c:948:4-5: Unneeded semicolon
-> drivers/scsi/bnx2fc/bnx2fc_fcoe.c:968:4-5: Unneeded semicolon
+> drivers/scsi/sgiwd93.c:190:2-3: Unneeded semicolon
 
 Applied to 5.8/scsi-queue, thanks!
 
-[1/1] scsi: bnx2fc: Remove unneeded semicolon in bnx2fc_fcoe.c
-      https://git.kernel.org/mkp/scsi/c/acfcb728bd57
+[1/1] scsi: sgiwd93: Remove unneeded semicolon in sgiwd93.c
+      https://git.kernel.org/mkp/scsi/c/f371d5345377
 
 -- 
 Martin K. Petersen	Oracle Linux Engineering
