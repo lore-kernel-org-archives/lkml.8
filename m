@@ -2,247 +2,148 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A80CFC54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09356C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88F8F206B9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D698A206B9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:10:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="jpEv9qVT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbgD0PIH (ORCPT
+        id S1728006AbgD0PKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 11:08:07 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:50752 "EHLO inva020.nxp.com"
+        Mon, 27 Apr 2020 11:10:37 -0400
+Received: from mga03.intel.com ([134.134.136.65]:21280 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726539AbgD0PIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 11:08:07 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3C3D11A11C2;
-        Mon, 27 Apr 2020 17:08:05 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2F1BA1A11AF;
-        Mon, 27 Apr 2020 17:08:05 +0200 (CEST)
-Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id BD6382030E;
-        Mon, 27 Apr 2020 17:08:04 +0200 (CEST)
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Rob Herring <robh@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-Cc:     Fabio Estevam <fabio.estevam@nxp.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH] arm64: dts: freescale: Add the power domain node on imx8mp
-Date:   Mon, 27 Apr 2020 18:07:55 +0300
-Message-Id: <1588000075-4039-1-git-send-email-abel.vesa@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1727073AbgD0PKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 11:10:36 -0400
+IronPort-SDR: y9zE6cf6rcs+89TJEhEj37LuLKBusRfQtJetu9jLPgf6lqzEHKn9E/lCgF4yeuzbq3j4/PRJTu
+ /dCv839It4lQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 08:10:35 -0700
+IronPort-SDR: wdlmObYwbkVYGyiD0n1ilmUGHOfipKS5vDbXzPE36zk6DX6VbyLkBjM50VZh2W1kEHVWrzvwaf
+ 5lZMufc/E9lA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,324,1583222400"; 
+   d="scan'208";a="257295815"
+Received: from orsmsx101.amr.corp.intel.com ([10.22.225.128])
+  by orsmga003.jf.intel.com with ESMTP; 27 Apr 2020 08:10:35 -0700
+Received: from orsmsx126.amr.corp.intel.com (10.22.240.126) by
+ ORSMSX101.amr.corp.intel.com (10.22.225.128) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 27 Apr 2020 08:10:35 -0700
+Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
+ ORSMSX126.amr.corp.intel.com (10.22.240.126) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 27 Apr 2020 08:10:35 -0700
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (104.47.37.56) by
+ edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Mon, 27 Apr 2020 08:10:35 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WiHEzJBHA5G2tw/AINJhTgAB4iVFF+nYzKiiHnO27ngj4DnmuBTtYz1ITg5NjRoHSdlcAA/5Jr0owJX3C0506XhW8lW0phbayy+JZrNfBp0UR5HWFYraVUYFVLWernxFu6esPHbqFDncoV2spb9sg/gE33ZL7s6jQxSPaYylezJKOWmxPOSWkQlxwuEQBfI6a0cJfrfIipuqshhWEFJCSeORA6gb5BeQMLHCI3PbjAkV244YzVp76hnoQ++Rvx/5LYqRoEK/cmFYfW9jU0vPx3+jOzDcgQC7FJq4tJsH5rYuNahRRYNF0dcLHyir86pK/6+9NVhJr9BUmIEcvwfsXw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ax/xBl4graRX2ZEgZ6kL7Mjyd2V6IbAxhIRJkNxS5jw=;
+ b=PHdU+ARvXaeMs9jd7+IYB35aMZwzZbrOEfF2kLz5W3HznFe4ToPki+pp3n3KCue3oQhxvnivvyFOXmngSuzcWiBgrnwv4qN1l5RSLv5je+NmQa0WB98yzM1/ZyDInSVMgMR39pdDaqjF6uXuWxW7BgLLstpa0LW8VKjoukKCbdNp8sge+1KRcVgbJm3N+oPCOfB1Kx0/TqnjZnfCRt+ZkDWm7DX4OYtbX/Qq/zR2+C9ZMBtzQTJYjGIf83f9rZa3EQTLNNJcNiLQfdjsGfoqTjq2h2322HvgwnXdtiocVbueCXGUDNez4uDsMgyTZPDRH+utTJmo2OwsgLAIWw+PtQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ax/xBl4graRX2ZEgZ6kL7Mjyd2V6IbAxhIRJkNxS5jw=;
+ b=jpEv9qVTLBu9jitelSidTsfxfuc2WecyTG19nfjLv48ygRvCeRcYfpFhkhHLhUxPKIKYTmmJaDJdgrzWrxwmPrlaDUmjN57VsgluLqGDjhdbJdyAFRwlmKRVMJdcNL0Nrz+Wr3WSr6TdRRrrOHmbxetVHsb3y6X1WwkGfoC+SXU=
+Received: from BN6PR1101MB2132.namprd11.prod.outlook.com
+ (2603:10b6:405:5b::22) by BN6PR1101MB2307.namprd11.prod.outlook.com
+ (2603:10b6:405:53::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Mon, 27 Apr
+ 2020 15:10:33 +0000
+Received: from BN6PR1101MB2132.namprd11.prod.outlook.com
+ ([fe80::344b:59bc:1455:37a6]) by BN6PR1101MB2132.namprd11.prod.outlook.com
+ ([fe80::344b:59bc:1455:37a6%11]) with mapi id 15.20.2937.023; Mon, 27 Apr
+ 2020 15:10:33 +0000
+From:   "Lu, Brent" <brent.lu@intel.com>
+To:     "Rojewski, Cezary" <cezary.rojewski@intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+CC:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        "Mark Brown" <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Ben Zhang <benzh@chromium.org>,
+        "Chiang, Mac" <mac.chiang@intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 0/3] add channel constraint for BDW machine drivers
+Thread-Topic: [PATCH 0/3] add channel constraint for BDW machine drivers
+Thread-Index: AQHWHG/538arzRVuVUW0WV5CErDv0qiMzXUAgAAD8ICAAD9FwA==
+Date:   Mon, 27 Apr 2020 15:10:32 +0000
+Message-ID: <BN6PR1101MB2132DEC140145F90645BF2B997AF0@BN6PR1101MB2132.namprd11.prod.outlook.com>
+References: <1587976638-29806-1-git-send-email-brent.lu@intel.com>
+ <1375d0b1-fafa-95b5-9a06-eefb1897ca42@intel.com>
+ <1bcd3310-34c3-7d90-cb18-f474d9e30c25@intel.com>
+In-Reply-To: <1bcd3310-34c3-7d90-cb18-f474d9e30c25@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=brent.lu@intel.com; 
+x-originating-ip: [111.248.248.241]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4ae111be-8b38-4db1-0b75-08d7eabd21ba
+x-ms-traffictypediagnostic: BN6PR1101MB2307:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN6PR1101MB230755E768D41036F3A2578497AF0@BN6PR1101MB2307.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0386B406AA
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR1101MB2132.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(39860400002)(366004)(396003)(136003)(66556008)(66476007)(81156014)(7696005)(66446008)(8676002)(316002)(86362001)(33656002)(66946007)(8936002)(76116006)(64756008)(186003)(9686003)(6506007)(55016002)(26005)(5660300002)(2906002)(71200400001)(7416002)(4744005)(52536014)(110136005)(54906003)(478600001)(4326008);DIR:OUT;SFP:1102;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: vQWn1bK5cuv+u+nzAYOmsXP6ivxfP8FvBoeYcWA58zlfqn996mNuhzCsK407GHHszwWaTejOFQgMH4meLoHhPSeXDRsdBlkWJRu/nET9nE3mpbEXWUb7Cr6qsxCQWwsaGsjzSOZHz6lkwIDIYOFyutl22G+hYtXnFLcc14PFzw/tI0NP1yYtqn5D3Q5oMY2m0NqA7AeSW1Hc4NOG78yZWjoIHaICgYCc1I03mKAlv7r+U/pvYsLOKD3Ezh2gp5hP8je9UVvIBMhJ2JA8MBH10Tt8+zkJUUapDepXdEXXli471nry1Le6LQIozsgPoArU42FgsWpvkB05phQa4ezgV509FL3q5ZnwHg2GEG3BKstY8C5XtpA2K/cpc/8wfVqBfFPLp6tmJ8J677wt0CWQXAodv/AujLRleWcmSJzzN/LuokzYKOIX6uK03uPAXhjw
+x-ms-exchange-antispam-messagedata: XpOSEn6tZw/pWvGFoz+KWrycC2vXqPr0vRVqTlQIgatCOUqssMe6DKdxjFkyqfASjgkSE3YQoL/2KZftvwM0kMKHkPkh+kC9ISJE5Ax6oOfaQkdX2gyn30cuk2Mb7OmyBhoMkb94Dyc/WGzbcw9tCqcDoySVXdGqp07RJ4ETJUoLOrSKaCmdlhUvqZHvIZXJ/oub8Bqi4pZ50Es7HT5n94wA9U7l2iPS4Ps1jkkbt+kCTT716RpMPGY/fe0NkqXBFDgWo/WKQ819aMCE7NogNq7bVSL0CFT/Y99RmFmdsd9R3D/NB9NJ18Si1mocTBcWvFihos5bbDzb6c5NclKT92Kq8Xj41bUQ+md4wNBI5ACCnh8idbpo1tqw1cWKlg1EtEM3dNxJeU2Gjsjwm/Q2wSEzpO7XilVaxuHlfOAIg6qDWNXI+WVVkNBluwnqr1eWhZYv+8SK+561+0LZk9cbaHSX+6pF3vSix5SO4+ktlOSddvFjfFnDzCIpGjrwWYDP/hyzJTOuw49dxB1SjRjdrG3vZ+qubyicXQx9LM86rPDlq6RwG1NnBM75oGAKfyN97JLNY2QxRvY55a5EB6yDV2j+NWZ0E8RUDCpmt2saYr28f/bi2cC720+EkIuk65BEuIsqD/T3IZPs7Jxr/HqCPKlOwbtpi6Oyw3Z2XF6XdOH8HT7x3KH4Z6it04eTXbmFYTNSfxQEKw7bozBwGIFwzYtWXTIzxFjsmvoJOejRTFsohf/9HBGgEB37STtP3/36uoA7FQAXNkJ9HN0ZKJfHMIPvoa9eYIkNsKO3ODMNwn0qyIi3zIea25OKl6mjH2oS
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4ae111be-8b38-4db1-0b75-08d7eabd21ba
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Apr 2020 15:10:32.8165
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aep+3UsY6J1dZ5JKfedwjKQiv10g/qAqC5qVCKVcRuUIamM6FUvxQ06K2FPy0IJB/noBfxeqND+q/33snXwIwA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1101MB2307
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacky Bai <ping.bai@nxp.com>
-
-Add the power domain nodes on i.MX8MP to enable the power domain
-support.
-
-Signed-off-by: Jacky Bai <ping.bai@nxp.com>
-Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mp.dtsi | 173 ++++++++++++++++++++++++++++++
- 1 file changed, 173 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-index 9b1616e..deafb36 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-@@ -122,6 +122,179 @@
- 		clock-output-names = "clk_ext4";
- 	};
- 
-+	power-domains {
-+		compatible = "simple-bus";
-+
-+		/* HSIO SS */
-+		hsiomix_pd: hsiomix-pd {
-+			compatible = "fsl,imx8m-pm-domain";
-+			active-wakeup;
-+			rpm-always-on;
-+			#power-domain-cells = <0>;
-+			domain-index = <0>;
-+			domain-name = "hsiomix";
-+		};
-+
-+		pcie_pd: pcie-pd {
-+			compatible = "fsl,imx8m-pm-domain";
-+			#power-domain-cells = <0>;
-+			domain-index = <1>;
-+			domain-name = "pcie";
-+			parent-domains = <&hsiomix_pd>;
-+		};
-+
-+		usb_otg1_pd: usbotg1-pd {
-+			compatible = "fsl,imx8m-pm-domain";
-+			#power-domain-cells = <0>;
-+			domain-index = <2>;
-+			domain-name = "usb_otg1";
-+			parent-domains = <&hsiomix_pd>;
-+		};
-+
-+		usb_otg2_pd: usbotg2-pd {
-+			compatible = "fsl,imx8m-pm-domain";
-+			#power-domain-cells = <0>;
-+			domain-index = <3>;
-+			domain-name = "usb_otg2";
-+			parent-domains = <&hsiomix_pd>;
-+		};
-+
-+		/* MLMIX */
-+		mlmix_pd: mlmix-pd {
-+			compatible = "fsl,imx8m-pm-domain";
-+			#power-domain-cells = <0>;
-+			domain-index = <4>;
-+			domain-name = "mlmix";
-+			clocks = <&clk IMX8MP_CLK_ML_AXI>,
-+				 <&clk IMX8MP_CLK_ML_AHB>,
-+				 <&clk IMX8MP_CLK_NPU_ROOT>;
-+		};
-+
-+		audiomix_pd: audiomix-pd {
-+			compatible = "fsl,imx8m-pm-domain";
-+			#power-domain-cells = <0>;
-+			domain-index = <5>;
-+			domain-name = "audiomix";
-+			clocks = <&clk IMX8MP_CLK_AUDIO_ROOT>,
-+				 <&clk IMX8MP_CLK_AUDIO_AXI_DIV>;
-+		};
-+
-+		gpumix_pd: gpumix-pd {
-+			compatible = "fsl,imx8m-pm-domain";
-+			#power-domain-cells = <0>;
-+			domain-index = <6>;
-+			domain-name = "gpumix";
-+			clocks = <&clk IMX8MP_CLK_GPU_ROOT>, <&clk IMX8MP_CLK_GPU_AHB>,
-+				 <&clk IMX8MP_CLK_GPU_AXI>;
-+		};
-+
-+		gpu2d_pd: gpu2d-pd {
-+			compatible = "fsl,imx8m-pm-domain";
-+			#power-domain-cells = <0>;
-+			domain-index = <7>;
-+			domain-name = "gpu2d";
-+			parent-domains = <&gpumix_pd>;
-+			clocks = <&clk IMX8MP_CLK_GPU2D_ROOT>;
-+		};
-+
-+		gpu3d_pd: gpu3d-pd {
-+			compatible = "fsl,imx8m-pm-domain";
-+			#power-domain-cells = <0>;
-+			domain-index = <8>;
-+			domain-name = "gpu3d";
-+			parent-domains = <&gpumix_pd>;
-+			clocks = <&clk IMX8MP_CLK_GPU3D_ROOT>,
-+				 <&clk IMX8MP_CLK_GPU3D_SHADER_DIV>;
-+		};
-+
-+		vpumix_pd: vpumix-pd {
-+			compatible = "fsl,imx8m-pm-domain";
-+			#power-domain-cells = <0>;
-+			domain-index = <9>;
-+			domain-name = "vpumix";
-+			clocks =<&clk IMX8MP_CLK_VPU_ROOT>;
-+		};
-+
-+		vpu_g1_pd: vpug1-pd {
-+			compatible = "fsl,imx8m-pm-domain";
-+			#power-domain-cells = <0>;
-+			domain-index = <10>;
-+			domain-name = "vpu_g1";
-+			parent-domains = <&vpumix_pd>;
-+			clocks = <&clk IMX8MP_CLK_VPU_G1_ROOT>;
-+		};
-+
-+		vpu_g2_pd: vpug2-pd {
-+			compatible = "fsl,imx8m-pm-domain";
-+			#power-domain-cells = <0>;
-+			domain-index = <11>;
-+			domain-name = "vpu_g2";
-+			parent-domains = <&vpumix_pd>;
-+			clocks = <&clk IMX8MP_CLK_VPU_G2_ROOT>;
-+		};
-+
-+		vpu_h1_pd: vpuh1-pd {
-+			compatible = "fsl,imx8m-pm-domain";
-+			#power-domain-cells = <0>;
-+			domain-index = <12>;
-+			domain-name = "vpu_h1";
-+			parent-domains = <&vpumix_pd>;
-+			clocks = <&clk IMX8MP_CLK_VPU_VC8KE_ROOT>;
-+		};
-+
-+		mediamix_pd: mediamix-pd {
-+			compatible = "fsl,imx8m-pm-domain";
-+			#power-domain-cells = <0>;
-+			domain-index = <13>;
-+			domain-name = "mediamix";
-+			clocks = <&clk IMX8MP_CLK_MEDIA_AXI_ROOT>,
-+				 <&clk IMX8MP_CLK_MEDIA_APB_ROOT>;
-+		};
-+
-+		ispdwp_pd: power-domain@14 {
-+			compatible = "fsl,imx8m-pm-domain";
-+			#power-domain-cells = <0>;
-+			domain-index = <14>;
-+			domain-name = "ispdwp";
-+			parent-domains = <&mediamix_pd>;
-+			clocks = <&clk IMX8MP_CLK_MEDIA_ISP_DIV>;
-+		};
-+
-+		mipi_phy1_pd: mipiphy1-pd {
-+			compatible = "fsl,imx8m-pm-domain";
-+			#power-domain-cells = <0>;
-+			domain-index = <15>;
-+			domain-name = "mipi_phy1";
-+			parent-domains = <&mediamix_pd>;
-+		};
-+
-+		mipi_phy2_pd: mipiphy2-pd {
-+			compatible = "fsl,imx8m-pm-domain";
-+			#power-domain-cells = <0>;
-+			domain-index = <16>;
-+			domain-name = "mipi_phy2";
-+			parent-domains = <&mediamix_pd>;
-+		};
-+
-+		hdmimix_pd: hdmimix-pd {
-+			compatible = "fsl,imx8m-pm-domain";
-+			#power-domain-cells = <0>;
-+			domain-index = <17>;
-+			domain-name = "hdmimix";
-+			clocks = <&clk IMX8MP_CLK_HDMI_ROOT>,
-+				 <&clk IMX8MP_CLK_HDMI_APB>,
-+				 <&clk IMX8MP_CLK_HDMI_REF_266M>;
-+		};
-+
-+		hdmi_phy_pd: hdmiphy-pd {
-+			compatible = "fsl,imx8m-pm-domain";
-+			#power-domain-cells = <0>;
-+			domain-index = <18>;
-+			domain-name = "hdmi_phy";
-+			parent-domains = <&hdmimix_pd>;
-+		};
-+	};
-+
- 	psci {
- 		compatible = "arm,psci-1.0";
- 		method = "smc";
--- 
-2.7.4
-
+PiA+DQo+ID4gQXBhcnQgZnJvbSByZXZpZXcgZ2l2ZW4gZm9yIGVhY2ggYW5kIGV2ZXJ5IHBhdGNo
+IChhbHRob3VnaCBtb3N0IGlzc3Vlcw0KPiA+IGFyZSBzaGFyZWQgc28gdGhlcmUgaXMgbm90IGFz
+IG11Y2ggdG8gYWRkcmVzcykgbXkgcXVlc3Rpb24gaXM6DQo+ID4gLSBhcmUgdGhlc2UgaHcgbGlt
+aXRhdGlvbnMgb3Igc29mdHdhcmUgKG1hY2hpbmUgYm9hcmQpIGxpbWl0YXRpb25zPw0KDQpUaGUg
+bGltaXRhdGlvbiBjb21lcyBmcm9tIGJvYXJkLiBCZHctcnQ1Njc3IGFuZCBCcm9hZHdlbGwgYXJl
+IHVzaW5nIEkyUyB3aXRoDQoyIG1pY3JvcGhvbmVzIHdoaWxlIEJkdy1ydDU2NTAgaXMgdXNpbmcg
+UENNIFRETSB3aXRoIDQgbWljcm9waG9uZXMuIE91cg0KRFNQIHN1cHBvcnRzIHN0ZXJlbyBwbGF5
+YmFjayBhbmQgMiBvciA0LWNoYW5uZWwgY2FwdHVyZSAoaGFzd2VsbC9zc3QtaGFzd2VsbC1wY20u
+YykuDQoNCg0KPiA+DQo+ID4gQ3phcmVrDQo+ID4NCj4gPj4gQnJlbnQgTHUgKDMpOg0KPiA+PiDC
+oMKgIEFTb0M6IGJkdy1ydDU2Nzc6IGNoYW5uZWwgY29uc3RyYWludCBzdXBwb3J0DQo+ID4+IMKg
+wqAgQVNvQzogYmR3LXJ0NTY1MDogY2hhbm5lbCBjb25zdHJhaW50IHN1cHBvcnQNCj4gPj4gwqDC
+oCBBU29DOiBicm9hZHdlbGw6IGNoYW5uZWwgY29uc3RyYWludCBzdXBwb3J0DQo+ID4+DQo+ID4+
+IMKgIHNvdW5kL3NvYy9pbnRlbC9ib2FyZHMvYmR3LXJ0NTY1MC5jIHwgMzQNCj4gPj4gKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+PiDCoCBzb3VuZC9zb2MvaW50ZWwvYm9h
+cmRzL2Jkdy1ydDU2NzcuYyB8IDMzDQo+ID4+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKw0KPiA+PiDCoCBzb3VuZC9zb2MvaW50ZWwvYm9hcmRzL2Jyb2Fkd2VsbC5jwqAgfCAzMw0K
+PiA+PiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPj4gwqAgMyBmaWxlcyBj
+aGFuZ2VkLCAxMDAgaW5zZXJ0aW9ucygrKQ0KPiA+Pg0K
