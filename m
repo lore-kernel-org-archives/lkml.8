@@ -2,143 +2,181 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68905C54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A05A3C4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4868D20B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:36:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588012593;
-	bh=4yeOpdjOcM2uN050wdKefgY2OBgaSb4yMnUi7uul+W0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bi6/0wucu22M264cs216CbN9by9JwILUb/P2MT8BydkGH/IA7mUYyuUuX8xyn5pYL
-	 hSPjHSdVbYS9H8p24aumZW3eogMbucCDVNfYYCdTf6KEh303VC1sxrvTPNaV2WkIov
-	 Z8tlABPoC0QoMiNvIGFjehddwi4StWc+GbrZOmJw=
+	by mail.kernel.org (Postfix) with ESMTP id 7E92720B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:36:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbgD0Sgc (ORCPT
+        id S1726566AbgD0Sg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 14:36:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50930 "EHLO mail.kernel.org"
+        Mon, 27 Apr 2020 14:36:57 -0400
+Received: from mga17.intel.com ([192.55.52.151]:35122 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725995AbgD0Sgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 14:36:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15BB7205C9;
-        Mon, 27 Apr 2020 18:36:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588012591;
-        bh=4yeOpdjOcM2uN050wdKefgY2OBgaSb4yMnUi7uul+W0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H7bCoGTr/tECOY3qgcnHq/ocLAWoZIXkwN70/+6lyh3D6MNRzf+Pzupd4xvJhqeGR
-         qOk52AEITmb8R7rPaeRk7HkZzuwd3eTc2C4xSA03QFva/jne/qd9gG57rYLi8ypQEn
-         hDKYf5BfKz7uCETo7/ZFtbOsH1FwpzKqMRK2z+E8=
-Date:   Mon, 27 Apr 2020 20:36:29 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Nishad Kamdar <nishadkamdar@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xfs: Use the correct style for SPDX License Identifier
-Message-ID: <20200427183629.GA20158@kroah.com>
-References: <20200425133504.GA11354@nishad>
- <20200427155617.GY6749@magnolia>
- <20200427172959.GB3936841@kroah.com>
- <515362d10c06567f35f0d5b7c3f2e121769fb04b.camel@perches.com>
- <20200427174611.GA4035548@kroah.com>
- <791a97d5d4dfd11af533a0bbd6ae27d1a2d479ee.camel@perches.com>
+        id S1725995AbgD0Sg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 14:36:57 -0400
+IronPort-SDR: naqbU4v4yGjOrqXAUFq2F6zB1J1Cn4jWaQrjcAyK54Uln/5rwwjPlNc4UX1qMnSWue73sejTjK
+ yRmMmXovqsOg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 11:36:56 -0700
+IronPort-SDR: lhNRKftxecrArb0ifevrmQZSglEPvEDWlICFbxaFvVzcaAQDgs9+HU9KlSIDPL7K1NkjhI77fH
+ 7nED5OMry3Cg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,325,1583222400"; 
+   d="scan'208";a="404401595"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga004.jf.intel.com with ESMTP; 27 Apr 2020 11:36:56 -0700
+Date:   Mon, 27 Apr 2020 11:36:56 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Haiwei Li <lihaiwei@tencent.com>
+Subject: Re: [PATCH v3 2/5] KVM: X86: Introduce need_cancel_enter_guest helper
+Message-ID: <20200427183656.GO14870@linux.intel.com>
+References: <1587709364-19090-1-git-send-email-wanpengli@tencent.com>
+ <1587709364-19090-3-git-send-email-wanpengli@tencent.com>
+ <CANRm+CwvTrwmJnFWR8UgEkqyE_fyoc6KmrNuHQj=DuJDkR-UGA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <791a97d5d4dfd11af533a0bbd6ae27d1a2d479ee.camel@perches.com>
+In-Reply-To: <CANRm+CwvTrwmJnFWR8UgEkqyE_fyoc6KmrNuHQj=DuJDkR-UGA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 11:01:38AM -0700, Joe Perches wrote:
-> On Mon, 2020-04-27 at 19:46 +0200, Greg Kroah-Hartman wrote:
-> > On Mon, Apr 27, 2020 at 10:41:58AM -0700, Joe Perches wrote:
-> > > On Mon, 2020-04-27 at 19:29 +0200, Greg Kroah-Hartman wrote:
-> > > > On Mon, Apr 27, 2020 at 08:56:18AM -0700, Darrick J. Wong wrote:
-> > > > > On Sat, Apr 25, 2020 at 07:05:09PM +0530, Nishad Kamdar wrote:
-> > > > > > This patch corrects the SPDX License Identifier style in
-> > > > > > header files related to XFS File System support.
-> > > > > > For C header files Documentation/process/license-rules.rst
-> > > > > > mandates C-like comments (opposed to C source files where
-> > > > > > C++ style should be used).
-> > > > > > 
-> > > > > > Changes made by using a script provided by Joe Perches here:
-> > > > > > https://lkml.org/lkml/2019/2/7/46.
-> > > []
-> > > > > > diff --git a/fs/xfs/libxfs/xfs_ag_resv.h b/fs/xfs/libxfs/xfs_ag_resv.h
-> > > []
-> > > > > > @@ -1,4 +1,4 @@
-> > > > > > -// SPDX-License-Identifier: GPL-2.0+
-> > > > > > +/* SPDX-License-Identifier: GPL-2.0+ */
-> > > > > 
-> > > > > I thought we were supposed to use 'GPL-2.0-or-newer' because 'GPL-2.0+'
-> > > > > is deprecated in some newer version of the SPDX standard?
-> > > > > 
-> > > > > <shrug>
-> > > > 
-> > > > The kernel follows the "older" SPDX standard, but will accept either,
-> > > > it's up to the author.  It is all documented in LICENSES/ if people
-> > > > really want to make sure.
-> > > 
-> > > I think the kernel should prefer the "newer" SPDX standard
-> > > for any/all changes to these lines.
-> > > ---
-> > >  LICENSES/preferred/GPL-2.0 | 8 ++++----
-> > >  1 file changed, 4 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/LICENSES/preferred/GPL-2.0 b/LICENSES/preferred/GPL-2.0
-> > > index ff0812..c50f93 100644
-> > > --- a/LICENSES/preferred/GPL-2.0
-> > > +++ b/LICENSES/preferred/GPL-2.0
-> > > @@ -8,13 +8,13 @@ Usage-Guide:
-> > >    tag/value pairs into a comment according to the placement
-> > >    guidelines in the licensing rules documentation.
-> > >    For 'GNU General Public License (GPL) version 2 only' use:
-> > > -    SPDX-License-Identifier: GPL-2.0
-> > > -  or
-> > >      SPDX-License-Identifier: GPL-2.0-only
-> > > +  or the deprecated alternative
-> > > +    SPDX-License-Identifier: GPL-2.0
-> > >    For 'GNU General Public License (GPL) version 2 or any later version' use:
-> > > -    SPDX-License-Identifier: GPL-2.0+
-> > > -  or
-> > >      SPDX-License-Identifier: GPL-2.0-or-later
-> > > +  or the deprecated alternative
-> > > +    SPDX-License-Identifier: GPL-2.0+
-> > >  License-Text:
-> > 
-> > At the moment, I do not, as the current ones are not "depreciated" at
-> > all.
+On Sun, Apr 26, 2020 at 10:05:00AM +0800, Wanpeng Li wrote:
+> On Fri, 24 Apr 2020 at 14:23, Wanpeng Li <kernellwp@gmail.com> wrote:
+> >
+> > From: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > Introduce need_cancel_enter_guest() helper, we need to check some
+> > conditions before doing CONT_RUN, in addition, it can also catch
+> > the case vmexit occurred while another event was being delivered
+> > to guest software since vmx_complete_interrupts() adds the request
+> > bit.
+> >
+> > Tested-by: Haiwei Li <lihaiwei@tencent.com>
+> > Cc: Haiwei Li <lihaiwei@tencent.com>
+> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > ---
+> >  arch/x86/kvm/vmx/vmx.c | 12 +++++++-----
+> >  arch/x86/kvm/x86.c     | 10 ++++++++--
+> >  arch/x86/kvm/x86.h     |  1 +
+> >  3 files changed, 16 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index f1f6638..5c21027 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -6577,7 +6577,7 @@ bool __vmx_vcpu_run(struct vcpu_vmx *vmx, unsigned long *regs, bool launched);
+> >
+> >  static enum exit_fastpath_completion vmx_vcpu_run(struct kvm_vcpu *vcpu)
+> >  {
+> > -       enum exit_fastpath_completion exit_fastpath;
+> > +       enum exit_fastpath_completion exit_fastpath = EXIT_FASTPATH_NONE;
+> >         struct vcpu_vmx *vmx = to_vmx(vcpu);
+> >         unsigned long cr3, cr4;
+> >
+> > @@ -6754,10 +6754,12 @@ static enum exit_fastpath_completion vmx_vcpu_run(struct kvm_vcpu *vcpu)
+> >         vmx_recover_nmi_blocking(vmx);
+> >         vmx_complete_interrupts(vmx);
+> >
+> > -       exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
+> > -       /* static call is better with retpolines */
+> > -       if (exit_fastpath == EXIT_FASTPATH_CONT_RUN)
+> > -               goto cont_run;
+> > +       if (!kvm_need_cancel_enter_guest(vcpu)) {
+> > +               exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
+> > +               /* static call is better with retpolines */
+> > +               if (exit_fastpath == EXIT_FASTPATH_CONT_RUN)
+> > +                       goto cont_run;
+> > +       }
 > 
-> https://spdx.org/licenses/
+> The kvm_need_cancel_enter_guest() should not before
+> vmx_exit_handlers_fastpath() which will break IPI fastpath. How about
+> applying something like below, otherwise, maybe introduce another
+> EXIT_FASTPATH_CONT_FAIL to indicate fails due to
+> kvm_need_cancel_enter_guest() if checking it after
+> vmx_exit_handlers_fastpath(), then we return 1 in vmx_handle_exit()
+> directly instead of kvm_skip_emulated_instruction(). VMX-preemption
+> timer exit doesn't need to skip emulated instruction but wrmsr
+> TSCDEADLINE MSR exit does which results in a little complex here.
 > 
-> shows the GPL-2.0 and GPL-2.0+ as deprecated.
+> Paolo, what do you think?
 > 
-> https://spdx.org/licenses/GPL-2.0.html
-> https://spdx.org/licenses/GPL-2.0+.html
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 853d3af..9317924 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -6564,6 +6564,9 @@ static enum exit_fastpath_completion
+> handle_fastpath_preemption_timer(struct kvm
+>  {
+>      struct vcpu_vmx *vmx = to_vmx(vcpu);
 > 
+> +    if (kvm_need_cancel_enter_guest(vcpu))
+> +        return EXIT_FASTPATH_NONE;
+> +
+>      if (!vmx->req_immediate_exit &&
+>          !unlikely(vmx->loaded_vmcs->hv_timer_soft_disabled)) {
+>              kvm_lapic_expired_hv_timer(vcpu);
+> @@ -6771,12 +6774,10 @@ static enum exit_fastpath_completion
+> vmx_vcpu_run(struct kvm_vcpu *vcpu)
+>      vmx_recover_nmi_blocking(vmx);
+>      vmx_complete_interrupts(vmx);
+> 
+> -    if (!(kvm_need_cancel_enter_guest(vcpu))) {
+> -        exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
+> -        if (exit_fastpath == EXIT_FASTPATH_CONT_RUN) {
+> -            vmx_sync_pir_to_irr(vcpu);
+> -            goto cont_run;
+> -        }
+> +    exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
+> +    if (exit_fastpath == EXIT_FASTPATH_CONT_RUN) {
 
-Again, we are not using the "new" version of the SPDX specification just
-yet.  We started out using one specific version, let's get the whole
-kernel converted first before worrying about trying to keep up with
-their newer releases please.  We still have a ways to go...
+Relying on the handlers to check kvm_need_cancel_enter_guest() will be
+error prone and costly to maintain.  I also don't like that it buries the
+logic.
 
-thanks,
+What about adding another flavor, e.g.:
 
-greg k-h
+	exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
+	if (exit_fastpath == EXIT_FASTPATH_CONT_RUN &&
+	    kvm_need_cancel_enter_guest(vcpu))
+		exit_fastpath = EXIT_FASTPATH_NOP;
+
+That would also allow you to enable preemption timer without first having
+to add CONT_RUN, which would be a very good thing for bisection.
+
+> +        vmx_sync_pir_to_irr(vcpu);
+> +        goto cont_run;
+>      }
+> 
+>      return exit_fastpath;
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 99061ba..11b309c 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -1618,6 +1618,9 @@ static int
+> handle_fastpath_set_x2apic_icr_irqoff(struct kvm_vcpu *vcpu, u64 data
+> 
+>  static int handle_fastpath_set_tscdeadline(struct kvm_vcpu *vcpu, u64 data)
+>  {
+> +    if (kvm_need_cancel_enter_guest(vcpu))
+> +        return 1;
+> +
+>      if (!kvm_x86_ops.set_hv_timer ||
+>          kvm_mwait_in_guest(vcpu->kvm) ||
+>          kvm_can_post_timer_interrupt(vcpu))
