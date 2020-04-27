@@ -4,51 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB484C81C40
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF62C81C42
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C54F2206D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E170A206D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:18:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588022316;
-	bh=N8bgzSaxaSPsvZKSTzHZfDpMlxQCMfS1JI2Jy6c2/m0=;
+	s=default; t=1588022333;
+	bh=6ICX8cckmy6texUfyApW5SonGeAHMErKiYN+4yOW/oM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gGYky7Ed7g1vvUAK6Gc33iGsBK1lXu+MfTi4cXoDtUjiSrevcx7fC2I2rsE5FfxwS
-	 3+NUdOC8c3D3b5mvTpbTQhQRqudJxWTbc85kaQaevYriE5DZhuMQWWDYgObd9aAs4r
-	 GUCVaT9l+rr4f6ndq5317DDwyGhOMYyNxRRuuSdE=
+	b=CekkzjF9zm1k9zqS7ZXjnbggsZardES1c7abSLFYF/a9/t/Yo7LEPTELrZH825xgy
+	 symccqirF0DkKik+bt6f+UW6lkqyU7TgumLcRs8LsKtp9VJSFzUr4oNMhqpQ8mEi/i
+	 vL8+Mbjeg+T7AHpQt3IA6+A3/wCYYOkr6gV5HMP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgD0VSf (ORCPT
+        id S1726783AbgD0VSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 17:18:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34202 "EHLO mail.kernel.org"
+        Mon, 27 Apr 2020 17:18:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726399AbgD0VR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 17:17:27 -0400
+        id S1726208AbgD0VR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 17:17:26 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0AE922205;
+        by mail.kernel.org (Postfix) with ESMTPSA id A449A21D94;
         Mon, 27 Apr 2020 21:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588022245;
-        bh=N8bgzSaxaSPsvZKSTzHZfDpMlxQCMfS1JI2Jy6c2/m0=;
+        s=default; t=1588022244;
+        bh=6ICX8cckmy6texUfyApW5SonGeAHMErKiYN+4yOW/oM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fxkNb+E7KjrZ7oUihDpHGpW6eJJtZOe5QrGQGDAC4YHEo3NbcOFinPRiVk/DhOmq7
-         MPLCkzV/Hv513uB1ZIO1VjUxlLD0mGP5rGPCTT3DFBWYOZEZ1sPdamRQf37yW1xPK3
-         ZhlQk70aCfBMyodSIf3eO8zABHaCTbU7Vp1D6JAE=
+        b=gMKuOVOun78m9WOx5LF7/YylCIuSkt73KvvYzowDqZr3TXaf0C9OVS/ypSJ7UFo52
+         6HmaK/JZwpEYSSumVQT5lZrB4I7wAoCFW+gHbv4QGYWHPtmfVHq7x4NWYGHw3arEQk
+         b6xmxrMMh4uSnfnlhy1/Skldv+ccUk38PlQ85Ays=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jTB7z-000HlW-9L; Mon, 27 Apr 2020 23:17:23 +0200
+        id 1jTB7y-000Hks-Su; Mon, 27 Apr 2020 23:17:22 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v3 24/29] docs: filesystems: convert spufs/spu_run.txt to ReST
-Date:   Mon, 27 Apr 2020 23:17:16 +0200
-Message-Id: <7d8ee1edf5ef0137009bc65ff0441826ce555895.1588021877.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH v3 16/29] docs: filesystems: convert mandatory-locking.txt to ReST
+Date:   Mon, 27 Apr 2020 23:17:08 +0200
+Message-Id: <aecd6259fe9f99b2c2b3440eab6a2b989125e00d.1588021877.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588021877.git.mchehab+huawei@kernel.org>
 References: <cover.1588021877.git.mchehab+huawei@kernel.org>
@@ -59,154 +63,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This file is at groff output format. Manually convert it to
-ReST format, trying to preserve a similar output after parsed.
+- Add a SPDX header;
+- Adjust document title;
+- Some whitespace fixes and new line breaks;
+- Use notes markups;
+- Add it to filesystems/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/filesystems/spufs/index.rst     |  1 +
- .../spufs/{spu_run.txt => spu_run.rst}        | 65 ++++++++++++-------
- 2 files changed, 42 insertions(+), 24 deletions(-)
- rename Documentation/filesystems/spufs/{spu_run.txt => spu_run.rst} (84%)
+ Documentation/filesystems/index.rst           |  1 +
+ Documentation/filesystems/locks.rst           |  2 +-
+ ...tory-locking.txt => mandatory-locking.rst} | 25 ++++++++++++-------
+ fs/locks.c                                    |  2 +-
+ 4 files changed, 19 insertions(+), 11 deletions(-)
+ rename Documentation/filesystems/{mandatory-locking.txt => mandatory-locking.rst} (91%)
 
-diff --git a/Documentation/filesystems/spufs/index.rst b/Documentation/filesystems/spufs/index.rst
-index 939cf59a7d9e..5ed4a8494967 100644
---- a/Documentation/filesystems/spufs/index.rst
-+++ b/Documentation/filesystems/spufs/index.rst
-@@ -10,3 +10,4 @@ SPU Filesystem
+diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
+index 7e975c9a5fbf..89c712b81778 100644
+--- a/Documentation/filesystems/index.rst
++++ b/Documentation/filesystems/index.rst
+@@ -29,6 +29,7 @@ algorithms work.
+    fiemap
+    files
+    locks
++   mandatory-locking
  
-    spufs
-    spu_create
-+   spu_run
-diff --git a/Documentation/filesystems/spufs/spu_run.txt b/Documentation/filesystems/spufs/spu_run.rst
-similarity index 84%
-rename from Documentation/filesystems/spufs/spu_run.txt
-rename to Documentation/filesystems/spufs/spu_run.rst
-index d5c6a00d0f97..7fdb1c31cb91 100644
---- a/Documentation/filesystems/spufs/spu_run.txt
-+++ b/Documentation/filesystems/spufs/spu_run.rst
-@@ -1,17 +1,26 @@
--SPU_RUN(2)                 Linux Programmer's Manual                SPU_RUN(2)
+    automount-support
+ 
+diff --git a/Documentation/filesystems/locks.rst b/Documentation/filesystems/locks.rst
+index 10f67fb9ce07..c5ae858b1aac 100644
+--- a/Documentation/filesystems/locks.rst
++++ b/Documentation/filesystems/locks.rst
+@@ -58,7 +58,7 @@ fcntl(), with all the problems that implies.
+ ---------------------------------------
+ 
+ Mandatory locking, as described in
+-'Documentation/filesystems/mandatory-locking.txt' was prior to this release a
++'Documentation/filesystems/mandatory-locking.rst' was prior to this release a
+ general configuration option that was valid for all mounted filesystems.  This
+ had a number of inherent dangers, not the least of which was the ability to
+ freeze an NFS server by asking it to read a file for which a mandatory lock
+diff --git a/Documentation/filesystems/mandatory-locking.txt b/Documentation/filesystems/mandatory-locking.rst
+similarity index 91%
+rename from Documentation/filesystems/mandatory-locking.txt
+rename to Documentation/filesystems/mandatory-locking.rst
+index a251ca33164a..9ce73544a8f0 100644
+--- a/Documentation/filesystems/mandatory-locking.txt
++++ b/Documentation/filesystems/mandatory-locking.rst
+@@ -1,8 +1,13 @@
+-	Mandatory File Locking For The Linux Operating System
 +.. SPDX-License-Identifier: GPL-2.0
- 
-+=======
-+spu_run
-+=======
- 
- 
--NAME
-+Name
-+====
-        spu_run - execute an spu context
- 
- 
--SYNOPSIS
--       #include <sys/spu.h>
-+Synopsis
-+========
- 
--       int spu_run(int fd, unsigned int *npc, unsigned int *event);
-+       ::
- 
--DESCRIPTION
-+	    #include <sys/spu.h>
 +
-+	    int spu_run(int fd, unsigned int *npc, unsigned int *event);
++=====================================================
++Mandatory File Locking For The Linux Operating System
++=====================================================
+ 
+ 		Andy Walker <andy@lysaker.kvaerner.no>
+ 
+ 			   15 April 1996
 +
-+Description
-+===========
-        The  spu_run system call is used on PowerPC machines that implement the
-        Cell Broadband Engine Architecture in order to access Synergistic  Pro-
-        cessor  Units  (SPUs).  It  uses the fd that was returned from spu_cre-
-@@ -45,24 +54,31 @@ DESCRIPTION
-        If NULL is passed as the event argument, these errors will result in  a
-        signal delivered to the calling process.
+ 		     (Updated September 2007)
  
--RETURN VALUE
-+Return Value
-+============
-        spu_run  returns the value of the spu_status register or -1 to indicate
-        an error and set errno to one of the error  codes  listed  below.   The
-        spu_status  register  value  contains  a  bit  mask of status codes and
-        optionally a 14 bit code returned from the stop-and-signal  instruction
-        on the SPU. The bit masks for the status codes are:
+ 0. Why you should avoid mandatory locking
+@@ -53,15 +58,17 @@ possible on existing user code. The scheme is based on marking individual files
+ as candidates for mandatory locking, and using the existing fcntl()/lockf()
+ interface for applying locks just as if they were normal, advisory locks.
  
--       0x02   SPU was stopped by stop-and-signal.
-+       0x02
-+	      SPU was stopped by stop-and-signal.
+-Note 1: In saying "file" in the paragraphs above I am actually not telling
+-the whole truth. System V locking is based on fcntl(). The granularity of
+-fcntl() is such that it allows the locking of byte ranges in files, in addition
+-to entire files, so the mandatory locking rules also have byte level
+-granularity.
++.. Note::
  
--       0x04   SPU was stopped by halt.
-+       0x04
-+	      SPU was stopped by halt.
+-Note 2: POSIX.1 does not specify any scheme for mandatory locking, despite
+-borrowing the fcntl() locking scheme from System V. The mandatory locking
+-scheme is defined by the System V Interface Definition (SVID) Version 3.
++   1. In saying "file" in the paragraphs above I am actually not telling
++      the whole truth. System V locking is based on fcntl(). The granularity of
++      fcntl() is such that it allows the locking of byte ranges in files, in
++      addition to entire files, so the mandatory locking rules also have byte
++      level granularity.
++
++   2. POSIX.1 does not specify any scheme for mandatory locking, despite
++      borrowing the fcntl() locking scheme from System V. The mandatory locking
++      scheme is defined by the System V Interface Definition (SVID) Version 3.
  
--       0x08   SPU is waiting for a channel.
-+       0x08
-+	      SPU is waiting for a channel.
- 
--       0x10   SPU is in single-step mode.
-+       0x10
-+	      SPU is in single-step mode.
- 
--       0x20   SPU has tried to execute an invalid instruction.
-+       0x20
-+	      SPU has tried to execute an invalid instruction.
- 
--       0x40   SPU has tried to access an invalid channel.
-+       0x40
-+	      SPU has tried to access an invalid channel.
- 
-        0x3fff0000
-               The  bits  masked with this value contain the code returned from
-@@ -71,7 +87,8 @@ RETURN VALUE
-        There are always one or more of the lower eight bits set  or  an  error
-        code is returned from spu_run.
- 
--ERRORS
-+Errors
-+======
-        EAGAIN or EWOULDBLOCK
-               fd is in non-blocking mode and spu_run would block.
- 
-@@ -93,29 +110,29 @@ ERRORS
-               not loaded.
- 
- 
--NOTES
-+Notes
-+=====
-        spu_run  is  meant  to  be  used  from  libraries that implement a more
-        abstract interface to SPUs, not to be used from  regular  applications.
-        See  http://www.bsc.es/projects/deepcomputing/linuxoncell/ for the rec-
-        ommended libraries.
- 
- 
--CONFORMING TO
-+Conforming to
-+=============
-        This call is Linux specific and only implemented by the ppc64 architec-
-        ture. Programs using this system call are not portable.
- 
- 
--BUGS
-+Bugs
-+====
-        The code does not yet fully implement all features lined out here.
- 
- 
--AUTHOR
-+Author
-+======
-        Arnd Bergmann <arndb@de.ibm.com>
- 
--SEE ALSO
-+See Also
-+========
-        capabilities(7), close(2), spu_create(2), spufs(7)
--
--
--
--
--Linux                             2005-09-28                        SPU_RUN(2)
+ 2. Marking a file for mandatory locking
+ ---------------------------------------
+diff --git a/fs/locks.c b/fs/locks.c
+index b8a31c1c4fff..1d4f4d5da704 100644
+--- a/fs/locks.c
++++ b/fs/locks.c
+@@ -61,7 +61,7 @@
+  *
+  *  Initial implementation of mandatory locks. SunOS turned out to be
+  *  a rotten model, so I implemented the "obvious" semantics.
+- *  See 'Documentation/filesystems/mandatory-locking.txt' for details.
++ *  See 'Documentation/filesystems/mandatory-locking.rst' for details.
+  *  Andy Walker (andy@lysaker.kvaerner.no), April 06, 1996.
+  *
+  *  Don't allow mandatory locks on mmap()'ed files. Added simple functions to
 -- 
 2.25.4
 
