@@ -2,98 +2,97 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D45CC4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0A2C4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DA25206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6EDF206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:21:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qU56nduM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbgD0UVZ (ORCPT
+        id S1726913AbgD0UVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 16:21:25 -0400
-Received: from smtp02.smtpout.orange.fr ([80.12.242.124]:23931 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726654AbgD0UVZ (ORCPT
+        Mon, 27 Apr 2020 16:21:36 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:56786 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726654AbgD0UVf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 16:21:25 -0400
-Received: from localhost.localdomain ([93.22.148.32])
-        by mwinf5d25 with ME
-        id XwML2200L0iASfR03wMMSk; Mon, 27 Apr 2020 22:21:21 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 27 Apr 2020 22:21:21 +0200
-X-ME-IP: 93.22.148.32
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     balbi@kernel.org, gregkh@linuxfoundation.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] usb: phy: twl6030-usb: Fix a resource leak in an error handling path in 'twl6030_usb_probe()'
-Date:   Mon, 27 Apr 2020 22:21:16 +0200
-Message-Id: <20200427202116.94380-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Mon, 27 Apr 2020 16:21:35 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03RKIvRQ007709;
+        Mon, 27 Apr 2020 20:21:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=H14jPY9l1j2xxxqPK9+sMxTRCWagVVKludjxZMM69bI=;
+ b=qU56nduMucvoKGGpi8DV90kSrJRZRwW6qPKaeuU58KFbNjkiXgGX4kkGPzIuMg0aVqUH
+ 6GyWysU4ALheWoUy68QwC/paD458XaUlgJ4iece9VPkZoHJDp5Tj04pWsor6VRsvDECe
+ I+xqS/RB14s3hmy/xirpOMBC789wujhjxD7kqpnTZen72QaoYLmnzB/g9mVzMrA9R6i8
+ bGwNclu0mMI5pfbq5Qj30cTEGd6oaRyHJnDrMrQnc3jgR6LHPW49BCqiI7DXs+WvJsYc
+ TyBopYYxvyOpnfx4ChQuGX+GWeX9UQ4kK8faJmV9DI0TQ3smdx7bsNSlhnuSS6f78Egt NA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 30nucfuw00-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Apr 2020 20:21:28 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03RKBxgn078378;
+        Mon, 27 Apr 2020 20:21:28 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 30mxrr0666-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Apr 2020 20:21:28 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03RKLRWA029811;
+        Mon, 27 Apr 2020 20:21:27 GMT
+Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 27 Apr 2020 13:21:27 -0700
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     skashyap@marvell.com, linux-kernel@vger.kernel.org,
+        jejb@linux.ibm.com, QLogic-Storage-Upstream@qlogic.com,
+        jhasan@marvell.com, linux-scsi@vger.kernel.org,
+        Jason Yan <yanaijie@huawei.com>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>
+Subject: Re: [PATCH] scsi: bnx2fc: remove unneeded semicolon in bnx2fc_fcoe.c
+Date:   Mon, 27 Apr 2020 16:21:16 -0400
+Message-Id: <158777063305.4076.1053092723665230286.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200421034019.27949-1-yanaijie@huawei.com>
+References: <20200421034019.27949-1-yanaijie@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 suspectscore=0
+ mlxlogscore=856 malwarescore=0 bulkscore=0 spamscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004270164
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
+ mlxlogscore=926 impostorscore=0 suspectscore=0 malwarescore=0
+ lowpriorityscore=0 mlxscore=0 spamscore=0 adultscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004270164
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A call to 'regulator_get()' is hidden in 'twl6030_usb_ldo_init()'. A
-corresponding put must be performed in the error handling path, as
-already done in the remove function.
+On Tue, 21 Apr 2020 11:40:19 +0800, Jason Yan wrote:
 
-While at it, also move a 'free_irq()' call in the error handling path in
-order to be consistent.
+> Fix the following coccicheck warning:
+> 
+> drivers/scsi/bnx2fc/bnx2fc_fcoe.c:948:4-5: Unneeded semicolon
+> drivers/scsi/bnx2fc/bnx2fc_fcoe.c:968:4-5: Unneeded semicolon
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Maybe adding a 'twl6030_usb_ldo_uninit()' function would be more explicit.
----
- drivers/usb/phy/phy-twl6030-usb.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+Applied to 5.8/scsi-queue, thanks!
 
-diff --git a/drivers/usb/phy/phy-twl6030-usb.c b/drivers/usb/phy/phy-twl6030-usb.c
-index bfebf1f2e991..9a7e655d5280 100644
---- a/drivers/usb/phy/phy-twl6030-usb.c
-+++ b/drivers/usb/phy/phy-twl6030-usb.c
-@@ -377,7 +377,7 @@ static int twl6030_usb_probe(struct platform_device *pdev)
- 	if (status < 0) {
- 		dev_err(&pdev->dev, "can't get IRQ %d, err %d\n",
- 			twl->irq1, status);
--		return status;
-+		goto err_put_regulator;
- 	}
- 
- 	status = request_threaded_irq(twl->irq2, NULL, twl6030_usb_irq,
-@@ -386,8 +386,7 @@ static int twl6030_usb_probe(struct platform_device *pdev)
- 	if (status < 0) {
- 		dev_err(&pdev->dev, "can't get IRQ %d, err %d\n",
- 			twl->irq2, status);
--		free_irq(twl->irq1, twl);
--		return status;
-+		goto err_free_irq1;
- 	}
- 
- 	twl->asleep = 0;
-@@ -396,6 +395,13 @@ static int twl6030_usb_probe(struct platform_device *pdev)
- 	dev_info(&pdev->dev, "Initialized TWL6030 USB module\n");
- 
- 	return 0;
-+
-+err_free_irq1:
-+	free_irq(twl->irq1, twl);
-+err_put_regulator:
-+	regulator_put(twl->usb3v3);
-+
-+	return status;
- }
- 
- static int twl6030_usb_remove(struct platform_device *pdev)
+[1/1] scsi: bnx2fc: Remove unneeded semicolon in bnx2fc_fcoe.c
+      https://git.kernel.org/mkp/scsi/c/acfcb728bd57
+
 -- 
-2.25.1
-
+Martin K. Petersen	Oracle Linux Engineering
