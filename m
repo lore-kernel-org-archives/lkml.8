@@ -2,102 +2,97 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90810C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1351CC4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CB0420B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB38820B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:09:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mdyI41YK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NpwnMS8K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgD0TI7 (ORCPT
+        id S1726595AbgD0TJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 15:08:59 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:55078 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbgD0TI7 (ORCPT
+        Mon, 27 Apr 2020 15:09:47 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:21956 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726420AbgD0TJq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 15:08:59 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03RJ8qkm128121;
-        Mon, 27 Apr 2020 14:08:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588014532;
-        bh=8uvXnocphWSyhpigo6fZuEay9bLaRZ/pDQB3Fo/ceik=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=mdyI41YKqs8PbL8bzwdwjfe+1lU9QI9EDTlTEUMQGmIg4NlVwAkvoB2R6wjSo9aNi
-         4cC6rLyjornJljJiTQgvdcpRv7I3zrQJg/m3tbIvExQwxqtP3v/aC4xvx0Efjfa2/z
-         /f7DbDRsbmjW1GAswvqrR3SvYHp60PsXkxpU+zzI=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03RJ8qFq117810
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 27 Apr 2020 14:08:52 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 27
- Apr 2020 14:08:52 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 27 Apr 2020 14:08:52 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RJ8qNe123922;
-        Mon, 27 Apr 2020 14:08:52 -0500
-Subject: Re: [PATCH v20 04/17] dt: bindings: lp50xx: Introduce the lp50xx
- family of RGB drivers
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     <jacek.anaszewski@gmail.com>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200423155524.13971-1-dmurphy@ti.com>
- <20200423155524.13971-5-dmurphy@ti.com> <20200425202422.GB23926@amd>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <5e15c7f6-d96e-1446-3163-5463139f8ee0@ti.com>
-Date:   Mon, 27 Apr 2020 14:02:59 -0500
+        Mon, 27 Apr 2020 15:09:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588014585;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fQf0JdKn9fSmRfZbYIguzX8UAvoKyiiMf06OglslXog=;
+        b=NpwnMS8Ka/M0/qMumYd8zdwuw3KYblvQaWyjeL1AX5BqCcRJ8so1hzGlz/C6ez4YQUNUbB
+        lEsQ2+FcWkHRwjsJRBrBv9jX0Urv1m0z5u7vXSFp17iuzRXRjS9jdUmW8WmZ58tgdlchuH
+        kpFbsjJL61PwpXbI/iNtkOq9wMLLATY=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-45-VacSErgFOA6KOodZkj3-FQ-1; Mon, 27 Apr 2020 15:09:43 -0400
+X-MC-Unique: VacSErgFOA6KOodZkj3-FQ-1
+Received: by mail-wr1-f69.google.com with SMTP id s11so11009144wru.6
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 12:09:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fQf0JdKn9fSmRfZbYIguzX8UAvoKyiiMf06OglslXog=;
+        b=LBD6gvaq0gnd9i1Vsgc72BZjyKWBsAapHGeHTCtYEt3u1eIoB2uw7Ftjqo27iP7rIV
+         DXMt7OFs/0BE/gKgjPAknX1Go5K9i2T73o+8r7ak4I6gi02mKU0SIYG+ciNcbN8IwQzo
+         Xhnk+zt863DxrgxdlMPGpiAyn0FTUrReIg7p48THWVdRO2zsMFXrDgqWXwztHsUgWGnS
+         0tuxGybw+0HJ41/lRXg2PXSD3aVCz8HPKKPmE2wdZ7Wyzh1Bb7nXeXUx7vKio/1CbcV8
+         NjUVPQJXb80WSx4kSdHTITjzA+Qqa91fG7iQk7DJkKKg/AZbgbGrju3xyA4Rkv7raKC1
+         GpMQ==
+X-Gm-Message-State: AGi0PuZzyOUQy88PAx71bdx5pfMJZXgKdNwamIoeB83xsQ8C7uZYfJkj
+        ACIGjY4LOpnTgW3eLySfheoVa7dIwr+KhMJ75hqkKBJTRfl4egrzCXqPqw7zlhQwgvUzz6ZExH7
+        M+U7h20gZ8mFCLOieHRpa2UQ/
+X-Received: by 2002:a1c:dc55:: with SMTP id t82mr219660wmg.12.1588014582461;
+        Mon, 27 Apr 2020 12:09:42 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIZYNBAaiKQGOrg9835xWa2K0IRaCFS4dqVqf5n883HYptUYcWCRGPxH1I/rZd0YeqpukeqPA==
+X-Received: by 2002:a1c:dc55:: with SMTP id t82mr219645wmg.12.1588014582249;
+        Mon, 27 Apr 2020 12:09:42 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:ac19:d1fb:3f5f:d54f? ([2001:b07:6468:f312:ac19:d1fb:3f5f:d54f])
+        by smtp.gmail.com with ESMTPSA id n2sm22714476wrq.74.2020.04.27.12.09.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 12:09:41 -0700 (PDT)
+Subject: Re: [PATCH] KVM: VMX: Use accessor to read vmcs.INTR_INFO when
+ handling exception
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200427171837.22613-1-sean.j.christopherson@intel.com>
+ <8123dc4b-a449-a92c-85a1-c255fa2bbbca@redhat.com>
+ <20200427173241.GJ14870@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <3bad600c-71e6-c094-59a4-f82144adddb4@redhat.com>
+Date:   Mon, 27 Apr 2020 21:09:40 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200425202422.GB23926@amd>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200427173241.GJ14870@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel
+On 27/04/20 19:32, Sean Christopherson wrote:
+> No, I missed this case in the original patch, and the other fix was for
+> incorrect sizing of an exit_qual variable.
 
-On 4/25/20 3:24 PM, Pavel Machek wrote:
-> Hi!
->
->> Introduce the bindings for the Texas Instruments LP5036, LP5030, LP5024,
->> LP5018, LP5012 and LP5009 RGB LED device driver.  The LP5036/30/24/18/12/9
->> can control RGB LEDs individually or as part of a control bank group.
->> These devices have the ability to adjust the mixing control for the RGB
->> LEDs to obtain different colors independent of the overall brightness of
->> the LED grouping.
->>
->> Datasheet:
->> http://www.ti.com/lit/ds/symlink/lp5012.pdf
->> http://www.ti.com/lit/ds/symlink/lp5024.pdf
->> http://www.ti.com/lit/ds/symlink/lp5036.pdf
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   .../devicetree/bindings/leds/leds-lp50xx.txt  | 148 ++++++++++++++++++
-> Not sure here, but should new bindings be .yml?
-> 								
+Nevermind, I applied it twice and I got an "Already applied" message on
+the second invocation.
 
-Yeah it should be now.  This patch has been around so long that it was 
-done before yaml conversion ;)
-
-Dan
-
-> Pavel
-> 								
