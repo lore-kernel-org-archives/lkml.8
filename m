@@ -2,322 +2,95 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C871FC55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E74EDC5519A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A44D32087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:42:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="j1gbTsin"
+	by mail.kernel.org (Postfix) with ESMTP id CD7A62087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:42:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgD0Hms (ORCPT
+        id S1726819AbgD0Hmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 03:42:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55268 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbgD0Hmn (ORCPT
+        Mon, 27 Apr 2020 03:42:49 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:40407 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726766AbgD0Hmp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 03:42:43 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35EC4C061A0F
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 00:42:43 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id v8so15257055wma.0
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 00:42:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=z6AdbaZw5amSpR1OTBUs1mGG2xOgZkTKod8u323wdnU=;
-        b=j1gbTsinaBOHHCiTpWUuIBw9z4yKIJrmeAQ+2qtSbwgf64HKByFWL1UsWv/dpI2Iuy
-         5IsrEQhr+7buKe6hGb3g07bYK+h2iESqSLVYBcv+v61glE4FygZFrR3zoevQdul6rcrz
-         YFel6MbOauDSI8Tnd1TKpKl+GdhPB9RoALzH4jiFfSMVHm0JJqgmI6WMIoReOL7MZovg
-         cShdx7UyPklTnp4u6n5kx0cFAmYxIiMIYvEYSCU/ZxNisjPnJKipycXLG8Fx1OZU9od1
-         37rfY10qYzd3Afk+ZskE2EjLJInDJYuX1a/D7d1KMQx8JaUgmUngxCLHhtUYii1eiSWj
-         4+dw==
+        Mon, 27 Apr 2020 03:42:45 -0400
+Received: by mail-yb1-f193.google.com with SMTP id f13so8976267ybk.7;
+        Mon, 27 Apr 2020 00:42:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=z6AdbaZw5amSpR1OTBUs1mGG2xOgZkTKod8u323wdnU=;
-        b=s4ky49QL5GLSyCoUfH6N2q7KkrJt8eiKUuq/K3MS6rKAZukPYv4C4ShPjqthlBKENX
-         ezHLY19oEwoBOnaiw7r8eaIjtUjzfGSdA9whTXV9ERXpyYTlrxOlqtuYrJqSa5qcmHGS
-         Yq5jL4k6zuAxGVA/Wi8pze7rQiAuc7aprzM4/YSyWmNWTk9nLcg8xMpWHDPIVEhSOdaO
-         4nCifZQhqIlyIVGTFX1pYGxtInwI05cronxY9qD5nF8CJ81euwoCGfk/d8r8MHF06M3K
-         dP/Tqd+Kbqce4LNdccwi4yaO93mNMTNj62uaYW9XrQhAfK/Tj81NfL7l600oe2WcRGkJ
-         SovQ==
-X-Gm-Message-State: AGi0PuaYptOUC/pNI3eX25LsR6wwNOZNeev+5d4lGkHDKFrWOtpPHNya
-        jS1nMkKqcyRwT/0oKgHMj1citA==
-X-Google-Smtp-Source: APiQypKz0yDPUhaz7yPws4piP/BM54W17wyzklqe4uMkwsqVg9PlCsrCQpVHVAsiyoFRLvd1PTXldw==
-X-Received: by 2002:a7b:ce09:: with SMTP id m9mr24019050wmc.156.1587973361938;
-        Mon, 27 Apr 2020 00:42:41 -0700 (PDT)
-Received: from maco2.ams.corp.google.com (a83-162-234-235.adsl.xs4all.nl. [83.162.234.235])
-        by smtp.gmail.com with ESMTPSA id x132sm15091658wmg.33.2020.04.27.00.42.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 00:42:41 -0700 (PDT)
-From:   Martijn Coenen <maco@android.com>
-To:     axboe@kernel.dk, hch@lst.de, ming.lei@redhat.com
-Cc:     narayan@google.com, zezeozue@google.com, kernel-team@android.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        maco@google.com, bvanassche@acm.org, Chaitanya.Kulkarni@wdc.com,
-        jaegeuk@kernel.org, Martijn Coenen <maco@android.com>
-Subject: [PATCH v3 7/9] loop: Move loop_set_status_from_info() and friends up
-Date:   Mon, 27 Apr 2020 09:42:20 +0200
-Message-Id: <20200427074222.65369-8-maco@android.com>
-X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
-In-Reply-To: <20200427074222.65369-1-maco@android.com>
-References: <20200427074222.65369-1-maco@android.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7HDE8ph93EI2vOePc5ywVTgnLdaOVxztdKRCyPN5Qdw=;
+        b=IOJzamf8OgTB7SIpo/NaEc7tMItPB90nfPDnCKPs1EodhWcDBKChSF+miIlCAy/MZv
+         fJ3d+JrfeSxOm0td6knQTV5XFOGn0pqC/OxFawNfnosRM4b8HW1Wn4Q+snyPW+q/yJZd
+         rfBtOMvrbe0CfFB8ifB4D7fCmhaPhcadwdQhefhWcDvszF3zHA+KDI8Aql22PcmTN5G7
+         EgWn0wtrcjwX6pE79D6w3UdX4rV8A36TRLJ7r4L1yjYjT8NSamw0G8cWDQVZcOMJd4AR
+         Q2rUIhPLM0MtoRUN/B6efN3DUO/tnTVWUyVcSWtEcOWFw5uzHvNLZ0Qgj6bifpotmyaC
+         U+Tg==
+X-Gm-Message-State: AGi0PuY4Re6h2fUPpEe8bx1Oci1eQ7yq6g8HrrxAqtYKuE7sz84h7l8f
+        /OnCFxAJlW8zHWDk06HlxIfziOV52yg/A6eoz9/GmBvU
+X-Google-Smtp-Source: APiQypIs6NvYWnWH/ktGUdZ2rE2Z5KmJb3YhfiR/lt5cCzkoxxCqS3BQi8X2Ml1ldVHBef942mt8n8y7vFl2hwtoB3Q=
+X-Received: by 2002:a25:c646:: with SMTP id k67mr11247591ybf.309.1587973363986;
+ Mon, 27 Apr 2020 00:42:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com> <20200427060551.1372591-2-jiaxun.yang@flygoat.com>
+In-Reply-To: <20200427060551.1372591-2-jiaxun.yang@flygoat.com>
+From:   =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>
+Date:   Mon, 27 Apr 2020 09:42:32 +0200
+Message-ID: <CAAdtpL59=bpmEUgY56=xHS3w5ddtdVGjKnnW7i++a5sTzPs+3Q@mail.gmail.com>
+Subject: Re: [PATCH v6 1/5] PCI: Don't disable decoding when mmio_always_on is set
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So we can use it without forward declaration. This is a separate commit
-to make it easier to verify that this is just a move, without functional
-modifications.
+On Mon, Apr 27, 2020 at 8:08 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+>
+> Don't disable MEM/IO decoing when a device have both non_compliant_bars
 
-Signed-off-by: Martijn Coenen <maco@android.com>
----
- drivers/block/loop.c | 206 +++++++++++++++++++++----------------------
- 1 file changed, 103 insertions(+), 103 deletions(-)
+Typo "decoing" -> "decoding"
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index b55569fce975..cd1efe0eec5a 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -963,6 +963,109 @@ static void loop_update_rotational(struct loop_device *lo)
- 		blk_queue_flag_clear(QUEUE_FLAG_NONROT, q);
- }
- 
-+static int
-+loop_release_xfer(struct loop_device *lo)
-+{
-+	int err = 0;
-+	struct loop_func_table *xfer = lo->lo_encryption;
-+
-+	if (xfer) {
-+		if (xfer->release)
-+			err = xfer->release(lo);
-+		lo->transfer = NULL;
-+		lo->lo_encryption = NULL;
-+		module_put(xfer->owner);
-+	}
-+	return err;
-+}
-+
-+static int
-+loop_init_xfer(struct loop_device *lo, struct loop_func_table *xfer,
-+	       const struct loop_info64 *i)
-+{
-+	int err = 0;
-+
-+	if (xfer) {
-+		struct module *owner = xfer->owner;
-+
-+		if (!try_module_get(owner))
-+			return -EINVAL;
-+		if (xfer->init)
-+			err = xfer->init(lo, i);
-+		if (err)
-+			module_put(owner);
-+		else
-+			lo->lo_encryption = xfer;
-+	}
-+	return err;
-+}
-+
-+/**
-+ * loop_set_status_from_info - configure device from loop_info
-+ * @lo: struct loop_device to configure
-+ * @info: struct loop_info64 to configure the device with
-+ *
-+ * Configures the loop device parameters according to the passed
-+ * in loop_info64 configuration.
-+ */
-+static int
-+loop_set_status_from_info(struct loop_device *lo,
-+			  const struct loop_info64 *info)
-+{
-+	int err;
-+	struct loop_func_table *xfer;
-+	kuid_t uid = current_uid();
-+
-+	if ((unsigned int) info->lo_encrypt_key_size > LO_KEY_SIZE)
-+		return -EINVAL;
-+
-+	err = loop_release_xfer(lo);
-+	if (err)
-+		return err;
-+
-+	if (info->lo_encrypt_type) {
-+		unsigned int type = info->lo_encrypt_type;
-+
-+		if (type >= MAX_LO_CRYPT)
-+			return -EINVAL;
-+		xfer = xfer_funcs[type];
-+		if (xfer == NULL)
-+			return -EINVAL;
-+	} else
-+		xfer = NULL;
-+
-+	err = loop_init_xfer(lo, xfer, info);
-+	if (err)
-+		return err;
-+
-+	lo->lo_offset = info->lo_offset;
-+	lo->lo_sizelimit = info->lo_sizelimit;
-+	memcpy(lo->lo_file_name, info->lo_file_name, LO_NAME_SIZE);
-+	memcpy(lo->lo_crypt_name, info->lo_crypt_name, LO_NAME_SIZE);
-+	lo->lo_file_name[LO_NAME_SIZE-1] = 0;
-+	lo->lo_crypt_name[LO_NAME_SIZE-1] = 0;
-+
-+	if (!xfer)
-+		xfer = &none_funcs;
-+	lo->transfer = xfer->transfer;
-+	lo->ioctl = xfer->ioctl;
-+
-+	if ((lo->lo_flags & LO_FLAGS_AUTOCLEAR) !=
-+	     (info->lo_flags & LO_FLAGS_AUTOCLEAR))
-+		lo->lo_flags ^= LO_FLAGS_AUTOCLEAR;
-+
-+	lo->lo_encrypt_key_size = info->lo_encrypt_key_size;
-+	lo->lo_init[0] = info->lo_init[0];
-+	lo->lo_init[1] = info->lo_init[1];
-+	if (info->lo_encrypt_key_size) {
-+		memcpy(lo->lo_encrypt_key, info->lo_encrypt_key,
-+		       info->lo_encrypt_key_size);
-+		lo->lo_key_owner = uid;
-+	}
-+
-+	return 0;
-+}
-+
- static int loop_set_fd(struct loop_device *lo, fmode_t mode,
- 		       struct block_device *bdev, unsigned int arg)
- {
-@@ -1086,43 +1189,6 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
- 	return error;
- }
- 
--static int
--loop_release_xfer(struct loop_device *lo)
--{
--	int err = 0;
--	struct loop_func_table *xfer = lo->lo_encryption;
--
--	if (xfer) {
--		if (xfer->release)
--			err = xfer->release(lo);
--		lo->transfer = NULL;
--		lo->lo_encryption = NULL;
--		module_put(xfer->owner);
--	}
--	return err;
--}
--
--static int
--loop_init_xfer(struct loop_device *lo, struct loop_func_table *xfer,
--	       const struct loop_info64 *i)
--{
--	int err = 0;
--
--	if (xfer) {
--		struct module *owner = xfer->owner;
--
--		if (!try_module_get(owner))
--			return -EINVAL;
--		if (xfer->init)
--			err = xfer->init(lo, i);
--		if (err)
--			module_put(owner);
--		else
--			lo->lo_encryption = xfer;
--	}
--	return err;
--}
--
- static int __loop_clr_fd(struct loop_device *lo, bool release)
- {
- 	struct file *filp = NULL;
-@@ -1267,72 +1333,6 @@ static int loop_clr_fd(struct loop_device *lo)
- 	return __loop_clr_fd(lo, false);
- }
- 
--/**
-- * loop_set_status_from_info - configure device from loop_info
-- * @lo: struct loop_device to configure
-- * @info: struct loop_info64 to configure the device with
-- *
-- * Configures the loop device parameters according to the passed
-- * in loop_info64 configuration.
-- */
--static int
--loop_set_status_from_info(struct loop_device *lo,
--			  const struct loop_info64 *info)
--{
--	int err;
--	struct loop_func_table *xfer;
--	kuid_t uid = current_uid();
--
--	if ((unsigned int) info->lo_encrypt_key_size > LO_KEY_SIZE)
--		return -EINVAL;
--
--	err = loop_release_xfer(lo);
--	if (err)
--		return err;
--
--	if (info->lo_encrypt_type) {
--		unsigned int type = info->lo_encrypt_type;
--
--		if (type >= MAX_LO_CRYPT)
--			return -EINVAL;
--		xfer = xfer_funcs[type];
--		if (xfer == NULL)
--			return -EINVAL;
--	} else
--		xfer = NULL;
--
--	err = loop_init_xfer(lo, xfer, info);
--	if (err)
--		return err;
--
--	lo->lo_offset = info->lo_offset;
--	lo->lo_sizelimit = info->lo_sizelimit;
--	memcpy(lo->lo_file_name, info->lo_file_name, LO_NAME_SIZE);
--	memcpy(lo->lo_crypt_name, info->lo_crypt_name, LO_NAME_SIZE);
--	lo->lo_file_name[LO_NAME_SIZE-1] = 0;
--	lo->lo_crypt_name[LO_NAME_SIZE-1] = 0;
--
--	if (!xfer)
--		xfer = &none_funcs;
--	lo->transfer = xfer->transfer;
--	lo->ioctl = xfer->ioctl;
--
--	if ((lo->lo_flags & LO_FLAGS_AUTOCLEAR) !=
--	     (info->lo_flags & LO_FLAGS_AUTOCLEAR))
--		lo->lo_flags ^= LO_FLAGS_AUTOCLEAR;
--
--	lo->lo_encrypt_key_size = info->lo_encrypt_key_size;
--	lo->lo_init[0] = info->lo_init[0];
--	lo->lo_init[1] = info->lo_init[1];
--	if (info->lo_encrypt_key_size) {
--		memcpy(lo->lo_encrypt_key, info->lo_encrypt_key,
--		       info->lo_encrypt_key_size);
--		lo->lo_key_owner = uid;
--	}
--
--	return 0;
--}
--
- static int
- loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
- {
--- 
-2.26.2.303.gf8c07b1a785-goog
-
+> and mmio_always_on.
+>
+> That would allow us quirk devices with junk in BARs but can't disable
+> their decoding.
+>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  drivers/pci/probe.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 77b8a145c39b..d9c2c3301a8a 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1822,7 +1822,7 @@ int pci_setup_device(struct pci_dev *dev)
+>         /* Device class may be changed after fixup */
+>         class = dev->class >> 8;
+>
+> -       if (dev->non_compliant_bars) {
+> +       if (dev->non_compliant_bars && !dev->mmio_always_on) {
+>                 pci_read_config_word(dev, PCI_COMMAND, &cmd);
+>                 if (cmd & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY)) {
+>                         pci_info(dev, "device has non-compliant BARs; disabling IO/MEM decoding\n");
+> --
+> 2.26.0.rc2
+>
