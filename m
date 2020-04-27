@@ -2,162 +2,104 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A53C5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2004BC5519A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1202A2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2E6D2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:55:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kWzVEYgY"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="z62B+eAr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbgD0Ivy (ORCPT
+        id S1726639AbgD0Izx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 04:51:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37842 "EHLO
+        Mon, 27 Apr 2020 04:55:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726003AbgD0Ivx (ORCPT
+        with ESMTP id S1726003AbgD0Izw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 04:51:53 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59C35C061A41
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 01:51:53 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id t14so19493516wrw.12
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 01:51:53 -0700 (PDT)
+        Mon, 27 Apr 2020 04:55:52 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ABF2C061A41
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 01:55:52 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id 131so13103940lfh.11
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 01:55:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=YPX4x0jDIEDTz7nvc7sn5bHK6BG3ihIkRvdS/BPSLzE=;
-        b=kWzVEYgY/9/widQPXrFcowP4ZjgLQHkdS9enzKduSjdkfx0EjP8bo0XL/1eJr3WKSX
-         JaXngTlXbRhWYn2hX9lTbL3BYOqB19rkhQThOErWAmIF/qonKh6RswR09vTh231Wumen
-         kkhqjmo/YdeXh0zkjImVDbUiZWOQt5OyFIRoy4ZvEENcfdPREtsZ5U6G1/quPfUCxTIt
-         5WXJoK36jKqIJyTxsTPlB5EpFR3KR7+KpsTR2iyPEYyeeX6eEN0rh8FYAJP1NsCNeGda
-         ozRxEpQyGjVLx9eZmfL6/SZ/2VZ5D0pd0rGMWpG6pqLBK3piKAxPdyCLrOe8OBJMZ1fF
-         OK0Q==
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WD5CEB84PYGnkljL91GU2HcSm2iIFIOGAEJsr9kazRQ=;
+        b=z62B+eAr+yM46IxeY8gnFq4+/05zI8Pp7FzGBNxc+cOimcXV9BbkiB9B8YMHwNB43m
+         iEraiix7QoT9Pk+EHtQtZI32w9hTCaYnSYKM1UbwJTH841lEx45GP0Z8vW/mxgtjHZnO
+         2tlsS6THKasOoUi2Gngvwcx/jd4NWcGG1pyfZ25RPkEqy+zW14qoWpZ4/MvGGgU+LSTf
+         N2yyppMDSVk9XZk2d9mTojaCCkiCleasYPN2oCt9WTJG2UHFAeTqZXxvs8X/pX4Be8Dt
+         lK5G5cceSluGCOLNmwpMC/zDT21VL/KzoX/SpPVaM3t+CbhiC5qRKnbS7MEFKNI0dAar
+         ZxdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=YPX4x0jDIEDTz7nvc7sn5bHK6BG3ihIkRvdS/BPSLzE=;
-        b=iBj+1KSedC2JOB/SNj4ueKMrSc5PAgQ97Zz4ctSvivIGPUfT4QZoz9+sn1CFxv0ZEl
-         DFfaCxWAaH07GmPrTJuXrQVvWuYrtFqYBa0eQ1cnkb/sL3ucGAMf1bOMrQlFmNx9ELVU
-         crH8aXb3/XbtirbbTtfXxoi/atpRnS4qc2nPSzHJ3qvlLrFtK2WxwCjpmhQ3Op1aFz88
-         qywDbm76PUKyXhv6qmXdSx3KOOA0Ygk/VhpUtwNJPTPpganKFZETu6oYrRKDMXbPW2+4
-         z0BLxci+QCFKb870QXSmaBhFOmHSFwrGzGf6oFtFLRFQzS6xPmwvdhDv3+Pk/ZmDj1jh
-         +5yA==
-X-Gm-Message-State: AGi0PubEjoa2ctFbqPBS6cOarsUcoCO9dH9PGEXQx8uJrxDqampudBQ4
-        H6R5BzXwhaIlYw+e2cpRilwdGw==
-X-Google-Smtp-Source: APiQypLxApUbpg3TJ0ILuchowzV4ZZ5EBCvXW4eaI3vv4CK0MLDKEWjIbJVseNky+c8kdrfJlPFTuQ==
-X-Received: by 2002:adf:dd8a:: with SMTP id x10mr26630284wrl.308.1587977511933;
-        Mon, 27 Apr 2020 01:51:51 -0700 (PDT)
-Received: from dell ([2.31.163.63])
-        by smtp.gmail.com with ESMTPSA id x18sm14507505wmi.29.2020.04.27.01.51.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 01:51:51 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 09:51:49 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     saravanan sekar <sravanhome@gmail.com>
-Cc:     andy.shevchenko@gmail.com, robh+dt@kernel.org, jic23@kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        sre@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v9 2/6] mfd: mp2629: Add support for mps battery charger
-Message-ID: <20200427085149.GF3559@dell>
-References: <20200415162030.16414-1-sravanhome@gmail.com>
- <20200415162030.16414-3-sravanhome@gmail.com>
- <20200424071822.GM3612@dell>
- <8ff17d07-8030-fcfe-8d8a-3011e4077778@gmail.com>
- <20200424093720.GA3542@dell>
- <864eb6ad-a605-c0a0-c3e7-23c0c70f5ede@gmail.com>
- <20200424105319.GD8414@dell>
- <c62cd5f2-6d82-0a2a-5ee5-a3e99e188a05@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WD5CEB84PYGnkljL91GU2HcSm2iIFIOGAEJsr9kazRQ=;
+        b=RSyf+CSbgMmbQPc3VCCwye4bpAEGjg4IMLeOJPKQbgZzIU8atV72KKujzzmiFpxUFd
+         Opc09i9mZ/GrhKoAVFVik4GQmI5XmQFa/CspUlzzdAAWFPJtg9BqKo9f7H1kAM80eGyE
+         w+nTVxnmDtofrBDdgTdCpXdyXeIXupYnIwggUVHTKd0zCip0iQIisjYrcF2WVuKA0vi/
+         wEQPJC/lB1WzGkRv1Gg2LB1/zAEw3awIWTMhQKETg92sGh47EMG8gDu+pzfGz9LGXbW5
+         Ysp0LEZlQ7EFAltYC4e7ycUgRdHdLV1BAPNBDeFDqF8X+JUOHrBy8sPb9mQpRRYnMqom
+         hqOA==
+X-Gm-Message-State: AGi0PuY4y9a4h0i3wvYpaUczuWNL99prLkLwX06g2a8M4yxdEJYUJmch
+        ObbvPQeoUJwRofHy9fv0N2w3xSM4Bcblkg==
+X-Google-Smtp-Source: APiQypKg8ICDhALT6WfGHqbNjZJaOhMacL43TYecRqgG/lMHD2ZFu4RjWmIrjEPtdmDqejxbHtNtMQ==
+X-Received: by 2002:a05:6512:74:: with SMTP id i20mr14801520lfo.104.1587977749779;
+        Mon, 27 Apr 2020 01:55:49 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:468e:1152:9c79:cdeb:725:5fa4? ([2a00:1fa0:468e:1152:9c79:cdeb:725:5fa4])
+        by smtp.gmail.com with ESMTPSA id y9sm4001767ljy.31.2020.04.27.01.55.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 01:55:48 -0700 (PDT)
+Subject: Re: [PATCH 2/2] mips/mm: Enable SOFT_DIRTY for all 64bit systems
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, akpm@linux-foundation.org
+Cc:     sunguoyun@loongson.cn,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>,
+        Dmitry Korotin <dkorotin@wavecomp.com>,
+        Daniel Silsby <dansilsby@gmail.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200426174058.1181837-1-jiaxun.yang@flygoat.com>
+ <20200426174058.1181837-2-jiaxun.yang@flygoat.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <2f94a9ce-74a2-29a0-3b1c-d4b2906e2750@cogentembedded.com>
+Date:   Mon, 27 Apr 2020 11:55:44 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c62cd5f2-6d82-0a2a-5ee5-a3e99e188a05@gmail.com>
+In-Reply-To: <20200426174058.1181837-2-jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Apr 2020, saravanan sekar wrote:
+Hello!
 
+On 26.04.2020 20:40, Jiaxun Yang wrote:
+
+> 64bit systems always have enough page table bits.
+> So we can safely enable it for all of them instead of for Loongson
+> only.
 > 
-> On 24/04/20 12:53 pm, Lee Jones wrote:
-> > On Fri, 24 Apr 2020, saravanan sekar wrote:
-> > 
-> > > Hi Lee,
-> > > 
-> > > On 24/04/20 11:37 am, Lee Jones wrote:
-> > > > On Fri, 24 Apr 2020, saravanan sekar wrote:
-> > > > 
-> > > > > Hi Lee,
-> > > > > 
-> > > > > On 24/04/20 9:18 am, Lee Jones wrote:
-> > > > > > On Wed, 15 Apr 2020, Saravanan Sekar wrote:
-> > > > > > 
-> > > > > > > mp2629 is a highly-integrated switching-mode battery charge management
-> > > > > > > device for single-cell Li-ion or Li-polymer battery.
-> > > > > > > 
-> > > > > > > Add MFD core enables chip access for ADC driver for battery readings,
-> > > > > > > and a power supply battery-charger driver
-> > > > > > > 
-> > > > > > > Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> > > > > > > ---
-> > > > > > >     drivers/mfd/Kconfig        |  9 ++++
-> > > > > > >     drivers/mfd/Makefile       |  2 +
-> > > > > > >     drivers/mfd/mp2629.c       | 86 ++++++++++++++++++++++++++++++++++++++
-> > > > > > >     include/linux/mfd/mp2629.h | 19 +++++++++
-> > > > > > >     4 files changed, 116 insertions(+)
-> > > > > > >     create mode 100644 drivers/mfd/mp2629.c
-> > > > > > >     create mode 100644 include/linux/mfd/mp2629.h
-> > > > > > How is this driver registered?
-> > > > > > 
-> > > > > > Looks like it has device tree support.  Is there another way?
-> > > > > Yes, only using device tree
-> > > > Then how about using 'simple-mfd' and 'syscon'?
-> > > > 
-> > > > Then you can omit this driver completely.
-> > > The exception is to support for non device tree platform as well, but I have
-> > > tested only for ARM device tree platform.
-> > Is that a reality though?
-> > 
-> > How else do you see this realistically being registered?
-> > 
-> I understand that acpi related device table are not covered here, well I
-> don't have to platform to test so.
-> If you ask me to cover acpi related table, I can do but hard to test.
+> If oneday 32bit systems get 64bit PTEs than we can drop this
+> limition.
 
-I don't know of any reasons why syscon can't be used by ACPI.
+    Limitation?
 
-Please try to solve this issue using 'simple-mfd' and 'syscon'.
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+[...]
 
-> > > > > > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > > > > > > index 3c547ed575e6..85be799795aa 100644
-> > > > > > > --- a/drivers/mfd/Kconfig
-> > > > > > > +++ b/drivers/mfd/Kconfig
-> > > > > > > @@ -434,6 +434,15 @@ config MFD_MC13XXX_I2C
-> > > > > > >     	help
-> > > > > > >     	  Select this if your MC13xxx is connected via an I2C bus.
-> > > > > > > +config MFD_MP2629
-> > > > > > > +	tristate "Monolithic power system MP2629 ADC and Battery charger"
-> > > > > > > +	depends on I2C
-> > > > > > > +	select REGMAP_I2C
-> > > > > > > +	help
-> > > > > > > +	  Select this option to enable support for monolithic power system
-> > > > > > > +	  battery charger. This provides ADC, thermal, battery charger power
-> > > > > > > +	  management functions on the systems.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+MBR, Sergei
