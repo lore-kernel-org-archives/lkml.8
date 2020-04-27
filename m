@@ -2,184 +2,132 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB75C5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A278C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E2B8206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:17:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587979053;
-	bh=0JQfGwBPW8HjbVmB+3oeIbQiiUMVtZ8rLy7VFh6Z++Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=aupaMOL3ihgroYHMJul2EJdMQYHG7DhzC+tkSaG55svExhoMPvp24QvZJfhLeE1Fs
-	 0jHPvoLoFid3dBgkgh6VgYNtVM7aUZovvtjbETVm/UdO0wBqtk8NQ5RzWFGQzYMQtZ
-	 RoE+YFFFoSleYwbLB7rojlqk73Vk9op4psmj10vk=
+	by mail.kernel.org (Postfix) with ESMTP id 6F5EF206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:18:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="bxOzjLv9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbgD0JRc (ORCPT
+        id S1726963AbgD0JR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 05:17:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55482 "EHLO mail.kernel.org"
+        Mon, 27 Apr 2020 05:17:59 -0400
+Received: from mout.web.de ([212.227.17.12]:32833 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726815AbgD0JRc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 05:17:32 -0400
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0E8D2075B;
-        Mon, 27 Apr 2020 09:17:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587979051;
-        bh=0JQfGwBPW8HjbVmB+3oeIbQiiUMVtZ8rLy7VFh6Z++Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=wFnNaMz3e85JoZrGYy0P3ue0v6+HWvyEG+x7gf1XtsPRx/14qvkvLyidqZmrJYh6y
-         3DybE5nYwAfsVLsbXy3YYIMf+hXIL9+GrYq/BJ3WR7bPiIbl/l0eUDDEG2tbIp/xPN
-         iWK73XUxIvpIbvyfbZJ6KyHK00ORj++O9r87ap1g=
-Received: by mail-lf1-f47.google.com with SMTP id m2so13175365lfo.6;
-        Mon, 27 Apr 2020 02:17:30 -0700 (PDT)
-X-Gm-Message-State: AGi0PuY0NPHUTg0GmRmwD8bmGA4C7/JaP4JdS+mECHgEWecX9IC8VJpp
-        o1XDpxQwZ5AtLUgnoRFZW4hkRf8CYpy0cHJ3KkA=
-X-Google-Smtp-Source: APiQypJtNE14qxYJUDlD1WTj8JHtL5qxZwtuov5fG7rWvNuBd12rJqXBM0FEM99dbe7wu5CMLVlzgmD7014xwvl4734=
-X-Received: by 2002:ac2:4a9d:: with SMTP id l29mr14131057lfp.4.1587979048894;
- Mon, 27 Apr 2020 02:17:28 -0700 (PDT)
+        id S1726243AbgD0JR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 05:17:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1587979059;
+        bh=tJKIP5/mdsP/vNzNEGPQkFtlyQQVMN8djw+HAazwd7s=;
+        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
+        b=bxOzjLv9wCyTxtrCkWsoiIUaQY0sXSLE8QdUGsYDG2ztSgNZlytYiSG85Yp2hg2lC
+         hQNzBLt8rgULSQ9E2mTotLauoHMCr8bT3d/RineqxpUmMjEj/ZPLhla27GsgeBtSTo
+         ghez2ib7HN3KtzJ4hFXCaCRXRd7ORP5bKC4Hbgtg=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.190.48]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LudP2-1j2UqZ1OAS-00zkRC; Mon, 27
+ Apr 2020 11:17:39 +0200
+Cc:     linux-kernel@vger.kernel.org, opensource.kernel@vivo.com,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH] drm/mediatek: cleanup coding style in mediatek a bit
+To:     Bernard Zhao <bernard@vivo.com>, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <a637d892-de2c-b31d-bcfc-b3fd5b1d38d0@web.de>
+Date:   Mon, 27 Apr 2020 11:17:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200427073132.29997-3-wens@kernel.org> <684132b8-4a84-8295-474b-38ccb992bba7@gmail.com>
-In-Reply-To: <684132b8-4a84-8295-474b-38ccb992bba7@gmail.com>
-From:   Chen-Yu Tsai <wens@kernel.org>
-Date:   Mon, 27 Apr 2020 17:17:17 +0800
-X-Gmail-Original-Message-ID: <CAGb2v66Piu5_2bdqvWV3eEn2Se_y1MNKWvvYBv_J7DA-8jBhbQ@mail.gmail.com>
-Message-ID: <CAGb2v66Piu5_2bdqvWV3eEn2Se_y1MNKWvvYBv_J7DA-8jBhbQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] arm64: dts: rockchip: rk3399-roc-pc: Fix MMC
- numbering for LED triggers
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     Chen-Yu Tsai <wens@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>, dmurphy@ti.com,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        jacek.anaszewski@gmail.com,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+X-Provags-ID: V03:K1:7j4GHmZW2bMANUC8DguSnJsY8cIhQHIdrTwtIV9F63WBSjbJtLz
+ q5JnZIsbpUJCR7fmCSxMWjHC9TkOY3CuXh3nznN5jkOvaGInSCz8caVtH5ENyz2omKisOAn
+ 4nytp5SEYc0l7gQlBdOxcD+Mtg4Nzei1Q45pZ8BBE/oSDnRlKiSIQhFJIcCWkcJufQNPqPh
+ XvvRGR8gCJXhGBPQuQJsQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:bbP7I+VHFPo=:h/eOyi0b4FAVcjvznZTeEX
+ CmZ40gnemPLuct6RgEb4t1sxGh1yoxgnQr4sIlG4SnJzSZF+tjb/v8mSdIvbxwrfemz+wvWZt
+ /1KsgxL40U83TBJPKeY1jEGN5I9V6lncoFaHyxWtqmuV2lA/fqHCfq7xD5e0NDKzgL/0O/TSO
+ /ZBuAtLY7UQGLs2stde1GfpHGiuDDJYLik21fHfyCPToAj4CL70VRW9FC/9PPSfVzN70SSMMD
+ +BLNU4WCx2eTTANsPTUdCo4oCLwy6MVmT3lEYvxyMwnPg3ct2w+fCcaWEdiJ5iIvgE4meiNhK
+ szxRVpkEa6dYH6MCgy+AUsAnhIPO6QdOSFfAr4bWlU/VvHEa7Tfp08PQIe7jdskrWW7X7yRAf
+ +I8BoHwdmSElom4svp3Cq4APLlq72bt3gbJeLwp+kGewhrBX9/6xP2OAjPksWj48ZLNyUkIHY
+ /CdDaYNp3PbS3ovE8rsem8aI0XFAtSZud3U11obN1YHZ4TBQR2yw9F3N7E0sDqNxIss1Ch/b6
+ Zdo2m5oJ0QiStih22xHNN1NdtbF16X4Z0ojtdL8bZhh3VIoHiQMCftRLjSsC0hyN504jY/gL5
+ Z902b+RDrUkquzMZXQA2jlB+GdDb4mz6NFjZQw2YI01yH2UBYi7lrTC/2cSbMh+/AgeJwu6/5
+ MRWvQRaga6/rWBMApqPsIjKcKTO28curdwp7v23spmzHP2IrOgtM960kyEL23oDYLM32mjI3D
+ FP9twbBWKhwVJ4Hzrctqmhove4PwJW74Rqnv9AImtifdFw/Z4sQIwKtc2+Pqj4WTE9qZgs5+i
+ VJdiGD8yt003eXqSmrNkFAY0An5PGgSpGZ7VKwPgHJ0ikwliSlhwskxH52P7k9Py9T2WxdN7k
+ PaCMeEyVRAZMMfzkBUyec1oFlyKYXmHbQtmflskt03OsFwgjNEIWa2zkBjebtEq+uCz0IZ1ef
+ SLwEeRuK5Y0um4FgvQBsIbIh8kB+4Z4MAHgsN5wJ7v0rvqKqm9Nmxi6/W4FlGXi6s2j3mZ4B3
+ OnMrZgOjC1dLryhdPTRxGCQDtxA22j3HKlt5WJwJhGQEjFvxTkbJZmL5e92E1jmFvfDQwulF6
+ SFf1gerGQ0Se+Dcx6Eh1a19EtNcG8N2tsSODVOmspHCdC+zxA2IT2jTXDZQnklG/ZixfNbeXq
+ Wh2KitXyEdjDaSvABd0/XbAlc/A3YWHVpgzWXPFWmTkSLX9XDIM0ABBEuIZlYGCK6DGfd3yS5
+ /tZNVpuyGjDfB7psr
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 4:57 PM Johan Jonker <jbx6244@gmail.com> wrote:
->
-> Hi Chen-Yu,
->
-> > From: Chen-Yu Tsai <wens@csie.org>
-> >
-> > With SDIO now enabled, the numbering of the existing MMC host controllers
-> > gets incremented by 1, as the SDIO host is the first one.
-> >
-> > Increment the numbering of the MMC LED triggers to match.
-> >
-> > Fixes: cf3c5397835f ("arm64: dts: rockchip: Enable sdio0 and uart0 on rk3399-roc-pc-mezzanine")
-> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> > ---
-> >  arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts | 8 ++++++++
-> >  arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi          | 4 ++--
-> >  2 files changed, 10 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
-> > index 2acb3d500fb9..f0686fc276be 100644
-> > --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
-> > +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
-> > @@ -38,6 +38,10 @@ vcc3v3_pcie: vcc3v3-pcie {
-> >       };
-> >  };
-> >
-> > +&diy_led {
-> > +     linux,default-trigger = "mmc2";
-> > +};
-> > +
-> >  &pcie_phy {
-> >       status = "okay";
-> >  };
-> > @@ -91,3 +95,7 @@ &uart0 {
-> >       pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
-> >       status = "okay";
-> >  };
-> > +
-> > +&yellow_led {
-> > +     linux,default-trigger = "mmc1";
-> > +};
-> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-> > index 9f225e9c3d54..bc060ac7972d 100644
-> > --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-> > +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-> > @@ -70,14 +70,14 @@ work-led {
-> >                       linux,default-trigger = "heartbeat";
-> >               };
-> >
->
-> > -             diy-led {
-> > +             diy_led: diy-led {
->
-> This changes an existing nodename into something that is still not the
-> preferred way. In the current Rockchip dts there are nodenames like
-> 'work', 'yellow' that causing warnings with the command:
+> This code change is to make code bit more readable.
+> Optimise array size align to HDMI macro define.
+> Add check if len is overange.
 
-This doesn't change the node name at all. It only adds a label.
-If it doesn't pass the check now, it didn't pass the check before.
+I find it safer to handle also such source code adjustments
+by a small patch series together with improved commit messages.
 
-I just realized that the footnote I added before is gone because I
-regenerated the patches. The original footnote was something along
-the lines of:
-
-I opted to not change the node names nor the labels as the discussion
-had not concluded. The other reason being that people may have scripts
-or device tree overlays depending on the existing node names.
-
-Previously I asked the following but got no response:
-
-    Is changing this after it has been in some kernel releases OK? Wouldn't
-    it be considered a break of sysfs ABI?
-
-    Also, is there some guideline on how to name the labels? For sunxi we've
-    been doing "${vendor}:${color}:${function}" since forever.
-
-    As far as I can tell, the hardware vendor [1] has no specific uses for
-    these two (red and yellow) LEDs designed in. And their GPIO lines are
-    simply labeled "DIY" (for the red one) and "YELLOW". So I'm not sure
-    if putting "our" interpretations and the default-trigger into the
-    label is wise.
-
-    For reference, the green one has its GPIO line labeled "WORK", and their
-    intention from [1] is to have it as some sort of power / activity indicator.
-    Hence it is named / labeled "work".
-
-    As for the node names, I think we can keep it as is for now. It's not
-    the preferred form, but there's really no need to change it either.
-    And some overlay or script might actually expect that name.
-
-> make -k ARCH=arm dtbs_check
->
-> Could you give a generic guide line/example, so all these changes are
-> treated the same way? As if the naming follows the preferred 'led-0' line.
-
-I'm not sure what you are asking for.
-
-ChenYu
-
-> >                       label = "red:diy";
-> >                       gpios = <&gpio0 RK_PB5 GPIO_ACTIVE_HIGH>;
-> >                       default-state = "off";
-> >                       linux,default-trigger = "mmc1";
-> >               };
-> >
-> > -             yellow-led {
-> > +             yellow_led: yellow-led {
-> >                       label = "yellow:yellow-led";
-> >                       gpios = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
-> >                       default-state = "off";
-> > --
-> > 2.26.0
->
+Regards,
+Markus
