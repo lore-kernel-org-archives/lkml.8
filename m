@@ -2,69 +2,73 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6360BC55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF53C55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D916206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:14:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uw/Hyy/C"
+	by mail.kernel.org (Postfix) with ESMTP id 07180206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:16:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbgD0GOa (ORCPT
+        id S1726604AbgD0GQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 02:14:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41566 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726231AbgD0GOa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 02:14:30 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29039C061A0F;
-        Sun, 26 Apr 2020 23:14:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=on8z9Ittpq1vG37rq3n1q4CJliIUajEmB/VdF44xHeQ=; b=uw/Hyy/CILJmKzp8JDfO1Klwcg
-        VsO26rPAJeY0W75RwNS00uBvPN9mhqPEW1H4Gf7jDw3hlSJ75YTuwWiY8tgunyhkMYdoWK4oRYxWk
-        kjp0RIB3jIdujYj3Jugd3VUcrXfDtx4U3yfZON1EgNUrUCMPIpkPJcPMx0hM+DC3f0XB0zLh7sged
-        8fTlZEpUgTEekHOKNHYavqlCoOHUHJWHXMfENgodlw8rNFaxC3HHH9QnrTKdOKpVRBMZoWOGzchP6
-        6m48xWU+VV23DpSBXPfcMROJpUvLVBPxAwBOHGG7vSmLHZSU6gYiJzD3Gd9G1ygNNHKuoCtwMTVnC
-        ixCPqw3g==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jSx2A-0001n6-8B; Mon, 27 Apr 2020 06:14:26 +0000
-Date:   Sun, 26 Apr 2020 23:14:26 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     rui_feng@realsil.com.cn
-Cc:     arnd@arndb.de, gregkh@linuxfoundation.org, ulf.hansson@linaro.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] mmc: rtsx: Add SD Express mode support for RTS5261
-Message-ID: <20200427061426.GA11270@infradead.org>
-References: <1587864346-3144-1-git-send-email-rui_feng@realsil.com.cn>
+        Mon, 27 Apr 2020 02:16:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:56966 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726243AbgD0GQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 02:16:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 218E331B;
+        Sun, 26 Apr 2020 23:16:02 -0700 (PDT)
+Received: from nicgas01-03-arm-vm.shanghai.arm.com (nicgas01-03-arm-vm.shanghai.arm.com [10.169.139.52])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A0F423F73D;
+        Sun, 26 Apr 2020 23:15:59 -0700 (PDT)
+From:   Nick Gasson <nick.gasson@arm.com>
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Nick Gasson <nick.gasson@arm.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] perf jvmti: Various fixes to JVMTI agent
+Date:   Mon, 27 Apr 2020 14:15:13 +0800
+Message-Id: <20200427061520.24905-1-nick.gasson@arm.com>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1587864346-3144-1-git-send-email-rui_feng@realsil.com.cn>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 09:25:46AM +0800, rui_feng@realsil.com.cn wrote:
-> From: Rui Feng <rui_feng@realsil.com.cn>
-> 
-> RTS5261 support legacy SD mode and SD Express mode.
-> In SD7.x, SD association introduce SD Express as a new mode.
-> SD Express mode is distinguished by CMD8.
-> Therefore, CMD8 has new bit for SD Express.
-> SD Express is based on PCIe/NVMe.
-> RTS5261 uses CMD8 to switch to SD Express mode.
+Hi,
 
-So how does this bit work?  They way I imagined SD Express to work
-is that the actual SD Card just shows up as a real PCIe device, similar
-to say Thunderbolt.
+These three patches fix a couple of issues I ran into while using the
+jitdump JVMTI agent to profile the SPECjbb benchmark.
+
+Tested with OpenJDK 8 and 14.
+
+Thanks,
+Nick
+
+
+Nick Gasson (3):
+  perf jvmti: Fix jitdump for methods without debug info
+  perf jvmti: Do not report error when missing debug information
+  perf jvmti: Fix demangling Java symbols
+
+ tools/perf/jvmti/libjvmti.c           | 24 +++++++--------
+ tools/perf/tests/Build                |  1 +
+ tools/perf/tests/builtin-test.c       |  4 +++
+ tools/perf/tests/demangle-java-test.c | 42 +++++++++++++++++++++++++++
+ tools/perf/tests/tests.h              |  1 +
+ tools/perf/util/demangle-java.c       | 13 +++++----
+ 6 files changed, 66 insertions(+), 19 deletions(-)
+ create mode 100644 tools/perf/tests/demangle-java-test.c
+
+-- 
+2.26.1
+
