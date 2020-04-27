@@ -2,144 +2,226 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF1BC55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 987D3C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5B90205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:02:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dEfOb1A9"
+	by mail.kernel.org (Postfix) with ESMTP id 7B0C7205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:02:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbgD0QCK (ORCPT
+        id S1728500AbgD0QCj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 12:02:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48728 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726539AbgD0QCJ (ORCPT
+        Mon, 27 Apr 2020 12:02:39 -0400
+Received: from smtprelay0059.hostedemail.com ([216.40.44.59]:48288 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726539AbgD0QCj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 12:02:09 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 325C6C0610D5;
-        Mon, 27 Apr 2020 09:02:09 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id g4so18185901ljl.2;
-        Mon, 27 Apr 2020 09:02:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UC4nurrRf3udrQTojIPA4rnIYQOFVwae7To0mJBT8fY=;
-        b=dEfOb1A9rszXfQ+Gl8DHgEKY28a1ukFvgJsqw2TDFDTAzkvl0TzJROMBfv7KHOA9Bq
-         ECJhx+6UwixpV7KO9N17Pg/IwsuYhqs8kFba/OdMJxhs/iyJK0eTZ8qqhCF0bIRFGH47
-         WNcgHxHeWL7NBULWgtD9PSgBD1asKMr8JWRzuNt4j9HA/6SbhHbz3V1Za1IwZQOAjHFZ
-         jrNvbo1w3flFlnTq+M7bhPhZFvhGLu22HXt+p5kL6ljZTMSAC4uSYykuIF1P8oTsjy4O
-         pvn+ZL7m+WWDTL60tsn+EV8rJgM/f2nxPRuG/re4uDfqH5ybJWy8qDzXdlqz7mxmdos/
-         PBWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UC4nurrRf3udrQTojIPA4rnIYQOFVwae7To0mJBT8fY=;
-        b=TFSds8NzEpa1vOFOsrsF2mLUHjQ+q7jchs623YQxV3rnGZZvH7e7Koa9a+aeJMvETu
-         p9qR2PpAPiUbTuNDxvw3qzBu+Lx8Nj0fRXvlX9KhHGvV+jGVN3LSHBRCWTRFkWkuVyxc
-         rddhcm6cZkSVHs4s9sa1Hw7SLft+P+RZsGyJaeWvSBwo3lh6s+zIs7qgy0pqs2qEcmTI
-         4nkhmLIlRe3TCdtrU4gCg4Nv9m06uVjdQoli0/+o420cK5xoMTYItKbOXSg1+SqkaNZL
-         z6lm4hwC2vJ8Auw1/KgV3XBw4Rt7KRD+l+/pjvL+Yy9mb9cHUEZCi9e/ywtUm1gnE6Dy
-         sgpw==
-X-Gm-Message-State: AGi0PubIdhjQcu3QL9qLqQyzkGtt0qrZHvuAFbZq3PIeNavuFiU/fqJD
-        wO3YQk3K0K8MBCY0nN4DOVOn3tl2
-X-Google-Smtp-Source: APiQypL5znxvymWbmggY0tfM0ZWAlsQInR3g+byT1vkk+SyFdtfKGG+UkYD5WzOhbUAxPKxtFjnRBw==
-X-Received: by 2002:a2e:8e98:: with SMTP id z24mr15083373ljk.134.1588003327236;
-        Mon, 27 Apr 2020 09:02:07 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id t16sm10271884ljg.41.2020.04.27.09.02.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Apr 2020 09:02:06 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
- for a long time
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>, linux-i2c@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <a5198024-7273-74c4-b4f4-3a29d042bc36@nvidia.com>
- <f8fb1f7f-2497-033e-ff2c-c86c6caa9706@gmail.com>
- <fd1ca178-1ea3-851f-20a6-10bf00453ce3@nvidia.com>
- <a5734f19-254e-b6bc-e791-fa1ac63f11a4@gmail.com>
- <79f6560e-dbb5-0ae1-49f8-cf1cd95396ec@nvidia.com>
- <20200427074837.GC3451400@ulmo> <20200427084424.GA28817@kunai>
- <820200ce-17f3-18c0-6f79-3e582f45492d@gmail.com>
- <20200427103553.GA24446@kunai> <20200427105029.GB3464906@ulmo>
- <20200427153244.GF3464906@ulmo>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <127a2c32-e5fb-2944-3062-361b276490c0@gmail.com>
-Date:   Mon, 27 Apr 2020 19:02:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 27 Apr 2020 12:02:39 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id CE7BD18029587;
+        Mon, 27 Apr 2020 16:02:37 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: ship96_33c1d1869b436
+X-Filterd-Recvd-Size: 5476
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf18.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 27 Apr 2020 16:02:35 +0000 (UTC)
+Message-ID: <0c487ba493f4b4c0f68b3dfd23f14a080e4fb0c2.camel@perches.com>
+Subject: Re: [RESEND PATCH v3 1/1] lib/vsprintf: Add support for printing
+ V4L2 and DRM fourccs
+From:   Joe Perches <joe@perches.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-media@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com,
+        mchehab@kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>
+Date:   Mon, 27 Apr 2020 09:02:34 -0700
+In-Reply-To: <20200427145303.29943-1-sakari.ailus@linux.intel.com>
+References: <20200427145303.29943-1-sakari.ailus@linux.intel.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-In-Reply-To: <20200427153244.GF3464906@ulmo>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-27.04.2020 18:32, Thierry Reding пишет:
-> On Mon, Apr 27, 2020 at 12:50:29PM +0200, Thierry Reding wrote:
->> On Mon, Apr 27, 2020 at 12:35:53PM +0200, Wolfram Sang wrote:
->>> On Mon, Apr 27, 2020 at 12:07:19PM +0300, Dmitry Osipenko wrote:
->>>> 27.04.2020 11:44, Wolfram Sang пишет:
->>>>>
->>>>>> Wolfram, can you revert the following two patches for v5.7, please?
->>>>>>
->>>>>> 	8814044fe0fa i2c: tegra: Synchronize DMA before termination
->>>>
->>>> This patch has nothing to do with your trouble, why do you want to
->>>> revert it?
->>>
->>> I'll wait some more before pushing out, so you can discuss it.
->>
->> Okay, let me run a quick test with that second patch still applied to
->> make sure it really is harmless.
-> 
-> Alright, I tested v5.7-rc3 with this patch reverted:
-> 
-> 	a900aeac2537 i2c: tegra: Better handle case where CPU0 is busy for a long time
-> 
-> and the results came back positive, so I think we can leave patch:
-> 
-> 	8814044fe0fa i2c: tegra: Synchronize DMA before termination
-> 
-> in. But then again, I see that Dmitry posted this yesterday:
-> 
-> 	https://lkml.org/lkml/2020/4/26/481
-> 
-> which seems like it would be related to this and potentially be a
-> follow-up fix for some corner cases?
+On Mon, 2020-04-27 at 17:53 +0300, Sakari Ailus wrote:
+> Add a printk modifier %p4cc (for pixel format) for printing V4L2 and DRM
+> pixel formats denoted by fourccs. The fourcc encoding is the same for both
+> so the same implementation can be used.
+[]
+> - Added WARN_ON_ONCE() sanity checks. Comments on these are welcome; I'd
+>   expect them mostly be covered by the tests.
 
-This is a follow-up to my previous message in this thread:
+All the WARN_ON_ONCE uses are not necessary.
 
-https://lkml.org/lkml/2020/4/23/792
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+[]
+> @@ -1721,6 +1721,89 @@ char *netdev_bits(char *buf, char *end, const void *addr,
+>  	return special_hex_number(buf, end, num, size);
+>  }
+>  
+> +static noinline_for_stack
+> +char *fourcc_string(char *buf, char *end, const u32 *__fourcc,
+> +		    struct printf_spec spec, const char *fmt)
 
-> So I'm not sure how well this whole set has been tested yet.
+There's no reason to use __ prefixed argument names here.
 
-It depends on what you're meaning by the testing. We have some
-yet-out-of-tree real-world devices that are using APBDMA for Bluetooth,
-Audio, I2C (touchscreens) and etc peripherals. These devices were using
-the DMA patches before they were posted to the ML.
+> +{
+> +#define FOURCC_HEX_CHAR_STR		"(xx)"
+> +#define FOURCC_BIG_ENDIAN_STR		" big-endian"
+> +#define FOURCC_LITTLE_ENDIAN_STR	" little-endian"
 
-> Maybe a better solution would be for the DMA synchronization patch to go
-> into the 5.8 queue instead to make sure we get more testing cycles.
+I don't believe used-once macro defines are useful.
 
-It should be fine to re-queue the patches for 5.8. I'm just a bit afraid
-that if patches are simply dropped now, then you won't get back to it
-for a year or so ;)
+> +#define FOURCC_HEX_NUMBER		" (0x01234567)"
+
+> +#define FOURCC_STRING_MAX						\
+> +	FOURCC_HEX_CHAR_STR FOURCC_HEX_CHAR_STR FOURCC_HEX_CHAR_STR	\
+> +	FOURCC_HEX_CHAR_STR FOURCC_LITTLE_ENDIAN_STR FOURCC_HEX_NUMBER
+
+This is very difficult to read and is size dependent on
+the size of little-endian > big_endian
+
+I'd write it out
+
+	FOURCC_STRING_MAX	sizeof("(xx)(xx)(xx)(xx) little-endian (0x01234567)")
+
+and then not have the define at all but use
+the written out string in the declaration.
+
+> +	struct printf_spec my_spec = {
+> +		.type = FORMAT_TYPE_UINT,
+> +		.field_width = 2,
+> +		.flags = SMALL,
+> +		.base = 16,
+> +		.precision = -1,
+> +	};
+
+my_spec isn't usefully named, likely not necessary at all,
+and if really necessary, it should be static const
+
+> +	char __s[sizeof(FOURCC_STRING_MAX)];
+
+I'd declare the buffer
+
+	char fourcc[sizeof("(xx)(xx)(xx)(xx) little-endian (0x01234567)"];
+
+like all the other specialty functions do.
+
+> +	char *s = __s;
+
+There's no reason to use __ prefixed variable names here either.
+All the other specialty function use:
+
+	char *p = <output_buffer_name>;
+
+> +	unsigned int i;
+
+just int i; is typical
+
+> +	/*
+> +	 * The 31st bit defines the endianness of the data, so save its printing
+> +	 * for later.
+> +	 */
+> +	u32 fourcc = *__fourcc & ~BIT(31);
+
+	bool be = fourcc & BIT(31);
+
+> +	int ret;
+> +
+> +	if (check_pointer(&buf, end, __fourcc, spec))
+> +		return buf;
+> +
+> +	if (fmt[1] != 'c' || fmt[2] != 'c')
+> +		return error_string(buf, end, "(%p4?)", spec);
+> +
+> +	for (i = 0; i < sizeof(fourcc); i++, fourcc >>= 8) {
+> +		unsigned char c = fourcc >> (i*8);
+
+Please remove the fourcc >>= 8 from the loop and use
+
+		unsigned char c = fourcc >> (i*8);
+
+If I understand this correctly, I think this is simpler:
+
+		if (isascii(c) && isprint(c)) {
+			*s++ = c;
+		} else {
+			*s++ = '(';
+			s = hex_byte_pack(s, c);
+			*s++ = ')';
+		}
+
+> +
+> +		/* Weed out spaces */
+> +		if (c == ' ')
+> +			continue;
+> +
+> +		/* Print non-control characters as-is */
+> +		if (c > ' ') {
+> +			*s = c;
+> +			s++;
+> +			continue;
+> +		}
+> +
+> +		if (WARN_ON_ONCE(sizeof(__s) <
+> +				 (s - __s) + sizeof(FOURCC_HEX_CHAR_STR)))
+> +			break;
+> +
+> +		*s = '(';
+> +		s++;
+> +		s = number(s, s + 2, c, my_spec);
+> +		*s = ')';
+> +		s++;
+> +	}
+> +
+> +	ret = strscpy(s, *__fourcc & BIT(31) ? FOURCC_BIG_ENDIAN_STR
+> +					     : FOURCC_LITTLE_ENDIAN_STR,
+> +		      sizeof(__s) - (s - __s));
+
+If you size the initial buffer correctly, strscpy is unnecessary.
+
+	strcpy(s, <bit31> ? "big endian" : "little endian");
+	s += strlen(s);
+
+> +	if (!WARN_ON_ONCE(ret < 0))
+> +		s += ret;
+> +
+> +	if (!WARN_ON_ONCE(sizeof(__s) <
+> +			  (s - __s) + sizeof(FOURCC_HEX_NUMBER))) {
+> +		*s = ' ';
+> +		s++;
+> +		*s = '(';
+> +		s++;
+
+		*s++ = ' ';
+		*s++ = '(';
+
++		/* subtract parentheses and the space from the size */
+> +		special_hex_number(s, s + sizeof(FOURCC_HEX_NUMBER) - 3,
+> +				   *__fourcc, sizeof(u32));
+> +		s += sizeof(u32) * 2 + 2 /* 0x */;
+> +		*s = ')';
+> +		s++;
+		*s++ = ')';
+
+> +		*s = '\0';
+> +	}
+> +
+> +	return string(buf, end, __s, spec);
+> +}
+> 
+
