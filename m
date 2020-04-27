@@ -2,248 +2,113 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD0BC55194
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 01:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9EFC5519C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 01:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 342D5206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 01:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA3FD206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 01:16:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbgD0BQW (ORCPT
+        id S1726429AbgD0BQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 21:16:22 -0400
-Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:42850 "EHLO
-        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1726159AbgD0BQW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 21:16:22 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id D139320138DE;
-        Mon, 27 Apr 2020 09:09:40 +0800 (HKT)
-X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
-Received: from mail.gtsys.com.hk ([127.0.0.1])
-        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id MvDMbBypFzTg; Mon, 27 Apr 2020 09:09:40 +0800 (HKT)
-Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id A98B220139B7;
-        Mon, 27 Apr 2020 09:09:40 +0800 (HKT)
-Received: from [10.128.2.32] (unknown [124.217.189.18])
-        by s01.gtsys.com.hk (Postfix) with ESMTPSA id 89849C019FB;
-        Mon, 27 Apr 2020 09:09:39 +0800 (HKT)
-Subject: Re: [PATCH v5 3/3] iio/dac: convert ltc2632.txt to lltc,ltc2632.yaml
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Steve Winslow <swinslow@gmail.com>,
+        Sun, 26 Apr 2020 21:16:33 -0400
+Received: from mga11.intel.com ([192.55.52.93]:62678 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726323AbgD0BQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 21:16:32 -0400
+IronPort-SDR: Lv/v2Jhj0NyWAobklZlghw3MydTkknmxfhC7JeS1RSQhe+MFITHVsWvc2aHAnd5si+epKjfCQu
+ IEveEu/quQnw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2020 18:16:31 -0700
+IronPort-SDR: ZrrKsQ6Zur3/bE2CO6sc6Wdv34dqrhqrjSlpkUGUwoboNwAHWFqd68hpZ33zjqX/g7EQHldNW4
+ L627f0bj0fUw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,321,1583222400"; 
+   d="scan'208";a="336090274"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga001.jf.intel.com with ESMTP; 26 Apr 2020 18:16:31 -0700
+Date:   Sun, 26 Apr 2020 18:16:30 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "David S. Miller" <davem@davemloft.net>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200420042612.27752-1-chris.ruehl@gtsys.com.hk>
- <20200420042612.27752-4-chris.ruehl@gtsys.com.hk>
- <20200425203556.4c051fad@archlinux>
-From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Message-ID: <49b05b32-ba6a-50fe-a4a2-96248e672576@gtsys.com.hk>
-Date:   Mon, 27 Apr 2020 09:09:38 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org
+Subject: Re: [PATCH 4/5] arch/kmap_atomic: Consolidate duplicate code
+Message-ID: <20200427011630.GC135929@iweiny-DESK2.sc.intel.com>
+References: <20200426055406.134198-1-ira.weiny@intel.com>
+ <20200426055406.134198-5-ira.weiny@intel.com>
+ <20200426072642.GB22024@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200425203556.4c051fad@archlinux>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200426072642.GB22024@infradead.org>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 26/4/2020 3:35 am, Jonathan Cameron wrote:
-> On Mon, 20 Apr 2020 12:26:08 +0800
-> Chris Ruehl <chris.ruehl@gtsys.com.hk> wrote:
+On Sun, Apr 26, 2020 at 12:26:42AM -0700, Christoph Hellwig wrote:
+> > diff --git a/arch/arc/mm/highmem.c b/arch/arc/mm/highmem.c
+> > index 4db13a6b9f3b..1cae4b911a33 100644
+> > --- a/arch/arc/mm/highmem.c
+> > +++ b/arch/arc/mm/highmem.c
+> > @@ -53,11 +53,10 @@ void *kmap_atomic(struct page *page)
+> >  {
+> >  	int idx, cpu_idx;
+> >  	unsigned long vaddr;
+> > +	void *addr = kmap_atomic_fast(page);
+> >  
+> > -	preempt_disable();
+> > -	pagefault_disable();
+> > -	if (!PageHighMem(page))
+> > -		return page_address(page);
+> > +	if (addr)
+> > +		return addr;
+> 
+> Wouldn't it make sense to just move kmap_atomic itelf to common code,
+> and call out to a kmap_atomic_high for the highmem case, following the
+> scheme in kmap?
 >
->> Conversion of the ltc2632 to yaml format and name the file 'lltc,ltc2632.yaml'.
->>
->> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
-> There is something odd going on with indentation but otherwise looks fine to me.
-> However we need to leave time for a final DT review.
+
+Sure I do like that symmetry between the calls.
+
 >
-> Thanks,
+> Same for the unmap side.
+
+FWIW that would simply be renaming  __kunmap_atomic() to kunmap_atomic_high()
+
 >
-> Jonathan
-I will wait for the review, and fix the indent together with / or without any 
-changes
-lining up. I think a good Idea to get a yaml extension for my 'vim'.
+> That might require to support
+> kmap_atomic_prot everywhere first, which sounds like a really good
+> idea anyway, and would avoid the need for strange workaround in drm.
 
-Cheers,
+Having a kmap_atomic_prot() seems like a good idea.  But I'm not exactly sure
+why CONFIG_x86 is being called out specifically in the DRM code?
 
-Chris
-
->> ---
->> v5:
->> correct require section
->> set maintainer of analog.com
->> v4..v2: no change
->>
->>   .../bindings/iio/dac/lltc,ltc2632.yaml        | 76 +++++++++++++++++++
->>   .../devicetree/bindings/iio/dac/ltc2632.txt   | 49 ------------
->>   2 files changed, 76 insertions(+), 49 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
->>   delete mode 100644 Documentation/devicetree/bindings/iio/dac/ltc2632.txt
->>
->> diff --git a/Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml b/Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
->> new file mode 100644
->> index 000000000000..b0043144fbc4
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
->> @@ -0,0 +1,76 @@
->> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/iio/dac/lltc,ltc2632.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: Linear Technology LTC263x 12-/10-/8-Bit Rail-to-Rail DAC
->> +
->> +maintainers:
->> +  - Michael Hennerich <michael.hennerich@analog.com>
->> +
->> +description: |
->> +  Bindings for the Linear Technology LTC2632/2634/2636 DAC
->> +  Datasheet can be found here: https://www.analog.com/media/en/technical-documentation/data-sheets/LTC263[246].pdf
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - lltc,ltc2632-l12
->> +      - lltc,ltc2632-l10
->> +      - lltc,ltc2632-l8
->> +      - lltc,ltc2632-h12
->> +      - lltc,ltc2632-h10
->> +      - lltc,ltc2632-h8
->> +      - lltc,ltc2634-l12
->> +      - lltc,ltc2634-l10
->> +      - lltc,ltc2634-l8
->> +      - lltc,ltc2634-h12
->> +      - lltc,ltc2634-h10
->> +      - lltc,ltc2634-h8
->> +      - lltc,ltc2636-l12
->> +      - lltc,ltc2636-l10
->> +      - lltc,ltc2636-l8
->> +      - lltc,ltc2636-h12
->> +      - lltc,ltc2636-h10
->> +      - lltc,ltc2636-h8
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  spi-max-frequency:
->> +    maximum: 2000000
->> +
->> +  vref-supply:
->> +    description:
->> +	  Phandle to the external reference voltage supply. This should
->> +      only be set if there is an external reference voltage connected to the VREF
->> +      pin. If the property is not set the internal reference is used.
-> Odd intent going on there.
->
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    vref: regulator-vref {
->> +        compatible = "regulator-fixed";
->> +        regulator-name = "vref-ltc2632";
->> +        regulator-min-microvolt = <1250000>;
->> +        regulator-max-microvolt = <1250000>;
->> +        regulator-always-on;
->> +    };
->> +
->> +    spi_master {
->> +      #address-cells = <1>;
->> +      #size-cells = <0>;
->> +
->> +      dac: ltc2632@0 {
->> +        compatible = "lltc,ltc2632";
->> +        reg = <0>;    /* CS0 */
->> +        spi-max-frequency = <1000000>;
->> +        vref-supply = <&vref>;
->> +      };
->> +    };
->> diff --git a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
->> deleted file mode 100644
->> index 1ab9570cf219..000000000000
->> --- a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
->> +++ /dev/null
->> @@ -1,49 +0,0 @@
->> -Linear Technology LTC2632/2634/2636 DAC
->> -
->> -Required properties:
->> - - compatible: Has to contain one of the following:
->> -	lltc,ltc2632-l12
->> -	lltc,ltc2632-l10
->> -	lltc,ltc2632-l8
->> -	lltc,ltc2632-h12
->> -	lltc,ltc2632-h10
->> -	lltc,ltc2632-h8
->> -	lltc,ltc2634-l12
->> -	lltc,ltc2634-l10
->> -	lltc,ltc2634-l8
->> -	lltc,ltc2634-h12
->> -	lltc,ltc2634-h10
->> -	lltc,ltc2634-h8
->> -	lltc,ltc2636-l12
->> -	lltc,ltc2636-l10
->> -	lltc,ltc2636-l8
->> -	lltc,ltc2636-h12
->> -	lltc,ltc2636-h10
->> -	lltc,ltc2636-h8
->> -
->> -Property rules described in Documentation/devicetree/bindings/spi/spi-bus.txt
->> -apply. In particular, "reg" and "spi-max-frequency" properties must be given.
->> -
->> -Optional properties:
->> -	- vref-supply: Phandle to the external reference voltage supply. This should
->> -	  only be set if there is an external reference voltage connected to the VREF
->> -	  pin. If the property is not set the internal reference is used.
->> -
->> -Example:
->> -
->> -	vref: regulator-vref {
->> -		compatible = "regulator-fixed";
->> -		regulator-name = "vref-ltc2632";
->> -		regulator-min-microvolt = <1250000>;
->> -		regulator-max-microvolt = <1250000>;
->> -		regulator-always-on;
->> -	};
->> -
->> -	spi_master {
->> -		dac: ltc2632@0 {
->> -			compatible = "lltc,ltc2632-l12";
->> -			reg = <0>; /* CS0 */
->> -			spi-max-frequency = <1000000>;
->> -			vref-supply = <&vref>; /* optional */
->> -		};
->> -	};
-
--- 
-GTSYS Limited RFID Technology
-9/F, Unit E, R07, Kwai Shing Industrial Building Phase 2,
-42-46 Tai Lin Pai Road, Kwai Chung, N.T., Hong Kong
-Tel (852) 9079 9521
-
-Disclaimer: https://www.gtsys.com.hk/email/classified.html
+Ira
 
