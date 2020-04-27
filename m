@@ -2,123 +2,119 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06183CAB362
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 985C0CAB363
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8A8D206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:42:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="YVwmDjdh"
+	by mail.kernel.org (Postfix) with ESMTP id 74277206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:42:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbgD0NlS (ORCPT
+        id S1728302AbgD0Nmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 09:41:18 -0400
-Received: from mail-mw2nam12on2043.outbound.protection.outlook.com ([40.107.244.43]:54528
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728023AbgD0NlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 09:41:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fLi1NTJC+bmMOYJr7jR7cgCFcQz7un5Gad0NypAJilKHN0+RrPFKpmfUULW/w2YcLpUswWk2jkRwFl1wSj1ODbTEAdHxYVIOQPMFUkT9QvcnM8rlVi/nVmRrBcE79BkQYHwZOc1JZmuDWIkv1pDxKGvl7ITNPc48wQB5PBjzWeXZmp0QbrqkAKZ2vAGkjfXd6zQu/LQ63N65ZVAaA9JsKgK5XrtAFP3+3HkbUT5/j03aq7+uCQkJ32wKi43yd/UCCxKZu479FXMFmFLdaWY+0xZwlPf+pVivJzz00ulsiTSDc1Kewd92AJAjb7IzuzaWduRqmXcdAEaMXISn8QrXXw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wwN1CSqxAkNpNx9GcjrtNvXNAKQ0nmOQLgVi1ERHmhs=;
- b=R4bLtpt6+ivDpYySnwOOJWicerD86s4bqrfSmJdWSg2mNE1bJlc8Pkg7pReQqykC234p/YF5YBPWX4kMRQ5bM5+CgeMh1k2qhryraVMHUAgRRPwXgt4i7FPTK2rUHjO7Z/8RMJJA/YXgFTHiRFt9xLXje5p99P70oYZyjJS0RDXdhgyunZIhhklw7k6rKIMdIgh2F5MVHszxu2v4by9fHL219ypHYgnInB3PjEXdCBGEL8b/gMBMyUHx3zI1GIuMau2RBQf/cUrJgEF0UjCmqJk5IUBb/WGwr1m3U2s5KUkZ7KBodCt4rqzAy+ti2lzTzK9BdxAkX/P4ovJXDKGUbg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wwN1CSqxAkNpNx9GcjrtNvXNAKQ0nmOQLgVi1ERHmhs=;
- b=YVwmDjdhpXYyKHaTSepo7FwTDSV/gaE+/FgPGTnpqlaCYhscPTO/JI011JhAFcjfmanEmUwvI/HKsiYiwpw1hAtArwu8vi9TpakfZ8PY8WIL+5D7aB8j/5s42ddUz7a+O+cMJiaCVfhyz1+wjJxiCWL9gs/sbw/z+IExYQ7gyGc=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Jerome.Pouiller@silabs.com; 
-Received: from MWHPR11MB1775.namprd11.prod.outlook.com (2603:10b6:300:10e::14)
- by MWHPR11MB1424.namprd11.prod.outlook.com (2603:10b6:300:26::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Mon, 27 Apr
- 2020 13:41:12 +0000
-Received: from MWHPR11MB1775.namprd11.prod.outlook.com
- ([fe80::81d5:b62b:3770:ffbe]) by MWHPR11MB1775.namprd11.prod.outlook.com
- ([fe80::81d5:b62b:3770:ffbe%10]) with mapi id 15.20.2937.023; Mon, 27 Apr
- 2020 13:41:12 +0000
-From:   Jerome Pouiller <Jerome.Pouiller@silabs.com>
-To:     devel@driverdev.osuosl.org, linux-wireless@vger.kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
-        <jerome.pouiller@silabs.com>
-Subject: [PATCH 05/17] staging: wfx: fix CAB sent at the wrong time
-Date:   Mon, 27 Apr 2020 15:40:19 +0200
-Message-Id: <20200427134031.323403-6-Jerome.Pouiller@silabs.com>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200427134031.323403-1-Jerome.Pouiller@silabs.com>
-References: <20200427134031.323403-1-Jerome.Pouiller@silabs.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-X-ClientProxiedBy: PR0P264CA0232.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:100:1e::28) To MWHPR11MB1775.namprd11.prod.outlook.com
- (2603:10b6:300:10e::14)
+        Mon, 27 Apr 2020 09:42:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34888 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727010AbgD0Nmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 09:42:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 919B1ADB5;
+        Mon, 27 Apr 2020 13:42:50 +0000 (UTC)
+Date:   Mon, 27 Apr 2020 08:42:47 -0500
+From:   Goldwyn Rodrigues <rgoldwyn@suse.de>
+To:     Roberto Sassu <roberto.sassu@huawei.com>
+Cc:     zohar@linux.ibm.com, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com,
+        krzysztof.struczynski@huawei.com, stable@vger.kernel.org
+Subject: Re: [PATCH v2 1/6] ima: Set file->f_mode instead of file->f_flags in
+ ima_calc_file_hash()
+Message-ID: <20200427134247.vcpx6gyh62seucnf@fiona>
+References: <20200427102900.18887-1-roberto.sassu@huawei.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from pc-42.home (2a01:e35:2435:66a0:544b:f17b:7ae8:fb7) by PR0P264CA0232.FRAP264.PROD.OUTLOOK.COM (2603:10a6:100:1e::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Mon, 27 Apr 2020 13:41:08 +0000
-X-Mailer: git-send-email 2.26.1
-X-Originating-IP: [2a01:e35:2435:66a0:544b:f17b:7ae8:fb7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: bf205ff6-e2b0-4d51-1dd8-08d7eab0a630
-X-MS-TrafficTypeDiagnostic: MWHPR11MB1424:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MWHPR11MB1424EAACB05AA6664744A02993AF0@MWHPR11MB1424.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2733;
-X-Forefront-PRVS: 0386B406AA
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1775.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(39850400004)(376002)(346002)(396003)(366004)(8886007)(66476007)(66556008)(4326008)(81156014)(86362001)(8936002)(6486002)(52116002)(6666004)(6506007)(5660300002)(16526019)(6512007)(1076003)(478600001)(8676002)(36756003)(186003)(2616005)(54906003)(107886003)(66574012)(2906002)(316002)(66946007);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: silabs.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: gR+mlpNiAwzNikdEssHXPT7dx4GD60dgnhWUnHxLd1VX5deMINNj2fCuIY8VGrlf/XR08vxfu3rF9WOLYKL0S7SaKXJllHvKdDOv1/m1jBulKUOdeTGRrMEL9k31qBOvafM/KfsioNmvLi9t/hdo0lNQzvjXAd7n9zypzj/kZoWn3O7cCdGGwluMbOHXHNhX+FwX0bwmfTc92HS+Ee94fxCSvPZoDkVzgv4XFCm0bweAruE82LIE3iMBfjEuNNAFbVtH+t10pleUnNSb+drfw+BS0IdylCHhovfo5toro3fFz0briRnzp9yyWAotuyeKQcZzVogZG1hEbP2tXaq3fmUDlWGUpWkFxm1Z6Sh1em5wkLO++2WfQy30CXyOrkCoN44ljPsra2JoE4P0Aty4QCDU6jnSoiDzQePe9PrhmPEiG3gD/DXia8iFsSR1kKsp
-X-MS-Exchange-AntiSpam-MessageData: 31ig2v6Gry7xAuRmP+EBV9VBwuuMOau7Cens3w7boQ0vOaaNCh8c+AUa/EVGL9fMflZYxdSr1X0ePc0BPhYzy1AxWQF3suvSqGZNifIS+gVi6iL0RIGGOI3XFDGBv/dkniZbexwD8Pp39mlRZkxfx7fbmy2BcTtH+mQdiGFGUlDcyIYR6oJXm7ANYJLiGuW8QTa6YX7TKtfJzEn+/9QRCBiFcfbGUqnDVddRkP1nSfUAANvwXDhikXf1uKwTHsvxieAN7WkCQAA92ZSd/ogKfFHFpc9PTxdAPUj7wqjGlv77Gx2KDxPIKLmkpkiWerwnKe3I+LoE1bsW4V3PNSGG57LdoPcQkCuwccKxknT35Y8IrUA/ClHVMgIESjpbi01gc/GDY2Qv6PX7Z8kieghC8yCtqJ2MKRHtudv7ITPX7je+F7JapRxoYQjB++b1aof+1GVnR9Cg0ec0TquMyyq70deB7ue+6bJ5PGVfAheZ42VDWW7MVF/Zg7kmLS0B9Gxo6lRoHMGszF/Dtx/WBs+nAy6wvuxVZ+AmiY4WwVHlyjUNwxTPzRkjQcULLjrCUzyGZsRAtDFJizahmh6sSsP0uz0HzJdznl2y2rVjPBVX+TqDy0UK7iGf1jYu9zCY6CQHfv+eEz4DxIxyvWxxtnyZU9CiPPnQIm4mOCD1cXeLeCBoQsgWVS9uuNyXWUVACaA1/Rwi+Mft38WuL9TxlxGiwb5W4P45lD2U6ick9kkqax45DaGt7JMVpeaKMruMsvipqh9DEKAIb6GSD3hTeQGwM0StHTuHZIL7HNR3CtroZq8EFa6tmZRNMB0OorUklq3a6/WfwgQdIp1cDQBQZ85zMRzQlD//AD8t2sTGgB3uqRA=
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bf205ff6-e2b0-4d51-1dd8-08d7eab0a630
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2020 13:41:12.3327
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Eh5YG+fAMyJwue/uJD54RNBnVFtwL38J8jWZ3ppIEh+vMdVQeTHoRVZDFZkC6jmNjGXzljvIl5tohtMBLTU1Vg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1424
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427102900.18887-1-roberto.sassu@huawei.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPgoKd2Z4
-X3N1c3BlbmRfcmVzdW1lX21jKCkgaXMgY2FsbGVkIHdoZW4gdGhlIGRldmljZSBpcyBhYm91dCB0
-byBzZW50IGEKRFRJTS4gVGhpcyBpcyB0aGUgcmlnaHQgbW9tZW50IHRvIGVucXVldWUgQ29udGVu
-dCBBZnRlciBEVElNIEJlYWNvbgooQ0FCKS4KCkhvd2V2ZXIsIHdmeF9zdXNwZW5kX3Jlc3VtZV9t
-YygpIGlzIGFsc28gY2FsbGVkIHdoZW4gdGhlIERUSU0gcGVyaW9kCmVuZHMuIFVudGlsIG5vdywg
-dGhpcyBldmVudCBkaWQgYWxzbyB0cmlnIENBQi4KCk5vdGUgdGhpcyBpc3N1ZSBkaWQgbm90IGhh
-dmUgdG9vIG11Y2ggaW1wYWN0IHNpbmNlIHdoZW4gYSBDQUIgaXMgc2VudApvdXRzaWRlIG9mIERU
-SU0gd2luZG93LCBhbiBlcnJvciBpcyByZXBvcnRlZCBieSB0aGUgZmlybXdhcmUgYW5kCm1hYzgw
-MjExIHJldHJpZXMgdG8gc2VuZCB0aGUgZGF0YS4KClNpZ25lZC1vZmYtYnk6IErDqXLDtG1lIFBv
-dWlsbGVyIDxqZXJvbWUucG91aWxsZXJAc2lsYWJzLmNvbT4KLS0tCiBkcml2ZXJzL3N0YWdpbmcv
-d2Z4L3N0YS5jIHwgMiArKwogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQoKZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvc3RhZ2luZy93Zngvc3RhLmMgYi9kcml2ZXJzL3N0YWdpbmcvd2Z4L3N0
-YS5jCmluZGV4IDc3ZDVmZjE3YTU5YS4uNTEzMmMxOWUwMzY3IDEwMDY0NAotLS0gYS9kcml2ZXJz
-L3N0YWdpbmcvd2Z4L3N0YS5jCisrKyBiL2RyaXZlcnMvc3RhZ2luZy93Zngvc3RhLmMKQEAgLTY0
-MSw2ICs2NDEsOCBAQCBpbnQgd2Z4X3NldF90aW0oc3RydWN0IGllZWU4MDIxMV9odyAqaHcsIHN0
-cnVjdCBpZWVlODAyMTFfc3RhICpzdGEsIGJvb2wgc2V0KQogCiB2b2lkIHdmeF9zdXNwZW5kX3Jl
-c3VtZV9tYyhzdHJ1Y3Qgd2Z4X3ZpZiAqd3ZpZiwgZW51bSBzdGFfbm90aWZ5X2NtZCBub3RpZnlf
-Y21kKQogeworCWlmIChub3RpZnlfY21kICE9IFNUQV9OT1RJRllfQVdBS0UpCisJCXJldHVybjsK
-IAlXQVJOKCF3ZnhfdHhfcXVldWVzX2hhc19jYWIod3ZpZiksICJpbmNvcnJlY3Qgc2VxdWVuY2Ui
-KTsKIAlXQVJOKHd2aWYtPmFmdGVyX2R0aW1fdHhfYWxsb3dlZCwgImluY29ycmVjdCBzZXF1ZW5j
-ZSIpOwogCXd2aWYtPmFmdGVyX2R0aW1fdHhfYWxsb3dlZCA9IHRydWU7Ci0tIAoyLjI2LjEKCg==
+On 12:28 27/04, Roberto Sassu wrote:
+> Commit a408e4a86b36 ("ima: open a new file instance if no read
+> permissions") tries to create a new file descriptor to calculate a file
+> digest if the file has not been opened with O_RDONLY flag. However, if a
+> new file descriptor cannot be obtained, it sets the FMODE_READ flag to
+> file->f_flags instead of file->f_mode.
+> 
+> This patch fixes this issue by replacing f_flags with f_mode as it was
+> before that commit.
+
+Thanks for fixing this.
+
+Reviewed-by: Goldwyn Rodrigues <rgoldwyn@suse.com>
+> 
+> Changelog
+> 
+> v1:
+> - fix comment for f_mode change (suggested by Mimi)
+> - rename modified_flags variable to modified_mode (suggested by Mimi)
+> 
+> Cc: stable@vger.kernel.org # 4.20.x
+> Fixes: a408e4a86b36 ("ima: open a new file instance if no read permissions")
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> ---
+>  security/integrity/ima/ima_crypto.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+> index 5201f5ec2ce4..f3a7f4eb1fc1 100644
+> --- a/security/integrity/ima/ima_crypto.c
+> +++ b/security/integrity/ima/ima_crypto.c
+> @@ -537,7 +537,7 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
+>  	loff_t i_size;
+>  	int rc;
+>  	struct file *f = file;
+> -	bool new_file_instance = false, modified_flags = false;
+> +	bool new_file_instance = false, modified_mode = false;
+>  
+>  	/*
+>  	 * For consistency, fail file's opened with the O_DIRECT flag on
+> @@ -557,13 +557,13 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
+>  		f = dentry_open(&file->f_path, flags, file->f_cred);
+>  		if (IS_ERR(f)) {
+>  			/*
+> -			 * Cannot open the file again, lets modify f_flags
+> +			 * Cannot open the file again, lets modify f_mode
+>  			 * of original and continue
+>  			 */
+>  			pr_info_ratelimited("Unable to reopen file for reading.\n");
+>  			f = file;
+> -			f->f_flags |= FMODE_READ;
+> -			modified_flags = true;
+> +			f->f_mode |= FMODE_READ;
+> +			modified_mode = true;
+>  		} else {
+>  			new_file_instance = true;
+>  		}
+> @@ -581,8 +581,8 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
+>  out:
+>  	if (new_file_instance)
+>  		fput(f);
+> -	else if (modified_flags)
+> -		f->f_flags &= ~FMODE_READ;
+> +	else if (modified_mode)
+> +		f->f_mode &= ~FMODE_READ;
+>  	return rc;
+>  }
+>  
+> -- 
+> 2.17.1
+> 
+
+-- 
+Goldwyn
