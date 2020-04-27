@@ -2,140 +2,129 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F188C82A00
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71444C81CFF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAAB520575
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:06:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588025160;
-	bh=sAZ/O2zdcyNp3hYa0dOFdYg2wRWDs461rvytxvnBq+Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tj3Apn+xLPa6qjMfdbL9FhNczHWkGG/sLKL4FVrQO3fKBXH84JoGNDQpTLkjn4g8t
-	 Nz4zY+EED0F91hRIRgZ85wiN/7CY2oa3tz8B8eEWr3y2xWDfqRY4Ileepau0jKstPT
-	 Bjo97HAOWmG4n98NV+bwZzhQwVZZ7LXwcKklwn3c=
+	by mail.kernel.org (Postfix) with ESMTP id 3FD5520575
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:09:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="axOblyzY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgD0WGA (ORCPT
+        id S1726315AbgD0WJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 18:06:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47636 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726233AbgD0WB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 18:01:57 -0400
-Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5984321835;
-        Mon, 27 Apr 2020 22:01:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588024916;
-        bh=sAZ/O2zdcyNp3hYa0dOFdYg2wRWDs461rvytxvnBq+Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XYDgAAeD1+15BIN62/BImoK2Ig+LC4dVMR7YfXZZzXiZGDyuJ1GoXtE/plxwV8Lm/
-         BrBIwZqnFnV9lbNc8TQ7pqGefBV1KfnuBCl0p5iM5AvV3x3mV/M+bBqPoiG0YDmCoL
-         vylwBr2nURCLVh04/DewtEOiv2GXzpM0rKlOtXAo=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jTBp4-000IoB-LU; Tue, 28 Apr 2020 00:01:54 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>, netdev@vger.kernel.org,
-        linux-hams@vger.kernel.org
-Subject: [PATCH 07/38] docs: networking: convert ax25.txt to ReST
-Date:   Tue, 28 Apr 2020 00:01:22 +0200
-Message-Id: <d31c24b630ad1b2b43a192689c5926e2e2e5978f.1588024424.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <cover.1588024424.git.mchehab+huawei@kernel.org>
-References: <cover.1588024424.git.mchehab+huawei@kernel.org>
+        Mon, 27 Apr 2020 18:09:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50266 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726182AbgD0WJv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 18:09:51 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E430FC0610D5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 15:09:50 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id 18so8451689pfv.8
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 15:09:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Xe8RUkEJu/E4jWUvQIevudFni0eW89aFKGU5bjDlftc=;
+        b=axOblyzYYZwm23zJs/yIhW4AiXhyGbo1u4AhSQWZk6aCS3SbgYhrO3uxU/GIgXJe+R
+         lZFY51Gu9ZAm1+Wx8ojNeFt262o3xlrjkkPW0UDsqW7aQHJ1kxx3GUTkZZ+SHEwEx4sj
+         qIXCdTHxBwmKDJGtD8EE1vu3RoM8rdzvr7zJDbahVKaFbLW3BvoGBtbrg30QQDm9ZjL4
+         NPsfDMvwSpCub92zGM4zYe+Jb2mMQ9YPQ+DnbHm8ALegArlm8BVMTVmhVxMj9B3OIDe9
+         C66WGlEQ/5l6bbT1mq3LFfU7EdwlU0npz53O3fl3EQgOzkoYeSp2jk4DOPWs1j31cN1R
+         XZyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Xe8RUkEJu/E4jWUvQIevudFni0eW89aFKGU5bjDlftc=;
+        b=FCcVLYZ6mTyfcqf5VELLYt6ClwxnrsvNRPJcqdl/fEtL8C/LWJ21x7PhcHJswMxdBv
+         5Q1d2kgs5K0niBi7SCzWDlQMnyOzNUZEdySbjlpwMAwA0EyJy7YThUYOgWOpxwhBg27o
+         xVVsbGfDcDgtXFooA1TsGHsEJ3J8odwx+Carpv2fFJjry8lFVEBhqYEEGLMZ/g7ufrbf
+         tmsMOJXqsUKyLFT9r3EebfxALWMVgfjoKDdw76piPGML+smXJ8/sXDj/Ej8KleuxIDEL
+         UY6ziIfM5fy8Dth7q79BM+h6/JPWYyIKkjx3vGEVg42QpEscAKZtamt3FgmXCmW3jEtA
+         CZGw==
+X-Gm-Message-State: AGi0Pub0pHVo7Ufgyndwh0ULliBL1dfh1MbidHqOgA+fCvSttSkYhlDz
+        IrsCB5nbrjp4yDuI0aak8KWTFQ==
+X-Google-Smtp-Source: APiQypJpQnaMid4q4FwB9UWWT+cZC0Q4L77KS//F8Pl43k21RxaiBYMIK3X+fVPtnLNFejOX3p7P2Q==
+X-Received: by 2002:aa7:951a:: with SMTP id b26mr25384503pfp.44.1588025389927;
+        Mon, 27 Apr 2020 15:09:49 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:ce90:ab18:83b0:619])
+        by smtp.gmail.com with ESMTPSA id l8sm3554016pga.60.2020.04.27.15.09.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 15:09:49 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 15:09:42 -0700
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Marc Zyngier <maz@kernel.org>,
+        kernel-hardening@lists.openwall.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v13 00/12] add support for Clang's Shadow Call Stack
+Message-ID: <20200427220942.GB80713@google.com>
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20200427160018.243569-1-samitolvanen@google.com>
+ <CAMj1kXGASSCjTjvXJh=_iPwEPG50_pVRe2QO1hoRW+KHtugFVQ@mail.gmail.com>
+ <CAMj1kXFYv6YQJ0KGnFh=d6_K-39PYW+2bUj9TDnutA04czhOjQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXFYv6YQJ0KGnFh=d6_K-39PYW+2bUj9TDnutA04czhOjQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There isn't much to be done here. Just:
+On Mon, Apr 27, 2020 at 10:50:34PM +0200, Ard Biesheuvel wrote:
+> > OK, so one thing that came up in an offline discussion about SCS is
+> > the way it interacts with the vmap'ed stack.
+> >
+> > The vmap'ed stack is great for robustness, but it only works if things
+> > don't explode for other reasons in the mean time. This means the
+> > ordinary-to-shadow-call-stack size ratio should be chosen such that it
+> > is *really* unlikely you could ever overflow the shadow call stack and
+> > corrupt another task's call stack before hitting the vmap stack's
+> > guard region.
+> >
+> > Alternatively, I wonder if there is a way we could let the SCS and
+> > ordinary stack share the [bottom of] the vmap'ed region. That would
+> > give rather nasty results if the ordinary stack overflows into the
+> > SCS, but for cases where we really recurse out of control, we could
+> > catch this occurrence on either stack, whichever one occurs first. And
+> > the nastiness -when it does occur- will not corrupt any state beyond
+> > the stack of the current task.
+> 
+> Hmm, I guess that would make it quite hard to keep the SCS address
+> secret though :-(
 
-- add SPDX header;
-- add a document title.
+Yes, and the stack potentially overflowing into the SCS sort of defeats
+the purpose. I'm fine with increasing the SCS size to something safer,
+but using a vmapped shadow stack seems like the correct solution to this
+problem, at least on devices where allocating a full page isn't an issue.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/networking/{ax25.txt => ax25.rst} | 6 ++++++
- Documentation/networking/index.rst              | 1 +
- net/ax25/Kconfig                                | 6 +++---
- 3 files changed, 10 insertions(+), 3 deletions(-)
- rename Documentation/networking/{ax25.txt => ax25.rst} (91%)
-
-diff --git a/Documentation/networking/ax25.txt b/Documentation/networking/ax25.rst
-similarity index 91%
-rename from Documentation/networking/ax25.txt
-rename to Documentation/networking/ax25.rst
-index 8257dbf9be57..824afd7002db 100644
---- a/Documentation/networking/ax25.txt
-+++ b/Documentation/networking/ax25.rst
-@@ -1,3 +1,9 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=====
-+AX.25
-+=====
-+
- To use the amateur radio protocols within Linux you will need to get a
- suitable copy of the AX.25 Utilities. More detailed information about
- AX.25, NET/ROM and ROSE, associated programs and and utilities can be
-diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index 841f3c3905d5..6a5858b27cf6 100644
---- a/Documentation/networking/index.rst
-+++ b/Documentation/networking/index.rst
-@@ -42,6 +42,7 @@ Contents:
-    arcnet-hardware
-    arcnet
-    atm
-+   ax25
- 
- .. only::  subproject and html
- 
-diff --git a/net/ax25/Kconfig b/net/ax25/Kconfig
-index 043fd5437809..97d686d115c0 100644
---- a/net/ax25/Kconfig
-+++ b/net/ax25/Kconfig
-@@ -40,7 +40,7 @@ config AX25
- 	  radio as well as information about how to configure an AX.25 port is
- 	  contained in the AX25-HOWTO, available from
- 	  <http://www.tldp.org/docs.html#howto>. You might also want to
--	  check out the file <file:Documentation/networking/ax25.txt> in the
-+	  check out the file <file:Documentation/networking/ax25.rst> in the
- 	  kernel source. More information about digital amateur radio in
- 	  general is on the WWW at
- 	  <http://www.tapr.org/>.
-@@ -88,7 +88,7 @@ config NETROM
- 	  users as well as information about how to configure an AX.25 port is
- 	  contained in the Linux Ham Wiki, available from
- 	  <http://www.linux-ax25.org>. You also might want to check out the
--	  file <file:Documentation/networking/ax25.txt>. More information about
-+	  file <file:Documentation/networking/ax25.rst>. More information about
- 	  digital amateur radio in general is on the WWW at
- 	  <http://www.tapr.org/>.
- 
-@@ -107,7 +107,7 @@ config ROSE
- 	  users as well as information about how to configure an AX.25 port is
- 	  contained in the Linux Ham Wiki, available from
- 	  <http://www.linux-ax25.org>.  You also might want to check out the
--	  file <file:Documentation/networking/ax25.txt>. More information about
-+	  file <file:Documentation/networking/ax25.rst>. More information about
- 	  digital amateur radio in general is on the WWW at
- 	  <http://www.tapr.org/>.
- 
--- 
-2.25.4
-
+Sami
