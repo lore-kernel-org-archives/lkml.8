@@ -2,200 +2,118 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D6DC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C22DC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C9862076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:30:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588008603;
-	bh=ZdSG41fFUlbC/UHMat4zJ2C7QtQ3OkJpXWPhWLCwozw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z3upi/nBnzU7P1tndsEZiNMgyOyN+l4A0N7c4uURqaRWgf7toMkLsqhhqnuizGf0J
-	 RVj0euciGYYBIT8Ira2v/2TtDoEk75TFn8E+UWWO5sd0R6+tFGT8DfekPY3Y4fFT02
-	 lMcdtWn4GO4CBbw4imCfhUXIsdGzawtmkLrSjlz0=
+	by mail.kernel.org (Postfix) with ESMTP id ECA2D206D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:30:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f7u4o2sK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgD0RaC (ORCPT
+        id S1726484AbgD0RaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 13:30:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44850 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725980AbgD0RaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 13:30:02 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8224206D9;
-        Mon, 27 Apr 2020 17:30:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588008601;
-        bh=ZdSG41fFUlbC/UHMat4zJ2C7QtQ3OkJpXWPhWLCwozw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=E6nTa2bR+ycpBp1H1A9OnuHkKwx/PwOvQkehou+5mBKQoMtScpAGilGmZhWaOHpcU
-         iVNXFzB1eQL8jTiCLd3i9fzlbf3zEZRjI3nGvvDH9tyA+CFa+6VJXkI7r5l7C4XVFG
-         DHRRgEW+jV01RgqTIg9PrtCSi3PQ+BOYJoZchWs8=
-Date:   Mon, 27 Apr 2020 19:29:59 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Nishad Kamdar <nishadkamdar@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Joe Perches <joe@perches.com>, linux-xfs@vger.kernel.org,
+        Mon, 27 Apr 2020 13:30:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbgD0RaD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 13:30:03 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D94CC0610D5;
+        Mon, 27 Apr 2020 10:30:02 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id n11so872736pgl.9;
+        Mon, 27 Apr 2020 10:30:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=SCLyDRiJjkisSI5+I7kNMlITwcAUmvW5WBS3LcGSTZs=;
+        b=f7u4o2sKuPfQQUUeIiWva27PcW47sExOw2ojdV1iJqO2YiekLlLQPdnrUK+CgZhhfG
+         cJ+ZgM4cPD7Y5oXHfP1JI9yj1gmTLQnN42FMZiF4iS0jQG9ocWgmH7gSirxMIvMmnn37
+         /lKlbgE9xfA929pEOUYZiTjseraB5PJQgyhO23j194oD+QjFpU1H46lSOKsyuh93rsEk
+         35afT3WPxbKMLvr22/qWiT1enHGec0iP/pL33VaHplNezHvl02oBGpKQ3YTOr3YjRB2P
+         3Ij9FTxtADBjH4qD0IK8bbqe7j3tXMbRQLrit3H3nqsBJwOQfm/2ExV+mpjsXDupHPec
+         hr1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SCLyDRiJjkisSI5+I7kNMlITwcAUmvW5WBS3LcGSTZs=;
+        b=R7uAU7TZWkks+LDkh3IIMZj5nCG4o7cLnvOLpzL97aNiqilCxnxon5yTdMJZJi/IHo
+         XvV3Y7Rt5aXJohT8QV7O7jlsRbBaotSUZPb+zqNF9agioYsv40GD/muIdSekzb6U1lnC
+         b8+dGsRSCkReA4ik9wsFGmqBVf5S85h2S70gyyUYrQQDeypKRHurvzIsEW8CmFfurIZT
+         h83hNr3WHnX20dfDeBDJC+FUtCRKzJhd/U5jnssx3dYzJ4eJUowb2Wh3/3wTdo2BE5Dp
+         ie9d3ECuWuL2vliUSFnHFVL5cHyiNv4drx06YR6xpWn6Xx7kg4lLaBk6/XXFOudTByNm
+         k4/A==
+X-Gm-Message-State: AGi0PubMe62J+RXsAESdsFA7Ge0Wql/4AOfobSklCmtr6QjKxT8ElLtj
+        56OYEjJYiV41wublQrHG8uADf/rp
+X-Google-Smtp-Source: APiQypLAkvMyKxt4+GqBWPPQov4z6yuIinvDdHdu3rfRqyLGtyrl9GGPdWcRQ69bAKSDmiis+wgM8A==
+X-Received: by 2002:a63:f843:: with SMTP id v3mr24542277pgj.421.1588008601102;
+        Mon, 27 Apr 2020 10:30:01 -0700 (PDT)
+Received: from [10.69.79.32] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id ml24sm11558508pjb.48.2020.04.27.10.29.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 10:30:00 -0700 (PDT)
+Subject: Re: [PATCH -next] tty: serial: bcm63xx: fix missing clk_put() in
+ bcm63xx_uart
+To:     Jiri Slaby <jslaby@suse.cz>, Zou Wei <zou_wei@huawei.com>,
+        gregkh@linuxfoundation.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xfs: Use the correct style for SPDX License Identifier
-Message-ID: <20200427172959.GB3936841@kroah.com>
-References: <20200425133504.GA11354@nishad>
- <20200427155617.GY6749@magnolia>
+References: <1587472306-105155-1-git-send-email-zou_wei@huawei.com>
+ <4cd8f963-9292-faef-1e24-df90821274d6@suse.cz>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <73c4cebb-467b-e5d5-89bf-8a6fe29cf858@gmail.com>
+Date:   Mon, 27 Apr 2020 10:29:58 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200427155617.GY6749@magnolia>
+In-Reply-To: <4cd8f963-9292-faef-1e24-df90821274d6@suse.cz>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 08:56:18AM -0700, Darrick J. Wong wrote:
-> On Sat, Apr 25, 2020 at 07:05:09PM +0530, Nishad Kamdar wrote:
-> > This patch corrects the SPDX License Identifier style in
-> > header files related to XFS File System support.
-> > For C header files Documentation/process/license-rules.rst
-> > mandates C-like comments (opposed to C source files where
-> > C++ style should be used).
-> > 
-> > Changes made by using a script provided by Joe Perches here:
-> > https://lkml.org/lkml/2019/2/7/46.
-> > 
-> > Suggested-by: Joe Perches <joe@perches.com>
-> > Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
-> > ---
-> >  fs/xfs/kmem.h                      | 2 +-
-> >  fs/xfs/libxfs/xfs_ag_resv.h        | 2 +-
-> >  fs/xfs/libxfs/xfs_alloc.h          | 2 +-
-> >  fs/xfs/libxfs/xfs_alloc_btree.h    | 2 +-
-> >  fs/xfs/libxfs/xfs_attr.h           | 2 +-
-> >  fs/xfs/libxfs/xfs_attr_leaf.h      | 2 +-
-> >  fs/xfs/libxfs/xfs_attr_remote.h    | 2 +-
-> >  fs/xfs/libxfs/xfs_attr_sf.h        | 2 +-
-> >  fs/xfs/libxfs/xfs_bit.h            | 2 +-
-> >  fs/xfs/libxfs/xfs_bmap.h           | 2 +-
-> >  fs/xfs/libxfs/xfs_bmap_btree.h     | 2 +-
-> >  fs/xfs/libxfs/xfs_btree.h          | 2 +-
-> >  fs/xfs/libxfs/xfs_da_btree.h       | 2 +-
-> >  fs/xfs/libxfs/xfs_da_format.h      | 2 +-
-> >  fs/xfs/libxfs/xfs_defer.h          | 2 +-
-> >  fs/xfs/libxfs/xfs_dir2.h           | 2 +-
-> >  fs/xfs/libxfs/xfs_dir2_priv.h      | 2 +-
-> >  fs/xfs/libxfs/xfs_errortag.h       | 2 +-
-> >  fs/xfs/libxfs/xfs_format.h         | 2 +-
-> >  fs/xfs/libxfs/xfs_fs.h             | 2 +-
-> >  fs/xfs/libxfs/xfs_health.h         | 2 +-
-> >  fs/xfs/libxfs/xfs_ialloc.h         | 2 +-
-> >  fs/xfs/libxfs/xfs_ialloc_btree.h   | 2 +-
-> >  fs/xfs/libxfs/xfs_inode_buf.h      | 2 +-
-> >  fs/xfs/libxfs/xfs_inode_fork.h     | 2 +-
-> >  fs/xfs/libxfs/xfs_log_format.h     | 2 +-
-> >  fs/xfs/libxfs/xfs_log_recover.h    | 2 +-
-> >  fs/xfs/libxfs/xfs_quota_defs.h     | 2 +-
-> >  fs/xfs/libxfs/xfs_refcount.h       | 2 +-
-> >  fs/xfs/libxfs/xfs_refcount_btree.h | 2 +-
-> >  fs/xfs/libxfs/xfs_rmap.h           | 2 +-
-> >  fs/xfs/libxfs/xfs_rmap_btree.h     | 2 +-
-> >  fs/xfs/libxfs/xfs_sb.h             | 2 +-
-> >  fs/xfs/libxfs/xfs_shared.h         | 2 +-
-> >  fs/xfs/libxfs/xfs_trans_resv.h     | 2 +-
-> >  fs/xfs/libxfs/xfs_trans_space.h    | 2 +-
-> >  fs/xfs/libxfs/xfs_types.h          | 2 +-
-> >  fs/xfs/mrlock.h                    | 2 +-
-> >  fs/xfs/scrub/bitmap.h              | 2 +-
-> >  fs/xfs/scrub/btree.h               | 2 +-
-> >  fs/xfs/scrub/common.h              | 2 +-
-> >  fs/xfs/scrub/dabtree.h             | 2 +-
-> >  fs/xfs/scrub/health.h              | 2 +-
-> >  fs/xfs/scrub/repair.h              | 2 +-
-> >  fs/xfs/scrub/scrub.h               | 2 +-
-> >  fs/xfs/scrub/trace.h               | 2 +-
-> >  fs/xfs/scrub/xfs_scrub.h           | 2 +-
-> >  fs/xfs/xfs.h                       | 2 +-
-> >  fs/xfs/xfs_acl.h                   | 2 +-
-> >  fs/xfs/xfs_aops.h                  | 2 +-
-> >  fs/xfs/xfs_bmap_item.h             | 2 +-
-> >  fs/xfs/xfs_bmap_util.h             | 2 +-
-> >  fs/xfs/xfs_buf.h                   | 2 +-
-> >  fs/xfs/xfs_buf_item.h              | 2 +-
-> >  fs/xfs/xfs_dquot.h                 | 2 +-
-> >  fs/xfs/xfs_dquot_item.h            | 2 +-
-> >  fs/xfs/xfs_error.h                 | 2 +-
-> >  fs/xfs/xfs_export.h                | 2 +-
-> >  fs/xfs/xfs_extent_busy.h           | 2 +-
-> >  fs/xfs/xfs_extfree_item.h          | 2 +-
-> >  fs/xfs/xfs_filestream.h            | 2 +-
-> >  fs/xfs/xfs_fsmap.h                 | 2 +-
-> >  fs/xfs/xfs_fsops.h                 | 2 +-
-> >  fs/xfs/xfs_icache.h                | 2 +-
-> >  fs/xfs/xfs_icreate_item.h          | 2 +-
-> >  fs/xfs/xfs_inode.h                 | 2 +-
-> >  fs/xfs/xfs_inode_item.h            | 2 +-
-> >  fs/xfs/xfs_ioctl.h                 | 2 +-
-> >  fs/xfs/xfs_ioctl32.h               | 2 +-
-> >  fs/xfs/xfs_iomap.h                 | 2 +-
-> >  fs/xfs/xfs_iops.h                  | 2 +-
-> >  fs/xfs/xfs_itable.h                | 2 +-
-> >  fs/xfs/xfs_linux.h                 | 2 +-
-> >  fs/xfs/xfs_log.h                   | 2 +-
-> >  fs/xfs/xfs_log_priv.h              | 2 +-
-> >  fs/xfs/xfs_mount.h                 | 2 +-
-> >  fs/xfs/xfs_mru_cache.h             | 2 +-
-> >  fs/xfs/xfs_ondisk.h                | 2 +-
-> >  fs/xfs/xfs_qm.h                    | 2 +-
-> >  fs/xfs/xfs_quota.h                 | 2 +-
-> >  fs/xfs/xfs_refcount_item.h         | 2 +-
-> >  fs/xfs/xfs_reflink.h               | 2 +-
-> >  fs/xfs/xfs_rmap_item.h             | 2 +-
-> >  fs/xfs/xfs_rtalloc.h               | 2 +-
-> >  fs/xfs/xfs_stats.h                 | 2 +-
-> >  fs/xfs/xfs_super.h                 | 2 +-
-> >  fs/xfs/xfs_symlink.h               | 2 +-
-> >  fs/xfs/xfs_sysctl.h                | 2 +-
-> >  fs/xfs/xfs_sysfs.h                 | 2 +-
-> >  fs/xfs/xfs_trace.h                 | 2 +-
-> >  fs/xfs/xfs_trans.h                 | 2 +-
-> >  fs/xfs/xfs_trans_priv.h            | 2 +-
-> >  92 files changed, 92 insertions(+), 92 deletions(-)
-> > 
-> > diff --git a/fs/xfs/kmem.h b/fs/xfs/kmem.h
-> > index 6143117770e9..fc87ea9f6843 100644
-> > --- a/fs/xfs/kmem.h
-> > +++ b/fs/xfs/kmem.h
-> > @@ -1,4 +1,4 @@
-> > -// SPDX-License-Identifier: GPL-2.0
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> >  /*
-> >   * Copyright (c) 2000-2005 Silicon Graphics, Inc.
-> >   * All Rights Reserved.
-> > diff --git a/fs/xfs/libxfs/xfs_ag_resv.h b/fs/xfs/libxfs/xfs_ag_resv.h
-> > index c0352edc8e41..f3fd0ee9a7f7 100644
-> > --- a/fs/xfs/libxfs/xfs_ag_resv.h
-> > +++ b/fs/xfs/libxfs/xfs_ag_resv.h
-> > @@ -1,4 +1,4 @@
-> > -// SPDX-License-Identifier: GPL-2.0+
-> > +/* SPDX-License-Identifier: GPL-2.0+ */
+
+
+On 4/26/2020 11:19 PM, Jiri Slaby wrote:
+> On 21. 04. 20, 14:31, Zou Wei wrote:
+>> This patch fixes below error reported by coccicheck
+>>
+>> drivers/tty/serial/bcm63xx_uart.c:848:2-8: ERROR: missing clk_put;
+>> clk_get on line 842 and execution via conditional on line 846
+>>
+>> Fixes: ab4382d27412 ("tty: move drivers/serial/ to drivers/tty/serial/")
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Signed-off-by: Zou Wei <zou_wei@huawei.com>
+>> ---
+>>  drivers/tty/serial/bcm63xx_uart.c | 4 +++-
+>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/tty/serial/bcm63xx_uart.c b/drivers/tty/serial/bcm63xx_uart.c
+>> index 5674da2..ed0aa5c 100644
+>> --- a/drivers/tty/serial/bcm63xx_uart.c
+>> +++ b/drivers/tty/serial/bcm63xx_uart.c
+>> @@ -843,8 +843,10 @@ static int bcm_uart_probe(struct platform_device *pdev)
+>>  	if (IS_ERR(clk) && pdev->dev.of_node)
+>>  		clk = of_clk_get(pdev->dev.of_node, 0);
+>>  
+>> -	if (IS_ERR(clk))
+>> +	if (IS_ERR(clk)) {
+>> +		clk_put(clk);
 > 
-> I thought we were supposed to use 'GPL-2.0-or-newer' because 'GPL-2.0+'
-> is deprecated in some newer version of the SPDX standard?
-> 
-> <shrug>
+> Why would you want to put an erroneous clk?
 
-The kernel follows the "older" SPDX standard, but will accept either,
-it's up to the author.  It is all documented in LICENSES/ if people
-really want to make sure.
-
-thanks,
-
-greg k-h
+Doh, somehow I completely missed, you are right this does not look legit.
+-- 
+Florian
