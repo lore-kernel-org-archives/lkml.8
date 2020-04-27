@@ -2,181 +2,142 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E665BC55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DF8C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C57B82075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:01:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lxLMOkd1"
+	by mail.kernel.org (Postfix) with ESMTP id 51312206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:03:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgD0HBm (ORCPT
+        id S1726670AbgD0HDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 03:01:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbgD0HBl (ORCPT
+        Mon, 27 Apr 2020 03:03:38 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:39502 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726221AbgD0HDi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 03:01:41 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A6A8C0610D5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 00:01:40 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id r26so19143500wmh.0
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 00:01:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QHAofsn8uU1kUPQWRssw/x34P9GiDf/VQqxTjU3liBY=;
-        b=lxLMOkd1PYJiuXNbiS1a+eCzpOKElS/bsErxIHkznDJH5u6pIkk1E4X+4LqtwndjII
-         eoJLlW2AwA1kBCEIU3pV2UTMMuCaBxuc+S+HbWL2IdklsTXEAnj7C4qO8ZVM0oJ1KCgg
-         FfegEAT6rE7Rfwb72o5vN86xnJ3cIDBFa1wHdTXWhuQCIegoWHpUUq2YUV47/BMxPanm
-         JwpSOt97R3sGlHkgClQopDUIliobBXJngq9kCSOA54w3UIBmslSEFwbQ7TxB/Ozvz1Sd
-         Qwc+YTg3rcJePhkpF0S/sfuQkwPn7Cdv9ypurEQNp2H8MFVw83/Tx23Diw4qA0mjzNBg
-         /W+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QHAofsn8uU1kUPQWRssw/x34P9GiDf/VQqxTjU3liBY=;
-        b=jVkZSnqdK4/BB6UbIJN3+SxZsxiDuyfKpGRRsCxi7r1+HvUZAbUHj81ihLS5tUkCa/
-         rHOCrL2RgrUkvOHlkgsyW8lzUf5Sc9h/N4ZmUxmiiKcByq18rHF2EJTUkPOls6ORzF/C
-         kohEe+FSqk91CWtz9bBzVtnhXJ6/mMicOF0VUdj861B3HvGvhZaSpackh42P1TCSQ8IR
-         cmd6E/jzssgKlbDgjZb6d4hXQ9rE9ZYScEwo/ZC/GgtM9IvrqB/PfhEwbQ4at3kshuaQ
-         /Q2wG+GGwdh6aHrcuC6bZmOALgWntMOIiSl2v8O8GlgJGwsj5qaBLj8LZJ/c830Vp11M
-         ZoPA==
-X-Gm-Message-State: AGi0PualsE+8SlAl69cloPRBqHpoA5HibVBRYMhcr7hjiMPgKInJ2Lfa
-        tWIzFkqKxjBt1mZ6bsJjyFPntpe7NGY=
-X-Google-Smtp-Source: APiQypIxdT2HUhgGkoWPlHuZswORpnAHJK6SShlkzX3VJ6JLRM5EuzMolS4/U7skbaaoQTdl+dh97Q==
-X-Received: by 2002:a7b:c0cb:: with SMTP id s11mr26429338wmh.180.1587970898665;
-        Mon, 27 Apr 2020 00:01:38 -0700 (PDT)
-Received: from [192.168.0.41] (lns-bzn-59-82-252-135-148.adsl.proxad.net. [82.252.135.148])
-        by smtp.googlemail.com with ESMTPSA id k133sm15433186wma.0.2020.04.27.00.01.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Apr 2020 00:01:38 -0700 (PDT)
-Subject: Re: [PATCH 00/14] Update omaps to use drivers/clocksource timers
-To:     Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Adam Ford <aford173@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Keerthy <j-keerthy@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Tero Kristo <t-kristo@ti.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200417165519.4979-1-tony@atomide.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <9cee6c42-781e-6897-abcc-a470732327a8@linaro.org>
-Date:   Mon, 27 Apr 2020 09:01:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200417165519.4979-1-tony@atomide.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Mon, 27 Apr 2020 03:03:38 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0Twm27rp_1587971012;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0Twm27rp_1587971012)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 27 Apr 2020 15:03:32 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
+        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
+        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, shakeelb@google.com,
+        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>
+Subject: [PATCH v10 00/15] per memcg lru lock
+Date:   Mon, 27 Apr 2020 15:02:49 +0800
+Message-Id: <1587970985-21629-1-git-send-email-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is a new version which bases on Johannes new patchset 
+"mm: memcontrol: charge swapin pages on instantiation"
+https://lkml.org/lkml/2020/4/21/266
 
-Hi Tony,
+Johannes Weiner has suggested:
+"So here is a crazy idea that may be worth exploring:
 
-On 17/04/2020 18:55, Tony Lindgren wrote:
-> Hi all,
-> 
-> Here's a series of changes to udpate omaps to use drivers/clocksource
-> timers for the 32k counter and dmtimer and to remove the old legacy
-> platform code. Please review and test.
-> 
-> Daniel, if the the first two patches look OK after review, maybe you
-> can again set up an immutable branch for the first two patches against
-> v5.7-rc1 that I can merge in?
+Right now, pgdat->lru_lock protects both PageLRU *and* the lruvec's
+linked list.
 
-Ok let me review the patches.
+Can we make PageLRU atomic and use it to stabilize the lru_lock
+instead, and then use the lru_lock only serialize list operations?
+..."
 
+With the cleaning memcg charge path and this suggestion, we could isolate
+LRU pages to exclusive visit them in compaction, page migration, reclaim,
+memcg move_accunt, huge page split etc scenarios while keeping pages' 
+memcg stable. Then possible to change per node lru locking to per memcg
+lru locking. As to pagevec_lru_move_fn funcs, it would be safe to let
+pages remain on lru list, lru lock could guard them for list integrity.
 
-> Tony Lindgren (14):
->   clocksource/drivers/timer-ti-32k: Add support for initializing
->     directly
->   clocksource/drivers/timer-ti-dm: Add clockevent and clocksource
->     support
->   clk: ti: dm816: enable sysclk6_ck on init
->   bus: ti-sysc: Ignore timer12 on secure omap3
->   ARM: OMAP2+: Add omap_init_time_of()
->   ARM: dts: Configure system timers for am335x
->   ARM: dts: Configure system timers for am437x
->   ARM: dts: Configure system timers for omap4
->   ARM: dts: Configure system timers for omap5 and dra7
->   ARM: dts: Configure system timers for omap3
->   ARM: dts: Configure system timers for ti81xx
->   ARM: dts: Configure system timers for omap2
->   ARM: OMAP2+: Drop old timer code for dmtimer and 32k counter
->   bus: ti-sysc: Timers no longer need legacy quirk handling
-> 
->  .../devicetree/bindings/timer/ti,timer.txt    |   2 +
->  arch/arm/boot/dts/am33xx-l4.dtsi              |   2 -
->  arch/arm/boot/dts/am33xx.dtsi                 |  12 +
->  arch/arm/boot/dts/am3517.dtsi                 |  16 +-
->  arch/arm/boot/dts/am4372.dtsi                 |  12 +
->  arch/arm/boot/dts/am437x-l4.dtsi              |   3 -
->  arch/arm/boot/dts/dm814x.dtsi                 |  66 +-
->  arch/arm/boot/dts/dm816x.dtsi                 |  70 ++-
->  arch/arm/boot/dts/dra7-l4.dtsi                |   5 -
->  arch/arm/boot/dts/dra7.dtsi                   |   6 +
->  arch/arm/boot/dts/omap2.dtsi                  |  38 +-
->  arch/arm/boot/dts/omap2420.dtsi               |  65 +-
->  arch/arm/boot/dts/omap2430.dtsi               |  65 +-
->  arch/arm/boot/dts/omap3-beagle.dts            |  16 +
->  arch/arm/boot/dts/omap3-devkit8000.dts        |  16 +
->  arch/arm/boot/dts/omap3.dtsi                  | 130 +++-
->  arch/arm/boot/dts/omap4-l4.dtsi               |   2 -
->  arch/arm/boot/dts/omap4.dtsi                  |   6 +
->  arch/arm/boot/dts/omap5-l4.dtsi               |   2 -
->  arch/arm/boot/dts/omap5.dtsi                  |   6 +
->  arch/arm/mach-omap2/Makefile                  |   4 +-
->  arch/arm/mach-omap2/board-generic.c           |  32 +-
->  arch/arm/mach-omap2/common.h                  |   7 +
->  arch/arm/mach-omap2/omap_hwmod_2420_data.c    |  20 -
->  arch/arm/mach-omap2/omap_hwmod_2430_data.c    |  19 -
->  .../omap_hwmod_2xxx_interconnect_data.c       |   8 -
->  .../mach-omap2/omap_hwmod_2xxx_ipblock_data.c |  47 --
->  .../omap_hwmod_33xx_43xx_common_data.h        |   2 -
->  .../omap_hwmod_33xx_43xx_interconnect_data.c  |   8 -
->  .../omap_hwmod_33xx_43xx_ipblock_data.c       |  62 --
->  arch/arm/mach-omap2/omap_hwmod_33xx_data.c    |  10 -
->  arch/arm/mach-omap2/omap_hwmod_3xxx_data.c    | 146 +----
->  arch/arm/mach-omap2/omap_hwmod_43xx_data.c    |  45 --
->  arch/arm/mach-omap2/omap_hwmod_44xx_data.c    |  90 ---
->  arch/arm/mach-omap2/omap_hwmod_54xx_data.c    |  89 ---
->  arch/arm/mach-omap2/omap_hwmod_7xx_data.c     | 176 ------
->  arch/arm/mach-omap2/omap_hwmod_81xx_data.c    |  74 ---
->  arch/arm/mach-omap2/omap_hwmod_common_data.h  |   3 -
->  arch/arm/mach-omap2/timer.c                   | 568 +-----------------
->  drivers/bus/ti-sysc.c                         |  25 +-
->  drivers/clk/ti/clk-816x.c                     |   1 +
->  drivers/clocksource/Makefile                  |   1 +
->  drivers/clocksource/timer-ti-32k.c            |  48 +-
->  drivers/clocksource/timer-ti-dm-systimer.c    | 468 +++++++++++++++
->  include/clocksource/timer-ti-dm.h             |   1 +
->  45 files changed, 1016 insertions(+), 1478 deletions(-)
->  create mode 100644 drivers/clocksource/timer-ti-dm-systimer.c
-> 
+This is version safely pass Hugh Dickins's swapping kernel building
+testcase, Thanks for the great case! I want to send out a bit early 
+for more testing and review while people's memory is still hot with
+Johannes new memcg charge patch. :) I will do more testing beside.
 
+The patchset includes 3 parts:
+1, some code cleanup and minimum optimization as a preparation.
+2, use TestCleanPageLRU as page isolation's precondition
+3, replace per node lru_lock with per memcg per node lru_lock
+
+The 3rd part moves per node lru_lock into lruvec, thus bring a lru_lock for
+each of memcg per node. So on a large machine, each of memcg don't
+have to suffer from per node pgdat->lru_lock competition. They could go
+fast with their self lru_lock
+
+Following Daniel Jordan's suggestion, I have run 208 'dd' with on 104
+containers on a 2s * 26cores * HT box with a modefied case:
+https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/tree/case-lru-file-readtwice
+
+With this patchset, the readtwice performance increased about 80%
+in concurrent containers.
+
+Thanks Hugh Dickins and Konstantin Khlebnikov, they both brought this
+idea 8 years ago, and others who give comments as well: Daniel Jordan, 
+Mel Gorman, Shakeel Butt, Matthew Wilcox etc.
+
+Thanks for Testing support from Intel 0day and Rong Chen, Fengguang Wu,
+and Yun Wang.
+
+Alex Shi (13):
+  mm/swap: use vmf clean up swapin funcs parameters
+  mm/vmscan: remove unnecessary lruvec adding
+  mm/page_idle: no unlikely double check for idle page counting
+  mm/thp: move lru_add_page_tail func to huge_memory.c
+  mm/thp: clean up lru_add_page_tail
+  mm/thp: narrow lru locking
+  mm/memcg: add debug checking in lock_page_memcg
+  mm/lru: introduce TestClearPageLRU
+  mm/compaction: do page isolation first in compaction
+  mm/mlock: ClearPageLRU before get lru lock in munlock page isolation
+  mm/lru: replace pgdat lru_lock with lruvec lock
+  mm/lru: introduce the relock_page_lruvec function
+  mm/pgdat: remove pgdat lru_lock
+
+Hugh Dickins (2):
+  mm/vmscan: use relock for move_pages_to_lru
+  mm/lru: revise the comments of lru_lock
+
+ Documentation/admin-guide/cgroup-v1/memcg_test.rst |  15 +-
+ Documentation/admin-guide/cgroup-v1/memory.rst     |   8 +-
+ Documentation/trace/events-kmem.rst                |   2 +-
+ Documentation/vm/unevictable-lru.rst               |  22 +--
+ include/linux/memcontrol.h                         |  92 +++++++++++
+ include/linux/mm_types.h                           |   2 +-
+ include/linux/mmzone.h                             |   5 +-
+ include/linux/page-flags.h                         |   1 +
+ include/linux/swap.h                               |  12 +-
+ mm/compaction.c                                    |  85 +++++++----
+ mm/filemap.c                                       |   4 +-
+ mm/huge_memory.c                                   |  55 +++++--
+ mm/madvise.c                                       |  11 +-
+ mm/memcontrol.c                                    |  87 ++++++++++-
+ mm/mlock.c                                         |  93 ++++++------
+ mm/mmzone.c                                        |   1 +
+ mm/page_alloc.c                                    |   1 -
+ mm/page_idle.c                                     |   8 -
+ mm/rmap.c                                          |   2 +-
+ mm/swap.c                                          | 119 ++++-----------
+ mm/swap_state.c                                    |  23 ++-
+ mm/swapfile.c                                      |   8 +-
+ mm/vmscan.c                                        | 168 +++++++++++----------
+ mm/zswap.c                                         |   3 +-
+ 24 files changed, 497 insertions(+), 330 deletions(-)
 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+1.8.3.1
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
