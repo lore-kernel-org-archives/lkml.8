@@ -2,128 +2,112 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF09C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CC5C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C725206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23806206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:34:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BTWu60Nl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W1fwGhZA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbgD0JdZ (ORCPT
+        id S1726879AbgD0JeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 05:33:25 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:59990 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726243AbgD0JdZ (ORCPT
+        Mon, 27 Apr 2020 05:34:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44484 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726003AbgD0JeP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 05:33:25 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03R9XClf010733;
-        Mon, 27 Apr 2020 09:33:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=11qvfcxGS4aOSNS8xBvKoNjWoqLgWCx7bu2daoW/Zo0=;
- b=BTWu60NluZc5UFN/cPDU36l7m8CIvTyu2Iol3/6dEEOmejoi9hnjXSrJUrM99fTUey/8
- YhA0W95PaYTkE11/V2mxEtin3Z2Qgvjwf/pglJ/B9QDdofWbPtCXvmtSLbraMDc5Si0f
- Ge0XpaLe1sc2oX6mT+g7GL12YQr97y9XH5Tce3Wqyp2mAgANF3J9MYZYUEjeu7Po+Xf6
- pZGVv9HqpuK6PJ0rjQS3ASC7lUYpr34Lh39hYNNOCpsluvufoW27t9A8zGM+qc57hQGB
- QNyjWXzARYxjV+u5BrVoeSaQFAV6P7ehgaFOTXxINf1tEExY9exznPbUkPaVPmc+PGav /w== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 30nucerhmv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Apr 2020 09:33:15 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03R9WuP7054902;
-        Mon, 27 Apr 2020 09:33:14 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 30my08uuwg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Apr 2020 09:33:14 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03R9XDQD007531;
-        Mon, 27 Apr 2020 09:33:13 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 27 Apr 2020 02:33:12 -0700
-Date:   Mon, 27 Apr 2020 12:33:06 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Oliver Graute <oliver.graute@gmail.com>
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-fbdev@vger.kernel.org,
-        Oliver Graute <oliver.graute@kococonnector.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v1] staging: fbtft: fb_st7789v: Initialize the Display
-Message-ID: <20200427093306.GU2682@kadam>
-References: <1586424337-26602-1-git-send-email-oliver.graute@gmail.com>
- <20200409102013.GP2001@kadam>
- <20200427083642.GD18436@portage>
+        Mon, 27 Apr 2020 05:34:15 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 384EEC0610D5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 02:34:14 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id u16so19638945wmc.5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 02:34:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0buJB0z9KapxfIQw0uykwUPzio93i7DItEUMqAKMBfM=;
+        b=W1fwGhZArB3B2+DBQNDEv9V+64OQ8DMPBLuaXDWDexY6GwpJKHGPvP8QLOUqJ+eecd
+         LYwlEk4y61byAflGZJCxNnwv3M2D+V1DztpkRmr9NaPLjsNBtmMcpx+gKhE1FWJtbzeq
+         E8mV63nPZ1voS1aaGRarY9DDHM4XhYzJxs7aMD/iJsXGEsmw6xpUx70SLa82zLMJwHNO
+         BYTX66NO4EIVZXhcCKREjOgrM9CwPEaLbgjUFj+4OQ4VnoWIQzGwpv9LKLfIXTAN+VCf
+         TyaAWmq/DugD7/QYX6WHZtMtCJ82zmWZnAEtI+VwJHIKY86oGOxOpLmSdCV7WlgZiNXe
+         0fEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0buJB0z9KapxfIQw0uykwUPzio93i7DItEUMqAKMBfM=;
+        b=Ah1GaGlAd9U6hdTSm3aAn2FltR9pPQOMaNOHGlnQtWUruhD66kNxA6OVvXwy7b29TW
+         uwmpKFyi5s+3eZDE2E/kL1WcDR1wF2a5XoyvoQ4wu7p952rJH0aGP6Q2E/EXESG+ilzp
+         eIcyUnTIul1H6P8ekSRMxFCd7jizjAyI+7Qx7he+QptpKOW092IpTo1GhtCTUc/+Jlqq
+         S048RdZCj8a0URV5PJoLzeOgPXsIm+2oDwjzht+wOhAbEgxqTSiLgA/m/Jbeh8v6/ghd
+         dZ9wf0KQLVZIYM3cMCwmn8buAomA2PwMEp+NcFJs2twzaVT7csrmh/mlzAQHBV272md/
+         ai1w==
+X-Gm-Message-State: AGi0Pua2HhEKkd59A9W3CBMWWeSNRp5Mu8jQvvsDK0imSQeHMIEy9qwF
+        5O/EQ+fak9dSFcYOoJcwQS+/0jrMTVI=
+X-Google-Smtp-Source: APiQypLLiKGcwY6bfTUQkodr+bdMNcsML1oG2j45dEjWZ1PUrpbvP951LYVzgT5rF/pECH7ry6RLdA==
+X-Received: by 2002:a1c:7c10:: with SMTP id x16mr24540443wmc.74.1587980052807;
+        Mon, 27 Apr 2020 02:34:12 -0700 (PDT)
+Received: from [192.168.0.41] (lns-bzn-59-82-252-135-148.adsl.proxad.net. [82.252.135.148])
+        by smtp.googlemail.com with ESMTPSA id s12sm14131667wmc.7.2020.04.27.02.34.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 02:34:12 -0700 (PDT)
+Subject: Re: [PATCH] clocksource: versatile: Allow CONFIG_CLKSRC_VERSATILE to
+ be disabled
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>
+References: <20200417212045.16917-1-robh@kernel.org>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <1d9c0b7a-cb40-9f66-e438-5e38293398b6@linaro.org>
+Date:   Mon, 27 Apr 2020 11:34:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200427083642.GD18436@portage>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9603 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0
- suspectscore=0 adultscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004270086
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9603 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 impostorscore=0
- lowpriorityscore=0 phishscore=0 priorityscore=1501 clxscore=1015
- mlxlogscore=999 mlxscore=0 adultscore=0 spamscore=0 suspectscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004270086
+In-Reply-To: <20200417212045.16917-1-robh@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 10:36:42AM +0200, Oliver Graute wrote:
-> On 09/04/20, Dan Carpenter wrote:
-> > On Thu, Apr 09, 2020 at 11:25:32AM +0200, Oliver Graute wrote:
-> > > From: Oliver Graute <oliver.graute@kococonnector.com>
-> > > 
-> > > Set Gamma Values and Register Values for the HSD20_IPS
-> > > 
-> > > Signed-off-by: Oliver Graute <oliver.graute@kococonnector.com>
-> > > ---
-> > >  drivers/staging/fbtft/fb_st7789v.c | 12 ++++++------
-> > >  1 file changed, 6 insertions(+), 6 deletions(-)
-> > > 
-> > > diff --git a/drivers/staging/fbtft/fb_st7789v.c b/drivers/staging/fbtft/fb_st7789v.c
-> > > index 84c5af2dc9a0..b0aa96b703a8 100644
-> > > --- a/drivers/staging/fbtft/fb_st7789v.c
-> > > +++ b/drivers/staging/fbtft/fb_st7789v.c
-> > > @@ -17,8 +17,8 @@
-> > >  #define DRVNAME "fb_st7789v"
-> > >  
-> > >  #define DEFAULT_GAMMA \
-> > > -	"70 2C 2E 15 10 09 48 33 53 0B 19 18 20 25\n" \
-> > > -	"70 2C 2E 15 10 09 48 33 53 0B 19 18 20 25"
-> > > +	"D0 05 0A 09 08 05 2E 44 45 0F 17 16 2B 33\n" \
-> > > +	"D0 05 0A 09 08 05 2E 43 45 0F 16 16 2B 33"
-> > 
-> > How do you know this won't break someone else's setup?
+On 17/04/2020 23:20, Rob Herring wrote:
+> The timer-versatile driver provides a sched_clock for certain Arm Ltd.
+> reference platforms. Specifically, it is used on Versatile and 32-bit
+> VExpress. It is not needed for those platforms with an arch timer (all
+> the 64-bit ones) yet CONFIG_MFD_VEXPRESS_SYSREG does still need to be
+> enabled. In that case, the timer-versatile can only be disabled when
+> COMPILE_TEST is enabled which is not desirable. Let's use the sub-arch
+> kconfig symbols instead.
 > 
-> Should I declare an extra define for my values?
+> Realview platforms don't have the sysregs that this driver uses so
+> correct the help text.
 > 
-> +#define HSD20_IPS_GAMMA \
-> +	"D0 05 0A 09 08 05 2E 44 45 0F 17 16 2B 33\n" \
-> +	"D0 05 0A 09 08 05 2E 43 45 0F 16 16 2B 33"
-> 
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> This is part of a larger effort to modularize Versatile Express support, 
+> but this change doesn't have any dependency, so it can be applied 
+> independently.
 
-That's fine, but it can't be a compile time thing.  Both types of
-hardware have to be working/available at run time.
+Applied, thanks
 
-regards,
-dan carpenter
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
