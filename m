@@ -2,88 +2,195 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E18C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9604C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A88DC2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 993C2206CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:31:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727988AbgD0OaC (ORCPT
+        id S1727848AbgD0Obs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 10:30:02 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:57702 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727077AbgD0OaC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 10:30:02 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-23-AKHUs2ulObCffgz2Mb-tuA-1; Mon, 27 Apr 2020 15:28:25 +0100
-X-MC-Unique: AKHUs2ulObCffgz2Mb-tuA-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 27 Apr 2020 15:28:24 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 27 Apr 2020 15:28:24 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Roberto Sassu' <roberto.sassu@huawei.com>,
-        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
-        "rgoldwyn@suse.de" <rgoldwyn@suse.de>
-CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
-        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH v2 3/6] ima: Fix ima digest hash table key calculation
-Thread-Topic: [PATCH v2 3/6] ima: Fix ima digest hash table key calculation
-Thread-Index: AQHWHH8SDZUC+XMi6UOqF9nBthnXX6iMzGEggAAOugCAACgi8A==
-Date:   Mon, 27 Apr 2020 14:28:24 +0000
-Message-ID: <5786ad88cd184e5791bc285d5cac6ecc@AcuMS.aculab.com>
-References: <20200427102900.18887-1-roberto.sassu@huawei.com>
- <20200427102900.18887-3-roberto.sassu@huawei.com>
- <84ecd8f2576849b29876448df66824fc@AcuMS.aculab.com>
- <90e19242fd8445cf93728c0946c03c19@huawei.com>
-In-Reply-To: <90e19242fd8445cf93728c0946c03c19@huawei.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 27 Apr 2020 10:31:48 -0400
+Received: from muru.com ([72.249.23.125]:51522 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727022AbgD0Obs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 10:31:48 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id E62BE8087;
+        Mon, 27 Apr 2020 14:32:34 +0000 (UTC)
+Date:   Mon, 27 Apr 2020 07:31:44 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Adam Ford <aford173@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 02/14] clocksource/drivers/timer-ti-dm: Add clockevent
+ and clocksource support
+Message-ID: <20200427143144.GQ37466@atomide.com>
+References: <20200417165519.4979-1-tony@atomide.com>
+ <20200417165519.4979-3-tony@atomide.com>
+ <62be90e2-7dbe-410d-4171-c0ad0cddc7a3@linaro.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <62be90e2-7dbe-410d-4171-c0ad0cddc7a3@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogUm9iZXJ0byBTYXNzdQ0KPiBTZW50OiAyNyBBcHJpbCAyMDIwIDEzOjUxDQouLi4NCj4g
-PiA+IC1zdGF0aWMgaW5saW5lIHVuc2lnbmVkIGxvbmcgaW1hX2hhc2hfa2V5KHU4ICpkaWdlc3Qp
-DQo+ID4gPiArc3RhdGljIGlubGluZSB1bnNpZ25lZCBpbnQgaW1hX2hhc2hfa2V5KHU4ICpkaWdl
-c3QpDQo+ID4gPiAgew0KPiA+ID4gLQlyZXR1cm4gaGFzaF9sb25nKCpkaWdlc3QsIElNQV9IQVNI
-X0JJVFMpOw0KPiA+ID4gKwlyZXR1cm4gKCoodW5zaWduZWQgaW50ICopZGlnZXN0ICUgSU1BX01F
-QVNVUkVfSFRBQkxFX1NJWkUpOw0KPiA+DQo+ID4gVGhhdCBhbG1vc3QgY2VydGFpbmx5IGlzbid0
-IHJpZ2h0Lg0KPiA+IEl0IGZhbGxzIGZvdWwgb2YgdGhlICooaW50ZWdlcl90eXBlICopcHRyIGJl
-aW5nIGFsbW9zdCBhbHdheXMgd3JvbmcuDQo+IA0KPiBJIGRpZG4ndCBmaW5kIHRoZSBwcm9ibGVt
-LiBDYW4geW91IHBsZWFzZSBleHBsYWluPw0KDQpUaGUgZ2VuZXJhbCBwcm9ibGVtIHdpdGggKihp
-bnRfdHlwZSAqKXB0ciBpcyB0aGF0IGl0IGRvZXMgY29tcGxldGVseQ0KdGhlIHdyb25nIHRoaW5n
-IGlmICdwdHInIGlzIHRoZSBhZGRyZXNzIG9mIGEgbGFyZ2VyIGludGVnZXIgdHlwZSBvbg0KYSBi
-aWctZW5kaWFuIHN5c3RlbS4NCllvdSBtYXkgYWxzbyBnZXQgYSBtaXNhbGlnbmVkIGFjY2VzcyB0
-cmFwLg0KDQpJbiB0aGlzIGNhc2UgSSBndWVzcyB0aGF0IGRpZ2VzdCBpcyBhY3R1YWxseSB1OFtT
-SEExX0RJR0VTVF9TSVpFXS4NCk1heWJlIHdoYXQgeW91IHNob3VsZCByZXR1cm4gaXM6DQoJKGRp
-Z2VzdFswXSB8IGRpZ2VzdFsxXSA8PCA4KSAlIElNQV9NRUFTVVJFX0hUQUJMRV9TSVpFOw0KYW5k
-IGNvbW1lbnQgdGhhdCB0aGVyZSBpcyBubyBwb2ludCB0YWtpbmcgYSBoYXNoIG9mIHBhcnQgb2YN
-CmEgU0hBMSBkaWdlc3QuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNp
-ZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsN
-ClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+Hi,
 
+* Daniel Lezcano <daniel.lezcano@linaro.org> [200427 09:19]:
+> On 17/04/2020 18:55, Tony Lindgren wrote:
+> > --- a/Documentation/devicetree/bindings/timer/ti,timer.txt
+> > +++ b/Documentation/devicetree/bindings/timer/ti,timer.txt
+> > @@ -14,6 +14,8 @@ Required properties:
+> >  			ti,omap5430-timer (applicable to OMAP543x devices)
+> >  			ti,am335x-timer	(applicable to AM335x devices)
+> >  			ti,am335x-timer-1ms (applicable to AM335x devices)
+> > +			ti,dmtimer-clockevent (when used as for clockevent)
+> > +			ti,dmtimer-clocksource (when used as for clocksource)
+> 
+> Please, submit a separate patch for this.
+> 
+> Before you resend as is, this will be nacked as clocksource / clockevent
+> is not a hardware description but a Linux thing.
+> 
+> Finding a way to characterize that from the DT is an endless discussion
+> since years, so I suggest to use a single property for the timer eg
+> <ti,dmtimer> and initialize the clocksource and the clockevent in the
+> driver.
+
+Hmm good point. We still need to specify which timer is a clocksource
+and which one a clockevent somehow.
+
+Maybe we could have a generic properties like the clock framework such as:
+
+assigned-system-clocksource
+assigned-system-clockevent
+
+Or do we already have something similar that can be used?
+
+> > diff --git a/drivers/clocksource/timer-ti-dm-systimer.c b/drivers/clocksource/timer-ti-dm-systimer.c
+> > new file mode 100644
+> > --- /dev/null
+> > +++ b/drivers/clocksource/timer-ti-dm-systimer.c
+> > +struct dmtimer_clocksource {
+> > +	struct clocksource dev;
+> > +	struct omap_dm_timer timer;
+> 
+> The usage of the timer field is to use the __omap_dm_timer_* helpers
+> function which does a busy looping on the status before read/write the
+> register. AFAICS, for the clocksource, the posted argument is zero, thus
+> it is possible to replace the calls to these helpers to a write / read
+> and perhaps the struct omap_dm_timer could be removed from the
+> clocksource structure.
+> 
+> The driver gets obfuscated by calls to helpers which does 'posted' things.
+> 
+> Why not remove those and handle the case in the driver to make it
+> self-encapsuled and remove the omap_dm_timer structure usage in this driver.
+
+Hmm that's a good comment indeed. If we can just use readl/writel for
+clockevent and clocksource driver without worrying about the posted mode
+flags, we can make all the old helpers static for the generic dmtimer
+driver. I'll take a look.
+
+> > +static int dmtimer_systimer_type2_reset(struct omap_dm_timer *timer)
+> > +{
+> > +	void __iomem *sysc = timer->io_base + OMAP_TIMER_OCP_CFG_OFFSET;
+> > +	u32 l;
+> > +
+> 
+> Isn't missing a write here ?
+
+Oops thanks for spotting it. Without that the mode can be whatever left
+over from the bootloader.
+
+> > +static int __init dmtimer_systimer_tag_disabled(struct device_node *np)
+> > +{
+> > +	struct property *prop;
+> > +
+> > +	prop = kzalloc(sizeof(*prop), GFP_KERNEL);
+> > +	if (!prop)
+> > +		return -ENOMEM;
+> > +
+> > +	prop->name = "status";
+> > +	prop->value = "disabled";
+> > +	prop->length = strlen(prop->value);
+> > +
+> > +	return of_add_property(np, prop);
+> 
+> Why not add this property in the DT instead ? That sounds hackish
+
+Yes that's a good point too. We need to configure the source clock anyways
+for the clocksource and clockevent in devicetree anyways, so setting it
+disabled there totally makes sense.
+
+> > +	dmtimer_systimer_enable(timer);
+> > +	dmtimer_systimer_reset(timer);
+> > +	pr_debug("dmtimer rev %08x sysc %08x\n", readl_relaxed(timer->io_base),
+> > +		 readl_relaxed(timer->io_base + OMAP_TIMER_OCP_CFG_OFFSET));
+> > +
+> > +	if (of_find_property(np, "ti,timer-alwon", NULL))
+> > +		timer->capability |= OMAP_TIMER_ALWON;
+> 
+> Where is used this capability in this driver ?
+
+That is just something we should show in dmesg for info as that helps to
+understand the board specific system timer configuration for PM related
+issues folks end up reporting.
+
+> > +static struct irqaction dmtimer_clockevent_irq = {
+> > +	.name		= "gp_timer",
+> > +	.flags		= IRQF_TIMER | IRQF_IRQPOLL,
+> 
+> Why do you need IRQF_IRQPOLL ?
+
+I'll check if that's needed. Probably just something that has mutated into
+the old timer code somehow.
+
+> > +	pa = of_translate_address(np, of_get_address(np, 0, NULL, NULL));
+> > +	pr_info("TI gptimer clockevent: %stimer@%08x at %lu Hz\n",
+> > +		timer->capability & OMAP_TIMER_ALWON ? "always-on " : "",
+> > +		pa, timer->rate);
+> 
+> %pOF instead of of_translate_address ?
+
+That just 0 from the interconnect target module here. But doing %pOF
+on the np->parent should work here and for the clocksource.
+
+> > diff --git a/include/clocksource/timer-ti-dm.h b/include/clocksource/timer-ti-dm.h
+> > --- a/include/clocksource/timer-ti-dm.h
+> > +++ b/include/clocksource/timer-ti-dm.h
+> > @@ -97,6 +97,7 @@ struct omap_dm_timer {
+> >  	int id;
+> >  	int irq;
+> >  	struct clk *fclk;
+> > +	struct clk *iclk;
+> 
+> No need of these clocks in the structure as they are used only to
+> initialize.
+
+OK I'll make them local.
+
+Thanks for the review! I'll fix up the other issues you spotted too,
+they all seem good comments.
+
+Regards,
+
+Tony
