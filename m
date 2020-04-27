@@ -2,66 +2,135 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F9F7C4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B97C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BE9D2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:23:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 246192072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:27:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UQrKXL1b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgD0VXk (ORCPT
+        id S1726315AbgD0V13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 17:23:40 -0400
-Received: from www62.your-server.de ([213.133.104.62]:47950 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbgD0VXk (ORCPT
+        Mon, 27 Apr 2020 17:27:29 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:45342 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbgD0V13 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 17:23:40 -0400
-Received: from sslproxy01.your-server.de ([78.46.139.224])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jTBE0-0002BI-Qy; Mon, 27 Apr 2020 23:23:36 +0200
-Received: from [178.195.186.98] (helo=pc-9.home)
-        by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jTBE0-000QGE-FV; Mon, 27 Apr 2020 23:23:36 +0200
-Subject: Re: [PATCH 1/5] bpf-cgroup: remove unused exports
-To:     Christoph Hellwig <hch@lst.de>, Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Andrey Ignatov <rdna@fb.com>
-References: <20200424064338.538313-1-hch@lst.de>
- <20200424064338.538313-2-hch@lst.de>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <7f4e6ed3-d009-4636-34dc-b115cf310c0f@iogearbox.net>
-Date:   Mon, 27 Apr 2020 23:23:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 27 Apr 2020 17:27:29 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03RLRGp0084931;
+        Mon, 27 Apr 2020 16:27:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588022836;
+        bh=R7o3BT4CYy5NdMPvEu2aN/eBzQEoN5q8cyhJ4J/6Clg=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=UQrKXL1bUUTmXhgiMbnYeEHxVzRMdFMFe9L234OPp2vYdtdkPQApux2SYO+KSKzkB
+         lRoH7Grm93UE7DnIafQ/rBkRlAVNLhb2txFqLUMaGuXzGScNecfHCl9KaL+guJKjpN
+         8lI50GZuvP6z1KkYy3J8d2uKaF4hFutOEZP2p6IM=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03RLRG9R054884
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 27 Apr 2020 16:27:16 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 27
+ Apr 2020 16:27:16 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 27 Apr 2020 16:27:16 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RLRG8L048696;
+        Mon, 27 Apr 2020 16:27:16 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>
+CC:     <linux@armlinux.org.uk>, <davem@davemloft.net>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <afd@ti.com>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH net v2 1/2] net: phy: DP83822: Fix WoL in config init to be disabled
+Date:   Mon, 27 Apr 2020 16:21:11 -0500
+Message-ID: <20200427212112.25368-2-dmurphy@ti.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200427212112.25368-1-dmurphy@ti.com>
+References: <20200427212112.25368-1-dmurphy@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200424064338.538313-2-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25795/Mon Apr 27 14:00:10 2020)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/24/20 8:43 AM, Christoph Hellwig wrote:
-> Except for a few of the networking hooks called from modular ipv4 or
-> ipv6 code, all of hooks are just called from guaranteed to be built-in
-> code.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Acked-by: Andrey Ignatov <rdna@fb.com>
+The WoL feature should be disabled when config_init is called and the
+feature should turned on or off  when set_wol is called.
 
-Applied this one to bpf-next, thanks!
+In addition updated the calls to modify the registers to use the set_bit
+and clear_bit function calls.
+
+Fixes: 3b427751a9d0 ("net: phy: DP83822 initial driver submission")
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/net/phy/dp83822.c | 30 ++++++++++++++----------------
+ 1 file changed, 14 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/net/phy/dp83822.c b/drivers/net/phy/dp83822.c
+index fe9aa3ad52a7..1dd19d0cb269 100644
+--- a/drivers/net/phy/dp83822.c
++++ b/drivers/net/phy/dp83822.c
+@@ -137,19 +137,18 @@ static int dp83822_set_wol(struct phy_device *phydev,
+ 			value &= ~DP83822_WOL_SECURE_ON;
+ 		}
+ 
+-		value |= (DP83822_WOL_EN | DP83822_WOL_INDICATION_SEL |
+-			  DP83822_WOL_CLR_INDICATION);
+-		phy_write_mmd(phydev, DP83822_DEVADDR, MII_DP83822_WOL_CFG,
+-			      value);
++		/* Clear any pending WoL interrupt */
++		phy_read(phydev, MII_DP83822_MISR2);
++
++		value |= DP83822_WOL_EN | DP83822_WOL_INDICATION_SEL |
++			 DP83822_WOL_CLR_INDICATION;
++
++		return phy_write_mmd(phydev, DP83822_DEVADDR,
++				     MII_DP83822_WOL_CFG, value);
+ 	} else {
+-		value = phy_read_mmd(phydev, DP83822_DEVADDR,
+-				     MII_DP83822_WOL_CFG);
+-		value &= ~DP83822_WOL_EN;
+-		phy_write_mmd(phydev, DP83822_DEVADDR, MII_DP83822_WOL_CFG,
+-			      value);
++		return phy_clear_bits_mmd(phydev, DP83822_DEVADDR,
++					  MII_DP83822_WOL_CFG, DP83822_WOL_EN);
+ 	}
+-
+-	return 0;
+ }
+ 
+ static void dp83822_get_wol(struct phy_device *phydev,
+@@ -258,12 +257,11 @@ static int dp83822_config_intr(struct phy_device *phydev)
+ 
+ static int dp83822_config_init(struct phy_device *phydev)
+ {
+-	int value;
+-
+-	value = DP83822_WOL_MAGIC_EN | DP83822_WOL_SECURE_ON | DP83822_WOL_EN;
++	int value = DP83822_WOL_EN | DP83822_WOL_MAGIC_EN |
++		    DP83822_WOL_SECURE_ON;
+ 
+-	return phy_write_mmd(phydev, DP83822_DEVADDR, MII_DP83822_WOL_CFG,
+-	      value);
++	return phy_clear_bits_mmd(phydev, DP83822_DEVADDR,
++				  MII_DP83822_WOL_CFG, value);
+ }
+ 
+ static int dp83822_phy_reset(struct phy_device *phydev)
+-- 
+2.25.1
+
