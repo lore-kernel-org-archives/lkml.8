@@ -2,95 +2,195 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D93C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 02:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9452EC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 02:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0CC2206B9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 02:10:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hl5k9q5u"
+	by mail.kernel.org (Postfix) with ESMTP id 71E04206B9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 02:11:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgD0CKy (ORCPT
+        id S1726502AbgD0CK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 22:10:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60564 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726084AbgD0CKx (ORCPT
+        Sun, 26 Apr 2020 22:10:59 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32478 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726470AbgD0CKy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 22:10:53 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 308CCC061A0F;
-        Sun, 26 Apr 2020 19:10:53 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id m18so23639915otq.9;
-        Sun, 26 Apr 2020 19:10:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4N0tzn6HxWCVKhbcP3iPrPzqWqbdVMDQSlnfjcrFqNo=;
-        b=Hl5k9q5ukoi3szf18rgUOm17uhLI9srrE7wVvHse+gpzS+zBzRST8NQCHhV5LvGtKM
-         FuJRIQlamx0E48HcHe6y8OIsWlt46/5MGyHVSa9+FtTO5p1zQVDDWiHSYXxlB6SjitK9
-         nt/a+y5ZgdHXhYOh3+ChcRoHW3tM0HQuqS/IKFlXquKuRrBAL1gyA7t09BMAhdZWoCKc
-         yNIvBR9DevGIMOe33mjjW1Sij6Nidm3IHW/MSkSq4oSaYvhk7ydRLgr+jX4LWgpwDY+H
-         lYV5O4QfbF0ena7beBiIGjmeOhhQ5xo7VFIM+dDlKgpwJEsp8Z6iKQJ1j1LXgWrxmCwU
-         rhJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4N0tzn6HxWCVKhbcP3iPrPzqWqbdVMDQSlnfjcrFqNo=;
-        b=PCusTttDt3v/6Ovgr2NrBTWcKgWHBwwMYetcEXvpJJEr8rmetiCAnu2kJxSBo6XJ5O
-         vKhlRZr98o2u254RhO+k/NDZOPp2PydYkeNZb86qT7nC+FbgWpOL1MgowTrJ3nf6e9Yj
-         HsViDhi6yYYZa04+K7jUUvIgypBZst3YUVpJ9yptzYUr96KYxHrxoVvSIeM7vceOZVR1
-         D5zw+sjJp1yabxU+xRVnztL4XOshwLBdEGNOE7UL56pXjfR3QElwCOszf7+CxD6HjMYf
-         YdtKXhvn135J4DZ4NEoA1cd0/fJPW/lSvXgunIqzCfum8Ep+SQ8unSMUiWsqKuW54HOn
-         ZFpg==
-X-Gm-Message-State: AGi0PuYoVdSSaRv6kVnIW/F1NW+d/K5QPfa3FJIHGrC7jOJTZv0qr0C9
-        yHI9SS/roP3pFipzhZdG5rk=
-X-Google-Smtp-Source: APiQypJrYOdevGlvw/kgcnt9kU19pHmd/u7nQtNhqmbnRNON7LpqS2Fr1a/gxig/Gh3i9GdvpiRZUQ==
-X-Received: by 2002:aca:c6ca:: with SMTP id w193mr14030066oif.165.1587953452299;
-        Sun, 26 Apr 2020 19:10:52 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id s10sm3589988otd.69.2020.04.26.19.10.51
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 26 Apr 2020 19:10:51 -0700 (PDT)
-Date:   Sun, 26 Apr 2020 19:10:50 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nathan Huckleberry <nhuck15@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kbuild: remove unused AS assignment
-Message-ID: <20200427021050.GA27787@ubuntu-s3-xlarge-x86>
-References: <20200427003019.2401592-1-masahiroy@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200427003019.2401592-1-masahiroy@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Sun, 26 Apr 2020 22:10:54 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03R23Yr8013757;
+        Sun, 26 Apr 2020 22:10:50 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mhr529ud-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 26 Apr 2020 22:10:50 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03R24q1L016953;
+        Sun, 26 Apr 2020 22:10:50 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mhr529tu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 26 Apr 2020 22:10:50 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03R2A5aQ019739;
+        Mon, 27 Apr 2020 02:10:48 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04ams.nl.ibm.com with ESMTP id 30mcu6tunj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Apr 2020 02:10:47 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03R2Ajp258327204
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Apr 2020 02:10:45 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 04795A405B;
+        Mon, 27 Apr 2020 02:10:45 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 85EF6A405C;
+        Mon, 27 Apr 2020 02:10:43 +0000 (GMT)
+Received: from ltc-wspoon6.aus.stglabs.ibm.com (unknown [9.40.193.95])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 27 Apr 2020 02:10:43 +0000 (GMT)
+From:   Abhishek Goel <huntbag@linux.vnet.ibm.com>
+To:     linuxppc-dev@ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     npiggin@gmail.com, ego@linux.vnet.ibm.com, svaidy@linux.ibm.com,
+        mpe@ellerman.id.au, oohall@gmail.com, mikey@neuling.org,
+        psampat@linux.ibm.com, Abhishek Goel <huntbag@linux.vnet.ibm.com>
+Subject: [RFC 3/3] powernv/cpuidle : Introduce capability for firmware-enabled-stop
+Date:   Sun, 26 Apr 2020 21:10:27 -0500
+Message-Id: <20200427021027.114582-3-huntbag@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200427021027.114582-1-huntbag@linux.vnet.ibm.com>
+References: <20200427021027.114582-1-huntbag@linux.vnet.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-26_11:2020-04-24,2020-04-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 spamscore=0 mlxscore=0 suspectscore=0 clxscore=1015
+ priorityscore=1501 adultscore=0 phishscore=0 mlxlogscore=999
+ impostorscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2004270016
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 09:30:19AM +0900, Masahiro Yamada wrote:
-> $(AS) is not used anywhere, hence commit aa824e0c962b ("kbuild: remove
-> AS variable") killed it.
-> 
-> Remove the left-over code in arch/{arm,arm64}/Makefile.
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+This patch introduces the capability for firmware to handle the stop
+states instead. A bit is set based on the discovery of the feature
+and correspondingly also the responsibility to handle the stop states.
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+If Kernel does not know about stop version, it can fallback to opal for
+idle stop support if firmware-stop-supported property is present.
+
+Earlier this patch was posted as part of this series :
+https://lkml.org/lkml/2020/3/4/589
+
+Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
+Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
+---
+
+ v1->v2: This patch is newly added in this series.
+
+ arch/powerpc/include/asm/processor.h  |  1 +
+ arch/powerpc/kernel/dt_cpu_ftrs.c     |  8 ++++++++
+ arch/powerpc/platforms/powernv/idle.c | 27 ++++++++++++++++-----------
+ 3 files changed, 25 insertions(+), 11 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/asm/processor.h
+index 66fa20476d0e..d5c6532b11ef 100644
+--- a/arch/powerpc/include/asm/processor.h
++++ b/arch/powerpc/include/asm/processor.h
+@@ -430,6 +430,7 @@ extern unsigned long cpuidle_disable;
+ enum idle_boot_override {IDLE_NO_OVERRIDE = 0, IDLE_POWERSAVE_OFF};
+ 
+ #define STOP_ENABLE		0x00000001
++#define FIRMWARE_STOP_ENABLE	0x00000010
+ 
+ #define STOP_VERSION_P9       0x1
+ 
+diff --git a/arch/powerpc/kernel/dt_cpu_ftrs.c b/arch/powerpc/kernel/dt_cpu_ftrs.c
+index db1a525e090d..ff4a87b79702 100644
+--- a/arch/powerpc/kernel/dt_cpu_ftrs.c
++++ b/arch/powerpc/kernel/dt_cpu_ftrs.c
+@@ -298,6 +298,13 @@ static int __init feat_enable_idle_stop(struct dt_cpu_feature *f)
+ 	return 1;
+ }
+ 
++static int __init feat_enable_firmware_stop(struct dt_cpu_feature *f)
++{
++	stop_dep.cpuidle_prop |= FIRMWARE_STOP_ENABLE;
++
++	return 1;
++}
++
+ static int __init feat_enable_mmu_hash(struct dt_cpu_feature *f)
+ {
+ 	u64 lpcr;
+@@ -592,6 +599,7 @@ static struct dt_cpu_feature_match __initdata
+ 	{"idle-nap", feat_enable_idle_nap, 0},
+ 	{"alignment-interrupt-dsisr", feat_enable_align_dsisr, 0},
+ 	{"idle-stop", feat_enable_idle_stop, 0},
++	{"firmware-stop-supported", feat_enable_firmware_stop, 0},
+ 	{"machine-check-power8", feat_enable_mce_power8, 0},
+ 	{"performance-monitor-power8", feat_enable_pmu_power8, 0},
+ 	{"data-stream-control-register", feat_enable_dscr, CPU_FTR_DSCR},
+diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
+index 538f0842ac3f..0de5de81902e 100644
+--- a/arch/powerpc/platforms/powernv/idle.c
++++ b/arch/powerpc/platforms/powernv/idle.c
+@@ -633,16 +633,6 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
+ 	unsigned long mmcr0 = 0;
+ 	struct p9_sprs sprs = {}; /* avoid false used-uninitialised */
+ 	bool sprs_saved = false;
+-	int rc = 0;
+-
+-	/*
+-	 * Kernel takes decision whether to make OPAL call or not. This logic
+-	 * will be combined with the logic for BE opal to take decision.
+-	 */
+-	if (firmware_stop_supported) {
+-		rc = opal_cpu_idle(cpu_to_be64(__pa(&srr1)), (uint64_t) psscr);
+-		goto out;
+-	}
+ 
+ 	if (!(psscr & (PSSCR_EC|PSSCR_ESL))) {
+ 		/* EC=ESL=0 case */
+@@ -835,6 +825,19 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
+ 	return srr1;
+ }
+ 
++static unsigned long power9_firmware_idle_stop(unsigned long psscr, bool mmu_on)
++{
++	unsigned long srr1;
++	int rc;
++
++	rc = opal_cpu_idle(cpu_to_be64(__pa(&srr1)), (uint64_t) psscr);
++
++	if (mmu_on)
++		mtmsr(MSR_KERNEL);
++	return srr1;
++
++}
++
+ #ifdef CONFIG_HOTPLUG_CPU
+ static unsigned long power9_offline_stop(unsigned long psscr)
+ {
+@@ -1394,9 +1397,11 @@ static int __init pnv_init_idle_states(void)
+ 	    !(stop_dep.cpuidle_prop & STOP_ENABLE))
+ 		goto out;
+ 
+-	/* Check for supported version in kernel */
++	/* Check for supported version in kernel or fallback to kernel*/
+ 	if (stop_dep.stop_version & STOP_VERSION_P9) {
+ 		stop_dep.idle_stop = power9_idle_stop;
++	} else if (stop_dep.cpuidle_prop & FIRMWARE_STOP_ENABLE) {
++		stop_dep.idle_stop = power9_firmware_idle_stop;
+ 	} else {
+ 		stop_dep.idle_stop = NULL;
+ 		goto out;
+-- 
+2.17.1
+
