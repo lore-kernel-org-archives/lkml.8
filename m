@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33871C82A01
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7667C82A03
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE0AA206D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97175206D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:02:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588024938;
-	bh=wzhGn++bfspWVoHEy2uWMKHT37k3Fc2hIQ7yHubHNZ4=;
+	s=default; t=1588024939;
+	bh=xxN6APHaqJl4kkyZpYkfCgEVb/bPQ9wvvkv/aTl4BEw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VcXfc1zlneKDDy7hRbb6rrHSd1sGPUMtlhSTZoPpMc7Ex+7O1pL+3FsBEx/YwwfGd
-	 QZf96uOK7xBUY29XSZBAjsRJwBtTfKWcd0MtUaIUE5IX8T6XcrbXDW7x7V4Wm2uloa
-	 YtCSEbR8zp+2yOjna4w976WglQQH3htd7MPosq9k=
+	b=KieRKSutAlIsNLy7u/w2B37iB5kEcLIQjQUFgbqklTTS3iXzdtZ6jnVWstL2AIjYr
+	 zneiG2cGdTROhK9hhPLWXZjVkmPkjMCK51kNTe6lAWxsf1eWIkzmnZvvEHRy9O7wav
+	 rerQE24yCp2QeGxc5cSOMVfdlFdI3R5JgiAtaEn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgD0WCQ (ORCPT
+        id S1726539AbgD0WCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 18:02:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47992 "EHLO mail.kernel.org"
+        Mon, 27 Apr 2020 18:02:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726373AbgD0WCF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726396AbgD0WCF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 Apr 2020 18:02:05 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B6F52087E;
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F31C21974;
         Mon, 27 Apr 2020 22:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588024917;
-        bh=wzhGn++bfspWVoHEy2uWMKHT37k3Fc2hIQ7yHubHNZ4=;
+        bh=xxN6APHaqJl4kkyZpYkfCgEVb/bPQ9wvvkv/aTl4BEw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hAzNKe/24V3ksltezVXw5DsRZTNQIdwgMiIFQU/hal5FcBX17ob8i86095nAaAoGJ
-         yVuJhwxkuMRs7HSwz9hTyi6PbVvRP2GLkc9q+EKN5Jvggcuywp3rayGwdrSpZT6rk2
-         awfShFN6nmfVd42Zdl4k8kOUrKZkXvEdzuOenO2U=
+        b=exSpkvSGHkbt2xFb0Hb2fvvVzmD786b7HXJCVqYUrnpIjhMs3e/ukrCzINGhLXNXF
+         iPgdg+IvvK12xoXDXatxGc7wGw2Utzq1+22wBcBG0kdP++eR8ElIKmx1Iwu2BqUFnP
+         yyTarIGMEpFeQmm4QEV6NrYF6RTXp+ddW8wHgYeQ=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jTBp4-000Inv-J0; Tue, 28 Apr 2020 00:01:54 +0200
+        id 1jTBp4-000IoN-NY; Tue, 28 Apr 2020 00:01:54 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 04/38] docs: networking: convert arcnet-hardware.txt to ReST
-Date:   Tue, 28 Apr 2020 00:01:19 +0200
-Message-Id: <182967a0f02bc0365ce1612df83ece8623566ff5.1588024424.git.mchehab+huawei@kernel.org>
+        Jakub Kicinski <kuba@kernel.org>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org
+Subject: [PATCH 09/38] docs: networking: convert bonding.txt to ReST
+Date:   Tue, 28 Apr 2020 00:01:24 +0200
+Message-Id: <0bd4bc995477514e91e35994d3fdd2306ed7abd3.1588024424.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588024424.git.mchehab+huawei@kernel.org>
 References: <cover.1588024424.git.mchehab+huawei@kernel.org>
@@ -62,3779 +64,2606 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 - add SPDX header;
-- add document title markup;
-- add notes markups;
-- mark tables as such;
+- adjust titles and chapters, adding proper markups;
+- comment out text-only TOC from html/pdf output;
 - mark code blocks and literals as such;
+- mark tables as such;
+- add notes markups;
 - adjust identation, whitespaces and blank lines;
 - add to networking/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- ...rcnet-hardware.txt => arcnet-hardware.rst} | 2169 +++++++++--------
+ .../networking/{bonding.txt => bonding.rst}   | 1275 +++++++++--------
+ .../networking/device_drivers/intel/e100.rst  |    2 +-
+ .../networking/device_drivers/intel/ixgb.rst  |    2 +-
  Documentation/networking/index.rst            |    1 +
- 2 files changed, 1136 insertions(+), 1034 deletions(-)
- rename Documentation/networking/{arcnet-hardware.txt => arcnet-hardware.rst} (66%)
+ drivers/net/Kconfig                           |    2 +-
+ 5 files changed, 668 insertions(+), 614 deletions(-)
+ rename Documentation/networking/{bonding.txt => bonding.rst} (75%)
 
-diff --git a/Documentation/networking/arcnet-hardware.txt b/Documentation/networking/arcnet-hardware.rst
-similarity index 66%
-rename from Documentation/networking/arcnet-hardware.txt
-rename to Documentation/networking/arcnet-hardware.rst
-index 731de411513c..b5a1a020c824 100644
---- a/Documentation/networking/arcnet-hardware.txt
-+++ b/Documentation/networking/arcnet-hardware.rst
-@@ -1,11 +1,15 @@
-- 
-------------------------------------------------------------------------------
--1) This file is a supplement to arcnet.txt.  Please read that for general
--   driver configuration help.
-------------------------------------------------------------------------------
--2) This file is no longer Linux-specific.  It should probably be moved out of
--   the kernel sources.  Ideas?
-------------------------------------------------------------------------------
+diff --git a/Documentation/networking/bonding.txt b/Documentation/networking/bonding.rst
+similarity index 75%
+rename from Documentation/networking/bonding.txt
+rename to Documentation/networking/bonding.rst
+index e3abfbd32f71..dd49f95d28d3 100644
+--- a/Documentation/networking/bonding.txt
++++ b/Documentation/networking/bonding.rst
+@@ -1,10 +1,15 @@
 +.. SPDX-License-Identifier: GPL-2.0
+ 
+-		Linux Ethernet Bonding Driver HOWTO
++===================================
++Linux Ethernet Bonding Driver HOWTO
++===================================
+ 
+-		Latest update: 27 April 2011
++Latest update: 27 April 2011
 +
-+===============
-+ARCnet Hardware
-+===============
++Initial release: Thomas Davis <tadavis at lbl.gov>
 +
-+.. note::
++Corrections, HA extensions: 2000/10/03-15:
+ 
+-Initial release : Thomas Davis <tadavis at lbl.gov>
+-Corrections, HA extensions : 2000/10/03-15 :
+   - Willy Tarreau <willy at meta-x.org>
+   - Constantine Gavrilov <const-g at xpert.com>
+   - Chad N. Tindel <ctindel at ieee dot org>
+@@ -13,98 +18,98 @@ Corrections, HA extensions : 2000/10/03-15 :
+ 
+ Reorganized and updated Feb 2005 by Jay Vosburgh
+ Added Sysfs information: 2006/04/24
 +
-+   1) This file is a supplement to arcnet.txt.  Please read that for general
-+      driver configuration help.
-+   2) This file is no longer Linux-specific.  It should probably be moved out
-+      of the kernel sources.  Ideas?
+   - Mitch Williams <mitch.a.williams at intel.com>
  
- Because so many people (myself included) seem to have obtained ARCnet cards
- without manuals, this file contains a quick introduction to ARCnet hardware,
-@@ -14,8 +18,8 @@ e-mail apenwarr@worldvisions.ca with any settings for your particular card,
- or any other information you have!
+ Introduction
+ ============
  
- 
--INTRODUCTION TO ARCNET
------------------------
-+Introduction to ARCnet
-+======================
- 
- ARCnet is a network type which works in a way similar to popular Ethernet
- networks but which is also different in some very important ways.
-@@ -30,7 +34,7 @@ since I only have the 2.5 Mbps variety.  It is probably not going to saturate
- your 100 Mbps card.  Stop complaining. :)
- 
- You also cannot connect an ARCnet card to any kind of Ethernet card and
--expect it to work.  
-+expect it to work.
- 
- There are two "types" of ARCnet - STAR topology and BUS topology.  This
- refers to how the cards are meant to be wired together.  According to most
-@@ -71,19 +75,24 @@ although they are generally kept down to the Ethernet-style 1500 bytes.
- For more information on the advantages and disadvantages (mostly the
- advantages) of ARCnet networks, you might try the "ARCnet Trade Association"
- WWW page:
-+
- 	http://www.arcnet.com
- 
- 
--CABLING ARCNET NETWORKS
-------------------------
-+Cabling ARCnet Networks
-+=======================
-+
-+This section was rewritten by
-+
-+	Vojtech Pavlik     <vojtech@suse.cz>
- 
--This section was rewritten by 
--        Vojtech Pavlik     <vojtech@suse.cz>
- using information from several people, including:
--        Avery Pennraun     <apenwarr@worldvisions.ca>
-- 	Stephen A. Wood    <saw@hallc1.cebaf.gov>
-- 	John Paul Morrison <jmorriso@bogomips.ee.ubc.ca>
-- 	Joachim Koenig     <jojo@repas.de>
-+
-+	- Avery Pennraun     <apenwarr@worldvisions.ca>
-+	- Stephen A. Wood    <saw@hallc1.cebaf.gov>
-+	- John Paul Morrison <jmorriso@bogomips.ee.ubc.ca>
-+	- Joachim Koenig     <jojo@repas.de>
-+
- and Avery touched it up a bit, at Vojtech's request.
- 
- ARCnet (the classic 2.5 Mbps version) can be connected by two different
-@@ -103,13 +112,13 @@ equal to a high impedance one with a terminator installed.
- 
- Usually, the ARCnet networks are built up from STAR cards and hubs.  There
- are two types of hubs - active and passive.  Passive hubs are small boxes
--with four BNC connectors containing four 47 Ohm resistors:
-+with four BNC connectors containing four 47 Ohm resistors::
- 
--   |         | wires
--   R         + junction
---R-+-R-      R 47 Ohm resistors
--   R
--   |
-+	   |         | wires
-+	   R         + junction
-+	-R-+-R-      R 47 Ohm resistors
-+	   R
-+	   |
- 
- The shielding is connected together.  Active hubs are much more complicated;
- they are powered and contain electronics to amplify the signal and send it
-@@ -127,14 +136,15 @@ And now to the cabling.  What you can connect together:
- 2. A card to a passive hub.  Remember that all unused connectors on the hub
-    must be properly terminated with 93 Ohm (or something else if you don't
-    have the right ones) terminators.
--   	(Avery's note: oops, I didn't know that.  Mine (TV cable) works
-+
-+	(Avery's note: oops, I didn't know that.  Mine (TV cable) works
- 	anyway, though.)
- 
- 3. A card to an active hub.  Here is no need to terminate the unused
-    connectors except some kind of aesthetic feeling.  But, there may not be
-    more than eleven active hubs between any two computers.  That of course
-    doesn't limit the number of active hubs on the network.
--   
-+
- 4. An active hub to another.
- 
- 5. An active hub to passive hub.
-@@ -142,22 +152,22 @@ And now to the cabling.  What you can connect together:
- Remember that you cannot connect two passive hubs together.  The power loss
- implied by such a connection is too high for the net to operate reliably.
- 
--An example of a typical ARCnet network:
-+An example of a typical ARCnet network::
- 
--           R                     S - STAR type card              
-+	   R                     S - STAR type card
-     S------H--------A-------S    R - Terminator
--           |        |            H - Hub                         
--           |        |            A - Active hub                  
--           |   S----H----S                                       
--           S        |                                            
--                    |                                            
--                    S                                            
--                                                                          
-+	   |        |            H - Hub
-+	   |        |            A - Active hub
-+	   |   S----H----S
-+	   S        |
-+		    |
-+		    S
-+
- The BUS topology is very similar to the one used by Ethernet.  The only
- difference is in cable and terminators: they should be 93 Ohm.  Ethernet
- uses 50 Ohm impedance. You use T connectors to put the computers on a single
- line of cable, the bus. You have to put terminators at both ends of the
--cable. A typical BUS ARCnet network looks like:
-+cable. A typical BUS ARCnet network looks like::
- 
-     RT----T------T------T------T------TR
-      B    B      B      B      B      B
-@@ -168,63 +178,63 @@ cable. A typical BUS ARCnet network looks like:
- 
- But that is not all! The two types can be connected together.  According to
- the official documentation the only way of connecting them is using an active
--hub:
-+hub::
- 
--         A------T------T------TR
--         |      B      B      B
-+	 A------T------T------TR
-+	 |      B      B      B
-      S---H---S
--         |
--         S
-+	 |
-+	 S
- 
- The official docs also state that you can use STAR cards at the ends of
--BUS network in place of a BUS card and a terminator:
-+BUS network in place of a BUS card and a terminator::
- 
-      S------T------T------S
--            B      B
-+	    B      B
- 
- But, according to my own experiments, you can simply hang a BUS type card
- anywhere in middle of a cable in a STAR topology network.  And more - you
- can use the bus card in place of any star card if you use a terminator. Then
- you can build very complicated networks fulfilling all your needs!  An
--example:
-+example::
-+
-+				  S
-+				  |
-+	   RT------T-------T------H------S
-+	    B      B       B      |
-+				  |       R
-+    S------A------T-------T-------A-------H------TR
-+	   |      B       B       |       |      B
-+	   |   S                 BT       |
-+	   |   |                  |  S----A-----S
-+    S------H---A----S             |       |
-+	   |   |      S------T----H---S   |
-+	   S   S             B    R       S
- 
--                                  S
--                                  |
--           RT------T-------T------H------S
--            B      B       B      |
--                                  |       R
--    S------A------T-------T-------A-------H------TR                    
--           |      B       B       |       |      B                         
--           |   S                 BT       |                                 
--           |   |                  |  S----A-----S
--    S------H---A----S             |       | 
--           |   |      S------T----H---S   |
--           S   S             B    R       S  
--                                                               
- A basically different cabling scheme is used with Twisted Pair cabling. Each
- of the TP cards has two RJ (phone-cord style) connectors.  The cards are
- then daisy-chained together using a cable connecting every two neighboring
- cards.  The ends are terminated with RJ 93 Ohm terminators which plug into
--the empty connectors of cards on the ends of the chain.  An example:
-+the empty connectors of cards on the ends of the chain.  An example::
- 
--          ___________   ___________
--      _R_|_         _|_|_         _|_R_  
--     |     |       |     |       |     |      
--     |Card |       |Card |       |Card |     
--     |_____|       |_____|       |_____|          
-+	  ___________   ___________
-+      _R_|_         _|_|_         _|_R_
-+     |     |       |     |       |     |
-+     |Card |       |Card |       |Card |
-+     |_____|       |_____|       |_____|
- 
- 
- There are also hubs for the TP topology.  There is nothing difficult
- involved in using them; you just connect a TP chain to a hub on any end or
--even at both.  This way you can create almost any network configuration. 
-+even at both.  This way you can create almost any network configuration.
- The maximum of 11 hubs between any two computers on the net applies here as
--well.  An example:
-+well.  An example::
- 
-     RP-------P--------P--------H-----P------P-----PR
--                               |
-+			       |
-       RP-----H--------P--------H-----P------PR
--             |                 |
--             PR                PR
-+	     |                 |
-+	     PR                PR
- 
-     R - RJ Terminator
-     P - TP Card
-@@ -234,11 +244,13 @@ Like any network, ARCnet has a limited cable length.  These are the maximum
- cable lengths between two active ends (an active end being an active hub or
- a STAR card).
- 
-+		========== ======= ===========
- 		RG-62       93 Ohm up to 650 m
- 		RG-59/U     75 Ohm up to 457 m
- 		RG-11/U     75 Ohm up to 533 m
- 		IBM Type 1 150 Ohm up to 200 m
- 		IBM Type 3 100 Ohm up to 100 m
-+		========== ======= ===========
- 
- The maximum length of all cables connected to a passive hub is limited to 65
- meters for RG-62 cabling; less for others.  You can see that using passive
-@@ -248,8 +260,8 @@ most distant points of the net is limited to 3000 meters. The maximum length
- of a TP cable between two cards/hubs is 650 meters.
- 
- 
--SETTING THE JUMPERS
---------------------
-+Setting the Jumpers
-+===================
- 
- All ARCnet cards should have a total of four or five different settings:
- 
-@@ -261,43 +273,51 @@ All ARCnet cards should have a total of four or five different settings:
-     eating net connections on my system (at least) otherwise.  My guess is
-     this may be because, if your card is at 0x2E0, probing for a serial port
-     at 0x2E8 will reset the card and probably mess things up royally.
-+
- 	- Avery's favourite: 0x300.
- 
-   - the IRQ: on  8-bit cards, it might be 2 (9), 3, 4, 5, or 7.
--             on 16-bit cards, it might be 2 (9), 3, 4, 5, 7, or 10-15.
--             
-+	     on 16-bit cards, it might be 2 (9), 3, 4, 5, 7, or 10-15.
-+
-     Make sure this is different from any other card on your system.  Note
-     that IRQ2 is the same as IRQ9, as far as Linux is concerned.  You can
-     "cat /proc/interrupts" for a somewhat complete list of which ones are in
-     use at any given time.  Here is a list of common usages from Vojtech
-     Pavlik <vojtech@suse.cz>:
--    	("Not on bus" means there is no way for a card to generate this
-+
-+	("Not on bus" means there is no way for a card to generate this
- 	interrupt)
--	IRQ  0 - Timer 0 (Not on bus)
--	IRQ  1 - Keyboard (Not on bus)
--	IRQ  2 - IRQ Controller 2 (Not on bus, nor does interrupt the CPU)
--	IRQ  3 - COM2
--	IRQ  4 - COM1
--	IRQ  5 - FREE (LPT2 if you have it; sometimes COM3; maybe PLIP)
--	IRQ  6 - Floppy disk controller
--	IRQ  7 - FREE (LPT1 if you don't use the polling driver; PLIP) 
--	IRQ  8 - Realtime Clock Interrupt (Not on bus)
--	IRQ  9 - FREE (VGA vertical sync interrupt if enabled)
--	IRQ 10 - FREE
--	IRQ 11 - FREE
--	IRQ 12 - FREE
--	IRQ 13 - Numeric Coprocessor (Not on bus)
--	IRQ 14 - Fixed Disk Controller
--	IRQ 15 - FREE (Fixed Disk Controller 2 if you have it) 
+-	The Linux bonding driver provides a method for aggregating
++The Linux bonding driver provides a method for aggregating
+ multiple network interfaces into a single logical "bonded" interface.
+ The behavior of the bonded interfaces depends upon the mode; generally
+ speaking, modes provide either hot standby or load balancing services.
+ Additionally, link integrity monitoring may be performed.
 -	
--	Note: IRQ 9 is used on some video cards for the "vertical retrace"
--	interrupt.  This interrupt would have been handy for things like
--	video games, as it occurs exactly once per screen refresh, but
--	unfortunately IBM cancelled this feature starting with the original
--	VGA and thus many VGA/SVGA cards do not support it.  For this
--	reason, no modern software uses this interrupt and it can almost
--	always be safely disabled, if your video card supports it at all.
--	
+-	The bonding driver originally came from Donald Becker's
 +
-+	======   =========================================================
-+	IRQ  0   Timer 0 (Not on bus)
-+	IRQ  1   Keyboard (Not on bus)
-+	IRQ  2   IRQ Controller 2 (Not on bus, nor does interrupt the CPU)
-+	IRQ  3   COM2
-+	IRQ  4   COM1
-+	IRQ  5   FREE (LPT2 if you have it; sometimes COM3; maybe PLIP)
-+	IRQ  6   Floppy disk controller
-+	IRQ  7   FREE (LPT1 if you don't use the polling driver; PLIP)
-+	IRQ  8   Realtime Clock Interrupt (Not on bus)
-+	IRQ  9   FREE (VGA vertical sync interrupt if enabled)
-+	IRQ 10   FREE
-+	IRQ 11   FREE
-+	IRQ 12   FREE
-+	IRQ 13   Numeric Coprocessor (Not on bus)
-+	IRQ 14   Fixed Disk Controller
-+	IRQ 15   FREE (Fixed Disk Controller 2 if you have it)
-+	======   =========================================================
-+
-+
-+	.. note::
-+
-+	   IRQ 9 is used on some video cards for the "vertical retrace"
-+	   interrupt.  This interrupt would have been handy for things like
-+	   video games, as it occurs exactly once per screen refresh, but
-+	   unfortunately IBM cancelled this feature starting with the original
-+	   VGA and thus many VGA/SVGA cards do not support it.  For this
-+	   reason, no modern software uses this interrupt and it can almost
-+	   always be safely disabled, if your video card supports it at all.
-+
- 	If your card for some reason CANNOT disable this IRQ (usually there
- 	is a jumper), one solution would be to clip the printed circuit
- 	contact on the board: it's the fourth contact from the left on the
-@@ -308,14 +328,18 @@ All ARCnet cards should have a total of four or five different settings:
-   - the memory address:  Unlike most cards, ARCnets use "shared memory" for
-     copying buffers around.  Make SURE it doesn't conflict with any other
-     used memory in your system!
-+
-+    ::
-+
- 	A0000		- VGA graphics memory (ok if you don't have VGA)
--        B0000		- Monochrome text mode
--        C0000		\  One of these is your VGA BIOS - usually C0000.
--        E0000		/
--        F0000		- System BIOS
-+	B0000		- Monochrome text mode
-+	C0000		\  One of these is your VGA BIOS - usually C0000.
-+	E0000		/
-+	F0000		- System BIOS
++The bonding driver originally came from Donald Becker's
+ beowulf patches for kernel 2.0. It has changed quite a bit since, and
+ the original tools from extreme-linux and beowulf sites will not work
+ with this version of the driver.
  
-     Anything less than 0xA0000 is, well, a BAD idea since it isn't above
-     640k.
-+
- 	- Avery's favourite: 0xD0000
+-	For new versions of the driver, updated userspace tools, and
++For new versions of the driver, updated userspace tools, and
+ who to ask for help, please follow the links at the end of this file.
  
-   - the station address:  Every ARCnet card has its own "unique" network
-@@ -326,6 +350,7 @@ All ARCnet cards should have a total of four or five different settings:
-     neat stuff will probably happen if you DO use them).  By the way, if you
-     haven't already guessed, don't set this the same as any other ARCnet on
-     your network!
-+
- 	- Avery's favourite:  3 and 4.  Not that it matters.
+-Table of Contents
+-=================
++.. Table of Contents
  
-   - There may be ETS1 and ETS2 settings.  These may or may not make a
-@@ -336,28 +361,34 @@ All ARCnet cards should have a total of four or five different settings:
-     requirement here is that all cards on the network with ETS1 and ETS2
-     jumpers have them in the same position.  Chris Hindy <chrish@io.org>
-     sent in a chart with actual values for this:
-+
-+	======= ======= =============== ====================
- 	ET1	ET2	Response Time	Reconfiguration Time
--	---	---	-------------	--------------------
-+	======= ======= =============== ====================
- 	open	open	74.7us		840us
- 	open	closed	283.4us		1680us
- 	closed	open	561.8us		1680us
- 	closed	closed	1118.6us	1680us
--    
-+	======= ======= =============== ====================
-+
-     Make sure you set ETS1 and ETS2 to the SAME VALUE for all cards on your
-     network.
--    
--Also, on many cards (not mine, though) there are red and green LED's. 
-+
-+Also, on many cards (not mine, though) there are red and green LED's.
- Vojtech Pavlik <vojtech@suse.cz> tells me this is what they mean:
-+
-+	=============== =============== =====================================
- 	GREEN           RED             Status
--	-----		---		------
-+	=============== =============== =====================================
- 	OFF             OFF             Power off
- 	OFF             Short flashes   Cabling problems (broken cable or not
--					  terminated)
-+					terminated)
- 	OFF (short)     ON              Card init
- 	ON              ON              Normal state - everything OK, nothing
--					  happens
-+					happens
- 	ON              Long flashes    Data transfer
- 	ON              OFF             Never happens (maybe when wrong ID)
-+	=============== =============== =====================================
+-1. Bonding Driver Installation
++   1. Bonding Driver Installation
  
+-2. Bonding Driver Options
++   2. Bonding Driver Options
  
- The following is all the specific information people have sent me about
-@@ -366,7 +397,7 @@ huge amounts of duplicated information.  I have no time to fix it.  If you
- want to, PLEASE DO!  Just send me a 'diff -u' of all your changes.
+-3. Configuring Bonding Devices
+-3.1	Configuration with Sysconfig Support
+-3.1.1		Using DHCP with Sysconfig
+-3.1.2		Configuring Multiple Bonds with Sysconfig
+-3.2	Configuration with Initscripts Support
+-3.2.1		Using DHCP with Initscripts
+-3.2.2		Configuring Multiple Bonds with Initscripts
+-3.3	Configuring Bonding Manually with Ifenslave
+-3.3.1		Configuring Multiple Bonds Manually
+-3.4	Configuring Bonding Manually via Sysfs
+-3.5	Configuration with Interfaces Support
+-3.6	Overriding Configuration for Special Cases
+-3.7 Configuring LACP for 802.3ad mode in a more secure way
++   3. Configuring Bonding Devices
++   3.1	Configuration with Sysconfig Support
++   3.1.1		Using DHCP with Sysconfig
++   3.1.2		Configuring Multiple Bonds with Sysconfig
++   3.2	Configuration with Initscripts Support
++   3.2.1		Using DHCP with Initscripts
++   3.2.2		Configuring Multiple Bonds with Initscripts
++   3.3	Configuring Bonding Manually with Ifenslave
++   3.3.1		Configuring Multiple Bonds Manually
++   3.4	Configuring Bonding Manually via Sysfs
++   3.5	Configuration with Interfaces Support
++   3.6	Overriding Configuration for Special Cases
++   3.7 Configuring LACP for 802.3ad mode in a more secure way
  
- The model # is listed right above specifics for that card, so you should be
--able to use your text viewer's "search" function to find the entry you want. 
-+able to use your text viewer's "search" function to find the entry you want.
- If you don't KNOW what kind of card you have, try looking through the
- various diagrams to see if you can tell.
+-4. Querying Bonding Configuration
+-4.1	Bonding Configuration
+-4.2	Network Configuration
++   4. Querying Bonding Configuration
++   4.1	Bonding Configuration
++   4.2	Network Configuration
  
-@@ -378,8 +409,9 @@ model that is, please e-mail me to say so.
+-5. Switch Configuration
++   5. Switch Configuration
  
- Cards Listed in this file (in this order, mostly):
+-6. 802.1q VLAN Support
++   6. 802.1q VLAN Support
  
-+	=============== ======================= ====
- 	Manufacturer	Model #			Bits
--	------------	-------			----
-+	=============== ======================= ====
- 	SMC		PC100			8
- 	SMC		PC110			8
- 	SMC		PC120			8
-@@ -404,17 +436,19 @@ Cards Listed in this file (in this order, mostly):
- 	No Name		Taiwan R.O.C?		8
- 	No Name		Model 9058		8
- 	Tiara		Tiara Lancard?		8
--	
-+	=============== ======================= ====
+-7. Link Monitoring
+-7.1	ARP Monitor Operation
+-7.2	Configuring Multiple ARP Targets
+-7.3	MII Monitor Operation
++   7. Link Monitoring
++   7.1	ARP Monitor Operation
++   7.2	Configuring Multiple ARP Targets
++   7.3	MII Monitor Operation
  
--** SMC = Standard Microsystems Corp.
--** CNet Tech = CNet Technology, Inc.
+-8. Potential Trouble Sources
+-8.1	Adventures in Routing
+-8.2	Ethernet Device Renaming
+-8.3	Painfully Slow Or No Failed Link Detection By Miimon
++   8. Potential Trouble Sources
++   8.1	Adventures in Routing
++   8.2	Ethernet Device Renaming
++   8.3	Painfully Slow Or No Failed Link Detection By Miimon
  
-+* SMC = Standard Microsystems Corp.
-+* CNet Tech = CNet Technology, Inc.
+-9. SNMP agents
++   9. SNMP agents
  
- Unclassified Stuff
--------------------
-+==================
-+
-   - Please send any other information you can find.
--  
--  - And some other stuff (more info is welcome!):
-+
-+  - And some other stuff (more info is welcome!)::
-+
-      From: root@ultraworld.xs4all.nl (Timo Hilbrink)
-      To: apenwarr@foxnet.net (Avery Pennarun)
-      Date: Wed, 26 Oct 1994 02:10:32 +0000 (GMT)
-@@ -423,7 +457,7 @@ Unclassified Stuff
-      [...parts deleted...]
+-10. Promiscuous mode
++   10. Promiscuous mode
  
-      About the jumpers: On my PC130 there is one more jumper, located near the
--     cable-connector and it's for changing to star or bus topology; 
-+     cable-connector and it's for changing to star or bus topology;
-      closed: star - open: bus
-      On the PC500 are some more jumper-pins, one block labeled with RX,PDN,TXI
-      and another with ALE,LA17,LA18,LA19 these are undocumented..
-@@ -432,136 +466,130 @@ Unclassified Stuff
+-11. Configuring Bonding for High Availability
+-11.1	High Availability in a Single Switch Topology
+-11.2	High Availability in a Multiple Switch Topology
+-11.2.1		HA Bonding Mode Selection for Multiple Switch Topology
+-11.2.2		HA Link Monitoring for Multiple Switch Topology
++   11. Configuring Bonding for High Availability
++   11.1	High Availability in a Single Switch Topology
++   11.2	High Availability in a Multiple Switch Topology
++   11.2.1		HA Bonding Mode Selection for Multiple Switch Topology
++   11.2.2		HA Link Monitoring for Multiple Switch Topology
  
-      --- CUT ---
+-12. Configuring Bonding for Maximum Throughput
+-12.1	Maximum Throughput in a Single Switch Topology
+-12.1.1		MT Bonding Mode Selection for Single Switch Topology
+-12.1.2		MT Link Monitoring for Single Switch Topology
+-12.2	Maximum Throughput in a Multiple Switch Topology
+-12.2.1		MT Bonding Mode Selection for Multiple Switch Topology
+-12.2.2		MT Link Monitoring for Multiple Switch Topology
++   12. Configuring Bonding for Maximum Throughput
++   12.1	Maximum Throughput in a Single Switch Topology
++   12.1.1		MT Bonding Mode Selection for Single Switch Topology
++   12.1.2		MT Link Monitoring for Single Switch Topology
++   12.2	Maximum Throughput in a Multiple Switch Topology
++   12.2.1		MT Bonding Mode Selection for Multiple Switch Topology
++   12.2.2		MT Link Monitoring for Multiple Switch Topology
  
-+Standard Microsystems Corp (SMC)
-+================================
-+
-+PC100, PC110, PC120, PC130 (8-bit cards) and PC500, PC600 (16-bit cards)
-+------------------------------------------------------------------------
+-13. Switch Behavior Issues
+-13.1	Link Establishment and Failover Delays
+-13.2	Duplicated Incoming Packets
++   13. Switch Behavior Issues
++   13.1	Link Establishment and Failover Delays
++   13.2	Duplicated Incoming Packets
  
--** Standard Microsystems Corp (SMC) **
--PC100, PC110, PC120, PC130 (8-bit cards)
--PC500, PC600 (16-bit cards)
-----------------------------------
-   - mainly from Avery Pennarun <apenwarr@worldvisions.ca>.  Values depicted
-     are from Avery's setup.
-   - special thanks to Timo Hilbrink <timoh@xs4all.nl> for noting that PC120,
--    130, 500, and 600 all have the same switches as Avery's PC100. 
-+    130, 500, and 600 all have the same switches as Avery's PC100.
-     PC500/600 have several extra, undocumented pins though. (?)
-   - PC110 settings were verified by Stephen A. Wood <saw@cebaf.gov>
-   - Also, the JP- and S-numbers probably don't match your card exactly.  Try
-     to find jumpers/switches with the same number of settings - it's
-     probably more reliable.
--  
--
--     JP5		       [|]    :    :    :    :
--(IRQ Setting)		      IRQ2  IRQ3 IRQ4 IRQ5 IRQ7
--		Put exactly one jumper on exactly one set of pins.
--
--
--                          1  2   3  4  5  6   7  8  9 10
--     S1                /----------------------------------\
--(I/O and Memory        |  1  1 * 0  0  0  0 * 1  1  0  1  |
-- addresses)            \----------------------------------/
--                          |--|   |--------|   |--------|
--                          (a)       (b)           (m)
--                          
--                WARNING.  It's very important when setting these which way
--                you're holding the card, and which way you think is '1'!
--                
--                If you suspect that your settings are not being made
--		correctly, try reversing the direction or inverting the
--		switch positions.
--
--		a: The first digit of the I/O address.
--			Setting		Value
--			-------		-----
--			00		0
--			01		1
--			10		2
--			11		3
--
--		b: The second digit of the I/O address.
--			Setting		Value
--			-------		-----
--			0000		0
--			0001		1
--			0010		2
--			...		...
--			1110		E
--			1111		F
--
--		The I/O address is in the form ab0.  For example, if
--		a is 0x2 and b is 0xE, the address will be 0x2E0.
--
--		DO NOT SET THIS LESS THAN 0x200!!!!!
--
--
--		m: The first digit of the memory address.
--			Setting		Value
--			-------		-----
--			0000		0
--			0001		1
--			0010		2
--			...		...
--			1110		E
--			1111		F
--
--		The memory address is in the form m0000.  For example, if
--		m is D, the address will be 0xD0000.
--
--		DO NOT SET THIS TO C0000, F0000, OR LESS THAN A0000!
--
--                          1  2  3  4  5  6  7  8
--     S2                /--------------------------\
--(Station Address)      |  1  1  0  0  0  0  0  0  |
--                       \--------------------------/
--
--			Setting		Value
--			-------		-----
--			00000000	00
--			10000000	01
--			01000000	02
--			...
--			01111111	FE
--			11111111	FF
--
--		Note that this is binary with the digits reversed!
--
--		DO NOT SET THIS TO 0 OR 255 (0xFF)!
--
--
--*****************************************************************************
--
--** Standard Microsystems Corp (SMC) **
-+
-+::
-+
-+	     JP5		       [|]    :    :    :    :
-+	(IRQ Setting)		      IRQ2  IRQ3 IRQ4 IRQ5 IRQ7
-+			Put exactly one jumper on exactly one set of pins.
-+
-+
-+				  1  2   3  4  5  6   7  8  9 10
-+	     S1                /----------------------------------\
-+	(I/O and Memory        |  1  1 * 0  0  0  0 * 1  1  0  1  |
-+	 addresses)            \----------------------------------/
-+				  |--|   |--------|   |--------|
-+				  (a)       (b)           (m)
-+
-+			WARNING.  It's very important when setting these which way
-+			you're holding the card, and which way you think is '1'!
-+
-+			If you suspect that your settings are not being made
-+			correctly, try reversing the direction or inverting the
-+			switch positions.
-+
-+			a: The first digit of the I/O address.
-+				Setting		Value
-+				-------		-----
-+				00		0
-+				01		1
-+				10		2
-+				11		3
-+
-+			b: The second digit of the I/O address.
-+				Setting		Value
-+				-------		-----
-+				0000		0
-+				0001		1
-+				0010		2
-+				...		...
-+				1110		E
-+				1111		F
-+
-+			The I/O address is in the form ab0.  For example, if
-+			a is 0x2 and b is 0xE, the address will be 0x2E0.
-+
-+			DO NOT SET THIS LESS THAN 0x200!!!!!
-+
-+
-+			m: The first digit of the memory address.
-+				Setting		Value
-+				-------		-----
-+				0000		0
-+				0001		1
-+				0010		2
-+				...		...
-+				1110		E
-+				1111		F
-+
-+			The memory address is in the form m0000.  For example, if
-+			m is D, the address will be 0xD0000.
-+
-+			DO NOT SET THIS TO C0000, F0000, OR LESS THAN A0000!
-+
-+				  1  2  3  4  5  6  7  8
-+	     S2                /--------------------------\
-+	(Station Address)      |  1  1  0  0  0  0  0  0  |
-+			       \--------------------------/
-+
-+				Setting		Value
-+				-------		-----
-+				00000000	00
-+				10000000	01
-+				01000000	02
-+				...
-+				01111111	FE
-+				11111111	FF
-+
-+			Note that this is binary with the digits reversed!
-+
-+			DO NOT SET THIS TO 0 OR 255 (0xFF)!
-+
-+
- PC130E/PC270E (8-bit cards)
- ---------------------------
-+
-   - from Juergen Seifert <seifert@htwm.de>
+-14. Hardware Specific Considerations
+-14.1	IBM BladeCenter
++   14. Hardware Specific Considerations
++   14.1	IBM BladeCenter
  
--
--STANDARD MICROSYSTEMS CORPORATION (SMC) ARCNET(R)-PC130E/PC270E
--===============================================================
--
- This description has been written by Juergen Seifert <seifert@htwm.de>
--using information from the following Original SMC Manual 
-+using information from the following Original SMC Manual
+-15. Frequently Asked Questions
++   15. Frequently Asked Questions
  
--             "Configuration Guide for
--             ARCNET(R)-PC130E/PC270
--            Network Controller Boards
--                Pub. # 900.044A
--                   June, 1989"
-+	     "Configuration Guide for ARCNET(R)-PC130E/PC270 Network
-+	     Controller Boards Pub. # 900.044A June, 1989"
- 
- ARCNET is a registered trademark of the Datapoint Corporation
--SMC is a registered trademark of the Standard Microsystems Corporation  
-+SMC is a registered trademark of the Standard Microsystems Corporation
- 
--The PC130E is an enhanced version of the PC130 board, is equipped with a 
-+The PC130E is an enhanced version of the PC130 board, is equipped with a
- standard BNC female connector for connection to RG-62/U coax cable.
- Since this board is designed both for point-to-point connection in star
--networks and for connection to bus networks, it is downwardly compatible 
-+networks and for connection to bus networks, it is downwardly compatible
- with all the other standard boards designed for coax networks (that is,
--the PC120, PC110 and PC100 star topology boards and the PC220, PC210 and 
-+the PC120, PC110 and PC100 star topology boards and the PC220, PC210 and
- PC200 bus topology boards).
- 
--The PC270E is an enhanced version of the PC260 board, is equipped with two 
-+The PC270E is an enhanced version of the PC260 board, is equipped with two
- modular RJ11-type jacks for connection to twisted pair wiring.
- It can be used in a star or a daisy-chained network.
- 
-+::
- 
--         8 7 6 5 4 3 2 1
-+	 8 7 6 5 4 3 2 1
-     ________________________________________________________________
-    |   |       S1        |                                          |
-    |   |_________________|                                          |
-@@ -587,27 +615,27 @@ It can be used in a star or a daisy-chained network.
-        |                                             |
-        |_____________________________________________|
- 
--Legend:
-+Legend::
- 
--SMC 90C63	ARCNET Controller / Transceiver /Logic
--S1	1-3:	I/O Base Address Select
-+  SMC 90C63	ARCNET Controller / Transceiver /Logic
-+  S1	1-3:	I/O Base Address Select
- 	4-6:	Memory Base Address Select
- 	7-8:	RAM Offset Select
--S2	1-8:	Node ID Select
--EXT		Extended Timeout Select
--ROM		ROM Enable Select
--STAR		Selected - Star Topology	(PC130E only)
-+  S2	1-8:	Node ID Select
-+  EXT		Extended Timeout Select
-+  ROM		ROM Enable Select
-+  STAR		Selected - Star Topology	(PC130E only)
- 		Deselected - Bus Topology	(PC130E only)
--CR3/CR4		Diagnostic LEDs
--J1		BNC RG62/U Connector		(PC130E only)
--J1		6-position Telephone Jack	(PC270E only)
--J2		6-position Telephone Jack	(PC270E only)
-+  CR3/CR4	Diagnostic LEDs
-+  J1		BNC RG62/U Connector		(PC130E only)
-+  J1		6-position Telephone Jack	(PC270E only)
-+  J2		6-position Telephone Jack	(PC270E only)
- 
- Setting one of the switches to Off/Open means "1", On/Closed means "0".
+-16. Resources and Links
++   16. Resources and Links
  
  
- Setting the Node ID
---------------------
-+^^^^^^^^^^^^^^^^^^^
+ 1. Bonding Driver Installation
+ ==============================
  
- The eight switches in group S2 are used to set the node ID.
- These switches work in a way similar to the PC100-series cards; see that
-@@ -615,10 +643,10 @@ entry for more information.
+-	Most popular distro kernels ship with the bonding driver
++Most popular distro kernels ship with the bonding driver
+ already available as a module. If your distro does not, or you
+ have need to compile bonding from source (e.g., configuring and
+ installing a mainline kernel from kernel.org), you'll need to perform
+@@ -113,54 +118,54 @@ the following steps:
+ 1.1 Configure and build the kernel with bonding
+ -----------------------------------------------
  
+-	The current version of the bonding driver is available in the
++The current version of the bonding driver is available in the
+ drivers/net/bonding subdirectory of the most recent kernel source
+ (which is available on http://kernel.org).  Most users "rolling their
+ own" will want to use the most recent kernel from kernel.org.
  
- Setting the I/O Base Address
------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-	Configure kernel with "make menuconfig" (or "make xconfig" or
++Configure kernel with "make menuconfig" (or "make xconfig" or
+ "make config"), then select "Bonding driver support" in the "Network
+ device support" section.  It is recommended that you configure the
+ driver as module since it is currently the only way to pass parameters
+ to the driver or configure more than one bonding device.
  
- The first three switches in switch group S1 are used to select one
--of eight possible I/O Base addresses using the following table
-+of eight possible I/O Base addresses using the following table::
+-	Build and install the new kernel and modules.
++Build and install the new kernel and modules.
  
- 
-    Switch | Hex I/O
-@@ -635,14 +663,16 @@ of eight possible I/O Base addresses using the following table
- 
- 
- Setting the Base Memory (RAM) buffer Address
----------------------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- The memory buffer requires 2K of a 16K block of RAM. The base of this
- 16K block can be located in any of eight positions.
- Switches 4-6 of switch group S1 select the Base of the 16K block.
--Within that 16K address space, the buffer may be assigned any one of four 
-+Within that 16K address space, the buffer may be assigned any one of four
- positions, determined by the offset, switches 7 and 8 of group S1.
- 
-+::
-+
-    Switch     | Hex RAM | Hex ROM
-    4 5 6  7 8 | Address | Address *)
-    -----------|---------|-----------
-@@ -650,115 +680,111 @@ positions, determined by the offset, switches 7 and 8 of group S1.
-    0 0 0  0 1 |  C0800  |  C2000
-    0 0 0  1 0 |  C1000  |  C2000
-    0 0 0  1 1 |  C1800  |  C2000
--              |         |
-+	      |         |
-    0 0 1  0 0 |  C4000  |  C6000
-    0 0 1  0 1 |  C4800  |  C6000
-    0 0 1  1 0 |  C5000  |  C6000
-    0 0 1  1 1 |  C5800  |  C6000
--              |         |
-+	      |         |
-    0 1 0  0 0 |  CC000  |  CE000
-    0 1 0  0 1 |  CC800  |  CE000
-    0 1 0  1 0 |  CD000  |  CE000
-    0 1 0  1 1 |  CD800  |  CE000
--              |         |
-+	      |         |
-    0 1 1  0 0 |  D0000  |  D2000  (Manufacturer's default)
-    0 1 1  0 1 |  D0800  |  D2000
-    0 1 1  1 0 |  D1000  |  D2000
-    0 1 1  1 1 |  D1800  |  D2000
--              |         |
-+	      |         |
-    1 0 0  0 0 |  D4000  |  D6000
-    1 0 0  0 1 |  D4800  |  D6000
-    1 0 0  1 0 |  D5000  |  D6000
-    1 0 0  1 1 |  D5800  |  D6000
--              |         |
-+	      |         |
-    1 0 1  0 0 |  D8000  |  DA000
-    1 0 1  0 1 |  D8800  |  DA000
-    1 0 1  1 0 |  D9000  |  DA000
-    1 0 1  1 1 |  D9800  |  DA000
--              |         |
-+	      |         |
-    1 1 0  0 0 |  DC000  |  DE000
-    1 1 0  0 1 |  DC800  |  DE000
-    1 1 0  1 0 |  DD000  |  DE000
-    1 1 0  1 1 |  DD800  |  DE000
--              |         |
-+	      |         |
-    1 1 1  0 0 |  E0000  |  E2000
-    1 1 1  0 1 |  E0800  |  E2000
-    1 1 1  1 0 |  E1000  |  E2000
-    1 1 1  1 1 |  E1800  |  E2000
--  
--*) To enable the 8K Boot PROM install the jumper ROM.
--   The default is jumper ROM not installed.
-+
-+  *) To enable the 8K Boot PROM install the jumper ROM.
-+     The default is jumper ROM not installed.
- 
- 
- Setting the Timeouts and Interrupt
------------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
--The jumpers labeled EXT1 and EXT2 are used to determine the timeout 
-+The jumpers labeled EXT1 and EXT2 are used to determine the timeout
- parameters. These two jumpers are normally left open.
- 
- To select a hardware interrupt level set one (only one!) of the jumpers
- IRQ2, IRQ3, IRQ4, IRQ5, IRQ7. The Manufacturer's default is IRQ2.
-- 
-+
- 
- Configuring the PC130E for Star or Bus Topology
-------------------------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
--The single jumper labeled STAR is used to configure the PC130E board for 
-+The single jumper labeled STAR is used to configure the PC130E board for
- star or bus topology.
--When the jumper is installed, the board may be used in a star network, when 
-+When the jumper is installed, the board may be used in a star network, when
- it is removed, the board can be used in a bus topology.
- 
- 
- Diagnostic LEDs
-----------------
-+^^^^^^^^^^^^^^^
- 
- Two diagnostic LEDs are visible on the rear bracket of the board.
- The green LED monitors the network activity: the red one shows the
--board activity:
-+board activity::
- 
-  Green  | Status               Red      | Status
-  -------|-------------------   ---------|-------------------
-   on    | normal activity      flash/on | data transfer
-   blink | reconfiguration      off      | no data transfer;
-   off   | defective board or            | incorrect memory or
--        | node ID is zero               | I/O address
-+	| node ID is zero               | I/O address
- 
- 
--*****************************************************************************
--
--** Standard Microsystems Corp (SMC) **
- PC500/PC550 Longboard (16-bit cards)
+ 1.2 Bonding Control Utility
 --------------------------------------
-+------------------------------------
-+
-   - from Juergen Seifert <seifert@htwm.de>
++---------------------------
  
+-	 It is recommended to configure bonding via iproute2 (netlink)
++It is recommended to configure bonding via iproute2 (netlink)
+ or sysfs, the old ifenslave control utility is obsolete.
  
--STANDARD MICROSYSTEMS CORPORATION (SMC) ARCNET-PC500/PC550 Long Board
--=====================================================================
-+  .. note::
+ 2. Bonding Driver Options
+ =========================
  
--Note: There is another Version of the PC500 called Short Version, which 
-+      There is another Version of the PC500 called Short Version, which
-       is different in hard- and software! The most important differences
-       are:
-+
-       - The long board has no Shared memory.
-       - On the long board the selection of the interrupt is done by binary
--        coded switch, on the short board directly by jumper.
--        
-+	coded switch, on the short board directly by jumper.
-+
- [Avery's note: pay special attention to that: the long board HAS NO SHARED
--MEMORY.  This means the current Linux-ARCnet driver can't use these cards. 
-+MEMORY.  This means the current Linux-ARCnet driver can't use these cards.
- I have obtained a PC500Longboard and will be doing some experiments on it in
- the future, but don't hold your breath.  Thanks again to Juergen Seifert for
- his advice about this!]
+-	Options for the bonding driver are supplied as parameters to the
++Options for the bonding driver are supplied as parameters to the
+ bonding module at load time, or are specified via sysfs.
  
- This description has been written by Juergen Seifert <seifert@htwm.de>
--using information from the following Original SMC Manual 
-+using information from the following Original SMC Manual
+-	Module options may be given as command line arguments to the
++Module options may be given as command line arguments to the
+ insmod or modprobe command, but are usually specified in either the
+-/etc/modprobe.d/*.conf configuration files, or in a distro-specific
++``/etc/modprobe.d/*.conf`` configuration files, or in a distro-specific
+ configuration file (some of which are detailed in the next section).
  
--             "Configuration Guide for
--             SMC ARCNET-PC500/PC550
--         Series Network Controller Boards
--             Pub. # 900.033 Rev. A
--                November, 1989"
-+	 "Configuration Guide for SMC ARCNET-PC500/PC550
-+	 Series Network Controller Boards Pub. # 900.033 Rev. A
-+	 November, 1989"
+-	Details on bonding support for sysfs is provided in the
++Details on bonding support for sysfs is provided in the
+ "Configuring Bonding Manually via Sysfs" section, below.
  
- ARCNET is a registered trademark of the Datapoint Corporation
--SMC is a registered trademark of the Standard Microsystems Corporation  
-+SMC is a registered trademark of the Standard Microsystems Corporation
+-	The available bonding driver parameters are listed below. If a
++The available bonding driver parameters are listed below. If a
+ parameter is not specified the default value is used.  When initially
+ configuring a bond, it is recommended "tail -f /var/log/messages" be
+ run in a separate window to watch for bonding driver error messages.
  
- The PC500 is equipped with a standard BNC female connector for connection
- to RG-62/U coax cable.
-@@ -769,7 +795,9 @@ The PC550 is equipped with two modular RJ11-type jacks for connection
- to twisted pair wiring.
- It can be used in a star or a daisy-chained (BUS) network.
+-	It is critical that either the miimon or arp_interval and
++It is critical that either the miimon or arp_interval and
+ arp_ip_target parameters be specified, otherwise serious network
+ degradation will occur during link failures.  Very few devices do not
+ support at least miimon, so there is really no reason not to use it.
  
--       1 
-+::
-+
-+       1
-        0 9 8 7 6 5 4 3 2 1     6 5 4 3 2 1
-     ____________________________________________________________________
-    < |         SW1         | |     SW2     |                            |
-@@ -796,34 +824,34 @@ It can be used in a star or a daisy-chained (BUS) network.
-    >    |  |                                             |
-    <____|  |_____________________________________________|
+-	Options with textual values will accept either the text name
++Options with textual values will accept either the text name
+ or, for backwards compatibility, the option value.  E.g.,
+ "mode=802.3ad" and "mode=4" set the same mode.
  
--Legend:
-+Legend::
+-	The parameters are as follows:
++The parameters are as follows:
  
--SW1	1-6:	I/O Base Address Select
-+  SW1	1-6:	I/O Base Address Select
- 	7-10:	Interrupt Select
--SW2	1-6:	Reserved for Future Use
--SW3	1-8:	Node ID Select
--JP2	1-4:	Extended Timeout Select
--JP6		Selected - Star Topology	(PC500 only)
-+  SW2	1-6:	Reserved for Future Use
-+  SW3	1-8:	Node ID Select
-+  JP2	1-4:	Extended Timeout Select
-+  JP6		Selected - Star Topology	(PC500 only)
- 		Deselected - Bus Topology	(PC500 only)
--CR3	Green	Monitors Network Activity
--CR4	Red	Monitors Board Activity
--J1		BNC RG62/U Connector		(PC500 only)
--J1		6-position Telephone Jack	(PC550 only)
--J2		6-position Telephone Jack	(PC550 only)
-+  CR3	Green	Monitors Network Activity
-+  CR4	Red	Monitors Board Activity
-+  J1		BNC RG62/U Connector		(PC500 only)
-+  J1		6-position Telephone Jack	(PC550 only)
-+  J2		6-position Telephone Jack	(PC550 only)
+ active_slave
  
- Setting one of the switches to Off/Open means "1", On/Closed means "0".
+@@ -246,10 +251,13 @@ ad_user_port_key
  
+ 	In an AD system, the port-key has three parts as shown below -
  
- Setting the Node ID
---------------------
-+^^^^^^^^^^^^^^^^^^^
++	   =====  ============
+ 	   Bits   Use
++	   =====  ============
+ 	   00     Duplex
+ 	   01-05  Speed
+ 	   06-15  User-defined
++	   =====  ============
  
- The eight switches in group SW3 are used to set the node ID. Each node
--attached to the network must have an unique node ID which must be 
-+attached to the network must have an unique node ID which must be
- different from 0.
- Switch 1 serves as the least significant bit (LSB).
+ 	This defines the upper 10 bits of the port key. The values can be
+ 	from 0 - 1023. If not given, the system defaults to 0.
+@@ -699,7 +707,7 @@ mode
+ 		swapped with the new curr_active_slave that was
+ 		chosen.
  
--The node ID is the sum of the values of all switches set to "1"  
--These values are:
-+The node ID is the sum of the values of all switches set to "1"
-+These values are::
+-num_grat_arp
++num_grat_arp,
+ num_unsol_na
  
-     Switch | Value
-     -------|-------
-@@ -836,30 +864,30 @@ These values are:
-       7    |  64
-       8    | 128
+ 	Specify the number of peer notifications (gratuitous ARPs and
+@@ -729,13 +737,13 @@ packets_per_slave
  
--Some Examples:
-+Some Examples::
+ peer_notif_delay
  
--    Switch         | Hex     | Decimal 
-+    Switch         | Hex     | Decimal
-    8 7 6 5 4 3 2 1 | Node ID | Node ID
-    ----------------|---------|---------
-    0 0 0 0 0 0 0 0 |    not allowed
--   0 0 0 0 0 0 0 1 |    1    |    1 
-+   0 0 0 0 0 0 0 1 |    1    |    1
-    0 0 0 0 0 0 1 0 |    2    |    2
-    0 0 0 0 0 0 1 1 |    3    |    3
-        . . .       |         |
-    0 1 0 1 0 1 0 1 |   55    |   85
-        . . .       |         |
-    1 0 1 0 1 0 1 0 |   AA    |  170
--       . . .       |         |  
-+       . . .       |         |
-    1 1 1 1 1 1 0 1 |   FD    |  253
-    1 1 1 1 1 1 1 0 |   FE    |  254
--   1 1 1 1 1 1 1 1 |   FF    |  255 
-+   1 1 1 1 1 1 1 1 |   FF    |  255
+-        Specify the delay, in milliseconds, between each peer
+-        notification (gratuitous ARP and unsolicited IPv6 Neighbor
+-        Advertisement) when they are issued after a failover event.
+-        This delay should be a multiple of the link monitor interval
+-        (arp_interval or miimon, whichever is active). The default
+-        value is 0 which means to match the value of the link monitor
+-        interval.
++	Specify the delay, in milliseconds, between each peer
++	notification (gratuitous ARP and unsolicited IPv6 Neighbor
++	Advertisement) when they are issued after a failover event.
++	This delay should be a multiple of the link monitor interval
++	(arp_interval or miimon, whichever is active). The default
++	value is 0 which means to match the value of the link monitor
++	interval.
  
+ primary
  
- Setting the I/O Base Address
------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+@@ -977,88 +985,88 @@ lp_interval
+ 3. Configuring Bonding Devices
+ ==============================
  
- The first six switches in switch group SW1 are used to select one
--of 32 possible I/O Base addresses using the following table
-+of 32 possible I/O Base addresses using the following table::
+-	You can configure bonding using either your distro's network
++You can configure bonding using either your distro's network
+ initialization scripts, or manually using either iproute2 or the
+ sysfs interface.  Distros generally use one of three packages for the
+ network initialization scripts: initscripts, sysconfig or interfaces.
+ Recent versions of these packages have support for bonding, while older
+ versions do not.
  
-    Switch       | Hex I/O
-    6 5  4 3 2 1 | Address
-@@ -899,16 +927,18 @@ of 32 possible I/O Base addresses using the following table
+-	We will first describe the options for configuring bonding for
++We will first describe the options for configuring bonding for
+ distros using versions of initscripts, sysconfig and interfaces with full
+ or partial support for bonding, then provide information on enabling
+ bonding without support from the network initialization scripts (i.e.,
+ older versions of initscripts or sysconfig).
  
+-	If you're unsure whether your distro uses sysconfig,
++If you're unsure whether your distro uses sysconfig,
+ initscripts or interfaces, or don't know if it's new enough, have no fear.
+ Determining this is fairly straightforward.
  
- Setting the Interrupt
-----------------------
-+^^^^^^^^^^^^^^^^^^^^^
+-	First, look for a file called interfaces in /etc/network directory.
++First, look for a file called interfaces in /etc/network directory.
+ If this file is present in your system, then your system use interfaces. See
+ Configuration with Interfaces Support.
  
--Switches seven through ten of switch group SW1 are used to select the 
--interrupt level. The interrupt level is binary coded, so selections 
-+Switches seven through ten of switch group SW1 are used to select the
-+interrupt level. The interrupt level is binary coded, so selections
- from 0 to 15 would be possible, but only the following eight values will
- be supported: 3, 4, 5, 7, 9, 10, 11, 12.
+-	Else, issue the command:
++Else, issue the command::
  
-+::
-+
-    Switch   | IRQ
--   10 9 8 7 | 
--   ---------|-------- 
-+   10 9 8 7 |
-+   ---------|--------
-     0 0 1 1 |  3
-     0 1 0 0 |  4
-     0 1 0 1 |  5
-@@ -919,52 +949,50 @@ be supported: 3, 4, 5, 7, 9, 10, 11, 12.
-     1 1 0 0 | 12
+-$ rpm -qf /sbin/ifup
++	$ rpm -qf /sbin/ifup
  
+-	It will respond with a line of text starting with either
++It will respond with a line of text starting with either
+ "initscripts" or "sysconfig," followed by some numbers.  This is the
+ package that provides your network initialization scripts.
  
--Setting the Timeouts 
----------------------
-+Setting the Timeouts
-+^^^^^^^^^^^^^^^^^^^^
+-	Next, to determine if your installation supports bonding,
+-issue the command:
++Next, to determine if your installation supports bonding,
++issue the command::
  
--The two jumpers JP2 (1-4) are used to determine the timeout parameters. 
-+The two jumpers JP2 (1-4) are used to determine the timeout parameters.
- These two jumpers are normally left open.
- Refer to the COM9026 Data Sheet for alternate configurations.
+-$ grep ifenslave /sbin/ifup
++    $ grep ifenslave /sbin/ifup
  
+-	If this returns any matches, then your initscripts or
++If this returns any matches, then your initscripts or
+ sysconfig has support for bonding.
  
- Configuring the PC500 for Star or Bus Topology
------------------------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3.1 Configuration with Sysconfig Support
+ ----------------------------------------
  
--The single jumper labeled JP6 is used to configure the PC500 board for 
-+The single jumper labeled JP6 is used to configure the PC500 board for
- star or bus topology.
--When the jumper is installed, the board may be used in a star network, when 
-+When the jumper is installed, the board may be used in a star network, when
- it is removed, the board can be used in a bus topology.
+-	This section applies to distros using a version of sysconfig
++This section applies to distros using a version of sysconfig
+ with bonding support, for example, SuSE Linux Enterprise Server 9.
  
+-	SuSE SLES 9's networking configuration system does support
++SuSE SLES 9's networking configuration system does support
+ bonding, however, at this writing, the YaST system configuration
+ front end does not provide any means to work with bonding devices.
+ Bonding devices can be managed by hand, however, as follows.
  
- Diagnostic LEDs
-----------------
-+^^^^^^^^^^^^^^^
+-	First, if they have not already been configured, configure the
++First, if they have not already been configured, configure the
+ slave devices.  On SLES 9, this is most easily done by running the
+ yast2 sysconfig configuration utility.  The goal is for to create an
+ ifcfg-id file for each slave device.  The simplest way to accomplish
+ this is to configure the devices for DHCP (this is only to get the
+ file ifcfg-id file created; see below for some issues with DHCP).  The
+-name of the configuration file for each device will be of the form:
++name of the configuration file for each device will be of the form::
  
- Two diagnostic LEDs are visible on the rear bracket of the board.
- The green LED monitors the network activity: the red one shows the
--board activity:
-+board activity::
+-ifcfg-id-xx:xx:xx:xx:xx:xx
++    ifcfg-id-xx:xx:xx:xx:xx:xx
  
-  Green  | Status               Red      | Status
-  -------|-------------------   ---------|-------------------
-   on    | normal activity      flash/on | data transfer
-   blink | reconfiguration      off      | no data transfer;
-   off   | defective board or            | incorrect memory or
--        | node ID is zero               | I/O address
-+	| node ID is zero               | I/O address
+-	Where the "xx" portion will be replaced with the digits from
++Where the "xx" portion will be replaced with the digits from
+ the device's permanent MAC address.
  
+-	Once the set of ifcfg-id-xx:xx:xx:xx:xx:xx files has been
++Once the set of ifcfg-id-xx:xx:xx:xx:xx:xx files has been
+ created, it is necessary to edit the configuration files for the slave
+ devices (the MAC addresses correspond to those of the slave devices).
+ Before editing, the file will contain multiple lines, and will look
+-something like this:
++something like this::
  
--*****************************************************************************
--
--** SMC **
- PC710 (8-bit card)
- ------------------
-+
-   - from J.S. van Oosten <jvoosten@compiler.tdcnet.nl>
--  
-+
- Note: this data is gathered by experimenting and looking at info of other
- cards. However, I'm sure I got 99% of the settings right.
+-BOOTPROTO='dhcp'
+-STARTMODE='on'
+-USERCTL='no'
+-UNIQUE='XNzu.WeZGOGF+4wE'
+-_nm_name='bus-pci-0001:61:01.0'
++	BOOTPROTO='dhcp'
++	STARTMODE='on'
++	USERCTL='no'
++	UNIQUE='XNzu.WeZGOGF+4wE'
++	_nm_name='bus-pci-0001:61:01.0'
  
- The SMC710 card resembles the PC270 card, but is much more basic (i.e. no
--LEDs, RJ11 jacks, etc.) and 8 bit. Here's a little drawing:
-+LEDs, RJ11 jacks, etc.) and 8 bit. Here's a little drawing::
+-	Change the BOOTPROTO and STARTMODE lines to the following:
++Change the BOOTPROTO and STARTMODE lines to the following::
  
--    _______________________________________   
-+    _______________________________________
-    | +---------+  +---------+              |____
-    | |   S2    |  |   S1    |              |
-    | +---------+  +---------+              |
-@@ -976,12 +1004,12 @@ LEDs, RJ11 jacks, etc.) and 8 bit. Here's a little drawing:
-    |  +===+                                |
-    |                                       |
-    |   .. JP1   +----------+               |
--   |   ..       | big chip |               |   
-+   |   ..       | big chip |               |
-    |   ..       |  90C63   |               |
-    |   ..       |          |               |
-    |   ..       +----------+               |
-     -------                     -----------
--           |||||||||||||||||||||
-+	   |||||||||||||||||||||
+-BOOTPROTO='none'
+-STARTMODE='off'
++	BOOTPROTO='none'
++	STARTMODE='off'
  
- The row of jumpers at JP1 actually consists of 8 jumpers, (sometimes
- labelled) the same as on the PC270, from top to bottom: EXT2, EXT1, ROM,
-@@ -992,71 +1020,76 @@ are swapped (S1 is the nodeaddress, S2 sets IO- and RAM-address).
+-	Do not alter the UNIQUE or _nm_name lines.  Remove any other
++Do not alter the UNIQUE or _nm_name lines.  Remove any other
+ lines (USERCTL, etc).
  
- I know it works when connected to a PC110 type ARCnet board.
+-	Once the ifcfg-id-xx:xx:xx:xx:xx:xx files have been modified,
++Once the ifcfg-id-xx:xx:xx:xx:xx:xx files have been modified,
+ it's time to create the configuration file for the bonding device
+ itself.  This file is named ifcfg-bondX, where X is the number of the
+ bonding device to create, starting at 0.  The first such file is
+@@ -1066,49 +1074,52 @@ ifcfg-bond0, the second is ifcfg-bond1, and so on.  The sysconfig
+ network configuration system will correctly start multiple instances
+ of bonding.
  
--	
-+
- *****************************************************************************
+-	The contents of the ifcfg-bondX file is as follows:
++The contents of the ifcfg-bondX file is as follows::
  
--** Possibly SMC **
-+Possibly SMC
-+============
-+
- LCS-8830(-T) (8 and 16-bit cards)
+-BOOTPROTO="static"
+-BROADCAST="10.0.2.255"
+-IPADDR="10.0.2.10"
+-NETMASK="255.255.0.0"
+-NETWORK="10.0.2.0"
+-REMOTE_IPADDR=""
+-STARTMODE="onboot"
+-BONDING_MASTER="yes"
+-BONDING_MODULE_OPTS="mode=active-backup miimon=100"
+-BONDING_SLAVE0="eth0"
+-BONDING_SLAVE1="bus-pci-0000:06:08.1"
++	BOOTPROTO="static"
++	BROADCAST="10.0.2.255"
++	IPADDR="10.0.2.10"
++	NETMASK="255.255.0.0"
++	NETWORK="10.0.2.0"
++	REMOTE_IPADDR=""
++	STARTMODE="onboot"
++	BONDING_MASTER="yes"
++	BONDING_MODULE_OPTS="mode=active-backup miimon=100"
++	BONDING_SLAVE0="eth0"
++	BONDING_SLAVE1="bus-pci-0000:06:08.1"
+ 
+-	Replace the sample BROADCAST, IPADDR, NETMASK and NETWORK
++Replace the sample BROADCAST, IPADDR, NETMASK and NETWORK
+ values with the appropriate values for your network.
+ 
+-	The STARTMODE specifies when the device is brought online.
++The STARTMODE specifies when the device is brought online.
+ The possible values are:
+ 
+-	onboot:	 The device is started at boot time.  If you're not
++	======== ======================================================
++	onboot	 The device is started at boot time.  If you're not
+ 		 sure, this is probably what you want.
+ 
+-	manual:	 The device is started only when ifup is called
++	manual	 The device is started only when ifup is called
+ 		 manually.  Bonding devices may be configured this
+ 		 way if you do not wish them to start automatically
+ 		 at boot for some reason.
+ 
+-	hotplug: The device is started by a hotplug event.  This is not
++	hotplug  The device is started by a hotplug event.  This is not
+ 		 a valid choice for a bonding device.
+ 
+-	off or ignore: The device configuration is ignored.
++	off or   The device configuration is ignored.
++	ignore
++	======== ======================================================
+ 
+-	The line BONDING_MASTER='yes' indicates that the device is a
++The line BONDING_MASTER='yes' indicates that the device is a
+ bonding master device.  The only useful value is "yes."
+ 
+-	The contents of BONDING_MODULE_OPTS are supplied to the
++The contents of BONDING_MODULE_OPTS are supplied to the
+ instance of the bonding module for this device.  Specify the options
+ for the bonding mode, link monitoring, and so on here.  Do not include
+ the max_bonds bonding parameter; this will confuse the configuration
+ system if you have multiple bonding devices.
+ 
+-	Finally, supply one BONDING_SLAVEn="slave device" for each
++Finally, supply one BONDING_SLAVEn="slave device" for each
+ slave.  where "n" is an increasing value, one for each slave.  The
+ "slave device" is either an interface name, e.g., "eth0", or a device
+ specifier for the network device.  The interface name is easier to
+@@ -1120,34 +1131,34 @@ changes (for example, it is moved from one PCI slot to another).  The
+ example above uses one of each type for demonstration purposes; most
+ configurations will choose one or the other for all slave devices.
+ 
+-	When all configuration files have been modified or created,
++When all configuration files have been modified or created,
+ networking must be restarted for the configuration changes to take
+-effect.  This can be accomplished via the following:
++effect.  This can be accomplished via the following::
+ 
+-# /etc/init.d/network restart
++	# /etc/init.d/network restart
+ 
+-	Note that the network control script (/sbin/ifdown) will
++Note that the network control script (/sbin/ifdown) will
+ remove the bonding module as part of the network shutdown processing,
+ so it is not necessary to remove the module by hand if, e.g., the
+ module parameters have changed.
+ 
+-	Also, at this writing, YaST/YaST2 will not manage bonding
++Also, at this writing, YaST/YaST2 will not manage bonding
+ devices (they do not show bonding interfaces on its list of network
+ devices).  It is necessary to edit the configuration file by hand to
+ change the bonding configuration.
+ 
+-	Additional general options and details of the ifcfg file
+-format can be found in an example ifcfg template file:
++Additional general options and details of the ifcfg file
++format can be found in an example ifcfg template file::
+ 
+-/etc/sysconfig/network/ifcfg.template
++	/etc/sysconfig/network/ifcfg.template
+ 
+-	Note that the template does not document the various BONDING_
++Note that the template does not document the various ``BONDING_*``
+ settings described above, but does describe many of the other options.
+ 
+ 3.1.1 Using DHCP with Sysconfig
+ -------------------------------
+ 
+-	Under sysconfig, configuring a device with BOOTPROTO='dhcp'
++Under sysconfig, configuring a device with BOOTPROTO='dhcp'
+ will cause it to query DHCP for its IP address information.  At this
+ writing, this does not function for bonding devices; the scripts
+ attempt to obtain the device address from DHCP prior to adding any of
+@@ -1157,7 +1168,7 @@ sent to the network.
+ 3.1.2 Configuring Multiple Bonds with Sysconfig
+ -----------------------------------------------
+ 
+-	The sysconfig network initialization system is capable of
++The sysconfig network initialization system is capable of
+ handling multiple bonding devices.  All that is necessary is for each
+ bonding instance to have an appropriately configured ifcfg-bondX file
+ (as described above).  Do not specify the "max_bonds" parameter to any
+@@ -1165,14 +1176,14 @@ instance of bonding, as this will confuse sysconfig.  If you require
+ multiple bonding devices with identical parameters, create multiple
+ ifcfg-bondX files.
+ 
+-	Because the sysconfig scripts supply the bonding module
++Because the sysconfig scripts supply the bonding module
+ options in the ifcfg-bondX file, it is not necessary to add them to
+-the system /etc/modules.d/*.conf configuration files.
++the system ``/etc/modules.d/*.conf`` configuration files.
+ 
+ 3.2 Configuration with Initscripts Support
+ ------------------------------------------
+ 
+-	This section applies to distros using a recent version of
++This section applies to distros using a recent version of
+ initscripts with bonding support, for example, Red Hat Enterprise Linux
+ version 3 or later, Fedora, etc.  On these systems, the network
+ initialization scripts have knowledge of bonding, and can be configured to
+@@ -1180,7 +1191,7 @@ control bonding devices.  Note that older versions of the initscripts
+ package have lower levels of support for bonding; this will be noted where
+ applicable.
+ 
+-	These distros will not automatically load the network adapter
++These distros will not automatically load the network adapter
+ driver unless the ethX device is configured with an IP address.
+ Because of this constraint, users must manually configure a
+ network-script file for all physical adapters that will be members of
+@@ -1188,19 +1199,19 @@ a bondX link.  Network script files are located in the directory:
+ 
+ /etc/sysconfig/network-scripts
+ 
+-	The file name must be prefixed with "ifcfg-eth" and suffixed
++The file name must be prefixed with "ifcfg-eth" and suffixed
+ with the adapter's physical adapter number.  For example, the script
+ for eth0 would be named /etc/sysconfig/network-scripts/ifcfg-eth0.
+-Place the following text in the file:
++Place the following text in the file::
+ 
+-DEVICE=eth0
+-USERCTL=no
+-ONBOOT=yes
+-MASTER=bond0
+-SLAVE=yes
+-BOOTPROTO=none
++	DEVICE=eth0
++	USERCTL=no
++	ONBOOT=yes
++	MASTER=bond0
++	SLAVE=yes
++	BOOTPROTO=none
+ 
+-	The DEVICE= line will be different for every ethX device and
++The DEVICE= line will be different for every ethX device and
+ must correspond with the name of the file, i.e., ifcfg-eth1 must have
+ a device line of DEVICE=eth1.  The setting of the MASTER= line will
+ also depend on the final bonding interface name chosen for your bond.
+@@ -1208,69 +1219,70 @@ As with other network devices, these typically start at 0, and go up
+ one for each device, i.e., the first bonding instance is bond0, the
+ second is bond1, and so on.
+ 
+-	Next, create a bond network script.  The file name for this
++Next, create a bond network script.  The file name for this
+ script will be /etc/sysconfig/network-scripts/ifcfg-bondX where X is
+ the number of the bond.  For bond0 the file is named "ifcfg-bond0",
+ for bond1 it is named "ifcfg-bond1", and so on.  Within that file,
+-place the following text:
++place the following text::
+ 
+-DEVICE=bond0
+-IPADDR=192.168.1.1
+-NETMASK=255.255.255.0
+-NETWORK=192.168.1.0
+-BROADCAST=192.168.1.255
+-ONBOOT=yes
+-BOOTPROTO=none
+-USERCTL=no
++	DEVICE=bond0
++	IPADDR=192.168.1.1
++	NETMASK=255.255.255.0
++	NETWORK=192.168.1.0
++	BROADCAST=192.168.1.255
++	ONBOOT=yes
++	BOOTPROTO=none
++	USERCTL=no
+ 
+-	Be sure to change the networking specific lines (IPADDR,
++Be sure to change the networking specific lines (IPADDR,
+ NETMASK, NETWORK and BROADCAST) to match your network configuration.
+ 
+-	For later versions of initscripts, such as that found with Fedora
++For later versions of initscripts, such as that found with Fedora
+ 7 (or later) and Red Hat Enterprise Linux version 5 (or later), it is possible,
+ and, indeed, preferable, to specify the bonding options in the ifcfg-bond0
+-file, e.g. a line of the format:
++file, e.g. a line of the format::
+ 
+-BONDING_OPTS="mode=active-backup arp_interval=60 arp_ip_target=192.168.1.254"
++  BONDING_OPTS="mode=active-backup arp_interval=60 arp_ip_target=192.168.1.254"
+ 
+-	will configure the bond with the specified options.  The options
++will configure the bond with the specified options.  The options
+ specified in BONDING_OPTS are identical to the bonding module parameters
+ except for the arp_ip_target field when using versions of initscripts older
+ than and 8.57 (Fedora 8) and 8.45.19 (Red Hat Enterprise Linux 5.2).  When
+ using older versions each target should be included as a separate option and
+ should be preceded by a '+' to indicate it should be added to the list of
+-queried targets, e.g.,
++queried targets, e.g.,::
+ 
+-	arp_ip_target=+192.168.1.1 arp_ip_target=+192.168.1.2
++    arp_ip_target=+192.168.1.1 arp_ip_target=+192.168.1.2
+ 
+-	is the proper syntax to specify multiple targets.  When specifying
+-options via BONDING_OPTS, it is not necessary to edit /etc/modprobe.d/*.conf.
++is the proper syntax to specify multiple targets.  When specifying
++options via BONDING_OPTS, it is not necessary to edit
++``/etc/modprobe.d/*.conf``.
+ 
+-	For even older versions of initscripts that do not support
++For even older versions of initscripts that do not support
+ BONDING_OPTS, it is necessary to edit /etc/modprobe.d/*.conf, depending upon
+ your distro) to load the bonding module with your desired options when the
+ bond0 interface is brought up.  The following lines in /etc/modprobe.d/*.conf
+ will load the bonding module, and select its options:
+ 
+-alias bond0 bonding
+-options bond0 mode=balance-alb miimon=100
++	alias bond0 bonding
++	options bond0 mode=balance-alb miimon=100
+ 
+-	Replace the sample parameters with the appropriate set of
++Replace the sample parameters with the appropriate set of
+ options for your configuration.
+ 
+-	Finally run "/etc/rc.d/init.d/network restart" as root.  This
++Finally run "/etc/rc.d/init.d/network restart" as root.  This
+ will restart the networking subsystem and your bond link should be now
+ up and running.
+ 
+ 3.2.1 Using DHCP with Initscripts
  ---------------------------------
+ 
+-	Recent versions of initscripts (the versions supplied with Fedora
++Recent versions of initscripts (the versions supplied with Fedora
+ Core 3 and Red Hat Enterprise Linux 4, or later versions, are reported to
+ work) have support for assigning IP information to bonding devices via
+ DHCP.
+ 
+-	To configure bonding for DHCP, configure it as described
++To configure bonding for DHCP, configure it as described
+ above, except replace the line "BOOTPROTO=none" with "BOOTPROTO=dhcp"
+ and add a line consisting of "TYPE=Bonding".  Note that the TYPE value
+ is case sensitive.
+@@ -1278,7 +1290,7 @@ is case sensitive.
+ 3.2.2 Configuring Multiple Bonds with Initscripts
+ -------------------------------------------------
+ 
+-	Initscripts packages that are included with Fedora 7 and Red Hat
++Initscripts packages that are included with Fedora 7 and Red Hat
+ Enterprise Linux 5 support multiple bonding interfaces by simply
+ specifying the appropriate BONDING_OPTS= in ifcfg-bondX where X is the
+ number of the bond.  This support requires sysfs support in the kernel,
+@@ -1290,77 +1302,77 @@ below.
+ 3.3 Configuring Bonding Manually with iproute2
+ -----------------------------------------------
+ 
+-	This section applies to distros whose network initialization
++This section applies to distros whose network initialization
+ scripts (the sysconfig or initscripts package) do not have specific
+ knowledge of bonding.  One such distro is SuSE Linux Enterprise Server
+ version 8.
+ 
+-	The general method for these systems is to place the bonding
++The general method for these systems is to place the bonding
+ module parameters into a config file in /etc/modprobe.d/ (as
+ appropriate for the installed distro), then add modprobe and/or
+ `ip link` commands to the system's global init script.  The name of
+ the global init script differs; for sysconfig, it is
+ /etc/init.d/boot.local and for initscripts it is /etc/rc.d/rc.local.
+ 
+-	For example, if you wanted to make a simple bond of two e100
++For example, if you wanted to make a simple bond of two e100
+ devices (presumed to be eth0 and eth1), and have it persist across
+ reboots, edit the appropriate file (/etc/init.d/boot.local or
+-/etc/rc.d/rc.local), and add the following:
++/etc/rc.d/rc.local), and add the following::
+ 
+-modprobe bonding mode=balance-alb miimon=100
+-modprobe e100
+-ifconfig bond0 192.168.1.1 netmask 255.255.255.0 up
+-ip link set eth0 master bond0
+-ip link set eth1 master bond0
++	modprobe bonding mode=balance-alb miimon=100
++	modprobe e100
++	ifconfig bond0 192.168.1.1 netmask 255.255.255.0 up
++	ip link set eth0 master bond0
++	ip link set eth1 master bond0
+ 
+-	Replace the example bonding module parameters and bond0
++Replace the example bonding module parameters and bond0
+ network configuration (IP address, netmask, etc) with the appropriate
+ values for your configuration.
+ 
+-	Unfortunately, this method will not provide support for the
++Unfortunately, this method will not provide support for the
+ ifup and ifdown scripts on the bond devices.  To reload the bonding
+-configuration, it is necessary to run the initialization script, e.g.,
++configuration, it is necessary to run the initialization script, e.g.,::
+ 
+-# /etc/init.d/boot.local
++	# /etc/init.d/boot.local
+ 
+-	or
++or::
+ 
+-# /etc/rc.d/rc.local
++	# /etc/rc.d/rc.local
+ 
+-	It may be desirable in such a case to create a separate script
++It may be desirable in such a case to create a separate script
+ which only initializes the bonding configuration, then call that
+ separate script from within boot.local.  This allows for bonding to be
+ enabled without re-running the entire global init script.
+ 
+-	To shut down the bonding devices, it is necessary to first
++To shut down the bonding devices, it is necessary to first
+ mark the bonding device itself as being down, then remove the
+ appropriate device driver modules.  For our example above, you can do
+-the following:
++the following::
+ 
+-# ifconfig bond0 down
+-# rmmod bonding
+-# rmmod e100
++	# ifconfig bond0 down
++	# rmmod bonding
++	# rmmod e100
+ 
+-	Again, for convenience, it may be desirable to create a script
++Again, for convenience, it may be desirable to create a script
+ with these commands.
+ 
+ 
+ 3.3.1 Configuring Multiple Bonds Manually
+ -----------------------------------------
+ 
+-	This section contains information on configuring multiple
++This section contains information on configuring multiple
+ bonding devices with differing options for those systems whose network
+ initialization scripts lack support for configuring multiple bonds.
+ 
+-	If you require multiple bonding devices, but all with the same
++If you require multiple bonding devices, but all with the same
+ options, you may wish to use the "max_bonds" module parameter,
+ documented above.
+ 
+-	To create multiple bonding devices with differing options, it is
++To create multiple bonding devices with differing options, it is
+ preferable to use bonding parameters exported by sysfs, documented in the
+ section below.
+ 
+-	For versions of bonding without sysfs support, the only means to
++For versions of bonding without sysfs support, the only means to
+ provide multiple instances of bonding with differing options is to load
+ the bonding driver multiple times.  Note that current versions of the
+ sysconfig network initialization scripts handle this automatically; if
+@@ -1368,35 +1380,35 @@ your distro uses these scripts, no special action is needed.  See the
+ section Configuring Bonding Devices, above, if you're not sure about your
+ network initialization scripts.
+ 
+-	To load multiple instances of the module, it is necessary to
++To load multiple instances of the module, it is necessary to
+ specify a different name for each instance (the module loading system
+ requires that every loaded module, even multiple instances of the same
+ module, have a unique name).  This is accomplished by supplying multiple
+-sets of bonding options in /etc/modprobe.d/*.conf, for example:
++sets of bonding options in ``/etc/modprobe.d/*.conf``, for example::
+ 
+-alias bond0 bonding
+-options bond0 -o bond0 mode=balance-rr miimon=100
++	alias bond0 bonding
++	options bond0 -o bond0 mode=balance-rr miimon=100
+ 
+-alias bond1 bonding
+-options bond1 -o bond1 mode=balance-alb miimon=50
++	alias bond1 bonding
++	options bond1 -o bond1 mode=balance-alb miimon=50
+ 
+-	will load the bonding module two times.  The first instance is
++will load the bonding module two times.  The first instance is
+ named "bond0" and creates the bond0 device in balance-rr mode with an
+ miimon of 100.  The second instance is named "bond1" and creates the
+ bond1 device in balance-alb mode with an miimon of 50.
+ 
+-	In some circumstances (typically with older distributions),
++In some circumstances (typically with older distributions),
+ the above does not work, and the second bonding instance never sees
+ its options.  In that case, the second options line can be substituted
+-as follows:
++as follows::
+ 
+-install bond1 /sbin/modprobe --ignore-install bonding -o bond1 \
+-	mode=balance-alb miimon=50
++	install bond1 /sbin/modprobe --ignore-install bonding -o bond1 \
++				     mode=balance-alb miimon=50
+ 
+-	This may be repeated any number of times, specifying a new and
++This may be repeated any number of times, specifying a new and
+ unique name in place of bond1 for each subsequent instance.
+ 
+-	It has been observed that some Red Hat supplied kernels are unable
++It has been observed that some Red Hat supplied kernels are unable
+ to rename modules at load time (the "-o bond1" part).  Attempts to pass
+ that option to modprobe will produce an "Operation not permitted" error.
+ This has been reported on some Fedora Core kernels, and has been seen on
+@@ -1407,18 +1419,18 @@ kernels, and also lack sysfs support).
+ 3.4 Configuring Bonding Manually via Sysfs
+ ------------------------------------------
+ 
+-	Starting with version 3.0.0, Channel Bonding may be configured
++Starting with version 3.0.0, Channel Bonding may be configured
+ via the sysfs interface.  This interface allows dynamic configuration
+ of all bonds in the system without unloading the module.  It also
+ allows for adding and removing bonds at runtime.  Ifenslave is no
+ longer required, though it is still supported.
+ 
+-	Use of the sysfs interface allows you to use multiple bonds
++Use of the sysfs interface allows you to use multiple bonds
+ with different configurations without having to reload the module.
+ It also allows you to use multiple, differently configured bonds when
+ bonding is compiled into the kernel.
+ 
+-	You must have the sysfs filesystem mounted to configure
++You must have the sysfs filesystem mounted to configure
+ bonding this way.  The examples in this document assume that you
+ are using the standard mount point for sysfs, e.g. /sys.  If your
+ sysfs filesystem is mounted elsewhere, you will need to adjust the
+@@ -1426,38 +1438,45 @@ example paths accordingly.
+ 
+ Creating and Destroying Bonds
+ -----------------------------
+-To add a new bond foo:
+-# echo +foo > /sys/class/net/bonding_masters
++To add a new bond foo::
+ 
+-To remove an existing bond bar:
+-# echo -bar > /sys/class/net/bonding_masters
++	# echo +foo > /sys/class/net/bonding_masters
+ 
+-To show all existing bonds:
+-# cat /sys/class/net/bonding_masters
++To remove an existing bond bar::
+ 
+-NOTE: due to 4K size limitation of sysfs files, this list may be
+-truncated if you have more than a few hundred bonds.  This is unlikely
+-to occur under normal operating conditions.
++	# echo -bar > /sys/class/net/bonding_masters
 +
-   - from Mathias Katzer <mkatzer@HRZ.Uni-Bielefeld.DE>
-   - Marek Michalkiewicz <marekm@i17linuxb.ists.pwr.wroc.pl> says the
-     LCS-8830 is slightly different from LCS-8830-T.  These are 8 bit, BUS
-     only (the JP0 jumper is hardwired), and BNC only.
--	
++To show all existing bonds::
 +
- This is a LCS-8830-T made by SMC, I think ('SMC' only appears on one PLCC,
- nowhere else, not even on the few Xeroxed sheets from the manual).
- 
--SMC ARCnet Board Type LCS-8830-T
--
--   ------------------------------------
--  |                                    |
--  |              JP3 88  8 JP2         |
--  |       #####      | \               |
--  |       #####    ET1 ET2          ###|
--  |                              8  ###|
--  |  U3   SW 1                  JP0 ###|  Phone Jacks
--  |  --                             ###|
--  | |  |                               |
--  | |  |   SW2                         |
--  | |  |                               |
--  | |  |  #####                        |
--  |  --   #####                       ####  BNC Connector 
--  |                                   ####
--  |   888888 JP1                       |
--  |   234567                           |
--   --                           -------
--     |||||||||||||||||||||||||||
--      --------------------------
--
--
--SW1: DIP-Switches for Station Address
--SW2: DIP-Switches for Memory Base and I/O Base addresses
--
--JP0: If closed, internal termination on (default open)
--JP1: IRQ Jumpers
--JP2: Boot-ROM enabled if closed
--JP3: Jumpers for response timeout
-- 
--U3: Boot-ROM Socket          
--
--
--ET1 ET2     Response Time     Idle Time    Reconfiguration Time
--
--               78                86               840
-- X            285               316              1680
--     X        563               624              1680
-- X   X       1130              1237              1680
--
--(X means closed jumper)
--
--(DIP-Switch downwards means "0")
-+SMC ARCnet Board Type LCS-8830-T::
-+
-+     ------------------------------------
-+    |                                    |
-+    |              JP3 88  8 JP2         |
-+    |       #####      | \               |
-+    |       #####    ET1 ET2          ###|
-+    |                              8  ###|
-+    |  U3   SW 1                  JP0 ###|  Phone Jacks
-+    |  --                             ###|
-+    | |  |                               |
-+    | |  |   SW2                         |
-+    | |  |                               |
-+    | |  |  #####                        |
-+    |  --   #####                       ####  BNC Connector
-+    |                                   ####
-+    |   888888 JP1                       |
-+    |   234567                           |
-+     --                           -------
-+       |||||||||||||||||||||||||||
-+	--------------------------
-+
-+
-+  SW1: DIP-Switches for Station Address
-+  SW2: DIP-Switches for Memory Base and I/O Base addresses
-+
-+  JP0: If closed, internal termination on (default open)
-+  JP1: IRQ Jumpers
-+  JP2: Boot-ROM enabled if closed
-+  JP3: Jumpers for response timeout
-+
-+  U3: Boot-ROM Socket
-+
-+
-+  ET1 ET2     Response Time     Idle Time    Reconfiguration Time
-+
-+		 78                86               840
-+   X            285               316              1680
-+       X        563               624              1680
-+   X   X       1130              1237              1680
-+
-+  (X means closed jumper)
-+
-+  (DIP-Switch downwards means "0")
- 
- The station address is binary-coded with SW1.
- 
- The I/O base address is coded with DIP-Switches 6,7 and 8 of SW2:
- 
-+========	========
- Switches        Base
- 678             Address
-+========	========
- 000		260-26f
- 100		290-29f
- 010		2e0-2ef
-@@ -1065,19 +1098,22 @@ Switches        Base
- 101		350-35f
- 011		380-38f
- 111 		3e0-3ef
-+========	========
- 
- 
- DIP Switches 1-5 of SW2 encode the RAM and ROM Address Range:
- 
-+========        ============= ================
- Switches        RAM           ROM
- 12345           Address Range  Address Range
-+========        ============= ================
- 00000		C:0000-C:07ff	C:2000-C:3fff
- 10000		C:0800-C:0fff
- 01000		C:1000-C:17ff
- 11000		C:1800-C:1fff
- 00100		C:4000-C:47ff	C:6000-C:7fff
- 10100		C:4800-C:4fff
--01100		C:5000-C:57ff 
-+01100		C:5000-C:57ff
- 11100		C:5800-C:5fff
- 00010		C:C000-C:C7ff	C:E000-C:ffff
- 10010		C:C800-C:Cfff
-@@ -1094,7 +1130,7 @@ Switches        RAM           ROM
- 00101		D:8000-D:87ff	D:A000-D:bfff
- 10101		D:8800-D:8fff
- 01101		D:9000-D:97ff
--11101		D:9800-D:9fff 
-+11101		D:9800-D:9fff
- 00011		D:C000-D:c7ff	D:E000-D:ffff
- 10011		D:C800-D:cfff
- 01011		D:D000-D:d7ff
-@@ -1103,34 +1139,37 @@ Switches        RAM           ROM
- 10111		E:0800-E:0fff
- 01111		E:1000-E:17ff
- 11111		E:1800-E:1fff
-+========        ============= ================
- 
- 
--*****************************************************************************
-+PureData Corp
-+=============
- 
--** PureData Corp **
- PDI507 (8-bit card)
- --------------------
-+
-   - from Mark Rejhon <mdrejhon@magi.com> (slight modifications by Avery)
-   - Avery's note: I think PDI508 cards (but definitely NOT PDI508Plus cards)
-     are mostly the same as this.  PDI508Plus cards appear to be mainly
-     software-configured.
- 
- Jumpers:
-+
- 	There is a jumper array at the bottom of the card, near the edge
--        connector.  This array is labelled J1.  They control the IRQs and
--        something else.  Put only one jumper on the IRQ pins.
-+	connector.  This array is labelled J1.  They control the IRQs and
-+	something else.  Put only one jumper on the IRQ pins.
- 
- 	ETS1, ETS2 are for timing on very long distance networks.  See the
- 	more general information near the top of this file.
- 
- 	There is a J2 jumper on two pins.  A jumper should be put on them,
--        since it was already there when I got the card.  I don't know what
--        this jumper is for though.
-+	since it was already there when I got the card.  I don't know what
-+	this jumper is for though.
- 
- 	There is a two-jumper array for J3.  I don't know what it is for,
--        but there were already two jumpers on it when I got the card.  It's
--        a six pin grid in a two-by-three fashion.  The jumpers were
--        configured as follows:
-+	but there were already two jumpers on it when I got the card.  It's
-+	a six pin grid in a two-by-three fashion.  The jumpers were
-+	configured as follows::
- 
- 	   .-------.
- 	 o | o   o |
-@@ -1140,28 +1179,28 @@ Jumpers:
- 
- Carl de Billy <CARL@carainfo.com> explains J3 and J4:
- 
--	J3 Diagram:
-+   J3 Diagram::
- 
--           .-------.
--         o | o   o |
--           :-------:    TWIST Technology
--         o | o   o |
--           `-------'
--           .-------.
--           | o   o | o
--           :-------:    COAX Technology
--           | o   o | o
--           `-------'
-+	   .-------.
-+	 o | o   o |
-+	   :-------:    TWIST Technology
-+	 o | o   o |
-+	   `-------'
-+	   .-------.
-+	   | o   o | o
-+	   :-------:    COAX Technology
-+	   | o   o | o
-+	   `-------'
- 
-   - If using coax cable in a bus topology the J4 jumper must be removed;
-     place it on one pin.
- 
--  - If using bus topology with twisted pair wiring move the J3 
-+  - If using bus topology with twisted pair wiring move the J3
-     jumpers so they connect the middle pin and the pins closest to the RJ11
-     Connectors.  Also the J4 jumper must be removed; place it on one pin of
-     J4 jumper for storage.
- 
--  - If using  star topology with twisted pair wiring move the J3 
-+  - If using  star topology with twisted pair wiring move the J3
-     jumpers so they connect the middle pin and the pins closest to the RJ11
-     connectors.
- 
-@@ -1169,40 +1208,43 @@ Carl de Billy <CARL@carainfo.com> explains J3 and J4:
- DIP Switches:
- 
- 	The DIP switches accessible on the accessible end of the card while
--        it is installed, is used to set the ARCnet address.  There are 8
--        switches.  Use an address from 1 to 254.
-+	it is installed, is used to set the ARCnet address.  There are 8
-+	switches.  Use an address from 1 to 254
- 
--	Switch No.
--	12345678	ARCnet address
--	-----------------------------------------
-+	==========      =========================
-+	Switch No.	ARCnet address
-+	12345678
-+	==========      =========================
- 	00000000	FF  	(Don't use this!)
- 	00000001	FE
- 	00000010	FD
--	....
--	11111101	2	
-+	...
-+	11111101	2
- 	11111110	1
- 	11111111	0	(Don't use this!)
-+	==========      =========================
- 
- 	There is another array of eight DIP switches at the top of the
--        card.  There are five labelled MS0-MS4 which seem to control the
--        memory address, and another three labelled IO0-IO2 which seem to
--        control the base I/O address of the card.
-+	card.  There are five labelled MS0-MS4 which seem to control the
-+	memory address, and another three labelled IO0-IO2 which seem to
-+	control the base I/O address of the card.
- 
- 	This was difficult to test by trial and error, and the I/O addresses
--        are in a weird order.  This was tested by setting the DIP switches,
--        rebooting the computer, and attempting to load ARCETHER at various
--        addresses (mostly between 0x200 and 0x400).  The address that caused
--        the red transmit LED to blink, is the one that I thought works.
-+	are in a weird order.  This was tested by setting the DIP switches,
-+	rebooting the computer, and attempting to load ARCETHER at various
-+	addresses (mostly between 0x200 and 0x400).  The address that caused
-+	the red transmit LED to blink, is the one that I thought works.
- 
- 	Also, the address 0x3D0 seem to have a special meaning, since the
--        ARCETHER packet driver loaded fine, but without the red LED
--        blinking.  I don't know what 0x3D0 is for though.  I recommend using
--        an address of 0x300 since Windows may not like addresses below
--        0x300.
-+	ARCETHER packet driver loaded fine, but without the red LED
-+	blinking.  I don't know what 0x3D0 is for though.  I recommend using
-+	an address of 0x300 since Windows may not like addresses below
-+	0x300.
- 
--	IO Switch No.
--	210             I/O address
--	-------------------------------
-+	=============   ===========
-+	IO Switch No.   I/O address
-+	210
-+	=============   ===========
- 	111             0x260
- 	110             0x290
- 	101             0x2E0
-@@ -1211,29 +1253,31 @@ DIP Switches:
- 	010             0x350
- 	001             0x380
- 	000             0x3E0
-+	=============   ===========
- 
- 	The memory switches set a reserved address space of 0x1000 bytes
--        (0x100 segment units, or 4k).  For example if I set an address of
--        0xD000, it will use up addresses 0xD000 to 0xD100.
-+	(0x100 segment units, or 4k).  For example if I set an address of
-+	0xD000, it will use up addresses 0xD000 to 0xD100.
- 
- 	The memory switches were tested by booting using QEMM386 stealth,
--        and using LOADHI to see what address automatically became excluded
--        from the upper memory regions, and then attempting to load ARCETHER
--        using these addresses.
-+	and using LOADHI to see what address automatically became excluded
-+	from the upper memory regions, and then attempting to load ARCETHER
-+	using these addresses.
- 
- 	I recommend using an ARCnet memory address of 0xD000, and putting
--        the EMS page frame at 0xC000 while using QEMM stealth mode.  That
--        way, you get contiguous high memory from 0xD100 almost all the way
--        the end of the megabyte.
-+	the EMS page frame at 0xC000 while using QEMM stealth mode.  That
-+	way, you get contiguous high memory from 0xD100 almost all the way
-+	the end of the megabyte.
- 
- 	Memory Switch 0 (MS0) didn't seem to work properly when set to OFF
--        on my card.  It could be malfunctioning on my card.  Experiment with
--        it ON first, and if it doesn't work, set it to OFF.  (It may be a
--        modifier for the 0x200 bit?)
-+	on my card.  It could be malfunctioning on my card.  Experiment with
-+	it ON first, and if it doesn't work, set it to OFF.  (It may be a
-+	modifier for the 0x200 bit?)
- 
-+	=============   ============================================
- 	MS Switch No.
- 	43210           Memory address
--	--------------------------------
-+	=============   ============================================
- 	00001           0xE100  (guessed - was not detected by QEMM)
- 	00011           0xE000  (guessed - was not detected by QEMM)
- 	00101           0xDD00
-@@ -1250,40 +1294,36 @@ DIP Switches:
- 	11011           0xC800 (guessed - crashes tested system)
- 	11101           0xC500 (guessed - crashes tested system)
- 	11111           0xC400 (guessed - crashes tested system)
--	
--	
--*****************************************************************************
-+	=============   ============================================
-+
-+CNet Technology Inc.
-+====================
- 
--** CNet Technology Inc. **
- 120 Series (8-bit cards)
- ------------------------
-   - from Juergen Seifert <seifert@htwm.de>
- 
--
--CNET TECHNOLOGY INC. (CNet) ARCNET 120A SERIES
--==============================================
--
- This description has been written by Juergen Seifert <seifert@htwm.de>
--using information from the following Original CNet Manual 
-+using information from the following Original CNet Manual
- 
--              "ARCNET
--            USER'S MANUAL 
--                for
--               CN120A
--               CN120AB
--               CN120TP
--               CN120ST
--               CN120SBT
--             P/N:12-01-0007
--             Revision 3.00"
-+	      "ARCNET USER'S MANUAL for
-+	      CN120A
-+	      CN120AB
-+	      CN120TP
-+	      CN120ST
-+	      CN120SBT
-+	      P/N:12-01-0007
-+	      Revision 3.00"
- 
- ARCNET is a registered trademark of the Datapoint Corporation
- 
--P/N 120A   ARCNET 8 bit XT/AT Star
--P/N 120AB  ARCNET 8 bit XT/AT Bus
--P/N 120TP  ARCNET 8 bit XT/AT Twisted Pair
--P/N 120ST  ARCNET 8 bit XT/AT Star, Twisted Pair
--P/N 120SBT ARCNET 8 bit XT/AT Star, Bus, Twisted Pair
-+- P/N 120A   ARCNET 8 bit XT/AT Star
-+- P/N 120AB  ARCNET 8 bit XT/AT Bus
-+- P/N 120TP  ARCNET 8 bit XT/AT Twisted Pair
-+- P/N 120ST  ARCNET 8 bit XT/AT Star, Twisted Pair
-+- P/N 120SBT ARCNET 8 bit XT/AT Star, Bus, Twisted Pair
-+
-+::
- 
-     __________________________________________________________________
-    |                                                                  |
-@@ -1307,75 +1347,77 @@ P/N 120SBT ARCNET 8 bit XT/AT Star, Bus, Twisted Pair
-    |  >  SOCKET      |  JP 6 5 4 3 2                    |o|o|o| | J1  |
-    |  |______________|    |o|o|o|o|o|                   |o|o|o| |_____|
-    |_____                 |o|o|o|o|o|                   ______________|
--         |                                             |
--         |_____________________________________________|
-+	 |                                             |
-+	 |_____________________________________________|
- 
--Legend:
-+Legend::
- 
--90C65       ARCNET Probe
--S1  1-5:    Base Memory Address Select
--    6-8:    Base I/O Address Select
--S2  1-8:    Node ID Select (ID0-ID7)
--JP1     ROM Enable Select
--JP2     IRQ2
--JP3     IRQ3
--JP4     IRQ4
--JP5     IRQ5
--JP6     IRQ7
--JP7/JP8     ET1, ET2 Timeout Parameters
--JP10/JP11   Coax / Twisted Pair Select  (CN120ST/SBT only)
--JP12        Terminator Select       (CN120AB/ST/SBT only)
--J1      BNC RG62/U Connector        (all except CN120TP)
--J2      Two 6-position Telephone Jack   (CN120TP/ST/SBT only)
-+  90C65       ARCNET Probe
-+  S1  1-5:    Base Memory Address Select
-+      6-8:    Base I/O Address Select
-+  S2  1-8:    Node ID Select (ID0-ID7)
-+  JP1     ROM Enable Select
-+  JP2     IRQ2
-+  JP3     IRQ3
-+  JP4     IRQ4
-+  JP5     IRQ5
-+  JP6     IRQ7
-+  JP7/JP8     ET1, ET2 Timeout Parameters
-+  JP10/JP11   Coax / Twisted Pair Select  (CN120ST/SBT only)
-+  JP12        Terminator Select       (CN120AB/ST/SBT only)
-+  J1      BNC RG62/U Connector        (all except CN120TP)
-+  J2      Two 6-position Telephone Jack   (CN120TP/ST/SBT only)
- 
- Setting one of the switches to Off means "1", On means "0".
- 
- 
- Setting the Node ID
---------------------
-+^^^^^^^^^^^^^^^^^^^
- 
- The eight switches in SW2 are used to set the node ID. Each node attached
- to the network must have an unique node ID which must be different from 0.
- Switch 1 (ID0) serves as the least significant bit (LSB).
- 
--The node ID is the sum of the values of all switches set to "1"  
-+The node ID is the sum of the values of all switches set to "1"
- These values are:
- 
--   Switch | Label | Value
--   -------|-------|-------
--     1    | ID0   |   1
--     2    | ID1   |   2
--     3    | ID2   |   4
--     4    | ID3   |   8
--     5    | ID4   |  16
--     6    | ID5   |  32
--     7    | ID6   |  64
--     8    | ID7   | 128
-+   =======  ======  =====
-+   Switch   Label   Value
-+   =======  ======  =====
-+     1      ID0       1
-+     2      ID1       2
-+     3      ID2       4
-+     4      ID3       8
-+     5      ID4      16
-+     6      ID5      32
-+     7      ID6      64
-+     8      ID7     128
-+   =======  ======  =====
- 
--Some Examples:
-+Some Examples::
- 
--    Switch         | Hex     | Decimal 
-+    Switch         | Hex     | Decimal
-    8 7 6 5 4 3 2 1 | Node ID | Node ID
-    ----------------|---------|---------
-    0 0 0 0 0 0 0 0 |    not allowed
--   0 0 0 0 0 0 0 1 |    1    |    1 
-+   0 0 0 0 0 0 0 1 |    1    |    1
-    0 0 0 0 0 0 1 0 |    2    |    2
-    0 0 0 0 0 0 1 1 |    3    |    3
-        . . .       |         |
-    0 1 0 1 0 1 0 1 |   55    |   85
-        . . .       |         |
-    1 0 1 0 1 0 1 0 |   AA    |  170
--       . . .       |         |  
-+       . . .       |         |
-    1 1 1 1 1 1 0 1 |   FD    |  253
-    1 1 1 1 1 1 1 0 |   FE    |  254
-    1 1 1 1 1 1 1 1 |   FF    |  255
- 
- 
- Setting the I/O Base Address
------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- The last three switches in switch block SW1 are used to select one
--of eight possible I/O Base addresses using the following table
-+of eight possible I/O Base addresses using the following table::
- 
- 
-    Switch      | Hex I/O
-@@ -1392,13 +1434,15 @@ of eight possible I/O Base addresses using the following table
- 
- 
- Setting the Base Memory (RAM) buffer Address
----------------------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
--The memory buffer (RAM) requires 2K. The base of this buffer can be 
-+The memory buffer (RAM) requires 2K. The base of this buffer can be
- located in any of eight positions. The address of the Boot Prom is
- memory base + 8K or memory base + 0x2000.
- Switches 1-5 of switch block SW1 select the Memory Base address.
- 
-+::
-+
-    Switch              | Hex RAM | Hex ROM
-     1   2   3   4   5  | Address | Address *)
-    --------------------|---------|-----------
-@@ -1410,22 +1454,24 @@ Switches 1-5 of switch block SW1 select the Memory Base address.
-    ON  ON  OFF ON  OFF |  D8000  |  DA000
-    ON  ON  ON  OFF OFF |  DC000  |  DE000
-    ON  ON  OFF OFF OFF |  E0000  |  E2000
--  
--*) To enable the Boot ROM install the jumper JP1
- 
--Note: Since the switches 1 and 2 are always set to ON it may be possible
-+  *) To enable the Boot ROM install the jumper JP1
++	# cat /sys/class/net/bonding_masters
 +
 +.. note::
 +
-+      Since the switches 1 and 2 are always set to ON it may be possible
-       that they can be used to add an offset of 2K, 4K or 6K to the base
-       address, but this feature is not documented in the manual and I
-       haven't tested it yet.
- 
- 
- Setting the Interrupt Line
----------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- To select a hardware interrupt level install one (only one!) of the jumpers
--JP2, JP3, JP4, JP5, JP6. JP2 is the default.
-+JP2, JP3, JP4, JP5, JP6. JP2 is the default::
- 
--   Jumper | IRQ     
-+   Jumper | IRQ
-    -------|-----
-      2    |  2
-      3    |  3
-@@ -1435,71 +1481,66 @@ JP2, JP3, JP4, JP5, JP6. JP2 is the default.
- 
- 
- Setting the Internal Terminator on CN120AB/TP/SBT
----------------------------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
--The jumper JP12 is used to enable the internal terminator. 
-+The jumper JP12 is used to enable the internal terminator::
- 
--                         -----
--       0                |  0  |     
-+			 -----
-+       0                |  0  |
-      -----   ON         |     |  ON
-     |  0  |             |  0  |
-     |     |  OFF         -----   OFF
-     |  0  |                0
-      -----
--   Terminator          Terminator 
-+   Terminator          Terminator
-     disabled            enabled
--  
-+
- 
- Selecting the Connector Type on CN120ST/SBT
---------------------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+::
- 
-      JP10    JP11        JP10    JP11
--                         -----   -----
--       0       0        |  0  | |  0  |       
-+			 -----   -----
-+       0       0        |  0  | |  0  |
-      -----   -----      |     | |     |
-     |  0  | |  0  |     |  0  | |  0  |
-     |     | |     |      -----   -----
--    |  0  | |  0  |        0       0 
-+    |  0  | |  0  |        0       0
-      -----   -----
--     Coaxial Cable       Twisted Pair Cable 
-+     Coaxial Cable       Twisted Pair Cable
-        (Default)
- 
- 
- Setting the Timeout Parameters
--------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
--The jumpers labeled EXT1 and EXT2 are used to determine the timeout 
-+The jumpers labeled EXT1 and EXT2 are used to determine the timeout
- parameters. These two jumpers are normally left open.
- 
- 
-+CNet Technology Inc.
-+====================
- 
--*****************************************************************************
--
--** CNet Technology Inc. **
- 160 Series (16-bit cards)
- -------------------------
-   - from Juergen Seifert <seifert@htwm.de>
- 
--CNET TECHNOLOGY INC. (CNet) ARCNET 160A SERIES
--==============================================
--
- This description has been written by Juergen Seifert <seifert@htwm.de>
--using information from the following Original CNet Manual 
-+using information from the following Original CNet Manual
- 
--              "ARCNET
--            USER'S MANUAL 
--                for
--               CN160A
--               CN160AB
--               CN160TP
--             P/N:12-01-0006
--             Revision 3.00"
-+	      "ARCNET USER'S MANUAL for
-+	      CN160A CN160AB CN160TP
-+	      P/N:12-01-0006 Revision 3.00"
- 
- ARCNET is a registered trademark of the Datapoint Corporation
- 
--P/N 160A   ARCNET 16 bit XT/AT Star
--P/N 160AB  ARCNET 16 bit XT/AT Bus
--P/N 160TP  ARCNET 16 bit XT/AT Twisted Pair
-+- P/N 160A   ARCNET 16 bit XT/AT Star
-+- P/N 160AB  ARCNET 16 bit XT/AT Bus
-+- P/N 160TP  ARCNET 16 bit XT/AT Twisted Pair
-+
-+::
- 
-    ___________________________________________________________________
-   <                             _________________________          ___|
-@@ -1526,30 +1567,30 @@ P/N 160TP  ARCNET 16 bit XT/AT Twisted Pair
-   >            |  |                                       |
-   <____________|  |_______________________________________|
- 
--Legend:
-+Legend::
- 
--9026            ARCNET Probe
--SW1 1-6:    Base I/O Address Select
--    7-10:   Base Memory Address Select
--SW2 1-8:    Node ID Select (ID0-ID7)
--JP1/JP2     ET1, ET2 Timeout Parameters
--JP3-JP13    Interrupt Select
--J1      BNC RG62/U Connector        (CN160A/AB only)
--J1      Two 6-position Telephone Jack   (CN160TP only)
--LED
-+  9026            ARCNET Probe
-+  SW1 1-6:    Base I/O Address Select
-+      7-10:   Base Memory Address Select
-+  SW2 1-8:    Node ID Select (ID0-ID7)
-+  JP1/JP2     ET1, ET2 Timeout Parameters
-+  JP3-JP13    Interrupt Select
-+  J1      BNC RG62/U Connector        (CN160A/AB only)
-+  J1      Two 6-position Telephone Jack   (CN160TP only)
-+  LED
- 
- Setting one of the switches to Off means "1", On means "0".
- 
- 
- Setting the Node ID
---------------------
-+^^^^^^^^^^^^^^^^^^^
- 
- The eight switches in SW2 are used to set the node ID. Each node attached
- to the network must have an unique node ID which must be different from 0.
- Switch 1 (ID0) serves as the least significant bit (LSB).
- 
--The node ID is the sum of the values of all switches set to "1"  
--These values are:
-+The node ID is the sum of the values of all switches set to "1"
-+These values are::
- 
-    Switch | Label | Value
-    -------|-------|-------
-@@ -1562,32 +1603,32 @@ These values are:
-      7    | ID6   |  64
-      8    | ID7   | 128
- 
--Some Examples:
-+Some Examples::
- 
--    Switch         | Hex     | Decimal 
-+    Switch         | Hex     | Decimal
-    8 7 6 5 4 3 2 1 | Node ID | Node ID
-    ----------------|---------|---------
-    0 0 0 0 0 0 0 0 |    not allowed
--   0 0 0 0 0 0 0 1 |    1    |    1 
-+   0 0 0 0 0 0 0 1 |    1    |    1
-    0 0 0 0 0 0 1 0 |    2    |    2
-    0 0 0 0 0 0 1 1 |    3    |    3
-        . . .       |         |
-    0 1 0 1 0 1 0 1 |   55    |   85
-        . . .       |         |
-    1 0 1 0 1 0 1 0 |   AA    |  170
--       . . .       |         |  
-+       . . .       |         |
-    1 1 1 1 1 1 0 1 |   FD    |  253
-    1 1 1 1 1 1 1 0 |   FE    |  254
-    1 1 1 1 1 1 1 1 |   FF    |  255
- 
- 
- Setting the I/O Base Address
------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- The first six switches in switch block SW1 are used to select the I/O Base
--address using the following table:
-+address using the following table::
- 
--             Switch        | Hex I/O
-+	     Switch        | Hex I/O
-     1   2   3   4   5   6  | Address
-    ------------------------|--------
-    OFF ON  ON  OFF OFF ON  |  260
-@@ -1604,10 +1645,10 @@ Note: Other IO-Base addresses seem to be selectable, but only the above
- 
- 
- Setting the Base Memory (RAM) buffer Address
----------------------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- The switches 7-10 of switch block SW1 are used to select the Memory
--Base address of the RAM (2K) and the PROM.
-+Base address of the RAM (2K) and the PROM::
- 
-    Switch          | Hex RAM | Hex ROM
-     7   8   9  10  | Address | Address
-@@ -1616,17 +1657,19 @@ Base address of the RAM (2K) and the PROM.
-    OFF OFF ON  OFF |  D0000  |  D8000 (Default)
-    OFF OFF OFF ON  |  E0000  |  E8000
- 
--Note: Other MEM-Base addresses seem to be selectable, but only the above
-+.. note::
-+
-+      Other MEM-Base addresses seem to be selectable, but only the above
-       combinations are documented.
- 
- 
- Setting the Interrupt Line
----------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- To select a hardware interrupt level install one (only one!) of the jumpers
--JP3 through JP13 using the following table:
-+JP3 through JP13 using the following table::
- 
--   Jumper | IRQ     
-+   Jumper | IRQ
-    -------|-----------------
-      3    |  14
-      4    |  15
-@@ -1640,10 +1683,12 @@ JP3 through JP13 using the following table:
-     12    |   7
-     13    |   2 (=9) Default!
- 
--Note:  - Do not use JP11=IRQ6, it may conflict with your Floppy Disk
--         Controller
-+.. note::
-+
-+       - Do not use JP11=IRQ6, it may conflict with your Floppy Disk
-+	 Controller
-        - Use JP3=IRQ14 only, if you don't have an IDE-, MFM-, or RLL-
--         Hard Disk, it may conflict with their controllers
-+	 Hard Disk, it may conflict with their controllers
- 
- 
- Setting the Timeout Parameters
-@@ -1653,14 +1698,16 @@ The jumpers labeled JP1 and JP2 are used to determine the timeout
- parameters. These two jumpers are normally left open.
- 
- 
--*****************************************************************************
-+Lantech
-+=======
- 
--** Lantech **
- 8-bit card, unknown model
- -------------------------
-   - from Vlad Lungu <vlungu@ugal.ro> - his e-mail address seemed broken at
-     the time I tried to reach him.  Sorry Vlad, if you didn't get my reply.
- 
-+::
-+
-    ________________________________________________________________
-    |   1         8                                                 |
-    |   ___________                                               __|
-@@ -1683,25 +1730,27 @@ parameters. These two jumpers are normally left open.
-    |      |    PROM    |        |ooooo|  JP6                       |
-    |      |____________|        |ooooo|                            |
-    |_____________                                             _   _|
--                |____________________________________________| |__|
-+		|____________________________________________| |__|
- 
- 
- UM9065L : ARCnet Controller
- 
- SW 1    : Shared Memory Address and I/O Base
- 
--        ON=0
-+::
- 
--        12345|Memory Address
--        -----|--------------
--        00001|  D4000
--        00010|  CC000
--        00110|  D0000
--        01110|  D1000
--        01101|  D9000
--        10010|  CC800
--        10011|  DC800
--        11110|  D1800
-+	ON=0
-+
-+	12345|Memory Address
-+	-----|--------------
-+	00001|  D4000
-+	00010|  CC000
-+	00110|  D0000
-+	01110|  D1000
-+	01101|  D9000
-+	10010|  CC800
-+	10011|  DC800
-+	11110|  D1800
- 
- It seems that the bits are considered in reverse order.  Also, you must
- observe that some of those addresses are unusual and I didn't probe them; I
-@@ -1710,43 +1759,48 @@ some others that I didn't write here the card seems to conflict with the
- video card (an S3 GENDAC). I leave the full decoding of those addresses to
- you.
- 
--        678| I/O Address
--        ---|------------
--        000|    260
--        001|    failed probe
--        010|    2E0
--        011|    380
--        100|    290
--        101|    350
--        110|    failed probe
--        111|    3E0
-+::
- 
--SW 2  : Node ID (binary coded)
-+	678| I/O Address
-+	---|------------
-+	000|    260
-+	001|    failed probe
-+	010|    2E0
-+	011|    380
-+	100|    290
-+	101|    350
-+	110|    failed probe
-+	111|    3E0
- 
--JP 4  : Boot PROM enable   CLOSE - enabled
--                           OPEN  - disabled
-+  SW 2  : Node ID (binary coded)
- 
--JP 6  : IRQ set (ONLY ONE jumper on 1-5 for IRQ 2-6)
-+  JP 4  : Boot PROM enable   CLOSE - enabled
-+			     OPEN  - disabled
- 
-+  JP 6  : IRQ set (ONLY ONE jumper on 1-5 for IRQ 2-6)
- 
--*****************************************************************************
- 
--** Acer **
-+Acer
-+====
-+
- 8-bit card, Model 5210-003
++   due to 4K size limitation of sysfs files, this list may be
++   truncated if you have more than a few hundred bonds.  This is unlikely
++   to occur under normal operating conditions.
+ 
+ Adding and Removing Slaves
  --------------------------
+-	Interfaces may be enslaved to a bond using the file
++Interfaces may be enslaved to a bond using the file
+ /sys/class/net/<bond>/bonding/slaves.  The semantics for this file
+ are the same as for the bonding_masters file.
+ 
+-To enslave interface eth0 to bond bond0:
+-# ifconfig bond0 up
+-# echo +eth0 > /sys/class/net/bond0/bonding/slaves
++To enslave interface eth0 to bond bond0::
+ 
+-To free slave eth0 from bond bond0:
+-# echo -eth0 > /sys/class/net/bond0/bonding/slaves
++	# ifconfig bond0 up
++	# echo +eth0 > /sys/class/net/bond0/bonding/slaves
+ 
+-	When an interface is enslaved to a bond, symlinks between the
++To free slave eth0 from bond bond0::
 +
-   - from Vojtech Pavlik <vojtech@suse.cz> using portions of the existing
-     arcnet-hardware file.
- 
- This is a 90C26 based card.  Its configuration seems similar to the SMC
- PC100, but has some additional jumpers I don't know the meaning of.
- 
--               __
--              |  |
-+::
++	# echo -eth0 > /sys/class/net/bond0/bonding/slaves
 +
-+	       __
-+	      |  |
-    ___________|__|_________________________
-   |         |      |                       |
-   |         | BNC  |                       |
-   |         |______|                    ___|
--  |  _____________________             |___  
-+  |  _____________________             |___
-   | |                     |                |
-   | | Hybrid IC           |                |
-   | |                     |       o|o J1   |
-@@ -1762,51 +1816,51 @@ PC100, but has some additional jumpers I don't know the meaning of.
-   |                    _____               |
-   |                   |     |   _____      |
-   |                   |     |  |     |  ___|
--  |                   |     |  |     | |    
--  |  _____            | ROM |  | UFS | |    
--  | |     |           |     |  |     | |   
--  | |     |     ___   |     |  |     | |   
--  | |     |    |   |  |__.__|  |__.__| |   
--  | | NCR |    |XTL|   _____    _____  |   
--  | |     |    |___|  |     |  |     | |   
--  | |90C26|           |     |  |     | |   
--  | |     |           | RAM |  | UFS | |   
--  | |     | J17 o|o   |     |  |     | |   
--  | |     | J16 o|o   |     |  |     | |   
--  | |__.__|           |__.__|  |__.__| |   
--  |  ___                               |   
--  | |   |8                             |   
--  | |SW2|                              |   
--  | |   |                              |   
--  | |___|1                             |   
--  |  ___                               |   
--  | |   |10           J18 o|o          |   
--  | |   |                 o|o          |   
--  | |SW1|                 o|o          |   
--  | |   |             J21 o|o          |   
--  | |___|1                             |   
--  |                                    |   
--  |____________________________________|   
-+  |                   |     |  |     | |
-+  |  _____            | ROM |  | UFS | |
-+  | |     |           |     |  |     | |
-+  | |     |     ___   |     |  |     | |
-+  | |     |    |   |  |__.__|  |__.__| |
-+  | | NCR |    |XTL|   _____    _____  |
-+  | |     |    |___|  |     |  |     | |
-+  | |90C26|           |     |  |     | |
-+  | |     |           | RAM |  | UFS | |
-+  | |     | J17 o|o   |     |  |     | |
-+  | |     | J16 o|o   |     |  |     | |
-+  | |__.__|           |__.__|  |__.__| |
-+  |  ___                               |
-+  | |   |8                             |
-+  | |SW2|                              |
-+  | |   |                              |
-+  | |___|1                             |
-+  |  ___                               |
-+  | |   |10           J18 o|o          |
-+  | |   |                 o|o          |
-+  | |SW1|                 o|o          |
-+  | |   |             J21 o|o          |
-+  | |___|1                             |
-+  |                                    |
-+  |____________________________________|
++When an interface is enslaved to a bond, symlinks between the
+ two are created in the sysfs filesystem.  In this case, you would get
+ /sys/class/net/bond0/slave_eth0 pointing to /sys/class/net/eth0, and
+ /sys/class/net/eth0/master pointing to /sys/class/net/bond0.
  
+-	This means that you can tell quickly whether or not an
++This means that you can tell quickly whether or not an
+ interface is enslaved by looking for the master symlink.  Thus:
+ # echo -eth0 > /sys/class/net/eth0/master/bonding/slaves
+ will free eth0 from whatever bond it is enslaved to, regardless of
+@@ -1465,127 +1484,143 @@ the name of the bond interface.
  
--Legend:
-+Legend::
+ Changing a Bond's Configuration
+ -------------------------------
+-	Each bond may be configured individually by manipulating the
++Each bond may be configured individually by manipulating the
+ files located in /sys/class/net/<bond name>/bonding
  
--90C26       ARCNET Chip
--XTL         20 MHz Crystal
--SW1 1-6     Base I/O Address Select
--    7-10    Memory Address Select
--SW2 1-8     Node ID Select (ID0-ID7)
--J1-J5       IRQ Select
--J6-J21      Unknown (Probably extra timeouts & ROM enable ...)
--LED1        Activity LED 
--BNC         Coax connector (STAR ARCnet)
--RAM         2k of SRAM
--ROM         Boot ROM socket
--UFS         Unidentified Flying Sockets
-+  90C26       ARCNET Chip
-+  XTL         20 MHz Crystal
-+  SW1 1-6     Base I/O Address Select
-+      7-10    Memory Address Select
-+  SW2 1-8     Node ID Select (ID0-ID7)
-+  J1-J5       IRQ Select
-+  J6-J21      Unknown (Probably extra timeouts & ROM enable ...)
-+  LED1        Activity LED
-+  BNC         Coax connector (STAR ARCnet)
-+  RAM         2k of SRAM
-+  ROM         Boot ROM socket
-+  UFS         Unidentified Flying Sockets
+-	The names of these files correspond directly with the command-
++The names of these files correspond directly with the command-
+ line parameters described elsewhere in this file, and, with the
+ exception of arp_ip_target, they accept the same values.  To see the
+ current setting, simply cat the appropriate file.
  
+-	A few examples will be given here; for specific usage
++A few examples will be given here; for specific usage
+ guidelines for each parameter, see the appropriate section in this
+ document.
  
- Setting the Node ID
---------------------
-+^^^^^^^^^^^^^^^^^^^
- 
- The eight switches in SW2 are used to set the node ID. Each node attached
- to the network must have an unique node ID which must not be 0.
-@@ -1815,7 +1869,7 @@ Switch 1 (ID0) serves as the least significant bit (LSB).
- Setting one of the switches to OFF means "1", ON means "0".
- 
- The node ID is the sum of the values of all switches set to "1"
--These values are:
-+These values are::
- 
-    Switch | Value
-    -------|-------
-@@ -1832,40 +1886,40 @@ Don't set this to 0 or 255; these values are reserved.
- 
- 
- Setting the I/O Base Address
------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- The switches 1 to 6 of switch block SW1 are used to select one
--of 32 possible I/O Base addresses using the following tables
--   
--          | Hex
-+of 32 possible I/O Base addresses using the following tables::
-+
-+	  | Hex
-    Switch | Value
-    -------|-------
--     1    | 200  
--     2    | 100  
--     3    |  80  
--     4    |  40  
--     5    |  20  
--     6    |  10 
-+     1    | 200
-+     2    | 100
-+     3    |  80
-+     4    |  40
-+     5    |  20
-+     6    |  10
- 
- The I/O address is sum of all switches set to "1". Remember that
- the I/O address space bellow 0x200 is RESERVED for mainboard, so
--switch 1 should be ALWAYS SET TO OFF. 
-+switch 1 should be ALWAYS SET TO OFF.
- 
- 
- Setting the Base Memory (RAM) buffer Address
----------------------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- The memory buffer (RAM) requires 2K. The base of this buffer can be
- located in any of sixteen positions. However, the addresses below
- A0000 are likely to cause system hang because there's main RAM.
- 
--Jumpers 7-10 of switch block SW1 select the Memory Base address.
-+Jumpers 7-10 of switch block SW1 select the Memory Base address::
- 
-    Switch          | Hex RAM
-     7   8   9  10  | Address
-    ----------------|---------
-    OFF OFF OFF OFF |  F0000 (conflicts with main BIOS)
--   OFF OFF OFF ON  |  E0000 
-+   OFF OFF OFF ON  |  E0000
-    OFF OFF ON  OFF |  D0000
-    OFF OFF ON  ON  |  C0000 (conflicts with video BIOS)
-    OFF ON  OFF OFF |  B0000 (conflicts with mono video)
-@@ -1873,10 +1927,10 @@ Jumpers 7-10 of switch block SW1 select the Memory Base address.
- 
- 
- Setting the Interrupt Line
----------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
--Jumpers 1-5 of the jumper block J1 control the IRQ level. ON means 
--shorted, OFF means open.
-+Jumpers 1-5 of the jumper block J1 control the IRQ level. ON means
-+shorted, OFF means open::
- 
-     Jumper              |  IRQ
-     1   2   3   4   5   |
-@@ -1889,65 +1943,67 @@ shorted, OFF means open.
- 
- 
- Unknown jumpers & sockets
---------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- I know nothing about these. I just guess that J16&J17 are timeout
- jumpers and maybe one of J18-J21 selects ROM. Also J6-J10 and
- J11-J15 are connecting IRQ2-7 to some pins on the UFSs. I can't
- guess the purpose.
- 
-+Datapoint?
-+==========
- 
--*****************************************************************************
+-To configure bond0 for balance-alb mode:
+-# ifconfig bond0 down
+-# echo 6 > /sys/class/net/bond0/bonding/mode
+- - or -
+-# echo balance-alb > /sys/class/net/bond0/bonding/mode
+-	NOTE: The bond interface must be down before the mode can be
+-changed.
 -
--** Datapoint? **
- LAN-ARC-8, an 8-bit card
- ------------------------
-+
-   - from Vojtech Pavlik <vojtech@suse.cz>
- 
- This is another SMC 90C65-based ARCnet card. I couldn't identify the
- manufacturer, but it might be DataPoint, because the card has the
- original arcNet logo in its upper right corner.
- 
--          _______________________________________________________
--         |                         _________                     |
--         |                        |   SW2   | ON      arcNet     |
--         |                        |_________| OFF             ___|
--         |  _____________         1 ______  8                |   | 8  
--         | |             | SW1     | XTAL | ____________     | S |    
--         | > RAM (2k)    |         |______||            |    | W |    
--         | |_____________|                 |      H     |    | 3 |    
--         |                        _________|_____ y     |    |___| 1  
--         |  _________            |         |     |b     |        |    
--         | |_________|           |         |     |r     |        |    
--         |                       |     SMC |     |i     |        |    
--         |                       |    90C65|     |d     |        |      
--         |  _________            |         |     |      |        |
--         | |   SW1   | ON        |         |     |I     |        |
--         | |_________| OFF       |_________|_____/C     |   _____|
--         |  1       8                      |            |  |     |___
--         |  ______________                 |            |  | BNC |___|
--         | |              |                |____________|  |_____|
--         | > EPROM SOCKET |              _____________           |
--         | |______________|             |_____________|          |
--         |                                         ______________|
--         |                                        | 
--         |________________________________________|
-+::
- 
--Legend:
-+	  _______________________________________________________
-+	 |                         _________                     |
-+	 |                        |   SW2   | ON      arcNet     |
-+	 |                        |_________| OFF             ___|
-+	 |  _____________         1 ______  8                |   | 8
-+	 | |             | SW1     | XTAL | ____________     | S |
-+	 | > RAM (2k)    |         |______||            |    | W |
-+	 | |_____________|                 |      H     |    | 3 |
-+	 |                        _________|_____ y     |    |___| 1
-+	 |  _________            |         |     |b     |        |
-+	 | |_________|           |         |     |r     |        |
-+	 |                       |     SMC |     |i     |        |
-+	 |                       |    90C65|     |d     |        |
-+	 |  _________            |         |     |      |        |
-+	 | |   SW1   | ON        |         |     |I     |        |
-+	 | |_________| OFF       |_________|_____/C     |   _____|
-+	 |  1       8                      |            |  |     |___
-+	 |  ______________                 |            |  | BNC |___|
-+	 | |              |                |____________|  |_____|
-+	 | > EPROM SOCKET |              _____________           |
-+	 | |______________|             |_____________|          |
-+	 |                                         ______________|
-+	 |                                        |
-+	 |________________________________________|
- 
--90C65       ARCNET Chip 
--SW1 1-5:    Base Memory Address Select
--    6-8:    Base I/O Address Select
--SW2 1-8:    Node ID Select
--SW3 1-5:    IRQ Select   
--    6-7:    Extra Timeout
--    8  :    ROM Enable   
--BNC         Coax connector
--XTAL        20 MHz Crystal
-+Legend::
-+
-+  90C65       ARCNET Chip
-+  SW1 1-5:    Base Memory Address Select
-+      6-8:    Base I/O Address Select
-+  SW2 1-8:    Node ID Select
-+  SW3 1-5:    IRQ Select
-+      6-7:    Extra Timeout
-+      8  :    ROM Enable
-+  BNC         Coax connector
-+  XTAL        20 MHz Crystal
- 
- 
- Setting the Node ID
---------------------
-+^^^^^^^^^^^^^^^^^^^
- 
- The eight switches in SW3 are used to set the node ID. Each node attached
- to the network must have an unique node ID which must not be 0.
-@@ -1955,8 +2011,8 @@ Switch 1 serves as the least significant bit (LSB).
- 
- Setting one of the switches to Off means "1", On means "0".
- 
--The node ID is the sum of the values of all switches set to "1"  
--These values are:
-+The node ID is the sum of the values of all switches set to "1"
-+These values are::
- 
-    Switch | Value
-    -------|-------
-@@ -1971,10 +2027,10 @@ These values are:
- 
- 
- Setting the I/O Base Address
------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- The last three switches in switch block SW1 are used to select one
--of eight possible I/O Base addresses using the following table
-+of eight possible I/O Base addresses using the following table::
- 
- 
-    Switch      | Hex I/O
-@@ -1991,13 +2047,16 @@ of eight possible I/O Base addresses using the following table
- 
- 
- Setting the Base Memory (RAM) buffer Address
----------------------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
--The memory buffer (RAM) requires 2K. The base of this buffer can be 
-+The memory buffer (RAM) requires 2K. The base of this buffer can be
- located in any of eight positions. The address of the Boot Prom is
- memory base + 0x2000.
-+
- Jumpers 3-5 of switch block SW1 select the Memory Base address.
- 
-+::
-+
-    Switch              | Hex RAM | Hex ROM
-     1   2   3   4   5  | Address | Address *)
-    --------------------|---------|-----------
-@@ -2009,16 +2068,16 @@ Jumpers 3-5 of switch block SW1 select the Memory Base address.
-    ON  ON  OFF ON  OFF |  D8000  |  DA000
-    ON  ON  ON  OFF OFF |  DC000  |  DE000
-    ON  ON  OFF OFF OFF |  E0000  |  E2000
--  
--*) To enable the Boot ROM set the switch 8 of switch block SW3 to position ON.
-+
-+  *) To enable the Boot ROM set the switch 8 of switch block SW3 to position ON.
- 
- The switches 1 and 2 probably add 0x0800 and 0x1000 to RAM base address.
- 
- 
- Setting the Interrupt Line
----------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
--Switches 1-5 of the switch block SW3 control the IRQ level.
-+Switches 1-5 of the switch block SW3 control the IRQ level::
- 
-     Jumper              |  IRQ
-     1   2   3   4   5   |
-@@ -2031,64 +2090,67 @@ Switches 1-5 of the switch block SW3 control the IRQ level.
- 
- 
- Setting the Timeout Parameters
--------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- The switches 6-7 of the switch block SW3 are used to determine the timeout
- parameters.  These two switches are normally left in the OFF position.
- 
- 
--*****************************************************************************
-+Topware
-+=======
- 
--** Topware **
- 8-bit card, TA-ARC/10
---------------------------
-+---------------------
-+
-   - from Vojtech Pavlik <vojtech@suse.cz>
- 
- This is another very similar 90C65 card. Most of the switches and jumpers
- are the same as on other clones.
- 
-- _____________________________________________________________________
--|  ___________   |                         |            ______        |
--| |SW2 NODE ID|  |                         |           | XTAL |       |
--| |___________|  |  Hybrid IC              |           |______|       |
--|  ___________   |                         |                        __|    
--| |SW1 MEM+I/O|  |_________________________|                   LED1|__|)   
--| |___________|           1 2                                         |     
--|                     J3 |o|o| TIMEOUT                          ______|    
--|     ______________     |o|o|                                 |      |    
--|    |              |  ___________________                     | RJ   |    
--|    > EPROM SOCKET | |                   \                    |------|     
--|J2  |______________| |                    |                   |      |    
--||o|                  |                    |                   |______|
--||o| ROM ENABLE       |        SMC         |    _________             |
--|     _____________   |       90C65        |   |_________|       _____|    
--|    |             |  |                    |                    |     |___ 
--|    > RAM (2k)    |  |                    |                    | BNC |___|
--|    |_____________|  |                    |                    |_____|    
--|                     |____________________|                          |    
--| ________ IRQ 2 3 4 5 7                  ___________                 |
--||________|   |o|o|o|o|o|                |___________|                |
--|________   J1|o|o|o|o|o|                               ______________|
--         |                                             |
--         |_____________________________________________|
-+::
- 
--Legend:
-+   _____________________________________________________________________
-+  |  ___________   |                         |            ______        |
-+  | |SW2 NODE ID|  |                         |           | XTAL |       |
-+  | |___________|  |  Hybrid IC              |           |______|       |
-+  |  ___________   |                         |                        __|
-+  | |SW1 MEM+I/O|  |_________________________|                   LED1|__|)
-+  | |___________|           1 2                                         |
-+  |                     J3 |o|o| TIMEOUT                          ______|
-+  |     ______________     |o|o|                                 |      |
-+  |    |              |  ___________________                     | RJ   |
-+  |    > EPROM SOCKET | |                   \                    |------|
-+  |J2  |______________| |                    |                   |      |
-+  ||o|                  |                    |                   |______|
-+  ||o| ROM ENABLE       |        SMC         |    _________             |
-+  |     _____________   |       90C65        |   |_________|       _____|
-+  |    |             |  |                    |                    |     |___
-+  |    > RAM (2k)    |  |                    |                    | BNC |___|
-+  |    |_____________|  |                    |                    |_____|
-+  |                     |____________________|                          |
-+  | ________ IRQ 2 3 4 5 7                  ___________                 |
-+  ||________|   |o|o|o|o|o|                |___________|                |
-+  |________   J1|o|o|o|o|o|                               ______________|
-+	   |                                             |
-+	   |_____________________________________________|
- 
--90C65       ARCNET Chip
--XTAL        20 MHz Crystal
--SW1 1-5     Base Memory Address Select
--    6-8     Base I/O Address Select
--SW2 1-8     Node ID Select (ID0-ID7)
--J1          IRQ Select
--J2          ROM Enable
--J3          Extra Timeout
--LED1        Activity LED 
--BNC         Coax connector (BUS ARCnet)
--RJ          Twisted Pair Connector (daisy chain)
-+Legend::
-+
-+  90C65       ARCNET Chip
-+  XTAL        20 MHz Crystal
-+  SW1 1-5     Base Memory Address Select
-+      6-8     Base I/O Address Select
-+  SW2 1-8     Node ID Select (ID0-ID7)
-+  J1          IRQ Select
-+  J2          ROM Enable
-+  J3          Extra Timeout
-+  LED1        Activity LED
-+  BNC         Coax connector (BUS ARCnet)
-+  RJ          Twisted Pair Connector (daisy chain)
- 
- 
- Setting the Node ID
---------------------
-+^^^^^^^^^^^^^^^^^^^
- 
- The eight switches in SW2 are used to set the node ID. Each node attached to
- the network must have an unique node ID which must not be 0.  Switch 1 (ID0)
-@@ -2097,7 +2159,7 @@ serves as the least significant bit (LSB).
- Setting one of the switches to Off means "1", On means "0".
- 
- The node ID is the sum of the values of all switches set to "1"
--These values are:
-+These values are::
- 
-    Switch | Label | Value
-    -------|-------|-------
-@@ -2111,10 +2173,10 @@ These values are:
-      8    | ID7   | 128
- 
- Setting the I/O Base Address
------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- The last three switches in switch block SW1 are used to select one
--of eight possible I/O Base addresses using the following table:
-+of eight possible I/O Base addresses using the following table::
- 
- 
-    Switch      | Hex I/O
-@@ -2122,7 +2184,7 @@ of eight possible I/O Base addresses using the following table:
-    ------------|--------
-    ON  ON  ON  |  260  (Manufacturer's default)
-    OFF ON  ON  |  290
--   ON  OFF ON  |  2E0                         
-+   ON  OFF ON  |  2E0
-    OFF OFF ON  |  2F0
-    ON  ON  OFF |  300
-    OFF ON  OFF |  350
-@@ -2131,35 +2193,38 @@ of eight possible I/O Base addresses using the following table:
- 
- 
- Setting the Base Memory (RAM) buffer Address
----------------------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- The memory buffer (RAM) requires 2K. The base of this buffer can be
- located in any of eight positions. The address of the Boot Prom is
- memory base + 0x2000.
-+
- Jumpers 3-5 of switch block SW1 select the Memory Base address.
- 
-+::
-+
-    Switch              | Hex RAM | Hex ROM
-     1   2   3   4   5  | Address | Address *)
-    --------------------|---------|-----------
-    ON  ON  ON  ON  ON  |  C0000  |  C2000
--   ON  ON  OFF ON  ON  |  C4000  |  C6000  (Manufacturer's default) 
-+   ON  ON  OFF ON  ON  |  C4000  |  C6000  (Manufacturer's default)
-    ON  ON  ON  OFF ON  |  CC000  |  CE000
--   ON  ON  OFF OFF ON  |  D0000  |  D2000  
-+   ON  ON  OFF OFF ON  |  D0000  |  D2000
-    ON  ON  ON  ON  OFF |  D4000  |  D6000
-    ON  ON  OFF ON  OFF |  D8000  |  DA000
-    ON  ON  ON  OFF OFF |  DC000  |  DE000
-    ON  ON  OFF OFF OFF |  E0000  |  E2000
- 
--*) To enable the Boot ROM short the jumper J2.
-+   *) To enable the Boot ROM short the jumper J2.
- 
- The jumpers 1 and 2 probably add 0x0800 and 0x1000 to RAM address.
- 
- 
- Setting the Interrupt Line
----------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- Jumpers 1-5 of the jumper block J1 control the IRQ level.  ON means
--shorted, OFF means open.
-+shorted, OFF means open::
- 
-     Jumper              |  IRQ
-     1   2   3   4   5   |
-@@ -2172,19 +2237,21 @@ shorted, OFF means open.
- 
- 
- Setting the Timeout Parameters
--------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
--The jumpers J3 are used to set the timeout parameters. These two 
-+The jumpers J3 are used to set the timeout parameters. These two
- jumpers are normally left open.
- 
--  
--*****************************************************************************
-+Thomas-Conrad
-+=============
- 
--** Thomas-Conrad **
- Model #500-6242-0097 REV A (8-bit card)
- ---------------------------------------
-+
-   - from Lars Karlsson <100617.3473@compuserve.com>
- 
-+::
-+
-      ________________________________________________________
-    |          ________   ________                           |_____
-    |         |........| |........|                            |
-@@ -2194,11 +2261,11 @@ Model #500-6242-0097 REV A (8-bit card)
-    |                                              address |   |
-    |    ______                                    switch  |   |
-    |   |      |                                           |   |
--   |   |      |                                           |___|    
-+   |   |      |                                           |___|
-    |   |      |                                 ______        |___._
-    |   |______|                                |______|         ____| BNC
-    |                                            Jumper-        _____| Connector
--   |   Main chip                                block  _    __|   '  
-+   |   Main chip                                block  _    __|   '
-    |                                                  | |  |    RJ Connector
-    |                                                  |_|  |    with 110 Ohm
-    |                                                       |__  Terminator
-@@ -2208,46 +2275,49 @@ Model #500-6242-0097 REV A (8-bit card)
-    |   |___________|   |_____|                             |__
-    |  Boot PROM socket IRQ-jumpers                            |_  Diagnostic
-    |________                                       __          _| LED (red)
--            | | | | | | | | | | | | | | | | | | | |  |        |
--            | | | | | | | | | | | | | | | | | | | |  |________|
--                                                              |
--                                                              |
-+	    | | | | | | | | | | | | | | | | | | | |  |        |
-+	    | | | | | | | | | | | | | | | | | | | |  |________|
-+							      |
-+							      |
- 
- And here are the settings for some of the switches and jumpers on the cards.
- 
-+::
- 
--          I/O
-+	    I/O
- 
--         1 2 3 4 5 6 7 8
-+	   1 2 3 4 5 6 7 8
- 
--2E0----- 0 0 0 1 0 0 0 1
--2F0----- 0 0 0 1 0 0 0 0
--300----- 0 0 0 0 1 1 1 1
--350----- 0 0 0 0 1 1 1 0
-+  2E0----- 0 0 0 1 0 0 0 1
-+  2F0----- 0 0 0 1 0 0 0 0
-+  300----- 0 0 0 0 1 1 1 1
-+  350----- 0 0 0 0 1 1 1 0
- 
- "0" in the above example means switch is off "1" means that it is on.
- 
-+::
- 
--    ShMem address.
-+      ShMem address.
- 
--      1 2 3 4 5 6 7 8
-+	1 2 3 4 5 6 7 8
- 
--CX00--0 0 1 1 | |   |
--DX00--0 0 1 0       |
--X000--------- 1 1   |
--X400--------- 1 0   |
--X800--------- 0 1   |
--XC00--------- 0 0   
--ENHANCED----------- 1
--COMPATIBLE--------- 0
-+  CX00--0 0 1 1 | |   |
-+  DX00--0 0 1 0       |
-+  X000--------- 1 1   |
-+  X400--------- 1 0   |
-+  X800--------- 0 1   |
-+  XC00--------- 0 0
-+  ENHANCED----------- 1
-+  COMPATIBLE--------- 0
- 
-+::
- 
--       IRQ
-+	 IRQ
- 
- 
--   3 4 5 7 2
--   . . . . .
--   . . . . .
-+     3 4 5 7 2
-+     . . . . .
-+     . . . . .
- 
- 
- There is a DIP-switch with 8 switches, used to set the shared memory address
-@@ -2266,10 +2336,9 @@ varies by the type of card involved.  I fail to see how either of these
- enhance anything.  Send me more detailed information about this mode, or
- just use "compatible" mode instead.]
- 
-+Waterloo Microsystems Inc. ??
-+=============================
- 
--*****************************************************************************
+-To enable MII monitoring on bond0 with a 1 second interval:
+-# echo 1000 > /sys/class/net/bond0/bonding/miimon
+-	NOTE: If ARP monitoring is enabled, it will disabled when MII
+-monitoring is enabled, and vice-versa.
 -
--** Waterloo Microsystems Inc. ?? **
- 8-bit card (C) 1985
- -------------------
-   - from Robert Michael Best <rmb117@cs.usask.ca>
-@@ -2283,103 +2352,104 @@ e-mail me.]
- 
- The probe has not been able to detect the card on any of the J2 settings,
- and I tried them again with the "Waterloo" chip removed.
-- 
-- _____________________________________________________________________
--| \/  \/              ___  __ __                                      |
--| C4  C4     |^|     | M ||  ^  ||^|                                  |
--| --  --     |_|     | 5 ||     || | C3                               |
--| \/  \/      C10    |___||     ||_|                                  | 
--| C4  C4             _  _ |     |                 ??                  | 
--| --  --            | \/ ||     |                                     | 
--|                   |    ||     |                                     | 
--|                   |    ||  C1 |                                     | 
--|                   |    ||     |  \/                            _____|    
--|                   | C6 ||     |  C9                           |     |___ 
--|                   |    ||     |  --                           | BNC |___| 
--|                   |    ||     |          >C7|                 |_____|
--|                   |    ||     |                                     |
--| __ __             |____||_____|       1 2 3     6                   |
--||  ^  |     >C4|                      |o|o|o|o|o|o| J2    >C4|       |
--||     |                               |o|o|o|o|o|o|                  |
--|| C2  |     >C4|                                          >C4|       |
--||     |                                   >C8|                       |
--||     |       2 3 4 5 6 7  IRQ                            >C4|       |
--||_____|      |o|o|o|o|o|o| J3                                        |
--|_______      |o|o|o|o|o|o|                            _______________|
--        |                                             |
--        |_____________________________________________|
- 
--C1 -- "COM9026
--       SMC 8638"
--      In a chip socket.
-+::
- 
--C2 -- "@Copyright
--       Waterloo Microsystems Inc.
--       1985"
--      In a chip Socket with info printed on a label covering a round window
--      showing the circuit inside. (The window indicates it is an EPROM chip.)
-+   _____________________________________________________________________
-+  | \/  \/              ___  __ __                                      |
-+  | C4  C4     |^|     | M ||  ^  ||^|                                  |
-+  | --  --     |_|     | 5 ||     || | C3                               |
-+  | \/  \/      C10    |___||     ||_|                                  |
-+  | C4  C4             _  _ |     |                 ??                  |
-+  | --  --            | \/ ||     |                                     |
-+  |                   |    ||     |                                     |
-+  |                   |    ||  C1 |                                     |
-+  |                   |    ||     |  \/                            _____|
-+  |                   | C6 ||     |  C9                           |     |___
-+  |                   |    ||     |  --                           | BNC |___|
-+  |                   |    ||     |          >C7|                 |_____|
-+  |                   |    ||     |                                     |
-+  | __ __             |____||_____|       1 2 3     6                   |
-+  ||  ^  |     >C4|                      |o|o|o|o|o|o| J2    >C4|       |
-+  ||     |                               |o|o|o|o|o|o|                  |
-+  || C2  |     >C4|                                          >C4|       |
-+  ||     |                                   >C8|                       |
-+  ||     |       2 3 4 5 6 7  IRQ                            >C4|       |
-+  ||_____|      |o|o|o|o|o|o| J3                                        |
-+  |_______      |o|o|o|o|o|o|                            _______________|
-+	  |                                             |
-+	  |_____________________________________________|
- 
--C3 -- "COM9032
--       SMC 8643"
--      In a chip socket.
-+  C1 -- "COM9026
-+	 SMC 8638"
-+	In a chip socket.
- 
--C4 -- "74LS"
--      9 total no sockets.
-+  C2 -- "@Copyright
-+	 Waterloo Microsystems Inc.
-+	 1985"
-+	In a chip Socket with info printed on a label covering a round window
-+	showing the circuit inside. (The window indicates it is an EPROM chip.)
- 
--M5 -- "50006-136
--       20.000000 MHZ
--       MTQ-T1-S3
--       0 M-TRON 86-40"
--      Metallic case with 4 pins, no socket.
-+  C3 -- "COM9032
-+	 SMC 8643"
-+	In a chip socket.
- 
--C6 -- "MOSTEK@TC8643
--       MK6116N-20
--       MALAYSIA"
--      No socket.
-+  C4 -- "74LS"
-+	9 total no sockets.
- 
--C7 -- No stamp or label but in a 20 pin chip socket.
-+  M5 -- "50006-136
-+	 20.000000 MHZ
-+	 MTQ-T1-S3
-+	 0 M-TRON 86-40"
-+	Metallic case with 4 pins, no socket.
- 
--C8 -- "PAL10L8CN
--       8623"
--      In a 20 pin socket.
-+  C6 -- "MOSTEK@TC8643
-+	 MK6116N-20
-+	 MALAYSIA"
-+	No socket.
- 
--C9 -- "PAl16R4A-2CN
--       8641"
--      In a 20 pin socket.
-+  C7 -- No stamp or label but in a 20 pin chip socket.
- 
--C10 -- "M8640
--          NMC
--        9306N"
--       In an 8 pin socket.
-+  C8 -- "PAL10L8CN
-+	 8623"
-+	In a 20 pin socket.
- 
--?? -- Some components on a smaller board and attached with 20 pins all 
--      along the side closest to the BNC connector.  The are coated in a dark 
--      resin.
-+  C9 -- "PAl16R4A-2CN
-+	 8641"
-+	In a 20 pin socket.
- 
--On the board there are two jumper banks labeled J2 and J3. The 
--manufacturer didn't put a J1 on the board. The two boards I have both 
-+  C10 -- "M8640
-+	    NMC
-+	  9306N"
-+	 In an 8 pin socket.
+-To add ARP targets:
+-# echo +192.168.0.100 > /sys/class/net/bond0/bonding/arp_ip_target
+-# echo +192.168.0.101 > /sys/class/net/bond0/bonding/arp_ip_target
+-	NOTE:  up to 16 target addresses may be specified.
+-
+-To remove an ARP target:
+-# echo -192.168.0.100 > /sys/class/net/bond0/bonding/arp_ip_target
+-
+-To configure the interval between learning packet transmits:
+-# echo 12 > /sys/class/net/bond0/bonding/lp_interval
+-	NOTE: the lp_interval is the number of seconds between instances where
+-the bonding driver sends learning packets to each slaves peer switch.  The
+-default interval is 1 second.
++To configure bond0 for balance-alb mode::
 +
-+  ?? -- Some components on a smaller board and attached with 20 pins all
-+	along the side closest to the BNC connector.  The are coated in a dark
-+	resin.
++	# ifconfig bond0 down
++	# echo 6 > /sys/class/net/bond0/bonding/mode
++	- or -
++	# echo balance-alb > /sys/class/net/bond0/bonding/mode
 +
-+On the board there are two jumper banks labeled J2 and J3. The
-+manufacturer didn't put a J1 on the board. The two boards I have both
- came with a jumper box for each bank.
- 
--J2 -- Numbered 1 2 3 4 5 6. 
--      4 and 5 are not stamped due to solder points.
--       
--J3 -- IRQ 2 3 4 5 6 7
-+::
- 
--The board itself has a maple leaf stamped just above the irq jumpers 
--and "-2 46-86" beside C2. Between C1 and C6 "ASS 'Y 300163" and "@1986 
-+  J2 -- Numbered 1 2 3 4 5 6.
-+	4 and 5 are not stamped due to solder points.
++.. note::
 +
-+  J3 -- IRQ 2 3 4 5 6 7
++   The bond interface must be down before the mode can be changed.
 +
-+The board itself has a maple leaf stamped just above the irq jumpers
-+and "-2 46-86" beside C2. Between C1 and C6 "ASS 'Y 300163" and "@1986
- CORMAN CUSTOM ELECTRONICS CORP." stamped just below the BNC connector.
- Below that "MADE IN CANADA"
++To enable MII monitoring on bond0 with a 1 second interval::
++
++	# echo 1000 > /sys/class/net/bond0/bonding/miimon
++
++.. note::
++
++   If ARP monitoring is enabled, it will disabled when MII
++   monitoring is enabled, and vice-versa.
++
++To add ARP targets::
++
++	# echo +192.168.0.100 > /sys/class/net/bond0/bonding/arp_ip_target
++	# echo +192.168.0.101 > /sys/class/net/bond0/bonding/arp_ip_target
++
++.. note::
++
++   up to 16 target addresses may be specified.
++
++To remove an ARP target::
++
++	# echo -192.168.0.100 > /sys/class/net/bond0/bonding/arp_ip_target
++
++To configure the interval between learning packet transmits::
++
++	# echo 12 > /sys/class/net/bond0/bonding/lp_interval
++
++.. note::
++
++   the lp_interval is the number of seconds between instances where
++   the bonding driver sends learning packets to each slaves peer switch.  The
++   default interval is 1 second.
  
--  
--*****************************************************************************
-+No Name
-+=======
+ Example Configuration
+ ---------------------
+-	We begin with the same example that is shown in section 3.3,
++We begin with the same example that is shown in section 3.3,
+ executed with sysfs, and without using ifenslave.
  
--** No Name **
- 8-bit cards, 16-bit cards
+-	To make a simple bond of two e100 devices (presumed to be eth0
++To make a simple bond of two e100 devices (presumed to be eth0
+ and eth1), and have it persist across reboots, edit the appropriate
+ file (/etc/init.d/boot.local or /etc/rc.d/rc.local), and add the
+-following:
++following::
+ 
+-modprobe bonding
+-modprobe e100
+-echo balance-alb > /sys/class/net/bond0/bonding/mode
+-ifconfig bond0 192.168.1.1 netmask 255.255.255.0 up
+-echo 100 > /sys/class/net/bond0/bonding/miimon
+-echo +eth0 > /sys/class/net/bond0/bonding/slaves
+-echo +eth1 > /sys/class/net/bond0/bonding/slaves
++	modprobe bonding
++	modprobe e100
++	echo balance-alb > /sys/class/net/bond0/bonding/mode
++	ifconfig bond0 192.168.1.1 netmask 255.255.255.0 up
++	echo 100 > /sys/class/net/bond0/bonding/miimon
++	echo +eth0 > /sys/class/net/bond0/bonding/slaves
++	echo +eth1 > /sys/class/net/bond0/bonding/slaves
+ 
+-	To add a second bond, with two e1000 interfaces in
++To add a second bond, with two e1000 interfaces in
+ active-backup mode, using ARP monitoring, add the following lines to
+-your init script:
++your init script::
+ 
+-modprobe e1000
+-echo +bond1 > /sys/class/net/bonding_masters
+-echo active-backup > /sys/class/net/bond1/bonding/mode
+-ifconfig bond1 192.168.2.1 netmask 255.255.255.0 up
+-echo +192.168.2.100 /sys/class/net/bond1/bonding/arp_ip_target
+-echo 2000 > /sys/class/net/bond1/bonding/arp_interval
+-echo +eth2 > /sys/class/net/bond1/bonding/slaves
+-echo +eth3 > /sys/class/net/bond1/bonding/slaves
++	modprobe e1000
++	echo +bond1 > /sys/class/net/bonding_masters
++	echo active-backup > /sys/class/net/bond1/bonding/mode
++	ifconfig bond1 192.168.2.1 netmask 255.255.255.0 up
++	echo +192.168.2.100 /sys/class/net/bond1/bonding/arp_ip_target
++	echo 2000 > /sys/class/net/bond1/bonding/arp_interval
++	echo +eth2 > /sys/class/net/bond1/bonding/slaves
++	echo +eth3 > /sys/class/net/bond1/bonding/slaves
+ 
+ 3.5 Configuration with Interfaces Support
+ -----------------------------------------
+ 
+-        This section applies to distros which use /etc/network/interfaces file
++This section applies to distros which use /etc/network/interfaces file
+ to describe network interface configuration, most notably Debian and it's
+ derivatives.
+ 
+-	The ifup and ifdown commands on Debian don't support bonding out of
++The ifup and ifdown commands on Debian don't support bonding out of
+ the box. The ifenslave-2.6 package should be installed to provide bonding
+-support.  Once installed, this package will provide bond-* options to be used
+-into /etc/network/interfaces.
++support.  Once installed, this package will provide ``bond-*`` options
++to be used into /etc/network/interfaces.
+ 
+-	Note that ifenslave-2.6 package will load the bonding module and use
++Note that ifenslave-2.6 package will load the bonding module and use
+ the ifenslave command when appropriate.
+ 
+ Example Configurations
+ ----------------------
+ 
+ In /etc/network/interfaces, the following stanza will configure bond0, in
+-active-backup mode, with eth0 and eth1 as slaves.
++active-backup mode, with eth0 and eth1 as slaves::
+ 
+-auto bond0
+-iface bond0 inet dhcp
+-	bond-slaves eth0 eth1
+-	bond-mode active-backup
+-	bond-miimon 100
+-	bond-primary eth0 eth1
++	auto bond0
++	iface bond0 inet dhcp
++		bond-slaves eth0 eth1
++		bond-mode active-backup
++		bond-miimon 100
++		bond-primary eth0 eth1
+ 
+ If the above configuration doesn't work, you might have a system using
+ upstart for system startup. This is most notably true for recent
+ Ubuntu versions. The following stanza in /etc/network/interfaces will
+-produce the same result on those systems.
++produce the same result on those systems::
+ 
+-auto bond0
+-iface bond0 inet dhcp
+-	bond-slaves none
+-	bond-mode active-backup
+-	bond-miimon 100
++	auto bond0
++	iface bond0 inet dhcp
++		bond-slaves none
++		bond-mode active-backup
++		bond-miimon 100
+ 
+-auto eth0
+-iface eth0 inet manual
+-	bond-master bond0
+-	bond-primary eth0 eth1
++	auto eth0
++	iface eth0 inet manual
++		bond-master bond0
++		bond-primary eth0 eth1
+ 
+-auto eth1
+-iface eth1 inet manual
+-	bond-master bond0
+-	bond-primary eth0 eth1
++	auto eth1
++	iface eth1 inet manual
++		bond-master bond0
++		bond-primary eth0 eth1
+ 
+-For a full list of bond-* supported options in /etc/network/interfaces and some
+-more advanced examples tailored to you particular distros, see the files in
++For a full list of ``bond-*`` supported options in /etc/network/interfaces and
++some more advanced examples tailored to you particular distros, see the files in
+ /usr/share/doc/ifenslave-2.6.
+ 
+ 3.6 Overriding Configuration for Special Cases
+@@ -1610,31 +1645,31 @@ tx_queues can be used to change this value.  There is no sysfs parameter
+ available as the allocation is done at module init time.
+ 
+ The output of the file /proc/net/bonding/bondX has changed so the output Queue
+-ID is now printed for each slave:
++ID is now printed for each slave::
+ 
+-Bonding Mode: fault-tolerance (active-backup)
+-Primary Slave: None
+-Currently Active Slave: eth0
+-MII Status: up
+-MII Polling Interval (ms): 0
+-Up Delay (ms): 0
+-Down Delay (ms): 0
++	Bonding Mode: fault-tolerance (active-backup)
++	Primary Slave: None
++	Currently Active Slave: eth0
++	MII Status: up
++	MII Polling Interval (ms): 0
++	Up Delay (ms): 0
++	Down Delay (ms): 0
+ 
+-Slave Interface: eth0
+-MII Status: up
+-Link Failure Count: 0
+-Permanent HW addr: 00:1a:a0:12:8f:cb
+-Slave queue ID: 0
++	Slave Interface: eth0
++	MII Status: up
++	Link Failure Count: 0
++	Permanent HW addr: 00:1a:a0:12:8f:cb
++	Slave queue ID: 0
+ 
+-Slave Interface: eth1
+-MII Status: up
+-Link Failure Count: 0
+-Permanent HW addr: 00:1a:a0:12:8f:cc
+-Slave queue ID: 2
++	Slave Interface: eth1
++	MII Status: up
++	Link Failure Count: 0
++	Permanent HW addr: 00:1a:a0:12:8f:cc
++	Slave queue ID: 2
+ 
+-The queue_id for a slave can be set using the command:
++The queue_id for a slave can be set using the command::
+ 
+-# echo "eth1:2" > /sys/class/net/bond0/bonding/queue_id
++	# echo "eth1:2" > /sys/class/net/bond0/bonding/queue_id
+ 
+ Any interface that needs a queue_id set should set it with multiple calls
+ like the one above until proper priorities are set for all interfaces.  On
+@@ -1645,12 +1680,12 @@ These queue id's can be used in conjunction with the tc utility to configure
+ a multiqueue qdisc and filters to bias certain traffic to transmit on certain
+ slave devices.  For instance, say we wanted, in the above configuration to
+ force all traffic bound to 192.168.1.100 to use eth1 in the bond as its output
+-device. The following commands would accomplish this:
++device. The following commands would accomplish this::
+ 
+-# tc qdisc add dev bond0 handle 1 root multiq
++	# tc qdisc add dev bond0 handle 1 root multiq
+ 
+-# tc filter add dev bond0 protocol ip parent 1: prio 1 u32 match ip dst \
+-	192.168.1.100 action skbedit queue_mapping 2
++	# tc filter add dev bond0 protocol ip parent 1: prio 1 u32 match ip \
++		dst 192.168.1.100 action skbedit queue_mapping 2
+ 
+ These commands tell the kernel to attach a multiqueue queue discipline to the
+ bond0 interface and filter traffic enqueued to it, such that packets with a dst
+@@ -1663,7 +1698,7 @@ that normal output policy selection should take place.  One benefit to simply
+ leaving the qid for a slave to 0 is the multiqueue awareness in the bonding
+ driver that is now present.  This awareness allows tc filters to be placed on
+ slave devices as well as bond devices and the bonding driver will simply act as
+-a pass-through for selecting output queues on the slave device rather than 
++a pass-through for selecting output queues on the slave device rather than
+ output port selection.
+ 
+ This feature first appeared in bonding driver version 3.7.0 and support for
+@@ -1689,31 +1724,31 @@ few bonding parameters:
+    (a) ad_actor_system : You can set a random mac-address that can be used for
+        these LACPDU exchanges. The value can not be either NULL or Multicast.
+        Also it's preferable to set the local-admin bit. Following shell code
+-       generates a random mac-address as described above.
++       generates a random mac-address as described above::
+ 
+-       # sys_mac_addr=$(printf '%02x:%02x:%02x:%02x:%02x:%02x' \
+-                                $(( (RANDOM & 0xFE) | 0x02 )) \
+-                                $(( RANDOM & 0xFF )) \
+-                                $(( RANDOM & 0xFF )) \
+-                                $(( RANDOM & 0xFF )) \
+-                                $(( RANDOM & 0xFF )) \
+-                                $(( RANDOM & 0xFF )))
+-       # echo $sys_mac_addr > /sys/class/net/bond0/bonding/ad_actor_system
++	      # sys_mac_addr=$(printf '%02x:%02x:%02x:%02x:%02x:%02x' \
++				       $(( (RANDOM & 0xFE) | 0x02 )) \
++				       $(( RANDOM & 0xFF )) \
++				       $(( RANDOM & 0xFF )) \
++				       $(( RANDOM & 0xFF )) \
++				       $(( RANDOM & 0xFF )) \
++				       $(( RANDOM & 0xFF )))
++	      # echo $sys_mac_addr > /sys/class/net/bond0/bonding/ad_actor_system
+ 
+    (b) ad_actor_sys_prio : Randomize the system priority. The default value
+        is 65535, but system can take the value from 1 - 65535. Following shell
+-       code generates random priority and sets it.
++       code generates random priority and sets it::
+ 
+-       # sys_prio=$(( 1 + RANDOM + RANDOM ))
+-       # echo $sys_prio > /sys/class/net/bond0/bonding/ad_actor_sys_prio
++	    # sys_prio=$(( 1 + RANDOM + RANDOM ))
++	    # echo $sys_prio > /sys/class/net/bond0/bonding/ad_actor_sys_prio
+ 
+    (c) ad_user_port_key : Use the user portion of the port-key. The default
+        keeps this empty. These are the upper 10 bits of the port-key and value
+        ranges from 0 - 1023. Following shell code generates these 10 bits and
+-       sets it.
++       sets it::
+ 
+-       # usr_port_key=$(( RANDOM & 0x3FF ))
+-       # echo $usr_port_key > /sys/class/net/bond0/bonding/ad_user_port_key
++	    # usr_port_key=$(( RANDOM & 0x3FF ))
++	    # echo $usr_port_key > /sys/class/net/bond0/bonding/ad_user_port_key
+ 
+ 
+ 4 Querying Bonding Configuration
+@@ -1722,81 +1757,81 @@ few bonding parameters:
+ 4.1 Bonding Configuration
  -------------------------
-+
-   - from Juergen Seifert <seifert@htwm.de>
--  
--NONAME 8-BIT ARCNET
--===================
- 
- I have named this ARCnet card "NONAME", since there is no name of any
- manufacturer on the Installation manual nor on the shipping box. The only
-@@ -2388,8 +2458,10 @@ it is "Made in Taiwan"
- 
- This description has been written by Juergen Seifert <seifert@htwm.de>
- using information from the Original
--                    "ARCnet Installation Manual"
- 
-+		    "ARCnet Installation Manual"
-+
-+::
- 
-     ________________________________________________________________
-    | |STAR| BUS| T/P|                                               |
-@@ -2416,32 +2488,32 @@ using information from the Original
-        |        \ IRQ   / T T O                      |
-        |__________________1_2_M______________________|
- 
--Legend:
-+Legend::
- 
--COM90C65:       ARCnet Probe
--S1  1-8:    Node ID Select
--S2  1-3:    I/O Base Address Select
--    4-6:    Memory Base Address Select
--    7-8:    RAM Offset Select
--ET1, ET2    Extended Timeout Select
--ROM     ROM Enable Select
--CN              RG62 Coax Connector
--STAR| BUS | T/P Three fields for placing a sign (colored circle)
--                indicating the topology of the card
-+  COM90C65:       ARCnet Probe
-+  S1  1-8:    Node ID Select
-+  S2  1-3:    I/O Base Address Select
-+      4-6:    Memory Base Address Select
-+      7-8:    RAM Offset Select
-+  ET1, ET2    Extended Timeout Select
-+  ROM     ROM Enable Select
-+  CN              RG62 Coax Connector
-+  STAR| BUS | T/P Three fields for placing a sign (colored circle)
-+		  indicating the topology of the card
- 
- Setting one of the switches to Off means "1", On means "0".
- 
- 
- Setting the Node ID
---------------------
-+^^^^^^^^^^^^^^^^^^^
- 
- The eight switches in group SW1 are used to set the node ID.
- Each node attached to the network must have an unique node ID which
- must be different from 0.
- Switch 8 serves as the least significant bit (LSB).
- 
--The node ID is the sum of the values of all switches set to "1"  
--These values are:
-+The node ID is the sum of the values of all switches set to "1"
-+These values are::
- 
-     Switch | Value
-     -------|-------
-@@ -2454,30 +2526,30 @@ These values are:
-       2    |  64
-       1    | 128
- 
--Some Examples:
-+Some Examples::
- 
--    Switch         | Hex     | Decimal 
-+    Switch         | Hex     | Decimal
-    1 2 3 4 5 6 7 8 | Node ID | Node ID
-    ----------------|---------|---------
-    0 0 0 0 0 0 0 0 |    not allowed
--   0 0 0 0 0 0 0 1 |    1    |    1 
-+   0 0 0 0 0 0 0 1 |    1    |    1
-    0 0 0 0 0 0 1 0 |    2    |    2
-    0 0 0 0 0 0 1 1 |    3    |    3
-        . . .       |         |
-    0 1 0 1 0 1 0 1 |   55    |   85
-        . . .       |         |
-    1 0 1 0 1 0 1 0 |   AA    |  170
--       . . .       |         |  
-+       . . .       |         |
-    1 1 1 1 1 1 0 1 |   FD    |  253
-    1 1 1 1 1 1 1 0 |   FE    |  254
-    1 1 1 1 1 1 1 1 |   FF    |  255
- 
- 
- Setting the I/O Base Address
------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- The first three switches in switch group SW2 are used to select one
--of eight possible I/O Base addresses using the following table
-+of eight possible I/O Base addresses using the following table::
- 
-    Switch      | Hex I/O
-     1   2   3  | Address
-@@ -2493,7 +2565,7 @@ of eight possible I/O Base addresses using the following table
- 
- 
- Setting the Base Memory (RAM) buffer Address
----------------------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- The memory buffer requires 2K of a 16K block of RAM. The base of this
- 16K block can be located in any of eight positions.
-@@ -2501,6 +2573,8 @@ Switches 4-6 of switch group SW2 select the Base of the 16K block.
- Within that 16K address space, the buffer may be assigned any one of four
- positions, determined by the offset, switches 7 and 8 of group SW2.
- 
-+::
-+
-    Switch     | Hex RAM | Hex ROM
-    4 5 6  7 8 | Address | Address *)
-    -----------|---------|-----------
-@@ -2508,60 +2582,62 @@ positions, determined by the offset, switches 7 and 8 of group SW2.
-    0 0 0  0 1 |  C0800  |  C2000
-    0 0 0  1 0 |  C1000  |  C2000
-    0 0 0  1 1 |  C1800  |  C2000
--              |         |
-+	      |         |
-    0 0 1  0 0 |  C4000  |  C6000
-    0 0 1  0 1 |  C4800  |  C6000
-    0 0 1  1 0 |  C5000  |  C6000
-    0 0 1  1 1 |  C5800  |  C6000
--              |         |
-+	      |         |
-    0 1 0  0 0 |  CC000  |  CE000
-    0 1 0  0 1 |  CC800  |  CE000
-    0 1 0  1 0 |  CD000  |  CE000
-    0 1 0  1 1 |  CD800  |  CE000
--              |         |
-+	      |         |
-    0 1 1  0 0 |  D0000  |  D2000  (Manufacturer's default)
-    0 1 1  0 1 |  D0800  |  D2000
-    0 1 1  1 0 |  D1000  |  D2000
-    0 1 1  1 1 |  D1800  |  D2000
--              |         |
-+	      |         |
-    1 0 0  0 0 |  D4000  |  D6000
-    1 0 0  0 1 |  D4800  |  D6000
-    1 0 0  1 0 |  D5000  |  D6000
-    1 0 0  1 1 |  D5800  |  D6000
--              |         |
-+	      |         |
-    1 0 1  0 0 |  D8000  |  DA000
-    1 0 1  0 1 |  D8800  |  DA000
-    1 0 1  1 0 |  D9000  |  DA000
-    1 0 1  1 1 |  D9800  |  DA000
--              |         |
-+	      |         |
-    1 1 0  0 0 |  DC000  |  DE000
-    1 1 0  0 1 |  DC800  |  DE000
-    1 1 0  1 0 |  DD000  |  DE000
-    1 1 0  1 1 |  DD800  |  DE000
--              |         |
-+	      |         |
-    1 1 1  0 0 |  E0000  |  E2000
-    1 1 1  0 1 |  E0800  |  E2000
-    1 1 1  1 0 |  E1000  |  E2000
-    1 1 1  1 1 |  E1800  |  E2000
--  
--*) To enable the 8K Boot PROM install the jumper ROM.
--   The default is jumper ROM not installed.
-+
-+   *) To enable the 8K Boot PROM install the jumper ROM.
-+      The default is jumper ROM not installed.
- 
- 
- Setting Interrupt Request Lines (IRQ)
---------------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- To select a hardware interrupt level set one (only one!) of the jumpers
- IRQ2, IRQ3, IRQ4, IRQ5 or IRQ7. The manufacturer's default is IRQ2.
-- 
-+
- 
- Setting the Timeouts
----------------------
-+^^^^^^^^^^^^^^^^^^^^
- 
- The two jumpers labeled ET1 and ET2 are used to determine the timeout
- parameters (response and reconfiguration time). Every node in a network
- must be set to the same timeout values.
- 
-+::
-+
-    ET1 ET2 | Response Time (us) | Reconfiguration Time (ms)
-    --------|--------------------|--------------------------
-    Off Off |        78          |          840   (Default)
-@@ -2572,8 +2648,8 @@ must be set to the same timeout values.
- On means jumper installed, Off means jumper not installed
- 
- 
--NONAME 16-BIT ARCNET
--====================
-+16-BIT ARCNET
-+-------------
- 
- The manual of my 8-Bit NONAME ARCnet Card contains another description
- of a 16-Bit Coax / Twisted Pair Card. This description is incomplete,
-@@ -2584,13 +2660,16 @@ the booklet there is a different way of counting ... 2-9, 2-10, A-1,
- Also the picture of the board layout is not as good as the picture of
- 8-Bit card, because there isn't any letter like "SW1" written to the
- picture.
-+
- Should somebody have such a board, please feel free to complete this
- description or to send a mail to me!
- 
- This description has been written by Juergen Seifert <seifert@htwm.de>
- using information from the Original
--                    "ARCnet Installation Manual"
- 
-+		    "ARCnet Installation Manual"
-+
-+::
- 
-    ___________________________________________________________________
-   <                    _________________  _________________           |
-@@ -2622,15 +2701,15 @@ Setting one of the switches to Off means "1", On means "0".
- 
- 
- Setting the Node ID
---------------------
-+^^^^^^^^^^^^^^^^^^^
- 
- The eight switches in group SW2 are used to set the node ID.
- Each node attached to the network must have an unique node ID which
- must be different from 0.
- Switch 8 serves as the least significant bit (LSB).
- 
--The node ID is the sum of the values of all switches set to "1"  
--These values are:
-+The node ID is the sum of the values of all switches set to "1"
-+These values are::
- 
-     Switch | Value
-     -------|-------
-@@ -2643,30 +2722,30 @@ These values are:
-       2    |  64
-       1    | 128
- 
--Some Examples:
-+Some Examples::
- 
--    Switch         | Hex     | Decimal 
-+    Switch         | Hex     | Decimal
-    1 2 3 4 5 6 7 8 | Node ID | Node ID
-    ----------------|---------|---------
-    0 0 0 0 0 0 0 0 |    not allowed
--   0 0 0 0 0 0 0 1 |    1    |    1 
-+   0 0 0 0 0 0 0 1 |    1    |    1
-    0 0 0 0 0 0 1 0 |    2    |    2
-    0 0 0 0 0 0 1 1 |    3    |    3
-        . . .       |         |
-    0 1 0 1 0 1 0 1 |   55    |   85
-        . . .       |         |
-    1 0 1 0 1 0 1 0 |   AA    |  170
--       . . .       |         |  
-+       . . .       |         |
-    1 1 1 1 1 1 0 1 |   FD    |  253
-    1 1 1 1 1 1 1 0 |   FE    |  254
-    1 1 1 1 1 1 1 1 |   FF    |  255
- 
- 
- Setting the I/O Base Address
------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- The first three switches in switch group SW1 are used to select one
--of eight possible I/O Base addresses using the following table
-+of eight possible I/O Base addresses using the following table::
- 
-    Switch      | Hex I/O
-     3   2   1  | Address
-@@ -2682,13 +2761,13 @@ of eight possible I/O Base addresses using the following table
- 
- 
- Setting the Base Memory (RAM) buffer Address
----------------------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- The memory buffer requires 2K of a 16K block of RAM. The base of this
- 16K block can be located in any of eight positions.
- Switches 6-8 of switch group SW1 select the Base of the 16K block.
- Within that 16K address space, the buffer may be assigned any one of four
--positions, determined by the offset, switches 4 and 5 of group SW1.
-+positions, determined by the offset, switches 4 and 5 of group SW1::
- 
-    Switch     | Hex RAM | Hex ROM
-    8 7 6  5 4 | Address | Address
-@@ -2697,111 +2776,111 @@ positions, determined by the offset, switches 4 and 5 of group SW1.
-    0 0 0  0 1 |  C0800  |  C2000
-    0 0 0  1 0 |  C1000  |  C2000
-    0 0 0  1 1 |  C1800  |  C2000
--              |         |
-+	      |         |
-    0 0 1  0 0 |  C4000  |  C6000
-    0 0 1  0 1 |  C4800  |  C6000
-    0 0 1  1 0 |  C5000  |  C6000
-    0 0 1  1 1 |  C5800  |  C6000
--              |         |
-+	      |         |
-    0 1 0  0 0 |  CC000  |  CE000
-    0 1 0  0 1 |  CC800  |  CE000
-    0 1 0  1 0 |  CD000  |  CE000
-    0 1 0  1 1 |  CD800  |  CE000
--              |         |
-+	      |         |
-    0 1 1  0 0 |  D0000  |  D2000  (Manufacturer's default)
-    0 1 1  0 1 |  D0800  |  D2000
-    0 1 1  1 0 |  D1000  |  D2000
-    0 1 1  1 1 |  D1800  |  D2000
--              |         |
-+	      |         |
-    1 0 0  0 0 |  D4000  |  D6000
-    1 0 0  0 1 |  D4800  |  D6000
-    1 0 0  1 0 |  D5000  |  D6000
-    1 0 0  1 1 |  D5800  |  D6000
--              |         |
-+	      |         |
-    1 0 1  0 0 |  D8000  |  DA000
-    1 0 1  0 1 |  D8800  |  DA000
-    1 0 1  1 0 |  D9000  |  DA000
-    1 0 1  1 1 |  D9800  |  DA000
--              |         |
-+	      |         |
-    1 1 0  0 0 |  DC000  |  DE000
-    1 1 0  0 1 |  DC800  |  DE000
-    1 1 0  1 0 |  DD000  |  DE000
-    1 1 0  1 1 |  DD800  |  DE000
--              |         |
-+	      |         |
-    1 1 1  0 0 |  E0000  |  E2000
-    1 1 1  0 1 |  E0800  |  E2000
-    1 1 1  1 0 |  E1000  |  E2000
-    1 1 1  1 1 |  E1800  |  E2000
--  
-+
- 
- Setting Interrupt Request Lines (IRQ)
---------------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- ??????????????????????????????????????
- 
- 
- Setting the Timeouts
----------------------
-+^^^^^^^^^^^^^^^^^^^^
- 
- ??????????????????????????????????????
- 
- 
--*****************************************************************************
--
--** No Name **
- 8-bit cards ("Made in Taiwan R.O.C.")
-------------
-+-------------------------------------
-+
-   - from Vojtech Pavlik <vojtech@suse.cz>
- 
- I have named this ARCnet card "NONAME", since I got only the card with
--no manual at all and the only text identifying the manufacturer is 
-+no manual at all and the only text identifying the manufacturer is
- "MADE IN TAIWAN R.O.C" printed on the card.
- 
--          ____________________________________________________________
--         |                 1 2 3 4 5 6 7 8                            |
--         | |o|o| JP1       o|o|o|o|o|o|o|o| ON                        |
--         |  +              o|o|o|o|o|o|o|o|                        ___|
--         |  _____________  o|o|o|o|o|o|o|o| OFF         _____     |   | ID7
--         | |             | SW1                         |     |    |   | ID6
--         | > RAM (2k)    |        ____________________ |  H  |    | S | ID5
--         | |_____________|       |                    ||  y  |    | W | ID4
--         |                       |                    ||  b  |    | 2 | ID3
--         |                       |                    ||  r  |    |   | ID2
--         |                       |                    ||  i  |    |   | ID1
--         |                       |       90C65        ||  d  |    |___| ID0
--         |      SW3              |                    ||     |        |      
--         | |o|o|o|o|o|o|o|o| ON  |                    ||  I  |        |
--         | |o|o|o|o|o|o|o|o|     |                    ||  C  |        |
--         | |o|o|o|o|o|o|o|o| OFF |____________________||     |   _____|
--         |  1 2 3 4 5 6 7 8                            |     |  |     |___
--         |  ______________                             |     |  | BNC |___|
--         | |              |                            |_____|  |_____|
--         | > EPROM SOCKET |                                           |
--         | |______________|                                           |
--         |                                              ______________|
--         |                                             |
--         |_____________________________________________|
-+::
- 
--Legend:
-+	  ____________________________________________________________
-+	 |                 1 2 3 4 5 6 7 8                            |
-+	 | |o|o| JP1       o|o|o|o|o|o|o|o| ON                        |
-+	 |  +              o|o|o|o|o|o|o|o|                        ___|
-+	 |  _____________  o|o|o|o|o|o|o|o| OFF         _____     |   | ID7
-+	 | |             | SW1                         |     |    |   | ID6
-+	 | > RAM (2k)    |        ____________________ |  H  |    | S | ID5
-+	 | |_____________|       |                    ||  y  |    | W | ID4
-+	 |                       |                    ||  b  |    | 2 | ID3
-+	 |                       |                    ||  r  |    |   | ID2
-+	 |                       |                    ||  i  |    |   | ID1
-+	 |                       |       90C65        ||  d  |    |___| ID0
-+	 |      SW3              |                    ||     |        |
-+	 | |o|o|o|o|o|o|o|o| ON  |                    ||  I  |        |
-+	 | |o|o|o|o|o|o|o|o|     |                    ||  C  |        |
-+	 | |o|o|o|o|o|o|o|o| OFF |____________________||     |   _____|
-+	 |  1 2 3 4 5 6 7 8                            |     |  |     |___
-+	 |  ______________                             |     |  | BNC |___|
-+	 | |              |                            |_____|  |_____|
-+	 | > EPROM SOCKET |                                           |
-+	 | |______________|                                           |
-+	 |                                              ______________|
-+	 |                                             |
-+	 |_____________________________________________|
- 
--90C65       ARCNET Chip 
--SW1 1-5:    Base Memory Address Select
--    6-8:    Base I/O Address Select
--SW2 1-8:    Node ID Select (ID0-ID7)
--SW3 1-5:    IRQ Select   
--    6-7:    Extra Timeout
--    8  :    ROM Enable   
--JP1         Led connector
--BNC         Coax connector
-+Legend::
- 
--Although the jumpers SW1 and SW3 are marked SW, not JP, they are jumpers, not 
-+  90C65       ARCNET Chip
-+  SW1 1-5:    Base Memory Address Select
-+      6-8:    Base I/O Address Select
-+  SW2 1-8:    Node ID Select (ID0-ID7)
-+  SW3 1-5:    IRQ Select
-+      6-7:    Extra Timeout
-+      8  :    ROM Enable
-+  JP1         Led connector
-+  BNC         Coax connector
-+
-+Although the jumpers SW1 and SW3 are marked SW, not JP, they are jumpers, not
- switches.
- 
--Setting the jumpers to ON means connecting the upper two pins, off the bottom 
-+Setting the jumpers to ON means connecting the upper two pins, off the bottom
- two - or - in case of IRQ setting, connecting none of them at all.
- 
- Setting the Node ID
---------------------
-+^^^^^^^^^^^^^^^^^^^
- 
- The eight switches in SW2 are used to set the node ID. Each node attached
- to the network must have an unique node ID which must not be 0.
-@@ -2809,8 +2888,8 @@ Switch 1 (ID0) serves as the least significant bit (LSB).
- 
- Setting one of the switches to Off means "1", On means "0".
- 
--The node ID is the sum of the values of all switches set to "1"  
--These values are:
-+The node ID is the sum of the values of all switches set to "1"
-+These values are::
- 
-    Switch | Label | Value
-    -------|-------|-------
-@@ -2823,30 +2902,30 @@ These values are:
-      7    | ID6   |  64
-      8    | ID7   | 128
- 
--Some Examples:
-+Some Examples::
- 
--    Switch         | Hex     | Decimal 
-+    Switch         | Hex     | Decimal
-    8 7 6 5 4 3 2 1 | Node ID | Node ID
-    ----------------|---------|---------
-    0 0 0 0 0 0 0 0 |    not allowed
--   0 0 0 0 0 0 0 1 |    1    |    1 
-+   0 0 0 0 0 0 0 1 |    1    |    1
-    0 0 0 0 0 0 1 0 |    2    |    2
-    0 0 0 0 0 0 1 1 |    3    |    3
-        . . .       |         |
-    0 1 0 1 0 1 0 1 |   55    |   85
-        . . .       |         |
-    1 0 1 0 1 0 1 0 |   AA    |  170
--       . . .       |         |  
-+       . . .       |         |
-    1 1 1 1 1 1 0 1 |   FD    |  253
-    1 1 1 1 1 1 1 0 |   FE    |  254
-    1 1 1 1 1 1 1 1 |   FF    |  255
- 
- 
- Setting the I/O Base Address
------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- The last three switches in switch block SW1 are used to select one
--of eight possible I/O Base addresses using the following table
-+of eight possible I/O Base addresses using the following table::
- 
- 
-    Switch      | Hex I/O
-@@ -2863,13 +2942,16 @@ of eight possible I/O Base addresses using the following table
- 
- 
- Setting the Base Memory (RAM) buffer Address
----------------------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
--The memory buffer (RAM) requires 2K. The base of this buffer can be 
-+The memory buffer (RAM) requires 2K. The base of this buffer can be
- located in any of eight positions. The address of the Boot Prom is
- memory base + 0x2000.
-+
- Jumpers 3-5 of jumper block SW1 select the Memory Base address.
+ 
+-	Each bonding device has a read-only file residing in the
++Each bonding device has a read-only file residing in the
+ /proc/net/bonding directory.  The file contents include information
+ about the bonding configuration, options and state of each slave.
+ 
+-	For example, the contents of /proc/net/bonding/bond0 after the
++For example, the contents of /proc/net/bonding/bond0 after the
+ driver is loaded with parameters of mode=0 and miimon=1000 is
+-generally as follows:
++generally as follows::
+ 
+ 	Ethernet Channel Bonding Driver: 2.6.1 (October 29, 2004)
+-        Bonding Mode: load balancing (round-robin)
+-        Currently Active Slave: eth0
+-        MII Status: up
+-        MII Polling Interval (ms): 1000
+-        Up Delay (ms): 0
+-        Down Delay (ms): 0
++	Bonding Mode: load balancing (round-robin)
++	Currently Active Slave: eth0
++	MII Status: up
++	MII Polling Interval (ms): 1000
++	Up Delay (ms): 0
++	Down Delay (ms): 0
+ 
+-        Slave Interface: eth1
+-        MII Status: up
+-        Link Failure Count: 1
++	Slave Interface: eth1
++	MII Status: up
++	Link Failure Count: 1
+ 
+-        Slave Interface: eth0
+-        MII Status: up
+-        Link Failure Count: 1
++	Slave Interface: eth0
++	MII Status: up
++	Link Failure Count: 1
+ 
+-	The precise format and contents will change depending upon the
++The precise format and contents will change depending upon the
+ bonding configuration, state, and version of the bonding driver.
+ 
+ 4.2 Network configuration
+ -------------------------
+ 
+-	The network configuration can be inspected using the ifconfig
++The network configuration can be inspected using the ifconfig
+ command.  Bonding devices will have the MASTER flag set; Bonding slave
+ devices will have the SLAVE flag set.  The ifconfig output does not
+ contain information on which slaves are associated with which masters.
+ 
+-	In the example below, the bond0 interface is the master
++In the example below, the bond0 interface is the master
+ (MASTER) while eth0 and eth1 are slaves (SLAVE). Notice all slaves of
+ bond0 have the same MAC address (HWaddr) as bond0 for all modes except
+-TLB and ALB that require a unique MAC address for each slave.
++TLB and ALB that require a unique MAC address for each slave::
+ 
+-# /sbin/ifconfig
+-bond0     Link encap:Ethernet  HWaddr 00:C0:F0:1F:37:B4
+-          inet addr:XXX.XXX.XXX.YYY  Bcast:XXX.XXX.XXX.255  Mask:255.255.252.0
+-          UP BROADCAST RUNNING MASTER MULTICAST  MTU:1500  Metric:1
+-          RX packets:7224794 errors:0 dropped:0 overruns:0 frame:0
+-          TX packets:3286647 errors:1 dropped:0 overruns:1 carrier:0
+-          collisions:0 txqueuelen:0
++  # /sbin/ifconfig
++  bond0     Link encap:Ethernet  HWaddr 00:C0:F0:1F:37:B4
++	    inet addr:XXX.XXX.XXX.YYY  Bcast:XXX.XXX.XXX.255  Mask:255.255.252.0
++	    UP BROADCAST RUNNING MASTER MULTICAST  MTU:1500  Metric:1
++	    RX packets:7224794 errors:0 dropped:0 overruns:0 frame:0
++	    TX packets:3286647 errors:1 dropped:0 overruns:1 carrier:0
++	    collisions:0 txqueuelen:0
+ 
+-eth0      Link encap:Ethernet  HWaddr 00:C0:F0:1F:37:B4
+-          UP BROADCAST RUNNING SLAVE MULTICAST  MTU:1500  Metric:1
+-          RX packets:3573025 errors:0 dropped:0 overruns:0 frame:0
+-          TX packets:1643167 errors:1 dropped:0 overruns:1 carrier:0
+-          collisions:0 txqueuelen:100
+-          Interrupt:10 Base address:0x1080
++  eth0      Link encap:Ethernet  HWaddr 00:C0:F0:1F:37:B4
++	    UP BROADCAST RUNNING SLAVE MULTICAST  MTU:1500  Metric:1
++	    RX packets:3573025 errors:0 dropped:0 overruns:0 frame:0
++	    TX packets:1643167 errors:1 dropped:0 overruns:1 carrier:0
++	    collisions:0 txqueuelen:100
++	    Interrupt:10 Base address:0x1080
+ 
+-eth1      Link encap:Ethernet  HWaddr 00:C0:F0:1F:37:B4
+-          UP BROADCAST RUNNING SLAVE MULTICAST  MTU:1500  Metric:1
+-          RX packets:3651769 errors:0 dropped:0 overruns:0 frame:0
+-          TX packets:1643480 errors:0 dropped:0 overruns:0 carrier:0
+-          collisions:0 txqueuelen:100
+-          Interrupt:9 Base address:0x1400
++  eth1      Link encap:Ethernet  HWaddr 00:C0:F0:1F:37:B4
++	    UP BROADCAST RUNNING SLAVE MULTICAST  MTU:1500  Metric:1
++	    RX packets:3651769 errors:0 dropped:0 overruns:0 frame:0
++	    TX packets:1643480 errors:0 dropped:0 overruns:0 carrier:0
++	    collisions:0 txqueuelen:100
++	    Interrupt:9 Base address:0x1400
+ 
+ 5. Switch Configuration
+ =======================
+ 
+-	For this section, "switch" refers to whatever system the
++For this section, "switch" refers to whatever system the
+ bonded devices are directly connected to (i.e., where the other end of
+ the cable plugs into).  This may be an actual dedicated switch device,
+ or it may be another regular system (e.g., another computer running
+ Linux),
+ 
+-	The active-backup, balance-tlb and balance-alb modes do not
++The active-backup, balance-tlb and balance-alb modes do not
+ require any specific configuration of the switch.
+ 
+-	The 802.3ad mode requires that the switch have the appropriate
++The 802.3ad mode requires that the switch have the appropriate
+ ports configured as an 802.3ad aggregation.  The precise method used
+ to configure this varies from switch to switch, but, for example, a
+ Cisco 3550 series switch requires that the appropriate ports first be
+@@ -1804,7 +1839,7 @@ grouped together in a single etherchannel instance, then that
+ etherchannel is set to mode "lacp" to enable 802.3ad (instead of
+ standard EtherChannel).
+ 
+-	The balance-rr, balance-xor and broadcast modes generally
++The balance-rr, balance-xor and broadcast modes generally
+ require that the switch have the appropriate ports grouped together.
+ The nomenclature for such a group differs between switches, it may be
+ called an "etherchannel" (as in the Cisco example, above), a "trunk
+@@ -1820,7 +1855,7 @@ with another EtherChannel group.
+ 6. 802.1q VLAN Support
+ ======================
+ 
+-	It is possible to configure VLAN devices over a bond interface
++It is possible to configure VLAN devices over a bond interface
+ using the 8021q driver.  However, only packets coming from the 8021q
+ driver and passing through bonding will be tagged by default.  Self
+ generated packets, for example, bonding's learning packets or ARP
+@@ -1829,7 +1864,7 @@ tagged internally by bonding itself.  As a result, bonding must
+ "learn" the VLAN IDs configured above it, and use those IDs to tag
+ self generated packets.
+ 
+-	For reasons of simplicity, and to support the use of adapters
++For reasons of simplicity, and to support the use of adapters
+ that can do VLAN hardware acceleration offloading, the bonding
+ interface declares itself as fully hardware offloading capable, it gets
+ the add_vid/kill_vid notifications to gather the necessary
+@@ -1839,7 +1874,7 @@ should go through an adapter that is not offloading capable are
+ "un-accelerated" by the bonding driver so the VLAN tag sits in the
+ regular location.
+ 
+-	VLAN interfaces *must* be added on top of a bonding interface
++VLAN interfaces *must* be added on top of a bonding interface
+ only after enslaving at least one slave.  The bonding interface has a
+ hardware address of 00:00:00:00:00:00 until the first slave is added.
+ If the VLAN interface is created prior to the first enslavement, it
+@@ -1847,23 +1882,23 @@ would pick up the all-zeroes hardware address.  Once the first slave
+ is attached to the bond, the bond device itself will pick up the
+ slave's hardware address, which is then available for the VLAN device.
+ 
+-	Also, be aware that a similar problem can occur if all slaves
++Also, be aware that a similar problem can occur if all slaves
+ are released from a bond that still has one or more VLAN interfaces on
+ top of it.  When a new slave is added, the bonding interface will
+ obtain its hardware address from the first slave, which might not
+ match the hardware address of the VLAN interfaces (which was
+ ultimately copied from an earlier slave).
+ 
+-	There are two methods to insure that the VLAN device operates
++There are two methods to insure that the VLAN device operates
+ with the correct hardware address if all slaves are removed from a
+ bond interface:
+ 
+-	1. Remove all VLAN interfaces then recreate them
++1. Remove all VLAN interfaces then recreate them
+ 
+-	2. Set the bonding interface's hardware address so that it
++2. Set the bonding interface's hardware address so that it
+ matches the hardware address of the VLAN interfaces.
+ 
+-	Note that changing a VLAN interface's HW address would set the
++Note that changing a VLAN interface's HW address would set the
+ underlying device -- i.e. the bonding interface -- to promiscuous
+ mode, which might not be what you want.
+ 
+@@ -1871,24 +1906,24 @@ mode, which might not be what you want.
+ 7. Link Monitoring
+ ==================
+ 
+-	The bonding driver at present supports two schemes for
++The bonding driver at present supports two schemes for
+ monitoring a slave device's link state: the ARP monitor and the MII
+ monitor.
+ 
+-	At the present time, due to implementation restrictions in the
++At the present time, due to implementation restrictions in the
+ bonding driver itself, it is not possible to enable both ARP and MII
+ monitoring simultaneously.
+ 
+ 7.1 ARP Monitor Operation
+ -------------------------
+ 
+-	The ARP monitor operates as its name suggests: it sends ARP
++The ARP monitor operates as its name suggests: it sends ARP
+ queries to one or more designated peer systems on the network, and
+ uses the response as an indication that the link is operating.  This
+ gives some assurance that traffic is actually flowing to and from one
+ or more peers on the local network.
+ 
+-	The ARP monitor relies on the device driver itself to verify
++The ARP monitor relies on the device driver itself to verify
+ that traffic is flowing.  In particular, the driver must keep up to
+ date the last receive time, dev->last_rx.  Drivers that use NETIF_F_LLTX
+ flag must also update netdev_queue->trans_start.  If they do not, then the
+@@ -1900,36 +1935,36 @@ your device driver is not updating last_rx and trans_start.
+ 7.2 Configuring Multiple ARP Targets
+ ------------------------------------
+ 
+-	While ARP monitoring can be done with just one target, it can
++While ARP monitoring can be done with just one target, it can
+ be useful in a High Availability setup to have several targets to
+ monitor.  In the case of just one target, the target itself may go
+ down or have a problem making it unresponsive to ARP requests.  Having
+ an additional target (or several) increases the reliability of the ARP
+ monitoring.
+ 
+-	Multiple ARP targets must be separated by commas as follows:
++Multiple ARP targets must be separated by commas as follows::
+ 
+-# example options for ARP monitoring with three targets
+-alias bond0 bonding
+-options bond0 arp_interval=60 arp_ip_target=192.168.0.1,192.168.0.3,192.168.0.9
++ # example options for ARP monitoring with three targets
++ alias bond0 bonding
++ options bond0 arp_interval=60 arp_ip_target=192.168.0.1,192.168.0.3,192.168.0.9
+ 
+-	For just a single target the options would resemble:
++For just a single target the options would resemble::
+ 
+-# example options for ARP monitoring with one target
+-alias bond0 bonding
+-options bond0 arp_interval=60 arp_ip_target=192.168.0.100
++    # example options for ARP monitoring with one target
++    alias bond0 bonding
++    options bond0 arp_interval=60 arp_ip_target=192.168.0.100
+ 
+ 
+ 7.3 MII Monitor Operation
+ -------------------------
+ 
+-	The MII monitor monitors only the carrier state of the local
++The MII monitor monitors only the carrier state of the local
+ network interface.  It accomplishes this in one of three ways: by
+ depending upon the device driver to maintain its carrier state, by
+ querying the device's MII registers, or by making an ethtool query to
+ the device.
+ 
+-	If the use_carrier module parameter is 1 (the default value),
++If the use_carrier module parameter is 1 (the default value),
+ then the MII monitor will rely on the driver for carrier state
+ information (via the netif_carrier subsystem).  As explained in the
+ use_carrier parameter information, above, if the MII monitor fails to
+@@ -1937,7 +1972,7 @@ detect carrier loss on the device (e.g., when the cable is physically
+ disconnected), it may be that the driver does not support
+ netif_carrier.
+ 
+-	If use_carrier is 0, then the MII monitor will first query the
++If use_carrier is 0, then the MII monitor will first query the
+ device's (via ioctl) MII registers and check the link state.  If that
+ request fails (not just that it returns carrier down), then the MII
+ monitor will make an ethtool ETHOOL_GLINK request to attempt to obtain
+@@ -1952,25 +1987,25 @@ up.
+ 8.1 Adventures in Routing
+ -------------------------
+ 
+-	When bonding is configured, it is important that the slave
++When bonding is configured, it is important that the slave
+ devices not have routes that supersede routes of the master (or,
+ generally, not have routes at all).  For example, suppose the bonding
+ device bond0 has two slaves, eth0 and eth1, and the routing table is
+-as follows:
++as follows::
+ 
+-Kernel IP routing table
+-Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
+-10.0.0.0        0.0.0.0         255.255.0.0     U        40 0          0 eth0
+-10.0.0.0        0.0.0.0         255.255.0.0     U        40 0          0 eth1
+-10.0.0.0        0.0.0.0         255.255.0.0     U        40 0          0 bond0
+-127.0.0.0       0.0.0.0         255.0.0.0       U        40 0          0 lo
++  Kernel IP routing table
++  Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
++  10.0.0.0        0.0.0.0         255.255.0.0     U        40 0          0 eth0
++  10.0.0.0        0.0.0.0         255.255.0.0     U        40 0          0 eth1
++  10.0.0.0        0.0.0.0         255.255.0.0     U        40 0          0 bond0
++  127.0.0.0       0.0.0.0         255.0.0.0       U        40 0          0 lo
+ 
+-	This routing configuration will likely still update the
++This routing configuration will likely still update the
+ receive/transmit times in the driver (needed by the ARP monitor), but
+ may bypass the bonding driver (because outgoing traffic to, in this
+ case, another host on network 10 would use eth0 or eth1 before bond0).
+ 
+-	The ARP monitor (and ARP itself) may become confused by this
++The ARP monitor (and ARP itself) may become confused by this
+ configuration, because ARP requests (generated by the ARP monitor)
+ will be sent on one interface (bond0), but the corresponding reply
+ will arrive on a different interface (eth0).  This reply looks to ARP
+@@ -1978,7 +2013,7 @@ as an unsolicited ARP reply (because ARP matches replies on an
+ interface basis), and is discarded.  The MII monitor is not affected
+ by the state of the routing table.
+ 
+-	The solution here is simply to insure that slaves do not have
++The solution here is simply to insure that slaves do not have
+ routes of their own, and if for some reason they must, those routes do
+ not supersede routes of their master.  This should generally be the
+ case, but unusual configurations or errant manual or automatic static
+@@ -1987,22 +2022,22 @@ route additions may cause trouble.
+ 8.2 Ethernet Device Renaming
+ ----------------------------
+ 
+-	On systems with network configuration scripts that do not
++On systems with network configuration scripts that do not
+ associate physical devices directly with network interface names (so
+ that the same physical device always has the same "ethX" name), it may
+ be necessary to add some special logic to config files in
+ /etc/modprobe.d/.
+ 
+-	For example, given a modules.conf containing the following:
++For example, given a modules.conf containing the following::
+ 
+-alias bond0 bonding
+-options bond0 mode=some-mode miimon=50
+-alias eth0 tg3
+-alias eth1 tg3
+-alias eth2 e1000
+-alias eth3 e1000
++	alias bond0 bonding
++	options bond0 mode=some-mode miimon=50
++	alias eth0 tg3
++	alias eth1 tg3
++	alias eth2 e1000
++	alias eth3 e1000
+ 
+-	If neither eth0 and eth1 are slaves to bond0, then when the
++If neither eth0 and eth1 are slaves to bond0, then when the
+ bond0 interface comes up, the devices may end up reordered.  This
+ happens because bonding is loaded first, then its slave device's
+ drivers are loaded next.  Since no other drivers have been loaded,
+@@ -2010,36 +2045,36 @@ when the e1000 driver loads, it will receive eth0 and eth1 for its
+ devices, but the bonding configuration tries to enslave eth2 and eth3
+ (which may later be assigned to the tg3 devices).
+ 
+-	Adding the following:
++Adding the following::
+ 
+-add above bonding e1000 tg3
++	add above bonding e1000 tg3
+ 
+-	causes modprobe to load e1000 then tg3, in that order, when
++causes modprobe to load e1000 then tg3, in that order, when
+ bonding is loaded.  This command is fully documented in the
+ modules.conf manual page.
+ 
+-	On systems utilizing modprobe an equivalent problem can occur.
++On systems utilizing modprobe an equivalent problem can occur.
+ In this case, the following can be added to config files in
+-/etc/modprobe.d/ as:
++/etc/modprobe.d/ as::
+ 
+-softdep bonding pre: tg3 e1000
++	softdep bonding pre: tg3 e1000
+ 
+-	This will load tg3 and e1000 modules before loading the bonding one.
++This will load tg3 and e1000 modules before loading the bonding one.
+ Full documentation on this can be found in the modprobe.d and modprobe
+ manual pages.
+ 
+ 8.3. Painfully Slow Or No Failed Link Detection By Miimon
+ ---------------------------------------------------------
+ 
+-	By default, bonding enables the use_carrier option, which
++By default, bonding enables the use_carrier option, which
+ instructs bonding to trust the driver to maintain carrier state.
+ 
+-	As discussed in the options section, above, some drivers do
++As discussed in the options section, above, some drivers do
+ not support the netif_carrier_on/_off link state tracking system.
+ With use_carrier enabled, bonding will always see these links as up,
+ regardless of their actual state.
+ 
+-	Additionally, other drivers do support netif_carrier, but do
++Additionally, other drivers do support netif_carrier, but do
+ not maintain it in real time, e.g., only polling the link state at
+ some fixed interval.  In this case, miimon will detect failures, but
+ only after some long period of time has expired.  If it appears that
+@@ -2051,7 +2086,7 @@ use_carrier=0 method of querying the registers directly works).  If
+ use_carrier=0 does not improve the failover, then the driver may cache
+ the registers, or the problem may be elsewhere.
+ 
+-	Also, remember that miimon only checks for the device's
++Also, remember that miimon only checks for the device's
+ carrier state.  It has no way to determine the state of devices on or
+ beyond other ports of a switch, or if a switch is refusing to pass
+ traffic while still maintaining carrier on.
+@@ -2059,7 +2094,7 @@ traffic while still maintaining carrier on.
+ 9. SNMP agents
+ ===============
+ 
+-	If running SNMP agents, the bonding driver should be loaded
++If running SNMP agents, the bonding driver should be loaded
+ before any network drivers participating in a bond.  This requirement
+ is due to the interface index (ipAdEntIfIndex) being associated to
+ the first interface found with a given IP address.  That is, there is
+@@ -2070,6 +2105,8 @@ with the eth0 interface.  This configuration is shown below, the IP
+ address 192.168.1.1 has an interface index of 2 which indexes to eth0
+ in the ifDescr table (ifDescr.2).
  
 +::
 +
-    Switch              | Hex RAM | Hex ROM
-     1   2   3   4   5  | Address | Address *)
-    --------------------|---------|-----------
-@@ -2881,15 +2963,15 @@ Jumpers 3-5 of jumper block SW1 select the Memory Base address.
-    ON  ON  OFF ON  OFF |  D8000  |  DA000
-    ON  ON  ON  OFF OFF |  DC000  |  DE000
-    ON  ON  OFF OFF OFF |  E0000  |  E2000
--  
--*) To enable the Boot ROM set the jumper 8 of jumper block SW3 to position ON.
-+
-+  *) To enable the Boot ROM set the jumper 8 of jumper block SW3 to position ON.
+      interfaces.ifTable.ifEntry.ifDescr.1 = lo
+      interfaces.ifTable.ifEntry.ifDescr.2 = eth0
+      interfaces.ifTable.ifEntry.ifDescr.3 = eth1
+@@ -2081,7 +2118,7 @@ in the ifDescr table (ifDescr.2).
+      ip.ipAddrTable.ipAddrEntry.ipAdEntIfIndex.10.74.20.94 = 4
+      ip.ipAddrTable.ipAddrEntry.ipAdEntIfIndex.127.0.0.1 = 1
  
- The jumpers 1 and 2 probably add 0x0800, 0x1000 and 0x1800 to RAM adders.
+-	This problem is avoided by loading the bonding driver before
++This problem is avoided by loading the bonding driver before
+ any network drivers participating in a bond.  Below is an example of
+ loading the bonding driver first, the IP address 192.168.1.1 is
+ correctly associated with ifDescr.2.
+@@ -2097,7 +2134,7 @@ correctly associated with ifDescr.2.
+      ip.ipAddrTable.ipAddrEntry.ipAdEntIfIndex.10.74.20.94 = 5
+      ip.ipAddrTable.ipAddrEntry.ipAdEntIfIndex.127.0.0.1 = 1
  
- Setting the Interrupt Line
----------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^
+-	While some distributions may not report the interface name in
++While some distributions may not report the interface name in
+ ifDescr, the association between the IP address and IfIndex remains
+ and SNMP functions such as Interface_Scan_Next will report that
+ association.
+@@ -2105,34 +2142,34 @@ association.
+ 10. Promiscuous mode
+ ====================
  
--Jumpers 1-5 of the jumper block SW3 control the IRQ level.
-+Jumpers 1-5 of the jumper block SW3 control the IRQ level::
+-	When running network monitoring tools, e.g., tcpdump, it is
++When running network monitoring tools, e.g., tcpdump, it is
+ common to enable promiscuous mode on the device, so that all traffic
+ is seen (instead of seeing only traffic destined for the local host).
+ The bonding driver handles promiscuous mode changes to the bonding
+ master device (e.g., bond0), and propagates the setting to the slave
+ devices.
  
-     Jumper              |  IRQ
-     1   2   3   4   5   |
-@@ -2902,23 +2984,24 @@ Jumpers 1-5 of the jumper block SW3 control the IRQ level.
+-	For the balance-rr, balance-xor, broadcast, and 802.3ad modes,
++For the balance-rr, balance-xor, broadcast, and 802.3ad modes,
+ the promiscuous mode setting is propagated to all slaves.
+ 
+-	For the active-backup, balance-tlb and balance-alb modes, the
++For the active-backup, balance-tlb and balance-alb modes, the
+ promiscuous mode setting is propagated only to the active slave.
+ 
+-	For balance-tlb mode, the active slave is the slave currently
++For balance-tlb mode, the active slave is the slave currently
+ receiving inbound traffic.
+ 
+-	For balance-alb mode, the active slave is the slave used as a
++For balance-alb mode, the active slave is the slave used as a
+ "primary."  This slave is used for mode-specific control traffic, for
+ sending to peers that are unassigned or if the load is unbalanced.
+ 
+-	For the active-backup, balance-tlb and balance-alb modes, when
++For the active-backup, balance-tlb and balance-alb modes, when
+ the active slave changes (e.g., due to a link failure), the
+ promiscuous setting will be propagated to the new active slave.
+ 
+ 11. Configuring Bonding for High Availability
+ =============================================
+ 
+-	High Availability refers to configurations that provide
++High Availability refers to configurations that provide
+ maximum network availability by having redundant or backup devices,
+ links or switches between the host and the rest of the world.  The
+ goal is to provide the maximum availability of network connectivity
+@@ -2142,7 +2179,7 @@ could provide higher throughput.
+ 11.1 High Availability in a Single Switch Topology
+ --------------------------------------------------
+ 
+-	If two hosts (or a host and a single switch) are directly
++If two hosts (or a host and a single switch) are directly
+ connected via multiple physical links, then there is no availability
+ penalty to optimizing for maximum bandwidth.  In this case, there is
+ only one switch (or peer), so if it fails, there is no alternative
+@@ -2150,32 +2187,32 @@ access to fail over to.  Additionally, the bonding load balance modes
+ support link monitoring of their members, so if individual links fail,
+ the load will be rebalanced across the remaining devices.
+ 
+-	See Section 12, "Configuring Bonding for Maximum Throughput"
++See Section 12, "Configuring Bonding for Maximum Throughput"
+ for information on configuring bonding with one peer device.
+ 
+ 11.2 High Availability in a Multiple Switch Topology
+ ----------------------------------------------------
+ 
+-	With multiple switches, the configuration of bonding and the
++With multiple switches, the configuration of bonding and the
+ network changes dramatically.  In multiple switch topologies, there is
+ a trade off between network availability and usable bandwidth.
+ 
+-	Below is a sample network, configured to maximize the
+-availability of the network:
++Below is a sample network, configured to maximize the
++availability of the network::
+ 
+-                |                                     |
+-                |port3                           port3|
+-          +-----+----+                          +-----+----+
+-          |          |port2       ISL      port2|          |
+-          | switch A +--------------------------+ switch B |
+-          |          |                          |          |
+-          +-----+----+                          +-----++---+
+-                |port1                           port1|
+-                |             +-------+               |
+-                +-------------+ host1 +---------------+
+-                         eth0 +-------+ eth1
++		|                                     |
++		|port3                           port3|
++	  +-----+----+                          +-----+----+
++	  |          |port2       ISL      port2|          |
++	  | switch A +--------------------------+ switch B |
++	  |          |                          |          |
++	  +-----+----+                          +-----++---+
++		|port1                           port1|
++		|             +-------+               |
++		+-------------+ host1 +---------------+
++			 eth0 +-------+ eth1
+ 
+-	In this configuration, there is a link between the two
++In this configuration, there is a link between the two
+ switches (ISL, or inter switch link), and multiple ports connecting to
+ the outside world ("port3" on each switch).  There is no technical
+ reason that this could not be extended to a third switch.
+@@ -2183,19 +2220,21 @@ reason that this could not be extended to a third switch.
+ 11.2.1 HA Bonding Mode Selection for Multiple Switch Topology
+ -------------------------------------------------------------
+ 
+-	In a topology such as the example above, the active-backup and
++In a topology such as the example above, the active-backup and
+ broadcast modes are the only useful bonding modes when optimizing for
+ availability; the other modes require all links to terminate on the
+ same peer for them to behave rationally.
+ 
+-active-backup: This is generally the preferred mode, particularly if
++active-backup:
++	This is generally the preferred mode, particularly if
+ 	the switches have an ISL and play together well.  If the
+ 	network configuration is such that one switch is specifically
+ 	a backup switch (e.g., has lower capacity, higher cost, etc),
+ 	then the primary option can be used to insure that the
+ 	preferred link is always used when it is available.
+ 
+-broadcast: This mode is really a special purpose mode, and is suitable
++broadcast:
++	This mode is really a special purpose mode, and is suitable
+ 	only for very specific needs.  For example, if the two
+ 	switches are not connected (no ISL), and the networks beyond
+ 	them are totally independent.  In this case, if it is
+@@ -2205,7 +2244,7 @@ broadcast: This mode is really a special purpose mode, and is suitable
+ 11.2.2 HA Link Monitoring Selection for Multiple Switch Topology
+ ----------------------------------------------------------------
+ 
+-	The choice of link monitoring ultimately depends upon your
++The choice of link monitoring ultimately depends upon your
+ switch.  If the switch can reliably fail ports in response to other
+ failures, then either the MII or ARP monitors should work.  For
+ example, in the above example, if the "port3" link fails at the remote
+@@ -2213,7 +2252,7 @@ end, the MII monitor has no direct means to detect this.  The ARP
+ monitor could be configured with a target at the remote end of port3,
+ thus detecting that failure without switch support.
+ 
+-	In general, however, in a multiple switch topology, the ARP
++In general, however, in a multiple switch topology, the ARP
+ monitor can provide a higher level of reliability in detecting end to
+ end connectivity failures (which may be caused by the failure of any
+ individual component to pass traffic for any reason).  Additionally,
+@@ -2222,7 +2261,7 @@ one for each switch in the network).  This will insure that,
+ regardless of which switch is active, the ARP monitor has a suitable
+ target to query.
+ 
+-	Note, also, that of late many switches now support a functionality
++Note, also, that of late many switches now support a functionality
+ generally referred to as "trunk failover."  This is a feature of the
+ switch that causes the link state of a particular switch port to be set
+ down (or up) when the state of another switch port goes down (or up).
+@@ -2238,18 +2277,18 @@ suitable switches.
+ 12.1 Maximizing Throughput in a Single Switch Topology
+ ------------------------------------------------------
+ 
+-	In a single switch configuration, the best method to maximize
++In a single switch configuration, the best method to maximize
+ throughput depends upon the application and network environment.  The
+ various load balancing modes each have strengths and weaknesses in
+ different environments, as detailed below.
+ 
+-	For this discussion, we will break down the topologies into
++For this discussion, we will break down the topologies into
+ two categories.  Depending upon the destination of most traffic, we
+ categorize them into either "gatewayed" or "local" configurations.
+ 
+-	In a gatewayed configuration, the "switch" is acting primarily
++In a gatewayed configuration, the "switch" is acting primarily
+ as a router, and the majority of traffic passes through this router to
+-other networks.  An example would be the following:
++other networks.  An example would be the following::
  
  
- Setting the Timeout Parameters
--------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      +----------+                     +----------+
+@@ -2259,25 +2298,25 @@ other networks.  An example would be the following:
+      |          |eth1            port2|          | here somewhere
+      +----------+                     +----------+
  
--The jumpers 6-7 of the jumper block SW3 are used to determine the timeout 
-+The jumpers 6-7 of the jumper block SW3 are used to determine the timeout
- parameters. These two jumpers are normally left in the OFF position.
+-	The router may be a dedicated router device, or another host
++The router may be a dedicated router device, or another host
+ acting as a gateway.  For our discussion, the important point is that
+ the majority of traffic from Host A will pass through the router to
+ some other network before reaching its final destination.
+ 
+-	In a gatewayed network configuration, although Host A may
++In a gatewayed network configuration, although Host A may
+ communicate with many other systems, all of its traffic will be sent
+ and received via one other peer on the local network, the router.
+ 
+-	Note that the case of two systems connected directly via
++Note that the case of two systems connected directly via
+ multiple physical links is, for purposes of configuring bonding, the
+ same as a gatewayed configuration.  In that case, it happens that all
+ traffic is destined for the "gateway" itself, not some other network
+ beyond the gateway.
+ 
+-	In a local configuration, the "switch" is acting primarily as
++In a local configuration, the "switch" is acting primarily as
+ a switch, and the majority of traffic passes through this switch to
+ reach other stations on the same network.  An example would be the
+-following:
++following::
+ 
+     +----------+            +----------+       +--------+
+     |          |eth0   port1|          +-------+ Host B |
+@@ -2287,19 +2326,19 @@ following:
+     +----------+            +----------+port4             +--------+
  
  
--*****************************************************************************
+-	Again, the switch may be a dedicated switch device, or another
++Again, the switch may be a dedicated switch device, or another
+ host acting as a gateway.  For our discussion, the important point is
+ that the majority of traffic from Host A is destined for other hosts
+ on the same local network (Hosts B and C in the above example).
  
--** No Name **
- (Generic Model 9058)
+-	In summary, in a gatewayed configuration, traffic to and from
++In summary, in a gatewayed configuration, traffic to and from
+ the bonded device will be to the same MAC level peer on the network
+ (the gateway itself, i.e., the router), regardless of its final
+ destination.  In a local configuration, traffic flows directly to and
+ from the final destinations, thus, each destination (Host B, Host C)
+ will be addressed directly by their individual MAC addresses.
+ 
+-	This distinction between a gatewayed and a local network
++This distinction between a gatewayed and a local network
+ configuration is important because many of the load balancing modes
+ available use the MAC addresses of the local network source and
+ destination to make load balancing decisions.  The behavior of each
+@@ -2309,11 +2348,12 @@ mode is described below.
+ 12.1.1 MT Bonding Mode Selection for Single Switch Topology
+ -----------------------------------------------------------
+ 
+-	This configuration is the easiest to set up and to understand,
++This configuration is the easiest to set up and to understand,
+ although you will have to decide which bonding mode best suits your
+ needs.  The trade offs for each mode are detailed below:
+ 
+-balance-rr: This mode is the only mode that will permit a single
++balance-rr:
++	This mode is the only mode that will permit a single
+ 	TCP/IP connection to stripe traffic across multiple
+ 	interfaces. It is therefore the only mode that will allow a
+ 	single TCP/IP stream to utilize more than one interface's
+@@ -2351,7 +2391,8 @@ balance-rr: This mode is the only mode that will permit a single
+ 	This mode requires the switch to have the appropriate ports
+ 	configured for "etherchannel" or "trunking."
+ 
+-active-backup: There is not much advantage in this network topology to
++active-backup:
++	There is not much advantage in this network topology to
+ 	the active-backup mode, as the inactive backup devices are all
+ 	connected to the same peer as the primary.  In this case, a
+ 	load balancing mode (with link monitoring) will provide the
+@@ -2361,7 +2402,8 @@ active-backup: There is not much advantage in this network topology to
+ 	have value if the hardware available does not support any of
+ 	the load balance modes.
+ 
+-balance-xor: This mode will limit traffic such that packets destined
++balance-xor:
++	This mode will limit traffic such that packets destined
+ 	for specific peers will always be sent over the same
+ 	interface.  Since the destination is determined by the MAC
+ 	addresses involved, this mode works best in a "local" network
+@@ -2373,10 +2415,12 @@ balance-xor: This mode will limit traffic such that packets destined
+ 	As with balance-rr, the switch ports need to be configured for
+ 	"etherchannel" or "trunking."
+ 
+-broadcast: Like active-backup, there is not much advantage to this
++broadcast:
++	Like active-backup, there is not much advantage to this
+ 	mode in this type of network topology.
+ 
+-802.3ad: This mode can be a good choice for this type of network
++802.3ad:
++	This mode can be a good choice for this type of network
+ 	topology.  The 802.3ad mode is an IEEE standard, so all peers
+ 	that implement 802.3ad should interoperate well.  The 802.3ad
+ 	protocol includes automatic configuration of the aggregates,
+@@ -2390,7 +2434,7 @@ broadcast: Like active-backup, there is not much advantage to this
+ 	the same speed and duplex.  Also, as with all bonding load
+ 	balance modes other than balance-rr, no single connection will
+ 	be able to utilize more than a single interface's worth of
+-	bandwidth.  
++	bandwidth.
+ 
+ 	Additionally, the linux bonding 802.3ad implementation
+ 	distributes traffic by peer (using an XOR of MAC addresses
+@@ -2404,7 +2448,8 @@ broadcast: Like active-backup, there is not much advantage to this
+ 	Finally, the 802.3ad mode mandates the use of the MII monitor,
+ 	therefore, the ARP monitor is not available in this mode.
+ 
+-balance-tlb: The balance-tlb mode balances outgoing traffic by peer.
++balance-tlb:
++	The balance-tlb mode balances outgoing traffic by peer.
+ 	Since the balancing is done according to MAC address, in a
+ 	"gatewayed" configuration (as described above), this mode will
+ 	send all traffic across a single device.  However, in a
+@@ -2422,7 +2467,8 @@ balance-tlb: The balance-tlb mode balances outgoing traffic by peer.
+ 	network device driver of the slave interfaces, and the ARP
+ 	monitor is not available.
+ 
+-balance-alb: This mode is everything that balance-tlb is, and more.
++balance-alb:
++	This mode is everything that balance-tlb is, and more.
+ 	It has all of the features (and restrictions) of balance-tlb,
+ 	and will also balance incoming traffic from local network
+ 	peers (as described in the Bonding Module Options section,
+@@ -2435,7 +2481,7 @@ balance-alb: This mode is everything that balance-tlb is, and more.
+ 12.1.2 MT Link Monitoring for Single Switch Topology
+ ----------------------------------------------------
+ 
+-	The choice of link monitoring may largely depend upon which
++The choice of link monitoring may largely depend upon which
+ mode you choose to use.  The more advanced load balancing modes do not
+ support the use of the ARP monitor, and are thus restricted to using
+ the MII monitor (which does not provide as high a level of end to end
+@@ -2444,27 +2490,27 @@ assurance as the ARP monitor).
+ 12.2 Maximum Throughput in a Multiple Switch Topology
+ -----------------------------------------------------
+ 
+-	Multiple switches may be utilized to optimize for throughput
++Multiple switches may be utilized to optimize for throughput
+ when they are configured in parallel as part of an isolated network
+-between two or more systems, for example:
++between two or more systems, for example::
+ 
+-                       +-----------+
+-                       |  Host A   | 
+-                       +-+---+---+-+
+-                         |   |   |
+-                +--------+   |   +---------+
+-                |            |             |
+-         +------+---+  +-----+----+  +-----+----+
+-         | Switch A |  | Switch B |  | Switch C |
+-         +------+---+  +-----+----+  +-----+----+
+-                |            |             |
+-                +--------+   |   +---------+
+-                         |   |   |
+-                       +-+---+---+-+
+-                       |  Host B   | 
+-                       +-----------+
++		       +-----------+
++		       |  Host A   |
++		       +-+---+---+-+
++			 |   |   |
++		+--------+   |   +---------+
++		|            |             |
++	 +------+---+  +-----+----+  +-----+----+
++	 | Switch A |  | Switch B |  | Switch C |
++	 +------+---+  +-----+----+  +-----+----+
++		|            |             |
++		+--------+   |   +---------+
++			 |   |   |
++		       +-+---+---+-+
++		       |  Host B   |
++		       +-----------+
+ 
+-	In this configuration, the switches are isolated from one
++In this configuration, the switches are isolated from one
+ another.  One reason to employ a topology such as this is for an
+ isolated network with many hosts (a cluster configured for high
+ performance, for example), using multiple smaller switches can be more
+@@ -2472,14 +2518,14 @@ cost effective than a single larger switch, e.g., on a network with 24
+ hosts, three 24 port switches can be significantly less expensive than
+ a single 72 port switch.
+ 
+-	If access beyond the network is required, an individual host
++If access beyond the network is required, an individual host
+ can be equipped with an additional network device connected to an
+ external network; this host then additionally acts as a gateway.
+ 
+ 12.2.1 MT Bonding Mode Selection for Multiple Switch Topology
+ -------------------------------------------------------------
+ 
+-	In actual practice, the bonding mode typically employed in
++In actual practice, the bonding mode typically employed in
+ configurations of this type is balance-rr.  Historically, in this
+ network configuration, the usual caveats about out of order packet
+ delivery are mitigated by the use of network adapters that do not do
+@@ -2492,7 +2538,7 @@ utilize greater than one interface's bandwidth.
+ 12.2.2 MT Link Monitoring for Multiple Switch Topology
+ ------------------------------------------------------
+ 
+-	Again, in actual practice, the MII monitor is most often used
++Again, in actual practice, the MII monitor is most often used
+ in this configuration, as performance is given preference over
+ availability.  The ARP monitor will function in this topology, but its
+ advantages over the MII monitor are mitigated by the volume of probes
+@@ -2505,10 +2551,10 @@ host in the network is configured with bonding).
+ 13.1 Link Establishment and Failover Delays
+ -------------------------------------------
+ 
+-	Some switches exhibit undesirable behavior with regard to the
++Some switches exhibit undesirable behavior with regard to the
+ timing of link up and down reporting by the switch.
+ 
+-	First, when a link comes up, some switches may indicate that
++First, when a link comes up, some switches may indicate that
+ the link is up (carrier available), but not pass traffic over the
+ interface for some period of time.  This delay is typically due to
+ some type of autonegotiation or routing protocol, but may also occur
+@@ -2517,12 +2563,12 @@ failure).  If you find this to be a problem, specify an appropriate
+ value to the updelay bonding module option to delay the use of the
+ relevant interface(s).
+ 
+-	Second, some switches may "bounce" the link state one or more
++Second, some switches may "bounce" the link state one or more
+ times while a link is changing state.  This occurs most commonly while
+ the switch is initializing.  Again, an appropriate updelay value may
+ help.
+ 
+-	Note that when a bonding interface has no active links, the
++Note that when a bonding interface has no active links, the
+ driver will immediately reuse the first link that goes up, even if the
+ updelay parameter has been specified (the updelay is ignored in this
+ case).  If there are slave interfaces waiting for the updelay timeout
+@@ -2532,7 +2578,7 @@ value of updelay has been overestimated, and since this occurs only in
+ cases with no connectivity, there is no additional penalty for
+ ignoring the updelay.
+ 
+-	In addition to the concerns about switch timings, if your
++In addition to the concerns about switch timings, if your
+ switches take a long time to go into backup mode, it may be desirable
+ to not activate a backup interface immediately after a link goes down.
+ Failover may be delayed via the downdelay bonding module option.
+@@ -2540,31 +2586,31 @@ Failover may be delayed via the downdelay bonding module option.
+ 13.2 Duplicated Incoming Packets
+ --------------------------------
+ 
+-	NOTE: Starting with version 3.0.2, the bonding driver has logic to
++NOTE: Starting with version 3.0.2, the bonding driver has logic to
+ suppress duplicate packets, which should largely eliminate this problem.
+ The following description is kept for reference.
+ 
+-	It is not uncommon to observe a short burst of duplicated
++It is not uncommon to observe a short burst of duplicated
+ traffic when the bonding device is first used, or after it has been
+ idle for some period of time.  This is most easily observed by issuing
+ a "ping" to some other host on the network, and noticing that the
+ output from ping flags duplicates (typically one per slave).
+ 
+-	For example, on a bond in active-backup mode with five slaves
+-all connected to one switch, the output may appear as follows:
++For example, on a bond in active-backup mode with five slaves
++all connected to one switch, the output may appear as follows::
+ 
+-# ping -n 10.0.4.2
+-PING 10.0.4.2 (10.0.4.2) from 10.0.3.10 : 56(84) bytes of data.
+-64 bytes from 10.0.4.2: icmp_seq=1 ttl=64 time=13.7 ms
+-64 bytes from 10.0.4.2: icmp_seq=1 ttl=64 time=13.8 ms (DUP!)
+-64 bytes from 10.0.4.2: icmp_seq=1 ttl=64 time=13.8 ms (DUP!)
+-64 bytes from 10.0.4.2: icmp_seq=1 ttl=64 time=13.8 ms (DUP!)
+-64 bytes from 10.0.4.2: icmp_seq=1 ttl=64 time=13.8 ms (DUP!)
+-64 bytes from 10.0.4.2: icmp_seq=2 ttl=64 time=0.216 ms
+-64 bytes from 10.0.4.2: icmp_seq=3 ttl=64 time=0.267 ms
+-64 bytes from 10.0.4.2: icmp_seq=4 ttl=64 time=0.222 ms
++	# ping -n 10.0.4.2
++	PING 10.0.4.2 (10.0.4.2) from 10.0.3.10 : 56(84) bytes of data.
++	64 bytes from 10.0.4.2: icmp_seq=1 ttl=64 time=13.7 ms
++	64 bytes from 10.0.4.2: icmp_seq=1 ttl=64 time=13.8 ms (DUP!)
++	64 bytes from 10.0.4.2: icmp_seq=1 ttl=64 time=13.8 ms (DUP!)
++	64 bytes from 10.0.4.2: icmp_seq=1 ttl=64 time=13.8 ms (DUP!)
++	64 bytes from 10.0.4.2: icmp_seq=1 ttl=64 time=13.8 ms (DUP!)
++	64 bytes from 10.0.4.2: icmp_seq=2 ttl=64 time=0.216 ms
++	64 bytes from 10.0.4.2: icmp_seq=3 ttl=64 time=0.267 ms
++	64 bytes from 10.0.4.2: icmp_seq=4 ttl=64 time=0.222 ms
+ 
+-	This is not due to an error in the bonding driver, rather, it
++This is not due to an error in the bonding driver, rather, it
+ is a side effect of how many switches update their MAC forwarding
+ tables.  Initially, the switch does not associate the MAC address in
+ the packet with a particular switch port, and so it may send the
+@@ -2574,7 +2620,7 @@ single switch, when the switch (temporarily) floods the traffic to all
+ ports, the bond device receives multiple copies of the same packet
+ (one per slave device).
+ 
+-	The duplicated packet behavior is switch dependent, some
++The duplicated packet behavior is switch dependent, some
+ switches exhibit this, and some do not.  On switches that display this
+ behavior, it can be induced by clearing the MAC forwarding table (on
+ most Cisco switches, the privileged command "clear mac address-table
+@@ -2583,16 +2629,16 @@ dynamic" will accomplish this).
+ 14. Hardware Specific Considerations
+ ====================================
+ 
+-	This section contains additional information for configuring
++This section contains additional information for configuring
+ bonding on specific hardware platforms, or for interfacing bonding
+ with particular switches or other devices.
+ 
+ 14.1 IBM BladeCenter
  --------------------
-   - from Andrew J. Kroll <ag784@freenet.buffalo.edu>
-   - Sorry this sat in my to-do box for so long, Andrew! (yikes - over a
-     year!)
--                                                                      _____
--                                                                     |    <
--                                                                     | .---'
+ 
+-	This applies to the JS20 and similar systems.
++This applies to the JS20 and similar systems.
+ 
+-	On the JS20 blades, the bonding driver supports only
++On the JS20 blades, the bonding driver supports only
+ balance-rr, active-backup, balance-tlb and balance-alb modes.  This is
+ largely due to the network topology inside the BladeCenter, detailed
+ below.
+@@ -2600,7 +2646,7 @@ below.
+ JS20 network adapter information
+ --------------------------------
+ 
+-	All JS20s come with two Broadcom Gigabit Ethernet ports
++All JS20s come with two Broadcom Gigabit Ethernet ports
+ integrated on the planar (that's "motherboard" in IBM-speak).  In the
+ BladeCenter chassis, the eth0 port of all JS20 blades is hard wired to
+ I/O Module #1; similarly, all eth1 ports are wired to I/O Module #2.
+@@ -2608,36 +2654,36 @@ An add-on Broadcom daughter card can be installed on a JS20 to provide
+ two more Gigabit Ethernet ports.  These ports, eth2 and eth3, are
+ wired to I/O Modules 3 and 4, respectively.
+ 
+-	Each I/O Module may contain either a switch or a passthrough
++Each I/O Module may contain either a switch or a passthrough
+ module (which allows ports to be directly connected to an external
+ switch).  Some bonding modes require a specific BladeCenter internal
+ network topology in order to function; these are detailed below.
+ 
+-	Additional BladeCenter-specific networking information can be
++Additional BladeCenter-specific networking information can be
+ found in two IBM Redbooks (www.ibm.com/redbooks):
+ 
+-"IBM eServer BladeCenter Networking Options"
+-"IBM eServer BladeCenter Layer 2-7 Network Switching"
++- "IBM eServer BladeCenter Networking Options"
++- "IBM eServer BladeCenter Layer 2-7 Network Switching"
+ 
+ BladeCenter networking configuration
+ ------------------------------------
+ 
+-	Because a BladeCenter can be configured in a very large number
++Because a BladeCenter can be configured in a very large number
+ of ways, this discussion will be confined to describing basic
+ configurations.
+ 
+-	Normally, Ethernet Switch Modules (ESMs) are used in I/O
++Normally, Ethernet Switch Modules (ESMs) are used in I/O
+ modules 1 and 2.  In this configuration, the eth0 and eth1 ports of a
+ JS20 will be connected to different internal switches (in the
+ respective I/O modules).
+ 
+-	A passthrough module (OPM or CPM, optical or copper,
++A passthrough module (OPM or CPM, optical or copper,
+ passthrough module) connects the I/O module directly to an external
+ switch.  By using PMs in I/O module #1 and #2, the eth0 and eth1
+ interfaces of a JS20 can be redirected to the outside world and
+ connected to a common external switch.
+ 
+-	Depending upon the mix of ESMs and PMs, the network will
++Depending upon the mix of ESMs and PMs, the network will
+ appear to bonding as either a single switch topology (all PMs) or as a
+ multiple switch topology (one or more ESMs, zero or more PMs).  It is
+ also possible to connect ESMs together, resulting in a configuration
+@@ -2647,24 +2693,24 @@ Topology," above.
+ Requirements for specific modes
+ -------------------------------
+ 
+-	The balance-rr mode requires the use of passthrough modules
++The balance-rr mode requires the use of passthrough modules
+ for devices in the bond, all connected to an common external switch.
+ That switch must be configured for "etherchannel" or "trunking" on the
+ appropriate ports, as is usual for balance-rr.
+ 
+-	The balance-alb and balance-tlb modes will function with
++The balance-alb and balance-tlb modes will function with
+ either switch modules or passthrough modules (or a mix).  The only
+ specific requirement for these modes is that all network interfaces
+ must be able to reach all destinations for traffic sent over the
+ bonding device (i.e., the network must converge at some point outside
+ the BladeCenter).
+ 
+-	The active-backup mode has no additional requirements.
++The active-backup mode has no additional requirements.
+ 
+ Link monitoring issues
+ ----------------------
+ 
+-	When an Ethernet Switch Module is in place, only the ARP
++When an Ethernet Switch Module is in place, only the ARP
+ monitor will reliably detect link loss to an external switch.  This is
+ nothing unusual, but examination of the BladeCenter cabinet would
+ suggest that the "external" network ports are the ethernet ports for
+@@ -2672,166 +2718,173 @@ the system, when it fact there is a switch between these "external"
+ ports and the devices on the JS20 system itself.  The MII monitor is
+ only able to detect link failures between the ESM and the JS20 system.
+ 
+-	When a passthrough module is in place, the MII monitor does
++When a passthrough module is in place, the MII monitor does
+ detect failures to the "external" port, which is then directly
+ connected to the JS20 system.
+ 
+ Other concerns
+ --------------
+ 
+-	The Serial Over LAN (SoL) link is established over the primary
++The Serial Over LAN (SoL) link is established over the primary
+ ethernet (eth0) only, therefore, any loss of link to eth0 will result
+ in losing your SoL connection.  It will not fail over with other
+ network traffic, as the SoL system is beyond the control of the
+ bonding driver.
+ 
+-	It may be desirable to disable spanning tree on the switch
++It may be desirable to disable spanning tree on the switch
+ (either the internal Ethernet Switch Module, or an external switch) to
+ avoid fail-over delay issues when using bonding.
+ 
+-	
 +
-+::
+ 15. Frequently Asked Questions
+ ==============================
+ 
+ 1.  Is it SMP safe?
++-------------------
+ 
+-	Yes. The old 2.0.xx channel bonding patch was not SMP safe.
++Yes. The old 2.0.xx channel bonding patch was not SMP safe.
+ The new driver was designed to be SMP safe from the start.
+ 
+ 2.  What type of cards will work with it?
++-----------------------------------------
+ 
+-	Any Ethernet type cards (you can even mix cards - a Intel
++Any Ethernet type cards (you can even mix cards - a Intel
+ EtherExpress PRO/100 and a 3com 3c905b, for example).  For most modes,
+ devices need not be of the same speed.
+ 
+-	Starting with version 3.2.1, bonding also supports Infiniband
++Starting with version 3.2.1, bonding also supports Infiniband
+ slaves in active-backup mode.
+ 
+ 3.  How many bonding devices can I have?
++----------------------------------------
+ 
+-	There is no limit.
++There is no limit.
+ 
+ 4.  How many slaves can a bonding device have?
++----------------------------------------------
+ 
+-	This is limited only by the number of network interfaces Linux
++This is limited only by the number of network interfaces Linux
+ supports and/or the number of network cards you can place in your
+ system.
+ 
+ 5.  What happens when a slave link dies?
++----------------------------------------
+ 
+-	If link monitoring is enabled, then the failing device will be
++If link monitoring is enabled, then the failing device will be
+ disabled.  The active-backup mode will fail over to a backup link, and
+ other modes will ignore the failed link.  The link will continue to be
+ monitored, and should it recover, it will rejoin the bond (in whatever
+ manner is appropriate for the mode). See the sections on High
+ Availability and the documentation for each mode for additional
+ information.
+-	
+-	Link monitoring can be enabled via either the miimon or
 +
-+								      _____
-+								     |    <
-+								     | .---'
-     ________________________________________________________________ | |
-    |                           |     SW2     |                      |  |
-    |   ___________             |_____________|                      |  |
-@@ -2936,7 +3019,7 @@ parameters. These two jumpers are normally left in the OFF position.
-    |  |________________|     |              |    : B   |-           |  |
-    |    1 2 3 4 5 6 7 8      |              |    : O   |-           |  |
-    |                         |_________o____|..../ A   |-    _______|  |
--   |    ____________________                |      R   |-   |       |------,   
-+   |    ____________________                |      R   |-   |       |------,
-    |   |                    |               |      D   |-   |  BNC  |   #  |
-    |   > 2764 PROM SOCKET   |               |__________|-   |_______|------'
-    |   |____________________|              _________                |  |
-@@ -2945,23 +3028,24 @@ parameters. These two jumpers are normally left in the OFF position.
-    |___                                               ______________|  |
-        |H H H H H H H H H H H H H H H H H H H H H H H|               | |
-        |U_U_U_U_U_U_U_U_U_U_U_U_U_U_U_U_U_U_U_U_U_U_U|               | |
--                                                                      \|
--Legend:
-+								      \|
++Link monitoring can be enabled via either the miimon or
+ arp_interval parameters (described in the module parameters section,
+ above).  In general, miimon monitors the carrier state as sensed by
+ the underlying network device, and the arp monitor (arp_interval)
+ monitors connectivity to another host on the local network.
  
--SL90C65 	ARCNET Controller / Transceiver /Logic
--SW1	1-5:	IRQ Select
-+Legend::
+-	If no link monitoring is configured, the bonding driver will
++If no link monitoring is configured, the bonding driver will
+ be unable to detect link failures, and will assume that all links are
+ always available.  This will likely result in lost packets, and a
+ resulting degradation of performance.  The precise performance loss
+ depends upon the bonding mode and network configuration.
+ 
+ 6.  Can bonding be used for High Availability?
++----------------------------------------------
+ 
+-	Yes.  See the section on High Availability for details.
++Yes.  See the section on High Availability for details.
+ 
+ 7.  Which switches/systems does it work with?
++---------------------------------------------
+ 
+-	The full answer to this depends upon the desired mode.
++The full answer to this depends upon the desired mode.
+ 
+-	In the basic balance modes (balance-rr and balance-xor), it
++In the basic balance modes (balance-rr and balance-xor), it
+ works with any system that supports etherchannel (also called
+ trunking).  Most managed switches currently available have such
+ support, and many unmanaged switches as well.
+ 
+-	The advanced balance modes (balance-tlb and balance-alb) do
++The advanced balance modes (balance-tlb and balance-alb) do
+ not have special switch requirements, but do need device drivers that
+ support specific features (described in the appropriate section under
+ module parameters, above).
+ 
+-	In 802.3ad mode, it works with systems that support IEEE
++In 802.3ad mode, it works with systems that support IEEE
+ 802.3ad Dynamic Link Aggregation.  Most managed and many unmanaged
+ switches currently available support 802.3ad.
+ 
+-        The active-backup mode should work with any Layer-II switch.
++The active-backup mode should work with any Layer-II switch.
+ 
+ 8.  Where does a bonding device get its MAC address from?
++---------------------------------------------------------
+ 
+-	When using slave devices that have fixed MAC addresses, or when
++When using slave devices that have fixed MAC addresses, or when
+ the fail_over_mac option is enabled, the bonding device's MAC address is
+ the MAC address of the active slave.
+ 
+-	For other configurations, if not explicitly configured (with
++For other configurations, if not explicitly configured (with
+ ifconfig or ip link), the MAC address of the bonding device is taken from
+ its first slave device.  This MAC address is then passed to all following
+ slaves and remains persistent (even if the first slave is removed) until
+ the bonding device is brought down or reconfigured.
+ 
+-	If you wish to change the MAC address, you can set it with
+-ifconfig or ip link:
++If you wish to change the MAC address, you can set it with
++ifconfig or ip link::
+ 
+-# ifconfig bond0 hw ether 00:11:22:33:44:55
++	# ifconfig bond0 hw ether 00:11:22:33:44:55
+ 
+-# ip link set bond0 address 66:77:88:99:aa:bb
++	# ip link set bond0 address 66:77:88:99:aa:bb
+ 
+-	The MAC address can be also changed by bringing down/up the
+-device and then changing its slaves (or their order):
++The MAC address can be also changed by bringing down/up the
++device and then changing its slaves (or their order)::
+ 
+-# ifconfig bond0 down ; modprobe -r bonding
+-# ifconfig bond0 .... up
+-# ifenslave bond0 eth...
++	# ifconfig bond0 down ; modprobe -r bonding
++	# ifconfig bond0 .... up
++	# ifenslave bond0 eth...
+ 
+-	This method will automatically take the address from the next
++This method will automatically take the address from the next
+ slave that is added.
+ 
+-	To restore your slaves' MAC addresses, you need to detach them
+-from the bond (`ifenslave -d bond0 eth0'). The bonding driver will
++To restore your slaves' MAC addresses, you need to detach them
++from the bond (``ifenslave -d bond0 eth0``). The bonding driver will
+ then restore the MAC addresses that the slaves had before they were
+ enslaved.
+ 
+ 16. Resources and Links
+ =======================
+ 
+-	The latest version of the bonding driver can be found in the latest
++The latest version of the bonding driver can be found in the latest
+ version of the linux kernel, found on http://kernel.org
+ 
+-	The latest version of this document can be found in the latest kernel
+-source (named Documentation/networking/bonding.txt).
++The latest version of this document can be found in the latest kernel
++source (named Documentation/networking/bonding.rst).
+ 
+-	Discussions regarding the usage of the bonding driver take place on the
++Discussions regarding the usage of the bonding driver take place on the
+ bonding-devel mailing list, hosted at sourceforge.net. If you have questions or
+ problems, post them to the list.  The list address is:
+ 
+ bonding-devel@lists.sourceforge.net
+ 
+-	The administrative interface (to subscribe or unsubscribe) can
++The administrative interface (to subscribe or unsubscribe) can
+ be found at:
+ 
+ https://lists.sourceforge.net/lists/listinfo/bonding-devel
+ 
+-	Discussions regarding the development of the bonding driver take place
++Discussions regarding the development of the bonding driver take place
+ on the main Linux network mailing list, hosted at vger.kernel.org. The list
+ address is:
+ 
+ netdev@vger.kernel.org
+ 
+-	The administrative interface (to subscribe or unsubscribe) can
++The administrative interface (to subscribe or unsubscribe) can
+ be found at:
+ 
+ http://vger.kernel.org/vger-lists.html#netdev
+ 
+ Donald Becker's Ethernet Drivers and diag programs may be found at :
+- - http://web.archive.org/web/*/http://www.scyld.com/network/ 
 +
-+  SL90C65 	ARCNET Controller / Transceiver /Logic
-+  SW1	1-5:	IRQ Select
- 	  6:	ET1
- 	  7:	ET2
--	  8:	ROM ENABLE 
--SW2	1-3:    Memory Buffer/PROM Address
-+	  8:	ROM ENABLE
-+  SW2	1-3:    Memory Buffer/PROM Address
- 	3-6:	I/O Address Map
--SW3	1-8:	Node ID Select
--BNC		BNC RG62/U Connection 
-+  SW3	1-8:	Node ID Select
-+  BNC		BNC RG62/U Connection
- 		*I* have had success using RG59B/U with *NO* terminators!
- 		What gives?!
++ - http://web.archive.org/web/%2E/http://www.scyld.com/network/
  
- SW1: Timeouts, Interrupt and ROM
-----------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- To select a hardware interrupt level set one (only one!) of the dip switches
- up (on) SW1...(switches 1-5)
-@@ -2976,10 +3060,10 @@ are normally left off (down).
- 
- 
- Setting the I/O Base Address
------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- The last three switches in switch group SW2 are used to select one
--of eight possible I/O Base addresses using the following table
-+of eight possible I/O Base addresses using the following table::
- 
- 
-    Switch | Hex I/O
-@@ -2996,7 +3080,7 @@ of eight possible I/O Base addresses using the following table
- 
- 
- Setting the Base Memory Address (RAM & ROM)
---------------------------------------------
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- The memory buffer requires 2K of a 16K block of RAM. The base of this
- 16K block can be located in any of eight positions.
-@@ -3004,13 +3088,16 @@ Switches 1-3 of switch group SW2 select the Base of the 16K block.
- (0 = DOWN, 1 = UP)
- I could, however, only verify two settings...
- 
-+
-+::
-+
-    Switch| Hex RAM | Hex ROM
-    1 2 3 | Address | Address
-    ------|---------|-----------
-    0 0 0 |  E0000  |  E2000
-    0 0 1 |  D0000  |  D2000  (Manufacturer's default)
-    0 1 0 |  ?????  |  ?????
--   0 1 1 |  ?????  |  ?????  
-+   0 1 1 |  ?????  |  ?????
-    1 0 0 |  ?????  |  ?????
-    1 0 1 |  ?????  |  ?????
-    1 1 0 |  ?????  |  ?????
-@@ -3018,7 +3105,7 @@ I could, however, only verify two settings...
- 
- 
- Setting the Node ID
---------------------
-+^^^^^^^^^^^^^^^^^^^
- 
- The eight switches in group SW3 are used to set the node ID.
- Each node attached to the network must have an unique node ID which
-@@ -3026,8 +3113,9 @@ must be different from 0.
- Switch 1 serves as the least significant bit (LSB).
- switches in the DOWN position are OFF (0) and in the UP position are ON (1)
- 
--The node ID is the sum of the values of all switches set to "1"  
--These values are:
-+The node ID is the sum of the values of all switches set to "1"
-+These values are::
-+
-     Switch | Value
-     -------|-------
-       1    |   1
-@@ -3039,70 +3127,80 @@ These values are:
-       7    |  64
-       8    | 128
- 
--Some Examples:
-+Some Examples::
- 
--    Switch#     |   Hex   | Decimal 
--8 7 6 5 4 3 2 1 | Node ID | Node ID
------------------|---------|---------
--0 0 0 0 0 0 0 0 |    not allowed  <-.
--0 0 0 0 0 0 0 1 |    1    |    1    | 
--0 0 0 0 0 0 1 0 |    2    |    2    |
--0 0 0 0 0 0 1 1 |    3    |    3    |
--    . . .       |         |         |
--0 1 0 1 0 1 0 1 |   55    |   85    |
--    . . .       |         |         + Don't use 0 or 255!
--1 0 1 0 1 0 1 0 |   AA    |  170    |
--    . . .       |         |         |
--1 1 1 1 1 1 0 1 |   FD    |  253    |
--1 1 1 1 1 1 1 0 |   FE    |  254    |
--1 1 1 1 1 1 1 1 |   FF    |  255  <-'
--  
-+      Switch#     |   Hex   | Decimal
-+  8 7 6 5 4 3 2 1 | Node ID | Node ID
-+  ----------------|---------|---------
-+  0 0 0 0 0 0 0 0 |    not allowed  <-.
-+  0 0 0 0 0 0 0 1 |    1    |    1    |
-+  0 0 0 0 0 0 1 0 |    2    |    2    |
-+  0 0 0 0 0 0 1 1 |    3    |    3    |
-+      . . .       |         |         |
-+  0 1 0 1 0 1 0 1 |   55    |   85    |
-+      . . .       |         |         + Don't use 0 or 255!
-+  1 0 1 0 1 0 1 0 |   AA    |  170    |
-+      . . .       |         |         |
-+  1 1 1 1 1 1 0 1 |   FD    |  253    |
-+  1 1 1 1 1 1 1 0 |   FE    |  254    |
-+  1 1 1 1 1 1 1 1 |   FF    |  255  <-'
- 
--*****************************************************************************
- 
--** Tiara **
-+Tiara
-+=====
-+
- (model unknown)
---------------------------
-+---------------
-+
-   - from Christoph Lameter <christoph@lameter.com>
--  
- 
--Here is information about my card as far as I could figure it out:
------------------------------------------------- tiara
--Tiara LanCard of Tiara Computer Systems.
- 
--+----------------------------------------------+
--!           ! Transmitter Unit !               !
--!           +------------------+             -------
--!          MEM                              Coax Connector
--!  ROM    7654321 <- I/O                     -------
--!  :  :   +--------+                           !
--!  :  :   ! 90C66LJ!                         +++
--!  :  :   !        !                         !D  Switch to set
--!  :  :   !        !                         !I  the Nodenumber
--!  :  :   +--------+                         !P
--!                                            !++
--!         234567 <- IRQ                      !
--+------------!!!!!!!!!!!!!!!!!!!!!!!!--------+
--             !!!!!!!!!!!!!!!!!!!!!!!!
-+Here is information about my card as far as I could figure it out::
- 
--0 = Jumper Installed
--1 = Open
-+
-+  ----------------------------------------------- tiara
-+  Tiara LanCard of Tiara Computer Systems.
-+
-+  +----------------------------------------------+
-+  !           ! Transmitter Unit !               !
-+  !           +------------------+             -------
-+  !          MEM                              Coax Connector
-+  !  ROM    7654321 <- I/O                     -------
-+  !  :  :   +--------+                           !
-+  !  :  :   ! 90C66LJ!                         +++
-+  !  :  :   !        !                         !D  Switch to set
-+  !  :  :   !        !                         !I  the Nodenumber
-+  !  :  :   +--------+                         !P
-+  !                                            !++
-+  !         234567 <- IRQ                      !
-+  +------------!!!!!!!!!!!!!!!!!!!!!!!!--------+
-+	       !!!!!!!!!!!!!!!!!!!!!!!!
-+
-+- 0 = Jumper Installed
-+- 1 = Open
- 
- Top Jumper line Bit 7 = ROM Enable 654=Memory location 321=I/O
- 
- Settings for Memory Location (Top Jumper Line)
-+
-+===     ================
- 456     Address selected
-+===     ================
- 000	C0000
- 001     C4000
- 010     CC000
- 011     D0000
- 100     D4000
- 101     D8000
--110     DC000     
-+110     DC000
- 111     E0000
-+===     ================
- 
- Settings for I/O Address (Top Jumper Line)
-+
-+===     ====
- 123     Port
-+===     ====
- 000	260
- 001	290
- 010	2E0
-@@ -3111,23 +3209,26 @@ Settings for I/O Address (Top Jumper Line)
- 101	350
- 110	380
- 111	3E0
-+===     ====
- 
- Settings for IRQ Selection (Lower Jumper Line)
-+
-+====== =====
- 234567
-+====== =====
- 011111 IRQ 2
- 101111 IRQ 3
- 110111 IRQ 4
- 111011 IRQ 5
- 111110 IRQ 7
+ You will also find a lot of information regarding Ethernet, NWay, MII,
+ etc. at www.scyld.com.
 -
--*****************************************************************************
--
-+====== =====
+--- END --
+diff --git a/Documentation/networking/device_drivers/intel/e100.rst b/Documentation/networking/device_drivers/intel/e100.rst
+index caf023cc88de..3ac21e7119a7 100644
+--- a/Documentation/networking/device_drivers/intel/e100.rst
++++ b/Documentation/networking/device_drivers/intel/e100.rst
+@@ -33,7 +33,7 @@ The following features are now available in supported kernels:
+  - SNMP
  
- Other Cards
-------------
-+===========
+ Channel Bonding documentation can be found in the Linux kernel source:
+-/Documentation/networking/bonding.txt
++/Documentation/networking/bonding.rst
  
- I have no information on other models of ARCnet cards at the moment.  Please
- send any and all info to:
-+
- 	apenwarr@worldvisions.ca
  
- Thanks.
+ Identifying Your Adapter
+diff --git a/Documentation/networking/device_drivers/intel/ixgb.rst b/Documentation/networking/device_drivers/intel/ixgb.rst
+index 945018207a92..ab624f1a44a8 100644
+--- a/Documentation/networking/device_drivers/intel/ixgb.rst
++++ b/Documentation/networking/device_drivers/intel/ixgb.rst
+@@ -37,7 +37,7 @@ The following features are available in this kernel:
+  - SNMP
+ 
+ Channel Bonding documentation can be found in the Linux kernel source:
+-/Documentation/networking/bonding.txt
++/Documentation/networking/bonding.rst
+ 
+ The driver information previously displayed in the /proc filesystem is not
+ supported in this release.  Alternatively, you can use ethtool (version 1.6
 diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index 96ffad845fd9..5da18e024fcb 100644
+index fbf845fbaff7..22b872834ef0 100644
 --- a/Documentation/networking/index.rst
 +++ b/Documentation/networking/index.rst
-@@ -39,6 +39,7 @@ Contents:
-    6lowpan
-    6pack
-    altera_tse
-+   arcnet-hardware
+@@ -44,6 +44,7 @@ Contents:
+    atm
+    ax25
+    baycom
++   bonding
  
  .. only::  subproject and html
  
+diff --git a/drivers/net/Kconfig b/drivers/net/Kconfig
+index b103fbdd0f68..4ab6d343fd86 100644
+--- a/drivers/net/Kconfig
++++ b/drivers/net/Kconfig
+@@ -50,7 +50,7 @@ config BONDING
+ 	  The driver supports multiple bonding modes to allow for both high
+ 	  performance and high availability operation.
+ 
+-	  Refer to <file:Documentation/networking/bonding.txt> for more
++	  Refer to <file:Documentation/networking/bonding.rst> for more
+ 	  information.
+ 
+ 	  To compile this driver as a module, choose M here: the module
 -- 
 2.25.4
 
