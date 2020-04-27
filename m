@@ -2,109 +2,90 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5CBC55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D889C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CAD520663
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18B93206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:54:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="v9d95XPM"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aTDoioBo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbgD0Mx7 (ORCPT
+        id S1727957AbgD0MyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 08:53:59 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:34031 "EHLO
+        Mon, 27 Apr 2020 08:54:17 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:30134 "EHLO
         mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727827AbgD0Mx6 (ORCPT
+        by vger.kernel.org with ESMTP id S1727091AbgD0MyQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 08:53:58 -0400
+        Mon, 27 Apr 2020 08:54:16 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587992037; h=Content-Transfer-Encoding: Content-Type:
+ s=smtp; t=1587992056; h=Content-Transfer-Encoding: Content-Type:
  In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=oHj/1Cte/kqSnw6BUUytxEkRvBSBwIKK808zQI9LFHE=; b=v9d95XPMH07vO2JNK4XScQv0yYFMZLzP2u2VJ4CCkyXqErcp6AcLxfVXMGHQYbN90S7v74Sq
- rOXry1DUA1bMKUdjkDwgkpZbEgIRI535z1WfMFLLg7IaivZbckZRCwFd6cE0Ov2Rblngn+2i
- NTsDR4pDH7nN+X/DctZ0/BeCOdE=
+ Subject: Sender; bh=bNxhDdEWNv8+M5j4zfOz6+JAfDWxx5aDTnOG/7aC93Y=; b=aTDoioBoFwVaa8akPSm+S5oPsjmhBIFEk/YWrsVj5+S5Jr18Al3wGVaccAT6Xl9466NgUC6N
+ 9R5B8EapKpDcqql7Cq9f40Ltu+ryqhJ0bndoJ3mx+zX0qfd5RvMEys/FUTa4dYs/m2nVuYJ+
+ GSPO+5dUnHIoOR3ok1LKc2iS0sg=
 X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea6d5d3.7fb15c300340-smtp-out-n04;
- Mon, 27 Apr 2020 12:53:39 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5ea6d5ed.7fef6158dc70-smtp-out-n04;
+ Mon, 27 Apr 2020 12:54:05 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 30ECAC44793; Mon, 27 Apr 2020 12:53:38 +0000 (UTC)
+        id D4893C4478C; Mon, 27 Apr 2020 12:54:03 +0000 (UTC)
 Received: from [192.168.1.100] (unknown [157.44.245.37])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: jprakash)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D7B24C433CB;
-        Mon, 27 Apr 2020 12:53:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D7B24C433CB
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CD4DCC433CB;
+        Mon, 27 Apr 2020 12:53:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CD4DCC433CB
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jprakash@codeaurora.org
 Subject: Re: [PATCH V2 1/3] iio: adc: Convert the QCOM SPMI ADC bindings to
  .yaml format
-To:     Rob Herring <robh@kernel.org>
+To:     Jonathan Cameron <jic23@kernel.org>
 Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         mka@chromium.org, linus.walleij@linaro.org,
         Jonathan.Cameron@huawei.com, smohanad@codeaurora.org,
         kgunda@codeaurora.org, aghayal@codeaurora.org,
-        Jonathan Cameron <jic23@kernel.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
 References: <1586942266-21480-1-git-send-email-jprakash@codeaurora.org>
  <1586942266-21480-2-git-send-email-jprakash@codeaurora.org>
- <20200416204241.GA14143@bogus>
+ <20200418172200.58a10116@archlinux>
 From:   Jishnu Prakash <jprakash@codeaurora.org>
-Message-ID: <b41fc1ea-1047-6305-bf58-fd8d4d72282d@codeaurora.org>
-Date:   Mon, 27 Apr 2020 18:23:27 +0530
+Message-ID: <0e840b20-c215-f446-b467-476d913005d1@codeaurora.org>
+Date:   Mon, 27 Apr 2020 18:23:53 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200416204241.GA14143@bogus>
+In-Reply-To: <20200418172200.58a10116@archlinux>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob
+Hi Jonathan
 
-I can see the first error:  "....chosen node must be at root node" from 
-'make dt_binding_check' even without my patch applied, so it does not 
-seem related. I will fix the second error in the next post.
-
-On 4/17/2020 2:12 AM, Rob Herring wrote:
-> On Wed, 15 Apr 2020 14:47:44 +0530, Jishnu Prakash wrote:
+On 4/18/2020 9:52 PM, Jonathan Cameron wrote:
+> On Wed, 15 Apr 2020 14:47:44 +0530
+> Jishnu Prakash <jprakash@codeaurora.org> wrote:
+>
 >> Convert the adc bindings from .txt to .yaml format.
 >>
->> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
->> ---
->>   .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt | 173 -------------
->>   .../bindings/iio/adc/qcom,spmi-vadc.yaml           | 288 +++++++++++++++++++++
->>   2 files changed, 288 insertions(+), 173 deletions(-)
->>   delete mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
->>   create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
->>
-> My bot found errors running 'make dt_binding_check' on your patch:
->
-> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.example.dt.yaml: adc@3100: 'adc-chan@0x39', 'adc-chan@0x9', 'adc-chan@0xa', 'adc-chan@0xe', 'adc-chan@0xf' do not match any of the regexes: '.*-names$', '.*-supply$', '^#.*-cells$', '^#[a-zA-Z0-9,+\\-._]{0,63}$', '^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}$', '^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}@[0-9a-fA-F]+(,[0-9a-fA-F]+)*$', '^__.*__$', 'pinctrl-[0-9]+'
->
-> See https://patchwork.ozlabs.org/patch/1271025
->
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure dt-schema is up to date:
->
-> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
->
-> Please check and re-submit.
+> I read patch 2 before this one for some reason but same question applies here
+> Given we are now enforcing a lot of the values explicitly are we better
+> off dropping the text description of that.  It looks to me like a potential
+> place to get out of sync given the information is a bit further down.
+I'll remove the redundant parts of the descriptions in the next post.
