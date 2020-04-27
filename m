@@ -2,92 +2,95 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CF3C5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9A6C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EE5320728
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C0292051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:42:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="dBGgQhGD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgD0HkI (ORCPT
+        id S1726243AbgD0HmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 03:40:08 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46106 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbgD0HkH (ORCPT
+        Mon, 27 Apr 2020 03:42:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55160 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbgD0HmN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 03:40:07 -0400
-Received: by mail-ot1-f65.google.com with SMTP id z25so24554936otq.13;
-        Mon, 27 Apr 2020 00:40:07 -0700 (PDT)
+        Mon, 27 Apr 2020 03:42:13 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D26C8C061A0F
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 00:42:12 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id j3so16452329ljg.8
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 00:42:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0ehox1gX7hX0ggxAjlHGH9e/EgYEXyAff8qtxqRj38E=;
+        b=dBGgQhGDOqyw7ZfK7WrM5BhDrademhFoJloRMzO9PYcWFnW2Gu7dItBRntMIfCTbzi
+         V9I4E+zLq5XxgA4GReqU23XKoUe4WUAnkhSg41RhlPWYc54h7FCLnUZDd752xEGBvfhu
+         eRerSeC8dJZaiBVBUsTP6qd4fJmhbDOtH3KgcpH0ghdNA1SUU+Jvv8rywvDDcHPt0wAn
+         AWK03yRby4J8TRCIUkV83VHB2mK5CC2uSYSgIqdME8KwVn5o0ySuBiM8MzhkHVt1HPYq
+         zE6KkDjHoozJmnXu0j3Yr1eJ8OETPS8McgtOFyz2j3B5UstMng1houybZQQEtbnS77br
+         V/3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wek6tBW+YiNXLDCAullGByq6Df5JS2eLcCF9PYMe2Os=;
-        b=ND7POKYuoI6rTC3LmAxQ+pwr5LFZ2G+NpUewCsRadwFbXudr6Os8Oc/SY9/bViRZOr
-         bwIODOsjZ2hzF0mdxNFlEGkjk27Ep5yBKH4Ka6AR1hT7PHDU0YKtoXip9qm9dM56h62v
-         pAbIInZHuWYZFJx+uhFZ5hetvbBtaSfiYMwbLaCMeyrntJPp61f0tbzHiK1b3Yt/2Ajw
-         9PyJD7h2uBk9iZSgQBzKEEI5004uonphP48F2YFX2WSmW3J8mYguMvRvZzsS7tdbs144
-         K0zj9wRL+Q0J7VJyZJ0AgctXFJHnpGVPkZ7OIPLkDt8PVkIsOn1/BKp0JGk1kJwUh6rE
-         IxIQ==
-X-Gm-Message-State: AGi0PuYEieeMzv/ehL2yvJvjdg8bJ6Rvd5erFJ/PuuVNc4EPTGuWQlRJ
-        /cfpzc6PQlGRc7+o/U+B/PUm+S5vOegjP41dfqk=
-X-Google-Smtp-Source: APiQypJsr17J2GPmA+VqMopmvfDZIJGNi04BuJZW9HgLZVc+RHHoovs3TupqRwUjD9U4Un5Q+0yM9r1PgNT/e3hjXEI=
-X-Received: by 2002:aca:895:: with SMTP id 143mr14265203oii.153.1587973206830;
- Mon, 27 Apr 2020 00:40:06 -0700 (PDT)
+        bh=0ehox1gX7hX0ggxAjlHGH9e/EgYEXyAff8qtxqRj38E=;
+        b=pOUTNyCryAlYzcOvQlZIKeAgReQBTVuQCyff6YOumt2eYTQWpcKzvr7RjDi709sAXA
+         g7uzHzM8g0fqlnG7Ss6lRTPexRtO+U2A3HN4Drdg8YIeFD5SJaWEyZaGGxMPCplFNiv+
+         XHRqvOAFGGXh5YDODCMkEzlW7OVdwAja1r/anrKAMTJvIEbwpjx/rT2zF6Aahgm0A0nU
+         zcKX/9aS/NiQs/1lf2jtz0vLIlyByZmtKDOXj46ZGlAtG5R/uZo+g2503i8HhzrnqMIp
+         GIGLkVhVhYtGbkM6Fcc0uREg37QTpqQ1bAOGcV4Ox9mEYerjQoHgNwf8RsEHGkKg6UdN
+         ynjQ==
+X-Gm-Message-State: AGi0PuZBcomIsAax/ZUCJqYJCnBRGrEpn+tVTFjsddWoP6lBkOFqFOYl
+        lCOA3c+NVJjsXkumAfOBvdHWoI6XnkNqktpcRTkQWg==
+X-Google-Smtp-Source: APiQypLWDocP+ioptzSAmG+w1P2rb9ZNZ9N/t8QaMahiaDxyOL9SjMrefaRbpVk2W79vbXv+V3OR8ReSkL1xxUKDWVE=
+X-Received: by 2002:a2e:864f:: with SMTP id i15mr7593765ljj.179.1587973331290;
+ Mon, 27 Apr 2020 00:42:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <1587678050-23468-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1587678050-23468-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1587678050-23468-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 27 Apr 2020 09:39:55 +0200
-Message-ID: <CAMuHMdUWwvLeuTY=DVwE3GK233dC0NNPPeeihSQX9TXKrhbA4A@mail.gmail.com>
-Subject: Re: [PATCH 01/10] dt-bindings: power: rcar-sysc: Document r8a7742
- SYSC binding
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Marian-Cristian Rotariu 
-        <marian-cristian.rotariu.rb@bp.renesas.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>
+References: <20200420080409.111693-1-maco@android.com> <20200420080409.111693-5-maco@android.com>
+ <9eaa4dc8-cd8f-a4e9-e83d-f49f8b00ec0e@acm.org>
+In-Reply-To: <9eaa4dc8-cd8f-a4e9-e83d-f49f8b00ec0e@acm.org>
+From:   Martijn Coenen <maco@android.com>
+Date:   Mon, 27 Apr 2020 09:42:00 +0200
+Message-ID: <CAB0TPYELcpqcTB1Gc4-qszs2v4ywx+b0ejBkdSoikUXo9VMoQg@mail.gmail.com>
+Subject: Re: [PATCH 4/4] loop: Add LOOP_SET_FD_AND_STATUS ioctl.
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Ming Lei <ming.lei@redhat.com>,
+        Narayan Kamath <narayan@google.com>,
+        Zimuzo Ezeozue <zezeozue@google.com>, kernel-team@android.com,
+        linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Martijn Coenen <maco@google.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 11:41 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add binding documentation for the RZ/G1H (R8A7742) SYSC block.
+On Wed, Apr 22, 2020 at 5:10 PM Bart Van Assche <bvanassche@acm.org> wrote:
+> Should linux-api be Cc'ed for this patch or the entire patch series?
+>  From https://www.kernel.org/doc/man-pages/linux-api-ml.html: "Among
+> other things, a primary goal of the list is to help answer the question:
+> How do we even know when an interface has been added or changed?".
+
+Thanks for the suggestion, will add linux-api in the next series.
+
+Martijn
+
 >
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.8.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> Thanks,
+>
+> Bart.
+>
+>
