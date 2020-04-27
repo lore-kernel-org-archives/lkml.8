@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34500C55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E22C55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ED8C2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:37:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F58B20728
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:37:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbgD0Ihg (ORCPT
+        id S1726812AbgD0Ihk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 04:37:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:59878 "EHLO foss.arm.com"
+        Mon, 27 Apr 2020 04:37:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:59900 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725899AbgD0Ihf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 04:37:35 -0400
+        id S1725899AbgD0Ihj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 04:37:39 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 097CE1063;
-        Mon, 27 Apr 2020 01:37:35 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02AAA113E;
+        Mon, 27 Apr 2020 01:37:39 -0700 (PDT)
 Received: from dell3630.arm.com (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6D6E13F68F;
-        Mon, 27 Apr 2020 01:37:31 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5DA873F68F;
+        Mon, 27 Apr 2020 01:37:35 -0700 (PDT)
 From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
 To:     Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -40,9 +40,9 @@ Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
         Morten Rasmussen <morten.rasmussen@arm.com>,
         Valentin Schneider <valentin.schneider@arm.com>,
         Qais Yousef <qais.yousef@arm.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/6] sched/topology: Store root domain CPU capacity sum
-Date:   Mon, 27 Apr 2020 10:37:04 +0200
-Message-Id: <20200427083709.30262-2-dietmar.eggemann@arm.com>
+Subject: [PATCH v2 2/6] sched/deadline: Optimize dl_bw_cpus()
+Date:   Mon, 27 Apr 2020 10:37:05 +0200
+Message-Id: <20200427083709.30262-3-dietmar.eggemann@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200427083709.30262-1-dietmar.eggemann@arm.com>
 References: <20200427083709.30262-1-dietmar.eggemann@arm.com>
@@ -51,65 +51,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add sum of (original) CPU capacity of all member CPUs to root domain.
+Return the weight of the rd (root domain) span in case it is a subset
+of the cpu_active_mask.
 
-This is needed for capacity-aware SCHED_DEADLINE admission control.
+Continue to compute the number of CPUs over rd span and cpu_active_mask
+when in hotplug.
 
 Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
 ---
- kernel/sched/sched.h    |  1 +
- kernel/sched/topology.c | 15 +++++++++++----
- 2 files changed, 12 insertions(+), 4 deletions(-)
+ kernel/sched/deadline.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index db3a57675ccf..58e1d3903ab9 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -803,6 +803,7 @@ struct root_domain {
- 	cpumask_var_t		rto_mask;
- 	struct cpupri		cpupri;
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index 504d2f51b0d6..4ae22bfc37ae 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -54,10 +54,16 @@ static inline struct dl_bw *dl_bw_of(int i)
+ static inline int dl_bw_cpus(int i)
+ {
+ 	struct root_domain *rd = cpu_rq(i)->rd;
+-	int cpus = 0;
++	int cpus;
  
-+	unsigned long           sum_cpu_capacity;
- 	unsigned long		max_cpu_capacity;
- 
- 	/*
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 8344757bba6e..fbb20b7a80c0 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -2052,12 +2052,18 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
- 	/* Attach the domains */
- 	rcu_read_lock();
- 	for_each_cpu(i, cpu_map) {
-+		unsigned long cap;
+ 	RCU_LOCKDEP_WARN(!rcu_read_lock_sched_held(),
+ 			 "sched RCU must be held");
 +
- 		rq = cpu_rq(i);
- 		sd = *per_cpu_ptr(d.sd, i);
-+		cap = rq->cpu_capacity_orig;
- 
- 		/* Use READ_ONCE()/WRITE_ONCE() to avoid load/store tearing: */
--		if (rq->cpu_capacity_orig > READ_ONCE(d.rd->max_cpu_capacity))
--			WRITE_ONCE(d.rd->max_cpu_capacity, rq->cpu_capacity_orig);
-+		if (cap > READ_ONCE(d.rd->max_cpu_capacity))
-+			WRITE_ONCE(d.rd->max_cpu_capacity, cap);
++	if (cpumask_subset(rd->span, cpu_active_mask))
++		return cpumask_weight(rd->span);
 +
-+		WRITE_ONCE(d.rd->sum_cpu_capacity,
-+			   READ_ONCE(d.rd->sum_cpu_capacity) + cap);
++	cpus = 0;
++
+ 	for_each_cpu_and(i, rd->span, cpu_active_mask)
+ 		cpus++;
  
- 		cpu_attach_domain(sd, d.rd, i);
- 	}
-@@ -2067,8 +2073,9 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
- 		static_branch_inc_cpuslocked(&sched_asym_cpucapacity);
- 
- 	if (rq && sched_debug_enabled) {
--		pr_info("root domain span: %*pbl (max cpu_capacity = %lu)\n",
--			cpumask_pr_args(cpu_map), rq->rd->max_cpu_capacity);
-+		pr_info("root domain span: %*pbl (capacity = %lu max cpu_capacity = %lu)\n",
-+			cpumask_pr_args(cpu_map), rq->rd->sum_cpu_capacity,
-+			rq->rd->max_cpu_capacity);
- 	}
- 
- 	ret = 0;
 -- 
 2.17.1
 
