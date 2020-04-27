@@ -2,123 +2,140 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B6EC54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 105DCC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FCC32078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:47:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E16292078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:48:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="XzBc9jhe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PW927SF/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgD0QrN (ORCPT
+        id S1726414AbgD0QsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 12:47:13 -0400
-Received: from mail.efficios.com ([167.114.26.124]:45496 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726204AbgD0QrM (ORCPT
+        Mon, 27 Apr 2020 12:48:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55976 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726402AbgD0QsU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 12:47:12 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 3828A25ABA2;
-        Mon, 27 Apr 2020 12:47:11 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 6kZC_M8qLWLq; Mon, 27 Apr 2020 12:47:11 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id E626125A555;
-        Mon, 27 Apr 2020 12:47:10 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com E626125A555
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1588006030;
-        bh=SCR0YXx7Ksd6h99vRKL/EL/KUijBXa/Pxw+bu0rC7s0=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=XzBc9jheMqKkakYI4T8Slk1bFyXwnehB7UObX8kVXkYJLfX08xI5Z2kv2y36y68X8
-         WXVLBPxJ01RijyBeP+yZKKGD8DEaU1SJgIaYf+NJXhF5iWXoQLV8wJBdyKUSJukUVQ
-         q4BhuocKu/3vgKQbbraPbhhe6FGkG+wgtv2DNFX6REUe8FdibYsSl0Khh5mz3N6bgc
-         u6og0JGtglLEc9jUicZfuET+mo84zxJ2X8Tn5K7iItHkFDSFOerkZBDIF4hjqpudlb
-         upqYZBGiSBjMjq4xV7p6klXNqaEDq4OAmcArVPTeOlx2VKGS4SW7BACoriYacfbkje
-         xkHQNPDkyw3Tg==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id pxMlmkdvfxuZ; Mon, 27 Apr 2020 12:47:10 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id D4F4825A551;
-        Mon, 27 Apr 2020 12:47:10 -0400 (EDT)
-Date:   Mon, 27 Apr 2020 12:47:10 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fw@deneb.enyo.de>
-Cc:     libc-alpha <libc-alpha@sourceware.org>,
-        Carlos O'Donell <carlos@redhat.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
-        Joseph Myers <joseph@codesourcery.com>
-Message-ID: <1660640739.70637.1588006030777.JavaMail.zimbra@efficios.com>
-In-Reply-To: <87ftcpxhpw.fsf@mid.deneb.enyo.de>
-References: <20200326155633.18236-1-mathieu.desnoyers@efficios.com> <20200326155633.18236-6-mathieu.desnoyers@efficios.com> <87ftcpxhpw.fsf@mid.deneb.enyo.de>
-Subject: Re: [PATCH glibc 5/9] glibc: Perform rseq(2) registration at C
- startup and thread creation (v17)
+        Mon, 27 Apr 2020 12:48:20 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01C02C03C1A8
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 09:48:20 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id u127so401261wmg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 09:48:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=V2IKgBBGeWQaS3nKENTTI6oYzwqYmWY3/5vxajcyiRg=;
+        b=PW927SF/uC1q91VoVVYQ+1pXnGZTfNMH4wSEMOjVR2xohzu4yp9PaN8dJxdTffySOX
+         Xg90snZYIfR+VLNbsD+aeBooFQY9hW3NEw/9WC8Ikg8Ua3CdX9GPiZdqolNYOZDjbOgW
+         8nMoVwWgXPDSdBzjyuD773mLMsMK2wxXf5mig/QQUsR9SZEmYcZxvhi1gOQNi/fBDetD
+         M2sOiHVkryGE0+k9XDDGVVwPrq/CFRbfFGAFfPhRys7RrcFrr1jI8b4rEFcrFjBdPlG+
+         ClCJmIQPMDJNb+VxjUwfW0rLYaSZQtSlHUpG3wiJ9Of7PaDg2cLwtlVdadaEVGFXiIoU
+         E5bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=V2IKgBBGeWQaS3nKENTTI6oYzwqYmWY3/5vxajcyiRg=;
+        b=rQFBYYZk7++fL9UkJ7gF4SCO7oV3da5pCvu2To121i7SxPt64QqH6n/BdTs33nMq5S
+         WyOBYS5w9NVi8JG5rjjTf6/AYBPmnjBabjJDXOfiUwj3HhvEdnp7IYB7jCxx6uTM+j6U
+         Au6jCiOfAS6He/zPGf2hlwJgpCw87BWxbhWBwUhFgLoal87pWnQWngTHKGX/QZSN3A+B
+         dgIqVxf9xc/KbQtvrx6B8WACRQRsT0LRP9PFB9ufY/MNZK4T/cmy5MAOiVD9NIkvWSv+
+         Ti2h+k2EVkRuJUqSH5Bucw2CBd/VtjBVbsyY7yGpx2NCae3XiLC12UXzvTFxPJH5rXwV
+         cuHg==
+X-Gm-Message-State: AGi0Pub3smNj6gP+5yHOtb4FoXsiXpubvfcXRW03GkQhSDG4FPc4iFW5
+        eNHWBi5qlznnOdwHzAuNRvx5bg==
+X-Google-Smtp-Source: APiQypKZLllr/ppZ5WEDGUG/MlZ92mT/85cNLs+v4f8ofGxIckLH3GUuN5fThqZIftzZJCB3DKPn+Q==
+X-Received: by 2002:a1c:ba09:: with SMTP id k9mr387758wmf.176.1588006098658;
+        Mon, 27 Apr 2020 09:48:18 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id r20sm15553355wmh.26.2020.04.27.09.48.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 09:48:18 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 17:48:16 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     jason.wessel@windriver.com, gregkh@linuxfoundation.org,
+        kgdb-bugreport@lists.sourceforge.net, mingo@redhat.com,
+        hpa@zytor.com, bp@alien8.de, linux-serial@vger.kernel.org,
+        agross@kernel.org, tglx@linutronix.de, frowand.list@gmail.com,
+        bjorn.andersson@linaro.org, jslaby@suse.com,
+        catalin.marinas@arm.com, corbet@lwn.net, will@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 8/9] serial: qcom_geni_serial: Support earlycon_kgdboc
+Message-ID: <20200427164816.j4xqw3vvlgoqkmx7@holly.lan>
+References: <20200421211447.193860-1-dianders@chromium.org>
+ <20200421141234.v2.8.If2deff9679a62c1ce1b8f2558a8635dc837adf8c@changeid>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3918 (ZimbraWebClient - FF75 (Linux)/8.8.15_GA_3895)
-Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v17)
-Thread-Index: +/FwB08aOPyK5lJHGmbcAUAOKgI6cw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421141234.v2.8.If2deff9679a62c1ce1b8f2558a8635dc837adf8c@changeid>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Apr 27, 2020, at 7:59 AM, Florian Weimer fw@deneb.enyo.de wrote:
-
-> * Mathieu Desnoyers via Libc-alpha:
+On Tue, Apr 21, 2020 at 02:14:46PM -0700, Douglas Anderson wrote:
+> Implement the read() function in the early console driver.  With
+> recent kgdb patches this allows you to use kgdb to debug fairly early
+> into the system boot.
 > 
->> diff --git a/elf/libc_early_init.c b/elf/libc_early_init.c
->> index 1ac66d895d..30466afea0 100644
->> --- a/elf/libc_early_init.c
->> +++ b/elf/libc_early_init.c
->> @@ -18,10 +18,13 @@
->>  
->>  #include <ctype.h>
->>  #include <libc-early-init.h>
->> +#include <rseq-internal.h>
->>  
->>  void
->>  __libc_early_init (void)
->>  {
->>    /* Initialize ctype data.  */
->>    __ctype_init ();
->> +  /* Register rseq ABI to the kernel.   */
->> +  (void) rseq_register_current_thread ();
->>  }
+> We only bother implementing this if polling is enabled since kgdb
+> can't be enabled without that.
 > 
-> I think the registration must be restricted to the primary namespace.
-> Otherwise, LD_AUDIT will register the area to the secondary libc (in
-> the audit module), not the primary libc for the entire process.
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
 > 
-> I think the easiest way to implement this for now is a flag argument
-> for __libc_early_init (as the upstream __libc_multiple_libcs is not
-> entirely accurate).  I will submit a patch.
+> Changes in v2: None
+> 
+>  drivers/tty/serial/qcom_geni_serial.c | 32 +++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+> 
+> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+> index 6119090ce045..4563d152b39e 100644
+> --- a/drivers/tty/serial/qcom_geni_serial.c
+> +++ b/drivers/tty/serial/qcom_geni_serial.c
+> @@ -1090,6 +1090,36 @@ static void qcom_geni_serial_earlycon_write(struct console *con,
+>  	__qcom_geni_serial_console_write(&dev->port, s, n);
+>  }
+>  
+> +#ifdef CONFIG_CONSOLE_POLL
+> +static int qcom_geni_serial_earlycon_read(struct console *con,
+> +					  char *s, unsigned int n)
+> +{
+> +	struct earlycon_device *dev = con->data;
+> +	struct uart_port *uport = &dev->port;
+> +	int num_read = 0;
+> +	int ch;
+> +
+> +	while (num_read < n) {
+> +		ch = qcom_geni_serial_get_char(uport);
+> +		if (ch == NO_POLL_CHAR)
+> +			break;
+> +		s[num_read++] = ch;
+> +	}
+> +
+> +	return num_read;
+> +}
+> +
+> +static void __init qcom_geni_serial_enable_early_read(struct geni_se *se,
+> +						      struct console *con)
+> +{
+> +	geni_se_setup_s_cmd(se, UART_START_READ, 0);
+> +	con->read = qcom_geni_serial_earlycon_read;
+> +}
+> +#else
+> +static inline void qcom_geni_serial_enable_early_read(struct geni_se *se,
+> +						      struct console *con) { ; }
 
-OK, once I get the patch, I will pick it up in my series.
+This is pure nitpicking but since I was passing... why the ; ?
 
-Thanks,
 
-Mathieu
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+Daniel.
