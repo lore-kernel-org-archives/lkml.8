@@ -2,198 +2,145 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2610C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B839C5519A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 863112076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 140F720738
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:04:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgD0REc (ORCPT
+        id S1726360AbgD0REu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 13:04:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:38468 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726306AbgD0REb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 13:04:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 87E7931B;
-        Mon, 27 Apr 2020 10:04:30 -0700 (PDT)
-Received: from e107158-lin (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3FE513F68F;
-        Mon, 27 Apr 2020 10:04:27 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 18:04:24 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        rostedt@goodmis.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, airlied@redhat.com,
-        alexander.deucher@amd.com, awalls@md.metrocast.net,
-        axboe@kernel.dk, broonie@kernel.org, daniel.lezcano@linaro.org,
-        gregkh@linuxfoundation.org, hannes@cmpxchg.org,
-        herbert@gondor.apana.org.au, hverkuil@xs4all.nl,
-        john.stultz@linaro.org, nico@fluxnic.net, paulmck@kernel.org,
-        rafael.j.wysocki@intel.com, rmk+kernel@arm.linux.org.uk,
-        sudeep.holla@arm.com, ulf.hansson@linaro.org,
-        wim@linux-watchdog.org
-Subject: Re: [PATCH 01/23] sched: Provide sched_set_fifo()
-Message-ID: <20200427170423.i3yjmj63oinwr4qx@e107158-lin>
-References: <20200422112719.826676174@infradead.org>
- <20200422112831.266499893@infradead.org>
+        Mon, 27 Apr 2020 13:04:50 -0400
+Received: from smtprelay0186.hostedemail.com ([216.40.44.186]:58026 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726295AbgD0REt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 13:04:49 -0400
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave05.hostedemail.com (Postfix) with ESMTP id EE6ED180295A1;
+        Mon, 27 Apr 2020 17:04:48 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 1AE11180A734F;
+        Mon, 27 Apr 2020 17:04:48 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: cow00_c88ad9aa571f
+X-Filterd-Recvd-Size: 4029
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf14.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 27 Apr 2020 17:04:45 +0000 (UTC)
+Message-ID: <be11c660467e8660ebbc311ec9b77b6b1b265e78.camel@perches.com>
+Subject: Re: [RESEND PATCH v3 1/1] lib/vsprintf: Add support for printing
+ V4L2 and DRM fourccs
+From:   Joe Perches <joe@perches.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-media@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com,
+        mchehab@kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>
+Date:   Mon, 27 Apr 2020 10:04:44 -0700
+In-Reply-To: <0c487ba493f4b4c0f68b3dfd23f14a080e4fb0c2.camel@perches.com>
+References: <20200427145303.29943-1-sakari.ailus@linux.intel.com>
+         <0c487ba493f4b4c0f68b3dfd23f14a080e4fb0c2.camel@perches.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200422112831.266499893@infradead.org>
-User-Agent: NeoMutt/20171215
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/22/20 13:27, Peter Zijlstra wrote:
-> SCHED_FIFO (or any static priority scheduler) is a broken scheduler
-> model; it is fundamentally incapable of resource management, the one
-> thing an OS is actually supposed to do.
-> 
-> It is impossible to compose static priority workloads. One cannot take
-> two well designed and functional static priority workloads and mash
-> them together and still expect them to work.
-> 
-> Therefore it doesn't make sense to expose the priority field; the
-> kernel is fundamentally incapable of setting a sensible value, it
-> needs systems knowledge that it doesn't have.
-> 
-> Take away sched_setschedule() / sched_setattr() from modules and
-> replace them with:
-> 
->   - sched_set_fifo(p); create a FIFO task (at prio 50)
->   - sched_set_fifo_low(p); create a task higher than NORMAL,
-> 	which ends up being a FIFO task at prio 1.
->   - sched_set_normal(p, nice); (re)set the task to normal
-> 
-> This stops the proliferation of randomly chosen, and irrelevant, FIFO
-> priorities that dont't really mean anything anyway.
-> 
-> The system administrator/integrator, whoever has insight into the
-> actual system design and requirements (userspace) can set-up
-> appropriate priorities if and when needed.
-> 
-> Cc: airlied@redhat.com
-> Cc: alexander.deucher@amd.com
-> Cc: awalls@md.metrocast.net
-> Cc: axboe@kernel.dk
-> Cc: broonie@kernel.org
-> Cc: daniel.lezcano@linaro.org
-> Cc: gregkh@linuxfoundation.org
-> Cc: hannes@cmpxchg.org
-> Cc: herbert@gondor.apana.org.au
-> Cc: hverkuil@xs4all.nl
-> Cc: john.stultz@linaro.org
-> Cc: nico@fluxnic.net
-> Cc: paulmck@kernel.org
-> Cc: rafael.j.wysocki@intel.com
-> Cc: rmk+kernel@arm.linux.org.uk
-> Cc: sudeep.holla@arm.com
-> Cc: tglx@linutronix.de
-> Cc: ulf.hansson@linaro.org
-> Cc: wim@linux-watchdog.org
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Reviewed-by: Ingo Molnar <mingo@kernel.org>
-> ---
+On Mon, 2020-04-27 at 09:02 -0700, Joe Perches wrote:
+> On Mon, 2020-04-27 at 17:53 +0300, Sakari Ailus wrote:
+> > Add a printk modifier %p4cc (for pixel format) for printing V4L2 and DRM
+> > pixel formats denoted by fourccs. The fourcc encoding is the same for both
+> > so the same implementation can be used.
+> []
+> > - Added WARN_ON_ONCE() sanity checks. Comments on these are welcome; I'd
+> >   expect them mostly be covered by the tests.
 
-The random priorities were horrible indeed.
+perhaps this is simpler?
+---
+ lib/vsprintf.c | 43 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-FWIW
+diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+index 7c488a..3e1dbd7 100644
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -1721,6 +1721,46 @@ char *netdev_bits(char *buf, char *end, const void *addr,
+ 	return special_hex_number(buf, end, num, size);
+ }
+ 
++static noinline_for_stack
++char *fourcc_string(char *buf, char *end, const u32 *fourcc,
++		    struct printf_spec spec, const char *fmt)
++{
++	char output[sizeof("(xx)(xx)(xx)(xx) little-endian (0x01234567)")];
++	char *p = output;
++	int i;
++	u32 val;
++
++	if (check_pointer(&buf, end, fourcc, spec))
++		return buf;
++
++	if (fmt[1] != 'c' || fmt[2] != 'c')
++		return error_string(buf, end, "(%p4?)", spec);
++
++	val = *fourcc & ~BIT(31);
++
++	for (i = 0; i < 4; i++) {
++		unsigned char c = val >> (i * 8);
++
++		if (isascii(c) && isprint(c)) {
++			*p++ = c;
++		} else {
++			*p++ = '(';
++			p = hex_byte_pack(p, c);
++			*p++ = ')';
++		}
++	}
++
++	strcpy(p, *fourcc & BIT(31) ? "big endian" : "little endian");
++	p += strlen(p);
++	*p++ = ' ';
++	*p++ = '(';
++	p = special_hex_number(p, p + 10, val, 4);
++	*p++ = ')';
++	*p = 0;
++
++	return string(buf, end, output, spec);
++}
++
+ static noinline_for_stack
+ char *address_val(char *buf, char *end, const void *addr,
+ 		  struct printf_spec spec, const char *fmt)
+@@ -2131,6 +2171,7 @@ char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
+  *       correctness of the format string and va_list arguments.
+  * - 'K' For a kernel pointer that should be hidden from unprivileged users
+  * - 'NF' For a netdev_features_t
++ * - '4cc' V4L2 or DRM FourCC code, with endianness and raw numerical value.
+  * - 'h[CDN]' For a variable-length buffer, it prints it as a hex string with
+  *            a certain separator (' ' by default):
+  *              C colon
+@@ -2223,6 +2264,8 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+ 		return restricted_pointer(buf, end, ptr, spec);
+ 	case 'N':
+ 		return netdev_bits(buf, end, ptr, spec, fmt);
++	case '4':
++		return fourcc_string(buf, end, ptr, spec, fmt);
+ 	case 'a':
+ 		return address_val(buf, end, ptr, spec, fmt);
+ 	case 'd':
 
-Reviewed-by: Qais Yousef <qais.yousef@arm.com>
-
-Thanks
-
---
-Qais Yousef
-
->  include/linux/sched.h |    3 +++
->  kernel/sched/core.c   |   47 +++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 50 insertions(+)
-> 
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -1631,6 +1631,9 @@ extern int idle_cpu(int cpu);
->  extern int available_idle_cpu(int cpu);
->  extern int sched_setscheduler(struct task_struct *, int, const struct sched_param *);
->  extern int sched_setscheduler_nocheck(struct task_struct *, int, const struct sched_param *);
-> +extern int sched_set_fifo(struct task_struct *p);
-> +extern int sched_set_fifo_low(struct task_struct *p);
-> +extern int sched_set_normal(struct task_struct *p, int nice);
->  extern int sched_setattr(struct task_struct *, const struct sched_attr *);
->  extern int sched_setattr_nocheck(struct task_struct *, const struct sched_attr *);
->  extern struct task_struct *idle_task(int cpu);
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -5055,6 +5055,8 @@ static int _sched_setscheduler(struct ta
->   * @policy: new policy.
->   * @param: structure containing the new RT priority.
->   *
-> + * Use sched_set_fifo(), read its comment.
-> + *
->   * Return: 0 on success. An error code otherwise.
->   *
->   * NOTE that the task may be already dead.
-> @@ -5097,6 +5099,51 @@ int sched_setscheduler_nocheck(struct ta
->  }
->  EXPORT_SYMBOL_GPL(sched_setscheduler_nocheck);
->  
-> +/*
-> + * SCHED_FIFO is a broken scheduler model; that is, it is fundamentally
-> + * incapable of resource management, which is the one thing an OS really should
-> + * be doing.
-> + *
-> + * This is of course the reason it is limited to privileged users only.
-> + *
-> + * Worse still; it is fundamentally impossible to compose static priority
-> + * workloads. You cannot take two correctly working static prio workloads
-> + * and smash them together and still expect them to work.
-> + *
-> + * For this reason 'all' FIFO tasks the kernel creates are basically at:
-> + *
-> + *   MAX_RT_PRIO / 2
-> + *
-> + * The administrator _MUST_ configure the system, the kernel simply doesn't
-> + * know enough information to make a sensible choice.
-> + */
-> +int sched_set_fifo(struct task_struct *p)
-> +{
-> +	struct sched_param sp = { .sched_priority = MAX_RT_PRIO / 2 };
-> +	return sched_setscheduler_nocheck(p, SCHED_FIFO, &sp);
-> +}
-> +EXPORT_SYMBOL_GPL(sched_set_fifo);
-> +
-> +/*
-> + * For when you don't much care about FIFO, but want to be above SCHED_NORMAL.
-> + */
-> +int sched_set_fifo_low(struct task_struct *p)
-> +{
-> +	struct sched_param sp = { .sched_priority = 1 };
-> +	return sched_setscheduler_nocheck(p, SCHED_FIFO, &sp);
-> +}
-> +EXPORT_SYMBOL_GPL(sched_set_fifo_low);
-> +
-> +int sched_set_normal(struct task_struct *p, int nice)
-> +{
-> +	struct sched_attr attr = {
-> +		.sched_policy = SCHED_NORMAL,
-> +		.sched_nice = nice,
-> +	};
-> +	return sched_setattr_nocheck(p, &attr);
-> +}
-> +EXPORT_SYMBOL_GPL(sched_set_normal);
-> +
->  static int
->  do_sched_setscheduler(pid_t pid, int policy, struct sched_param __user *param)
->  {
-> 
-> 
