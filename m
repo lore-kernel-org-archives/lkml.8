@@ -2,201 +2,90 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D81D4C55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C9AC5519A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B73362072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE3392072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:43:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="gTGIkUg2"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="bLig6qxK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgD0GmU (ORCPT
+        id S1726651AbgD0GnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 02:42:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726246AbgD0GmT (ORCPT
+        Mon, 27 Apr 2020 02:43:20 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:14368 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726246AbgD0GnT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 02:42:19 -0400
-Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C938C061A0F;
-        Sun, 26 Apr 2020 23:42:19 -0700 (PDT)
-Received: from flygoat-x1e (unknown [IPv6:240e:390:491:f2b0::d68])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 87CD220497;
-        Mon, 27 Apr 2020 06:42:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1587969739; bh=N7ZUcCWVc0dV9V1wU96trh4dgtO3ZeLTlP6o++IdGOY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=gTGIkUg2l3iEJgc4a03ynBptX1ag9ERyKq0/9zZOYZDTX5Yz4aDA+YKZ3gKYZnUCS
-         uiiJZBU2cmJRvfq/e6kit5+MG/qxXbEibteqeaD1TFVJIZBHwHCYbMws96jttI1B1I
-         Khcmf6QkubRJkFmwdKUPwm6H3bmhv3Aqr0z1OsgXplOBWq74h9pc56hcnwp9tdsNwb
-         2ZwYlvOoo/SV36aqZsL1vvgnhGFPWgAnbH19jhdHB7pym4bAutejcsNXPUe9U6M12i
-         vOA4ZOfSfxD1YBkDaWkiQtYZPiGRi7RKKHvt9vsgUVI1uNMOmyO2k01Z1Ens4+zv5t
-         RLZkLw2SGpjCA==
-Date:   Mon, 27 Apr 2020 14:42:03 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH v4 0/3] Add basic support for LS7A bridge chip
-Message-ID: <20200427144203.114d4e2d@flygoat-x1e>
-In-Reply-To: <a6df2442-bb44-5002-09ab-56ad6e7dd528@loongson.cn>
-References: <1585906191-26037-1-git-send-email-yangtiezhu@loongson.cn>
-        <8afa3df1-9c9f-aa90-e630-2b77f24fe41f@loongson.cn>
-        <20200427125732.3212ced3@flygoat-x1e>
-        <a6df2442-bb44-5002-09ab-56ad6e7dd528@loongson.cn>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 27 Apr 2020 02:43:19 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03R6cO6F024040;
+        Mon, 27 Apr 2020 08:42:58 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=TDbaAq8nLSxL5Pn2AoB6X1/THDI0mod6aKQma53bdKU=;
+ b=bLig6qxKvGEjnGtaOjXzq4zAdvJpIBkSWQGyLqRnITGmh1KUYDrkQ91y4yc8aBWZXhzt
+ Lk2kWh7WqbhJoeUXkVfvXfVnxt5mG29rwMm5Qef2/zG075ECyiHF+aH2qZgAIEJ8nuAV
+ 5YhFcY8gS1ElPReEOHOZm5rpq68OjSJ1I+vj8ssZXSLLiGSy+AsVery+AlDehfAqW+wW
+ 3usr1bNMVWCV6gI1mj7CQ/w+87cJhQ4xYP1TfjldvV32qLs7ih7SZ8JUvIYt/2LFPVzm
+ PrkvlX4Zl6sR3EBrEYEpKu1xSxXAd1wYVzu2IGttUs/AJi1HVgtfwZNbTXnpokZeX94+ kQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30mhq5r2h7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Apr 2020 08:42:58 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5B03B100034;
+        Mon, 27 Apr 2020 08:42:55 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag7node2.st.com [10.75.127.20])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0E63021F679;
+        Mon, 27 Apr 2020 08:42:55 +0200 (CEST)
+Received: from localhost (10.75.127.44) by SFHDAG7NODE2.st.com (10.75.127.20)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 Apr 2020 08:42:54
+ +0200
+From:   Lionel Debieve <lionel.debieve@st.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <linux-crypto@vger.kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH 0/3] crypto: stm32/hash: Defer probe management
+Date:   Mon, 27 Apr 2020 08:42:23 +0200
+Message-ID: <20200427064226.6991-1-lionel.debieve@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG7NODE2.st.com
+ (10.75.127.20)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-27_03:2020-04-24,2020-04-27 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Apr 2020 13:42:06 +0800
-Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+These patches manage properly the defer probe for STM32 Hash driver.
+It allows the driver to be probed later if clock, reset or dma return
+a defer error.
+It also removes the error print messages in such cases.
 
-> On 04/27/2020 12:57 PM, Jiaxun Yang wrote:
-> > On Mon, 27 Apr 2020 09:31:54 +0800
-> > Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
-> >  
-> >> On 04/03/2020 05:29 PM, Tiezhu Yang wrote:  
-> >>> The LS7A bridge chip has been released for several years since the
-> >>> second half of 2017, but it is not supported by the Linux mainline
-> >>> kernel while it only works well with the Loongson internal kernel
-> >>> version. When I update the latest version of Linux mainline kernel
-> >>> on the Loongson 3A3000 CPU and LS7A bridge chip system, the boot
-> >>> process failed and I feel depressed.
-> >>>
-> >>> The LS7A bridge chip is used a lot with 3A3000 or 3A4000 CPU in
-> >>> the most Loongson desktop and sever products, it is important to
-> >>> support LS7A bridge chip by the Linux mainline kernel.
-> >>>
-> >>> This patch series adds the basic support for the LS7A bridge chip,
-> >>> the patch about vendor ID and SATA has been merged into the
-> >>> mainline tree, the next work is to refactor the code about the
-> >>> interrupt controller, and then power management and some other
-> >>> controller device drivers.
-> >>>
-> >>> By the way, if you want the boot process is successful (just for
-> >>> test) on the Loongson 3A3000 CPU and LS7A bridge chip system,
-> >>> you should not only apply these patches, but also need the support
-> >>> for SATA and interrupt controller in the v1 patch series.
-> >>>
-> >>> This patch series is based on mips-next.
-> >>>
-> >>> If you have any questions and suggestions, please let me know.
-> >>>
-> >>> Thanks,
-> >>>
-> >>> Tiezhu Yang
-> >>>
-> >>> v2:
-> >>>     - The split patch series about Loongson vendor ID and SATA
-> >>> controller has been merged into the linux-block.git by Jens Axboe
-> >>> [1].
-> >>>
-> >>>     - Think about using hierarchy IRQ domain in the patch of
-> >>> interrupt controller, and this maybe depend on the patch series by
-> >>> Jiaxun ("Modernize Loongson64 Machine"), so the patch about
-> >>> interrupt is not included in this v2 patch series.
-> >>>
-> >>> v3:
-> >>>     - The split patch series about Loongson vendor ID and SATA
-> >>> controller has been merged into the mainline tree [2]
-> >>>
-> >>>     - Modify the macro definition and add comment to make it easy
-> >>> to read
-> >>>
-> >>>     - Move ls7a1000_pci_class_quirk() to fixup-loongson3.c
-> >>>
-> >>>     - Use PCI_VENDOR_ID_LOONGSON in pci_ids.h instead of 0x0014
-> >>>
-> >>> v4:
-> >>>     - Use LS7A instead of Loongson 7A1000 in the description
-> >>>     - Use LS7A or ls7a instead of LS7A1000 or ls7a1000 in the code
-> >>>
-> >>> [1]
-> >>> https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-next&id=9acb9fe18d86
-> >>> https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-next&id=e49bd683e00b
-> >>> [2]
-> >>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9acb9fe18d86
-> >>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e49bd683e00b
-> >>>
-> >>> Tiezhu Yang (3):
-> >>>     MIPS: Loongson: Get host bridge information
-> >>>     MIPS: Loongson: Add DMA support for LS7A
-> >>>     MIPS: Loongson: Add PCI support for LS7A
-> >>>
-> >>>    arch/mips/include/asm/mach-loongson64/boot_param.h | 20 +++++++
-> >>>    arch/mips/loongson64/dma.c                         |  9 ++--
-> >>>    arch/mips/loongson64/env.c                         | 22
-> >>> ++++++++ arch/mips/loongson64/init.c                        | 17
-> >>> ++++++ arch/mips/pci/fixup-loongson3.c                    | 12
-> >>> +++++ arch/mips/pci/ops-loongson3.c                      | 63
-> >>> ++++++++++++++++++++-- 6 files changed, 136 insertions(+), 7
-> >>> deletions(-)  
-> >> Hi Thomas,
-> >>
-> >> Could you please apply the following two patches to mips-next?
-> >>
-> >> [v4,1/3] MIPS: Loongson: Get host bridge information
-> >> https://lore.kernel.org/patchwork/patch/1220009/
-> >>
-> >> [v4,2/3] MIPS: Loongson: Add DMA support for LS7A
-> >> https://lore.kernel.org/patchwork/patch/1220010/  
-> > Sorry but I really don't like the DMA patch, hard coding a config
-> > register in platform code is not necessarily a good idea, it
-> > create painful hell for adding new platform support.
-> >
-> > I'm trying very hard to let all devices go through DeviceTree.
-> >
-> > I'd suggest you to limit DMA capability on LS7A PCH instead of doing
-> > the hack.  
-> 
-> Hi Jiaxun,
-> 
-> Thanks for your suggestion, let me rethink how to properly support
-> DMA.
-> 
-> Do you think the following patch could be applied first?
-> 
-> [v4,1/3] MIPS: Loongson: Get host bridge information
-> https://lore.kernel.org/patchwork/patch/1220009/
+Etienne Carriere (2):
+  crypto: stm32/hash - defer probe for reset controller
+  crypto: stm32/hash - defer probe for dma device
 
-Looks reasonable.
+Lionel Debieve (1):
+  crypto: stm32/hash - don't print error on probe deferral
 
-Thanks.
+ drivers/crypto/stm32/stm32-hash.c | 38 ++++++++++++++++++++++---------
+ 1 file changed, 27 insertions(+), 11 deletions(-)
 
-> 
-> Thanks,
-> Tiezhu Yang
-> 
-> >
-> > Or if you think the function is necessary, you can create a
-> > DeviceTree node called "loongson,ls7a-syscon", and do whatever you
-> > like in init_calls by parsing this node.
-> >
-> > Also that will also block my upcoming LS2K support patches.
-> > You can check my tree here[1].
-> >
-> > Thanks.
-> >
-> > [1]: https://github.com/FlyGoat/linux/commits/next-testing-2k
-> >  
-> >> Thanks,
-> >> Tiezhu Yang
-> >>  
-> > --
-> > Jiaxun Yang  
-> 
---
-Jiaxun Yang
+-- 
+2.17.1
 
