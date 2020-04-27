@@ -2,68 +2,137 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC438C5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B538C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F94B206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:16:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C2B4206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:17:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="XrY2LCS6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbgD0GQj (ORCPT
+        id S1726661AbgD0GRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 02:16:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42382 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726242AbgD0GQi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 02:16:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E8EE4AC6D;
-        Mon, 27 Apr 2020 06:16:35 +0000 (UTC)
-Subject: Re: [PATCH 2/7] ide-cd: rename cdrom_read_tocentry
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Cc:     Tim Waugh <tim@cyberelk.net>, Borislav Petkov <bp@alien8.de>,
-        Jan Kara <jack@suse.com>, linux-block@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Damien Le Moal <damien.lemoal@wdc.com>
-References: <20200425075706.721917-1-hch@lst.de>
- <20200425075706.721917-3-hch@lst.de>
-From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <3528369c-b03a-8c72-9b84-a188b92c5a03@suse.de>
-Date:   Mon, 27 Apr 2020 08:16:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 27 Apr 2020 02:17:03 -0400
+Received: from mail-eopbgr750131.outbound.protection.outlook.com ([40.107.75.131]:33351
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726242AbgD0GRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 02:17:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=R3f1TqztJ7qdzvktdu8ecqEWQTkbk2lJJ77/CwxHCZX6t7M6PGNutfUwTTDSVoUB4gFTzMaPh+P+ilek9OQQYfTVQQwJlMnCuHvS1jHyMB8NUHqCX4Ix1ujGtfsoMdC68N/pRJ/czw8txSJYIea7ckVWarE5XBjOsKDceYFKDkpKVFwwV0z2KAMZFntGeesIsbi0LEFirk9hMhvJXj9jmrdG7O7f8jB8PjcW0oSJUMPUbVf4JUQ0KeqBkru8iGOno5UKoVheCrmXCVq2fzH0z0WvwfUSx3ogEaASvT0JU9KI4qshX0z1G1YTaCwFs2+4wy6mCEjN/LdSEDShKY8wYA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=L1vEZx+ii7oiAmIQAPtzDrPHycucDeLrHLIwYEbM2PM=;
+ b=b62GeAZN9IOLtxkj64uVUExxQbUJ5sI6BmT9XtM0Su2h6ZWIkCyN8HwvIHyrUvyRob2ZVEDgg5rEiIx3XvDJz3B2JQFDDyEP0L/lVauwFTVHj4ejeRtZCkytQ5QpSXaIbcS23JL+igkdZd1+L2qVpHstwP8HKCjtA/Y71YuUR6Jk+7iO9TcaOIJYEaSQFMVFVzhRC+GxEzYsdpD2CKnstZvAyUWHrtj5qhGCKkcKY/XLwQdVxWVFUwdgl7FmwXi16AN/cSTAN/JsR24ULozcx7jbI+J2UACwymbwXzU4WlRJBeBfODW0r4MokuhcVTLcGzAAty06hPQ2JS/IC6zVhA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
+ header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=L1vEZx+ii7oiAmIQAPtzDrPHycucDeLrHLIwYEbM2PM=;
+ b=XrY2LCS6GfA/L1T5ZnsV4z5y9krDBoQe0qRkifPycopfTUYIRGiHKvXorCgs8QovP7uYRbmPYRsy73lBsPfL7s9g7w6YNxCliNUAquHF09lQXceA8clWQhrBQPfvfUK47b9U0v17Q77PGqqWN4GNuLFycrHID1oMKP9rWOwXsBk=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=xji@analogixsemi.com; 
+Received: from BY5PR04MB6739.namprd04.prod.outlook.com (2603:10b6:a03:229::8)
+ by BY5PR04MB6518.namprd04.prod.outlook.com (2603:10b6:a03:1d4::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Mon, 27 Apr
+ 2020 06:16:58 +0000
+Received: from BY5PR04MB6739.namprd04.prod.outlook.com
+ ([fe80::4517:bcc8:a3bd:407f]) by BY5PR04MB6739.namprd04.prod.outlook.com
+ ([fe80::4517:bcc8:a3bd:407f%6]) with mapi id 15.20.2937.023; Mon, 27 Apr 2020
+ 06:16:58 +0000
+Date:   Mon, 27 Apr 2020 14:16:49 +0800
+From:   Xin Ji <xji@analogixsemi.com>
+To:     devel@driverdev.osuosl.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Nicolas Boichat <drinkcat@google.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Sheng Pan <span@analogixsemi.com>
+Subject: [PATCH v8 0/2] Add initial support for slimport anx7625
+Message-ID: <cover.1587880280.git.xji@analogixsemi.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-ClientProxiedBy: HK0PR01CA0068.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:a6::32) To BY5PR04MB6739.namprd04.prod.outlook.com
+ (2603:10b6:a03:229::8)
 MIME-Version: 1.0
-In-Reply-To: <20200425075706.721917-3-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xin-VirtualBox (114.247.245.254) by HK0PR01CA0068.apcprd01.prod.exchangelabs.com (2603:1096:203:a6::32) with Microsoft SMTP Server (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.20.2937.13 via Frontend Transport; Mon, 27 Apr 2020 06:16:57 +0000
+X-Originating-IP: [114.247.245.254]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2d9987d7-da09-4710-1d6c-08d7ea7296e2
+X-MS-TrafficTypeDiagnostic: BY5PR04MB6518:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BY5PR04MB65181628BA1065A5C29816F1C7AF0@BY5PR04MB6518.namprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 0386B406AA
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6739.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(376002)(136003)(346002)(39840400004)(396003)(6486002)(81156014)(8936002)(5660300002)(36756003)(8676002)(26005)(2906002)(6496006)(52116002)(110136005)(54906003)(66476007)(66556008)(66946007)(956004)(2616005)(7416002)(6666004)(4326008)(186003)(16526019)(478600001)(316002)(86362001)(107886003);DIR:OUT;SFP:1102;
+Received-SPF: None (protection.outlook.com: analogixsemi.com does not
+ designate permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 6r37cKsqOBSADQm3oRKxMO4TFzmoaBSy3HIJMItwLBiLYRiravaJuWsH3lBoj+kL+9pAEZw9P/btBs1ZT73AFD18L8NZfhQktv6//V8cg+6DE6IsoEwm1Q2pQ3H/MH3hPpheU+Pe0CIUE51ERaaeel9v+cGWgCTS0LpfpHd0Q+vJ/QOctbZA4zXoj9DqOyDhl6rwy/YXDKY9OvOdyn3Fj2Axz2t8kaqJJOiKmW/A2nwfMXdjsll401tDXGUA6gBRLJSty54ZPdglXXdLesocGwzIb8WHAmC41pFsY9DF/64qhDo2JNOS0wGJIWnp2WRO3ryu83D7J8keqORFrBoTbOBYcKbJV3Y9BV+Xk7JxLpD81FNHDW7UKgx99vlXPsfSQlvJd9cQiVoMH6XWJn3APXxtnQhp3HUTpLcN03IkZ72cA3qhbl5MDlxMb3u/9XAD
+X-MS-Exchange-AntiSpam-MessageData: okjFoQJuHGc3/j0K6wILkYRH3rpIwO7NtmGqjWPZxQ5J5AA4Al2MTtUuU1Eiz8rWpFUxdQqtv+tNbZsNddR2yZHWDpyQN9hhn1ZbeEix8pthb7WvzRcgtEsfzbzmEBDTNO0WOgkpQOAwm+FIxuCKppjITEg/rafoEFa+vKkxm3GSkfZ/EAmXygdjy3zVMh5CmznymFT+nOGaIMWZZ/0xZ1s1NxPO2O7PHTHAe9mPFtTmDhHP0c5Eh4G5WYMiWp7+PXkX+GPiCKCmWapSEHTeeGHg5LTCLbmTFNi/m6w/rAtb8UolMQbURIbBL3wbe230hHGyu9Ee9bpYpwxUhLruVxWMPtZAMIqfSZiFD+z8TlyY+D7eANbZ3To2vT+7+UmnPg7nd5nL7BZ4FPpy0WrGDwhyfmUsjJRHucr6RhOnv7W4Ty1bQsP+KDDaJc8v8HBAiDkBeui5nzzEJqpWT04DTA2HGBU9Ey17rqXiT50DWuCblpCnL4koPU6cq2vPkQZh76LFoWlIxwIEkB2Sf73cOLp3P5T6JCiL6ymttAsUvxGH8deF8dcjGGY6iSdzDbArnB6wfMrieDdgZBbYRTyFXXc9DQi2oo0PFlRvbTEoC6r4gIJZtBe7hzz3r+BbtCKFD1U/6RpLie0u5AJiyLP4B4NcLT+KOHuPkvMz88nyF7bHHrLbl4Xj+14V9HOhbYaOsCBIR3GJhuzdeNETm98MUG20o76ZgnDhfiFEQDSWOieg2YjXxoWodrCx+Mku5m20MPhEwzCO5DMiZjTdtyPAy9Mm12yEOCSM3Q2apkJ5tAb01bbw+08JIfIQ3EhCKQD/
+X-OriginatorOrg: analogixsemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2d9987d7-da09-4710-1d6c-08d7ea7296e2
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2020 06:16:57.8391
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: C1P2Vfr6OvtDR/Im5DrRd9+iY4glaLTb2lhPlh03BXjJTrhSl6dLOLP5y9ZA4xN8ExPT/PdU1mdkhvNaHMF3VQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR04MB6518
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/25/20 9:57 AM, Christoph Hellwig wrote:
-> Give the cdrom_read_tocentry function and ide_ prefix to not conflict
-> with the soon to be added generic function.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-> ---
->   drivers/ide/ide-cd.c | 14 +++++++-------
->   1 file changed, 7 insertions(+), 7 deletions(-)
-> 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+Hi all,
 
-Cheers,
+The following series add support for the Slimport ANX7625 transmitter, a
+ultra-low power Full-HD 4K MIPI to DP transmitter designed for portable device.
 
-Hannes
+This is the v8 version, any mistakes, please let me know, I will fix it in
+the next series. This series fix several coding format and description.
+
+Thanks,
+Xin
+
+
+
+Xin Ji (2):
+  dt-bindings: drm/bridge: anx7625: MIPI to DP transmitter binding
+  drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to DP bridge driver
+
+ .../bindings/display/bridge/anx7625.yaml           |   91 +
+ drivers/gpu/drm/bridge/Makefile                    |    2 +-
+ drivers/gpu/drm/bridge/analogix/Kconfig            |    6 +
+ drivers/gpu/drm/bridge/analogix/Makefile           |    1 +
+ drivers/gpu/drm/bridge/analogix/anx7625.c          | 2158 ++++++++++++++++++++
+ drivers/gpu/drm/bridge/analogix/anx7625.h          |  410 ++++
+ 6 files changed, 2667 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/anx7625.yaml
+ create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.c
+ create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.h
+
 -- 
-Dr. Hannes Reinecke            Teamlead Storage & Networking
-hare@suse.de                               +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
+2.7.4
+
