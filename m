@@ -2,245 +2,97 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12559C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1163C55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE54D206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:43:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hPJ2XSuH"
+	by mail.kernel.org (Postfix) with ESMTP id A025020656
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:44:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587995053;
+	bh=OhxRsSwwdvnGxdpaeF4FzeJ/8kd+1iigCwEMEzTAriA=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=s19RBsPL65K+3t56WqzRGEK6ExlzBvc6jvK6gR6LBqhbDzeMdfjqVShTF3zXFiH0K
+	 MoFtZBtZI75LGyXc2CbfxEyEGUVQLIocngxQJwJy3uw1qUM/HH3zQSGDfHq0sd2Wo1
+	 L8ZKSyX8UeMjq+DAS7I4QJhkBixMFPPS8Kju1P5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbgD0NnZ (ORCPT
+        id S1727953AbgD0NoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 09:43:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54754 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727850AbgD0Nkw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 09:40:52 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4A41C0610D5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 06:40:51 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id z6so20564513wml.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 06:40:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fxv3PIQcPscEviJfWYwjHAEJidH2zqP2QWZmt0qarzY=;
-        b=hPJ2XSuHEDxk5xa92BEbmuxK1uUmRUUlrHAPlW1S4fKju8pKVB86jqQq0Op75Hjnoi
-         fSgmA/am90EQl9boTQpfwfYSt/kVuQEZGVKSsaWPUn3GboMljKWlrYNfFQVZ3K+u4zsj
-         i/rVjbS61Uhy+jj2PSTwp47AaGoqL5SyXJL+H/Cyz4gGtREkdbS4LfGifodVE6hd/NSj
-         oR7C/99LtIC9WGs8s2/bgAchF5ms3xXKrDE/e00QjeLI4PpUxcEz7cFj2knXjgjSScbW
-         iHLXuTNopFFK6BYJA+UTISpj2ZAPgoJM2XyvEskkCSOrhfzrSHug6AOo+E524OzJwqvB
-         uTTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fxv3PIQcPscEviJfWYwjHAEJidH2zqP2QWZmt0qarzY=;
-        b=eIBl2c1HpOpyhK4e9McC6l01U9Qkh2fx9cIo4BOOoFoLNuXnRkmmf9DuNdDMp8sjOY
-         BqJEz7Y/HeP0QSng2zY8mnsL8UI+C2PDz1Lqf/hSyoiPo+zRQ/8fsHUB8iK1uZ6cEYYD
-         gBXs1MIg5U71fDisNxr2gy5K1Cbx/S4EZvRrkLi0lm0K02gwcmrWCKXHFZEDLJb/vAxd
-         B2WybQ3hK64GZNGeZhZsPHbzr3be2NcTVRsbfEtBJz0yduxhoAM2VX6HyqTrDvGQSeTW
-         oXqRXbcKk2pEyCtu/XY7oGH8QQhDdcYS7+VkqaCyQL9RyGA5H644RlWCW21w6CR1aNIC
-         3bbA==
-X-Gm-Message-State: AGi0PubKekHEII4ev1dh5OA4dKsnK1XFQ5bt6+lc9Y4Sq1zDyDj5FDux
-        wtuqj+LZ+0iFNntL5ghGpto=
-X-Google-Smtp-Source: APiQypKwGdK4AFvzGTiKeu3mcjDu4XTYIpvdPfsk8IS/9AHapOYmM6EgUL1lOCyFZTn1RjXD7vZOMw==
-X-Received: by 2002:a1c:f615:: with SMTP id w21mr25239830wmc.183.1587994850577;
-        Mon, 27 Apr 2020 06:40:50 -0700 (PDT)
-Received: from linuxdev2.toradex.int (31-10-206-124.static.upc.ch. [31.10.206.124])
-        by smtp.gmail.com with ESMTPSA id g186sm16290640wme.7.2020.04.27.06.40.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 06:40:49 -0700 (PDT)
-From:   Max Krummenacher <max.oss.09@gmail.com>
-X-Google-Original-From: Max Krummenacher <max.krummenacher@toradex.com>
-List-Id: <soc.lore.kernel.org>
-To:     Max Krummenacher <max.krummenacher@toradex.com>, soc@kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Mon, 27 Apr 2020 09:44:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60758 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727834AbgD0NoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 09:44:12 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A25B206B6;
+        Mon, 27 Apr 2020 13:44:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587995052;
+        bh=OhxRsSwwdvnGxdpaeF4FzeJ/8kd+1iigCwEMEzTAriA=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=b/spQsEs9VVzo3Kdr0A9ZLsBkBHmawqed3tSX6DJ3TLn/CcAHoS3m2q2UcWkVhu3T
+         SPec862zYs/vJjVWrhth2UKYCna5yxChwTIzCKwKCHx03Wfjrv/18KT3Y8HsX71lcg
+         iMOSVJwmPKRiWrBHIw9y+yQ7So4KryOoD8x4ooMg=
+Date:   Mon, 27 Apr 2020 14:44:09 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Iskren Chernev <iskren.chernev@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Olof Johansson <olof@lixom.net>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH v3 5/5] arm64: defconfig: refresh
-Date:   Mon, 27 Apr 2020 15:40:03 +0200
-Message-Id: <20200427134003.45188-6-max.krummenacher@toradex.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200427134003.45188-1-max.krummenacher@toradex.com>
-References: <20200427134003.45188-1-max.krummenacher@toradex.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        devicetree@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+In-Reply-To: <20200425125335.2674534-1-iskren.chernev@gmail.com>
+References: <20200425125335.2674534-1-iskren.chernev@gmail.com>
+Subject: Re: [PATCH] regulator: max77826: Remove erroneous additionalProperties
+Message-Id: <158799504950.16924.8566981464657105053.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Refresh with make defconfig savedefconfig. The resulting .config before
-and after this patch are identical.
+On Sat, 25 Apr 2020 15:53:35 +0300, Iskren Chernev wrote:
+> In this particular location additionalProperties actually declares a property
+> named `additionalProperties` instead of specifying there should be no other
+> properties.
+> 
+> Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
+> ---
+> Fix bindings documentation for max77826 regulator as discussed in
+> https://lore.kernel.org/lkml/20200413164440.1138178-1-iskren.chernev@gmail.com/T/#m9e9904560e68bcd98980fa0e68fe190525033af6
+> 
+> [...]
 
-Eight configs moved to a different line.
-Four configs get selected by other configs and are present in the
-resulting .config:
-    FSL_MC_BUS=y
-    MEDIA_CONTROLLER=y
-    VIDEO_V4L2_SUBDEV_API=y
-    SDM_GCC_845=y
-One config is selected by other configs but moves from module to kernel
-built-in:
-    USB_CONN_GPIO=m
+Applied to
 
-Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.8
 
----
+Thanks!
 
-Changes in v3:
-- add reviewed-by tags
-- dropped 'arm64: defconfig: PCIE_TEGRA194: follow changed config symbol name'
-  similar patch got applied
-- as requested by Arnd, added suggestion on where to apply, 5.7 vs. 5.8.
-- as requested by Arnd, amended commit message with info why some configs
-  are no longer in the defconfig.
+[1/1] regulator: max77826: Remove erroneous additionalProperties
+      commit: 48dd1a7938e37d6d6414a20266394f858b37f10a
 
-Changes in v2:
-- add reviewed-by tags
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
- arch/arm64/configs/defconfig | 21 ++++++++-------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 472aa82b9feee..fae25f4d7d5d3 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -166,9 +166,9 @@ CONFIG_QRTR_SMD=m
- CONFIG_QRTR_TUN=m
- CONFIG_BPF_JIT=y
- CONFIG_CAN=m
-+CONFIG_CAN_FLEXCAN=m
- CONFIG_CAN_RCAR=m
- CONFIG_CAN_RCAR_CANFD=m
--CONFIG_CAN_FLEXCAN=m
- CONFIG_BT=m
- CONFIG_BT_HIDP=m
- # CONFIG_BT_HS is not set
-@@ -203,20 +203,19 @@ CONFIG_PCI_HOST_THUNDER_ECAM=y
- CONFIG_PCIE_ROCKCHIP_HOST=m
- CONFIG_PCIE_BRCMSTB=m
- CONFIG_PCI_LAYERSCAPE=y
--CONFIG_PCIE_LAYERSCAPE_GEN4=y
- CONFIG_PCI_HISI=y
- CONFIG_PCIE_QCOM=y
- CONFIG_PCIE_ARMADA_8K=y
- CONFIG_PCIE_KIRIN=y
- CONFIG_PCIE_HISI_STB=y
- CONFIG_PCIE_TEGRA194_HOST=m
-+CONFIG_PCIE_LAYERSCAPE_GEN4=y
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
- CONFIG_FW_LOADER_USER_HELPER=y
- CONFIG_FW_LOADER_USER_HELPER_FALLBACK=y
- CONFIG_HISILICON_LPC=y
- CONFIG_SIMPLE_PM_BUS=y
--CONFIG_FSL_MC_BUS=y
- CONFIG_MTD=y
- CONFIG_MTD_BLOCK=y
- CONFIG_MTD_CFI=y
-@@ -496,10 +495,10 @@ CONFIG_SENSORS_INA3221=m
- CONFIG_THERMAL_GOV_POWER_ALLOCATOR=y
- CONFIG_CPU_THERMAL=y
- CONFIG_THERMAL_EMULATION=y
--CONFIG_QORIQ_THERMAL=m
--CONFIG_SUN8I_THERMAL=y
- CONFIG_IMX_SC_THERMAL=m
- CONFIG_IMX8MM_THERMAL=m
-+CONFIG_QORIQ_THERMAL=m
-+CONFIG_SUN8I_THERMAL=y
- CONFIG_ROCKCHIP_THERMAL=m
- CONFIG_RCAR_THERMAL=y
- CONFIG_RCAR_GEN3_THERMAL=y
-@@ -567,13 +566,12 @@ CONFIG_MEDIA_CAMERA_SUPPORT=y
- CONFIG_MEDIA_ANALOG_TV_SUPPORT=y
- CONFIG_MEDIA_DIGITAL_TV_SUPPORT=y
- CONFIG_MEDIA_SDR_SUPPORT=y
--CONFIG_MEDIA_CONTROLLER=y
--CONFIG_VIDEO_V4L2_SUBDEV_API=y
- CONFIG_MEDIA_PLATFORM_SUPPORT=y
- # CONFIG_DVB_NET is not set
- CONFIG_MEDIA_USB_SUPPORT=y
- CONFIG_USB_VIDEO_CLASS=m
- CONFIG_V4L_PLATFORM_DRIVERS=y
-+CONFIG_VIDEO_QCOM_CAMSS=m
- CONFIG_VIDEO_RCAR_CSI2=m
- CONFIG_VIDEO_RCAR_VIN=m
- CONFIG_VIDEO_SUN6I_CSI=m
-@@ -586,7 +584,6 @@ CONFIG_VIDEO_RENESAS_FCP=m
- CONFIG_VIDEO_RENESAS_VSP1=m
- CONFIG_SDR_PLATFORM_DRIVERS=y
- CONFIG_VIDEO_RCAR_DRIF=m
--CONFIG_VIDEO_QCOM_CAMSS=m
- CONFIG_DRM=m
- CONFIG_DRM_I2C_NXP_TDA998X=m
- CONFIG_DRM_MALI_DISPLAY=m
-@@ -614,10 +611,10 @@ CONFIG_DRM_MSM=m
- CONFIG_DRM_TEGRA=m
- CONFIG_DRM_PANEL_LVDS=m
- CONFIG_DRM_PANEL_SIMPLE=m
--CONFIG_DRM_SIMPLE_BRIDGE=m
- CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA=m
- CONFIG_DRM_DISPLAY_CONNECTOR=m
- CONFIG_DRM_SII902X=m
-+CONFIG_DRM_SIMPLE_BRIDGE=m
- CONFIG_DRM_THINE_THC63LVD1024=m
- CONFIG_DRM_TI_SN65DSI86=m
- CONFIG_DRM_I2C_ADV7511=m
-@@ -665,7 +662,6 @@ CONFIG_SND_SOC_WSA881X=m
- CONFIG_SND_SIMPLE_CARD=m
- CONFIG_SND_AUDIO_GRAPH_CARD=m
- CONFIG_I2C_HID=m
--CONFIG_USB_CONN_GPIO=m
- CONFIG_USB=y
- CONFIG_USB_OTG=y
- CONFIG_USB_XHCI_HCD=y
-@@ -800,15 +796,14 @@ CONFIG_QCOM_A53PLL=y
- CONFIG_QCOM_CLK_APCS_MSM8916=y
- CONFIG_QCOM_CLK_SMD_RPM=y
- CONFIG_QCOM_CLK_RPMH=y
--CONFIG_IPQ_GCC_8074=y
- CONFIG_IPQ_GCC_6018=y
-+CONFIG_IPQ_GCC_8074=y
- CONFIG_MSM_GCC_8916=y
- CONFIG_MSM_GCC_8994=y
- CONFIG_MSM_MMCC_8996=y
- CONFIG_MSM_GCC_8998=y
- CONFIG_QCS_GCC_404=y
- CONFIG_SDM_CAMCC_845=m
--CONFIG_SDM_GCC_845=y
- CONFIG_SDM_GPUCC_845=y
- CONFIG_SDM_DISPCC_845=y
- CONFIG_SM_GCC_8150=y
-@@ -937,10 +932,10 @@ CONFIG_FPGA_REGION=m
- CONFIG_OF_FPGA_REGION=m
- CONFIG_TEE=y
- CONFIG_OPTEE=y
-+CONFIG_MUX_MMIO=y
- CONFIG_SLIMBUS=m
- CONFIG_SLIM_QCOM_CTRL=m
- CONFIG_SLIM_QCOM_NGD_CTRL=m
--CONFIG_MUX_MMIO=y
- CONFIG_EXT2_FS=y
- CONFIG_EXT3_FS=y
- CONFIG_EXT4_FS_POSIX_ACL=y
--- 
-2.20.1
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
