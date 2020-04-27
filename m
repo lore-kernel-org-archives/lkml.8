@@ -2,236 +2,355 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51389C81857
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 636A6C81857
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C5F7206D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24D5720575
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:12:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="UPw4k7kt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbgD0WKP (ORCPT
+        id S1726279AbgD0WMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 18:10:15 -0400
-Received: from mga12.intel.com ([192.55.52.136]:39101 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725998AbgD0WKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 18:10:15 -0400
-IronPort-SDR: 4IgImb9eeXIXsX+CdTVjqbzEgGB/LQQtUS3HqsNj4flh4yOr8DnFb9lu0kXFf1BDA/RVMnEMdR
- /yp8TkGPftsA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 15:10:14 -0700
-IronPort-SDR: zk2osSBPECmbC1ZmEcTq5wzrxSe1rXQgzH6ja1obCgFWlrP3XyfUhXZoJ5yx7RRdl2ptnPnRhc
- jJp0QEf8k0Qw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,325,1583222400"; 
-   d="scan'208";a="458553248"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 27 Apr 2020 15:10:13 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jTBx6-000EM5-M0; Tue, 28 Apr 2020 06:10:12 +0800
-Date:   Tue, 28 Apr 2020 06:09:24 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- 77b688f7c29f537395be3a34cd807fd6580e8f7f
-Message-ID: <5ea75814.mdNJ2b8pP3QI6a+D%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Mon, 27 Apr 2020 18:12:53 -0400
+Received: from mail1.protonmail.ch ([185.70.40.18]:18099 "EHLO
+        mail1.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725998AbgD0WMw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 18:12:52 -0400
+Date:   Mon, 27 Apr 2020 22:12:41 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail; t=1588025566;
+        bh=DYCuiuKPBBkEr3iJsKakDERZQBlOgZSxnVMeB5WxUYI=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
+        b=UPw4k7kt7irmUwsOK7H6HcWWyJU095QTGSCxXmPbmgm/vJZtDQ4x9IXo551MZFviN
+         wNmwOFyFa7+dIWRwgZDINQ3KJf/RMtlGWXOYyOoQBjWsyVKq/kqRrFr4wjwVyV8SBU
+         EEPXfK8B063GsvdXoI09U7wwbqTzga4DZDh/1+AA=
+To:     Helen Koike <helen.koike@collabora.com>
+From:   =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
+        <nfraprado@protonmail.com>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-media@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
+Reply-To: =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
+          <nfraprado@protonmail.com>
+Subject: Re: [PATCH v2 3/3] media: vimc: deb: Add support for {RGB,BGR,GBR}888 bus formats on source pad
+Message-ID: <20200427221212.ito2n77c2uwulek2@ArchWay.local>
+In-Reply-To: <64a28b0a-f4fc-2623-ac42-d7ebec52ceba@collabora.com>
+References: <20200326214730.2449707-1-nfraprado@protonmail.com>
+ <20200326214730.2449707-4-nfraprado@protonmail.com>
+ <b5bc6ab8-274a-adc7-9d86-a91a1efb8805@linuxfoundation.org>
+ <ae9fdf85-7129-e1ad-a377-bda0808545c1@collabora.com>
+ <20200420210135.bmca5qw5ilaavuo6@ArchWay.local>
+ <64a28b0a-f4fc-2623-ac42-d7ebec52ceba@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: 77b688f7c29f537395be3a34cd807fd6580e8f7f  Merge branch 'x86/boot'
+On Mon, Apr 20, 2020 at 06:04:25PM -0300, Helen Koike wrote:
+>=20
+>=20
+>=20
+> On 4/20/20 6:01 PM, N=C3=ADcolas F. R. A. Prado wrote:
+> > Hi Helen,
+> >
+> > thanks for the review.
+> >
+> > Some comments below.
+> >
+> > On Mon, Mar 30, 2020 at 04:43:53PM -0300, Helen Koike wrote:
+> >>
+> >> Hello,
+> >>
+> >> On 3/26/20 7:06 PM, Shuah Khan wrote:
+> >>> On 3/26/20 3:47 PM, N=C3=ADcolas F. R. A. Prado wrote:
+> >>>> Add support for RGB888_*, BGR888_* and GBR888_* media bus formats on
+> >>>> the source pad of debayer subdevices.
+> >>>>
+> >>>> Co-developed-by: Vitor Massaru Iha <vitor@massaru.org>
+> >>>> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+> >>>> Signed-off-by: N=C3=ADcolas F. R. A. Prado <nfraprado@protonmail.com=
+>
+> >>>> ---
+> >>>>
+> >>>> Changes in v2:
+> >>>> - Change commit message to reflect v2 changes
+> >>>> - Rename variables
+> >>>> - Fix array formatting
+> >>>> - Add vimc_deb_is_src_code_valid function
+> >>>> - Add other BGR888 and RGB888 formats to debayer source pad supporte=
+d
+> >>>> =C2=A0=C2=A0 formats
+> >>>>
+> >>>> =C2=A0 drivers/media/platform/vimc/vimc-debayer.c | 61 +++++++++++++=
+++++-----
+> >>>> =C2=A0 1 file changed, 49 insertions(+), 12 deletions(-)
+> >>>>
+> >>>> diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/me=
+dia/platform/vimc/vimc-debayer.c
+> >>>> index baf6bf9f65b5..33a9bea770bc 100644
+> >>>> --- a/drivers/media/platform/vimc/vimc-debayer.c
+> >>>> +++ b/drivers/media/platform/vimc/vimc-debayer.c
+> >>>> @@ -51,6 +51,19 @@ static const struct v4l2_mbus_framefmt sink_fmt_d=
+efault =3D {
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .colorspace =3D V4L2_COLORSPACE_DEFAU=
+LT,
+> >>>> =C2=A0 };
+> >>>> =C2=A0 +static const u32 vimc_deb_src_mbus_codes[] =3D {
+> >>>> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_GBR888_1X24,
+> >>>> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_BGR888_1X24,
+> >>>> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_BGR888_3X8,
+> >>>> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_RGB888_1X24,
+> >>>> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_RGB888_2X12_BE,
+> >>>> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_RGB888_2X12_LE,
+> >>>> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_RGB888_3X8,
+> >>>> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
+> >>>> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA,
+> >>>> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_RGB888_1X32_PADHI,
+> >>>> +};
+> >>>> +
+> >>>> =C2=A0 static const struct vimc_deb_pix_map vimc_deb_pix_map_list[] =
+=3D {
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 {
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .code =3D MED=
+IA_BUS_FMT_SBGGR8_1X8,
+> >>>> @@ -125,6 +138,17 @@ static const struct vimc_deb_pix_map *vimc_deb_=
+pix_map_by_code(u32 code)
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return NULL;
+> >>>> =C2=A0 }
+> >>>> =C2=A0 +static int vimc_deb_is_src_code_invalid(u32 code)
+> >>>> +{
+> >>>> +=C2=A0=C2=A0=C2=A0 unsigned int i;
+> >>>> +
+> >>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < ARRAY_SIZE(vimc_deb_src_mbus_c=
+odes); i++)
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (vimc_deb_src_mbus_co=
+des[i] =3D=3D code)
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 return 0;
+> >>>> +
+> >>>> +=C2=A0=C2=A0=C2=A0 return -EINVAL;
+> >>>> +}
+> >>
+> >> The naming is a bit confusing, since it checks if it is invalid, but r=
+eturns a negative number if so.
+> >>
+> >> How about renaming to vimc_deb_src_code_is_valid ?
+> >
+> > I also don't like that the function is called 'is_invalid', but I gave =
+it that
+> > name because I think it actually is less confusing when calling.
+> > For example, later in this patch I do:
+> >
+> > =C2=A0=C2=A0=C2=A0 } else if (vimc_deb_is_src_code_invalid(fse->code)) =
+{
+> >         return -EINVAL;
+> >
+> > Which to me becomes very clear.
+> >
+> > Since the error values evaluate to True, the other alternative that I
+> > see is to call it 'is_valid', but return 0 when invalid and 1 when vali=
+d.
+> > But then we no longer return the -EINVAL value, which I think makes the=
+ function
+> > less clear.
+> >
+> > What do you think?
+>=20
+> How about make the function to return bool instead of int?
 
-elapsed time: 813m
+Oh that's better, I didn't realize there was a bool type.
+I'll send a v3 using bool then.
 
-configs tested: 169
-configs skipped: 0
+Thank you,
+N=C3=ADcolas
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+>=20
+> Regards,
+> Helen
+>=20
+> >
+> > Thank you,
+> > N=C3=ADcolas
+> >
+> >>
+> >>>> +
+> >>>> =C2=A0 static int vimc_deb_init_cfg(struct v4l2_subdev *sd,
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct v4l2_subdev_pad_config=
+ *cfg)
+> >>>> =C2=A0 {
+> >>>> @@ -148,14 +172,11 @@ static int vimc_deb_enum_mbus_code(struct v4l2=
+_subdev *sd,
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct v4l2_subde=
+v_pad_config *cfg,
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct v4l2_subde=
+v_mbus_code_enum *code)
+> >>>> =C2=A0 {
+> >>>> -=C2=A0=C2=A0=C2=A0 /* We only support one format for source pads */
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (VIMC_IS_SRC(code->pad)) {
+> >>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct vimc_deb_device *=
+vdeb =3D v4l2_get_subdevdata(sd);
+> >>>> -
+> >>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (code->index)
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (code->index >=3D ARR=
+AY_SIZE(vimc_deb_src_mbus_codes))
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 return -EINVAL;
+> >>>> =C2=A0 -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 code->code =3D vd=
+eb->src_code;
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 code->code =3D vimc_deb_=
+src_mbus_codes[code->index];
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 } else {
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (code->ind=
+ex >=3D ARRAY_SIZE(vimc_deb_pix_map_list))
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 return -EINVAL;
+> >>>> @@ -170,8 +191,6 @@ static int vimc_deb_enum_frame_size(struct v4l2_=
+subdev *sd,
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct v4l2=
+_subdev_pad_config *cfg,
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct v4l2=
+_subdev_frame_size_enum *fse)
+> >>>> =C2=A0 {
+> >>>> -=C2=A0=C2=A0=C2=A0 struct vimc_deb_device *vdeb =3D v4l2_get_subdev=
+data(sd);
+> >>>> -
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (fse->index)
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVA=
+L;
+> >>>> =C2=A0 @@ -181,7 +200,7 @@ static int vimc_deb_enum_frame_size(struc=
+t v4l2_subdev *sd,
+> >>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!v=
+pix)
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 return -EINVAL;
+> >>>> -=C2=A0=C2=A0=C2=A0 } else if (fse->code !=3D vdeb->src_code) {
+> >>>> +=C2=A0=C2=A0=C2=A0 } else if (vimc_deb_is_src_code_invalid(fse->cod=
+e)) {
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVA=
+L;
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+> >>>> =C2=A0 @@ -237,6 +256,7 @@ static int vimc_deb_set_fmt(struct v4l2_s=
+ubdev *sd,
+> >>>> =C2=A0 {
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct vimc_deb_device *vdeb =3D v4l2=
+_get_subdevdata(sd);
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct v4l2_mbus_framefmt *sink_fmt;
+> >>>> +=C2=A0=C2=A0=C2=A0 u32 *src_code;
+> >>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (fmt->which =3D=3D V4L2_SUB=
+DEV_FORMAT_ACTIVE) {
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Do not cha=
+nge the format while stream is on */
+> >>>> @@ -244,8 +264,10 @@ static int vimc_deb_set_fmt(struct v4l2_subdev =
+*sd,
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 return -EBUSY;
+> >>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sink_f=
+mt =3D &vdeb->sink_fmt;
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 src_code =3D &vdeb->src_=
+code;
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 } else {
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sink_fmt =3D =
+v4l2_subdev_get_try_format(sd, cfg, 0);
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 src_code =3D &v4l2_subde=
+v_get_try_format(sd, cfg, 1)->code;
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+> >>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
+> >>>> @@ -253,9 +275,14 @@ static int vimc_deb_set_fmt(struct v4l2_subdev =
+*sd,
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * it is propagated from the sin=
+k
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (VIMC_IS_SRC(fmt->pad)) {
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 code =3D fmt->format=
+.code;
+> >>>> +
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fmt->format =
+=3D *sink_fmt;
+> >>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* TODO: Add support for=
+ other formats */
+> >>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fmt->format.code =3D vde=
+b->src_code;
+> >>>> +
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!vimc_deb_is_src_cod=
+e_invalid(code))
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 *src_code =3D code;
+> >>>> +
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fmt->format.code =3D *sr=
+c_code;
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 } else {
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Set the ne=
+w format in the sink pad */
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vimc_deb_adju=
+st_sink_fmt(&fmt->format);
+> >>>> @@ -291,11 +318,21 @@ static void vimc_deb_set_rgb_mbus_fmt_rgb888_1=
+x24(struct vimc_deb_device *vdeb,
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int col,
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int rgb[3])
+> >>>
+> >>> Change this to pass a pointer and size.
+> >>
+> >> Hi Shuah,
+> >>
+> >> Modifying vimc_deb_set_rgb_mbus_fmt_rgb888_1x24() is not part of this =
+patch, or do you mean another part of the code?
+> >>
+> >> Thanks for reviewing
+> >> Helen
+> >>
+> >>>
+> >>>> =C2=A0 {
+> >>>> +=C2=A0=C2=A0=C2=A0 const struct vimc_pix_map *vpix;
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int i, index;
+> >>>> =C2=A0 +=C2=A0=C2=A0=C2=A0 vpix =3D vimc_pix_map_by_code(vdeb->src_c=
+ode);
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 index =3D VIMC_FRAME_INDEX(lin, col, =
+vdeb->sink_fmt.width, 3);
+> >>>> -=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < 3; i++)
+> >>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vdeb->src_frame[index + =
+i] =3D rgb[i];
+> >>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < 3; i++) {
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 switch (vpix->pixelforma=
+t) {
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case V4L2_PIX_FMT_RGB24:
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 vdeb->src_frame[index + i] =3D rgb[i];
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 break;
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case V4L2_PIX_FMT_BGR24:
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 vdeb->src_frame[index + i] =3D rgb[2-i];
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 break;
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+> >>>> +=C2=A0=C2=A0=C2=A0 }
+> >>>> =C2=A0 }
+> >>>> =C2=A0 =C2=A0 static int vimc_deb_s_stream(struct v4l2_subdev *sd, i=
+nt enable)
+> >>>>
+> >>>
+> >>> thanks,
+> >>> -- Shuah
+> >
 
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm                              allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-sparc                            allyesconfig
-h8300                    h8300h-sim_defconfig
-c6x                              allyesconfig
-ia64                              allnoconfig
-i386                             alldefconfig
-openrisc                 simple_smp_defconfig
-mips                  decstation_64_defconfig
-riscv                            allyesconfig
-um                             i386_defconfig
-riscv                             allnoconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                        generic_defconfig
-ia64                          tiger_defconfig
-ia64                         bigsur_defconfig
-ia64                             allyesconfig
-ia64                             alldefconfig
-nios2                         3c120_defconfig
-nios2                         10m50_defconfig
-c6x                        evmc6678_defconfig
-xtensa                          iss_defconfig
-xtensa                       common_defconfig
-openrisc                    or1ksim_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-mips                malta_kvm_guest_defconfig
-mips                         tb0287_defconfig
-mips                       capcella_defconfig
-mips                           ip32_defconfig
-mips                      loongson3_defconfig
-mips                          ath79_defconfig
-mips                        bcm63xx_defconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-mips                            ar7_defconfig
-mips                             allyesconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                           32r2_defconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                generic-64bit_defconfig
-parisc                generic-32bit_defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-parisc               randconfig-a001-20200427
-alpha                randconfig-a001-20200427
-mips                 randconfig-a001-20200427
-m68k                 randconfig-a001-20200427
-riscv                randconfig-a001-20200427
-nds32                randconfig-a001-20200427
-nios2                randconfig-a001-20200427
-c6x                  randconfig-a001-20200427
-h8300                randconfig-a001-20200427
-sparc64              randconfig-a001-20200427
-microblaze           randconfig-a001-20200427
-sh                   randconfig-a001-20200427
-csky                 randconfig-a001-20200427
-xtensa               randconfig-a001-20200427
-openrisc             randconfig-a001-20200427
-i386                 randconfig-b003-20200427
-i386                 randconfig-b002-20200427
-x86_64               randconfig-b001-20200427
-i386                 randconfig-b001-20200427
-x86_64               randconfig-b002-20200427
-x86_64               randconfig-b003-20200427
-i386                 randconfig-c002-20200427
-i386                 randconfig-c001-20200427
-x86_64               randconfig-c002-20200427
-x86_64               randconfig-c001-20200427
-i386                 randconfig-c003-20200427
-x86_64               randconfig-c003-20200427
-x86_64               randconfig-d001-20200427
-x86_64               randconfig-d002-20200427
-i386                 randconfig-d002-20200427
-i386                 randconfig-d001-20200427
-x86_64               randconfig-d003-20200427
-i386                 randconfig-d003-20200427
-i386                 randconfig-e003-20200427
-x86_64               randconfig-e002-20200427
-x86_64               randconfig-e003-20200427
-i386                 randconfig-e002-20200427
-i386                 randconfig-e001-20200427
-x86_64               randconfig-e001-20200427
-i386                 randconfig-a003-20200427
-i386                 randconfig-a001-20200427
-i386                 randconfig-a002-20200427
-x86_64               randconfig-a002-20200427
-i386                 randconfig-g003-20200427
-i386                 randconfig-g001-20200427
-x86_64               randconfig-g001-20200427
-i386                 randconfig-g002-20200427
-x86_64               randconfig-g003-20200427
-i386                 randconfig-h003-20200427
-x86_64               randconfig-h002-20200427
-i386                 randconfig-h002-20200427
-i386                 randconfig-h001-20200427
-ia64                 randconfig-a001-20200428
-powerpc              randconfig-a001-20200428
-arm64                randconfig-a001-20200428
-sparc                randconfig-a001-20200427
-ia64                 randconfig-a001-20200427
-arm                  randconfig-a001-20200427
-arm64                randconfig-a001-20200427
-arc                  randconfig-a001-20200427
-riscv                    nommu_virt_defconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                       zfcpdump_defconfig
-s390                          debug_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                                allnoconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                           x86_64_defconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
