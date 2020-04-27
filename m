@@ -2,327 +2,126 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB59C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F6FC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81A2320656
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:42:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="n1DX+gEv"
+	by mail.kernel.org (Postfix) with ESMTP id 33CBE2098B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:43:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbgD0Imj (ORCPT
+        id S1726869AbgD0Ina (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 04:42:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36420 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgD0Imj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 04:42:39 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1129C061A0F
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 01:42:38 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id u16so19463123wmc.5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 01:42:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3OJ7zI5D/+o9PAallEctJqNG+ojY+//gD77qJQ0kIFM=;
-        b=n1DX+gEvh24yHFjrn3QLssQv3ijVfIFIlGJUqwi2poGOnb8R9LuTNilUKt2z4PtmaB
-         k+7nnBnv/1VHahFFTeGhcw+q+VAG6L33jnv0FdarpYF2fubsCLOHWtT/RG79D1BErI0h
-         Fg1ZvXrg+EE6aTFZAizH38VLRdYRuJUS3DnqM/bJp3WL+c94prK3xPkhT4h+fWUjZXM+
-         YvhyHSBdbft0ytSSQkG+ijNYNd5y9pQAKeUy2tijFJX6+fuWvsUA0OjKhxgsZuDYvPyA
-         8Sz1UuO1/iDdyOTFW2kxkh1ykmq9IXxkOY5T4waGTNvA1jKWEQzy1sbG2YzGd3J4A+p6
-         m9gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3OJ7zI5D/+o9PAallEctJqNG+ojY+//gD77qJQ0kIFM=;
-        b=QSrTdihioER97FGAw0f/jI7AreNMvBqOQsre+cqnie+FatL/Bxk1vtH1Zyyx4iHamA
-         CPUZNsYZPrVKAatEKFjFDCHDaQgXUiujpk6brck1Y/pOZYXp2iNjFcoOvrXYQgABj7g8
-         DIpehL95RQXbBO2idSe8Hcji2gBEHeJTxgskXUC/sFpkC8sbyjJB2VYOyETrm5FEo40j
-         m15RMQ/uJQZsdmG3T0YQc6z3wIM9AyBd3skwGQNV1pefsc+239clCHR3h2d67/hMt5+X
-         1Z8XDDDlW3+qLo8WcgHTcB+PFxyVyyqPrrNwvfmqCN7uEe+83puZSMbpqm7BbsoXEkw5
-         /ZqA==
-X-Gm-Message-State: AGi0PuYHRhq18Z0FHQMLb+q2Epo9f1jsW9J4D9cCNN4FFDjiV/HbW+o4
-        yGs1/fwvTIVTbVUNakXjN0wi4w==
-X-Google-Smtp-Source: APiQypJrmRJxl+LFnFg2EFvUIMNK4tDN3pemq89DtMppLTkVHPD2h3aVOBLY2yibIMA36EC/SbpXgQ==
-X-Received: by 2002:a1c:7c10:: with SMTP id x16mr24340968wmc.74.1587976957587;
-        Mon, 27 Apr 2020 01:42:37 -0700 (PDT)
-Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id r18sm17101839wrj.70.2020.04.27.01.42.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 01:42:37 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 10:42:35 +0200
-From:   LABBE Corentin <clabbe@baylibre.com>
-To:     Stephan Mueller <stephan.mueller@atsec.com>
-Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        mripard@kernel.org, wens@csie.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v2 14/14] crypto: sun8i-ce: Add support for the TRNG
-Message-ID: <20200427084235.GB8787@Red>
-References: <1587736934-22801-1-git-send-email-clabbe@baylibre.com>
- <1587736934-22801-15-git-send-email-clabbe@baylibre.com>
- <3693153.CBanSm0cUG@tauon.chronox.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3693153.CBanSm0cUG@tauon.chronox.de>
+        Mon, 27 Apr 2020 04:43:30 -0400
+Received: from mga12.intel.com ([192.55.52.136]:49908 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726003AbgD0In3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 04:43:29 -0400
+IronPort-SDR: W3GgC9Vpu28NMePxsVhYrOBWuffcLy7cOXqMRVlvouIIU1Q/nAV6IgOxwLYK1xHccRSj6Eki4x
+ pj2Oc1OC+JGA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 01:43:29 -0700
+IronPort-SDR: W70FpfbFGXv4Y15djW/k2nA39A02axB8Ze4UMVrqXxjarL2+9R+SQnaYfuJDlmdIsDLkTx6wbH
+ 3IID+bCEHg/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,323,1583222400"; 
+   d="scan'208";a="431673902"
+Received: from brentlu-desk0.itwn.intel.com ([10.5.253.11])
+  by orsmga005.jf.intel.com with ESMTP; 27 Apr 2020 01:43:26 -0700
+From:   Brent Lu <brent.lu@intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Ben Zhang <benzh@chromium.org>,
+        Mac Chiang <mac.chiang@intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Brent Lu <brent.lu@intel.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] ASoC: bdw-rt5677: channel constraint support
+Date:   Mon, 27 Apr 2020 16:37:16 +0800
+Message-Id: <1587976638-29806-2-git-send-email-brent.lu@intel.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1587976638-29806-1-git-send-email-brent.lu@intel.com>
+References: <1587976638-29806-1-git-send-email-brent.lu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 04:34:40PM +0200, Stephan Mueller wrote:
-> Am Freitag, 24. April 2020, 16:02:14 CEST schrieb Corentin Labbe:
-> 
-> Hi Corentin,
-> 
-> > This patch had support for the TRNG present in the CE.
-> > Note that according to the algorithm ID, 2 version of the TRNG exists,
-> > the first present in H3/H5/R40/A64 and the second present in H6.
-> > This patch adds support for both, but only the second is working
-> > reliabily accoridng to rngtest.
-> > 
-> > Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-> > ---
-> >  drivers/crypto/allwinner/Kconfig              |   8 ++
-> >  drivers/crypto/allwinner/sun8i-ce/Makefile    |   1 +
-> >  .../crypto/allwinner/sun8i-ce/sun8i-ce-core.c |  18 +++
-> >  .../crypto/allwinner/sun8i-ce/sun8i-ce-trng.c | 123 ++++++++++++++++++
-> >  drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h  |  18 +++
-> >  5 files changed, 168 insertions(+)
-> >  create mode 100644 drivers/crypto/allwinner/sun8i-ce/sun8i-ce-trng.c
-> > 
-> > diff --git a/drivers/crypto/allwinner/Kconfig
-> > b/drivers/crypto/allwinner/Kconfig index 223a5823867c..6aec31f7d2be 100644
-> > --- a/drivers/crypto/allwinner/Kconfig
-> > +++ b/drivers/crypto/allwinner/Kconfig
-> > @@ -87,6 +87,14 @@ config CRYPTO_DEV_SUN8I_CE_PRNG
-> >  	  Select this option if you want to provide kernel-side support for
-> >  	  the Pseudo-Random Number Generator found in the Crypto Engine.
-> > 
-> > +config CRYPTO_DEV_SUN8I_CE_TRNG
-> > +	bool "Support for Allwinner Crypto Engine TRNG"
-> > +	depends on CRYPTO_DEV_SUN8I_CE
-> > +	select HW_RANDOM
-> > +	help
-> > +	  Select this option if you want to provide kernel-side support for
-> > +	  the True Random Number Generator found in the Crypto Engine.
-> > +
-> >  config CRYPTO_DEV_SUN8I_SS
-> >  	tristate "Support for Allwinner Security System cryptographic 
-> offloader"
-> >  	select CRYPTO_SKCIPHER
-> > diff --git a/drivers/crypto/allwinner/sun8i-ce/Makefile
-> > b/drivers/crypto/allwinner/sun8i-ce/Makefile index
-> > c0ea81da2c7d..0842eb2d9408 100644
-> > --- a/drivers/crypto/allwinner/sun8i-ce/Makefile
-> > +++ b/drivers/crypto/allwinner/sun8i-ce/Makefile
-> > @@ -2,3 +2,4 @@ obj-$(CONFIG_CRYPTO_DEV_SUN8I_CE) += sun8i-ce.o
-> >  sun8i-ce-y += sun8i-ce-core.o sun8i-ce-cipher.o
-> >  sun8i-ce-$(CONFIG_CRYPTO_DEV_SUN8I_CE_HASH) += sun8i-ce-hash.o
-> >  sun8i-ce-$(CONFIG_CRYPTO_DEV_SUN8I_CE_PRNG) += sun8i-ce-prng.o
-> > +sun8i-ce-$(CONFIG_CRYPTO_DEV_SUN8I_CE_TRNG) += sun8i-ce-trng.o
-> > diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-> > b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c index
-> > 23b9fc67d7ea..86d75789811f 100644
-> > --- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-> > +++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-> > @@ -47,6 +47,7 @@ static const struct ce_variant ce_h3_variant = {
-> >  		},
-> >  	.esr = ESR_H3,
-> >  	.prng = CE_ALG_PRNG,
-> > +	.trng = CE_ID_NOTSUPP,
-> >  };
-> > 
-> >  static const struct ce_variant ce_h5_variant = {
-> > @@ -63,6 +64,7 @@ static const struct ce_variant ce_h5_variant = {
-> >  		},
-> >  	.esr = ESR_H5,
-> >  	.prng = CE_ALG_PRNG,
-> > +	.trng = CE_ID_NOTSUPP,
-> >  };
-> > 
-> >  static const struct ce_variant ce_h6_variant = {
-> > @@ -76,6 +78,7 @@ static const struct ce_variant ce_h6_variant = {
-> >  	.cipher_t_dlen_in_bytes = true,
-> >  	.hash_t_dlen_in_bits = true,
-> >  	.prng_t_dlen_in_bytes = true,
-> > +	.trng_t_dlen_in_bytes = true,
-> >  	.ce_clks = {
-> >  		{ "bus", 0, 200000000 },
-> >  		{ "mod", 300000000, 0 },
-> > @@ -83,6 +86,7 @@ static const struct ce_variant ce_h6_variant = {
-> >  		},
-> >  	.esr = ESR_H6,
-> >  	.prng = CE_ALG_PRNG_V2,
-> > +	.trng = CE_ALG_TRNG_V2,
-> >  };
-> > 
-> >  static const struct ce_variant ce_a64_variant = {
-> > @@ -99,6 +103,7 @@ static const struct ce_variant ce_a64_variant = {
-> >  		},
-> >  	.esr = ESR_A64,
-> >  	.prng = CE_ALG_PRNG,
-> > +	.trng = CE_ID_NOTSUPP,
-> >  };
-> > 
-> >  static const struct ce_variant ce_r40_variant = {
-> > @@ -115,6 +120,7 @@ static const struct ce_variant ce_r40_variant = {
-> >  		},
-> >  	.esr = ESR_R40,
-> >  	.prng = CE_ALG_PRNG,
-> > +	.trng = CE_ID_NOTSUPP,
-> >  };
-> > 
-> >  /*
-> > @@ -579,6 +585,10 @@ static int sun8i_ce_dbgfs_read(struct seq_file *seq,
-> > void *v) break;
-> >  		}
-> >  	}
-> > +#ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_TRNG
-> > +	seq_printf(seq, "HWRNG %lu %lu\n",
-> > +		   ce->hwrng_stat_req, ce->hwrng_stat_bytes);
-> > +#endif
-> >  	return 0;
-> >  }
-> > 
-> > @@ -928,6 +938,10 @@ static int sun8i_ce_probe(struct platform_device *pdev)
-> > if (err < 0)
-> >  		goto error_alg;
-> > 
-> > +#ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_TRNG
-> > +	sun8i_ce_hwrng_register(ce);
-> > +#endif
-> > +
-> >  	v = readl(ce->base + CE_CTR);
-> >  	v >>= CE_DIE_ID_SHIFT;
-> >  	v &= CE_DIE_ID_MASK;
-> > @@ -957,6 +971,10 @@ static int sun8i_ce_remove(struct platform_device
-> > *pdev) {
-> >  	struct sun8i_ce_dev *ce = platform_get_drvdata(pdev);
-> > 
-> > +#ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_TRNG
-> > +	sun8i_ce_hwrng_unregister(ce);
-> > +#endif
-> > +
-> >  	sun8i_ce_unregister_algs(ce);
-> > 
-> >  #ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG
-> > diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-trng.c
-> > b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-trng.c new file mode 100644
-> > index 000000000000..5e4effe29ed3
-> > --- /dev/null
-> > +++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-trng.c
-> > @@ -0,0 +1,123 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * sun8i-ce-trng.c - hardware cryptographic offloader for
-> > + * Allwinner H3/A64/H5/H2+/H6/R40 SoC
-> > + *
-> > + * Copyright (C) 2015-2020 Corentin Labbe <clabbe@baylibre.com>
-> > + *
-> > + * This file handle the TRNG
-> > + *
-> > + * You could find a link for the datasheet in
-> > Documentation/arm/sunxi/README + */
-> > +#include "sun8i-ce.h"
-> > +#include <linux/pm_runtime.h>
-> > +#include <linux/hw_random.h>
-> > +/*
-> > + * Note that according to the algorithm ID, 2 versions of the TRNG exists,
-> > + * The first present in H3/H5/R40/A64 and the second present in H6.
-> > + * This file adds support for both, but only the second is working
-> > + * reliabily according to rngtest.
-> > + **/
-> > +
-> > +int sun8i_ce_trng_read(struct hwrng *rng, void *data, size_t max, bool
-> > wait) +{
-> > +	struct sun8i_ce_dev *ce;
-> > +	dma_addr_t dma_dst;
-> > +	int err = 0;
-> > +	int flow = 3;
-> > +	unsigned int todo;
-> > +	struct sun8i_ce_flow *chan;
-> > +	struct ce_task *cet;
-> > +	u32 common;
-> > +	void *d;
-> > +
-> > +	ce = container_of(rng, struct sun8i_ce_dev, trng);
-> > +
-> > +	todo = max + 32;
-> > +	todo -= todo % 32;
-> > +
-> > +	d = kzalloc(todo, GFP_KERNEL | GFP_DMA);
-> > +	if (!d)
-> > +		return -ENOMEM;
-> > +
-> > +#ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG
-> > +	ce->hwrng_stat_req++;
-> > +	ce->hwrng_stat_bytes += todo;
-> > +#endif
-> > +
-> > +	dma_dst = dma_map_single(ce->dev, d, todo, DMA_FROM_DEVICE);
-> > +	if (dma_mapping_error(ce->dev, dma_dst)) {
-> > +		dev_err(ce->dev, "Cannot DMA MAP DST\n");
-> > +		err = -EFAULT;
-> > +		goto err_dst;
-> > +	}
-> > +
-> > +	err = pm_runtime_get_sync(ce->dev);
-> > +	if (err < 0)
-> > +		goto err_pm;
-> > +
-> > +	mutex_lock(&ce->rnglock);
-> > +	chan = &ce->chanlist[flow];
-> > +
-> > +	cet = &chan->tl[0];
-> > +	memset(cet, 0, sizeof(struct ce_task));
-> > +
-> > +	cet->t_id = cpu_to_le32(flow);
-> > +	common = ce->variant->trng | CE_COMM_INT;
-> > +	cet->t_common_ctl = cpu_to_le32(common);
-> > +
-> > +	/* recent CE (H6) need length in bytes, in word otherwise */
-> > +	if (ce->variant->trng_t_dlen_in_bytes)
-> > +		cet->t_dlen = cpu_to_le32(todo);
-> > +	else
-> > +		cet->t_dlen = cpu_to_le32(todo / 4);
-> > +
-> > +	cet->t_sym_ctl = 0;
-> > +	cet->t_asym_ctl = 0;
-> > +
-> > +	cet->t_dst[0].addr = cpu_to_le32(dma_dst);
-> > +	cet->t_dst[0].len = cpu_to_le32(todo / 4);
-> > +	ce->chanlist[flow].timeout = 2000;
-> > +
-> > +	err = sun8i_ce_run_task(ce, 3, "TRNG");
-> > +	mutex_unlock(&ce->rnglock);
-> > +
-> > +	pm_runtime_put(ce->dev);
-> > +
-> > +err_pm:
-> > +	dma_unmap_single(ce->dev, dma_dst, todo, DMA_FROM_DEVICE);
-> > +
-> > +	if (!err) {
-> > +		memcpy(data, d, max);
-> > +		err = max;
-> > +	}
-> > +
-> > +err_dst:
-> > +	kfree(d);
-> 
-> kzfree? I would assume d contains sensitive data, no?
-> 
+BDW boards using this machine driver supports only stereo capture and
+playback. Implement a constraint to enforce it.
 
-Like sun8i-ce, yes.
-I will fix that
+Signed-off-by: Brent Lu <brent.lu@intel.com>
+---
+ sound/soc/intel/boards/bdw-rt5677.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-Thanks
+diff --git a/sound/soc/intel/boards/bdw-rt5677.c b/sound/soc/intel/boards/bdw-rt5677.c
+index cc41a34..7963cae 100644
+--- a/sound/soc/intel/boards/bdw-rt5677.c
++++ b/sound/soc/intel/boards/bdw-rt5677.c
+@@ -22,6 +22,8 @@
+ 
+ #include "../../codecs/rt5677.h"
+ 
++#define DUAL_CHANNEL 2
++
+ struct bdw_rt5677_priv {
+ 	struct gpio_desc *gpio_hp_en;
+ 	struct snd_soc_component *component;
+@@ -222,6 +224,36 @@ static int bdw_rt5677_rtd_init(struct snd_soc_pcm_runtime *rtd)
+ }
+ #endif
+ 
++static const unsigned int channels[] = {
++	DUAL_CHANNEL,
++};
++
++static const struct snd_pcm_hw_constraint_list constraints_channels = {
++	.count = ARRAY_SIZE(channels),
++	.list = channels,
++	.mask = 0,
++};
++
++static int bdw_fe_startup(struct snd_pcm_substream *substream)
++{
++	struct snd_pcm_runtime *runtime = substream->runtime;
++
++	/*
++	 * On this platform for PCM device we support,
++	 * stereo audio
++	 */
++
++	runtime->hw.channels_max = DUAL_CHANNEL;
++	snd_pcm_hw_constraint_list(runtime, 0, SNDRV_PCM_HW_PARAM_CHANNELS,
++					   &constraints_channels);
++
++	return 0;
++}
++
++static const struct snd_soc_ops bdw_rt5677_fe_ops = {
++	.startup = bdw_fe_startup,
++};
++
+ static int bdw_rt5677_init(struct snd_soc_pcm_runtime *rtd)
+ {
+ 	struct bdw_rt5677_priv *bdw_rt5677 =
+@@ -321,6 +353,7 @@ static struct snd_soc_dai_link bdw_rt5677_dais[] = {
+ 		},
+ 		.dpcm_capture = 1,
+ 		.dpcm_playback = 1,
++		.ops = &bdw_rt5677_fe_ops,
+ 		SND_SOC_DAILINK_REG(fe, dummy, platform),
+ 	},
+ 
+-- 
+2.7.4
+
