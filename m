@@ -2,110 +2,63 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB94FC55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDFC6C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A594C2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:08:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="W2a981xv"
+	by mail.kernel.org (Postfix) with ESMTP id BA6AF2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:15:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726625AbgD0HIM (ORCPT
+        id S1726646AbgD0HPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 03:08:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49894 "EHLO
+        Mon, 27 Apr 2020 03:15:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726504AbgD0HIM (ORCPT
+        with ESMTP id S1726349AbgD0HPR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 03:08:12 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 594ABC061A0F;
-        Mon, 27 Apr 2020 00:08:12 -0700 (PDT)
-Received: from zn.tnic (p200300EC2F05F000D9541802070C4AE1.dip0.t-ipconnect.de [IPv6:2003:ec:2f05:f000:d954:1802:70c:4ae1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F2D5D1EC0CDA;
-        Mon, 27 Apr 2020 09:08:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1587971290;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=3CxZwGBTt+ToXUeMtFGEKT2BZI/KNjbUZlpY/rw/Ztg=;
-        b=W2a981xvH2aNCGTvcwxFjU0F46f/6RRi1rqoV5zYGK9c2LGLloo6nejMad5RsnNg3Yr6+R
-        h3zLgOweECmDHK0Te5ziXOnmPWVOoXM9xyvInwmywrfjvgN7fliS+r2rBH9+Yfj6bqV606
-        repydKjEz666T8RBkLKYkdrNiD0BSHQ=
-Date:   Mon, 27 Apr 2020 09:08:02 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Aristeu Rozanski <aris@redhat.com>,
-        Matthias Brugger <mbrugger@suse.com>,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 06/10] EDAC/ghes: Remove local variable rdr_mask in
- ghes_edac_dmidecode()
-Message-ID: <20200427070802.GA11036@zn.tnic>
-References: <20200422115814.22205-1-rrichter@marvell.com>
- <20200422115814.22205-7-rrichter@marvell.com>
+        Mon, 27 Apr 2020 03:15:17 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66A0DC061A0F;
+        Mon, 27 Apr 2020 00:15:17 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jSxyu-00CcTO-MI; Mon, 27 Apr 2020 07:15:08 +0000
+Date:   Mon, 27 Apr 2020 08:15:08 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: pass kernel pointers to the sysctl ->proc_handler method v3
+Message-ID: <20200427071508.GV23230@ZenIV.linux.org.uk>
+References: <20200424064338.538313-1-hch@lst.de>
+ <20200426155958.GS23230@ZenIV.linux.org.uk>
+ <20200427053616.GC15905@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200422115814.22205-7-rrichter@marvell.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200427053616.GC15905@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 01:58:10PM +0200, Robert Richter wrote:
-> The local variable rdr_mask serves as a static constant here. It hides
-> what the code is doing. Remove it and replace it with the actual logic
-> that checks some bits.
+On Mon, Apr 27, 2020 at 07:36:16AM +0200, Christoph Hellwig wrote:
+> On Sun, Apr 26, 2020 at 04:59:58PM +0100, Al Viro wrote:
+> > OK, I can live with that; further work can live on top of that, anyway.
+> > How are we going to handle that?  I can put it into never-rebased branch
+> > in vfs.git (#work.sysctl), so that people could pull that.
+> > 
+> > FWIW, I'm putting together more uaccess stuff (will probably hit -next
+> > tonight or tomorrow); this would fit well there...
 > 
-> Signed-off-by: Robert Richter <rrichter@marvell.com>
-> ---
->  drivers/edac/ghes_edac.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
-> index a5890afa9c71..038e560fd332 100644
-> --- a/drivers/edac/ghes_edac.c
-> +++ b/drivers/edac/ghes_edac.c
-> @@ -191,7 +191,6 @@ static void ghes_edac_dmidecode(const struct dmi_header *dh, void *arg)
->  	if (dh->type == DMI_ENTRY_MEM_DEVICE) {
->  		struct memdev_dmi_entry *entry = (struct memdev_dmi_entry *)dh;
->  		struct dimm_info *dimm = edac_get_dimm(mci, dimm_fill->count, 0, 0);
-> -		u16 rdr_mask = BIT(7) | BIT(13);
->  
->  		if (entry->size == 0xffff) {
->  			pr_info("Can't get DIMM%i size\n",
-> @@ -241,7 +240,8 @@ static void ghes_edac_dmidecode(const struct dmi_header *dh, void *arg)
->  		default:
->  			if (entry->type_detail & BIT(6))
->  				dimm->mtype = MEM_RMBS;
-> -			else if ((entry->type_detail & rdr_mask) == rdr_mask)
-> +			else if ((entry->type_detail & BIT(7)) &&
-> +				 (entry->type_detail & BIT(13)))
+> Sounds good to me.  The first patch isn't really needed for the series
+> and could go in through the bpf tree.
 
-Well, "checks some bits" doesn't make it more telling than checking a
-descriptive name like "rdr_mask" but ok, since we're assigning MEM_RDR
-here, it is still clear what the check does.
-
-Btw, please write it like this:
-
-			else if (entry->type_detail & (BIT(7) | BIT(13)))
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+OK, ##2--5 are in #work.sysctl, based at 5.7-rc1
