@@ -2,92 +2,165 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B19AC7C820
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D6EC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F4DD2087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5ECF20661
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:20:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgD0ITr (ORCPT
+        id S1726860AbgD0IUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 04:19:47 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:44305 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726710AbgD0ITq (ORCPT
+        Mon, 27 Apr 2020 04:20:50 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:22294 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726434AbgD0IUt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 04:19:46 -0400
-Received: from mail-lf1-f43.google.com ([209.85.167.43]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MzQwa-1jFhIm3dU8-00vMhr; Mon, 27 Apr 2020 10:19:44 +0200
-Received: by mail-lf1-f43.google.com with SMTP id f8so13062817lfe.12;
-        Mon, 27 Apr 2020 01:19:44 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZ85yEie7SI4mXbpUNxbNq/kyBtKnIm2qtWiwp4PS/aZbZjsbIB
-        qKx6tBrOml2/5Cj0EZldo2UdoQ+QzqXYZfMHX9w=
-X-Google-Smtp-Source: APiQypKq+e3NC+Rf8KzaYonKc9dxCoJqQRrJrRG2Yg0jxksCGlJ48uH8hPHx64NKuyd+sZ0TBuXz/6X9HC2EUJLCFf0=
-X-Received: by 2002:a19:4b90:: with SMTP id y138mr14393819lfa.39.1587975584363;
- Mon, 27 Apr 2020 01:19:44 -0700 (PDT)
+        Mon, 27 Apr 2020 04:20:49 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03R7XldU011092;
+        Mon, 27 Apr 2020 04:20:47 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30mhbh482f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Apr 2020 04:20:46 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03R7XwQs011724;
+        Mon, 27 Apr 2020 04:20:46 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30mhbh481m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Apr 2020 04:20:46 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03R8Je6s023801;
+        Mon, 27 Apr 2020 08:20:44 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04ams.nl.ibm.com with ESMTP id 30mcu6ueuy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Apr 2020 08:20:44 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03R8Kf9b721342
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Apr 2020 08:20:41 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D3DF9AE051;
+        Mon, 27 Apr 2020 08:20:41 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 45D0AAE05A;
+        Mon, 27 Apr 2020 08:20:41 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.191.241])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 27 Apr 2020 08:20:41 +0000 (GMT)
+Subject: Re: [PATCH v7 03/15] s390/zcrypt: driver callback to indicate
+ resource in use
+To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
+References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
+ <20200407192015.19887-4-akrowiak@linux.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Message-ID: <75bcbc06-f38f-1aff-138f-5d2a2dd3f7b6@linux.ibm.com>
+Date:   Mon, 27 Apr 2020 10:20:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <1587966099-28139-1-git-send-email-hadar.gat@arm.com>
- <1587966099-28139-3-git-send-email-hadar.gat@arm.com> <CAMj1kXGwVZiGbsT2NwWTyka0FVZnQcmfMSeoBKD03PdC=fRZeA@mail.gmail.com>
- <DB6PR0802MB25334429B7DD333780E7BABBE9AF0@DB6PR0802MB2533.eurprd08.prod.outlook.com>
-In-Reply-To: <DB6PR0802MB25334429B7DD333780E7BABBE9AF0@DB6PR0802MB2533.eurprd08.prod.outlook.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 27 Apr 2020 10:19:28 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1LYAESnePbwbn7x7x=2MCTWUNZVmmoiuv+_-J2ntFGmA@mail.gmail.com>
-Message-ID: <CAK8P3a1LYAESnePbwbn7x7x=2MCTWUNZVmmoiuv+_-J2ntFGmA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] hwrng: cctrng - change default to n
-To:     Hadar Gat <Hadar.Gat@arm.com>
-Cc:     Ard Biesheuvel <ardb@kernel.org>, Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <Ofir.Drang@arm.com>, nd <nd@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:JZk1rY2QBY2t6QRgHFCvHTZYoKOBY6GwFBii/ryiTzIpqlx/XN6
- Fng27KvbkdMXSsM9mBVlxKMWNMy7nSJUEu2Os7Wqwp9quhCHInVvvA7LCN91eun4KjNrDfD
- xpl3Ookw2O3m8kkrHDyhnHjS/4ufKvsnVIF4MhA+rYsrSfgW5mCLa0yNJzB6mg127ZlWZLB
- f8pkb5W3vJgpjdgGMpyhg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:8QlHj3zZLkY=:NYM1FTY3EEbenHMb1D71Mn
- i4LDcgNURbhhEgVvEBn+cZ5WBI/5/go8lcoMuCr0wTNT+RXxBc6yLT5RhOSjVyNjrcF6nBxV5
- EQIHs2w1awPkIiUTwdDfo2521UUXqYXpzW7OMymAoRHIFH+ltaNzCb5VMjqygcG5z8/k234vo
- 2cAlLBlGMMWlJbCzu2OPL5bsr0fzsMTvJroh+JjlgpiSBihIvIUwkP6QGJugLgfzbbZxAxMIa
- u5EH2XB7EiNJsip7pkFu/HgIkAIuTdaHfhZSiCliTI+MRAsDpawc++SfgcvD+O28n+YeSNaJN
- BBo6S5gXvv+p3Abf7U2lp9UyiNf0+7Orcf/XzbYPIBKRbd+snuxQUhbwkYjUgTGyTTahqoyug
- CgKgsBWvR5UJzVNFE9TCGKKerTaE4umLUAOdUkU8bDmkRoBUe8pVvzUMABMdIiyVEVjlifsvd
- RcleteP27G7ZYoh5wH31wPr7g8q8Yb1wTCP6Tw2GVSB55s2rp2nedEnNYHPZ5A7Rmhjm9oRHd
- JE0JZszm6fWq5TnGSF4q5+MUWoxLTx1bqAnBRAZoCd3qiwrSdJ6tCki0f7vkhZrDCxD0hxbyj
- oqG4CTF2485vo6RsF8v6klv3FDDHIehf0sLf4By7k/gsbKWCXjOYhs0HW7+TdJgVcwLUqaLxp
- 5fNk0tqDYDKsFFBJ7MJYyr0DJpeeHINuhf/JLgwGyuc3VLz3m+mrKR/sxYkIBUUVC1Y4AMW2F
- +6dwHVdd2UxiZCE0sx3EnagPJdDIjEHinl9ZAdDwawnPkrpfOyf7IUvTc5PBHrZ2AO01OPFq/
- YBBORCIsHqbQ9YetLJ3UXvkIqegUYKlCnRx+NrVQHZB7J2dLkA=
+In-Reply-To: <20200407192015.19887-4-akrowiak@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-27_03:2020-04-24,2020-04-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ phishscore=0 adultscore=0 spamscore=0 clxscore=1011 priorityscore=1501
+ impostorscore=0 lowpriorityscore=0 mlxlogscore=999 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004270067
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 9:26 AM Hadar Gat <Hadar.Gat@arm.com> wrote:
-> > -----Original Message-----
-> > From: Ard Biesheuvel <ardb@kernel.org>
-> > > +       default n
-> >
-> > 'default n' is the default so you can just remove the line
->
-> Is this a guideline or just optional?
-> Personally I like things to be explicit and if allowed I prefer to keep this line.
 
-It's a common convention, and we have had patches in the past that
-mass-removed those lines. I'd also just leave it out. It is generally well
-understood that all options default to 'n' unless specified otherwise.
 
-        Arnd
+On 2020-04-07 21:20, Tony Krowiak wrote:
+> Introduces a new driver callback to prevent a root user from unbinding
+> an AP queue from its device driver if the queue is in use. The intent of
+> this callback is to provide a driver with the means to prevent a root user
+> from inadvertently taking a queue away from a guest and giving it to the
+> host while the guest is still using it.
+
+How can we know, at this point if the guest uses or not the queue?
+Do you want to say that this prevents to take away a queue when it is 
+currently assigned to a VFIO device?
+and with a guest currently using this VFIO device?
+
+> The callback will
+> be invoked whenever a change to the AP bus's sysfs apmask or aqmask
+> attributes would result in one or more AP queues being removed from its
+> driver. If the callback responds in the affirmative for any driver
+> queried, the change to the apmask or aqmask will be rejected with a device
+> in use error.
+
+AFAIU you mean that Linux's driver's binding and unbinding mechanism is 
+not sufficient to avoid this issue because unbind can not be refused by 
+the driver.
+
+The reason why we do not want a single queue to be removed from the VFIO 
+driver is because the VFIO drivers works on a matrix, not on queues, and 
+for the matrix to be consistent it needs to acquire all queues defined 
+by the cross product of all APID and AQID assigned to the matrix.
+
+This functionality is valid for the host as for the guests and is 
+handled automatically by the firmware with the CRYCB.
+The AP bus uses QCI to retrieve the host CRYCB and build the hosts AP 
+queues.
+
+If instead to mix VFIO CRYCB matrix handling and queues at the same 
+level inside the AP bus we separate these different firmware entities in 
+two different software entities.
+
+If we make the AP bus sit above a CRYCB/Matrix bus, and in the way 
+virtualize the QCI and test AP queue instructions:
+- we can directly pass a matrix device to the guest though a VFIO matrix 
+device
+- the consistence will be automatic
+- the VFIO device and parent device will be of the same kind which would 
+make the design much more clearer.
+- there will be no need for these callback because the consistence of 
+the matrix will be guaranteed by firmware
+
+
+> 
+> For this patch, only non-default drivers will be queried. Currently,
+> there is only one non-default driver, the vfio_ap device driver.
+
+You mean that the admin may take queues away from the "default driver", 
+while the queue is in use, to give it to an other driver?
+Why is it to avoid in one way and not in the other way?
+
+> The
+> vfio_ap device driver manages AP queues passed through to one or more
+> guests
+
+I read this as if a queue may be passed to several guest...
+please, rephrase or explain.
+
+> and we don't want to unexpectedly take AP resources away from
+> guests which are most likely independently administered.
+
+When you say "independently administered", you mean as a second admin 
+inside the host, don't you?
+
+Regards,
+Pierre
+
+-- 
+Pierre Morel
+IBM Lab Boeblingen
