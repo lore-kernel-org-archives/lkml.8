@@ -2,101 +2,177 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B40EAC55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BF0C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90FFE206BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6E5620661
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:41:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DgrzTzZP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgD0Pi4 convert rfc822-to-8bit (ORCPT
+        id S1728022AbgD0Plw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 11:38:56 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:47463 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727006AbgD0Piz (ORCPT
+        Mon, 27 Apr 2020 11:41:52 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:52284 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727077AbgD0Plv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 11:38:55 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 2D5C0C0011;
-        Mon, 27 Apr 2020 15:38:48 +0000 (UTC)
-Date:   Mon, 27 Apr 2020 17:38:46 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, richard@nod.at, vigneshr@ti.com,
-        arnd@arndb.de, brendanhiggins@google.com, tglx@linutronix.de,
-        anders.roxell@linaro.org, masonccyang@mxic.com.tw,
-        piotrs@cadence.com, robh+dt@kernel.org, linux-mips@vger.kernel.org,
-        hauke.mehrtens@intel.com, andriy.shevchenko@intel.com,
-        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
-Subject: Re: [PATCH v2 2/2] mtd: rawnand: Add NAND controller support on
- Intel LGM SoC
-Message-ID: <20200427173846.3866c506@xps13>
-In-Reply-To: <20200418105533.477ce529@collabora.com>
-References: <20200417082147.43384-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200418105533.477ce529@collabora.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 27 Apr 2020 11:41:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588002109;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tJRLLv8agzDERmbgL8/S6trBj8aDl75vAd6aQQKyE3Q=;
+        b=DgrzTzZPAkjOB+bivcRSWQA2pvAIllLZonqRtHT8LQXG/tBMLTnB1KL36jrpAxffX0TFKc
+        3m1Vju15aWPnpY645GM1i2YuBhlwdXs564dLDZ5X2uO4F8AqahHRwWuaJftLxBvsuWjaED
+        Q9RUDHfSDPdh4UDHZB4wQsisYTlnYM8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-32-dPon0T0jP8e_3iYOFCzrPw-1; Mon, 27 Apr 2020 11:41:45 -0400
+X-MC-Unique: dPon0T0jP8e_3iYOFCzrPw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 776E145F;
+        Mon, 27 Apr 2020 15:41:42 +0000 (UTC)
+Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3F6766062E;
+        Mon, 27 Apr 2020 15:41:38 +0000 (UTC)
+Date:   Mon, 27 Apr 2020 09:41:37 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Message-ID: <20200427094137.4801bfb6@w520.home>
+In-Reply-To: <20200427142553.GH13640@mellanox.com>
+References: <20200424124444.GJ13640@mellanox.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D8A808B@SHSMSX104.ccr.corp.intel.com>
+        <20200424181203.GU13640@mellanox.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
+        <20200426191357.GB13640@mellanox.com>
+        <20200426214355.29e19d33@x1.home>
+        <20200427115818.GE13640@mellanox.com>
+        <20200427071939.06aa300e@x1.home>
+        <20200427132218.GG13640@mellanox.com>
+        <20200427081841.18c4a994@x1.home>
+        <20200427142553.GH13640@mellanox.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris,
+On Mon, 27 Apr 2020 11:25:53 -0300
+Jason Gunthorpe <jgg@mellanox.com> wrote:
 
-Boris Brezillon <boris.brezillon@collabora.com> wrote on Sat, 18 Apr
-2020 10:55:33 +0200:
-
-> On Fri, 17 Apr 2020 16:21:47 +0800
-> "Ramuthevar,Vadivel MuruganX"
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> On Mon, Apr 27, 2020 at 08:18:41AM -0600, Alex Williamson wrote:
+> > On Mon, 27 Apr 2020 10:22:18 -0300
+> > Jason Gunthorpe <jgg@mellanox.com> wrote:
+> >   
+> > > On Mon, Apr 27, 2020 at 07:19:39AM -0600, Alex Williamson wrote:
+> > >   
+> > > > > It is not trivial masking. It is a 2000 line patch doing comprehensive
+> > > > > emulation.    
+> > > > 
+> > > > Not sure what you're referring to, I see about 30 lines of code in
+> > > > vdcm_vidxd_cfg_write() that specifically handle writes to the 4 BARs in
+> > > > config space and maybe a couple hundred lines of code in total handling
+> > > > config space emulation.  Thanks,    
+> > > 
+> > > Look around vidxd_do_command()
+> > > 
+> > > If I understand this flow properly..  
+> > 
+> > I've only glanced at it, but that's called in response to a write to
+> > MMIO space on the device, so it's implementing a device specific
+> > register.  
 > 
-> > From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> > 
-> > This patch adds the new IP of Nand Flash Controller(NFC) support
-> > on Intel's Lightning Mountain(LGM) SoC.
-> > 
-> > DMA is used for burst data transfer operation, also DMA HW supports
-> > aligned 32bit memory address and aligned data access by default.
-> > DMA burst of 8 supported. Data register used to support the read/write
-> > operation from/to device.
-> > 
-> > NAND controller driver implements ->exec_op() to replace legacy hooks,
-> > these specific call-back method to execute NAND operations.
-> > 
-> > Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> > ---
-> >  drivers/mtd/nand/raw/Kconfig          |   7 +
-> >  drivers/mtd/nand/raw/Makefile         |   1 +
-> >  drivers/mtd/nand/raw/intel_lgm_nand.c | 740 ++++++++++++++++++++++++++++++++++  
+> It is doing emulation of the secure BAR. The entire 1000 lines of
+> vidxd_* functions appear to be focused on this task.
+
+Ok, we/I need a terminology clarification, a BAR is a register in
+config space for determining the size, type, and setting the location
+of a I/O or memory region of a device.  I've been asserting that the
+emulation of the BAR itself is trivial, but are you actually focused on
+emulation of the region described by the BAR?  This is what mdev is
+for, mediating access to a device and filling in gaps such that we can
+use re-use the vfio device APIs.
+
+> > Are you asking that PCI config space be done in userspace
+> > or any sort of device emulation?    
 > 
-> I wonder if we shouldn't name the driver infineon-nand-controller.c
-> since the original design comes from Infineon IIUC. intel_lgm_nand.c is
-> definitely misleading, as we also have a nand_intel.c file which is for
-> Intel NAND chips (not NAND controllers). If we keep intel in the name,
-> let's at least add a "-controller" suffix to make it clear.
+> I'm concerned about doing full emulation of registers on a MMIO BAR
+> that trigger complex actions in response to MMIO read/write.
+
+Maybe what you're recalling me say about mdev is that its Achilles
+heel is that we rely on mediation provider (ie. vendor driver) for
+security, we don't necessarily have an piece of known, common hardware
+like an IOMMU to protect us when things go wrong.  That's true, but
+don't we also trust drivers in the host kernel to correctly manage and
+validate their own interactions with hardware, including the APIs
+provided through other user interfaces.  Is the assertion then that
+device specific, register level API is too difficult to emulate?
+
+> Simple masking and simple config space stuff doesn't seem so
+> problematic.
 > 
-> Side note for Miquel: I guess we would also benefit from having a clear
-> core vs controller-drivers split as recently done for spi-nor (a
-> controller subdir has been created).
+> > The assumption with mdev is that we need emulation in the host
+> > kernel because we need a trusted entity to mediate device access and
+> > interact with privileged portion of the device control.  Thanks,  
+> 
+> Sure, but there are all kinds of different levels to this - mdev
+> should not be some open ended device emulation framework, IMHO.
+> 
+> ie other devices need only a small amount of kernel side help and
+> don't need complex MMIO BAR emulation.
+> 
+> Would you be happy if someone proposed an e1000 NIC emulator using
+> mdev? Why not move every part of qemu's PCI device emulation into the
+> kernel?
 
-I would even like a core vs controller drivers vs nand chips drivers.
+Well, in order to mediate a device, we certainly expect there to be a
+physical device.  I also expect that there's some performance or at
+least compatibility advantage to using the device API directly rather
+than masquerading everything behind something like virtio.  So no, I
+wouldn't expect someone to create a fully emulated device in mdev, but
+also I do expect some degree of device emulation in an mdev driver to
+fill the gaps in non-performance path that hardware chose to defer to
+software.  Thanks,
 
-Macronix for instance has a NAND controller driver and a NAND chip
-driver, that's why, even if it is a bit long, I enforce the -nfc or
--nand-controller (my favorite) suffix now.
+Alex
 
-Thanks,
-Miquèl
