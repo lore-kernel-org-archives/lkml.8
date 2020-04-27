@@ -2,141 +2,128 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C821C5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8B6C55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C2D4206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:21:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE338206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:22:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="RtqBsWDg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h991u1Ch"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgD0MVz (ORCPT
+        id S1727045AbgD0MWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 08:21:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42442 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726390AbgD0MVy (ORCPT
+        Mon, 27 Apr 2020 08:22:13 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55660 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726831AbgD0MWM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 08:21:54 -0400
-Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB936C0610D5;
-        Mon, 27 Apr 2020 05:21:54 -0700 (PDT)
-Received: from flygoat-x1e (unknown [IPv6:240e:390:491:f2b0::d68])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id DF81620CCC;
-        Mon, 27 Apr 2020 12:21:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1587990112; bh=R1+k3dAQgTnnM31r1i4S/QU+lBsdeL1PrW/jJlxBHmI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=RtqBsWDgq2Fv6x6mm8Wd5brjrHoAZt0ZN2ma/YfHpVEGTMePCXxWWOROLNXeCQIHw
-         JEYiYpgtO0V28OozpxRfJLoHXhjKtaO5PY1QiDXWPHATy7Ks3RZC+5PeSkCr3hHx41
-         EM1W0Wzd9RMkiqMAdrxKndZtI6fA/oDAxah+6QGNklzHvapgnaJpSihb7nyYZgQJYX
-         dWPeq/3s1nH2/xE2FD2LipDyIKuCRyVwgRsFgr3miA1Wf8JgS8s7Qdtn4WkEVSZHyV
-         aAeKSRvLg9u0rW8tETU1kbi9qs/A4tV95XCiw7T+NnTuHqez3pUHcoD9Flqiyl5xZc
-         zGRv5i1H0u1VA==
-Date:   Mon, 27 Apr 2020 20:21:29 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     John Garry <john.garry@huawei.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-mips@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Kitt <steve@sk2.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Daniel Silsby <dansilsby@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Wei Xu <xuwei5@hisilicon.com>, <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>, Rob Herring <robh@kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH 3/4] lib: logic_pio: Introduce MMIO_LOWER_RESERVED
-Message-ID: <20200427202129.34f8807e@flygoat-x1e>
-In-Reply-To: <e6e3331f-283d-03e8-b23e-41870b547e34@huawei.com>
-References: <20200426114806.1176629-1-jiaxun.yang@flygoat.com>
-        <20200426114806.1176629-4-jiaxun.yang@flygoat.com>
-        <e84f4146-b44f-b009-0dc4-876aa551f44f@huawei.com>
-        <42432F7C-D859-48B4-9547-A61BD22EFEEF@flygoat.com>
-        <e6e3331f-283d-03e8-b23e-41870b547e34@huawei.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 27 Apr 2020 08:22:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587990131;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4yrEcbYqeWqSME0VKr0tn8j8NtL6y9pbDQetkAUTq5Q=;
+        b=h991u1ChjDASboPez1dHmQEkRGdA/o07zpGWdboeOmPSTzRg4keqJa+RkWvexF1c/qVFPJ
+        IyBMEXSLAzZZM6gFk9rD92NWUQhtJb/tFriY3CHThE6/lD1ttEb8XvMRGivRSgmWnzaNmD
+        RX9HmQpCMyTlP5/jdWkafnYZTjH5wsM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-251-ogj_N9Q6PG22mSx3bl-ymg-1; Mon, 27 Apr 2020 08:22:06 -0400
+X-MC-Unique: ogj_N9Q6PG22mSx3bl-ymg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 26B6F800685;
+        Mon, 27 Apr 2020 12:22:05 +0000 (UTC)
+Received: from [10.3.112.171] (ovpn-112-171.phx2.redhat.com [10.3.112.171])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7D05E27CC9;
+        Mon, 27 Apr 2020 12:22:04 +0000 (UTC)
+Subject: Re: [PATCH v3 00/10] livepatch,module: Remove .klp.arch and
+ module_disable_ro()
+To:     Josh Poimboeuf <jpoimboe@redhat.com>, live-patching@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>
+References: <cover.1587812518.git.jpoimboe@redhat.com>
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+Message-ID: <a566f775-4e5b-6ced-079b-4951dfd98cab@redhat.com>
+Date:   Mon, 27 Apr 2020 08:22:03 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <cover.1587812518.git.jpoimboe@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Apr 2020 12:54:06 +0100
-John Garry <john.garry@huawei.com> wrote:
+On 4/25/20 7:07 AM, Josh Poimboeuf wrote:
+> v3:
+> - klp: split klp_write_relocations() into object/section specific
+>    functions [joe]
+> - s390: fix plt/got writes [joe]
+> - s390: remove text_mutex usage [mbenes]
+> - x86: do text_poke_sync() before releasing text_mutex [peterz]
+> - split x86 text_mutex changes into separate patch [mbenes]
+> 
+> v2:
+> - add vmlinux.ko check [peterz]
+> - remove 'klp_object' forward declaration [mbenes]
+> - use text_mutex [jeyu]
+> - fix documentation TOC [jeyu]
+> - fix s390 issues [mbenes]
+> - upstream kpatch-build now supports this
+>    (though it's only enabled for Linux >= 5.8)
+> 
+> These patches add simplifications and improvements for some issues Peter
+> found six months ago, as part of his non-writable text code (W^X)
+> cleanups.
+> 
+> Highlights:
+> 
+> - Remove the livepatch arch-specific .klp.arch sections, which were used
+>    to do paravirt patching and alternatives patching for livepatch
+>    replacement code.
+> 
+> - Add support for jump labels in patched code.
+> 
+> - Remove the last module_disable_ro() usage.
+> 
+> For more background, see this thread:
+> 
+>    https://lkml.kernel.org/r/20191021135312.jbbxsuipxldocdjk@treble
+> 
+> This has been tested with kpatch-build integration tests and klp-convert
+> selftests.
+> 
 
-> On 27/04/2020 12:03, Jiaxun Yang wrote:
-> >=20
-> >=20
-> > =E4=BA=8E 2020=E5=B9=B44=E6=9C=8827=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
-=886:43:09, John Garry
-> > <john.garry@huawei.com> =E5=86=99=E5=88=B0: =20
-> >> On 26/04/2020 12:47, Jiaxun Yang wrote: =20
-> >>> That would allow platforms reserve some lower address in PIO MMIO
-> >>> range to deal with legacy drivers with hardcoded I/O ports that
-> >>> can't be managed by logic_pio. =20
-> >>
-> >> Hi,
-> >>
-> >> Is there some reason why the logic_pio code cannot be improved to
-> >> handle these devices at these "fixed" addresses? Or do you have a
-> >> plan to improve it? We already support fixed bus address devices
-> >> in the INDIRECT IO region. =20
-> >=20
-> > Hi,
-> >=20
-> > The issue about "Fixed Address" is we can't control the ioport
-> > That driver used to operate devices.
-> > So any attempt to resolve it in logic_pio seems impossible.
-> >=20
-> > Currently we have i8259, i8042, piix4_smbus, mc146818 rely on this
-> > assumption. =20
->=20
-> Right, and from glancing at a couple of drivers you mentioned, if we=20
-> were to register a logic pio region for that legacy region, there
-> does not seem to be an easy place to fixup to use logic pio addresses
-> (for those devices). They use hardcoded values. However if all those
-> drivers were mips specific, you could fixup those drivers to use
-> logic_pio addresses today through some macro. But not sure on that.
->=20
+Hi Josh,
 
-Well, most of these drivers are shared with x86 so....
-I guess the conversion needs two or more release cycles.
+I've added some late module patching tests for klp-convert as well as 
+extended the existing ones.  I'll put them on-top of v3 and give it some 
+test runs today (x86, ppc64le, s390x) and report back.
 
->=20
-> So, going back to your change, I have a dilemma wondering whether you=20
-> should still register a logic pio region for the legacy region
-> instead of the carveout reservation, but ensure it is the first
-> region registered, such that logic pio address base is 0 and no
-> translation is required. At least then you have a region registered
-> and it shows in /proc/ioports, but then this whole thing becomes a
-> bit fragile.
+BTW, this may be out of scope for this patchset, but is it a large 
+amount of work to support clearing klp-relocations on target module 
+unload?  ie, this test case:
 
-Thanks for your solution. So I must register this range as early as
-possible. As IRQ is the first subsystem using ISA, I'll do it before
-IRQ init, just at the place I setup iormap for reserved region now.
+   - (target module and livepatch loaded)
+   - rmmod target_mod
+   - modprobe target_mod       << fails as reloc target is non-zero
 
-Should be early enough to avoid any collision, as the only logic_pio
-user on our system is PCI controller.
+IIRC, Miroslav had taken a stab at this last year, but I don't remember 
+what the technical problems were then.
 
-Thanks.
->=20
---
-Jiaxun Yang
+-- Joe
+
