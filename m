@@ -2,414 +2,599 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F59C55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F26D0C5519A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1581720656
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5A9620656
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:41:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbgD0Old (ORCPT
+        id S1728049AbgD0Olh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 10:41:33 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:9685 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727012AbgD0Olc (ORCPT
+        Mon, 27 Apr 2020 10:41:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36094 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727012AbgD0Olg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 10:41:32 -0400
-X-IronPort-AV: E=Sophos;i="5.73,324,1583161200"; 
-   d="scan'208";a="45623793"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 27 Apr 2020 23:41:30 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 641C940062DE;
-        Mon, 27 Apr 2020 23:41:28 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        linux-clk@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2] clk: renesas: cpg-mssr: Add R8A7742 support
-Date:   Mon, 27 Apr 2020 15:41:00 +0100
-Message-Id: <1587998460-7804-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 27 Apr 2020 10:41:36 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71FEAC0610D5;
+        Mon, 27 Apr 2020 07:41:36 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 8CFF82A0C06
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: Re: [PATCH v8 05/10] drm: imx: Add i.MX 6 MIPI DSI host platform
+ driver
+To:     Adrian Ratiu <adrian.ratiu@collabora.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-imx@nxp.com,
+        kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com,
+        Fabio Estevam <festevam@gmail.com>,
+        Enric Balletbo Serra <eballetbo@gmail.com>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Adrian Pop <pop.adrian61@gmail.com>,
+        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
+        Sjoerd Simons <sjoerd.simons@collabora.com>,
+        Martyn Welch <martyn.welch@collabora.com>
+References: <20200427081952.3536741-1-adrian.ratiu@collabora.com>
+ <20200427081952.3536741-6-adrian.ratiu@collabora.com>
+Message-ID: <26ac2e23-f678-0c12-9a0d-d09fcb236e44@collabora.com>
+Date:   Mon, 27 Apr 2020 16:41:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200427081952.3536741-6-adrian.ratiu@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add RZ/G1H (R8A7742) Clock Pulse Generator / Module Standby and Software
-Reset support, using the CPG/MSSR driver core and the common R-Car Gen2
-(and RZ/G) code.
+Hi Adrian
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
----
-Changes for v2:
-* Dropped zt* clocks
-* lb clock is now a base clock
-* Fixed clock-sources for scif2/sdhi1/iic2
-* Dropped setting div to 3 for zg clock
+Thank you for your patch.
 
- drivers/clk/renesas/Kconfig            |   5 +
- drivers/clk/renesas/Makefile           |   1 +
- drivers/clk/renesas/r8a7742-cpg-mssr.c | 275 +++++++++++++++++++++++++
- drivers/clk/renesas/renesas-cpg-mssr.c |   6 +
- drivers/clk/renesas/renesas-cpg-mssr.h |   1 +
- 5 files changed, 288 insertions(+)
- create mode 100644 drivers/clk/renesas/r8a7742-cpg-mssr.c
+On 27/4/20 10:19, Adrian Ratiu wrote:
+> This adds support for the Synopsis DesignWare MIPI DSI v1.01 host
+> controller which is embedded in i.MX 6 SoCs.
+> 
+> Based on following patches, but updated/extended to work with existing
+> support found in the kernel:
+> 
+> - drm: imx: Support Synopsys DesignWare MIPI DSI host controller
+>   Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
+> 
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: Enric Balletbo Serra <eballetbo@gmail.com>
+> Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
+> Tested-by: Adrian Pop <pop.adrian61@gmail.com>
+> Tested-by: Arnaud Ferraris <arnaud.ferraris@collabora.com>
+> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.com>
+> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
+> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+> ---
+> Changes since v7:
+>   - Removed encoder helper ops and added drm_bridge (Laurent)
+>   - Brought back drm_simple_encoder_init and dropped dependency on
+>   external unify encoder creation patch (Laurent)
+>   - Minor typo fixes
+> 
+> Changes since v6:
+>   - Replaced custom noop encoder with the simple drm encoder (Enric)
+>   - Added CONFIG_DRM_IMX6_MIPI_DSI depends on CONFIG_OF (Enric)
+>   - Dropped imx_mipi_dsi_register() because now it only creates the
+>   dummy encoder which can easily be done directly in imx_dsi_bind()
+> 
+> Changes since v5:
+>   - Reword to remove unrelated device tree patch mention (Fabio)
+>   - Move pllref_clk enable/disable to bind/unbind (Ezequiel)
+>   - Fix freescale.com -> nxp.com email addresses (Fabio)
+>   - Also added myself as module author (Fabio)
+>   - Use DRM_DEV_* macros for consistency, print more error msg
+> 
+> Changes since v4:
+>   - Split off driver-specific configuration of phy timings due
+>   to new upstream API.
+>   - Move regmap infrastructure logic to separate commit (Ezequiel)
+>   - Move dsi v1.01 layout addition to a separate commit (Ezequiel)
+>   - Minor warnings and driver name fixes
+> 
+> Changes since v3:
+>   - Renamed platform driver to reflect it's i.MX6 only. (Fabio)
+> 
+> Changes since v2:
+>   - Fixed commit tags. (Emil)
+> 
+> Changes since v1:
+>   - Moved register definitions & regmap initialization into bridge
+>   module. Platform drivers get the regmap via plat_data after
+>   calling the bridge probe. (Emil)
+> ---
+>  drivers/gpu/drm/imx/Kconfig            |   8 +
+>  drivers/gpu/drm/imx/Makefile           |   1 +
+>  drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c | 399 +++++++++++++++++++++++++
+>  3 files changed, 408 insertions(+)
+>  create mode 100644 drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c
+> 
+> diff --git a/drivers/gpu/drm/imx/Kconfig b/drivers/gpu/drm/imx/Kconfig
+> index 207bf7409dfba..0dffc72df7922 100644
+> --- a/drivers/gpu/drm/imx/Kconfig
+> +++ b/drivers/gpu/drm/imx/Kconfig
+> @@ -39,3 +39,11 @@ config DRM_IMX_HDMI
+>  	depends on DRM_IMX
+>  	help
+>  	  Choose this if you want to use HDMI on i.MX6.
+> +
+> +config DRM_IMX6_MIPI_DSI
+> +	tristate "Freescale i.MX6 DRM MIPI DSI"
+> +	select DRM_DW_MIPI_DSI
+> +	depends on DRM_IMX
+> +	depends on OF
+> +	help
+> +	  Choose this if you want to use MIPI DSI on i.MX6.
+> diff --git a/drivers/gpu/drm/imx/Makefile b/drivers/gpu/drm/imx/Makefile
+> index 21cdcc2faabc8..9a7843c593478 100644
+> --- a/drivers/gpu/drm/imx/Makefile
+> +++ b/drivers/gpu/drm/imx/Makefile
+> @@ -9,3 +9,4 @@ obj-$(CONFIG_DRM_IMX_TVE) += imx-tve.o
+>  obj-$(CONFIG_DRM_IMX_LDB) += imx-ldb.o
+>  
+>  obj-$(CONFIG_DRM_IMX_HDMI) += dw_hdmi-imx.o
+> +obj-$(CONFIG_DRM_IMX6_MIPI_DSI) += dw_mipi_dsi-imx6.o
+> diff --git a/drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c b/drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c
+> new file mode 100644
+> index 0000000000000..492decc418bc3
+> --- /dev/null
+> +++ b/drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c
+> @@ -0,0 +1,399 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * i.MX6 drm driver - MIPI DSI Host Controller
+> + *
+> + * Copyright (C) 2011-2015 Freescale Semiconductor, Inc.
+> + * Copyright (C) 2019-2020 Collabora, Ltd.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/component.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/videodev2.h>
+> +#include <drm/bridge/dw_mipi_dsi.h>
+> +#include <drm/drm_atomic_state_helper.h>
+> +#include <drm/drm_crtc_helper.h>
+> +#include <drm/drm_mipi_dsi.h>
+> +#include <drm/drm_of.h>
+> +#include <drm/drm_print.h>
+> +#include <drm/drm_simple_kms_helper.h>
+> +
+> +#include "imx-drm.h"
+> +
+> +#define DSI_PWR_UP			0x04
+> +#define RESET				0
+> +#define POWERUP				BIT(0)
+> +
+> +#define DSI_PHY_IF_CTRL			0x5c
+> +#define PHY_IF_CTRL_RESET		0x0
+> +
+> +#define DSI_PHY_TST_CTRL0		0x64
+> +#define PHY_TESTCLK			BIT(1)
+> +#define PHY_UNTESTCLK			0
+> +#define PHY_TESTCLR			BIT(0)
+> +#define PHY_UNTESTCLR			0
+> +
+> +#define DSI_PHY_TST_CTRL1		0x68
+> +#define PHY_TESTEN			BIT(16)
+> +#define PHY_UNTESTEN			0
+> +#define PHY_TESTDOUT(n)			(((n) & 0xff) << 8)
+> +#define PHY_TESTDIN(n)			(((n) & 0xff) << 0)
+> +
+> +struct imx_mipi_dsi {
+> +	struct drm_encoder encoder;
+> +	struct drm_bridge bridge;
+> +	struct device *dev;
+> +	struct regmap *mux_sel;
+> +	struct dw_mipi_dsi *mipi_dsi;
+> +	struct clk *pllref_clk;
+> +
+> +	void __iomem *base;
+> +	unsigned int lane_mbps;
+> +};
+> +
+> +struct dphy_pll_testdin_map {
+> +	unsigned int max_mbps;
+> +	u8 testdin;
+> +};
+> +
+> +/* The table is based on 27MHz DPHY pll reference clock. */
+> +static const struct dphy_pll_testdin_map dptdin_map[] = {
+> +	{160, 0x04}, {180, 0x24}, {200, 0x44}, {210, 0x06},
+> +	{240, 0x26}, {250, 0x46}, {270, 0x08}, {300, 0x28},
+> +	{330, 0x48}, {360, 0x2a}, {400, 0x4a}, {450, 0x0c},
+> +	{500, 0x2c}, {550, 0x0e}, {600, 0x2e}, {650, 0x10},
+> +	{700, 0x30}, {750, 0x12}, {800, 0x32}, {850, 0x14},
+> +	{900, 0x34}, {950, 0x54}, {1000, 0x74}
+> +};
+> +
+> +static inline struct imx_mipi_dsi *bridge_to_imxdsi(struct drm_bridge *br)
+> +{
+> +	return container_of(br, struct imx_mipi_dsi, bridge);
+> +}
+> +
+> +static int
+> +imx_mipi_dsi_bridge_atomic_check(struct drm_bridge *bridge,
+> +				 struct drm_bridge_state *bridge_state,
+> +				 struct drm_crtc_state *crtc_state,
+> +				 struct drm_connector_state *conn_state)
+> +{
+> +	struct imx_crtc_state *imx_crtc_state = to_imx_crtc_state(crtc_state);
+> +
+> +	/* The following values are taken from dw_hdmi_imx_atomic_check */
+> +	imx_crtc_state->bus_format = MEDIA_BUS_FMT_RGB888_1X24;
+> +	imx_crtc_state->di_hsync_pin = 2;
+> +	imx_crtc_state->di_vsync_pin = 3;
+> +
+> +	return 0;
+> +}
+> +
+> +static void imx_mipi_dsi_bridge_atomic_enable(struct drm_bridge *bridge,
+> +					      struct drm_bridge_state *old_st)
+> +{
+> +	struct imx_mipi_dsi *dsi = bridge_to_imxdsi(bridge);
+> +	int mux = drm_of_encoder_active_port_id(dsi->dev->of_node,
+> +						&dsi->encoder);
+> +	/* Set IOMUX DSI output reg to correct IPU 1 or 0 and DI 1 or 0 ports */
+> +	regmap_update_bits(dsi->mux_sel, IOMUXC_GPR3,
+> +			   IMX6Q_GPR3_MIPI_MUX_CTL_MASK,
+> +			   mux << IMX6Q_GPR3_MIPI_MUX_CTL_SHIFT);
+> +}
+> +
+> +static const struct drm_bridge_funcs imx_dsi_bridge_funcs = {
+> +	.atomic_enable = imx_mipi_dsi_bridge_atomic_enable,
+> +	.atomic_check = imx_mipi_dsi_bridge_atomic_check,
+> +	.atomic_reset = drm_atomic_helper_bridge_reset,
+> +	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
+> +	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
+> +};
+> +
+> +static enum drm_mode_status imx_mipi_dsi_mode_valid(void *priv_data,
+> +					const struct drm_display_mode *mode)
+> +{
+> +	/*
+> +	 * The VID_PKT_SIZE field in the DSI_VID_PKT_CFG
+> +	 * register is 11-bit.
+> +	 */
+> +	if (mode->hdisplay > 0x7ff)
+> +		return MODE_BAD_HVALUE;
+> +
+> +	/*
+> +	 * The V_ACTIVE_LINES field in the DSI_VTIMING_CFG
+> +	 * register is 11-bit.
+> +	 */
+> +	if (mode->vdisplay > 0x7ff)
+> +		return MODE_BAD_VVALUE;
+> +
+> +	return MODE_OK;
+> +}
+> +
+> +
+> +static unsigned int max_mbps_to_testdin(unsigned int max_mbps)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(dptdin_map); i++)
+> +		if (dptdin_map[i].max_mbps == max_mbps)
+> +			return dptdin_map[i].testdin;
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static inline void dsi_write(struct imx_mipi_dsi *dsi, u32 reg, u32 val)
+> +{
+> +	writel(val, dsi->base + reg);
+> +}
+> +
+> +static int imx_mipi_dsi_phy_init(void *priv_data)
+> +{
+> +	struct imx_mipi_dsi *dsi = priv_data;
+> +	int testdin;
+> +
+> +	testdin = max_mbps_to_testdin(dsi->lane_mbps);
+> +	if (testdin < 0) {
+> +		DRM_DEV_ERROR(dsi->dev,
+> +			      "failed to get testdin for %dmbps lane clock\n",
+> +			      dsi->lane_mbps);
+> +		return testdin;
+> +	}
+> +
+> +	dsi_write(dsi, DSI_PHY_IF_CTRL, PHY_IF_CTRL_RESET);
+> +	dsi_write(dsi, DSI_PWR_UP, POWERUP);
+> +
+> +	dsi_write(dsi, DSI_PHY_TST_CTRL0, PHY_UNTESTCLK | PHY_UNTESTCLR);
+> +	dsi_write(dsi, DSI_PHY_TST_CTRL1, PHY_TESTEN | PHY_TESTDOUT(0) |
+> +		  PHY_TESTDIN(0x44));
+> +	dsi_write(dsi, DSI_PHY_TST_CTRL0, PHY_TESTCLK | PHY_UNTESTCLR);
+> +	dsi_write(dsi, DSI_PHY_TST_CTRL0, PHY_UNTESTCLK | PHY_UNTESTCLR);
+> +	dsi_write(dsi, DSI_PHY_TST_CTRL1, PHY_UNTESTEN | PHY_TESTDOUT(0) |
+> +		  PHY_TESTDIN(testdin));
+> +	dsi_write(dsi, DSI_PHY_TST_CTRL0, PHY_TESTCLK | PHY_UNTESTCLR);
+> +	dsi_write(dsi, DSI_PHY_TST_CTRL0, PHY_UNTESTCLK | PHY_UNTESTCLR);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx_mipi_dsi_get_lane_mbps(void *priv_data,
+> +				      const struct drm_display_mode *mode,
+> +				      unsigned long mode_flags, u32 lanes,
+> +				      u32 format, unsigned int *lane_mbps)
+> +{
+> +	struct imx_mipi_dsi *dsi = priv_data;
+> +	int bpp;
+> +	unsigned int i, target_mbps, mpclk;
+> +	unsigned long pllref;
+> +
+> +	bpp = mipi_dsi_pixel_format_to_bpp(format);
+> +	if (bpp < 0) {
+> +		DRM_DEV_ERROR(dsi->dev, "failed to get bpp for format %d: %d\n",
+> +			      format, bpp);
+> +		return bpp;
+> +	}
+> +
+> +	pllref = clk_get_rate(dsi->pllref_clk);
+> +	if (pllref != 27000000)
+> +		DRM_WARN("DSI pllref_clk not set to 27Mhz\n");
 
-diff --git a/drivers/clk/renesas/Kconfig b/drivers/clk/renesas/Kconfig
-index ac2dd92ce2ef..149787b0005d 100644
---- a/drivers/clk/renesas/Kconfig
-+++ b/drivers/clk/renesas/Kconfig
-@@ -8,6 +8,7 @@ config CLK_RENESAS
- 	select CLK_R7S9210 if ARCH_R7S9210
- 	select CLK_R8A73A4 if ARCH_R8A73A4
- 	select CLK_R8A7740 if ARCH_R8A7740
-+	select CLK_R8A7742 if ARCH_R8A7742
- 	select CLK_R8A7743 if ARCH_R8A7743 || ARCH_R8A7744
- 	select CLK_R8A7745 if ARCH_R8A7745
- 	select CLK_R8A77470 if ARCH_R8A77470
-@@ -55,6 +56,10 @@ config CLK_R8A7740
- 	select CLK_RENESAS_CPG_MSTP
- 	select CLK_RENESAS_DIV6
- 
-+config CLK_R8A7742
-+	bool "RZ/G1H clock support" if COMPILE_TEST
-+	select CLK_RCAR_GEN2_CPG
-+
- config CLK_R8A7743
- 	bool "RZ/G1M clock support" if COMPILE_TEST
- 	select CLK_RCAR_GEN2_CPG
-diff --git a/drivers/clk/renesas/Makefile b/drivers/clk/renesas/Makefile
-index 4a722bc5aac7..a4066f9b34ef 100644
---- a/drivers/clk/renesas/Makefile
-+++ b/drivers/clk/renesas/Makefile
-@@ -5,6 +5,7 @@ obj-$(CONFIG_CLK_RZA1)			+= clk-rz.o
- obj-$(CONFIG_CLK_R7S9210)		+= r7s9210-cpg-mssr.o
- obj-$(CONFIG_CLK_R8A73A4)		+= clk-r8a73a4.o
- obj-$(CONFIG_CLK_R8A7740)		+= clk-r8a7740.o
-+obj-$(CONFIG_CLK_R8A7742)		+= r8a7742-cpg-mssr.o
- obj-$(CONFIG_CLK_R8A7743)		+= r8a7743-cpg-mssr.o
- obj-$(CONFIG_CLK_R8A7745)		+= r8a7745-cpg-mssr.o
- obj-$(CONFIG_CLK_R8A77470)		+= r8a77470-cpg-mssr.o
-diff --git a/drivers/clk/renesas/r8a7742-cpg-mssr.c b/drivers/clk/renesas/r8a7742-cpg-mssr.c
-new file mode 100644
-index 000000000000..1deb68f30da0
---- /dev/null
-+++ b/drivers/clk/renesas/r8a7742-cpg-mssr.c
-@@ -0,0 +1,275 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * r8a7742 Clock Pulse Generator / Module Standby and Software Reset
-+ *
-+ * Copyright (C) 2020 Renesas Electronics Corp.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/soc/renesas/rcar-rst.h>
-+
-+#include <dt-bindings/clock/r8a7742-cpg-mssr.h>
-+
-+#include "renesas-cpg-mssr.h"
-+#include "rcar-gen2-cpg.h"
-+
-+enum clk_ids {
-+	/* Core Clock Outputs exported to DT */
-+	LAST_DT_CORE_CLK = R8A7742_CLK_OSC,
-+
-+	/* External Input Clocks */
-+	CLK_EXTAL,
-+	CLK_USB_EXTAL,
-+
-+	/* Internal Core Clocks */
-+	CLK_MAIN,
-+	CLK_PLL0,
-+	CLK_PLL1,
-+	CLK_PLL3,
-+	CLK_PLL1_DIV2,
-+
-+	/* Module Clocks */
-+	MOD_CLK_BASE
-+};
-+
-+static struct cpg_core_clk r8a7742_core_clks[] __initdata = {
-+	/* External Clock Inputs */
-+	DEF_INPUT("extal",	CLK_EXTAL),
-+	DEF_INPUT("usb_extal",	CLK_USB_EXTAL),
-+
-+	/* Internal Core Clocks */
-+	DEF_BASE(".main",	CLK_MAIN, CLK_TYPE_GEN2_MAIN, CLK_EXTAL),
-+	DEF_BASE(".pll0",	CLK_PLL0, CLK_TYPE_GEN2_PLL0, CLK_MAIN),
-+	DEF_BASE(".pll1",	CLK_PLL1, CLK_TYPE_GEN2_PLL1, CLK_MAIN),
-+	DEF_BASE(".pll3",	CLK_PLL3, CLK_TYPE_GEN2_PLL3, CLK_MAIN),
-+
-+	DEF_FIXED(".pll1_div2",	CLK_PLL1_DIV2, CLK_PLL1, 2, 1),
-+
-+	/* Core Clock Outputs */
-+	DEF_BASE("z",    R8A7742_CLK_Z,    CLK_TYPE_GEN2_Z,	CLK_PLL0),
-+	DEF_BASE("lb",   R8A7742_CLK_LB,   CLK_TYPE_GEN2_LB,	CLK_PLL1),
-+	DEF_BASE("sdh",  R8A7742_CLK_SDH,  CLK_TYPE_GEN2_SDH,	CLK_PLL1),
-+	DEF_BASE("sd0",  R8A7742_CLK_SD0,  CLK_TYPE_GEN2_SD0,	CLK_PLL1),
-+	DEF_BASE("sd1",  R8A7742_CLK_SD1,  CLK_TYPE_GEN2_SD1,	CLK_PLL1),
-+	DEF_BASE("qspi", R8A7742_CLK_QSPI, CLK_TYPE_GEN2_QSPI,	CLK_PLL1_DIV2),
-+	DEF_BASE("rcan", R8A7742_CLK_RCAN, CLK_TYPE_GEN2_RCAN,	CLK_USB_EXTAL),
-+
-+	DEF_FIXED("z2",    R8A7742_CLK_Z2,	CLK_PLL1,	    2, 1),
-+	DEF_FIXED("zg",    R8A7742_CLK_ZG,	CLK_PLL1,	    3, 1),
-+	DEF_FIXED("zx",    R8A7742_CLK_ZX,	CLK_PLL1,	    3, 1),
-+	DEF_FIXED("zs",    R8A7742_CLK_ZS,	CLK_PLL1,	    6, 1),
-+	DEF_FIXED("hp",    R8A7742_CLK_HP,	CLK_PLL1,	   12, 1),
-+	DEF_FIXED("b",     R8A7742_CLK_B,	CLK_PLL1,	   12, 1),
-+	DEF_FIXED("p",     R8A7742_CLK_P,	CLK_PLL1,	   24, 1),
-+	DEF_FIXED("cl",    R8A7742_CLK_CL,	CLK_PLL1,	   48, 1),
-+	DEF_FIXED("m2",    R8A7742_CLK_M2,	CLK_PLL1,	    8, 1),
-+	DEF_FIXED("zb3",   R8A7742_CLK_ZB3,	CLK_PLL3,	    4, 1),
-+	DEF_FIXED("zb3d2", R8A7742_CLK_ZB3D2,	CLK_PLL3,	    8, 1),
-+	DEF_FIXED("ddr",   R8A7742_CLK_DDR,	CLK_PLL3,	    8, 1),
-+	DEF_FIXED("mp",    R8A7742_CLK_MP,	CLK_PLL1_DIV2,	   15, 1),
-+	DEF_FIXED("cp",    R8A7742_CLK_CP,	CLK_EXTAL,	    2, 1),
-+	DEF_FIXED("r",     R8A7742_CLK_R,	CLK_PLL1,	49152, 1),
-+	DEF_FIXED("osc",   R8A7742_CLK_OSC,	CLK_PLL1,	12288, 1),
-+
-+	DEF_DIV6P1("sd2",  R8A7742_CLK_SD2,	CLK_PLL1_DIV2,	0x078),
-+	DEF_DIV6P1("sd3",  R8A7742_CLK_SD3,	CLK_PLL1_DIV2,	0x26c),
-+	DEF_DIV6P1("mmc0", R8A7742_CLK_MMC0,	CLK_PLL1_DIV2,	0x240),
-+	DEF_DIV6P1("mmc1", R8A7742_CLK_MMC1,	CLK_PLL1_DIV2,	0x244),
-+};
-+
-+static const struct mssr_mod_clk r8a7742_mod_clks[] __initconst = {
-+	DEF_MOD("msiof0",		   0,	R8A7742_CLK_MP),
-+	DEF_MOD("vcp1",			 100,	R8A7742_CLK_ZS),
-+	DEF_MOD("vcp0",			 101,	R8A7742_CLK_ZS),
-+	DEF_MOD("vpc1",			 102,	R8A7742_CLK_ZS),
-+	DEF_MOD("vpc0",			 103,	R8A7742_CLK_ZS),
-+	DEF_MOD("tmu1",			 111,	R8A7742_CLK_P),
-+	DEF_MOD("3dg",			 112,	R8A7742_CLK_ZG),
-+	DEF_MOD("2d-dmac",		 115,	R8A7742_CLK_ZS),
-+	DEF_MOD("fdp1-2",		 117,	R8A7742_CLK_ZS),
-+	DEF_MOD("fdp1-1",		 118,	R8A7742_CLK_ZS),
-+	DEF_MOD("fdp1-0",		 119,	R8A7742_CLK_ZS),
-+	DEF_MOD("tmu3",			 121,	R8A7742_CLK_P),
-+	DEF_MOD("tmu2",			 122,	R8A7742_CLK_P),
-+	DEF_MOD("cmt0",			 124,	R8A7742_CLK_R),
-+	DEF_MOD("tmu0",			 125,	R8A7742_CLK_CP),
-+	DEF_MOD("vsp1du1",		 127,	R8A7742_CLK_ZS),
-+	DEF_MOD("vsp1du0",		 128,	R8A7742_CLK_ZS),
-+	DEF_MOD("vsp1-sy",		 131,	R8A7742_CLK_ZS),
-+	DEF_MOD("scifa2",		 202,	R8A7742_CLK_MP),
-+	DEF_MOD("scifa1",		 203,	R8A7742_CLK_MP),
-+	DEF_MOD("scifa0",		 204,	R8A7742_CLK_MP),
-+	DEF_MOD("msiof2",		 205,	R8A7742_CLK_MP),
-+	DEF_MOD("scifb0",		 206,	R8A7742_CLK_MP),
-+	DEF_MOD("scifb1",		 207,	R8A7742_CLK_MP),
-+	DEF_MOD("msiof1",		 208,	R8A7742_CLK_MP),
-+	DEF_MOD("msiof3",		 215,	R8A7742_CLK_MP),
-+	DEF_MOD("scifb2",		 216,	R8A7742_CLK_MP),
-+	DEF_MOD("sys-dmac1",		 218,	R8A7742_CLK_ZS),
-+	DEF_MOD("sys-dmac0",		 219,	R8A7742_CLK_ZS),
-+	DEF_MOD("iic2",			 300,	R8A7742_CLK_HP),
-+	DEF_MOD("tpu0",			 304,	R8A7742_CLK_CP),
-+	DEF_MOD("mmcif1",		 305,	R8A7742_CLK_MMC1),
-+	DEF_MOD("scif2",		 310,	R8A7742_CLK_P),
-+	DEF_MOD("sdhi3",		 311,	R8A7742_CLK_SD3),
-+	DEF_MOD("sdhi2",		 312,	R8A7742_CLK_SD2),
-+	DEF_MOD("sdhi1",		 313,	R8A7742_CLK_SD1),
-+	DEF_MOD("sdhi0",		 314,	R8A7742_CLK_SD0),
-+	DEF_MOD("mmcif0",		 315,	R8A7742_CLK_MMC0),
-+	DEF_MOD("iic0",			 318,	R8A7742_CLK_HP),
-+	DEF_MOD("pciec",		 319,	R8A7742_CLK_MP),
-+	DEF_MOD("iic1",			 323,	R8A7742_CLK_HP),
-+	DEF_MOD("usb3.0",		 328,	R8A7742_CLK_MP),
-+	DEF_MOD("cmt1",			 329,	R8A7742_CLK_R),
-+	DEF_MOD("usbhs-dmac0",		 330,	R8A7742_CLK_HP),
-+	DEF_MOD("usbhs-dmac1",		 331,	R8A7742_CLK_HP),
-+	DEF_MOD("rwdt",			 402,	R8A7742_CLK_R),
-+	DEF_MOD("irqc",			 407,	R8A7742_CLK_CP),
-+	DEF_MOD("intc-sys",		 408,	R8A7742_CLK_ZS),
-+	DEF_MOD("audio-dmac1",		 501,	R8A7742_CLK_HP),
-+	DEF_MOD("audio-dmac0",		 502,	R8A7742_CLK_HP),
-+	DEF_MOD("thermal",		 522,	CLK_EXTAL),
-+	DEF_MOD("pwm",			 523,	R8A7742_CLK_P),
-+	DEF_MOD("usb-ehci",		 703,	R8A7742_CLK_MP),
-+	DEF_MOD("usbhs",		 704,	R8A7742_CLK_HP),
-+	DEF_MOD("hscif1",		 716,	R8A7742_CLK_ZS),
-+	DEF_MOD("hscif0",		 717,	R8A7742_CLK_ZS),
-+	DEF_MOD("scif1",		 720,	R8A7742_CLK_P),
-+	DEF_MOD("scif0",		 721,	R8A7742_CLK_P),
-+	DEF_MOD("du2",			 722,	R8A7742_CLK_ZX),
-+	DEF_MOD("du1",			 723,	R8A7742_CLK_ZX),
-+	DEF_MOD("du0",			 724,	R8A7742_CLK_ZX),
-+	DEF_MOD("lvds1",		 725,	R8A7742_CLK_ZX),
-+	DEF_MOD("lvds0",		 726,	R8A7742_CLK_ZX),
-+	DEF_MOD("r-gp2d",		 807,	R8A7742_CLK_ZX),
-+	DEF_MOD("vin3",			 808,	R8A7742_CLK_ZG),
-+	DEF_MOD("vin2",			 809,	R8A7742_CLK_ZG),
-+	DEF_MOD("vin1",			 810,	R8A7742_CLK_ZG),
-+	DEF_MOD("vin0",			 811,	R8A7742_CLK_ZG),
-+	DEF_MOD("etheravb",		 812,	R8A7742_CLK_HP),
-+	DEF_MOD("ether",		 813,	R8A7742_CLK_P),
-+	DEF_MOD("sata1",		 814,	R8A7742_CLK_ZS),
-+	DEF_MOD("sata0",		 815,	R8A7742_CLK_ZS),
-+	DEF_MOD("imr-x2-1",		 820,	R8A7742_CLK_ZG),
-+	DEF_MOD("imr-x2-0",		 821,	R8A7742_CLK_HP),
-+	DEF_MOD("imr-lsx2-1",		 822,	R8A7742_CLK_P),
-+	DEF_MOD("imr-lsx2-0",		 823,	R8A7742_CLK_ZS),
-+	DEF_MOD("gpio5",		 907,	R8A7742_CLK_CP),
-+	DEF_MOD("gpio4",		 908,	R8A7742_CLK_CP),
-+	DEF_MOD("gpio3",		 909,	R8A7742_CLK_CP),
-+	DEF_MOD("gpio2",		 910,	R8A7742_CLK_CP),
-+	DEF_MOD("gpio1",		 911,	R8A7742_CLK_CP),
-+	DEF_MOD("gpio0",		 912,	R8A7742_CLK_CP),
-+	DEF_MOD("can1",			 915,	R8A7742_CLK_P),
-+	DEF_MOD("can0",			 916,	R8A7742_CLK_P),
-+	DEF_MOD("qspi_mod",		 917,	R8A7742_CLK_QSPI),
-+	DEF_MOD("iicdvfs",		 926,	R8A7742_CLK_CP),
-+	DEF_MOD("i2c3",			 928,	R8A7742_CLK_HP),
-+	DEF_MOD("i2c2",			 929,	R8A7742_CLK_HP),
-+	DEF_MOD("i2c1",			 930,	R8A7742_CLK_HP),
-+	DEF_MOD("i2c0",			 931,	R8A7742_CLK_HP),
-+	DEF_MOD("ssi-all",		1005,	R8A7742_CLK_P),
-+	DEF_MOD("ssi9",			1006,	MOD_CLK_ID(1005)),
-+	DEF_MOD("ssi8",			1007,	MOD_CLK_ID(1005)),
-+	DEF_MOD("ssi7",			1008,	MOD_CLK_ID(1005)),
-+	DEF_MOD("ssi6",			1009,	MOD_CLK_ID(1005)),
-+	DEF_MOD("ssi5",			1010,	MOD_CLK_ID(1005)),
-+	DEF_MOD("ssi4",			1011,	MOD_CLK_ID(1005)),
-+	DEF_MOD("ssi3",			1012,	MOD_CLK_ID(1005)),
-+	DEF_MOD("ssi2",			1013,	MOD_CLK_ID(1005)),
-+	DEF_MOD("ssi1",			1014,	MOD_CLK_ID(1005)),
-+	DEF_MOD("ssi0",			1015,	MOD_CLK_ID(1005)),
-+	DEF_MOD("scu-all",		1017,	R8A7742_CLK_P),
-+	DEF_MOD("scu-dvc1",		1018,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-dvc0",		1019,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-ctu1-mix1",	1020,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-ctu0-mix0",	1021,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src9",		1022,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src8",		1023,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src7",		1024,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src6",		1025,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src5",		1026,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src4",		1027,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src3",		1028,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src2",		1029,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src1",		1030,	MOD_CLK_ID(1017)),
-+	DEF_MOD("scu-src0",		1031,	MOD_CLK_ID(1017)),
-+};
-+
-+static const unsigned int r8a7742_crit_mod_clks[] __initconst = {
-+	MOD_CLK_ID(402),	/* RWDT */
-+	MOD_CLK_ID(408),	/* INTC-SYS (GIC) */
-+};
-+
-+/*
-+ * CPG Clock Data
-+ */
-+
-+/*
-+ *    MD	EXTAL		PLL0	PLL1	PLL3
-+ * 14 13 19	(MHz)		*1	*1
-+ *---------------------------------------------------
-+ * 0  0  0	15		x172/2	x208/2	x106
-+ * 0  0  1	15		x172/2	x208/2	x88
-+ * 0  1  0	20		x130/2	x156/2	x80
-+ * 0  1  1	20		x130/2	x156/2	x66
-+ * 1  0  0	26 / 2		x200/2	x240/2	x122
-+ * 1  0  1	26 / 2		x200/2	x240/2	x102
-+ * 1  1  0	30 / 2		x172/2	x208/2	x106
-+ * 1  1  1	30 / 2		x172/2	x208/2	x88
-+ *
-+ * *1 :	Table 7.5a indicates VCO output (PLLx = VCO/2)
-+ */
-+#define CPG_PLL_CONFIG_INDEX(md)	((((md) & BIT(14)) >> 12) | \
-+					 (((md) & BIT(13)) >> 12) | \
-+					 (((md) & BIT(19)) >> 19))
-+
-+static const struct rcar_gen2_cpg_pll_config cpg_pll_configs[8] __initconst = {
-+	/* EXTAL div	PLL1 mult	PLL3 mult */
-+	{ 1,		208,		106,	},
-+	{ 1,		208,		88,	},
-+	{ 1,		156,		80,	},
-+	{ 1,		156,		66,	},
-+	{ 2,		240,		122,	},
-+	{ 2,		240,		102,	},
-+	{ 2,		208,		106,	},
-+	{ 2,		208,		88,	},
-+};
-+
-+static int __init r8a7742_cpg_mssr_init(struct device *dev)
-+{
-+	const struct rcar_gen2_cpg_pll_config *cpg_pll_config;
-+	u32 cpg_mode;
-+	int error;
-+
-+	error = rcar_rst_read_mode_pins(&cpg_mode);
-+	if (error)
-+		return error;
-+
-+	cpg_pll_config = &cpg_pll_configs[CPG_PLL_CONFIG_INDEX(cpg_mode)];
-+
-+	return rcar_gen2_cpg_init(cpg_pll_config, 2, cpg_mode);
-+}
-+
-+const struct cpg_mssr_info r8a7742_cpg_mssr_info __initconst = {
-+	/* Core Clocks */
-+	.core_clks = r8a7742_core_clks,
-+	.num_core_clks = ARRAY_SIZE(r8a7742_core_clks),
-+	.last_dt_core_clk = LAST_DT_CORE_CLK,
-+	.num_total_core_clks = MOD_CLK_BASE,
-+
-+	/* Module Clocks */
-+	.mod_clks = r8a7742_mod_clks,
-+	.num_mod_clks = ARRAY_SIZE(r8a7742_mod_clks),
-+	.num_hw_mod_clks = 12 * 32,
-+
-+	/* Critical Module Clocks */
-+	.crit_mod_clks = r8a7742_crit_mod_clks,
-+	.num_crit_mod_clks = ARRAY_SIZE(r8a7742_crit_mod_clks),
-+
-+	/* Callbacks */
-+	.init = r8a7742_cpg_mssr_init,
-+	.cpg_clk_register = rcar_gen2_cpg_clk_register,
-+};
-diff --git a/drivers/clk/renesas/renesas-cpg-mssr.c b/drivers/clk/renesas/renesas-cpg-mssr.c
-index a2663fbbd7a5..8f6dff362869 100644
---- a/drivers/clk/renesas/renesas-cpg-mssr.c
-+++ b/drivers/clk/renesas/renesas-cpg-mssr.c
-@@ -673,6 +673,12 @@ static const struct of_device_id cpg_mssr_match[] = {
- 		.data = &r7s9210_cpg_mssr_info,
- 	},
- #endif
-+#ifdef CONFIG_CLK_R8A7742
-+	{
-+		.compatible = "renesas,r8a7742-cpg-mssr",
-+		.data = &r8a7742_cpg_mssr_info,
-+	},
-+#endif
- #ifdef CONFIG_CLK_R8A7743
- 	{
- 		.compatible = "renesas,r8a7743-cpg-mssr",
-diff --git a/drivers/clk/renesas/renesas-cpg-mssr.h b/drivers/clk/renesas/renesas-cpg-mssr.h
-index 3b852ba0ecec..55a18ef0efaf 100644
---- a/drivers/clk/renesas/renesas-cpg-mssr.h
-+++ b/drivers/clk/renesas/renesas-cpg-mssr.h
-@@ -155,6 +155,7 @@ struct cpg_mssr_info {
- };
- 
- extern const struct cpg_mssr_info r7s9210_cpg_mssr_info;
-+extern const struct cpg_mssr_info r8a7742_cpg_mssr_info;
- extern const struct cpg_mssr_info r8a7743_cpg_mssr_info;
- extern const struct cpg_mssr_info r8a7745_cpg_mssr_info;
- extern const struct cpg_mssr_info r8a77470_cpg_mssr_info;
--- 
-2.17.1
+This pllref variable is only used to print this warning, what's the point of
+warn and ignore it? If pllref is not set at 27MHz what will happen?
 
+> +
+> +	mpclk = DIV_ROUND_UP(mode->clock, MSEC_PER_SEC);
+> +	if (mpclk) {
+> +		/* take 1/0.7 blanking overhead into consideration */
+> +		target_mbps = (mpclk * (bpp / lanes) * 10) / 7;
+> +	} else {
+> +		DRM_DEV_ERROR(dsi->dev, "use default 1Gbps DPHY pll clock\n");
+
+That's really an error? Looks to me that's just a fallback if mpclk is zero.
+Maybe set the level to INFO or even better DEBUG.
+
+> +		target_mbps = 1000;
+> +	}
+> +
+> +	DRM_DEV_DEBUG(dsi->dev, "target pllref_clk frequency is %uMbps\n",
+> +		      target_mbps);
+> +
+> +	for (i = 0; i < ARRAY_SIZE(dptdin_map); i++) {
+> +		if (target_mbps < dptdin_map[i].max_mbps) {
+> +			*lane_mbps = dptdin_map[i].max_mbps;
+> +			dsi->lane_mbps = *lane_mbps;
+> +			DRM_DEV_DEBUG(dsi->dev,
+> +				      "real pllref_clk frequency is %uMbps\n",
+> +				      *lane_mbps);
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	DRM_DEV_ERROR(dsi->dev, "DPHY clock frequency %uMbps is out of range\n",
+> +		      target_mbps);
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int
+> +dw_mipi_dsi_phy_get_timing(void *priv_data, unsigned int lane_mbps,
+> +			   struct dw_mipi_dsi_dphy_timing *timing)
+> +{
+> +	timing->clk_hs2lp = 0x40;
+> +	timing->clk_lp2hs = 0x40;
+> +	timing->data_hs2lp = 0x40;
+> +	timing->data_lp2hs = 0x40;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct dw_mipi_dsi_phy_ops dw_mipi_dsi_imx6_phy_ops = {
+> +	.init = imx_mipi_dsi_phy_init,
+> +	.get_lane_mbps = imx_mipi_dsi_get_lane_mbps,
+> +	.get_timing = dw_mipi_dsi_phy_get_timing,
+> +};
+> +
+> +static struct dw_mipi_dsi_plat_data imx6_mipi_dsi_drv_data = {
+> +	.max_data_lanes = 2,
+> +	.mode_valid = imx_mipi_dsi_mode_valid,
+> +	.phy_ops = &dw_mipi_dsi_imx6_phy_ops,
+> +};
+> +
+> +static const struct of_device_id imx_dsi_dt_ids[] = {
+> +	{
+> +		.compatible = "fsl,imx6-mipi-dsi",
+> +		.data = &imx6_mipi_dsi_drv_data,
+> +	},
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, imx_dsi_dt_ids);
+> +
+> +static int imx_mipi_dsi_bind(struct device *dev, struct device *master,
+> +			     void *data)
+> +{
+> +	struct imx_mipi_dsi *dsi = dev_get_drvdata(dev);
+> +	struct drm_device *drm = data;
+> +	int ret;
+> +
+> +	ret = clk_prepare_enable(dsi->pllref_clk);
+> +	if (ret) {
+> +		DRM_DEV_ERROR(dev, "Failed to enable pllref_clk: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = imx_drm_encoder_parse_of(drm, &dsi->encoder, dsi->dev->of_node);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = drm_simple_encoder_init(drm, &dsi->encoder, DRM_MODE_ENCODER_NONE);
+> +	if (ret) {
+> +		DRM_DEV_ERROR(dev, "failed to create drm encoder\n");
+> +		return ret;
+> +	}
+> +
+> +	drm_bridge_add(&dsi->bridge);
+
+You are adding the bridge in imx_mipi_dsi_bind() but removing in
+imx_mipi_dsi_remove(). Although in this case I don't think there is any bad
+effect, would be nice maintain the symetry, so I'd move the drm_bridge_add()
+call to the imx_mipi_dis_probe() function just before component_add().
+
+> +
+> +	drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL, 0);
+> +	if (ret < 0) {
+> +		DRM_DEV_ERROR(dev, "failed to attach IMX6 bridge: %d\n", ret);
+> +		return ret;
+
+If it fails you probably want to cleanup the encoder drm_cleanup_encoder()
+
+> +	}
+> +
+> +	ret = dw_mipi_dsi_bind(dsi->mipi_dsi, &dsi->encoder, &dsi->bridge);
+> +	if (ret) {
+> +		DRM_DEV_ERROR(dev, "Failed to bind: %d\n", ret);
+> +		return ret;
+
+The same here.
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void imx_mipi_dsi_unbind(struct device *dev, struct device *master,
+> +				void *data)
+> +{
+> +	struct imx_mipi_dsi *dsi = dev_get_drvdata(dev);
+> +
+> +	dw_mipi_dsi_unbind(dsi->mipi_dsi);
+> +
+
+drm_encoder_cleanup() ?
+
+> +	clk_disable_unprepare(dsi->pllref_clk);
+> +}
+> +
+> +static const struct component_ops imx_mipi_dsi_ops = {
+> +	.bind	= imx_mipi_dsi_bind,
+> +	.unbind	= imx_mipi_dsi_unbind,
+> +};
+> +
+> +static int imx_mipi_dsi_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	const struct of_device_id *of_id = of_match_device(imx_dsi_dt_ids, dev);
+> +	struct dw_mipi_dsi_plat_data *pdata = (struct dw_mipi_dsi_plat_data *) of_id->data;
+> +	struct imx_mipi_dsi *dsi;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	dsi = devm_kzalloc(dev, sizeof(*dsi), GFP_KERNEL);
+> +	if (!dsi)
+> +		return -ENOMEM;
+> +
+> +	dsi->dev = dev;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	dsi->base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(dsi->base)) {
+> +		ret = PTR_ERR(dsi->base);
+> +		DRM_DEV_ERROR(dev, "Unable to get dsi registers: %d\n", ret);
+> +		return ret;
+
+This print is redundant, devm_ioremap_resource will print an error already. This
+code can be simply
+		return PTR_ERR(res);
+
+> +	}
+> +
+> +	dsi->pllref_clk = devm_clk_get(dev, "ref");
+> +	if (IS_ERR(dsi->pllref_clk)) {
+> +		ret = PTR_ERR(dsi->pllref_clk);
+> +		DRM_DEV_ERROR(dev, "Unable to get pllref_clk: %d\n", ret);
+
+This print is redundant, devm_clk_get will print an error already. This code can
+be simply
+		return PTR_ERR(dsi->pllref_clk);
+
+> +		return ret;
+> +	}
+> +
+> +	dsi->mux_sel = syscon_regmap_lookup_by_phandle(dev->of_node, "fsl,gpr");
+> +	if (IS_ERR(dsi->mux_sel)) {
+> +		ret = PTR_ERR(dsi->mux_sel);
+> +		DRM_DEV_ERROR(dev, "Failed to get GPR regmap: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	dev_set_drvdata(dev, dsi);
+> +
+> +	imx6_mipi_dsi_drv_data.base = dsi->base;
+> +	imx6_mipi_dsi_drv_data.priv_data = dsi;
+> +
+> +	dsi->bridge.driver_private = dsi;
+> +	dsi->bridge.funcs = &imx_dsi_bridge_funcs;
+> +	dsi->bridge.of_node = dev->of_node;
+
+You probably want to set the bridge.type here too:
+
+        dsi->bridge.type = DRM_MODE_CONNECTOR_DSI;
+
+> +
+> +	dsi->mipi_dsi = dw_mipi_dsi_probe(pdev, pdata);
+> +	if (IS_ERR(dsi->mipi_dsi)) {
+> +		ret = PTR_ERR(dsi->mipi_dsi);
+> +		DRM_DEV_ERROR(dev, "Failed to probe DW DSI host: %d\n", ret);
+> +		goto err_clkdisable;
+> +	}
+> +
+> +	return component_add(&pdev->dev, &imx_mipi_dsi_ops);
+> +
+> +err_clkdisable:
+> +	clk_disable_unprepare(dsi->pllref_clk);
+> +	return ret;
+> +}
+> +
+> +static int imx_mipi_dsi_remove(struct platform_device *pdev)
+> +{
+> +	struct imx_mipi_dsi *dsi = platform_get_drvdata(pdev);
+> +	drm_bridge_remove(&dsi->bridge);
+> +	component_del(&pdev->dev, &imx_mipi_dsi_ops);
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver imx_mipi_dsi_driver = {
+> +	.probe		= imx_mipi_dsi_probe,
+> +	.remove		= imx_mipi_dsi_remove,
+> +	.driver		= {
+> +		.of_match_table = imx_dsi_dt_ids,
+> +		.name	= "dw-mipi-dsi-imx6",
+> +	},
+> +};
+> +module_platform_driver(imx_mipi_dsi_driver);
+> +
+> +MODULE_DESCRIPTION("i.MX6 MIPI DSI host controller driver");
+> +MODULE_AUTHOR("Liu Ying <victor.liu@nxp.com>");
+> +MODULE_AUTHOR("Adrian Ratiu <adrian.ratiu@collabora.com>");
+> +MODULE_LICENSE("GPL");
+> 
