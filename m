@@ -2,261 +2,272 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5A1C5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E48C55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C033E206BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9011B20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:07:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="JhSWBnL2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b/LBja5R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbgD0KFI (ORCPT
+        id S1726948AbgD0KHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 06:05:08 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:18112 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726243AbgD0KFH (ORCPT
+        Mon, 27 Apr 2020 06:07:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49628 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726537AbgD0KG7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 06:05:07 -0400
-Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03R9uM2K013974;
-        Mon, 27 Apr 2020 06:04:45 -0400
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2168.outbound.protection.outlook.com [104.47.58.168])
-        by mx0b-00128a01.pphosted.com with ESMTP id 30nf4rk3pp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Apr 2020 06:04:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cF6EbndA6AKBvltoDFBHymnIgxET+EMMGpT62ZEh6k9yTNx6GuCna2CYgomgn/DuiDcdISnHOGXYicrKtMOLGC/SmjIIt1hEsgZB/SXXcpJjgrjPVN2xKJc2/i0zw38Qp9iXefKQ4MjFl+XhHTs5YEm3Zcx4JBAYr6Y1rqI/2n8mcYV/K/OM6/OOj84fUYd0JnG9T0Ehb/6aNqIf/lfu90mKbwVvPIRbEREUFbjYm2n7kke9GjEFg3emnjdn6/g5g2p/BEqkwAKQJ2sJWmpbaTiczh697BEvv1N15ua6en0T5k3AOD8BhJZzNLz16tbHmxwscXOgL716ep7CkFbuNw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CK47PrN178OM2oocKVYf1CK4fQydxKA13qmeO9Pob4o=;
- b=kHs4tomrWCZEoX0QBSIsr46qjDS/XkWgiVEHgysyCVrPgSLW0X8oDkJyCQiBbCqzgKw08sTpycONcE+ZH8PSVgRT1ynOz/U03S42Wexb5Uvzm+36nhi02qAkb9IvZVtKUA4mQuPTUDQVXwTab2wLevXaLxIt5u/A0peozmDX/Jwi/aTLmXu7G2DBJObkozaWoPgpWyFysi/ViGWXkHpORb0yKclZ+/duZNbGXpt/l0cDNelIsBPDNF+RXF7vdn3l3lfBJAw+wmYoZcLJEFqwEBoZc8FCQKXSfGXJi0UWmnkY/G7oyauzFDg9NXy2ewsfuXimkuOCeV/4BaJREPULiA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
+        Mon, 27 Apr 2020 06:06:59 -0400
+Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19211C0610D5;
+        Mon, 27 Apr 2020 03:06:59 -0700 (PDT)
+Received: by mail-oo1-xc44.google.com with SMTP id t12so3734342oot.2;
+        Mon, 27 Apr 2020 03:06:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CK47PrN178OM2oocKVYf1CK4fQydxKA13qmeO9Pob4o=;
- b=JhSWBnL2evXYBfOOIIzi8CtoMNYAWIXI4wBXAvN2ev7uNAcP8If/hLbjvQT9hKHSDTueKqeWKbnqL1sgceQT9bHesAyyKuchMSb7flUPobuRpiU7aApWaX0BABNGcU6094TBHlr+Ec0VN8wKN1Ap6MpVav0VtLJ2q50v03EOCB8=
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
- by DM6PR03MB5163.namprd03.prod.outlook.com (2603:10b6:5:22b::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Mon, 27 Apr
- 2020 10:04:43 +0000
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::c47f:ceee:cfda:6a7f]) by DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::c47f:ceee:cfda:6a7f%3]) with mapi id 15.20.2937.023; Mon, 27 Apr 2020
- 10:04:43 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "jic23@kernel.org" <jic23@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "lars@metafoo.de" <lars@metafoo.de>
-Subject: Re: [PATCH v5 5/6] iio: core: add simple centralized mechanism for
- ioctl() handlers
-Thread-Topic: [PATCH v5 5/6] iio: core: add simple centralized mechanism for
- ioctl() handlers
-Thread-Index: AQHWG52eqbf2uFgPVkWtC16dM7DzaqiLLqGAgAADKoCAAVVYAIAAOCsA
-Date:   Mon, 27 Apr 2020 10:04:43 +0000
-Message-ID: <e08fb14bec5faf5f092fdf6d89020a416311080d.camel@analog.com>
-References: <20200426073817.33307-1-alexandru.ardelean@analog.com>
-         <20200426073817.33307-6-alexandru.ardelean@analog.com>
-         <20200426111037.076b984d@archlinux> <20200426112157.51b16616@archlinux>
-         <db28898f5a2a92a24cc549fe5a2064ad83efa2bc.camel@analog.com>
-In-Reply-To: <db28898f5a2a92a24cc549fe5a2064ad83efa2bc.camel@analog.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [188.27.130.47]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 656b6fbf-d57b-4e9c-2af4-08d7ea926863
-x-ms-traffictypediagnostic: DM6PR03MB5163:
-x-microsoft-antispam-prvs: <DM6PR03MB51633293EECD2CFF8BFE8CB9F9AF0@DM6PR03MB5163.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0386B406AA
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4411.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(396003)(366004)(346002)(136003)(39860400002)(71200400001)(2616005)(478600001)(6486002)(2906002)(6512007)(6506007)(26005)(36756003)(316002)(76116006)(81156014)(8936002)(54906003)(6916009)(186003)(91956017)(86362001)(66476007)(4326008)(66446008)(8676002)(64756008)(66556008)(5660300002)(66946007);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: TFmlxgRgWu4bT16MJtICgoL75qMsmh1wEr4DCPZtUGC2zeOaNtc3Uhyihwx8j0crulSYgvznsvhyMG83gnAtMhHob+U1DCJe17Z+ba5LC25G6+cHukkL2xoqEUepP/+VFMezsBkP6nqmsJsNPdKKeFIwaMNo8qwrct3nedwM3vaIJ+ryhUqHRRl3Ovt6YJzPQilsETNnhFEmWSGkxL7bbsb9MtOSu/ExGyvJPqtzLf4T9SeaV80DwFVJf0SAbkRq0wFLueDjyn5sldfttDIdXGOzci+bKuo7LoS9V5Qjc46zP+2yP0Gwf/8PpLnAYjWpDPB+tDBVWyo4biS/X7r4mS9Nsg6VWFogrn0Qp3AGXybHlMJUhO9kndwtP9GvYvWZvFEsO0U/yV4wGZ55EvQyPvN+VN8eYdap7FiWu8baUim7uyrtslRLPYuYxBPqQaF4
-x-ms-exchange-antispam-messagedata: 63KJ1lU0BXH1yJcyKCFXr7JybK6a6lLnQHNBH2HACd68vUPySi88bT0LCVe3RfszA8q8HcpkLkc/1B9jiiuPxMh6IktVOYH07nJ0mltzYCUBJ4NWjbcDT/eX9zX96oior8u3DsONCtH03RsFPQodLicbYUx6XLmTlXIuGieBIRGiACRtt7VB1hzihr2wTp+bwXKYb6Dbzni5fGj+sO4u6chBBJk5ZLW6qBTrdUPsGApPEoobViZG+tR4VGXj5ReNPlfeUZRUNT7LZeBw8FiEfXtavPSahxjauT+orD1I8a4lGcXSKyB91i0Nd7arx93Cw7MobL8DmcmtJaXPwTztzxrPqJGsb272SpPKPCiTbvbCgoSdxpov5ow9tK7YYMhaS0HSU9RJdUKSSOfQUR/eRMBunNEC75bsE3C2bpxVm6ZNXAC67lS/MZSpBfOyfH0Xh+E8ka0aBQIjntnDADaJsCwMtFj/yV7hN0Cu+Eb+wWNJopPWJelZDU9H41yHKwFaiip1wUT4W9th4XaOjhu3d2fSstWv4LujTCapmHJWaZETrxkAY9mylg0qqkqu6Qh5ZfRvfqfzl8fKMs86GRy3qQO2nn5HUkU2VVjH9C0IIFBi2inv51VbjUjLOPxYKAfrirTp2L/a0C3N8Dzm4lOaFUbb1w1IfxMXxR5Ce+UTMIiZ863GvZHL6VNFoN2j77fhDfjU7f4Rl5eu5G080Z3cV4UNoA3NO4d+t1P1IkdTO6S7AoERHO+DEq3odH8GkRERKtwLMtlOwcXjhC0LRpDYJzTXc6NFYl07WSfYy+TNuJ8=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BF7BD21DFD2D254F9C659845333186F2@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/8wc6353cJmYKvU50uq408861CgNfA6IaFlnENCpkL0=;
+        b=b/LBja5R+Js2ibhV1vt/BBCY0a1gVh5uvDLI6vqDFg178D0bGCLIzX6M4Jva9vGlmz
+         2ZxqW/hjYt/ArKgZ6QrnlbAD/gHmh0EAIz0sAOBkOdE2sdCxtLxXVguliGBpAKcQ6zJX
+         xB87mmezZ2d3irdgHndfALAkL2eI7r/biuzKxXcRxaHDk2f1+blcwgZmIMmmCpZaRI1d
+         uT/OPkWKrTnB+HF5jHKfsbjE/EXWVNzWYSMfRHc1ZTxTFvYCX5vL1pdCgipMyq4AiYo/
+         8Rc1hEes/AG9M1lA58MsnUP/UsPPx3lWn34yxHgs2vjQAoM+Z6mu0Jz1TuV2676izpVK
+         ZhIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/8wc6353cJmYKvU50uq408861CgNfA6IaFlnENCpkL0=;
+        b=Uem34jetvH0cECv/wWHSkeZIa7mqZWbK1w3f9U/ei503Tq3P7f93e6guk3NGwVhHKm
+         nJcwEV30LRVq8pLyKieme0hMKl93PApCXHzqX3sJk1EoQvuQ0D1IESMhfyqmzA5oxiCO
+         +tPLfwvkjVX9Nz11/BVCNSCRlLV3AO5Q0Che1Ys+UwaROotAyTkxQiPYk5wAM+HWqHPE
+         znKH2usxktVjYqd40a7QtO+xdMz5/ShmUEG1g3ombhSqiLRpqWCTzSXpgytucq9i5H7M
+         gCWj6O68vjUEFTzWsY1mRN7pWcyuPnLNdhXo9GTmNb4QoDHB0zAMCkFTGhxfUEljmn+3
+         /5rw==
+X-Gm-Message-State: AGi0PubIHmTGxSgzlC/BGgFCyJSVYryDaUxDk09kAKRAkdqtLHRcSeh0
+        3Mjh5g8VLqFezX8+9qFMBNP2LUE7X48YoL1SIiM=
+X-Google-Smtp-Source: APiQypKktIMudH7fSwzJHH4PK42Yws0No8wvziqeVIcvs6xME2/auUqYKo856hQGWP78owicWLpqYBNQ12uq6QHl5LQ=
+X-Received: by 2002:a4a:355c:: with SMTP id w28mr18169766oog.18.1587982018338;
+ Mon, 27 Apr 2020 03:06:58 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 656b6fbf-d57b-4e9c-2af4-08d7ea926863
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Apr 2020 10:04:43.2359
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: On3cKPTm38D+LSs8D4Pha9FfXyKbFV13ASDOmThlUYgyAF/L5j9G3/B7hZXnx7nLFsgtslmLv782/RE1pvnreQTkFoWdCxEXnzgkQG2FiU0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB5163
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-27_05:2020-04-24,2020-04-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- malwarescore=0 adultscore=0 impostorscore=0 bulkscore=0 phishscore=0
- suspectscore=0 priorityscore=1501 clxscore=1015 mlxlogscore=999
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004270090
+References: <1587678050-23468-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1587678050-23468-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdUmj+m8WLaSfwELD0VGYFpDaACTLgerbznBeqfVVy2nzw@mail.gmail.com>
+In-Reply-To: <CAMuHMdUmj+m8WLaSfwELD0VGYFpDaACTLgerbznBeqfVVy2nzw@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Mon, 27 Apr 2020 11:06:31 +0100
+Message-ID: <CA+V-a8s6RacEpZ+Z5M8ftKq9NGsVgizdBY137YiYuK_yg-Ozxg@mail.gmail.com>
+Subject: Re: [PATCH 08/10] clk: renesas: cpg-mssr: Add R8A7742 support
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Marian-Cristian Rotariu 
+        <marian-cristian.rotariu.rb@bp.renesas.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA0LTI3IGF0IDA2OjQzICswMDAwLCBBcmRlbGVhbiwgQWxleGFuZHJ1IHdy
-b3RlOg0KPiBbRXh0ZXJuYWxdDQo+IA0KPiBPbiBTdW4sIDIwMjAtMDQtMjYgYXQgMTE6MjEgKzAx
-MDAsIEpvbmF0aGFuIENhbWVyb24gd3JvdGU6DQo+ID4gW0V4dGVybmFsXQ0KPiA+IA0KPiA+IE9u
-IFN1biwgMjYgQXByIDIwMjAgMTE6MTA6MzcgKzAxMDANCj4gPiBKb25hdGhhbiBDYW1lcm9uIDxq
-aWMyM0BrZXJuZWwub3JnPiB3cm90ZToNCj4gPiANCj4gPiA+IE9uIFN1biwgMjYgQXByIDIwMjAg
-MTA6Mzg6MTYgKzAzMDANCj4gPiA+IEFsZXhhbmRydSBBcmRlbGVhbiA8YWxleGFuZHJ1LmFyZGVs
-ZWFuQGFuYWxvZy5jb20+IHdyb3RlOg0KPiA+ID4gDQo+ID4gPiA+IFRoZSBhaW0gb2YgdGhpcyBp
-cyB0byByZWR1Y2UgdGhlIG9yZ2FuaXphdGlvbiB2aW9sYXRpb24gb2YgaW9jdGwoKSBjYWxscw0K
-PiA+ID4gPiBpbg0KPiA+ID4gPiBJSU8gY29yZS4gQ3VycmVudGx5LCBzaW5jZSB0aGUgY2hhcmRl
-diBpcyBzcGxpdCBhY3Jvc3MgZmlsZXMsIGV2ZW50DQo+ID4gPiA+IGlvY3RsKCkNCj4gPiA+ID4g
-Y2FsbHMgbmVlZCB0byBiZSBjYWxsZWQgaW4gYnVmZmVyIGlvY3RsKCkgY2FsbHMuDQo+ID4gPiA+
-IA0KPiA+ID4gPiBUaGUgJ2luZHVzdHJpYWxpby1jb3JlLmMnIGZpbGUgd2lsbCBwcm92aWRlIGEg
-J2lpb19kZXZpY2VfaW9jdGwoKScgd2hpY2gNCj4gPiA+ID4gd2lsbCBpdGVyYXRlIG92ZXIgYSBs
-aXN0IG9mIGlvY3RscyByZWdpc3RlcmVkIHdpdGggdGhlIElJTyBkZXZpY2UuIFRoZXNlDQo+ID4g
-PiA+IGNhbiBiZSBldmVudCBpb2N0bCgpIG9yIGJ1ZmZlciBpb2N0bCgpIGNhbGxzLCBvciBzb21l
-dGhpbmcgZWxzZS4NCj4gPiA+ID4gVGhpcyBpcyBuZWVkZWQsIHNpbmNlIHRoZXJlIGlzIGN1cnJl
-bnRseSBvbmUgY2hhcmRldiBwZXIgSUlPIGRldmljZSBhbmQNCj4gPiA+ID4gdGhhdCBpcyB1c2Vk
-IGZvciBib3RoIGV2ZW50IGhhbmRsaW5nIGFuZCByZWFkaW5nIGZyb20gdGhlIGJ1ZmZlci4NCj4g
-PiA+ID4gDQo+ID4gPiA+IEVhY2ggaW9jdGwoKSB3aWxsIGhhdmUgdG8gcmV0dXJuIGEgSUlPX0lP
-Q1RMX1VOSEFORExFRCBjb2RlICh3aGljaCBpcw0KPiA+ID4gPiBwb3NpdGl2ZSAxKSwgaWYgdGhl
-IGlvY3RsKCkgZGlkIG5vdCBoYW5kbGUgdGhlIGNhbGwgaW4gYW55LiBUaGlzDQo+ID4gPiA+IGVs
-aW1pbmF0ZXMNCj4gPiA+ID4gYW55IHBvdGVudGlhbCBhbWJpZ3VpdGllczsgaWYgd2Ugd2VyZSB0
-byBoYXZlIHVzZWQgZXJyb3IgY29kZXMgaXQgd291bGQNCj4gPiA+ID4gaGF2ZSBiZWVuIHVuY2Vy
-dGFpbiB3aGV0aGVyIHRoZXkgd2VyZSBhY3R1YWwgZXJyb3JzLCBvciB3aGV0aGVyDQo+ID4gPiA+
-IHRoZSByZWdpc3RlcmVkIGlvY3RsKCkgZG9lc24ndCBzZXJ2aWNlIHRoZSBjb21tYW5kLg0KPiA+
-ID4gPiANCj4gPiA+ID4gSWYgYW55IGlvY3RsKCkgcmV0dXJucyAwLCBpdCB3YXMgY29uc2lkZXJl
-ZCB0aGF0IGl0IHdhcyBzZXJ2aWNlZA0KPiA+ID4gPiBzdWNjZXNzZnVsbHkgYW5kIHRoZSBsb29w
-IHdpbGwgZXhpdC4NCj4gPiA+ID4gDQo+ID4gPiA+IE9uZSBhc3N1bXB0aW9uIGZvciBhbGwgcmVn
-aXN0ZXJlZCBpb2N0bCgpIGhhbmRsZXJzIGlzIHRoYXQgdGhleSBhcmUNCj4gPiA+ID4gc3RhdGlj
-YWxseSBhbGxvY2F0ZWQsIHNvIHRoZSBpaW9fZGV2aWNlX3VucmVnaXN0ZXIoKSB3aGljaCBqdXN0
-IHJlbW92ZQ0KPiA+ID4gPiBhbGwNCj4gPiA+ID4gb2YgdGhlbSBmcm9tIHRoZSBkZXZpY2UncyBp
-b2N0bCgpIGhhbmRsZXIgbGlzdC4NCj4gPiA+ID4gDQo+ID4gPiA+IEFsc28sIHNvbWV0aGluZyB0
-aGF0IGlzIGEgYml0IGhhcmQgdG8gZG8gW2F0IHRoaXMgcG9pbnRdIGFuZCBtYXkgbm90IGJlDQo+
-ID4gPiA+IHdvcnRoIHRoZSBlZmZvcnQgb2YgZG9pbmcsIGlzIHRvIGNoZWNrIHdoZXRoZXIgcmVn
-aXN0ZXJlZCBpb2N0bCgpDQo+ID4gPiA+IGNhbGxzL2NvbW1hbmRzIG92ZXJsYXAuIFRoaXMgc2hv
-dWxkIGJlIHVubGlrZWx5IHRvIGhhcHBlbiwgYW5kIHNob3VsZA0KPiA+ID4gPiBnZXQNCj4gPiA+
-ID4gY2F1Z2h0IGF0IHJldmlldyB0aW1lLiBUaG91Z2gsIG5ldyBpb2N0bCgpIGNhbGxzIHdvdWxk
-IGxpa2VseSBub3QgYmUNCj4gPiA+ID4gYWRkZWQNCj4gPiA+ID4gdG9vIG9mdGVuLg0KPiA+ID4g
-PiANCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogQWxleGFuZHJ1IEFyZGVsZWFuIDxhbGV4YW5kcnUu
-YXJkZWxlYW5AYW5hbG9nLmNvbT4gIA0KPiA+ID4gDQo+ID4gPiBBIHF1ZXN0aW9uIG9uIGxvY2tp
-bmcgaW5saW5lLiBPdGhlcndpc2UgdGhpcyBsb29rcyBmYWlybHkgY2xlYW4gYW5kIHNpbXBsZQ0K
-PiA+ID4gdG8gbWUuDQo+ID4gPiANCj4gPiA+IEpvbmF0aGFuDQo+ID4gPiANCj4gPiA+IA0KPiA+
-ID4gPiAtLS0NCj4gPiA+ID4gIGRyaXZlcnMvaWlvL2lpb19jb3JlLmggICAgICAgICAgfCAxNCAr
-KysrKysrKysrKysrKw0KPiA+ID4gPiAgZHJpdmVycy9paW8vaW5kdXN0cmlhbGlvLWNvcmUuYyB8
-IDMzICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ID4gPiAgaW5jbHVkZS9s
-aW51eC9paW8vaWlvLmggICAgICAgICB8ICAyICsrDQo+ID4gPiA+ICAzIGZpbGVzIGNoYW5nZWQs
-IDQ5IGluc2VydGlvbnMoKykNCj4gPiA+ID4gDQo+ID4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L2lpby9paW9fY29yZS5oIGIvZHJpdmVycy9paW8vaWlvX2NvcmUuaA0KPiA+ID4gPiBpbmRleCBh
-NTI3YTY2YmU5ZTUuLjM0YzNlMTkyMjlkOCAxMDA2NDQNCj4gPiA+ID4gLS0tIGEvZHJpdmVycy9p
-aW8vaWlvX2NvcmUuaA0KPiA+ID4gPiArKysgYi9kcml2ZXJzL2lpby9paW9fY29yZS5oDQo+ID4g
-PiA+IEBAIC0xNyw2ICsxNywyMCBAQCBzdHJ1Y3QgaWlvX2RldjsNCj4gPiA+ID4gIA0KPiA+ID4g
-PiAgZXh0ZXJuIHN0cnVjdCBkZXZpY2VfdHlwZSBpaW9fZGV2aWNlX3R5cGU7DQo+ID4gPiA+ICAN
-Cj4gPiA+ID4gKyNkZWZpbmUgSUlPX0lPQ1RMX1VOSEFORExFRAkxDQo+ID4gPiA+ICtzdHJ1Y3Qg
-aWlvX2lvY3RsX2hhbmRsZXIgew0KPiA+ID4gPiArCXN0cnVjdCBsaXN0X2hlYWQgZW50cnk7DQo+
-ID4gPiA+ICsJbG9uZyAoKmlvY3RsKShzdHJ1Y3QgaWlvX2RldiAqaW5kaW9fZGV2LCBzdHJ1Y3Qg
-ZmlsZSAqZmlscCwNCj4gPiA+ID4gKwkJICAgICAgdW5zaWduZWQgaW50IGNtZCwgdW5zaWduZWQg
-bG9uZyBhcmcpOw0KPiA+ID4gPiArfTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArbG9uZyBpaW9fZGV2
-aWNlX2lvY3RsKHN0cnVjdCBpaW9fZGV2ICppbmRpb19kZXYsIHN0cnVjdCBmaWxlICpmaWxwLA0K
-PiA+ID4gPiArCQkgICAgICB1bnNpZ25lZCBpbnQgY21kLCB1bnNpZ25lZCBsb25nIGFyZyk7DQo+
-ID4gPiA+ICsNCj4gPiA+ID4gK3ZvaWQgaWlvX2RldmljZV9pb2N0bF9oYW5kbGVyX3JlZ2lzdGVy
-KHN0cnVjdCBpaW9fZGV2ICppbmRpb19kZXYsDQo+ID4gPiA+ICsJCQkJICAgICAgIHN0cnVjdCBp
-aW9faW9jdGxfaGFuZGxlciAqaCk7DQo+ID4gPiA+ICt2b2lkIGlpb19kZXZpY2VfaW9jdGxfaGFu
-ZGxlcl91bnJlZ2lzdGVyKHN0cnVjdCBpaW9faW9jdGxfaGFuZGxlciAqaCk7DQo+ID4gPiA+ICsN
-Cj4gPiA+ID4gIGludCBfX2lpb19hZGRfY2hhbl9kZXZhdHRyKGNvbnN0IGNoYXIgKnBvc3RmaXgs
-DQo+ID4gPiA+ICAJCQkgICBzdHJ1Y3QgaWlvX2NoYW5fc3BlYyBjb25zdCAqY2hhbiwNCj4gPiA+
-ID4gIAkJCSAgIHNzaXplX3QgKCpmdW5jKShzdHJ1Y3QgZGV2aWNlICpkZXYsDQo+ID4gPiA+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL2lpby9pbmR1c3RyaWFsaW8tY29yZS5jIGIvZHJpdmVycy9paW8v
-aW5kdXN0cmlhbGlvLQ0KPiA+ID4gPiBjb3JlLmMNCj4gPiA+ID4gaW5kZXggYWVjNTg1Y2M4NDUz
-Li43OWU4ZmE4ZmY3MGIgMTAwNjQ0DQo+ID4gPiA+IC0tLSBhL2RyaXZlcnMvaWlvL2luZHVzdHJp
-YWxpby1jb3JlLmMNCj4gPiA+ID4gKysrIGIvZHJpdmVycy9paW8vaW5kdXN0cmlhbGlvLWNvcmUu
-Yw0KPiA+ID4gPiBAQCAtMTUzMSw2ICsxNTMxLDcgQEAgc3RydWN0IGlpb19kZXYgKmlpb19kZXZp
-Y2VfYWxsb2MoaW50IHNpemVvZl9wcml2KQ0KPiA+ID4gPiAgCX0NCj4gPiA+ID4gIAlkZXZfc2V0
-X25hbWUoJmRldi0+ZGV2LCAiaWlvOmRldmljZSVkIiwgZGV2LT5pZCk7DQo+ID4gPiA+ICAJSU5J
-VF9MSVNUX0hFQUQoJmRldi0+YnVmZmVyX2xpc3QpOw0KPiA+ID4gPiArCUlOSVRfTElTVF9IRUFE
-KCZkZXYtPmlvY3RsX2hhbmRsZXJzKTsNCj4gPiA+ID4gIA0KPiA+ID4gPiAgCXJldHVybiBkZXY7
-DQo+ID4gPiA+ICB9DQo+ID4gPiA+IEBAIC0xNTg0LDYgKzE1ODUsMzMgQEAgc3RydWN0IGlpb19k
-ZXYgKmRldm1faWlvX2RldmljZV9hbGxvYyhzdHJ1Y3QNCj4gPiA+ID4gZGV2aWNlDQo+ID4gPiA+
-ICpkZXYsIGludCBzaXplb2ZfcHJpdikNCj4gPiA+ID4gIH0NCj4gPiA+ID4gIEVYUE9SVF9TWU1C
-T0xfR1BMKGRldm1faWlvX2RldmljZV9hbGxvYyk7DQo+ID4gPiA+ICANCj4gPiA+ID4gK3ZvaWQg
-aWlvX2RldmljZV9pb2N0bF9oYW5kbGVyX3JlZ2lzdGVyKHN0cnVjdCBpaW9fZGV2ICppbmRpb19k
-ZXYsDQo+ID4gPiA+ICsJCQkJICAgICAgIHN0cnVjdCBpaW9faW9jdGxfaGFuZGxlciAqaCkNCj4g
-PiA+ID4gK3sNCj4gPiA+ID4gKwkvKiB0aGlzIGFzc3VtZXMgdGhhdCBhbGwgaW9jdGwoKSBoYW5k
-bGVycyBhcmUgc3RhdGljYWxseQ0KPiA+ID4gPiBhbGxvY2F0ZWQgKi8NCj4gPiA+ID4gKwlsaXN0
-X2FkZF90YWlsKCZoLT5lbnRyeSwgJmluZGlvX2Rldi0+aW9jdGxfaGFuZGxlcnMpOw0KPiA+ID4g
-PiArfQ0KPiA+ID4gPiArDQo+ID4gPiA+ICtsb25nIGlpb19kZXZpY2VfaW9jdGwoc3RydWN0IGlp
-b19kZXYgKmluZGlvX2Rldiwgc3RydWN0IGZpbGUgKmZpbHAsDQo+ID4gPiA+ICsJCSAgICAgIHVu
-c2lnbmVkIGludCBjbWQsIHVuc2lnbmVkIGxvbmcgYXJnKQ0KPiA+ID4gPiArew0KPiA+ID4gPiAr
-CXN0cnVjdCBpaW9faW9jdGxfaGFuZGxlciAqaDsNCj4gPiA+ID4gKwlpbnQgcmV0Ow0KPiA+ID4g
-PiArDQo+ID4gPiA+ICsJaWYgKCFpbmRpb19kZXYtPmluZm8pDQo+ID4gPiA+ICsJCXJldHVybiAt
-RU5PREVWOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsJbGlzdF9mb3JfZWFjaF9lbnRyeShoLCAmaW5k
-aW9fZGV2LT5pb2N0bF9oYW5kbGVycywgZW50cnkpIHsNCj4gPiA+ID4gKwkJcmV0ID0gaC0+aW9j
-dGwoaW5kaW9fZGV2LCBmaWxwLCBjbWQsIGFyZyk7DQo+ID4gPiA+ICsJCWlmIChyZXQgPT0gMCkN
-Cj4gPiA+ID4gKwkJCXJldHVybiAwOw0KPiA+ID4gPiArCQlpZiAocmV0ICE9IElJT19JT0NUTF9V
-TkhBTkRMRUQpDQo+ID4gPiA+ICsJCQlyZXR1cm4gcmV0Ow0KPiA+ID4gPiArCX0NCj4gPiA+ID4g
-Kw0KPiA+ID4gPiArCXJldHVybiAtRUlOVkFMOw0KPiA+ID4gPiArfQ0KPiA+ID4gPiArDQo+ID4g
-PiA+ICBzdGF0aWMgaW50IGlpb19jaGVja191bmlxdWVfc2Nhbl9pbmRleChzdHJ1Y3QgaWlvX2Rl
-diAqaW5kaW9fZGV2KQ0KPiA+ID4gPiAgew0KPiA+ID4gPiAgCWludCBpLCBqOw0KPiA+ID4gPiBA
-QCAtMTY5NSw2ICsxNzIzLDggQEAgRVhQT1JUX1NZTUJPTChfX2lpb19kZXZpY2VfcmVnaXN0ZXIp
-Ow0KPiA+ID4gPiAgICoqLw0KPiA+ID4gPiAgdm9pZCBpaW9fZGV2aWNlX3VucmVnaXN0ZXIoc3Ry
-dWN0IGlpb19kZXYgKmluZGlvX2RldikNCj4gPiA+ID4gIHsNCj4gPiA+ID4gKwlzdHJ1Y3QgaWlv
-X2lvY3RsX2hhbmRsZXIgKmgsICp0Ow0KPiA+ID4gPiArDQo+ID4gPiA+ICAJaWYgKGluZGlvX2Rl
-di0+Y2hyZGV2KQ0KPiA+ID4gPiAgCQljZGV2X2RldmljZV9kZWwoaW5kaW9fZGV2LT5jaHJkZXYs
-ICZpbmRpb19kZXYtPmRldik7DQo+ID4gPiA+ICAJZWxzZQ0KPiA+ID4gPiBAQCAtMTcwOCw2ICsx
-NzM4LDkgQEAgdm9pZCBpaW9fZGV2aWNlX3VucmVnaXN0ZXIoc3RydWN0IGlpb19kZXYNCj4gPiA+
-ID4gKmluZGlvX2RldikNCj4gPiA+ID4gIA0KPiA+ID4gPiAgCWlpb19kaXNhYmxlX2FsbF9idWZm
-ZXJzKGluZGlvX2Rldik7DQo+ID4gPiA+ICANCj4gPiA+ID4gKwlsaXN0X2Zvcl9lYWNoX2VudHJ5
-X3NhZmUoaCwgdCwgJmluZGlvX2Rldi0+aW9jdGxfaGFuZGxlcnMsDQo+ID4gPiA+IGVudHJ5KQ0K
-PiA+ID4gPiArCQlsaXN0X2RlbCgmaC0+ZW50cnkpOw0KPiA+ID4gPiArICANCj4gPiA+IA0KPiA+
-ID4gSXMgdGhlcmUgYW55IGNoYW5jZSBhbnl0aGluZyBpcyB3YWxraW5nIHRoYXQgbGlzdCB3aGls
-c3Qgd2UgYXJlIGRlbGV0aW5nDQo+ID4gPiBpdD8NCj4gPiA+IEkgdGhpbmsgdGhpcyBuZWVkcyB0
-byBoYXBwZW4gdW5kZXIgYSBsb2NrIGFzIGRvZXMgdGhlIHdhbGsuDQo+ID4gDQo+ID4gV2UgbWF5
-IHdhbnQgdG8gdXNlIHRoZSByY3UgbWV0aG9kcyB0byBtYWtlIHRoZSB3YWxrIGFuZCBkZWxldGUg
-c2FmZSB3aGlsc3QNCj4gPiBhdm9pZGluZyBoZWF2eSB3ZWlnaHQgbG9ja2luZyBvbiB0aGUgcmVh
-ZCBwYXRoDQo+ID4gDQo+ID4gbGludXgvcmN1bGlzdC5oDQo+ID4gDQo+ID4gSSd2ZSBub3QgdGhv
-dWdodCBhYm91dCB0aGlzIGluIG11Y2ggZGVwdGggdGhvdWdoIHNvIHRha2UgdGhhdCBhZHZpY2Ug
-YXMNCj4gPiBhIHZhZ3VlIHN1Z2dlc3Rpb24gYW5kIG5vdGhpbmcgbW9yZSENCj4gDQo+IEknbSBh
-IGJpdCB0ZW1wdGVkIHRvIGRvIHRoZSBzaW1wbGUgbXV0ZXggYXBwcm9hY2gsIGJ1dCBJJ2xsIHRh
-a2UgYSBsb29rIGF0IHRoZQ0KPiByY3VsaXN0LmggdGhpbmdpLg0KPiANCj4gVGhlIHBvaW50IGlz
-IGdvb2QgYWJvdXQgdGhlIGxpc3QgYmVpbmcgd2Fsa2VkIHdoaWxlIGJlaW5nIGRlbGV0ZWQuDQoN
-CkknbSB0aGlua2luZyB0aGlzIGNvdWxkIHJlLXVzZSB0aGUgJ2luZGlvX2Rldi0+aW5mb19leGlz
-dF9sb2NrJyBbaS5lIGFkZCB0aGUNCmxvY2sgaW4gaWlvX2RldmljZV9pb2N0bCgpXS4NClNpbmNl
-LCB0aGUgdXNlIG9mIHRoaXMgbG9jayBpcyB0byBndWFyZCBhZ2FpbnN0IHRoZSAnaW5kaW9fZGV2
-LT5pbmZvID0gTlVMTCcsIHdlDQpjYW4gY291cGxlIHRoaXMgd2l0aCB0aGUgbGlzdCBkZWxldGlv
-biBoYXJkZW5pbmcuDQppaW9fZGV2aWNlX2lvY3RsKCkgZG9lcyBoYXZlIGEgY2hlY2sgZm9yICdp
-bmRpb19kZXYtPmluZm8gPT0gTlVMTCcNCg0KPiANCj4gPiANCj4gPiA+ID4gIAlpbmRpb19kZXYt
-PmluZm8gPSBOVUxMOw0KPiA+ID4gPiAgDQo+ID4gPiA+ICAJaWlvX2RldmljZV93YWtldXBfZXZl
-bnRzZXQoaW5kaW9fZGV2KTsNCj4gPiA+ID4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvaWlv
-L2lpby5oIGIvaW5jbHVkZS9saW51eC9paW8vaWlvLmgNCj4gPiA+ID4gaW5kZXggNTI5OTJiZTQ0
-ZTllLi5iNmNhOGQ4NTYyOWUgMTAwNjQ0DQo+ID4gPiA+IC0tLSBhL2luY2x1ZGUvbGludXgvaWlv
-L2lpby5oDQo+ID4gPiA+ICsrKyBiL2luY2x1ZGUvbGludXgvaWlvL2lpby5oDQo+ID4gPiA+IEBA
-IC00ODgsNiArNDg4LDcgQEAgc3RydWN0IGlpb19idWZmZXJfc2V0dXBfb3BzIHsNCj4gPiA+ID4g
-ICAqIEBjdXJyZW50bW9kZToJW0RSSVZFUl0gY3VycmVudCBvcGVyYXRpbmcgbW9kZQ0KPiA+ID4g
-PiAgICogQGRldjoJCVtEUklWRVJdIGRldmljZSBzdHJ1Y3R1cmUsIHNob3VsZCBiZSBhc3NpZ25l
-ZCBhDQo+ID4gPiA+IHBhcmVudA0KPiA+ID4gPiAgICoJCQlhbmQgb3duZXINCj4gPiA+ID4gKyAq
-IEBpb2N0bF9oYW5kbGVyczoJW0lOVEVSTl0gbGlzdCBvZiByZWdpc3RlcmVkIGlvY3RsIGhhbmRs
-ZXJzDQo+ID4gPiA+ICAgKiBAZXZlbnRfaW50ZXJmYWNlOglbSU5URVJOXSBldmVudCBjaHJkZXZz
-IGFzc29jaWF0ZWQgd2l0aCBpbnRlcnJ1cHQNCj4gPiA+ID4gbGluZXMNCj4gPiA+ID4gICAqIEBi
-dWZmZXI6CQlbRFJJVkVSXSBhbnkgYnVmZmVyIHByZXNlbnQNCj4gPiA+ID4gICAqIEBidWZmZXJf
-bGlzdDoJW0lOVEVSTl0gbGlzdCBvZiBhbGwgYnVmZmVycyBjdXJyZW50bHkgYXR0YWNoZWQNCj4g
-PiA+ID4gQEAgLTUyOSw2ICs1MzAsNyBAQCBzdHJ1Y3QgaWlvX2RldiB7DQo+ID4gPiA+ICAJaW50
-CQkJCW1vZGVzOw0KPiA+ID4gPiAgCWludAkJCQljdXJyZW50bW9kZTsNCj4gPiA+ID4gIAlzdHJ1
-Y3QgZGV2aWNlCQkJZGV2Ow0KPiA+ID4gPiArCXN0cnVjdCBsaXN0X2hlYWQJCWlvY3RsX2hhbmRs
-ZXJzOw0KPiA+ID4gPiAgDQo+ID4gPiA+ICAJc3RydWN0IGlpb19ldmVudF9pbnRlcmZhY2UJKmV2
-ZW50X2ludGVyZmFjZTsNCj4gPiA+ID4gICAgDQo=
+Hi Geert,
+
+Thank you for the review.
+
+On Mon, Apr 27, 2020 at 10:10 AM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Thu, Apr 23, 2020 at 11:41 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > Add RZ/G1H (R8A7742) Clock Pulse Generator / Module Standby and Software
+> > Reset support, using the CPG/MSSR driver core and the common R-Car Gen2
+> > (and RZ/G) code.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> Thanks for your patch!
+>
+> > --- /dev/null
+> > +++ b/drivers/clk/renesas/r8a7742-cpg-mssr.c
+>
+> > +static struct cpg_core_clk r8a7742_core_clks[] __initdata = {
+> > +       /* External Clock Inputs */
+> > +       DEF_INPUT("extal",      CLK_EXTAL),
+> > +       DEF_INPUT("usb_extal",  CLK_USB_EXTAL),
+> > +
+> > +       /* Internal Core Clocks */
+> > +       DEF_BASE(".main",       CLK_MAIN, CLK_TYPE_GEN2_MAIN, CLK_EXTAL),
+> > +       DEF_BASE(".pll0",       CLK_PLL0, CLK_TYPE_GEN2_PLL0, CLK_MAIN),
+> > +       DEF_BASE(".pll1",       CLK_PLL1, CLK_TYPE_GEN2_PLL1, CLK_MAIN),
+> > +       DEF_BASE(".pll3",       CLK_PLL3, CLK_TYPE_GEN2_PLL3, CLK_MAIN),
+> > +
+> > +       DEF_FIXED(".pll1_div2", CLK_PLL1_DIV2, CLK_PLL1, 2, 1),
+> > +
+> > +       /* Core Clock Outputs */
+> > +       DEF_BASE("z",    R8A7742_CLK_Z,    CLK_TYPE_GEN2_Z,     CLK_PLL0),
+> > +       DEF_BASE("sdh",  R8A7742_CLK_SDH,  CLK_TYPE_GEN2_SDH,   CLK_PLL1),
+> > +       DEF_BASE("sd0",  R8A7742_CLK_SD0,  CLK_TYPE_GEN2_SD0,   CLK_PLL1),
+> > +       DEF_BASE("sd1",  R8A7742_CLK_SD1,  CLK_TYPE_GEN2_SD1,   CLK_PLL1),
+> > +       DEF_BASE("qspi", R8A7742_CLK_QSPI, CLK_TYPE_GEN2_QSPI,  CLK_PLL1_DIV2),
+> > +       DEF_BASE("rcan", R8A7742_CLK_RCAN, CLK_TYPE_GEN2_RCAN,  CLK_USB_EXTAL),
+> > +
+> > +       DEF_FIXED("z2",    R8A7742_CLK_Z2,      CLK_PLL1,           2, 1),
+> > +       DEF_FIXED("zg",    R8A7742_CLK_ZG,      CLK_PLL1,           3, 1),
+> > +       DEF_FIXED("zt",    R8A7742_CLK_ZT,      CLK_PLL1,           5, 1),
+> > +       DEF_FIXED("ztr",   R8A7742_CLK_ZTR,     CLK_PLL1,           4, 1),
+> > +       DEF_FIXED("ztrd2", R8A7742_CLK_ZTRD2,   CLK_PLL1,           12, 1),
+>
+> The ZT* clocks are not fixed-factor clocks, but use programmable
+> dividers in FRQCRB.
+> So either you implement them correctly, or you drop them, like we did
+> for the other R-Car Gen2 and RZ/G1 SoCs (there are no users yet).
+>
+Since there are no users yet Ill drop them for now.
+
+> > +       DEF_FIXED("zx",    R8A7742_CLK_ZX,      CLK_PLL1,           3, 1),
+> > +       DEF_FIXED("zs",    R8A7742_CLK_ZS,      CLK_PLL1,           6, 1),
+> > +       DEF_FIXED("hp",    R8A7742_CLK_HP,      CLK_PLL1,          12, 1),
+> > +       DEF_FIXED("b",     R8A7742_CLK_B,       CLK_PLL1,          12, 1),
+> > +       DEF_FIXED("lb",    R8A7742_CLK_LB,      CLK_PLL1,          24, 1),
+>
+> Please use CLK_TYPE_GEN2_LB, as the LB divider depends on the state of
+> mode pin MD18.
+>
+Agreed and looking further into it this needs to be a base clock I
+shall replace this to:
+    DEF_BASE("lb",   R8A7742_CLK_LB,   CLK_TYPE_GEN2_LB,   CLK_PLL1),
+
+> > +       DEF_FIXED("p",     R8A7742_CLK_P,       CLK_PLL1,          24, 1),
+> > +       DEF_FIXED("cl",    R8A7742_CLK_CL,      CLK_PLL1,          48, 1),
+> > +       DEF_FIXED("m2",    R8A7742_CLK_M2,      CLK_PLL1,           8, 1),
+> > +       DEF_FIXED("zb3",   R8A7742_CLK_ZB3,     CLK_PLL3,           4, 1),
+> > +       DEF_FIXED("zb3d2", R8A7742_CLK_ZB3D2,   CLK_PLL3,           8, 1),
+> > +       DEF_FIXED("ddr",   R8A7742_CLK_DDR,     CLK_PLL3,           8, 1),
+> > +       DEF_FIXED("mp",    R8A7742_CLK_MP,      CLK_PLL1_DIV2,     15, 1),
+> > +       DEF_FIXED("cp",    R8A7742_CLK_CP,      CLK_EXTAL,          2, 1),
+> > +       DEF_FIXED("r",     R8A7742_CLK_R,       CLK_PLL1,       49152, 1),
+> > +       DEF_FIXED("osc",   R8A7742_CLK_OSC,     CLK_PLL1,       12288, 1),
+> > +
+> > +       DEF_DIV6P1("sd2",  R8A7742_CLK_SD2,     CLK_PLL1_DIV2,  0x078),
+> > +       DEF_DIV6P1("sd3",  R8A7742_CLK_SD3,     CLK_PLL1_DIV2,  0x26c),
+> > +       DEF_DIV6P1("mmc0", R8A7742_CLK_MMC0,    CLK_PLL1_DIV2,  0x240),
+> > +       DEF_DIV6P1("mmc1", R8A7742_CLK_MMC1,    CLK_PLL1_DIV2,  0x244),
+> > +};
+> > +
+> > +static const struct mssr_mod_clk r8a7742_mod_clks[] __initconst = {
+> > +       DEF_MOD("msiof0",                  0,   R8A7742_CLK_MP),
+> > +       DEF_MOD("vcp1",                  100,   R8A7742_CLK_ZS),
+> > +       DEF_MOD("vcp0",                  101,   R8A7742_CLK_ZS),
+> > +       DEF_MOD("vpc1",                  102,   R8A7742_CLK_ZS),
+> > +       DEF_MOD("vpc0",                  103,   R8A7742_CLK_ZS),
+> > +       DEF_MOD("tmu1",                  111,   R8A7742_CLK_P),
+> > +       DEF_MOD("3dg",                   112,   R8A7742_CLK_ZG),
+> > +       DEF_MOD("2d-dmac",               115,   R8A7742_CLK_ZS),
+> > +       DEF_MOD("fdp1-2",                117,   R8A7742_CLK_ZS),
+> > +       DEF_MOD("fdp1-1",                118,   R8A7742_CLK_ZS),
+> > +       DEF_MOD("fdp1-0",                119,   R8A7742_CLK_ZS),
+> > +       DEF_MOD("tmu3",                  121,   R8A7742_CLK_P),
+> > +       DEF_MOD("tmu2",                  122,   R8A7742_CLK_P),
+> > +       DEF_MOD("cmt0",                  124,   R8A7742_CLK_R),
+> > +       DEF_MOD("tmu0",                  125,   R8A7742_CLK_CP),
+> > +       DEF_MOD("vsp1du1",               127,   R8A7742_CLK_ZS),
+> > +       DEF_MOD("vsp1du0",               128,   R8A7742_CLK_ZS),
+> > +       DEF_MOD("vsp1-sy",               131,   R8A7742_CLK_ZS),
+> > +       DEF_MOD("scifa2",                202,   R8A7742_CLK_MP),
+> > +       DEF_MOD("scifa1",                203,   R8A7742_CLK_MP),
+> > +       DEF_MOD("scifa0",                204,   R8A7742_CLK_MP),
+> > +       DEF_MOD("msiof2",                205,   R8A7742_CLK_MP),
+> > +       DEF_MOD("scifb0",                206,   R8A7742_CLK_MP),
+> > +       DEF_MOD("scifb1",                207,   R8A7742_CLK_MP),
+> > +       DEF_MOD("msiof1",                208,   R8A7742_CLK_MP),
+> > +       DEF_MOD("msiof3",                215,   R8A7742_CLK_MP),
+> > +       DEF_MOD("scifb2",                216,   R8A7742_CLK_MP),
+> > +       DEF_MOD("sys-dmac1",             218,   R8A7742_CLK_ZS),
+> > +       DEF_MOD("sys-dmac0",             219,   R8A7742_CLK_ZS),
+> > +       DEF_MOD("iic2",                  300,   R8A7742_CLK_CP),
+>
+> Parent should be R8A7742_CLK_HP.
+>
+Agreed shall fix it.
+
+> > +       DEF_MOD("tpu0",                  304,   R8A7742_CLK_CP),
+> > +       DEF_MOD("mmcif1",                305,   R8A7742_CLK_MMC1),
+> > +       DEF_MOD("scif2",                 310,   R8A7742_CLK_CP),
+>
+> Parent should be R8A7742_CLK_P.
+>
+Agreed shall fix it.
+
+> > +       DEF_MOD("sdhi3",                 311,   R8A7742_CLK_SD3),
+> > +       DEF_MOD("sdhi2",                 312,   R8A7742_CLK_SD2),
+> > +       DEF_MOD("sdhi1",                 313,   R8A7742_CLK_SD2),
+>
+> Parent should be R8A7742_CLK_SD1.
+>
+Agreed shall fix it.
+
+> > +static int __init r8a7742_cpg_mssr_init(struct device *dev)
+> > +{
+> > +       const struct rcar_gen2_cpg_pll_config *cpg_pll_config;
+> > +       struct device_node *np = dev->of_node;
+> > +       unsigned int i;
+> > +       u32 cpg_mode;
+> > +       int error;
+> > +
+> > +       error = rcar_rst_read_mode_pins(&cpg_mode);
+> > +       if (error)
+> > +               return error;
+> > +
+> > +       cpg_pll_config = &cpg_pll_configs[CPG_PLL_CONFIG_INDEX(cpg_mode)];
+> > +
+> > +       if (of_device_is_compatible(np, "renesas,r8a7742-cpg-mssr")) {
+> > +               /* RZ/G1H uses a 1/3 divider for ZG */
+> > +               for (i = 0; i < ARRAY_SIZE(r8a7742_core_clks); i++)
+> > +                       if (r8a7742_core_clks[i].id == R8A7742_CLK_ZG) {
+> > +                               r8a7742_core_clks[i].div = 3;
+> > +                               break;
+> > +                       }
+> > +       }
+>
+> Do you really need this part? (copied from r8a7743-cpg-mssr.c ;-)
+> If you remove it, r8a7742_core_clks[] can be const, and <linux/of.h> is
+> no longer needed,
+>
+I haven't come far enough to test the GPU yet, so Ill drop this for
+now and add this later if needed.
+
+Cheers,
+--Prabhakar
+
+> > +       return rcar_gen2_cpg_init(cpg_pll_config, 2, cpg_mode);
+> > +}
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
