@@ -2,109 +2,87 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D343BC81CF5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6460FC81828
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE1BC2078C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35EB72074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:52:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R/EIr+RR"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="myO0Z0y7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbgD0Vvx (ORCPT
+        id S1726401AbgD0VwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 17:51:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47434 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726194AbgD0Vvw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 17:51:52 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D2ACC0610D5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 14:51:52 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id j7so9282047pgj.13
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 14:51:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2US+UFErdQz+/2WUCZdQSrynGNoBUJIwL6mFZZjO4Zk=;
-        b=R/EIr+RRamTRbKEAIuBhHKtxaZewTjKE+LoWnkc6pD9eXhURKoBWUI4TmJyQusVmxP
-         jOByzuGCKpFdP9gc4/+Qkuces3cOPbZGbpK8Xb0bGwpey/X184pwhchY4wkJaj1Ja18d
-         ezEjZlzbb/RPusZpc4a8A7uzoMB90e2nYlB6QmhrB/GCOW5qjRYmeC4clKzYjjTQJz62
-         A5LU5tKEnL0jix2gPrIJMSTx2tQpcWR8K5FQRSml2SIT/K/F0hI2tj/EiZYa27s6232T
-         0q3JFgy7tEtWSEeVAMXJtCJAgPIoeElTBbGf6s68t3zak1GwAXvtYfIeSsJPxgZGokhg
-         vmeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2US+UFErdQz+/2WUCZdQSrynGNoBUJIwL6mFZZjO4Zk=;
-        b=qlQk1BkCUW30EykMXcJTCZDdkLAHlqqIlRTnWO4ZM0MbHbMs2vk4JBXVagHBji/xhk
-         29S/FJqGx5nmAkzK8aIhYR+efcjW792WJfIgzuMyT9Oo+TaVKeBWxwmfNrKwYXG6jvXS
-         arxX7HMCccnccjHbCKrwgw+HHU00Z+ap3LlmAHwQpgeb7fFrn4Hb6R6IBNQaXUQo2XB+
-         1kYhgKWHSGB9Pd1n4T1Y7D8ecmBLL2K+PEkORFERewmlTjDVsFQWEogDnYVRqFW3Tlaj
-         oDD2UEVFC0DHejLQJuwGdO30h6i0gmxhc4lcLJndM+iV/GYynm54EVjAAoFZpymKCvkp
-         d+Dw==
-X-Gm-Message-State: AGi0PuY4fIJsTL1WeEhM+Cu+6BdYZEX9tcGNh+Y88stGMLV0g5iERESI
-        LyyB2hXp5Ii+hrFMLPpefx/Z1A==
-X-Google-Smtp-Source: APiQypI9w3mN/5nhDZ6PT2DjOc9Txq+MTciQT5JDWxwj7p1+7MIALxUJUUbrsUd/RNQXKiPBr/2zFg==
-X-Received: by 2002:a63:241:: with SMTP id 62mr5334082pgc.38.1588024311660;
-        Mon, 27 Apr 2020 14:51:51 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id j5sm4153876pfh.58.2020.04.27.14.51.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 14:51:50 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: qcom: sm8250-mtp: Drop PM8150 ldo11
-Date:   Mon, 27 Apr 2020 14:51:17 -0700
-Message-Id: <20200427215117.2900139-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.24.0
+        Mon, 27 Apr 2020 17:52:23 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:39414 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726338AbgD0VwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 17:52:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=W2nZ/AC5SYD3gcSLnbu+uo46QTDRbgde6kyBr7kf65w=; b=myO0Z0y7uA7IYjQSpJDZiHP6eR
+        v7l8GAGKiYVIh4ccDQEYAVCdjTcJI31ofPk9qlKiDkdyu8EkUOrnb9h6w36dKhnvozNRYlT+1NG1P
+        taC4kHc12w1jW/EBdq7wYOWozb5usI5P5cQ7IYdrkxof4irOz74+K9NRmcp/ri+BdkvM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jTBfd-005I0E-Ky; Mon, 27 Apr 2020 23:52:09 +0200
+Date:   Mon, 27 Apr 2020 23:52:09 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Roelof Berg <rberg@berg-solutions.de>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Bryan Whitehead <bryan.whitehead@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] lan743x: Added fixed_phy support
+Message-ID: <20200427215209.GP1250287@lunn.ch>
+References: <rberg@berg-solutions.de>
+ <20200425234320.32588-1-rberg@berg-solutions.de>
+ <20200426143116.GC1140627@lunn.ch>
+ <6C2E44BB-F4D1-4BC3-9FCB-55F01DA4A3C9@berg-solutions.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6C2E44BB-F4D1-4BC3-9FCB-55F01DA4A3C9@berg-solutions.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PM8150 ldo11 on the MTP is wired to VDD_SSC_CX and controlled in levels,
-rather than as a regulator. As such it's available from the rpmhpd as
-the SM8250_LCX power domain.
+On Mon, Apr 27, 2020 at 11:37:07PM +0200, Roelof Berg wrote:
+> Hello Andrew,
+> 
+> thanks for working together on this. Our target system is an embedded linux device for vehicles, that has all three components as single chips on one PCB: The MCU, the lan743x MAC and a KSZ9893 switch.
 
-Fixes: ec13d5c23a33 ("arm64: dts: qcom: sm8250-mtp: Add pm8150, pm8150l and pm8009")
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/sm8250-mtp.dts | 7 -------
- 1 file changed, 7 deletions(-)
+What is the MCU? ARM?
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8250-mtp.dts b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
-index e9acda9f5b83..0c6b936be471 100644
---- a/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
-@@ -136,13 +136,6 @@ vreg_l10a_1p8: ldo10 {
- 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
- 		};
- 
--		vreg_l11a_0p75: ldo11 {
--			regulator-name = "vreg_l11a_0p75";
--			regulator-min-microvolt = <800000>;
--			regulator-max-microvolt = <800000>;
--			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
--		};
--
- 		vreg_l12a_1p8: ldo12 {
- 			regulator-name = "vreg_l12a_1p8";
- 			regulator-min-microvolt = <1800000>;
--- 
-2.24.0
+> Four options:
+> a) We offer this kernel configuration and the next embedded system designer can use phyless MII mode.
+> b) We change this to a runtime configuration that somehow auto-detects that phyless MII mode is desired.
+>     (Then the EEPROM/OTP needs to provide baud rate, MII mode and duplex mode by user-register access).
+> c) We move the configuration of the phyless mode to somewhere like dev-fs
+> d) We avoid compiled fixed_phy and use a newer method. Like device-tree configuration of fixed_phy (is it working allready ?) or phylink as you originally suggested. Unfortunately I have no test-hardware here that uses a phy.
+> e) We leave this one away from the kernel if it is unlikely that other embedded systems would use lan8431 in direct (phyless) MII mode as well. Microchip (on cc) could know more about this likelihood.
 
+If you are using ARM, device tree is the way to go. In systems like
+this, you know exactly which PCIe bus the lan743x will be hanging
+off. So you can add a DT node for it. It is not done very often, but
+look at arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi. That board has an
+intel i210 on its PCIe bus, and we need a phandle for it. But you can
+add any properties you want. For what you are doing, you should be
+looking at:
+
+Documentation/devicetree/bindings/net/ethernet-controller.yaml:
+
+phy-mode and fixed-link.
+
+	  Andrew
