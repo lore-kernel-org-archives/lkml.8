@@ -2,139 +2,144 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E859CC54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF1BC55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C10FF205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5B90205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:02:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BnX5x9L/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dEfOb1A9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbgD0QBh (ORCPT
+        id S1728231AbgD0QCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 12:01:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48640 "EHLO
+        Mon, 27 Apr 2020 12:02:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727084AbgD0QBg (ORCPT
+        by vger.kernel.org with ESMTP id S1726539AbgD0QCJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 12:01:36 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76EA5C0610D5;
-        Mon, 27 Apr 2020 09:01:36 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id a31so5730469pje.1;
-        Mon, 27 Apr 2020 09:01:36 -0700 (PDT)
+        Mon, 27 Apr 2020 12:02:09 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 325C6C0610D5;
+        Mon, 27 Apr 2020 09:02:09 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id g4so18185901ljl.2;
+        Mon, 27 Apr 2020 09:02:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:mime-version
-         :content-disposition:user-agent;
-        bh=9VOe6zfbZtbjAZlq2qI2KNild4EAONAC/y5eieLjgk8=;
-        b=BnX5x9L/dv8XVZnTgnpgDNjk70souLU3wwPPv/bitTN6PWwuVeieuBdqa6dFBgWNWp
-         EKh2SgxyqXL5KUhI+Z60uWqbAQijklGf3dlZLMmIfdHtiplKxrI6Of6Ll8x5VjLD5Bpl
-         Wo3/2H3OLF+zKDxXrkpt3KtuBoy4jxNZGpF+H7ki9eBouYSmMg7J+Pr3Ao9Bfcqzgyf4
-         e8jsOVyDY1hsfym8YFHxOmkoMMAexOsu1rvEAxfWoRYraKDeWt+/ENVlWJEpGfk7jcPB
-         hSpcKEO1NtgNFqvr1B/kfrvd9wo6D+gNv1TeQ2hVZLIniumVIzz3bRRSuUdthh6IDVVL
-         tQ1g==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UC4nurrRf3udrQTojIPA4rnIYQOFVwae7To0mJBT8fY=;
+        b=dEfOb1A9rszXfQ+Gl8DHgEKY28a1ukFvgJsqw2TDFDTAzkvl0TzJROMBfv7KHOA9Bq
+         ECJhx+6UwixpV7KO9N17Pg/IwsuYhqs8kFba/OdMJxhs/iyJK0eTZ8qqhCF0bIRFGH47
+         WNcgHxHeWL7NBULWgtD9PSgBD1asKMr8JWRzuNt4j9HA/6SbhHbz3V1Za1IwZQOAjHFZ
+         jrNvbo1w3flFlnTq+M7bhPhZFvhGLu22HXt+p5kL6ljZTMSAC4uSYykuIF1P8oTsjy4O
+         pvn+ZL7m+WWDTL60tsn+EV8rJgM/f2nxPRuG/re4uDfqH5ybJWy8qDzXdlqz7mxmdos/
+         PBWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:mime-version:content-disposition:user-agent;
-        bh=9VOe6zfbZtbjAZlq2qI2KNild4EAONAC/y5eieLjgk8=;
-        b=relE27VpFudYD5Y6BVtbMRmT02QscMztRxO2VQLLF2NkXevey4N58oqIpi0nuxeVLz
-         okMDLjn4jFID2u+FZNNkxzQoPawG5GC0dmx+usOsioiETHELsxkEM6SHX0d4KF5VmnCI
-         kH0oYU3vCOiBRxOaGDgL5H0lu9AbYqIWfGxi8IyEhOIpMRgY7hbZOSBHfdXqc4x5c3B8
-         gstdg8f1bb2jiS151yQ9goryh8V28ycrcT8zM17lEn1/NqfAIe7c74vk7nvScXxQE/Ul
-         n71XsohIgrFVALzdGcJ0PyP3yI2M6zIr+eWj3q2QXRal2kXAWrP+vVOiyVUhCWVgzekZ
-         jJ9A==
-X-Gm-Message-State: AGi0PuY1W30iQOXDrPTfu8EYUq2JwO5Wy5jisOkdCU6UOay98BysNrcb
-        Vyfmr0/s7/LLwXDiW8ONQNU=
-X-Google-Smtp-Source: APiQypJxjdKJUkibD5FvbEyQw7orSRPWuGaVTPgLdl0DmNd67CJVKb2yIpTTT3nfi4xd/XZUSa0Wrg==
-X-Received: by 2002:a17:90a:324f:: with SMTP id k73mr25155177pjb.195.1588003295930;
-        Mon, 27 Apr 2020 09:01:35 -0700 (PDT)
-Received: from udknight.localhost ([59.57.158.27])
-        by smtp.gmail.com with ESMTPSA id p16sm11578519pjz.2.2020.04.27.09.01.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 Apr 2020 09:01:34 -0700 (PDT)
-Received: from udknight.localhost (localhost [127.0.0.1])
-        by udknight.localhost (8.14.9/8.14.4) with ESMTP id 03RErdMI019234;
-        Mon, 27 Apr 2020 22:53:39 +0800
-Received: (from root@localhost)
-        by udknight.localhost (8.14.9/8.14.9/Submit) id 03RErXiK019233;
-        Mon, 27 Apr 2020 22:53:33 +0800
-Date:   Mon, 27 Apr 2020 22:53:32 +0800
-From:   Wang YanQing <udknight@gmail.com>
-To:     joe@perches.com
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Andy Whitcroft <apw@canonical.com>, Markus.Elfring@web.de
-Subject: [PATCH v2] checkpatch: add dedicated checker for 'Fixes:' tag
-Message-ID: <20200427145332.GA18830@udknight>
-Mail-Followup-To: Wang YanQing <udknight@gmail.com>, joe@perches.com,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Andy Whitcroft <apw@canonical.com>, Markus.Elfring@web.de
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UC4nurrRf3udrQTojIPA4rnIYQOFVwae7To0mJBT8fY=;
+        b=TFSds8NzEpa1vOFOsrsF2mLUHjQ+q7jchs623YQxV3rnGZZvH7e7Koa9a+aeJMvETu
+         p9qR2PpAPiUbTuNDxvw3qzBu+Lx8Nj0fRXvlX9KhHGvV+jGVN3LSHBRCWTRFkWkuVyxc
+         rddhcm6cZkSVHs4s9sa1Hw7SLft+P+RZsGyJaeWvSBwo3lh6s+zIs7qgy0pqs2qEcmTI
+         4nkhmLIlRe3TCdtrU4gCg4Nv9m06uVjdQoli0/+o420cK5xoMTYItKbOXSg1+SqkaNZL
+         z6lm4hwC2vJ8Auw1/KgV3XBw4Rt7KRD+l+/pjvL+Yy9mb9cHUEZCi9e/ywtUm1gnE6Dy
+         sgpw==
+X-Gm-Message-State: AGi0PubIdhjQcu3QL9qLqQyzkGtt0qrZHvuAFbZq3PIeNavuFiU/fqJD
+        wO3YQk3K0K8MBCY0nN4DOVOn3tl2
+X-Google-Smtp-Source: APiQypL5znxvymWbmggY0tfM0ZWAlsQInR3g+byT1vkk+SyFdtfKGG+UkYD5WzOhbUAxPKxtFjnRBw==
+X-Received: by 2002:a2e:8e98:: with SMTP id z24mr15083373ljk.134.1588003327236;
+        Mon, 27 Apr 2020 09:02:07 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id t16sm10271884ljg.41.2020.04.27.09.02.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 09:02:06 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
+ for a long time
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <a5198024-7273-74c4-b4f4-3a29d042bc36@nvidia.com>
+ <f8fb1f7f-2497-033e-ff2c-c86c6caa9706@gmail.com>
+ <fd1ca178-1ea3-851f-20a6-10bf00453ce3@nvidia.com>
+ <a5734f19-254e-b6bc-e791-fa1ac63f11a4@gmail.com>
+ <79f6560e-dbb5-0ae1-49f8-cf1cd95396ec@nvidia.com>
+ <20200427074837.GC3451400@ulmo> <20200427084424.GA28817@kunai>
+ <820200ce-17f3-18c0-6f79-3e582f45492d@gmail.com>
+ <20200427103553.GA24446@kunai> <20200427105029.GB3464906@ulmo>
+ <20200427153244.GF3464906@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <127a2c32-e5fb-2944-3062-361b276490c0@gmail.com>
+Date:   Mon, 27 Apr 2020 19:02:05 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.7.1 (2016-10-04)
+In-Reply-To: <20200427153244.GF3464906@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to submitting-patches.rst, 'Fixes:' tag has a little
-stricter condition about the one line summary:
-"
-Do not split the tag across multiple
-lines, tags are exempt from the "wrap at 75 columns" rule in order to simplify
-parsing scripts
-"
-And the current 'Fixes:' checker in "# Check for git id commit length and
-improperly formed commit descriptions" doesn't check for invalid commit id
-length, so this patch adds dedicated checker to fix these issues.
+27.04.2020 18:32, Thierry Reding пишет:
+> On Mon, Apr 27, 2020 at 12:50:29PM +0200, Thierry Reding wrote:
+>> On Mon, Apr 27, 2020 at 12:35:53PM +0200, Wolfram Sang wrote:
+>>> On Mon, Apr 27, 2020 at 12:07:19PM +0300, Dmitry Osipenko wrote:
+>>>> 27.04.2020 11:44, Wolfram Sang пишет:
+>>>>>
+>>>>>> Wolfram, can you revert the following two patches for v5.7, please?
+>>>>>>
+>>>>>> 	8814044fe0fa i2c: tegra: Synchronize DMA before termination
+>>>>
+>>>> This patch has nothing to do with your trouble, why do you want to
+>>>> revert it?
+>>>
+>>> I'll wait some more before pushing out, so you can discuss it.
+>>
+>> Okay, let me run a quick test with that second patch still applied to
+>> make sure it really is harmless.
+> 
+> Alright, I tested v5.7-rc3 with this patch reverted:
+> 
+> 	a900aeac2537 i2c: tegra: Better handle case where CPU0 is busy for a long time
+> 
+> and the results came back positive, so I think we can leave patch:
+> 
+> 	8814044fe0fa i2c: tegra: Synchronize DMA before termination
+> 
+> in. But then again, I see that Dmitry posted this yesterday:
+> 
+> 	https://lkml.org/lkml/2020/4/26/481
+> 
+> which seems like it would be related to this and potentially be a
+> follow-up fix for some corner cases?
 
-Signed-off-by: Wang YanQing <udknight@gmail.com>
----
- scripts/checkpatch.pl | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+This is a follow-up to my previous message in this thread:
 
- v1-v2:
- 1: Reword commit log (Markus Elfring).
- 2: Allow more than 12 characters of SHA-1 id (Markus Elfring).
- 3: Update the error message according to reflect the second update.
- 4: Add missing (?:...).
+https://lkml.org/lkml/2020/4/23/792
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 23a001a..d74683a 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -2820,7 +2820,7 @@ sub process {
- 		    ($line =~ /\bcommit\s+[0-9a-f]{5,}\b/i ||
- 		     ($line =~ /(?:\s|^)[0-9a-f]{12,40}(?:[\s"'\(\[]|$)/i &&
- 		      $line !~ /[\<\[][0-9a-f]{12,40}[\>\]]/i &&
--		      $line !~ /\bfixes:\s*[0-9a-f]{12,40}/i))) {
-+		      $line !~ /^\s*fixes:\s*(?:[0-9a-f]{6,40})\s*(?:.*)/i))) {
- 			my $init_char = "c";
- 			my $orig_commit = "";
- 			my $short = 1;
-@@ -2979,6 +2979,13 @@ sub process {
- 			}
- 		}
- 
-+		if ($in_commit_log && $line =~ /^\s*fixes:\s*([0-9a-f]{6,40})\s*(.*)/i) {
-+		    if (length($1) < 12 || $2 !~ /^\(\"(?:.*)\"\)$/i) {
-+				ERROR("FIXES_TAG",
-+					"please use the 'Fixes:' tag with at least the first 12 characters of the SHA-1 ID, and the one line summary(no across multiple lines)\n" . $herecurr);
-+			}
-+		}
-+
- # ignore non-hunk lines and lines being removed
- 		next if (!$hunk_line || $line =~ /^-/);
- 
--- 
-1.8.5.6.2.g3d8a54e.dirty
+> So I'm not sure how well this whole set has been tested yet.
+
+It depends on what you're meaning by the testing. We have some
+yet-out-of-tree real-world devices that are using APBDMA for Bluetooth,
+Audio, I2C (touchscreens) and etc peripherals. These devices were using
+the DMA patches before they were posted to the ML.
+
+> Maybe a better solution would be for the DMA synchronization patch to go
+> into the 5.8 queue instead to make sure we get more testing cycles.
+
+It should be fine to re-queue the patches for 5.8. I'm just a bit afraid
+that if patches are simply dropped now, then you won't get back to it
+for a year or so ;)
