@@ -2,261 +2,116 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2F2C81CFF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D30C81CFF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 544C4206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3A362078C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:33:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="o8O64NcO"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b8SHhWvZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbgD0Xag (ORCPT
+        id S1726318AbgD0XdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 19:30:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34478 "EHLO
+        Mon, 27 Apr 2020 19:33:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726253AbgD0Xag (ORCPT
+        by vger.kernel.org with ESMTP id S1726233AbgD0XdC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 19:30:36 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DB8CC03C1A7
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 16:30:36 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id q7so7918661qkf.3
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 16:30:35 -0700 (PDT)
+        Mon, 27 Apr 2020 19:33:02 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 200D4C0610D5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 16:33:02 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id z6so7582524plk.10
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 16:33:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=quaCJQUXh16GBVFik8QA4Fip2ZkMv94tq1SIciD+mKk=;
-        b=o8O64NcOpReFrdICIw0R22TmhsUrXmbrt0Oquifi1kyyFHcemcPC6lPBakxI7oUNZq
-         I7jBqcLaHoph4I/bGwjn3uwtM6vuggTusUl58GAxe5waPDXDah/g/IYbbsYFVMyOYapE
-         xm/qUjg5KrYezq1T1+bryli0DAr3cgEWoapxeB3pDr5RsZOvuLE5fHI7yilkKPePGznk
-         c1k+PHdKAx/VWQbhHbfX2gJA2NXyOYciXI8KGCyw4cxm1hM15Rhyxy7q72pkFCYdXDWk
-         N8xX6/gYf2fFs7oNVE9x7OUWuiFd7NEMdvQ4EaNulCgqDIpIPsdEK2I1Io33CTLg9DYi
-         cp4g==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=psE/TVWQ8r0hHEn8TaByg+EQGlqN2iYLLSNjuoRCa9k=;
+        b=b8SHhWvZTnoeLLp7IhgorcpvGtX2VBtc6vtxpVWuQoeDabjj0nAmuP6/TiuQUuiRNh
+         etINFZ53Wf2AxOzz/nSnynJ4yALdIG4FmtD9L7neNUYUJq9Z2xbTJRF74DW8l6RrICQy
+         4m3riY6RULFDgxpguilcjn9XbHCWm0rHcTDJs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=quaCJQUXh16GBVFik8QA4Fip2ZkMv94tq1SIciD+mKk=;
-        b=FU0OcFf1CdRg0i9TsYC/5+XIOl404yQb0SA/GfVUN8HIS5EYZXhefJ30L8ySDy04uQ
-         5TOWeDXIZZ3p6Y6GkDmPjuXqMa1d8tUt+W7lFQbzHCa8BIw4TWhnaQEZEp2/YgwRyVxA
-         U7OxZCg3gjwkb1BQxoPKoJROXfxfZj85Ogok4SvVTXLppICSSs0ekpszEXayc3kJ8oI/
-         W+bYk73Irjh1INIPh+1d82mXCcloxSzHfStEGN4MneNYHLrzetsWubAjauvuQEfME3cW
-         +r9MNxd3A1h3oyPIeguJjNfX95skNPooYIKrh1u8C8mWGVtfQbQvLqvAKpegf5wmOlbv
-         XS3w==
-X-Gm-Message-State: AGi0PubhhVe3io9FvWR7WM7yhiI5qPxCKMHDFlHBe4yAgM901EfO/tCV
-        c0KgOziOm1j8pkPyUJ05p42Kzg==
-X-Google-Smtp-Source: APiQypKQhsXJYAUPGeCAiGNzkd/+nPRyT2PYJttcnGCPjzLZOweUizR2QmY1YuuQpy+d1hOiuVGD1A==
-X-Received: by 2002:a37:4f45:: with SMTP id d66mr24593051qkb.318.1588030235080;
-        Mon, 27 Apr 2020 16:30:35 -0700 (PDT)
-Received: from x1 (ip-48-2-52-196.nyc.us.northamericancoax.com. [196.52.2.48])
-        by smtp.gmail.com with ESMTPSA id h6sm11956233qtd.79.2020.04.27.16.30.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 16:30:34 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 01:31:16 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>
-Subject: [PATCH] arm: dts: am33xx-l4: add gpio-line-names to gpio controllers
-Message-ID: <20200427233116.GA18917@x1>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=psE/TVWQ8r0hHEn8TaByg+EQGlqN2iYLLSNjuoRCa9k=;
+        b=PIz05DJndbj9J5O8ki2Ow0PvT8y9rwsaM0SIHKUB1Q51H8nAzlXmBYycC3V7w1EzJG
+         60wz18Gs1O14QUxT6UEjk+8tye167srciL6sV1CJH5oMgj79+Rjofnu3YsxE2XZo8KDC
+         2IEn+4Lai18JXdheMasA0tapTFi264AnXJVjU/tcEFBl8QeqePiDvK7iKVrMo+7RVNJa
+         pcBjhzXlFmBeczDl3lSjCmXo+YsZZIsqra0XmVXeBO8LuyyhgsZc7AteQRFC9tT7/dRk
+         ucfxYPTEcAd81IanOzr0zeZzyEpakHn4PY+kG021ECOUIRWN8lBbANGqmnHNTTIxB7VT
+         jrrg==
+X-Gm-Message-State: AGi0PubG92kO39qiraey4VN65tR8nEaDfHX15lmviIgpTVvtX2fmAl5D
+        gMh7OyBgqlXhUC/tK81PaQk6rw==
+X-Google-Smtp-Source: APiQypIltu09rqzr9JI0Ay36qw8wC98n1LszdiP6AYWaeNG61gnrxNMq7cNJFmvmNXJIZr8u6f1mqQ==
+X-Received: by 2002:a17:902:a98a:: with SMTP id bh10mr24753613plb.340.1588030381558;
+        Mon, 27 Apr 2020 16:33:01 -0700 (PDT)
+Received: from evgreen-glaptop.cheshire.ch ([2601:646:c780:1404:1c5a:73fa:6d5a:5a3c])
+        by smtp.gmail.com with ESMTPSA id u15sm308980pjm.47.2020.04.27.16.33.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 27 Apr 2020 16:33:00 -0700 (PDT)
+From:   Evan Green <evgreen@chromium.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Evan Green <evgreen@chromium.org>,
+        Shobhit Srivastava <shobhit.srivastava@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org
+Subject: [PATCH] spi: pxa2xx: Apply CS clk quirk to BXT
+Date:   Mon, 27 Apr 2020 16:32:48 -0700
+Message-Id: <20200427163238.1.Ib1faaabe236e37ea73be9b8dcc6aa034cb3c8804@changeid>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add gpio-line-names properties to the gpio controller nodes.  The names
-correspond to the AM335x pin names which are also the muxmode 0 signal
-names.  Refer to "Table 4-2. Pin Attributes" in the TI AM335x Sitara 
-Processors datasheet:
+With a couple allies at Intel, and much badgering, I got confirmation
+from Intel that at least BXT suffers from the same SPI chip-select
+issue as Cannonlake (and beyond). The issue being that after going
+through runtime suspend/resume, toggling the chip-select line without
+also sending data does nothing.
 
-http://www.ti.com/lit/ds/symlink/am3358.pdf
+Add the quirk to BXT to briefly toggle dynamic clock gating off and
+on, forcing the fabric to wake up enough to notice the CS register
+change.
 
-
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
+Signed-off-by: Evan Green <evgreen@chromium.org>
+Cc: Shobhit Srivastava <shobhit.srivastava@intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- arch/arm/boot/dts/am33xx-l4.dtsi | 134 +++++++++++++++++++++++++++++++
- 1 file changed, 134 insertions(+)
 
-diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
-index 5ed7f3c58c0f..1ac574ebfe74 100644
---- a/arch/arm/boot/dts/am33xx-l4.dtsi
-+++ b/arch/arm/boot/dts/am33xx-l4.dtsi
-@@ -157,6 +157,39 @@
- 				#interrupt-cells = <2>;
- 				reg = <0x0 0x1000>;
- 				interrupts = <96>;
-+				gpio-line-names =
-+					"MDIO_DATA",
-+					"MDIO_CLK",
-+					"SPI0_SCLK",
-+					"SPI0_D0",
-+					"SPI0_D1",
-+					"SPI0_CS0",
-+					"SPI0_CS1",
-+					"ECAP0_IN_PWM0_OUT",
-+					"LCD_DATA12",
-+					"LCD_DATA13",
-+					"LCD_DATA14",
-+					"LCD_DATA15",
-+					"UART1_CTSN",
-+					"UART1_RTSN",
-+					"UART1_RXD",
-+					"UART1_TXD",
-+					"GMII1_TXD3",
-+					"GMII1_TXD2",
-+					"USB0_DRVVBUS",
-+					"XDMA_EVENT_INTR0",
-+					"XDMA_EVENT_INTR1",
-+					"GMII1_TXD1",
-+					"GPMC_AD8",
-+					"GPMC_AD9",
-+					"NC",
-+					"NC",
-+					"GPMC_AD10",
-+					"GPMC_AD11",
-+					"GMII1_TXD0",
-+					"RMII1_REFCLK",
-+					"GPMC_WAIT0",
-+					"GPMC_WPN";
- 			};
- 		};
- 
-@@ -1304,6 +1337,39 @@
- 				#interrupt-cells = <2>;
- 				reg = <0x0 0x1000>;
- 				interrupts = <98>;
-+				gpio-line-names =
-+					"GPMC_AD0",
-+					"GPMC_AD1",
-+					"GPMC_AD2",
-+					"GPMC_AD3",
-+					"GPMC_AD4",
-+					"GPMC_AD5",
-+					"GPMC_AD6",
-+					"GPMC_AD7",
-+					"UART0_CTSN",
-+					"UART0_RTSN",
-+					"UART0_RXD",
-+					"UART0_TXD",
-+					"GPMC_AD12",
-+					"GPMC_AD13",
-+					"GPMC_AD14",
-+					"GPMC_AD15",
-+					"GPMC_A0",
-+					"GPMC_A1",
-+					"GPMC_A2",
-+					"GPMC_A3",
-+					"GPMC_A4",
-+					"GPMC_A5",
-+					"GPMC_A6",
-+					"GPMC_A7",
-+					"GPMC_A8",
-+					"GPMC_A9",
-+					"GPMC_A10",
-+					"GPMC_A11",
-+					"GPMC_BE1N",
-+					"GPMC_CSN0",
-+					"GPMC_CSN1",
-+					"GPMC_CSN2";
- 			};
- 		};
- 
-@@ -1706,6 +1772,40 @@
- 				#interrupt-cells = <2>;
- 				reg = <0x0 0x1000>;
- 				interrupts = <32>;
-+				gpio-line-names =
-+					"GPMC_CSN3",
-+					"GPMC_CLK",
-+					"GPMC_ADVN_ALE",
-+					"GPMC_OEN_REN",
-+					"GPMC_WEN",
-+					"GPMC_BE0N_CLE",
-+					"LCD_DATA0",
-+					"LCD_DATA1",
-+					"LCD_DATA2",
-+					"LCD_DATA3",
-+					"LCD_DATA4",
-+					"LCD_DATA5",
-+					"LCD_DATA6",
-+					"LCD_DATA7",
-+					"LCD_DATA8",
-+					"LCD_DATA9",
-+					"LCD_DATA10",
-+					"LCD_DATA11",
-+					"GMII1_RXD3",
-+					"GMII1_RXD2",
-+					"GMII1_RXD1",
-+					"GMII1_RXD0",
-+					"LCD_VSYNC",
-+					"LCD_HSYNC",
-+					"LCD_PCLK",
-+					"LCD_AC_BIAS_EN",
-+					"MMC0_DAT3",
-+					"MMC0_DAT2",
-+					"MMC0_DAT1",
-+					"MMC0_DAT0",
-+					"MMC0_CLK",
-+					"MMC0_CMD";
-+
- 			};
- 		};
- 
-@@ -1739,6 +1839,40 @@
- 				#interrupt-cells = <2>;
- 				reg = <0x0 0x1000>;
- 				interrupts = <62>;
-+				gpio-line-names =
-+					"GMII1_COL",
-+					"GMII1_CRS",
-+					"GMII1_RXER",
-+					"GMII1_TXEN",
-+					"GMII1_RXDV",
-+					"I2C0_SDA",
-+					"I2C0_SCL",
-+					"EMU0",
-+					"EMU1",
-+					"GMII1_TXCLK",
-+					"GMII1_RXCLK",
-+					"NC",
-+					"NC",
-+					"USB1_DRVVBUS",
-+					"MCASP0_ACLKX",
-+					"MCASP0_FSX",
-+					"MCASP0_AXR0",
-+					"MCASP0_AHCLKR",
-+					"MCASP0_ACLKR",
-+					"MCASP0_FSR",
-+					"MCASP0_AXR1",
-+					"MCASP0_AHCLKX",
-+					"NC",
-+					"NC",
-+					"NC",
-+					"NC",
-+					"NC",
-+					"NC",
-+					"NC",
-+					"NC",
-+					"NC",
-+					"NC";
-+
- 			};
- 		};
- 
+I don't actually have a BXT (Broxton/Apollolake?) system to test this.
+To be honest I suspect the issue is there in older generations as well,
+but I couldn't get Intel to confirm that, so this seemed like the
+only safe change.
+---
+ drivers/spi/spi-pxa2xx.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index 73d2a65d0b6ef..20dcbd35611a7 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -150,6 +150,7 @@ static const struct lpss_config lpss_platforms[] = {
+ 		.tx_threshold_hi = 48,
+ 		.cs_sel_shift = 8,
+ 		.cs_sel_mask = 3 << 8,
++		.cs_clk_stays_gated = true,
+ 	},
+ 	{	/* LPSS_CNL_SSP */
+ 		.offset = 0x200,
 -- 
-2.20.1
+2.24.1
 
