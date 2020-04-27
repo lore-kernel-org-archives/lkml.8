@@ -2,191 +2,189 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B495C5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 382EEC55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F49F20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E0FB20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:51:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BviJlWNn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgD0Mv3 (ORCPT
+        id S1727791AbgD0Mvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 08:51:29 -0400
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:47695 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726604AbgD0Mv2 (ORCPT
+        Mon, 27 Apr 2020 08:51:31 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47853 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726539AbgD0Mv3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 08:51:28 -0400
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 03RCoeTl024044;
-        Mon, 27 Apr 2020 15:50:40 +0300
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10140)
-        id 75FEC639B1; Mon, 27 Apr 2020 15:50:40 +0300 (IDT)
-From:   amirmizi6@gmail.com
-To:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
-        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de,
-        jgg@ziepe.ca, arnd@arndb.de, gregkh@linuxfoundation.org,
-        benoit.houyere@st.com, eajames@linux.ibm.com, joel@jms.id.au
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
-        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
-        Amir Mizinski <amirmizi6@gmail.com>
-Subject: [PATCH v7 0/7] Add tpm i2c ptp driver
-Date:   Mon, 27 Apr 2020 15:49:24 +0300
-Message-Id: <20200427124931.115697-1-amirmizi6@gmail.com>
-X-Mailer: git-send-email 2.22.0
+        Mon, 27 Apr 2020 08:51:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587991888;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vRiQmFzoZrXUGpwWxPLuF6siHGrPTOYeQlcSJvIJ/rE=;
+        b=BviJlWNnuBwu4EOaTImMyBXe929z2tIC81SVqzDd0TOhee6XEZjMi7ux6H3Q+NUi1CMCBZ
+        742XGtSaMzsnc1YkAW085YQcG3URuKHNmPQxbkr+4a+SIOyqKTSQ3jkZ0LInGrUFrKd0vL
+        3tZPGbuswwq2q9XUUYa6FwydY/qETOs=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-295-iiPr1NLWMsulRR9J7vuwIw-1; Mon, 27 Apr 2020 08:51:26 -0400
+X-MC-Unique: iiPr1NLWMsulRR9J7vuwIw-1
+Received: by mail-wr1-f72.google.com with SMTP id e5so10400368wrs.23
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 05:51:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vRiQmFzoZrXUGpwWxPLuF6siHGrPTOYeQlcSJvIJ/rE=;
+        b=lD5vvc6zYA639CJE2EVt5jPEgWaBFkR0z47jx5+RR4Pvg4v5kmzMkYvsAQs3NplDKO
+         mJpXXnmHBYj8+6X/aBmFtVPHc9i1eIh56cXuk2o896bMwVwEh1/n2laeoe5KiQcNcKnt
+         JO+ZJWbdJi3cmF6Hz5A0CFHehlqm3zozjsh4AwxEw+3wIlWB0XRssXivBmy8eStAhw3p
+         An+AB37zJClNkr9W4zGy580DCIN3exWcY2bqLpNv2AHhYgsQjziqimBfq0DSBGBgIUV3
+         +v+IH1Lb/11B4Skp3L5sk+IHtDNRahy/TVdi0BhgdxR3RLTb2BW8WVMJgQfZQS142SQJ
+         yO9w==
+X-Gm-Message-State: AGi0PuaOj7hmin9LRWTnKdx3Z45LL9QgaDGBQ6VBTZ+ztza3aLoswmT9
+        7HRp4R79mf/GC1SJT4UXZQEZFs08pFNdU2IBMbM6/8Ea8TvXbRiDYOuE4wktbTZc7BoQ37PROEd
+        Zgp9U8H3ZORrkR9bmQKpFo+G2
+X-Received: by 2002:a1c:668a:: with SMTP id a132mr27023572wmc.46.1587991885027;
+        Mon, 27 Apr 2020 05:51:25 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJyDf/OX4OYcDKrzqBAjDFKNR+NN09aMBK95aTkzZozir/CCz+7irJYgimIBbyH7YrcfSq2zw==
+X-Received: by 2002:a1c:668a:: with SMTP id a132mr27023550wmc.46.1587991884778;
+        Mon, 27 Apr 2020 05:51:24 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id m15sm15230473wmc.35.2020.04.27.05.51.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 05:51:23 -0700 (PDT)
+Subject: Re: [PATCH 1/2] platform/x86: i2c-multi-instantiate: Add flag for
+ passing fwnode
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200426104713.216896-1-hdegoede@redhat.com>
+ <20200426104713.216896-2-hdegoede@redhat.com>
+ <CAHp75VdOd6C36oR7HAnqrKiinVBr4YcqqJ=dv3NpR3=Xp0QQ-Q@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <b5bdffb4-0af2-abb7-21f7-2f5da56d5dc6@redhat.com>
+Date:   Mon, 27 Apr 2020 14:51:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75VdOd6C36oR7HAnqrKiinVBr4YcqqJ=dv3NpR3=Xp0QQ-Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Mizinski <amirmizi6@gmail.com>
+Hi,
 
-This patch set adds support for TPM devices that implement the I2C.
-Interface defined by TCG PTP specification:
-https://trustedcomputinggroup.org/wp-content/uploads/TCG_PC_Client_Platform_TPM_Profile_PTP_2.0_r1.03_v22.pdf
+On 4/26/20 7:59 PM, Andy Shevchenko wrote:
+> On Sun, Apr 26, 2020 at 1:47 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> In some cases the driver for the i2c_client-s which i2c-multi-instantiate
+>> instantiates may need access some fields / methods from to the ACPI fwnode
+>> for which i2c_clients are being instantiated.
+>>
+>> An example of this are CPLM3218 ACPI device-s. These contain CPM0 and
+>> CPM1 packages with various information (e.g. register init values) which
+>> the driver needs.
+>>
+>> Passing the fwnode through the i2c_board_info struct also gives the
+>> i2c-core access to it, and if we do not pass an IRQ then the i2c-core
+>> will use the fwnode to get an IRQ, see i2c_acpi_get_irq().
+> 
+> I'm wondering, can we rather do it in the same way like we do for
+> GPIO/APIC case here.
+> Introduce IRQ_RESOURCE_SHARED (or so) and
+> 
+> case _SHARED:
+>   irq = i2c_acpi_get_irq();
+> ...
+> 
+> ?
 
-The driver was tested on Raspberry-Pie 3, using Nuvoton NPCT75X TPM.
+I think you are miss-understanding the problem. The problem is not that
+we want to share the IRQ, the problem is that we want to pass the single
+IRQ in the resources to only 1 of the instantiated I2C-clients. But if we
+do not pass an IRQ (we leave it at 0) and we do pass the fwnode then
+i2c-core-base.c will see that there is an ACPI-node attached to the
+device and will call i2c_acpi_get_irq().
 
-Interrupts are not implemented yet, preparing it for the next patch.
-This patch is based on initial work by oshri Alkoby, Alexander Steffen and Christophe Ricard
+So the solution is definitely not calling i2c_acpi_get_irq() inside
+i2c-multi-instantiate.c we want to avoid the i2c_acpi_get_irq(),
+leaving the other 2 clients for the BSG1160 device without an IRQ
+and thus avoiding the IRQ mismatch (it is a mismatch because the
+drivers do not set the shared flag; and that is ok, we do not want
+to share the IRQ, it is just for the accelerometer AFAIK).
 
-Changes since version 1:
--"char:tpm:Add check_data handle to tpm_tis_phy_ops in order to check data integrity"
-        - Fixed and extended commit description.
-        - Fixed an issue regarding handling max retries.
--"dt-bindings: tpm: Add YAML schema for TPM TIS I2C options":
-        -Converted "tpm_tis_i2c.txt" to "tpm-tis-i2c.yaml".
-        - Renamed "tpm_tis-i2c" to "tpm-tis-i2c".
-        - Removed interrupts properties.
--"char: tpm: add tpm_tis_i2c driver"
-        - Replaced "tpm_tis-i2c" with "tpm-tis-i2c" in "tpm_tis_i2c.c".
-Addressed comments from:
- - Jarkko Sakkinen: https://patchwork.kernel.org/patch/11236257/
- - Rob Herring: https://patchwork.kernel.org/patch/11236253/
+Regards,
 
-Changes since version 2:
-- Added 2 new commits with improvements suggested by Benoit Houyere.
-        -"Fix expected bit handling and send all bytes in one shot without last byte in exception"
-        -"Handle an exception for TPM Firmware Update mode."
-- Updated patch to latest v5.5
--"dt-bindings: tpm: Add YAML schema for TPM TIS I2C options"
-        - Added "interrupts" and "crc-checksum" to properties.
-        - Updated binding description and commit info.
--"char: tpm: add tpm_tis_i2c driver" (suggested by Benoit Houyere)
-        - Added repeat I2C frame after NACK.
-        - Checksum I2C feature activation in DTS file configuration.
-Addressed comments from:
- - Rob Herring: https://lore.kernel.org/patchwork/patch/1161287/
+Hans
 
-Changes since version 3:
-- Updated patch to latest v5.6
-- Updated commits headlines and development credit format by Jarkko Sakkinen suggestion
--"tpm: tpm_tis: Make implementation of read16 read32 write32 optional"
-        - Updated commit description.
--"dt-bindings: tpm: Add YAML schema for TPM TIS I2C options"
-        - Fixed 'make dt_binding_check' errors on YAML file.
-        - Removed interrupts from required and examples since there is no use for them in current patch.
-Addressed comments from:
- - Jarkko Sakkinen: https://lore.kernel.org/patchwork/patch/1192101/
- - Rob Herring: https://lore.kernel.org/patchwork/patch/1192099/
 
-Changes since version 4:
--"tpm: tpm_tis: Make implementation of read16 read32 write32 optional"
-        -Added a "Reviewed-by" tag:
--"tpm: tpm_tis: Add check_data handle to tpm_tis_phy_ops in order to check data integrity"
-        -Fixed credit typos.
--"tpm: tpm_tis: rewrite "tpm_tis_req_canceled()""
-        -Added fixes tag and removed changes for STM.
--"tpm: tpm_tis: Fix expected bit handling and send all bytes in one shot without last byte in exception"
-        -Fixed typos, edited description to be clearer, and added a "Suggested-by" tag.
--"tpm: Handle an exception for TPM Firmware Update mode."
-        -Added a "Suggested-by" tag.
--"dt-bindings: tpm: Add YAML schema for TPM TIS I2C options"
-        -Fixed 'make dt_binding_check' errors.
--"tpm: tpm_tis: add tpm_tis_i2c driver"
-        -Added tested-by tag by Eddie James.
-        -Fixed indent in Kconfig file.
-        -Fixed 'MODULE_DESCRIPTION'.
-Addressed comments from:
- - Jarkko Sakkinen: https://patchwork.kernel.org/patch/11467645/
-                https://patchwork.kernel.org/patch/11467655/
-                https://patchwork.kernel.org/patch/11467643/
-                https://patchwork.kernel.org/patch/11467659/
-                https://patchwork.kernel.org/patch/11467651/
- - Rob Herring: https://patchwork.kernel.org/patch/11467653/
- - Randy Dunlap: https://patchwork.kernel.org/patch/11467651/
- - Eddie James: https://lore.kernel.org/patchwork/patch/1192104/
-
-Changes since version 5:
--"tpm: tpm_tis: Add check_data handle to tpm_tis_phy_ops"
-        -Updated short description and fixed long description to be more clear.
-Addressed comments from:
- - Jarkko Sakkinen: https://lkml.org/lkml/2020/4/6/748
-
-Changes since version 6:
--"tpm: tpm_tis: Make implementation of read16, read32 and write32 optional"
-        -Fixed short description.
-        -Fixed long description proofreading issues.
--"tpm: tpm_tis: Add check_data handle to tpm_tis_phy_ops"
-        -Fixed long description by Jarkko comments and proofreading issues.
-        -Replaced "check_data" with verify_data_integrity".
-        -New line before return statement.
--"tpm: tpm_tis: rewrite "tpm_tis_req_canceled()"
-        -Fixed line over 80 characters.
-        -Fixed long description proofreading issues.
--" tpm: tpm_tis: Fix expected bit handling and send all bytes in one shot"
-        -Fixed long description proofreading issues.
--"dt-bindings: tpm: Add YAML schema for TPM TIS I2C option"
-        -Replaced "tpm-tis-i2c@2e" with "tpm_tis@2e".
-        -Fixed CRC_Checksum description.
--"tpm: tpm_tis: add tpm_tis_i2c driver"
-        -Replaced "depends on CRC_CCIT" with "select CRC_CCIT".
-        -Added tested-by tag by Joel Stanley.
-        -Fixed checkpatch.pl warnings.
-Addressed comments from:
- - Jarkko Sakkinen:
-        https://lore.kernel.org/patchwork/patch/1221336/
-        https://lore.kernel.org/patchwork/patch/1221337/
-        https://lore.kernel.org/patchwork/patch/1221339/
- - Joel Stanley:
-        https://lore.kernel.org/patchwork/patch/1220543/
- - Rob Herring:
-        https://lore.kernel.org/patchwork/patch/1221334/
-
-Amir Mizinski (7):
-  tpm: tpm_tis: Make implementation of read16, read32 and write32
-    optional
-  tpm: tpm_tis: Add verify_data_integrity handle toy tpm_tis_phy_ops
-  tpm: tpm_tis: Rewrite "tpm_tis_req_canceled()"
-  tpm: tpm_tis: Fix expected bit handling and send all bytes in one shot
-    without last byte in exception
-  tpm: Handle an exception for TPM Firmware Update mode.
-  tpm: Add YAML schema for TPM TIS I2C options
-  tpm: tpm_tis: add tpm_tis_i2c driver
-
- .../bindings/security/tpm/tpm-tis-i2c.yaml         |  47 ++++
- drivers/char/tpm/Kconfig                           |  12 +
- drivers/char/tpm/Makefile                          |   1 +
- drivers/char/tpm/tpm2-cmd.c                        |   4 +
- drivers/char/tpm/tpm_tis_core.c                    | 180 +++++++------
- drivers/char/tpm/tpm_tis_core.h                    |  41 ++-
- drivers/char/tpm/tpm_tis_i2c.c                     | 291 +++++++++++++++++++++
- drivers/char/tpm/tpm_tis_spi_main.c                |  41 ---
- include/linux/tpm.h                                |   1 +
- 9 files changed, 490 insertions(+), 128 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
- create mode 100644 drivers/char/tpm/tpm_tis_i2c.c
-
--- 
-2.7.4
+> 
+>>
+>> This is a problem when there is only an IRQ for 1 of the clients described
+>> in the ACPI device we are instantiating clients for. If we unconditionally
+>> pass the fwnode, then i2c_acpi_get_irq() will assign the same IRQ to all
+>> clients instantiated, leading to kernel-oopses like this (BSG1160 device):
+>>
+>> [   27.340557] genirq: Flags mismatch irq 76. 00002001 (bmc150_magn_event) vs. 00000001 (bmc150_accel_event)
+>> [   27.340567] Call Trace:
+>> ...
+>>
+>> So we cannot simply always pass the fwnode. This commit adds a PASS_FWNODE
+>> flag, which can be used to pass the fwnode in cases where we do not have
+>> the IRQ problem and the driver for the instantiated client(s) needs access
+>> to the fwnode.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>   drivers/platform/x86/i2c-multi-instantiate.c | 6 ++++++
+>>   1 file changed, 6 insertions(+)
+>>
+>> diff --git a/drivers/platform/x86/i2c-multi-instantiate.c b/drivers/platform/x86/i2c-multi-instantiate.c
+>> index 6acc8457866e..dcafb1a29d17 100644
+>> --- a/drivers/platform/x86/i2c-multi-instantiate.c
+>> +++ b/drivers/platform/x86/i2c-multi-instantiate.c
+>> @@ -20,6 +20,8 @@
+>>   #define IRQ_RESOURCE_GPIO      1
+>>   #define IRQ_RESOURCE_APIC      2
+>>
+>> +#define PASS_FWNODE            BIT(2)
+>> +
+>>   struct i2c_inst_data {
+>>          const char *type;
+>>          unsigned int flags;
+>> @@ -93,6 +95,10 @@ static int i2c_multi_inst_probe(struct platform_device *pdev)
+>>                  snprintf(name, sizeof(name), "%s-%s.%d", dev_name(dev),
+>>                           inst_data[i].type, i);
+>>                  board_info.dev_name = name;
+>> +
+>> +               if (inst_data[i].flags & PASS_FWNODE)
+>> +                       board_info.fwnode = dev->fwnode;
+>> +
+>>                  switch (inst_data[i].flags & IRQ_RESOURCE_TYPE) {
+>>                  case IRQ_RESOURCE_GPIO:
+>>                          ret = acpi_dev_gpio_irq_get(adev, inst_data[i].irq_idx);
+>> --
+>> 2.26.0
+>>
+> 
+> 
 
