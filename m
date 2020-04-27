@@ -2,127 +2,223 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CB1C4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E940C4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8E7A214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F2B7216FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:32:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n5DS4mi7"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Pg6N2DaR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbgD0Tco (ORCPT
+        id S1726780AbgD0Tcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 15:32:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53808 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbgD0Tcn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 15:32:43 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BD13C03C1A7
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 12:32:43 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id u127so206842wmg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 12:32:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=4/npxxtH+H1OeXXMGzZZnqf+6zu3hCivzxJohpfCQF4=;
-        b=n5DS4mi790uR4KR7jkR4G+Sa4b1EbK+SfC23Apm2Z+aCa5so6VCDig/MIh1Jf6cBP8
-         n+8EqbD1Llns9FfaffKpvEtCTkf4srgM7b6luuSYYV37ANfVYbT6LXmVQPVdqaM4aTHz
-         KLIiqTX7GaouFxw3sYQziltDN2ALBDdWsJSN56/exqCntOxbuQtzI7xfTzXEVf8bfGUx
-         4DPHCU1dJVR/eXPBrseFSVmz6jtTJNrGlXsOq02zpSZ3h+geeEvDTvLEMZS9DZQPcG/F
-         rn7yre0pMarF8QzdOsYlKRXnVOXanX2bAMhRuM2q7SI4TUj6m8kR4T2KSvjOmhg7Z8/S
-         7Qlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4/npxxtH+H1OeXXMGzZZnqf+6zu3hCivzxJohpfCQF4=;
-        b=Qm+ov99vhFA3rp63WWj9t77jTTYpk9dgIQNxNsvvsMvzH23LAZK0bgpweF2vVaefAM
-         7LN7AMtfhVqoe5YyYv2/0D3CmodyohCPZonC2Zyoil1LTu8HP3TgZ1JRZLam88xdVMbY
-         n5HgNFaN2HRKu2UR9clncI4j6IABGkNLcyHsbBMvzC0Gt5kb4UoqY3QKebwEEBMRoeBb
-         jpIvqxBfZzpxG/ERSXc5+2m+1AQhYInwhWZ9kDYkYl0U2lJjpQWsNITZXHqrsX9MyhOJ
-         wBGij+t2FBLDSx1nFiZYizPkQJh02Rj6bKwkfcMPmgSNDc1y30hVmJIR513RWNaRhGCk
-         beJw==
-X-Gm-Message-State: AGi0PuZV3N5xZlpbLxcAycyF75uzGzppokV+GoE5UpwcrT8P9dfuK+dz
-        +570xrpDXOk6jsZPb19w48MNfVLxOUxUbIQAFiw=
-X-Google-Smtp-Source: APiQypJwGs92/0Duteoz2jJWYEITGhMBlH7Ezu6BITIsatXNYDTf+lZCUXwEqwNTqKgT/ilVjIO/lJ6ZE2N5pJMOCnY=
-X-Received: by 2002:a7b:cc0e:: with SMTP id f14mr242589wmh.39.1588015962213;
- Mon, 27 Apr 2020 12:32:42 -0700 (PDT)
+        Mon, 27 Apr 2020 15:32:47 -0400
+Received: from mout.web.de ([212.227.15.14]:54133 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726498AbgD0Tcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 15:32:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1588015951;
+        bh=yriEMMSw+mJO9UE3z78SkastypBUctvQc/BJwAY/K4I=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=Pg6N2DaRHMhT1lufSSwrpSjQulFWPHLusHx2KYsgA1AstCjKQCU37JxSq57fBen5O
+         mkcNuvp2Y9hug36QYI2/BkDdI+r4UkAN/FZjBUv9PhBHA2r+Vf3DRrTsJoX92AS86m
+         JSbVr9O1gLzWmbMNFqyHzL5I+35tU0Vobvs6VfRc=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.31] ([89.12.68.2]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lmu5s-1izaV90Loi-00h2Py; Mon, 27
+ Apr 2020 21:32:31 +0200
+Subject: Re: [BUG] PCI: rockchip: rk3399: pcie switch support
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <4d03dd8c-14f9-d1ef-6fd2-095423be3dd3@web.de>
+ <3e9d2c53-4f0d-0c97-fbfa-6d799e223747@arm.com>
+ <b088ad0e-bab1-0cff-dc43-eb5709555902@web.de>
+ <1f180d4b-9e5d-c829-555b-c9750940361e@web.de>
+ <d02e0b72-5fb3-dd47-468c-08b86db07a9a@arm.com>
+From:   Soeren Moch <smoch@web.de>
+Message-ID: <213ff8e4-0921-6e06-a98e-e7d955ca279d@web.de>
+Date:   Mon, 27 Apr 2020 21:32:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200427063715.21255-1-yanaijie@huawei.com> <ca33223e-efd8-cc26-1dec-c7975a5001ca@amd.com>
-In-Reply-To: <ca33223e-efd8-cc26-1dec-c7975a5001ca@amd.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Mon, 27 Apr 2020 15:32:30 -0400
-Message-ID: <CADnq5_P+U3Kz1r+ehHKZeHULYix5hzJfn0hrn80OtAKNzsZczw@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: remove conversion to bool in dcn20_mpc.c
-To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc:     Jason Yan <yanaijie@huawei.com>,
-        "Wentland, Harry" <harry.wentland@amd.com>,
-        "Leo (Sunpeng) Li" <sunpeng.li@amd.com>,
-        "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <d02e0b72-5fb3-dd47-468c-08b86db07a9a@arm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
+Content-Language: en-GB
+X-Provags-ID: V03:K1:egsP99ZUL8Q+NhjQ+Y0Iq7o0uFlAWiM0eMjSXXzuHmfsXEl14dK
+ U+SWHY1f5u+fSuvX1bzSu9vM8qM9x4WbC7UKxeiyUDxrX0H3bR+c3qytIupN6N4fiUGsfyP
+ xob3RNlqojne4h78YczVbCiQxUE33jECVf0HPYdAowDfEMU7a+9vSMQLH+/Tx+LOh0+6Fio
+ ET093r0Woc7k+juuvDXPg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Y5F9Zlf49Qc=:1ioKBA093oWxuGDt9c4A2E
+ p/qMSJASroWOWPbQc/Z59EoXV03oc4p9t/klcXOEbGaeh55bxbSCCZ9y4Wl3BvnI916xQv5NF
+ o3ULvV7wCbFURDG1VwnSKPYMsPlEIPmHUXCojGwopZ37EflqIg5DJeS1vsCh1ZX1//Uczbkqb
+ U0MKh0b1gcQOln/XrSrHmnC9UWsbmv5W84OeKr9BqyFqbXoE0BnbqocnN9K7EOMY++aMQrt/S
+ NkUIudEWyHz4SmFjEdHapCKkyVqlTifSjaOlx97Z+iaX+DOBYXKpcmIUH+rshr24iJoBDsCGR
+ /IVw1vPp2qqb9hpd6vtVX9k2wlXu06WBHPcZpOm9SmcJ2aJQIXTDjJfspNycBCQVmeOBEeAkT
+ nB8Ku7wdcAK/dkUs5LzkZ88GJ+Cmx9quOtEK8FBSzpo00XpP1339fbqVuqF5Poa6CkeOVaNFT
+ gvNVBqQjq2HH+PYA8ZZX+yR8OTv+BlAalrGpQPysBGUUdMI1LF+0FCs33T+/rvDZZ/0VVXc0I
+ qj6hL56m3b4w1OW3sWoE5j0VdM3ZkS2XxdFoPcnmjFUJAW73yrvyA4kroeOJWlYNPZjVWwwJg
+ ebFvYfAFD0L67b5pI7+idEWKJiBnkzBow+nXPo6NJiN4PPxNfCgAn9sRHb8X0d/3/iBQxy/Kz
+ MEKHJMHhs6KoDAPMO0mKcQxmbE9W74i/UnKI1FWWF8nuH4XcXLN74wcR/Y3jO8xcIsi/lnnEg
+ +GEEwkH0+meGkRtyRG+LU8kFAwQJvAErPaDLetVzTdv3fwi1pbTAiEmngtLsaL3Ysd4tODFp4
+ xGrVsiaY7ebrZ/+JELnb+IsIHq2Ez0qKudErn01vwaftQKoRCxtB1pQErDKKgO0AXLypLJisA
+ rEDkU8fO0d+JTACZeXrUNzuloNHFo61IbBBVLVlqu+Xu5UU1o9s/F0iYN0ePsTEzBW1sWM+Fe
+ UE9Q6iVtSL5GZ3p3X2+VUVGnpgGCSTxKJrBcdLdbZce957fg0jU1pIf11pIbhu085pLNqVz95
+ cpe9pmUlgaL7hd/g1gLu3mXyyEnJnq1Wg/RIXS/qDV8fASdLCnaDHq309ajeSSgYX3H7Sh2ML
+ IgV7O5+lt4q70BzLUDhQjZohr1oCooliHekSIjJ5W/KtpEu4Q29dm7bvFr1xXZxNI/WidsSji
+ 6LTVl6wI7oJTnqdBh9WU++h0CRw5Tjx+lW23wFhh1gx4T77raKEeRnx+sCC5RNPHCIdMp4OpF
+ 5RVZo2UFFJWwx9B3Y
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied.  Thanks!
+On 14.04.20 14:28, Robin Murphy wrote:
+> On 2020-04-14 12:35 pm, Soeren Moch wrote:
+>> On 06.04.20 19:12, Soeren Moch wrote:
+>>> On 06.04.20 14:52, Robin Murphy wrote:
+>>>> On 2020-04-04 7:41 pm, Soeren Moch wrote:
+>>>>> I want to use a PCIe switch on a RK3399 based RockPro64 V2.1 board.
+>>>>> "Normal" PCIe cards work (mostly) just fine on this board. The PCIe
+>>>>> switches (I tried Pericom and ASMedia based switches) also work
+>>>>> fine on
+>>>>> other boards. The RK3399 PCIe controller with pcie_rockchip_host
+>>>>> driver
+>>>>> also recognises the switch, but fails to initialize the buses
+>>>>> behind the
+>>>>> bridge properly, see syslog from linux-5.6.0.
+>>>>>
+>>>>> Any ideas what I do wrong, or any suggestions what I can test here?
+>>>> See the thread here:
+>>>>
+>>>> https://lore.kernel.org/linux-pci/CAMdYzYoTwjKz4EN8PtD5pZfu3+SX+68JL+=
+dfvmCrSnLL=3DK6Few@mail.gmail.com/
+>>>>
+>>>>
+>>> Thanks Robin!
+>>>
+>>> I also found out in the meantime that device enumeration fails in this
+>>> fatal way when probing non-existent devices. So if I hack my complete
+>>> bus topology into rockchip_pcie_valid_device, then all existing device=
+s
+>>> come up properly. Of course this is not how PCIe should work.
+>>>> The conclusion there seems to be that the RK3399 root complex just
+>>>> doesn't handle certain types of response in a sensible manner, and
+>>>> there's not much that can reasonably be done to change that.
+>>> Hm, at least there is the promising suggestion to take over the SError
+>>> handler, maybe in ATF, as workaround.
+>> Unfortunately it seems to be not that easy. Only when PCIe device
+>> probing runs on one of the Cortex-A72 cores of rk3399 we see the SError=
+.
+>> When probing runs on one of the A53 cores, we get a synchronous externa=
+l
+>> abort instead.
+>>
+>> Is this expected to see different error types on big.LITTLE systems? Or
+>> is this another special property of the rk3399 pcie controller?
+>
+> As far as I'm aware, the CPU microarchitecture is indeed one of the
+> factors in whether it takes a given external abort synchronously or
+> asynchronously, so yes, I'd say that probably is expected. I wouldn't
+> necessarily even rely on a single microarchitecture only behaving one
+> way, since in principle it's possible that surrounding instructions
+> might affect whether the core still has enough context left to take
+> the exception synchronously or not at the point the abort does come back=
+.
+>
+> In general external aborts are a "should never happen" kind of thing,
+> so they're not necessarily expected to be recoverable (I think the RAS
+> extensions might add a more robustness in terms of reporting, but
+> aren't relevant here either way).
+>
+Okay. In an ideal world we would not need software workarounds for
+hardware bugs.
 
-Alex
+@Shawn: Can you point me to the rk3399 errata you mentioned in commit
+712fa1777207c2f2703a6eb618a9699099cbe37b ?
 
-On Mon, Apr 27, 2020 at 4:03 AM Christian K=C3=B6nig
-<christian.koenig@amd.com> wrote:
+Thanks.
+
+
+> At this point I'm starting to wonder whether it might be possible to
+> do something similar to the Arm N1SDP workaround using the Cortex-M0,
+> albeit with the complication that probing would realistically have to
+> be explicitly invoked from the Linux driver due to clocks and external
+> regulators... :/
 >
-> Am 27.04.20 um 08:37 schrieb Jason Yan:
-> > The '=3D=3D' expression itself is bool, no need to convert it to bool a=
-gain.
-> > This fixes the following coccicheck warning:
-> >
-> > drivers/gpu/drm/amd/display/dc/dcn20/dcn20_mpc.c:455:70-75: WARNING:
-> > conversion to bool not needed here
-> >
-> > Signed-off-by: Jason Yan <yanaijie@huawei.com>
->
-> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
->
-> > ---
-> >   drivers/gpu/drm/amd/display/dc/dcn20/dcn20_mpc.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_mpc.c b/drivers=
-/gpu/drm/amd/display/dc/dcn20/dcn20_mpc.c
-> > index de9c857ab3e9..9d7432f3fb16 100644
-> > --- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_mpc.c
-> > +++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_mpc.c
-> > @@ -452,7 +452,7 @@ void mpc2_set_output_gamma(
-> >               next_mode =3D LUT_RAM_A;
-> >
-> >       mpc20_power_on_ogam_lut(mpc, mpcc_id, true);
-> > -     mpc20_configure_ogam_lut(mpc, mpcc_id, next_mode =3D=3D LUT_RAM_A=
- ? true:false);
-> > +     mpc20_configure_ogam_lut(mpc, mpcc_id, next_mode =3D=3D LUT_RAM_A=
-);
-> >
-> >       if (next_mode =3D=3D LUT_RAM_A)
-> >               mpc2_program_luta(mpc, mpcc_id, params);
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Sounds complicated.
+For me I use the patch below. Of course this hack is not intended for
+merging, just as reference to conclude this discussion.
+
+If someone comes up with a better solution, I'm happy to test this.
+
+Thanks,
+Soeren
+
+
+=2D-----------------------8<------------------------------------
+=46rom 9f2e26186bbf867f1baada057bcbd843c465c381 Mon Sep 17 00:00:00 2001
+From: Soeren Moch <smoch@web.de>
+Date: Fri, 17 Apr 2020 12:14:04 +0200
+Subject: [PATCH] PCI: rockchip: rk3399: pcie switch support
+
+Due to a hardware bug the rk3399 PCIe controller signals error conditions
+to the cpu when scanning for PCIe devices, which are not available. So
+PCIe bridges are not supported.
+
+The rk3399 Cortex-A72 cores generate SError interrupts for these false
+PCIe errors, Cortex-A53 cores generate Synchronuos External Aborts.
+
+This hack enables PCIe device probing on buses behind bridges by
+ignoring the generated SError. Device probing needs to be done on
+Cortex-A72 cores, e.g. use
+taskset -c 4 modprobe pcie_rockchip_host
+
+Signed-off-by: Soeren Moch <smoch@web.de>
+=2D--
+=C2=A0arch/arm64/kernel/traps.c | 10 +++++++++-
+=C2=A01 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+index cf402be5c573..da2b64d2613f 100644
+=2D-- a/arch/arm64/kernel/traps.c
++++ b/arch/arm64/kernel/traps.c
+@@ -906,8 +906,16 @@ bool arm64_is_fatal_ras_serror(struct pt_regs
+*regs, unsigned int esr)
+=C2=A0
+=C2=A0asmlinkage void do_serror(struct pt_regs *regs, unsigned int esr)
+=C2=A0{
+-=C2=A0=C2=A0=C2=A0 const bool was_in_nmi =3D in_nmi();
++=C2=A0=C2=A0=C2=A0 bool was_in_nmi;
+=C2=A0
++=C2=A0=C2=A0=C2=A0 /* ignore SError to enable rk3399 PCIe bus enumeration=
+ */
++=C2=A0=C2=A0=C2=A0 if (esr >> ESR_ELx_EC_SHIFT =3D=3D ESR_ELx_EC_SERROR) =
+{
++=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 pr_debug("ignoring SError Interrupt=
+ on CPU%d\n",
++=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
+=A0 smp_processor_id());
++=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 return;
++=C2=A0=C2=A0=C2=A0 }
++
++=C2=A0=C2=A0=C2=A0 was_in_nmi =3D in_nmi();
+=C2=A0=C2=A0=C2=A0=C2=A0 if (!was_in_nmi)
+=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 nmi_enter();
+=C2=A0
+=2D-
+2.17.1
+
