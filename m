@@ -2,131 +2,251 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A49DC55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E43CC5519E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 382A9206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:33:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u871Cc3a"
+	by mail.kernel.org (Postfix) with ESMTP id D61EE20575
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:33:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587983616;
+	bh=aOaIIKszeCrTqlWbseYknAJ8SMIcs8kkPSNhJjQ6u9E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fbO4h3USjBn/uewCv1ukf9jZ/gAodogoc85005ZKfSqxe2vuvjiEoZgIQWos04g/z
+	 U5VEBB+P1I14LWU95AJDvexKxYOSDZo1LhTZn7k4TNPDhBTNK3hJNIT25jlXYKdHsc
+	 iqmtf06bRxzYUHIRRQwhINHVJmx8W8b0ijtKvjFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbgD0Kd2 (ORCPT
+        id S1727042AbgD0Kdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 06:33:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53736 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726504AbgD0Kd1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 06:33:27 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7512EC0610D5;
-        Mon, 27 Apr 2020 03:33:27 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id 72so25313361otu.1;
-        Mon, 27 Apr 2020 03:33:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RHfKISSDuem09HNmnqJrvLsee+Kd/nK6TGgV01HIek4=;
-        b=u871Cc3aU+fj9E/6ltaMi4DRumGoRfm36hLggOksBcwUIQlOn+/VZR5G8ZmZ+MSjOs
-         R0ahBZlobrZWEonpeSZVJbZqyUJHfuSEK6LwjXbKKL33b8U/lX+aPIj3cXjM58nwR8cg
-         zk5FfOFxVWl4st/r6DjbI3ohzYmy3Sufzui6R0MtC0h6ZGAMOUS7xYRliSOv31QY5qi3
-         ZR9CpoLvcvWwSt2Cdh85uBHqMky7C1e7mbWk3Fj+rQZo/s8dJ1z5Y2wZEnGQFx7xTKnA
-         Xs6wOq3xj+V2SetBWAnFdlGiPrTvXuDcPVqqxzrMCw+VcxhmfIxoIglQs2ecwrMsEbHu
-         U+Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RHfKISSDuem09HNmnqJrvLsee+Kd/nK6TGgV01HIek4=;
-        b=pcGAv1dhy3K5ZPzlvpGtqubhhQ/V5/ee1xBTK6UgOdsPrvhOZLA95qFmzIFMf3eUDm
-         z5ylLzMch5j+XG8yGt+VZE7R8l0o0FjZQy6IZ7SauxJ5in+NLnO35+lUdWqhTIxdC114
-         vcDwDp4H+A1NYEvCftmOGNExnwDg71v6356kaUrdmCUXLMLp2fHEUMI/KhT7S+tdjU7g
-         llrJUElqcdKHM6r4I5pMbdT5bmbBUBusEPMO1jy2E2O0JvJk9gEMsFQsxXPkZdOJDGuq
-         +CLogL0CebRyaW4St8gSB1hHxbr/Um26Yo1/OS2rrccnv6ziRBrs+Gx7cVZ57GGCqMrc
-         CPNA==
-X-Gm-Message-State: AGi0Pua6BxSDXYuCeotJLr+dDDFewhpCmKek9fWPHAPKVeiUKcc9c8IM
-        cyiL9SRUA4lUl+pwKTuPTi1CheT6xm5jiadQHf4=
-X-Google-Smtp-Source: APiQypJYWrI2wW3qHn8idUgkhu1PgaumpBUm2i/d7Fy3/icjCxWW32db6tol3+HUkjrAEJvFcar5dI/Knt8Yve0JLgM=
-X-Received: by 2002:a9d:7390:: with SMTP id j16mr16472029otk.43.1587983606923;
- Mon, 27 Apr 2020 03:33:26 -0700 (PDT)
+        Mon, 27 Apr 2020 06:33:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46634 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726504AbgD0Kde (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 06:33:34 -0400
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EB5320735;
+        Mon, 27 Apr 2020 10:33:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587983613;
+        bh=aOaIIKszeCrTqlWbseYknAJ8SMIcs8kkPSNhJjQ6u9E=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UlRBMPvoNLzTUwJ+zdPpThA5L0s9xRgXLrZ8eoGDZIuwANdtW9I2jCMH1GosymYX+
+         tqmIYiXCOMHVIHBBOgjhC3Tg4TVYun5gpZadxN0GAuLqRrOQsaRVpHyxhn9dUns24N
+         NfDLQ7IjDJICa6jSUq0JV9hPvXX4Jr7dLl/rSUJk=
+Received: by mail-lj1-f171.google.com with SMTP id a21so16998918ljb.9;
+        Mon, 27 Apr 2020 03:33:33 -0700 (PDT)
+X-Gm-Message-State: AGi0Publ4NBWfABfdbmiUyf5FeYs8Khn0/LXyuaUdfriEYqFoTfqRDj2
+        kCs/htPvrI0vbXKTSYd0kIkRJ4DER1uS/bwjp90=
+X-Google-Smtp-Source: APiQypIqOK1mjsOHL1arjUsIJmqjBh9f6SaKAQkyQrjJ4yAtDn+rUtD2oFnEgN8nt8ZLYAHmAznVhXsvWd0e3gOKPI0=
+X-Received: by 2002:a05:651c:48a:: with SMTP id s10mr13149460ljc.226.1587983611214;
+ Mon, 27 Apr 2020 03:33:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <1587678050-23468-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1587678050-23468-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdV6J-_gBkzhUXtA8OrxhJVzyrAqjA8oeGJGBp86X-C3Nw@mail.gmail.com>
- <20200427092408.g2vpc6j2c6it4x2i@vireshk-i7> <CA+V-a8vwF=u53dZ_U4vX3oAUHrBh5uVUBeOTiDqTZJfV8UUeCA@mail.gmail.com>
- <20200427102240.jsskbskczvctvcwv@vireshk-i7>
-In-Reply-To: <20200427102240.jsskbskczvctvcwv@vireshk-i7>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Mon, 27 Apr 2020 11:33:00 +0100
-Message-ID: <CA+V-a8u46NZ8Y9dAQRHpsVQ2h4fevmRVxnCMLL5mJ2uewRUm8A@mail.gmail.com>
-Subject: Re: [PATCH 10/10] cpufreq: dt: Add support for r8a7742
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Marian-Cristian Rotariu 
-        <marian-cristian.rotariu.rb@bp.renesas.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
+References: <20200427073132.29997-3-wens@kernel.org> <684132b8-4a84-8295-474b-38ccb992bba7@gmail.com>
+ <CAGb2v66Piu5_2bdqvWV3eEn2Se_y1MNKWvvYBv_J7DA-8jBhbQ@mail.gmail.com> <65d15254-08da-895c-1a0c-ef6ce231b620@gmail.com>
+In-Reply-To: <65d15254-08da-895c-1a0c-ef6ce231b620@gmail.com>
+From:   Chen-Yu Tsai <wens@kernel.org>
+Date:   Mon, 27 Apr 2020 18:33:19 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65fGYguNoksq5Dyx3HTKeYg+U82TiQSL+NO8AUcQJQj5w@mail.gmail.com>
+Message-ID: <CAGb2v65fGYguNoksq5Dyx3HTKeYg+U82TiQSL+NO8AUcQJQj5w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] arm64: dts: rockchip: rk3399-roc-pc: Fix MMC
+ numbering for LED triggers
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     Chen-Yu Tsai <wens@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>, dmurphy@ti.com,
+        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        jacek.anaszewski@gmail.com,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-leds@vger.kernel.org,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 11:22 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+On Mon, Apr 27, 2020 at 6:09 PM Johan Jonker <jbx6244@gmail.com> wrote:
 >
-> On 27-04-20, 11:20, Lad, Prabhakar wrote:
-> > Hi Viresh,
+> On 4/27/20 11:17 AM, Chen-Yu Tsai wrote:
+> > On Mon, Apr 27, 2020 at 4:57 PM Johan Jonker <jbx6244@gmail.com> wrote:
+> >>
+> >> Hi Chen-Yu,
+> >>
+> >>> From: Chen-Yu Tsai <wens@csie.org>
+> >>>
+> >>> With SDIO now enabled, the numbering of the existing MMC host controllers
+> >>> gets incremented by 1, as the SDIO host is the first one.
+> >>>
+> >>> Increment the numbering of the MMC LED triggers to match.
+> >>>
+> >>> Fixes: cf3c5397835f ("arm64: dts: rockchip: Enable sdio0 and uart0 on rk3399-roc-pc-mezzanine")
+> >>> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> >>> ---
+> >>>  arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts | 8 ++++++++
+> >>>  arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi          | 4 ++--
+> >>>  2 files changed, 10 insertions(+), 2 deletions(-)
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
+> >>> index 2acb3d500fb9..f0686fc276be 100644
+> >>> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
+> >>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
+> >>> @@ -38,6 +38,10 @@ vcc3v3_pcie: vcc3v3-pcie {
+> >>>       };
+> >>>  };
+> >>>
+> >>> +&diy_led {
+>
+> >>> +     linux,default-trigger = "mmc2";
+>
+> If you decide to use a free form trigger that is not a 'standard' one,
+> then it becomes a user property.
+> User defined properties should not go in a generic dts.
+> It's up to the user what function he/she gives to that led!
+
+The original (in the base .dtsi file for this series of boards) trigger
+is already a non-standard, i.e. not listed in the bindings, one.
+
+Now I would very much like to get rid of user specific stuff, and I
+also mentioned that in the previous round of discussions. No one said
+anything.
+
+> >>> +};
+> >>> +
+> >>>  &pcie_phy {
+> >>>       status = "okay";
+> >>>  };
+> >>> @@ -91,3 +95,7 @@ &uart0 {
+> >>>       pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
+> >>>       status = "okay";
+> >>>  };
+> >>> +
+> >>> +&yellow_led {
+> >>> +     linux,default-trigger = "mmc1";
+> >>> +};
+> >>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+> >>> index 9f225e9c3d54..bc060ac7972d 100644
+> >>> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+> >>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+> >>> @@ -70,14 +70,14 @@ work-led {
+> >>>                       linux,default-trigger = "heartbeat";
+> >>>               };
+> >>>
+> >>
+> >>> -             diy-led {
+> >>> +             diy_led: diy-led {
+> >>
+> >> This changes an existing nodename into something that is still not the
+>
+> Correction:
+> It takes an existing nodename and adds a label.
+
+OK.
+
+> >> preferred way. In the current Rockchip dts there are nodenames like
+> >> 'work', 'yellow' that causing warnings with the command:
 > >
-> > On Mon, Apr 27, 2020 at 10:24 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > >
-> > > On 27-04-20, 11:22, Geert Uytterhoeven wrote:
-> > > > Hi Prabhakar,
-> > > >
-> > > > This patch should be merged through Viresh's cpufreq tree (CCed).
-> > > >
-> > > > On Thu, Apr 23, 2020 at 11:41 PM Lad Prabhakar
-> > > > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > > > > Add the compatible strings for supporting the generic cpufreq driver on
-> > > > > the Renesas RZ/G1H (R8A7742) SoC.
-> > > > >
-> > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> > > >
-> > > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > >
-> > > Prabhakar,
-> > >
-> > > Please resend the patch with all dependencies to me so I can apply it.
-> > >
-> > This is the only patch which is needed for R8A7742 SoC which needs to
-> > be applied for drivers/cpufreq. Shall I still repost it or you are
-> > happy to pick this one up ?
+> > This doesn't change the node name at all. It only adds a label.
+> > If it doesn't pass the check now, it didn't pass the check before.
+> >
+> > I just realized that the footnote I added before is gone because I
+> > regenerated the patches. The original footnote was something along
+> > the lines of:
+> >
+> > I opted to not change the node names nor the labels as the discussion
+> > had not concluded. The other reason being that people may have scripts
+> > or device tree overlays depending on the existing node names.
+> >
+> > Previously I asked the following but got no response:
+> >
+> >     Is changing this after it has been in some kernel releases OK? Wouldn't
+> >     it be considered a break of sysfs ABI?
+> >
+> >     Also, is there some guideline on how to name the labels? For sunxi we've
+> >     been doing "${vendor}:${color}:${function}" since forever.
+> >
+> >     As far as I can tell, the hardware vendor [1] has no specific uses for
+> >     these two (red and yellow) LEDs designed in. And their GPIO lines are
+> >     simply labeled "DIY" (for the red one) and "YELLOW". So I'm not sure
+> >     if putting "our" interpretations and the default-trigger into the
+> >     label is wise.
+> >
+> >     For reference, the green one has its GPIO line labeled "WORK", and their
+> >     intention from [1] is to have it as some sort of power / activity indicator.
+> >     Hence it is named / labeled "work".
+> >
+> >     As for the node names, I think we can keep it as is for now. It's not
+> >     the preferred form, but there's really no need to change it either.
+> >     And some overlay or script might actually expect that name.
+> >
+> >> make -k ARCH=arm dtbs_check
+> >>
+> >> Could you give a generic guide line/example, so all these changes are
+> >> treated the same way? As if the naming follows the preferred 'led-0' line.
+> >
+> > I'm not sure what you are asking for.
 >
-> would be easier for me if you repost it. I don't have it in my
-> mailbox.
+> Your nodename just happend to contain 'led' to pass the regex.
+> There are many other names in use.
+
+Right. So if it passes, what's the problem?
+
+> 'If' the DT maintainer (=Heiko) decides the get rid of all the warnings
+> for led nodes then that change would require all nodename to be handled
+> to same (=preferred way):
 >
-Sure will post that in a bit.
+> Change this:
+>
+> diy_led: diy-led
+> yellow_led: yellow-led
+>
+> Into something like:
+>
+> led_0: led-0
+> led_1: led-1
 
-Cheers,
---Prabhakar
+As I already said, if the maintainers want to clean this up, I am happy to
+provide patches towards this. That is not the case right now. Furthermore,
+that cleanup is not directly related to what I'm trying to fix in this
+patch, which is, from the original submitter's point of view, incorrect
+triggers are used when the mezzanine board is added.
 
-> --
-> viresh
+Also, DT labels "led_0" and "led_1" are useless. They have no relation to
+what is used in the schematics, which are "work", "diy", and "yellow". The
+board itself doesn't have anything silk-screened on, so on that end the only
+thing to go with is the color.
+
+So for fixing up the LED node names, we'd probably want the following:
+
+    diy_led: led-0
+    yellow_led: led-1
+    work_led: led-2
+
+Is that what you're asking for?
+
+
+ChenYu
+
+> >
+> > ChenYu
+> >
+> >>>                       label = "red:diy";
+> >>>                       gpios = <&gpio0 RK_PB5 GPIO_ACTIVE_HIGH>;
+> >>>                       default-state = "off";
+> >>>                       linux,default-trigger = "mmc1";
+> >>>               };
+> >>>
+> >>> -             yellow-led {
+> >>> +             yellow_led: yellow-led {
+> >>>                       label = "yellow:yellow-led";
+> >>>                       gpios = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
+> >>>                       default-state = "off";
+> >>> --
+> >>> 2.26.0
+> >>
+>
