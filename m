@@ -2,98 +2,167 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D2FC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E09DC55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1476A206CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C7FE2064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:19:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fA42ToD7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aPlJ/LL3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgD0NSy (ORCPT
+        id S1727794AbgD0NTz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 09:18:54 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33306 "EHLO
+        Mon, 27 Apr 2020 09:19:55 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56542 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726721AbgD0NSx (ORCPT
+        with ESMTP id S1727010AbgD0NTy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 09:18:53 -0400
+        Mon, 27 Apr 2020 09:19:54 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587993532;
+        s=mimecast20190719; t=1587993592;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=eMggmePdezXBpkt3EQMsDMNJymVegCMfPLGhSAkJGro=;
-        b=fA42ToD7LcYsOY/stUfSSWb6aD0UTsqY+9wzWl2IzzYVGk4SrrueAfVBd24t0aLv+VGxoH
-        MLKKkMSRJ3hBj3cdsJpviOiqSu568lIBQAp9b0+JaxMDOUPnm7YWU4Dr7hcDWy2nl9qjwp
-        xktW5GAqaoKtMYd6lJGvoK1UwuTs6ys=
+        bh=yT6OpqrHhtjj38PhYWZNLuSW0UlygZ75Mb7wSWJbJz8=;
+        b=aPlJ/LL3xE7SQ5hbp+Gk3wIRLLtf7uRFjL2Y1W7jT4TqACGfTYmQDpjeUlW1mw+ORAofGM
+        SdEboDTyP4ahhOxBZJ8cH4+X0mGaaF40BkLkhz4px+lmhnCKhDvnrvDxAKS72pSK/Eg8qQ
+        3KKiSaY0CjR3TOdNf4XknH9fOhbOVm0=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-439-0sGGArDHPwCdsY9wqytrng-1; Mon, 27 Apr 2020 09:18:50 -0400
-X-MC-Unique: 0sGGArDHPwCdsY9wqytrng-1
+ us-mta-351-6uf19V3fO6OsdruwAkISWw-1; Mon, 27 Apr 2020 09:19:49 -0400
+X-MC-Unique: 6uf19V3fO6OsdruwAkISWw-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D5BC6100CC9D;
-        Mon, 27 Apr 2020 13:18:37 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-118-57.rdu2.redhat.com [10.10.118.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EFE3419697;
-        Mon, 27 Apr 2020 13:18:35 +0000 (UTC)
-Subject: Re: [PATCH] mm/slub: Fix incorrect checkings of s->offset
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-References: <20200427020212.5222-1-longman@redhat.com>
- <20200427123814.GE29705@bombadil.infradead.org>
-From:   Waiman Long <longman@redhat.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A06A31895957;
+        Mon, 27 Apr 2020 13:19:45 +0000 (UTC)
+Received: from x1.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 756BA6106A;
+        Mon, 27 Apr 2020 13:19:40 +0000 (UTC)
+Date:   Mon, 27 Apr 2020 07:19:39 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Message-ID: <20200427071939.06aa300e@x1.home>
+In-Reply-To: <20200427115818.GE13640@mellanox.com>
+References: <20200422115017.GQ11945@mellanox.com>
+        <20200422211436.GA103345@otc-nc-03>
+        <20200423191217.GD13640@mellanox.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D8960F9@SHSMSX104.ccr.corp.intel.com>
+        <20200424124444.GJ13640@mellanox.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D8A808B@SHSMSX104.ccr.corp.intel.com>
+        <20200424181203.GU13640@mellanox.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
+        <20200426191357.GB13640@mellanox.com>
+        <20200426214355.29e19d33@x1.home>
+        <20200427115818.GE13640@mellanox.com>
 Organization: Red Hat
-Message-ID: <891a7635-9074-d320-9571-74f584401f01@redhat.com>
-Date:   Mon, 27 Apr 2020 09:18:36 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200427123814.GE29705@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/27/20 8:38 AM, Matthew Wilcox wrote:
-> On Sun, Apr 26, 2020 at 10:02:12PM -0400, Waiman Long wrote:
->> In a couple of places in the slub memory allocator, the code uses
->> "s->offset" as a check to see if the free pointer is put right after the
->> object. That check is no longer true with commit 3202fa62fb43 ("slub:
->> relocate freelist pointer to middle of object").
->>
->> As a result, echoing "1" into the validate sysfs file, e.g. of dentry,
->> may cause a bunch of "Freepointer corrupt" error reports to appear with
->> the system in panic afterwards.
->>
->> To fix it, use the check "s->offset == s->inuse" instead.
-> I think a little refactoring would make this more clear.
->
-> unsigned int track_offset(const struct kmem_cache *s)
-> {
-> 	return s->inuse + (s->offset == s->inuse) ? sizeof(void *) : 0;
-> }
+On Mon, 27 Apr 2020 08:58:18 -0300
+Jason Gunthorpe <jgg@mellanox.com> wrote:
 
-Yes, that was what I am thinking of doing in v2.
+> On Sun, Apr 26, 2020 at 09:43:55PM -0600, Alex Williamson wrote:
+> > On Sun, 26 Apr 2020 16:13:57 -0300
+> > Jason Gunthorpe <jgg@mellanox.com> wrote:
+> >   
+> > > On Sun, Apr 26, 2020 at 05:18:59AM +0000, Tian, Kevin wrote:
+> > >   
+> > > > > > I think providing an unified abstraction to userspace is also important,
+> > > > > > which is what VFIO provides today. The merit of using one set of VFIO
+> > > > > > API to manage all kinds of mediated devices and VF devices is a major
+> > > > > > gain. Instead, inventing a new vDPA-like interface for every Scalable-IOV
+> > > > > > or equivalent device is just overkill and doesn't scale. Also the actual
+> > > > > > emulation code in idxd driver is actually small, if putting aside the PCI
+> > > > > > config space part for which I already explained most logic could be shared
+> > > > > > between mdev device drivers.    
+> > > > > 
+> > > > > If it was just config space you might have an argument, VFIO already
+> > > > > does some config space mangling, but emulating BAR space is out of
+> > > > > scope of VFIO, IMHO.    
+> > > > 
+> > > > out of scope of vfio-pci, but in scope of vfio-mdev. btw I feel that most
+> > > > of your objections are actually related to the general idea of
+> > > > vfio-mdev.    
+> > > 
+> > > There have been several abusive proposals of vfio-mdev, everything
+> > > from a way to create device drivers to this kind of generic emulation
+> > > framework.
+> > >   
+> > > > Scalable IOV just uses PASID to harden DMA isolation in mediated
+> > > > pass-through usage which vfio-mdev enables. Then are you just opposing
+> > > > the whole vfio-mdev? If not, I'm curious about the criteria in your mind 
+> > > > about when using vfio-mdev is good...    
+> > > 
+> > > It is appropriate when non-PCI standard techniques are needed to do
+> > > raw device assignment, just like VFIO.
+> > > 
+> > > Basically if vfio-pci is already doing it then it seems reasonable
+> > > that vfio-mdev should do the same. This mission creep where vfio-mdev
+> > > gains functionality far beyond VFIO is the problem.  
+> > 
+> > Ehm, vfio-pci emulates BARs too.  We also emulate FLR, power
+> > management, DisINTx, and VPD.  FLR, PM, and VPD all have device
+> > specific quirks in the host kernel, and I've generally taken the stance
+> > that would should take advantage of those quirks, not duplicate them in
+> > userspace and not invent new access mechanisms/ioctls for each of them.
+> > Emulating DisINTx is convenient since we must have a mechanism to mask
+> > INTx, whether it's at the device or the APIC, so we can pretend the
+> > hardware supports it.  BAR emulation is really too trivial to argue
+> > about, the BARs mean nothing to the physical device mapping, they're
+> > simply scratch registers that we mask out the alignment bits on read.
+> > vfio-pci is a mix of things that we decide are too complicated or
+> > irrelevant to emulate in the kernel and things that take advantage of
+> > shared quirks or are just too darn easy to worry about.  BARs fall into
+> > that latter category, any sort of mapping into VM address spaces is
+> > necessarily done in userspace, but scratch registers that are masked on
+> > read, *shrug*, vfio-pci does that.  Thanks,  
+> 
+> It is not trivial masking. It is a 2000 line patch doing comprehensive
+> emulation.
 
-Thanks,
-Longman
+Not sure what you're referring to, I see about 30 lines of code in
+vdcm_vidxd_cfg_write() that specifically handle writes to the 4 BARs in
+config space and maybe a couple hundred lines of code in total handling
+config space emulation.  Thanks,
+
+Alex
 
