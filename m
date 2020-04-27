@@ -2,145 +2,261 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DC1C82F01
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2F2C81CFF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E11620B80
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:28:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588030137;
-	bh=EXwlW9YtDj2mhxuO/5UeEOGlkxheyWDNO0eQBZNy4rM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tMmwdQuoY0Ky5Gm2dYLWAtJypC9bT9YDYHZf4GOUMyZm4YpzNmX3gxX4i5X5oQZ1K
-	 ZxbCHCQMYc89Y35uDlBTMgp+t6tWs+3tsI16PRH5FH2iuAtSxIlBdqK4W7k+mzFvbm
-	 Lm5RKDLFCPVx0qVPyItyt8ctgGgTaLRL9GDBj6Go=
+	by mail.kernel.org (Postfix) with ESMTP id 544C4206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:30:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="o8O64NcO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbgD0X24 (ORCPT
+        id S1726333AbgD0Xag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 19:28:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34214 "EHLO
+        Mon, 27 Apr 2020 19:30:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726204AbgD0X2z (ORCPT
+        by vger.kernel.org with ESMTP id S1726253AbgD0Xag (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 19:28:55 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D91E5C0610D5;
-        Mon, 27 Apr 2020 16:28:54 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id y25so9769651pfn.5;
-        Mon, 27 Apr 2020 16:28:54 -0700 (PDT)
+        Mon, 27 Apr 2020 19:30:36 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DB8CC03C1A7
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 16:30:36 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id q7so7918661qkf.3
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 16:30:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=3+IHnDhveDGaeKCCK0OYWbU0s/NXx9OTuAol7R/VECo=;
-        b=cGIyZLN1vtbT/cGwzzdhiFz4OM0YjsRDk5xuN0Yz842DiSOrJAjPTxJz+DomJSQpKR
-         TkeSn6hsRLpEbUTUD/0qfyJn+DMv02u7MVRRQ10nUUv3JK/ROXS5UukiAt66eFXVP7iW
-         T+YwDNHD5cYsVyqzlmbNb8BHQoFUJfxjkksitV0QPa4yyvfvz8GFBIctncwcgP/eHhJZ
-         fFZbhnYLnHWbpWvLZX69/VobPVATQWF11yfrphPZGRHr9lrUNoc770UaVMpGHFDsmX7Y
-         qvfOd4Do0r8C+KVktJUzrVMN6xBL7pG/7iJUHG6B1wN/X97u/jsBbVJzxxpoGYN8mwGK
-         evNQ==
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=quaCJQUXh16GBVFik8QA4Fip2ZkMv94tq1SIciD+mKk=;
+        b=o8O64NcOpReFrdICIw0R22TmhsUrXmbrt0Oquifi1kyyFHcemcPC6lPBakxI7oUNZq
+         I7jBqcLaHoph4I/bGwjn3uwtM6vuggTusUl58GAxe5waPDXDah/g/IYbbsYFVMyOYapE
+         xm/qUjg5KrYezq1T1+bryli0DAr3cgEWoapxeB3pDr5RsZOvuLE5fHI7yilkKPePGznk
+         c1k+PHdKAx/VWQbhHbfX2gJA2NXyOYciXI8KGCyw4cxm1hM15Rhyxy7q72pkFCYdXDWk
+         N8xX6/gYf2fFs7oNVE9x7OUWuiFd7NEMdvQ4EaNulCgqDIpIPsdEK2I1Io33CTLg9DYi
+         cp4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=3+IHnDhveDGaeKCCK0OYWbU0s/NXx9OTuAol7R/VECo=;
-        b=PUH5LHDyq+E45PsMA8Ew4dOuuAdIZmnCM6Rv59nBHnoVD/SgsSekJrFINXEUxmKfUN
-         aFTo0Vn9PORM3xd89rLWoYEUHjlRujjE/pR9cJaj5XoXc+6+JTzFgs0kIrcvTvjePUzc
-         lGSrZkA692r8v5ldadcKzbfxBVifDPSKi2BNbqvkpuiQE4GEPn9+3msxyrOxziLPQI2p
-         xfsWIzm06R5JK+JaawR8yZaTXCvX1mcH8l3I2VDcCyZ7orM/j7RwOQSPP+U8ZySDp9Av
-         LGmSRdcLvSOCjM+MMYY/5pqdIOw4IjtK7HQUOfZftn+gfrkgOwlDuA+elMM8g6VD862Z
-         pMTw==
-X-Gm-Message-State: AGi0PuaBFGkOeAxPZQHnIO03bYGE7bqSpissk3xQwklMg0J2OXy3cJGw
-        eFkF3o92NrL6TDitJ3IYFwI=
-X-Google-Smtp-Source: APiQypJtJ9ReIfTtyu5z3RxVDsRD7/rjAa3M3BxCSTrSlWeZnLHG1eQze305qm1kgwA01zyl/Ltaog==
-X-Received: by 2002:a63:1823:: with SMTP id y35mr25701371pgl.25.1588030134185;
-        Mon, 27 Apr 2020 16:28:54 -0700 (PDT)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id x12sm13510217pfq.209.2020.04.27.16.28.52
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=quaCJQUXh16GBVFik8QA4Fip2ZkMv94tq1SIciD+mKk=;
+        b=FU0OcFf1CdRg0i9TsYC/5+XIOl404yQb0SA/GfVUN8HIS5EYZXhefJ30L8ySDy04uQ
+         5TOWeDXIZZ3p6Y6GkDmPjuXqMa1d8tUt+W7lFQbzHCa8BIw4TWhnaQEZEp2/YgwRyVxA
+         U7OxZCg3gjwkb1BQxoPKoJROXfxfZj85Ogok4SvVTXLppICSSs0ekpszEXayc3kJ8oI/
+         W+bYk73Irjh1INIPh+1d82mXCcloxSzHfStEGN4MneNYHLrzetsWubAjauvuQEfME3cW
+         +r9MNxd3A1h3oyPIeguJjNfX95skNPooYIKrh1u8C8mWGVtfQbQvLqvAKpegf5wmOlbv
+         XS3w==
+X-Gm-Message-State: AGi0PubhhVe3io9FvWR7WM7yhiI5qPxCKMHDFlHBe4yAgM901EfO/tCV
+        c0KgOziOm1j8pkPyUJ05p42Kzg==
+X-Google-Smtp-Source: APiQypKQhsXJYAUPGeCAiGNzkd/+nPRyT2PYJttcnGCPjzLZOweUizR2QmY1YuuQpy+d1hOiuVGD1A==
+X-Received: by 2002:a37:4f45:: with SMTP id d66mr24593051qkb.318.1588030235080;
+        Mon, 27 Apr 2020 16:30:35 -0700 (PDT)
+Received: from x1 (ip-48-2-52-196.nyc.us.northamericancoax.com. [196.52.2.48])
+        by smtp.gmail.com with ESMTPSA id h6sm11956233qtd.79.2020.04.27.16.30.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 16:28:53 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 16:28:51 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     akpm@linux-foundation.org, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
-Subject: Re: mmotm 2020-04-26-00-15 uploaded (mm/madvise.c)
-Message-ID: <20200427232851.GC163745@google.com>
-References: <20200426071602.ZmQ_9C0ql%akpm@linux-foundation.org>
- <bec3b7bd-0829-b430-be1a-f61da01ac4ac@infradead.org>
+        Mon, 27 Apr 2020 16:30:34 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 01:31:16 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>
+Subject: [PATCH] arm: dts: am33xx-l4: add gpio-line-names to gpio controllers
+Message-ID: <20200427233116.GA18917@x1>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bec3b7bd-0829-b430-be1a-f61da01ac4ac@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 10:26:01AM -0700, Randy Dunlap wrote:
-> On 4/26/20 12:16 AM, akpm@linux-foundation.org wrote:
-> > The mm-of-the-moment snapshot 2020-04-26-00-15 has been uploaded to
-> > 
-> >    http://www.ozlabs.org/~akpm/mmotm/
-> > 
-> > mmotm-readme.txt says
-> > 
-> > README for mm-of-the-moment:
-> > 
-> > http://www.ozlabs.org/~akpm/mmotm/
-> > 
-> > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> > more than once a week.
-> > 
-> > You will need quilt to apply these patches to the latest Linus release (5.x
-> > or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-> > http://ozlabs.org/~akpm/mmotm/series
-> > 
-> > The file broken-out.tar.gz contains two datestamp files: .DATE and
-> > .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
-> > followed by the base kernel version against which this patch series is to
-> > be applied.
-> 
-> Hi,
-> I'm seeing lots of build failures in mm/madvise.c.
-> 
-> Is Minchin's patch only partially applied or is it just missing some pieces?
-> 
-> a.  mm/madvise.c needs to #include <linux/uio.h>
-> 
-> b.  looks like the sys_process_madvise() prototype in <linux/syscalls.h>
-> has not been updated:
+Add gpio-line-names properties to the gpio controller nodes.  The names
+correspond to the AM335x pin names which are also the muxmode 0 signal
+names.  Refer to "Table 4-2. Pin Attributes" in the TI AM335x Sitara 
+Processors datasheet:
 
-I screwed up. Sorry about that.
-Thanks for the fixing, Randy and Andrew.
-> 
-> In file included from ../mm/madvise.c:11:0:
-> ../include/linux/syscalls.h:239:18: error: conflicting types for ‘sys_process_madvise’
->   asmlinkage long sys##name(__MAP(x,__SC_DECL,__VA_ARGS__)) \
->                   ^
-> ../include/linux/syscalls.h:225:2: note: in expansion of macro ‘__SYSCALL_DEFINEx’
->   __SYSCALL_DEFINEx(x, sname, __VA_ARGS__)
->   ^~~~~~~~~~~~~~~~~
-> ../include/linux/syscalls.h:219:36: note: in expansion of macro ‘SYSCALL_DEFINEx’
->  #define SYSCALL_DEFINE6(name, ...) SYSCALL_DEFINEx(6, _##name, __VA_ARGS__)
->                                     ^~~~~~~~~~~~~~~
-> ../mm/madvise.c:1295:1: note: in expansion of macro ‘SYSCALL_DEFINE6’
->  SYSCALL_DEFINE6(process_madvise, int, which, pid_t, upid,
->  ^~~~~~~~~~~~~~~
-> In file included from ../mm/madvise.c:11:0:
-> ../include/linux/syscalls.h:880:17: note: previous declaration of ‘sys_process_madvise’ was here
->  asmlinkage long sys_process_madvise(int which, pid_t pid, unsigned long start,
->                  ^~~~~~~~~~~~~~~~~~~
-> 
-> thanks.
-> -- 
-> ~Randy
-> 
+http://www.ti.com/lit/ds/symlink/am3358.pdf
+
+
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
+---
+ arch/arm/boot/dts/am33xx-l4.dtsi | 134 +++++++++++++++++++++++++++++++
+ 1 file changed, 134 insertions(+)
+
+diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
+index 5ed7f3c58c0f..1ac574ebfe74 100644
+--- a/arch/arm/boot/dts/am33xx-l4.dtsi
++++ b/arch/arm/boot/dts/am33xx-l4.dtsi
+@@ -157,6 +157,39 @@
+ 				#interrupt-cells = <2>;
+ 				reg = <0x0 0x1000>;
+ 				interrupts = <96>;
++				gpio-line-names =
++					"MDIO_DATA",
++					"MDIO_CLK",
++					"SPI0_SCLK",
++					"SPI0_D0",
++					"SPI0_D1",
++					"SPI0_CS0",
++					"SPI0_CS1",
++					"ECAP0_IN_PWM0_OUT",
++					"LCD_DATA12",
++					"LCD_DATA13",
++					"LCD_DATA14",
++					"LCD_DATA15",
++					"UART1_CTSN",
++					"UART1_RTSN",
++					"UART1_RXD",
++					"UART1_TXD",
++					"GMII1_TXD3",
++					"GMII1_TXD2",
++					"USB0_DRVVBUS",
++					"XDMA_EVENT_INTR0",
++					"XDMA_EVENT_INTR1",
++					"GMII1_TXD1",
++					"GPMC_AD8",
++					"GPMC_AD9",
++					"NC",
++					"NC",
++					"GPMC_AD10",
++					"GPMC_AD11",
++					"GMII1_TXD0",
++					"RMII1_REFCLK",
++					"GPMC_WAIT0",
++					"GPMC_WPN";
+ 			};
+ 		};
+ 
+@@ -1304,6 +1337,39 @@
+ 				#interrupt-cells = <2>;
+ 				reg = <0x0 0x1000>;
+ 				interrupts = <98>;
++				gpio-line-names =
++					"GPMC_AD0",
++					"GPMC_AD1",
++					"GPMC_AD2",
++					"GPMC_AD3",
++					"GPMC_AD4",
++					"GPMC_AD5",
++					"GPMC_AD6",
++					"GPMC_AD7",
++					"UART0_CTSN",
++					"UART0_RTSN",
++					"UART0_RXD",
++					"UART0_TXD",
++					"GPMC_AD12",
++					"GPMC_AD13",
++					"GPMC_AD14",
++					"GPMC_AD15",
++					"GPMC_A0",
++					"GPMC_A1",
++					"GPMC_A2",
++					"GPMC_A3",
++					"GPMC_A4",
++					"GPMC_A5",
++					"GPMC_A6",
++					"GPMC_A7",
++					"GPMC_A8",
++					"GPMC_A9",
++					"GPMC_A10",
++					"GPMC_A11",
++					"GPMC_BE1N",
++					"GPMC_CSN0",
++					"GPMC_CSN1",
++					"GPMC_CSN2";
+ 			};
+ 		};
+ 
+@@ -1706,6 +1772,40 @@
+ 				#interrupt-cells = <2>;
+ 				reg = <0x0 0x1000>;
+ 				interrupts = <32>;
++				gpio-line-names =
++					"GPMC_CSN3",
++					"GPMC_CLK",
++					"GPMC_ADVN_ALE",
++					"GPMC_OEN_REN",
++					"GPMC_WEN",
++					"GPMC_BE0N_CLE",
++					"LCD_DATA0",
++					"LCD_DATA1",
++					"LCD_DATA2",
++					"LCD_DATA3",
++					"LCD_DATA4",
++					"LCD_DATA5",
++					"LCD_DATA6",
++					"LCD_DATA7",
++					"LCD_DATA8",
++					"LCD_DATA9",
++					"LCD_DATA10",
++					"LCD_DATA11",
++					"GMII1_RXD3",
++					"GMII1_RXD2",
++					"GMII1_RXD1",
++					"GMII1_RXD0",
++					"LCD_VSYNC",
++					"LCD_HSYNC",
++					"LCD_PCLK",
++					"LCD_AC_BIAS_EN",
++					"MMC0_DAT3",
++					"MMC0_DAT2",
++					"MMC0_DAT1",
++					"MMC0_DAT0",
++					"MMC0_CLK",
++					"MMC0_CMD";
++
+ 			};
+ 		};
+ 
+@@ -1739,6 +1839,40 @@
+ 				#interrupt-cells = <2>;
+ 				reg = <0x0 0x1000>;
+ 				interrupts = <62>;
++				gpio-line-names =
++					"GMII1_COL",
++					"GMII1_CRS",
++					"GMII1_RXER",
++					"GMII1_TXEN",
++					"GMII1_RXDV",
++					"I2C0_SDA",
++					"I2C0_SCL",
++					"EMU0",
++					"EMU1",
++					"GMII1_TXCLK",
++					"GMII1_RXCLK",
++					"NC",
++					"NC",
++					"USB1_DRVVBUS",
++					"MCASP0_ACLKX",
++					"MCASP0_FSX",
++					"MCASP0_AXR0",
++					"MCASP0_AHCLKR",
++					"MCASP0_ACLKR",
++					"MCASP0_FSR",
++					"MCASP0_AXR1",
++					"MCASP0_AHCLKX",
++					"NC",
++					"NC",
++					"NC",
++					"NC",
++					"NC",
++					"NC",
++					"NC",
++					"NC",
++					"NC",
++					"NC";
++
+ 			};
+ 		};
+ 
+-- 
+2.20.1
+
