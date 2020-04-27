@@ -2,58 +2,57 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9CCC81C42
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57727C81C40
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 608CC2076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:17:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 331862075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:18:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588022277;
-	bh=GPH6dsgPIHXze49Zrhyo4dTiwhqFaCAXRAs3Zi+NpLs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RprVJLuG+M69O8cNXe/XJOVEGUSgVg+BZp+dho3Ssx0U6fgdndWeSoZ4LiUaKJrI8
-	 Z+od+zgLjHgv9A8XhouG4vAIsaK8WSFpc3oZWAs4QDO8xMHZz9m8JiKFRg9ag12uRy
-	 m+sB3obel6Pi3gq9fbbhugog0gapwT7FE24ZlL5k=
+	s=default; t=1588022281;
+	bh=diHIQNdW9tXwNaigHoaDIpMGH+WAB2UEy0sdibZm2Fc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=FV3Rt3o7Opxj8HdyK+5i32qF66vMdsflz3jzxVcR6pwAfAYkC/K5H0reNIC1HZpmN
+	 YMiSoHOFEt/aXnEYuoUMBxdVkjN3UWEOuHg/ClThdR8nJ22rIxYjl5D9I+XQzpjNcG
+	 V53slk9e+EidNIVafCnVvH5bqG6jMY5r5X3BQL0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgD0VR4 (ORCPT
+        id S1726437AbgD0VR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 17:17:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34210 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726412AbgD0VR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 Apr 2020 17:17:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726030AbgD0VRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 17:17:25 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 258612222A;
-        Mon, 27 Apr 2020 21:17:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5F552075E;
+        Mon, 27 Apr 2020 21:17:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588022245;
-        bh=GPH6dsgPIHXze49Zrhyo4dTiwhqFaCAXRAs3Zi+NpLs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yDAweM4MJ69ihTiA3yTTzV8U6j+nV/KfZwYOwt/CqhESrSBPiyKItzE4iXUjYglx4
-         kl0nV6ikGtOWjBBOAzWywdZ1niq6YRkfWg3O3+bmkkMz9BQuoFmuQmSAbOFNdf2DgE
-         Z2ztfRMEKzLc4L32InKRPPwL4z+CsdSCBM/JgTmo=
+        s=default; t=1588022243;
+        bh=diHIQNdW9tXwNaigHoaDIpMGH+WAB2UEy0sdibZm2Fc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=P4ErDB3UqWrQeqbLqijoEa8kkqGyrk6Qu0y5yI2MKzjqNm6ch/xu4WEb6bki8G/bw
+         w+R3JWBW/0iVAtsV2f2EZCbEipIeFB47JUs0l47yQSuVBVgGt6XiHW+EvIw5b5nHYD
+         JW8gpsqNwh6fZ1haUh2NStOV0V/kj5diMisolXXs=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jTB7z-000Hlq-DE; Mon, 27 Apr 2020 23:17:23 +0200
+        id 1jTB7y-000Hjc-03; Mon, 27 Apr 2020 23:17:22 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org
-Subject: [PATCH v3 28/29] docs: filesystems: convert xfs-self-describing-metadata.txt to ReST
-Date:   Mon, 27 Apr 2020 23:17:20 +0200
-Message-Id: <7c26b200e12cfc07b9bd379612452d845a8d1474.1588021877.git.mchehab+huawei@kernel.org>
+        linux-cachefs@redhat.com, codalist@coda.cs.cmu.edu,
+        linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-xfs@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: [PATCH v3 00/29] Convert files to ReST - part 2
+Date:   Mon, 27 Apr 2020 23:16:52 +0200
+Message-Id: <cover.1588021877.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
-In-Reply-To: <cover.1588021877.git.mchehab+huawei@kernel.org>
-References: <cover.1588021877.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,308 +60,181 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- Add a SPDX header;
-- Adjust document and section titles;
-- Some whitespace fixes and new line breaks;
-- Mark literal blocks as such;
-- Add it to filesystems/index.rst.
+This is the second part of a series I wrote sometime ago where I manually
+convert lots of files to be properly parsed by Sphinx as ReST files.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+As it touches on lot of stuff, this series is based on today's linux-next, 
+at tag next-20190617.
+
+The first version of this series had 57 patches. The first part with 28 patches
+were already merged. Right now, there are still ~76  patches pending applying
+(including this series), and that's because I opted to do ~1 patch per converted
+ directory.
+
+That sounds too much to be send on a single round. So, I'm opting to split
+it on 3 parts for the conversion, plus a final patch adding orphaned books
+to existing ones. 
+
+Those patches should probably be good to be merged either by subsystem
+maintainers or via the docs tree.
+
+I opted to mark new files not included yet to the main index.rst (directly or
+indirectly) with the :orphan: tag, in order to avoid adding warnings to the
+build system. This should be removed after we find a "home" for all
+the converted files within the new document tree arrangement, after I
+submit the third part.
+
+Both this series and  the other parts of this work are on my devel git tree,
+at:
+
+	https://git.linuxtv.org/mchehab/experimental.git/log/?h=convert_rst_renames_v5.1
+
+The final output in html (after all patches I currently have, including 
+the upcoming series) can be seen at:
+
+	https://www.infradead.org/~mchehab/rst_conversion/
+
+It contains all pending work from my side related to the conversion, plus
+the patches I finished a first version today with contains the renaming 
+patches and de-orphan changes.
+
 ---
- Documentation/filesystems/index.rst           |   1 +
- ...a.txt => xfs-self-describing-metadata.rst} | 182 +++++++++---------
- MAINTAINERS                                   |   2 +-
- 3 files changed, 94 insertions(+), 91 deletions(-)
+
+Version 3:
+
+- Rebased on the top of next-20200424
+- configfs.rst conversion moved to the end of the series;
+- avoided almost all markups at configfs.rst while still preserving
+  a reasonable output and not generating build warnings.
+
+Version 2:
+
+- Removed patches merged via other trees;
+- rebased on the top of today's linux-next (next-20190617);
+- Fix a typo on one patch's description;
+- Added received acks.
+
+Mauro Carvalho Chehab (29):
+  docs: filesystems: convert caching/object.txt to ReST
+  docs: filesystems: convert caching/fscache.txt to ReST format
+  docs: filesystems: caching/netfs-api.txt: convert it to ReST
+  docs: filesystems: caching/operations.txt: convert it to ReST
+  docs: filesystems: caching/cachefiles.txt: convert to ReST
+  docs: filesystems: caching/backend-api.txt: convert it to ReST
+  docs: filesystems: convert cifs/cifsroot.txt to ReST
+  docs: filesystems: convert automount-support.txt to ReST
+  docs: filesystems: convert coda.txt to ReST
+  docs: filesystems: convert devpts.txt to ReST
+  docs: filesystems: convert dnotify.txt to ReST
+  docs: filesystems: convert fiemap.txt to ReST
+  docs: filesystems: convert files.txt to ReST
+  docs: filesystems: convert fuse-io.txt to ReST
+  docs: filesystems: convert locks.txt to ReST
+  docs: filesystems: convert mandatory-locking.txt to ReST
+  docs: filesystems: convert mount_api.txt to ReST
+  docs: filesystems: convert quota.txt to ReST
+  docs: filesystems: convert seq_file.txt to ReST
+  docs: filesystems: convert sharedsubtree.txt to ReST
+  docs: filesystems: split spufs.txt into 3 separate files
+  docs: filesystems: convert spufs/spu_create.txt to ReST
+  docs: filesystems: convert spufs/spufs.txt to ReST
+  docs: filesystems: convert spufs/spu_run.txt to ReST
+  docs: filesystems: convert sysfs-pci.txt to ReST
+  docs: filesystems: convert sysfs-tagging.txt to ReST
+  docs: filesystems: convert xfs-delayed-logging-design.txt to ReST
+  docs: filesystems: convert xfs-self-describing-metadata.txt to ReST
+  docs: filesystems: convert configfs.txt to ReST
+
+ Documentation/admin-guide/sysctl/kernel.rst   |    2 +-
+ ...ount-support.txt => automount-support.rst} |   23 +-
+ .../{backend-api.txt => backend-api.rst}      |  165 +-
+ .../{cachefiles.txt => cachefiles.rst}        |  139 +-
+ Documentation/filesystems/caching/fscache.rst |  565 ++++++
+ Documentation/filesystems/caching/fscache.txt |  448 -----
+ Documentation/filesystems/caching/index.rst   |   14 +
+ .../caching/{netfs-api.txt => netfs-api.rst}  |  172 +-
+ .../caching/{object.txt => object.rst}        |   43 +-
+ .../{operations.txt => operations.rst}        |   45 +-
+ .../cifs/{cifsroot.txt => cifsroot.rst}       |   56 +-
+ Documentation/filesystems/coda.rst            | 1670 ++++++++++++++++
+ Documentation/filesystems/coda.txt            | 1676 -----------------
+ .../{configfs/configfs.txt => configfs.rst}   |  131 +-
+ Documentation/filesystems/devpts.rst          |   36 +
+ Documentation/filesystems/devpts.txt          |   26 -
+ .../filesystems/{dnotify.txt => dnotify.rst}  |   11 +-
+ .../filesystems/{fiemap.txt => fiemap.rst}    |  133 +-
+ .../filesystems/{files.txt => files.rst}      |   15 +-
+ .../filesystems/{fuse-io.txt => fuse-io.rst}  |    6 +
+ Documentation/filesystems/index.rst           |   23 +
+ .../filesystems/{locks.txt => locks.rst}      |   14 +-
+ ...tory-locking.txt => mandatory-locking.rst} |   25 +-
+ .../{mount_api.txt => mount_api.rst}          |  329 ++--
+ Documentation/filesystems/proc.rst            |    2 +-
+ .../filesystems/{quota.txt => quota.rst}      |   41 +-
+ .../{seq_file.txt => seq_file.rst}            |   61 +-
+ .../{sharedsubtree.txt => sharedsubtree.rst}  |  394 ++--
+ Documentation/filesystems/spufs/index.rst     |   13 +
+ .../filesystems/spufs/spu_create.rst          |  131 ++
+ Documentation/filesystems/spufs/spu_run.rst   |  138 ++
+ .../{spufs.txt => spufs/spufs.rst}            |  304 +--
+ .../{sysfs-pci.txt => sysfs-pci.rst}          |   23 +-
+ .../{sysfs-tagging.txt => sysfs-tagging.rst}  |   22 +-
+ ...ign.txt => xfs-delayed-logging-design.rst} |   65 +-
+ ...a.txt => xfs-self-describing-metadata.rst} |  182 +-
+ Documentation/iio/iio_configfs.rst            |    2 +-
+ Documentation/usb/gadget_configfs.rst         |    4 +-
+ MAINTAINERS                                   |   14 +-
+ fs/cachefiles/Kconfig                         |    4 +-
+ fs/coda/Kconfig                               |    2 +-
+ fs/configfs/inode.c                           |    2 +-
+ fs/configfs/item.c                            |    2 +-
+ fs/fscache/Kconfig                            |    8 +-
+ fs/fscache/cache.c                            |    8 +-
+ fs/fscache/cookie.c                           |    2 +-
+ fs/fscache/object.c                           |    4 +-
+ fs/fscache/operation.c                        |    2 +-
+ fs/locks.c                                    |    2 +-
+ include/linux/configfs.h                      |    2 +-
+ include/linux/fs_context.h                    |    2 +-
+ include/linux/fscache-cache.h                 |    4 +-
+ include/linux/fscache.h                       |   42 +-
+ include/linux/lsm_hooks.h                     |    2 +-
+ 54 files changed, 3843 insertions(+), 3408 deletions(-)
+ rename Documentation/filesystems/{automount-support.txt => automount-support.rst} (92%)
+ rename Documentation/filesystems/caching/{backend-api.txt => backend-api.rst} (87%)
+ rename Documentation/filesystems/caching/{cachefiles.txt => cachefiles.rst} (90%)
+ create mode 100644 Documentation/filesystems/caching/fscache.rst
+ delete mode 100644 Documentation/filesystems/caching/fscache.txt
+ create mode 100644 Documentation/filesystems/caching/index.rst
+ rename Documentation/filesystems/caching/{netfs-api.txt => netfs-api.rst} (91%)
+ rename Documentation/filesystems/caching/{object.txt => object.rst} (95%)
+ rename Documentation/filesystems/caching/{operations.txt => operations.rst} (90%)
+ rename Documentation/filesystems/cifs/{cifsroot.txt => cifsroot.rst} (72%)
+ create mode 100644 Documentation/filesystems/coda.rst
+ delete mode 100644 Documentation/filesystems/coda.txt
+ rename Documentation/filesystems/{configfs/configfs.txt => configfs.rst} (87%)
+ create mode 100644 Documentation/filesystems/devpts.rst
+ delete mode 100644 Documentation/filesystems/devpts.txt
+ rename Documentation/filesystems/{dnotify.txt => dnotify.rst} (90%)
+ rename Documentation/filesystems/{fiemap.txt => fiemap.rst} (70%)
+ rename Documentation/filesystems/{files.txt => files.rst} (95%)
+ rename Documentation/filesystems/{fuse-io.txt => fuse-io.rst} (95%)
+ rename Documentation/filesystems/{locks.txt => locks.rst} (91%)
+ rename Documentation/filesystems/{mandatory-locking.txt => mandatory-locking.rst} (91%)
+ rename Documentation/filesystems/{mount_api.txt => mount_api.rst} (79%)
+ rename Documentation/filesystems/{quota.txt => quota.rst} (81%)
+ rename Documentation/filesystems/{seq_file.txt => seq_file.rst} (92%)
+ rename Documentation/filesystems/{sharedsubtree.txt => sharedsubtree.rst} (72%)
+ create mode 100644 Documentation/filesystems/spufs/index.rst
+ create mode 100644 Documentation/filesystems/spufs/spu_create.rst
+ create mode 100644 Documentation/filesystems/spufs/spu_run.rst
+ rename Documentation/filesystems/{spufs.txt => spufs/spufs.rst} (57%)
+ rename Documentation/filesystems/{sysfs-pci.txt => sysfs-pci.rst} (92%)
+ rename Documentation/filesystems/{sysfs-tagging.txt => sysfs-tagging.rst} (72%)
+ rename Documentation/filesystems/{xfs-delayed-logging-design.txt => xfs-delayed-logging-design.rst} (97%)
  rename Documentation/filesystems/{xfs-self-describing-metadata.txt => xfs-self-describing-metadata.rst} (83%)
 
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 24d122ab4b39..a4fefb62c931 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -119,4 +119,5 @@ Documentation for filesystem implementations.
-    virtiofs
-    vfat
-    xfs-delayed-logging-design
-+   xfs-self-describing-metadata
-    zonefs
-diff --git a/Documentation/filesystems/xfs-self-describing-metadata.txt b/Documentation/filesystems/xfs-self-describing-metadata.rst
-similarity index 83%
-rename from Documentation/filesystems/xfs-self-describing-metadata.txt
-rename to Documentation/filesystems/xfs-self-describing-metadata.rst
-index 8db0121d0980..51cdafe01ab1 100644
---- a/Documentation/filesystems/xfs-self-describing-metadata.txt
-+++ b/Documentation/filesystems/xfs-self-describing-metadata.rst
-@@ -1,8 +1,11 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+============================
- XFS Self Describing Metadata
------------------------------
-+============================
- 
- Introduction
--------------
-+============
- 
- The largest scalability problem facing XFS is not one of algorithmic
- scalability, but of verification of the filesystem structure. Scalabilty of the
-@@ -34,7 +37,7 @@ required for basic forensic analysis of the filesystem structure.
- 
- 
- Self Describing Metadata
--------------------------
-+========================
- 
- One of the problems with the current metadata format is that apart from the
- magic number in the metadata block, we have no other way of identifying what it
-@@ -142,7 +145,7 @@ modification occurred between the corruption being written and when it was
- detected.
- 
- Runtime Validation
--------------------
-+==================
- 
- Validation of self-describing metadata takes place at runtime in two places:
- 
-@@ -183,18 +186,18 @@ error occurs during this process, the buffer is again marked with a EFSCORRUPTED
- error for the higher layers to catch.
- 
- Structures
------------
-+==========
- 
--A typical on-disk structure needs to contain the following information:
-+A typical on-disk structure needs to contain the following information::
- 
--struct xfs_ondisk_hdr {
--        __be32  magic;		/* magic number */
--        __be32  crc;		/* CRC, not logged */
--        uuid_t  uuid;		/* filesystem identifier */
--        __be64  owner;		/* parent object */
--        __be64  blkno;		/* location on disk */
--        __be64  lsn;		/* last modification in log, not logged */
--};
-+    struct xfs_ondisk_hdr {
-+	    __be32  magic;		/* magic number */
-+	    __be32  crc;		/* CRC, not logged */
-+	    uuid_t  uuid;		/* filesystem identifier */
-+	    __be64  owner;		/* parent object */
-+	    __be64  blkno;		/* location on disk */
-+	    __be64  lsn;		/* last modification in log, not logged */
-+    };
- 
- Depending on the metadata, this information may be part of a header structure
- separate to the metadata contents, or may be distributed through an existing
-@@ -214,24 +217,24 @@ level of information is generally provided. For example:
- 	  well. hence the additional metadata headers change the overall format
- 	  of the metadata.
- 
--A typical buffer read verifier is structured as follows:
-+A typical buffer read verifier is structured as follows::
- 
--#define XFS_FOO_CRC_OFF		offsetof(struct xfs_ondisk_hdr, crc)
-+    #define XFS_FOO_CRC_OFF		offsetof(struct xfs_ondisk_hdr, crc)
- 
--static void
--xfs_foo_read_verify(
--	struct xfs_buf	*bp)
--{
--       struct xfs_mount *mp = bp->b_mount;
-+    static void
-+    xfs_foo_read_verify(
-+	    struct xfs_buf	*bp)
-+    {
-+	struct xfs_mount *mp = bp->b_mount;
- 
--        if ((xfs_sb_version_hascrc(&mp->m_sb) &&
--             !xfs_verify_cksum(bp->b_addr, BBTOB(bp->b_length),
--					XFS_FOO_CRC_OFF)) ||
--            !xfs_foo_verify(bp)) {
--                XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp, bp->b_addr);
--                xfs_buf_ioerror(bp, EFSCORRUPTED);
--        }
--}
-+	    if ((xfs_sb_version_hascrc(&mp->m_sb) &&
-+		!xfs_verify_cksum(bp->b_addr, BBTOB(bp->b_length),
-+					    XFS_FOO_CRC_OFF)) ||
-+		!xfs_foo_verify(bp)) {
-+		    XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp, bp->b_addr);
-+		    xfs_buf_ioerror(bp, EFSCORRUPTED);
-+	    }
-+    }
- 
- The code ensures that the CRC is only checked if the filesystem has CRCs enabled
- by checking the superblock of the feature bit, and then if the CRC verifies OK
-@@ -239,83 +242,83 @@ by checking the superblock of the feature bit, and then if the CRC verifies OK
- 
- The verifier function will take a couple of different forms, depending on
- whether the magic number can be used to determine the format of the block. In
--the case it can't, the code is structured as follows:
-+the case it can't, the code is structured as follows::
- 
--static bool
--xfs_foo_verify(
--	struct xfs_buf		*bp)
--{
--        struct xfs_mount	*mp = bp->b_mount;
--        struct xfs_ondisk_hdr	*hdr = bp->b_addr;
-+    static bool
-+    xfs_foo_verify(
-+	    struct xfs_buf		*bp)
-+    {
-+	    struct xfs_mount	*mp = bp->b_mount;
-+	    struct xfs_ondisk_hdr	*hdr = bp->b_addr;
- 
--        if (hdr->magic != cpu_to_be32(XFS_FOO_MAGIC))
--                return false;
-+	    if (hdr->magic != cpu_to_be32(XFS_FOO_MAGIC))
-+		    return false;
- 
--        if (!xfs_sb_version_hascrc(&mp->m_sb)) {
--		if (!uuid_equal(&hdr->uuid, &mp->m_sb.sb_uuid))
--			return false;
--		if (bp->b_bn != be64_to_cpu(hdr->blkno))
--			return false;
--		if (hdr->owner == 0)
--			return false;
--	}
-+	    if (!xfs_sb_version_hascrc(&mp->m_sb)) {
-+		    if (!uuid_equal(&hdr->uuid, &mp->m_sb.sb_uuid))
-+			    return false;
-+		    if (bp->b_bn != be64_to_cpu(hdr->blkno))
-+			    return false;
-+		    if (hdr->owner == 0)
-+			    return false;
-+	    }
- 
--	/* object specific verification checks here */
-+	    /* object specific verification checks here */
- 
--        return true;
--}
-+	    return true;
-+    }
- 
- If there are different magic numbers for the different formats, the verifier
--will look like:
-+will look like::
- 
--static bool
--xfs_foo_verify(
--	struct xfs_buf		*bp)
--{
--        struct xfs_mount	*mp = bp->b_mount;
--        struct xfs_ondisk_hdr	*hdr = bp->b_addr;
-+    static bool
-+    xfs_foo_verify(
-+	    struct xfs_buf		*bp)
-+    {
-+	    struct xfs_mount	*mp = bp->b_mount;
-+	    struct xfs_ondisk_hdr	*hdr = bp->b_addr;
- 
--        if (hdr->magic == cpu_to_be32(XFS_FOO_CRC_MAGIC)) {
--		if (!uuid_equal(&hdr->uuid, &mp->m_sb.sb_uuid))
--			return false;
--		if (bp->b_bn != be64_to_cpu(hdr->blkno))
--			return false;
--		if (hdr->owner == 0)
--			return false;
--	} else if (hdr->magic != cpu_to_be32(XFS_FOO_MAGIC))
--		return false;
-+	    if (hdr->magic == cpu_to_be32(XFS_FOO_CRC_MAGIC)) {
-+		    if (!uuid_equal(&hdr->uuid, &mp->m_sb.sb_uuid))
-+			    return false;
-+		    if (bp->b_bn != be64_to_cpu(hdr->blkno))
-+			    return false;
-+		    if (hdr->owner == 0)
-+			    return false;
-+	    } else if (hdr->magic != cpu_to_be32(XFS_FOO_MAGIC))
-+		    return false;
- 
--	/* object specific verification checks here */
-+	    /* object specific verification checks here */
- 
--        return true;
--}
-+	    return true;
-+    }
- 
- Write verifiers are very similar to the read verifiers, they just do things in
--the opposite order to the read verifiers. A typical write verifier:
-+the opposite order to the read verifiers. A typical write verifier::
- 
--static void
--xfs_foo_write_verify(
--	struct xfs_buf	*bp)
--{
--	struct xfs_mount	*mp = bp->b_mount;
--	struct xfs_buf_log_item	*bip = bp->b_fspriv;
-+    static void
-+    xfs_foo_write_verify(
-+	    struct xfs_buf	*bp)
-+    {
-+	    struct xfs_mount	*mp = bp->b_mount;
-+	    struct xfs_buf_log_item	*bip = bp->b_fspriv;
- 
--	if (!xfs_foo_verify(bp)) {
--		XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp, bp->b_addr);
--		xfs_buf_ioerror(bp, EFSCORRUPTED);
--		return;
--	}
-+	    if (!xfs_foo_verify(bp)) {
-+		    XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp, bp->b_addr);
-+		    xfs_buf_ioerror(bp, EFSCORRUPTED);
-+		    return;
-+	    }
- 
--	if (!xfs_sb_version_hascrc(&mp->m_sb))
--		return;
-+	    if (!xfs_sb_version_hascrc(&mp->m_sb))
-+		    return;
- 
- 
--	if (bip) {
--		struct xfs_ondisk_hdr	*hdr = bp->b_addr;
--		hdr->lsn = cpu_to_be64(bip->bli_item.li_lsn);
--	}
--	xfs_update_cksum(bp->b_addr, BBTOB(bp->b_length), XFS_FOO_CRC_OFF);
--}
-+	    if (bip) {
-+		    struct xfs_ondisk_hdr	*hdr = bp->b_addr;
-+		    hdr->lsn = cpu_to_be64(bip->bli_item.li_lsn);
-+	    }
-+	    xfs_update_cksum(bp->b_addr, BBTOB(bp->b_length), XFS_FOO_CRC_OFF);
-+    }
- 
- This will verify the internal structure of the metadata before we go any
- further, detecting corruptions that have occurred as the metadata has been
-@@ -324,7 +327,7 @@ update the LSN field (when it was last modified) and calculate the CRC on the
- metadata. Once this is done, we can issue the IO.
- 
- Inodes and Dquots
-------------------
-+=================
- 
- Inodes and dquots are special snowflakes. They have per-object CRC and
- self-identifiers, but they are packed so that there are multiple objects per
-@@ -347,4 +350,3 @@ XXX: inode unlinked list modification doesn't recalculate the inode CRC! None of
- the unlinked list modifications check or update CRCs, neither during unlink nor
- log recovery. So, it's gone unnoticed until now. This won't matter immediately -
- repair will probably complain about it - but it needs to be fixed.
--
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0a4d2fefe5f2..25dcb5ce2417 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18591,7 +18591,7 @@ T:	git git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
- F:	Documentation/ABI/testing/sysfs-fs-xfs
- F:	Documentation/admin-guide/xfs.rst
- F:	Documentation/filesystems/xfs-delayed-logging-design.rst
--F:	Documentation/filesystems/xfs-self-describing-metadata.txt
-+F:	Documentation/filesystems/xfs-self-describing-metadata.rst
- F:	fs/xfs/
- F:	include/uapi/linux/dqblk_xfs.h
- F:	include/uapi/linux/fsmap.h
 -- 
 2.25.4
+
 
