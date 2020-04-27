@@ -2,104 +2,86 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 166A2C5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD3AC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB3C22064C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79583206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:54:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588002855;
+	bh=GzHcKeJNUKqZMJXI9hV1XJzO/w60O4aCtaOhcc1X/gM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BiLXqMMbtZqoRh66ZA/JlVNzFC5w+xHNLg/q17AQ5/OqjK3jVBlb9mIQZNORzwdcz
+	 sIxXJ9rFwA01JGZrRozU6PJ+C3zzbpP0hLmRDb87lpusg5IDWQLKUSSmsqIbiYFiao
+	 KD3Rh9xCfSRrPkUYEpdAlhx7mZF2RGe3tsj7C9Fs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728540AbgD0Pvg convert rfc822-to-8bit (ORCPT
+        id S1728454AbgD0PyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 11:51:36 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:35021 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbgD0Pvf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 11:51:35 -0400
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 43A08200005;
-        Mon, 27 Apr 2020 15:51:29 +0000 (UTC)
-Date:   Mon, 27 Apr 2020 17:51:27 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
-        hauke.mehrtens@intel.com, qi-ming.wu@intel.com,
-        anders.roxell@linaro.org, vigneshr@ti.com, arnd@arndb.de,
-        richard@nod.at, brendanhiggins@google.com,
-        linux-mips@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
-        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
-Subject: Re: [PATCH v3 2/2] mtd: rawnand: Add NAND controller support on
- Intel LGM SoC
-Message-ID: <20200427175127.0518c193@xps13>
-In-Reply-To: <20200424183612.4cfdbb6a@collabora.com>
-References: <20200423162113.38055-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200423162113.38055-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200424183612.4cfdbb6a@collabora.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 27 Apr 2020 11:54:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32992 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728119AbgD0PyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 11:54:14 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CE59206D4;
+        Mon, 27 Apr 2020 15:54:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588002853;
+        bh=GzHcKeJNUKqZMJXI9hV1XJzO/w60O4aCtaOhcc1X/gM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Sc7760sgl9cV7RR6+Ul5gW9Hjs90ASi5+HcKQLCuM/ZlC2UwaeQPAdnBHYvpSUc54
+         +Ey6GhAXdE4o1N/IcCH544yKfvEMPlXM7iWlqt5Q/rQQWjeHR5jDwnADMgMiXWqBrZ
+         ZqaEJJQ6WdcCMuq5Hz4GK+j8+KWcTiGv4bHlEmNw=
+Date:   Mon, 27 Apr 2020 18:54:10 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86 <x86@kernel.org>,
+        Suresh Siddha <suresh.b.siddha@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/apic: Fix circular locking dependency between
+ console and hrtimer locks
+Message-ID: <20200427155410.GG134660@unreal>
+References: <20200407170925.1775019-1-leon@kernel.org>
+ <20200414054836.GA956407@unreal>
+ <20200414062454.GA84326@gmail.com>
+ <87tv15qj5u.fsf@nanos.tec.linutronix.de>
+ <20200427113218.GB134660@unreal>
+ <87h7x5qe3v.fsf@nanos.tec.linutronix.de>
+ <20200427134130.GE134660@unreal>
+ <87y2qhoshi.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87y2qhoshi.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ramuthevar,
+On Mon, Apr 27, 2020 at 05:31:21PM +0200, Thomas Gleixner wrote:
+> Leon Romanovsky <leon@kernel.org> writes:
+> > OK, I consulted with verification people and back then the trigger was:
+> > Reproduce when run "echo 1 > /sys/kernel/debug/clear_warn_once" after
+> > reboot
+>
+> That explains it.
+>
+> > [    0.937310] Freeing SMP alternatives memory: 32K
+> > [    0.940471] TSC deadline timer enabled
+>
+> So here is the first one which sets 'once'. Of course if you clear 'once'
+> afterwards then this triggers because the context is completely
+> different.
+>
+> So the right thing to do is to move this out of __setup_APIC_LVTT() and
+> be done with it.
 
-> > +static int ebu_nand_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct ebu_nand_controller *ebu_host;
-> > +	struct nand_chip *nand;
-> > +	phys_addr_t nandaddr_pa;
-> > +	struct mtd_info *mtd;
-> > +	struct resource *res;
-> > +	int ret;
-> > +	u32 cs;
-> > +
-> > +	ebu_host = devm_kzalloc(dev, sizeof(*ebu_host), GFP_KERNEL);
-> > +	if (!ebu_host)
-> > +		return -ENOMEM;
-> > +
-> > +	ebu_host->dev = dev;
-> > +	nand_controller_init(&ebu_host->controller);
-> > +
-> > +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ebunand");
-> > +	ebu_host->ebu_addr = devm_ioremap_resource(&pdev->dev, res);
-> > +	if (IS_ERR(ebu_host->ebu_addr))
-> > +		return PTR_ERR(ebu_host->ebu_addr);
-> > +
-> > +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsnand");
-> > +	ebu_host->nand_addr = devm_ioremap_resource(&pdev->dev, res);
-> > +	if (IS_ERR(ebu_host->nand_addr))
-> > +		return PTR_ERR(ebu_host->nand_addr);
-> > +
-> > +	ret = device_property_read_u32(dev, "nand,cs", &cs);  
-> 
-> CS ids should be encoded in the reg property (see [1]).
-
-Is it your choice to only support a single CS or is it actually a
-controller limitation? If the latter, it would be much better I think
-to anticipate the addition of the support for another CS. And in
-this case there are many places in this driver that should be
-more generic.
-
-> > +	if (ret) {
-> > +		dev_err(dev, "failed to get chip select: %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	ebu_host->cs = cs;
-> > +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "nand_cs0");  
-
-Thanks,
-Miquèl
+Thanks a lot.
