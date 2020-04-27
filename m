@@ -2,148 +2,143 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F35C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D565C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA164206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 820042072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:32:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qnXdkfkf"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HKzbYVZx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgD0UcT (ORCPT
+        id S1726791AbgD0Ucr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 16:32:19 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:19878 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726676AbgD0UcT (ORCPT
+        Mon, 27 Apr 2020 16:32:47 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:37984 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726285AbgD0Ucr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 16:32:19 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588019538; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=kNapMrLPfWyqq3saA7ayYBf3t2HHIt3ns1o+JIh4q4U=; b=qnXdkfkfZOFa3nvemiYARZmiIdcTAUMBrs10zuLH6On6bXGj+VWUyV7vl17CDmSr5qhQvyV7
- 11Bl68HoEJGVJKUPQDh7fsSGJTj/JfqGcIzdzG9SWWqrooEto1nMhqELyEoT3asllByApzhP
- FtVj3fJdIE0J+LnbH0Fyd//kMqY=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea7413d.7f0d1ef71030-smtp-out-n03;
- Mon, 27 Apr 2020 20:31:57 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BEBEFC4478F; Mon, 27 Apr 2020 20:31:56 +0000 (UTC)
-Received: from [10.110.78.22] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C2DA4C433D2;
-        Mon, 27 Apr 2020 20:31:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C2DA4C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [PATCH] phy: qcom-snps: Add runtime suspend and resume handlers
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1587662818-4461-1-git-send-email-wcheng@codeaurora.org>
- <20200427165919.GR56386@vkoul-mobl.Dlink>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <4ce39b01-ddf3-7a5b-9ac4-659ff4362fcd@codeaurora.org>
-Date:   Mon, 27 Apr 2020 13:31:55 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Mon, 27 Apr 2020 16:32:47 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03RKSxCl029276;
+        Mon, 27 Apr 2020 20:31:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=pOSG25qvqUqJ+z4S02r79fZiwo4gUeQybxg3JDBq6Zg=;
+ b=HKzbYVZxairCzE7vdE2FUh+lRMalt1IgLwG62EZZLOrMDDiweMek4V/UQKTaD29jB+C3
+ HhaguVAewckdZLwW+JeHsLxuqK7OFCyqGT+eNZPRqE8MoeyZG6xifNaVeevVI8zPyTph
+ ecCkoVkAHGETiAylhjR5pXlAj6mQud8KB6cpUlp/3MArilZtrPgR8MPcKO0Qb8Lz7CC8
+ qvVF13zrUX6sIfBnQhl9touKGipc7jilcG/GzjtjNfH6zyFs5dGhUwjoqsGGawh/jxvj
+ rMXwCVFCCNaS5tC7N5Om8J27L1gCUE+1yL1IG9QLgGAFv8Yp3z4fnrNipQSt7lbsVwlC Xw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 30nucfuxfs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Apr 2020 20:31:14 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03RKRqKn111291;
+        Mon, 27 Apr 2020 20:31:14 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 30mxwwwt96-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Apr 2020 20:31:13 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03RKV9QE002577;
+        Mon, 27 Apr 2020 20:31:09 GMT
+Received: from [192.168.2.157] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 27 Apr 2020 13:31:09 -0700
+Subject: Re: [PATCH v3 2/4] hugetlbfs: move hugepagesz= parsing to arch
+ independent code
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Sandipan Das <sandipan.osd@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "David S.Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Longpeng <longpeng2@huawei.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Mina Almasry <almasrymina@google.com>,
+        Peter Xu <peterx@redhat.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>
+References: <20200417185049.275845-1-mike.kravetz@oracle.com>
+ <20200417185049.275845-3-mike.kravetz@oracle.com>
+ <7583dfcc-62d8-2a54-6eef-bcb4e01129b3@gmail.com>
+ <5a380060-38db-b690-1003-678ca0f28f07@oracle.com>
+ <b1f04f9f-fa46-c2a0-7693-4a0679d2a1ee@oracle.com>
+ <20200427131802.3d132055a59535a0e6780e9f@linux-foundation.org>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <b34270b7-fa9b-ce2c-20bc-84279ce6ea59@oracle.com>
+Date:   Mon, 27 Apr 2020 13:31:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200427165919.GR56386@vkoul-mobl.Dlink>
+In-Reply-To: <20200427131802.3d132055a59535a0e6780e9f@linux-foundation.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 bulkscore=0
+ suspectscore=0 mlxlogscore=999 phishscore=0 malwarescore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004270166
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
+ mlxlogscore=999 impostorscore=0 suspectscore=0 malwarescore=0
+ lowpriorityscore=0 mlxscore=0 spamscore=0 adultscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004270166
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/27/2020 9:59 AM, Vinod Koul wrote:
-> On 23-04-20, 10:26, Wesley Cheng wrote:
+On 4/27/20 1:18 PM, Andrew Morton wrote:
+> On Mon, 27 Apr 2020 12:09:47 -0700 Mike Kravetz <mike.kravetz@oracle.com> wrote:
 > 
->> +static int qcom_snps_hsphy_suspend(struct qcom_snps_hsphy *hsphy)
->> +{
->> +	if (hsphy->suspended)
->> +		return 0;
->> +
->> +	dev_dbg(&hsphy->phy->dev, "Suspend QCOM SNPS PHY, mode = %d \n", hsphy->mode);
->> +
->> +	if (hsphy->mode == PHY_MODE_USB_HOST) {
->> +		/* Enable auto-resume to meet remote wakeup timing */
->> +		qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL2,
->> +										USB2_AUTO_RESUME, USB2_AUTO_RESUME);
->> +		usleep_range(500, 1000);
->> +		qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL2,
->> +										0, USB2_AUTO_RESUME);
+>> Previously, a check for hugepages_supported was added before processing
+>> hugetlb command line parameters.  On some architectures such as powerpc,
+>> hugepages_supported() is not set to true until after command line
+>> processing.  Therefore, no hugetlb command line parameters would be
+>> accepted.
+>>
+>> Remove the additional checks for hugepages_supported.  In hugetlb_init,
+>> print a warning if !hugepages_supported and command line parameters were
+>> specified.
 > 
-> Kernel has a coding guideline where we try to "stick" to 80 char limit
-> and is sometimes okay like debug logs. Above is not okay. Please fix it
-> and run ./scripts/checkpatch.pl --strict on your patch and fix all
-> errors. Warning and checks at your discretion using common sense. When
-> in doubt do ask :)
-> 
+> This applies to [4/4] instead of fixing [2/4].  I guess you'll
+> straighten that out in v4?
 
-Hi Vinod,
+Yes.
 
-Thanks for the input.  I do run the checkpatch script before sending
-patches, and addressing the errors.  However, seems this was tagged as a
-warning instead.  Will keep in mind to address as many warnings as I can
-as well.
+> btw, was
+> http://lkml.kernel.org/r/CADYN=9Koefrq9H1Y82Q8nMNbeyN4tzhEfvDu5u=sVFjFZCYorA@mail.gmail.com
+> addressed?
 
->> +	}
->> +
->> +	clk_disable_unprepare(hsphy->cfg_ahb_clk);
->> +	hsphy->suspended = true;
-> 
-> why do you need to track this?
-> 
+Yes, you pulled a patch into your tree to address this.
+hugetlbfs-remove-hugetlb_add_hstate-warning-for-existing-hstate-fix.patch
 
-More for debug purposes in case the RPM state becomes out of sync with
-the expected PHY state.  We've seen some situations during PM
-suspend/resume testing where our RPM routines aren't executed, as PM
-will disable RPM briefly.  It would be nice to be able to catch these
-situations after collecting our crash dumps.
-
->> +
->> +	return 0;
->> +}
->> +
->> +static int qcom_snps_hsphy_resume(struct qcom_snps_hsphy *hsphy)
->> +{
->> +	int ret = 0;
-> 
-> superfluous init..
-> 
-
-Agreed.
-
->>  static int qcom_snps_hsphy_probe(struct platform_device *pdev)
->>  {
->>  	struct device *dev = &pdev->dev;
->> @@ -251,6 +333,14 @@ static int qcom_snps_hsphy_probe(struct platform_device *pdev)
->>  		return ret;
->>  	}
->>  
->> +	pm_runtime_set_active(dev);
->> +	pm_runtime_enable(dev);
-> 
-> would it not make sense to enable this after pjy in initialized?
-> 
-
-Not sure we want to put this in the phy_init() callback, as we can't
-guarantee how the driver registering the PHY will use it. It'll put the
-requirement of having to call phy_exit() for every phy_init() sequence,
-in order to avoid unbalanced disable_depth warnings from the RPM driver.
-
+I'll send out a v4 with both these issues addressed.  Would like to wait
+until receiving confirmation from someone who can test on powerpc.
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Mike Kravetz
