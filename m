@@ -2,72 +2,52 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44019C5519B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4D7C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 188A32072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:25:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EywXmHz4"
+	by mail.kernel.org (Postfix) with ESMTP id 9D61C2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:26:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgD0HZe (ORCPT
+        id S1726679AbgD0H0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 03:25:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52588 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbgD0HZe (ORCPT
+        Mon, 27 Apr 2020 03:26:38 -0400
+Received: from smtp.domeneshop.no ([194.63.252.55]:34993 "EHLO
+        smtp.domeneshop.no" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726243AbgD0H0i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 03:25:34 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B07FC061A0F;
-        Mon, 27 Apr 2020 00:25:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=nvKryGltvAZBbLqFJq4aHWUrRwCZ4uSxodxNcS43W1M=; b=EywXmHz4i8UGNyEIOAOgABnyw2
-        QpIgEWUG+OovJD79btXpcQROu2y+Ssxn3weaGuU+lbU8VFb60Mbv/dQ43NebPsBraLJJfgq8jfwea
-        K1bZwDeaW28CHbQpqLFKRmV0+gAkfT2RkeebxhqK4OqWrrtvsj2V22Oe0mDWjJCunDuFJDr2e675t
-        eprmjw71k1RJwiAQdyQ+HndUERGqVS/pV5nsgUJV3eBuFHY1R8ZO/WOqLZWPvuPT3vhjC/brD5P8A
-        ahAla0pEDc7A8slOeJSEkigVFZ4sFMgEKiRnveKoligCFfKpA7vdr4ckYniuxZB0uEnFkZuE45GrC
-        0P2tmK3w==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jSy8t-0003X5-3Y; Mon, 27 Apr 2020 07:25:27 +0000
-Date:   Mon, 27 Apr 2020 00:25:27 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Nishad Kamdar <nishadkamdar@gmail.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Joe Perches <joe@perches.com>, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xfs: Use the correct style for SPDX License Identifier
-Message-ID: <20200427072527.GA3019@infradead.org>
-References: <20200425133504.GA11354@nishad>
+        Mon, 27 Apr 2020 03:26:38 -0400
+Received: from [2a02:fe0:c700:2:984c:ac0d:3200:67f3] (port=53621)
+        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <Ywe_C4rlyn@sn-parti.eu>)
+        id 1jSy9y-0006zu-Jq
+        for linux-kernel@vger.kernel.org; Mon, 27 Apr 2020 09:26:34 +0200
+To:     linux-kernel@vger.kernel.org
+From:   =?UTF-8?Q?Ywe_C=c3=a6rlyn?= <Ywe_C4rlyn@sn-parti.eu>
+Subject: =?UTF-8?Q?Fair_Pay_Project=3a_=e2=82=ac-money_=3d_optimal?=
+Message-ID: <cc95f59e-1856-8054-a62f-3abdaedab8b9@sn-parti.eu>
+Date:   Mon, 27 Apr 2020 09:26:31 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200425133504.GA11354@nishad>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 25, 2020 at 07:05:09PM +0530, Nishad Kamdar wrote:
-> This patch corrects the SPDX License Identifier style in
-> header files related to XFS File System support.
-> For C header files Documentation/process/license-rules.rst
-> mandates C-like comments (opposed to C source files where
-> C++ style should be used).
-> 
-> Changes made by using a script provided by Joe Perches here:
-> https://lkml.org/lkml/2019/2/7/46.
+it-X now finally named, supports €-money, as we have called it, and 
+things can get symbolical in large projects, and EU is positioned 
+optimal for this.
 
-Please use up all 73 chars in your commit logs.
+Should be all the fair pay principles for the next stage of *nix 
+development: €-money!
+
+Serene Greetings.
+Ywe.
+https://www.youtube.com/channel/UCR3gmLVjHS5A702wo4bol_Q
