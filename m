@@ -2,334 +2,372 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 080A0C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CBF7C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7182206BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFC2B206B9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:27:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="Odo/K5D3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LBFabJFx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgD0O1J (ORCPT
+        id S1727974AbgD0O1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 10:27:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33828 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727089AbgD0O1I (ORCPT
+        Mon, 27 Apr 2020 10:27:46 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50474 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727897AbgD0O1p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 10:27:08 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62C64C0610D5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 07:27:08 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id nv1so14288477ejb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 07:27:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5xaiJwxf5bizYJGRGo7ug7IG2WAtUtRwoEcLaSq8Teg=;
-        b=Odo/K5D3TIaqpTmsMGErs+sIjRD22u0LguhPbYTjeE4y/+bkeWfp30Kot6SyhCXhHr
-         L98B012zTSmfx3NMuwfrF1+JijWNF1J4H0MEeb1eGCJTV41DIRVeJuT7MAnjF5tq7krp
-         5zNAedaa6SiRipLjtO7u06i//XAE28O5gGUmWWMG3S/s1H74JH4EYgqppDANQF43pYgc
-         puMFA/i6+hoxfTchDGXOTRglCzEf+eAZ5K9bWd3GJI8hk7FUDjQHBTrdtaWEXU/hU1fM
-         lbhjSUXrlKM8UcVLCfLf2/pjROkFFr8lZepHwGmqjTgZdhS7aMMWbOsVhI2ORjXzEEVc
-         HSRw==
+        Mon, 27 Apr 2020 10:27:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587997663;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=KH3F3rn5H3P6F15O38bSCG/8kvqeQ9K+5rygkYqN0eY=;
+        b=LBFabJFxdRZhGT9S7MU530zS6YDVesJtIi9oQlXSqR/nCDmxeIqLRVo4EUvt6PQhYLYBb3
+        zbOgMOq8G2a6Mh02LgTaabldTXF/0/OqjNRTSiV9oZx/nOc9ICumRKT8HZHvqP9V9JTdpf
+        h0Z3D9fQz/6Uu1fI24Vd3YmAlbAv7Qs=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-123--EPGGTTrM9WxS6nwSlEi3Q-1; Mon, 27 Apr 2020 10:27:41 -0400
+X-MC-Unique: -EPGGTTrM9WxS6nwSlEi3Q-1
+Received: by mail-qk1-f200.google.com with SMTP id o21so19644601qkm.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 07:27:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5xaiJwxf5bizYJGRGo7ug7IG2WAtUtRwoEcLaSq8Teg=;
-        b=ZaB4s2EGIaLxF7VeenjyyY5/rR9c9kgTJ/m0hZJSgDys9rENEEQ+4WoJ8nOrIyS7mX
-         pmoIdUXBxEFpJoPIfpX2e9F6GsC7zYBLHdMDgRoFOEfWJRTaIyQ32uWJ9B64tPPxPLSi
-         JOTcq+4KSNfs1Ia1Jc64YghBOKLya5+2zt8wWed7tL/pZQ4nuy1eoIzyB/OoAhZb/BVA
-         NgR5wNJvv4+vxUq8mPyYHY/8p+pHNRXtQzkq/Y4RuvSirKI1UL1td9Yx7iXPXsXi21GJ
-         kI6lvmrarJNx6KDzu1TM+3KR43D+5/wES1IOhzHwF2k5y6QyByXFgMzmsdGJ65lDslTb
-         fH8g==
-X-Gm-Message-State: AGi0PuZzFmzLNAHxECjrg6dF8IpTDPSfAZ31T1qEdz2spukjaEO7SwEl
-        3JBQUBekKBHO3rabjTH4ffqSN8Trpzavli5rOGrDww==
-X-Google-Smtp-Source: APiQypLXfqV0HKiZP7bfFJzl75f0rxK6T82MHGc1c+GmLousTsyiDNYWdq2HHlmiKi05gqLNnM2y6AYCrBCDoedU7QU=
-X-Received: by 2002:a17:906:390a:: with SMTP id f10mr19419682eje.74.1587997626980;
- Mon, 27 Apr 2020 07:27:06 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KH3F3rn5H3P6F15O38bSCG/8kvqeQ9K+5rygkYqN0eY=;
+        b=QI3RpewVt/+ahdVcNjEwaY8J2fIbmPpOa5tUMkYrfTCJg5/0Unud+kEjuiVFb/zfK/
+         KNe7P2qjR7iyxoSV8skn6nyLLuRDrnx+CfCOGLChelaROdyb9YZSM3//5Swr2KzIK/oi
+         kumO3cRg8bW/BIJxE2O0P11ShOaudn+Ldi/zLYAy1WOaKxcxym26Dm8JksSnm5OtNzYY
+         X2pDLpvGUYDykG2yUZmO9eawjhrmWIgl15mkEnLy7uHLioPWSrsEFAhN9NcCZCS6EBii
+         762Z3VfeCCxBUoTV/Cz+weh2o+AvxeMF8OMNyTcx7Ymi7NyqJRxMrTkUQ/BH/dPedFYl
+         95TA==
+X-Gm-Message-State: AGi0PuYb4dJingWTH2JDuYttyuPqI6BBXvO7dMVnpTBNbpi3d2YXrTH0
+        kkc8bqINQ1hqyokyrMStP8CLpVroT4xhaW/A3cW6GnCQb7T0JWL/krzFzBfCq0gK6Difq9YOrqM
+        WhoYbzTH0YUA9uWxRrAD8aMeL
+X-Received: by 2002:a37:614a:: with SMTP id v71mr23179850qkb.326.1587997660697;
+        Mon, 27 Apr 2020 07:27:40 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJBahc2Fd13kBJ84o2T7mk9CjdMOq9EJyYJJL+14UprAQQVaTptKsIU4hnS0GBjnWy+NDpS2w==
+X-Received: by 2002:a37:614a:: with SMTP id v71mr23179778qkb.326.1587997659805;
+        Mon, 27 Apr 2020 07:27:39 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id w27sm10967427qtc.18.2020.04.27.07.27.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 07:27:38 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 10:27:37 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        "Zhao, Yan Y" <yan.y.zhao@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH v8 00/14] KVM: Dirty ring interface
+Message-ID: <20200427142737.GC48376@xz-x1>
+References: <20200331190000.659614-1-peterx@redhat.com>
+ <20200422185155.GA3596@xz-x1>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D877A3B@SHSMSX104.ccr.corp.intel.com>
+ <20200423152253.GB3596@xz-x1>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D899D8D@SHSMSX104.ccr.corp.intel.com>
+ <20200424141944.GA41816@xz-x1>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D8CD4C8@SHSMSX104.ccr.corp.intel.com>
 MIME-Version: 1.0
-References: <00000000000089155205a43d9596@google.com>
-In-Reply-To: <00000000000089155205a43d9596@google.com>
-From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Date:   Mon, 27 Apr 2020 11:26:54 -0300
-Message-ID: <CAAEAJfAnMeZw3H3PJccpJTEME877i3=21CehykkSgnSnCZbOVQ@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in vkms_dumb_create
-To:     syzbot <syzbot+e3372a2afe1e7ef04bc7@syzkaller.appspotmail.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        hamohammed.sa@gmail.com, linaro-mm-sig@lists.linaro.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        rodrigosiqueiramelo@gmail.com,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D8CD4C8@SHSMSX104.ccr.corp.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Apr 2020 at 00:48, syzbot
-<syzbot+e3372a2afe1e7ef04bc7@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    c578ddb3 Merge tag 'linux-kselftest-5.7-rc3' of git://git...
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=10fbf0d8100000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=b7a70e992f2f9b68
-> dashboard link: https://syzkaller.appspot.com/bug?extid=e3372a2afe1e7ef04bc7
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15438330100000
->
-> Bisection is inconclusive: the first bad commit could be any of:
->
-> 85b5bafb drm/cma-helper: Remove drm_fb_cma_fbdev_init_with_funcs()
-> dff1c703 drm/tinydrm: Use drm_fbdev_generic_setup()
-> 23167fa9 drm/panel: simple: Add support for Rocktech RK070ER9427 LCD panel
-> 9060d7f4 drm/fb-helper: Finish the generic fbdev emulation
-> 2230ca12 dt-bindings: display: Document the EDT et* displays in one file.
-> e896c132 drm/debugfs: Add internal client debugfs file
-> 894a677f drm/cma-helper: Use the generic fbdev emulation
-> aa7e6455 drm/panel: Add support for the EDT ETM0700G0BDH6
-> 244007ec drm/pl111: Set .gem_prime_vmap and .gem_prime_mmap
-> aad34de2 drm/panel: Add support for the EDT ETM0700G0EDH6
-> 7a6aca49 dt-bindings: Add vendor prefix for DLC Display Co., Ltd.
-> d536540f drm/fb-helper: Add generic fbdev emulation .fb_probe function
-> 0ca0c827 drm/panel: simple: Add DLC DLC0700YZG-1 panel
-> c76f0f7c drm: Begin an API for in-kernel clients
-> 5ba57bab drm: vkms: select DRM_KMS_HELPER
-> 5fa8e4a2 drm/panel: Make of_drm_find_panel() return an ERR_PTR() instead of NULL
-> 008095e0 drm/vc4: Add support for the transposer block
-> c59eb3cf drm/panel: Let of_drm_find_panel() return -ENODEV when the panel is disabled
-> 1ebe99a7 drm/vc4: Call drm_atomic_helper_fake_vblank() in the commit path
-> 2e64a174 drm/of: Make drm_of_find_panel_or_bridge() fail when the device is disabled
-> 1b9883ea drm/vc4: Support the case where the DSI device is disabled
-> 6fb42b66 drm/atomic: Call fake_vblank() from the generic commit_tail() helpers
-> b0b7aa40 dt-bindings: display: Add DT bindings for BOE HV070WSA-100 panel
-> b25c60af drm/crtc: Add a generic infrastructure to fake VBLANK events
-> 184d3cf4 drm/vc4: Use wait_for_flip_done() instead of wait_for_vblanks()
-> ae8cf41b drm/panel: simple: Add support for BOE HV070WSA-100 panel to simple-panel
-> 814bde99 drm/connector: Make ->atomic_commit() optional
-> 955f60db drm: Add support for extracting sync signal drive edge from videomode
-> 3b39ad7a drm/panel: simple: Add newhaven, nhd-4.3-480272ef-atxl LCD
-> 425132fd drm/connector: Pass a drm_connector_state to ->atomic_commit()
-> a5d2ade6 drm/panel: simple: Add support for Innolux G070Y2-L01
-> b82c1f8f drm/atomic: Avoid connector to writeback_connector casts
-> 03fa9aa3 dt-bindings: Add DataImage, Inc. vendor prefix
-> 73915b2b drm/writeback: Fix the "overview" section of the doc
-> 97ceb1fb drm/panel: simple: Add support for DataImage SCF0700C48GGU18
-> e22e9531 Merge drm-upstream/drm-next into drm-misc-next
-> 3d5664f9 drm/panel: ili9881c: Fix missing assignment to error return ret
-> a0120245 drm/crc: Only report a single overflow when a CRC fd is opened
-> 7ad4e463 drm/panel: p079zca: Refactor panel driver to support multiple panels
-> 8adbbb2e drm/stm: ltdc: rework reset sequence
-> 48bd379a drm/panel: p079zca: Add variable unprepare_delay properties
-> 7868e507 drm/stm: ltdc: filter mode pixel clock vs pad constraint
-> 731edd4c dt-bindings: Add Innolux P097PFG panel bindings
-> f8878bb2 drm: print plane state normalized zpos value
-> ca52bea9 drm/atomic-helper: Use bitwise or for filling a bitmask
-> de04a462 drm/panel: p079zca: Support Innolux P097PFG panel
-> 2bb7a39c dt-bindings: Add vendor prefix for kingdisplay
-> a65020d0 drm/v3d: Fix a grammar nit in the scheduler docs.
-> 2dd4f211 drm/v3d: Add missing v3d documentation structure.
-> ebc950fd dt-bindings: Add KINGDISPLAY KD097D04 panel bindings
-> cd0e0ca6 drm/panel: type promotion bug in s6e8aa0_read_mtp_id()
-> e0d01811 drm/v3d: Remove unnecessary dma_fence_ops.
-> 624bb0c0 drm/v3d: Delay the scheduler timeout if we're still making progress.
-> b6d83fcc drm/panel: p079zca: Use of_device_get_match_data()
-> 408633d2 drm/v3d: use new return type vm_fault_t in v3d_gem_fault
-> decac6b0 dt-bindings: display: sun4i-drm: Add R40 display engine compatible
-> 0b7510d1 drm/tilcdc: Use drm_connector_has_possible_encoder()
-> d978a94b drm/sun4i: Add R40 display engine compatible
-> af11942e drm/sun4i: tcon-top: Cleanup clock handling
-> f8222409 drm/msm: Use drm_connector_has_possible_encoder()
-> 38cb8d96 drm: Add drm_connector_has_possible_encoder()
-> da82107e drm/sun4i: tcon: Release node when traversing of graph
-> 7a667775 dt-bindings: display: sun4i-drm: Add R40 TV TCON description
-> 7b71ca24 drm/radeon: Use drm_connector_for_each_possible_encoder()
-> 4a068c5c drm/sun4i: DW HDMI: Release nodes if error happens during CRTC search
-> ddba766d drm/nouveau: Use drm_connector_for_each_possible_encoder()
-> 98c0e348 drm/amdgpu: Use drm_connector_for_each_possible_encoder()
-> e0f56782 drm/sun4i: mixer: Order includes alphabetically
-> 05db311a drm/sun4i: tcon-top: Add helpers for mux switching
-> 83aefbb8 drm: Add drm_connector_for_each_possible_encoder()
-> 20431c05 drm/i915: Nuke intel_mst_best_encoder()
-> 5e496566 drm/sun4i: tcon-top: Remove mux configuration at probe time
-> 0d998891 drm/fb-helper: Eliminate the .best_encoder() usage
-> ac1fe132 dt-bindings: display: sun4i-drm: Fix order of DW HDMI PHY compatibles
-> 03e3ec9a drm/panel: simple: Add Sharp LQ035Q7DB03 panel support
-> c91b007e drm/vkms: Add extra information about vkms
-> 5685ca0c drm/tinydrm: Fix doc build warnings
-> 854502fa drm/vkms: Add basic CRTC initialization
-> ae61f61f drm/client: Fix: drm_client_new: Don't require DRM to be registered
-> c04372ea drm/vkms: Add mode_config initialization
-> 41111ce1 drm/vkms: vkms_driver can be static
-> 559e50fd drm/vkms: Add dumb operations
-> 1c7c5fd9 drm/vkms: Introduce basic VKMS driver
-> 657cd71e drm: gma500: Changed __attribute__((packed)) to __packed
-> d1648930 drm/vkms: Add connectors helpers
->
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17b65cdfe00000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+e3372a2afe1e7ef04bc7@syzkaller.appspotmail.com
->
-> ==================================================================
-> BUG: KASAN: use-after-free in vkms_dumb_create+0x286/0x290 drivers/gpu/drm/vkms/vkms_gem.c:142
-> Read of size 8 at addr ffff88809e537110 by task syz-executor.0/9558
->
-> CPU: 0 PID: 9558 Comm: syz-executor.0 Not tainted 5.7.0-rc2-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x188/0x20d lib/dump_stack.c:118
->  print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:382
->  __kasan_report.cold+0x35/0x4d mm/kasan/report.c:511
->  kasan_report+0x33/0x50 mm/kasan/common.c:625
->  vkms_dumb_create+0x286/0x290 drivers/gpu/drm/vkms/vkms_gem.c:142
->  drm_mode_create_dumb+0x27c/0x300 drivers/gpu/drm/drm_dumb_buffers.c:94
->  drm_ioctl_kernel+0x220/0x2f0 drivers/gpu/drm/drm_ioctl.c:787
->  drm_ioctl+0x4c9/0x980 drivers/gpu/drm/drm_ioctl.c:887
->  vfs_ioctl fs/ioctl.c:47 [inline]
->  ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
->  __do_sys_ioctl fs/ioctl.c:772 [inline]
->  __se_sys_ioctl fs/ioctl.c:770 [inline]
->  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
->  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
->  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> RIP: 0033:0x45c829
-> Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007f19a3e30c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> RAX: ffffffffffffffda RBX: 00000000004e2d80 RCX: 000000000045c829
-> RDX: 0000000020000080 RSI: 00000000c02064b2 RDI: 0000000000000003
-> RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-> R13: 000000000000028b R14: 00000000004d3188 R15: 00007f19a3e316d4
->
-> Allocated by task 9558:
->  save_stack+0x1b/0x40 mm/kasan/common.c:49
->  set_track mm/kasan/common.c:57 [inline]
->  __kasan_kmalloc mm/kasan/common.c:495 [inline]
->  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:468
->  kmem_cache_alloc_trace+0x153/0x7d0 mm/slab.c:3551
->  __vkms_gem_create+0x44/0xf0 include/linux/slab.h:555
->  vkms_gem_create drivers/gpu/drm/vkms/vkms_gem.c:111 [inline]
->  vkms_gem_create drivers/gpu/drm/vkms/vkms_gem.c:100 [inline]
->  vkms_dumb_create+0x110/0x290 drivers/gpu/drm/vkms/vkms_gem.c:138
->  drm_mode_create_dumb+0x27c/0x300 drivers/gpu/drm/drm_dumb_buffers.c:94
->  drm_ioctl_kernel+0x220/0x2f0 drivers/gpu/drm/drm_ioctl.c:787
->  drm_ioctl+0x4c9/0x980 drivers/gpu/drm/drm_ioctl.c:887
->  vfs_ioctl fs/ioctl.c:47 [inline]
->  ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
->  __do_sys_ioctl fs/ioctl.c:772 [inline]
->  __se_sys_ioctl fs/ioctl.c:770 [inline]
->  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
->  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
->  entry_SYSCALL_64_after_hwframe+0x49/0xb3
->
-> Freed by task 9558:
->  save_stack+0x1b/0x40 mm/kasan/common.c:49
->  set_track mm/kasan/common.c:57 [inline]
->  kasan_set_free_info mm/kasan/common.c:317 [inline]
->  __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:456
->  __cache_free mm/slab.c:3426 [inline]
->  kfree+0x109/0x2b0 mm/slab.c:3757
->  drm_gem_object_free+0xf0/0x1f0 drivers/gpu/drm/drm_gem.c:983
->  kref_put include/linux/kref.h:65 [inline]
->  drm_gem_object_put_unlocked drivers/gpu/drm/drm_gem.c:1017 [inline]
->  drm_gem_object_put_unlocked+0x190/0x1c0 drivers/gpu/drm/drm_gem.c:1002
->  vkms_gem_create drivers/gpu/drm/vkms/vkms_gem.c:116 [inline]
->  vkms_gem_create drivers/gpu/drm/vkms/vkms_gem.c:100 [inline]
->  vkms_dumb_create+0x14d/0x290 drivers/gpu/drm/vkms/vkms_gem.c:138
->  drm_mode_create_dumb+0x27c/0x300 drivers/gpu/drm/drm_dumb_buffers.c:94
->  drm_ioctl_kernel+0x220/0x2f0 drivers/gpu/drm/drm_ioctl.c:787
->  drm_ioctl+0x4c9/0x980 drivers/gpu/drm/drm_ioctl.c:887
->  vfs_ioctl fs/ioctl.c:47 [inline]
->  ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
->  __do_sys_ioctl fs/ioctl.c:772 [inline]
->  __se_sys_ioctl fs/ioctl.c:770 [inline]
->  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
->  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
->  entry_SYSCALL_64_after_hwframe+0x49/0xb3
->
-> The buggy address belongs to the object at ffff88809e537000
->  which belongs to the cache kmalloc-1k of size 1024
-> The buggy address is located 272 bytes inside of
->  1024-byte region [ffff88809e537000, ffff88809e537400)
-> The buggy address belongs to the page:
-> page:ffffea0002794dc0 refcount:1 mapcount:0 mapping:00000000e8234a18 index:0x0
-> flags: 0xfffe0000000200(slab)
-> raw: 00fffe0000000200 ffffea00027a3608 ffffea0002749008 ffff8880aa000c40
-> raw: 0000000000000000 ffff88809e537000 0000000100000002 0000000000000000
-> page dumped because: kasan: bad access detected
->
-> Memory state around the buggy address:
->  ffff88809e537000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->  ffff88809e537080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> >ffff88809e537100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->                          ^
->  ffff88809e537180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->  ffff88809e537200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ==================================================================
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+On Sun, Apr 26, 2020 at 10:29:51AM +0000, Tian, Kevin wrote:
+> > From: Peter Xu
+> > Sent: Friday, April 24, 2020 10:20 PM
+> > 
+> > On Fri, Apr 24, 2020 at 06:01:46AM +0000, Tian, Kevin wrote:
+> > > > From: Peter Xu <peterx@redhat.com>
+> > > > Sent: Thursday, April 23, 2020 11:23 PM
+> > > >
+> > > > On Thu, Apr 23, 2020 at 06:28:43AM +0000, Tian, Kevin wrote:
+> > > > > > From: Peter Xu <peterx@redhat.com>
+> > > > > > Sent: Thursday, April 23, 2020 2:52 AM
+> > > > > >
+> > > > > > Hi,
+> > > > > >
+> > > > > > TL;DR: I'm thinking whether we should record pure GPA/GFN instead
+> > of
+> > > > > > (slot_id,
+> > > > > > slot_offset) tuple for dirty pages in kvm dirty ring to unbind
+> > > > kvm_dirty_gfn
+> > > > > > with memslots.
+> > > > > >
+> > > > > > (A slightly longer version starts...)
+> > > > > >
+> > > > > > The problem is that binding dirty tracking operations to KVM
+> > memslots is
+> > > > a
+> > > > > > restriction that needs synchronization to memslot changes, which
+> > further
+> > > > > > needs
+> > > > > > synchronization across all the vcpus because they're the consumers of
+> > > > > > memslots.
+> > > > > > E.g., when we remove a memory slot, we need to flush all the dirty
+> > bits
+> > > > > > correctly before we do the removal of the memslot.  That's actually an
+> > > > > > known
+> > > > > > defect for QEMU/KVM [1] (I bet it could be a defect for many other
+> > > > > > hypervisors...) right now with current dirty logging.  Meanwhile, even
+> > if
+> > > > we
+> > > > > > fix it, that procedure is not scale at all, and error prone to dead locks.
+> > > > > >
+> > > > > > Here memory removal is really an (still corner-cased but relatively)
+> > > > important
+> > > > > > scenario to think about for dirty logging comparing to memory
+> > additions
+> > > > &
+> > > > > > movings.  Because memory addition will always have no initial dirty
+> > page,
+> > > > > > and
+> > > > > > we don't really move RAM a lot (or do we ever?!) for a general VM
+> > use
+> > > > case.
+> > > > > >
+> > > > > > Then I went a step back to think about why we need these dirty bit
+> > > > > > information
+> > > > > > after all if the memslot is going to be removed?
+> > > > > >
+> > > > > > There're two cases:
+> > > > > >
+> > > > > >   - When the memslot is going to be removed forever, then the dirty
+> > > > > > information
+> > > > > >     is indeed meaningless and can be dropped, and,
+> > > > > >
+> > > > > >   - When the memslot is going to be removed but quickly added back
+> > with
+> > > > > > changed
+> > > > > >     size, then we need to keep those dirty bits because it's just a
+> > commmon
+> > > > > > way
+> > > > > >     to e.g. punch an MMIO hole in an existing RAM region (here I'd
+> > confess
+> > > > I
+> > > > > >     feel like using "slot_id" to identify memslot is really unfriendly
+> > syscall
+> > > > > >     design for things like "hole punchings" in the RAM address space...
+> > > > > >     However such "punch hold" operation is really needed even for a
+> > > > common
+> > > > > >     guest for either system reboots or device hotplugs, etc.).
+> > > > >
+> > > > > why would device hotplug punch a hole in an existing RAM region?
+> > > >
+> > > > I thought it could happen because I used to trace the KVM ioctls and see
+> > the
+> > > > memslot changes during driver loading.  But later when I tried to hotplug
+> > a
+> > >
+> > > Is there more detail why driver loading may lead to memslot changes?
+> > 
+> > E.g., I can observe these after Linux loads and before the prompt, which is a
+> > simplest VM with default devices on:
+> > 
+> > 41874@1587736345.192636:kvm_set_user_memory Slot#3 flags=0x0
+> > gpa=0xfd000000 size=0x0 ua=0x7fadf6800000 ret=0
+> > 41874@1587736345.192760:kvm_set_user_memory Slot#65539 flags=0x0
+> > gpa=0xfd000000 size=0x0 ua=0x7fadf6800000 ret=0
+> > 41874@1587736345.193884:kvm_set_user_memory Slot#3 flags=0x1
+> > gpa=0xfd000000 size=0x1000000 ua=0x7fadf6800000 ret=0
+> > 41874@1587736345.193956:kvm_set_user_memory Slot#65539 flags=0x1
+> > gpa=0xfd000000 size=0x1000000 ua=0x7fadf6800000 ret=0
+> > 41874@1587736345.195788:kvm_set_user_memory Slot#3 flags=0x0
+> > gpa=0xfd000000 size=0x0 ua=0x7fadf6800000 ret=0
+> > 41874@1587736345.195838:kvm_set_user_memory Slot#65539 flags=0x0
+> > gpa=0xfd000000 size=0x0 ua=0x7fadf6800000 ret=0
+> > 41874@1587736345.196769:kvm_set_user_memory Slot#3 flags=0x1
+> > gpa=0xfd000000 size=0x1000000 ua=0x7fadf6800000 ret=0
+> > 41874@1587736345.196827:kvm_set_user_memory Slot#65539 flags=0x1
+> > gpa=0xfd000000 size=0x1000000 ua=0x7fadf6800000 ret=0
+> > 41874@1587736345.197787:kvm_set_user_memory Slot#3 flags=0x0
+> > gpa=0xfd000000 size=0x0 ua=0x7fadf6800000 ret=0
+> > 41874@1587736345.197832:kvm_set_user_memory Slot#65539 flags=0x0
+> > gpa=0xfd000000 size=0x0 ua=0x7fadf6800000 ret=0
+> > 41874@1587736345.198777:kvm_set_user_memory Slot#3 flags=0x1
+> > gpa=0xfd000000 size=0x1000000 ua=0x7fadf6800000 ret=0
+> > 41874@1587736345.198836:kvm_set_user_memory Slot#65539 flags=0x1
+> > gpa=0xfd000000 size=0x1000000 ua=0x7fadf6800000 ret=0
+> > 41874@1587736345.200491:kvm_set_user_memory Slot#3 flags=0x0
+> > gpa=0xfd000000 size=0x0 ua=0x7fadf6800000 ret=0
+> > 41874@1587736345.200537:kvm_set_user_memory Slot#65539 flags=0x0
+> > gpa=0xfd000000 size=0x0 ua=0x7fadf6800000 ret=0
+> > 41874@1587736345.201592:kvm_set_user_memory Slot#3 flags=0x1
+> > gpa=0xfd000000 size=0x1000000 ua=0x7fadf6800000 ret=0
+> > 41874@1587736345.201649:kvm_set_user_memory Slot#65539 flags=0x1
+> > gpa=0xfd000000 size=0x1000000 ua=0x7fadf6800000 ret=0
+> > 41874@1587736345.202415:kvm_set_user_memory Slot#3 flags=0x0
+> > gpa=0xfd000000 size=0x0 ua=0x7fadf6800000 ret=0
+> > 41874@1587736345.202461:kvm_set_user_memory Slot#65539 flags=0x0
+> > gpa=0xfd000000 size=0x0 ua=0x7fadf6800000 ret=0
+> > 41874@1587736345.203169:kvm_set_user_memory Slot#3 flags=0x1
+> > gpa=0xfd000000 size=0x1000000 ua=0x7fadf6800000 ret=0
+> > 41874@1587736345.203225:kvm_set_user_memory Slot#65539 flags=0x1
+> > gpa=0xfd000000 size=0x1000000 ua=0x7fadf6800000 ret=0
+> > 41874@1587736345.204037:kvm_set_user_memory Slot#3 flags=0x0
+> > gpa=0xfd000000 size=0x0 ua=0x7fadf6800000 ret=0
+> > 41874@1587736345.204083:kvm_set_user_memory Slot#65539 flags=0x0
+> > gpa=0xfd000000 size=0x0 ua=0x7fadf6800000 ret=0
+> > 41874@1587736345.204983:kvm_set_user_memory Slot#3 flags=0x1
+> > gpa=0xfd000000 size=0x1000000 ua=0x7fadf6800000 ret=0
+> > 41874@1587736345.205041:kvm_set_user_memory Slot#65539 flags=0x1
+> > gpa=0xfd000000 size=0x1000000 ua=0x7fadf6800000 ret=0
+> > 41874@1587736345.205940:kvm_set_user_memory Slot#3 flags=0x0
+> > gpa=0xfd000000 size=0x0 ua=0x7fadf6800000 ret=0
+> > 41874@1587736345.206022:kvm_set_user_memory Slot#65539 flags=0x0
+> > gpa=0xfd000000 size=0x0 ua=0x7fadf6800000 ret=0
+> > 41874@1587736345.206981:kvm_set_user_memory Slot#3 flags=0x1
+> > gpa=0xfd000000 size=0x1000000 ua=0x7fadf6800000 ret=0
+> > 41874@1587736345.207038:kvm_set_user_memory Slot#65539 flags=0x1
+> > gpa=0xfd000000 size=0x1000000 ua=0x7fadf6800000 ret=0
+> > 41875@1587736351.141052:kvm_set_user_memory Slot#9 flags=0x1
+> > gpa=0xa0000 size=0x10000 ua=0x7fadf6800000 ret=0
+> > 
+> > After a careful look, I noticed it's only the VGA device mostly turning slot 3
+> > off & on.  Frankly speaking I don't know why it happens to do so.
+> > 
+> > >
+> > > > device I do see that it won't...  The new MMIO regions are added only
+> > into
+> > > > 0xfe000000 for a virtio-net:
+> > > >
+> > > >   00000000fe000000-00000000fe000fff (prio 0, i/o): virtio-pci-common
+> > > >   00000000fe001000-00000000fe001fff (prio 0, i/o): virtio-pci-isr
+> > > >   00000000fe002000-00000000fe002fff (prio 0, i/o): virtio-pci-device
+> > > >   00000000fe003000-00000000fe003fff (prio 0, i/o): virtio-pci-notify
+> > > >   00000000fe840000-00000000fe84002f (prio 0, i/o): msix-table
+> > > >   00000000fe840800-00000000fe840807 (prio 0, i/o): msix-pba
+> > > >
+> > > > Does it mean that device plugging is guaranteed to not trigger RAM
+> > changes?
+> > >
+> > > I'd think so. Otherwise from guest p.o.v any device hotplug implies doing
+> > > a memory hot-unplug first then it's a bad design.
+> > 
+> > Right that's what I was confused about.  Then maybe you're right. :)
+> > 
+> > >
+> > > > I
+> > > > am really curious about what cases we need to consider in which we
+> > need to
+> > > > keep
+> > > > the dirty bits for a memory removal, and if system reset is the only case,
+> > then
+> > > > it could be even easier (because we might be able to avoid the sync in
+> > > > memory
+> > > > removal but do that once in a sys reset hook)...
+> > >
+> > > Possibly memory hot-unplug, as allowed by recent virtio-mem?
+> > 
+> > That should belong to the case where dirty bits do not matter at all after the
+> > removal, right?  I would be mostly curious about when we (1) remove a
+> > memory
+> > slot, and at the meantime (2) we still care about the dirty bits of that slot.
+> 
+> I remember one case. PCIe spec defines a resizable BAR capability, allowing
+> hardware to communicate supported resource sizes and software to set
+> an optimal size back to hardware. If such a capability is presented to guest
+> and the BAR is backed by memory, it's possible to observe a removal-and-
+> add-back scenario. However in such case, the spec requires the software 
+> to clear memory space enable bit in command register before changing 
+> the BAR size. I suppose such thing should happen at boot phase where
+> dirty bits related to old BAR size don't matter. 
 
-#syz test: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-c578ddb3
+Good to know. Yes it makes sense to have no valid data if the driver is trying
+to decide the bar size at boot time.
 
-From 58035231aa036d5710286e242ec9b6d1f2995c85 Mon Sep 17 00:00:00 2001
-From: Ezequiel Garcia <ezequiel@collabora.com>
-Date: Mon, 27 Apr 2020 10:15:06 -0300
-Subject: [PATCH] vkms: Hold gem object while in use
+> 
+> > 
+> > I'll see whether I can remove the dirty bit sync in kvm_set_phys_mem(),
+> > which I
+> > think is really nasty.
+> > 
+> > >
+> > > btw VFIO faces a similar problem when unmapping a DMA range (e.g.
+> > when
+> > > vIOMMU is enabled) in dirty log phase. There could be some dirty bits
+> > which are
+> > > not retrieved when unmapping happens. VFIO chooses to return the dirty
+> > > bits in a buffer passed in the unmapping parameters. Can memslot
+> > interface
+> > > do similar thing by allowing the userspace to specify a buffer pointer to
+> > hold
+> > > whatever dirty pages recorded for the slot that is being removed?
+> > 
+> > Yes I think we can, but may not be necessary.  Actually IMHO CPU access to
+> > pages are slightly different to device DMAs in that we can do these sequence
+> > to
+> > collect the dirty bits of a slot safely:
+> > 
+> >   - mark slot as READONLY
+> >   - KVM_GET_DIRTY_LOG on the slot
+> >   - finally remove the slot
+> > 
+> > I guess VFIO cannot do that because there's no way to really "mark the
+> > region
+> > as read-only" for a device because DMA could happen and DMA would fail
+> > then
+> > when writting to a readonly slot.
+> > 
+> > On the KVM/CPU side, after we mark the slot as READONLY then the CPU
+> > writes
+> > will page fault and fallback to the QEMU userspace, then QEMU will take care
+> > of
+> > the writes (so those writes could be slow but still working) then even if we
+> > mark it READONLY it won't fail the writes but just fallback to QEMU.
+> 
+> Yes, you are right.
+> 
+> > 
+> > Btw, since we're discussing the VFIO dirty logging across memory removal...
+> > the
+> > unmapping DMA range you're talking about needs to be added back later,
+> > right?
+> 
+> pure memory removal doesn't need add-back. Or are you specifically
+> referring to removal-and-add-back case?
 
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
----
- drivers/gpu/drm/vkms/vkms_gem.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Oh right I get the point now - VFIO unmap is different that it does not mean
+the RAM is going away, but the RAM is only not accessable any more from the
+device, so it's actually a different scenario here comparing to real memory
+removals.  Sorry I obviously missed that... :)
 
-diff --git a/drivers/gpu/drm/vkms/vkms_gem.c b/drivers/gpu/drm/vkms/vkms_gem.c
-index 2e01186fb943..023e6a45fbf8 100644
---- a/drivers/gpu/drm/vkms/vkms_gem.c
-+++ b/drivers/gpu/drm/vkms/vkms_gem.c
-@@ -113,7 +113,6 @@ struct drm_gem_object *vkms_gem_create(struct
-drm_device *dev,
-  return ERR_CAST(obj);
+Thanks,
 
-  ret = drm_gem_handle_create(file, &obj->gem, handle);
-- drm_gem_object_put_unlocked(&obj->gem);
-  if (ret)
-  return ERR_PTR(ret);
+> 
+> > Then what if the device does DMA after the removal but before it's added
+> > back?
+> 
+> then just got IOMMU page fault, but I guess that I didn't get your real 
+> question...
+> 
+> > I think this is a more general question not for dirty logging but also for when
+> > dirty logging is not enabled - I never understand how this could be fixed with
+> > existing facilities.
+> > 
+> 
+> Thanks,
+> Kevin
 
-@@ -142,6 +141,8 @@ int vkms_dumb_create(struct drm_file *file, struct
-drm_device *dev,
-  args->size = gem_obj->size;
-  args->pitch = pitch;
+-- 
+Peter Xu
 
-+ drm_gem_object_put_unlocked(gem_obj);
-+
-  DRM_DEBUG_DRIVER("Created object of size %lld\n", size);
-
-  return 0;
---
-2.26.0.rc2
