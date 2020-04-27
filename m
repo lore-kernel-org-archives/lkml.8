@@ -2,174 +2,160 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B80C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F7DC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE41A2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:56:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24CF92075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:57:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="y/RAHKLi";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="y/RAHKLi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q5d4M2jz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgD0I4v (ORCPT
+        id S1726826AbgD0I5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 04:56:51 -0400
-Received: from mail-eopbgr80040.outbound.protection.outlook.com ([40.107.8.40]:56034
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726183AbgD0I4u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 04:56:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Q/YZoOdwy5jCiN8Mt0R1TmvByv4dO8rZl0CoMDE4Bcc=;
- b=y/RAHKLisesysXnZFtHtERczXoMUFfS76+rd+cZJ/pQroiBIzVtbtU82P1tVzVu513B3YhxMFE3EJYLwzZXtmDFICcRARsVh2PleW3kBOmCpRbHeVjguDSCscuPhdgDxPH9X3NB8FbkGOwWHbLzgH+c1DBk6OaybcHBAulyc5fE=
-Received: from AM6P193CA0065.EURP193.PROD.OUTLOOK.COM (2603:10a6:209:8e::42)
- by AM6PR08MB3318.eurprd08.prod.outlook.com (2603:10a6:209:45::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Mon, 27 Apr
- 2020 08:56:46 +0000
-Received: from AM5EUR03FT003.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:209:8e:cafe::b0) by AM6P193CA0065.outlook.office365.com
- (2603:10a6:209:8e::42) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend
- Transport; Mon, 27 Apr 2020 08:56:46 +0000
-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
- action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM5EUR03FT003.mail.protection.outlook.com (10.152.16.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2937.19 via Frontend Transport; Mon, 27 Apr 2020 08:56:46 +0000
-Received: ("Tessian outbound ff098c684b24:v54"); Mon, 27 Apr 2020 08:56:45 +0000
-X-CR-MTA-TID: 64aa7808
-Received: from 5fa8be9958cd.2
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 76DC682B-A967-47A0-8B58-7A986A9C8E46.1;
-        Mon, 27 Apr 2020 08:56:40 +0000
-Received: from EUR01-DB5-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 5fa8be9958cd.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Mon, 27 Apr 2020 08:56:40 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=USobUby+qeHNqSJEBLiPkxF58FOPthlCj4xnFBNY+v0feFXcgITk1mD7r63exGVou312twsPwILyEI+To90ws/j8N/WtDkkzQ1RJ8/4dVHkCQnRkmbmvZLe0BtTDabA/95OdugAgXyi8mMkvqMTEEabJafVR300C8m/S1qvYwexn2XTobLTCXcwqv6GnJhs0HBS1RWMAvrqhW4uIXHu3jg39H2KfseU1VWWjGCkODWIjaH3TYzxYRlDToulGjdYTLvuJjvJBweP+Dnbcro2dc+Fa9L/dJ96jXex0eHqWej2JHMUYeRSpSdK/nRIQWVeUnIDMRMlp+WNtMB7tOwG5mA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Q/YZoOdwy5jCiN8Mt0R1TmvByv4dO8rZl0CoMDE4Bcc=;
- b=WpXIaj9KizzKVPlB/DcsEKPujP7epPCxSJetkxicblywTqd848h60DBfmAyQShur+3dDP+kuqSVwv9h46EHGlbP+i1dNZtUZO7+xzzTlrVicZZXUMR91+qED7rqwnYvHl4pvE7vj7rsSVrq1DJ2JX3VDo3aNRdBCyf7k3qNnujl7jP7v1/VbeLY8J9hPcVrvZ+rflk472v5krONWoXpM6NNQsGZIAL/hFtLekzOIvOTmvHdTFbdPFZvePwb1BWjN1Uz/+0gJOftV1qmiEP8uUQtU+HbJkTVo7BEqsWYTxigrYhc+WBAiKx5tUr5FFneO++uPal6V8JcsPBxWplHjgw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Q/YZoOdwy5jCiN8Mt0R1TmvByv4dO8rZl0CoMDE4Bcc=;
- b=y/RAHKLisesysXnZFtHtERczXoMUFfS76+rd+cZJ/pQroiBIzVtbtU82P1tVzVu513B3YhxMFE3EJYLwzZXtmDFICcRARsVh2PleW3kBOmCpRbHeVjguDSCscuPhdgDxPH9X3NB8FbkGOwWHbLzgH+c1DBk6OaybcHBAulyc5fE=
-Received: from DB6PR0802MB2533.eurprd08.prod.outlook.com (2603:10a6:4:a0::12)
- by DB6PR0802MB2597.eurprd08.prod.outlook.com (2603:10a6:4:99::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Mon, 27 Apr
- 2020 08:56:39 +0000
-Received: from DB6PR0802MB2533.eurprd08.prod.outlook.com
- ([fe80::b959:1879:c050:3117]) by DB6PR0802MB2533.eurprd08.prod.outlook.com
- ([fe80::b959:1879:c050:3117%8]) with mapi id 15.20.2937.020; Mon, 27 Apr 2020
- 08:56:39 +0000
-From:   Hadar Gat <Hadar.Gat@arm.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Ard Biesheuvel <ardb@kernel.org>, Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <Ofir.Drang@arm.com>, nd <nd@arm.com>
-Subject: RE: [PATCH 2/3] hwrng: cctrng - change default to n
-Thread-Topic: [PATCH 2/3] hwrng: cctrng - change default to n
-Thread-Index: AQHWHFaa2ILie1hr/Ua7OdXaSVzplaiMigqAgAAGr1CAAA+9AIAACb9A
-Date:   Mon, 27 Apr 2020 08:56:38 +0000
-Message-ID: <DB6PR0802MB253351027A5B3236E31D1E9AE9AF0@DB6PR0802MB2533.eurprd08.prod.outlook.com>
-References: <1587966099-28139-1-git-send-email-hadar.gat@arm.com>
- <1587966099-28139-3-git-send-email-hadar.gat@arm.com>
- <CAMj1kXGwVZiGbsT2NwWTyka0FVZnQcmfMSeoBKD03PdC=fRZeA@mail.gmail.com>
- <DB6PR0802MB25334429B7DD333780E7BABBE9AF0@DB6PR0802MB2533.eurprd08.prod.outlook.com>
- <CAK8P3a1LYAESnePbwbn7x7x=2MCTWUNZVmmoiuv+_-J2ntFGmA@mail.gmail.com>
-In-Reply-To: <CAK8P3a1LYAESnePbwbn7x7x=2MCTWUNZVmmoiuv+_-J2ntFGmA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ts-tracking-id: 3f622335-76be-4668-a357-22837c7fece5.1
-x-checkrecipientchecked: true
-Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=Hadar.Gat@arm.com; 
-x-originating-ip: [84.109.179.203]
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 7f80681c-a13f-4905-9a43-08d7ea88ea34
-x-ms-traffictypediagnostic: DB6PR0802MB2597:|DB6PR0802MB2597:|AM6PR08MB3318:
-x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <AM6PR08MB33182685B0D1E45706007FA4E9AF0@AM6PR08MB3318.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-nodisclaimer: true
-x-ms-oob-tlc-oobclassifiers: OLM:7219;OLM:7219;
-x-forefront-prvs: 0386B406AA
-X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0802MB2533.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(136003)(346002)(39860400002)(396003)(316002)(2906002)(6506007)(4326008)(7696005)(81156014)(8676002)(8936002)(71200400001)(54906003)(33656002)(53546011)(9686003)(52536014)(66946007)(478600001)(186003)(64756008)(76116006)(66446008)(7416002)(55016002)(86362001)(4744005)(6916009)(26005)(66556008)(66476007)(5660300002)(129723003);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: SinEI4uUlDiLO03NcVKprf0KcQGTc5f2FX/vR4dH4oZo6d+lMEn4YnG8MDK5ohpa1GwxeTkLmh7evsJQZerig+oU4x9ENAZSvKU4NTA7bjdjV/D27F3MpfSbIOBfQVUuETTsNdDVnmV2Vr9oEcU34Ot0pbbsJVtkPF4ILPJZN0EOU9fzejsYaUWD+QI2gTorPlMb6d7KA5+rPrAG36t1PDRmWiGweeVktIYvLtcCgPJJkbKNzYDVfU4o18FVP/rRra/h7Ccagkfh8ISiTzXlSMcnj62o27Ss6jEVFASFdbfr2LqWcsms2IhDcNPKrHOtnTJW7/7UbyIk+8C7dcNtM52JR47G34q0tsiTHKuza0WQYLodjFwWaGrU6FhXv1c94hs8QFXBy3y1czAgVDdZ9d3JqpyykWm85CqSmEULiFaureReu+1LH9zGnQAsmUyhagqFjqJ68yHsopr/BmyXEbqmw2EuCBlyD7Y54Y+CBfcGGm+DlN3d+yaTQlNIeGKh
-x-ms-exchange-antispam-messagedata: 8th/Z0gJ4oIeHUh3pFo3YPwi3Icxf9V9L5YeVh8wDFjWdIm51Ofr3ANLzKtrasTVxCJ3SzznyXtqIxqFa3oplwpC/XYf1pTLy9tVZveB3814IVa7K7Qxoql86a7QGZP8/WncpfJyGWz1050Y6MPfIeUiJa8GMJrPXy+NxPMV2451RCOJIZtdjd1pVjcvpoSaFJQKwSjy3Xhm/TFcmE7cl9CRFGXd1mT28GklwuG4O1NqwFJw+sNztNNTMTW1Chm63nhA3E/yc4srmCUw7+k6hbDy/UcBGRmBiqIN019c5oMCXgod46tpCt9fdso7j8aOpTLaOOd1By4VLTYOqj7FDwwQ63hyIhywmj3eZQGMJaetAUGJkAusPH4vJEK25/Bg/1NHt3GIrN4Exn+eLjamkYYXiYu02Kp0cD5gHrDWT+k5toA15nh7am+Z+QjzVXxJDAKr+7nbTp6KyLUSPwi9uUj8G6cigdvVAB7oLOc8mnO0ljmfJRsD4lVR3iNxmF00dbCQMGhN/irX5RTX6QFjcCCI1ApiH7WLLSK8mlXnvbooCTVVr43Y0avRsHxsdaZlVg6TquvoWunOd3R/s/W8tbNqIws0s6ik83Pe69ZNRtW2zidB/I4qcYiIrkgXE2bIWT6aN+5DNuccJvFlWWBXaR15UhgzUkCxHLKM3jYeItu3cIjN//9QublbU8ibgxLjhVjHWWfJRnp04IDMQW46iVsHyo4aXT7EX3j02N7Vy0WMp5iUQbPS60san5PWD1pLLAtnz6nGucjWPtA2TOb4KUpLIsODCPtBurzUpC2ejgc=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 27 Apr 2020 04:57:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38660 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbgD0I5K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 04:57:10 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AA10C061A10;
+        Mon, 27 Apr 2020 01:57:10 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id y24so19562180wma.4;
+        Mon, 27 Apr 2020 01:57:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:references:subject:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Jcofdwz9+t05uTAvna4ymutVAwmekuIi4pNGc9/MH88=;
+        b=Q5d4M2jz0Wl+6clQyaBEO2kE27ihpH/n/zKCNoR5NFAAQD625a4A/+auWeg6qrJawA
+         jGR2qBn0JrZnYf7qSaaPjd+QHediUI2IHZMSBuRMhYjEYXJF/abFd8uW6qj3Q4k/2FIc
+         HfOyQQFh7Om6oOkXvwLf00BmlW6ynC3vAylSpTpgjxiaMSxlssL1culT6yEle+zkt+G7
+         VWBMAI6HDXZNoIv1OZLghE1QmeHNhmQ06ca2JAS9uWxvSmCtibky3Aj9f2WMJnQAe9E3
+         Wgo4xlTuB9g6fG1VUUti0HpHlJBu1+C5r6cQlAs1aTEfXIAnzU7vlviA5I9kmmKntLoa
+         86pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:references:subject:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Jcofdwz9+t05uTAvna4ymutVAwmekuIi4pNGc9/MH88=;
+        b=AKPjCrH4QVE1HqtQef474cgSQ8OqGP/P6gMOb2zC7hbv8jy3NuLf9ODNTNdnZXabN8
+         v7SrTifDwJS73XwSjvw1g8dD26yyNuDauei9T1FIpW3URT6FnynXvzdGxXuMz/nVROJM
+         UZkrIjQPtnGWVK2Nvg3iG+fFhf130xAW/xEGAChAf9TbCKzkP6od2r8FdoIyVGDKCBEy
+         FuzG/1G6eCoNCLqXPC/UFB8UU8X0WpaZdvJj9EqIbUVStcDFnbmSvVuWO4xymPHl4zPO
+         +4QT/v+Yr7xsGwwPjANJUxS2y7C/GKYLJeCUucN5l7hS0UNw1R0znzhtO5f8ES4uz7LQ
+         RH6Q==
+X-Gm-Message-State: AGi0PuZU/RzNQK9cBhVLs7RQtjvCsOSe3SINxDggAfaYJw06HcNx6aNU
+        ebPN9js65/LP5QKwt2QTWmdasevH
+X-Google-Smtp-Source: APiQypIwXrjjInfbjfDk9B1skhirM2+uI+xE5YfNG3+dy/5UjcY8PBtYZfDkyuRvwRt/tiB7c3z8UQ==
+X-Received: by 2002:a05:600c:2046:: with SMTP id p6mr25177578wmg.177.1587977829209;
+        Mon, 27 Apr 2020 01:57:09 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id i129sm15502103wmi.20.2020.04.27.01.57.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 01:57:08 -0700 (PDT)
+To:     wens@kernel.org
+Cc:     devicetree@vger.kernel.org, dmurphy@ti.com, heiko@sntech.de,
+        jacek.anaszewski@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, pavel@ucw.cz,
+        robh+dt@kernel.org, wens@csie.org
+References: <20200427073132.29997-3-wens@kernel.org>
+Subject: Re: [PATCH v2 2/3] arm64: dts: rockchip: rk3399-roc-pc: Fix MMC
+ numbering for LED triggers
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <684132b8-4a84-8295-474b-38ccb992bba7@gmail.com>
+Date:   Mon, 27 Apr 2020 10:57:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0802MB2597
-Original-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Hadar.Gat@arm.com; 
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT003.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(376002)(39860400002)(396003)(46966005)(4326008)(450100002)(33656002)(2906002)(82740400003)(6862004)(47076004)(81156014)(8676002)(70586007)(8936002)(86362001)(6506007)(53546011)(316002)(36906005)(4744005)(70206006)(52536014)(55016002)(336012)(5660300002)(356005)(81166007)(82310400002)(186003)(9686003)(7696005)(54906003)(478600001)(26005)(129723003);DIR:OUT;SFP:1101;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 0fbf4a9b-1860-4e50-4a13-08d7ea88e606
-X-Forefront-PRVS: 0386B406AA
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: kEuHYoGCF5vNHRIGeiA5GsLG8V1VW5PyfuvzVwKqinHDNt0ELdq2lek4ylS5wXY0TIYi86+KBvJ2/IG9lD1XN5Axnu1K5pq23TVH3Sp1vlXJVch+ZK14DVy+n0/eH7P/zfstg/EG7GOHvYHWo9NpeV8sLss+mk/xFvhd0sw9Y+jxUNGZQNyyqp3QoLkY6aAiGtsYTzDpNk1E+yE9Y5MdrfRsfjWJCPFJHTB9ZgVlx7ASJSIsClOdlsQeiuRzpSSM9cJH97IfWl+hXnsr20FNqsj8Ok0ZmNDyjrPYOxerKjzXM+DiapbV7cvS41mDzgmPU26r23l8+Zl9NopAzYwHbaJY7kkCzWsmh/8kZvclIPJlZiwtDpXcz3mSPlKDq2UQbSD551pEqShknaH5itFpgWaSwlsMFYPN9+sXa/JVzt1r1u5pmDneUwOSKpfY+eU2wt+IZybdmOrtR2UDwYJAcdP6OGzTGAVZFNL4o/FJq8M4lddMJjRoQiIfgggGzStsvRhpeNAvVhJZJ6tF0emZJ9oZyT0P2z2KoiqwG9QLEVA=
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2020 08:56:46.0902
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7f80681c-a13f-4905-9a43-08d7ea88ea34
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB3318
+In-Reply-To: <20200427073132.29997-3-wens@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEFybmQgQmVyZ21hbm4gPGFy
-bmRAYXJuZGIuZGU+DQo+IA0KPiBPbiBNb24sIEFwciAyNywgMjAyMCBhdCA5OjI2IEFNIEhhZGFy
-IEdhdCA8SGFkYXIuR2F0QGFybS5jb20+IHdyb3RlOg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNz
-YWdlLS0tLS0NCj4gPiA+IEZyb206IEFyZCBCaWVzaGV1dmVsIDxhcmRiQGtlcm5lbC5vcmc+DQo+
-ID4gPiA+ICsgICAgICAgZGVmYXVsdCBuDQo+ID4gPg0KPiA+ID4gJ2RlZmF1bHQgbicgaXMgdGhl
-IGRlZmF1bHQgc28geW91IGNhbiBqdXN0IHJlbW92ZSB0aGUgbGluZQ0KPiA+DQo+ID4gSXMgdGhp
-cyBhIGd1aWRlbGluZSBvciBqdXN0IG9wdGlvbmFsPw0KPiA+IFBlcnNvbmFsbHkgSSBsaWtlIHRo
-aW5ncyB0byBiZSBleHBsaWNpdCBhbmQgaWYgYWxsb3dlZCBJIHByZWZlciB0byBrZWVwIHRoaXMg
-bGluZS4NCj4gDQo+IEl0J3MgYSBjb21tb24gY29udmVudGlvbiwgYW5kIHdlIGhhdmUgaGFkIHBh
-dGNoZXMgaW4gdGhlIHBhc3QgdGhhdCBtYXNzLQ0KPiByZW1vdmVkIHRob3NlIGxpbmVzLiBJJ2Qg
-YWxzbyBqdXN0IGxlYXZlIGl0IG91dC4gSXQgaXMgZ2VuZXJhbGx5IHdlbGwgdW5kZXJzdG9vZA0K
-PiB0aGF0IGFsbCBvcHRpb25zIGRlZmF1bHQgdG8gJ24nIHVubGVzcyBzcGVjaWZpZWQgb3RoZXJ3
-aXNlLg0KDQpPaywgSSdsbCByZW1vdmUgaXQuDQpUaGFua3MgZm9yIHRoZSBleHBsYW5hdGlvbi4N
-Cg0KPiANCj4gICAgICAgICBBcm5kDQo=
+Hi Chen-Yu,
+
+> From: Chen-Yu Tsai <wens@csie.org>
+> 
+> With SDIO now enabled, the numbering of the existing MMC host controllers
+> gets incremented by 1, as the SDIO host is the first one.
+> 
+> Increment the numbering of the MMC LED triggers to match.
+> 
+> Fixes: cf3c5397835f ("arm64: dts: rockchip: Enable sdio0 and uart0 on rk3399-roc-pc-mezzanine")
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts | 8 ++++++++
+>  arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi          | 4 ++--
+>  2 files changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
+> index 2acb3d500fb9..f0686fc276be 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
+> @@ -38,6 +38,10 @@ vcc3v3_pcie: vcc3v3-pcie {
+>  	};
+>  };
+>  
+> +&diy_led {
+> +	linux,default-trigger = "mmc2";
+> +};
+> +
+>  &pcie_phy {
+>  	status = "okay";
+>  };
+> @@ -91,3 +95,7 @@ &uart0 {
+>  	pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
+>  	status = "okay";
+>  };
+> +
+> +&yellow_led {
+> +	linux,default-trigger = "mmc1";
+> +};
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+> index 9f225e9c3d54..bc060ac7972d 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+> @@ -70,14 +70,14 @@ work-led {
+>  			linux,default-trigger = "heartbeat";
+>  		};
+>  
+
+> -		diy-led {
+> +		diy_led: diy-led {
+
+This changes an existing nodename into something that is still not the
+preferred way. In the current Rockchip dts there are nodenames like
+'work', 'yellow' that causing warnings with the command:
+
+make -k ARCH=arm dtbs_check
+
+Could you give a generic guide line/example, so all these changes are
+treated the same way? As if the naming follows the preferred 'led-0' line.
+
+>  			label = "red:diy";
+>  			gpios = <&gpio0 RK_PB5 GPIO_ACTIVE_HIGH>;
+>  			default-state = "off";
+>  			linux,default-trigger = "mmc1";
+>  		};
+>  
+> -		yellow-led {
+> +		yellow_led: yellow-led {
+>  			label = "yellow:yellow-led";
+>  			gpios = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
+>  			default-state = "off";
+> -- 
+> 2.26.0
+
