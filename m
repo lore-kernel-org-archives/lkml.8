@@ -2,680 +2,129 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35965C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6D1C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DB252080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:46:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2629D2087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:46:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="p4OavsRl"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="j0X8ISUf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbgD0QqK (ORCPT
+        id S1726279AbgD0QqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 12:46:10 -0400
-Received: from mail.efficios.com ([167.114.26.124]:44942 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbgD0QqJ (ORCPT
+        Mon, 27 Apr 2020 12:46:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbgD0QqR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 12:46:09 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id E793725AA2C;
-        Mon, 27 Apr 2020 12:40:49 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id vXigyrb4ALM5; Mon, 27 Apr 2020 12:40:48 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id BE6A325A546;
-        Mon, 27 Apr 2020 12:40:48 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com BE6A325A546
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1588005648;
-        bh=CJW2+LbckLL1pCYHO0SvRfwy4PoMUExCTJDNXYVXpKg=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=p4OavsRlfLe3C/v6vsi9jFwtsY3wPI1OEzg9xgWRrRtq/mSszvqFx+tAMmEtVubyF
-         kovY8q0YQBlTAY3MADliaNf3ZiODDzss/W5ppityvoSs/MuiWj2moa4y0+I03Nbfiw
-         g4TNK8ph83UfyE0yoJKFL1qkex0oLPL3uILW679XNaajVSEXtBO+R8n6MXWvPPlDPS
-         cVqDv/QN9bR/+qDpmbtWo5ABuidK7jU1eYsawLmrrd+6P+2T+b471ehmOJum/4HCtQ
-         mhc+y6/RoEY1fXNEhqBxfPxpBKWE1/PoH6R2zIQRAtKd1FuBVDfYZUjfgQTkeYX4Ua
-         yD3RFEaEgFllg==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id Ocpc0geReoR5; Mon, 27 Apr 2020 12:40:48 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id A073D25A756;
-        Mon, 27 Apr 2020 12:40:48 -0400 (EDT)
-Date:   Mon, 27 Apr 2020 12:40:48 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fw@deneb.enyo.de>,
-        Michael Kerrisk <mtk.manpages@gmail.com>
-Cc:     libc-alpha <libc-alpha@sourceware.org>, carlos <carlos@redhat.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
-        Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>
-Message-ID: <284293396.70630.1588005648556.JavaMail.zimbra@efficios.com>
-In-Reply-To: <87ees9z417.fsf@mid.deneb.enyo.de>
-References: <20200326155633.18236-1-mathieu.desnoyers@efficios.com> <20200326155633.18236-6-mathieu.desnoyers@efficios.com> <87ees9z417.fsf@mid.deneb.enyo.de>
-Subject: Re: [PATCH glibc 5/9] glibc: Perform rseq(2) registration at C
- startup and thread creation (v17)
+        Mon, 27 Apr 2020 12:46:17 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6507DC09B050
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 09:46:17 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id k1so21400624wrx.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 09:46:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=K+g8CFmqfjmYJhrJrB84iQ9ane1MJeR/rniO7Hj0TcQ=;
+        b=j0X8ISUfitBA/7pgF+7wgu8pr3DqkIkyLmpu2c7JYW1hSgdSSbqKuFseYFmFzggSq4
+         YBiGPvcexHTHn523bsRBKfW9983b4IPLe9iYFu6seqdh6a+UMOwsLAsEdK3HDE5DC9Wd
+         HCEwqdEC0m97fG2KxiGGXEPQtnRb2knFsV5KNAlmha64oKZiHul0yB/9FKB94Veevpez
+         g40O8b8Jc23aooitCnmdv5VCoJhzPZwGIzS3hm5EqF3fV3qM/yXIK8mZWUK+eRkE+cMv
+         q/97FOTCOwZ5ZJ3W2cRDwsU7yltn850rt7KXhyoV72KoqiqWSPLq/6tBCRXm4ElrWdni
+         gI8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=K+g8CFmqfjmYJhrJrB84iQ9ane1MJeR/rniO7Hj0TcQ=;
+        b=XpLq5GEFaAtnzf8deGKzE00dSSHT5m6WnODVRs0OYQ0S8RllrypeDxwRazIudPd1Ii
+         1EszlpkjR1GYJNPVOiLsd/0qWtCc1wc+TO7ONleEV8qZ7LDOxlu67kWRhdsZiF8b0F+6
+         KU+CSgaErK+BBcbQe1Qx9F1BBGCFJaoLq6ovFhTc6QZwxa4cbdFRc/kl4qfPFkRToVSS
+         nGB1qg1c5RkVfjQ3TiOPdT/Dm06tuH+hW2MCBNCXTHlc/r2R+vhXCRHE7raqVvvdoza9
+         61h8dt4lpvqHI9M6AmS22f1pnmsHJWixMJZ4crsJ6Km4iUBG0RXZIMsX0L0KntREv6WF
+         qnZw==
+X-Gm-Message-State: AGi0PuZSdOx//7VljV2aYVHlwywcYT6v3mUEFZWyIjknf+778t0fl0wd
+        a8sENEGoL2j79mDGJJb1Hv/wdg==
+X-Google-Smtp-Source: APiQypIeEHjLe+6L+bZvcDi8pabn6zUvT6/Fw3vHzATYAOxTOerhsjaw3lgm9cNww142ONc10a58tA==
+X-Received: by 2002:a5d:4292:: with SMTP id k18mr26970411wrq.137.1588005975964;
+        Mon, 27 Apr 2020 09:46:15 -0700 (PDT)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id n7sm15664278wmd.11.2020.04.27.09.46.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 09:46:14 -0700 (PDT)
+References: <20200328003249.1248978-1-martin.blumenstingl@googlemail.com> <1jblnd2tp3.fsf@starbuckisacylon.baylibre.com> <CAFBinCDzNw6nV3oBJs6C0sssW61GERBXq39DCM22BT9zS8M31A@mail.gmail.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-mmc@vger.kernel.org, ulf.hansson@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, jianxin.pan@amlogic.com,
+        linux-kernel@vger.kernel.org, yinxin_1989@aliyun.com,
+        linux-arm-kernel@lists.infradead.org, lnykww@gmail.com
+Subject: Re: [PATCH v5 0/3] Amlogic 32-bit Meson SoC SDHC MMC controller driver
+In-reply-to: <CAFBinCDzNw6nV3oBJs6C0sssW61GERBXq39DCM22BT9zS8M31A@mail.gmail.com>
+Date:   Mon, 27 Apr 2020 18:46:12 +0200
+Message-ID: <1j8sig3mi3.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3918 (ZimbraWebClient - FF75 (Linux)/8.8.15_GA_3895)
-Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v17)
-Thread-Index: /j9NkOdwpAcG2p0QWhkHsXuWBFxTSw==
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Apr 27, 2020, at 5:11 AM, Florian Weimer fw@deneb.enyo.de wrote:
 
-> * Mathieu Desnoyers via Libc-alpha:
->=20
->> +* Support for automatically registering threads with the Linux rseq(2)
->> +  system call has been added.  This system call is implemented starting
->> +  from Linux 4.18.  The Restartable Sequences ABI accelerates user-spac=
-e
->> +  operations on per-cpu data.  It allows user-space to perform updates
->> +  on per-cpu data without requiring heavy-weight atomic operations.
->> +  Automatically registering threads allows all libraries, including lib=
-c,
->> +  to make immediate use of the rseq(2) support by using the documented =
-ABI.
->> +  See 'man 2 rseq' for the details of the ABI shared between libc and t=
-he
->> +  kernel.
->=20
-> This should refer documentation in the glibc manual.
->=20
-> (It is currently a glibc project requirement to add documentation for
-> new Linux interfaces, something that I do not necessarily agree with.)
+On Mon 27 Apr 2020 at 18:23, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
+
+> Hi Jerome,
+>
+> On Mon, Apr 27, 2020 at 10:56 AM Jerome Brunet <jbrunet@baylibre.com> wrote:
+> [...]
+>> > Changes since v3 at [3]:
+>> > - split the clock bits into a separate clock controller driver because
+>> >   of two reasons: 1) it keeps the MMC controller driver mostly clean of
+>> >   the clock bits
+>>
+>> If the register is in the MMC controller register space and the MMC
+>> driver is the driver using these clocks, it is where the clocks belong.
+>> I don't get why it could be an issue ?
+>>
+>> Is the clock block is shared with another device, like on the Gx family ?
+> no, it is not shared with another device (to my knowledge).
+>
+>> > 2) the pure clock controller can use
+>> >   devm_clk_hw_register() (instead of devm_clk_register(), which is
+>> >   deprecated) and the MMC controller can act as a pure clock consumer.
+>>
+>> Why can't you use devm_clk_hw_register in an MMC driver ?
+>> Unless I missed something, it is provided by clk-provider.h, which can be
+>> included by any driver.
+> indeed, I could use devm_clk_hw_register in the MMC driver.
+> Ulfs concern was that a lot of code was needed for managing the clocks
+> and I agree with him. so this is my way of keeping those details away
+> from the MMC driver and have two separate drivers which are better to
+> understand overall.
+
+Martin, Ulf,
+
+I understand that CCF code might seems verbose and I'm happy to help
+review it if necessary but I don't think every driver out there should
+register some kind of fake clock controller driver everytime they wish
+to use CCF API.
+
+Yes the it might make the driver code cleaner but the overall
+architecture is harder to follow.
+
+CCF was made so driver from any subsystem *may* use it. Creating a
+controller for a single register is overkill. The HW architecture of
+this particular device does not justify it.
+
+>
+>
+> Martin
 
-A related issue here is that editing of the rseq(2) man pages has been stal=
-led
-since March 2019. I have been waiting for reply from Michael Kerrisk, and I
-suspect he might have be side-tracked by other projects. I just bumped that
-thread.
-
-Ref.: https://lore.kernel.org/r/211707091.921.1551722548347.JavaMail.zimbra=
-@efficios.com
-
-So as of today, "man 2 rseq" does not exist in the kernel man pages, so I
-suggest we remove that sentence. Would the following change be OK with you =
-?
-
--  See 'man 2 rseq' for the details of the ABI shared between libc and the
--  kernel.
-+  The GNU C Library manual has details on integration of Restartable
-+  Sequences.
-
->=20
->> =20
->>  Deprecated and removed features, and other changes affecting compatibil=
-ity:
->> =20
->> diff --git a/elf/libc_early_init.c b/elf/libc_early_init.c
->> index 1ac66d895d..30466afea0 100644
->> --- a/elf/libc_early_init.c
->> +++ b/elf/libc_early_init.c
->> @@ -18,10 +18,13 @@
->> =20
->>  #include <ctype.h>
->>  #include <libc-early-init.h>
->> +#include <rseq-internal.h>
->> =20
->>  void
->>  __libc_early_init (void)
->>  {
->>    /* Initialize ctype data.  */
->>    __ctype_init ();
->> +  /* Register rseq ABI to the kernel.   */
->> +  (void) rseq_register_current_thread ();
->>  }
->=20
-> The cast to void should be removed (see below the comment about the
-> return type.
-
-OK
-
->=20
->> diff --git a/manual/threads.texi b/manual/threads.texi
->> index 0858ef8f92..59f634e432 100644
->> --- a/manual/threads.texi
->> +++ b/manual/threads.texi
->> @@ -9,8 +9,10 @@ This chapter describes functions used for managing thre=
-ads.
->>  POSIX threads.
->> =20
->>  @menu
->> -* ISO C Threads::=09Threads based on the ISO C specification.
->> -* POSIX Threads::=09Threads based on the POSIX specification.
->> +* ISO C Threads::=09=09Threads based on the ISO C specification.
->> +* POSIX Threads::=09=09Threads based on the POSIX specification.
->> +* Restartable Sequences::=09Linux-specific Restartable Sequences
->> +=09=09=09=09integration.
->>  @end menu
->> =20
->> =20
->> @@ -881,3 +883,27 @@ Behaves like @code{pthread_timedjoin_np} except tha=
-t the
->> absolute time in
->>  @c pthread_spin_unlock
->>  @c pthread_testcancel
->>  @c pthread_yield
->> +
->> +@node Restartable Sequences
->> +@section Restartable Sequences
->> +@cindex rseq
->> +
->> +This section describes @theglibc{} Restartable Sequences integration.
->> +
->> +@deftypevar {struct rseq} __rseq_abi
->> +@standards{GNU, sys/rseq.h}
->> +@Theglibc{} implements a @code{__rseq_abi} TLS symbol to interact with =
-the
->> +Restartable Sequences system call (Linux-specific).  The layout of this
->> +structure is defined by the Linux kernel @file{linux/rseq.h} UAPI.
->> +Registration of each thread's @code{__rseq_abi} is performed by
->> +@theglibc{} at libc initialization and pthread creation.
->> +@end deftypevar
->> +
->> +@deftypevr Macro int RSEQ_SIG
->> +@standards{GNU, sys/rseq.h}
->> +Each supported architecture provide a @code{RSEQ_SIG} macro in
->> +@file{sys/rseq.h} which contains a signature.  That signature is expect=
-ed to be
->> +present in the code before each Restartable Sequences abort handler.  F=
-ailure
->> +to provide the expected signature may terminate the process with a Segm=
-entation
->> +fault.
->> +@end deftypevr
->=20
-> This should say Linux, not GNU as the standards source, given that the
-> interface is not added to the GNU ABI.
-
-Good point, done.
-
->=20
-> Is this sufficient documentation of this feature?  What do others
-> think about this?
-
-I'll leave this question to others.
-
->=20
->> diff --git a/misc/rseq-internal.h b/misc/rseq-internal.h
->> new file mode 100644
->> index 0000000000..d564cf1bc3
->> --- /dev/null
->> +++ b/misc/rseq-internal.h
->> @@ -0,0 +1,33 @@
->=20
->> +static inline int
->> +rseq_register_current_thread (void)
->> +{
->> +  return -1;
->> +}
->=20
-> Nothing checks the return value of this function as far as I can see,
-> so it can return void.
-
-OK
-
->=20
->> +static inline int
->> +rseq_unregister_current_thread (void)
->> +{
->> +  return -1;
->> +}
->=20
-> This function is unused.  This also applies to the full version.  I
-> believe we switched to implicit deregistration on thread exit, so I
-> think you can just remove it.
-
-OK
-
->=20
->> diff --git a/nptl/pthread_create.c b/nptl/pthread_create.c
->> index afd379e89a..1ff248042e 100644
->> --- a/nptl/pthread_create.c
->> +++ b/nptl/pthread_create.c
->> @@ -33,6 +33,7 @@
->>  #include <default-sched.h>
->>  #include <futex-internal.h>
->>  #include <tls-setup.h>
->> +#include <rseq-internal.h>
->>  #include "libioP.h"
->> =20
->>  #include <shlib-compat.h>
->> @@ -384,6 +385,9 @@ START_THREAD_DEFN
->>    /* Initialize pointers to locale data.  */
->>    __ctype_init ();
->> =20
->> +  /* Register rseq TLS to the kernel. */
->> +  (void) rseq_register_current_thread ();
->> +
->=20
-> The cast can go.
-
-OK
-
->=20
->>  #ifndef __ASSUME_SET_ROBUST_LIST
->>    if (__set_robust_list_avail >=3D 0)
->>  #endif
->> @@ -578,6 +582,14 @@ START_THREAD_DEFN
->>       process is really dead since 'clone' got passed the CLONE_CHILD_CL=
-EARTID
->>       flag.  The 'tid' field in the TCB will be set to zero.
->> =20
->> +     rseq TLS is still registered at this point. Rely on implicit
->> unregistration
->> +     performed by the kernel on thread teardown. This is not a problem =
-because
->> the
->> +     rseq TLS lives on the stack, and the stack outlives the thread. If=
- TCB
->> +     allocation is ever changed, additional steps may be required, such=
- as
->> +     performing explicit rseq unregistration before reclaiming the rseq=
- TLS
->> area
->> +     memory. It is NOT sufficient to block signals because the kernel m=
-ay write
->> +     to the rseq area even without signals.
->> +
->>       The exit code is zero since in case all threads exit by calling
->>       'pthread_exit' the exit status must be 0 (zero).  */
->>    __exit_thread ();
->=20
-> Some of these lines are too long.  Also two spaces after . at the end
-> of sentences.
-
-OK
-
->=20
->> diff --git a/sysdeps/unix/sysv/linux/rseq-internal.h
->> b/sysdeps/unix/sysv/linux/rseq-internal.h
->> new file mode 100644
->> index 0000000000..5f7f02f1ec
->> --- /dev/null
->> +++ b/sysdeps/unix/sysv/linux/rseq-internal.h
->=20
->> +static inline int
->> +rseq_register_current_thread (void)
->> +{
->> +  int rc, ret =3D 0;
->> +
->> +  if (__rseq_abi.cpu_id =3D=3D RSEQ_CPU_ID_REGISTRATION_FAILED)
->> +    return -1;
->> +  rc =3D INTERNAL_SYSCALL_CALL (rseq, &__rseq_abi, sizeof (struct rseq)=
-,
->> +                              0, RSEQ_SIG);
->> +  if (!rc)
->> +    goto end;
->> +  if (INTERNAL_SYSCALL_ERRNO (rc) !=3D EBUSY)
->> +    __rseq_abi.cpu_id =3D RSEQ_CPU_ID_REGISTRATION_FAILED;
->> +  ret =3D -1;
->> +end:
->> +  return ret;
->> +}
->=20
-> This does not seem to use INTERNAL_SYSCALL_CALL correctly.  I think
-> you need to use INTERNAL_SYSCALL_ERROR_P on the result to check for an
-> error, and only then use INTERNAL_SYSCALL_ERRNO to extract the error
-> code.
-
-OK
-
->=20
->> diff --git a/sysdeps/unix/sysv/linux/rseq-sym.c
->> b/sysdeps/unix/sysv/linux/rseq-sym.c
->> new file mode 100644
->> index 0000000000..0e33fab278
->> --- /dev/null
->> +++ b/sysdeps/unix/sysv/linux/rseq-sym.c
->=20
->> +#include <sys/syscall.h>
->> +#include <stdint.h>
->> +#include <kernel-features.h>
->> +#include <sys/rseq.h>
->> +
->> +__thread struct rseq __rseq_abi =3D {
->> +  .cpu_id =3D RSEQ_CPU_ID_UNINITIALIZED,
->> +};
->=20
-> { should go onto its own line.
-
-OK
-
-> I'd also add attribute_tls_model_ie,
-> also it's implied by the declaration in the header.
-
-This contradicts feedback I received from Szabolcs Nagy in September 2019:
-
-https://public-inbox.org/libc-alpha/c58d4d6e-f22a-f5d9-e23a-5bd72cec1a86@ar=
-m.com/
-
-"note that libpthread.so is built with -ftls-model=3Dinitial-exec
-
-(and if it wasn't then you'd want to put the attribute on the
-declaration in the internal header file, not on the definition,
-so the actual tls accesses generate the right code)"
-
-In the context of his feedback, __rseq_abi was defined within nptl/pthread_=
-create.c.
-It is now defined in sysdeps/unix/sysv/linux/rseq-sym.c, which is built int=
-o the
-csu which AFAIU ends up in libc.so. His comment still applies though, becau=
-se
-libc.so is also built with -ftls-model=3Dinitial-exec.
-
-So should I apply the "initial-exec" TLS model only to the __rseq_abi
-declaration, or is it preferred to apply it to both the declaration
-and the definition ?
-
->=20
->> diff --git a/sysdeps/unix/sysv/linux/sys/rseq.h
->> b/sysdeps/unix/sysv/linux/sys/rseq.h
->> new file mode 100644
->> index 0000000000..503dce4cac
->> --- /dev/null
->> +++ b/sysdeps/unix/sysv/linux/sys/rseq.h
->> @@ -0,0 +1,186 @@
->=20
-> I think there is some value in making this header compatible with
-> inclusion from the assembler (including constants for the relevant
-> struct offsets), but that can be a later change.
-
-Agreed. By "later", do you mean before merging the patch, between
-merge of the patch and next glibc release, or for a subsequent glibc
-release ?
-
->=20
->> +#ifndef _SYS_RSEQ_H
->> +#define _SYS_RSEQ_H=091
->> +
->> +/* Architecture-specific rseq signature.  */
->> +#include <bits/rseq.h>
->=20
-> Maybe add a newline between the above and the following, to make clear
-> the comment only applies to the first #include.
-
-OK
-
->=20
->> +#include <stdint.h>
->> +#include <sys/cdefs.h>
->> +
->> +#ifdef __has_include
->> +# if __has_include ("linux/rseq.h")
->> +#   define __GLIBC_HAVE_KERNEL_RSEQ
->> +# endif
->> +#else
->> +# include <linux/version.h>
->> +# if LINUX_VERSION_CODE >=3D KERNEL_VERSION (4, 18, 0)
->> +#   define __GLIBC_HAVE_KERNEL_RSEQ
->> +# endif
->> +#endif
->> +
->> +#ifdef __GLIBC_HAVE_KERNEL_RSEQ
->> +/* We use the structures declarations from the kernel headers.  */
->> +# include <linux/rseq.h>
->> +#else
->> +/* We use a copy of the include/uapi/linux/rseq.h kernel header.  */
->> +
->> +#include <asm/byteorder.h>
->> +
->> +enum rseq_cpu_id_state
->> +  {
->> +    RSEQ_CPU_ID_UNINITIALIZED =3D -1,
->> +    RSEQ_CPU_ID_REGISTRATION_FAILED =3D -2,
->> +  };
->> +
->> +enum rseq_flags
->> +  {
->> +    RSEQ_FLAG_UNREGISTER =3D (1 << 0),
->> +  };
->> +
->> +enum rseq_cs_flags_bit
->> +  {
->> +    RSEQ_CS_FLAG_NO_RESTART_ON_PREEMPT_BIT =3D 0,
->> +    RSEQ_CS_FLAG_NO_RESTART_ON_SIGNAL_BIT =3D 1,
->> +    RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE_BIT =3D 2,
->> +  };
->> +
->> +enum rseq_cs_flags
->> +  {
->> +    RSEQ_CS_FLAG_NO_RESTART_ON_PREEMPT =3D
->> +      (1U << RSEQ_CS_FLAG_NO_RESTART_ON_PREEMPT_BIT),
->> +    RSEQ_CS_FLAG_NO_RESTART_ON_SIGNAL =3D
->> +      (1U << RSEQ_CS_FLAG_NO_RESTART_ON_SIGNAL_BIT),
->> +    RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE =3D
->> +      (1U << RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE_BIT),
->> +  };
->> +
->> +/* struct rseq_cs is aligned on 4 * 8 bytes to ensure it is always
->> +   contained within a single cache-line. It is usually declared as
->> +   link-time constant data.  */
->> +struct rseq_cs
->> +  {
->> +    /* Version of this structure.  */
->> +    uint32_t version;
->> +    /* enum rseq_cs_flags.  */
->> +    uint32_t flags;
->> +    uint64_t start_ip;
->> +    /* Offset from start_ip.  */
->> +    uint64_t post_commit_offset;
->> +    uint64_t abort_ip;
->> +} __attribute__((aligned(4 * sizeof(uint64_t))));
->=20
-> The comment is wrong.  32-byte alignment does not put struct rseq_cs
-> on its own cache line on many (most?) CPUs.  Not using the constant 32
-> looks like unnecessary obfuscation to me.
-
-There is a difference between "being contained within a single cache-line"
-and "being the only structure in a cache-line". The objective here is the
-former.
-
-For instance, if we do not enforce any minimum alignment, the compiler coul=
-d
-decide to align that structure on __alignof__(uint64_t) which happens to be
-4 bytes on some architectures. This can cause this frequently accessed stru=
-cture
-to be sitting across 2 cache-lines, thus requiring the CPU to load two cach=
-e
-lines rather than one very frequently.
-
-I think what you have in mind is "being the only structure in a cache-line"=
-,
-which is useful to eliminate false-sharing. However, considering that this =
-is
-a TLS variable, we don't care about false-sharing, because it is never mean=
-t
-to be updated concurrently by many threads or CPUs.
-
-So I think my comment is correct.
-
-I agree that the constant 32 may be clearer here. I will change to align(32=
-).
-
-> I still think we should avoid the alignment.  The _ip fields should
-> perhaps be _pc (IP is more or less specific to x86).
-
-I am concerned that removing an alignment attribute which is exposed
-in a public Linux UAPI header can be an ABI breakage.
-
-I am also concerned about changing field names for fields already
-exposed in a public Linux UAPI header, especially if the change is
-only for cosmetic reasons.
-
->=20
-> { and } are not aligned.  Please do not forget to add spaces before
-> opening parentheses, and two spaces after the . and the end of
-> sentences.  The opening { should always be on its own line.  (This
-> also applies to the definition of struct rseq below.)
-
-OK. Old coding style habits die hard ;)
-
->=20
->> +
->> +/* struct rseq is aligned on 4 * 8 bytes to ensure it is always
->> +   contained within a single cache-line.
->> +
->> +   A single struct rseq per thread is allowed.  */
->> +struct rseq
->> +  {
->> +    /* Restartable sequences cpu_id_start field. Updated by the
->> +       kernel. Read by user-space with single-copy atomicity
->> +       semantics. This field should only be read by the thread which
->> +       registered this data structure. Aligned on 32-bit. Always
->=20
-> What does =E2=80=9CAligned on 32-bit=E2=80=9D mean in this context?  Do y=
-ou mean to
-> reference 32-*byte* alignment here?
-
-No. I really mean 32-bit (4-byte). Being aligned on 32-byte guarantees that
-this field is aligned at least on 4-byte. This is required by single-copy
-atomicity semantics.
-
-Should I update this comment to state "Aligned on 4-byte" instead ?
-
->=20
->> +    /* Restartable sequences rseq_cs field.
->> +
->> +       Contains NULL when no critical section is active for the current
->> +       thread, or holds a pointer to the currently active struct rseq_c=
-s.
->> +
->> +       Updated by user-space, which sets the address of the currently
->> +       active rseq_cs at the beginning of assembly instruction sequence
->> +       block, and set to NULL by the kernel when it restarts an assembl=
-y
->> +       instruction sequence block, as well as when the kernel detects t=
-hat
->> +       it is preempting or delivering a signal outside of the range
->> +       targeted by the rseq_cs. Also needs to be set to NULL by user-sp=
-ace
->> +       before reclaiming memory that contains the targeted struct rseq_=
-cs.
->> +
->> +       Read and set by the kernel. Set by user-space with single-copy
->> +       atomicity semantics. This field should only be updated by the
->> +       thread which registered this data structure. Aligned on 64-bit. =
- */
->> +    union {
->> +      uint64_t ptr64;
->> +#ifdef __LP64__
->> +      uint64_t ptr;
->> +#else
->> +      struct {
->> +#if (defined(__BYTE_ORDER) && (__BYTE_ORDER =3D=3D __BIG_ENDIAN)) ||
->> defined(__BIG_ENDIAN)
->> +        uint32_t padding; /* Initialized to zero.  */
->> +        uint32_t ptr32;
->> +#else /* LITTLE */
->> +        uint32_t ptr32;
->> +        uint32_t padding; /* Initialized to zero.  */
->> +#endif /* ENDIAN */
->> +      } ptr;
->> +#endif
->> +    } rseq_cs;
->=20
-> Are these conditionals correct for x32?
-
-Let's see. With x86 gcc:
-
--m64: (__x86_64__ && __LP64__)
--m32: (__i386__)
--mx32: (__x86_64__ && __ILP32__)
-
-So with "#ifdef __LP64__" we specifically target 64-bit pointers. The rest
-falls into the "else" case, which expects 32-bit pointers. Considering that
-x32 has 32-bit pointers, I don't see any issue here.
-
-> Shouldn't there be a member of type const struct rseq_cs * somewhere?
-
-Having pointers within structures in kernel UAPI headers is frowned upon. I=
-ndeed
-here having it in the union could possibly make some use-cases easier in
-user-space, so I'm open to it. It basically depends on how much we want the
-Linux UAPI header and the glibc header to stay in sync, and if other kernel
-maintainers are open to this addition.
-
-We don't mind that user-space uses that pointer, but we never want the kern=
-el
-to touch that pointer rather than the 32/64-bit-aware fields. One possibili=
-ty
-would be to do:
-
-    union
-      {
-        uint64_t ptr64;
-#ifdef __LP64__
-        uint64_t ptr;
-#else
-        struct
-          {
-#if (defined (__BYTE_ORDER) && (__BYTE_ORDER =3D=3D __BIG_ENDIAN)) || defin=
-ed (__BIG_ENDIAN)
-            uint32_t padding; /* Initialized to zero.  */
-            uint32_t ptr32;
-#else /* LITTLE */
-            uint32_t ptr32;
-            uint32_t padding; /* Initialized to zero.  */
-#endif /* ENDIAN */
-          } ptr;
-#endif
-
-#ifndef __KERNEL__
-     const struct rseq_cs *uptr;
-#endif
-      } rseq_cs;
-
-in the union, so only user-space can see that field. Thoughts ?
-
->=20
->> diff --git a/sysdeps/unix/sysv/linux/x86/bits/rseq.h
->> b/sysdeps/unix/sysv/linux/x86/bits/rseq.h
->> new file mode 100644
->> index 0000000000..75f52d9788
->> --- /dev/null
->> +++ b/sysdeps/unix/sysv/linux/x86/bits/rseq.h
->> @@ -0,0 +1,30 @@
->> +/* Restartable Sequences Linux x86 architecture header.
->> +   Copyright (C) 2019-2020 Free Software Foundation, Inc.
->=20
-> Please make sure that none of the new files reference the 2019 year.
-> It should be 2020, per GNU policy.
-
-OK
-
->=20
-> The patch needs some rebasing on top of current master.
-
-Done.
-
-Thanks for the review!
-
-Mathieu
-
-
---=20
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
