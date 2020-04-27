@@ -2,116 +2,109 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D30C81CFF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE592C81CFF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3A362078C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:33:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b8SHhWvZ"
+	by mail.kernel.org (Postfix) with ESMTP id 775842072A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:36:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588030561;
+	bh=xmk7CyW+Iq+Rc+TKxRT/9WDnIkypckD7+blQ1n4svRo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=V//nxWocM8ZTspjyJLAyIp1gXxFawe4uNt4AdYcWfxI8qBSAMGVGmVBqG1Eme0Fci
+	 /7vsKGoIAO6lR6rcjZtDHxEWgxkJ2WwF45LJDu146QHYhkn7Cwa87NeIAHN/NnInYG
+	 zh2RXbSx0JkRiwR5kdUx3CDrw0JGHrMq+peX9tKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbgD0XdC (ORCPT
+        id S1726275AbgD0XgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 19:33:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34846 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726233AbgD0XdC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 19:33:02 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 200D4C0610D5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 16:33:02 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id z6so7582524plk.10
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 16:33:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=psE/TVWQ8r0hHEn8TaByg+EQGlqN2iYLLSNjuoRCa9k=;
-        b=b8SHhWvZTnoeLLp7IhgorcpvGtX2VBtc6vtxpVWuQoeDabjj0nAmuP6/TiuQUuiRNh
-         etINFZ53Wf2AxOzz/nSnynJ4yALdIG4FmtD9L7neNUYUJq9Z2xbTJRF74DW8l6RrICQy
-         4m3riY6RULFDgxpguilcjn9XbHCWm0rHcTDJs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=psE/TVWQ8r0hHEn8TaByg+EQGlqN2iYLLSNjuoRCa9k=;
-        b=PIz05DJndbj9J5O8ki2Ow0PvT8y9rwsaM0SIHKUB1Q51H8nAzlXmBYycC3V7w1EzJG
-         60wz18Gs1O14QUxT6UEjk+8tye167srciL6sV1CJH5oMgj79+Rjofnu3YsxE2XZo8KDC
-         2IEn+4Lai18JXdheMasA0tapTFi264AnXJVjU/tcEFBl8QeqePiDvK7iKVrMo+7RVNJa
-         pcBjhzXlFmBeczDl3lSjCmXo+YsZZIsqra0XmVXeBO8LuyyhgsZc7AteQRFC9tT7/dRk
-         ucfxYPTEcAd81IanOzr0zeZzyEpakHn4PY+kG021ECOUIRWN8lBbANGqmnHNTTIxB7VT
-         jrrg==
-X-Gm-Message-State: AGi0PubG92kO39qiraey4VN65tR8nEaDfHX15lmviIgpTVvtX2fmAl5D
-        gMh7OyBgqlXhUC/tK81PaQk6rw==
-X-Google-Smtp-Source: APiQypIltu09rqzr9JI0Ay36qw8wC98n1LszdiP6AYWaeNG61gnrxNMq7cNJFmvmNXJIZr8u6f1mqQ==
-X-Received: by 2002:a17:902:a98a:: with SMTP id bh10mr24753613plb.340.1588030381558;
-        Mon, 27 Apr 2020 16:33:01 -0700 (PDT)
-Received: from evgreen-glaptop.cheshire.ch ([2601:646:c780:1404:1c5a:73fa:6d5a:5a3c])
-        by smtp.gmail.com with ESMTPSA id u15sm308980pjm.47.2020.04.27.16.33.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 27 Apr 2020 16:33:00 -0700 (PDT)
-From:   Evan Green <evgreen@chromium.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Evan Green <evgreen@chromium.org>,
-        Shobhit Srivastava <shobhit.srivastava@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org
-Subject: [PATCH] spi: pxa2xx: Apply CS clk quirk to BXT
-Date:   Mon, 27 Apr 2020 16:32:48 -0700
-Message-Id: <20200427163238.1.Ib1faaabe236e37ea73be9b8dcc6aa034cb3c8804@changeid>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 27 Apr 2020 19:36:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37372 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726204AbgD0XgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 19:36:00 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FDB4206D4;
+        Mon, 27 Apr 2020 23:35:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588030559;
+        bh=xmk7CyW+Iq+Rc+TKxRT/9WDnIkypckD7+blQ1n4svRo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=2cpPjegOkw3YBWsW96LWmxnh3azEbh7CSJHStLSLXp5TY4TnoMr9NfVaRauY6i1R+
+         proOSGIherCc6G0gUH/650UezzeWUFWcYKzAw3D1USFGbqChxVC67gwszbXI5FvtYd
+         AZd7HzTIQLujQMJGLpIyy6ZZ8tf1tzRdAQRThkBc=
+Date:   Mon, 27 Apr 2020 16:35:58 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [patch] mm, oom: stop reclaiming if GFP_ATOMIC will start
+ failing soon
+Message-Id: <20200427163558.5b08487d63da3cc7a89bf50b@linux-foundation.org>
+In-Reply-To: <alpine.DEB.2.22.394.2004271558540.248401@chino.kir.corp.google.com>
+References: <alpine.DEB.2.22.394.2004241347310.70176@chino.kir.corp.google.com>
+        <20200425172706.26b5011293e8dc77b1dccaf3@linux-foundation.org>
+        <alpine.DEB.2.22.394.2004261959310.80211@chino.kir.corp.google.com>
+        <20200427133051.b71f961c1bc53a8e72c4f003@linux-foundation.org>
+        <alpine.DEB.2.22.394.2004271558540.248401@chino.kir.corp.google.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With a couple allies at Intel, and much badgering, I got confirmation
-from Intel that at least BXT suffers from the same SPI chip-select
-issue as Cannonlake (and beyond). The issue being that after going
-through runtime suspend/resume, toggling the chip-select line without
-also sending data does nothing.
+On Mon, 27 Apr 2020 16:03:56 -0700 (PDT) David Rientjes <rientjes@google.com> wrote:
 
-Add the quirk to BXT to briefly toggle dynamic clock gating off and
-on, forcing the fabric to wake up enough to notice the CS register
-change.
+> On Mon, 27 Apr 2020, Andrew Morton wrote:
+> 
+> > > No - that would actually make the problem worse.
+> > > 
+> > > Today, per-zone min watermarks dictate when user allocations will loop or 
+> > > oom kill.  should_reclaim_retry() currently loops if reclaim has succeeded 
+> > > in the past few tries and we should be able to allocate if we are able to 
+> > > reclaim the amount of memory that we think we can.
+> > > 
+> > > The issue is that this supposes that looping to reclaim more will result 
+> > > in more free memory.  That doesn't always happen if there are concurrent 
+> > > memory allocators.
+> > > 
+> > > GFP_ATOMIC allocators can access below these per-zone watermarks.  So the 
+> > > issue is that per-zone free pages stays between ALLOC_HIGH watermarks 
+> > > (the watermark that GFP_ATOMIC allocators can allocate to) and min 
+> > > watermarks.  We never reclaim enough memory to get back to min watermarks 
+> > > because reclaim cannot keep up with the amount of GFP_ATOMIC allocations.
+> > 
+> > But there should be an upper bound upon the total amount of in-flight
+> > GFP_ATOMIC memory at any point in time?  These aren't like pagecache
+> > which will take more if we give it more.  Setting the various
+> > thresholds appropriately should ensure that blockable allocations don't
+> > get their memory stolen by GPP_ATOMIC allocations?
+> > 
+> 
+> Certainly if that upper bound is defined and enforced somewhere we would 
+> not have run into this issue causing all userspace to become completely 
+> unresponsive.  Do you have links to patches that proposed enforcing this 
+> upper bound?
 
-Signed-off-by: Evan Green <evgreen@chromium.org>
-Cc: Shobhit Srivastava <shobhit.srivastava@intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
+There is no such enforcement and there are no such patches, as I'm sure
+you know.
 
-I don't actually have a BXT (Broxton/Apollolake?) system to test this.
-To be honest I suspect the issue is there in older generations as well,
-but I couldn't get Intel to confirm that, so this seemed like the
-only safe change.
----
- drivers/spi/spi-pxa2xx.c | 1 +
- 1 file changed, 1 insertion(+)
+No consumer of GFP_ATOMIC memory should consume an unbounded amount of
+it.  Subsystems such as networking will consume a certain amount and
+will then start recycling it.  The total amount in-flight will vary
+over the longer term as workloads change.  A dynamically tuning
+threshold system will need to adapt rapidly enough to sudden load
+shifts, which might require unreasonable amounts of headroom.
 
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index 73d2a65d0b6ef..20dcbd35611a7 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -150,6 +150,7 @@ static const struct lpss_config lpss_platforms[] = {
- 		.tx_threshold_hi = 48,
- 		.cs_sel_shift = 8,
- 		.cs_sel_mask = 3 << 8,
-+		.cs_clk_stays_gated = true,
- 	},
- 	{	/* LPSS_CNL_SSP */
- 		.offset = 0x200,
--- 
-2.24.1
-
+Michal asked relevant questions regarding watermark tuning - an ansewr
+to those would be interesting.  To amplify that, is it possible to
+manually tune this system so that the problem no longer exhibits?  If
+so, then why can't that tuning be performed automatically?
