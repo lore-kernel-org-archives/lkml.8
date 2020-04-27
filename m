@@ -2,355 +2,215 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 636A6C81857
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF68FC82A40
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24D5720575
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:12:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="UPw4k7kt"
+	by mail.kernel.org (Postfix) with ESMTP id A5C0D2078C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:14:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588025686;
+	bh=rwZyRkD1TSoz7ebCbiTMlMTBmGgzCf7CPs5QQBwDQ50=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=xyj4Ap6X4AL5N3x6fO31cdP2sSX9WUfgU74S6RRAUqdHwUNTRv9WQvfcJzrv6K/1B
+	 hZEvIkjOPCdLisP8XlgFZe/PkK332Bz13U0SUtGr/XjE2NbNKryEfBK6ZTbS+UtXMi
+	 1Rdyci7mcZsU58q/uJc8fo0nlP/CHvi7Q/SyMLsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbgD0WMx (ORCPT
+        id S1726309AbgD0WOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 18:12:53 -0400
-Received: from mail1.protonmail.ch ([185.70.40.18]:18099 "EHLO
-        mail1.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725998AbgD0WMw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 18:12:52 -0400
-Date:   Mon, 27 Apr 2020 22:12:41 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1588025566;
-        bh=DYCuiuKPBBkEr3iJsKakDERZQBlOgZSxnVMeB5WxUYI=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=UPw4k7kt7irmUwsOK7H6HcWWyJU095QTGSCxXmPbmgm/vJZtDQ4x9IXo551MZFviN
-         wNmwOFyFa7+dIWRwgZDINQ3KJf/RMtlGWXOYyOoQBjWsyVKq/kqRrFr4wjwVyV8SBU
-         EEPXfK8B063GsvdXoI09U7wwbqTzga4DZDh/1+AA=
-To:     Helen Koike <helen.koike@collabora.com>
-From:   =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
-        <nfraprado@protonmail.com>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        linux-media@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
-Reply-To: =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
-          <nfraprado@protonmail.com>
-Subject: Re: [PATCH v2 3/3] media: vimc: deb: Add support for {RGB,BGR,GBR}888 bus formats on source pad
-Message-ID: <20200427221212.ito2n77c2uwulek2@ArchWay.local>
-In-Reply-To: <64a28b0a-f4fc-2623-ac42-d7ebec52ceba@collabora.com>
-References: <20200326214730.2449707-1-nfraprado@protonmail.com>
- <20200326214730.2449707-4-nfraprado@protonmail.com>
- <b5bc6ab8-274a-adc7-9d86-a91a1efb8805@linuxfoundation.org>
- <ae9fdf85-7129-e1ad-a377-bda0808545c1@collabora.com>
- <20200420210135.bmca5qw5ilaavuo6@ArchWay.local>
- <64a28b0a-f4fc-2623-ac42-d7ebec52ceba@collabora.com>
+        Mon, 27 Apr 2020 18:14:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54086 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725998AbgD0WOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 18:14:45 -0400
+Received: from localhost (mobile-166-175-187-210.mycingular.net [166.175.187.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0FA92074F;
+        Mon, 27 Apr 2020 22:14:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588025684;
+        bh=rwZyRkD1TSoz7ebCbiTMlMTBmGgzCf7CPs5QQBwDQ50=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=nm6CuiAd2H2773Qx0+ywYuFu0fKPEBl08Oli133tgjd6GzwvSbPQ7REExtqlaIDM9
+         kz5v1Wd4nGdFdrNEkCrvNZHKkaCXMts5ejHnBttPTKpePfMzYFYNgsOrzP9tCNSNyO
+         1sdVv1SuzIF9vV191NK5s8+wauUDwAAEJpzsChQI=
+Date:   Mon, 27 Apr 2020 17:14:41 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
+Cc:     "rajatja@google.com" <rajatja@google.com>,
+        "fred@fredlawl.com" <fred@fredlawl.com>,
+        "ruscur@russell.cc" <ruscur@russell.cc>,
+        "kbusch@kernel.org" <kbusch@kernel.org>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "sbobroff@linux.ibm.com" <sbobroff@linux.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "oohall@gmail.com" <oohall@gmail.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Patel, Mayurkumar" <mayurkumar.patel@intel.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "sathyanarayanan.kuppuswamy@linux.intel.com" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH v2 1/2] PCI/AER: Allow Native AER Host Bridges to use AER
+Message-ID: <20200427221441.GA7516@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ac3d3b2d3f0e678b792281a1debf5762f1d52b1f.camel@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 06:04:25PM -0300, Helen Koike wrote:
->=20
->=20
->=20
-> On 4/20/20 6:01 PM, N=C3=ADcolas F. R. A. Prado wrote:
-> > Hi Helen,
-> >
-> > thanks for the review.
-> >
-> > Some comments below.
-> >
-> > On Mon, Mar 30, 2020 at 04:43:53PM -0300, Helen Koike wrote:
-> >>
-> >> Hello,
-> >>
-> >> On 3/26/20 7:06 PM, Shuah Khan wrote:
-> >>> On 3/26/20 3:47 PM, N=C3=ADcolas F. R. A. Prado wrote:
-> >>>> Add support for RGB888_*, BGR888_* and GBR888_* media bus formats on
-> >>>> the source pad of debayer subdevices.
-> >>>>
-> >>>> Co-developed-by: Vitor Massaru Iha <vitor@massaru.org>
-> >>>> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> >>>> Signed-off-by: N=C3=ADcolas F. R. A. Prado <nfraprado@protonmail.com=
->
-> >>>> ---
-> >>>>
-> >>>> Changes in v2:
-> >>>> - Change commit message to reflect v2 changes
-> >>>> - Rename variables
-> >>>> - Fix array formatting
-> >>>> - Add vimc_deb_is_src_code_valid function
-> >>>> - Add other BGR888 and RGB888 formats to debayer source pad supporte=
-d
-> >>>> =C2=A0=C2=A0 formats
-> >>>>
-> >>>> =C2=A0 drivers/media/platform/vimc/vimc-debayer.c | 61 +++++++++++++=
-++++-----
-> >>>> =C2=A0 1 file changed, 49 insertions(+), 12 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/me=
-dia/platform/vimc/vimc-debayer.c
-> >>>> index baf6bf9f65b5..33a9bea770bc 100644
-> >>>> --- a/drivers/media/platform/vimc/vimc-debayer.c
-> >>>> +++ b/drivers/media/platform/vimc/vimc-debayer.c
-> >>>> @@ -51,6 +51,19 @@ static const struct v4l2_mbus_framefmt sink_fmt_d=
-efault =3D {
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .colorspace =3D V4L2_COLORSPACE_DEFAU=
-LT,
-> >>>> =C2=A0 };
-> >>>> =C2=A0 +static const u32 vimc_deb_src_mbus_codes[] =3D {
-> >>>> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_GBR888_1X24,
-> >>>> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_BGR888_1X24,
-> >>>> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_BGR888_3X8,
-> >>>> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_RGB888_1X24,
-> >>>> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_RGB888_2X12_BE,
-> >>>> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_RGB888_2X12_LE,
-> >>>> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_RGB888_3X8,
-> >>>> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
-> >>>> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA,
-> >>>> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_RGB888_1X32_PADHI,
-> >>>> +};
-> >>>> +
-> >>>> =C2=A0 static const struct vimc_deb_pix_map vimc_deb_pix_map_list[] =
-=3D {
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 {
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .code =3D MED=
-IA_BUS_FMT_SBGGR8_1X8,
-> >>>> @@ -125,6 +138,17 @@ static const struct vimc_deb_pix_map *vimc_deb_=
-pix_map_by_code(u32 code)
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return NULL;
-> >>>> =C2=A0 }
-> >>>> =C2=A0 +static int vimc_deb_is_src_code_invalid(u32 code)
-> >>>> +{
-> >>>> +=C2=A0=C2=A0=C2=A0 unsigned int i;
-> >>>> +
-> >>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < ARRAY_SIZE(vimc_deb_src_mbus_c=
-odes); i++)
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (vimc_deb_src_mbus_co=
-des[i] =3D=3D code)
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 return 0;
-> >>>> +
-> >>>> +=C2=A0=C2=A0=C2=A0 return -EINVAL;
-> >>>> +}
-> >>
-> >> The naming is a bit confusing, since it checks if it is invalid, but r=
-eturns a negative number if so.
-> >>
-> >> How about renaming to vimc_deb_src_code_is_valid ?
-> >
-> > I also don't like that the function is called 'is_invalid', but I gave =
-it that
-> > name because I think it actually is less confusing when calling.
-> > For example, later in this patch I do:
-> >
-> > =C2=A0=C2=A0=C2=A0 } else if (vimc_deb_is_src_code_invalid(fse->code)) =
-{
-> >         return -EINVAL;
-> >
-> > Which to me becomes very clear.
-> >
-> > Since the error values evaluate to True, the other alternative that I
-> > see is to call it 'is_valid', but return 0 when invalid and 1 when vali=
-d.
-> > But then we no longer return the -EINVAL value, which I think makes the=
- function
-> > less clear.
-> >
-> > What do you think?
->=20
-> How about make the function to return bool instead of int?
+On Mon, Apr 27, 2020 at 04:11:07PM +0000, Derrick, Jonathan wrote:
+> On Fri, 2020-04-24 at 18:30 -0500, Bjorn Helgaas wrote:
+> > I'm glad you raised this because I think the way we handle
+> > FIRMWARE_FIRST is really screwed up.
+> > 
+> > On Mon, Apr 20, 2020 at 03:37:09PM -0600, Jon Derrick wrote:
+> > > Some platforms have a mix of ports whose capabilities can be negotiated
+> > > by _OSC, and some ports which are not described by ACPI and instead
+> > > managed by Native drivers. The existing Firmware-First HEST model can
+> > > incorrectly tag these Native, Non-ACPI ports as Firmware-First managed
+> > > ports by advertising the HEST Global Flag and matching the type and
+> > > class of the port (aer_hest_parse).
+> > > 
+> > > If the port requests Native AER through the Host Bridge's capability
+> > > settings, the AER driver should honor those settings and allow the port
+> > > to bind. This patch changes the definition of Firmware-First to exclude
+> > > ports whose Host Bridges request Native AER.
+> > > 
+> > > Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+> > > ---
+> > >  drivers/pci/pcie/aer.c | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> > > index f4274d3..30fbd1f 100644
+> > > --- a/drivers/pci/pcie/aer.c
+> > > +++ b/drivers/pci/pcie/aer.c
+> > > @@ -314,6 +314,9 @@ int pcie_aer_get_firmware_first(struct pci_dev *dev)
+> > >  	if (pcie_ports_native)
+> > >  		return 0;
+> > >  
+> > > +	if (pci_find_host_bridge(dev->bus)->native_aer)
+> > > +		return 0;
+> > 
+> > I hope we don't have to complicate pcie_aer_get_firmware_first() by
+> > adding this "native_aer" check here.  I'm not sure what we actually
+> > *should* do based on FIRMWARE_FIRST, but I don't think the current
+> > uses really make sense.
+> > 
+> > I think Linux makes too many assumptions based on the FIRMWARE_FIRST
+> > bit.  The ACPI spec really only says (ACPI v6.3, sec 18.3.2.4):
+> > 
+> >   If set, FIRMWARE_FIRST indicates to the OSPM that system firmware
+> >   will handle errors from this source first.
+> > 
+> >   If FIRMWARE_FIRST is set in the flags field, the Enabled field [of
+> >   the HEST AER structure] is ignored by the OSPM.
+> > 
+> > I do not see anything there about who owns the AER Capability, but
+> > Linux assumes that if FIRMWARE_FIRST is set, firmware must own the AER
+> > Capability.  I think that's reading too much into the spec.
+> > 
+> > We already have _OSC, which *does* explicitly talk about who owns the
+> > AER Capability, and I think we should rely on that.  If firmware
+> > doesn't want the OS to touch the AER Capability, it should decline to
+> > give ownership to the OS via _OSC.
+> > 
+> > >  	if (!dev->__aer_firmware_first_valid)
+> > >  		aer_set_firmware_first(dev);
+> > >  	return dev->__aer_firmware_first;
+> 
+> Just a little bit of reading and my interpretation, as it seems like
+> some of this is just layers upon layers of possibly conflicting yet
+> intentionally vague descriptions.
+> 
+> _OSC seems to describe that OSPM can handle AER (6.2.11.3):
+> PCI Express Advanced Error Reporting (AER) control
+>    The OS sets this bit to 1 to request control over PCI Express AER.
+>    If the OS successfully receives control of this feature, it must
+>    handle error reporting through the AER Capability as described in
+>    the PCI Express Base Specification.
+> 
+> 
+> For AER and DPC the ACPI root port enumeration will properly set
+> native_aer/dpc based on _OSC:
+> 
+> struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+> ...
+> 	if (!(root->osc_control_set & OSC_PCI_EXPRESS_AER_CONTROL))
+> 		host_bridge->native_aer = 0;
+> 	if (!(root->osc_control_set & OSC_PCI_EXPRESS_PME_CONTROL))
+> 		host_bridge->native_pme = 0;
+> 	if (!(root->osc_control_set & OSC_PCI_EXPRESS_LTR_CONTROL))
+> 		host_bridge->native_ltr = 0;
+> 	if (!(root->osc_control_set & OSC_PCI_EXPRESS_DPC_CONTROL))
+> 		host_bridge->native_dpc = 0;
+> 
+> As DPC was defined in an ECN [1], I would imagine AER will need to
+> cover DPC for legacy platforms prior to the ECN.
+> 
+> 
+> 
+> The complication is that HEST also seems to describe how ports (and
+> other devices) are managed either individually or globally:
+> 
+> Table 18-387  PCI Express Root Port AER Structure
+> ...
+> Flags:
+>    [0] - FIRMWARE_FIRST: If set, this bit indicates to the OSPM that
+>    system firmware will handle errors from this source
+>    [1] - GLOBAL: If set, indicates that the settings contained in this
+>    structure apply globally to all PCI Express Devices. All other bits
+>    must be set to zero
+> 
+> 
+> The _OSC definition seems to contradict/negate the above FIRMWARE_FIRST
+> definition that says only firmware will handle errors. It's a bit
+> different than the IA_32 MCE definition which allows for a GHES_ASSIST
+> condition, which would cause Firmware 'First', however does allow the
+> error to be received by OSPM AER via GHES:
+> 
+> Table 18-385  IA-32 Architecture Corrected Machine Check Structure
+>    [0] - FIRMWARE_FIRST: If set, this bit indicates that system
+>    firmware will handle errors from this source first.
+>    [2] - GHES_ASSIST: If set, this bit indicates that although OSPM is
+>    responsible for directly handling the error (as expected when
+>    FIRMWARE_FIRST is not set), system firmware reports additional
+>    information in the context of an interrupt generated by the error.
+>    The additional information is reported in a Generic Hardware Error
+>    Source structure with a matching Related Source Id.
+> 
+> 
+> I think Linux needs to make an assumption that devices either
+> enumerated in HEST or enumerated globally by HEST should be managed by
+> FFS. However it seems that Linux should also be correlating that with
+> _OSC as _OSC seems to directly contradict and possibly supercede the
+> HEST expectation.
 
-Oh that's better, I didn't realize there was a bool type.
-I'll send a v3 using bool then.
+That's basically what Linux been doing -- we've been assuming that if
+_OSC declines to grant us control, *or* if FFS is set somewhere, we
+shouldn't touch the AER capability.  But this leads to lots of weird
+corner cases, and I really doubt that firmware and Linux are
+interpreting all these the same way.
 
-Thank you,
-N=C3=ADcolas
+What breaks if we change Linux to *only* use _OSC to determine
+ownership of the AER capability?  My argument is that firmware doesn't
+want the OS to touch the AER capability registers, it should decline
+to give the OS control of the AER capability via _OSC.
 
->=20
-> Regards,
-> Helen
->=20
-> >
-> > Thank you,
-> > N=C3=ADcolas
-> >
-> >>
-> >>>> +
-> >>>> =C2=A0 static int vimc_deb_init_cfg(struct v4l2_subdev *sd,
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct v4l2_subdev_pad_config=
- *cfg)
-> >>>> =C2=A0 {
-> >>>> @@ -148,14 +172,11 @@ static int vimc_deb_enum_mbus_code(struct v4l2=
-_subdev *sd,
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct v4l2_subde=
-v_pad_config *cfg,
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct v4l2_subde=
-v_mbus_code_enum *code)
-> >>>> =C2=A0 {
-> >>>> -=C2=A0=C2=A0=C2=A0 /* We only support one format for source pads */
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (VIMC_IS_SRC(code->pad)) {
-> >>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct vimc_deb_device *=
-vdeb =3D v4l2_get_subdevdata(sd);
-> >>>> -
-> >>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (code->index)
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (code->index >=3D ARR=
-AY_SIZE(vimc_deb_src_mbus_codes))
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 return -EINVAL;
-> >>>> =C2=A0 -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 code->code =3D vd=
-eb->src_code;
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 code->code =3D vimc_deb_=
-src_mbus_codes[code->index];
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 } else {
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (code->ind=
-ex >=3D ARRAY_SIZE(vimc_deb_pix_map_list))
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 return -EINVAL;
-> >>>> @@ -170,8 +191,6 @@ static int vimc_deb_enum_frame_size(struct v4l2_=
-subdev *sd,
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct v4l2=
-_subdev_pad_config *cfg,
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct v4l2=
-_subdev_frame_size_enum *fse)
-> >>>> =C2=A0 {
-> >>>> -=C2=A0=C2=A0=C2=A0 struct vimc_deb_device *vdeb =3D v4l2_get_subdev=
-data(sd);
-> >>>> -
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (fse->index)
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVA=
-L;
-> >>>> =C2=A0 @@ -181,7 +200,7 @@ static int vimc_deb_enum_frame_size(struc=
-t v4l2_subdev *sd,
-> >>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!v=
-pix)
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 return -EINVAL;
-> >>>> -=C2=A0=C2=A0=C2=A0 } else if (fse->code !=3D vdeb->src_code) {
-> >>>> +=C2=A0=C2=A0=C2=A0 } else if (vimc_deb_is_src_code_invalid(fse->cod=
-e)) {
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVA=
-L;
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> >>>> =C2=A0 @@ -237,6 +256,7 @@ static int vimc_deb_set_fmt(struct v4l2_s=
-ubdev *sd,
-> >>>> =C2=A0 {
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct vimc_deb_device *vdeb =3D v4l2=
-_get_subdevdata(sd);
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct v4l2_mbus_framefmt *sink_fmt;
-> >>>> +=C2=A0=C2=A0=C2=A0 u32 *src_code;
-> >>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (fmt->which =3D=3D V4L2_SUB=
-DEV_FORMAT_ACTIVE) {
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Do not cha=
-nge the format while stream is on */
-> >>>> @@ -244,8 +264,10 @@ static int vimc_deb_set_fmt(struct v4l2_subdev =
-*sd,
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 return -EBUSY;
-> >>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sink_f=
-mt =3D &vdeb->sink_fmt;
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 src_code =3D &vdeb->src_=
-code;
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 } else {
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sink_fmt =3D =
-v4l2_subdev_get_try_format(sd, cfg, 0);
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 src_code =3D &v4l2_subde=
-v_get_try_format(sd, cfg, 1)->code;
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> >>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
-> >>>> @@ -253,9 +275,14 @@ static int vimc_deb_set_fmt(struct v4l2_subdev =
-*sd,
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * it is propagated from the sin=
-k
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (VIMC_IS_SRC(fmt->pad)) {
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 code =3D fmt->format=
-.code;
-> >>>> +
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fmt->format =
-=3D *sink_fmt;
-> >>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* TODO: Add support for=
- other formats */
-> >>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fmt->format.code =3D vde=
-b->src_code;
-> >>>> +
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!vimc_deb_is_src_cod=
-e_invalid(code))
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 *src_code =3D code;
-> >>>> +
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fmt->format.code =3D *sr=
-c_code;
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 } else {
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Set the ne=
-w format in the sink pad */
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vimc_deb_adju=
-st_sink_fmt(&fmt->format);
-> >>>> @@ -291,11 +318,21 @@ static void vimc_deb_set_rgb_mbus_fmt_rgb888_1=
-x24(struct vimc_deb_device *vdeb,
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int col,
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int rgb[3])
-> >>>
-> >>> Change this to pass a pointer and size.
-> >>
-> >> Hi Shuah,
-> >>
-> >> Modifying vimc_deb_set_rgb_mbus_fmt_rgb888_1x24() is not part of this =
-patch, or do you mean another part of the code?
-> >>
-> >> Thanks for reviewing
-> >> Helen
-> >>
-> >>>
-> >>>> =C2=A0 {
-> >>>> +=C2=A0=C2=A0=C2=A0 const struct vimc_pix_map *vpix;
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int i, index;
-> >>>> =C2=A0 +=C2=A0=C2=A0=C2=A0 vpix =3D vimc_pix_map_by_code(vdeb->src_c=
-ode);
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 index =3D VIMC_FRAME_INDEX(lin, col, =
-vdeb->sink_fmt.width, 3);
-> >>>> -=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < 3; i++)
-> >>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vdeb->src_frame[index + =
-i] =3D rgb[i];
-> >>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < 3; i++) {
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 switch (vpix->pixelforma=
-t) {
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case V4L2_PIX_FMT_RGB24:
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 vdeb->src_frame[index + i] =3D rgb[i];
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 break;
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case V4L2_PIX_FMT_BGR24:
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 vdeb->src_frame[index + i] =3D rgb[2-i];
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 break;
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> >>>> +=C2=A0=C2=A0=C2=A0 }
-> >>>> =C2=A0 }
-> >>>> =C2=A0 =C2=A0 static int vimc_deb_s_stream(struct v4l2_subdev *sd, i=
-nt enable)
-> >>>>
-> >>>
-> >>> thanks,
-> >>> -- Shuah
-> >
+If _OSC grants control to the OS in a case where firmware doesn't want
+the OS to have control, I'd say that's just a firmware defect that
+should be worked around with some sort of quirk.
 
+> [1] https://members.pcisig.com/wg/PCI-SIG/document/12888
