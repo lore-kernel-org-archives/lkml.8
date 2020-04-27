@@ -2,138 +2,150 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 328F6C5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E16C5519E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F817206A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:50:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 244E020661
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:50:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NkYnhxaE"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mL4UttTB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgD0Kuf (ORCPT
+        id S1726994AbgD0Kug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 06:50:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726507AbgD0Kud (ORCPT
+        Mon, 27 Apr 2020 06:50:36 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:49670 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726881AbgD0Kue (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 06:50:33 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5D02C0610D6;
-        Mon, 27 Apr 2020 03:50:32 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id e26so19007830wmk.5;
-        Mon, 27 Apr 2020 03:50:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=usvoDcQmOAQfSVCHZkaVpsS5uFVX3OgVFcU37tITmDU=;
-        b=NkYnhxaEqBz0kuLI8UFoasBYsi3X5fu7TqTP6oou5tjAhgFfVQwbbxJ8cF9PzJ24Wp
-         ngevZy52PSMUwshYEIVqoG7dw/Luk6rpiyw5/CYisM6co97UINwWjyfsaey9Cz1zvrpp
-         ekGXAnNj8RpnwEREvzz260MNx0H8Lohc5BjLm18C5KQ0Yx+wakvB5EQ0pYA7rqi98j+X
-         2lFk4aUM8hB99T5SrZU7rr741vjujrTZ1eoSvj8Mv8u5Iuz+vIgDDuKBpSrt9jEaG7mL
-         xSZwY1VXTGBXLeAKNZQjm+qIs+lDZ7JQzq9MEqheJPdFh1ZTOqhAEyJnCZQNfIzJymV1
-         MUlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=usvoDcQmOAQfSVCHZkaVpsS5uFVX3OgVFcU37tITmDU=;
-        b=mnsYaGCd0DOkEZ08p/dPrssES9Pmj8PcFvJ1voPzYMS4+gH8OTdIcfccrCBbx+EQoX
-         lZuIVUxD56MJX+rj1YiZzGYmsWRzUxWvOS7292UX83sAh1hTRGTfRGXqGPV8x1D8343u
-         GzvvqxQnFgHGCJ0qa6B2tB9rZPXMkcxBnwcG4bDKLkS5P6NXJnoYKDuhjkHsTue6ZWgW
-         5J2h124e4uqr/FawZyguCQWAbeR5DoGwzkM1PCIehujMY+ZcmlxUziwPya8tm2mmSGkv
-         2yf9A3Vu63pFiJVOoUeYPgOM9q/RLwfrFBrAeSB2q4jQT/QzBP1GfbyPvnOiHdIg32r+
-         K2xQ==
-X-Gm-Message-State: AGi0PuY5NgEaVG1Nb/xg3k21CpOk209fhLgzqBZDc6wqdD7P0+6FMhIN
-        iOkJ8VecW6w8kWIploT3PYA=
-X-Google-Smtp-Source: APiQypKBEJPhig0ZdzlTpmFNbyrFXFxDJfSJ0HQpzFOB2874Q6TduWtLpeS0K86eKEbwGPkjiGifVQ==
-X-Received: by 2002:a1c:2002:: with SMTP id g2mr24635013wmg.109.1587984631690;
-        Mon, 27 Apr 2020 03:50:31 -0700 (PDT)
-Received: from localhost (p2E5BEDBA.dip0.t-ipconnect.de. [46.91.237.186])
-        by smtp.gmail.com with ESMTPSA id l15sm14666438wmi.48.2020.04.27.03.50.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 03:50:30 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 12:50:29 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>, linux-i2c@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
- for a long time
-Message-ID: <20200427105029.GB3464906@ulmo>
-References: <d2531fc1-b452-717d-af71-19497e14ef00@gmail.com>
- <a5198024-7273-74c4-b4f4-3a29d042bc36@nvidia.com>
- <f8fb1f7f-2497-033e-ff2c-c86c6caa9706@gmail.com>
- <fd1ca178-1ea3-851f-20a6-10bf00453ce3@nvidia.com>
- <a5734f19-254e-b6bc-e791-fa1ac63f11a4@gmail.com>
- <79f6560e-dbb5-0ae1-49f8-cf1cd95396ec@nvidia.com>
- <20200427074837.GC3451400@ulmo>
- <20200427084424.GA28817@kunai>
- <820200ce-17f3-18c0-6f79-3e582f45492d@gmail.com>
- <20200427103553.GA24446@kunai>
+        Mon, 27 Apr 2020 06:50:34 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03RAoQXT001400;
+        Mon, 27 Apr 2020 05:50:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1587984626;
+        bh=IGT8KtVf7PY2gZ9dU2q+ikbbXQeLIMBV50rwe1LAM80=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=mL4UttTBU230xpooZ1c7vwuHNunAEuD65ZxU9nPRWzcn4X+OHnetVmvL1Q9v6MTQB
+         NIsXhHt3QqtXq43Hdz30XG41zctgvylQTy3Z3Nruu+To5kn10r/QgpLkVolIT+sRFB
+         5jOD488Lu2mtwWSoQIfHxY0gXAm/ziB1GOMlmvKc=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03RAoQo3001900
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 27 Apr 2020 05:50:26 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 27
+ Apr 2020 05:50:25 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 27 Apr 2020 05:50:25 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RAoONg024515;
+        Mon, 27 Apr 2020 05:50:24 -0500
+Subject: Re: [PATCH 1/3] arm64: dts: ti: am654: Add DSS node
+To:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jyri Sarha <jsarha@ti.com>
+References: <20200422091512.950-1-tomi.valkeinen@ti.com>
+ <591ddc8e-b45a-5a36-ae81-e1b92727dd2d@ti.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <3708a94a-9c42-745b-3dc0-2271fcc266a5@ti.com>
+Date:   Mon, 27 Apr 2020 13:50:23 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="O5XBE6gyVG5Rl6Rj"
-Content-Disposition: inline
-In-Reply-To: <20200427103553.GA24446@kunai>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <591ddc8e-b45a-5a36-ae81-e1b92727dd2d@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 27/04/2020 13:08, Tero Kristo wrote:
+> On 22/04/2020 12:15, Tomi Valkeinen wrote:
+>> From: Jyri Sarha <jsarha@ti.com>
+>>
+>> Add DSS node to k3-am65-main.dtsi with labels for board specific
+>> support and syscon node for oldi-io-ctrl.
+>>
+>> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+>> ---
+>>   arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 44 ++++++++++++++++++++++++
+>>   1 file changed, 44 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+>> index 11887c72f23a..7d1bc991708e 100644
+>> --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+>> +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+>> @@ -287,6 +287,11 @@
+>>               mux-reg-masks = <0x4080 0x3>, /* SERDES0 lane select */
+>>                       <0x4090 0x3>; /* SERDES1 lane select */
+>>           };
+>> +
+>> +        dss_oldi_io_ctrl: dss_oldi_io_ctrl@41E0 {
+>> +            compatible = "syscon";
+>> +            reg = <0x0000041E0 0x14>;
+>> +        };
+>>       };
+>>       dwc3_0: dwc3@4000000 {
+>> @@ -746,4 +751,43 @@
+>>               };
+>>           };
+>>       };
+>> +
+>> +    dss: dss@04a00000 {
+>> +        compatible = "ti,am65x-dss";
+>> +        reg =    <0x0 0x04a00000 0x0 0x1000>, /* common */
+>> +            <0x0 0x04a02000 0x0 0x1000>, /* vidl1 */
+>> +            <0x0 0x04a06000 0x0 0x1000>, /* vid */
+>> +            <0x0 0x04a07000 0x0 0x1000>, /* ovr1 */
+>> +            <0x0 0x04a08000 0x0 0x1000>, /* ovr2 */
+>> +            <0x0 0x04a0a000 0x0 0x1000>, /* vp1 */
+>> +            <0x0 0x04a0b000 0x0 0x1000>; /* vp2 */
+>> +        reg-names = "common", "vidl1", "vid",
+>> +            "ovr1", "ovr2", "vp1", "vp2";
+>> +
+>> +        ti,am65x-oldi-io-ctrl = <&dss_oldi_io_ctrl>;
+>> +
+>> +        power-domains = <&k3_pds 67 TI_SCI_PD_EXCLUSIVE>;
+>> +
+>> +        clocks =    <&k3_clks 67 1>,
+>> +                <&k3_clks 216 1>,
+>> +                <&k3_clks 67 2>;
+>> +        clock-names = "fck", "vp1", "vp2";
+>> +
+>> +        /*
+>> +         * Set vp2 clk (DPI_1_IN_CLK) mux to PLL4 via
+>> +         * DIV1. See "Figure 12-3365. DSS Integration"
+>> +         * in AM65x TRM for details.
+>> +         */
+>> +        assigned-clocks = <&k3_clks 67 2>;
+>> +        assigned-clock-parents = <&k3_clks 67 5>;
+>> +
+>> +        interrupts = <GIC_SPI 166 IRQ_TYPE_EDGE_RISING>;
+>> +
+>> +        status = "disabled";
+> 
+> Any reason why the node is disabled? Are you planning to enable it somewhere later on, or is that 
+> left for the user to do?
 
---O5XBE6gyVG5Rl6Rj
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It's enabled in board DT files or DT overlays which add a display and the DT graph for the 
+connections. Having DSS driver probe without any displays is a waste of resources.
 
-On Mon, Apr 27, 2020 at 12:35:53PM +0200, Wolfram Sang wrote:
-> On Mon, Apr 27, 2020 at 12:07:19PM +0300, Dmitry Osipenko wrote:
-> > 27.04.2020 11:44, Wolfram Sang =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > >=20
-> > >> Wolfram, can you revert the following two patches for v5.7, please?
-> > >>
-> > >> 	8814044fe0fa i2c: tegra: Synchronize DMA before termination
-> >=20
-> > This patch has nothing to do with your trouble, why do you want to
-> > revert it?
->=20
-> I'll wait some more before pushing out, so you can discuss it.
+  Tomi
 
-Okay, let me run a quick test with that second patch still applied to
-make sure it really is harmless.
-
-Thierry
-
---O5XBE6gyVG5Rl6Rj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6muPUACgkQ3SOs138+
-s6HeRA//R1ZgI3RIgFRMumlzLgXjk9E0ydZrGpjmIXD2Yq1hKWN7rDxl77D5X1z+
-JemdX2sML4h6JIMiXGercu0mI5SrjO0LHh7L2AYITbdRtfHVjpK4ed96NewY9CNZ
-ruYoVRDYIehUwq6jzX6aQmASBXnnrPiztYEMYqV/2SpTVLJDsAFBFcDI4VpaBpgm
-Sy/tACPUi1JYn6zn5hu96sFqOEvG6BFRwYFVRqDFG8zNWS25YoogvgnKfbL4Yr+X
-CGTw9+1iiMZ7YShdsOj9m/iQaCk8wPI4Nl10KzyEGQlsWDSfce/hcqtG6V0QZqnV
-T0z8GdrKY/o6NqX+iHcEWCySq7aTtZQ42rYKU6zu2awHgxle0a/Y4O6uw+A0CIF8
-eL3joxZcYWUG1Ns8mthGChimL8CVyioMrz7AoLyhcRv+nN6zHnAKi2ODqBFDe7HN
-0UniHlFxJosmw5CE2KtSMzigrcDib6keHaqx7j3riafDORQchOeJh3QxmnhyaO1W
-5KnB63lCx/sph1lPjgUuULp3lYQr8yJozcgTq3by5DvmEdnTNRHBo4FVI62uO2YR
-KvURjkEhTn2OOcs+X6cRTI+mum3BlGHUGMF4vg0a8LVcYYZ1kH1lhDd9ZuhPZ9I4
-CXPot1AVOsY9w//Nm5K4az98xyGkS3UbqL6SNu4psx8tMEFh6KI=
-=dg8T
------END PGP SIGNATURE-----
-
---O5XBE6gyVG5Rl6Rj--
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
