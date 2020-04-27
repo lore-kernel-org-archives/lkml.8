@@ -2,132 +2,715 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A278C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEF4C5519E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5EF206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 037C4206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:18:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="bxOzjLv9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aBsQ/ail"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbgD0JR7 (ORCPT
+        id S1726965AbgD0JSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 05:17:59 -0400
-Received: from mout.web.de ([212.227.17.12]:32833 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726243AbgD0JR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 05:17:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1587979059;
-        bh=tJKIP5/mdsP/vNzNEGPQkFtlyQQVMN8djw+HAazwd7s=;
-        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
-        b=bxOzjLv9wCyTxtrCkWsoiIUaQY0sXSLE8QdUGsYDG2ztSgNZlytYiSG85Yp2hg2lC
-         hQNzBLt8rgULSQ9E2mTotLauoHMCr8bT3d/RineqxpUmMjEj/ZPLhla27GsgeBtSTo
-         ghez2ib7HN3KtzJ4hFXCaCRXRd7ORP5bKC4Hbgtg=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.190.48]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LudP2-1j2UqZ1OAS-00zkRC; Mon, 27
- Apr 2020 11:17:39 +0200
-Cc:     linux-kernel@vger.kernel.org, opensource.kernel@vivo.com,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH] drm/mediatek: cleanup coding style in mediatek a bit
-To:     Bernard Zhao <bernard@vivo.com>, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <a637d892-de2c-b31d-bcfc-b3fd5b1d38d0@web.de>
-Date:   Mon, 27 Apr 2020 11:17:37 +0200
+        Mon, 27 Apr 2020 05:18:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42060 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbgD0JSt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 05:18:49 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E248C061BD3
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 02:18:48 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id r26so19599738wmh.0
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 02:18:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9FTPtp7+y3MUtyHKaeDKo5Q0m6xb8IjbKn5FfTGclWo=;
+        b=aBsQ/ailLFzWUnlmPJ+ZfiqcHRffYU1OEV1Ux/D+S/aBDzmgU7x5p2F4BjWtYm2Wy0
+         dR947Z5NFNAjBQBIYOzvJEIHkO/pUy/KpG3kk7VF5761Tf9wB+Cp6G8ZJ6cqRfLbylCR
+         cEpy/N9sCuCWXLmNqQJBMqw1JUt6YxPLN3zaHxXJDcrZcNdVCK8BbO1n2+BsqG/Lvgv2
+         qQDbJIYvEDgJTtWHtSUaU++EKyTAvQVO0kmkWAp8bDNJJckcf8/6TFrqPJ/jk228VlTx
+         ynOCnpes53/ttKUf/MOKfZa8yoKZJijvuaqcp55CvCMVcBEZKIy2lzP1vUADskuMPMr/
+         ljdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9FTPtp7+y3MUtyHKaeDKo5Q0m6xb8IjbKn5FfTGclWo=;
+        b=mAEZbdkgsp0M92QWXbcohesM96dN6GVvYkmorsstNERCAbrbIrkitnUSUtKwl5gHJq
+         5T8mn9Q/nIAC81ANGeQWMYVCXdJ8uxV8Rxxk7GCgmUh6c8UhkAMW2TU/Y1GJwAKXvZr/
+         67epa6cmY3lCSbMd0ESh95wiTbaP4VuSHtcYlJzBLB2+bp4wdXpThkTELEsuCwb8GkI8
+         +w/Zz8SE3YmmX+uv1eXzdef0MXfkPtuYgqSCWVG5VSzq1i0T5pNJQ4HtPTZGUF4xdc+o
+         ldZm+S9NOPbea2WfwQm26Bobz9vxvkSmNMH7lLMZhCVBdj+gokYxguayUovCEJOebmPH
+         gIng==
+X-Gm-Message-State: AGi0PuZ3iCpnGBrYuZ0f94AGEyqf4YMZmEu353RW8V/4hPAIa6uzXYU6
+        ZGxz4xS4qmxBJCnjbhU9vyQCIw==
+X-Google-Smtp-Source: APiQypIXAJ8yNOf4r5qX1LuyG2AW1GVq4fxN/DCEEP6uNm26qn4MK4w1bUpW+f6p0BVe0f3rXajqTg==
+X-Received: by 2002:a1c:2383:: with SMTP id j125mr24706956wmj.6.1587979126344;
+        Mon, 27 Apr 2020 02:18:46 -0700 (PDT)
+Received: from [192.168.0.41] (lns-bzn-59-82-252-135-148.adsl.proxad.net. [82.252.135.148])
+        by smtp.googlemail.com with ESMTPSA id s12sm14083678wmc.7.2020.04.27.02.18.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 02:18:45 -0700 (PDT)
+Subject: Re: [PATCH 02/14] clocksource/drivers/timer-ti-dm: Add clockevent and
+ clocksource support
+To:     Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Keerthy <j-keerthy@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Adam Ford <aford173@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org
+References: <20200417165519.4979-1-tony@atomide.com>
+ <20200417165519.4979-3-tony@atomide.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <62be90e2-7dbe-410d-4171-c0ad0cddc7a3@linaro.org>
+Date:   Mon, 27 Apr 2020 11:18:44 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200417165519.4979-3-tony@atomide.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-X-Provags-ID: V03:K1:7j4GHmZW2bMANUC8DguSnJsY8cIhQHIdrTwtIV9F63WBSjbJtLz
- q5JnZIsbpUJCR7fmCSxMWjHC9TkOY3CuXh3nznN5jkOvaGInSCz8caVtH5ENyz2omKisOAn
- 4nytp5SEYc0l7gQlBdOxcD+Mtg4Nzei1Q45pZ8BBE/oSDnRlKiSIQhFJIcCWkcJufQNPqPh
- XvvRGR8gCJXhGBPQuQJsQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:bbP7I+VHFPo=:h/eOyi0b4FAVcjvznZTeEX
- CmZ40gnemPLuct6RgEb4t1sxGh1yoxgnQr4sIlG4SnJzSZF+tjb/v8mSdIvbxwrfemz+wvWZt
- /1KsgxL40U83TBJPKeY1jEGN5I9V6lncoFaHyxWtqmuV2lA/fqHCfq7xD5e0NDKzgL/0O/TSO
- /ZBuAtLY7UQGLs2stde1GfpHGiuDDJYLik21fHfyCPToAj4CL70VRW9FC/9PPSfVzN70SSMMD
- +BLNU4WCx2eTTANsPTUdCo4oCLwy6MVmT3lEYvxyMwnPg3ct2w+fCcaWEdiJ5iIvgE4meiNhK
- szxRVpkEa6dYH6MCgy+AUsAnhIPO6QdOSFfAr4bWlU/VvHEa7Tfp08PQIe7jdskrWW7X7yRAf
- +I8BoHwdmSElom4svp3Cq4APLlq72bt3gbJeLwp+kGewhrBX9/6xP2OAjPksWj48ZLNyUkIHY
- /CdDaYNp3PbS3ovE8rsem8aI0XFAtSZud3U11obN1YHZ4TBQR2yw9F3N7E0sDqNxIss1Ch/b6
- Zdo2m5oJ0QiStih22xHNN1NdtbF16X4Z0ojtdL8bZhh3VIoHiQMCftRLjSsC0hyN504jY/gL5
- Z902b+RDrUkquzMZXQA2jlB+GdDb4mz6NFjZQw2YI01yH2UBYi7lrTC/2cSbMh+/AgeJwu6/5
- MRWvQRaga6/rWBMApqPsIjKcKTO28curdwp7v23spmzHP2IrOgtM960kyEL23oDYLM32mjI3D
- FP9twbBWKhwVJ4Hzrctqmhove4PwJW74Rqnv9AImtifdFw/Z4sQIwKtc2+Pqj4WTE9qZgs5+i
- VJdiGD8yt003eXqSmrNkFAY0An5PGgSpGZ7VKwPgHJ0ikwliSlhwskxH52P7k9Py9T2WxdN7k
- PaCMeEyVRAZMMfzkBUyec1oFlyKYXmHbQtmflskt03OsFwgjNEIWa2zkBjebtEq+uCz0IZ1ef
- SLwEeRuK5Y0um4FgvQBsIbIh8kB+4Z4MAHgsN5wJ7v0rvqKqm9Nmxi6/W4FlGXi6s2j3mZ4B3
- OnMrZgOjC1dLryhdPTRxGCQDtxA22j3HKlt5WJwJhGQEjFvxTkbJZmL5e92E1jmFvfDQwulF6
- SFf1gerGQ0Se+Dcx6Eh1a19EtNcG8N2tsSODVOmspHCdC+zxA2IT2jTXDZQnklG/ZixfNbeXq
- Wh2KitXyEdjDaSvABd0/XbAlc/A3YWHVpgzWXPFWmTkSLX9XDIM0ABBEuIZlYGCK6DGfd3yS5
- /tZNVpuyGjDfB7psr
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> This code change is to make code bit more readable.
-> Optimise array size align to HDMI macro define.
-> Add check if len is overange.
 
-I find it safer to handle also such source code adjustments
-by a small patch series together with improved commit messages.
+Hi Tony,
 
-Regards,
-Markus
+On 17/04/2020 18:55, Tony Lindgren wrote:
+> We can move the TI dmtimer clockevent and clocksource to live under
+> drivers/clocksource if we rely only on the clock framework, and handle
+> the module configuration directly in the clocksource driver.
+> 
+> This removes the early dependency with system timers to the interconnect
+> related code, and we can probe pretty much everything else later on at
+> the module_init level.
+> 
+> Let's first add a new driver for timer-ti-dm-systimer based on existing
+> arch/arm/mach-omap2/timer.c. Then let's start moving SoCs to probe with
+> device tree data while still keeping the old timer.c. And eventually we
+> can just drop the old timer.c.
+> 
+> Note the boards can optionally configure the timer source clock in using
+> assigned-clock-parents.
+> 
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-omap@vger.kernel.org
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Keerthy <j-keerthy@ti.com>
+> Cc: Lokesh Vutla <lokeshvutla@ti.com>
+> Cc: Tero Kristo <t-kristo@ti.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
+>  .../devicetree/bindings/timer/ti,timer.txt    |   2 +
+>  drivers/clocksource/Makefile                  |   1 +
+>  drivers/clocksource/timer-ti-dm-systimer.c    | 468 ++++++++++++++++++
+>  include/clocksource/timer-ti-dm.h             |   1 +
+>  4 files changed, 472 insertions(+)
+>  create mode 100644 drivers/clocksource/timer-ti-dm-systimer.c
+> 
+> diff --git a/Documentation/devicetree/bindings/timer/ti,timer.txt b/Documentation/devicetree/bindings/timer/ti,timer.txt
+> --- a/Documentation/devicetree/bindings/timer/ti,timer.txt
+> +++ b/Documentation/devicetree/bindings/timer/ti,timer.txt
+> @@ -14,6 +14,8 @@ Required properties:
+>  			ti,omap5430-timer (applicable to OMAP543x devices)
+>  			ti,am335x-timer	(applicable to AM335x devices)
+>  			ti,am335x-timer-1ms (applicable to AM335x devices)
+> +			ti,dmtimer-clockevent (when used as for clockevent)
+> +			ti,dmtimer-clocksource (when used as for clocksource)
+
+Please, submit a separate patch for this.
+
+Before you resend as is, this will be nacked as clocksource / clockevent
+is not a hardware description but a Linux thing.
+
+Finding a way to characterize that from the DT is an endless discussion
+since years, so I suggest to use a single property for the timer eg
+<ti,dmtimer> and initialize the clocksource and the clockevent in the
+driver.
+
+>  - reg:			Contains timer register address range (base address and
+>  			length).
+> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+> --- a/drivers/clocksource/Makefile
+> +++ b/drivers/clocksource/Makefile
+> @@ -18,6 +18,7 @@ obj-$(CONFIG_CLKSRC_MMIO)	+= mmio.o
+>  obj-$(CONFIG_DAVINCI_TIMER)	+= timer-davinci.o
+>  obj-$(CONFIG_DIGICOLOR_TIMER)	+= timer-digicolor.o
+>  obj-$(CONFIG_OMAP_DM_TIMER)	+= timer-ti-dm.o
+> +obj-$(CONFIG_OMAP_DM_TIMER)	+= timer-ti-dm-systimer.o
+>  obj-$(CONFIG_DW_APB_TIMER)	+= dw_apb_timer.o
+>  obj-$(CONFIG_DW_APB_TIMER_OF)	+= dw_apb_timer_of.o
+>  obj-$(CONFIG_FTTMR010_TIMER)	+= timer-fttmr010.o
+> diff --git a/drivers/clocksource/timer-ti-dm-systimer.c b/drivers/clocksource/timer-ti-dm-systimer.c
+> new file mode 100644
+> --- /dev/null
+> +++ b/drivers/clocksource/timer-ti-dm-systimer.c
+> @@ -0,0 +1,468 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +#include <linux/clk.h>
+> +#include <linux/clocksource.h>
+> +#include <linux/clockchips.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/err.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/sched_clock.h>
+> +
+> +#include <linux/clk/clk-conf.h>
+> +
+> +#include <clocksource/timer-ti-dm.h>
+> +#include <dt-bindings/bus/ti-sysc.h>
+> +
+> +/* For type1, set SYSC_OMAP2_CLOCKACTIVITY for fck off on idle, l4 clock on */
+> +#define DMTIMER_TYPE1_ENABLE	((1 << 9) | (SYSC_IDLE_SMART << 3) | \
+> +				 SYSC_OMAP2_ENAWAKEUP | SYSC_OMAP2_AUTOIDLE)
+> +
+> +#define DMTIMER_TYPE2_ENABLE	(SYSC_IDLE_SMART_WKUP << 2)
+> +#define DMTIMER_RESET_WAIT	100000
+> +
+> +struct dmtimer_clockevent {
+> +	struct clock_event_device dev;
+> +	struct omap_dm_timer timer;
+> +};
+> +
+> +struct dmtimer_clocksource {
+> +	struct clocksource dev;
+> +	struct omap_dm_timer timer;
+
+The usage of the timer field is to use the __omap_dm_timer_* helpers
+function which does a busy looping on the status before read/write the
+register. AFAICS, for the clocksource, the posted argument is zero, thus
+it is possible to replace the calls to these helpers to a write / read
+and perhaps the struct omap_dm_timer could be removed from the
+clocksource structure.
+
+The driver gets obfuscated by calls to helpers which does 'posted' things.
+
+Why not remove those and handle the case in the driver to make it
+self-encapsuled and remove the omap_dm_timer structure usage in this driver.
+
+> +	unsigned int loadval;
+> +};
+> +
+> +static int dmtimer_systimer_type1_reset(struct omap_dm_timer *timer)
+> +{
+> +	void __iomem *syss = timer->io_base + OMAP_TIMER_V1_SYS_STAT_OFFSET;
+> +	int ret;
+> +	u32 l;
+> +
+> +	__omap_dm_timer_write(timer, OMAP_TIMER_IF_CTRL_REG, 0x06, 0);
+
+As the last argument is zero, may be take the opportunity to do a direct
+call to writel?
+
+> +	ret = readl_poll_timeout_atomic(syss, l, l & BIT(0), 100,
+> +					DMTIMER_RESET_WAIT);
+> +
+> +	return ret;
+> +}
+> +
+> +/* Note we must use io_base instead of func_base for type2 OCP regs */
+> +static int dmtimer_systimer_type2_reset(struct omap_dm_timer *timer)
+> +{
+> +	void __iomem *sysc = timer->io_base + OMAP_TIMER_OCP_CFG_OFFSET;
+> +	u32 l;
+> +
+
+Isn't missing a write here ?
+
+> +	return readl_poll_timeout_atomic(sysc, l, !(l & BIT(0)), 100,
+> +					 DMTIMER_RESET_WAIT);
+> +}
+> +
+> +static int dmtimer_systimer_reset(struct omap_dm_timer *timer)
+> +{
+> +	int ret;
+> +
+> +	if (timer->revision == 1)
+> +		ret = dmtimer_systimer_type1_reset(timer);
+> +	else
+> +		ret = dmtimer_systimer_type2_reset(timer);
+> +	if (ret < 0) {
+> +		pr_err("%s failed with %i\n", __func__, ret);
+> +
+> +		return ret;
+> +	}
+> +
+> +	timer->posted = 0;
+> +
+> +	return 0;
+> +}
+> +
+> +/* Interface clocks are only available on some SoCs variants */
+> +static int __init dmtimer_systimer_init_clock(struct omap_dm_timer *timer,
+
+The timer argument is not used
+
+> +					      struct device_node *np,
+> +					      struct clk **clk,
+> +					      const char *name)
+> +{
+> +	struct clk *clock;
+> +	int error;
+> +
+> +	clock = of_clk_get_by_name(np, name);
+> +	if ((PTR_ERR(clock) == -EINVAL) && !strncmp(name, "ick", 3))
+> +		return 0;
+> +	else if (IS_ERR(clock))
+> +		return PTR_ERR(clock);
+> +
+> +	error = clk_prepare_enable(clock);
+> +	if (error)
+> +		return error;
+> +
+> +	*clk = clock;
+> +
+> +	return 0;
+> +}
+> +
+> +static void dmtimer_systimer_enable(struct omap_dm_timer *timer)
+> +{
+> +	void __iomem *sysc = timer->io_base + OMAP_TIMER_OCP_CFG_OFFSET;
+> +	u32 val;
+> +
+> +	if (timer->revision == 1)
+> +		val = DMTIMER_TYPE1_ENABLE;
+> +	else
+> +		val = DMTIMER_TYPE2_ENABLE;
+> +
+> +	writel_relaxed(val, sysc);
+> +}
+> +
+> +static void dmtimer_systimer_disable(struct omap_dm_timer *timer)
+> +{
+> +	void __iomem *sysc = timer->io_base + OMAP_TIMER_OCP_CFG_OFFSET;
+> +
+> +	writel_relaxed(0, sysc);
+> +}
+> +
+> +static int __init dmtimer_systimer_tag_disabled(struct device_node *np)
+> +{
+> +	struct property *prop;
+> +
+> +	prop = kzalloc(sizeof(*prop), GFP_KERNEL);
+> +	if (!prop)
+> +		return -ENOMEM;
+> +
+> +	prop->name = "status";
+> +	prop->value = "disabled";
+> +	prop->length = strlen(prop->value);
+> +
+> +	return of_add_property(np, prop);
+
+Why not add this property in the DT instead ? That sounds hackish
+
+> +}
+> +
+> +static int __init dmtimer_systimer_init(struct omap_dm_timer *timer,
+> +					struct device_node *np)
+> +{
+> +	int error;
+> +
+> +	if (!of_device_is_compatible(np->parent, "ti,sysc"))
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * Enable optional assigned-clock-parents configured at the timer
+> +	 * node level. For regular device drivers, this is done automatically
+> +	 * by bus related code such as platform_drv_probe().
+> +	 */
+> +	error = of_clk_set_defaults(np, false);
+> +	if (error < 0)
+> +		pr_err("%s: clock source init failed: %i\n", __func__, error);
+> +
+> +	/* For ti-sysc, we have timer clocks at the parent module level */
+> +	error = dmtimer_systimer_init_clock(timer, np->parent,
+> +					    &timer->fclk, "fck");
+> +	if (error)
+> +		return error;
+> +
+> +	timer->rate = clk_get_rate(timer->fclk);
+check rate == 0 for error ?
+
+> +
+> +	error = dmtimer_systimer_init_clock(timer, np->parent,
+> +					    &timer->iclk, "ick");
+> +	if (error)
+> +		return error;
+> +
+> +	__omap_dm_timer_init_regs(timer);
+
+readl_relaxed(timer->io_base) to get the revision ? And then get rid of
+all the helpers thing ?
+
+
+> +	dmtimer_systimer_enable(timer);
+> +	dmtimer_systimer_reset(timer);
+> +	pr_debug("dmtimer rev %08x sysc %08x\n", readl_relaxed(timer->io_base),
+> +		 readl_relaxed(timer->io_base + OMAP_TIMER_OCP_CFG_OFFSET));
+> +
+> +	if (of_find_property(np, "ti,timer-alwon", NULL))
+> +		timer->capability |= OMAP_TIMER_ALWON;
+
+Where is used this capability in this driver ?
+
+> +	/* Tag parent interconnect target module disabled for ti-sysc */
+> +	error = dmtimer_systimer_tag_disabled(np->parent);
+> +	if (error)
+> +		pr_err("%s: failed to set %pOF disabled: %i\n",
+> +		       __func__, np, error);
+> +
+> +	return 0;
+> +}
+> +
+> +/* Clockevent */
+> +static struct dmtimer_clockevent *
+> +to_dmtimer_clockevent(struct clock_event_device *clockevent)
+> +{
+> +	return container_of(clockevent, struct dmtimer_clockevent, dev);
+> +}
+> +
+> +static struct omap_dm_timer *
+> +clockevent_to_dm_timer(struct clock_event_device *evt)
+> +{
+> +	struct dmtimer_clockevent *dmtce = to_dmtimer_clockevent(evt);
+> +
+> +	return &dmtce->timer;
+> +}
+> +
+> +static irqreturn_t dmtimer_clockevent_interrupt(int irq, void *data)
+> +{
+> +	struct dmtimer_clockevent *dmtce = data;
+> +
+> +	__omap_dm_timer_write_status(&dmtce->timer, OMAP_TIMER_INT_OVERFLOW);
+
+Please replace with a writel()
+
+> +	dmtce->dev.event_handler(&dmtce->dev);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static struct irqaction dmtimer_clockevent_irq = {
+> +	.name		= "gp_timer",
+> +	.flags		= IRQF_TIMER | IRQF_IRQPOLL,
+
+Why do you need IRQF_IRQPOLL ?
+
+> +	.handler	= dmtimer_clockevent_interrupt,
+> +};
+> +
+> +static int dmtimer_set_next_event(unsigned long cycles,
+> +				  struct clock_event_device *evt)
+> +{
+> +	struct omap_dm_timer *timer = clockevent_to_dm_timer(evt);
+> +
+> +	__omap_dm_timer_load_start(timer, OMAP_TIMER_CTRL_ST,
+> +				   0xffffffff - cycles, OMAP_TIMER_POSTED);
+> +
+> +	return 0;
+> +}
+> +
+> +static int dmtimer_clockevent_shutdown(struct clock_event_device *evt)
+> +{
+> +	struct omap_dm_timer *timer = clockevent_to_dm_timer(evt);
+> +
+> +	__omap_dm_timer_stop(timer, OMAP_TIMER_POSTED, timer->rate);
+> +
+> +	return 0;
+> +}
+> +
+> +static int dmtimer_set_periodic(struct clock_event_device *evt)
+> +{
+> +	struct omap_dm_timer *timer = clockevent_to_dm_timer(evt);
+> +	u32 period;
+> +
+> +	__omap_dm_timer_stop(timer, OMAP_TIMER_POSTED, timer->rate);
+> +
+> +	period = timer->rate / HZ;
+> +	period -= 1;
+
+DIV_ROUND_CLOSEST(rate, HZ); ?
+
+> +	/* Looks like we need to first set the load value separately */
+> +	__omap_dm_timer_write(timer, OMAP_TIMER_LOAD_REG, 0xffffffff - period,
+> +			      OMAP_TIMER_POSTED);
+> +	__omap_dm_timer_load_start(timer,
+> +				   OMAP_TIMER_CTRL_AR | OMAP_TIMER_CTRL_ST,
+> +				   0xffffffff - period, OMAP_TIMER_POSTED);
+> +	return 0;
+> +}
+> +
+> +static void omap_clockevent_idle(struct clock_event_device *evt)
+> +{
+> +	struct omap_dm_timer *timer = clockevent_to_dm_timer(evt);
+> +
+> +	dmtimer_systimer_disable(timer);
+> +}
+> +
+> +static void omap_clockevent_unidle(struct clock_event_device *evt)
+> +{
+> +	struct omap_dm_timer *timer = clockevent_to_dm_timer(evt);
+> +
+> +	dmtimer_systimer_enable(timer);
+> +	__omap_dm_timer_int_enable(timer, OMAP_TIMER_INT_OVERFLOW);
+> +}
+> +
+> +static int __init dmtimer_clockevent_init(struct device_node *np)
+> +{
+> +	struct dmtimer_clockevent *clkevt;
+> +	struct clock_event_device *evt;
+> +	struct omap_dm_timer *timer;
+> +	int error;
+> +	u32 pa;
+> +
+> +	clkevt = kzalloc(sizeof(*clkevt), GFP_KERNEL | __GFP_NOFAIL);
+
+Remove __GFP_NOFAIL
+
+> +	if (!clkevt)
+> +		return -ENOMEM;
+> +
+> +	timer = &clkevt->timer;
+> +	evt = &clkevt->dev;
+> +
+> +	evt->features = CLOCK_EVT_FEAT_PERIODIC |
+> +			CLOCK_EVT_FEAT_ONESHOT;
+> +	evt->rating = 300;
+> +	evt->set_next_event = dmtimer_set_next_event;
+> +	evt->set_state_shutdown = dmtimer_clockevent_shutdown;
+> +	evt->set_state_periodic = dmtimer_set_periodic;
+> +	evt->set_state_oneshot = dmtimer_clockevent_shutdown;
+> +	evt->tick_resume = dmtimer_clockevent_shutdown;
+> +	evt->cpumask = cpu_possible_mask;
+
+You may consider the CLOCK_EVT_FEAT_DYNIRQ flag
+
+> +	evt->irq = timer->irq;
+> +
+> +	timer->irq = irq_of_parse_and_map(np, 0);
+> +	if (!timer->irq) {
+> +		error = -ENXIO;
+> +		goto err_out_free;
+> +	}
+> +
+> +	timer->io_base = of_iomap(np, 0);
+> +	if (!timer->io_base) {
+> +		error = -ENXIO;
+> +		goto err_out_free;
+> +	}
+> +
+> +	error = dmtimer_systimer_init(timer, np);
+> +	if (error)
+> +		goto err_out_unmap;
+> +
+> +	/*
+> +	 * For clock-event timers we never read the timer counter and
+> +	 * so we are not impacted by errata i103 and i767. Therefore,
+> +	 * we can safely ignore this errata for clock-event timers.
+> +	 */
+> +	__omap_dm_timer_override_errata(timer, OMAP_TIMER_ERRATA_I103_I767);
+
+Without all these omap_... helpers you would not have to set this
+
+> +	dmtimer_clockevent_irq.dev_id = clkevt;
+> +	setup_irq(timer->irq, &dmtimer_clockevent_irq);
+
+request_irq
+
+> +	__omap_dm_timer_int_enable(timer, OMAP_TIMER_INT_OVERFLOW);
+> +
+> +	pa = of_translate_address(np, of_get_address(np, 0, NULL, NULL));
+> +	pr_info("TI gptimer clockevent: %stimer@%08x at %lu Hz\n",
+> +		timer->capability & OMAP_TIMER_ALWON ? "always-on " : "",
+> +		pa, timer->rate);
+
+%pOF instead of of_translate_address ?
+
+> +	clockevents_config_and_register(evt, timer->rate,
+> +					3, /* Timer internal resynch latency */
+> +					0xffffffff);
+> +
+> +	if (of_device_is_compatible(np, "ti,am33xx") ||
+> +	    of_device_is_compatible(np, "ti,am43")) {
+> +		evt->suspend = omap_clockevent_idle;
+> +		evt->resume = omap_clockevent_unidle;
+> +	}
+> +
+> +	return 0;
+> +
+> +err_out_unmap:
+> +	iounmap(timer->io_base);
+> +err_out_free:
+> +	kfree(clkevt);
+> +
+> +	return error;
+> +}
+> +
+> +/* Clocksource */
+> +static struct dmtimer_clocksource *
+> +to_dmtimer_clocksource(struct clocksource *cs)
+> +{
+> +	return container_of(cs, struct dmtimer_clocksource, dev);
+> +}
+> +
+> +static struct omap_dm_timer *
+> +clocksource_to_dmtimer(struct clocksource *cs)
+> +{
+> +	struct dmtimer_clocksource *clksrc = to_dmtimer_clocksource(cs);
+> +
+> +	return &clksrc->timer;
+> +}
+> +
+> +static u64 dmtimer_clocksource_read_cycles(struct clocksource *cs)
+> +{
+> +	struct omap_dm_timer *timer = clocksource_to_dmtimer(cs);
+> +
+> +	return (u64)__omap_dm_timer_read_counter(timer,
+> +						 OMAP_TIMER_NONPOSTED);
+> +}
+> +
+> +static void __iomem *dmtimer_sched_clock_counter;
+> +
+> +static u64 notrace dmtimer_read_sched_clock(void)
+> +{
+> +	return readl_relaxed(dmtimer_sched_clock_counter);
+> +}
+> +
+> +static void dmtimer_clocksource_suspend(struct clocksource *cs)
+> +{
+> +	struct dmtimer_clocksource *clksrc = to_dmtimer_clocksource(cs);
+> +	struct omap_dm_timer *timer = &clksrc->timer;
+> +
+> +	clksrc->loadval =
+> +		__omap_dm_timer_read_counter(timer, OMAP_TIMER_NONPOSTED);
+> +	dmtimer_systimer_disable(timer);
+> +}
+> +
+> +static void dmtimer_clocksource_resume(struct clocksource *cs)
+> +{
+> +	struct dmtimer_clocksource *clksrc = to_dmtimer_clocksource(cs);
+> +	struct omap_dm_timer *timer = &clksrc->timer;
+> +
+> +	dmtimer_systimer_enable(timer);
+> +	__omap_dm_timer_load_start(timer,
+> +				   OMAP_TIMER_CTRL_ST | OMAP_TIMER_CTRL_AR,
+> +				   clksrc->loadval,
+> +				   OMAP_TIMER_NONPOSTED);
+> +}
+> +
+> +static int __init dmtimer_clocksource_init(struct device_node *np)
+> +{
+> +	struct dmtimer_clocksource *clksrc;
+> +	struct omap_dm_timer *timer;
+> +	struct clocksource *dev;
+> +	int error;
+> +	u32 pa;
+> +
+> +	clksrc = kzalloc(sizeof(*clksrc), GFP_KERNEL | __GFP_NOFAIL);
+> +	if (!clksrc)
+> +		return -ENOMEM;
+> +
+> +	timer = &clksrc->timer;
+> +	dev = &clksrc->dev;
+> +
+> +	timer->io_base = of_iomap(np, 0);
+> +	if (!timer->io_base) {
+> +		pr_err("%s: could not iomap\n", __func__);
+> +		return -ENODEV;
+> +	}
+> +
+> +	error = dmtimer_systimer_init(timer, np);
+> +	if (error)
+> +		goto err_out_unmap;
+> +
+> +	dev->name = "dmtimer";
+> +	dev->rating = 300;
+> +	dev->read = dmtimer_clocksource_read_cycles;
+> +	dev->mask = CLOCKSOURCE_MASK(32);
+> +	dev->flags = CLOCK_SOURCE_IS_CONTINUOUS;
+> +
+> +	if (of_device_is_compatible(np, "ti,am33xx") ||
+> +	    of_device_is_compatible(np, "ti,am43")) {
+> +		dev->suspend = dmtimer_clocksource_suspend;
+> +		dev->resume = dmtimer_clocksource_resume;
+> +	}
+> +	__omap_dm_timer_load_start(timer,
+> +				   OMAP_TIMER_CTRL_ST | OMAP_TIMER_CTRL_AR, 0,
+> +				   OMAP_TIMER_NONPOSTED);
+> +
+> +	pa = of_translate_address(np, of_get_address(np, 0, NULL, NULL));
+> +	pr_info("TI gptimer clocksource: %stimer@%08x %lu at Hz\n",
+
+%pOF instead of of_translate_address ?
+
+> +		timer->capability & OMAP_TIMER_ALWON ?
+> +		"always-on " : "", pa, timer->rate);
+> +
+> +	if (!dmtimer_sched_clock_counter) {
+> +		/* Mask out write pending bits for raw OMAP_TIMER_COUNTER_REG */
+> +		dmtimer_sched_clock_counter =
+> +			timer->func_base + (OMAP_TIMER_COUNTER_REG & 0xff);
+> +		sched_clock_register(dmtimer_read_sched_clock, 32, timer->rate);
+> +	}
+> +
+> +	if (clocksource_register_hz(dev, timer->rate))
+> +		pr_err("Could not register clocksource %pOF\n", np);
+> +
+> +	return 0;
+> +
+> +err_out_unmap:
+> +	iounmap(timer->io_base);
+> +
+> +	return -ENODEV;
+> +}
+> +
+> +TIMER_OF_DECLARE(dmtimer_clockevent, "ti,dmtimer-clockevent",
+> +		 dmtimer_clockevent_init);
+> +TIMER_OF_DECLARE(dmtimer_clocksource, "ti,dmtimer-clocksource",
+> +		 dmtimer_clocksource_init);
+> diff --git a/include/clocksource/timer-ti-dm.h b/include/clocksource/timer-ti-dm.h
+> --- a/include/clocksource/timer-ti-dm.h
+> +++ b/include/clocksource/timer-ti-dm.h
+> @@ -97,6 +97,7 @@ struct omap_dm_timer {
+>  	int id;
+>  	int irq;
+>  	struct clk *fclk;
+> +	struct clk *iclk;
+
+No need of these clocks in the structure as they are used only to
+initialize.
+
+>  	void __iomem	*io_base;
+>  	void __iomem	*irq_stat;	/* TISR/IRQSTATUS interrupt status */
+> 
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
