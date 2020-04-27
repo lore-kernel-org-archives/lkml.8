@@ -2,105 +2,121 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E001FC5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F72AC5519B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7400206B9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:52:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587970362;
-	bh=SXEGb6LTTKGu/qwb7zAbrCsuo/qhlGR1iqLf7e+m/4g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BUVKrVS2Gnz4wF78FuZqpYzKK5sj645hk4t3dr/glEx4uiUe1NgMlGBZik1s/xzVb
-	 x9KO8Nr1ApUOVzpLAwikMoMHTcslvqgM5Tk3zN7JecBrtHsDwlL5JTN6hyT+BPK/5+
-	 794xjXueyy8HgQ6wsxLPsnBAyXDRgU/KcVcqkqM4=
+	by mail.kernel.org (Postfix) with ESMTP id E3D4F206B9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:57:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y81pPHV6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbgD0Gwm (ORCPT
+        id S1726593AbgD0G5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 02:52:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51110 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726246AbgD0Gwl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 02:52:41 -0400
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2D38206B9;
-        Mon, 27 Apr 2020 06:52:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587970361;
-        bh=SXEGb6LTTKGu/qwb7zAbrCsuo/qhlGR1iqLf7e+m/4g=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=I6W2zcpTcQQUBXpvQrLKVxXyAtKVPcshHgUOpviTXOZGsQ4Fllfwl2aPL6PyWM+6H
-         3iUInwn5KIi7ym1XJG6JgSYgRnYBWBqYf4ItC9qyPFPSzI/rYA3XVAfuDG06BvmmxL
-         spKLWGKyQ6pR0kkeL3Q7Jdm5b5ygjwaOpy3MO9Nk=
-Received: by mail-io1-f53.google.com with SMTP id o127so17674487iof.0;
-        Sun, 26 Apr 2020 23:52:40 -0700 (PDT)
-X-Gm-Message-State: AGi0PubNY8enL+EYlLKDlt2IQ87aOfsVpOgWGhTCtIIGkk/lKBlyqVXt
-        3oboLL4ClXtezrnQBd2l+FLDAa9+LlilzJ/bGe8=
-X-Google-Smtp-Source: APiQypLYfh2DXGdQLTmg+XU3QUKt5FEeozkZZy28VGrW7SVPCC2k5PiT5Q4wKEtoGybgbDAPe4Cs1Qr/zryB7LGnZ3E=
-X-Received: by 2002:a6b:ef03:: with SMTP id k3mr19662018ioh.203.1587970360390;
- Sun, 26 Apr 2020 23:52:40 -0700 (PDT)
+        Mon, 27 Apr 2020 02:57:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48262 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726539AbgD0G5q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 02:57:46 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E426C061A41
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 23:57:45 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id x2so4826787pfx.7
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 23:57:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:user-agent:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:from:message-id;
+        bh=b9oxcazi1/+l/yb4NyRDEdRqX15ANK5/BAmDpBrnUi8=;
+        b=Y81pPHV6TJ9EkXH9eV7DUPae3EaO63pB3FGsztZ6e1Cs9eXuL26oRw4FSc/t7wy387
+         PeMqkJ8+MP+t/42gzbWvVaaB2Yt98ewM1robv81VUAL05jhYlGT3rJAagXrgGclpxRX1
+         1Nb0bk8G/TZA20P2pIB4lZs9Our5z5324+2XcBvdhhHA+A/CGZq5TPKZom1XN7r0lmXL
+         iWXZSA2jK85lED9cHLdbru5wH/vOdLLGQ7nOtIhUKTYF/3OWK9xa3ZqIB+T9Qyz6qttc
+         M1m0koXjvxL4yOokthBuK4FgDNXti4IgZbR5gPa4xO0hXGZJRxyQW+GoPnIwqnvHndSE
+         pECw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=b9oxcazi1/+l/yb4NyRDEdRqX15ANK5/BAmDpBrnUi8=;
+        b=H7xKLgtdLK/vSpCMH2dSokuLKVG83rzRSznntnMsD//xP3GTJXhjw7mCqugtjpStjh
+         jUq467F/DUgJikN75//QNjmsKDUqZsYyrQWiTs74tBK1adbuhHzo1gmE/58P/x4cPJo9
+         2NKNG8PKkcQkJytwNxaZaY9D3y5yclb8eFxzoi19JiyycWAwDzUXPH1Fuf+Hd4zlX8ih
+         0Li3UQdFtZeFESTgbSVm1TwLb8l5yoNW4UktWW/9Nr8hXuWcCOx2K6smU4OyNYNnkmPq
+         uPdf+C/n+lJGkvWnI2Rg+hMAQLwRSK6my2tObqM1avkJVwAOmZZ1V8v/30nkflEl0Rci
+         CPPg==
+X-Gm-Message-State: AGi0PubvMmfCwnV7jr0LYo2shTjzcmYyfgg1jAzgsFFYq/0HIcPYQ/Bd
+        pCZBImHSUeq0AVRCp7BQXgDd
+X-Google-Smtp-Source: APiQypK24+KNrgHgySmdTtSUONrB9B6ttKM1cQgEsHUTa4gUhqc//sqXF0yTaJNY+mlpdHFzZQghNQ==
+X-Received: by 2002:a63:214a:: with SMTP id s10mr20340551pgm.98.1587970664594;
+        Sun, 26 Apr 2020 23:57:44 -0700 (PDT)
+Received: from ?IPv6:2409:4072:608f:8328:cdd7:29cc:291b:9aa4? ([2409:4072:608f:8328:cdd7:29cc:291b:9aa4])
+        by smtp.gmail.com with ESMTPSA id h5sm10438546pjv.4.2020.04.26.23.57.43
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 26 Apr 2020 23:57:44 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 12:27:37 +0530
+User-Agent: K-9 Mail for Android
+In-Reply-To: <6affe7d6-4aa1-cd72-74bf-69d8f6c3c98a@web.de>
+References: <85591553-f1f2-a7c9-9c5a-58f74ebeaf38@web.de> <20200427054023.GA3311@Mani-XPS-13-9360> <6affe7d6-4aa1-cd72-74bf-69d8f6c3c98a@web.de>
 MIME-Version: 1.0
-References: <20200426194946.112768-1-xypron.glpk@gmx.de>
-In-Reply-To: <20200426194946.112768-1-xypron.glpk@gmx.de>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Mon, 27 Apr 2020 08:52:29 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHo+utD4Y2BT0kcefEtYUKZsEWvqgzMNcJy0GE3Cw3jGA@mail.gmail.com>
-Message-ID: <CAMj1kXHo+utD4Y2BT0kcefEtYUKZsEWvqgzMNcJy0GE3Cw3jGA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] efi/libstub: setup_graphics() do not return random data
-To:     Heinrich Schuchardt <xypron.glpk@gmx.de>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [v2 2/3] net: qrtr: Add MHI transport layer
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        Chris Lew <clew@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org
+CC:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hemant Kumar <hemantk@codeaurora.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Siddartha Mohanadoss <smohanad@codeaurora.org>
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Message-ID: <11CCC96F-FF72-464F-AC29-8E7D53C6F31E@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 26 Apr 2020 at 21:49, Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
->
-> Currently setup_graphics() ignores the return value of efi_setup_gop(). As
-> AllocatePool() does not zero out memory the screen information table will
-> contain random data in this case.
->
-> We should free the screen information table if efi_setup_gop() returns an
-> error code.
->
-> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-
-Thanks Heinrich
-
-I will take this as a fix
 
 
-> ---
->  drivers/firmware/efi/libstub/efi-stub.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+On 27 April 2020 12:20:43 PM IST, Markus Elfring <Markus=2EElfring@web=2Ed=
+e> wrote:
+>>> I propose again to add a jump target so that a bit of exception
+>handling code
+>>> can be better reused at the end of this function implementation=2E
+>>>
+>https://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/torvalds/linux=2Egit/=
+tree/Documentation/process/coding-style=2Erst?id=3Db2768df24ec400dd4f7fa795=
+42f797e904812053#n450
+>>>
+>>
+>> Matter of taste! goto's are really useful if there are multiple exit
+>paths
+>> available=2E But in this case there is only one and I don't think we
+>may add
+>> anymore in future=2E So I'll keep it as it is=2E
 >
-> diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
-> index ee225b323687..60377e5ceab3 100644
-> --- a/drivers/firmware/efi/libstub/efi-stub.c
-> +++ b/drivers/firmware/efi/libstub/efi-stub.c
-> @@ -55,7 +55,11 @@ static struct screen_info *setup_graphics(void)
->                 si = alloc_screen_info();
->                 if (!si)
->                         return NULL;
-> -               efi_setup_gop(si, &gop_proto, size);
-> +               status = efi_setup_gop(si, &gop_proto, size);
-> +               if (status != EFI_SUCCESS) {
-> +                       free_screen_info(si);
-> +                       return NULL;
-> +               }
->         }
->         return si;
->  }
-> --
-> 2.26.2
+>Do you hope that an other optimiser software will avoid duplicate code
+>like kfree_skb(skb) calls from if branches?
 >
+
+Doh=2E I didn't notice the previous kfree in skb_linearize()=2E Will spin =
+v3 incorporating this change=2E=20
+
+Thanks,=20
+Mani
+
+>Regards,
+>Markus
+
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
