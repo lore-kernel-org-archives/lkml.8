@@ -2,83 +2,163 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9142C55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FE0C55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91B6D20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73977206BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:05:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="bOqdEXVo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgD0L7Q (ORCPT
+        id S1726963AbgD0MF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 07:59:16 -0400
-Received: from albireo.enyo.de ([37.24.231.21]:51092 "EHLO albireo.enyo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726786AbgD0L7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 07:59:16 -0400
-Received: from [172.17.203.2] (helo=deneb.enyo.de)
-        by albireo.enyo.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1jT2Pj-0001h5-7F; Mon, 27 Apr 2020 11:59:07 +0000
-Received: from fw by deneb.enyo.de with local (Exim 4.92)
-        (envelope-from <fw@deneb.enyo.de>)
-        id 1jT2Pj-0006cz-2z; Mon, 27 Apr 2020 13:59:07 +0200
-From:   Florian Weimer <fw@deneb.enyo.de>
-To:     Mathieu Desnoyers via Libc-alpha <libc-alpha@sourceware.org>
-Cc:     Carlos O'Donell <carlos@redhat.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Rich Felker <dalias@libc.org>, linux-api@vger.kernel.org,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Paul Turner <pjt@google.com>,
-        Joseph Myers <joseph@codesourcery.com>
-Subject: Re: [PATCH glibc 5/9] glibc: Perform rseq(2) registration at C startup and thread creation (v17)
-References: <20200326155633.18236-1-mathieu.desnoyers@efficios.com>
-        <20200326155633.18236-6-mathieu.desnoyers@efficios.com>
-Date:   Mon, 27 Apr 2020 13:59:07 +0200
-In-Reply-To: <20200326155633.18236-6-mathieu.desnoyers@efficios.com> (Mathieu
-        Desnoyers via Libc-alpha's message of "Thu, 26 Mar 2020 11:56:29
-        -0400")
-Message-ID: <87ftcpxhpw.fsf@mid.deneb.enyo.de>
+        Mon, 27 Apr 2020 08:05:57 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:42431 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbgD0MF4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 08:05:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1587989156; x=1619525156;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=iUKxsyy8EDqa4LYd6lWomJlLTmy2039pJ+ilYaUf9pk=;
+  b=bOqdEXVoGg2QwA6uAIWXC380nCOI8zNaL5fx4lMd5YjfltRqqnbmqRzs
+   mai7uaAnjd/UupL2DplcWCgheKdZTb4co7ifm7kkwE57uUH4G1SgM/r4u
+   v9XA/8y1Qy3YJBJcFCGWdGQoCVd48c9mkgwbT7CdFjaIt4JYJhAAajhdJ
+   4=;
+IronPort-SDR: QRtBKSDVsFWhZ45sI0INdhGVOKu8YX6L76dBFjYXfHjNuQ9CEPb78QvjdZ6TMvpAO6/zZVcedf
+ Qtj48nU0ij0w==
+X-IronPort-AV: E=Sophos;i="5.73,324,1583193600"; 
+   d="scan'208";a="31356237"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-c5104f52.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 27 Apr 2020 12:05:53 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-c5104f52.us-west-2.amazon.com (Postfix) with ESMTPS id 76C18A1805;
+        Mon, 27 Apr 2020 12:05:51 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 27 Apr 2020 12:05:51 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.53) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 27 Apr 2020 12:05:35 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
+        <irogers@google.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
+        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
+        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v9 01/15] scripts/spelling: Add a few more typos
+Date:   Mon, 27 Apr 2020 14:04:28 +0200
+Message-ID: <20200427120442.24179-2-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200427120442.24179-1-sjpark@amazon.com>
+References: <20200427120442.24179-1-sjpark@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-Originating-IP: [10.43.162.53]
+X-ClientProxiedBy: EX13D34UWC004.ant.amazon.com (10.43.162.155) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mathieu Desnoyers via Libc-alpha:
+From: SeongJae Park <sjpark@amazon.de>
 
-> diff --git a/elf/libc_early_init.c b/elf/libc_early_init.c
-> index 1ac66d895d..30466afea0 100644
-> --- a/elf/libc_early_init.c
-> +++ b/elf/libc_early_init.c
-> @@ -18,10 +18,13 @@
->  
->  #include <ctype.h>
->  #include <libc-early-init.h>
-> +#include <rseq-internal.h>
->  
->  void
->  __libc_early_init (void)
->  {
->    /* Initialize ctype data.  */
->    __ctype_init ();
-> +  /* Register rseq ABI to the kernel.   */
-> +  (void) rseq_register_current_thread ();
->  }
+This commit adds typos found from DAMON patchset.
 
-I think the registration must be restricted to the primary namespace.
-Otherwise, LD_AUDIT will register the area to the secondary libc (in
-the audit module), not the primary libc for the entire process.
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+---
+ scripts/spelling.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-I think the easiest way to implement this for now is a flag argument
-for __libc_early_init (as the upstream __libc_multiple_libcs is not
-entirely accurate).  I will submit a patch.
+diff --git a/scripts/spelling.txt b/scripts/spelling.txt
+index ffa838f3a2b5..a8214d8e8e4b 100644
+--- a/scripts/spelling.txt
++++ b/scripts/spelling.txt
+@@ -59,6 +59,7 @@ actualy||actually
+ acumulating||accumulating
+ acumulative||accumulative
+ acumulator||accumulator
++acutally||actually
+ adapater||adapter
+ addional||additional
+ additionaly||additionally
+@@ -245,6 +246,7 @@ calescing||coalescing
+ calle||called
+ callibration||calibration
+ callled||called
++callser||caller
+ calucate||calculate
+ calulate||calculate
+ cancelation||cancellation
+@@ -664,6 +666,7 @@ hanlde||handle
+ hanled||handled
+ happend||happened
+ harware||hardware
++havind||having
+ heirarchically||hierarchically
+ helpfull||helpful
+ hexdecimal||hexadecimal
+@@ -835,6 +838,7 @@ logile||logfile
+ loobpack||loopback
+ loosing||losing
+ losted||lost
++maangement||management
+ machinary||machinery
+ maibox||mailbox
+ maintainance||maintenance
+@@ -999,6 +1003,7 @@ partiton||partition
+ pased||passed
+ passin||passing
+ pathes||paths
++pattrns||patterns
+ pecularities||peculiarities
+ peformance||performance
+ peforming||performing
+@@ -1238,6 +1243,7 @@ shoule||should
+ shrinked||shrunk
+ siginificantly||significantly
+ signabl||signal
++significanly||significantly
+ similary||similarly
+ similiar||similar
+ simlar||similar
+@@ -1352,6 +1358,7 @@ thead||thread
+ therfore||therefore
+ thier||their
+ threds||threads
++threee||three
+ threshhold||threshold
+ thresold||threshold
+ throught||through
+@@ -1391,6 +1398,7 @@ tyep||type
+ udpate||update
+ uesd||used
+ uknown||unknown
++usccess||success
+ usupported||unsupported
+ uncommited||uncommitted
+ unconditionaly||unconditionally
+-- 
+2.17.1
+
