@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E1FC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6AAC55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69461206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C69D206BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:00:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fqLi0Sky"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kiSv8CiU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728561AbgD0QAl (ORCPT
+        id S1727801AbgD0QAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 12:00:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48472 "EHLO
+        Mon, 27 Apr 2020 12:00:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728517AbgD0QAj (ORCPT
+        by vger.kernel.org with ESMTP id S1728517AbgD0QAm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 12:00:39 -0400
+        Mon, 27 Apr 2020 12:00:42 -0400
 Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D28CC0610D5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 09:00:39 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id v18so20939096qtq.22
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 09:00:39 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 960B4C0610D5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 09:00:42 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id g55so20998081qtk.14
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 09:00:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=jTb4YPIUPKL1E1OLE2ifNkQg2x2HSYmo0hj4Ci3DZ3A=;
-        b=fqLi0SkyPjbXxPX/hPsXZeMNhq35aYqBNJAvT/Xx+BzPh7YlBx6i8WTACzT4FBHIRv
-         yB3PamKTCHUBg04d9KVAhujS595QnxeeGH1EBSaBLJkOM7C2p6uhVroooOZkVWSFANBo
-         EQq7r79O7lYvn3jVBEw+TI04/17VIVUaDIXO9ddhSuge+F4kykHowiB4XA1PixFt7f06
-         knShlLB1Y6N5OLuGmCs4M7eKqc6BblFu2RW9cdCpUqsLmxzOIrCdokmS7rXLST3WR3EJ
-         4YBYToSahIZ4xPJWmk/lOEd0e03hxC16yaJ1xBfFhei9FtsLMetBOg+CemUkcnsn0gik
-         hibA==
+        bh=vWKjMu4YpZkMxmoaABUBOKf1igZnxFZ9c3Ig1J3O4Og=;
+        b=kiSv8CiUDdv0MhnhG7OLvK4HRjHRHD2p5Xk8z4MNjfWWTLx6u3zwpYo+VXYo00s9lQ
+         2SiB14ebJv+tpR/lJ6lBiS6NtwBJkpElgf6+/UxLuf4ODhwnkipaZqAOpGAlWYJpWfCS
+         z/5ymvrE+OkDEIiguUTShhBQhJ6y715cKJGNQcwyaJsde7L0h/IXtozn5mtgfyeHg/Ym
+         H43sTz24QuaAjK8JJGNtzpBldyBrDbq8uPivT4CI9K7/qC+hhiObIxt3J7MJfK5BmrKL
+         +bLkpaJXkzjZcdx/s4M6wTt3HBXcwxs7ZUVUd46Y+nf5P0oIYdPegXdb9NdLI9tk1xzd
+         GS1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=jTb4YPIUPKL1E1OLE2ifNkQg2x2HSYmo0hj4Ci3DZ3A=;
-        b=T+EQk9nFaTdedL+6XJzltpQmjaozibBjF4nhI1UJ6irjAZGGDDWJtA5rwiolJq9FRr
-         kVDR8C0SRe7LKpgVhkp4SgBEqar4aL+bfBpGyqXAz+skYfDMmw/9bYPEkoeBdB6ZJ+Ky
-         j+f+k1S1wQk5U4ZgNEnhcl7SAKYPXlHioQBKwAP2WdNgUKBbvV0Q9zuR4i+XDFyncUFa
-         GPh5cBansZ7zOB8OvBvLySuKcI/5FLK3ZwLic/aHX66DuXumSj4R7FMFARelPjD/JG0e
-         pcezS8FIcKqaEPs+NmTHD1tNHu2ACEStn2uw8v35dnWVvlHiOO2g6eEh1XXGxxs9/+7A
-         cC/A==
-X-Gm-Message-State: AGi0PuaCKJrx/eZsf1qb2cMdEYcivRtinsFzMuKNq7Q1Rr1wp44a1sbw
-        VB0bzIA53Ox96/RROnR+rjTNhVdbEPPm4rjcSQo=
-X-Google-Smtp-Source: APiQypLDtauRhcKiTQyzgC2LQ3XamOTxT1OCw5Clsp9y71dsXWMyuVGmw4gnWIV3Yp64XvmFFiqiRAvcGkJl+hJ0vkc=
-X-Received: by 2002:a05:6214:1513:: with SMTP id e19mr22507959qvy.75.1588003237430;
- Mon, 27 Apr 2020 09:00:37 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 09:00:10 -0700
+        bh=vWKjMu4YpZkMxmoaABUBOKf1igZnxFZ9c3Ig1J3O4Og=;
+        b=Pi/T2rKc82HAxJg8rAcGSw6/67KDaFiMatumcsqbBeLJK7N0bbqRraGA93NpVXF9/o
+         hYtyC3NB6bFGA8lnkE6b5bzrvcoFTDP2F1TwAu5+Y3LkSy115Vi7qv3Vwb+th6vt1oTp
+         xiQu8iMtGKw58TC0AmqPKfsUuHh2nRn9A/5XjTOX5ccsQWH5je3lngpCDaJy5A6sGStw
+         rYIxBscyWMdbmt5JL6F447o73qse6gouICJ+n5y+aJj9+wXR9G03V4GGA4/97RVc4qnM
+         23Yvm1NHQXYCFWbMsPwhpeEKUc9UfOCgpre85tC19jqAwKBmt6eshkE/fChb7KpzDD+y
+         fexA==
+X-Gm-Message-State: AGi0Pua4eGSaiv1YEzmcbLQKWvCgDJigKQRbQDhc1Y9hTxxDoToSf+2/
+        A7WF0Ik8BCLolW/bLqe0s3lppxZtmT1IoKOtlm0=
+X-Google-Smtp-Source: APiQypJpHxnUVa+HJ+OCdJz02DOHfWXmMr67lw1U6ExG9PpcAMVbKyAwbyBII6uQ9n51wuhyBZXu9qOSoWBoJcrJ8Lg=
+X-Received: by 2002:a05:6214:150e:: with SMTP id e14mr23211009qvy.65.1588003241754;
+ Mon, 27 Apr 2020 09:00:41 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 09:00:11 -0700
 In-Reply-To: <20200427160018.243569-1-samitolvanen@google.com>
-Message-Id: <20200427160018.243569-5-samitolvanen@google.com>
+Message-Id: <20200427160018.243569-6-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20191018161033.261971-1-samitolvanen@google.com> <20200427160018.243569-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
-Subject: [PATCH v13 04/12] scs: disable when function graph tracing is enabled
+Subject: [PATCH v13 05/12] arm64: reserve x18 from general allocation with SCS
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -93,49 +93,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The graph tracer hooks returns by modifying frame records on the
-(regular) stack, but with SCS the return address is taken from the
-shadow stack, and the value in the frame record has no effect. As we
-don't currently have a mechanism to determine the corresponding slot
-on the shadow stack (and to pass this through the ftrace
-infrastructure), for now let's disable SCS when the graph tracer is
-enabled.
-
-With SCS the return address is taken from the shadow stack and the
-value in the frame record has no effect. The mcount based graph tracer
-hooks returns by modifying frame records on the (regular) stack, and
-thus is not compatible. The patchable-function-entry graph tracer
-used for DYNAMIC_FTRACE_WITH_REGS modifies the LR before it is saved
-to the shadow stack, and is compatible.
-
-Modifying the mcount based graph tracer to work with SCS would require
-a mechanism to determine the corresponding slot on the shadow stack
-(and to pass this through the ftrace infrastructure), and we expect
-that everyone will eventually move to the patchable-function-entry
-based graph tracer anyway, so for now let's disable SCS when the
-mcount-based graph tracer is enabled.
-
-SCS and patchable-function-entry are both supported from LLVM 10.x.
+Reserve the x18 register from general allocation when SCS is enabled,
+because the compiler uses the register to store the current task's
+shadow stack pointer. Note that all external kernel modules must also be
+compiled with -ffixed-x18 if the kernel has SCS enabled.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Acked-by: Will Deacon <will@kernel.org>
 ---
- arch/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 334a3d9b19df..45dfca9a98d3 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -543,6 +543,7 @@ config ARCH_SUPPORTS_SHADOW_CALL_STACK
- config SHADOW_CALL_STACK
- 	bool "Clang Shadow Call Stack"
- 	depends on CC_IS_CLANG && ARCH_SUPPORTS_SHADOW_CALL_STACK
-+	depends on DYNAMIC_FTRACE_WITH_REGS || !FUNCTION_GRAPH_TRACER
- 	help
- 	  This option enables Clang's Shadow Call Stack, which uses a
- 	  shadow stack to protect function return addresses from being
+diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+index 85e4149cc5d5..409a6c1be8cc 100644
+--- a/arch/arm64/Makefile
++++ b/arch/arm64/Makefile
+@@ -81,6 +81,10 @@ endif
+ 
+ KBUILD_CFLAGS += $(branch-prot-flags-y)
+ 
++ifeq ($(CONFIG_SHADOW_CALL_STACK), y)
++KBUILD_CFLAGS	+= -ffixed-x18
++endif
++
+ ifeq ($(CONFIG_CPU_BIG_ENDIAN), y)
+ KBUILD_CPPFLAGS	+= -mbig-endian
+ CHECKFLAGS	+= -D__AARCH64EB__
 -- 
 2.26.2.303.gf8c07b1a785-goog
 
