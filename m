@@ -2,120 +2,149 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C87DDC4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F787C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A91472070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BAA92073C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:14:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q28RKGDL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SrVJHLVx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgD0UNV (ORCPT
+        id S1726959AbgD0UN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 16:13:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60222 "EHLO
+        Mon, 27 Apr 2020 16:13:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726918AbgD0UNS (ORCPT
+        by vger.kernel.org with ESMTP id S1726850AbgD0UMx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 16:13:18 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81D04C0610D5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 13:13:18 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id b13so28593675oti.3
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 13:13:18 -0700 (PDT)
+        Mon, 27 Apr 2020 16:12:53 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 208BFC0610D5;
+        Mon, 27 Apr 2020 13:12:52 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id u127so341685wmg.1;
+        Mon, 27 Apr 2020 13:12:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=cDA2gvlDjQF3XmddqEEMdYklKnKtW+BtZmwqaZrV2YY=;
-        b=q28RKGDLUUXJvCA/waXzctMM5+urQ8/dGyUlR8ZuzfTnCZyBfn5/jcAKFB06qJ3Hx0
-         sue98eW6PYIHRaiNGNYjJ6TLGjMLXKSU0MtnqzZ9qBFq+b+H/4QX9zSEwTUIn0w1aJiV
-         guu6X80zsl5GyqW22FIfpwcojJOLdSM6jiVlxpEKJHooqZdUc38cjjYPsks3Lfs2CRt4
-         HIN+jWCdZ9KoZCjxFT/7t79nXIPKUPrIavp/goEvQg5Ke9gabxr+QfjuKDiDgtgDFP12
-         AbXiIAKyCQEJw66SmGFJoB6zcpvpUL3NsjDV4VaI7ns4I+bKjKUmmxtS+4wcKnMS3YnL
-         26cA==
+        bh=x1zonVb/BbRigHqP69T8VBwuU0bduWhkzmHUC7793dM=;
+        b=SrVJHLVxg21IVO23W2AGolBEV2fVOJXFbod/kjJ1H1wEPl5pEpJr/F/wRuYBSvaPWY
+         ebs82S2n+w7pEciImNGMDyjj8WMYy0aFXxC2/h9xMrFKDeDFD7y1GUgA+J7T65aZFtjk
+         xs+8LWL+QAjxaLOkJg9LLwL9VMN9sHcKKDqheNk8/Uv65WB4ddP3F8IGqQKJlx6szR0X
+         13rb5/Jl77mFcKUcs1VlFO8s+TDBcBnOUf+nvG3h0PwECAejKS6TUcY7YcuNV1S+a10p
+         JQO1hN/3SQkDv+hdIAHZMpeywFRqxk9wNr4gbu9Nh2EoW21Qa1Ef2IMIpI9ioWIklA9s
+         Nhlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cDA2gvlDjQF3XmddqEEMdYklKnKtW+BtZmwqaZrV2YY=;
-        b=fOWoMBGxZHwVocIKsO4iLA1MqIGd/0YCS3UIDc1KYsR6LB2jI5XI2r7zHQqoxSF9Jv
-         1bkEaXVBGMBYBixnguZPffpXnOoOw9ejvW/AylCFDCmh78frfnamWgpl0HKMi2CoWOtp
-         jqNpOUshvfYDrpzg7iTnVYri1I3YdaD3xGyN2xfk17mNknAtIVgDfyvsR2zKp+k+7RyY
-         t9KAJ7MCuWJE3vucGjulc3KP3UkYpOiK/Ugg6tzBkcNM++fm5hunFO4XHtz/+XH6uz9j
-         O3TEJuFIpgTlPNBM97/RIj7jVBRyjWqIYORXioY/Ss/s+7360fACECzukI1lEx6DVKR6
-         jPyg==
-X-Gm-Message-State: AGi0PuZrH2vpZxw5nH3eNDZ4YHlV9Y+9cGvEk9qgpYebD8ZFsh12LndI
-        24es1aeDAmeR+8yRtoIRUXJs5sOb0M5YrjvX2EXLXg==
-X-Google-Smtp-Source: APiQypJY3Lz/oTNH320U8S37bDEtPLjloMUGN4LeeYArglN/WH/Vzs1yv5zDS0VrwBNqlNsRjuvxvJiWjSctNWBv56s=
-X-Received: by 2002:a9d:2622:: with SMTP id a31mr20989231otb.231.1588018397440;
- Mon, 27 Apr 2020 13:13:17 -0700 (PDT)
+        bh=x1zonVb/BbRigHqP69T8VBwuU0bduWhkzmHUC7793dM=;
+        b=fLtling7ZjvO2p88wh2xhe2x628x3B2NonXUWZPEAWsYjDVrfzdJmxtOBFzzHxUxBe
+         QVfJewwkUFOxVqWbo+tW7KS6EJGgIciOPD3JevWTTMsp1GkjHDZBT/dgpFdI9vRSqaXE
+         9P2oBH5sy4aUrW2cp8fHYuJJ0B2++qWciFkfPVL6BZwL6TxppWhnXBXKQKWNDFfsLfrw
+         9vimFMiiGtOqBLkG9pI5BSFKB2W6HpWoeXBmgHNatzo8Z/namT3/QCT8N9VzvGD8hk3d
+         PUGHD/vYwDR4UnE+Pzeyuj/6BHP2tWivH+S4Z35iv817TKtGgOmWKWt460P3IuX2aKF0
+         8lSg==
+X-Gm-Message-State: AGi0PubVWnzbKPW2/56X23+atzO6ZylaKvMcJuFmSRJs82v7nscomvYP
+        MSlCbH187Tbwdx3rpxMP1I70V7GxZMKGzN/0oBI=
+X-Google-Smtp-Source: APiQypLiCFtjL1zFB7OdQgYbc9SVeTlF4OAYPBx3Gc5cNaKO/YffjNVwodyP+eWjvYbcJf5NrAaZUOvwpX6rrjojCTU=
+X-Received: by 2002:a7b:c74d:: with SMTP id w13mr436755wmk.36.1588018370739;
+ Mon, 27 Apr 2020 13:12:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <d2934f74d77c637c41d7cb98710cb5363d09e83b.1585021186.git.baolin.wang7@gmail.com>
- <CADBw62pmiguVmuq334eskLAZ5CkrjxohW_fXNjNev+O1U15=OQ@mail.gmail.com>
- <bd800f7b-05fd-b393-fba6-1965ba89e1b3@linaro.org> <CAGETcx9da-U+dXA6sreTKJQiS3brYh3Hfh_qVYt06=3UOSmT_g@mail.gmail.com>
- <429da47b-ad51-30eb-ff36-b05780c941ba@linaro.org>
-In-Reply-To: <429da47b-ad51-30eb-ff36-b05780c941ba@linaro.org>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Mon, 27 Apr 2020 13:12:41 -0700
-Message-ID: <CAGETcx9sc6oWSPK=aWJ+39i9eHAyg6iOf+Xf2oVECO+g1pFjtQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] drivers/clocksource/timer-of: Remove __init markings
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Baolin Wang <baolin.wang7@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>
+References: <20200427103048.20785-1-benchuanggli@gmail.com>
+In-Reply-To: <20200427103048.20785-1-benchuanggli@gmail.com>
+From:   Vineeth Pillai <vineethrp@gmail.com>
+Date:   Mon, 27 Apr 2020 16:12:39 -0400
+Message-ID: <CAOBnfPi+ztJ7vtgQ9qcHhGKDB8QKW3F=_9MR2roQOBLfrtqbDg@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sdhci-pci-gli: Fix no irq handler from suspend
+To:     Ben Chuang <benchuanggli@gmail.com>
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?B?QmVuQ2h1YW5nW+iOiuaZuumHj10=?= 
+        <ben.chuang@genesyslogic.com.tw>,
+        =?UTF-8?B?UmVuaXVzQ2hlblvpmbPlu7rlro9d?= 
+        <Renius.Chen@genesyslogic.com.tw>, dflogeras2@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 1:09 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> On 27/04/2020 21:04, Saravana Kannan wrote:
-> > On Mon, Apr 27, 2020 at 10:13 AM Daniel Lezcano
-> > <daniel.lezcano@linaro.org> wrote:
-> >>
-> >> On 13/04/2020 04:55, Baolin Wang wrote:
-> >>> Hi Daniel,
-> >>>
-> >>> On Tue, Mar 24, 2020 at 1:59 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
-> >>>>
-> >>>> From: Saravana Kannan <saravanak@google.com>
-> >>>>
-> >>>> This allows timer drivers to be compiled as modules.
-> >>>>
-> >>>> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> >>>> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-> >>>
-> >>> Do you have any comments for this patch set? Thanks.
-> >>
-> >> If my understanding is correct, this patch is part of the GKI picture
-> >> where hardware drivers are converted to modules.
-> >>
-> >> But do we really want to convert timer drivers to modules ?
-> >>
-> >> Is the core time framework able to support that (eg. load + unload )
-> >
-> > So this will mainly be used for secondary timers that the system
-> > supports. Not for the main one that's set up during early boot for
-> > sched timer to work. For the primary timer during boot up, we still
-> > expect that to be the default ARM timer and don't want/expect that to
-> > be a module (it can't be).
->
-> My question is about clockevents_config_and_register() for instance, is
-> there a function to unregister in the core framework ?
+Tested-by: Vineeth Pillai <vineethrp@gmail.com>
 
-We can just have these modules be "permanent" modules that can't be
-unloaded. They just need to not implement module_exit().
+Thanks,
+Vineeth
 
--Saravana
+On Mon, Apr 27, 2020 at 6:30 AM Ben Chuang <benchuanggli@gmail.com> wrote:
+>
+> From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+>
+> The kernel prints a message similar to
+> "[   28.881959] do_IRQ: 5.36 No irq handler for vector"
+> when GL975x resumes from suspend. Implement a resume callback to fix this.
+>
+> Fixes: 31e43f31890c ("mmc: sdhci-pci-gli: Enable MSI interrupt for GL975x")
+> Co-developed-by: Renius Chen <renius.chen@genesyslogic.com.tw>
+> Signed-off-by: Renius Chen <renius.chen@genesyslogic.com.tw>
+> Tested-by: Dave Flogeras <dflogeras2@gmail.com>
+> Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+> ---
+>  drivers/mmc/host/sdhci-pci-gli.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>
+> diff --git a/drivers/mmc/host/sdhci-pci-gli.c b/drivers/mmc/host/sdhci-pci-gli.c
+> index ce15a05f23d4..7195dd33ac3d 100644
+> --- a/drivers/mmc/host/sdhci-pci-gli.c
+> +++ b/drivers/mmc/host/sdhci-pci-gli.c
+> @@ -334,6 +334,18 @@ static u32 sdhci_gl9750_readl(struct sdhci_host *host, int reg)
+>         return value;
+>  }
+>
+> +#ifdef CONFIG_PM_SLEEP
+> +int sdhci_pci_gli_resume(struct sdhci_pci_chip *chip)
+> +{
+> +       struct sdhci_pci_slot *slot = chip->slots[0];
+> +
+> +       pci_free_irq_vectors(slot->chip->pdev);
+> +       gli_pcie_enable_msi(slot);
+> +
+> +       return sdhci_pci_resume_host(chip);
+> +}
+> +#endif
+> +
+>  static const struct sdhci_ops sdhci_gl9755_ops = {
+>         .set_clock              = sdhci_set_clock,
+>         .enable_dma             = sdhci_pci_enable_dma,
+> @@ -348,6 +360,9 @@ const struct sdhci_pci_fixes sdhci_gl9755 = {
+>         .quirks2        = SDHCI_QUIRK2_BROKEN_DDR50,
+>         .probe_slot     = gli_probe_slot_gl9755,
+>         .ops            = &sdhci_gl9755_ops,
+> +#ifdef CONFIG_PM_SLEEP
+> +       .resume         = sdhci_pci_gli_resume,
+> +#endif
+>  };
+>
+>  static const struct sdhci_ops sdhci_gl9750_ops = {
+> @@ -366,4 +381,7 @@ const struct sdhci_pci_fixes sdhci_gl9750 = {
+>         .quirks2        = SDHCI_QUIRK2_BROKEN_DDR50,
+>         .probe_slot     = gli_probe_slot_gl9750,
+>         .ops            = &sdhci_gl9750_ops,
+> +#ifdef CONFIG_PM_SLEEP
+> +       .resume         = sdhci_pci_gli_resume,
+> +#endif
+>  };
+> --
+> 2.26.2
+>
+
+
+-- 
+Cheers,
+~Vineeth
+
+## "Its not the load that breaks you, but the way u carry it!" ##
