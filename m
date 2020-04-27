@@ -2,185 +2,163 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C39CC4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4408C54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 434A32078C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B82502078C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:54:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="wTy3d/O7"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="K3QM6nur"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726517AbgD0Tvw (ORCPT
+        id S1726576AbgD0Tyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 15:51:52 -0400
-Received: from gateway23.websitewelcome.com ([192.185.47.80]:27156 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726205AbgD0Tvw (ORCPT
+        Mon, 27 Apr 2020 15:54:33 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:58946 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbgD0Tyc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 15:51:52 -0400
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id F37F82645
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 14:51:50 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id T9nCjB70CEfyqT9nCj16UR; Mon, 27 Apr 2020 14:51:50 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=K9rvz993rEWHpe/slLaIwcj7PEadMPRISWvrM6xG1ck=; b=wTy3d/O7cdoVmcBoX6lglAqtY
-        gBlWxjqxg3ErcWOZMHQ2/W+Jt80HE9vyc4nYFmKHxr5D4mYrzPqi4TJOVNYfJyYJi8lBLvn6WY07x
-        AASyNkLQRsqFsQJjnEjJMK0tBuBgj3AxZZt01PORlNcS2Z8yvPTWP2EBAshYNFacFaJJlUslLlRYU
-        XdF18eTQ0l4McGHjHesU6opY5oOintds+lKmA4t7/dCFhPVxfpSbH6MH3OPCScG1qv8iEEDMaShSU
-        1cwOA7qqnKuenZHvYy6eRWrXZNx9QZYsJKY/oQPjucKKGTLcSxQsqj8IdDfSwo+zjlQT+LK0Sfcy5
-        11HUTQi6A==;
-Received: from [201.162.241.110] (port=6995 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jT9nC-00113q-GQ; Mon, 27 Apr 2020 14:51:50 -0500
-Date:   Mon, 27 Apr 2020 14:56:08 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org, Joe Perches <joe@perches.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH v2 3/3] mtd: lpddr: Move function print_drs_error to
- lpddr_cmds.c
-Message-ID: <e0063cbd65f3b47be1db34efc494ea3047634d88.1588016644.git.gustavo@embeddedor.com>
-References: <cover.1588016644.git.gustavo@embeddedor.com>
+        Mon, 27 Apr 2020 15:54:32 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03RJsDMO007386;
+        Mon, 27 Apr 2020 14:54:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588017253;
+        bh=dwly5aN+uAHdquqvnejrhvQPF5JgoVydz5AkBpeUbCI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=K3QM6nurhmKSBibvGWCs0BBJ8FGXQGmtn2TASc56KnQTAqVf0IG5ni6P6f52VSRzM
+         gZZIdiWq1bmYtxQG0MkSjgY5f4x8b777rx/bpX4Y4Tg+RnYbla+LWoCd4aizR16aQO
+         fBugqJ99DU6sWe/if/S3ljKYaNfit6OM5ZRjsVB4=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RJsDBm005665;
+        Mon, 27 Apr 2020 14:54:13 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 27
+ Apr 2020 14:54:12 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 27 Apr 2020 14:54:12 -0500
+Received: from [10.250.48.148] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RJsBYI080761;
+        Mon, 27 Apr 2020 14:54:11 -0500
+Subject: Re: [PATCH 4/4] remoteproc/k3-dsp: Add support for C71x DSPs
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     Clement Leger <cleger@kalray.eu>,
+        Loic Pallardy <loic.pallardy@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200325204701.16862-1-s-anna@ti.com>
+ <20200325204701.16862-5-s-anna@ti.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <59ac4e15-205a-7205-d013-da91b7426688@ti.com>
+Date:   Mon, 27 Apr 2020 14:54:11 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1588016644.git.gustavo@embeddedor.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.241.110
-X-Source-L: No
-X-Exim-ID: 1jT9nC-00113q-GQ
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.162.241.110]:6995
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 37
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20200325204701.16862-5-s-anna@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Function print_drs_error is only used in drivers/mtd/lpddr/lpddr_cmds.c
-so, better to move it there.
+On 3/25/20 3:47 PM, Suman Anna wrote:
+> The Texas Instrument's K3 J721E SoCs have a newer next-generation
+> C71x DSP Subsystem in the MAIN voltage domain in addition to the
+> previous generation C66x DSP subsystems. The C71x DSP subsystem is
+> based on the TMS320C71x DSP CorePac module. The C71x CPU is a true
+> 64-bit machine including 64-bit memory addressing and single-cycle
+> 64-bit base arithmetic operations and supports vector signal processing
+> providing a significant lift in DSP processing power over C66x DSPs.
+> J721E SoCs use a C711 (a one-core 512-bit vector width CPU core) DSP
+> that is cache coherent with the A72 Arm cores.
+> 
+> Each subsystem has one or more Fixed/Floating-Point DSP CPUs, with 32 KB
+> of L1P Cache, 48 KB of L1D SRAM that can be configured and partitioned as
+> either RAM and/or Cache, and 512 KB of L2 SRAM configurable as either RAM
+> and/or Cache. The CorePac also includes a Matrix Multiplication Accelerator
+> (MMA), a Stream Engine (SE) and a C71x Memory Management Unit (CMMU), an
+> Interrupt Controller (INTC) and a Powerdown Management Unit (PMU) modules.
+> 
+> Update the existing K3 DSP remoteproc driver to add support for this C71x
+> DSP subsystem. The firmware loading support is provided by using the newly
+> added 64-bit ELF loader support, and is limited to images using only
+> external DDR memory at the moment. The L1D and L2 SRAMs are used as scratch
+> memory when using as RAMs, and cannot be used for loadable segments. The
+> CMMU is also not supported to begin with, and the driver is designed to
+> treat the MMU as if it is in bypass mode.
+> 
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> ---
+>   drivers/remoteproc/ti_k3_dsp_remoteproc.c | 17 +++++++++++++++++
+>   1 file changed, 17 insertions(+)
+> 
+> diff --git a/drivers/remoteproc/ti_k3_dsp_remoteproc.c b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
+> index 7b712ef74611..48d26f7d5f48 100644
+> --- a/drivers/remoteproc/ti_k3_dsp_remoteproc.c
+> +++ b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
+> @@ -649,6 +649,9 @@ static int k3_dsp_rproc_probe(struct platform_device *pdev)
+>   
+>   	rproc->has_iommu = false;
+>   	rproc->recovery_disabled = true;
+> +	/* C71x is a 64-bit processor, so plug in generic .sanity_check ops */
+> +	rproc->ops->sanity_check = rproc_elf_sanity_check;
+> +
 
-Also, notice that there's no need for inline as the function is used
-once.  Lastly, fix the following checkpatch warning:
+Will drop this on the next version, this is no longer needed after 
+commit e29ff72b7794 ("remoteproc: remove rproc_elf32_sanity_check") 
+currently on rproc-next.
 
-WARNING: Prefer 'unsigned int' to bare use of 'unsigned'
-+static void print_drs_error(unsigned dsr)
+regards
+Suman
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
-Changes in v2:
- - Remove inline from print_drs_error and update changelog text,
-   accordingly.
 
- drivers/mtd/lpddr/lpddr_cmds.c | 28 ++++++++++++++++++++++++++++
- include/linux/mtd/pfow.h       | 28 ----------------------------
- 2 files changed, 28 insertions(+), 28 deletions(-)
-
-diff --git a/drivers/mtd/lpddr/lpddr_cmds.c b/drivers/mtd/lpddr/lpddr_cmds.c
-index fb1cbc9a2870..ee063baed136 100644
---- a/drivers/mtd/lpddr/lpddr_cmds.c
-+++ b/drivers/mtd/lpddr/lpddr_cmds.c
-@@ -94,6 +94,34 @@ struct mtd_info *lpddr_cmdset(struct map_info *map)
- }
- EXPORT_SYMBOL(lpddr_cmdset);
- 
-+static void print_drs_error(unsigned int dsr)
-+{
-+	int prog_status = (dsr & DSR_RPS) >> 8;
-+
-+	if (!(dsr & DSR_AVAILABLE))
-+		pr_notice("DSR.15: (0) Device not Available\n");
-+	if ((prog_status & 0x03) == 0x03)
-+		pr_notice("DSR.9,8: (11) Attempt to program invalid half with 41h command\n");
-+	else if (prog_status & 0x02)
-+		pr_notice("DSR.9,8: (10) Object Mode Program attempt in region with Control Mode data\n");
-+	else if (prog_status &  0x01)
-+		pr_notice("DSR.9,8: (01) Program attempt in region with Object Mode data\n");
-+	if (!(dsr & DSR_READY_STATUS))
-+		pr_notice("DSR.7: (0) Device is Busy\n");
-+	if (dsr & DSR_ESS)
-+		pr_notice("DSR.6: (1) Erase Suspended\n");
-+	if (dsr & DSR_ERASE_STATUS)
-+		pr_notice("DSR.5: (1) Erase/Blank check error\n");
-+	if (dsr & DSR_PROGRAM_STATUS)
-+		pr_notice("DSR.4: (1) Program Error\n");
-+	if (dsr & DSR_VPPS)
-+		pr_notice("DSR.3: (1) Vpp low detect, operation aborted\n");
-+	if (dsr & DSR_PSS)
-+		pr_notice("DSR.2: (1) Program suspended\n");
-+	if (dsr & DSR_DPS)
-+		pr_notice("DSR.1: (1) Aborted Erase/Program attempt on locked block\n");
-+}
-+
- static int wait_for_ready(struct map_info *map, struct flchip *chip,
- 		unsigned int chip_op_time)
- {
-diff --git a/include/linux/mtd/pfow.h b/include/linux/mtd/pfow.h
-index cd21c6768065..b3eae82eb03c 100644
---- a/include/linux/mtd/pfow.h
-+++ b/include/linux/mtd/pfow.h
-@@ -121,32 +121,4 @@ static inline void send_pfow_command(struct map_info *map,
- 	map_write(map, CMD(LPDDR_START_EXECUTION),
- 			map->pfow_base + PFOW_COMMAND_EXECUTE);
- }
--
--static inline void print_drs_error(unsigned dsr)
--{
--	int prog_status = (dsr & DSR_RPS) >> 8;
--
--	if (!(dsr & DSR_AVAILABLE))
--		pr_notice("DSR.15: (0) Device not Available\n");
--	if ((prog_status & 0x03) == 0x03)
--		pr_notice("DSR.9,8: (11) Attempt to program invalid half with 41h command\n");
--	else if (prog_status & 0x02)
--		pr_notice("DSR.9,8: (10) Object Mode Program attempt in region with Control Mode data\n");
--	else if (prog_status &  0x01)
--		pr_notice("DSR.9,8: (01) Program attempt in region with Object Mode data\n");
--	if (!(dsr & DSR_READY_STATUS))
--		pr_notice("DSR.7: (0) Device is Busy\n");
--	if (dsr & DSR_ESS)
--		pr_notice("DSR.6: (1) Erase Suspended\n");
--	if (dsr & DSR_ERASE_STATUS)
--		pr_notice("DSR.5: (1) Erase/Blank check error\n");
--	if (dsr & DSR_PROGRAM_STATUS)
--		pr_notice("DSR.4: (1) Program Error\n");
--	if (dsr & DSR_VPPS)
--		pr_notice("DSR.3: (1) Vpp low detect, operation aborted\n");
--	if (dsr & DSR_PSS)
--		pr_notice("DSR.2: (1) Program suspended\n");
--	if (dsr & DSR_DPS)
--		pr_notice("DSR.1: (1) Aborted Erase/Program attempt on locked block\n");
--}
- #endif /* __LINUX_MTD_PFOW_H */
--- 
-2.26.0
+>   	kproc = rproc->priv;
+>   	kproc->rproc = rproc;
+>   	kproc->dev = dev;
+> @@ -789,6 +792,12 @@ static const struct k3_dsp_mem_data c66_mems[] = {
+>   	{ .name = "l1dram", .dev_addr = 0xf00000 },
+>   };
+>   
+> +/* C71x cores only have a L1P Cache, there are no L1P SRAMs */
+> +static const struct k3_dsp_mem_data c71_mems[] = {
+> +	{ .name = "l2sram", .dev_addr = 0x800000 },
+> +	{ .name = "l1dram", .dev_addr = 0xe00000 },
+> +};
+> +
+>   static const struct k3_dsp_dev_data c66_data = {
+>   	.mems = c66_mems,
+>   	.num_mems = ARRAY_SIZE(c66_mems),
+> @@ -796,8 +805,16 @@ static const struct k3_dsp_dev_data c66_data = {
+>   	.uses_lreset = true,
+>   };
+>   
+> +static const struct k3_dsp_dev_data c71_data = {
+> +	.mems = c71_mems,
+> +	.num_mems = ARRAY_SIZE(c71_mems),
+> +	.boot_align_addr = SZ_2M,
+> +	.uses_lreset = false,
+> +};
+> +
+>   static const struct of_device_id k3_dsp_of_match[] = {
+>   	{ .compatible = "ti,j721e-c66-dsp", .data = &c66_data, },
+> +	{ .compatible = "ti,j721e-c71-dsp", .data = &c71_data, },
+>   	{ /* sentinel */ },
+>   };
+>   MODULE_DEVICE_TABLE(of, k3_dsp_of_match);
+> 
 
