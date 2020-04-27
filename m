@@ -3,192 +3,173 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FA4C5519B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B80C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D078E2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE41A2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:56:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ZxAicqBE"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="y/RAHKLi";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="y/RAHKLi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbgD0I4O (ORCPT
+        id S1726801AbgD0I4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 04:56:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38508 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbgD0I4N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 04:56:13 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF657C061A10
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 01:56:11 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id k13so19559873wrw.7
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 01:56:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=lnRwjXbCLNSgqmF0eAVoEuS/w3gfoX8hHq6Rr+bVouI=;
-        b=ZxAicqBE7gtw4KlxJ6AGM4EEvTxs4P5QWqjTN/QP75l4jYbxhStBX5mNkEp5kiu8m1
-         MFnZyigewABW+VSPUWQolDAw6v9IVj+nJFatqky/wUAeJeSbF8CqrWCiUtOblkyW6dna
-         YCgGyMLANbV4OXkW8KxF0XTMa0iHgCLBPkNQWHpx/XV7/iGj/lmp69XFcM+iGliXQyMs
-         lLwhayZDtTD3yqPZzlaTTUKRMECVfI3OORRUeSyYil1GxMAisl/BrOAqqL7jMvgV+oPD
-         LtlKIJA91Bs2XS1TdnI6szBJ82MUm9DqBKJuJzmJuBzp2+p8I2Scmko96n9BbUUnkCBt
-         7cEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=lnRwjXbCLNSgqmF0eAVoEuS/w3gfoX8hHq6Rr+bVouI=;
-        b=MnrviUsYl2BoxZz1lNRktFc5AQOLJOGvwFJMaayPKbw9FNZp53tp/pm0QZPXIDGKWL
-         stHSoi5LZo6AfaNmffhlpzlwiHzVWvB1s4NB0y+gPfnC+Hf6KSNm5fzfH505cNcz/VrU
-         +vPYRclyZxwPqnyp3IFV1QlyiMvUbkuvN0M+zO6+uLZOn0/DI/h+9WG8z5ZF76i4NfiI
-         AwBfJunqv+HKSD/XEtpQQbxCFPW+ykggVn54IteoCF+6oB2WFUtCoa6ZhpMqWLOymTRJ
-         Fv5qISCsWTpqsvxN0N3OJ/HAOFJWZRPZQWrOMXlLLZOjfnQTKTWQ/81bdHo43CsJKTQ6
-         wbxw==
-X-Gm-Message-State: AGi0PuY54yWmaBjwUElfDTsOYZ5L4ww6WoPetw0sAIUlaCtHOtXwA5bC
-        rPfUCDfA4QI+P3kBHDz9B+qL5A==
-X-Google-Smtp-Source: APiQypLhubdjTPL7ywGgfEzi/OUKoNJ/LWk7kYZWC+WQcIxs4uRm7LCF9Ze4GDVIaPy2SAZAs5y+XQ==
-X-Received: by 2002:a5d:4092:: with SMTP id o18mr26042449wrp.227.1587977770645;
-        Mon, 27 Apr 2020 01:56:10 -0700 (PDT)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id e2sm20113767wrv.89.2020.04.27.01.56.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 01:56:09 -0700 (PDT)
-References: <20200328003249.1248978-1-martin.blumenstingl@googlemail.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-mmc@vger.kernel.org, ulf.hansson@linaro.org,
-        robh+dt@kernel.org
-Cc:     mark.rutland@arm.com, jianxin.pan@amlogic.com,
-        linux-kernel@vger.kernel.org, yinxin_1989@aliyun.com,
-        linux-arm-kernel@lists.infradead.org, lnykww@gmail.com
-Subject: Re: [PATCH v5 0/3] Amlogic 32-bit Meson SoC SDHC MMC controller driver
-In-reply-to: <20200328003249.1248978-1-martin.blumenstingl@googlemail.com>
-Date:   Mon, 27 Apr 2020 10:56:08 +0200
-Message-ID: <1jblnd2tp3.fsf@starbuckisacylon.baylibre.com>
+        Mon, 27 Apr 2020 04:56:51 -0400
+Received: from mail-eopbgr80040.outbound.protection.outlook.com ([40.107.8.40]:56034
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726183AbgD0I4u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 04:56:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q/YZoOdwy5jCiN8Mt0R1TmvByv4dO8rZl0CoMDE4Bcc=;
+ b=y/RAHKLisesysXnZFtHtERczXoMUFfS76+rd+cZJ/pQroiBIzVtbtU82P1tVzVu513B3YhxMFE3EJYLwzZXtmDFICcRARsVh2PleW3kBOmCpRbHeVjguDSCscuPhdgDxPH9X3NB8FbkGOwWHbLzgH+c1DBk6OaybcHBAulyc5fE=
+Received: from AM6P193CA0065.EURP193.PROD.OUTLOOK.COM (2603:10a6:209:8e::42)
+ by AM6PR08MB3318.eurprd08.prod.outlook.com (2603:10a6:209:45::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Mon, 27 Apr
+ 2020 08:56:46 +0000
+Received: from AM5EUR03FT003.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:209:8e:cafe::b0) by AM6P193CA0065.outlook.office365.com
+ (2603:10a6:209:8e::42) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend
+ Transport; Mon, 27 Apr 2020 08:56:46 +0000
+Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
+ action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ AM5EUR03FT003.mail.protection.outlook.com (10.152.16.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2937.19 via Frontend Transport; Mon, 27 Apr 2020 08:56:46 +0000
+Received: ("Tessian outbound ff098c684b24:v54"); Mon, 27 Apr 2020 08:56:45 +0000
+X-CR-MTA-TID: 64aa7808
+Received: from 5fa8be9958cd.2
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 76DC682B-A967-47A0-8B58-7A986A9C8E46.1;
+        Mon, 27 Apr 2020 08:56:40 +0000
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 5fa8be9958cd.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Mon, 27 Apr 2020 08:56:40 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=USobUby+qeHNqSJEBLiPkxF58FOPthlCj4xnFBNY+v0feFXcgITk1mD7r63exGVou312twsPwILyEI+To90ws/j8N/WtDkkzQ1RJ8/4dVHkCQnRkmbmvZLe0BtTDabA/95OdugAgXyi8mMkvqMTEEabJafVR300C8m/S1qvYwexn2XTobLTCXcwqv6GnJhs0HBS1RWMAvrqhW4uIXHu3jg39H2KfseU1VWWjGCkODWIjaH3TYzxYRlDToulGjdYTLvuJjvJBweP+Dnbcro2dc+Fa9L/dJ96jXex0eHqWej2JHMUYeRSpSdK/nRIQWVeUnIDMRMlp+WNtMB7tOwG5mA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q/YZoOdwy5jCiN8Mt0R1TmvByv4dO8rZl0CoMDE4Bcc=;
+ b=WpXIaj9KizzKVPlB/DcsEKPujP7epPCxSJetkxicblywTqd848h60DBfmAyQShur+3dDP+kuqSVwv9h46EHGlbP+i1dNZtUZO7+xzzTlrVicZZXUMR91+qED7rqwnYvHl4pvE7vj7rsSVrq1DJ2JX3VDo3aNRdBCyf7k3qNnujl7jP7v1/VbeLY8J9hPcVrvZ+rflk472v5krONWoXpM6NNQsGZIAL/hFtLekzOIvOTmvHdTFbdPFZvePwb1BWjN1Uz/+0gJOftV1qmiEP8uUQtU+HbJkTVo7BEqsWYTxigrYhc+WBAiKx5tUr5FFneO++uPal6V8JcsPBxWplHjgw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q/YZoOdwy5jCiN8Mt0R1TmvByv4dO8rZl0CoMDE4Bcc=;
+ b=y/RAHKLisesysXnZFtHtERczXoMUFfS76+rd+cZJ/pQroiBIzVtbtU82P1tVzVu513B3YhxMFE3EJYLwzZXtmDFICcRARsVh2PleW3kBOmCpRbHeVjguDSCscuPhdgDxPH9X3NB8FbkGOwWHbLzgH+c1DBk6OaybcHBAulyc5fE=
+Received: from DB6PR0802MB2533.eurprd08.prod.outlook.com (2603:10a6:4:a0::12)
+ by DB6PR0802MB2597.eurprd08.prod.outlook.com (2603:10a6:4:99::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Mon, 27 Apr
+ 2020 08:56:39 +0000
+Received: from DB6PR0802MB2533.eurprd08.prod.outlook.com
+ ([fe80::b959:1879:c050:3117]) by DB6PR0802MB2533.eurprd08.prod.outlook.com
+ ([fe80::b959:1879:c050:3117%8]) with mapi id 15.20.2937.020; Mon, 27 Apr 2020
+ 08:56:39 +0000
+From:   Hadar Gat <Hadar.Gat@arm.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Ard Biesheuvel <ardb@kernel.org>, Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <Ofir.Drang@arm.com>, nd <nd@arm.com>
+Subject: RE: [PATCH 2/3] hwrng: cctrng - change default to n
+Thread-Topic: [PATCH 2/3] hwrng: cctrng - change default to n
+Thread-Index: AQHWHFaa2ILie1hr/Ua7OdXaSVzplaiMigqAgAAGr1CAAA+9AIAACb9A
+Date:   Mon, 27 Apr 2020 08:56:38 +0000
+Message-ID: <DB6PR0802MB253351027A5B3236E31D1E9AE9AF0@DB6PR0802MB2533.eurprd08.prod.outlook.com>
+References: <1587966099-28139-1-git-send-email-hadar.gat@arm.com>
+ <1587966099-28139-3-git-send-email-hadar.gat@arm.com>
+ <CAMj1kXGwVZiGbsT2NwWTyka0FVZnQcmfMSeoBKD03PdC=fRZeA@mail.gmail.com>
+ <DB6PR0802MB25334429B7DD333780E7BABBE9AF0@DB6PR0802MB2533.eurprd08.prod.outlook.com>
+ <CAK8P3a1LYAESnePbwbn7x7x=2MCTWUNZVmmoiuv+_-J2ntFGmA@mail.gmail.com>
+In-Reply-To: <CAK8P3a1LYAESnePbwbn7x7x=2MCTWUNZVmmoiuv+_-J2ntFGmA@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ts-tracking-id: 3f622335-76be-4668-a357-22837c7fece5.1
+x-checkrecipientchecked: true
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=Hadar.Gat@arm.com; 
+x-originating-ip: [84.109.179.203]
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 7f80681c-a13f-4905-9a43-08d7ea88ea34
+x-ms-traffictypediagnostic: DB6PR0802MB2597:|DB6PR0802MB2597:|AM6PR08MB3318:
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <AM6PR08MB33182685B0D1E45706007FA4E9AF0@AM6PR08MB3318.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+nodisclaimer: true
+x-ms-oob-tlc-oobclassifiers: OLM:7219;OLM:7219;
+x-forefront-prvs: 0386B406AA
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0802MB2533.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(136003)(346002)(39860400002)(396003)(316002)(2906002)(6506007)(4326008)(7696005)(81156014)(8676002)(8936002)(71200400001)(54906003)(33656002)(53546011)(9686003)(52536014)(66946007)(478600001)(186003)(64756008)(76116006)(66446008)(7416002)(55016002)(86362001)(4744005)(6916009)(26005)(66556008)(66476007)(5660300002)(129723003);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: SinEI4uUlDiLO03NcVKprf0KcQGTc5f2FX/vR4dH4oZo6d+lMEn4YnG8MDK5ohpa1GwxeTkLmh7evsJQZerig+oU4x9ENAZSvKU4NTA7bjdjV/D27F3MpfSbIOBfQVUuETTsNdDVnmV2Vr9oEcU34Ot0pbbsJVtkPF4ILPJZN0EOU9fzejsYaUWD+QI2gTorPlMb6d7KA5+rPrAG36t1PDRmWiGweeVktIYvLtcCgPJJkbKNzYDVfU4o18FVP/rRra/h7Ccagkfh8ISiTzXlSMcnj62o27Ss6jEVFASFdbfr2LqWcsms2IhDcNPKrHOtnTJW7/7UbyIk+8C7dcNtM52JR47G34q0tsiTHKuza0WQYLodjFwWaGrU6FhXv1c94hs8QFXBy3y1czAgVDdZ9d3JqpyykWm85CqSmEULiFaureReu+1LH9zGnQAsmUyhagqFjqJ68yHsopr/BmyXEbqmw2EuCBlyD7Y54Y+CBfcGGm+DlN3d+yaTQlNIeGKh
+x-ms-exchange-antispam-messagedata: 8th/Z0gJ4oIeHUh3pFo3YPwi3Icxf9V9L5YeVh8wDFjWdIm51Ofr3ANLzKtrasTVxCJ3SzznyXtqIxqFa3oplwpC/XYf1pTLy9tVZveB3814IVa7K7Qxoql86a7QGZP8/WncpfJyGWz1050Y6MPfIeUiJa8GMJrPXy+NxPMV2451RCOJIZtdjd1pVjcvpoSaFJQKwSjy3Xhm/TFcmE7cl9CRFGXd1mT28GklwuG4O1NqwFJw+sNztNNTMTW1Chm63nhA3E/yc4srmCUw7+k6hbDy/UcBGRmBiqIN019c5oMCXgod46tpCt9fdso7j8aOpTLaOOd1By4VLTYOqj7FDwwQ63hyIhywmj3eZQGMJaetAUGJkAusPH4vJEK25/Bg/1NHt3GIrN4Exn+eLjamkYYXiYu02Kp0cD5gHrDWT+k5toA15nh7am+Z+QjzVXxJDAKr+7nbTp6KyLUSPwi9uUj8G6cigdvVAB7oLOc8mnO0ljmfJRsD4lVR3iNxmF00dbCQMGhN/irX5RTX6QFjcCCI1ApiH7WLLSK8mlXnvbooCTVVr43Y0avRsHxsdaZlVg6TquvoWunOd3R/s/W8tbNqIws0s6ik83Pe69ZNRtW2zidB/I4qcYiIrkgXE2bIWT6aN+5DNuccJvFlWWBXaR15UhgzUkCxHLKM3jYeItu3cIjN//9QublbU8ibgxLjhVjHWWfJRnp04IDMQW46iVsHyo4aXT7EX3j02N7Vy0WMp5iUQbPS60san5PWD1pLLAtnz6nGucjWPtA2TOb4KUpLIsODCPtBurzUpC2ejgc=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0802MB2597
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Hadar.Gat@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT003.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(376002)(39860400002)(396003)(46966005)(4326008)(450100002)(33656002)(2906002)(82740400003)(6862004)(47076004)(81156014)(8676002)(70586007)(8936002)(86362001)(6506007)(53546011)(316002)(36906005)(4744005)(70206006)(52536014)(55016002)(336012)(5660300002)(356005)(81166007)(82310400002)(186003)(9686003)(7696005)(54906003)(478600001)(26005)(129723003);DIR:OUT;SFP:1101;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 0fbf4a9b-1860-4e50-4a13-08d7ea88e606
+X-Forefront-PRVS: 0386B406AA
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: kEuHYoGCF5vNHRIGeiA5GsLG8V1VW5PyfuvzVwKqinHDNt0ELdq2lek4ylS5wXY0TIYi86+KBvJ2/IG9lD1XN5Axnu1K5pq23TVH3Sp1vlXJVch+ZK14DVy+n0/eH7P/zfstg/EG7GOHvYHWo9NpeV8sLss+mk/xFvhd0sw9Y+jxUNGZQNyyqp3QoLkY6aAiGtsYTzDpNk1E+yE9Y5MdrfRsfjWJCPFJHTB9ZgVlx7ASJSIsClOdlsQeiuRzpSSM9cJH97IfWl+hXnsr20FNqsj8Ok0ZmNDyjrPYOxerKjzXM+DiapbV7cvS41mDzgmPU26r23l8+Zl9NopAzYwHbaJY7kkCzWsmh/8kZvclIPJlZiwtDpXcz3mSPlKDq2UQbSD551pEqShknaH5itFpgWaSwlsMFYPN9+sXa/JVzt1r1u5pmDneUwOSKpfY+eU2wt+IZybdmOrtR2UDwYJAcdP6OGzTGAVZFNL4o/FJq8M4lddMJjRoQiIfgggGzStsvRhpeNAvVhJZJ6tF0emZJ9oZyT0P2z2KoiqwG9QLEVA=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2020 08:56:46.0902
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7f80681c-a13f-4905-9a43-08d7ea88ea34
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB3318
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On Sat 28 Mar 2020 at 01:32, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
-
-> Hello,
->
-> this is the patchset for a driver for the Amlogic "SDHC" MMC controller
-> found on Meson6, Meson8, Meson8b and Meson8m2 SoCs.
->
-> The public S805 (Meson8b) datasheet has some documentation starting on
-> page 74: [0]
->
-> It's performance is still not as good as the driver from Amlogic's 3.10
-> kernel, but it does not corrupt data anymore (as RFC v1 did).
->
-> Special thanks to the people who supported me off-list - you are
-> amazing and deserve to be mentioned here:
-> - Xin Yin who helped me fix two more write corruption problems. I am
->   hoping that he will reply with Reviewed-by, Tested-by and Bug-fixed-by
-> - Jianxin Pan for sharing some of the internal workings of this MMC
->   controller with me
-> - Wei Wang for spotting the initial write corruption problem and helping
->   test this driver on his board. I have his permission to add his
->   Tested-by (off-list, he's Cc'ed so if there's any problem he can speak
->   up)
->
->
-> Changes since v4 at [4]:
-> - move the four clkin clock inputs to the start of the clock-names list
->   as suggested by Rob, affects patch #1
-> - fixed #include statement in dt-bindings example in patch #1
->
-> Changes since v3 at [3]:
-> - split the clock bits into a separate clock controller driver because
->   of two reasons: 1) it keeps the MMC controller driver mostly clean of
->   the clock bits
-
-If the register is in the MMC controller register space and the MMC
-driver is the driver using these clocks, it is where the clocks belong.
-I don't get why it could be an issue ?
-
-Is the clock block is shared with another device, like on the Gx family ?
-
-> 2) the pure clock controller can use
->   devm_clk_hw_register() (instead of devm_clk_register(), which is
->   deprecated) and the MMC controller can act as a pure clock consumer.
-
-Why can't you use devm_clk_hw_register in an MMC driver ?
-Unless I missed something, it is provided by clk-provider.h, which can be
-included by any driver.
-
-I'm not sure I understand why the support for this device is split in
-two drivers. Using CCF clocks out of "drivers/clk" is encouraged.
-
->   This also affects the dt-bindings which is why I dropped Rob's
->   Reviewed-by. Thanks to Ulf for the suggestions
->
-> Changes since v2 at [2]:
-> - rebased on top of v5.5-rc1
-> - added Rob's and Xin Yin's Reviewed-by and Tested-by (thank you!)
-> - (note: Kevin had v2 of this series in -next for a few days so the
->    build test robots could play with it. I haven't received any negative
->    feedback in that time)
->
-> Changes since RFC v1 at [1]:
-> - don't set MESON_SDHC_MISC_MANUAL_STOP to fix one of three write
->   corruption problems. the out-of-tree 3.10 "reference" driver doesn't
->   set it either
-> - check against data->flags instead of cmd->flags when testing for
->   MMC_DATA_WRITE as spotted by Xin Yin (many thanks!). This fixes
->   another write corruption problem
-> - clear the FIFOs after successfully transferring data as suggested by
->   Xin Yin (many thanks!). This is what the 3.10 driver did and fixes yet
->   another write corruption problem
-> - integrate the clock suggestions from Jianxin Pan so the driver is now
->   able to set up the clocks correctly for all known cases. documentation
->   is also added to the patch description. Thank you Jianxin for the
->   help!
-> - set the correct max_busy_timeout as suggested by Jianxin Pan (thanks!)
-> - convert the dt-bindings to .yaml (which is why I didn't add Rob's
->   Reviewed-by)
-> - switch to struct clk_parent_data as part of newer common clock
->   framework APIs to simplify the clock setup
-> - dropped CMD23 support because it seems to hurt read and write
->   performance by 10-20% in my tests. it's not clear why, but for now we
->   can live without this.
-> - use devm_platform_ioremap_resource instead of open-coding it
->
->
-> [0] https://dn.odroid.com/S805/Datasheet/S805_Datasheet%20V0.8%2020150126.pdf
-> [1] https://patchwork.kernel.org/cover/11035505/
-> [2] http://lists.infradead.org/pipermail/linux-amlogic/2019-November/014576.html
-> [3] https://patchwork.kernel.org/cover/11283179/
-> [4] https://patchwork.kernel.org/cover/11329017/
->
-> Martin Blumenstingl (3):
->   dt-bindings: mmc: Document the Amlogic Meson SDHC MMC host controller
->   clk: meson: add a driver for the Meson8/8b/8m2 SDHC clock controller
->   mmc: host: meson-mx-sdhc: new driver for the Amlogic Meson SDHC host
->
->  .../bindings/mmc/amlogic,meson-mx-sdhc.yaml   |   83 ++
->  drivers/clk/meson/Kconfig                     |    9 +
->  drivers/clk/meson/Makefile                    |    1 +
->  drivers/clk/meson/meson-mx-sdhc.c             |  212 ++++
->  drivers/mmc/host/Kconfig                      |   14 +
->  drivers/mmc/host/Makefile                     |    1 +
->  drivers/mmc/host/meson-mx-sdhc.c              | 1064 +++++++++++++++++
->  .../dt-bindings/clock/meson-mx-sdhc-clkc.h    |    8 +
->  8 files changed, 1392 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml
->  create mode 100644 drivers/clk/meson/meson-mx-sdhc.c
->  create mode 100644 drivers/mmc/host/meson-mx-sdhc.c
->  create mode 100644 include/dt-bindings/clock/meson-mx-sdhc-clkc.h
-
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEFybmQgQmVyZ21hbm4gPGFy
+bmRAYXJuZGIuZGU+DQo+IA0KPiBPbiBNb24sIEFwciAyNywgMjAyMCBhdCA5OjI2IEFNIEhhZGFy
+IEdhdCA8SGFkYXIuR2F0QGFybS5jb20+IHdyb3RlOg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNz
+YWdlLS0tLS0NCj4gPiA+IEZyb206IEFyZCBCaWVzaGV1dmVsIDxhcmRiQGtlcm5lbC5vcmc+DQo+
+ID4gPiA+ICsgICAgICAgZGVmYXVsdCBuDQo+ID4gPg0KPiA+ID4gJ2RlZmF1bHQgbicgaXMgdGhl
+IGRlZmF1bHQgc28geW91IGNhbiBqdXN0IHJlbW92ZSB0aGUgbGluZQ0KPiA+DQo+ID4gSXMgdGhp
+cyBhIGd1aWRlbGluZSBvciBqdXN0IG9wdGlvbmFsPw0KPiA+IFBlcnNvbmFsbHkgSSBsaWtlIHRo
+aW5ncyB0byBiZSBleHBsaWNpdCBhbmQgaWYgYWxsb3dlZCBJIHByZWZlciB0byBrZWVwIHRoaXMg
+bGluZS4NCj4gDQo+IEl0J3MgYSBjb21tb24gY29udmVudGlvbiwgYW5kIHdlIGhhdmUgaGFkIHBh
+dGNoZXMgaW4gdGhlIHBhc3QgdGhhdCBtYXNzLQ0KPiByZW1vdmVkIHRob3NlIGxpbmVzLiBJJ2Qg
+YWxzbyBqdXN0IGxlYXZlIGl0IG91dC4gSXQgaXMgZ2VuZXJhbGx5IHdlbGwgdW5kZXJzdG9vZA0K
+PiB0aGF0IGFsbCBvcHRpb25zIGRlZmF1bHQgdG8gJ24nIHVubGVzcyBzcGVjaWZpZWQgb3RoZXJ3
+aXNlLg0KDQpPaywgSSdsbCByZW1vdmUgaXQuDQpUaGFua3MgZm9yIHRoZSBleHBsYW5hdGlvbi4N
+Cg0KPiANCj4gICAgICAgICBBcm5kDQo=
