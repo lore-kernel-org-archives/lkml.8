@@ -2,161 +2,206 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40291C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1AF0C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA5320663
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:34:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70DE120663
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:37:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eWsiqAfD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="JBGCR/yi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbgD0Neq (ORCPT
+        id S1727104AbgD0Nh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 09:34:46 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36938 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726651AbgD0Nep (ORCPT
+        Mon, 27 Apr 2020 09:37:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54208 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726539AbgD0Nh1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 09:34:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587994484;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=hCIx+uylxDiIkQIo7KO6BB1dE1p8+oU0uTFZQetsf50=;
-        b=eWsiqAfDllpkf3sf9ed5i7DugdqymnPVy+H/HG6LZNeekaj5Ata8ZqSeWaC7DLTKQQVVZq
-        domXIMbGtScEa1ErcRYEP4R044KQz+y5YoTF+gQlfr8DKVqpR04rCf58L9wP6mRd4mUx3+
-        O47rKjolGj96UTIyftEO1hiwqVDSKNA=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-394-7plCh5oWNpCIucYQSc93jQ-1; Mon, 27 Apr 2020 09:34:43 -0400
-X-MC-Unique: 7plCh5oWNpCIucYQSc93jQ-1
-Received: by mail-wm1-f70.google.com with SMTP id 72so21444wmb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 06:34:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hCIx+uylxDiIkQIo7KO6BB1dE1p8+oU0uTFZQetsf50=;
-        b=Xvh3D8bjhkbMZgU2S+5rgcZX5YVo+uMyOKg5ipZaNiD+KWVqa1m7bJkxRWYblfTHXi
-         SiKmsQFPt4U8UqjlAi4IeRjFrk1J1Wd8mumObK6VwgiHp8Mxgeaq4D4iZRm+gJbrZrl4
-         aTSSr4h8SGxXodgqBA07uzRMpaTlMIQRdjpsBh+HGVuDeCFU5Ufh1Ju3QYjxJCraJ5Qi
-         YBh0aR6Jqa0VJ8lBbxIivQBuRu8vTCqcAsx1RPtaVSdZOVTaIAwRY8EcILXx9sN4OSK0
-         84Dw6bi6ypScDo0Rmwj/vjd0G7pItZIOiGp3mJpoSX2vFpbYEvTxPv7KyEc3VleuYMii
-         3vbA==
-X-Gm-Message-State: AGi0Pub0HiH6V8nL7udPOVsEOTxD0/R6xTEiVd8+c5f/rQx/aopQLtTB
-        zZomg+x2hjushX+ywlenCmI474FwjRCWUvSqzeQzbszAaK+Bz4T2Vx0i40z5iG+OTaZO8uLtD1P
-        lSM2by4MjqKz4L41/lMwCn6L4
-X-Received: by 2002:a1c:2383:: with SMTP id j125mr25781800wmj.6.1587994481714;
-        Mon, 27 Apr 2020 06:34:41 -0700 (PDT)
-X-Google-Smtp-Source: APiQypL/8fhnPF6uJTxPIAxQKuM5Wu3I9kgqbQ/J1LPwGYsrrgrO5zSWZlrzHK/Fh7Awiw8Gd/wlfA==
-X-Received: by 2002:a1c:2383:: with SMTP id j125mr25781773wmj.6.1587994481373;
-        Mon, 27 Apr 2020 06:34:41 -0700 (PDT)
-Received: from localhost.localdomain ([151.29.194.179])
-        by smtp.gmail.com with ESMTPSA id r3sm22287559wrx.72.2020.04.27.06.34.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 06:34:40 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 15:34:38 +0200
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Luca Abeni <luca.abeni@santannapisa.it>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Wei Wang <wvw@google.com>, Quentin Perret <qperret@google.com>,
-        Alessio Balsini <balsini@google.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Qais Yousef <qais.yousef@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 6/6] sched/deadline: Implement fallback mechanism for
- !fit case
-Message-ID: <20200427133438.GA6469@localhost.localdomain>
-References: <20200427083709.30262-1-dietmar.eggemann@arm.com>
- <20200427083709.30262-7-dietmar.eggemann@arm.com>
+        Mon, 27 Apr 2020 09:37:27 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 383FFC0610D5;
+        Mon, 27 Apr 2020 06:37:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=unOIlxoTJY/D57NywEw3MuFa8hyg11oekg3vyZ+x9k0=; b=JBGCR/yihuGypbtYuNhprmpJr
+        xXotLfX8SCvbjMXQ6QaNYzw9VQCBpU1ASsWd+AdHrMvKUV5p3bP8y6k5+KiEiyW19aSoT6k7v8JqF
+        52h4xvPgdIQ9NIcHv3+QU3fl6Aw6GZa5VFG76FA2hnwNufAJUg4vG79GDrVq75jjolCJICGAtfivK
+        73zXMmKdwnamjy6KYVRdKUfNgujANHkhy9J1P19i1Fm0mq7VU3v8l8+xT0HzXkA88KGxattf/tr71
+        tfleelz0dVJmtm9oV5/zTyBpehy3tXrvDSpt/2401XfGo2LgBKSiiD3zWGnOfJmyQ1uF4bZ2M6xQL
+        OgiT5OYSA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:56282)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jT3wR-00036i-Dx; Mon, 27 Apr 2020 14:36:59 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jT3wN-0006gp-PD; Mon, 27 Apr 2020 14:36:55 +0100
+Date:   Mon, 27 Apr 2020 14:36:55 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Calvin Johnson <calvin.johnson@oss.nxp.com>
+Cc:     linux.cj@gmail.com, Jeremy Linton <jeremy.linton@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        linux-acpi@vger.kernel.org, Marcin Wojtas <mw@semihalf.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
+        Varun Sethi <V.Sethi@nxp.com>, linux-kernel@vger.kernel.org,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [net-next PATCH v2 1/3] device property: Introduce phy related
+ fwnode functions
+Message-ID: <20200427133655.GE25745@shell.armlinux.org.uk>
+References: <20200427132409.23664-1-calvin.johnson@oss.nxp.com>
+ <20200427132409.23664-2-calvin.johnson@oss.nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200427083709.30262-7-dietmar.eggemann@arm.com>
+In-Reply-To: <20200427132409.23664-2-calvin.johnson@oss.nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 27/04/20 10:37, Dietmar Eggemann wrote:
-> From: Luca Abeni <luca.abeni@santannapisa.it>
+On Mon, Apr 27, 2020 at 06:54:07PM +0530, Calvin Johnson wrote:
+> Define fwnode_phy_find_device() to iterate an mdiobus and find the
+> phy device of the provided phy fwnode. Additionally define
+> device_phy_find_device() to find phy device of provided device.
 > 
-> When a task has a runtime that cannot be served within the scheduling
-> deadline by any of the idle CPU (later_mask) the task is doomed to miss
-> its deadline.
+> Define fwnode_get_phy_node() to get phy_node using named reference.
 > 
-> This can happen since the SCHED_DEADLINE admission control guarantees
-> only bounded tardiness and not the hard respect of all deadlines.
-> In this case try to select the idle CPU with the largest CPU capacity
-> to minimize tardiness.
-> 
-> Signed-off-by: Luca Abeni <luca.abeni@santannapisa.it>
-> Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> Signed-off-by: Calvin Johnson <calvin.johnson@oss.nxp.com>
 > ---
->  kernel/sched/cpudeadline.c | 19 +++++++++++++++----
->  1 file changed, 15 insertions(+), 4 deletions(-)
 > 
-> diff --git a/kernel/sched/cpudeadline.c b/kernel/sched/cpudeadline.c
-> index 8630f2a40a3f..b6c7a0bc0880 100644
-> --- a/kernel/sched/cpudeadline.c
-> +++ b/kernel/sched/cpudeadline.c
-> @@ -121,19 +121,30 @@ int cpudl_find(struct cpudl *cp, struct task_struct *p,
+> Changes in v2:
+>   move phy code from base/property.c to net/phy/phy_device.c
+>   replace acpi & of code to get phy-handle with fwnode_find_reference
+> 
+>  drivers/net/phy/phy_device.c | 55 ++++++++++++++++++++++++++++++++++++
+>  include/linux/phy.h          |  3 ++
+>  2 files changed, 58 insertions(+)
+> 
+> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+> index 7e1ddd5745d2..a2f3dbba8a3c 100644
+> --- a/drivers/net/phy/phy_device.c
+> +++ b/drivers/net/phy/phy_device.c
+> @@ -31,6 +31,7 @@
+>  #include <linux/mdio.h>
+>  #include <linux/io.h>
+>  #include <linux/uaccess.h>
+> +#include <linux/property.h>
 >  
->  	if (later_mask &&
->  	    cpumask_and(later_mask, cp->free_cpus, p->cpus_ptr)) {
-> -		int cpu;
-> +		unsigned long cap, max_cap = 0;
-> +		int cpu, max_cpu = -1;
+>  MODULE_DESCRIPTION("PHY library");
+>  MODULE_AUTHOR("Andy Fleming");
+> @@ -2436,6 +2437,60 @@ static bool phy_drv_supports_irq(struct phy_driver *phydrv)
+>  	return phydrv->config_intr && phydrv->ack_interrupt;
+>  }
 >  
->  		if (!static_branch_unlikely(&sched_asym_cpucapacity))
->  			return 1;
->  
->  		/* Ensure the capacity of the CPUs fits the task. */
->  		for_each_cpu(cpu, later_mask) {
-> -			if (!dl_task_fits_capacity(p, cpu))
-> +			if (!dl_task_fits_capacity(p, cpu)) {
->  				cpumask_clear_cpu(cpu, later_mask);
+> +/**
+> + * fwnode_phy_find_device - Find phy_device on the mdiobus for the provided
+> + * phy_fwnode.
+> + * @phy_fwnode: Pointer to the phy's fwnode.
+> + *
+> + * If successful, returns a pointer to the phy_device with the embedded
+> + * struct device refcount incremented by one, or NULL on failure.
+> + */
+> +struct phy_device *fwnode_phy_find_device(struct fwnode_handle *phy_fwnode)
+> +{
+> +	struct device *d;
+> +	struct mdio_device *mdiodev;
 > +
-> +				cap = capacity_orig_of(cpu);
+> +	if (!phy_fwnode)
+> +		return NULL;
 > +
-> +				if (cap > max_cap) {
-> +					max_cap = cap;
-> +					max_cpu = cpu;
-> +				}
-> +			}
->  		}
+> +	d = bus_find_device_by_fwnode(&mdio_bus_type, phy_fwnode);
+> +	if (d) {
+> +		mdiodev = to_mdio_device(d);
+> +		if (mdiodev->flags & MDIO_DEVICE_FLAG_PHY)
+> +			return to_phy_device(d);
+> +		put_device(d);
+> +	}
+> +
+> +	return NULL;
+> +}
+> +EXPORT_SYMBOL(fwnode_phy_find_device);
+> +
+> +/**
+> + * device_phy_find_device - For the given device, get the phy_device
+> + * @dev: Pointer to the given device
+> + *
+> + * If successful, returns a pointer to the phy_device with the embedded
+> + * struct device refcount incremented by one, or NULL on failure.
+> + */
+> +struct phy_device *device_phy_find_device(struct device *dev)
+> +{
+> +	return fwnode_phy_find_device(dev_fwnode(dev));
+> +}
+> +EXPORT_SYMBOL_GPL(device_phy_find_device);
+> +
+> +/**
+> + * fwnode_get_phy_node - Get the phy_node using the named reference.
+> + * @fwnode: Pointer to fwnode from which phy_node has to be obtained.
+> + *
+> + * Returns pointer to the phy fwnode, or ERR_PTR. Caller is responsible to
+> + * call fwnode_handle_put() on the returned phy fwnode pointer.
+> + */
+> +struct fwnode_handle *fwnode_get_phy_node(struct fwnode_handle *fwnode)
+> +{
+> +	return fwnode_find_reference(fwnode, "phy-handle", 0);
+> +}
+> +EXPORT_SYMBOL_GPL(fwnode_get_phy_node);
+> +
+>  /**
+>   * phy_probe - probe and init a PHY device
+>   * @dev: device to probe and init
+> diff --git a/include/linux/phy.h b/include/linux/phy.h
+> index e2bfb9240587..f0450ef2dc9b 100644
+> --- a/include/linux/phy.h
+> +++ b/include/linux/phy.h
+> @@ -1328,6 +1328,9 @@ void phy_set_asym_pause(struct phy_device *phydev, bool rx, bool tx);
+>  bool phy_validate_pause(struct phy_device *phydev,
+>  			struct ethtool_pauseparam *pp);
+>  void phy_get_pause(struct phy_device *phydev, bool *tx_pause, bool *rx_pause);
+> +struct phy_device *fwnode_phy_find_device(struct fwnode_handle *phy_fwnode);
+> +struct phy_device *device_phy_find_device(struct device *dev);
+> +struct fwnode_handle *fwnode_get_phy_node(struct fwnode_handle *fwnode);
+>  void phy_resolve_pause(unsigned long *local_adv, unsigned long *partner_adv,
+>  		       bool *tx_pause, bool *rx_pause);
 >  
-> -		if (!cpumask_empty(later_mask))
-> -			return 1;
-> +		if (cpumask_empty(later_mask))
-> +			cpumask_set_cpu(max_cpu, later_mask);
 
-Think we touched upon this during v1 review, but I'm (still?) wondering
-if we can do a little better, still considering only free cpus.
+I think you can find a better location in this file to places these
+function prototypes - putting them in the middle of a set of prototypes
+for pause-related functions looks like you printed the file out, and
+played "pin the tail on the donkey" to select somewhere to put them!
 
-Can't we get into a situation that some of the (once free) big cpus have
-been occupied by small tasks and now a big task enters the system and it
-only finds small cpus available, were it could have fit into bigs if
-small tasks were put onto small cpus?
+I think putting them near the get_phy_device() prototype would be
+sensible.  Also, consider the case where CONFIG_PHYLIB is not set.
+Do we need stub implementations of these functions to avoid ifdefs
+in C code?
 
-I.e., shouldn't we always try to best fit among free cpus?
+Thanks.
 
-Thanks,
-
-Juri
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
