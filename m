@@ -2,104 +2,101 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E048CC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B40EAC55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC5C720656
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:38:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iclky+Go"
+	by mail.kernel.org (Postfix) with ESMTP id 90FFE206BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:38:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbgD0Pir (ORCPT
+        id S1727115AbgD0Pi4 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 11:38:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45054 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727115AbgD0Piq (ORCPT
+        Mon, 27 Apr 2020 11:38:56 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:47463 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbgD0Piz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 11:38:46 -0400
-Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03FF5C0610D5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 08:38:46 -0700 (PDT)
-Received: by mail-io1-xd35.google.com with SMTP id y26so9423484ioj.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 08:38:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=iTidgto46X3PBcLh/NZ3p3EEGIHyStvrrt3xBRoiKAg=;
-        b=iclky+Goj+8nLqDIQ9Ej9kG/1gbh8zknNJ9GmTUliHSJgJ5stv396dgtpB+rMqC4zZ
-         OJfs7amekuelbG/oMXztZT8Jl6YV6bWv+mrJhxijOTC9XjkyjtUG6tsZ6jNrrAZnzUyL
-         kDZUtOqhR8D/Mmk8lgh8NT/SIzQAXbeTjoivRgkBvquFc9wLYLShf8hjK+xoY0zXQppB
-         AryBNHQYJQrkFZw7tjNeXM2axUnxnbWiynSNZD32Rerl7FAyQWShoVYUEITchlW797t8
-         BKb+6Mx4czi/BhJZ9+jnreBdBys0CUobKXhPasjgVZU46bC53QaabmEX06VkKfPk5M4q
-         NB1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=iTidgto46X3PBcLh/NZ3p3EEGIHyStvrrt3xBRoiKAg=;
-        b=KBhiGpQIkHFS8hQFzhNdU8SDlbo4h+BMpjQSF6WGzgfC7xJENglH6jYPGjfSfbaDp3
-         rl1p1tU4tsPNnZzDznfHFkufipfeZb234QQpt6MrfdZnYWBkW74R9LfThLrge5Dbm5hr
-         rd/eUnVZbc4y3dL8kGMWVgnRNo2FflCRENLaTuDMr5aZAvMcA/JwKvNGsfuDOaNjC2vE
-         NhzI3SAkkmR7YPCRbArJ9uKblBrdi7XYt9+dsxlBB9fBOQI6qxxKvWFUqddqaqRmSvIq
-         iRLIg5I6GcnrkfAx+Ev49Mq6Iwmtph+bYzgMGdHK60Nyp9JzxL6xlR1spnBOB0xYPvSZ
-         KVKw==
-X-Gm-Message-State: AGi0PubS6/tkMy4zyefJqXVCyUg3EuoZMd0Z0KCTx2TyoyAvvHxitAdt
-        l5xYOmEz2UOeIraFpsQQCCHjnzKrGxy8LRNWzSA=
-X-Google-Smtp-Source: APiQypK2OeOQ1R0yIPyYwvW+TSu4zZdULykTH/FcCZ3v/uXwLwvDPknpzq77avRB2FvKMNHPW7arFhiGUwk804z30mM=
-X-Received: by 2002:a02:8666:: with SMTP id e93mr21477338jai.0.1588001925361;
- Mon, 27 Apr 2020 08:38:45 -0700 (PDT)
+        Mon, 27 Apr 2020 11:38:55 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 2D5C0C0011;
+        Mon, 27 Apr 2020 15:38:48 +0000 (UTC)
+Date:   Mon, 27 Apr 2020 17:38:46 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, richard@nod.at, vigneshr@ti.com,
+        arnd@arndb.de, brendanhiggins@google.com, tglx@linutronix.de,
+        anders.roxell@linaro.org, masonccyang@mxic.com.tw,
+        piotrs@cadence.com, robh+dt@kernel.org, linux-mips@vger.kernel.org,
+        hauke.mehrtens@intel.com, andriy.shevchenko@intel.com,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
+Subject: Re: [PATCH v2 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200427173846.3866c506@xps13>
+In-Reply-To: <20200418105533.477ce529@collabora.com>
+References: <20200417082147.43384-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200418105533.477ce529@collabora.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200417101129.35556-1-yuehaibing@huawei.com> <CAC=U0a2VfQBmHdS4eL0Fbm==aVCS0FWoBnZi7tRHzNKmm=SDVQ@mail.gmail.com>
- <20200427164336.5df4650a@xps13>
-In-Reply-To: <20200427164336.5df4650a@xps13>
-From:   Kamal Dasu <kdasu.kdev@gmail.com>
-Date:   Mon, 27 Apr 2020 11:38:34 -0400
-Message-ID: <CAC=U0a1zWmKFVJVfYLJOnwcB_voqFqWFZJCZxo78Zby=PbhAiA@mail.gmail.com>
-Subject: Re: [PATCH -next] mtd: rawnand: brcmnand: Remove unused including <linux/version.h>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        "R, Vignesh" <vigneshr@ti.com>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 10:43 AM Miquel Raynal
-<miquel.raynal@bootlin.com> wrote:
->
-> Hi Kamal,
->
-> Kamal Dasu <kdasu.kdev@gmail.com> wrote on Fri, 17 Apr 2020 14:40:51
-> -0400:
->
-> > On Fri, Apr 17, 2020 at 6:12 AM YueHaibing <yuehaibing@huawei.com> wrot=
-e:
-> > >
-> > > Remove including <linux/version.h> that don't need it.
-> > >
-> > > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> >
-> > Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
->
-> Can I suppose you meant "Reviewed-by" ?
->
+Hi Boris,
 
-Reviewed-by: Kamal Dasu <kdasu.kdev@gmail.com>
+Boris Brezillon <boris.brezillon@collabora.com> wrote on Sat, 18 Apr
+2020 10:55:33 +0200:
 
->
-> Thanks,
-> Miqu=C3=A8l
+> On Fri, 17 Apr 2020 16:21:47 +0800
+> "Ramuthevar,Vadivel MuruganX"
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> 
+> > From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> > 
+> > This patch adds the new IP of Nand Flash Controller(NFC) support
+> > on Intel's Lightning Mountain(LGM) SoC.
+> > 
+> > DMA is used for burst data transfer operation, also DMA HW supports
+> > aligned 32bit memory address and aligned data access by default.
+> > DMA burst of 8 supported. Data register used to support the read/write
+> > operation from/to device.
+> > 
+> > NAND controller driver implements ->exec_op() to replace legacy hooks,
+> > these specific call-back method to execute NAND operations.
+> > 
+> > Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> > ---
+> >  drivers/mtd/nand/raw/Kconfig          |   7 +
+> >  drivers/mtd/nand/raw/Makefile         |   1 +
+> >  drivers/mtd/nand/raw/intel_lgm_nand.c | 740 ++++++++++++++++++++++++++++++++++  
+> 
+> I wonder if we shouldn't name the driver infineon-nand-controller.c
+> since the original design comes from Infineon IIUC. intel_lgm_nand.c is
+> definitely misleading, as we also have a nand_intel.c file which is for
+> Intel NAND chips (not NAND controllers). If we keep intel in the name,
+> let's at least add a "-controller" suffix to make it clear.
+> 
+> Side note for Miquel: I guess we would also benefit from having a clear
+> core vs controller-drivers split as recently done for spi-nor (a
+> controller subdir has been created).
+
+I would even like a core vs controller drivers vs nand chips drivers.
+
+Macronix for instance has a NAND controller driver and a NAND chip
+driver, that's why, even if it is a bit long, I enforce the -nfc or
+-nand-controller (my favorite) suffix now.
+
+Thanks,
+Miquèl
