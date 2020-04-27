@@ -2,127 +2,123 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A194C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F32C4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24F54214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8667B214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:59:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbgD0S7U (ORCPT
+        id S1726753AbgD0S7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 14:59:20 -0400
-Received: from smtprelay0161.hostedemail.com ([216.40.44.161]:59244 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726260AbgD0S7U (ORCPT
+        Mon, 27 Apr 2020 14:59:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbgD0S7m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 14:59:20 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 437DD182CF668;
-        Mon, 27 Apr 2020 18:59:19 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: price03_8b5bd9a9cf130
-X-Filterd-Recvd-Size: 4152
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf09.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 27 Apr 2020 18:59:17 +0000 (UTC)
-Message-ID: <16b209d0b0c8034db62f8d4d0a260a00f0aa5d5e.camel@perches.com>
-Subject: Re: [PATCH] xfs: Use the correct style for SPDX License Identifier
-From:   Joe Perches <joe@perches.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Mon, 27 Apr 2020 14:59:42 -0400
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [IPv6:2001:67c:2050::465:202])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1790DC0610D5;
+        Mon, 27 Apr 2020 11:59:42 -0700 (PDT)
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 499vGK29VXzQlH3;
+        Mon, 27 Apr 2020 20:59:37 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
+        with ESMTP id q-xPfyQwqZzM; Mon, 27 Apr 2020 20:59:33 +0200 (CEST)
+Date:   Mon, 27 Apr 2020 20:59:29 +0200
+From:   Hagen Paul Pfeifer <hagen@jauu.net>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Jann Horn <jannh@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+        Brian Gerst <brgerst@gmail.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Nishad Kamdar <nishadkamdar@gmail.com>,
-        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 27 Apr 2020 11:59:16 -0700
-In-Reply-To: <20200427183629.GA20158@kroah.com>
-References: <20200425133504.GA11354@nishad> <20200427155617.GY6749@magnolia>
-         <20200427172959.GB3936841@kroah.com>
-         <515362d10c06567f35f0d5b7c3f2e121769fb04b.camel@perches.com>
-         <20200427174611.GA4035548@kroah.com>
-         <791a97d5d4dfd11af533a0bbd6ae27d1a2d479ee.camel@perches.com>
-         <20200427183629.GA20158@kroah.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [RFC v2] ptrace, pidfd: add pidfd_ptrace syscall
+Message-ID: <20200427185929.GA1768@laniakea>
+References: <20200426130100.306246-1-hagen@jauu.net>
+ <20200426163430.22743-1-hagen@jauu.net>
+ <20200427170826.mdklazcrn4xaeafm@wittgenstein>
+ <CAG48ez0hskhN7OkxwHX-Bo5HGboJaVEk8udFukkTgiC=43ixcw@mail.gmail.com>
+ <87zhawdc6w.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87zhawdc6w.fsf@x220.int.ebiederm.org>
+X-Key-Id: 98350C22
+X-Key-Fingerprint: 490F 557B 6C48 6D7E 5706 2EA2 4A22 8D45 9835 0C22
+X-GPG-Key: gpg --recv-keys --keyserver wwwkeys.eu.pgp.net 98350C22
+X-Rspamd-Queue-Id: A09E7176C
+X-Rspamd-Score: 0.58 / 15.00 / 15.00
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-04-27 at 20:36 +0200, Greg Kroah-Hartman wrote:
-> On Mon, Apr 27, 2020 at 11:01:38AM -0700, Joe Perches wrote:
-> > On Mon, 2020-04-27 at 19:46 +0200, Greg Kroah-Hartman wrote:
-> > > On Mon, Apr 27, 2020 at 10:41:58AM -0700, Joe Perches wrote:
-> > > > On Mon, 2020-04-27 at 19:29 +0200, Greg Kroah-Hartman wrote:
-[]
-> > > > > I thought we were supposed to use 'GPL-2.0-or-newer' because 'GPL-2.0+'
-> > > > > > is deprecated in some newer version of the SPDX standard?
-> > > > > > 
-> > > > > > <shrug>
-> > > > > 
-> > > > > The kernel follows the "older" SPDX standard, but will accept either,
-> > > > > it's up to the author.  It is all documented in LICENSES/ if people
-> > > > > really want to make sure.
-> > > > 
-> > > > I think the kernel should prefer the "newer" SPDX standard
-> > > > for any/all changes to these lines.
-> > > > ---
-> > > >  LICENSES/preferred/GPL-2.0 | 8 ++++----
-> > > >  1 file changed, 4 insertions(+), 4 deletions(-)
-> > > > 
-> > > > diff --git a/LICENSES/preferred/GPL-2.0 b/LICENSES/preferred/GPL-2.0
-> > > > index ff0812..c50f93 100644
-> > > > --- a/LICENSES/preferred/GPL-2.0
-> > > > +++ b/LICENSES/preferred/GPL-2.0
-> > > > @@ -8,13 +8,13 @@ Usage-Guide:
-> > > >    tag/value pairs into a comment according to the placement
-> > > >    guidelines in the licensing rules documentation.
-> > > >    For 'GNU General Public License (GPL) version 2 only' use:
-> > > > -    SPDX-License-Identifier: GPL-2.0
-> > > > -  or
-> > > >      SPDX-License-Identifier: GPL-2.0-only
-> > > > +  or the deprecated alternative
-> > > > +    SPDX-License-Identifier: GPL-2.0
-> > > >    For 'GNU General Public License (GPL) version 2 or any later version' use:
-> > > > -    SPDX-License-Identifier: GPL-2.0+
-> > > > -  or
-> > > >      SPDX-License-Identifier: GPL-2.0-or-later
-> > > > +  or the deprecated alternative
-> > > > +    SPDX-License-Identifier: GPL-2.0+
-> > > >  License-Text:
-> > > 
-> > > At the moment, I do not, as the current ones are not "depreciated" at
-> > > all.
-> > 
-> > https://spdx.org/licenses/
-> > 
-> > shows the GPL-2.0 and GPL-2.0+ as deprecated.
-> > 
-> > https://spdx.org/licenses/GPL-2.0.html
-> > https://spdx.org/licenses/GPL-2.0+.html
-> > 
-> 
-> Again, we are not using the "new" version of the SPDX specification just
-> yet.  We started out using one specific version, let's get the whole
-> kernel converted first before worrying about trying to keep up with
-> their newer releases please.  We still have a ways to go...
+* Eric W. Biederman | 2020-04-27 13:18:47 [-0500]:
 
-It seems you refer to yourself using the majestic plural.
+>I am conflicted about that but I have to agree.    Instead of
+>duplicating everything it would be good enough to duplicate the once
+>that cause the process to be attached to use.  Then there would be no
+>more pid races to worry about.
 
-There's already ~80% use of SPDX-License-Identifier and the
--only versions are already about 25% of the existing uses.
+>How does this differ using the tracing related infrastructure we have
+>for the kernel on a userspace process?  I suspect augmenting the tracing
+>infrastructure with the ability to set breakpoints and watchpoints (aka
+>stopping userspace threads and processes might be a more fertile
+>direction to go).
+>
+>But I agree either we want to just address the races in PTRACE_ATTACH
+>and PTRACE_SIEZE or we want to take a good hard look at things.
+>
+>There is a good case for minimal changes because one of the cases that
+>comes up is how much work will it take to change existing programs.  But
+>ultimately ptrace pretty much sucks so a very good set of test cases and
+>documentation for what we want to implement would be a very good idea.
 
-There's no real reason not to prefer the latest versions
-over the deprecated ones.
+Hey Eric, Jann, Christian, Arnd,
 
+thank you for your valuable input! IMHO I think we have exactly two choices
+here:
+
+a) we go with my patchset that is 100% ptrace feature compatible - except the
+   pidfd thing - now and in the future. If ptrace is extended pidfd_ptrace is
+   automatically extended and vice versa. Both APIs are feature identical
+   without any headaches.
+b) leave ptrace completely behind us and design ptrace that we have always
+   dreamed of! eBPF filters, ftrace kernel architecture, k/uprobe goodness,
+   a speedy API to copy & modify large chunks of data, io_uring/epoll support
+   and of course: pidfd based (missed likely thousands of other dreams)
+	
+I think a solution in between is not worth the effort! It will not be
+compatible in any way for the userspace and the benefit will be negligible.
+Ptrace is horrible API - everybody knows that but developers get comfy with
+it. You find examples everywhere, why should we make it harder for the user for
+no or little benefit (except that stable handle with pidfd and some cleanups)?
+
+Any thoughts on this?
+
+Hagen
 
