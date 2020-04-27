@@ -2,148 +2,118 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD29FC5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 01:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B00D7C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 02:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2E76206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 01:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EB3F2064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 02:02:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=timesys-com.20150623.gappssmtp.com header.i=@timesys-com.20150623.gappssmtp.com header.b="1G1e4dCA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726432AbgD0BcD (ORCPT
+        id S1726429AbgD0CCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 21:32:03 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:35326 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726186AbgD0BcC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 21:32:02 -0400
-Received: from [10.130.0.79] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxz2kKNqZePpQsAA--.0S3;
-        Mon, 27 Apr 2020 09:31:55 +0800 (CST)
-Subject: Re: [PATCH v4 0/3] Add basic support for LS7A bridge chip
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-References: <1585906191-26037-1-git-send-email-yangtiezhu@loongson.cn>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <8afa3df1-9c9f-aa90-e630-2b77f24fe41f@loongson.cn>
-Date:   Mon, 27 Apr 2020 09:31:54 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Sun, 26 Apr 2020 22:02:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726332AbgD0CCt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 22:02:49 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2E25C061A10
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 19:02:48 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id p13so7773839qvt.12
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 19:02:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=timesys-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RcteqZvDysSs0cwl3sE+jokTE69dza9uRSn9B2LltWQ=;
+        b=1G1e4dCA00hoQt1Hw0ek/4a5nK7ET0Nh8wvpf61QguFDoNCdqWNG8W/kWAK77f0HxA
+         cWxxf+egaGejHWexf09B4wQdkGdgq72PPDpG8grP62LbR4gatgiICOPc127GT2etwrLS
+         iLlZJTt07CPb2Oidfwt42gI5vhEQaSKjg82KRE7tlFUBdj1i8yk6zJu0aFJDLFzSsRHU
+         6SrLUMn8yoc2ANPfgzvk64wqQmkDoFigg/8nAxVrS8v0D8RP0D2WtmUtJxyFJR6n4CFv
+         lYOrbhWiQYIo5fJw5zXHriPVdtYB2B95cuOTbiaw9JmPzz8jwwcqKZ5nHTjha74BzYs+
+         zhQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RcteqZvDysSs0cwl3sE+jokTE69dza9uRSn9B2LltWQ=;
+        b=jGObHNz6/qrYgDMIGpl22DSoYV5rRg7Q9NvCqdaBmsLgI7Bl01Ts5EAVghBPWHK2Mz
+         uCicCrwxG4D7Cz7/+jr+h+jEyLCfLQ56X9u1wSnmfWqBczwKZzEnNd5FXhfP9PHPhdtm
+         zsP3ttAY41dkZGKV+9v0TAo3GilF7dkD/Dzlkv2Mlv9CBc9YnDV2ceRlnq678SbPIK67
+         yk3i8RHcHoU/V0xjg3IEhf5eoucl+qXjDyXZ3vbQZR9rTHquRrF/os6ME45lZfrtl0Zf
+         S7HTU8L0wgHheFkgJQ1xS6CB2jpQMzGiRVnaL86xKcnBUU+mp0oEHY4DRv5JUXKoLHRJ
+         l98Q==
+X-Gm-Message-State: AGi0PuayNtAaFw/6tNV3TvESjp8VuXthDJtW7q/gosBxRXnH4Sp9r+zs
+        0V/G1BFXGYTDUTRmgV43LGe/iQ==
+X-Google-Smtp-Source: APiQypIkc7issTLMrpbXDSQ6Y1/OE643ybFGp6zM1Bzw8c6AsDDf5cTlbPqAvNmzC1DnkFPNw3TIWA==
+X-Received: by 2002:a05:6214:593:: with SMTP id bx19mr20297276qvb.2.1587952967865;
+        Sun, 26 Apr 2020 19:02:47 -0700 (PDT)
+Received: from tony-Gazelle.8.8.8.8 (pool-173-75-1-174.pitbpa.fios.verizon.net. [173.75.1.174])
+        by smtp.gmail.com with ESMTPSA id j14sm8745752qkk.92.2020.04.26.19.02.46
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 26 Apr 2020 19:02:47 -0700 (PDT)
+From:   Anthony Felice <tony.felice@timesys.com>
+Cc:     Anthony Felice <tony.felice@timesys.com>,
+        Akshay Bhat <akshay.bhat@timesys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: tc35815: Fix phydev supported/advertising mask
+Date:   Sun, 26 Apr 2020 22:00:59 -0400
+Message-Id: <20200427020101.3059-1-tony.felice@timesys.com>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-In-Reply-To: <1585906191-26037-1-git-send-email-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9Dxz2kKNqZePpQsAA--.0S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxXw48tw1xuw18AF1rKF4UJwb_yoW5tF15pa
-        y5ua13Gr1DGr1UJa1fur4xua15Aws3Jr9xWw47G3s5AF9IqF10qr9avF15KF129r9Y93W2
-        qr12g3yvg3W7Ca7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvm14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr
-        0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-        6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
-        0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7Mxk0xIA0c2IEe2xFo4CE
-        bIxvr21lc2xSY4AK67AK6w4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
-        1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
-        14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
-        IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvE
-        x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnU
-        UI43ZEXa7VU1ItC7UUUUU==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/03/2020 05:29 PM, Tiezhu Yang wrote:
-> The LS7A bridge chip has been released for several years since the
-> second half of 2017, but it is not supported by the Linux mainline
-> kernel while it only works well with the Loongson internal kernel
-> version. When I update the latest version of Linux mainline kernel
-> on the Loongson 3A3000 CPU and LS7A bridge chip system, the boot
-> process failed and I feel depressed.
->
-> The LS7A bridge chip is used a lot with 3A3000 or 3A4000 CPU in
-> the most Loongson desktop and sever products, it is important to
-> support LS7A bridge chip by the Linux mainline kernel.
->
-> This patch series adds the basic support for the LS7A bridge chip,
-> the patch about vendor ID and SATA has been merged into the mainline
-> tree, the next work is to refactor the code about the interrupt
-> controller, and then power management and some other controller
-> device drivers.
->
-> By the way, if you want the boot process is successful (just for
-> test) on the Loongson 3A3000 CPU and LS7A bridge chip system,
-> you should not only apply these patches, but also need the support
-> for SATA and interrupt controller in the v1 patch series.
->
-> This patch series is based on mips-next.
->
-> If you have any questions and suggestions, please let me know.
->
-> Thanks,
->
-> Tiezhu Yang
->
-> v2:
->    - The split patch series about Loongson vendor ID and SATA controller
->      has been merged into the linux-block.git by Jens Axboe [1].
->
->    - Think about using hierarchy IRQ domain in the patch of interrupt
->      controller, and this maybe depend on the patch series by Jiaxun
->      ("Modernize Loongson64 Machine"), so the patch about interrupt is
->      not included in this v2 patch series.
->
-> v3:
->    - The split patch series about Loongson vendor ID and SATA controller
->      has been merged into the mainline tree [2]
->
->    - Modify the macro definition and add comment to make it easy to read
->
->    - Move ls7a1000_pci_class_quirk() to fixup-loongson3.c
->
->    - Use PCI_VENDOR_ID_LOONGSON in pci_ids.h instead of 0x0014
->
-> v4:
->    - Use LS7A instead of Loongson 7A1000 in the description
->    - Use LS7A or ls7a instead of LS7A1000 or ls7a1000 in the code
->
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-next&id=9acb9fe18d86
->      https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-next&id=e49bd683e00b
-> [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9acb9fe18d86
->      https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e49bd683e00b
->
-> Tiezhu Yang (3):
->    MIPS: Loongson: Get host bridge information
->    MIPS: Loongson: Add DMA support for LS7A
->    MIPS: Loongson: Add PCI support for LS7A
->
->   arch/mips/include/asm/mach-loongson64/boot_param.h | 20 +++++++
->   arch/mips/loongson64/dma.c                         |  9 ++--
->   arch/mips/loongson64/env.c                         | 22 ++++++++
->   arch/mips/loongson64/init.c                        | 17 ++++++
->   arch/mips/pci/fixup-loongson3.c                    | 12 +++++
->   arch/mips/pci/ops-loongson3.c                      | 63 ++++++++++++++++++++--
->   6 files changed, 136 insertions(+), 7 deletions(-)
->
+Commit 3c1bcc8614db ("net: ethernet: Convert phydev advertize and
+supported from u32 to link mode") updated ethernet drivers to use a
+linkmode bitmap. It mistakenly dropped a bitwise negation in the
+tc35815 ethernet driver on a bitmask to set the supported/advertising
+flags.
 
-Hi Thomas,
+Found by Anthony via code inspection, not tested as I do not have the
+required hardware.
 
-Could you please apply the following two patches to mips-next?
+Fixes: 3c1bcc8614db ("net: ethernet: Convert phydev advertize and supported from u32 to link mode")
+Signed-off-by: Anthony Felice <tony.felice@timesys.com>
+Reviewed-by: Akshay Bhat <akshay.bhat@timesys.com>
+---
+ drivers/net/ethernet/toshiba/tc35815.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[v4,1/3] MIPS: Loongson: Get host bridge information
-https://lore.kernel.org/patchwork/patch/1220009/
+diff --git a/drivers/net/ethernet/toshiba/tc35815.c b/drivers/net/ethernet/toshiba/tc35815.c
+index 3fd43d30b20d..a1066fbb93b5 100644
+--- a/drivers/net/ethernet/toshiba/tc35815.c
++++ b/drivers/net/ethernet/toshiba/tc35815.c
+@@ -643,7 +643,7 @@ static int tc_mii_probe(struct net_device *dev)
+ 		linkmode_set_bit(ETHTOOL_LINK_MODE_10baseT_Half_BIT, mask);
+ 		linkmode_set_bit(ETHTOOL_LINK_MODE_100baseT_Half_BIT, mask);
+ 	}
+-	linkmode_and(phydev->supported, phydev->supported, mask);
++	linkmode_andnot(phydev->supported, phydev->supported, mask);
+ 	linkmode_copy(phydev->advertising, phydev->supported);
+ 
+ 	lp->link = 0;
 
-[v4,2/3] MIPS: Loongson: Add DMA support for LS7A
-https://lore.kernel.org/patchwork/patch/1220010/
-
-Thanks,
-Tiezhu Yang
+base-commit: 55b2af1c23eb12663015998079992f79fdfa56c8
+-- 
+2.26.1
 
