@@ -2,120 +2,106 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D06BC4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E60FDC4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 155AC206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:57:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="di+1djng"
+	by mail.kernel.org (Postfix) with ESMTP id D2D7821775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:59:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbgD0T5r (ORCPT
+        id S1726690AbgD0T7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 15:57:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57784 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726364AbgD0T5q (ORCPT
+        Mon, 27 Apr 2020 15:59:45 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39622 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726205AbgD0T7o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 15:57:46 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 308BAC0610D5;
-        Mon, 27 Apr 2020 12:57:45 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id s3so15248740eji.6;
-        Mon, 27 Apr 2020 12:57:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=GJDhC8dz1UCAtH/BxA6Y2i5c6CSS8QiVlm7CC6ceN1Q=;
-        b=di+1djngWKc+yBC2sVVRtlvVb6+ghANoyasyRkhw59rY5kpK2yn8m+5cT/EWBPGfrB
-         GDuYLd4+X4e1KRbKKeySJsNuJU0mG9bZSHX9gELo/O8G7ngaYWb6+89q/0Mpfw5RmztG
-         P5vOYApZ2rU41U0UNhigD0R5qbWi8SeZ2C9vz2ScOfqKzuFAT+ePFKkDgrzA//TTsrIN
-         BB1YJ4tNXtfMecXR+iuvRftLru3ySi98XzLTmWSSSzlaMNrDF1+uTBW1C2NBZtUOBE01
-         8bNa+HMyzrr4Cwttlqy8QSwECGILgikMpQzN14ZGPzCjpAJ1vJKURyvDw80JpzHRxDE5
-         lrgg==
+        Mon, 27 Apr 2020 15:59:44 -0400
+Received: by mail-ot1-f67.google.com with SMTP id m13so28442140otf.6;
+        Mon, 27 Apr 2020 12:59:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=GJDhC8dz1UCAtH/BxA6Y2i5c6CSS8QiVlm7CC6ceN1Q=;
-        b=R5MmhZz55L6T8epSv8HZMCSv2ovJ/l5r9fpclHgDFf6+P9yyPccCcPSLPYhDKBWn3m
-         oHFZbu8D7FCWI7g4e67PHzTKTtuEd994iljIrZdMiregWXJicFco34zZSrg0v3ll6CR5
-         WyVECVVpKw0aw+Dp/RaX6RWFLtbmFZmpvB9XGqwO4ksllYQqXJVEeV9XKLig/EkVO6ha
-         /jXTjmPYj7lXra824b3ut4iCTbdUwfspq004uyjo7mBOzPzNagsRELJ+BCqe8b3bjKww
-         pMJWrcSgeAN9ecVGwWK0EtJ1i77uKd7FWxMT99CGpOPiYBRM/2Ik3yp4h2dhP3aj2Rvq
-         uydw==
-X-Gm-Message-State: AGi0Pub0blRpE0kF0MlA0G+I/JjJGLzDDt3GEbgfCvcUlY0FWO8bqhz9
-        4TeiO/qpcmcEokpxvD1LNl3upYzWa7llClR6AnGKIl//tQQ=
-X-Google-Smtp-Source: APiQypI/5x/k2ZEjeKzMnLvdY3+3lcwsOP3UmM0K9r50UkqbSjltr0j9Ig/Pn9uMY8rY/7QNMyS4rQpX/u8NmqSdeHQ=
-X-Received: by 2002:a17:907:2098:: with SMTP id pv24mr21801601ejb.22.1588017463681;
- Mon, 27 Apr 2020 12:57:43 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GCux3WFhsUzhnpQIYTb6iBn0WfJCEnqGmFf2x3Obejw=;
+        b=X3A1lrexDO9cQu0M28QqyRB7f/BxEtGFwbWeYMJBAjZl3FiESmSFQX2uQewhH40OZ3
+         sXgbUzYdYAQjVW47eKzX8nfSFcCsIZnyxodKiSRI8IdhDbDjc8wxRQn7QL3sMeoTp3FW
+         ElT7hiRH2MjNM6OUFhVOs2sv/OOGex5VZXglJmtQ4lKuKTSgwIJx4gXKPS+KNcog25es
+         bG8/DI6An+ks9c+Aqtr0s4qhPouc3+jjwc/krMk6zekcemiQ1+sFUpsJBMq7PtqWwKEn
+         4S+UO0BGMXJ7kEB7X8ho+7PX2DexPGDXkChNCa+WQcf67kdbNNLfuuRBmEDPITSyydMy
+         KsIw==
+X-Gm-Message-State: AGi0PuaWyE197bp32zEv5cJr50U94MErc3YbUso3KLDKtv2yeeShIOvf
+        uRmA8mh0mtkk0ps8v+zFbPT4bWc6o21a3IwBBfo=
+X-Google-Smtp-Source: APiQypLPJTcQTVlxVhJcfPDdHKtGYcKy3uvV5JgdLt2s6vgHNEyA98htHEn2T1akaPpGIpF8clQG+IgKiuVpLVxonxA=
+X-Received: by 2002:aca:895:: with SMTP id 143mr237114oii.153.1588017583685;
+ Mon, 27 Apr 2020 12:59:43 -0700 (PDT)
 MIME-Version: 1.0
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 27 Apr 2020 21:57:33 +0200
-Message-ID: <CAFBinCBHuPLS8BDzO4Gb86TG3tNTtqmW5BSWy8jhPuN3STOTUA@mail.gmail.com>
-Subject: clk_hw.init and -EPROBE_DEFER / driver re-load
-To:     sboyd@kernel.org, linux-clk@vger.kernel.org
-Cc:     mturquette@baylibre.com, linux-kernel@vger.kernel.org,
-        jbrunet@baylibre.com
+References: <1588004391-8461-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588004391-8461-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 27 Apr 2020 21:59:31 +0200
+Message-ID: <CAMuHMdXG_hpb==xY88vCEguc-n8kg_4vjv_Xmmh5jEGr37BPKA@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: r8a7743: Add missing compatible strings for
+ iic3 node
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Stephen et al.
+Hi Prabhakar,
 
-I am working on a driver for the "SDHC" controller on older Amlogic Meson SoCs.
-This has some clock controller bits built into.
-Using CCF for the whole rate management makes things a lot easier, so
-I decided to use that instead of poking register bits manually.
-The code can be seen here: [0] - but don't take it too seriously
-because I have to move some of that in the next patch revision.
+On Mon, Apr 27, 2020 at 6:20 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add missing compatible strings "renesas,rcar-gen2-iic" and
+> "renesas,rmobile-iic" to iic3 node of r8a7743 SoC.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-I solved an "interesting" problem where I'm not sure if it works as
-intended (which is what I assumed) or if there's an actual problem (as
-suggested by Jerome).
+Thanks for your patch!
 
-The flow in the driver is basically:
-(the clk_hws are defined as "static" variables inside the driver)
-1) fetch related OF properties
-2) initialize and register the built-in (into the MMC controller
-driver) clock controller part
-3) initialize the MMC controller
+> --- a/arch/arm/boot/dts/r8a7743.dtsi
+> +++ b/arch/arm/boot/dts/r8a7743.dtsi
+> @@ -551,7 +551,9 @@
+>                         /* doesn't need pinmux */
+>                         #address-cells = <1>;
+>                         #size-cells = <0>;
+> -                       compatible = "renesas,iic-r8a7743";
+> +                       compatible = "renesas,iic-r8a7743",
+> +                                    "renesas,rcar-gen2-iic",
+> +                                    "renesas,rmobile-iic";
+>                         reg = <0 0xe60b0000 0 0x425>;
+>                         interrupts = <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>;
+>                         clocks = <&cpg CPG_MOD 926>;
 
-Step 3) can fail for example because one of the regulators is not ready.
-In this case I'm de-registering the clock controller part again.
-Finally the driver returns -EPROBE_DEFER
-(so far everything is working fine)
+This was intentional, cfr. commit 072b817589b17660 ("ARM: dts: r8a7743:
+Remove generic compatible string from iic3"), and my review comments on
+"[PATCH 02/22] ARM: dts: r8a7744: Add I2C and IIC support"
+(https://lore.kernel.org/linux-devicetree/CAMuHMdVt2DDQJ9Ud6i=GWAeWW0TdpF5xiCxtRiv0dZTGCPEt8A@mail.gmail.com/).
 
-However, once the regulator (in this example) becomes ready the the
-same flow as above is being executed.
-Only this time the clock controller registration fails because
-hw->init is NULL (before it had the values which I defined in the
-driver).
-This is due to the following line in __clk_register():
-  hw->init = NULL;
+The note at the bottom of Section 45.1 of the RZ/G1 Hardware User's
+Manual says: "Automatic transmission for PMIC control (DVFS) is not
+available ...".
 
-My way to "solve" this is to clone the clk_hws while registering the
-clock controller.
-Unfortunately this means that I can't easily use clk_hw references to
-describe the parent/child relation between these clocks.
+Gr{oetje,eeting}s,
 
-I'm not sure if my way of defining the clk_hws is wrong, there's a bug
-in CCF, this is a new feature request or something completely
-different :-)
-My motivation is to understand how I should to consider this behavior
-for my next version of the MMC controller patches.
+                        Geert
 
-Any feedback is welcome!
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
-Thank you,
-Martin
-
-
-[0] https://patchwork.kernel.org/patch/11463357/
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
