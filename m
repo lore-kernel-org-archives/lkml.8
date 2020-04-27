@@ -2,125 +2,118 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B9EC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 317C9C5519A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69F16206B9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EE17206B9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:46:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="ipmZLB70"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgD0Gpf (ORCPT
+        id S1726681AbgD0Gqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 02:45:35 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34908 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726504AbgD0Gpf (ORCPT
+        Mon, 27 Apr 2020 02:46:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726349AbgD0Gqh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 02:45:35 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e26so24457844otr.2;
-        Sun, 26 Apr 2020 23:45:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A20QEuwcQ3bPQDVPM4YhHWYF19sEEIWz0tIXZgQQNBA=;
-        b=aElH/Npms16am5+g19bdMxGhPitYhjP6kwaB/Nzwg1Sf2NOqQPGHzk3tT705f278hU
-         DsFXXM8Ck+1c3QUrpU6m2CBSes95pItbPJAjI/P4PQGx0fyEU2MZBsJ0hh6yOneqLj5u
-         2lJvxbIVAyIG6U12fCRbeFnDZWXJpO/+H8GTXm1H5CBg9H88iveg6V/Y8/NK1qFskgwq
-         1EuCVd9IOJPx5GOOfmrM5HjurxVfns3J2qv5a1Oy83OeH5Iob8IwIyZ/Ccn7p9S4J1FO
-         K44SCw0ku1ObK7fSHxqPGPZ9FvXD4uaKhKxmVuTGdoA3TN2fdThOWOSGYQautXLgILf1
-         0n9A==
-X-Gm-Message-State: AGi0PubGXODkQXJ4ss5ivF/wQAF70hj6vGvfE+63iH6LtL1EZhiEBzJ/
-        UyF1Tfh+hjEBQm6UQ0FW2yaRvwXXqxrPMEVmo64=
-X-Google-Smtp-Source: APiQypKnNMH9rOhofcKlK7I9omQSdQmvVEfckYI5Sp58zjUJsZuaoc+VBXSc57/r+A1q4uEpYjSTT0Irt0S0re1bJoY=
-X-Received: by 2002:a9d:564:: with SMTP id 91mr17254715otw.250.1587969933846;
- Sun, 26 Apr 2020 23:45:33 -0700 (PDT)
+        Mon, 27 Apr 2020 02:46:37 -0400
+Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D4CAC061A0F;
+        Sun, 26 Apr 2020 23:46:37 -0700 (PDT)
+Received: from flygoat-x1e (unknown [IPv6:240e:390:491:f2b0::d68])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 491202049F;
+        Mon, 27 Apr 2020 06:46:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1587969996; bh=87cY8c65SZbqmYxYzk6T3jS7ROhx/jS7jol+umwWuSU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ipmZLB70pSVEu9CTWQUAPnv8VwbpFKilRfFvtvs2qQqppq+N6gnGsLm272ScTwsAT
+         pQOSD3mKgw1ZTRqT7P7EKI1Lgm7jEDUPAYpZJRW3emSSkbETQupWpVcLckr+fRsdS1
+         WIGijRv/PVDI/Uqt82jPlUetvVCk4jW4a4UF2H0v3dU8a5drnVxoPFYx0eGXc3vO49
+         INyafcEamxMEuTGOXCwS5H2uRvboiBRjuOte/zrPwWWini+IkfBdXRgdHFNucyPbTZ
+         CLUVS2jO7mdz1TeqKEsmLmAEFGammRDOnWMziS23ni9A8OKCcnY42fU+nJ1LJA2Yrj
+         eBUmFNS0uCXIg==
+Date:   Mon, 27 Apr 2020 14:46:18 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     Huacai Chen <chenhc@lemote.com>
+Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 2/5] PCI: Add Loongson PCI Controller support
+Message-ID: <20200427144618.1e7a642a@flygoat-x1e>
+In-Reply-To: <CAAhV-H6JpHUJ_aQ0zSzMquSQBkA5Roo6bOUqhLys_AZhbp1UmA@mail.gmail.com>
+References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
+        <20200427060551.1372591-3-jiaxun.yang@flygoat.com>
+        <CAAhV-H6JpHUJ_aQ0zSzMquSQBkA5Roo6bOUqhLys_AZhbp1UmA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200420143229.245488-1-mst@redhat.com>
-In-Reply-To: <20200420143229.245488-1-mst@redhat.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 27 Apr 2020 08:45:22 +0200
-Message-ID: <CAMuHMdWaG5EUsbTOMPkj4i50D40T0TLRvB6g-Y8Dj4C0v7KTqQ@mail.gmail.com>
-Subject: Re: [PATCH v4] vhost: disable for OABI
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Richard Earnshaw <Richard.Earnshaw@arm.com>,
-        Sudeep Dutt <sudeep.dutt@intel.com>,
-        Ashutosh Dixit <ashutosh.dixit@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jason Wang <jasowang@redhat.com>,
-        netdev <netdev@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        KVM list <kvm@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
+On Mon, 27 Apr 2020 14:29:34 +0800
+Huacai Chen <chenhc@lemote.com> wrote:
 
-Thanks for your patch!
+> Hi, Jiaxun,
+> 
+> On Mon, Apr 27, 2020 at 2:06 PM Jiaxun Yang <jiaxun.yang@flygoat.com>
+> wrote:
+> >
+> > This controller can be found on Loongson-2K SoC, Loongson-3
+> > systems with RS780E/LS7A PCH.
+> >
+> > The RS780E part of code was previously located at
+> > arch/mips/pci/ops-loongson3.c and now it can use generic PCI
+> > driver implementation.
+> >
+> > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> >
+> > --
+> > v2:
+> >         - Clean up according to rob's suggestions
+> >         - Claim that it can't work as a module
+> > v3:
+> >         - Fix a typo
+> > v4:
+> >         - More clean-ups: Drop flag check, use devfn
+> > ---
+> >  drivers/pci/controller/Kconfig        |  10 +
+> >  drivers/pci/controller/Makefile       |   1 +
+> >  drivers/pci/controller/pci-loongson.c | 251
 
-On Mon, Apr 20, 2020 at 5:13 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> vhost is currently broken on the some ARM configs.
->
-> The reason is that the ring element addresses are passed between
-> components with different alignments assumptions. Thus, if
-> guest selects a pointer and host then gets and dereferences
-> it, then alignment assumed by the host's compiler might be
-> greater than the actual alignment of the pointer.
-> compiler on the host from assuming pointer is aligned.
->
-> This actually triggers on ARM with -mabi=apcs-gnu - which is a
-> deprecated configuration. With this OABI, compiler assumes that
-> all structures are 4 byte aligned - which is stronger than
-> virtio guarantees for available and used rings, which are
-> merely 2 bytes. Thus a guest without -mabi=apcs-gnu running
-> on top of host with -mabi=apcs-gnu will be broken.
->
-> The correct fix is to force alignment of structures - however
-> that is an intrusive fix that's best deferred until the next release.
->
-> We didn't previously support such ancient systems at all - this surfaced
-> after vdpa support prompted removing dependency of vhost on
-> VIRTULIZATION. So for now, let's just add something along the lines of
->
->         depends on !ARM || AEABI
->
-> to the virtio Kconfig declaration, and add a comment that it has to do
-> with struct member alignment.
->
-> Note: we can't make VHOST and VHOST_RING themselves have
-> a dependency since these are selected. Add a new symbol for that.
+[...]
 
-Adding the dependencies to VHOST and VHOST_RING themselves is indeed not
-sufficient.  But IMHO you should still add VHOST_DPN dependencies t
- these two symbols, so any driver selecting them without fulfilling the
-VHOST_DPN dependency will trigger a Kconfig warning.  Else the
-issue will be ignored silently.
+> > +static const struct of_device_id loongson_pci_of_match[] = {
+> > +       { .compatible = "loongson,rs780e-pci",
+> > +               .data = (void *)(FLAG_CFG0), },
+> > +       { .compatible = "loongson,ls2k-pci",
+> > +               .data = (void *)(FLAG_CFG0 | FLAG_CFG1 |
+> > FLAG_DEV_FIX), },
+> > +       { .compatible = "loongson,ls7a-pci",
+> > +               .data = (void *)(FLAG_CFG0 | FLAG_CFG1 |
+> > FLAG_DEV_FIX), },  
+> I suggest to use alpha-betical order here: ls2k, ls7a and rs780 at
+> last.
 
-> We should be able to drop this dependency down the road.
->
-> Fixes: 20c384f1ea1a0bc7 ("vhost: refine vhost and vringh kconfig")
-> Suggested-by: Ard Biesheuvel <ardb@kernel.org>
-> Suggested-by: Richard Earnshaw <Richard.Earnshaw@arm.com>
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Thanks for pointing out this minor issue.
+I put rs780e at first at it appears to be the first system using this
+driver.
+If there is no more review suggestion I'll send out next revision very
+soon. 
 
-Gr{oetje,eeting}s,
+[...]
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--
+Jiaxun Yang
