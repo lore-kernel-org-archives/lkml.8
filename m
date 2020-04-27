@@ -2,157 +2,154 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 648BCC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5D0C7C820
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 340A820656
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:27:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="W8rMPUR7"
+	by mail.kernel.org (Postfix) with ESMTP id 1CAFF206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:32:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587987148;
+	bh=HyZEmG6wmcdniR2Viwm5NPHIbC+E2pVAsWUXqBU5HWg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bS6m4o0RmkCiU0kyQeeDmIjAOgY+ppy7MATcxutVbvIoQkQo51R7siCCVMb6v9s4i
+	 lDSpE7fCbdCbxe50pcEeyGNhDLmUbNtgdBJtl0zVMiA4sazl/5V+5XZDJlZypqUcy9
+	 kiqYOSlLsZHX1lP37/DiHBmX6f7kA1oj0eHFjspI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgD0L1G (ORCPT
+        id S1727107AbgD0Lc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 07:27:06 -0400
-Received: from mout.web.de ([217.72.192.78]:43353 "EHLO mout.web.de"
+        Mon, 27 Apr 2020 07:32:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726504AbgD0L1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 07:27:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1587986811;
-        bh=u35VrCt8medsivMDHaOutmpmvu9KIs/e9Ch87ZjO3vc=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=W8rMPUR7ZHcqDJKxjm66tJwBzxZYUTYGk/NH1cdSIRSS/z5CqFITv8P/peewO4B90
-         nuMdGpnOET0ElQaYE+9l8exuGtixJuIKMm4yFVgohwXxWm0U/Vbc1YokBCDSgVzOg1
-         vlYnA/Gwv4frDnqRM1MhZg/3fV3g1z/2zi7v24go=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.190.48]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lpezi-1iwT6r26y6-00fRdt; Mon, 27
- Apr 2020 13:26:51 +0200
-To:     Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>,
-        netdev@vger.kernel.org, Coccinelle <cocci@systeme.lip6.fr>
-Cc:     linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Madalin Bucur <madalin.bucur@nxp.com>
-Subject: Re: [PATCH] dpaa_eth: Fix comparing pointer to 0
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <332befc4-efd1-9303-7c9d-f7f3809cd81e@web.de>
-Date:   Mon, 27 Apr 2020 13:26:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1727074AbgD0LcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 07:32:23 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0128E206A4;
+        Mon, 27 Apr 2020 11:32:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587987142;
+        bh=HyZEmG6wmcdniR2Viwm5NPHIbC+E2pVAsWUXqBU5HWg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lJfkm9oiIt/XWlTLQ0TOgPbLC3asB2J0JzUMyvTUz9w8/BsLgMnd/hm0lF+RZhRKl
+         5CTU+CitEMpThKsklh5bwutbGd0kBFxqV+4UfKTtbmnmE00Vzy6vGQcsrqxCQVpIxv
+         j6Qc4YCqMSfXRpIdePLZGmxtAa1S0y3RRIyBamSU=
+Date:   Mon, 27 Apr 2020 14:32:18 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86 <x86@kernel.org>,
+        Suresh Siddha <suresh.b.siddha@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/apic: Fix circular locking dependency between
+ console and hrtimer locks
+Message-ID: <20200427113218.GB134660@unreal>
+References: <20200407170925.1775019-1-leon@kernel.org>
+ <20200414054836.GA956407@unreal>
+ <20200414062454.GA84326@gmail.com>
+ <87tv15qj5u.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:m1lzIOTWu5edMqRRyCQJq4KBZcNljlhFecvVYZCKRwFDVenNrCG
- yLvwR/DueaOQGjxOGsTnt1cz3VtG8jQ50xr8vUeCPIPLB0sDNEX5U7vSzG/tfU60KAG33eW
- 0TE7b7Kc8rVWeE/bZJMFfoFlvOlnWHNyDOLKt7LejYpIntR0caJnAHv2wUes4InCNqoHTpA
- D2IgUHOeoRPeEpVLMYTRA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:GnzX39we2Gk=:m04wqwdrjegXNR3MXXhVAW
- /XMWgDlSCRzYcFaiiXewVFjOA/wvi1c0hhkD8WXoRW+1Q+IvO6OM+WjzSLXyw3n4+reY80QAX
- lAlKxHrnd5cVQgH7D7lXEykPlRtTpBIrC136IrP4Aun30bBm4jTGc40OW+R7WFU5IgbW0EtGT
- j5js5O65Bg4F/Dut19gw7TIEdin/dsoquqDy3u8108acjGMF7XChfgpCYI8GZm9Q7EuZ8Jj0S
- E6zE4mfgD0RjlTgBt1gGOxqDBJWY80FpbLCcORunBcftc7y3104M4U2QQsxZYJiAtwCI3sLU+
- dtN3n/miHytRNuyqpR/aoyNi/0Eq8nEJsnu9G8Pscdrrnp7LHgxn7d+pgFgg9fV7SDqPu6xt6
- 8Eo1nMqurpSFpu6z0k3PUj2h77Ol6UTrBWWFc8pPo+nFfJZLIF4EPjdYB4OkiNQUaVYEY0PNM
- FZoMZVh+PMocNqYnvr0NUNaFCF8n1LesIe3kHXyxnE/oEJjoOXGQc+tSVjDCH+sdzuxhwDgOI
- xWqFF0bhx7/AcgcJZev2gpu4s1qrR6ZHLAl59fZHSDBhzvIpqK3mCslcF1Too1BWx7CAKSDAK
- s8swH6QWop6DIQDDcxEEtVZ3ru+lz29Clvf/KX13jlFGMA02CcraLSfxY+Tq+lTTwbiq+W4ap
- /3hLNAq5Cywjfmj4qG5i98QitJQI8kBAwAqpjloJl0b2MOky4JTkcxMdE823QCUkA9/iV7S4b
- 6sc94rocoiWeBH20OXM+kpaR0VQQUELLOfxwUMThV+R7pVjMD+klOUVRf3hWya0ZL0sGtVqyf
- SoYYLE8YUgryu3eubEsB2oSVwgeUR51YfBmQqOS4Wu210S4rKgyLmZ75cWpddHdl0u8GBNtH7
- MuEjf3pTkERZGlyoUnmDeRmih76J6fuYSEELmlRLLO1bChlFb0caWrBGVNbi3pCU8fMjYg7rF
- FMOoqyaPJCUgbNYuGMawrp6JazYJCkKKC+zQDzTmXzrjG5JM3oOwFQ1jXju02C2ypdRqbC+Rd
- s+BMdR3HN8wlifhwWc8JjOfgfO42bHdw37VFCHMTkaKqJ/oSU+PpZTXey8j56WcxDdAEJ+8kc
- 2V881kfFmMpxQUHMIL9EFYsc/6WbfnrPtoLx9DN7dPgU61PvhyHV93/+fLywuZ5k0qHrnYbLA
- ZHEXqdVaXWdakJJuZlV31s8NM/234x2MyZFRfFSfVI0lM+lHot5ZB3gbS6qhE9VKJ0CJbcUX6
- 5u9L0RffmvS1Dr7RN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87tv15qj5u.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Fixes coccicheck warning:
-> ./drivers/net/ethernet/freescale/dpaa/dpaa_eth.c:2110:30-31:
-> WARNING comparing pointer to 0
+On Mon, Apr 27, 2020 at 01:09:49PM +0200, Thomas Gleixner wrote:
+> Ingo Molnar <mingo@kernel.org> writes:
+> > * Leon Romanovsky <leon@kernel.org> wrote:
+> > The fix definitely looks legit, lockdep is right that we shouldn't take
+> > the console_sem.lock even under trylock.
+> >
+> > It's only a printk_once(), yet I'm wondering why in the last ~8 years
+> > this never triggered. Nobody ever ran lockdep and debug console level
+> > enabled on such hardware, or did something else change?
+> >
+> > One possibility would be that apic_check_deadline_errata() marked almost
+> > all Intel systems as broken and the TSC-deadline hardware never actually
+> > got activated. In that case you have triggered rarely tested code and
+> > might see other weirdnesses. Just saying. :-)
+> >
+> > Or a bootup with "debug" specified is much more rare in production
+> > systems, hence the 8 years old bug.
+>
+> None of this makes any sense at all.
+>
+> The local APIC timer (in this case the TSC deadline timer) is set up
+> during early boot on the boot CPU (before SMP setup) with this call
+> chain:
+>
+> smp_prepare_cpus()
+>  native_smp_prepare_cpus()
+>    x86_init.timers.setup_percpu_clockev()
+>      setup_boot_APIC_clock()
+>        setup_APIC_timer()
+>          clockevents_config_and_register()
+>            tick_check_new_device()
+>              tick_setup_device()
+>                tick_setup_oneshot()
+>                  clockevents_switch_state()
+>                    lapic_timer_set_oneshot()
+>                      __setup_APIC_LVTT()
+>                        printk_once(...)
+>
+> Nothing holds hrtimer.base_lock in this call chain.
 
-Such information is actually provided by a known script for
-the semantic patch language.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/scr=
-ipts/coccinelle/null/badzero.cocci
+Can't printk hold that lock through console/netconsole?
 
+>
+> But the lockdep splat clearly says:
+>
+>  [  735.324357] stack backtrace:
+>  [  735.324360] CPU: 3 PID: 0 Comm: swapper/3 Not tainted 5.6.0-for-upstream-dbg-2020-04-03_10-44-43-70 #1
+>
+> ...
+>
+> So how can that be the first invocation of that printk_once()?
+>
+> While the patch looks innocent, it papers over the underlying problem
+> and wild theories are not really helping here.
+>
+> Here is a boot log excerpt with lockdep enabled and 'debug' on the
+> command line:
+>
+> [    0.000000] Linux version 5.7.0-rc3 ...
+> ...
+> [    3.992125] TSC deadline timer enabled
+> [    3.995820] smpboot: CPU0: Intel(R) ....
+> ...
+> [    4.050766] smp: Bringing up secondary CPUs ...
+>
+> No splat nothing. The real question is WHY this triggers on Leons
+> machine 735 seconds after boot and on CPU3.
 
-> Avoid pointer type value compared to 0.
+I want to believe that the timestamp are not correct, have no clue if it
+is even possible.
 
-But I suggest to reconsider corresponding software development consequence=
-s
-also around mentioned implementation details.
+But let's talk about facts:
+1. It is started after -rc1 (we don't test linux-next).
+2. This workaround helped to eliminate the splat.
+3. My machine experiences the extra splat all the time
+https://lore.kernel.org/lkml/20200414070502.GR334007@unreal/
 
+Unfortunately, I can't bisect because the failure mentioned in the
+commit message because it  doesn't happen on one machine all the time,
+but when we are talking about night run regression, at least one of the
+runners hits such lockdep prints.
 
-=E2=80=A6
-> +++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-> @@ -2107,7 +2107,7 @@ static int dpaa_a050385_wa(struct net_device *net_=
-dev, struct sk_buff **s)
-=E2=80=A6
->  	start =3D PTR_ALIGN(new_skb->data, DPAA_A050385_ALIGN);
-> -	if (start - new_skb->data !=3D 0)
-> +	if (start - new_skb->data)
->  		skb_reserve(new_skb, start - new_skb->data);
-=E2=80=A6
+I can add to our regression any debug patch and get results day after,
+if it helps.
 
+Thanks
 
-I interpret the source code in the way that a subtraction is performed
-with two pointers. I would expect that such a pointer difference
-has got an integral data type.
-Will this view trigger any further software evolution?
-
-Regards,
-Markus
+>
+> Thanks,
+>
+>         tglx
