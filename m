@@ -2,115 +2,110 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D3FC5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73506C5519A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26F50206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:59:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R/yZNbJ/"
+	by mail.kernel.org (Postfix) with ESMTP id 535932075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:59:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587970766;
+	bh=ov6M4aYlkDxT50jIQMegvBYJbk1S2tGCE0FmhuKWQH0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Di20uWwhCJkVUWb7jrPMs+YhIVp22pJDcjISTgbLxuaTMpozU0b7SYuzzqA0JcQbH
+	 lCeB2tIkRyphrgLdoOuTOM+dEBRxT6fX88swrsKcY7Ecj2UT0/CNMfXCzQ2Fx4+W5n
+	 ca4i6v5O1Uv4R2bGtHHcJ60p4NSSfMki5q+n8jow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgD0G7P (ORCPT
+        id S1726721AbgD0G7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 02:59:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48494 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726605AbgD0G7O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 02:59:14 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEBCBC061A41
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 23:59:14 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id g35so4587094uad.0
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 23:59:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p75ZI/P1vAKdvQGL/dkDYNcJX48p538uaKviA/7sw78=;
-        b=R/yZNbJ/FXJTeWHoBM/VGrSujsjvdbo2k6YfYwGCyStA4w4Vu+3r6pSliy3CmjHCY9
-         SfTABC9U26Iuir75W2uhDMbjYrKuCe5gUJz+hjZT/9SPfNH7Wq+s6evzjQF/O4AlxycF
-         7sWy9vdMYVW9+yX3/Mj1hq8Cq3GpFlBCf+O/f2/OrfpFFZM2dIPGtKvQdDFpzz+h3cRb
-         YxUtXuByeXDj0ep4IIuVfFOTzrd8fJuc5IhLadjFSz8WuRsGOpPAvfFz5aPQ12iGPdpR
-         +6r3h9+BxdYKM75iYz3wwyH0hWBh//y4y7f8slVNxEbN4lNLXnntUxChGWyVjmNjp1tw
-         oeLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p75ZI/P1vAKdvQGL/dkDYNcJX48p538uaKviA/7sw78=;
-        b=IEK7nANllqvXCg5QbqnkL2koKAtjxEke6/uGzW9Jt2tBDm/V4sP08BOsCluMBnI9cg
-         w4c6MDowpjYhS9sOfLbgY+p8BJDBQwLnSfoXuv8joe0RejNdNgeD//tOZgqq8V1Ll9jq
-         RwPaRMafkFXAuX7cX1AxhMzsn+SruIucLcanuhEvmnebvqHJk/J/5Cnc9nja1S44ezti
-         0DjV7aglIkzerFUhfCqQY7VJw1+yCsdGLZNVLMSqtjYME5MBo3jpviHee3N1rV2fEQFu
-         D3lZ52I0bM7+f4/gLk7Wy/QtaALR5RZ/nRMpsJ7GChtVbTRF0sBRqcp/Udq126cM8cIP
-         Cgug==
-X-Gm-Message-State: AGi0PubDD3kkfc4nqhPHkIM+nHJcUy5QneRp3aYBKDOq9DNBYWN9TBsK
-        tcdPn25mneTsPKIRiAMXUdj4qbbfpJbZIaFwyQKNqw==
-X-Google-Smtp-Source: APiQypLgdu94xf46n59WAXNWbtQ/etKr47I9IXWtRxhdXwH7gOWdeXqlB5oxfaZVEhk0xe+ABAYpaedqjH2ouRHKL5s=
-X-Received: by 2002:a67:11c4:: with SMTP id 187mr15068680vsr.34.1587970753925;
- Sun, 26 Apr 2020 23:59:13 -0700 (PDT)
+        Mon, 27 Apr 2020 02:59:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53094 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726692AbgD0G7Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 02:59:25 -0400
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BFB8208FE;
+        Mon, 27 Apr 2020 06:59:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587970764;
+        bh=ov6M4aYlkDxT50jIQMegvBYJbk1S2tGCE0FmhuKWQH0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ep8onAZnXVdYGoJ87QmVsTIcOzFERI9ZdAde4GUoc7yFSD0wM7nX6q5mt3Qsyi17L
+         wqSJWEhr+U1gX0Zp1GrgIGBEBOoT5GH17TMSca7cWUFISwXIUeRnmFnoIGOyFpp2RE
+         fExOUm9+ncAhMxwXwqVkfMesr/3uuEH85Cf+yUjg=
+Received: by mail-io1-f50.google.com with SMTP id f3so17711454ioj.1;
+        Sun, 26 Apr 2020 23:59:24 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaYlEUKekDEO+SIKkrKUZsEIIvapdxh1wIQTp92b0hfvCbVmGBb
+        MZsWw7XoNdLfIZwkk/3RPRV/7LkaBApVyniCD8E=
+X-Google-Smtp-Source: APiQypLzw5Wlo2ON/5Pd90vRPCEMvEtwyzNHaL6myGvq3E+y/zS7dhbgAMW6zlSBYKCOh9aP0ySlRWzkTND4iQm/bQ0=
+X-Received: by 2002:a5d:8b57:: with SMTP id c23mr19677979iot.161.1587970764040;
+ Sun, 26 Apr 2020 23:59:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200328003249.1248978-1-martin.blumenstingl@googlemail.com> <CAFBinCDCv-zNf1FX+8FHMxcNdJ_69yog+O_=QPz3Fzryg3ynAw@mail.gmail.com>
-In-Reply-To: <CAFBinCDCv-zNf1FX+8FHMxcNdJ_69yog+O_=QPz3Fzryg3ynAw@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 27 Apr 2020 08:58:37 +0200
-Message-ID: <CAPDyKFqNgS4JGRqMDeMgguAHd11W_OpzxyKDjaWoTUXUdc6fwg@mail.gmail.com>
-Subject: Re: [PATCH v5 0/3] Amlogic 32-bit Meson SoC SDHC MMC controller driver
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+References: <1587966099-28139-1-git-send-email-hadar.gat@arm.com> <1587966099-28139-3-git-send-email-hadar.gat@arm.com>
+In-Reply-To: <1587966099-28139-3-git-send-email-hadar.gat@arm.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Mon, 27 Apr 2020 08:59:13 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGwVZiGbsT2NwWTyka0FVZnQcmfMSeoBKD03PdC=fRZeA@mail.gmail.com>
+Message-ID: <CAMj1kXGwVZiGbsT2NwWTyka0FVZnQcmfMSeoBKD03PdC=fRZeA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] hwrng: cctrng - change default to n
+To:     Hadar Gat <hadar.gat@arm.com>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        lnykww@gmail.com, yinxin_1989@aliyun.com,
-        Jerome Brunet <jbrunet@baylibre.com>
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <ofir.drang@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 25 Apr 2020 at 22:27, Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
+On Mon, 27 Apr 2020 at 07:42, Hadar Gat <hadar.gat@arm.com> wrote:
 >
-> Hi Ulf,
+> For many users, the Arm CryptoCell HW is not available, so the
+> default for HW_RANDOM_CCTRNG changed to n.
 >
-> On Sat, Mar 28, 2020 at 1:33 AM Martin Blumenstingl
-> <martin.blumenstingl@googlemail.com> wrote:
-> [...]
-> > Martin Blumenstingl (3):
-> >   dt-bindings: mmc: Document the Amlogic Meson SDHC MMC host controller
-> >   clk: meson: add a driver for the Meson8/8b/8m2 SDHC clock controller
-> >   mmc: host: meson-mx-sdhc: new driver for the Amlogic Meson SDHC host
-> I have Rob's reviewed-by for the dt-bindings patch and three
-> tested-by's for the MMC driver in patch #3 (which means that patch #2
-> was implicitly tested as well)
-> I tried to answer all your previous questions where possible, but for
-> some of your questions I simply don't have an answer.
+> Signed-off-by: Hadar Gat <hadar.gat@arm.com>
+> ---
+>  drivers/char/hw_random/Kconfig | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> is there anything from your side which is holding this driver back
-> from being merged?
-
-Apologize for the delay. I will have a look asap.
-
+> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
+> index df2d001..0938d3d 100644
+> --- a/drivers/char/hw_random/Kconfig
+> +++ b/drivers/char/hw_random/Kconfig
+> @@ -476,8 +476,8 @@ config HW_RANDOM_KEYSTONE
 >
-> +Cc Jerome, because he is the maintainer of the Amlogic clock
-> controller drivers - where this series adds another one, so we need to
-> coordinate where patches go.
+>  config HW_RANDOM_CCTRNG
+>         tristate "Arm CryptoCell True Random Number Generator support"
+> -       depends on HAS_IOMEM & OF
+> -       default HW_RANDOM
+> +       depends on HW_RANDOM & HAS_IOMEM & OF
 
-It seems like you may need to resend the series so the clock
-maintainers (Stephen and Jerome) can get a look as well.
+The whole block is guarded by if HW_RANDOM, so I don't think you need
+the dependency here.
 
-Perhaps it's better if the series is queued together - and can help to
-do that, but then I need acks from Stephen/Jerome for the clock patch.
+> +       default n
 
-Kind regards
-Uffe
+'default n' is the default so you can just remove the line
+
+>         help
+>           This driver provides support for the True Random Number
+>           Generator available in Arm TrustZone CryptoCell.
+> --
+> 2.7.4
+>
