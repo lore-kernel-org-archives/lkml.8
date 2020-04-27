@@ -2,156 +2,184 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22935C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1072FC4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:31:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB0C3216FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:30:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5E0C214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:31:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G8GetS9x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbgD0SaP (ORCPT
+        id S1726333AbgD0SbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 14:30:15 -0400
-Received: from mga03.intel.com ([134.134.136.65]:34512 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726189AbgD0SaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 14:30:15 -0400
-IronPort-SDR: FH5ieVHTDZl2NcHKKYf3Qs7DeErajLnY5EAM0OEBjnqhXdmMpwSrJk3Wab0NNYh1W3Q0BZorGQ
- 6oo8xKHAu1mw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 11:30:14 -0700
-IronPort-SDR: dzNpUWnLy+BqQgkoHYn8J7WnmojkK9OYjkNk7tmyxglsZJEl8zaAD+fCzVBM4QOOGsJNp/sxSe
- LJqMy4MasX9w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,325,1583222400"; 
-   d="scan'208";a="281861522"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga004.fm.intel.com with ESMTP; 27 Apr 2020 11:30:13 -0700
-Date:   Mon, 27 Apr 2020 11:30:13 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Haiwei Li <lihaiwei@tencent.com>
-Subject: Re: [PATCH v3 2/5] KVM: X86: Introduce need_cancel_enter_guest helper
-Message-ID: <20200427183013.GN14870@linux.intel.com>
-References: <1587709364-19090-1-git-send-email-wanpengli@tencent.com>
- <1587709364-19090-3-git-send-email-wanpengli@tencent.com>
+        Mon, 27 Apr 2020 14:31:22 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35209 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726189AbgD0SbW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 14:31:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588012280;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=67Uxs+jqDkywiXxN1nmtevKGJBAFvPYU5lLkyapeJkg=;
+        b=G8GetS9xMrD8x/NSCT/IzCmV7H3pK5g69GONJw85xqTN2wJJMZBEE0tnfdiS1dVnoXriyL
+        TNf46A2TO4IYhCRkZfG8BG4mOLhmPlJg6bjmQPtabo4Hu7zJdzEI+uBLU+t28PD8DH/92l
+        cBAxmYPfyThwgoNCOeG6afFUmhpRB6s=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-138-84fgvbPwMdurBeB1RToJIw-1; Mon, 27 Apr 2020 14:31:18 -0400
+X-MC-Unique: 84fgvbPwMdurBeB1RToJIw-1
+Received: by mail-wr1-f69.google.com with SMTP id q10so10970680wrv.10
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 11:31:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=67Uxs+jqDkywiXxN1nmtevKGJBAFvPYU5lLkyapeJkg=;
+        b=YeJjZ5TK5XIS03O16XYpJ2GjOiCyTSp15nfQOcRUWXRJkyYAaTdrd57n/smGDJ3O+G
+         tQa4mJwZdE6VvAmDHpU+RsAn+Xvies7a6986CVXAAZH8hwd5gokTaDYyb9yNuAF3LPi3
+         N/XVE30WszGoVqzFf5txHDYWDsl3r+/IokkKdPTsXhCb12Eceg8GgmPaIddsvEWU9vGb
+         SphaJtQinzBZhPZ0FsLzw5oh9fWeCmM5apewzlLtvAJ6WK2BoRJJKjzCYEM5Oc8QB8uR
+         lQyOiec1ojmNprrPWK++MeSjsx9B+cFIzBZdzoNQmZWCNhGd9kgcRJjQ/p8UsrbjuM0a
+         mW4g==
+X-Gm-Message-State: AGi0PuZoYKG4zi9I4dFBL9XEa63+CkSHq5vnEl4f1HAuM1G69fwz0vOH
+        tzGIllA3CKX12uqhEuTmdf5cRII6fVZI94y3javyv7nlx3HxolD50IG6VW+17s0dZNS36WuySor
+        QgF1zsZDcqE9W+TmS6mdh4Qze
+X-Received: by 2002:a05:600c:1:: with SMTP id g1mr11536wmc.142.1588012277608;
+        Mon, 27 Apr 2020 11:31:17 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLDZ6UDRoixaGgcsBYLrYO4VdkGWby2stovmM2K2nsk1XEjrdC+pETwdndY4ihaTUL4Vn38vg==
+X-Received: by 2002:a05:600c:1:: with SMTP id g1mr11509wmc.142.1588012277341;
+        Mon, 27 Apr 2020 11:31:17 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id 5sm16234565wmg.34.2020.04.27.11.31.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 11:31:16 -0700 (PDT)
+From:   Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v2 3/8] iio: light: cm32181: Handle ACPI instantiating a
+ cm32181 client on the SMBus ARA
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>
+Cc:     linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <20200427155037.218390-1-hdegoede@redhat.com>
+ <20200427155037.218390-3-hdegoede@redhat.com>
+Message-ID: <2dae8c05-c84c-3caf-f84a-34615183ab01@redhat.com>
+Date:   Mon, 27 Apr 2020 20:31:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1587709364-19090-3-git-send-email-wanpengli@tencent.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200427155037.218390-3-hdegoede@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 02:22:41PM +0800, Wanpeng Li wrote:
-> From: Wanpeng Li <wanpengli@tencent.com>
+Hi All,
+
+On 4/27/20 5:50 PM, Hans de Goede wrote:
+> Some ACPI systems list 2 I2C resources for the CM3218 sensor. On these
+> systems the first I2cSerialBus ACPI-resource points to the SMBus Alert
+> Response Address (ARA, 0x0c) and the second I2cSerialBus ACPI-resource
+> points to the actual CM3218 sensor address.
 > 
-> Introduce need_cancel_enter_guest() helper, we need to check some 
-> conditions before doing CONT_RUN, in addition, it can also catch 
-> the case vmexit occurred while another event was being delivered 
-> to guest software since vmx_complete_interrupts() adds the request 
-> bit.
+>  From the ACPI/x86 side devices with more then 1 I2cSerialBus ACPI-resource
+> are handled by the drivers/platform/x86/i2c-multi-instantiate.c code.
+> This code will instantiate "cm32181" i2c_client-s for both resources.
 > 
-> Tested-by: Haiwei Li <lihaiwei@tencent.com>
-> Cc: Haiwei Li <lihaiwei@tencent.com>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> Add a check to cm32181_probe() for the client's address being the ARA
+> address, and in that case fail the probe with -ENODEV.
+> 
+> On these ACPI systems the sensor may have a SMBus Alert asserted at boot,
+> if this is the case the sensor will not respond to any i2c_transfers on
+> its actual address until we read from the ARA register to clear the Alert.
+> 
+> Therefor we must (try to) read a byte from the client with the ARA
+> register, before returning -ENODEV, so that we clear the Alert and when
+> we get called again for the client instantiated for the second
+> I2cSerialBus ACPI-resource the sensor will respond to our i2c-transfers.
+> 
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+
+So this assumes that i2c-multi-inst will be used for ACPI
+CPLM3218 device nodes and we get 2 separate i2c_clients for
+the ARA, resp. the real address. This has been discussed on the
+linux-acpi list and the conclusion is that that instanting 2
+full i2c_clients is not the right solution.
+
+Instead the cm32181 driver should create a "dummy" client
+for the second address (which is part of the same chip)
+itself, using an acpi version of i2c_new_dummy_device() or
+i2c_new_ancillary_device()
+
+I will prepare a v3
+of this series with a better solution.
+
+Regards,
+
+Hans
+
+
+
 > ---
->  arch/x86/kvm/vmx/vmx.c | 12 +++++++-----
->  arch/x86/kvm/x86.c     | 10 ++++++++--
->  arch/x86/kvm/x86.h     |  1 +
->  3 files changed, 16 insertions(+), 7 deletions(-)
+> Changes in v2
+> - s/i2c_client-s/I2C clients/ in added comment
+> ---
+>   drivers/iio/light/cm32181.c | 16 ++++++++++++++++
+>   1 file changed, 16 insertions(+)
 > 
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index f1f6638..5c21027 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -6577,7 +6577,7 @@ bool __vmx_vcpu_run(struct vcpu_vmx *vmx, unsigned long *regs, bool launched);
->  
->  static enum exit_fastpath_completion vmx_vcpu_run(struct kvm_vcpu *vcpu)
->  {
-> -	enum exit_fastpath_completion exit_fastpath;
-> +	enum exit_fastpath_completion exit_fastpath = EXIT_FASTPATH_NONE;
->  	struct vcpu_vmx *vmx = to_vmx(vcpu);
->  	unsigned long cr3, cr4;
->  
-> @@ -6754,10 +6754,12 @@ static enum exit_fastpath_completion vmx_vcpu_run(struct kvm_vcpu *vcpu)
->  	vmx_recover_nmi_blocking(vmx);
->  	vmx_complete_interrupts(vmx);
->  
-> -	exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
-> -	/* static call is better with retpolines */
-> -	if (exit_fastpath == EXIT_FASTPATH_CONT_RUN)
-> -		goto cont_run;
-> +	if (!kvm_need_cancel_enter_guest(vcpu)) {
-> +		exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
-> +		/* static call is better with retpolines */
-> +		if (exit_fastpath == EXIT_FASTPATH_CONT_RUN)
-> +			goto cont_run;
-> +	}
->  
->  	return exit_fastpath;
->  }
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 59958ce..4561104 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -1581,6 +1581,13 @@ int kvm_emulate_wrmsr(struct kvm_vcpu *vcpu)
->  }
->  EXPORT_SYMBOL_GPL(kvm_emulate_wrmsr);
->  
-> +bool kvm_need_cancel_enter_guest(struct kvm_vcpu *vcpu)
-
-What about kvm_vcpu_<???>_pending()?  Not sure what a good ??? would be.
-The "cancel_enter_guest" wording is a bit confusing when this is called
-from the VM-Exit path.
-
-> +{
-> +	return (vcpu->mode == EXITING_GUEST_MODE || kvm_request_pending(vcpu)
-> +	    || need_resched() || signal_pending(current));
-
-Parantheses around the whole statement are unnecessary.  Personal preference
-is to put the || before the newline.
-
-> +}
-> +EXPORT_SYMBOL_GPL(kvm_need_cancel_enter_guest);
+> diff --git a/drivers/iio/light/cm32181.c b/drivers/iio/light/cm32181.c
+> index fd371b36c7b3..4c26a4a8a070 100644
+> --- a/drivers/iio/light/cm32181.c
+> +++ b/drivers/iio/light/cm32181.c
+> @@ -51,6 +51,8 @@
+>   #define CM32181_CALIBSCALE_RESOLUTION	1000
+>   #define MLUX_PER_LUX			1000
+>   
+> +#define SMBUS_ALERT_RESPONSE_ADDRESS	0x0c
 > +
->  /*
->   * The fast path for frequent and performance sensitive wrmsr emulation,
->   * i.e. the sending of IPI, sending IPI early in the VM-Exit flow reduces
-> @@ -8373,8 +8380,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->  	if (kvm_lapic_enabled(vcpu) && vcpu->arch.apicv_active)
->  		kvm_x86_ops.sync_pir_to_irr(vcpu);
->  
-> -	if (vcpu->mode == EXITING_GUEST_MODE || kvm_request_pending(vcpu)
-> -	    || need_resched() || signal_pending(current)) {
-> +	if (kvm_need_cancel_enter_guest(vcpu)) {
->  		vcpu->mode = OUTSIDE_GUEST_MODE;
->  		smp_wmb();
->  		local_irq_enable();
-> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-> index 7b5ed8e..1906e7e 100644
-> --- a/arch/x86/kvm/x86.h
-> +++ b/arch/x86/kvm/x86.h
-> @@ -364,5 +364,6 @@ static inline bool kvm_dr7_valid(u64 data)
->  void kvm_load_guest_xsave_state(struct kvm_vcpu *vcpu);
->  void kvm_load_host_xsave_state(struct kvm_vcpu *vcpu);
->  u64 kvm_spec_ctrl_valid_bits(struct kvm_vcpu *vcpu);
-> +bool kvm_need_cancel_enter_guest(struct kvm_vcpu *vcpu);
->  
->  #endif
-> -- 
-> 2.7.4
+>   static const u8 cm32181_reg[CM32181_CONF_REG_NUM] = {
+>   	CM32181_REG_ADDR_CMD,
+>   };
+> @@ -333,6 +335,20 @@ static int cm32181_probe(struct i2c_client *client,
+>   	struct iio_dev *indio_dev;
+>   	int ret;
+>   
+> +	/*
+> +	 * Some ACPI systems list 2 I2C resources for the CM3218 sensor, the
+> +	 * SMBus Alert Response Address (ARA, 0x0c) and the actual I2C address.
+> +	 * drivers/platform/x86/i2c-multi-instantiate.c instantiates "cm32181"
+> +	 * I2C clients for both resources, ignore the ARA client.
+> +	 * On these systems the sensor may have a SMBus Alert asserted at boot,
+> +	 * in that case the ARA must be read to clear the Alert otherwise the
+> +	 * sensor will not respond on its actual I2C address.
+> +	 */
+> +	if (client->addr == SMBUS_ALERT_RESPONSE_ADDRESS) {
+> +		i2c_smbus_read_byte(client);
+> +		return -ENODEV;
+> +	}
+> +
+>   	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*cm32181));
+>   	if (!indio_dev) {
+>   		dev_err(&client->dev, "devm_iio_device_alloc failed\n");
 > 
+
