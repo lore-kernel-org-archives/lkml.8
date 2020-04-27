@@ -2,224 +2,114 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59566C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C94CAC4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2850420B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:55:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MmKCFwdr"
+	by mail.kernel.org (Postfix) with ESMTP id A9CDA20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:56:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbgD0Rzf (ORCPT
+        id S1726345AbgD0R4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 13:55:35 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:56624 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726162AbgD0Rzd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 13:55:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588010131;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=etwvjvChJYw2xD2Q59uDFZcN9+Aabm9ep74Qu3G2FyU=;
-        b=MmKCFwdrwhpnMuJQPI9XheTtU64jMw8DJbYr02fAIcBn2JUQUjLn1YN4nQ5DBfVQBdinah
-        Rk4A6pbEnFu9hOUOUK8IcOVR5nEiqKuEV+AkkSVAtdX3YKmnSyx+HWry/laBWLQ5/WoCds
-        Ic4vVUuFUDYR+EnACVCL+ep0P7Kt3MQ=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-25-q879ZZqyNPy70w89YB7RNQ-1; Mon, 27 Apr 2020 13:55:30 -0400
-X-MC-Unique: q879ZZqyNPy70w89YB7RNQ-1
-Received: by mail-wm1-f71.google.com with SMTP id u11so172477wmc.7
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 10:55:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=etwvjvChJYw2xD2Q59uDFZcN9+Aabm9ep74Qu3G2FyU=;
-        b=Vt5LRnE5dIcmsge5HFx0K1J5BlgkKO1IR+GO8hNhiozYzi7qbJm1iMvnCDDHPoSrEo
-         +tnlFJgNTlmKEd2XKMFIUF0Wxd9FgwBQvMHXziiRx/fg+pFhVrfghidb4LnuvAmlI5AZ
-         nJ3q60R5z38JuhOjq4lxlnHM0mJtZJoXt3YeO+K0hTRAbZZiiV0up4/fQ2lIJrNeW8xf
-         QTJVcY1Lk9qNs4E7X5Zvo1fJgaBjswT6Hgy4xQG3Y16Ekov3OBhjFmGkEbrBQG2xeXGw
-         LSa+txJVNxZzeNFNXerTj0MeNCenKWL2s+9knGdn57VWHxG2nEwgT1d9lQ5UHs+/P1Lh
-         Afcg==
-X-Gm-Message-State: AGi0PuY9y+R0TRbEHp7BkobHDV6dhIpGKOkSeGn1jAhJfCJxT3hWQRsa
-        nbhim1/zXRZyUJvM3P/iquEej1r7vp35Wxu3HgrOOzpAkq2uQvFY84rkqgrPea5JyFIkJ8tk336
-        OFIO8ff9L8jnvOTSIS3MPs4Mb
-X-Received: by 2002:a05:600c:2:: with SMTP id g2mr687287wmc.85.1588010128568;
-        Mon, 27 Apr 2020 10:55:28 -0700 (PDT)
-X-Google-Smtp-Source: APiQypI0OH8BXfOTJ2wc6HvDgQlRE9KFIPKjY7PC2sok3Pju9+X4KF44Ou9hGNexFtkytPBuJbtyxQ==
-X-Received: by 2002:a05:600c:2:: with SMTP id g2mr687258wmc.85.1588010128265;
-        Mon, 27 Apr 2020 10:55:28 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id u188sm16303627wmg.37.2020.04.27.10.55.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Apr 2020 10:55:27 -0700 (PDT)
-Subject: Re: [PATCH 1/2] platform/x86: i2c-multi-instantiate: Add flag for
- passing fwnode
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>
-References: <20200426104713.216896-1-hdegoede@redhat.com>
- <20200426104713.216896-2-hdegoede@redhat.com>
- <CAHp75VdOd6C36oR7HAnqrKiinVBr4YcqqJ=dv3NpR3=Xp0QQ-Q@mail.gmail.com>
- <b5bdffb4-0af2-abb7-21f7-2f5da56d5dc6@redhat.com>
- <CAHp75VegakBqAzxn1e+MzF3EgB6fNya3L0eZHMh11yct6HHNKw@mail.gmail.com>
- <66619a61-c398-5a8a-4ee0-13dbe5d2c559@redhat.com>
- <CAHp75VcBf1OYQ=W+k1ygHnXkNbA+NuZoiSOQOq6g7SJNc2iFiA@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <c5425938-cf0d-3bc5-d8e8-e8c6e8da8d24@redhat.com>
-Date:   Mon, 27 Apr 2020 19:55:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 27 Apr 2020 13:56:48 -0400
+Received: from mga04.intel.com ([192.55.52.120]:18653 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726229AbgD0R4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 13:56:48 -0400
+IronPort-SDR: 3dXglAy1oN7zYNVmuX34tO7qIovq1LqlmDunV/9d5KkpqZOqrVn2jIGpULvbkzQeJn+W0+gGMU
+ mwnKCMi2wKbw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 10:56:48 -0700
+IronPort-SDR: VMqz5JP/v6+Xipo7yk79MoKh7DT+hIdwj2pgAYG7iyo+P5HvnpbpRlhEEdEg6YoQGkuTrlnCvh
+ VX6WGnLDvddw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,325,1583222400"; 
+   d="scan'208";a="248940043"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga008.fm.intel.com with ESMTP; 27 Apr 2020 10:56:47 -0700
+Date:   Mon, 27 Apr 2020 10:56:47 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, jmattson@google.com,
+        yu.c.zhang@linux.intel.com
+Subject: Re: [PATCH v11 3/9] KVM: VMX: Set host/guest CET states for
+ vmexit/vmentry
+Message-ID: <20200427175647.GK14870@linux.intel.com>
+References: <20200326081847.5870-1-weijiang.yang@intel.com>
+ <20200326081847.5870-4-weijiang.yang@intel.com>
+ <20200423171741.GH17824@linux.intel.com>
+ <20200424143510.GH24039@local-michael-cet-test>
+ <20200424144941.GC30013@linux.intel.com>
+ <20200425092021.GB26221@local-michael-cet-test>
+ <20200427170426.GH14870@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VcBf1OYQ=W+k1ygHnXkNbA+NuZoiSOQOq6g7SJNc2iFiA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427170426.GH14870@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 4/27/20 7:33 PM, Andy Shevchenko wrote:
-> On Mon, Apr 27, 2020 at 6:06 PM Hans de Goede <hdegoede@redhat.com> wrote:
->> On 4/27/20 3:18 PM, Andy Shevchenko wrote:
->>> On Mon, Apr 27, 2020 at 3:51 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>>> On 4/26/20 7:59 PM, Andy Shevchenko wrote:
->>>>> On Sun, Apr 26, 2020 at 1:47 PM Hans de Goede <hdegoede@redhat.com> wrote:
+On Mon, Apr 27, 2020 at 10:04:26AM -0700, Sean Christopherson wrote:
+> On Sat, Apr 25, 2020 at 05:20:21PM +0800, Yang Weijiang wrote:
+> > On Fri, Apr 24, 2020 at 07:49:41AM -0700, Sean Christopherson wrote:
+> > > On Fri, Apr 24, 2020 at 10:35:10PM +0800, Yang Weijiang wrote:
+> > > > On Thu, Apr 23, 2020 at 10:17:41AM -0700, Sean Christopherson wrote:
+> > > > > On Thu, Mar 26, 2020 at 04:18:40PM +0800, Yang Weijiang wrote:
+> > > > > > @@ -7140,8 +7175,23 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
+> > > > > >  	}
+> > > > > >  
+> > > > > >  	if (guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
+> > > > > > -	    guest_cpuid_has(vcpu, X86_FEATURE_IBT))
+> > > > > > +	    guest_cpuid_has(vcpu, X86_FEATURE_IBT)) {
+> > > > > >  		vmx_update_intercept_for_cet_msr(vcpu);
+> > > > > > +
+> > > > > > +		if (cpu_has_cet_guest_load_ctrl() && is_cet_supported(vcpu))
+> > > > > > +			vm_entry_controls_setbit(to_vmx(vcpu),
+> > > > > > +						 VM_ENTRY_LOAD_GUEST_CET_STATE);
+> > > > > > +		else
+> > > > > > +			vm_entry_controls_clearbit(to_vmx(vcpu),
+> > > > > > +						   VM_ENTRY_LOAD_GUEST_CET_STATE);
+> > > > > > +
+> > > > > > +		if (cpu_has_cet_host_load_ctrl() && is_cet_supported(vcpu))
+> > > > > > +			vm_exit_controls_setbit(to_vmx(vcpu),
+> > > > > > +						VM_EXIT_LOAD_HOST_CET_STATE);
+> > > > > > +		else
+> > > > > > +			vm_exit_controls_clearbit(to_vmx(vcpu),
+> > > > > > +						  VM_EXIT_LOAD_HOST_CET_STATE);
+> > > > > 
+> > > > > As above, I think this can be done in vmx_set_cr4().
+> > > > >
+> > > > Hmm, it's in vmx_set_cr4() in early versions, OK, will move them back.
+> > > 
+> > > Did I advise you to move them out of vmx_set_cr4()?  It's entirely possible
+> > > I forgot some detail since the last time I reviewed this series.
+> > Things are always changing, I'm willing to change any part of the patch
+> > before it's landed :-).
 > 
->>>>>> In some cases the driver for the i2c_client-s which i2c-multi-instantiate
->>>>>> instantiates may need access some fields / methods from to the ACPI fwnode
->>>>>> for which i2c_clients are being instantiated.
->>>>>>
->>>>>> An example of this are CPLM3218 ACPI device-s. These contain CPM0 and
->>>>>> CPM1 packages with various information (e.g. register init values) which
->>>>>> the driver needs.
->>>>>>
->>>>>> Passing the fwnode through the i2c_board_info struct also gives the
->>>>>> i2c-core access to it, and if we do not pass an IRQ then the i2c-core
->>>>>> will use the fwnode to get an IRQ, see i2c_acpi_get_irq().
->>>>>
->>>>> I'm wondering, can we rather do it in the same way like we do for
->>>>> GPIO/APIC case here.
->>>>> Introduce IRQ_RESOURCE_SHARED (or so) and
->>>>>
->>>>> case _SHARED:
->>>>>     irq = i2c_acpi_get_irq();
->>>>> ...
->>>>>
->>>>> ?
->>>>
->>>> I think you are miss-understanding the problem. The problem is not that
->>>> we want to share the IRQ, the problem is that we want to pass the single
->>>> IRQ in the resources to only 1 of the instantiated I2C-clients. But if we
->>>> do not pass an IRQ (we leave it at 0) and we do pass the fwnode then
->>>> i2c-core-base.c will see that there is an ACPI-node attached to the
->>>> device and will call i2c_acpi_get_irq().
->>>
->>> Do we know ahead which device should take IRQ resource and which should not?
->>> Can we use current _NONE flag for them?
->>
->> The problem is not internal to i2c-multi-instantiate.c, the problem
->> (once we pass a fwnode) is the API between i2c-multi-instantiate.c and
->> the i2c-core. For the IRQ_RESOURCE_NONE case i2c-multi-instantiate.c
->> sets board_info.irq to 0, which is the correct way to specify that
->> we do not have an IRQ, but if don't pass an IRQ then the i2c-core
->> will try to find one itself.  And once we pass the fwnode, then
->> the "try to find one itself" code will call i2c_acpi_get_irq()
->> and find the same IRQ for clients we instantiate, leading to
->> the earlier mentioned IRQ conflict.
-> 
-> I'm missing something here. Why we need to pass an fwnode in the first place?
-> Seems you would like to access to methods from the driver.
+> I'm worried that there was a reason for requesting the logic to be moved
+> out vmx_set_cr4() that I've since forgotten.  I'll see if I can dredge up
+> the old mail.
 
-Right, the cm32181 code needs access to the CPM0 and CPM1 ACPI
-objects, which requires access to the fwnode.
+Aha.  v1-v7 had this in cr4.  In v7, you stated that you would move the
+toggling to VM-Enter, and in v8 you did just that[2].  In v9 I questioned
+why the bits were being toggled in vmx_vcpu_run() and advised moving the
+code to vmx_cpuid_update()[3], obviously forgetting that earlier versions
+did the toggling in vmx_set_cr4().
 
-> But if you simple enumerate the driver in ACPI multi-instantiate won't
-> be needed. >
-> As far as I understand, the actual driver consumes *both* I²C
-> resources. It's not a multi-instantiate in this case.
+AFAICT, I was only reacting to the immediate patch when I advised moving
+the code to vmx_cpuid_update(), i.e. the recommendation to move the code
+to vmx_set_cr4() doesn't contradict any previous feedback and thus doesn't
+reintroduce a known bug.
 
-On systems where there are 2 resources, the driver only attaches
-to the second resouce. It does detect when it gets called for
-the first resource (it detects the ARA address) and then returns
--ENODEV.
-
-Another approach might be for the driver to call i2c_acpi_new_device
-itself when it detects the ARA address, but that is quite ugly, then
-we get:
-
--ACPI subsys instantiates i2c-client
-  -cm32181_probe
-   -cm32181_probe instantiates i2c-client for second resource
-    -cm32181 probe (for second resource)
-    -cm32181 probe returns 0
-   -cm32181 probe returns -ENODEV
-
-So the end result is the same (2 clients instantiated, one
-bound to the cm32181 driver). But the nested probe calls to me
-look quite ugly and since this solution actually still does
-multi-instantiation using i2c-multi-inst seems like the more
-clean solution to me.
-
-Note that we need to likely solve the fwnode passing problem
-sooner or later anyways. One of these days a driver for an
-i2c-client instantiated by the i2c-multi-inst code is going
-to need access to some methods or objects from the ACPI
-device.
-
-Since you do not like the PASS_FWNODE flag, one solution
-would be this change:
-
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index a66912782064..365864e8bfd5 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -341,12 +341,12 @@ static int i2c_device_probe(struct device *dev)
-  		if (irq == -EPROBE_DEFER)
-  			return irq;
-
--		if (irq < 0)
--			irq = 0;
--
-  		client->irq = irq;
-  	}
-
-+	if (client->irq < 0)
-+		client->irq = 0;
-+
-  	/*
-  	 * An I2C ID table is not mandatory, if and only if, a suitable OF
-  	 * or ACPI ID table is supplied for the probing device.
-
-
-This allows us to set board_info.irq to -ENOENT in the i2c-multi-inst
-code, causing the core to skip trying to get the irq from the fwnode
-itself, while still making drivers see 0 as irq value (which they
-expect when there is no irq).
-
-With this change i2c-multi-inst can pass the fwnode unconditionally.
-
-Regards,
-
-Hans
-
+[1] https://patchwork.kernel.org/patch/11163639/#22931561
+[2] https://patchwork.kernel.org/patch/11222763/
+[3] https://patchwork.kernel.org/patch/11310823/
