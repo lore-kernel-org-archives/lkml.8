@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3837C81C45
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB75C81C42
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 763F32075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 516942075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:18:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588022294;
-	bh=RFGUcCVxrgv5mUyJOaax4cRxjCGpLehPRqP0Yl9mXSE=;
+	s=default; t=1588022297;
+	bh=xEAUuAOCpuquLgLg4GQaMSKcv3xJRMSku1YEZbtkbEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ifr4SyX012bucamDJ0JZtIEM8bALg5IdjKL3iyRknTaXr7uyU8i0bewRfGEyxQini
-	 KdjpRIuO+LLUc9vyYebc8YbKZY78IWJQEtOBoA+86mj8bE/9N9HfJ6xcBTcASL+wS7
-	 BfzsnxTN/1PY3a3rCikEyolIvTVjMp9q0Y5I5WX8=
+	b=lsyQ+vPng4xxWdU4/7tiK+ylrJoUYMzCJuCfhmff9Eo4J6rN9zdXg3oCSsNpmQ6Fv
+	 jpTcc/iuSggneqsUKTD9F1cPiO0KhbRLNQVdS1p/L/34BsDJ78+ABeZFf5d19QlOdy
+	 shcoMp/J48ODFb8BoJRjfHNK81MjtAqFOW16JtGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726611AbgD0VSJ (ORCPT
+        id S1726577AbgD0VSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 17:18:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34212 "EHLO mail.kernel.org"
+        Mon, 27 Apr 2020 17:18:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726410AbgD0VR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726396AbgD0VR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 Apr 2020 17:17:27 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2832C2222B;
-        Mon, 27 Apr 2020 21:17:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A192921D93;
+        Mon, 27 Apr 2020 21:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588022245;
-        bh=RFGUcCVxrgv5mUyJOaax4cRxjCGpLehPRqP0Yl9mXSE=;
+        bh=xEAUuAOCpuquLgLg4GQaMSKcv3xJRMSku1YEZbtkbEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T0ItBSHQVBLtokQpLSmNwKyDtx6tXki0321irqjcj5nRqxGn/tskT3Ye2e0BgX1Er
-         GeIPPFYnS+dmmSJjy2Mx8rHukToQ41mMFsDJmBnwxLpLceotd0MJSqHwDncbggBfa/
-         x1oBUbMYj6k+xNep5LYBAWOQCkyfOx53c3S0E8N4=
+        b=F5gwOmQCT1oZidATCIQXeEHAtwbqeKxNXyszalQ1ZwAtIW9KOw5YdqlJYTDoPYS9R
+         q2AIbjD8pMH0tLY9ohInzqvQQFbaeZoeyGT/wH8rPz/zeNF4JZFhITU9bDyNuNNdHl
+         eZC5EGMmDyLqEOvGCdg/Xd6/zZHXo8HyfKnb6Lsc=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jTB7z-000Hlv-E7; Mon, 27 Apr 2020 23:17:23 +0200
+        id 1jTB7y-000Hky-Uu; Mon, 27 Apr 2020 23:17:22 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Becker <jlbec@evilplan.org>,
-        Christoph Hellwig <hch@lst.de>, linux-usb@vger.kernel.org
-Subject: [PATCH v3 29/29] docs: filesystems: convert configfs.txt to ReST
-Date:   Mon, 27 Apr 2020 23:17:21 +0200
-Message-Id: <c2424ec2ad4d735751434ff7f52144c44aa02d5a.1588021877.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v3 17/29] docs: filesystems: convert mount_api.txt to ReST
+Date:   Mon, 27 Apr 2020 23:17:09 +0200
+Message-Id: <32332c1659a28c22561cb5e64162c959856066b4.1588021877.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588021877.git.mchehab+huawei@kernel.org>
 References: <cover.1588021877.git.mchehab+huawei@kernel.org>
@@ -64,435 +61,804 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 - Add a SPDX header;
 - Adjust document and section titles;
-- Use copyright symbol;
 - Some whitespace fixes and new line breaks;
 - Mark literal blocks as such;
+- Add table markups;
+- Add lists markups;
 - Add it to filesystems/index.rst.
-
-Also, as this file is alone on its own dir, and it doesn't
-seem too likely that other documents will follow it, let's
-move it to the filesystems/ root documentation dir.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../{configfs/configfs.txt => configfs.rst}   | 131 +++++++++++-------
  Documentation/filesystems/index.rst           |   1 +
- Documentation/iio/iio_configfs.rst            |   2 +-
- Documentation/usb/gadget_configfs.rst         |   4 +-
- fs/configfs/inode.c                           |   2 +-
- fs/configfs/item.c                            |   2 +-
- include/linux/configfs.h                      |   2 +-
- 7 files changed, 86 insertions(+), 58 deletions(-)
- rename Documentation/filesystems/{configfs/configfs.txt => configfs.rst} (87%)
+ .../{mount_api.txt => mount_api.rst}          | 329 ++++++++++++------
+ include/linux/fs_context.h                    |   2 +-
+ include/linux/lsm_hooks.h                     |   2 +-
+ 4 files changed, 218 insertions(+), 116 deletions(-)
+ rename Documentation/filesystems/{mount_api.txt => mount_api.rst} (79%)
 
-diff --git a/Documentation/filesystems/configfs/configfs.txt b/Documentation/filesystems/configfs.rst
-similarity index 87%
-rename from Documentation/filesystems/configfs/configfs.txt
-rename to Documentation/filesystems/configfs.rst
-index 16e606c11f40..851d475798f7 100644
---- a/Documentation/filesystems/configfs/configfs.txt
-+++ b/Documentation/filesystems/configfs.rst
-@@ -1,5 +1,6 @@
--
--configfs - Userspace-driven kernel object configuration.
-+=======================================================
-+Configfs - Userspace-driven Kernel oOject Configuration
-+=======================================================
- 
- Joel Becker <joel.becker@oracle.com>
- 
-@@ -9,7 +10,8 @@ Copyright (c) 2005 Oracle Corporation,
- 	Joel Becker <joel.becker@oracle.com>
- 
- 
--[What is configfs?]
-+What is configfs?
-+=================
- 
- configfs is a ram-based filesystem that provides the converse of
- sysfs's functionality.  Where sysfs is a filesystem-based view of
-@@ -35,10 +37,11 @@ kernel modules backing the items must respond to this.
- Both sysfs and configfs can and should exist together on the same
- system.  One is not a replacement for the other.
- 
--[Using configfs]
-+Using configfs
-+==============
- 
- configfs can be compiled as a module or into the kernel.  You can access
--it by doing
-+it by doing::
- 
- 	mount -t configfs none /config
- 
-@@ -56,28 +59,29 @@ values.  Don't mix more than one attribute in one attribute file.
- There are two types of configfs attributes:
- 
- * Normal attributes, which similar to sysfs attributes, are small ASCII text
--files, with a maximum size of one page (PAGE_SIZE, 4096 on i386).  Preferably
--only one value per file should be used, and the same caveats from sysfs apply.
--Configfs expects write(2) to store the entire buffer at once.  When writing to
--normal configfs attributes, userspace processes should first read the entire
--file, modify the portions they wish to change, and then write the entire
--buffer back.
-+  files, with a maximum size of one page (PAGE_SIZE, 4096 on i386).  Preferably
-+  only one value per file should be used, and the same caveats from sysfs apply.
-+  Configfs expects write(2) to store the entire buffer at once.  When writing to
-+  normal configfs attributes, userspace processes should first read the entire
-+  file, modify the portions they wish to change, and then write the entire
-+  buffer back.
- 
- * Binary attributes, which are somewhat similar to sysfs binary attributes,
--but with a few slight changes to semantics.  The PAGE_SIZE limitation does not
--apply, but the whole binary item must fit in single kernel vmalloc'ed buffer.
--The write(2) calls from user space are buffered, and the attributes'
--write_bin_attribute method will be invoked on the final close, therefore it is
--imperative for user-space to check the return code of close(2) in order to
--verify that the operation finished successfully.
--To avoid a malicious user OOMing the kernel, there's a per-binary attribute
--maximum buffer value.
-+  but with a few slight changes to semantics.  The PAGE_SIZE limitation does not
-+  apply, but the whole binary item must fit in single kernel vmalloc'ed buffer.
-+  The write(2) calls from user space are buffered, and the attributes'
-+  write_bin_attribute method will be invoked on the final close, therefore it is
-+  imperative for user-space to check the return code of close(2) in order to
-+  verify that the operation finished successfully.
-+  To avoid a malicious user OOMing the kernel, there's a per-binary attribute
-+  maximum buffer value.
- 
- When an item needs to be destroyed, remove it with rmdir(2).  An
- item cannot be destroyed if any other item has a link to it (via
- symlink(2)).  Links can be removed via unlink(2).
- 
--[Configuring FakeNBD: an Example]
-+Configuring FakeNBD: an Example
-+===============================
- 
- Imagine there's a Network Block Device (NBD) driver that allows you to
- access remote block devices.  Call it FakeNBD.  FakeNBD uses configfs
-@@ -86,14 +90,14 @@ sysadmins use to configure FakeNBD, but somehow that program has to tell
- the driver about it.  Here's where configfs comes in.
- 
- When the FakeNBD driver is loaded, it registers itself with configfs.
--readdir(3) sees this just fine:
-+readdir(3) sees this just fine::
- 
- 	# ls /config
- 	fakenbd
- 
- A fakenbd connection can be created with mkdir(2).  The name is
- arbitrary, but likely the tool will make some use of the name.  Perhaps
--it is a uuid or a disk name:
-+it is a uuid or a disk name::
- 
- 	# mkdir /config/fakenbd/disk1
- 	# ls /config/fakenbd/disk1
-@@ -102,7 +106,7 @@ it is a uuid or a disk name:
- The target attribute contains the IP address of the server FakeNBD will
- connect to.  The device attribute is the device on the server.
- Predictably, the rw attribute determines whether the connection is
--read-only or read-write.
-+read-only or read-write::
- 
- 	# echo 10.0.0.1 > /config/fakenbd/disk1/target
- 	# echo /dev/sda1 > /config/fakenbd/disk1/device
-@@ -111,7 +115,8 @@ read-only or read-write.
- That's it.  That's all there is.  Now the device is configured, via the
- shell no less.
- 
--[Coding With configfs]
-+Coding With configfs
-+====================
- 
- Every object in configfs is a config_item.  A config_item reflects an
- object in the subsystem.  It has attributes that match values on that
-@@ -130,7 +135,10 @@ appears as a directory at the top of the configfs filesystem.  A
- subsystem is also a config_group, and can do everything a config_group
- can.
- 
--[struct config_item]
-+struct config_item
-+==================
-+
-+::
- 
- 	struct config_item {
- 		char                    *ci_name;
-@@ -168,7 +176,10 @@ By itself, a config_item cannot do much more than appear in configfs.
- Usually a subsystem wants the item to display and/or store attributes,
- among other things.  For that, it needs a type.
- 
--[struct config_item_type]
-+struct config_item_type
-+=======================
-+
-+::
- 
- 	struct configfs_item_operations {
- 		void (*release)(struct config_item *);
-@@ -192,7 +203,10 @@ allocated dynamically will need to provide the ct_item_ops->release()
- method.  This method is called when the config_item's reference count
- reaches zero.
- 
--[struct configfs_attribute]
-+struct configfs_attribute
-+=========================
-+
-+::
- 
- 	struct configfs_attribute {
- 		char                    *ca_name;
-@@ -214,7 +228,10 @@ be called whenever userspace asks for a read(2) on the attribute.  If an
- attribute is writable and provides a ->store  method, that method will be
- be called whenever userspace asks for a write(2) on the attribute.
- 
--[struct configfs_bin_attribute]
-+struct configfs_bin_attribute
-+=============================
-+
-+::
- 
- 	struct configfs_bin_attribute {
- 		struct configfs_attribute	cb_attr;
-@@ -240,11 +257,12 @@ will happen for write(2). The reads/writes are bufferred so only a
- single read/write will occur; the attributes' need not concern itself
- with it.
- 
--[struct config_group]
-+struct config_group
-+===================
- 
- A config_item cannot live in a vacuum.  The only way one can be created
- is via mkdir(2) on a config_group.  This will trigger creation of a
--child item.
-+child item::
- 
- 	struct config_group {
- 		struct config_item		cg_item;
-@@ -264,7 +282,7 @@ The config_group structure contains a config_item.  Properly configuring
- that item means that a group can behave as an item in its own right.
- However, it can do more: it can create child items or groups.  This is
- accomplished via the group operations specified on the group's
--config_item_type.
-+config_item_type::
- 
- 	struct configfs_group_operations {
- 		struct config_item *(*make_item)(struct config_group *group,
-@@ -279,7 +297,8 @@ config_item_type.
- 	};
- 
- A group creates child items by providing the
--ct_group_ops->make_item() method.  If provided, this method is called from mkdir(2) in the group's directory.  The subsystem allocates a new
-+ct_group_ops->make_item() method.  If provided, this method is called from
-+mkdir(2) in the group's directory.  The subsystem allocates a new
- config_item (or more likely, its container structure), initializes it,
- and returns it to configfs.  Configfs will then populate the filesystem
- tree to reflect the new item.
-@@ -296,13 +315,14 @@ upon item allocation.  If a subsystem has no work to do, it may omit
- the ct_group_ops->drop_item() method, and configfs will call
- config_item_put() on the item on behalf of the subsystem.
- 
--IMPORTANT: drop_item() is void, and as such cannot fail.  When rmdir(2)
--is called, configfs WILL remove the item from the filesystem tree
--(assuming that it has no children to keep it busy).  The subsystem is
--responsible for responding to this.  If the subsystem has references to
--the item in other threads, the memory is safe.  It may take some time
--for the item to actually disappear from the subsystem's usage.  But it
--is gone from configfs.
-+Important:
-+   drop_item() is void, and as such cannot fail.  When rmdir(2)
-+   is called, configfs WILL remove the item from the filesystem tree
-+   (assuming that it has no children to keep it busy).  The subsystem is
-+   responsible for responding to this.  If the subsystem has references to
-+   the item in other threads, the memory is safe.  It may take some time
-+   for the item to actually disappear from the subsystem's usage.  But it
-+   is gone from configfs.
- 
- When drop_item() is called, the item's linkage has already been torn
- down.  It no longer has a reference on its parent and has no place in
-@@ -319,10 +339,11 @@ is implemented in the configfs rmdir(2) code.  ->drop_item() will not be
- called, as the item has not been dropped.  rmdir(2) will fail, as the
- directory is not empty.
- 
--[struct configfs_subsystem]
-+struct configfs_subsystem
-+=========================
- 
- A subsystem must register itself, usually at module_init time.  This
--tells configfs to make the subsystem appear in the file tree.
-+tells configfs to make the subsystem appear in the file tree::
- 
- 	struct configfs_subsystem {
- 		struct config_group	su_group;
-@@ -332,17 +353,19 @@ tells configfs to make the subsystem appear in the file tree.
- 	int configfs_register_subsystem(struct configfs_subsystem *subsys);
- 	void configfs_unregister_subsystem(struct configfs_subsystem *subsys);
- 
--	A subsystem consists of a toplevel config_group and a mutex.
-+A subsystem consists of a toplevel config_group and a mutex.
- The group is where child config_items are created.  For a subsystem,
- this group is usually defined statically.  Before calling
- configfs_register_subsystem(), the subsystem must have initialized the
- group via the usual group _init() functions, and it must also have
- initialized the mutex.
--	When the register call returns, the subsystem is live, and it
-+
-+When the register call returns, the subsystem is live, and it
- will be visible via configfs.  At that point, mkdir(2) can be called and
- the subsystem must be ready for it.
- 
--[An Example]
-+An Example
-+==========
- 
- The best example of these basic concepts is the simple_children
- subsystem/group and the simple_child item in
-@@ -350,7 +373,8 @@ samples/configfs/configfs_sample.c. It shows a trivial object displaying
- and storing an attribute, and a simple group creating and destroying
- these children.
- 
--[Hierarchy Navigation and the Subsystem Mutex]
-+Hierarchy Navigation and the Subsystem Mutex
-+============================================
- 
- There is an extra bonus that configfs provides.  The config_groups and
- config_items are arranged in a hierarchy due to the fact that they
-@@ -375,7 +399,8 @@ be in its parent's cg_children list for the same duration.  This allows
- a subsystem to trust ci_parent and cg_children while they hold the
- mutex.
- 
--[Item Aggregation Via symlink(2)]
-+Item Aggregation Via symlink(2)
-+===============================
- 
- configfs provides a simple group via the group->item parent/child
- relationship.  Often, however, a larger environment requires aggregation
-@@ -403,7 +428,8 @@ A config_item cannot be removed while it links to any other item, nor
- can it be removed while an item links to it.  Dangling symlinks are not
- allowed in configfs.
- 
--[Automatically Created Subgroups]
-+Automatically Created Subgroups
-+===============================
- 
- A new config_group may want to have two types of child config_items.
- While this could be codified by magic names in ->make_item(), it is much
-@@ -433,7 +459,8 @@ As a consequence of this, default groups cannot be removed directly via
- rmdir(2).  They also are not considered when rmdir(2) on the parent
- group is checking for children.
- 
--[Dependent Subsystems]
-+Dependent Subsystems
-+====================
- 
- Sometimes other drivers depend on particular configfs items.  For
- example, ocfs2 mounts depend on a heartbeat region item.  If that
-@@ -460,9 +487,11 @@ succeeds, then heartbeat knows the region is safe to give to ocfs2.
- If it fails, it was being torn down anyway, and heartbeat can gracefully
- pass up an error.
- 
--[Committable Items]
-+Committable Items
-+=================
- 
--NOTE: Committable items are currently unimplemented.
-+Note:
-+     Committable items are currently unimplemented.
- 
- Some config_items cannot have a valid initial state.  That is, no
- default values can be specified for the item's attributes such that the
-@@ -504,5 +533,3 @@ As rmdir(2) does not work in the "live" directory, an item must be
- shutdown, or "uncommitted".  Again, this is done via rename(2), this
- time from the "live" directory back to the "pending" one.  The subsystem
- is notified by the ct_group_ops->uncommit_object() method.
--
--
 diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index a4fefb62c931..4c536e66dc4c 100644
+index 89c712b81778..c6f309b488e4 100644
 --- a/Documentation/filesystems/index.rst
 +++ b/Documentation/filesystems/index.rst
-@@ -76,6 +76,7 @@ Documentation for filesystem implementations.
-    cifs/cifsroot
-    ceph
-    coda
-+   configfs
-    cramfs
-    debugfs
-    dlmfs
-diff --git a/Documentation/iio/iio_configfs.rst b/Documentation/iio/iio_configfs.rst
-index ecbfdb3afef7..6e38cbbd2981 100644
---- a/Documentation/iio/iio_configfs.rst
-+++ b/Documentation/iio/iio_configfs.rst
-@@ -9,7 +9,7 @@ Configfs is a filesystem-based manager of kernel objects. IIO uses some
- objects that could be easily configured using configfs (e.g.: devices,
- triggers).
+@@ -30,6 +30,7 @@ algorithms work.
+    files
+    locks
+    mandatory-locking
++   mount_api
  
--See Documentation/filesystems/configfs/configfs.txt for more information
-+See Documentation/filesystems/configfs.rst for more information
- about how configfs works.
+    automount-support
  
- 2. Usage
-diff --git a/Documentation/usb/gadget_configfs.rst b/Documentation/usb/gadget_configfs.rst
-index 54fb08baae22..158e48dab586 100644
---- a/Documentation/usb/gadget_configfs.rst
-+++ b/Documentation/usb/gadget_configfs.rst
-@@ -24,7 +24,7 @@ Linux provides a number of functions for gadgets to use.
- Creating a gadget means deciding what configurations there will be
- and which functions each configuration will provide.
+diff --git a/Documentation/filesystems/mount_api.txt b/Documentation/filesystems/mount_api.rst
+similarity index 79%
+rename from Documentation/filesystems/mount_api.txt
+rename to Documentation/filesystems/mount_api.rst
+index 87c14bbb2b35..dea22d64f060 100644
+--- a/Documentation/filesystems/mount_api.txt
++++ b/Documentation/filesystems/mount_api.rst
+@@ -1,8 +1,10 @@
+-			     ====================
+-			     FILESYSTEM MOUNT API
+-			     ====================
++.. SPDX-License-Identifier: GPL-2.0
  
--Configfs (please see `Documentation/filesystems/configfs/*`) lends itself nicely
-+Configfs (please see `Documentation/filesystems/configfs.rst`) lends itself nicely
- for the purpose of telling the kernel about the above mentioned decision.
- This document is about how to do it.
+-CONTENTS
++====================
++fILESYSTEM Mount API
++====================
++
++.. CONTENTS
  
-@@ -354,7 +354,7 @@ the directories in general can be named at will. A group can have
- a number of its default sub-groups created automatically.
+  (1) Overview.
  
- For more information on configfs please see
--`Documentation/filesystems/configfs/*`.
-+`Documentation/filesystems/configfs.rst`.
+@@ -21,8 +23,7 @@ CONTENTS
+  (8) Parameter helper functions.
  
- The concepts described above translate to USB gadgets like this:
  
-diff --git a/fs/configfs/inode.c b/fs/configfs/inode.c
-index fd0b5dd68f9e..8bd6a883c94c 100644
---- a/fs/configfs/inode.c
-+++ b/fs/configfs/inode.c
-@@ -9,7 +9,7 @@
+-========
+-OVERVIEW
++Overview
+ ========
+ 
+ The creation of new mounts is now to be done in a multistep process:
+@@ -43,7 +44,7 @@ The creation of new mounts is now to be done in a multistep process:
+ 
+  (7) Destroy the context.
+ 
+-To support this, the file_system_type struct gains two new fields:
++To support this, the file_system_type struct gains two new fields::
+ 
+ 	int (*init_fs_context)(struct fs_context *fc);
+ 	const struct fs_parameter_description *parameters;
+@@ -57,12 +58,11 @@ Note that security initialisation is done *after* the filesystem is called so
+ that the namespaces may be adjusted first.
+ 
+ 
+-======================
+-THE FILESYSTEM CONTEXT
++The Filesystem context
+ ======================
+ 
+ The creation and reconfiguration of a superblock is governed by a filesystem
+-context.  This is represented by the fs_context structure:
++context.  This is represented by the fs_context structure::
+ 
+ 	struct fs_context {
+ 		const struct fs_context_operations *ops;
+@@ -86,78 +86,106 @@ context.  This is represented by the fs_context structure:
+ 
+ The fs_context fields are as follows:
+ 
+- (*) const struct fs_context_operations *ops
++   * ::
++
++       const struct fs_context_operations *ops
+ 
+      These are operations that can be done on a filesystem context (see
+      below).  This must be set by the ->init_fs_context() file_system_type
+      operation.
+ 
+- (*) struct file_system_type *fs_type
++   * ::
++
++       struct file_system_type *fs_type
+ 
+      A pointer to the file_system_type of the filesystem that is being
+      constructed or reconfigured.  This retains a reference on the type owner.
+ 
+- (*) void *fs_private
++   * ::
++
++       void *fs_private
+ 
+      A pointer to the file system's private data.  This is where the filesystem
+      will need to store any options it parses.
+ 
+- (*) struct dentry *root
++   * ::
++
++       struct dentry *root
+ 
+      A pointer to the root of the mountable tree (and indirectly, the
+      superblock thereof).  This is filled in by the ->get_tree() op.  If this
+      is set, an active reference on root->d_sb must also be held.
+ 
+- (*) struct user_namespace *user_ns
+- (*) struct net *net_ns
++   * ::
++
++       struct user_namespace *user_ns
++       struct net *net_ns
+ 
+      There are a subset of the namespaces in use by the invoking process.  They
+      retain references on each namespace.  The subscribed namespaces may be
+      replaced by the filesystem to reflect other sources, such as the parent
+      mount superblock on an automount.
+ 
+- (*) const struct cred *cred
++   * ::
++
++       const struct cred *cred
+ 
+      The mounter's credentials.  This retains a reference on the credentials.
+ 
+- (*) char *source
++   * ::
++
++       char *source
+ 
+      This specifies the source.  It may be a block device (e.g. /dev/sda1) or
+      something more exotic, such as the "host:/path" that NFS desires.
+ 
+- (*) char *subtype
++   * ::
++
++       char *subtype
+ 
+      This is a string to be added to the type displayed in /proc/mounts to
+      qualify it (used by FUSE).  This is available for the filesystem to set if
+      desired.
+ 
+- (*) void *security
++   * ::
++
++       void *security
+ 
+      A place for the LSMs to hang their security data for the superblock.  The
+      relevant security operations are described below.
+ 
+- (*) void *s_fs_info
++   * ::
++
++       void *s_fs_info
+ 
+      The proposed s_fs_info for a new superblock, set in the superblock by
+      sget_fc().  This can be used to distinguish superblocks.
+ 
+- (*) unsigned int sb_flags
+- (*) unsigned int sb_flags_mask
++   * ::
++
++       unsigned int sb_flags
++       unsigned int sb_flags_mask
+ 
+      Which bits SB_* flags are to be set/cleared in super_block::s_flags.
+ 
+- (*) unsigned int s_iflags
++   * ::
++
++       unsigned int s_iflags
+ 
+      These will be bitwise-OR'd with s->s_iflags when a superblock is created.
+ 
+- (*) enum fs_context_purpose
++   * ::
++
++       enum fs_context_purpose
+ 
+      This indicates the purpose for which the context is intended.  The
+      available values are:
+ 
+-	FS_CONTEXT_FOR_MOUNT,		-- New superblock for explicit mount
+-	FS_CONTEXT_FOR_SUBMOUNT		-- New automatic submount of extant mount
+-	FS_CONTEXT_FOR_RECONFIGURE	-- Change an existing mount
++	==========================	======================================
++	FS_CONTEXT_FOR_MOUNT,		New superblock for explicit mount
++	FS_CONTEXT_FOR_SUBMOUNT		New automatic submount of extant mount
++	FS_CONTEXT_FOR_RECONFIGURE	Change an existing mount
++	==========================	======================================
+ 
+ The mount context is created by calling vfs_new_fs_context() or
+ vfs_dup_fs_context() and is destroyed with put_fs_context().  Note that the
+@@ -176,11 +204,10 @@ mount context.  For instance, NFS might pin the appropriate protocol version
+ module.
+ 
+ 
+-=================================
+-THE FILESYSTEM CONTEXT OPERATIONS
++The Filesystem Context Operations
+ =================================
+ 
+-The filesystem context points to a table of operations:
++The filesystem context points to a table of operations::
+ 
+ 	struct fs_context_operations {
+ 		void (*free)(struct fs_context *fc);
+@@ -195,24 +222,32 @@ The filesystem context points to a table of operations:
+ These operations are invoked by the various stages of the mount procedure to
+ manage the filesystem context.  They are as follows:
+ 
+- (*) void (*free)(struct fs_context *fc);
++   * ::
++
++	void (*free)(struct fs_context *fc);
+ 
+      Called to clean up the filesystem-specific part of the filesystem context
+      when the context is destroyed.  It should be aware that parts of the
+      context may have been removed and NULL'd out by ->get_tree().
+ 
+- (*) int (*dup)(struct fs_context *fc, struct fs_context *src_fc);
++   * ::
++
++	int (*dup)(struct fs_context *fc, struct fs_context *src_fc);
+ 
+      Called when a filesystem context has been duplicated to duplicate the
+      filesystem-private data.  An error may be returned to indicate failure to
+      do this.
+ 
+-     [!] Note that even if this fails, put_fs_context() will be called
++     .. Warning::
++
++         Note that even if this fails, put_fs_context() will be called
+ 	 immediately thereafter, so ->dup() *must* make the
+ 	 filesystem-private data safe for ->free().
+ 
+- (*) int (*parse_param)(struct fs_context *fc,
+-			struct struct fs_parameter *param);
++   * ::
++
++	int (*parse_param)(struct fs_context *fc,
++			   struct struct fs_parameter *param);
+ 
+      Called when a parameter is being added to the filesystem context.  param
+      points to the key name and maybe a value object.  VFS-specific options
+@@ -224,7 +259,9 @@ manage the filesystem context.  They are as follows:
+ 
+      If successful, 0 should be returned or a negative error code otherwise.
+ 
+- (*) int (*parse_monolithic)(struct fs_context *fc, void *data);
++   * ::
++
++	int (*parse_monolithic)(struct fs_context *fc, void *data);
+ 
+      Called when the mount(2) system call is invoked to pass the entire data
+      page in one go.  If this is expected to be just a list of "key[=val]"
+@@ -236,7 +273,9 @@ manage the filesystem context.  They are as follows:
+      finds it's the standard key-val list then it may pass it off to
+      generic_parse_monolithic().
+ 
+- (*) int (*get_tree)(struct fs_context *fc);
++   * ::
++
++	int (*get_tree)(struct fs_context *fc);
+ 
+      Called to get or create the mountable root and superblock, using the
+      information stored in the filesystem context (reconfiguration goes via a
+@@ -249,7 +288,9 @@ manage the filesystem context.  They are as follows:
+      The phase on a userspace-driven context will be set to only allow this to
+      be called once on any particular context.
+ 
+- (*) int (*reconfigure)(struct fs_context *fc);
++   * ::
++
++	int (*reconfigure)(struct fs_context *fc);
+ 
+      Called to effect reconfiguration of a superblock using information stored
+      in the filesystem context.  It may detach any resources it desires from
+@@ -259,19 +300,20 @@ manage the filesystem context.  They are as follows:
+      On success it should return 0.  In the case of an error, it should return
+      a negative error code.
+ 
+-     [NOTE] reconfigure is intended as a replacement for remount_fs.
++     .. Note:: reconfigure is intended as a replacement for remount_fs.
+ 
+ 
+-===========================
+-FILESYSTEM CONTEXT SECURITY
++Filesystem context Security
+ ===========================
+ 
+ The filesystem context contains a security pointer that the LSMs can use for
+ building up a security context for the superblock to be mounted.  There are a
+ number of operations used by the new mount code for this purpose:
+ 
+- (*) int security_fs_context_alloc(struct fs_context *fc,
+-				   struct dentry *reference);
++   * ::
++
++	int security_fs_context_alloc(struct fs_context *fc,
++				      struct dentry *reference);
+ 
+      Called to initialise fc->security (which is preset to NULL) and allocate
+      any resources needed.  It should return 0 on success or a negative error
+@@ -283,22 +325,28 @@ number of operations used by the new mount code for this purpose:
+      non-NULL in the case of a submount (FS_CONTEXT_FOR_SUBMOUNT) in which case
+      it indicates the automount point.
+ 
+- (*) int security_fs_context_dup(struct fs_context *fc,
+-				 struct fs_context *src_fc);
++   * ::
++
++	int security_fs_context_dup(struct fs_context *fc,
++				    struct fs_context *src_fc);
+ 
+      Called to initialise fc->security (which is preset to NULL) and allocate
+      any resources needed.  The original filesystem context is pointed to by
+      src_fc and may be used for reference.  It should return 0 on success or a
+      negative error code on failure.
+ 
+- (*) void security_fs_context_free(struct fs_context *fc);
++   * ::
++
++	void security_fs_context_free(struct fs_context *fc);
+ 
+      Called to clean up anything attached to fc->security.  Note that the
+      contents may have been transferred to a superblock and the pointer cleared
+      during get_tree.
+ 
+- (*) int security_fs_context_parse_param(struct fs_context *fc,
+-					 struct fs_parameter *param);
++   * ::
++
++	int security_fs_context_parse_param(struct fs_context *fc,
++					    struct fs_parameter *param);
+ 
+      Called for each mount parameter, including the source.  The arguments are
+      as for the ->parse_param() method.  It should return 0 to indicate that
+@@ -310,7 +358,9 @@ number of operations used by the new mount code for this purpose:
+      (provided the value pointer is NULL'd out).  If it is stolen, 1 must be
+      returned to prevent it being passed to the filesystem.
+ 
+- (*) int security_fs_context_validate(struct fs_context *fc);
++   * ::
++
++	int security_fs_context_validate(struct fs_context *fc);
+ 
+      Called after all the options have been parsed to validate the collection
+      as a whole and to do any necessary allocation so that
+@@ -320,36 +370,43 @@ number of operations used by the new mount code for this purpose:
+      In the case of reconfiguration, the target superblock will be accessible
+      via fc->root.
+ 
+- (*) int security_sb_get_tree(struct fs_context *fc);
++   * ::
++
++	int security_sb_get_tree(struct fs_context *fc);
+ 
+      Called during the mount procedure to verify that the specified superblock
+      is allowed to be mounted and to transfer the security data there.  It
+      should return 0 or a negative error code.
+ 
+- (*) void security_sb_reconfigure(struct fs_context *fc);
++   * ::
++
++	void security_sb_reconfigure(struct fs_context *fc);
+ 
+      Called to apply any reconfiguration to an LSM's context.  It must not
+      fail.  Error checking and resource allocation must be done in advance by
+      the parameter parsing and validation hooks.
+ 
+- (*) int security_sb_mountpoint(struct fs_context *fc, struct path *mountpoint,
+-				unsigned int mnt_flags);
++   * ::
++
++	int security_sb_mountpoint(struct fs_context *fc,
++			           struct path *mountpoint,
++				   unsigned int mnt_flags);
+ 
+      Called during the mount procedure to verify that the root dentry attached
+      to the context is permitted to be attached to the specified mountpoint.
+      It should return 0 on success or a negative error code on failure.
+ 
+ 
+-==========================
+-VFS FILESYSTEM CONTEXT API
++VFS Filesystem context API
+ ==========================
+ 
+ There are four operations for creating a filesystem context and one for
+ destroying a context:
+ 
+- (*) struct fs_context *fs_context_for_mount(
+-		struct file_system_type *fs_type,
+-		unsigned int sb_flags);
++   * ::
++
++       struct fs_context *fs_context_for_mount(struct file_system_type *fs_type,
++					       unsigned int sb_flags);
+ 
+      Allocate a filesystem context for the purpose of setting up a new mount,
+      whether that be with a new superblock or sharing an existing one.  This
+@@ -359,7 +416,9 @@ destroying a context:
+      fs_type specifies the filesystem type that will manage the context and
+      sb_flags presets the superblock flags stored therein.
+ 
+- (*) struct fs_context *fs_context_for_reconfigure(
++   * ::
++
++       struct fs_context *fs_context_for_reconfigure(
+ 		struct dentry *dentry,
+ 		unsigned int sb_flags,
+ 		unsigned int sb_flags_mask);
+@@ -369,7 +428,9 @@ destroying a context:
+      configured.  sb_flags and sb_flags_mask indicate which superblock flags
+      need changing and to what.
+ 
+- (*) struct fs_context *fs_context_for_submount(
++   * ::
++
++       struct fs_context *fs_context_for_submount(
+ 		struct file_system_type *fs_type,
+ 		struct dentry *reference);
+ 
+@@ -382,7 +443,9 @@ destroying a context:
+      Note that it's not a requirement that the reference dentry be of the same
+      filesystem type as fs_type.
+ 
+- (*) struct fs_context *vfs_dup_fs_context(struct fs_context *src_fc);
++   * ::
++
++        struct fs_context *vfs_dup_fs_context(struct fs_context *src_fc);
+ 
+      Duplicate a filesystem context, copying any options noted and duplicating
+      or additionally referencing any resources held therein.  This is available
+@@ -392,14 +455,18 @@ destroying a context:
+ 
+      The purpose in the new context is inherited from the old one.
+ 
+- (*) void put_fs_context(struct fs_context *fc);
++   * ::
++
++       void put_fs_context(struct fs_context *fc);
+ 
+      Destroy a filesystem context, releasing any resources it holds.  This
+      calls the ->free() operation.  This is intended to be called by anyone who
+      created a filesystem context.
+ 
+-     [!] filesystem contexts are not refcounted, so this causes unconditional
+-	 destruction.
++     .. Warning::
++
++        filesystem contexts are not refcounted, so this causes unconditional
++	destruction.
+ 
+ In all the above operations, apart from the put op, the return is a mount
+ context pointer or a negative error code.
+@@ -407,8 +474,10 @@ context pointer or a negative error code.
+ For the remaining operations, if an error occurs, a negative error code will be
+ returned.
+ 
+- (*) int vfs_parse_fs_param(struct fs_context *fc,
+-			    struct fs_parameter *param);
++   * ::
++
++        int vfs_parse_fs_param(struct fs_context *fc,
++			       struct fs_parameter *param);
+ 
+      Supply a single mount parameter to the filesystem context.  This include
+      the specification of the source/device which is specified as the "source"
+@@ -423,53 +492,64 @@ returned.
+ 
+      The parameter value is typed and can be one of:
+ 
+-	fs_value_is_flag,		Parameter not given a value.
+-	fs_value_is_string,		Value is a string
+-	fs_value_is_blob,		Value is a binary blob
+-	fs_value_is_filename,		Value is a filename* + dirfd
+-	fs_value_is_file,		Value is an open file (file*)
++	====================		=============================
++	fs_value_is_flag		Parameter not given a value
++	fs_value_is_string		Value is a string
++	fs_value_is_blob		Value is a binary blob
++	fs_value_is_filename		Value is a filename* + dirfd
++	fs_value_is_file		Value is an open file (file*)
++	====================		=============================
+ 
+      If there is a value, that value is stored in a union in the struct in one
+      of param->{string,blob,name,file}.  Note that the function may steal and
+      clear the pointer, but then becomes responsible for disposing of the
+      object.
+ 
+- (*) int vfs_parse_fs_string(struct fs_context *fc, const char *key,
+-			     const char *value, size_t v_size);
++   * ::
++
++       int vfs_parse_fs_string(struct fs_context *fc, const char *key,
++			       const char *value, size_t v_size);
+ 
+      A wrapper around vfs_parse_fs_param() that copies the value string it is
+      passed.
+ 
+- (*) int generic_parse_monolithic(struct fs_context *fc, void *data);
++   * ::
++
++       int generic_parse_monolithic(struct fs_context *fc, void *data);
+ 
+      Parse a sys_mount() data page, assuming the form to be a text list
+      consisting of key[=val] options separated by commas.  Each item in the
+      list is passed to vfs_mount_option().  This is the default when the
+      ->parse_monolithic() method is NULL.
+ 
+- (*) int vfs_get_tree(struct fs_context *fc);
++   * ::
++
++       int vfs_get_tree(struct fs_context *fc);
+ 
+      Get or create the mountable root and superblock, using the parameters in
+      the filesystem context to select/configure the superblock.  This invokes
+      the ->get_tree() method.
+ 
+- (*) struct vfsmount *vfs_create_mount(struct fs_context *fc);
++   * ::
++
++       struct vfsmount *vfs_create_mount(struct fs_context *fc);
+ 
+      Create a mount given the parameters in the specified filesystem context.
+      Note that this does not attach the mount to anything.
+ 
+ 
+-===========================
+-SUPERBLOCK CREATION HELPERS
++Superblock Creation Helpers
+ ===========================
+ 
+ A number of VFS helpers are available for use by filesystems for the creation
+ or looking up of superblocks.
+ 
+- (*) struct super_block *
+-     sget_fc(struct fs_context *fc,
+-	     int (*test)(struct super_block *sb, struct fs_context *fc),
+-	     int (*set)(struct super_block *sb, struct fs_context *fc));
++   * ::
++
++       struct super_block *
++       sget_fc(struct fs_context *fc,
++	       int (*test)(struct super_block *sb, struct fs_context *fc),
++	       int (*set)(struct super_block *sb, struct fs_context *fc));
+ 
+      This is the core routine.  If test is non-NULL, it searches for an
+      existing superblock matching the criteria held in the fs_context, using
+@@ -482,10 +562,12 @@ or looking up of superblocks.
+ 
+ The following helpers all wrap sget_fc():
+ 
+- (*) int vfs_get_super(struct fs_context *fc,
+-		       enum vfs_get_super_keying keying,
+-		       int (*fill_super)(struct super_block *sb,
+-					 struct fs_context *fc))
++   * ::
++
++       int vfs_get_super(struct fs_context *fc,
++		         enum vfs_get_super_keying keying,
++		         int (*fill_super)(struct super_block *sb,
++					   struct fs_context *fc))
+ 
+      This creates/looks up a deviceless superblock.  The keying indicates how
+      many superblocks of this type may exist and in what manner they may be
+@@ -515,14 +597,14 @@ PARAMETER DESCRIPTION
+ =====================
+ 
+ Parameters are described using structures defined in linux/fs_parser.h.
+-There's a core description struct that links everything together:
++There's a core description struct that links everything together::
+ 
+ 	struct fs_parameter_description {
+ 		const struct fs_parameter_spec *specs;
+ 		const struct fs_parameter_enum *enums;
+ 	};
+ 
+-For example:
++For example::
+ 
+ 	enum {
+ 		Opt_autocell,
+@@ -539,10 +621,12 @@ For example:
+ 
+ The members are as follows:
+ 
+- (1) const struct fs_parameter_specification *specs;
++ (1) ::
++
++       const struct fs_parameter_specification *specs;
+ 
+      Table of parameter specifications, terminated with a null entry, where the
+-     entries are of type:
++     entries are of type::
+ 
+ 	struct fs_parameter_spec {
+ 		const char		*name;
+@@ -558,6 +642,7 @@ The members are as follows:
+ 
+      The 'type' field indicates the desired value type and must be one of:
+ 
++	=======================	=======================	=====================
+ 	TYPE NAME		EXPECTED VALUE		RESULT IN
+ 	=======================	=======================	=====================
+ 	fs_param_is_flag	No value		n/a
+@@ -573,19 +658,23 @@ The members are as follows:
+ 	fs_param_is_blockdev	Blockdev path		* Needs lookup
+ 	fs_param_is_path	Path			* Needs lookup
+ 	fs_param_is_fd		File descriptor		result->int_32
++	=======================	=======================	=====================
+ 
+      Note that if the value is of fs_param_is_bool type, fs_parse() will try
+      to match any string value against "0", "1", "no", "yes", "false", "true".
+ 
+      Each parameter can also be qualified with 'flags':
+ 
++	=======================	================================================
+ 	fs_param_v_optional	The value is optional
+ 	fs_param_neg_with_no	result->negated set if key is prefixed with "no"
+ 	fs_param_neg_with_empty	result->negated set if value is ""
+ 	fs_param_deprecated	The parameter is deprecated.
++	=======================	================================================
+ 
+      These are wrapped with a number of convenience wrappers:
+ 
++	=======================	===============================================
+ 	MACRO			SPECIFIES
+ 	=======================	===============================================
+ 	fsparam_flag()		fs_param_is_flag
+@@ -602,9 +691,10 @@ The members are as follows:
+ 	fsparam_bdev()		fs_param_is_blockdev
+ 	fsparam_path()		fs_param_is_path
+ 	fsparam_fd()		fs_param_is_fd
++	=======================	===============================================
+ 
+      all of which take two arguments, name string and option number - for
+-     example:
++     example::
+ 
+ 	static const struct fs_parameter_spec afs_param_specs[] = {
+ 		fsparam_flag	("autocell",	Opt_autocell),
+@@ -618,10 +708,12 @@ The members are as follows:
+      of arguments to specify the type and the flags for anything that doesn't
+      match one of the above macros.
+ 
+- (2) const struct fs_parameter_enum *enums;
++ (2) ::
++
++       const struct fs_parameter_enum *enums;
+ 
+      Table of enum value names to integer mappings, terminated with a null
+-     entry.  This is of type:
++     entry.  This is of type::
+ 
+ 	struct fs_parameter_enum {
+ 		u8		opt;
+@@ -630,7 +722,7 @@ The members are as follows:
+ 	};
+ 
+      Where the array is an unsorted list of { parameter ID, name }-keyed
+-     elements that indicate the value to map to, e.g.:
++     elements that indicate the value to map to, e.g.::
+ 
+ 	static const struct fs_parameter_enum afs_param_enums[] = {
+ 		{ Opt_bar,   "x",      1},
+@@ -648,18 +740,19 @@ CONFIG_VALIDATE_FS_PARSER=y) and will allow the description to be queried from
+ userspace using the fsinfo() syscall.
+ 
+ 
+-==========================
+-PARAMETER HELPER FUNCTIONS
++Parameter Helper Functions
+ ==========================
+ 
+ A number of helper functions are provided to help a filesystem or an LSM
+ process the parameters it is given.
+ 
+- (*) int lookup_constant(const struct constant_table tbl[],
+-			 const char *name, int not_found);
++   * ::
++
++       int lookup_constant(const struct constant_table tbl[],
++			   const char *name, int not_found);
+ 
+      Look up a constant by name in a table of name -> integer mappings.  The
+-     table is an array of elements of the following type:
++     table is an array of elements of the following type::
+ 
+ 	struct constant_table {
+ 		const char	*name;
+@@ -669,9 +762,11 @@ process the parameters it is given.
+      If a match is found, the corresponding value is returned.  If a match
+      isn't found, the not_found value is returned instead.
+ 
+- (*) bool validate_constant_table(const struct constant_table *tbl,
+-				  size_t tbl_size,
+-				  int low, int high, int special);
++   * ::
++
++       bool validate_constant_table(const struct constant_table *tbl,
++				    size_t tbl_size,
++				    int low, int high, int special);
+ 
+      Validate a constant table.  Checks that all the elements are appropriately
+      ordered, that there are no duplicates and that the values are between low
+@@ -682,16 +777,20 @@ process the parameters it is given.
+      If all is good, true is returned.  If the table is invalid, errors are
+      logged to dmesg and false is returned.
+ 
+- (*) bool fs_validate_description(const struct fs_parameter_description *desc);
++   * ::
++
++       bool fs_validate_description(const struct fs_parameter_description *desc);
+ 
+      This performs some validation checks on a parameter description.  It
+      returns true if the description is good and false if it is not.  It will
+      log errors to dmesg if validation fails.
+ 
+- (*) int fs_parse(struct fs_context *fc,
+-		  const struct fs_parameter_description *desc,
+-		  struct fs_parameter *param,
+-		  struct fs_parse_result *result);
++   * ::
++
++        int fs_parse(struct fs_context *fc,
++		     const struct fs_parameter_description *desc,
++		     struct fs_parameter *param,
++		     struct fs_parse_result *result);
+ 
+      This is the main interpreter of parameters.  It uses the parameter
+      description to look up a parameter by key name and to convert that to an
+@@ -711,14 +810,16 @@ process the parameters it is given.
+      parameter is matched, but the value is erroneous, -EINVAL will be
+      returned; otherwise the parameter's option number will be returned.
+ 
+- (*) int fs_lookup_param(struct fs_context *fc,
+-			 struct fs_parameter *value,
+-			 bool want_bdev,
+-			 struct path *_path);
++   * ::
++
++       int fs_lookup_param(struct fs_context *fc,
++			   struct fs_parameter *value,
++			   bool want_bdev,
++			   struct path *_path);
+ 
+      This takes a parameter that carries a string or filename type and attempts
+      to do a path lookup on it.  If the parameter expects a blockdev, a check
+      is made that the inode actually represents one.
+ 
+-     Returns 0 if successful and *_path will be set; returns a negative error
+-     code if not.
++     Returns 0 if successful and ``*_path`` will be set; returns a negative
++     error code if not.
+diff --git a/include/linux/fs_context.h b/include/linux/fs_context.h
+index e6c3e4c61dad..5f24fcbfbfb4 100644
+--- a/include/linux/fs_context.h
++++ b/include/linux/fs_context.h
+@@ -85,7 +85,7 @@ struct p_log {
+  * Superblock creation fills in ->root whereas reconfiguration begins with this
+  * already set.
   *
-  * configfs Copyright (C) 2005 Oracle.  All rights reserved.
-  *
-- * Please see Documentation/filesystems/configfs/configfs.txt for more
-+ * Please see Documentation/filesystems/configfs.rst for more
-  * information.
+- * See Documentation/filesystems/mount_api.txt
++ * See Documentation/filesystems/mount_api.rst
   */
- 
-diff --git a/fs/configfs/item.c b/fs/configfs/item.c
-index 6e0f1fcb8a5b..704a4356f137 100644
---- a/fs/configfs/item.c
-+++ b/fs/configfs/item.c
-@@ -9,7 +9,7 @@
+ struct fs_context {
+ 	const struct fs_context_operations *ops;
+diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+index 23bd89a3d369..c638e5de672f 100644
+--- a/include/linux/lsm_hooks.h
++++ b/include/linux/lsm_hooks.h
+@@ -77,7 +77,7 @@
+  *	state.  This is called immediately after commit_creds().
   *
-  * configfs Copyright (C) 2005 Oracle.  All rights reserved.
+  * Security hooks for mount using fs_context.
+- *	[See also Documentation/filesystems/mount_api.txt]
++ *	[See also Documentation/filesystems/mount_api.rst]
   *
-- * Please see the file Documentation/filesystems/configfs/configfs.txt for
-+ * Please see the file Documentation/filesystems/configfs.rst for
-  * critical information about using the config_item interface.
-  */
- 
-diff --git a/include/linux/configfs.h b/include/linux/configfs.h
-index fa9490a8874c..2e8c69b43c64 100644
---- a/include/linux/configfs.h
-+++ b/include/linux/configfs.h
-@@ -13,7 +13,7 @@
-  *
-  * configfs Copyright (C) 2005 Oracle.  All rights reserved.
-  *
-- * Please read Documentation/filesystems/configfs/configfs.txt before using
-+ * Please read Documentation/filesystems/configfs.rst before using
-  * the configfs interface, ESPECIALLY the parts about reference counts and
-  * item destructors.
-  */
+  * @fs_context_dup:
+  *	Allocate and attach a security structure to sc->security.  This pointer
 -- 
 2.25.4
 
