@@ -2,175 +2,139 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D1B5C55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 193FAC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BAEC214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7282206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:48:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AnOZDOps"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nSMCkTkz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgD0Hsl (ORCPT
+        id S1726710AbgD0Hsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 03:48:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56204 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbgD0Hsl (ORCPT
+        Mon, 27 Apr 2020 03:48:47 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:47678 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbgD0Hsp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 03:48:41 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E88EAC061A0F;
-        Mon, 27 Apr 2020 00:48:40 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id d15so17675788wrx.3;
-        Mon, 27 Apr 2020 00:48:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ykXrmH4eSp0lHQxOKpg8eyJKQJcyO1JQD5mT6efAflk=;
-        b=AnOZDOpsgAeWPgZxk3V6/dCZNFwCY/j5llSevfYQXGFxKBG3I/CMCk8t1S9VSNoqcY
-         hl8EoO26MUaPwv3ndjPJatIziugH5mTzeYWYjVhU1U3hJQnZgFEMSCyCF9Y+t7+9tkaI
-         Fn0nStQlSQ8PoJmuIVheLGoh9FlhHuUSabQL7lt4hL1JxsaOj3MPhgtIBjyxARBfBoHa
-         rwgDF8raeWiCWPY/EXLQ4QoUOlvvEN6IvK/SGjzuN/GvMj4Kk0llYh/xqFUdDRrb0VW+
-         c3ldtWhISc6kQr6FLkR+6bLxZGsLtwRXsTat4GR1Oz8zX9FpOWnOcSopD5OlF7o6uWxT
-         COAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ykXrmH4eSp0lHQxOKpg8eyJKQJcyO1JQD5mT6efAflk=;
-        b=sSiwlFZq/ixqw8pl2eomYnyEvsY2GeydwVc5A+MQLFl69iZ3W/BfEvn+be0aW2OJGX
-         e/vjBmzs/9NVN1krp9TQhxuVWbdLtk5Re4o+2zDP0RxZOR16pZTlkgGnHvrHzP4J6+qD
-         7p6t76P4uYH+5JskmDbcw0U7dkiqawmxnin/eiERhEni5Jis55TAEftAW/64gPfF7auO
-         J8iUxUqfCrDMAFsvRmzsyuFLq9+sJAxt9FVOr8mSo0A5PHBX99RmOrIYOWBPw54UYUJ2
-         t8LBx0PoEMMtH2vJ8ljjc5Bqxfpgzolg4469eX0qFJzlek+i1XlLDXRwIl5ALS650RRa
-         V6xQ==
-X-Gm-Message-State: AGi0PuZ23Ta/KW6WGAkw3Qi6+AKJau5DXGDImSDFcT2vizEiPzOB8m7l
-        rpjZVlLt4vAOZcJfgoKh7qI=
-X-Google-Smtp-Source: APiQypLr4pMzeVYP4oKRwidwWpS/8tfvK74Y8iLP/UR5diqSW/Ip7nQvQA645SUPQxdfR8mfEZCrOw==
-X-Received: by 2002:adf:fc4f:: with SMTP id e15mr26149257wrs.415.1587973719735;
-        Mon, 27 Apr 2020 00:48:39 -0700 (PDT)
-Received: from localhost (p2E5BEDBA.dip0.t-ipconnect.de. [46.91.237.186])
-        by smtp.gmail.com with ESMTPSA id c1sm20626643wrc.4.2020.04.27.00.48.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 00:48:38 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 09:48:37 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Jon Hunter <jonathanh@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>, linux-i2c@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
- for a long time
-Message-ID: <20200427074837.GC3451400@ulmo>
-References: <bba0a93a-8ec4-eda6-97f3-fb2ab0b9b503@gmail.com>
- <6f07e5c8-7916-7ea2-2fe7-d05f8f011471@nvidia.com>
- <77a31b2f-f525-ba9e-f1ae-2b474465bde4@gmail.com>
- <470b4de4-e98a-1bdc-049e-6259ad603507@nvidia.com>
- <d2531fc1-b452-717d-af71-19497e14ef00@gmail.com>
- <a5198024-7273-74c4-b4f4-3a29d042bc36@nvidia.com>
- <f8fb1f7f-2497-033e-ff2c-c86c6caa9706@gmail.com>
- <fd1ca178-1ea3-851f-20a6-10bf00453ce3@nvidia.com>
- <a5734f19-254e-b6bc-e791-fa1ac63f11a4@gmail.com>
- <79f6560e-dbb5-0ae1-49f8-cf1cd95396ec@nvidia.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4ZLFUWh1odzi/v6L"
-Content-Disposition: inline
-In-Reply-To: <79f6560e-dbb5-0ae1-49f8-cf1cd95396ec@nvidia.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+        Mon, 27 Apr 2020 03:48:45 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200427074843euoutp020e02824427d44d49bdd37549c09a69d3~JnbAVvyeX3002830028euoutp02h
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 07:48:43 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200427074843euoutp020e02824427d44d49bdd37549c09a69d3~JnbAVvyeX3002830028euoutp02h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1587973723;
+        bh=BlPYhTkuuXU4W6a42ZfvT9Z3Mq0rbD+ikTxhs9HG92s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nSMCkTkzQtZmvXbrn/G6oOM0rxcDX7tEQC1Sc1n2hMo07eHmfmWZw+Z/YJ5z/m3l/
+         BWteAOFEwQZTmRZf2EgnfYrSuNQh/YoohSPBrTxCEf5T7ekaee6g0Lff2v0f24let+
+         5jom3z45TS4w9GdydRUU+pm/sNMKG9JDKq31JOdY=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200427074842eucas1p18e2d11e1a88a255d8a5bb2b512a77c16~JnbAB8qU92249322493eucas1p1a;
+        Mon, 27 Apr 2020 07:48:42 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id B1.91.61286.A5E86AE5; Mon, 27
+        Apr 2020 08:48:42 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200427074842eucas1p1abfb9af74f0d898ba381700f37820318~Jna-joXJD2249322493eucas1p1Z;
+        Mon, 27 Apr 2020 07:48:42 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200427074842eusmtrp270ef1508ddad3aed8dbc553636c99585~Jna-i8Qa00599405994eusmtrp2g;
+        Mon, 27 Apr 2020 07:48:42 +0000 (GMT)
+X-AuditID: cbfec7f2-ef1ff7000001ef66-72-5ea68e5af15d
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 46.1A.07950.A5E86AE5; Mon, 27
+        Apr 2020 08:48:42 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200427074841eusmtip210ac6e5be1c4cc1e11973682146daa84~Jna-GsUfA0961909619eusmtip2K;
+        Mon, 27 Apr 2020 07:48:41 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     patches@opensource.cirrus.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Subject: [PATCH 1/4] mfd: wm8994: Fix driver operation if loaded as modules
+Date:   Mon, 27 Apr 2020 09:48:29 +0200
+Message-Id: <20200427074832.22134-2-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200427074832.22134-1-m.szyprowski@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphleLIzCtJLcpLzFFi42LZduzned2ovmVxBp9OG1tcuXiIyWLqwyds
+        FldaNzFa3P96lNHi25UOJovLu+awWaw9cpfd4vP7/awWh9+0szpwemz43MTmsXPWXXaPTas6
+        2TzuXNvD5jF9zn9Gj74tqxg9Pm+SC2CP4rJJSc3JLEst0rdL4MpYP6GyYA1nxa1Jr9gbGLs4
+        uhg5OSQETCTeHWpn6WLk4hASWMEoMf9XIxOE84VRYnvfAWaQKiGBz4wSnSvqYDq2f53IDFG0
+        nFHi+YTLbHAd84/sYwepYhMwlOh628UGYosIxEksX7wAbCyzwC9Gic+fNjGBJIQFvCWOrTzE
+        CGKzCKhKnOjoBIvzCthKzJo7hx1inbzE6g0gZ3BwcArYSSyc7gYyR0Kgn11i8d85rCBxCQEX
+        if7r/hDlwhKvjm+BapWR+L9zPhNEfTOjxMNza9khnB5GictNMxghqqwl7pz7xQYyiFlAU2L9
+        Ln2ImY4SnZOsIEw+iRtvBUGKmYHMSdumM0OEeSU62oQgZqhJzDq+Dm7rwQuXoEo8JA5cDoaE
+        zkRGiVuPv7FNYJSfhbBqASPjKkbx1NLi3PTUYsO81HK94sTc4tK8dL3k/NxNjMA0cvrf8U87
+        GL9eSjrEKMDBqMTDy7F9aZwQa2JZcWXuIUYJDmYlEd5HGcvihHhTEiurUovy44tKc1KLDzFK
+        c7AoifMaL3oZKySQnliSmp2aWpBaBJNl4uCUamDcqSDMf9EtR+ZRX5vmveVeJl4tZvv/Gpcs
+        M1ZdX79i0Z3NKwysYsS7FfYvL+v482rb/k1rc1seGs7JtVvMd1mL+8n30KNNC8t+Lz84J/4D
+        o8aWXRFLZ57ZuNsu8lxzkOZfNzET+btLj9ese/+cJ0ov/m//4lI7p+7PWuukQ50aume5egfN
+        u+evxFKckWioxVxUnAgA6i009x8DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrALMWRmVeSWpSXmKPExsVy+t/xe7pRfcviDJpuCllcuXiIyWLqwyds
+        FldaNzFa3P96lNHi25UOJovLu+awWaw9cpfd4vP7/awWh9+0szpwemz43MTmsXPWXXaPTas6
+        2TzuXNvD5jF9zn9Gj74tqxg9Pm+SC2CP0rMpyi8tSVXIyC8usVWKNrQw0jO0tNAzMrHUMzQ2
+        j7UyMlXSt7NJSc3JLEst0rdL0MtYP6GyYA1nxa1Jr9gbGLs4uhg5OSQETCS2f53I3MXIxSEk
+        sJRR4unquWwQCRmJk9MaWCFsYYk/17rYIIo+MUrcaTzMApJgEzCU6HrbBdYgIpAgcWh5C9gk
+        ZoF/jBLvHt1kBkkIC3hLHFt5iBHEZhFQlTjR0ckEYvMK2ErMmjuHHWKDvMTqDQeA6jk4OAXs
+        JBZOdwMJCwGVfPz+lnkCI98CRoZVjCKppcW56bnFRnrFibnFpXnpesn5uZsYgaG97djPLTsY
+        u94FH2IU4GBU4uHl2L40Tog1say4MvcQowQHs5II76OMZXFCvCmJlVWpRfnxRaU5qcWHGE2B
+        bprILCWanA+Mu7ySeENTQ3MLS0NzY3NjMwslcd4OgYMxQgLpiSWp2ampBalFMH1MHJxSDYzz
+        bou0WIhmHz/+6M7NWzatJbzmP6y7Njxedzq/+fbJTDex7R+DZPXT5eZE1bxfNls7783mGYva
+        MpbumJB84JQPy8nuL//KTk95o3Egwph3S1vdpp3HSvYv0GVdMqnahTvaZumtm0I7pPk/2764
+        sfPI7k3bKx2rxMX2H/1kzZbW61G6kjnZ56i/EktxRqKhFnNRcSIALGsBtIMCAAA=
+X-CMS-MailID: 20200427074842eucas1p1abfb9af74f0d898ba381700f37820318
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200427074842eucas1p1abfb9af74f0d898ba381700f37820318
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200427074842eucas1p1abfb9af74f0d898ba381700f37820318
+References: <20200427074832.22134-1-m.szyprowski@samsung.com>
+        <CGME20200427074842eucas1p1abfb9af74f0d898ba381700f37820318@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+WM8994 chip has built-in regulators, which might be used for chip
+operation. They are controlled by a separate wm8994-regulator driver,
+which should be loaded before this driver calls regulator_get(), because
+that driver also provides consumer-supply mapping for the them. If that
+driver is not yet loaded, regulator core substitute them with dummy
+regulator, what breaks chip operation, because the built-in regulators are
+never enabled. Fix this by annotating this driver with MODULE_SOFTDEP()
+"pre" dependency to "wm8994_regulator" module.
 
---4ZLFUWh1odzi/v6L
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+---
+ drivers/mfd/wm8994-core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Fri, Apr 24, 2020 at 04:19:25PM +0100, Jon Hunter wrote:
->=20
-> On 24/04/2020 15:45, Dmitry Osipenko wrote:
-> > 24.04.2020 10:10, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > ...
-> >>> Could you please clarify why pm_runtime_get_sync() can't be used by t=
-he
-> >>> I2C driver's in NOIRQ phase?
-> >>
-> >> Yes take a look at commit 1e2ef05bb8cf ("PM: Limit race conditions
-> >> between runtime PM and system sleep (v2)").
-> >=20
-> > I2C driver now uses irq-safe RPM since ede2299f7 ("i2c: tegra: Support
-> > atomic transfers"), and thus, the RPM's workqueue shouldn't be a
-> > problem. I guess RPM should work fine in this case, don't you think so?
->=20
-> I was testing, and I did not see it using atomic transfers. I can
-> confirm if the RPM callbacks are called or not, but I did not think so.
-> However, let me confirm.
->=20
-> >>> Yes, keeping PCI regulators always-enabled should be a good immediate
-> >>> solution.
-> >>
-> >> I was thinking about that, and I am not sure it is. I don't think that
-> >> the failure to send the I2C command should break suspend.
-> >=20
-> > It shouldn't, but looks like it should be a separate problem.
->=20
-> Maybe but all these other problems appear to have existed for sometime
-> now. We need to fix all, but for the moment we need to figure out what's
-> best for v5.7.
+diff --git a/drivers/mfd/wm8994-core.c b/drivers/mfd/wm8994-core.c
+index 1e9fe7d92597..737dede4a95c 100644
+--- a/drivers/mfd/wm8994-core.c
++++ b/drivers/mfd/wm8994-core.c
+@@ -690,3 +690,4 @@ module_i2c_driver(wm8994_i2c_driver);
+ MODULE_DESCRIPTION("Core support for the WM8994 audio CODEC");
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Mark Brown <broonie@opensource.wolfsonmicro.com>");
++MODULE_SOFTDEP("pre: wm8994_regulator");
+-- 
+2.17.1
 
-To me it doesn't sound like we have a good handle on what exactly is
-going on here and we're mostly just poking around.
-
-And even if things weren't working quite properly before, it sounds to
-me like this patch actually made things worse.
-
-Given all that, I think the best course of action at this point is to
-revert for v5.7 and prevent this from spreading[0]. After that we need
-to look at fixing the regulator issues and make sure that suspend/resume
-actually works properly and without errors. After that we should have a
-better chance of isolating why exactly this patch fails.
-
-Wolfram, can you revert the following two patches for v5.7, please?
-
-	8814044fe0fa i2c: tegra: Synchronize DMA before termination
-	a900aeac2537 i2c: tegra: Better handle case where CPU0 is busy for a long =
-time
-
-Thanks,
-Thierry
-
-[0]: https://lkml.org/lkml/2020/4/24/498
-
---4ZLFUWh1odzi/v6L
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6mjlEACgkQ3SOs138+
-s6GuPA//YCI4iiRaXv/ZB4BV/jq0WNLoCvWW1RIunKE3zf6VZ6DTdT29DXUZXEx+
-5e0ruCZPLzlF5m2hF5TGYlRJcsimli2K5QolOi2Mn0ROxPF2Lso1FKwtFrGhJwdB
-22oUXuUDjeIPdTl7EQHEoaVcGPSVfxIWJOJoyQKK3WSpirU1NFkWJLIx5S8xpcMd
-E5MdrQVZVvVjFYETLy3e8cbvW8AzwA+TBsls03/UszuORf4GJXCjQHEQKRrb8Ouw
-Av4zI4C3pIgdlj5pEsUCbkAQOMtwEgiezoiedZKVj3RpQtLVR3ntmB7S9Em1ra0N
-+4MkeSKcoPULYZgnmikrtY2H+ok14axoqN2aQROiGNcytggWEbsqyaKErrHzlq72
-RCNAeplgBsy9h2AoeWEfIqTy+bApoMX4QkVlOCxyCIn4Z0nbSta1MGjN+QHbX1L3
-atmaTITY2aGc6G74tMMkPBgvIYY2hgLoZc05jBY8P3fKNgj56tAAwCJ4Bx9OLMsS
-k5VchUOnHoCS5MefRBpQh4ikFOzXgpFzqYNphBxOk1YeRGZU9Xg6Vm4be31aRHdY
-hf1QocwpWOuhdNjzL/mCU+TiIDJv8/27YTXE/lMFRRhCyZ4oXcIq0VUMFyCerDgH
-K7RmwFiB54pxeOBHBRYFOfgSi51TCv4du9+AHL7J+7IXEkjf/MM=
-=MOEg
------END PGP SIGNATURE-----
-
---4ZLFUWh1odzi/v6L--
