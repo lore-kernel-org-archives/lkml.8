@@ -7,110 +7,226 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6D3C5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A45C55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00F69206B9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFCDE206B9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:49:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SvUvd1yx"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="dnof+psR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726639AbgD0GtP (ORCPT
+        id S1726611AbgD0Gtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 02:49:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46936 "EHLO
+        Mon, 27 Apr 2020 02:49:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726429AbgD0GtP (ORCPT
+        with ESMTP id S1726246AbgD0Gty (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 02:49:15 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B25F3C061A10
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 23:49:14 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id j1so19127886wrt.1
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 23:49:14 -0700 (PDT)
+        Mon, 27 Apr 2020 02:49:54 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45B9EC061A0F
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 23:49:54 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id q7so4891072qkf.3
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 23:49:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=OIRTtsyYCkg1t+ohXCk6lMBH379NOlwqIHq+QRjBm7Y=;
-        b=SvUvd1yxOiPnMe9YAUHgv8lQk0A2/6HHwopTOUCWs8NALsr8IaE+hEzfoKEo1yuqs2
-         TjmUIlPobyTTQwgv36TEaJLcVdpJsaOogMMa4AuCDJpBCcsgiZU/DME2f/khPL6iHlIg
-         EK+qQPX4JJRFUEvhskXLGcPGW04SF1toxWWM+RmxQ3XLi2BNb7WkSIEi+Hr6YfkXUGV9
-         7r/ITt+NXy5qzPvRpN8Ht1AKkwLhwe14aeKCNyTT33vTINcvj7L/SRGzEV1yKIvqLi/8
-         9pMTJn7ubL6lG8FAp4pE5t90T8NoZdw8q65UAq+7ypuxycxcTarTTWVpeWiyRhymWdH5
-         vfoQ==
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=1PVKCPVALnvwEaD1U6h5gcX2vEpDpla/uMGs4UxNrgo=;
+        b=dnof+psRHwMyPQG6q9AUqfbAV+LAZEaYYdzXGpK7uS08Ud2s7wACrrU1FhJgePSRWn
+         As3HERLV8aQDCz392ujJWVtQ2zp7Bby4eFUObw/+cUg8OemZ9HNCYeFUDbxhqRm+UB9l
+         WgHVng0KHWYMKjDQuQdnvK8GMxQ+lVDxd3iSM92CiwfLKwfCdaJYrtyaOC944UOf3Crb
+         P+tsZncrVASVuD9uWj+1z/KDtnNqU7f6lyLvw4ssMDC4nIoM38vs4wMGbu3Kz1acgnFN
+         gzTfBTMLeUBWp/MptIk2IFJ+sxlszVD0NiiK0o7T+FC5G8NSCCRGcep4zgV9mHD53uDo
+         2XpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=OIRTtsyYCkg1t+ohXCk6lMBH379NOlwqIHq+QRjBm7Y=;
-        b=YZ+J866KE+rZmFXY6AiUJeYsf6AoE+eL7zF5aWU3GLFX0IeLq5qa8+RnHgc1Lzo8jQ
-         YQm2TpgvRhbPpy2tp2PSRMKHVjmqdzahch5Hd0Qjn6900hDAyo6r/qYwLe9rfZD7sWsV
-         QHgj2TPDYg0thgBeKQIxnQ6tJ+EOaJ/Dr76PM0MGwbh6+3YcR70nGsfdyBpByoX2HJG9
-         iZjWKcxPVUSc241crBieQZfP1s624i1ZBYQ45zvy/COGYXFxSXtgSiif0DRa7BCSGfjZ
-         UqngqBMKZfc7HRUbYwT9+WHuv5K5bYfmtH8F+LcYCJZLWZjxWzTRtot04FrltEOZoNmU
-         xkmA==
-X-Gm-Message-State: AGi0Pub8XqzhlV7Bcd+TxWMQCSPu/iG2u61uXYsodwo9RlW/0u+teqe3
-        GOvBiCdiqlSjLpAxGXSCc3goVA==
-X-Google-Smtp-Source: APiQypI8chzF5P4rL2qpeRVXfTfA1qmduiJM0OWyA6AOLxbJHzUHnF5rqPqCGyojl0yXIHmSI+roCA==
-X-Received: by 2002:adf:f884:: with SMTP id u4mr25202217wrp.171.1587970153463;
-        Sun, 26 Apr 2020 23:49:13 -0700 (PDT)
-Received: from dell ([2.31.163.63])
-        by smtp.gmail.com with ESMTPSA id z10sm20140795wrg.69.2020.04.26.23.49.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Apr 2020 23:49:12 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 07:49:10 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Adrian Pop <pop.adrian61@gmail.com>
-Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] arm: dt-bindings: mfd: stm32f-rcc: Add missing DSI
- clock
-Message-ID: <20200427064910.GC3559@dell>
-References: <20200424181642.32084-1-pop.adrian61@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=1PVKCPVALnvwEaD1U6h5gcX2vEpDpla/uMGs4UxNrgo=;
+        b=IiNYSxvVPQ6UxFNyKgI6McA71hDa0bHj1XrCb99rjl/JxSbUtw/kE57hVXsVd6iO1n
+         plGEokdiEM4k8G4EygtiHSQp0Ko1KWVDAKdfwLxBQK5/FiAiDDtzhCellZOJBkUORxyL
+         3S8Xa9UGlyxVdooHn+M6fYuzStbFXrfq/TPXJQm+1R0o2XThQKlTcOc9dGMZP18VxpHy
+         0lbmEx7dbtzcsonrRVASWG4ms/aOCv/fBva4eP5A+wf+opAAEpXFJvdqfLjDA8d4SXOq
+         gG42hDM5U+Q3QaKcYmgBh2eYvgZLBabA2nA650RPE9pNF5WXXbMsiKJRPy1w8dWYDVXj
+         IDyw==
+X-Gm-Message-State: AGi0Pub1QM9dczqWtXDKZDfknpcC3WD6mcTOkVBMFClViTh8UWE1v6pO
+        kTGnuL4XC57RBKRB/ThHJbg4Cc/Zy5Xh380hZbmMnQ==
+X-Google-Smtp-Source: APiQypIeh88b6nTXu37F/D2EhkcMWCvN3p06uEFyOroXB45mhT/g7603VxSPSZNbJ7xigEPD0SZyZuV+VXVrxMTsTbE=
+X-Received: by 2002:a37:91c6:: with SMTP id t189mr20287581qkd.280.1587970193304;
+ Sun, 26 Apr 2020 23:49:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200424181642.32084-1-pop.adrian61@gmail.com>
+References: <20200426110740.123638-1-zong.li@sifive.com> <CAAhSdy3FCdzLV-nH03T=PBxB2tdZXhRrugcC2NcoA=22qpv+Lw@mail.gmail.com>
+ <CANXhq0qW9ORoZ5qc5g8ikO9QdeYX=p0fwoP8pyFFkk02a7imnw@mail.gmail.com>
+ <CAAhSdy2f2-SQP6TdgxA0HM2ft3eBJd6kEkB--RH=2gUuLktXLQ@mail.gmail.com>
+ <CANXhq0pDYa2QfGZX87d5gyO5V2uzA3-ttPZXf7s1EkMUcG37Cw@mail.gmail.com>
+ <CAAhSdy188_Kkfsz2bX05T3Rr12XDNtwGiwfqaT2TFVW7auGUaw@mail.gmail.com> <CANXhq0qGq33u34q7nhJE4GG03pZ8BBJrnusr=FgmTeJwtq-=4Q@mail.gmail.com>
+In-Reply-To: <CANXhq0qGq33u34q7nhJE4GG03pZ8BBJrnusr=FgmTeJwtq-=4Q@mail.gmail.com>
+From:   Greentime Hu <greentime.hu@sifive.com>
+Date:   Mon, 27 Apr 2020 14:49:42 +0800
+Message-ID: <CAHCEeh+FVYd6GKDuN4fXz9ku57vmdyVR1y_mzu89-sanNa_E3A@mail.gmail.com>
+Subject: Re: [PATCH] irqchip/sifive-plic: allow many cores to handle IRQs
+To:     Zong Li <zong.li@sifive.com>
+Cc:     Anup Patel <anup@brainfault.org>,
+        David Abdurachmanov <david.abdurachmanov@sifive.com>,
+        Marc Zyngier <maz@kernel.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Apr 2020, Adrian Pop wrote:
+Zong Li <zong.li@sifive.com> =E6=96=BC 2020=E5=B9=B44=E6=9C=8826=E6=97=A5 =
+=E9=80=B1=E6=97=A5 =E4=B8=8B=E5=8D=8811:35=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Sun, Apr 26, 2020 at 11:21 PM Anup Patel <anup@brainfault.org> wrote:
+> >
+> > On Sun, Apr 26, 2020 at 8:42 PM Zong Li <zong.li@sifive.com> wrote:
+> > >
+> > > On Sun, Apr 26, 2020 at 9:38 PM Anup Patel <anup@brainfault.org> wrot=
+e:
+> > > >
+> > > > +Mark Z
+> > > >
+> > > > On Sun, Apr 26, 2020 at 6:49 PM Zong Li <zong.li@sifive.com> wrote:
+> > > > >
+> > > > > On Sun, Apr 26, 2020 at 8:47 PM Anup Patel <anup@brainfault.org> =
+wrote:
+> > > > > >
+> > > > > > On Sun, Apr 26, 2020 at 4:37 PM Zong Li <zong.li@sifive.com> wr=
+ote:
+> > > > > > >
+> > > > > > > Currently, driver forces the IRQs to be handled by only one c=
+ore. This
+> > > > > > > patch provides the way to enable others cores to handle IRQs =
+if needed,
+> > > > > > > so users could decide how many cores they wanted on default b=
+y boot
+> > > > > > > argument.
+> > > > > > >
+> > > > > > > Use 'irqaffinity' boot argument to determine affinity. If the=
+re is no
+> > > > > > > irqaffinity in dts or kernel configuration, use irq default a=
+ffinity,
+> > > > > > > so all harts would try to claim IRQ.
+> > > > > > >
+> > > > > > > For example, add irqaffinity=3D0 in chosen node to set irq af=
+finity to
+> > > > > > > hart 0. It also supports more than one harts to handle irq, s=
+uch as set
+> > > > > > > irqaffinity=3D0,3,4.
+> > > > > > >
+> > > > > > > You can change IRQ affinity from user-space using procfs. For=
+ example,
+> > > > > > > you can make CPU0 and CPU2 serve IRQ together by the followin=
+g command:
+> > > > > > >
+> > > > > > > echo 4 > /proc/irq/<x>/smp_affinity
+> > > > > > >
+> > > > > > > Signed-off-by: Zong Li <zong.li@sifive.com>
+> > > > > > > ---
+> > > > > > >  drivers/irqchip/irq-sifive-plic.c | 21 +++++++--------------
+> > > > > > >  1 file changed, 7 insertions(+), 14 deletions(-)
+> > > > > > >
+> > > > > > > diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqc=
+hip/irq-sifive-plic.c
+> > > > > > > index d0a71febdadc..bc1440d54185 100644
+> > > > > > > --- a/drivers/irqchip/irq-sifive-plic.c
+> > > > > > > +++ b/drivers/irqchip/irq-sifive-plic.c
+> > > > > > > @@ -111,15 +111,12 @@ static inline void plic_irq_toggle(cons=
+t struct cpumask *mask,
+> > > > > > >  static void plic_irq_unmask(struct irq_data *d)
+> > > > > > >  {
+> > > > > > >         struct cpumask amask;
+> > > > > > > -       unsigned int cpu;
+> > > > > > >         struct plic_priv *priv =3D irq_get_chip_data(d->irq);
+> > > > > > >
+> > > > > > >         cpumask_and(&amask, &priv->lmask, cpu_online_mask);
+> > > > > > > -       cpu =3D cpumask_any_and(irq_data_get_affinity_mask(d)=
+,
+> > > > > > > -                                          &amask);
+> > > > > > > -       if (WARN_ON_ONCE(cpu >=3D nr_cpu_ids))
+> > > > > > > -               return;
+> > > > > > > -       plic_irq_toggle(cpumask_of(cpu), d, 1);
+> > > > > > > +       cpumask_and(&amask, &amask, irq_data_get_affinity_mas=
+k(d));
+> > > > > > > +
+> > > > > > > +       plic_irq_toggle(&amask, d, 1);
+> > > > > > >  }
+> > > > > > >
+> > > > > > >  static void plic_irq_mask(struct irq_data *d)
+> > > > > > > @@ -133,24 +130,20 @@ static void plic_irq_mask(struct irq_da=
+ta *d)
+> > > > > > >  static int plic_set_affinity(struct irq_data *d,
+> > > > > > >                              const struct cpumask *mask_val, =
+bool force)
+> > > > > > >  {
+> > > > > > > -       unsigned int cpu;
+> > > > > > >         struct cpumask amask;
+> > > > > > >         struct plic_priv *priv =3D irq_get_chip_data(d->irq);
+> > > > > > >
+> > > > > > >         cpumask_and(&amask, &priv->lmask, mask_val);
+> > > > > > >
+> > > > > > >         if (force)
+> > > > > > > -               cpu =3D cpumask_first(&amask);
+> > > > > > > +               cpumask_copy(&amask, mask_val);
+> > > > > > >         else
+> > > > > > > -               cpu =3D cpumask_any_and(&amask, cpu_online_ma=
+sk);
+> > > > > > > -
+> > > > > > > -       if (cpu >=3D nr_cpu_ids)
+> > > > > > > -               return -EINVAL;
+> > > > > > > +               cpumask_and(&amask, &amask, cpu_online_mask);
+> > > > > > >
+> > > > > > >         plic_irq_toggle(&priv->lmask, d, 0);
+> > > > > > > -       plic_irq_toggle(cpumask_of(cpu), d, 1);
+> > > > > > > +       plic_irq_toggle(&amask, d, 1);
+> > > > > > >
+> > > > > > > -       irq_data_update_effective_affinity(d, cpumask_of(cpu)=
+);
+> > > > > > > +       irq_data_update_effective_affinity(d, &amask);
+> > > > > > >
+> > > > > > >         return IRQ_SET_MASK_OK_DONE;
+> > > > > > >  }
+> > > > > > > --
+> > > > > > > 2.26.1
+> > > > > > >
+> > > > > >
+> > > > > > I strongly oppose (NACK) this patch due to performance reasons.
+> > > > > >
+> > > > > > In PLIC, if we enable an IRQ X for N CPUs then when IRQ X occur=
+s:
+> > > > > > 1) All N CPUs will take interrupt
+> > > > > > 2) All N CPUs will try to read PLIC CLAIM register
+> > > > > > 3) Only one of the CPUs will see IRQ X using the CLAIM register
+> > > > > > but other N - 1 CPUs will see no interrupt and return back to w=
+hat
+> > > > > > they were doing. In other words, N - 1 CPUs will just waste CPU
+> > > > > > every time IRQ X occurs.
+> > > > > >
+> > > > > > Example1, one Application doing heavy network traffic will
+> > > > > > degrade performance of other applications because with every
+> > > > > > network RX/TX interrupt N-1 CPUs will waste CPU trying to
+> > > > > > process network interrupt.
+> > > > > >
+> > > > > > Example1, one Application doing heavy MMC/SD traffic will
+> > > > > > degrade performance of other applications because with every
+> > > > > > SPI read/write interrupt N-1 CPUs will waste CPU trying to
+> > > > > > process it.
+> > > > > >
 
-> Add missing clock.
-> 
-> Signed-off-by: Adrian Pop <pop.adrian61@gmail.com>
-> ---
->  include/dt-bindings/mfd/stm32f7-rcc.h | 1 +
->  1 file changed, 1 insertion(+)
+Hi Anup,
 
-I assume patch 2 depends on this?
-
-If so, where is it?  Why isn't it in my inbox?
-
-> diff --git a/include/dt-bindings/mfd/stm32f7-rcc.h b/include/dt-bindings/mfd/stm32f7-rcc.h
-> index a90f3613c584..ba5cb7456ee4 100644
-> --- a/include/dt-bindings/mfd/stm32f7-rcc.h
-> +++ b/include/dt-bindings/mfd/stm32f7-rcc.h
-> @@ -107,6 +107,7 @@
->  #define STM32F7_RCC_APB2_SAI1		22
->  #define STM32F7_RCC_APB2_SAI2		23
->  #define STM32F7_RCC_APB2_LTDC		26
-> +#define STM32F7_RCC_APB2_DSI		27
->  
->  #define STM32F7_APB2_RESET(bit)	(STM32F7_RCC_APB2_##bit + (0x24 * 8))
->  #define STM32F7_APB2_CLOCK(bit)	(STM32F7_RCC_APB2_##bit + 0xA0)
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+If there is a case that there are a lot of interrupts from a single
+irq number coming very quickly, the first hart is still serving the
+first interrupt and still in its top half so it doesn't enable
+interrupt yet but the second interrupt is coming and waiting, only the
+rest of the harts can serve it. If they are masked, the interrupt
+won't be able to be served it right away. In this case, I think this
+patch can get better performance. Maybe we can still keep this patch
+for user to define their usage in his case?
