@@ -2,119 +2,198 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE8BC83001
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 126D7C83001
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7225F2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC1D42076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:53:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MnMVkFor"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gxcZIVgl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbgD0XrP (ORCPT
+        id S1726357AbgD0Xxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 19:47:15 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51717 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726244AbgD0XrP (ORCPT
+        Mon, 27 Apr 2020 19:53:46 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:34566 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726259AbgD0Xxp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 19:47:15 -0400
+        Mon, 27 Apr 2020 19:53:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588031234;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=uxyngGCNpGQBYlRKpDPeBZ17JkQOaOtVTbxTt4N/Ybk=;
-        b=MnMVkForpxGFZPYkwR2e0/Sud9TiSWO0nEqLIDa3ywdC4Ad31JkeeWxLLPGFI5qIVKnCj8
-        QA1aXTS8cR3DNiHb0EbKTl4Dhpf8bh7J3nmtwS3/dxDx6lm0FvfddNljEe+E6D/MgNZgnx
-        CfdI71G0r7dG0hS9G90oppigcyD6Y7o=
+        s=mimecast20190719; t=1588031623;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vCpLh05vrSFnAMWAQ3GvOGITpQiy3hkoT81RPE/4NEg=;
+        b=gxcZIVglLN5BDTHLydfd4L6IbmXpetekkLOEIYaCm1FjIk2TDRa1qputZFvDLWNQ1TJGCq
+        j6PKNka50zLOSildU/xGcn3z/b3+dmG4d9gnJbhLVHD/5D9K9b4+Mr7mw79dsXpRV5bxYz
+        TF8avt107hqz5MX3jAmoWjvmW67Sw1s=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-4-31bkz1BpNr6ZCYJ85BkCug-1; Mon, 27 Apr 2020 19:47:09 -0400
-X-MC-Unique: 31bkz1BpNr6ZCYJ85BkCug-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-224-xs_S9lOGM3a0v-IsKUqYAA-1; Mon, 27 Apr 2020 19:53:41 -0400
+X-MC-Unique: xs_S9lOGM3a0v-IsKUqYAA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A8682835B44;
-        Mon, 27 Apr 2020 23:47:08 +0000 (UTC)
-Received: from localhost.localdomain.com (vpn2-54-127.bne.redhat.com [10.64.54.127])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 61E82600DB;
-        Mon, 27 Apr 2020 23:47:06 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8FE2F1005510;
+        Mon, 27 Apr 2020 23:53:39 +0000 (UTC)
+Received: from localhost.localdomain (vpn2-54-127.bne.redhat.com [10.64.54.127])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B965910013D9;
+        Mon, 27 Apr 2020 23:53:36 +0000 (UTC)
+Reply-To: Gavin Shan <gshan@redhat.com>
+Subject: Re: [PATCH] arm64/kernel: Fix range on invalidating dcache for boot
+ page tables
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     steve.capper@arm.com, catalin.marinas@arm.com,
+        linux-kernel@vger.kernel.org, broonie@kernel.org,
+        shan.gavin@gmail.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200424050230.16720-1-gshan@redhat.com>
+ <20200424100131.GB1167@C02TD0UTHF1T.local>
 From:   Gavin Shan <gshan@redhat.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        catalin.marinas@arm.com, will@kernel.org, shan.gavin@gmail.com
-Subject: [PATCH v2] arm64/mm: Use phys_to_page() to access pgtable memory
-Date:   Tue, 28 Apr 2020 09:46:55 +1000
-Message-Id: <20200427234655.111847-1-gshan@redhat.com>
+Message-ID: <f62c7189-27e5-d820-fdd2-72ec5936aa68@redhat.com>
+Date:   Tue, 28 Apr 2020 09:53:34 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200424100131.GB1167@C02TD0UTHF1T.local>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The macros {pgd, pud, pmd}_page() retrieves the page struct of the
-corresponding page frame, which is reserved as page table. There
-is already a macro (phys_to_page), defined in memory.h as below,
-to convert the physical address to the page struct. Also, the header
-file (memory.h) has been included by pgtable.h.
+Hi Mark,
 
-   #define phys_to_page(phys)      (pfn_to_page(__phys_to_pfn(phys)))
+On 4/24/20 8:01 PM, Mark Rutland wrote:
+> Hi Gavin,
+> 
+> On Fri, Apr 24, 2020 at 03:02:30PM +1000, Gavin Shan wrote:
+>> The MMU is disabled when __create_page_tables() is called. The data
+>> cache corresponding to these two page tables, which are tracked by
+>> @idmap_pg_dir and @init_pg_dir, is invalidated after the page tables
+>> are populated. However, the wrong or inappropriate size have been used
+>> and more data cache are invalidated than it need.
+>>
+>> This fixes the issue by invalidating the data cache for these two
+>> page tables separately as they aren't necessarily physically adjacent.
+> 
+> Thanks for this!
+> 
+> I think the commit message needs to explain the issue more explicitly,
+> e.g.
+> 
+> | Prior to commit:
+> |
+> |   8eb7e28d4c642c31i ("arm64/mm: move runtime pgds to rodata")
+> |
+> | ... idmap_pgd_dir, tramp_pg_dir, reserved_ttbr0, swapper_pg_dir, and
+> | init_pg_dir were contiguous at the end of the kernel image. The
+> | maintenance at the end of __create_page_tables assumed these were
+> | contiguous, and affected everything from the start of idmap_pg_dir to
+> | the end of init_pg_dir.
+> |
+> | That commit moved all but init_pg_dir into the .rodata section, with
+> | other data placed between idmap_pg_dir and init_pg_dir, but did not
+> | update the maintenance. Hence the maintenance is performed on much
+> | more data than necessary (but as the bootloader previously made this
+> | clean to the PoC there is no functional problem).
+> |
+> | As we only alter idmap_pg_dir, and init_pg_dir, we only need to
+> | perform maintenance for these. As the other dirs are in .rodata, the
+> | bootloader will have initialised them as expected and cleaned them to
+> | the PoC. The kernel will initialize them as necessary after enabling
+> | the MMU.
+> |
+> | This patch reworks the maintenance to only cover the idmap_pg_dir and
+> | init_pg_dir to avoid this unnecessary work.
+> 
 
-So it's reasonable to use the macro in pgtable.h.
+Thanks for detailed changelog. I will use yours in v2, which will be posted
+shortly. A nit is the correct commit ID would be 8eb7e28d4c642c31 instead
+of 8eb7e28d4c642c31i :)
 
-Signed-off-by: Gavin Shan <gshan@redhat.com>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
----
-v2: Improved commit log (Mark Rutland)
----
- arch/arm64/include/asm/pgtable.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+>> Signed-off-by: Gavin Shan <gshan@redhat.com>
+>> ---
+>>   arch/arm64/kernel/head.S | 4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+>> index 57a91032b4c2..66947873c9e7 100644
+>> --- a/arch/arm64/kernel/head.S
+>> +++ b/arch/arm64/kernel/head.S
+>> @@ -398,6 +398,10 @@ SYM_FUNC_START_LOCAL(__create_page_tables)
+>>   	 * tables again to remove any speculatively loaded cache lines.
+>>   	 */
+> 
+> The comment above has been stale for a while, since it says:
+> 
+> | 	/*
+> | 	 * Since the page tables have been populated with non-cacheable
+> | 	 * accesses (MMU disabled), invalidate the idmap and swapper page
+> | 	 * tables again to remove any speculatively loaded cache lines.
+> | 	 */
+> 
+> ... can we please update that at the same time? We can avoid mention of
+> the specific tables and say:
+> 
+> | 	/*
+> | 	 * Since the page tables have been populated with non-cacheable
+> | 	 * accesses (MMU disabled), invalidate those tables again to
+> | 	 * remove any speculatively loaded cache lines.
+> | 	 */
+> 
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pg=
-table.h
-index 538c85e62f86..8c20e2bd6287 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -508,7 +508,7 @@ static inline void pte_unmap(pte_t *pte) { }
- #define pte_set_fixmap_offset(pmd, addr)	pte_set_fixmap(pte_offset_phys(=
-pmd, addr))
- #define pte_clear_fixmap()		clear_fixmap(FIX_PTE)
-=20
--#define pmd_page(pmd)		pfn_to_page(__phys_to_pfn(__pmd_to_phys(pmd)))
-+#define pmd_page(pmd)			phys_to_page(__pmd_to_phys(pmd))
-=20
- /* use ONLY for statically allocated translation tables */
- #define pte_offset_kimg(dir,addr)	((pte_t *)__phys_to_kimg(pte_offset_ph=
-ys((dir), (addr))))
-@@ -566,7 +566,7 @@ static inline phys_addr_t pud_page_paddr(pud_t pud)
- #define pmd_set_fixmap_offset(pud, addr)	pmd_set_fixmap(pmd_offset_phys(=
-pud, addr))
- #define pmd_clear_fixmap()		clear_fixmap(FIX_PMD)
-=20
--#define pud_page(pud)		pfn_to_page(__phys_to_pfn(__pud_to_phys(pud)))
-+#define pud_page(pud)			phys_to_page(__pud_to_phys(pud))
-=20
- /* use ONLY for statically allocated translation tables */
- #define pmd_offset_kimg(dir,addr)	((pmd_t *)__phys_to_kimg(pmd_offset_ph=
-ys((dir), (addr))))
-@@ -624,7 +624,7 @@ static inline phys_addr_t pgd_page_paddr(pgd_t pgd)
- #define pud_set_fixmap_offset(pgd, addr)	pud_set_fixmap(pud_offset_phys(=
-pgd, addr))
- #define pud_clear_fixmap()		clear_fixmap(FIX_PUD)
-=20
--#define pgd_page(pgd)		pfn_to_page(__phys_to_pfn(__pgd_to_phys(pgd)))
-+#define pgd_page(pgd)			phys_to_page(__pgd_to_phys(pgd))
-=20
- /* use ONLY for statically allocated translation tables */
- #define pud_offset_kimg(dir,addr)	((pud_t *)__phys_to_kimg(pud_offset_ph=
-ys((dir), (addr))))
---=20
-2.23.0
+Sure, It will be included in v2.
+
+>>   	adrp	x0, idmap_pg_dir
+>> +	mov	x1, #IDMAP_DIR_SIZE
+>> +	dmb	sy
+>> +	bl	__inval_dcache_area
+>> +	adrp	x0, init_pg_dir
+>>   	adrp	x1, init_pg_end
+>>   	sub	x1, x1, x0
+>>   	dmb	sy
+> 
+> The existing DMB is to order prior non-cacheable accesses against cache
+> maintenance, so we only need one of those at the start of the sequence.
+> For consistency, we should use the same idiom to generate the size of
+> both dirs. Given we use ADRP+ADRP+SUB here and elsewhere in head.S, I
+> think that's preferable for now.
+> 
+> So I reckon this should be:
+> 
+> |	dmb	sy
+> |
+> |	adrp	x0, idmap_pg_dir
+> |	adrp	x1, idmap_pg_end
+> |	sub	x1, x1, x0
+> |	bl	__inval_dcache_area
+> |
+> |	adrp	x0, init_pg_dir
+> |	adrp	x1, init_pg_end
+> |	sub	x1, x1, x0
+> |	bl	__inval_dcache_area
+> 
+> ... with those line gaps to make the distinct blocks clearer.
+> 
+
+Yep, I'll change the code accordingly in v2. Also, symbol @idmap_pg_end
+will be added to vmlinux.lds.S as it's not existing.
+
+> Thanks,
+> Mark.
+> 
+
+Thanks,
+Gavin
 
