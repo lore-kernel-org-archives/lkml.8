@@ -2,111 +2,130 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C558C55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EFE8C5519A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 636C32087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85AE520656
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:41:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbgD0Ih5 (ORCPT
+        id S1726639AbgD0IlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 04:37:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:59986 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725899AbgD0Ih4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 04:37:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3265A139F;
-        Mon, 27 Apr 2020 01:37:56 -0700 (PDT)
-Received: from dell3630.arm.com (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id EB86C3F68F;
-        Mon, 27 Apr 2020 01:37:51 -0700 (PDT)
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Luca Abeni <luca.abeni@santannapisa.it>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Wei Wang <wvw@google.com>, Quentin Perret <qperret@google.com>,
-        Alessio Balsini <balsini@google.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Qais Yousef <qais.yousef@arm.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 6/6] sched/deadline: Implement fallback mechanism for !fit case
-Date:   Mon, 27 Apr 2020 10:37:09 +0200
-Message-Id: <20200427083709.30262-7-dietmar.eggemann@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200427083709.30262-1-dietmar.eggemann@arm.com>
-References: <20200427083709.30262-1-dietmar.eggemann@arm.com>
+        Mon, 27 Apr 2020 04:41:20 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:59904 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbgD0IlT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 04:41:19 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 23D6720037;
+        Mon, 27 Apr 2020 10:41:14 +0200 (CEST)
+Date:   Mon, 27 Apr 2020 10:41:08 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Gareth Williams <gareth.williams.jx@renesas.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] drm/panel: simple: Add Newhaven ATXL#-CTP panel
+Message-ID: <20200427084108.GA21216@ravnborg.org>
+References: <1587975709-2092-1-git-send-email-gareth.williams.jx@renesas.com>
+ <1587975709-2092-4-git-send-email-gareth.williams.jx@renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587975709-2092-4-git-send-email-gareth.williams.jx@renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=ULXz4hXy c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=kj9zAlcOel0A:10 a=yC-0_ovQAAAA:8 a=MtrMpk1ate3mC_r31NwA:9
+        a=CjuIK1q_8ugA:10 a=QsnFDINu91a9xkgZirup:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luca Abeni <luca.abeni@santannapisa.it>
+Hi Gareth.
 
-When a task has a runtime that cannot be served within the scheduling
-deadline by any of the idle CPU (later_mask) the task is doomed to miss
-its deadline.
+Looking forward to see the other patches - they seem to be stuck
+awaiting approval.
 
-This can happen since the SCHED_DEADLINE admission control guarantees
-only bounded tardiness and not the hard respect of all deadlines.
-In this case try to select the idle CPU with the largest CPU capacity
-to minimize tardiness.
+A few comments in the following.
 
-Signed-off-by: Luca Abeni <luca.abeni@santannapisa.it>
-Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
----
- kernel/sched/cpudeadline.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+	Sam
 
-diff --git a/kernel/sched/cpudeadline.c b/kernel/sched/cpudeadline.c
-index 8630f2a40a3f..b6c7a0bc0880 100644
---- a/kernel/sched/cpudeadline.c
-+++ b/kernel/sched/cpudeadline.c
-@@ -121,19 +121,30 @@ int cpudl_find(struct cpudl *cp, struct task_struct *p,
- 
- 	if (later_mask &&
- 	    cpumask_and(later_mask, cp->free_cpus, p->cpus_ptr)) {
--		int cpu;
-+		unsigned long cap, max_cap = 0;
-+		int cpu, max_cpu = -1;
- 
- 		if (!static_branch_unlikely(&sched_asym_cpucapacity))
- 			return 1;
- 
- 		/* Ensure the capacity of the CPUs fits the task. */
- 		for_each_cpu(cpu, later_mask) {
--			if (!dl_task_fits_capacity(p, cpu))
-+			if (!dl_task_fits_capacity(p, cpu)) {
- 				cpumask_clear_cpu(cpu, later_mask);
-+
-+				cap = capacity_orig_of(cpu);
-+
-+				if (cap > max_cap) {
-+					max_cap = cap;
-+					max_cpu = cpu;
-+				}
-+			}
- 		}
- 
--		if (!cpumask_empty(later_mask))
--			return 1;
-+		if (cpumask_empty(later_mask))
-+			cpumask_set_cpu(max_cpu, later_mask);
-+
-+		return 1;
- 	} else {
- 		int best_cpu = cpudl_maximum(cp);
- 
--- 
-2.17.1
+On Mon, Apr 27, 2020 at 09:21:49AM +0100, Gareth Williams wrote:
+> This commit adds support for the Newhaven ATXL#-CTP panel used by the
+> Renesas RZ/N1 Demo Board.
+> 
+> Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
+> ---
+>  drivers/gpu/drm/panel/panel-simple.c | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> index 5a93c4e..0b57b0e 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -2021,6 +2021,30 @@ static const struct panel_desc newhaven_nhd_43_480272ef_atxl = {
+>  		     DRM_BUS_FLAG_SYNC_DRIVE_POSEDGE,
+>  };
+>  
+> +static const struct display_timing newhaven_nhd_50_800480tf_atxl_timing = {
+> +	.pixelclock = { 33300000, 33400000, 33500000 },
+> +	.hactive = { 800, 800, 800 },
+> +	.hfront_porch = { 40, 40, 40 },
+> +	.hback_porch = { 88, 88, 88 },
+> +	.hsync_len = { 1, 1, 1 },
+> +	.vactive = { 480, 480, 480 },
+> +	.vfront_porch = { 13, 13, 13 },
+> +	.vback_porch = { 32, 32, 32 },
+> +	.vsync_len = { 3, 3, 3 },
+> +	.flags = DISPLAY_FLAGS_HSYNC_HIGH | DISPLAY_FLAGS_VSYNC_HIGH,
+> +};
+> +
+> +static const struct panel_desc newhaven_nhd_50_800480tf_atxl = {
+> +		.timings = &newhaven_nhd_50_800480tf_atxl_timing,
+> +		.num_timings = 1,
+> +		.bpc = 8,
+> +		.size = {
+> +			.width = 400,
+> +			.height = 300,
+> +		},
+> +		.bus_flags = DRM_BUS_FLAG_DE_HIGH,
+Please add DRM_BUS_FLAG_PIXDATA too - as I assume this is an LVDS panel.
 
+> +};
+For new panels .connector_type is mandatory.
+
+
+> +
+>  static const struct display_timing nlt_nl192108ac18_02d_timing = {
+>  	.pixelclock = { 130000000, 148350000, 163000000 },
+>  	.hactive = { 1920, 1920, 1920 },
+> @@ -2964,6 +2988,9 @@ static const struct of_device_id platform_of_match[] = {
+>  		.compatible = "newhaven,nhd-4.3-480272ef-atxl",
+>  		.data = &newhaven_nhd_43_480272ef_atxl,
+>  	}, {
+> +		.compatible = "newhaven,nhd-5.0-800480tf-atxl",
+> +		.data = &newhaven_nhd_50_800480tf_atxl,
+> +	}, {
+
+I did not see the other patches - so this is maybe covered.
+But newhaven,nhd-5.0-800480tf-atxl must be documented in
+panel-simple.yaml before we can apply this.
+
+	Sam
+
+>  		.compatible = "nlt,nl192108ac18-02d",
+>  		.data = &nlt_nl192108ac18_02d,
+>  	}, {
+> -- 
+> 2.7.4
