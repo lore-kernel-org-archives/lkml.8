@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59339C5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7651FC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 432C1206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:31:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51B42206CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:31:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727055AbgD0Kbm (ORCPT
+        id S1726539AbgD0Kbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 06:31:42 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2105 "EHLO huawei.com"
+        Mon, 27 Apr 2020 06:31:49 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2108 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726537AbgD0Kbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 06:31:41 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id E1F57895E276EE888944;
-        Mon, 27 Apr 2020 11:31:39 +0100 (IST)
+        id S1726537AbgD0Kbn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 06:31:43 -0400
+Received: from lhreml725-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 459A0124F449A199D767;
+        Mon, 27 Apr 2020 11:31:42 +0100 (IST)
 Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
- lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
+ lhreml725-chm.china.huawei.com (10.201.108.76) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Mon, 27 Apr 2020 11:31:39 +0100
+ 15.1.1913.5; Mon, 27 Apr 2020 11:31:42 +0100
 Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.160)
  by fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Mon, 27 Apr 2020 12:31:38 +0200
+ 15.1.1913.5; Mon, 27 Apr 2020 12:31:41 +0200
 From:   Roberto Sassu <roberto.sassu@huawei.com>
 To:     <zohar@linux.ibm.com>, <rgoldwyn@suse.de>
 CC:     <linux-integrity@vger.kernel.org>,
         <linux-security-module@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <silviu.vlasceanu@huawei.com>,
-        <krzysztof.struczynski@huawei.com>,
-        "Roberto Sassu" <roberto.sassu@huawei.com>,
-        <stable@vger.kernel.org>
-Subject: [PATCH v2 1/6] ima: Set file->f_mode instead of file->f_flags in ima_calc_file_hash()
-Date:   Mon, 27 Apr 2020 12:28:55 +0200
-Message-ID: <20200427102900.18887-1-roberto.sassu@huawei.com>
+        <krzysztof.struczynski@huawei.com>
+Subject: [PATCH v2 4/6] ima: Remove redundant policy rule set in add_rules()
+Date:   Mon, 27 Apr 2020 12:28:58 +0200
+Message-ID: <20200427102900.18887-4-roberto.sassu@huawei.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200427102900.18887-1-roberto.sassu@huawei.com>
+References: <20200427102900.18887-1-roberto.sassu@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.204.65.160]
@@ -53,67 +53,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit a408e4a86b36 ("ima: open a new file instance if no read
-permissions") tries to create a new file descriptor to calculate a file
-digest if the file has not been opened with O_RDONLY flag. However, if a
-new file descriptor cannot be obtained, it sets the FMODE_READ flag to
-file->f_flags instead of file->f_mode.
+From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
 
-This patch fixes this issue by replacing f_flags with f_mode as it was
-before that commit.
+Function ima_appraise_flag() returns the flag to be set in
+temp_ima_appraise depending on the hook identifier passed as an argument.
+It is not necessary to set the flag again for the POLICY_CHECK hook.
 
-Changelog
-
-v1:
-- fix comment for f_mode change (suggested by Mimi)
-- rename modified_flags variable to modified_mode (suggested by Mimi)
-
-Cc: stable@vger.kernel.org # 4.20.x
-Fixes: a408e4a86b36 ("ima: open a new file instance if no read permissions")
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
 ---
- security/integrity/ima/ima_crypto.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ security/integrity/ima/ima_policy.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
-index 5201f5ec2ce4..f3a7f4eb1fc1 100644
---- a/security/integrity/ima/ima_crypto.c
-+++ b/security/integrity/ima/ima_crypto.c
-@@ -537,7 +537,7 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
- 	loff_t i_size;
- 	int rc;
- 	struct file *f = file;
--	bool new_file_instance = false, modified_flags = false;
-+	bool new_file_instance = false, modified_mode = false;
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index c334e0dc6083..ea9b991f0232 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -643,11 +643,8 @@ static void add_rules(struct ima_rule_entry *entries, int count,
  
- 	/*
- 	 * For consistency, fail file's opened with the O_DIRECT flag on
-@@ -557,13 +557,13 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
- 		f = dentry_open(&file->f_path, flags, file->f_cred);
- 		if (IS_ERR(f)) {
- 			/*
--			 * Cannot open the file again, lets modify f_flags
-+			 * Cannot open the file again, lets modify f_mode
- 			 * of original and continue
- 			 */
- 			pr_info_ratelimited("Unable to reopen file for reading.\n");
- 			f = file;
--			f->f_flags |= FMODE_READ;
--			modified_flags = true;
-+			f->f_mode |= FMODE_READ;
-+			modified_mode = true;
- 		} else {
- 			new_file_instance = true;
+ 			list_add_tail(&entry->list, &ima_policy_rules);
  		}
-@@ -581,8 +581,8 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
- out:
- 	if (new_file_instance)
- 		fput(f);
--	else if (modified_flags)
--		f->f_flags &= ~FMODE_READ;
-+	else if (modified_mode)
-+		f->f_mode &= ~FMODE_READ;
- 	return rc;
+-		if (entries[i].action == APPRAISE) {
++		if (entries[i].action == APPRAISE)
+ 			temp_ima_appraise |= ima_appraise_flag(entries[i].func);
+-			if (entries[i].func == POLICY_CHECK)
+-				temp_ima_appraise |= IMA_APPRAISE_POLICY;
+-		}
+ 	}
  }
  
 -- 
