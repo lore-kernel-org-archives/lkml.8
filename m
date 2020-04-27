@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 499BCC4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43111C81C81
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EAD82076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EA2F2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:19:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588022348;
-	bh=lwRMGbbsHVJhb8hO0xx/eSCpSl6VYKFTJ7/WckzZ9dM=;
+	s=default; t=1588022353;
+	bh=lgU5kQJKALcK/8kZC7aKJ8WIXmn4TvXevTBP41xPg8w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sHED4unZa7QIguBuPKTY5hwYLMlkD54aamIRm61AoptjeoCfQnesD13c40tPfK0C9
-	 IuB6ukaDXhKntofn23IAJWtXVFCqI0XPPFNzJgsGj2Kbg8FUbFgYOodsVDAzPS0gxQ
-	 HbdQD/UkieqRwKQS10+QkGHFsc/ZZ2Fa1bPxJqSw=
+	b=FN3uZ3cwGSil0Bs1gJeqQXynvNe4zbDUuny2PWDui89FxRxkWLxFrS22KkRyWw8cP
+	 Yn5K1hYvs0N1qAR+b85izwVN4niF3twOSTSunJCa8OUe3H+H7eH4V88zYGjynbH4UV
+	 9coMf3Kau+UMI/PNEdY7jkUqX3shD/XV9G5dynzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbgD0VTD (ORCPT
+        id S1726819AbgD0VTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 17:19:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34032 "EHLO mail.kernel.org"
+        Mon, 27 Apr 2020 17:19:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726309AbgD0VRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726344AbgD0VRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 Apr 2020 17:17:25 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06D2D2087E;
+        by mail.kernel.org (Postfix) with ESMTPSA id 5324721BE5;
         Mon, 27 Apr 2020 21:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588022244;
-        bh=lwRMGbbsHVJhb8hO0xx/eSCpSl6VYKFTJ7/WckzZ9dM=;
+        bh=lgU5kQJKALcK/8kZC7aKJ8WIXmn4TvXevTBP41xPg8w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TBItvtSm+5br5ozbc+9UMC15zzMiSewwqwrBiTwGuB2KPaUF+Oc9BFh2Vj2DdtMZN
-         fgRYCMqXX4ju2xXIdIVihMVG5CwzQ7EDt2N5clfFT3RPJ4wBuA99+aDtEmkwFi9ZLt
-         dtOfw1Y75WnsI4E/zzkP3OLEzoCpFF0WBT6Qwje8=
+        b=Q4J4cCfqihrVC7CO2CYq5CGeorm9gdyNVZjW2EqBq6dhxHWbCcgtXbvnJvLCmHo7s
+         wjxoubYj/WumY37FO8Z899gILQvTGYGXxeWdytLjOMBeRxhSLxt019JV6n9gaboeK6
+         dRykYy7lWYEnSk7DK9GrHaF9c6d5j9OldKPo1NkM=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jTB7y-000Hjz-80; Mon, 27 Apr 2020 23:17:22 +0200
+        id 1jTB7y-000HkO-IL; Mon, 27 Apr 2020 23:17:22 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        David Howells <dhowells@redhat.com>, linux-cachefs@redhat.com
-Subject: [PATCH v3 05/29] docs: filesystems: caching/cachefiles.txt: convert to ReST
-Date:   Mon, 27 Apr 2020 23:16:57 +0200
-Message-Id: <eec0cfc268e8dca348f760224685100c9c2caba6.1588021877.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v3 10/29] docs: filesystems: convert devpts.txt to ReST
+Date:   Mon, 27 Apr 2020 23:17:02 +0200
+Message-Id: <4ac8f3a7edd4d817acf0d173ead7ef74fe010c6c.1588021877.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588021877.git.mchehab+huawei@kernel.org>
 References: <cover.1588021877.git.mchehab+huawei@kernel.org>
@@ -61,455 +60,120 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 - Add a SPDX header;
-- Adjust document title;
+- Add a document title;
+- Some whitespace fixes and new line breaks;
 - Mark literal blocks as such;
-- Add table markups;
-- Comment out text ToC for html/pdf output;
-- Add lists markups;
-- Add it to filesystems/caching/index.rst.
+- Add it to filesystems/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../{cachefiles.txt => cachefiles.rst}        | 139 ++++++++----------
- Documentation/filesystems/caching/index.rst   |   1 +
- MAINTAINERS                                   |   2 +-
- fs/cachefiles/Kconfig                         |   4 +-
- 4 files changed, 65 insertions(+), 81 deletions(-)
- rename Documentation/filesystems/caching/{cachefiles.txt => cachefiles.rst} (90%)
+ Documentation/admin-guide/sysctl/kernel.rst |  2 +-
+ Documentation/filesystems/devpts.rst        | 36 +++++++++++++++++++++
+ Documentation/filesystems/devpts.txt        | 26 ---------------
+ Documentation/filesystems/index.rst         |  1 +
+ 4 files changed, 38 insertions(+), 27 deletions(-)
+ create mode 100644 Documentation/filesystems/devpts.rst
+ delete mode 100644 Documentation/filesystems/devpts.txt
 
-diff --git a/Documentation/filesystems/caching/cachefiles.txt b/Documentation/filesystems/caching/cachefiles.rst
-similarity index 90%
-rename from Documentation/filesystems/caching/cachefiles.txt
-rename to Documentation/filesystems/caching/cachefiles.rst
-index 28aefcbb1442..65d3db476765 100644
---- a/Documentation/filesystems/caching/cachefiles.txt
-+++ b/Documentation/filesystems/caching/cachefiles.rst
-@@ -1,8 +1,10 @@
--	       ===============================================
--	       CacheFiles: CACHE ON ALREADY MOUNTED FILESYSTEM
--	       ===============================================
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index fce1c059fbab..474cabfac468 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -921,7 +921,7 @@ this sysctl interface anymore.
+ pty
+ ===
+ 
+-See Documentation/filesystems/devpts.txt.
++See Documentation/filesystems/devpts.rst.
+ 
+ 
+ randomize_va_space
+diff --git a/Documentation/filesystems/devpts.rst b/Documentation/filesystems/devpts.rst
+new file mode 100644
+index 000000000000..a03248ddfb4c
+--- /dev/null
++++ b/Documentation/filesystems/devpts.rst
+@@ -0,0 +1,36 @@
 +.. SPDX-License-Identifier: GPL-2.0
- 
--Contents:
-+===============================================
-+CacheFiles: CACHE ON ALREADY MOUNTED FILESYSTEM
-+===============================================
 +
-+.. Contents:
- 
-  (*) Overview.
- 
-@@ -27,8 +29,8 @@ Contents:
-  (*) Debugging.
- 
- 
--========
--OVERVIEW
++=====================
++The Devpts Filesystem
++=====================
 +
-+Overview
- ========
- 
- CacheFiles is a caching backend that's meant to use as a cache a directory on
-@@ -58,8 +60,8 @@ spare space and automatically contract when the set of data requires more
- space.
- 
- 
--============
--REQUIREMENTS
++Each mount of the devpts filesystem is now distinct such that ptys
++and their indicies allocated in one mount are independent from ptys
++and their indicies in all other mounts.
 +
-+Requirements
- ============
- 
- The use of CacheFiles and its daemon requires the following features to be
-@@ -79,84 +81,70 @@ It is strongly recommended that the "dir_index" option is enabled on Ext3
- filesystems being used as a cache.
- 
- 
--=============
--CONFIGURATION
-+Configuration
- =============
- 
- The cache is configured by a script in /etc/cachefilesd.conf.  These commands
- set up cache ready for use.  The following script commands are available:
- 
-- (*) brun <N>%
-- (*) bcull <N>%
-- (*) bstop <N>%
-- (*) frun <N>%
-- (*) fcull <N>%
-- (*) fstop <N>%
--
-+ brun <N>%, bcull <N>%, bstop <N>%, frun <N>%, fcull <N>%, fstop <N>%
- 	Configure the culling limits.  Optional.  See the section on culling
- 	The defaults are 7% (run), 5% (cull) and 1% (stop) respectively.
- 
- 	The commands beginning with a 'b' are file space (block) limits, those
- 	beginning with an 'f' are file count limits.
- 
-- (*) dir <path>
--
-+ dir <path>
- 	Specify the directory containing the root of the cache.  Mandatory.
- 
-- (*) tag <name>
--
-+ tag <name>
- 	Specify a tag to FS-Cache to use in distinguishing multiple caches.
- 	Optional.  The default is "CacheFiles".
- 
-- (*) debug <mask>
--
-+ debug <mask>
- 	Specify a numeric bitmask to control debugging in the kernel module.
- 	Optional.  The default is zero (all off).  The following values can be
- 	OR'd into the mask to collect various information:
- 
-+		==	=================================================
- 		1	Turn on trace of function entry (_enter() macros)
- 		2	Turn on trace of function exit (_leave() macros)
- 		4	Turn on trace of internal debug points (_debug())
-+		==	=================================================
- 
--	This mask can also be set through sysfs, eg:
-+	This mask can also be set through sysfs, eg::
- 
- 		echo 5 >/sys/modules/cachefiles/parameters/debug
- 
- 
--==================
--STARTING THE CACHE
-+Starting the Cache
- ==================
- 
- The cache is started by running the daemon.  The daemon opens the cache device,
- configures the cache and tells it to begin caching.  At that point the cache
- binds to fscache and the cache becomes live.
- 
--The daemon is run as follows:
-+The daemon is run as follows::
- 
- 	/sbin/cachefilesd [-d]* [-s] [-n] [-f <configfile>]
- 
- The flags are:
- 
-- (*) -d
--
-+ ``-d``
- 	Increase the debugging level.  This can be specified multiple times and
- 	is cumulative with itself.
- 
-- (*) -s
--
-+ ``-s``
- 	Send messages to stderr instead of syslog.
- 
-- (*) -n
--
-+ ``-n``
- 	Don't daemonise and go into background.
- 
-- (*) -f <configfile>
--
-+ ``-f <configfile>``
- 	Use an alternative configuration file rather than the default one.
- 
- 
--===============
--THINGS TO AVOID
-+Things to Avoid
- ===============
- 
- Do not mount other things within the cache as this will cause problems.  The
-@@ -179,8 +167,7 @@ Do not chmod files in the cache.  The module creates things with minimal
- permissions to prevent random users being able to access them directly.
- 
- 
--=============
--CACHE CULLING
-+Cache Culling
- =============
- 
- The cache may need culling occasionally to make space.  This involves
-@@ -192,27 +179,21 @@ Cache culling is done on the basis of the percentage of blocks and the
- percentage of files available in the underlying filesystem.  There are six
- "limits":
- 
-- (*) brun
-- (*) frun
--
-+ brun, frun
-      If the amount of free space and the number of available files in the cache
-      rises above both these limits, then culling is turned off.
- 
-- (*) bcull
-- (*) fcull
--
-+ bcull, fcull
-      If the amount of available space or the number of available files in the
-      cache falls below either of these limits, then culling is started.
- 
-- (*) bstop
-- (*) fstop
--
-+ bstop, fstop
-      If the amount of available space or the number of available files in the
-      cache falls below either of these limits, then no further allocation of
-      disk space or files is permitted until culling has raised things above
-      these limits again.
- 
--These must be configured thusly:
-+These must be configured thusly::
- 
- 	0 <= bstop < bcull < brun < 100
- 	0 <= fstop < fcull < frun < 100
-@@ -226,16 +207,14 @@ started as soon as space is made in the table.  Objects will be skipped if
- their atimes have changed or if the kernel module says it is still using them.
- 
- 
--===============
--CACHE STRUCTURE
-+Cache Structure
- ===============
- 
- The CacheFiles module will create two directories in the directory it was
- given:
- 
-- (*) cache/
--
-- (*) graveyard/
-+ * cache/
-+ * graveyard/
- 
- The active cache objects all reside in the first directory.  The CacheFiles
- kernel module moves any retired or culled objects that it can't simply unlink
-@@ -261,10 +240,10 @@ If an object has children, then it will be represented as a directory.
- Immediately in the representative directory are a collection of directories
- named for hash values of the child object keys with an '@' prepended.  Into
- this directory, if possible, will be placed the representations of the child
--objects:
-+objects::
- 
--	INDEX     INDEX      INDEX                             DATA FILES
--	========= ========== ================================= ================
-+	 /INDEX    /INDEX     /INDEX                            /DATA FILES
-+	/=========/==========/=================================/================
- 	cache/@4a/I03nfs/@30/Ji000000000000000--fHg8hi8400
- 	cache/@4a/I03nfs/@30/Ji000000000000000--fHg8hi8400/@75/Es0g000w...DB1ry
- 	cache/@4a/I03nfs/@30/Ji000000000000000--fHg8hi8400/@75/Es0g000w...N22ry
-@@ -275,7 +254,7 @@ If the key is so long that it exceeds NAME_MAX with the decorations added on to
- it, then it will be cut into pieces, the first few of which will be used to
- make a nest of directories, and the last one of which will be the objects
- inside the last directory.  The names of the intermediate directories will have
--'+' prepended:
-+'+' prepended::
- 
- 	J1223/@23/+xy...z/+kl...m/Epqr
- 
-@@ -288,11 +267,13 @@ To handle this, CacheFiles will use a suitably printable filename directly and
- "base-64" encode ones that aren't directly suitable.  The two versions of
- object filenames indicate the encoding:
- 
-+	===============	===============	===============
- 	OBJECT TYPE	PRINTABLE	ENCODED
- 	===============	===============	===============
- 	Index		"I..."		"J..."
- 	Data		"D..."		"E..."
- 	Special		"S..."		"T..."
-+	===============	===============	===============
- 
- Intermediate directories are always "@" or "+" as appropriate.
- 
-@@ -307,8 +288,7 @@ Note that CacheFiles will erase from the cache any file it doesn't recognise or
- any file of an incorrect type (such as a FIFO file or a device file).
- 
- 
--==========================
--SECURITY MODEL AND SELINUX
-+Security Model and SELinux
- ==========================
- 
- CacheFiles is implemented to deal properly with the LSM security features of
-@@ -331,26 +311,26 @@ When the CacheFiles module is asked to bind to its cache, it:
- 
-  (1) Finds the security label attached to the root cache directory and uses
-      that as the security label with which it will create files.  By default,
--     this is:
-+     this is::
- 
- 	cachefiles_var_t
- 
-  (2) Finds the security label of the process which issued the bind request
--     (presumed to be the cachefilesd daemon), which by default will be:
-+     (presumed to be the cachefilesd daemon), which by default will be::
- 
- 	cachefilesd_t
- 
-      and asks LSM to supply a security ID as which it should act given the
--     daemon's label.  By default, this will be:
-+     daemon's label.  By default, this will be::
- 
- 	cachefiles_kernel_t
- 
-      SELinux transitions the daemon's security ID to the module's security ID
--     based on a rule of this form in the policy.
-+     based on a rule of this form in the policy::
- 
- 	type_transition <daemon's-ID> kernel_t : process <module's-ID>;
- 
--     For instance:
-+     For instance::
- 
- 	type_transition cachefilesd_t kernel_t : process cachefiles_kernel_t;
- 
-@@ -370,7 +350,7 @@ There are policy source files available in:
- 
- 	http://people.redhat.com/~dhowells/fscache/cachefilesd-0.8.tar.bz2
- 
--and later versions.  In that tarball, see the files:
-+and later versions.  In that tarball, see the files::
- 
- 	cachefilesd.te
- 	cachefilesd.fc
-@@ -379,7 +359,7 @@ and later versions.  In that tarball, see the files:
- They are built and installed directly by the RPM.
- 
- If a non-RPM based system is being used, then copy the above files to their own
--directory and run:
-+directory and run::
- 
- 	make -f /usr/share/selinux/devel/Makefile
- 	semodule -i cachefilesd.pp
-@@ -394,7 +374,7 @@ an auxiliary policy must be installed to label the alternate location of the
- cache.
- 
- For instructions on how to add an auxiliary policy to enable the cache to be
--located elsewhere when SELinux is in enforcing mode, please see:
-+located elsewhere when SELinux is in enforcing mode, please see::
- 
- 	/usr/share/doc/cachefilesd-*/move-cache.txt
- 
-@@ -402,8 +382,7 @@ When the cachefilesd rpm is installed; alternatively, the document can be found
- in the sources.
- 
- 
--==================
--A NOTE ON SECURITY
-+A Note on Security
- ==================
- 
- CacheFiles makes use of the split security in the task_struct.  It allocates
-@@ -445,17 +424,18 @@ for CacheFiles to run in a context of a specific security label, or to create
- files and directories with another security label.
- 
- 
--=======================
--STATISTICAL INFORMATION
-+Statistical Information
- =======================
- 
--If FS-Cache is compiled with the following option enabled:
-+If FS-Cache is compiled with the following option enabled::
- 
- 	CONFIG_CACHEFILES_HISTOGRAM=y
- 
- then it will gather certain statistics and display them through a proc file.
- 
-- (*) /proc/fs/cachefiles/histogram
-+ /proc/fs/cachefiles/histogram
++All mounts of the devpts filesystem now create a ``/dev/pts/ptmx`` node
++with permissions ``0000``.
 +
-+     ::
++To retain backwards compatibility the a ptmx device node (aka any node
++created with ``mknod name c 5 2``) when opened will look for an instance
++of devpts under the name ``pts`` in the same directory as the ptmx device
++node.
++
++As an option instead of placing a ``/dev/ptmx`` device node at ``/dev/ptmx``
++it is possible to place a symlink to ``/dev/pts/ptmx`` at ``/dev/ptmx`` or
++to bind mount ``/dev/ptx/ptmx`` to ``/dev/ptmx``.  If you opt for using
++the devpts filesystem in this manner devpts should be mounted with
++the ``ptmxmode=0666``, or ``chmod 0666 /dev/pts/ptmx`` should be called.
++
++Total count of pty pairs in all instances is limited by sysctls::
++
++    kernel.pty.max = 4096	- global limit
++    kernel.pty.reserve = 1024	- reserved for filesystems mounted from the initial mount namespace
++    kernel.pty.nr		- current count of ptys
++
++Per-instance limit could be set by adding mount option ``max=<count>``.
++
++This feature was added in kernel 3.4 together with
++``sysctl kernel.pty.reserve``.
++
++In kernels older than 3.4 sysctl ``kernel.pty.max`` works as per-instance limit.
+diff --git a/Documentation/filesystems/devpts.txt b/Documentation/filesystems/devpts.txt
+deleted file mode 100644
+index 9f94fe276dea..000000000000
+--- a/Documentation/filesystems/devpts.txt
++++ /dev/null
+@@ -1,26 +0,0 @@
+-Each mount of the devpts filesystem is now distinct such that ptys
+-and their indicies allocated in one mount are independent from ptys
+-and their indicies in all other mounts.
+-
+-All mounts of the devpts filesystem now create a /dev/pts/ptmx node
+-with permissions 0000.
+-
+-To retain backwards compatibility the a ptmx device node (aka any node
+-created with "mknod name c 5 2") when opened will look for an instance
+-of devpts under the name "pts" in the same directory as the ptmx device
+-node.
+-
+-As an option instead of placing a /dev/ptmx device node at /dev/ptmx
+-it is possible to place a symlink to /dev/pts/ptmx at /dev/ptmx or
+-to bind mount /dev/ptx/ptmx to /dev/ptmx.  If you opt for using
+-the devpts filesystem in this manner devpts should be mounted with
+-the ptmxmode=0666, or chmod 0666 /dev/pts/ptmx should be called.
+-
+-Total count of pty pairs in all instances is limited by sysctls:
+-kernel.pty.max = 4096		- global limit
+-kernel.pty.reserve = 1024	- reserved for filesystems mounted from the initial mount namespace
+-kernel.pty.nr			- current count of ptys
+-
+-Per-instance limit could be set by adding mount option "max=<count>".
+-This feature was added in kernel 3.4 together with sysctl kernel.pty.reserve.
+-In kernels older than 3.4 sysctl kernel.pty.max works as per-instance limit.
+diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
+index 9a7021bcb91f..10207f158a3e 100644
+--- a/Documentation/filesystems/index.rst
++++ b/Documentation/filesystems/index.rst
+@@ -24,6 +24,7 @@ algorithms work.
+    splice
+    locking
+    directory-locking
++   devpts
  
- 	cat /proc/fs/cachefiles/histogram
- 	JIFS  SECS  LOOKUPS   MKDIRS    CREATES
-@@ -465,36 +445,39 @@ then it will gather certain statistics and display them through a proc file.
-      between 0 jiffies and HZ-1 jiffies a variety of tasks took to run.  The
-      columns are as follows:
+    automount-support
  
-+	=======		=======================================================
- 	COLUMN		TIME MEASUREMENT
- 	=======		=======================================================
- 	LOOKUPS		Length of time to perform a lookup on the backing fs
- 	MKDIRS		Length of time to perform a mkdir on the backing fs
- 	CREATES		Length of time to perform a create on the backing fs
-+	=======		=======================================================
- 
-      Each row shows the number of events that took a particular range of times.
-      Each step is 1 jiffy in size.  The JIFS column indicates the particular
-      jiffy range covered, and the SECS field the equivalent number of seconds.
- 
- 
--=========
--DEBUGGING
-+Debugging
- =========
- 
- If CONFIG_CACHEFILES_DEBUG is enabled, the CacheFiles facility can have runtime
--debugging enabled by adjusting the value in:
-+debugging enabled by adjusting the value in::
- 
- 	/sys/module/cachefiles/parameters/debug
- 
- This is a bitmask of debugging streams to enable:
- 
-+	=======	=======	===============================	=======================
- 	BIT	VALUE	STREAM				POINT
- 	=======	=======	===============================	=======================
- 	0	1	General				Function entry trace
- 	1	2					Function exit trace
- 	2	4					General
-+	=======	=======	===============================	=======================
- 
- The appropriate set of values should be OR'd together and the result written to
--the control file.  For example:
-+the control file.  For example::
- 
- 	echo $((1|4|8)) >/sys/module/cachefiles/parameters/debug
- 
-diff --git a/Documentation/filesystems/caching/index.rst b/Documentation/filesystems/caching/index.rst
-index 75492b7c8ea0..a2cf35f89e28 100644
---- a/Documentation/filesystems/caching/index.rst
-+++ b/Documentation/filesystems/caching/index.rst
-@@ -8,5 +8,6 @@ Filesystem Caching
- 
-    fscache
-    object
-+   cachefiles
-    netfs-api
-    operations
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a1558eb34c45..7efea3593ff5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3733,7 +3733,7 @@ CACHEFILES: FS-CACHE BACKEND FOR CACHING ON MOUNTED FILESYSTEMS
- M:	David Howells <dhowells@redhat.com>
- L:	linux-cachefs@redhat.com (moderated for non-subscribers)
- S:	Supported
--F:	Documentation/filesystems/caching/cachefiles.txt
-+F:	Documentation/filesystems/caching/cachefiles.rst
- F:	fs/cachefiles/
- 
- CADENCE MIPI-CSI2 BRIDGES
-diff --git a/fs/cachefiles/Kconfig b/fs/cachefiles/Kconfig
-index ae559ed5b3b3..ff9ca55a9ae9 100644
---- a/fs/cachefiles/Kconfig
-+++ b/fs/cachefiles/Kconfig
-@@ -8,7 +8,7 @@ config CACHEFILES
- 	  filesystems - primarily networking filesystems - thus allowing fast
- 	  local disk to enhance the speed of slower devices.
- 
--	  See Documentation/filesystems/caching/cachefiles.txt for more
-+	  See Documentation/filesystems/caching/cachefiles.rst for more
- 	  information.
- 
- config CACHEFILES_DEBUG
-@@ -36,5 +36,5 @@ config CACHEFILES_HISTOGRAM
- 	  bouncing between CPUs.  On the other hand, the histogram may be
- 	  useful for debugging purposes.  Saying 'N' here is recommended.
- 
--	  See Documentation/filesystems/caching/cachefiles.txt for more
-+	  See Documentation/filesystems/caching/cachefiles.rst for more
- 	  information.
 -- 
 2.25.4
 
