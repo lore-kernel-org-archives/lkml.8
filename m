@@ -2,154 +2,136 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0198DC4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B01D1C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7AD22070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F4FF206D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:10:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fiouDYCk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbgD0UKm (ORCPT
+        id S1726839AbgD0UKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 16:10:42 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:51304 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbgD0UKl (ORCPT
+        Mon, 27 Apr 2020 16:10:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59832 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726205AbgD0UKr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 16:10:41 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 499wrG2wf8z1r57K;
-        Mon, 27 Apr 2020 22:10:38 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 499wrG17wnz1r5QD;
-        Mon, 27 Apr 2020 22:10:38 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id i4tqPQhTSciQ; Mon, 27 Apr 2020 22:10:36 +0200 (CEST)
-X-Auth-Info: GUUzWNkr5v3OccBIirF+3V7nXhtOcUNOL4F87dnWiJo=
-Received: from [IPv6:::1] (unknown [195.140.253.167])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Mon, 27 Apr 2020 22:10:36 +0200 (CEST)
-Subject: Re: [PATCH v2 04/12] mtd: rawnand: stm32_fmc2: manage all errors
- cases at probe time
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Christophe Kerello <christophe.kerello@st.com>, richard@nod.at,
-        vigneshr@ti.com, lee.jones@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, tony@atomide.com,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        devicetree@vger.kernel.org
-References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
- <1586966256-29548-5-git-send-email-christophe.kerello@st.com>
- <20200427194747.224a2402@xps13>
- <40a9bac7-9ed4-b781-f2c2-2d90b4e82749@denx.de>
- <20200427200848.722f4c56@xps13>
- <3527f3b8-225d-6e5a-dd8a-0421d475f70b@denx.de>
- <20200427220806.13741ec0@xps13>
-From:   Marek Vasut <marex@denx.de>
-Message-ID: <456b04f5-4ed7-6f3f-b0e6-9276bea09b50@denx.de>
-Date:   Mon, 27 Apr 2020 22:10:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 27 Apr 2020 16:10:47 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78B1BC0610D5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 13:10:47 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id l78so19452967qke.7
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 13:10:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=3l2kWyAVHOWSuEUbycrT6AidP4si2/zy60pGuFCsUSE=;
+        b=fiouDYCkHG4Eg7BHAQ8IO87s4LQMvzFHPr+C/vQRhOvTumCFZlYSShWEon1hlRmqk1
+         PwGf/ZMdo7nWIUUdMc1fPHGRL3KxrCORb2J1B21nuRjtx1i9SjDjCUDei3VNO8ninfRu
+         za1eREQ39+btOBBApTp3XECZGBjOnweWxH65KW9KCmcggEI3YsJwHgvDg9oy8P3I0TBU
+         TsR+WpF76BbyuhrsXHUE6piBOV3UEoqtI4IBq37NKXOciILX8+9kleluJq3XpdGwZNQB
+         1IT3JvFA943ipf8AUEpPgF/guw4uYQ+DhtGv63/GgBLo8a07o/CyXKUm81D1HeNjv0lJ
+         GewA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3l2kWyAVHOWSuEUbycrT6AidP4si2/zy60pGuFCsUSE=;
+        b=oOjHH6qG/C7LhiIoy/YLk35bnLjfLoWm0EKmEIA+KCF13VTOvx2myu2WO46GUzwdyg
+         WreQ7i1IijEkCxsGUvC6/BUcPxsLW2AFbHTWLMIdSNEpuefcuefbWYovBiofEuXsEi4p
+         znZW7Zf2FpBdn0mjSLWSWrJPbWiYZgPseY5SqbmrxexnTQ/EC+gVjD3wDsXn1Q2dlUlx
+         SAWs0gnfpmzelOCpD1cVfzTRlIXEooJQROp3slyAjIKdOMJMpEUfemglpvROWEiXktq6
+         lVfyGe2gAkggM2iqmKY6NVeZIsJSS18idAN0FqeXat5K6XgrQrAvcjuz61Fm8lydC9+a
+         oiFg==
+X-Gm-Message-State: AGi0PubGlXmV+GWgTOotWasZ+UYji9NcNwMxUAo9sWbfGzEx9kww5dkY
+        HH+d4rhBS5luoyb3ELxZsQ0=
+X-Google-Smtp-Source: APiQypKjxDYkx92awVftkfSXuPbisbGOLN1xeev4lT01j1fX1LHfj1aFnxHaT7WAIBOz4F6o03IZZQ==
+X-Received: by 2002:ae9:ef0b:: with SMTP id d11mr23730219qkg.403.1588018246551;
+        Mon, 27 Apr 2020 13:10:46 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id m12sm643597qtu.42.2020.04.27.13.10.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 13:10:45 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id C1102409A3; Mon, 27 Apr 2020 17:10:43 -0300 (-03)
+Date:   Mon, 27 Apr 2020 17:10:43 -0300
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, Jiri Olsa <jolsa@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V6 08/15] ftrace: Add perf text poke events for ftrace
+ trampolines
+Message-ID: <20200427201043.GP19437@kernel.org>
+References: <20200405201327.7332-1-adrian.hunter@intel.com>
+ <20200405201327.7332-9-adrian.hunter@intel.com>
+ <20200421134504.GQ20730@hirez.programming.kicks-ass.net>
+ <ce16611a-8b6c-765d-c254-5bb98493b082@intel.com>
+ <20200422114659.GE20730@hirez.programming.kicks-ass.net>
+ <76de871f-fb0a-6918-68a9-94aa7b049d6b@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200427220806.13741ec0@xps13>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <76de871f-fb0a-6918-68a9-94aa7b049d6b@intel.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/27/20 10:08 PM, Miquel Raynal wrote:
-> Hi Marek,
+Em Mon, Apr 27, 2020 at 10:23:05AM +0300, Adrian Hunter escreveu:
+> On 22/04/20 2:46 pm, Peter Zijlstra wrote:
+> > On Wed, Apr 22, 2020 at 10:39:06AM +0300, Adrian Hunter wrote:
+> >> On 21/04/20 4:45 pm, Peter Zijlstra wrote:
+> >>> On Sun, Apr 05, 2020 at 11:13:20PM +0300, Adrian Hunter wrote:
+> >>>> Add perf text poke events for ftrace trampolines when created and when
+> >>>> freed.
+> >>>
+> >>> Maybe also put in a little more detail on the various events. Because
+> >>> arch_ftrace_update_trampoline() can also generate text_poke_bp() events,
+> >>> to update an existing trampoline.
+> >>>
+> >>> A diagram, like with the kprobes thing perhaps.
+> >>
+> >> How about adding this:
+> >>
+> >> There can be 3 text_poke events for ftrace trampolines:
+> >>
+> >> 1. NULL -> trampoline
+> >>    By ftrace_update_trampoline() when !ops->trampoline
+> >>    Trampoline created
+> >>
+> >> 2. [e.g. on x86] CALL rel32 -> CALL rel32
+> >>    By arch_ftrace_update_trampoline() when ops->trampoline and
+> >>                         ops->flags & FTRACE_OPS_FL_ALLOC_TRAMP
+> >>    [e.g. on x86] via text_poke_bp() which generates text poke events
+> >>    Trampoline-called function target updated
+> >>
+> >> 3. trampoline -> NULL
+> >>    By ftrace_trampoline_free() when ops->trampoline and
+> >>                  ops->flags & FTRACE_OPS_FL_ALLOC_TRAMP
+> >>    Trampoline freed
+> > 
+> > Yes, very nice. Thanks!
 > 
-> Marek Vasut <marex@denx.de> wrote on Mon, 27 Apr 2020 21:46:44 +0200:
-> 
->> On 4/27/20 8:08 PM, Miquel Raynal wrote:
->> [...]
->>>>>>  	/* FMC2 init routine */
->>>>>>  	stm32_fmc2_init(fmc2);
->>>>>> @@ -1997,7 +2001,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
->>>>>>  	/* Scan to find existence of the device */
->>>>>>  	ret = nand_scan(chip, nand->ncs);
->>>>>>  	if (ret)
->>>>>> -		goto err_scan;
->>>>>> +		goto err_dma_setup;
->>>>>>  
->>>>>>  	ret = mtd_device_register(mtd, NULL, 0);
->>>>>>  	if (ret)
->>>>>> @@ -2010,7 +2014,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
->>>>>>  err_device_register:
->>>>>>  	nand_cleanup(chip);
->>>>>>  
->>>>>> -err_scan:
->>>>>> +err_dma_setup:
->>>>>>  	if (fmc2->dma_ecc_ch)
->>>>>>  		dma_release_channel(fmc2->dma_ecc_ch);
->>>>>>  	if (fmc2->dma_tx_ch)
->>>>>> @@ -2021,6 +2025,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
->>>>>>  	sg_free_table(&fmc2->dma_data_sg);
->>>>>>  	sg_free_table(&fmc2->dma_ecc_sg);
->>>>>>  
->>>>>> +err_clk_disable:
->>>>>>  	clk_disable_unprepare(fmc2->clk);
->>>>>>  
->>>>>>  	return ret;    
->>>>>
->>>>> I didn't spot it during my earlier reviews but I really prefer using
->>>>> labels explaining what you do than having the same name of the function
->>>>> which failed. This way you don't have to rework the error path when
->>>>> you handle an additional error.
->>>>>
->>>>> So, would you mind doing this in two steps:
->>>>>
->>>>> 1/
->>>>> Replace
->>>>>
->>>>>     err_scan:
->>>>>
->>>>> with, eg.
->>>>>
->>>>>     release_dma_objs:    
->>>>
->>>> The ^err_ prefix in failpath labels is useful, since it's easily
->>>> possible to match on it with regexes ; not so much on arbitrary label name.  
->>>
->>> I guess so, but is it actually useful to catch labels in a regex? (real
->>> question)  
->>
->> I find it useful to have a unified way to find those labels, e.g.
->> err_because_foo:
->> err_because_bar:
->> err_last_one:
->> is much nicer than:
->> foo_failed:
->> bar_also_failed:
->> its_total_randomness:
-> 
-> My point being, Christophe, you can use err_ as a prefix but I think
-> it's better to use:
-> 
->     err_do_this_cleanup
-> 
-> than
-> 
->    err_this_failed
+> Arnaldo, do you have this patchset on your radar?
 
-That's fine either way.
+Now it is, will look it into it,
 
->>> Any way I suppose catching ":\n" is already a good approximation to
->>> find labels?  
->>
->> Not very practical with git grep (^err.*: works nicely though)
-> 
-> I suppose ^.*:$ would work the same ;)
-
-Try and see how much other irrelevant stuff that sucks in ;-)
+- Arnaldo
