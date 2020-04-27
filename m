@@ -2,137 +2,108 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB51C55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49702C55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29BE720656
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:21:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587979315;
-	bh=jKyA/Qjkmcdo4y/kF2F0R19weTj2X0wKUsAjpoDrwrA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=GHcLTlBedRPLFwDFBLp4yg8xBc6yjPZv9juOUumOQC5Ho+S/hX+gi+R0xWL/JXM86
-	 kWQNk9N0tqFHlg8ySKkDZMOEVapj+7V+FooT4qVMXyMiok2vL3KPBG/R1OkK8fdqkZ
-	 XRhXRXvkIVQdYkcZkriXn/7/xrnssaF1OL288B4w=
+	by mail.kernel.org (Postfix) with ESMTP id 3142420656
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:22:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgD0JVy (ORCPT
+        id S1726892AbgD0JWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 05:21:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57282 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726507AbgD0JVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 05:21:54 -0400
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D23A82075E;
-        Mon, 27 Apr 2020 09:21:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587979313;
-        bh=jKyA/Qjkmcdo4y/kF2F0R19weTj2X0wKUsAjpoDrwrA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qvjI3693uqXiyrz1pqnm09s+lMplQHHaPmABgh2Z4nWsmJgEbhO3H/67Qgj4bOGFV
-         foiwHBi8Rpl68csholnG9+7Q0X70q3relP8nRyYR44jzf5AndCgj2LMH/b4Qe2pEmU
-         Pus41UVX3ahsNGo3RFtIXM5j0qTTHA7TGjGkMzXw=
-Received: by mail-lj1-f174.google.com with SMTP id g4so16810859ljl.2;
-        Mon, 27 Apr 2020 02:21:52 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYwDXmRPnwPBbwyvCZPsxvh+dmnHytO1yBA3myEFmbj/1IdqQsF
-        XVMpLtPpXMmtADEP8vt+gn51SDyv3IMn8zbLOEI=
-X-Google-Smtp-Source: APiQypLonALPqCCxEkhgKW6hPj0VMnhh8js9Nzmi3hS5n1MUW4IMs8k0s21bp3PJw4RUgY/Fx25darDkQTSoNMmnPCw=
-X-Received: by 2002:a2e:910e:: with SMTP id m14mr12450836ljg.141.1587979310912;
- Mon, 27 Apr 2020 02:21:50 -0700 (PDT)
+        Mon, 27 Apr 2020 05:22:24 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33769 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726434AbgD0JWY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 05:22:24 -0400
+Received: by mail-ot1-f68.google.com with SMTP id j26so25016103ots.0;
+        Mon, 27 Apr 2020 02:22:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8DC9wuWVCpF4fX18bDiRbTVykcklvB3HgA/RSTX3Ci8=;
+        b=mhsPza1L+7xZRs4T2p5Egg3AsNIqgbf6S8LCkx2Av9mky2fXKgFR8KEoUPI0792Lhj
+         fvNrfEwjG/kdUl0t1Ddlo5vclAinBnS6rV3quLRCt2IzQDpHjRRkfyz7Tx2Cljj0s0rX
+         teBGZISSKPlooHXEynRAxzRXOXDsgmoJuFL/TYu5Y6i7I6zWFb/hDZRUwI2bnF27Fufg
+         TKf+0nmDiLq1b+GZfDSYDQfoa5ptABQ4vk6TrTV6xjq/Xr7mY+J5NApVn0aXDr46mYab
+         +N46vkgSHy0X5T18EyRbPeI/0fHuuV5eqAHp09c4gXFtUIVxGLOCyZU2opw5pwa0ZXwX
+         Pe1w==
+X-Gm-Message-State: AGi0PuZMG2Q7eecdWDmM+0Kdf5SsSB7kjAKoysccHwrNmyh4BRnHMqB3
+        VfIhtQLbDZYPGBPicbsolA9AkuXT5PmIZS3qV/k=
+X-Google-Smtp-Source: APiQypJ10JMZ48yMEr4gCPT2ON7rEsolbc8FeD4lWrGcROoB5VwAc887q0ILi7S4AP3Z/A1HrLX90XTtwrazUTrCwvg=
+X-Received: by 2002:a9d:7d85:: with SMTP id j5mr16573914otn.107.1587979343075;
+ Mon, 27 Apr 2020 02:22:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200427073132.29997-2-wens@kernel.org> <4044214d-5385-94b6-d985-e1f824a60c5e@gmail.com>
-In-Reply-To: <4044214d-5385-94b6-d985-e1f824a60c5e@gmail.com>
-From:   Chen-Yu Tsai <wens@kernel.org>
-Date:   Mon, 27 Apr 2020 17:21:39 +0800
-X-Gmail-Original-Message-ID: <CAGb2v645WU9mFeB83DvJcbfJ0xJswb3gq0NJLXwkVnPz8kcYNQ@mail.gmail.com>
-Message-ID: <CAGb2v645WU9mFeB83DvJcbfJ0xJswb3gq0NJLXwkVnPz8kcYNQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: leds: common: Drop enumeration for linux,default-triggers
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     Chen-Yu Tsai <wens@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>, dmurphy@ti.com,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        jacek.anaszewski@gmail.com,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
+References: <1587678050-23468-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1587678050-23468-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1587678050-23468-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 27 Apr 2020 11:22:11 +0200
+Message-ID: <CAMuHMdV6J-_gBkzhUXtA8OrxhJVzyrAqjA8oeGJGBp86X-C3Nw@mail.gmail.com>
+Subject: Re: [PATCH 10/10] cpufreq: dt: Add support for r8a7742
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Marian-Cristian Rotariu 
+        <marian-cristian.rotariu.rb@bp.renesas.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 4:33 PM Johan Jonker <jbx6244@gmail.com> wrote:
->
-> Hi Chen-Yu,
->
-> > From: Chen-Yu Tsai <wens@csie.org>
-> >
-> > The bindings currently list a very small subset of valid triggers for
-> > LEDs. Since many drivers or subsystems in Linux register custom
-> > triggers, the list would become very hard to maintain.
-> >
-> > Instead, just drop the list and allow free form strings.
-> >
-> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> > ---
-> >  .../devicetree/bindings/leds/common.yaml      | 21 +------------------
-> >  1 file changed, 1 insertion(+), 20 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/leds/common.yaml b/Documentation/devicetree/bindings/leds/common.yaml
-> > index 4c270fde4567..3b3cdab3fc15 100644
-> > --- a/Documentation/devicetree/bindings/leds/common.yaml
-> > +++ b/Documentation/devicetree/bindings/leds/common.yaml
-> > @@ -79,26 +79,7 @@ properties:
-> >      description:
-> >        This parameter, if present, is a string defining the trigger assigned to
-> >        the LED.
-> > -    allOf:
-> > -      - $ref: /schemas/types.yaml#definitions/string
-> > -    enum:
-> > -        # LED will act as a back-light, controlled by the framebuffer system
-> > -      - backlight
-> > -        # LED will turn on (but for leds-gpio see "default-state" property in
-> > -        # Documentation/devicetree/bindings/leds/leds-gpio.yaml)
-> > -      - default-on
-> > -        # LED "double" flashes at a load average based rate
-> > -      - heartbeat
-> > -        # LED indicates disk activity
-> > -      - disk-activity
-> > -        # LED indicates IDE disk activity (deprecated), in new implementations
-> > -        # use "disk-activity"
-> > -      - ide-disk
-> > -        # LED flashes at a fixed, configurable rate
-> > -      - timer
-> > -        # LED alters the brightness for the specified duration with one software
-> > -        # timer (requires "led-pattern" property)
-> > -      - pattern
-> > +    $ref: /schemas/types.yaml#definitions/string
->
-> This makes it free form, but deletes the documentation of options that
-> are standard available for people without custom driver.
-> Where should that info go?
+Hi Prabhakar,
 
-As far as I know, there is no canonical list of standard triggers.
-In addition, what triggers are available also depend on the kernel
-configuration, so there really is no "standard".
+This patch should be merged through Viresh's cpufreq tree (CCed).
 
-Since this is also configurable via sysfs, maybe it should be part
-of the sysfs ABI document? Either way I believe this will be up to
-the LED subsystem maintainers.
-
-ChenYu
-
-> >
-> >    led-pattern:
-> >      description: |
-> > --
-> > 2.26.0
+On Thu, Apr 23, 2020 at 11:41 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add the compatible strings for supporting the generic cpufreq driver on
+> the Renesas RZ/G1H (R8A7742) SoC.
 >
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+> --- a/drivers/cpufreq/cpufreq-dt-platdev.c
+> +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
+> @@ -53,6 +53,7 @@ static const struct of_device_id whitelist[] __initconst = {
+>         { .compatible = "renesas,r7s72100", },
+>         { .compatible = "renesas,r8a73a4", },
+>         { .compatible = "renesas,r8a7740", },
+> +       { .compatible = "renesas,r8a7742", },
+>         { .compatible = "renesas,r8a7743", },
+>         { .compatible = "renesas,r8a7744", },
+>         { .compatible = "renesas,r8a7745", },
+> --
+> 2.7.4
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
