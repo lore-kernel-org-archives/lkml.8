@@ -2,148 +2,128 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9852C83001
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB81C83003
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F7792076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32C212076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:57:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LlkDOFKK"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hM855UT/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgD0X5O (ORCPT
+        id S1726507AbgD0X5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 19:57:14 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:54376 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726355AbgD0X5O (ORCPT
+        Mon, 27 Apr 2020 19:57:20 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:3807 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726472AbgD0X5T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 19:57:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588031832;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=TX3l/PsIBBKAEBFp9II7hFHKmsTrVNvxgpKGxnEg3zs=;
-        b=LlkDOFKKSF9tfS0L3MVHmnU6/9z8orRFb6HM3Zac80QGiZl21VEBMp+2Rpy+0pb03+tRkY
-        wlGTMAsvWw0RSh9SkZa13wnUuvrAYdzlnIUuXEooosnZ1qfJ/Q5aklzKtqDrK4A9wHCwLm
-        FJedj46nVj9cs0b7mr62Qqou6DLFxu0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-314-V-bSCE4gMoyiC7kkAoz9Zg-1; Mon, 27 Apr 2020 19:57:08 -0400
-X-MC-Unique: V-bSCE4gMoyiC7kkAoz9Zg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 36668107ACCA;
-        Mon, 27 Apr 2020 23:57:07 +0000 (UTC)
-Received: from localhost.localdomain.com (vpn2-54-127.bne.redhat.com [10.64.54.127])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9B9E960300;
-        Mon, 27 Apr 2020 23:57:04 +0000 (UTC)
-From:   Gavin Shan <gshan@redhat.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        steve.capper@arm.com, catalin.marinas@arm.com, broonie@kernel.org,
-        will@kernel.org, shan.gavin@gmail.com
-Subject: [PATCH v2] arm64/kernel: Fix range on invalidating dcache for boot page tables
-Date:   Tue, 28 Apr 2020 09:57:00 +1000
-Message-Id: <20200427235700.112220-1-gshan@redhat.com>
+        Mon, 27 Apr 2020 19:57:19 -0400
+X-UUID: e4c8437aa40a471cb743922bcd70d065-20200428
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=4PG5NDEBrD4fO5vzTmIM1OqLtc9TFzvj1Pom1O6bbj0=;
+        b=hM855UT/qYcScQoS1QHW0kcPRTdW/YiJuGwQfgDtFEHI2T/UP3H0PCKyrNtxZLKXRy4k+XCajPqUt9zlW8OhFmgoucPRP/4CdUHKQ8GXVU3bb7aUQaJqjXql4RVY2cq53bvMPHgmxdEDFrf3Bryz5aZHOVunv95zBUOlIZp4+XQ=;
+X-UUID: e4c8437aa40a471cb743922bcd70d065-20200428
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <chun-hung.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1814683827; Tue, 28 Apr 2020 07:57:14 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 28 Apr 2020 07:57:08 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 28 Apr 2020 07:57:13 +0800
+From:   Chun-Hung Wu <chun-hung.wu@mediatek.com>
+To:     <mirq-linux@rere.qmqm.pl>, Jonathan Hunter <jonathanh@nvidia.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Pan Bian <bianpan2016@163.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Kuohong Wang <kuohong.wang@mediatek.com>,
+        Yong Mao <yong.mao@mediatek.com>
+CC:     <kernel-team@android.com>, <linux-kernel@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        Chun-Hung Wu <chun-hung.wu@mediatek.com>
+Subject: [PATCH v5 3/5] mmc: mediatek: refine msdc timeout api
+Date:   Tue, 28 Apr 2020 07:56:06 +0800
+Message-ID: <1588031768-23677-4-git-send-email-chun-hung.wu@mediatek.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1588031768-23677-1-git-send-email-chun-hung.wu@mediatek.com>
+References: <1588031768-23677-1-git-send-email-chun-hung.wu@mediatek.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prior to commit 8eb7e28d4c642c31 ("arm64/mm: move runtime pgds to
-rodata"), idmap_pgd_dir, tramp_pg_dir, reserved_ttbr0, swapper_pg_dir,
-and init_pg_dir were contiguous at the end of the kernel image. The
-maintenance at the end of __create_page_tables assumed these were
-contiguous, and affected everything from the start of idmap_pg_dir
-to the end of init_pg_dir.
-
-That commit moved all but init_pg_dir into the .rodata section, with
-other data placed between idmap_pg_dir and init_pg_dir, but did not
-update the maintenance. Hence the maintenance is performed on much
-more data than necessary (but as the bootloader previously made this
-clean to the PoC there is no functional problem).
-
-As we only alter idmap_pg_dir, and init_pg_dir, we only need to perform
-maintenance for these. As the other dirs are in .rodata, the bootloader
-will have initialised them as expected and cleaned them to the PoC. The
-kernel will initialize them as necessary after enabling the MMU.
-
-This patch reworks the maintenance to only cover the idmap_pg_dir and
-init_pg_dir to avoid this unnecessary work.
-
-Signed-off-by: Gavin Shan <gshan@redhat.com>
----
-v2: Include the suggested commit log    (Mark Rutland)
-    Improved comments and code          (Mark Rutland)
----
- arch/arm64/include/asm/pgtable.h |  1 +
- arch/arm64/kernel/head.S         | 12 +++++++++---
- arch/arm64/kernel/vmlinux.lds.S  |  1 +
- 3 files changed, 11 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pg=
-table.h
-index 8c20e2bd6287..5caff09c6a3a 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -457,6 +457,7 @@ extern pgd_t init_pg_dir[PTRS_PER_PGD];
- extern pgd_t init_pg_end[];
- extern pgd_t swapper_pg_dir[PTRS_PER_PGD];
- extern pgd_t idmap_pg_dir[PTRS_PER_PGD];
-+extern pgd_t idmap_pg_end[];
- extern pgd_t tramp_pg_dir[PTRS_PER_PGD];
-=20
- extern void set_swapper_pgd(pgd_t *pgdp, pgd_t pgd);
-diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
-index 57a91032b4c2..32f5ecbec0ea 100644
---- a/arch/arm64/kernel/head.S
-+++ b/arch/arm64/kernel/head.S
-@@ -394,13 +394,19 @@ SYM_FUNC_START_LOCAL(__create_page_tables)
-=20
- 	/*
- 	 * Since the page tables have been populated with non-cacheable
--	 * accesses (MMU disabled), invalidate the idmap and swapper page
--	 * tables again to remove any speculatively loaded cache lines.
-+	 * accesses (MMU disabled), invalidate those tables again to
-+	 * remove any speculatively loaded cache lines.
- 	 */
-+	dmb	sy
-+
- 	adrp	x0, idmap_pg_dir
-+	adrp	x1, idmap_pg_end
-+	sub	x1, x1, x0
-+	bl	__inval_dcache_area
-+
-+	adrp	x0, init_pg_dir
- 	adrp	x1, init_pg_end
- 	sub	x1, x1, x0
--	dmb	sy
- 	bl	__inval_dcache_area
-=20
- 	ret	x28
-diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.=
-lds.S
-index 497f9675071d..94402aaf5f5c 100644
---- a/arch/arm64/kernel/vmlinux.lds.S
-+++ b/arch/arm64/kernel/vmlinux.lds.S
-@@ -139,6 +139,7 @@ SECTIONS
-=20
- 	idmap_pg_dir =3D .;
- 	. +=3D IDMAP_DIR_SIZE;
-+	idmap_pg_end =3D .;
-=20
- #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
- 	tramp_pg_dir =3D .;
---=20
-2.23.0
+RXh0cmFjdCBtc2RjIHRpbWVvdXQgYXBpIGNvbW1vbiBwYXJ0IHRvIGhhdmUNCmJldHRlciBjb2Rl
+IGFyY2hpdGVjdHVyZSBhbmQgYXZvaWQgcmVkdW5kZW50DQpjb2RlLg0KDQpTaWduZWQtb2ZmLWJ5
+OiBDaHVuLUh1bmcgV3UgPGNodW4taHVuZy53dUBtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJz
+L21tYy9ob3N0L210ay1zZC5jIHwgMzIgKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0N
+CiAxIGZpbGUgY2hhbmdlZCwgMjIgaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pDQoNCmRp
+ZmYgLS1naXQgYS9kcml2ZXJzL21tYy9ob3N0L210ay1zZC5jIGIvZHJpdmVycy9tbWMvaG9zdC9t
+dGstc2QuYw0KaW5kZXggNzcyNmRjZi4uYTIzMjhmYiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvbW1j
+L2hvc3QvbXRrLXNkLmMNCisrKyBiL2RyaXZlcnMvbW1jL2hvc3QvbXRrLXNkLmMNCkBAIC02OTks
+MjEgKzY5OSwyMSBAQCBzdGF0aWMgdm9pZCBtc2RjX3VucHJlcGFyZV9kYXRhKHN0cnVjdCBtc2Rj
+X2hvc3QgKmhvc3QsIHN0cnVjdCBtbWNfcmVxdWVzdCAqbXJxKQ0KIAl9DQogfQ0KIA0KLS8qIGNs
+b2NrIGNvbnRyb2wgcHJpbWl0aXZlcyAqLw0KLXN0YXRpYyB2b2lkIG1zZGNfc2V0X3RpbWVvdXQo
+c3RydWN0IG1zZGNfaG9zdCAqaG9zdCwgdTMyIG5zLCB1MzIgY2xrcykNCitzdGF0aWMgdTY0IG1z
+ZGNfdGltZW91dF9jYWwoc3RydWN0IG1zZGNfaG9zdCAqaG9zdCwgdTY0IG5zLCB1NjQgY2xrcykN
+CiB7DQotCXUzMiB0aW1lb3V0LCBjbGtfbnM7DQorCXU2NCB0aW1lb3V0LCBjbGtfbnM7DQogCXUz
+MiBtb2RlID0gMDsNCiANCi0JaG9zdC0+dGltZW91dF9ucyA9IG5zOw0KLQlob3N0LT50aW1lb3V0
+X2Nsa3MgPSBjbGtzOw0KIAlpZiAoaG9zdC0+bW1jLT5hY3R1YWxfY2xvY2sgPT0gMCkgew0KIAkJ
+dGltZW91dCA9IDA7DQogCX0gZWxzZSB7DQotCQljbGtfbnMgID0gMTAwMDAwMDAwMFVMIC8gaG9z
+dC0+bW1jLT5hY3R1YWxfY2xvY2s7DQotCQl0aW1lb3V0ID0gKG5zICsgY2xrX25zIC0gMSkgLyBj
+bGtfbnMgKyBjbGtzOw0KKwkJY2xrX25zICA9IDEwMDAwMDAwMDBVTEw7DQorCQlkb19kaXYoY2xr
+X25zLCBob3N0LT5tbWMtPmFjdHVhbF9jbG9jayk7DQorCQl0aW1lb3V0ID0gbnMgKyBjbGtfbnMg
+LSAxOw0KKwkJZG9fZGl2KHRpbWVvdXQsIGNsa19ucyk7DQorCQl0aW1lb3V0ICs9IGNsa3M7DQog
+CQkvKiBpbiAxMDQ4NTc2IHNjbGsgY3ljbGUgdW5pdCAqLw0KLQkJdGltZW91dCA9ICh0aW1lb3V0
+ICsgKDB4MSA8PCAyMCkgLSAxKSA+PiAyMDsNCisJCXRpbWVvdXQgPSBESVZfUk9VTkRfVVAodGlt
+ZW91dCwgKDB4MSA8PCAyMCkpOw0KIAkJaWYgKGhvc3QtPmRldl9jb21wLT5jbGtfZGl2X2JpdHMg
+PT0gOCkNCiAJCQlzZHJfZ2V0X2ZpZWxkKGhvc3QtPmJhc2UgKyBNU0RDX0NGRywNCiAJCQkJICAg
+ICAgTVNEQ19DRkdfQ0tNT0QsICZtb2RlKTsNCkBAIC03MjMsOSArNzIzLDIxIEBAIHN0YXRpYyB2
+b2lkIG1zZGNfc2V0X3RpbWVvdXQoc3RydWN0IG1zZGNfaG9zdCAqaG9zdCwgdTMyIG5zLCB1MzIg
+Y2xrcykNCiAJCS8qRERSIG1vZGUgd2lsbCBkb3VibGUgdGhlIGNsayBjeWNsZXMgZm9yIGRhdGEg
+dGltZW91dCAqLw0KIAkJdGltZW91dCA9IG1vZGUgPj0gMiA/IHRpbWVvdXQgKiAyIDogdGltZW91
+dDsNCiAJCXRpbWVvdXQgPSB0aW1lb3V0ID4gMSA/IHRpbWVvdXQgLSAxIDogMDsNCi0JCXRpbWVv
+dXQgPSB0aW1lb3V0ID4gMjU1ID8gMjU1IDogdGltZW91dDsNCiAJfQ0KLQlzZHJfc2V0X2ZpZWxk
+KGhvc3QtPmJhc2UgKyBTRENfQ0ZHLCBTRENfQ0ZHX0RUT0MsIHRpbWVvdXQpOw0KKwlyZXR1cm4g
+dGltZW91dDsNCit9DQorDQorLyogY2xvY2sgY29udHJvbCBwcmltaXRpdmVzICovDQorc3RhdGlj
+IHZvaWQgbXNkY19zZXRfdGltZW91dChzdHJ1Y3QgbXNkY19ob3N0ICpob3N0LCB1NjQgbnMsIHU2
+NCBjbGtzKQ0KK3sNCisJdTY0IHRpbWVvdXQ7DQorDQorCWhvc3QtPnRpbWVvdXRfbnMgPSBuczsN
+CisJaG9zdC0+dGltZW91dF9jbGtzID0gY2xrczsNCisNCisJdGltZW91dCA9IG1zZGNfdGltZW91
+dF9jYWwoaG9zdCwgbnMsIGNsa3MpOw0KKwlzZHJfc2V0X2ZpZWxkKGhvc3QtPmJhc2UgKyBTRENf
+Q0ZHLCBTRENfQ0ZHX0RUT0MsDQorCQkgICAgICAodTMyKSh0aW1lb3V0ID4gMjU1ID8gMjU1IDog
+dGltZW91dCkpOw0KIH0NCiANCiBzdGF0aWMgdm9pZCBtc2RjX2dhdGVfY2xvY2soc3RydWN0IG1z
+ZGNfaG9zdCAqaG9zdCkNCi0tIA0KMi42LjQNCg==
 
