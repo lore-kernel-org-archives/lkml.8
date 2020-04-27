@@ -2,126 +2,79 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D37C4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0CBC4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F1442070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:34:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588023274;
-	bh=bzYkS1jEmYKLLaiahQ523rQRdG7e1GXlcRoT4pqgHJM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=g9BYSnVoia+e8wIHmuGu5d5P5BqFyUpkDJFjJ6ED4oqpRKxb7bAZqkILiAa/7YQ4F
-	 ORKDfGWKOtSMzpzOzNUe8FDdZTPeJtOClSsIdK2eOSPOPP2OP7OK0e+2az1BGDG75X
-	 9xc/M9l4i4AZS8PgaDT8s/24E03X01P8GDgOKebw=
+	by mail.kernel.org (Postfix) with ESMTP id 5F2C12070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:35:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P7PGTt7h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgD0Ved (ORCPT
+        id S1726364AbgD0VfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 17:34:33 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36939 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbgD0VeV (ORCPT
+        Mon, 27 Apr 2020 17:35:05 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:23208 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726275AbgD0Veq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 17:34:21 -0400
-Received: by mail-ot1-f66.google.com with SMTP id z17so29047836oto.4;
-        Mon, 27 Apr 2020 14:34:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XRUQCI377Xbc6JD+2krofLmVxxHirS9bA0gL+Jn1x9k=;
-        b=e6XL/Csvti1mhQrcIXXYXbRQzyYSb+N3qnF7HOLjKPuspwCrDrHb2u+3J+DccpJFfG
-         BE9NEaKFrLPTXchMqWBxmfQN3vaIRNbPLK/tJJ9rX8H8Mb+VC0ur669Q9Gfrg3xwctzw
-         tqTlcXZSbYCtKvQHLLp5a9IvzecGsx9nXUjks0ARNrhm0IfBzpZRCnt6hDKsxP8qWoNT
-         xoN0NjiK5jsSw20kLt05+a8KTBWV2P4zkin2udQEW4S1wAC6vHdSAgUSFSNDt8cGvEx2
-         ILPPb/iJvE7WXz4K50WIzpw3/Y+xZ0qTA++YpqdbpDeUgRobKuR6FIHSVP78tVJ9u000
-         tApQ==
-X-Gm-Message-State: AGi0Puat9JCMnMkTVELun3ah+QkXSFfFZOCyVImuyz4lHMNOUGhfDSZ8
-        mZcebnHQKw9Bc5lkrf7ndg==
-X-Google-Smtp-Source: APiQypJ9mE/BH2D4+sKYproJwZ1HaMb0oGk33+e3IQvAocBe9hWzM892y3UWLh7SWCcD4cf4iNNOaA==
-X-Received: by 2002:a9d:51cc:: with SMTP id d12mr18633279oth.70.1588023260003;
-        Mon, 27 Apr 2020 14:34:20 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i196sm587727oib.8.2020.04.27.14.34.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 14:34:19 -0700 (PDT)
-Received: (nullmailer pid 2856 invoked by uid 1000);
-        Mon, 27 Apr 2020 21:34:18 -0000
-Date:   Mon, 27 Apr 2020 16:34:18 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: display: Add IPK DSI subsystem
- bindings
-Message-ID: <20200427213418.GA2156@bogus>
-References: <cover.1587992776.git.angelo.ribeiro@synopsys.com>
- <04a657ce78633d82565d3a7ce34a8ab52310ff63.1587992776.git.angelo.ribeiro@synopsys.com>
+        Mon, 27 Apr 2020 17:34:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588023284;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=kzHVQ1RNrTy6GimaONMy+YWogsizAFU4Ww/1ICCw9Wc=;
+        b=P7PGTt7hDaJkXtyGiERrZx+pq5+oCkdvs7I0SJW27dMKXqCQu47zxy/8x10oo4DkzznGlz
+        bX3LoPexSQGYqoSb0FomRTh5i+S3yBQzN9YSr7JENPfTNRjGegaSFWFW9S0ruFO07keTZQ
+        L9A5y5IpRWk20S0+etw3BgfPy4X1qv8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-36-6E4XqAfANYKuBZBtLrzL_Q-1; Mon, 27 Apr 2020 17:34:32 -0400
+X-MC-Unique: 6E4XqAfANYKuBZBtLrzL_Q-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F26DA835B40;
+        Mon, 27 Apr 2020 21:34:30 +0000 (UTC)
+Received: from Ruby.redhat.com (ovpn-113-110.rdu2.redhat.com [10.10.113.110])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 043845D9DD;
+        Mon, 27 Apr 2020 21:34:28 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Maxime Ripard <mripard@kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        "Daniel Vetter" <daniel@ffwll.ch>,
+        "Dave Airlie" <airlied@redhat.com>,
+        "David Airlie" <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        "Todd Previte" <tprevite@gmail.com>
+Subject: [PATCH 0/1] Backport "drm/dp_mst: Kill the second sideband tx slot, save the world" for drm-fixes
+Date:   Mon, 27 Apr 2020 17:34:21 -0400
+Message-Id: <20200427213422.1414614-1-lyude@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <04a657ce78633d82565d3a7ce34a8ab52310ff63.1587992776.git.angelo.ribeiro@synopsys.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Apr 2020 16:00:33 +0200, Angelo Ribeiro wrote:
-> Add dt-bindings for Synopsys DesignWare MIPI DSI Host and VPG (Video
-> Pattern Generator) support in the IPK display subsystem.
-> 
-> The Synopsys DesignWare IPK display video pipeline is composed by a DSI
-> controller (snps,dw-ipk-dsi) and a VPG (snps,dw-ipk-vpg) as DPI
-> stimulus. Typically is used the Raspberry Pi
-> (raspberrypi,7inch-touchscreen-panel) as DSI panel that requires a
-> I2C controller (snps,designware-i2c).
-> 
-> Reported-by: Rob Herring <robh+dt@kernel.org>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> Cc: Joao Pinto <jpinto@synopsys.com>
-> Signed-off-by: Angelo Ribeiro <angelo.ribeiro@synopsys.com>
-> ---
-> Changes since v3:
->   - Fixed dt-binding breaking on `make dt_binding_check`.
-> 
-> Changes since v2:
->   - Fixed dt-bindings issues, see
->     https://patchwork.ozlabs.org/patch/1260819/.
-> ---
->  .../bindings/display/snps,dw-ipk-dsi.yaml          | 159 +++++++++++++++++++++
->  .../bindings/display/snps,dw-ipk-vpg.yaml          |  73 ++++++++++
->  2 files changed, 232 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/snps,dw-ipk-dsi.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/snps,dw-ipk-vpg.yaml
-> 
+Because this patch will likely end up fixing a lot of MST issues we
+either don't know about, or weren't able to figure out a fix for before,
+I definitely want to make sure this patch gets cc'd to stable as well.
+It doesn't apply cleanly to drm-misc-fixes, so here's a backported
+version that does.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Lyude Paul (1):
+  drm/dp_mst: Kill the second sideband tx slot, save the world
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/snps,dw-ipk-dsi.example.dt.yaml: dw-ipk-dsi@2000: compatible: ['snps,dw-ipk-dsi'] is too short
+ drivers/gpu/drm/drm_dp_mst_topology.c | 122 +++++++-------------------
+ include/drm/drm_dp_mst_helper.h       |  18 +---
+ 2 files changed, 33 insertions(+), 107 deletions(-)
 
-See https://patchwork.ozlabs.org/patch/1277673
+--=20
+2.25.3
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
