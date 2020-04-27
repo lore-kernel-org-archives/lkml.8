@@ -2,96 +2,217 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 015C4C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 463C8C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3BB320656
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22EB220656
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:48:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbgD0Nss convert rfc822-to-8bit (ORCPT
+        id S1728022AbgD0Nsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 27 Apr 2020 09:48:54 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:4098 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727001AbgD0Nsx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 09:48:53 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03RDUqgt140807;
         Mon, 27 Apr 2020 09:48:48 -0400
-Received: from mga06.intel.com ([134.134.136.31]:53448 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727001AbgD0Nsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 09:48:47 -0400
-IronPort-SDR: gFAqEpeI9ldKMeOMw1fFq+dZMxQKabre4yURlir7iAGiEsvalw7Q7Cd6lzTHoKGMlYZsKG4sup
- 7zvrceLm/HKw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 06:48:47 -0700
-IronPort-SDR: s4oIVuVu3USfWnW80U/6zKOUmltoh8xzO52WmN/+qPMXyWhsz+Of1qcrWEQBhYSq2o6YbT/La6
- mPxnhwx3hxBg==
-X-IronPort-AV: E=Sophos;i="5.73,324,1583222400"; 
-   d="scan'208";a="431781142"
-Received: from mbrowarx-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.47.15])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 06:48:42 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     linux-pwm@vger.kernel.org, David Collins <collinsd@codeaurora.org>,
-        David Airlie <airlied@linux.ie>,
-        intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-Subject: Re: [PATCH v13 01/11] drm/i915: Use 64-bit division macro
-In-Reply-To: <20200424221756.GB31118@codeaurora.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <cover.1587523702.git.gurus@codeaurora.org> <4a3acf8673c08308848fb7ae73d992b6feb758d3.1587523702.git.gurus@codeaurora.org> <87ftctbe5l.fsf@intel.com> <20200424221756.GB31118@codeaurora.org>
-Date:   Mon, 27 Apr 2020 16:48:39 +0300
-Message-ID: <87y2qh9gzs.fsf@intel.com>
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30metv8g6x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Apr 2020 09:48:48 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03RDV3u4141812;
+        Mon, 27 Apr 2020 09:48:48 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30metv8g6s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Apr 2020 09:48:48 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03RDjp3G027970;
+        Mon, 27 Apr 2020 13:48:47 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma04dal.us.ibm.com with ESMTP id 30mcu68ecy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Apr 2020 13:48:47 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03RDmjAN10093286
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Apr 2020 13:48:45 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 76F257805E;
+        Mon, 27 Apr 2020 13:48:46 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 545B57805C;
+        Mon, 27 Apr 2020 13:48:45 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.85.94.115])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 27 Apr 2020 13:48:45 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id 42B5F2E2E25; Mon, 27 Apr 2020 19:18:40 +0530 (IST)
+Date:   Mon, 27 Apr 2020 19:18:40 +0530
+From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
+To:     Abhishek Goel <huntbag@linux.vnet.ibm.com>
+Cc:     linuxppc-dev@ozlabs.org, linux-kernel@vger.kernel.org,
+        npiggin@gmail.com, ego@linux.vnet.ibm.com, svaidy@linux.ibm.com,
+        mpe@ellerman.id.au, oohall@gmail.com, mikey@neuling.org,
+        psampat@linux.ibm.com
+Subject: Re: [RFC 3/3] powernv/cpuidle : Introduce capability for
+ firmware-enabled-stop
+Message-ID: <20200427134840.GE29708@in.ibm.com>
+Reply-To: ego@linux.vnet.ibm.com
+References: <20200427021027.114582-1-huntbag@linux.vnet.ibm.com>
+ <20200427021027.114582-3-huntbag@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427021027.114582-3-huntbag@linux.vnet.ibm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-27_09:2020-04-24,2020-04-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
+ priorityscore=1501 phishscore=0 mlxscore=0 adultscore=0 lowpriorityscore=0
+ impostorscore=0 clxscore=1015 malwarescore=0 spamscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004270114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Apr 2020, Guru Das Srinagesh <gurus@codeaurora.org> wrote:
-> On Fri, Apr 24, 2020 at 09:17:58AM +0300, Jani Nikula wrote:
->> On Tue, 21 Apr 2020, Guru Das Srinagesh <gurus@codeaurora.org> wrote:
->> > Since the PWM framework is switching struct pwm_state.duty_cycle's
->> > datatype to u64, prepare for this transition by using DIV_ROUND_UP_ULL
->> > to handle a 64-bit dividend.
->> >
->> > To: Jani Nikula <jani.nikula@linux.intel.com>
->> > Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
->> > Cc: David Airlie <airlied@linux.ie>
->> > Cc: Daniel Vetter <daniel@ffwll.ch>
->> > Cc: Chris Wilson <chris@chris-wilson.co.uk>
->> > Cc: "Ville Syrjälä" <ville.syrjala@linux.intel.com>
->> > Cc: intel-gfx@lists.freedesktop.org
->> > Cc: dri-devel@lists.freedesktop.org
->> >
->> 
->> Superfluous blank line.
->
-> Will remove.
->
->> 
->> Anyway, please preserve the existing acks and reviews [1] so people
->> don't have to do it again.
->> 
->> BR,
->> Jani.
->> 
->> [1] http://lore.kernel.org/r/87h7yleb0i.fsf@intel.com
->
-> I dropped your Acked-by as the patch had to changed to resolve a merge
-> conflict when I rebased to tip. Could you please re-review this patch?
+On Sun, Apr 26, 2020 at 09:10:27PM -0500, Abhishek Goel wrote:
+> This patch introduces the capability for firmware to handle the stop
+> states instead. A bit is set based on the discovery of the feature
+> and correspondingly also the responsibility to handle the stop states.
+> 
+> If Kernel does not know about stop version, it can fallback to opal for
+> idle stop support if firmware-stop-supported property is present.
+> 
+> Earlier this patch was posted as part of this series :
+> https://lkml.org/lkml/2020/3/4/589
+> 
+> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
+> Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
+> ---
+> 
+>  v1->v2: This patch is newly added in this series.
+> 
+>  arch/powerpc/include/asm/processor.h  |  1 +
+>  arch/powerpc/kernel/dt_cpu_ftrs.c     |  8 ++++++++
+>  arch/powerpc/platforms/powernv/idle.c | 27 ++++++++++++++++-----------
+>  3 files changed, 25 insertions(+), 11 deletions(-)
+> 
+> diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/asm/processor.h
+> index 66fa20476d0e..d5c6532b11ef 100644
+> --- a/arch/powerpc/include/asm/processor.h
+> +++ b/arch/powerpc/include/asm/processor.h
+> @@ -430,6 +430,7 @@ extern unsigned long cpuidle_disable;
+>  enum idle_boot_override {IDLE_NO_OVERRIDE = 0, IDLE_POWERSAVE_OFF};
+> 
+>  #define STOP_ENABLE		0x00000001
+> +#define FIRMWARE_STOP_ENABLE	0x00000010
+> 
+>  #define STOP_VERSION_P9       0x1
+> 
+> diff --git a/arch/powerpc/kernel/dt_cpu_ftrs.c b/arch/powerpc/kernel/dt_cpu_ftrs.c
+> index db1a525e090d..ff4a87b79702 100644
+> --- a/arch/powerpc/kernel/dt_cpu_ftrs.c
+> +++ b/arch/powerpc/kernel/dt_cpu_ftrs.c
+> @@ -298,6 +298,13 @@ static int __init feat_enable_idle_stop(struct dt_cpu_feature *f)
+>  	return 1;
+>  }
+> 
+> +static int __init feat_enable_firmware_stop(struct dt_cpu_feature *f)
+> +{
+> +	stop_dep.cpuidle_prop |= FIRMWARE_STOP_ENABLE;
+> +
+> +	return 1;
+> +}
+> +
+>  static int __init feat_enable_mmu_hash(struct dt_cpu_feature *f)
+>  {
+>  	u64 lpcr;
+> @@ -592,6 +599,7 @@ static struct dt_cpu_feature_match __initdata
+>  	{"idle-nap", feat_enable_idle_nap, 0},
+>  	{"alignment-interrupt-dsisr", feat_enable_align_dsisr, 0},
+>  	{"idle-stop", feat_enable_idle_stop, 0},
+> +	{"firmware-stop-supported", feat_enable_firmware_stop, 0},
+>  	{"machine-check-power8", feat_enable_mce_power8, 0},
+>  	{"performance-monitor-power8", feat_enable_pmu_power8, 0},
+>  	{"data-stream-control-register", feat_enable_dscr, CPU_FTR_DSCR},
+> diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
+> index 538f0842ac3f..0de5de81902e 100644
+> --- a/arch/powerpc/platforms/powernv/idle.c
+> +++ b/arch/powerpc/platforms/powernv/idle.c
+> @@ -633,16 +633,6 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
+>  	unsigned long mmcr0 = 0;
+>  	struct p9_sprs sprs = {}; /* avoid false used-uninitialised */
+>  	bool sprs_saved = false;
+> -	int rc = 0;
+> -
+> -	/*
+> -	 * Kernel takes decision whether to make OPAL call or not. This logic
+> -	 * will be combined with the logic for BE opal to take decision.
+> -	 */
+> -	if (firmware_stop_supported) {
+> -		rc = opal_cpu_idle(cpu_to_be64(__pa(&srr1)), (uint64_t) psscr);
+> -		goto out;
+> -	}
+> 
+>  	if (!(psscr & (PSSCR_EC|PSSCR_ESL))) {
+>  		/* EC=ESL=0 case */
+> @@ -835,6 +825,19 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
+>  	return srr1;
+>  }
+> 
+> +static unsigned long power9_firmware_idle_stop(unsigned long psscr, bool mmu_on)
+> +{
+> +	unsigned long srr1;
+> +	int rc;
+> +
+> +	rc = opal_cpu_idle(cpu_to_be64(__pa(&srr1)), (uint64_t) psscr);
+> +
+> +	if (mmu_on)
+> +		mtmsr(MSR_KERNEL);
+> +	return srr1;
+> +
+> +}
+> +
+>  #ifdef CONFIG_HOTPLUG_CPU
+>  static unsigned long power9_offline_stop(unsigned long psscr)
+>  {
+> @@ -1394,9 +1397,11 @@ static int __init pnv_init_idle_states(void)
+>  	    !(stop_dep.cpuidle_prop & STOP_ENABLE))
+>  		goto out;
+> 
+> -	/* Check for supported version in kernel */
+> +	/* Check for supported version in kernel or fallback to kernel*/
+>  	if (stop_dep.stop_version & STOP_VERSION_P9) {
+>  		stop_dep.idle_stop = power9_idle_stop;
+> +	} else if (stop_dep.cpuidle_prop & FIRMWARE_STOP_ENABLE) {
+> +		stop_dep.idle_stop = power9_firmware_idle_stop;
 
-Reviewed-by: Jani Nikula <jani.nikula@intel.com>
-Acked-by: Jani Nikula <jani.nikula@intel.com>
+Ok, so in this patch you first check if the "idle-stop" feature is
+available. Only otherwise you fallback to the OPAL based cpuidle
+driver.
+
+This looks ok to me.
 
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
+>  	} else {
+>  		stop_dep.idle_stop = NULL;
+>  		goto out;
+> -- 
+> 2.17.1
+> 
+
+--
+Thanks and Regards
+gautham.
