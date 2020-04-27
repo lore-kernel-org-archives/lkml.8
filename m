@@ -2,177 +2,252 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0709EC55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58864C5519A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E519F206CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C37620663
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:48:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgD0JsW (ORCPT
+        id S1726973AbgD0JsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 05:48:22 -0400
-Received: from 60-251-196-230.HINET-IP.hinet.net ([60.251.196.230]:10827 "EHLO
-        ironport.ite.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbgD0JsV (ORCPT
+        Mon, 27 Apr 2020 05:48:25 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:60934 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726604AbgD0JsW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 05:48:21 -0400
-IronPort-SDR: Nb5hj9NuK3oXq9/IH8bi5DrL+aq3AKGZjRkksAkSBaKz+EcT0sqQO+OdCruSL+IKoFZpMrd5U6
- kZ4LODGVFRMQ==
-Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
-  by ironport.ite.com.tw with ESMTP; 27 Apr 2020 17:33:10 +0800
-Received: from CSBMAIL1.internal.ite.com.tw (csbmail1.internal.ite.com.tw [192.168.65.58])
-        by mse.ite.com.tw with ESMTP id 03R9X6ei046727;
-        Mon, 27 Apr 2020 17:33:06 +0800 (GMT-8)
-        (envelope-from allen.chen@ite.com.tw)
-Received: from allen-VirtualBox.internal.ite.com.tw (192.168.70.14) by
- CSBMAIL1.internal.ite.com.tw (192.168.65.58) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Mon, 27 Apr 2020 17:33:05 +0800
-From:   allen <allen.chen@ite.com.tw>
-CC:     Allen Chen <allen.chen@ite.com.tw>,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH v9 2/3] dt-bindings: Add binding for IT6505.
-Date:   Mon, 27 Apr 2020 17:16:53 +0800
-Message-ID: <1587979103-5630-3-git-send-email-allen.chen@ite.com.tw>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1587979103-5630-1-git-send-email-allen.chen@ite.com.tw>
-References: <1587979103-5630-1-git-send-email-allen.chen@ite.com.tw>
+        Mon, 27 Apr 2020 05:48:22 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R601e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TwoMATP_1587980897;
+Received: from JosephdeMacBook-Pro.local(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0TwoMATP_1587980897)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 27 Apr 2020 17:48:18 +0800
+Subject: Re: [PATCH] ocfs2: mount shared volume without ha stack
+To:     Gang He <ghe@suse.com>, mark@fasheh.com, jlbec@evilplan.org
+Cc:     linux-kernel@vger.kernel.org, ocfs2-devel@oss.oracle.com,
+        akpm@linux-foundation.org
+References: <20200423053300.22661-1-ghe@suse.com>
+From:   Joseph Qi <joseph.qi@linux.alibaba.com>
+Message-ID: <ec4f098b-f043-85d5-6717-66c4f611146d@linux.alibaba.com>
+Date:   Mon, 27 Apr 2020 17:48:17 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [192.168.70.14]
-X-ClientProxiedBy: CSBMAIL1.internal.ite.com.tw (192.168.65.58) To
- CSBMAIL1.internal.ite.com.tw (192.168.65.58)
-X-TM-SNTS-SMTP: 557488118687ECA03E3E140BD109D111E633E24110D61BF46727D3D572AB26702000:8
-X-MAIL: mse.ite.com.tw 03R9X6ei046727
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20200423053300.22661-1-ghe@suse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a DT binding documentation for IT6505.
+Hi Gang,
 
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
----
-cros-ec does not have an associated driver that uses the standard Linux USB-C driver class.
-extcon is used to model the Type-C connector.(crbug.com/982932)
----
- .../bindings/display/bridge/ite,it6505.yaml        | 91 ++++++++++++++++++++++
- 1 file changed, 91 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
+On 2020/4/23 13:33, Gang He wrote:
+> Usually we create and use a ocfs2 shared volume on the top of
+> ha stack. For pcmk based ha stack, which includes DLM, corosync
+> and pacemaker services.
+> The customers complained they could not mount existent ocfs2
+> volume in the single node without ha stack, e.g. single node
+> backup/restore scenario.
+> Like this case, the customers just want to access the data
+> from the existent ocfs2 volume quickly, but do not want to
+> restart or setup ha stack.
+> Then, I'd like to add a mount option "nocluster", if the users
+> use this option to mount a ocfs2 shared volume, the whole mount
+> will not depend on the ha related services. the command will mount
+> the existent ocfs2 volume directly (like local mount), for avoiding
+> setup the ha stack.
+> 
+> Signed-off-by: Gang He <ghe@suse.com>
+> ---
+>  fs/ocfs2/ocfs2.h    |  4 +++-
+>  fs/ocfs2/slot_map.c | 46 ++++++++++++++++++++++++++-------------------
+>  fs/ocfs2/super.c    | 21 +++++++++++++++++++++
+>  3 files changed, 51 insertions(+), 20 deletions(-)
+> 
+> diff --git a/fs/ocfs2/ocfs2.h b/fs/ocfs2/ocfs2.h
+> index 9150cfa4df7d..ee5d98516212 100644
+> --- a/fs/ocfs2/ocfs2.h
+> +++ b/fs/ocfs2/ocfs2.h
+> @@ -279,6 +279,7 @@ enum ocfs2_mount_options
+>  	OCFS2_MOUNT_JOURNAL_ASYNC_COMMIT = 1 << 15,  /* Journal Async Commit */
+>  	OCFS2_MOUNT_ERRORS_CONT = 1 << 16, /* Return EIO to the calling process on error */
+>  	OCFS2_MOUNT_ERRORS_ROFS = 1 << 17, /* Change filesystem to read-only on error */
+> +	OCFS2_MOUNT_NOCLUSTER = 1 << 18, /* No cluster aware filesystem mount */
+>  };
+>  
+>  #define OCFS2_OSB_SOFT_RO	0x0001
+> @@ -673,7 +674,8 @@ static inline int ocfs2_cluster_o2cb_global_heartbeat(struct ocfs2_super *osb)
+>  
+>  static inline int ocfs2_mount_local(struct ocfs2_super *osb)
+>  {
+> -	return (osb->s_feature_incompat & OCFS2_FEATURE_INCOMPAT_LOCAL_MOUNT);
+> +	return ((osb->s_feature_incompat & OCFS2_FEATURE_INCOMPAT_LOCAL_MOUNT)
+> +		|| (osb->s_mount_opt & OCFS2_MOUNT_NOCLUSTER));
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-new file mode 100644
-index 00000000..13feeef
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-@@ -0,0 +1,91 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/ite,it6505.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ITE it6505 Device Tree Bindings
-+
-+maintainers:
-+  - Allen Chen <allen.chen@ite.com.tw>
-+
-+description: |
-+  The IT6505 is a high-performance DisplayPort 1.1a transmitter,
-+  fully compliant with DisplayPort 1.1a, HDCP 1.3 specifications.
-+  The IT6505 supports color depth of up to 36 bits (12 bits/color)
-+  and ensures robust transmission of high-quality uncompressed video
-+  content, along with uncompressed and compressed digital audio content.
-+
-+  Aside from the various video output formats supported, the IT6505
-+  also encodes and transmits up to 8 channels of I2S digital audio,
-+  with sampling rate up to 192kHz and sample size up to 24 bits.
-+  In addition, an S/PDIF input port takes in compressed audio of up to
-+  192kHz frame rate.
-+
-+  Each IT6505 chip comes preprogrammed with an unique HDCP key,
-+  in compliance with the HDCP 1.3 standard so as to provide secure
-+  transmission of high-definition content. Users of the IT6505 need not
-+  purchase any HDCP keys or ROMs.
-+
-+properties:
-+  compatible:
-+    const: ite,it6505
-+
-+  ovdd-supply:
-+    maxItems: 1
-+    description: I/O voltage
-+
-+  pwr18-supply:
-+    maxItems: 1
-+    description: core voltage
-+
-+  interrupts:
-+    maxItems: 1
-+    description: interrupt specifier of INT pin
-+
-+  reset-gpios:
-+    maxItems: 1
-+    description: gpio specifier of RESET pin
-+
-+  extcon:
-+    maxItems: 1
-+    description: extcon specifier for the Power Delivery
-+
-+  port:
-+    type: object
-+    description: A port node pointing to DPI host port node
-+
-+required:
-+  - compatible
-+  - ovdd-supply
-+  - pwr18-supply
-+  - interrupts
-+  - reset-gpios
-+  - extcon
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c3 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        dp-bridge@5c {
-+            compatible = "ite,it6505";
-+            interrupts = <152 IRQ_TYPE_EDGE_FALLING 152 0>;
-+            reg = <0x5c>;
-+            pinctrl-names = "default";
-+            pinctrl-0 = <&it6505_pins>;
-+            ovdd-supply = <&mt6358_vsim1_reg>;
-+            pwr18-supply = <&it6505_pp18_reg>;
-+            reset-gpios = <&pio 179 1>;
-+            extcon = <&usbc_extcon>;
-+
-+            port {
-+                it6505_in: endpoint {
-+                    remote-endpoint = <&dpi_out>;
-+                };
-+            };
-+        };
-+    };
--- 
-1.9.1
+Could we set the feature bit when mount with "nocluster"?
 
+>  }
+>  
+>  static inline int ocfs2_uses_extended_slot_map(struct ocfs2_super *osb)
+> diff --git a/fs/ocfs2/slot_map.c b/fs/ocfs2/slot_map.c
+> index 8caeceeaeda7..4da0e4b1e79b 100644
+> --- a/fs/ocfs2/slot_map.c
+> +++ b/fs/ocfs2/slot_map.c
+> @@ -254,14 +254,16 @@ static int __ocfs2_find_empty_slot(struct ocfs2_slot_info *si,
+>  	int i, ret = -ENOSPC;
+>  
+>  	if ((preferred >= 0) && (preferred < si->si_num_slots)) {
+> -		if (!si->si_slots[preferred].sl_valid) {
+> +		if (!si->si_slots[preferred].sl_valid ||
+> +		    !si->si_slots[preferred].sl_node_num) {
+
+Why specially handle node num 0 here?
+It seems breaks original logic.
+
+>  			ret = preferred;
+>  			goto out;
+>  		}
+>  	}
+>  
+>  	for(i = 0; i < si->si_num_slots; i++) {
+> -		if (!si->si_slots[i].sl_valid) {
+> +		if (!si->si_slots[i].sl_valid ||
+> +		    !si->si_slots[i].sl_node_num) {
+>  			ret = i;
+>  			break;
+>  		}
+> @@ -456,24 +458,30 @@ int ocfs2_find_slot(struct ocfs2_super *osb)
+>  	spin_lock(&osb->osb_lock);
+>  	ocfs2_update_slot_info(si);
+>  
+> -	/* search for ourselves first and take the slot if it already
+> -	 * exists. Perhaps we need to mark this in a variable for our
+> -	 * own journal recovery? Possibly not, though we certainly
+> -	 * need to warn to the user */
+> -	slot = __ocfs2_node_num_to_slot(si, osb->node_num);
+> -	if (slot < 0) {
+> -		/* if no slot yet, then just take 1st available
+> -		 * one. */
+> -		slot = __ocfs2_find_empty_slot(si, osb->preferred_slot);
+> +	if (ocfs2_mount_local(osb))
+> +		/* use slot 0 directly in local mode */
+> +		slot = 0;
+
+Could you please elaborate more why we need this?
+
+Thanks,
+Joseph
+
+> +	else {
+> +		/* search for ourselves first and take the slot if it already
+> +		 * exists. Perhaps we need to mark this in a variable for our
+> +		 * own journal recovery? Possibly not, though we certainly
+> +		 * need to warn to the user */
+> +		slot = __ocfs2_node_num_to_slot(si, osb->node_num);
+>  		if (slot < 0) {
+> -			spin_unlock(&osb->osb_lock);
+> -			mlog(ML_ERROR, "no free slots available!\n");
+> -			status = -EINVAL;
+> -			goto bail;
+> -		}
+> -	} else
+> -		printk(KERN_INFO "ocfs2: Slot %d on device (%s) was already "
+> -		       "allocated to this node!\n", slot, osb->dev_str);
+> +			/* if no slot yet, then just take 1st available
+> +			 * one. */
+> +			slot = __ocfs2_find_empty_slot(si, osb->preferred_slot);
+> +			if (slot < 0) {
+> +				spin_unlock(&osb->osb_lock);
+> +				mlog(ML_ERROR, "no free slots available!\n");
+> +				status = -EINVAL;
+> +				goto bail;
+> +			}
+> +		} else
+> +			printk(KERN_INFO "ocfs2: Slot %d on device (%s) was "
+> +			       "already allocated to this node!\n",
+> +			       slot, osb->dev_str);
+> +	}
+>  
+>  	ocfs2_set_slot(si, slot, osb->node_num);
+>  	osb->slot_num = slot;
+> diff --git a/fs/ocfs2/super.c b/fs/ocfs2/super.c
+> index ac61eeaf3837..71ea9ce71a6b 100644
+> --- a/fs/ocfs2/super.c
+> +++ b/fs/ocfs2/super.c
+> @@ -175,6 +175,7 @@ enum {
+>  	Opt_dir_resv_level,
+>  	Opt_journal_async_commit,
+>  	Opt_err_cont,
+> +	Opt_nocluster,
+>  	Opt_err,
+>  };
+>  
+> @@ -208,6 +209,7 @@ static const match_table_t tokens = {
+>  	{Opt_dir_resv_level, "dir_resv_level=%u"},
+>  	{Opt_journal_async_commit, "journal_async_commit"},
+>  	{Opt_err_cont, "errors=continue"},
+> +	{Opt_nocluster, "nocluster"},
+>  	{Opt_err, NULL}
+>  };
+>  
+> @@ -619,6 +621,13 @@ static int ocfs2_remount(struct super_block *sb, int *flags, char *data)
+>  		goto out;
+>  	}
+>  
+> +	tmp = OCFS2_MOUNT_NOCLUSTER;
+> +	if ((osb->s_mount_opt & tmp) != (parsed_options.mount_opt & tmp)) {
+> +		ret = -EINVAL;
+> +		mlog(ML_ERROR, "Cannot change nocluster option on remount\n");
+> +		goto out;
+> +	}
+> +
+>  	tmp = OCFS2_MOUNT_HB_LOCAL | OCFS2_MOUNT_HB_GLOBAL |
+>  		OCFS2_MOUNT_HB_NONE;
+>  	if ((osb->s_mount_opt & tmp) != (parsed_options.mount_opt & tmp)) {
+> @@ -859,6 +868,7 @@ static int ocfs2_verify_userspace_stack(struct ocfs2_super *osb,
+>  	}
+>  
+>  	if (ocfs2_userspace_stack(osb) &&
+> +	    !(osb->s_mount_opt & OCFS2_MOUNT_NOCLUSTER) &&
+>  	    strncmp(osb->osb_cluster_stack, mopt->cluster_stack,
+>  		    OCFS2_STACK_LABEL_LEN)) {
+>  		mlog(ML_ERROR,
+> @@ -1139,6 +1149,11 @@ static int ocfs2_fill_super(struct super_block *sb, void *data, int silent)
+>  	       osb->s_mount_opt & OCFS2_MOUNT_DATA_WRITEBACK ? "writeback" :
+>  	       "ordered");
+>  
+> +	if ((osb->s_mount_opt & OCFS2_MOUNT_NOCLUSTER) &&
+> +	   !(osb->s_feature_incompat & OCFS2_FEATURE_INCOMPAT_LOCAL_MOUNT))
+> +		printk(KERN_NOTICE "ocfs2: The shared device (%s) is mounted "
+> +		       "without cluster aware mode.\n", osb->dev_str);
+> +
+>  	atomic_set(&osb->vol_state, VOLUME_MOUNTED);
+>  	wake_up(&osb->osb_mount_event);
+>  
+> @@ -1445,6 +1460,9 @@ static int ocfs2_parse_options(struct super_block *sb,
+>  		case Opt_journal_async_commit:
+>  			mopt->mount_opt |= OCFS2_MOUNT_JOURNAL_ASYNC_COMMIT;
+>  			break;
+> +		case Opt_nocluster:
+> +			mopt->mount_opt |= OCFS2_MOUNT_NOCLUSTER;
+> +			break;
+>  		default:
+>  			mlog(ML_ERROR,
+>  			     "Unrecognized mount option \"%s\" "
+> @@ -1556,6 +1574,9 @@ static int ocfs2_show_options(struct seq_file *s, struct dentry *root)
+>  	if (opts & OCFS2_MOUNT_JOURNAL_ASYNC_COMMIT)
+>  		seq_printf(s, ",journal_async_commit");
+>  
+> +	if (opts & OCFS2_MOUNT_NOCLUSTER)
+> +		seq_printf(s, ",nocluster");
+> +
+>  	return 0;
+>  }
+>  
+> 
