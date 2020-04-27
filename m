@@ -2,132 +2,101 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B70AC7C886
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 04:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8619BC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 04:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 414212084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 04:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 591D4206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 04:41:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587962492;
+	bh=djvCbNDaA+a30AHx0Y08ssMqYTvTxFQMgnTgZsJsMTE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ncoJqM6e//M/FyajX3FKIgVq13vVWJ3dJc/k4MDc7Bha5v4ArBer3q/Znhbbri9jn
+	 vcRe9dF7HTGeJuqbmNsDLTGmXEj2crrZbnARldCCtCbr2uYHCwHB8tGw/jjGmZIbUY
+	 2OOTxHBLZOURpP8bsoPHi1C4QQ64lyRxUZWucw6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgD0Ef6 (ORCPT
+        id S1726313AbgD0Elb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 00:35:58 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:11459 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726548AbgD0Eff (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 00:35:35 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R881e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=38;SR=0;TI=SMTPD_---0Twk-CBH_1587962117;
-Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0Twk-CBH_1587962117)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 27 Apr 2020 12:35:17 +0800
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-To:     pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org,
-        mpe@ellerman.id.au, benh@kernel.crashing.org,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        cohuck@redhat.com, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
-        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
-        christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com,
-        chenhuacai@gmail.com
-Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tianjia.zhang@linux.alibaba.com
-Subject: [PATCH v4 3/7] KVM: PPC: Remove redundant kvm_run from vcpu_arch
-Date:   Mon, 27 Apr 2020 12:35:10 +0800
-Message-Id: <20200427043514.16144-4-tianjia.zhang@linux.alibaba.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com>
-References: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com>
+        Mon, 27 Apr 2020 00:41:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52342 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725890AbgD0Elb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 00:41:31 -0400
+Received: from localhost (unknown [106.51.110.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6CFF206D4;
+        Mon, 27 Apr 2020 04:41:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587962490;
+        bh=djvCbNDaA+a30AHx0Y08ssMqYTvTxFQMgnTgZsJsMTE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=k3ETmyic3zjkttIoDz+ZScSZe/jpiI7c04b/t6FqC5zMCnjbTPCk74gfQJNbom+HE
+         3o8+jg15iqbfwCiZ0GJebDeXJkDZxMIkNtxTP7FxW/YWTVYh5XXKYHcwrAuGym+lJZ
+         +Gbr9G7N7ZzfRezgAuk5KRXARZKAsCosL1P0ZJak=
+Date:   Mon, 27 Apr 2020 10:11:26 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Jonathan Marek <jonathan@marek.ca>, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] clk: qcom: gcc: Add GPU and NPU clocks for SM8150
+Message-ID: <20200427044126.GA4625@vkoul-mobl.Dlink>
+References: <20200424044311.2155917-1-vkoul@kernel.org>
+ <158784184123.117437.7321952768664025415@swboyd.mtv.corp.google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <158784184123.117437.7321952768664025415@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 'kvm_run' field already exists in the 'vcpu' structure, which
-is the same structure as the 'kvm_run' in the 'vcpu_arch' and
-should be deleted.
+On 25-04-20, 12:10, Stephen Boyd wrote:
+> Quoting Vinod Koul (2020-04-23 21:43:10)
+> > Add the GPU and NPU clocks for SM8150. They were missed in earlier
+> > addition of clock driver.
+> > 
+> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> 
+> Fixes tag? That way backporters know they're missing this.
 
-Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
----
- arch/powerpc/include/asm/kvm_host.h | 1 -
- arch/powerpc/kvm/book3s_hv.c        | 6 ++----
- arch/powerpc/kvm/book3s_hv_nested.c | 3 +--
- 3 files changed, 3 insertions(+), 7 deletions(-)
+Yes it makes sense to add here, will add.
 
-diff --git a/arch/powerpc/include/asm/kvm_host.h b/arch/powerpc/include/asm/kvm_host.h
-index 1dc63101ffe1..2745ff8faa01 100644
---- a/arch/powerpc/include/asm/kvm_host.h
-+++ b/arch/powerpc/include/asm/kvm_host.h
-@@ -795,7 +795,6 @@ struct kvm_vcpu_arch {
- 	struct mmio_hpte_cache_entry *pgfault_cache;
- 
- 	struct task_struct *run_task;
--	struct kvm_run *kvm_run;
- 
- 	spinlock_t vpa_update_lock;
- 	struct kvmppc_vpa vpa;
-diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-index 93493f0cbfe8..413ea2dcb10c 100644
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -2934,7 +2934,7 @@ static void post_guest_process(struct kvmppc_vcore *vc, bool is_master)
- 
- 		ret = RESUME_GUEST;
- 		if (vcpu->arch.trap)
--			ret = kvmppc_handle_exit_hv(vcpu->arch.kvm_run, vcpu,
-+			ret = kvmppc_handle_exit_hv(vcpu->run, vcpu,
- 						    vcpu->arch.run_task);
- 
- 		vcpu->arch.ret = ret;
-@@ -3920,7 +3920,6 @@ static int kvmppc_run_vcpu(struct kvm_run *kvm_run, struct kvm_vcpu *vcpu)
- 	spin_lock(&vc->lock);
- 	vcpu->arch.ceded = 0;
- 	vcpu->arch.run_task = current;
--	vcpu->arch.kvm_run = kvm_run;
- 	vcpu->arch.stolen_logged = vcore_stolen_time(vc, mftb());
- 	vcpu->arch.state = KVMPPC_VCPU_RUNNABLE;
- 	vcpu->arch.busy_preempt = TB_NIL;
-@@ -3973,7 +3972,7 @@ static int kvmppc_run_vcpu(struct kvm_run *kvm_run, struct kvm_vcpu *vcpu)
- 			if (signal_pending(v->arch.run_task)) {
- 				kvmppc_remove_runnable(vc, v);
- 				v->stat.signal_exits++;
--				v->arch.kvm_run->exit_reason = KVM_EXIT_INTR;
-+				v->run->exit_reason = KVM_EXIT_INTR;
- 				v->arch.ret = -EINTR;
- 				wake_up(&v->arch.cpu_run);
- 			}
-@@ -4049,7 +4048,6 @@ int kvmhv_run_single_vcpu(struct kvm_run *kvm_run,
- 	vc = vcpu->arch.vcore;
- 	vcpu->arch.ceded = 0;
- 	vcpu->arch.run_task = current;
--	vcpu->arch.kvm_run = kvm_run;
- 	vcpu->arch.stolen_logged = vcore_stolen_time(vc, mftb());
- 	vcpu->arch.state = KVMPPC_VCPU_RUNNABLE;
- 	vcpu->arch.busy_preempt = TB_NIL;
-diff --git a/arch/powerpc/kvm/book3s_hv_nested.c b/arch/powerpc/kvm/book3s_hv_nested.c
-index dc97e5be76f6..5a3987f3ebf3 100644
---- a/arch/powerpc/kvm/book3s_hv_nested.c
-+++ b/arch/powerpc/kvm/book3s_hv_nested.c
-@@ -290,8 +290,7 @@ long kvmhv_enter_nested_guest(struct kvm_vcpu *vcpu)
- 			r = RESUME_HOST;
- 			break;
- 		}
--		r = kvmhv_run_single_vcpu(vcpu->arch.kvm_run, vcpu, hdec_exp,
--					  lpcr);
-+		r = kvmhv_run_single_vcpu(vcpu->run, vcpu, hdec_exp, lpcr);
- 	} while (is_kvmppc_resume_guest(r));
- 
- 	/* save L2 state for return */
+> > +/* external clocks so add BRANCH_HALT_SKIP */
+> > +static struct clk_branch gcc_npu_gpll0_clk_src = {
+> > +       .halt_check = BRANCH_HALT_SKIP,
+> > +       .clkr = {
+> > +               .enable_reg = 0x52004,
+> > +               .enable_mask = BIT(18),
+> > +               .hw.init = &(struct clk_init_data){
+> > +                       .name = "gcc_npu_gpll0_clk_src",
+> > +                       .parent_hws = (const struct clk_hw *[]){
+> > +                               &gpll0.clkr.hw },
+> > +                       .num_parents = 1,
+> > +                       .flags = CLK_SET_RATE_PARENT,
+> > +                       .ops = &clk_branch2_ops,
+> > +               },
+> > +       },
+> > +};
+> > +
+> > +/* external clocks so add BRANCH_HALT_SKIP */
+> 
+> None of these look external. The parents are all inside this driver. Why
+> are we skipping the halt check?
+
+yeah not sure why this got added here, tested and these look fine. I
+will update these and send update.
+
+Thanks for the review
+
 -- 
-2.17.1
-
+~Vinod
