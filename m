@@ -2,69 +2,64 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E6EC4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0039C54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4C7D20728
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD7E620728
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:52:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726556AbgD0Swd (ORCPT
+        id S1726626AbgD0Swl convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 14:52:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726249AbgD0Swc (ORCPT
+        Mon, 27 Apr 2020 14:52:41 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:51839 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbgD0Swk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 14:52:32 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2087C0610D5;
-        Mon, 27 Apr 2020 11:52:32 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id DA3DB15D586BD;
-        Mon, 27 Apr 2020 11:52:31 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 11:52:31 -0700 (PDT)
-Message-Id: <20200427.115231.1873814851542756574.davem@davemloft.net>
-To:     tony.felice@timesys.com
-Cc:     akshay.bhat@timesys.com, hkallweit1@gmail.com,
-        srinivas.kandagatla@linaro.org, natechancellor@gmail.com,
-        robh@kernel.org, suzuki.poulose@arm.com, mst@redhat.com,
-        andrew@lunn.ch, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: tc35815: Fix phydev supported/advertising mask
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200427020101.3059-1-tony.felice@timesys.com>
-References: <20200427020101.3059-1-tony.felice@timesys.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 27 Apr 2020 11:52:32 -0700 (PDT)
+        Mon, 27 Apr 2020 14:52:40 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 435D9240007;
+        Mon, 27 Apr 2020 18:52:37 +0000 (UTC)
+Date:   Mon, 27 Apr 2020 20:52:35 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Christophe Kerello <christophe.kerello@st.com>
+Cc:     <richard@nod.at>, <vigneshr@ti.com>, <lee.jones@linaro.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <tony@atomide.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <devicetree@vger.kernel.org>, <marex@denx.de>
+Subject: Re: [PATCH v2 10/12] mtd: rawnand: stm32_fmc2: use regmap APIs
+Message-ID: <20200427205235.1e147534@xps13>
+In-Reply-To: <1586966256-29548-11-git-send-email-christophe.kerello@st.com>
+References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
+        <1586966256-29548-11-git-send-email-christophe.kerello@st.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anthony Felice <tony.felice@timesys.com>
-Date: Sun, 26 Apr 2020 22:00:59 -0400
+Hi Christophe,
 
-> Commit 3c1bcc8614db ("net: ethernet: Convert phydev advertize and
-> supported from u32 to link mode") updated ethernet drivers to use a
-> linkmode bitmap. It mistakenly dropped a bitwise negation in the
-> tc35815 ethernet driver on a bitmask to set the supported/advertising
-> flags.
-> 
-> Found by Anthony via code inspection, not tested as I do not have the
-> required hardware.
-> 
-> Fixes: 3c1bcc8614db ("net: ethernet: Convert phydev advertize and supported from u32 to link mode")
-> Signed-off-by: Anthony Felice <tony.felice@timesys.com>
-> Reviewed-by: Akshay Bhat <akshay.bhat@timesys.com>
+Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 15 Apr
+2020 17:57:34 +0200:
 
-Applied.
+> This patch uses regmap APIs to access all FMC2 registers.
+> 
+> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+> ---
+
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+
+
+Thanks,
+Miquèl
