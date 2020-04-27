@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 253DDC5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E1FC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 043E1206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69461206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:00:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LKPo6Bc/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fqLi0Sky"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728552AbgD0QAh (ORCPT
+        id S1728561AbgD0QAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 12:00:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48460 "EHLO
+        Mon, 27 Apr 2020 12:00:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728517AbgD0QAe (ORCPT
+        by vger.kernel.org with ESMTP id S1728517AbgD0QAj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 12:00:34 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 841AEC0610D5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 09:00:34 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id j14so20899138ybt.10
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 09:00:34 -0700 (PDT)
+        Mon, 27 Apr 2020 12:00:39 -0400
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D28CC0610D5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 09:00:39 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id v18so20939096qtq.22
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 09:00:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=kikYfFSTfca/HkjJiT4VwZFMKgohIqKorfyIql1wDNc=;
-        b=LKPo6Bc/Q5MtQzUK3oQa6NKadNaC15z3lO/zjdaounxLr3Yr/P6IlUdUGblL+xU5k4
-         spAtU8NF5ubk32gUq0m5VXjp6kv3GAFhZ4b47WHO1jV9Re1P0wgxqNnIy78PYlqK6iHg
-         Lz7JdX7MXdIx+DHcDceIZRSq68+3ppbTa32fDBBMVQUsXCdSeZ2Rk0+iayOXLcIpH0mh
-         1y8jfaqoFffOSgqi3glfbRygtn76YwRgqeTcaTsWT5Ma8vEPSbQu5Sf1lQXSpiWIQ5jH
-         osRX2DeCrw1RtV2JiczAkw6ANMNeNCpzDPw4w/B5fxj55cgpesof+s+eghyxXIYIpJqz
-         Cp7A==
+        bh=jTb4YPIUPKL1E1OLE2ifNkQg2x2HSYmo0hj4Ci3DZ3A=;
+        b=fqLi0SkyPjbXxPX/hPsXZeMNhq35aYqBNJAvT/Xx+BzPh7YlBx6i8WTACzT4FBHIRv
+         yB3PamKTCHUBg04d9KVAhujS595QnxeeGH1EBSaBLJkOM7C2p6uhVroooOZkVWSFANBo
+         EQq7r79O7lYvn3jVBEw+TI04/17VIVUaDIXO9ddhSuge+F4kykHowiB4XA1PixFt7f06
+         knShlLB1Y6N5OLuGmCs4M7eKqc6BblFu2RW9cdCpUqsLmxzOIrCdokmS7rXLST3WR3EJ
+         4YBYToSahIZ4xPJWmk/lOEd0e03hxC16yaJ1xBfFhei9FtsLMetBOg+CemUkcnsn0gik
+         hibA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=kikYfFSTfca/HkjJiT4VwZFMKgohIqKorfyIql1wDNc=;
-        b=gbzteNDEEiJ2C2oosz4Y0fKUOO27RWPGhp7CBNZJ8/u93GFsNpSG7Ft09TO3I+5w7q
-         n9oltMGyg+mot4ex1gQoaFULSuBSW0VNMNyWnBuJBknZoMRLzux9qQhyl61Clrp8THqV
-         DPRQRgmYXRDK5oeUSg9xGoiOnmVjfZS19xA8Dam2XTNFITxjSt7fLxjGwFDK96+XmbqV
-         mecQipRnW8GRqngw60Bx21AHBzo2WIjwEagEYDss3MTmHd4OzL7DxcbogFFcep6kt2AY
-         044Cc31vwrGsL4u/B6ZUewcy6vnEKgTOVhW5LA0OFQz7lHkC/RS3zBv9lsWd44Nie+Wq
-         e8SA==
-X-Gm-Message-State: AGi0PubYv4piYN69PZDtIXqXe6zOcP8ADnBEH1+2Rh6zcDyGaTbSc2HL
-        5IWT/Coqh2ZoRCykGxhOtoSS3wDFOe8fBszT9ug=
-X-Google-Smtp-Source: APiQypIgO4clcO6Z7kvhUaBuvYACtL+F9hDoKmeBmaTp5Edf0BzJT+qKnh+MwC69KhaGLcQ8wc5C0JEBbMo44i2AOQM=
-X-Received: by 2002:a25:ddc3:: with SMTP id u186mr36888616ybg.383.1588003232559;
- Mon, 27 Apr 2020 09:00:32 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 09:00:09 -0700
+        bh=jTb4YPIUPKL1E1OLE2ifNkQg2x2HSYmo0hj4Ci3DZ3A=;
+        b=T+EQk9nFaTdedL+6XJzltpQmjaozibBjF4nhI1UJ6irjAZGGDDWJtA5rwiolJq9FRr
+         kVDR8C0SRe7LKpgVhkp4SgBEqar4aL+bfBpGyqXAz+skYfDMmw/9bYPEkoeBdB6ZJ+Ky
+         j+f+k1S1wQk5U4ZgNEnhcl7SAKYPXlHioQBKwAP2WdNgUKBbvV0Q9zuR4i+XDFyncUFa
+         GPh5cBansZ7zOB8OvBvLySuKcI/5FLK3ZwLic/aHX66DuXumSj4R7FMFARelPjD/JG0e
+         pcezS8FIcKqaEPs+NmTHD1tNHu2ACEStn2uw8v35dnWVvlHiOO2g6eEh1XXGxxs9/+7A
+         cC/A==
+X-Gm-Message-State: AGi0PuaCKJrx/eZsf1qb2cMdEYcivRtinsFzMuKNq7Q1Rr1wp44a1sbw
+        VB0bzIA53Ox96/RROnR+rjTNhVdbEPPm4rjcSQo=
+X-Google-Smtp-Source: APiQypLDtauRhcKiTQyzgC2LQ3XamOTxT1OCw5Clsp9y71dsXWMyuVGmw4gnWIV3Yp64XvmFFiqiRAvcGkJl+hJ0vkc=
+X-Received: by 2002:a05:6214:1513:: with SMTP id e19mr22507959qvy.75.1588003237430;
+ Mon, 27 Apr 2020 09:00:37 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 09:00:10 -0700
 In-Reply-To: <20200427160018.243569-1-samitolvanen@google.com>
-Message-Id: <20200427160018.243569-4-samitolvanen@google.com>
+Message-Id: <20200427160018.243569-5-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20191018161033.261971-1-samitolvanen@google.com> <20200427160018.243569-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
-Subject: [PATCH v13 03/12] scs: add support for stack usage debugging
+Subject: [PATCH v13 04/12] scs: disable when function graph tracing is enabled
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -93,72 +93,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implements CONFIG_DEBUG_STACK_USAGE for shadow stacks. When enabled,
-also prints out the highest shadow stack usage per process.
+The graph tracer hooks returns by modifying frame records on the
+(regular) stack, but with SCS the return address is taken from the
+shadow stack, and the value in the frame record has no effect. As we
+don't currently have a mechanism to determine the corresponding slot
+on the shadow stack (and to pass this through the ftrace
+infrastructure), for now let's disable SCS when the graph tracer is
+enabled.
+
+With SCS the return address is taken from the shadow stack and the
+value in the frame record has no effect. The mcount based graph tracer
+hooks returns by modifying frame records on the (regular) stack, and
+thus is not compatible. The patchable-function-entry graph tracer
+used for DYNAMIC_FTRACE_WITH_REGS modifies the LR before it is saved
+to the shadow stack, and is compatible.
+
+Modifying the mcount based graph tracer to work with SCS would require
+a mechanism to determine the corresponding slot on the shadow stack
+(and to pass this through the ftrace infrastructure), and we expect
+that everyone will eventually move to the patchable-function-entry
+based graph tracer anyway, so for now let's disable SCS when the
+mcount-based graph tracer is enabled.
+
+SCS and patchable-function-entry are both supported from LLVM 10.x.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
-Acked-by: Will Deacon <will@kernel.org>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
 ---
- kernel/scs.c | 38 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ arch/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/scs.c b/kernel/scs.c
-index 8769016c714c..2a96573f2b1b 100644
---- a/kernel/scs.c
-+++ b/kernel/scs.c
-@@ -68,6 +68,43 @@ int scs_prepare(struct task_struct *tsk, int node)
- 	return 0;
- }
- 
-+#ifdef CONFIG_DEBUG_STACK_USAGE
-+static unsigned long __scs_used(struct task_struct *tsk)
-+{
-+	unsigned long *p = task_scs(tsk);
-+	unsigned long *end = __scs_magic(p);
-+	unsigned long s = (unsigned long)p;
-+
-+	while (p < end && READ_ONCE_NOCHECK(*p))
-+		p++;
-+
-+	return (unsigned long)p - s;
-+}
-+
-+static void scs_check_usage(struct task_struct *tsk)
-+{
-+	static unsigned long highest;
-+	unsigned long used = __scs_used(tsk);
-+	unsigned long prev;
-+	unsigned long curr = highest;
-+
-+	while (used > curr) {
-+		prev = cmpxchg_relaxed(&highest, curr, used);
-+
-+		if (prev == curr) {
-+			pr_info("%s (%d): highest shadow stack usage: "
-+				"%lu bytes\n",
-+				tsk->comm, task_pid_nr(tsk), used);
-+			break;
-+		}
-+
-+		curr = prev;
-+	}
-+}
-+#else
-+static inline void scs_check_usage(struct task_struct *tsk) {}
-+#endif
-+
- void scs_release(struct task_struct *tsk)
- {
- 	void *s;
-@@ -77,6 +114,7 @@ void scs_release(struct task_struct *tsk)
- 		return;
- 
- 	WARN_ON(scs_corrupted(tsk));
-+	scs_check_usage(tsk);
- 
- 	scs_account(tsk, -1);
- 	scs_free(s);
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 334a3d9b19df..45dfca9a98d3 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -543,6 +543,7 @@ config ARCH_SUPPORTS_SHADOW_CALL_STACK
+ config SHADOW_CALL_STACK
+ 	bool "Clang Shadow Call Stack"
+ 	depends on CC_IS_CLANG && ARCH_SUPPORTS_SHADOW_CALL_STACK
++	depends on DYNAMIC_FTRACE_WITH_REGS || !FUNCTION_GRAPH_TRACER
+ 	help
+ 	  This option enables Clang's Shadow Call Stack, which uses a
+ 	  shadow stack to protect function return addresses from being
 -- 
 2.26.2.303.gf8c07b1a785-goog
 
