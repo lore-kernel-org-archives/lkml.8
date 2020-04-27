@@ -2,82 +2,114 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3CDC4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABDCC4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8EF82074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A0462074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:03:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588021385;
+	bh=QS/Ws0tcWAQM2ZkiRv7X5brt2YRcz7Xl1zO1Ihaw5ak=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=2RlSyDjYRSCRJV/hkx0PIfCUfPfEscm1yR7/cjhJ3G5IS2xzfHRnohtmNe/AmYjXq
+	 S6VvxtxavWxgJL0AB614RtaRBb/YBBRtnSUyiBSJZfGihYY+bN64a/klC0Q/QctV8C
+	 9gkYXWiwngHn+v/DE8xr/YT2dtj6a25I8Z+h++eI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgD0Uvs (ORCPT
+        id S1726748AbgD0VDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 16:51:48 -0400
-Received: from mga04.intel.com ([192.55.52.120]:30236 "EHLO mga04.intel.com"
+        Mon, 27 Apr 2020 17:03:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726384AbgD0Uvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 16:51:47 -0400
-IronPort-SDR: 6fgNlV5v213iuEbC0nf+y43R+9SrMHbU97rvrXcwpv8+p1tyLcDGN3lxBBcP+BBCPIpTZ/tu2e
- HM/7JynLkqCQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 13:51:47 -0700
-IronPort-SDR: OzjFzowdiAAi7ko+rI7XAZrtRA1KQSqppc5kR0KuQeUaV/9XsuF+JR/9ixe+1kaIKzk5G/F4YW
- jqykhlmsh48Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,325,1583222400"; 
-   d="scan'208";a="275604013"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga002.jf.intel.com with ESMTP; 27 Apr 2020 13:51:46 -0700
-Date:   Mon, 27 Apr 2020 13:50:51 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Jacob Jun Pan <jacob.jun.pan@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Sohil Mehta <sohil.mehta@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, iommu@lists.linux-foundation.org
-Subject: Re: [PATCH 4/7] x86/msr-index: Define IA32_PASID MSR
-Message-ID: <20200427205050.GE242333@romley-ivt3.sc.intel.com>
-References: <1585596788-193989-1-git-send-email-fenghua.yu@intel.com>
- <1585596788-193989-5-git-send-email-fenghua.yu@intel.com>
- <87sggqsd9j.fsf@nanos.tec.linutronix.de>
+        id S1726285AbgD0VDE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 17:03:04 -0400
+Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4CEC206E2;
+        Mon, 27 Apr 2020 21:03:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588021383;
+        bh=QS/Ws0tcWAQM2ZkiRv7X5brt2YRcz7Xl1zO1Ihaw5ak=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=EaQ/aOuYRpyZxVjpy0mYaR17gkB6Qks3k8Es7a63FM3/DBkMq27/LnMmxV1mNcDiP
+         eXRqq+uChKse7fsyH/vEXyNLzRY+gIt5UL1/7wlkdB5bAOvpTESRIsFZjAbT8FgMUv
+         gVY3foIecwO3fNk3mw5qttjURpHk7Jdg8z+jbdsg=
+Date:   Mon, 27 Apr 2020 23:02:58 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Peter Lister <peter@bikeshed.quignogs.org.uk>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Becker <jlbec@evilplan.org>,
+        Christoph Hellwig <hch@lst.de>, linux-usb@vger.kernel.org
+Subject: Re: [PATCH v2 08/29] docs: filesystems: convert configfs.txt to
+ ReST
+Message-ID: <20200427230258.5f1cd909@coco.lan>
+In-Reply-To: <31da15f2-7755-3e56-d05c-1e3f388e0933@bikeshed.quignogs.org.uk>
+References: <cover.1587487612.git.mchehab+huawei@kernel.org>
+        <278a9befc98b49ea866c9b687d070c70cde20628.1587487612.git.mchehab+huawei@kernel.org>
+        <31da15f2-7755-3e56-d05c-1e3f388e0933@bikeshed.quignogs.org.uk>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87sggqsd9j.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 01:22:00PM +0200, Thomas Gleixner wrote:
-> Fenghua Yu <fenghua.yu@intel.com> writes:
-> 
-> > The IA32_PASID MSR (0xd93) contains the Process Address Space Identifier
-> > (PASID), a 20-bit value. Bit 31 must be set to indicate the value
-> > programmed in the MSR is valid. Hardware uses PASID to identify which
-> > process submits the work and direct responses to the right process.
-> 
-> No. It does not identify the process. It identifies the process' address
-> space as the name says.
-> 
-> Please provide coherent and precise information.
+Em Fri, 24 Apr 2020 18:34:17 +0100
+Peter Lister <peter@bikeshed.quignogs.org.uk> escreveu:
 
-Ok. Will change to address space identification.
+> > -configfs - Userspace-driven kernel object configuration.
+> > +=======================================================
+> > +Configfs - Userspace-driven Kernel oOject Configuration
+> > +=======================================================  
+> 
+> Typo, presumably intended to be Object, not oOject?
 
-Thanks.
+Yeah, sorry for the typo.
 
--Fenghua
+> Why amend capitalisation as part of converting to REST? Normal 
+> Linux/Unix convention is lower case for things like filesystems.
+
+This is to make things more uniform. The thing is: before the
+ReST conversion, there were a mess of capitalization on titles.
+Some documents all caps, others just the first letter, others
+camel case and there were even some documents whose titles
+were all lower case. Now, almost all documents are using the
+same capitalization for titles.
+
+> 
+> > -IMPORTANT: drop_item() is void, and as such cannot fail.  When rmdir(2)
+> > -is called, configfs WILL remove the item from the filesystem tree
+> > -(assuming that it has no children to keep it busy).  The subsystem is
+> > -responsible for responding to this.  If the subsystem has references to
+> > -the item in other threads, the memory is safe.  It may take some time
+> > -for the item to actually disappear from the subsystem's usage.  But it
+> > -is gone from configfs.
+> > +.. Important::
+> > +
+> > +   drop_item() is void, and as such cannot fail.  When rmdir(2)
+> > +   is called, configfs WILL remove the item from the filesystem tree
+> > +   (assuming that it has no children to keep it busy).  The subsystem is
+> > +   responsible for responding to this.  If the subsystem has references to
+> > +   the item in other threads, the memory is safe.  It may take some time
+> > +   for the item to actually disappear from the subsystem's usage.  But it
+> > +   is gone from configfs.  
+> 
+> Using a  REST admonition is probably OK but, again, why change case?
+> 
+> The original author used shouting caps for IMPORTANT. A change can be 
+> argued for consistency or if there is an established preference for 
+> style. But, if so, that's a style patch, not a conversion.
+
+It is for consistency reasons. On all converted docs I touched, I used
+the same convention for such markups: "Notes", "Important", "Warning"...
+
+Thanks,
+Mauro
