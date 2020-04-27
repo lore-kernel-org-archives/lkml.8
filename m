@@ -7,56 +7,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97811C82A05
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4DDC82A04
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 433C22087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4FDB206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:03:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588024996;
-	bh=kJ7nuAYrQepxscJcqa5SQk6Dcd37HnIqGWIDAJTKfpw=;
+	s=default; t=1588025017;
+	bh=pVA9OaErKP0hgBQz20FkuuYqF8blrIapVovuG1NtvWU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c4fVKqdp/Vb8/3MFC29JFDMc4PyUIoqr2fHMG0iQNNJGh8R4IfJq9TiMmxVwfCKTN
-	 RLYvq7IBXKqFB0u8KAq1bQjjrz6UV1qGhGfMtvXyL06pB/AwGMOtnxb+jF/X1iBk0Q
-	 KR8tcHO36pCIONEd2JcFm1i0FTE43JrsMq/uKf9Q=
+	b=zcuBEit4+zRsfQP+49lkyrnRTbrm73rG70YYNgXfrECkoAnsz1ns9r+dMRxwSFwr2
+	 LI18Q+ssZeDxcUrfgIZnU/fZdIzZLpoz3rK3m74mi9cyFaSqLp9AmqnHco9pfeGqPn
+	 UGL6WiHuPazRiB9UpSSZotCc5IRKc9QyfWaapw+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726611AbgD0WDA (ORCPT
+        id S1726413AbgD0WCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 18:03:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48008 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726402AbgD0WCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 Apr 2020 18:02:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47574 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726182AbgD0WB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 18:01:57 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C36422260;
-        Mon, 27 Apr 2020 22:01:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41F23206D9;
+        Mon, 27 Apr 2020 22:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588024917;
-        bh=kJ7nuAYrQepxscJcqa5SQk6Dcd37HnIqGWIDAJTKfpw=;
+        s=default; t=1588024916;
+        bh=pVA9OaErKP0hgBQz20FkuuYqF8blrIapVovuG1NtvWU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gH4dZdqP4JH8eN/EKaY5mayoBo96wRGMENIur4REBUcoqPNCJ62mkllreq2pgGP+q
-         O2FCjUFjvTkUvQG1qe/IrZ3FPPuB+ecsUlptPV/gG6sGqTBv5MVDRxyl/RVPzokQ1X
-         7xhURxSj6DMGUTWRjQtWtwLcfoY8dWjCWaSm77Kk=
+        b=SOtIMLUvKEY22dD6c76ydVCKWImx+1neUg0wh1dzpLVcJMEOmIJZoAt+cy2f2gbyj
+         yEJJvI1sQZlkJTv2fQQggxrSju0LP17EtRbD2X4NKrTv3TCONKR0mxUGQfC/DAm5LT
+         phX0rsKlcgnm+d6mXydtNdXqDRFeCBSXU3WzpfxE=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jTBp5-000IqC-BA; Tue, 28 Apr 2020 00:01:55 +0200
+        id 1jTBp4-000Inm-HD; Tue, 28 Apr 2020 00:01:54 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Chas Williams <3chas3@gmail.com>, netdev@vger.kernel.org,
-        linux-atm-general@lists.sourceforge.net
-Subject: [PATCH 32/38] docs: networking: convert iphase.txt to ReST
-Date:   Tue, 28 Apr 2020 00:01:47 +0200
-Message-Id: <76e3297787c9b642d8ffe54f98eb2a6d36ff6207.1588024424.git.mchehab+huawei@kernel.org>
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH 02/38] docs: networking: convert 6pack.txt to ReST
+Date:   Tue, 28 Apr 2020 00:01:17 +0200
+Message-Id: <6122d960e575bcc5b51e87fcb354fbdb9f06d837.1588024424.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588024424.git.mchehab+huawei@kernel.org>
 References: <cover.1588024424.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -64,320 +63,178 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 - add SPDX header;
-- adjust title using the proper markup;
+- use title markups;
 - mark code blocks and literals as such;
-- mark tables as such;
-- mark lists as such;
 - adjust identation, whitespaces and blank lines;
 - add to networking/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/networking/index.rst            |   1 +
- .../networking/{iphase.txt => iphase.rst}     | 185 +++++++++++-------
- drivers/atm/Kconfig                           |   2 +-
- 3 files changed, 112 insertions(+), 76 deletions(-)
- rename Documentation/networking/{iphase.txt => iphase.rst} (50%)
+ .../networking/{6pack.txt => 6pack.rst}       | 46 +++++++++++++------
+ Documentation/networking/index.rst            |  1 +
+ drivers/net/hamradio/Kconfig                  |  2 +-
+ 3 files changed, 33 insertions(+), 16 deletions(-)
+ rename Documentation/networking/{6pack.txt => 6pack.rst} (90%)
 
+diff --git a/Documentation/networking/6pack.txt b/Documentation/networking/6pack.rst
+similarity index 90%
+rename from Documentation/networking/6pack.txt
+rename to Documentation/networking/6pack.rst
+index 8f339428fdf4..bc5bf1f1a98f 100644
+--- a/Documentation/networking/6pack.txt
++++ b/Documentation/networking/6pack.rst
+@@ -1,27 +1,36 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++==============
++6pack Protocol
++==============
++
+ This is the 6pack-mini-HOWTO, written by
+ 
+ Andreas Könsgen DG3KQ
+-Internet: ajk@comnets.uni-bremen.de
+-AMPR-net: dg3kq@db0pra.ampr.org
+-AX.25:    dg3kq@db0ach.#nrw.deu.eu
++
++:Internet: ajk@comnets.uni-bremen.de
++:AMPR-net: dg3kq@db0pra.ampr.org
++:AX.25:    dg3kq@db0ach.#nrw.deu.eu
+ 
+ Last update: April 7, 1998
+ 
+ 1. What is 6pack, and what are the advantages to KISS?
++======================================================
+ 
+ 6pack is a transmission protocol for data exchange between the PC and
+ the TNC over a serial line. It can be used as an alternative to KISS.
+ 
+ 6pack has two major advantages:
++
+ - The PC is given full control over the radio
+   channel. Special control data is exchanged between the PC and the TNC so
+   that the PC knows at any time if the TNC is receiving data, if a TNC
+   buffer underrun or overrun has occurred, if the PTT is
+   set and so on. This control data is processed at a higher priority than
+   normal data, so a data stream can be interrupted at any time to issue an
+-  important event. This helps to improve the channel access and timing 
+-  algorithms as everything is computed in the PC. It would even be possible 
+-  to experiment with something completely different from the known CSMA and 
++  important event. This helps to improve the channel access and timing
++  algorithms as everything is computed in the PC. It would even be possible
++  to experiment with something completely different from the known CSMA and
+   DAMA channel access methods.
+   This kind of real-time control is especially important to supply several
+   TNCs that are connected between each other and the PC by a daisy chain
+@@ -36,6 +45,7 @@ More details about 6pack are described in the file 6pack.ps that is located
+ in the doc directory of the AX.25 utilities package.
+ 
+ 2. Who has developed the 6pack protocol?
++========================================
+ 
+ The 6pack protocol has been developed by Ekki Plicht DF4OR, Henning Rech
+ DF9IC and Gunter Jost DK7WJ. A driver for 6pack, written by Gunter Jost and
+@@ -44,12 +54,14 @@ They have also written a firmware for TNCs to perform the 6pack
+ protocol (see section 4 below).
+ 
+ 3. Where can I get the latest version of 6pack for LinuX?
++=========================================================
+ 
+ At the moment, the 6pack stuff can obtained via anonymous ftp from
+ db0bm.automation.fh-aachen.de. In the directory /incoming/dg3kq,
+ there is a file named 6pack.tgz.
+ 
+ 4. Preparing the TNC for 6pack operation
++========================================
+ 
+ To be able to use 6pack, a special firmware for the TNC is needed. The EPROM
+ of a newly bought TNC does not contain 6pack, so you will have to
+@@ -75,12 +87,14 @@ and the status LED are lit for about a second if the firmware initialises
+ the TNC correctly.
+ 
+ 5. Building and installing the 6pack driver
++===========================================
+ 
+ The driver has been tested with kernel version 2.1.90. Use with older
+ kernels may lead to a compilation error because the interface to a kernel
+ function has been changed in the 2.1.8x kernels.
+ 
+ How to turn on 6pack support:
++=============================
+ 
+ - In the linux kernel configuration program, select the code maturity level
+   options menu and turn on the prompting for development drivers.
+@@ -94,27 +108,28 @@ To use the driver, the kissattach program delivered with the AX.25 utilities
+ has to be modified.
+ 
+ - Do a cd to the directory that holds the kissattach sources. Edit the
+-  kissattach.c file. At the top, insert the following lines:
++  kissattach.c file. At the top, insert the following lines::
+ 
+-  #ifndef N_6PACK
+-  #define N_6PACK (N_AX25+1)
+-  #endif
++    #ifndef N_6PACK
++    #define N_6PACK (N_AX25+1)
++    #endif
+ 
+-  Then find the line
+-   
+-  int disc = N_AX25;
++  Then find the line:
++
++    int disc = N_AX25;
+ 
+   and replace N_AX25 by N_6PACK.
+ 
+ - Recompile kissattach. Rename it to spattach to avoid confusions.
+ 
+ Installing the driver:
++----------------------
+ 
+-- Do an insmod 6pack. Look at your /var/log/messages file to check if the 
++- Do an insmod 6pack. Look at your /var/log/messages file to check if the
+   module has printed its initialization message.
+ 
+ - Do a spattach as you would launch kissattach when starting a KISS port.
+-  Check if the kernel prints the message '6pack: TNC found'. 
++  Check if the kernel prints the message '6pack: TNC found'.
+ 
+ - From here, everything should work as if you were setting up a KISS port.
+   The only difference is that the network device that represents
+@@ -138,6 +153,7 @@ from the PC to the TNC over the serial line, the status LED if data is
+ sent to the PC.
+ 
+ 6. Known problems
++=================
+ 
+ When testing the driver with 2.0.3x kernels and
+ operating with data rates on the radio channel of 9600 Baud or higher,
 diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index f81aeb87aa28..505eaa41ca2b 100644
+index 5b3421ec25ec..dc37fc8d5bee 100644
 --- a/Documentation/networking/index.rst
 +++ b/Documentation/networking/index.rst
-@@ -67,6 +67,7 @@ Contents:
-    ila
-    ipddp
-    ip_dynaddr
-+   iphase
+@@ -37,6 +37,7 @@ Contents:
+    tls-offload
+    nfc
+    6lowpan
++   6pack
  
  .. only::  subproject and html
  
-diff --git a/Documentation/networking/iphase.txt b/Documentation/networking/iphase.rst
-similarity index 50%
-rename from Documentation/networking/iphase.txt
-rename to Documentation/networking/iphase.rst
-index 670b72f16585..92d9b757d75a 100644
---- a/Documentation/networking/iphase.txt
-+++ b/Documentation/networking/iphase.rst
-@@ -1,27 +1,35 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+==================================
-+ATM (i)Chip IA Linux Driver Source
-+==================================
-+
-+			      READ ME FISRT
+diff --git a/drivers/net/hamradio/Kconfig b/drivers/net/hamradio/Kconfig
+index 8e05b5c31a77..bf306fed04cc 100644
+--- a/drivers/net/hamradio/Kconfig
++++ b/drivers/net/hamradio/Kconfig
+@@ -30,7 +30,7 @@ config 6PACK
  
--                              READ ME FISRT
--		  ATM (i)Chip IA Linux Driver Source
- --------------------------------------------------------------------------------
--                     Read This Before You Begin!
-+
-+		     Read This Before You Begin!
-+
- --------------------------------------------------------------------------------
+ 	  Note that this driver is still experimental and might cause
+ 	  problems. For details about the features and the usage of the
+-	  driver, read <file:Documentation/networking/6pack.txt>.
++	  driver, read <file:Documentation/networking/6pack.rst>.
  
- Description
-------------
-+===========
- 
--This is the README file for the Interphase PCI ATM (i)Chip IA Linux driver 
-+This is the README file for the Interphase PCI ATM (i)Chip IA Linux driver
- source release.
- 
- The features and limitations of this driver are as follows:
-+
-     - A single VPI (VPI value of 0) is supported.
--    - Supports 4K VCs for the server board (with 512K control memory) and 1K 
-+    - Supports 4K VCs for the server board (with 512K control memory) and 1K
-       VCs for the client board (with 128K control memory).
-     - UBR, ABR and CBR service categories are supported.
--    - Only AAL5 is supported. 
--    - Supports setting of PCR on the VCs. 
-+    - Only AAL5 is supported.
-+    - Supports setting of PCR on the VCs.
-     - Multiple adapters in a system are supported.
--    - All variants of Interphase ATM PCI (i)Chip adapter cards are supported, 
--      including x575 (OC3, control memory 128K , 512K and packet memory 128K, 
--      512K and 1M), x525 (UTP25) and x531 (DS3 and E3). See 
-+    - All variants of Interphase ATM PCI (i)Chip adapter cards are supported,
-+      including x575 (OC3, control memory 128K , 512K and packet memory 128K,
-+      512K and 1M), x525 (UTP25) and x531 (DS3 and E3). See
-       http://www.iphase.com/
-       for details.
-     - Only x86 platforms are supported.
-@@ -29,128 +37,155 @@ The features and limitations of this driver are as follows:
- 
- 
- Before You Start
------------------ 
-+================
- 
- 
- Installation
- ------------
- 
- 1. Installing the adapters in the system
-+
-    To install the ATM adapters in the system, follow the steps below.
-+
-        a. Login as root.
-        b. Shut down the system and power off the system.
-        c. Install one or more ATM adapters in the system.
--       d. Connect each adapter to a port on an ATM switch. The green 'Link' 
--          LED on the front panel of the adapter will be on if the adapter is 
--          connected to the switch properly when the system is powered up.
-+       d. Connect each adapter to a port on an ATM switch. The green 'Link'
-+	  LED on the front panel of the adapter will be on if the adapter is
-+	  connected to the switch properly when the system is powered up.
-        e. Power on and boot the system.
- 
- 2. [ Removed ]
- 
- 3. Rebuild kernel with ABR support
-+
-    [ a. and b. removed ]
--    c. Reconfigure the kernel, choose the Interphase ia driver through "make 
-+
-+    c. Reconfigure the kernel, choose the Interphase ia driver through "make
-        menuconfig" or "make xconfig".
--    d. Rebuild the kernel, loadable modules and the atm tools. 
-+    d. Rebuild the kernel, loadable modules and the atm tools.
-     e. Install the new built kernel and modules and reboot.
- 
- 4. Load the adapter hardware driver (ia driver) if it is built as a module
-+
-        a. Login as root.
-        b. Change directory to /lib/modules/<kernel-version>/atm.
-        c. Run "insmod suni.o;insmod iphase.o"
--	  The yellow 'status' LED on the front panel of the adapter will blink 
--          while the driver is loaded in the system.
--       d. To verify that the 'ia' driver is loaded successfully, run the 
--          following command:
-+	  The yellow 'status' LED on the front panel of the adapter will blink
-+	  while the driver is loaded in the system.
-+       d. To verify that the 'ia' driver is loaded successfully, run the
-+	  following command::
- 
--              cat /proc/atm/devices
-+	      cat /proc/atm/devices
- 
--          If the driver is loaded successfully, the output of the command will 
--          be similar to the following lines:
-+	  If the driver is loaded successfully, the output of the command will
-+	  be similar to the following lines::
- 
--              Itf Type    ESI/"MAC"addr AAL(TX,err,RX,err,drop) ...
--              0   ia      xxxxxxxxx  0 ( 0 0 0 0 0 )  5 ( 0 0 0 0 0 )
-+	      Itf Type    ESI/"MAC"addr AAL(TX,err,RX,err,drop) ...
-+	      0   ia      xxxxxxxxx  0 ( 0 0 0 0 0 )  5 ( 0 0 0 0 0 )
- 
--          You can also check the system log file /var/log/messages for messages
--          related to the ATM driver.
-+	  You can also check the system log file /var/log/messages for messages
-+	  related to the ATM driver.
- 
--5. Ia Driver Configuration 
-+5. Ia Driver Configuration
- 
- 5.1 Configuration of adapter buffers
-     The (i)Chip boards have 3 different packet RAM size variants: 128K, 512K and
--    1M. The RAM size decides the number of buffers and buffer size. The default 
--    size and number of buffers are set as following: 
-+    1M. The RAM size decides the number of buffers and buffer size. The default
-+    size and number of buffers are set as following:
- 
--          Total    Rx RAM   Tx RAM   Rx Buf   Tx Buf   Rx buf   Tx buf
--         RAM size   size     size     size     size      cnt      cnt
--         --------  ------   ------   ------   ------   ------   ------
--           128K      64K      64K      10K      10K       6        6
--           512K     256K     256K      10K      10K      25       25
--             1M     512K     512K      10K      10K      51       51
-+	=========  =======  ======   ======   ======   ======   ======
-+	 Total     Rx RAM   Tx RAM   Rx Buf   Tx Buf   Rx buf   Tx buf
-+	 RAM size  size     size     size     size     cnt      cnt
-+	=========  =======  ======   ======   ======   ======   ======
-+	   128K      64K      64K      10K      10K       6        6
-+	   512K     256K     256K      10K      10K      25       25
-+	     1M     512K     512K      10K      10K      51       51
-+	=========  =======  ======   ======   ======   ======   ======
- 
-        These setting should work well in most environments, but can be
--       changed by typing the following command: 
-- 
--           insmod <IA_DIR>/ia.o IA_RX_BUF=<RX_CNT> IA_RX_BUF_SZ=<RX_SIZE> \
--                   IA_TX_BUF=<TX_CNT> IA_TX_BUF_SZ=<TX_SIZE> 
-+       changed by typing the following command::
-+
-+	   insmod <IA_DIR>/ia.o IA_RX_BUF=<RX_CNT> IA_RX_BUF_SZ=<RX_SIZE> \
-+		   IA_TX_BUF=<TX_CNT> IA_TX_BUF_SZ=<TX_SIZE>
-+
-        Where:
--            RX_CNT = number of receive buffers in the range (1-128)
--            RX_SIZE = size of receive buffers in the range (48-64K)
--            TX_CNT = number of transmit buffers in the range (1-128)
--            TX_SIZE = size of transmit buffers in the range (48-64K)
- 
--            1. Transmit and receive buffer size must be a multiple of 4.
--            2. Care should be taken so that the memory required for the
--               transmit and receive buffers is less than or equal to the
--               total adapter packet memory.   
-+	    - RX_CNT = number of receive buffers in the range (1-128)
-+	    - RX_SIZE = size of receive buffers in the range (48-64K)
-+	    - TX_CNT = number of transmit buffers in the range (1-128)
-+	    - TX_SIZE = size of transmit buffers in the range (48-64K)
-+
-+	    1. Transmit and receive buffer size must be a multiple of 4.
-+	    2. Care should be taken so that the memory required for the
-+	       transmit and receive buffers is less than or equal to the
-+	       total adapter packet memory.
- 
- 5.2 Turn on ia debug trace
- 
--    When the ia driver is built with the CONFIG_ATM_IA_DEBUG flag, the driver 
--    can provide more debug trace if needed. There is a bit mask variable, 
--    IADebugFlag, which controls the output of the traces. You can find the bit 
--    map of the IADebugFlag in iphase.h. 
--    The debug trace can be turn on through the insmod command line option, for 
--    example, "insmod iphase.o IADebugFlag=0xffffffff" can turn on all the debug 
-+    When the ia driver is built with the CONFIG_ATM_IA_DEBUG flag, the driver
-+    can provide more debug trace if needed. There is a bit mask variable,
-+    IADebugFlag, which controls the output of the traces. You can find the bit
-+    map of the IADebugFlag in iphase.h.
-+    The debug trace can be turn on through the insmod command line option, for
-+    example, "insmod iphase.o IADebugFlag=0xffffffff" can turn on all the debug
-     traces together with loading the driver.
- 
- 6. Ia Driver Test Using ttcp_atm and PVC
- 
--   For the PVC setup, the test machines can either be connected back-to-back or 
--   through a switch. If connected through the switch, the switch must be 
-+   For the PVC setup, the test machines can either be connected back-to-back or
-+   through a switch. If connected through the switch, the switch must be
-    configured for the PVC(s).
- 
-    a. For UBR test:
--      At the test machine intended to receive data, type:
--         ttcp_atm -r -a -s 0.100 
--      At the other test machine, type:
--         ttcp_atm -t -a -s 0.100 -n 10000
-+
-+      At the test machine intended to receive data, type::
-+
-+	 ttcp_atm -r -a -s 0.100
-+
-+      At the other test machine, type::
-+
-+	 ttcp_atm -t -a -s 0.100 -n 10000
-+
-       Run "ttcp_atm -h" to display more options of the ttcp_atm tool.
-    b. For ABR test:
--      It is the same as the UBR testing, but with an extra command option:
--         -Pabr:max_pcr=<xxx>
--         where:
--             xxx = the maximum peak cell rate, from 170 - 353207.
--         This option must be set on both the machines.
-+
-+      It is the same as the UBR testing, but with an extra command option::
-+
-+	 -Pabr:max_pcr=<xxx>
-+
-+      where:
-+
-+	     xxx = the maximum peak cell rate, from 170 - 353207.
-+
-+      This option must be set on both the machines.
-+
-    c. For CBR test:
--      It is the same as the UBR testing, but with an extra command option:
--         -Pcbr:max_pcr=<xxx>
--         where:
--             xxx = the maximum peak cell rate, from 170 - 353207.
--         This option may only be set on the transmit machine.
- 
-+      It is the same as the UBR testing, but with an extra command option::
- 
--OUTSTANDING ISSUES
--------------------
-+	 -Pcbr:max_pcr=<xxx>
-+
-+      where:
-+
-+	     xxx = the maximum peak cell rate, from 170 - 353207.
-+
-+      This option may only be set on the transmit machine.
-+
-+
-+Outstanding Issues
-+==================
- 
- 
- 
- Contact Information
- -------------------
- 
-+::
-+
-      Customer Support:
--         United States:	Telephone:	(214) 654-5555
--     			Fax:		(214) 654-5500
-+	 United States:	Telephone:	(214) 654-5555
-+			Fax:		(214) 654-5500
- 			E-Mail:		intouch@iphase.com
- 	 Europe:	Telephone:	33 (0)1 41 15 44 00
- 			Fax:		33 (0)1 41 15 12 13
-diff --git a/drivers/atm/Kconfig b/drivers/atm/Kconfig
-index 4af7cbdcc349..cfb0d16b60ad 100644
---- a/drivers/atm/Kconfig
-+++ b/drivers/atm/Kconfig
-@@ -306,7 +306,7 @@ config ATM_IA
- 	  for more info about the cards. Say Y (or M to compile as a module
- 	  named iphase) here if you have one of these cards.
- 
--	  See the file <file:Documentation/networking/iphase.txt> for further
-+	  See the file <file:Documentation/networking/iphase.rst> for further
- 	  details.
- 
- config ATM_IA_DEBUG
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called 6pack.
 -- 
 2.25.4
 
