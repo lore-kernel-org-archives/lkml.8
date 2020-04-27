@@ -2,168 +2,148 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3800DC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F02C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E4CB2074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7353F20644
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:57:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbgD0Lyu (ORCPT
+        id S1726899AbgD0L47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 07:54:50 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2112 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726260AbgD0Lyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 07:54:49 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 7AEC82A367116205EBC7;
-        Mon, 27 Apr 2020 12:54:47 +0100 (IST)
-Received: from [127.0.0.1] (10.210.170.137) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 27 Apr
- 2020 12:54:44 +0100
-Subject: Re: [PATCH 3/4] lib: logic_pio: Introduce MMIO_LOWER_RESERVED
-To:     <jiaxun.yang@flygoat.com>, Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     <linux-mips@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Kitt <steve@sk2.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mon, 27 Apr 2020 07:56:59 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:42662 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbgD0L46 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 07:56:58 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jT2Nc-0005LR-I5; Mon, 27 Apr 2020 05:56:56 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jT2Nb-000812-3T; Mon, 27 Apr 2020 05:56:56 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Alexey Gladkov <legion@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Daniel Silsby <dansilsby@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Wei Xu <xuwei5@hisilicon.com>, <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>, Rob Herring <robh@kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-References: <20200426114806.1176629-1-jiaxun.yang@flygoat.com>
- <20200426114806.1176629-4-jiaxun.yang@flygoat.com>
- <e84f4146-b44f-b009-0dc4-876aa551f44f@huawei.com>
- <42432F7C-D859-48B4-9547-A61BD22EFEEF@flygoat.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <e6e3331f-283d-03e8-b23e-41870b547e34@huawei.com>
-Date:   Mon, 27 Apr 2020 12:54:06 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
+        <87ftcv1nqe.fsf@x220.int.ebiederm.org>
+        <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
+        <20200424173927.GB26802@redhat.com>
+        <87mu6ymkea.fsf_-_@x220.int.ebiederm.org>
+        <87h7x6mj6h.fsf_-_@x220.int.ebiederm.org>
+        <87368ps1ql.fsf@nanos.tec.linutronix.de>
+Date:   Mon, 27 Apr 2020 06:53:42 -0500
+In-Reply-To: <87368ps1ql.fsf@nanos.tec.linutronix.de> (Thomas Gleixner's
+        message of "Mon, 27 Apr 2020 11:43:14 +0200")
+Message-ID: <87zhaxi1q1.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <42432F7C-D859-48B4-9547-A61BD22EFEEF@flygoat.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.210.170.137]
-X-ClientProxiedBy: lhreml722-chm.china.huawei.com (10.201.108.73) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-XM-SPF: eid=1jT2Nb-000812-3T;;;mid=<87zhaxi1q1.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+es43Xm7YLhAh5+wwr1PPIMlgGfoou5is=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v3 1/6] posix-cpu-timers: Always call __get_task_for_clock holding rcu_read_lock
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/04/2020 12:03, Jiaxun Yang wrote:
-> 
-> 
-> 于 2020年4月27日 GMT+08:00 下午6:43:09, John Garry <john.garry@huawei.com> 写到:
->> On 26/04/2020 12:47, Jiaxun Yang wrote:
->>> That would allow platforms reserve some lower address in PIO MMIO range
->>> to deal with legacy drivers with hardcoded I/O ports that can't be
->>> managed by logic_pio.
+Thomas Gleixner <tglx@linutronix.de> writes:
+
+> ebiederm@xmission.com (Eric W. Biederman) writes:
+>
+>> This allows the getref flag to be removed and the callers can
+>> than take a task reference if needed.
+>
+> That changelog lacks any form of information why this should be
+> changed. I can see the point vs. patch 2, but pretty please put coherent
+> explanations into each patch.
+
+Well excess flags bad.  But in this case I can do even better.
+
+The code no longer takes a reference on task_struct so this patch
+removes unnecessary code.
+
+I will see if I can say that better.
+
+
+
+>> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+>> ---
+>>  kernel/time/posix-cpu-timers.c | 41 +++++++++++++++++-----------------
+>>  1 file changed, 21 insertions(+), 20 deletions(-)
 >>
->> Hi,
->>
->> Is there some reason why the logic_pio code cannot be improved to handle
->> these devices at these "fixed" addresses? Or do you have a plan to
->> improve it? We already support fixed bus address devices in the INDIRECT
->> IO region.
-> 
-> Hi,
-> 
-> The issue about "Fixed Address" is we can't control the ioport
-> That driver used to operate devices.
-> So any attempt to resolve it in logic_pio seems impossible.
-> 
-> Currently we have i8259, i8042, piix4_smbus, mc146818 rely on this assumption.
-
-Right, and from glancing at a couple of drivers you mentioned, if we 
-were to register a logic pio region for that legacy region, there does 
-not seem to be an easy place to fixup to use logic pio addresses (for 
-those devices). They use hardcoded values. However if all those drivers 
-were mips specific, you could fixup those drivers to use logic_pio 
-addresses today through some macro. But not sure on that.
-
-So, going back to your change, I have a dilemma wondering whether you 
-should still register a logic pio region for the legacy region instead 
-of the carveout reservation, but ensure it is the first region 
-registered, such that logic pio address base is 0 and no translation is 
-required. At least then you have a region registered and it shows in 
-/proc/ioports, but then this whole thing becomes a bit fragile.
-
-Maybe Arnd or Bjorn have an opinion on this.
-
-Thanks,
-John
-
-
-> 
-> My plan is after getting this part merged, I'm going to work on a ISA Host bridge driver,
-> then convert device drivers into logic_pio and Devicetree based driver step by step.
-> 
-> Finally when we nologner have any legacy driver, we can safely remove this reserved
-> range.
-> 
-> Thanks.
-> 
-> 
->>
->> Carving out a region of IO space is less than ideal.
->>
->> Thanks,
->> John
->>
->>>
->>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
->>> ---
->>>    lib/logic_pio.c | 6 +++++-
->>>    1 file changed, 5 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/lib/logic_pio.c b/lib/logic_pio.c
->>> index f511a99bb389..57fff1cb7063 100644
->>> --- a/lib/logic_pio.c
->>> +++ b/lib/logic_pio.c
->>> @@ -20,6 +20,10 @@
->>>    static LIST_HEAD(io_range_list);
->>>    static DEFINE_MUTEX(io_range_mutex);
->>>    
->>> +#ifndef MMIO_LOWER_RESERVED
->>> +#define MMIO_LOWER_RESERVED	0
->>> +#endif
->>> +
->>>    /* Consider a kernel general helper for this */
->>>    #define in_range(b, first, len)        ((b) >= (first) && (b) < (first) + (len))
->>>    
->>> @@ -36,7 +40,7 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
->>>    	struct logic_pio_hwaddr *range;
->>>    	resource_size_t start;
->>>    	resource_size_t end;
->>> -	resource_size_t mmio_end = 0;
->>> +	resource_size_t mmio_end = MMIO_LOWER_RESERVED;
->>>    	resource_size_t iio_sz = MMIO_UPPER_LIMIT;
->>>    	int ret = 0;
->>>    
->>>
->>
-> 
-
+>> diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
+>> index 2fd3b3fa68bf..eba41c70f0f0 100644
+>> --- a/kernel/time/posix-cpu-timers.c
+>> +++ b/kernel/time/posix-cpu-timers.c
+>> @@ -86,36 +86,34 @@ static struct task_struct *lookup_task(const pid_t pid, bool thread,
+>>  }
+>>  
+>>  static struct task_struct *__get_task_for_clock(const clockid_t clock,
+>> -						bool getref, bool gettime)
+>> +						bool gettime)
+>>  {
+>>  	const bool thread = !!CPUCLOCK_PERTHREAD(clock);
+>>  	const pid_t pid = CPUCLOCK_PID(clock);
+>> -	struct task_struct *p;
+>>  
+>>  	if (CPUCLOCK_WHICH(clock) >= CPUCLOCK_MAX)
+>>  		return NULL;
+>>  
+>> -	rcu_read_lock();
+>> -	p = lookup_task(pid, thread, gettime);
+>> -	if (p && getref)
+>> -		get_task_struct(p);
+>> -	rcu_read_unlock();
+>> -	return p;
+>> +	return lookup_task(pid, thread, gettime);
+>>  }
+>>  
+>>  static inline struct task_struct *get_task_for_clock(const clockid_t clock)
+>>  {
+>> -	return __get_task_for_clock(clock, true, false);
+>> +	return __get_task_for_clock(clock, false);
+>>  }
+>>  
+>>  static inline struct task_struct *get_task_for_clock_get(const clockid_t clock)
+>>  {
+>> -	return __get_task_for_clock(clock, true, true);
+>> +	return __get_task_for_clock(clock, true);
+>>  }
+>>  
+>>  static inline int validate_clock_permissions(const clockid_t clock)
+>>  {
+>> -	return __get_task_for_clock(clock, false, false) ? 0 : -EINVAL;
+>> +	int ret;
+>
+> New line between declarations and code please.
+>
+>> +	rcu_read_lock();
+>> +	ret = __get_task_for_clock(clock, false) ? 0 : -EINVAL;
+>> +	rcu_read_unlock();
+>> +	return ret;
+>>  }
+>
+> Thanks,
+>
+>         tglx
