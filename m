@@ -2,134 +2,175 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 704CEC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D1B5C55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 419C6206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BAEC214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:48:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cypress.com header.i=@cypress.com header.b="Rs6aQYAM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AnOZDOps"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbgD0HsB (ORCPT
+        id S1726661AbgD0Hsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 03:48:01 -0400
-Received: from mail-co1nam11on2131.outbound.protection.outlook.com ([40.107.220.131]:62176
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725785AbgD0HsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 03:48:00 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bNkvYenzKno/TQgM6c50FyTcZ+LMjh+PBsFoMCtxL3wVhBrTC+TtjGadCIKra2ENQi6QyPm4EwoqT+6/n1iKqfMoTduUsvYZeHzwz2uj0L67T7jeY7rgfYIv1KEAkwI8e81TZsMEJLY67OgBlXCaikKph+CCegrbDNeGbmKMJGjSg8PnqrJn8P2RfKa68F3dvsG8DyL+B8jOTAY0JLJyodVyO+52EstYwtHPaF/ijOdSpdhniKygKhXKiw0mazx5IIU9gzBgMO2LmX/6PPhzR21J2UkUETh5+F5NNr5XBdrn9iugRiQD1M3pvfgi3TqEzWkLHM1oOkAk2uDTTFnRfA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FuKH0m6UzaZA6lGxBGjWasPhs9FvDqpHWeLqF5jf4B4=;
- b=hSaQx0bX1h6stKpfMUnS9qYDWaoaYXy7qDWTaJIQDuXKKvH2juqrfaSRD1kRfjhkwLEpQnpIv7cE2hIeDqYAPFsYdamxlUTyZ2YTGmoV+LyDzNfxZXfowys78FdKRHwjTQICBV4HmzGeR7PaHJgaewe9WOWOsoH6GsL3hglWrB/zChemzb/9Lmii6JCdL/4FwaLvVjuOnusCyNnz0bpz21M5ZDQ/PJBI4bYQs2nYjl8pj59XUTupUeeveGtQ/Zeu4egIOMgzpTPJsYMuEfsMPTbhNt2pH4oLSOrNfFVhJyrtYKMmf6NoAPu4N5YxxmbmCYNTPD4mKeB9fmYVIGEvvw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cypress.com; dmarc=pass action=none header.from=cypress.com;
- dkim=pass header.d=cypress.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cypress.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FuKH0m6UzaZA6lGxBGjWasPhs9FvDqpHWeLqF5jf4B4=;
- b=Rs6aQYAM+PvO5voam7ESwb7KVBophfxJPT3eN0LlL84rzgjYQAlttOLjGdiJQHKshV1XhWXlkQRNUiqINVYHchTsgl+gJiv23XAzCRQcAtd+FcMHeGELZ+2Eg/epDpFOBAcWSGaLtWlRrK4fRxOOGvm6pRjrpnqvTuUYmzCscio=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Chi-Hsien.Lin@cypress.com; 
-Received: from BYAPR06MB4901.namprd06.prod.outlook.com (2603:10b6:a03:7a::30)
- by BYAPR06MB4598.namprd06.prod.outlook.com (2603:10b6:a03:4a::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Mon, 27 Apr
- 2020 07:47:56 +0000
-Received: from BYAPR06MB4901.namprd06.prod.outlook.com
- ([fe80::69bb:5671:e8b:74c1]) by BYAPR06MB4901.namprd06.prod.outlook.com
- ([fe80::69bb:5671:e8b:74c1%3]) with mapi id 15.20.2937.023; Mon, 27 Apr 2020
- 07:47:56 +0000
-Reply-To: chi-hsien.lin@cypress.com
-Subject: Re: [PATCH] brcmfmac: remove comparison to bool in brcmf_fws_attach()
-To:     Jason Yan <yanaijie@huawei.com>, arend.vanspriel@broadcom.com,
-        franky.lin@broadcom.com, hante.meuleman@broadcom.com,
-        wright.feng@cypress.com, kvalo@codeaurora.org, davem@davemloft.net,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200426094053.23132-1-yanaijie@huawei.com>
-From:   Chi-Hsien Lin <chi-hsien.lin@cypress.com>
-Message-ID: <a49224fa-f645-53a4-d6ea-541758c7631c@cypress.com>
-Date:   Mon, 27 Apr 2020 15:47:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-In-Reply-To: <20200426094053.23132-1-yanaijie@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR21CA0020.namprd21.prod.outlook.com
- (2603:10b6:a03:114::30) To BYAPR06MB4901.namprd06.prod.outlook.com
- (2603:10b6:a03:7a::30)
+        Mon, 27 Apr 2020 03:48:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56204 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbgD0Hsl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 03:48:41 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E88EAC061A0F;
+        Mon, 27 Apr 2020 00:48:40 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id d15so17675788wrx.3;
+        Mon, 27 Apr 2020 00:48:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ykXrmH4eSp0lHQxOKpg8eyJKQJcyO1JQD5mT6efAflk=;
+        b=AnOZDOpsgAeWPgZxk3V6/dCZNFwCY/j5llSevfYQXGFxKBG3I/CMCk8t1S9VSNoqcY
+         hl8EoO26MUaPwv3ndjPJatIziugH5mTzeYWYjVhU1U3hJQnZgFEMSCyCF9Y+t7+9tkaI
+         Fn0nStQlSQ8PoJmuIVheLGoh9FlhHuUSabQL7lt4hL1JxsaOj3MPhgtIBjyxARBfBoHa
+         rwgDF8raeWiCWPY/EXLQ4QoUOlvvEN6IvK/SGjzuN/GvMj4Kk0llYh/xqFUdDRrb0VW+
+         c3ldtWhISc6kQr6FLkR+6bLxZGsLtwRXsTat4GR1Oz8zX9FpOWnOcSopD5OlF7o6uWxT
+         COAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ykXrmH4eSp0lHQxOKpg8eyJKQJcyO1JQD5mT6efAflk=;
+        b=sSiwlFZq/ixqw8pl2eomYnyEvsY2GeydwVc5A+MQLFl69iZ3W/BfEvn+be0aW2OJGX
+         e/vjBmzs/9NVN1krp9TQhxuVWbdLtk5Re4o+2zDP0RxZOR16pZTlkgGnHvrHzP4J6+qD
+         7p6t76P4uYH+5JskmDbcw0U7dkiqawmxnin/eiERhEni5Jis55TAEftAW/64gPfF7auO
+         J8iUxUqfCrDMAFsvRmzsyuFLq9+sJAxt9FVOr8mSo0A5PHBX99RmOrIYOWBPw54UYUJ2
+         t8LBx0PoEMMtH2vJ8ljjc5Bqxfpgzolg4469eX0qFJzlek+i1XlLDXRwIl5ALS650RRa
+         V6xQ==
+X-Gm-Message-State: AGi0PuZ23Ta/KW6WGAkw3Qi6+AKJau5DXGDImSDFcT2vizEiPzOB8m7l
+        rpjZVlLt4vAOZcJfgoKh7qI=
+X-Google-Smtp-Source: APiQypLr4pMzeVYP4oKRwidwWpS/8tfvK74Y8iLP/UR5diqSW/Ip7nQvQA645SUPQxdfR8mfEZCrOw==
+X-Received: by 2002:adf:fc4f:: with SMTP id e15mr26149257wrs.415.1587973719735;
+        Mon, 27 Apr 2020 00:48:39 -0700 (PDT)
+Received: from localhost (p2E5BEDBA.dip0.t-ipconnect.de. [46.91.237.186])
+        by smtp.gmail.com with ESMTPSA id c1sm20626643wrc.4.2020.04.27.00.48.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 00:48:38 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 09:48:37 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
+ for a long time
+Message-ID: <20200427074837.GC3451400@ulmo>
+References: <bba0a93a-8ec4-eda6-97f3-fb2ab0b9b503@gmail.com>
+ <6f07e5c8-7916-7ea2-2fe7-d05f8f011471@nvidia.com>
+ <77a31b2f-f525-ba9e-f1ae-2b474465bde4@gmail.com>
+ <470b4de4-e98a-1bdc-049e-6259ad603507@nvidia.com>
+ <d2531fc1-b452-717d-af71-19497e14ef00@gmail.com>
+ <a5198024-7273-74c4-b4f4-3a29d042bc36@nvidia.com>
+ <f8fb1f7f-2497-033e-ff2c-c86c6caa9706@gmail.com>
+ <fd1ca178-1ea3-851f-20a6-10bf00453ce3@nvidia.com>
+ <a5734f19-254e-b6bc-e791-fa1ac63f11a4@gmail.com>
+ <79f6560e-dbb5-0ae1-49f8-cf1cd95396ec@nvidia.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.9.112.143] (61.222.14.99) by BYAPR21CA0020.namprd21.prod.outlook.com (2603:10b6:a03:114::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.4 via Frontend Transport; Mon, 27 Apr 2020 07:47:53 +0000
-X-Originating-IP: [61.222.14.99]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: df6252a3-c3eb-4b1d-d56a-08d7ea7f4c3b
-X-MS-TrafficTypeDiagnostic: BYAPR06MB4598:|BYAPR06MB4598:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR06MB4598597BD73FB66B61738341BBAF0@BYAPR06MB4598.namprd06.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
-X-Forefront-PRVS: 0386B406AA
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR06MB4901.namprd06.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(376002)(346002)(136003)(366004)(39860400002)(31696002)(3450700001)(7416002)(36756003)(86362001)(31686004)(2906002)(316002)(16576012)(66556008)(66946007)(8676002)(26005)(6486002)(81156014)(8936002)(478600001)(2616005)(956004)(66476007)(5660300002)(186003)(52116002)(16526019)(53546011)(921003);DIR:OUT;SFP:1102;
-Received-SPF: None (protection.outlook.com: cypress.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: pkZTy5+K5NeYiq72SVtkeAh3Wg2Ee8KRaEamSSffdp8PdVo0iF0Xm36SRd70e+50ryVuyYkzl01rPNzWtv0ZL6z7LDVaRG83GQrkoEquHOmR11oPOg9rcou8rZGFAoHn/8dxXtCOsqS4VjEXRCiti/lV/364zzg9/q45KsshO35So1PIB+q1ZQ8Arv+S9hSPSDbMOf+xfMGJfXR08WbboD5N8guO65My/TZ74YmEK+9YmBJN3hhzIv34sbXoYJnSFdSYH4KY3h+Ezu03apCTAUjQ5qk5O54ezJyd6GCEDaXmsyMlEoYPQD6h04IvfgUe4xDaNwDLvgIXlw4r/DC0GAy/bFUzeDOKbQhZGI0ObE9BA1FcJhuCgktJJQB0vZK8YZDo25Al0pzJN2Cf63ttCvwULBxiozauXpiwUlXBElpezQOP3PVwJNWWKq5k1hoSqAKWHYkVkk+HE4OQDXhv4JXZLgsSM2RH11c2wYAjaVM=
-X-MS-Exchange-AntiSpam-MessageData: /gRGNRd+M6O+cgR4TcK+2HQn/V7nB3w5sq12xycO4Nj8WEt6E8ROB1SFu+T8SjgdOgsqGt2ykErySt/rlekP2Ho1QkFHAlJvnvvKpLvmKdWSEp9ZjUscFJxqaNWIRykaWqbbQIpOn2ftuIfZsinChrAPdpOEcwMbgjS9woQSM0ogxFu47ukUSfq8PzNsnvRSahjZgJQb5rvtOBWtnQ1AAfi+1JDB+vZNbU9+jqir8Lssts5o4qRcQLd6gwSigbzMIrPpsXOxwr7VtE3BW93ff/Kf39RWe3oHybKkISHInoWXJnihTSaZgNyROGySnaIykdUid6xRXfvrjkZU/jw4ObEoXu8xVGq7zfmxcAmC76GPkh7OZG5BlilHoyTRa48BO2F7RVnvrqSWVckADAouzV9UzKNwZXo4V3yoYrTpNGmwNMoFySry3khx0SmLZzxZK9uCkuiVuP5uFV7qWsz0Ag0f8ecyjbWby0T5Eb4bSwuHKFT7vIQXA1KntQlFbnOkyYl3IKEXpvCVnnoIEjdw7mqxb606R+LHDJJ1KPufafiCS7PRiHOnTtaT+gGVD2+sivkr9WFitbVkv7D8ZxtC409l4R3z4kA2kBsLVi7//+eCmSrOgcIvusdWr4OL3ohh0KtC/ove54qdGuYJFD2h/3ykSL1M5uxxh/UmstcY8sKpaAgAkgajCFmCvBdRUOZzH1RwgskOgVneh769ztC/1eoEPU1Xs0fdOOIcqX541yLxseNARfyBX28k5AAEJx49ujK4/elbHEzC6RMNT7Cxm6h6xZtJiV1njZcoLZEFe80=
-X-OriginatorOrg: cypress.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: df6252a3-c3eb-4b1d-d56a-08d7ea7f4c3b
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2020 07:47:56.1547
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 011addfc-2c09-450d-8938-e0bbc2dd2376
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RKNP4RYb1k+EhrBTBQjPBe3kOQyyiGXV+Tew8dHuxVLDVVEkkbePNTeMXnpAAYdFuCkXXIwJh7XsGUejCaFcmQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR06MB4598
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4ZLFUWh1odzi/v6L"
+Content-Disposition: inline
+In-Reply-To: <79f6560e-dbb5-0ae1-49f8-cf1cd95396ec@nvidia.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--4ZLFUWh1odzi/v6L
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 04/26/2020 5:40, Jason Yan wrote:
-> Fix the following coccicheck warning:
-> 
-> drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c:2359:6-40:
-> WARNING: Comparison to bool
-> 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-Reviewed-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
+On Fri, Apr 24, 2020 at 04:19:25PM +0100, Jon Hunter wrote:
+>=20
+> On 24/04/2020 15:45, Dmitry Osipenko wrote:
+> > 24.04.2020 10:10, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > ...
+> >>> Could you please clarify why pm_runtime_get_sync() can't be used by t=
+he
+> >>> I2C driver's in NOIRQ phase?
+> >>
+> >> Yes take a look at commit 1e2ef05bb8cf ("PM: Limit race conditions
+> >> between runtime PM and system sleep (v2)").
+> >=20
+> > I2C driver now uses irq-safe RPM since ede2299f7 ("i2c: tegra: Support
+> > atomic transfers"), and thus, the RPM's workqueue shouldn't be a
+> > problem. I guess RPM should work fine in this case, don't you think so?
+>=20
+> I was testing, and I did not see it using atomic transfers. I can
+> confirm if the RPM callbacks are called or not, but I did not think so.
+> However, let me confirm.
+>=20
+> >>> Yes, keeping PCI regulators always-enabled should be a good immediate
+> >>> solution.
+> >>
+> >> I was thinking about that, and I am not sure it is. I don't think that
+> >> the failure to send the I2C command should break suspend.
+> >=20
+> > It shouldn't, but looks like it should be a separate problem.
+>=20
+> Maybe but all these other problems appear to have existed for sometime
+> now. We need to fix all, but for the moment we need to figure out what's
+> best for v5.7.
 
-> ---
->   drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
-> index 8cc52935fd41..2b7837887c0b 100644
-> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
-> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
-> @@ -2356,7 +2356,7 @@ struct brcmf_fws_info *brcmf_fws_attach(struct brcmf_pub *drvr)
->   	fws->drvr = drvr;
->   	fws->fcmode = drvr->settings->fcmode;
->   
-> -	if ((drvr->bus_if->always_use_fws_queue == false) &&
-> +	if (!drvr->bus_if->always_use_fws_queue &&
->   	    (fws->fcmode == BRCMF_FWS_FCMODE_NONE)) {
->   		fws->avoid_queueing = true;
->   		brcmf_dbg(INFO, "FWS queueing will be avoided\n");
-> 
+To me it doesn't sound like we have a good handle on what exactly is
+going on here and we're mostly just poking around.
+
+And even if things weren't working quite properly before, it sounds to
+me like this patch actually made things worse.
+
+Given all that, I think the best course of action at this point is to
+revert for v5.7 and prevent this from spreading[0]. After that we need
+to look at fixing the regulator issues and make sure that suspend/resume
+actually works properly and without errors. After that we should have a
+better chance of isolating why exactly this patch fails.
+
+Wolfram, can you revert the following two patches for v5.7, please?
+
+	8814044fe0fa i2c: tegra: Synchronize DMA before termination
+	a900aeac2537 i2c: tegra: Better handle case where CPU0 is busy for a long =
+time
+
+Thanks,
+Thierry
+
+[0]: https://lkml.org/lkml/2020/4/24/498
+
+--4ZLFUWh1odzi/v6L
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6mjlEACgkQ3SOs138+
+s6GuPA//YCI4iiRaXv/ZB4BV/jq0WNLoCvWW1RIunKE3zf6VZ6DTdT29DXUZXEx+
+5e0ruCZPLzlF5m2hF5TGYlRJcsimli2K5QolOi2Mn0ROxPF2Lso1FKwtFrGhJwdB
+22oUXuUDjeIPdTl7EQHEoaVcGPSVfxIWJOJoyQKK3WSpirU1NFkWJLIx5S8xpcMd
+E5MdrQVZVvVjFYETLy3e8cbvW8AzwA+TBsls03/UszuORf4GJXCjQHEQKRrb8Ouw
+Av4zI4C3pIgdlj5pEsUCbkAQOMtwEgiezoiedZKVj3RpQtLVR3ntmB7S9Em1ra0N
++4MkeSKcoPULYZgnmikrtY2H+ok14axoqN2aQROiGNcytggWEbsqyaKErrHzlq72
+RCNAeplgBsy9h2AoeWEfIqTy+bApoMX4QkVlOCxyCIn4Z0nbSta1MGjN+QHbX1L3
+atmaTITY2aGc6G74tMMkPBgvIYY2hgLoZc05jBY8P3fKNgj56tAAwCJ4Bx9OLMsS
+k5VchUOnHoCS5MefRBpQh4ikFOzXgpFzqYNphBxOk1YeRGZU9Xg6Vm4be31aRHdY
+hf1QocwpWOuhdNjzL/mCU+TiIDJv8/27YTXE/lMFRRhCyZ4oXcIq0VUMFyCerDgH
+K7RmwFiB54pxeOBHBRYFOfgSi51TCv4du9+AHL7J+7IXEkjf/MM=
+=MOEg
+-----END PGP SIGNATURE-----
+
+--4ZLFUWh1odzi/v6L--
