@@ -2,99 +2,141 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFFCC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE380C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13BE020656
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:22:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587986527;
-	bh=0jmC6ymb22IxBunv3XGNmRuVyT/qlxFM1kkb/eWadrs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wOjbud0ZUs0FY/PPl/X5pQuUw78JPY4kfpVK/KOiXqFylLqoqi7RuTEhm3Pg1J1eo
-	 4nXEnLj9jx7NjchSgOfmxn7/vZm9TSDiRziWO8vuw0jj8EbwkNQs8Ue+PMbMiL6TIo
-	 Q2hKcm+1C2nB7V7sHYpNrgWZ7tEswrdeGrf2dqA0=
+	by mail.kernel.org (Postfix) with ESMTP id CCDFE205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:24:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgD0LWG (ORCPT
+        id S1726931AbgD0LYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 07:22:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36222 "EHLO mail.kernel.org"
+        Mon, 27 Apr 2020 07:24:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39090 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726260AbgD0LWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 07:22:05 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A319B205C9;
-        Mon, 27 Apr 2020 11:22:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587986525;
-        bh=0jmC6ymb22IxBunv3XGNmRuVyT/qlxFM1kkb/eWadrs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oMCK4UYlbGod1a1y5XvygMeHe8P1YvmunwSWbIIZ552DSBYHSFnaTtzvitje4yc5D
-         UzTJgJwuPOO6O26FCKCXDrZ5nLtvogMTIbATLS/45lkyOxvE8oz98oRZNmjLdx9+Y8
-         prTJZl+Z5mrHc6TlOUvyi31ZKDG5NOWMKWlkKNSY=
-Date:   Mon, 27 Apr 2020 12:22:02 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     patches@opensource.cirrus.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Subject: Re: [PATCH 4/4] ASoC: wm8994: Silence warnings during deferred probe
-Message-ID: <20200427112202.GB4272@sirena.org.uk>
-References: <20200427074832.22134-1-m.szyprowski@samsung.com>
- <CGME20200427074843eucas1p1a3a265df0c7f14b0aaec25eb65daf606@eucas1p1.samsung.com>
- <20200427074832.22134-5-m.szyprowski@samsung.com>
+        id S1726260AbgD0LYS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 07:24:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id BADA4ABC2;
+        Mon, 27 Apr 2020 11:24:15 +0000 (UTC)
+Message-ID: <4842d1b72192bb7c461a2d50c8798f178da964e0.camel@suse.de>
+Subject: Re: [PATCH v2 04/91] firmware: rpi: Only create clocks device if we
+ don't have a node for it
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Maxime Ripard <maxime@cerno.tech>, Eric Anholt <eric@anholt.net>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>
+Date:   Mon, 27 Apr 2020 13:24:14 +0200
+In-Reply-To: <b181d867cb9523e1877a3dfd258bafde2988024f.1587742492.git-series.maxime@cerno.tech>
+References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
+         <b181d867cb9523e1877a3dfd258bafde2988024f.1587742492.git-series.maxime@cerno.tech>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-t2CrNR4eS4OpaMihaaXw"
+User-Agent: Evolution 3.34.4 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="98e8jtXdkpgskNou"
-Content-Disposition: inline
-In-Reply-To: <20200427074832.22134-5-m.szyprowski@samsung.com>
-X-Cookie: Secrecy is the beginning of tyranny.
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---98e8jtXdkpgskNou
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--=-t2CrNR4eS4OpaMihaaXw
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 27, 2020 at 09:48:32AM +0200, Marek Szyprowski wrote:
-> Don't confuse user with meaningless warning about the failure in getting
-> clocks in case of deferred probe.
+Hi Maxime,
 
->  	if (ret < 0) {
-> -		dev_err(&pdev->dev, "Failed to get clocks: %d\n", ret);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "Failed to get clocks: %d\n", ret);
+On Fri, 2020-04-24 at 17:33 +0200, Maxime Ripard wrote:
+> The firmware clocks driver was previously probed through a platform_devic=
+e
+> created by the firmware driver.
+>=20
+> Since we will now have a node for that clocks driver, we need to create t=
+he
+> device only in the case where there's no node for it already.
+>=20
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> ---
+>  drivers/firmware/raspberrypi.c | 17 +++++++++++++++--
+>  1 file changed, 15 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberryp=
+i.c
+> index da26a584dca0..1874f41b007c 100644
+> --- a/drivers/firmware/raspberrypi.c
+> +++ b/drivers/firmware/raspberrypi.c
+> @@ -210,6 +210,15 @@ rpi_register_hwmon_driver(struct device *dev, struct
+> rpi_firmware *fw)
+> =20
+>  static void rpi_register_clk_driver(struct device *dev)
+>  {
+> +	/*
+> +	 * Earlier DTs don't have a node for the firmware clocks but
+> +	 * rely on us creating a platform device by hand. If we do
+> +	 * have a node for the firmware clocks, just bail out here.
+> +	 */
+> +	if (of_get_compatible_child(dev->of_node,
+> +				    "raspberrypi,firmware-clocks"))
+> +		return;
+> +
+>  	rpi_clk =3D platform_device_register_data(dev, "raspberrypi-clk",
+>  						-1, NULL, 0);
+>  }
+> @@ -262,8 +271,12 @@ static int rpi_firmware_remove(struct platform_devic=
+e
+> *pdev)
+> =20
+>  	platform_device_unregister(rpi_hwmon);
+>  	rpi_hwmon =3D NULL;
+> -	platform_device_unregister(rpi_clk);
+> -	rpi_clk =3D NULL;
+> +
+> +	if (rpi_clk) {
 
-This completely eliminates the diagnostics which means that if the clock
-isn't there the user is a bit stuck trying to work out what's missing.
-There should still be a diagnostic.
+rpi_clk, being a static global variable, will be zeroed by default. So, if =
+you
+don't register the platform device, rpi_clk is going to be NULL, which you'=
+re
+allowed to feed platform_device_unregister(), so no need to be extra carefu=
+l.
 
---98e8jtXdkpgskNou
+Regards,
+Nicolas
+
+> +		platform_device_unregister(rpi_clk);
+> +		rpi_clk =3D NULL;
+> +	}
+> +
+>  	mbox_free_channel(fw->chan);
+> =20
+>  	return 0;
+
+
+--=-t2CrNR4eS4OpaMihaaXw
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6mwFkACgkQJNaLcl1U
-h9CnKgf+L0DHzyP9uJrX9mcCSOEFMqGDbUbVooabgQKACLN2NqFor9WHedKckCIh
-fDOp+RpDynCvnBX7erSNkPM8Hkpo8VemUi+ULRs+Bj2qP1h6t+069tYs+AZ8f9VJ
-dAWfnctdgI8rYKrfwFa7zPToZbEYNX+3tZHwBMwnpW12+maRF788h2uas/h6Ae2s
-9o0nObKwrSLLvvnqvFXGPeX6UZ4kXayfQ8RojLR+y+QtkcLZTZeB2WGuowRS62wD
-yccW4mzrZojzcC3aSuuCosv3h9wEMbMb+g1PIF4cCUGz14oywcWiVBDiEi7uMSWp
-oyQQZ6ObUxSdmIvqgirYU5GA67W+wA==
-=MSap
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl6mwN4ACgkQlfZmHno8
+x/5xXAf+Ng2E3SKjoUMbR1+VP/yWSENtjk2GqBEMGPPIZYYmsbkt9al9HYQZJ5C3
+nwOXe0b3145xT5Von1/JrpzL3sPIp29cbA9zYKU+7x+WpZtSctau+dkeM5VpTPdw
+hHu01BPVOX2KJERjvB8u4y25U2Xpm1LzosEf9CFGDxng3LDaBrgP4j779Oq9sbq3
+0pfATYlX1KFsMwbN3twlsShGwuokSb6kdcrKj53kBP2alNxL2dGpre4COea33YAx
+Ro1hGda3eGhqBndalntUHQ0MsSiKIwdkQP4H287W+D7UPb46ee0GdRcoVohqQadY
+W9mJfQMFIP2MiJ/tYqxOUPFqBrJi7A==
+=fYAz
 -----END PGP SIGNATURE-----
 
---98e8jtXdkpgskNou--
+--=-t2CrNR4eS4OpaMihaaXw--
+
