@@ -2,93 +2,90 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23ADDC55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E99FDC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F41AF2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC80F2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:05:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726243AbgD0IEH (ORCPT
+        id S1726717AbgD0IFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 04:04:07 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35669 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbgD0IEG (ORCPT
+        Mon, 27 Apr 2020 04:05:42 -0400
+Received: from mail-m17613.qiye.163.com ([59.111.176.13]:15447 "EHLO
+        mail-m17613.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726504AbgD0IFl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 04:04:06 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e26so24752088otr.2;
-        Mon, 27 Apr 2020 01:04:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yp9HgL6YXH1Mrs7/xb1a0hjYzru62kco8NbdEX0q47w=;
-        b=fqf2apN6rMLx+bj9WGC0vXQnzxwveZ3ahvm450ePwDSnEHZcdxPaPSr7K7Pc3mvcBO
-         e0dCwnt1oE/748jia21S+QBQaSMeSy0+TbKHw8eKGEWYBboW5CpkqZJ15j2Ik7PlwKMV
-         wo7FXsWj9vBEzlGrojdmY+/2KY97+4j+W/+4q//gv8btJtdcZ665O1uix35th7eB82zT
-         VNNN2SJTpvAwAPOQUYmTjVNgAdIIqSpzzdvgOrf0mYRZkKxR61eb5z4FuB+Y21p6DWcM
-         ozXbyoaxVLuDb/MzThOx+KxyD23Kdtl0qKjb3zIDQY3gQ47X8fpRAx+2ow+cP+VGYazo
-         847g==
-X-Gm-Message-State: AGi0Pubo0I9AvwMRJ3PgvuQgaWmhUv+DIp3TxjZZIxeV2EeJ1y1nBb/1
-        6z8VQ85jsJup41aqcJhyxM3dCnbkA8o5QDSMiDY=
-X-Google-Smtp-Source: APiQypL9L0sStSs9sZCJMMiE2Zg4MITGkAayddwxMKwHPKdmjS62MIWjUuR1BBUAExNprGCWXUObgfMmOo6mye5Vn6w=
-X-Received: by 2002:a9d:7d85:: with SMTP id j5mr16411444otn.107.1587974644288;
- Mon, 27 Apr 2020 01:04:04 -0700 (PDT)
+        Mon, 27 Apr 2020 04:05:41 -0400
+Received: from ubuntu.localdomain (unknown [157.0.31.122])
+        by mail-m17613.qiye.163.com (Hmail) with ESMTPA id B9D1C48274B;
+        Mon, 27 Apr 2020 16:05:39 +0800 (CST)
+From:   Bernard Zhao <bernard@vivo.com>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Uma Shankar <uma.shankar@intel.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Shashank Sharma <shashank.sharma@intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Bernard Zhao <bernard@vivo.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     opensource.kernel@vivo.com
+Subject: [PATCH] drivers/video: cleanup coding style in video a bit
+Date:   Mon, 27 Apr 2020 01:05:23 -0700
+Message-Id: <20200427080530.3234-1-bernard@vivo.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <1587678050-23468-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1587678050-23468-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1587678050-23468-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 27 Apr 2020 10:03:52 +0200
-Message-ID: <CAMuHMdWiQd1x7+_qJnFzNbz27CwCW9yO431pUfYATE=0rM8J-Q@mail.gmail.com>
-Subject: Re: [PATCH 06/10] dt-bindings: clock: renesas: cpg-mssr: Document
- r8a7742 binding
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Marian-Cristian Rotariu 
-        <marian-cristian.rotariu.rb@bp.renesas.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZTlVOTUhLS0tJS0lKTENCTVlXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PTI6Sgw4CDgrFkgNMjU9Dw0w
+        ThYaCjJVSlVKTkNMQkxPTE9LS05JVTMWGhIXVRkeCRUaCR87DRINFFUYFBZFWVdZEgtZQVlKTkxV
+        S1VISlVKSUlZV1kIAVlBSU5PTTcG
+X-HM-Tid: 0a71baab97fd93bakuwsb9d1c48274b
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 11:41 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add binding documentation for the RZ/G1H (R8A7742) Clock Pulse Generator
-> driver.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+Eliminate the magic numbers, add vender infoframe size macro
+like other hdmi modules.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in clk-renesas-for-v5.8.
+Signed-off-by: Bernard Zhao <bernard@vivo.com>
+---
+ drivers/video/hdmi.c | 2 +-
+ include/linux/hdmi.h | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/video/hdmi.c b/drivers/video/hdmi.c
+index 856a8c4e84a2..f693076f2e5f 100644
+--- a/drivers/video/hdmi.c
++++ b/drivers/video/hdmi.c
+@@ -495,7 +495,7 @@ int hdmi_vendor_infoframe_init(struct hdmi_vendor_infoframe *frame)
+ 	 * value
+ 	 */
+ 	frame->s3d_struct = HDMI_3D_STRUCTURE_INVALID;
+-	frame->length = 4;
++	frame->length = HDMI_VENDOR_INFOFRAME_SIZE;
+ 
+ 	return 0;
+ }
+diff --git a/include/linux/hdmi.h b/include/linux/hdmi.h
+index 9613d796cfb1..ff25aeb95ee4 100644
+--- a/include/linux/hdmi.h
++++ b/include/linux/hdmi.h
+@@ -57,6 +57,7 @@ enum hdmi_infoframe_type {
+ #define HDMI_SPD_INFOFRAME_SIZE    25
+ #define HDMI_AUDIO_INFOFRAME_SIZE  10
+ #define HDMI_DRM_INFOFRAME_SIZE    26
++#define HDMI_VENDOR_INFOFRAME_SIZE  4
+ 
+ #define HDMI_INFOFRAME_SIZE(type)	\
+ 	(HDMI_INFOFRAME_HEADER_SIZE + HDMI_ ## type ## _INFOFRAME_SIZE)
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.26.2
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
