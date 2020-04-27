@@ -2,119 +2,114 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C13C2C55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAEFCC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A004F206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:37:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Rg7KBMJn"
+	by mail.kernel.org (Postfix) with ESMTP id 8FAF5206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:37:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727055AbgD0Lhq (ORCPT
+        id S1727068AbgD0Lhx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 07:37:46 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:53696 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726260AbgD0Lhp (ORCPT
+        Mon, 27 Apr 2020 07:37:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35468 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbgD0Lhx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 07:37:45 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03RBbebG012356;
-        Mon, 27 Apr 2020 06:37:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587987460;
-        bh=5QDEIBRwUNoI7dvYP0AT0ZGIXfUe6VQAiR6ihBCjn1A=;
-        h=Subject:From:To:References:Date:In-Reply-To;
-        b=Rg7KBMJneKFflF9BjjsRobXIHl3wXsOrehZue6ezyqGROjtpT5Uyt9E5ZTg++0YmX
-         OU0CburW2v8RNRugJI8rmL6aCDEkDPlBum9JzoNqdNkPZ+6FNI6niYvQkSShsJQLKo
-         Ot+yYoJL07fqlC1n3dxHbY5VCPFw+QTMfZxrBUNw=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03RBbeGq021143
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 27 Apr 2020 06:37:40 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 27
- Apr 2020 06:37:39 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 27 Apr 2020 06:37:39 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RBbblB052342;
-        Mon, 27 Apr 2020 06:37:38 -0500
-Subject: Re: [PATCH 2/3] arm64: dts: ti: k3-j721e-main.dtsi: Add DSS node
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-To:     Jyri Sarha <jsarha@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200422091512.950-1-tomi.valkeinen@ti.com>
- <20200422091512.950-2-tomi.valkeinen@ti.com>
- <ade3a177-f060-bc40-bcc1-494093e3071d@ti.com>
- <47b7f858-a8d9-1c3b-4dca-2cc493f6730f@ti.com>
- <fa497e8d-7911-5f3d-cf91-347370f8edaa@ti.com>
- <217c0c14-f4fb-7321-9f57-205df0cd01fe@ti.com>
- <9a4b1d0a-c871-2280-8d22-196730e9385b@ti.com>
-Message-ID: <3eb05f6d-523f-f7e5-a0e9-d47b852fe079@ti.com>
-Date:   Mon, 27 Apr 2020 14:37:37 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 27 Apr 2020 07:37:53 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C175C0610D5;
+        Mon, 27 Apr 2020 04:37:53 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jT257-0001BZ-KW; Mon, 27 Apr 2020 13:37:49 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4715D1C0451;
+        Mon, 27 Apr 2020 13:37:49 +0200 (CEST)
+Date:   Mon, 27 Apr 2020 11:37:48 -0000
+From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/build] x86/build: Check whether the compiler is sane
+Cc:     mliska@suse.cz, Borislav Petkov <bp@suse.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200423173058.GE26021@zn.tnic>
+References: <20200423173058.GE26021@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <9a4b1d0a-c871-2280-8d22-196730e9385b@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Message-ID: <158798746887.28353.12553648261169854767.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/04/2020 14:15, Tomi Valkeinen wrote:
-> On 27/04/2020 14:10, Jyri Sarha wrote:
->> On 27/04/2020 13:51, Tomi Valkeinen wrote:
->>> On 27/04/2020 13:37, Jyri Sarha wrote:
->>>> On 27/04/2020 13:09, Tero Kristo wrote:
->>>>>> +        status = "disabled";
->>>>>
->>>>> Again, why disabled by default?
->>>>>
->>>>
->>>> tidss device is not functional without a defined video-port. The driver
->>>> is not implemented in a way that it would handle a broken configuration
->>>> gracefully.
->>>
->>> Then we need to fix it. The driver should handle the case where there
->>> are no ports defined just fine.
->>>
->>
->> Just by reading the code, I would say that currently the probe would
->> fail with returned -ENOMEM after calling drm_vblank_init() with zero CRTCs.
->>
->> So should the probe fail gracefully and silently, or should we try to
->> register a DRM device with no CRTCs? Is that even possible?
-> 
-> My first thought is that the driver should exit probe silently with ENODEV if there are no outputs 
-> defined (but, of course, with EPROBE_DEFER if there are outputs which haven't been probed yet).
-> 
-> It gets a bit more complex if we ever support writeback, as that can be used as mem-to-mem without 
-> any displays, but I think we can ignore that for now.
+The following commit has been merged into the x86/build branch of tip:
 
-In any case, that's not the reason for status = "disabled", so that discussion is not related to 
-these patches as such.
+Commit-ID:     73da86741e7f75c9f1b5c8a2660c90aa41840972
+Gitweb:        https://git.kernel.org/tip/73da86741e7f75c9f1b5c8a2660c90aa41840972
+Author:        Borislav Petkov <bp@suse.de>
+AuthorDate:    Thu, 23 Apr 2020 19:28:28 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Mon, 27 Apr 2020 13:31:57 +02:00
 
-The reason to have DSS disabled is just to prevent pointless driver probing. When a board dts or a 
-DT overlay adds a display, the DSS DT node has to be modified anyway to add the DT graph and the 
-panel/bridge data. So one can as well add the single line of "status = enabled" there.
+x86/build: Check whether the compiler is sane
 
-  Tomi
+Add a check script to verify whether the compiler is sane. This is
+x86-only for now and checks one thing only but should be useful for more
+checks in the future.
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Suggested-by: Martin Liška <mliska@suse.cz>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Link: https://lkml.kernel.org/r/20200423173058.GE26021@zn.tnic
+---
+ arch/x86/Makefile             |  4 ++++
+ scripts/x86-check-compiler.sh |  9 +++++++++
+ 2 files changed, 13 insertions(+)
+ create mode 100755 scripts/x86-check-compiler.sh
+
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index 00e378d..38d3eec 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -1,6 +1,10 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # Unified Makefile for i386 and x86_64
+ 
++#  Check the compiler
++sane_compiler := $(shell $(srctree)/scripts/x86-check-compiler.sh $(CC))
++$(if $(sane_compiler),$(error $(CC) check failed. Aborting),)
++
+ # select defconfig based on actual architecture
+ ifeq ($(ARCH),x86)
+   ifeq ($(shell uname -m),x86_64)
+diff --git a/scripts/x86-check-compiler.sh b/scripts/x86-check-compiler.sh
+new file mode 100755
+index 0000000..b2b5b54
+--- /dev/null
++++ b/scripts/x86-check-compiler.sh
+@@ -0,0 +1,9 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++
++# Check whether the compiler tail-call optimizes across an asm() statement.
++# Fail the build if it does.
++
++echo "int foo(int a); int bar(int a) { int r = foo(a); asm(\"\"); return r; }" |\
++	     $* -O2 -x c -c -S - -o - 2>/dev/null |\
++	     grep -E "^[[:blank:]]+jmp[[:blank:]]+.*"
