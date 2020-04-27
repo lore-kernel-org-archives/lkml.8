@@ -2,126 +2,121 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9F0C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91500C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DBA4214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70AAC21D79
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:33:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588012415;
+	bh=Kvl1vZC9kDd1F7eq2SkykbjVcxFidxJg+IWcZRfXVAo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=JSkmasO9aHx7hnLiEzqzC1gGq5b4AOWzs9WlFFkStNdFKI9awTd35o4RWiPii7KOE
+	 T/oV2IM7p0wh5DTaJBvI2ZlnJbf03MqENS+vbexyOq43owbWPLvuVRIzocBMVyPB4e
+	 9qsVHozf/x+dbsmB80hl/cw6RcB9yHR8x1XXYIiI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbgD0SdV convert rfc822-to-8bit (ORCPT
+        id S1726572AbgD0Sdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 14:33:21 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:43633 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726295AbgD0SdU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 14:33:20 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 2C647FF806;
-        Mon, 27 Apr 2020 18:33:15 +0000 (UTC)
-Date:   Mon, 27 Apr 2020 20:33:14 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Christophe Kerello <christophe.kerello@st.com>
-Cc:     <richard@nod.at>, <vigneshr@ti.com>, <lee.jones@linaro.org>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <tony@atomide.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <devicetree@vger.kernel.org>, <marex@denx.de>
-Subject: Re: [PATCH v2 07/12] mtd: rawnand: stm32_fmc2: cleanup
-Message-ID: <20200427203314.798b3c4e@xps13>
-In-Reply-To: <1586966256-29548-8-git-send-email-christophe.kerello@st.com>
-References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
-        <1586966256-29548-8-git-send-email-christophe.kerello@st.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+        Mon, 27 Apr 2020 14:33:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47972 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726295AbgD0Sde (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 14:33:34 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C91E3205C9;
+        Mon, 27 Apr 2020 18:33:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588012412;
+        bh=Kvl1vZC9kDd1F7eq2SkykbjVcxFidxJg+IWcZRfXVAo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=vTUbWzE5YKsAhGIfXoRp6hDQedTaAGNp8/huMp2MGwjrnBnIXHcBAq0/WY8QdQVWP
+         3fwbk784z3Nv1x9AHPRORRmxK1OEK6hOa6dlldVISf/+5WX+j/LhXOW/uH1RlqCgSk
+         CTNRshvUm2K2Rpl2z+NivnJNaxfo+daK65RoGEYo=
+Date:   Mon, 27 Apr 2020 11:33:31 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Michal Hocko <mhocko@suse.com>
+Subject: Re: [PATCH v3 1/5] kernel/sysctl: support setting sysctl parameters
+ from kernel command line
+Message-Id: <20200427113331.f0c1e8e7cee98644260448d3@linux-foundation.org>
+In-Reply-To: <20200427180433.7029-2-vbabka@suse.cz>
+References: <20200427180433.7029-1-vbabka@suse.cz>
+        <20200427180433.7029-2-vbabka@suse.cz>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christophe,
+On Mon, 27 Apr 2020 20:04:29 +0200 Vlastimil Babka <vbabka@suse.cz> wrote:
 
-Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 15 Apr
-2020 17:57:31 +0200:
-
-> This patch renames functions and local variables to be ready to use
-> stm32_fmc2 structure.
+> A recently proposed patch to add vm_swappiness command line parameter in
+> addition to existing sysctl [1] made me wonder why we don't have a general
+> support for passing sysctl parameters via command line. Googling found only
+> somebody else wondering the same [2], but I haven't found any prior discussion
+> with reasons why not to do this.
 > 
-> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
-> ---
-
-> -static int stm32_fmc2_setup_interface(struct nand_chip *chip, int chipnr,
-> -				      const struct nand_data_interface *conf)
-> +static int stm32_fmc2_nfc_setup_interface(struct nand_chip *chip, int chipnr,
-> +					  const struct nand_data_interface *cf)
-
-I suppose you s/conf/cf/ because of the 80 chars boundary. In this case
-I don't mind crossing it, I don't think it is better to rename the
-conf parameter for this reason.
-
->  {
->  	const struct nand_sdr_timings *sdrt;
+> Settings the vm_swappiness issue aside (the underlying issue might be solved in
+> a different way), quick search of kernel-parameters.txt shows there are already
+> some that exist as both sysctl and kernel parameter - hung_task_panic,
+> nmi_watchdog, numa_zonelist_order, traceoff_on_warning. A general mechanism
+> would remove the need to add more of those one-offs and might be handy in
+> situations where configuration by e.g. /etc/sysctl.d/ is impractical.
+> 
+> Hence, this patch adds a new parse_args() pass that looks for parameters
+> prefixed by 'sysctl.' and tries to interpret them as writes to the
+> corresponding sys/ files using an temporary in-kernel procfs mount. This
+> mechanism was suggested by Eric W. Biederman [3], as it handles all dynamically
+> registered sysctl tables, even though we don't handle modular sysctls. Errors
+> due to e.g. invalid parameter name or value are reported in the kernel log.
+> 
+> The processing is hooked right before the init process is loaded, as some
+> handlers might be more complicated than simple setters and might need some
+> subsystems to be initialized. At the moment the init process can be started and
+> eventually execute a process writing to /proc/sys/ then it should be also fine
+> to do that from the kernel.
+> 
+> Sysctls registered later on module load time are not set by this mechanism -
+> it's expected that in such scenarios, setting sysctl values from userspace is
+> practical enough.
+> 
+> ...
 >  
-> -	sdrt = nand_get_sdr_timings(conf);
-> +	sdrt = nand_get_sdr_timings(cf);
->  	if (IS_ERR(sdrt))
->  		return PTR_ERR(sdrt);
->  
->  	if (chipnr == NAND_DATA_IFACE_CHECK_ONLY)
->  		return 0;
->  
-> -	stm32_fmc2_calc_timings(chip, sdrt);
-> -	stm32_fmc2_timings_init(chip);
-> +	stm32_fmc2_nfc_calc_timings(chip, sdrt);
-> +	stm32_fmc2_nfc_timings_init(chip);
->  
->  	return 0;
->  }
->  
+> +	sysctl.*=	[KNL]
+> +			Set a sysctl parameter, right before loading the init
+> +			process, as if the value was written to the respective
+> +			/proc/sys/... file. Both '.' and '/' are recognized as
+> +			separators. Unrecognized parameters and invalid values
+> +			are reported in the kernel log. Sysctls registered
+> +			later by a loaded module cannot be set this way.
+> +			Example: sysctl.vm.swappiness=40
 
-[...]
+Why support "."?  I think only supporting "/" is perfectly adequate and
+simplifies documentation.  It aligns the command-line syntax with the
+rest of the sysctl documentation.  I'm not seeing the need to provide
+two ways of doing the same thing?
 
->  
-> -static struct platform_driver stm32_fmc2_driver = {
-> -	.probe	= stm32_fmc2_probe,
-> -	.remove	= stm32_fmc2_remove,
-> +static struct platform_driver stm32_fmc2_nfc_driver = {
-> +	.probe	= stm32_fmc2_nfc_probe,
-> +	.remove	= stm32_fmc2_nfc_remove,
->  	.driver	= {
-> -		.name = "stm32_fmc2_nand",
-> -		.of_match_table = stm32_fmc2_match,
-> -		.pm = &stm32_fmc2_pm_ops,
-> +		.name = "stm32_fmc2_nfc",
-> +		.of_match_table = stm32_fmc2_nfc_match,
-> +		.pm = &stm32_fmc2_nfc_pm_ops,
->  	},
->  };
-> -module_platform_driver(stm32_fmc2_driver);
-> +module_platform_driver(stm32_fmc2_nfc_driver);
->  
-> -MODULE_ALIAS("platform:stm32_fmc2_nand");
-> +MODULE_ALIAS("platform:stm32_fmc2_nfc");
->  MODULE_AUTHOR("Christophe Kerello <christophe.kerello@st.com>");
-> -MODULE_DESCRIPTION("STMicroelectronics STM32 FMC2 nand driver");
-> +MODULE_DESCRIPTION("STMicroelectronics STM32 FMC2 nfc driver");
-
-I would prefer: s/nfc/NFC/ here please.
-
->  MODULE_LICENSE("GPL v2");
-
-With these two nits,
-
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
-
-Thanks,
-Miquèl
