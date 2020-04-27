@@ -2,271 +2,195 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB756C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB49C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACD7620656
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:31:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nqid3mtu"
+	by mail.kernel.org (Postfix) with ESMTP id 4662B206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:31:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbgD0Pbb (ORCPT
+        id S1728197AbgD0Pbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 11:31:31 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36930 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728156AbgD0Pba (ORCPT
+        Mon, 27 Apr 2020 11:31:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43924 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728156AbgD0Pbf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 11:31:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588001489;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TKFWcoJJEHH5/ibI5vdJgvFR606TzkLnlJit+oD4SIw=;
-        b=Nqid3mtuCH8O28RxmQ6LLc+JTgTL5NXYAdL/LxoBk5VlDyVOs+IqiUgIzJ1O7eHHV4RZvR
-        Dtl00kjzX30a5cAsQEKonuyRj5RmMVEPKmUM9BbQrneRGLRbktTM4V04xD7gMqueihQsn1
-        YC+Pkxl6365tSi70IYhweQp3Y/7b8po=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-351-1buJHQBgP5eDSvmYabL9Ng-1; Mon, 27 Apr 2020 11:31:27 -0400
-X-MC-Unique: 1buJHQBgP5eDSvmYabL9Ng-1
-Received: by mail-wr1-f70.google.com with SMTP id p2so10646209wrx.12
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 08:31:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=TKFWcoJJEHH5/ibI5vdJgvFR606TzkLnlJit+oD4SIw=;
-        b=CXev8YAcPSGMJs4qrcE21CF+kgLq+Mh6T/LMqlHo8oPLKGSygrfOUd56IYKBpb+dhq
-         S/yQf/xUdgpv9JJo97KrRn+v+J/cotME2mHrtfWSGAXsmPjpPZ0H8CgMSeQP1JZ8zifw
-         KStdfWmc4oAfwl3bH3W33Sw3OI5nRzObArgkpnYx/XNwxkY4dN4DsCqFBf0x3YD3ytMG
-         YD5lzd4JTXr4UPkfnkeFvTuEHSKuiPGwBI6dEG/QnsPJN7qbCk5my8Jv4l39S1rflh3B
-         4l3XFDSpw+svHsfoIA3Ax+lzUJ01bONMAitu3rEiY/LfWwA5LsyR4k955/zbqvm1qVS9
-         SztQ==
-X-Gm-Message-State: AGi0PuZbq3psPLQiokTqdQmte36TURAFY9vn1uKOFvVSuYN/XhvZWsWZ
-        sTlbTconrgb8xHVcqauE52gAT8OeTmnyQNV8rWfQPpkM0YW4AGoNISs6Zxmuozz6MO2zkSQiKAW
-        jKKsjDwPIMGz3Zo9bS2Pb7lAu
-X-Received: by 2002:adf:f74f:: with SMTP id z15mr27610542wrp.297.1588001485952;
-        Mon, 27 Apr 2020 08:31:25 -0700 (PDT)
-X-Google-Smtp-Source: APiQypK1z0uJnIkyqKhTGjclHeQYArQfsANi9lGv3gcyQLqpd9WZYBRVORDchAEbGQqBBjAFAxmDtQ==
-X-Received: by 2002:adf:f74f:: with SMTP id z15mr27610523wrp.297.1588001485724;
-        Mon, 27 Apr 2020 08:31:25 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id q184sm16239828wma.25.2020.04.27.08.31.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Apr 2020 08:31:24 -0700 (PDT)
-Subject: Re: [PATCH 7/8] iio: light: cm32181: Add support for parsing CPM0 and
- CPM1 ACPI tables
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Kevin Tsai <ktsai@capellamicro.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>
-References: <20200426110256.218186-1-hdegoede@redhat.com>
- <20200426110256.218186-7-hdegoede@redhat.com>
- <CAHp75Vdzu18gKaix2B5btEAz6YX7JZ3wJfeSR-MAV6nLeJUMzg@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <ade56f53-8ac5-1900-21fa-574f27e2a24a@redhat.com>
-Date:   Mon, 27 Apr 2020 17:31:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 27 Apr 2020 11:31:35 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A8D5C0610D5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 08:31:34 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jT5j8-0006Yg-LG; Mon, 27 Apr 2020 17:31:22 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 0FCF0100606; Mon, 27 Apr 2020 17:31:22 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86 <x86@kernel.org>,
+        Suresh Siddha <suresh.b.siddha@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/apic: Fix circular locking dependency between console and hrtimer locks
+In-Reply-To: <20200427134130.GE134660@unreal>
+References: <20200407170925.1775019-1-leon@kernel.org> <20200414054836.GA956407@unreal> <20200414062454.GA84326@gmail.com> <87tv15qj5u.fsf@nanos.tec.linutronix.de> <20200427113218.GB134660@unreal> <87h7x5qe3v.fsf@nanos.tec.linutronix.de> <20200427134130.GE134660@unreal>
+Date:   Mon, 27 Apr 2020 17:31:21 +0200
+Message-ID: <87y2qhoshi.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vdzu18gKaix2B5btEAz6YX7JZ3wJfeSR-MAV6nLeJUMzg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Leon Romanovsky <leon@kernel.org> writes:
+> OK, I consulted with verification people and back then the trigger was:
+> Reproduce when run "echo 1 > /sys/kernel/debug/clear_warn_once" after
+> reboot
 
-On 4/26/20 7:50 PM, Andy Shevchenko wrote:
-> On Sun, Apr 26, 2020 at 2:03 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> On ACPI based systems the CPLM3218 ACPI device node describing the
->> CM3218[1] sensor typically will have some extra tables with register
->> init values for initializing the sensor and calibration info.
->>
->> This is based on a newer version of cm32181.c, with a copyright of:
->>
->>   * Copyright (C) 2014 Capella Microsystems Inc.
->>   * Author: Kevin Tsai <ktsai@capellamicro.com>
->>   *
->>   * This program is free software; you can redistribute it and/or modify it
->>   * under the terms of the GNU General Public License version 2, as published
->>   * by the Free Software Foundation.
->>
->> Which is floating around on the net in various places, but the changes
->> from this newer version never made it upstream.
->>
->> This was tested on the following models: Acer Switch 10 SW5-012 (CM32181)
->> Asus T100TA (CM3218), Asus T100CHI (CM3218) and HP X2 10-n000nd (CM32181).
->>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->>   drivers/iio/light/cm32181.c | 98 +++++++++++++++++++++++++++++++++++++
->>   1 file changed, 98 insertions(+)
->>
->> diff --git a/drivers/iio/light/cm32181.c b/drivers/iio/light/cm32181.c
->> index e5674d4a8143..878fc13632d8 100644
->> --- a/drivers/iio/light/cm32181.c
->> +++ b/drivers/iio/light/cm32181.c
->> @@ -4,6 +4,7 @@
->>    * Author: Kevin Tsai <ktsai@capellamicro.com>
->>    */
->>
->> +#include <linux/acpi.h>
->>   #include <linux/delay.h>
->>   #include <linux/err.h>
->>   #include <linux/i2c.h>
->> @@ -53,6 +54,15 @@
->>
->>   #define SMBUS_ALERT_RESPONSE_ADDRESS   0x0c
->>
->> +/* CPM0 Index 0: device-id (3218 or 32181), 1: Unknown, 2: init_regs_bitmap */
->> +#define CPM0_REGS_BITMAP               2
->> +#define CPM0_HEADER_SIZE               3
->> +
->> +/* CPM1 Index 0: lux_per_bit, 1: calibscale, 2: resolution (100000) */
->> +#define CPM1_LUX_PER_BIT               0
->> +#define CPM1_CALIBSCALE                        1
->> +#define CPM1_SIZE                      3
->> +
->>   /* CM3218 Family */
->>   static const int cm3218_als_it_bits[] = { 0, 1, 2, 3 };
->>   static const int cm3218_als_it_values[] = { 100000, 200000, 400000, 800000 };
->> @@ -76,6 +86,56 @@ struct cm32181_chip {
->>          const int *als_it_values;
->>   };
->>
->> +static int cm32181_read_als_it(struct cm32181_chip *cm32181, int *val2);
->> +
->> +#ifdef CONFIG_ACPI
->> +/**
->> + * cm32181_acpi_get_cpm() - Get CPM object from ACPI
->> + * @client     pointer of struct i2c_client.
->> + * @obj_name   pointer of ACPI object name.
->> + * @count      maximum size of return array.
->> + * @vals       pointer of array for return elements.
->> + *
->> + * Convert ACPI CPM table to array.
->> + *
->> + * Return: -ENODEV for fail.  Otherwise is number of elements.
->> + */
->> +static int cm32181_acpi_get_cpm(struct i2c_client *client, char *obj_name,
->> +                               u64 *values, int count)
->> +{
->> +       struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
->> +       union acpi_object *cpm, *elem;
->> +       acpi_handle handle;
->> +       acpi_status status;
->> +       int i;
->> +
->> +       handle = ACPI_HANDLE(&client->dev);
->> +       if (!handle)
->> +               return -ENODEV;
->> +
->> +       status = acpi_evaluate_object(handle, obj_name, NULL, &buffer);
->> +       if (ACPI_FAILURE(status)) {
->> +               dev_err(&client->dev, "object %s not found\n", obj_name);
->> +               return -ENODEV;
->> +       }
->> +
->> +       cpm = buffer.pointer;
->> +       if (cpm->package.count > count)
->> +               dev_warn(&client->dev, "%s table contains %d values, only using first %d values\n",
->> +                        obj_name, cpm->package.count, count);
->> +
->> +       count = min_t(int, cpm->package.count, count);
->> +       for (i = 0; i < count; i++) {
->> +               elem = &(cpm->package.elements[i]);
->> +               values[i] = elem->integer.value;
->> +       }
->> +
->> +       kfree(buffer.pointer);
->> +
->> +       return count;
->> +}
->> +#endif /* CONFIG_ACPI */
->> +
->>   /**
->>    * cm32181_reg_init() - Initialize CM32181 registers
->>    * @cm32181:   pointer of struct cm32181.
->> @@ -121,6 +181,44 @@ static int cm32181_reg_init(struct cm32181_chip *cm32181)
->>          cm32181->lux_per_bit = CM32181_LUX_PER_BIT;
->>          cm32181->lux_per_bit_base_it = CM32181_LUX_PER_BIT_BASE_IT;
->>
->> +#ifdef CONFIG_ACPI
->> +       if (ACPI_HANDLE(&client->dev)) {
->> +               u64 values[CPM0_HEADER_SIZE + CM32181_CONF_REG_NUM];
->> +               int count;
->> +
->> +               count = cm32181_acpi_get_cpm(client, "CPM0",
->> +                                            values, ARRAY_SIZE(values));
->> +               if (count <= CPM0_HEADER_SIZE)
->> +                       goto cpm_parsing_done;
->> +
->> +               count -= CPM0_HEADER_SIZE;
->> +
->> +               cm32181->init_regs_bitmap = values[CPM0_REGS_BITMAP];
->> +               cm32181->init_regs_bitmap &= GENMASK(count - 1, 0);
->> +               for (i = 0; i < count; i++) {
->> +                       if (cm32181->init_regs_bitmap & BIT(i))
->> +                               cm32181->conf_regs[i] =
->> +                                       values[CPM0_HEADER_SIZE + i];
->> +               }
->> +
->> +               count = cm32181_acpi_get_cpm(client, "CPM1",
->> +                                            values, ARRAY_SIZE(values));
->> +               if (count != CPM1_SIZE)
->> +                       goto cpm_parsing_done;
->> +
->> +               cm32181->lux_per_bit = values[CPM1_LUX_PER_BIT];
->> +
->> +               /* Check for uncalibrated devices */
->> +               if (values[CPM1_CALIBSCALE] == CM32181_CALIBSCALE_DEFAULT)
->> +                       goto cpm_parsing_done;
->> +
->> +               cm32181->calibscale  = values[CPM1_CALIBSCALE];
->> +               /* CPM1 lux_per_bit is for the current it value */
->> +               cm32181_read_als_it(cm32181, &cm32181->lux_per_bit_base_it);
->> +       }
->> +cpm_parsing_done:
-> 
-> Perhaps factor out to a helper, will
-> a) allow to get rid of a label;
-> b) drop indentation level.
+That explains it.
 
-Thank you for the reviews.
+> [    0.937310] Freeing SMP alternatives memory: 32K
+> [    0.940471] TSC deadline timer enabled
 
-Factoring this into a helper is a good idea, that will also allow
-getting rid of 1 of the CONFIG_ACPI #ifdef-s.
+So here is the first one which sets 'once'. Of course if you clear 'once'
+afterwards then this triggers because the context is completely
+different.
 
-I also agree with your comments on the other patches.
+So the right thing to do is to move this out of __setup_APIC_LVTT() and
+be done with it.
 
-I'll prepare and test a v2 with these changes and then submit
-it with your Reviewed-by added.
+Thanks
 
-Regards,
+        tglx
 
-Hans
+8<-------------------
+Subject: x86/apic: Move TSC deadline timer debug printk
+From: Thomas Gleixner <tglx@linutronix.de>
+Date: Mon, 27 Apr 2020 16:55:57 +0200
 
+Leon reported that the printk_once() in __setup_APIC_LVTT() triggers a
+lockdep splat due to a lock order violation between hrtimer_base::lock and
+console_sem, when the 'once' condition is reset via
+/sys/kernel/debug/clear_warn_once after boot.
+
+The initial printk cannot trigger this because that happens during boot
+when the local APIC timer is set up on the boot CPU.
+
+Prevent it by moving the printk to a place which is guaranteed to be only
+called once during boot.
+
+Mark the deadline timer check related functions and data __init while at
+it.
+
+Reported-by: Leon Romanovsky <leon@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/kernel/apic/apic.c |   27 ++++++++++++++-------------
+ 1 file changed, 14 insertions(+), 13 deletions(-)
+
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -352,8 +352,6 @@ static void __setup_APIC_LVTT(unsigned i
+ 		 * According to Intel, MFENCE can do the serialization here.
+ 		 */
+ 		asm volatile("mfence" : : : "memory");
+-
+-		printk_once(KERN_DEBUG "TSC deadline timer enabled\n");
+ 		return;
+ 	}
+ 
+@@ -546,7 +544,7 @@ static struct clock_event_device lapic_c
+ };
+ static DEFINE_PER_CPU(struct clock_event_device, lapic_events);
+ 
+-static u32 hsx_deadline_rev(void)
++static __init u32 hsx_deadline_rev(void)
+ {
+ 	switch (boot_cpu_data.x86_stepping) {
+ 	case 0x02: return 0x3a; /* EP */
+@@ -556,7 +554,7 @@ static u32 hsx_deadline_rev(void)
+ 	return ~0U;
+ }
+ 
+-static u32 bdx_deadline_rev(void)
++static __init u32 bdx_deadline_rev(void)
+ {
+ 	switch (boot_cpu_data.x86_stepping) {
+ 	case 0x02: return 0x00000011;
+@@ -568,7 +566,7 @@ static u32 bdx_deadline_rev(void)
+ 	return ~0U;
+ }
+ 
+-static u32 skx_deadline_rev(void)
++static __init u32 skx_deadline_rev(void)
+ {
+ 	switch (boot_cpu_data.x86_stepping) {
+ 	case 0x03: return 0x01000136;
+@@ -581,7 +579,7 @@ static u32 skx_deadline_rev(void)
+ 	return ~0U;
+ }
+ 
+-static const struct x86_cpu_id deadline_match[] = {
++static const struct x86_cpu_id deadline_match[] __initconst = {
+ 	X86_MATCH_INTEL_FAM6_MODEL( HASWELL_X,		&hsx_deadline_rev),
+ 	X86_MATCH_INTEL_FAM6_MODEL( BROADWELL_X,	0x0b000020),
+ 	X86_MATCH_INTEL_FAM6_MODEL( BROADWELL_D,	&bdx_deadline_rev),
+@@ -603,18 +601,19 @@ static const struct x86_cpu_id deadline_
+ 	{},
+ };
+ 
+-static void apic_check_deadline_errata(void)
++static __init bool apic_validate_deadline_timer(void)
+ {
+ 	const struct x86_cpu_id *m;
+ 	u32 rev;
+ 
+-	if (!boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER) ||
+-	    boot_cpu_has(X86_FEATURE_HYPERVISOR))
+-		return;
++	if (!boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER))
++		return false;
++	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
++		return true;
+ 
+ 	m = x86_match_cpu(deadline_match);
+ 	if (!m)
+-		return;
++		return true;
+ 
+ 	/*
+ 	 * Function pointers will have the MSB set due to address layout,
+@@ -626,11 +625,12 @@ static void apic_check_deadline_errata(v
+ 		rev = (u32)m->driver_data;
+ 
+ 	if (boot_cpu_data.microcode >= rev)
+-		return;
++		return true;
+ 
+ 	setup_clear_cpu_cap(X86_FEATURE_TSC_DEADLINE_TIMER);
+ 	pr_err(FW_BUG "TSC_DEADLINE disabled due to Errata; "
+ 	       "please update microcode to version: 0x%x (or later)\n", rev);
++	return false;
+ }
+ 
+ /*
+@@ -2092,7 +2092,8 @@ void __init init_apic_mappings(void)
+ {
+ 	unsigned int new_apicid;
+ 
+-	apic_check_deadline_errata();
++	if (apic_validate_deadline_timer())
++		pr_debug("TSC deadline timer available\n");
+ 
+ 	if (x2apic_mode) {
+ 		boot_cpu_physical_apicid = read_apic_id();
