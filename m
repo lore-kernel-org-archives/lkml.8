@@ -2,83 +2,139 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE93C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DEAC55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6555520663
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83F8D20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:56:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZBJEozcW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgD0JzC (ORCPT
+        id S1726944AbgD0J4K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 05:55:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:32852 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726434AbgD0JzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 05:55:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B8101FB;
-        Mon, 27 Apr 2020 02:55:01 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 63DB63F68F;
-        Mon, 27 Apr 2020 02:54:58 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 10:54:52 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Jianyong Wu <Jianyong.Wu@arm.com>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "yangbo.lu@nxp.com" <yangbo.lu@nxp.com>,
-        "john.stultz@linaro.org" <john.stultz@linaro.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "richardcochran@gmail.com" <richardcochran@gmail.com>,
-        "will@kernel.org" <will@kernel.org>,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Steven Price <Steven.Price@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Steve Capper <Steve.Capper@arm.com>,
-        Kaly Xin <Kaly.Xin@arm.com>, Justin He <Justin.He@arm.com>,
-        nd <nd@arm.com>
-Subject: Re: [RFC PATCH v11 5/9] psci: Add hypercall service for ptp_kvm.
-Message-ID: <20200427095452.GA1300@C02TD0UTHF1T.local>
-References: <20200421032304.26300-1-jianyong.wu@arm.com>
- <20200421032304.26300-6-jianyong.wu@arm.com>
- <20200421095736.GB16306@C02TD0UTHF1T.local>
- <ab629714-c08c-2155-dd13-ad25e7f60b39@arm.com>
- <20200424103953.GD1167@C02TD0UTHF1T.local>
- <b005e2c8-ed9f-3dc6-dbfa-5e6db5183f3c@arm.com>
+        Mon, 27 Apr 2020 05:56:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47928 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726485AbgD0J4J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 05:56:09 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EDA0C0610D5;
+        Mon, 27 Apr 2020 02:56:09 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id k1so19811088wrx.4;
+        Mon, 27 Apr 2020 02:56:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=78897x0Vz8sDaO0Q94P5Aox7/J6SvRZJYjM13t5atvo=;
+        b=ZBJEozcW/B2nYEACBeplmtwaIDIjaVdUY70J9ZI7j/o1CBLXPtBtJIoz+awkf9qODn
+         zBv6asu3LiVNZK4UIlmfMZiIB4138sSbdwG5ypIE/ZSFrL2LJI/xpAGSIWvMUPxEJdEM
+         sNaI2BuGaV7iA+uhM39NpSoMCkQrCoalhRvK+Um+QkduSk2q2DHrFFStVcJIGvbT3ziV
+         iNQlc8SveNODARzF4OkbESPiwyVmm3JMmaQqPhYOxcWwHPk25a/nR+Ctb1euCtmLrMDR
+         r09avxYMNNfD1ueBP/OAsltcvhWXVPfniPMs5rAqU9xQ48GtbHOjwmVdhhvD+QOUs2LA
+         /hNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=78897x0Vz8sDaO0Q94P5Aox7/J6SvRZJYjM13t5atvo=;
+        b=ABhtZ8drq28wkhynT6CdDWvZ55yohFSaDL2n3MXpO4HJT3d1ckHy3qLfCE77sHm7jm
+         u/TGOJafzAhsmXnytKn0qVhvLVrlb5g2bpehFnKZ2GvqDWmibbYBrQoehGuHc06Ft6VD
+         lhRSJQeTEN+U5Lh4gZGcvAsVjlhaxFneS+wENT7qU4ayIi9kpbxpAXvJ9JScBIYGRV/D
+         2cZKDpW4Y2ADXDDG2qxMFIkqOBuz65qs7krTDaudvi2h1Hjgu26uBqmwVcnGRaY5/e/y
+         FwKiGi4PvNz4ugJN7cjlDLW+k1Vbej0O6qY/X090EXvDuwle5+GHv0sRVrZt4tPtHe1H
+         fquA==
+X-Gm-Message-State: AGi0PubzNNnJiw8/vPsmj5ri7MZbLpjwq1SSoKIfFiXwmKfaXuI626jC
+        Eg+dvm1poWE71LA/yVK9wDXcnsOnEfc=
+X-Google-Smtp-Source: APiQypJmw3gP87szqL6WiP/AjYwYBCy8JLyODqr5Z1MD9+Zw88TK6ydHTdSBMjBSRsK/z2NcabCqRQ==
+X-Received: by 2002:a5d:6b85:: with SMTP id n5mr26846006wrx.370.1587981367870;
+        Mon, 27 Apr 2020 02:56:07 -0700 (PDT)
+Received: from meru.fronius.com ([2a01:cb18:832e:5f00:7069:9b5d:ebe2:85b8])
+        by smtp.gmail.com with ESMTPSA id y10sm14487606wma.5.2020.04.27.02.56.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 02:56:07 -0700 (PDT)
+From:   Mathieu Othacehe <m.othacehe@gmail.com>
+To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mathieu Othacehe <m.othacehe@gmail.com>
+Subject: [PATCH v6 0/5] iio: vcnl: Add interrupts support for VCNL4010/20.
+Date:   Mon, 27 Apr 2020 11:55:54 +0200
+Message-Id: <20200427095559.16131-1-m.othacehe@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b005e2c8-ed9f-3dc6-dbfa-5e6db5183f3c@arm.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hello,
 
-On Sun, Apr 26, 2020 at 06:02:23AM +0100, Jianyong Wu wrote:
-> <html>
-> <head>
-> <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-> </head>
-> <body>
-
-Please fix your mail client to reply in plain text rather than HTML;
-it's much more painful than necessary to review and have a conversation
-when mails revert to HTML.
-
-It would be very helpful if you could resend this mail as plaintext as
-above.
+Here's a v6 taking Jonathan remarks into account. A new patch is added to fix
+i2c measure reads. The driver also uses read_avail callback for sampling
+frequency.
 
 Thanks,
-Mark.
+
+Mathieu
+
+Changed from v5:
+* Fix i2c measure reads that are broken on the current driver for be16
+platforms.
+* Use read_avail callback for sampling frequency.
+* Move scan_index setting to the correct patch.
+
+Changes from v4:
+* Rename vcnl4010_in_periodic_mode into vcnl4010_is_in_periodic_mode
+and vcnl4010_thr_enabled into vcnl4010_is_thr_enabled.
+Also fix bitmask checking in those functions.
+* Refactor vcnl4010_write_proxy_samp_freq to loop in the
+other direction.
+
+Changes from v3:
+* Use i2c_smbus_read_byte_data and i2c_smbus_write_word_data
+for read and write functions.
+* Rename vcnl4010_prox_threshold to vcnl4010_config_threshold.
+* Do not lock i2c accesses as they are already protected.
+* Fix a typo in irq name.
+* Do not provide ALS sampling frequency operation, as ALS data
+are not buffered anymore.
+* Return bool in vcnl4010_in_periodic_mode and vcnl4010_thr_enabled
+functions.
+
+Changes from v2:
+* Rebase on iio testing branch.
+* Remove useless test in vcnl4010_probe_trigger.
+
+Changes from v1:
+* Split into four different patches.
+* Use iio_device_claim_direct_mode to protect
+raw access from buffer capture.
+* Requesting a sampling frequency above the limit is no longer possible.
+* Inline read_isr and write_isr functions.
+* Remove IIO_LIGHT data from buffer capture.
+* Make sure postenable and predisable functions respect the common form.
+* Do not set the trigger by default.
+* Remove the devm_iio_triggered_buffer_setup top half.
+
+Mathieu Othacehe (5):
+  iio: vcnl4000: Fix i2c swapped word reading.
+  iio: vcnl4000: Factorize data reading and writing.
+  iio: vcnl4000: Add event support for VCNL4010/20.
+  iio: vcnl4000: Add sampling frequency support for VCNL4010/20.
+  iio: vcnl4000: Add buffer support for VCNL4010/20.
+
+ drivers/iio/light/Kconfig    |   2 +
+ drivers/iio/light/vcnl4000.c | 753 ++++++++++++++++++++++++++++++++---
+ 2 files changed, 689 insertions(+), 66 deletions(-)
+
+-- 
+2.26.0
+
