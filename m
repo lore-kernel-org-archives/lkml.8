@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C74C8C82A01
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2484FC82A02
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A9E920575
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:04:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 039A320575
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:04:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588025081;
-	bh=xBkzNBy2YhJi/8RK1Om5eioEswOWWQFUH8yKwJvvfgI=;
+	s=default; t=1588025092;
+	bh=gZ3kqaJAqPpuWPwp8rsvec84t06UEJWSiB9rwLxgwaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hIBGtwvSuDLvjABqCW3nGn2lXmATQ9+KqqU3NQjcwSKUZ5Got6BNOxDIwgN7EV6Xm
-	 q413tc2WtVoKMyo1ANcUJ4ezmBApB2jaDRtMwC+FjVA94jAB96+5fP/hvFs0qXX4g/
-	 iDpQzPZNbFD2hoO7Sy+Ib0wYW1poa8aACtpzpqXQ=
+	b=eZ9+R9FpXJ3L46DDOnW52jOzOlVRsxI4B2m9lS6ncS5NHPKiCU8SAv5eCxQHznlWL
+	 Eb5IARfYrrq0mrBAIM2p69oMprws0djYdKvsqDwZdH0ZoGTMd6mDz4Uie4GlGiz6oc
+	 DLuj0DAMJRkvL/RFlE7amnS46ht56FOqsb1FOri0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbgD0WEa (ORCPT
+        id S1726875AbgD0WEU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 18:04:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48134 "EHLO mail.kernel.org"
+        Mon, 27 Apr 2020 18:04:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726194AbgD0WCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726366AbgD0WCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 Apr 2020 18:02:00 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D99282223C;
+        by mail.kernel.org (Postfix) with ESMTPSA id C7BF022209;
         Mon, 27 Apr 2020 22:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588024917;
-        bh=xBkzNBy2YhJi/8RK1Om5eioEswOWWQFUH8yKwJvvfgI=;
+        bh=gZ3kqaJAqPpuWPwp8rsvec84t06UEJWSiB9rwLxgwaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HfwAVJgU5xU8hFba4Fet0WG5uwzHpKjNy+G/Q25LQwj2hZUVA+6KsS/oqUZIck34i
-         NDF9MuK088cyhYRJHoOPU8d2T4m9FB63KZjzgS+t+MbQntQGI7tUIZwKXgo3G4qZ+w
-         1gKY389t7znH0SKWVaiRj758Lc0d/ILVCIOErS48=
+        b=KrtBuD4zHi/kjtU352oo8dk/rXifZwHC7QAq3KbdSRa3Ilr6GFgnWScEtB/mbwma9
+         fZCmuep0OhOS76Czi/RwS9zJE0PpFUEpNvcMeJVj8uz5aTmtW8bHMdBI7Km2HRJpH9
+         FsJDliIasM/Tp0zQGkxm8wdvxDp7VeriJ221pqj8=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jTBp5-000Ipd-52; Tue, 28 Apr 2020 00:01:55 +0200
+        id 1jTBp5-000IpT-3U; Tue, 28 Apr 2020 00:01:55 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 25/38] docs: networking: convert generic_netlink.txt to ReST
-Date:   Tue, 28 Apr 2020 00:01:40 +0200
-Message-Id: <8ed7ad58fc10c5343722f7bcda07e712e41f7d0e.1588024424.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 23/38] docs: networking: convert framerelay.txt to ReST
+Date:   Tue, 28 Apr 2020 00:01:38 +0200
+Message-Id: <d435143780b022bb15b07fa51a44f53f4a3f1ea6.1588024424.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588024424.git.mchehab+huawei@kernel.org>
 References: <cover.1588024424.git.mchehab+huawei@kernel.org>
@@ -61,47 +61,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Not much to be done here:
 - add SPDX header;
 - add a document title;
+- adjust identation, whitespaces and blank lines;
 - add to networking/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../networking/{generic_netlink.txt => generic_netlink.rst} | 6 ++++++
- Documentation/networking/index.rst                          | 1 +
- 2 files changed, 7 insertions(+)
- rename Documentation/networking/{generic_netlink.txt => generic_netlink.rst} (64%)
+ .../{framerelay.txt => framerelay.rst}        | 21 ++++++++++++-------
+ Documentation/networking/index.rst            |  1 +
+ drivers/net/wan/Kconfig                       |  4 ++--
+ 3 files changed, 16 insertions(+), 10 deletions(-)
+ rename Documentation/networking/{framerelay.txt => framerelay.rst} (93%)
 
-diff --git a/Documentation/networking/generic_netlink.txt b/Documentation/networking/generic_netlink.rst
-similarity index 64%
-rename from Documentation/networking/generic_netlink.txt
-rename to Documentation/networking/generic_netlink.rst
-index 3e071115ca90..59e04ccf80c1 100644
---- a/Documentation/networking/generic_netlink.txt
-+++ b/Documentation/networking/generic_netlink.rst
-@@ -1,3 +1,9 @@
+diff --git a/Documentation/networking/framerelay.txt b/Documentation/networking/framerelay.rst
+similarity index 93%
+rename from Documentation/networking/framerelay.txt
+rename to Documentation/networking/framerelay.rst
+index 1a0b720440dd..6d904399ec6d 100644
+--- a/Documentation/networking/framerelay.txt
++++ b/Documentation/networking/framerelay.rst
+@@ -1,4 +1,10 @@
+-Frame Relay (FR) support for linux is built into a two tiered system of device 
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+===============
-+Generic Netlink
-+===============
++================
++Frame Relay (FR)
++================
 +
- A wiki document on how to use Generic Netlink can be found here:
++Frame Relay (FR) support for linux is built into a two tiered system of device
+ drivers.  The upper layer implements RFC1490 FR specification, and uses the
+ Data Link Connection Identifier (DLCI) as its hardware address.  Usually these
+ are assigned by your network supplier, they give you the number/numbers of
+@@ -7,18 +13,18 @@ the Virtual Connections (VC) assigned to you.
+ Each DLCI is a point-to-point link between your machine and a remote one.
+ As such, a separate device is needed to accommodate the routing.  Within the
+ net-tools archives is 'dlcicfg'.  This program will communicate with the
+-base "DLCI" device, and create new net devices named 'dlci00', 'dlci01'... 
++base "DLCI" device, and create new net devices named 'dlci00', 'dlci01'...
+ The configuration script will ask you how many DLCIs you need, as well as
+ how many DLCIs you want to assign to each Frame Relay Access Device (FRAD).
  
-  * http://www.linuxfoundation.org/collaborate/workgroups/networking/generic_netlink_howto
+ The DLCI uses a number of function calls to communicate with the FRAD, all
+-of which are stored in the FRAD's private data area.  assoc/deassoc, 
++of which are stored in the FRAD's private data area.  assoc/deassoc,
+ activate/deactivate and dlci_config.  The DLCI supplies a receive function
+ to the FRAD to accept incoming packets.
+ 
+ With this initial offering, only 1 FRAD driver is available.  With many thanks
+-to Sangoma Technologies, David Mandelstam & Gene Kozin, the S502A, S502E & 
+-S508 are supported.  This driver is currently set up for only FR, but as 
++to Sangoma Technologies, David Mandelstam & Gene Kozin, the S502A, S502E &
++S508 are supported.  This driver is currently set up for only FR, but as
+ Sangoma makes more firmware modules available, it can be updated to provide
+ them as well.
+ 
+@@ -32,8 +38,7 @@ an initial configuration.
+ Additional FRAD device drivers can be added as hardware is available.
+ 
+ At this time, the dlcicfg and fradcfg programs have not been incorporated into
+-the net-tools distribution.  They can be found at ftp.invlogic.com, in 
++the net-tools distribution.  They can be found at ftp.invlogic.com, in
+ /pub/linux.  Note that with OS/2 FTPD, you end up in /pub by default, so just
+-use 'cd linux'.  v0.10 is for use on pre-2.0.3 and earlier, v0.15 is for 
++use 'cd linux'.  v0.10 is for use on pre-2.0.3 and earlier, v0.15 is for
+ pre-2.0.4 and later.
+-
 diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index d34824b27264..42e556509e22 100644
+index b2fb8b907d68..4e225f1f7039 100644
 --- a/Documentation/networking/index.rst
 +++ b/Documentation/networking/index.rst
-@@ -60,6 +60,7 @@ Contents:
+@@ -58,6 +58,7 @@ Contents:
+    fib_trie
+    filter
     fore200e
-    framerelay
-    generic-hdlc
-+   generic_netlink
++   framerelay
  
  .. only::  subproject and html
  
+diff --git a/drivers/net/wan/Kconfig b/drivers/net/wan/Kconfig
+index dbc0e3f7a3e2..3e21726c36e8 100644
+--- a/drivers/net/wan/Kconfig
++++ b/drivers/net/wan/Kconfig
+@@ -336,7 +336,7 @@ config DLCI
+ 
+ 	  To use frame relay, you need supporting hardware (called FRAD) and
+ 	  certain programs from the net-tools package as explained in
+-	  <file:Documentation/networking/framerelay.txt>.
++	  <file:Documentation/networking/framerelay.rst>.
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called dlci.
+@@ -361,7 +361,7 @@ config SDLA
+ 
+ 	  These are multi-protocol cards, but only Frame Relay is supported
+ 	  by the driver at this time. Please read
+-	  <file:Documentation/networking/framerelay.txt>.
++	  <file:Documentation/networking/framerelay.rst>.
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called sdla.
 -- 
 2.25.4
 
