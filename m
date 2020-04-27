@@ -2,98 +2,84 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED6EC54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6762C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD6D920661
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:43:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588002221;
-	bh=w1azKjWdrnZjgbv7B4X2uNjhbZ3vn8MbYNztK+jcxrY=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=n7ZjMvYae/DkyNLNZBzIboNY8Nab2f2S362OpTyG3oFKAeWKBD+UBd/xjKOMjAEmg
-	 7QfSJHKd6d63XtA4aXXUfnvajV0T5EfDTyaVE16cATc15CYhGzxctLq0Diw+OjCHuN
-	 Ma9/DdrJab+ej5yKuyuI2EI0k/FuCJRn9UyNpoQA=
+	by mail.kernel.org (Postfix) with ESMTP id 7B7CC20661
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:44:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="UrD5xFXs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728205AbgD0Pnl (ORCPT
+        id S1728230AbgD0PoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 11:43:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51314 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726539AbgD0Pnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 11:43:40 -0400
-Received: from [192.168.1.30] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23DF720656;
-        Mon, 27 Apr 2020 15:43:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588002219;
-        bh=w1azKjWdrnZjgbv7B4X2uNjhbZ3vn8MbYNztK+jcxrY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=wusn4jm4VJuXs9dMAqHmy04sX89KZFH7THfQdVKLxE/Ymc9REmPdgLaaU7WSl9I1v
-         DVWK+V8UJJJBSnXTmPYi6w57jbM08G+goe7jfA+jVsWfEvKbbpxWFaMEsbfZScZ79V
-         POC+rBRzhyh3+jO3BzqimC/d5EvHCF/gxB+9cRFM=
-Subject: Re: [PATCHv7 0/5] clk: agilex: add clock driver
-To:     linux-clk@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org,
-        mark.rutland@arm.com
-References: <20200415164642.29382-1-dinguyen@kernel.org>
-From:   Dinh Nguyen <dinguyen@kernel.org>
-Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <5ec389fa-c0ff-93a5-e3f4-a42090b6f2e3@kernel.org>
-Date:   Mon, 27 Apr 2020 10:43:37 -0500
+        Mon, 27 Apr 2020 11:44:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45892 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726539AbgD0PoG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 11:44:06 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3494C0610D5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 08:44:04 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id g4so18115151ljl.2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 08:44:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=sVsyz0n2LjXG2IMJx6t3VUYyNBTpyfFbeltK0qpohx0=;
+        b=UrD5xFXslZfgP/IsODr4Z3GfOpeNr4l2Y9wwbLA2CxuzqDDSj+VxthzWKGbPbBzx+V
+         YFw7RxVyUbIHs9BPMtLAAdksSlCa1ApMHm8w1kmkg+wpKWWC7zT92sWOiWh0RQB6NlTq
+         9ck5vp+KJa8tVJztLzVD4UJBbtroaw2dWunMA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sVsyz0n2LjXG2IMJx6t3VUYyNBTpyfFbeltK0qpohx0=;
+        b=sudoM2DvRsc00JeZ7W1QQXCtoTfDvsPCT0MlUHB/H47yYWk4Ss4Zi9C5gzgeegv6gG
+         4U7Wr51N3/G96dNzUzmA0rO2eAF410qV4Qq9MijkuAmLe9ls0+tGMKeHveP05OoIGby5
+         0mla5g8LSjc35l1ao+3360TolqzXYHYQbYospBTK1ZmzABCkf9OqkHXcqDKVQ8WajhHs
+         QESCn6CWl5UJe36wwr4es8b0iqpVH+d4aHuHUQoukAecQ2LLTPPi5uNfhYGZ7Eahp2V+
+         Gtxrd1XlAGM7WIH+Pkvn0xwv77qIf59lZXfLBHh7xbwiZNLsHpaTSVLQJRZcC2EvOYmW
+         sN9g==
+X-Gm-Message-State: AGi0PubRM/ZQQbdsPXhXYGrr42OilfwUCoecu5C+JmPgxTQcjb1xKz6s
+        8qEiwqc7k/CkP58ZRR069l4Khw==
+X-Google-Smtp-Source: APiQypIo4iuWFF1BSuZmM63rM6Vr2tOgjUljme//kEiDbJuxhm8cbNTY4mYBxzl23MRK4Zgp1JnkkQ==
+X-Received: by 2002:a2e:3017:: with SMTP id w23mr14890688ljw.150.1588002243139;
+        Mon, 27 Apr 2020 08:44:03 -0700 (PDT)
+Received: from [192.168.1.149] (ip-5-186-116-45.cgn.fibianet.dk. [5.186.116.45])
+        by smtp.gmail.com with ESMTPSA id b28sm10171986ljo.1.2020.04.27.08.44.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 08:44:02 -0700 (PDT)
+Subject: Re: [RESEND PATCH v3 1/1] lib/vsprintf: Add support for printing V4L2
+ and DRM fourccs
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-media@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com,
+        mchehab@kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joe Perches <joe@perches.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>
+References: <20200427145303.29943-1-sakari.ailus@linux.intel.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <f97e4cf1-c3c6-80b1-5d17-167d60515236@rasmusvillemoes.dk>
+Date:   Mon, 27 Apr 2020 17:44:00 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200415164642.29382-1-dinguyen@kernel.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200427145303.29943-1-sakari.ailus@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -101,45 +87,225 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+On 27/04/2020 16.53, Sakari Ailus wrote:
+> Add a printk modifier %p4cc (for pixel format) for printing V4L2 and DRM
+> pixel formats denoted by fourccs. The fourcc encoding is the same for both
+> so the same implementation can be used.
+> 
+> Suggested-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+> since v2:
+> 
+> - Add comments to explain why things are being done
+> 
+> - Print characters under 32 (space) as hexadecimals in parenthesis.
+> 
+> - Do not print spaces in the fourcc codes.
+> 
+> - Make use of a loop over the fourcc characters instead of
+>   put_unaligned_le32(). This is necessary to omit spaces in the output.
+> 
+> - Use DRM style format instead of V4L2. This provides the precise code as
+>   a numerical value as well as explicit endianness information.
+> 
+> - Added WARN_ON_ONCE() sanity checks. Comments on these are welcome; I'd
+>   expect them mostly be covered by the tests.
+> 
+> - Added tests for %p4cc in lib/test_printf.c
+> 
+>  Documentation/core-api/printk-formats.rst | 12 ++++
+>  lib/test_printf.c                         | 17 +++++
+>  lib/vsprintf.c                            | 86 +++++++++++++++++++++++
+>  3 files changed, 115 insertions(+)
+> 
+> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+> index 8ebe46b1af39..7aa0451e06fb 100644
+> --- a/Documentation/core-api/printk-formats.rst
+> +++ b/Documentation/core-api/printk-formats.rst
+> @@ -545,6 +545,18 @@ For printing netdev_features_t.
+>  
+>  Passed by reference.
+>  
+> +V4L2 and DRM FourCC code (pixel format)
+> +---------------------------------------
+> +
+> +::
+> +
+> +	%p4cc
+> +
+> +Print a FourCC code used by V4L2 or DRM, including format endianness and
+> +its numerical value as hexadecimal.
+> +
+> +Passed by reference.
+> +
+>  Thanks
+>  ======
+>  
+> diff --git a/lib/test_printf.c b/lib/test_printf.c
+> index 2d9f520d2f27..a14754086707 100644
+> --- a/lib/test_printf.c
+> +++ b/lib/test_printf.c
+> @@ -624,6 +624,22 @@ static void __init fwnode_pointer(void)
+>  	software_node_unregister_nodes(softnodes);
+>  }
+>  
+> +static void __init fourcc_pointer(void)
+> +{
+> +	struct {
+> +		u32 code;
+> +		char *str;
+> +	} const try[] = {
+> +		{ 0x20104646, "FF(10) little-endian (0x20104646)", },
+> +		{ 0xa0104646, "FF(10) big-endian (0xa0104646)", },
+> +		{ 0x10111213, "(13)(12)(11)(10) little-endian (0x10111213)", },
+> +	};
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(try); i++)
+> +		test(try[i].str, "%p4cc", &try[i].code);
+> +}
+> +
+>  static void __init
+>  errptr(void)
+>  {
+> @@ -668,6 +684,7 @@ test_pointer(void)
+>  	flags();
+>  	errptr();
+>  	fwnode_pointer();
+> +	fourcc_pointer();
+>  }
+>  
+>  static void __init selftest(void)
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index 7c488a1ce318..02e7906619c0 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -1721,6 +1721,89 @@ char *netdev_bits(char *buf, char *end, const void *addr,
+>  	return special_hex_number(buf, end, num, size);
+>  }
+>  
+> +static noinline_for_stack
+> +char *fourcc_string(char *buf, char *end, const u32 *__fourcc,
+> +		    struct printf_spec spec, const char *fmt)
+> +{
+> +#define FOURCC_HEX_CHAR_STR		"(xx)"
+> +#define FOURCC_BIG_ENDIAN_STR		" big-endian"
+> +#define FOURCC_LITTLE_ENDIAN_STR	" little-endian"
+> +#define FOURCC_HEX_NUMBER		" (0x01234567)"
+> +#define FOURCC_STRING_MAX						\
+> +	FOURCC_HEX_CHAR_STR FOURCC_HEX_CHAR_STR FOURCC_HEX_CHAR_STR	\
+> +	FOURCC_HEX_CHAR_STR FOURCC_LITTLE_ENDIAN_STR FOURCC_HEX_NUMBER
+> +	struct printf_spec my_spec = {
+> +		.type = FORMAT_TYPE_UINT,
+> +		.field_width = 2,
+> +		.flags = SMALL,
+> +		.base = 16,
+> +		.precision = -1,
+> +	};
+> +	char __s[sizeof(FOURCC_STRING_MAX)];
+> +	char *s = __s;
+> +	unsigned int i;
+> +	/*
+> +	 * The 31st bit defines the endianness of the data, so save its printing
+> +	 * for later.
+> +	 */
+> +	u32 fourcc = *__fourcc & ~BIT(31);
+> +	int ret;
 
-Was wondering if you have any comments on this series?
+Dereference __fourcc ...
 
-On 4/15/20 11:46 AM, Dinh Nguyen wrote:
-> Hi,
-> 
-> This is version 7 of the patchset to add a clock driver to the Agilex
-> platform.
-> 
-> The change from v6 is to correct the dt-bindings document to include the
-> license header to be "(GPL-2.0-only OR BSD-2-Clause)".
-> 
-> Thanks,
-> 
-> Dinh Nguyen (5):
->   clk: socfpga: stratix10: use new parent data scheme
->   clk: socfpga: remove clk_ops enable/disable methods
->   clk: socfpga: add const to _ops data structures
->   dt-bindings: documentation: add clock bindings information for Agilex
->   clk: socfpga: agilex: add clock driver for the Agilex platform
-> 
->  .../bindings/clock/intel,agilex.yaml          |  46 ++
->  drivers/clk/Makefile                          |   3 +-
->  drivers/clk/socfpga/Makefile                  |   2 +
->  drivers/clk/socfpga/clk-agilex.c              | 454 ++++++++++++++++++
->  drivers/clk/socfpga/clk-gate-s10.c            |   5 +-
->  drivers/clk/socfpga/clk-periph-s10.c          |  10 +-
->  drivers/clk/socfpga/clk-pll-a10.c             |   4 +-
->  drivers/clk/socfpga/clk-pll-s10.c             |  78 ++-
->  drivers/clk/socfpga/clk-pll.c                 |   4 +-
->  drivers/clk/socfpga/clk-s10.c                 | 160 ++++--
->  drivers/clk/socfpga/stratix10-clk.h           |  10 +-
->  include/dt-bindings/clock/agilex-clock.h      |  70 +++
->  12 files changed, 794 insertions(+), 52 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/intel,agilex.yaml
->  create mode 100644 drivers/clk/socfpga/clk-agilex.c
->  create mode 100644 include/dt-bindings/clock/agilex-clock.h
-> 
+> +	if (check_pointer(&buf, end, __fourcc, spec))
+> +		return buf;
 
-Thanks,
-Dinh
+.. and then sanity check it?
+
+> +	if (fmt[1] != 'c' || fmt[2] != 'c')
+> +		return error_string(buf, end, "(%p4?)", spec);
+
+Doesn't that want to come before everything else, including the
+check_pointer()?
+
+> +	for (i = 0; i < sizeof(fourcc); i++, fourcc >>= 8) {
+> +		unsigned char c = fourcc;
+> +
+> +		/* Weed out spaces */
+> +		if (c == ' ')
+> +			continue;
+> +
+> +		/* Print non-control characters as-is */
+> +		if (c > ' ') {
+> +			*s = c;
+> +			s++;
+> +			continue;
+> +		}
+
+Are you sure you want to pass non-ascii characters through?
+
+> +		if (WARN_ON_ONCE(sizeof(__s) <
+> +				 (s - __s) + sizeof(FOURCC_HEX_CHAR_STR)))
+> +			break;
+
+I really don't see the point of these checks.  Why check here but not
+before we output a non-control character? That seems rather arbitrary.
+Also, assume we do take this break, (to be continued below [*])
+
+> +		*s = '(';
+> +		s++;
+> +		s = number(s, s + 2, c, my_spec);
+
+You can drop my_spec and just use "s = hex_byte_pack(s, c);".
+
+> +		*s = ')';
+> +		s++;
+> +	}
+> +
+> +	ret = strscpy(s, *__fourcc & BIT(31) ? FOURCC_BIG_ENDIAN_STR
+> +					     : FOURCC_LITTLE_ENDIAN_STR,
+> +		      sizeof(__s) - (s - __s));
+> +	if (!WARN_ON_ONCE(ret < 0))
+> +		s += ret;
+> +
+> +	if (!WARN_ON_ONCE(sizeof(__s) <
+> +			  (s - __s) + sizeof(FOURCC_HEX_NUMBER))) {
+
+[*] then AFAICT this WARN_ON_ONCE is guaranteed to also fire [the
+left-hand side is the same as before, the right-hand side consists of a
+quantity s-__s that can only be larger or equal than before and a
+constant sizeof(FOURCC_HEX_NUMBER) that is definitely larger], hence we
+do not enter this if () and [**]
+
+> +		*s = ' ';
+> +		s++;
+> +		*s = '(';
+> +		s++;
+> +		/* subtract parentheses and the space from the size */
+> +		special_hex_number(s, s + sizeof(FOURCC_HEX_NUMBER) - 3,
+> +				   *__fourcc, sizeof(u32));
+
+Urgh. Don't we have an ARRAY_END() macro that let's you call this with
+(s, ARRAY_END(__s)) as buf, end?
+
+> +		s += sizeof(u32) * 2 + 2 /* 0x */;
+
+Why, when special_hex_number returns a pointer to one-past-its-output?
+
+> +		*s = ')';
+> +		s++;
+> +		*s = '\0';
+> +	}
+> +
+> +	return string(buf, end, __s, spec);
+
+[**] __s does not get nul-terminated, so we call string() with stack
+garbage.
+
+I'd say just drop those checks, and de-obfuscate the sizing of the __s
+array so it becomes obviously large enough for what the algorithm can
+produce. Just
+
+char __s[sizeof("(01)(02)(03)(04) little-endian (0x01020304)")]
+
+or something like that should be sufficient.
+
+Rasmus
