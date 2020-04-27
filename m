@@ -2,74 +2,154 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 577E1C4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0198DC4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A502206D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7AD22070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:10:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgD0UJq convert rfc822-to-8bit (ORCPT
+        id S1726787AbgD0UKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 16:09:46 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:49919 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbgD0UJq (ORCPT
+        Mon, 27 Apr 2020 16:10:42 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:51304 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726205AbgD0UKl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 16:09:46 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 31D4620003;
-        Mon, 27 Apr 2020 20:09:44 +0000 (UTC)
-Date:   Mon, 27 Apr 2020 22:09:42 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     linux-kernel@vger.kernel.org, Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org, Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v2 3/3] mtd: lpddr: Move function print_drs_error to
- lpddr_cmds.c
-Message-ID: <20200427220942.0bf6b851@xps13>
-In-Reply-To: <e0063cbd65f3b47be1db34efc494ea3047634d88.1588016644.git.gustavo@embeddedor.com>
-References: <cover.1588016644.git.gustavo@embeddedor.com>
-        <e0063cbd65f3b47be1db34efc494ea3047634d88.1588016644.git.gustavo@embeddedor.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 27 Apr 2020 16:10:41 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 499wrG2wf8z1r57K;
+        Mon, 27 Apr 2020 22:10:38 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 499wrG17wnz1r5QD;
+        Mon, 27 Apr 2020 22:10:38 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id i4tqPQhTSciQ; Mon, 27 Apr 2020 22:10:36 +0200 (CEST)
+X-Auth-Info: GUUzWNkr5v3OccBIirF+3V7nXhtOcUNOL4F87dnWiJo=
+Received: from [IPv6:::1] (unknown [195.140.253.167])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Mon, 27 Apr 2020 22:10:36 +0200 (CEST)
+Subject: Re: [PATCH v2 04/12] mtd: rawnand: stm32_fmc2: manage all errors
+ cases at probe time
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Christophe Kerello <christophe.kerello@st.com>, richard@nod.at,
+        vigneshr@ti.com, lee.jones@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, tony@atomide.com,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        devicetree@vger.kernel.org
+References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
+ <1586966256-29548-5-git-send-email-christophe.kerello@st.com>
+ <20200427194747.224a2402@xps13>
+ <40a9bac7-9ed4-b781-f2c2-2d90b4e82749@denx.de>
+ <20200427200848.722f4c56@xps13>
+ <3527f3b8-225d-6e5a-dd8a-0421d475f70b@denx.de>
+ <20200427220806.13741ec0@xps13>
+From:   Marek Vasut <marex@denx.de>
+Message-ID: <456b04f5-4ed7-6f3f-b0e6-9276bea09b50@denx.de>
+Date:   Mon, 27 Apr 2020 22:10:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200427220806.13741ec0@xps13>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gustavo,
-
-"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote on Mon, 27 Apr
-2020 14:56:08 -0500:
-
-> Function print_drs_error is only used in drivers/mtd/lpddr/lpddr_cmds.c
-> so, better to move it there.
+On 4/27/20 10:08 PM, Miquel Raynal wrote:
+> Hi Marek,
 > 
-> Also, notice that there's no need for inline as the function is used
-> once.  Lastly, fix the following checkpatch warning:
+> Marek Vasut <marex@denx.de> wrote on Mon, 27 Apr 2020 21:46:44 +0200:
 > 
-> WARNING: Prefer 'unsigned int' to bare use of 'unsigned'
-> +static void print_drs_error(unsigned dsr)
+>> On 4/27/20 8:08 PM, Miquel Raynal wrote:
+>> [...]
+>>>>>>  	/* FMC2 init routine */
+>>>>>>  	stm32_fmc2_init(fmc2);
+>>>>>> @@ -1997,7 +2001,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
+>>>>>>  	/* Scan to find existence of the device */
+>>>>>>  	ret = nand_scan(chip, nand->ncs);
+>>>>>>  	if (ret)
+>>>>>> -		goto err_scan;
+>>>>>> +		goto err_dma_setup;
+>>>>>>  
+>>>>>>  	ret = mtd_device_register(mtd, NULL, 0);
+>>>>>>  	if (ret)
+>>>>>> @@ -2010,7 +2014,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
+>>>>>>  err_device_register:
+>>>>>>  	nand_cleanup(chip);
+>>>>>>  
+>>>>>> -err_scan:
+>>>>>> +err_dma_setup:
+>>>>>>  	if (fmc2->dma_ecc_ch)
+>>>>>>  		dma_release_channel(fmc2->dma_ecc_ch);
+>>>>>>  	if (fmc2->dma_tx_ch)
+>>>>>> @@ -2021,6 +2025,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
+>>>>>>  	sg_free_table(&fmc2->dma_data_sg);
+>>>>>>  	sg_free_table(&fmc2->dma_ecc_sg);
+>>>>>>  
+>>>>>> +err_clk_disable:
+>>>>>>  	clk_disable_unprepare(fmc2->clk);
+>>>>>>  
+>>>>>>  	return ret;    
+>>>>>
+>>>>> I didn't spot it during my earlier reviews but I really prefer using
+>>>>> labels explaining what you do than having the same name of the function
+>>>>> which failed. This way you don't have to rework the error path when
+>>>>> you handle an additional error.
+>>>>>
+>>>>> So, would you mind doing this in two steps:
+>>>>>
+>>>>> 1/
+>>>>> Replace
+>>>>>
+>>>>>     err_scan:
+>>>>>
+>>>>> with, eg.
+>>>>>
+>>>>>     release_dma_objs:    
+>>>>
+>>>> The ^err_ prefix in failpath labels is useful, since it's easily
+>>>> possible to match on it with regexes ; not so much on arbitrary label name.  
+>>>
+>>> I guess so, but is it actually useful to catch labels in a regex? (real
+>>> question)  
+>>
+>> I find it useful to have a unified way to find those labels, e.g.
+>> err_because_foo:
+>> err_because_bar:
+>> err_last_one:
+>> is much nicer than:
+>> foo_failed:
+>> bar_also_failed:
+>> its_total_randomness:
 > 
-> Suggested-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
-> Changes in v2:
->  - Remove inline from print_drs_error and update changelog text,
->    accordingly.
+> My point being, Christophe, you can use err_ as a prefix but I think
+> it's better to use:
 > 
+>     err_do_this_cleanup
+> 
+> than
+> 
+>    err_this_failed
 
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+That's fine either way.
 
-Thanks,
-Miquèl
+>>> Any way I suppose catching ":\n" is already a good approximation to
+>>> find labels?  
+>>
+>> Not very practical with git grep (^err.*: works nicely though)
+> 
+> I suppose ^.*:$ would work the same ;)
+
+Try and see how much other irrelevant stuff that sucks in ;-)
