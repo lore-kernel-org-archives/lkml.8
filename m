@@ -2,91 +2,150 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FBAC55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7759C5519A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4329B20575
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 864D220575
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:43:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZFzjLXB4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dXF9roYi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbgD0KlJ (ORCPT
+        id S1727058AbgD0Knu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 06:41:09 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50782 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726485AbgD0KlJ (ORCPT
+        Mon, 27 Apr 2020 06:43:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55332 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726537AbgD0Knt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 06:41:09 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03RAf6ME098168;
-        Mon, 27 Apr 2020 05:41:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587984066;
-        bh=+e9snjuVn8/9SAIvEDXDG4BktGSSOERgBnlvNMxv+ZU=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=ZFzjLXB4pT1g/ASFlNO+oxvU14by/GfQqc+5rQb1XLLTe/zWsxnu75t2+Ihzi6Y5E
-         SCsy52iQSNX1G6QgaGoTXEri2PqJQ6pjYnXWnh3hJ1AEPDMCEJh/seAsIAqjYqXues
-         AIO2Hdk8qmfX75Dt1AKvj9GLN7CLxWzxZ0zqBNFE=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03RAf6Hk074046
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 27 Apr 2020 05:41:06 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 27
- Apr 2020 05:41:05 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 27 Apr 2020 05:41:06 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RAf337009038;
-        Mon, 27 Apr 2020 05:41:04 -0500
-Subject: Re: [PATCH 2/3] arm64: dts: ti: k3-j721e-main.dtsi: Add DSS node
-To:     Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
+        Mon, 27 Apr 2020 06:43:49 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26EFFC0610D5;
+        Mon, 27 Apr 2020 03:43:49 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id s10so19972310wrr.0;
+        Mon, 27 Apr 2020 03:43:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=8VrvOpg1vEprgEJxlFupBjFgcQQNFTGZ6LU4Tz38GQo=;
+        b=dXF9roYiDIYZjPSd2jGEHE9og4CQxpRwJtc76ja66qiCXiHh/uRRb0XIInTA/k28zZ
+         Dh6RVCce4oD6EbqXH1Y5TzJtdUdIPI35WSA3sAPFZ06jy5lUiVq1w82xsFcamybOm4se
+         obRdBmLrwOUzH8RJ+ex7abuj1Ah1zzBrhdcvKsebjVr4WFkKwTPZOMpI6Wpl65InNT8F
+         i4fNZUkz8RvLnGvuLgD3XaTWYezh0pGVV5FnDIAanvo3YaiWcb03sb63X7MmKeCfRTYU
+         uQyXNT0f3fnbMFJqi27+GYFSlQiLmvMh0RdLnXDhH1Sz0X1b30YRlIadeJUe64nxoC8X
+         1WMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=8VrvOpg1vEprgEJxlFupBjFgcQQNFTGZ6LU4Tz38GQo=;
+        b=o46B3gqTHESMsUOca4zsqFlP5o2USvfR5pYasZ3PpAExOKHIVvKRN9vDLRPkZ9NZMc
+         e4sm6xTd+wkBcn14Oun6rfsFxsGLrxULbIFWrkXM8olMPRGtcnnYoUqLCSIlu36mY2rI
+         /ZUMJkItf/P5s69IHNIXRJ5itXvH9WqiR06uQktiFp8WBtK6YwAk6eEUbCIPmtLIEsDX
+         CW4aqspqPBulhmmRwPBnqgjMgVpSSsTYIIpedcS+kgOIynyqQOFgGva+by53TXK9pRkc
+         VksQJpWUHlijErXE+q1yc0GNWEo48lvzkLcYC7hs+h0ycsq0HGg8IUS+9Uqz69PUKq8H
+         5YMA==
+X-Gm-Message-State: AGi0PuY5k+G35Ka0zspxGxWbVplvvLvnxokP7fPgCN9fslE6W5CiDBFu
+        gO+Cgrr1RMcVafZwGejKVZ0=
+X-Google-Smtp-Source: APiQypLo5rKIrkPgDi/F0qTznt4jwhBCY3AfHSXpG5DZtCW6uWuoOEl4kd6ym1UbbBTtgFBz9K+LTg==
+X-Received: by 2002:a5d:42cf:: with SMTP id t15mr26270515wrr.354.1587984227110;
+        Mon, 27 Apr 2020 03:43:47 -0700 (PDT)
+Received: from AnsuelXPS ([79.37.253.240])
+        by smtp.gmail.com with ESMTPSA id g186sm15672947wme.7.2020.04.27.03.43.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 Apr 2020 03:43:46 -0700 (PDT)
+From:   <ansuelsmth@gmail.com>
+To:     "'Viresh Kumar'" <viresh.kumar@linaro.org>
+Cc:     "'Rob Herring'" <robh+dt@kernel.org>,
+        "'Viresh Kumar'" <vireshk@kernel.org>,
+        "'Andy Gross'" <agross@kernel.org>,
+        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
+        "'Ilia Lin'" <ilia.lin@kernel.org>, "'Nishanth Menon'" <nm@ti.com>,
+        "'Stephen Boyd'" <sboyd@kernel.org>,
+        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
+        "'Sricharan R'" <sricharan@codeaurora.org>,
+        "'linux-arm-msm'" <linux-arm-msm@vger.kernel.org>,
+        "'open list:THERMAL'" <linux-pm@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200422091512.950-1-tomi.valkeinen@ti.com>
- <20200422091512.950-2-tomi.valkeinen@ti.com>
- <ade3a177-f060-bc40-bcc1-494093e3071d@ti.com>
- <47b7f858-a8d9-1c3b-4dca-2cc493f6730f@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <df93da78-132a-d02e-6561-5bb5fdfe7e53@ti.com>
-Date:   Mon, 27 Apr 2020 13:41:02 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+References: <20200422201216.10593-1-ansuelsmth@gmail.com> <20200422201216.10593-2-ansuelsmth@gmail.com> <CAL_JsqLUbM7ed2q7so4Uibiz2URRg1juoGRExy9Ta3J-LWAFow@mail.gmail.com> <087301d61a86$68b6f950$3a24ebf0$@gmail.com> <20200427034951.xrk5ja3pg4anbg4s@vireshk-i7>
+In-Reply-To: <20200427034951.xrk5ja3pg4anbg4s@vireshk-i7>
+Subject: R: R: [PATCH v2 2/2] dt-bindings: opp: Fix wrong binding in qcom-nvmem-cpufreq
+Date:   Mon, 27 Apr 2020 12:43:43 +0200
+Message-ID: <016c01d61c80$ba1358b0$2e3a0a10$@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <47b7f858-a8d9-1c3b-4dca-2cc493f6730f@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: it
+Thread-Index: AQI2zLF6jE7E+qUxZ1JX975++E9sxAFV8SPrAaqC6P0CXGiiOwGPGxidp5QHXxA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/04/2020 13:37, Jyri Sarha wrote:
-> On 27/04/2020 13:09, Tero Kristo wrote:
->>> +        status = "disabled";
->>
->> Again, why disabled by default?
->>
+> On 25-04-20, 00:19, ansuelsmth@gmail.com wrote:
+> > > On Wed, Apr 22, 2020 at 3:12 PM Ansuel Smith
+> <ansuelsmth@gmail.com>
+> > > wrote:
+> > > >
+> > > > Update binding to new generic name "operating-points-v2-qcom-cpu"
+> > > >
+> > > > Fixes: a8811ec764f9 ("cpufreq: qcom: Add support for krait based
+> socs")
+> > > > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt |
+> 2
+> > > +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/opp/qcom-nvmem-
+> > > cpufreq.txt b/Documentation/devicetree/bindings/opp/qcom-nvmem-
+> > > cpufreq.txt
+> > > > index 64f07417ecfb..537e1774f589 100644
+> > > > --- a/Documentation/devicetree/bindings/opp/qcom-nvmem-
+> cpufreq.txt
+> > > > +++ b/Documentation/devicetree/bindings/opp/qcom-nvmem-
+> > > cpufreq.txt
+> > > > @@ -19,7 +19,7 @@ In 'cpu' nodes:
+> > > >
+> > > >  In 'operating-points-v2' table:
+> > > >  - compatible: Should be
+> > > > -       - 'operating-points-v2-kryo-cpu' for apq8096, msm8996,
+> msm8974,
+> > > > +       - 'operating-points-v2-qcom-cpu' for apq8096, msm8996,
+> > > msm8974,
+> > > >                                              apq8064, ipq8064,
+msm8960 and ipq8074.
+> > >
+> > > This is not how you fix the backwards compatibility issue pointed out
+> > > on the Fixes reference.
+> > >
+> > > Rob
+> >
+> > Sorry but can you give some directive? Should I use the old binding and
+> change
+> > the driver to use it instead of the new one (and drop it) ?
 > 
-> tidss device is not functional without a defined video-port. The driver
-> is not implemented in a way that it would handle a broken configuration
-> gracefully.
+> It is not about the name of the binding, you can rename it to whatever
+> you want. The kernel needs to keep supporting all the previous
+> bindings, so we can keep on changing the kernel but keep the same
+> bootloader (with earlier bindings).
+> 
+> --
+> viresh
 
-What/where/when is the video-port going to be defined then? Is this 
-going to be done in an overlay?
+Ok but still I can't understand why this is not right. 
+In 1/2 of this patchset I added the check for the old binding in the driver
+and 
+here I updated the Documentation with the new one. This way the kernel 
+should support all the previous bindings and I can use the new better name.
 
--Tero
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
