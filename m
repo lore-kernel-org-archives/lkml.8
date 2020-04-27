@@ -2,61 +2,56 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C908FC4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC253C4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7CDA2074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C30222072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:30:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588019453;
+	bh=3OaU0s347QfqeFqIzMECGLi3g6NTgnY6bjs+lqsqumo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=C5swaLuqg+72oewR5eJN6MzKSIiZa/Uk8DWPGpeogrugR4j1fwIaOqfpqH/hIxtPu
+	 mli5Zri0m1L9r2vsZlWMSjCtqLWhY4+2wYNtN1YvguaGja8ZJBq0+3D1qNgMZj5HaX
+	 sTssk1+aVq47PstfFAhs0cy/HUmWMLkWq2NHSeXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgD0U2K (ORCPT
+        id S1726493AbgD0Uax (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 16:28:10 -0400
-Received: from mga02.intel.com ([134.134.136.20]:57517 "EHLO mga02.intel.com"
+        Mon, 27 Apr 2020 16:30:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726561AbgD0U2J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 16:28:09 -0400
-IronPort-SDR: rgR7sXx/44Oy/DLUtAiDs96+6u9Ypg/pK+EUTQVMiMeEgAE23Rs88wDN4db81ZAj4ZbHs8JsWx
- DXB+iLpxm3Vg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 13:28:08 -0700
-IronPort-SDR: iIYy/NvvB8hx399Y+GO78jCMKO/svuaRvWoAAHF7X+pSRddzwujxq3V4SDZnreE3xBj2rSc6ej
- oLs53JaD9qHA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,325,1583222400"; 
-   d="scan'208";a="257388649"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga003.jf.intel.com with ESMTP; 27 Apr 2020 13:28:08 -0700
-Date:   Mon, 27 Apr 2020 13:34:09 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Alex Williamson" <alex.williamson@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v12 4/8] iommu/vt-d: Add bind guest PASID support
-Message-ID: <20200427133409.47ba22b2@jacob-builder>
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D8A0D03@SHSMSX104.ccr.corp.intel.com>
-References: <1587495165-80096-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1587495165-80096-5-git-send-email-jacob.jun.pan@linux.intel.com>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D8A0D03@SHSMSX104.ccr.corp.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
+        id S1726205AbgD0Uaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 16:30:52 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04AD7206D4;
+        Mon, 27 Apr 2020 20:30:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588019452;
+        bh=3OaU0s347QfqeFqIzMECGLi3g6NTgnY6bjs+lqsqumo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=WqOkTOeEGwBaKAM+DhtEkIARd8K6PGThTZPLzxxNPuk0yjqwzqWZ/yv2BR3ViUPTQ
+         G9Z5skn6CjwjQesmvO+yI62J2raArApqb0KUyhxrZPBZhp8Q5p3/UmRQTZZxD7iSFH
+         sTaegxf/bjyaKpzRobuOVZ1rqVDWIGjnViFb8NwQ=
+Date:   Mon, 27 Apr 2020 13:30:51 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [patch] mm, oom: stop reclaiming if GFP_ATOMIC will start
+ failing soon
+Message-Id: <20200427133051.b71f961c1bc53a8e72c4f003@linux-foundation.org>
+In-Reply-To: <alpine.DEB.2.22.394.2004261959310.80211@chino.kir.corp.google.com>
+References: <alpine.DEB.2.22.394.2004241347310.70176@chino.kir.corp.google.com>
+        <20200425172706.26b5011293e8dc77b1dccaf3@linux-foundation.org>
+        <alpine.DEB.2.22.394.2004261959310.80211@chino.kir.corp.google.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -64,487 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Apr 2020 10:47:45 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
+On Sun, 26 Apr 2020 20:12:58 -0700 (PDT) David Rientjes <rientjes@google.com> wrote:
 
-> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Sent: Wednesday, April 22, 2020 2:53 AM
+> > > blockable allocations and then queue a worker to asynchronously oom kill
+> > > if it finds watermarks to be sufficiently low as well.
+> > > 
 > > 
-> > When supporting guest SVA with emulated IOMMU, the guest PASID
-> > table is shadowed in VMM. Updates to guest vIOMMU PASID table
-> > will result in PASID cache flush which will be passed down to
-> > the host as bind guest PASID calls.  
-> 
-> Above description is not accurate. Guest PASID table updates don't
-> 'result in' PASID cache flush automatically. What about:
-> --
-> The guest needs to invalidate the PASID cache for any update to
-> guest PASID table. Those invalidation requests are intercepted
-> by the VMM and passed down to the host as binding guest PASID
-> calls.
-> --
-It is good to add more details, thanks.
-
+> > Well, what's really going on here?
 > > 
-> > For the SL page tables, it will be harvested from device's
-> > default domain (request w/o PASID), or aux domain in case of
-> > mediated device.
+> > Is networking potentially consuming an unbounded amount of memory?  If
+> > so, then killing a process will just cause networking to consume more
+> > memory then hit against the same thing.  So presumably the answer is
+> > "no, the watermarks are inappropriately set for this workload".
 > > 
-> >     .-------------.  .---------------------------.
-> >     |   vIOMMU    |  | Guest process CR3, FL only|
-> >     |             |  '---------------------------'
-> >     .----------------/
-> >     | PASID Entry |--- PASID cache flush -
-> >     '-------------'                       |
-> >     |             |                       V
-> >     |             |                CR3 in GPA
-> >     '-------------'
-> > Guest
-> > ------| Shadow |--------------------------|--------
-> >       v        v                          v
-> > Host
-> >     .-------------.  .----------------------.
-> >     |   pIOMMU    |  | Bind FL for GVA-GPA  |
-> >     |             |  '----------------------'
-> >     .----------------/  |
-> >     | PASID Entry |     V (Nested xlate)
-> >     '----------------\.------------------------------.
-> >     |             |   |SL for GPA-HPA, default domain|
-> >     |             |   '------------------------------'
-> >     '-------------'
-> > Where:
-> >  - FL = First level/stage one page tables
-> >  - SL = Second level/stage two page tables
+> > So would it not be sensible to dynamically adjust the watermarks in
+> > response to this condition?  Maintain a larger pool of memory for these
+> > allocations?  Or possibly push back on networking and tell it to reduce
+> > its queue sizes?  So that stuff doesn't keep on getting oom-killed?
 > > 
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
-> > ---
-> >  drivers/iommu/intel-iommu.c |   4 +
-> >  drivers/iommu/intel-svm.c   | 204
-> > ++++++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/intel-iommu.h |   8 +-
-> >  include/linux/intel-svm.h   |  17 ++++
-> >  4 files changed, 232 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/iommu/intel-iommu.c
-> > b/drivers/iommu/intel-iommu.c index 9c01e391a931..8862d6b0ef21
-> > 100644 --- a/drivers/iommu/intel-iommu.c
-> > +++ b/drivers/iommu/intel-iommu.c
-> > @@ -6179,6 +6179,10 @@ const struct iommu_ops intel_iommu_ops = {
-> >  	.dev_disable_feat	= intel_iommu_dev_disable_feat,
-> >  	.is_attach_deferred	=
-> > intel_iommu_is_attach_deferred, .pgsize_bitmap		=
-> > INTEL_IOMMU_PGSIZES, +#ifdef CONFIG_INTEL_IOMMU_SVM
-> > +	.sva_bind_gpasid	= intel_svm_bind_gpasid,
-> > +	.sva_unbind_gpasid	= intel_svm_unbind_gpasid,
-> > +#endif
-> >  };
-> > 
-> >  static void quirk_iommu_igfx(struct pci_dev *dev)
-> > diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-> > index 2998418f0a38..69b2070b843d 100644
-> > --- a/drivers/iommu/intel-svm.c
-> > +++ b/drivers/iommu/intel-svm.c
-> > @@ -226,6 +226,210 @@ static LIST_HEAD(global_svm_list);
-> >  	list_for_each_entry((sdev), &(svm)->devs, list)	\
-> >  		if ((d) != (sdev)->dev) {} else
-> > 
-> > +static inline void intel_svm_free_if_empty(struct intel_svm *svm,
-> > u64 pasid) +{
-> > +	if (list_empty(&svm->devs)) {
-> > +		ioasid_set_data(pasid, NULL);
-> > +		kfree(svm);
-> > +	}
-> > +}  
 > 
-> Do we really need a function form instead of putting the 4 lines
-> directly after the 'out' label?
+> No - that would actually make the problem worse.
 > 
-it is more readable and good for code sharing.
+> Today, per-zone min watermarks dictate when user allocations will loop or 
+> oom kill.  should_reclaim_retry() currently loops if reclaim has succeeded 
+> in the past few tries and we should be able to allocate if we are able to 
+> reclaim the amount of memory that we think we can.
+> 
+> The issue is that this supposes that looping to reclaim more will result 
+> in more free memory.  That doesn't always happen if there are concurrent 
+> memory allocators.
+> 
+> GFP_ATOMIC allocators can access below these per-zone watermarks.  So the 
+> issue is that per-zone free pages stays between ALLOC_HIGH watermarks 
+> (the watermark that GFP_ATOMIC allocators can allocate to) and min 
+> watermarks.  We never reclaim enough memory to get back to min watermarks 
+> because reclaim cannot keep up with the amount of GFP_ATOMIC allocations.
 
-> > +
-> > +int intel_svm_bind_gpasid(struct iommu_domain *domain, struct
-> > device *dev,
-> > +			  struct iommu_gpasid_bind_data *data)
-> > +{
-> > +	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
-> > +	struct dmar_domain *dmar_domain;
-> > +	struct intel_svm_dev *sdev;
-> > +	struct intel_svm *svm;
-> > +	int ret = 0;
-> > +
-> > +	if (WARN_ON(!iommu) || !data)
-> > +		return -EINVAL;  
-> 
-> well, why not checking !dev together?
-This is kernel API, unlike iommu and data caller fills in dev directly.
+But there should be an upper bound upon the total amount of in-flight
+GFP_ATOMIC memory at any point in time?  These aren't like pagecache
+which will take more if we give it more.  Setting the various
+thresholds appropriately should ensure that blockable allocations don't
+get their memory stolen by GPP_ATOMIC allocations?
 
-> 
-> > +
-> > +	if (data->version != IOMMU_GPASID_BIND_VERSION_1 ||
-> > +	    data->format != IOMMU_PASID_FORMAT_INTEL_VTD)
-> > +		return -EINVAL;
-> > +
-> > +	if (dev_is_pci(dev)) {
-> > +		/* VT-d supports devices with full 20 bit PASIDs
-> > only */
-> > +		if (pci_max_pasids(to_pci_dev(dev)) != PASID_MAX)
-> > +			return -EINVAL;
-> > +	} else {
-> > +		return -ENOTSUPP;
-> > +	}
-> > +
-> > +	/*
-> > +	 * We only check host PASID range, we have no knowledge to
-> > check
-> > +	 * guest PASID range.
-> > +	 */
-> > +	if (data->hpasid <= 0 || data->hpasid >= PASID_MAX)
-> > +		return -EINVAL;
-> > +
-> > +	dmar_domain = to_dmar_domain(domain);
-> > +
-> > +	mutex_lock(&pasid_mutex);
-> > +	svm = ioasid_find(NULL, data->hpasid, NULL);
-> > +	if (IS_ERR(svm)) {
-> > +		ret = PTR_ERR(svm);
-> > +		goto out;
-> > +	}
-> > +
-> > +	if (svm) {
-> > +		/*
-> > +		 * If we found svm for the PASID, there must be at
-> > +		 * least one device bond, otherwise svm should be
-> > freed.
-> > +		 */
-> > +		if (WARN_ON(list_empty(&svm->devs))) {
-> > +			ret = -EINVAL;
-> > +			goto out;
-> > +		}
-> > +
-> > +		for_each_svm_dev(sdev, svm, dev) {
-> > +			/* In case of multiple sub-devices of the
-> > same pdev
-> > +			 * assigned, we should allow multiple bind
-> > calls with
-> > +			 * the same PASID and pdev.
-> > +			 */
-> > +			sdev->users++;
-> > +			goto out;  
-> 
-> in last review Eric raised the open about what about binding the same
-> PASID to the same pdev multiple times. We discussed that should be
-> disallowed. Here can you check whether aux_domain is enabled on pdev
-> to restrict multiple-binding only for sub-devices?
-Why aux_domain is sufficient? A pdev could have aux_domain enabled but
-still bind pdev many times more than its mdevs.
+I took a look at doing a quick-fix for the
+direct-reclaimers-get-their-stuff-stolen issue about a million years
+ago.  I don't recall where it ended up.  It's pretty trivial for the
+direct reclaimer to free pages into current->reclaimed_pages and to
+take a look in there on the allocation path, etc.  But it's only
+practical for order-0 pages.
 
-Either we allow multiple bind or not.
-
-> 
-> > +		}
-> > +	} else {
-> > +		/* We come here when PASID has never been bond to a
-> > device. */
-> > +		svm = kzalloc(sizeof(*svm), GFP_KERNEL);
-> > +		if (!svm) {
-> > +			ret = -ENOMEM;
-> > +			goto out;
-> > +		}
-> > +		/* REVISIT: upper layer/VFIO can track host
-> > process that bind
-> > +		 * the PASID. ioasid_set = mm might be sufficient
-> > for vfio to
-> > +		 * check pasid VMM ownership. We can drop the
-> > following line
-> > +		 * once VFIO and IOASID set check is in place.
-> > +		 */  
-> 
-> there is no check below this comment. Following lines are simply
-> initializing the svm fields.
-> 
-What it meant to say is that once IOASID set is checked in VFIO layer,
-we can drop the assignment of svm->mm, IOMMU driver will not check.
-
-You are right, this is just a place holder to help handle many moving
-pieces.
-
-> > +		svm->mm = get_task_mm(current);
-> > +		svm->pasid = data->hpasid;
-> > +		if (data->flags & IOMMU_SVA_GPASID_VAL) {
-> > +			svm->gpasid = data->gpasid;
-> > +			svm->flags |= SVM_FLAG_GUEST_PASID;
-> > +		}
-> > +		ioasid_set_data(data->hpasid, svm);
-> > +		INIT_LIST_HEAD_RCU(&svm->devs);
-> > +		mmput(svm->mm);
-> > +	}
-> > +	sdev = kzalloc(sizeof(*sdev), GFP_KERNEL);
-> > +	if (!sdev) {
-> > +		/*
-> > +		 * If this is a new PASID that never bond to a
-> > device, then
-> > +		 * the device list must be empty which indicates
-> > struct svm
-> > +		 * was allocated in this function.
-> > +		 */
-> > +		intel_svm_free_if_empty(svm, data->hpasid);
-> > +		ret = -ENOMEM;
-> > +		goto out;
-> > +	}
-> > +	sdev->dev = dev;
-> > +	sdev->users = 1;
-> > +
-> > +	/* Set up device context entry for PASID if not enabled
-> > already */
-> > +	ret = intel_iommu_enable_pasid(iommu, sdev->dev);
-> > +	if (ret) {
-> > +		dev_err_ratelimited(dev, "Failed to enable PASID
-> > capability\n");  
-> 
-> print hpasid 
-
-OK, sounds good.
-> 
-> > +		kfree(sdev);
-> > +		intel_svm_free_if_empty(svm, data->hpasid);
-> > +		goto out;
-> > +	}
-> > +
-> > +	/*
-> > +	 * PASID table is per device for better security.
-> > Therefore, for
-> > +	 * each bind of a new device even with an existing PASID,
-> > we need to
-> > +	 * call the nested mode setup function here.
-> > +	 */
-> > +	spin_lock(&iommu->lock);
-> > +	ret = intel_pasid_setup_nested(iommu,
-> > +				       dev,
-> > +				       (pgd_t *)data->gpgd,
-> > +				       data->hpasid,
-> > +				       &data->vtd,
-> > +				       dmar_domain,
-> > +				       data->addr_width);
-> > +	if (ret) {
-> > +		dev_err_ratelimited(dev, "Failed to set up PASID
-> > %llu in nested mode, Err %d\n",
-> > +				    data->hpasid, ret);
-> > +		/*
-> > +		 * PASID entry should be in cleared state if
-> > nested mode
-> > +		 * set up failed. So we only need to clear IOASID
-> > tracking
-> > +		 * data such that free call will succeed.
-> > +		 */
-> > +		kfree(sdev);
-> > +		intel_svm_free_if_empty(svm, data->hpasid);
-> > +		spin_unlock(&iommu->lock);
-> > +		goto out;
-> > +	}
-> > +	spin_unlock(&iommu->lock);  
-> 
-> spin_unlock can be moved before if(ret)?
-Yes, good point. We can combine the unlock.
-
-> 
-> > +	svm->flags |= SVM_FLAG_GUEST_MODE;
-> > +
-> > +	init_rcu_head(&sdev->rcu);
-> > +	list_add_rcu(&sdev->list, &svm->devs);
-> > + out:
-> > +	mutex_unlock(&pasid_mutex);
-> > +	return ret;
-> > +}
-> > +
-> > +int intel_svm_unbind_gpasid(struct device *dev, int pasid)
-> > +{
-> > +	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
-> > +	struct intel_svm_dev *sdev;
-> > +	struct intel_svm *svm;
-> > +	int ret = -EINVAL;
-> > +
-> > +	if (WARN_ON(!iommu))
-> > +		return -EINVAL;
-> > +
-> > +	mutex_lock(&pasid_mutex);
-> > +	svm = ioasid_find(NULL, pasid, NULL);
-> > +	if (!svm) {
-> > +		ret = -EINVAL;
-> > +		goto out;
-> > +	}
-> > +
-> > +	if (IS_ERR(svm)) {
-> > +		ret = PTR_ERR(svm);
-> > +		goto out;
-> > +	}
-> > +
-> > +	for_each_svm_dev(sdev, svm, dev) {
-> > +		ret = 0;
-> > +		sdev->users--;
-> > +		if (!sdev->users) {
-> > +			list_del_rcu(&sdev->list);
-> > +			intel_pasid_tear_down_entry(iommu, dev,
-> > svm-  
-> > >pasid);  
-> > +			intel_flush_svm_range_dev(svm, sdev, 0,
-> > -1, 0);
-> > +			/* TODO: Drain in flight PRQ for the PASID
-> > since it
-> > +			 * may get reused soon, we don't want to
-> > +			 * confuse with its previous life.
-> > +			 * intel_svm_drain_prq(dev, pasid);
-> > +			 */
-> > +			kfree_rcu(sdev, rcu);
-> > +
-> > +			if (list_empty(&svm->devs)) {
-> > +				/*
-> > +				 * We do not free the IOASID here
-> > in that
-> > +				 * IOMMU driver did not allocate
-> > it.
-> > +				 * Unlike native SVM, IOASID for
-> > guest use was
-> > +				 * allocated prior to the bind
-> > call.
-> > +				 * In any case, if the free call
-> > comes before
-> > +				 * the unbind, IOMMU driver will
-> > get notified
-> > +				 * and perform cleanup.
-> > +				 */
-> > +				ioasid_set_data(pasid, NULL);
-> > +				kfree(svm);
-> > +			}  
-> 
-> is it safer moving above empty check outside of the loop?
-why? could you explain.
-
-Note that this is not a loop.
-
-> 
-> > +		}
-> > +		break;
-> > +	}
-> > +out:
-> > +	mutex_unlock(&pasid_mutex);
-> > +	return ret;
-> > +}
-> > +
-> >  int intel_svm_bind_mm(struct device *dev, int *pasid, int flags,
-> > struct svm_dev_ops *ops)
-> >  {
-> >  	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
-> > diff --git a/include/linux/intel-iommu.h
-> > b/include/linux/intel-iommu.h index 6da03f627ba3..c8ce2336f8d8
-> > 100644 --- a/include/linux/intel-iommu.h
-> > +++ b/include/linux/intel-iommu.h
-> > @@ -706,7 +706,9 @@ struct dmar_domain *find_domain(struct device
-> > *dev);
-> >  extern void intel_svm_check(struct intel_iommu *iommu);
-> >  extern int intel_svm_enable_prq(struct intel_iommu *iommu);
-> >  extern int intel_svm_finish_prq(struct intel_iommu *iommu);
-> > -
-> > +int intel_svm_bind_gpasid(struct iommu_domain *domain, struct
-> > device *dev,
-> > +			  struct iommu_gpasid_bind_data *data);
-> > +int intel_svm_unbind_gpasid(struct device *dev, int pasid);
-> >  struct svm_dev_ops;
-> > 
-> >  struct intel_svm_dev {
-> > @@ -723,9 +725,13 @@ struct intel_svm_dev {
-> >  struct intel_svm {
-> >  	struct mmu_notifier notifier;
-> >  	struct mm_struct *mm;
-> > +
-> >  	struct intel_iommu *iommu;
-> >  	int flags;
-> >  	int pasid;
-> > +	int gpasid; /* Guest PASID in case of vSVA bind with
-> > non-identity host
-> > +		     * to guest PASID mapping.
-> > +		     */  
-> 
-> /* in case that guest PASID is different from host PASID */
-OK, will do.
-
-> 
-> >  	struct list_head devs;
-> >  	struct list_head list;
-> >  };
-> > diff --git a/include/linux/intel-svm.h b/include/linux/intel-svm.h
-> > index d7c403d0dd27..c19690937540 100644
-> > --- a/include/linux/intel-svm.h
-> > +++ b/include/linux/intel-svm.h
-> > @@ -44,6 +44,23 @@ struct svm_dev_ops {
-> >   * do such IOTLB flushes automatically.
-> >   */
-> >  #define SVM_FLAG_SUPERVISOR_MODE	(1<<1)
-> > +/*
-> > + * The SVM_FLAG_GUEST_MODE flag is used when a guest process bind
-> > to a device.
-> > + * In this case the mm_struct is in the guest kernel or userspace,
-> > its life  
-> 
-> this statement is confusing. We still have mm_struct in the host side
-> to claim the ownership of a PASID.
-> 
-How about this:
-/*
- * The SVM_FLAG_GUEST_MODE flag is used when a PASID bind is for guest
- * processes. Compared to the host bind, the primary differences are:
- * 1. mm life cycle management
- * 2. fault reporting
- */
-
-> > + * cycle is managed by VMM and VFIO layer. For IOMMU driver, this
-> > API  
-> 
-> why is a flag becoming an API?
-> 
-will refer as flag.
-
-> > provides
-> > + * means to bind/unbind guest CR3 with PASIDs allocated for a
-> > device.
-> > + */
-> > +#define SVM_FLAG_GUEST_MODE	(1<<2)
-> > +/*
-> > + * The SVM_FLAG_GUEST_PASID flag is used when a guest has its own
-> > PASID space,
-> > + * which requires guest and host PASID translation at both
-> > directions. We keep
-> > + * track of guest PASID in order to provide lookup service to
-> > device drivers.
-> > + * One such example is a physical function (PF) driver that
-> > supports mediated
-> > + * device (mdev) assignment. Guest programming of mdev
-> > configuration space can
-> > + * only be done with guest PASID, therefore PF driver needs to
-> > find the matching
-> > + * host PASID to program the real hardware.  
-> 
-> I feel such example doesn't belong here, which is purely userspace
-> policy. Here just describe what the flag is for should be sufficient.
-> 
-Will remove the example. How about this?
-
-/*
- * The SVM_FLAG_GUEST_PASID flag is used when a guest has its own PASID space,
- * which requires guest and host PASID translation at both directions.
- */
-
-
-> > + */
-> > +#define SVM_FLAG_GUEST_PASID	(1<<3)
-> > 
-> >  #ifdef CONFIG_INTEL_IOMMU_SVM
-> > 
-> > --
-> > 2.7.4  
-> 
-> Thanks
-> Kevin
-> 
-
-[Jacob Pan]
