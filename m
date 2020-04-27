@@ -2,128 +2,299 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B374C54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D45D4C4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36BDB206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:48:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA755206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:49:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aDNtRS5f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbgD0TsU (ORCPT
+        id S1726564AbgD0TtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 15:48:20 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:43192 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbgD0TsU (ORCPT
+        Mon, 27 Apr 2020 15:49:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56476 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726205AbgD0TtT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 15:48:20 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jT9jk-0003p6-AT; Mon, 27 Apr 2020 19:48:16 +0000
-Date:   Mon, 27 Apr 2020 21:48:15 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Jann Horn <jannh@google.com>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        =?utf-8?B?U3TDqXBoYW5l?= Graber <stgraber@ubuntu.com>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: [PATCH] nsproxy: attach to namespaces via pidfds
-Message-ID: <20200427194815.nc22k7mj543swk7z@wittgenstein>
-References: <20200427143646.619227-1-christian.brauner@ubuntu.com>
- <CAG48ez3eSJSODADpo=O-j9txJ=2R+EupunRvs5H9t5Wa8mvkRA@mail.gmail.com>
- <20200427181507.ry3hw7ufiifwhi5k@wittgenstein>
- <CAG48ez2D36QZU0djiXGbirCgcFeAWA02s8PCk6SWEY5MoKg_kg@mail.gmail.com>
+        Mon, 27 Apr 2020 15:49:19 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23865C03C1A7
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 12:49:19 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id a31so88103pje.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 12:49:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jEerkCT9TzKSUHSlKdk8mBv+MQGjDxFrB8vo7AAG6JU=;
+        b=aDNtRS5fEYc2xcdaMDa/QNBMD/BsPucouNMYbVlDpQONpV26D2tuBVwj6JPoc5/Pry
+         KdGXM5xJoeKU5AMeIf3ENbpBb8KlonA9Xry72AnuALLKcto9mCZt2tnNRy4aGMsPWfNF
+         jsOjGNOUiCnrmVh84ellq+Ju3o4+oa2iq0N4+NjBbrMsXHrJOZAJpYV6MLNtGPDq4ltU
+         rZ0asxAM31wIIcsGC+b9xDyy47396WcXJRwX++XBx09cQgLMGOEzQNMSVSkz5Z0+v/vH
+         6nn8y0dpauXUafz/9wvckLtOiO2Jas7HuErUVTf0Tao6GHYUB8h2BTtrojmEr9etkanl
+         TLhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jEerkCT9TzKSUHSlKdk8mBv+MQGjDxFrB8vo7AAG6JU=;
+        b=bPca6EFtvEI2StZJZ4Gu0IpVl1L/vD/xjY485B+POWAwdxgveoXq5+y/RHIYXjTRz2
+         cP7uT1aniSBhPVxqsoINEqzMRMyIhqLrvKX4NYNTTKyyxt8uDF70Rmeccvi2vp6UpPQT
+         p4O1KrsrRYN2dQr8i24Wv72t1UDkcrSlHAw/jUJx42hlFdnF2cCHZ7sQnLHvy3qegIzj
+         ULE+ph0WmGNOS6aFt5Bjjw3ylKTKOikRqTeBCCrTHYa/I7ZqokojtJe34uEX50x/vJ3c
+         oYYIG5rPlEi9oLsDTFUJ2mg5xUmZsAxpnIapss3sK82pxqhKkbi5Duh1eMNUPEUVl4jP
+         NGKg==
+X-Gm-Message-State: AGi0PuZen3wvAfMsT8QSirc0SxXI4XTkc2urE37znGHsmWbd6Qts8MiV
+        IRDc6m4cjRW8ycxgItaRkoezxA==
+X-Google-Smtp-Source: APiQypKoHMXhC7ldZltP3zeeHiihA+8rUs3muVExUWi1iQdL4LAmPnhL/gnjMXhSDCVSdoydpXLszw==
+X-Received: by 2002:a17:90a:d703:: with SMTP id y3mr375417pju.75.1588016958305;
+        Mon, 27 Apr 2020 12:49:18 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id 184sm13502817pfy.144.2020.04.27.12.49.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 12:49:17 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 13:49:15 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: remoteproc: Add bindings for C66x DSPs
+ on TI K3 SoCs
+Message-ID: <20200427194915.GA10552@xps15>
+References: <20200325201839.15896-1-s-anna@ti.com>
+ <20200325201839.15896-2-s-anna@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAG48ez2D36QZU0djiXGbirCgcFeAWA02s8PCk6SWEY5MoKg_kg@mail.gmail.com>
+In-Reply-To: <20200325201839.15896-2-s-anna@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 09:41:20PM +0200, Jann Horn wrote:
-> On Mon, Apr 27, 2020 at 8:15 PM Christian Brauner
-> <christian.brauner@ubuntu.com> wrote:
-> > On Mon, Apr 27, 2020 at 07:28:56PM +0200, Jann Horn wrote:
-> > > On Mon, Apr 27, 2020 at 4:47 PM Christian Brauner
-> > > <christian.brauner@ubuntu.com> wrote:
-> [...]
-> > > > That means
-> > > > setns(nsfd, CLONE_NEWNET) equals setns(pidfd, CLONE_NEWNET). However,
-> > > > when a pidfd is passed, multiple namespace flags can be specified in the
-> > > > second setns() argument and setns() will attach the caller to all the
-> > > > specified namespaces all at once or to none of them. If 0 is specified
-> > > > together with a pidfd then setns() will interpret it the same way 0 is
-> > > > interpreted together with a nsfd argument, i.e. attach to any/all
-> > > > namespaces.
-> > > [...]
-> > > > Apart from significiantly reducing the number of syscalls from double
-> > > > digit to single digit which is a decent reason post-spectre/meltdown
-> > > > this also allows to switch to a set of namespaces atomically, i.e.
-> > > > either attaching to all the specified namespaces succeeds or we fail.
-> > >
-> > > Apart from the issues I've pointed out below, I think it's worth
-> > > calling out explicitly that with the current design, the switch will
-> > > not, in fact, be fully atomic - the process will temporarily be in
-> > > intermediate stages where the switches to some namespaces have
-> > > completed while the switches to other namespaces are still pending;
-> > > and while there will be less of these intermediate stages than before,
-> > > it also means that they will be less explicit to userspace.
-> >
-> > Right, that can be fixed by switching to the unshare model of getting a
-> > new set of credentials and committing it after the nsproxy has been
-> > installed? Then there shouldn't be an intermediate state anymore or
-> > rather an intermediate stage where we can still fail somehow.
-> 
-> It still wouldn't be atomic (in the sense of parallelism, not in the
-> sense of intermediate error handling) though; for example, if task B
-> does setns(<pidfd_of_task_a>, 0) and task C concurrently does
-> setns(<pidfd_of_task_b>, 0), then task C may end up with the new mount
-> namespace of task B but the old user namespace, or something like
-> that. If C is more privileged than B, that may cause C to have more
-> privileges through its configuration of namespaces than B does (e.g.
-> by running in the &init_user_ns but with a mount namespace owned by an
-> unprivileged user), which C may not expect. Same thing for racing
-> between unshare() and setns().
-> 
-> [...]
-> > > > +               put_user_ns(user_ns);
-> > > > +       }
-> > > > +#else
-> > > > +       if (flags & CLONE_NEWUSER)
-> > > > +               ret = -EINVAL;
-> > > > +#endif
-> > > > +
-> > > > +       if (!ret && wants_ns(flags, CLONE_NEWNS))
-> > > > +               ret = __ns_install(nsproxy, mnt_ns_to_common(nsp->mnt_ns));
-> > >
-> > > And this one might be even worse, because the mount namespace change
-> > > itself is only stored in the nsproxy at this point, but the cwd and
-> > > root paths have already been overwritten on the task's fs_struct.
-> > >
-> > > To actually make sys_set_ns() atomic, I think you'd need some
-> > > moderately complicated prep work, splitting the ->install handlers up
-> > > into prep work and a commit phase that can't fail.
-> >
-> > Wouldn't it be sufficient to move to an unshare like model, i.e.
-> > creating a new set of creds, and passing the new user_ns to
-> > create_new_namespaces() as well as having a temporary new_fs struct?
-> > That should get rid of all intermediate stages.
-> 
-> Ah, good point, I didn't realize that that already exists for unshare().
+Hi Suman,
 
-Let me try and switch the patch to that.
+I have started to review this set - comments will come over the next few days.
 
-Christian
+On Wed, Mar 25, 2020 at 03:18:37PM -0500, Suman Anna wrote:
+> Some Texas Instruments K3 family of SoCs have one of more Digital Signal
+> Processor (DSP) subsystems that are comprised of either a TMS320C66x
+> CorePac and/or a next-generation TMS320C71x CorePac processor subsystem.
+> Add the device tree bindings document for the C66x DSP devices on these
+> SoCs. The added example illustrates the DT nodes for the first C66x DSP
+> device present on the K3 J721E family of SoCs.
+> 
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> ---
+>  .../bindings/remoteproc/ti,k3-dsp-rproc.yaml  | 180 ++++++++++++++++++
+>  1 file changed, 180 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+> new file mode 100644
+> index 000000000000..416e3abe7937
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+> @@ -0,0 +1,180 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/remoteproc/ti,k3-dsp-rproc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: TI K3 DSP devices
+> +
+> +maintainers:
+> +  - Suman Anna <s-anna@ti.com>
+> +
+> +description: |
+> +  The TI K3 family of SoCs usually have one or more TI DSP Core sub-systems
+> +  that are used to offload some of the processor-intensive tasks or algorithms,
+> +  for achieving various system level goals.
+> +
+> +  These processor sub-systems usually contain additional sub-modules like
+> +  L1 and/or L2 caches/SRAMs, an Interrupt Controller, an external memory
+> +  controller, a dedicated local power/sleep controller etc. The DSP processor
+> +  cores in the K3 SoCs are usually either a TMS320C66x CorePac processor or a
+> +  TMS320C71x CorePac processor.
+> +
+> +  Each DSP Core sub-system is represented as a single DT node. Each node has a
+> +  number of required or optional properties that enable the OS running on the
+> +  host processor (Arm CorePac) to perform the device management of the remote
+> +  processor and to communicate with the remote processor.
+> +
+> +properties:
+> +  compatible:
+> +    const: ti,j721e-c66-dsp
+> +    description:
+> +      Use "ti,j721e-c66-dsp" for C66x DSPs on K3 J721E SoCs
+> +
+> +  reg:
+> +    description: |
+> +      Should contain an entry for each value in 'reg-names'.
+> +      Each entry should have the memory region's start address
+> +      and the size of the region, the representation matching
+> +      the parent node's '#address-cells' and '#size-cells' values.
+> +    minItems: 3
+> +    maxItems: 3
+> +
+> +  reg-names:
+> +    description: |
+> +      Should contain strings with the names of the specific internal
+> +      internal memory regions, and should be defined in this order
+
+The word "internal" is found twice in a row.
+
+> +    maxItems: 3
+> +    items:
+> +      - const: l2sram
+> +      - const: l1pram
+> +      - const: l1dram
+> +
+> +  ti,sci:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      Should be a phandle to the TI-SCI System Controller node
+> +
+> +  ti,sci-dev-id:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Should contain the TI-SCI device id corresponding to the DSP core.
+> +      Please refer to the corresponding System Controller documentation
+> +      for valid values for the DSP cores.
+> +
+> +  ti,sci-proc-ids:
+> +    description: Should contain a single tuple of <proc_id host_id>.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> +      - maxItems: 1
+> +        items:
+> +          items:
+> +            - description: TI-SCI processor id for the DSP core device
+> +            - description: TI-SCI host id to which processor control
+> +                           ownership should be transferred to
+> +
+> +  resets:
+> +    description: |
+> +      Should contain the phandle to the reset controller node
+> +      managing the resets for this device, and a reset
+> +      specifier. Please refer to the following reset bindings
+> +      for the reset argument specifier,
+> +      Documentation/devicetree/bindings/reset/ti,sci-reset.txt
+> +
+> +  firmware-name:
+> +    description: |
+> +      Should contain the name of the default firmware image
+> +      file located on the firmware search path
+> +
+> +  mboxes:
+> +    description: |
+> +      OMAP Mailbox specifier denoting the sub-mailbox, to be used for
+> +      communication with the remote processor. This property should match
+> +      with the sub-mailbox node used in the firmware image. The specifier
+> +      format is as per the bindings,
+> +      Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
+> +
+> +  memory-region:
+> +    minItems: 2
+> +    description: |
+> +      phandle to the reserved memory nodes to be associated with the remoteproc
+> +      device. There should be atleast two reserved memory nodes defined - the
+> +      first one would be used for dynamic DMA allocations like vrings and vring
+> +      buffers, and the remaining ones used for the firmware image sections. The
+> +      reserved memory nodes should be carveout nodes, and should be defined as
+> +      per the bindings in
+> +      Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> +
+> +# Optional properties:
+> +# --------------------
+> +
+> +  sram:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    minItems: 1
+> +    description: |
+> +      pHandles to one or more reserved on-chip SRAM regions. The regions
+
+s/pHandle/phandle
+
+Thanks,
+Mathieu
+
+> +      should be defined as child nodes of the respective SRAM node, and
+> +      should be defined as per the generic bindings in,
+> +      Documentation/devicetree/bindings/sram/sram.yaml
+> +
+> +required:
+> + - compatible
+> + - reg
+> + - reg-names
+> + - ti,sci
+> + - ti,sci-dev-id
+> + - ti,sci-proc-ids
+> + - resets
+> + - firmware-name
+> + - mboxes
+> + - memory-region
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +
+> +    //Example: J721E SoC
+> +    /* DSP Carveout reserved memory nodes */
+> +    reserved-memory {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +        ranges;
+> +
+> +        c66_0_dma_memory_region: c66-dma-memory@a6000000 {
+> +            compatible = "shared-dma-pool";
+> +            reg = <0x00 0xa6000000 0x00 0x100000>;
+> +            no-map;
+> +        };
+> +
+> +        c66_0_memory_region: c66-memory@a6100000 {
+> +            compatible = "shared-dma-pool";
+> +            reg = <0x00 0xa6100000 0x00 0xf00000>;
+> +            no-map;
+> +        };
+> +    };
+> +
+> +    cbass_main: interconnect@100000 {
+> +        compatible = "simple-bus";
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +        ranges = <0x4d 0x80800000 0x4d 0x80800000 0x00 0x00800000>, /* C66_0 */
+> +                 <0x4d 0x81800000 0x4d 0x81800000 0x00 0x00800000>; /* C66_1 */
+> +
+> +        /* J721E C66_0 DSP node */
+> +        c66_0: dsp@4d80800000 {
+> +            compatible = "ti,j721e-c66-dsp";
+> +            reg = <0x4d 0x80800000 0x00 0x00048000>,
+> +                  <0x4d 0x80e00000 0x00 0x00008000>,
+> +                  <0x4d 0x80f00000 0x00 0x00008000>;
+> +            reg-names = "l2sram", "l1pram", "l1dram";
+> +            ti,sci = <&dmsc>;
+> +            ti,sci-dev-id = <142>;
+> +            ti,sci-proc-ids = <0x03 0xFF>;
+> +            resets = <&k3_reset 142 1>;
+> +            firmware-name = "j7-c66_0-fw";
+> +            memory-region = <&c66_0_dma_memory_region>,
+> +                            <&c66_0_memory_region>;
+> +            mboxes = <&mailbox0_cluster3 &mbox_c66_0>;
+> +        };
+> +    };
+> -- 
+> 2.23.0
+> 
