@@ -2,157 +2,163 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BE4C5519B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C69C5C55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACBFD206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D22C2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:16:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="o0UZ98qO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgD0JPm (ORCPT
+        id S1726910AbgD0JQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 05:15:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:60446 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726243AbgD0JPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 05:15:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0302F1FB;
-        Mon, 27 Apr 2020 02:15:41 -0700 (PDT)
-Received: from [192.168.0.21] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7A7443F68F;
-        Mon, 27 Apr 2020 02:15:39 -0700 (PDT)
-Subject: Re: [PATCH] coresight: dynamic-replicator: Fix handling of multiple
- connections
-To:     saiprakash.ranjan@codeaurora.org, mathieu.poirier@linaro.org,
-        mike.leach@linaro.org
-Cc:     swboyd@chromium.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20200426143725.18116-1-saiprakash.ranjan@codeaurora.org>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <cf5852e9-c3c1-3d31-46f0-0370719947ab@arm.com>
-Date:   Mon, 27 Apr 2020 10:20:32 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Mon, 27 Apr 2020 05:16:27 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:63468 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726651AbgD0JQ1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 05:16:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1587978986; x=1619514986;
+  h=to:cc:references:from:message-id:date:mime-version:
+   in-reply-to:content-transfer-encoding:subject;
+  bh=lwBfPp01QpnUdn4rYMapglbVIlsaGzSUpEy+Zy9cY3k=;
+  b=o0UZ98qOEyc8bPfkrwGwX8ldQqiNQLUxXn+c6sdKUmxLHEQAYgbq+zvf
+   EwHx5mImxsaVyKc5W3cEp43DlNVkTCvoS72zjRVyxCiUS/OIsK94NGRd8
+   a2GMw9/d77VbGBPQGHkdRqsDFam0Pjes/W4qWhGqaug8oRU7Mx+WFO1fi
+   E=;
+IronPort-SDR: WFlepa61gd2l1oxSOfHy+HsK7AoscM0YiRAnpi6uJe4uEZ8akQABPCHaoQQlG8sY8i00hgEXby
+ eYoyymr3f3xQ==
+X-IronPort-AV: E=Sophos;i="5.73,323,1583193600"; 
+   d="scan'208";a="27524015"
+Subject: Re: [PATCH v1 00/15] Add support for Nitro Enclaves
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-87a10be6.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 27 Apr 2020 09:16:12 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2c-87a10be6.us-west-2.amazon.com (Postfix) with ESMTPS id A6EFCA17CD;
+        Mon, 27 Apr 2020 09:16:11 +0000 (UTC)
+Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 27 Apr 2020 09:16:11 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.253) by
+ EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 27 Apr 2020 09:16:03 +0000
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Alexander Graf <graf@amazon.com>,
+        <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@amazon.com>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>, Balbir Singh <sblbir@amazon.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>
+References: <20200421184150.68011-1-andraprs@amazon.com>
+ <18406322-dc58-9b59-3f94-88e6b638fe65@redhat.com>
+ <ff65b1ed-a980-9ddc-ebae-996869e87308@amazon.com>
+ <2a4a15c5-7adb-c574-d558-7540b95e2139@redhat.com>
+ <1ee5958d-e13e-5175-faf7-a1074bd9846d@amazon.com>
+ <f560aed3-a241-acbd-6d3b-d0c831234235@redhat.com>
+ <80489572-72a1-dbe7-5306-60799711dae0@amazon.com>
+ <0467ce02-92f3-8456-2727-c4905c98c307@redhat.com>
+ <5f8de7da-9d5c-0115-04b5-9f08be0b34b0@amazon.com>
+ <095e3e9d-c9e5-61d0-cdfc-2bb099f02932@redhat.com>
+ <602565db-d9a6-149a-0e1a-fe9c14a90ce7@amazon.com>
+ <fb0bfd95-4732-f3c6-4a59-7227cf50356c@redhat.com>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <1c3f76ac-abf2-e5aa-1e70-55c6995b5901@amazon.com>
+Date:   Mon, 27 Apr 2020 12:15:53 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200426143725.18116-1-saiprakash.ranjan@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <fb0bfd95-4732-f3c6-4a59-7227cf50356c@redhat.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.43.161.253]
+X-ClientProxiedBy: EX13D12UWC002.ant.amazon.com (10.43.162.253) To
+ EX13D16EUB001.ant.amazon.com (10.43.166.28)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/26/2020 03:37 PM, Sai Prakash Ranjan wrote:
-> Since commit 30af4fb619e5 ("coresight: dynamic-replicator:
-> Handle multiple connections"), we do not make sure that
-> the other port is disabled when the dynamic replicator is
-> enabled. This is seen to cause the CPU hardlockup atleast
-> on SC7180 SoC with the following topology when enabling ETM
-> with ETR as the sink via sysfs. Since there is no trace id
-> logic in coresight yet to make use of multiple sinks in
-> parallel for different trace sessions, disable the other
-> port when one port is turned on.
-> 
->         etm0_out
-> 	  |
->     apss_funnel_in0
->            |
->    apss_merge_funnel_in
->            |
->        funnel1_in4
-> 	  |
->     merge_funnel_in1
-> 	  |
->      swao_funnel_in
->            |
->          etf_in
-> 	  |
->    swao_replicator_in
->            |
->     replicator_in
-> 	  |
->          etr_in
-> 
->    Kernel panic - not syncing: Watchdog detected hard LOCKUP on cpu 0
->    CPU: 7 PID: 0 Comm: swapper/7 Tainted: G S  B             5.4.25 #100
->    Hardware name: Qualcomm Technologies, Inc. SC7180 IDP (DT)
->    Call trace:
->     dump_backtrace+0x0/0x188
->     show_stack+0x20/0x2c
->     dump_stack+0xdc/0x144
->     panic+0x168/0x370
->     arch_seccomp_spec_mitigate+0x0/0x14
->     watchdog_timer_fn+0x68/0x290
->     __hrtimer_run_queues+0x264/0x498
->     hrtimer_interrupt+0xf0/0x22c
->     arch_timer_handler_phys+0x40/0x50
->     handle_percpu_devid_irq+0x8c/0x158
->     __handle_domain_irq+0x84/0xc4
->     gic_handle_irq+0x100/0x1c4
->     el1_irq+0xbc/0x180
->     arch_cpu_idle+0x3c/0x5c
->     default_idle_call+0x1c/0x38
->     do_idle+0x100/0x280
->     cpu_startup_entry+0x24/0x28
->     secondary_start_kernel+0x15c/0x170
->    SMP: stopping secondary CPUs
-> 
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> Tested-by: Stephen Boyd <swboyd@chromium.org>
-> ---
-> Changes since RFC:
->   * Reworded commit text and included the topology on SC7180.
+CgpPbiAyNS8wNC8yMDIwIDE5OjA1LCBQYW9sbyBCb256aW5pIHdyb3RlOgo+IENBVVRJT046IFRo
+aXMgZW1haWwgb3JpZ2luYXRlZCBmcm9tIG91dHNpZGUgb2YgdGhlIG9yZ2FuaXphdGlvbi4gRG8g
+bm90IGNsaWNrIGxpbmtzIG9yIG9wZW4gYXR0YWNobWVudHMgdW5sZXNzIHlvdSBjYW4gY29uZmly
+bSB0aGUgc2VuZGVyIGFuZCBrbm93IHRoZSBjb250ZW50IGlzIHNhZmUuCj4KPgo+Cj4gT24gMjQv
+MDQvMjAgMjE6MTEsIEFsZXhhbmRlciBHcmFmIHdyb3RlOgo+PiBXaGF0IEkgd2FzIHNheWluZyBh
+Ym92ZSBpcyB0aGF0IG1heWJlIGNvZGUgaXMgZWFzaWVyIHRvIHRyYW5zZmVyIHRoYXQKPj4gdGhh
+biBhIC50eHQgZmlsZSB0aGF0IGdldHMgbG9zdCBzb21ld2hlcmUgaW4gdGhlIERvY3VtZW50YXRp
+b24gZGlyZWN0b3J5Cj4+IDopLgo+IHdoeW5vdGJvdGguanBnIDpECgo6KSBBbHJpZ2h0LCBJIGFk
+ZGVkIGl0IHRvIHRoZSBsaXN0LCBpbiBhZGRpdGlvbiB0byB0aGUgc2FtcGxlIHdlJ3ZlIGJlZW4g
+CnRhbGtpbmcgYmVmb3JlLCB3aXRoIHRoZSBiYXNpYyBmbG93IG9mIHRoZSBpb2N0bCBpbnRlcmZh
+Y2UgdXNhZ2UuCgo+Cj4+Pj4gVG8gYW5zd2VyIHRoZSBxdWVzdGlvbiB0aG91Z2gsIHRoZSB0YXJn
+ZXQgZmlsZSBpcyBpbiBhIG5ld2x5IGludmVudGVkCj4+Pj4gZmlsZSBmb3JtYXQgY2FsbGVkICJF
+SUYiIGFuZCBpdCBuZWVkcyB0byBiZSBsb2FkZWQgYXQgb2Zmc2V0IDB4ODAwMDAwIG9mCj4+Pj4g
+dGhlIGFkZHJlc3Mgc3BhY2UgZG9uYXRlZCB0byB0aGUgZW5jbGF2ZS4KPj4+IFdoYXQgaXMgdGhp
+cyBFSUY/Cj4+IEl0J3MganVzdCBhIHZlcnkgZHVtYiBjb250YWluZXIgZm9ybWF0IHRoYXQgaGFz
+IGEgdHJpdmlhbCBoZWFkZXIsIGEKPj4gc2VjdGlvbiB3aXRoIHRoZSBiekltYWdlIGFuZCBvbmUg
+dG8gbWFueSBzZWN0aW9ucyBvZiBpbml0cmFtZnMuCj4+Cj4+IEFzIG1lbnRpb25lZCBlYXJsaWVy
+IGluIHRoaXMgdGhyZWFkLCBpdCByZWFsbHkgaXMganVzdCAiLWtlcm5lbCIgYW5kCj4+ICItaW5p
+dHJkIiwgcGFja2VkIGludG8gYSBzaW5nbGUgYmluYXJ5IGZvciB0cmFuc21pc3Npb24gdG8gdGhl
+IGhvc3QuCj4gT2theSwgZ290IGl0LiAgU28sIGNvcnJlY3QgbWUgaWYgdGhpcyBpcyB3cm9uZywg
+dGhlIGluZm9ybWF0aW9uIHRoYXQgaXMKPiBuZWVkZWQgdG8gYm9vdCB0aGUgZW5jbGF2ZSBpczoK
+Pgo+ICogdGhlIGtlcm5lbCwgaW4gYnpJbWFnZSBmb3JtYXQKPgo+ICogdGhlIGluaXRyZAo+Cj4g
+KiBhIGNvbnNlY3V0aXZlIGFtb3VudCBvZiBtZW1vcnksIHRvIGJlIG1hcHBlZCB3aXRoCj4gS1ZN
+X1NFVF9VU0VSX01FTU9SWV9SRUdJT04KClllcywgdGhlIGtlcm5lbCBiekltYWdlLCB0aGUga2Vy
+bmVsIGNvbW1hbmQgbGluZSwgdGhlIHJhbWRpc2socykgYXJlIApwYXJ0IG9mIHRoZSBFbmNsYXZl
+IEltYWdlIEZvcm1hdCAoRUlGKTsgcGx1cyBhbiBFSUYgaGVhZGVyIGluY2x1ZGluZyAKbWV0YWRh
+dGEgc3VjaCBhcyBtYWdpYyBudW1iZXIsIGVpZiB2ZXJzaW9uLCBpbWFnZSBzaXplIGFuZCBDUkMu
+Cgo+Cj4gT2ZmIGxpc3QsIEFsZXggYW5kIEkgZGlzY3Vzc2VkIGhhdmluZyBhIHN0cnVjdCB0aGF0
+IHBvaW50cyB0byBrZXJuZWwgYW5kCj4gaW5pdHJkIG9mZiBlbmNsYXZlIG1lbW9yeSwgYW5kIGhh
+dmUgdGhlIGRyaXZlciBidWlsZCBFSUYgYXQgdGhlCj4gYXBwcm9wcmlhdGUgcG9pbnQgaW4gZW5j
+bGF2ZSBtZW1vcnkgKHRoZSA4IE1pQiBvZnNldCB0aGF0IHlvdSBtZW50aW9uZWQpLgo+Cj4gVGhp
+cyBob3dldmVyIGhhcyB0d28gZGlzYWR2YW50YWdlczoKPgo+IDEpIGhhdmluZyB0aGUga2VybmVs
+IGFuZCBpbml0cmQgbG9hZGVkIGJ5IHRoZSBwYXJlbnQgVk0gaW4gZW5jbGF2ZQo+IG1lbW9yeSBo
+YXMgdGhlIGFkdmFudGFnZSB0aGF0IHlvdSBzYXZlIG1lbW9yeSBvdXRzaWRlIHRoZSBlbmNsYXZl
+IG1lbW9yeQo+IGZvciBzb21ldGhpbmcgdGhhdCBpcyBvbmx5IG5lZWRlZCBpbnNpZGUgdGhlIGVu
+Y2xhdmUKCkhlcmUgeW91IHdhbnRlZCB0byBzYXkgZGlzYWR2YW50YWdlPyA6KSBXcnQgc2F2aW5n
+IG1lbW9yeSwgaXQncyBhYm91dCAKYWRkaXRpb25hbCBtZW1vcnkgZnJvbSB0aGUgcGFyZW50IC8g
+cHJpbWFyeSBWTSBuZWVkZWQgZm9yIGhhbmRsaW5nIHRoZSAKZW5jbGF2ZSBpbWFnZSBzZWN0aW9u
+cyAoc3VjaCBhcyB0aGUga2VybmVsLCByYW1kaXNrKSBhbmQgc2V0dGluZyB0aGUgRUlGIAphdCBh
+IGNlcnRhaW4gb2Zmc2V0IGluIGVuY2xhdmUgbWVtb3J5PwoKPgo+IDIpIGl0IGlzIGxlc3MgZXh0
+ZW5zaWJsZSAod2hhdCBpZiB5b3Ugd2FudCB0byB1c2UgUFZIIGluIHRoZSBmdXR1cmUgZm9yCj4g
+ZXhhbXBsZSkgYW5kIHB1dHMgaW4gdGhlIGRyaXZlciBwb2xpY3kgdGhhdCBzaG91bGQgYmUgaW4g
+dXNlcnNwYWNlLgo+Cj4KPiBTbyB3aHkgbm90IGp1c3Qgc3RhcnQgcnVubmluZyB0aGUgZW5jbGF2
+ZSBhdCAweGZmZmZmZmYwIGluIHJlYWwgbW9kZT8KPiBZZXMgZXZlcnlib2R5IGhhdGVzIGl0LCBi
+dXQgdGhhdCdzIHdoYXQgT1NlcyBhcmUgd3JpdHRlbiBhZ2FpbnN0LiAgSW4KPiB0aGUgc2ltcGxl
+c3QgZXhhbXBsZSwgdGhlIHBhcmVudCBlbmNsYXZlIGNhbiBsb2FkIGJ6SW1hZ2UgYW5kIGluaXRy
+ZCBhdAo+IDB4MTAwMDAgYW5kIHBsYWNlIGZpcm13YXJlIHRhYmxlcyAoTVBUYWJsZSBhbmQgRE1J
+KSBzb21ld2hlcmUgYXQKPiAweGYwMDAwOyB0aGUgZmlybXdhcmUgd291bGQganVzdCBiZSBhIGZl
+dyBtb3ZzIHRvIHNlZ21lbnQgcmVnaXN0ZXJzCj4gZm9sbG93ZWQgYnkgYSBsb25nIGptcC4KPgo+
+IElmIHlvdSB3YW50IHRvIGtlZXAgRUlGLCB3ZSBtZWFzdXJlZCBpbiBRRU1VIHRoYXQgdGhlcmUg
+aXMgbm8gbWVhc3VyYWJsZQo+IGRpZmZlcmVuY2UgYmV0d2VlbiBsb2FkaW5nIHRoZSBrZXJuZWwg
+aW4gdGhlIGhvc3QgYW5kIGRvaW5nIGl0IGluIHRoZQo+IGd1ZXN0LCBzbyBBbWF6b24gY291bGQg
+cHJvdmlkZSBhbiBFSUYgbG9hZGVyIHN0dWIgYXQgMHhmZmZmZmZmMCBmb3IKPiBiYWNrd2FyZHMg
+Y29tcGF0aWJpbGl0eS4KClRoYW5rcyBmb3IgaW5mby4KCkFuZHJhCgo+Cj4+PiBBZ2FpbiwgSSBj
+YW5ub3QgcHJvdmlkZSBhIHNlbnNpYmxlIHJldmlldyB3aXRob3V0IGV4cGxhaW5pbmcgaG93IHRv
+IHVzZQo+Pj4gYWxsIHRoaXMuICBJIHVuZGVyc3RhbmQgdGhhdCBBbWF6b24gbmVlZHMgdG8gZG8g
+cGFydCBvZiB0aGUgZGVzaWduCj4+PiBiZWhpbmQgY2xvc2VkIGRvb3JzLCBidXQgdGhpcyBzZWVt
+cyB0byBoYXZlIHRoZSByZXN1bHRlZCBpbiBpc3N1ZXMgdGhhdAo+Pj4gcmVtaW5kcyBtZSBvZiBJ
+bnRlbCdzIFNHWCBtaXNhZHZlbnR1cmVzLiBJZiBBbWF6b24gaGFzIGRlc2lnbmVkIE5FIGluIGEK
+Pj4+IHdheSB0aGF0IGlzIGluY29tcGF0aWJsZSB3aXRoIG9wZW4gc3RhbmRhcmRzLCBpdCdzIHVw
+IHRvIEFtYXpvbiB0byBmaXgKPj4gT2gsIGlmIHRoZXJlJ3MgYW55dGhpbmcgdGhhdCBjb25mbGlj
+dHMgd2l0aCBvcGVuIHN0YW5kYXJkcyBoZXJlLCBJIHdvdWxkCj4+IGxvdmUgdG8gaGVhciBpdCBp
+bW1lZGlhdGVseS4gSSBkbyBub3QgYmVsaWV2ZSBpbiBzZWN1cml0eSBieSBvYnNjdXJpdHkgIDop
+Lgo+IFRoYXQncyBncmVhdCB0byBoZWFyIQo+Cj4gUGFvbG8KPgoKCgoKQW1hem9uIERldmVsb3Bt
+ZW50IENlbnRlciAoUm9tYW5pYSkgUy5SLkwuIHJlZ2lzdGVyZWQgb2ZmaWNlOiAyN0EgU2YuIExh
+emFyIFN0cmVldCwgVUJDNSwgZmxvb3IgMiwgSWFzaSwgSWFzaSBDb3VudHksIDcwMDA0NSwgUm9t
+YW5pYS4gUmVnaXN0ZXJlZCBpbiBSb21hbmlhLiBSZWdpc3RyYXRpb24gbnVtYmVyIEoyMi8yNjIx
+LzIwMDUuCg==
 
-
-> ---
->   .../hwtracing/coresight/coresight-replicator.c    | 15 ++++++++++-----
->   1 file changed, 10 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
-> index e7dc1c31d20d..f4eaa38f8f43 100644
-> --- a/drivers/hwtracing/coresight/coresight-replicator.c
-> +++ b/drivers/hwtracing/coresight/coresight-replicator.c
-> @@ -66,14 +66,16 @@ static int dynamic_replicator_enable(struct replicator_drvdata *drvdata,
->   				     int inport, int outport)
->   {
->   	int rc = 0;
-> -	u32 reg;
-> +	u32 reg0, reg1;
->   
->   	switch (outport) {
->   	case 0:
-> -		reg = REPLICATOR_IDFILTER0;
-> +		reg0 = REPLICATOR_IDFILTER0;
-> +		reg1 = REPLICATOR_IDFILTER1;
->   		break;
->   	case 1:
-> -		reg = REPLICATOR_IDFILTER1;
-> +		reg0 = REPLICATOR_IDFILTER1;
-> +		reg1 = REPLICATOR_IDFILTER0;
->   		break;
->   	default:
->   		WARN_ON(1);
-> @@ -87,8 +89,11 @@ static int dynamic_replicator_enable(struct replicator_drvdata *drvdata,
->   		rc = coresight_claim_device_unlocked(drvdata->base);
->   
->   	/* Ensure that the outport is enabled. */
-> -	if (!rc)
-> -		writel_relaxed(0x00, drvdata->base + reg);
-> +	if (!rc) {
-> +		writel_relaxed(0x00, drvdata->base + reg0);
-> +		writel_relaxed(0xff, drvdata->base + reg1);
-> +	}
-> +
-
-This is not sufficient. You must prevent another session trying to
-enable the other port of the replicator as this could silently fail
-the "on-going" session. Not ideal. Fail the attempt to enable a port
-if the other port is active. You could track this in software and
-fail early.
-
-Suzuki
