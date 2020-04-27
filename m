@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC85C81C43
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3837C81C45
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3C8F2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 763F32075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:18:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588022288;
-	bh=MSIDkFQpjWNdQzmc0lgQ2AK9rlXYgAOEwcZyNa8KNRA=;
+	s=default; t=1588022294;
+	bh=RFGUcCVxrgv5mUyJOaax4cRxjCGpLehPRqP0Yl9mXSE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2UqvQMYEZ15aNKicgsq3iZBlgStXgEZy7j030e4d+fCy6H2PZKXxXXkRpvthM7BgX
-	 NUc8dy2fqehoLYRmpo5bXK+maasdj/TqZqZSDo6Yp8S47WUz6JFF/kucZn/JnpmL0Y
-	 l5Lx8BmttSBHZmyx27iLSg3xnI9dIuvUwb0OGi20=
+	b=Ifr4SyX012bucamDJ0JZtIEM8bALg5IdjKL3iyRknTaXr7uyU8i0bewRfGEyxQini
+	 KdjpRIuO+LLUc9vyYebc8YbKZY78IWJQEtOBoA+86mj8bE/9N9HfJ6xcBTcASL+wS7
+	 BfzsnxTN/1PY3a3rCikEyolIvTVjMp9q0Y5I5WX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbgD0VSG (ORCPT
+        id S1726611AbgD0VSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 17:18:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34128 "EHLO mail.kernel.org"
+        Mon, 27 Apr 2020 17:18:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726403AbgD0VR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726410AbgD0VR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 Apr 2020 17:17:27 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D31D0221F5;
-        Mon, 27 Apr 2020 21:17:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2832C2222B;
+        Mon, 27 Apr 2020 21:17:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588022245;
-        bh=MSIDkFQpjWNdQzmc0lgQ2AK9rlXYgAOEwcZyNa8KNRA=;
+        bh=RFGUcCVxrgv5mUyJOaax4cRxjCGpLehPRqP0Yl9mXSE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K3XXjO2hAye0oXSPFyz6H8bVTEF1v6Zxd7OkU1rEfhDezRv92KAXQRTJbgSBDF+Yl
-         1PB4+2YkFZbFZe3pz3BuMZYgkAuu2N5g7JTFIWjroQrEd959ovhsbfGwGzqMQ6bjn/
-         vOYFmnRXj83LE/ROn+GA1Rzpg9n4Rbx++p1DVrHU=
+        b=T0ItBSHQVBLtokQpLSmNwKyDtx6tXki0321irqjcj5nRqxGn/tskT3Ye2e0BgX1Er
+         GeIPPFYnS+dmmSJjy2Mx8rHukToQ41mMFsDJmBnwxLpLceotd0MJSqHwDncbggBfa/
+         x1oBUbMYj6k+xNep5LYBAWOQCkyfOx53c3S0E8N4=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jTB7z-000HlD-3Q; Mon, 27 Apr 2020 23:17:23 +0200
+        id 1jTB7z-000Hlv-E7; Mon, 27 Apr 2020 23:17:23 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH v3 20/29] docs: filesystems: convert sharedsubtree.txt to ReST
-Date:   Mon, 27 Apr 2020 23:17:12 +0200
-Message-Id: <6692b8abc177130e9e53aace94117a2ad076cab5.1588021877.git.mchehab+huawei@kernel.org>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Becker <jlbec@evilplan.org>,
+        Christoph Hellwig <hch@lst.de>, linux-usb@vger.kernel.org
+Subject: [PATCH v3 29/29] docs: filesystems: convert configfs.txt to ReST
+Date:   Mon, 27 Apr 2020 23:17:21 +0200
+Message-Id: <c2424ec2ad4d735751434ff7f52144c44aa02d5a.1588021877.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588021877.git.mchehab+huawei@kernel.org>
 References: <cover.1588021877.git.mchehab+huawei@kernel.org>
@@ -63,832 +64,435 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 - Add a SPDX header;
 - Adjust document and section titles;
+- Use copyright symbol;
 - Some whitespace fixes and new line breaks;
 - Mark literal blocks as such;
-- Add table markups;
-- Add it to filesystems/index.rst
+- Add it to filesystems/index.rst.
+
+Also, as this file is alone on its own dir, and it doesn't
+seem too likely that other documents will follow it, let's
+move it to the filesystems/ root documentation dir.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
+ .../{configfs/configfs.txt => configfs.rst}   | 131 +++++++++++-------
  Documentation/filesystems/index.rst           |   1 +
- Documentation/filesystems/proc.rst            |   2 +-
- .../{sharedsubtree.txt => sharedsubtree.rst}  | 394 ++++++++++--------
- 3 files changed, 227 insertions(+), 170 deletions(-)
- rename Documentation/filesystems/{sharedsubtree.txt => sharedsubtree.rst} (72%)
+ Documentation/iio/iio_configfs.rst            |   2 +-
+ Documentation/usb/gadget_configfs.rst         |   4 +-
+ fs/configfs/inode.c                           |   2 +-
+ fs/configfs/item.c                            |   2 +-
+ include/linux/configfs.h                      |   2 +-
+ 7 files changed, 86 insertions(+), 58 deletions(-)
+ rename Documentation/filesystems/{configfs/configfs.txt => configfs.rst} (87%)
 
+diff --git a/Documentation/filesystems/configfs/configfs.txt b/Documentation/filesystems/configfs.rst
+similarity index 87%
+rename from Documentation/filesystems/configfs/configfs.txt
+rename to Documentation/filesystems/configfs.rst
+index 16e606c11f40..851d475798f7 100644
+--- a/Documentation/filesystems/configfs/configfs.txt
++++ b/Documentation/filesystems/configfs.rst
+@@ -1,5 +1,6 @@
+-
+-configfs - Userspace-driven kernel object configuration.
++=======================================================
++Configfs - Userspace-driven Kernel oOject Configuration
++=======================================================
+ 
+ Joel Becker <joel.becker@oracle.com>
+ 
+@@ -9,7 +10,8 @@ Copyright (c) 2005 Oracle Corporation,
+ 	Joel Becker <joel.becker@oracle.com>
+ 
+ 
+-[What is configfs?]
++What is configfs?
++=================
+ 
+ configfs is a ram-based filesystem that provides the converse of
+ sysfs's functionality.  Where sysfs is a filesystem-based view of
+@@ -35,10 +37,11 @@ kernel modules backing the items must respond to this.
+ Both sysfs and configfs can and should exist together on the same
+ system.  One is not a replacement for the other.
+ 
+-[Using configfs]
++Using configfs
++==============
+ 
+ configfs can be compiled as a module or into the kernel.  You can access
+-it by doing
++it by doing::
+ 
+ 	mount -t configfs none /config
+ 
+@@ -56,28 +59,29 @@ values.  Don't mix more than one attribute in one attribute file.
+ There are two types of configfs attributes:
+ 
+ * Normal attributes, which similar to sysfs attributes, are small ASCII text
+-files, with a maximum size of one page (PAGE_SIZE, 4096 on i386).  Preferably
+-only one value per file should be used, and the same caveats from sysfs apply.
+-Configfs expects write(2) to store the entire buffer at once.  When writing to
+-normal configfs attributes, userspace processes should first read the entire
+-file, modify the portions they wish to change, and then write the entire
+-buffer back.
++  files, with a maximum size of one page (PAGE_SIZE, 4096 on i386).  Preferably
++  only one value per file should be used, and the same caveats from sysfs apply.
++  Configfs expects write(2) to store the entire buffer at once.  When writing to
++  normal configfs attributes, userspace processes should first read the entire
++  file, modify the portions they wish to change, and then write the entire
++  buffer back.
+ 
+ * Binary attributes, which are somewhat similar to sysfs binary attributes,
+-but with a few slight changes to semantics.  The PAGE_SIZE limitation does not
+-apply, but the whole binary item must fit in single kernel vmalloc'ed buffer.
+-The write(2) calls from user space are buffered, and the attributes'
+-write_bin_attribute method will be invoked on the final close, therefore it is
+-imperative for user-space to check the return code of close(2) in order to
+-verify that the operation finished successfully.
+-To avoid a malicious user OOMing the kernel, there's a per-binary attribute
+-maximum buffer value.
++  but with a few slight changes to semantics.  The PAGE_SIZE limitation does not
++  apply, but the whole binary item must fit in single kernel vmalloc'ed buffer.
++  The write(2) calls from user space are buffered, and the attributes'
++  write_bin_attribute method will be invoked on the final close, therefore it is
++  imperative for user-space to check the return code of close(2) in order to
++  verify that the operation finished successfully.
++  To avoid a malicious user OOMing the kernel, there's a per-binary attribute
++  maximum buffer value.
+ 
+ When an item needs to be destroyed, remove it with rmdir(2).  An
+ item cannot be destroyed if any other item has a link to it (via
+ symlink(2)).  Links can be removed via unlink(2).
+ 
+-[Configuring FakeNBD: an Example]
++Configuring FakeNBD: an Example
++===============================
+ 
+ Imagine there's a Network Block Device (NBD) driver that allows you to
+ access remote block devices.  Call it FakeNBD.  FakeNBD uses configfs
+@@ -86,14 +90,14 @@ sysadmins use to configure FakeNBD, but somehow that program has to tell
+ the driver about it.  Here's where configfs comes in.
+ 
+ When the FakeNBD driver is loaded, it registers itself with configfs.
+-readdir(3) sees this just fine:
++readdir(3) sees this just fine::
+ 
+ 	# ls /config
+ 	fakenbd
+ 
+ A fakenbd connection can be created with mkdir(2).  The name is
+ arbitrary, but likely the tool will make some use of the name.  Perhaps
+-it is a uuid or a disk name:
++it is a uuid or a disk name::
+ 
+ 	# mkdir /config/fakenbd/disk1
+ 	# ls /config/fakenbd/disk1
+@@ -102,7 +106,7 @@ it is a uuid or a disk name:
+ The target attribute contains the IP address of the server FakeNBD will
+ connect to.  The device attribute is the device on the server.
+ Predictably, the rw attribute determines whether the connection is
+-read-only or read-write.
++read-only or read-write::
+ 
+ 	# echo 10.0.0.1 > /config/fakenbd/disk1/target
+ 	# echo /dev/sda1 > /config/fakenbd/disk1/device
+@@ -111,7 +115,8 @@ read-only or read-write.
+ That's it.  That's all there is.  Now the device is configured, via the
+ shell no less.
+ 
+-[Coding With configfs]
++Coding With configfs
++====================
+ 
+ Every object in configfs is a config_item.  A config_item reflects an
+ object in the subsystem.  It has attributes that match values on that
+@@ -130,7 +135,10 @@ appears as a directory at the top of the configfs filesystem.  A
+ subsystem is also a config_group, and can do everything a config_group
+ can.
+ 
+-[struct config_item]
++struct config_item
++==================
++
++::
+ 
+ 	struct config_item {
+ 		char                    *ci_name;
+@@ -168,7 +176,10 @@ By itself, a config_item cannot do much more than appear in configfs.
+ Usually a subsystem wants the item to display and/or store attributes,
+ among other things.  For that, it needs a type.
+ 
+-[struct config_item_type]
++struct config_item_type
++=======================
++
++::
+ 
+ 	struct configfs_item_operations {
+ 		void (*release)(struct config_item *);
+@@ -192,7 +203,10 @@ allocated dynamically will need to provide the ct_item_ops->release()
+ method.  This method is called when the config_item's reference count
+ reaches zero.
+ 
+-[struct configfs_attribute]
++struct configfs_attribute
++=========================
++
++::
+ 
+ 	struct configfs_attribute {
+ 		char                    *ca_name;
+@@ -214,7 +228,10 @@ be called whenever userspace asks for a read(2) on the attribute.  If an
+ attribute is writable and provides a ->store  method, that method will be
+ be called whenever userspace asks for a write(2) on the attribute.
+ 
+-[struct configfs_bin_attribute]
++struct configfs_bin_attribute
++=============================
++
++::
+ 
+ 	struct configfs_bin_attribute {
+ 		struct configfs_attribute	cb_attr;
+@@ -240,11 +257,12 @@ will happen for write(2). The reads/writes are bufferred so only a
+ single read/write will occur; the attributes' need not concern itself
+ with it.
+ 
+-[struct config_group]
++struct config_group
++===================
+ 
+ A config_item cannot live in a vacuum.  The only way one can be created
+ is via mkdir(2) on a config_group.  This will trigger creation of a
+-child item.
++child item::
+ 
+ 	struct config_group {
+ 		struct config_item		cg_item;
+@@ -264,7 +282,7 @@ The config_group structure contains a config_item.  Properly configuring
+ that item means that a group can behave as an item in its own right.
+ However, it can do more: it can create child items or groups.  This is
+ accomplished via the group operations specified on the group's
+-config_item_type.
++config_item_type::
+ 
+ 	struct configfs_group_operations {
+ 		struct config_item *(*make_item)(struct config_group *group,
+@@ -279,7 +297,8 @@ config_item_type.
+ 	};
+ 
+ A group creates child items by providing the
+-ct_group_ops->make_item() method.  If provided, this method is called from mkdir(2) in the group's directory.  The subsystem allocates a new
++ct_group_ops->make_item() method.  If provided, this method is called from
++mkdir(2) in the group's directory.  The subsystem allocates a new
+ config_item (or more likely, its container structure), initializes it,
+ and returns it to configfs.  Configfs will then populate the filesystem
+ tree to reflect the new item.
+@@ -296,13 +315,14 @@ upon item allocation.  If a subsystem has no work to do, it may omit
+ the ct_group_ops->drop_item() method, and configfs will call
+ config_item_put() on the item on behalf of the subsystem.
+ 
+-IMPORTANT: drop_item() is void, and as such cannot fail.  When rmdir(2)
+-is called, configfs WILL remove the item from the filesystem tree
+-(assuming that it has no children to keep it busy).  The subsystem is
+-responsible for responding to this.  If the subsystem has references to
+-the item in other threads, the memory is safe.  It may take some time
+-for the item to actually disappear from the subsystem's usage.  But it
+-is gone from configfs.
++Important:
++   drop_item() is void, and as such cannot fail.  When rmdir(2)
++   is called, configfs WILL remove the item from the filesystem tree
++   (assuming that it has no children to keep it busy).  The subsystem is
++   responsible for responding to this.  If the subsystem has references to
++   the item in other threads, the memory is safe.  It may take some time
++   for the item to actually disappear from the subsystem's usage.  But it
++   is gone from configfs.
+ 
+ When drop_item() is called, the item's linkage has already been torn
+ down.  It no longer has a reference on its parent and has no place in
+@@ -319,10 +339,11 @@ is implemented in the configfs rmdir(2) code.  ->drop_item() will not be
+ called, as the item has not been dropped.  rmdir(2) will fail, as the
+ directory is not empty.
+ 
+-[struct configfs_subsystem]
++struct configfs_subsystem
++=========================
+ 
+ A subsystem must register itself, usually at module_init time.  This
+-tells configfs to make the subsystem appear in the file tree.
++tells configfs to make the subsystem appear in the file tree::
+ 
+ 	struct configfs_subsystem {
+ 		struct config_group	su_group;
+@@ -332,17 +353,19 @@ tells configfs to make the subsystem appear in the file tree.
+ 	int configfs_register_subsystem(struct configfs_subsystem *subsys);
+ 	void configfs_unregister_subsystem(struct configfs_subsystem *subsys);
+ 
+-	A subsystem consists of a toplevel config_group and a mutex.
++A subsystem consists of a toplevel config_group and a mutex.
+ The group is where child config_items are created.  For a subsystem,
+ this group is usually defined statically.  Before calling
+ configfs_register_subsystem(), the subsystem must have initialized the
+ group via the usual group _init() functions, and it must also have
+ initialized the mutex.
+-	When the register call returns, the subsystem is live, and it
++
++When the register call returns, the subsystem is live, and it
+ will be visible via configfs.  At that point, mkdir(2) can be called and
+ the subsystem must be ready for it.
+ 
+-[An Example]
++An Example
++==========
+ 
+ The best example of these basic concepts is the simple_children
+ subsystem/group and the simple_child item in
+@@ -350,7 +373,8 @@ samples/configfs/configfs_sample.c. It shows a trivial object displaying
+ and storing an attribute, and a simple group creating and destroying
+ these children.
+ 
+-[Hierarchy Navigation and the Subsystem Mutex]
++Hierarchy Navigation and the Subsystem Mutex
++============================================
+ 
+ There is an extra bonus that configfs provides.  The config_groups and
+ config_items are arranged in a hierarchy due to the fact that they
+@@ -375,7 +399,8 @@ be in its parent's cg_children list for the same duration.  This allows
+ a subsystem to trust ci_parent and cg_children while they hold the
+ mutex.
+ 
+-[Item Aggregation Via symlink(2)]
++Item Aggregation Via symlink(2)
++===============================
+ 
+ configfs provides a simple group via the group->item parent/child
+ relationship.  Often, however, a larger environment requires aggregation
+@@ -403,7 +428,8 @@ A config_item cannot be removed while it links to any other item, nor
+ can it be removed while an item links to it.  Dangling symlinks are not
+ allowed in configfs.
+ 
+-[Automatically Created Subgroups]
++Automatically Created Subgroups
++===============================
+ 
+ A new config_group may want to have two types of child config_items.
+ While this could be codified by magic names in ->make_item(), it is much
+@@ -433,7 +459,8 @@ As a consequence of this, default groups cannot be removed directly via
+ rmdir(2).  They also are not considered when rmdir(2) on the parent
+ group is checking for children.
+ 
+-[Dependent Subsystems]
++Dependent Subsystems
++====================
+ 
+ Sometimes other drivers depend on particular configfs items.  For
+ example, ocfs2 mounts depend on a heartbeat region item.  If that
+@@ -460,9 +487,11 @@ succeeds, then heartbeat knows the region is safe to give to ocfs2.
+ If it fails, it was being torn down anyway, and heartbeat can gracefully
+ pass up an error.
+ 
+-[Committable Items]
++Committable Items
++=================
+ 
+-NOTE: Committable items are currently unimplemented.
++Note:
++     Committable items are currently unimplemented.
+ 
+ Some config_items cannot have a valid initial state.  That is, no
+ default values can be specified for the item's attributes such that the
+@@ -504,5 +533,3 @@ As rmdir(2) does not work in the "live" directory, an item must be
+ shutdown, or "uncommitted".  Again, this is done via rename(2), this
+ time from the "live" directory back to the "pending" one.  The subsystem
+ is notified by the ct_group_ops->uncommit_object() method.
+-
+-
 diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 1a99767f39e5..30f1583015bd 100644
+index a4fefb62c931..4c536e66dc4c 100644
 --- a/Documentation/filesystems/index.rst
 +++ b/Documentation/filesystems/index.rst
-@@ -33,6 +33,7 @@ algorithms work.
-    mount_api
-    quota
-    seq_file
-+   sharedsubtree
- 
-    automount-support
- 
-diff --git a/Documentation/filesystems/proc.rst b/Documentation/filesystems/proc.rst
-index 38b606991065..a567bcccbb02 100644
---- a/Documentation/filesystems/proc.rst
-+++ b/Documentation/filesystems/proc.rst
-@@ -1870,7 +1870,7 @@ unbindable        mount is unbindable
- 
- For more information on mount propagation see:
- 
--  Documentation/filesystems/sharedsubtree.txt
-+  Documentation/filesystems/sharedsubtree.rst
- 
- 
- 3.6	/proc/<pid>/comm  & /proc/<pid>/task/<tid>/comm
-diff --git a/Documentation/filesystems/sharedsubtree.txt b/Documentation/filesystems/sharedsubtree.rst
-similarity index 72%
-rename from Documentation/filesystems/sharedsubtree.txt
-rename to Documentation/filesystems/sharedsubtree.rst
-index 8ccfbd55244b..d83395354250 100644
---- a/Documentation/filesystems/sharedsubtree.txt
-+++ b/Documentation/filesystems/sharedsubtree.rst
-@@ -1,7 +1,10 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===============
- Shared Subtrees
-----------------
-+===============
- 
--Contents:
-+.. Contents:
- 	1) Overview
- 	2) Features
- 	3) Setting mount states
-@@ -41,31 +44,38 @@ replicas continue to be exactly same.
- 
- 	Here is an example:
- 
--	Let's say /mnt has a mount that is shared.
--	mount --make-shared /mnt
-+	Let's say /mnt has a mount that is shared::
-+
-+	    mount --make-shared /mnt
- 
- 	Note: mount(8) command now supports the --make-shared flag,
- 	so the sample 'smount' program is no longer needed and has been
- 	removed.
- 
--	# mount --bind /mnt /tmp
-+	::
-+
-+	    # mount --bind /mnt /tmp
-+
- 	The above command replicates the mount at /mnt to the mountpoint /tmp
- 	and the contents of both the mounts remain identical.
- 
--	#ls /mnt
--	a b c
-+	::
- 
--	#ls /tmp
--	a b c
-+	    #ls /mnt
-+	    a b c
- 
--	Now let's say we mount a device at /tmp/a
--	# mount /dev/sd0  /tmp/a
-+	    #ls /tmp
-+	    a b c
- 
--	#ls /tmp/a
--	t1 t2 t3
-+	Now let's say we mount a device at /tmp/a::
- 
--	#ls /mnt/a
--	t1 t2 t3
-+	    # mount /dev/sd0  /tmp/a
-+
-+	    #ls /tmp/a
-+	    t1 t2 t3
-+
-+	    #ls /mnt/a
-+	    t1 t2 t3
- 
- 	Note that the mount has propagated to the mount at /mnt as well.
- 
-@@ -123,14 +133,15 @@ replicas continue to be exactly same.
- 
- 2d) A unbindable mount is a unbindable private mount
- 
--	let's say we have a mount at /mnt and we make it unbindable
-+	let's say we have a mount at /mnt and we make it unbindable::
- 
--	# mount --make-unbindable /mnt
-+	    # mount --make-unbindable /mnt
- 
--	 Let's try to bind mount this mount somewhere else.
--	 # mount --bind /mnt /tmp
--	 mount: wrong fs type, bad option, bad superblock on /mnt,
--	        or too many mounted file systems
-+	 Let's try to bind mount this mount somewhere else::
-+
-+	    # mount --bind /mnt /tmp
-+	    mount: wrong fs type, bad option, bad superblock on /mnt,
-+		    or too many mounted file systems
- 
- 	Binding a unbindable mount is a invalid operation.
- 
-@@ -138,12 +149,12 @@ replicas continue to be exactly same.
- 3) Setting mount states
- 
- 	The mount command (util-linux package) can be used to set mount
--	states:
-+	states::
- 
--	mount --make-shared mountpoint
--	mount --make-slave mountpoint
--	mount --make-private mountpoint
--	mount --make-unbindable mountpoint
-+	    mount --make-shared mountpoint
-+	    mount --make-slave mountpoint
-+	    mount --make-private mountpoint
-+	    mount --make-unbindable mountpoint
- 
- 
- 4) Use cases
-@@ -154,9 +165,10 @@ replicas continue to be exactly same.
- 
- 	   Solution:
- 
--		The system administrator can make the mount at /cdrom shared
--		mount --bind /cdrom /cdrom
--		mount --make-shared /cdrom
-+		The system administrator can make the mount at /cdrom shared::
-+
-+		    mount --bind /cdrom /cdrom
-+		    mount --make-shared /cdrom
- 
- 		Now any process that clones off a new namespace will have a
- 		mount at /cdrom which is a replica of the same mount in the
-@@ -172,14 +184,14 @@ replicas continue to be exactly same.
- 	   Solution:
- 
- 		To begin with, the administrator can mark the entire mount tree
--		as shareable.
-+		as shareable::
- 
--		mount --make-rshared /
-+		    mount --make-rshared /
- 
- 		A new process can clone off a new namespace. And mark some part
--		of its namespace as slave
-+		of its namespace as slave::
- 
--		mount --make-rslave /myprivatetree
-+		    mount --make-rslave /myprivatetree
- 
- 		Hence forth any mounts within the /myprivatetree done by the
- 		process will not show up in any other namespace. However mounts
-@@ -206,13 +218,13 @@ replicas continue to be exactly same.
- 		versions of the file depending on the path used to access that
- 		file.
- 
--		An example is:
-+		An example is::
- 
--		mount --make-shared /
--		mount --rbind / /view/v1
--		mount --rbind / /view/v2
--		mount --rbind / /view/v3
--		mount --rbind / /view/v4
-+		    mount --make-shared /
-+		    mount --rbind / /view/v1
-+		    mount --rbind / /view/v2
-+		    mount --rbind / /view/v3
-+		    mount --rbind / /view/v4
- 
- 		and if /usr has a versioning filesystem mounted, then that
- 		mount appears at /view/v1/usr, /view/v2/usr, /view/v3/usr and
-@@ -224,8 +236,8 @@ replicas continue to be exactly same.
- 		filesystem is being requested and return the corresponding
- 		inode.
- 
--5) Detailed semantics:
---------------------
-+5) Detailed semantics
-+---------------------
- 	The section below explains the detailed semantics of
- 	bind, rbind, move, mount, umount and clone-namespace operations.
- 
-@@ -235,6 +247,7 @@ replicas continue to be exactly same.
- 5a) Mount states
- 
- 	A given mount can be in one of the following states
-+
- 	1) shared
- 	2) slave
- 	3) shared and slave
-@@ -252,7 +265,8 @@ replicas continue to be exactly same.
- 		A 'shared mount' is defined as a vfsmount that belongs to a
- 		'peer group'.
- 
--		For example:
-+		For example::
-+
- 			mount --make-shared /mnt
- 			mount --bind /mnt /tmp
- 
-@@ -270,7 +284,7 @@ replicas continue to be exactly same.
- 		A slave mount as the name implies has a master mount from which
- 		mount/unmount events are received. Events do not propagate from
- 		the slave mount to the master.  Only a shared mount can be made
--		a slave by executing the following command
-+		a slave by executing the following command::
- 
- 			mount --make-slave mount
- 
-@@ -290,8 +304,10 @@ replicas continue to be exactly same.
- 		peer group.
- 
- 		Only a slave vfsmount can be made as 'shared and slave' by
--		either executing the following command
-+		either executing the following command::
-+
- 			mount --make-shared mount
-+
- 		or by moving the slave vfsmount under a shared vfsmount.
- 
- 	(4) Private mount
-@@ -307,30 +323,32 @@ replicas continue to be exactly same.
- 
- 
-    	State diagram:
-+
-    	The state diagram below explains the state transition of a mount,
--	in response to various commands.
--	------------------------------------------------------------------------
--	|             |make-shared |  make-slave  | make-private |make-unbindab|
--	--------------|------------|--------------|--------------|-------------|
--	|shared	      |shared	   |*slave/private|   private	 | unbindable  |
--	|             |            |              |              |             |
--	|-------------|------------|--------------|--------------|-------------|
--	|slave	      |shared      |	**slave	  |    private   | unbindable  |
--	|             |and slave   |              |              |             |
--	|-------------|------------|--------------|--------------|-------------|
--	|shared	      |shared      |    slave	  |    private   | unbindable  |
--	|and slave    |and slave   |              |              |             |
--	|-------------|------------|--------------|--------------|-------------|
--	|private      |shared	   |  **private	  |    private   | unbindable  |
--	|-------------|------------|--------------|--------------|-------------|
--	|unbindable   |shared	   |**unbindable  |    private   | unbindable  |
--	------------------------------------------------------------------------
-+	in response to various commands::
- 
--	* if the shared mount is the only mount in its peer group, making it
--	slave, makes it private automatically. Note that there is no master to
--	which it can be slaved to.
-+	    -----------------------------------------------------------------------
-+	    |             |make-shared |  make-slave  | make-private |make-unbindab|
-+	    --------------|------------|--------------|--------------|-------------|
-+	    |shared	  |shared      |*slave/private|   private    | unbindable  |
-+	    |             |            |              |              |             |
-+	    |-------------|------------|--------------|--------------|-------------|
-+	    |slave	  |shared      | **slave      |    private   | unbindable  |
-+	    |             |and slave   |              |              |             |
-+	    |-------------|------------|--------------|--------------|-------------|
-+	    |shared       |shared      | slave        |    private   | unbindable  |
-+	    |and slave    |and slave   |              |              |             |
-+	    |-------------|------------|--------------|--------------|-------------|
-+	    |private      |shared      |  **private   |    private   | unbindable  |
-+	    |-------------|------------|--------------|--------------|-------------|
-+	    |unbindable   |shared      |**unbindable  |    private   | unbindable  |
-+	    ------------------------------------------------------------------------
- 
--	** slaving a non-shared mount has no effect on the mount.
-+	    * if the shared mount is the only mount in its peer group, making it
-+	    slave, makes it private automatically. Note that there is no master to
-+	    which it can be slaved to.
-+
-+	    ** slaving a non-shared mount has no effect on the mount.
- 
- 	Apart from the commands listed below, the 'move' operation also changes
- 	the state of a mount depending on type of the destination mount. Its
-@@ -338,31 +356,32 @@ replicas continue to be exactly same.
- 
- 5b) Bind semantics
- 
--	Consider the following command
-+	Consider the following command::
- 
--	mount --bind A/a  B/b
-+	    mount --bind A/a  B/b
- 
- 	where 'A' is the source mount, 'a' is the dentry in the mount 'A', 'B'
- 	is the destination mount and 'b' is the dentry in the destination mount.
- 
- 	The outcome depends on the type of mount of 'A' and 'B'. The table
--	below contains quick reference.
--   ---------------------------------------------------------------------------
--   |         BIND MOUNT OPERATION                                            |
--   |**************************************************************************
--   |source(A)->| shared       |       private  |       slave    | unbindable |
--   | dest(B)  |               |                |                |            |
--   |   |      |               |                |                |            |
--   |   v      |               |                |                |            |
--   |**************************************************************************
--   |  shared  | shared        |     shared     | shared & slave |  invalid   |
--   |          |               |                |                |            |
--   |non-shared| shared        |      private   |      slave     |  invalid   |
--   ***************************************************************************
-+	below contains quick reference::
-+
-+	    --------------------------------------------------------------------------
-+	    |         BIND MOUNT OPERATION                                           |
-+	    |************************************************************************|
-+	    |source(A)->| shared      |       private  |       slave    | unbindable |
-+	    | dest(B)  |              |                |                |            |
-+	    |   |      |              |                |                |            |
-+	    |   v      |              |                |                |            |
-+	    |************************************************************************|
-+	    |  shared  | shared       |     shared     | shared & slave |  invalid   |
-+	    |          |              |                |                |            |
-+	    |non-shared| shared       |      private   |      slave     |  invalid   |
-+	    **************************************************************************
- 
-      	Details:
- 
--	1. 'A' is a shared mount and 'B' is a shared mount. A new mount 'C'
-+    1. 'A' is a shared mount and 'B' is a shared mount. A new mount 'C'
- 	which is clone of 'A', is created. Its root dentry is 'a' . 'C' is
- 	mounted on mount 'B' at dentry 'b'. Also new mount 'C1', 'C2', 'C3' ...
- 	are created and mounted at the dentry 'b' on all mounts where 'B'
-@@ -371,7 +390,7 @@ replicas continue to be exactly same.
- 	'B'.  And finally the peer-group of 'C' is merged with the peer group
- 	of 'A'.
- 
--	2. 'A' is a private mount and 'B' is a shared mount. A new mount 'C'
-+    2. 'A' is a private mount and 'B' is a shared mount. A new mount 'C'
- 	which is clone of 'A', is created. Its root dentry is 'a'. 'C' is
- 	mounted on mount 'B' at dentry 'b'. Also new mount 'C1', 'C2', 'C3' ...
- 	are created and mounted at the dentry 'b' on all mounts where 'B'
-@@ -379,7 +398,7 @@ replicas continue to be exactly same.
- 	'C', 'C1', .., 'Cn' with exactly the same configuration as the
- 	propagation tree for 'B'.
- 
--	3. 'A' is a slave mount of mount 'Z' and 'B' is a shared mount. A new
-+    3. 'A' is a slave mount of mount 'Z' and 'B' is a shared mount. A new
- 	mount 'C' which is clone of 'A', is created. Its root dentry is 'a' .
- 	'C' is mounted on mount 'B' at dentry 'b'. Also new mounts 'C1', 'C2',
- 	'C3' ... are created and mounted at the dentry 'b' on all mounts where
-@@ -389,19 +408,19 @@ replicas continue to be exactly same.
- 	is made the slave of mount 'Z'.  In other words, mount 'C' is in the
- 	state 'slave and shared'.
- 
--	4. 'A' is a unbindable mount and 'B' is a shared mount. This is a
-+    4. 'A' is a unbindable mount and 'B' is a shared mount. This is a
- 	invalid operation.
- 
--	5. 'A' is a private mount and 'B' is a non-shared(private or slave or
-+    5. 'A' is a private mount and 'B' is a non-shared(private or slave or
- 	unbindable) mount. A new mount 'C' which is clone of 'A', is created.
- 	Its root dentry is 'a'. 'C' is mounted on mount 'B' at dentry 'b'.
- 
--	6. 'A' is a shared mount and 'B' is a non-shared mount. A new mount 'C'
-+    6. 'A' is a shared mount and 'B' is a non-shared mount. A new mount 'C'
- 	which is a clone of 'A' is created. Its root dentry is 'a'. 'C' is
- 	mounted on mount 'B' at dentry 'b'.  'C' is made a member of the
- 	peer-group of 'A'.
- 
--	7. 'A' is a slave mount of mount 'Z' and 'B' is a non-shared mount. A
-+    7. 'A' is a slave mount of mount 'Z' and 'B' is a non-shared mount. A
- 	new mount 'C' which is a clone of 'A' is created. Its root dentry is
- 	'a'.  'C' is mounted on mount 'B' at dentry 'b'. Also 'C' is set as a
- 	slave mount of 'Z'. In other words 'A' and 'C' are both slave mounts of
-@@ -409,7 +428,7 @@ replicas continue to be exactly same.
- 	mount/unmount on 'A' do not propagate anywhere else. Similarly
- 	mount/unmount on 'C' do not propagate anywhere else.
- 
--	8. 'A' is a unbindable mount and 'B' is a non-shared mount. This is a
-+    8. 'A' is a unbindable mount and 'B' is a non-shared mount. This is a
- 	invalid operation. A unbindable mount cannot be bind mounted.
- 
- 5c) Rbind semantics
-@@ -422,7 +441,9 @@ replicas continue to be exactly same.
- 	then the subtree under the unbindable mount is pruned in the new
- 	location.
- 
--	eg: let's say we have the following mount tree.
-+	eg:
-+
-+	  let's say we have the following mount tree::
- 
- 		A
- 	      /   \
-@@ -430,12 +451,12 @@ replicas continue to be exactly same.
- 	     / \ / \
- 	     D E F G
- 
--	     Let's say all the mount except the mount C in the tree are
--	     of a type other than unbindable.
-+	  Let's say all the mount except the mount C in the tree are
-+	  of a type other than unbindable.
- 
--	     If this tree is rbound to say Z
-+	  If this tree is rbound to say Z
- 
--	     We will have the following tree at the new location.
-+	  We will have the following tree at the new location::
- 
- 		Z
- 		|
-@@ -457,24 +478,26 @@ replicas continue to be exactly same.
- 	the dentry in the destination mount.
- 
- 	The outcome depends on the type of the mount of 'A' and 'B'. The table
--	below is a quick reference.
--   ---------------------------------------------------------------------------
--   |         		MOVE MOUNT OPERATION                                 |
--   |**************************************************************************
--   | source(A)->| shared      |       private  |       slave    | unbindable |
--   | dest(B)  |               |                |                |            |
--   |   |      |               |                |                |            |
--   |   v      |               |                |                |            |
--   |**************************************************************************
--   |  shared  | shared        |     shared     |shared and slave|  invalid   |
--   |          |               |                |                |            |
--   |non-shared| shared        |      private   |    slave       | unbindable |
--   ***************************************************************************
--	NOTE: moving a mount residing under a shared mount is invalid.
-+	below is a quick reference::
-+
-+	    ---------------------------------------------------------------------------
-+	    |         		MOVE MOUNT OPERATION                                 |
-+	    |**************************************************************************
-+	    | source(A)->| shared      |       private  |       slave    | unbindable |
-+	    | dest(B)  |               |                |                |            |
-+	    |   |      |               |                |                |            |
-+	    |   v      |               |                |                |            |
-+	    |**************************************************************************
-+	    |  shared  | shared        |     shared     |shared and slave|  invalid   |
-+	    |          |               |                |                |            |
-+	    |non-shared| shared        |      private   |    slave       | unbindable |
-+	    ***************************************************************************
-+
-+	.. Note:: moving a mount residing under a shared mount is invalid.
- 
-       Details follow:
- 
--	1. 'A' is a shared mount and 'B' is a shared mount.  The mount 'A' is
-+    1. 'A' is a shared mount and 'B' is a shared mount.  The mount 'A' is
- 	mounted on mount 'B' at dentry 'b'.  Also new mounts 'A1', 'A2'...'An'
- 	are created and mounted at dentry 'b' on all mounts that receive
- 	propagation from mount 'B'. A new propagation tree is created in the
-@@ -483,7 +506,7 @@ replicas continue to be exactly same.
- 	propagation tree is appended to the already existing propagation tree
- 	of 'A'.
- 
--	2. 'A' is a private mount and 'B' is a shared mount. The mount 'A' is
-+    2. 'A' is a private mount and 'B' is a shared mount. The mount 'A' is
- 	mounted on mount 'B' at dentry 'b'. Also new mount 'A1', 'A2'... 'An'
- 	are created and mounted at dentry 'b' on all mounts that receive
- 	propagation from mount 'B'. The mount 'A' becomes a shared mount and a
-@@ -491,7 +514,7 @@ replicas continue to be exactly same.
- 	'B'. This new propagation tree contains all the new mounts 'A1',
- 	'A2'...  'An'.
- 
--	3. 'A' is a slave mount of mount 'Z' and 'B' is a shared mount.  The
-+    3. 'A' is a slave mount of mount 'Z' and 'B' is a shared mount.  The
- 	mount 'A' is mounted on mount 'B' at dentry 'b'.  Also new mounts 'A1',
- 	'A2'... 'An' are created and mounted at dentry 'b' on all mounts that
- 	receive propagation from mount 'B'. A new propagation tree is created
-@@ -501,32 +524,32 @@ replicas continue to be exactly same.
- 	'A'.  Mount 'A' continues to be the slave mount of 'Z' but it also
- 	becomes 'shared'.
- 
--	4. 'A' is a unbindable mount and 'B' is a shared mount. The operation
-+    4. 'A' is a unbindable mount and 'B' is a shared mount. The operation
- 	is invalid. Because mounting anything on the shared mount 'B' can
- 	create new mounts that get mounted on the mounts that receive
- 	propagation from 'B'.  And since the mount 'A' is unbindable, cloning
- 	it to mount at other mountpoints is not possible.
- 
--	5. 'A' is a private mount and 'B' is a non-shared(private or slave or
-+    5. 'A' is a private mount and 'B' is a non-shared(private or slave or
- 	unbindable) mount. The mount 'A' is mounted on mount 'B' at dentry 'b'.
- 
--	6. 'A' is a shared mount and 'B' is a non-shared mount.  The mount 'A'
-+    6. 'A' is a shared mount and 'B' is a non-shared mount.  The mount 'A'
- 	is mounted on mount 'B' at dentry 'b'.  Mount 'A' continues to be a
- 	shared mount.
- 
--	7. 'A' is a slave mount of mount 'Z' and 'B' is a non-shared mount.
-+    7. 'A' is a slave mount of mount 'Z' and 'B' is a non-shared mount.
- 	The mount 'A' is mounted on mount 'B' at dentry 'b'.  Mount 'A'
- 	continues to be a slave mount of mount 'Z'.
- 
--	8. 'A' is a unbindable mount and 'B' is a non-shared mount. The mount
-+    8. 'A' is a unbindable mount and 'B' is a non-shared mount. The mount
- 	'A' is mounted on mount 'B' at dentry 'b'. Mount 'A' continues to be a
- 	unbindable mount.
- 
- 5e) Mount semantics
- 
--	Consider the following command
-+	Consider the following command::
- 
--	mount device  B/b
-+	    mount device  B/b
- 
- 	'B' is the destination mount and 'b' is the dentry in the destination
- 	mount.
-@@ -537,9 +560,9 @@ replicas continue to be exactly same.
- 
- 5f) Unmount semantics
- 
--	Consider the following command
-+	Consider the following command::
- 
--	umount A
-+	    umount A
- 
- 	where 'A' is a mount mounted on mount 'B' at dentry 'b'.
- 
-@@ -592,10 +615,12 @@ replicas continue to be exactly same.
- 
- 	A. What is the result of the following command sequence?
- 
--		mount --bind /mnt /mnt
--		mount --make-shared /mnt
--		mount --bind /mnt /tmp
--		mount --move /tmp /mnt/1
-+		::
-+
-+		    mount --bind /mnt /mnt
-+		    mount --make-shared /mnt
-+		    mount --bind /mnt /tmp
-+		    mount --move /tmp /mnt/1
- 
- 		what should be the contents of /mnt /mnt/1 /mnt/1/1 should be?
- 		Should they all be identical? or should /mnt and /mnt/1 be
-@@ -604,23 +629,27 @@ replicas continue to be exactly same.
- 
- 	B. What is the result of the following command sequence?
- 
--		mount --make-rshared /
--		mkdir -p /v/1
--		mount --rbind / /v/1
-+		::
-+
-+		    mount --make-rshared /
-+		    mkdir -p /v/1
-+		    mount --rbind / /v/1
- 
- 		what should be the content of /v/1/v/1 be?
- 
- 
- 	C. What is the result of the following command sequence?
- 
--		mount --bind /mnt /mnt
--		mount --make-shared /mnt
--		mkdir -p /mnt/1/2/3 /mnt/1/test
--		mount --bind /mnt/1 /tmp
--		mount --make-slave /mnt
--		mount --make-shared /mnt
--		mount --bind /mnt/1/2 /tmp1
--		mount --make-slave /mnt
-+		::
-+
-+		    mount --bind /mnt /mnt
-+		    mount --make-shared /mnt
-+		    mkdir -p /mnt/1/2/3 /mnt/1/test
-+		    mount --bind /mnt/1 /tmp
-+		    mount --make-slave /mnt
-+		    mount --make-shared /mnt
-+		    mount --bind /mnt/1/2 /tmp1
-+		    mount --make-slave /mnt
- 
- 		At this point we have the first mount at /tmp and
- 		its root dentry is 1. Let's call this mount 'A'
-@@ -668,7 +697,8 @@ replicas continue to be exactly same.
- 
- 		step 1:
- 		   let's say the root tree has just two directories with
--		   one vfsmount.
-+		   one vfsmount::
-+
- 				    root
- 				   /    \
- 				  tmp    usr
-@@ -676,14 +706,17 @@ replicas continue to be exactly same.
- 		    And we want to replicate the tree at multiple
- 		    mountpoints under /root/tmp
- 
--		step2:
--		      mount --make-shared /root
-+		step 2:
-+		      ::
- 
--		      mkdir -p /tmp/m1
- 
--		      mount --rbind /root /tmp/m1
-+			mount --make-shared /root
- 
--		      the new tree now looks like this:
-+			mkdir -p /tmp/m1
-+
-+			mount --rbind /root /tmp/m1
-+
-+		      the new tree now looks like this::
- 
- 				    root
- 				   /    \
-@@ -697,11 +730,13 @@ replicas continue to be exactly same.
- 
- 			  it has two vfsmounts
- 
--		step3:
-+		step 3:
-+		    ::
-+
- 			    mkdir -p /tmp/m2
- 			    mount --rbind /root /tmp/m2
- 
--			the new tree now looks like this:
-+			the new tree now looks like this::
- 
- 				      root
- 				     /    \
-@@ -724,6 +759,7 @@ replicas continue to be exactly same.
- 		       it has 6 vfsmounts
- 
- 		step 4:
-+		      ::
- 			  mkdir -p /tmp/m3
- 			  mount --rbind /root /tmp/m3
- 
-@@ -740,7 +776,8 @@ replicas continue to be exactly same.
- 
- 		step 1:
- 		   let's say the root tree has just two directories with
--		   one vfsmount.
-+		   one vfsmount::
-+
- 				    root
- 				   /    \
- 				  tmp    usr
-@@ -748,17 +785,20 @@ replicas continue to be exactly same.
- 		    How do we set up the same tree at multiple locations under
- 		    /root/tmp
- 
--		step2:
--		      mount --bind /root/tmp /root/tmp
-+		step 2:
-+		      ::
- 
--		      mount --make-rshared /root
--		      mount --make-unbindable /root/tmp
- 
--		      mkdir -p /tmp/m1
-+			mount --bind /root/tmp /root/tmp
- 
--		      mount --rbind /root /tmp/m1
-+			mount --make-rshared /root
-+			mount --make-unbindable /root/tmp
- 
--		      the new tree now looks like this:
-+			mkdir -p /tmp/m1
-+
-+			mount --rbind /root /tmp/m1
-+
-+		      the new tree now looks like this::
- 
- 				    root
- 				   /    \
-@@ -768,11 +808,13 @@ replicas continue to be exactly same.
- 			      /  \
- 			     tmp  usr
- 
--		step3:
-+		step 3:
-+		      ::
-+
- 			    mkdir -p /tmp/m2
- 			    mount --rbind /root /tmp/m2
- 
--		      the new tree now looks like this:
-+		      the new tree now looks like this::
- 
- 				    root
- 				   /    \
-@@ -782,12 +824,13 @@ replicas continue to be exactly same.
- 			      /  \     / \
- 			     tmp  usr tmp usr
- 
--		step4:
-+		step 4:
-+		      ::
- 
- 			    mkdir -p /tmp/m3
- 			    mount --rbind /root /tmp/m3
- 
--		      the new tree now looks like this:
-+		      the new tree now looks like this::
- 
- 				    	  root
- 				      /    	  \
-@@ -801,25 +844,31 @@ replicas continue to be exactly same.
- 
- 8A) Datastructure
- 
--	4 new fields are introduced to struct vfsmount
-+	4 new fields are introduced to struct vfsmount:
-+
-+	*   ->mnt_share
-+	*   ->mnt_slave_list
-+	*   ->mnt_slave
-+	*   ->mnt_master
-+
- 	->mnt_share
--	->mnt_slave_list
--	->mnt_slave
--	->mnt_master
--
--	->mnt_share links together all the mount to/from which this vfsmount
-+		links together all the mount to/from which this vfsmount
- 		send/receives propagation events.
- 
--	->mnt_slave_list links all the mounts to which this vfsmount propagates
-+	->mnt_slave_list
-+		links all the mounts to which this vfsmount propagates
- 		to.
- 
--	->mnt_slave links together all the slaves that its master vfsmount
-+	->mnt_slave
-+		links together all the slaves that its master vfsmount
- 		propagates to.
- 
--	->mnt_master points to the master vfsmount from which this vfsmount
-+	->mnt_master
-+		points to the master vfsmount from which this vfsmount
- 		receives propagation.
- 
--	->mnt_flags takes two more flags to indicate the propagation status of
-+	->mnt_flags
-+		takes two more flags to indicate the propagation status of
- 		the vfsmount.  MNT_SHARE indicates that the vfsmount is a shared
- 		vfsmount.  MNT_UNCLONABLE indicates that the vfsmount cannot be
- 		replicated.
-@@ -842,7 +891,7 @@ replicas continue to be exactly same.
- 
- 	A example propagation tree looks as shown in the figure below.
- 	[ NOTE: Though it looks like a forest, if we consider all the shared
--	mounts as a conceptual entity called 'pnode', it becomes a tree]
-+	mounts as a conceptual entity called 'pnode', it becomes a tree]::
- 
- 
- 		        A <--> B <--> C <---> D
-@@ -864,14 +913,19 @@ replicas continue to be exactly same.
- 	A's ->mnt_slave_list links with ->mnt_slave of 'E', 'K', 'F' and 'G'
- 
- 	E's ->mnt_share links with ->mnt_share of K
--	'E', 'K', 'F', 'G' have their ->mnt_master point to struct
--				vfsmount of 'A'
-+
-+	'E', 'K', 'F', 'G' have their ->mnt_master point to struct vfsmount of 'A'
-+
- 	'M', 'L', 'N' have their ->mnt_master point to struct vfsmount of 'K'
-+
- 	K's ->mnt_slave_list links with ->mnt_slave of 'M', 'L' and 'N'
- 
- 	C's ->mnt_slave_list links with ->mnt_slave of 'J' and 'K'
-+
- 	J and K's ->mnt_master points to struct vfsmount of C
-+
- 	and finally D's ->mnt_slave_list links with ->mnt_slave of 'H' and 'I'
-+
- 	'H' and 'I' have their ->mnt_master pointing to struct vfsmount of 'D'.
- 
- 
-@@ -903,6 +957,7 @@ replicas continue to be exactly same.
- 	Prepare phase:
- 
- 	for each mount in the source tree:
-+
- 		   a) Create the necessary number of mount trees to
- 		   	be attached to each of the mounts that receive
- 			propagation from the destination mount.
-@@ -929,11 +984,12 @@ replicas continue to be exactly same.
- 	Abort phase
- 		delete all the newly created trees.
- 
--	NOTE: all the propagation related functionality resides in the file
--	pnode.c
-+	.. Note::
-+	   all the propagation related functionality resides in the file pnode.c
- 
- 
- ------------------------------------------------------------------------
- 
- version 0.1  (created the initial document, Ram Pai linuxram@us.ibm.com)
-+
- version 0.2  (Incorporated comments from Al Viro)
+@@ -76,6 +76,7 @@ Documentation for filesystem implementations.
+    cifs/cifsroot
+    ceph
+    coda
++   configfs
+    cramfs
+    debugfs
+    dlmfs
+diff --git a/Documentation/iio/iio_configfs.rst b/Documentation/iio/iio_configfs.rst
+index ecbfdb3afef7..6e38cbbd2981 100644
+--- a/Documentation/iio/iio_configfs.rst
++++ b/Documentation/iio/iio_configfs.rst
+@@ -9,7 +9,7 @@ Configfs is a filesystem-based manager of kernel objects. IIO uses some
+ objects that could be easily configured using configfs (e.g.: devices,
+ triggers).
+ 
+-See Documentation/filesystems/configfs/configfs.txt for more information
++See Documentation/filesystems/configfs.rst for more information
+ about how configfs works.
+ 
+ 2. Usage
+diff --git a/Documentation/usb/gadget_configfs.rst b/Documentation/usb/gadget_configfs.rst
+index 54fb08baae22..158e48dab586 100644
+--- a/Documentation/usb/gadget_configfs.rst
++++ b/Documentation/usb/gadget_configfs.rst
+@@ -24,7 +24,7 @@ Linux provides a number of functions for gadgets to use.
+ Creating a gadget means deciding what configurations there will be
+ and which functions each configuration will provide.
+ 
+-Configfs (please see `Documentation/filesystems/configfs/*`) lends itself nicely
++Configfs (please see `Documentation/filesystems/configfs.rst`) lends itself nicely
+ for the purpose of telling the kernel about the above mentioned decision.
+ This document is about how to do it.
+ 
+@@ -354,7 +354,7 @@ the directories in general can be named at will. A group can have
+ a number of its default sub-groups created automatically.
+ 
+ For more information on configfs please see
+-`Documentation/filesystems/configfs/*`.
++`Documentation/filesystems/configfs.rst`.
+ 
+ The concepts described above translate to USB gadgets like this:
+ 
+diff --git a/fs/configfs/inode.c b/fs/configfs/inode.c
+index fd0b5dd68f9e..8bd6a883c94c 100644
+--- a/fs/configfs/inode.c
++++ b/fs/configfs/inode.c
+@@ -9,7 +9,7 @@
+  *
+  * configfs Copyright (C) 2005 Oracle.  All rights reserved.
+  *
+- * Please see Documentation/filesystems/configfs/configfs.txt for more
++ * Please see Documentation/filesystems/configfs.rst for more
+  * information.
+  */
+ 
+diff --git a/fs/configfs/item.c b/fs/configfs/item.c
+index 6e0f1fcb8a5b..704a4356f137 100644
+--- a/fs/configfs/item.c
++++ b/fs/configfs/item.c
+@@ -9,7 +9,7 @@
+  *
+  * configfs Copyright (C) 2005 Oracle.  All rights reserved.
+  *
+- * Please see the file Documentation/filesystems/configfs/configfs.txt for
++ * Please see the file Documentation/filesystems/configfs.rst for
+  * critical information about using the config_item interface.
+  */
+ 
+diff --git a/include/linux/configfs.h b/include/linux/configfs.h
+index fa9490a8874c..2e8c69b43c64 100644
+--- a/include/linux/configfs.h
++++ b/include/linux/configfs.h
+@@ -13,7 +13,7 @@
+  *
+  * configfs Copyright (C) 2005 Oracle.  All rights reserved.
+  *
+- * Please read Documentation/filesystems/configfs/configfs.txt before using
++ * Please read Documentation/filesystems/configfs.rst before using
+  * the configfs interface, ESPECIALLY the parts about reference counts and
+  * item destructors.
+  */
 -- 
 2.25.4
 
