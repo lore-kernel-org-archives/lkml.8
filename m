@@ -2,58 +2,59 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 266BFC82A03
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69737C82A00
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDC192087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FCC72087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:05:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588025109;
-	bh=dF+NLkrSZQWpkJtyhjfUrm9LkyWHXe56pH8Wmk9Nu4o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iDu4Mj3XL/JEk/hg8z13m2wP9fC60mh5YFC9ugKnK+uM/s/ytsD/nzHTDvGmR+Tmp
-	 XhNLXwm5rU2/PhJH2vb5Z+nzRS+h/p6w1y1IXmsgsFjL83fhRqQ3CaBrjVrzuIDflx
-	 MPDu0Hpf0gK3/yEX3X3qQ2cPYDapkVUZNkEiYi4Q=
+	s=default; t=1588025124;
+	bh=6hICUJOm73tC7mybOqnlsNRDxZD2tv+mEL2WRMC0A40=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=a+Zrnh+m9/uVzezJA7+jnVeOiWjmg1uFc3LEjiNt++hqsit5DDFvVhBDjTooJC/9t
+	 Fn12sb7XtMHn+rze1fvYkz9Dr5jjdnBfrPry8tRnsTbFm6w4PtJUL7yzXoe42U4g2h
+	 c71JtY4ED4T9H+Pu0RI5lc94w7SoLt7cJBEQPGTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbgD0WFH (ORCPT
+        id S1726999AbgD0WFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 18:05:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48010 "EHLO mail.kernel.org"
+        Mon, 27 Apr 2020 18:05:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726315AbgD0WB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726204AbgD0WB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 Apr 2020 18:01:58 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 762962192A;
+        by mail.kernel.org (Postfix) with ESMTPSA id 49E132082E;
         Mon, 27 Apr 2020 22:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588024916;
-        bh=dF+NLkrSZQWpkJtyhjfUrm9LkyWHXe56pH8Wmk9Nu4o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=06Eg8a1sFp9KQHIsNs+zJCs0vnN+rmscMvP6MI5I4pIxPUI+bmuPKS6x5PuVlBVJ1
-         bTfhyH8HLW7CHTPxHeDDgUnY6l9JFy17tO09/qtFJLQgX+wM6zQRmsFRofg4cKR0G8
-         kMLf3FKuUf7OhcQib517BMiDSQhZZEnRGdpHqjW0=
+        bh=6hICUJOm73tC7mybOqnlsNRDxZD2tv+mEL2WRMC0A40=;
+        h=From:To:Cc:Subject:Date:From;
+        b=WYg28824GL3DwqDlANPhGsSSLnLCt+nOUarYdI+8iK8EnAlq74+LHuJNW6rd/NOH5
+         oTUvcy5e4wOKxSC4GuXp+IABhcvwc1W2XSXkjunBIJ9G3botBuK/jslIHLS2Uid7wJ
+         H5Wm1uLFOHUzoyYKgayq/3HfAxgkHCPKSiRuDjIs=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jTBp4-000IoR-OP; Tue, 28 Apr 2020 00:01:54 +0200
+        id 1jTBp4-000Inf-FO; Tue, 28 Apr 2020 00:01:54 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 10/38] docs: networking: convert cdc_mbim.txt to ReST
-Date:   Tue, 28 Apr 2020 00:01:25 +0200
-Message-Id: <fdd27f590a9154fd319a9a49345b622315b822a7.1588024424.git.mchehab+huawei@kernel.org>
+        netdev@vger.kernel.org, linux-hams@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org,
+        linux-decnet-user@lists.sourceforge.net,
+        ceph-devel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net, lvs-devel@vger.kernel.org
+Subject: [PATCH 00/38] net: manually convert files to ReST format - part 1
+Date:   Tue, 28 Apr 2020 00:01:15 +0200
+Message-Id: <cover.1588024424.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
-In-Reply-To: <cover.1588024424.git.mchehab+huawei@kernel.org>
-References: <cover.1588024424.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,231 +62,181 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- add SPDX header;
-- mark code blocks and literals as such;
-- use :field: markup;
-- adjust identation, whitespaces and blank lines;
-- add to networking/index.rst.
+There are very few documents upstream that aren't converted upstream.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- .../networking/{cdc_mbim.txt => cdc_mbim.rst} | 76 +++++++++++--------
- Documentation/networking/index.rst            |  1 +
- 2 files changed, 47 insertions(+), 30 deletions(-)
+This series convert part of the networking text files into ReST.
+It is part of a bigger set of patches, which were split on parts,
+in order to make reviewing task easier.
+
+The full series (including those ones) are at:
+
+	https://git.linuxtv.org/mchehab/experimental.git/log/?h=net-docs
+
+And the documents, converted to HTML via the building system
+are at:
+
+	https://www.infradead.org/~mchehab/kernel_docs/networking/
+
+
+Mauro Carvalho Chehab (38):
+  docs: networking: convert caif files to ReST
+  docs: networking: convert 6pack.txt to ReST
+  docs: networking: convert altera_tse.txt to ReST
+  docs: networking: convert arcnet-hardware.txt to ReST
+  docs: networking: convert arcnet.txt to ReST
+  docs: networking: convert atm.txt to ReST
+  docs: networking: convert ax25.txt to ReST
+  docs: networking: convert baycom.txt to ReST
+  docs: networking: convert bonding.txt to ReST
+  docs: networking: convert cdc_mbim.txt to ReST
+  docs: networking: convert cops.txt to ReST
+  docs: networking: convert cxacru.txt to ReST
+  docs: networking: convert dccp.txt to ReST
+  docs: networking: convert dctcp.txt to ReST
+  docs: networking: convert decnet.txt to ReST
+  docs: networking: convert defza.txt to ReST
+  docs: networking: convert dns_resolver.txt to ReST
+  docs: networking: convert driver.txt to ReST
+  docs: networking: convert eql.txt to ReST
+  docs: networking: convert fib_trie.txt to ReST
+  docs: networking: convert filter.txt to ReST
+  docs: networking: convert fore200e.txt to ReST
+  docs: networking: convert framerelay.txt to ReST
+  docs: networking: convert generic-hdlc.txt to ReST
+  docs: networking: convert generic_netlink.txt to ReST
+  docs: networking: convert gen_stats.txt to ReST
+  docs: networking: convert gtp.txt to ReST
+  docs: networking: convert hinic.txt to ReST
+  docs: networking: convert ila.txt to ReST
+  docs: networking: convert ipddp.txt to ReST
+  docs: networking: convert ip_dynaddr.txt to ReST
+  docs: networking: convert iphase.txt to ReST
+  docs: networking: convert ipsec.txt to ReST
+  docs: networking: convert ip-sysctl.txt to ReST
+  docs: networking: convert ipv6.txt to ReST
+  docs: networking: convert ipvlan.txt to ReST
+  docs: networking: convert ipvs-sysctl.txt to ReST
+  docs: networking: convert kcm.txt to ReST
+
+ .../admin-guide/kernel-parameters.txt         |   10 +-
+ Documentation/admin-guide/sysctl/net.rst      |    4 +-
+ Documentation/bpf/index.rst                   |    4 +-
+ .../networking/{6pack.txt => 6pack.rst}       |   46 +-
+ .../{altera_tse.txt => altera_tse.rst}        |   87 +-
+ ...rcnet-hardware.txt => arcnet-hardware.rst} | 2169 +++++++++--------
+ .../networking/{arcnet.txt => arcnet.rst}     |  348 +--
+ Documentation/networking/{atm.txt => atm.rst} |    6 +
+ .../networking/{ax25.txt => ax25.rst}         |    6 +
+ .../networking/{baycom.txt => baycom.rst}     |  110 +-
+ .../networking/{bonding.txt => bonding.rst}   | 1275 +++++-----
+ Documentation/networking/caif/caif.rst        |    2 -
+ Documentation/networking/caif/index.rst       |   13 +
+ .../caif/{Linux-CAIF.txt => linux_caif.rst}   |   54 +-
+ Documentation/networking/caif/spi_porting.rst |  229 ++
+ Documentation/networking/caif/spi_porting.txt |  208 --
+ .../networking/{cdc_mbim.txt => cdc_mbim.rst} |   76 +-
+ Documentation/networking/cops.rst             |   80 +
+ Documentation/networking/cops.txt             |   63 -
+ .../networking/{cxacru.txt => cxacru.rst}     |   86 +-
+ .../networking/{dccp.txt => dccp.rst}         |   39 +-
+ .../networking/{dctcp.txt => dctcp.rst}       |   14 +-
+ .../networking/{decnet.txt => decnet.rst}     |   77 +-
+ .../networking/{defza.txt => defza.rst}       |    8 +-
+ .../networking/device_drivers/intel/e100.rst  |    2 +-
+ .../networking/device_drivers/intel/ixgb.rst  |    2 +-
+ .../{dns_resolver.txt => dns_resolver.rst}    |   52 +-
+ .../networking/{driver.txt => driver.rst}     |   22 +-
+ Documentation/networking/{eql.txt => eql.rst} |  445 ++--
+ .../networking/{fib_trie.txt => fib_trie.rst} |   16 +-
+ .../networking/{filter.txt => filter.rst}     |  850 ++++---
+ .../networking/{fore200e.txt => fore200e.rst} |    8 +-
+ .../{framerelay.txt => framerelay.rst}        |   21 +-
+ .../{gen_stats.txt => gen_stats.rst}          |   98 +-
+ .../{generic-hdlc.txt => generic-hdlc.rst}    |   86 +-
+ ...eneric_netlink.txt => generic_netlink.rst} |    6 +
+ Documentation/networking/{gtp.txt => gtp.rst} |   95 +-
+ .../networking/{hinic.txt => hinic.rst}       |    5 +-
+ Documentation/networking/{ila.txt => ila.rst} |   81 +-
+ Documentation/networking/index.rst            |   38 +
+ .../{ip-sysctl.txt => ip-sysctl.rst}          |  829 ++++---
+ .../{ip_dynaddr.txt => ip_dynaddr.rst}        |   29 +-
+ .../networking/{ipddp.txt => ipddp.rst}       |   13 +-
+ .../networking/{iphase.txt => iphase.rst}     |  185 +-
+ .../networking/{ipsec.txt => ipsec.rst}       |   14 +-
+ .../networking/{ipv6.txt => ipv6.rst}         |    8 +-
+ .../networking/{ipvlan.txt => ipvlan.rst}     |  159 +-
+ .../{ipvs-sysctl.txt => ipvs-sysctl.rst}      |  180 +-
+ Documentation/networking/{kcm.txt => kcm.rst} |   83 +-
+ Documentation/networking/ltpc.txt             |    2 +-
+ Documentation/networking/packet_mmap.txt      |    2 +-
+ Documentation/networking/snmp_counter.rst     |    2 +-
+ MAINTAINERS                                   |    8 +-
+ drivers/atm/Kconfig                           |    4 +-
+ drivers/net/Kconfig                           |    4 +-
+ drivers/net/appletalk/Kconfig                 |    6 +-
+ drivers/net/arcnet/Kconfig                    |    6 +-
+ drivers/net/caif/Kconfig                      |    2 +-
+ drivers/net/hamradio/Kconfig                  |   10 +-
+ drivers/net/wan/Kconfig                       |    4 +-
+ net/Kconfig                                   |    2 +-
+ net/atm/Kconfig                               |    2 +-
+ net/ax25/Kconfig                              |    6 +-
+ net/ceph/Kconfig                              |    2 +-
+ net/core/gen_stats.c                          |    2 +-
+ net/decnet/Kconfig                            |    4 +-
+ net/dns_resolver/Kconfig                      |    2 +-
+ net/dns_resolver/dns_key.c                    |    2 +-
+ net/dns_resolver/dns_query.c                  |    2 +-
+ net/ipv4/Kconfig                              |    2 +-
+ net/ipv4/icmp.c                               |    2 +-
+ net/ipv6/Kconfig                              |    2 +-
+ tools/bpf/bpf_asm.c                           |    2 +-
+ tools/bpf/bpf_dbg.c                           |    2 +-
+ 74 files changed, 4656 insertions(+), 3769 deletions(-)
+ rename Documentation/networking/{6pack.txt => 6pack.rst} (90%)
+ rename Documentation/networking/{altera_tse.txt => altera_tse.rst} (85%)
+ rename Documentation/networking/{arcnet-hardware.txt => arcnet-hardware.rst} (66%)
+ rename Documentation/networking/{arcnet.txt => arcnet.rst} (76%)
+ rename Documentation/networking/{atm.txt => atm.rst} (89%)
+ rename Documentation/networking/{ax25.txt => ax25.rst} (91%)
+ rename Documentation/networking/{baycom.txt => baycom.rst} (58%)
+ rename Documentation/networking/{bonding.txt => bonding.rst} (75%)
+ create mode 100644 Documentation/networking/caif/index.rst
+ rename Documentation/networking/caif/{Linux-CAIF.txt => linux_caif.rst} (90%)
+ create mode 100644 Documentation/networking/caif/spi_porting.rst
+ delete mode 100644 Documentation/networking/caif/spi_porting.txt
  rename Documentation/networking/{cdc_mbim.txt => cdc_mbim.rst} (88%)
+ create mode 100644 Documentation/networking/cops.rst
+ delete mode 100644 Documentation/networking/cops.txt
+ rename Documentation/networking/{cxacru.txt => cxacru.rst} (66%)
+ rename Documentation/networking/{dccp.txt => dccp.rst} (94%)
+ rename Documentation/networking/{dctcp.txt => dctcp.rst} (89%)
+ rename Documentation/networking/{decnet.txt => decnet.rst} (87%)
+ rename Documentation/networking/{defza.txt => defza.rst} (91%)
+ rename Documentation/networking/{dns_resolver.txt => dns_resolver.rst} (89%)
+ rename Documentation/networking/{driver.txt => driver.rst} (85%)
+ rename Documentation/networking/{eql.txt => eql.rst} (62%)
+ rename Documentation/networking/{fib_trie.txt => fib_trie.rst} (96%)
+ rename Documentation/networking/{filter.txt => filter.rst} (77%)
+ rename Documentation/networking/{fore200e.txt => fore200e.rst} (94%)
+ rename Documentation/networking/{framerelay.txt => framerelay.rst} (93%)
+ rename Documentation/networking/{gen_stats.txt => gen_stats.rst} (60%)
+ rename Documentation/networking/{generic-hdlc.txt => generic-hdlc.rst} (75%)
+ rename Documentation/networking/{generic_netlink.txt => generic_netlink.rst} (64%)
+ rename Documentation/networking/{gtp.txt => gtp.rst} (79%)
+ rename Documentation/networking/{hinic.txt => hinic.rst} (97%)
+ rename Documentation/networking/{ila.txt => ila.rst} (82%)
+ rename Documentation/networking/{ip-sysctl.txt => ip-sysctl.rst} (83%)
+ rename Documentation/networking/{ip_dynaddr.txt => ip_dynaddr.rst} (65%)
+ rename Documentation/networking/{ipddp.txt => ipddp.rst} (89%)
+ rename Documentation/networking/{iphase.txt => iphase.rst} (50%)
+ rename Documentation/networking/{ipsec.txt => ipsec.rst} (90%)
+ rename Documentation/networking/{ipv6.txt => ipv6.rst} (93%)
+ rename Documentation/networking/{ipvlan.txt => ipvlan.rst} (54%)
+ rename Documentation/networking/{ipvs-sysctl.txt => ipvs-sysctl.rst} (62%)
+ rename Documentation/networking/{kcm.txt => kcm.rst} (84%)
 
-diff --git a/Documentation/networking/cdc_mbim.txt b/Documentation/networking/cdc_mbim.rst
-similarity index 88%
-rename from Documentation/networking/cdc_mbim.txt
-rename to Documentation/networking/cdc_mbim.rst
-index 4e68f0bc5dba..0048409c06b4 100644
---- a/Documentation/networking/cdc_mbim.txt
-+++ b/Documentation/networking/cdc_mbim.rst
-@@ -1,5 +1,8 @@
--     cdc_mbim - Driver for CDC MBIM Mobile Broadband modems
--    ========================================================
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+======================================================
-+cdc_mbim - Driver for CDC MBIM Mobile Broadband modems
-+======================================================
- 
- The cdc_mbim driver supports USB devices conforming to the "Universal
- Serial Bus Communications Class Subclass Specification for Mobile
-@@ -19,9 +22,9 @@ by a cdc_ncm driver parameter:
- 
- prefer_mbim
- -----------
--Type:          Boolean
--Valid Range:   N/Y (0-1)
--Default Value: Y (MBIM is preferred)
-+:Type:          Boolean
-+:Valid Range:   N/Y (0-1)
-+:Default Value: Y (MBIM is preferred)
- 
- This parameter sets the system policy for NCM/MBIM functions.  Such
- functions will be handled by either the cdc_ncm driver or the cdc_mbim
-@@ -44,11 +47,13 @@ userspace MBIM management application always is required to enable a
- MBIM function.
- 
- Such userspace applications includes, but are not limited to:
-+
-  - mbimcli (included with the libmbim [3] library), and
-  - ModemManager [4]
- 
- Establishing a MBIM IP session reequires at least these actions by the
- management application:
-+
-  - open the control channel
-  - configure network connection settings
-  - connect to network
-@@ -76,7 +81,7 @@ complies with all the control channel requirements in [1].
- 
- The cdc-wdmX device is created as a child of the MBIM control
- interface USB device.  The character device associated with a specific
--MBIM function can be looked up using sysfs.  For example:
-+MBIM function can be looked up using sysfs.  For example::
- 
-  bjorn@nemi:~$ ls /sys/bus/usb/drivers/cdc_mbim/2-4:2.12/usbmisc
-  cdc-wdm0
-@@ -119,13 +124,15 @@ negotiated control message size.
- 
- 
- /dev/cdc-wdmX ioctl()
----------------------
-+---------------------
- IOCTL_WDM_MAX_COMMAND: Get Maximum Command Size
- This ioctl returns the wMaxControlMessage field of the CDC MBIM
- functional descriptor for MBIM devices.  This is intended as a
- convenience, eliminating the need to parse the USB descriptors from
- userspace.
- 
-+::
-+
- 	#include <stdio.h>
- 	#include <fcntl.h>
- 	#include <sys/ioctl.h>
-@@ -178,7 +185,7 @@ VLAN links prior to establishing MBIM IP sessions where the SessionId
- is greater than 0. These links can be added by using the normal VLAN
- kernel interfaces, either ioctl or netlink.
- 
--For example, adding a link for a MBIM IP session with SessionId 3:
-+For example, adding a link for a MBIM IP session with SessionId 3::
- 
-   ip link add link wwan0 name wwan0.3 type vlan id 3
- 
-@@ -207,6 +214,7 @@ the stream to the end user in an appropriate way for the stream type.
- The network device ABI requires a dummy ethernet header for every DSS
- data frame being transported.  The contents of this header is
- arbitrary, with the following exceptions:
-+
-  - TX frames using an IP protocol (0x0800 or 0x86dd) will be dropped
-  - RX frames will have the protocol field set to ETH_P_802_3 (but will
-    not be properly formatted 802.3 frames)
-@@ -218,7 +226,7 @@ adding the dummy ethernet header on TX and stripping it on RX.
- 
- This is a simple example using tools commonly available, exporting
- DssSessionId 5 as a pty character device pointed to by a /dev/nmea
--symlink:
-+symlink::
- 
-   ip link add link wwan0 name wwan0.dss5 type vlan id 261
-   ip link set dev wwan0.dss5 up
-@@ -236,7 +244,7 @@ map frames to the correct DSS session and adding 18 byte VLAN ethernet
- headers with the appropriate tag on TX.  In this case using a socket
- filter is recommended, matching only the DSS VLAN subset. This avoid
- unnecessary copying of unrelated IP session data to userspace.  For
--example:
-+example::
- 
-   static struct sock_filter dssfilter[] = {
- 	/* use special negative offsets to get VLAN tag */
-@@ -249,11 +257,11 @@ example:
- 	BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 512, 3, 0),	/* 511 is last DSS VLAN */
- 
- 	/* verify ethertype */
--        BPF_STMT(BPF_LD|BPF_H|BPF_ABS, 2 * ETH_ALEN),
--        BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, ETH_P_802_3, 0, 1),
-+	BPF_STMT(BPF_LD|BPF_H|BPF_ABS, 2 * ETH_ALEN),
-+	BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, ETH_P_802_3, 0, 1),
- 
--        BPF_STMT(BPF_RET|BPF_K, (u_int)-1),	/* accept */
--        BPF_STMT(BPF_RET|BPF_K, 0),		/* ignore */
-+	BPF_STMT(BPF_RET|BPF_K, (u_int)-1),	/* accept */
-+	BPF_STMT(BPF_RET|BPF_K, 0),		/* ignore */
-   };
- 
- 
-@@ -266,6 +274,7 @@ network device.
- 
- This mapping implies a few restrictions on multiplexed IPS and DSS
- sessions, which may not always be practical:
-+
-  - no IPS or DSS session can use a frame size greater than the MTU on
-    IP session 0
-  - no IPS or DSS session can be in the up state unless the network
-@@ -280,7 +289,7 @@ device.
- 
- Tip: It might be less confusing to the end user to name this VLAN
- subdevice after the MBIM SessionID instead of the VLAN ID.  For
--example:
-+example::
- 
-   ip link add link wwan0 name wwan0.0 type vlan id 4094
- 
-@@ -290,7 +299,7 @@ VLAN mapping
- 
- Summarizing the cdc_mbim driver mapping described above, we have this
- relationship between VLAN tags on the wwanY network device and MBIM
--sessions on the shared USB data channel:
-+sessions on the shared USB data channel::
- 
-   VLAN ID       MBIM type   MBIM SessionID           Notes
-   ---------------------------------------------------------
-@@ -310,30 +319,37 @@ sessions on the shared USB data channel:
- References
- ==========
- 
--[1] USB Implementers Forum, Inc. - "Universal Serial Bus
--      Communications Class Subclass Specification for Mobile Broadband
--      Interface Model", Revision 1.0 (Errata 1), May 1, 2013
-+ 1) USB Implementers Forum, Inc. - "Universal Serial Bus
-+    Communications Class Subclass Specification for Mobile Broadband
-+    Interface Model", Revision 1.0 (Errata 1), May 1, 2013
-+
-       - http://www.usb.org/developers/docs/devclass_docs/
- 
--[2] USB Implementers Forum, Inc. - "Universal Serial Bus
--      Communications Class Subclass Specifications for Network Control
--      Model Devices", Revision 1.0 (Errata 1), November 24, 2010
-+ 2) USB Implementers Forum, Inc. - "Universal Serial Bus
-+    Communications Class Subclass Specifications for Network Control
-+    Model Devices", Revision 1.0 (Errata 1), November 24, 2010
-+
-       - http://www.usb.org/developers/docs/devclass_docs/
- 
--[3] libmbim - "a glib-based library for talking to WWAN modems and
--      devices which speak the Mobile Interface Broadband Model (MBIM)
--      protocol"
-+ 3) libmbim - "a glib-based library for talking to WWAN modems and
-+    devices which speak the Mobile Interface Broadband Model (MBIM)
-+    protocol"
-+
-       - http://www.freedesktop.org/wiki/Software/libmbim/
- 
--[4] ModemManager - "a DBus-activated daemon which controls mobile
--      broadband (2G/3G/4G) devices and connections"
-+ 4) ModemManager - "a DBus-activated daemon which controls mobile
-+    broadband (2G/3G/4G) devices and connections"
-+
-       - http://www.freedesktop.org/wiki/Software/ModemManager/
- 
--[5] "MBIM (Mobile Broadband Interface Model) Registry"
-+ 5) "MBIM (Mobile Broadband Interface Model) Registry"
-+
-        - http://compliance.usb.org/mbim/
- 
--[6] "/sys/kernel/debug/usb/devices output format"
-+ 6) "/sys/kernel/debug/usb/devices output format"
-+
-        - Documentation/driver-api/usb/usb.rst
- 
--[7] "/sys/bus/usb/devices/.../descriptors"
-+ 7) "/sys/bus/usb/devices/.../descriptors"
-+
-        - Documentation/ABI/stable/sysfs-bus-usb
-diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index 22b872834ef0..55802abd65a0 100644
---- a/Documentation/networking/index.rst
-+++ b/Documentation/networking/index.rst
-@@ -45,6 +45,7 @@ Contents:
-    ax25
-    baycom
-    bonding
-+   cdc_mbim
- 
- .. only::  subproject and html
- 
 -- 
 2.25.4
+
 
