@@ -2,87 +2,185 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD6AC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE752C5519B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 222992072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:24:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B83B52072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:24:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="KhkIJ1jj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726746AbgD0HYD (ORCPT
+        id S1726760AbgD0HYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 03:24:03 -0400
-Received: from smtprelay0253.hostedemail.com ([216.40.44.253]:55596 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726339AbgD0HYC (ORCPT
+        Mon, 27 Apr 2020 03:24:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52350 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726748AbgD0HYM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 03:24:02 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id C0E98837F24D;
-        Mon, 27 Apr 2020 07:24:01 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: story74_22f7f5c60c81e
-X-Filterd-Recvd-Size: 2270
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf10.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 27 Apr 2020 07:24:00 +0000 (UTC)
-Message-ID: <d80d0862bd73bb17b8e840771ae7b27fe7447734.camel@perches.com>
-Subject: Re: [RESEND PATCH V11 1/3] MAINTAINERS: da7280 updates to the
- Dialog Semiconductor search terms
-From:   Joe Perches <joe@perches.com>
-To:     Roy Im <roy.im.opensource@diasemi.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Support Opensource <support.opensource@diasemi.com>
-Date:   Mon, 27 Apr 2020 00:23:59 -0700
-In-Reply-To: <3e4e181ae9b25b51298b90be43396f46c91e2ea9.1587949032.git.Roy.Im@diasemi.com>
-References: <cover.1587949032.git.Roy.Im@diasemi.com>
-         <3e4e181ae9b25b51298b90be43396f46c91e2ea9.1587949032.git.Roy.Im@diasemi.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Mon, 27 Apr 2020 03:24:12 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68A19C061A10
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 00:24:11 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id a31so5199865pje.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 00:24:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=XOcbyKgA0Bpvq+avYOz1rNm0o9oBZQ47QSXwocd5JDs=;
+        b=KhkIJ1jjdAjc7I6o69UtZUncp44UuyyZDD/4xfQF8CirYMTf9cJeFRIellap23PRfm
+         Ed//agPd2fbamkS4hNwvCoCC8NRPHuPKEYG7l9G4FvrsbfVqnJ8B5PFcqLUUUMxxb8yp
+         0jfEUyV0ROpnkgmchA824E5slER3IVZ4493vNeNZEtvSboA81qZ/k0P7DEKDCN4N2/7+
+         Yj+/tpZDGmES2G1MG1YAAW0FqdW/XisAk9EoRGyszIar3N9nhLwequneqKONdiSRKxsb
+         pNV5YP0VFyGcTA/cVucnh3gT7ND/v71VY3sIMVhiCUeu/m5k73fyCzeWXX/OnLWKP/Qa
+         wUuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=XOcbyKgA0Bpvq+avYOz1rNm0o9oBZQ47QSXwocd5JDs=;
+        b=baWDa3iiw97NcIh77GFeN3dzg7Vxamz5xR3uPd3Y0k0i3HBdc96R7hlOa6TPf6YWq8
+         Dh8lDDST6KNVpT9/A++GjNLNPsxM972CQYvndTxm+uzStguTvWQb2qOH9np3xXJTlyw4
+         dz/12cm5dOstzgCLgtOXf8ssGEq/dVLzqXZqngw0AG7I3iDBr3yHrpJIHV4cKWR9mNBJ
+         yOyvMKULk9TMOqfBWQdn0evaoYc8BKFe4tE2+lV9B7j/ll8iw8lJ8pgEsTWqEIPlwhNA
+         XE69tBghowu19rLfsbwz3GE/XHqEfGSNYMKhJpJ6ZQ6OcvtyOZwUcYsguy7mn2aoWF6p
+         BN5Q==
+X-Gm-Message-State: AGi0Pua7ut1lec8l19EJcnKbKLSQUEjBcF/A5RwhEPPaejLmMquBdzG7
+        CafzZSx0Rxf92EeOaRs+W7XXFA==
+X-Google-Smtp-Source: APiQypLZ1hE4GjmvgAhgyfKaFcwMZtgCX6AntRqvDptj+irvRENaKBgzUmWEYk/9JfJE78Am8sJHpA==
+X-Received: by 2002:a17:90a:252f:: with SMTP id j44mr21962732pje.9.1587972250735;
+        Mon, 27 Apr 2020 00:24:10 -0700 (PDT)
+Received: from starnight.168.95.1.1 ([150.117.130.110])
+        by smtp.googlemail.com with ESMTPSA id t3sm11570687pfq.110.2020.04.27.00.24.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 00:24:10 -0700 (PDT)
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Jian-Hong Pan <jian-hong@endlessm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux@endlessm.com
+Subject: Re: [PATCH v2 00/91] drm/vc4: Support BCM2711 Display Pipelin
+Date:   Mon, 27 Apr 2020 15:23:42 +0800
+Message-Id: <20200427072342.5499-1-jian-hong@endlessm.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
+References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-04-27 at 09:57 +0900, Roy Im wrote:
-> This patch adds the da7280 bindings doc and driver to the Dialog
-> Semiconductor support list.
-[]
-> diff --git a/MAINTAINERS b/MAINTAINERS
-[]
-> @@ -4944,6 +4944,7 @@ S:	Supported
->  W:	http://www.dialog-semiconductor.com/products
->  F:	Documentation/devicetree/bindings/input/da90??-onkey.txt
->  F:	Documentation/devicetree/bindings/mfd/da90*.txt
-> +F:	Documentation/devicetree/bindings/input/dlg,da72??.txt
+Hi Maxime,
 
-trivia:
+Thanks for your V2 patch series!  I'm testing it.
 
-Please keep the file lists in alphabetic case sensitive order
-so please move this new line up one entry.
+This patch series is applied upon mainline kernel 5.7-rc2 cleanly and built.
+System can boot into console text mode, but no graphic UI.
 
->  F:	Documentation/devicetree/bindings/regulator/da92*.txt
->  F:	Documentation/devicetree/bindings/regulator/slg51000.txt
->  F:	Documentation/devicetree/bindings/sound/da[79]*.txt
-> @@ -4954,6 +4955,7 @@ F:	drivers/gpio/gpio-da90??.c
->  F:	drivers/hwmon/da90??-hwmon.c
->  F:	drivers/iio/adc/da91??-*.c
->  F:	drivers/input/misc/da90??_onkey.c
-> +F:	drivers/input/misc/da72??.[ch]
+Get the error in vc5_hdmi_phy_init(), and full dmesg is at [1]:
 
-Up one here too.
+[    5.587543] vc4_hdmi fef00700.hdmi: Unknown register ID 46
+[    5.587700] debugfs: Directory 'fef00700.hdmi' with parent 'vc4-hdmi' already present!
+[    5.588070] vc4_hdmi fef00700.hdmi: vc4-hdmi-hifi <-> fef00700.hdmi mapping ok
+[    5.588076] vc4_hdmi fef00700.hdmi: ASoC: no DMI vendor name!
+[    5.588263] vc4-drm gpu: bound fef00700.hdmi (ops vc4_hdmi_ops)
+[    5.588299] vc4_hdmi fef05700.hdmi: Unknown register ID 46
+[    5.588373] debugfs: Directory 'vc4-hdmi' with parent 'asoc' already present!
+[    5.588673] vc4_hdmi fef05700.hdmi: vc4-hdmi-hifi <-> fef05700.hdmi mapping ok
+[    5.588677] vc4_hdmi fef05700.hdmi: ASoC: no DMI vendor name!
+[    5.588809] vc4-drm gpu: bound fef05700.hdmi (ops vc4_hdmi_ops)
+[    5.588854] vc4-drm gpu: bound fe806000.vec (ops vc4_vec_ops)
+[    5.588897] vc4-drm gpu: bound fe004000.txp (ops vc4_txp_ops)
+[    5.588934] vc4-drm gpu: bound fe400000.hvs (ops vc4_hvs_ops)
+[    5.588990] vc4-drm gpu: bound fe206000.pixelvalve (ops vc4_crtc_ops)
+[    5.589030] vc4-drm gpu: bound fe207000.pixelvalve (ops vc4_crtc_ops)
+[    5.589074] vc4-drm gpu: bound fe20a000.pixelvalve (ops vc4_crtc_ops)
+[    5.589106] vc4-drm gpu: bound fe216000.pixelvalve (ops vc4_crtc_ops)
+[    5.589145] vc4-drm gpu: bound fec12000.pixelvalve (ops vc4_crtc_ops)
+[    5.589294] checking generic (3e513000 6d8c00) vs hw (0 ffffffffffffffff)
+[    5.589297] fb0: switching to vc4drmfb from simple
+[    5.589433] Console: switching to colour dummy device 80x25
+[    5.589481] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+[    5.589816] [drm] Initialized vc4 0.0.0 20140616 for gpu on minor 0
+[    5.601079] ------------[ cut here ]------------
+[    5.601095] WARNING: CPU: 2 PID: 127 at drivers/gpu/drm/vc4/vc4_hdmi_phy.c:413 vc5_hdmi_phy_init+0x7ac/0x2078
+[    5.601097] Modules linked in:
+[    5.601103] CPU: 2 PID: 127 Comm: kworker/2:1 Not tainted 5.7.0-rc2-00091-ga181df59a930 #7
+[    5.601105] Hardware name: Raspberry Pi 4 Model B (DT)
+[    5.601112] Workqueue: events deferred_probe_work_func
+[    5.601116] pstate: 20000005 (nzCv daif -PAN -UAO)
+[    5.601119] pc : vc5_hdmi_phy_init+0x7ac/0x2078
+[    5.601123] lr : vc4_hdmi_encoder_enable+0x1b8/0x1ac0
+[    5.601124] sp : ffff80001217b410
+[    5.601126] x29: ffff80001217b410 x28: ffff0000ec6370f0 
+[    5.601129] x27: ffff0000f650d400 x26: 000000008a500000 
+[    5.601132] x25: ffff8000113b4ac0 x24: 0000000000002060 
+[    5.601135] x23: 000000000a500000 x22: 0000000000000300 
+[    5.601137] x21: 0000000008d9ee20 x20: ffff0000ec535080 
+[    5.601140] x19: 000000010989e7c0 x18: 0000000000000000 
+[    5.601142] x17: 0000000000000001 x16: 0000000000005207 
+[    5.601145] x15: 00004932ad293c92 x14: 0000000000000137 
+[    5.601147] x13: ffff800010015000 x12: 0000000000000001 
+[    5.601150] x11: 0000000000000001 x10: 0000000000000000 
+[    5.601152] x9 : 0000000000000000 x8 : ffff800010015038 
+[    5.601154] x7 : 0000000000000001 x6 : ffff80001217b368 
+[    5.601157] x5 : 0000000000000000 x4 : 000000000000004c 
+[    5.601159] x3 : 0000000000000000 x2 : ffff8000113b4ac0 
+[    5.601162] x1 : ffff8000120c5f44 x0 : 00000000dc8984ff 
+[    5.601164] Call trace:
+[    5.601169]  vc5_hdmi_phy_init+0x7ac/0x2078
+[    5.601172]  vc4_hdmi_encoder_enable+0x1b8/0x1ac0
+[    5.601176]  drm_atomic_helper_commit_modeset_enables+0x224/0x248
+[    5.601179]  vc4_atomic_complete_commit+0x400/0x558
+[    5.601182]  vc4_atomic_commit+0x1e0/0x200
+[    5.601185]  drm_atomic_commit+0x4c/0x60
+[    5.601190]  drm_client_modeset_commit_atomic.isra.0+0x17c/0x238
+[    5.601192]  drm_client_modeset_commit_locked+0x5c/0x198
+[    5.601195]  drm_client_modeset_commit+0x30/0x58
+[    5.601201]  drm_fb_helper_restore_fbdev_mode_unlocked+0x78/0xe0
+[    5.601204]  drm_fb_helper_set_par+0x30/0x68
+[    5.601208]  fbcon_init+0x3d4/0x598
+[    5.601212]  visual_init+0xb0/0x108
+[    5.601214]  do_bind_con_driver+0x1d0/0x3a8
+[    5.601217]  do_take_over_console+0x144/0x208
+[    5.601219]  do_fbcon_takeover+0x68/0xd8
+[    5.601222]  fbcon_fb_registered+0x100/0x118
+[    5.601226]  register_framebuffer+0x1f4/0x338
+[    5.601229]  __drm_fb_helper_initial_config_and_unlock+0x2f8/0x4a0
+[    5.601232]  drm_fbdev_client_hotplug+0xd4/0x1b0
+[    5.601235]  drm_fbdev_generic_setup+0xb0/0x130
+[    5.601238]  vc4_drm_bind+0x184/0x1a0
+[    5.601241]  try_to_bring_up_master+0x168/0x1c8
+[    5.601244]  __component_add+0xa4/0x170
+[    5.601246]  component_add+0x14/0x20
+[    5.601248]  vc4_vec_dev_probe+0x20/0x30
+[    5.601252]  platform_drv_probe+0x54/0xa8
+[    5.601254]  really_probe+0xd8/0x320
+[    5.601256]  driver_probe_device+0x58/0xf0
+[    5.601258]  __device_attach_driver+0x84/0xc8
+[    5.601263]  bus_for_each_drv+0x78/0xc8
+[    5.601265]  __device_attach+0xe4/0x140
+[    5.601267]  device_initial_probe+0x14/0x20
+[    5.601269]  bus_probe_device+0x9c/0xa8
+[    5.601271]  deferred_probe_work_func+0x74/0xb0
+[    5.601276]  process_one_work+0x1bc/0x338
+[    5.601279]  worker_thread+0x1f8/0x428
+[    5.601282]  kthread+0x138/0x158
+[    5.601286]  ret_from_fork+0x10/0x1c
+[    5.601288] ---[ end trace cfba0996218c3f3d ]---
 
->  F:	drivers/input/touchscreen/da9052_tsi.c
->  F:	drivers/leds/leds-da90??.c
->  F:	drivers/mfd/da903x.c
+[1]: https://gist.github.com/starnight/2236cf350737e3b0e9f05135fc7c910e
 
+Jian-Hong Pan
