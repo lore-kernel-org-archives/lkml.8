@@ -2,132 +2,130 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE896C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB63C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE682078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC6122084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:49:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fen7SlaY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GRK7TdGO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbgD0QtB (ORCPT
+        id S1726435AbgD0QtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 12:49:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56096 "EHLO
+        Mon, 27 Apr 2020 12:49:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbgD0QtB (ORCPT
+        with ESMTP id S1726250AbgD0QtC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 12:49:01 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55B34C03C1A7
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 09:49:01 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id y25so9269444pfn.5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 09:49:01 -0700 (PDT)
+        Mon, 27 Apr 2020 12:49:02 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 641AAC03C1A7
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 09:49:02 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id w20so18370061ljj.0
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 09:49:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=SZx79zjZZHQd5ot8L6cTLZwPB/Y8WAZ3ad6NpKenT0M=;
-        b=fen7SlaYNevbM1TH0EBcPC1WP4ydnCNaXMoZYuK7i6NpHvUAd3AZAZrZdNH4jXqwIz
-         0WcMtb4nV/H9UnTgGXa3rAuo0uc+6I4Jd2tAOTmORnPJHSPz9skOz+t+jJh1ScOZy6ag
-         +LFCFHOOGAvJu11EQvpsxaSCw4UDWEzKUJd12PjOfpYBnbvGE4hrJvUde72z9qpiE/5h
-         Mbdwn2fWKKo4QkiBX71vdenRckAOGdiwDcg8lGtAOlFwOUNscQznNettnNZqnf6czdd4
-         kxHgoh8htNwXR9hSZgViiSWwTCsPVkvhayuiV1e1NQYtKY1XG/J/Y0yVNAHPvA4dsalD
-         TSxw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DggTYojfEhSzNZzSt4p++E5JdlZHCZXJc0ROh9SzVlM=;
+        b=GRK7TdGOAvGylag4wlIODdJrhvjeHh+CNCtIcuSjrjRzmjvA/4gHODiRDIqS3Ni+Ul
+         xbrVAAQCFm0TrYX2gS2hmjsvmryyRHakKtro88oW5d8as36di5wAZi4QB0mVNrt3VYKC
+         +mpM0biKQt1OtPZuP6KA+c31n0Icc3RDkS0F9D8RbdChUBCSxHizssgw5UMLXNS+Ozdv
+         GhMLcbyKMjipz7hWcnUogsA5mxtEQ9HhUWk5UBJ4M7FpLiEWL82tfvSHuemxUMjA3T9k
+         HQEcjwjSO8dW822QXi8v5ESAjxm5SgtUzR6RIF8ybNX7oWNscelNzVp5wj+yo9QkGQtH
+         XR7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=SZx79zjZZHQd5ot8L6cTLZwPB/Y8WAZ3ad6NpKenT0M=;
-        b=fXs1LKlZAokz5xJahwu+GYPk2L1UhmfGXtNmQceFYbyTpZdsYcgAlZED99xcOuPTRY
-         KIZcrLRLHmC1YBwhU15fpd398B0R50fnTXuvCJ0NMiCWE8W1FGwE+mRCD0+b1jhxNf0o
-         kBCoXABBGFGVAuJVvlgV0MdyDHqa1GWLvKR5KL1SakJsBCj1coXc2hUN3IKGP2/bKYH2
-         oMRbc0KXaKd/XSzghGDTN/A80NQzWbZYiZzK9wKx6lKUMKEm6IQOusCfFUhQ4M8I6Fhj
-         ZpS1jIINOktrOYVuWLsGv1dHPzu6lXE018zcuznv++IKarrUj3nFJVX1Ldwtl3iU+KQf
-         +cRw==
-X-Gm-Message-State: AGi0PuZr/vMjG+hseUkR+YT8cBuv7n/p3ZlTcrEcZ41qJYyFpPj7aryC
-        BVteeflVdjiwPzzxsTwRdkE=
-X-Google-Smtp-Source: APiQypKuknnx3/Wdbj59FRBYjmpKIxZDVN6ah149plUDnAvn0sICpRdc2uA9Ids2Mr0AWFsm+z5yPg==
-X-Received: by 2002:a63:6302:: with SMTP id x2mr23325827pgb.375.1588006140938;
-        Mon, 27 Apr 2020 09:49:00 -0700 (PDT)
-Received: from ubuntu.localdomain ([220.116.27.194])
-        by smtp.gmail.com with ESMTPSA id a196sm13013585pfd.184.2020.04.27.09.48.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 09:49:00 -0700 (PDT)
-From:   youngjun <her0gyugyu@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org,
-        youngjun <her0gyugyu@gmail.com>
-Subject: [PATCH] kernfs: fix possibility of NULL pointer dereference.
-Date:   Mon, 27 Apr 2020 09:48:36 -0700
-Message-Id: <20200427164836.48765-1-her0gyugyu@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DggTYojfEhSzNZzSt4p++E5JdlZHCZXJc0ROh9SzVlM=;
+        b=mhfP6UgX2dZJxDip/ysNKepqvEFCvQi4be9sbCgvLiKmNyrQ7sP7fZUTuAPuWQ0YVR
+         Y1jM97JATPRnhu/Q2zg+Fv+B7k5LIDw0uADk8zAanF/NBr2aSCx2fvaRFe3FWag5ZNUR
+         rTxcXD6QosnYGvq/AbOCPqM5zZTo37Is0dzhgM92uQsWlmesEaGb5muRoNKdp4uSgJ4V
+         eVgPxN9puQ4u9k+GGCqepKLlX+TV7TLQoHrw0MjJPgVe6NLk1ynbIqy1oXgm7/dfVYms
+         4IZl76LT5YJK5DjXitEsLjLPjm3BqRuisJkeHtIaKgRc7Xxou+58LmbEaGNpROxJ2/NP
+         TPCg==
+X-Gm-Message-State: AGi0PuYSO8ROELuZJ80+9xP4Vjppqgk816dp/F5RkiGiDwuVImQOGWGa
+        4x0r03TaNJp8mjRmPt2ji+v0DJRdV2asEChoY+k=
+X-Google-Smtp-Source: APiQypKOZlel+ggVdbFyIPtgHGZpVrDz6ne1COTeLPmgW0WeAhG5IdM5qWoDEvfl/ilzflIttY+StL0Az1RFGIsqSuw=
+X-Received: by 2002:a2e:7613:: with SMTP id r19mr4909107ljc.29.1588006140845;
+ Mon, 27 Apr 2020 09:49:00 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20200427160018.243569-1-samitolvanen@google.com> <20200427160018.243569-2-samitolvanen@google.com>
+In-Reply-To: <20200427160018.243569-2-samitolvanen@google.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Mon, 27 Apr 2020 18:48:49 +0200
+Message-ID: <CANiq72=vvRcjWCON7zbaCTxLA2wP_-5zrnLyymR4g9b1gwc5kg@mail.gmail.com>
+Subject: Re: [PATCH v13 01/12] add support for Clang's Shadow Call Stack (SCS)
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When dentry is negative, "kernfs_dentry_node" returns NULL.
-In this case, "kernfs_root" dereferences NULL pointer.
+On Mon, Apr 27, 2020 at 6:00 PM Sami Tolvanen <samitolvanen@google.com> wrote:
+>
+> diff --git a/include/linux/compiler-clang.h b/include/linux/compiler-clang.h
+> index 333a6695a918..18fc4d29ef27 100644
+> --- a/include/linux/compiler-clang.h
+> +++ b/include/linux/compiler-clang.h
+> @@ -42,3 +42,9 @@
+>   * compilers, like ICC.
+>   */
+>  #define barrier() __asm__ __volatile__("" : : : "memory")
+> +
+> +#if __has_feature(shadow_call_stack)
+> +# define __noscs       __attribute__((__no_sanitize__("shadow-call-stack")))
+> +#else
+> +# define __noscs
+> +#endif
 
-Signed-off-by: youngjun <her0gyugyu@gmail.com>
----
- fs/kernfs/dir.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+Can we remove the `#else` branch? compiler_types.h [*] has to care
+anyway about that case for other compilers anyway, no?
 
-diff --git a/fs/kernfs/dir.c b/fs/kernfs/dir.c
-index 9aec80b9d7c6..02fb5cc76e33 100644
---- a/fs/kernfs/dir.c
-+++ b/fs/kernfs/dir.c
-@@ -1133,15 +1133,16 @@ static int kernfs_iop_mkdir(struct inode *dir, struct dentry *dentry,
- static int kernfs_iop_rmdir(struct inode *dir, struct dentry *dentry)
- {
- 	struct kernfs_node *kn  = kernfs_dentry_node(dentry);
--	struct kernfs_syscall_ops *scops = kernfs_root(kn)->syscall_ops;
-+	struct kernfs_syscall_ops *scops;
- 	int ret;
- 
--	if (!scops || !scops->rmdir)
--		return -EPERM;
--
- 	if (!kernfs_get_active(kn))
- 		return -ENODEV;
- 
-+	scops = kernfs_root(kn)->syscall_ops;
-+	if (!scops || !scops->rmdir)
-+		return -EPERM;
-+
- 	ret = scops->rmdir(kn);
- 
- 	kernfs_put_active(kn);
-@@ -1154,18 +1155,19 @@ static int kernfs_iop_rename(struct inode *old_dir, struct dentry *old_dentry,
- {
- 	struct kernfs_node *kn = kernfs_dentry_node(old_dentry);
- 	struct kernfs_node *new_parent = new_dir->i_private;
--	struct kernfs_syscall_ops *scops = kernfs_root(kn)->syscall_ops;
-+	struct kernfs_syscall_ops *scops;
- 	int ret;
- 
- 	if (flags)
- 		return -EINVAL;
- 
--	if (!scops || !scops->rename)
--		return -EPERM;
--
- 	if (!kernfs_get_active(kn))
- 		return -ENODEV;
- 
-+	scops = kernfs_root(kn)->syscall_ops;
-+	if (!scops || !scops->rename)
-+		return -EPERM;
-+
- 	if (!kernfs_get_active(new_parent)) {
- 		kernfs_put_active(kn);
- 		return -ENODEV;
--- 
-2.17.1
+> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+> index e970f97a7fcb..97b62f47a80d 100644
+> --- a/include/linux/compiler_types.h
+> +++ b/include/linux/compiler_types.h
+> @@ -193,6 +193,10 @@ struct ftrace_likely_data {
+>  # define randomized_struct_fields_end
+>  #endif
+>
+> +#ifndef __noscs
+> +# define __noscs
+> +#endif
 
+[*] Here
+
+Cheers,
+Miguel
