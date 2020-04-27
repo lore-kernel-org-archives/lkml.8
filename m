@@ -7,95 +7,117 @@ X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A16A6C54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D37C4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 788AD20775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F1442070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:34:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588023213;
-	bh=jQGfdOOR0x2hadI+LwY3LK9pxGyQ+lqOTwryW7RLnwU=;
+	s=default; t=1588023274;
+	bh=bzYkS1jEmYKLLaiahQ523rQRdG7e1GXlcRoT4pqgHJM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TuwcXpBEIlJIaXJLX+TWMRFl6JPpODKdbHr/ztvTS8Kl8/9K0wsfpq1L6z54XqMTh
-	 8prVMp2t0usqVCZt8i9RD2kaKiOuvfhk0BmbWmoFJe8aPw/va29R925Q6lHG0GA3P/
-	 mu475CdfVhHkSxewSZUAcHTJQrcmlImnzoZhc5ZQ=
+	b=g9BYSnVoia+e8wIHmuGu5d5P5BqFyUpkDJFjJ6ED4oqpRKxb7bAZqkILiAa/7YQ4F
+	 ORKDfGWKOtSMzpzOzNUe8FDdZTPeJtOClSsIdK2eOSPOPP2OP7OK0e+2az1BGDG75X
+	 9xc/M9l4i4AZS8PgaDT8s/24E03X01P8GDgOKebw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbgD0Vdd (ORCPT
+        id S1726335AbgD0Ved (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 17:33:33 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33292 "EHLO
+        Mon, 27 Apr 2020 17:34:33 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36939 "EHLO
         mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbgD0Vdc (ORCPT
+        with ESMTP id S1726030AbgD0VeV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 17:33:32 -0400
-Received: by mail-ot1-f66.google.com with SMTP id j26so28979011ots.0;
-        Mon, 27 Apr 2020 14:33:31 -0700 (PDT)
+        Mon, 27 Apr 2020 17:34:21 -0400
+Received: by mail-ot1-f66.google.com with SMTP id z17so29047836oto.4;
+        Mon, 27 Apr 2020 14:34:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=obA990z8OJleBnpKtdw+eeF7m9Ujcg/6PH3LdKUCACk=;
-        b=XsBW0h3r6qwCC+BbYS1nt3qBaOzbFr433P5vTx/1/KnBTd3Pu1Dyl36QBU434eOnMH
-         OrIaQ5FgNFBERu6um0SKbKjKCOffhbgrnB2mLCc83mCuochZT8Gnmceu7C1ZahVszXt4
-         fVp9blfcC6xOIjTcPxWC9uGgBCbvtfCr2aVY2RYL/T/ut/7FgQPHUycqSpLLfNfO+qMw
-         3gcHoOxfJrNumjRwLu52LzxTpM7Yq4jIQsR48OBKTowYTIZEYqrXUbh7dlYLDnKx4SQ1
-         Mdq7UMdbtcRrnrj5QZWEa7iJLPbiySSFU8DOX5BfyKEUMM4zCGGZHJs8Tjvb6odWR614
-         ZGPg==
-X-Gm-Message-State: AGi0PuYIdYlzy1WLnwzB2X3Oi0LGjQL5Crp0Fb8cD6OdYbLuVht1H1ym
-        Dyht/UbfYV2zgbHNypA4gw==
-X-Google-Smtp-Source: APiQypKzJKtr9ww00Gp25Z/3kTPkp/Xy6KxA4pc69SBeGjzz5+ZOtZDiTRA3EvrAU8JA4MmlxGOexw==
-X-Received: by 2002:a05:6830:2317:: with SMTP id u23mr21214818ote.203.1588023211391;
-        Mon, 27 Apr 2020 14:33:31 -0700 (PDT)
+        bh=XRUQCI377Xbc6JD+2krofLmVxxHirS9bA0gL+Jn1x9k=;
+        b=e6XL/Csvti1mhQrcIXXYXbRQzyYSb+N3qnF7HOLjKPuspwCrDrHb2u+3J+DccpJFfG
+         BE9NEaKFrLPTXchMqWBxmfQN3vaIRNbPLK/tJJ9rX8H8Mb+VC0ur669Q9Gfrg3xwctzw
+         tqTlcXZSbYCtKvQHLLp5a9IvzecGsx9nXUjks0ARNrhm0IfBzpZRCnt6hDKsxP8qWoNT
+         xoN0NjiK5jsSw20kLt05+a8KTBWV2P4zkin2udQEW4S1wAC6vHdSAgUSFSNDt8cGvEx2
+         ILPPb/iJvE7WXz4K50WIzpw3/Y+xZ0qTA++YpqdbpDeUgRobKuR6FIHSVP78tVJ9u000
+         tApQ==
+X-Gm-Message-State: AGi0Puat9JCMnMkTVELun3ah+QkXSFfFZOCyVImuyz4lHMNOUGhfDSZ8
+        mZcebnHQKw9Bc5lkrf7ndg==
+X-Google-Smtp-Source: APiQypJ9mE/BH2D4+sKYproJwZ1HaMb0oGk33+e3IQvAocBe9hWzM892y3UWLh7SWCcD4cf4iNNOaA==
+X-Received: by 2002:a9d:51cc:: with SMTP id d12mr18633279oth.70.1588023260003;
+        Mon, 27 Apr 2020 14:34:20 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d18sm4364822otk.63.2020.04.27.14.33.29
+        by smtp.gmail.com with ESMTPSA id i196sm587727oib.8.2020.04.27.14.34.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 14:33:30 -0700 (PDT)
-Received: (nullmailer pid 1330 invoked by uid 1000);
-        Mon, 27 Apr 2020 21:33:29 -0000
-Date:   Mon, 27 Apr 2020 16:33:29 -0500
+        Mon, 27 Apr 2020 14:34:19 -0700 (PDT)
+Received: (nullmailer pid 2856 invoked by uid 1000);
+        Mon, 27 Apr 2020 21:34:18 -0000
+Date:   Mon, 27 Apr 2020 16:34:18 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Gareth Williams <gareth.williams.jx@renesas.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Vivek Unune <npcomplete13@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] drm/db9000: Add bindings documentation for LCD
- controller
-Message-ID: <20200427213329.GA651@bogus>
-References: <1587975709-2092-1-git-send-email-gareth.williams.jx@renesas.com>
- <1587975709-2092-3-git-send-email-gareth.williams.jx@renesas.com>
+To:     Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: display: Add IPK DSI subsystem
+ bindings
+Message-ID: <20200427213418.GA2156@bogus>
+References: <cover.1587992776.git.angelo.ribeiro@synopsys.com>
+ <04a657ce78633d82565d3a7ce34a8ab52310ff63.1587992776.git.angelo.ribeiro@synopsys.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1587975709-2092-3-git-send-email-gareth.williams.jx@renesas.com>
+In-Reply-To: <04a657ce78633d82565d3a7ce34a8ab52310ff63.1587992776.git.angelo.ribeiro@synopsys.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Apr 2020 09:21:48 +0100, Gareth Williams wrote:
-> Add the DT bindings information for the Digital Blocks DB9000 LCD
-> controller. Also include documentation for the Renesas RZN1 specific
-> compatible string.
+On Mon, 27 Apr 2020 16:00:33 +0200, Angelo Ribeiro wrote:
+> Add dt-bindings for Synopsys DesignWare MIPI DSI Host and VPG (Video
+> Pattern Generator) support in the IPK display subsystem.
 > 
-> Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
+> The Synopsys DesignWare IPK display video pipeline is composed by a DSI
+> controller (snps,dw-ipk-dsi) and a VPG (snps,dw-ipk-vpg) as DPI
+> stimulus. Typically is used the Raspberry Pi
+> (raspberrypi,7inch-touchscreen-panel) as DSI panel that requires a
+> I2C controller (snps,designware-i2c).
+> 
+> Reported-by: Rob Herring <robh+dt@kernel.org>
+> Cc: David Airlie <airlied@linux.ie>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Cc: Joao Pinto <jpinto@synopsys.com>
+> Signed-off-by: Angelo Ribeiro <angelo.ribeiro@synopsys.com>
 > ---
->  .../devicetree/bindings/display/db9000,du.yaml     | 87 ++++++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.yaml       |  2 +
->  2 files changed, 89 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/db9000,du.yaml
+> Changes since v3:
+>   - Fixed dt-binding breaking on `make dt_binding_check`.
+> 
+> Changes since v2:
+>   - Fixed dt-bindings issues, see
+>     https://patchwork.ozlabs.org/patch/1260819/.
+> ---
+>  .../bindings/display/snps,dw-ipk-dsi.yaml          | 159 +++++++++++++++++++++
+>  .../bindings/display/snps,dw-ipk-vpg.yaml          |  73 ++++++++++
+>  2 files changed, 232 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/snps,dw-ipk-dsi.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/snps,dw-ipk-vpg.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-Documentation/devicetree/bindings/display/db9000,du.example.dts:28.35-30.15: Warning (unit_address_vs_reg): /example-0/drm@53004000/port/endpoint@0: node has a unit name, but no reg or ranges property
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/db9000,du.example.dt.yaml: drm@53004000: clock-names:0: 'lcd_eclk' was expected
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/snps,dw-ipk-dsi.example.dt.yaml: dw-ipk-dsi@2000: compatible: ['snps,dw-ipk-dsi'] is too short
 
-See https://patchwork.ozlabs.org/patch/1277401
+See https://patchwork.ozlabs.org/patch/1277673
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
