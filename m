@@ -2,121 +2,111 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6395FC55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CEFC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C45D2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:12:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oAbzNbnG"
+	by mail.kernel.org (Postfix) with ESMTP id 178952063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:13:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587996802;
+	bh=Xg8u6B1gRKJJyhc2ghpbZWMsF25bOlRNgkDeAPMsyhQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SmfYB3gFxibV6kfnm4YkHkhQLxwy2U5d2SACgnxHxSfp34cD7kp6t1hgny+Fc7L2A
+	 6xqaLMu5T0p7An1D2JO7mo3mkXAe3oOSyz9jmxlE24KR0WlxgsgfR6k0+pEtrSFwex
+	 NgbNydyYHLBJFdCcTScCrCnQhDAh/Gm5ncrugm8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgD0OM4 (ORCPT
+        id S1728060AbgD0ONV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 10:12:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59812 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727059AbgD0OM4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 10:12:56 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DAEBC0610D5;
-        Mon, 27 Apr 2020 07:12:55 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id r26so20666921wmh.0;
-        Mon, 27 Apr 2020 07:12:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hXzFCii8TK+6j4aoUMO+iQEJf8FgxRpxLE2R58+xhnU=;
-        b=oAbzNbnGmUqYwp1txITipiEvjxihbS2UCHOaOjmg8ovkCNQAlfLRuGTyWQwyIjgWD3
-         E073JSClILB1nA3qt8tGjq+VRPpC7UfwW299JgADbvNkeXyEC+1y0OUTeXhWEP4CZx/Y
-         Hwy6cHauz07E0P2uR6KIlRaU181SkT8g0ollwYYgCEAWxHEafxWNphYdzrnGdZwTD2v3
-         AWzP4/tjFBVKACwEHa/nmOj3X4idoIRmtZs25KcEtEOa31ZTkwHOhmt7gquE/kY/ImN2
-         K0RlE8d0zVjzM4IOgHIGC3xlzS1/ooV/olNIbhDzTPufkQRMgcnxjiOjfnhZBf17eU/A
-         Z5cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hXzFCii8TK+6j4aoUMO+iQEJf8FgxRpxLE2R58+xhnU=;
-        b=EDBdRhhWi5wIucHuw2ohQDd4fEtdja4I44xw0+WUBKb4vUJ+YVsRHn7IvKByyHaC1w
-         +sSAgP6lrF9o/8NjNMwtR75BZSXUXpaz02INapyH60TilqWGiTBn07hv92RYvKKtVAZz
-         18BMnDiFVTOx24rIQUWj4RThuQP/kigfo7ApoCIuN2Oi2MG8XRsEQ3pWtcM02NIZjpRr
-         diFN6flyx4COy5XORbqXlPf60Of6e3RCLMOGra4VRx5BEXiJJyM8wgwj0+QxK/CcSk7z
-         jpAgHAcm8Mm/6wPO8Ir1vjU3Pz237yikyCNZApfBA3xD+DqTzG7WR/xZxgqGaCT4qqsz
-         boUg==
-X-Gm-Message-State: AGi0PuaNec8mS1OUgBM+lefDeMKdmG///YSN3YALKnC4gqEaJdzWACXW
-        Fd1qGjg2ZPbBnmakEy4VnUA=
-X-Google-Smtp-Source: APiQypJiOnJfu2lTVpb0BgX484TchdDbu6LXcPdFTw2LgdaUXl1ACqMYRiadebISaSMGvTJodU5KsQ==
-X-Received: by 2002:a1c:99d3:: with SMTP id b202mr27301491wme.126.1587996774461;
-        Mon, 27 Apr 2020 07:12:54 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id e13sm11841282wrp.15.2020.04.27.07.12.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Apr 2020 07:12:53 -0700 (PDT)
-Subject: Re: [PATCH v2 2/3] arm64: dts: rockchip: rk3399-roc-pc: Fix MMC
- numbering for LED triggers
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     devicetree <devicetree@vger.kernel.org>, dmurphy@ti.com,
-        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
-        jacek.anaszewski@gmail.com,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
-References: <20200427073132.29997-3-wens@kernel.org>
- <684132b8-4a84-8295-474b-38ccb992bba7@gmail.com>
- <CAGb2v66Piu5_2bdqvWV3eEn2Se_y1MNKWvvYBv_J7DA-8jBhbQ@mail.gmail.com>
- <65d15254-08da-895c-1a0c-ef6ce231b620@gmail.com>
- <CAGb2v65fGYguNoksq5Dyx3HTKeYg+U82TiQSL+NO8AUcQJQj5w@mail.gmail.com>
- <74a984fc-ce57-211b-936c-2d77e2e642bb@gmail.com>
-Message-ID: <a81840d3-813b-51b5-767c-e0d9d270200e@gmail.com>
-Date:   Mon, 27 Apr 2020 16:12:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 27 Apr 2020 10:13:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42236 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727059AbgD0ONV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 10:13:21 -0400
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CAD32063A
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 14:13:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587996800;
+        bh=Xg8u6B1gRKJJyhc2ghpbZWMsF25bOlRNgkDeAPMsyhQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=osEHPWYdXxkYQ78QupC0ZbxmDHM4nKIFYj+hceaPPcun89vocxPgKHy9Qq40zoUbk
+         QrSGQhV62SZsNwG4VYijAjgIkna3Zq5CZv8uSHXvJpUm0nEf2beyNZ5DWzkUmgTNml
+         Q4e1Vc2b+Xxgtf65Jn47m5wnj59udKDIW1tjL3uk=
+Received: by mail-qt1-f176.google.com with SMTP id x12so13785235qts.9
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 07:13:20 -0700 (PDT)
+X-Gm-Message-State: AGi0PubIF6YXTfdX4GnVJSw1Pd26mPUtiDnstmb8CcUf6rarSzqnP6so
+        wRCw2HSPTfPmP2buFcsolyAQgIVLiNWAQ/kS+w==
+X-Google-Smtp-Source: APiQypIvO+0zNT12ohswoL68dXvl6sO1zbOdn5h7ZevGpjPFRFXJndduPs3pSHS2ibmtQnJF8M8fsotgSW9W3De7vbk=
+X-Received: by 2002:ac8:7cba:: with SMTP id z26mr23458821qtv.143.1587996798916;
+ Mon, 27 Apr 2020 07:13:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <74a984fc-ce57-211b-936c-2d77e2e642bb@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200420030538.101696-1-wenhu.wang@vivo.com>
+In-Reply-To: <20200420030538.101696-1-wenhu.wang@vivo.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 27 Apr 2020 09:13:06 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqK3fpM_tUjHvAMbNzf_nry_iORLXaQBFC8xDK+mxhHDRQ@mail.gmail.com>
+Message-ID: <CAL_JsqK3fpM_tUjHvAMbNzf_nry_iORLXaQBFC8xDK+mxhHDRQ@mail.gmail.com>
+Subject: Re: [PATCH v2,RESEND] misc: new driver sram_uapi for user level SRAM access
+To:     Wang Wenhu <wenhu.wang@vivo.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, kernel@vivo.com,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Scott Wood <oss@buserror.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Randy Dunlap <rdunlap@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sun, Apr 19, 2020 at 10:06 PM Wang Wenhu <wenhu.wang@vivo.com> wrote:
+>
+> A generic User-Kernel interface that allows a misc device created
+> by it to support file-operations of ioctl and mmap to access SRAM
+> memory from user level. Different kinds of SRAM alloction and free
+> APIs could be registered by specific SRAM hardware level driver to
+> the available list and then be chosen by users to allocate and map
+> SRAM memory from user level.
+>
+> It is extremely helpful for the user space applications that require
+> high performance memory accesses, such as embedded networking devices
+> that would process data in user space, and PowerPC e500 is a case.
+>
+> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+> Cc: Scott Wood <oss@buserror.net>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> ---
+> Changes since v1: addressed comments from Arnd
+>  * Changed the ioctl cmd definitions using _IO micros
+>  * Export interfaces for HW-SRAM drivers to register apis to available list
+>  * Modified allocation alignment to PAGE_SIZE
+>  * Use phys_addr_t as type of SRAM resource size and offset
+>  * Support compat_ioctl
+>  * Misc device name:sram
+>
+> Note: From this on, the SRAM_UAPI driver is independent to any hardware
+> drivers, so I would only commit the patch itself as v2, while the v1 of
+> it was wrapped together with patches for Freescale L2-Cache-SRAM device.
+> Then after, I'd create patches for Freescale L2-Cache-SRAM device as
+> another series.
 
->> So for fixing up the LED node names, we'd probably want the following:
->>
->>     diy_led: led-0
->>     yellow_led: led-1
->>     work_led: led-2
+There's work to add SRAM support to dma-buf heaps[1]. Take a look and
+see if that works for you.
 
-Change proposal for led nodes to comply with preexisting dts.
-Does this work?
+Rob
 
-diy_led: led_0: led-0
-yellow_led: led_1: led-1
-work_led: led_2: led-2
-
-
-blue: led_0: led-0
-
-A check does not give any warnings.
-
-make -k ARCH=arm dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/leds/leds-gpio.yaml
-
-> 
-> That doesn't look pretty either.
-> Would like to hear the maintainers view on how to handle other cases
-> without 'led' like for example 'blue' for mk808.
-> 
+[1] https://lore.kernel.org/lkml/20200424222740.16259-1-afd@ti.com/
