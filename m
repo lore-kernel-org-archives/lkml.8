@@ -2,157 +2,147 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	SUBJ_ALL_CAPS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E86C55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6F1C55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AFFD2064C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED003206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:22:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="NGSABjbF"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="etU4yFKt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbgD0NVW (ORCPT
+        id S1727828AbgD0NW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 09:21:22 -0400
-Received: from mail-eopbgr1310115.outbound.protection.outlook.com ([40.107.131.115]:43952
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        Mon, 27 Apr 2020 09:22:28 -0400
+Received: from mail-db8eur05on2086.outbound.protection.outlook.com ([40.107.20.86]:6025
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726651AbgD0NVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 09:21:22 -0400
+        id S1726651AbgD0NW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 09:22:27 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CItuy1cqN8+MVlb+aL0L6v4/FBPWcvVPKttb+lFOg+TszrnV0MWRx+47G27RCu8nurwZYOFIFSKwkGs4guvj9oRFHwGg+LNk4uEiX/69S+fayjfnnlc+ZchZ20GP8BHeXbJNQmvAC4PqtBmsvD3amQkG1VSP9PM0E8tSpjJuMxx9ttWUB/hE345vjcvfW67lFrO3ewqHxWflIPCDL566piLQLfI8LY7wy4dk4TW7I0C7X+V+4tlmaznYItkKG8DFS7r6pt3IMNFgjmQUIaCIa3qai/3t6RlCSAQ42Oa2SNfEcQ3ui/u1fXsbi2G1HpAjnwRRKcbDgFLnKu2u53YFtg==
+ b=OQMSnmnt98/OKT55m5usudNiHoSHaMBeIBe/hTZrebaKi6Z5HFxSyOI/koq32a6+nTBxn1x5/uESD6frJzA9nh5fN2DsiKSEtV9te84YpwP/dCNdFNyirN+K2Ip0M7lHekmpYKPnepRbHMoFxmfgkoHzfq7TVdHFgwFCR8Zl+Lv+yjfc4FefGQfgdVTRRWNKxO5Uv/isfNYg2R1QhnL+cM4MiYcjFI9Lyc7WfB59am+8B7jr1GFPqSIbrN0P8FEHSchy5S9pMXtplbuZ7Gfe97DPL5c3RrPVIPGz/mrDgW3P/oJndfHFdbylDXz1KAtRB4KYziZ1cQilDnkDwtqgXQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qcJIpyftj+669IYyd8PWOSybRTk2PfOnt/54JMJycOY=;
- b=UDdCvkltYMh/6dWQZ7mkw3fXRfvC3+xjgwwUrs27/SFS+REj5mEdqCBc6P14sca7epuBS062xz5Srrhl6RKOfZYklHxh0++4R7RIQrO1YD2rGHN3bH5GQ1RGCNv+fmH+x1HXDLasf42E9IW6k0ilAB+Xq6CraEMCUf0peWmnlhIP+PE2Xzlq0g2hW4qNTVBrQi0aYmndF0ycB+JVl/jhFpaekVQdvSjV8BbllVQ8owlA06J8vJ7A35sClZw6nGuH4S3m6vh+IfKNgvrIL9WRYxWOc1poufaGJmRGs0sejc+IJ2z19jYKJZihhKSMVP517CSO1HRwW9BriCsjEegHLA==
+ bh=KUA7BtHdVi6/YBBuwQ66BkgS/bRPHzwcZ+I3Qs66TdA=;
+ b=ICYjQCVKo6+iU7LcsVeTxwuHDuyIj9f+own5ENhrAet5QtzysoNA3lEBlPbUFL1AbwHW+k8NlA/5UeVhUJ0gjXVkFF3D88elyM/J/rJ2zm3iqotXk8eSCuh7Fioxll+dhXO8LW5dRUk5DXrokjkll6ur6U1OFVSMlLOcLuucRE85FOQJfDzrM75jxKx9A8TFP8HpwfUpTkl4/xTrG2qyOR1fzpgx7/1f5aDtPxQayqbOdnxB9LdkdRpijXb+FU+xQ8nZpN353t/96AGuO+6W3PLpReVF18NYPYK+ZxVSMoWQb5iyqF7O8dFYxQvK3b2BGXghwn+JrY6yccVOlY7etg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qcJIpyftj+669IYyd8PWOSybRTk2PfOnt/54JMJycOY=;
- b=NGSABjbFqsgo9bAqNNvmdgWfI6FD+5IOpJZFG1skvH2gZtK+1gWDGC5lYwFcvtojLdMauq4fOLXY3Gf8H+Czqsdur/BzNep9q91Qq9Kw8x3hHJx/ApVpaiNAocQOf14YbQTOoVd+YINfSKNyoD13c0L3iBdEw6/m+pDgV/IAaYs=
-Received: from TY2PR01MB2924.jpnprd01.prod.outlook.com (20.177.98.81) by
- TY2PR01MB2234.jpnprd01.prod.outlook.com (52.133.182.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2937.22; Mon, 27 Apr 2020 13:21:16 +0000
-Received: from TY2PR01MB2924.jpnprd01.prod.outlook.com
- ([fe80::15c5:58a4:5913:d859]) by TY2PR01MB2924.jpnprd01.prod.outlook.com
- ([fe80::15c5:58a4:5913:d859%7]) with mapi id 15.20.2937.023; Mon, 27 Apr 2020
- 13:21:15 +0000
-From:   Gareth Williams <gareth.williams.jx@renesas.com>
-To:     Gareth Williams <gareth.williams.jx@renesas.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Vivek Unune <npcomplete13@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-CC:     Phil Edworthy <phil.edworthy@renesas.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 0/3]
-Thread-Topic: [PATCH 0/3]
-Thread-Index: AQHWHGzvXFhntU7vAESnsWWN43lNnKiM8Q4w
-Date:   Mon, 27 Apr 2020 13:21:15 +0000
-Message-ID: <TY2PR01MB2924A29DED5C3AD29950D863DFAF0@TY2PR01MB2924.jpnprd01.prod.outlook.com>
-References: <1587975709-2092-1-git-send-email-gareth.williams.jx@renesas.com>
-In-Reply-To: <1587975709-2092-1-git-send-email-gareth.williams.jx@renesas.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=gareth.williams.jx@renesas.com; 
-x-originating-ip: [79.64.184.175]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: abca37ea-b24f-4a6d-ada6-08d7eaaddd44
-x-ms-traffictypediagnostic: TY2PR01MB2234:|TY2PR01MB2234:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TY2PR01MB22345E80EB465787E438AD65DFAF0@TY2PR01MB2234.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0386B406AA
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB2924.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(396003)(39860400002)(366004)(136003)(2906002)(5660300002)(478600001)(71200400001)(76116006)(66556008)(316002)(9686003)(66476007)(66946007)(66446008)(54906003)(110136005)(64756008)(55016002)(4326008)(33656002)(7696005)(186003)(6506007)(81156014)(8676002)(8936002)(7416002)(52536014)(86362001)(26005)(921003);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 4nq0VGgTlC90TaNfh0o3sKJ4gGwVNzl31gYu2LD8X7cgos6we06NLX6Pc/su7FmMlyAR2F+gvS+MIUe3uqLNcXVmYM0o6FUmnAoRFhEJiyaeJ7M6xjEhASGdWV+QwyGOoX8lu9yxk2EXErh4fAZ2cyegI3xXl2h1k46Lamw165uvY5QfF4f+u1rRGSbZ4AYI+7hSymZIpNXlUI0vASzp0NUFajbX+l872/EkIma2qbEC/y9eBTj9nD+55Oe0lRfXcJNAXOa/zMIDBDTFMAMV3nv0BEVN1Z9bLFUaGTSH8FjywE/UnEAqGTx9AUPFd/lOz19pJunn35cg3zh7kKb/fs7gnFubgXWwkJn3kH8uHkJbuZPleL9ZRRvDXIYVra/hoEX0XlWHFqOVXGxzbrr1YLzFGEDnRgZAsQvvTaKb03328f/QkJojweYWULYsKMk+wQTCr6MmSA6GB0zdv7W+hMmbZeluB0xkvrhb3zEx1KQ=
-x-ms-exchange-antispam-messagedata: wv9FVRUGdG1J4a9yKYTiKrc4WdJ+kbY/tL+yPDRerP3RNF1C3FudEQ54YbTZu2Ewb9m7LIjHDkS24b9nTfyAQg+D6dq0WLraC4MdTwseG5krQoa3XJ+SGSylvEO5p7RSNmEWQxy/+cY3STzDMhFMoORv46WzTJYCyKEwTI3x+9XqG+EOH+mUS0eq2DhzC89JYR4n9QoJGGH82bh+V5jcsJDjLzz5dD9A/KMW/sx+5WvbK51n+xqV/Ke0PEoNu1kXuClTP6lNuH5xbeP/JI0FkOktW9K7Y7H/Cook6j2InIOXC6r4iRbwfGKwom/V3cmyLWp1EMiw+YOI+SpSsZsKfdp+QufdKFijJ6XYB4O0OFiJWObtHewgbTXgnZ5OiImKl8Cn+0OqQx7S0j3kO1elSmTH3NG5dRT80aIIAGbhFLoP8CGWfMRtdsZkLOEO4601v+PFNhEIW8Us9sOS98gcFefrC11dWEW7oIq6+cjw4urM/gVTWsWficfxpMl/j9DMQHPPKhhAWmggiuHZ0KYUKUVO4SuzLcCdYsYIMU+eJuDKQK3++IsKiqU+IVWgk/PEOmcS3fV7qGLaXeV8O7JT4s6R8Gfo9rzBNsWX2ShDYmE+1bxno4Bp0HUKFlw4qBXOXmrTOMCTh5jhDhHXQq9rbxk4jv/DLECpTC+AXtJiZHyhb8/oMhP0A3rXkoMJl8tLLvjgYTquvmnfXCGYk5qTc86ELkY0/p+F/sEBs1CFKM8nK6P0ldkuBJMIqKkLq1XAhNO7/T6QZyJn+zncXOL63Sr8OEcvR6LA1cqLJKhjZJY=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ bh=KUA7BtHdVi6/YBBuwQ66BkgS/bRPHzwcZ+I3Qs66TdA=;
+ b=etU4yFKtrRtTjK5R4Kfv/xo5R0D8FNhepje8LRiCMZ458RamLbkBUwyHcNobxVQlf61mIPfkoUzoi6HmxyZ/+FVGPdwYvAechavKcvCyPTMaU7CmG3bB6K998Ony67POFRCZfOlkDzN5xhvSoSv3Vgrmg0T/j+CFFCK6ojJMgJk=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
+ by VI1PR05MB3470.eurprd05.prod.outlook.com (2603:10a6:802:1f::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Mon, 27 Apr
+ 2020 13:22:22 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::a47b:e3cd:7d6d:5d4e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::a47b:e3cd:7d6d:5d4e%6]) with mapi id 15.20.2937.020; Mon, 27 Apr 2020
+ 13:22:22 +0000
+Date:   Mon, 27 Apr 2020 10:22:18 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Message-ID: <20200427132218.GG13640@mellanox.com>
+References: <20200423191217.GD13640@mellanox.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D8960F9@SHSMSX104.ccr.corp.intel.com>
+ <20200424124444.GJ13640@mellanox.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D8A808B@SHSMSX104.ccr.corp.intel.com>
+ <20200424181203.GU13640@mellanox.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
+ <20200426191357.GB13640@mellanox.com>
+ <20200426214355.29e19d33@x1.home>
+ <20200427115818.GE13640@mellanox.com>
+ <20200427071939.06aa300e@x1.home>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427071939.06aa300e@x1.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: MN2PR16CA0010.namprd16.prod.outlook.com
+ (2603:10b6:208:134::23) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: abca37ea-b24f-4a6d-ada6-08d7eaaddd44
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Apr 2020 13:21:15.7002
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR16CA0010.namprd16.prod.outlook.com (2603:10b6:208:134::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Mon, 27 Apr 2020 13:22:22 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jT3iE-000665-Ib; Mon, 27 Apr 2020 10:22:18 -0300
+X-Originating-IP: [142.68.57.212]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 45582a51-9828-4855-cbf9-08d7eaae04ca
+X-MS-TrafficTypeDiagnostic: VI1PR05MB3470:|VI1PR05MB3470:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR05MB3470B66E0448EF5B054FDD2ACFAF0@VI1PR05MB3470.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
+X-Forefront-PRVS: 0386B406AA
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(396003)(136003)(376002)(366004)(1076003)(86362001)(9786002)(9746002)(33656002)(8676002)(81156014)(2906002)(8936002)(36756003)(7416002)(2616005)(66476007)(4744005)(66946007)(66556008)(186003)(6916009)(52116002)(26005)(5660300002)(478600001)(4326008)(54906003)(316002)(24400500001);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: LghRcKWImbuUtTjSsd5ajft8XUdIH6zZKrhmqp9gD5DlIY2GGv3nG453LkOkyvt2EhCc4/vJGTWgoM8DkEz7iW3Xl6+PgFWDI9kN/WSsYcbB55n6CjnU22Wwik+vUwQnVa5yP1Pmr99QKhdVgb8KwfueBFtMaPcPnMOUeIM//9LvVzoSnRECH4DsrO69enhDLDHo6ksiBur4iTG/gzX5sj1t4qek2R34CzodKN9dCKHNN1gPG/aFlYwGLobJ+vTFPNkPXJP1bXvJqlO0uD6vWcT38tR5pPrcw7sS5TMcr6MWEmPqIHGL2LVePsJLD/SYVz8OUrKm1tYECVmpqAt95Vpswb2flmlhUMFqKtPe7fmN79AE7GBEbdC9GHKq/oDlmziLEjnuI2P2Zt1A82CXDKHudalC8DUdiatFTP5tZc3K8kloPoIWtNN4PdblxZBMEuxwXvf5cBmOhKExgxpHKkszrsRHAZ/nIPbBw/IAFNut0eyIT8NpJ+SwA0mPS18Z
+X-MS-Exchange-AntiSpam-MessageData: SmkW0laNse18vQvLYOdpGxISqiDYQkStjtC5gsfFTz+9rFaJVGjWQ01RNt+C7JRpxkAtPskwgUqzEBrk5Vhvxv2Pca3xLwngAVyhwbukK3Cmb33I4ssGn880A+lsXt7V5Hc4D0taDO/VrZYYyYVwluViGKFPasz0hnWbHBf5Wp3AoNFEukeOBjtkebxMRJZWRhTtoP+lrunE/5VcJpIfhw9Q87uZkAE3kW44KkD8GkkdBK34L/xaZY3iJFv7vqosF3/MP8MqgzqbnUbb4AC/ZBS/nMugzfPwA1YHR9DIOfmY/FscDoaKSZjeWcgdAdSLFYetTJPHDXldt8wHrqewgzemyaMx7xrKUzqtZ5Ga2RuaxBmyOEvoh3ZEZd5KK3vyKseMSXrfgVBGeJ9sTmIzljM/QJPGGWoxF9GAxG3XdhXOhPOMAQjv5Z/grT52X8ittxYfjqXQfl/ic+fQ2IxNFV0/2V5VVBwCCv8f3F18mFEMnCjDWkQjg1lLrOCyGLIcrjPSXoeuD0mrjwbjXRmWppqjUhl/zVxAl8Duug1uXL2TybMKyWz20Ln/TG2QL1jUhrrkNziiN8EZCv/29jL8snUuxXzGyN3IhEdtlcGDJbo7cS9WpJqPzY8AVsqqKIQw936Qof2CtUpiQJfN0It4SJ57WQKMAn/njQDVBpNWVCquYP20/em+a+dBWwERc2XfsNoIfBVfqUx9Nwf/ngIUituJtn0xw17SlLfQa9ZwvuAMHsT8d3e/aVopqPNhUjfdS1w3niiZ8xL03WCf1ASjXuZBhUhPruf8eVYAm6G2f4U=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 45582a51-9828-4855-cbf9-08d7eaae04ca
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2020 13:22:22.4261
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1fe1q6nfh6UHzk9Oji9cDYVqD/v+Jl+ylU9ojoA/ALg4zW4Zj6VRXSdU1CkSFadctSq97n9xtBkiIDQZB2aP+DZmmL/LRuy9uLnSoz1b5gQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB2234
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rcTQCl5GsCIdV8cdLI8EOTwmy2Ih6ffwvh3fnPac4qWliZ9SkGN9AC9KlTd9LeELKhhL6lM+gCYlz/rtSOcYXw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB3470
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+On Mon, Apr 27, 2020 at 07:19:39AM -0600, Alex Williamson wrote:
 
-I noticed some API changes that were not present when I first wrote this dr=
-iver.=20
-This will need correcting so I will send out a second version and respond=20
-to Sam Ravnborg's feedback at the same time. I recommend waiting for that
-version before reviewing as this will not function on Linux-next otherwise.
+> > It is not trivial masking. It is a 2000 line patch doing comprehensive
+> > emulation.
+> 
+> Not sure what you're referring to, I see about 30 lines of code in
+> vdcm_vidxd_cfg_write() that specifically handle writes to the 4 BARs in
+> config space and maybe a couple hundred lines of code in total handling
+> config space emulation.  Thanks,
 
-Gareth
+Look around vidxd_do_command()
 
-On Mon, Apr 27, 2020 at 09:21:49AM +0100, Gareth Williams wrote:
->=20
-> This series adds DRM support for the Digital Blocks db9000 LCD controller=
- with
-> RZ/N1 specific changes and updates simple-panel to include the associated
-> panel. As this has not previously been documented, also include a yaml fi=
-le to
-> provide this.
->=20
-> Gareth Williams (3):
->   drm/db9000: Add Digital Blocks DB9000 LCD Controller
->   drm/db9000: Add bindings documentation for LCD controller
->   drm/panel: simple: Add Newhaven ATXL#-CTP panel
->=20
->  .../devicetree/bindings/display/db9000,du.yaml     |  87 ++
->  .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
->  drivers/gpu/drm/Kconfig                            |   2 +
->  drivers/gpu/drm/Makefile                           |   1 +
->  drivers/gpu/drm/digital-blocks/Kconfig             |  13 +
->  drivers/gpu/drm/digital-blocks/Makefile            |   3 +
->  drivers/gpu/drm/digital-blocks/db9000-du.c         | 953
-> +++++++++++++++++++++
->  drivers/gpu/drm/digital-blocks/db9000-du.h         | 192 +++++
->  drivers/gpu/drm/panel/panel-simple.c               |  27 +
->  9 files changed, 1280 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/display/db9000,du.yaml
->  create mode 100644 drivers/gpu/drm/digital-blocks/Kconfig
->  create mode 100644 drivers/gpu/drm/digital-blocks/Makefile
->  create mode 100644 drivers/gpu/drm/digital-blocks/db9000-du.c
->  create mode 100644 drivers/gpu/drm/digital-blocks/db9000-du.h
->=20
-> --
-> 2.7.4
+If I understand this flow properly..
 
+Jason
