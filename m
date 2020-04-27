@@ -2,138 +2,176 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5957C4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B86F9C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C901206D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98080206D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:07:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B4917ULy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pg9HzUQy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgD0UG7 (ORCPT
+        id S1726860AbgD0UHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 16:06:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59198 "EHLO
+        Mon, 27 Apr 2020 16:07:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725919AbgD0UGs (ORCPT
+        by vger.kernel.org with ESMTP id S1725919AbgD0UHB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 16:06:48 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5482EC0610D5;
-        Mon, 27 Apr 2020 13:06:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=tRh2egFE5bL+lOO5QZcFzobBLROoVTEyjp5GB1YlRSI=; b=B4917ULyuyzDL/PEWb5k2c845z
-        OgAxxZzldO+FXYvaMWPFOyGIUHo8cXALBoKkBANOp7XIBAwXpMpNKM3j6xb1xqSyp9+m6yK/8FWnc
-        37Myv1SWyyKMbTUkFz89+OIMrl4cm4xNayxW6RyzX8VMU8relvPuDfiSqWXTIq1HnkoGoXTgPk2Y0
-        l//xBrLBYmdoczVvQxLsGfD4a84xKVhvHJCbHdaZBOxC2tG8ilUrTH9esfyLfarZpWZ1JDR1Zoz0c
-        pM7U2MY08y9CDb70vyjdwMs6j3SpSI5MLaEyUID//Wf2HuMJlbhp8uB8618d4ilXVG5Cz+O5SDCLI
-        /HZ2tx/A==;
-Received: from [2001:4bb8:193:f203:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jTA1T-000189-Ol; Mon, 27 Apr 2020 20:06:36 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jeremy Kerr <jk@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
+        Mon, 27 Apr 2020 16:07:01 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 064D3C0610D5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 13:07:01 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id e26so270166wmk.5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 13:07:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=24jm4GLg7KcSdmvEBL/9cPElK0syYBQHKVx8N1+MAU4=;
+        b=Pg9HzUQyg5RA0+hvrmI73UOkuF/9Cr5LUJQsCEnf1fjcsho050+qghoGdQOYhB8Trz
+         8G9xIXaOWP/IaYw0rIxE2xoVVUux9NTBMR14HccUAjwX0fY4PmaErmVku6+d5ovrTodX
+         bbyOJ08gnloJs/o8mCbjuq6fWM+QweeRxbCJ+kn6estXnSnR2hOJCB+w3GlM/pDsIHHJ
+         58sUZqUXC1f59dKfjAyDmgdH5HGnMuaod+rS3f4FFDcq1Y/zoBocXt9EzQqlzx6SRmJy
+         dbx/POmCHPnDiqH8tKfsR7TicGdUCpVEh1F3l9rA31Dlf2gn1XMm9WatXj9l8kK2NdxR
+         rUQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=24jm4GLg7KcSdmvEBL/9cPElK0syYBQHKVx8N1+MAU4=;
+        b=cvxQyzO/viCgBCdZRQiz34iPj+8PdpYDMCHzrElfXvKPM4YAGWMEThJ4BlPK5KQ6Sa
+         /RIEv700v6YU6RYpz/RWkXan7QbqzANYLuleyV4m/YqR04ven1Om3O+qmyGtT/JYgNVz
+         6USbMSXyYz+xY7oee6rhfD2KjMiNCbZWNPx4A5zH4cHGdOJoDbsjoQ2JobicDSXVaF0U
+         PheO70UqUx6+AI9RoFekY4WAkvvqPBaAdUWqD96B13XFFNRL7LkGK7REoRafSTD1Bdw6
+         EweJZD/pp4azYA8NzeIhgFcbPk8/cDlILg+XR2cXvjoRq3EUSwjavSt6UHEHzaRP6iQu
+         Znug==
+X-Gm-Message-State: AGi0PuajbYIOvpkSJkX1s8nY0/e151d3/m6omNQVj/PDf2xgCmUVDolx
+        aKPAmth08t0akH5pZu2Q3gU=
+X-Google-Smtp-Source: APiQypJh7+yhT8PXtTKgbjFqecr5pL6hNJD3OfafOUzCRDq+pSpviCz70i2wV3o1y5Jh5hk5nu+ahQ==
+X-Received: by 2002:a1c:3884:: with SMTP id f126mr395842wma.91.1588018019702;
+        Mon, 27 Apr 2020 13:06:59 -0700 (PDT)
+Received: from ?IPv6:2001:a61:2482:101:3351:6160:8173:cc31? ([2001:a61:2482:101:3351:6160:8173:cc31])
+        by smtp.gmail.com with ESMTPSA id u30sm22553735wru.13.2020.04.27.13.06.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 13:06:59 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, Alexander Viro <viro@zeniv.linux.org.uk>,
+        =?UTF-8?Q?St=c3=a9phane_Graber?= <stgraber@ubuntu.com>,
+        Linux Containers <containers@lists.linux-foundation.org>,
         "Eric W . Biederman" <ebiederm@xmission.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+        Serge Hallyn <serge@hallyn.com>,
+        Aleksa Sarai <cyphar@cyphar.com>
+Subject: Re: [PATCH] nsproxy: attach to namespaces via pidfds
+To:     Christian Brauner <christian.brauner@ubuntu.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/5] binfmt_elf: remove the set_fs in fill_siginfo_note
-Date:   Mon, 27 Apr 2020 22:06:23 +0200
-Message-Id: <20200427200626.1622060-4-hch@lst.de>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200427200626.1622060-1-hch@lst.de>
-References: <20200427200626.1622060-1-hch@lst.de>
+References: <20200427143646.619227-1-christian.brauner@ubuntu.com>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <f77ae6fe-a02c-1bd3-39d9-6cb829c3ccdd@gmail.com>
+Date:   Mon, 27 Apr 2020 22:06:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200427143646.619227-1-christian.brauner@ubuntu.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Eric W. Biederman" <ebiederm@xmission.com>
+Hello Christian,
 
-The code in binfmt_elf.c is differnt from the rest of the code that
-processes siginfo, as it sends siginfo from a kernel buffer to a file
-rather than from kernel memory to userspace buffers.  To remove it's
-use of set_fs the code needs some different siginfo helpers.
+On 4/27/20 4:36 PM, Christian Brauner wrote:
+> For quite a while we have been thinking about using pidfds to attach to
+> namespaces. 
 
-Add the helper copy_siginfo_to_external to copy from the kernel's
-internal siginfo layout to a buffer in the siginfo layout that
-userspace expects.
+(Sounds promising.)
 
-Modify fill_siginfo_note to use copy_siginfo_to_external instead of
-set_fs and copy_siginfo_to_user.
+> This patchset has existed for about a year already but we've
+> wanted to wait to see how the general api would be received and adopted.
+> Now that more and more programs in userspace have started using pidfds
+> for process management it's time to send this one out.
+> 
+> This patch makes it possible to use pidfds to attach to the namespaces
+> of another process, i.e. they can be passed as the first argument to the
+> setns() syscall. When only a single namespace type is specified the
+> semantics are equivalent to passing an nsfd. That means
+> setns(nsfd, CLONE_NEWNET) equals setns(pidfd, CLONE_NEWNET). However,
+> when a pidfd is passed, multiple namespace flags can be specified in the
+> second setns() argument and setns() will attach the caller to all the
+> specified namespaces all at once or to none of them. 
 
-Update compat_binfmt_elf.c to use the previously added
-copy_siginfo_to_external32 to handle the compat case.
+While I think I understand what the intended semantics are, the
+description in the previous paragraph feels off, so that if 
+this whole text lands in a commit message (or a manual page),
+I think it needs fixing.
 
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/binfmt_elf.c        | 5 +----
- fs/compat_binfmt_elf.c | 2 +-
- include/linux/signal.h | 8 ++++++++
- 3 files changed, 10 insertions(+), 5 deletions(-)
+Firs, it seems odd to say that 
 
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index 13f25e241ac46..a1f57e20c3cf2 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -1556,10 +1556,7 @@ static void fill_auxv_note(struct memelfnote *note, struct mm_struct *mm)
- static void fill_siginfo_note(struct memelfnote *note, user_siginfo_t *csigdata,
- 		const kernel_siginfo_t *siginfo)
- {
--	mm_segment_t old_fs = get_fs();
--	set_fs(KERNEL_DS);
--	copy_siginfo_to_user((user_siginfo_t __user *) csigdata, siginfo);
--	set_fs(old_fs);
-+	copy_siginfo_to_external(csigdata, siginfo);
- 	fill_note(note, "CORE", NT_SIGINFO, sizeof(*csigdata), csigdata);
- }
- 
-diff --git a/fs/compat_binfmt_elf.c b/fs/compat_binfmt_elf.c
-index aaad4ca1217ef..fa0e24e1b7267 100644
---- a/fs/compat_binfmt_elf.c
-+++ b/fs/compat_binfmt_elf.c
-@@ -39,7 +39,7 @@
-  */
- #define user_long_t		compat_long_t
- #define user_siginfo_t		compat_siginfo_t
--#define copy_siginfo_to_user	copy_siginfo_to_user32
-+#define copy_siginfo_to_external	copy_siginfo_to_external32
- 
- /*
-  * The machine-dependent core note format types are defined in elfcore-compat.h,
-diff --git a/include/linux/signal.h b/include/linux/signal.h
-index 05bacd2ab1350..6bb1a3f0258c2 100644
---- a/include/linux/signal.h
-+++ b/include/linux/signal.h
-@@ -24,6 +24,14 @@ static inline void clear_siginfo(kernel_siginfo_t *info)
- 
- #define SI_EXPANSION_SIZE (sizeof(struct siginfo) - sizeof(struct kernel_siginfo))
- 
-+static inline void copy_siginfo_to_external(siginfo_t *to,
-+					    const kernel_siginfo_t *from)
-+{
-+	memcpy(to, from, sizeof(*from));
-+	memset(((char *)to) + sizeof(struct kernel_siginfo), 0,
-+		SI_EXPANSION_SIZE);
-+}
-+
- int copy_siginfo_to_user(siginfo_t __user *to, const kernel_siginfo_t *from);
- int copy_siginfo_from_user(kernel_siginfo_t *to, const siginfo_t __user *from);
- 
+   "setns(nsfd, CLONE_NEWNET) equals setns(pidfd, CLONE_NEWNET)"
+
+setns(nsfd, CLONE_NEWNET) means: fail if nsfd does not refer to a
+network namespace.
+
+setns(pidfd, CLONE_NEWNET) means: move into just the network
+namespace of the process referred to by 'pidfd'.
+
+I would not call those two things "equal", in a semantic sense.
+
+And then:
+
+> If 0 is specified
+> together with a pidfd then setns() will interpret it the same way 0 is
+> interpreted together with a nsfd argument, i.e. attach to any/all
+> namespaces.
+
+If I understand right, setns(pidfd, 0) would mean: move into
+all of the same namespaces as the process referred to by 'pidfd'.
+
+But setns(nsfd, 0) means: move into whatever kind of namespace
+is referred to by 'nsfd'.
+
+I would not say of these two cases that 0 is interpreted
+in the same way.
+
+Hopefully I have not misunderstood.
+
+
+
+> The obvious example where this is useful is a standard container
+> manager interacting with a running container: pushing and pulling files
+> or directories, injecting mounts, attaching/execing any kind of process,
+> managing network devices all these operations require attaching to all
+> or at least multiple namespaces at the same time. Given that nowadays
+> most containers are spawned with all namespaces enabled we're currently
+> looking at at least 14 syscalls, 7 to open the /proc/<pid>/ns/<ns>
+> nsfds, another 7 to actually perform the namespace switch. With time
+> namespaces we're looking at about 16 syscalls.
+> (We could amortize the first 7 or 8 syscalls for opening the nsfds by
+>  stashing them in each container's monitor process but that would mean
+>  we need to send around those file descriptors through unix sockets
+>  everytime we want to interact with the container or keep on-disk
+>  state. Even in scenarios where a caller wants to join a particular
+>  namespace in a particular order callers still profit from batching
+>  other namespaces. That mostly applies to the user namespace but
+>  all container runtimes I found join the user namespace first no matter
+>  if it privileges or deprivileges the container.)
+> With pidfds this becomes a single syscall no matter how many namespaces
+> are supposed to be attached to.
+
+That does seem like a win. Thanks for working on this!
+
+Cheers,
+
+Michael
+
 -- 
-2.26.1
-
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
