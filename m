@@ -2,151 +2,126 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB412C54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D45EFC4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8D3E215A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADFAD21707
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:46:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588009564;
-	bh=iF9YmvJqlTOPV6QEo1ch3u7PI0qsz6iUbUvNWthAYms=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dNTZ63z7R53mMWP0PhZFUrEOAr2MVgmQlcVpEuIknij43t2IDTa+P/qOqEsBMbzF/
-	 maFckphOpm4QjCOl9psM1w6se9l/AlR5PvWYpY1RBkREp6s8pE+vrRElBSDFe9/Ff7
-	 C8MJ8fIc5oLGrWiPVbEreDhQx1ytrMVeIc9BKnvE=
+	s=default; t=1588009575;
+	bh=GyOKbULGIjSk5qPc89qgzUXWhIi1IHH3gWYAgn/MlkE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MdhCdUBEbRCY2sxWnGvTA6u5bKE6nuoiksQnk1p04geUm0LqQQwPAHDrTrfRQmgLy
+	 W7aFufoK/xhakectkBnEzsFflLNYpmNbp6B+lwk9avy/5B9Al0Dr1lupuNmHKWlpku
+	 pyXMdnqNdOuW/FfAk4OnVuafuJ9UBaXzBP6wDboM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbgD0RqE (ORCPT
+        id S1726406AbgD0RqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 13:46:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54150 "EHLO mail.kernel.org"
+        Mon, 27 Apr 2020 13:46:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726226AbgD0RqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 13:46:03 -0400
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725963AbgD0RqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 13:46:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCAA621775;
-        Mon, 27 Apr 2020 17:46:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2F0D215A4;
+        Mon, 27 Apr 2020 17:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588009562;
-        bh=iF9YmvJqlTOPV6QEo1ch3u7PI0qsz6iUbUvNWthAYms=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=x5dT7bls/3QJn+I9NbWzFlG6FHclIlFs0dMqD5tSRm8dQv0gBaJ4/72TXlkHbf0kb
-         5JDD4w1fIgId0fi//oLcPdvIffq0NDHGy0/8f7NlxLYtrTIJIvLtveFzXAIaaFbQMa
-         kbfuHB2JKD+TyBrwC58U+aB0tbjo5/LEOt5HXqfM=
-Received: by mail-yb1-f172.google.com with SMTP id o139so9891403ybc.11;
-        Mon, 27 Apr 2020 10:46:02 -0700 (PDT)
-X-Gm-Message-State: AGi0PuauBr6AQeTzL2HsNKdxN76/MrNIVzrVim/JmvLEVxEn5U97W+QQ
-        sjcxAxJ9PEokUyEsAS1VKL+cUmHgkF8t/yHSUQ==
-X-Google-Smtp-Source: APiQypJCjp0sKkH8wsvV7TRTZ+Y5WfstmylSaK6ab9MlcQ1t5UeAxbE4A4p6/U7DdUD81SjmmMDCkQIJah8HRlmHtgQ=
-X-Received: by 2002:a25:281:: with SMTP id 123mr37843786ybc.358.1588009561921;
- Mon, 27 Apr 2020 10:46:01 -0700 (PDT)
+        s=default; t=1588009574;
+        bh=GyOKbULGIjSk5qPc89qgzUXWhIi1IHH3gWYAgn/MlkE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WBqXHHkTNUpf+PamSmfO5GQtEYUOcUJRXQ+3jHA2Ya6zlOnh7NUUqJxd18VdXSioF
+         pir5n1Dlnw2cYh54OKsOwpmcbCH4jQSlwk57lI1adufP1suJy/PvZ7r5NeLPN7vpO1
+         R18PoAhIz1KMqziTwW4YlMsTk/O+QAkpnCPsCt+c=
+Date:   Mon, 27 Apr 2020 19:46:11 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Nishad Kamdar <nishadkamdar@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] xfs: Use the correct style for SPDX License Identifier
+Message-ID: <20200427174611.GA4035548@kroah.com>
+References: <20200425133504.GA11354@nishad>
+ <20200427155617.GY6749@magnolia>
+ <20200427172959.GB3936841@kroah.com>
+ <515362d10c06567f35f0d5b7c3f2e121769fb04b.camel@perches.com>
 MIME-Version: 1.0
-References: <20200422201216.10593-1-ansuelsmth@gmail.com> <20200422201216.10593-2-ansuelsmth@gmail.com>
- <CAL_JsqLUbM7ed2q7so4Uibiz2URRg1juoGRExy9Ta3J-LWAFow@mail.gmail.com>
- <087301d61a86$68b6f950$3a24ebf0$@gmail.com> <20200427034951.xrk5ja3pg4anbg4s@vireshk-i7>
- <016c01d61c80$ba1358b0$2e3a0a10$@gmail.com>
-In-Reply-To: <016c01d61c80$ba1358b0$2e3a0a10$@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 27 Apr 2020 12:45:49 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKu15CQu4pP6uyrUvYk3xZVWwUu=86CE5yDHPx7cSKdTw@mail.gmail.com>
-Message-ID: <CAL_JsqKu15CQu4pP6uyrUvYk3xZVWwUu=86CE5yDHPx7cSKdTw@mail.gmail.com>
-Subject: Re: R: [PATCH v2 2/2] dt-bindings: opp: Fix wrong binding in qcom-nvmem-cpufreq
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ilia Lin <ilia.lin@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sricharan R <sricharan@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <515362d10c06567f35f0d5b7c3f2e121769fb04b.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 5:43 AM <ansuelsmth@gmail.com> wrote:
->
-> > On 25-04-20, 00:19, ansuelsmth@gmail.com wrote:
-> > > > On Wed, Apr 22, 2020 at 3:12 PM Ansuel Smith
-> > <ansuelsmth@gmail.com>
-> > > > wrote:
-> > > > >
-> > > > > Update binding to new generic name "operating-points-v2-qcom-cpu"
-> > > > >
-> > > > > Fixes: a8811ec764f9 ("cpufreq: qcom: Add support for krait based
-> > socs")
-> > > > > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> > > > > ---
-> > > > >  Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt |
-> > 2
-> > > > +-
-> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/opp/qcom-nvmem-
-> > > > cpufreq.txt b/Documentation/devicetree/bindings/opp/qcom-nvmem-
-> > > > cpufreq.txt
-> > > > > index 64f07417ecfb..537e1774f589 100644
-> > > > > --- a/Documentation/devicetree/bindings/opp/qcom-nvmem-
-> > cpufreq.txt
-> > > > > +++ b/Documentation/devicetree/bindings/opp/qcom-nvmem-
-> > > > cpufreq.txt
-> > > > > @@ -19,7 +19,7 @@ In 'cpu' nodes:
-> > > > >
-> > > > >  In 'operating-points-v2' table:
-> > > > >  - compatible: Should be
-> > > > > -       - 'operating-points-v2-kryo-cpu' for apq8096, msm8996,
-> > msm8974,
-> > > > > +       - 'operating-points-v2-qcom-cpu' for apq8096, msm8996,
-> > > > msm8974,
-> > > > >                                              apq8064, ipq8064,
-> msm8960 and ipq8074.
-> > > >
-> > > > This is not how you fix the backwards compatibility issue pointed out
-> > > > on the Fixes reference.
-> > > >
-> > > > Rob
-> > >
-> > > Sorry but can you give some directive? Should I use the old binding and
-> > change
-> > > the driver to use it instead of the new one (and drop it) ?
-> >
-> > It is not about the name of the binding, you can rename it to whatever
-> > you want. The kernel needs to keep supporting all the previous
-> > bindings, so we can keep on changing the kernel but keep the same
-> > bootloader (with earlier bindings).
-> >
-> > --
-> > viresh
->
-> Ok but still I can't understand why this is not right.
-> In 1/2 of this patchset I added the check for the old binding in the driver
+On Mon, Apr 27, 2020 at 10:41:58AM -0700, Joe Perches wrote:
+> On Mon, 2020-04-27 at 19:29 +0200, Greg Kroah-Hartman wrote:
+> > On Mon, Apr 27, 2020 at 08:56:18AM -0700, Darrick J. Wong wrote:
+> > > On Sat, Apr 25, 2020 at 07:05:09PM +0530, Nishad Kamdar wrote:
+> > > > This patch corrects the SPDX License Identifier style in
+> > > > header files related to XFS File System support.
+> > > > For C header files Documentation/process/license-rules.rst
+> > > > mandates C-like comments (opposed to C source files where
+> > > > C++ style should be used).
+> > > > 
+> > > > Changes made by using a script provided by Joe Perches here:
+> > > > https://lkml.org/lkml/2019/2/7/46.
+> []
+> > > > diff --git a/fs/xfs/libxfs/xfs_ag_resv.h b/fs/xfs/libxfs/xfs_ag_resv.h
+> []
+> > > > @@ -1,4 +1,4 @@
+> > > > -// SPDX-License-Identifier: GPL-2.0+
+> > > > +/* SPDX-License-Identifier: GPL-2.0+ */
+> > > 
+> > > I thought we were supposed to use 'GPL-2.0-or-newer' because 'GPL-2.0+'
+> > > is deprecated in some newer version of the SPDX standard?
+> > > 
+> > > <shrug>
+> > 
+> > The kernel follows the "older" SPDX standard, but will accept either,
+> > it's up to the author.  It is all documented in LICENSES/ if people
+> > really want to make sure.
+> 
+> I think the kernel should prefer the "newer" SPDX standard
+> for any/all changes to these lines.
+> ---
+>  LICENSES/preferred/GPL-2.0 | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/LICENSES/preferred/GPL-2.0 b/LICENSES/preferred/GPL-2.0
+> index ff0812..c50f93 100644
+> --- a/LICENSES/preferred/GPL-2.0
+> +++ b/LICENSES/preferred/GPL-2.0
+> @@ -8,13 +8,13 @@ Usage-Guide:
+>    tag/value pairs into a comment according to the placement
+>    guidelines in the licensing rules documentation.
+>    For 'GNU General Public License (GPL) version 2 only' use:
+> -    SPDX-License-Identifier: GPL-2.0
+> -  or
+>      SPDX-License-Identifier: GPL-2.0-only
+> +  or the deprecated alternative
+> +    SPDX-License-Identifier: GPL-2.0
+>    For 'GNU General Public License (GPL) version 2 or any later version' use:
+> -    SPDX-License-Identifier: GPL-2.0+
+> -  or
+>      SPDX-License-Identifier: GPL-2.0-or-later
+> +  or the deprecated alternative
+> +    SPDX-License-Identifier: GPL-2.0+
+>  License-Text:
 
-I don't have patch 1 and this patch should stand on it's own.
+At the moment, I do not, as the current ones are not "depreciated" at
+all.
 
-> and
-> here I updated the Documentation with the new one. This way the kernel
-> should support all the previous bindings and I can use the new better name.
+thanks,
 
-First, a compatible string is just an identifier. Maybe it wasn't the
-best name, but who cares really. Just use it even if it's not just
-kryo cpus. Otherwise, it's more complicated.
-
-Are you changing every dts file? If not, then dts files now have an
-undocumented compatible string which is not okay. You'd need to keep
-the old compatible and mark it deprecated. If you are, then you are
-breaking compatibility between new dts and older kernels unless adding
-the new compatible string to the driver is backported to stable (which
-should be okay).
-
-Rob
+greg k-h
