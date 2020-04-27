@@ -2,179 +2,98 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D41F2C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D2FC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F4E2206CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1476A206CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:18:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uLbgawqS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fA42ToD7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727886AbgD0NSf (ORCPT
+        id S1727768AbgD0NSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 09:18:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51308 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727074AbgD0NSf (ORCPT
+        Mon, 27 Apr 2020 09:18:54 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33306 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726721AbgD0NSx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 09:18:35 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30370C0610D5;
-        Mon, 27 Apr 2020 06:18:35 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id 145so8981573pfw.13;
-        Mon, 27 Apr 2020 06:18:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=c1k+gEIx9g2n5bow6vtVN4S2Oq2hdJ7Izd4HZYhlGy4=;
-        b=uLbgawqSZf5WmYOM6BphwUPZqqeTRvTEk8pAY4dpAvTaPyUI3Y0DC5A60nnhZCrm+L
-         VH5NKdG0wLRYVt3tL8XIP82+eQ4HH5ADJKRpbBWuq5vc2IN1ifhUkkGQkUuBWHvxH1sL
-         pKoTyCmQWMyrZiVbmnjh+Y5gfOSvRe3jJNva9GzRINDm2kFPNThnMeUSCNlRRgYjtlb5
-         upDacs7OkHBiQUjo7G35XrknjRJ6fds0AA2hlBW1ANBBRKQ5nEIrofcAR8KqH/likuj+
-         1GFxuVEsSXMc2JKVe7PqWXCvEfHNRZsFBaJD3FuzRKTuL4sJqDBwKnTmxJda1d/4Tchx
-         j8mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c1k+gEIx9g2n5bow6vtVN4S2Oq2hdJ7Izd4HZYhlGy4=;
-        b=UlhedcFGgoGGfMRFFEew5PpDh+wNGpkH/F0Lt31eD7WWJLdbMRlWF3qBjeRzNj39wB
-         2O1BkyzEbXD0AkoWaSlhfo1ZRYtvxcP5/ZHwgN+esHAZBe4H0YNJlUFQiqPoWJ50wZn4
-         WNCjwKZI6/GkzVtXSATL4J392vG9GTOGRVUsEAmfToasrExufOvQcBbAw4N99JL/YhIO
-         r3EAwgfULd+lJIIfFITP95Ft8eUzHAyW+//dWpjHbud+kpvTxuKZD/JUWCLzNAjE1R19
-         iqsVIrizMs0lwVa2m+gHU9CiPz8UO3PU7uUfc5LUZ/XokpWrAEG83XeQokwNWtKrHEAt
-         LqmQ==
-X-Gm-Message-State: AGi0PuYVLSy6v5yxv16wZQwwlgv7FIuDKQi6LBBh0aAUDoxB+F9odeGf
-        A67h1cr9KH4IEmrQvB8oj2MznXneS+KHDYHm6BM=
-X-Google-Smtp-Source: APiQypIl5JhShfbLXk210/ONkEo4RLpOUlw3JnX3koAy0fh72SXGm0PXh4t+wpSJFLk7CwNMI6rOAM2DC1qKtbSLiXU=
-X-Received: by 2002:a63:1c1:: with SMTP id 184mr23868927pgb.203.1587993514639;
- Mon, 27 Apr 2020 06:18:34 -0700 (PDT)
+        Mon, 27 Apr 2020 09:18:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587993532;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eMggmePdezXBpkt3EQMsDMNJymVegCMfPLGhSAkJGro=;
+        b=fA42ToD7LcYsOY/stUfSSWb6aD0UTsqY+9wzWl2IzzYVGk4SrrueAfVBd24t0aLv+VGxoH
+        MLKKkMSRJ3hBj3cdsJpviOiqSu568lIBQAp9b0+JaxMDOUPnm7YWU4Dr7hcDWy2nl9qjwp
+        xktW5GAqaoKtMYd6lJGvoK1UwuTs6ys=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-439-0sGGArDHPwCdsY9wqytrng-1; Mon, 27 Apr 2020 09:18:50 -0400
+X-MC-Unique: 0sGGArDHPwCdsY9wqytrng-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D5BC6100CC9D;
+        Mon, 27 Apr 2020 13:18:37 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-118-57.rdu2.redhat.com [10.10.118.57])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EFE3419697;
+        Mon, 27 Apr 2020 13:18:35 +0000 (UTC)
+Subject: Re: [PATCH] mm/slub: Fix incorrect checkings of s->offset
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
+References: <20200427020212.5222-1-longman@redhat.com>
+ <20200427123814.GE29705@bombadil.infradead.org>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <891a7635-9074-d320-9571-74f584401f01@redhat.com>
+Date:   Mon, 27 Apr 2020 09:18:36 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200426104713.216896-1-hdegoede@redhat.com> <20200426104713.216896-2-hdegoede@redhat.com>
- <CAHp75VdOd6C36oR7HAnqrKiinVBr4YcqqJ=dv3NpR3=Xp0QQ-Q@mail.gmail.com> <b5bdffb4-0af2-abb7-21f7-2f5da56d5dc6@redhat.com>
-In-Reply-To: <b5bdffb4-0af2-abb7-21f7-2f5da56d5dc6@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 27 Apr 2020 16:18:28 +0300
-Message-ID: <CAHp75VegakBqAzxn1e+MzF3EgB6fNya3L0eZHMh11yct6HHNKw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] platform/x86: i2c-multi-instantiate: Add flag for
- passing fwnode
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200427123814.GE29705@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 3:51 PM Hans de Goede <hdegoede@redhat.com> wrote:
+On 4/27/20 8:38 AM, Matthew Wilcox wrote:
+> On Sun, Apr 26, 2020 at 10:02:12PM -0400, Waiman Long wrote:
+>> In a couple of places in the slub memory allocator, the code uses
+>> "s->offset" as a check to see if the free pointer is put right after the
+>> object. That check is no longer true with commit 3202fa62fb43 ("slub:
+>> relocate freelist pointer to middle of object").
+>>
+>> As a result, echoing "1" into the validate sysfs file, e.g. of dentry,
+>> may cause a bunch of "Freepointer corrupt" error reports to appear with
+>> the system in panic afterwards.
+>>
+>> To fix it, use the check "s->offset == s->inuse" instead.
+> I think a little refactoring would make this more clear.
 >
-> Hi,
->
-> On 4/26/20 7:59 PM, Andy Shevchenko wrote:
-> > On Sun, Apr 26, 2020 at 1:47 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> >>
-> >> In some cases the driver for the i2c_client-s which i2c-multi-instantiate
-> >> instantiates may need access some fields / methods from to the ACPI fwnode
-> >> for which i2c_clients are being instantiated.
-> >>
-> >> An example of this are CPLM3218 ACPI device-s. These contain CPM0 and
-> >> CPM1 packages with various information (e.g. register init values) which
-> >> the driver needs.
-> >>
-> >> Passing the fwnode through the i2c_board_info struct also gives the
-> >> i2c-core access to it, and if we do not pass an IRQ then the i2c-core
-> >> will use the fwnode to get an IRQ, see i2c_acpi_get_irq().
-> >
-> > I'm wondering, can we rather do it in the same way like we do for
-> > GPIO/APIC case here.
-> > Introduce IRQ_RESOURCE_SHARED (or so) and
-> >
-> > case _SHARED:
-> >   irq = i2c_acpi_get_irq();
-> > ...
-> >
-> > ?
->
-> I think you are miss-understanding the problem. The problem is not that
-> we want to share the IRQ, the problem is that we want to pass the single
-> IRQ in the resources to only 1 of the instantiated I2C-clients. But if we
-> do not pass an IRQ (we leave it at 0) and we do pass the fwnode then
-> i2c-core-base.c will see that there is an ACPI-node attached to the
-> device and will call i2c_acpi_get_irq().
+> unsigned int track_offset(const struct kmem_cache *s)
+> {
+> 	return s->inuse + (s->offset == s->inuse) ? sizeof(void *) : 0;
+> }
 
-Do we know ahead which device should take IRQ resource and which should not?
-Can we use current _NONE flag for them?
+Yes, that was what I am thinking of doing in v2.
 
-> So the solution is definitely not calling i2c_acpi_get_irq() inside
-> i2c-multi-instantiate.c we want to avoid the i2c_acpi_get_irq(),
-> leaving the other 2 clients for the BSG1160 device without an IRQ
-> and thus avoiding the IRQ mismatch (it is a mismatch because the
-> drivers do not set the shared flag; and that is ok, we do not want
-> to share the IRQ, it is just for the accelerometer AFAIK).
+Thanks,
+Longman
 
-> >> This is a problem when there is only an IRQ for 1 of the clients described
-> >> in the ACPI device we are instantiating clients for. If we unconditionally
-> >> pass the fwnode, then i2c_acpi_get_irq() will assign the same IRQ to all
-> >> clients instantiated, leading to kernel-oopses like this (BSG1160 device):
-> >>
-> >> [   27.340557] genirq: Flags mismatch irq 76. 00002001 (bmc150_magn_event) vs. 00000001 (bmc150_accel_event)
-> >> [   27.340567] Call Trace:
-> >> ...
-> >>
-> >> So we cannot simply always pass the fwnode. This commit adds a PASS_FWNODE
-> >> flag, which can be used to pass the fwnode in cases where we do not have
-> >> the IRQ problem and the driver for the instantiated client(s) needs access
-> >> to the fwnode.
-> >>
-> >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> >> ---
-> >>   drivers/platform/x86/i2c-multi-instantiate.c | 6 ++++++
-> >>   1 file changed, 6 insertions(+)
-> >>
-> >> diff --git a/drivers/platform/x86/i2c-multi-instantiate.c b/drivers/platform/x86/i2c-multi-instantiate.c
-> >> index 6acc8457866e..dcafb1a29d17 100644
-> >> --- a/drivers/platform/x86/i2c-multi-instantiate.c
-> >> +++ b/drivers/platform/x86/i2c-multi-instantiate.c
-> >> @@ -20,6 +20,8 @@
-> >>   #define IRQ_RESOURCE_GPIO      1
-> >>   #define IRQ_RESOURCE_APIC      2
-> >>
-> >> +#define PASS_FWNODE            BIT(2)
-> >> +
-> >>   struct i2c_inst_data {
-> >>          const char *type;
-> >>          unsigned int flags;
-> >> @@ -93,6 +95,10 @@ static int i2c_multi_inst_probe(struct platform_device *pdev)
-> >>                  snprintf(name, sizeof(name), "%s-%s.%d", dev_name(dev),
-> >>                           inst_data[i].type, i);
-> >>                  board_info.dev_name = name;
-> >> +
-> >> +               if (inst_data[i].flags & PASS_FWNODE)
-> >> +                       board_info.fwnode = dev->fwnode;
-> >> +
-> >>                  switch (inst_data[i].flags & IRQ_RESOURCE_TYPE) {
-> >>                  case IRQ_RESOURCE_GPIO:
-> >>                          ret = acpi_dev_gpio_irq_get(adev, inst_data[i].irq_idx);
-> >> --
-> >> 2.26.0
-> >>
-> >
-> >
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
