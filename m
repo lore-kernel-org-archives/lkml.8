@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF98C82A00
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 267A8C82A0A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B4C22082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F39D32082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:03:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588024988;
-	bh=RpfAiculO1CWkSlT+K3PNUD5JFFarLwrKakCGdMtgK0=;
+	s=default; t=1588024986;
+	bh=jPw2vwOYLdQLlLNVqlyNjqvBBy54L5FWmYUuoJDEcdo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w+FtgtqPsKmdAj0vDYXvmOyU+tjVG9MA3reEkqG1YygnlSS+ZiNQF5EZHejQtCeiq
-	 qSalmxs8gg7EKgFSJU9R1qawOUQDUG8D8IZe2mZp/l86mPmydEyJuI+NVzHYEXZ5O+
-	 h2Y3+pgQ6CZv6k18fQjbYm/CCex0shXyaXxOU5g8=
+	b=lWPs2J29JBu+RZZdxrqobyMZFoWE93jK6nAtEOm2pZhHcbfELbKVdtBryaPt6bZwD
+	 E5bBKR5XDaVZa5/k1sS2SVI+pq1HMtr/GCCHQAPhAFDs0Rs/eAiQ2c1N/thpilvel+
+	 eO4bCYSJ2edBNrqjmiyV98LvGoQuUYzvrKvJ8aDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgD0WDH (ORCPT
+        id S1726672AbgD0WDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 18:03:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48134 "EHLO mail.kernel.org"
+        Mon, 27 Apr 2020 18:03:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726404AbgD0WCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726381AbgD0WCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 Apr 2020 18:02:01 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3088E22285;
+        by mail.kernel.org (Postfix) with ESMTPSA id 0166522253;
         Mon, 27 Apr 2020 22:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588024917;
-        bh=RpfAiculO1CWkSlT+K3PNUD5JFFarLwrKakCGdMtgK0=;
+        bh=jPw2vwOYLdQLlLNVqlyNjqvBBy54L5FWmYUuoJDEcdo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QwXZo1SaI47WPVn/HK875y7YQt97p5fJ9mu9XdaiyJCnDv9GTq1unFfl9+irbMiAK
-         jLfKdiQ32/o6lbfoKyX1vPNRqxMzdV9llSygTL380Zc6JTJdHInqvrlaywo+VyEdPL
-         UQutuXD0M1VuwSNciluQj4u8ZqM4iMnbOoq3IA90=
+        b=Keof8qQ3MTvMj1l8+wyESbXuOCtK6WoBzNsDYSQkI0jeIy4vskn79UzBWzdxclcvu
+         9rC+i5FGabMvAJtS20uC47sgvOLNBSJ4Eij6bA4V6YgTKz9aB6pbqzaKTw26EURT2q
+         Zp0LowYr3N4QBS/n75HPkr5y5jGMtJzLYWL4aVSQ=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jTBp5-000IqS-Di; Tue, 28 Apr 2020 00:01:55 +0200
+        id 1jTBp5-000Iq2-97; Tue, 28 Apr 2020 00:01:55 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev@vger.kernel.org
-Subject: [PATCH 35/38] docs: networking: convert ipv6.txt to ReST
-Date:   Tue, 28 Apr 2020 00:01:50 +0200
-Message-Id: <3eafd57c449c38460db2aa1628e2034de2406f66.1588024424.git.mchehab+huawei@kernel.org>
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH 30/38] docs: networking: convert ipddp.txt to ReST
+Date:   Tue, 28 Apr 2020 00:01:45 +0200
+Message-Id: <8c3349990d7236f49b668588e40d6a14f6a81077.1588024424.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588024424.git.mchehab+huawei@kernel.org>
 References: <cover.1588024424.git.mchehab+huawei@kernel.org>
@@ -67,99 +64,95 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Not much to be done here:
 
 - add SPDX header;
-- add a document title;
-- mark a literal as such, in order to avoid a warning;
+- use a document title from existing text;
+- adjust a chapter markup;
 - add to networking/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/admin-guide/kernel-parameters.txt | 6 +++---
- Documentation/networking/index.rst              | 1 +
- Documentation/networking/{ipv6.txt => ipv6.rst} | 8 +++++++-
- net/ipv6/Kconfig                                | 2 +-
- 4 files changed, 12 insertions(+), 5 deletions(-)
- rename Documentation/networking/{ipv6.txt => ipv6.rst} (93%)
+ Documentation/networking/index.rst                |  1 +
+ Documentation/networking/{ipddp.txt => ipddp.rst} | 13 +++++++++----
+ Documentation/networking/ltpc.txt                 |  2 +-
+ drivers/net/appletalk/Kconfig                     |  4 ++--
+ 4 files changed, 13 insertions(+), 7 deletions(-)
+ rename Documentation/networking/{ipddp.txt => ipddp.rst} (89%)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index ef9779398cee..e84951d80e6f 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -356,7 +356,7 @@
- 			      shot down by NMI
- 
- 	autoconf=	[IPV6]
--			See Documentation/networking/ipv6.txt.
-+			See Documentation/networking/ipv6.rst.
- 
- 	show_lapic=	[APIC,X86] Advanced Programmable Interrupt Controller
- 			Limit apic dumping. The parameter defines the maximal
-@@ -875,7 +875,7 @@
- 			miss to occur.
- 
- 	disable=	[IPV6]
--			See Documentation/networking/ipv6.txt.
-+			See Documentation/networking/ipv6.rst.
- 
- 	hardened_usercopy=
-                         [KNL] Under CONFIG_HARDENED_USERCOPY, whether
-@@ -915,7 +915,7 @@
- 			to workaround buggy firmware.
- 
- 	disable_ipv6=	[IPV6]
--			See Documentation/networking/ipv6.txt.
-+			See Documentation/networking/ipv6.rst.
- 
- 	disable_mtrr_cleanup [X86]
- 			The kernel tries to adjust MTRR layout from continuous
 diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index 7d133d8dbe2a..709675464e51 100644
+index 488971f6b650..cf85d0a73144 100644
 --- a/Documentation/networking/index.rst
 +++ b/Documentation/networking/index.rst
-@@ -70,6 +70,7 @@ Contents:
-    iphase
-    ipsec
-    ip-sysctl
-+   ipv6
+@@ -65,6 +65,7 @@ Contents:
+    gtp
+    hinic
+    ila
++   ipddp
  
  .. only::  subproject and html
  
-diff --git a/Documentation/networking/ipv6.txt b/Documentation/networking/ipv6.rst
-similarity index 93%
-rename from Documentation/networking/ipv6.txt
-rename to Documentation/networking/ipv6.rst
-index 6cd74fa55358..ba09c2f2dcc7 100644
---- a/Documentation/networking/ipv6.txt
-+++ b/Documentation/networking/ipv6.rst
-@@ -1,9 +1,15 @@
+diff --git a/Documentation/networking/ipddp.txt b/Documentation/networking/ipddp.rst
+similarity index 89%
+rename from Documentation/networking/ipddp.txt
+rename to Documentation/networking/ipddp.rst
+index ba5c217fffe0..be7091b77927 100644
+--- a/Documentation/networking/ipddp.txt
++++ b/Documentation/networking/ipddp.rst
+@@ -1,7 +1,12 @@
+-Text file for ipddp.c:
+-	AppleTalk-IP Decapsulation and AppleTalk-IP Encapsulation
 +.. SPDX-License-Identifier: GPL-2.0
+ 
+-This text file is written by Jay Schulist <jschlst@samba.org>
++=========================================================
++AppleTalk-IP Decapsulation and AppleTalk-IP Encapsulation
++=========================================================
 +
-+====
-+IPv6
-+====
++Documentation ipddp.c
 +
++This file is written by Jay Schulist <jschlst@samba.org>
  
- Options for the ipv6 module are supplied as parameters at load time.
+ Introduction
+ ------------
+@@ -21,7 +26,7 @@ kernel AppleTalk layer and drivers are available.
+ Each mode requires its own user space software.
  
- Module options may be given as command line arguments to the insmod
- or modprobe command, but are usually specified in either
--/etc/modules.d/*.conf configuration files, or in a distro-specific
-+``/etc/modules.d/*.conf`` configuration files, or in a distro-specific
- configuration file.
+ Compiling AppleTalk-IP Decapsulation/Encapsulation
+-=================================================
++==================================================
  
- The available ipv6 module parameters are listed below.  If a parameter
-diff --git a/net/ipv6/Kconfig b/net/ipv6/Kconfig
-index 2ccaee98fddb..5a6111da26c4 100644
---- a/net/ipv6/Kconfig
-+++ b/net/ipv6/Kconfig
-@@ -13,7 +13,7 @@ menuconfig IPV6
- 	  For general information about IPv6, see
- 	  <https://en.wikipedia.org/wiki/IPv6>.
- 	  For specific information about IPv6 under Linux, see
--	  Documentation/networking/ipv6.txt and read the HOWTO at
-+	  Documentation/networking/ipv6.rst and read the HOWTO at
- 	  <http://www.tldp.org/HOWTO/Linux+IPv6-HOWTO/>
+ AppleTalk-IP decapsulation needs to be compiled into your kernel. You
+ will need to turn on AppleTalk-IP driver support. Then you will need to
+diff --git a/Documentation/networking/ltpc.txt b/Documentation/networking/ltpc.txt
+index 0bf3220c715b..a005a73b76d0 100644
+--- a/Documentation/networking/ltpc.txt
++++ b/Documentation/networking/ltpc.txt
+@@ -99,7 +99,7 @@ treat the LocalTalk device like an ordinary Ethernet device, even if
+ that's what it looks like to Netatalk.
  
- 	  To compile this protocol support as a module, choose M here: the
+ Instead, you follow the same procedure as for doing IP in EtherTalk.
+-See Documentation/networking/ipddp.txt for more information about the
++See Documentation/networking/ipddp.rst for more information about the
+ kernel driver and userspace tools needed.
+ 
+ --------------------------------------
+diff --git a/drivers/net/appletalk/Kconfig b/drivers/net/appletalk/Kconfig
+index d4e51c048f62..ccde6479050c 100644
+--- a/drivers/net/appletalk/Kconfig
++++ b/drivers/net/appletalk/Kconfig
+@@ -86,7 +86,7 @@ config IPDDP
+ 	  box is stuck on an AppleTalk only network) or decapsulate (e.g. if
+ 	  you want your Linux box to act as an Internet gateway for a zoo of
+ 	  AppleTalk connected Macs). Please see the file
+-	  <file:Documentation/networking/ipddp.txt> for more information.
++	  <file:Documentation/networking/ipddp.rst> for more information.
+ 
+ 	  If you say Y here, the AppleTalk-IP support will be compiled into
+ 	  the kernel. In this case, you can either use encapsulation or
+@@ -107,4 +107,4 @@ config IPDDP_ENCAP
+ 	  IP packets inside AppleTalk frames; this is useful if your Linux box
+ 	  is stuck on an AppleTalk network (which hopefully contains a
+ 	  decapsulator somewhere). Please see
+-	  <file:Documentation/networking/ipddp.txt> for more information.
++	  <file:Documentation/networking/ipddp.rst> for more information.
 -- 
 2.25.4
 
