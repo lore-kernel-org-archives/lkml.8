@@ -2,233 +2,133 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B714CC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B8BC4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91A49206D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:34:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78173206D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:37:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588009076;
+	bh=CRnrGSfeXKE04SYiSfLjK47OzoOEUP1L82XDJvKWoR4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mWljshM1abkvqxCsAXAEUcnbyrQ1+gq5Rw6RchMzHDq13ARjbjCmaQgsxoozeLUMJ
+	 /74owchATGiCGCeBV6ZOyEl+inkSHh4iSOmiPxQIKDgdp6F1QhNI8sYSQ0xzpf8r67
+	 HR67AsyiOiBwwOs8rrBF6j3Y6EN4P8Zr7tIhWN28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbgD0ReR (ORCPT
+        id S1726318AbgD0Rhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 13:34:17 -0400
-Received: from mga18.intel.com ([134.134.136.126]:58281 "EHLO mga18.intel.com"
+        Mon, 27 Apr 2020 13:37:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726250AbgD0ReR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 13:34:17 -0400
-IronPort-SDR: 8iu883LNuGB6SYRBmz7y4cPQq1DD4Nk1lrDhgYaMbUqwzpfvMG/KAg1Ap4EJ8w8w0KhaGAVX/p
- H8Vv9HOHqLcg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 10:34:13 -0700
-IronPort-SDR: 0gQvuxmRkGVvyxFaDsAGzRjMW5HomBx/fJWEEVYlWTR3/KsNDwthx8PwGXV6wOLispG7rF8MD4
- pKkShmOCMFrg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,324,1583222400"; 
-   d="scan'208";a="275550376"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 27 Apr 2020 10:34:11 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jT7dy-00098K-E5; Tue, 28 Apr 2020 01:34:10 +0800
-Date:   Tue, 28 Apr 2020 01:33:41 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/boot] BUILD SUCCESS
- 694cfd87b0c8a48af2f1afb225563571c0b975c4
-Message-ID: <5ea71775.BQZudA8rumehcQY+%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1725963AbgD0Rhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 13:37:55 -0400
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27790206D9
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 17:37:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588009074;
+        bh=CRnrGSfeXKE04SYiSfLjK47OzoOEUP1L82XDJvKWoR4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nu+Pwm8C7ZzEGBJLMJ9VwcO6z51c/SaWNuYsdGhtItHu3A+6FYmc/eXSNmTVAb2uK
+         tneA1fuX8ZfPP79F3RSubUzWXXK8kKasgds0aHFbkTeJbXUGK2foYTtQ/f6xlDFlN3
+         djowQs6+Y1171rpUGBcqSzTO520lNKT2mJFacNgE=
+Received: by mail-wr1-f53.google.com with SMTP id s10so21572166wrr.0
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 10:37:54 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaoDMbn+pkSwQX/ZDX3Sj3batRQWuVplvOGQ5PXjIFIK9n03gBn
+        tiU1NkLd81QhTHDxVESDQ3DzDr3ivhxih7TLdDRLjg==
+X-Google-Smtp-Source: APiQypK2liBn30m34/Dp/fYtTgQDcIlhKU2o3YS7OuvYuy5s6viTinmEVCuKGI6u9wjEWkrN2rR1dZgH24YAvZ+2RGI=
+X-Received: by 2002:adf:f648:: with SMTP id x8mr27923047wrp.257.1588009072661;
+ Mon, 27 Apr 2020 10:37:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20200425191032.GK21900@8bytes.org> <910AE5B4-4522-4133-99F7-64850181FBF9@amacapital.net>
+ <20200425202316.GL21900@8bytes.org> <CALCETrW2Y6UFC=zvGbXEYqpsDyBh0DSEM4NQ+L=_pp4aOd6Fuw@mail.gmail.com>
+In-Reply-To: <CALCETrW2Y6UFC=zvGbXEYqpsDyBh0DSEM4NQ+L=_pp4aOd6Fuw@mail.gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 27 Apr 2020 10:37:41 -0700
+X-Gmail-Original-Message-ID: <CALCETrXGr+o1_bKbnre8cVY14c_76m8pEf3iB_i7h+zfgE5_jA@mail.gmail.com>
+Message-ID: <CALCETrXGr+o1_bKbnre8cVY14c_76m8pEf3iB_i7h+zfgE5_jA@mail.gmail.com>
+Subject: Should SEV-ES #VC use IST? (Re: [PATCH] Allow RDTSC and RDTSCP from userspace)
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tom Lendacky <Thomas.Lendacky@amd.com>,
+        Mike Stunes <mstunes@vmware.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <JGross@suse.com>,
+        Jiri Slaby <jslaby@suse.cz>, Kees Cook <keescook@chromium.org>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>,
+        X86 ML <x86@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andrew Cooper <andrew.cooper3@citrix.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/boot
-branch HEAD: 694cfd87b0c8a48af2f1afb225563571c0b975c4  x86/setup: Add an initrdmem= option to specify initrd physical address
+On Sat, Apr 25, 2020 at 3:10 PM Andy Lutomirski <luto@kernel.org> wrote:
+>
+> On Sat, Apr 25, 2020 at 1:23 PM Joerg Roedel <joro@8bytes.org> wrote:
+> >
+> > On Sat, Apr 25, 2020 at 12:47:31PM -0700, Andy Lutomirski wrote:
+> > > I assume the race you mean is:
+> > >
+> > > #VC
+> > > Immediate NMI before IST gets shifted
+> > > #VC
+> > >
+> > > Kaboom.
+> > >
+> > > How are you dealing with this?  Ultimately, I think that NMI will need
+> > > to turn off IST before engaging in any funny business. Let me ponder
+> > > this a bit.
+> >
+> > Right, I dealt with that by unconditionally shifting/unshifting the #VC IST entry
+> > in do_nmi() (thanks to Davin Kaplan for the idea). It might cause
+> > one of the IST stacks to be unused during nesting, but that is fine. The
+> > stack memory for #VC is only allocated when SEV-ES is active (in an
+> > SEV-ES VM).
+>
+> Blech.  It probably works, but still, yuck.  It's a bit sad that we
+> seem to be growing more and more poorly designed happens-anywhere
+> exception types at an alarming rate.  We seem to have #NM, #MC, #VC,
+> #HV, and #DB.  This doesn't really scale.
 
-elapsed time: 600m
+I have a somewhat serious question: should we use IST for #VC at all?
+As I understand it, Rome and Naples make it mandatory for hypervisors
+to intercept #DB, which means that, due to the MOV SS mess, it's sort
+of mandatory to use IST for #VC.  But Milan fixes the #DB issue, so,
+if we're running under a sufficiently sensible hypervisor, we don't
+need IST for #VC.
 
-configs tested: 166
-configs skipped: 0
+So I think we have two choices:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+1. Use IST for #VC and deal with all the mess that entails.
 
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm                              allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-sparc                            allyesconfig
-h8300                    h8300h-sim_defconfig
-c6x                              allyesconfig
-ia64                              allnoconfig
-openrisc                 simple_smp_defconfig
-parisc                generic-32bit_defconfig
-riscv                            allyesconfig
-um                             i386_defconfig
-microblaze                      mmu_defconfig
-nios2                         3c120_defconfig
-ia64                         bigsur_defconfig
-mips                              allnoconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                             alldefconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                        generic_defconfig
-ia64                          tiger_defconfig
-ia64                             allyesconfig
-ia64                             alldefconfig
-nios2                         10m50_defconfig
-c6x                        evmc6678_defconfig
-xtensa                          iss_defconfig
-xtensa                       common_defconfig
-openrisc                    or1ksim_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-mips                            ar7_defconfig
-mips                             allyesconfig
-mips                         64r6el_defconfig
-mips                           32r2_defconfig
-mips                             allmodconfig
-mips                malta_kvm_guest_defconfig
-mips                         tb0287_defconfig
-mips                       capcella_defconfig
-mips                           ip32_defconfig
-mips                  decstation_64_defconfig
-mips                      loongson3_defconfig
-mips                          ath79_defconfig
-mips                        bcm63xx_defconfig
-parisc                            allnoconfig
-parisc                generic-64bit_defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-parisc               randconfig-a001-20200427
-alpha                randconfig-a001-20200427
-mips                 randconfig-a001-20200427
-m68k                 randconfig-a001-20200427
-riscv                randconfig-a001-20200427
-nds32                randconfig-a001-20200427
-nios2                randconfig-a001-20200427
-c6x                  randconfig-a001-20200427
-h8300                randconfig-a001-20200427
-sparc64              randconfig-a001-20200427
-microblaze           randconfig-a001-20200427
-sh                   randconfig-a001-20200427
-csky                 randconfig-a001-20200427
-xtensa               randconfig-a001-20200427
-openrisc             randconfig-a001-20200427
-i386                 randconfig-b002-20200427
-x86_64               randconfig-b001-20200427
-i386                 randconfig-b001-20200427
-i386                 randconfig-b003-20200427
-x86_64               randconfig-b002-20200427
-x86_64               randconfig-b003-20200427
-i386                 randconfig-c002-20200427
-i386                 randconfig-c001-20200427
-x86_64               randconfig-c002-20200427
-x86_64               randconfig-c001-20200427
-i386                 randconfig-c003-20200427
-x86_64               randconfig-c003-20200427
-x86_64               randconfig-d001-20200427
-x86_64               randconfig-d002-20200427
-i386                 randconfig-d002-20200427
-i386                 randconfig-d001-20200427
-x86_64               randconfig-d003-20200427
-i386                 randconfig-d003-20200427
-i386                 randconfig-e003-20200427
-x86_64               randconfig-e002-20200427
-x86_64               randconfig-e003-20200427
-i386                 randconfig-e002-20200427
-i386                 randconfig-e001-20200427
-x86_64               randconfig-e001-20200427
-i386                 randconfig-g003-20200427
-i386                 randconfig-g001-20200427
-x86_64               randconfig-g001-20200427
-i386                 randconfig-g002-20200427
-x86_64               randconfig-g003-20200427
-i386                 randconfig-h003-20200427
-x86_64               randconfig-h002-20200427
-i386                 randconfig-h002-20200427
-i386                 randconfig-h001-20200427
-i386                 randconfig-a003-20200427
-i386                 randconfig-a001-20200427
-i386                 randconfig-a002-20200427
-x86_64               randconfig-a002-20200427
-sparc                randconfig-a001-20200427
-ia64                 randconfig-a001-20200427
-arm                  randconfig-a001-20200427
-arm64                randconfig-a001-20200427
-arc                  randconfig-a001-20200427
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                       zfcpdump_defconfig
-s390                          debug_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                                allnoconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                           x86_64_defconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+2. Say that we SEV-ES client support on Rome and Naples is for
+development only and do a quick boot-time check for whether #DB is
+intercepted.  (Just set TF and see what vector we get.)  If #DB is
+intercepted, print a very loud warning and refuse to boot unless some
+special sev_es.insecure_development_mode or similar option is set.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+#2 results in simpler and more robust entry code.  #1 is more secure.
+
+So my question is: will anyone actually use SEV-ES in production on
+Rome or Naples?  As I understand it, it's not really ready for prime
+time on those chips.  And do we care if the combination of a malicious
+hypervisor and malicious guest userspace on Milan can compromise the
+guest kernel?  I don't think SEV-ES is really mean to resist a
+concerted effort by the hypervisor to compromise the guest.
+
+--Andy
