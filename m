@@ -2,177 +2,168 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BF0C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 335C8C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6E5620661
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1152620656
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:42:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DgrzTzZP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zVyMRiMl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbgD0Plw (ORCPT
+        id S1728163AbgD0PmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 11:41:52 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:52284 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727077AbgD0Plv (ORCPT
+        Mon, 27 Apr 2020 11:42:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45572 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728032AbgD0PmF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 11:41:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588002109;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tJRLLv8agzDERmbgL8/S6trBj8aDl75vAd6aQQKyE3Q=;
-        b=DgrzTzZPAkjOB+bivcRSWQA2pvAIllLZonqRtHT8LQXG/tBMLTnB1KL36jrpAxffX0TFKc
-        3m1Vju15aWPnpY645GM1i2YuBhlwdXs564dLDZ5X2uO4F8AqahHRwWuaJftLxBvsuWjaED
-        Q9RUDHfSDPdh4UDHZB4wQsisYTlnYM8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-32-dPon0T0jP8e_3iYOFCzrPw-1; Mon, 27 Apr 2020 11:41:45 -0400
-X-MC-Unique: dPon0T0jP8e_3iYOFCzrPw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 776E145F;
-        Mon, 27 Apr 2020 15:41:42 +0000 (UTC)
-Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3F6766062E;
-        Mon, 27 Apr 2020 15:41:38 +0000 (UTC)
-Date:   Mon, 27 Apr 2020 09:41:37 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-Message-ID: <20200427094137.4801bfb6@w520.home>
-In-Reply-To: <20200427142553.GH13640@mellanox.com>
-References: <20200424124444.GJ13640@mellanox.com>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D8A808B@SHSMSX104.ccr.corp.intel.com>
-        <20200424181203.GU13640@mellanox.com>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
-        <20200426191357.GB13640@mellanox.com>
-        <20200426214355.29e19d33@x1.home>
-        <20200427115818.GE13640@mellanox.com>
-        <20200427071939.06aa300e@x1.home>
-        <20200427132218.GG13640@mellanox.com>
-        <20200427081841.18c4a994@x1.home>
-        <20200427142553.GH13640@mellanox.com>
+        Mon, 27 Apr 2020 11:42:05 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C308C03C1A7
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 08:42:05 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id x4so133459wmj.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 08:42:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lLZ7XRRaI1Gpl8c1cQLS2hZAOx8Bn/MZHFlY/EiF3y4=;
+        b=zVyMRiMlwP+4cneNlBaaoQ92zIOVybC9w7sTqGp6acGraFBBzMNx47ZgVM0VG2/3EG
+         NEPiBNjfdPgG4SDKj+0hZXH+JyVsqJmkXwHbH2YpKeWHODUK0z6FvTCLldhQr293Uflb
+         v4gpmbFCPThW6+4w69f4HLq/2UwEkekOwNsS7TSBvs+QcpQtPe9usGuV5mRmPQGJthFY
+         l2R0uRiURvPiQYByEuK2PWbtckwm3lDBYJPbjAHVmyfrI47bGJOozdGn8vxxHkK72v98
+         SUV2DbWN4hTXtML0aeXUJ2ebaeinIsvIAqYBBhocdaABi06WiZ7LFXLH1YH7itElAiXH
+         k5aQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lLZ7XRRaI1Gpl8c1cQLS2hZAOx8Bn/MZHFlY/EiF3y4=;
+        b=F3aaG0l0pj9IH7sUVgvO+P4Fmnta+g+2iT+f5C2CL4s7iAnEq97zmQQP2O3amDQQqr
+         6NmxmWDpHYmh2JNtryMXxX+DiAfj1fGlkUCicA7ZVquK3uxoC+9dsyzvj360ZGiT7goS
+         o87Wgj+nDiPckUnJj9yWWLZ1Zj/TB8Urzb2EGawF2it/P1e0l9g4xQmzsct/yaINLquA
+         3AtLFYY14xndC9Nuf42QilEEcmg82zXK0SR5S9GPNjKzwuUx9IfNLBPtkbX2IhVB6cTc
+         Fai5ZJbq0OX6wP9EluZWGUxHgIsFMGF+WjfMsy6hAsQvciF0TIToj5VDZyqY523RkmZV
+         b9XA==
+X-Gm-Message-State: AGi0PuajI2FgQnUEhMNMutB/QX3Zb6tgqFVeZg510tlv9VK3xK1nD1mQ
+        t2gekcLXgg6ZjCxgzgCDqt+jzgHcXpnpzw==
+X-Google-Smtp-Source: APiQypJenGZpAvaB6iFtn3C1GjiCaFZUmaBJg7GJrDEvUU4GsYWVxuZ3cD66dGyGhTicTC8AaKBCkA==
+X-Received: by 2002:a1c:9a81:: with SMTP id c123mr52891wme.115.1588002123816;
+        Mon, 27 Apr 2020 08:42:03 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id w10sm22463339wrg.52.2020.04.27.08.42.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 08:42:03 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 16:42:01 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     jason.wessel@windriver.com, gregkh@linuxfoundation.org,
+        kgdb-bugreport@lists.sourceforge.net, mingo@redhat.com,
+        hpa@zytor.com, bp@alien8.de, linux-serial@vger.kernel.org,
+        agross@kernel.org, tglx@linutronix.de, frowand.list@gmail.com,
+        bjorn.andersson@linaro.org, jslaby@suse.com,
+        catalin.marinas@arm.com, corbet@lwn.net, will@kernel.org,
+        Matt Mullins <mmullins@fb.com>, Nadav Amit <namit@vmware.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v2 4/9] kgdb: Delay "kgdbwait" to dbg_late_init() by
+ default
+Message-ID: <20200427154201.dxkoctjxta22u7hz@holly.lan>
+References: <20200421211447.193860-1-dianders@chromium.org>
+ <20200421141234.v2.4.I3113aea1b08d8ce36dc3720209392ae8b815201b@changeid>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421141234.v2.4.I3113aea1b08d8ce36dc3720209392ae8b815201b@changeid>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Apr 2020 11:25:53 -0300
-Jason Gunthorpe <jgg@mellanox.com> wrote:
-
-> On Mon, Apr 27, 2020 at 08:18:41AM -0600, Alex Williamson wrote:
-> > On Mon, 27 Apr 2020 10:22:18 -0300
-> > Jason Gunthorpe <jgg@mellanox.com> wrote:
-> >   
-> > > On Mon, Apr 27, 2020 at 07:19:39AM -0600, Alex Williamson wrote:
-> > >   
-> > > > > It is not trivial masking. It is a 2000 line patch doing comprehensive
-> > > > > emulation.    
-> > > > 
-> > > > Not sure what you're referring to, I see about 30 lines of code in
-> > > > vdcm_vidxd_cfg_write() that specifically handle writes to the 4 BARs in
-> > > > config space and maybe a couple hundred lines of code in total handling
-> > > > config space emulation.  Thanks,    
-> > > 
-> > > Look around vidxd_do_command()
-> > > 
-> > > If I understand this flow properly..  
-> > 
-> > I've only glanced at it, but that's called in response to a write to
-> > MMIO space on the device, so it's implementing a device specific
-> > register.  
+On Tue, Apr 21, 2020 at 02:14:42PM -0700, Douglas Anderson wrote:
+> Using kgdb requires at least some level of architecture-level
+> initialization.  If nothing else, it relies on the architecture to
+> pass breakpoints / crashes onto kgdb.
 > 
-> It is doing emulation of the secure BAR. The entire 1000 lines of
-> vidxd_* functions appear to be focused on this task.
-
-Ok, we/I need a terminology clarification, a BAR is a register in
-config space for determining the size, type, and setting the location
-of a I/O or memory region of a device.  I've been asserting that the
-emulation of the BAR itself is trivial, but are you actually focused on
-emulation of the region described by the BAR?  This is what mdev is
-for, mediating access to a device and filling in gaps such that we can
-use re-use the vfio device APIs.
-
-> > Are you asking that PCI config space be done in userspace
-> > or any sort of device emulation?    
+> On some architectures this all works super early, specifically it
+> starts working at some point in time before Linux parses
+> early_params's.  On other architectures it doesn't.  A survey of a few
+> platforms:
 > 
-> I'm concerned about doing full emulation of registers on a MMIO BAR
-> that trigger complex actions in response to MMIO read/write.
-
-Maybe what you're recalling me say about mdev is that its Achilles
-heel is that we rely on mediation provider (ie. vendor driver) for
-security, we don't necessarily have an piece of known, common hardware
-like an IOMMU to protect us when things go wrong.  That's true, but
-don't we also trust drivers in the host kernel to correctly manage and
-validate their own interactions with hardware, including the APIs
-provided through other user interfaces.  Is the assertion then that
-device specific, register level API is too difficult to emulate?
-
-> Simple masking and simple config space stuff doesn't seem so
-> problematic.
+> a) x86: Presumably it all works early since "ekgdboc" is documented to
+>    work here.
+> b) arm64: Catching crashes works; with a simple patch breakpoints can
+>    also be made to work.
+> c) arm: Nothing in kgdb works until
+>    paging_init() -> devicemaps_init() -> early_trap_init()
 > 
-> > The assumption with mdev is that we need emulation in the host
-> > kernel because we need a trusted entity to mediate device access and
-> > interact with privileged portion of the device control.  Thanks,  
+> Let's be conservative and, by default, process "kgdbwait" (which tells
+> the kernel to drop into the debugger ASAP at boot) a bit later at
+> dbg_late_init() time.  If an architecture has tested it and wants to
+> re-enable super early debugging, they can implement the weak function
+> kgdb_arch_can_debug_early() to return true.  We'll do this for x86 to
+> start.  It should be noted that dbg_late_init() is still called quite
+> early in the system.
 > 
-> Sure, but there are all kinds of different levels to this - mdev
-> should not be some open ended device emulation framework, IMHO.
+> Note that this patch doesn't affect when kgdb runs its init.  If kgdb
+> is set to initialize early it will still initialize when parsing
+> early_params's.  This patch _only_ inhibits the initial breakpoint
+> from "kgdbwait".  This means:
 > 
-> ie other devices need only a small amount of kernel side help and
-> don't need complex MMIO BAR emulation.
+> * Without any extra patches arm64 platforms will at least catch
+>   crashes after kgdb inits.
+> * arm platforms will catch crashes (and could handle a hardcoded
+>   kgdb_breakpoint()) any time after early_trap_init() runs, even
+>   before dbg_late_init().
 > 
-> Would you be happy if someone proposed an e1000 NIC emulator using
-> mdev? Why not move every part of qemu's PCI device emulation into the
-> kernel?
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
 
-Well, in order to mediate a device, we certainly expect there to be a
-physical device.  I also expect that there's some performance or at
-least compatibility advantage to using the device API directly rather
-than masquerading everything behind something like virtio.  So no, I
-wouldn't expect someone to create a fully emulated device in mdev, but
-also I do expect some degree of device emulation in an mdev driver to
-fill the gaps in non-performance path that hardware chose to defer to
-software.  Thanks,
+Overall this looks good but there is a small quibble below...
 
-Alex
 
+> diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
+> index b072aeb1fd78..7371517aeacc 100644
+> --- a/include/linux/kgdb.h
+> +++ b/include/linux/kgdb.h
+> @@ -226,6 +226,28 @@ extern int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt);
+>   */
+>  extern void kgdb_arch_late(void);
+>  
+> +/**
+> + *	kgdb_arch_can_debug_early - Check if OK to break before dbg_late_init()
+> + *
+> + *	If an architecture can definitely handle entering the debugger when
+> + *	early_param's are parsed then it can override this function to return
+> + *	true.  Otherwise if "kgdbwait" is passed on the kernel command line it
+> + *	won't actually be processed until dbg_late_init() just after the call
+> + *	to kgdb_arch_late() is made.
+> + *
+> + *	NOTE: Even if this returns false we will still try to register kgdb to
+> + *	handle breakpoints and crashes when early_params's are parsed, we just
+> + *	won't act on the "kgdbwait" parameter until dbg_late_init().  If you
+> + *	get a crash and try to drop into kgdb somewhere between these two
+> + *	places you might or might not end up being able to use kgdb depending
+> + *	on exactly how far along the architecture has initted.
+> + *
+> + *	ALSO: dbg_late_init() is actually still fairly early in the system
+> + *	boot process.
+> + *
+> + *	Return: true if platform can handle kgdb early.
+> + */
+> +extern bool kgdb_arch_can_debug_early(void);
+
+Does this need to be a function? It looks like all implementations are
+either return true or return false (e.g. CONFIG_ARCH_HAVE_EARLY_DEBUG
+would do the same thing).
+
+
+Daniel.
