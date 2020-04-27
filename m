@@ -2,129 +2,357 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFA8C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E77DAC4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6679720728
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2E39206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:48:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z8kGvYRN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgD0SrI (ORCPT
+        id S1726640AbgD0SsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 14:47:08 -0400
-Received: from mga05.intel.com ([192.55.52.43]:20616 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726249AbgD0SrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 14:47:08 -0400
-IronPort-SDR: PRC6689qJ1oUsyFvOsRNFva+d0TxYT0Nt9C2cLQtC0CJJnAOZsJySNeZS4DLFTG4Uvp54TPDpN
- bpoHnqDFaIvw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 11:47:08 -0700
-IronPort-SDR: tMRtVWJYS1g//srvZYmJ2nFAv6Wb5tQeTTBE/WbF5xB2QrFFDh6VQW2DqK0OwiIGflsdk5wXw3
- 3SAMWLsKrYlA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,325,1583222400"; 
-   d="scan'208";a="260825823"
-Received: from jbarra4x-mobl2.amr.corp.intel.com (HELO [10.252.135.2]) ([10.252.135.2])
-  by orsmga006.jf.intel.com with ESMTP; 27 Apr 2020 11:47:07 -0700
-Subject: Re: [PATCH] Allow RDTSC and RDTSCP from userspace
-To:     Joerg Roedel <jroedel@suse.de>
-Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
-        Mike Stunes <mstunes@vmware.com>, joro@8bytes.org,
-        dan.j.williams@intel.com, dave.hansen@linux.intel.com,
-        hpa@zytor.com, jgross@suse.com, jslaby@suse.cz,
-        keescook@chromium.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, luto@kernel.org,
-        peterz@infradead.org, thellstrom@vmware.com,
-        virtualization@lists.linux-foundation.org, x86@kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-References: <20200319091407.1481-56-joro@8bytes.org>
- <20200424210316.848878-1-mstunes@vmware.com>
- <2c49061d-eb84-032e-8dcb-dd36a891ce90@intel.com>
- <ead88d04-1756-1190-2b37-b24f86422595@amd.com>
- <4d2ac222-a896-a60e-9b3c-b35aa7e81a97@intel.com>
- <20200425124909.GO30814@suse.de>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <45000aa0-a6d1-03c3-069b-0e9a07c0284d@intel.com>
-Date:   Mon, 27 Apr 2020 11:47:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Mon, 27 Apr 2020 14:48:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46674 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbgD0SsD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 14:48:03 -0400
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89197C0610D5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 11:48:02 -0700 (PDT)
+Received: by mail-ua1-x943.google.com with SMTP id a7so10622406uak.2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 11:48:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=cFn00JHO3//cIrlbFatqYT5gKfrzHc2bMxqCPhl3DDk=;
+        b=Z8kGvYRNc3cU4CYxNXtCQpRxxZmVaZfpzE/MSz3U/6rA4aTwWVgKQa4V4AN01u0OlD
+         WbZeyFUDbAxHOvqxU6EB6lc4Qe3GW4aCnRLCZoRj/eAswrAaiSZpH3Qlmk7ZM/BZrLm3
+         7Dn2kHG/tMV0nai5SbBRPg4Ztg1d0O8LKr+74e3QjYiJwbUbUCdcJJB7rzKRwmAcKiXW
+         mMQEaXZnrdVVjd+yQRvHqsGSh8E5lXX4i2xkvj8ET0RcHCkL/jWrblLA3lSHDK19CkjG
+         uG8VzDKK3JnWVxGrLiGARmzLzUoVlUDsSPE+JWgincUgONghx4Vf/elPzgmGLW7s+v7g
+         ef6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=cFn00JHO3//cIrlbFatqYT5gKfrzHc2bMxqCPhl3DDk=;
+        b=QnHehJVFwgRZ3B6aRMu/pY9+sVe+wAe06d/gANOV21XWQf/LQBBqxLqkU8AmS6qLqr
+         7asThGb3EWx15kLiL3oSwhMAJmL/rkeM+HGdP2WQipAmzvRugw4CEB7J4nb/o0awLKS9
+         pNBad9l3hczl0Q18nL8asDR9Ifql9Yd+dA5C6+92Rkl6r31ANZnYYflCgUCZdMjg/u1l
+         JL8aqIVRCRKs06ndcl5OCpISS+Oix4ogeUeIOxF3wuLJ224NP0Vk3uLDxs4PWjsXuY6T
+         mHWgQr+uW8ezm1fz+IvRrqN0om7zDBUYpHgjASGEbrlAX/RDEnwMIIC3Xlj8sqyDZXOO
+         yLmw==
+X-Gm-Message-State: AGi0Pubo8bnCChYHYqiW4aoUUxCS4/hFwLkYBLfqT2vP1VnGsVLHN4Qs
+        c30HuuTgmRUlm+plWOeMNw+zfQ/lgsHtYCKonipQAA==
+X-Google-Smtp-Source: APiQypLu6VKxQGNQLLvqKo1WMOawCQmpu4RzXh4UZIdVYvclWAiYpQcdFRX9JT1mAatyGGYXf/UXXMUFbn6PhtF1OwM=
+X-Received: by 2002:ab0:202:: with SMTP id 2mr17746122uas.42.1588013281404;
+ Mon, 27 Apr 2020 11:48:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200425124909.GO30814@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <CAJuCfpG4NkhpQvZjgXZ_3gm6Hf1QgN_eUOQ8iX9Cv1k9whLwSQ@mail.gmail.com>
+ <CAJuCfpGMdegJvLO-o-96PNf6iV5sWcmj=WUovi9ixRbeiHX70w@mail.gmail.com>
+ <20200424174025.GA13592@hirez.programming.kicks-ass.net> <CAJuCfpEEp=UVa=WXtXwdKbUa_yZsrmaE=wqhQL7xEYHXcKbg=w@mail.gmail.com>
+ <CALvZod4hNWFMErVSCPnPV4TJAhJHH11ta_c30dhOgaWOesQxaA@mail.gmail.com> <CAJuCfpECDryYL7ia+JH8HZtWRWHtLFFg2ZwtAB4nj=mXDDPENg@mail.gmail.com>
+In-Reply-To: <CAJuCfpECDryYL7ia+JH8HZtWRWHtLFFg2ZwtAB4nj=mXDDPENg@mail.gmail.com>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Mon, 27 Apr 2020 11:47:50 -0700
+Message-ID: <CAJuCfpE+qHpOVU9JS+CEVKgdJMgZB8jG3KKq=AMFNZXCgvE69Q@mail.gmail.com>
+Subject: Re: lockdep warning about possible circular dependency in PSI
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/25/20 5:49 AM, Joerg Roedel wrote:
->> That's a fun point because it means that the (untrusted) hypervisor can
->> cause endless faults.  I *guess* we have mitigation for this with our
->> stack guard pages, but it's still a bit nasty that the hypervisor can
->> arbitrarily land a guest in the double-fault handler.
->>
->> It just all seems a bit weak for the hypervisor to be considered
->> untrusted.  But, it's _certainly_ a steep in the right direction from SEV.
-> Yeah, a malicious hypervisor can do bad things to an SEV-ES VM, but it
-> can't easily steal its secrets from memory or registers. The #VC handler
-> does its best to just crash the VM if unexpected hypervisor behavior is
-> detected.
+On Sun, Apr 26, 2020 at 5:00 PM Suren Baghdasaryan <surenb@google.com> wrot=
+e:
+>
+> On Fri, Apr 24, 2020 at 1:54 PM Shakeel Butt <shakeelb@google.com> wrote:
+> >
+> > On Fri, Apr 24, 2020 at 10:52 AM Suren Baghdasaryan <surenb@google.com>=
+ wrote:
+> > >
+> > > On Fri, Apr 24, 2020 at 10:40 AM Peter Zijlstra <peterz@infradead.org=
+> wrote:
+> > > >
+> > > > On Fri, Apr 24, 2020 at 09:34:42AM -0700, Suren Baghdasaryan wrote:
+> > > > > Sorry to bother you again folks. Any suggestions on how to silenc=
+e
+> > > > > this lockdep warning which I believe to be a false positive?
+> > > > >
+> > > > > On Wed, Apr 15, 2020 at 4:01 PM Suren Baghdasaryan <surenb@google=
+.com> wrote:
+> > > > > >
+> > > > > > I received a report about possible circular locking dependency =
+warning
+> > > > > > generated from PSI polling code. I think we are protected from =
+this
+> > > > > > scenario by poll_scheduled atomic but wanted to double-check an=
+d I=E2=80=99m
+> > > > > > looking for an advice on how to annotate this case to fix the l=
+ockdep
+> > > > > > warning. I copied the detailed information at the end of this e=
+mail
+> > > > > > but the short story is this:
+> > > > > >
+> > > > > > "WARNING: possible circular locking dependency detected" is gen=
+erated
+> > > > > > with CONFIG_PSI and CONFIG_LOCKDEP enabled. The dependency chai=
+n it
+> > > > > > describes is:
+> > > > > >
+> > > > > > #0
+> > > > > > kthread_delayed_work_timer_fn()
+> > > > > >  |
+> > > > > > worker->lock
+> > > > > >  |
+> > > > > > try_to_wake_up()
+> > > > > >  |
+> > > > > > p->pi_lock
+> > > > > >
+> > > > > > #1
+> > > > > > sched_fork()
+> > > > > >  |
+> > > > > > p->pi_lock
+> > > > > >  |
+> > > > > > task_fork_fair()
+> > > > > >  |
+> > > > > > rq->lock
+> > > > > >
+> > > > > > #2
+> > > > > > psi_memstall_enter
+> > > > > >  |
+> > > > > > rq->lock
+> > > > > >  |
+> > > > > > kthread_queue_delayed_work()
+> > > > > >  |
+> > > > > > worker->lock
+> > > >
+> > > > Irrespective of it actually being a deadlock or not, it is fairly
+> > > > fragile. Ideally we'd fix #2, we really should minimize the number =
+of
+> > > > locks nested under rq->lock.
+> > > >
+> > > > That said, here's the easy fix, which breaks #0.
+> > > >
+> > >
+> > > Thanks for the suggestion, Peter. Let me digest this and will post a
+> > > patch with your Suggested-by.
+> > > Cheers!
+> > >
+> >
+> > I tested on my simple repro and the patch fixes the lockdep splat.
+> >
+> > You can add
+> > Tested-by: Shakeel Butt <shakeelb@google.com>
+> >
+>
+> Thanks Shakeel! Will do.
+>
+> > > > ---
+> > > > diff --git a/kernel/kthread.c b/kernel/kthread.c
+> > > > index bfbfa481be3a..b443bba7dd21 100644
+> > > > --- a/kernel/kthread.c
+> > > > +++ b/kernel/kthread.c
+> > > > @@ -806,14 +806,15 @@ static void kthread_insert_work_sanity_check(=
+struct kthread_worker *worker,
+> > > >  /* insert @work before @pos in @worker */
+> > > >  static void kthread_insert_work(struct kthread_worker *worker,
+> > > >                                 struct kthread_work *work,
+> > > > -                               struct list_head *pos)
+> > > > +                               struct list_head *pos,
+> > > > +                               struct wake_q_head *wake_q)
+> > > >  {
+> > > >         kthread_insert_work_sanity_check(worker, work);
+> > > >
+> > > >         list_add_tail(&work->node, pos);
+> > > >         work->worker =3D worker;
+> > > >         if (!worker->current_work && likely(worker->task))
+> > > > -               wake_up_process(worker->task);
+> > > > +               wake_q_add(wake_q, worker->task);
+> > > >  }
+> > > >
+> > > >  /**
+> > > > @@ -831,15 +832,19 @@ static void kthread_insert_work(struct kthrea=
+d_worker *worker,
+> > > >  bool kthread_queue_work(struct kthread_worker *worker,
+> > > >                         struct kthread_work *work)
+> > > >  {
+> > > > -       bool ret =3D false;
+> > > > +       DEFINE_WAKE_Q(wake_q);
+> > > >         unsigned long flags;
+> > > > +       bool ret =3D false;
+> > > >
+> > > >         raw_spin_lock_irqsave(&worker->lock, flags);
+> > > >         if (!queuing_blocked(worker, work)) {
+> > > > -               kthread_insert_work(worker, work, &worker->work_lis=
+t);
+> > > > +               kthread_insert_work(worker, work, &worker->work_lis=
+t, &wake_q);
+> > > >                 ret =3D true;
+> > > >         }
+> > > >         raw_spin_unlock_irqrestore(&worker->lock, flags);
+> > > > +
+> > > > +       wake_up_q(&wake_q);
+> > > > +
+> > > >         return ret;
+> > > >  }
+> > > >  EXPORT_SYMBOL_GPL(kthread_queue_work);
+> > > > @@ -857,6 +862,7 @@ void kthread_delayed_work_timer_fn(struct timer=
+_list *t)
+> > > >         struct kthread_delayed_work *dwork =3D from_timer(dwork, t,=
+ timer);
+> > > >         struct kthread_work *work =3D &dwork->work;
+> > > >         struct kthread_worker *worker =3D work->worker;
+> > > > +       DEFINE_WAKE_Q(wake_q);
+> > > >         unsigned long flags;
+> > > >
+> > > >         /*
+> > > > @@ -873,15 +879,18 @@ void kthread_delayed_work_timer_fn(struct tim=
+er_list *t)
+> > > >         /* Move the work from worker->delayed_work_list. */
+> > > >         WARN_ON_ONCE(list_empty(&work->node));
+> > > >         list_del_init(&work->node);
+> > > > -       kthread_insert_work(worker, work, &worker->work_list);
+> > > > +       kthread_insert_work(worker, work, &worker->work_list, &wake=
+_q);
+> > > >
+> > > >         raw_spin_unlock_irqrestore(&worker->lock, flags);
+> > > > +
+> > > > +       wake_up_q(&wake_q);
+> > > >  }
+> > > >  EXPORT_SYMBOL(kthread_delayed_work_timer_fn);
+> > > >
+> > > >  static void __kthread_queue_delayed_work(struct kthread_worker *wo=
+rker,
+> > > >                                          struct kthread_delayed_wor=
+k *dwork,
+> > > > -                                        unsigned long delay)
+> > > > +                                        unsigned long delay,
+> > > > +                                        struct wake_q_head *wake_q=
+)
+> > > >  {
+> > > >         struct timer_list *timer =3D &dwork->timer;
+> > > >         struct kthread_work *work =3D &dwork->work;
+> > > > @@ -895,7 +904,7 @@ static void __kthread_queue_delayed_work(struct=
+ kthread_worker *worker,
+> > > >          * on that there's no such delay when @delay is 0.
+> > > >          */
+> > > >         if (!delay) {
+> > > > -               kthread_insert_work(worker, work, &worker->work_lis=
+t);
+> > > > +               kthread_insert_work(worker, work, &worker->work_lis=
+t, wake_q);
+> > > >                 return;
+> > > >         }
+> > > >
+> > > > @@ -928,17 +937,21 @@ bool kthread_queue_delayed_work(struct kthrea=
+d_worker *worker,
+> > > >                                 unsigned long delay)
+> > > >  {
+> > > >         struct kthread_work *work =3D &dwork->work;
+> > > > +       DEFINE_WAKE_Q(wake_q);
+> > > >         unsigned long flags;
+> > > >         bool ret =3D false;
+> > > >
+> > > >         raw_spin_lock_irqsave(&worker->lock, flags);
+> > > >
+> > > >         if (!queuing_blocked(worker, work)) {
+> > > > -               __kthread_queue_delayed_work(worker, dwork, delay);
+> > > > +               __kthread_queue_delayed_work(worker, dwork, delay, =
+&wake_q);
+> > > >                 ret =3D true;
+> > > >         }
+> > > >
+> > > >         raw_spin_unlock_irqrestore(&worker->lock, flags);
+> > > > +
+> > > > +       wake_up_q(&wake_q);
+> > > > +
+> > > >         return ret;
+> > > >  }
+> > > >  EXPORT_SYMBOL_GPL(kthread_queue_delayed_work);
+> > > > @@ -967,6 +980,7 @@ void kthread_flush_work(struct kthread_work *wo=
+rk)
+> > > >                 KTHREAD_WORK_INIT(fwork.work, kthread_flush_work_fn=
+),
+> > > >                 COMPLETION_INITIALIZER_ONSTACK(fwork.done),
+> > > >         };
+> > > > +       DEFINE_WAKE_Q(wake_q);
+> > > >         struct kthread_worker *worker;
+> > > >         bool noop =3D false;
+> > > >
+> > > > @@ -979,15 +993,17 @@ void kthread_flush_work(struct kthread_work *=
+work)
+> > > >         WARN_ON_ONCE(work->worker !=3D worker);
+> > > >
+> > > >         if (!list_empty(&work->node))
+> > > > -               kthread_insert_work(worker, &fwork.work, work->node=
+.next);
+> > > > +               kthread_insert_work(worker, &fwork.work, work->node=
+.next, &wake_q);
+> > > >         else if (worker->current_work =3D=3D work)
+> > > >                 kthread_insert_work(worker, &fwork.work,
+> > > > -                                   worker->work_list.next);
+> > > > +                                   worker->work_list.next, &wake_q=
+);
+> > > >         else
+> > > >                 noop =3D true;
+> > > >
+> > > >         raw_spin_unlock_irq(&worker->lock);
+> > > >
+> > > > +       wake_up_q(&wake_q);
+> > > > +
+> > > >         if (!noop)
+> > > >                 wait_for_completion(&fwork.done);
+> > > >  }
+> > > > @@ -1065,6 +1081,7 @@ bool kthread_mod_delayed_work(struct kthread_=
+worker *worker,
+> > > >                               unsigned long delay)
+> > > >  {
+> > > >         struct kthread_work *work =3D &dwork->work;
+> > > > +       DEFINE_WAKE_Q(wake_q);
+> > > >         unsigned long flags;
+> > > >         int ret =3D false;
+> > > >
+> > > > @@ -1083,9 +1100,12 @@ bool kthread_mod_delayed_work(struct kthread=
+_worker *worker,
+> > > >
+> > > >         ret =3D __kthread_cancel_work(work, true, &flags);
+> > > >  fast_queue:
+> > > > -       __kthread_queue_delayed_work(worker, dwork, delay);
+> > > > +       __kthread_queue_delayed_work(worker, dwork, delay, &wake_q)=
+;
+> > > >  out:
+> > > >         raw_spin_unlock_irqrestore(&worker->lock, flags);
+> > > > +
+> > > > +       wake_up_q(&wake_q);
+> > > > +
+> > > >         return ret;
+> > > >  }
+> > > >  EXPORT_SYMBOL_GPL(kthread_mod_delayed_work);
+> > > >
 
-This is the kind of design information that would be very useful to
-reviewers.  Will some of this information make it into the cover letter
-eventually?  Or, Documentation/?
+Patch is posted at https://lkml.org/lkml/2020/4/27/985 . Had to
+include linux/sched/wake_q.h and fix a long line but other than that
+it's unchanged.
+Thanks!
 
-Also, for the security purists, an SEV-ES host is still trusted (in the
-same TCB as the guest).  Truly guest-untrusted VMMs won't be available
-until SEV-SNP, right?
+> > > > --
+> > > > To unsubscribe from this group and stop receiving emails from it, s=
+end an email to kernel-team+unsubscribe@android.com.
+> > > >
