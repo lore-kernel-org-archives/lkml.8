@@ -2,198 +2,130 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E82FC5519B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE5AC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 593492064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:05:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 081D82064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:05:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KiFPn5ig"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbgD0JFQ (ORCPT
+        id S1726879AbgD0JFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 05:05:16 -0400
-Received: from mo-csw-fb1116.securemx.jp ([210.130.202.175]:36920 "EHLO
-        mo-csw-fb.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgD0JFQ (ORCPT
+        Mon, 27 Apr 2020 05:05:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbgD0JFY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 05:05:16 -0400
-X-Greylist: delayed 711 seconds by postgrey-1.27 at vger.kernel.org; Mon, 27 Apr 2020 05:05:14 EDT
-Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1116) id 03R8rOaE008423; Mon, 27 Apr 2020 17:53:24 +0900
-Received: by mo-csw.securemx.jp (mx-mo-csw1114) id 03R8qwAY012935; Mon, 27 Apr 2020 17:52:58 +0900
-X-Iguazu-Qid: 2wHHmtTglbDiQFar0U
-X-Iguazu-QSIG: v=2; s=0; t=1587977578; q=2wHHmtTglbDiQFar0U; m=xkIQ5G8uB+mBuk2KpbYQ9WX+PVEjESxzVhAAS6YBJ14=
-Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
-        by relay.securemx.jp (mx-mr1111) id 03R8qucT003817;
-        Mon, 27 Apr 2020 17:52:56 +0900
-Received: from enc02.toshiba.co.jp ([61.202.160.51])
-        by imx12.toshiba.co.jp  with ESMTP id 03R8quBJ001287;
-        Mon, 27 Apr 2020 17:52:56 +0900 (JST)
-Received: from hop101.toshiba.co.jp ([133.199.85.107])
-        by enc02.toshiba.co.jp  with ESMTP id 03R8qtgc029882;
-        Mon, 27 Apr 2020 17:52:55 +0900
-From:   Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Punit Agrawal <punit1.agrawal@toshiba.co.jp>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Borislav Petkov <bp@alien8.de>,
-        James Morse <james.morse@arm.com>, linux-acpi@vger.kernel.org,
-        linux-efi@vger.kernel.org
-Subject: [PATCH] efi: cper: Add support for printing Firmware Error Record Reference
-Date:   Mon, 27 Apr 2020 17:52:42 +0900
-X-TSB-HOP: ON
-Message-Id: <20200427085242.2380614-1-punit1.agrawal@toshiba.co.jp>
-X-Mailer: git-send-email 2.26.2
+        Mon, 27 Apr 2020 05:05:24 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59E01C061A41
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 02:05:23 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id d17so19582932wrg.11
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 02:05:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=t0Qb3M+KoO7rshy7LxfHgJoujvSz6frs1GElCox2b5s=;
+        b=KiFPn5ig/JKiOhaz02UnaLlnM3E8H8eyZzRXSgpgUO41XBVvN2o0dl8F35rNzr5/fP
+         M6d4vtcAdWrgC2ZqKCoTgLP4AgzuIMc1qN/3l/+HxvYd1zY0rJhpp9LNNi9k1kFhlyBZ
+         ymqiZ6+D/a+5NUOtNineXVJL593LPnBbBKiTxurunGLd5ELXd8bYFwg+xhk6NNxKfTNf
+         6CBdSmQY8GKAzYPVGKG53XQ3FeoIaZXG7yq5nsIEtHFm0L9lO4N80M2L0xDLhGiegXKx
+         tigV4d7V10rfAc9U9fdzaXGRfJKJAMq7gifpJIt6BDgTeVY+pEsAGXTqg18enuabO6YL
+         UPEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=t0Qb3M+KoO7rshy7LxfHgJoujvSz6frs1GElCox2b5s=;
+        b=KiNUCGZYgaoDfiUcwDQWVCDoyAZBZcqbUzUqEv615AwUF6Df8B007Fsf64KvypLOYU
+         gGWOeF7q2vPPBIdSVig29mRXYEyz2OFUbFuVM/M1KDOPK/c1ximj7ZrOdMvR59bRYq0M
+         jOpt2xwqsGtIuIpxpTqviLedD2xkFhRLvFDK2serNL+N1kCO3mjjctAWUxYuZtXRIV0Y
+         r86c/brsArCek7K9ZscNGRb9BXu9rjrJ/ecL6qGbKKqdp1cIehtDeueUaXvtGDpc7nEM
+         gYAcuLBztiL33ClQ5K187h+WeouWtvLMyudAGty7SIOjTx+n8bz3f/aSHA/0Fka/gOtm
+         NS3A==
+X-Gm-Message-State: AGi0PuZ+qB0DtaeYB7adH6/HfshBJnMcYM4yD42FhvlpnKN5K1Qvb5/b
+        KTuECDNMaC8heIHLI+Bxq+6QeQ==
+X-Google-Smtp-Source: APiQypLpoDDhhdpdCRaX2x6X7Pxrq+PxdaeSfgMI7TOujsZcV/bIZhc1xo/+1EofweXOdW56V/D2bQ==
+X-Received: by 2002:a05:6000:11cb:: with SMTP id i11mr26886292wrx.339.1587978321185;
+        Mon, 27 Apr 2020 02:05:21 -0700 (PDT)
+Received: from dell ([2.31.163.63])
+        by smtp.gmail.com with ESMTPSA id l9sm19962876wrq.83.2020.04.27.02.05.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 02:05:20 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 10:05:18 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Baolin Wang <baolin.wang7@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] mfd: syscon: Add Spreadtrum physical regmap bus
+ support
+Message-ID: <20200427090518.GG3559@dell>
+References: <c2fd765aa388d4510194ba02c017e39bde57c8d4.1587478171.git.baolin.wang7@gmail.com>
+ <CADBw62rJ8VYTgnW_3q4=TkCyZx2B1DHsG+oOmiph8FLsukUROQ@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CADBw62rJ8VYTgnW_3q4=TkCyZx2B1DHsG+oOmiph8FLsukUROQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While debugging a boot failure, the following unknown error record was
-seen in the boot logs.
+On Mon, 27 Apr 2020, Baolin Wang wrote:
 
-    <...>
-    BERT: Error records from previous boot:
-    [Hardware Error]: event severity: fatal
-    [Hardware Error]:  Error 0, type: fatal
-    [Hardware Error]:   section type: unknown, 81212a96-09ed-4996-9471-8d729c8e69ed
-    [Hardware Error]:   section length: 0x290
-    [Hardware Error]:   00000000: 00000001 00000000 00000000 00020002  ................
-    [Hardware Error]:   00000010: 00020002 0000001f 00000320 00000000  ........ .......
-    [Hardware Error]:   00000020: 00000000 00000000 00000000 00000000  ................
-    [Hardware Error]:   00000030: 00000000 00000000 00000000 00000000  ................
-    <...>
+> Hi Arnd and Lee,
+> 
+> On Tue, Apr 21, 2020 at 10:13 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
+> >
+> > Some platforms such as Spreadtrum platform, define a special method to
+> > update bits of the registers instead of read-modify-write, which means
+> > we should use a physical regmap bus to define the reg_update_bits()
+> > operation instead of the MMIO regmap bus. Thus we can register a new
+> > physical regmap bus into syscon core to support this.
+> >
+> > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> 
+> Do you have any comments for this patch? Thanks.
 
-On further investigation, it was found that the error record with
-UUID (81212a96-09ed-4996-9471-8d729c8e69ed) has been defined in the
-UEFI Specification at least since v2.4 and has recently had additional
-fields defined in v2.7 Section N.2.10 Firmware Error Record Reference.
+Yes.  I'm not accepting it, sorry.
 
-Add support for parsing and printing the defined fields to give users
-a chance to figure out what's went wrong.
+I'd rather you duplicate the things you need from of_syscon_register()
+in your own driver than taint this one.
 
-Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: James Morse <james.morse@arm.com>
-Cc: linux-acpi@vger.kernel.org
-Cc: linux-efi@vger.kernel.org
----
+> > ---
+> > Changes from v2:
+> >  - Fix building errors without enabling CONFIG_ARCH_SPRD.
+> >
+> > Changes from v1:
+> >  - Add WARN_ONCE() for seting bits and clearing bits at the same time.
+> >  - Remove the Spreadtrum SoC syscon driver, instead moving the regmap_bus
+> >  instance into syscon.c driver.
+> >
+> > Changes from RFC v2:
+> >  - Drop regmap change, which was applied by Mark.
+> >  - Add more information about how to use set/clear.
+> >  - Add checking to ensure the platform is compatible with
+> >  using a new physical regmap bus.
+> >
+> > Changes from RFC v1:
+> >  - Add new helper to registers a physical regmap bus instead of
+> >  using the MMIO bus.
+> > ---
+> >  drivers/mfd/syscon.c | 83 ++++++++++++++++++++++++++++++++++++++++++--
+> >  1 file changed, 81 insertions(+), 2 deletions(-)
 
-Hi,
-
-I ran into this while debugging a boot failure on an end product
-device. Parsing known record types can help the user narrow down the
-investigation quickly to the failing components - firmware error in
-this case.
-
-It would be good to support the record types specified in the
-standard.
-
-Feedback welcome.
-
-Thanks,
-Punit
----
- drivers/firmware/efi/cper.c | 49 +++++++++++++++++++++++++++++++++++++
- include/linux/cper.h        | 11 +++++++++
- 2 files changed, 60 insertions(+)
-
-diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
-index 9d2512913d25..153b95257e23 100644
---- a/drivers/firmware/efi/cper.c
-+++ b/drivers/firmware/efi/cper.c
-@@ -407,6 +407,46 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
- 	}
- }
- 
-+static const char * const fw_err_rec_type_strs[] = {
-+	"IPF SAL Error Record",
-+	"SOC Firmware Error Record Type1 (Legacy CrashLog Support)",
-+	"SOC Firmware Error Record Type2",
-+};
-+
-+static void cper_print_fw_err(const char *pfx,
-+			      struct acpi_hest_generic_data *gdata,
-+			      const struct cper_sec_fw_err_rec_ref *fw_err)
-+{
-+	void *buf = acpi_hest_get_payload(gdata);
-+	u32 offset, length = gdata->error_data_length;
-+
-+	printk("%s""Firmware Error Record Type: %s\n", pfx,
-+	       fw_err->record_type < ARRAY_SIZE(fw_err_rec_type_strs) ?
-+	       fw_err_rec_type_strs[fw_err->record_type] : "unknown");
-+
-+	/* Record Type based on UEFI 2.7 */
-+	if (fw_err->revision == 0)
-+		printk("%s""Record Identifier: %08llx\n", pfx,
-+		       fw_err->record_identifier);
-+	else if (fw_err->revision == 2)
-+		printk("%s""Record Identifier: %pUl\n", pfx,
-+		       &fw_err->record_identifier_guid);
-+
-+	if (fw_err->revision == 0)
-+		offset = offsetof(struct cper_sec_fw_err_rec_ref,
-+				  record_identifier_guid);
-+	else if (fw_err->revision == 1)
-+		offset = offsetof(struct cper_sec_fw_err_rec_ref,
-+				  record_identifier);
-+	else
-+		offset = sizeof(*fw_err);
-+
-+	buf += offset;
-+	length -= offset;
-+
-+	print_hex_dump(pfx, "", DUMP_PREFIX_OFFSET, 16, 4, buf, length, true);
-+}
-+
- static void cper_print_tstamp(const char *pfx,
- 				   struct acpi_hest_generic_data_v300 *gdata)
- {
-@@ -494,6 +534,15 @@ cper_estatus_print_section(const char *pfx, struct acpi_hest_generic_data *gdata
- 		else
- 			goto err_section_too_small;
- #endif
-+	} else if (guid_equal(sec_type, &CPER_SEC_FW_ERR_REC_REF)) {
-+		struct cper_sec_fw_err_rec_ref *fw_err = acpi_hest_get_payload(gdata);
-+
-+		printk("%ssection_type: Firmware Error Record Reference\n",
-+		       newpfx);
-+		if (gdata->error_data_length >= sizeof(*fw_err))
-+			cper_print_fw_err(newpfx, gdata, fw_err);
-+		else
-+			goto err_section_too_small;
- 	} else {
- 		const void *err = acpi_hest_get_payload(gdata);
- 
-diff --git a/include/linux/cper.h b/include/linux/cper.h
-index 4f005d95ce88..5cb57e69df70 100644
---- a/include/linux/cper.h
-+++ b/include/linux/cper.h
-@@ -521,6 +521,17 @@ struct cper_sec_pcie {
- 	u8	aer_info[96];
- };
- 
-+/* Firmware Error Record Reference, UEFI v2.7 sec N.2.10  */
-+struct cper_sec_fw_err_rec_ref {
-+	u8 record_type;
-+	union {
-+		u8 revision;
-+		u8 reserved[7];
-+	};
-+	u64 record_identifier;
-+	guid_t record_identifier_guid;
-+};
-+
- /* Reset to default packing */
- #pragma pack()
- 
 -- 
-2.26.2
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
