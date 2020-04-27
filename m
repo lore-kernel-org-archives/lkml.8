@@ -2,230 +2,127 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A44AC55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F36AFC55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F3CA2064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CED6F2064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:10:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BqT2KEPE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbgD0JKm (ORCPT
+        id S1726883AbgD0JKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 05:10:42 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45141 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgD0JKm (ORCPT
+        Mon, 27 Apr 2020 05:10:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40784 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbgD0JKr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 05:10:42 -0400
-Received: by mail-ot1-f66.google.com with SMTP id e20so24946276otk.12;
-        Mon, 27 Apr 2020 02:10:41 -0700 (PDT)
+        Mon, 27 Apr 2020 05:10:47 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82CDAC0610D5;
+        Mon, 27 Apr 2020 02:10:47 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 188so18667306wmc.2;
+        Mon, 27 Apr 2020 02:10:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=v8OYpZNOLgP9t4cgS+lWeCMwxdaxqT3UXnjOJoxqS0Y=;
+        b=BqT2KEPEMxn8IqVj7zJKlZqtf/b0Oy7iK02eNt7GWBNT2SBqk+rdbWEaml3cfFqH6p
+         QQIq5WxIzUgk9NArIgTB04RWTrmj9sRV78xC6RzCkOoc3S5HKX/jzO1L0BkBJ/Eml2I9
+         RL4uP3PWANi7w+GXoj5pBrcxv31qD5mMCp5f8q10J3MB8P4zC+xvRUyx8eMQVtXcZTjl
+         DE3G3WtiyMIsH5RLVfyviJFnDcXpfW5Ou/KgtNTvIvXHSzYu8+Vw1UcBUTZ+JWqW2bjQ
+         mnxDkFfHxn/lTYOkxp7+5HqN/5ukSkb4vYggZ+5r6tzuQU9OHEvWPqowbkovmIawsRhG
+         goQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qcNlgT253Q+mnyb0dmPBeKwZupVLUVCEsXLGGQlN7mU=;
-        b=l4XhQPhefh0GTIyDpEVrTyYasipwFtBtPxRNNze6HMFvhzgKUILtr5x4Pxt6g9S7xk
-         nrlESZJxyPUREGTzDaQLIEla2kvKIHDxvCC0uK2D4Nd0MivcNkRSu0xpinahms6i0VPy
-         Eqz0WfhsFoIF7hOedkK2esFVThhk6teUvbc99jmoMiILkZq3hqPVUely6hk+tFlBVsnz
-         AP48sMs2gRryUU7c3+XvO5qdKBp0mRta1ZqKtQ5qTgveYbItxF38XyfEO5xcnapDhmV5
-         1xBZlaI6IwhdllM/XAjkefXIbiq3yy0QclKQTPiwGEbdOEI5s+M/+QdtF9tsbEdxSdIJ
-         5SZw==
-X-Gm-Message-State: AGi0PuY6kedkysaYurdLYTDWR4JUxVVrmkKZPbf1M2fj5FSnUO/Ug7aP
-        jxyt6a26K8Pd6DOjjb87YcTuH+i7TYMQrY0Pyqc=
-X-Google-Smtp-Source: APiQypKw19uX7pNh+s25tQlcVi6u/qoBo4l+PDXl+dtgYprl6i34GYCNk/rsJvOcHawKKsX52BSbZ5FC/bbkN04OYi4=
-X-Received: by 2002:a9d:7990:: with SMTP id h16mr11539338otm.145.1587978640642;
- Mon, 27 Apr 2020 02:10:40 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=v8OYpZNOLgP9t4cgS+lWeCMwxdaxqT3UXnjOJoxqS0Y=;
+        b=RPDCNsb9FT3yunwxSiZS4cdub2unWmcitn5UHwShBF19kHGl5IgvJsfvD0+i1j9uV6
+         DKpcWFJu90ik7dTZ8dA6O6knskdya+SSVAcGO2Mj+UZdr3ZZc9xWqZjvVtjFd9tle9jw
+         A4DvXEkuU+aXCWXEb2wSbsmYNl/1nzwCSfJe2Fd3k/fQpsoewzkQS6M8JgXs6DUqiM3j
+         Wvv5/5V5/lgKNfo8KNcm2UvWsPdEoc/v9HdrmHG/O0CseSFVU00Ecihi0n8LZcnQ6cJh
+         FCtlDA2xBssaQ0dPelOX+ZG5lDXwmcvXHq+SBTzaZJfFMwQ+sY89tXzbSFkVgNmyhlK7
+         z1jQ==
+X-Gm-Message-State: AGi0PuZ0VLGL4eOiEW0pdYRV7Oqa0/5cq1CG9P2MDxu4nTh3HTw8aObI
+        /D7kzRQLGY+CWWGlKd5emKl9+5Kk
+X-Google-Smtp-Source: APiQypKSCpGVCZs4NZkWauLtvGJ3ItDQAys5hbROeKn4kv73H5Cu0bGms1Pj/LrGlYx38WFqoTJRIQ==
+X-Received: by 2002:a7b:c4c9:: with SMTP id g9mr24852983wmk.171.1587978645987;
+        Mon, 27 Apr 2020 02:10:45 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f29:6000:1925:3f70:bb74:e0a1? (p200300EA8F29600019253F70BB74E0A1.dip0.t-ipconnect.de. [2003:ea:8f29:6000:1925:3f70:bb74:e0a1])
+        by smtp.googlemail.com with ESMTPSA id k14sm20585389wrp.53.2020.04.27.02.10.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 02:10:45 -0700 (PDT)
+Subject: Re: [PATCH] net: tc35815: Fix phydev supported/advertising mask
+To:     Anthony Felice <tony.felice@timesys.com>
+Cc:     Akshay Bhat <akshay.bhat@timesys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200427020101.3059-1-tony.felice@timesys.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <62ec43c6-e9e4-555b-4c91-dda22b3620c7@gmail.com>
+Date:   Mon, 27 Apr 2020 11:10:39 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <1587678050-23468-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1587678050-23468-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1587678050-23468-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 27 Apr 2020 11:10:29 +0200
-Message-ID: <CAMuHMdUmj+m8WLaSfwELD0VGYFpDaACTLgerbznBeqfVVy2nzw@mail.gmail.com>
-Subject: Re: [PATCH 08/10] clk: renesas: cpg-mssr: Add R8A7742 support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Marian-Cristian Rotariu 
-        <marian-cristian.rotariu.rb@bp.renesas.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200427020101.3059-1-tony.felice@timesys.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+On 27.04.2020 04:00, Anthony Felice wrote:
+> Commit 3c1bcc8614db ("net: ethernet: Convert phydev advertize and
+> supported from u32 to link mode") updated ethernet drivers to use a
+> linkmode bitmap. It mistakenly dropped a bitwise negation in the
+> tc35815 ethernet driver on a bitmask to set the supported/advertising
+> flags.
+> 
+> Found by Anthony via code inspection, not tested as I do not have the
+> required hardware.
+> 
+> Fixes: 3c1bcc8614db ("net: ethernet: Convert phydev advertize and supported from u32 to link mode")
+> Signed-off-by: Anthony Felice <tony.felice@timesys.com>
+> Reviewed-by: Akshay Bhat <akshay.bhat@timesys.com>
+> ---
+>  drivers/net/ethernet/toshiba/tc35815.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/toshiba/tc35815.c b/drivers/net/ethernet/toshiba/tc35815.c
+> index 3fd43d30b20d..a1066fbb93b5 100644
+> --- a/drivers/net/ethernet/toshiba/tc35815.c
+> +++ b/drivers/net/ethernet/toshiba/tc35815.c
+> @@ -643,7 +643,7 @@ static int tc_mii_probe(struct net_device *dev)
+>  		linkmode_set_bit(ETHTOOL_LINK_MODE_10baseT_Half_BIT, mask);
+>  		linkmode_set_bit(ETHTOOL_LINK_MODE_100baseT_Half_BIT, mask);
+>  	}
+> -	linkmode_and(phydev->supported, phydev->supported, mask);
+> +	linkmode_andnot(phydev->supported, phydev->supported, mask);
+>  	linkmode_copy(phydev->advertising, phydev->supported);
+>  
+>  	lp->link = 0;
+> 
+> base-commit: 55b2af1c23eb12663015998079992f79fdfa56c8
+> 
+Reviewed-by: Heiner Kallweit <hkallweit1@gmail.com>
 
-On Thu, Apr 23, 2020 at 11:41 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add RZ/G1H (R8A7742) Clock Pulse Generator / Module Standby and Software
-> Reset support, using the CPG/MSSR driver core and the common R-Car Gen2
-> (and RZ/G) code.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-
-Thanks for your patch!
-
-> --- /dev/null
-> +++ b/drivers/clk/renesas/r8a7742-cpg-mssr.c
-
-> +static struct cpg_core_clk r8a7742_core_clks[] __initdata = {
-> +       /* External Clock Inputs */
-> +       DEF_INPUT("extal",      CLK_EXTAL),
-> +       DEF_INPUT("usb_extal",  CLK_USB_EXTAL),
-> +
-> +       /* Internal Core Clocks */
-> +       DEF_BASE(".main",       CLK_MAIN, CLK_TYPE_GEN2_MAIN, CLK_EXTAL),
-> +       DEF_BASE(".pll0",       CLK_PLL0, CLK_TYPE_GEN2_PLL0, CLK_MAIN),
-> +       DEF_BASE(".pll1",       CLK_PLL1, CLK_TYPE_GEN2_PLL1, CLK_MAIN),
-> +       DEF_BASE(".pll3",       CLK_PLL3, CLK_TYPE_GEN2_PLL3, CLK_MAIN),
-> +
-> +       DEF_FIXED(".pll1_div2", CLK_PLL1_DIV2, CLK_PLL1, 2, 1),
-> +
-> +       /* Core Clock Outputs */
-> +       DEF_BASE("z",    R8A7742_CLK_Z,    CLK_TYPE_GEN2_Z,     CLK_PLL0),
-> +       DEF_BASE("sdh",  R8A7742_CLK_SDH,  CLK_TYPE_GEN2_SDH,   CLK_PLL1),
-> +       DEF_BASE("sd0",  R8A7742_CLK_SD0,  CLK_TYPE_GEN2_SD0,   CLK_PLL1),
-> +       DEF_BASE("sd1",  R8A7742_CLK_SD1,  CLK_TYPE_GEN2_SD1,   CLK_PLL1),
-> +       DEF_BASE("qspi", R8A7742_CLK_QSPI, CLK_TYPE_GEN2_QSPI,  CLK_PLL1_DIV2),
-> +       DEF_BASE("rcan", R8A7742_CLK_RCAN, CLK_TYPE_GEN2_RCAN,  CLK_USB_EXTAL),
-> +
-> +       DEF_FIXED("z2",    R8A7742_CLK_Z2,      CLK_PLL1,           2, 1),
-> +       DEF_FIXED("zg",    R8A7742_CLK_ZG,      CLK_PLL1,           3, 1),
-> +       DEF_FIXED("zt",    R8A7742_CLK_ZT,      CLK_PLL1,           5, 1),
-> +       DEF_FIXED("ztr",   R8A7742_CLK_ZTR,     CLK_PLL1,           4, 1),
-> +       DEF_FIXED("ztrd2", R8A7742_CLK_ZTRD2,   CLK_PLL1,           12, 1),
-
-The ZT* clocks are not fixed-factor clocks, but use programmable
-dividers in FRQCRB.
-So either you implement them correctly, or you drop them, like we did
-for the other R-Car Gen2 and RZ/G1 SoCs (there are no users yet).
-
-> +       DEF_FIXED("zx",    R8A7742_CLK_ZX,      CLK_PLL1,           3, 1),
-> +       DEF_FIXED("zs",    R8A7742_CLK_ZS,      CLK_PLL1,           6, 1),
-> +       DEF_FIXED("hp",    R8A7742_CLK_HP,      CLK_PLL1,          12, 1),
-> +       DEF_FIXED("b",     R8A7742_CLK_B,       CLK_PLL1,          12, 1),
-> +       DEF_FIXED("lb",    R8A7742_CLK_LB,      CLK_PLL1,          24, 1),
-
-Please use CLK_TYPE_GEN2_LB, as the LB divider depends on the state of
-mode pin MD18.
-
-> +       DEF_FIXED("p",     R8A7742_CLK_P,       CLK_PLL1,          24, 1),
-> +       DEF_FIXED("cl",    R8A7742_CLK_CL,      CLK_PLL1,          48, 1),
-> +       DEF_FIXED("m2",    R8A7742_CLK_M2,      CLK_PLL1,           8, 1),
-> +       DEF_FIXED("zb3",   R8A7742_CLK_ZB3,     CLK_PLL3,           4, 1),
-> +       DEF_FIXED("zb3d2", R8A7742_CLK_ZB3D2,   CLK_PLL3,           8, 1),
-> +       DEF_FIXED("ddr",   R8A7742_CLK_DDR,     CLK_PLL3,           8, 1),
-> +       DEF_FIXED("mp",    R8A7742_CLK_MP,      CLK_PLL1_DIV2,     15, 1),
-> +       DEF_FIXED("cp",    R8A7742_CLK_CP,      CLK_EXTAL,          2, 1),
-> +       DEF_FIXED("r",     R8A7742_CLK_R,       CLK_PLL1,       49152, 1),
-> +       DEF_FIXED("osc",   R8A7742_CLK_OSC,     CLK_PLL1,       12288, 1),
-> +
-> +       DEF_DIV6P1("sd2",  R8A7742_CLK_SD2,     CLK_PLL1_DIV2,  0x078),
-> +       DEF_DIV6P1("sd3",  R8A7742_CLK_SD3,     CLK_PLL1_DIV2,  0x26c),
-> +       DEF_DIV6P1("mmc0", R8A7742_CLK_MMC0,    CLK_PLL1_DIV2,  0x240),
-> +       DEF_DIV6P1("mmc1", R8A7742_CLK_MMC1,    CLK_PLL1_DIV2,  0x244),
-> +};
-> +
-> +static const struct mssr_mod_clk r8a7742_mod_clks[] __initconst = {
-> +       DEF_MOD("msiof0",                  0,   R8A7742_CLK_MP),
-> +       DEF_MOD("vcp1",                  100,   R8A7742_CLK_ZS),
-> +       DEF_MOD("vcp0",                  101,   R8A7742_CLK_ZS),
-> +       DEF_MOD("vpc1",                  102,   R8A7742_CLK_ZS),
-> +       DEF_MOD("vpc0",                  103,   R8A7742_CLK_ZS),
-> +       DEF_MOD("tmu1",                  111,   R8A7742_CLK_P),
-> +       DEF_MOD("3dg",                   112,   R8A7742_CLK_ZG),
-> +       DEF_MOD("2d-dmac",               115,   R8A7742_CLK_ZS),
-> +       DEF_MOD("fdp1-2",                117,   R8A7742_CLK_ZS),
-> +       DEF_MOD("fdp1-1",                118,   R8A7742_CLK_ZS),
-> +       DEF_MOD("fdp1-0",                119,   R8A7742_CLK_ZS),
-> +       DEF_MOD("tmu3",                  121,   R8A7742_CLK_P),
-> +       DEF_MOD("tmu2",                  122,   R8A7742_CLK_P),
-> +       DEF_MOD("cmt0",                  124,   R8A7742_CLK_R),
-> +       DEF_MOD("tmu0",                  125,   R8A7742_CLK_CP),
-> +       DEF_MOD("vsp1du1",               127,   R8A7742_CLK_ZS),
-> +       DEF_MOD("vsp1du0",               128,   R8A7742_CLK_ZS),
-> +       DEF_MOD("vsp1-sy",               131,   R8A7742_CLK_ZS),
-> +       DEF_MOD("scifa2",                202,   R8A7742_CLK_MP),
-> +       DEF_MOD("scifa1",                203,   R8A7742_CLK_MP),
-> +       DEF_MOD("scifa0",                204,   R8A7742_CLK_MP),
-> +       DEF_MOD("msiof2",                205,   R8A7742_CLK_MP),
-> +       DEF_MOD("scifb0",                206,   R8A7742_CLK_MP),
-> +       DEF_MOD("scifb1",                207,   R8A7742_CLK_MP),
-> +       DEF_MOD("msiof1",                208,   R8A7742_CLK_MP),
-> +       DEF_MOD("msiof3",                215,   R8A7742_CLK_MP),
-> +       DEF_MOD("scifb2",                216,   R8A7742_CLK_MP),
-> +       DEF_MOD("sys-dmac1",             218,   R8A7742_CLK_ZS),
-> +       DEF_MOD("sys-dmac0",             219,   R8A7742_CLK_ZS),
-> +       DEF_MOD("iic2",                  300,   R8A7742_CLK_CP),
-
-Parent should be R8A7742_CLK_HP.
-
-> +       DEF_MOD("tpu0",                  304,   R8A7742_CLK_CP),
-> +       DEF_MOD("mmcif1",                305,   R8A7742_CLK_MMC1),
-> +       DEF_MOD("scif2",                 310,   R8A7742_CLK_CP),
-
-Parent should be R8A7742_CLK_P.
-
-> +       DEF_MOD("sdhi3",                 311,   R8A7742_CLK_SD3),
-> +       DEF_MOD("sdhi2",                 312,   R8A7742_CLK_SD2),
-> +       DEF_MOD("sdhi1",                 313,   R8A7742_CLK_SD2),
-
-Parent should be R8A7742_CLK_SD1.
-
-> +static int __init r8a7742_cpg_mssr_init(struct device *dev)
-> +{
-> +       const struct rcar_gen2_cpg_pll_config *cpg_pll_config;
-> +       struct device_node *np = dev->of_node;
-> +       unsigned int i;
-> +       u32 cpg_mode;
-> +       int error;
-> +
-> +       error = rcar_rst_read_mode_pins(&cpg_mode);
-> +       if (error)
-> +               return error;
-> +
-> +       cpg_pll_config = &cpg_pll_configs[CPG_PLL_CONFIG_INDEX(cpg_mode)];
-> +
-> +       if (of_device_is_compatible(np, "renesas,r8a7742-cpg-mssr")) {
-> +               /* RZ/G1H uses a 1/3 divider for ZG */
-> +               for (i = 0; i < ARRAY_SIZE(r8a7742_core_clks); i++)
-> +                       if (r8a7742_core_clks[i].id == R8A7742_CLK_ZG) {
-> +                               r8a7742_core_clks[i].div = 3;
-> +                               break;
-> +                       }
-> +       }
-
-Do you really need this part? (copied from r8a7743-cpg-mssr.c ;-)
-If you remove it, r8a7742_core_clks[] can be const, and <linux/of.h> is
-no longer needed,
-
-> +       return rcar_gen2_cpg_init(cpg_pll_config, 2, cpg_mode);
-> +}
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+The complete structure of this code is quite weird (e.g. using module
+parameters to force a link mode), but the driver seems to be too old
+that anybody would spend effort on refactoring it.
