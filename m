@@ -2,96 +2,67 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C79C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D2CC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5EBE205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80591206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:08:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588003722;
+	bh=Fht19I4+eezxy5GovEcjy5M55vqSuUXkK9sZ7M4yS2M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lCP4kbNu26HMbn2JzBGSD5Llw2l0AsXZHlyjyKv4elvbVf4frEFSHbEsqmURq9PLc
+	 js3VLSjkn5mjR1O/H3V4DWzvDh0kQZrhyRMrQ0d/UGWanv6Z140e4ZvWZM+eDjv/J7
+	 8S2yY2/ZxkvdCQZvTs/pCZd++sUSFe1efi3I/K0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgD0QGX (ORCPT
+        id S1728279AbgD0QIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 12:06:23 -0400
-Received: from mga05.intel.com ([192.55.52.43]:8556 "EHLO mga05.intel.com"
+        Mon, 27 Apr 2020 12:08:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726185AbgD0QGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 12:06:23 -0400
-IronPort-SDR: z02/zrHjM/G6rUnKQoMtXt7HhW1CMfB5TQtKNfYYVFcCCzlZmv2c2Mjm+/uFfRC/vWojyvc/v1
- lTXCJElIDurg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 09:06:22 -0700
-IronPort-SDR: b01dvZ9KFoBL+qpbsGAzdTYnopKrQZ8+lhXmHHjPNgel+wtCMg/Bin2YPgQbRw4AGbXxJm9p/b
- QvKU9QwaQRWA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,324,1583222400"; 
-   d="scan'208";a="293579355"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.174.92]) ([10.249.174.92])
-  by orsmga008.jf.intel.com with ESMTP; 27 Apr 2020 09:06:20 -0700
-Subject: Re: [RFC PATCH 1/3] kvm: x86: Rename KVM_DEBUGREG_RELOAD to
- KVM_DEBUGREG_NEED_RELOAD
-To:     Peter Xu <peterx@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        kvm@vger.kernel.org, Nadav Amit <namit@cs.technion.ac.il>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linux-kernel@vger.kernel.org
-References: <20200416101509.73526-1-xiaoyao.li@intel.com>
- <20200416101509.73526-2-xiaoyao.li@intel.com>
- <20200423190941.GN17824@linux.intel.com> <20200424202103.GA48376@xz-x1>
- <f1c0ba71-1c5b-a5b7-3123-7ab36a5c5c74@redhat.com>
- <20200427143732.GD48376@xz-x1>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <3cc6471b-13da-832f-18d8-6db840b5ac47@intel.com>
-Date:   Tue, 28 Apr 2020 00:06:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726539AbgD0QIl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 12:08:41 -0400
+Received: from localhost (unknown [171.76.79.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBAAE205C9;
+        Mon, 27 Apr 2020 16:08:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588003720;
+        bh=Fht19I4+eezxy5GovEcjy5M55vqSuUXkK9sZ7M4yS2M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Wsy7jmWO9YhGIFy8m+h/Pj5RwoL2HpGQYSA2W2RNN6F4+zdNlshGddo6y/wM+ZGsm
+         jRPfuiim4i5JJbZcWsyBAv+Fdh6HgVvjAkXUxWNtklBjxLKjV/RyEOfHxePjR3Z+Vt
+         Bq28GQ86+r0qPVFxAS41PTQ0cdJ4K7m45IosxJm4=
+Date:   Mon, 27 Apr 2020 21:38:36 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     okaya@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org,
+        dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: qcom_hidma: Simplify error handling path in
+ hidma_probe
+Message-ID: <20200427160836.GI56386@vkoul-mobl.Dlink>
+References: <20200427111043.70218-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-In-Reply-To: <20200427143732.GD48376@xz-x1>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427111043.70218-1-christophe.jaillet@wanadoo.fr>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/27/2020 10:37 PM, Peter Xu wrote:
-> On Sat, Apr 25, 2020 at 09:48:17AM +0200, Paolo Bonzini wrote:
->> On 24/04/20 22:21, Peter Xu wrote:
->>> But then shouldn't DIRTY be set as long as KVM_DEBUGREG_BP_ENABLED is set every
->>> time before vmenter?  Then it'll somehow go back to switch_db_regs, iiuc...
->>>
->>> IIUC RELOAD actually wants to say "reload only for this iteration", that's why
->>> it's cleared after each reload.  So maybe...  RELOAD_ONCE?
->>>
->>> (Btw, do we have debug regs tests somewhere no matter inside guest or with
->>>   KVM_SET_GUEST_DEBUG?)
->>
->> What about KVM_DEBUGREG_EFF_DB_DIRTY?
-> 
-> The problem is iiuc we always reload eff_db[] no matter which bit in
-> switch_db_regs is set, so this may still not clearly identify this bit from the
-> rest of the two bits...
-> 
-> Actually I think eff_db[] is a bit confusing here in that it can be either the
-> host specified dbreg values or the guest specified depends on the dynamic value
-> of KVM_GUESTDBG_USE_HW_BP.
-> 
-> I am thinking maybe it's clearer to have host_db[] and guest_db[], then only
-> until vmenter do we load either of them by:
+On 27-04-20, 13:10, Christophe JAILLET wrote:
+> There is no need to call 'hidma_debug_uninit()' in the error handling
+> path. 'hidma_debug_init()' has not been called yet.
 
-host_db[] is somewhat misleading, how about user_db[] (just like user_fpu)
+Applied, thanks
 
->    if (KVM_GUESTDBG_USE_HW_BP)
->      load(host_db[]);
->    else
->      load(gueet_db[]);
-> 
-> Then each db[] will be very clear on what's the data is about.  And we don't
-> need to check KVM_GUESTDBG_USE_HW_BP every time when accessing eff_db[].
-> 
-
+-- 
+~Vinod
