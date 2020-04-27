@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FF6C54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE78C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B397F206D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEEEE206D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:06:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VOhp/uhe"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fz44ydA9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbgD0UGu (ORCPT
+        id S1726840AbgD0UGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 16:06:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59190 "EHLO
+        Mon, 27 Apr 2020 16:06:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726789AbgD0UGq (ORCPT
+        by vger.kernel.org with ESMTP id S1726789AbgD0UGv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 16:06:46 -0400
+        Mon, 27 Apr 2020 16:06:51 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F02BC0610D5;
-        Mon, 27 Apr 2020 13:06:46 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85C95C0610D5;
+        Mon, 27 Apr 2020 13:06:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=gpWRZElREATeZwYUTenSdTJqeed7o42EBJOpC8zP8hc=; b=VOhp/uhefZFEynocz44DtCEVFz
-        dxGTK36xP2DXbc1N3eQSPLjTl4PzLLqwkIrVXlGPbwrGI4idMF/OjFjtEwiqE2c7M6+ghuQxp5x70
-        381dxchwc1hP5Nmwt+aMkY9IIH8eqhtOZR9/E0pz5IwN91Qhowp/LBLZ+KyzFZ1JWftARQLKib6A9
-        a1XA9JyhfXCjofbd498H+U3O9OQxTDUPUM5cfFSoexrjA+tdYbZU2plopx4IVUavWoIFYNDZhMYOY
-        R7MQ2sPJlp+YKQLjAPOTLyBJ0uHy0nmDd9/8W1xDO9adntJjS8lrUJzt19cB+TmPnZD3wIInsaLZ/
-        fPiBrn6Q==;
+        bh=HvsuEE5+Vpf11RhZiIeD024n91SKgo+pyfBY5PqLiHs=; b=fz44ydA9lpLx6+mZRQa+jdunmM
+        2xFuVgrbgquFBgLBTB0qhCVkbWljLk7X4dPlF7J4ybyPZozZD1qrxtRJ3VPoA/mgtFeFJtv3RJtjM
+        geoHbg0cLo4+wcMK71JhpYf/XfXJBhjDvehe8oo+Di0E9PJ9KTYO1Mjp0NFDKb9FQi+3dWIURdVKr
+        EmjYzBi4tgSUfVvz8ndaGuAFsY02irEX5Et7pDslGVdUnIgcUzKIFKApOwUQtPjeQYmS25C+BZPJd
+        Mxk3KwE1i5I+dcnCksa1cpOyXnLi0Y6ve9y/kQyWaJd9B2ODWGM2IwBkC9h/Cew0TFfvatych1ed0
+        Z5Bf0NEg==;
 Received: from [2001:4bb8:193:f203:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jTA1R-00017b-BT; Mon, 27 Apr 2020 20:06:33 +0000
+        id 1jTA1Y-00019J-QF; Mon, 27 Apr 2020 20:06:41 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>
@@ -47,9 +47,9 @@ Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         "Eric W . Biederman" <ebiederm@xmission.com>,
         linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/5] signal: factor copy_siginfo_to_external32 from copy_siginfo_to_user32
-Date:   Mon, 27 Apr 2020 22:06:22 +0200
-Message-Id: <20200427200626.1622060-3-hch@lst.de>
+Subject: [PATCH 5/5] binfmt_elf_fdpic: remove the set_fs(KERNEL_DS) in elf_fdpic_core_dump
+Date:   Mon, 27 Apr 2020 22:06:25 +0200
+Message-Id: <20200427200626.1622060-6-hch@lst.de>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200427200626.1622060-1-hch@lst.de>
 References: <20200427200626.1622060-1-hch@lst.de>
@@ -61,197 +61,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Eric W. Biederman" <ebiederm@xmission.com>
+There is no logic in elf_fdpic_core_dump itself or in the various arch
+helpers called from it which use uaccess routines on kernel pointers
+except for the file writes thate are nicely encapsulated by using
+__kernel_write in dump_emit.
 
-To remove the use of set_fs in the coredump code there needs to be a
-way to convert a kernel siginfo to a userspace compat siginfo.
-
-Call that function copy_siginfo_to_compat and factor it out of
-copy_siginfo_to_user32.
-
-The existence of x32 complicates this code.  On x32 SIGCHLD uses 64bit
-times for utime and stime.  As only SIGCHLD is affected and SIGCHLD
-never causes a coredump I have avoided handling that case.
-
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- include/linux/compat.h |   2 +
- kernel/signal.c        | 113 ++++++++++++++++++++++-------------------
- 2 files changed, 62 insertions(+), 53 deletions(-)
+ fs/binfmt_elf_fdpic.c | 31 ++++++++++++-------------------
+ 1 file changed, 12 insertions(+), 19 deletions(-)
 
-diff --git a/include/linux/compat.h b/include/linux/compat.h
-index 0480ba4db5929..adbfe8f688d92 100644
---- a/include/linux/compat.h
-+++ b/include/linux/compat.h
-@@ -402,6 +402,8 @@ long compat_get_bitmap(unsigned long *mask, const compat_ulong_t __user *umask,
- 		       unsigned long bitmap_size);
- long compat_put_bitmap(compat_ulong_t __user *umask, unsigned long *mask,
- 		       unsigned long bitmap_size);
-+void copy_siginfo_to_external32(struct compat_siginfo *to,
-+		const struct kernel_siginfo *from);
- int copy_siginfo_from_user32(kernel_siginfo_t *to, const struct compat_siginfo __user *from);
- int copy_siginfo_to_user32(struct compat_siginfo __user *to, const kernel_siginfo_t *from);
- int get_compat_sigevent(struct sigevent *event,
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 284fc1600063b..244c69c4261e0 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -3235,94 +3235,101 @@ int copy_siginfo_from_user(kernel_siginfo_t *to, const siginfo_t __user *from)
- }
- 
- #ifdef CONFIG_COMPAT
--int copy_siginfo_to_user32(struct compat_siginfo __user *to,
--			   const struct kernel_siginfo *from)
--#if defined(CONFIG_X86_X32_ABI) || defined(CONFIG_IA32_EMULATION)
-+void copy_siginfo_to_external32(struct compat_siginfo *to,
-+				const struct kernel_siginfo *from)
+diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
+index 240f666635437..c62c17a5c34a9 100644
+--- a/fs/binfmt_elf_fdpic.c
++++ b/fs/binfmt_elf_fdpic.c
+@@ -1549,7 +1549,6 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
  {
--	return __copy_siginfo_to_user32(to, from, in_x32_syscall());
--}
--int __copy_siginfo_to_user32(struct compat_siginfo __user *to,
--			     const struct kernel_siginfo *from, bool x32_ABI)
--#endif
--{
--	struct compat_siginfo new;
--	memset(&new, 0, sizeof(new));
-+	/*
-+	 * This function does not work properly for SIGCHLD on x32,
-+	 * but it does not need to as SIGCHLD never causes a coredump.
-+	 */
-+	memset(to, 0, sizeof(*to));
+ #define	NUM_NOTES	6
+ 	int has_dumped = 0;
+-	mm_segment_t fs;
+ 	int segs;
+ 	int i;
+ 	struct vm_area_struct *vma;
+@@ -1678,9 +1677,6 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
+ 			  "LINUX", ELF_CORE_XFPREG_TYPE, sizeof(*xfpu), xfpu);
+ #endif
  
--	new.si_signo = from->si_signo;
--	new.si_errno = from->si_errno;
--	new.si_code  = from->si_code;
-+	to->si_signo = from->si_signo;
-+	to->si_errno = from->si_errno;
-+	to->si_code  = from->si_code;
- 	switch(siginfo_layout(from->si_signo, from->si_code)) {
- 	case SIL_KILL:
--		new.si_pid = from->si_pid;
--		new.si_uid = from->si_uid;
-+		to->si_pid = from->si_pid;
-+		to->si_uid = from->si_uid;
- 		break;
- 	case SIL_TIMER:
--		new.si_tid     = from->si_tid;
--		new.si_overrun = from->si_overrun;
--		new.si_int     = from->si_int;
-+		to->si_tid     = from->si_tid;
-+		to->si_overrun = from->si_overrun;
-+		to->si_int     = from->si_int;
- 		break;
- 	case SIL_POLL:
--		new.si_band = from->si_band;
--		new.si_fd   = from->si_fd;
-+		to->si_band = from->si_band;
-+		to->si_fd   = from->si_fd;
- 		break;
- 	case SIL_FAULT:
--		new.si_addr = ptr_to_compat(from->si_addr);
-+		to->si_addr = ptr_to_compat(from->si_addr);
- #ifdef __ARCH_SI_TRAPNO
--		new.si_trapno = from->si_trapno;
-+		to->si_trapno = from->si_trapno;
- #endif
- 		break;
- 	case SIL_FAULT_MCEERR:
--		new.si_addr = ptr_to_compat(from->si_addr);
-+		to->si_addr = ptr_to_compat(from->si_addr);
- #ifdef __ARCH_SI_TRAPNO
--		new.si_trapno = from->si_trapno;
-+		to->si_trapno = from->si_trapno;
- #endif
--		new.si_addr_lsb = from->si_addr_lsb;
-+		to->si_addr_lsb = from->si_addr_lsb;
- 		break;
- 	case SIL_FAULT_BNDERR:
--		new.si_addr = ptr_to_compat(from->si_addr);
-+		to->si_addr = ptr_to_compat(from->si_addr);
- #ifdef __ARCH_SI_TRAPNO
--		new.si_trapno = from->si_trapno;
-+		to->si_trapno = from->si_trapno;
- #endif
--		new.si_lower = ptr_to_compat(from->si_lower);
--		new.si_upper = ptr_to_compat(from->si_upper);
-+		to->si_lower = ptr_to_compat(from->si_lower);
-+		to->si_upper = ptr_to_compat(from->si_upper);
- 		break;
- 	case SIL_FAULT_PKUERR:
--		new.si_addr = ptr_to_compat(from->si_addr);
-+		to->si_addr = ptr_to_compat(from->si_addr);
- #ifdef __ARCH_SI_TRAPNO
--		new.si_trapno = from->si_trapno;
-+		to->si_trapno = from->si_trapno;
- #endif
--		new.si_pkey = from->si_pkey;
-+		to->si_pkey = from->si_pkey;
- 		break;
- 	case SIL_CHLD:
--		new.si_pid    = from->si_pid;
--		new.si_uid    = from->si_uid;
--		new.si_status = from->si_status;
--#ifdef CONFIG_X86_X32_ABI
--		if (x32_ABI) {
--			new._sifields._sigchld_x32._utime = from->si_utime;
--			new._sifields._sigchld_x32._stime = from->si_stime;
--		} else
--#endif
--		{
--			new.si_utime = from->si_utime;
--			new.si_stime = from->si_stime;
--		}
-+		to->si_pid    = from->si_pid;
-+		to->si_uid    = from->si_uid;
-+		to->si_status = from->si_status;
-+		to->si_utime = from->si_utime;
-+		to->si_stime = from->si_stime;
- 		break;
- 	case SIL_RT:
--		new.si_pid = from->si_pid;
--		new.si_uid = from->si_uid;
--		new.si_int = from->si_int;
-+		to->si_pid = from->si_pid;
-+		to->si_uid = from->si_uid;
-+		to->si_int = from->si_int;
- 		break;
- 	case SIL_SYS:
--		new.si_call_addr = ptr_to_compat(from->si_call_addr);
--		new.si_syscall   = from->si_syscall;
--		new.si_arch      = from->si_arch;
-+		to->si_call_addr = ptr_to_compat(from->si_call_addr);
-+		to->si_syscall   = from->si_syscall;
-+		to->si_arch      = from->si_arch;
- 		break;
- 	}
-+}
- 
-+int copy_siginfo_to_user32(struct compat_siginfo __user *to,
-+			   const struct kernel_siginfo *from)
-+#if defined(CONFIG_X86_X32_ABI) || defined(CONFIG_IA32_EMULATION)
-+{
-+	return __copy_siginfo_to_user32(to, from, in_x32_syscall());
-+}
-+int __copy_siginfo_to_user32(struct compat_siginfo __user *to,
-+			     const struct kernel_siginfo *from, bool x32_ABI)
-+#endif
-+{
-+	struct compat_siginfo new;
-+
-+	copy_siginfo_to_external32(&new, from);
-+#ifdef CONFIG_X86_X32_ABI
-+	if (x32_ABI && from->si_signo == SIGCHLD) {
-+		new._sifields._sigchld_x32._utime = from->si_utime;
-+		new._sifields._sigchld_x32._stime = from->si_stime;
-+	}
-+#endif
- 	if (copy_to_user(to, &new, sizeof(struct compat_siginfo)))
- 		return -EFAULT;
+-	fs = get_fs();
+-	set_fs(KERNEL_DS);
 -
- 	return 0;
- }
+ 	offset += sizeof(*elf);				/* Elf header */
+ 	offset += segs * sizeof(struct elf_phdr);	/* Program headers */
  
+@@ -1695,7 +1691,7 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
+ 
+ 		phdr4note = kmalloc(sizeof(*phdr4note), GFP_KERNEL);
+ 		if (!phdr4note)
+-			goto end_coredump;
++			goto cleanup;
+ 
+ 		fill_elf_note_phdr(phdr4note, sz, offset);
+ 		offset += sz;
+@@ -1711,17 +1707,17 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
+ 	if (e_phnum == PN_XNUM) {
+ 		shdr4extnum = kmalloc(sizeof(*shdr4extnum), GFP_KERNEL);
+ 		if (!shdr4extnum)
+-			goto end_coredump;
++			goto cleanup;
+ 		fill_extnum_info(elf, shdr4extnum, e_shoff, segs);
+ 	}
+ 
+ 	offset = dataoff;
+ 
+ 	if (!dump_emit(cprm, elf, sizeof(*elf)))
+-		goto end_coredump;
++		goto cleanup;
+ 
+ 	if (!dump_emit(cprm, phdr4note, sizeof(*phdr4note)))
+-		goto end_coredump;
++		goto cleanup;
+ 
+ 	/* write program headers for segments dump */
+ 	for (vma = current->mm->mmap; vma; vma = vma->vm_next) {
+@@ -1745,16 +1741,16 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
+ 		phdr.p_align = ELF_EXEC_PAGESIZE;
+ 
+ 		if (!dump_emit(cprm, &phdr, sizeof(phdr)))
+-			goto end_coredump;
++			goto cleanup;
+ 	}
+ 
+ 	if (!elf_core_write_extra_phdrs(cprm, offset))
+-		goto end_coredump;
++		goto cleanup;
+ 
+  	/* write out the notes section */
+ 	for (i = 0; i < numnote; i++)
+ 		if (!writenote(notes + i, cprm))
+-			goto end_coredump;
++			goto cleanup;
+ 
+ 	/* write out the thread status notes section */
+ 	list_for_each(t, &thread_list) {
+@@ -1763,21 +1759,21 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
+ 
+ 		for (i = 0; i < tmp->num_notes; i++)
+ 			if (!writenote(&tmp->notes[i], cprm))
+-				goto end_coredump;
++				goto cleanup;
+ 	}
+ 
+ 	if (!dump_skip(cprm, dataoff - cprm->pos))
+-		goto end_coredump;
++		goto cleanup;
+ 
+ 	if (!elf_fdpic_dump_segments(cprm))
+-		goto end_coredump;
++		goto cleanup;
+ 
+ 	if (!elf_core_write_extra_data(cprm))
+-		goto end_coredump;
++		goto cleanup;
+ 
+ 	if (e_phnum == PN_XNUM) {
+ 		if (!dump_emit(cprm, shdr4extnum, sizeof(*shdr4extnum)))
+-			goto end_coredump;
++			goto cleanup;
+ 	}
+ 
+ 	if (cprm->file->f_pos != offset) {
+@@ -1787,9 +1783,6 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
+ 		       cprm->file->f_pos, offset);
+ 	}
+ 
+-end_coredump:
+-	set_fs(fs);
+-
+ cleanup:
+ 	while (!list_empty(&thread_list)) {
+ 		struct list_head *tmp = thread_list.next;
 -- 
 2.26.1
 
