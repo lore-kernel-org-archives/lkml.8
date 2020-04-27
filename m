@@ -2,130 +2,107 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE5AC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45962C55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 081D82064C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:05:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22B9F2064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:05:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KiFPn5ig"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GcjfFFrr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbgD0JFZ (ORCPT
+        id S1726887AbgD0JFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 05:05:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39938 "EHLO
+        Mon, 27 Apr 2020 05:05:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgD0JFY (ORCPT
+        with ESMTP id S1726183AbgD0JFe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 05:05:24 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59E01C061A41
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 02:05:23 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id d17so19582932wrg.11
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 02:05:23 -0700 (PDT)
+        Mon, 27 Apr 2020 05:05:34 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78051C061A41
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 02:05:34 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id g10so13093448lfj.13
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 02:05:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=t0Qb3M+KoO7rshy7LxfHgJoujvSz6frs1GElCox2b5s=;
-        b=KiFPn5ig/JKiOhaz02UnaLlnM3E8H8eyZzRXSgpgUO41XBVvN2o0dl8F35rNzr5/fP
-         M6d4vtcAdWrgC2ZqKCoTgLP4AgzuIMc1qN/3l/+HxvYd1zY0rJhpp9LNNi9k1kFhlyBZ
-         ymqiZ6+D/a+5NUOtNineXVJL593LPnBbBKiTxurunGLd5ELXd8bYFwg+xhk6NNxKfTNf
-         6CBdSmQY8GKAzYPVGKG53XQ3FeoIaZXG7yq5nsIEtHFm0L9lO4N80M2L0xDLhGiegXKx
-         tigV4d7V10rfAc9U9fdzaXGRfJKJAMq7gifpJIt6BDgTeVY+pEsAGXTqg18enuabO6YL
-         UPEw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XQq5YIVKHJKBzizbvimRgWeA7KAlaAb3K//0ivaDXEY=;
+        b=GcjfFFrr40m8FSVYqgVIjAbvgzHosO3lzZ6qTIiqpDNS8HoWn5hUVL1wE7lIj1y8dW
+         S/9Pd8rNKEugLVcpfWdmydm7ozGskMb7ekSFlcCVVq758OIBhhlTMGj8qEo5FB6Vyj5V
+         p3xePRgtVUn0A81bArSzadfZ0CkYwrJ1HpDyK5uEW328RUlD5s/pK+Roa2dTALN5QUOq
+         M8+IOy1NHV9kk9E7do/W5CwWRG7/4vwCHw/gTH2rduzbHVD6bwK1A45Jzmj64W+kF57m
+         i1amVbhLKyzl8SQFdf2Fmn5SUnzcpygyL7Ms6jd8D3eEARjApbLBjF1rVj+PMCK5nAy5
+         baOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=t0Qb3M+KoO7rshy7LxfHgJoujvSz6frs1GElCox2b5s=;
-        b=KiNUCGZYgaoDfiUcwDQWVCDoyAZBZcqbUzUqEv615AwUF6Df8B007Fsf64KvypLOYU
-         gGWOeF7q2vPPBIdSVig29mRXYEyz2OFUbFuVM/M1KDOPK/c1ximj7ZrOdMvR59bRYq0M
-         jOpt2xwqsGtIuIpxpTqviLedD2xkFhRLvFDK2serNL+N1kCO3mjjctAWUxYuZtXRIV0Y
-         r86c/brsArCek7K9ZscNGRb9BXu9rjrJ/ecL6qGbKKqdp1cIehtDeueUaXvtGDpc7nEM
-         gYAcuLBztiL33ClQ5K187h+WeouWtvLMyudAGty7SIOjTx+n8bz3f/aSHA/0Fka/gOtm
-         NS3A==
-X-Gm-Message-State: AGi0PuZ+qB0DtaeYB7adH6/HfshBJnMcYM4yD42FhvlpnKN5K1Qvb5/b
-        KTuECDNMaC8heIHLI+Bxq+6QeQ==
-X-Google-Smtp-Source: APiQypLpoDDhhdpdCRaX2x6X7Pxrq+PxdaeSfgMI7TOujsZcV/bIZhc1xo/+1EofweXOdW56V/D2bQ==
-X-Received: by 2002:a05:6000:11cb:: with SMTP id i11mr26886292wrx.339.1587978321185;
-        Mon, 27 Apr 2020 02:05:21 -0700 (PDT)
-Received: from dell ([2.31.163.63])
-        by smtp.gmail.com with ESMTPSA id l9sm19962876wrq.83.2020.04.27.02.05.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 02:05:20 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 10:05:18 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] mfd: syscon: Add Spreadtrum physical regmap bus
- support
-Message-ID: <20200427090518.GG3559@dell>
-References: <c2fd765aa388d4510194ba02c017e39bde57c8d4.1587478171.git.baolin.wang7@gmail.com>
- <CADBw62rJ8VYTgnW_3q4=TkCyZx2B1DHsG+oOmiph8FLsukUROQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XQq5YIVKHJKBzizbvimRgWeA7KAlaAb3K//0ivaDXEY=;
+        b=hVl3mZAFFyx0749CC6Y2uKoX+M4ELC0iVXZ+TWH+agIJB4QGMY1w0FudePkv+qoj2v
+         HvSi+v2iKTSHYzCeCHpj20ZUvl/H4ytKeTHG9KZqDp/oWBiacJVc28oSC6lpfSgdhgLb
+         C2mHVRYPOXppUY22+FA3VYCzaS2e+OkWuSpe9y7WfB6sitNfacZVV7YcZ4dBr+OAY+r+
+         BhX1ley1c9UFLZwS+cqfiO8PE4FJ4ypfCL52mQVsCqP1eXk5FQ7AzuSY3KsZUAiDROxN
+         VUQM8IcoD1+Tk4Wo9xZWKofgcxOuA+5O0Vj5hSUOu/sWocgFpUBLWZMPGsvdq88wAfQp
+         WgHw==
+X-Gm-Message-State: AGi0PuYP+cdFl5ECVROWzd8raAy7tDP6oSrQnvAjwYiaR2Mn8GX3NA06
+        uH5nWQplCrGuf0OhCk880M+g/y6gZITFQgzK3Y3k9Q==
+X-Google-Smtp-Source: APiQypJ7xTvcVAg1CVRnlMJb2+Mp058WGfk5Qxh7iUgNk5n6eBbb/kl3GThMvjCLOys+aY076SZ8xFal+6KXDL4I9B8=
+X-Received: by 2002:ac2:51c9:: with SMTP id u9mr15212511lfm.184.1587978332910;
+ Mon, 27 Apr 2020 02:05:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADBw62rJ8VYTgnW_3q4=TkCyZx2B1DHsG+oOmiph8FLsukUROQ@mail.gmail.com>
+References: <20200427032338.73743-1-songmuchun@bytedance.com>
+In-Reply-To: <20200427032338.73743-1-songmuchun@bytedance.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Mon, 27 Apr 2020 11:05:21 +0200
+Message-ID: <CAKfTPtCKNRbqi7oRcj29RJwOCrPemEHVzi0936jYryxzhkW7zg@mail.gmail.com>
+Subject: Re: [PATCH RESEND] sched/fair: add __init to sched_init_granularity functions
+To:     Muchun Song <songmuchun@bytedance.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Apr 2020, Baolin Wang wrote:
+On Mon, 27 Apr 2020 at 05:23, Muchun Song <songmuchun@bytedance.com> wrote:
+>
+> Function sched_init_granularity() is only called from __init
+> functions, so mark it __init as well.
+>
+> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-> Hi Arnd and Lee,
-> 
-> On Tue, Apr 21, 2020 at 10:13 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
-> >
-> > Some platforms such as Spreadtrum platform, define a special method to
-> > update bits of the registers instead of read-modify-write, which means
-> > we should use a physical regmap bus to define the reg_update_bits()
-> > operation instead of the MMIO regmap bus. Thus we can register a new
-> > physical regmap bus into syscon core to support this.
-> >
-> > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-> 
-> Do you have any comments for this patch? Thanks.
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
 
-Yes.  I'm not accepting it, sorry.
-
-I'd rather you duplicate the things you need from of_syscon_register()
-in your own driver than taint this one.
-
-> > ---
-> > Changes from v2:
-> >  - Fix building errors without enabling CONFIG_ARCH_SPRD.
-> >
-> > Changes from v1:
-> >  - Add WARN_ONCE() for seting bits and clearing bits at the same time.
-> >  - Remove the Spreadtrum SoC syscon driver, instead moving the regmap_bus
-> >  instance into syscon.c driver.
-> >
-> > Changes from RFC v2:
-> >  - Drop regmap change, which was applied by Mark.
-> >  - Add more information about how to use set/clear.
-> >  - Add checking to ensure the platform is compatible with
-> >  using a new physical regmap bus.
-> >
-> > Changes from RFC v1:
-> >  - Add new helper to registers a physical regmap bus instead of
-> >  using the MMIO bus.
-> > ---
-> >  drivers/mfd/syscon.c | 83 ++++++++++++++++++++++++++++++++++++++++++--
-> >  1 file changed, 81 insertions(+), 2 deletions(-)
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> ---
+>  kernel/sched/fair.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 1141c7e77564d..6f05843c76d7d 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -191,7 +191,7 @@ static void update_sysctl(void)
+>  #undef SET_SYSCTL
+>  }
+>
+> -void sched_init_granularity(void)
+> +void __init sched_init_granularity(void)
+>  {
+>         update_sysctl();
+>  }
+> --
+> 2.11.0
+>
