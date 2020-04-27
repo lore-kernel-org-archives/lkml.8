@@ -2,324 +2,212 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F423C5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED6D3C5519A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECF7920663
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6F2F20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:46:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="wkvZ/2OE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EbUlbJf3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726929AbgD0Jpi (ORCPT
+        id S1726937AbgD0JqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 05:45:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46262 "EHLO
+        Mon, 27 Apr 2020 05:46:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726821AbgD0Jph (ORCPT
+        by vger.kernel.org with ESMTP id S1726349AbgD0JqI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 05:45:37 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DF47C061BD3
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 02:45:37 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id m13so25062313otf.6
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 02:45:36 -0700 (PDT)
+        Mon, 27 Apr 2020 05:46:08 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1497C0610D5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 02:46:06 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id l3so12945112edq.13
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 02:46:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=p/dkv8siYLu4BZqbzo9AEk9hetqwaOBV9gfUD96SYV4=;
-        b=wkvZ/2OEzPmpzA1KGxW4Nr+32KgW8NQ3ymID5WWYJRWgS2Iqd28pDmJ1ydEcabxmEJ
-         aMjxgUqk6DmpOe8Nq6FL9BwtAvgu4as/EpD+xJokAl+rmfPCznstgiVZjQOqTo9nga3x
-         TZIwHcyjSEDL25xgeyK+DxhXbwkG8t1iJaNIM=
+        bh=bFV9sBvatl6AXHhG7wp/COKK9les57X1hK35qsxV5xk=;
+        b=EbUlbJf3tuX+YZtYtlMf7Y7xTfiT73UT00bsSnbqg6l7Smat0W+qEtS60TSsYooNaH
+         aJUIKABFZJf91k3lrw0txfMc1941zkEqWEdcbFJ3Y19653c5eXJTR7s+V/A1X6w44cPV
+         2+sKwwae9hp4/Jl/VEUV0bPTFqn++exYrTAelPQuWNfg50ZN9B9fKlDpliHaA7zU18x1
+         v05ZM3pfsEuy3Q6vskAC6td2ghjnQh2Kl8YaWd5G+0rsy0i7MZSxP0daoIwPsjxA8Nyt
+         7g0sZ1Ya1zFmul+BQjffOTcoSUfV/p2RkUgq3n6W0snyN7N3cfgJcfmLfsQIWwXEngdB
+         jTlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=p/dkv8siYLu4BZqbzo9AEk9hetqwaOBV9gfUD96SYV4=;
-        b=Nv147QaKQ9/9rharjKDcu0JCw14NrbpCVHkT+cvVVw+aKMiTiKIWigaiAvnljxtMcb
-         tLRzpzVWzBjfiu+vHH89y6LyKxBeb3uzinw25xlmohGjaYpdRGOQCT9iOhZ/FRtTIEJI
-         8oifFJOzSO9dUBmFArPbPVgr3Ydjy/nw2lu8ufdu2tEgDdWy2Y9lT7etDwgVxpDTgnws
-         5BV5am16uPy6m5kb403f6RMdxRB42KoV/Z8xemOjyPLl/J8MrSqInPonZyP9Aa6173m9
-         QuP4TX9tkPhX83qM92Bt8ioCi0XPPW8ccgDun3DD1d3El3I49xOmMtplSRSkG8GQLntx
-         w/ZQ==
-X-Gm-Message-State: AGi0PuZ6g2Cjz+sJ0WqkvKFry4IL4bXawKpOsHKVEEOUJ5RAI7+FwSHX
-        pssktK+J9m4YHYOY9TuDtMN3gdWHTcS5j7eG+AGt1A==
-X-Google-Smtp-Source: APiQypJb/0wG6doOweC6/06XgmGhy6G6Ty+M8bIB3K5ZRqyxCXC7fCfVf3fNxWjDKvYlAslCazWdOEbT8BFYiIP3+mg=
-X-Received: by 2002:aca:5492:: with SMTP id i140mr13417819oib.13.1587980736077;
- Mon, 27 Apr 2020 02:45:36 -0700 (PDT)
+        bh=bFV9sBvatl6AXHhG7wp/COKK9les57X1hK35qsxV5xk=;
+        b=EpifReAMP/ziCgJdert1bRpvECt+jVXbop2wZZVuw+AoxFUlC5rSNUZdJqOcFz51tc
+         /BjJFi8ePA/1KGGO8HipLQPbDb+Jn0hfV5Oc4/SiPJymNUtTh3ktkl3xU7+xKiYY6OSl
+         4KsmoNd3pHRy7bqSOCZPL9AcIGzLqvKgrmmqj3AktPrXs8krZeboC73qBW4YYtk29xpl
+         RwFjyRAjPNxQsrGdh9TLFqAbvxEnbA+Rck6RuNdH8X2iyMKsZD3Cy0/047rxU5u/VgWf
+         XNgpOHjkZr9ZWnbP6E7KGPA77MoCBENb2b43R49Eob/k1jET4apfA3JOy4ufmbLPzws+
+         GwnA==
+X-Gm-Message-State: AGi0PuYET+fLn4+wx4Ywm5sg6bPFlJiMl5vtD6Ff/xHtKlr8yFbbFtlh
+        X5U6QAnPwNC/FF170FpUffG/Ce/A341fud3Su4INkA==
+X-Google-Smtp-Source: APiQypKBJ1TjgztIav5Ztn3182KcUXk9E605M/lf85I3kerNto/5dGXA2llc0FTVncqtJrOobc7MLFiNojywC1oRs+M=
+X-Received: by 2002:aa7:d0d8:: with SMTP id u24mr18345837edo.138.1587980765556;
+ Mon, 27 Apr 2020 02:46:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200424185556.7358-1-lmb@cloudflare.com> <20200424185556.7358-2-lmb@cloudflare.com>
- <20200426173324.5zg7isugereb5ert@ast-mbp.dhcp.thefacebook.com>
-In-Reply-To: <20200426173324.5zg7isugereb5ert@ast-mbp.dhcp.thefacebook.com>
-From:   Lorenz Bauer <lmb@cloudflare.com>
-Date:   Mon, 27 Apr 2020 10:45:24 +0100
-Message-ID: <CACAyw98nK_Vkstp-vEqNwKXtoCRnTOPr7Eh+ziH56tJGbnPsig@mail.gmail.com>
-Subject: Re: [PATCH 1/1] selftests/bpf: add cls_redirect classifier
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Theo Julienne <theojulienne@github.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
+References: <20200426143725.18116-1-saiprakash.ranjan@codeaurora.org> <cf5852e9-c3c1-3d31-46f0-0370719947ab@arm.com>
+In-Reply-To: <cf5852e9-c3c1-3d31-46f0-0370719947ab@arm.com>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Mon, 27 Apr 2020 10:45:54 +0100
+Message-ID: <CAJ9a7VgF3-Hdc7KSw9gVBeXSDHNguhqVhp60oK2XhCtr3DhDqg@mail.gmail.com>
+Subject: Re: [PATCH] coresight: dynamic-replicator: Fix handling of multiple connections
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 26 Apr 2020 at 18:33, Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Fri, Apr 24, 2020 at 07:55:55PM +0100, Lorenz Bauer wrote:
-> > cls_redirect is a TC clsact based replacement for the glb-redirect iptables
-> > module available at [1]. It enables what GitHub calls "second chance"
-> > flows [2], similarly proposed by the Beamer paper [3]. In contrast to
-> > glb-redirect, it also supports migrating UDP flows as long as connected
-> > sockets are used. cls_redirect is in production at Cloudflare, as part of
-> > our own L4 load balancer.
->
-> This is awesome. Thank you for contributing!
-> Applied.
->
-> > There are two major distinctions from glb-redirect: first, cls_redirect
-> > relies on receiving encapsulated packets directly from a router. This is
-> > because we don't have access to the neighbour tables from BPF, yet. See
->
-> Let's make it available then :)
+HI,
 
-Yes, I've been dragging my feet on this. It seems like the fib_lookup does
-almost what we want, but I need to experiment with it. In the best case,
-we'd have a helper that does the following:
-
-* Try and find a neighbour
-* Return it if one exists
-* Otherwise, asynchronously trigger neighbour discovery (if it makes sense)
-* And return the default gateway
-
-I should probably start a new thread about this on the list.
-
+On Mon, 27 Apr 2020 at 10:15, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
 >
-> > The code base started it's life on v4.19, so there are most likely still
-> > hold overs from old workarounds. In no particular order:
+> On 04/26/2020 03:37 PM, Sai Prakash Ranjan wrote:
+> > Since commit 30af4fb619e5 ("coresight: dynamic-replicator:
+> > Handle multiple connections"), we do not make sure that
+> > the other port is disabled when the dynamic replicator is
+> > enabled. This is seen to cause the CPU hardlockup atleast
+> > on SC7180 SoC with the following topology when enabling ETM
+> > with ETR as the sink via sysfs. Since there is no trace id
+> > logic in coresight yet to make use of multiple sinks in
+> > parallel for different trace sessions, disable the other
+> > port when one port is turned on.
 > >
-> > - The function buf_off is required to defeat a clang optimization
-> >   that leads to the verifier rejecting the program due to pointer
-> >   arithmetic in the wrong order.
+> >         etm0_out
+> >         |
+> >     apss_funnel_in0
+> >            |
+> >    apss_merge_funnel_in
+> >            |
+> >        funnel1_in4
+> >         |
+> >     merge_funnel_in1
+> >         |
+> >      swao_funnel_in
+> >            |
+> >          etf_in
+> >         |
+> >    swao_replicator_in
+> >            |
+> >     replicator_in
+> >         |
+> >          etr_in
 > >
-> > - The function pkt_parse_ipv6 is force inlined, because it would
-> >   otherwise be rejected due to returning a pointer to stack memory.
+> >    Kernel panic - not syncing: Watchdog detected hard LOCKUP on cpu 0
+> >    CPU: 7 PID: 0 Comm: swapper/7 Tainted: G S  B             5.4.25 #100
+> >    Hardware name: Qualcomm Technologies, Inc. SC7180 IDP (DT)
+> >    Call trace:
+> >     dump_backtrace+0x0/0x188
+> >     show_stack+0x20/0x2c
+> >     dump_stack+0xdc/0x144
+> >     panic+0x168/0x370
+> >     arch_seccomp_spec_mitigate+0x0/0x14
+> >     watchdog_timer_fn+0x68/0x290
+> >     __hrtimer_run_queues+0x264/0x498
+> >     hrtimer_interrupt+0xf0/0x22c
+> >     arch_timer_handler_phys+0x40/0x50
+> >     handle_percpu_devid_irq+0x8c/0x158
+> >     __handle_domain_irq+0x84/0xc4
+> >     gic_handle_irq+0x100/0x1c4
+> >     el1_irq+0xbc/0x180
+> >     arch_cpu_idle+0x3c/0x5c
+> >     default_idle_call+0x1c/0x38
+> >     do_idle+0x100/0x280
+> >     cpu_startup_entry+0x24/0x28
+> >     secondary_start_kernel+0x15c/0x170
+> >    SMP: stopping secondary CPUs
 > >
-> > - The functions fill_tuple and classify_tcp contain kludges, because
-> >   we've run out of function arguments.
+> > Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> > Tested-by: Stephen Boyd <swboyd@chromium.org>
+> > ---
+> > Changes since RFC:
+> >   * Reworded commit text and included the topology on SC7180.
+>
+>
+> > ---
+> >   .../hwtracing/coresight/coresight-replicator.c    | 15 ++++++++++-----
+> >   1 file changed, 10 insertions(+), 5 deletions(-)
 > >
-> > - The logic in general is rather nested, due to verifier restrictions.
-> >   I think this is either because the verifier loses track of constants
-> >   on the stack, or because it can't track enum like variables.
->
-> Have you tried undoing these workarounds to check the latest verifier?
-> If they're still needed we certainly have to improve the verifier.
->
-> > +#include "test_cls_redirect.skel.h"
->
-> Do you use skeleton internally as well or was it just for selftests? ;)
-
-Only for selftests :) Our internal tooling is all Go based. skeleton
-is really nice
-though, so I'll make sure to steal some ideas!
-
->
-> > +_Static_assert(
-> > +     sizeof(flow_ports_t) !=
-> > +             offsetofend(struct bpf_sock_tuple, ipv4.dport) -
-> > +                     offsetof(struct bpf_sock_tuple, ipv4.sport) - 1,
-> > +     "flow_ports_t must match sport and dport in struct bpf_sock_tuple");
->
-> Nice. I didn't realize clang supports it. Of course it should.
->
-> > +/* Linux packet pointers are either aligned to NET_IP_ALIGN (aka 2 bytes),
-> > + * or not aligned if the arch supports efficient unaligned access.
-> > + *
-> > + * Since the verifier ensures that eBPF packet accesses follow these rules,
-> > + * we can tell LLVM to emit code as if we always had a larger alignment.
-> > + * It will yell at us if we end up on a platform where this is not valid.
-> > + */
-> > +typedef uint8_t *net_ptr __attribute__((align_value(8)));
->
-> Wow. I didn't know about this attribute.
-> I wonder whether it can help Daniel's memcpy hack.
-
-Yes, I think so.
-
-> > +
-> > +typedef struct buf {
-> > +     struct __sk_buff *skb;
-> > +     net_ptr head;
-> > +     /* NB: tail musn't have alignment other than 1, otherwise
-> > +     * LLVM will go and eliminate code, e.g. when checking packet lengths.
-> > +     */
-> > +     uint8_t *const tail;
-> > +} buf_t;
-> > +
-> > +static size_t buf_off(const buf_t *buf)
-> > +{
-> > +     /* Clang seems to optimize constructs like
-> > +      *    a - b + c
-> > +      * if c is known:
-> > +      *    r? = c
-> > +      *    r? -= b
-> > +      *    r? += a
-> > +      *
-> > +      * This is a problem if a and b are packet pointers,
-> > +      * since the verifier allows subtracting two pointers to
-> > +      * get a scalar, but not a scalar and a pointer.
-> > +      *
-> > +      * Use inline asm to break this optimization.
-> > +      */
-> > +     size_t off = (size_t)buf->head;
-> > +     asm("%0 -= %1" : "+r"(off) : "r"(buf->skb->data));
-> > +     return off;
-> > +}
->
-> We need to look into this one.
-> This part is not gated by allow_ptr_leaks.
-> if (dst_reg == off_reg) {
->         /* scalar -= pointer.  Creates an unknown scalar */
->         verbose(env, "R%d tried to subtract pointer from scalar\n",
->                 dst);
->         return -EACCES;
-> }
-> Hopefully not too hard to fix.
->
-> > +
-> > +static bool pkt_skip_ipv6_extension_headers(buf_t *pkt,
-> > +                                         const struct ipv6hdr *ipv6,
-> > +                                         uint8_t *upper_proto,
-> > +                                         bool *is_fragment)
-> > +{
-> > +     /* We understand five extension headers.
-> > +      * https://tools.ietf.org/html/rfc8200#section-4.1 states that all
-> > +      * headers should occur once, except Destination Options, which may
-> > +      * occur twice. Hence we give up after 6 headers.
-> > +      */
-> > +     struct {
-> > +             uint8_t next;
-> > +             uint8_t len;
-> > +     } exthdr = {
-> > +             .next = ipv6->nexthdr,
-> > +     };
-> > +     *is_fragment = false;
-> > +
-> > +#pragma clang loop unroll(full)
-> > +     for (int i = 0; i < 6; i++) {
->
-> unroll is still needed even with bounded loop support in the verifier?
-
-I've just tried removing this on bpf-next. pkt_ipv4_checksum works
-without the pragma,
-pkt_skip_ipv6_extension_headers fails with the following message:
-
-libbpf: load bpf program failed: Invalid argument
-libbpf: -- BEGIN DUMP LOG ---
-libbpf:
-476: for (int i = 0; i < 6; i++) {
-477: switch (exthdr.next) {
-back-edge from insn 476 to 477
-processed 0 insns (limit 1000000) max_states_per_insn 0 total_states 0
-peak_states 0 mark_read 0
-
-libbpf: -- END LOG --
-libbpf: failed to load program 'classifier/cls_redirect'
-libbpf: failed to load object 'test_cls_redirect'
-libbpf: failed to load BPF skeleton 'test_cls_redirect': -4007
-test_cls_redirect:FAIL:385
-#10 cls_redirect:FAIL
-Summary: 0/0 PASSED, 0 SKIPPED, 1 FAILED
-
->
->
-> > +/* This function has to be inlined, because the verifier otherwise rejects it
-> > + * due to returning a pointer to the stack. This is technically correct, since
-> > + * scratch is allocated on the stack. However, this usage should be safe since
-> > + * it's the callers stack after all.
-> > + */
->
-> Interesting. The verifier can recognize that ptr to stack can be safe in some cases.
-> When I added that check I didn't think that the code can be as tricky as this :)
->
-> > +static verdict_t process_ipv4(buf_t *pkt, metrics_t *metrics)
-> > +{
-> > +     switch (ipv4->protocol) {
-> > +     case IPPROTO_ICMP:
-> > +             return process_icmpv4(pkt, metrics);
-> > +
-> > +     case IPPROTO_TCP:
-> > +             return process_tcp(pkt, ipv4, sizeof(*ipv4), metrics);
-> > +
-> > +     case IPPROTO_UDP:
-> > +             return process_udp(pkt, ipv4, sizeof(*ipv4), metrics);
-> > +
-> > +     default:
-> > +             metrics->errors_total_unknown_l4_proto++;
-> > +             return INVALID;
-> > +     }
-> > +}
-> > +
-> > +static verdict_t process_ipv6(buf_t *pkt, metrics_t *metrics)
-> > +     if (is_fragment) {
-> > +             metrics->errors_total_fragmented_ip++;
-> > +             return INVALID;
+> > diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
+> > index e7dc1c31d20d..f4eaa38f8f43 100644
+> > --- a/drivers/hwtracing/coresight/coresight-replicator.c
+> > +++ b/drivers/hwtracing/coresight/coresight-replicator.c
+> > @@ -66,14 +66,16 @@ static int dynamic_replicator_enable(struct replicator_drvdata *drvdata,
+> >                                    int inport, int outport)
+> >   {
+> >       int rc = 0;
+> > -     u32 reg;
+> > +     u32 reg0, reg1;
+> >
+> >       switch (outport) {
+> >       case 0:
+> > -             reg = REPLICATOR_IDFILTER0;
+> > +             reg0 = REPLICATOR_IDFILTER0;
+> > +             reg1 = REPLICATOR_IDFILTER1;
+> >               break;
+> >       case 1:
+> > -             reg = REPLICATOR_IDFILTER1;
+> > +             reg0 = REPLICATOR_IDFILTER1;
+> > +             reg1 = REPLICATOR_IDFILTER0;
+> >               break;
+> >       default:
+> >               WARN_ON(1);
+> > @@ -87,8 +89,11 @@ static int dynamic_replicator_enable(struct replicator_drvdata *drvdata,
+> >               rc = coresight_claim_device_unlocked(drvdata->base);
+> >
+> >       /* Ensure that the outport is enabled. */
+> > -     if (!rc)
+> > -             writel_relaxed(0x00, drvdata->base + reg);
+> > +     if (!rc) {
+> > +             writel_relaxed(0x00, drvdata->base + reg0);
+> > +             writel_relaxed(0xff, drvdata->base + reg1);
 > > +     }
 > > +
-> > +     switch (l4_proto) {
-> > +     case IPPROTO_ICMPV6:
-> > +             return process_icmpv6(pkt, metrics);
-> > +
-> > +     case IPPROTO_TCP:
-> > +             return process_tcp(pkt, ipv6, sizeof(*ipv6), metrics);
-> > +
-> > +     case IPPROTO_UDP:
-> > +             return process_udp(pkt, ipv6, sizeof(*ipv6), metrics);
-> > +
-> > +     default:
-> > +             metrics->errors_total_unknown_l4_proto++;
-> > +             return INVALID;
-> > +     }
-> > +}
-> > +
-> > +SEC("classifier/cls_redirect")
-> > +int cls_redirect(struct __sk_buff *skb)
-> > +{
-> ...
-> > +     verdict_t verdict;
-> > +     switch (encap->gue.proto_ctype) {
-> > +     case IPPROTO_IPIP:
-> > +             verdict = process_ipv4(&pkt, metrics);
-> > +             break;
-> > +
-> > +     case IPPROTO_IPV6:
-> > +             verdict = process_ipv6(&pkt, metrics);
-> > +             break;
 >
-> The code flow looks pretty clean.
-> I didn't find the copy-paste of ipv[46] -> tcp/udp
-> you were mentioning.
-> So that old issue is now gone?
+> This is not sufficient. You must prevent another session trying to
+> enable the other port of the replicator as this could silently fail
+> the "on-going" session. Not ideal. Fail the attempt to enable a port
+> if the other port is active. You could track this in software and
+> fail early.
+>
+> Suzuki
 
-The biggest offenders are fill_tuple (which is purely a hack) as well
-as classify_tcp.
-I'd really like to call classify_tcp from cls_redirect(), using saved
-packet pointers and lengths.
-Right now the function is called starting from process_ipv4 and
-process_ipv6, which
-means all of those arguments have to be passed down somehow.
+While I have no issue in principle with not enabling a path to a sink
+that is not in use - indeed in some cases attaching to unused sinks
+can cause back-pressure that slows throughput (cf TPIU) - I am
+concerned that this modification is masking an underlying issue with
+the platform in question.
+
+Should we decide to enable the diversion of different IDs to different
+sinks or allow different sessions go to different sinks, then this has
+potential to fail on the SC7180 SoC - and it will be difficult in
+future to associate a problem with this discussion.
+
+Regards
+
+Mike
+
+
+
 
 -- 
-Lorenz Bauer  |  Systems Engineer
-6th Floor, County Hall/The Riverside Building, SE1 7PB, UK
-
-www.cloudflare.com
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
