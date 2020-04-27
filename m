@@ -2,90 +2,127 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5347C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07628C4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C134E216FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D563C208FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:58:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Y4Qr+iAw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbgD0S4d (ORCPT
+        id S1726692AbgD0S6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 14:56:33 -0400
-Received: from mga09.intel.com ([134.134.136.24]:22989 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726385AbgD0S4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 14:56:33 -0400
-IronPort-SDR: zlf9d9uYAcSATKoHyYLhhnEoQ1N3h4vEXIIY30uEE/4cv/9Gmr/IJWJm/2WqZys4ogIPJHMRGC
- Wc8hdWEylO9w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 11:56:33 -0700
-IronPort-SDR: xS5JlL4vBwEjAeyxOBw1yzPjRI4rbG6eNCk7vvICju1Ms07GnCA27am4N65H/iXU8l9gxoyGGR
- r7Et6egwICCQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,325,1583222400"; 
-   d="scan'208";a="431879622"
-Received: from marshy.an.intel.com (HELO [10.122.105.159]) ([10.122.105.159])
-  by orsmga005.jf.intel.com with ESMTP; 27 Apr 2020 11:56:32 -0700
-Subject: Re: [PATCH] firmware: stratix10-svc: Drop unnecessary checking for
- and populating /firmware/ node
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     linux-kernel@vger.kernel.org
-References: <20200421173256.34897-1-sudeep.holla@arm.com>
- <8ca3666f-8ff1-3c3c-d40b-81c024b37bdd@linux.intel.com>
- <20200423081149.GB18538@bogus>
-From:   Richard Gong <richard.gong@linux.intel.com>
-Message-ID: <2b2e29ec-ebbf-3ee6-acc9-3722a2fabbfb@linux.intel.com>
-Date:   Mon, 27 Apr 2020 14:12:56 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 27 Apr 2020 14:58:09 -0400
+Received: from gateway23.websitewelcome.com ([192.185.48.104]:34680 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726302AbgD0S6I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 14:58:08 -0400
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id 8047C8504
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 13:58:06 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id T8xCjA7V9EfyqT8xCj07d8; Mon, 27 Apr 2020 13:58:06 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=RzfMdFPhf7q/zyx+Rmk6dI0yIoKjxCN+NpRpWfhaeHQ=; b=Y4Qr+iAwLN+7yQ96ZNqapVo6W
+        e9mVZErjxJaiCXC6baXIdV3whVzvEIlkU/uuOfbBHVzYGDOnJvvoeq0SAuMzukg1UXwGIkPnpoZar
+        ik6Sj0jGtmzzbI9BfcAlNlL+3vzShYVYgAY2vTyePDq0fFTtB7rBS30GSp853POIttI7+BysnDaox
+        aKl21I2snLLtqbXA69pCdjvv3Cui60NlIiSYjjbBlZCcp8oKxl5wlVqJ1qP6ZFOql3wO8txKq6oB0
+        t8Krm8rZzWzcEllhBL7+5UzSSK3eTJe0WlVPQQN7nNQB6BlcHeItLaPwd+xmydescHLNiUZudiObJ
+        e9YSY7mCA==;
+Received: from [201.162.241.110] (port=9503 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jT8xB-000Zkw-VZ; Mon, 27 Apr 2020 13:58:06 -0500
+Date:   Mon, 27 Apr 2020 14:02:22 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org, Joe Perches <joe@perches.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH 1/3] mtd: lpddr: Fix bad logic in print_drs_error
+Message-ID: <68edaa1aa3c8b4ddecad2f093404c4693d1e2a17.1588013366.git.gustavo@embeddedor.com>
+References: <cover.1588013366.git.gustavo@embeddedor.com>
 MIME-Version: 1.0
-In-Reply-To: <20200423081149.GB18538@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1588013366.git.gustavo@embeddedor.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.241.110
+X-Source-L: No
+X-Exim-ID: 1jT8xB-000Zkw-VZ
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.162.241.110]:9503
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 13
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sudeep,
+Update logic for broken test. Use a more common logging style.
 
-In our dts, firmware is not under root node. You can refer to 
-arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi for details.
+It appears the logic in this function is broken for the
+consecutive tests of
 
-This is why we need check and populate firmware node.
+        if (prog_status & 0x3)
+                ...
+        else if (prog_status & 0x2)
+                ...
+        else (prog_status & 0x1)
+                ...
 
-Regards,
-Richard
+Likely the first test should be
 
-On 4/23/20 3:11 AM, Sudeep Holla wrote:
-> On Wed, Apr 22, 2020 at 04:50:00PM -0500, Richard Gong wrote:
->> Hi Sudeep,
->>
->> I tried and couldn't load stratix10-svc driver with your patch on kernel
->> 5.6.
->>
-> 
-> What exactly do you mean by not loading stratix10-svc driver ?
-> This patch doesn't change that part, the driver should still get loaded.
-> The change may affect probing part if for some reason the devices for
-> nodes under firmware are not populated which I still can't understand.
-> 
-> Do you see any change under i/sys/devices/platform/firmware\:* with
-> and without this change ?
-> 
-> Lots of drivers removed the code similar to this patch after the Commit
-> 3aa0582fdb82 ("of: platform: populate /firmware/ node from
-> of_platform_default_populate_init()") and continue to work fine. I am
-> interested to see what is different in stratix10-svc.
-> 
-> --
-> Regards,
-> Sudeep
-> 
+        if ((prog_status & 0x3) == 0x3)
+
+Found by inspection of include files using printk.
+
+Fixes: eb3db27507f7 ("[MTD] LPDDR PFOW definition")
+Cc: stable@vger.kernel.org
+Reported-by: Joe Perches <joe@perches.com>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ include/linux/mtd/pfow.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/mtd/pfow.h b/include/linux/mtd/pfow.h
+index 122f3439e1af..c65d7a3be3c6 100644
+--- a/include/linux/mtd/pfow.h
++++ b/include/linux/mtd/pfow.h
+@@ -128,7 +128,7 @@ static inline void print_drs_error(unsigned dsr)
+ 
+ 	if (!(dsr & DSR_AVAILABLE))
+ 		printk(KERN_NOTICE"DSR.15: (0) Device not Available\n");
+-	if (prog_status & 0x03)
++	if ((prog_status & 0x03) == 0x03)
+ 		printk(KERN_NOTICE"DSR.9,8: (11) Attempt to program invalid "
+ 						"half with 41h command\n");
+ 	else if (prog_status & 0x02)
+-- 
+2.26.0
+
