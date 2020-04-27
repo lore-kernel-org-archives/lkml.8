@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DDEC4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11170C81983
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CAD12173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD25B206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:05:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbgD0SEz (ORCPT
+        id S1726535AbgD0SFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 14:04:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54722 "EHLO mx2.suse.de"
+        Mon, 27 Apr 2020 14:05:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54660 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726475AbgD0SEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 14:04:53 -0400
+        id S1726384AbgD0SEw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 14:04:52 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A6F9AAD5D;
-        Mon, 27 Apr 2020 18:04:48 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id EAC1AABE2;
+        Mon, 27 Apr 2020 18:04:47 +0000 (UTC)
 From:   Vlastimil Babka <vbabka@suse.cz>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         Luis Chamberlain <mcgrof@kernel.org>,
@@ -40,10 +40,11 @@ Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Christian Brauner <christian.brauner@ubuntu.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: [PATCH v3 5/5] lib/test_sysctl: support testing of sysctl. boot parameter
-Date:   Mon, 27 Apr 2020 20:04:33 +0200
-Message-Id: <20200427180433.7029-6-vbabka@suse.cz>
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@suse.com>
+Subject: [PATCH v3 1/5] kernel/sysctl: support setting sysctl parameters from kernel command line
+Date:   Mon, 27 Apr 2020 20:04:29 +0200
+Message-Id: <20200427180433.7029-2-vbabka@suse.cz>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200427180433.7029-1-vbabka@suse.cz>
 References: <20200427180433.7029-1-vbabka@suse.cz>
@@ -54,117 +55,229 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Testing is done by a new parameter debug.test_sysctl.boot_int which defaults to
-0 and it's expected that the tester passes a boot parameter that sets it to 1.
-The test checks if it's set to 1. To distinguish true failure from parameter
-not being set, the test checks /proc/cmdline for the expected parameter, and
-whether test_sysctl is built-in and not a module.
+A recently proposed patch to add vm_swappiness command line parameter in
+addition to existing sysctl [1] made me wonder why we don't have a general
+support for passing sysctl parameters via command line. Googling found only
+somebody else wondering the same [2], but I haven't found any prior discussion
+with reasons why not to do this.
+
+Settings the vm_swappiness issue aside (the underlying issue might be solved in
+a different way), quick search of kernel-parameters.txt shows there are already
+some that exist as both sysctl and kernel parameter - hung_task_panic,
+nmi_watchdog, numa_zonelist_order, traceoff_on_warning. A general mechanism
+would remove the need to add more of those one-offs and might be handy in
+situations where configuration by e.g. /etc/sysctl.d/ is impractical.
+
+Hence, this patch adds a new parse_args() pass that looks for parameters
+prefixed by 'sysctl.' and tries to interpret them as writes to the
+corresponding sys/ files using an temporary in-kernel procfs mount. This
+mechanism was suggested by Eric W. Biederman [3], as it handles all dynamically
+registered sysctl tables, even though we don't handle modular sysctls. Errors
+due to e.g. invalid parameter name or value are reported in the kernel log.
+
+The processing is hooked right before the init process is loaded, as some
+handlers might be more complicated than simple setters and might need some
+subsystems to be initialized. At the moment the init process can be started and
+eventually execute a process writing to /proc/sys/ then it should be also fine
+to do that from the kernel.
+
+Sysctls registered later on module load time are not set by this mechanism -
+it's expected that in such scenarios, setting sysctl values from userspace is
+practical enough.
+
+[1] https://lore.kernel.org/r/BL0PR02MB560167492CA4094C91589930E9FC0@BL0PR02MB5601.namprd02.prod.outlook.com/
+[2] https://unix.stackexchange.com/questions/558802/how-to-set-sysctl-using-kernel-command-line-parameter
+[3] https://lore.kernel.org/r/87bloj2skm.fsf@x220.int.ebiederm.org/
 
 Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Kees Cook <keescook@chromium.org>
+Acked-by: Michal Hocko <mhocko@suse.com>
 ---
- lib/test_sysctl.c                        | 13 +++++++++
- tools/testing/selftests/sysctl/sysctl.sh | 36 ++++++++++++++++++++++++
- 2 files changed, 49 insertions(+)
+ .../admin-guide/kernel-parameters.txt         |   9 ++
+ fs/proc/proc_sysctl.c                         | 107 ++++++++++++++++++
+ include/linux/sysctl.h                        |   4 +
+ init/main.c                                   |   2 +
+ 4 files changed, 122 insertions(+)
 
-diff --git a/lib/test_sysctl.c b/lib/test_sysctl.c
-index 566dad3f4196..84eaae22d3a6 100644
---- a/lib/test_sysctl.c
-+++ b/lib/test_sysctl.c
-@@ -44,6 +44,8 @@ struct test_sysctl_data {
- 	int int_0002;
- 	int int_0003[4];
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 7bc83f3d9bdf..73dbbf942431 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4891,6 +4891,15 @@
  
-+	int boot_int;
+ 	switches=	[HW,M68k]
+ 
++	sysctl.*=	[KNL]
++			Set a sysctl parameter, right before loading the init
++			process, as if the value was written to the respective
++			/proc/sys/... file. Both '.' and '/' are recognized as
++			separators. Unrecognized parameters and invalid values
++			are reported in the kernel log. Sysctls registered
++			later by a loaded module cannot be set this way.
++			Example: sysctl.vm.swappiness=40
 +
- 	unsigned int uint_0001;
+ 	sysfs.deprecated=0|1 [KNL]
+ 			Enable/disable old style sysfs layout for old udev
+ 			on older distributions. When this option is enabled
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index b6f5d459b087..7804da5f5be0 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -14,6 +14,7 @@
+ #include <linux/mm.h>
+ #include <linux/module.h>
+ #include <linux/bpf-cgroup.h>
++#include <linux/mount.h>
+ #include "internal.h"
  
- 	char string_0001[65];
-@@ -61,6 +63,8 @@ static struct test_sysctl_data test_data = {
- 	.int_0003[2] = 2,
- 	.int_0003[3] = 3,
+ static const struct dentry_operations proc_sys_dentry_operations;
+@@ -1692,3 +1693,109 @@ int __init proc_sys_init(void)
  
-+	.boot_int = 0,
-+
- 	.uint_0001 = 314,
- 
- 	.string_0001 = "(none)",
-@@ -91,6 +95,15 @@ static struct ctl_table test_table[] = {
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec,
- 	},
-+	{
-+		.procname	= "boot_int",
-+		.data		= &test_data.boot_int,
-+		.maxlen		= sizeof(test_data.boot_int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2         = SYSCTL_ONE,
-+	},
- 	{
- 		.procname	= "uint_0001",
- 		.data		= &test_data.uint_0001,
-diff --git a/tools/testing/selftests/sysctl/sysctl.sh b/tools/testing/selftests/sysctl/sysctl.sh
-index ce1eeea6f769..ef6417b8067b 100755
---- a/tools/testing/selftests/sysctl/sysctl.sh
-+++ b/tools/testing/selftests/sysctl/sysctl.sh
-@@ -39,6 +39,7 @@ ALL_TESTS="$ALL_TESTS 0003:1:1:int_0002"
- ALL_TESTS="$ALL_TESTS 0004:1:1:uint_0001"
- ALL_TESTS="$ALL_TESTS 0005:3:1:int_0003"
- ALL_TESTS="$ALL_TESTS 0006:50:1:bitmap_0001"
-+ALL_TESTS="$ALL_TESTS 0007:1:1:boot_int"
- 
- test_modprobe()
- {
-@@ -752,6 +753,40 @@ sysctl_test_0006()
- 	run_bitmaptest
+ 	return sysctl_init();
  }
- 
-+sysctl_test_0007()
++
++/* Set sysctl value passed on kernel command line. */
++static int process_sysctl_arg(char *param, char *val,
++			       const char *unused, void *arg)
 +{
-+	TARGET="${SYSCTL}/boot_int"
-+	if [ -d $DIR ]; then
-+		echo "Boot param test only possible sysctl_test is built-in, not module:"
-+		cat $TEST_DIR/config >&2
-+		return 0
-+	fi
++	char *path;
++	struct vfsmount **proc_mnt = arg;
++	struct file_system_type *proc_fs_type;
++	struct file *file;
++	int len;
++	int err;
++	loff_t pos = 0;
++	ssize_t wret;
 +
-+	echo -n "Testing if $TARGET is set to 1 ..."
-+	ORIG=$(cat "${TARGET}")
++	if (strncmp(param, "sysctl", sizeof("sysctl") - 1))
++		return 0;
 +
-+	if [ x$ORIG = "x1" ]; then
-+		echo "ok"
-+		return 0
-+	fi
-+	echo "FAIL"
-+	echo "Checking if /proc/cmdline contains setting of the expected parameter ..."
-+	if [ ! -f /proc/cmdline ]; then
-+		echo "/proc/cmdline does not exist, test inconclusive"
-+		return 0
-+	fi
++	param += sizeof("sysctl") - 1;
 +
-+	FOUND=$(grep -c "sysctl[./]debug[./]test_sysctl[./]boot_int=1" /proc/cmdline)
-+	if [ $FOUND = "1" ]; then
-+		echo "Kernel param found but $TARGET is not 1, TEST FAILED"
-+		rc=1
-+		test_rc
-+	fi
++	if (param[0] != '/' && param[0] != '.')
++		return 0;
 +
-+	echo "Skipping test, expected kernel parameter missing."
-+	echo "To perform this test, make sure kernel is booted with parameter: sysctl.debug.test_sysctl.boot_int=1"
++	param++;
++
++	/*
++	 * To set sysctl options, we use a temporary mount of proc, look up the
++	 * respective sys/ file and write to it. To avoid mounting it when no
++	 * options were given, we mount it only when the first sysctl option is
++	 * found. Why not a persistent mount? There are problems with a
++	 * persistent mount of proc in that it forces userspace not to use any
++	 * proc mount options.
++	 */
++	if (!*proc_mnt) {
++		proc_fs_type = get_fs_type("proc");
++		if (!proc_fs_type) {
++			pr_err("Failed to find procfs to set sysctl from command line\n");
++			return 0;
++		}
++		*proc_mnt = kern_mount(proc_fs_type);
++		put_filesystem(proc_fs_type);
++		if (IS_ERR(*proc_mnt)) {
++			pr_err("Failed to mount procfs to set sysctl from command line\n");
++			return 0;
++		}
++	}
++
++	path = kasprintf(GFP_KERNEL, "sys/%s", param);
++	if (!path)
++		panic("%s: Failed to allocate path for %s\n", __func__, param);
++	strreplace(path, '.', '/');
++
++	file = file_open_root((*proc_mnt)->mnt_root, *proc_mnt, path, O_WRONLY, 0);
++	if (IS_ERR(file)) {
++		err = PTR_ERR(file);
++		if (err == -ENOENT)
++			pr_err("Failed to set sysctl parameter '%s=%s': parameter not found\n",
++				param, val);
++		else if (err == -EACCES)
++			pr_err("Failed to set sysctl parameter '%s=%s': permission denied (read-only?)\n",
++				param, val);
++		else
++			pr_err("Error %pe opening proc file to set sysctl parameter '%s=%s'\n",
++				file, param, val);
++		goto out;
++	}
++	len = strlen(val);
++	wret = kernel_write(file, val, len, &pos);
++	if (wret < 0) {
++		err = wret;
++		if (err == -EINVAL)
++			pr_err("Failed to set sysctl parameter '%s=%s': invalid value\n",
++				param, val);
++		else
++			pr_err("Error %pe writing to proc file to set sysctl parameter '%s=%s'\n",
++				ERR_PTR(err), param, val);
++	} else if (wret != len) {
++		pr_err("Wrote only %zd bytes of %d writing to proc file %s to set sysctl parameter '%s=%s\n",
++			wret, len, path, param, val);
++	}
++
++	err = filp_close(file, NULL);
++	if (err)
++		pr_err("Error %pe closing proc file to set sysctl parameter '%s=%s\n",
++			ERR_PTR(err), param, val);
++out:
++	kfree(path);
++	return 0;
 +}
 +
- list_tests()
++void do_sysctl_args(void)
++{
++	char *command_line;
++	struct vfsmount *proc_mnt = NULL;
++
++	command_line = kstrdup(saved_command_line, GFP_KERNEL);
++	if (!command_line)
++		panic("%s: Failed to allocate copy of command line\n", __func__);
++
++	parse_args("Setting sysctl args", command_line,
++		   NULL, 0, -1, -1, &proc_mnt, process_sysctl_arg);
++
++	if (proc_mnt)
++		kern_unmount(proc_mnt);
++
++	kfree(command_line);
++}
+diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
+index 02fa84493f23..bee62d30ebdb 100644
+--- a/include/linux/sysctl.h
++++ b/include/linux/sysctl.h
+@@ -206,6 +206,7 @@ struct ctl_table_header *register_sysctl_paths(const struct ctl_path *path,
+ void unregister_sysctl_table(struct ctl_table_header * table);
+ 
+ extern int sysctl_init(void);
++void do_sysctl_args(void);
+ 
+ extern struct ctl_table sysctl_mount_point[];
+ 
+@@ -236,6 +237,9 @@ static inline void setup_sysctl_set(struct ctl_table_set *p,
  {
- 	echo "Test ID list:"
-@@ -766,6 +801,7 @@ list_tests()
- 	echo "0004 x $(get_test_count 0004) - tests proc_douintvec()"
- 	echo "0005 x $(get_test_count 0005) - tests proc_douintvec() array"
- 	echo "0006 x $(get_test_count 0006) - tests proc_do_large_bitmap()"
-+	echo "0007 x $(get_test_count 0007) - tests setting sysctl from kernel boot param"
  }
  
- usage()
++static inline void do_sysctl_args(void)
++{
++}
+ #endif /* CONFIG_SYSCTL */
+ 
+ int sysctl_max_threads(struct ctl_table *table, int write,
+diff --git a/init/main.c b/init/main.c
+index a48617f2e5e5..7b43118215d6 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -1372,6 +1372,8 @@ static int __ref kernel_init(void *unused)
+ 
+ 	rcu_end_inkernel_boot();
+ 
++	do_sysctl_args();
++
+ 	if (ramdisk_execute_command) {
+ 		ret = run_init_process(ramdisk_execute_command);
+ 		if (!ret)
 -- 
 2.26.0
 
