@@ -2,91 +2,116 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB31CC5519E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F18B3C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFF88206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:25:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VSN75IUf"
+	by mail.kernel.org (Postfix) with ESMTP id D63FB206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:25:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbgD0GZH (ORCPT
+        id S1726593AbgD0GZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 02:25:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43212 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726237AbgD0GZG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 02:25:06 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 666FBC061A0F;
-        Sun, 26 Apr 2020 23:25:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=LwzmOb3btwZWep3+YPjYnUvOGv3+Nq/y2Sezku7tCA8=; b=VSN75IUfBcmUoJDShroRnfsCmj
-        9zPPKvdLIyfNn1pdI+RzUQxG8Drz1gZp5nqdTSc0D5fqRO+yCabSDOBOntXar0dD+lYu8fs1ACg8f
-        0PnAZzp0GqPm20YCs+nf7dOB8ClpAmgYiXVBuRQxM1ooXIGx77Ly1HrKkiQSPZpe1mw3aUMNW/6i/
-        hoNa9z+yotMJGgOs3ZcK+OTOEEbPsm91mKaubaVzJWhjVn5C18X4VfBLhZEmpdTsFbcBzxv/Yg9/v
-        pDLiEBurSlh3nFqhA5R6COQ9NZp1LZbBu/KG11sxPgc3hNMNgYmsCCyRAR6yJyccSCPflTGJHEfvK
-        enZPX1lA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jSxCO-0000ML-4s; Mon, 27 Apr 2020 06:25:00 +0000
-Date:   Sun, 26 Apr 2020 23:25:00 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org
-Subject: Re: [PATCH 4/5] arch/kmap_atomic: Consolidate duplicate code
-Message-ID: <20200427062500.GA32152@infradead.org>
-References: <20200426055406.134198-1-ira.weiny@intel.com>
- <20200426055406.134198-5-ira.weiny@intel.com>
- <20200426072642.GB22024@infradead.org>
- <20200427011630.GC135929@iweiny-DESK2.sc.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200427011630.GC135929@iweiny-DESK2.sc.intel.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Mon, 27 Apr 2020 02:25:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:57178 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726237AbgD0GZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 02:25:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6999931B;
+        Sun, 26 Apr 2020 23:25:15 -0700 (PDT)
+Received: from a075553-lin.blr.arm.com (a075553-lin.blr.arm.com [10.162.17.24])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A1AF13F73D;
+        Sun, 26 Apr 2020 23:25:12 -0700 (PDT)
+From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Bhupesh Sharma <bhsharma@redhat.com>,
+        Vincenzo Frascino <Vincenzo.Frascino@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Amit Daniel Kachhap <amit.kachhap@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH v2 1/2] arm64/crash_core: Export KERNELPACMASK in vmcoreinfo
+Date:   Mon, 27 Apr 2020 11:55:01 +0530
+Message-Id: <1587968702-19996-1-git-send-email-amit.kachhap@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 06:16:30PM -0700, Ira Weiny wrote:
-> > That might require to support
-> > kmap_atomic_prot everywhere first, which sounds like a really good
-> > idea anyway, and would avoid the need for strange workaround in drm.
-> 
-> Having a kmap_atomic_prot() seems like a good idea.  But I'm not exactly sure
-> why CONFIG_x86 is being called out specifically in the DRM code?
+Recently arm64 linux kernel added support for Armv8.3-A Pointer
+Authentication feature. If this feature is enabled in the kernel and the
+hardware supports address authentication then the return addresses are
+signed and stored in the stack to prevent ROP kind of attack. Kdump tool
+will now dump the kernel with signed lr values in the stack.
 
-Probably because it only existed on x86 back then.  And drm has a
-tendency of working around core problems with hacks instead of doing
-the fairly easy fixups.
+Any user analysis tool for this kernel dump may need the kernel pac mask
+information in vmcoreinfo to generate the correct return address for
+stacktrace purpose as well as to resolve the symbol name.
+
+This patch is similar to commit ec6e822d1a22d0eef ("arm64: expose user PAC
+bit positions via ptrace") which exposes pac mask information via ptrace
+interfaces.
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+---
+Changes since v1:
+* Rebased to kernel 5.7-rc3.
+* commit log change.
+
+An implementation of this new KERNELPACMASK vmcoreinfo field used by crash
+tool can be found here[1]. This change is accepted by crash utility
+maintainer [2].
+
+[1]: https://www.redhat.com/archives/crash-utility/2020-April/msg00095.html
+[2]: https://www.redhat.com/archives/crash-utility/2020-April/msg00099.html
+
+ arch/arm64/include/asm/compiler.h | 3 +++
+ arch/arm64/kernel/crash_core.c    | 4 ++++
+ 2 files changed, 7 insertions(+)
+
+diff --git a/arch/arm64/include/asm/compiler.h b/arch/arm64/include/asm/compiler.h
+index eece20d..32d5900 100644
+--- a/arch/arm64/include/asm/compiler.h
++++ b/arch/arm64/include/asm/compiler.h
+@@ -19,6 +19,9 @@
+ #define __builtin_return_address(val)					\
+ 	(void *)(ptrauth_clear_pac((unsigned long)__builtin_return_address(val)))
+ 
++#else  /* !CONFIG_ARM64_PTR_AUTH */
++#define	ptrauth_user_pac_mask()		0ULL
++#define	ptrauth_kernel_pac_mask()	0ULL
+ #endif /* CONFIG_ARM64_PTR_AUTH */
+ 
+ #endif /* __ASM_COMPILER_H */
+diff --git a/arch/arm64/kernel/crash_core.c b/arch/arm64/kernel/crash_core.c
+index ca4c3e1..25cf2ce 100644
+--- a/arch/arm64/kernel/crash_core.c
++++ b/arch/arm64/kernel/crash_core.c
+@@ -6,6 +6,7 @@
+ 
+ #include <linux/crash_core.h>
+ #include <asm/memory.h>
++#include <asm/pointer_auth.h>
+ 
+ void arch_crash_save_vmcoreinfo(void)
+ {
+@@ -16,4 +17,7 @@ void arch_crash_save_vmcoreinfo(void)
+ 	vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%llx\n",
+ 						PHYS_OFFSET);
+ 	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
++	vmcoreinfo_append_str("NUMBER(KERNELPACMASK)=0x%llx\n",
++						system_supports_address_auth() ?
++						ptrauth_kernel_pac_mask() : 0);
+ }
+-- 
+2.7.4
+
