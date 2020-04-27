@@ -2,263 +2,109 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF0DC4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4D4C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36E6D2074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:05:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Veb/ERmM"
+	by mail.kernel.org (Postfix) with ESMTP id 38C48206BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:08:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbgD0VFA (ORCPT
+        id S1726744AbgD0VIh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 17:05:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726486AbgD0VFA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 17:05:00 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88E8CC03C1A8
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 14:04:59 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id e25so19179859ljg.5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 14:04:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FRzDYtIIz0JW+6PZb2zruuBk+QvKYrYZ56R5C7QkFt4=;
-        b=Veb/ERmM/Fvq5x+hnKuzFr+Oi2EvWj3JMRKfS5dreGvXGR7HHDRzCltSvz8iL74KVf
-         vvXa7kQbiusaDvTAOk156Mf7hON3TX2a0FzndnVBAxLoFchHk+njI5H4pAE1kRF3vJo9
-         NexN1jeZjghvsKd2uYooTEC2xo2RIMb7tJyhddQpRSVYJHnyIDBhUWfhvuemKFtWPkyv
-         n+PH/T6Vl0pT7/m/aNwSdWgVFoULgg4DBzPqtfCljbt7hQFJVC+KhAx8/0MD/DpFChAt
-         gnJ5gRLO3ljMyqRBuJAfJwiBuLZqD4q3UecBSDcPrZjGo6g2UuSmLpr+wyuN0e+GOLaF
-         tUyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FRzDYtIIz0JW+6PZb2zruuBk+QvKYrYZ56R5C7QkFt4=;
-        b=EzzluE1peKA3V3tAZ9azAIIyVyi8CK8xrYxcyYAfHNXbidD9AhBD0wM+VAuq8PAp1/
-         +w+oU23G27Z/C7mZfWVzSlAcvLVK4BkBYv00atkP1br7goKvEpjnlL1RjoZznXgcW/Tp
-         BYpuV3FBhGQCnmhtunwNhtBQcTXCT0Ln5OeSjHdyPpoT1L0J3tKJgYVDY1lyr4XqJxnV
-         ygvuiS32Yoo1TrYOQ/tTCaN/QDLagGF1Vu+pst8Xa1E31FvxJjRYrMmLS5M0xDwZPVi0
-         sVTT/PuBOPPlvdRnDujq0rquo8f54MbNrERA0wUvuh1+pP7aFl/dHidR9AhRwh+KBVH/
-         qGMw==
-X-Gm-Message-State: AGi0PuacYbBZkiDcWuylGo6qbxBEThXgUUPEBa98PSBZVkL61GOSHwLq
-        8Y2jUF8qpndpfvUxUQP6W1gc43xJSj/HYr53ju5QTw==
-X-Google-Smtp-Source: APiQypJcRRtGTPVXnm8p8UXKalah/OzYXIqyedCHVb9HaBb9PhwfiYx7P9YHDFpHDH41Il/4E23OcBSc4zh1bxD3DHw=
-X-Received: by 2002:a2e:9785:: with SMTP id y5mr14239323lji.66.1588021497399;
- Mon, 27 Apr 2020 14:04:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200328185916.98423-1-rajatja@google.com> <20200328185916.98423-2-rajatja@google.com>
- <20200424210316.GI125362@dtor-ws>
-In-Reply-To: <20200424210316.GI125362@dtor-ws>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Mon, 27 Apr 2020 14:04:20 -0700
-Message-ID: <CACK8Z6GN63_KuQy3jieTn7uG6T4KQ7jRNKf0_4CVsGkCcY+enA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/5] Input: atkbd: Expose function row physical map to userspace
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Dmitry Torokhov <dtor@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Furquan Shaikh <furquan@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Benson Leung <bleung@google.com>,
-        Zentaro Kavanagh <zentaro@google.com>,
-        Dominik Behr <dbehr@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 27 Apr 2020 17:08:37 -0400
+Received: from foss.arm.com ([217.140.110.172]:42330 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726285AbgD0VIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 17:08:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A17A31B;
+        Mon, 27 Apr 2020 14:08:36 -0700 (PDT)
+Received: from e120937-lin.home (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A28B3F305;
+        Mon, 27 Apr 2020 14:08:35 -0700 (PDT)
+From:   Cristian Marussi <cristian.marussi@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     sudeep.holla@arm.com, lukasz.luba@arm.com,
+        james.quinlan@broadcom.com, Jonathan.Cameron@Huawei.com,
+        cristian.marussi@arm.com
+Subject: [RFC PATCH 0/3] SCMI System Power Support
+Date:   Mon, 27 Apr 2020 22:08:03 +0100
+Message-Id: <20200427210806.37422-1-cristian.marussi@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
+Hi all,
 
-On Fri, Apr 24, 2020 at 2:03 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> Hi Rajat,
->
-> On Sat, Mar 28, 2020 at 11:59:13AM -0700, Rajat Jain wrote:
-> > Certain keyboards have their top-row keys intended
-> > for actions such as "Browser back", "Browser Refresh", "Fullscreen"
-> > etc as their primary mode, thus they will send physical codes for those
-> > actions. Further, they don't have a dedicated "Fn" key so don't have
-> > the capability to generate function key codes (e.g. F1, F2 etc..).
-> > However in this case, if userspace still wants to "synthesize" those
-> > function keys using the top row action keys, it needs to know the
-> > physical position of the top row keys. (Essentially a mapping between
-> > usage codes and a physical location in the top row).
-> >
-> > This patch enhances the atkbd driver to receive such a mapping from the
-> > firmware / device tree, and expose it to userspace in the form of
-> > a function-row-physmap attribute. The attribute would be a space
-> > separated ordered list of physical codes, for the keys in the function
-> > row, in left-to-right order.
-> >
-> > The attribute will only be present if the kernel knows about such
-> > mapping, otherwise the attribute shall not be visible.
-> >
-> > Signed-off-by: Rajat Jain <rajatja@google.com>
-> > ---
-> > v4: Same as v3
-> > v3: Change to dev_dbg and remove unecessary error check
-> > v2: Remove the Change-Id from the commit log
-> >
-> >  drivers/input/keyboard/atkbd.c | 56 ++++++++++++++++++++++++++++++++++
-> >  1 file changed, 56 insertions(+)
-> >
-> > diff --git a/drivers/input/keyboard/atkbd.c b/drivers/input/keyboard/atkbd.c
-> > index 7e3eae54c1926..3b20aba1861cd 100644
-> > --- a/drivers/input/keyboard/atkbd.c
-> > +++ b/drivers/input/keyboard/atkbd.c
-> > @@ -24,6 +24,7 @@
-> >  #include <linux/libps2.h>
-> >  #include <linux/mutex.h>
-> >  #include <linux/dmi.h>
-> > +#include <linux/property.h>
-> >
-> >  #define DRIVER_DESC  "AT and PS/2 keyboard driver"
-> >
-> > @@ -63,6 +64,8 @@ static bool atkbd_terminal;
-> >  module_param_named(terminal, atkbd_terminal, bool, 0);
-> >  MODULE_PARM_DESC(terminal, "Enable break codes on an IBM Terminal keyboard connected via AT/PS2");
-> >
-> > +#define MAX_FUNCTION_ROW_KEYS        24
-> > +
-> >  /*
-> >   * Scancode to keycode tables. These are just the default setting, and
-> >   * are loadable via a userland utility.
-> > @@ -230,6 +233,9 @@ struct atkbd {
-> >
-> >       /* Serializes reconnect(), attr->set() and event work */
-> >       struct mutex mutex;
-> > +
-> > +     u16 function_row_physmap[MAX_FUNCTION_ROW_KEYS];
-> > +     int num_function_row_keys;
-> >  };
-> >
-> >  /*
-> > @@ -283,6 +289,7 @@ static struct device_attribute atkbd_attr_##_name =                               \
-> >       __ATTR(_name, S_IRUGO, atkbd_do_show_##_name, NULL);
-> >
-> >  ATKBD_DEFINE_RO_ATTR(err_count);
-> > +ATKBD_DEFINE_RO_ATTR(function_row_physmap);
-> >
-> >  static struct attribute *atkbd_attributes[] = {
-> >       &atkbd_attr_extra.attr,
-> > @@ -292,11 +299,42 @@ static struct attribute *atkbd_attributes[] = {
-> >       &atkbd_attr_softrepeat.attr,
-> >       &atkbd_attr_softraw.attr,
-> >       &atkbd_attr_err_count.attr,
-> > +     &atkbd_attr_function_row_physmap.attr,
-> >       NULL
-> >  };
-> >
-> > +static ssize_t atkbd_show_function_row_physmap(struct atkbd *atkbd, char *buf)
-> > +{
-> > +     ssize_t size = 0;
-> > +     int i;
-> > +
-> > +     if (!atkbd->num_function_row_keys)
-> > +             return 0;
-> > +
-> > +     for (i = 0; i < atkbd->num_function_row_keys; i++)
-> > +             size += sprintf(buf + size, "%02X ",
-> > +                             atkbd->function_row_physmap[i]);
-> > +     size += sprintf(buf + size, "\n");
->
-> Can we change this to scnprintf() with PAGE_SIZE as the initial limit?
+this series wants to add the core SCMI System Power support and related
+events' handling logic: the protocol support itself is trivial and boils
+down to some bare initializations and supporting one SCMI System Power
+notification event meant to carry platform-originated System transition
+requests. This is patch [1/3].
 
-Done.
+On top of this a new SCMI driver has been developed which registers for
+such System Power notification and acts accordingly to satisfy such
+plaform system-state transition requests that can be of forceful or
+graceful kind.
 
->
-> > +     return size;
-> > +}
-> > +
-> > +static umode_t atkbd_attr_is_visible(struct kobject *kobj,
-> > +                             struct attribute *attr, int i)
-> > +{
-> > +     struct device *dev = container_of(kobj, struct device, kobj);
-> > +     struct serio *serio = to_serio_port(dev);
-> > +     struct atkbd *atkbd = serio_get_drvdata(serio);
-> > +
-> > +     if (attr == &atkbd_attr_function_row_physmap.attr &&
-> > +         !atkbd->num_function_row_keys)
-> > +             return 0;
-> > +
-> > +     return attr->mode;
-> > +}
-> > +
-> >  static struct attribute_group atkbd_attribute_group = {
-> >       .attrs  = atkbd_attributes,
-> > +     .is_visible = atkbd_attr_is_visible,
-> >  };
-> >
-> >  static const unsigned int xl_table[] = {
-> > @@ -1121,6 +1159,22 @@ static void atkbd_set_device_attrs(struct atkbd *atkbd)
-> >       }
-> >  }
-> >
-> > +static void atkbd_parse_fwnode_data(struct serio *serio)
-> > +{
-> > +     struct atkbd *atkbd = serio_get_drvdata(serio);
-> > +     struct device *dev = &serio->dev;
-> > +     int n;
-> > +
-> > +     /* Parse "function-row-physmap" property */
-> > +     n = device_property_count_u16(dev, "function-row-physmap");
->
-> I think for ACPI case it does not matter, but if we ever have device
-> tree using it, it will lead to less errors if we use u32 as the element
-> size. Do you mind switching to it?
+In order to comply with such graceful requests, and co-operate with
+userspace entities to drive a clean shutdown/reboot, the logic of the
+driver relies on the same orderly_* API methods used by ACPI when handling
+ACPI Shutdown bus events. This is patch [2/3].
 
-Done and posted the new patchset here:
-https://patchwork.kernel.org/patch/11513295/
+Patch [3/3] is a mere JUNO example of the minimal DT bindings needed to
+enable the protocol at the DT level and is NOT meant to be upstream as of
+now.
 
-Thanks,
-Rajat
+A viable alternative method (not implemented here) for communicating
+graceful requests to userspace could be to use instead signals to PID 1
+init process (e.g. kill_cad_pid(SIGRTMIN + 4, 1)): this method is supported
+out-of-the-box by SystemD and (to some extent) Android, and, maybe, could
+be interesting as an optional alternative, since it avoids the dependency
+on usermodehelpers introduced by the internals of the orderly_ API calls
+above.
 
->
-> > +     if (n > 0 && n <= MAX_FUNCTION_ROW_KEYS &&
-> > +         !device_property_read_u16_array(dev, "function-row-physmap",
-> > +                                         atkbd->function_row_physmap, n)) {
-> > +             atkbd->num_function_row_keys = n;
-> > +             dev_dbg(dev, "FW reported %d function-row key locations\n", n);
-> > +     }
-> > +}
-> > +
-> >  /*
-> >   * atkbd_connect() is called when the serio module finds an interface
-> >   * that isn't handled yet by an appropriate device driver. We check if
-> > @@ -1184,6 +1238,8 @@ static int atkbd_connect(struct serio *serio, struct serio_driver *drv)
-> >               atkbd->id = 0xab00;
-> >       }
-> >
-> > +     atkbd_parse_fwnode_data(serio);
-> > +
-> >       atkbd_set_keycode_table(atkbd);
-> >       atkbd_set_device_attrs(atkbd);
-> >
->
-> Thanks.
->
-> --
-> Dmitry
+Such alternative, if deemed worth, should clearly be configurable via DT
+(also in terms of which signals to use), BUT all of this work is not done
+in this series: and that's the reason for the RFC tag: does it make sense
+to add such a configurable additional option ?
+
+
+The series is based on SCMI Notifications Core V7 (still not posted though)
+which in turn is based on top of scmi-for-next-5.7 and it's available (with
+some additional debug on top) at [1].
+
+
+Thanks
+
+Cristian
+
+----
+
+[1] http://www.linux-arm.org/git?p=linux-cm.git;a=shortlog;h=refs/heads/scmi_system_power_V1
+
+
+Cristian Marussi (3):
+  firmware: arm_scmi: Add System Power Protocol support
+  firmware: arm_scmi: Add SCMI System Power Control driver
+  arm64: dts: juno: add SCMI SystemPower Protocol support
+
+ arch/arm64/boot/dts/arm/juno-base.dtsi        |   4 +
+ drivers/firmware/Kconfig                      |  12 +
+ drivers/firmware/arm_scmi/Makefile            |   3 +-
+ drivers/firmware/arm_scmi/driver.c            |   1 +
+ .../firmware/arm_scmi/scmi_power_control.c    | 359 ++++++++++++++++++
+ drivers/firmware/arm_scmi/system.c            | 146 +++++++
+ include/linux/scmi_protocol.h                 |  17 +
+ 7 files changed, 541 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/firmware/arm_scmi/scmi_power_control.c
+ create mode 100644 drivers/firmware/arm_scmi/system.c
+
+-- 
+2.17.1
+
