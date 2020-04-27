@@ -2,156 +2,130 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FEC5C4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B16DC4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FCA32070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 204092070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:37:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbgD0Vgg (ORCPT
+        id S1726413AbgD0Vh2 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 17:36:36 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30994 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726030AbgD0Vgg (ORCPT
+        Mon, 27 Apr 2020 17:37:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726194AbgD0Vh2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 17:36:36 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03RLW36a133533;
-        Mon, 27 Apr 2020 17:36:32 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mggtmmvj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Apr 2020 17:36:32 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03RLXVTr136727;
-        Mon, 27 Apr 2020 17:36:32 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mggtmmv3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Apr 2020 17:36:32 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03RLaPtf030139;
-        Mon, 27 Apr 2020 21:36:31 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma01dal.us.ibm.com with ESMTP id 30mcu6m3ac-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Apr 2020 21:36:31 +0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03RLaTf051970448
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Apr 2020 21:36:29 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1F482124055;
-        Mon, 27 Apr 2020 21:36:29 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8D170124053;
-        Mon, 27 Apr 2020 21:36:28 +0000 (GMT)
-Received: from cpe-172-100-175-116.stny.res.rr.com (unknown [9.85.200.21])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 27 Apr 2020 21:36:28 +0000 (GMT)
-Subject: Re: [PATCH v7 03/15] s390/zcrypt: driver callback to indicate
- resource in use
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pmorel@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
-References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
- <20200407192015.19887-4-akrowiak@linux.ibm.com>
- <20200414145851.562867ae.cohuck@redhat.com>
- <35d8c3cb-78bb-8f84-41d8-c6e59d201ba0@linux.ibm.com>
- <20200416113721.124f9843.cohuck@redhat.com>
- <20200424053338.658b2a05.pasic@linux.ibm.com>
- <195d237d-c668-48ca-1125-08eafc0011db@linux.ibm.com>
- <20200424202348.39bb2eaf.pasic@linux.ibm.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Message-ID: <82433013-b132-4f1f-e224-cb2eb6cda98c@linux.ibm.com>
-Date:   Mon, 27 Apr 2020 17:36:28 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200424202348.39bb2eaf.pasic@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-27_16:2020-04-27,2020-04-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- suspectscore=3 mlxscore=0 lowpriorityscore=0 adultscore=0 phishscore=0
- bulkscore=0 priorityscore=1501 malwarescore=0 clxscore=1015
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004270172
+        Mon, 27 Apr 2020 17:37:28 -0400
+Received: from wp148.webpack.hosteurope.de (wp148.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:849b::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C946BC0610D5;
+        Mon, 27 Apr 2020 14:37:27 -0700 (PDT)
+Received: from ip1f126570.dynamic.kabel-deutschland.de ([31.18.101.112] helo=roelofs-mbp.fritz.box); authenticated
+        by wp148.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1jTBR5-0003oP-S8; Mon, 27 Apr 2020 23:37:07 +0200
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [PATCH] lan743x: Added fixed_phy support
+From:   Roelof Berg <rberg@berg-solutions.de>
+In-Reply-To: <20200426143116.GC1140627@lunn.ch>
+Date:   Mon, 27 Apr 2020 23:37:07 +0200
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Bryan Whitehead <bryan.whitehead@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <6C2E44BB-F4D1-4BC3-9FCB-55F01DA4A3C9@berg-solutions.de>
+References: <rberg@berg-solutions.de>
+ <20200425234320.32588-1-rberg@berg-solutions.de>
+ <20200426143116.GC1140627@lunn.ch>
+To:     Andrew Lunn <andrew@lunn.ch>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
+X-bounce-key: webpack.hosteurope.de;rberg@berg-solutions.de;1588023447;8c6127ab;
+X-HE-SMSGID: 1jTBR5-0003oP-S8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Andrew,
 
+thanks for working together on this. Our target system is an embedded linux device for vehicles, that has all three components as single chips on one PCB: The MCU, the lan743x MAC and a KSZ9893 switch. The busses (PCIe, RGMII are fixed traces on the PCB without any sockets, no phy is between the MAC and the switch. So it is one big PCB with a lot of chips and a few Ethernet jacks for in-vehicle communication.
 
-On 4/24/20 2:23 PM, Halil Pasic wrote:
-> On Fri, 24 Apr 2020 13:07:38 -0400
-> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
->
->>
->> On 4/23/20 11:33 PM, Halil Pasic wrote:
->>> On Thu, 16 Apr 2020 11:37:21 +0200
->>> Cornelia Huck <cohuck@redhat.com> wrote:
->>>
->>>> On Wed, 15 Apr 2020 13:10:10 -0400
->>>> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
->>>>
->>>>> On 4/14/20 8:58 AM, Cornelia Huck wrote:
->>>>>> On Tue,  7 Apr 2020 15:20:03 -0400
->>>>>> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
->>>>>>> +
->>>>>>> +	if (ap_drv->in_use)
->>>>>>> +		if (ap_drv->in_use(newapm, ap_perms.aqm))
->>>>>> Can we log the offending apm somewhere, preferably with additional info
->>>>>> that allows the admin to figure out why an error was returned?
->>>>> One of the things on my TODO list is to add logging to the vfio_ap
->>>>> module which will track all significant activity within the device
->>>>> driver. I plan to do that with a patch or set of patches specifically
->>>>> put together for that purpose. Having said that, the best place to
->>>>> log this would be in the in_use callback in the vfio_ap device driver
->>>>> (see next patch) where the APQNs that are in use can be identified.
->>>>> For now, I will log a message to the dmesg log indicating which
->>>>> APQNs are in use by the matrix mdev.
->>>> Sounds reasonable. My main issue was what an admin was supposed to do
->>>> until logging was in place :)
->>> Logging may not be the right answer here. Imagine somebody wants to build
->>> a nice web-tool for managing this stuff at scale -- e.g. something HMC. I
->>> don't think the solution is to let this tool parse the kernel messages
->>> and try to relate that to its own transactions.
->> I don't believe there is no right or wrong answer here; I simply don't
->> see the relevance of discussing a tool in this context. We are talking
->> about a sysfs attribute interface here, so - correct me if I'm
->> mistaken - our options for notifying the user that a queue is in use are
->> limited to the return code from the sysfs interface and logging. I would
->> expect that a tool would have to do something similar to the callback
->> implemented in the vfio_ap device driver and check the APQNs
->> removed against the APQNs assigned to the mdevs to determine which
->> is in use.
->>
-> We are talking interface design. The relevance of discussing a tool is
-> that any userspace tool must come by with whatever interface we come up
-> now. IMHO thinking about the usage (and the client code) is very helpful
-> in avoiding broken interface designs. AFAIK this is one of the basic
-> ideas behind test driven development.
+For an embedded systems vendor it is ok in such a case to configure the kernel to the needs of the system. Configuring is the easiest part, usually the kernel also needs to be patched as well :)
 
-What can a sysfs interface, such as apmask/aqmask, do other than reply with
-a return code given sysfs attributes that store data can only return a 
-count?
-I'm sorry, but I still don't see the relevance.
+However, I see your concern that a runtime configuration would be more versatile. There are several methods for runtime detection instead of compile time ‚detection‘, e.g. lan743’s EEPROM, the PCI vendor-id as you mentioned (although we wouldn’t strictly need a vendor ID as we have everything on one PCB), or maybe the phy-enumeration if this is unambiguous, and the usual runtime-configuration-means (dev-fs etc.). Also the EEPROM of the lan743x can be used for hardware register configuration, possibly eliminating the need to configure things like the baud rate in the .config.
 
->
-> Regards,
-> Halil
+Four options:
+a) We offer this kernel configuration and the next embedded system designer can use phyless MII mode.
+b) We change this to a runtime configuration that somehow auto-detects that phyless MII mode is desired.
+    (Then the EEPROM/OTP needs to provide baud rate, MII mode and duplex mode by user-register access).
+c) We move the configuration of the phyless mode to somewhere like dev-fs
+d) We avoid compiled fixed_phy and use a newer method. Like device-tree configuration of fixed_phy (is it working allready ?) or phylink as you originally suggested. Unfortunately I have no test-hardware here that uses a phy.
+e) We leave this one away from the kernel if it is unlikely that other embedded systems would use lan8431 in direct (phyless) MII mode as well. Microchip (on cc) could know more about this likelihood.
+
+Any votes from the list members of how to proceed ?
+
+Thanks and have a nice day,
+Roelof
+
+> Am 26.04.2020 um 16:31 schrieb Andrew Lunn <andrew@lunn.ch>:
+> 
+> On Sun, Apr 26, 2020 at 01:43:18AM +0200, Roelof Berg wrote:
+>> +# All the following symbols are dependent on LAN743X - do not repeat
+>> +# that for each of the symbols.
+>> +if LAN743X
+>> +
+>> +choice LAN743x_MII_MODE
+>> +	prompt "MII operation mode"
+>> +	default LAN743x_MII_MODE_DEFAULT
+>> +	depends on LAN743X
+>> +	help
+>> +	 Defines the R/G/MII operation mode of the MAC of lan743.
+>> +
+>> +config LAN743x_MII_MODE_DEFAULT
+>> +	bool "Device default"
+>> +	help
+>> +	 The existing internal device configuration, which may have come from
+>> +	 EEPROM or OTP, will remain unchanged.
+>> +
+>> +config LAN743x_MII_MODE_RGMII
+>> +	bool "RGMII"
+>> +	help
+>> +	 RGMII (Reduced GMII) will be enabled when the driver is loaded.
+>> +
+>> +config LAN743x_MII_MODE_GMII
+>> +	bool "G/MII"
+>> +	help
+>> +	 GMII (in case of 100 mbit) or MII (in case of 10 mbit) will be enabled when
+>> +	 the driver is loaded.
+>> +
+>> +endchoice
+> 
+> Hi Roelof
+> 
+> You should not be putting this sort of configuration into Kconfig. You
+> want one kernel to be able to drive all LAN743x instances. Think of a
+> Debian kernel, etc.
+> 
+> So what are you trying to achieve here? What is the big picture?
+> 
+> You have a PCI device with a LAN743x connected to an Ethernet switch?
+> You need the MII interface between the LAN743x and the switch to be
+> configured to some specific speed? But you only want to do this for
+> your device. How can you identify your device? Do you set the PCI
+> vendor/device IDs to something unique?
+> 
+> You can add to the end of lan743x_pcidev_tbl[] your vendor/device
+> ID. In the probe function you can detect your own vendor/product ID
+> and then configure things as you need. 
+> 
+>    Andrew
+> 
 
