@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A96C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 309F5C4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0552072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:17:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E1912078C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:17:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588022249;
-	bh=yz+D7iVuh5MZRcPLv2I33NXwj3NBarP44LcAmlrDVsA=;
+	s=default; t=1588022251;
+	bh=Js898cFBeqq0xTdeHpDvGillcAR42l1XpEI+yj+aM0Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s1+sK0NEhpmWAyCUp1+4SEKuVlBn6A+CHR9r3AMu6HKK86WohF1Ub/31qPCpHzrLd
-	 7TvRk/dXiNd25hoigbiXIBERGbKEUUSCld89GvAdyz5Y8IYKNhwkbgUMmKlQtXcUx5
-	 FCZUC8Sky/S2Tsp95RbVkCpfhzRgFpnzCUJy8t6c=
+	b=1SjOCLUUVjeRtP0VA48bgl82BrrJNKHM8emRAI+SfhXf34LopbD0KtWx2ij8oOPn7
+	 eBxS7ZQNcI8LSrptxm5KfM9SUXV7gE1COU2SmUyVeQHu4FvWfCCTlynGbiHP+12JiW
+	 1rS0qLu76TXyPO5YAArGfOncWbgW4n+bQiZUjn4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbgD0VR3 (ORCPT
+        id S1726467AbgD0VR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 27 Apr 2020 17:17:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34126 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:34136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726343AbgD0VR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726346AbgD0VR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 Apr 2020 17:17:26 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C1A021D79;
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DED921D7F;
         Mon, 27 Apr 2020 21:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588022244;
-        bh=yz+D7iVuh5MZRcPLv2I33NXwj3NBarP44LcAmlrDVsA=;
+        bh=Js898cFBeqq0xTdeHpDvGillcAR42l1XpEI+yj+aM0Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MAtUelUlowEBDiiYM9Tbi4nmOvT3taOzq63y3ASn44HiLFkF7zFJsKk1jL/vWAOtb
-         N4oD4bLqQ1MPW+lAIdLZI8O3dXbYB3ibpQflpK/3QbaiECAR3AkVvvWvD5bzzlTXeo
-         n395gqnZJKVekm5aKksIJd/6KNGlXC2T7O3EEh4k=
+        b=JJXjfvGJ6cuT/jnh2MWRtq0Fdd7pC8IInRX7XiSPEBhdVCBe9sGiniGuyfQoutHXC
+         dB+BwEt/mBbREc5i8NPC1kl/rQBUYFPKb0/6GUjBQIUHyxE85PowWdx1UUk+dH9cnY
+         1Mfep++dbC6eY0JxebeuRrYqJH/mCQBw8ou3cXHY=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jTB7y-000HkT-K7; Mon, 27 Apr 2020 23:17:22 +0200
+        id 1jTB7y-000Hkd-Nw; Mon, 27 Apr 2020 23:17:22 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH v3 11/29] docs: filesystems: convert dnotify.txt to ReST
-Date:   Mon, 27 Apr 2020 23:17:03 +0200
-Message-Id: <b39d6430d1c28438e833f01cb4597eff78703c75.1588021877.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v3 13/29] docs: filesystems: convert files.txt to ReST
+Date:   Mon, 27 Apr 2020 23:17:05 +0200
+Message-Id: <e31b0f6a7ee466a233dc7f9c73f53f07ebb07f0b.1588021877.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588021877.git.mchehab+huawei@kernel.org>
 References: <cover.1588021877.git.mchehab+huawei@kernel.org>
@@ -62,87 +60,84 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 - Add a SPDX header;
-- Add a document title;
+- Adjust document title;
 - Some whitespace fixes and new line breaks;
-- Add table markups;
-- Add it to filesystems/index.rst
+- Mark literal blocks as such;
+- Add it to filesystems/index.rst.
 
-Acked-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../filesystems/{dnotify.txt => dnotify.rst}          | 11 ++++++++---
- Documentation/filesystems/index.rst                   |  1 +
- MAINTAINERS                                           |  2 +-
- 3 files changed, 10 insertions(+), 4 deletions(-)
- rename Documentation/filesystems/{dnotify.txt => dnotify.rst} (90%)
+ .../filesystems/{files.txt => files.rst}          | 15 ++++++++++-----
+ Documentation/filesystems/index.rst               |  1 +
+ 2 files changed, 11 insertions(+), 5 deletions(-)
+ rename Documentation/filesystems/{files.txt => files.rst} (95%)
 
-diff --git a/Documentation/filesystems/dnotify.txt b/Documentation/filesystems/dnotify.rst
-similarity index 90%
-rename from Documentation/filesystems/dnotify.txt
-rename to Documentation/filesystems/dnotify.rst
-index 08d575ece45d..a28a1f9ef79c 100644
---- a/Documentation/filesystems/dnotify.txt
-+++ b/Documentation/filesystems/dnotify.rst
+diff --git a/Documentation/filesystems/files.txt b/Documentation/filesystems/files.rst
+similarity index 95%
+rename from Documentation/filesystems/files.txt
+rename to Documentation/filesystems/files.rst
+index 46dfc6b038c3..cbf8e57376bf 100644
+--- a/Documentation/filesystems/files.txt
++++ b/Documentation/filesystems/files.rst
 @@ -1,5 +1,8 @@
--		Linux Directory Notification
--		============================
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+============================
-+Linux Directory Notification
-+============================
++===================================
+ File management in the Linux kernel
+------------------------------------
++===================================
  
- 	   Stephen Rothwell <sfr@canb.auug.org.au>
+ This document describes how locking for files (struct file)
+ and file descriptor table (struct files) works.
+@@ -34,7 +37,7 @@ appear atomic. Here are the locking rules for
+ the fdtable structure -
  
-@@ -12,6 +15,7 @@ being delivered using signals.
- The application decides which "events" it wants to be notified about.
- The currently defined events are:
+ 1. All references to the fdtable must be done through
+-   the files_fdtable() macro :
++   the files_fdtable() macro::
  
-+	=========	=====================================================
- 	DN_ACCESS	A file in the directory was accessed (read)
- 	DN_MODIFY	A file in the directory was modified (write,truncate)
- 	DN_CREATE	A file was created in the directory
-@@ -19,6 +23,7 @@ The currently defined events are:
- 	DN_RENAME	A file in the directory was renamed
- 	DN_ATTRIB	A file in the directory had its attributes
- 			changed (chmod,chown)
-+	=========	=====================================================
+ 	struct fdtable *fdt;
  
- Usually, the application must reregister after each notification, but
- if DN_MULTISHOT is or'ed with the event mask, then the registration will
-@@ -36,7 +41,7 @@ especially important if DN_MULTISHOT is specified.  Note that SIGRTMIN
- is often blocked, so it is better to use (at least) SIGRTMIN + 1.
+@@ -61,7 +64,8 @@ the fdtable structure -
+ 4. To look up the file structure given an fd, a reader
+    must use either fcheck() or fcheck_files() APIs. These
+    take care of barrier requirements due to lock-free lookup.
+-   An example :
++
++   An example::
  
- Implementation expectations (features and bugs :-))
-----------------------------
-+---------------------------------------------------
+ 	struct file *file;
  
- The notification should work for any local access to files even if the
- actual file system is on a remote server.  This implies that remote
+@@ -77,7 +81,7 @@ the fdtable structure -
+    of the fd (fget()/fget_light()) are lock-free, it is possible
+    that look-up may race with the last put() operation on the
+    file structure. This is avoided using atomic_long_inc_not_zero()
+-   on ->f_count :
++   on ->f_count::
+ 
+ 	rcu_read_lock();
+ 	file = fcheck_files(files, fd);
+@@ -106,7 +110,8 @@ the fdtable structure -
+    holding files->file_lock. If ->file_lock is dropped, then
+    another thread expand the files thereby creating a new
+    fdtable and making the earlier fdtable pointer stale.
+-   For example :
++
++   For example::
+ 
+ 	spin_lock(&files->file_lock);
+ 	fd = locate_fd(files, file, start);
 diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 10207f158a3e..8f26f1b91e04 100644
+index c571112746f3..42f3309b994e 100644
 --- a/Documentation/filesystems/index.rst
 +++ b/Documentation/filesystems/index.rst
-@@ -25,6 +25,7 @@ algorithms work.
-    locking
-    directory-locking
+@@ -27,6 +27,7 @@ algorithms work.
     devpts
-+   dnotify
+    dnotify
+    fiemap
++   files
  
     automount-support
- 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7d26487c55cf..36d1fd48b6b2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5007,7 +5007,7 @@ M:	Jan Kara <jack@suse.cz>
- R:	Amir Goldstein <amir73il@gmail.com>
- L:	linux-fsdevel@vger.kernel.org
- S:	Maintained
--F:	Documentation/filesystems/dnotify.txt
-+F:	Documentation/filesystems/dnotify.rst
- F:	fs/notify/dnotify/
- F:	include/linux/dnotify.h
  
 -- 
 2.25.4
