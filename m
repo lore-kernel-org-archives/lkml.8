@@ -2,107 +2,181 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6748C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59ACAC54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8000E20775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:08:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588021734;
-	bh=OE1L3adloJPBNIWK7KMwVjp8IfJnonnlx6M5z4vCT00=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=lS7kN13kipOPAR3mPvm0tJPLH3qApqy0eNCuzkxZ//nglgbP6Xr70rr9kf8o3L/8o
-	 0qgi3AzyQVp9U//ukkiMTgA7BaQ6xzz6WR+XofJtUvJT2wUEuS1S+nSucuCF2/YWu+
-	 H8yd1cu+19EO+rZc62n3gYK6qkSwZ0xdCgXE5Zo4=
+	by mail.kernel.org (Postfix) with ESMTP id 31DC92074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:10:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="asN92CUC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbgD0VIx (ORCPT
+        id S1726901AbgD0VKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 17:08:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58724 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726285AbgD0VIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 17:08:51 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D382206BF;
-        Mon, 27 Apr 2020 21:08:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588021731;
-        bh=OE1L3adloJPBNIWK7KMwVjp8IfJnonnlx6M5z4vCT00=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BqpRmjaFGMXdVnyWXrXObfrVvHfw0wsJU66EKo5OWVhewGtILMhWeFtnjixp5iktE
-         Gl+BaGZBsahbePMkmaMUBIyzCPKLCRsGZNX+L5+vZxcPOgE4Oj23C8j4IUTTJv9Yd5
-         WqPCMR+uLOlK8ocLaP8BT6KZovtXt7E91neN1GhQ=
-Date:   Mon, 27 Apr 2020 23:08:45 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Becker <jlbec@evilplan.org>, linux-usb@vger.kernel.org
-Subject: Re: [PATCH v2 08/29] docs: filesystems: convert configfs.txt to
- ReST
-Message-ID: <20200427230845.6716e945@coco.lan>
-In-Reply-To: <20200421165317.277f52ee@lwn.net>
-References: <cover.1587487612.git.mchehab+huawei@kernel.org>
-        <278a9befc98b49ea866c9b687d070c70cde20628.1587487612.git.mchehab+huawei@kernel.org>
-        <20200421165534.GA16511@lst.de>
-        <20200421170223.GP5820@bombadil.infradead.org>
-        <20200421172337.GA18305@lst.de>
-        <20200421165317.277f52ee@lwn.net>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 27 Apr 2020 17:10:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40952 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726285AbgD0VKc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 17:10:32 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9340C0610D5;
+        Mon, 27 Apr 2020 14:10:31 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id t14so22197733wrw.12;
+        Mon, 27 Apr 2020 14:10:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YcKWIY2MXEY9yETNeWA3mpQlFZvVkwPb0tBInR/V9Qo=;
+        b=asN92CUC5fWcrPe0XiJkw+FAPmOPy18UXD8TQ1uD4Xy4Qrpt/AqSfmF92tkL9Wlajc
+         ZcCI9g2j0Fto+f34yJyrhkQ+62WUH51jRqCPCetSvGyWQXF1XOrz2zAx6IlWbutEexWU
+         LtXCwTzcFYksytsDyOkVHovzQyVhvxWMJPl0JIenB0otw81EFeOlUtkWFtcpRDE4zpWj
+         A+KGRIq2ow2PY1y+VPrLZKh++HZCDCBubF1KjM+cAO3s4jTd2xxgWhFcxkzkPQYc2CJb
+         xkAvDuoLiYRxFmOYC5f7TmFJQk20UhrZbsWL/oMAh4Uw30KkqPOXtF7ulUwQBMkXU8fB
+         0lQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YcKWIY2MXEY9yETNeWA3mpQlFZvVkwPb0tBInR/V9Qo=;
+        b=RP2zbjX8OJG+9d8WnBeiRzq6TU/RUnFijOEyEqGGMbm+GmJKtaoosSjJeXxSAziziV
+         Gu96916rSFKGQhhbOAS8qGpuuvIMGxDtV2Xhad+E7Ns9pOemVPjwrEykYgiSQBPADTPx
+         T3+5x7I+s5P9e0pb3szg80DRa8G+Yk8LYSU0eupWQpbF8FW3u3ujU0Uhc41ACnQKGSfN
+         yi2kJFhT0rDcHg6FwbmqSySP7J8O9epPRelhI7Q/jYK0OE2G0CPrMRU4Jfo9kbH8N3sc
+         ElRJGuLqhxnLzWkiKKNgwxIRUJeAwHPKRNTkr/ktqBRmQAYMPpN9zrIDxCQumWMvqrT9
+         k2gQ==
+X-Gm-Message-State: AGi0PuZf3BmSAhYkDKAPiZDb20rtZsPf/82EDf+qQUmsm9IMpkA7zzEy
+        aKQNLCkKKksyzu8PrJMVoiM=
+X-Google-Smtp-Source: APiQypIfnE9TCnw4ISHqihiv2DP5aBYbFtJjGfebMYH2oeRlrafHShe2ZdvRiHMknXIYaPxCeid2mw==
+X-Received: by 2002:a5d:6589:: with SMTP id q9mr27853808wru.136.1588021830326;
+        Mon, 27 Apr 2020 14:10:30 -0700 (PDT)
+Received: from [192.168.1.23] (acft175.neoplus.adsl.tpnet.pl. [83.9.221.175])
+        by smtp.gmail.com with ESMTPSA id q184sm511187wma.25.2020.04.27.14.10.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 14:10:29 -0700 (PDT)
+Subject: Re: [PATCH v3 2/2] leds: add sgm3140 driver
+To:     Luca Weiss <luca@z3ntu.xyz>, Pavel Machek <pavel@ucw.cz>
+Cc:     linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+References: <20200421191354.1443017-1-luca@z3ntu.xyz>
+ <20200421191354.1443017-3-luca@z3ntu.xyz> <20200427095102.GA21572@duo.ucw.cz>
+ <318932736.Jt2qlLCP7m@g550jk>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <a5b4ddec-e0f9-f8e6-1763-87935569be97@gmail.com>
+Date:   Mon, 27 Apr 2020 23:10:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <318932736.Jt2qlLCP7m@g550jk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, 21 Apr 2020 16:53:17 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
+Hi Luca,
 
-> On Tue, 21 Apr 2020 19:23:37 +0200
-> Christoph Hellwig <hch@lst.de> wrote:
->=20
-> > On Tue, Apr 21, 2020 at 10:02:23AM -0700, Matthew Wilcox wrote: =20
-> > > On Tue, Apr 21, 2020 at 06:55:34PM +0200, Christoph Hellwig wrote:   =
-=20
-> > > > NAK, this makes the document significantly harder to read.   =20
-> > >=20
-> > > Really?  It reads more easily to me in the new format.  Enclosing
-> > > section headers in [] is really weird.   =20
-> >=20
-> > It wasn't entirely uncommon, but that's not really the point.  The
-> > Problem is all the weird ".." or "::" annotations that really kill
-> > the flow, or things like "|copy|" that have no reason to exist. =20
->=20
-> This sounds sort of like "my markup is good, yours is bad", honestly.  If
-> somebody were trying to add bracketed headings to a new document, I
-> suspect we'd get similar complaints.
->=20
-> The markup can certainly be toned down.  If you don't like |copy|, it can
-> just as easily remain "(c)" or become =C2=A9, or just go away entirely.  =
-That
-> would get rid of the ".. include:: <isonum.txt>" line too.  I would
-> happily make a rule that we don't bother with markup like |copy|
-> anywhere in the kernel docs.
->=20
-> The SPDX line is supposed to exist in all files, of course.
->=20
-> If Mauro does that, can you live with "::" to mark a literal block?  It
-> doesn't seem like a whole lot of noise...?
+On 4/27/20 9:49 PM, Luca Weiss wrote:
+> On Montag, 27. April 2020 11:51:02 CEST Pavel Machek wrote:
+>> Hi!
+>>
+>>> Add a driver for the SGMICRO SGM3140 Buck/Boost Charge Pump LED driver.
+>>>
+>>> This device is controlled by two GPIO pins, one for enabling and the
+>>> second one for switching between torch and flash mode.
+>>>
+>>> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+>>
+>> Thanks, applied, but... I may remove it again.
+>>
+>>> +++ b/drivers/leds/leds-sgm3140.c
+>>> @@ -0,0 +1,320 @@
+>>> +// SPDX-License-Identifier: GPL-2.0
+>>
+>> Would you consider GPL-2+?
+> 
+> I don't really have a preference either way but GPL-2.0-or-later is fine for
+> me.
+> 
+>>
+>>> +#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
+>>> +static void sgm3140_init_v4l2_flash_config(struct sgm3140 *priv,
+>>
+>> Ok.
+>>
+>>> +static int sgm3140_probe(struct platform_device *pdev)
+>>> +{
+>>
+>> ...
+>>
+>>> +	led_cdev->brightness_set_blocking = sgm3140_brightness_set;
+>>> +	led_cdev->max_brightness = LED_ON;
+>>
+>> Don't do this, unless you really have 255 levels of brightness.
+> 
+> LED_ON is 1, so the brightness available is 0 - 1.
+> 
+>>
+>>> +	/* Create V4L2 Flash subdev */
+>>> +	priv->v4l2_flash = v4l2_flash_init(&pdev->dev,
+>>> +					   child_node,
+>>> +					   fled_cdev, NULL,
+>>> +					   &v4l2_sd_cfg);
+>>> +	if (IS_ERR(priv->v4l2_flash)) {
+>>
+>> Does this need some #ifdef guards?
+> 
+> v4l2_flash_init has a NULL-returning version when CONFIG_V4L2_FLASH_LED_CLASS
+> is not defined (see https://elixir.bootlin.com/linux/latest/source/include/
+> media/v4l2-flash-led-class.h#L166 )
 
-Yeah, I can remove most of the markups, preserving the "::".
+Correct.
 
-Will send a new patchset in a few.
+>>
+>>> +		ret = PTR_ERR(priv->v4l2_flash);
+>>> +		goto err;
+>>> +	}
+>>> +
+>>> +	return ret;
+>>
+>> Should this return 0?
+> 
+> ret should be 0 here, so it shouldn't matter much.
+> 
+>>
+>>> +err:
+>>> +	fwnode_handle_put(child_node);
+>>> +	return ret;
+>>> +}
+>>
+>> Does non-error path needs handle_put, too?
+> 
+> I don't think so, I'm passing child_node to v4l2_flash_init which then saves
+> the pointer to v4l2_subdev->fwnode.
+> 
+> The devm_led_classdev_flash_register_ext function also seems to store the
+> pointer (led_cdev->dev->fwnode = init_data->fwnode; in
+> led_classdev_register_ext)
 
-Thanks,
-Mauro
+The node needs to be held only during parsing, so you
+have to call fwnode_handle_put() for both paths.
+
+-- 
+Best regards,
+Jacek Anaszewski
