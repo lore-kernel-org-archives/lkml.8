@@ -2,73 +2,80 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E65C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF89C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48D142084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A249F20728
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:18:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbgD0RSW (ORCPT
+        id S1726430AbgD0RSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 13:18:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60710 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbgD0RSV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 13:18:21 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1A61C0610D5;
-        Mon, 27 Apr 2020 10:18:21 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1092D15D4A682;
-        Mon, 27 Apr 2020 10:18:20 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 10:18:19 -0700 (PDT)
-Message-Id: <20200427.101819.498317950218972559.davem@davemloft.net>
-To:     sgarzare@redhat.com
-Cc:     jasowang@redhat.com, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, mst@redhat.com, stefanha@redhat.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: Re: [PATCH net v2 0/2] vsock/virtio: fixes about packet delivery
- to monitoring devices
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200424150830.183113-1-sgarzare@redhat.com>
-References: <20200424150830.183113-1-sgarzare@redhat.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 27 Apr 2020 10:18:20 -0700 (PDT)
+        Mon, 27 Apr 2020 13:18:39 -0400
+Received: from mga17.intel.com ([192.55.52.151]:29269 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726194AbgD0RSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 13:18:39 -0400
+IronPort-SDR: Iul8b1UXw3eD5pWiErkIuD6UjIybOV3iqrcaPRIkflvJr4ds+aRsX26yTNd2Rk2DsR1yQ/KVrx
+ eJJt8z4dt0IQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 10:18:39 -0700
+IronPort-SDR: KYSM7GOGmSOSToEQRYvFVrql3AWK8WH4N3Fw7QSu7yvS9JzELdSrcDkLbrQtFSs9rftFYDZsw8
+ AtwLBAj6DhfQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,324,1583222400"; 
+   d="scan'208";a="458454690"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
+  by fmsmga005.fm.intel.com with ESMTP; 27 Apr 2020 10:18:38 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: VMX: Use accessor to read vmcs.INTR_INFO when handling exception
+Date:   Mon, 27 Apr 2020 10:18:37 -0700
+Message-Id: <20200427171837.22613-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.26.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Garzarella <sgarzare@redhat.com>
-Date: Fri, 24 Apr 2020 17:08:28 +0200
+Use vmx_get_intr_info() when grabbing the cached vmcs.INTR_INFO in
+handle_exception_nmi() to ensure the cache isn't stale.  Bypassing the
+caching accessor doesn't cause any known issues as the cache is always
+refreshed by handle_exception_nmi_irqoff(), but the whole point of
+adding the proper caching mechanism was to avoid such dependencies.
 
-> During the review of v1, Stefan pointed out an issue introduced by
-> that patch, where replies can appear in the packet capture before
-> the transmitted packet.
-> 
-> While fixing my patch, reverting it and adding a new flag in
-> 'struct virtio_vsock_pkt' (patch 2/2), I found that we already had
-> that issue in vhost-vsock, so I fixed it (patch 1/2).
-> 
-> v1 -> v2:
-> - reverted the v1 patch, to avoid that replies can appear in the
->   packet capture before the transmitted packet [Stefan]
-> - added patch to fix packet delivering to monitoring devices in
->   vhost-vsock
-> - added patch to check if the packet is already delivered to
->   monitoring devices
-> 
-> v1: https://patchwork.ozlabs.org/project/netdev/patch/20200421092527.41651-1-sgarzare@redhat.com/
+Fixes: 8791585837f6 ("KVM: VMX: Cache vmcs.EXIT_INTR_INFO using arch avail_reg flags")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/kvm/vmx/vmx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Series applied, thank you.
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 3ab6ca6062ce..7bddcb24f6f3 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -4677,7 +4677,7 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
+ 	u32 vect_info;
+ 
+ 	vect_info = vmx->idt_vectoring_info;
+-	intr_info = vmx->exit_intr_info;
++	intr_info = vmx_get_intr_info(vcpu);
+ 
+ 	if (is_machine_check(intr_info) || is_nmi(intr_info))
+ 		return 1; /* handled by handle_exception_nmi_irqoff() */
+-- 
+2.26.0
+
