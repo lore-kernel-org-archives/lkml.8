@@ -2,130 +2,110 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0884C55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A046EC55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0C3A20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B5F020663
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:52:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s1Zx9bZG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgD0JvF (ORCPT
+        id S1726923AbgD0JwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 05:51:05 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:60140 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726485AbgD0JvF (ORCPT
+        Mon, 27 Apr 2020 05:52:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47302 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726589AbgD0JwO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 05:51:05 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 046F01C0244; Mon, 27 Apr 2020 11:51:03 +0200 (CEST)
-Date:   Mon, 27 Apr 2020 11:51:02 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Luca Weiss <luca@z3ntu.xyz>
-Cc:     linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH v3 2/2] leds: add sgm3140 driver
-Message-ID: <20200427095102.GA21572@duo.ucw.cz>
-References: <20200421191354.1443017-1-luca@z3ntu.xyz>
- <20200421191354.1443017-3-luca@z3ntu.xyz>
+        Mon, 27 Apr 2020 05:52:14 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11EB5C0610D5;
+        Mon, 27 Apr 2020 02:52:14 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id m2so13255498lfo.6;
+        Mon, 27 Apr 2020 02:52:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/1SDtO4Ad7MyXOywoaq5DD1Ze7Y/wDVd4q/zz16aaT4=;
+        b=s1Zx9bZGzXF8XJY7Nn2UJcY/TsTM7XJe2efANkLHLqxaIPK2Ska0PJTbWs4J3EVtol
+         cdoj2ZH940ZohXKwRpNz1ZmZ4MiLyzV8r/LuM5NfphG/6gm+0DovqqnxGZKqCdzx0RkT
+         HzNZwHw4qz8gO70cUOodxIY3Zl+thFFcS8807UFd/ArIZPh6T2SEU9qxVT+UyQqWb+zV
+         MAe8vJCoYNMXpOvP6uthVAYvuBGPodcN7K9JLS1qot4wT0yPiswagnVbZqNBWfjHF8jk
+         GWkoOWr9bl1Xv6faS68mSLABOAFlTJ5hXNdPmDbkFYCt6Wyhok8zP/BsDk1/gjyJZWH9
+         +8Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/1SDtO4Ad7MyXOywoaq5DD1Ze7Y/wDVd4q/zz16aaT4=;
+        b=eazoQOFAf7WtwO2/Hpt0B7HshAi+GNrP1UCCYGsbl4TpAuL1o94V5IY8GAVsv8Lx6z
+         oki4AAelbICKOkIU3yMdxlD8bkUvVOXXzEnt2SCXu7qi8GD3fM/b1NIt05hnmCOiki2r
+         RH44DCswPJckt0DGQBBiJFz7yERYoZqr+gBxnWwYszYZBkVOIBRMXTLcJsLCnVlw/Dl2
+         TH65x/SiFPeKSO5UQsowWkMlo+jeBqMwdNMhGde/ISGM++8zYYgSB1Hj/qLi5Ly7cLtV
+         sbUXctkmfOhlx9AETAauGBGlXpG5e4sBskawG46rgRmXYdW9FbKrnCl2ipbpvQJUxzh0
+         qXtg==
+X-Gm-Message-State: AGi0PuYKnj06UNYLgPMJQpxsZyzkpC9WF3jmuuxGcNAngs3ES6McLheX
+        AXGQkuk4kL7DiqT49pzDpgoLJFQl
+X-Google-Smtp-Source: APiQypIrZKBB3s8eVZpVqi1XMC/roIR+Qb4Ack7/dTw+w7yQiAvQ0moOUKIy1RICEh0aIpzKAnwt1A==
+X-Received: by 2002:ac2:4c34:: with SMTP id u20mr15166804lfq.40.1587981132001;
+        Mon, 27 Apr 2020 02:52:12 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id c10sm2737181lfc.7.2020.04.27.02.52.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 02:52:11 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
+ for a long time
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <bba0a93a-8ec4-eda6-97f3-fb2ab0b9b503@gmail.com>
+ <6f07e5c8-7916-7ea2-2fe7-d05f8f011471@nvidia.com>
+ <77a31b2f-f525-ba9e-f1ae-2b474465bde4@gmail.com>
+ <470b4de4-e98a-1bdc-049e-6259ad603507@nvidia.com>
+ <d2531fc1-b452-717d-af71-19497e14ef00@gmail.com>
+ <a5198024-7273-74c4-b4f4-3a29d042bc36@nvidia.com>
+ <f8fb1f7f-2497-033e-ff2c-c86c6caa9706@gmail.com>
+ <fd1ca178-1ea3-851f-20a6-10bf00453ce3@nvidia.com>
+ <a5734f19-254e-b6bc-e791-fa1ac63f11a4@gmail.com>
+ <79f6560e-dbb5-0ae1-49f8-cf1cd95396ec@nvidia.com>
+ <20200427074837.GC3451400@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <c1190858-eaea-8e94-b4d1-1cf28076c330@gmail.com>
+Date:   Mon, 27 Apr 2020 12:52:10 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="pWyiEgJYm5f9v55/"
-Content-Disposition: inline
-In-Reply-To: <20200421191354.1443017-3-luca@z3ntu.xyz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200427074837.GC3451400@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+27.04.2020 10:48, Thierry Reding пишет:
+...
+>> Maybe but all these other problems appear to have existed for sometime
+>> now. We need to fix all, but for the moment we need to figure out what's
+>> best for v5.7.
+> 
+> To me it doesn't sound like we have a good handle on what exactly is
+> going on here and we're mostly just poking around.
+> 
+> And even if things weren't working quite properly before, it sounds to
+> me like this patch actually made things worse.
 
---pWyiEgJYm5f9v55/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> Add a driver for the SGMICRO SGM3140 Buck/Boost Charge Pump LED driver.
->=20
-> This device is controlled by two GPIO pins, one for enabling and the
-> second one for switching between torch and flash mode.
->=20
-> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-
-Thanks, applied, but... I may remove it again.
-
-> +++ b/drivers/leds/leds-sgm3140.c
-> @@ -0,0 +1,320 @@
-> +// SPDX-License-Identifier: GPL-2.0
-
-Would you consider GPL-2+?
-
-> +#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
-> +static void sgm3140_init_v4l2_flash_config(struct sgm3140 *priv,
-
-Ok.
-
-> +static int sgm3140_probe(struct platform_device *pdev)
-> +{
-=2E..
-> +	led_cdev->brightness_set_blocking =3D sgm3140_brightness_set;
-> +	led_cdev->max_brightness =3D LED_ON;
-
-Don't do this, unless you really have 255 levels of brightness.
-
-> +	/* Create V4L2 Flash subdev */
-> +	priv->v4l2_flash =3D v4l2_flash_init(&pdev->dev,
-> +					   child_node,
-> +					   fled_cdev, NULL,
-> +					   &v4l2_sd_cfg);
-> +	if (IS_ERR(priv->v4l2_flash)) {
-
-Does this need some #ifdef guards?
-
-> +		ret =3D PTR_ERR(priv->v4l2_flash);
-> +		goto err;
-> +	}
-> +
-> +	return ret;
-
-Should this return 0?
-
-> +err:
-> +	fwnode_handle_put(child_node);
-> +	return ret;
-> +}
-
-Does non-error path needs handle_put, too?
-
-Best regards,
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---pWyiEgJYm5f9v55/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXqarBgAKCRAw5/Bqldv6
-8tcQAKCWUTuRy7TvgT2+F1Aj1oFotUcn9wCgvlDQBHg5Trhv/KEKFw2CkG70ke8=
-=EEZa
------END PGP SIGNATURE-----
-
---pWyiEgJYm5f9v55/--
+There is a plenty of time to work on the proper fix now. To me it sounds
+like you're giving up on fixing the root of the problem, sorry.
