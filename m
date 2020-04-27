@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8276BC82A01
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 725C5C82A02
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FA8620575
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:05:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C67F20575
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:05:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588025138;
-	bh=m+3uhfU30k0g3RHQf5Wy2GgWHe8onVT3u8WYPIr3ei4=;
+	s=default; t=1588025141;
+	bh=Emi2yoocs4hV5xnVSqpHUmvmCGjZo8W2zvoib32QGkI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L2c9ZpbFQaN72+r4tW6wPKhzcHC9frZ0h8l7BaJsUjP1GXmJGyGMlnRgQWYr7wpQ0
-	 9Vg4VXzULBMlUjzGcr6cCBZNe02qXlzoqGYX1/S6jghf+j1m4ERL6tGEZ2G5+ZgAnD
-	 VEuQkkE/cjvw/rWXEc3NPjm3nLQIJNRtD8V6Kw2w=
+	b=CbWmkUGWsFCB2Ywp3BqAm8SnoR6WXDPsmtzoYZ/XQ9XDfXQWhqgL9L6ODiOT0o9Hv
+	 GQMNyB0tR6CxSs0Vt5xliJIRFwE9FZ1GzGAAm2o+5P2Tzz/UB14UMGV+N1kvSUjtA8
+	 2OK6C579+ekVrmmWkyNy6e3QT7VoxEaWPltV1Tpk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgD0WFh (ORCPT
+        id S1727008AbgD0WFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 18:05:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48024 "EHLO mail.kernel.org"
+        Mon, 27 Apr 2020 18:05:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726328AbgD0WB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726309AbgD0WB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 Apr 2020 18:01:58 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F93021D7E;
+        by mail.kernel.org (Postfix) with ESMTPSA id 828DC21BE5;
         Mon, 27 Apr 2020 22:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588024916;
-        bh=m+3uhfU30k0g3RHQf5Wy2GgWHe8onVT3u8WYPIr3ei4=;
+        bh=Emi2yoocs4hV5xnVSqpHUmvmCGjZo8W2zvoib32QGkI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jnno8vmdrg/60Q5DGedy1+GY/huVq7ZmBAt/vxbStUrpIhOTgpA5FIM5pN0HlB6Ru
-         fLVhUF70oJlkgwuwt1GQwY7sNmNUY1BJKRHdThhppVxK8z2IRpttE/eU2I11sOO06C
-         9/b4hCDD2vARIZSdof91UyMvBtZvDKMzJ8hz1UME=
+        b=K/3QhxJ9FaZVq+QqESOYha1vU32VTfaKA8teo8JxjeKSYPFASAftlZc+VVowzVgPt
+         CJoYwRfxE3eq1WSbVGbqop8zzGgJBd8EvOxrvwPpZXIjNSQ9lnAByZxM0UlmcJbt1d
+         X7WvDjD7N147NfVJAasRKjsAx5GzNGseJslQ8wKo=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jTBp4-000Iok-ST; Tue, 28 Apr 2020 00:01:54 +0200
+        id 1jTBp4-000Iob-QQ; Tue, 28 Apr 2020 00:01:54 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 14/38] docs: networking: convert dctcp.txt to ReST
-Date:   Tue, 28 Apr 2020 00:01:29 +0200
-Message-Id: <94cf64eaf46b157d9a14aaf68733a3c65f034f1e.1588024424.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 12/38] docs: networking: convert cxacru.txt to ReST
+Date:   Tue, 28 Apr 2020 00:01:27 +0200
+Message-Id: <de1ca06ed67d07d81ee7daac8a130aef6f2f335c.1588024424.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588024424.git.mchehab+huawei@kernel.org>
 References: <cover.1588024424.git.mchehab+huawei@kernel.org>
@@ -62,72 +62,171 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 - add SPDX header;
-- adjust title markup;
+- add a document title;
 - mark code blocks and literals as such;
+- mark lists as such;
 - adjust identation, whitespaces and blank lines;
 - add to networking/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/networking/{dctcp.txt => dctcp.rst} | 14 +++++++++++---
- Documentation/networking/index.rst                |  1 +
- 2 files changed, 12 insertions(+), 3 deletions(-)
- rename Documentation/networking/{dctcp.txt => dctcp.rst} (89%)
+ .../networking/{cxacru.txt => cxacru.rst}     | 86 ++++++++++++-------
+ Documentation/networking/index.rst            |  1 +
+ 2 files changed, 54 insertions(+), 33 deletions(-)
+ rename Documentation/networking/{cxacru.txt => cxacru.rst} (66%)
 
-diff --git a/Documentation/networking/dctcp.txt b/Documentation/networking/dctcp.rst
-similarity index 89%
-rename from Documentation/networking/dctcp.txt
-rename to Documentation/networking/dctcp.rst
-index 13a857753208..4cc8bb2dad50 100644
---- a/Documentation/networking/dctcp.txt
-+++ b/Documentation/networking/dctcp.rst
-@@ -1,11 +1,14 @@
+diff --git a/Documentation/networking/cxacru.txt b/Documentation/networking/cxacru.rst
+similarity index 66%
+rename from Documentation/networking/cxacru.txt
+rename to Documentation/networking/cxacru.rst
+index 2cce04457b4d..6088af2ffeda 100644
+--- a/Documentation/networking/cxacru.txt
++++ b/Documentation/networking/cxacru.rst
+@@ -1,3 +1,9 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+======================
- DCTCP (DataCenter TCP)
------------------------
-+======================
- 
- DCTCP is an enhancement to the TCP congestion control algorithm for data
- center networks and leverages Explicit Congestion Notification (ECN) in
- the data center network to provide multi-bit feedback to the end hosts.
- 
--To enable it on end hosts:
-+To enable it on end hosts::
- 
-   sysctl -w net.ipv4.tcp_congestion_control=dctcp
-   sysctl -w net.ipv4.tcp_ecn_fallback=0 (optional)
-@@ -25,14 +28,19 @@ SIGCOMM/SIGMETRICS papers:
- 
-  i) Mohammad Alizadeh, Albert Greenberg, David A. Maltz, Jitendra Padhye,
-     Parveen Patel, Balaji Prabhakar, Sudipta Sengupta, and Murari Sridharan:
--      "Data Center TCP (DCTCP)", Data Center Networks session
++========================
++ATM cxacru device driver
++========================
 +
-+      "Data Center TCP (DCTCP)", Data Center Networks session"
-+
-       Proc. ACM SIGCOMM, New Delhi, 2010.
-+
-     http://simula.stanford.edu/~alizade/Site/DCTCP_files/dctcp-final.pdf
-     http://www.sigcomm.org/ccr/papers/2010/October/1851275.1851192
+ Firmware is required for this device: http://accessrunner.sourceforge.net/
  
- ii) Mohammad Alizadeh, Adel Javanmard, and Balaji Prabhakar:
-+
-       "Analysis of DCTCP: Stability, Convergence, and Fairness"
-       Proc. ACM SIGMETRICS, San Jose, 2011.
-+
-     http://simula.stanford.edu/~alizade/Site/DCTCP_files/dctcp_analysis-full.pdf
+ While it is capable of managing/maintaining the ADSL connection without the
+@@ -19,29 +25,35 @@ several sysfs attribute files for retrieving device statistics:
  
- IETF informational draft:
+ * adsl_headend
+ * adsl_headend_environment
+-	Information about the remote headend.
++
++	- Information about the remote headend.
+ 
+ * adsl_config
+-	Configuration writing interface.
+-	Write parameters in hexadecimal format <index>=<value>,
+-	separated by whitespace, e.g.:
++
++	- Configuration writing interface.
++	- Write parameters in hexadecimal format <index>=<value>,
++	  separated by whitespace, e.g.:
++
+ 		"1=0 a=5"
+-	Up to 7 parameters at a time will be sent and the modem will restart
+-	the ADSL connection when any value is set. These are logged for future
+-	reference.
++
++	- Up to 7 parameters at a time will be sent and the modem will restart
++	  the ADSL connection when any value is set. These are logged for future
++	  reference.
+ 
+ * downstream_attenuation (dB)
+ * downstream_bits_per_frame
+ * downstream_rate (kbps)
+ * downstream_snr_margin (dB)
+-	Downstream stats.
++
++	- Downstream stats.
+ 
+ * upstream_attenuation (dB)
+ * upstream_bits_per_frame
+ * upstream_rate (kbps)
+ * upstream_snr_margin (dB)
+ * transmitter_power (dBm/Hz)
+-	Upstream stats.
++
++	- Upstream stats.
+ 
+ * downstream_crc_errors
+ * downstream_fec_errors
+@@ -49,48 +61,56 @@ several sysfs attribute files for retrieving device statistics:
+ * upstream_crc_errors
+ * upstream_fec_errors
+ * upstream_hec_errors
+-	Error counts.
++
++	- Error counts.
+ 
+ * line_startable
+-	Indicates that ADSL support on the device
+-	is/can be enabled, see adsl_start.
++
++	- Indicates that ADSL support on the device
++	  is/can be enabled, see adsl_start.
+ 
+ * line_status
+-	"initialising"
+-	"down"
+-	"attempting to activate"
+-	"training"
+-	"channel analysis"
+-	"exchange"
+-	"waiting"
+-	"up"
++
++	 - "initialising"
++	 - "down"
++	 - "attempting to activate"
++	 - "training"
++	 - "channel analysis"
++	 - "exchange"
++	 - "waiting"
++	 - "up"
+ 
+ 	Changes between "down" and "attempting to activate"
+ 	if there is no signal.
+ 
+ * link_status
+-	"not connected"
+-	"connected"
+-	"lost"
++
++	 - "not connected"
++	 - "connected"
++	 - "lost"
+ 
+ * mac_address
+ 
+ * modulation
+-	"" (when not connected)
+-	"ANSI T1.413"
+-	"ITU-T G.992.1 (G.DMT)"
+-	"ITU-T G.992.2 (G.LITE)"
++
++	 - "" (when not connected)
++	 - "ANSI T1.413"
++	 - "ITU-T G.992.1 (G.DMT)"
++	 - "ITU-T G.992.2 (G.LITE)"
+ 
+ * startup_attempts
+-	Count of total attempts to initialise ADSL.
++
++	- Count of total attempts to initialise ADSL.
+ 
+ To enable/disable ADSL, the following can be written to the adsl_state file:
+-	"start"
+-	"stop
+-	"restart" (stops, waits 1.5s, then starts)
+-	"poll" (used to resume status polling if it was disabled due to failure)
+ 
+-Changes in adsl/line state are reported via kernel log messages:
++	 - "start"
++	 - "stop
++	 - "restart" (stops, waits 1.5s, then starts)
++	 - "poll" (used to resume status polling if it was disabled due to failure)
++
++Changes in adsl/line state are reported via kernel log messages::
++
+ 	[4942145.150704] ATM dev 0: ADSL state: running
+ 	[4942243.663766] ATM dev 0: ADSL line: down
+ 	[4942249.665075] ATM dev 0: ADSL line: attempting to activate
 diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index 3894043332de..9e83d3bda4e0 100644
+index 7b596810d479..4c8e896490e0 100644
 --- a/Documentation/networking/index.rst
 +++ b/Documentation/networking/index.rst
-@@ -49,6 +49,7 @@ Contents:
+@@ -47,6 +47,7 @@ Contents:
+    bonding
+    cdc_mbim
     cops
-    cxacru
-    dccp
-+   dctcp
++   cxacru
  
  .. only::  subproject and html
  
