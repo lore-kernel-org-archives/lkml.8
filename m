@@ -2,153 +2,138 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36675C5519F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB082C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CAE520661
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:46:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588002386;
-	bh=4WKuEEu6AV9S5LHgPyiAwgQEIkDIj7vq5rk7Tvuxgio=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CjtRWdtYu800oO8k6yAMZ5A8tpdl/iLKqNI+N+XRUhYW0HaHaXdPHjLx5ette8n6S
-	 wycTLumNWewGVCZDRcFeCSfJpkLqiqQ7RyM1v3TTtJKevYZ5rnfQcY9ZH9SHbIQbB5
-	 X1YbFq2JEWr+wCTOdg8xxXYmT0m9vQMQ9JXsYf9Q=
+	by mail.kernel.org (Postfix) with ESMTP id A6422206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:46:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Rv9xl/0y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgD0PqZ convert rfc822-to-8bit (ORCPT
+        id S1728201AbgD0Pqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 11:46:25 -0400
-Received: from mail-ej1-f68.google.com ([209.85.218.68]:42580 "EHLO
-        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbgD0PqY (ORCPT
+        Mon, 27 Apr 2020 11:46:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727077AbgD0Pqy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 11:46:24 -0400
-Received: by mail-ej1-f68.google.com with SMTP id pg17so14477745ejb.9;
-        Mon, 27 Apr 2020 08:46:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=vN8ZtTEMOm40Zgoqr2j2go1H/JlhYwioxL2VoPsyXMo=;
-        b=cTxh2TAcHuZX30NEGByeXRxLV/yCkaoG+WLOckufPxWBnuYBAhDbkhQ5M8GynJgIwu
-         dgIWjI21OAwfJjP4dN9FRBTZgHoZORDAXNUBEhxskYf5SLItKg/f/uDyrB3PtNv/Uavu
-         Yj0foPRbTyYUMxvBL+UiLKZkXGrINEFS46KZUCQE3rbfcX8vsLrkQb3vlM+1agiuFJ8C
-         dLx3f3/fY4GW2vZlR4USC9jaY/eNjnA/cfrB+4047NZpqmHViB6338VM6e5E2o8hEMNI
-         8pfW2pN13ATQCjqxcGOpeOb6dYJpaWeBR3xMYdC3r4wqaUBH+/d3n7GgSSXgoRcSHWCn
-         EeBA==
-X-Gm-Message-State: AGi0PuZ0/uWdnyqjT+DE+fTlNibCpkq1PLiGM0pX4hTjt2jYIXseadgb
-        CeAiosruEjlY9RrY8US9wYQ=
-X-Google-Smtp-Source: APiQypJaGHIqdott9ULGc1vIvIC2hB4wMVjvSOJwybdeeq2XFdtUhgVC8YxEO2xmFZWEXRWg3+ZkRg==
-X-Received: by 2002:a17:906:3713:: with SMTP id d19mr19332049ejc.111.1588002380871;
-        Mon, 27 Apr 2020 08:46:20 -0700 (PDT)
-Received: from pi3 ([194.230.155.237])
-        by smtp.googlemail.com with ESMTPSA id v14sm1947180edx.67.2020.04.27.08.46.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 08:46:20 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 17:46:17 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jonathan Bakker <xc-racer2@live.ca>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Philipp Rossak <embed3d@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH v7 08/12] arm: dts: s5pv210: Add node for SGX 540
-Message-ID: <20200427154617.GA1798@pi3>
-References: <cover.1587760454.git.hns@goldelico.com>
- <3fd18c747426e15fd1f3500b9c4adce2db9ddd0c.1587760454.git.hns@goldelico.com>
- <NYBE9Q.YH08US7A7DC3@crapouillou.net>
- <BN6PR04MB0660A180D2069848E5C03D7EA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+        Mon, 27 Apr 2020 11:46:54 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6973AC0610D5;
+        Mon, 27 Apr 2020 08:46:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=WJhX0gy4PLhLVzhkqKlPTRBI4F1++Yw2mgGmpA3PmDk=; b=Rv9xl/0yJAvArM66lMVoxSWEMQ
+        3Qh/ze4bgZMsEwvC5UUATGsA9ndC2ScJuPNo9xuctTBXRJo5vw9hJsy620rzuA+6fG7N0rMSJ4Ldg
+        57nntPN3w9G49xjrPcPPxzMKCxNlEAe5dlw5t04X/s4HsA/6UOTAAMAeik+Qz2XZPrxeEtp82fUtt
+        Jr7x3NcjgEjOVQnZyTTB8P0XwdhKAspRZ7sD9Td1qDK8ZIHp/jaGQ8LcNHFsUPCbu+Gtxz6TKMbAK
+        Awqyk3g/bsIaq4woSAzA3r6HJ5HmKsRwiyhFjY3dYtVOjI2t6CgFPy+oSNkQmF0hMXalSzMCMHzK4
+        8GhNKZnw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jT5y1-0007q0-PV; Mon, 27 Apr 2020 15:46:45 +0000
+Date:   Mon, 27 Apr 2020 08:46:45 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Baolin Wang <baolin.wang7@gmail.com>
+Cc:     axboe@kernel.dk, ulf.hansson@linaro.org, adrian.hunter@intel.com,
+        arnd@arndb.de, linus.walleij@linaro.org, paolo.valente@linaro.org,
+        ming.lei@redhat.com, orsonzhai@gmail.com, zhang.lyra@gmail.com,
+        linux-mmc@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 1/7] block: Extand commit_rqs() to do batch
+ processing
+Message-ID: <20200427154645.GA1201@infradead.org>
+References: <cover.1587888520.git.baolin.wang7@gmail.com>
+ <c8bd9e5ba815a3f1bc9dac0a4bc2fbadadbc0a43.1587888520.git.baolin.wang7@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <BN6PR04MB0660A180D2069848E5C03D7EA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+In-Reply-To: <c8bd9e5ba815a3f1bc9dac0a4bc2fbadadbc0a43.1587888520.git.baolin.wang7@gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 07:57:12AM -0700, Jonathan Bakker wrote:
-> Hi Paul,
+extand in the subject really shpuld be 'extend'
+
+On Sun, Apr 26, 2020 at 05:38:54PM +0800, Baolin Wang wrote:
+> From: Ming Lei <ming.lei@redhat.com>
 > 
-> On 2020-04-26 5:56 a.m., Paul Cercueil wrote:
-> > 
-> > 
-> > Le ven. 24 avril 2020 à 22:34, H. Nikolaus Schaller <hns@goldelico.com> a écrit :
-> >> From: Jonathan Bakker <xc-racer2@live.ca>
-> >>
-> >> All s5pv210 devices have a PowerVR SGX 540 (revision 120) attached.
-> >>
-> >> There is no external regulator for it so it can be enabled by default.
-> >>
-> >> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-> >> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> >> ---
-> >>  arch/arm/boot/dts/s5pv210.dtsi | 13 +++++++++++++
-> >>  1 file changed, 13 insertions(+)
-> >>
-> >> diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
-> >> index 2ad642f51fd9..abbdda205c1b 100644
-> >> --- a/arch/arm/boot/dts/s5pv210.dtsi
-> >> +++ b/arch/arm/boot/dts/s5pv210.dtsi
-> >> @@ -512,6 +512,19 @@ vic3: interrupt-controller@f2300000 {
-> >>              #interrupt-cells = <1>;
-> >>          };
-> >>
-> >> +        gpu: gpu@f3000000 {
-> >> +            compatible = "samsung,s5pv210-sgx540-120";
-
-This should not pass the bindings check because you missed last
-compatibles.
-
-> >> +            reg = <0xf3000000 0x10000>;
-> >> +            interrupt-parent = <&vic2>;
-> >> +            interrupts = <10>;
-> >> +            clock-names = "core";
-> >> +            clocks = <&clocks CLK_G3D>;
-> >> +
-> >> +            assigned-clocks = <&clocks MOUT_G3D>, <&clocks DOUT_G3D>;
-> >> +            assigned-clock-rates = <0>, <66700000>;
-> >> +            assigned-clock-parents = <&clocks MOUT_MPLL>;
-> > 
-> > What are these clocks for, and why are they reparented / reclocked?
-> > 
-> > Shouldn't they be passed to 'clocks' as well?
-> > 
-> > -Paul
-> > 
+> Now some SD/MMC host controllers can support packed command or packed request,
+> that means we can package several requests to host controller at one time
+> to improve performence.
 > 
-> The G3D clock system can have multiple parents, and for stable operation
-> it's recommended to use the MPLL clock as the parent (which in turn
-> is actually a mux as well).  MOUT_G3D is simply the mux for CLK_G3D
-> (SGX core clock), DOUT_G3D is the divider.  DOUT_G3D could equally be CLK_G3D
-> (and probably should be, for readability) as CLK_G3D is simply the gate and
-> DOUT_G3D is the divider for it.
+> But the blk-mq always takes one request from the scheduler and dispatch it to
+> the device, regardless of the driver or the scheduler, so there should only
+> ever be one request in the local list in blk_mq_dispatch_rq_list(), that means
+> the bd.last is always true and the driver can not use bd.last to decide if
+> there are requests are pending now in hardware queue to help to package
+> requests.
+> 
+> Thus this patch introduces a new 'BLK_MQ_F_FORCE_COMMIT_RQS' flag to call
+> .commit_rqs() to do batch processing if necessary.
+> 
+> Signed-off-by: Ming Lei <ming.lei@redhat.com>
+> Tested-by: Baolin Wang <baolin.wang7@gmail.com>
+> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> ---
+>  block/blk-mq-sched.c   | 29 ++++++++++++++++++++---------
+>  block/blk-mq.c         | 15 ++++++++++-----
+>  include/linux/blk-mq.h |  1 +
+>  3 files changed, 31 insertions(+), 14 deletions(-)
+> 
+> diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+> index 74cedea56034..3429a71a7364 100644
+> --- a/block/blk-mq-sched.c
+> +++ b/block/blk-mq-sched.c
+> @@ -85,11 +85,12 @@ void blk_mq_sched_restart(struct blk_mq_hw_ctx *hctx)
+>   * its queue by itself in its completion handler, so we don't need to
+>   * restart queue if .get_budget() returns BLK_STS_NO_RESOURCE.
+>   */
+> -static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+> +static bool blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
 
-Good point, it should be CLK_G3D instead of DOUT.  Can you fix this as
-well?
+This function already returns an int in the current for-5.8/block tree.
 
-Best regards,
-Krzysztof
+> +		if (!(hctx->flags & BLK_MQ_F_FORCE_COMMIT_RQS)) {
+> +			if (list_empty(list)) {
+> +				bd.last = true;
+> +			} else {
+> +				nxt = list_first_entry(list, struct request,
+> +						       queuelist);
+> +				bd.last = !blk_mq_get_driver_tag(nxt);
+> +			}
+> +		} else {
+> +			bd.last = false;
+>  		}
+
+This seems a little odd in terms of code flow.  Why not:
+
+		if (hctx->flags & BLK_MQ_F_FORCE_COMMIT_RQS) {
+			bd.last = false;
+		} else if (list_empty(list)) {
+			bd.last = true;
+		} else {
+			nxt = list_first_entry(list, struct request, queuelist);
+			bd.last = !blk_mq_get_driver_tag(nxt);
+		}
+
+> diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+> index f389d7c724bd..6a20f8e8eb85 100644
+> --- a/include/linux/blk-mq.h
+> +++ b/include/linux/blk-mq.h
+> @@ -391,6 +391,7 @@ struct blk_mq_ops {
+>  enum {
+>  	BLK_MQ_F_SHOULD_MERGE	= 1 << 0,
+>  	BLK_MQ_F_TAG_SHARED	= 1 << 1,
+> +	BLK_MQ_F_FORCE_COMMIT_RQS = 1 << 3,
+
+Maybe BLK_MQ_F_ALWAYS_COMMIT might be a better name?  Also this
+flag (just like the existing ones..) could really use a comment
+explaining it.
