@@ -7,87 +7,100 @@ X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD91C54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F723C54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5059E2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FCBD20775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:31:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588022910;
-	bh=TI+Bio5sKlYlT/Nx52QoQXgZYPcyzD3Ih+se/keVCsA=;
+	s=default; t=1588023090;
+	bh=lFeIMiNGEgCSi6ii0MKTZDttzPaLXuBC68gFpCI87Q8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pPd1tZoSxarseKvNzuxp0IQwS5wKLTQPF0IWGCClqn7R4h5v1CeqWVOL3YBkFZT5z
-	 W+jWRSEMI4NUo0WyeZ+Qmc4LT0mzFZSFLAzO2RWNzYhip+gnKpOwHwHw379kj0vkXH
-	 qxyaVzkYaaXtCZ35jV1LIQSM2jSao+//2OETQHfY=
+	b=ZPCrFBx50jA5xtlujQN1amIX/84RI5jjo0JYH/3Ub6q/5zftP/00a6xlzUK3udhcR
+	 fdt3wjL7Vr5Kg2A6ezZoJOFCEgJe6nfsgTLgj4qAkyKJDSCHEXhGCifuJccw8AduUt
+	 kHh69HHvBfmmfJrECNWAZZuT3FYkmSBXKfhSpKfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbgD0V23 (ORCPT
+        id S1726272AbgD0Vb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 17:28:29 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33026 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbgD0V23 (ORCPT
+        Mon, 27 Apr 2020 17:31:29 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39105 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbgD0Vb3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 17:28:29 -0400
-Received: by mail-ot1-f68.google.com with SMTP id j26so28953362ots.0;
-        Mon, 27 Apr 2020 14:28:28 -0700 (PDT)
+        Mon, 27 Apr 2020 17:31:29 -0400
+Received: by mail-ot1-f65.google.com with SMTP id m13so28923006otf.6;
+        Mon, 27 Apr 2020 14:31:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=phD6dC2Al/yY/sFl+4yOknV0vS+D1yw4j8TAayBjiFg=;
-        b=iukvoNJ2cPgAKzNmwckbw1VCQRnySWWsYHhnCcqtJDMI9AOULxeE7FJSUiDlMrkTSf
-         uPFHkWS47KxNGdFCnEQf8iAlzlS1WzXE5R/YgeCuPRh8uiA1m8fosA9WLHCzkOJ4ZN1X
-         nNtCQWYFga04Bk1uq7db/Ts7Ckc4eMhU5s6OQwK3Sqr2djr7OuL2dRxsHKPGyxBYJfNZ
-         Zv6Z8zXldj+RJKc5uX1LxZlZ64+GX6ASe4hVkc7SSKgmxA/+P9ySBruJIYLA1RZtpqMp
-         tRit7NXRZUIKFgaDO5M7ZWL2Z9Za9JGHkVc8+Icmb0/vsKr4I4HnwPSrKugJYjuC4Ocu
-         qqPw==
-X-Gm-Message-State: AGi0Pua98pTD3JOujhGuPiiWUjS5wZ8uiuoGwPiDK0GMekd6DsbgkTEf
-        h+QT3VcEmUucC8jA5Qku3Qa8VrE=
-X-Google-Smtp-Source: APiQypJpmhS3vEKwGO9a8rjv0tcUcZmOuxpwt+49p18dJ+soi/+5A308a/uPpAMwYkKk2MszA4Qv+g==
-X-Received: by 2002:a54:4483:: with SMTP id v3mr637135oiv.0.1588022908294;
-        Mon, 27 Apr 2020 14:28:28 -0700 (PDT)
+        bh=P3/VvZUA9zwno+73vZLI4qG6D4JXKfA1s3Po7FwNPGs=;
+        b=owhqWAXN1Rwn8UT5PiawvSvU2OPzhL87Vis3K3cchKghfPJzUm5yA2f8CJVOwqNH9o
+         J6zkpAwTyTpfMykOYJak8JDrNfonVd/tzCXWrAicY23IfYttzeU0pPu64hvJ3dlgc6OT
+         GSu7E917hR7rA/xvbp1fXyI51oKfzZjUEw0xMUV1oGxI1TxRi3AMe/AeUgKuyCxQX7fP
+         AV5VWpHAtoQQOEyegIzkhjPirnfprJ2FNLOG+rN1Kaug9aT0Hr6gRe+MxaV9rNiWNz9n
+         f0caf8hnuj5rVQjdgOhRT4Dv/g13UB+d0g+Nspl17s1wZKX4Z0wEDXQ0uYKUfAH8706b
+         ZOjA==
+X-Gm-Message-State: AGi0PuY44Y1zIMS2X3LkR8i0zcRVGqhuVqoMbA7GkERPZ1e65YGvqOgq
+        8QyTMXRPo2R5ygstnymbpA==
+X-Google-Smtp-Source: APiQypLNeTWAxwwOfxU2MVkwYzjoiYWvXpMeZLwojCWXww6d2kmG4sLN+TM4J4N77uDJJPoW1+5EMQ==
+X-Received: by 2002:aca:3a83:: with SMTP id h125mr598693oia.64.1588023088290;
+        Mon, 27 Apr 2020 14:31:28 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q142sm4345841oic.44.2020.04.27.14.28.27
+        by smtp.gmail.com with ESMTPSA id p13sm4374770oom.34.2020.04.27.14.31.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 14:28:27 -0700 (PDT)
-Received: (nullmailer pid 26250 invoked by uid 1000);
-        Mon, 27 Apr 2020 21:28:26 -0000
-Date:   Mon, 27 Apr 2020 16:28:26 -0500
+        Mon, 27 Apr 2020 14:31:27 -0700 (PDT)
+Received: (nullmailer pid 30448 invoked by uid 1000);
+        Mon, 27 Apr 2020 21:31:26 -0000
+Date:   Mon, 27 Apr 2020 16:31:26 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org, jic23@kernel.org,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Subject: Re: [PATCH 5/6] dt-bindings: iio: scd30: add device binding file
-Message-ID: <20200427212826.GA25672@bogus>
-References: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
- <20200422141135.86419-6-tomasz.duszynski@octakon.com>
+To:     Dhananjay Kangude <dkangude@cadence.com>
+Cc:     linux-edac@vger.kernel.org, bp@alien8.de, mchehab@kernel.org,
+        tony.luck@intel.com, james.morse@arm.com,
+        linux-kernel@vger.kernel.org, mparab@cadence.com,
+        robh+dt@kernel.org, devicetree@vger.kernel.org,
+        Dhananjay Kangude <dkangude@cadence.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: edac: Add cadence ddr mc support
+Message-ID: <20200427213126.GA26416@bogus>
+References: <20200424083155.30918-1-dkangude@cadence.com>
+ <20200424083155.30918-2-dkangude@cadence.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200422141135.86419-6-tomasz.duszynski@octakon.com>
+In-Reply-To: <20200424083155.30918-2-dkangude@cadence.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Apr 2020 16:11:34 +0200, Tomasz Duszynski wrote:
-> Add SCD30 sensor binding file.
+On Fri, 24 Apr 2020 10:31:54 +0200, Dhananjay Kangude wrote:
+> Add documentation for cadence ddr memory controller EDAC DTS bindings
 > 
-> Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+> Signed-off-by: Dhananjay Kangude <dkangude@cadence.com>
 > ---
->  .../iio/chemical/sensirion,scd30.yaml         | 71 +++++++++++++++++++
->  1 file changed, 71 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
+>  .../devicetree/bindings/edac/cdns,ddr-edac.yaml    |   45 ++++++++++++++++++++
+>  1 files changed, 45 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.example.dt.yaml: scd30@61: 'interrupt-parrent' does not match any of the regexes: 'pinctrl-[0-9]+'
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.example.dt.yaml: scd30: 'interrupt-parrent' does not match any of the regexes: 'pinctrl-[0-9]+'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml: properties:compatible:items: ['cdns,ddr4-mc-edac'] is not valid under any of the given schemas (Possible causes of the failure):
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml: properties:compatible:items: ['cdns,ddr4-mc-edac'] is not of type 'object', 'boolean'
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml: properties:compatible:items:0: 'cdns,ddr4-mc-edac' is not of type 'object', 'boolean'
 
-See https://patchwork.ozlabs.org/patch/1275131
+Documentation/devicetree/bindings/Makefile:11: recipe for target 'Documentation/devicetree/bindings/edac/cdns,ddr-edac.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/edac/cdns,ddr-edac.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+warning: no schema found in file: Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml: ignoring, error in schema: properties: compatible: items
+warning: no schema found in file: Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml: ignoring, error in schema: properties: compatible: items
+Makefile:1300: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+See https://patchwork.ozlabs.org/patch/1276250
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
