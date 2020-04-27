@@ -2,121 +2,179 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D24D4C7C8A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D41F2C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AECA220656
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F4E2206CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:18:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CkD/p2YT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uLbgawqS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbgD0NRf (ORCPT
+        id S1727886AbgD0NSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 09:17:35 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:5673 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726953AbgD0NRd (ORCPT
+        Mon, 27 Apr 2020 09:18:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51308 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727074AbgD0NSf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 09:17:33 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ea6daf40001>; Mon, 27 Apr 2020 06:15:32 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 27 Apr 2020 06:17:33 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 27 Apr 2020 06:17:33 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 Apr
- 2020 13:17:33 +0000
-Received: from [10.26.73.54] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 Apr
- 2020 13:17:21 +0000
-Subject: Re: [PATCH] backlight: lp855x: Ensure regulators are disabled on
- probe failure
-To:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>
-CC:     Milo Kim <milo.kim@ti.com>, Jingoo Han <jingoohan1@gmail.com>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>
-References: <20200224140748.2182-1-jonathanh@nvidia.com>
- <20200224143732.rreev3ypou26hvx3@holly.lan>
- <6ec74817-968b-ab5e-6566-56bbb9b67599@nvidia.com>
- <20200316090546.5eufi423ahstz6v3@holly.lan>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <b57f3ef0-8d14-c0bf-524c-9ec0d6334e0c@nvidia.com>
-Date:   Mon, 27 Apr 2020 14:17:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 27 Apr 2020 09:18:35 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30370C0610D5;
+        Mon, 27 Apr 2020 06:18:35 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 145so8981573pfw.13;
+        Mon, 27 Apr 2020 06:18:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c1k+gEIx9g2n5bow6vtVN4S2Oq2hdJ7Izd4HZYhlGy4=;
+        b=uLbgawqSZf5WmYOM6BphwUPZqqeTRvTEk8pAY4dpAvTaPyUI3Y0DC5A60nnhZCrm+L
+         VH5NKdG0wLRYVt3tL8XIP82+eQ4HH5ADJKRpbBWuq5vc2IN1ifhUkkGQkUuBWHvxH1sL
+         pKoTyCmQWMyrZiVbmnjh+Y5gfOSvRe3jJNva9GzRINDm2kFPNThnMeUSCNlRRgYjtlb5
+         upDacs7OkHBiQUjo7G35XrknjRJ6fds0AA2hlBW1ANBBRKQ5nEIrofcAR8KqH/likuj+
+         1GFxuVEsSXMc2JKVe7PqWXCvEfHNRZsFBaJD3FuzRKTuL4sJqDBwKnTmxJda1d/4Tchx
+         j8mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c1k+gEIx9g2n5bow6vtVN4S2Oq2hdJ7Izd4HZYhlGy4=;
+        b=UlhedcFGgoGGfMRFFEew5PpDh+wNGpkH/F0Lt31eD7WWJLdbMRlWF3qBjeRzNj39wB
+         2O1BkyzEbXD0AkoWaSlhfo1ZRYtvxcP5/ZHwgN+esHAZBe4H0YNJlUFQiqPoWJ50wZn4
+         WNCjwKZI6/GkzVtXSATL4J392vG9GTOGRVUsEAmfToasrExufOvQcBbAw4N99JL/YhIO
+         r3EAwgfULd+lJIIfFITP95Ft8eUzHAyW+//dWpjHbud+kpvTxuKZD/JUWCLzNAjE1R19
+         iqsVIrizMs0lwVa2m+gHU9CiPz8UO3PU7uUfc5LUZ/XokpWrAEG83XeQokwNWtKrHEAt
+         LqmQ==
+X-Gm-Message-State: AGi0PuYVLSy6v5yxv16wZQwwlgv7FIuDKQi6LBBh0aAUDoxB+F9odeGf
+        A67h1cr9KH4IEmrQvB8oj2MznXneS+KHDYHm6BM=
+X-Google-Smtp-Source: APiQypIl5JhShfbLXk210/ONkEo4RLpOUlw3JnX3koAy0fh72SXGm0PXh4t+wpSJFLk7CwNMI6rOAM2DC1qKtbSLiXU=
+X-Received: by 2002:a63:1c1:: with SMTP id 184mr23868927pgb.203.1587993514639;
+ Mon, 27 Apr 2020 06:18:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200316090546.5eufi423ahstz6v3@holly.lan>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587993332; bh=PWx8n+kYRA1n2vodVtlcl5MSgTdEhqLiiBItjXVs/nA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=CkD/p2YTdNlyTddyE4uATk7emVK+mMQlRmf80wOjePk8J8B+ueUTzoMvVB7PLQXuo
-         g/QXkFsyAPpDPOV35S7mZ5eMG4M7kgwDwBM4COJeOzO/Cn0np4hQBGWR43y1VwYJNz
-         PDuiYuyNsBPd0A93YpPj7xqhM50Dk4MrkMIPrT+5vZL+G8nHzxpu77Um5w9dx29y/m
-         NaKV9q0/e4ssVmWBd8u7R8J9jlVNGRmiDPS3c81vZO5fg3N/yQpJFzIt/TGp0NivH1
-         bEG8ZC/FdDe6RMspv+7QFzEuOnOS0CoRobI7uP9xj6vQqNbgkramjx7F48lkg0rdmR
-         FYgjRnNBKQQnA==
+References: <20200426104713.216896-1-hdegoede@redhat.com> <20200426104713.216896-2-hdegoede@redhat.com>
+ <CAHp75VdOd6C36oR7HAnqrKiinVBr4YcqqJ=dv3NpR3=Xp0QQ-Q@mail.gmail.com> <b5bdffb4-0af2-abb7-21f7-2f5da56d5dc6@redhat.com>
+In-Reply-To: <b5bdffb4-0af2-abb7-21f7-2f5da56d5dc6@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 27 Apr 2020 16:18:28 +0300
+Message-ID: <CAHp75VegakBqAzxn1e+MzF3EgB6fNya3L0eZHMh11yct6HHNKw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] platform/x86: i2c-multi-instantiate: Add flag for
+ passing fwnode
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lee,
+On Mon, Apr 27, 2020 at 3:51 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi,
+>
+> On 4/26/20 7:59 PM, Andy Shevchenko wrote:
+> > On Sun, Apr 26, 2020 at 1:47 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> >>
+> >> In some cases the driver for the i2c_client-s which i2c-multi-instantiate
+> >> instantiates may need access some fields / methods from to the ACPI fwnode
+> >> for which i2c_clients are being instantiated.
+> >>
+> >> An example of this are CPLM3218 ACPI device-s. These contain CPM0 and
+> >> CPM1 packages with various information (e.g. register init values) which
+> >> the driver needs.
+> >>
+> >> Passing the fwnode through the i2c_board_info struct also gives the
+> >> i2c-core access to it, and if we do not pass an IRQ then the i2c-core
+> >> will use the fwnode to get an IRQ, see i2c_acpi_get_irq().
+> >
+> > I'm wondering, can we rather do it in the same way like we do for
+> > GPIO/APIC case here.
+> > Introduce IRQ_RESOURCE_SHARED (or so) and
+> >
+> > case _SHARED:
+> >   irq = i2c_acpi_get_irq();
+> > ...
+> >
+> > ?
+>
+> I think you are miss-understanding the problem. The problem is not that
+> we want to share the IRQ, the problem is that we want to pass the single
+> IRQ in the resources to only 1 of the instantiated I2C-clients. But if we
+> do not pass an IRQ (we leave it at 0) and we do pass the fwnode then
+> i2c-core-base.c will see that there is an ACPI-node attached to the
+> device and will call i2c_acpi_get_irq().
 
-On 16/03/2020 09:05, Daniel Thompson wrote:
-> On Fri, Mar 13, 2020 at 02:16:16PM +0000, Jon Hunter wrote:
->> Hi Lee, Daniel,
->>
->> On 24/02/2020 14:37, Daniel Thompson wrote:
->>> On Mon, Feb 24, 2020 at 02:07:48PM +0000, Jon Hunter wrote:
->>>> If probing the LP885x backlight fails after the regulators have been
->>>> enabled, then the following warning is seen when releasing the
->>>> regulators ...
->>>>
->>>>  WARNING: CPU: 1 PID: 289 at drivers/regulator/core.c:2051 _regulator_put.part.28+0x158/0x160
->>>>  Modules linked in: tegra_xudc lp855x_bl(+) host1x pwm_tegra ip_tables x_tables ipv6 nf_defrag_ipv6
->>>>  CPU: 1 PID: 289 Comm: systemd-udevd Not tainted 5.6.0-rc2-next-20200224 #1
->>>>  Hardware name: NVIDIA Jetson TX1 Developer Kit (DT)
->>>>
->>>>  ...
->>>>
->>>> Fix this by ensuring that the regulators are disabled, if enabled, on
->>>> probe failure.
->>>>
->>>> Finally, ensure that the vddio regulator is disabled in the driver
->>>> remove handler.
->>>>
->>>> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
->>>
->>> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
->> I received a bounce from Milo's email and so I am not sure that his
->> email address is still valid.
->>
->> Can either of you pick this up?
-> 
-> Lee generally starts to hoover up patches about this stage in the dev
-> cycle so I'd expect this to move fairly soon.
+Do we know ahead which device should take IRQ resource and which should not?
+Can we use current _NONE flag for them?
 
-Does not look like this ever got picked up. Please let me know if you
-can queue this one. Note it still applies cleanly to -next.
+> So the solution is definitely not calling i2c_acpi_get_irq() inside
+> i2c-multi-instantiate.c we want to avoid the i2c_acpi_get_irq(),
+> leaving the other 2 clients for the BSG1160 device without an IRQ
+> and thus avoiding the IRQ mismatch (it is a mismatch because the
+> drivers do not set the shared flag; and that is ok, we do not want
+> to share the IRQ, it is just for the accelerometer AFAIK).
 
-Jon
+> >> This is a problem when there is only an IRQ for 1 of the clients described
+> >> in the ACPI device we are instantiating clients for. If we unconditionally
+> >> pass the fwnode, then i2c_acpi_get_irq() will assign the same IRQ to all
+> >> clients instantiated, leading to kernel-oopses like this (BSG1160 device):
+> >>
+> >> [   27.340557] genirq: Flags mismatch irq 76. 00002001 (bmc150_magn_event) vs. 00000001 (bmc150_accel_event)
+> >> [   27.340567] Call Trace:
+> >> ...
+> >>
+> >> So we cannot simply always pass the fwnode. This commit adds a PASS_FWNODE
+> >> flag, which can be used to pass the fwnode in cases where we do not have
+> >> the IRQ problem and the driver for the instantiated client(s) needs access
+> >> to the fwnode.
+> >>
+> >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> >> ---
+> >>   drivers/platform/x86/i2c-multi-instantiate.c | 6 ++++++
+> >>   1 file changed, 6 insertions(+)
+> >>
+> >> diff --git a/drivers/platform/x86/i2c-multi-instantiate.c b/drivers/platform/x86/i2c-multi-instantiate.c
+> >> index 6acc8457866e..dcafb1a29d17 100644
+> >> --- a/drivers/platform/x86/i2c-multi-instantiate.c
+> >> +++ b/drivers/platform/x86/i2c-multi-instantiate.c
+> >> @@ -20,6 +20,8 @@
+> >>   #define IRQ_RESOURCE_GPIO      1
+> >>   #define IRQ_RESOURCE_APIC      2
+> >>
+> >> +#define PASS_FWNODE            BIT(2)
+> >> +
+> >>   struct i2c_inst_data {
+> >>          const char *type;
+> >>          unsigned int flags;
+> >> @@ -93,6 +95,10 @@ static int i2c_multi_inst_probe(struct platform_device *pdev)
+> >>                  snprintf(name, sizeof(name), "%s-%s.%d", dev_name(dev),
+> >>                           inst_data[i].type, i);
+> >>                  board_info.dev_name = name;
+> >> +
+> >> +               if (inst_data[i].flags & PASS_FWNODE)
+> >> +                       board_info.fwnode = dev->fwnode;
+> >> +
+> >>                  switch (inst_data[i].flags & IRQ_RESOURCE_TYPE) {
+> >>                  case IRQ_RESOURCE_GPIO:
+> >>                          ret = acpi_dev_gpio_irq_get(adev, inst_data[i].irq_idx);
+> >> --
+> >> 2.26.0
+> >>
+> >
+> >
+>
+
 
 -- 
-nvpublic
+With Best Regards,
+Andy Shevchenko
