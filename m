@@ -1,72 +1,127 @@
 Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: **
-X-Spam-Status: No, score=2.4 required=3.0 tests=CHARSET_FARAWAY_HEADER,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4618C55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 394EFC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C87A22080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15539206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:43:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbgD0Jl0 (ORCPT
+        id S1726903AbgD0JnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 05:41:26 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:40789 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbgD0Jl0 (ORCPT
+        Mon, 27 Apr 2020 05:43:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45882 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726349AbgD0JnT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 05:41:26 -0400
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 03R9enxgF016452, This message is accepted by code: ctaloc0852
-Received: from RS-CAS01.realsil.com.cn (rsfs1.realsil.com.cn[172.29.17.2])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 03R9enxgF016452
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 27 Apr 2020 17:40:49 +0800
-Received: from RS-MBS01.realsil.com.cn ([::1]) by RS-CAS01.realsil.com.cn
- ([::1]) with mapi id 14.03.0439.000; Mon, 27 Apr 2020 17:40:48 +0800
-From:   =?gb2312?B?t+vI8Q==?= <rui_feng@realsil.com.cn>
-To:     Christoph Hellwig <hch@infradead.org>
-CC:     "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: =?gb2312?B?tPC4tDogW1BBVENIXSBtbWM6IHJ0c3g6IEFkZCBTRCBFeHByZXNzIG1vZGUg?= =?gb2312?Q?support_for_RTS5261?=
-Thread-Topic: [PATCH] mmc: rtsx: Add SD Express mode support for RTS5261
-Thread-Index: AQHWG2mdb2Wi+0TUh0G7QGay1iuqfqiL+UQAgAC/B7A=
-Date:   Mon, 27 Apr 2020 09:40:48 +0000
-Message-ID: <2A308283684ECD4B896628E09AF5361E028BCA26@RS-MBS01.realsil.com.cn>
-References: <1587864346-3144-1-git-send-email-rui_feng@realsil.com.cn>
- <20200427061426.GA11270@infradead.org>
-In-Reply-To: <20200427061426.GA11270@infradead.org>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.29.40.150]
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Mon, 27 Apr 2020 05:43:19 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3322C0610D5;
+        Mon, 27 Apr 2020 02:43:19 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jT0IF-0007ll-Iz; Mon, 27 Apr 2020 11:43:15 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id EAECA100606; Mon, 27 Apr 2020 11:43:14 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH v3 1/6] posix-cpu-timers: Always call __get_task_for_clock holding rcu_read_lock
+In-Reply-To: <87h7x6mj6h.fsf_-_@x220.int.ebiederm.org>
+References: <20200419141057.621356-1-gladkov.alexey@gmail.com> <87ftcv1nqe.fsf@x220.int.ebiederm.org> <87wo66vvnm.fsf_-_@x220.int.ebiederm.org> <20200424173927.GB26802@redhat.com> <87mu6ymkea.fsf_-_@x220.int.ebiederm.org> <87h7x6mj6h.fsf_-_@x220.int.ebiederm.org>
+Date:   Mon, 27 Apr 2020 11:43:14 +0200
+Message-ID: <87368ps1ql.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IE9uIFN1biwgQXByIDI2LCAyMDIwIGF0IDA5OjI1OjQ2QU0gKzA4MDAsIHJ1aV9mZW5nQHJl
-YWxzaWwuY29tLmNuIHdyb3RlOg0KPiA+IEZyb206IFJ1aSBGZW5nIDxydWlfZmVuZ0ByZWFsc2ls
-LmNvbS5jbj4NCj4gPg0KPiA+IFJUUzUyNjEgc3VwcG9ydCBsZWdhY3kgU0QgbW9kZSBhbmQgU0Qg
-RXhwcmVzcyBtb2RlLg0KPiA+IEluIFNENy54LCBTRCBhc3NvY2lhdGlvbiBpbnRyb2R1Y2UgU0Qg
-RXhwcmVzcyBhcyBhIG5ldyBtb2RlLg0KPiA+IFNEIEV4cHJlc3MgbW9kZSBpcyBkaXN0aW5ndWlz
-aGVkIGJ5IENNRDguDQo+ID4gVGhlcmVmb3JlLCBDTUQ4IGhhcyBuZXcgYml0IGZvciBTRCBFeHBy
-ZXNzLg0KPiA+IFNEIEV4cHJlc3MgaXMgYmFzZWQgb24gUENJZS9OVk1lLg0KPiA+IFJUUzUyNjEg
-dXNlcyBDTUQ4IHRvIHN3aXRjaCB0byBTRCBFeHByZXNzIG1vZGUuDQo+IA0KPiBTbyBob3cgZG9l
-cyB0aGlzIGJpdCB3b3JrPyAgVGhleSB3YXkgSSBpbWFnaW5lZCBTRCBFeHByZXNzIHRvIHdvcmsg
-aXMgdGhhdA0KPiB0aGUgYWN0dWFsIFNEIENhcmQganVzdCBzaG93cyB1cCBhcyBhIHJlYWwgUENJ
-ZSBkZXZpY2UsIHNpbWlsYXIgdG8gc2F5DQo+IFRodW5kZXJib2x0Lg0KDQpOZXcgU0QgRXhwcmVz
-cyBjYXJkIGhhcyBkdWFsIG1vZGUuIE9uZSBpcyBTRCBtb2RlIGFuZCBhbm90aGVyIGlzIFBDSWUg
-bW9kZS4NCkluIFBDSWUgbW9kZSwgaXQgYWN0IGFzIGEgUENJZSBkZXZpY2UgYW5kIHVzZSBQQ0ll
-IHByb3RvY29sIG5vdCBUaHVuZGVyYm9sdCBwcm90b2NvbC4NCg==
+ebiederm@xmission.com (Eric W. Biederman) writes:
+
+> This allows the getref flag to be removed and the callers can
+> than take a task reference if needed.
+
+That changelog lacks any form of information why this should be
+changed. I can see the point vs. patch 2, but pretty please put coherent
+explanations into each patch.
+
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> ---
+>  kernel/time/posix-cpu-timers.c | 41 +++++++++++++++++-----------------
+>  1 file changed, 21 insertions(+), 20 deletions(-)
+>
+> diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
+> index 2fd3b3fa68bf..eba41c70f0f0 100644
+> --- a/kernel/time/posix-cpu-timers.c
+> +++ b/kernel/time/posix-cpu-timers.c
+> @@ -86,36 +86,34 @@ static struct task_struct *lookup_task(const pid_t pid, bool thread,
+>  }
+>  
+>  static struct task_struct *__get_task_for_clock(const clockid_t clock,
+> -						bool getref, bool gettime)
+> +						bool gettime)
+>  {
+>  	const bool thread = !!CPUCLOCK_PERTHREAD(clock);
+>  	const pid_t pid = CPUCLOCK_PID(clock);
+> -	struct task_struct *p;
+>  
+>  	if (CPUCLOCK_WHICH(clock) >= CPUCLOCK_MAX)
+>  		return NULL;
+>  
+> -	rcu_read_lock();
+> -	p = lookup_task(pid, thread, gettime);
+> -	if (p && getref)
+> -		get_task_struct(p);
+> -	rcu_read_unlock();
+> -	return p;
+> +	return lookup_task(pid, thread, gettime);
+>  }
+>  
+>  static inline struct task_struct *get_task_for_clock(const clockid_t clock)
+>  {
+> -	return __get_task_for_clock(clock, true, false);
+> +	return __get_task_for_clock(clock, false);
+>  }
+>  
+>  static inline struct task_struct *get_task_for_clock_get(const clockid_t clock)
+>  {
+> -	return __get_task_for_clock(clock, true, true);
+> +	return __get_task_for_clock(clock, true);
+>  }
+>  
+>  static inline int validate_clock_permissions(const clockid_t clock)
+>  {
+> -	return __get_task_for_clock(clock, false, false) ? 0 : -EINVAL;
+> +	int ret;
+
+New line between declarations and code please.
+
+> +	rcu_read_lock();
+> +	ret = __get_task_for_clock(clock, false) ? 0 : -EINVAL;
+> +	rcu_read_unlock();
+> +	return ret;
+>  }
+
+Thanks,
+
+        tglx
