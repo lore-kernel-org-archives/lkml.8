@@ -2,176 +2,92 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A525C7C7E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98CA4C55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 048DF2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:43:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="fnexYmog"
+	by mail.kernel.org (Postfix) with ESMTP id 75D28206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:44:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgD0HnR (ORCPT
+        id S1726860AbgD0HoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 03:43:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55246 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726701AbgD0Hmj (ORCPT
+        Mon, 27 Apr 2020 03:44:14 -0400
+Received: from mail-oo1-f66.google.com ([209.85.161.66]:41589 "EHLO
+        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726349AbgD0HoN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 03:42:39 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ED16C061A0F
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 00:42:39 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id y24so19316006wma.4
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 00:42:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=LlF9hQrtqAVkh9UpGKlmxEFlHX/UD9uxV1eHlcxAJ3U=;
-        b=fnexYmogjOXup/e3tYS2gP/6MnVAfVxckYSj8bpFo/B7M3YWZgyo8m8WwEIDajR5bi
-         crzfuWav0zcI76Y+F0wc3xFuRGtCWuxBTLfhPWoJKVDH+PAdMVwIIiTVapIEro0FTPTp
-         lyFX2fVqx24UivdL9QiebFgeoriTR/NOp/wWnAbTDGXWyPuAmy7QJnph0uwo8C1EaWfs
-         FcgV5HBMNtD9mjZekcaB3Y0NdMac/bg1hhyEblwD/+X3FtemNqJO3C/+udCIqsFakKRS
-         4zO/cLKGFqu3EcorY5TXwjBtYzIw+AcepWUJdPa8UHZJwK8HjbZ76IyT6fqSYWhvdF4s
-         yDIA==
+        Mon, 27 Apr 2020 03:44:13 -0400
+Received: by mail-oo1-f66.google.com with SMTP id t3so3653302oou.8;
+        Mon, 27 Apr 2020 00:44:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LlF9hQrtqAVkh9UpGKlmxEFlHX/UD9uxV1eHlcxAJ3U=;
-        b=MLA5ny46qRfPu1GN1JtlsWNVMKscAET2gDgMKB0+Gbu/bPFD5cqF0aUSGtMDBq38xw
-         0c3BkPA0vJLo2mvahB7p102cOr2UUGGRVGpv3j+3dlVl6h1eeISG3SwuzY0FBOYhSX2X
-         3S13LzJReUhqW7scsffp3qAi3mhykRvvaYLzV7z/d+2uEbFN6NT4jNEPoDxhwKx4dqTl
-         6bj8DGNvouxKhFQzfW24jgXazeOv5lit0kTJ70MogeDSBM29UzlUDrTsHbrpmj3tQqxM
-         8JMYY/k6I+K94vtngMh7Nq0N0Auky5fY4nuXPoMGNHwgHf3/eT2DxiDy+RMOQLtLG7Te
-         gIdw==
-X-Gm-Message-State: AGi0PuYEswsJqvDUF7PZVpJutzZzXwpV9PlBP+5BxYDrw9FVu+KNvYMz
-        Tey+Ie3Y9j17RbDCykOf+mEhpbSRZsYfyg==
-X-Google-Smtp-Source: APiQypKxaIEIrAbS4VD6DPhHwA8Z9c0Iikjybz7Gls4+S+TFILJ5eZ7Rv3r3svM3sG1cy2rxDanIYg==
-X-Received: by 2002:a05:600c:414b:: with SMTP id h11mr24580948wmm.9.1587973358112;
-        Mon, 27 Apr 2020 00:42:38 -0700 (PDT)
-Received: from maco2.ams.corp.google.com (a83-162-234-235.adsl.xs4all.nl. [83.162.234.235])
-        by smtp.gmail.com with ESMTPSA id x132sm15091658wmg.33.2020.04.27.00.42.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 00:42:37 -0700 (PDT)
-From:   Martijn Coenen <maco@android.com>
-To:     axboe@kernel.dk, hch@lst.de, ming.lei@redhat.com
-Cc:     narayan@google.com, zezeozue@google.com, kernel-team@android.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        maco@google.com, bvanassche@acm.org, Chaitanya.Kulkarni@wdc.com,
-        jaegeuk@kernel.org, Martijn Coenen <maco@android.com>
-Subject: [PATCH v3 4/9] loop: Refactor loop_set_status() size calculation
-Date:   Mon, 27 Apr 2020 09:42:17 +0200
-Message-Id: <20200427074222.65369-5-maco@android.com>
-X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
-In-Reply-To: <20200427074222.65369-1-maco@android.com>
-References: <20200427074222.65369-1-maco@android.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aUJDPtd94Plupi9zkES8lfiieamV2XcJxXuQDIx8qu4=;
+        b=LaA8xE9HQN6CCOu8WU7r9z+uwaF5b992FKIuKd4AKAdE2sDR7Zq+5msm/Y3RF9MeYt
+         KIojFPh5aQRm39piXX6ApEwh9LO8M0peVAqQJFJL/xDqpVp5EGPy8312SX+lEW/7YaJv
+         O5FpxVJKU97kMSAQdRO6o16B09KHrzNl9ukl0d8CUNW3XG3CDfgKe5S06p4u2HM38m8x
+         yZvtc2zrdX55iwxqTzhJzZ4u2d7al2ULzFgIU4HIdCM6h00R9RRIide0XHYR/MStDJoC
+         zJDOSv6ovM0nZ9e56ZC3vhEcMWAQ3icWUNgAQL2itIY6mUw2HLo9lM6XIfS1m5irch7q
+         L3JA==
+X-Gm-Message-State: AGi0PuZrKbHc83BqU3YxiJrHC+Sk2+Kw+tiamDZv4lLUJl1egUqfWN5M
+        gBq9n9OdT2D9BDdttWxXXfszVOj6S3dkrTZNE8ZQE+8T
+X-Google-Smtp-Source: APiQypIl/TpnOn5p7OBbPvXk/Rw8DS6/P2ZXewhbJXbTzpHODYNJFR3YLZ3Ic8lUBEcmpgBPbPkwhix00waahtWul7Q=
+X-Received: by 2002:a4a:d44a:: with SMTP id p10mr11597099oos.11.1587973452397;
+ Mon, 27 Apr 2020 00:44:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1587678050-23468-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1587678050-23468-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1587678050-23468-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 27 Apr 2020 09:44:00 +0200
+Message-ID: <CAMuHMdVkFBjgwL9M4GutgOaf0Avo1Vq1ZUUv9fWsia=Tb6qnmA@mail.gmail.com>
+Subject: Re: [PATCH 02/10] dt-bindings: power: rcar-sysc: Add r8a7742 power
+ domain index macros
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Marian-Cristian Rotariu 
+        <marian-cristian.rotariu.rb@bp.renesas.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-figure_loop_size() calculates the loop size based on the passed in
-parameters, but at the same time it updates the offset and sizelimit
-parameters in the loop device configuration. That is a somewhat
-unexpected side effect of a function with this name, and it is only only
-needed by one of the two callers of this function - loop_set_status().
+On Thu, Apr 23, 2020 at 11:41 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+>
+> Add power domain indices for RZ/G1H (R8A7742) SoC.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-Move the lo_offset and lo_sizelimit assignment back into loop_set_status(),
-and use the newly factored out functions to validate and apply the newly
-calculated size. This allows us to get rid of figure_loop_size in a
-follow-up commit.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.8.
 
-Signed-off-by: Martijn Coenen <maco@android.com>
----
- drivers/block/loop.c | 39 +++++++++++++++++++++++----------------
- 1 file changed, 23 insertions(+), 16 deletions(-)
+Gr{oetje,eeting}s,
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 2e2874318393..d0f17ee1e29b 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -1295,6 +1295,8 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
- 	kuid_t uid = current_uid();
- 	struct block_device *bdev;
- 	bool partscan = false;
-+	bool size_changed = false;
-+	loff_t validated_size;
- 
- 	err = mutex_lock_killable(&loop_ctl_mutex);
- 	if (err)
-@@ -1316,6 +1318,13 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
- 
- 	if (lo->lo_offset != info->lo_offset ||
- 	    lo->lo_sizelimit != info->lo_sizelimit) {
-+		loff_t size = get_size(info->lo_offset, info->lo_sizelimit,
-+				       lo->lo_backing_file);
-+		err = loop_validate_size(size);
-+		if (err)
-+			goto out_unlock;
-+		size_changed = true;
-+		validated_size = size;
- 		sync_blockdev(lo->lo_device);
- 		kill_bdev(lo->lo_device);
- 	}
-@@ -1323,6 +1332,15 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
- 	/* I/O need to be drained during transfer transition */
- 	blk_mq_freeze_queue(lo->lo_queue);
- 
-+	if (size_changed && lo->lo_device->bd_inode->i_mapping->nrpages) {
-+		/* If any pages were dirtied after kill_bdev(), try again */
-+		err = -EAGAIN;
-+		pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
-+			__func__, lo->lo_number, lo->lo_file_name,
-+			lo->lo_device->bd_inode->i_mapping->nrpages);
-+		goto out_unfreeze;
-+	}
-+
- 	err = loop_release_xfer(lo);
- 	if (err)
- 		goto out_unfreeze;
-@@ -1346,22 +1364,8 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
- 	if (err)
- 		goto out_unfreeze;
- 
--	if (lo->lo_offset != info->lo_offset ||
--	    lo->lo_sizelimit != info->lo_sizelimit) {
--		/* kill_bdev should have truncated all the pages */
--		if (lo->lo_device->bd_inode->i_mapping->nrpages) {
--			err = -EAGAIN;
--			pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
--				__func__, lo->lo_number, lo->lo_file_name,
--				lo->lo_device->bd_inode->i_mapping->nrpages);
--			goto out_unfreeze;
--		}
--		if (figure_loop_size(lo, info->lo_offset, info->lo_sizelimit)) {
--			err = -EFBIG;
--			goto out_unfreeze;
--		}
--	}
--
-+	lo->lo_offset = info->lo_offset;
-+	lo->lo_sizelimit = info->lo_sizelimit;
- 	memcpy(lo->lo_file_name, info->lo_file_name, LO_NAME_SIZE);
- 	memcpy(lo->lo_crypt_name, info->lo_crypt_name, LO_NAME_SIZE);
- 	lo->lo_file_name[LO_NAME_SIZE-1] = 0;
-@@ -1385,6 +1389,9 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
- 		lo->lo_key_owner = uid;
- 	}
- 
-+	if (size_changed)
-+		loop_set_size(lo, validated_size);
-+
- 	loop_config_discard(lo);
- 
- 	/* update dio if lo_offset or transfer is changed */
+                        Geert
+
 -- 
-2.26.2.303.gf8c07b1a785-goog
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
