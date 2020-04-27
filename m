@@ -4,24 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C748C81980
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F5BC81982
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 477A6214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02DC3214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:05:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726468AbgD0SEv (ORCPT
+        id S1726544AbgD0SFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 14:04:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54566 "EHLO mx2.suse.de"
+        Mon, 27 Apr 2020 14:05:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54588 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726252AbgD0SEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 14:04:50 -0400
+        id S1726283AbgD0SEv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 14:04:51 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id EE33AAD4F;
+        by mx2.suse.de (Postfix) with ESMTP id E7407AB5C;
         Mon, 27 Apr 2020 18:04:47 +0000 (UTC)
 From:   Vlastimil Babka <vbabka@suse.cz>
 To:     Andrew Morton <akpm@linux-foundation.org>,
@@ -40,10 +40,11 @@ Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Christian Brauner <christian.brauner@ubuntu.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: [PATCH v3 4/5] tools/testing/selftests/sysctl/sysctl.sh: support CONFIG_TEST_SYSCTL=y
-Date:   Mon, 27 Apr 2020 20:04:32 +0200
-Message-Id: <20200427180433.7029-5-vbabka@suse.cz>
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@suse.com>
+Subject: [PATCH v3 2/5] kernel/sysctl: support handling command line aliases
+Date:   Mon, 27 Apr 2020 20:04:30 +0200
+Message-Id: <20200427180433.7029-3-vbabka@suse.cz>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200427180433.7029-1-vbabka@suse.cz>
 References: <20200427180433.7029-1-vbabka@suse.cz>
@@ -54,40 +55,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The testing script recommends CONFIG_TEST_SYSCTL=y, but actually only works
-with CONFIG_TEST_SYSCTL=m. Testing of sysctl setting via boot param however
-requires the test to be built-in, so make sure the test script supports it.
+We can now handle sysctl parameters on kernel command line, but historically
+some parameters introduced their own command line equivalent, which we don't
+want to remove for compatibility reasons. We can however convert them to the
+generic infrastructure with a table translating the legacy command line
+parameters to their sysctl names, and removing the one-off param handlers.
+
+This patch adds the support and makes the first conversion to demonstrate it,
+on the (deprecated) numa_zonelist_order parameter.
 
 Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+Acked-by: Kees Cook <keescook@chromium.org>
+Acked-by: Michal Hocko <mhocko@suse.com>
 ---
- tools/testing/selftests/sysctl/sysctl.sh | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/proc/proc_sysctl.c | 48 ++++++++++++++++++++++++++++++++++++-------
+ mm/page_alloc.c       |  9 --------
+ 2 files changed, 41 insertions(+), 16 deletions(-)
 
-diff --git a/tools/testing/selftests/sysctl/sysctl.sh b/tools/testing/selftests/sysctl/sysctl.sh
-index 6a970b127c9b..ce1eeea6f769 100755
---- a/tools/testing/selftests/sysctl/sysctl.sh
-+++ b/tools/testing/selftests/sysctl/sysctl.sh
-@@ -42,7 +42,7 @@ ALL_TESTS="$ALL_TESTS 0006:50:1:bitmap_0001"
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index 7804da5f5be0..209ad03e1b82 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -1694,6 +1694,37 @@ int __init proc_sys_init(void)
+ 	return sysctl_init();
+ }
  
- test_modprobe()
- {
--       if [ ! -d $DIR ]; then
-+       if [ ! -d $SYSCTL ]; then
-                echo "$0: $DIR not present" >&2
-                echo "You must have the following enabled in your kernel:" >&2
-                cat $TEST_DIR/config >&2
-@@ -122,9 +122,9 @@ test_reqs()
++struct sysctl_alias {
++	const char *kernel_param;
++	const char *sysctl_param;
++};
++
++/*
++ * Historically some settings had both sysctl and a command line parameter.
++ * With the generic sysctl. parameter support, we can handle them at a single
++ * place and only keep the historical name for compatibility. This is not meant
++ * to add brand new aliases. When adding existing aliases, consider whether
++ * the possibly different moment of changing the value (e.g. from early_param
++ * to the moment do_sysctl_args() is called) is an issue for the specific
++ * parameter.
++ */
++static const struct sysctl_alias sysctl_aliases[] = {
++	{"numa_zonelist_order",		"vm.numa_zonelist_order" },
++	{ }
++};
++
++static const char *sysctl_find_alias(char *param)
++{
++	const struct sysctl_alias *alias;
++
++	for (alias = &sysctl_aliases[0]; alias->kernel_param != NULL; alias++) {
++		if (strcmp(alias->kernel_param, param) == 0)
++			return alias->sysctl_param;
++	}
++
++	return NULL;
++}
++
+ /* Set sysctl value passed on kernel command line. */
+ static int process_sysctl_arg(char *param, char *val,
+ 			       const char *unused, void *arg)
+@@ -1707,15 +1738,18 @@ static int process_sysctl_arg(char *param, char *val,
+ 	loff_t pos = 0;
+ 	ssize_t wret;
  
- function load_req_mod()
- {
--	if [ ! -d $DIR ]; then
-+	if [ ! -d $DIR -a ! -d $SYSCTL ]; then
- 		if ! modprobe -q -n $TEST_DRIVER; then
--			echo "$0: module $TEST_DRIVER not found [SKIP]"
-+			echo "$0: module $TEST_DRIVER not found and not built-in [SKIP]"
- 			exit $ksft_skip
- 		fi
- 		modprobe $TEST_DRIVER
+-	if (strncmp(param, "sysctl", sizeof("sysctl") - 1))
+-		return 0;
+-
+-	param += sizeof("sysctl") - 1;
++	if (strncmp(param, "sysctl", sizeof("sysctl") - 1) == 0) {
++		param += sizeof("sysctl") - 1;
+ 
+-	if (param[0] != '/' && param[0] != '.')
+-		return 0;
++		if (param[0] != '/' && param[0] != '.')
++			return 0;
+ 
+-	param++;
++		param++;
++	} else {
++		param = (char *) sysctl_find_alias(param);
++		if (!param)
++			return 0;
++	}
+ 
+ 	/*
+ 	 * To set sysctl options, we use a temporary mount of proc, look up the
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 69827d4fa052..80b2788711c9 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -5531,15 +5531,6 @@ static int __parse_numa_zonelist_order(char *s)
+ 	return 0;
+ }
+ 
+-static __init int setup_numa_zonelist_order(char *s)
+-{
+-	if (!s)
+-		return 0;
+-
+-	return __parse_numa_zonelist_order(s);
+-}
+-early_param("numa_zonelist_order", setup_numa_zonelist_order);
+-
+ char numa_zonelist_order[] = "Node";
+ 
+ /*
 -- 
 2.26.0
 
