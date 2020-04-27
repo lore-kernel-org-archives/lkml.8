@@ -2,154 +2,170 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09300C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA67BC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9FB62064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:02:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1A7D2064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:04:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S9jfsLt2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Aa1Dej3n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgD0JCj (ORCPT
+        id S1726809AbgD0JEN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 05:02:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39514 "EHLO
+        Mon, 27 Apr 2020 05:04:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726003AbgD0JCi (ORCPT
+        with ESMTP id S1726183AbgD0JEN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 05:02:38 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EF4EC061A41;
-        Mon, 27 Apr 2020 02:02:38 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id d17so8433120pgo.0;
-        Mon, 27 Apr 2020 02:02:38 -0700 (PDT)
+        Mon, 27 Apr 2020 05:04:13 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8F3DC061A41
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 02:04:11 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id b2so16705036ljp.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 02:04:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=No3l3tVxMOYI0sBvPh0yz49YIT/rbemERKzXNkg42cM=;
-        b=S9jfsLt2b0vbA6WMBsREA7m6FlxSVBc3AMXqrbDArXxsA8rUUnJxJIRlxKInrpwWlp
-         lTlJL9PCHUkvCXneeeWDf1hQTWBvUtrBro/PDbKbsOsi43NNcuGxsClyz7dos/p2c64d
-         1o3oygCQlmNgD8D0lhNQiPMoEr+uCpLCTDS513OTOJ1wgZ/iNJksjU6PfSPGrWNXnWFs
-         8MHPpa9vpG1DH8nOcul/+7xQMs9uT1in+UJ0Uk/4oYsoulT7yRiHw3HVfdm0wvrS9tNd
-         gMzZ7vpDlx0gD1YMGHmcEkcHGgrLvNiYBMUxtr+hdMM1nkdBKgE40Uyoqd71BEG0u4F2
-         wmVA==
+        bh=Rydwbdaoje7MZkccmx6moHONOQ/I4uRhTduHZ8udciY=;
+        b=Aa1Dej3nfI6OjBce4bcO7gX9gTJQQO8b5pd+OHcnl3RkIp+iil/bEd9umIFXVU7o9u
+         3EoKlTpF67u+/DYGIsDR5vtBWBd9co/A+YtH4zvw6NXeA52avNtjmUlOuJVr40G394ts
+         SyhcG1Uze5Glpv0iw5rAAGtl8VZUTRSZ2NnJfcSg8vQLicRCewvqj+qOd4hqolCQNeHz
+         +deoh+hiYrRgpT2Bj2o1+/Uan+TQs5IXR1e30VZQCgvpTj78Hx1s/FEc2JNfglFtVF4a
+         Hvp9hmEif+RMdSfR+gXd23s1Jtgj+5fPBRobyrMpjwgnmFx+LqXMH2z1yThqislMSIK+
+         9ZaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=No3l3tVxMOYI0sBvPh0yz49YIT/rbemERKzXNkg42cM=;
-        b=Qy6pbG8Zla65RNPpzsXOHV+28mimg9YB34w7/skunzoaPI9gj1MGn30AjipxCnWsHy
-         3B98Dk+brsawthE5qx6Wku0CNKOCx3S76pKLCMtW65Ir0L6ybWMC242ZwOJMqjZIiFI7
-         J2lJBqg1zZM0kElgfpTo+VNSwhlml3e0YFFB2bh/tfeBPN3l54sbA2RYTgiZTixTlmB1
-         SJnageh6U0jF1KzY5T3PmCwT/rYCuXef+JU2PdOPrYEYnJ3n/4+/DW/OsfEv8uNjs7qV
-         DIp7LDsZ2V0jy0zgPR58ETLSec+qAUBAk6hc4u7N/yyf609ndE8pb1YghdfflR8zIlhS
-         I7/Q==
-X-Gm-Message-State: AGi0PuaztzWuNj9PFfa2gfnaPzmOSB9sPqQwIZzZMeJcnStOzLyH535G
-        wfh3TqHAso91QxGiyczPAOfNmfHr26iYx+GmNRE=
-X-Google-Smtp-Source: APiQypJ+Jt4WQy9vMmOsUAtVuDSHxHzYtDKBigHQS2Y661NcJP6vx/MNPwb77T1Un8B+rTqcsUpaPObPtJOd/VetSz4=
-X-Received: by 2002:a62:5ec7:: with SMTP id s190mr22398681pfb.130.1587978158112;
- Mon, 27 Apr 2020 02:02:38 -0700 (PDT)
+        bh=Rydwbdaoje7MZkccmx6moHONOQ/I4uRhTduHZ8udciY=;
+        b=T8vueULKuVVLLfUeRzAf8Xnqz937rM19lzHiW7jPT7GlPomdye3p02bB5k5BQNfdaC
+         Dti01XRVI50hPeiaFK6MW5VRWcIxgh8q0XtniE35tIJkQVY+3D+AcHuBzySQ13sE7MZj
+         IKrj8VPt01kl8jG8drBTBQ7HGZlQ+uTA9r6BO5ORmHoQEYUGvDxXCGvsffzQXpE+h69N
+         tr1o3B+WY5pupKC66eAo9DWZammLBN5xIkFZ+4uKQH2/2AeHzZlHawP1M972vgMMDO8v
+         xRMqNc7E+JzjKUkk0yYkQ5rczgs8MDTtqP1WnHhHjSq23WCti7kGLLyPv6VFpObdlCcF
+         63mQ==
+X-Gm-Message-State: AGi0Pua8g1RPojUNZSrksANsZbaZP8bJgqxFT7DIXXyAnFwf/bz7xeTd
+        S4c+unhN5Qls+tEfq8hn8C/aLFOa1iFWfahzanGmow==
+X-Google-Smtp-Source: APiQypL+qnAEryBX91teGvr/Jpek4pNl5NTRYSAAc3aCTsdpogjlQ76SHR7A02Mai03Nq5ntTYUfkIeATXUiW5uN3CU=
+X-Received: by 2002:a2e:95d2:: with SMTP id y18mr13838553ljh.65.1587978250291;
+ Mon, 27 Apr 2020 02:04:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200423220056.29450-1-john.stultz@linaro.org>
- <jhj1rodyeu1.mognet@arm.com> <CALAqxLW+CBMxj_5gCF5yLcX8dhM7Fg6oOL-zot0ZZT6PW6R04g@mail.gmail.com>
- <jhj1ro9bzhg.mognet@arm.com>
-In-Reply-To: <jhj1ro9bzhg.mognet@arm.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 27 Apr 2020 12:02:31 +0300
-Message-ID: <CAHp75VeE_J-GE9o6QVxBk6RJ2fjSwATfR1etaT0CXCgAiidjPQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH] serial: amba-pl011: Make sure we initialize the
- port.lock spinlock
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <20200421004749.GC26573@shao2-debian> <20200425012306.13516-1-hdanton@sina.com>
+ <20200426124208.8872-1-hdanton@sina.com>
+In-Reply-To: <20200426124208.8872-1-hdanton@sina.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Mon, 27 Apr 2020 11:03:58 +0200
+Message-ID: <CAKfTPtD1ES2-Jd1cW2XctRmhuJ_2Nh+oJeA8jF9UYgBW8+8-Yg@mail.gmail.com>
+Subject: Re: [LKP] [sched/fair] 6c8116c914: stress-ng.mmapfork.ops_per_sec
+ -38.0% regression
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Tao Zhou <ouwen210@hotmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mel Gorman <mgorman@suse.de>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 2:29 AM Valentin Schneider
-<valentin.schneider@arm.com> wrote:
+On Sun, 26 Apr 2020 at 14:42, Hillf Danton <hdanton@sina.com> wrote:
 >
 >
-> On 25/04/20 05:04, John Stultz wrote:
-> > On Thu, Apr 23, 2020 at 4:14 PM Valentin Schneider
-> > <valentin.schneider@arm.com> wrote:
-> >> On 23/04/20 23:00, John Stultz wrote:
-> >> > Which seems to be due to the fact that after allocating the uap
-> >> > structure, the pl011 code doesn't initialize the spinlock.
-> >> >
-> >> > This patch fixes it by initializing the spinlock and the warning
-> >> > has gone away.
-> >> >
-> >>
-> >> Thanks for having a look. It does seem like the reasonable thing to do, and
-> >> I no longer get the warning on h960.
-> >>
-> >> That said, I got more curious as this doesn't show up on my Juno (same
-> >> Image). Digging into it I see that uart_add_one_port() has a call to
-> >> uart_port_spin_lock_init() a few lines before uart_configure_port() (in
-> >> which the above warning gets triggered). That thing says:
-> >>
-> >>  * Ensure that the serial console lock is initialised early.
-> >>  * If this port is a console, then the spinlock is already initialised.
-> >>
-> >> Which requires me to ask: are we doing the right thing here?
+> On 4/21/2020 8:47 AM, kernel test robot wrote:
 > >
-> > So I got a little bit of time to look at this before I got pulled off
-> > to other things (and now its Friday night, so I figured I'd reply
-> > before I forget it on Monday).
+> > Greeting,
 > >
-> > I did check and lockdep is tripping when we add ttyAMA6 which is the
-> > serial console on the board. I wasn't able to trace back to why we
-> > hadn't already called spin_lock_init() in the console code, but it
-> > seems we haven't.
+> > FYI, we noticed a 56.4% improvement of stress-ng.fifo.ops_per_sec due to commit:
+> >
+> >
+> > commit: 6c8116c914b65be5e4d6f66d69c8142eb0648c22 ("sched/fair: Fix condition of avg_load calculation")
+> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> >
+> > in testcase: stress-ng
+> > on test machine: 88 threads Intel(R) Xeon(R) CPU E5-2699 v4 @ 2.20GHz with 128G memory
+> > with following parameters:
+> >
+> >     nr_threads: 100%
+> >     disk: 1HDD
+> >     testtime: 1s
+> >     class: scheduler
+> >     cpufreq_governor: performance
+> >     ucode: 0xb000038
+> >     sc_pid_max: 4194304
 > >
 >
-> So on the Juno (ttyAMA0), the first time I see us hitting
-> uart_port_spin_lock_init() is via:
->
->   uart_add_one_port() ->  uart_port_spin_lock_init()
->
-> Since port->cons->(index, line) is (-1, 0) at this point in time,
-> uart_console(port) returns false and we init the spinlock. When then
-> happily trickle down to uart_configure_port() -> register_console()
->
->
-> On the Hikey960 (ttyAMA6) I see the same initial flow, but (index, line)
-> is (6, 6), so uart_console(port) returns true and we skip the
-> spin_lock_init(). When then hit the splat on the rest of the way down
-> uart_add_one_port().
->
->
-> I did a tiny bit of git spelunking; I found a commit that changed
-> uart_console_enabled() into uart_console() within
-> uart_port_spin_lock_init():
->
->   a3cb39d258ef ("serial: core: Allow detach and attach serial device for console")
->
-> Reverting just that one change in uart_port_spin_lock_init() seems to go
-> fine on both Juno & HiKey960, but I think that doesn't play well with the
-> rest of the aforementioned commit. I think that this initial (index, line)
-> tuple is to blame, though I've added Andy in Cc just in case.
+> We need to handle group_fully_busy in a different way from
+> group_overloaded as task push does not help grow load balance
+> in the former case.
 
-The above mentioned commit reveals the issue in the code which doesn't
-register console properly.
+Have you tested this patch for the UC above ? Do you have figures ?
 
-See what I put in 0f87aa66e8c31 ("serial: sunhv: Initialize lock for
-non-registered console").
+>
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -8744,30 +8744,20 @@ find_idlest_group(struct sched_domain *s
+>
+>         switch (local_sgs.group_type) {
+>         case group_overloaded:
+> -       case group_fully_busy:
+> -               /*
+> -                * When comparing groups across NUMA domains, it's possible for
+> -                * the local domain to be very lightly loaded relative to the
+> -                * remote domains but "imbalance" skews the comparison making
+> -                * remote CPUs look much more favourable. When considering
+> -                * cross-domain, add imbalance to the load on the remote node
+> -                * and consider staying local.
+> -                */
+> -
+> -               if ((sd->flags & SD_NUMA) &&
+> -                   ((idlest_sgs.avg_load + imbalance) >= local_sgs.avg_load))
+> +               if (100 * local_sgs.avg_load <= sd->imbalance_pct * (idlest_sgs.avg_load + imbalance))
+> +                       return idlest;
 
--- 
-With Best Regards,
-Andy Shevchenko
+So you have completely removed the NUMA special case without explaining why.
+
+And you have also removed the tests for small load.
+
+Could you explain the rationale behind all these changes ?
+
+Also keep in mind that the current version provide +58% improvement
+for  stress-ng.fifo
+
+> +               if (local_sgs.avg_load > idlest_sgs.avg_load + imbalance)
+> +                       return idlest;
+> +               else
+>                         return NULL;
+>
+> +       case group_fully_busy:
+>                 /*
+> -                * If the local group is less loaded than the selected
+> -                * idlest group don't try and push any tasks.
+> +                * Pushing task to the idlest group will make the target group
+> +                * overloaded, leaving the local group that is overloaded fully busy,
+> +                * thus we earn nothing except for the exchange of group types.
+
+For this case both local and idlest are fully busy and in this case
+one will become overloaded so you must compare the load to be fair in
+the spread of load
+
+>                  */
+> -               if (idlest_sgs.avg_load >= (local_sgs.avg_load + imbalance))
+> -                       return NULL;
+> -
+> -               if (100 * local_sgs.avg_load <= sd->imbalance_pct * idlest_sgs.avg_load)
+> -                       return NULL;
+> -               break;
+> +               return NULL;
+>
+>         case group_imbalanced:
+>         case group_asym_packing:
+>
