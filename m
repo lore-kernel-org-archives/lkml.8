@@ -2,109 +2,72 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A39C55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44019C5519B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 279162084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:24:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587972269;
-	bh=y2j/hNS486RI1bnR+aDGuxSB9pse8rk5aZSv6RfS4FM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ooCPEmFnJ/kbRsvDtUxezn+p/75cwhFtwwcCBrxKZMDOlXRhQJnVpQDzb191PaewM
-	 FLBM+IHSu4N3ppevfT2qWy4MGNCPu3ccXtVrD9aMIwomgfPwLbKh1phqz6ATS4sI8X
-	 L1Npp9cqg5/UYpFmaUIzGLM5wbRP+YHoyw09drZc=
+	by mail.kernel.org (Postfix) with ESMTP id 188A32072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:25:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EywXmHz4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgD0HY2 (ORCPT
+        id S1726651AbgD0HZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 03:24:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33722 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726679AbgD0HY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 03:24:28 -0400
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58EEA21835;
-        Mon, 27 Apr 2020 07:24:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587972267;
-        bh=y2j/hNS486RI1bnR+aDGuxSB9pse8rk5aZSv6RfS4FM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=puBU60g6Jc4kuYgN8/flCN8J7nKkf6DBCGJinCMgvK9s2wS28SlhyTnFYAFAnyDKU
-         pKqI9og//Du2UTqU5Gwf5HzVZkpXukC1NNBU+z3oVL5uauqdndPG4we4woU2xYzbaS
-         ssFAThyEH7/ZkYOLZnh7aZtGAZUcS3OrtHmM09AI=
-Received: by mail-il1-f177.google.com with SMTP id w6so15769750ilg.1;
-        Mon, 27 Apr 2020 00:24:27 -0700 (PDT)
-X-Gm-Message-State: AGi0PubHGbH+df9UgKTPkmDXInsTO2lp0Awq/IY7HQrBHeU0S9Eev9tq
-        J6AVeW9jiUGwOwKA5AyxPcwlai9Qsw3mgunt+ko=
-X-Google-Smtp-Source: APiQypLTYbEngVS71XND42rFRz0BF/tYDA/z6GNs9SrDJWNULXkyWJU2rZxyV7HhyjNn72SQDFss31iJnQySUclx+q4=
-X-Received: by 2002:a92:405:: with SMTP id 5mr19085583ile.279.1587972266674;
- Mon, 27 Apr 2020 00:24:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <1587966099-28139-1-git-send-email-hadar.gat@arm.com>
- <1587966099-28139-2-git-send-email-hadar.gat@arm.com> <CAMj1kXHN1qzoP9YNmrFcTJRncJE88Jyp_MS_9XrdAiY9v6DAyw@mail.gmail.com>
- <DB6PR0802MB253304D0FE37A3C99C1A1E4CE9AF0@DB6PR0802MB2533.eurprd08.prod.outlook.com>
-In-Reply-To: <DB6PR0802MB253304D0FE37A3C99C1A1E4CE9AF0@DB6PR0802MB2533.eurprd08.prod.outlook.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Mon, 27 Apr 2020 09:24:15 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFL7e9_=vax0t0YBEzk+hc-d1v0oGVnFO1mfmNPCDaEcQ@mail.gmail.com>
-Message-ID: <CAMj1kXFL7e9_=vax0t0YBEzk+hc-d1v0oGVnFO1mfmNPCDaEcQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] hwrng: cctrng - Add dependency on OF
-To:     Hadar Gat <Hadar.Gat@arm.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
+        Mon, 27 Apr 2020 03:25:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52588 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726349AbgD0HZe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 03:25:34 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B07FC061A0F;
+        Mon, 27 Apr 2020 00:25:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=nvKryGltvAZBbLqFJq4aHWUrRwCZ4uSxodxNcS43W1M=; b=EywXmHz4i8UGNyEIOAOgABnyw2
+        QpIgEWUG+OovJD79btXpcQROu2y+Ssxn3weaGuU+lbU8VFb60Mbv/dQ43NebPsBraLJJfgq8jfwea
+        K1bZwDeaW28CHbQpqLFKRmV0+gAkfT2RkeebxhqK4OqWrrtvsj2V22Oe0mDWjJCunDuFJDr2e675t
+        eprmjw71k1RJwiAQdyQ+HndUERGqVS/pV5nsgUJV3eBuFHY1R8ZO/WOqLZWPvuPT3vhjC/brD5P8A
+        ahAla0pEDc7A8slOeJSEkigVFZ4sFMgEKiRnveKoligCFfKpA7vdr4ckYniuxZB0uEnFkZuE45GrC
+        0P2tmK3w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jSy8t-0003X5-3Y; Mon, 27 Apr 2020 07:25:27 +0000
+Date:   Mon, 27 Apr 2020 00:25:27 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Nishad Kamdar <nishadkamdar@gmail.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <Ofir.Drang@arm.com>, nd <nd@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Joe Perches <joe@perches.com>, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] xfs: Use the correct style for SPDX License Identifier
+Message-ID: <20200427072527.GA3019@infradead.org>
+References: <20200425133504.GA11354@nishad>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200425133504.GA11354@nishad>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Apr 2020 at 09:23, Hadar Gat <Hadar.Gat@arm.com> wrote:
->
->
-> > -----Original Message-----
-> > From: Ard Biesheuvel <ardb@kernel.org>
-> >
-> > On Mon, 27 Apr 2020 at 07:42, Hadar Gat <hadar.gat@arm.com> wrote:
-> > >
-> > > The cctrng is unusable on non-DT systems so we should depend on it.
-> > >
-> > > Signed-off-by: Hadar Gat <hadar.gat@arm.com>
-> > > ---
-> > >  drivers/char/hw_random/Kconfig | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/char/hw_random/Kconfig
-> > > b/drivers/char/hw_random/Kconfig index 0c99735..df2d001 100644
-> > > --- a/drivers/char/hw_random/Kconfig
-> > > +++ b/drivers/char/hw_random/Kconfig
-> > > @@ -476,7 +476,7 @@ config HW_RANDOM_KEYSTONE
-> > >
-> > >  config HW_RANDOM_CCTRNG
-> > >         tristate "Arm CryptoCell True Random Number Generator support"
-> > > -       depends on HAS_IOMEM
-> > > +       depends on HAS_IOMEM & OF
-> >
-> > Does your driver in fact depend on CONFIG_HAS_IOMEM ?
->
-> Yes, it uses devm_ioremap_resource() for registers mapping.
->
+On Sat, Apr 25, 2020 at 07:05:09PM +0530, Nishad Kamdar wrote:
+> This patch corrects the SPDX License Identifier style in
+> header files related to XFS File System support.
+> For C header files Documentation/process/license-rules.rst
+> mandates C-like comments (opposed to C source files where
+> C++ style should be used).
+> 
+> Changes made by using a script provided by Joe Perches here:
+> https://lkml.org/lkml/2019/2/7/46.
 
-Fair enough
+Please use up all 73 chars in your commit logs.
