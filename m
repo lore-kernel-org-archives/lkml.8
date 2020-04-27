@@ -7,94 +7,92 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 256DCC82C81
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0949C82C80
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBCD320661
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C200D20661
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:50:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JwCNM8AW"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ks7DmA5b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgD0WuA (ORCPT
+        id S1726399AbgD0WuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 18:50:00 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:54836 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726204AbgD0Wt7 (ORCPT
+        Mon, 27 Apr 2020 18:50:14 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:33026 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726233AbgD0WuO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 18:49:59 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03RMnGKi011609;
-        Mon, 27 Apr 2020 22:49:55 GMT
+        Mon, 27 Apr 2020 18:50:14 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03RMmnir073103;
+        Mon, 27 Apr 2020 22:49:57 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2020-01-29;
- bh=1c+Qb0P6m8Bjmtsg/rPwqyaKG/hriJn7/NsqFOKcOsU=;
- b=JwCNM8AW/dbJuvz0+/3HtR9BfLbskNfRUpOW3+MYz982eaQxZ65kNms8PG+FoHaXUhkt
- 0WduaFWvcrVOJHLwVy/YX+9vXC4mykDD+C9KimRWTpBdcnqKYTUn7pcAbuUtvlNXYsfa
- bd92cgXg6/YDYoT06k7tzCiSojS2EI0MU1DSAUwOVEhZWGgaUHrIwN7x/sqEb0n2Xp9u
- XBGEwqhcEaRJA0KeECvMtNIeAbc1rL+HtcsT9PcNAffTms5BwnuR5YRXSc1vEQLi59e4
- Cdz4NFnSBhzUSYZNqJ+aMu5EPsl7E7ySLFCY1Dv1lOuaAPdZe009Xfr2y8EREOyhzsiK 8g== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 30p01nk10y-1
+ bh=qDMayMbg+FKCS2mjLaz0JLNCqW1XcYuqT5QmYVU1E+w=;
+ b=Ks7DmA5br7wukiVPXNNHYVopqnlxwvbnbP2Ty7in6w6Ovw0YDkt70e0hhbynRF/Z3wzN
+ tJiQKVzsbreVwtMGrupkziINLHPmCMmkVGu6eX+KRId7bBgoDO0/JF43/OHqzAYjkKBd
+ 81xAMC2QP3YnMbQD0oF3+R0F7nzWNIhd61TStm6zRtgf7NCCiu2Zb0nIQDnYZqjZMReA
+ DB0T+PGAfp19QSsy9jZulfEDY83wZlL3UqP6/QKhx6Rq67JrOSer5/ss8baw1pv9DfVN
+ XQuy9p+Uc6Oo7zxtjTvII1qWmOVqL3j6pqEK8FTEIwcmwkCtKQixYkOOpvknv6EFrnF1 8g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 30nucfvfy9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Apr 2020 22:49:55 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03RMbOC2126457;
-        Mon, 27 Apr 2020 22:49:54 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 30my0avchp-1
+        Mon, 27 Apr 2020 22:49:56 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03RMbxWg114119;
+        Mon, 27 Apr 2020 22:49:56 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 30mxwx5c54-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Apr 2020 22:49:54 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03RMnrjU022306;
-        Mon, 27 Apr 2020 22:49:53 GMT
+        Mon, 27 Apr 2020 22:49:56 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03RMnsnn027962;
+        Mon, 27 Apr 2020 22:49:55 GMT
 Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 27 Apr 2020 15:49:53 -0700
+        with ESMTP ; Mon, 27 Apr 2020 15:49:54 -0700
 From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     jejb@linux.ibm.com, aacraid@microsemi.com,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: aacraid: Fix some error handling paths in 'aac_probe_one()'
-Date:   Mon, 27 Apr 2020 18:49:49 -0400
-Message-Id: <158802757520.27023.14035276109176874290.b4-ty@oracle.com>
+To:     alim.akhtar@samsung.com, Jason Yan <yanaijie@huawei.com>,
+        jejb@linux.ibm.com, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, avri.altman@wdc.com,
+        stanley.chu@mediatek.com
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>
+Subject: Re: [PATCH] scsi: ufs: use true for bool variables in ufshcd_complete_dev_init()
+Date:   Mon, 27 Apr 2020 18:49:50 -0400
+Message-Id: <158802757520.27023.7635538053293481561.b4-ty@oracle.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200412094039.8822-1-christophe.jaillet@wanadoo.fr>
-References: <20200412094039.8822-1-christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20200426094305.24083-1-yanaijie@huawei.com>
+References: <20200426094305.24083-1-yanaijie@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0
- suspectscore=0 adultscore=0 mlxlogscore=819 bulkscore=0 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004270185
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 clxscore=1015
- phishscore=0 mlxlogscore=875 adultscore=0 priorityscore=1501 mlxscore=0
- suspectscore=0 malwarescore=0 lowpriorityscore=0 impostorscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 bulkscore=0
+ suspectscore=0 mlxlogscore=999 phishscore=0 malwarescore=0 mlxscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
  definitions=main-2004270185
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
+ mlxlogscore=999 impostorscore=0 suspectscore=0 malwarescore=0
+ lowpriorityscore=0 mlxscore=0 spamscore=0 adultscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004270185
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 12 Apr 2020 11:40:39 +0200, Christophe JAILLET wrote:
+On Sun, 26 Apr 2020 17:43:05 +0800, Jason Yan wrote:
 
-> If 'scsi_host_alloc()' or 'kcalloc()' fail, 'error' is known to be 0. Set
-> it explicitly to -ENOMEM instead before branching to the error handling
-> path.
+> Fix the following coccicheck warning:
 > 
-> While at it, axe 2 useless assignments to 'error'. These values are
-> overwridden a few lines later.
+> drivers/scsi/ufs/ufshcd.c:4140:6-14: WARNING: Assignment of 0/1 to bool
+> variable
 
 Applied to 5.8/scsi-queue, thanks!
 
-[1/1] scsi: aacraid: Fix error handling paths in aac_probe_one()
-      https://git.kernel.org/mkp/scsi/c/f7854c382240
+[1/1] scsi: ufs: Use true for bool variables in ufshcd_complete_dev_init()
+      https://git.kernel.org/mkp/scsi/c/7dfdcc393dcd
 
 -- 
 Martin K. Petersen	Oracle Linux Engineering
