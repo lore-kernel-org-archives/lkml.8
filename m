@@ -2,146 +2,130 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4F4C5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0884C55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FDB220663
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0C3A20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:51:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbgD0Jut (ORCPT
+        id S1726903AbgD0JvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 05:50:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46542 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726485AbgD0Jus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 05:50:48 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 9A11FABC2;
-        Mon, 27 Apr 2020 09:50:45 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 64CBB1E129C; Mon, 27 Apr 2020 11:50:45 +0200 (CEST)
-Date:   Mon, 27 Apr 2020 11:50:45 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Tim Waugh <tim@cyberelk.net>,
-        Borislav Petkov <bp@alien8.de>, Jan Kara <jack@suse.com>,
-        linux-block@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Damien Le Moal <damien.lemoal@wdc.com>
-Subject: Re: [PATCH 6/7] isofs: stop using ioctl_by_bdev
-Message-ID: <20200427095045.GA15107@quack2.suse.cz>
-References: <20200425075706.721917-1-hch@lst.de>
- <20200425075706.721917-7-hch@lst.de>
+        Mon, 27 Apr 2020 05:51:05 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:60140 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726485AbgD0JvF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 05:51:05 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 046F01C0244; Mon, 27 Apr 2020 11:51:03 +0200 (CEST)
+Date:   Mon, 27 Apr 2020 11:51:02 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Luca Weiss <luca@z3ntu.xyz>
+Cc:     linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH v3 2/2] leds: add sgm3140 driver
+Message-ID: <20200427095102.GA21572@duo.ucw.cz>
+References: <20200421191354.1443017-1-luca@z3ntu.xyz>
+ <20200421191354.1443017-3-luca@z3ntu.xyz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="pWyiEgJYm5f9v55/"
 Content-Disposition: inline
-In-Reply-To: <20200425075706.721917-7-hch@lst.de>
+In-Reply-To: <20200421191354.1443017-3-luca@z3ntu.xyz>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 25-04-20 09:57:05, Christoph Hellwig wrote:
-> Instead just call the CDROM layer functionality directly, and turn the
-> hot mess in isofs_get_last_session into remotely readable code.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
 
-Looks good to me. You can add:
+--pWyiEgJYm5f9v55/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+Hi!
 
-								Honza
+> Add a driver for the SGMICRO SGM3140 Buck/Boost Charge Pump LED driver.
+>=20
+> This device is controlled by two GPIO pins, one for enabling and the
+> second one for switching between torch and flash mode.
+>=20
+> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
 
-> ---
->  fs/isofs/inode.c | 54 +++++++++++++++++++++++-------------------------
->  1 file changed, 26 insertions(+), 28 deletions(-)
-> 
-> diff --git a/fs/isofs/inode.c b/fs/isofs/inode.c
-> index 62c0462dc89f3..276107cdaaf13 100644
-> --- a/fs/isofs/inode.c
-> +++ b/fs/isofs/inode.c
-> @@ -544,43 +544,41 @@ static int isofs_show_options(struct seq_file *m, struct dentry *root)
->  
->  static unsigned int isofs_get_last_session(struct super_block *sb, s32 session)
->  {
-> -	struct cdrom_multisession ms_info;
-> -	unsigned int vol_desc_start;
-> -	struct block_device *bdev = sb->s_bdev;
-> -	int i;
-> +	struct cdrom_device_info *cdi = disk_to_cdi(sb->s_bdev->bd_disk);
-> +	unsigned int vol_desc_start = 0;
->  
-> -	vol_desc_start=0;
-> -	ms_info.addr_format=CDROM_LBA;
->  	if (session > 0) {
-> -		struct cdrom_tocentry Te;
-> -		Te.cdte_track=session;
-> -		Te.cdte_format=CDROM_LBA;
-> -		i = ioctl_by_bdev(bdev, CDROMREADTOCENTRY, (unsigned long) &Te);
-> -		if (!i) {
-> +		struct cdrom_tocentry te;
-> +
-> +		if (!cdi)
-> +			return 0;
-> +
-> +		te.cdte_track = session;
-> +		te.cdte_format = CDROM_LBA;
-> +		if (cdrom_read_tocentry(cdi, &te) == 0) {
->  			printk(KERN_DEBUG "ISOFS: Session %d start %d type %d\n",
-> -				session, Te.cdte_addr.lba,
-> -				Te.cdte_ctrl&CDROM_DATA_TRACK);
-> -			if ((Te.cdte_ctrl&CDROM_DATA_TRACK) == 4)
-> -				return Te.cdte_addr.lba;
-> +				session, te.cdte_addr.lba,
-> +				te.cdte_ctrl & CDROM_DATA_TRACK);
-> +			if ((te.cdte_ctrl & CDROM_DATA_TRACK) == 4)
-> +				return te.cdte_addr.lba;
->  		}
->  
->  		printk(KERN_ERR "ISOFS: Invalid session number or type of track\n");
->  	}
-> -	i = ioctl_by_bdev(bdev, CDROMMULTISESSION, (unsigned long) &ms_info);
-> -	if (session > 0)
-> -		printk(KERN_ERR "ISOFS: Invalid session number\n");
-> -#if 0
-> -	printk(KERN_DEBUG "isofs.inode: CDROMMULTISESSION: rc=%d\n",i);
-> -	if (i==0) {
-> -		printk(KERN_DEBUG "isofs.inode: XA disk: %s\n",ms_info.xa_flag?"yes":"no");
-> -		printk(KERN_DEBUG "isofs.inode: vol_desc_start = %d\n", ms_info.addr.lba);
-> -	}
-> -#endif
-> -	if (i==0)
-> +
-> +	if (cdi) {
-> +		struct cdrom_multisession ms_info;
-> +
-> +		ms_info.addr_format = CDROM_LBA;
-> +		if (cdrom_multisession(cdi, &ms_info) == 0) {
->  #if WE_OBEY_THE_WRITTEN_STANDARDS
-> -		if (ms_info.xa_flag) /* necessary for a valid ms_info.addr */
-> +			/* necessary for a valid ms_info.addr */
-> +			if (ms_info.xa_flag)
->  #endif
-> -			vol_desc_start=ms_info.addr.lba;
-> +				vol_desc_start = ms_info.addr.lba;
-> +		}
+Thanks, applied, but... I may remove it again.
+
+> +++ b/drivers/leds/leds-sgm3140.c
+> @@ -0,0 +1,320 @@
+> +// SPDX-License-Identifier: GPL-2.0
+
+Would you consider GPL-2+?
+
+> +#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
+> +static void sgm3140_init_v4l2_flash_config(struct sgm3140 *priv,
+
+Ok.
+
+> +static int sgm3140_probe(struct platform_device *pdev)
+> +{
+=2E..
+> +	led_cdev->brightness_set_blocking =3D sgm3140_brightness_set;
+> +	led_cdev->max_brightness =3D LED_ON;
+
+Don't do this, unless you really have 255 levels of brightness.
+
+> +	/* Create V4L2 Flash subdev */
+> +	priv->v4l2_flash =3D v4l2_flash_init(&pdev->dev,
+> +					   child_node,
+> +					   fled_cdev, NULL,
+> +					   &v4l2_sd_cfg);
+> +	if (IS_ERR(priv->v4l2_flash)) {
+
+Does this need some #ifdef guards?
+
+> +		ret =3D PTR_ERR(priv->v4l2_flash);
+> +		goto err;
 > +	}
 > +
->  	return vol_desc_start;
->  }
->  
-> -- 
-> 2.26.1
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> +	return ret;
+
+Should this return 0?
+
+> +err:
+> +	fwnode_handle_put(child_node);
+> +	return ret;
+> +}
+
+Does non-error path needs handle_put, too?
+
+Best regards,
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--pWyiEgJYm5f9v55/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXqarBgAKCRAw5/Bqldv6
+8tcQAKCWUTuRy7TvgT2+F1Aj1oFotUcn9wCgvlDQBHg5Trhv/KEKFw2CkG70ke8=
+=EEZa
+-----END PGP SIGNATURE-----
+
+--pWyiEgJYm5f9v55/--
