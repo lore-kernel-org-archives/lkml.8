@@ -2,106 +2,155 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6552C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB423C55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4756206B9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:24:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="C/UeX3V2"
+	by mail.kernel.org (Postfix) with ESMTP id 9085D206B9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:26:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728203AbgD0QYD (ORCPT
+        id S1728236AbgD0Q0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 12:24:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52128 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726229AbgD0QYC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 12:24:02 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22425C0610D5;
-        Mon, 27 Apr 2020 09:24:02 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id nv1so14649380ejb.0;
-        Mon, 27 Apr 2020 09:24:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KWPoYwJEl9V5YJAC4WNuwBg/dxHA3IxOpuyKiILxznU=;
-        b=C/UeX3V22n4clKX0lidBg1wfTgyte141RHR4D/yMWPz4MmLO9VSKjxOGhfZUMvSxh5
-         lahhhGC1BnRLcRys8vkijyNhoC3ZriRyC34w1IELDASTlvq2yV7ZfrwIiYS72NBDmLDu
-         yaZl3kzdt+u9A/quzE5wJf2u6aJQ4ktAIJa87cuf1+MfjEeICkqJ44WBRN47Iy3Uswx6
-         ahFVmC+2xRhc80opYNR1EgJrlmOVOA3wuePis6UkUONHFv//rO7Cuqf3X12VTLz7xU0p
-         GkNxzuyjfUzFaHe7y1wNaVWkmcegsxROdx7l1tBryU73TvdBcHVdr/yKY9XSL8hzj0cR
-         Hyhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KWPoYwJEl9V5YJAC4WNuwBg/dxHA3IxOpuyKiILxznU=;
-        b=Hkk1/1aBlR6m2oySy67fiJoFhERt4y3OebyXAfLTXtey2I3wgXkyBYu2uFDnNY5Jfm
-         8pTmEtr21c1jmshugRbPpx+kLZoS7waYPTKxLu21DmzF8yFvRLtKYdDBU/XDGlf9pOWh
-         Yf/JzliuhlsDNwoW/eYNIDASkVOlGdnrpNpbi84aK4W5A+39zLNfLmYi7uxYfv6pCft2
-         C/rk2LW+CeOT6X6ZkKzilvCFvlu3TSfeWxoRfyPxQyDbM0a5z7KiBMoI4q//API/Aenx
-         ufX7673RTqFe5PnNW3PORndrn+Er8Jhgdq2qtIpE3KHQ+zgvL18UKl9kS896qqEDf7/R
-         GwMA==
-X-Gm-Message-State: AGi0PuZNG483UKqmj9LRbvoAeKIJCflcyHleY1wblvJZ3ECcy0Qe9LfK
-        6Md9fGNHgXQXfZPigvqa/2thlKVicjuVbYZwHf0=
-X-Google-Smtp-Source: APiQypLMHO3pnC6/d3Uf/T8HCEFOxHwcaSjxBATefEkEjE6SvjUvYOMC854uurowtQ2fXp3sQqiBg2bcmRKVKa8jO68=
-X-Received: by 2002:a17:906:1a06:: with SMTP id i6mr19961325ejf.90.1588004640687;
- Mon, 27 Apr 2020 09:24:00 -0700 (PDT)
+        Mon, 27 Apr 2020 12:26:04 -0400
+Received: from mga06.intel.com ([134.134.136.31]:63947 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726539AbgD0Q0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 12:26:03 -0400
+IronPort-SDR: Wg5Jf+8g2xsColPpoqLAZ5bVnZZ7/bds3PqOY+QrMGl59ffbKZ8WGhE+DUOrxESyq+MqFe4+sS
+ mQC/LQFj9lQw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 09:26:02 -0700
+IronPort-SDR: kOdgCf+VvD2U+8+05JkhvCxBcCXLYvUX3hluIRiCFSsJ8Uhkef83MmD472PSiHHC97bOYikDcj
+ +h6Cxdb3YypA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,324,1583222400"; 
+   d="scan'208";a="246196130"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.213.181.12]) ([10.213.181.12])
+  by orsmga007.jf.intel.com with ESMTP; 27 Apr 2020 09:26:00 -0700
+Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+To:     Jason Gunthorpe <jgg@mellanox.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+References: <20200424181203.GU13640@mellanox.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
+ <20200426191357.GB13640@mellanox.com> <20200426214355.29e19d33@x1.home>
+ <20200427115818.GE13640@mellanox.com> <20200427071939.06aa300e@x1.home>
+ <20200427132218.GG13640@mellanox.com> <20200427081841.18c4a994@x1.home>
+ <20200427142553.GH13640@mellanox.com> <20200427094137.4801bfb6@w520.home>
+ <20200427161625.GI13640@mellanox.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <e2cbba8b-e204-42bc-44cd-ebdb6be211e3@intel.com>
+Date:   Mon, 27 Apr 2020 09:25:58 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200328003249.1248978-1-martin.blumenstingl@googlemail.com> <1jblnd2tp3.fsf@starbuckisacylon.baylibre.com>
-In-Reply-To: <1jblnd2tp3.fsf@starbuckisacylon.baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 27 Apr 2020 18:23:49 +0200
-Message-ID: <CAFBinCDzNw6nV3oBJs6C0sssW61GERBXq39DCM22BT9zS8M31A@mail.gmail.com>
-Subject: Re: [PATCH v5 0/3] Amlogic 32-bit Meson SoC SDHC MMC controller driver
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-mmc@vger.kernel.org, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, jianxin.pan@amlogic.com,
-        linux-kernel@vger.kernel.org, yinxin_1989@aliyun.com,
-        linux-arm-kernel@lists.infradead.org, lnykww@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200427161625.GI13640@mellanox.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jerome,
-
-On Mon, Apr 27, 2020 at 10:56 AM Jerome Brunet <jbrunet@baylibre.com> wrote:
-[...]
-> > Changes since v3 at [3]:
-> > - split the clock bits into a separate clock controller driver because
-> >   of two reasons: 1) it keeps the MMC controller driver mostly clean of
-> >   the clock bits
->
-> If the register is in the MMC controller register space and the MMC
-> driver is the driver using these clocks, it is where the clocks belong.
-> I don't get why it could be an issue ?
->
-> Is the clock block is shared with another device, like on the Gx family ?
-no, it is not shared with another device (to my knowledge).
-
-> > 2) the pure clock controller can use
-> >   devm_clk_hw_register() (instead of devm_clk_register(), which is
-> >   deprecated) and the MMC controller can act as a pure clock consumer.
->
-> Why can't you use devm_clk_hw_register in an MMC driver ?
-> Unless I missed something, it is provided by clk-provider.h, which can be
-> included by any driver.
-indeed, I could use devm_clk_hw_register in the MMC driver.
-Ulfs concern was that a lot of code was needed for managing the clocks
-and I agree with him. so this is my way of keeping those details away
-from the MMC driver and have two separate drivers which are better to
-understand overall.
 
 
-Martin
+On 4/27/2020 9:16 AM, Jason Gunthorpe wrote:
+> On Mon, Apr 27, 2020 at 09:41:37AM -0600, Alex Williamson wrote:
+>> On Mon, 27 Apr 2020 11:25:53 -0300
+>> Jason Gunthorpe <jgg@mellanox.com> wrote:
+>>
+>>> On Mon, Apr 27, 2020 at 08:18:41AM -0600, Alex Williamson wrote:
+>>>> On Mon, 27 Apr 2020 10:22:18 -0300
+>>>> Jason Gunthorpe <jgg@mellanox.com> wrote:
+>>>>    
+>>>>> On Mon, Apr 27, 2020 at 07:19:39AM -0600, Alex Williamson wrote:
+>>>>>    
+>>>>>>> It is not trivial masking. It is a 2000 line patch doing comprehensive
+>>>>>>> emulation.
+>>>>>>
+>>>>>> Not sure what you're referring to, I see about 30 lines of code in
+>>>>>> vdcm_vidxd_cfg_write() that specifically handle writes to the 4 BARs in
+>>>>>> config space and maybe a couple hundred lines of code in total handling
+>>>>>> config space emulation.  Thanks,
+>>>>>
+>>>>> Look around vidxd_do_command()
+>>>>>
+>>>>> If I understand this flow properly..
+>>>>
+>>>> I've only glanced at it, but that's called in response to a write to
+>>>> MMIO space on the device, so it's implementing a device specific
+>>>> register.
+>>>
+>>> It is doing emulation of the secure BAR. The entire 1000 lines of
+>>> vidxd_* functions appear to be focused on this task.
+>>
+>> Ok, we/I need a terminology clarification, a BAR is a register in
+>> config space for determining the size, type, and setting the location
+>> of a I/O or memory region of a device.  I've been asserting that the
+>> emulation of the BAR itself is trivial, but are you actually focused on
+>> emulation of the region described by the BAR?
+> 
+> Yes, BAR here means the actually MMIO memory window - not the config
+> space part. Config space emulation is largely trivial.
+> 
+>>>> Are you asking that PCI config space be done in userspace
+>>>> or any sort of device emulation?
+>>>
+>>> I'm concerned about doing full emulation of registers on a MMIO BAR
+>>> that trigger complex actions in response to MMIO read/write.
+>>
+>> Maybe what you're recalling me say about mdev is that its Achilles
+>> heel is that we rely on mediation provider (ie. vendor driver) for
+>> security, we don't necessarily have an piece of known, common hardware
+>> like an IOMMU to protect us when things go wrong.  That's true, but
+>> don't we also trust drivers in the host kernel to correctly manage and
+>> validate their own interactions with hardware, including the APIs
+>> provided through other user interfaces.  Is the assertion then that
+>> device specific, register level API is too difficult to emulate?
+> 
+> No, it is a reflection on the standard Linux philosophy that if it can
+> be done in user space it should be done in userspace. Ie keep minimal
+> work in the monolithic kernel.
+> 
+> Also to avoid duplication, ie idxd proposes to have a char dev with a
+> normal kernel driver interface and then an in-kernel emulated MMIO BAR
+> version of that same capability for VFIO consumption.
+
+The char dev interface serves user apps on host (which we will deprecate 
+and move to the UACCE framework in near future). The mdev interface will 
+be servicing guests only. I'm not sure where the duplication of 
+functionality comes into play.
+
+> 
+> Jason
+> 
