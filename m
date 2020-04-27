@@ -2,310 +2,153 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6762C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36675C5519F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B7CC20661
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:44:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="UrD5xFXs"
+	by mail.kernel.org (Postfix) with ESMTP id 0CAE520661
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:46:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588002386;
+	bh=4WKuEEu6AV9S5LHgPyiAwgQEIkDIj7vq5rk7Tvuxgio=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CjtRWdtYu800oO8k6yAMZ5A8tpdl/iLKqNI+N+XRUhYW0HaHaXdPHjLx5ette8n6S
+	 wycTLumNWewGVCZDRcFeCSfJpkLqiqQ7RyM1v3TTtJKevYZ5rnfQcY9ZH9SHbIQbB5
+	 X1YbFq2JEWr+wCTOdg8xxXYmT0m9vQMQ9JXsYf9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbgD0PoH (ORCPT
+        id S1727976AbgD0PqZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 11:44:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726539AbgD0PoG (ORCPT
+        Mon, 27 Apr 2020 11:46:25 -0400
+Received: from mail-ej1-f68.google.com ([209.85.218.68]:42580 "EHLO
+        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726539AbgD0PqY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 11:44:06 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3494C0610D5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 08:44:04 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id g4so18115151ljl.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 08:44:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=sVsyz0n2LjXG2IMJx6t3VUYyNBTpyfFbeltK0qpohx0=;
-        b=UrD5xFXslZfgP/IsODr4Z3GfOpeNr4l2Y9wwbLA2CxuzqDDSj+VxthzWKGbPbBzx+V
-         YFw7RxVyUbIHs9BPMtLAAdksSlCa1ApMHm8w1kmkg+wpKWWC7zT92sWOiWh0RQB6NlTq
-         9ck5vp+KJa8tVJztLzVD4UJBbtroaw2dWunMA=
+        Mon, 27 Apr 2020 11:46:24 -0400
+Received: by mail-ej1-f68.google.com with SMTP id pg17so14477745ejb.9;
+        Mon, 27 Apr 2020 08:46:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sVsyz0n2LjXG2IMJx6t3VUYyNBTpyfFbeltK0qpohx0=;
-        b=sudoM2DvRsc00JeZ7W1QQXCtoTfDvsPCT0MlUHB/H47yYWk4Ss4Zi9C5gzgeegv6gG
-         4U7Wr51N3/G96dNzUzmA0rO2eAF410qV4Qq9MijkuAmLe9ls0+tGMKeHveP05OoIGby5
-         0mla5g8LSjc35l1ao+3360TolqzXYHYQbYospBTK1ZmzABCkf9OqkHXcqDKVQ8WajhHs
-         QESCn6CWl5UJe36wwr4es8b0iqpVH+d4aHuHUQoukAecQ2LLTPPi5uNfhYGZ7Eahp2V+
-         Gtxrd1XlAGM7WIH+Pkvn0xwv77qIf59lZXfLBHh7xbwiZNLsHpaTSVLQJRZcC2EvOYmW
-         sN9g==
-X-Gm-Message-State: AGi0PubRM/ZQQbdsPXhXYGrr42OilfwUCoecu5C+JmPgxTQcjb1xKz6s
-        8qEiwqc7k/CkP58ZRR069l4Khw==
-X-Google-Smtp-Source: APiQypIo4iuWFF1BSuZmM63rM6Vr2tOgjUljme//kEiDbJuxhm8cbNTY4mYBxzl23MRK4Zgp1JnkkQ==
-X-Received: by 2002:a2e:3017:: with SMTP id w23mr14890688ljw.150.1588002243139;
-        Mon, 27 Apr 2020 08:44:03 -0700 (PDT)
-Received: from [192.168.1.149] (ip-5-186-116-45.cgn.fibianet.dk. [5.186.116.45])
-        by smtp.gmail.com with ESMTPSA id b28sm10171986ljo.1.2020.04.27.08.44.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Apr 2020 08:44:02 -0700 (PDT)
-Subject: Re: [RESEND PATCH v3 1/1] lib/vsprintf: Add support for printing V4L2
- and DRM fourccs
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-media@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com,
-        mchehab@kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joe Perches <joe@perches.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>
-References: <20200427145303.29943-1-sakari.ailus@linux.intel.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <f97e4cf1-c3c6-80b1-5d17-167d60515236@rasmusvillemoes.dk>
-Date:   Mon, 27 Apr 2020 17:44:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=vN8ZtTEMOm40Zgoqr2j2go1H/JlhYwioxL2VoPsyXMo=;
+        b=cTxh2TAcHuZX30NEGByeXRxLV/yCkaoG+WLOckufPxWBnuYBAhDbkhQ5M8GynJgIwu
+         dgIWjI21OAwfJjP4dN9FRBTZgHoZORDAXNUBEhxskYf5SLItKg/f/uDyrB3PtNv/Uavu
+         Yj0foPRbTyYUMxvBL+UiLKZkXGrINEFS46KZUCQE3rbfcX8vsLrkQb3vlM+1agiuFJ8C
+         dLx3f3/fY4GW2vZlR4USC9jaY/eNjnA/cfrB+4047NZpqmHViB6338VM6e5E2o8hEMNI
+         8pfW2pN13ATQCjqxcGOpeOb6dYJpaWeBR3xMYdC3r4wqaUBH+/d3n7GgSSXgoRcSHWCn
+         EeBA==
+X-Gm-Message-State: AGi0PuZ0/uWdnyqjT+DE+fTlNibCpkq1PLiGM0pX4hTjt2jYIXseadgb
+        CeAiosruEjlY9RrY8US9wYQ=
+X-Google-Smtp-Source: APiQypJaGHIqdott9ULGc1vIvIC2hB4wMVjvSOJwybdeeq2XFdtUhgVC8YxEO2xmFZWEXRWg3+ZkRg==
+X-Received: by 2002:a17:906:3713:: with SMTP id d19mr19332049ejc.111.1588002380871;
+        Mon, 27 Apr 2020 08:46:20 -0700 (PDT)
+Received: from pi3 ([194.230.155.237])
+        by smtp.googlemail.com with ESMTPSA id v14sm1947180edx.67.2020.04.27.08.46.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 08:46:20 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 17:46:17 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Jonathan Bakker <xc-racer2@live.ca>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Philipp Rossak <embed3d@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH v7 08/12] arm: dts: s5pv210: Add node for SGX 540
+Message-ID: <20200427154617.GA1798@pi3>
+References: <cover.1587760454.git.hns@goldelico.com>
+ <3fd18c747426e15fd1f3500b9c4adce2db9ddd0c.1587760454.git.hns@goldelico.com>
+ <NYBE9Q.YH08US7A7DC3@crapouillou.net>
+ <BN6PR04MB0660A180D2069848E5C03D7EA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20200427145303.29943-1-sakari.ailus@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <BN6PR04MB0660A180D2069848E5C03D7EA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/04/2020 16.53, Sakari Ailus wrote:
-> Add a printk modifier %p4cc (for pixel format) for printing V4L2 and DRM
-> pixel formats denoted by fourccs. The fourcc encoding is the same for both
-> so the same implementation can be used.
+On Sun, Apr 26, 2020 at 07:57:12AM -0700, Jonathan Bakker wrote:
+> Hi Paul,
 > 
-> Suggested-by: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
-> since v2:
+> On 2020-04-26 5:56 a.m., Paul Cercueil wrote:
+> > 
+> > 
+> > Le ven. 24 avril 2020 à 22:34, H. Nikolaus Schaller <hns@goldelico.com> a écrit :
+> >> From: Jonathan Bakker <xc-racer2@live.ca>
+> >>
+> >> All s5pv210 devices have a PowerVR SGX 540 (revision 120) attached.
+> >>
+> >> There is no external regulator for it so it can be enabled by default.
+> >>
+> >> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+> >> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> >> ---
+> >>  arch/arm/boot/dts/s5pv210.dtsi | 13 +++++++++++++
+> >>  1 file changed, 13 insertions(+)
+> >>
+> >> diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
+> >> index 2ad642f51fd9..abbdda205c1b 100644
+> >> --- a/arch/arm/boot/dts/s5pv210.dtsi
+> >> +++ b/arch/arm/boot/dts/s5pv210.dtsi
+> >> @@ -512,6 +512,19 @@ vic3: interrupt-controller@f2300000 {
+> >>              #interrupt-cells = <1>;
+> >>          };
+> >>
+> >> +        gpu: gpu@f3000000 {
+> >> +            compatible = "samsung,s5pv210-sgx540-120";
+
+This should not pass the bindings check because you missed last
+compatibles.
+
+> >> +            reg = <0xf3000000 0x10000>;
+> >> +            interrupt-parent = <&vic2>;
+> >> +            interrupts = <10>;
+> >> +            clock-names = "core";
+> >> +            clocks = <&clocks CLK_G3D>;
+> >> +
+> >> +            assigned-clocks = <&clocks MOUT_G3D>, <&clocks DOUT_G3D>;
+> >> +            assigned-clock-rates = <0>, <66700000>;
+> >> +            assigned-clock-parents = <&clocks MOUT_MPLL>;
+> > 
+> > What are these clocks for, and why are they reparented / reclocked?
+> > 
+> > Shouldn't they be passed to 'clocks' as well?
+> > 
+> > -Paul
+> > 
 > 
-> - Add comments to explain why things are being done
-> 
-> - Print characters under 32 (space) as hexadecimals in parenthesis.
-> 
-> - Do not print spaces in the fourcc codes.
-> 
-> - Make use of a loop over the fourcc characters instead of
->   put_unaligned_le32(). This is necessary to omit spaces in the output.
-> 
-> - Use DRM style format instead of V4L2. This provides the precise code as
->   a numerical value as well as explicit endianness information.
-> 
-> - Added WARN_ON_ONCE() sanity checks. Comments on these are welcome; I'd
->   expect them mostly be covered by the tests.
-> 
-> - Added tests for %p4cc in lib/test_printf.c
-> 
->  Documentation/core-api/printk-formats.rst | 12 ++++
->  lib/test_printf.c                         | 17 +++++
->  lib/vsprintf.c                            | 86 +++++++++++++++++++++++
->  3 files changed, 115 insertions(+)
-> 
-> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-> index 8ebe46b1af39..7aa0451e06fb 100644
-> --- a/Documentation/core-api/printk-formats.rst
-> +++ b/Documentation/core-api/printk-formats.rst
-> @@ -545,6 +545,18 @@ For printing netdev_features_t.
->  
->  Passed by reference.
->  
-> +V4L2 and DRM FourCC code (pixel format)
-> +---------------------------------------
-> +
-> +::
-> +
-> +	%p4cc
-> +
-> +Print a FourCC code used by V4L2 or DRM, including format endianness and
-> +its numerical value as hexadecimal.
-> +
-> +Passed by reference.
-> +
->  Thanks
->  ======
->  
-> diff --git a/lib/test_printf.c b/lib/test_printf.c
-> index 2d9f520d2f27..a14754086707 100644
-> --- a/lib/test_printf.c
-> +++ b/lib/test_printf.c
-> @@ -624,6 +624,22 @@ static void __init fwnode_pointer(void)
->  	software_node_unregister_nodes(softnodes);
->  }
->  
-> +static void __init fourcc_pointer(void)
-> +{
-> +	struct {
-> +		u32 code;
-> +		char *str;
-> +	} const try[] = {
-> +		{ 0x20104646, "FF(10) little-endian (0x20104646)", },
-> +		{ 0xa0104646, "FF(10) big-endian (0xa0104646)", },
-> +		{ 0x10111213, "(13)(12)(11)(10) little-endian (0x10111213)", },
-> +	};
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(try); i++)
-> +		test(try[i].str, "%p4cc", &try[i].code);
-> +}
-> +
->  static void __init
->  errptr(void)
->  {
-> @@ -668,6 +684,7 @@ test_pointer(void)
->  	flags();
->  	errptr();
->  	fwnode_pointer();
-> +	fourcc_pointer();
->  }
->  
->  static void __init selftest(void)
-> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> index 7c488a1ce318..02e7906619c0 100644
-> --- a/lib/vsprintf.c
-> +++ b/lib/vsprintf.c
-> @@ -1721,6 +1721,89 @@ char *netdev_bits(char *buf, char *end, const void *addr,
->  	return special_hex_number(buf, end, num, size);
->  }
->  
-> +static noinline_for_stack
-> +char *fourcc_string(char *buf, char *end, const u32 *__fourcc,
-> +		    struct printf_spec spec, const char *fmt)
-> +{
-> +#define FOURCC_HEX_CHAR_STR		"(xx)"
-> +#define FOURCC_BIG_ENDIAN_STR		" big-endian"
-> +#define FOURCC_LITTLE_ENDIAN_STR	" little-endian"
-> +#define FOURCC_HEX_NUMBER		" (0x01234567)"
-> +#define FOURCC_STRING_MAX						\
-> +	FOURCC_HEX_CHAR_STR FOURCC_HEX_CHAR_STR FOURCC_HEX_CHAR_STR	\
-> +	FOURCC_HEX_CHAR_STR FOURCC_LITTLE_ENDIAN_STR FOURCC_HEX_NUMBER
-> +	struct printf_spec my_spec = {
-> +		.type = FORMAT_TYPE_UINT,
-> +		.field_width = 2,
-> +		.flags = SMALL,
-> +		.base = 16,
-> +		.precision = -1,
-> +	};
-> +	char __s[sizeof(FOURCC_STRING_MAX)];
-> +	char *s = __s;
-> +	unsigned int i;
-> +	/*
-> +	 * The 31st bit defines the endianness of the data, so save its printing
-> +	 * for later.
-> +	 */
-> +	u32 fourcc = *__fourcc & ~BIT(31);
-> +	int ret;
+> The G3D clock system can have multiple parents, and for stable operation
+> it's recommended to use the MPLL clock as the parent (which in turn
+> is actually a mux as well).  MOUT_G3D is simply the mux for CLK_G3D
+> (SGX core clock), DOUT_G3D is the divider.  DOUT_G3D could equally be CLK_G3D
+> (and probably should be, for readability) as CLK_G3D is simply the gate and
+> DOUT_G3D is the divider for it.
 
-Dereference __fourcc ...
+Good point, it should be CLK_G3D instead of DOUT.  Can you fix this as
+well?
 
-> +	if (check_pointer(&buf, end, __fourcc, spec))
-> +		return buf;
-
-.. and then sanity check it?
-
-> +	if (fmt[1] != 'c' || fmt[2] != 'c')
-> +		return error_string(buf, end, "(%p4?)", spec);
-
-Doesn't that want to come before everything else, including the
-check_pointer()?
-
-> +	for (i = 0; i < sizeof(fourcc); i++, fourcc >>= 8) {
-> +		unsigned char c = fourcc;
-> +
-> +		/* Weed out spaces */
-> +		if (c == ' ')
-> +			continue;
-> +
-> +		/* Print non-control characters as-is */
-> +		if (c > ' ') {
-> +			*s = c;
-> +			s++;
-> +			continue;
-> +		}
-
-Are you sure you want to pass non-ascii characters through?
-
-> +		if (WARN_ON_ONCE(sizeof(__s) <
-> +				 (s - __s) + sizeof(FOURCC_HEX_CHAR_STR)))
-> +			break;
-
-I really don't see the point of these checks.  Why check here but not
-before we output a non-control character? That seems rather arbitrary.
-Also, assume we do take this break, (to be continued below [*])
-
-> +		*s = '(';
-> +		s++;
-> +		s = number(s, s + 2, c, my_spec);
-
-You can drop my_spec and just use "s = hex_byte_pack(s, c);".
-
-> +		*s = ')';
-> +		s++;
-> +	}
-> +
-> +	ret = strscpy(s, *__fourcc & BIT(31) ? FOURCC_BIG_ENDIAN_STR
-> +					     : FOURCC_LITTLE_ENDIAN_STR,
-> +		      sizeof(__s) - (s - __s));
-> +	if (!WARN_ON_ONCE(ret < 0))
-> +		s += ret;
-> +
-> +	if (!WARN_ON_ONCE(sizeof(__s) <
-> +			  (s - __s) + sizeof(FOURCC_HEX_NUMBER))) {
-
-[*] then AFAICT this WARN_ON_ONCE is guaranteed to also fire [the
-left-hand side is the same as before, the right-hand side consists of a
-quantity s-__s that can only be larger or equal than before and a
-constant sizeof(FOURCC_HEX_NUMBER) that is definitely larger], hence we
-do not enter this if () and [**]
-
-> +		*s = ' ';
-> +		s++;
-> +		*s = '(';
-> +		s++;
-> +		/* subtract parentheses and the space from the size */
-> +		special_hex_number(s, s + sizeof(FOURCC_HEX_NUMBER) - 3,
-> +				   *__fourcc, sizeof(u32));
-
-Urgh. Don't we have an ARRAY_END() macro that let's you call this with
-(s, ARRAY_END(__s)) as buf, end?
-
-> +		s += sizeof(u32) * 2 + 2 /* 0x */;
-
-Why, when special_hex_number returns a pointer to one-past-its-output?
-
-> +		*s = ')';
-> +		s++;
-> +		*s = '\0';
-> +	}
-> +
-> +	return string(buf, end, __s, spec);
-
-[**] __s does not get nul-terminated, so we call string() with stack
-garbage.
-
-I'd say just drop those checks, and de-obfuscate the sizing of the __s
-array so it becomes obviously large enough for what the algorithm can
-produce. Just
-
-char __s[sizeof("(01)(02)(03)(04) little-endian (0x01020304)")]
-
-or something like that should be sufficient.
-
-Rasmus
+Best regards,
+Krzysztof
