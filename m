@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C23A3C82A01
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B010C82A01
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD9720575
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F1EC20575
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:05:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588025148;
-	bh=Ez5DysS12alFSCGzxD+JpDgKPRZigXc7wY6pgLEfTlQ=;
+	s=default; t=1588025156;
+	bh=AxN1whvX2LEvqCh0BfKLJDWQcQXL/COt6CVUMUhB4ag=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mv7Sh1ZmixgA8f7EgdZjxv4XeONUQ2oOy7Zw4qMQEgW7R+TFj6cLoJnuYVI1OmrYT
-	 gHgVBRJk/tdwNl2KSXwhUbTtrA33V0q/65mlYAKgWYhxH37mpXnn2Nw2gnWmV9nRAW
-	 e/AHNrSIhsJSxgZgvWnpWsB2Ka2aPJnY5J2kFdPg=
+	b=lZsStIjd3XuLpFO1mlZrTbhA53sQPthFbW2Fk5d1QafSOJjOPMPtXk8B4XhLgu89I
+	 C23sHh3Hg3qVU/R7dbYglpud+fvmIbesRs5SrR/vvDvHm8dr2WTpkQZ7EHMZqgnPZN
+	 uYCo3ljRCuFDa8I1cJXoZwrnNB1OtHWsWQvhxCwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726662AbgD0WFr (ORCPT
+        id S1727035AbgD0WFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 18:05:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48022 "EHLO mail.kernel.org"
+        Mon, 27 Apr 2020 18:05:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbgD0WB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 18:01:58 -0400
+        id S1726253AbgD0WB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 18:01:57 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E02E21D7D;
+        by mail.kernel.org (Postfix) with ESMTPSA id 5485420B80;
         Mon, 27 Apr 2020 22:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588024916;
-        bh=Ez5DysS12alFSCGzxD+JpDgKPRZigXc7wY6pgLEfTlQ=;
+        bh=AxN1whvX2LEvqCh0BfKLJDWQcQXL/COt6CVUMUhB4ag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CPnP3dWy1rVmzBOc+lQzDyQS50F7Kr8HaGt1qx6TPlk40VJUMvaDucCAkdt7IhepB
-         H0BBr9on6dGvbh1b6FWqIJX5tq0gg1JC7le8QYprw5abQjy5npiQWG1VfaLjcdRKRA
-         QZsYsIrY2ZSw25mA/AbBkPjjF2dP0z5hWGkyl76Q=
+        b=Jc57t5d5qk5Qx+ahBntP/QYCixOlOkonvRWm/PpnzZRCvKAIwpfA/I+1jUyzi61Ji
+         RuEEJMCefEthB1ngkTmH9ttOxAE+NzvW29gAdXJddgxFb+N8fF39a/HWaZVZq/IBVs
+         pCKhGX0te2tXV5N9q5Tdiw0gY2wgIIZl7nj2Od10=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jTBp4-000Iog-Rj; Tue, 28 Apr 2020 00:01:54 +0200
+        id 1jTBp4-000Inq-Hy; Tue, 28 Apr 2020 00:01:54 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 13/38] docs: networking: convert dccp.txt to ReST
-Date:   Tue, 28 Apr 2020 00:01:28 +0200
-Message-Id: <0dc5f31ae8ddf18a57d9f9d2922af3a09e0f357b.1588024424.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 03/38] docs: networking: convert altera_tse.txt to ReST
+Date:   Tue, 28 Apr 2020 00:01:18 +0200
+Message-Id: <b1341bc6ced659258fbf6f176727714ab01a716d.1588024424.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588024424.git.mchehab+huawei@kernel.org>
 References: <cover.1588024424.git.mchehab+huawei@kernel.org>
@@ -62,137 +62,182 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 - add SPDX header;
-- adjust title markup;
-- comment out text-only TOC from html/pdf output;
-- mark code blocks and literals as such;
+- use copyright symbol;
+- adjust titles and chapters, adding proper markups;
+- mark lists as such;
 - adjust identation, whitespaces and blank lines;
 - add to networking/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../networking/{dccp.txt => dccp.rst}         | 39 ++++++++++++-------
+ .../{altera_tse.txt => altera_tse.rst}        | 87 ++++++++++++-------
  Documentation/networking/index.rst            |  1 +
- 2 files changed, 25 insertions(+), 15 deletions(-)
- rename Documentation/networking/{dccp.txt => dccp.rst} (94%)
+ 2 files changed, 56 insertions(+), 32 deletions(-)
+ rename Documentation/networking/{altera_tse.txt => altera_tse.rst} (85%)
 
-diff --git a/Documentation/networking/dccp.txt b/Documentation/networking/dccp.rst
-similarity index 94%
-rename from Documentation/networking/dccp.txt
-rename to Documentation/networking/dccp.rst
-index 55c575fcaf17..dde16be04456 100644
---- a/Documentation/networking/dccp.txt
-+++ b/Documentation/networking/dccp.rst
-@@ -1,16 +1,18 @@
+diff --git a/Documentation/networking/altera_tse.txt b/Documentation/networking/altera_tse.rst
+similarity index 85%
+rename from Documentation/networking/altera_tse.txt
+rename to Documentation/networking/altera_tse.rst
+index 50b8589d12fd..7a7040072e58 100644
+--- a/Documentation/networking/altera_tse.txt
++++ b/Documentation/networking/altera_tse.rst
+@@ -1,6 +1,12 @@
+-       Altera Triple-Speed Ethernet MAC driver
 +.. SPDX-License-Identifier: GPL-2.0
+ 
+-Copyright (C) 2008-2014 Altera Corporation
++.. include:: <isonum.txt>
 +
-+=============
- DCCP protocol
- =============
- 
- 
--Contents
--========
--- Introduction
--- Missing features
--- Socket options
--- Sysctl variables
--- IOCTLs
--- Other tunables
--- Notes
-+.. Contents
-+   - Introduction
-+   - Missing features
-+   - Socket options
-+   - Sysctl variables
-+   - IOCTLs
-+   - Other tunables
-+   - Notes
- 
- 
- Introduction
-@@ -38,6 +40,7 @@ The Linux DCCP implementation does not currently support all the features that a
- specified in RFCs 4340...42.
- 
- The known bugs are at:
++=======================================
++Altera Triple-Speed Ethernet MAC driver
++=======================================
 +
- 	http://www.linuxfoundation.org/collaborate/workgroups/networking/todo#DCCP
++Copyright |copy| 2008-2014 Altera Corporation
  
- For more up-to-date versions of the DCCP implementation, please consider using
-@@ -54,7 +57,8 @@ defined: the "simple" policy (DCCPQ_POLICY_SIMPLE), which does nothing special,
- and a priority-based variant (DCCPQ_POLICY_PRIO). The latter allows to pass an
- u32 priority value as ancillary data to sendmsg(), where higher numbers indicate
- a higher packet priority (similar to SO_PRIORITY). This ancillary data needs to
--be formatted using a cmsg(3) message header filled in as follows:
-+be formatted using a cmsg(3) message header filled in as follows::
+ This is the driver for the Altera Triple-Speed Ethernet (TSE) controllers
+ using the SGDMA and MSGDMA soft DMA IP components. The driver uses the
+@@ -46,23 +52,33 @@ Jumbo frames are not supported at this time.
+ The driver limits PHY operations to 10/100Mbps, and has not yet been fully
+ tested for 1Gbps. This support will be added in a future maintenance update.
+ 
+-1) Kernel Configuration
++1. Kernel Configuration
++=======================
 +
- 	cmsg->cmsg_level = SOL_DCCP;
- 	cmsg->cmsg_type	 = DCCP_SCM_PRIORITY;
- 	cmsg->cmsg_len	 = CMSG_LEN(sizeof(uint32_t));	/* or CMSG_LEN(4) */
-@@ -94,7 +98,7 @@ must be registered on the socket before calling connect() or listen().
- 
- DCCP_SOCKOPT_TX_CCID is read/write. It returns the current CCID (if set) or sets
- the preference list for the TX CCID, using the same format as DCCP_SOCKOPT_CCID.
--Please note that the getsockopt argument type here is `int', not uint8_t.
-+Please note that the getsockopt argument type here is ``int``, not uint8_t.
- 
- DCCP_SOCKOPT_RX_CCID is analogous to DCCP_SOCKOPT_TX_CCID, but for the RX CCID.
- 
-@@ -113,6 +117,7 @@ be enabled at the receiver, too with suitable choice of CsCov.
- DCCP_SOCKOPT_SEND_CSCOV sets the sender checksum coverage. Values in the
- 	range 0..15 are acceptable. The default setting is 0 (full coverage),
- 	values between 1..15 indicate partial coverage.
+ The kernel configuration option is ALTERA_TSE:
 +
- DCCP_SOCKOPT_RECV_CSCOV is for the receiver and has a different meaning: it
- 	sets a threshold, where again values 0..15 are acceptable. The default
- 	of 0 means that all packets with a partial coverage will be discarded.
-@@ -123,11 +128,13 @@ DCCP_SOCKOPT_RECV_CSCOV is for the receiver and has a different meaning: it
+  Device Drivers ---> Network device support ---> Ethernet driver support --->
+  Altera Triple-Speed Ethernet MAC support (ALTERA_TSE)
  
- The following two options apply to CCID 3 exclusively and are getsockopt()-only.
- In either case, a TFRC info struct (defined in <linux/tfrc.h>) is returned.
+-2) Driver parameters list:
+-	debug: message level (0: no output, 16: all);
+-	dma_rx_num: Number of descriptors in the RX list (default is 64);
+-	dma_tx_num: Number of descriptors in the TX list (default is 64).
++2. Driver parameters list
++=========================
 +
- DCCP_SOCKOPT_CCID_RX_INFO
--	Returns a `struct tfrc_rx_info' in optval; the buffer for optval and
-+	Returns a ``struct tfrc_rx_info`` in optval; the buffer for optval and
- 	optlen must be set to at least sizeof(struct tfrc_rx_info).
++	- debug: message level (0: no output, 16: all);
++	- dma_rx_num: Number of descriptors in the RX list (default is 64);
++	- dma_tx_num: Number of descriptors in the TX list (default is 64).
 +
- DCCP_SOCKOPT_CCID_TX_INFO
--	Returns a `struct tfrc_tx_info' in optval; the buffer for optval and
-+	Returns a ``struct tfrc_tx_info`` in optval; the buffer for optval and
- 	optlen must be set to at least sizeof(struct tfrc_tx_info).
++3. Command line options
++=======================
++
++Driver parameters can be also passed in command line by using::
  
- On unidirectional connections it is useful to close the unused half-connection
-@@ -182,7 +189,7 @@ sync_ratelimit = 125 ms
- IOCTLS
- ======
- FIONREAD
--	Works as in udp(7): returns in the `int' argument pointer the size of
-+	Works as in udp(7): returns in the ``int`` argument pointer the size of
- 	the next pending datagram in bytes, or 0 when no datagram is pending.
+-3) Command line options
+-Driver parameters can be also passed in command line by using:
+ 	altera_tse=dma_rx_num:128,dma_tx_num:512
  
+-4) Driver information and notes
++4. Driver information and notes
++===============================
  
-@@ -191,10 +198,12 @@ Other tunables
- Per-route rto_min support
- 	CCID-2 supports the RTAX_RTO_MIN per-route setting for the minimum value
- 	of the RTO timer. This setting can be modified via the 'rto_min' option
--	of iproute2; for example:
-+	of iproute2; for example::
-+
- 		> ip route change 10.0.0.0/24   rto_min 250j dev wlan0
- 		> ip route add    10.0.0.254/32 rto_min 800j dev wlan0
- 		> ip route show dev wlan0
-+
- 	CCID-3 also supports the rto_min setting: it is used to define the lower
- 	bound for the expiry of the nofeedback timer. This can be useful on LANs
- 	with very low RTTs (e.g., loopback, Gbit ethernet).
+-4.1) Transmit process
++4.1. Transmit process
++---------------------
+ When the driver's transmit routine is called by the kernel, it sets up a
+ transmit descriptor by calling the underlying DMA transmit routine (SGDMA or
+ MSGDMA), and initiates a transmit operation. Once the transmit is complete, an
+@@ -70,7 +86,8 @@ interrupt is driven by the transmit DMA logic. The driver handles the transmit
+ completion in the context of the interrupt handling chain by recycling
+ resource required to send and track the requested transmit operation.
+ 
+-4.2) Receive process
++4.2. Receive process
++--------------------
+ The driver will post receive buffers to the receive DMA logic during driver
+ initialization. Receive buffers may or may not be queued depending upon the
+ underlying DMA logic (MSGDMA is able queue receive buffers, SGDMA is not able
+@@ -79,34 +96,39 @@ received, the DMA logic generates an interrupt. The driver handles a receive
+ interrupt by obtaining the DMA receive logic status, reaping receive
+ completions until no more receive completions are available.
+ 
+-4.3) Interrupt Mitigation
++4.3. Interrupt Mitigation
++-------------------------
+ The driver is able to mitigate the number of its DMA interrupts
+ using NAPI for receive operations. Interrupt mitigation is not yet supported
+ for transmit operations, but will be added in a future maintenance release.
+ 
+ 4.4) Ethtool support
++--------------------
+ Ethtool is supported. Driver statistics and internal errors can be taken using:
+ ethtool -S ethX command. It is possible to dump registers etc.
+ 
+ 4.5) PHY Support
++----------------
+ The driver is compatible with PAL to work with PHY and GPHY devices.
+ 
+ 4.7) List of source files:
+- o Kconfig
+- o Makefile
+- o altera_tse_main.c: main network device driver
+- o altera_tse_ethtool.c: ethtool support
+- o altera_tse.h: private driver structure and common definitions
+- o altera_msgdma.h: MSGDMA implementation function definitions
+- o altera_sgdma.h: SGDMA implementation function definitions
+- o altera_msgdma.c: MSGDMA implementation
+- o altera_sgdma.c: SGDMA implementation
+- o altera_sgdmahw.h: SGDMA register and descriptor definitions
+- o altera_msgdmahw.h: MSGDMA register and descriptor definitions
+- o altera_utils.c: Driver utility functions
+- o altera_utils.h: Driver utility function definitions
++--------------------------
++ - Kconfig
++ - Makefile
++ - altera_tse_main.c: main network device driver
++ - altera_tse_ethtool.c: ethtool support
++ - altera_tse.h: private driver structure and common definitions
++ - altera_msgdma.h: MSGDMA implementation function definitions
++ - altera_sgdma.h: SGDMA implementation function definitions
++ - altera_msgdma.c: MSGDMA implementation
++ - altera_sgdma.c: SGDMA implementation
++ - altera_sgdmahw.h: SGDMA register and descriptor definitions
++ - altera_msgdmahw.h: MSGDMA register and descriptor definitions
++ - altera_utils.c: Driver utility functions
++ - altera_utils.h: Driver utility function definitions
+ 
+-5) Debug Information
++5. Debug Information
++====================
+ 
+ The driver exports debug information such as internal statistics,
+ debug information, MAC and DMA registers etc.
+@@ -118,17 +140,18 @@ or sees the MAC registers: e.g. using: ethtool -d ethX
+ The developer can also use the "debug" module parameter to get
+ further debug information.
+ 
+-6) Statistics Support
++6. Statistics Support
++=====================
+ 
+ The controller and driver support a mix of IEEE standard defined statistics,
+ RFC defined statistics, and driver or Altera defined statistics. The four
+ specifications containing the standard definitions for these statistics are
+ as follows:
+ 
+- o IEEE 802.3-2012 - IEEE Standard for Ethernet.
+- o RFC 2863 found at http://www.rfc-editor.org/rfc/rfc2863.txt.
+- o RFC 2819 found at http://www.rfc-editor.org/rfc/rfc2819.txt.
+- o Altera Triple Speed Ethernet User Guide, found at http://www.altera.com
++ - IEEE 802.3-2012 - IEEE Standard for Ethernet.
++ - RFC 2863 found at http://www.rfc-editor.org/rfc/rfc2863.txt.
++ - RFC 2819 found at http://www.rfc-editor.org/rfc/rfc2819.txt.
++ - Altera Triple Speed Ethernet User Guide, found at http://www.altera.com
+ 
+ The statistics supported by the TSE and the device driver are as follows:
+ 
 diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index 4c8e896490e0..3894043332de 100644
+index dc37fc8d5bee..96ffad845fd9 100644
 --- a/Documentation/networking/index.rst
 +++ b/Documentation/networking/index.rst
-@@ -48,6 +48,7 @@ Contents:
-    cdc_mbim
-    cops
-    cxacru
-+   dccp
+@@ -38,6 +38,7 @@ Contents:
+    nfc
+    6lowpan
+    6pack
++   altera_tse
  
  .. only::  subproject and html
  
