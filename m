@@ -2,180 +2,165 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6D8C54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0490C4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22D55214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:50:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="XgxUF9Vy";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="pbNz3UCZ"
+	by mail.kernel.org (Postfix) with ESMTP id 8FC14206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:50:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgD0TuI (ORCPT
+        id S1726754AbgD0TuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 15:50:08 -0400
-Received: from mail.z3ntu.xyz ([128.199.32.197]:53132 "EHLO mail.z3ntu.xyz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725919AbgD0TuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 15:50:08 -0400
-Received: by mail.z3ntu.xyz (Postfix, from userid 182)
-        id 2477BC4D5F; Mon, 27 Apr 2020 19:50:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1588017006; bh=Tp5K0z6qXk66LE+x4u+qGGY18uOXh/OQIqEnu5hZFXg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=XgxUF9Vyf52xMS3BxfBY340LUDK+q6P4zfeGyNkRPGJKJQRuEZGKkmG0IywjstE1d
-         YVcJ9+L4y5alvyz8HYnMnGGK4DFZbOaBEAlB4W4a5FkUo1+pKkTPrO74965c1gSPvB
-         CzMwQ+WPAlGueZT+gRjdaruDvji8BV4n3DcFcQBY=
-Received: from g550jk.localnet (80-110-124-168.cgn.dynamic.surfer.at [80.110.124.168])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 78112C4C9D;
-        Mon, 27 Apr 2020 19:49:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1588016997; bh=Tp5K0z6qXk66LE+x4u+qGGY18uOXh/OQIqEnu5hZFXg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=pbNz3UCZ4ArCYHMDrSstU3Ei+42CwaW2E6sA6fEd4B3Ds5xdLdg87gkkHJ9EOuxWv
-         mS2RG4rD+ZiBT0uF6/g0Pg0aaIWZ2wXShtqffynnT1izO8Y+ukVdAv2nsgM/fFDyHa
-         qmOYcX/5wTQ3Uo/gIOWSwWoN0t/79F4nq+fL/Pzs=
-From:   Luca Weiss <luca@z3ntu.xyz>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH v3 2/2] leds: add sgm3140 driver
-Date:   Mon, 27 Apr 2020 21:49:54 +0200
-Message-ID: <318932736.Jt2qlLCP7m@g550jk>
-In-Reply-To: <20200427095102.GA21572@duo.ucw.cz>
-References: <20200421191354.1443017-1-luca@z3ntu.xyz> <20200421191354.1443017-3-luca@z3ntu.xyz> <20200427095102.GA21572@duo.ucw.cz>
+        Mon, 27 Apr 2020 15:50:15 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:53344 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726699AbgD0TuP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 15:50:15 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jT9lX-0006L6-BZ; Mon, 27 Apr 2020 13:50:07 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jT9lV-0003xk-91; Mon, 27 Apr 2020 13:50:07 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
+        <87ftcv1nqe.fsf@x220.int.ebiederm.org>
+        <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
+        <20200424173927.GB26802@redhat.com>
+        <87mu6ymkea.fsf_-_@x220.int.ebiederm.org>
+        <87blnemj5t.fsf_-_@x220.int.ebiederm.org>
+        <87zhaxqkwa.fsf@nanos.tec.linutronix.de>
+Date:   Mon, 27 Apr 2020 14:46:51 -0500
+In-Reply-To: <87zhaxqkwa.fsf@nanos.tec.linutronix.de> (Thomas Gleixner's
+        message of "Mon, 27 Apr 2020 12:32:21 +0200")
+Message-ID: <87a72wd844.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart4979951.K97e9W9pSL"; micalg="pgp-sha256"; protocol="application/pgp-signature"
+Content-Type: text/plain
+X-XM-SPF: eid=1jT9lV-0003xk-91;;;mid=<87a72wd844.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18j5AH/+MVgbJoMSFliM5bTtu8iUZh+Nco=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v3 2/6] posix-cpu-timers: Use PIDTYPE_TGID to simplify the logic in lookup_task
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---nextPart4979951.K97e9W9pSL
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Thomas Gleixner <tglx@linutronix.de> writes:
 
-On Montag, 27. April 2020 11:51:02 CEST Pavel Machek wrote:
-> Hi!
-> 
-> > Add a driver for the SGMICRO SGM3140 Buck/Boost Charge Pump LED driver.
-> > 
-> > This device is controlled by two GPIO pins, one for enabling and the
-> > second one for switching between torch and flash mode.
-> > 
-> > Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> 
-> Thanks, applied, but... I may remove it again.
-> 
-> > +++ b/drivers/leds/leds-sgm3140.c
-> > @@ -0,0 +1,320 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> 
-> Would you consider GPL-2+?
+> ebiederm@xmission.com (Eric W. Biederman) writes:
+>> Using pid_task(find_vpid(N), PIDTYPE_TGID) guarantees that if a task
+>> is found it is at that moment the thread group leader.  Which removes
+>> the need for the follow on test has_group_leader_pid.
+>>
+>> I have reorganized the rest of the code in lookup_task for clarity,
+>> and created a common return for most of the code.
+>
+> Sorry, it's way harder to read than the very explicit exits which were
+> there before.
 
-I don't really have a preference either way but GPL-2.0-or-later is fine for 
-me.
+My biggest gripe is the gettime and the ordinary !thread case should
+be sharing code and they are not.  I know historically why they don't
+but for all practical purposes has_group_leader_pid and
+thread_group_leader are the same test.
 
-> 
-> > +#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
-> > +static void sgm3140_init_v4l2_flash_config(struct sgm3140 *priv,
-> 
-> Ok.
-> 
-> > +static int sgm3140_probe(struct platform_device *pdev)
-> > +{
-> 
-> ...
-> 
-> > +	led_cdev->brightness_set_blocking = sgm3140_brightness_set;
-> > +	led_cdev->max_brightness = LED_ON;
-> 
-> Don't do this, unless you really have 255 levels of brightness.
 
-LED_ON is 1, so the brightness available is 0 - 1.
+>> The special case for clock_gettime with "pid == gettid" is not my
+>> favorite.  I strongly suspect it isn't used as gettid is such a pain,
+>> and passing 0 is much easier.  Still it is easier to keep this special
+>> case than to do the reasarch that will show it isn't used.
+>
+> It might be not your favorite, but when I refactored the code I learned
+> the hard way that one of the test suites has assumptions that
+> clock_gettime(PROCESS) works from any task of a group and not just for
+> the group leader. Sure we could fix the test suite, but test code tends
+> to be copied ...
 
-> 
-> > +	/* Create V4L2 Flash subdev */
-> > +	priv->v4l2_flash = v4l2_flash_init(&pdev->dev,
-> > +					   child_node,
-> > +					   fled_cdev, NULL,
-> > +					   &v4l2_sd_cfg);
-> > +	if (IS_ERR(priv->v4l2_flash)) {
-> 
-> Does this need some #ifdef guards?
+Do you know which test suite?
+It would be nice to see such surprising code with my own eyes.
 
-v4l2_flash_init has a NULL-returning version when CONFIG_V4L2_FLASH_LED_CLASS 
-is not defined (see https://elixir.bootlin.com/linux/latest/source/include/
-media/v4l2-flash-led-class.h#L166 )
+I completely agree that clock_gettime(PROCESS) should work for any task
+of a group.  I would think anything with a constant like that would just
+be passing in 0, which is trivial.  Looking up your threadid seems like
+extra work.
 
-> 
-> > +		ret = PTR_ERR(priv->v4l2_flash);
-> > +		goto err;
-> > +	}
-> > +
-> > +	return ret;
-> 
-> Should this return 0?
+Mostly my complaint is that the gettime subcase is an awkward special
+case.  Added in 33ab0fec3352 ("posix-timers: Consolidate
+posix_cpu_clock_get()") and the only justification for changing the
+userspace ABI was that it made things less awkward to combine to
+branches of code.
 
-ret should be 0 here, so it shouldn't matter much.
+>>  /*
+>>   * Functions for validating access to tasks.
+>>   */
+>> -static struct task_struct *lookup_task(const pid_t pid, bool thread,
+>> +static struct task_struct *lookup_task(const pid_t which_pid, bool thread,
+>>  				       bool gettime)
+>>  {
+>>  	struct task_struct *p;
+>> +	struct pid *pid;
+>>  
+>>  	/*
+>>  	 * If the encoded PID is 0, then the timer is targeted at current
+>>  	 * or the process to which current belongs.
+>>  	 */
+>> -	if (!pid)
+>> +	if (!which_pid)
+>>  		return thread ? current : current->group_leader;
+>>  
+>> -	p = find_task_by_vpid(pid);
+>> -	if (!p)
+>> -		return p;
+>> -
+>> -	if (thread)
+>> -		return same_thread_group(p, current) ? p : NULL;
+>> -
+>> -	if (gettime) {
+>> +	pid = find_vpid(which_pid);
+>> +	if (thread) {
+>> +		p = pid_task(pid, PIDTYPE_PID);
+>> +		if (p && !same_thread_group(p, current))
+>> +			p = NULL;
+>> +	} else {
+>>  		/*
+>>  		 * For clock_gettime(PROCESS) the task does not need to be
+>>  		 * the actual group leader. tsk->sighand gives
+>> @@ -76,13 +75,13 @@ static struct task_struct *lookup_task(const pid_t pid, bool thread,
+>>  		 * reference on it and store the task pointer until the
+>>  		 * timer is destroyed.
+>
+> Btw, this comment is wrong since
+>
+>      55e8c8eb2c7b ("posix-cpu-timers: Store a reference to a pid not a task")
 
-> 
-> > +err:
-> > +	fwnode_handle_put(child_node);
-> > +	return ret;
-> > +}
-> 
-> Does non-error path needs handle_put, too?
+It is definitely stale.  It continues to describe the motive for
+limiting ourselves to a thread_group_leader.
 
-I don't think so, I'm passing child_node to v4l2_flash_init which then saves 
-the pointer to v4l2_subdev->fwnode. 
+I am cooking up a patch to tweak that comment, and get replace of
+has_group_leader_pid.  Since it is unnecessary I just want to decouple
+that work from this patchset.
 
-The devm_led_classdev_flash_register_ext function also seems to store the 
-pointer (led_cdev->dev->fwnode = init_data->fwnode; in 
-led_classdev_register_ext)
-
-> 
-> Best regards,
-> 								
-	Pavel
-
-Regards,
-Luca
---nextPart4979951.K97e9W9pSL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEObrSLwgs2pG6FY/6cthDuJ1N11YFAl6nN2IACgkQcthDuJ1N
-11aAZBAA0i4n3JlvsQXSwCK/Fm8tiPmVsJPyFwa/Pt2f4xSUnBtjbBxnkdEt6MhK
-SnYIfBNZAjnTcNQeIObdGMjJ6nhMVk3zqXD8P2QfxQJL3I9izpjQv0cDsMzmFrsk
-JKjWeBCayt/AjhOU5pF48nOe6MDAzNNP+Eg1He2HMzJi43klsuRBtqadn6AzTgWz
-xaCX+BcZDdMZv+ZaJOfUkRkWVEjN2OvIRBSj3uIZMZ09+fTMSUgy26aWyxWMjMYX
-N+jqlBzVfp+UBBHcE3vwTqwlVfn4f5cNlhIAN+g9QtTAZ5/1gH7uMzIAaqZamvJp
-5ckBQvoz07051RkHmlbc5RrJf1rMuVJvnSlFw+MI5jGg7q0GmL6qTE9E8d46KT/8
-L9FV3uHJzeaos5DkGAZ40T0UmB130RzfvIpXcnq6r8dpTatduGHae1Rli8+bsTuL
-CFMywEMutthCiC9ql+FVByTlysTNRZO9V8ca3CwTFVDy90AxfjkZg5Wclo4wkE+o
-3Pj106n1C8jqfRX9dhO79LlcnG6+DOzim0+V+S78pHBPrvzQMVBLExC+VWZiia2a
-Ptk0vbKes2A6BRWWjSNFPun0X1aryXDl3gk3YAeBAN14tjMpepx8JrnzPGRpMD3a
-7rm2xshmhiGC1ncqGW8WUosoEc61IOHXZPN1Pz6osY1RXCm2zzY=
-=y4oW
------END PGP SIGNATURE-----
-
---nextPart4979951.K97e9W9pSL--
-
+Eric
 
 
