@@ -2,551 +2,125 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE5BC54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E287C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB856206BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3361A20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:58:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="SYIvUpHt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="m8Kykkky"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbgD0N5g (ORCPT
+        id S1727888AbgD0N6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 09:57:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57360 "EHLO
+        Mon, 27 Apr 2020 09:58:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726769AbgD0N5f (ORCPT
+        with ESMTP id S1726879AbgD0N6g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 09:57:35 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 526C2C0610D5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 06:57:35 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id b12so18862234ion.8
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 06:57:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LTTvKZfCiwrDKfifESYhTeX6mqxC+h8YHU3E6XuId8Y=;
-        b=SYIvUpHt1nxjLVHpWehlpyClkl8w6DmlYlInuGJF0hSSYNHvSs92iWLLKJ56Vvopd9
-         Rp9q0TRjuEfvg7OJXAxjManWj/N7ngrtldkbOMOGuryUGRpwjveXk5gZQKPoROvZy/t2
-         8OYubonvMroBZyyQAak/ACn8klvS+iZa4NceuFsdELgrXXxTDivrL8hfNf052TMvpR4m
-         ycm4ZcTG8EwpFOrHVJ16PIMheLOEyGbpXLmagYegxhnPrlc4HEgeJDNCK0Aman3sLg8k
-         AJ5tHJJT0CD9wrisrzrRgmfimAh7jcr9Byn1w1VhRV6vkgsF8mGEb8JBsZ1fSf8ekKa1
-         2I9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LTTvKZfCiwrDKfifESYhTeX6mqxC+h8YHU3E6XuId8Y=;
-        b=sALaOe0h6w1A15avhl6fTiGbmfcWS0Z5xsHSW0AjsexmOMZLv8uK7bg0uocElRe4fS
-         +Ebu6v/AatHODMeRJUpkXDOxi3eYFI571K/pBqdIQxo8DO1wnxGMfveCN3SUPDbbyE8u
-         4UNeG/S0mwyGYjunV3vEpkIOAGaxMQ2mmd3XQHQy5k0sN/7uWuPHptFDnBj40i0oSvU5
-         bHbcUmIGu/ssAGYXPxxLAtQeZbWuKbCTfSWHU4TDlAMVdYIAvli3DR0zuP4OXkpQmoTK
-         55Um5+C9sUrTm2Q1yy3rDGw3SwOeRmfPK9ngPFd/mLtvEpqMFyPnVOlJHuse2+2G9HLq
-         i+2w==
-X-Gm-Message-State: AGi0PuZkmfQdXjRDVJH/I5k0huTNrfrKTQaMumX8o9TgOMDobuts0eUR
-        nXIMF+juFBZGK6/silHc62PbczTHKzfLSRVTczvQJQ==
-X-Google-Smtp-Source: APiQypIHKnZUWFfEh4Ri6+LlmH1IuQU9xN8gcpDaoRnPmAQ36cUv+rx7+RJX+00jQETpcyAO7LhVQMZM1kX3BY7S45s=
-X-Received: by 2002:a5e:d506:: with SMTP id e6mr8158225iom.184.1587995854450;
- Mon, 27 Apr 2020 06:57:34 -0700 (PDT)
+        Mon, 27 Apr 2020 09:58:36 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77888C0610D5;
+        Mon, 27 Apr 2020 06:58:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HI+hXdef3teFcq3aFHJ+lNQ36+H/xnayzEP1cLz139A=; b=m8KykkkylWdoseBY1n/gsoqEh
+        KVFTqlhC0kFSp30GS16jUkbUZq7hRIIFETkZzuGl9kBqK2RTa4RTpC3CXJ9+Rj7Y2/iLhSK6XgT3N
+        ScefK7wtt9WxTxKjVKBC1wqYSRrECSrlLe9tbgSH1oytOZq2pylhi5zsVzFC+5p4NpsqR+RUNxT9D
+        XtUWUAj78s5iuppoliNlc9owGzJlBFNQSFZrqSOPfgOik+W8NN+vB08RqRaYtuQPZwCNiRbA7SqBY
+        h1PR2wiMjIpCXZqlGIY/VXWn7lBiRbKH5zdlKb0HDEBtgr2ibt+ebxHGba7DtaX29ZXB3ypvrWRYi
+        E6rLzrZ9Q==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:44642)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jT4H7-0003EQ-Ql; Mon, 27 Apr 2020 14:58:22 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jT4H6-0006iG-Q0; Mon, 27 Apr 2020 14:58:20 +0100
+Date:   Mon, 27 Apr 2020 14:58:20 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Calvin Johnson <calvin.johnson@oss.nxp.com>
+Cc:     linux.cj@gmail.com, Jeremy Linton <jeremy.linton@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        linux-acpi@vger.kernel.org, Marcin Wojtas <mw@semihalf.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
+        Varun Sethi <V.Sethi@nxp.com>, linux-kernel@vger.kernel.org,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [net-next PATCH v2 0/3] Introduce new APIs to support phylink
+ and phy layers
+Message-ID: <20200427135820.GH25745@shell.armlinux.org.uk>
+References: <20200427132409.23664-1-calvin.johnson@oss.nxp.com>
 MIME-Version: 1.0
-References: <20200424181308.770749-1-lyude@redhat.com>
-In-Reply-To: <20200424181308.770749-1-lyude@redhat.com>
-From:   Sean Paul <sean@poorly.run>
-Date:   Mon, 27 Apr 2020 09:56:58 -0400
-Message-ID: <CAMavQKLV31k=ePGCq2pc+QonyWcw6a9YvAPhR_+f-Q3TLjPyYg@mail.gmail.com>
-Subject: Re: [PATCH] drm/dp_mst: Kill the second sideband tx slot, save the world
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        "Lin, Wayne" <Wayne.Lin@amd.com>, stable <stable@vger.kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Airlie <airlied@redhat.com>,
-        Todd Previte <tprevite@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427132409.23664-1-calvin.johnson@oss.nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 2:13 PM Lyude Paul <lyude@redhat.com> wrote:
->
-> While we support using both tx slots for sideband transmissions, it
-> appears that DisplayPort devices in the field didn't end up doing a very
-> good job of supporting it. From section 5.2.1 of the DP 2.0
-> specification:
->
->   There are MST Sink/Branch devices in the field that do not handle
->   interleaved message transactions.
->
->   To facilitate message transaction handling by downstream devices, an
->   MST Source device shall generate message transactions in an atomic
->   manner (i.e., the MST Source device shall not concurrently interleave
->   multiple message transactions). Therefore, an MST Source device shall
->   clear the Message_Sequence_No value in the Sideband_MSG_Header to 0.
->
-> This might come as a bit of a surprise since the vast majority of hubs
-> will support using both tx slots even if they don't support interleaved
-> message transactions, and we've also been using both tx slots since MST
-> was introduced into the kernel.
->
-> However, there is one device we've had trouble getting working
-> consistently with MST for so long that we actually assumed it was just
-> broken: the infamous Dell P2415Qb. Previously this monitor would appear
-> to work sometimes, but in most situations would end up timing out
-> LINK_ADDRESS messages almost at random until you power cycled the whole
-> display. After reading section 5.2.1 in the DP 2.0 spec, some closer
-> investigation into this infamous display revealed it was only ever
-> timing out on sideband messages in the second TX slot.
->
-> Sure enough, avoiding the second TX slot has suddenly made this monitor
-> function perfectly for the first time in five years. And since they
-> explicitly mention this in the specification, I doubt this is the only
-> monitor out there with this issue. This might even explain explain the
-> seemingly harmless garbage sideband responses we would occasionally see
-> with MST hubs!
->
-> So - rewrite our sideband TX handlers to only support one TX slot. In
-> order to simplify our sideband handling now that we don't support
-> transmitting to multiple MSTBs at once, we also move all state tracking
-> for down replies from mstbs to the topology manager.
->
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> Fixes: ad7f8a1f9ced ("drm/helper: add Displayport multi-stream helper (v0.6)")
-> Cc: Sean Paul <sean@poorly.run>
+On Mon, Apr 27, 2020 at 06:54:06PM +0530, Calvin Johnson wrote:
+> Following functions are defined:
+>   phylink_fwnode_phy_connect()
+>   phylink_device_phy_connect()
+>   fwnode_phy_find_device()
+>   device_phy_find_device()
+>   fwnode_get_phy_node()
+> 
+> First two help in connecting phy to phylink instance.
+> Next two help in finding a phy on a mdiobus.
+> Last one helps in getting phy_node from a fwnode.
+> 
+> Changes in v2:
+>   move phy code from base/property.c to net/phy/phy_device.c
+>   replace acpi & of code to get phy-handle with fwnode_find_reference
+>   replace of_ and acpi_ code with generic fwnode to get phy-handle.
+> 
+> Calvin Johnson (3):
+>   device property: Introduce phy related fwnode functions
+>   net: phy: alphabetically sort header includes
+>   phylink: Introduce phylink_fwnode_phy_connect()
 
-Reviewed-by: Sean Paul <sean@poorly.run>
+Thanks for this, but there's more work that needs to be done here.  I
+also think that we must have an ack from ACPI people before this can be
+accepted - you are in effect proposing a new way for representing PHYs
+in ACPI.
 
-> Cc: "Lin, Wayne" <Wayne.Lin@amd.com>
-> Cc: <stable@vger.kernel.org> # v3.17+
-> ---
->  drivers/gpu/drm/drm_dp_mst_topology.c | 149 ++++++++------------------
->  include/drm/drm_dp_mst_helper.h       |  29 ++---
->  2 files changed, 50 insertions(+), 128 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-> index 03a1496f6120..dec5df82eef4 100644
-> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> @@ -1197,16 +1197,8 @@ static int drm_dp_mst_wait_tx_reply(struct drm_dp_mst_branch *mstb,
->
->                 /* remove from q */
->                 if (txmsg->state == DRM_DP_SIDEBAND_TX_QUEUED ||
-> -                   txmsg->state == DRM_DP_SIDEBAND_TX_START_SEND) {
-> +                   txmsg->state == DRM_DP_SIDEBAND_TX_START_SEND)
->                         list_del(&txmsg->next);
-> -               }
-> -
-> -               if (txmsg->state == DRM_DP_SIDEBAND_TX_START_SEND ||
-> -                   txmsg->state == DRM_DP_SIDEBAND_TX_SENT) {
-> -                       mstb->tx_slots[txmsg->seqno] = NULL;
-> -               }
-> -               mgr->is_waiting_for_dwn_reply = false;
-> -
->         }
->  out:
->         if (unlikely(ret == -EIO) && drm_debug_enabled(DRM_UT_DP)) {
-> @@ -2685,22 +2677,6 @@ static int set_hdr_from_dst_qlock(struct drm_dp_sideband_msg_hdr *hdr,
->         struct drm_dp_mst_branch *mstb = txmsg->dst;
->         u8 req_type;
->
-> -       /* both msg slots are full */
-> -       if (txmsg->seqno == -1) {
-> -               if (mstb->tx_slots[0] && mstb->tx_slots[1]) {
-> -                       DRM_DEBUG_KMS("%s: failed to find slot\n", __func__);
-> -                       return -EAGAIN;
-> -               }
-> -               if (mstb->tx_slots[0] == NULL && mstb->tx_slots[1] == NULL) {
-> -                       txmsg->seqno = mstb->last_seqno;
-> -                       mstb->last_seqno ^= 1;
-> -               } else if (mstb->tx_slots[0] == NULL)
-> -                       txmsg->seqno = 0;
-> -               else
-> -                       txmsg->seqno = 1;
-> -               mstb->tx_slots[txmsg->seqno] = txmsg;
-> -       }
-> -
->         req_type = txmsg->msg[0] & 0x7f;
->         if (req_type == DP_CONNECTION_STATUS_NOTIFY ||
->                 req_type == DP_RESOURCE_STATUS_NOTIFY)
-> @@ -2712,7 +2688,7 @@ static int set_hdr_from_dst_qlock(struct drm_dp_sideband_msg_hdr *hdr,
->         hdr->lcr = mstb->lct - 1;
->         if (mstb->lct > 1)
->                 memcpy(hdr->rad, mstb->rad, mstb->lct / 2);
-> -       hdr->seqno = txmsg->seqno;
-> +
->         return 0;
->  }
->  /*
-> @@ -2727,15 +2703,15 @@ static int process_single_tx_qlock(struct drm_dp_mst_topology_mgr *mgr,
->         int len, space, idx, tosend;
->         int ret;
->
-> +       if (txmsg->state == DRM_DP_SIDEBAND_TX_SENT)
-> +               return 0;
-> +
->         memset(&hdr, 0, sizeof(struct drm_dp_sideband_msg_hdr));
->
-> -       if (txmsg->state == DRM_DP_SIDEBAND_TX_QUEUED) {
-> -               txmsg->seqno = -1;
-> +       if (txmsg->state == DRM_DP_SIDEBAND_TX_QUEUED)
->                 txmsg->state = DRM_DP_SIDEBAND_TX_START_SEND;
-> -       }
->
-> -       /* make hdr from dst mst - for replies use seqno
-> -          otherwise assign one */
-> +       /* make hdr from dst mst */
->         ret = set_hdr_from_dst_qlock(&hdr, txmsg);
->         if (ret < 0)
->                 return ret;
-> @@ -2788,42 +2764,17 @@ static void process_single_down_tx_qlock(struct drm_dp_mst_topology_mgr *mgr)
->         if (list_empty(&mgr->tx_msg_downq))
->                 return;
->
-> -       txmsg = list_first_entry(&mgr->tx_msg_downq, struct drm_dp_sideband_msg_tx, next);
-> +       txmsg = list_first_entry(&mgr->tx_msg_downq,
-> +                                struct drm_dp_sideband_msg_tx, next);
->         ret = process_single_tx_qlock(mgr, txmsg, false);
-> -       if (ret == 1) {
-> -               /* txmsg is sent it should be in the slots now */
-> -               mgr->is_waiting_for_dwn_reply = true;
-> -               list_del(&txmsg->next);
-> -       } else if (ret) {
-> +       if (ret < 0) {
->                 DRM_DEBUG_KMS("failed to send msg in q %d\n", ret);
-> -               mgr->is_waiting_for_dwn_reply = false;
->                 list_del(&txmsg->next);
-> -               if (txmsg->seqno != -1)
-> -                       txmsg->dst->tx_slots[txmsg->seqno] = NULL;
->                 txmsg->state = DRM_DP_SIDEBAND_TX_TIMEOUT;
->                 wake_up_all(&mgr->tx_waitq);
->         }
->  }
->
-> -/* called holding qlock */
-> -static void process_single_up_tx_qlock(struct drm_dp_mst_topology_mgr *mgr,
-> -                                      struct drm_dp_sideband_msg_tx *txmsg)
-> -{
-> -       int ret;
-> -
-> -       /* construct a chunk from the first msg in the tx_msg queue */
-> -       ret = process_single_tx_qlock(mgr, txmsg, true);
-> -
-> -       if (ret != 1)
-> -               DRM_DEBUG_KMS("failed to send msg in q %d\n", ret);
-> -
-> -       if (txmsg->seqno != -1) {
-> -               WARN_ON((unsigned int)txmsg->seqno >
-> -                       ARRAY_SIZE(txmsg->dst->tx_slots));
-> -               txmsg->dst->tx_slots[txmsg->seqno] = NULL;
-> -       }
-> -}
-> -
->  static void drm_dp_queue_down_tx(struct drm_dp_mst_topology_mgr *mgr,
->                                  struct drm_dp_sideband_msg_tx *txmsg)
->  {
-> @@ -2836,8 +2787,7 @@ static void drm_dp_queue_down_tx(struct drm_dp_mst_topology_mgr *mgr,
->                 drm_dp_mst_dump_sideband_msg_tx(&p, txmsg);
->         }
->
-> -       if (list_is_singular(&mgr->tx_msg_downq) &&
-> -           !mgr->is_waiting_for_dwn_reply)
-> +       if (list_is_singular(&mgr->tx_msg_downq))
->                 process_single_down_tx_qlock(mgr);
->         mutex_unlock(&mgr->qlock);
->  }
-> @@ -3457,7 +3407,7 @@ static int drm_dp_encode_up_ack_reply(struct drm_dp_sideband_msg_tx *msg, u8 req
->
->  static int drm_dp_send_up_ack_reply(struct drm_dp_mst_topology_mgr *mgr,
->                                     struct drm_dp_mst_branch *mstb,
-> -                                   int req_type, int seqno, bool broadcast)
-> +                                   int req_type, bool broadcast)
->  {
->         struct drm_dp_sideband_msg_tx *txmsg;
->
-> @@ -3466,13 +3416,11 @@ static int drm_dp_send_up_ack_reply(struct drm_dp_mst_topology_mgr *mgr,
->                 return -ENOMEM;
->
->         txmsg->dst = mstb;
-> -       txmsg->seqno = seqno;
->         drm_dp_encode_up_ack_reply(txmsg, req_type);
->
->         mutex_lock(&mgr->qlock);
-> -
-> -       process_single_up_tx_qlock(mgr, txmsg);
-> -
-> +       /* construct a chunk from the first msg in the tx_msg queue */
-> +       process_single_tx_qlock(mgr, txmsg, true);
->         mutex_unlock(&mgr->qlock);
->
->         kfree(txmsg);
-> @@ -3697,8 +3645,9 @@ int drm_dp_mst_topology_mgr_resume(struct drm_dp_mst_topology_mgr *mgr,
->  }
->  EXPORT_SYMBOL(drm_dp_mst_topology_mgr_resume);
->
-> -static bool drm_dp_get_one_sb_msg(struct drm_dp_mst_topology_mgr *mgr, bool up,
-> -                                 struct drm_dp_mst_branch **mstb, int *seqno)
-> +static bool
-> +drm_dp_get_one_sb_msg(struct drm_dp_mst_topology_mgr *mgr, bool up,
-> +                     struct drm_dp_mst_branch **mstb)
->  {
->         int len;
->         u8 replyblock[32];
-> @@ -3706,13 +3655,13 @@ static bool drm_dp_get_one_sb_msg(struct drm_dp_mst_topology_mgr *mgr, bool up,
->         int ret;
->         u8 hdrlen;
->         struct drm_dp_sideband_msg_hdr hdr;
-> -       struct drm_dp_sideband_msg_rx *msg;
-> +       struct drm_dp_sideband_msg_rx *msg =
-> +               up ? &mgr->up_req_recv : &mgr->down_rep_recv;
->         int basereg = up ? DP_SIDEBAND_MSG_UP_REQ_BASE :
->                            DP_SIDEBAND_MSG_DOWN_REP_BASE;
->
->         if (!up)
->                 *mstb = NULL;
-> -       *seqno = -1;
->
->         len = min(mgr->max_dpcd_transaction_bytes, 16);
->         ret = drm_dp_dpcd_read(mgr->aux, basereg, replyblock, len);
-> @@ -3729,11 +3678,7 @@ static bool drm_dp_get_one_sb_msg(struct drm_dp_mst_topology_mgr *mgr, bool up,
->                 return false;
->         }
->
-> -       *seqno = hdr.seqno;
-> -
-> -       if (up) {
-> -               msg = &mgr->up_req_recv;
-> -       } else {
-> +       if (!up) {
->                 /* Caller is responsible for giving back this reference */
->                 *mstb = drm_dp_get_mst_branch_device(mgr, hdr.lct, hdr.rad);
->                 if (!*mstb) {
-> @@ -3741,7 +3686,6 @@ static bool drm_dp_get_one_sb_msg(struct drm_dp_mst_topology_mgr *mgr, bool up,
->                                       hdr.lct);
->                         return false;
->                 }
-> -               msg = &(*mstb)->down_rep_recv[hdr.seqno];
->         }
->
->         if (!drm_dp_sideband_msg_set_header(msg, &hdr, hdrlen)) {
-> @@ -3785,13 +3729,10 @@ static int drm_dp_mst_handle_down_rep(struct drm_dp_mst_topology_mgr *mgr)
->  {
->         struct drm_dp_sideband_msg_tx *txmsg;
->         struct drm_dp_mst_branch *mstb = NULL;
-> -       struct drm_dp_sideband_msg_rx *msg = NULL;
-> -       int seqno = -1;
-> -
-> -       if (!drm_dp_get_one_sb_msg(mgr, false, &mstb, &seqno))
-> -               goto out_clear_reply;
-> +       struct drm_dp_sideband_msg_rx *msg = &mgr->down_rep_recv;
->
-> -       msg = &mstb->down_rep_recv[seqno];
-> +       if (!drm_dp_get_one_sb_msg(mgr, false, &mstb))
-> +               goto out;
->
->         /* Multi-packet message transmission, don't clear the reply */
->         if (!msg->have_eomt)
-> @@ -3799,11 +3740,12 @@ static int drm_dp_mst_handle_down_rep(struct drm_dp_mst_topology_mgr *mgr)
->
->         /* find the message */
->         mutex_lock(&mgr->qlock);
-> -       txmsg = mstb->tx_slots[seqno];
-> -       /* remove from slots */
-> +       txmsg = list_first_entry_or_null(&mgr->tx_msg_downq,
-> +                                        struct drm_dp_sideband_msg_tx, next);
->         mutex_unlock(&mgr->qlock);
->
-> -       if (!txmsg) {
-> +       /* Were we actually expecting a response, and from this mstb? */
-> +       if (!txmsg || txmsg->dst != mstb) {
->                 struct drm_dp_sideband_msg_hdr *hdr;
->                 hdr = &msg->initial_hdr;
->                 DRM_DEBUG_KMS("Got MST reply with no msg %p %d %d %02x %02x\n",
-> @@ -3828,8 +3770,7 @@ static int drm_dp_mst_handle_down_rep(struct drm_dp_mst_topology_mgr *mgr)
->
->         mutex_lock(&mgr->qlock);
->         txmsg->state = DRM_DP_SIDEBAND_TX_RX;
-> -       mstb->tx_slots[seqno] = NULL;
-> -       mgr->is_waiting_for_dwn_reply = false;
-> +       list_del(&txmsg->next);
->         mutex_unlock(&mgr->qlock);
->
->         wake_up_all(&mgr->tx_waitq);
-> @@ -3837,11 +3778,7 @@ static int drm_dp_mst_handle_down_rep(struct drm_dp_mst_topology_mgr *mgr)
->         return 0;
->
->  out_clear_reply:
-> -       mutex_lock(&mgr->qlock);
-> -       mgr->is_waiting_for_dwn_reply = false;
-> -       mutex_unlock(&mgr->qlock);
-> -       if (msg)
-> -               memset(msg, 0, sizeof(struct drm_dp_sideband_msg_rx));
-> +       memset(msg, 0, sizeof(struct drm_dp_sideband_msg_rx));
->  out:
->         if (mstb)
->                 drm_dp_mst_topology_put_mstb(mstb);
-> @@ -3921,9 +3858,8 @@ static void drm_dp_mst_up_req_work(struct work_struct *work)
->  static int drm_dp_mst_handle_up_req(struct drm_dp_mst_topology_mgr *mgr)
->  {
->         struct drm_dp_pending_up_req *up_req;
-> -       int seqno;
->
-> -       if (!drm_dp_get_one_sb_msg(mgr, true, NULL, &seqno))
-> +       if (!drm_dp_get_one_sb_msg(mgr, true, NULL))
->                 goto out;
->
->         if (!mgr->up_req_recv.have_eomt)
-> @@ -3947,7 +3883,7 @@ static int drm_dp_mst_handle_up_req(struct drm_dp_mst_topology_mgr *mgr)
->         }
->
->         drm_dp_send_up_ack_reply(mgr, mgr->mst_primary, up_req->msg.req_type,
-> -                                seqno, false);
-> +                                false);
->
->         if (up_req->msg.req_type == DP_CONNECTION_STATUS_NOTIFY) {
->                 const struct drm_dp_connection_status_notify *conn_stat =
-> @@ -4693,7 +4629,7 @@ static void drm_dp_tx_work(struct work_struct *work)
->         struct drm_dp_mst_topology_mgr *mgr = container_of(work, struct drm_dp_mst_topology_mgr, tx_work);
->
->         mutex_lock(&mgr->qlock);
-> -       if (!list_empty(&mgr->tx_msg_downq) && !mgr->is_waiting_for_dwn_reply)
-> +       if (!list_empty(&mgr->tx_msg_downq))
->                 process_single_down_tx_qlock(mgr);
->         mutex_unlock(&mgr->qlock);
->  }
-> @@ -4714,26 +4650,25 @@ static inline void
->  drm_dp_delayed_destroy_mstb(struct drm_dp_mst_branch *mstb)
->  {
->         struct drm_dp_mst_topology_mgr *mgr = mstb->mgr;
-> -       struct drm_dp_mst_port *port, *tmp;
-> +       struct drm_dp_mst_port *port, *port_tmp;
-> +       struct drm_dp_sideband_msg_tx *txmsg, *txmsg_tmp;
->         bool wake_tx = false;
->
->         mutex_lock(&mgr->lock);
-> -       list_for_each_entry_safe(port, tmp, &mstb->ports, next) {
-> +       list_for_each_entry_safe(port, port_tmp, &mstb->ports, next) {
->                 list_del(&port->next);
->                 drm_dp_mst_topology_put_port(port);
->         }
->         mutex_unlock(&mgr->lock);
->
-> -       /* drop any tx slots msg */
-> +       /* drop any tx slot msg */
->         mutex_lock(&mstb->mgr->qlock);
-> -       if (mstb->tx_slots[0]) {
-> -               mstb->tx_slots[0]->state = DRM_DP_SIDEBAND_TX_TIMEOUT;
-> -               mstb->tx_slots[0] = NULL;
-> -               wake_tx = true;
-> -       }
-> -       if (mstb->tx_slots[1]) {
-> -               mstb->tx_slots[1]->state = DRM_DP_SIDEBAND_TX_TIMEOUT;
-> -               mstb->tx_slots[1] = NULL;
-> +       list_for_each_entry_safe(txmsg, txmsg_tmp, &mgr->tx_msg_downq, next) {
-> +               if (txmsg->dst != mstb)
-> +                       continue;
-> +
-> +               txmsg->state = DRM_DP_SIDEBAND_TX_TIMEOUT;
-> +               list_del(&txmsg->next);
->                 wake_tx = true;
->         }
->         mutex_unlock(&mstb->mgr->qlock);
-> diff --git a/include/drm/drm_dp_mst_helper.h b/include/drm/drm_dp_mst_helper.h
-> index 96bcf33c03d3..9e1ffcd7cb68 100644
-> --- a/include/drm/drm_dp_mst_helper.h
-> +++ b/include/drm/drm_dp_mst_helper.h
-> @@ -194,11 +194,8 @@ struct drm_dp_sideband_msg_rx {
->   * @rad: Relative Address to talk to this branch device.
->   * @lct: Link count total to talk to this branch device.
->   * @num_ports: number of ports on the branch.
-> - * @msg_slots: one bit per transmitted msg slot.
->   * @port_parent: pointer to the port parent, NULL if toplevel.
->   * @mgr: topology manager for this branch device.
-> - * @tx_slots: transmission slots for this device.
-> - * @last_seqno: last sequence number used to talk to this.
->   * @link_address_sent: if a link address message has been sent to this device yet.
->   * @guid: guid for DP 1.2 branch device. port under this branch can be
->   * identified by port #.
-> @@ -239,7 +236,6 @@ struct drm_dp_mst_branch {
->         u8 lct;
->         int num_ports;
->
-> -       int msg_slots;
->         /**
->          * @ports: the list of ports on this branch device. This should be
->          * considered protected for reading by &drm_dp_mst_topology_mgr.lock.
-> @@ -252,20 +248,11 @@ struct drm_dp_mst_branch {
->          */
->         struct list_head ports;
->
-> -       /* list of tx ops queue for this port */
->         struct drm_dp_mst_port *port_parent;
->         struct drm_dp_mst_topology_mgr *mgr;
->
-> -       /* slots are protected by mstb->mgr->qlock */
-> -       struct drm_dp_sideband_msg_tx *tx_slots[2];
-> -       int last_seqno;
->         bool link_address_sent;
->
-> -       /**
-> -        * @down_rep_recv: Message receiver state for down replies.
-> -        */
-> -       struct drm_dp_sideband_msg_rx down_rep_recv[2];
-> -
->         /* global unique identifier to identify branch devices */
->         u8 guid[16];
->  };
-> @@ -567,6 +554,12 @@ struct drm_dp_mst_topology_mgr {
->          */
->         struct drm_dp_sideband_msg_rx up_req_recv;
->
-> +       /**
-> +        * @down_rep_recv: Message receiver state for replies to down
-> +        * requests.
-> +        */
-> +       struct drm_dp_sideband_msg_rx down_rep_recv;
-> +
->         /**
->          * @lock: protects @mst_state, @mst_primary, @dpcd, and
->          * @payload_id_table_cleared.
-> @@ -592,11 +585,6 @@ struct drm_dp_mst_topology_mgr {
->          */
->         bool payload_id_table_cleared : 1;
->
-> -       /**
-> -        * @is_waiting_for_dwn_reply: whether we're waiting for a down reply.
-> -        */
-> -       bool is_waiting_for_dwn_reply : 1;
-> -
->         /**
->          * @mst_primary: Pointer to the primary/first branch device.
->          */
-> @@ -621,13 +609,12 @@ struct drm_dp_mst_topology_mgr {
->         const struct drm_private_state_funcs *funcs;
->
->         /**
-> -        * @qlock: protects @tx_msg_downq, the &drm_dp_mst_branch.txslost and
-> -        * &drm_dp_sideband_msg_tx.state once they are queued
-> +        * @qlock: protects @tx_msg_downq and &drm_dp_sideband_msg_tx.state
->          */
->         struct mutex qlock;
->
->         /**
-> -        * @tx_msg_downq: List of pending down replies.
-> +        * @tx_msg_downq: List of pending down requests
->          */
->         struct list_head tx_msg_downq;
->
-> --
-> 2.25.3
->
+> 
+>  drivers/net/phy/phy_device.c | 83 ++++++++++++++++++++++++++++++------
+>  drivers/net/phy/phylink.c    | 68 +++++++++++++++++++++++++++++
+>  include/linux/phy.h          |  3 ++
+>  include/linux/phylink.h      |  6 +++
+>  4 files changed, 146 insertions(+), 14 deletions(-)
+> 
+> -- 
+> 2.17.1
+> 
+> 
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
