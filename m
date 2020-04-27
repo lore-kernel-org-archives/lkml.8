@@ -2,98 +2,218 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE274C5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C498C55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98ACB20728
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAEB0206D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:29:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jigExJEw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QALnd6im"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726432AbgD0R2m (ORCPT
+        id S1726204AbgD0R30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 13:28:42 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:45276 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726348AbgD0R2l (ORCPT
+        Mon, 27 Apr 2020 13:29:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34228 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726309AbgD0R3Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 13:28:41 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03RHSbqk104244;
-        Mon, 27 Apr 2020 12:28:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588008517;
-        bh=dkYDQiJXfdVnI5Ul/GYJhp6hlCqYVf4gO6nywH0oUXY=;
-        h=From:To:CC:Subject:Date;
-        b=jigExJEwCtkyqdDLTJ/ja+ULmNFZJ141jGUs0qpPlD8gZWdvmADXP/m4VYX6mIfG2
-         64ULOwqokCPOLpwbDeDcN21fbp4xAhNZz6XG0MZ7Y1apZuYrZ67p2IEnyEwEDA2wMQ
-         nQ1iT7YAYLxPPN5mPlyEglOv9mP67zE5C/W1zSfs=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RHSbnS067353;
-        Mon, 27 Apr 2020 12:28:37 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 27
- Apr 2020 12:28:36 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 27 Apr 2020 12:28:36 -0500
-Received: from uda0131933.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RHSX69017392;
-        Mon, 27 Apr 2020 12:28:34 -0500
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-To:     <daniel.lezcano@linaro.org>, Tony Lindgren <tony@atomide.com>
-CC:     Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>, Suman Anna <s-anna@ti.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] clocksource/drivers/timer-ti-dm: Do one override clock parent in prepare()
-Date:   Mon, 27 Apr 2020 22:58:31 +0530
-Message-ID: <20200427172831.16546-1-lokeshvutla@ti.com>
-X-Mailer: git-send-email 2.23.0
+        Mon, 27 Apr 2020 13:29:25 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43974C03C1A7
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 10:29:25 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id w20so18511062ljj.0
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 10:29:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SHuBjEFsXuCOnXrDPerkRVxxxGJlefJzzkBgVwYtJlA=;
+        b=QALnd6imJ7V1ZuG0QY9Bq/9Z9J1unuBZ9xPj6KDxnYPc7fE4lJB9FjEFiP03awwA3b
+         zb92lKkogwPFCwFlntiLQ99F5H75z+x8WzXhoPMhhvlWFvDQWXj2cYnZUSCLhGNeLVH3
+         Wu6HU4F6I0ezMQ/bFDI9rQDlpnTEZ3wrIJYoZQmdRPTh3pdEsoZAT47tzLqkSGDIjpQy
+         tmlUnZwLfgtwDZ69d33p8fJFSwztMFMQ7TD9ZZwVoht1dQHhyFO54Ny3fBd/zbgLm/MQ
+         W7tuhO0gvn0im4FWdXx/ffwDttk/8EC2jVjhCbp0iO8kAIYiTqIiJjT9kL0duhgGyvCF
+         UcYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SHuBjEFsXuCOnXrDPerkRVxxxGJlefJzzkBgVwYtJlA=;
+        b=lgaSW0YDKQtypQXKtHlZGCIX2yfp+hH+1c2GhYv7PLkkHxE5P2BQ71pN3qBgn+DnLi
+         5Tr6TUEUd5hxPf/qq2J70bF70Jqc/McOl4UEN0Eb1sFXfAHuDgv/JpTlDJTZpZRbEo5Y
+         IIsGXlJ0jzEmZ8P5SBaf7ARGeRBUnILRgu5l1qChwSuaBJgxqFeCmU53gGzl2w6Lju0E
+         6enoPlP5xaFMsp/GbmpmdHNJZ8A7wbwGHnk51OH/cl24AvxLNrQQAgcj38bmVl2yfgvG
+         OVHn2iE1C9yX9KK9ECdMSf9uxoS9NzvmvlrBBpYvkZk4fXmVaFpNct2GPcwBDr9E0GNP
+         IDHg==
+X-Gm-Message-State: AGi0PuYzSIIbgHhwPdbOQUqqfsGFmz7fMbHgIrH4HAOpyCZOYnUK1I8l
+        sPGyHn2v9CFMRQ2awg/XNgTxk94ttxBsi5svBMoElM0iRLk=
+X-Google-Smtp-Source: APiQypLRikU2kj4lwV6Hlv63XRM9RyOKCs8RknvaYiOvJdZc7VVr5C780JaTVTCUKgNwbuwUujWo/vMtAOfrKhTqrI8=
+X-Received: by 2002:a2e:87d3:: with SMTP id v19mr14032917ljj.176.1588008563374;
+ Mon, 27 Apr 2020 10:29:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200427143646.619227-1-christian.brauner@ubuntu.com>
+In-Reply-To: <20200427143646.619227-1-christian.brauner@ubuntu.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Mon, 27 Apr 2020 19:28:56 +0200
+Message-ID: <CAG48ez3eSJSODADpo=O-j9txJ=2R+EupunRvs5H9t5Wa8mvkRA@mail.gmail.com>
+Subject: Re: [PATCH] nsproxy: attach to namespaces via pidfds
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@ubuntu.com>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-omap_dm_timer_prepare() is setting up the parent 32KHz clock. This
-prepare() gets called by request_timer in the client's driver. Because of
-this, the timer clock parent that is set with assigned-clock-parent is being
-overwritten. So drop this default setting of parent in prepare().
+On Mon, Apr 27, 2020 at 4:47 PM Christian Brauner
+<christian.brauner@ubuntu.com> wrote:
+> For quite a while we have been thinking about using pidfds to attach to
+> namespaces. This patchset has existed for about a year already but we've
+> wanted to wait to see how the general api would be received and adopted.
+> Now that more and more programs in userspace have started using pidfds
+> for process management it's time to send this one out.
 
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
----
-- As per the discussion happened here[0], dropping the default setting.
-[0] https://patchwork.kernel.org/patch/11379875/#23309493
+You can already reliably switch to a specific namespace of another
+process like this given a pidfd and the pid of the process (which, if
+you don't have it, you can get via fdinfo), right?
 
- drivers/clocksource/timer-ti-dm.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+int switch_ns_to(int pidfd, int pid, char *nstypename) {
+  char ns_path[100];
+  snprintf(ns_path, sizeof(ns_path), "/proc/%d/ns/%s", pid, nstypename);
+  int fd = open(ns_path, O_RDONLY|O_CLOEXEC);
+  int errno_after_open = errno;
 
-diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
-index 2531eab3d6d7..60aff087947a 100644
---- a/drivers/clocksource/timer-ti-dm.c
-+++ b/drivers/clocksource/timer-ti-dm.c
-@@ -258,9 +258,7 @@ static int omap_dm_timer_prepare(struct omap_dm_timer *timer)
- 	__omap_dm_timer_enable_posted(timer);
- 	omap_dm_timer_disable(timer);
- 
--	rc = omap_dm_timer_set_source(timer, OMAP_TIMER_SRC_32_KHZ);
--
--	return rc;
-+	return 0;
- }
- 
- static inline u32 omap_dm_timer_reserved_systimer(int id)
--- 
-2.23.0
+  if (pidfd_send_signal(pidfd, 0, NULL, 0))
+    return -1;
 
+  if (fd == -1) {
+    errno = errno_after_open;
+    return -1;
+  }
+
+  int ret = setns(fd, 0);
+  close(fd);
+  return ret;
+}
+
+> This patch makes it possible to use pidfds to attach to the namespaces
+> of another process, i.e. they can be passed as the first argument to the
+> setns() syscall. When only a single namespace type is specified the
+> semantics are equivalent to passing an nsfd.
+
+This introduces a difference in terms of security: With the old API,
+you need PTRACE_MODE_READ_FSCREDS on the task whose namespace you're
+attaching to (to dereference the link /proc/*/ns/*) *AND* whatever
+access checks the namespace itself enforces (always includes a check
+for CAP_SYS_ADMIN on the namespace). The ptrace check has the
+advantage, among other things, that it allows an LSM to see the
+relationship between the task that's accessing the namespace (subject)
+and the task whose namespace is being accessed (object).
+
+I feel slightly twitchy about this relaxation, and I'm wondering
+whether we can add a ptrace access check analogous to what you'd have
+needed via procfs.
+
+> That means
+> setns(nsfd, CLONE_NEWNET) equals setns(pidfd, CLONE_NEWNET). However,
+> when a pidfd is passed, multiple namespace flags can be specified in the
+> second setns() argument and setns() will attach the caller to all the
+> specified namespaces all at once or to none of them. If 0 is specified
+> together with a pidfd then setns() will interpret it the same way 0 is
+> interpreted together with a nsfd argument, i.e. attach to any/all
+> namespaces.
+[...]
+> Apart from significiantly reducing the number of syscalls from double
+> digit to single digit which is a decent reason post-spectre/meltdown
+> this also allows to switch to a set of namespaces atomically, i.e.
+> either attaching to all the specified namespaces succeeds or we fail.
+
+Apart from the issues I've pointed out below, I think it's worth
+calling out explicitly that with the current design, the switch will
+not, in fact, be fully atomic - the process will temporarily be in
+intermediate stages where the switches to some namespaces have
+completed while the switches to other namespaces are still pending;
+and while there will be less of these intermediate stages than before,
+it also means that they will be less explicit to userspace.
+
+[...]
+> diff --git a/kernel/nsproxy.c b/kernel/nsproxy.c
+[...]
+> +/*
+> + * Ordering is equivalent to the standard ordering used everywhere
+> + * else during unshare and process creation.
+> + */
+> +static int ns_install(struct nsproxy *nsproxy, struct pid *pid, int flags)
+> +{
+> +       int ret = 0;
+> +       struct task_struct *tsk;
+> +       struct nsproxy *nsp;
+> +
+> +       tsk = get_pid_task(pid, PIDTYPE_PID);
+> +       if (!tsk)
+> +               return -ESRCH;
+> +
+> +       get_nsproxy(tsk->nsproxy);
+> +       nsp = tsk->nsproxy;
+
+How is this correct? Are you holding any locks that protect tsk->nsproxy?
+
+> +#ifdef CONFIG_USER_NS
+> +       if (wants_ns(flags, CLONE_NEWUSER)) {
+> +               struct user_namespace *user_ns;
+> +
+> +               user_ns = get_user_ns(__task_cred(tsk)->user_ns);
+> +               ret = __ns_install(nsproxy, &user_ns->ns);
+
+If ret == 0, then at this point you've already committed the user
+namespace change *to the calling process*. The ->install handler of
+user namespaces doesn't touch the nsproxy at all.
+
+> +               put_user_ns(user_ns);
+> +       }
+> +#else
+> +       if (flags & CLONE_NEWUSER)
+> +               ret = -EINVAL;
+> +#endif
+> +
+> +       if (!ret && wants_ns(flags, CLONE_NEWNS))
+> +               ret = __ns_install(nsproxy, mnt_ns_to_common(nsp->mnt_ns));
+
+And this one might be even worse, because the mount namespace change
+itself is only stored in the nsproxy at this point, but the cwd and
+root paths have already been overwritten on the task's fs_struct.
+
+To actually make sys_set_ns() atomic, I think you'd need some
+moderately complicated prep work, splitting the ->install handlers up
+into prep work and a commit phase that can't fail.
+
+[...]
+> +#ifdef CONFIG_PID_NS
+> +       if (!ret && wants_ns(flags, CLONE_NEWPID)) {
+> +               struct pid_namespace *pidns;
+> +
+> +               pidns = task_active_pid_ns(tsk);
+> +               if (pidns) {
+> +                       get_pid_ns(pidns);
+> +                       ret = __ns_install(nsproxy, &pidns->ns);
+> +                       put_pid_ns(pidns);
+> +               }
+
+If you can't get the task's pidns, shouldn't that be an error?
+
+> +       }
+[...]
