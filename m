@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DEFBC4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 354D2C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 065AF2078C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:20:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11D9D218AC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:20:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588022401;
-	bh=1yH336cDHg1XCo8mE3CXxWN2Wfs+pS+peIyoC1Fr+ZE=;
+	s=default; t=1588022404;
+	bh=ATNvUB+RDOUU4Zw8jalEgQKIa8iNkrmEm5PCk/2EQHg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pKPrclUaEJHtw1iaM1DP8yrfKjhV1BL57uEv9wVeQxrGbYVjkEydgULRoqWgHUcdq
-	 ilGEzJnCNmwFWrCZ6bmulaOzIAMyANDWcO/+7RsgFdLsZgJ9mMDDSAt8YOfoqjbH5H
-	 AWe4ajuvXNSOpg6jp3jAoP5XENwVYsAizaRn2o3g=
+	b=xhDA0A/vJof56wPk1h1s8MSCrbts2k2G1wt/Z4MERlfGrTy5Y5T9tFEAKBOcLiv2m
+	 CJ8W7MuExfONBZId1j1mdjildmQyE6wGamv8VFzlIHX1eusxmDKG57UsU6leFcsPdS
+	 23HgMslFFD82Sd6oGxPYq5Hi40+EFAKyRnbrt/Og=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgD0VT7 (ORCPT
+        id S1726867AbgD0VUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 17:19:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36252 "EHLO mail.kernel.org"
+        Mon, 27 Apr 2020 17:20:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726030AbgD0VT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 17:19:57 -0400
+        id S1726030AbgD0VUA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 17:20:00 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7A42206D6;
-        Mon, 27 Apr 2020 21:19:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68A832087E;
+        Mon, 27 Apr 2020 21:19:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588022396;
-        bh=1yH336cDHg1XCo8mE3CXxWN2Wfs+pS+peIyoC1Fr+ZE=;
+        s=default; t=1588022400;
+        bh=ATNvUB+RDOUU4Zw8jalEgQKIa8iNkrmEm5PCk/2EQHg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GhT6IedCvpDCVnI1nusfcg4uDzefx5h+JWp4jKnU91QWqYCVarcA1HhEF21DYqEaN
-         gvuOMVwqTLeL5qt/Jp/OjidF/+q8aoF9hzXIz7cwDXn8NSC6Id5xVTMArPJITCTIif
-         VcZEncB85wgKn3PPSCYECzCYNI7O38EUggDPd9tg=
+        b=cMAnBqDMxoVHrm4PM6FFQYXmLDMe4rvE8ChQDZiXGiyiuuciKKgRrJvyuMWYlBcat
+         0hUApb3k5UJwXEXtGuEwQS12ggLq6JMYhB5l849XNyitt8c8Mn196IiAeT2FeWyJG1
+         THeDLAbyK6BQ5L3w6ACVltKK9Msw4pcQ+MrqalJ8=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
 Cc:     Ingo Molnar <mingo@kernel.org>,
@@ -48,9 +48,9 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Song Liu <songliubraving@fb.com>
-Subject: [PATCH 3/7] perf bpf: Decouple creating the evlist from adding the SB event
-Date:   Mon, 27 Apr 2020 18:19:31 -0300
-Message-Id: <20200427211935.25789-4-acme@kernel.org>
+Subject: [PATCH 4/7] perf bpf: Decouple creating the evlist from adding the SB event
+Date:   Mon, 27 Apr 2020 18:19:32 -0300
+Message-Id: <20200427211935.25789-5-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200427211935.25789-1-acme@kernel.org>
 References: <20200427211935.25789-1-acme@kernel.org>
@@ -76,173 +76,22 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Song Liu <songliubraving@fb.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-record.c | 17 ++++++++++++++---
- tools/perf/builtin-top.c    | 15 +++++++++++++--
- tools/perf/util/bpf-event.c |  3 +--
- tools/perf/util/bpf-event.h |  7 +++----
- tools/perf/util/evlist.c    | 17 +++--------------
- tools/perf/util/evlist.h    |  2 +-
- 6 files changed, 35 insertions(+), 26 deletions(-)
+ tools/perf/util/bpf-event.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 2348c4205e59..ed2244847400 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1572,16 +1572,27 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 			goto out_child;
- 	}
- 
-+	err = -1;
- 	if (!rec->no_buildid
- 	    && !perf_header__has_feat(&session->header, HEADER_BUILD_ID)) {
- 		pr_err("Couldn't generate buildids. "
- 		       "Use --no-buildid to profile anyway.\n");
--		err = -1;
- 		goto out_child;
- 	}
- 
--	if (!opts->no_bpf_event)
--		bpf_event__add_sb_event(&rec->sb_evlist, &session->header.env);
-+	if (!opts->no_bpf_event) {
-+		rec->sb_evlist = evlist__new();
-+
-+		if (rec->sb_evlist == NULL) {
-+			pr_err("Couldn't create side band evlist.\n.");
-+			goto out_child;
-+		}
-+
-+		if (evlist__add_bpf_sb_event(rec->sb_evlist, &session->header.env)) {
-+			pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
-+			goto out_child;
-+		}
-+	}
- 
- 	if (perf_evlist__start_sb_thread(rec->sb_evlist, &rec->opts.target)) {
- 		pr_debug("Couldn't start the BPF side band thread:\nBPF programs starting from now on won't be annotatable\n");
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 70e1c732db6a..de24aced7213 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1742,8 +1742,19 @@ int cmd_top(int argc, const char **argv)
- 		goto out_delete_evlist;
- 	}
- 
--	if (!top.record_opts.no_bpf_event)
--		bpf_event__add_sb_event(&top.sb_evlist, &perf_env);
-+	if (!top.record_opts.no_bpf_event) {
-+		top.sb_evlist = evlist__new();
-+
-+		if (top.sb_evlist == NULL) {
-+			pr_err("Couldn't create side band evlist.\n.");
-+			goto out_delete_evlist;
-+		}
-+
-+		if (evlist__add_bpf_sb_event(top.sb_evlist, &perf_env)) {
-+			pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
-+			goto out_delete_evlist;
-+		}
-+	}
- 
- 	if (perf_evlist__start_sb_thread(top.sb_evlist, target)) {
- 		pr_debug("Couldn't start the BPF side band thread:\nBPF programs starting from now on won't be annotatable\n");
-diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-index 0cd41a862952..3742511a08d1 100644
---- a/tools/perf/util/bpf-event.c
-+++ b/tools/perf/util/bpf-event.c
-@@ -509,8 +509,7 @@ static int bpf_event__sb_cb(union perf_event *event, void *data)
- 	return 0;
- }
- 
--int bpf_event__add_sb_event(struct evlist **evlist,
--			    struct perf_env *env)
-+int evlist__add_bpf_sb_event(struct evlist *evlist, struct perf_env *env)
- {
- 	struct perf_event_attr attr = {
- 		.type	          = PERF_TYPE_SOFTWARE,
 diff --git a/tools/perf/util/bpf-event.h b/tools/perf/util/bpf-event.h
-index 81fdc88e6c1a..2c7a50509659 100644
+index 2c7a50509659..68f315c3df5b 100644
 --- a/tools/perf/util/bpf-event.h
 +++ b/tools/perf/util/bpf-event.h
-@@ -33,8 +33,7 @@ struct btf_node {
- #ifdef HAVE_LIBBPF_SUPPORT
- int machine__process_bpf(struct machine *machine, union perf_event *event,
- 			 struct perf_sample *sample);
--int bpf_event__add_sb_event(struct evlist **evlist,
--				 struct perf_env *env);
-+int evlist__add_bpf_sb_event(struct evlist *evlist, struct perf_env *env);
- void bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
- 				    struct perf_env *env,
- 				    FILE *fp);
-@@ -46,8 +45,8 @@ static inline int machine__process_bpf(struct machine *machine __maybe_unused,
+@@ -45,7 +45,7 @@ static inline int machine__process_bpf(struct machine *machine __maybe_unused,
  	return 0;
  }
  
--static inline int bpf_event__add_sb_event(struct evlist **evlist __maybe_unused,
--					  struct perf_env *env __maybe_unused)
-+static inline int evlist__add_bpf_sb_event(struct evlist **evlist __maybe_unused,
-+					   struct perf_env *env __maybe_unused)
+-static inline int evlist__add_bpf_sb_event(struct evlist **evlist __maybe_unused,
++static inline int evlist__add_bpf_sb_event(struct evlist *evlist __maybe_unused,
+ 					   struct perf_env *env __maybe_unused)
  {
  	return 0;
- }
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 82d9f9bb8975..1d0d36da223b 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1704,38 +1704,27 @@ struct evsel *perf_evlist__reset_weak_group(struct evlist *evsel_list,
- 	return leader;
- }
- 
--int perf_evlist__add_sb_event(struct evlist **evlist,
-+int perf_evlist__add_sb_event(struct evlist *evlist,
- 			      struct perf_event_attr *attr,
- 			      perf_evsel__sb_cb_t cb,
- 			      void *data)
- {
- 	struct evsel *evsel;
--	bool new_evlist = (*evlist) == NULL;
--
--	if (*evlist == NULL)
--		*evlist = evlist__new();
--	if (*evlist == NULL)
--		return -1;
- 
- 	if (!attr->sample_id_all) {
- 		pr_warning("enabling sample_id_all for all side band events\n");
- 		attr->sample_id_all = 1;
- 	}
- 
--	evsel = perf_evsel__new_idx(attr, (*evlist)->core.nr_entries);
-+	evsel = perf_evsel__new_idx(attr, evlist->core.nr_entries);
- 	if (!evsel)
- 		goto out_err;
- 
- 	evsel->side_band.cb = cb;
- 	evsel->side_band.data = data;
--	evlist__add(*evlist, evsel);
-+	evlist__add(evlist, evsel);
- 	return 0;
--
- out_err:
--	if (new_evlist) {
--		evlist__delete(*evlist);
--		*evlist = NULL;
--	}
- 	return -1;
- }
- 
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index f5bd5c386df1..0f02408fff3e 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -107,7 +107,7 @@ int __perf_evlist__add_default_attrs(struct evlist *evlist,
- 
- int perf_evlist__add_dummy(struct evlist *evlist);
- 
--int perf_evlist__add_sb_event(struct evlist **evlist,
-+int perf_evlist__add_sb_event(struct evlist *evlist,
- 			      struct perf_event_attr *attr,
- 			      perf_evsel__sb_cb_t cb,
- 			      void *data);
 -- 
 2.21.1
 
