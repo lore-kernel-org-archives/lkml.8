@@ -2,116 +2,547 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F63AC5519C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 04:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DECA9C5519A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 04:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F16282080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 04:15:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rylan.coffee header.i=@rylan.coffee header.b="llX/86K0";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AlKMLq1b"
+	by mail.kernel.org (Postfix) with ESMTP id B7E90215A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 04:17:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbgD0EPU (ORCPT
+        id S1726504AbgD0ERN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 00:15:20 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:33853 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726357AbgD0EPT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 00:15:19 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 1D0F85C00DE;
-        Mon, 27 Apr 2020 00:15:18 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Mon, 27 Apr 2020 00:15:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rylan.coffee; h=
-        date:from:to:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=b2k2hy0obFtFe40lOY3WleQMvx/
-        DeMs6uYX07xiuYUM=; b=llX/86K09l8ElFJedOdbRBX28xXwWgVXDiSP1UmlzEc
-        0syw5duUk8wRFEenqJyGIEzj3uejgA/RAO0ihDyctwuBRKt4En+wVRZLcxe4Bb9O
-        eJeL8PqhhR2XcPF86CsVkKqVnTZ4FIT68rPZx14qmHE2wgJx8CDiUZzFuO5BieX0
-        pNtoIz5K12kEQQ5yK0CdgtK65RPRZLToydcdVErJ25xkPJ3ZYsmqmaU7adsJp8Jc
-        CBzvIGiyWfj2dDQJ7f5PvXY0opTznBPMrlRwul81cEqdtRvQUvGdJP7NVbzh2nEv
-        HHXiGC7k4oHPNYZGfEhTLBi7utfgiAAol2Vkj4w2new==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=b2k2hy
-        0obFtFe40lOY3WleQMvx/DeMs6uYX07xiuYUM=; b=AlKMLq1bLc892cBt1Q1KmH
-        64s5VqdC0fR2BCskqdMmeTDsrFAJUvB19qD9+rdCGLIHrPTy+b2mqyieQPz3vl6Y
-        QXMVd86z3xEPE21Vm3oX2GuGIYQPBbSGeu4GbfBLhGS5maEihFTX4UdNu7jpQI8w
-        WSTlDD9g4gS306oNBHLDdytTNh5cqgKlWwsDR35pkpV5v0tW56qjDkWJiUiF8hnp
-        YIBn1zxhySKqwJWQIiz5XctteeJO+/4HskGAHixqchPRIqbbvGNrUkCldujXUHR2
-        qNmdfSSUGCbgI32etLuy8ZTrar6ewFShjd11rrTrtn9rBhqzZaoJAH0NzSFbx0rA
-        ==
-X-ME-Sender: <xms:VVymXh84y6tCANY9_Y_ncc6r5-QCGhwGOfqqJ9RNkpt9TLq4Qon5Lw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrheekgdekvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtjeenucfhrhhomheptfihlhgrnhcu
-    ffhmvghllhhouceomhgrihhlsehrhihlrghnrdgtohhffhgvvgeqnecukfhppedutdekrd
-    egledrudehkedrkeegnecuvehluhhsthgvrhfuihiivgepvdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrihhlsehrhihlrghnrdgtohhffhgvvg
-X-ME-Proxy: <xmx:VVymXuod60fD-NHqfvXPabNrd-OqBDq8iulf3jv79mvzYPhlRNje-Q>
-    <xmx:VVymXsVmbP3nIDuarlYiRlGuLe4QB4pgdeJx_Uf4Yrn2bSbVJM5vsg>
-    <xmx:VVymXpJyts3RNPEbSi-swCQfx_v0abltrYHVqGZNlNXlU22Cdr8ZxQ>
-    <xmx:VlymXr1ioOfPPgoUySYicbyyax3FGEoCfJSXL7qPQIu033VdiQ5uiA>
-Received: from athena (pool-108-49-158-84.bstnma.fios.verizon.net [108.49.158.84])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A9D47328005D;
-        Mon, 27 Apr 2020 00:15:17 -0400 (EDT)
-Date:   Mon, 27 Apr 2020 00:15:18 -0400
-From:   Rylan Dmello <mail@rylan.coffee>
-To:     Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, Benjamin Poirier <bpoirier@suse.com>,
-        Jiri Pirko <jpirko@redhat.com>
-Subject: [PATCH 3/3] staging: qlge: Remove print statements for lbq_clean_idx
- and lbq_free_cnt
-Message-ID: <aa7e0197f4e34cec0855124e45696e33dd9527e5.1587959245.git.mail@rylan.coffee>
-References: <cover.1587959245.git.mail@rylan.coffee>
+        Mon, 27 Apr 2020 00:17:13 -0400
+Received: from mga03.intel.com ([134.134.136.65]:50544 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726064AbgD0ERM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 00:17:12 -0400
+IronPort-SDR: Ze1dyAdaBQnglU47u1CojO+BLLdf+TvDe2fu/AT1xEArCoQQQnOrQAp4sCWyWaicvH+et5DGvX
+ dM34w7IESOWw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2020 21:17:10 -0700
+IronPort-SDR: KPoYrprCRrhuhwRMA74c2MarHHHfAa7xS1xQUo6e/KxBraRT9AOjmth5AE7Jg0ut+auoKDNPP0
+ wx/TPObQYKsQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,322,1583222400"; 
+   d="scan'208";a="302224309"
+Received: from linux.intel.com ([10.54.29.200])
+  by FMSMGA003.fm.intel.com with ESMTP; 26 Apr 2020 21:17:09 -0700
+Received: from [10.255.164.247] (vramuthx-MOBL1.gar.corp.intel.com [10.255.164.247])
+        by linux.intel.com (Postfix) with ESMTP id 5A635580646;
+        Sun, 26 Apr 2020 21:17:04 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v3 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, hauke.mehrtens@intel.com,
+        anders.roxell@linaro.org, vigneshr@ti.com, arnd@arndb.de,
+        richard@nod.at, brendanhiggins@google.com,
+        linux-mips@vger.kernel.org, robh+dt@kernel.org,
+        miquel.raynal@bootlin.com, tglx@linutronix.de,
+        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
+References: <20200423162113.38055-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200423162113.38055-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200424183612.4cfdbb6a@collabora.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <7d7b6f10-0ed9-da47-7910-476b4562e92d@linux.intel.com>
+Date:   Mon, 27 Apr 2020 12:17:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <cover.1587959245.git.mail@rylan.coffee>
+In-Reply-To: <20200424183612.4cfdbb6a@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove debug print statements referring to non-existent fields
-'lbq_clean_idx' and 'lbq_free_cnt' in the 'rx_ring' struct, which causes
-a compilation failure when QL_DEV_DUMP is set.
+Hi Boris,
 
-These fields were initially removed as a part of commit aec626d2092f
-("staging: qlge: Update buffer queue prod index despite oom") in 2019.
+     Thank you  very much for review comments and your time...
+On 25/4/2020 12:36 am, Boris Brezillon wrote:
+ > On Fri, 24 Apr 2020 00:21:13 +0800
+ > "Ramuthevar, Vadivel MuruganX"
+ > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+ >
+ >> +
+ >> +#define EBU_CLC			0x000
+ >> +#define EBU_CLC_RST		0x00000000u
+ >> +
+ >> +#define	EBU_ADDR_SEL(n)		(0x20 + (n) * 4)
+ > 	   ^ Please replace those tabs by a single space.
+Noted.
+ >> +#define	EBU_ADDR_MASK		(5 << 4)
+ >> +#define	EBU_ADDR_SEL_REGEN	0x1
+ >> +
+ >> +#define EBU_BUSCON(n)		(0x60 + (n) * 4)
+ >> +#define EBU_BUSCON_CMULT_V4	0x1
+ >> +#define EBU_BUSCON_RECOVC(n)	((n) << 2)
+ >> +#define EBU_BUSCON_HOLDC(n)	((n) << 4)
+ >> +#define EBU_BUSCON_WAITRDC(n)	((n) << 6)
+ >> +#define EBU_BUSCON_WAITWRC(n)	((n) << 8)
+ >> +#define EBU_BUSCON_BCGEN_CS	0x0
+ >> +#define EBU_BUSCON_SETUP_EN	BIT(22)
+ >> +#define EBU_BUSCON_ALEC		0xC000
+ >> +
+ >> +#define EBU_CON			0x0B0
+ >> +#define EBU_CON_NANDM_EN	BIT(0)
+ >> +#define EBU_CON_NANDM_DIS	0x0
+ >> +#define EBU_CON_CSMUX_E_EN	BIT(1)
+ >> +#define EBU_CON_ALE_P_LOW	BIT(2)
+ >> +#define EBU_CON_CLE_P_LOW	BIT(3)
+ >> +#define EBU_CON_CS_P_LOW	BIT(4)
+ >> +#define EBU_CON_SE_P_LOW	BIT(5)
+ >> +#define EBU_CON_WP_P_LOW	BIT(6)
+ >> +#define EBU_CON_PRE_P_LOW	BIT(7)
+ >> +#define EBU_CON_IN_CS_S(n)	((n) << 8)
+ >> +#define EBU_CON_OUT_CS_S(n)	((n) << 10)
+ >> +#define EBU_CON_LAT_EN_CS_P	((0x3D) << 18)
+ >> +
+ >> +#define EBU_WAIT		0x0B4
+ >> +#define EBU_WAIT_RDBY		BIT(0)
+ >> +#define EBU_WAIT_WR_C		BIT(3)
+ >> +
+ >> +#define	EBU_MEM_BASE_CS_0	0x17400
+ >> +#define	EBU_MEM_BASE_CS_1	0x17C00
+ > If I refer to v2, that's actually 0x17400000 and 0x17C00000.
+ > And I suspect those addresses come from the physical addresses of the
+ > EBU range attached to those CS lines, which can be extracted
+ > from the resource passed to the driver. But maybe I'm wrong.
+Agreed!, will update.
+ >> +#define	EBU_MEM_OFFSET		0x051
+ > Sorry but that's too vague. What is this mask/offset encoding?
+it's not offset, wrongly mentioned name as offset, bit field values.
+will correct it.
+ >> +
+ >> +#define HSNAND_CTL1		0x110
+ >> +#define HSNAND_CTL1_ADDR_SHIFT	24
+ >> +
+ >> +#define HSNAND_CTL2		0x114
+ >> +#define HSNAND_CTL2_ADDR_SHIFT	8
+ >> +#define HSNAND_CTL2_CYC_N_V5	(0x2 << 16)
+ >> +
+ >> +#define HSNAND_INT_MSK_CTL	0x124
+ >> +#define HSNAND_INT_MSK_CTL_WR_C	BIT(4)
+ >> +
+ >> +#define HSNAND_INT_STA		0x128
+ >> +#define HSNAND_INT_STA_WR_C	BIT(4)
+ >> +
+ >> +#define HSNAND_CTL		0x130
+ >> +#define HSNAND_CTL_MODE_ECC	0x1
+ > #define HSNAND_CTL_ENABLE_ECC	BIT(0)
+Noted, will update
+ >> +#define HSNAND_CTL_GO		BIT(2)
+ >> +#define HSNAND_CTL_CE_SEL_CS(n)	BIT(3 + (n))
+ >> +#define HSNAND_CTL_RW_READ	0x0
+ >> +#define HSNAND_CTL_RW_WRITE	BIT(10)
+ >> +#define HSNAND_CTL_ECC_OFF_V8TH	BIT(11)
+ >> +#define HSNAND_CTL_CKFF_EN	0x0
+ >> +#define HSNAND_CTL_MSG_EN	BIT(17)
+ >> +
+ >> +#define NAND_PARA0		0x13c
+ > Why are some of those registers prefixed NAND and others HSNAND? I
+ > guess HS stands for High-Speed.
+To differentiate the common HSNAND registers between MIPS and X86 based 
+SoC's
+ >> +#define NAND_PARA0_PAGE_V8192	0x3
+ >> +#define NAND_PARA0_PIB_V256	(0x3 << 4)
+ >> +#define NAND_PARA0_BYP_EN_NP	0x0
+ >> +#define NAND_PARA0_BYP_DEC_NP	0x0
+ >> +#define NAND_PARA0_TYPE_ONFI	BIT(18)
+ >> +#define NAND_PARA0_ADEP_EN	BIT(21)
+ >> +
+ >> +#define NAND_CMSG_0		0x150
+ >> +#define NAND_CMSG_1		0x154
+ >> +
+ >> +#define NAND_ALE_OFFS		BIT(2)
+ >> +#define NAND_CLE_OFFS		BIT(3)
+ >> +#define NAND_CS_OFFS		BIT(4)
+ >> +
+ >> +#define NAND_WRITE_CMD		(NAND_CS_OFFS | NAND_CLE_OFFS)
+ >> +#define NAND_WRITE_ADDR		(NAND_CS_OFFS | NAND_ALE_OFFS)
+ > Those macros are no longer used, you can drop them.
+Noted, will drop them
+ >> +#define NAND_WRITE_DATA		EBU_CON_CS_P_LOW
+ >> +#define NAND_READ_DATA		EBU_CON_CS_P_LOW
+ > And those should not be used, please use NAND_CS_OFFS instead.
+Sure, Noted
+ >> +
+ >> +#define NAND_ECC_OFFSET		0x008
+ >> +
+ >> +struct ebu_nand_controller {
+ >> +	struct nand_controller	controller;
+ > Can you drop the tabs and use one space between the type and field name?
+Noted
+ >> +	struct nand_chip	chip;
+ > Can you add a comment explaining that this should be reworked if
+ > someone needs to support more than one chip.
+Sure, will add comments
+ >> +	void __iomem		*ebu_addr;
+ >> +	void __iomem		*nand_addr;
+ > Can we get rid of those _addr and rename those fields so they describe
+ > more precisely what the MMIO range is about:
+ >
+ > 	void __iomem *ebu;
+ > 	void __iomem *hsnand;
+ >
+Noted
+ >> +	void __iomem		*chip_addr;
+ > This field should be part of a specialized nand_chip object (see what's
+ > done here [1]). More generally, you should move anything that's
+ > chip-specific to this driver-specific nand_chip object.
+I supposed to add like nand_cs, will change it.
+ >> +	struct clk		*clk;
+ >> +	unsigned long		clk_rate;
+ >> +	u32			cs;
+ >> +	u32			nd_para0;
+ > The cs and nd_para0 fields should be attached to the ebu_nand_chip
+ > object too (see [1]). While you move that, please add a comment saying
+ > that you currently only support single-CE chips.
+Yes, you are correct, will do that
+ >> +	struct device		*dev;
+ >> +	struct dma_chan		*dma_tx;
+ >> +	struct dma_chan		*dma_rx;
+ >> +	struct completion	dma_access_complete;
+ > Maybe
+ >
+ > 	struct {
+ > 		struct dma_chan *tx;
+ > 		struct dma_chan *rx;
+ > 		struct completion complete;
+ > 	} dma;
+Ok, Noted
+ >> +	const char *cs_name;
+ > You no longer use this field.
+Noted, will drop it.
+ >> +};
+ >> +
+ >> +static inline struct ebu_nand_controller *nand_to_ebu(struct 
+nand_chip *chip)
+ >> +{
+ >> +	return container_of(chip, struct ebu_nand_controller, chip);
+ >> +}
+ >> +
+ >> +static u8 ebu_nand_readb(struct nand_chip *chip, unsigned int op)
+ >> +{
+ >> +	struct ebu_nand_controller *ebu_host = nand_get_controller_data(chip);
+ >> +	void __iomem *nand_wait = ebu_host->ebu_addr + EBU_WAIT;
+ >> +	u32 stat;
+ >> +	int ret;
+ >> +	u8 val;
+ >> +
+ >> +	val = readb(ebu_host->chip_addr + op);
+ > No need for op here, just pass NAND_CS_OFFS directly, and you can drop
+ > the op argument.
+Noted, will update.
+ >> +
+ >> +	ret = readl_poll_timeout(nand_wait, stat, stat & EBU_WAIT_WR_C,
+ >> +				 20, 1000);
+ >> +	if (ret)
+ >> +		dev_warn(ebu_host->dev,
+ >> +			 "ebu nand write timeout. nand_wait(0x%p)=0x%x\n",
+ >> +			 nand_wait, readl(nand_wait));
+ > Maybe dev_warn_ratelimited().
+Not required, might be used for network drivers.
+ >> +
+ >> +	return val;
+ >> +}
+ >> +
+ >> +static void ebu_nand_writeb(struct nand_chip *chip, int op, u8 value)
+ > 							^u32 offset,
+ >
+ >> +{
+ >> +	struct ebu_nand_controller *ebu_host = nand_get_controller_data(chip);
+ >> +	void __iomem *nand_wait = ebu_host->ebu_addr + EBU_WAIT;
+ >> +	u32 stat;
+ >> +	int ret;
+ >> +
+ >> +	writeb(value, ebu_host->chip_addr + op);
+ >> +
+ >> +	ret = readl_poll_timeout(nand_wait, stat, stat & EBU_WAIT_WR_C,
+ >> +				 20, 1000);
+ >> +	if (ret)
+ >> +		dev_warn(ebu_host->dev,
+ >> +			 "ebu nand write timeout. nand_wait(0x%p)=0x%x\n",
+ >> +			 nand_wait, readl(nand_wait));
+ >> +}
+ >> +
+ >> +static void ebu_read_buf(struct nand_chip *chip, u_char *buf, int len)
+ > 						      ^void *	   ^unsigned int
+ >
+ > Please update all of those.
+Sure, will update all.
+ >> +{
+ >> +	int i;
+ >> +
+ >> +	for (i = 0; i < len; i++)
+ >> +		buf[i] = ebu_nand_readb(chip, NAND_READ_DATA);
+ >> +}
+ >> +
+ >> +static void ebu_write_buf(struct nand_chip *chip, const u_char 
+*buf, int len)
+ >> +{
+ >> +	int i;
+ >> +
+ >> +	for (i = 0; i < len; i++)
+ >> +		ebu_nand_writeb(chip, NAND_WRITE_DATA, buf[i]);
+ > 				      ^NAND_CS_OFFS
+Noted.
+ >> +}
+ >> +
+ >> +static void ebu_unselect_chip(struct nand_chip *chip)
+ >> +{
+ >> +	struct ebu_nand_controller *ebu_host = nand_get_controller_data(chip);
+ >> +	void __iomem *nand_con = ebu_host->ebu_addr + EBU_CON;
+ >> +	int val;
+ > 	^u32
+ >
+ >> +
+ >> +	val = readl(nand_con);
+ >> +	writel(val & ~EBU_CON_NANDM_EN, nand_con);
+ > And I suspect you could just do:
+ >
+ > 	writel(0, ebu_host->ebu + EBU_CON);
+ >
+ > here.
+ >
+ > BTW, maybe we don't have to unselect the chip and can instead do this
+ > 'disable NAND module' in a runtime PM hook when the NAND has been
+ > unused for some time, but let's keep that for later.
+Sure, Noted.
+ >> +}
+ > ...
+ >
+ >> +static int ebu_nand_exec_op(struct nand_chip *chip,
+ >> +			    const struct nand_operation *op, bool check_only)
+ >> +{
+ >> +	struct ebu_nand_controller *ctrl = nand_to_ebu(chip);
+ >> +	const struct nand_op_instr *instr = NULL;
+ >> +	unsigned int op_id;
+ >> +	int i, time_out, ret = 0;
+ >> +	u32 stat;
+ >> +
+ >> +	ebu_select_chip(chip);
+ >> +
+ >> +	for (op_id = 0; op_id < op->ninstrs; op_id++) {
+ >> +		instr = &op->instrs[op_id];
+ >> +
+ >> +		switch (instr->type) {
+ >> +		case NAND_OP_CMD_INSTR:
+ >> +			ebu_nand_writeb(chip, NAND_CLE_OFFS,
+ > Hm, are you sure you shouldn't add NAND_CS_OFFS here? I'd expect
+ > the CS to be asserted when the CLE/ALE pin is. Or maybe NAND_CS_OFFS
+ > is not about CS pin assertion/de-assertion, in which case this should
+ > be documented (and the name should be changed accordingly).
+before doing the read/write asserting the chip by chip_select function, 
+let me double check
+as you said, will update accordingly
+ >> +					instr->ctx.cmd.opcode);
+ >> +			break;
+ >> +
+ >> +		case NAND_OP_ADDR_INSTR:
+ >> +			for (i = 0; i < instr->ctx.addr.naddrs; i++)
+ >> +				ebu_nand_writeb(chip, NAND_ALE_OFFS,
+ >> +						instr->ctx.addr.addrs[i]);
+ >> +			break;
+ >> +
+ >> +		case NAND_OP_DATA_IN_INSTR:
+ >> +			ebu_read_buf(chip, instr->ctx.data.buf.in,
+ >> +				     instr->ctx.data.len);
+ >> +			break;
+ >> +
+ >> +		case NAND_OP_DATA_OUT_INSTR:
+ >> +			ebu_write_buf(chip, instr->ctx.data.buf.out,
+ >> +				      instr->ctx.data.len);
+ >> +			break;
+ >> +
+ >> +		case NAND_OP_WAITRDY_INSTR:
+ >> +			time_out = instr->ctx.waitrdy.timeout_ms * 1000;
+ >> +			ret = readl_poll_timeout(ctrl->ebu_addr + EBU_WAIT,
+ >> +						 stat, stat & EBU_WAIT_RDBY,
+ >> +						 20, time_out);
+ >> +			break;
+ >> +		}
+ >> +	}
+ > Yay! I really like this new version of exec_op().
+Thank you Boris!
+ >> +
+ >> +	ebu_unselect_chip(chip);
+ >> +
+ >> +	return ret;
+ >> +}
+ >> +
+ >> +static const struct nand_controller_ops ebu_nand_controller_ops = {
+ >> +	.attach_chip = ebu_nand_attach_chip,
+ >> +	.exec_op = ebu_nand_exec_op,
+ >> +};
+ >> +
+ >> +static void ebu_dma_cleanup(struct ebu_nand_controller *ebu_host)
+ >> +{
+ >> +	if (ebu_host->dma_rx) {
+ >> +		dma_release_channel(ebu_host->dma_rx);
+ >> +		ebu_host->dma_rx = NULL;
+ > You don't need to reset the value here.
+Noted.
+ >> +	}
+ >> +
+ >> +	if (ebu_host->dma_tx) {
+ >> +		dma_release_channel(ebu_host->dma_tx);
+ >> +		ebu_host->dma_tx = NULL;
+ >> +	}
+ >> +}
+ >> +
+ >> +static int ebu_nand_probe(struct platform_device *pdev)
+ >> +{
+ >> +	struct device *dev = &pdev->dev;
+ >> +	struct ebu_nand_controller *ebu_host;
+ >> +	struct nand_chip *nand;
+ >> +	phys_addr_t nandaddr_pa;
+ >> +	struct mtd_info *mtd;
+ >> +	struct resource *res;
+ >> +	int ret;
+ >> +	u32 cs;
+ >> +
+ >> +	ebu_host = devm_kzalloc(dev, sizeof(*ebu_host), GFP_KERNEL);
+ >> +	if (!ebu_host)
+ >> +		return -ENOMEM;
+ >> +
+ >> +	ebu_host->dev = dev;
+ >> +	nand_controller_init(&ebu_host->controller);
+ >> +
+ >> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ebunand");
+ >> +	ebu_host->ebu_addr = devm_ioremap_resource(&pdev->dev, res);
+ >> +	if (IS_ERR(ebu_host->ebu_addr))
+ >> +		return PTR_ERR(ebu_host->ebu_addr);
+ >> +
+ >> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsnand");
+ >> +	ebu_host->nand_addr = devm_ioremap_resource(&pdev->dev, res);
+ >> +	if (IS_ERR(ebu_host->nand_addr))
+ >> +		return PTR_ERR(ebu_host->nand_addr);
+ >> +
+ >> +	ret = device_property_read_u32(dev, "nand,cs", &cs);
+ > CS ids should be encoded in the reg property (see [1]).
+Ok, will check.
+ >> +	if (ret) {
+ >> +		dev_err(dev, "failed to get chip select: %d\n", ret);
+ >> +		return ret;
+ >> +	}
+ >> +
+ >> +	ebu_host->cs = cs;
+ >> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "nand_cs0");
+ > 	resname = devm_kasprintf("nand-cs%d", cs);
+ > 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, resname);
+I have kept same-way in my earlier patches , will update.
+ >> +	ebu_host->chip_addr = devm_ioremap_resource(&pdev->dev, res);
+ >> +	nandaddr_pa = res->start;
+ >> +	if (IS_ERR(ebu_host->chip_addr))
+ >> +		return PTR_ERR(ebu_host->chip_addr);
+ >> +
+ >> +	ebu_host->clk = devm_clk_get(dev, NULL);
+ >> +	if (IS_ERR(ebu_host->clk)) {
+ >> +		ret = PTR_ERR(ebu_host->clk);
+ >> +		dev_err(dev, "failed to get clock: %d\n", ret);
+ >> +		return ret;
+ >> +	}
+ >> +
+ >> +	ret = clk_prepare_enable(ebu_host->clk);
+ >> +	if (ret) {
+ >> +		dev_err(dev, "failed to enable clock: %d\n", ret);
+ >> +		return ret;
+ >> +	}
+ >> +	ebu_host->clk_rate = clk_get_rate(ebu_host->clk);
+ >> +
+ >> +	ebu_host->dma_tx = dma_request_chan(dev, "tx");
+ >> +	if (IS_ERR(ebu_host->dma_tx)) {
+ >> +		ret = PTR_ERR(ebu_host->dma_tx);
+ >> +		dev_err(dev, "DMA tx channel request fail!.\n");
+ >> +		goto exit_dma;
+ >> +	}
+ >> +
+ >> +	ebu_host->dma_rx = dma_request_chan(dev, "rx");
+ >> +	if (IS_ERR(ebu_host->dma_rx)) {
+ >> +		ret = PTR_ERR(ebu_host->dma_rx);
+ >> +		dev_err(dev, "DMA tx channel request fail!.\n");
+ >> +		goto exit_dma;
+ >> +	}
+ >> +
+ >> +	writel(lower_32_bits(nandaddr_pa) | EBU_ADDR_SEL_REGEN | 
+EBU_ADDR_MASK,
+ >> +	       ebu_host->ebu_addr + EBU_ADDR_SEL(cs));
+ >> +
+ >> +	writel(EBU_BUSCON_CMULT_V4 | EBU_BUSCON_RECOVC(1) |
+ >> +	       EBU_BUSCON_HOLDC(1) | EBU_BUSCON_WAITRDC(2) |
+ >> +	       EBU_BUSCON_WAITWRC(2) | EBU_BUSCON_BCGEN_CS | EBU_BUSCON_ALEC |
+ >> +	       EBU_BUSCON_SETUP_EN, ebu_host->ebu_addr + EBU_BUSCON(cs));
+ > Again, can you try to implement ->setup_data_interface()?
+Sure, will implement .
+ >> +
+ >> +	/*
+ >> +	 * NAND physical address selection is based on the chip select
+ >> +	 * and written to ADDR_SEL register to get Memory Region Base address.
+ >> +	 * FPI Bus addresses are compared to this base address in conjunction
+ >> +	 * with the mask control. Driver need to program this field!
+ >> +	 * Address: 0x17400 if chip select is CS_0
+ >> +	 * Address: 0x17C00 if chip select is CS_1
+ >> +	 */
+ >> +	writel(EBU_MEM_BASE_CS_0 + EBU_MEM_OFFSET,
+ >> +	       ebu_host->ebu_addr + EBU_ADDR_SEL(0));
+ >> +	writel(EBU_MEM_BASE_CS_1 + EBU_MEM_OFFSET,
+ >> +	       ebu_host->ebu_addr + EBU_ADDR_SEL(cs));
+ > See my comments on those values. I feel like the mapping should be
+ > created based on information we gather from somewhere else.
+Yes, of-course will update the proper way.
+ >> +	nand_set_flash_node(&ebu_host->chip, dev->of_node);
+ >> +	mtd = nand_to_mtd(&ebu_host->chip);
+ >> +	mtd->dev.parent = dev;
+ >> +	ebu_host->dev = dev;
+ >> +
+ >> +	platform_set_drvdata(pdev, ebu_host);
+ >> +	nand_set_controller_data(&ebu_host->chip, ebu_host);
+ >> +
+ >> +	nand = &ebu_host->chip;
+ >> +	nand->controller = &ebu_host->controller;
+ >> +	nand->controller->ops = &ebu_nand_controller_ops;
+ >> +
+ >> +	/* Scan to find existence of the device */
+ >> +	ret = nand_scan(&ebu_host->chip, 1);
+ >> +	if (ret)
+ >> +		goto exit_dma;
+ >> +
+ >> +	ret = mtd_device_register(mtd, NULL, 0);
+ >> +	if (ret)
+ >> +		goto clean_nand;
+ >> +
+ >> +	return 0;
+ >> +
+ >> +clean_nand:
+ > err_cleanup_nand:
+Noted.
+ >> +	nand_cleanup(&ebu_host->chip);
+ >> +exit_dma:
+ > err_cleanup_dma:
+Noted.
+ >> +	ebu_dma_cleanup(ebu_host);
+ >> +	clk_disable_unprepare(ebu_host->clk);
+ >> +
+ >> +	return ret;
+ >> +}
+ >> +
+ >> +static int ebu_nand_remove(struct platform_device *pdev)
+ >> +{
+ >> +	struct ebu_nand_controller *ebu_host = platform_get_drvdata(pdev);
+ >> +
+ >> +	mtd_device_unregister(nand_to_mtd(&ebu_host->chip));
+ > Check the return value of this function please.
 
-Their replacement fields ('next_to_use' and 'next_to_clean') are already
-being printed, so this patch does not add new debug statements for them.
-
-Signed-off-by: Rylan Dmello <mail@rylan.coffee>
----
- drivers/staging/qlge/qlge_dbg.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
-index bf157baace54..058889687907 100644
---- a/drivers/staging/qlge/qlge_dbg.c
-+++ b/drivers/staging/qlge/qlge_dbg.c
-@@ -1757,8 +1757,6 @@ void ql_dump_rx_ring(struct rx_ring *rx_ring)
- 	       rx_ring->lbq.prod_idx_db_reg);
- 	pr_err("rx_ring->lbq.next_to_use = %d\n", rx_ring->lbq.next_to_use);
- 	pr_err("rx_ring->lbq.next_to_clean = %d\n", rx_ring->lbq.next_to_clean);
--	pr_err("rx_ring->lbq_clean_idx = %d\n", rx_ring->lbq_clean_idx);
--	pr_err("rx_ring->lbq_free_cnt = %d\n", rx_ring->lbq_free_cnt);
- 
- 	pr_err("rx_ring->sbq.base = %p\n", rx_ring->sbq.base);
- 	pr_err("rx_ring->sbq.base_dma = %llx\n",
--- 
-2.26.2
-
+sure, will check and update.
+Regards
+Vadivel
