@@ -2,97 +2,102 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC35C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF021C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0100520728
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:29:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zlu6VfX2"
+	by mail.kernel.org (Postfix) with ESMTP id 9413820728
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:30:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgD0I3o (ORCPT
+        id S1726786AbgD0Iag convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 04:29:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34382 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726003AbgD0I3n (ORCPT
+        Mon, 27 Apr 2020 04:30:36 -0400
+Received: from seldsegrel01.sonyericsson.com ([37.139.156.29]:15282 "EHLO
+        SELDSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726003AbgD0Iag (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 04:29:43 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62243C061A0F;
-        Mon, 27 Apr 2020 01:29:43 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id a8so12809414edv.2;
-        Mon, 27 Apr 2020 01:29:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3u0dV855unI4O3p8peLsDTUicXAYlb28KnCe8UM7MUs=;
-        b=Zlu6VfX2l+7goUVTDjG0v+TCcX75zOZGXqTIdVxBqOlF54VJrT09yWSCdeAt86pL5e
-         IR3ssFL9phUIY4cr04VSZ8exPUkcdWgSSislA+X+jcvoelNI6YDI8O1ynEGTXy/+IQdl
-         UPD7Nxcf6CE4y3EFj1kwkIMoz8P6STCkLLXBL1NDVVgq6pEkeCJavGgsTDm5zz8XPufO
-         Xthx3bO2cYdQ7/GMIVxOyZ3zFuN09avlPFWfLgklAq/pa+vAdO84iaowsDdqhgFsw5eR
-         vB8tdAjJvjxu1VLa2ioiMjRM7dS5j/VYyUqdPE/ZPXr3XaSfXaUk3r82WSJY9C+8qGId
-         KrsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3u0dV855unI4O3p8peLsDTUicXAYlb28KnCe8UM7MUs=;
-        b=EMdeo9w+a+aETHo082VgEWrzB7VWEY0wQ4GAY8cB/zl4Nj3lokGaK5QW9V+5SyGi5l
-         t0pN2WSR+nQXkWtlI1KmGc3ltdgbNFMTvVxnoI4MVZKxNgFwR34Q9lojXgm/Qj5gwNMR
-         97864uXLMPO18amCvp6LF4oFuvuDzRDiShZ+3YjAyH/eMJKhPCTno+f7gBt6lAfp2I3l
-         GZ0G8Zw8qf2f13UOMPPtlD24lrQO0T6ySsnv+77IEynZwjugQ6+fRw/MAuUqZeEMehBl
-         3M9BFDFMQUw5MBlBo7VuB5sla1MHrI0/SwgnMnAhkZXfyp47VjnsXPA1eprsjqTe39QX
-         qf+g==
-X-Gm-Message-State: AGi0PuaGLDdGoenl3vI0V1ewPWWuboKWWzBebQY0upztLojrzQZtC6//
-        4FFX0kb4eKvCvkWkDeP6rdlNmhYx/qQ=
-X-Google-Smtp-Source: APiQypKbYjp0Ad9RAw21UP4Z6Nd2JIoYOrwLCpAUf/+Tg0yEq9TchOmQsbsVdRSuZVn7vzuOqKCM7w==
-X-Received: by 2002:a05:6402:391:: with SMTP id o17mr17630403edv.71.1587976182020;
-        Mon, 27 Apr 2020 01:29:42 -0700 (PDT)
-Received: from localhost (ipv6-80adf4751ff4da96.ost.clients.hamburg.freifunk.net. [2a03:2267:4:0:80ad:f475:1ff4:da96])
-        by smtp.gmail.com with ESMTPSA id r26sm1976873edw.34.2020.04.27.01.29.40
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 Apr 2020 01:29:40 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 10:29:39 +0200
-From:   Oliver Graute <oliver.graute@gmail.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-fbdev@vger.kernel.org,
-        Oliver Graute <oliver.graute@kococonnector.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v1] staging: fbtft: fb_st7789v: enabled inversion
-Message-ID: <20200427082939.GB18436@portage>
-References: <1586424250-25897-1-git-send-email-oliver.graute@gmail.com>
- <20200409101517.GO2001@kadam>
+        Mon, 27 Apr 2020 04:30:36 -0400
+X-Greylist: delayed 601 seconds by postgrey-1.27 at vger.kernel.org; Mon, 27 Apr 2020 04:30:35 EDT
+Subject: Re: [patch] mm, oom: stop reclaiming if GFP_ATOMIC will start failing
+ soon
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>
+CC:     Vlastimil Babka <vbabka@suse.cz>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>
+References: <alpine.DEB.2.22.394.2004241347310.70176@chino.kir.corp.google.com>
+ <20200425172706.26b5011293e8dc77b1dccaf3@linux-foundation.org>
+From:   peter enderborg <peter.enderborg@sony.com>
+Message-ID: <7726e8a8-8390-cee8-3480-4e68bf26f08a@sony.com>
+Date:   Mon, 27 Apr 2020 10:20:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200409101517.GO2001@kadam>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200425172706.26b5011293e8dc77b1dccaf3@linux-foundation.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-GB
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=Nc2YKFL4 c=1 sm=1 tr=0 a=kIrCkORFHx6JeP9rmF/Kww==:117 a=IkcTkHD0fZMA:10 a=cl8xLZFz6L8A:10 a=1XWaLZrsAAAA:8 a=_KWB5BKwUhRobCCBmOoA:9 a=QEXdDO2ut3YA:10
+X-SEG-SpamProfiler-Score: 0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/04/20, Dan Carpenter wrote:
-> On Thu, Apr 09, 2020 at 11:24:05AM +0200, Oliver Graute wrote:
-> > From: Oliver Graute <oliver.graute@kococonnector.com>
-> > 
-> > Enable inversion mode
-> 
-> What the heck is an inversion mode and why would you want it?
+On 4/26/20 2:27 AM, Andrew Morton wrote:
+> On Fri, 24 Apr 2020 13:48:06 -0700 (PDT) David Rientjes <rientjes@google.com> wrote:
+>
+>> If GFP_ATOMIC allocations will start failing soon because the amount of
+>> free memory is substantially under per-zone min watermarks, it is better
+>> to oom kill a process rather than continue to reclaim.
+>>
+>> This intends to significantly reduce the number of page allocation
+>> failures that are encountered when the demands of user and atomic
+>> allocations overwhelm the ability of reclaim to keep up.  We can see this
+>> with a high ingress of networking traffic where memory allocated in irq
+>> context can overwhelm the ability to reclaim fast enough such that user
+>> memory consistently loops.  In that case, we have reclaimable memory, and
+> "user memory allocation", I assume?  Or maybe "blockable memory
+> allocatoins".
+>
+>> reclaiming is successful, but we've fully depleted memory reserves that
+>> are allowed for non-blockable allocations.
+>>
+>> Commit 400e22499dd9 ("mm: don't warn about allocations which stall for
+>> too long") removed evidence of user allocations stalling because of this,
+>> but the situation can apply anytime we get "page allocation failures"
+>> where reclaim is happening but per-zone min watermarks are starved:
+>>
+>> Node 0 Normal free:87356kB min:221984kB low:416984kB high:611984kB active_anon:123009936kB inactive_anon:67647652kB active_file:429612kB inactive_file:209980kB unevictable:112348kB writepending:260kB present:198180864kB managed:195027624kB mlocked:81756kB kernel_stack:24040kB pagetables:11460kB bounce:0kB free_pcp:940kB local_pcp:96kB free_cma:0kB
+>> lowmem_reserve[]: 0 0 0 0
+>> Node 1 Normal free:105616kB min:225568kB low:423716kB high:621864kB active_anon:122124196kB inactive_anon:74112696kB active_file:39172kB inactive_file:103696kB unevictable:204480kB writepending:180kB present:201326592kB managed:198174372kB mlocked:204480kB kernel_stack:11328kB pagetables:3680kB bounce:0kB free_pcp:1140kB local_pcp:0kB free_cma:0kB
+>> lowmem_reserve[]: 0 0 0 0
+>>
+>> Without this patch, there is no guarantee that user memory allocations
+>> will ever be successful when non-blockable allocations overwhelm the
+>> ability to get above per-zone min watermarks.
+>>
+>> This doesn't solve page allocation failures entirely since it's a
+>> preemptive measure based on watermarks that requires concurrent blockable
+>> allocations to trigger the oom kill.  To complete solve page allocation
+>> failures, it would be possible to do the same watermark check for non-
+>> blockable allocations and then queue a worker to asynchronously oom kill
+>> if it finds watermarks to be sufficiently low as well.
+>>
+> Well, what's really going on here?
+>
+> Is networking potentially consuming an unbounded amount of memory?  If
+> so, then killing a process will just cause networking to consume more
+> memory then hit against the same thing.  So presumably the answer is
+> "no, the watermarks are inappropriately set for this workload".
+>
+> So would it not be sensible to dynamically adjust the watermarks in
+> response to this condition?  Maintain a larger pool of memory for these
+> allocations?  Or possibly push back on networking and tell it to reduce
+> its queue sizes?  So that stuff doesn't keep on getting oom-killed?
+>
+I think I seen similar issues when dma-buf allocate a lot.  But that is on older kernels and out of tree.
+So networking is maybe not the only cause. dma-buf are used a lot for camera stuff in android.
 
-
-Should I name it:
-
-Enable MIPI_DCS_ENTER_INVERT_MODE
-
-Best Regards,
-
-Oliver
