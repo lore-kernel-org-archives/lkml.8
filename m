@@ -2,137 +2,100 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D1BC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B97C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D607206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:49:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="uJwbz9XH"
+	by mail.kernel.org (Postfix) with ESMTP id A8706214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:49:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587973763;
+	bh=gUEF4e+I+5LtkJ+KR7VccemOQ0DrTjrOVZmMSY/BJKo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FYPbwBf6W3Gtc57PqYAUJhfNCQWvNm1FtEPAOyqA4k2RX8zT/04wSAWB7xL6/8G0l
+	 DeyFCJ+8m4ecsm7dMGZHMR4Jfl6pVubISUtyLSxqgTqmN9WzvYwVGVeGUC2Q7tC5su
+	 GtU9PECUfhRSBv09HFiNQ2UlRdtdCIeAVH8eJy3o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbgD0Hs7 (ORCPT
+        id S1726789AbgD0HtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 03:48:59 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:41689 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726683AbgD0Hsq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 03:48:46 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200427074844euoutp0124d1987075d3a25ceef2eb09db280bad~JnbBmDUbc0841708417euoutp018
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 07:48:44 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200427074844euoutp0124d1987075d3a25ceef2eb09db280bad~JnbBmDUbc0841708417euoutp018
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1587973724;
-        bh=16c85UL1fH0B0UINKqjhEjmvKTup4PQjtl3nu9iR4gE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uJwbz9XH0NT6euuoozLt4Dcs4V3dR/lDByWmmaSTMT6U0FhxUtVHBC7ktHoZ3RpjF
-         2TNvR293uiqlsEBOXHXEYwBvT6nez9Lq2JXibsLzsgBmtEfizay2dAzkX/+wQOpdaN
-         6WDBOzKyofBrxwOZd7ywJxB5OTUPPpK6YJWpenSs=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200427074844eucas1p2981455a070a5aef8fc15b3eb848297a3~JnbBIjM0x0183601836eucas1p2I;
-        Mon, 27 Apr 2020 07:48:44 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id FB.1D.60679.B5E86AE5; Mon, 27
-        Apr 2020 08:48:43 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200427074843eucas1p1a3a265df0c7f14b0aaec25eb65daf606~JnbA3Z4u90341903419eucas1p1w;
-        Mon, 27 Apr 2020 07:48:43 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200427074843eusmtrp156023f0b462c0cae30620ccbf6e281a7~JnbA2Rm4C0061900619eusmtrp1U;
-        Mon, 27 Apr 2020 07:48:43 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-4e-5ea68e5b3882
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id C9.1A.07950.B5E86AE5; Mon, 27
-        Apr 2020 08:48:43 +0100 (BST)
-Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200427074843eusmtip2032e3d382bbc91c2a1b6d85dc80f4046~JnbAVdxcK0786807868eusmtip2S;
-        Mon, 27 Apr 2020 07:48:43 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     patches@opensource.cirrus.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Subject: [PATCH 4/4] ASoC: wm8994: Silence warnings during deferred probe
-Date:   Mon, 27 Apr 2020 09:48:32 +0200
-Message-Id: <20200427074832.22134-5-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200427074832.22134-1-m.szyprowski@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupmleLIzCtJLcpLzFFi42LZduzned2YvmVxBsdYLK5cPMRkMfXhEzaL
-        K62bGC3ufz3KaPHtSgeTxeVdc9gs1h65y27x+f1+VovDb9pZHTg9NnxuYvPYOesuu8emVZ1s
-        Hneu7WHzmD7nP6NH35ZVjB6fN8kFsEdx2aSk5mSWpRbp2yVwZSy+e5m1YBdbxZ6bJ5gaGNew
-        djFyckgImEi8f/OPvYuRi0NIYAWjxK85DWwQzhdGiUnb+hkhnM+MEt9fzgRq4QBrefDDGyK+
-        nFFiz7ZFrHAdp/8fZwSZyyZgKNH1tosNxBYRiJNYvngBE0gRs8AvRonPnzYxgUwSFvCUWD43
-        EaSGRUBV4lTrNhYQm1fAVuL+xXYmiPvkJVZvOMAMUs4pYCexcLobyBgJgX52iZcnpzNBHOQi
-        8fJwCES5sMSr41vYIWwZidOTe1gg6psZJR6eW8sO4fQwSlxumsEIUWUtcefcLzaQQcwCmhLr
-        d+lDhB0lNr/dxw4xn0/ixltBkDAzkDlp23RmiDCvREebEES1msSs4+vg1h68cAmqxENi+uxI
-        kLCQwERGifl/iicwys9CWLWAkXEVo3hqaXFuemqxUV5quV5xYm5xaV66XnJ+7iZGYBI5/e/4
-        lx2Mu/4kHWIU4GBU4uHl2L40Tog1say4MvcQowQHs5II76OMZXFCvCmJlVWpRfnxRaU5qcWH
-        GKU5WJTEeY0XvYwVEkhPLEnNTk0tSC2CyTJxcEo1MEYaXeUPldGVPpY09YaC75YeIR51xQ/K
-        TWHhLJEetqeyZtz5xKXQZRx8Mp5x8a7uVXc+iDgXyR5u1Hm37J/4UkOdJBZrt2MnNi1vUJ14
-        yCjKZX1CR1tLmb+XWk71c2YW+Z0p015b/rZlXXvomk6y6BJzobULz0XPTV9jvyFSN+Tnxuzu
-        5OvXlViKMxINtZiLihMBFCEqlB4DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHLMWRmVeSWpSXmKPExsVy+t/xe7rRfcviDN5v07G4cvEQk8XUh0/Y
-        LK60bmK0uP/1KKPFtysdTBaXd81hs1h75C67xef3+1ktDr9pZ3Xg9NjwuYnNY+esu+wem1Z1
-        snncubaHzWP6nP+MHn1bVjF6fN4kF8AepWdTlF9akqqQkV9cYqsUbWhhpGdoaaFnZGKpZ2hs
-        HmtlZKqkb2eTkpqTWZZapG+XoJex+O5l1oJdbBV7bp5gamBcw9rFyMEhIWAi8eCHdxcjF4eQ
-        wFJGiX2PdrB1MXICxWUkTk5rYIWwhSX+XOsCiwsJfGKUOPxOGMRmEzCU6HoLERcRSJA4tLyF
-        GWQQs8A/Rol3j24ygywQFvCUWD43EaSGRUBV4lTrNhYQm1fAVuL+xXYmiPnyEqs3HAAr5xSw
-        k1g43Q1ila3Ex+9vmScw8i1gZFjFKJJaWpybnltspFecmFtcmpeul5yfu4kRGNbbjv3csoOx
-        613wIUYBDkYlHl6O7UvjhFgTy4orcw8xSnAwK4nwPspYFifEm5JYWZValB9fVJqTWnyI0RTo
-        ponMUqLJ+cCYyyuJNzQ1NLewNDQ3Njc2s1AS5+0QOBgjJJCeWJKanZpakFoE08fEwSnVwJhm
-        Xft1alvU5r0FH/JT7mwSu1CSuo+jZmnoxDUP5KXdZdOBfuDYkDAjm/WoaUu+1b9vzKn5ew6H
-        rq9tU30U1aj9b26e5QPzz1X619f1Tc6VWBHx78dPm2ffF8R9aK6SenD0u9ur13v3aXvv3qv3
-        c8W1k2qTP255k7rxEsc+vZSlb64s+F48XUGJpTgj0VCLuag4EQAAPcU/gQIAAA==
-X-CMS-MailID: 20200427074843eucas1p1a3a265df0c7f14b0aaec25eb65daf606
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200427074843eucas1p1a3a265df0c7f14b0aaec25eb65daf606
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200427074843eucas1p1a3a265df0c7f14b0aaec25eb65daf606
-References: <20200427074832.22134-1-m.szyprowski@samsung.com>
-        <CGME20200427074843eucas1p1a3a265df0c7f14b0aaec25eb65daf606@eucas1p1.samsung.com>
+        Mon, 27 Apr 2020 03:49:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40032 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726339AbgD0HtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 03:49:22 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EC0B20728;
+        Mon, 27 Apr 2020 07:49:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587973761;
+        bh=gUEF4e+I+5LtkJ+KR7VccemOQ0DrTjrOVZmMSY/BJKo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tM0MCyqEbiKAHZFfSbvrulUKGmf63KAanMfop+yxY/F6lhWkM0zaQHm6rQTTcpbFO
+         HOLa2VqGqzrsyLsi9beTUDK/YUbfTbFXhIaq0lXicUQ2nltnRNrmYVf2nEyZ5hYtxm
+         L4qNVWY1RZq3IAt1JnQvY/wDdHSjRRAJ1cpgYvGY=
+Date:   Mon, 27 Apr 2020 08:49:16 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Zong Li <zong.li@sifive.com>
+Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, linux-riscv@lists.infradead.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, catalin.marinas@arm.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/4] mm: add DEBUG_WX support
+Message-ID: <20200427074915.GA11787@willie-the-truck>
+References: <cover.1587455584.git.zong.li@sifive.com>
+ <23980cd0f0e5d79e24a92169116407c75bcc650d.1587455584.git.zong.li@sifive.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <23980cd0f0e5d79e24a92169116407c75bcc650d.1587455584.git.zong.li@sifive.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't confuse user with meaningless warning about the failure in getting
-clocks in case of deferred probe.
+On Tue, Apr 21, 2020 at 04:17:12PM +0800, Zong Li wrote:
+> Some architectures support DEBUG_WX function, it's verbatim from each
+> others. Extract to mm/Kconfig.debug for shared use.
+> 
+> Signed-off-by: Zong Li <zong.li@sifive.com>
+> Suggested-by: Palmer Dabbelt <palmer@dabbelt.com>
+> ---
+>  mm/Kconfig.debug | 33 +++++++++++++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+> 
+> diff --git a/mm/Kconfig.debug b/mm/Kconfig.debug
+> index 0271b22e063f..077458ad968d 100644
+> --- a/mm/Kconfig.debug
+> +++ b/mm/Kconfig.debug
+> @@ -118,6 +118,39 @@ config DEBUG_RODATA_TEST
+>      ---help---
+>        This option enables a testcase for the setting rodata read-only.
+>  
+> +config ARCH_HAS_DEBUG_WX
+> +	bool
+> +
+> +config DEBUG_WX
+> +	bool "Warn on W+X mappings at boot"
+> +	depends on ARCH_HAS_DEBUG_WX
+> +	select PTDUMP_CORE
+> +	help
+> +	  Generate a warning if any W+X mappings are found at boot.
+> +
+> +	  This is useful for discovering cases where the kernel is leaving
+> +	  W+X mappings after applying NX, as such mappings are a security risk.
+> +	  This check also includes UXN, which should be set on all kernel
+> +	  mappings.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
- sound/soc/codecs/wm8994.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+"UXN" is the name of a bit in the arm64 page-table descriptors, so this
+should be reworded now that it's in generic help text.
 
-diff --git a/sound/soc/codecs/wm8994.c b/sound/soc/codecs/wm8994.c
-index 55d0b9be6ff0..7426df1f806c 100644
---- a/sound/soc/codecs/wm8994.c
-+++ b/sound/soc/codecs/wm8994.c
-@@ -4593,7 +4593,8 @@ static int wm8994_probe(struct platform_device *pdev)
- 	ret = devm_clk_bulk_get_optional(pdev->dev.parent, ARRAY_SIZE(wm8994->mclk),
- 					 wm8994->mclk);
- 	if (ret < 0) {
--		dev_err(&pdev->dev, "Failed to get clocks: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Failed to get clocks: %d\n", ret);
- 		return ret;
- 	}
- 
--- 
-2.17.1
-
+Will
