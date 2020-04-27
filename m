@@ -2,218 +2,200 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C498C55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D6DC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAEB0206D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:29:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QALnd6im"
+	by mail.kernel.org (Postfix) with ESMTP id 0C9862076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:30:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588008603;
+	bh=ZdSG41fFUlbC/UHMat4zJ2C7QtQ3OkJpXWPhWLCwozw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=z3upi/nBnzU7P1tndsEZiNMgyOyN+l4A0N7c4uURqaRWgf7toMkLsqhhqnuizGf0J
+	 RVj0euciGYYBIT8Ira2v/2TtDoEk75TFn8E+UWWO5sd0R6+tFGT8DfekPY3Y4fFT02
+	 lMcdtWn4GO4CBbw4imCfhUXIsdGzawtmkLrSjlz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgD0R30 (ORCPT
+        id S1726467AbgD0RaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 13:29:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34228 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726309AbgD0R3Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 13:29:25 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43974C03C1A7
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 10:29:25 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id w20so18511062ljj.0
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 10:29:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SHuBjEFsXuCOnXrDPerkRVxxxGJlefJzzkBgVwYtJlA=;
-        b=QALnd6imJ7V1ZuG0QY9Bq/9Z9J1unuBZ9xPj6KDxnYPc7fE4lJB9FjEFiP03awwA3b
-         zb92lKkogwPFCwFlntiLQ99F5H75z+x8WzXhoPMhhvlWFvDQWXj2cYnZUSCLhGNeLVH3
-         Wu6HU4F6I0ezMQ/bFDI9rQDlpnTEZ3wrIJYoZQmdRPTh3pdEsoZAT47tzLqkSGDIjpQy
-         tmlUnZwLfgtwDZ69d33p8fJFSwztMFMQ7TD9ZZwVoht1dQHhyFO54Ny3fBd/zbgLm/MQ
-         W7tuhO0gvn0im4FWdXx/ffwDttk/8EC2jVjhCbp0iO8kAIYiTqIiJjT9kL0duhgGyvCF
-         UcYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SHuBjEFsXuCOnXrDPerkRVxxxGJlefJzzkBgVwYtJlA=;
-        b=lgaSW0YDKQtypQXKtHlZGCIX2yfp+hH+1c2GhYv7PLkkHxE5P2BQ71pN3qBgn+DnLi
-         5Tr6TUEUd5hxPf/qq2J70bF70Jqc/McOl4UEN0Eb1sFXfAHuDgv/JpTlDJTZpZRbEo5Y
-         IIsGXlJ0jzEmZ8P5SBaf7ARGeRBUnILRgu5l1qChwSuaBJgxqFeCmU53gGzl2w6Lju0E
-         6enoPlP5xaFMsp/GbmpmdHNJZ8A7wbwGHnk51OH/cl24AvxLNrQQAgcj38bmVl2yfgvG
-         OVHn2iE1C9yX9KK9ECdMSf9uxoS9NzvmvlrBBpYvkZk4fXmVaFpNct2GPcwBDr9E0GNP
-         IDHg==
-X-Gm-Message-State: AGi0PuYzSIIbgHhwPdbOQUqqfsGFmz7fMbHgIrH4HAOpyCZOYnUK1I8l
-        sPGyHn2v9CFMRQ2awg/XNgTxk94ttxBsi5svBMoElM0iRLk=
-X-Google-Smtp-Source: APiQypLRikU2kj4lwV6Hlv63XRM9RyOKCs8RknvaYiOvJdZc7VVr5C780JaTVTCUKgNwbuwUujWo/vMtAOfrKhTqrI8=
-X-Received: by 2002:a2e:87d3:: with SMTP id v19mr14032917ljj.176.1588008563374;
- Mon, 27 Apr 2020 10:29:23 -0700 (PDT)
+        Mon, 27 Apr 2020 13:30:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44850 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725980AbgD0RaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 13:30:02 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8224206D9;
+        Mon, 27 Apr 2020 17:30:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588008601;
+        bh=ZdSG41fFUlbC/UHMat4zJ2C7QtQ3OkJpXWPhWLCwozw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=E6nTa2bR+ycpBp1H1A9OnuHkKwx/PwOvQkehou+5mBKQoMtScpAGilGmZhWaOHpcU
+         iVNXFzB1eQL8jTiCLd3i9fzlbf3zEZRjI3nGvvDH9tyA+CFa+6VJXkI7r5l7C4XVFG
+         DHRRgEW+jV01RgqTIg9PrtCSi3PQ+BOYJoZchWs8=
+Date:   Mon, 27 Apr 2020 19:29:59 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Nishad Kamdar <nishadkamdar@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Joe Perches <joe@perches.com>, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] xfs: Use the correct style for SPDX License Identifier
+Message-ID: <20200427172959.GB3936841@kroah.com>
+References: <20200425133504.GA11354@nishad>
+ <20200427155617.GY6749@magnolia>
 MIME-Version: 1.0
-References: <20200427143646.619227-1-christian.brauner@ubuntu.com>
-In-Reply-To: <20200427143646.619227-1-christian.brauner@ubuntu.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Mon, 27 Apr 2020 19:28:56 +0200
-Message-ID: <CAG48ez3eSJSODADpo=O-j9txJ=2R+EupunRvs5H9t5Wa8mvkRA@mail.gmail.com>
-Subject: Re: [PATCH] nsproxy: attach to namespaces via pidfds
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@ubuntu.com>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427155617.GY6749@magnolia>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 4:47 PM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
-> For quite a while we have been thinking about using pidfds to attach to
-> namespaces. This patchset has existed for about a year already but we've
-> wanted to wait to see how the general api would be received and adopted.
-> Now that more and more programs in userspace have started using pidfds
-> for process management it's time to send this one out.
+On Mon, Apr 27, 2020 at 08:56:18AM -0700, Darrick J. Wong wrote:
+> On Sat, Apr 25, 2020 at 07:05:09PM +0530, Nishad Kamdar wrote:
+> > This patch corrects the SPDX License Identifier style in
+> > header files related to XFS File System support.
+> > For C header files Documentation/process/license-rules.rst
+> > mandates C-like comments (opposed to C source files where
+> > C++ style should be used).
+> > 
+> > Changes made by using a script provided by Joe Perches here:
+> > https://lkml.org/lkml/2019/2/7/46.
+> > 
+> > Suggested-by: Joe Perches <joe@perches.com>
+> > Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+> > ---
+> >  fs/xfs/kmem.h                      | 2 +-
+> >  fs/xfs/libxfs/xfs_ag_resv.h        | 2 +-
+> >  fs/xfs/libxfs/xfs_alloc.h          | 2 +-
+> >  fs/xfs/libxfs/xfs_alloc_btree.h    | 2 +-
+> >  fs/xfs/libxfs/xfs_attr.h           | 2 +-
+> >  fs/xfs/libxfs/xfs_attr_leaf.h      | 2 +-
+> >  fs/xfs/libxfs/xfs_attr_remote.h    | 2 +-
+> >  fs/xfs/libxfs/xfs_attr_sf.h        | 2 +-
+> >  fs/xfs/libxfs/xfs_bit.h            | 2 +-
+> >  fs/xfs/libxfs/xfs_bmap.h           | 2 +-
+> >  fs/xfs/libxfs/xfs_bmap_btree.h     | 2 +-
+> >  fs/xfs/libxfs/xfs_btree.h          | 2 +-
+> >  fs/xfs/libxfs/xfs_da_btree.h       | 2 +-
+> >  fs/xfs/libxfs/xfs_da_format.h      | 2 +-
+> >  fs/xfs/libxfs/xfs_defer.h          | 2 +-
+> >  fs/xfs/libxfs/xfs_dir2.h           | 2 +-
+> >  fs/xfs/libxfs/xfs_dir2_priv.h      | 2 +-
+> >  fs/xfs/libxfs/xfs_errortag.h       | 2 +-
+> >  fs/xfs/libxfs/xfs_format.h         | 2 +-
+> >  fs/xfs/libxfs/xfs_fs.h             | 2 +-
+> >  fs/xfs/libxfs/xfs_health.h         | 2 +-
+> >  fs/xfs/libxfs/xfs_ialloc.h         | 2 +-
+> >  fs/xfs/libxfs/xfs_ialloc_btree.h   | 2 +-
+> >  fs/xfs/libxfs/xfs_inode_buf.h      | 2 +-
+> >  fs/xfs/libxfs/xfs_inode_fork.h     | 2 +-
+> >  fs/xfs/libxfs/xfs_log_format.h     | 2 +-
+> >  fs/xfs/libxfs/xfs_log_recover.h    | 2 +-
+> >  fs/xfs/libxfs/xfs_quota_defs.h     | 2 +-
+> >  fs/xfs/libxfs/xfs_refcount.h       | 2 +-
+> >  fs/xfs/libxfs/xfs_refcount_btree.h | 2 +-
+> >  fs/xfs/libxfs/xfs_rmap.h           | 2 +-
+> >  fs/xfs/libxfs/xfs_rmap_btree.h     | 2 +-
+> >  fs/xfs/libxfs/xfs_sb.h             | 2 +-
+> >  fs/xfs/libxfs/xfs_shared.h         | 2 +-
+> >  fs/xfs/libxfs/xfs_trans_resv.h     | 2 +-
+> >  fs/xfs/libxfs/xfs_trans_space.h    | 2 +-
+> >  fs/xfs/libxfs/xfs_types.h          | 2 +-
+> >  fs/xfs/mrlock.h                    | 2 +-
+> >  fs/xfs/scrub/bitmap.h              | 2 +-
+> >  fs/xfs/scrub/btree.h               | 2 +-
+> >  fs/xfs/scrub/common.h              | 2 +-
+> >  fs/xfs/scrub/dabtree.h             | 2 +-
+> >  fs/xfs/scrub/health.h              | 2 +-
+> >  fs/xfs/scrub/repair.h              | 2 +-
+> >  fs/xfs/scrub/scrub.h               | 2 +-
+> >  fs/xfs/scrub/trace.h               | 2 +-
+> >  fs/xfs/scrub/xfs_scrub.h           | 2 +-
+> >  fs/xfs/xfs.h                       | 2 +-
+> >  fs/xfs/xfs_acl.h                   | 2 +-
+> >  fs/xfs/xfs_aops.h                  | 2 +-
+> >  fs/xfs/xfs_bmap_item.h             | 2 +-
+> >  fs/xfs/xfs_bmap_util.h             | 2 +-
+> >  fs/xfs/xfs_buf.h                   | 2 +-
+> >  fs/xfs/xfs_buf_item.h              | 2 +-
+> >  fs/xfs/xfs_dquot.h                 | 2 +-
+> >  fs/xfs/xfs_dquot_item.h            | 2 +-
+> >  fs/xfs/xfs_error.h                 | 2 +-
+> >  fs/xfs/xfs_export.h                | 2 +-
+> >  fs/xfs/xfs_extent_busy.h           | 2 +-
+> >  fs/xfs/xfs_extfree_item.h          | 2 +-
+> >  fs/xfs/xfs_filestream.h            | 2 +-
+> >  fs/xfs/xfs_fsmap.h                 | 2 +-
+> >  fs/xfs/xfs_fsops.h                 | 2 +-
+> >  fs/xfs/xfs_icache.h                | 2 +-
+> >  fs/xfs/xfs_icreate_item.h          | 2 +-
+> >  fs/xfs/xfs_inode.h                 | 2 +-
+> >  fs/xfs/xfs_inode_item.h            | 2 +-
+> >  fs/xfs/xfs_ioctl.h                 | 2 +-
+> >  fs/xfs/xfs_ioctl32.h               | 2 +-
+> >  fs/xfs/xfs_iomap.h                 | 2 +-
+> >  fs/xfs/xfs_iops.h                  | 2 +-
+> >  fs/xfs/xfs_itable.h                | 2 +-
+> >  fs/xfs/xfs_linux.h                 | 2 +-
+> >  fs/xfs/xfs_log.h                   | 2 +-
+> >  fs/xfs/xfs_log_priv.h              | 2 +-
+> >  fs/xfs/xfs_mount.h                 | 2 +-
+> >  fs/xfs/xfs_mru_cache.h             | 2 +-
+> >  fs/xfs/xfs_ondisk.h                | 2 +-
+> >  fs/xfs/xfs_qm.h                    | 2 +-
+> >  fs/xfs/xfs_quota.h                 | 2 +-
+> >  fs/xfs/xfs_refcount_item.h         | 2 +-
+> >  fs/xfs/xfs_reflink.h               | 2 +-
+> >  fs/xfs/xfs_rmap_item.h             | 2 +-
+> >  fs/xfs/xfs_rtalloc.h               | 2 +-
+> >  fs/xfs/xfs_stats.h                 | 2 +-
+> >  fs/xfs/xfs_super.h                 | 2 +-
+> >  fs/xfs/xfs_symlink.h               | 2 +-
+> >  fs/xfs/xfs_sysctl.h                | 2 +-
+> >  fs/xfs/xfs_sysfs.h                 | 2 +-
+> >  fs/xfs/xfs_trace.h                 | 2 +-
+> >  fs/xfs/xfs_trans.h                 | 2 +-
+> >  fs/xfs/xfs_trans_priv.h            | 2 +-
+> >  92 files changed, 92 insertions(+), 92 deletions(-)
+> > 
+> > diff --git a/fs/xfs/kmem.h b/fs/xfs/kmem.h
+> > index 6143117770e9..fc87ea9f6843 100644
+> > --- a/fs/xfs/kmem.h
+> > +++ b/fs/xfs/kmem.h
+> > @@ -1,4 +1,4 @@
+> > -// SPDX-License-Identifier: GPL-2.0
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> >  /*
+> >   * Copyright (c) 2000-2005 Silicon Graphics, Inc.
+> >   * All Rights Reserved.
+> > diff --git a/fs/xfs/libxfs/xfs_ag_resv.h b/fs/xfs/libxfs/xfs_ag_resv.h
+> > index c0352edc8e41..f3fd0ee9a7f7 100644
+> > --- a/fs/xfs/libxfs/xfs_ag_resv.h
+> > +++ b/fs/xfs/libxfs/xfs_ag_resv.h
+> > @@ -1,4 +1,4 @@
+> > -// SPDX-License-Identifier: GPL-2.0+
+> > +/* SPDX-License-Identifier: GPL-2.0+ */
+> 
+> I thought we were supposed to use 'GPL-2.0-or-newer' because 'GPL-2.0+'
+> is deprecated in some newer version of the SPDX standard?
+> 
+> <shrug>
 
-You can already reliably switch to a specific namespace of another
-process like this given a pidfd and the pid of the process (which, if
-you don't have it, you can get via fdinfo), right?
+The kernel follows the "older" SPDX standard, but will accept either,
+it's up to the author.  It is all documented in LICENSES/ if people
+really want to make sure.
 
-int switch_ns_to(int pidfd, int pid, char *nstypename) {
-  char ns_path[100];
-  snprintf(ns_path, sizeof(ns_path), "/proc/%d/ns/%s", pid, nstypename);
-  int fd = open(ns_path, O_RDONLY|O_CLOEXEC);
-  int errno_after_open = errno;
+thanks,
 
-  if (pidfd_send_signal(pidfd, 0, NULL, 0))
-    return -1;
-
-  if (fd == -1) {
-    errno = errno_after_open;
-    return -1;
-  }
-
-  int ret = setns(fd, 0);
-  close(fd);
-  return ret;
-}
-
-> This patch makes it possible to use pidfds to attach to the namespaces
-> of another process, i.e. they can be passed as the first argument to the
-> setns() syscall. When only a single namespace type is specified the
-> semantics are equivalent to passing an nsfd.
-
-This introduces a difference in terms of security: With the old API,
-you need PTRACE_MODE_READ_FSCREDS on the task whose namespace you're
-attaching to (to dereference the link /proc/*/ns/*) *AND* whatever
-access checks the namespace itself enforces (always includes a check
-for CAP_SYS_ADMIN on the namespace). The ptrace check has the
-advantage, among other things, that it allows an LSM to see the
-relationship between the task that's accessing the namespace (subject)
-and the task whose namespace is being accessed (object).
-
-I feel slightly twitchy about this relaxation, and I'm wondering
-whether we can add a ptrace access check analogous to what you'd have
-needed via procfs.
-
-> That means
-> setns(nsfd, CLONE_NEWNET) equals setns(pidfd, CLONE_NEWNET). However,
-> when a pidfd is passed, multiple namespace flags can be specified in the
-> second setns() argument and setns() will attach the caller to all the
-> specified namespaces all at once or to none of them. If 0 is specified
-> together with a pidfd then setns() will interpret it the same way 0 is
-> interpreted together with a nsfd argument, i.e. attach to any/all
-> namespaces.
-[...]
-> Apart from significiantly reducing the number of syscalls from double
-> digit to single digit which is a decent reason post-spectre/meltdown
-> this also allows to switch to a set of namespaces atomically, i.e.
-> either attaching to all the specified namespaces succeeds or we fail.
-
-Apart from the issues I've pointed out below, I think it's worth
-calling out explicitly that with the current design, the switch will
-not, in fact, be fully atomic - the process will temporarily be in
-intermediate stages where the switches to some namespaces have
-completed while the switches to other namespaces are still pending;
-and while there will be less of these intermediate stages than before,
-it also means that they will be less explicit to userspace.
-
-[...]
-> diff --git a/kernel/nsproxy.c b/kernel/nsproxy.c
-[...]
-> +/*
-> + * Ordering is equivalent to the standard ordering used everywhere
-> + * else during unshare and process creation.
-> + */
-> +static int ns_install(struct nsproxy *nsproxy, struct pid *pid, int flags)
-> +{
-> +       int ret = 0;
-> +       struct task_struct *tsk;
-> +       struct nsproxy *nsp;
-> +
-> +       tsk = get_pid_task(pid, PIDTYPE_PID);
-> +       if (!tsk)
-> +               return -ESRCH;
-> +
-> +       get_nsproxy(tsk->nsproxy);
-> +       nsp = tsk->nsproxy;
-
-How is this correct? Are you holding any locks that protect tsk->nsproxy?
-
-> +#ifdef CONFIG_USER_NS
-> +       if (wants_ns(flags, CLONE_NEWUSER)) {
-> +               struct user_namespace *user_ns;
-> +
-> +               user_ns = get_user_ns(__task_cred(tsk)->user_ns);
-> +               ret = __ns_install(nsproxy, &user_ns->ns);
-
-If ret == 0, then at this point you've already committed the user
-namespace change *to the calling process*. The ->install handler of
-user namespaces doesn't touch the nsproxy at all.
-
-> +               put_user_ns(user_ns);
-> +       }
-> +#else
-> +       if (flags & CLONE_NEWUSER)
-> +               ret = -EINVAL;
-> +#endif
-> +
-> +       if (!ret && wants_ns(flags, CLONE_NEWNS))
-> +               ret = __ns_install(nsproxy, mnt_ns_to_common(nsp->mnt_ns));
-
-And this one might be even worse, because the mount namespace change
-itself is only stored in the nsproxy at this point, but the cwd and
-root paths have already been overwritten on the task's fs_struct.
-
-To actually make sys_set_ns() atomic, I think you'd need some
-moderately complicated prep work, splitting the ->install handlers up
-into prep work and a commit phase that can't fail.
-
-[...]
-> +#ifdef CONFIG_PID_NS
-> +       if (!ret && wants_ns(flags, CLONE_NEWPID)) {
-> +               struct pid_namespace *pidns;
-> +
-> +               pidns = task_active_pid_ns(tsk);
-> +               if (pidns) {
-> +                       get_pid_ns(pidns);
-> +                       ret = __ns_install(nsproxy, &pidns->ns);
-> +                       put_pid_ns(pidns);
-> +               }
-
-If you can't get the task's pidns, shouldn't that be an error?
-
-> +       }
-[...]
+greg k-h
