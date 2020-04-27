@@ -2,117 +2,157 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2FFC5519B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F212C55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83B2E2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1E982063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 11:00:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EuBMiAZv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbgD0LAN convert rfc822-to-8bit (ORCPT
+        id S1727049AbgD0LAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 07:00:13 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:40446 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726898AbgD0LAL (ORCPT
+        Mon, 27 Apr 2020 07:00:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57974 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726700AbgD0LAh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 07:00:11 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-191-HECg1l8bNsO4jduJXHGeUw-1; Mon, 27 Apr 2020 12:00:07 +0100
-X-MC-Unique: HECg1l8bNsO4jduJXHGeUw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 27 Apr 2020 12:00:06 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 27 Apr 2020 12:00:06 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Roberto Sassu' <roberto.sassu@huawei.com>,
-        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
-        "rgoldwyn@suse.de" <rgoldwyn@suse.de>
-CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "silviu.vlasceanu@huawei.com" <silviu.vlasceanu@huawei.com>,
-        "krzysztof.struczynski@huawei.com" <krzysztof.struczynski@huawei.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH v2 3/6] ima: Fix ima digest hash table key calculation
-Thread-Topic: [PATCH v2 3/6] ima: Fix ima digest hash table key calculation
-Thread-Index: AQHWHH8SDZUC+XMi6UOqF9nBthnXX6iMzGEg
-Date:   Mon, 27 Apr 2020 11:00:06 +0000
-Message-ID: <84ecd8f2576849b29876448df66824fc@AcuMS.aculab.com>
-References: <20200427102900.18887-1-roberto.sassu@huawei.com>
- <20200427102900.18887-3-roberto.sassu@huawei.com>
-In-Reply-To: <20200427102900.18887-3-roberto.sassu@huawei.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 27 Apr 2020 07:00:37 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F5DEC0610D5;
+        Mon, 27 Apr 2020 04:00:37 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id j2so20013264wrs.9;
+        Mon, 27 Apr 2020 04:00:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wDGYvSoUtWFCiB9f3JUcCvPqOGXmkZsIrQjt5HrnGos=;
+        b=EuBMiAZvu4ghhUPR13OZX7veD1udkneRiqv1UF3fh7ByRMgGw2ddV+suF0fruNc5Ok
+         QYPgDSM8BICnAd7TABQn5b7SqgG8goP9LImBRL0X922f5BXkHgm7eWUDk2nD2VSdo70b
+         w2H4mdwDqQiDGdYMdqLq5YdrQsrXxbHBAi6MscQD7R31Wpopo6Zibs9AZhhXJtBiCs4T
+         kswk+oF7lGwPaxqRCA1UXmg9/AUfwZ8EhKnSgotBBy4QItP9IZLS9GM/1RzwKs285DS8
+         3UFXtQHQrAKO9BQ/cdUXvRDtS7VDL2m6xn+VkUSHtU7ToVyIAY6YRvNnEk1RsMUpVMl2
+         Hx/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wDGYvSoUtWFCiB9f3JUcCvPqOGXmkZsIrQjt5HrnGos=;
+        b=DqIUv8RAAYruMMf2gxoYGKxCwaLZOJN/5WmKloTby/MGcObmPrdJA1niPB6bu0SiQn
+         jXAPIz/Gy7FV1KiHMznpN6NYb9IpJDwzWeW7NXZ4Azk16pGCPD69zLfDmLAj/cp9ZNf/
+         vbuPEo1ugZHhnwDCP7Yq8LzWDJnhR/+IQgkCQswS1aVwSV0BQuDuQYXT5T1V70ZE5aFp
+         AJE2GNfd8e9J+bNbHcWVUMT/tXSPHYuKFIPh66BgAXtOaZ7kljaWUn0d3z7+Cr3eqPna
+         KkMzXZiP3db+HscrEjvQtfG+NsOQ+1Q9+5rgjMWs1qUarGRNYxXBS3EN0suaDrOETCCd
+         5lOA==
+X-Gm-Message-State: AGi0PuaI6SLyVIka+MmgY/2ypnZed+cAVuEOzbQdMbndHX559NtoSF25
+        rYrZ735SXHBu4jjCu+HQsqw=
+X-Google-Smtp-Source: APiQypKLTGlMkyzyNm1oCRgxnUlkYlWbRZcOtewRjGQ7tA6PTzNS+l3A1g3PlVsB1E3DQnRXkF+Mqg==
+X-Received: by 2002:a5d:634d:: with SMTP id b13mr26110798wrw.353.1587985236176;
+        Mon, 27 Apr 2020 04:00:36 -0700 (PDT)
+Received: from localhost (p2E5BEDBA.dip0.t-ipconnect.de. [46.91.237.186])
+        by smtp.gmail.com with ESMTPSA id y63sm15794861wmg.21.2020.04.27.04.00.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 04:00:34 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 13:00:33 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
+ for a long time
+Message-ID: <20200427110033.GC3464906@ulmo>
+References: <77a31b2f-f525-ba9e-f1ae-2b474465bde4@gmail.com>
+ <470b4de4-e98a-1bdc-049e-6259ad603507@nvidia.com>
+ <d2531fc1-b452-717d-af71-19497e14ef00@gmail.com>
+ <a5198024-7273-74c4-b4f4-3a29d042bc36@nvidia.com>
+ <f8fb1f7f-2497-033e-ff2c-c86c6caa9706@gmail.com>
+ <fd1ca178-1ea3-851f-20a6-10bf00453ce3@nvidia.com>
+ <a5734f19-254e-b6bc-e791-fa1ac63f11a4@gmail.com>
+ <79f6560e-dbb5-0ae1-49f8-cf1cd95396ec@nvidia.com>
+ <20200427074837.GC3451400@ulmo>
+ <c1190858-eaea-8e94-b4d1-1cf28076c330@gmail.com>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="m51xatjYGsM+13rf"
+Content-Disposition: inline
+In-Reply-To: <c1190858-eaea-8e94-b4d1-1cf28076c330@gmail.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roberto Sassu
-> Sent: 27 April 2020 11:29
-> Function hash_long() accepts unsigned long, while currently only one byte
-> is passed from ima_hash_key(), which calculates a key for ima_htable.
-> 
-> Given that hashing the digest does not give clear benefits compared to
-> using the digest itself, remove hash_long() and return the modulus
-> calculated on the beginning of the digest with the number of slots. Also
-> reduce the depth of the hash table by doubling the number of slots.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 3323eec921ef ("integrity: IMA as an integrity service provider")
-> Co-developed-by: Roberto Sassu <roberto.sassu@huawei.com>
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
-> ---
->  security/integrity/ima/ima.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-> index 467dfdbea25c..6ee458cf124a 100644
-> --- a/security/integrity/ima/ima.h
-> +++ b/security/integrity/ima/ima.h
-> @@ -36,7 +36,7 @@ enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 = 8 };
->  #define IMA_DIGEST_SIZE		SHA1_DIGEST_SIZE
->  #define IMA_EVENT_NAME_LEN_MAX	255
-> 
-> -#define IMA_HASH_BITS 9
-> +#define IMA_HASH_BITS 10
->  #define IMA_MEASURE_HTABLE_SIZE (1 << IMA_HASH_BITS)
-> 
->  #define IMA_TEMPLATE_FIELD_ID_MAX_LEN	16
-> @@ -179,9 +179,9 @@ struct ima_h_table {
->  };
->  extern struct ima_h_table ima_htable;
-> 
-> -static inline unsigned long ima_hash_key(u8 *digest)
-> +static inline unsigned int ima_hash_key(u8 *digest)
->  {
-> -	return hash_long(*digest, IMA_HASH_BITS);
-> +	return (*(unsigned int *)digest % IMA_MEASURE_HTABLE_SIZE);
 
-That almost certainly isn't right.
-It falls foul of the *(integer_type *)ptr being almost always wrong.
+--m51xatjYGsM+13rf
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-	David
+On Mon, Apr 27, 2020 at 12:52:10PM +0300, Dmitry Osipenko wrote:
+> 27.04.2020 10:48, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> ...
+> >> Maybe but all these other problems appear to have existed for sometime
+> >> now. We need to fix all, but for the moment we need to figure out what=
+'s
+> >> best for v5.7.
+> >=20
+> > To me it doesn't sound like we have a good handle on what exactly is
+> > going on here and we're mostly just poking around.
+> >=20
+> > And even if things weren't working quite properly before, it sounds to
+> > me like this patch actually made things worse.
+>=20
+> There is a plenty of time to work on the proper fix now. To me it sounds
+> like you're giving up on fixing the root of the problem, sorry.
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+We're at -rc3 now and I haven't seen any promising progress in the last
+week. All the while suspend/resume is now broken on at least one board
+and that may end up hiding any other issues that could creep in in the
+meantime.
 
+Furthermore we seem to have a preexisting issue that may very well
+interfere with this patch, so I think the cautious thing is to revert
+for now and then fix the original issue first. We can always come back
+to this once everything is back to normal.
+
+Also, people are now looking at backporting this to v5.6. Unless we
+revert this from v5.7 it may get picked up for backports to other
+kernels and then I have to notify stable kernel maintainers that they
+shouldn't and they have to back things out again. That's going to cause
+a lot of wasted time for a lot of people.
+
+So, sorry, I disagree. I don't think we have "plenty of time".
+
+Thierry
+
+--m51xatjYGsM+13rf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6mu08ACgkQ3SOs138+
+s6GkNQ/+MM+0bsgj+vHl+YaAN2lhG38F1/Aeh44skTQX8cmsPvvL03ucTRBOf3wW
+TjMvlg4+8pFnBfUFEm6YfhBayoh4pemFZUyKjMiqrNExB3W2h+IPaixKQwRM5SPs
+V6JpfP5Gc0Esye8UPKq7p8LUTFPRhlFfTzb3E9YcaWjW4cQu9Uv2BjfECQuSwkpa
+dyTA7nuxuZzWk9vqNG8SDAb5yjXo5yZn5XxTKn0NoQSQkHGV0LLTO0xrhU7UIhah
+oGT0bywp6iwncSYkHyKE0mgM1tLK3LUVyfjgXtwj9WK77VVrxkIeGPPRoG0z0GWj
+NhoywNPnO8GCwpMpnJ+rY/YQPGbmIvxtxQ3WyydiWVpmV89+91Fo+bJa0hYTServ
+tNlE2UoaZc43AvNkgpj6832xT4AjIWEF6HomFrr90qDhN/TIojUJYtyxEm1uh0UO
+h78qHYBRqo+6WV+Txladbr2USeO2bMRNwYkohHawMIfTyGgPaZTlmR8a/tuVIyFe
+Iz8DpUPs1yNKO0mbAGJ8yOaQs8QuJVoqQiWRMjedcyIqUASRQOVkjymqVrv8JZou
+W9lgTK12eRxP47VyFtIY+sr4pT1g3Tx+eScMfZJb8SMw+/94q2F9keKuy7C2anM0
+qfA8QFlxh9X71T+zlxeoWVrc5/LOmR+u0BJe/vLj4ix9FRGYVmg=
+=IL/X
+-----END PGP SIGNATURE-----
+
+--m51xatjYGsM+13rf--
