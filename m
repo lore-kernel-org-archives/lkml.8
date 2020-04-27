@@ -2,96 +2,193 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0568CC4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0D5C54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3ECE214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:39:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588012774;
-	bh=Lme6El6tD/BYUOZo17Ei14owg7NmYfICUYkDlTMex+Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XwQ8hxe0SgtdXsm5mZ7LQi8hwHRuCURhJcBj9gZIpx3/3AYvDkallwTTsihW4KKsY
-	 FrJFJQCxt0haVtonG4POg+BsS9gVGy9LYgtYJuFAwoEF+7PrV1SYsz0gI8jLM6IvWC
-	 YAfKwB7QjnYUlwOdYDjBm9FcEuhKS0wj0SvTuulg=
+	by mail.kernel.org (Postfix) with ESMTP id 1D11720B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:39:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbgD0Sje (ORCPT
+        id S1726605AbgD0Sjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 14:39:34 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40311 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbgD0Sje (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 14:39:34 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n16so9061515pgb.7;
-        Mon, 27 Apr 2020 11:39:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=e5/BJgBb9+BnsnGu4qvm1p5Drnqy7riS6RgVNSCSYu8=;
-        b=ecACkwbBu7S6yt2GI6z3Z95ioyBt1HGF/EwEVQqYKhUNjMo3tM2QenL0Wv7nlMlu6a
-         A6Cj1k8c5t42mbXCrKs47OyYQLk21U7fkeBnuoHUla9KkM3nVtApMtVSIyYtpHSVPWqK
-         Z7QlR2NQjCI+WeX3yFUKdDZDjFuZIqQ4RaUWe971/wde0O/r2N9ZRMOFq/H97L7qXnVc
-         IiLhdrsBXR9vYl0ycLymWZmDivbEGi2uZufeuxxKOIIZx4w1bkzJku/p6m8xrRQnH2+A
-         uvWCVSB8NUAqNctgM/lY0MUAKLTmejzCfvy5GwnY4fAebM7eNsTfpQeXjyv5+iZ0527S
-         qyvA==
-X-Gm-Message-State: AGi0Pua3DaU35oTub+DFWBzVQCoi/YAHuSNQBOxCFxxJj+EI8JuCAzDb
-        f+OUDGmbiSRfmuoioVgE9B8=
-X-Google-Smtp-Source: APiQypIu2WcZsYqOoI4gNIEcf3o9s3itN8+KJR+9FBk6FHmBMIhT4HV/y3uHuuCMQtd8Jobsnw2Dsg==
-X-Received: by 2002:a63:1414:: with SMTP id u20mr6946591pgl.47.1588012773236;
-        Mon, 27 Apr 2020 11:39:33 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id m3sm14400pjs.17.2020.04.27.11.39.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 11:39:31 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 27F5E403AB; Mon, 27 Apr 2020 18:39:31 +0000 (UTC)
-Date:   Mon, 27 Apr 2020 18:39:31 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v3 4/5] tools/testing/selftests/sysctl/sysctl.sh: support
- CONFIG_TEST_SYSCTL=y
-Message-ID: <20200427183931.GI11244@42.do-not-panic.com>
-References: <20200427180433.7029-1-vbabka@suse.cz>
- <20200427180433.7029-5-vbabka@suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200427180433.7029-5-vbabka@suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 27 Apr 2020 14:39:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49050 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725995AbgD0Sjv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 14:39:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 48C31ACBA;
+        Mon, 27 Apr 2020 18:39:48 +0000 (UTC)
+Date:   Mon, 27 Apr 2020 20:39:48 +0200
+Message-ID: <s5h4kt4ojrf.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        Takashi Iwai <tiwai@suse.com>, Lukas Wunner <lukas@wunner.de>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>
+Subject: Re: [PATCH 0/1] Fiji GPU audio register timeout when in BACO state
+In-Reply-To: <CADnq5_M=QEqxuCKjb_qZvFSvwM5eLEFfsepxYYXoouFoe5bn7A@mail.gmail.com>
+References: <PSXP216MB0438D2AF96CE0D4F83F48C4D80AE0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        <MN2PR12MB4488E4909C1488FB507E0BF5F7AF0@MN2PR12MB4488.namprd12.prod.outlook.com>
+        <s5ho8rdnems.wl-tiwai@suse.de>
+        <PSXP216MB04387BF6B5F8DA84749E5D6F80AF0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        <CADnq5_M=QEqxuCKjb_qZvFSvwM5eLEFfsepxYYXoouFoe5bn7A@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 08:04:32PM +0200, Vlastimil Babka wrote:
-> The testing script recommends CONFIG_TEST_SYSCTL=y, but actually only works
-> with CONFIG_TEST_SYSCTL=m. Testing of sysctl setting via boot param however
-> requires the test to be built-in, so make sure the test script supports it.
+On Mon, 27 Apr 2020 20:28:12 +0200,
+Alex Deucher wrote:
 > 
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> On Mon, Apr 27, 2020 at 2:07 PM Nicholas Johnson
+> <nicholas.johnson-opensource@outlook.com.au> wrote:
+> >
+> > On Mon, Apr 27, 2020 at 05:15:55PM +0200, Takashi Iwai wrote:
+> > > On Mon, 27 Apr 2020 16:22:21 +0200,
+> > > Deucher, Alexander wrote:
+> > > >
+> > > > [AMD Public Use]
+> > > >
+> > > > > -----Original Message-----
+> > > > > From: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+> > > > > Sent: Sunday, April 26, 2020 12:02 PM
+> > > > > To: linux-kernel@vger.kernel.org
+> > > > > Cc: Deucher, Alexander <Alexander.Deucher@amd.com>; Koenig, Christian
+> > > > > <Christian.Koenig@amd.com>; Zhou, David(ChunMing)
+> > > > > <David1.Zhou@amd.com>; Nicholas Johnson <nicholas.johnson-
+> > > > > opensource@outlook.com.au>
+> > > > > Subject: [PATCH 0/1] Fiji GPU audio register timeout when in BACO state
+> > > > >
+> > > > > Hi all,
+> > > > >
+> > > > > Since Linux v5.7-rc1 / commit 4fdda2e66de0 ("drm/amdgpu/runpm: enable
+> > > > > runpm on baco capable VI+ asics"), my AMD R9 Nano has been using runpm /
+> > > > > BACO. You can tell visually when it sleeps, because the fan on the graphics
+> > > > > card is switched off to save power. It did not spin down the fan in v5.6.x.
+> > > > >
+> > > > > This is great (I love it), except that when it is sleeping, the PCIe audio function
+> > > > > of the GPU has issues if anything tries to access it. You get dmesg errors such
+> > > > > as these:
+> > > > >
+> > > > > snd_hda_intel 0000:08:00.1: spurious response 0x0:0x0, last cmd=0x170500
+> > > > > snd_hda_intel 0000:08:00.1: azx_get_response timeout, switching to polling
+> > > > > mode: last cmd=0x001f0500 snd_hda_intel 0000:08:00.1: No response from
+> > > > > codec, disabling MSI: last cmd=0x001f0500 snd_hda_intel 0000:08:00.1: No
+> > > > > response from codec, resetting bus: last cmd=0x001f0500
+> > > > > snd_hda_codec_hdmi hdaudioC1D0: Unable to sync register 0x2f0d00. -11
+> > > > >
+> > > > > The above is with the Fiji XT GPU at 0000:08:00.0 in a Thunderbolt enclosure
+> > > > > (not that Thunderbolt should affect it, but I feel I should mention it just in
+> > > > > case). I dropped a lot of duplicate dmesg lines, as some of them repeated a
+> > > > > lot of times before the driver gave up.
+> > > > >
+> > > > > I offer this patch to disable runpm for Fiji while a fix is found, if you decide
+> > > > > that is the best approach. Regardless, I will gladly test any patches you come
+> > > > > up with instead and confirm that the above issue has been fixed.
+> > > > >
+> > > > > I cannot tell if any other GPUs are affected. The only other cards to which I
+> > > > > have access are a couple of AMD R9 280X (Tahiti XT), which use radeon driver
+> > > > > instead of amdgpu driver.
+> > > >
+> > > > Adding a few more people.  Do you know what is accessing the audio?  The audio should have a dependency on the GPU device.  The GPU won't enter runtime pm until the audio has entered runtime pm and vice versa on resume. Please attach a copy of your dmesg output and lspci output.
+> >
+> > pci 0000:08:00.1: D0 power state depends on 0000:08:00.0
+> > The above must be the dependency of which you speak from dmesg.
+> >
+> > Accessing the audio? I did not have a single method for triggering it.
+> > Sometimes it happened on shutdown. Sometimes when restarting gdm.
+> > Sometimes when playing with audio settings in Cinnamon Desktop. But most
+> > often when changing displays. It might have something to do with the
+> > audio device associated with a monitor being created when the monitor is
+> > found. If an audio device is created, then pulseaudio might touch it.
+> > Sorry, this is a very verbose "not quite sure".
+> >
+> > To trigger the bug, this time I did the following:
+> >
+> > 1. Boot laptop without Fiji and log in
+> >
+> > 2. Attach Fiji via Thunderbolt (no displays attached to Fiji) and
+> > approve Thunderbolt device
+> >
+> > 3. Log in again because the session gets killed when GPU is hot-added
+> >
+> > 4. Wait for Fiji to fall asleep (fan stops)
+> >
+> > 5. Open "dmesg -w" on laptop display
+> >
+> > 6. Attach display to DisplayPort on Fiji (it should still stay asleep)
+> >
+> > 7. Do WindowsKey+P to activate external display. The error appears in
+> > dmesg window that instant.
+> >
+> > Could it be a race condition when waking the card up?
+> >
+> > I cannot get the graphics card fan to spin down if the Thunderbolt
+> > enclosure is attached at boot time. It only does it if hot-added.
+> >
+> > If you think it will help, I can take out the Fiji and put it in a test
+> > rig and try to replicate the issue without Thunderbolt, but it looks
+> > like it will not spin the fan down if Fiji is attached at boot time.
+> >
+> > Question, why would the fan not spin down if Fiji is attached at boot
+> > time, and how would one make the said fan turn off? Aside from being
+> > useful for pinning down the audio register issue, I would like to make
+> > sure the power savings are realised whenever the GPU is not being used.
+> 
+> Presumably something is using the device.  Maybe a framebuffer console
+> or X?  Or maybe the something like tlp has disabled runtime pm on your
+> device?  You can see the current status by reading the files in
+> /sys/class/drm/cardX/device/power/ .  Replace cardX with card0, card1,
+> etc. depending on which device is the radeon card.
+> 
+> FWIW, I have a fiji board in a desktop system and it worked fine when
+> this code was enabled.
 
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Is the new DC code used for Fiji boards?  IIRC, the audio component
+binding from amdgpu is enabled only for DC, and without the audio
+component binding the runtime PM won't be linked up, hence you can't
+power up GPU from the audio side access automatically.
 
-  Luis
+
+Takashi
+
+> 
+> Alex
+> 
+> >
+> > >
+> > > Also, please retest with the fresh 5.7-rc3.  There was a known
+> > > regression regarding HD-audio PM in 5.7-rc1/rc2, and it's been fixed
+> > > there (commit 8d6762af302d).
+> > Linux v5.7-rc3 still has the same problem, unfortunately.
+> >
+> > The dmesg is attached.
+> >
+> > Thanks for your replies. Kind regards,
+> > Nicholas
+> >
+> > >
+> > >
+> > > thanks,
+> > >
+> > > Takashi
+> > _______________________________________________
+> > amd-gfx mailing list
+> > amd-gfx@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+> 
