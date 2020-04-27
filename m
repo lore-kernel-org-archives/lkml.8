@@ -2,126 +2,147 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D45EFC4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC1BFC4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADFAD21707
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:46:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588009575;
-	bh=GyOKbULGIjSk5qPc89qgzUXWhIi1IHH3gWYAgn/MlkE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MdhCdUBEbRCY2sxWnGvTA6u5bKE6nuoiksQnk1p04geUm0LqQQwPAHDrTrfRQmgLy
-	 W7aFufoK/xhakectkBnEzsFflLNYpmNbp6B+lwk9avy/5B9Al0Dr1lupuNmHKWlpku
-	 pyXMdnqNdOuW/FfAk4OnVuafuJ9UBaXzBP6wDboM=
+	by mail.kernel.org (Postfix) with ESMTP id B1E12215A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:47:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbgD0RqP (ORCPT
+        id S1726403AbgD0Rrx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 13:46:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54356 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725963AbgD0RqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 13:46:14 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2F0D215A4;
-        Mon, 27 Apr 2020 17:46:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588009574;
-        bh=GyOKbULGIjSk5qPc89qgzUXWhIi1IHH3gWYAgn/MlkE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WBqXHHkTNUpf+PamSmfO5GQtEYUOcUJRXQ+3jHA2Ya6zlOnh7NUUqJxd18VdXSioF
-         pir5n1Dlnw2cYh54OKsOwpmcbCH4jQSlwk57lI1adufP1suJy/PvZ7r5NeLPN7vpO1
-         R18PoAhIz1KMqziTwW4YlMsTk/O+QAkpnCPsCt+c=
-Date:   Mon, 27 Apr 2020 19:46:11 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Nishad Kamdar <nishadkamdar@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xfs: Use the correct style for SPDX License Identifier
-Message-ID: <20200427174611.GA4035548@kroah.com>
-References: <20200425133504.GA11354@nishad>
- <20200427155617.GY6749@magnolia>
- <20200427172959.GB3936841@kroah.com>
- <515362d10c06567f35f0d5b7c3f2e121769fb04b.camel@perches.com>
+        Mon, 27 Apr 2020 13:47:53 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:40615 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726244AbgD0Rrw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 13:47:52 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 94DDD20005;
+        Mon, 27 Apr 2020 17:47:48 +0000 (UTC)
+Date:   Mon, 27 Apr 2020 19:47:47 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Christophe Kerello <christophe.kerello@st.com>
+Cc:     <richard@nod.at>, <vigneshr@ti.com>, <lee.jones@linaro.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <tony@atomide.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <devicetree@vger.kernel.org>, <marex@denx.de>
+Subject: Re: [PATCH v2 04/12] mtd: rawnand: stm32_fmc2: manage all errors
+ cases at probe time
+Message-ID: <20200427194747.224a2402@xps13>
+In-Reply-To: <1586966256-29548-5-git-send-email-christophe.kerello@st.com>
+References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
+        <1586966256-29548-5-git-send-email-christophe.kerello@st.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <515362d10c06567f35f0d5b7c3f2e121769fb04b.camel@perches.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 10:41:58AM -0700, Joe Perches wrote:
-> On Mon, 2020-04-27 at 19:29 +0200, Greg Kroah-Hartman wrote:
-> > On Mon, Apr 27, 2020 at 08:56:18AM -0700, Darrick J. Wong wrote:
-> > > On Sat, Apr 25, 2020 at 07:05:09PM +0530, Nishad Kamdar wrote:
-> > > > This patch corrects the SPDX License Identifier style in
-> > > > header files related to XFS File System support.
-> > > > For C header files Documentation/process/license-rules.rst
-> > > > mandates C-like comments (opposed to C source files where
-> > > > C++ style should be used).
-> > > > 
-> > > > Changes made by using a script provided by Joe Perches here:
-> > > > https://lkml.org/lkml/2019/2/7/46.
-> []
-> > > > diff --git a/fs/xfs/libxfs/xfs_ag_resv.h b/fs/xfs/libxfs/xfs_ag_resv.h
-> []
-> > > > @@ -1,4 +1,4 @@
-> > > > -// SPDX-License-Identifier: GPL-2.0+
-> > > > +/* SPDX-License-Identifier: GPL-2.0+ */
-> > > 
-> > > I thought we were supposed to use 'GPL-2.0-or-newer' because 'GPL-2.0+'
-> > > is deprecated in some newer version of the SPDX standard?
-> > > 
-> > > <shrug>
-> > 
-> > The kernel follows the "older" SPDX standard, but will accept either,
-> > it's up to the author.  It is all documented in LICENSES/ if people
-> > really want to make sure.
+Hi Christophe,
+
+Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 15 Apr
+2020 17:57:28 +0200:
+
+> This patch defers its probe when the expected reset control is not
+> yet ready. This patch also handles properly all errors cases at probe
+> time.
 > 
-> I think the kernel should prefer the "newer" SPDX standard
-> for any/all changes to these lines.
+> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
 > ---
->  LICENSES/preferred/GPL-2.0 | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>  drivers/mtd/nand/raw/stm32_fmc2_nand.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
 > 
-> diff --git a/LICENSES/preferred/GPL-2.0 b/LICENSES/preferred/GPL-2.0
-> index ff0812..c50f93 100644
-> --- a/LICENSES/preferred/GPL-2.0
-> +++ b/LICENSES/preferred/GPL-2.0
-> @@ -8,13 +8,13 @@ Usage-Guide:
->    tag/value pairs into a comment according to the placement
->    guidelines in the licensing rules documentation.
->    For 'GNU General Public License (GPL) version 2 only' use:
-> -    SPDX-License-Identifier: GPL-2.0
-> -  or
->      SPDX-License-Identifier: GPL-2.0-only
-> +  or the deprecated alternative
-> +    SPDX-License-Identifier: GPL-2.0
->    For 'GNU General Public License (GPL) version 2 or any later version' use:
-> -    SPDX-License-Identifier: GPL-2.0+
-> -  or
->      SPDX-License-Identifier: GPL-2.0-or-later
-> +  or the deprecated alternative
-> +    SPDX-License-Identifier: GPL-2.0+
->  License-Text:
+> diff --git a/drivers/mtd/nand/raw/stm32_fmc2_nand.c b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+> index b6d45cd..0a96797 100644
+> --- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+> +++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+> @@ -1967,7 +1967,11 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	rstc = devm_reset_control_get(dev, NULL);
+> -	if (!IS_ERR(rstc)) {
+> +	if (IS_ERR(rstc)) {
+> +		ret = PTR_ERR(rstc);
+> +		if (ret == -EPROBE_DEFER)
+> +			goto err_clk_disable;
+> +	} else {
+>  		reset_control_assert(rstc);
+>  		reset_control_deassert(rstc);
+>  	}
+> @@ -1975,7 +1979,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
+>  	/* DMA setup */
+>  	ret = stm32_fmc2_dma_setup(fmc2);
+>  	if (ret)
+> -		return ret;
+> +		goto err_dma_setup;
+>  
+>  	/* FMC2 init routine */
+>  	stm32_fmc2_init(fmc2);
+> @@ -1997,7 +2001,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
+>  	/* Scan to find existence of the device */
+>  	ret = nand_scan(chip, nand->ncs);
+>  	if (ret)
+> -		goto err_scan;
+> +		goto err_dma_setup;
+>  
+>  	ret = mtd_device_register(mtd, NULL, 0);
+>  	if (ret)
+> @@ -2010,7 +2014,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
+>  err_device_register:
+>  	nand_cleanup(chip);
+>  
+> -err_scan:
+> +err_dma_setup:
+>  	if (fmc2->dma_ecc_ch)
+>  		dma_release_channel(fmc2->dma_ecc_ch);
+>  	if (fmc2->dma_tx_ch)
+> @@ -2021,6 +2025,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
+>  	sg_free_table(&fmc2->dma_data_sg);
+>  	sg_free_table(&fmc2->dma_ecc_sg);
+>  
+> +err_clk_disable:
+>  	clk_disable_unprepare(fmc2->clk);
+>  
+>  	return ret;
 
-At the moment, I do not, as the current ones are not "depreciated" at
-all.
+I didn't spot it during my earlier reviews but I really prefer using
+labels explaining what you do than having the same name of the function
+which failed. This way you don't have to rework the error path when
+you handle an additional error.
 
-thanks,
+So, would you mind doing this in two steps:
 
-greg k-h
+1/
+Replace
+
+    err_scan:
+
+with, eg.
+
+    release_dma_objs:
+
+2/
+Add a
+
+    goto release_dma_objs;
+
+in *_dma_setup() error path, and define and use a
+
+    release_clk
+
+label like you already do.
+
+
+Thanks,
+Miquèl
