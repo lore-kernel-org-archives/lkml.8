@@ -2,110 +2,96 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E13D6C55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4CEC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4F7320728
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:59:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588006766;
-	bh=/dqFyvgTMr7/GP4hysHTzeyCgcVIbSNQGjRnh7yYytk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HxfhcT7IHopyGRqTGc6F7nAHNW+iGPqibEqdPcIMTEr23lt0tcOwTBC8Vmqvxz18+
-	 GZPyQZjSq8+NWI7xy9ZE5yEN/E78dDp3C1FSmRlDduk25AipqDqipnuBA2QhwBbWH2
-	 8gvdr49OBulmGLJ/hX6Oglefw/vFFc6zrd1GjSsA=
+	by mail.kernel.org (Postfix) with ESMTP id 55AA2206B9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:59:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726182AbgD0Q70 (ORCPT
+        id S1726379AbgD0Q7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 12:59:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36842 "EHLO mail.kernel.org"
+        Mon, 27 Apr 2020 12:59:32 -0400
+Received: from albireo.enyo.de ([37.24.231.21]:58106 "EHLO albireo.enyo.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726030AbgD0Q7Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 12:59:25 -0400
-Received: from localhost (unknown [171.76.79.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EDD2206B9;
-        Mon, 27 Apr 2020 16:59:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588006765;
-        bh=/dqFyvgTMr7/GP4hysHTzeyCgcVIbSNQGjRnh7yYytk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ItM+qEI46/NGazMa3t/sxUsrW0dOpgOGRdxhfenznQYkIPv7iu2aMVvRdW77ExxDa
-         k0ItWZ8tZ/4/wqYC1lzTh7JnEH5gWCvqao4usBSJGu1w6YjogIqoq4Fv4xpucK/WG8
-         sQFfgIOn7svWAecOjefan+HfthYwCuzzh9QyAGuU=
-Date:   Mon, 27 Apr 2020 22:29:19 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Wesley Cheng <wcheng@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] phy: qcom-snps: Add runtime suspend and resume handlers
-Message-ID: <20200427165919.GR56386@vkoul-mobl.Dlink>
-References: <1587662818-4461-1-git-send-email-wcheng@codeaurora.org>
+        id S1726360AbgD0Q7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 12:59:31 -0400
+Received: from [172.17.203.2] (helo=deneb.enyo.de)
+        by albireo.enyo.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1jT76J-0003mG-3y; Mon, 27 Apr 2020 16:59:23 +0000
+Received: from fw by deneb.enyo.de with local (Exim 4.92)
+        (envelope-from <fw@deneb.enyo.de>)
+        id 1jT76J-0008BA-15; Mon, 27 Apr 2020 18:59:23 +0200
+From:   Florian Weimer <fw@deneb.enyo.de>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     libc-alpha <libc-alpha@sourceware.org>,
+        Carlos O'Donell <carlos@redhat.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-api <linux-api@vger.kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
+        Joseph Myers <joseph@codesourcery.com>
+Subject: Re: [PATCH glibc 5/9] glibc: Perform rseq(2) registration at C startup and thread creation (v17)
+References: <20200326155633.18236-1-mathieu.desnoyers@efficios.com>
+        <20200326155633.18236-6-mathieu.desnoyers@efficios.com>
+        <87ftcpxhpw.fsf@mid.deneb.enyo.de>
+        <1660640739.70637.1588006030777.JavaMail.zimbra@efficios.com>
+Date:   Mon, 27 Apr 2020 18:59:23 +0200
+In-Reply-To: <1660640739.70637.1588006030777.JavaMail.zimbra@efficios.com>
+        (Mathieu Desnoyers's message of "Mon, 27 Apr 2020 12:47:10 -0400
+        (EDT)")
+Message-ID: <87k120vp90.fsf@mid.deneb.enyo.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1587662818-4461-1-git-send-email-wcheng@codeaurora.org>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23-04-20, 10:26, Wesley Cheng wrote:
+* Mathieu Desnoyers:
 
-> +static int qcom_snps_hsphy_suspend(struct qcom_snps_hsphy *hsphy)
-> +{
-> +	if (hsphy->suspended)
-> +		return 0;
-> +
-> +	dev_dbg(&hsphy->phy->dev, "Suspend QCOM SNPS PHY, mode = %d \n", hsphy->mode);
-> +
-> +	if (hsphy->mode == PHY_MODE_USB_HOST) {
-> +		/* Enable auto-resume to meet remote wakeup timing */
-> +		qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL2,
-> +										USB2_AUTO_RESUME, USB2_AUTO_RESUME);
-> +		usleep_range(500, 1000);
-> +		qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL2,
-> +										0, USB2_AUTO_RESUME);
+> ----- On Apr 27, 2020, at 7:59 AM, Florian Weimer fw@deneb.enyo.de wrote:
+>
+>> * Mathieu Desnoyers via Libc-alpha:
+>> 
+>>> diff --git a/elf/libc_early_init.c b/elf/libc_early_init.c
+>>> index 1ac66d895d..30466afea0 100644
+>>> --- a/elf/libc_early_init.c
+>>> +++ b/elf/libc_early_init.c
+>>> @@ -18,10 +18,13 @@
+>>>  
+>>>  #include <ctype.h>
+>>>  #include <libc-early-init.h>
+>>> +#include <rseq-internal.h>
+>>>  
+>>>  void
+>>>  __libc_early_init (void)
+>>>  {
+>>>    /* Initialize ctype data.  */
+>>>    __ctype_init ();
+>>> +  /* Register rseq ABI to the kernel.   */
+>>> +  (void) rseq_register_current_thread ();
+>>>  }
+>> 
+>> I think the registration must be restricted to the primary namespace.
+>> Otherwise, LD_AUDIT will register the area to the secondary libc (in
+>> the audit module), not the primary libc for the entire process.
+>> 
+>> I think the easiest way to implement this for now is a flag argument
+>> for __libc_early_init (as the upstream __libc_multiple_libcs is not
+>> entirely accurate).  I will submit a patch.
+>
+> OK, once I get the patch, I will pick it up in my series.
 
-Kernel has a coding guideline where we try to "stick" to 80 char limit
-and is sometimes okay like debug logs. Above is not okay. Please fix it
-and run ./scripts/checkpatch.pl --strict on your patch and fix all
-errors. Warning and checks at your discretion using common sense. When
-in doubt do ask :)
+There should be no need for that, it can be reviewed and committed
+separately:
 
-> +	}
-> +
-> +	clk_disable_unprepare(hsphy->cfg_ahb_clk);
-> +	hsphy->suspended = true;
-
-why do you need to track this?
-
-> +
-> +	return 0;
-> +}
-> +
-> +static int qcom_snps_hsphy_resume(struct qcom_snps_hsphy *hsphy)
-> +{
-> +	int ret = 0;
-
-superfluous init..
-
->  static int qcom_snps_hsphy_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -251,6 +333,14 @@ static int qcom_snps_hsphy_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> +	pm_runtime_set_active(dev);
-> +	pm_runtime_enable(dev);
-
-would it not make sense to enable this after pjy in initialized?
-
--- 
-~Vinod
+  <https://sourceware.org/pipermail/libc-alpha/2020-April/113182.html>
