@@ -2,168 +2,197 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 335C8C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3972BC55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1152620656
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:42:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zVyMRiMl"
+	by mail.kernel.org (Postfix) with ESMTP id 1A8E920656
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:43:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728163AbgD0PmG (ORCPT
+        id S1728192AbgD0PnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 11:42:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45572 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728032AbgD0PmF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 11:42:05 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C308C03C1A7
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 08:42:05 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id x4so133459wmj.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 08:42:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lLZ7XRRaI1Gpl8c1cQLS2hZAOx8Bn/MZHFlY/EiF3y4=;
-        b=zVyMRiMlwP+4cneNlBaaoQ92zIOVybC9w7sTqGp6acGraFBBzMNx47ZgVM0VG2/3EG
-         NEPiBNjfdPgG4SDKj+0hZXH+JyVsqJmkXwHbH2YpKeWHODUK0z6FvTCLldhQr293Uflb
-         v4gpmbFCPThW6+4w69f4HLq/2UwEkekOwNsS7TSBvs+QcpQtPe9usGuV5mRmPQGJthFY
-         l2R0uRiURvPiQYByEuK2PWbtckwm3lDBYJPbjAHVmyfrI47bGJOozdGn8vxxHkK72v98
-         SUV2DbWN4hTXtML0aeXUJ2ebaeinIsvIAqYBBhocdaABi06WiZ7LFXLH1YH7itElAiXH
-         k5aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lLZ7XRRaI1Gpl8c1cQLS2hZAOx8Bn/MZHFlY/EiF3y4=;
-        b=F3aaG0l0pj9IH7sUVgvO+P4Fmnta+g+2iT+f5C2CL4s7iAnEq97zmQQP2O3amDQQqr
-         6NmxmWDpHYmh2JNtryMXxX+DiAfj1fGlkUCicA7ZVquK3uxoC+9dsyzvj360ZGiT7goS
-         o87Wgj+nDiPckUnJj9yWWLZ1Zj/TB8Urzb2EGawF2it/P1e0l9g4xQmzsct/yaINLquA
-         3AtLFYY14xndC9Nuf42QilEEcmg82zXK0SR5S9GPNjKzwuUx9IfNLBPtkbX2IhVB6cTc
-         Fai5ZJbq0OX6wP9EluZWGUxHgIsFMGF+WjfMsy6hAsQvciF0TIToj5VDZyqY523RkmZV
-         b9XA==
-X-Gm-Message-State: AGi0PuajI2FgQnUEhMNMutB/QX3Zb6tgqFVeZg510tlv9VK3xK1nD1mQ
-        t2gekcLXgg6ZjCxgzgCDqt+jzgHcXpnpzw==
-X-Google-Smtp-Source: APiQypJenGZpAvaB6iFtn3C1GjiCaFZUmaBJg7GJrDEvUU4GsYWVxuZ3cD66dGyGhTicTC8AaKBCkA==
-X-Received: by 2002:a1c:9a81:: with SMTP id c123mr52891wme.115.1588002123816;
-        Mon, 27 Apr 2020 08:42:03 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id w10sm22463339wrg.52.2020.04.27.08.42.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 08:42:03 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 16:42:01 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     jason.wessel@windriver.com, gregkh@linuxfoundation.org,
-        kgdb-bugreport@lists.sourceforge.net, mingo@redhat.com,
-        hpa@zytor.com, bp@alien8.de, linux-serial@vger.kernel.org,
-        agross@kernel.org, tglx@linutronix.de, frowand.list@gmail.com,
-        bjorn.andersson@linaro.org, jslaby@suse.com,
-        catalin.marinas@arm.com, corbet@lwn.net, will@kernel.org,
-        Matt Mullins <mmullins@fb.com>, Nadav Amit <namit@vmware.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v2 4/9] kgdb: Delay "kgdbwait" to dbg_late_init() by
- default
-Message-ID: <20200427154201.dxkoctjxta22u7hz@holly.lan>
-References: <20200421211447.193860-1-dianders@chromium.org>
- <20200421141234.v2.4.I3113aea1b08d8ce36dc3720209392ae8b815201b@changeid>
+        Mon, 27 Apr 2020 11:43:06 -0400
+Received: from mga05.intel.com ([192.55.52.43]:6779 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727768AbgD0PnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 11:43:05 -0400
+IronPort-SDR: 9QUIsgXNYkQPlmfAIXzH+EKun/QrrCX+94eWnW2y5emZ+oro9zJlopJy0ygwWzdoWvn47GnzuK
+ FV1V1hol7cqA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 08:43:04 -0700
+IronPort-SDR: xzyccRZCToBiEJJk7VKV/GPt/PAPE3bvggxB4tPyWAm6ywDykKrxSp9+ORjMHYMItH+bBWnPKY
+ gPL7deJG9Vfw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,324,1583222400"; 
+   d="scan'208";a="336331704"
+Received: from djmuller-mobl.amr.corp.intel.com (HELO [10.255.231.74]) ([10.255.231.74])
+  by orsmga001.jf.intel.com with ESMTP; 27 Apr 2020 08:43:04 -0700
+Subject: Re: [PATCH v2 2/2] PCI/DPC: Allow Native DPC Host Bridges to use DPC
+To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>
+Cc:     "rajatja@google.com" <rajatja@google.com>,
+        "fred@fredlawl.com" <fred@fredlawl.com>,
+        "ruscur@russell.cc" <ruscur@russell.cc>,
+        "kbusch@kernel.org" <kbusch@kernel.org>,
+        "oohall@gmail.com" <oohall@gmail.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "sbobroff@linux.ibm.com" <sbobroff@linux.ibm.com>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Patel, Mayurkumar" <mayurkumar.patel@intel.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>
+References: <1587418630-13562-1-git-send-email-jonathan.derrick@intel.com>
+ <1587418630-13562-3-git-send-email-jonathan.derrick@intel.com>
+ <0058b993-0663-7fed-ed31-cb0adf845a39@linux.intel.com>
+ <ea21d9475b0af277c7288504ff2cd32b3f91e4ba.camel@intel.com>
+ <7e574cc1-a24b-5c4b-7d4f-3fda3f395390@linux.intel.com>
+ <6344a9afcc585504c5dfbc00174280613683064d.camel@intel.com>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <6ee30f16-0a91-04cd-c8ba-72d177fab8f4@linux.intel.com>
+Date:   Mon, 27 Apr 2020 08:43:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421141234.v2.4.I3113aea1b08d8ce36dc3720209392ae8b815201b@changeid>
+In-Reply-To: <6344a9afcc585504c5dfbc00174280613683064d.camel@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 02:14:42PM -0700, Douglas Anderson wrote:
-> Using kgdb requires at least some level of architecture-level
-> initialization.  If nothing else, it relies on the architecture to
-> pass breakpoints / crashes onto kgdb.
-> 
-> On some architectures this all works super early, specifically it
-> starts working at some point in time before Linux parses
-> early_params's.  On other architectures it doesn't.  A survey of a few
-> platforms:
-> 
-> a) x86: Presumably it all works early since "ekgdboc" is documented to
->    work here.
-> b) arm64: Catching crashes works; with a simple patch breakpoints can
->    also be made to work.
-> c) arm: Nothing in kgdb works until
->    paging_init() -> devicemaps_init() -> early_trap_init()
-> 
-> Let's be conservative and, by default, process "kgdbwait" (which tells
-> the kernel to drop into the debugger ASAP at boot) a bit later at
-> dbg_late_init() time.  If an architecture has tested it and wants to
-> re-enable super early debugging, they can implement the weak function
-> kgdb_arch_can_debug_early() to return true.  We'll do this for x86 to
-> start.  It should be noted that dbg_late_init() is still called quite
-> early in the system.
-> 
-> Note that this patch doesn't affect when kgdb runs its init.  If kgdb
-> is set to initialize early it will still initialize when parsing
-> early_params's.  This patch _only_ inhibits the initial breakpoint
-> from "kgdbwait".  This means:
-> 
-> * Without any extra patches arm64 platforms will at least catch
->   crashes after kgdb inits.
-> * arm platforms will catch crashes (and could handle a hardcoded
->   kgdb_breakpoint()) any time after early_trap_init() runs, even
->   before dbg_late_init().
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-
-Overall this looks good but there is a small quibble below...
 
 
-> diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
-> index b072aeb1fd78..7371517aeacc 100644
-> --- a/include/linux/kgdb.h
-> +++ b/include/linux/kgdb.h
-> @@ -226,6 +226,28 @@ extern int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt);
->   */
->  extern void kgdb_arch_late(void);
->  
-> +/**
-> + *	kgdb_arch_can_debug_early - Check if OK to break before dbg_late_init()
-> + *
-> + *	If an architecture can definitely handle entering the debugger when
-> + *	early_param's are parsed then it can override this function to return
-> + *	true.  Otherwise if "kgdbwait" is passed on the kernel command line it
-> + *	won't actually be processed until dbg_late_init() just after the call
-> + *	to kgdb_arch_late() is made.
-> + *
-> + *	NOTE: Even if this returns false we will still try to register kgdb to
-> + *	handle breakpoints and crashes when early_params's are parsed, we just
-> + *	won't act on the "kgdbwait" parameter until dbg_late_init().  If you
-> + *	get a crash and try to drop into kgdb somewhere between these two
-> + *	places you might or might not end up being able to use kgdb depending
-> + *	on exactly how far along the architecture has initted.
-> + *
-> + *	ALSO: dbg_late_init() is actually still fairly early in the system
-> + *	boot process.
-> + *
-> + *	Return: true if platform can handle kgdb early.
-> + */
-> +extern bool kgdb_arch_can_debug_early(void);
+On 4/27/20 8:15 AM, Derrick, Jonathan wrote:
+> Hi Sathyanarayanan,
+> 
+> On Sat, 2020-04-25 at 13:46 -0700, Kuppuswamy, Sathyanarayanan wrote:
+>>
+>> On 4/23/20 8:11 AM, Derrick, Jonathan wrote:
+>>> Hi Sathyanarayanan,
+>>>
+>>> On Wed, 2020-04-22 at 15:50 -0700, Kuppuswamy, Sathyanarayanan wrote:
+>>>> On 4/20/20 2:37 PM, Jon Derrick wrote:
+>>>>> The existing portdrv model prevents DPC services without either OS
+>>>>> control (_OSC) granted to AER services, a Host Bridge requesting Native
+>>>>> AER, or using one of the 'pcie_ports=' parameters of 'native' or
+>>>>> 'dpc-native'.
+>>>>>
+>>>>> The DPC port service driver itself will also fail to probe if the kernel
+>>>>> assumes the port is using Firmware-First AER. It's a reasonable
+>>>>> expectation that a port using Firmware-First AER will also be using
+>>>>> Firmware-First DPC, however if a Host Bridge requests Native DPC, the
+>>>>> DPC driver should allow it and not fail to bind due to AER capability
+>>>>> settings.
+>>>>>
+>>>>> Host Bridges which request Native DPC port services will also likely
+>>>>> request Native AER, however it shouldn't be a requirement. This patch
+>>>>> allows ports on those Host Bridges to have DPC port services.
+>>>>>
+>>>>> This will avoid the unlikely situation where the port is Firmware-First
+>>>>> AER and Native DPC, and a BIOS or switch firmware preconfiguration of
+>>>>> the DPC trigger could result in unhandled DPC events.
+>>>>>
+>>>>> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+>>>>> ---
+>>>>>     drivers/pci/pcie/dpc.c          | 3 ++-
+>>>>>     drivers/pci/pcie/portdrv_core.c | 3 ++-
+>>>>>     2 files changed, 4 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+>>>>> index 7621704..3f3106f 100644
+>>>>> --- a/drivers/pci/pcie/dpc.c
+>>>>> +++ b/drivers/pci/pcie/dpc.c
+>>>>> @@ -284,7 +284,8 @@ static int dpc_probe(struct pcie_device *dev)
+>>>>>     	int status;
+>>>>>     	u16 ctl, cap;
+>>>>>     
+>>>>> -	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
+>>>>> +	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native &&
+>>>>> +	    !pci_find_host_bridge(pdev->bus)->native_dpc)
+>>>> Why do it in probe as well ? if host->native_dpc is not set then the
+>>>> device DPC probe it self won't happen right ?
+>>>
+>>> Portdrv only enables the interrupt and allows the probe to occur.
+>>
+>> Please check the following snippet of code (from portdrv_core.c).
+>>
+>> IIUC, pcie_device_init() will not be called if PCIE_PORT_SERVICE_DPC is
+>> not set in capabilities. Your change in portdrv_core.c already
+>> selectively enables the PCIE_PORT_SERVICE_DPC service based on
+>> native_dpc value.
+>>
+> That's right. So pcie_device_init registers the port service driver
+> allowing the services enumeration to occur.
+> 
+>> So IMO, adding native_dpc check in dpc_probe() is redundant.
+>>
+>> int pcie_port_device_register(struct pci_dev *dev)
+>> 	/* Allocate child services if any */
+>> 	status = -ENODEV;
+>> 	nr_service = 0;
+>> 	for (i = 0; i < PCIE_PORT_DEVICE_MAXSERVICES; i++) {
+>> 		int service = 1 << i;
+>> 		if (!(capabilities & service))
+>> 			continue;
+>> 		if (!pcie_device_init(dev, service, irqs[i]))
+>> 			nr_service++;
+>> 	}
+>>
+> This is the tricky part
+> There's still a check in dpc_probe for AER FFS or pcie_ports=dpc-
+> native:
+> 
+> if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
+> 	return -ENOTSUPP;
+> 
+> One option is to move that to get_port_device_capability and remove the
+> dpc_probe check
+Yes, its better to group them together in get_port_device_capability().
 
-Does this need to be a function? It looks like all implementations are
-either return true or return false (e.g. CONFIG_ARCH_HAVE_EARLY_DEBUG
-would do the same thing).
-
-
-Daniel.
+But it should be done in a separate patch.
+> 
+>>> The probe itself will still fail if there's a mixed-mode _OSC
+>>> negotiated AER & DPC, due to pcie_aer_get_firmware_first returning 1
+>>> for AER and no check for DPC.
+>>>
+>>> I don't know if such a platform will exist, but the kernel is already
+>>> wired for 'dpc-native' so it makes sense to extend it for this..
+>>>
+>>> This transform might be more readable:
+>>> 	if (pcie_aer_get_firmware_first(pdev) &&
+>>> 	    !(pcie_ports_dpc_native || hb->native_dpc))
+>>>
+>>>
+>>>
+>>>>>     		return -ENOTSUPP;
+>>>>>     
+>>>>>     	status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
+>>>>> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+>>>>> index 50a9522..f2139a1 100644
+>>>>> --- a/drivers/pci/pcie/portdrv_core.c
+>>>>> +++ b/drivers/pci/pcie/portdrv_core.c
+>>>>> @@ -256,7 +256,8 @@ static int get_port_device_capability(struct pci_dev *dev)
+>>>>>     	 */
+>>>>>     	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
+>>>>>     	    pci_aer_available() &&
+>>>>> -	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
+>>>>> +	    (pcie_ports_dpc_native || host->native_dpc ||
+>>>>> +	     (services & PCIE_PORT_SERVICE_AER)))
+>>>>>     		services |= PCIE_PORT_SERVICE_DPC;
+>>>>>     
+>>>>>     	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+>>>>>
