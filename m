@@ -2,144 +2,138 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E6EC55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A62EC55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED63B206A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E990D20661
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:49:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vDp3eq9i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lgb2ZRSn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbgD0KtX (ORCPT
+        id S1726931AbgD0Ktq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 06:49:23 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:49552 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726507AbgD0KtW (ORCPT
+        Mon, 27 Apr 2020 06:49:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56254 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726507AbgD0Ktp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 06:49:22 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03RAnH7e001180;
-        Mon, 27 Apr 2020 05:49:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587984557;
-        bh=pzsarCr4uG9L7jDuWrGGe+JBhzGxnj/BuclyDI8lbdo=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=vDp3eq9i7TRn3fylKOcEURt7+3FEztuJbz5dVa1aJMCFnq1IEHMMeHNXmqIWTuHFy
-         YKitHxo0/UWf1yMSgWzzZny3WH7oEie87Q1C5hQhaPXFDHSSzD70dUUFUVp5Q9QI6F
-         +hii0yMl0cu/Q3OyP2ZXfURKn+CiMcuSGmfc+bMo=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03RAnHxL082877
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 27 Apr 2020 05:49:17 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 27
- Apr 2020 05:49:17 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 27 Apr 2020 05:49:17 -0500
-Received: from [10.1.3.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RAnFcN097373;
-        Mon, 27 Apr 2020 05:49:15 -0500
-Subject: Re: [PATCH 2/3] arm64: dts: ti: k3-j721e-main.dtsi: Add DSS node
-To:     Tero Kristo <t-kristo@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200422091512.950-1-tomi.valkeinen@ti.com>
- <20200422091512.950-2-tomi.valkeinen@ti.com>
- <ade3a177-f060-bc40-bcc1-494093e3071d@ti.com>
- <47b7f858-a8d9-1c3b-4dca-2cc493f6730f@ti.com>
- <df93da78-132a-d02e-6561-5bb5fdfe7e53@ti.com>
-From:   Jyri Sarha <jsarha@ti.com>
-Autocrypt: addr=jsarha@ti.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <56c85293-cea2-d554-ae36-d34f19a4f290@ti.com>
-Date:   Mon, 27 Apr 2020 13:49:14 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 27 Apr 2020 06:49:45 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 240D6C0610D5;
+        Mon, 27 Apr 2020 03:49:44 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id u127so19895569wmg.1;
+        Mon, 27 Apr 2020 03:49:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Ti6XX+QFzit0PUdlRv+q4FDbpNYXwxiJNOQSy8OVhSY=;
+        b=Lgb2ZRSnwgcgdVrTP0vx1myxJSscHtMy8iNa5k7w+aqXFSSDYKnoG1GMGPy7gPJnYq
+         2Vco6ldRfV8tB0aVDXH8VPUuyWOmkytgWKjngHAGy5bYV1TUPJD8g6JBO7RfPqsB7I7A
+         1f6XhC4XMTaUcY7Wfp+uL5qzsHnBS+kq9ub1hYYw77QzlimpQjHSXgmS4TJeeCYulZng
+         pJSS5XCXcICNMJvl0X/tThvVs9t5iq8ZeW0MQMHLMc2YpM5tdfWm8R3GO0NZBnvDj1xd
+         suqfqXZk6OfFMfRW0uRwqbsPpQSGM0dIHJoXY4x+Ijv6QOnT+6Z7zKUDX+PHEf4+CkXq
+         t9nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ti6XX+QFzit0PUdlRv+q4FDbpNYXwxiJNOQSy8OVhSY=;
+        b=e2gABC/YM+hWXjat8Umxc4fN9SnTc0YcojtLvpmLiUN7yh/POqzwb7jm0la7qjUKz8
+         LHNMp3+T+r7TEDEf3W119eG6Xiaz9/fcVSebgHtkdWUTZvAU/SP07WJLJEhaj35BUAta
+         3Zq5L1nZgOb8GLLWXbVrk4ta9+4ljri6HRS+COTtF1Oc9DowxafAEtTmmpT3tMcg3yYf
+         Sx55f8CepwvHzi319j6IRhF77C4MvmZ5smJuYVluZcMMGDCniLNnQla674G4mSfK8/gN
+         8GZLBhcroREz7A1BSYTUPqmFcdiiDmOmUFsYIzkU1H8OpFOD6w6DoAPomoVYBNW2cwOb
+         HtpA==
+X-Gm-Message-State: AGi0PuZiqgEjHehVBcjSpLo/L0H4G6mZ5ESfWBg2Bk03tle2IvQ4hzcQ
+        hDlAwlAOA/1vgMQ3rLg4MUk=
+X-Google-Smtp-Source: APiQypJ0HGaypdEafNHZCuSEFo2ktSx7EEFsJYPQXEpGQrBf3bgMRhOYbCwSRtTRvjF/TcQt1vRQGg==
+X-Received: by 2002:a1c:43c6:: with SMTP id q189mr24141339wma.115.1587984582834;
+        Mon, 27 Apr 2020 03:49:42 -0700 (PDT)
+Received: from localhost (p2E5BEDBA.dip0.t-ipconnect.de. [46.91.237.186])
+        by smtp.gmail.com with ESMTPSA id c83sm16582066wmd.23.2020.04.27.03.49.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 03:49:41 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 12:49:40 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
+ for a long time
+Message-ID: <20200427104940.GA3464906@ulmo>
+References: <470b4de4-e98a-1bdc-049e-6259ad603507@nvidia.com>
+ <d2531fc1-b452-717d-af71-19497e14ef00@gmail.com>
+ <a5198024-7273-74c4-b4f4-3a29d042bc36@nvidia.com>
+ <f8fb1f7f-2497-033e-ff2c-c86c6caa9706@gmail.com>
+ <fd1ca178-1ea3-851f-20a6-10bf00453ce3@nvidia.com>
+ <a5734f19-254e-b6bc-e791-fa1ac63f11a4@gmail.com>
+ <79f6560e-dbb5-0ae1-49f8-cf1cd95396ec@nvidia.com>
+ <20200427074837.GC3451400@ulmo>
+ <20200427084424.GA28817@kunai>
+ <820200ce-17f3-18c0-6f79-3e582f45492d@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <df93da78-132a-d02e-6561-5bb5fdfe7e53@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="YZ5djTAD1cGYuMQK"
+Content-Disposition: inline
+In-Reply-To: <820200ce-17f3-18c0-6f79-3e582f45492d@gmail.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/04/2020 13:41, Tero Kristo wrote:
-> On 27/04/2020 13:37, Jyri Sarha wrote:
->> On 27/04/2020 13:09, Tero Kristo wrote:
->>>> +        status = "disabled";
->>>
->>> Again, why disabled by default?
->>>
->>
->> tidss device is not functional without a defined video-port. The driver
->> is not implemented in a way that it would handle a broken configuration
->> gracefully.
-> 
-> What/where/when is the video-port going to be defined then? Is this
-> going to be done in an overlay?
-> 
 
-Yes. It should be defined in the board specific dts or dtso file, where
-the video-connector or -panel is.
+--YZ5djTAD1cGYuMQK
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-BR,
-Jyri
+On Mon, Apr 27, 2020 at 12:07:19PM +0300, Dmitry Osipenko wrote:
+> 27.04.2020 11:44, Wolfram Sang =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> >=20
+> >> Wolfram, can you revert the following two patches for v5.7, please?
+> >>
+> >> 	8814044fe0fa i2c: tegra: Synchronize DMA before termination
+>=20
+> This patch has nothing to do with your trouble, why do you want to
+> revert it?
 
+It was part of the same series and addressing the same "busy CPU"
+scenario, so I think it makes sense to keep both in the same series. I
+guess we could try to run some tests with only this applied and see if
+that really doesn't break anything. If so, I don't have any objection
+to keeping this.
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Thierry
+
+--YZ5djTAD1cGYuMQK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6muMQACgkQ3SOs138+
+s6HF2BAAqZf92sFTs/Eyv87f5posF3vq/kOLjtXrGynwpI3AifzD9eQ6i64bHgI6
+2+Bygj2uHJCx7PAstQ8VvHjd/uRNa6b2ZACjOoVf17mcGhfUT+0LafnEHC3JqJ+z
+kFmak2jgejP0LY/RGmvrJi79/cTituLrKeFR62kwrXojfMe14kS81sZ8uZ2ki6Na
+MlyQdkSKJvkueA7cSN+J8QW+TDHrdMfGV3cn5DiR4UNs2JbwbxTawByKImMt/pCp
+0fY+q9LSo9XAjR0tx9xo5h/+XfbxgwxKGvlmiy/PrGxltKWluFbgZbK8WBP/uSVD
+j77w1WlqqlW3Xv90ysW027FE6sJi5KvtZpacuHJdM0AzgqB0148hWOd7VURngg5E
+8v/hs2RPD4wWET1O7DrIAZY3HbSXPuXuoNMnkTcVsZaDofV/R+yh4T7munkBhrnq
+/y0hnxsvmZu/MvuA6Dzy5k+aHALtJxc3IxDqJA+FbPsIisnDaIu8tZF9tpPitNdm
+KtMsYLxFfFSMA+hvTnrOSlalTk2DYXh7NuYBd0z9MkkqQHm2e/reDpr8houPxzN5
+oNYTHosfzOsmklBvZ5seMR9zjFKeAhhC37+EWi5KCbbfuq0uRJViDIRJwLSeoie+
+z0RgqB2aX6q0QKtsaubnnEolKKPl8eKyGe5v9EJd1uenzeEBAaw=
+=+wzR
+-----END PGP SIGNATURE-----
+
+--YZ5djTAD1cGYuMQK--
