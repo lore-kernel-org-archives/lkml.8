@@ -2,135 +2,199 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D703BC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 05:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 290C1C55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 05:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3AD72084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 05:40:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AyJkv03r"
+	by mail.kernel.org (Postfix) with ESMTP id 159862084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 05:40:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbgD0Fke (ORCPT
+        id S1726566AbgD0Fk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 01:40:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36360 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726172AbgD0Fke (ORCPT
+        Mon, 27 Apr 2020 01:40:57 -0400
+Received: from smtprelay0202.hostedemail.com ([216.40.44.202]:57318 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726172AbgD0Fk5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 01:40:34 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3693CC061A0F
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 22:40:34 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id fu13so6382476pjb.5
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 22:40:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=22T1fi9hCZYd16gPcEsO2HumG8BRGMGET2lEOhIEL10=;
-        b=AyJkv03rxnWCaBzdAH5twsD9kYcFCs4wXARJ3xX27DJhspQD783axyG9yWI6oKX8Hn
-         WqLMKCdno8670wi5hqobVmFSvs6h2h3Ap5h1Vunq/Ithw0kzdNq5RBAd8JOH8mYIBhwZ
-         4EhT/0kj503nGbUXkckWvsPA2YMfOHM5JWriTedy0ZDTz173mxKGmgtDCOkH+7edLyjp
-         X8YLtKgWTXq5gFQZJdzT0hecoSpiinhbJQ4M8j+acwHRGT6ACdAz6oUUNwu76E9aEMAY
-         D2ZWTJEXX13ZkfHscUEYLxwsJp3rBfJKJo74m2+ePncqCkcm5KZXyUcPZcD/7p4MR0FR
-         7bhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=22T1fi9hCZYd16gPcEsO2HumG8BRGMGET2lEOhIEL10=;
-        b=H9xKXDzlpsR3Ah4+u+ur4Ghycp1olCyVo5++6tZdP4RsbOLHEPmJaBea10N5iWEWuG
-         Jp8THvgg3jUM6241SSYZtMKuHX5ppyxWfUQInzeDnzjnZXiyYf8TWuK1pVCMxk/Y5Hpe
-         vp1cyBsQIsigOs8DhFn/lwqDVJdThsrz/u4MKGv04OG2AHiGEuBIlnU1uy7ly3b0zTQJ
-         amz+CmP6ZDfi/Sd3MpaY3OH7Hv+d9MND4ObhiLZO5DIT7L2HyBXhB7zJQzgqQhpyJjPR
-         ffza3YPSebWV/IXuJz/YUJjSsuXAQGSxqrulz9gXL+FRHPG6qevw+ZJX2kXzC/qU0H/Y
-         UMAA==
-X-Gm-Message-State: AGi0PuZSYL5inBYGXjELarkNPCHSckEY4LGH1KZZV4pLXdN1bSZn29A7
-        TvOpIjG8pbDkuMa0H01i4MqZUXe+Cg==
-X-Google-Smtp-Source: APiQypLU+w8iopyaIUxj6f7frOXFqJA7R7fUgSTRUGPKn1R4131TNHAPvUBHF5UzJVeSaVns4RLjSw==
-X-Received: by 2002:a17:90a:ae12:: with SMTP id t18mr15259427pjq.26.1587966033683;
-        Sun, 26 Apr 2020 22:40:33 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:996:8534:8d2a:cf91:2e3d:2746])
-        by smtp.gmail.com with ESMTPSA id o21sm9959514pjr.37.2020.04.26.22.40.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 26 Apr 2020 22:40:33 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 11:10:23 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Chris Lew <clew@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hemant Kumar <hemantk@codeaurora.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Siddartha Mohanadoss <smohanad@codeaurora.org>
-Subject: Re: [PATCH v2 2/3] net: qrtr: Add MHI transport layer
-Message-ID: <20200427054023.GA3311@Mani-XPS-13-9360>
-References: <85591553-f1f2-a7c9-9c5a-58f74ebeaf38@web.de>
+        Mon, 27 Apr 2020 01:40:57 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id CBBFF100E7B40;
+        Mon, 27 Apr 2020 05:40:55 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: owl97_7daddaa7d028
+X-Filterd-Recvd-Size: 5572
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 27 Apr 2020 05:40:53 +0000 (UTC)
+Message-ID: <7beaedfd63017973b910dd21cac13ecb42dbe503.camel@perches.com>
+Subject: [PATCH] get_maintainer: Add email addresses from .yaml files
+From:   Joe Perches <joe@perches.com>
+To:     Rob Herring <robh+dt@kernel.org>, Sam Ravnborg <sam@ravnborg.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Adrian Ratiu <adrian.ratiu@collabora.com>,
+        devicetree@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Collabora Kernel ML <kernel@collabora.com>
+Date:   Sun, 26 Apr 2020 22:40:52 -0700
+In-Reply-To: <9a32f150f85f851d04afd148b2a9a5cf203f7ce1.camel@perches.com>
+References: <87d082jtfn.fsf@collabora.com>
+         <20200420175909.GA5810@ravnborg.org>
+         <CAL_JsqJXa8QxQmLfkCO8_SSsgYm2nTFW1J6wx4bGbZgAy8Sxog@mail.gmail.com>
+         <9a32f150f85f851d04afd148b2a9a5cf203f7ce1.camel@perches.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <85591553-f1f2-a7c9-9c5a-58f74ebeaf38@web.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 03:45:41PM +0200, Markus Elfring wrote:
-> > Hence, this commit adds MHI transport layer support to QRTR for
-> > transferring the QMI messages over IPC Router.
-> 
-> I suggest to reconsider software development consequences around
-> another implementation detail.
-> 
-> 
-> â€¦
-> > +static int qcom_mhi_qrtr_send(struct qrtr_endpoint *ep, struct sk_buff *skb)
-> > +{
-> â€¦
-> > +	rc = mhi_queue_skb(qdev->mhi_dev, DMA_TO_DEVICE, skb, skb->len,
-> > +			   MHI_EOT);
-> > +	if (rc) {
-> > +		kfree_skb(skb);
-> > +		return rc;
-> > +	}
-> â€¦
-> > +}
-> 
-> I propose again to add a jump target so that a bit of exception handling code
-> can be better reused at the end of this function implementation.
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/coding-style.rst?id=b2768df24ec400dd4f7fa79542f797e904812053#n450
-> 
+.yaml files can contain maintainer/author addresses and it seems
+unlikely or unnecessary that individual MAINTAINER file section
+entries for each .yaml file will be created.
 
-Matter of taste! goto's are really useful if there are multiple exit paths
-available. But in this case there is only one and I don't think we may add
-anymore in future. So I'll keep it as it is.
+So dd the email addresses found in .yaml files to the default
+get_maintainer output.
 
-Thanks,
-Mani
+The email addresses are marked with "(in file)" when using the
+"--roles" or "--rolestats" options.
 
-> +	if (rc)
-> +		goto free_skb;
-> â€¦
-> +	return rc;
-> +
-> +free_skb:
-> +	kfree_skb(skb);
-> +	return rc;
-> +}
-> 
-> 
-> Regards,
-> Markus
+Miscellanea:
+
+o Change $file_emails to $email_file_emails to avoid visual
+  naming conflicts with @file_emails
+
+Signed-off-by: Joe Perches <joe@perches.com>
+---
+ scripts/get_maintainer.pl | 44 +++++++++++++++++++++++++++++---------------
+ 1 file changed, 29 insertions(+), 15 deletions(-)
+
+diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
+index 6cbcd1..6d973f 100755
+--- a/scripts/get_maintainer.pl
++++ b/scripts/get_maintainer.pl
+@@ -57,7 +57,7 @@ my $status = 0;
+ my $letters = "";
+ my $keywords = 1;
+ my $sections = 0;
+-my $file_emails = 0;
++my $email_file_emails = 0;
+ my $from_filename = 0;
+ my $pattern_depth = 0;
+ my $self_test = undef;
+@@ -69,6 +69,12 @@ my $vcs_used = 0;
+ 
+ my $exit = 0;
+ 
++my @files = ();
++my @fixes = ();			# If a patch description includes Fixes: lines
++my @range = ();
++my @keyword_tvi = ();
++my @file_emails = ();
++
+ my %commit_author_hash;
+ my %commit_signer_hash;
+ 
+@@ -266,7 +272,7 @@ if (!GetOptions(
+ 		'pattern-depth=i' => \$pattern_depth,
+ 		'k|keywords!' => \$keywords,
+ 		'sections!' => \$sections,
+-		'fe|file-emails!' => \$file_emails,
++		'fe|file-emails!' => \$email_file_emails,
+ 		'f|file' => \$from_filename,
+ 		'find-maintainer-files' => \$find_maintainer_files,
+ 		'mpath|maintainer-path=s' => \$maintainer_path,
+@@ -424,6 +430,22 @@ sub read_all_maintainer_files {
+     }
+ }
+ 
++sub maintainers_in_file {
++    my ($file) = @_;
++
++    return if ($file =~ m@\bMAINTAINERS$@);
++
++    if (-f $file && ($email_file_emails || $file =~ /\.yaml$/)) {
++	open(my $f, '<', $file)
++	    or die "$P: Can't open $file: $!\n";
++	my $text = do { local($/) ; <$f> };
++	close($f);
++
++	my @poss_addr = $text =~ m$[A-Za-zÀ-ÿ\"\' \,\.\+-]*\s*[\,]*\s*[\(\<\{]{0,1}[A-Za-z0-9_\.\+-]+\@[A-Za-z0-9\.-]+\.[A-Za-z0-9]+[\)\>\}]{0,1}$g;
++	push(@file_emails, clean_file_emails(@poss_addr));
++    }
++}
++
+ #
+ # Read mail address map
+ #
+@@ -504,12 +526,6 @@ sub read_mailmap {
+ 
+ ## use the filenames on the command line or find the filenames in the patchfiles
+ 
+-my @files = ();
+-my @fixes = ();			# If a patch description includes Fixes: lines
+-my @range = ();
+-my @keyword_tvi = ();
+-my @file_emails = ();
+-
+ if (!@ARGV) {
+     push(@ARGV, "&STDIN");
+ }
+@@ -527,7 +543,7 @@ foreach my $file (@ARGV) {
+ 	$file =~ s/^\Q${cur_path}\E//;	#strip any absolute path
+ 	$file =~ s/^\Q${lk_path}\E//;	#or the path to the lk tree
+ 	push(@files, $file);
+-	if ($file ne "MAINTAINERS" && -f $file && ($keywords || $file_emails)) {
++	if ($file ne "MAINTAINERS" && -f $file && $keywords) {
+ 	    open(my $f, '<', $file)
+ 		or die "$P: Can't open $file: $!\n";
+ 	    my $text = do { local($/) ; <$f> };
+@@ -539,10 +555,6 @@ foreach my $file (@ARGV) {
+ 		    }
+ 		}
+ 	    }
+-	    if ($file_emails) {
+-		my @poss_addr = $text =~ m$[A-Za-zÀ-ÿ\"\' \,\.\+-]*\s*[\,]*\s*[\(\<\{]{0,1}[A-Za-z0-9_\.\+-]+\@[A-Za-z0-9\.-]+\.[A-Za-z0-9]+[\)\>\}]{0,1}$g;
+-		push(@file_emails, clean_file_emails(@poss_addr));
+-	    }
+ 	}
+     } else {
+ 	my $file_cnt = @files;
+@@ -923,6 +935,8 @@ sub get_maintainers {
+ 		print("\n");
+ 	    }
+ 	}
++
++	maintainers_in_file($file);
+     }
+ 
+     if ($keywords) {
+@@ -1835,7 +1849,7 @@ tm toggle maintainers
+ tg toggle git entries
+ tl toggle open list entries
+ ts toggle subscriber list entries
+-f  emails in file       [$file_emails]
++f  emails in file       [$email_file_emails]
+ k  keywords in file     [$keywords]
+ r  remove duplicates    [$email_remove_duplicates]
+ p# pattern match depth  [$pattern_depth]
+@@ -1960,7 +1974,7 @@ EOT
+ 		bool_invert(\$email_git_all_signature_types);
+ 		$rerun = 1;
+ 	    } elsif ($sel eq "f") {
+-		bool_invert(\$file_emails);
++		bool_invert(\$email_file_emails);
+ 		$rerun = 1;
+ 	    } elsif ($sel eq "r") {
+ 		bool_invert(\$email_remove_duplicates);
+
+
