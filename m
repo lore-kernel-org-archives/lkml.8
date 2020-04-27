@@ -4,72 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 850E7C55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE25C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F6D1206B9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70B952072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:32:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726588AbgD0G2v (ORCPT
+        id S1726539AbgD0GcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 02:28:51 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:38196 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726407AbgD0G2u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 02:28:50 -0400
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 27 Apr 2020 11:58:47 +0530
-Received: from c-skakit-linux.qualcomm.com ([10.242.50.210])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 27 Apr 2020 11:58:32 +0530
-Received: by c-skakit-linux.qualcomm.com (Postfix, from userid 2344709)
-        id 36AFB3BD4; Mon, 27 Apr 2020 11:58:31 +0530 (IST)
-From:   satya priya <skakit@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
-        rojay@codeaurora.org, msavaliy.qti.qualcomm.com@qualcomm.com,
-        satya priya <skakit@codeaurora.org>
-Subject: [PATCH] arm64: dts: sc7180: Add wakeup support over UART RX
-Date:   Mon, 27 Apr 2020 11:57:24 +0530
-Message-Id: <1587968844-26667-1-git-send-email-skakit@codeaurora.org>
+        Mon, 27 Apr 2020 02:32:10 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:56606 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726221AbgD0GcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 02:32:10 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CC6CE200E40;
+        Mon, 27 Apr 2020 08:32:08 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A391F200F97;
+        Mon, 27 Apr 2020 08:32:04 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 881D4402E6;
+        Mon, 27 Apr 2020 14:31:59 +0800 (SGT)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] ASoC: fsl_esai: Disable exception interrupt before scheduling tasklet
+Date:   Mon, 27 Apr 2020 14:23:21 +0800
+Message-Id: <a8f2ad955aac9e52587beedc1133b3efbe746895.1587968824.git.shengjiu.wang@nxp.com>
 X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the necessary pinctrl and interrupts to make UART
-wakeup capable.
+Disable exception interrupt before scheduling tasklet, otherwise if
+the tasklet isn't handled immediately, there will be endless xrun
+interrupt.
 
-Signed-off-by: satya priya <skakit@codeaurora.org>
+Fixes: 7ccafa2b3879 ("ASoC: fsl_esai: recover the channel swap after xrun")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 ---
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+changes in v2
+- Disable exception interrupt instead of remove tasklet.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 4216b57..3a49603 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -637,9 +637,12 @@
- 				reg = <0 0x0088c000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S3_CLK>;
--				pinctrl-names = "default";
-+				pinctrl-names = "default", "sleep";
- 				pinctrl-0 = <&qup_uart3_default>;
--				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
-+				pinctrl-1 = <&qup_uart3_default>;
-+				interrupts-extended =
-+					<&intc GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>,
-+					<&tlmm 41 0>;
- 				status = "disabled";
- 			};
+ sound/soc/fsl/fsl_esai.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/sound/soc/fsl/fsl_esai.c b/sound/soc/fsl/fsl_esai.c
+index c7a49d03463a..84290be778f0 100644
+--- a/sound/soc/fsl/fsl_esai.c
++++ b/sound/soc/fsl/fsl_esai.c
+@@ -87,6 +87,10 @@ static irqreturn_t esai_isr(int irq, void *devid)
+ 	if ((saisr & (ESAI_SAISR_TUE | ESAI_SAISR_ROE)) &&
+ 	    esai_priv->reset_at_xrun) {
+ 		dev_dbg(&pdev->dev, "reset module for xrun\n");
++		regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR,
++				   ESAI_xCR_xEIE_MASK, 0);
++		regmap_update_bits(esai_priv->regmap, REG_ESAI_RCR,
++				   ESAI_xCR_xEIE_MASK, 0);
+ 		tasklet_schedule(&esai_priv->task);
+ 	}
  
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
+2.21.0
 
