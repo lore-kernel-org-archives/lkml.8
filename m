@@ -2,139 +2,95 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E379DC55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C309C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C93132080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6916F2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:01:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UyRo4nU5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbgD0GBg (ORCPT
+        id S1726572AbgD0GBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 02:01:36 -0400
-Received: from mga06.intel.com ([134.134.136.31]:29239 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726221AbgD0GBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 02:01:35 -0400
-IronPort-SDR: wj6SPiLfZn1W+xoaByvY9ECQl+E6lvTOpqfsDMVAYvHZEtMvQwJclH9ZSZ3PFrDcU7Zg918rB/
- IoQbFmR/CQZQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2020 23:01:34 -0700
-IronPort-SDR: Tbvmk32U8pXGkx1MtpOonsRz7dQHWFUGWcQDrlFH9X4px9KwcuhmgnP/3NtibVV60Lc23EbyEN
- qNIffhnF9OCQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,323,1583222400"; 
-   d="scan'208";a="292341155"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 26 Apr 2020 23:01:33 -0700
-Received: from [10.215.243.21] (ekotax-mobl.gar.corp.intel.com [10.215.243.21])
-        by linux.intel.com (Postfix) with ESMTP id 72B9B580646;
-        Sun, 26 Apr 2020 23:01:30 -0700 (PDT)
-Subject: Re: [PATCH 1/4] spi: lantiq: Synchronize interrupt handlers and
- transfers
-To:     Mark Brown <broonie@kernel.org>
-Cc:     robh@kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        daniel.schwierzeck@gmail.com, hauke@hauke-m.de,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-References: <cover.1587702428.git.eswara.kota@linux.intel.com>
- <3bf88d24b9cad9f3df1da8ed65bf55c05693b0f2.1587702428.git.eswara.kota@linux.intel.com>
- <20200424112505.GD5850@sirena.org.uk>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <616a5419-add3-085e-32dc-c83d9d975725@linux.intel.com>
-Date:   Mon, 27 Apr 2020 14:01:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 27 Apr 2020 02:01:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39608 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726221AbgD0GBk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 02:01:40 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ED9DC061A0F
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 23:01:40 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id 71so13338142qtc.12
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 23:01:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QGFl2uS3f+5RhP1jpZPcJAcfmonJZTFWwEebr4DUxFY=;
+        b=UyRo4nU5c3POIrn+bZNVgt6vTDruBvL+THYSpR5jUEZZLvf83LrK3lhS32ufRmvIuZ
+         j+p0QDq8tiRsO/i7/BbTZt+KQnXxVxGMIcXKxLkgYnTHILV/QflQyc3LOUCSX/j8RH9B
+         HqjbXO3I7wsSKeQBXxBxS6w/Lqlwgw3tUuFnaj/+EkR7nnxhgiS0rjU1y/MyrHrnYdAa
+         z3m9Gu1qnyQ9j2RHohDO9UfdkJlg62SgSkrBc5g7LfpEcLqpwxvb29YXpNsnBUHi3XYQ
+         nK4zBoGZFxPKFm3/6Rw8+ToQ98up3xbuv0qg1BFYyuT4g04WSLG+ELflaQcjzRES2Uv7
+         ZjQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QGFl2uS3f+5RhP1jpZPcJAcfmonJZTFWwEebr4DUxFY=;
+        b=LvdQ6aqNXOzLorvD335rOY4IugElnjNKskIHpw2qF3iQx9pFhuoOHuP1i4wpUPpiqs
+         raNQ7Jg1MQC4kjzIV1jcsUymazDK1MRovSc6U8O/e9ekJkk9gEnwOtNOfpeUnJDg9rQ5
+         6q9qS4P4ulBOguXCdna+PaXUWBw4DdxVlKW8lR+M4BYvuTp/36F0g+PGBpvVsEFzo6PX
+         orFJQSwUkGaZ6kPOiT+VvbJaQkqQX4DMnDf0BWneIVjWEQqIS/2pnXl+ghi8LRTe9BcL
+         JCMkSBP7rdz3g2axyCXZZRlbk+NERvSiwagbL//NJW5g/A2N5072iatrIzJv5dG8bdaL
+         xYCA==
+X-Gm-Message-State: AGi0PuZ1crSGo25rp/xcgX+EmxNvHpQSqMTqGHQ+KSgGOis3JGj0Ofyv
+        F7RPTgw8m858fI5Vk0nSC7rZ78PB37FthX5ZKC0Iaw==
+X-Google-Smtp-Source: APiQypLsDEJUKDwWhUb0HcitD6LTYrZxucNft/F+aO2VwcOAWSNRFoEXi3bGQvQKjWbUhypkIAgG5fdIBm8Q2V74QlI=
+X-Received: by 2002:ac8:22ad:: with SMTP id f42mr20964483qta.292.1587967298448;
+ Sun, 26 Apr 2020 23:01:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200424112505.GD5850@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <1587711246-27226-1-git-send-email-shengjiu.wang@nxp.com> <20200424091533.GA8856@Asurada>
+In-Reply-To: <20200424091533.GA8856@Asurada>
+From:   Shengjiu Wang <shengjiu.wang@gmail.com>
+Date:   Mon, 27 Apr 2020 14:01:27 +0800
+Message-ID: <CAA+D8AMgenpGapp3fbZVvswPOKDLZXZE0KaPK7Js41xSDhG9wQ@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: fsl_esai: Remove the tasklet
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 4/24/2020 7:25 PM, Mark Brown wrote:
-> On Fri, Apr 24, 2020 at 06:42:30PM +0800, Dilip Kota wrote:
+On Fri, Apr 24, 2020 at 5:17 PM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
 >
->> Synchronize tx, rx and error interrupts by registering to the
->> same interrupt handler. Interrupt handler will recognize and process
->> the appropriate interrupt on the basis of interrupt status register.
->> Also, establish synchronization between the interrupt handler and
->> transfer operation by taking the locks and registering the interrupt
->> handler as thread IRQ which avoids the bottom half.
->> Fixes the wrongly populated interrupt register offsets too.
-> This sounds like at least three different changes mixed together in one
-> commit, it makes it quite hard to tell what's going on.  If nothing else
-> the conversion from a workqueue to threaded interrupts should probably
-> be split out from merging the interrupts.
-While preparing the patches, i got puzzled to go with separate patches 
-(for threaded interrupts, unified interrupt handler and fixing the 
-register offset) or as a single patch!!.
-Finally i choose to go with single patch, because establishing 
-synchronization is the major reason for this change, for that reason 
-threaded interrupts and unified interrupts changes are done. And the 
-fixing offset is a single line change, so included in this patch itself. 
-And, on a lighter note, the whole patch is coming under 45 lines of code 
-changes.
-Please let me know your view.
+> On Fri, Apr 24, 2020 at 02:54:06PM +0800, Shengjiu Wang wrote:
+> > Remove tasklet for it may cause the reset operation
+> > can't be handled immediately, then there will be
+> > endless xrun interrupt.
 >
->> -static irqreturn_t lantiq_ssc_err_interrupt(int irq, void *data)
->> +static irqreturn_t lantiq_ssc_err_interrupt(struct lantiq_ssc_spi *spi)
->>   {
->> -	struct lantiq_ssc_spi *spi = data;
->>   	u32 stat = lantiq_ssc_readl(spi, LTQ_SPI_STAT);
->>   
->> -	if (!(stat & LTQ_SPI_STAT_ERRORS))
->> -		return IRQ_NONE;
->> -
-> Why drop this?
-lantiq_ssc_err_interrupt() getting called, only if LTQ_SPI_IRNEN_E is 
-set in the interrupt status register.
-Once the 'LTQ_SPI_IRNEN_E' bit is set, there is no chance of all error 
-bits being unset in the SPI_STAT register, so the 'if condition' will 
-never be successful. Hence dropped it.
->
->> -	err = devm_request_irq(dev, rx_irq, lantiq_ssc_xmit_interrupt,
->> -			       0, LTQ_SPI_RX_IRQ_NAME, spi);
->> +	err = devm_request_threaded_irq(dev, rx_irq, NULL, lantiq_ssc_isr,
->> +					IRQF_ONESHOT, LTQ_SPI_RX_IRQ_NAME, spi);
->>   	if (err)
->>   		goto err_master_put;
->>   
->> -	err = devm_request_irq(dev, tx_irq, lantiq_ssc_xmit_interrupt,
->> -			       0, LTQ_SPI_TX_IRQ_NAME, spi);
->> +	err = devm_request_threaded_irq(dev, tx_irq, NULL, lantiq_ssc_isr,
->> +					IRQF_ONESHOT, LTQ_SPI_TX_IRQ_NAME, spi);
->>   	if (err)
->>   		goto err_master_put;
->>   
->> -	err = devm_request_irq(dev, err_irq, lantiq_ssc_err_interrupt,
->> -			       0, LTQ_SPI_ERR_IRQ_NAME, spi);
->> +	err = devm_request_threaded_irq(dev, err_irq, NULL, lantiq_ssc_isr,
->> +					IRQF_ONESHOT, LTQ_SPI_ERR_IRQ_NAME, spi);
-> It's not clear to me that it's a benefit to combine all the interrupts
-> unconditionally - obviously where they're shared we need to but could
-> that be accomplished with IRQF_SHARED and even if it can't it seems like
-> something conditional would be better.
+> The reset routine is really long and expensive, so not sure
+> if it'd be good to do it completely inside HW ISR. Have you
+> tried to clear xEIE bits to disable xrun interrupts, before
+> scheduling the tasklet? If that does not solve the problem,
+> we may go for this change.
 
-Lets take a case where Tx/Rx transfer interrupt got triggered and 
-followed by error interrupt(before finishing the tx/rx interrupt 
-execution) which is very less likely to occur, unified interrupt handler 
-establishes synchronization.
-Comparatively, unified interrupt handler is better for adding support to 
-the latest SoCs on which SPI have single interrupt line for tx,rx and 
-errors.
-On basis of these two points i felt to go with unified interrupt handler.
+Good idea, will send v2
 
-Regards,
-Dilip
-
+best regards
+wang shengjiu
