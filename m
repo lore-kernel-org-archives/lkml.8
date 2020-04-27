@@ -2,121 +2,103 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D9C3C5519B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CDEC55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AFC7206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:20:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uNy2SXjr"
+	by mail.kernel.org (Postfix) with ESMTP id 99B88206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:21:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587982880;
+	bh=0E+w1Amg7oT1BhlR/L9HE4Drgi4qkASgSyoqfD8xSwI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=E4otIeZIZZuCs6xMEmaGXhWAQ0Fh+7aAQf9wmQ8ZyAZ3rHb3Zv3U8W6ZB0OF4iOXg
+	 PoLS2b4jE8M2LIB7pw0wZaH6bDgxFIg4R8i/xm69f+bxL1o0QWEfhcSF2uGhuorNxU
+	 XGo5oGufxGcR6HK+IpLIqCGq8DOaWK083VLPaWnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbgD0KUm (ORCPT
+        id S1726952AbgD0KVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 06:20:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51740 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726485AbgD0KUl (ORCPT
+        Mon, 27 Apr 2020 06:21:19 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34865 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726507AbgD0KVI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 06:20:41 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CD28C0610D5;
-        Mon, 27 Apr 2020 03:20:41 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id m13so25199090otf.6;
-        Mon, 27 Apr 2020 03:20:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gUcWSkbxyPvJ0+ERW/qepkDLsiLjdEGghyciw3XnsT4=;
-        b=uNy2SXjrR2mbQALDHVMHlcFBkpzgy8HTawiU3KEQzSt++Gk5NabhVh9Ye4tWjoYCKl
-         pUmPFhRGG+Ecfi4QF7T7Fml1Ft31cm1aCR9QLNusoV6LIdEu/4gPNnbynP6ZUU2FTzfG
-         hvYSUHt9mYQVUl3PiZTKwiJvhWG4wXKqhdzTE9gtGfyM/Gbi4rWevwH8BBo1xQ6vBwZW
-         scW9/eXN/w6qmx9mT3YHcZrtoP/vO+RK54L0D48d7Y1ZrXPvsOkY7ib53eTwWszwsLEU
-         Xfhw5+HfEMIlhQNWef8RoTmymqqsrKfa2YJn2skuiblTh7MqWRbwBUsSNBKhtNJWhqia
-         w26A==
+        Mon, 27 Apr 2020 06:21:08 -0400
+Received: by mail-wr1-f68.google.com with SMTP id x18so19850266wrq.2;
+        Mon, 27 Apr 2020 03:21:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gUcWSkbxyPvJ0+ERW/qepkDLsiLjdEGghyciw3XnsT4=;
-        b=kfjEpdVRYc4xfn/8vOJ4wZKBawGDVepIVQlAj2+FKXkgaThRBcCQPbcAddWn3cA6+L
-         W5GVIQWrXtV5rFVX55Ew6nQUB6JzLv+IXfMOuq/8juBMclUBpvvAOMXw3jbXzVHuNDM9
-         F2nzd/Kae/Wg/BV3S/v381FyTL9D5tGxkvsXeY5QPwGbTtEw9xFz38phl1Lm58tS0Fo7
-         JgdiuAONWQkU/LNthiuGdo7RckNsPHY3pHlK7ygYOYkQdqn3qNEVX/cVqps8FkKDb7xA
-         J415qmnRWYfJutF/++/Yx99PmMaw8pcDffvCQ3GgC9w7+lPhM7/tyeYSdNMazDGoK3RO
-         ne+w==
-X-Gm-Message-State: AGi0PuY00hti2oD7+Yex5/hJKDwOEuyA9ETMpFbqoEZjQyUEJLopIosO
-        F4S7s5eYVE1MRM7kjHdRtQd9DOA4CC73uvhbMNo=
-X-Google-Smtp-Source: APiQypIeuwTOWNRaduLVrl8FnkbpT7m1ncyU5dpdVc0UJFZpGKzatZMZ/wGFpQdBgCzzzKU46eV7y4UpS9+lDJyUvmw=
-X-Received: by 2002:aca:b783:: with SMTP id h125mr3049635oif.62.1587982840882;
- Mon, 27 Apr 2020 03:20:40 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+7bVFLWrQIX8JTal4r0/ZmJRvVDeqQomfNKtoU2FS3E=;
+        b=YrOZ5zWfKd0CqAbguZCn6y5ydA+zHJLYxasCh2WrTaN6p8FMRM4tF1XAhAwEKjKQPY
+         1EgIbCl+bXYRH5zPkiANzNypaEuziI2qyMdvHNRc7Mv5RHnK2j9JmatnGuBq024h7WQS
+         BzqBduNksbl5stgXNCuBF+wyC+uOu0vNvZKoMuP0Jy/V+jtkLeTsfudnAzw2Y+PunBOF
+         nYnkGkPzwDMDrYrwMcs8ii37VpXCpH2ZUvJ3m0azAaKngd3bj0VbzbPtWsEfoWDhTBLA
+         cJL7DxdEQRD44Se0nBZaSJk9JiGovgzwmzXEr08djo7Qgr458foAbT3ETRBM3IH/ZvSe
+         UK/Q==
+X-Gm-Message-State: AGi0PuZUytQDm6ACPnZDzzaTmpeYwUwisbf6vTlvMMzRmjhjpIS+4ZZX
+        DfnXC8Vd4SPJMUMsL+Zc/mFOLRZP
+X-Google-Smtp-Source: APiQypKFmkXpGVvRzHZGFEZVOY9BybBoS1EtcBDc2CSoMzoH9YHRDKgDok7WTYAp0c8U/f9qn30bcQ==
+X-Received: by 2002:adf:fd46:: with SMTP id h6mr27795565wrs.90.1587982865429;
+        Mon, 27 Apr 2020 03:21:05 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id b82sm15832648wmh.1.2020.04.27.03.21.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 03:21:04 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 10:21:02 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Wei Hu <weh@microsoft.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        bhelgaas@google.com, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        decui@microsoft.com, mikelley@microsoft.com
+Subject: Re: [PATCH] PCI: pci-hyperv: Retry PCI bus D0 entry when the first
+ attempt failed with invalid device state 0xC0000184.
+Message-ID: <20200427102102.lar6d4w3rqz3d3j4@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
+References: <20200426132430.1756-1-weh@microsoft.com>
 MIME-Version: 1.0
-References: <1587678050-23468-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1587678050-23468-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdV6J-_gBkzhUXtA8OrxhJVzyrAqjA8oeGJGBp86X-C3Nw@mail.gmail.com> <20200427092408.g2vpc6j2c6it4x2i@vireshk-i7>
-In-Reply-To: <20200427092408.g2vpc6j2c6it4x2i@vireshk-i7>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Mon, 27 Apr 2020 11:20:14 +0100
-Message-ID: <CA+V-a8vwF=u53dZ_U4vX3oAUHrBh5uVUBeOTiDqTZJfV8UUeCA@mail.gmail.com>
-Subject: Re: [PATCH 10/10] cpufreq: dt: Add support for r8a7742
-To:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Marian-Cristian Rotariu 
-        <marian-cristian.rotariu.rb@bp.renesas.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200426132430.1756-1-weh@microsoft.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Viresh,
+On Sun, Apr 26, 2020 at 09:24:30PM +0800, Wei Hu wrote:
+> In the case of kdump, the PCI device was not cleanly shut down
+> before the kdump kernel starts. This causes the initial
+> attempt of entering D0 state in the kdump kernel to fail with
+> invalid device state 0xC0000184 returned from Hyper-V host.
+> When this happens, explicitly call PCI bus exit and retry to
+> enter the D0 state.
+> 
+> Also fix the PCI probe failure path to release the PCI device
+> resource properly.
+> 
+> Signed-off-by: Wei Hu <weh@microsoft.com>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 34 ++++++++++++++++++++++++++++-
+>  1 file changed, 33 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index e15022ff63e3..eb4781fa058d 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -2736,6 +2736,10 @@ static void hv_free_config_window(struct hv_pcibus_device *hbus)
+>  	vmbus_free_mmio(hbus->mem_config->start, PCI_CONFIG_MMIO_LENGTH);
+>  }
+>  
+> +#define STATUS_INVALID_DEVICE_STATE		0xC0000184
+> +
 
-On Mon, Apr 27, 2020 at 10:24 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 27-04-20, 11:22, Geert Uytterhoeven wrote:
-> > Hi Prabhakar,
-> >
-> > This patch should be merged through Viresh's cpufreq tree (CCed).
-> >
-> > On Thu, Apr 23, 2020 at 11:41 PM Lad Prabhakar
-> > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > > Add the compatible strings for supporting the generic cpufreq driver on
-> > > the Renesas RZ/G1H (R8A7742) SoC.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> >
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> Prabhakar,
->
-> Please resend the patch with all dependencies to me so I can apply it.
->
-This is the only patch which is needed for R8A7742 SoC which needs to
-be applied for drivers/cpufreq. Shall I still repost it or you are
-happy to pick this one up ?
+Can you please move this along side STATUS_REVISION_MISMATCH?
 
-Cheers,
---Prabhakar
-
-> --
-> viresh
+Wei.
