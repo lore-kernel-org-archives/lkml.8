@@ -2,105 +2,92 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC660C5519A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADB1C5519E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAF2620728
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:59:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j1MoGpGO"
+	by mail.kernel.org (Postfix) with ESMTP id 207A02080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:01:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgD0H7F (ORCPT
+        id S1726752AbgD0IBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 03:59:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726680AbgD0H7D (ORCPT
+        Mon, 27 Apr 2020 04:01:00 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42726 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726003AbgD0IA7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 03:59:03 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5759C061A41
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 00:59:03 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id v63so8618267pfb.10
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 00:59:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=jPuAXHpqrNAT+U03Z2D0D9d6MExECUerQyolxFR+Rtk=;
-        b=j1MoGpGODY0G+y0YAjbilr/Dm5aQfXd9MCiY/FcdZcdVBByNPe2LcKMDjoZJQdqpJC
-         eEodDfBogAmd+rBU/dgf3nJ5zdJrMNuTJqhBtS/iSgl4HpvmMJzFaQO4rB71uw+HMlA4
-         uqSWAKRcw0tNlQezUH2GxNshYDP1eORsMQgJFQoznbI54J+owrXIE3h3wxvfxFL03l+o
-         vb832Zd/4KmQdiSf8i9drvrBK2/4dA1yTi6T6oMOuvxvlwIbmr/whiz1BBs9VfuHT9fW
-         jBGBUJ4aRvv+AS1iu6e4rxDRNFuIcAz58C746IMS8TRtDLRbt2D3Ta8b+VuPbVZS6LDT
-         DKYQ==
+        Mon, 27 Apr 2020 04:00:59 -0400
+Received: by mail-ot1-f68.google.com with SMTP id m18so24651680otq.9;
+        Mon, 27 Apr 2020 01:00:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=jPuAXHpqrNAT+U03Z2D0D9d6MExECUerQyolxFR+Rtk=;
-        b=hR3MzJjDT7JBsuTAv0Fz8qfUeGWnDVCZ2XAlqXShiwNwqA4NR/2uKBoIMer9DE+uyc
-         eTOC+OUDQKFgDiH3SdjBAD+yk2HCTmpKXeJiKebTwWBAiq4hVItSUZ9b5cEnIisVU4YI
-         0ZcnsbizEEYqiVfkITSv5ZGXSPjAOyIyE/ieNpBOvY0bI9jDT4x/LomFP/rAxR8j/8cS
-         lWgD/mP3oW1pW+A5biZgwXcG7v97YlTAbEvOfL5XdaFd8rO93qasgUcJvdC98XzbHPek
-         KR9FCWciGcOJ9tYe+lF5yZVYHTO36D4A6AKjIfduuM2VmufosSMkM6xW1P++R5fuYJLs
-         Lz1Q==
-X-Gm-Message-State: AGi0PuYXvRY7JCiWT4IGbBRQJ3JJYm91qET6mAvy7IjXtOrhuytnPDkR
-        sTdziWvefD0H2EbYnSFZNayH7TAIXQ==
-X-Google-Smtp-Source: APiQypLZpxltxsTka+7sS/LyifM/nE79AgNzoR4gAcDIxipkFRxh/hIm6cR1gUqyoxtd8NkbZ/xIjQ==
-X-Received: by 2002:a63:ec0b:: with SMTP id j11mr21238091pgh.376.1587974343260;
-        Mon, 27 Apr 2020 00:59:03 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:996:8534:f925:aed4:6e41:e1dd])
-        by smtp.gmail.com with ESMTPSA id a12sm11621190pfr.28.2020.04.27.00.58.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 00:59:02 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     gregkh@linuxfoundation.org, davem@davemloft.net
-Cc:     smohanad@codeaurora.org, jhugo@codeaurora.org,
-        kvalo@codeaurora.org, bjorn.andersson@linaro.org,
-        hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clew@codeaurora.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        netdev@vger.kernel.org
-Subject: [PATCH v3 3/3] net: qrtr: Do not depend on ARCH_QCOM
-Date:   Mon, 27 Apr 2020 13:28:29 +0530
-Message-Id: <20200427075829.9304-4-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200427075829.9304-1-manivannan.sadhasivam@linaro.org>
-References: <20200427075829.9304-1-manivannan.sadhasivam@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X961gX/6KGObMSFw3QoDIqVYm3uZsNmN2X2162ARhZg=;
+        b=mnQr5GM8HW9MB+AngAt96JsNUiQC62b1wrDHJQTD+PgYaf1eOH+0th3TtWNCXvGKBF
+         p6/phvk5BhEI0uieIhQJgMEgb9CiWDbk3wS42hMgw0O1W3FjXYrGzoD0JCpCmVRH/Mv4
+         R9jsYsE+EF7B7Ff3iKdW0Yk7ArmAdkfXtoHQsqp/lnBN1C14uoD03w1zz3D+KyR9jTAB
+         4X2TlA21+dzKmU1/4oezM6/2ru5HNp9m/RId6LHt7Z1BTRdPOxEeYC0TfB5aGlGJiEeL
+         rxlFKRQJJekSQ0JmTBna89Exwr1wHkcxnFzkV94+e5kuRWEj0npSpiWvE+PJEMHW4KwC
+         VPWw==
+X-Gm-Message-State: AGi0PuaezamjWVwe2yLDIc8fhkuDQ5omT9og/nsW1yQbuZXsUuMIQvEw
+        eFNvfn6Jzx0kpiOAMSfPArd5qaYtvcfWiXKWv+E=
+X-Google-Smtp-Source: APiQypJKU/j72BSTwKd4GmflG8egi0AV4Nl6yPNfO5elzqOQWxX9qJArYB8VHjspyZ9/XuD3IAIBCboIdRj5O8UEkS0=
+X-Received: by 2002:a9d:7990:: with SMTP id h16mr11394398otm.145.1587974458189;
+ Mon, 27 Apr 2020 01:00:58 -0700 (PDT)
+MIME-Version: 1.0
+References: <1587678050-23468-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1587678050-23468-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1587678050-23468-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 27 Apr 2020 10:00:46 +0200
+Message-ID: <CAMuHMdW2Uj4TtcBmBDo8+69e7xoYKT-Kesznrv+kpRgp1v3z6g@mail.gmail.com>
+Subject: Re: [PATCH 04/10] dt-bindings: reset: rcar-rst: Document r8a7742
+ reset module
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Marian-Cristian Rotariu 
+        <marian-cristian.rotariu.rb@bp.renesas.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IPC Router protocol is also used by external modems for exchanging the QMI
-messages. Hence, it doesn't always depend on Qualcomm platforms. One such
-instance is the QCA6390 WLAN device connected to x86 machine.
+On Thu, Apr 23, 2020 at 11:41 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Document bindings for the RZ/G1H (R8A7742) reset module.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: netdev@vger.kernel.org
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- net/qrtr/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.8.
 
-diff --git a/net/qrtr/Kconfig b/net/qrtr/Kconfig
-index 8eb876471564..f362ca316015 100644
---- a/net/qrtr/Kconfig
-+++ b/net/qrtr/Kconfig
-@@ -4,7 +4,6 @@
- 
- config QRTR
- 	tristate "Qualcomm IPC Router support"
--	depends on ARCH_QCOM || COMPILE_TEST
- 	---help---
- 	  Say Y if you intend to use Qualcomm IPC router protocol.  The
- 	  protocol is used to communicate with services provided by other
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.17.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
