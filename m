@@ -2,173 +2,124 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8FCC55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 649E5C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3ACF9206B9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41185206BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 14:20:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E9TeY8dh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fv6KdKme"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbgD0OT1 (ORCPT
+        id S1728087AbgD0OT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 10:19:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60850 "EHLO
+        Mon, 27 Apr 2020 10:19:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728070AbgD0OT1 (ORCPT
+        with ESMTP id S1727824AbgD0OT6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 10:19:27 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD058C0610D5;
-        Mon, 27 Apr 2020 07:19:26 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id e26so19749417wmk.5;
-        Mon, 27 Apr 2020 07:19:26 -0700 (PDT)
+        Mon, 27 Apr 2020 10:19:58 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D799C0610D5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 07:19:58 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id u127so20671097wmg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 07:19:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SfPuELRIWxp5jXaR1sFBkvGfN5BclUxZ+W3cAMGm9ow=;
-        b=E9TeY8dhIi+QX5Tt8DRtwCOArHPzendJuUF+E20AZFPXTpkhlupVJbX9O5Qo6qQWJW
-         2Y5kftqQWrzPktcA0MrfBw5RFjZGprATbavPE0xi61C42SKOrw4/yA0Ad7363XkLAmWU
-         pbrWM2xyex0VvN5XQonqjbrL9mGGKmqD1lSHAvfVo/QBp1aszS9lIhn8GnIVf2aui8ph
-         u4i+cChluvH9k2uaDBFnlotTx3xyU3INS098ljIQp/DsVLxvIz0HA/d1ZtqDAMsTK69L
-         vGMnRzLlmdXycw7nhBNzwovr7G1wU/EGliCjAQiJ3gjAeGpNqlhP2YC1DEDgEVKo2PU8
-         gT1g==
+         :content-disposition:in-reply-to;
+        bh=bee/vT9YZsF5aLuysXN53gVWnahANuP+/H4BtD8nDYA=;
+        b=Fv6KdKme0P7Hd6Cv7sn90bDFGKT3FWV4huW02i2XsZ69hzzo1H3u17OS98OzaZnBTB
+         278KEthOnv0lxhcPsLu7SX/vgTtq4wPqX+E2pWCx23VhbpaUXDQfoVYsJbx/Kuva3O2S
+         PJxvYmNcCpSHd+6bDJnvLSiezLzVKMsooJagwhfuXLnIQQEXEEX67MWfkbn6V0X/Zu98
+         UsMjjj0yyJiwg66FMZp3hMqn6vGHm7TvUasx+awqJcZjlvQewIC2DbBCYNbvd62AZtYa
+         0AfvcSlUzA3xn+ukScz45mTXRED9CfUSUT8dzrtuQMu+s7czphHXriJF2Q1TTHqpC6ZW
+         LZcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SfPuELRIWxp5jXaR1sFBkvGfN5BclUxZ+W3cAMGm9ow=;
-        b=S0CS63cnAZR7l9cTHunoo+orH97HYOjFELgDcuFtwS+wqKPWmdhazxvMEk0NS5L38t
-         D+TWjjRNPxR1TYqdTSNljHcylBFDQVdsyHFnne1OqwF+Zu/r+bkRJ0I1PbFHrkdQ86Bs
-         XHhflzml3shmRvEQnEE5YdoZV8dKiyaWJeXIoMz/iBUpIsmGKOlMxvOC/3zeWx547+d5
-         Re4A2g1Dd7Ytmju50RULnHR2kUOQIyveEDoVbfLyhxMFfL4Vg8t8MZjM01nxCtE0uF6b
-         vgN5OGLkUo991wBXZl+cOvY2X6wOYWcnBcKSpVPOyShYtNZ66gv0TM5vGXaSE+ZBYizz
-         zjzg==
-X-Gm-Message-State: AGi0PuZjDGckitCzaiw/upAzRmc2KqGXKt+O25Wg/65l3rfbVLaH9K+T
-        HhYAked0kC5z6OkI1haKfFE=
-X-Google-Smtp-Source: APiQypI2SvMyeV2Q5rXnJ14bTo3q4Z66XQDagd3Qhp4sIf61dariP2UlM+4tloNavM2mOhhrF0DeFQ==
-X-Received: by 2002:a1c:3b0a:: with SMTP id i10mr25763470wma.26.1587997165506;
-        Mon, 27 Apr 2020 07:19:25 -0700 (PDT)
-Received: from localhost (p2E5BEDBA.dip0.t-ipconnect.de. [46.91.237.186])
-        by smtp.gmail.com with ESMTPSA id 33sm21525843wrp.5.2020.04.27.07.19.23
+         :mime-version:content-disposition:in-reply-to;
+        bh=bee/vT9YZsF5aLuysXN53gVWnahANuP+/H4BtD8nDYA=;
+        b=reUCcGXZKnWdXkAw65po24HdI3r5IG4LEKugNTLHNZWHX4n0+m2JofwS36ST85ZpY8
+         zrJsQSiVMGEh5bSYwYNA9mNKy308uJI/ho7LRMTx54YpIgSUA0Oh4XXXAceOzTSRzZIw
+         OpG+xO/og1/hskHp/JDrYhhF4APruhjJE4A0Xp+T2ArK63XhIdelWhjP69VZF0Ln1O0j
+         7lZjvDsBHdhnbdo9LRRciLAM5Ed/JcPtM2eF+SRQulho81Oo/QajP4m6PNQ1l8S4xZXU
+         Nhoz6ErqhUjLMDRxEH1HW4WgKxeBkY6oBzouUF6WCGy/ggPWZuuNC/XkaRYMPt0ZcPMI
+         8UMw==
+X-Gm-Message-State: AGi0PuagmgWk3eYFYfcKxdlIDBWWSCxV8JObITQQDnExEwl99WWQM7h7
+        vjO9ja+yw2MICB6ZGkGb6v1lNA==
+X-Google-Smtp-Source: APiQypL3l+lAat7PP7CR3gM2nPKe8kVnYD5lj6efi+kyjeJHTF/ddP0kz0TZeQ47rwxSl4/e9jMwqQ==
+X-Received: by 2002:a1c:9cc6:: with SMTP id f189mr25872640wme.75.1587997197302;
+        Mon, 27 Apr 2020 07:19:57 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id i129sm16621988wmi.20.2020.04.27.07.19.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 07:19:23 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 16:19:22 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>, linux-i2c@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
- for a long time
-Message-ID: <20200427141922.GD3464906@ulmo>
-References: <d2531fc1-b452-717d-af71-19497e14ef00@gmail.com>
- <a5198024-7273-74c4-b4f4-3a29d042bc36@nvidia.com>
- <f8fb1f7f-2497-033e-ff2c-c86c6caa9706@gmail.com>
- <fd1ca178-1ea3-851f-20a6-10bf00453ce3@nvidia.com>
- <a5734f19-254e-b6bc-e791-fa1ac63f11a4@gmail.com>
- <79f6560e-dbb5-0ae1-49f8-cf1cd95396ec@nvidia.com>
- <20200427074837.GC3451400@ulmo>
- <c1190858-eaea-8e94-b4d1-1cf28076c330@gmail.com>
- <20200427103851.GB24446@kunai>
- <dc2de966-81d6-6ad5-0c51-16dd28ca4165@gmail.com>
+        Mon, 27 Apr 2020 07:19:56 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 15:19:54 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     jason.wessel@windriver.com, gregkh@linuxfoundation.org,
+        kgdb-bugreport@lists.sourceforge.net, mingo@redhat.com,
+        hpa@zytor.com, bp@alien8.de, linux-serial@vger.kernel.org,
+        agross@kernel.org, tglx@linutronix.de, frowand.list@gmail.com,
+        bjorn.andersson@linaro.org, jslaby@suse.com,
+        catalin.marinas@arm.com, corbet@lwn.net, will@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/9] kgdboc: Use a platform device to handle tty
+ drivers showing up late
+Message-ID: <20200427141954.d55djgbq74e4dme5@holly.lan>
+References: <20200421211447.193860-1-dianders@chromium.org>
+ <20200421141234.v2.3.I4a493cfb0f9f740ce8fd2ab58e62dc92d18fed30@changeid>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lc9FT7cWel8HagAv"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <dc2de966-81d6-6ad5-0c51-16dd28ca4165@gmail.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <20200421141234.v2.3.I4a493cfb0f9f740ce8fd2ab58e62dc92d18fed30@changeid>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 21, 2020 at 02:14:41PM -0700, Douglas Anderson wrote:
+> If you build CONFIG_KGDB_SERIAL_CONSOLE into the kernel then you
+> should be able to have KGDB init itself at bootup by specifying the
+> "kgdboc=..." kernel command line parameter.  This has worked OK for me
+> for many years, but on a new device I switched to it stopped working.
+> 
+> The problem is that on this new device the serial driver gets its
+> probe deferred.  Now when kgdb initializes it can't find the tty
+> driver and when it gives up it never tries again.
+> 
+> We could try to find ways to move up the initialization of the serial
+> driver and such a thing might be worthwhile, but it's nice to be
+> robust against serial drivers that load late.  We could move kgdb to
+> init itself later but that penalizes our ability to debug early boot
+> code on systems where the driver inits early.  We could roll our own
+> system of detecting when new tty drivers get loaded and then use that
+> to figure out when kgdb can init, but that's ugly.
+> 
+> Instead, let's jump on the -EPROBE_DEFER bandwagon.  We'll create a
+> singleton instance of a "kgdboc" platform device.  If we can't find
+> our tty device when the singleton "kgdboc" probes we'll return
+> -EPROBE_DEFER which means that the system will call us back later to
+> try again when the tty device might be there.
+> 
+> We won't fully transition all of the kgdboc to a platform device
+> because early kgdb initialization (via the "ekgdboc" kernel command
+> line parameter) still runs before the platform device has been
+> created.  The kgdb platform device is merely used as a convenient way
+> to hook into the system's normal probe deferral mechanisms.
+> 
+> As part of this, we'll ever-so-slightly change how the "kgdboc=..."
+> kernel command line parameter works.  Previously if you booted up and
+> kgdb couldn't find the tty driver then later reading
+> '/sys/module/kgdboc/parameters/kgdboc' would return a blank string.
+> Now kgdb will keep track of the string that came as part of the
+> command line and give it back to you.  It's expected that this should
+> be an OK change.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
---lc9FT7cWel8HagAv
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Apr 27, 2020 at 04:15:21PM +0300, Dmitry Osipenko wrote:
-> 27.04.2020 13:38, Wolfram Sang =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > On Mon, Apr 27, 2020 at 12:52:10PM +0300, Dmitry Osipenko wrote:
-> >> 27.04.2020 10:48, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >> ...
-> >>>> Maybe but all these other problems appear to have existed for someti=
-me
-> >>>> now. We need to fix all, but for the moment we need to figure out wh=
-at's
-> >>>> best for v5.7.
-> >>>
-> >>> To me it doesn't sound like we have a good handle on what exactly is
-> >>> going on here and we're mostly just poking around.
-> >>>
-> >>> And even if things weren't working quite properly before, it sounds to
-> >>> me like this patch actually made things worse.
-> >>
-> >> There is a plenty of time to work on the proper fix now. To me it soun=
-ds
-> >> like you're giving up on fixing the root of the problem, sorry.
-> >=20
-> > From what I understood, there were (at least) two regressions reported.
-> > So, to me, it makes sense to revert the change, so for upstream users
-> > everything stays "the same". Of course, this does not mean it should
-> > stay like this forever and you guys can work on fixing the root causes.
-> > I'll happily apply them for this release when you are confident with the
-> > results.
-> >=20
->=20
-> For now it's a single regression in the PCIe driver and it's actually
-> not a regression, but a PCIe driver bug that needs to be fixed. The I2C
-> part should be okay.
->=20
-> By reverting the I2C patch, we're back to the PCIe bug being papered
-> over and I don't like this. Let's just fix the PCIe driver and the
-> problem is gone.. it needs to be fixed anyways.
-
-Yes, that bug should be fixed anyway. But that doesn't justify breaking
-suspend/resume completely, which *is* a regression.
-
-Look, I'm not saying that we should drop this patch altogether. All I'm
-saying is that we should postpone it so that we can: a) get suspend and
-resume working again (and by doing so make sure no other suspend/resume
-regressions silently creep in, because that always seems to happen when
-you're not looking) and b) fix any preexisting issues without possibly
-scrambling the result with this perhaps unrelated fix.
-
-So, again, I think the safest road forward is to back this one out for
-now, fix whatever this other bug is and once suspend/resume is working
-properly again we can revisit this patch based on a known-good baseline.
-
-Thierry
-
---lc9FT7cWel8HagAv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6m6egACgkQ3SOs138+
-s6Hmsw//Uzwdybr9wuj6AsAY89t463pL9vAk42ZwhrzZBpXcey07PyykuVPeOksH
-dlekmFYutFVttiZne1WWhfyo0q+pWa7OtsmatGZ0zj6Dqa69Jv3lwpwXTwm1dHoC
-T+NTx7/h3Gcz4qWY8sZBiikzXwePh5WkZ9n02t5j5xeOBaxPBnvNWsd/1dx3Wry6
-aFwOvwEOmCGKTLvx3h+IgGGCXU2Fw9TXWL9PM0RygZD4/ZGmzpsrcI0Kq/qhsEax
-ZIqfNYKt7Df/71HBSusjwzUf1Xc4PBHXQXY5DC0XT+lIZxlWcDkeVoH9/hsm+/mn
-Y5Z1jHdYtUXvfeVEM7Uygj4r87Qqq9oRyO09vzstZBgMnlfw7ooQUT/MaHcUpMY3
-bd66W/9pO6LsBVJ32+GpL3WavNmD7h1EwU4VoSjkHKr5bDl5PWMqDrUB3H72TjK4
-567mRx2ZdLJ5G7x76PXH7P8FT9XmbGvFHRtY2J1oV8DTTFUwnA5Z1op9A88tcKIO
-+s1kmqFObLC5PIQUx9hCzbprRN2R8p4WemoG3Goe2Cs3ZUcaTbIVUKA0K+xLoJPx
-xOcFR0cWOYzabOGW8le54lj5IrCDFtYocozhD/KzYhoW1ZuEN7w+ljR64xIcbB7D
-D3/heQd0r+WLZQxYT7sBrpK70bB7DPXXuIScoLR4fmcBUdinTDk=
-=3Tty
------END PGP SIGNATURE-----
-
---lc9FT7cWel8HagAv--
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
