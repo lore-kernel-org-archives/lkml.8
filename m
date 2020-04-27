@@ -2,191 +2,112 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02EF1C55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 05:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD35FC55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 05:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D85702084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 05:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FC862084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 05:42:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BbQaEPW/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgD0FmZ (ORCPT
+        id S1726635AbgD0Fmh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 01:42:25 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:42014 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726172AbgD0FmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 01:42:24 -0400
-Received: from [10.130.0.79] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxP9yucKZeTqUsAA--.20S3;
-        Mon, 27 Apr 2020 13:42:06 +0800 (CST)
-Subject: Re: [PATCH v4 0/3] Add basic support for LS7A bridge chip
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-References: <1585906191-26037-1-git-send-email-yangtiezhu@loongson.cn>
- <8afa3df1-9c9f-aa90-e630-2b77f24fe41f@loongson.cn>
- <20200427125732.3212ced3@flygoat-x1e>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <a6df2442-bb44-5002-09ab-56ad6e7dd528@loongson.cn>
-Date:   Mon, 27 Apr 2020 13:42:06 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Mon, 27 Apr 2020 01:42:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36688 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726349AbgD0Fmg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 01:42:36 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57977C061A10
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 22:42:36 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id j7so8164433pgj.13
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 22:42:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=S7iDJl+P8l2tDxO1XbtmVx7feXA+RtlRnZQzWbR1KCQ=;
+        b=BbQaEPW/zDNX8G8dA8Cjp6b7T5/J4+qeFvDgjuUj/mN9iX1CMi6K4/+hHjTLJ0nLXM
+         jTovYFZWpVZtdbTkLUL7pG9dJTnpR8t7AX88lZPVo9qhcdWJFFCyMRuSSMo97qVWhSKD
+         7V6rGfTyEAlaqocyU23aZD78ieLI/fun5WsVDeFO9zLauAISoY0aAejvxwKKx6CyCGva
+         aCKb5/5VC+ai4a8aPhJXmDbj7t/2lQiRGf5YfTezg3D8dKiyS5S4MO0oAZydNwOrGtDk
+         rxnIhDb1D73YfujxVT8f1mcd7HmSoF+psE8wYdyqYmD9yyI3KWswzJwhdQVHUzy6h2g3
+         ZSqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=S7iDJl+P8l2tDxO1XbtmVx7feXA+RtlRnZQzWbR1KCQ=;
+        b=p1JFqubHQ/arsDLsUqkBc42dUhjBQMnqfcVuqjvKsSj6FEaBxEUvi1M1+VVp/KP8y8
+         sPz3CxYL9/QwiIKYNpgWJ9ZySdLTSTryvDAoKWjF4tCGXA6IES9oNastjt/OzmKYXUYY
+         5U6KHfKYHBr+J+jJ1+qZRtt2xf0K81HD55LIZFjkEIiyTtQxaJzadkOu5vam/Q7OVxTk
+         hYX4R1CKY/ny3Vgvzl0GlKD8u/ItCSOBH3/jiLI7p/d1IBpM+kSzyy3aScgHMufuFwQT
+         DJpHk2PlM0WNzXd1tdEgh6HfNbFugg09E1GWtSwO+0/n/xF8DAFkyfhxBA+Js1/nvzl9
+         P5ww==
+X-Gm-Message-State: AGi0PubqSy4Oqi8KYXcxuJMGiLkd1zwCgGHGEXs4ekjuFz8jrF0IfJ2I
+        Q6uznS6dnloOKak+lX6DqK8rMSxekxs=
+X-Google-Smtp-Source: APiQypIPQJak3AVIzrbXaNSFwIn3GL2iOHSkQBPm+c3nVnIMeJ3QrdBl1RQ4owlASd3uL25gnBkUbQ==
+X-Received: by 2002:a65:4b8d:: with SMTP id t13mr20292240pgq.388.1587966155786;
+        Sun, 26 Apr 2020 22:42:35 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id f3sm10172355pjo.24.2020.04.26.22.42.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Apr 2020 22:42:35 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] soc: qcom: aoss: Add SM8250 compatible
+Date:   Sun, 26 Apr 2020 22:42:02 -0700
+Message-Id: <20200427054202.2822144-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20200427125732.3212ced3@flygoat-x1e>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9DxP9yucKZeTqUsAA--.20S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxWFWUWFWxtFWfXryUKrWrGrg_yoWrKrWfpa
-        y5Ca13Gr4DGryUA3WSvr4xAa1ay393Jr9rWw47G34rCr90vF10qr929F1Yk3W7urnak3Wj
-        qFy2g392g3WUC37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
-        1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-        7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r
-        1j6r4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE
-        67vIY487MxkIecxEwVAFwVW8WwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJV
-        W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
-        1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
-        IIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAI
-        cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
-        nxnUUI43ZEXa7VUjWxRDUUUUU==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/27/2020 12:57 PM, Jiaxun Yang wrote:
-> On Mon, 27 Apr 2020 09:31:54 +0800
-> Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->
->> On 04/03/2020 05:29 PM, Tiezhu Yang wrote:
->>> The LS7A bridge chip has been released for several years since the
->>> second half of 2017, but it is not supported by the Linux mainline
->>> kernel while it only works well with the Loongson internal kernel
->>> version. When I update the latest version of Linux mainline kernel
->>> on the Loongson 3A3000 CPU and LS7A bridge chip system, the boot
->>> process failed and I feel depressed.
->>>
->>> The LS7A bridge chip is used a lot with 3A3000 or 3A4000 CPU in
->>> the most Loongson desktop and sever products, it is important to
->>> support LS7A bridge chip by the Linux mainline kernel.
->>>
->>> This patch series adds the basic support for the LS7A bridge chip,
->>> the patch about vendor ID and SATA has been merged into the mainline
->>> tree, the next work is to refactor the code about the interrupt
->>> controller, and then power management and some other controller
->>> device drivers.
->>>
->>> By the way, if you want the boot process is successful (just for
->>> test) on the Loongson 3A3000 CPU and LS7A bridge chip system,
->>> you should not only apply these patches, but also need the support
->>> for SATA and interrupt controller in the v1 patch series.
->>>
->>> This patch series is based on mips-next.
->>>
->>> If you have any questions and suggestions, please let me know.
->>>
->>> Thanks,
->>>
->>> Tiezhu Yang
->>>
->>> v2:
->>>     - The split patch series about Loongson vendor ID and SATA
->>> controller has been merged into the linux-block.git by Jens Axboe
->>> [1].
->>>
->>>     - Think about using hierarchy IRQ domain in the patch of
->>> interrupt controller, and this maybe depend on the patch series by
->>> Jiaxun ("Modernize Loongson64 Machine"), so the patch about
->>> interrupt is not included in this v2 patch series.
->>>
->>> v3:
->>>     - The split patch series about Loongson vendor ID and SATA
->>> controller has been merged into the mainline tree [2]
->>>
->>>     - Modify the macro definition and add comment to make it easy to
->>> read
->>>
->>>     - Move ls7a1000_pci_class_quirk() to fixup-loongson3.c
->>>
->>>     - Use PCI_VENDOR_ID_LOONGSON in pci_ids.h instead of 0x0014
->>>
->>> v4:
->>>     - Use LS7A instead of Loongson 7A1000 in the description
->>>     - Use LS7A or ls7a instead of LS7A1000 or ls7a1000 in the code
->>>
->>> [1]
->>> https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-next&id=9acb9fe18d86
->>> https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-next&id=e49bd683e00b
->>> [2]
->>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9acb9fe18d86
->>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e49bd683e00b
->>>
->>> Tiezhu Yang (3):
->>>     MIPS: Loongson: Get host bridge information
->>>     MIPS: Loongson: Add DMA support for LS7A
->>>     MIPS: Loongson: Add PCI support for LS7A
->>>
->>>    arch/mips/include/asm/mach-loongson64/boot_param.h | 20 +++++++
->>>    arch/mips/loongson64/dma.c                         |  9 ++--
->>>    arch/mips/loongson64/env.c                         | 22 ++++++++
->>>    arch/mips/loongson64/init.c                        | 17 ++++++
->>>    arch/mips/pci/fixup-loongson3.c                    | 12 +++++
->>>    arch/mips/pci/ops-loongson3.c                      | 63
->>> ++++++++++++++++++++-- 6 files changed, 136 insertions(+), 7
->>> deletions(-)
->> Hi Thomas,
->>
->> Could you please apply the following two patches to mips-next?
->>
->> [v4,1/3] MIPS: Loongson: Get host bridge information
->> https://lore.kernel.org/patchwork/patch/1220009/
->>
->> [v4,2/3] MIPS: Loongson: Add DMA support for LS7A
->> https://lore.kernel.org/patchwork/patch/1220010/
-> Sorry but I really don't like the DMA patch, hard coding a config
-> register in platform code is not necessarily a good idea, it
-> create painful hell for adding new platform support.
->
-> I'm trying very hard to let all devices go through DeviceTree.
->
-> I'd suggest you to limit DMA capability on LS7A PCH instead of doing
-> the hack.
+Add SM8250 compatible to the qcom_aoss binding and driver.
 
-Hi Jiaxun,
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt | 1 +
+ drivers/soc/qcom/qcom_aoss.c                                 | 1 +
+ 2 files changed, 2 insertions(+)
 
-Thanks for your suggestion, let me rethink how to properly support DMA.
-
-Do you think the following patch could be applied first?
-
-[v4,1/3] MIPS: Loongson: Get host bridge information
-https://lore.kernel.org/patchwork/patch/1220009/
-
-Thanks,
-Tiezhu Yang
-
->
-> Or if you think the function is necessary, you can create a DeviceTree
-> node called "loongson,ls7a-syscon", and do whatever you like in
-> init_calls by parsing this node.
->
-> Also that will also block my upcoming LS2K support patches.
-> You can check my tree here[1].
->
-> Thanks.
->
-> [1]: https://github.com/FlyGoat/linux/commits/next-testing-2k
->
->> Thanks,
->> Tiezhu Yang
->>
-> --
-> Jiaxun Yang
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
+index 4fc571e78f01..953add19e937 100644
+--- a/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
+@@ -19,6 +19,7 @@ power-domains.
+ 		    "qcom,sc7180-aoss-qmp"
+ 		    "qcom,sdm845-aoss-qmp"
+ 		    "qcom,sm8150-aoss-qmp"
++		    "qcom,sm8250-aoss-qmp"
+ 
+ - reg:
+ 	Usage: required
+diff --git a/drivers/soc/qcom/qcom_aoss.c b/drivers/soc/qcom/qcom_aoss.c
+index f43a2e07ee83..ed2c687c16b3 100644
+--- a/drivers/soc/qcom/qcom_aoss.c
++++ b/drivers/soc/qcom/qcom_aoss.c
+@@ -599,6 +599,7 @@ static const struct of_device_id qmp_dt_match[] = {
+ 	{ .compatible = "qcom,sc7180-aoss-qmp", },
+ 	{ .compatible = "qcom,sdm845-aoss-qmp", },
+ 	{ .compatible = "qcom,sm8150-aoss-qmp", },
++	{ .compatible = "qcom,sm8250-aoss-qmp", },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, qmp_dt_match);
+-- 
+2.24.0
 
