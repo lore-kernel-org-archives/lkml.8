@@ -2,374 +2,161 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9309EC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AB8C5519A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70442206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F22472072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:20:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XBXMK6iZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgD0HSv (ORCPT
+        id S1726692AbgD0HUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 03:18:51 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61798 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726349AbgD0HSv (ORCPT
+        Mon, 27 Apr 2020 03:20:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbgD0HUJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 03:18:51 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03R6Wo6R109327;
-        Mon, 27 Apr 2020 03:18:15 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mh6st0cy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Apr 2020 03:18:15 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03R6wASB032412;
-        Mon, 27 Apr 2020 03:18:14 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mh6st0c6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Apr 2020 03:18:14 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03R7G7NE014750;
-        Mon, 27 Apr 2020 07:18:12 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma03ams.nl.ibm.com with ESMTP id 30mcu5ka7c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Apr 2020 07:18:12 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03R7IAlR54853742
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Apr 2020 07:18:10 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 50B4EA4067;
-        Mon, 27 Apr 2020 07:18:10 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1EEEBA4065;
-        Mon, 27 Apr 2020 07:18:06 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.84.67])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 27 Apr 2020 07:18:05 +0000 (GMT)
-Subject: Re: [RFC 00/11] perf: Enhancing perf to export processor hazard
- information
-From:   Madhavan Srinivasan <maddy@linux.ibm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Kim Phillips <kim.phillips@amd.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        yao.jin@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Robert Richter <robert.richter@amd.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-References: <20200302052355.36365-1-ravi.bangoria@linux.ibm.com>
- <20200302101332.GS18400@hirez.programming.kicks-ass.net>
- <CABPqkBSzwpR6p7UZs7g1vWGCJRLsh565mRMGc6m0Enn1SnkC4w@mail.gmail.com>
- <df966d6e-8898-029f-e697-8496500a1663@amd.com>
- <2550ec4d-a015-4625-ca24-ff10632dbe2e@linux.ibm.com>
- <d3c82708-dd09-80e0-4e9f-1cbab118a169@amd.com>
- <8a4d966c-acc9-b2b7-8ab7-027aefab201c@linux.ibm.com>
- <f226f4c5-6310-fd6b-ee76-aebd938ec212@amd.com>
- <0c5e94a3-e86e-f7cb-d668-d542b3a8ae29@linux.ibm.com>
- <8803550e-5d6d-2eda-39f5-e4594052188c@amd.com>
- <965dba09-813a-59a7-9c10-97ed1c892245@linux.ibm.com>
- <ee86b3e9-9e6e-8601-b381-9556cb7b67de@amd.com>
- <960e39ae-4d9a-05e5-9fbc-0a11706dce70@linux.ibm.com>
-Message-ID: <9aa2da24-3621-ba50-60c8-5084fa1041d7@linux.ibm.com>
-Date:   Mon, 27 Apr 2020 12:48:05 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <960e39ae-4d9a-05e5-9fbc-0a11706dce70@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-27_02:2020-04-24,2020-04-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
- suspectscore=0 bulkscore=0 spamscore=0 mlxscore=0 impostorscore=0
- malwarescore=0 adultscore=0 priorityscore=1501 lowpriorityscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004270054
+        Mon, 27 Apr 2020 03:20:09 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3537C061A0F;
+        Mon, 27 Apr 2020 00:20:09 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 18so7351509pfv.8;
+        Mon, 27 Apr 2020 00:20:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ugGlujtn3dDnrGju7ZgAZz03fv8HLSylSAJy626CBik=;
+        b=XBXMK6iZjcUJGelQ+1gU7U8NX3t0KuA8q5IEcDIUmMvXtC2PayfuYu0UZWFst9dGfW
+         JNZD5sPkgldMYKg14pO1ZpCcjBBLSkcXhPkWqxA0Dg9SKqAS1i7QUmrDSr474iySdAXl
+         dIgvFOZUvYfHbwOsVowwVp7cxo79EsinrYQXxdZQhXF93somUnEPWAKnXvUDM+F18t9k
+         K22Wtq5Kr3scNgH8d3jSySwOu99iaYN7A0wKn8QjZ9TIPC0f9pC6KI0X8MDWDP4ObFtI
+         +4UH88JeC7AKL8L0pKf/eh9Yp2Ai1kktqihfgVMQcTnNGkNAMCuLGViKGkBqEsYDzFRU
+         bGEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ugGlujtn3dDnrGju7ZgAZz03fv8HLSylSAJy626CBik=;
+        b=HA1xpxhVxSUIMbVMUgMJkXu5uMrjBjzDIc7s4kxlZIqeRkeKd+0ZXNWMW3U1EIqLaX
+         IQCgSkjyaOWVRGKu9oQkG6KkyBRE0dI5JF39DDJqeeEzgFkduB1wh8iwBcLLGREl9r9j
+         yKj+gnwM8a1qVQGv2ZiZ54AF0IHtMCvJfCFScLBuW0emnTNECy+Hcn2WEa12rUo36vkc
+         ghkuV3DbKCkUjoiiV4L14pt0imKPrbW4J49tFeyLBE+k4eV7Yf6rX9cORRVtT5VZrhcQ
+         zn2HtnRdkgiIthX2/udTjwHlq4QzdpxOYZnD4khAnVj57Qk/XLecQiSpi4lVxDWhfE6a
+         SN6A==
+X-Gm-Message-State: AGi0PuZ0xUuZEtQwOvsgI1lCSw8awdxT06wpXVW5c+vmsjFKigzfkoz2
+        nOZSMIvISDlQbpq4RExEnpU=
+X-Google-Smtp-Source: APiQypICK0qD8gD3HCpdOLGz52VlUUkN3av4Bne20ulEaJhg/t5QpoC7vtTTRxf3lF8W6MAe+tiWhA==
+X-Received: by 2002:a63:4383:: with SMTP id q125mr20393732pga.27.1587972009508;
+        Mon, 27 Apr 2020 00:20:09 -0700 (PDT)
+Received: from localhost.localdomain ([45.135.186.129])
+        by smtp.gmail.com with ESMTPSA id o21sm10104124pgk.16.2020.04.27.00.20.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 00:20:08 -0700 (PDT)
+From:   Baolin Wang <baolin.wang7@gmail.com>
+To:     robh+dt@kernel.org, jassisinghbrar@gmail.com
+Cc:     orsonzhai@gmail.com, baolin.wang7@gmail.com, zhang.lyra@gmail.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RESEND PATCH v3 1/2] dt-bindings: mailbox: Add the Spreadtrum mailbox documentation
+Date:   Mon, 27 Apr 2020 15:19:53 +0800
+Message-Id: <8d29eba045ef18c5489e122b3668afc20431f15d.1587894279.git.baolin.wang7@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-peterz,
+From: Baolin Wang <baolin.wang@unisoc.com>
 
-     Can you please help. Is it okay to use PERF_SAMPLE_RAW to expose 
-the pipeline stall details and
-add tool side infrastructure to handle the PERF_SAMPLE_RAW for cpu-pmu 
-samples.
+Add the Spreadtrum mailbox documentation.
 
-Maddy
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+---
+Changes from v2:
+ - Add reviewed tag from Rob.
+ - Remove redundant 'minItems'.
 
-On 4/20/20 12:39 PM, Madhavan Srinivasan wrote:
->
->
-> On 3/27/20 1:18 AM, Kim Phillips wrote:
->>
->> On 3/26/20 5:19 AM, maddy wrote:
->>>
->>> On 3/18/20 11:05 PM, Kim Phillips wrote:
->>>> Hi Maddy,
->>>>
->>>> On 3/17/20 1:50 AM, maddy wrote:
->>>>> On 3/13/20 4:08 AM, Kim Phillips wrote:
->>>>>> On 3/11/20 11:00 AM, Ravi Bangoria wrote:
->>>>>>> On 3/6/20 3:36 AM, Kim Phillips wrote:
->>>>>>>>> On 3/3/20 3:55 AM, Kim Phillips wrote:
->>>>>>>>>> On 3/2/20 2:21 PM, Stephane Eranian wrote:
->>>>>>>>>>> On Mon, Mar 2, 2020 at 2:13 AM Peter Zijlstra 
->>>>>>>>>>> <peterz@infradead.org> wrote:
->>>>>>>>>>>> On Mon, Mar 02, 2020 at 10:53:44AM +0530, Ravi Bangoria wrote:
->>>>>>>>>>>>> Modern processors export such hazard data in Performance
->>>>>>>>>>>>> Monitoring Unit (PMU) registers. Ex, 'Sampled Instruction 
->>>>>>>>>>>>> Event
->>>>>>>>>>>>> Register' on IBM PowerPC[1][2] and 'Instruction-Based 
->>>>>>>>>>>>> Sampling' on
->>>>>>>>>>>>> AMD[3] provides similar information.
->>>>>>>>>>>>>
->>>>>>>>>>>>> Implementation detail:
->>>>>>>>>>>>>
->>>>>>>>>>>>> A new sample_type called PERF_SAMPLE_PIPELINE_HAZ is 
->>>>>>>>>>>>> introduced.
->>>>>>>>>>>>> If it's set, kernel converts arch specific hazard information
->>>>>>>>>>>>> into generic format:
->>>>>>>>>>>>>
->>>>>>>>>>>>>        struct perf_pipeline_haz_data {
->>>>>>>>>>>>>               /* Instruction/Opcode type: Load, Store, 
->>>>>>>>>>>>> Branch .... */
->>>>>>>>>>>>>               __u8    itype;
->>>>>>>>>>>>>               /* Instruction Cache source */
->>>>>>>>>>>>>               __u8    icache;
->>>>>>>>>>>>>               /* Instruction suffered hazard in pipeline 
->>>>>>>>>>>>> stage */
->>>>>>>>>>>>>               __u8    hazard_stage;
->>>>>>>>>>>>>               /* Hazard reason */
->>>>>>>>>>>>>               __u8    hazard_reason;
->>>>>>>>>>>>>               /* Instruction suffered stall in pipeline 
->>>>>>>>>>>>> stage */
->>>>>>>>>>>>>               __u8    stall_stage;
->>>>>>>>>>>>>               /* Stall reason */
->>>>>>>>>>>>>               __u8    stall_reason;
->>>>>>>>>>>>>               __u16   pad;
->>>>>>>>>>>>>        };
->>>>>>>>>>>> Kim, does this format indeed work for AMD IBS?
->>>>>>>>>> It's not really 1:1, we don't have these separations of stages
->>>>>>>>>> and reasons, for example: we have missed in L2 cache, for 
->>>>>>>>>> example.
->>>>>>>>>> So IBS output is flatter, with more cycle latency figures than
->>>>>>>>>> IBM's AFAICT.
->>>>>>>>> AMD IBS captures pipeline latency data incase Fetch sampling 
->>>>>>>>> like the
->>>>>>>>> Fetch latency, tag to retire latency, completion to retire 
->>>>>>>>> latency and
->>>>>>>>> so on. Yes, Ops sampling do provide more data on load/store 
->>>>>>>>> centric
->>>>>>>>> information. But it also captures more detailed data for 
->>>>>>>>> Branch instructions.
->>>>>>>>> And we also looked at ARM SPE, which also captures more 
->>>>>>>>> details pipeline
->>>>>>>>> data and latency information.
->>>>>>>>>
->>>>>>>>>>> Personally, I don't like the term hazard. This is too IBM Power
->>>>>>>>>>> specific. We need to find a better term, maybe stall or 
->>>>>>>>>>> penalty.
->>>>>>>>>> Right, IBS doesn't have a filter to only count stalled or 
->>>>>>>>>> otherwise
->>>>>>>>>> bad events.  IBS' PPR descriptions has one occurrence of the
->>>>>>>>>> word stall, and no penalty.  The way I read IBS is it's just
->>>>>>>>>> reporting more sample data than just the precise IP: things like
->>>>>>>>>> hits, misses, cycle latencies, addresses, types, etc., so words
->>>>>>>>>> like 'extended', or the 'auxiliary' already used today even
->>>>>>>>>> are more appropriate for IBS, although I'm the last person to
->>>>>>>>>> bikeshed.
->>>>>>>>> We are thinking of using "pipeline" word instead of Hazard.
->>>>>>>> Hm, the word 'pipeline' occurs 0 times in IBS documentation.
->>>>>>> NP. We thought pipeline is generic hw term so we proposed 
->>>>>>> "pipeline"
->>>>>>> word. We are open to term which can be generic enough.
->>>>>>>
->>>>>>>> I realize there are a couple of core pipeline-specific pieces
->>>>>>>> of information coming out of it, but the vast majority
->>>>>>>> are addresses, latencies of various components in the memory
->>>>>>>> hierarchy, and various component hit/miss bits.
->>>>>>> Yes. we should capture core pipeline specific details. For example,
->>>>>>> IBS generates Branch unit information(IbsOpData1) and Icahce 
->>>>>>> related
->>>>>>> data(IbsFetchCtl) which is something that shouldn't be extended as
->>>>>>> part of perf-mem, IMO.
->>>>>> Sure, IBS Op-side output is more 'perf mem' friendly, and so it
->>>>>> should populate perf_mem_data_src fields, just like POWER9 can:
->>>>>>
->>>>>> union perf_mem_data_src {
->>>>>> ...
->>>>>>                    __u64   mem_rsvd:24,
->>>>>>                            mem_snoopx:2,   /* snoop mode, ext */
->>>>>>                            mem_remote:1,   /* remote */
->>>>>>                            mem_lvl_num:4,  /* memory hierarchy 
->>>>>> level number */
->>>>>>                            mem_dtlb:7,     /* tlb access */
->>>>>>                            mem_lock:2,     /* lock instr */
->>>>>>                            mem_snoop:5,    /* snoop mode */
->>>>>>                            mem_lvl:14,     /* memory hierarchy 
->>>>>> level */
->>>>>>                            mem_op:5;       /* type of opcode */
->>>>>>
->>>>>>
->>>>>> E.g., SIER[LDST] SIER[A_XLATE_SRC] can be used to populate
->>>>>> mem_lvl[_num], SIER_TYPE can be used to populate 'mem_op',
->>>>>> 'mem_lock', and the Reload Bus Source Encoding bits can
->>>>>> be used to populate mem_snoop, right?
->>>>> Hi Kim,
->>>>>
->>>>> Yes. We do expose these data as part of perf-mem for POWER.
->>>> OK, I see relevant PERF_MEM_S bits in 
->>>> arch/powerpc/perf/isa207-common.c:
->>>> isa207_find_source now, thanks.
->>>>
->>>>>> For IBS, I see PERF_SAMPLE_ADDR and PERF_SAMPLE_PHYS_ADDR can be
->>>>>> used for the ld/st target addresses, too.
->>>>>>
->>>>>>>> What's needed here is a vendor-specific extended
->>>>>>>> sample information that all these technologies gather,
->>>>>>>> of which things like e.g., 'L1 TLB cycle latency' we
->>>>>>>> all should have in common.
->>>>>>> Yes. We will include fields to capture the latency cycles (like 
->>>>>>> Issue
->>>>>>> latency, Instruction completion latency etc..) along with other 
->>>>>>> pipeline
->>>>>>> details in the proposed structure.
->>>>>> Latency figures are just an example, and from what I
->>>>>> can tell, struct perf_sample_data already has a 'weight' member,
->>>>>> used with PERF_SAMPLE_WEIGHT, that is used by intel-pt to
->>>>>> transfer memory access latency figures.  Granted, that's
->>>>>> a bad name given all other vendors don't call latency
->>>>>> 'weight'.
->>>>>>
->>>>>> I didn't see any latency figures coming out of POWER9,
->>>>>> and do not expect this patchseries to implement those
->>>>>> of other vendors, e.g., AMD's IBS; leave each vendor
->>>>>> to amend perf to suit their own h/w output please.
->>>>> Reference structure proposed in this patchset did not have members
->>>>> to capture latency info for that exact reason. But idea here is to
->>>>> abstract  as vendor specific as possible. So if we include u16 array,
->>>>> then this format can also capture data from IBS since it provides
->>>>> few latency details.
->>>> OK, that sounds a bit different from the 6 x u8's + 1 u16 padded
->>>> struct presented in this patchset.
->>>>
->>>> IBS Ops can report e.g.:
->>>>
->>>> 15 tag-to-retire cycles bits,
->>>> 15 completion to retire count bits,
->>>> 15 L1 DTLB refill latency bits,
->>>> 15 DC miss latency bits,
->>>> 5 outstanding memory requests on mem refill bits, and so on.
->>>>
->>>> IBS Fetch reports 15 bits of fetch latency, and another 16
->>>> for iTLB latency, among others.
->>>>
->>>> Some of these may/may not be valid simultaneously, and
->>>> there are IBS specific rules to establish validity.
->>>>
->>>>>> My main point there, however, was that each vendor should
->>>>>> use streamlined record-level code to just copy the data
->>>>>> in the proprietary format that their hardware produces,
->>>>>> and then then perf tooling can synthesize the events
->>>>>> from the raw data at report/script/etc. time.
->>>>>>
->>>>>>>> I'm not sure why a new PERF_SAMPLE_PIPELINE_HAZ is needed
->>>>>>>> either.  Can we use PERF_SAMPLE_AUX instead?
->>>>>>> We took a look at PERF_SAMPLE_AUX. IIUC, PERF_SAMPLE_AUX is 
->>>>>>> intended when
->>>>>>> large volume of data needs to be captured as part of perf.data 
->>>>>>> without
->>>>>>> frequent PMIs. But proposed type is to address the capture of 
->>>>>>> pipeline
->>>>>> SAMPLE_AUX shouldn't care whether the volume is large, or how 
->>>>>> frequent
->>>>>> PMIs are, even though it may be used in those environments.
->>>>>>
->>>>>>> information on each sample using PMI at periodic intervals. 
->>>>>>> Hence proposing
->>>>>>> PERF_SAMPLE_PIPELINE_HAZ.
->>>>>> And that's fine for any extra bits that POWER9 has to convey
->>>>>> to its users beyond things already represented by other sample
->>>>>> types like PERF_SAMPLE_DATA_SRC, but the capturing of both POWER9
->>>>>> and other vendor e.g., AMD IBS data can be made vendor-independent
->>>>>> at record time by using SAMPLE_AUX, or SAMPLE_RAW even, which is
->>>>>> what IBS currently uses.
->>>>> My bad. Not sure what you mean by this. We are trying to abstract
->>>>> as much vendor specific data as possible with this (like perf-mem).
->>>> Perhaps if I say it this way: instead of doing all the
->>>> isa207_get_phazard_data() work past the mfspr(SPRN_SIER)
->>>> in patch 4/11, rather/instead just put the raw sier value in a
->>>> PERF_SAMPLE_RAW or _AUX event, and call perf_event_update_userpage.
->>>> Specific SIER capabilities can be written as part of the perf.data
->>>> header.  Then synthesize the true pipe events from the raw SIER
->>>> values later, and in userspace.
->>> Hi Kim,
->>>
->>> Would like to stay away from SAMPLE_RAW type for these comments in 
->>> perf_events.h
->>>
->>> *      #
->>> *      # The RAW record below is opaque data wrt the ABI
->>> *      #
->>> *      # That is, the ABI doesn't make any promises wrt to
->>> *      # the stability of its content, it may vary depending
->>> *      # on event, hardware, kernel version and phase of
->>> *      # the moon.
->>> *      #
->>> *      # In other words, PERF_SAMPLE_RAW contents are not an ABI.
->>> *      #
->> The "it may vary depending on ... hardware" clause makes it sound
->> appropriate for the use-case where the raw hardware register contents
->> are copied directly into the user buffer.
->
->
-> Hi Kim,
->
-> Sorry for the delayed response.
->
-> But perf tool side needs infrastructure to handle the raw sample
-> data from cpu-pmu (used by tracepoints). I am not sure whether
-> his is the approach we should look here.
->
-> peterz any comments?
->
->>
->>> Secondly, sorry I didn't understand your suggestion about using 
->>> PERF_SAMPLE_AUX.
->>> IIUC, SAMPLE_AUX will go to AUX ring buffer, which is more memory 
->>> and more
->>> challenging when correlating and presenting the pipeline details for 
->>> each IP.
->>> IMO, having a new sample type can be useful to capture the pipeline 
->>> data
->>> both in perf_sample_data and if _AUX is enabled, can be made to push to
->>> AUX buffer.
->> OK, I didn't think SAMPLE_AUX and the aux ring buffer were
->> interdependent, sorry.
->>
->> Thanks,
->>
->> Kim
->
+Changes from v1:
+ - Add 'additionalProperties'.
+ - Split description for each entry.
+---
+ .../bindings/mailbox/sprd-mailbox.yaml        | 60 +++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/sprd-mailbox.yaml
+
+diff --git a/Documentation/devicetree/bindings/mailbox/sprd-mailbox.yaml b/Documentation/devicetree/bindings/mailbox/sprd-mailbox.yaml
+new file mode 100644
+index 000000000000..0f7451b42d7e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/sprd-mailbox.yaml
+@@ -0,0 +1,60 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/mailbox/sprd-mailbox.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Spreadtrum mailbox controller bindings
++
++maintainers:
++  - Orson Zhai <orsonzhai@gmail.com>
++  - Baolin Wang <baolin.wang7@gmail.com>
++  - Chunyan Zhang <zhang.lyra@gmail.com>
++
++properties:
++  compatible:
++    enum:
++      - sprd,sc9860-mailbox
++
++  reg:
++    items:
++      - description: inbox registers' base address
++      - description: outbox registers' base address
++
++  interrupts:
++    items:
++      - description: inbox interrupt
++      - description: outbox interrupt
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: enable
++
++  "#mbox-cells":
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - "#mbox-cells"
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    mailbox: mailbox@400a0000 {
++      compatible = "sprd,sc9860-mailbox";
++      reg = <0 0x400a0000 0 0x8000>, <0 0x400a8000 0 0x8000>;
++      #mbox-cells = <1>;
++      clock-names = "enable";
++      clocks = <&aon_gate 53>;
++      interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
++    };
++...
+-- 
+2.17.1
 
