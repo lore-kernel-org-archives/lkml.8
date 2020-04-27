@@ -2,118 +2,237 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD1EC4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9426FC4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95A88214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:10:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hv5WI99E"
+	by mail.kernel.org (Postfix) with ESMTP id 7712A214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:10:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbgD0TKd (ORCPT
+        id S1726750AbgD0TK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 15:10:33 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:49653 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726371AbgD0TKc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 15:10:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588014630;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=I0hVk/6G0HDWyNl0uhimzd8WziWxl6KqqJxBVaLL5oQ=;
-        b=Hv5WI99EVG9PbL1gSwidJYL6t6VS/Y1P1Skqq5aW8euIyC5x4rTLvCjxIpu9DLgXrs2kE3
-        CwTRIp7LXY/d8EgGm09711mgIGKKIm6pGS+Lb1U+HxUV9m3tjI5akgTzLSzNW8kzyY+JTA
-        pYDuYA7G/7UlSxsuOANO86WvGJiN9hE=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-15-8NES2kblOu-E-gvS6EWDdQ-1; Mon, 27 Apr 2020 15:10:29 -0400
-X-MC-Unique: 8NES2kblOu-E-gvS6EWDdQ-1
-Received: by mail-wm1-f72.google.com with SMTP id j5so45656wmi.4
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 12:10:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=I0hVk/6G0HDWyNl0uhimzd8WziWxl6KqqJxBVaLL5oQ=;
-        b=CXq4s/wDu48peiZR1NZxRR9Lr3cVVv72TakV2GJ311TowECeGH43vCis4UGNjShjA9
-         lAvi9XsMVBxly8Ldc66Odaz9sDH+r1J1Ro0bhGwsFXghyXPPR0h8QPuE7u8n/gq+m1/b
-         ldUZsbMPssfLb4zqvQuzvUtrlA/1OzuiKEVhpuuSmyBXMQx4op14D+WawsTNoQAXup5X
-         7P4Q2rpd3DA+EE0L5GdMNa5T3+39UXqOlrR/o3dw78ZRldtHw+5cgT7vACrRI4oIrUw1
-         Un08bQaxQwKv1qxIB+PPgZIxS9yx6xKZo0iSdzF4pwzuOwySnE51s19qyVxSO4C9YMqf
-         Brgw==
-X-Gm-Message-State: AGi0PuapNi4pJwQC9HUW5ZG6veYJO9lMs6+2OsIe73nWHdAQeEEyA/4b
-        8IIQxHnqVtdga9pAuOmATXlZkVQOhcNsslkZyjNzpjhKJ3RJQzHG2OwHoh8CD4V+PV2oy027DoQ
-        bFYRke3P8w+zDdh/O2vvDzhG0
-X-Received: by 2002:adf:cd04:: with SMTP id w4mr30392815wrm.357.1588014628249;
-        Mon, 27 Apr 2020 12:10:28 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIILVoJz/qNWYWE3ErDemAwYqp/nA424nLm5ZyRRhg+ICEM+y/HKkvpU9uy47Xz8+V0QcM6PQ==
-X-Received: by 2002:adf:cd04:: with SMTP id w4mr30392803wrm.357.1588014628029;
-        Mon, 27 Apr 2020 12:10:28 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:ac19:d1fb:3f5f:d54f? ([2001:b07:6468:f312:ac19:d1fb:3f5f:d54f])
-        by smtp.gmail.com with ESMTPSA id k9sm23532061wrd.17.2020.04.27.12.10.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Apr 2020 12:10:27 -0700 (PDT)
-Subject: Re: [PATCH] [RFC] kvm: x86: emulate APERF/MPERF registers
-To:     Jim Mattson <jmattson@google.com>,
-        "Li,Rongqing" <lirongqing@baidu.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Joerg Roedel <joro@8bytes.org>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-References: <1587704935-30960-1-git-send-email-lirongqing@baidu.com>
- <20200424100143.GZ20730@hirez.programming.kicks-ass.net>
- <20200424144625.GB30013@linux.intel.com>
- <CALMp9eQtSrZMRQtxa_Z5WmjayWzJYhSrpNkQbqK5b7Ufxg-cMA@mail.gmail.com>
- <ce51d5f9-aa7b-233b-883d-802d9b00e090@redhat.com>
- <fd2a8092edf54a85979e5781dc354690@baidu.com>
- <CALMp9eQrGuqzy_ZRu+qU3A7PRkoi8JHWFRpm---cMhp9+J4j8A@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <f3c2cc31-6388-f7b5-48fd-fb19d059eea3@redhat.com>
-Date:   Mon, 27 Apr 2020 21:10:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 27 Apr 2020 15:10:56 -0400
+Received: from mga02.intel.com ([134.134.136.20]:53128 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726371AbgD0TK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 15:10:56 -0400
+IronPort-SDR: 8gt3OIBenhBxuVnxAEQsaddsMDVjEHTSWprjxriuCmZWWjvioawsQbnzRh3ntv8jD1XbF+/FWF
+ XYFfEdfA/SeA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 12:10:55 -0700
+IronPort-SDR: LPeFoGkj26QoBoEPmlhoWEyn+1+68gfpjfC9nhZGmvywJ/0M7jFen537nA1XoSjfa8SXbRNWFN
+ dK8l3UkGZjag==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,325,1583222400"; 
+   d="scan'208";a="248957715"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 27 Apr 2020 12:10:54 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jT99Z-0008r5-KN; Tue, 28 Apr 2020 03:10:53 +0800
+Date:   Tue, 28 Apr 2020 03:10:33 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:locking/core] BUILD SUCCESS
+ 23b5ae2e8e1326c91b5dfdbb6ebcd5a6820074ae
+Message-ID: <5ea72e29.Q6/G6M8tnHQnWlJd%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <CALMp9eQrGuqzy_ZRu+qU3A7PRkoi8JHWFRpm---cMhp9+J4j8A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/04/20 19:30, Jim Mattson wrote:
->>>> I would like to see performance data before enabling this
->>>> unconditionally.
->>> I wouldn't want this to be enabled unconditionally anyway,
->>> because you need to take into account live migration to and from
->>> processors that do not have APERF/MPERF support.
->>> 
->>> Paolo
->> I will add a kvm parameter to consider whether enable MPERF/APERF
->> emulations, and make default value to false
->
-> Wouldn't it be better to add a per-VM capability to enable this
-> feature?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  locking/core
+branch HEAD: 23b5ae2e8e1326c91b5dfdbb6ebcd5a6820074ae  locking/rtmutex: Remove unused rt_mutex_cmpxchg_relaxed()
 
-Yes, you it would be better to use KVM_ENABLE_CAP indeed.
+elapsed time: 503m
 
-Paolo
+configs tested: 170
+configs skipped: 0
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm                              allmodconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+arm                           efm32_defconfig
+arm                         at91_dt_defconfig
+arm                        shmobile_defconfig
+arm64                               defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                           sunxi_defconfig
+arm                        multi_v7_defconfig
+sparc                            allyesconfig
+powerpc                             defconfig
+ia64                                defconfig
+i386                             alldefconfig
+h8300                    h8300h-sim_defconfig
+riscv                             allnoconfig
+riscv                          rv32_defconfig
+i386                                defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                        generic_defconfig
+ia64                          tiger_defconfig
+ia64                         bigsur_defconfig
+ia64                             allyesconfig
+ia64                             alldefconfig
+nios2                         3c120_defconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+xtensa                          iss_defconfig
+c6x                              allyesconfig
+xtensa                       common_defconfig
+openrisc                 simple_smp_defconfig
+openrisc                    or1ksim_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+arc                                 defconfig
+arc                              allyesconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+mips                            ar7_defconfig
+mips                             allyesconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+mips                malta_kvm_guest_defconfig
+mips                         tb0287_defconfig
+mips                       capcella_defconfig
+mips                           ip32_defconfig
+mips                  decstation_64_defconfig
+mips                      loongson3_defconfig
+mips                          ath79_defconfig
+mips                        bcm63xx_defconfig
+parisc                            allnoconfig
+parisc                generic-64bit_defconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+parisc               randconfig-a001-20200427
+alpha                randconfig-a001-20200427
+mips                 randconfig-a001-20200427
+m68k                 randconfig-a001-20200427
+riscv                randconfig-a001-20200427
+nds32                randconfig-a001-20200427
+nios2                randconfig-a001-20200427
+c6x                  randconfig-a001-20200427
+h8300                randconfig-a001-20200427
+sparc64              randconfig-a001-20200427
+microblaze           randconfig-a001-20200427
+sh                   randconfig-a001-20200427
+csky                 randconfig-a001-20200427
+xtensa               randconfig-a001-20200427
+openrisc             randconfig-a001-20200427
+i386                 randconfig-b002-20200427
+x86_64               randconfig-b001-20200427
+i386                 randconfig-b001-20200427
+i386                 randconfig-b003-20200427
+x86_64               randconfig-b002-20200427
+x86_64               randconfig-b003-20200427
+i386                 randconfig-c002-20200427
+i386                 randconfig-c001-20200427
+x86_64               randconfig-c002-20200427
+x86_64               randconfig-c001-20200427
+i386                 randconfig-c003-20200427
+x86_64               randconfig-c003-20200427
+i386                 randconfig-a003-20200427
+i386                 randconfig-a001-20200427
+i386                 randconfig-a002-20200427
+x86_64               randconfig-a002-20200427
+x86_64               randconfig-d001-20200427
+x86_64               randconfig-d002-20200427
+i386                 randconfig-d002-20200427
+i386                 randconfig-d001-20200427
+x86_64               randconfig-d003-20200427
+i386                 randconfig-d003-20200427
+i386                 randconfig-e003-20200427
+x86_64               randconfig-e002-20200427
+x86_64               randconfig-e003-20200427
+i386                 randconfig-e002-20200427
+i386                 randconfig-e001-20200427
+x86_64               randconfig-e001-20200427
+x86_64               randconfig-f002-20200427
+i386                 randconfig-f002-20200427
+i386                 randconfig-f003-20200427
+i386                 randconfig-f001-20200427
+i386                 randconfig-g003-20200427
+i386                 randconfig-g001-20200427
+x86_64               randconfig-g001-20200427
+i386                 randconfig-g002-20200427
+x86_64               randconfig-g003-20200427
+i386                 randconfig-h003-20200427
+x86_64               randconfig-h002-20200427
+i386                 randconfig-h002-20200427
+i386                 randconfig-h001-20200427
+sparc                randconfig-a001-20200427
+ia64                 randconfig-a001-20200427
+arm                  randconfig-a001-20200427
+arm64                randconfig-a001-20200427
+arc                  randconfig-a001-20200427
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                       zfcpdump_defconfig
+s390                          debug_defconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                             alldefconfig
+s390                                defconfig
+sh                          rsk7269_defconfig
+sh                               allmodconfig
+sh                            titan_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
