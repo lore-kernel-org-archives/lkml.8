@@ -2,147 +2,200 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B98C55194
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 03:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9140C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 03:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA857206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 03:35:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5D6D206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 03:39:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ceOMoli5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgD0DfF (ORCPT
+        id S1726458AbgD0DjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 23:35:05 -0400
-Received: from mga09.intel.com ([134.134.136.24]:34469 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726431AbgD0DfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 23:35:04 -0400
-IronPort-SDR: gd7h5y0TYFk6bQ1ANGd4P+oWrgy0h5XEeS/2pHj+i3hN+AJ/e6IbMZzKA49da5PgrjUo89GGFP
- 9MGhMMZF7fdA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2020 20:35:04 -0700
-IronPort-SDR: 4lN3g3wEu3YFhrOsnEp0TYfNeSAOpd48c4eM4BT/P0raYqwC4PiI1XxXxXD3q+k5Y+ci/2Eqfl
- kXrJRgmhkygA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,321,1583222400"; 
-   d="scan'208";a="245962543"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by orsmga007.jf.intel.com with ESMTP; 26 Apr 2020 20:35:03 -0700
-Received: from fmsmsx126.amr.corp.intel.com (10.18.125.43) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sun, 26 Apr 2020 20:35:03 -0700
-Received: from shsmsx106.ccr.corp.intel.com (10.239.4.159) by
- FMSMSX126.amr.corp.intel.com (10.18.125.43) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sun, 26 Apr 2020 20:35:03 -0700
-Received: from shsmsx101.ccr.corp.intel.com ([169.254.1.129]) by
- SHSMSX106.ccr.corp.intel.com ([169.254.10.89]) with mapi id 14.03.0439.000;
- Mon, 27 Apr 2020 11:35:01 +0800
-From:   "Ma, Jianpeng" <jianpeng.ma@intel.com>
-To:     Randy Dunlap <rdunlap@infradead.org>,
+        Sun, 26 Apr 2020 23:39:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45902 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726341AbgD0DjM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 23:39:12 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F8F4C061A0F
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 20:39:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=wniblRoeFeVzjHbwI/eShcX0rxEXqnrqWa9Srx3dHN0=; b=ceOMoli52nv3xiFyOK7+Q16uoU
+        PnG4U/dOuAIMU4J7bfk2BCIFDe+LVAVR8VjP+HKkBSRYgniFT/lzYoaMQdTyjJJTXC6cqbfwOwLXZ
+        vxetVRnIG5on/Fw6Y3DwFXMoUfekJ+D0kP3rRCS5pn3ua35/pXf1W+TPgCNb/t+Ak3TOOsR7wy80Q
+        2IU01zVBVmX/1X20GHnCPIGMAq2tUwwUxNfif83n9fsUHToEqNgbDTFOWmL+9+uLxXTSI8Bt+xyTV
+        iFLXc8eKzNYW6gcuWyakt4vTcLFVy3pRI0019FScD7X/Yinqenw8Ow8Pxd1jNFkufAhDe+Jjqe5WE
+        AGAV/XgQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jSubv-0006wN-I8; Mon, 27 Apr 2020 03:39:11 +0000
+Subject: Re: block: remove unused header includes.
+To:     "Ma, Jianpeng" <jianpeng.ma@intel.com>,
         Christoph Hellwig <hch@infradead.org>
-CC:     "axboe@kernel.dk" <axboe@kernel.dk>,
+Cc:     "axboe@kernel.dk" <axboe@kernel.dk>,
         "Williams, Dan J" <dan.j.williams@intel.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: block: remove unused header includes.
-Thread-Topic: block: remove unused header includes.
-Thread-Index: AdYcP3CXILghGS16Sc6WaotIgRxXX///fKWA//9yTmA=
-Date:   Mon, 27 Apr 2020 03:35:00 +0000
-Message-ID: <6AA21C22F0A5DA478922644AD2EC308C73C55A66@SHSMSX101.ccr.corp.intel.com>
 References: <6AA21C22F0A5DA478922644AD2EC308C73C55940@SHSMSX101.ccr.corp.intel.com>
  <768e4398-1789-8dfa-5883-effb566b2f31@infradead.org>
-In-Reply-To: <768e4398-1789-8dfa-5883-effb566b2f31@infradead.org>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ <6AA21C22F0A5DA478922644AD2EC308C73C55A66@SHSMSX101.ccr.corp.intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <0341f3e4-b43c-7f66-4123-cedc9d5516db@infradead.org>
+Date:   Sun, 26 Apr 2020 20:39:10 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <6AA21C22F0A5DA478922644AD2EC308C73C55A66@SHSMSX101.ccr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSYW5keSBEdW5sYXAgPHJkdW5s
-YXBAaW5mcmFkZWFkLm9yZz4NCj4gU2VudDogTW9uZGF5LCBBcHJpbCAyNywgMjAyMCAxMTowNiBB
-TQ0KPiBUbzogTWEsIEppYW5wZW5nIDxqaWFucGVuZy5tYUBpbnRlbC5jb20+OyBDaHJpc3RvcGgg
-SGVsbHdpZw0KPiA8aGNoQGluZnJhZGVhZC5vcmc+DQo+IENjOiBheGJvZUBrZXJuZWwuZGs7IFdp
-bGxpYW1zLCBEYW4gSiA8ZGFuLmoud2lsbGlhbXNAaW50ZWwuY29tPjsgbGludXgtDQo+IGtlcm5l
-bEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IGJsb2NrOiByZW1vdmUgdW51c2VkIGhl
-YWRlciBpbmNsdWRlcy4NCj4gDQo+IEhpLA0KPiANCj4gT24gNC8yNi8yMCA3OjU2IFBNLCBNYSwg
-SmlhbnBlbmcgd3JvdGU6DQo+ID4gVGhpcyB1c2VkIGRlaGVhZGVyKGdpdEBnaXRsYWIuY29tOmVz
-ci9kZWhlYWRlci5naXQpIHRvIHByb2R1Y2UuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBKaWFu
-cGVuZyBNYSA8amlhbnBlbmcubWFAaW50ZWwuY29tPg0KPiA+IC0tLQ0KPiA+ICBibG9jay9iYWRi
-bG9ja3MuYyAgICAgICAgfCAgNiAtLS0tLS0NCj4gPiAgYmxvY2svYmZxLWNncm91cC5jICAgICAg
-IHwgMTAgLS0tLS0tLS0tLQ0KPiA+ICBibG9jay9iZnEtaW9zY2hlZC5jICAgICAgfCAxMyAtLS0t
-LS0tLS0tLS0tDQo+ID4gIGJsb2NrL2Jpby1pbnRlZ3JpdHkuYyAgICB8ICA2IC0tLS0tLQ0KPiA+
-ICBibG9jay9iaW8uYyAgICAgICAgICAgICAgfCAxNCAtLS0tLS0tLS0tLS0tLQ0KPiA+ICBibG9j
-ay9ibGstY2dyb3VwLmMgICAgICAgfCAxMCAtLS0tLS0tLS0tDQo+ID4gIGJsb2NrL2Jsay1jb3Jl
-LmMgICAgICAgICB8IDI0IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ICBibG9jay9ibGst
-ZXhlYy5jICAgICAgICAgfCAgNSAtLS0tLQ0KPiA+ICBibG9jay9ibGstZmx1c2guYyAgICAgICAg
-fCAxMCAtLS0tLS0tLS0tDQo+ID4gIGJsb2NrL2Jsay1pbnRlZ3JpdHkuYyAgICB8ICA2IC0tLS0t
-LQ0KPiA+ICBibG9jay9ibGstaW9jLmMgICAgICAgICAgfCAgNyAtLS0tLS0tDQo+ID4gIGJsb2Nr
-L2Jsay1saWIuYyAgICAgICAgICB8ICA1IC0tLS0tDQo+ID4gIGJsb2NrL2Jsay1tYXAuYyAgICAg
-ICAgICB8ICA0IC0tLS0NCj4gPiAgYmxvY2svYmxrLW1lcmdlLmMgICAgICAgIHwgIDUgLS0tLS0N
-Cj4gPiAgYmxvY2svYmxrLW1xLWNwdW1hcC5jICAgIHwgIDggLS0tLS0tLS0NCj4gPiAgYmxvY2sv
-YmxrLW1xLWRlYnVnZnMuYyAgIHwgIDYgLS0tLS0tDQo+ID4gIGJsb2NrL2Jsay1tcS1wY2kuYyAg
-ICAgICB8ICA0IC0tLS0NCj4gPiAgYmxvY2svYmxrLW1xLXJkbWEuYyAgICAgIHwgIDEgLQ0KPiA+
-ICBibG9jay9ibGstbXEtc2NoZWQuYyAgICAgfCAgNyAtLS0tLS0tDQo+ID4gIGJsb2NrL2Jsay1t
-cS1zeXNmcy5jICAgICB8IDE1ICstLS0tLS0tLS0tLS0tLQ0KPiA+ICBibG9jay9ibGstbXEtdGFn
-LmMgICAgICAgfCAgNSAtLS0tLQ0KPiA+ICBibG9jay9ibGstbXEtdmlydGlvLmMgICAgfCAgNCAt
-LS0tDQo+ID4gIGJsb2NrL2Jsay1tcS5jICAgICAgICAgICB8IDIyIC0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0NCj4gPiAgYmxvY2svYmxrLXBtLmMgICAgICAgICAgIHwgIDQgLS0tLQ0KPiA+ICBibG9j
-ay9ibGstc2V0dGluZ3MuYyAgICAgfCAgOCAtLS0tLS0tLQ0KPiA+ICBibG9jay9ibGstc29mdGly
-cS5jICAgICAgfCAgNiAtLS0tLS0NCj4gPiAgYmxvY2svYmxrLXN0YXQuYyAgICAgICAgIHwgIDUg
-LS0tLS0NCj4gPiAgYmxvY2svYmxrLXN5c2ZzLmMgICAgICAgIHwgIDkgLS0tLS0tLS0tDQo+ID4g
-IGJsb2NrL2Jsay10aHJvdHRsZS5jICAgICB8ICA1IC0tLS0tDQo+ID4gIGJsb2NrL2Jsay10aW1l
-b3V0LmMgICAgICB8ICA1IC0tLS0tDQo+ID4gIGJsb2NrL2Jsay13YnQuYyAgICAgICAgICB8ICA2
-IC0tLS0tLQ0KPiA+ICBibG9jay9ibGstem9uZWQuYyAgICAgICAgfCAgNyAtLS0tLS0tDQo+ID4g
-IGJsb2NrL2JvdW5jZS5jICAgICAgICAgICB8IDE1IC0tLS0tLS0tLS0tLS0tLQ0KPiA+ICBibG9j
-ay9ic2ctbGliLmMgICAgICAgICAgfCAgNSAtLS0tLQ0KPiA+ICBibG9jay9ic2cuYyAgICAgICAg
-ICAgICAgfCAxMSAtLS0tLS0tLS0tLQ0KPiA+ICBibG9jay9jbWRsaW5lLXBhcnNlci5jICAgfCAg
-MSAtDQo+ID4gIGJsb2NrL2VsZXZhdG9yLmMgICAgICAgICB8IDE1IC0tLS0tLS0tLS0tLS0tLQ0K
-PiA+ICBibG9jay9nZW5oZC5jICAgICAgICAgICAgfCAxNCAtLS0tLS0tLS0tLS0tLQ0KPiA+ICBi
-bG9jay9pb2N0bC5jICAgICAgICAgICAgfCAgOCAtLS0tLS0tLQ0KPiA+ICBibG9jay9pb3ByaW8u
-YyAgICAgICAgICAgfCAxMSAtLS0tLS0tLS0tLQ0KPiA+ICBibG9jay9reWJlci1pb3NjaGVkLmMg
-ICAgfCAgOSAtLS0tLS0tLS0NCj4gPiAgYmxvY2svbXEtZGVhZGxpbmUuYyAgICAgIHwgMTQgLS0t
-LS0tLS0tLS0tLS0NCj4gPiAgYmxvY2svcGFydGl0aW9ucy9hbWlnYS5jIHwgIDEgLQ0KPiA+ICBi
-bG9jay9wYXJ0aXRpb25zL2NvcmUuYyAgfCAgNCAtLS0tDQo+ID4gIGJsb2NrL3BhcnRpdGlvbnMv
-ZWZpLmMgICB8ICAzIC0tLQ0KPiA+ICBibG9jay9wYXJ0aXRpb25zL2thcm1hLmMgfCAgMSAtDQo+
-ID4gIGJsb2NrL3BhcnRpdGlvbnMvbGRtLmMgICB8ICA0IC0tLS0NCj4gPiAgYmxvY2svcGFydGl0
-aW9ucy9tYWMuYyAgIHwgIDEgLQ0KPiA+ICBibG9jay9zY3NpX2lvY3RsLmMgICAgICAgfCAxNCAt
-LS0tLS0tLS0tLS0tLQ0KPiA+ICBibG9jay9zZWQtb3BhbC5jICAgICAgICAgfCAgOSAtLS0tLS0t
-LS0NCj4gPiAgYmxvY2svdDEwLXBpLmMgICAgICAgICAgIHwgIDEgLQ0KPiA+ICBmcy9ibG9ja19k
-ZXYuYyAgICAgICAgICAgfCAxNiAtLS0tLS0tLS0tLS0tLS0tDQo+ID4gIDUyIGZpbGVzIGNoYW5n
-ZWQsIDEgaW5zZXJ0aW9uKCspLCA0MDggZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0
-IGEvYmxvY2svYmFkYmxvY2tzLmMgYi9ibG9jay9iYWRibG9ja3MuYyBpbmRleA0KPiA+IDJlNWY1
-Njk3ZGIzNS4uNGU0ZWIwZmM5ZWI5IDEwMDY0NA0KPiA+IC0tLSBhL2Jsb2NrL2JhZGJsb2Nrcy5j
-DQo+ID4gKysrIGIvYmxvY2svYmFkYmxvY2tzLmMNCj4gPiBAQCAtOCwxMiArOCw2IEBADQo+ID4g
-ICAqLw0KPiA+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9iYWRibG9ja3MuaD4NCj4gPiAtI2luY2x1
-ZGUgPGxpbnV4L3NlcWxvY2suaD4NCj4gDQo+IGFib3ZlIGlzIHVzZWQgYnk6DQo+IAlzZXEgPSBy
-ZWFkX3NlcWJlZ2luKCZiYi0+bG9jayk7DQo+IA0KPiA+IC0jaW5jbHVkZSA8bGludXgvZGV2aWNl
-Lmg+DQo+IA0KPiAJc3RydWN0IGRldmljZSBpcyB1c2VkIGluIHRoaXMgc291cmNlIGZpbGUuDQo+
-IA0KPiA+IC0jaW5jbHVkZSA8bGludXgva2VybmVsLmg+DQo+ID4gLSNpbmNsdWRlIDxsaW51eC9t
-b2R1bGUuaD4NCj4gPiAtI2luY2x1ZGUgPGxpbnV4L3N0ZGRlZi5oPg0KPiANCj4gCU5VTEwgaXMg
-dXNlZCBpbiB0aGlzIHNvdXJjZSBmaWxlLg0KPiANCj4gPiAtI2luY2x1ZGUgPGxpbnV4L3R5cGVz
-Lmg+DQo+IA0KPiAJc2VjdG9yX3QgaXMgdXNlZCBpbiB0aGlzIHNvdXJjZSBmaWxlLg0KPiANCj4g
-PiAgI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4NCj4gPg0KPiA+ICAvKioNCj4gDQo+IA0KPiANCj4g
-Q2FuIHlvdSBleHBsYWluIHRoZSBjcml0ZXJpYSB0aGF0ICdkZWhlYWRlcicgdXNlIHRvIGRlY2lk
-ZSB0aGF0IGEgaGVhZGVyIGZpbGUgY2FuDQo+IGJlIHJlbW92ZWQ/DQo+IA0KRGVoZWFkZXIgaXRl
-cmF0b3IgcmVtb3ZlIHRoZSAjaW5jbHVkZSBhbmQgZG8gbWFrZS4gSWYgbm8gZmFpbCBtZWFuIHRo
-aXMgI2luY2x1ZGUgY2FuIHJlbW92ZS4gDQoNCj4gQW5kIGFyZSB5b3UgYXdhcmUgb2YgcnVsZSAj
-MSBpbiBEb2N1bWVudGF0aW9uL3Byb2Nlc3Mvc3VibWl0LWNoZWNrbGlzdC5yc3Q6DQo+IA0KPiAx
-KSBJZiB5b3UgdXNlIGEgZmFjaWxpdHkgdGhlbiAjaW5jbHVkZSB0aGUgZmlsZSB0aGF0IGRlZmlu
-ZXMvZGVjbGFyZXMNCj4gICAgdGhhdCBmYWNpbGl0eS4gIERvbid0IGRlcGVuZCBvbiBvdGhlciBo
-ZWFkZXIgZmlsZXMgcHVsbGluZyBpbiBvbmVzDQo+ICAgIHRoYXQgeW91IHVzZS4NCj4gDQpJcyB0
-aGlzIHJ1bGUgbWVhbiBmb3IgI2lmZGVmIGNhc2U/DQoNCkppYW5wZW5nLg0KPiANCj4gDQo+IC0t
-DQo+IH5SYW5keQ0KDQo=
+On 4/26/20 8:35 PM, Ma, Jianpeng wrote:
+>> -----Original Message-----
+>> From: Randy Dunlap <rdunlap@infradead.org>
+>> Sent: Monday, April 27, 2020 11:06 AM
+>> To: Ma, Jianpeng <jianpeng.ma@intel.com>; Christoph Hellwig
+>> <hch@infradead.org>
+>> Cc: axboe@kernel.dk; Williams, Dan J <dan.j.williams@intel.com>; linux-
+>> kernel@vger.kernel.org
+>> Subject: Re: block: remove unused header includes.
+>>
+>> Hi,
+>>
+>> On 4/26/20 7:56 PM, Ma, Jianpeng wrote:
+>>> This used deheader(git@gitlab.com:esr/deheader.git) to produce.
+>>>
+>>> Signed-off-by: Jianpeng Ma <jianpeng.ma@intel.com>
+>>> ---
+>>>  block/badblocks.c        |  6 ------
+>>>  block/bfq-cgroup.c       | 10 ----------
+>>>  block/bfq-iosched.c      | 13 -------------
+>>>  block/bio-integrity.c    |  6 ------
+>>>  block/bio.c              | 14 --------------
+>>>  block/blk-cgroup.c       | 10 ----------
+>>>  block/blk-core.c         | 24 ------------------------
+>>>  block/blk-exec.c         |  5 -----
+>>>  block/blk-flush.c        | 10 ----------
+>>>  block/blk-integrity.c    |  6 ------
+>>>  block/blk-ioc.c          |  7 -------
+>>>  block/blk-lib.c          |  5 -----
+>>>  block/blk-map.c          |  4 ----
+>>>  block/blk-merge.c        |  5 -----
+>>>  block/blk-mq-cpumap.c    |  8 --------
+>>>  block/blk-mq-debugfs.c   |  6 ------
+>>>  block/blk-mq-pci.c       |  4 ----
+>>>  block/blk-mq-rdma.c      |  1 -
+>>>  block/blk-mq-sched.c     |  7 -------
+>>>  block/blk-mq-sysfs.c     | 15 +--------------
+>>>  block/blk-mq-tag.c       |  5 -----
+>>>  block/blk-mq-virtio.c    |  4 ----
+>>>  block/blk-mq.c           | 22 ----------------------
+>>>  block/blk-pm.c           |  4 ----
+>>>  block/blk-settings.c     |  8 --------
+>>>  block/blk-softirq.c      |  6 ------
+>>>  block/blk-stat.c         |  5 -----
+>>>  block/blk-sysfs.c        |  9 ---------
+>>>  block/blk-throttle.c     |  5 -----
+>>>  block/blk-timeout.c      |  5 -----
+>>>  block/blk-wbt.c          |  6 ------
+>>>  block/blk-zoned.c        |  7 -------
+>>>  block/bounce.c           | 15 ---------------
+>>>  block/bsg-lib.c          |  5 -----
+>>>  block/bsg.c              | 11 -----------
+>>>  block/cmdline-parser.c   |  1 -
+>>>  block/elevator.c         | 15 ---------------
+>>>  block/genhd.c            | 14 --------------
+>>>  block/ioctl.c            |  8 --------
+>>>  block/ioprio.c           | 11 -----------
+>>>  block/kyber-iosched.c    |  9 ---------
+>>>  block/mq-deadline.c      | 14 --------------
+>>>  block/partitions/amiga.c |  1 -
+>>>  block/partitions/core.c  |  4 ----
+>>>  block/partitions/efi.c   |  3 ---
+>>>  block/partitions/karma.c |  1 -
+>>>  block/partitions/ldm.c   |  4 ----
+>>>  block/partitions/mac.c   |  1 -
+>>>  block/scsi_ioctl.c       | 14 --------------
+>>>  block/sed-opal.c         |  9 ---------
+>>>  block/t10-pi.c           |  1 -
+>>>  fs/block_dev.c           | 16 ----------------
+>>>  52 files changed, 1 insertion(+), 408 deletions(-)
+>>>
+>>> diff --git a/block/badblocks.c b/block/badblocks.c index
+>>> 2e5f5697db35..4e4eb0fc9eb9 100644
+>>> --- a/block/badblocks.c
+>>> +++ b/block/badblocks.c
+>>> @@ -8,12 +8,6 @@
+>>>   */
+>>>
+>>>  #include <linux/badblocks.h>
+>>> -#include <linux/seqlock.h>
+>>
+>> above is used by:
+>> 	seq = read_seqbegin(&bb->lock);
+>>
+>>> -#include <linux/device.h>
+>>
+>> 	struct device is used in this source file.
+>>
+>>> -#include <linux/kernel.h>
+>>> -#include <linux/module.h>
+>>> -#include <linux/stddef.h>
+>>
+>> 	NULL is used in this source file.
+>>
+>>> -#include <linux/types.h>
+>>
+>> 	sector_t is used in this source file.
+>>
+>>>  #include <linux/slab.h>
+>>>
+>>>  /**
+>>
+>>
+>>
+>> Can you explain the criteria that 'deheader' use to decide that a header file can
+>> be removed?
+>>
+> Deheader iterator remove the #include and do make. If no fail mean this #include can remove.
+
+In some cases it just means that headerfile-a sucks in headerfile-b automagically,
+but that's not what we want to see, according to rule #1.
+We want all needed header files to be explicitly #included.
+
+> 
+>> And are you aware of rule #1 in Documentation/process/submit-checklist.rst:
+>>
+>> 1) If you use a facility then #include the file that defines/declares
+>>    that facility.  Don't depend on other header files pulling in ones
+>>    that you use.
+>>
+> Is this rule mean for #ifdef case?
+
+It depends. We try not to do things like
+
+#ifdef CONFIG_OPTIONA
+#include <linux/optiona.h>
+#endif
+
+and instead just do
+#include <linux/optiona.h>
+
+but that's probably not a universal rule.
+
+-- 
+~Randy
+
