@@ -2,176 +2,176 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B871DC7C7E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A525C7C7E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EC062051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:43:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 048DF2051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 07:43:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="zp52gtWg"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="fnexYmog"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726849AbgD0HnL (ORCPT
+        id S1726858AbgD0HnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 03:43:11 -0400
-Received: from mail1.bemta25.messagelabs.com ([46.226.52.113]:62759 "EHLO
-        mail1.bemta25.messagelabs.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726829AbgD0HnH (ORCPT
+        Mon, 27 Apr 2020 03:43:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55246 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726701AbgD0Hmj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 03:43:07 -0400
-Received: from [100.112.197.243] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-2.bemta.az-b.eu-west-1.aws.symcld.net id 67/26-40649-70D86AE5; Mon, 27 Apr 2020 07:43:03 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA1VTf1CTZRzn2fvu3YvHvNcN42kHxu3IktjaiM4
-  35Lqdd3EvlmlSdmeGvoNXNm4bYxs5GFwELNMJ4lkcCshvDOyElhGaCa6JoEechCOFQhlZjmwc
-  lTXlrL17h9V/n1/3/X6e554HR0TzmARnrBbGZKB1UmwFqnkWXy/DqjqzFO9fSSIbxipRsqKtB
-  yPrZ7wo2d3iwchvzzZgpH9xP4/8+1y/QCWgTndd51GV7rt8ytm9H6MGGj8RUL93exDqN+eard
-  gOvtagzrfu5mumygOYMRBp7Zsrx8rABfwAWIEDogOBX93+BuHIEAqdN5bC5DMAH1QFMJagxDA
-  CvUO3Qo6IaOLBiT8qAEdmAbw9fCVIInGMSIKzR3t4rBFN9PPgrGOKzxoIkQUHPEsYi8WEFi44
-  6kJ6NJEHR4erUQ6nwmZ7q+AAwIP7noT3e9JYWUjQsOHEEZRb5gJw4r3vEDYTSWTAy5XrWAiIO
-  HjNE8ttioE35pp4LIYEAdvPjSEcXg3veB+GtgJiFyzzNYT1JDg6OQc4HA8//nAfxuE4ON7kCO
-  ub4dW6GcFy/vPpeT6HSdjusKNsBUgkwIeuIk42wh/avOHxa+EXnrFwnVhYG+jgsyeBRDkKR5d
-  q0RqgOPaf2hxOgs1fLmIcfgZ2tswjx0I3sQqOHJ1DmwHaDUi1SZursehprU6mVChkSmWyTPkC
-  KVOSKXK6WKaWM4WyvYzZIlPK6b1mublIn63LkRsYixMEX1mOcai/H7hP+OUu8DjOk64Wyt/uz
-  BKtVOfnFGlos2aXqVDHmF3gaRwnJi6464EENeQbGCkUZjuCuVUmJpex7tHqgu92OQrxKGm08E
-  /WFpqNtN6szeWsy+A5vOZOYyuCn7l4vBURhSZJYoRvslGCjWoKDY8GLf+BcRAnEQtBRESEKMr
-  ImPRay/99H4jBgVQsFBwMTonSGiyP9vmCVXjBKsVPtLFVLPS/lqSMV6qvqShq/HnSXVB/d/P2
-  6tTnB11CpSUvUEolD7zjW0yfuho4q/d0Sf/61S/b1PvAH38wusdWpFifU74tYROVjmvbxWLhe
-  ZVq8Y2U8cReVWO87Qi9xvD1i+2Xntp+81QJnfXqTNrKDvL6lo+Y2UvF9s5Io1t569TABzuqre
-  mdh0reHdn4VsTuuKrB0sThgt74EuSnlzIOfx87uGCbtq/jXfNWuhbQNK/vMHnvfuuWCfvGoZ1
-  1eerHmF+23ctPoW6uJVoFGzwjaT2TfIekSvOK7aLfacuoPa+1970+ssfzWsK+tuTTiy+XyTP4
-  qZ9OF3SpDp0hWjKzqcwNJ/syf2RO7kz1SlGzhlYmIiYz/Q/s/wANfgQAAA==
-X-Env-Sender: roy.im.opensource@diasemi.com
-X-Msg-Ref: server-20.tower-282.messagelabs.com!1587973382!3987379!1
-X-Originating-IP: [104.47.8.55]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.50.1; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 8232 invoked from network); 27 Apr 2020 07:43:02 -0000
-Received: from mail-am5eur03lp2055.outbound.protection.outlook.com (HELO EUR03-AM5-obe.outbound.protection.outlook.com) (104.47.8.55)
-  by server-20.tower-282.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 27 Apr 2020 07:43:02 -0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=I870/sAjagzytXgC3+7p2Mnr4h7BqPxPf2zXHYtkEYAlRE6TV2tun4Lg+NHmR4pA5nNXkBmqcvhJg/hG+TT7f0aHQG0SPlCIzZMjrzE8y5M5x75/XbpOPX1y0atY/282gMol7VpZWQxdj1YBLMUsb5RWE38qXQ3UOi6moQKCtwUak1Uim0VeJ6isxrMJL310CwBayGuuWsZe30J6IesP0fVU2g1Zc+AXQd6RpzXKbXP4+0j+kmhnSHANryJC4N8p3cEd/dQE9wcNUZs6tgC19SjlT7ECwI6bYXHe1VFrGp7rAjog8tzDdyjvpC4yhO1PdLlCaa86ZG8sdoB73i1wLQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xv0nqezkOZD0WXT43Dzip10hrpdAXXCp6O7O971iyiE=;
- b=ey7okcvyPK3PgO9p2W6uONtIzdk5Cjr/zDtHaukJBYou/aWikOHPap8ZB6gP5IvPy5XTggznlKgUGLySW/pe9EyoYFAyK29iVFLZYo7fuWRirFEfBl2cC4ygWGsEvxlQuBAofxEyQ0/Yfv/PY20/WQzZ8McHW57c06xjt7z/jXkCk41Jliqv8eNxOXqV6rsiuF5lm9LPtclH6aigmT5UYf21daIiPjlClnlUhnbUxiWQGZCklHQrbCEhYvriU0NzEu7XO6fBb4lp4U6yvthkRsymnFRGo0UtvQUoavIwWj8H2jCIQ/QwTyqsW429UVAoTtk9z5PYc5DtaNtN/WJUzw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
- dkim=pass header.d=diasemi.com; arc=none
+        Mon, 27 Apr 2020 03:42:39 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ED16C061A0F
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 00:42:39 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id y24so19316006wma.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 00:42:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com;
- s=selector1-dialogsemiconductor-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xv0nqezkOZD0WXT43Dzip10hrpdAXXCp6O7O971iyiE=;
- b=zp52gtWgXupteTm9Cr7BBYZ9bCaMZ7qgqLyZjhzCwu1BTtg+oW7O9dzPHzH6P+0/FfHiHzp2Aewshb6QG2pmGGvy8FyVx5AWjL4aQP3iL6s2XmS4A2xOk0KZoxtoH5Mk/MhFNQn+2yR4r2hUHA1cezzImRCSXtJO7mK0ZP++dxI=
-Received: from DB6PR1001MB1077.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:4:58::12)
- by DB6PR1001MB1157.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:4:62::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Mon, 27 Apr
- 2020 07:43:00 +0000
-Received: from DB6PR1001MB1077.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::88f1:274:a471:30f2]) by DB6PR1001MB1077.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::88f1:274:a471:30f2%11]) with mapi id 15.20.2937.023; Mon, 27 Apr 2020
- 07:43:00 +0000
-From:   Roy Im <roy.im.opensource@diasemi.com>
-To:     Joe Perches <joe@perches.com>,
-        Roy Im <roy.im.opensource@diasemi.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Greg KH <gregkh@linuxfoundation.org>,
-        Support Opensource <Support.Opensource@diasemi.com>
-Subject: RE: [RESEND PATCH V11 1/3] MAINTAINERS: da7280 updates to the Dialog
- Semiconductor search terms
-Thread-Topic: [RESEND PATCH V11 1/3] MAINTAINERS: da7280 updates to the Dialog
- Semiconductor search terms
-Thread-Index: AQHWHFzKWDHCy4oKzU2KFcnXdPq4VKiMkOmAgAADMQA=
-Date:   Mon, 27 Apr 2020 07:42:59 +0000
-Message-ID: <DB6PR1001MB1077E881E48BEC44632B80CA85AF0@DB6PR1001MB1077.EURPRD10.PROD.OUTLOOK.COM>
-References: <cover.1587949032.git.Roy.Im@diasemi.com>
-         <3e4e181ae9b25b51298b90be43396f46c91e2ea9.1587949032.git.Roy.Im@diasemi.com>
- <d80d0862bd73bb17b8e840771ae7b27fe7447734.camel@perches.com>
-In-Reply-To: <d80d0862bd73bb17b8e840771ae7b27fe7447734.camel@perches.com>
-Accept-Language: ko-KR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [1.230.217.36]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0a1d7852-965d-4323-c1c0-08d7ea7e9c0f
-x-ms-traffictypediagnostic: DB6PR1001MB1157:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR1001MB1157DA93D9144354B6794D17A2AF0@DB6PR1001MB1157.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0386B406AA
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR1001MB1077.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39850400004)(376002)(396003)(366004)(136003)(346002)(107886003)(5660300002)(64756008)(2906002)(66556008)(71200400001)(66946007)(316002)(54906003)(478600001)(110136005)(76116006)(66476007)(9686003)(55016002)(66574012)(66446008)(33656002)(86362001)(6506007)(7696005)(186003)(81156014)(8676002)(52536014)(26005)(8936002)(4326008);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: diasemi.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: uTGGn53ZIudIVuRNZmcXOqfvvimDvGzpY1LVMb3glc3Yb6Oy1cCR8hVrTTkqEBTlIV353cvb6qHi/X3sfVG9VwTR2tnZo3peATAjG6eSFgRKyooE415pGljjzumF4sbL1osDuIqIFCrF24HrMuFv1GQG8HeGlKny+M1nnx5aeXVxevgtLAELPDFRGHxMF53ioz9KzeGRruUnNMSL9sxjlYTi/740O2GRt5HgrpZZyD6WhngqMIsrbmLuUJ92iyT0rbLOWCZh73K/vfn0Jno/ZSr4TEmYhwztCS9Zk+mOvh+9EgYA6dw0/FMLRgPvQMqi99REdNnMrqGsfudsYC/FkW214sJ2NvRB1hAFEJyPQvO0uLOmCmBlvCtU8cewcR4It0KVh55s9LFjA6oIka0ANsAzl+zoiYN0im7dkOV2SaKkWCrs2hCAfAOxwWUZ4Q6QetCaaN7DcgT3vQc3tFnHiWqpManXWqLlJ5cec8HhhGN3JwFZCWcFnv1IAuW5UXl6njgSxwn0iXfziQhch/YpOg==
-x-ms-exchange-antispam-messagedata: gMGsk5sZZrk9ZWVsa0whnIQyT++XMsI/mDDd1k8YMlj/O0JaQTUoAI/fCzrGa6kkxyMxdctypnAKxLH8W6a/t8iTW+xmA9wSM4tY2pSG/2S6SCHF94mshvTV4UxuLUEc/xus7dKdbCPa7SVikCwAY1KAnLuD2v9eUe06yTbv+2mE7/mzXn4ioBa6i14+fXUqsX3/8nkyilZ0QEHMafRZ2+z5/AQJ2mdOEg4U3xsI49WlHNau+IFVIM+q4Zj41m5MiDQfb0NnN22UJQy7w18q97Qla7c9MfxskQSJh6wU4TuNA8ncNBlbPri9tkJnUeu9BGlvZGlF1hHI8+2Ckd4G5NHiLnrbKxql1tKORkyEtV6X6a4aAGkPR19126fU0/xi8HkaSKoY5/m6mFLJMXHKBl84LfjnQGYhEnw3QdR0Um3ESgAQwcn2YwocT4Vb9SVlF8wCR5NsXdVj3tXrfzRh9fV1XqrgT35pdq492djK8R20XRkNoc/yN5+eEQdaPENU22znDOQiqWBE+rPr7BO4P8/dIjGpOqwpTkUtkfW6U+c+y6GrvdUXIpdsYczctX0asp9fJVSU9YaIiwvxb/YdsGNxGJrcFrUdSPjGucJI2RQE5LllkNVTOkNTdCYft6IB2lc5oQZmydFzc7IZ+zXii/CTAedxLGut/tr21Z8FibR+R+EuWxuMdv2fiUtjDNV17YD5PN5cQdhaBrIthtqK20HypLCrNW+iQFqI6HuzIt6V4Ddwx2c+O2sFLmLDKElSH0jdPNHbEtbHDvhpivJWSdH5zHEm7Q213Hl3WyhK5Hk=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=android.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=LlF9hQrtqAVkh9UpGKlmxEFlHX/UD9uxV1eHlcxAJ3U=;
+        b=fnexYmogjOXup/e3tYS2gP/6MnVAfVxckYSj8bpFo/B7M3YWZgyo8m8WwEIDajR5bi
+         crzfuWav0zcI76Y+F0wc3xFuRGtCWuxBTLfhPWoJKVDH+PAdMVwIIiTVapIEro0FTPTp
+         lyFX2fVqx24UivdL9QiebFgeoriTR/NOp/wWnAbTDGXWyPuAmy7QJnph0uwo8C1EaWfs
+         FcgV5HBMNtD9mjZekcaB3Y0NdMac/bg1hhyEblwD/+X3FtemNqJO3C/+udCIqsFakKRS
+         4zO/cLKGFqu3EcorY5TXwjBtYzIw+AcepWUJdPa8UHZJwK8HjbZ76IyT6fqSYWhvdF4s
+         yDIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=LlF9hQrtqAVkh9UpGKlmxEFlHX/UD9uxV1eHlcxAJ3U=;
+        b=MLA5ny46qRfPu1GN1JtlsWNVMKscAET2gDgMKB0+Gbu/bPFD5cqF0aUSGtMDBq38xw
+         0c3BkPA0vJLo2mvahB7p102cOr2UUGGRVGpv3j+3dlVl6h1eeISG3SwuzY0FBOYhSX2X
+         3S13LzJReUhqW7scsffp3qAi3mhykRvvaYLzV7z/d+2uEbFN6NT4jNEPoDxhwKx4dqTl
+         6bj8DGNvouxKhFQzfW24jgXazeOv5lit0kTJ70MogeDSBM29UzlUDrTsHbrpmj3tQqxM
+         8JMYY/k6I+K94vtngMh7Nq0N0Auky5fY4nuXPoMGNHwgHf3/eT2DxiDy+RMOQLtLG7Te
+         gIdw==
+X-Gm-Message-State: AGi0PuYEswsJqvDUF7PZVpJutzZzXwpV9PlBP+5BxYDrw9FVu+KNvYMz
+        Tey+Ie3Y9j17RbDCykOf+mEhpbSRZsYfyg==
+X-Google-Smtp-Source: APiQypKxaIEIrAbS4VD6DPhHwA8Z9c0Iikjybz7Gls4+S+TFILJ5eZ7Rv3r3svM3sG1cy2rxDanIYg==
+X-Received: by 2002:a05:600c:414b:: with SMTP id h11mr24580948wmm.9.1587973358112;
+        Mon, 27 Apr 2020 00:42:38 -0700 (PDT)
+Received: from maco2.ams.corp.google.com (a83-162-234-235.adsl.xs4all.nl. [83.162.234.235])
+        by smtp.gmail.com with ESMTPSA id x132sm15091658wmg.33.2020.04.27.00.42.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 00:42:37 -0700 (PDT)
+From:   Martijn Coenen <maco@android.com>
+To:     axboe@kernel.dk, hch@lst.de, ming.lei@redhat.com
+Cc:     narayan@google.com, zezeozue@google.com, kernel-team@android.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        maco@google.com, bvanassche@acm.org, Chaitanya.Kulkarni@wdc.com,
+        jaegeuk@kernel.org, Martijn Coenen <maco@android.com>
+Subject: [PATCH v3 4/9] loop: Refactor loop_set_status() size calculation
+Date:   Mon, 27 Apr 2020 09:42:17 +0200
+Message-Id: <20200427074222.65369-5-maco@android.com>
+X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
+In-Reply-To: <20200427074222.65369-1-maco@android.com>
+References: <20200427074222.65369-1-maco@android.com>
 MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0a1d7852-965d-4323-c1c0-08d7ea7e9c0f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Apr 2020 07:42:59.9862
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0tBg1FvGdnqJ687oDrvyXvfRSvQ3T6nRoldDa3b74D+YUdhIhtbJ2tCnTQTa3anqAMpK+a5RjOb9z+ldwt2j8w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR1001MB1157
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Monday, April 27, 2020 4:24 PM, Joe Perches wrote
-> On Mon, 2020-04-27 at 09:57 +0900, Roy Im wrote:
-> > This patch adds the da7280 bindings doc and driver to the Dialog
-> > Semiconductor support list.
-> []
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> []
-> > @@ -4944,6 +4944,7 @@ S:	Supported
-> >  W:	http://www.dialog-semiconductor.com/products
-> >  F:	Documentation/devicetree/bindings/input/da90??-onkey.txt
-> >  F:	Documentation/devicetree/bindings/mfd/da90*.txt
-> > +F:	Documentation/devicetree/bindings/input/dlg,da72??.txt
->=20
-> trivia:
->=20
-> Please keep the file lists in alphabetic case sensitive order so please m=
-ove this new line up one entry.
+figure_loop_size() calculates the loop size based on the passed in
+parameters, but at the same time it updates the offset and sizelimit
+parameters in the loop device configuration. That is a somewhat
+unexpected side effect of a function with this name, and it is only only
+needed by one of the two callers of this function - loop_set_status().
 
-I will move this new line up one entry.
+Move the lo_offset and lo_sizelimit assignment back into loop_set_status(),
+and use the newly factored out functions to validate and apply the newly
+calculated size. This allows us to get rid of figure_loop_size in a
+follow-up commit.
 
->=20
-> >  F:	Documentation/devicetree/bindings/regulator/da92*.txt
-> >  F:	Documentation/devicetree/bindings/regulator/slg51000.txt
-> >  F:	Documentation/devicetree/bindings/sound/da[79]*.txt
-> > @@ -4954,6 +4955,7 @@ F:	drivers/gpio/gpio-da90??.c
-> >  F:	drivers/hwmon/da90??-hwmon.c
-> >  F:	drivers/iio/adc/da91??-*.c
-> >  F:	drivers/input/misc/da90??_onkey.c
-> > +F:	drivers/input/misc/da72??.[ch]
->=20
-> Up one here too.
-I will do that too. Thanks.
+Signed-off-by: Martijn Coenen <maco@android.com>
+---
+ drivers/block/loop.c | 39 +++++++++++++++++++++++----------------
+ 1 file changed, 23 insertions(+), 16 deletions(-)
 
->=20
-> >  F:	drivers/input/touchscreen/da9052_tsi.c
-> >  F:	drivers/leds/leds-da90??.c
-> >  F:	drivers/mfd/da903x.c
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 2e2874318393..d0f17ee1e29b 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -1295,6 +1295,8 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+ 	kuid_t uid = current_uid();
+ 	struct block_device *bdev;
+ 	bool partscan = false;
++	bool size_changed = false;
++	loff_t validated_size;
+ 
+ 	err = mutex_lock_killable(&loop_ctl_mutex);
+ 	if (err)
+@@ -1316,6 +1318,13 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+ 
+ 	if (lo->lo_offset != info->lo_offset ||
+ 	    lo->lo_sizelimit != info->lo_sizelimit) {
++		loff_t size = get_size(info->lo_offset, info->lo_sizelimit,
++				       lo->lo_backing_file);
++		err = loop_validate_size(size);
++		if (err)
++			goto out_unlock;
++		size_changed = true;
++		validated_size = size;
+ 		sync_blockdev(lo->lo_device);
+ 		kill_bdev(lo->lo_device);
+ 	}
+@@ -1323,6 +1332,15 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+ 	/* I/O need to be drained during transfer transition */
+ 	blk_mq_freeze_queue(lo->lo_queue);
+ 
++	if (size_changed && lo->lo_device->bd_inode->i_mapping->nrpages) {
++		/* If any pages were dirtied after kill_bdev(), try again */
++		err = -EAGAIN;
++		pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
++			__func__, lo->lo_number, lo->lo_file_name,
++			lo->lo_device->bd_inode->i_mapping->nrpages);
++		goto out_unfreeze;
++	}
++
+ 	err = loop_release_xfer(lo);
+ 	if (err)
+ 		goto out_unfreeze;
+@@ -1346,22 +1364,8 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+ 	if (err)
+ 		goto out_unfreeze;
+ 
+-	if (lo->lo_offset != info->lo_offset ||
+-	    lo->lo_sizelimit != info->lo_sizelimit) {
+-		/* kill_bdev should have truncated all the pages */
+-		if (lo->lo_device->bd_inode->i_mapping->nrpages) {
+-			err = -EAGAIN;
+-			pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
+-				__func__, lo->lo_number, lo->lo_file_name,
+-				lo->lo_device->bd_inode->i_mapping->nrpages);
+-			goto out_unfreeze;
+-		}
+-		if (figure_loop_size(lo, info->lo_offset, info->lo_sizelimit)) {
+-			err = -EFBIG;
+-			goto out_unfreeze;
+-		}
+-	}
+-
++	lo->lo_offset = info->lo_offset;
++	lo->lo_sizelimit = info->lo_sizelimit;
+ 	memcpy(lo->lo_file_name, info->lo_file_name, LO_NAME_SIZE);
+ 	memcpy(lo->lo_crypt_name, info->lo_crypt_name, LO_NAME_SIZE);
+ 	lo->lo_file_name[LO_NAME_SIZE-1] = 0;
+@@ -1385,6 +1389,9 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+ 		lo->lo_key_owner = uid;
+ 	}
+ 
++	if (size_changed)
++		loop_set_size(lo, validated_size);
++
+ 	loop_config_discard(lo);
+ 
+ 	/* update dio if lo_offset or transfer is changed */
+-- 
+2.26.2.303.gf8c07b1a785-goog
 
