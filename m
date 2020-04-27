@@ -2,174 +2,199 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9364FC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 03:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D01DAC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 03:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 685B4206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 03:13:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sSo3NCPa"
+	by mail.kernel.org (Postfix) with ESMTP id 9CC182070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 03:16:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726429AbgD0DNB (ORCPT
+        id S1726484AbgD0DQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 23:13:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41852 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725788AbgD0DNA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 23:13:00 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62141C061A0F
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 20:13:00 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id z1so6594403pfn.3
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 20:13:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=SCfzkhntNmlfJ3/9dHC8fKSHMv9iuHlVHfaxqt9T00M=;
-        b=sSo3NCPasVs8bFbG8XtjnczfxwgVESVeNKxhsYIBuPwtdsiMv7YfL2BQHWfEMfp1Ax
-         sd8qe1g1Nt1ioonKuXplQOQ/k08Nfk3eJpfzIySYDJ2Lh/QMDXvKWIpgX/6aBDvlui1l
-         cprAws5jDVv6FV6uXxFHejSZtW/dLK7CmrRcczzAuIT2FFyAaeD9a/jUav2oZmGeeJJ8
-         I/FdzfIYUUy4yy0gy+Xdv24R5P82FR+GsWXZYdvaLORvLLRLsiAJouQ9X1tCMZSywuEa
-         p8C0DXzt0aFLuK6ii8VC/K4gnM+UnP/KyDgEwVb2rWOgZT+Cv6XpeCpXpZBkUBnODd67
-         NAFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=SCfzkhntNmlfJ3/9dHC8fKSHMv9iuHlVHfaxqt9T00M=;
-        b=ZBKHw649wJ2hQCszS4rvGOvHSgFMrGgamIhPmVqkL8JvpRL8IwqsPFErVvgmoh86jC
-         RSSwWlBCsjCU4k75p5/iFOVkJvvO3xgJXbePKdS2uwCU8TD6YCzo93tAo+Td6WwOgjFh
-         iJUjSXmBVvNXLTtlBsDEd3QfF2d9/E50DBtAFPzki5I4ruVZBmFQXE9aPNudtXGOq7ZP
-         mtBW7E7WsJ8p8GXa1Bpk3tD4Vpl3GS/js1+gzXY1uT37iqjx0hGE0/oupTIo0pvQeCmj
-         cP7fRxjuCkwCrnBzohnViE3/tXuz+KkcdQgHA6/r6XQwquoQhf99xtGICrIDvZ7VREEG
-         ZuuA==
-X-Gm-Message-State: AGi0Pubv4JTiXnjmiaDM9T3MaUaKXWNxe4/+vGhiOrqgM6Xd12DREQU8
-        N/1DposD4G1DO/AYZlgqRN4PNzWuIfo=
-X-Google-Smtp-Source: APiQypLO38pS2eEFBwtoKL/D4fMIEtX/1v4RbA1SHFjGz9L9KoMTro5mg74TE5qeFPns3QGoD04euw==
-X-Received: by 2002:aa7:9218:: with SMTP id 24mr21685803pfo.312.1587957179430;
-        Sun, 26 Apr 2020 20:12:59 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id s44sm10049417pjc.28.2020.04.26.20.12.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Apr 2020 20:12:58 -0700 (PDT)
-Date:   Sun, 26 Apr 2020 20:12:58 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-cc:     Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [patch] mm, oom: stop reclaiming if GFP_ATOMIC will start failing
- soon
-In-Reply-To: <20200425172706.26b5011293e8dc77b1dccaf3@linux-foundation.org>
-Message-ID: <alpine.DEB.2.22.394.2004261959310.80211@chino.kir.corp.google.com>
-References: <alpine.DEB.2.22.394.2004241347310.70176@chino.kir.corp.google.com> <20200425172706.26b5011293e8dc77b1dccaf3@linux-foundation.org>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Sun, 26 Apr 2020 23:16:45 -0400
+Received: from mga01.intel.com ([192.55.52.88]:12793 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726316AbgD0DQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Apr 2020 23:16:45 -0400
+IronPort-SDR: DMkPo59qOkvWQSpeDWiJKL+eF7yTm9MFJU9TaP3dPOLMN7jFImU+p3Z96vygxN5J03l5UNtMGC
+ gMU8BSOhX0+w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2020 20:16:45 -0700
+IronPort-SDR: Mm2pG5cxKYJx1b6m48GXBl5b6Lr1zvxfH+ljuMPnV6e1Siy7/U32tuvxid2G+BEebTotYqUUwt
+ bHvkYcxjvF2A==
+X-IronPort-AV: E=Sophos;i="5.73,321,1583222400"; 
+   d="scan'208";a="431568271"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.238.4.236]) ([10.238.4.236])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2020 20:16:42 -0700
+Subject: Re: [PATCH v10 08/11] KVM: x86/pmu: Add LBR feature emulation via
+ guest LBR event
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, wei.w.wang@intel.com,
+        ak@linux.intel.com
+References: <20200423081412.164863-1-like.xu@linux.intel.com>
+ <20200423081412.164863-9-like.xu@linux.intel.com>
+ <20200424121626.GB20730@hirez.programming.kicks-ass.net>
+From:   Like Xu <like.xu@linux.intel.com>
+Organization: Intel OTC
+Message-ID: <87abf620-d292-d997-c9be-9a5d2544f3fa@linux.intel.com>
+Date:   Mon, 27 Apr 2020 11:16:40 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200424121626.GB20730@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 25 Apr 2020, Andrew Morton wrote:
+Hi Peter,
 
-> > If GFP_ATOMIC allocations will start failing soon because the amount of
-> > free memory is substantially under per-zone min watermarks, it is better
-> > to oom kill a process rather than continue to reclaim.
-> > 
-> > This intends to significantly reduce the number of page allocation
-> > failures that are encountered when the demands of user and atomic
-> > allocations overwhelm the ability of reclaim to keep up.  We can see this
-> > with a high ingress of networking traffic where memory allocated in irq
-> > context can overwhelm the ability to reclaim fast enough such that user
-> > memory consistently loops.  In that case, we have reclaimable memory, and
+On 2020/4/24 20:16, Peter Zijlstra wrote:
+> On Thu, Apr 23, 2020 at 04:14:09PM +0800, Like Xu wrote:
+>> +static int intel_pmu_create_lbr_event(struct kvm_vcpu *vcpu)
+>> +{
+>> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+>> +	struct perf_event *event;
+>> +
+>> +	/*
+>> +	 * The perf_event_attr is constructed in the minimum efficient way:
+>> +	 * - set 'pinned = true' to make it task pinned so that if another
+>> +	 *   cpu pinned event reclaims LBR, the event->oncpu will be set to -1;
+>> +	 *
+>> +	 * - set 'sample_type = PERF_SAMPLE_BRANCH_STACK' and
+>> +	 *   'exclude_host = true' to mark it as a guest LBR event which
+>> +	 *   indicates host perf to schedule it without but a fake counter,
+>> +	 *   check is_guest_lbr_event() and intel_guest_event_constraints();
+>> +	 *
+>> +	 * - set 'branch_sample_type = PERF_SAMPLE_BRANCH_CALL_STACK |
+>> +	 *   PERF_SAMPLE_BRANCH_USER' to configure it to use callstack mode,
+>> +	 *   which allocs 'ctx->task_ctx_data' and request host perf subsystem
+>> +	 *   to save/restore guest LBR records during host context switches,
+>> +	 *   check branch_user_callstack() and intel_pmu_lbr_sched_task();
+>> +	 */
+>> +	struct perf_event_attr attr = {
+>> +		.type = PERF_TYPE_RAW,
 > 
-> "user memory allocation", I assume?  Or maybe "blockable memory
-> allocatoins".
+> This is not right; this needs a .config
+
+Now we know the default value .config = 0 for attr is not acceptable.
+
+> 
+> And I suppose that is why you need that horrible:
+> needs_guest_lbr_without_counter() thing to begin with.
+
+Do you suggest to use event->attr.config check to replace
+"needs_branch_stack(event) && is_kernel_event(event) &&
+event->attr.exclude_host" check for guest LBR event ?
+
+> 
+> Please allocate yourself an event from the pseudo event range:
+> event==0x00. Currently we only have umask==3 for Fixed2 and umask==4
+> for Fixed3, given you claim 58, which is effectively Fixed25,
+> umask==0x1a might be appropriate.
+
+OK, I assume that adding one more field ".config = 0x1a00" is
+efficient enough for perf_event_attr to allocate guest LBR events.
+
+> 
+> Also, I suppose we need to claim 0x0000 as an error, so that other
+> people won't try this again.
+
+Does the following fix address your concern on this ?
+
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 2405926e2dba..32d2a3f8c51f 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -498,6 +498,9 @@ int x86_pmu_max_precise(void)
+
+  int x86_pmu_hw_config(struct perf_event *event)
+  {
++       if (!unlikely(event->attr.config & X86_ARCH_EVENT_MASK))
++               return -EINVAL;
++
+         if (event->attr.precise_ip) {
+                 int precise = x86_pmu_max_precise();
+
+diff --git a/arch/x86/include/asm/perf_event.h 
+b/arch/x86/include/asm/perf_event.h
+index 2e6c59308344..bdba87a6f0af 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -47,6 +47,8 @@
+         (ARCH_PERFMON_EVENTSEL_EVENT | (0x0FULL << 32))
+  #define INTEL_ARCH_EVENT_MASK  \
+         (ARCH_PERFMON_EVENTSEL_UMASK | ARCH_PERFMON_EVENTSEL_EVENT)
++#define X86_ARCH_EVENT_MASK    \
++       (ARCH_PERFMON_EVENTSEL_UMASK | ARCH_PERFMON_EVENTSEL_EVENT)
+
+  #define AMD64_L3_SLICE_SHIFT                           48
+  #define AMD64_L3_SLICE_MASK
+
+> 
+>> +		.size = sizeof(attr),
+>> +		.pinned = true,
+>> +		.exclude_host = true,
+>> +		.sample_type = PERF_SAMPLE_BRANCH_STACK,
+>> +		.branch_sample_type = PERF_SAMPLE_BRANCH_CALL_STACK |
+>> +					PERF_SAMPLE_BRANCH_USER,
+>> +	};
+>> +
+>> +	if (unlikely(pmu->lbr_event))
+>> +		return 0;
+>> +
+>> +	event = perf_event_create_kernel_counter(&attr, -1,
+>> +						current, NULL, NULL);
+>> +	if (IS_ERR(event)) {
+>> +		pr_debug_ratelimited("%s: failed %ld\n",
+>> +					__func__, PTR_ERR(event));
+>> +		return -ENOENT;
+>> +	}
+>> +	pmu->lbr_event = event;
+>> +	pmu->event_count++;
+>> +	return 0;
+>> +}
+> 
+> Also, what happens if you fail programming due to a conflicting cpu
+> event? That pinned doesn't guarantee you'll get the event, it just means
+> you'll error instead of getting RR.
+> 
+> I didn't find any code checking the event state.
 > 
 
-"user memory allocations consistently loop", yeah.  Thanks.
+Error instead of RR is expected.
 
-> > reclaiming is successful, but we've fully depleted memory reserves that
-> > are allowed for non-blockable allocations.
-> > 
-> > Commit 400e22499dd9 ("mm: don't warn about allocations which stall for
-> > too long") removed evidence of user allocations stalling because of this,
-> > but the situation can apply anytime we get "page allocation failures"
-> > where reclaim is happening but per-zone min watermarks are starved:
-> > 
-> > Node 0 Normal free:87356kB min:221984kB low:416984kB high:611984kB active_anon:123009936kB inactive_anon:67647652kB active_file:429612kB inactive_file:209980kB unevictable:112348kB writepending:260kB present:198180864kB managed:195027624kB mlocked:81756kB kernel_stack:24040kB pagetables:11460kB bounce:0kB free_pcp:940kB local_pcp:96kB free_cma:0kB
-> > lowmem_reserve[]: 0 0 0 0
-> > Node 1 Normal free:105616kB min:225568kB low:423716kB high:621864kB active_anon:122124196kB inactive_anon:74112696kB active_file:39172kB inactive_file:103696kB unevictable:204480kB writepending:180kB present:201326592kB managed:198174372kB mlocked:204480kB kernel_stack:11328kB pagetables:3680kB bounce:0kB free_pcp:1140kB local_pcp:0kB free_cma:0kB
-> > lowmem_reserve[]: 0 0 0 0
-> > 
-> > Without this patch, there is no guarantee that user memory allocations
-> > will ever be successful when non-blockable allocations overwhelm the
-> > ability to get above per-zone min watermarks.
-> > 
-> > This doesn't solve page allocation failures entirely since it's a
-> > preemptive measure based on watermarks that requires concurrent blockable
-> > allocations to trigger the oom kill.  To complete solve page allocation
-> > failures, it would be possible to do the same watermark check for non-
-> > blockable allocations and then queue a worker to asynchronously oom kill
-> > if it finds watermarks to be sufficiently low as well.
-> > 
-> 
-> Well, what's really going on here?
-> 
-> Is networking potentially consuming an unbounded amount of memory?  If
-> so, then killing a process will just cause networking to consume more
-> memory then hit against the same thing.  So presumably the answer is
-> "no, the watermarks are inappropriately set for this workload".
-> 
-> So would it not be sensible to dynamically adjust the watermarks in
-> response to this condition?  Maintain a larger pool of memory for these
-> allocations?  Or possibly push back on networking and tell it to reduce
-> its queue sizes?  So that stuff doesn't keep on getting oom-killed?
-> 
+If the KVM fails programming due to a conflicting cpu event
+the LBR registers will not be passthrough to the guest,
+and KVM would return zero for any guest LBR records accesses
+until the next attempt to program the guest LBR event.
 
-No - that would actually make the problem worse.
+Every time before cpu enters the non-root mode where irq is
+disabled, the "event-> oncpu! =-1" check will be applied.
+(more details in the comment around intel_pmu_availability_check())
 
-Today, per-zone min watermarks dictate when user allocations will loop or 
-oom kill.  should_reclaim_retry() currently loops if reclaim has succeeded 
-in the past few tries and we should be able to allocate if we are able to 
-reclaim the amount of memory that we think we can.
+The guests administer is supposed to know the result of guest
+LBR records is inaccurate if someone is using LBR to record
+guest or hypervisor on the host side.
 
-The issue is that this supposes that looping to reclaim more will result 
-in more free memory.  That doesn't always happen if there are concurrent 
-memory allocators.
+Is this acceptable to you？
 
-GFP_ATOMIC allocators can access below these per-zone watermarks.  So the 
-issue is that per-zone free pages stays between ALLOC_HIGH watermarks 
-(the watermark that GFP_ATOMIC allocators can allocate to) and min 
-watermarks.  We never reclaim enough memory to get back to min watermarks 
-because reclaim cannot keep up with the amount of GFP_ATOMIC allocations.
+If there is anything needs to be improved, please let me know.
 
-In production scnearios, this results in userspace processes going out to 
-lunch because they are constantly looping in the page allocator reclaiming 
-only for the benefit of GFP_ATOMIC allocations.
+Thanks,
+Like Xu
 
-In fact, when we hit ALLOC_HIGH watermarks and we start getting "page 
-allocation failures" in the kernel log, there is also no guarantee that 
-kswapd's reclaim will outpace GFP_ATOMIC allocations.  Thus, an oom kill 
-is really the best policy at this point to provide an actual guarantee of 
-net positive memory freeing.
-
-This isn't a matter of any specific networking stack; the scope of 
-allocations that can trigger this is the set of all GFP_ATOMIC (or 
-GFP_MEMALLOC) allocations in the kernel.
-
-Tetsuo: the specific allocation that triggers a page allocation failure is 
-not interesting; we have tens of thousands of examples.  Each example is 
-simply the unlucky last GFP_ATOMIC allocation that fails; the interesting 
-point is the amount of free memory.  In other words, when free memory is 
-below ALLOC_HIGH watermarks, we assume that we have depleted memory 
-reserves *faster* than when user allocations started to fail.  In the 
-interest of userspace being responsive, we should oom kill here.
