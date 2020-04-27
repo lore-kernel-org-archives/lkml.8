@@ -2,200 +2,180 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9140C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 03:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC2DC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 03:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5D6D206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 03:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6C27214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 03:44:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ceOMoli5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HmIgmO/k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726458AbgD0DjM (ORCPT
+        id S1726525AbgD0DoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Apr 2020 23:39:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45902 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726341AbgD0DjM (ORCPT
+        Sun, 26 Apr 2020 23:44:11 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53359 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726378AbgD0DoL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Apr 2020 23:39:12 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F8F4C061A0F
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 20:39:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=wniblRoeFeVzjHbwI/eShcX0rxEXqnrqWa9Srx3dHN0=; b=ceOMoli52nv3xiFyOK7+Q16uoU
-        PnG4U/dOuAIMU4J7bfk2BCIFDe+LVAVR8VjP+HKkBSRYgniFT/lzYoaMQdTyjJJTXC6cqbfwOwLXZ
-        vxetVRnIG5on/Fw6Y3DwFXMoUfekJ+D0kP3rRCS5pn3ua35/pXf1W+TPgCNb/t+Ak3TOOsR7wy80Q
-        2IU01zVBVmX/1X20GHnCPIGMAq2tUwwUxNfif83n9fsUHToEqNgbDTFOWmL+9+uLxXTSI8Bt+xyTV
-        iFLXc8eKzNYW6gcuWyakt4vTcLFVy3pRI0019FScD7X/Yinqenw8Ow8Pxd1jNFkufAhDe+Jjqe5WE
-        AGAV/XgQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jSubv-0006wN-I8; Mon, 27 Apr 2020 03:39:11 +0000
-Subject: Re: block: remove unused header includes.
-To:     "Ma, Jianpeng" <jianpeng.ma@intel.com>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     "axboe@kernel.dk" <axboe@kernel.dk>,
+        Sun, 26 Apr 2020 23:44:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587959049;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DBEUXWUXNpw/sxGPzp5z9UjnZg0452gbfsNvSnWcap8=;
+        b=HmIgmO/klJs2YWFdZW9KCIvQzUmDR4IaaliUi0eOTFGjMkMWbtXyXvzLHQxUbwbMHv2Fcv
+        JAe0cP2lx+nnQ91jRov3s0U7uGaiOPWRGP3XLmM3MjK6jXS97XiT8afu3MbRS32Y6q7E2L
+        B5xeiOyrDBQsjO2nOPE9VSi5OvnwOjg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-287-pbMyTdOTPh20o3V3rN2nZQ-1; Sun, 26 Apr 2020 23:44:05 -0400
+X-MC-Unique: pbMyTdOTPh20o3V3rN2nZQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DFA021800F97;
+        Mon, 27 Apr 2020 03:44:01 +0000 (UTC)
+Received: from x1.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B68B319C58;
+        Mon, 27 Apr 2020 03:43:55 +0000 (UTC)
+Date:   Sun, 26 Apr 2020 21:43:55 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
         "Williams, Dan J" <dan.j.williams@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <6AA21C22F0A5DA478922644AD2EC308C73C55940@SHSMSX101.ccr.corp.intel.com>
- <768e4398-1789-8dfa-5883-effb566b2f31@infradead.org>
- <6AA21C22F0A5DA478922644AD2EC308C73C55A66@SHSMSX101.ccr.corp.intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <0341f3e4-b43c-7f66-4123-cedc9d5516db@infradead.org>
-Date:   Sun, 26 Apr 2020 20:39:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Message-ID: <20200426214355.29e19d33@x1.home>
+In-Reply-To: <20200426191357.GB13640@mellanox.com>
+References: <20200421235442.GO11945@mellanox.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D86EE26@SHSMSX104.ccr.corp.intel.com>
+        <20200422115017.GQ11945@mellanox.com>
+        <20200422211436.GA103345@otc-nc-03>
+        <20200423191217.GD13640@mellanox.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D8960F9@SHSMSX104.ccr.corp.intel.com>
+        <20200424124444.GJ13640@mellanox.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D8A808B@SHSMSX104.ccr.corp.intel.com>
+        <20200424181203.GU13640@mellanox.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
+        <20200426191357.GB13640@mellanox.com>
+Organization: Red Hat
 MIME-Version: 1.0
-In-Reply-To: <6AA21C22F0A5DA478922644AD2EC308C73C55A66@SHSMSX101.ccr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/26/20 8:35 PM, Ma, Jianpeng wrote:
->> -----Original Message-----
->> From: Randy Dunlap <rdunlap@infradead.org>
->> Sent: Monday, April 27, 2020 11:06 AM
->> To: Ma, Jianpeng <jianpeng.ma@intel.com>; Christoph Hellwig
->> <hch@infradead.org>
->> Cc: axboe@kernel.dk; Williams, Dan J <dan.j.williams@intel.com>; linux-
->> kernel@vger.kernel.org
->> Subject: Re: block: remove unused header includes.
->>
->> Hi,
->>
->> On 4/26/20 7:56 PM, Ma, Jianpeng wrote:
->>> This used deheader(git@gitlab.com:esr/deheader.git) to produce.
->>>
->>> Signed-off-by: Jianpeng Ma <jianpeng.ma@intel.com>
->>> ---
->>>  block/badblocks.c        |  6 ------
->>>  block/bfq-cgroup.c       | 10 ----------
->>>  block/bfq-iosched.c      | 13 -------------
->>>  block/bio-integrity.c    |  6 ------
->>>  block/bio.c              | 14 --------------
->>>  block/blk-cgroup.c       | 10 ----------
->>>  block/blk-core.c         | 24 ------------------------
->>>  block/blk-exec.c         |  5 -----
->>>  block/blk-flush.c        | 10 ----------
->>>  block/blk-integrity.c    |  6 ------
->>>  block/blk-ioc.c          |  7 -------
->>>  block/blk-lib.c          |  5 -----
->>>  block/blk-map.c          |  4 ----
->>>  block/blk-merge.c        |  5 -----
->>>  block/blk-mq-cpumap.c    |  8 --------
->>>  block/blk-mq-debugfs.c   |  6 ------
->>>  block/blk-mq-pci.c       |  4 ----
->>>  block/blk-mq-rdma.c      |  1 -
->>>  block/blk-mq-sched.c     |  7 -------
->>>  block/blk-mq-sysfs.c     | 15 +--------------
->>>  block/blk-mq-tag.c       |  5 -----
->>>  block/blk-mq-virtio.c    |  4 ----
->>>  block/blk-mq.c           | 22 ----------------------
->>>  block/blk-pm.c           |  4 ----
->>>  block/blk-settings.c     |  8 --------
->>>  block/blk-softirq.c      |  6 ------
->>>  block/blk-stat.c         |  5 -----
->>>  block/blk-sysfs.c        |  9 ---------
->>>  block/blk-throttle.c     |  5 -----
->>>  block/blk-timeout.c      |  5 -----
->>>  block/blk-wbt.c          |  6 ------
->>>  block/blk-zoned.c        |  7 -------
->>>  block/bounce.c           | 15 ---------------
->>>  block/bsg-lib.c          |  5 -----
->>>  block/bsg.c              | 11 -----------
->>>  block/cmdline-parser.c   |  1 -
->>>  block/elevator.c         | 15 ---------------
->>>  block/genhd.c            | 14 --------------
->>>  block/ioctl.c            |  8 --------
->>>  block/ioprio.c           | 11 -----------
->>>  block/kyber-iosched.c    |  9 ---------
->>>  block/mq-deadline.c      | 14 --------------
->>>  block/partitions/amiga.c |  1 -
->>>  block/partitions/core.c  |  4 ----
->>>  block/partitions/efi.c   |  3 ---
->>>  block/partitions/karma.c |  1 -
->>>  block/partitions/ldm.c   |  4 ----
->>>  block/partitions/mac.c   |  1 -
->>>  block/scsi_ioctl.c       | 14 --------------
->>>  block/sed-opal.c         |  9 ---------
->>>  block/t10-pi.c           |  1 -
->>>  fs/block_dev.c           | 16 ----------------
->>>  52 files changed, 1 insertion(+), 408 deletions(-)
->>>
->>> diff --git a/block/badblocks.c b/block/badblocks.c index
->>> 2e5f5697db35..4e4eb0fc9eb9 100644
->>> --- a/block/badblocks.c
->>> +++ b/block/badblocks.c
->>> @@ -8,12 +8,6 @@
->>>   */
->>>
->>>  #include <linux/badblocks.h>
->>> -#include <linux/seqlock.h>
->>
->> above is used by:
->> 	seq = read_seqbegin(&bb->lock);
->>
->>> -#include <linux/device.h>
->>
->> 	struct device is used in this source file.
->>
->>> -#include <linux/kernel.h>
->>> -#include <linux/module.h>
->>> -#include <linux/stddef.h>
->>
->> 	NULL is used in this source file.
->>
->>> -#include <linux/types.h>
->>
->> 	sector_t is used in this source file.
->>
->>>  #include <linux/slab.h>
->>>
->>>  /**
->>
->>
->>
->> Can you explain the criteria that 'deheader' use to decide that a header file can
->> be removed?
->>
-> Deheader iterator remove the #include and do make. If no fail mean this #include can remove.
+On Sun, 26 Apr 2020 16:13:57 -0300
+Jason Gunthorpe <jgg@mellanox.com> wrote:
 
-In some cases it just means that headerfile-a sucks in headerfile-b automagically,
-but that's not what we want to see, according to rule #1.
-We want all needed header files to be explicitly #included.
-
+> On Sun, Apr 26, 2020 at 05:18:59AM +0000, Tian, Kevin wrote:
 > 
->> And are you aware of rule #1 in Documentation/process/submit-checklist.rst:
->>
->> 1) If you use a facility then #include the file that defines/declares
->>    that facility.  Don't depend on other header files pulling in ones
->>    that you use.
->>
-> Is this rule mean for #ifdef case?
+> > > > I think providing an unified abstraction to userspace is also important,
+> > > > which is what VFIO provides today. The merit of using one set of VFIO
+> > > > API to manage all kinds of mediated devices and VF devices is a major
+> > > > gain. Instead, inventing a new vDPA-like interface for every Scalable-IOV
+> > > > or equivalent device is just overkill and doesn't scale. Also the actual
+> > > > emulation code in idxd driver is actually small, if putting aside the PCI
+> > > > config space part for which I already explained most logic could be shared
+> > > > between mdev device drivers.  
+> > > 
+> > > If it was just config space you might have an argument, VFIO already
+> > > does some config space mangling, but emulating BAR space is out of
+> > > scope of VFIO, IMHO.  
+> > 
+> > out of scope of vfio-pci, but in scope of vfio-mdev. btw I feel that most
+> > of your objections are actually related to the general idea of
+> > vfio-mdev.  
+> 
+> There have been several abusive proposals of vfio-mdev, everything
+> from a way to create device drivers to this kind of generic emulation
+> framework.
+> 
+> > Scalable IOV just uses PASID to harden DMA isolation in mediated
+> > pass-through usage which vfio-mdev enables. Then are you just opposing
+> > the whole vfio-mdev? If not, I'm curious about the criteria in your mind 
+> > about when using vfio-mdev is good...  
+> 
+> It is appropriate when non-PCI standard techniques are needed to do
+> raw device assignment, just like VFIO.
+> 
+> Basically if vfio-pci is already doing it then it seems reasonable
+> that vfio-mdev should do the same. This mission creep where vfio-mdev
+> gains functionality far beyond VFIO is the problem.
 
-It depends. We try not to do things like
+Ehm, vfio-pci emulates BARs too.  We also emulate FLR, power
+management, DisINTx, and VPD.  FLR, PM, and VPD all have device
+specific quirks in the host kernel, and I've generally taken the stance
+that would should take advantage of those quirks, not duplicate them in
+userspace and not invent new access mechanisms/ioctls for each of them.
+Emulating DisINTx is convenient since we must have a mechanism to mask
+INTx, whether it's at the device or the APIC, so we can pretend the
+hardware supports it.  BAR emulation is really too trivial to argue
+about, the BARs mean nothing to the physical device mapping, they're
+simply scratch registers that we mask out the alignment bits on read.
+vfio-pci is a mix of things that we decide are too complicated or
+irrelevant to emulate in the kernel and things that take advantage of
+shared quirks or are just too darn easy to worry about.  BARs fall into
+that latter category, any sort of mapping into VM address spaces is
+necessarily done in userspace, but scratch registers that are masked on
+read, *shrug*, vfio-pci does that.  Thanks,
 
-#ifdef CONFIG_OPTIONA
-#include <linux/optiona.h>
-#endif
-
-and instead just do
-#include <linux/optiona.h>
-
-but that's probably not a universal rule.
-
--- 
-~Randy
+Alex
+ 
+> > technically Scalable IOV is definitely different from SR-IOV. It's 
+> > simpler in hardware. And we're not emulating SR-IOV. The point
+> > is just in usage-wise we want to present a consistent user 
+> > experience just like passing through a PCI endpoint (PF or VF) device
+> > through vfio eco-system, including various userspace VMMs (Qemu,
+> > firecracker, rust-vmm, etc.), middleware (Libvirt), and higher level 
+> > management stacks.   
+> 
+> Yes, I understand your desire, but at the same time we have not been
+> doing device emulation in the kernel. You should at least be
+> forthwright about that major change in the cover letters/etc.
+>  
+> > > The only thing we get out of this is someone doesn't have to write a
+> > > idxd emulation driver in qemu, instead they have to write it in the
+> > > kernel. I don't see how that is a win for the ecosystem.  
+> > 
+> > No. The clear win is on leveraging classic VFIO iommu and its eco-system
+> > as explained above.  
+> 
+> vdpa had no problem implementing iommu support without VFIO. This was
+> their original argument too, it turned out to be erroneous.
+> 
+> Jason
+> 
 
