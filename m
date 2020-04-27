@@ -2,252 +2,117 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFB9C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67506C55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57BEC206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 09:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42B4020656
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 10:00:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KRautktu"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="GXM0c+Xl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgD0J4Y (ORCPT
+        id S1726880AbgD0KAX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 05:56:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47948 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726985AbgD0J4P (ORCPT
+        Mon, 27 Apr 2020 06:00:23 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:31030 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726243AbgD0KAV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 05:56:15 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7899C0610D5;
-        Mon, 27 Apr 2020 02:56:13 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id k1so19811389wrx.4;
-        Mon, 27 Apr 2020 02:56:13 -0700 (PDT)
+        Mon, 27 Apr 2020 06:00:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ZEVkzMr6z0E4N1w6xvyS7Drw+BpsL4Z8MCI9pveo6ew=;
-        b=KRautktuCB9uogc76bwtrNlB+E3/1WAHuKW5gq5tvy8yndlq5u5O6H1fhgOTUvHfyC
-         8tFowqZ0qr825BVXXmJi9ptktFM1Kqtk6TF+AXef6PcYccu627R6UVa6CAPBOhVx5a+c
-         y91Bv8wkkiPoG7Mf3qLa0VJZU+3eLN6p/ppU9xN8xuVWheWXzXMHE7tjuPAvdW1oMvBj
-         3xGdvFUHbkjxXbUJXCUhIQIACspNRuPR0ci155VK0VGWJJkEDTnjEohupmkEal76U/vC
-         vkARCn+uEwb0MEf2psU5vC4y4ZEc3jIexRejMA+aVLOm0bD4jizNxbKXNwz3mbf2hPyc
-         8/pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ZEVkzMr6z0E4N1w6xvyS7Drw+BpsL4Z8MCI9pveo6ew=;
-        b=o9jXIfEjyA4GBDI2qCX0g/O6xdqcodqpnbH6uvisGmVYKdmlnuxE+TOH9P03rHMmE0
-         +flk8VQ7Y4WeYXQbc/9xIugeFhQ/+q06tkrCQBCvCbaQAuUdqtT5crWPXqAYCevSzz9f
-         vjxHlykkjR5fXh2WaFntcpkI6N0lrAEbuVouoGdZ+deiGfmeokKothpn1x2GI+IAknn+
-         F4ksletyA4oTEIqR+9VXY2WfgeFRiVtP+e7tPhX5fpX3ktKgQ944dv50uqEumJBiZi3f
-         DvcIzz+dNiKtKs9/6NrbC7970DnxnjfryLUNcamicFJgSp10BeE+F4gk0VOl+M2jmtgG
-         BCWA==
-X-Gm-Message-State: AGi0PubDQ55DDciP6sVl+l+8N3YwOeO4RQKD2s1JJHZquqSal45dFoiC
-        oqZ8gTrMI9WSSlEzxIyf6DzGt16JCKc=
-X-Google-Smtp-Source: APiQypKQ27HFm73+63sn8d2HS0IWx9al1/5J9ud8pLAjnrpSEAcbHHBQKjULLKlDUUuUA3C46Zahug==
-X-Received: by 2002:adf:9564:: with SMTP id 91mr27396960wrs.246.1587981372395;
-        Mon, 27 Apr 2020 02:56:12 -0700 (PDT)
-Received: from meru.fronius.com ([2a01:cb18:832e:5f00:7069:9b5d:ebe2:85b8])
-        by smtp.gmail.com with ESMTPSA id y10sm14487606wma.5.2020.04.27.02.56.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 02:56:11 -0700 (PDT)
-From:   Mathieu Othacehe <m.othacehe@gmail.com>
-To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mathieu Othacehe <m.othacehe@gmail.com>
-Subject: [PATCH v6 4/5] iio: vcnl4000: Add sampling frequency support for VCNL4010/20.
-Date:   Mon, 27 Apr 2020 11:55:58 +0200
-Message-Id: <20200427095559.16131-5-m.othacehe@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200427095559.16131-1-m.othacehe@gmail.com>
-References: <20200427095559.16131-1-m.othacehe@gmail.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1587981621; x=1619517621;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=UHE+kIEcVDdAVEwv2C1XAIoryuhn239l8foOtDGiZRc=;
+  b=GXM0c+XlSYtIwBatS5wtMEE8dXUd9Mrfw8A313hUsTbu6TwDs5sjSRpf
+   d1KNXFRsjIaX1lcKWJZC1EXxZdUej3dlJIDUBhiVZBbw64+La5up7ONo2
+   Hq7pBsQ5CSLBosneinJUoKYi1ouseux7tXnoYejdISgyRPR6Uqn64cOdg
+   0=;
+IronPort-SDR: kX7ERtiVTNTx5MtX5Ou848cOMqFDQ9pasI7beB0l1oDlR6k8SAw+Pc7RafxQ/qBsxaoQMVg0wW
+ ES2WcT8gUZCQ==
+X-IronPort-AV: E=Sophos;i="5.73,323,1583193600"; 
+   d="scan'208";a="39652240"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-1c1b5cdd.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 27 Apr 2020 10:00:20 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-1c1b5cdd.us-west-2.amazon.com (Postfix) with ESMTPS id 8747DA2282;
+        Mon, 27 Apr 2020 10:00:18 +0000 (UTC)
+Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 27 Apr 2020 10:00:18 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.217) by
+ EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 27 Apr 2020 10:00:10 +0000
+Subject: Re: [PATCH v1 00/15] Add support for Nitro Enclaves
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Alexander Graf <graf@amazon.com>,
+        <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@amazon.com>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>, Balbir Singh <sblbir@amazon.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>
+References: <20200421184150.68011-1-andraprs@amazon.com>
+ <18406322-dc58-9b59-3f94-88e6b638fe65@redhat.com>
+ <ff65b1ed-a980-9ddc-ebae-996869e87308@amazon.com>
+ <2a4a15c5-7adb-c574-d558-7540b95e2139@redhat.com>
+ <1ee5958d-e13e-5175-faf7-a1074bd9846d@amazon.com>
+ <f560aed3-a241-acbd-6d3b-d0c831234235@redhat.com>
+ <80489572-72a1-dbe7-5306-60799711dae0@amazon.com>
+ <0467ce02-92f3-8456-2727-c4905c98c307@redhat.com>
+ <5f8de7da-9d5c-0115-04b5-9f08be0b34b0@amazon.com>
+ <095e3e9d-c9e5-61d0-cdfc-2bb099f02932@redhat.com>
+ <602565db-d9a6-149a-0e1a-fe9c14a90ce7@amazon.com>
+ <fb0bfd95-4732-f3c6-4a59-7227cf50356c@redhat.com>
+ <fe8940ff-9deb-1b2b-8f30-2ecfe26ce27b@amazon.com>
+ <617eb49c-0ad9-8cf4-54bc-6d2cdfbb189a@redhat.com>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <47b7dc92-793c-75ce-6a8b-46b8a1f2bc88@amazon.com>
+Date:   Mon, 27 Apr 2020 13:00:00 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <617eb49c-0ad9-8cf4-54bc-6d2cdfbb189a@redhat.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.161.217]
+X-ClientProxiedBy: EX13D16UWC003.ant.amazon.com (10.43.162.15) To
+ EX13D16EUB001.ant.amazon.com (10.43.166.28)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add sampling frequency support for proximity data on VCNL4010 and VCNL4020
-chips.
-
-Signed-off-by: Mathieu Othacehe <m.othacehe@gmail.com>
----
- drivers/iio/light/vcnl4000.c | 118 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 117 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
-index e7653037fa5d..65c0cf2b5037 100644
---- a/drivers/iio/light/vcnl4000.c
-+++ b/drivers/iio/light/vcnl4000.c
-@@ -86,6 +86,16 @@
- #define VCNL4010_INT_DRDY \
- 	(BIT(VCNL4010_INT_PROXIMITY) | BIT(VCNL4010_INT_ALS))
- 
-+static const int vcnl4010_prox_sampling_frequency[][2] = {
-+	{1, 950000},
-+	{3, 906250},
-+	{7, 812500},
-+	{16, 625000},
-+	{31, 250000},
-+	{62, 500000},
-+	{125, 0},
-+	{250, 0},
-+};
- 
- #define VCNL4000_SLEEP_DELAY_MS	2000 /* before we enter pm_runtime_suspend */
- 
-@@ -363,6 +373,24 @@ static int vcnl4200_measure_proximity(struct vcnl4000_data *data, int *val)
- 	return vcnl4200_measure(data, &data->vcnl4200_ps, val);
- }
- 
-+static int vcnl4010_read_proxy_samp_freq(struct vcnl4000_data *data, int *val,
-+					 int *val2)
-+{
-+	int ret;
-+
-+	ret = i2c_smbus_read_byte_data(data->client, VCNL4010_PROX_RATE);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (ret >= ARRAY_SIZE(vcnl4010_prox_sampling_frequency))
-+		return -EINVAL;
-+
-+	*val = vcnl4010_prox_sampling_frequency[ret][0];
-+	*val2 = vcnl4010_prox_sampling_frequency[ret][1];
-+
-+	return 0;
-+}
-+
- static bool vcnl4010_is_in_periodic_mode(struct vcnl4000_data *data)
- {
- 	int ret;
-@@ -456,11 +484,95 @@ static int vcnl4010_read_raw(struct iio_dev *indio_dev,
- 
- 		iio_device_release_direct_mode(indio_dev);
- 		return ret;
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+		switch (chan->type) {
-+		case IIO_PROXIMITY:
-+			ret = vcnl4010_read_proxy_samp_freq(data, val, val2);
-+			if (ret < 0)
-+				return ret;
-+			return IIO_VAL_INT_PLUS_MICRO;
-+		default:
-+			return -EINVAL;
-+		}
- 	default:
- 		return -EINVAL;
- 	}
- }
- 
-+static int vcnl4010_read_avail(struct iio_dev *indio_dev,
-+			       struct iio_chan_spec const *chan,
-+			       const int **vals, int *type, int *length,
-+			       long mask)
-+{
-+	switch (mask) {
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+		*vals = (int *)vcnl4010_prox_sampling_frequency;
-+		*type = IIO_VAL_INT_PLUS_MICRO;
-+		*length = 2 * ARRAY_SIZE(vcnl4010_prox_sampling_frequency);
-+		return IIO_AVAIL_LIST;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int vcnl4010_write_proxy_samp_freq(struct vcnl4000_data *data, int val,
-+					  int val2)
-+{
-+	unsigned int i;
-+	int index = -1;
-+
-+	for (i = 0; i < ARRAY_SIZE(vcnl4010_prox_sampling_frequency); i++) {
-+		if (val == vcnl4010_prox_sampling_frequency[i][0] &&
-+		    val2 == vcnl4010_prox_sampling_frequency[i][1]) {
-+			index = i;
-+			break;
-+		}
-+	}
-+
-+	if (index < 0)
-+		return -EINVAL;
-+
-+	return i2c_smbus_write_byte_data(data->client, VCNL4010_PROX_RATE,
-+					 index);
-+}
-+
-+static int vcnl4010_write_raw(struct iio_dev *indio_dev,
-+			      struct iio_chan_spec const *chan,
-+			      int val, int val2, long mask)
-+{
-+	int ret;
-+	struct vcnl4000_data *data = iio_priv(indio_dev);
-+
-+	ret = iio_device_claim_direct_mode(indio_dev);
-+	if (ret)
-+		return ret;
-+
-+	/* Protect against event capture. */
-+	if (vcnl4010_is_in_periodic_mode(data)) {
-+		ret = -EBUSY;
-+		goto end;
-+	}
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+		switch (chan->type) {
-+		case IIO_PROXIMITY:
-+			ret = vcnl4010_write_proxy_samp_freq(data, val, val2);
-+			goto end;
-+		default:
-+			ret = -EINVAL;
-+			goto end;
-+		}
-+	default:
-+		ret = -EINVAL;
-+		goto end;
-+	}
-+
-+end:
-+	iio_device_release_direct_mode(indio_dev);
-+	return ret;
-+}
-+
- static int vcnl4010_read_event(struct iio_dev *indio_dev,
- 			       const struct iio_chan_spec *chan,
- 			       enum iio_event_type type,
-@@ -663,7 +775,9 @@ static const struct iio_chan_spec vcnl4010_channels[] = {
- 			BIT(IIO_CHAN_INFO_SCALE),
- 	}, {
- 		.type = IIO_PROXIMITY,
--		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+			BIT(IIO_CHAN_INFO_SAMP_FREQ),
-+		.info_mask_separate_available = BIT(IIO_CHAN_INFO_SAMP_FREQ),
- 		.event_spec = vcnl4000_event_spec,
- 		.num_event_specs = ARRAY_SIZE(vcnl4000_event_spec),
- 		.ext_info = vcnl4000_ext_info,
-@@ -676,6 +790,8 @@ static const struct iio_info vcnl4000_info = {
- 
- static const struct iio_info vcnl4010_info = {
- 	.read_raw = vcnl4010_read_raw,
-+	.read_avail = vcnl4010_read_avail,
-+	.write_raw = vcnl4010_write_raw,
- 	.read_event_value = vcnl4010_read_event,
- 	.write_event_value = vcnl4010_write_event,
- 	.read_event_config = vcnl4010_read_event_config,
--- 
-2.26.0
+CgpPbiAyNy8wNC8yMDIwIDEyOjQ2LCBQYW9sbyBCb256aW5pIHdyb3RlOgo+IE9uIDI3LzA0LzIw
+IDExOjIyLCBQYXJhc2NoaXYsIEFuZHJhLUlyaW5hIHdyb3RlOgo+Pj4KPj4+IDEpIGhhdmluZyB0
+aGUga2VybmVsIGFuZCBpbml0cmQgbG9hZGVkIGJ5IHRoZSBwYXJlbnQgVk0gaW4gZW5jbGF2ZQo+
+Pj4gbWVtb3J5IGhhcyB0aGUgYWR2YW50YWdlIHRoYXQgeW91IHNhdmUgbWVtb3J5IG91dHNpZGUg
+dGhlIGVuY2xhdmUgbWVtb3J5Cj4+PiBmb3Igc29tZXRoaW5nIHRoYXQgaXMgb25seSBuZWVkZWQg
+aW5zaWRlIHRoZSBlbmNsYXZlCj4+IEhlcmUgeW91IHdhbnRlZCB0byBzYXkgZGlzYWR2YW50YWdl
+PyA6KVdydCBzYXZpbmcgbWVtb3J5LCBpdCdzIGFib3V0Cj4+IGFkZGl0aW9uYWwgbWVtb3J5IGZy
+b20gdGhlIHBhcmVudCAvIHByaW1hcnkgVk0gbmVlZGVkIGZvciBoYW5kbGluZyB0aGUKPj4gZW5j
+bGF2ZSBpbWFnZSBzZWN0aW9ucyAoc3VjaCBhcyB0aGUga2VybmVsLCByYW1kaXNrKSBhbmQgc2V0
+dGluZyB0aGUgRUlGCj4+IGF0IGEgY2VydGFpbiBvZmZzZXQgaW4gZW5jbGF2ZSBtZW1vcnk/Cj4g
+Tm8sIGl0J3MgYW4gYWR2YW50YWdlLiAgSWYgdGhlIHBhcmVudCBWTSBjYW4gbG9hZCBldmVyeXRo
+aW5nIGluIGVuY2xhdmUKPiBtZW1vcnksIGl0IGNhbiByZWFkKCkgaW50byBpdCBkaXJlY3RseS4g
+IEl0IGRvZXNuJ3QgdG8gd2FzdGUgaXRzIG93bgo+IG1lbW9yeSBmb3IgYSBrZXJuZWwgYW5kIGlu
+aXRyZCwgd2hvc2Ugb25seSByZWFzb24gdG8gZXhpc3QgaXMgdG8gYmUKPiBjb3BpZWQgaW50byBl
+bmNsYXZlIG1lbW9yeS4KCk9rLCBnb3QgaXQsIHNhdmluZyB3YXMgcmVmZXJyaW5nIHRvIGFjdHVh
+bGx5IG5vdCB1c2luZyBhZGRpdGlvbmFsIG1lbW9yeS4KClRoYW5rIHlvdSBmb3IgY2xhcmlmaWNh
+dGlvbi4KCkFuZHJhCgoKCgpBbWF6b24gRGV2ZWxvcG1lbnQgQ2VudGVyIChSb21hbmlhKSBTLlIu
+TC4gcmVnaXN0ZXJlZCBvZmZpY2U6IDI3QSBTZi4gTGF6YXIgU3RyZWV0LCBVQkM1LCBmbG9vciAy
+LCBJYXNpLCBJYXNpIENvdW50eSwgNzAwMDQ1LCBSb21hbmlhLiBSZWdpc3RlcmVkIGluIFJvbWFu
+aWEuIFJlZ2lzdHJhdGlvbiBudW1iZXIgSjIyLzI2MjEvMjAwNS4K
 
