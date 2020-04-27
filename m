@@ -2,86 +2,75 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F15A9C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1CEC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3B25206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8D05206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:10:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588003844;
+	bh=6y+UP73Vxjpn15HNvNYlaPBEXH1uzwIZb3nl5q1GqOQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=J/TbdKVR7v1GDh9pqTDPQhavOTRfGBJL+HC7lGkyh8Eah7OjguwAPowvcCsZ/wuEO
+	 yiYUGuPyfmRuJUHhPWsLsZkMnlJRowktiGIpai6k/T1dr7MUraZjJTMEjwu7/u+GrF
+	 oFxY7CVUwmeIawtpL5YftjSN6sscqyAojOXDAP/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbgD0QKc (ORCPT
+        id S1728327AbgD0QKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 12:10:32 -0400
-Received: from gentwo.org ([3.19.106.255]:35258 "EHLO gentwo.org"
+        Mon, 27 Apr 2020 12:10:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726000AbgD0QKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 12:10:32 -0400
-Received: by gentwo.org (Postfix, from userid 1002)
-        id 82DFF3F4ED; Mon, 27 Apr 2020 16:10:31 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-        by gentwo.org (Postfix) with ESMTP id 81ACC3E8A0;
-        Mon, 27 Apr 2020 16:10:31 +0000 (UTC)
-Date:   Mon, 27 Apr 2020 16:10:31 +0000 (UTC)
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@www.lameter.com
-To:     Waiman Long <longman@redhat.com>
-cc:     Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v2] mm/slub: Fix incorrect interpretation of s->offset
-In-Reply-To: <20200427140822.18619-1-longman@redhat.com>
-Message-ID: <alpine.DEB.2.21.2004271606390.26716@www.lameter.com>
-References: <20200427140822.18619-1-longman@redhat.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        id S1726000AbgD0QKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 12:10:42 -0400
+Received: from localhost (unknown [171.76.79.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2FC8205C9;
+        Mon, 27 Apr 2020 16:10:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588003842;
+        bh=6y+UP73Vxjpn15HNvNYlaPBEXH1uzwIZb3nl5q1GqOQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aR1yAoAqwS+RgrXbE1AAsuiTXEZV7W92AcrPzeyict0PPlEUiEHKWRkvmzMO4oKO1
+         8t1vZ23bc52pz9LNTyHP2+DXUHAnnbaSQ9r7UrlG/lPkXnZN2nk3zjzIC/SsQo75Oa
+         DMs/H54jSMbM7I0mxVYOer0nm3Bobcrh/qb1G+S0=
+Date:   Mon, 27 Apr 2020 21:40:38 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Amelie Delaunay <amelie.delaunay@st.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Pierre-Yves Mordret <pierre-yves.mordret@st.com>
+Subject: Re: [PATCH 0/2] STM32 DMA Direct mode
+Message-ID: <20200427161038.GJ56386@vkoul-mobl.Dlink>
+References: <20200422102904.1448-1-amelie.delaunay@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422102904.1448-1-amelie.delaunay@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Apr 2020, Waiman Long wrote:
+On 22-04-20, 12:29, Amelie Delaunay wrote:
+> By default, the driver compute if the FIFO must operate in direct mode or with
+> FIFO threshold. Direct mode is allowed only if computed source burst and
+> destination burst are disabled. But with memory source or destination, burst
+> is always > 0.
+> Direct mode is useful when the peripheral requires an immediate and single
+> transfer to or from the memory after each DMA request.
+> This patchset adds a way to force Direct mode through device tree.
 
->
-> To fix it, use the check "s->offset == s->inuse" in the new helper
-> function freeptr_after_object() instead. Also add another helper function
-> get_info_end() to return the end of info block (inuse + free pointer
-> if not overlapping with object).
->
-> Fixes: 3202fa62fb43 ("slub: relocate freelist pointer to middle of object")
-> Signed-off-by: Waiman Long <longman@redhat.com>
-> ---
->  mm/slub.c | 37 ++++++++++++++++++++++---------------
->  1 file changed, 22 insertions(+), 15 deletions(-)
->
-> diff --git a/mm/slub.c b/mm/slub.c
-> index 0e736d66bb42..68f1b4b1c309 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -551,15 +551,29 @@ static void print_section(char *level, char *text, u8 *addr,
->  	metadata_access_disable();
->  }
->
-> +static inline bool freeptr_after_object(struct kmem_cache *s)
+Applied, thanks
 
-bool freeptr_outside_of_object()?
-
-> +{
-> +	return s->offset == s->inuse;
-
-s->offset >= s->inuse?
-
-There may be a redzone after the object.
-
-
-> +static inline unsigned int get_info_end(struct kmem_cache *s)
-
-static inline track_offset()?
-
+-- 
+~Vinod
