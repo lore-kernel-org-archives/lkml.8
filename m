@@ -2,128 +2,144 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C373C4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C973AC54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAEEA2087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A537E2087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 17:53:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XjRzckfv"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dz0+iV/t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbgD0Rvp (ORCPT
+        id S1726366AbgD0RxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 13:51:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37690 "EHLO
+        Mon, 27 Apr 2020 13:53:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726223AbgD0Rvo (ORCPT
+        by vger.kernel.org with ESMTP id S1726223AbgD0RxO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 13:51:44 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45AAEC03C1A7
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 10:51:43 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id t16so7259916plo.7
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 10:51:43 -0700 (PDT)
+        Mon, 27 Apr 2020 13:53:14 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08B83C0610D5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 10:53:14 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id r17so14604303lff.2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 10:53:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=dJ17v9H467897ZVwuE0ureLW7wDRPRyU689O1y5ZV5A=;
-        b=XjRzckfvIvP0s0WPToecVrTWvFlp5f+I3xVuru1I+sl4sz0Jw5QF5XRaH18XAfmaFe
-         arz4IxhBOZd9LFFZ+YKUjHAKubh4tQObKMUB4DItRgzf+DxyCrI1xaOVQnOAjfQ/3GyY
-         UoEa6EryFeOyn+6CPo14hxqgKRFjDzLcmQTwn9lT8YFtbhB1z5/SYmP9wlelEM4QRA/P
-         90bdeKi2wbH85X5bafyfXXQhGaIp+W+mX5+oeKNXe/lovhWiouqqaefLHN9mhiaI28vd
-         hi4L4RVgg5PU/SN7kSSDmAV/3T8v2q5WyEqMWZHsenS70QIWNmls+5KvbkvQcj4JzWc/
-         19Lg==
+        bh=QgX2UlkPShntWDyuJpzvmZjjIQUfcagM19kKDn9F6wE=;
+        b=Dz0+iV/t1KqOhDyK8EACleXuaC/vjXfE1GO0GBbVnqrRsUa80DP/dAv2adRGhBR6lk
+         Gtfme/Ltdzg9pa5fyKx56wosVSu05n/9fhuacV+55wUjiAG2q8Zh57oWm7m+MfyhTiik
+         R5drk7ygprRSpnuoep7YKEZq+P/7K9unwsYjSlignb2OiZ1mCdV63zXO1+Ky4rew12qM
+         ldAk+8skqB2yaciEVy8GPzlkDPk9+SkvOKeWdPa50NWvYa6M8Mv4RdRRXedkT5JIpXz3
+         TRC3ISyczWILl/Mtw3LbLzelmcVBzcGRm8NhXEKkWv2gCdJ2Phv9wFYqYPJak4AwmMeZ
+         5EiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dJ17v9H467897ZVwuE0ureLW7wDRPRyU689O1y5ZV5A=;
-        b=aBmqSrxUw9/ZbSYG2Hmkk5/DFDYcdFUUA8GqLazhsi5Crecoqi/1GfEZEgwIi7nrIh
-         WSYSOa4D+QJDaslAUTuelQewwSzVOWOuFJ874j9QGAzx9LDsqGudGmBIUuIqbrV2nc/t
-         uCixFhXxo9XNo/pHxf7RqBwZjVjPLbfMEP92XRKj0ykbdiaiVq/TlFtIN6N+FOprV+01
-         /d3KxHDodpKUbeKih4vG4xcfyDCHT+iyQdUYm88UVojExWHWeQENVYzMvZzHhCZ3O5Ye
-         ZgKBFxxwPG/A4MScZjEbrUwccfDeivNa28ubxG/HGLUEJwoz+UTBuO8sd4Z/KZpAQe7p
-         x6qA==
-X-Gm-Message-State: AGi0PuaR8BRS5aOE1+31IBWEbvZKT1GhPpCqqir7PPpJ2RwvV2jhLTyk
-        h0kx0f6YFARXcwxx+sSRmE5xHXt1qPdtX0XZVReZOQ==
-X-Google-Smtp-Source: APiQypIph5UQ7zAXbug0H0w8INlnKV1E/F5QgE60ll0GfOaIYravv9zQJ6Q2AapFCP7S6ERPg62h6IPV9xznjSXLGv4=
-X-Received: by 2002:a17:902:ac87:: with SMTP id h7mr23322320plr.119.1588009902182;
- Mon, 27 Apr 2020 10:51:42 -0700 (PDT)
+        bh=QgX2UlkPShntWDyuJpzvmZjjIQUfcagM19kKDn9F6wE=;
+        b=gd8YGs48cFf+eajoLyToolvZlKj4w9qJHhi2Lj6PDgVIzVsCaKwygM4CBT1v2tVYAK
+         M7gRfnCBPfK8VesF3N/FEFoF3S77yB/bakjs+8GkRvhB0pm3jX8wKA5BxfLPiz3aCkJ3
+         wSaFHwravavXV1bm62Ogc8WiiVTeq7uqdUyej5QNG2BflsGvMXWXI1rl0athLQZ+cB18
+         MwMdAOzwyN+ckxIYjENINfbX0GovXMriEvo1OSoWA7K+wJwN3m63hACLmCCL4Di/9FN8
+         BE1XTKT/EX6ZQJaHL1E69OmTP6KimGcOqMrQXW1R3nrEWNHBQxFI2k9bKUlNcJef7gvx
+         5z3g==
+X-Gm-Message-State: AGi0Puawq4MQoPgxWGPphoPFSt7/23AehMcMOYwyAYJ0LQviTCGB3BIV
+        J5FV30MiT0BKxD50f52wcI87Tr6FWzY1zKWIgfOVZw==
+X-Google-Smtp-Source: APiQypKmlFS6Yiqo7t2bGATAHiA4jtK+nP4Z7/Fx2bh1xXVwJTRIFDU0jHlSb/WgU3IObNltcAQnVHhF27BtJ/SezkQ=
+X-Received: by 2002:a19:e04a:: with SMTP id g10mr16042699lfj.164.1588009992307;
+ Mon, 27 Apr 2020 10:53:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200425060640.823362-1-masahiroy@kernel.org>
-In-Reply-To: <20200425060640.823362-1-masahiroy@kernel.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 27 Apr 2020 10:51:31 -0700
-Message-ID: <CAKwvOd=0hnjUh9eZFVJhQc4-7dq+T0c9BGEd7UM-dDXVehqOeQ@mail.gmail.com>
-Subject: Re: [PATCH] unicore32: do not evaluate compiler's library path when cleaning
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200426130100.306246-1-hagen@jauu.net> <20200426163430.22743-1-hagen@jauu.net>
+ <20200427170826.mdklazcrn4xaeafm@wittgenstein>
+In-Reply-To: <20200427170826.mdklazcrn4xaeafm@wittgenstein>
+From:   Jann Horn <jannh@google.com>
+Date:   Mon, 27 Apr 2020 19:52:45 +0200
+Message-ID: <CAG48ez0hskhN7OkxwHX-Bo5HGboJaVEk8udFukkTgiC=43ixcw@mail.gmail.com>
+Subject: Re: [RFC v2] ptrace, pidfd: add pidfd_ptrace syscall
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Hagen Paul Pfeifer <hagen@jauu.net>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+        Brian Gerst <brgerst@gmail.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 11:07 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+On Mon, Apr 27, 2020 at 7:08 PM Christian Brauner
+<christian.brauner@ubuntu.com> wrote:
+> On Sun, Apr 26, 2020 at 06:34:30PM +0200, Hagen Paul Pfeifer wrote:
+> > Working on a safety-critical stress testing tool, using ptrace in an
+> > rather uncommon way (stop, peeking memory, ...) for a bunch of
+> > applications in an automated way I realized that once opened processes
+> > where restarted and PIDs recycled.  Resulting in monitoring and
+> > manipulating the wrong processes.
+> >
+> > With the advent of pidfd we are now able to stick with one stable handle
+> > to identifying processes exactly. We now have the ability to get this
+> > race free. Sending signals now works like a charm, next step is to
+> > extend the functionality also for ptrace.
+> >
+> > API:
+> >          long pidfd_ptrace(int pidfd, enum __ptrace_request request,
+> >                            void *addr, void *data, unsigned flags);
 >
-> Since commit a83e4ca26af8 ("kbuild: remove cc-option switch from
-> -Wframe-larger-than="), 'make ARCH=unicore32 clean' emits error
-> messages as follows:
->
->   $ make ARCH=unicore32 clean
->   gcc: error: missing argument to '-Wframe-larger-than='
->   gcc: error: missing argument to '-Wframe-larger-than='
->
-> We do not care compiler flags when cleaning.
->
-> Use the '=' operator for lazy expansion because we do not use
-> GNU_LIBC_A or GNU_LIBGCC_A when cleaning.
+> I'm in general not opposed to this if there's a clear need for this and
+> users that are interested. But I think if people really prefer having
+> this a new syscall then we should probably try to improve on the old
+> one. Things that come to mind right away without doing a deep review are
+> replacing the void *addr pointer with a dedicated struct ptract_args or
+> union ptrace_args and a size argument. If we're not doing something
+> like this or something more fundamental we can equally well either just
+> duplicate all enums in the old ptrace syscall and append a _PIDFD to it
+> where it makes sense.
 
-So many assignment operators!
-https://www.gnu.org/software/make/manual/html_node/Setting.html
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-
->
-> Fixes: a83e4ca26af8 ("kbuild: remove cc-option switch from -Wframe-larger-than=")
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
->
->  arch/unicore32/lib/Makefile | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/unicore32/lib/Makefile b/arch/unicore32/lib/Makefile
-> index 098981a01841..5af06645b8f0 100644
-> --- a/arch/unicore32/lib/Makefile
-> +++ b/arch/unicore32/lib/Makefile
-> @@ -10,12 +10,12 @@ lib-y       += strncpy_from_user.o strnlen_user.o
->  lib-y  += clear_user.o copy_page.o
->  lib-y  += copy_from_user.o copy_to_user.o
->
-> -GNU_LIBC_A             := $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libc.a)
-> +GNU_LIBC_A             = $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libc.a)
->  GNU_LIBC_A_OBJS                := memchr.o memcpy.o memmove.o memset.o
->  GNU_LIBC_A_OBJS                += strchr.o strrchr.o
->  GNU_LIBC_A_OBJS                += rawmemchr.o                  # needed by strrchr.o
->
-> -GNU_LIBGCC_A           := $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libgcc.a)
-> +GNU_LIBGCC_A           = $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libgcc.a)
->  GNU_LIBGCC_A_OBJS      := _ashldi3.o _ashrdi3.o _lshrdi3.o
->  GNU_LIBGCC_A_OBJS      += _divsi3.o _modsi3.o _ucmpdi2.o _umodsi3.o _udivsi3.o
->
-> --
-> 2.25.1
->
+Yeah, it seems like just adding pidfd flavors of PTRACE_ATTACH and
+PTRACE_SEIZE should do the job.
 
 
--- 
-Thanks,
-~Nick Desaulniers
+And if we do make a new syscall, there is a bunch of de-crufting that
+can be done... for example, just as some low-hanging fruit, a new
+ptrace API probably shouldn't have
+PTRACE_PEEKTEXT/PTRACE_PEEKDATA/PTRACE_POKETEXT/PTRACE_POKEDATA (we
+have /proc/$pid/mem for that, which is much saner than doing peek/poke
+in word-size units), and probably also shouldn't support all the weird
+arch-specific register-accessing requests (e.g.
+PTRACE_PEEKUSR/PTRACE_POKEUSR/PTRACE_GETREGS/PTRACE_SETREGS/PTRACE_GETFPREGS/...)
+that are nowadays accessible via PTRACE_GETREGSET/PTRACE_SETREGSET.
+
+(And there are also some more major changes that I think would be
+sensible; for example, it'd be neat if you could have notifications
+about the tracee delivered through a pollable file descriptor, and if
+you could get the kernel to tell you in each notification which type
+of ptrace stop you're dealing with (e.g. distinguishing
+syscall-entry-stop vs syscall-exit-stop), and it would be great to be
+able to directly inject syscalls into the child instead of having to
+figure out where a syscall instruction you can abuse is and then
+setting the instruction pointer to that, and it'd be helpful to be
+able to have multiple tracers attached to a single process so that you
+can e.g. have strace and gdb active on the same process
+concurrently...)
