@@ -2,166 +2,125 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A221EC55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B9EC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89DC4206B9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:44:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69F16206B9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 06:45:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbgD0Gog (ORCPT
+        id S1726710AbgD0Gpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 02:44:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46204 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726429AbgD0Gog (ORCPT
+        Mon, 27 Apr 2020 02:45:35 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34908 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726504AbgD0Gpf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 02:44:36 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 468A4C061A0F
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Apr 2020 23:44:36 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jSxVJ-0000P6-Cn; Mon, 27 Apr 2020 08:44:33 +0200
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jSxVJ-0000pD-2l; Mon, 27 Apr 2020 08:44:33 +0200
-Date:   Mon, 27 Apr 2020 08:44:33 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Moritz Fischer <mdf@kernel.org>
-Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: How to upload fpga firmware
-Message-ID: <20200427064433.GH5877@pengutronix.de>
-References: <20200422114432.GM1694@pengutronix.de>
- <20200423013648.GA2430@epycbox.lan>
- <20200423062331.GR1694@pengutronix.de>
- <20200425035949.GA11710@epycbox.lan>
+        Mon, 27 Apr 2020 02:45:35 -0400
+Received: by mail-ot1-f65.google.com with SMTP id e26so24457844otr.2;
+        Sun, 26 Apr 2020 23:45:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A20QEuwcQ3bPQDVPM4YhHWYF19sEEIWz0tIXZgQQNBA=;
+        b=aElH/Npms16am5+g19bdMxGhPitYhjP6kwaB/Nzwg1Sf2NOqQPGHzk3tT705f278hU
+         DsFXXM8Ck+1c3QUrpU6m2CBSes95pItbPJAjI/P4PQGx0fyEU2MZBsJ0hh6yOneqLj5u
+         2lJvxbIVAyIG6U12fCRbeFnDZWXJpO/+H8GTXm1H5CBg9H88iveg6V/Y8/NK1qFskgwq
+         1EuCVd9IOJPx5GOOfmrM5HjurxVfns3J2qv5a1Oy83OeH5Iob8IwIyZ/Ccn7p9S4J1FO
+         K44SCw0ku1ObK7fSHxqPGPZ9FvXD4uaKhKxmVuTGdoA3TN2fdThOWOSGYQautXLgILf1
+         0n9A==
+X-Gm-Message-State: AGi0PubGXODkQXJ4ss5ivF/wQAF70hj6vGvfE+63iH6LtL1EZhiEBzJ/
+        UyF1Tfh+hjEBQm6UQ0FW2yaRvwXXqxrPMEVmo64=
+X-Google-Smtp-Source: APiQypKnNMH9rOhofcKlK7I9omQSdQmvVEfckYI5Sp58zjUJsZuaoc+VBXSc57/r+A1q4uEpYjSTT0Irt0S0re1bJoY=
+X-Received: by 2002:a9d:564:: with SMTP id 91mr17254715otw.250.1587969933846;
+ Sun, 26 Apr 2020 23:45:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200425035949.GA11710@epycbox.lan>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 07:43:15 up 67 days, 13:13, 80 users,  load average: 0.05, 0.17,
- 0.17
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20200420143229.245488-1-mst@redhat.com>
+In-Reply-To: <20200420143229.245488-1-mst@redhat.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 27 Apr 2020 08:45:22 +0200
+Message-ID: <CAMuHMdWaG5EUsbTOMPkj4i50D40T0TLRvB6g-Y8Dj4C0v7KTqQ@mail.gmail.com>
+Subject: Re: [PATCH v4] vhost: disable for OABI
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Richard Earnshaw <Richard.Earnshaw@arm.com>,
+        Sudeep Dutt <sudeep.dutt@intel.com>,
+        Ashutosh Dixit <ashutosh.dixit@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jason Wang <jasowang@redhat.com>,
+        netdev <netdev@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        KVM list <kvm@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 08:59:49PM -0700, Moritz Fischer wrote:
-> Hi Sascha,
-> 
-> On Thu, Apr 23, 2020 at 08:23:31AM +0200, Sascha Hauer wrote:
-> > Hi Moritz,
-> > 
-> > On Wed, Apr 22, 2020 at 06:36:48PM -0700, Moritz Fischer wrote:
-> > > Hi Sascha,
-> > > 
-> > > On Wed, Apr 22, 2020 at 01:44:32PM +0200, Sascha Hauer wrote:
-> > > > Hi,
-> > > > 
-> > > > I wonder what can be done with the mainline state of drivers/fpga/. The
-> > > > entry to the framework seems to be fpga_mgr_load(). The only user of
-> > > > this function is fpga_region_program_fpga(). This in turn is only called
-> > > > in response of applying a device tree overlay. A device tree overlay is
-> > > > applied with of_overlay_fdt_apply() which has no users in the Kernel.
-> > > 
-> > > Yes. It is waiting for dt_overlays one way or another. I personally
-> > > don't currently have the bandwidth to work actively on this.
-> > > 
-> > > > My current task is to load a firmware to a FPGA. The code all seems to
-> > > > be there in the Kernel, it only lacks a way to trigger it. I am not very
-> > > > interested in device tree overlays since the FPGA appears as a PCI
-> > > > device (although applying a dtbo could enable the PCIe controller device
-> > > > tree node). Is there some mainline way to upload FPGA firmware? At the
-> > > > moment we are using the attached patch to trigger loading the firmware
-> > > > from userspace. Would something like this be acceptable for mainline?
-> > > 
-> > > We've looked into this sort of patches over the years and never came to
-> > > a general interface that really works.
-> > > 
-> > > The OPAE folks (and other users I know of) usually use FPGA Manager with
-> > > a higher layer on top of it that moves the bitstream into the kernel via
-> > > an ioctl().
-> > > 
-> > > One concept I had toyed with mentally, but haven't really gotten around
-> > > to implement is a 'discoverable' region, that would deal with the
-> > > necessary re-enumeration via a callback and have a sysfs interface
-> > > similar to what the patch below has.
-> > > This would essentially cover use-cases where you have a discoverable
-> > > device implemented in FPGA logic, such as say an FPGA hanging off of
-> > > PCIe bus that can get loaded over USB, a CPLD or some other side-band
-> > > mechanism. After loading the image you'd have to rescan the PCIe bus -
-> > > which - imho is the kernel's job.
-> > > 
-> > > What I really wanna avoid is creating another /dev/fpga0 / /dev/xdevcfg
-> > > that completely leaves the kernel in the dark about the fact that it
-> > > reconfigures a bit of hardware hanging off the bus.
-> > 
-> > Yes, makes sense. While this would suffice my needs at the moment it
-> > really sounds like a dead end.
-> > 
-> > > 
-> > > In my ideal world you'd create a pci driver that binds to your device,
-> > > and creates mfd style subdevices for whatever you'd want your design to
-> > > do. One of these devices would be an FPGA and a FPGA region attached to
-> > > that FPGA manager. Your top level driver would co-ordinate the fact that
-> > > you are re-programming parts of the FPGA and create / destroy devices as
-> > > needed for the hardware contained in the bitstream.
-> > 
-> > In my case there is no pci device visible before loading the firmware,
-> > so creating a pci driver is not an option. Maybe pci host controllers
-> > could register themselves as fpga-bridges. With this we could put the
-> > pci host controller (or the pci device, AFAIK there is a PCI device tree
-> > binding) where the fpga is connected into the fpga-bridges phandles list
-> > of the fpga-region.
-> 
-> Can you talk a bit more about the system you're working with? Is there
-> some sort of sideband mechanism to load the image? What exposes the
-> image loading capaibility? A CPLD, an ASIC, USB device, JTAG?
+Hi Michael,
 
-We have two systems. One uploads the FPGA firmware via SPI passive
-serial mode (compatible fpga-arria10-passive-serial). The other system
-has a ftdi FT232H USB/serial converter chip working in synchronous FIFO
-mode, connected to the FPGA via a CPLD. The series from Anatolij Gustchin
-here https://patchwork.kernel.org/cover/10824743/ would have been useful
-for us, although of course our CPLD has a different protocol. On this
-system we currently ended up with a small custom driver which bypasses
-FPGA manager and only uploads the firmware at USB connect time.
+Thanks for your patch!
 
-> 
-> What does the topology look like?
-> 
-> Sideband  -----> FPGA
-> PCIe      -----> FPGA
-> 
-> It also depends a bit on the use-case: After you program the bitstream,
-> do you need to runtime re-program it? Does it do partial
-> reconfiguration? Are there subdevices inside your device, or is the
-> whole thing a discoverable PCI device afterwards?
+On Mon, Apr 20, 2020 at 5:13 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> vhost is currently broken on the some ARM configs.
+>
+> The reason is that the ring element addresses are passed between
+> components with different alignments assumptions. Thus, if
+> guest selects a pointer and host then gets and dereferences
+> it, then alignment assumed by the host's compiler might be
+> greater than the actual alignment of the pointer.
+> compiler on the host from assuming pointer is aligned.
+>
+> This actually triggers on ARM with -mabi=apcs-gnu - which is a
+> deprecated configuration. With this OABI, compiler assumes that
+> all structures are 4 byte aligned - which is stronger than
+> virtio guarantees for available and used rings, which are
+> merely 2 bytes. Thus a guest without -mabi=apcs-gnu running
+> on top of host with -mabi=apcs-gnu will be broken.
+>
+> The correct fix is to force alignment of structures - however
+> that is an intrusive fix that's best deferred until the next release.
+>
+> We didn't previously support such ancient systems at all - this surfaced
+> after vdpa support prompted removing dependency of vhost on
+> VIRTULIZATION. So for now, let's just add something along the lines of
+>
+>         depends on !ARM || AEABI
+>
+> to the virtio Kconfig declaration, and add a comment that it has to do
+> with struct member alignment.
+>
+> Note: we can't make VHOST and VHOST_RING themselves have
+> a dependency since these are selected. Add a new symbol for that.
 
-On both systems It's one PCI device only. Currently we don't need runtime
-re-programming, although this might be useful in the future. Also there's
-no partial reconfiguration.
+Adding the dependencies to VHOST and VHOST_RING themselves is indeed not
+sufficient.  But IMHO you should still add VHOST_DPN dependencies t
+ these two symbols, so any driver selecting them without fulfilling the
+VHOST_DPN dependency will trigger a Kconfig warning.  Else the
+issue will be ignored silently.
 
-Sascha
+> We should be able to drop this dependency down the road.
+>
+> Fixes: 20c384f1ea1a0bc7 ("vhost: refine vhost and vringh kconfig")
+> Suggested-by: Ard Biesheuvel <ardb@kernel.org>
+> Suggested-by: Richard Earnshaw <Richard.Earnshaw@arm.com>
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
