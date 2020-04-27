@@ -4,180 +4,146 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D93C83003
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9852C83001
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE952076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F7792076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 23:57:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FgUaCwP5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LlkDOFKK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbgD0X5A (ORCPT
+        id S1726469AbgD0X5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 19:57:00 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28323 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726328AbgD0X4w (ORCPT
+        Mon, 27 Apr 2020 19:57:14 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:54376 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726355AbgD0X5O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 19:56:52 -0400
+        Mon, 27 Apr 2020 19:57:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588031810;
+        s=mimecast20190719; t=1588031832;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=hKMGvop5RUwWSaAIrxGf06+2WG92KPK2um2wWjE0aqI=;
-        b=FgUaCwP5/4VVeP3CbMFUJg5qVFyi5aOIZ+d0dW4mbXXR4u7MmWFDuCvFdr7yJZPKMaSpBc
-        rZ33PARjnls7yRfjBV9zNPEqnm60/Z/5LBXMAyQlwmjD92KSgUSptL2Yw05q8L7IQ/7wVy
-        6aX1kAX+53fNi1jCA6qX+3uIREXwyVM=
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=TX3l/PsIBBKAEBFp9II7hFHKmsTrVNvxgpKGxnEg3zs=;
+        b=LlkDOFKKSF9tfS0L3MVHmnU6/9z8orRFb6HM3Zac80QGiZl21VEBMp+2Rpy+0pb03+tRkY
+        wlGTMAsvWw0RSh9SkZa13wnUuvrAYdzlnIUuXEooosnZ1qfJ/Q5aklzKtqDrK4A9wHCwLm
+        FJedj46nVj9cs0b7mr62Qqou6DLFxu0=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-447-iDM7_ISSM26hLWkH4Npq8w-1; Mon, 27 Apr 2020 19:56:48 -0400
-X-MC-Unique: iDM7_ISSM26hLWkH4Npq8w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-314-V-bSCE4gMoyiC7kkAoz9Zg-1; Mon, 27 Apr 2020 19:57:08 -0400
+X-MC-Unique: V-bSCE4gMoyiC7kkAoz9Zg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7A2A7180F122;
-        Mon, 27 Apr 2020 23:56:46 +0000 (UTC)
-Received: from llong.com (ovpn-112-176.rdu2.redhat.com [10.10.112.176])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3293560BE2;
-        Mon, 27 Apr 2020 23:56:45 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>,
-        Qian Cai <cai@lca.pw>, Waiman Long <longman@redhat.com>
-Subject: [PATCH v2 3/4] mm/slub: Fix another circular locking dependency in slab_attr_store()
-Date:   Mon, 27 Apr 2020 19:56:20 -0400
-Message-Id: <20200427235621.7823-4-longman@redhat.com>
-In-Reply-To: <20200427235621.7823-1-longman@redhat.com>
-References: <20200427235621.7823-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 36668107ACCA;
+        Mon, 27 Apr 2020 23:57:07 +0000 (UTC)
+Received: from localhost.localdomain.com (vpn2-54-127.bne.redhat.com [10.64.54.127])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9B9E960300;
+        Mon, 27 Apr 2020 23:57:04 +0000 (UTC)
+From:   Gavin Shan <gshan@redhat.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        steve.capper@arm.com, catalin.marinas@arm.com, broonie@kernel.org,
+        will@kernel.org, shan.gavin@gmail.com
+Subject: [PATCH v2] arm64/kernel: Fix range on invalidating dcache for boot page tables
+Date:   Tue, 28 Apr 2020 09:57:00 +1000
+Message-Id: <20200427235700.112220-1-gshan@redhat.com>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It turns out that switching from slab_mutex to memcg_cache_ids_sem in
-slab_attr_store() does not completely eliminate circular locking dependency
-as shown by the following lockdep splat when the system is shut down:
+Prior to commit 8eb7e28d4c642c31 ("arm64/mm: move runtime pgds to
+rodata"), idmap_pgd_dir, tramp_pg_dir, reserved_ttbr0, swapper_pg_dir,
+and init_pg_dir were contiguous at the end of the kernel image. The
+maintenance at the end of __create_page_tables assumed these were
+contiguous, and affected everything from the start of idmap_pg_dir
+to the end of init_pg_dir.
 
-[ 2095.079697] Chain exists of:
-[ 2095.079697]   kn->count#278 --> memcg_cache_ids_sem --> slab_mutex
-[ 2095.079697]
-[ 2095.090278]  Possible unsafe locking scenario:
-[ 2095.090278]
-[ 2095.096227]        CPU0                    CPU1
-[ 2095.100779]        ----                    ----
-[ 2095.105331]   lock(slab_mutex);
-[ 2095.108486]                                lock(memcg_cache_ids_sem);
-[ 2095.114961]                                lock(slab_mutex);
-[ 2095.120649]   lock(kn->count#278);
-[ 2095.124068]
-[ 2095.124068]  *** DEADLOCK ***
+That commit moved all but init_pg_dir into the .rodata section, with
+other data placed between idmap_pg_dir and init_pg_dir, but did not
+update the maintenance. Hence the maintenance is performed on much
+more data than necessary (but as the bootloader previously made this
+clean to the PoC there is no functional problem).
 
-To eliminate this possibility, we have to use trylock to acquire
-memcg_cache_ids_sem. Unlikely slab_mutex which can be acquired in
-many places, the memcg_cache_ids_sem write lock is only acquired
-in memcg_alloc_cache_id() to double the size of memcg_nr_cache_ids.
-So the chance of successive calls to memcg_alloc_cache_id() within
-a short time is pretty low. As a result, we can retry the read lock
-acquisition a few times if the first attempt fails.
+As we only alter idmap_pg_dir, and init_pg_dir, we only need to perform
+maintenance for these. As the other dirs are in .rodata, the bootloader
+will have initialised them as expected and cleaned them to the PoC. The
+kernel will initialize them as necessary after enabling the MMU.
 
-Signed-off-by: Waiman Long <longman@redhat.com>
+This patch reworks the maintenance to only cover the idmap_pg_dir and
+init_pg_dir to avoid this unnecessary work.
+
+Signed-off-by: Gavin Shan <gshan@redhat.com>
 ---
- include/linux/memcontrol.h |  1 +
- mm/memcontrol.c            |  5 +++++
- mm/slub.c                  | 25 +++++++++++++++++++++++--
- 3 files changed, 29 insertions(+), 2 deletions(-)
+v2: Include the suggested commit log    (Mark Rutland)
+    Improved comments and code          (Mark Rutland)
+---
+ arch/arm64/include/asm/pgtable.h |  1 +
+ arch/arm64/kernel/head.S         | 12 +++++++++---
+ arch/arm64/kernel/vmlinux.lds.S  |  1 +
+ 3 files changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index d275c72c4f8e..9285f14965b1 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -1379,6 +1379,7 @@ extern struct workqueue_struct *memcg_kmem_cache_wq;
- extern int memcg_nr_cache_ids;
- void memcg_get_cache_ids(void);
- void memcg_put_cache_ids(void);
-+int  memcg_tryget_cache_ids(void);
- 
- /*
-  * Helper macro to loop through all memcg-specific caches. Callers must still
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 5beea03dd58a..9fa8535ff72a 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -279,6 +279,11 @@ void memcg_get_cache_ids(void)
- 	down_read(&memcg_cache_ids_sem);
- }
- 
-+int memcg_tryget_cache_ids(void)
-+{
-+	return down_read_trylock(&memcg_cache_ids_sem);
-+}
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pg=
+table.h
+index 8c20e2bd6287..5caff09c6a3a 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -457,6 +457,7 @@ extern pgd_t init_pg_dir[PTRS_PER_PGD];
+ extern pgd_t init_pg_end[];
+ extern pgd_t swapper_pg_dir[PTRS_PER_PGD];
+ extern pgd_t idmap_pg_dir[PTRS_PER_PGD];
++extern pgd_t idmap_pg_end[];
+ extern pgd_t tramp_pg_dir[PTRS_PER_PGD];
+=20
+ extern void set_swapper_pgd(pgd_t *pgdp, pgd_t pgd);
+diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+index 57a91032b4c2..32f5ecbec0ea 100644
+--- a/arch/arm64/kernel/head.S
++++ b/arch/arm64/kernel/head.S
+@@ -394,13 +394,19 @@ SYM_FUNC_START_LOCAL(__create_page_tables)
+=20
+ 	/*
+ 	 * Since the page tables have been populated with non-cacheable
+-	 * accesses (MMU disabled), invalidate the idmap and swapper page
+-	 * tables again to remove any speculatively loaded cache lines.
++	 * accesses (MMU disabled), invalidate those tables again to
++	 * remove any speculatively loaded cache lines.
+ 	 */
++	dmb	sy
 +
- void memcg_put_cache_ids(void)
- {
- 	up_read(&memcg_cache_ids_sem);
-diff --git a/mm/slub.c b/mm/slub.c
-index 44cb5215c17f..cf2114ca27f7 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -34,6 +34,7 @@
- #include <linux/prefetch.h>
- #include <linux/memcontrol.h>
- #include <linux/random.h>
-+#include <linux/delay.h>
- 
- #include <trace/events/kmem.h>
- 
-@@ -5572,6 +5573,7 @@ static ssize_t slab_attr_store(struct kobject *kobj,
- 	    !list_empty(&s->memcg_params.children)) {
- 		struct kmem_cache *c, **pcaches;
- 		int idx, max, cnt = 0;
-+		int retries = 3;
- 		size_t size, old = s->max_attr_size;
- 		struct memcg_cache_array *arr;
- 
-@@ -5585,9 +5587,28 @@ static ssize_t slab_attr_store(struct kobject *kobj,
- 			old = cmpxchg(&s->max_attr_size, size, len);
- 		} while (old != size);
- 
--		memcg_get_cache_ids();
--		max = memcg_nr_cache_ids;
-+		/*
-+		 * To avoid the following circular lock chain
-+		 *
-+		 *   kn->count#278 --> memcg_cache_ids_sem --> slab_mutex
-+		 *
-+		 * We need to use trylock to acquire memcg_cache_ids_sem.
-+		 *
-+		 * Since the write lock is acquired only in
-+		 * memcg_alloc_cache_id() to double the size of
-+		 * memcg_nr_cache_ids. The chance of successive
-+		 * memcg_alloc_cache_id() calls within a short time is
-+		 * very low except at the beginning where the number of
-+		 * memory cgroups is low. So we retry a few times to get
-+		 * the memcg_cache_ids_sem read lock.
-+		 */
-+		while (!memcg_tryget_cache_ids()) {
-+			if (retries-- <= 0)
-+				return -EBUSY;
-+			msleep(100);
-+		}
- 
-+		max = memcg_nr_cache_ids;
- 		pcaches = kmalloc_array(max, sizeof(void *), GFP_KERNEL);
- 		if (!pcaches) {
- 			memcg_put_cache_ids();
--- 
-2.18.1
+ 	adrp	x0, idmap_pg_dir
++	adrp	x1, idmap_pg_end
++	sub	x1, x1, x0
++	bl	__inval_dcache_area
++
++	adrp	x0, init_pg_dir
+ 	adrp	x1, init_pg_end
+ 	sub	x1, x1, x0
+-	dmb	sy
+ 	bl	__inval_dcache_area
+=20
+ 	ret	x28
+diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.=
+lds.S
+index 497f9675071d..94402aaf5f5c 100644
+--- a/arch/arm64/kernel/vmlinux.lds.S
++++ b/arch/arm64/kernel/vmlinux.lds.S
+@@ -139,6 +139,7 @@ SECTIONS
+=20
+ 	idmap_pg_dir =3D .;
+ 	. +=3D IDMAP_DIR_SIZE;
++	idmap_pg_end =3D .;
+=20
+ #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
+ 	tramp_pg_dir =3D .;
+--=20
+2.23.0
 
