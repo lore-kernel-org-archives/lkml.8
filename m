@@ -7,62 +7,61 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5512C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CCB6C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A903F206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DACA520735
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 13:09:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587992943;
-	bh=bV1PKM7KpCxCRZJEtuGqiJ04oyD1/g2gNseB/UP8fgI=;
+	s=default; t=1587992949;
+	bh=pB4iFyAh9VaSFr6AV9fX9xSoxAlH6RoVnNZL7aR2xwQ=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=qFS9rue6//ffHvhtPfELQjB+p60C0eu94e2bv3YdA2obSSkV7yOC2icdDaVa/NTJ3
-	 BYRxcO/xaUHwIw1chSiD0zRS351k7lHkOJpXbY4wkc5ZTXCWXiOM6D6gF8RjzjJkl6
-	 +sAgzi1BhiJ5ff9qH/qampPrXEh70ofSVtJ0utBY=
+	b=vd9WdsmR5bnrGVkaJt7qEsYQQ/V32G5VHwZvfS+T18tAv9viWjH+RQ0bwghw7emeB
+	 25m+ovAxLCJNz+eJ27YIqCuS9S5vW1ViryeCx4FdD+EJ+xBw0hq6Ukkq8Tw71jRNFM
+	 JVVS8VkyKOysNOeiXrcDcxv6c3aSaunNjc7UH6yw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbgD0NJC (ORCPT
+        id S1727100AbgD0NJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 09:09:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46366 "EHLO mail.kernel.org"
+        Mon, 27 Apr 2020 09:09:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726651AbgD0NJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 09:09:02 -0400
+        id S1726651AbgD0NJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 09:09:08 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD0B52064C;
-        Mon, 27 Apr 2020 13:09:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89E21206E2;
+        Mon, 27 Apr 2020 13:09:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587992942;
-        bh=bV1PKM7KpCxCRZJEtuGqiJ04oyD1/g2gNseB/UP8fgI=;
+        s=default; t=1587992948;
+        bh=pB4iFyAh9VaSFr6AV9fX9xSoxAlH6RoVnNZL7aR2xwQ=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=CjJmlxt9kCyLciLtehj1y6LsYtD7lEt182QGWIwd/60V5xjHrGMZAsfukZmihBSFA
-         auMg1SAA7kev7CyJJclpfr2WF1wWU9qfEgz6PQKoCKZ2tPlRXp+Szv/TJaHiEtAHHc
-         JCVJD2kv55UWmkiuNJLLDGIFI7XiuOy5tXQQgIH0=
-Date:   Mon, 27 Apr 2020 14:08:59 +0100
+        b=dXYMY5LRP9lCqOlKe+8ZzEqIF6K5e4ylgXZsWft2JC5j+3SY17/h2MjQwmIqigQs0
+         hpCpul3RZ5cz1g7kDs3LmLWOL9z0rNntSuybiYLbf+lRlIgB9HQws/eEgkxl8CP4sW
+         8NzzFmglg2U3O0z50QKwMbekeI8BXysCPdik3Stk=
+Date:   Mon, 27 Apr 2020 14:09:05 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Tang Bin <tangbin@cmss.chinamobile.com>, s.hauer@pengutronix.de,
-        shawnguo@kernel.org, perex@perex.cz, tiwai@suse.com,
-        lgirdwood@gmail.com
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Shengju Zhang <zhangshengju@cmss.chinamobile.com>,
+To:     Tang Bin <tangbin@cmss.chinamobile.com>, perex@perex.cz,
+        tiwai@suse.com, lgirdwood@gmail.com
+Cc:     Zhang Shengju <zhangshengju@cmss.chinamobile.com>,
         linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
-In-Reply-To: <20200420142509.9728-1-tangbin@cmss.chinamobile.com>
-References: <20200420142509.9728-1-tangbin@cmss.chinamobile.com>
-Subject: Re: [PATCH] ASoC: mxs-saif: Avoid unnecessary check
-Message-Id: <158799293954.30174.3525396439519252505.b4-ty@kernel.org>
+In-Reply-To: <20200427091520.12412-1-tangbin@cmss.chinamobile.com>
+References: <20200427091520.12412-1-tangbin@cmss.chinamobile.com>
+Subject: Re: [PATCH] ASoC: hisilicon: Use the defined variable to clean code
+Message-Id: <158799293954.30174.17557167078734797875.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Apr 2020 22:25:09 +0800, Tang Bin wrote:
-> The function mxs_saif_probe() is only called with an
-> openfirmware platform device. Therefore there is no
-> need to check that it has an openfirmware node.
+On Mon, 27 Apr 2020 17:15:20 +0800, Tang Bin wrote:
+> Use the defined variable "dev" to make the code cleaner.
 > 
-> Signed-off-by: Shengju Zhang <zhangshengju@cmss.chinamobile.com>
+> Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
 > Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+> ---
+>  sound/soc/hisilicon/hi6210-i2s.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 > 
 > [...]
 
@@ -72,8 +71,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: mxs-saif: Avoid unnecessary check
-      commit: e66f385354b3bd29b713d8ab8556aa889723928f
+[1/1] ASoC: hisilicon: Use the defined variable to clean code
+      commit: 77060f4f71dfb08309f461766d2e7453ce68aa76
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
