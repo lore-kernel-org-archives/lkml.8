@@ -2,143 +2,133 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7F5C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A741DC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9760B2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 806D52063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:10:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gBntIUlP"
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="J+CAqwB2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbgD0IIx (ORCPT
+        id S1726769AbgD0IKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 04:08:53 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:57136 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbgD0IIt (ORCPT
+        Mon, 27 Apr 2020 04:10:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59532 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726485AbgD0IKJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 04:08:49 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03R836vG062365;
-        Mon, 27 Apr 2020 08:08:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=pmiQIvDNHy8LtZslPvKzGmpIjktW4EcjqDLMfhvz3as=;
- b=gBntIUlPfp7ZOc9PxbjRQ1cnNbeACiROBnqbFKhL6yIyg4sIYo83XoMExidBXksFWgCc
- rOQRCyufPAgSP7fHxyUa7UoS3OZLnoBjEZW1AzHfWUQGPEW7pd88LF3+YA5hXWr/4/38
- h400e3ihcD/SBlI1ZCo3Dg2TmR/6OvFKIyq2qFA2u8vJcrh5WYCsiJ/owKm+V6vFNSfO
- Oai8cSYzZrmWherLs/U7O7EhffwEx/yHPTQWgmu3C6yvqhckH9IeZsTmE/F/CrWaAQQb
- mzUOUFX4Rzf2m73sakz+iN2ph0FBMQBnk69ewn+30au5Zy55297f9STJkF/uSu2nfeKy RA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 30mcmqw25h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Apr 2020 08:08:29 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03R882U7175098;
-        Mon, 27 Apr 2020 08:08:28 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 30mxrpuh6t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Apr 2020 08:08:28 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03R88LAB018697;
-        Mon, 27 Apr 2020 08:08:22 GMT
-Received: from mihai.localdomain (/10.153.73.25)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 27 Apr 2020 01:08:21 -0700
-From:   Mihai Carabas <mihai.carabas@oracle.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Mihai Carabas <mihai.carabas@oracle.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Subject: [PATCH RFC 3/3] Documentation: x86: microcode: add description for metadata file
-Date:   Mon, 27 Apr 2020 10:27:59 +0300
-Message-Id: <1587972479-10971-4-git-send-email-mihai.carabas@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1587972479-10971-1-git-send-email-mihai.carabas@oracle.com>
-References: <1587972479-10971-1-git-send-email-mihai.carabas@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9603 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 suspectscore=1
- mlxlogscore=999 malwarescore=0 bulkscore=0 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004270072
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9603 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 clxscore=1015
- priorityscore=1501 suspectscore=1 impostorscore=0 adultscore=0
- malwarescore=0 bulkscore=0 lowpriorityscore=0 mlxlogscore=999 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004270071
+        Mon, 27 Apr 2020 04:10:09 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CF36C061A0F
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 01:10:08 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id h4so5208406wmb.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 01:10:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=1dLU8YduWUBDKIvk9hl+sTzDJ6YHT5GLBFDPP+SjQU8=;
+        b=J+CAqwB2QPN0E5CdjjxES0Yqz9lutFE6OrUW+aWlSRQAVoFskQIOQSp/tXnrrFcY+S
+         pfPm9kzykgdcv5B1jTlNiflWU8tkErfeWOEBGdoh0wqB23/ypAx9G4SDqJnsQYrZoIKH
+         X3y71AJ9OtH6jCWpLQIt8drRVFp9fLyL8gJJQ3g6cX91BvylB2ea48hyfzvV8CgsfIZ3
+         exmB6/AGgR7uZ7coa3aXGWLVxtz6+AwQQKh/9m8YXJOWEpf3UDedfuJp3nrHNhoLmMiB
+         PQ9PhY4SXnN8NPL7rTpmpiUGZcojr7xbYpiuvmesL+WLUZ5or7t1Sr7zh01rgfO/kexf
+         3gqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=1dLU8YduWUBDKIvk9hl+sTzDJ6YHT5GLBFDPP+SjQU8=;
+        b=LsstbU4+od/DJRHwtRDz6oQUZ9dKGE8wupTEjSMolegjHvZ6JDxm7QLDneMQQrXIzB
+         ft5F2BdEHm0QFRzp2gi/a3iHlOU34BiTRo0P2eUleC3ed2wlULu9zPQhebWDwDX6szwo
+         zI/ZPtZw5c8CYQ66pT31+UcpH30yriwtDTJQzCnLH+4wepaEP5H8XcRaYz8ZjnMeR4RA
+         96+A2eDVckjUuXVF8u4sBWwSjteWZby/pz4IkcgDRbYESOXSrhsfLah67ztzSfLrN9eC
+         /5ZIta64VGPxKe9XRbvdYlJ53a3zVEpuhj4Xzqw0iDAYVLwVry8MfEWb/r/HASSDM+e+
+         xc/A==
+X-Gm-Message-State: AGi0PuYy5HhYvy+SPTF2Z+Hg0NwjnkW/gjA9NAOVdCXzF8msUFjUiD8r
+        /UyOGQogMk0zINMT7gyKJwlqYFcS1zzVp4Kv
+X-Google-Smtp-Source: APiQypLn3J3RCB8ryYsKWizfosaGEJo/2w9hat+vzkU31n7Rr0/0iPIQaWP6YM/tdzVZON9yzrUYlA==
+X-Received: by 2002:a1c:a794:: with SMTP id q142mr24729255wme.4.1587975007193;
+        Mon, 27 Apr 2020 01:10:07 -0700 (PDT)
+Received: from ?IPv6:2001:16b8:4886:8400:6d4b:554:cd7c:6b19? ([2001:16b8:4886:8400:6d4b:554:cd7c:6b19])
+        by smtp.gmail.com with ESMTPSA id d7sm19574961wrn.78.2020.04.27.01.10.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 01:10:06 -0700 (PDT)
+Subject: Re: [RFC PATCH 1/9] include/linux/pagemap.h: introduce
+ set/clear_fs_page_private
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        david@fromorbit.com, willy@infradead.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+References: <20200426214925.10970-1-guoqing.jiang@cloud.ionos.com>
+ <20200426214925.10970-2-guoqing.jiang@cloud.ionos.com>
+ <20200427055255.GA16709@infradead.org>
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Message-ID: <125d6be2-eabb-16d1-19de-82c2e7de3851@cloud.ionos.com>
+Date:   Mon, 27 Apr 2020 10:10:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200427055255.GA16709@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Microcode nowadays may remove of modify certain CPU feature bits. Prior
-to this patch the kernel was blindly loading any microcode blob which might
-have caused an unrecoverable error (e.g. the kernel was executing an
-instruction that was removed). The following patches will process the
-metadata file and will know what features are being added/removed/modified
-and can take a decision on loading or not the new microcode blob.
+Hi Christoph,
 
-Signed-off-by: Mihai Carabas <mihai.carabas@oracle.com>
----
- Documentation/x86/microcode.rst | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+On 4/27/20 7:52 AM, Christoph Hellwig wrote:
+> Why not attach_page_private and clear_page_private as that conveys
+> the use case a little better?
 
-diff --git a/Documentation/x86/microcode.rst b/Documentation/x86/microcode.rst
-index a320d37..45e3ae8 100644
---- a/Documentation/x86/microcode.rst
-+++ b/Documentation/x86/microcode.rst
-@@ -110,6 +110,42 @@ The loading mechanism looks for microcode blobs in
- /lib/firmware/{intel-ucode,amd-ucode}. The default distro installation
- packages already put them there.
- 
-+Late loading metadata file
-+==========================
-+
-+New microcode blobs may remove or modify CPU feature bits. Prior to this
-+metadata file, the microcode was blindly loaded and might have created an
-+unrecoverable error (e.g. remove an instruction used currently in the kernel).
-+
-+In order to improve visibility on what features a new microcode that is being
-+loaded at runtime (late loading) brings in, a new metadata file is created
-+together with the microcode blob. The metadata file has the same name as the
-+microcode blob with a suffix of ".metadata". The metadata file respects the
-+following regular expression: "{m|c} {+|-} u32 [u32]*", where "m" means MSR
-+feature and "c" means a CPUID exposed feature.
-+
-+Here is an example of content for the metadata file::
-+   m + 0x00000122
-+   m - 0x00000120
-+   c + 0x00000007 0x00 0x00000000 0x021cbfbb 0x00000000 0x00000000
-+   c - 0x00000007 0x00 0x00000000 0x021cbfbb 0x00000000 0x00000000
-+
-+The definition of the file format is as follows::
-+   - each line contains an action on a CPU feature that the microcode will do
-+   - the first letter specify the type of the feature
-+   - the second letter specify the operation:
-+   -- + - adds the feature
-+   -- - - removes the feature
-+   - the third letter specifies the index of the CPUID or the MSR
-+   - for the CPUID case all the others parameters specifies the
-+     leaf, eax, ebx, ecx and edx values
-+
-+Using this metadata file, the kernel, based on its internal policies, may
-+deny a microcode update in order to ensure system stability (e.g. if an
-+instruction is removed by the microcode and that instruction is still being
-+used by the current code, we would drop the update as it would brake the
-+system).
-+
- Builtin microcode
- =================
- 
--- 
-1.8.3.1
+Yes, thanks for the good suggestion. Will rename them if no one else
+has new idea ...
+
+>> +static inline void *set_fs_page_private(struct page *page, void *data)
+>> +{
+>> +	get_page(page);
+>> +	set_page_private(page, (unsigned long)data);
+>> +	SetPagePrivate(page);
+>> +
+>> +	return data;
+>> +}
+>> +
+>> +static inline void *clear_fs_page_private(struct page *page)
+>> +{
+>> +	void *data = (void *)page_private(page);
+>> +
+>> +	if (!PagePrivate(page))
+>> +		return NULL;
+>> +	ClearPagePrivate(page);
+>> +	set_page_private(page, 0);
+>> +	put_page(page);
+>> +
+>> +	return data;
+>> +}
+> Can you add kerneldoc comments describing them, including why we
+> take the refernces?
+
+Ok, will do.
+
+> Also what is the point of the return value of set_fs_page_private?
+
+In this way, iomap_page_create can just return the function, but you
+don't like this way as you replied, will change the return value to "void".
+
+Thanks,
+Guoqing
 
