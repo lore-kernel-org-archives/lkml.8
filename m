@@ -2,75 +2,69 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A41C55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67641C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC11120663
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5083920663
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 12:53:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbgD0MxO (ORCPT
+        id S1727825AbgD0Mxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 08:53:14 -0400
-Received: from verein.lst.de ([213.95.11.211]:47815 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727029AbgD0MxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 08:53:13 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 49F0A68CF0; Mon, 27 Apr 2020 14:53:11 +0200 (CEST)
-Date:   Mon, 27 Apr 2020 14:53:10 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Becker <jlbec@evilplan.org>, linux-usb@vger.kernel.org
-Subject: Re: [PATCH v2 08/29] docs: filesystems: convert configfs.txt to
- ReST
-Message-ID: <20200427125310.GC31904@lst.de>
-References: <cover.1587487612.git.mchehab+huawei@kernel.org> <278a9befc98b49ea866c9b687d070c70cde20628.1587487612.git.mchehab+huawei@kernel.org> <20200421165534.GA16511@lst.de> <20200421170223.GP5820@bombadil.infradead.org> <20200421172337.GA18305@lst.de> <20200421165317.277f52ee@lwn.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200421165317.277f52ee@lwn.net>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        Mon, 27 Apr 2020 08:53:46 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:43455 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726651AbgD0Mxq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 08:53:46 -0400
+X-IronPort-AV: E=Sophos;i="5.73,324,1583161200"; 
+   d="scan'208";a="45618953"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 27 Apr 2020 21:53:44 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id EE54D42290A8;
+        Mon, 27 Apr 2020 21:53:42 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH RESEND] cpufreq: dt: Add support for r8a7742
+Date:   Mon, 27 Apr 2020 13:53:30 +0100
+Message-Id: <1587992010-7203-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 04:53:17PM -0600, Jonathan Corbet wrote:
-> > It wasn't entirely uncommon, but that's not really the point.  The
-> > Problem is all the weird ".." or "::" annotations that really kill
-> > the flow, or things like "|copy|" that have no reason to exist.
-> 
-> This sounds sort of like "my markup is good, yours is bad", honestly.  If
-> somebody were trying to add bracketed headings to a new document, I
-> suspect we'd get similar complaints.
+Add the compatible strings for supporting the generic cpufreq driver on
+the Renesas RZ/G1H (R8A7742) SoC.
 
-Not really.  It is a "less markup is better". 
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/cpufreq/cpufreq-dt-platdev.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> The markup can certainly be toned down.  If you don't like |copy|, it can
-> just as easily remain "(c)" or become ©, or just go away entirely.  That
-> would get rid of the ".. include:: <isonum.txt>" line too.  I would
-> happily make a rule that we don't bother with markup like |copy|
-> anywhere in the kernel docs.
+diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
+index cb9db16..148aa66 100644
+--- a/drivers/cpufreq/cpufreq-dt-platdev.c
++++ b/drivers/cpufreq/cpufreq-dt-platdev.c
+@@ -53,6 +53,7 @@ static const struct of_device_id whitelist[] __initconst = {
+ 	{ .compatible = "renesas,r7s72100", },
+ 	{ .compatible = "renesas,r8a73a4", },
+ 	{ .compatible = "renesas,r8a7740", },
++	{ .compatible = "renesas,r8a7742", },
+ 	{ .compatible = "renesas,r8a7743", },
+ 	{ .compatible = "renesas,r8a7744", },
+ 	{ .compatible = "renesas,r8a7745", },
+-- 
+2.7.4
 
-That is a good start.
-
-> The SPDX line is supposed to exist in all files, of course.
-
-No problem with that.  I'll happily take a SPDX patch any time.
-
-> If Mauro does that, can you live with "::" to mark a literal block?  It
-> doesn't seem like a whole lot of noise...?
-
-That is in fact one of my favourite pet pevees with the whole RST
-thing.
