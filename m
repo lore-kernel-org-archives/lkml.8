@@ -2,144 +2,105 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C010C4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE8EC4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38B972072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA5C02073C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:18:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588018686;
+	bh=FZznVs7DKImH4bMp84GuK30NCRT+ks2QZb0zw61Aw2o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=MBBbsRElv/VW7l7KVuBOpNEcoF+g6XmG8MaIw9cKQfx2uWSdeuBjCEqmZf/wIm8r3
+	 YVhmBgnHtdm1q2UDO7pLwPOaBQwbD/JHo5uhDzae1L5UjehUEv4C1kyiqPQCrkov0V
+	 z+fPG8ERAclxCcq9alEg+6mRHTdbws0Rzp+ZN+C0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgD0UOz (ORCPT
+        id S1726738AbgD0USF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 16:14:55 -0400
-Received: from mga03.intel.com ([134.134.136.65]:40490 "EHLO mga03.intel.com"
+        Mon, 27 Apr 2020 16:18:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726285AbgD0UOy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 16:14:54 -0400
-IronPort-SDR: 2tI4Oi6oIwWQxfcHsi4pG7mnOpH0z17RXnFf0APwjr6EOY/u4yEGozpMerBr9dXHUA6KT1gdhW
- z357f45VHSXw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 13:14:54 -0700
-IronPort-SDR: oSH1QzudxMhvrNKYYa85wCPYgn+CzdEisFQatM2S+MaevgrPdVt+tmmUWR2NSoLtOYQv8SqrGt
- 31V5QV9sFD6Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,325,1583222400"; 
-   d="scan'208";a="404431741"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga004.jf.intel.com with ESMTP; 27 Apr 2020 13:14:53 -0700
-Date:   Mon, 27 Apr 2020 13:13:57 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Jacob Jun Pan <jacob.jun.pan@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Sohil Mehta <sohil.mehta@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, iommu@lists.linux-foundation.org
-Subject: Re: [PATCH 1/7] docs: x86: Add a documentation for ENQCMD
-Message-ID: <20200427201357.GB242333@romley-ivt3.sc.intel.com>
-References: <1585596788-193989-1-git-send-email-fenghua.yu@intel.com>
- <1585596788-193989-2-git-send-email-fenghua.yu@intel.com>
- <87368qtsqz.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87368qtsqz.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        id S1726285AbgD0USE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 16:18:04 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB8ED2072D;
+        Mon, 27 Apr 2020 20:18:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588018684;
+        bh=FZznVs7DKImH4bMp84GuK30NCRT+ks2QZb0zw61Aw2o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=0dPVwJ/H9B7uUoDHVQh+JzhGMmouLB2JEnhplDQk7I3xuAgcbSFK60H1piEfCx5Sx
+         t+jKABLjlMrQXuoJB1Wv7UdopSfsHYSYtmSlzWb93RhaIDNLpcyXt7Avmd+0pazZfN
+         HbeEsAjiXXS9v7hdBuMksmtrvhaQ+taOUTUIOuQQ=
+Date:   Mon, 27 Apr 2020 13:18:02 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Sandipan Das <sandipan.osd@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "David S.Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Longpeng <longpeng2@huawei.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Mina Almasry <almasrymina@google.com>,
+        Peter Xu <peterx@redhat.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>
+Subject: Re: [PATCH v3 2/4] hugetlbfs: move hugepagesz= parsing to arch
+ independent code
+Message-Id: <20200427131802.3d132055a59535a0e6780e9f@linux-foundation.org>
+In-Reply-To: <b1f04f9f-fa46-c2a0-7693-4a0679d2a1ee@oracle.com>
+References: <20200417185049.275845-1-mike.kravetz@oracle.com>
+        <20200417185049.275845-3-mike.kravetz@oracle.com>
+        <7583dfcc-62d8-2a54-6eef-bcb4e01129b3@gmail.com>
+        <5a380060-38db-b690-1003-678ca0f28f07@oracle.com>
+        <b1f04f9f-fa46-c2a0-7693-4a0679d2a1ee@oracle.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 01:02:12PM +0200, Thomas Gleixner wrote:
-> Fenghua Yu <fenghua.yu@intel.com> writes:
-> 
-> s/Add a documentation/Add documentation/
-> 
-> > From: Ashok Raj <ashok.raj@intel.com>
-> >
-> > ENQCMD and Data Streaming Accelerator (DSA) and all of their associated
-> > features are a complicated stack with lots of interconnected pieces.
-> > This documentation provides a big picture overview for all of the
-> > features.
-> >
-> > Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-> > Co-developed-by: Fenghua Yu <fenghua.yu@intel.com>
-> > Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> > Reviewed-by: Tony Luck <tony.luck@intel.com>
-> > ---
-> >  Documentation/x86/enqcmd.rst | 185 +++++++++++++++++++++++++++++++++++
-> 
-> How is that hooked up into the Documentation index?
-> 
->  Documentation/x86/enqcmd.rst: WARNING: document isn't included in any toctree
-> 
-> > +++ b/Documentation/x86/enqcmd.rst
-> > @@ -0,0 +1,185 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +Improved Device Interaction Overview
-> 
-> So the document is about ENQCMD, right? Can you please make that in some
-> way consistently named?
-> 
-> > +
-> > +== Background ==
-> 
-> This lacks any docbook formatting.... The resulting HTML looks like ...
-> 
-> > +
-> > +Shared Virtual Addressing (SVA) allows the processor and device to use the
-> > +same virtual addresses avoiding the need for software to translate virtual
-> > +addresses to physical addresses. ENQCMD is a new instruction on Intel
-> > +platforms that allows user applications to directly notify hardware of new
-> > +work, much like doorbells are used in some hardware, but carries a payload
-> > +that carries the PASID and some additional device specific commands
-> > +along with it.
-> 
-> Sorry that's not background information, that's an agglomeration of
-> words.
-> 
-> Can you please explain properly what's the background of SVA, how it
-> differs from regular device addressing and what kind of requirements it
-> has?
-> 
-> ENQCMD is not related to background. It's part of the new technology.
-> 
-> > +== Address Space Tagging ==
-> > +
-> > +A new MSR (MSR_IA32_PASID) allows an application address space to be
-> > +associated with what the PCIe spec calls a Process Address Space ID
-> > +(PASID). This PASID tag is carried along with all requests between
-> > +applications and devices and allows devices to interact with the process
-> > +address space.
-> 
-> Sigh. The important part here is not the MSR. The important part is to
-> explain what PASID is and where it comes from. Documentation has similar
-> rules as changelogs:
-> 
->       1) Provide context
-> 
->       2) Explain requirements
->       
->       3) Explain implementation
-> 
-> The pile you provided is completely backwards and unstructured.
+On Mon, 27 Apr 2020 12:09:47 -0700 Mike Kravetz <mike.kravetz@oracle.com> wrote:
 
-Ok. Will address all of the comments.
+> Previously, a check for hugepages_supported was added before processing
+> hugetlb command line parameters.  On some architectures such as powerpc,
+> hugepages_supported() is not set to true until after command line
+> processing.  Therefore, no hugetlb command line parameters would be
+> accepted.
+> 
+> Remove the additional checks for hugepages_supported.  In hugetlb_init,
+> print a warning if !hugepages_supported and command line parameters were
+> specified.
 
-Thanks.
+This applies to [4/4] instead of fixing [2/4].  I guess you'll
+straighten that out in v4?
 
--Fenghua
+btw, was
+http://lkml.kernel.org/r/CADYN=9Koefrq9H1Y82Q8nMNbeyN4tzhEfvDu5u=sVFjFZCYorA@mail.gmail.com
+addressed?
+
