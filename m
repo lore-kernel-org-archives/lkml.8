@@ -2,102 +2,238 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E6AC4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A37FC4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C2D3206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:34:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB7A92072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:38:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="uCMDj0u3"
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="NWGr6wbt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726849AbgD0Uet (ORCPT
+        id S1726691AbgD0UiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 16:34:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35396 "EHLO
+        Mon, 27 Apr 2020 16:38:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726205AbgD0Uet (ORCPT
+        by vger.kernel.org with ESMTP id S1726205AbgD0UiJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 16:34:49 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BB9EC0610D5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 13:34:48 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id a21so19085451ljb.9
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 13:34:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g4dBzvzaYSmwe+gN0bTSxOguahuOK70qElh1uq5WJTY=;
-        b=uCMDj0u3BZLTUsCCRaRdr9xL9loSXFm7wGZEF7Ya1WoOmLRGy+nA1AMMNXR/ILJZVw
-         z8y4K4UI1gIuel/XaDugIU1GIeoXHJYXmAJ4/SejjNBnmMN8IxPFUZt/FnZg1mBDJnmC
-         8rkdL7wa67XKNfQhX9nVJln/EqqVnmaen/3TUFAldcbLr+xTor60OpBWNATy369XqToC
-         e3/tNcque2dmIaoRPmusn3BazbMH3ZXWjAcB/IKIMqzXaw8KsmhUm8dkDv59SBstlAca
-         whboOeW+ydNPEEjw6fPQutYz4fkfXkJ8NqlM4WJcMSF31Y/p8hOSDl05n7ZqzNrJSHFM
-         UbyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g4dBzvzaYSmwe+gN0bTSxOguahuOK70qElh1uq5WJTY=;
-        b=p7B/oYCm4rL0DPSzwATbeZsB3eM5l0nQnFO0/gX/Cr22mm+qBAfD7We/NjAI0P66Qm
-         2BNwLayqaeBtY0s0EdCV1ySNvs2krEFbkBndk2bQAf66KNr69GdgwIwR0wFLum4PEW7A
-         KKCoDAdZjAzNbbDjH5tLKDVp3nZmHvPUVdQaIeh0l16T16n2+rw24OGohHyC/wOL4PcB
-         ZEo9fs29nvYCwBMUkc3FhtuM6skmqbRf8Ib9X+pvh/cZEX3QLHkJemaFqVp//mbBvXaw
-         M2b9J4v3q7yf5HtDJLJKX3PORxXSYcjrNY76OEg6q6gPvwEEORRNzxDgR5gp1U/21+Uc
-         tctQ==
-X-Gm-Message-State: AGi0PubjugLqd6bWTsU0DRShtTSaV5H0uzmK+GPszEx4qY9GVn8mQCOs
-        MBvW2Ui5UsdOU2a+/0FT2ioEhoHnpAoqPwdB6SC8aw==
-X-Google-Smtp-Source: APiQypJ0k6z02gQOm9RJYPAfBsYkzEtyCANSfITp19EEVZRfK4V472Q83W1EunxwohzuVywk3Dyj5f6RuGciuIt8I1E=
-X-Received: by 2002:a2e:8e98:: with SMTP id z24mr15758173ljk.134.1588019686261;
- Mon, 27 Apr 2020 13:34:46 -0700 (PDT)
+        Mon, 27 Apr 2020 16:38:09 -0400
+Received: from mx0b-00190b01.pphosted.com (mx0b-00190b01.pphosted.com [IPv6:2620:100:9005:57f::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E4D5C0610D5;
+        Mon, 27 Apr 2020 13:38:09 -0700 (PDT)
+Received: from pps.filterd (m0050096.ppops.net [127.0.0.1])
+        by m0050096.ppops.net-00190b01. (8.16.0.42/8.16.0.42) with SMTP id 03RKUOYG027508;
+        Mon, 27 Apr 2020 21:38:04 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=jan2016.eng;
+ bh=Xk6H3qlPs8/T+MwYn7e+lTfgfR06gunAjHmC1efrlFs=;
+ b=NWGr6wbtj/iYC0XKPgUu9Js14hkTLXe2cMaFbA4vjpO+wH2k+znzefbvTqXMkRn1KNcm
+ ca5BuWhVVhdLgjvkxl0yH15agPjxNm9Z4+itvHZajKRzYLApyaAyrKcqVbC4osPaj867
+ EuwfHEQZxWQbSAD8KQQ088Bco9Bu7n1UouBdyC6ywTbW0wAaGBxCxH4TcVx+DzS8S3o5
+ XpIXdDoQbIDjFLFoWrSw7+ji0tDK85Pui+BndZirKS1Ab9E7N6Cf3nHB+Vi2eJHY+E0o
+ hx56/TzSA9gaeKppEakkWMxCKfcrFqo7m+F5o6hAUVaQg6U9vWUL0q3SG7drfKcPfQkQ Sw== 
+Received: from prod-mail-ppoint6 (prod-mail-ppoint6.akamai.com [184.51.33.61] (may be forged))
+        by m0050096.ppops.net-00190b01. with ESMTP id 30mdm9hw6q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Apr 2020 21:38:04 +0100
+Received: from pps.filterd (prod-mail-ppoint6.akamai.com [127.0.0.1])
+        by prod-mail-ppoint6.akamai.com (8.16.0.27/8.16.0.27) with SMTP id 03RKXvNq004182;
+        Mon, 27 Apr 2020 16:38:03 -0400
+Received: from prod-mail-relay14.akamai.com ([172.27.17.39])
+        by prod-mail-ppoint6.akamai.com with ESMTP id 30mghv92f2-1;
+        Mon, 27 Apr 2020 16:38:03 -0400
+Received: from [0.0.0.0] (prod-ssh-gw01.bos01.corp.akamai.com [172.27.119.138])
+        by prod-mail-relay14.akamai.com (Postfix) with ESMTP id 6C51485B92;
+        Mon, 27 Apr 2020 20:38:02 +0000 (GMT)
+Subject: Re: [PATCH v2] eventpoll: fix missing wakeup for ovflist in
+ ep_poll_callback
+To:     Khazhismel Kumykov <khazhy@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Roman Penyaev <rpenyaev@suse.de>,
+        Alexander Viro <viro@zeniv.linux.org.uk>, Heiher <r@hev.cc>,
+        stable@vger.kernel.org
+References: <20200424025057.118641-1-khazhy@google.com>
+ <20200424190039.192373-1-khazhy@google.com>
+ <66f26e74-6c7b-28c2-8b3f-faf8ea5229d4@akamai.com>
+ <CACGdZYLD9ZqJNVktHUVe6N4t28VKy-Z76ZcCdsAOJHZRXaYGSA@mail.gmail.com>
+From:   Jason Baron <jbaron@akamai.com>
+Message-ID: <a2f22c3c-c25a-4bda-8339-a7bdaf17849e@akamai.com>
+Date:   Mon, 27 Apr 2020 16:38:02 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200427074222.65369-1-maco@android.com> <20200427170613.GA13686@lst.de>
-In-Reply-To: <20200427170613.GA13686@lst.de>
-From:   Martijn Coenen <maco@android.com>
-Date:   Mon, 27 Apr 2020 22:34:35 +0200
-Message-ID: <CAB0TPYGZc_n-b5xtNsbJxEiqpLMqE=RcXGuy7C2vbY18mKZ6_A@mail.gmail.com>
-Subject: Re: [PATCH v3 0/9] Add a new LOOP_SET_FD_AND_STATUS ioctl
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
-        Narayan Kamath <narayan@google.com>,
-        Zimuzo Ezeozue <zezeozue@google.com>, kernel-team@android.com,
-        linux-block <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martijn Coenen <maco@google.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CACGdZYLD9ZqJNVktHUVe6N4t28VKy-Z76ZcCdsAOJHZRXaYGSA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-27_16:2020-04-27,2020-04-27 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=940
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-2002250000 definitions=main-2004270167
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-27_15:2020-04-27,2020-04-27 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 suspectscore=0
+ mlxlogscore=944 impostorscore=0 malwarescore=0 mlxscore=0 adultscore=0
+ phishscore=0 spamscore=0 bulkscore=0 clxscore=1015 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004270167
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
 
-On Mon, Apr 27, 2020 at 7:06 PM Christoph Hellwig <hch@lst.de> wrote:
+
+On 4/25/20 4:59 PM, Khazhismel Kumykov wrote:
+> On Sat, Apr 25, 2020 at 9:17 AM Jason Baron <jbaron@akamai.com> wrote:
+>>
+>>
+>>
+>> On 4/24/20 3:00 PM, Khazhismel Kumykov wrote:
+>>> In the event that we add to ovflist, before 339ddb53d373 we would be
+>>> woken up by ep_scan_ready_list, and did no wakeup in ep_poll_callback.
+>>> With that wakeup removed, if we add to ovflist here, we may never wake
+>>> up. Rather than adding back the ep_scan_ready_list wakeup - which was
+>>> resulting in unnecessary wakeups, trigger a wake-up in ep_poll_callback.
+>>
+>> I'm just curious which 'wakeup' we are talking about here? There is:
+>> wake_up(&ep->wq) for the 'ep' and then there is the nested one via:
+>> ep_poll_safewake(ep, epi). It seems to me that its only about the later
+>> one being missing not both? Is your workload using nested epoll?
+>>
+>> If so, it might make sense to just do the later, since the point of
+>> the original patch was to minimize unnecessary wakeups.
+> 
+> The missing wake-ups were when we added to ovflist instead of rdllist.
+> Both are "the ready list" together - so I'd think we'd want the same
+> wakeups regardless of which specific list we added to.
+> ep_poll_callback isn't nested specific?
 >
-> I've just been looking over the loop driver for other reasons,
-> and noticed that setting the block size still isn't possible
-> with LOOP_SET_FD_AND_STATUS as far as I can tell.  Might that
-> be worth it?
 
-That's a good point, I didn't think about it because that path is no
-longer slow in our setup, but I think it makes sense to include it.
+So I was thinking that ep_poll() would see these events on the
+ovflist without an explicit wakeup, b/c the overflow list being active
+implies that the ep_poll() path would add them to the rdllist in
+ep_scan_read_list(). Thus, it will see the events either in the
+current ep_poll() context or via a subsequent syscall to epoll_wait().
 
-> Also maybe an explicit direct I/O flag, and maybe
-> enough padding with a future proof flags bitmap that we can easily
-> extend it for new features if they pop up?
+However, there are other paths that can call ep_scan_ready_list() thus
+I agree with you that both wakeups here are necessary.
 
-Sounds good. I'm thinking these flags should be separate from
-LO_FLAGS_; even though there is already a LO_FLAGS_DIRECT_IO, as far
-as I can tell it can only be used to tell whether it's enabled, not to
-actually enable it. And it would just get confusing if we add more
-flags later. Maybe something like LO_FD_STATUS_FLAG_DIRECT_IO ?
+I do think are are still (smaller) potential races in ep_scan_ready_list()
+where we have:
+
+        write_lock_irq(&ep->lock);
+        list_splice_init(&ep->rdllist, &txlist);
+        WRITE_ONCE(ep->ovflist, NULL);
+        write_unlock_irq(&ep->lock);
+
+And in the ep_poll path we have:
+
+static inline int ep_events_available(struct eventpoll *ep)
+{
+        return !list_empty_careful(&ep->rdllist) ||
+                READ_ONCE(ep->ovflist) != EP_UNACTIVE_PTR;
+}
+
+
+Seems to me that first bit needs to be the following, since
+ep_events_available() is now checked in a lockless way:
+
+
+        write_lock_irq(&ep->lock);
+	WRITE_ONCE(ep->ovflist, NULL);
+	smp_wmb();
+        list_splice_init(&ep->rdllist, &txlist);
+        write_unlock_irq(&ep->lock);
+
+
+And also this bit:
+
+        WRITE_ONCE(ep->ovflist, EP_UNACTIVE_PTR);
+
+        /*
+         * Quickly re-inject items left on "txlist".
+         */
+        list_splice(&txlist, &ep->rdllist);
+
+Should I think better be reversed as well to:
+
+list_splice(&txlist, &ep->rdllist);
+smp_wmb();
+WRITE_ONCE(ep->ovflist, EP_UNACTIVE_PTR);
+
+
+I can send those as a separate patch followup.
 
 Thanks,
-Martijn
+
+-Jason
+
+
+>>> We noticed that one of our workloads was missing wakeups starting with
+>>> 339ddb53d373 and upon manual inspection, this wakeup seemed missing to
+>>> me. With this patch added, we no longer see missing wakeups. I haven't
+>>> yet tried to make a small reproducer, but the existing kselftests in
+>>> filesystem/epoll passed for me with this patch.
+>>>
+>>> Fixes: 339ddb53d373 ("fs/epoll: remove unnecessary wakeups of nested epoll")
+>>>
+>>> Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
+>>> Reviewed-by: Roman Penyaev <rpenyaev@suse.de>
+>>> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+>>> Cc: Heiher <r@hev.cc>
+>>> Cc: Jason Baron <jbaron@akamai.com>
+>>> Cc: <stable@vger.kernel.org>
+>>> ---
+>>> v2: use if/elif instead of goto + cleanup suggested by Roman
+>>>  fs/eventpoll.c | 18 +++++++++---------
+>>>  1 file changed, 9 insertions(+), 9 deletions(-)
+>>>
+>>> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+>>> index 8c596641a72b..d6ba0e52439b 100644
+>>> --- a/fs/eventpoll.c
+>>> +++ b/fs/eventpoll.c
+>>> @@ -1171,6 +1171,10 @@ static inline bool chain_epi_lockless(struct epitem *epi)
+>>>  {
+>>>       struct eventpoll *ep = epi->ep;
+>>>
+>>> +     /* Fast preliminary check */
+>>> +     if (epi->next != EP_UNACTIVE_PTR)
+>>> +             return false;
+>>> +
+>>>       /* Check that the same epi has not been just chained from another CPU */
+>>>       if (cmpxchg(&epi->next, EP_UNACTIVE_PTR, NULL) != EP_UNACTIVE_PTR)
+>>>               return false;
+>>> @@ -1237,16 +1241,12 @@ static int ep_poll_callback(wait_queue_entry_t *wait, unsigned mode, int sync, v
+>>>        * chained in ep->ovflist and requeued later on.
+>>>        */
+>>>       if (READ_ONCE(ep->ovflist) != EP_UNACTIVE_PTR) {
+>>> -             if (epi->next == EP_UNACTIVE_PTR &&
+>>> -                 chain_epi_lockless(epi))
+>>> +             if (chain_epi_lockless(epi))
+>>> +                     ep_pm_stay_awake_rcu(epi);
+>>> +     } else if (!ep_is_linked(epi)) {
+>>> +             /* In the usual case, add event to ready list. */
+>>> +             if (list_add_tail_lockless(&epi->rdllink, &ep->rdllist))
+>>>                       ep_pm_stay_awake_rcu(epi);
+>>> -             goto out_unlock;
+>>> -     }
+>>> -
+>>> -     /* If this file is already in the ready list we exit soon */
+>>> -     if (!ep_is_linked(epi) &&
+>>> -         list_add_tail_lockless(&epi->rdllink, &ep->rdllist)) {
+>>> -             ep_pm_stay_awake_rcu(epi);
+>>>       }
+>>>
+>>>       /*
+>>>
