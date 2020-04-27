@@ -2,178 +2,93 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE92C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BC6C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE92920663
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:34:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51BD1206D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 16:34:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KgTIBTlE"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="AVHFyKBa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbgD0Qet (ORCPT
+        id S1728209AbgD0Qex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 12:34:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53826 "EHLO
+        Mon, 27 Apr 2020 12:34:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725852AbgD0Qet (ORCPT
+        by vger.kernel.org with ESMTP id S1725852AbgD0Qev (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 12:34:49 -0400
+        Mon, 27 Apr 2020 12:34:51 -0400
 Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4161DC0610D5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 09:34:49 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 18so9244409pfx.6
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 09:34:49 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61DEDC0610D5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 09:34:51 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id x15so9263945pfa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 09:34:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dH5N2+Bi4maNV3TmI71q19uFU+pmI9F59AU5vH4JkGo=;
-        b=KgTIBTlEkl4brC9BVI6m48Hr6lFrINQSdl/vtD1d1TG9HjjiP1rV9LlZkFEY97lryv
-         FpdoVukZ0PTdSO0bT9R9ppDktjJ5bKAWrFSrIIeL62AZWdBl+tPJotIxlbFf/nhoEys/
-         8MtPXxtQTh65nhszKqT1ldyWDzOCPXbR7uhwZiTbXlrB7HPMinpQQ+S8wXSzrGwC5a0u
-         fT8tY1Ge0/Qi4xNL+YQXJuPPaQfTTBSv233LH2/1H2OStjLWj+fxMvowEBMKEZ3VHrkV
-         1a93tU0BtHcgapnwu37dHt4/sPW49DAFDhwMTYtEswJNG+jqyj6lzwMJcURIr0TXA7U3
-         qp3g==
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fbHM1UO8ZCsiegGn5ySxeV/75VUNG8WD+xMilKzGDK0=;
+        b=AVHFyKBaT3lWtILdsn7lZbmxuZqLoXBACX+5oScB4Ni5aArwxsJ6qGE8HLSV8BTb9R
+         jyR/oGhu7x83HmelJV7BfQxEM2p97lF9zL+Z0LTiB096JYKfSVi/FGfwL33jTP+aF5vZ
+         SVdjrqIjF+5LJr4e70MVqjl+QwzGsm+G6laRPOuqao1Lt1ZDqTv+5iD/cvj2LaTOVuPh
+         uOP931J9qGvclu8Vnku+rbLzIsfgJN4Emx5SOXDnhM+CLIrD07it7a3tkWSVQKgAiSE1
+         xCC1NcUjETwzx28zzLY1K4/ftDdcYeB+2J/HlFl2wmr3lek0dzHuzdYKqpxnvO+nvhWw
+         +Fng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dH5N2+Bi4maNV3TmI71q19uFU+pmI9F59AU5vH4JkGo=;
-        b=CFTEcP7Fi/i4iI+260jK0b6lq677RgFJcn0fXs0Ah8sYGQ7sGLCsVjVhKiGWsXP6AR
-         AWUcn/G3HiY/k6cItdVsBhPkhLUMiB3bm4/3fmr4ezVxH5ID/gsl0irYc+MnTQIvtpd2
-         Zm19w7ifoSiBFtskN5tHrPUCpKvz4JgZXGPI2EDrj5CCkDHEsYzSF6OhtXpjqlHOzU3d
-         KSaWd5QGcdX5h1LhXWSLgOSRghP9yv3Nn4gd99h8aV/ZMyNhjIUEki3pGDkip5uGWXAJ
-         qIZWTMvM+x/pkUS7nhTvoz7vKmYAU8TwOmks/7dgE7mlW9mCr5TQWuy62FlBzEi+Wjt7
-         7lWA==
-X-Gm-Message-State: AGi0Pua7UDg0qIhHmBaALICgDksiyLcG8qldtvzllzDLQNHDJmyJyYPY
-        DlnfbbdQbpDqRlVYIjc93/dkZg==
-X-Google-Smtp-Source: APiQypLQHB4CFaWth/CqHFeb7GtkoQ9f+Z/YV/uWim5iFdQkxhpFtCKNB5qi1Wi4AJ6tYvRUkvgWmA==
-X-Received: by 2002:a63:1845:: with SMTP id 5mr19348310pgy.69.1588005288806;
-        Mon, 27 Apr 2020 09:34:48 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id fy21sm11457036pjb.25.2020.04.27.09.34.47
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=fbHM1UO8ZCsiegGn5ySxeV/75VUNG8WD+xMilKzGDK0=;
+        b=P/VrMMvHneet55FbTuptPcE98rRPuAdkRhhg/VNJuFbrhXvL6m4ocZLrPme1dBK8WK
+         FqZh2tkDBeN8wyP1KiRGQpLfdmPR+27wJ7hvhynp2mhNnJXNTCwdx+xA16yX7O6Vm+TN
+         QYeiEm2+TcPmlRbmgWpC8Ez7kK2fpj0mw1kDnyNI3u6cJcjo9arqi3Q20HlwrchI5FST
+         hqZrT2UgjQZEIuMYmhzNUd1uObGEJRXI/wbmVvPDN+aBz1ltNARCuP54mxAQ8lE6P/b+
+         HaT252HTu7MmXGkG06DbwmmiYiVrxL9t8SaZRIqb5Dg8WOkrjb32IS3ZTuu8CydUYDUy
+         rB0g==
+X-Gm-Message-State: AGi0PuZcbNIyp6yYAWy3kBQHk11RRVjdjN1VpEX+aONw3mB7eIRr1tvV
+        SvW1B35bDg41XZOwdyOPnPs8TA==
+X-Google-Smtp-Source: APiQypLRWUHLrcl4eewb2MZpebmvrOe2d15ENGwSBTtBtqZ8Qsa654XlBZq7p87Qzgo0xDc/BXO4jQ==
+X-Received: by 2002:a63:67c5:: with SMTP id b188mr23328255pgc.111.1588005290612;
+        Mon, 27 Apr 2020 09:34:50 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id 23sm11675960pjb.11.2020.04.27.09.34.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 09:34:48 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 10:34:46 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>
-Subject: Re: [PATCH 1/5] coresight: Include required headers in C files
-Message-ID: <20200427163446.GB10601@xps15>
-References: <20200426185805.14923-1-swboyd@chromium.org>
- <20200426185805.14923-2-swboyd@chromium.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200426185805.14923-2-swboyd@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 27 Apr 2020 09:34:49 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 09:34:49 -0700 (PDT)
+X-Google-Original-Date: Mon, 27 Apr 2020 09:34:46 PDT (-0700)
+Subject:     Re: [PATCH 0/3] Refactor patch text interfaces and mechanism
+In-Reply-To: <cover.1587453338.git.zong.li@sifive.com>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        zong.li@sifive.com
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     zong.li@sifive.com
+Message-ID: <mhng-7876a56a-d387-46f1-9f54-95b18654a571@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 11:58:01AM -0700, Stephen Boyd wrote:
-> We should include headers that C files use in the C files that use them
-> and avoid relying on implicit includes as much as possible. This helps
-> avoid compiler errors in the future about missing declarations when
-> header files change includes in the future.
-> 
-> Cc: Douglas Anderson <dianders@chromium.org>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: Mike Leach <mike.leach@linaro.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->  drivers/hwtracing/coresight/coresight-cti-platform.c |  8 +++++++-
->  drivers/hwtracing/coresight/coresight-cti-sysfs.c    |  7 +++++++
->  drivers/hwtracing/coresight/coresight-cti.h          | 10 +++++++++-
->  3 files changed, 23 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-cti-platform.c b/drivers/hwtracing/coresight/coresight-cti-platform.c
-> index b44d83142b62..245f16c61af8 100644
-> --- a/drivers/hwtracing/coresight/coresight-cti-platform.c
-> +++ b/drivers/hwtracing/coresight/coresight-cti-platform.c
-> @@ -2,11 +2,17 @@
->  /*
->   * Copyright (c) 2019, The Linaro Limited. All rights reserved.
->   */
-> +#include <linux/coresight.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/of.h>
-> +#include <linux/property.h>
-> +#include <linux/slab.h>
->  
->  #include <dt-bindings/arm/coresight-cti-dt.h>
-> -#include <linux/of.h>
->  
->  #include "coresight-cti.h"
-> +#include "coresight-priv.h"
->  
->  /* Number of CTI signals in the v8 architecturally defined connection */
->  #define NR_V8PE_IN_SIGS		2
-> diff --git a/drivers/hwtracing/coresight/coresight-cti-sysfs.c b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-> index 1f8fb7c15e80..bed460541f15 100644
-> --- a/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-> +++ b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-> @@ -4,7 +4,14 @@
->   * Author: Mike Leach <mike.leach@linaro.org>
->   */
->  
-> +#include <linux/atomic.h>
->  #include <linux/coresight.h>
-> +#include <linux/device.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/slab.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/sysfs.h>
->  
->  #include "coresight-cti.h"
->  
-> diff --git a/drivers/hwtracing/coresight/coresight-cti.h b/drivers/hwtracing/coresight/coresight-cti.h
-> index 004df3ab9dd0..d80123b905a8 100644
-> --- a/drivers/hwtracing/coresight/coresight-cti.h
-> +++ b/drivers/hwtracing/coresight/coresight-cti.h
-> @@ -7,8 +7,10 @@
->  #ifndef _CORESIGHT_CORESIGHT_CTI_H
->  #define _CORESIGHT_CORESIGHT_CTI_H
->  
-> -#include <asm/local.h>
-> +#include <linux/list.h>
->  #include <linux/spinlock.h>
-> +#include <linux/types.h>
-> +
->  #include "coresight-priv.h"
->  
->  /*
-> @@ -52,6 +54,12 @@
->   */
->  #define CTIINOUTEN_MAX		32
->  
-> +struct attribute;
-> +struct attribute_group;
-> +struct coresight_device;
-> +struct device;
-> +struct fwnode_handle;
-> +
+On Tue, 21 Apr 2020 00:29:58 PDT (-0700), zong.li@sifive.com wrote:
+> This patch set contains the difference from the newest strict memory
+> permission. These changes are suggested by Masami Hiramatsu, including
+> deprecating old style of kprobe annotation, lock protection and so on.
+>
+> Zong Li (3):
+>   riscv: Remove the 'riscv_' prefix of function name
+>   riscv: Use NOKPROBE_SYMBOL() instead of __krpobes annotation
+>   riscv: Use text_mutex instead of patch_lock
+>
+>  arch/riscv/include/asm/patch.h |  4 +--
+>  arch/riscv/kernel/ftrace.c     | 15 ++++++++++-
+>  arch/riscv/kernel/patch.c      | 46 ++++++++++++++++++++--------------
+>  3 files changed, 43 insertions(+), 22 deletions(-)
 
-I would prefer adding the headers rather than forward declarations, it scales
-better.
-
-Thanks,
-Mathieu
-
->  /**
->   * Group of related trigger signals
->   *
-> -- 
-> Sent by a computer, using git, on the internet
-> 
+Thanks, this is on for-next.
