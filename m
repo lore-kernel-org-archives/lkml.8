@@ -2,57 +2,56 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57727C81C40
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA97C81C44
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 331862075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 289692072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 21:18:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588022281;
-	bh=diHIQNdW9tXwNaigHoaDIpMGH+WAB2UEy0sdibZm2Fc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=FV3Rt3o7Opxj8HdyK+5i32qF66vMdsflz3jzxVcR6pwAfAYkC/K5H0reNIC1HZpmN
-	 YMiSoHOFEt/aXnEYuoUMBxdVkjN3UWEOuHg/ClThdR8nJ22rIxYjl5D9I+XQzpjNcG
-	 V53slk9e+EidNIVafCnVvH5bqG6jMY5r5X3BQL0k=
+	s=default; t=1588022292;
+	bh=tCnOwtkTEM30df+W8tGzx5ucDOM4NXef99urc+b2bEk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=O2/qqkiLI+4YxLjj4nisgwYWu0QcH6SuE5GxpmHdBzByhSQis3SpP7HjDUqMNWUcu
+	 r6f8hw4YVojSSody9HoxVGDetR7k6SyGxh4XkMwqA/7GwDearEArGQJDml6LIDoRiE
+	 nY3bd9N+lN70IyStQpjc1ZwJ2eTYcXGCRbpJVG0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgD0VR2 (ORCPT
+        id S1726626AbgD0VSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 17:17:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33754 "EHLO mail.kernel.org"
+        Mon, 27 Apr 2020 17:18:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726030AbgD0VRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 17:17:25 -0400
+        id S1726404AbgD0VR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 17:17:27 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5F552075E;
-        Mon, 27 Apr 2020 21:17:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3248221F6;
+        Mon, 27 Apr 2020 21:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588022243;
-        bh=diHIQNdW9tXwNaigHoaDIpMGH+WAB2UEy0sdibZm2Fc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=P4ErDB3UqWrQeqbLqijoEa8kkqGyrk6Qu0y5yI2MKzjqNm6ch/xu4WEb6bki8G/bw
-         w+R3JWBW/0iVAtsV2f2EZCbEipIeFB47JUs0l47yQSuVBVgGt6XiHW+EvIw5b5nHYD
-         JW8gpsqNwh6fZ1haUh2NStOV0V/kj5diMisolXXs=
+        s=default; t=1588022245;
+        bh=tCnOwtkTEM30df+W8tGzx5ucDOM4NXef99urc+b2bEk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1FlJ+9Y2UDDF362zhlVcEH70fr5w9vAUvwHKZXBx2XoRy0IuVW68HbRRDPJ8mau6v
+         P+XveXsDO1bgbhE4jNTQ1KFnic/WG2HUHG1AgMlJ+IkgA6vnioaXi271g8KdoU+6ff
+         z7nMLhLcTjRHtxxtisEnmqlGNv49V963KGjwdwjA=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jTB7y-000Hjc-03; Mon, 27 Apr 2020 23:17:22 +0200
+        id 1jTB7z-000HlH-55; Mon, 27 Apr 2020 23:17:23 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        linux-cachefs@redhat.com, codalist@coda.cs.cmu.edu,
-        linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-xfs@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: [PATCH v3 00/29] Convert files to ReST - part 2
-Date:   Mon, 27 Apr 2020 23:16:52 +0200
-Message-Id: <cover.1588021877.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v3 21/29] docs: filesystems: split spufs.txt into 3 separate files
+Date:   Mon, 27 Apr 2020 23:17:13 +0200
+Message-Id: <3753aa73524f4e1cbf0c19e34f7b322420e0b1c6.1588021877.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
+In-Reply-To: <cover.1588021877.git.mchehab+huawei@kernel.org>
+References: <cover.1588021877.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,181 +59,528 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the second part of a series I wrote sometime ago where I manually
-convert lots of files to be properly parsed by Sphinx as ReST files.
+This file has manpages for 3 different things. As we'll
+be converting it to ReST, let's fist split it into their
+individual components.
 
-As it touches on lot of stuff, this series is based on today's linux-next, 
-at tag next-20190617.
-
-The first version of this series had 57 patches. The first part with 28 patches
-were already merged. Right now, there are still ~76  patches pending applying
-(including this series), and that's because I opted to do ~1 patch per converted
- directory.
-
-That sounds too much to be send on a single round. So, I'm opting to split
-it on 3 parts for the conversion, plus a final patch adding orphaned books
-to existing ones. 
-
-Those patches should probably be good to be merged either by subsystem
-maintainers or via the docs tree.
-
-I opted to mark new files not included yet to the main index.rst (directly or
-indirectly) with the :orphan: tag, in order to avoid adding warnings to the
-build system. This should be removed after we find a "home" for all
-the converted files within the new document tree arrangement, after I
-submit the third part.
-
-Both this series and  the other parts of this work are on my devel git tree,
-at:
-
-	https://git.linuxtv.org/mchehab/experimental.git/log/?h=convert_rst_renames_v5.1
-
-The final output in html (after all patches I currently have, including 
-the upcoming series) can be seen at:
-
-	https://www.infradead.org/~mchehab/rst_conversion/
-
-It contains all pending work from my side related to the conversion, plus
-the patches I finished a first version today with contains the renaming 
-patches and de-orphan changes.
-
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
+ .../filesystems/spufs/spu_create.txt          | 119 +++++++++
+ Documentation/filesystems/spufs/spu_run.txt   | 121 +++++++++
+ .../filesystems/{ => spufs}/spufs.txt         | 245 ------------------
+ 3 files changed, 240 insertions(+), 245 deletions(-)
+ create mode 100644 Documentation/filesystems/spufs/spu_create.txt
+ create mode 100644 Documentation/filesystems/spufs/spu_run.txt
+ rename Documentation/filesystems/{ => spufs}/spufs.txt (59%)
 
-Version 3:
-
-- Rebased on the top of next-20200424
-- configfs.rst conversion moved to the end of the series;
-- avoided almost all markups at configfs.rst while still preserving
-  a reasonable output and not generating build warnings.
-
-Version 2:
-
-- Removed patches merged via other trees;
-- rebased on the top of today's linux-next (next-20190617);
-- Fix a typo on one patch's description;
-- Added received acks.
-
-Mauro Carvalho Chehab (29):
-  docs: filesystems: convert caching/object.txt to ReST
-  docs: filesystems: convert caching/fscache.txt to ReST format
-  docs: filesystems: caching/netfs-api.txt: convert it to ReST
-  docs: filesystems: caching/operations.txt: convert it to ReST
-  docs: filesystems: caching/cachefiles.txt: convert to ReST
-  docs: filesystems: caching/backend-api.txt: convert it to ReST
-  docs: filesystems: convert cifs/cifsroot.txt to ReST
-  docs: filesystems: convert automount-support.txt to ReST
-  docs: filesystems: convert coda.txt to ReST
-  docs: filesystems: convert devpts.txt to ReST
-  docs: filesystems: convert dnotify.txt to ReST
-  docs: filesystems: convert fiemap.txt to ReST
-  docs: filesystems: convert files.txt to ReST
-  docs: filesystems: convert fuse-io.txt to ReST
-  docs: filesystems: convert locks.txt to ReST
-  docs: filesystems: convert mandatory-locking.txt to ReST
-  docs: filesystems: convert mount_api.txt to ReST
-  docs: filesystems: convert quota.txt to ReST
-  docs: filesystems: convert seq_file.txt to ReST
-  docs: filesystems: convert sharedsubtree.txt to ReST
-  docs: filesystems: split spufs.txt into 3 separate files
-  docs: filesystems: convert spufs/spu_create.txt to ReST
-  docs: filesystems: convert spufs/spufs.txt to ReST
-  docs: filesystems: convert spufs/spu_run.txt to ReST
-  docs: filesystems: convert sysfs-pci.txt to ReST
-  docs: filesystems: convert sysfs-tagging.txt to ReST
-  docs: filesystems: convert xfs-delayed-logging-design.txt to ReST
-  docs: filesystems: convert xfs-self-describing-metadata.txt to ReST
-  docs: filesystems: convert configfs.txt to ReST
-
- Documentation/admin-guide/sysctl/kernel.rst   |    2 +-
- ...ount-support.txt => automount-support.rst} |   23 +-
- .../{backend-api.txt => backend-api.rst}      |  165 +-
- .../{cachefiles.txt => cachefiles.rst}        |  139 +-
- Documentation/filesystems/caching/fscache.rst |  565 ++++++
- Documentation/filesystems/caching/fscache.txt |  448 -----
- Documentation/filesystems/caching/index.rst   |   14 +
- .../caching/{netfs-api.txt => netfs-api.rst}  |  172 +-
- .../caching/{object.txt => object.rst}        |   43 +-
- .../{operations.txt => operations.rst}        |   45 +-
- .../cifs/{cifsroot.txt => cifsroot.rst}       |   56 +-
- Documentation/filesystems/coda.rst            | 1670 ++++++++++++++++
- Documentation/filesystems/coda.txt            | 1676 -----------------
- .../{configfs/configfs.txt => configfs.rst}   |  131 +-
- Documentation/filesystems/devpts.rst          |   36 +
- Documentation/filesystems/devpts.txt          |   26 -
- .../filesystems/{dnotify.txt => dnotify.rst}  |   11 +-
- .../filesystems/{fiemap.txt => fiemap.rst}    |  133 +-
- .../filesystems/{files.txt => files.rst}      |   15 +-
- .../filesystems/{fuse-io.txt => fuse-io.rst}  |    6 +
- Documentation/filesystems/index.rst           |   23 +
- .../filesystems/{locks.txt => locks.rst}      |   14 +-
- ...tory-locking.txt => mandatory-locking.rst} |   25 +-
- .../{mount_api.txt => mount_api.rst}          |  329 ++--
- Documentation/filesystems/proc.rst            |    2 +-
- .../filesystems/{quota.txt => quota.rst}      |   41 +-
- .../{seq_file.txt => seq_file.rst}            |   61 +-
- .../{sharedsubtree.txt => sharedsubtree.rst}  |  394 ++--
- Documentation/filesystems/spufs/index.rst     |   13 +
- .../filesystems/spufs/spu_create.rst          |  131 ++
- Documentation/filesystems/spufs/spu_run.rst   |  138 ++
- .../{spufs.txt => spufs/spufs.rst}            |  304 +--
- .../{sysfs-pci.txt => sysfs-pci.rst}          |   23 +-
- .../{sysfs-tagging.txt => sysfs-tagging.rst}  |   22 +-
- ...ign.txt => xfs-delayed-logging-design.rst} |   65 +-
- ...a.txt => xfs-self-describing-metadata.rst} |  182 +-
- Documentation/iio/iio_configfs.rst            |    2 +-
- Documentation/usb/gadget_configfs.rst         |    4 +-
- MAINTAINERS                                   |   14 +-
- fs/cachefiles/Kconfig                         |    4 +-
- fs/coda/Kconfig                               |    2 +-
- fs/configfs/inode.c                           |    2 +-
- fs/configfs/item.c                            |    2 +-
- fs/fscache/Kconfig                            |    8 +-
- fs/fscache/cache.c                            |    8 +-
- fs/fscache/cookie.c                           |    2 +-
- fs/fscache/object.c                           |    4 +-
- fs/fscache/operation.c                        |    2 +-
- fs/locks.c                                    |    2 +-
- include/linux/configfs.h                      |    2 +-
- include/linux/fs_context.h                    |    2 +-
- include/linux/fscache-cache.h                 |    4 +-
- include/linux/fscache.h                       |   42 +-
- include/linux/lsm_hooks.h                     |    2 +-
- 54 files changed, 3843 insertions(+), 3408 deletions(-)
- rename Documentation/filesystems/{automount-support.txt => automount-support.rst} (92%)
- rename Documentation/filesystems/caching/{backend-api.txt => backend-api.rst} (87%)
- rename Documentation/filesystems/caching/{cachefiles.txt => cachefiles.rst} (90%)
- create mode 100644 Documentation/filesystems/caching/fscache.rst
- delete mode 100644 Documentation/filesystems/caching/fscache.txt
- create mode 100644 Documentation/filesystems/caching/index.rst
- rename Documentation/filesystems/caching/{netfs-api.txt => netfs-api.rst} (91%)
- rename Documentation/filesystems/caching/{object.txt => object.rst} (95%)
- rename Documentation/filesystems/caching/{operations.txt => operations.rst} (90%)
- rename Documentation/filesystems/cifs/{cifsroot.txt => cifsroot.rst} (72%)
- create mode 100644 Documentation/filesystems/coda.rst
- delete mode 100644 Documentation/filesystems/coda.txt
- rename Documentation/filesystems/{configfs/configfs.txt => configfs.rst} (87%)
- create mode 100644 Documentation/filesystems/devpts.rst
- delete mode 100644 Documentation/filesystems/devpts.txt
- rename Documentation/filesystems/{dnotify.txt => dnotify.rst} (90%)
- rename Documentation/filesystems/{fiemap.txt => fiemap.rst} (70%)
- rename Documentation/filesystems/{files.txt => files.rst} (95%)
- rename Documentation/filesystems/{fuse-io.txt => fuse-io.rst} (95%)
- rename Documentation/filesystems/{locks.txt => locks.rst} (91%)
- rename Documentation/filesystems/{mandatory-locking.txt => mandatory-locking.rst} (91%)
- rename Documentation/filesystems/{mount_api.txt => mount_api.rst} (79%)
- rename Documentation/filesystems/{quota.txt => quota.rst} (81%)
- rename Documentation/filesystems/{seq_file.txt => seq_file.rst} (92%)
- rename Documentation/filesystems/{sharedsubtree.txt => sharedsubtree.rst} (72%)
- create mode 100644 Documentation/filesystems/spufs/index.rst
- create mode 100644 Documentation/filesystems/spufs/spu_create.rst
- create mode 100644 Documentation/filesystems/spufs/spu_run.rst
- rename Documentation/filesystems/{spufs.txt => spufs/spufs.rst} (57%)
- rename Documentation/filesystems/{sysfs-pci.txt => sysfs-pci.rst} (92%)
- rename Documentation/filesystems/{sysfs-tagging.txt => sysfs-tagging.rst} (72%)
- rename Documentation/filesystems/{xfs-delayed-logging-design.txt => xfs-delayed-logging-design.rst} (97%)
- rename Documentation/filesystems/{xfs-self-describing-metadata.txt => xfs-self-describing-metadata.rst} (83%)
-
+diff --git a/Documentation/filesystems/spufs/spu_create.txt b/Documentation/filesystems/spufs/spu_create.txt
+new file mode 100644
+index 000000000000..8ede5a35340f
+--- /dev/null
++++ b/Documentation/filesystems/spufs/spu_create.txt
+@@ -0,0 +1,119 @@
++SPU_CREATE(2)              Linux Programmer's Manual             SPU_CREATE(2)
++
++
++
++NAME
++       spu_create - create a new spu context
++
++
++SYNOPSIS
++       #include <sys/types.h>
++       #include <sys/spu.h>
++
++       int spu_create(const char *pathname, int flags, mode_t mode);
++
++DESCRIPTION
++       The  spu_create  system call is used on PowerPC machines that implement
++       the Cell Broadband Engine Architecture in order to  access  Synergistic
++       Processor  Units (SPUs). It creates a new logical context for an SPU in
++       pathname and returns a handle to associated  with  it.   pathname  must
++       point  to  a  non-existing directory in the mount point of the SPU file
++       system (spufs).  When spu_create is successful, a directory  gets  cre-
++       ated on pathname and it is populated with files.
++
++       The  returned  file  handle can only be passed to spu_run(2) or closed,
++       other operations are not defined on it. When it is closed, all  associ-
++       ated  directory entries in spufs are removed. When the last file handle
++       pointing either inside  of  the  context  directory  or  to  this  file
++       descriptor is closed, the logical SPU context is destroyed.
++
++       The  parameter flags can be zero or any bitwise or'd combination of the
++       following constants:
++
++       SPU_RAWIO
++              Allow mapping of some of the hardware registers of the SPU  into
++              user space. This flag requires the CAP_SYS_RAWIO capability, see
++              capabilities(7).
++
++       The mode parameter specifies the permissions used for creating the  new
++       directory  in  spufs.   mode is modified with the user's umask(2) value
++       and then used for both the directory and the files contained in it. The
++       file permissions mask out some more bits of mode because they typically
++       support only read or write access. See stat(2) for a full list  of  the
++       possible mode values.
++
++
++RETURN VALUE
++       spu_create  returns a new file descriptor. It may return -1 to indicate
++       an error condition and set errno to  one  of  the  error  codes  listed
++       below.
++
++
++ERRORS
++       EACCES
++              The  current  user does not have write access on the spufs mount
++              point.
++
++       EEXIST An SPU context already exists at the given path name.
++
++       EFAULT pathname is not a valid string pointer in  the  current  address
++              space.
++
++       EINVAL pathname is not a directory in the spufs mount point.
++
++       ELOOP  Too many symlinks were found while resolving pathname.
++
++       EMFILE The process has reached its maximum open file limit.
++
++       ENAMETOOLONG
++              pathname was too long.
++
++       ENFILE The system has reached the global open file limit.
++
++       ENOENT Part of pathname could not be resolved.
++
++       ENOMEM The kernel could not allocate all resources required.
++
++       ENOSPC There  are  not  enough  SPU resources available to create a new
++              context or the user specific limit for the number  of  SPU  con-
++              texts has been reached.
++
++       ENOSYS the functionality is not provided by the current system, because
++              either the hardware does not provide SPUs or the spufs module is
++              not loaded.
++
++       ENOTDIR
++              A part of pathname is not a directory.
++
++
++
++NOTES
++       spu_create  is  meant  to  be used from libraries that implement a more
++       abstract interface to SPUs, not to be used from  regular  applications.
++       See  http://www.bsc.es/projects/deepcomputing/linuxoncell/ for the rec-
++       ommended libraries.
++
++
++FILES
++       pathname must point to a location beneath the mount point of spufs.  By
++       convention, it gets mounted in /spu.
++
++
++CONFORMING TO
++       This call is Linux specific and only implemented by the ppc64 architec-
++       ture. Programs using this system call are not portable.
++
++
++BUGS
++       The code does not yet fully implement all features lined out here.
++
++
++AUTHOR
++       Arnd Bergmann <arndb@de.ibm.com>
++
++SEE ALSO
++       capabilities(7), close(2), spu_run(2), spufs(7)
++
++
++
++Linux                             2005-09-28                     SPU_CREATE(2)
+diff --git a/Documentation/filesystems/spufs/spu_run.txt b/Documentation/filesystems/spufs/spu_run.txt
+new file mode 100644
+index 000000000000..d5c6a00d0f97
+--- /dev/null
++++ b/Documentation/filesystems/spufs/spu_run.txt
+@@ -0,0 +1,121 @@
++SPU_RUN(2)                 Linux Programmer's Manual                SPU_RUN(2)
++
++
++
++NAME
++       spu_run - execute an spu context
++
++
++SYNOPSIS
++       #include <sys/spu.h>
++
++       int spu_run(int fd, unsigned int *npc, unsigned int *event);
++
++DESCRIPTION
++       The  spu_run system call is used on PowerPC machines that implement the
++       Cell Broadband Engine Architecture in order to access Synergistic  Pro-
++       cessor  Units  (SPUs).  It  uses the fd that was returned from spu_cre-
++       ate(2) to address a specific SPU context. When the context gets  sched-
++       uled  to a physical SPU, it starts execution at the instruction pointer
++       passed in npc.
++
++       Execution of SPU code happens synchronously, meaning that spu_run  does
++       not  return  while the SPU is still running. If there is a need to exe-
++       cute SPU code in parallel with other code on either  the  main  CPU  or
++       other  SPUs,  you  need to create a new thread of execution first, e.g.
++       using the pthread_create(3) call.
++
++       When spu_run returns, the current value of the SPU instruction  pointer
++       is  written back to npc, so you can call spu_run again without updating
++       the pointers.
++
++       event can be a NULL pointer or point to an extended  status  code  that
++       gets  filled  when spu_run returns. It can be one of the following con-
++       stants:
++
++       SPE_EVENT_DMA_ALIGNMENT
++              A DMA alignment error
++
++       SPE_EVENT_SPE_DATA_SEGMENT
++              A DMA segmentation error
++
++       SPE_EVENT_SPE_DATA_STORAGE
++              A DMA storage error
++
++       If NULL is passed as the event argument, these errors will result in  a
++       signal delivered to the calling process.
++
++RETURN VALUE
++       spu_run  returns the value of the spu_status register or -1 to indicate
++       an error and set errno to one of the error  codes  listed  below.   The
++       spu_status  register  value  contains  a  bit  mask of status codes and
++       optionally a 14 bit code returned from the stop-and-signal  instruction
++       on the SPU. The bit masks for the status codes are:
++
++       0x02   SPU was stopped by stop-and-signal.
++
++       0x04   SPU was stopped by halt.
++
++       0x08   SPU is waiting for a channel.
++
++       0x10   SPU is in single-step mode.
++
++       0x20   SPU has tried to execute an invalid instruction.
++
++       0x40   SPU has tried to access an invalid channel.
++
++       0x3fff0000
++              The  bits  masked with this value contain the code returned from
++              stop-and-signal.
++
++       There are always one or more of the lower eight bits set  or  an  error
++       code is returned from spu_run.
++
++ERRORS
++       EAGAIN or EWOULDBLOCK
++              fd is in non-blocking mode and spu_run would block.
++
++       EBADF  fd is not a valid file descriptor.
++
++       EFAULT npc is not a valid pointer or status is neither NULL nor a valid
++              pointer.
++
++       EINTR  A signal occurred while spu_run was in progress.  The npc  value
++              has  been updated to the new program counter value if necessary.
++
++       EINVAL fd is not a file descriptor returned from spu_create(2).
++
++       ENOMEM Insufficient memory was available to handle a page fault result-
++              ing from an MFC direct memory access.
++
++       ENOSYS the functionality is not provided by the current system, because
++              either the hardware does not provide SPUs or the spufs module is
++              not loaded.
++
++
++NOTES
++       spu_run  is  meant  to  be  used  from  libraries that implement a more
++       abstract interface to SPUs, not to be used from  regular  applications.
++       See  http://www.bsc.es/projects/deepcomputing/linuxoncell/ for the rec-
++       ommended libraries.
++
++
++CONFORMING TO
++       This call is Linux specific and only implemented by the ppc64 architec-
++       ture. Programs using this system call are not portable.
++
++
++BUGS
++       The code does not yet fully implement all features lined out here.
++
++
++AUTHOR
++       Arnd Bergmann <arndb@de.ibm.com>
++
++SEE ALSO
++       capabilities(7), close(2), spu_create(2), spufs(7)
++
++
++
++
++Linux                             2005-09-28                        SPU_RUN(2)
+diff --git a/Documentation/filesystems/spufs.txt b/Documentation/filesystems/spufs/spufs.txt
+similarity index 59%
+rename from Documentation/filesystems/spufs.txt
+rename to Documentation/filesystems/spufs/spufs.txt
+index eb9e3aa63026..caf36aaae804 100644
+--- a/Documentation/filesystems/spufs.txt
++++ b/Documentation/filesystems/spufs/spufs.txt
+@@ -274,248 +274,3 @@ SEE ALSO
+ 
+ 
+ Linux                             2005-09-28                          SPUFS(2)
+-
+-------------------------------------------------------------------------------
+-
+-SPU_RUN(2)                 Linux Programmer's Manual                SPU_RUN(2)
+-
+-
+-
+-NAME
+-       spu_run - execute an spu context
+-
+-
+-SYNOPSIS
+-       #include <sys/spu.h>
+-
+-       int spu_run(int fd, unsigned int *npc, unsigned int *event);
+-
+-DESCRIPTION
+-       The  spu_run system call is used on PowerPC machines that implement the
+-       Cell Broadband Engine Architecture in order to access Synergistic  Pro-
+-       cessor  Units  (SPUs).  It  uses the fd that was returned from spu_cre-
+-       ate(2) to address a specific SPU context. When the context gets  sched-
+-       uled  to a physical SPU, it starts execution at the instruction pointer
+-       passed in npc.
+-
+-       Execution of SPU code happens synchronously, meaning that spu_run  does
+-       not  return  while the SPU is still running. If there is a need to exe-
+-       cute SPU code in parallel with other code on either  the  main  CPU  or
+-       other  SPUs,  you  need to create a new thread of execution first, e.g.
+-       using the pthread_create(3) call.
+-
+-       When spu_run returns, the current value of the SPU instruction  pointer
+-       is  written back to npc, so you can call spu_run again without updating
+-       the pointers.
+-
+-       event can be a NULL pointer or point to an extended  status  code  that
+-       gets  filled  when spu_run returns. It can be one of the following con-
+-       stants:
+-
+-       SPE_EVENT_DMA_ALIGNMENT
+-              A DMA alignment error
+-
+-       SPE_EVENT_SPE_DATA_SEGMENT
+-              A DMA segmentation error
+-
+-       SPE_EVENT_SPE_DATA_STORAGE
+-              A DMA storage error
+-
+-       If NULL is passed as the event argument, these errors will result in  a
+-       signal delivered to the calling process.
+-
+-RETURN VALUE
+-       spu_run  returns the value of the spu_status register or -1 to indicate
+-       an error and set errno to one of the error  codes  listed  below.   The
+-       spu_status  register  value  contains  a  bit  mask of status codes and
+-       optionally a 14 bit code returned from the stop-and-signal  instruction
+-       on the SPU. The bit masks for the status codes are:
+-
+-       0x02   SPU was stopped by stop-and-signal.
+-
+-       0x04   SPU was stopped by halt.
+-
+-       0x08   SPU is waiting for a channel.
+-
+-       0x10   SPU is in single-step mode.
+-
+-       0x20   SPU has tried to execute an invalid instruction.
+-
+-       0x40   SPU has tried to access an invalid channel.
+-
+-       0x3fff0000
+-              The  bits  masked with this value contain the code returned from
+-              stop-and-signal.
+-
+-       There are always one or more of the lower eight bits set  or  an  error
+-       code is returned from spu_run.
+-
+-ERRORS
+-       EAGAIN or EWOULDBLOCK
+-              fd is in non-blocking mode and spu_run would block.
+-
+-       EBADF  fd is not a valid file descriptor.
+-
+-       EFAULT npc is not a valid pointer or status is neither NULL nor a valid
+-              pointer.
+-
+-       EINTR  A signal occurred while spu_run was in progress.  The npc  value
+-              has  been updated to the new program counter value if necessary.
+-
+-       EINVAL fd is not a file descriptor returned from spu_create(2).
+-
+-       ENOMEM Insufficient memory was available to handle a page fault result-
+-              ing from an MFC direct memory access.
+-
+-       ENOSYS the functionality is not provided by the current system, because
+-              either the hardware does not provide SPUs or the spufs module is
+-              not loaded.
+-
+-
+-NOTES
+-       spu_run  is  meant  to  be  used  from  libraries that implement a more
+-       abstract interface to SPUs, not to be used from  regular  applications.
+-       See  http://www.bsc.es/projects/deepcomputing/linuxoncell/ for the rec-
+-       ommended libraries.
+-
+-
+-CONFORMING TO
+-       This call is Linux specific and only implemented by the ppc64 architec-
+-       ture. Programs using this system call are not portable.
+-
+-
+-BUGS
+-       The code does not yet fully implement all features lined out here.
+-
+-
+-AUTHOR
+-       Arnd Bergmann <arndb@de.ibm.com>
+-
+-SEE ALSO
+-       capabilities(7), close(2), spu_create(2), spufs(7)
+-
+-
+-
+-Linux                             2005-09-28                        SPU_RUN(2)
+-
+-------------------------------------------------------------------------------
+-
+-SPU_CREATE(2)              Linux Programmer's Manual             SPU_CREATE(2)
+-
+-
+-
+-NAME
+-       spu_create - create a new spu context
+-
+-
+-SYNOPSIS
+-       #include <sys/types.h>
+-       #include <sys/spu.h>
+-
+-       int spu_create(const char *pathname, int flags, mode_t mode);
+-
+-DESCRIPTION
+-       The  spu_create  system call is used on PowerPC machines that implement
+-       the Cell Broadband Engine Architecture in order to  access  Synergistic
+-       Processor  Units (SPUs). It creates a new logical context for an SPU in
+-       pathname and returns a handle to associated  with  it.   pathname  must
+-       point  to  a  non-existing directory in the mount point of the SPU file
+-       system (spufs).  When spu_create is successful, a directory  gets  cre-
+-       ated on pathname and it is populated with files.
+-
+-       The  returned  file  handle can only be passed to spu_run(2) or closed,
+-       other operations are not defined on it. When it is closed, all  associ-
+-       ated  directory entries in spufs are removed. When the last file handle
+-       pointing either inside  of  the  context  directory  or  to  this  file
+-       descriptor is closed, the logical SPU context is destroyed.
+-
+-       The  parameter flags can be zero or any bitwise or'd combination of the
+-       following constants:
+-
+-       SPU_RAWIO
+-              Allow mapping of some of the hardware registers of the SPU  into
+-              user space. This flag requires the CAP_SYS_RAWIO capability, see
+-              capabilities(7).
+-
+-       The mode parameter specifies the permissions used for creating the  new
+-       directory  in  spufs.   mode is modified with the user's umask(2) value
+-       and then used for both the directory and the files contained in it. The
+-       file permissions mask out some more bits of mode because they typically
+-       support only read or write access. See stat(2) for a full list  of  the
+-       possible mode values.
+-
+-
+-RETURN VALUE
+-       spu_create  returns a new file descriptor. It may return -1 to indicate
+-       an error condition and set errno to  one  of  the  error  codes  listed
+-       below.
+-
+-
+-ERRORS
+-       EACCES
+-              The  current  user does not have write access on the spufs mount
+-              point.
+-
+-       EEXIST An SPU context already exists at the given path name.
+-
+-       EFAULT pathname is not a valid string pointer in  the  current  address
+-              space.
+-
+-       EINVAL pathname is not a directory in the spufs mount point.
+-
+-       ELOOP  Too many symlinks were found while resolving pathname.
+-
+-       EMFILE The process has reached its maximum open file limit.
+-
+-       ENAMETOOLONG
+-              pathname was too long.
+-
+-       ENFILE The system has reached the global open file limit.
+-
+-       ENOENT Part of pathname could not be resolved.
+-
+-       ENOMEM The kernel could not allocate all resources required.
+-
+-       ENOSPC There  are  not  enough  SPU resources available to create a new
+-              context or the user specific limit for the number  of  SPU  con-
+-              texts has been reached.
+-
+-       ENOSYS the functionality is not provided by the current system, because
+-              either the hardware does not provide SPUs or the spufs module is
+-              not loaded.
+-
+-       ENOTDIR
+-              A part of pathname is not a directory.
+-
+-
+-
+-NOTES
+-       spu_create  is  meant  to  be used from libraries that implement a more
+-       abstract interface to SPUs, not to be used from  regular  applications.
+-       See  http://www.bsc.es/projects/deepcomputing/linuxoncell/ for the rec-
+-       ommended libraries.
+-
+-
+-FILES
+-       pathname must point to a location beneath the mount point of spufs.  By
+-       convention, it gets mounted in /spu.
+-
+-
+-CONFORMING TO
+-       This call is Linux specific and only implemented by the ppc64 architec-
+-       ture. Programs using this system call are not portable.
+-
+-
+-BUGS
+-       The code does not yet fully implement all features lined out here.
+-
+-
+-AUTHOR
+-       Arnd Bergmann <arndb@de.ibm.com>
+-
+-SEE ALSO
+-       capabilities(7), close(2), spu_run(2), spufs(7)
+-
+-
+-
+-Linux                             2005-09-28                     SPU_CREATE(2)
 -- 
 2.25.4
-
 
