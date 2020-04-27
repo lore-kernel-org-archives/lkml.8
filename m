@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E08C82A02
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C74C8C82A01
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8771F2087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A9E920575
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 22:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588025078;
-	bh=yhwdUWx9RSIe5YyttDq2rStcupVQmYSCHy6p57D1Ig0=;
+	s=default; t=1588025081;
+	bh=xBkzNBy2YhJi/8RK1Om5eioEswOWWQFUH8yKwJvvfgI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xiCNNQvijmZvGITdgAj5Zm7JWomTzcA76/PBnX0BnhrWsTM/MUggIbJtThPSEBf1k
-	 SIH2M+kqPcVYnzy9E78qRkoq09VbUdCDBubCYBuMvXJ722kOigMrWxv2e/j9sTPQ51
-	 1++xw22Q3fDe6lpdqzfLHKEJ0vzaI5YNr/8Kh6mg=
+	b=hIBGtwvSuDLvjABqCW3nGn2lXmATQ9+KqqU3NQjcwSKUZ5Got6BNOxDIwgN7EV6Xm
+	 q413tc2WtVoKMyo1ANcUJ4ezmBApB2jaDRtMwC+FjVA94jAB96+5fP/hvFs0qXX4g/
+	 iDpQzPZNbFD2hoO7Sy+Ib0wYW1poa8aACtpzpqXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgD0WEe (ORCPT
+        id S1726924AbgD0WEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 18:04:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48122 "EHLO mail.kernel.org"
+        Mon, 27 Apr 2020 18:04:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726363AbgD0WCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726194AbgD0WCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 Apr 2020 18:02:00 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0529221ED;
+        by mail.kernel.org (Postfix) with ESMTPSA id D99282223C;
         Mon, 27 Apr 2020 22:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588024916;
-        bh=yhwdUWx9RSIe5YyttDq2rStcupVQmYSCHy6p57D1Ig0=;
+        s=default; t=1588024917;
+        bh=xBkzNBy2YhJi/8RK1Om5eioEswOWWQFUH8yKwJvvfgI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x/G2dMJ4uEfZWsiz3V48FHy/MEX4bawWiFzBARTQGqaEkeS4AJkkPJVI6XMxRpuV8
-         bf7hlE2FL67CnyGG14Xk/pV9aGjCfBl9ZZLfZymsMadz/Y2fegE3dJWg1lIONyOKoX
-         Pgo3wMFmKiTgR0uD053clvhg5DVf/4bNVWUZHWk0=
+        b=HfwAVJgU5xU8hFba4Fet0WG5uwzHpKjNy+G/Q25LQwj2hZUVA+6KsS/oqUZIck34i
+         NDF9MuK088cyhYRJHoOPU8d2T4m9FB63KZjzgS+t+MbQntQGI7tUIZwKXgo3G4qZ+w
+         1gKY389t7znH0SKWVaiRj758Lc0d/ILVCIOErS48=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jTBp5-000IpE-10; Tue, 28 Apr 2020 00:01:55 +0200
+        id 1jTBp5-000Ipd-52; Tue, 28 Apr 2020 00:01:55 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 20/38] docs: networking: convert fib_trie.txt to ReST
-Date:   Tue, 28 Apr 2020 00:01:35 +0200
-Message-Id: <5f770e8ff6a81f7378fc7bf8374d11b15f7f3b8a.1588024424.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 25/38] docs: networking: convert generic_netlink.txt to ReST
+Date:   Tue, 28 Apr 2020 00:01:40 +0200
+Message-Id: <8ed7ad58fc10c5343722f7bcda07e712e41f7d0e.1588024424.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588024424.git.mchehab+huawei@kernel.org>
 References: <cover.1588024424.git.mchehab+huawei@kernel.org>
@@ -61,78 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Not much to be done here:
 - add SPDX header;
-- adjust title markup;
-- adjust identation, whitespaces and blank lines;
+- add a document title;
 - add to networking/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../networking/{fib_trie.txt => fib_trie.rst}    | 16 ++++++++++------
- Documentation/networking/index.rst               |  1 +
- 2 files changed, 11 insertions(+), 6 deletions(-)
- rename Documentation/networking/{fib_trie.txt => fib_trie.rst} (96%)
+ .../networking/{generic_netlink.txt => generic_netlink.rst} | 6 ++++++
+ Documentation/networking/index.rst                          | 1 +
+ 2 files changed, 7 insertions(+)
+ rename Documentation/networking/{generic_netlink.txt => generic_netlink.rst} (64%)
 
-diff --git a/Documentation/networking/fib_trie.txt b/Documentation/networking/fib_trie.rst
-similarity index 96%
-rename from Documentation/networking/fib_trie.txt
-rename to Documentation/networking/fib_trie.rst
-index fe719388518b..f1435b7fcdb7 100644
---- a/Documentation/networking/fib_trie.txt
-+++ b/Documentation/networking/fib_trie.rst
-@@ -1,8 +1,12 @@
--			LC-trie implementation notes.
+diff --git a/Documentation/networking/generic_netlink.txt b/Documentation/networking/generic_netlink.rst
+similarity index 64%
+rename from Documentation/networking/generic_netlink.txt
+rename to Documentation/networking/generic_netlink.rst
+index 3e071115ca90..59e04ccf80c1 100644
+--- a/Documentation/networking/generic_netlink.txt
++++ b/Documentation/networking/generic_netlink.rst
+@@ -1,3 +1,9 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+============================
-+LC-trie implementation notes
-+============================
++===============
++Generic Netlink
++===============
++
+ A wiki document on how to use Generic Netlink can be found here:
  
- Node types
- ----------
--leaf 
-+leaf
- 	An end node with data. This has a copy of the relevant key, along
- 	with 'hlist' with routing table entries sorted by prefix length.
- 	See struct leaf and struct leaf_info.
-@@ -13,7 +17,7 @@ trie node or tnode
- 
- A few concepts explained
- ------------------------
--Bits (tnode) 
-+Bits (tnode)
- 	The number of bits in the key segment used for indexing into the
- 	child array - the "child index". See Level Compression.
- 
-@@ -23,7 +27,7 @@ Pos (tnode)
- 
- Path Compression / skipped bits
- 	Any given tnode is linked to from the child array of its parent, using
--	a segment of the key specified by the parent's "pos" and "bits" 
-+	a segment of the key specified by the parent's "pos" and "bits"
- 	In certain cases, this tnode's own "pos" will not be immediately
- 	adjacent to the parent (pos+bits), but there will be some bits
- 	in the key skipped over because they represent a single path with no
-@@ -56,8 +60,8 @@ full_children
- Comments
- ---------
- 
--We have tried to keep the structure of the code as close to fib_hash as 
--possible to allow verification and help up reviewing. 
-+We have tried to keep the structure of the code as close to fib_hash as
-+possible to allow verification and help up reviewing.
- 
- fib_find_node()
- 	A good start for understanding this code. This function implements a
+  * http://www.linuxfoundation.org/collaborate/workgroups/networking/generic_netlink_howto
 diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index 9ef6ef42bdc5..807abe25ae4b 100644
+index d34824b27264..42e556509e22 100644
 --- a/Documentation/networking/index.rst
 +++ b/Documentation/networking/index.rst
-@@ -55,6 +55,7 @@ Contents:
-    dns_resolver
-    driver
-    eql
-+   fib_trie
+@@ -60,6 +60,7 @@ Contents:
+    fore200e
+    framerelay
+    generic-hdlc
++   generic_netlink
  
  .. only::  subproject and html
  
