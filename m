@@ -2,126 +2,174 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 837EDC54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11ED5C55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57BA92054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:15:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ixjl1U9Z"
+	by mail.kernel.org (Postfix) with ESMTP id E6760206BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:15:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbgD0PPi (ORCPT
+        id S1728276AbgD0PPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 27 Apr 2020 11:15:40 -0400
+Received: from mga18.intel.com ([134.134.136.126]:48776 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728168AbgD0PPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 Apr 2020 11:15:38 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52305 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727022AbgD0PPh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 11:15:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588000536;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=eSpYzJ8vruskzw1ixWuPTFKODIOCb1DdC0Y5Ypx1fB0=;
-        b=Ixjl1U9ZxAd7CT3hUfVBj4OC3cNpxodUZOfnDT/R+PiEaqt/AILrKzUj5Eo/rzHioy9Oln
-        cvJLzIAKJ6wHxC5CCF4L4yKtPq/EaBFl8TJ9vWTotACZe3HuIK/3lALMrWYOMCjppl2WFY
-        7T3/PCaVB0U3AZ/R1FovAdsEF10h418=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-459-FC7MyVs7NdyGTwSusW303w-1; Mon, 27 Apr 2020 11:15:34 -0400
-X-MC-Unique: FC7MyVs7NdyGTwSusW303w-1
-Received: by mail-wr1-f72.google.com with SMTP id y10so10630354wrn.5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 08:15:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eSpYzJ8vruskzw1ixWuPTFKODIOCb1DdC0Y5Ypx1fB0=;
-        b=jcAS1S4fbBIab++6im/l63R1d9z86g38ANEx5YDzY7EPBtoseGqmUjg2uYb9hu8biU
-         43vd+gl+gpttFOLC/1jN3DQx/hUQIzMUMhWpWoseW+J5xpcU0hp0D7pr8adBcE3vIe7S
-         6rAfyVFD7w5cvMmCYnqZxlW6EtQhLtGHbc1zWsEEjk50jQz+86nTg+GkyESshNAHDYIz
-         sHtXtldqemDJK5ZOJRImlchf+W0B8//UsdIzmHuvjf47qJJ3wfEXxmO+fOzaVCyxe8s+
-         kei4YT9TaEBT6biOlA5DqtMHbPh4xavit6Rz3GmLZV8yrQ4g8mpu7eLjhoG6wu55C/sT
-         UhvA==
-X-Gm-Message-State: AGi0PuZfYtCstA26UezdVmx6wK68lk1exBhzgf3gheFROldDXGJSARVY
-        F1IZqauEWrRAPCPcq0BOWz6+2V80HWqCaAumpyL90N9iI2fWBZOFqY0iHsCJQDS9VVqSFHJf62r
-        6qk5F/0xZKfFgBXnG7L8rbalt
-X-Received: by 2002:a5d:670d:: with SMTP id o13mr29924460wru.29.1588000533358;
-        Mon, 27 Apr 2020 08:15:33 -0700 (PDT)
-X-Google-Smtp-Source: APiQypK+T+6Aj+dLlxq4HhKDwXzdqmOqUdriVVov3jgAPiPujwYcHZ4fNtTJwlwzd9NWqPh44afp5Q==
-X-Received: by 2002:a5d:670d:: with SMTP id o13mr29924444wru.29.1588000533150;
-        Mon, 27 Apr 2020 08:15:33 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:ac19:d1fb:3f5f:d54f? ([2001:b07:6468:f312:ac19:d1fb:3f5f:d54f])
-        by smtp.gmail.com with ESMTPSA id n6sm23226378wrs.81.2020.04.27.08.15.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Apr 2020 08:15:32 -0700 (PDT)
-Subject: Re: [PATCH v2 6/7] debugfs: switch to simplefs inode creation API
-To:     Emanuele Giuseppe Esposito <eesposit@redhat.com>,
-        linux-fsdevel@vger.kernel.org
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Manoj N. Kumar" <manoj@linux.ibm.com>,
-        "Matthew R. Ochs" <mrochs@linux.ibm.com>,
-        Uma Krishnan <ukrishn@linux.ibm.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Joel Becker <jlbec@evilplan.org>,
-        Christoph Hellwig <hch@lst.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        John Johansen <john.johansen@canonical.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-scsi@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-References: <20200421135119.30007-1-eesposit@redhat.com>
- <20200421135741.30657-4-eesposit@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <167ebece-2e50-5186-3a42-2fa491fcb8a5@redhat.com>
-Date:   Mon, 27 Apr 2020 17:15:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200421135741.30657-4-eesposit@redhat.com>
-Content-Type: text/plain; charset=utf-8
+IronPort-SDR: 7KOH2Wwf4jhCsJor0l80EShxNabuokweeWn3hL39+yczGUItUpHCWI2bywKPJ1z/y1mZa7Asxz
+ rwyDTyLm4BRA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 08:15:37 -0700
+IronPort-SDR: zZYgPQLIGuqPb367g+MrrtH/5nJbhuWhverW/aZT9RKMh+fo+qH3LEggYNetESR/4lSyRJM4+H
+ 6nV0jI1S2CDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,324,1583222400"; 
+   d="scan'208";a="431810513"
+Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
+  by orsmga005.jf.intel.com with ESMTP; 27 Apr 2020 08:15:37 -0700
+Received: from orsmsx115.amr.corp.intel.com (10.22.240.11) by
+ ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 27 Apr 2020 08:15:37 -0700
+Received: from orsmsx101.amr.corp.intel.com ([169.254.8.204]) by
+ ORSMSX115.amr.corp.intel.com ([169.254.4.83]) with mapi id 14.03.0439.000;
+ Mon, 27 Apr 2020 08:15:37 -0700
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "sathyanarayanan.kuppuswamy@linux.intel.com" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>
+CC:     "rajatja@google.com" <rajatja@google.com>,
+        "fred@fredlawl.com" <fred@fredlawl.com>,
+        "ruscur@russell.cc" <ruscur@russell.cc>,
+        "kbusch@kernel.org" <kbusch@kernel.org>,
+        "oohall@gmail.com" <oohall@gmail.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "sbobroff@linux.ibm.com" <sbobroff@linux.ibm.com>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Patel, Mayurkumar" <mayurkumar.patel@intel.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>
+Subject: Re: [PATCH v2 2/2] PCI/DPC: Allow Native DPC Host Bridges to use DPC
+Thread-Topic: [PATCH v2 2/2] PCI/DPC: Allow Native DPC Host Bridges to use
+ DPC
+Thread-Index: AQHWF186KnXLsMWtVkCGO69asmmcQaiGN2OAgAESEwCAA4JngIACyCOA
+Date:   Mon, 27 Apr 2020 15:15:36 +0000
+Message-ID: <6344a9afcc585504c5dfbc00174280613683064d.camel@intel.com>
+References: <1587418630-13562-1-git-send-email-jonathan.derrick@intel.com>
+         <1587418630-13562-3-git-send-email-jonathan.derrick@intel.com>
+         <0058b993-0663-7fed-ed31-cb0adf845a39@linux.intel.com>
+         <ea21d9475b0af277c7288504ff2cd32b3f91e4ba.camel@intel.com>
+         <7e574cc1-a24b-5c4b-7d4f-3fda3f395390@linux.intel.com>
+In-Reply-To: <7e574cc1-a24b-5c4b-7d4f-3fda3f395390@linux.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.255.3.119]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <DA95B75948026E40ACB35C2843122F18@intel.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/04/20 15:57, Emanuele Giuseppe Esposito wrote:
-> -	inode = debugfs_get_inode(dentry->d_sb);
-
-You're not removing debugfs_get_inode so I think you're going to get a
-warning (same in tracefs)?
-
-You can wait a few more days for reviews and/or Acked-bys (especially
-for patches 6 and 7) and then post v3.
-
-Since the touch-everything patch (#2) has already been reviewed, and
-it's mechanical and not introducing any semantic change, you can
-probably reduce the To/Cc list to filesystem, debugfs and tracefs
-maintainers.
-
-Thanks,
-
-Paolo
-
+SGkgU2F0aHlhbmFyYXlhbmFuLA0KDQpPbiBTYXQsIDIwMjAtMDQtMjUgYXQgMTM6NDYgLTA3MDAs
+IEt1cHB1c3dhbXksIFNhdGh5YW5hcmF5YW5hbiB3cm90ZToNCj4gDQo+IE9uIDQvMjMvMjAgODox
+MSBBTSwgRGVycmljaywgSm9uYXRoYW4gd3JvdGU6DQo+ID4gSGkgU2F0aHlhbmFyYXlhbmFuLA0K
+PiA+IA0KPiA+IE9uIFdlZCwgMjAyMC0wNC0yMiBhdCAxNTo1MCAtMDcwMCwgS3VwcHVzd2FteSwg
+U2F0aHlhbmFyYXlhbmFuIHdyb3RlOg0KPiA+ID4gT24gNC8yMC8yMCAyOjM3IFBNLCBKb24gRGVy
+cmljayB3cm90ZToNCj4gPiA+ID4gVGhlIGV4aXN0aW5nIHBvcnRkcnYgbW9kZWwgcHJldmVudHMg
+RFBDIHNlcnZpY2VzIHdpdGhvdXQgZWl0aGVyIE9TDQo+ID4gPiA+IGNvbnRyb2wgKF9PU0MpIGdy
+YW50ZWQgdG8gQUVSIHNlcnZpY2VzLCBhIEhvc3QgQnJpZGdlIHJlcXVlc3RpbmcgTmF0aXZlDQo+
+ID4gPiA+IEFFUiwgb3IgdXNpbmcgb25lIG9mIHRoZSAncGNpZV9wb3J0cz0nIHBhcmFtZXRlcnMg
+b2YgJ25hdGl2ZScgb3INCj4gPiA+ID4gJ2RwYy1uYXRpdmUnLg0KPiA+ID4gPiANCj4gPiA+ID4g
+VGhlIERQQyBwb3J0IHNlcnZpY2UgZHJpdmVyIGl0c2VsZiB3aWxsIGFsc28gZmFpbCB0byBwcm9i
+ZSBpZiB0aGUga2VybmVsDQo+ID4gPiA+IGFzc3VtZXMgdGhlIHBvcnQgaXMgdXNpbmcgRmlybXdh
+cmUtRmlyc3QgQUVSLiBJdCdzIGEgcmVhc29uYWJsZQ0KPiA+ID4gPiBleHBlY3RhdGlvbiB0aGF0
+IGEgcG9ydCB1c2luZyBGaXJtd2FyZS1GaXJzdCBBRVIgd2lsbCBhbHNvIGJlIHVzaW5nDQo+ID4g
+PiA+IEZpcm13YXJlLUZpcnN0IERQQywgaG93ZXZlciBpZiBhIEhvc3QgQnJpZGdlIHJlcXVlc3Rz
+IE5hdGl2ZSBEUEMsIHRoZQ0KPiA+ID4gPiBEUEMgZHJpdmVyIHNob3VsZCBhbGxvdyBpdCBhbmQg
+bm90IGZhaWwgdG8gYmluZCBkdWUgdG8gQUVSIGNhcGFiaWxpdHkNCj4gPiA+ID4gc2V0dGluZ3Mu
+DQo+ID4gPiA+IA0KPiA+ID4gPiBIb3N0IEJyaWRnZXMgd2hpY2ggcmVxdWVzdCBOYXRpdmUgRFBD
+IHBvcnQgc2VydmljZXMgd2lsbCBhbHNvIGxpa2VseQ0KPiA+ID4gPiByZXF1ZXN0IE5hdGl2ZSBB
+RVIsIGhvd2V2ZXIgaXQgc2hvdWxkbid0IGJlIGEgcmVxdWlyZW1lbnQuIFRoaXMgcGF0Y2gNCj4g
+PiA+ID4gYWxsb3dzIHBvcnRzIG9uIHRob3NlIEhvc3QgQnJpZGdlcyB0byBoYXZlIERQQyBwb3J0
+IHNlcnZpY2VzLg0KPiA+ID4gPiANCj4gPiA+ID4gVGhpcyB3aWxsIGF2b2lkIHRoZSB1bmxpa2Vs
+eSBzaXR1YXRpb24gd2hlcmUgdGhlIHBvcnQgaXMgRmlybXdhcmUtRmlyc3QNCj4gPiA+ID4gQUVS
+IGFuZCBOYXRpdmUgRFBDLCBhbmQgYSBCSU9TIG9yIHN3aXRjaCBmaXJtd2FyZSBwcmVjb25maWd1
+cmF0aW9uIG9mDQo+ID4gPiA+IHRoZSBEUEMgdHJpZ2dlciBjb3VsZCByZXN1bHQgaW4gdW5oYW5k
+bGVkIERQQyBldmVudHMuDQo+ID4gPiA+IA0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBKb24gRGVy
+cmljayA8am9uYXRoYW4uZGVycmlja0BpbnRlbC5jb20+DQo+ID4gPiA+IC0tLQ0KPiA+ID4gPiAg
+ICBkcml2ZXJzL3BjaS9wY2llL2RwYy5jICAgICAgICAgIHwgMyArKy0NCj4gPiA+ID4gICAgZHJp
+dmVycy9wY2kvcGNpZS9wb3J0ZHJ2X2NvcmUuYyB8IDMgKystDQo+ID4gPiA+ICAgIDIgZmlsZXMg
+Y2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPiA+ID4gPiANCj4gPiA+
+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL3BjaWUvZHBjLmMgYi9kcml2ZXJzL3BjaS9wY2ll
+L2RwYy5jDQo+ID4gPiA+IGluZGV4IDc2MjE3MDQuLjNmMzEwNmYgMTAwNjQ0DQo+ID4gPiA+IC0t
+LSBhL2RyaXZlcnMvcGNpL3BjaWUvZHBjLmMNCj4gPiA+ID4gKysrIGIvZHJpdmVycy9wY2kvcGNp
+ZS9kcGMuYw0KPiA+ID4gPiBAQCAtMjg0LDcgKzI4NCw4IEBAIHN0YXRpYyBpbnQgZHBjX3Byb2Jl
+KHN0cnVjdCBwY2llX2RldmljZSAqZGV2KQ0KPiA+ID4gPiAgICAJaW50IHN0YXR1czsNCj4gPiA+
+ID4gICAgCXUxNiBjdGwsIGNhcDsNCj4gPiA+ID4gICAgDQo+ID4gPiA+IC0JaWYgKHBjaWVfYWVy
+X2dldF9maXJtd2FyZV9maXJzdChwZGV2KSAmJiAhcGNpZV9wb3J0c19kcGNfbmF0aXZlKQ0KPiA+
+ID4gPiArCWlmIChwY2llX2Flcl9nZXRfZmlybXdhcmVfZmlyc3QocGRldikgJiYgIXBjaWVfcG9y
+dHNfZHBjX25hdGl2ZSAmJg0KPiA+ID4gPiArCSAgICAhcGNpX2ZpbmRfaG9zdF9icmlkZ2UocGRl
+di0+YnVzKS0+bmF0aXZlX2RwYykNCj4gPiA+IFdoeSBkbyBpdCBpbiBwcm9iZSBhcyB3ZWxsID8g
+aWYgaG9zdC0+bmF0aXZlX2RwYyBpcyBub3Qgc2V0IHRoZW4gdGhlDQo+ID4gPiBkZXZpY2UgRFBD
+IHByb2JlIGl0IHNlbGYgd29uJ3QgaGFwcGVuIHJpZ2h0ID8NCj4gPiANCj4gPiBQb3J0ZHJ2IG9u
+bHkgZW5hYmxlcyB0aGUgaW50ZXJydXB0IGFuZCBhbGxvd3MgdGhlIHByb2JlIHRvIG9jY3VyLg0K
+PiANCj4gUGxlYXNlIGNoZWNrIHRoZSBmb2xsb3dpbmcgc25pcHBldCBvZiBjb2RlIChmcm9tIHBv
+cnRkcnZfY29yZS5jKS4NCj4gDQo+IElJVUMsIHBjaWVfZGV2aWNlX2luaXQoKSB3aWxsIG5vdCBi
+ZSBjYWxsZWQgaWYgUENJRV9QT1JUX1NFUlZJQ0VfRFBDIGlzDQo+IG5vdCBzZXQgaW4gY2FwYWJp
+bGl0aWVzLiBZb3VyIGNoYW5nZSBpbiBwb3J0ZHJ2X2NvcmUuYyBhbHJlYWR5DQo+IHNlbGVjdGl2
+ZWx5IGVuYWJsZXMgdGhlIFBDSUVfUE9SVF9TRVJWSUNFX0RQQyBzZXJ2aWNlIGJhc2VkIG9uDQo+
+IG5hdGl2ZV9kcGMgdmFsdWUuDQo+IA0KVGhhdCdzIHJpZ2h0LiBTbyBwY2llX2RldmljZV9pbml0
+IHJlZ2lzdGVycyB0aGUgcG9ydCBzZXJ2aWNlIGRyaXZlcg0KYWxsb3dpbmcgdGhlIHNlcnZpY2Vz
+IGVudW1lcmF0aW9uIHRvIG9jY3VyLg0KDQo+IFNvIElNTywgYWRkaW5nIG5hdGl2ZV9kcGMgY2hl
+Y2sgaW4gZHBjX3Byb2JlKCkgaXMgcmVkdW5kYW50Lg0KPiANCj4gaW50IHBjaWVfcG9ydF9kZXZp
+Y2VfcmVnaXN0ZXIoc3RydWN0IHBjaV9kZXYgKmRldikNCj4gCS8qIEFsbG9jYXRlIGNoaWxkIHNl
+cnZpY2VzIGlmIGFueSAqLw0KPiAJc3RhdHVzID0gLUVOT0RFVjsNCj4gCW5yX3NlcnZpY2UgPSAw
+Ow0KPiAJZm9yIChpID0gMDsgaSA8IFBDSUVfUE9SVF9ERVZJQ0VfTUFYU0VSVklDRVM7IGkrKykg
+ew0KPiAJCWludCBzZXJ2aWNlID0gMSA8PCBpOw0KPiAJCWlmICghKGNhcGFiaWxpdGllcyAmIHNl
+cnZpY2UpKQ0KPiAJCQljb250aW51ZTsNCj4gCQlpZiAoIXBjaWVfZGV2aWNlX2luaXQoZGV2LCBz
+ZXJ2aWNlLCBpcnFzW2ldKSkNCj4gCQkJbnJfc2VydmljZSsrOw0KPiAJfQ0KPiANClRoaXMgaXMg
+dGhlIHRyaWNreSBwYXJ0DQpUaGVyZSdzIHN0aWxsIGEgY2hlY2sgaW4gZHBjX3Byb2JlIGZvciBB
+RVIgRkZTIG9yIHBjaWVfcG9ydHM9ZHBjLQ0KbmF0aXZlOg0KDQppZiAocGNpZV9hZXJfZ2V0X2Zp
+cm13YXJlX2ZpcnN0KHBkZXYpICYmICFwY2llX3BvcnRzX2RwY19uYXRpdmUpDQoJcmV0dXJuIC1F
+Tk9UU1VQUDsNCg0KT25lIG9wdGlvbiBpcyB0byBtb3ZlIHRoYXQgdG8gZ2V0X3BvcnRfZGV2aWNl
+X2NhcGFiaWxpdHkgYW5kIHJlbW92ZSB0aGUNCmRwY19wcm9iZSBjaGVjaw0KDQo+ID4gVGhlIHBy
+b2JlIGl0c2VsZiB3aWxsIHN0aWxsIGZhaWwgaWYgdGhlcmUncyBhIG1peGVkLW1vZGUgX09TQw0K
+PiA+IG5lZ290aWF0ZWQgQUVSICYgRFBDLCBkdWUgdG8gcGNpZV9hZXJfZ2V0X2Zpcm13YXJlX2Zp
+cnN0IHJldHVybmluZyAxDQo+ID4gZm9yIEFFUiBhbmQgbm8gY2hlY2sgZm9yIERQQy4NCj4gPiAN
+Cj4gPiBJIGRvbid0IGtub3cgaWYgc3VjaCBhIHBsYXRmb3JtIHdpbGwgZXhpc3QsIGJ1dCB0aGUg
+a2VybmVsIGlzIGFscmVhZHkNCj4gPiB3aXJlZCBmb3IgJ2RwYy1uYXRpdmUnIHNvIGl0IG1ha2Vz
+IHNlbnNlIHRvIGV4dGVuZCBpdCBmb3IgdGhpcy4uDQo+ID4gDQo+ID4gVGhpcyB0cmFuc2Zvcm0g
+bWlnaHQgYmUgbW9yZSByZWFkYWJsZToNCj4gPiAJaWYgKHBjaWVfYWVyX2dldF9maXJtd2FyZV9m
+aXJzdChwZGV2KSAmJg0KPiA+IAkgICAgIShwY2llX3BvcnRzX2RwY19uYXRpdmUgfHwgaGItPm5h
+dGl2ZV9kcGMpKQ0KPiA+IA0KPiA+IA0KPiA+IA0KPiA+ID4gPiAgICAJCXJldHVybiAtRU5PVFNV
+UFA7DQo+ID4gPiA+ICAgIA0KPiA+ID4gPiAgICAJc3RhdHVzID0gZGV2bV9yZXF1ZXN0X3RocmVh
+ZGVkX2lycShkZXZpY2UsIGRldi0+aXJxLCBkcGNfaXJxLA0KPiA+ID4gPiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9wY2kvcGNpZS9wb3J0ZHJ2X2NvcmUuYyBiL2RyaXZlcnMvcGNpL3BjaWUvcG9ydGRy
+dl9jb3JlLmMNCj4gPiA+ID4gaW5kZXggNTBhOTUyMi4uZjIxMzlhMSAxMDA2NDQNCj4gPiA+ID4g
+LS0tIGEvZHJpdmVycy9wY2kvcGNpZS9wb3J0ZHJ2X2NvcmUuYw0KPiA+ID4gPiArKysgYi9kcml2
+ZXJzL3BjaS9wY2llL3BvcnRkcnZfY29yZS5jDQo+ID4gPiA+IEBAIC0yNTYsNyArMjU2LDggQEAg
+c3RhdGljIGludCBnZXRfcG9ydF9kZXZpY2VfY2FwYWJpbGl0eShzdHJ1Y3QgcGNpX2RldiAqZGV2
+KQ0KPiA+ID4gPiAgICAJICovDQo+ID4gPiA+ICAgIAlpZiAocGNpX2ZpbmRfZXh0X2NhcGFiaWxp
+dHkoZGV2LCBQQ0lfRVhUX0NBUF9JRF9EUEMpICYmDQo+ID4gPiA+ICAgIAkgICAgcGNpX2Flcl9h
+dmFpbGFibGUoKSAmJg0KPiA+ID4gPiAtCSAgICAocGNpZV9wb3J0c19kcGNfbmF0aXZlIHx8IChz
+ZXJ2aWNlcyAmIFBDSUVfUE9SVF9TRVJWSUNFX0FFUikpKQ0KPiA+ID4gPiArCSAgICAocGNpZV9w
+b3J0c19kcGNfbmF0aXZlIHx8IGhvc3QtPm5hdGl2ZV9kcGMgfHwNCj4gPiA+ID4gKwkgICAgIChz
+ZXJ2aWNlcyAmIFBDSUVfUE9SVF9TRVJWSUNFX0FFUikpKQ0KPiA+ID4gPiAgICAJCXNlcnZpY2Vz
+IHw9IFBDSUVfUE9SVF9TRVJWSUNFX0RQQzsNCj4gPiA+ID4gICAgDQo+ID4gPiA+ICAgIAlpZiAo
+cGNpX3BjaWVfdHlwZShkZXYpID09IFBDSV9FWFBfVFlQRV9ET1dOU1RSRUFNIHx8DQo+ID4gPiA+
+IA0K
