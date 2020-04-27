@@ -2,1238 +2,177 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA490C55199
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAE7C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9592E206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:37:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588001868;
-	bh=Ddt1eY93DCtanc2wEu+EbnEWGXSAaZ5t4Q9EIPhYMAc=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=1J3t275Lx45XbEjLzjvWdgOwiFWSCvbdc4A1ENj0/OwNa/C1236BGJOZ9nPZvldnL
-	 qsesSFrOT5bRHjtaAgPff6vj9iqfSWGnDfGPYdDMbeZODiJr1DteMpRyUFjfM8ZVgT
-	 TcCjzz/Rlfbj7ZYlNwQeY1y58puoHkBsbF13vt6o=
+	by mail.kernel.org (Postfix) with ESMTP id 9133D20661
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:38:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SLsLC4b/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgD0Phr (ORCPT
+        id S1728158AbgD0PiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 11:37:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49014 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726539AbgD0Phr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 11:37:47 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4FF420661;
-        Mon, 27 Apr 2020 15:37:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588001864;
-        bh=Ddt1eY93DCtanc2wEu+EbnEWGXSAaZ5t4Q9EIPhYMAc=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=0otMsyYIhDnv3jPchS0ySUeZUArfYhN38BzD+6ebdHUgl6dUd5vEmUrfdoZFkNzx8
-         ofcf3IB4zlrWTnbMQcnZHiCWhf2/Ibdw+T19gxDhe9ohWLG8TcgWXinVw299KmkAgf
-         GcIjTWP+N6swbh4FwSD2ZbR8KKz1xQWHBL+dMC1Q=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id AACBA35226DB; Mon, 27 Apr 2020 08:37:44 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 08:37:44 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     kunit-dev@googlegroups.com,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] kcsan: Add test suite
-Message-ID: <20200427153744.GA7560@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200427143507.49654-1-elver@google.com>
- <CANpmjNOv7VXv9LtWHWBx1-an+1+WxjtzDNBF+rKsOm+ybmvwog@mail.gmail.com>
+        Mon, 27 Apr 2020 11:38:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44942 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728040AbgD0PiG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 11:38:06 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF865C0610D5;
+        Mon, 27 Apr 2020 08:38:05 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id h4so4507725ljg.12;
+        Mon, 27 Apr 2020 08:38:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ft/gSkENItl+I+HfgLLd4aQw7Vlgmrgc3KxVR65o03U=;
+        b=SLsLC4b/1zMBh2BvKOVneoglcU3is1An0Kgg7VP0QPtmfX2p1ekgEyRdfdD7JWQ/su
+         DAAHJDJkhJ97o5zolTl1B2nMKpTISuqyMl6mNuDoczaJ9LFBKOc0F5cptdd0MKRPGpHv
+         fI8L/vlLIqLZNckPih1QZXs35BJ4Ijjbi/RDYkgIzTd5+sGPP/yQiP6g6pfRzEAbxxDH
+         Qga+5edKQ4wCVDcU3p+OpBleURrOptvgguUdhEIrtgVta4yneOrcPK33y/D/e3rllbq/
+         VBMYOLyd+/1+s/upHRYWYkyaYhK53aOriFmUfwq0ZplW3GXuipIrL/BZIrbhdlB3o8uh
+         UGew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ft/gSkENItl+I+HfgLLd4aQw7Vlgmrgc3KxVR65o03U=;
+        b=s7+GBC5iq2tX4ZF/EkefuuJ5VlnIU/Yfs9MlDPZi7u6kq8ye8s/tUTvyhbHK41v57+
+         sS0I6sU8xGM3GANyvZNPPwB11QgknqmhtfS2QuoHMOzj/aYNNHhez8CZeRpxs8HmiC14
+         DNva9s4m6A/rf+TWwqJNBZGes+IgaE0Sga8E/PN8a+sKd8ESGdmmma4Hhql/PdmW/OGO
+         YowqIgaboPpc2tcST8PMv0JSVk/C6J6fmoUok+8IFl+DrPj6alMqnByVxXRijikKAYdz
+         IwuYb8adFW82+BNFtjvFhMvwtAbj651OQneetP5ZLuDPOaZhjRBDbM0Dun51SKVzO14P
+         OX4w==
+X-Gm-Message-State: AGi0PuZ7aF8tzRSeeXT0J/rZvOjA6i3WWtnapU37XFXQJF4WktejZ6jK
+        vGs731dJebH/nL7vU8BXxK0=
+X-Google-Smtp-Source: APiQypLtqc43dCJTpwgeg3Rb+/6I/OnS8jzCKbR/r6s0Okwr5FF95Y7P37PoQbrDQXGJUtv6K5Scyg==
+X-Received: by 2002:a2e:7613:: with SMTP id r19mr4734556ljc.29.1588001884385;
+        Mon, 27 Apr 2020 08:38:04 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id r14sm10211056ljn.4.2020.04.27.08.38.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2020 08:38:03 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
+ for a long time
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>
+Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+References: <20200324191217.1829-1-digetx@gmail.com>
+ <20200324191217.1829-2-digetx@gmail.com>
+ <1e259e22-c300-663a-e537-18d854e0f478@nvidia.com>
+ <f59ba318-8e99-c486-fa4d-1ee28a7b203d@gmail.com>
+ <b01cec76-bb39-9fb5-8f6e-4023c075e6b3@gmail.com>
+ <8cd085e1-f9fd-6ec0-9f7a-d5463f176a63@nvidia.com>
+ <db1132ce-53a8-371c-98e0-cb7cd91d5c7d@gmail.com>
+ <fa344989-4cce-0d2c-dc93-4ca546823160@nvidia.com>
+ <bba0a93a-8ec4-eda6-97f3-fb2ab0b9b503@gmail.com>
+ <6f07e5c8-7916-7ea2-2fe7-d05f8f011471@nvidia.com>
+ <77a31b2f-f525-ba9e-f1ae-2b474465bde4@gmail.com>
+ <470b4de4-e98a-1bdc-049e-6259ad603507@nvidia.com>
+ <d2531fc1-b452-717d-af71-19497e14ef00@gmail.com>
+ <a5198024-7273-74c4-b4f4-3a29d042bc36@nvidia.com>
+ <da5985f4-44b3-336d-207d-4c0388806f95@gmail.com>
+ <5fc71168-e4ac-11f6-dbf1-e80f4fae8d1a@gmail.com>
+ <090241c4-e026-aea4-e1e9-a2a661b2c27e@gmail.com>
+Message-ID: <9a3d283c-d4ff-c55a-3ebf-4e08d35792ec@gmail.com>
+Date:   Mon, 27 Apr 2020 18:38:02 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNOv7VXv9LtWHWBx1-an+1+WxjtzDNBF+rKsOm+ybmvwog@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <090241c4-e026-aea4-e1e9-a2a661b2c27e@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 05:23:23PM +0200, Marco Elver wrote:
-> On Mon, 27 Apr 2020 at 16:35, Marco Elver <elver@google.com> wrote:
-> >
-> > This adds KCSAN test focusing on behaviour of the integrated runtime.
-> > Tests various race scenarios, and verifies the reports generated to
-> > console. Makes use of KUnit for test organization, and the Torture
-> > framework for test thread control.
-> >
-> > Signed-off-by: Marco Elver <elver@google.com>
-> > ---
+27.04.2020 17:45, Dmitry Osipenko пишет:
+> 27.04.2020 17:13, Dmitry Osipenko пишет:
+>> 27.04.2020 15:46, Dmitry Osipenko пишет:
+>>> 23.04.2020 13:56, Jon Hunter пишет:
+>>>>>> So I think that part of the problem already existed prior to these
+>>>>>> patches. Without your patches I see ...
+>>>>>>
+>>>>>> [   59.543528] tegra-i2c 7000d000.i2c: i2c transfer timed out
+>>>>>> [   59.549036] vdd_sata,avdd_plle: failed to disable
+>>>>>> [   59.553778] Failed to disable avdd-plle: -110
+>>>>>> [   59.558150] tegra-pcie 3000.pcie: failed to disable regulators: -110
+>>>>> Does this I2C timeout happen with my patches? Could you please post full
+>>>>> logs of an older and the recent kernel versions?
+>>>> I believe that it does, but I need to check.
+>>>>
+>>>
+>>> Jon, could you please confirm that you're seeing those regulator-disable
+>>> errors with my patch? I don't see those errors in yours original log [1].
+>>>
+>>> [1]
+>>> https://lore.kernel.org/lkml/1e259e22-c300-663a-e537-18d854e0f478@nvidia.com/
+>>>
+>>> Again, could you please post the *full* logs?
+>>>
+>>> If regulator's disabling was "failing" before without my patch because
+>>> of the I2C interrupt being force-disabled during of NOIRQ phase, and now
+>>> regulator's disabling succeeds with my patch because IRQ is manually
+>>> handled after the timeout, then this could be bad. It means that
+>>> regulator was actually getting disabled, but I2C driver was timing out
+>>> because interrupt couldn't be handled in NOIRQ phase, which should
+>>> result in a dead PCIe on a resume from suspend since regulator's core
+>>> thinks that regulator is enabled (I2C said it failed to disable), while
+>>> it is actually disabled.
+>>>
+>>> Do you have anything plugged into the PCIe slot in yours testing farm?
+>>> It wouldn't surprise me if the plugged card isn't functional after
+>>> resume from suspend on a stable kernels.
+>>>
+>>
+>> I actually now see that interrupt is not allowed to be enabled during
+>> the NOIRQ phase:
+>>
+>> https://elixir.bootlin.com/linux/v5.7-rc3/source/kernel/irq/manage.c#L640
+>>
+>> it should be worthwhile to turn it into a WARN_ON.
+>>
 > 
-> +KUnit devs
-> We had some discussions on how to best test sanitizer runtimes, and we
-> believe that this test is what testing sanitizer runtimes should
-> roughly look like. Note that, for KCSAN there are various additional
-> complexities like multiple threads, and report generation isn't
-> entirely deterministic (need to run some number of iterations to get
-> reports, may get multiple reports, etc.).
+> Oh, wait! There is already a warning there.. hmm.
 > 
-> The main thing, however, is that we want to verify the actual output
-> (or absence of it) to console. This is what the KCSAN test does using
-> the 'console' tracepoint. Could KUnit provide some generic
-> infrastructure to check console output, like is done in the test here?
-> Right now I couldn't say what the most useful generalization of this
-> would be (without it just being a wrapper around the console
-> tracepoint), because the way I've decided to capture and then match
-> console output is quite test-specific. For now we can replicate this
-> logic on a per-test basis, but it would be extremely useful if there
-> was a generic interface that KUnit could provide in future.
-> 
-> Thoughts?
 
-What I do in rcutorture is to run in a VM, dump the console output
-to a file, then parse that output after the run completes.  For example,
-the admittedly crude script here:
+Aha, the disable depth for the I2C interrupt is 2 after
+suspend_device_irq(), that's why there is no warning.
 
-	tools/testing/selftests/rcutorture/bin/parse-console.sh
+This should catch the bug and trigger the warning:
 
-							Thanx, Paul
+--- >8 ---
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index 453a8a0f4804..fe25104d8b22 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -653,6 +653,8 @@ void __enable_irq(struct irq_desc *desc)
+ 		break;
+ 	}
+ 	default:
++		if (desc->istate & IRQS_SUSPENDED)
++			goto err_out;
+ 		desc->depth--;
+ 	}
+ }
+--- >8 ---
 
-> Thanks,
-> -- Marco
-> 
-> >  kernel/kcsan/Makefile     |    3 +
-> >  kernel/kcsan/kcsan-test.c | 1067 +++++++++++++++++++++++++++++++++++++
-> >  lib/Kconfig.kcsan         |   23 +-
-> >  3 files changed, 1092 insertions(+), 1 deletion(-)
-> >  create mode 100644 kernel/kcsan/kcsan-test.c
-> >
-> > diff --git a/kernel/kcsan/Makefile b/kernel/kcsan/Makefile
-> > index d4999b38d1be..14533cf24bc3 100644
-> > --- a/kernel/kcsan/Makefile
-> > +++ b/kernel/kcsan/Makefile
-> > @@ -12,3 +12,6 @@ CFLAGS_core.o := $(call cc-option,-fno-conserve-stack,) \
-> >
-> >  obj-y := core.o debugfs.o report.o
-> >  obj-$(CONFIG_KCSAN_SELFTEST) += test.o
-> > +
-> > +CFLAGS_kcsan-test.o := $(CFLAGS_KCSAN) -g -fno-omit-frame-pointer
-> > +obj-$(CONFIG_KCSAN_TEST) += kcsan-test.o
-> > diff --git a/kernel/kcsan/kcsan-test.c b/kernel/kcsan/kcsan-test.c
-> > new file mode 100644
-> > index 000000000000..04326cd5a4b2
-> > --- /dev/null
-> > +++ b/kernel/kcsan/kcsan-test.c
-> > @@ -0,0 +1,1067 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * KCSAN test with various race scenarious to test runtime behaviour. Since the
-> > + * interface with which KCSAN's reports are obtained is via the console, this is
-> > + * the output we should verify. For each test case checks the presence (or
-> > + * absence) of generated reports. Relies on 'console' tracepoint to capture
-> > + * reports as they appear in the kernel log.
-> > + *
-> > + * Makes use of KUnit for test organization, and the Torture framework for test
-> > + * thread control.
-> > + *
-> > + * Copyright (C) 2020, Google LLC.
-> > + * Author: Marco Elver <elver@google.com>
-> > + */
-> > +
-> > +#include <kunit/test.h>
-> > +#include <linux/jiffies.h>
-> > +#include <linux/kcsan-checks.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/sched.h>
-> > +#include <linux/seqlock.h>
-> > +#include <linux/spinlock.h>
-> > +#include <linux/string.h>
-> > +#include <linux/timer.h>
-> > +#include <linux/torture.h>
-> > +#include <linux/tracepoint.h>
-> > +#include <linux/types.h>
-> > +#include <trace/events/printk.h>
-> > +
-> > +/* Points to current test-case memory access "kernels". */
-> > +static void (*access_kernels[2])(void);
-> > +
-> > +static struct task_struct **threads; /* Lists of threads. */
-> > +static unsigned long end_time;       /* End time of test. */
-> > +
-> > +/* Report as observed from console. */
-> > +static struct {
-> > +       spinlock_t lock;
-> > +       int nlines;
-> > +       char lines[3][512];
-> > +} observed = {
-> > +       .lock = __SPIN_LOCK_UNLOCKED(observed.lock),
-> > +};
-> > +
-> > +/* Setup test checking loop. */
-> > +static __no_kcsan_or_inline void
-> > +begin_test_checks(void (*func1)(void), void (*func2)(void))
-> > +{
-> > +       kcsan_disable_current();
-> > +
-> > +       /*
-> > +        * Require at least as long as KCSAN_REPORT_ONCE_IN_MS, to ensure at
-> > +        * least one race is reported.
-> > +        */
-> > +       end_time = jiffies + msecs_to_jiffies(CONFIG_KCSAN_REPORT_ONCE_IN_MS + 300);
-> > +
-> > +       /* Signal start; release potential initialization of shared data. */
-> > +       smp_store_release(&access_kernels[0], func1);
-> > +       smp_store_release(&access_kernels[1], func2);
-> > +}
-> > +
-> > +/* End test checking loop. */
-> > +static __no_kcsan_or_inline bool
-> > +end_test_checks(bool stop)
-> > +{
-> > +       if (!stop && time_before(jiffies, end_time)) {
-> > +               /* Continue checking */
-> > +               return false;
-> > +       }
-> > +
-> > +       kcsan_enable_current();
-> > +       return true;
-> > +}
-> > +
-> > +/*
-> > + * Probe for console output: checks if a race was reported, and obtains observed
-> > + * lines of interest.
-> > + */
-> > +__no_kcsan
-> > +static void probe_console(void *ignore, const char *buf, size_t len)
-> > +{
-> > +       unsigned long flags;
-> > +       int nlines;
-> > +
-> > +       /*
-> > +        * Note that KCSAN reports under a global lock, so we do not risk the
-> > +        * possibility of having multiple reports interleaved. If that were the
-> > +        * case, we'd expect tests to fail.
-> > +        */
-> > +
-> > +       spin_lock_irqsave(&observed.lock, flags);
-> > +       nlines = observed.nlines;
-> > +
-> > +       if (strnstr(buf, "BUG: KCSAN: ", len) && strnstr(buf, "test_", len)) {
-> > +               /*
-> > +                * KCSAN report and related to the test.
-> > +                *
-> > +                * The provided @buf is not NUL-terminated; copy no more than
-> > +                * @len bytes and let strscpy() add the missing NUL-terminator.
-> > +                */
-> > +               strscpy(observed.lines[0], buf, min(len + 1, sizeof(observed.lines[0])));
-> > +               nlines = 1;
-> > +       } else if ((nlines == 1 || nlines == 2) && strnstr(buf, "bytes by", len)) {
-> > +               strscpy(observed.lines[nlines++], buf, min(len + 1, sizeof(observed.lines[0])));
-> > +
-> > +               if (strnstr(buf, "race at unknown origin", len)) {
-> > +                       if (WARN_ON(nlines != 2))
-> > +                               goto out;
-> > +
-> > +                       /* No second line of interest. */
-> > +                       strcpy(observed.lines[nlines++], "<none>");
-> > +               }
-> > +       }
-> > +
-> > +out:
-> > +       WRITE_ONCE(observed.nlines, nlines); /* Publish new nlines. */
-> > +       spin_unlock_irqrestore(&observed.lock, flags);
-> > +}
-> > +
-> > +/* Check if a report related to the test exists. */
-> > +__no_kcsan
-> > +static bool report_available(void)
-> > +{
-> > +       return READ_ONCE(observed.nlines) == ARRAY_SIZE(observed.lines);
-> > +}
-> > +
-> > +/* Report information we expect in a report. */
-> > +struct expect_report {
-> > +       /* Access information of both accesses. */
-> > +       struct {
-> > +               void *fn;    /* Function pointer to expected function of top frame. */
-> > +               void *addr;  /* Address of access; unchecked if NULL. */
-> > +               size_t size; /* Size of access; unchecked if @addr is NULL. */
-> > +               int type;    /* Access type, see KCSAN_ACCESS definitions. */
-> > +       } access[2];
-> > +};
-> > +
-> > +/* Check observed report matches information in @r. */
-> > +__no_kcsan
-> > +static bool report_matches(const struct expect_report *r)
-> > +{
-> > +       const bool is_assert = (r->access[0].type | r->access[1].type) & KCSAN_ACCESS_ASSERT;
-> > +       bool ret = false;
-> > +       unsigned long flags;
-> > +       typeof(observed.lines) expect;
-> > +       const char *end;
-> > +       char *cur;
-> > +       int i;
-> > +
-> > +       /* Doubled-checked locking. */
-> > +       if (!report_available())
-> > +               return false;
-> > +
-> > +       /* Generate expected report contents. */
-> > +
-> > +       /* Title */
-> > +       cur = expect[0];
-> > +       end = &expect[0][sizeof(expect[0]) - 1];
-> > +       cur += scnprintf(cur, end - cur, "BUG: KCSAN: %s in ",
-> > +                        is_assert ? "assert: race" : "data-race");
-> > +       if (r->access[1].fn) {
-> > +               char tmp[2][64];
-> > +               int cmp;
-> > +
-> > +               /* Expect lexographically sorted function names in title. */
-> > +               scnprintf(tmp[0], sizeof(tmp[0]), "%pS", r->access[0].fn);
-> > +               scnprintf(tmp[1], sizeof(tmp[1]), "%pS", r->access[1].fn);
-> > +               cmp = strcmp(tmp[0], tmp[1]);
-> > +               cur += scnprintf(cur, end - cur, "%ps / %ps",
-> > +                                cmp < 0 ? r->access[0].fn : r->access[1].fn,
-> > +                                cmp < 0 ? r->access[1].fn : r->access[0].fn);
-> > +       } else {
-> > +               scnprintf(cur, end - cur, "%pS", r->access[0].fn);
-> > +               /* The exact offset won't match, remove it. */
-> > +               cur = strchr(expect[0], '+');
-> > +               if (cur)
-> > +                       *cur = '\0';
-> > +       }
-> > +
-> > +       /* Access 1 */
-> > +       cur = expect[1];
-> > +       end = &expect[1][sizeof(expect[1]) - 1];
-> > +       if (!r->access[1].fn)
-> > +               cur += scnprintf(cur, end - cur, "race at unknown origin, with ");
-> > +
-> > +       /* Access 1 & 2 */
-> > +       for (i = 0; i < 2; ++i) {
-> > +               const char *const access_type =
-> > +                       (r->access[i].type & KCSAN_ACCESS_ASSERT) ?
-> > +                               ((r->access[i].type & KCSAN_ACCESS_WRITE) ?
-> > +                                        "assert no accesses" :
-> > +                                        "assert no writes") :
-> > +                               ((r->access[i].type & KCSAN_ACCESS_WRITE) ?
-> > +                                        "write" :
-> > +                                        "read");
-> > +               const char *const access_type_aux =
-> > +                       (r->access[i].type & KCSAN_ACCESS_ATOMIC) ?
-> > +                               " (marked)" :
-> > +                               ((r->access[i].type & KCSAN_ACCESS_SCOPED) ?
-> > +                                        " (scoped)" :
-> > +                                        "");
-> > +
-> > +               if (i == 1) {
-> > +                       /* Access 2 */
-> > +                       cur = expect[2];
-> > +                       end = &expect[2][sizeof(expect[2]) - 1];
-> > +
-> > +                       if (!r->access[1].fn) {
-> > +                               /* Dummy string if no second access is available. */
-> > +                               strcpy(cur, "<none>");
-> > +                               break;
-> > +                       }
-> > +               }
-> > +
-> > +               cur += scnprintf(cur, end - cur, "%s%s to ", access_type,
-> > +                                access_type_aux);
-> > +
-> > +               if (r->access[i].addr) /* Address is optional. */
-> > +                       cur += scnprintf(cur, end - cur, "0x%px of %zu bytes",
-> > +                                        r->access[i].addr, r->access[i].size);
-> > +       }
-> > +
-> > +       spin_lock_irqsave(&observed.lock, flags);
-> > +       if (!report_available())
-> > +               goto out; /* A new report is being captured. */
-> > +
-> > +       /* Finally match expected output to what we actually observed. */
-> > +       ret = strstr(observed.lines[0], expect[0]) &&
-> > +             /* Access info may appear in any order. */
-> > +             ((strstr(observed.lines[1], expect[1]) &&
-> > +               strstr(observed.lines[2], expect[2])) ||
-> > +              (strstr(observed.lines[1], expect[2]) &&
-> > +               strstr(observed.lines[2], expect[1])));
-> > +out:
-> > +       spin_unlock_irqrestore(&observed.lock, flags);
-> > +       return ret;
-> > +}
-> > +
-> > +/* ===== Test kernels ===== */
-> > +
-> > +static long test_sink;
-> > +static long test_var;
-> > +/* @test_array should be large enough to fall into multiple watchpoint slots. */
-> > +static long test_array[3 * PAGE_SIZE / sizeof(long)];
-> > +static struct {
-> > +       long val[8];
-> > +} test_struct;
-> > +static DEFINE_SEQLOCK(test_seqlock);
-> > +
-> > +/*
-> > + * Helper to avoid compiler optimizing out reads, and to generate source values
-> > + * for writes.
-> > + */
-> > +__no_kcsan
-> > +static noinline void sink_value(long v) { WRITE_ONCE(test_sink, v); }
-> > +
-> > +static noinline void test_kernel_read(void) { sink_value(test_var); }
-> > +
-> > +static noinline void test_kernel_write(void)
-> > +{
-> > +       test_var = READ_ONCE_NOCHECK(test_sink) + 1;
-> > +}
-> > +
-> > +static noinline void test_kernel_write_nochange(void) { test_var = 42; }
-> > +
-> > +/* Suffixed by value-change exception filter. */
-> > +static noinline void test_kernel_write_nochange_rcu(void) { test_var = 42; }
-> > +
-> > +static noinline void test_kernel_read_atomic(void)
-> > +{
-> > +       sink_value(READ_ONCE(test_var));
-> > +}
-> > +
-> > +static noinline void test_kernel_write_atomic(void)
-> > +{
-> > +       WRITE_ONCE(test_var, READ_ONCE_NOCHECK(test_sink) + 1);
-> > +}
-> > +
-> > +__no_kcsan
-> > +static noinline void test_kernel_write_uninstrumented(void) { test_var++; }
-> > +
-> > +static noinline void test_kernel_data_race(void) { data_race(test_var++); }
-> > +
-> > +static noinline void test_kernel_assert_writer(void)
-> > +{
-> > +       ASSERT_EXCLUSIVE_WRITER(test_var);
-> > +}
-> > +
-> > +static noinline void test_kernel_assert_access(void)
-> > +{
-> > +       ASSERT_EXCLUSIVE_ACCESS(test_var);
-> > +}
-> > +
-> > +#define TEST_CHANGE_BITS 0xff00ff00
-> > +
-> > +static noinline void test_kernel_change_bits(void)
-> > +{
-> > +       if (IS_ENABLED(CONFIG_KCSAN_IGNORE_ATOMICS)) {
-> > +               /*
-> > +                * Avoid race of unknown origin for this test, just pretend they
-> > +                * are atomic.
-> > +                */
-> > +               kcsan_nestable_atomic_begin();
-> > +               test_var ^= TEST_CHANGE_BITS;
-> > +               kcsan_nestable_atomic_end();
-> > +       } else
-> > +               WRITE_ONCE(test_var, READ_ONCE(test_var) ^ TEST_CHANGE_BITS);
-> > +}
-> > +
-> > +static noinline void test_kernel_assert_bits_change(void)
-> > +{
-> > +       ASSERT_EXCLUSIVE_BITS(test_var, TEST_CHANGE_BITS);
-> > +}
-> > +
-> > +static noinline void test_kernel_assert_bits_nochange(void)
-> > +{
-> > +       ASSERT_EXCLUSIVE_BITS(test_var, ~TEST_CHANGE_BITS);
-> > +}
-> > +
-> > +/* To check that scoped assertions do trigger anywhere in scope. */
-> > +static noinline void test_enter_scope(void)
-> > +{
-> > +       int x = 0;
-> > +
-> > +       /* Unrelated accesses to scoped assert. */
-> > +       READ_ONCE(test_sink);
-> > +       kcsan_check_read(&x, sizeof(x));
-> > +}
-> > +
-> > +static noinline void test_kernel_assert_writer_scoped(void)
-> > +{
-> > +       ASSERT_EXCLUSIVE_WRITER_SCOPED(test_var);
-> > +       test_enter_scope();
-> > +}
-> > +
-> > +static noinline void test_kernel_assert_access_scoped(void)
-> > +{
-> > +       ASSERT_EXCLUSIVE_ACCESS_SCOPED(test_var);
-> > +       test_enter_scope();
-> > +}
-> > +
-> > +static noinline void test_kernel_rmw_array(void)
-> > +{
-> > +       int i;
-> > +
-> > +       for (i = 0; i < ARRAY_SIZE(test_array); ++i)
-> > +               test_array[i]++;
-> > +}
-> > +
-> > +static noinline void test_kernel_write_struct(void)
-> > +{
-> > +       kcsan_check_write(&test_struct, sizeof(test_struct));
-> > +       kcsan_disable_current();
-> > +       test_struct.val[3]++; /* induce value change */
-> > +       kcsan_enable_current();
-> > +}
-> > +
-> > +static noinline void test_kernel_write_struct_part(void)
-> > +{
-> > +       test_struct.val[3] = 42;
-> > +}
-> > +
-> > +static noinline void test_kernel_read_struct_zero_size(void)
-> > +{
-> > +       kcsan_check_read(&test_struct.val[3], 0);
-> > +}
-> > +
-> > +static noinline void test_kernel_seqlock_reader(void)
-> > +{
-> > +       unsigned int seq;
-> > +
-> > +       do {
-> > +               seq = read_seqbegin(&test_seqlock);
-> > +               sink_value(test_var);
-> > +       } while (read_seqretry(&test_seqlock, seq));
-> > +}
-> > +
-> > +static noinline void test_kernel_seqlock_writer(void)
-> > +{
-> > +       unsigned long flags;
-> > +
-> > +       write_seqlock_irqsave(&test_seqlock, flags);
-> > +       test_var++;
-> > +       write_sequnlock_irqrestore(&test_seqlock, flags);
-> > +}
-> > +
-> > +/* ===== Test cases ===== */
-> > +
-> > +/* Simple test with normal data race. */
-> > +__no_kcsan
-> > +static void test_basic(struct kunit *test)
-> > +{
-> > +       const struct expect_report expect = {
-> > +               .access = {
-> > +                       { test_kernel_write, &test_var, sizeof(test_var), KCSAN_ACCESS_WRITE },
-> > +                       { test_kernel_read, &test_var, sizeof(test_var), 0 },
-> > +               },
-> > +       };
-> > +       static const struct expect_report never = {
-> > +               .access = {
-> > +                       { test_kernel_read, &test_var, sizeof(test_var), 0 },
-> > +                       { test_kernel_read, &test_var, sizeof(test_var), 0 },
-> > +               },
-> > +       };
-> > +       bool match_expect = false;
-> > +       bool match_never = false;
-> > +
-> > +       begin_test_checks(test_kernel_write, test_kernel_read);
-> > +       do {
-> > +               match_expect |= report_matches(&expect);
-> > +               match_never = report_matches(&never);
-> > +       } while (!end_test_checks(match_never));
-> > +       KUNIT_EXPECT_TRUE(test, match_expect);
-> > +       KUNIT_EXPECT_FALSE(test, match_never);
-> > +}
-> > +
-> > +/*
-> > + * Stress KCSAN with lots of concurrent races on different addresses until
-> > + * timeout.
-> > + */
-> > +__no_kcsan
-> > +static void test_concurrent_races(struct kunit *test)
-> > +{
-> > +       const struct expect_report expect = {
-> > +               .access = {
-> > +                       /* NULL will match any address. */
-> > +                       { test_kernel_rmw_array, NULL, 0, KCSAN_ACCESS_WRITE },
-> > +                       { test_kernel_rmw_array, NULL, 0, 0 },
-> > +               },
-> > +       };
-> > +       static const struct expect_report never = {
-> > +               .access = {
-> > +                       { test_kernel_rmw_array, NULL, 0, 0 },
-> > +                       { test_kernel_rmw_array, NULL, 0, 0 },
-> > +               },
-> > +       };
-> > +       bool match_expect = false;
-> > +       bool match_never = false;
-> > +
-> > +       begin_test_checks(test_kernel_rmw_array, test_kernel_rmw_array);
-> > +       do {
-> > +               match_expect |= report_matches(&expect);
-> > +               match_never |= report_matches(&never);
-> > +       } while (!end_test_checks(false));
-> > +       KUNIT_EXPECT_TRUE(test, match_expect); /* Sanity check matches exist. */
-> > +       KUNIT_EXPECT_FALSE(test, match_never);
-> > +}
-> > +
-> > +/* Test the KCSAN_REPORT_VALUE_CHANGE_ONLY option. */
-> > +__no_kcsan
-> > +static void test_novalue_change(struct kunit *test)
-> > +{
-> > +       const struct expect_report expect = {
-> > +               .access = {
-> > +                       { test_kernel_write_nochange, &test_var, sizeof(test_var), KCSAN_ACCESS_WRITE },
-> > +                       { test_kernel_read, &test_var, sizeof(test_var), 0 },
-> > +               },
-> > +       };
-> > +       bool match_expect = false;
-> > +
-> > +       begin_test_checks(test_kernel_write_nochange, test_kernel_read);
-> > +       do {
-> > +               match_expect = report_matches(&expect);
-> > +       } while (!end_test_checks(match_expect));
-> > +       if (IS_ENABLED(CONFIG_KCSAN_REPORT_VALUE_CHANGE_ONLY))
-> > +               KUNIT_EXPECT_FALSE(test, match_expect);
-> > +       else
-> > +               KUNIT_EXPECT_TRUE(test, match_expect);
-> > +}
-> > +
-> > +/*
-> > + * Test that the rules where the KCSAN_REPORT_VALUE_CHANGE_ONLY option should
-> > + * never apply work.
-> > + */
-> > +__no_kcsan
-> > +static void test_novalue_change_exception(struct kunit *test)
-> > +{
-> > +       const struct expect_report expect = {
-> > +               .access = {
-> > +                       { test_kernel_write_nochange_rcu, &test_var, sizeof(test_var), KCSAN_ACCESS_WRITE },
-> > +                       { test_kernel_read, &test_var, sizeof(test_var), 0 },
-> > +               },
-> > +       };
-> > +       bool match_expect = false;
-> > +
-> > +       begin_test_checks(test_kernel_write_nochange_rcu, test_kernel_read);
-> > +       do {
-> > +               match_expect = report_matches(&expect);
-> > +       } while (!end_test_checks(match_expect));
-> > +       KUNIT_EXPECT_TRUE(test, match_expect);
-> > +}
-> > +
-> > +/* Test that data races of unknown origin are reported. */
-> > +__no_kcsan
-> > +static void test_unknown_origin(struct kunit *test)
-> > +{
-> > +       const struct expect_report expect = {
-> > +               .access = {
-> > +                       { test_kernel_read, &test_var, sizeof(test_var), 0 },
-> > +                       { NULL },
-> > +               },
-> > +       };
-> > +       bool match_expect = false;
-> > +
-> > +       begin_test_checks(test_kernel_write_uninstrumented, test_kernel_read);
-> > +       do {
-> > +               match_expect = report_matches(&expect);
-> > +       } while (!end_test_checks(match_expect));
-> > +       if (IS_ENABLED(CONFIG_KCSAN_REPORT_RACE_UNKNOWN_ORIGIN))
-> > +               KUNIT_EXPECT_TRUE(test, match_expect);
-> > +       else
-> > +               KUNIT_EXPECT_FALSE(test, match_expect);
-> > +}
-> > +
-> > +/* Test KCSAN_ASSUME_PLAIN_WRITES_ATOMIC if it is selected. */
-> > +__no_kcsan
-> > +static void test_write_write_assume_atomic(struct kunit *test)
-> > +{
-> > +       const struct expect_report expect = {
-> > +               .access = {
-> > +                       { test_kernel_write, &test_var, sizeof(test_var), KCSAN_ACCESS_WRITE },
-> > +                       { test_kernel_write, &test_var, sizeof(test_var), KCSAN_ACCESS_WRITE },
-> > +               },
-> > +       };
-> > +       bool match_expect = false;
-> > +
-> > +       begin_test_checks(test_kernel_write, test_kernel_write);
-> > +       do {
-> > +               sink_value(READ_ONCE(test_var)); /* induce value-change */
-> > +               match_expect = report_matches(&expect);
-> > +       } while (!end_test_checks(match_expect));
-> > +       if (IS_ENABLED(CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC))
-> > +               KUNIT_EXPECT_FALSE(test, match_expect);
-> > +       else
-> > +               KUNIT_EXPECT_TRUE(test, match_expect);
-> > +}
-> > +
-> > +/*
-> > + * Test that data races with writes larger than word-size are always reported,
-> > + * even if KCSAN_ASSUME_PLAIN_WRITES_ATOMIC is selected.
-> > + */
-> > +__no_kcsan
-> > +static void test_write_write_struct(struct kunit *test)
-> > +{
-> > +       const struct expect_report expect = {
-> > +               .access = {
-> > +                       { test_kernel_write_struct, &test_struct, sizeof(test_struct), KCSAN_ACCESS_WRITE },
-> > +                       { test_kernel_write_struct, &test_struct, sizeof(test_struct), KCSAN_ACCESS_WRITE },
-> > +               },
-> > +       };
-> > +       bool match_expect = false;
-> > +
-> > +       begin_test_checks(test_kernel_write_struct, test_kernel_write_struct);
-> > +       do {
-> > +               match_expect = report_matches(&expect);
-> > +       } while (!end_test_checks(match_expect));
-> > +       KUNIT_EXPECT_TRUE(test, match_expect);
-> > +}
-> > +
-> > +/*
-> > + * Test that data races where only one write is larger than word-size are always
-> > + * reported, even if KCSAN_ASSUME_PLAIN_WRITES_ATOMIC is selected.
-> > + */
-> > +__no_kcsan
-> > +static void test_write_write_struct_part(struct kunit *test)
-> > +{
-> > +       const struct expect_report expect = {
-> > +               .access = {
-> > +                       { test_kernel_write_struct, &test_struct, sizeof(test_struct), KCSAN_ACCESS_WRITE },
-> > +                       { test_kernel_write_struct_part, &test_struct.val[3], sizeof(test_struct.val[3]), KCSAN_ACCESS_WRITE },
-> > +               },
-> > +       };
-> > +       bool match_expect = false;
-> > +
-> > +       begin_test_checks(test_kernel_write_struct, test_kernel_write_struct_part);
-> > +       do {
-> > +               match_expect = report_matches(&expect);
-> > +       } while (!end_test_checks(match_expect));
-> > +       KUNIT_EXPECT_TRUE(test, match_expect);
-> > +}
-> > +
-> > +/* Test that races with atomic accesses never result in reports. */
-> > +__no_kcsan
-> > +static void test_read_atomic_write_atomic(struct kunit *test)
-> > +{
-> > +       bool match_never = false;
-> > +
-> > +       begin_test_checks(test_kernel_read_atomic, test_kernel_write_atomic);
-> > +       do {
-> > +               match_never = report_available();
-> > +       } while (!end_test_checks(match_never));
-> > +       KUNIT_EXPECT_FALSE(test, match_never);
-> > +}
-> > +
-> > +/* Test that a race with an atomic and plain access result in reports. */
-> > +__no_kcsan
-> > +static void test_read_plain_atomic_write(struct kunit *test)
-> > +{
-> > +       const struct expect_report expect = {
-> > +               .access = {
-> > +                       { test_kernel_read, &test_var, sizeof(test_var), 0 },
-> > +                       { test_kernel_write_atomic, &test_var, sizeof(test_var), KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC },
-> > +               },
-> > +       };
-> > +       bool match_expect = false;
-> > +
-> > +       if (IS_ENABLED(CONFIG_KCSAN_IGNORE_ATOMICS))
-> > +               return;
-> > +
-> > +       begin_test_checks(test_kernel_read, test_kernel_write_atomic);
-> > +       do {
-> > +               match_expect = report_matches(&expect);
-> > +       } while (!end_test_checks(match_expect));
-> > +       KUNIT_EXPECT_TRUE(test, match_expect);
-> > +}
-> > +
-> > +/* Zero-sized accesses should never cause data race reports. */
-> > +__no_kcsan
-> > +static void test_zero_size_access(struct kunit *test)
-> > +{
-> > +       const struct expect_report expect = {
-> > +               .access = {
-> > +                       { test_kernel_write_struct, &test_struct, sizeof(test_struct), KCSAN_ACCESS_WRITE },
-> > +                       { test_kernel_write_struct, &test_struct, sizeof(test_struct), KCSAN_ACCESS_WRITE },
-> > +               },
-> > +       };
-> > +       const struct expect_report never = {
-> > +               .access = {
-> > +                       { test_kernel_write_struct, &test_struct, sizeof(test_struct), KCSAN_ACCESS_WRITE },
-> > +                       { test_kernel_read_struct_zero_size, &test_struct.val[3], 0, 0 },
-> > +               },
-> > +       };
-> > +       bool match_expect = false;
-> > +       bool match_never = false;
-> > +
-> > +       begin_test_checks(test_kernel_write_struct, test_kernel_read_struct_zero_size);
-> > +       do {
-> > +               match_expect |= report_matches(&expect);
-> > +               match_never = report_matches(&never);
-> > +       } while (!end_test_checks(match_never));
-> > +       KUNIT_EXPECT_TRUE(test, match_expect); /* Sanity check. */
-> > +       KUNIT_EXPECT_FALSE(test, match_never);
-> > +}
-> > +
-> > +/* Test the data_race() macro. */
-> > +__no_kcsan
-> > +static void test_data_race(struct kunit *test)
-> > +{
-> > +       bool match_never = false;
-> > +
-> > +       begin_test_checks(test_kernel_data_race, test_kernel_data_race);
-> > +       do {
-> > +               match_never = report_available();
-> > +       } while (!end_test_checks(match_never));
-> > +       KUNIT_EXPECT_FALSE(test, match_never);
-> > +}
-> > +
-> > +__no_kcsan
-> > +static void test_assert_exclusive_writer(struct kunit *test)
-> > +{
-> > +       const struct expect_report expect = {
-> > +               .access = {
-> > +                       { test_kernel_assert_writer, &test_var, sizeof(test_var), KCSAN_ACCESS_ASSERT },
-> > +                       { test_kernel_write_nochange, &test_var, sizeof(test_var), KCSAN_ACCESS_WRITE },
-> > +               },
-> > +       };
-> > +       bool match_expect = false;
-> > +
-> > +       begin_test_checks(test_kernel_assert_writer, test_kernel_write_nochange);
-> > +       do {
-> > +               match_expect = report_matches(&expect);
-> > +       } while (!end_test_checks(match_expect));
-> > +       KUNIT_EXPECT_TRUE(test, match_expect);
-> > +}
-> > +
-> > +__no_kcsan
-> > +static void test_assert_exclusive_access(struct kunit *test)
-> > +{
-> > +       const struct expect_report expect = {
-> > +               .access = {
-> > +                       { test_kernel_assert_access, &test_var, sizeof(test_var), KCSAN_ACCESS_ASSERT | KCSAN_ACCESS_WRITE },
-> > +                       { test_kernel_read, &test_var, sizeof(test_var), 0 },
-> > +               },
-> > +       };
-> > +       bool match_expect = false;
-> > +
-> > +       begin_test_checks(test_kernel_assert_access, test_kernel_read);
-> > +       do {
-> > +               match_expect = report_matches(&expect);
-> > +       } while (!end_test_checks(match_expect));
-> > +       KUNIT_EXPECT_TRUE(test, match_expect);
-> > +}
-> > +
-> > +__no_kcsan
-> > +static void test_assert_exclusive_access_writer(struct kunit *test)
-> > +{
-> > +       const struct expect_report expect_access_writer = {
-> > +               .access = {
-> > +                       { test_kernel_assert_access, &test_var, sizeof(test_var), KCSAN_ACCESS_ASSERT | KCSAN_ACCESS_WRITE },
-> > +                       { test_kernel_assert_writer, &test_var, sizeof(test_var), KCSAN_ACCESS_ASSERT },
-> > +               },
-> > +       };
-> > +       const struct expect_report expect_access_access = {
-> > +               .access = {
-> > +                       { test_kernel_assert_access, &test_var, sizeof(test_var), KCSAN_ACCESS_ASSERT | KCSAN_ACCESS_WRITE },
-> > +                       { test_kernel_assert_access, &test_var, sizeof(test_var), KCSAN_ACCESS_ASSERT | KCSAN_ACCESS_WRITE },
-> > +               },
-> > +       };
-> > +       const struct expect_report never = {
-> > +               .access = {
-> > +                       { test_kernel_assert_writer, &test_var, sizeof(test_var), KCSAN_ACCESS_ASSERT },
-> > +                       { test_kernel_assert_writer, &test_var, sizeof(test_var), KCSAN_ACCESS_ASSERT },
-> > +               },
-> > +       };
-> > +       bool match_expect_access_writer = false;
-> > +       bool match_expect_access_access = false;
-> > +       bool match_never = false;
-> > +
-> > +       begin_test_checks(test_kernel_assert_access, test_kernel_assert_writer);
-> > +       do {
-> > +               match_expect_access_writer |= report_matches(&expect_access_writer);
-> > +               match_expect_access_access |= report_matches(&expect_access_access);
-> > +               match_never |= report_matches(&never);
-> > +       } while (!end_test_checks(match_never));
-> > +       KUNIT_EXPECT_TRUE(test, match_expect_access_writer);
-> > +       KUNIT_EXPECT_TRUE(test, match_expect_access_access);
-> > +       KUNIT_EXPECT_FALSE(test, match_never);
-> > +}
-> > +
-> > +__no_kcsan
-> > +static void test_assert_exclusive_bits_change(struct kunit *test)
-> > +{
-> > +       const struct expect_report expect = {
-> > +               .access = {
-> > +                       { test_kernel_assert_bits_change, &test_var, sizeof(test_var), KCSAN_ACCESS_ASSERT },
-> > +                       { test_kernel_change_bits, &test_var, sizeof(test_var),
-> > +                               KCSAN_ACCESS_WRITE | (IS_ENABLED(CONFIG_KCSAN_IGNORE_ATOMICS) ? 0 : KCSAN_ACCESS_ATOMIC) },
-> > +               },
-> > +       };
-> > +       bool match_expect = false;
-> > +
-> > +       begin_test_checks(test_kernel_assert_bits_change, test_kernel_change_bits);
-> > +       do {
-> > +               match_expect = report_matches(&expect);
-> > +       } while (!end_test_checks(match_expect));
-> > +       KUNIT_EXPECT_TRUE(test, match_expect);
-> > +}
-> > +
-> > +__no_kcsan
-> > +static void test_assert_exclusive_bits_nochange(struct kunit *test)
-> > +{
-> > +       bool match_never = false;
-> > +
-> > +       begin_test_checks(test_kernel_assert_bits_nochange, test_kernel_change_bits);
-> > +       do {
-> > +               match_never = report_available();
-> > +       } while (!end_test_checks(match_never));
-> > +       KUNIT_EXPECT_FALSE(test, match_never);
-> > +}
-> > +
-> > +__no_kcsan
-> > +static void test_assert_exclusive_writer_scoped(struct kunit *test)
-> > +{
-> > +       const struct expect_report expect_start = {
-> > +               .access = {
-> > +                       { test_kernel_assert_writer_scoped, &test_var, sizeof(test_var), KCSAN_ACCESS_ASSERT | KCSAN_ACCESS_SCOPED },
-> > +                       { test_kernel_write_nochange, &test_var, sizeof(test_var), KCSAN_ACCESS_WRITE },
-> > +               },
-> > +       };
-> > +       const struct expect_report expect_anywhere = {
-> > +               .access = {
-> > +                       { test_enter_scope, &test_var, sizeof(test_var), KCSAN_ACCESS_ASSERT | KCSAN_ACCESS_SCOPED },
-> > +                       { test_kernel_write_nochange, &test_var, sizeof(test_var), KCSAN_ACCESS_WRITE },
-> > +               },
-> > +       };
-> > +       bool match_expect_start = false;
-> > +       bool match_expect_anywhere = false;
-> > +
-> > +       begin_test_checks(test_kernel_assert_writer_scoped, test_kernel_write_nochange);
-> > +       do {
-> > +               match_expect_start |= report_matches(&expect_start);
-> > +               match_expect_anywhere |= report_matches(&expect_anywhere);
-> > +       } while (!end_test_checks(match_expect_start && match_expect_anywhere));
-> > +       KUNIT_EXPECT_TRUE(test, match_expect_start);
-> > +       KUNIT_EXPECT_TRUE(test, match_expect_anywhere);
-> > +}
-> > +
-> > +__no_kcsan
-> > +static void test_assert_exclusive_access_scoped(struct kunit *test)
-> > +{
-> > +       const struct expect_report expect_start1 = {
-> > +               .access = {
-> > +                       { test_kernel_assert_access_scoped, &test_var, sizeof(test_var), KCSAN_ACCESS_ASSERT | KCSAN_ACCESS_WRITE | KCSAN_ACCESS_SCOPED },
-> > +                       { test_kernel_read, &test_var, sizeof(test_var), 0 },
-> > +               },
-> > +       };
-> > +       const struct expect_report expect_start2 = {
-> > +               .access = { expect_start1.access[0], expect_start1.access[0] },
-> > +       };
-> > +       const struct expect_report expect_inscope = {
-> > +               .access = {
-> > +                       { test_enter_scope, &test_var, sizeof(test_var), KCSAN_ACCESS_ASSERT | KCSAN_ACCESS_WRITE | KCSAN_ACCESS_SCOPED },
-> > +                       { test_kernel_read, &test_var, sizeof(test_var), 0 },
-> > +               },
-> > +       };
-> > +       bool match_expect_start = false;
-> > +       bool match_expect_inscope = false;
-> > +
-> > +       begin_test_checks(test_kernel_assert_access_scoped, test_kernel_read);
-> > +       end_time += msecs_to_jiffies(1000); /* This test requires a bit more time. */
-> > +       do {
-> > +               match_expect_start |= report_matches(&expect_start1) || report_matches(&expect_start2);
-> > +               match_expect_inscope |= report_matches(&expect_inscope);
-> > +       } while (!end_test_checks(match_expect_start && match_expect_inscope));
-> > +       KUNIT_EXPECT_TRUE(test, match_expect_start);
-> > +       KUNIT_EXPECT_TRUE(test, match_expect_inscope);
-> > +}
-> > +
-> > +/* Test that racing accesses in seqlock critical sections are not reported. */
-> > +__no_kcsan
-> > +static void test_seqlock_noreport(struct kunit *test)
-> > +{
-> > +       bool match_never = false;
-> > +
-> > +       begin_test_checks(test_kernel_seqlock_reader, test_kernel_seqlock_writer);
-> > +       do {
-> > +               match_never = report_available();
-> > +       } while (!end_test_checks(match_never));
-> > +       KUNIT_EXPECT_FALSE(test, match_never);
-> > +}
-> > +
-> > +/*
-> > + * Each test case is run with different numbers of threads. Until KUnit supports
-> > + * passing arguments for each test case, we encode #threads in the test case
-> > + * name (read by get_num_threads()). [The '-' was chosen as a stylistic
-> > + * preference to separate test name and #threads.]
-> > + *
-> > + * The thread counts are chosen to cover potentially interesting boundaries and
-> > + * corner cases (range 2-5), and then stress the system with larger counts.
-> > + */
-> > +#define KCSAN_KUNIT_CASE(test_name)                                            \
-> > +       { .run_case = test_name, .name = #test_name "-02" },                   \
-> > +       { .run_case = test_name, .name = #test_name "-03" },                   \
-> > +       { .run_case = test_name, .name = #test_name "-04" },                   \
-> > +       { .run_case = test_name, .name = #test_name "-05" },                   \
-> > +       { .run_case = test_name, .name = #test_name "-08" },                   \
-> > +       { .run_case = test_name, .name = #test_name "-16" }
-> > +
-> > +static struct kunit_case kcsan_test_cases[] = {
-> > +       KCSAN_KUNIT_CASE(test_basic),
-> > +       KCSAN_KUNIT_CASE(test_concurrent_races),
-> > +       KCSAN_KUNIT_CASE(test_novalue_change),
-> > +       KCSAN_KUNIT_CASE(test_novalue_change_exception),
-> > +       KCSAN_KUNIT_CASE(test_unknown_origin),
-> > +       KCSAN_KUNIT_CASE(test_write_write_assume_atomic),
-> > +       KCSAN_KUNIT_CASE(test_write_write_struct),
-> > +       KCSAN_KUNIT_CASE(test_write_write_struct_part),
-> > +       KCSAN_KUNIT_CASE(test_read_atomic_write_atomic),
-> > +       KCSAN_KUNIT_CASE(test_read_plain_atomic_write),
-> > +       KCSAN_KUNIT_CASE(test_zero_size_access),
-> > +       KCSAN_KUNIT_CASE(test_data_race),
-> > +       KCSAN_KUNIT_CASE(test_assert_exclusive_writer),
-> > +       KCSAN_KUNIT_CASE(test_assert_exclusive_access),
-> > +       KCSAN_KUNIT_CASE(test_assert_exclusive_access_writer),
-> > +       KCSAN_KUNIT_CASE(test_assert_exclusive_bits_change),
-> > +       KCSAN_KUNIT_CASE(test_assert_exclusive_bits_nochange),
-> > +       KCSAN_KUNIT_CASE(test_assert_exclusive_writer_scoped),
-> > +       KCSAN_KUNIT_CASE(test_assert_exclusive_access_scoped),
-> > +       KCSAN_KUNIT_CASE(test_seqlock_noreport),
-> > +       {},
-> > +};
-> > +
-> > +/* ===== End test cases ===== */
-> > +
-> > +/* Get number of threads encoded in test name. */
-> > +static bool __no_kcsan
-> > +get_num_threads(const char *test, int *nthreads)
-> > +{
-> > +       int len = strlen(test);
-> > +
-> > +       if (WARN_ON(len < 3))
-> > +               return false;
-> > +
-> > +       *nthreads = test[len - 1] - '0';
-> > +       *nthreads += (test[len - 2] - '0') * 10;
-> > +
-> > +       if (WARN_ON(*nthreads < 0))
-> > +               return false;
-> > +
-> > +       return true;
-> > +}
-> > +
-> > +/* Concurrent accesses from interrupts. */
-> > +__no_kcsan
-> > +static void access_thread_timer(struct timer_list *timer)
-> > +{
-> > +       static atomic_t cnt = ATOMIC_INIT(0);
-> > +       unsigned int idx;
-> > +       void (*func)(void);
-> > +
-> > +       idx = (unsigned int)atomic_inc_return(&cnt) % ARRAY_SIZE(access_kernels);
-> > +       /* Acquire potential initialization. */
-> > +       func = smp_load_acquire(&access_kernels[idx]);
-> > +       if (func)
-> > +               func();
-> > +}
-> > +
-> > +/* The main loop for each thread. */
-> > +__no_kcsan
-> > +static int access_thread(void *arg)
-> > +{
-> > +       struct timer_list timer;
-> > +       unsigned int cnt = 0;
-> > +       unsigned int idx;
-> > +       void (*func)(void);
-> > +
-> > +       timer_setup_on_stack(&timer, access_thread_timer, 0);
-> > +       do {
-> > +               if (!timer_pending(&timer))
-> > +                       mod_timer(&timer, jiffies + 1);
-> > +               else {
-> > +                       /* Iterate through all kernels. */
-> > +                       idx = cnt++ % ARRAY_SIZE(access_kernels);
-> > +                       /* Acquire potential initialization. */
-> > +                       func = smp_load_acquire(&access_kernels[idx]);
-> > +                       if (func)
-> > +                               func();
-> > +               }
-> > +       } while (!torture_must_stop());
-> > +       del_timer_sync(&timer);
-> > +       destroy_timer_on_stack(&timer);
-> > +
-> > +       torture_kthread_stopping("access_thread");
-> > +       return 0;
-> > +}
-> > +
-> > +__no_kcsan
-> > +static int test_init(struct kunit *test)
-> > +{
-> > +       unsigned long flags;
-> > +       int nthreads;
-> > +       int i;
-> > +
-> > +       spin_lock_irqsave(&observed.lock, flags);
-> > +       for (i = 0; i < ARRAY_SIZE(observed.lines); ++i)
-> > +               observed.lines[i][0] = '\0';
-> > +       observed.nlines = 0;
-> > +       spin_unlock_irqrestore(&observed.lock, flags);
-> > +
-> > +       if (!torture_init_begin((char *)test->name, 1))
-> > +               return -EBUSY;
-> > +
-> > +       if (!get_num_threads(test->name, &nthreads))
-> > +               goto err;
-> > +
-> > +       if (WARN_ON(threads))
-> > +               goto err;
-> > +
-> > +       for (i = 0; i < ARRAY_SIZE(access_kernels); ++i) {
-> > +               if (WARN_ON(access_kernels[i]))
-> > +                       goto err;
-> > +       }
-> > +
-> > +       if (!IS_ENABLED(CONFIG_PREEMPT) && nthreads > num_online_cpus() - 2) {
-> > +               nthreads = num_online_cpus() - 2;
-> > +               pr_info("%s: limiting number of threads to %d\n", test->name,
-> > +                       nthreads);
-> > +       }
-> > +
-> > +       if (nthreads) {
-> > +               threads = kcalloc(nthreads + 1, sizeof(struct task_struct *),
-> > +                                 GFP_KERNEL);
-> > +               if (WARN_ON(!threads))
-> > +                       goto err;
-> > +
-> > +               threads[nthreads] = NULL;
-> > +               for (i = 0; i < nthreads; ++i) {
-> > +                       if (torture_create_kthread(access_thread, NULL,
-> > +                                                  threads[i]))
-> > +                               goto err;
-> > +               }
-> > +       }
-> > +
-> > +       torture_init_end();
-> > +
-> > +       return 0;
-> > +
-> > +err:
-> > +       kfree(threads);
-> > +       threads = NULL;
-> > +       torture_init_end();
-> > +       return -EINVAL;
-> > +}
-> > +
-> > +__no_kcsan
-> > +static void test_exit(struct kunit *test)
-> > +{
-> > +       struct task_struct **stop_thread;
-> > +       int i;
-> > +
-> > +       if (torture_cleanup_begin())
-> > +               return;
-> > +
-> > +       for (i = 0; i < ARRAY_SIZE(access_kernels); ++i)
-> > +               WRITE_ONCE(access_kernels[i], NULL);
-> > +
-> > +       if (threads) {
-> > +               for (stop_thread = threads; *stop_thread; stop_thread++)
-> > +                       torture_stop_kthread(reader_thread, *stop_thread);
-> > +
-> > +               kfree(threads);
-> > +               threads = NULL;
-> > +       }
-> > +
-> > +       torture_cleanup_end();
-> > +}
-> > +
-> > +static struct kunit_suite kcsan_test_suite = {
-> > +       .name = "kcsan-test",
-> > +       .test_cases = kcsan_test_cases,
-> > +       .init = test_init,
-> > +       .exit = test_exit,
-> > +};
-> > +static struct kunit_suite *kcsan_test_suites[] = { &kcsan_test_suite, NULL };
-> > +
-> > +__no_kcsan
-> > +static void register_tracepoints(struct tracepoint *tp, void *ignore)
-> > +{
-> > +       check_trace_callback_type_console(probe_console);
-> > +       if (!strcmp(tp->name, "console"))
-> > +               WARN_ON(tracepoint_probe_register(tp, probe_console, NULL));
-> > +}
-> > +
-> > +__no_kcsan
-> > +static void unregister_tracepoints(struct tracepoint *tp, void *ignore)
-> > +{
-> > +       if (!strcmp(tp->name, "console"))
-> > +               tracepoint_probe_unregister(tp, probe_console, NULL);
-> > +}
-> > +
-> > +/*
-> > + * We only want to do tracepoints setup and teardown once, therefore we have to
-> > + * customize the init and exit functions and cannot rely on kunit_test_suite().
-> > + */
-> > +static int __init kcsan_test_init(void)
-> > +{
-> > +       /*
-> > +        * Because we want to be able to build the test as a module, we need to
-> > +        * iterate through all known tracepoints, since the static registration
-> > +        * won't work here.
-> > +        */
-> > +       for_each_kernel_tracepoint(register_tracepoints, NULL);
-> > +       return __kunit_test_suites_init(kcsan_test_suites);
-> > +}
-> > +
-> > +static void kcsan_test_exit(void)
-> > +{
-> > +       __kunit_test_suites_exit(kcsan_test_suites);
-> > +       for_each_kernel_tracepoint(unregister_tracepoints, NULL);
-> > +       tracepoint_synchronize_unregister();
-> > +}
-> > +
-> > +late_initcall(kcsan_test_init);
-> > +module_exit(kcsan_test_exit);
-> > +
-> > +MODULE_LICENSE("GPL v2");
-> > +MODULE_AUTHOR("Marco Elver <elver@google.com>");
-> > diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
-> > index 689b6b81f272..ea28245c6c1d 100644
-> > --- a/lib/Kconfig.kcsan
-> > +++ b/lib/Kconfig.kcsan
-> > @@ -41,7 +41,28 @@ config KCSAN_SELFTEST
-> >         bool "Perform short selftests on boot"
-> >         default y
-> >         help
-> > -         Run KCSAN selftests on boot. On test failure, causes the kernel to panic.
-> > +         Run KCSAN selftests on boot. On test failure, causes the kernel to
-> > +         panic. Recommended to be enabled, ensuring critical functionality
-> > +         works as intended.
-> > +
-> > +config KCSAN_TEST
-> > +       tristate "KCSAN test for integrated runtime behaviour"
-> > +       depends on TRACEPOINTS && KUNIT
-> > +       select TORTURE_TEST
-> > +       help
-> > +         KCSAN test focusing on behaviour of the integrated runtime. Tests
-> > +         various race scenarios, and verifies the reports generated to
-> > +         console. Makes use of KUnit for test organization, and the Torture
-> > +         framework for test thread control.
-> > +
-> > +         Each test case may run at least up to KCSAN_REPORT_ONCE_IN_MS
-> > +         milliseconds. Test run duration may be optimized by building the
-> > +         kernel and KCSAN test with KCSAN_REPORT_ONCE_IN_MS set to a lower
-> > +         than default value.
-> > +
-> > +         Say Y here if you want the test to be built into the kernel and run
-> > +         during boot; say M if you want the test to build as a module; say N
-> > +         if you are unsure.
-> >
-> >  config KCSAN_EARLY_ENABLE
-> >         bool "Early enable during boot"
-> > --
-> > 2.26.2.303.gf8c07b1a785-goog
-> >
+Jon could you please give it a try? Will this change produce a warning
+for the I2C driver on a PCIe suspend for the v5.6 kernel?
