@@ -2,108 +2,91 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E76C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A2A7C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D7C92072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:33:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="mckb55iH"
+	by mail.kernel.org (Postfix) with ESMTP id 51735206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:34:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgD0UdP (ORCPT
+        id S1726552AbgD0Uei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 16:33:15 -0400
-Received: from gateway20.websitewelcome.com ([192.185.4.169]:16200 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726230AbgD0UdO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 16:33:14 -0400
-X-Greylist: delayed 1498 seconds by postgrey-1.27 at vger.kernel.org; Mon, 27 Apr 2020 16:33:13 EDT
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 67B87400CCA53
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 13:27:11 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id T9gGjU1aN8vkBT9gGjDwSk; Mon, 27 Apr 2020 14:44:40 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=VRUZQhEnPk469+Qwnk58nua2haaBvdA4SRE7j9QA81c=; b=mckb55iH5NRVNCVctN5DRl+9Mf
-        CN8qAKs3P777km2hJ8XBPpntvs4o7qMdb23jU+h41krAYNBeSqo7xby8FemDIYARfRZSAeZkXhDrI
-        Srm1G2IeOAbTRkGrNvXlMLwlqgRhwGrEeimiOtw1b8FpG3DqoB6I1iTVtiTSnWMavlVzv0PxaJcSE
-        K+z0EH+DP1PWgzMOqv28B/xsgi8UtOvUhAWHG1LpP4+wukMfG8/SCdR5/Mk+Tgcp7AglvA81omr2v
-        zrDN1aYCXwzK9wNkV5WdFTFXfCWx0pmUgOVPB5pqsKAxz5dz6Hr09iqlRVWeqfD4+YRSco8YzpK9J
-        vGPma7nQ==;
-Received: from [201.162.241.110] (port=19065 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jT9gF-000xYF-SV; Mon, 27 Apr 2020 14:44:39 -0500
-Date:   Mon, 27 Apr 2020 14:48:58 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org, Joe Perches <joe@perches.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH v2 0/3] mtd: lpddr: Fix bad logic bug in print_drs_error
-Message-ID: <cover.1588016644.git.gustavo@embeddedor.com>
+        Mon, 27 Apr 2020 16:34:38 -0400
+Received: from mga07.intel.com ([134.134.136.100]:3582 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726205AbgD0Uei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 16:34:38 -0400
+IronPort-SDR: 0Xb+0f5+yB9gl0pCchZlaSjTDjZy845Pz5YpWW/8SBUvDvcNPkTHQpq6zhK5q7ypcr/hn6HEGY
+ vZlfITZ352ug==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 13:34:37 -0700
+IronPort-SDR: y2Sh/6x3rugWB7BHMA6491hj3iYPojS6oXNP7wDgPJYmdpNExEJXYQbseSl0O9k2ncAYQOLlz1
+ pWhaTbvD8qzQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,325,1583222400"; 
+   d="scan'208";a="367278502"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by fmsmga001.fm.intel.com with ESMTP; 27 Apr 2020 13:34:37 -0700
+Date:   Mon, 27 Apr 2020 13:33:41 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Jacob Jun Pan <jacob.jun.pan@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, iommu@lists.linux-foundation.org,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>
+Subject: Re: [PATCH 3/7] x86/fpu/xstate: Add supervisor PASID state for
+ ENQCMD feature
+Message-ID: <20200427203341.GD242333@romley-ivt3.sc.intel.com>
+References: <1585596788-193989-1-git-send-email-fenghua.yu@intel.com>
+ <1585596788-193989-4-git-send-email-fenghua.yu@intel.com>
+ <87v9lmsdhk.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.241.110
-X-Source-L: No
-X-Exim-ID: 1jT9gF-000xYF-SV
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.162.241.110]:19065
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 19
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <87v9lmsdhk.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sun, Apr 26, 2020 at 01:17:11PM +0200, Thomas Gleixner wrote:
+> Fenghua Yu <fenghua.yu@intel.com> writes:
+> > From: Yu-cheng Yu <yu-cheng.yu@intel.com>
+> >
+> > The IA32_PASID MSR is used when a task submits work via the ENQCMD
+> > instruction.
+> 
+> Is used?
+> 
+> > The per task MSR is stored in the task's supervisor FPU
+> 
+> per task MSR? Lot's of MSRs ....
+> 
+> > PASID state and is context switched by XSAVES/XRSTORS.
+> >
 
-This series aims to fix a bad logic bug in print_drs_error, which is
-tagged for -stable.  The series also include some formatting fixups.
+Maybe change the commit messge to the following?
 
-Thanks
+ENQCMD instruction reads PASID from IA32_PASID MSR. The MSR is stored
+in the task's supervisor FPU PASID state and is context switched by
+XSAVES/XRSTORS.
 
-Changes in v2:
- - Coalesce formats in Patch 2.
- - Remove inline from print_drs_error in Patch 3.
- - Update changelog texts according to the last
-   changes.
+Thanks.
 
-Gustavo A. R. Silva (3):
-  mtd: lpddr: Fix bad logic in print_drs_error
-  mtd: lpddr: Replace printk with pr_notice
-  mtd: lpddr: Move function print_drs_error to lpddr_cmds.c
-
- drivers/mtd/lpddr/lpddr_cmds.c | 28 ++++++++++++++++++++++++++++
- include/linux/mtd/pfow.h       | 33 ---------------------------------
- 2 files changed, 28 insertions(+), 33 deletions(-)
-
--- 
-2.26.0
-
+-Fenghua
