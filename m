@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4AE6C81B01
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6102C54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 836E520728
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C4FE214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:32:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="xYLC+Wt4"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="V2RtI1ub"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgD0Sch (ORCPT
+        id S1726577AbgD0Scl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 14:32:37 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:53260 "EHLO
+        Mon, 27 Apr 2020 14:32:41 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:33172 "EHLO
         mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726549AbgD0Scf (ORCPT
+        by vger.kernel.org with ESMTP id S1726409AbgD0Sce (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 14:32:35 -0400
+        Mon, 27 Apr 2020 14:32:34 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588012354; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1588012353; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=CxXWapujNQU/nOx131lQ2pkM22nSN7vNLoN5yDLlLUQ=; b=xYLC+Wt4ripdKoIdSxx3beAXKAezSnYs1+NRymRc+hocy0bFnagTpV+JIMNEN32TiBSnnULO
- zgQFvdrOiSMo1DW7hQZ6LljsdmFQtWyBa2Bpqzhum4JwRcGo2eQLrTAUMUAr9yNXafJ/nhFR
- 10Qwnvi/82Diyc8zL6DVhqgNzec=
+ bh=jNSPiheV+d47ns/l8Ch/Ze/Q8LvlI/1DRVaErfIZ8Mw=; b=V2RtI1ubVrN5CJBWXOlm4SYvW4hkTReopq2B35IpPtwk2WenLy02Pps+M6XtKrc0u+x1qzdq
+ erDqltGHB5o5QrukpX+17XI6li11kyROS//CkunhQTJ72IZWXalmR94tPde7J3+H7YeV+GES
+ xB7HEsM1/FietGu/el+S7fB+72Q=
 X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea72540.7f4d2ae31c70-smtp-out-n01;
- Mon, 27 Apr 2020 18:32:32 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5ea7253f.7f95c59030d8-smtp-out-n02;
+ Mon, 27 Apr 2020 18:32:31 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 99547C43636; Mon, 27 Apr 2020 18:32:32 +0000 (UTC)
+        id 91FA7C433CB; Mon, 27 Apr 2020 18:32:31 +0000 (UTC)
 Received: from bbhatt-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1C0D3C44788;
-        Mon, 27 Apr 2020 18:32:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1C0D3C44788
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id ED9C5C433BA;
+        Mon, 27 Apr 2020 18:32:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org ED9C5C433BA
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
 From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
 To:     mani@kernel.org
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         hemantk@codeaurora.org, Bhaumik Bhatt <bbhatt@codeaurora.org>
-Subject: [PATCH v1 8/8] bus: mhi: core: Ensure non-zero session or sequence ID values
-Date:   Mon, 27 Apr 2020 11:32:22 -0700
-Message-Id: <1588012342-4995-9-git-send-email-bbhatt@codeaurora.org>
+Subject: [PATCH v1 5/8] bus: mhi: core: WARN_ON for malformed vector table
+Date:   Mon, 27 Apr 2020 11:32:19 -0700
+Message-Id: <1588012342-4995-6-git-send-email-bbhatt@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1588012342-4995-1-git-send-email-bbhatt@codeaurora.org>
 References: <1588012342-4995-1-git-send-email-bbhatt@codeaurora.org>
@@ -60,10 +60,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While writing any sequence or session identifiers, it is possible that
-the host could write a zero value, whereas only non-zero values are
-supported writes to those registers. Ensure that host does not write a
-non-zero value for those cases.
+Add a bounds check in the firmware copy routine to exit if a malformed
+vector table is found while attempting to load the firmware in to the
+BHIe vector table.
 
 Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
 ---
@@ -71,29 +70,24 @@ Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
  1 file changed, 6 insertions(+)
 
 diff --git a/drivers/bus/mhi/core/boot.c b/drivers/bus/mhi/core/boot.c
-index 0bc9c50..c9971d4 100644
+index 17c636b..bc70edc 100644
 --- a/drivers/bus/mhi/core/boot.c
 +++ b/drivers/bus/mhi/core/boot.c
-@@ -199,6 +199,9 @@ static int mhi_fw_load_amss(struct mhi_controller *mhi_cntrl,
- 	mhi_write_reg(mhi_cntrl, base, BHIE_TXVECSIZE_OFFS, mhi_buf->len);
+@@ -362,8 +362,14 @@ static void mhi_firmware_copy(struct mhi_controller *mhi_cntrl,
+ 	int i = 0;
+ 	struct mhi_buf *mhi_buf = img_info->mhi_buf;
+ 	struct bhi_vec_entry *bhi_vec = img_info->bhi_vec;
++	struct device *dev = &mhi_cntrl->mhi_dev->dev;
  
- 	sequence_id = prandom_u32() & BHIE_TXVECSTATUS_SEQNUM_BMSK;
-+	if (unlikely(!sequence_id))
-+		sequence_id = 1;
+ 	while (remainder) {
++		if (WARN_ON(i >= img_info->entries)) {
++			dev_err(dev, "Malformed vector table\n");
++			return;
++		}
 +
- 	mhi_write_reg_field(mhi_cntrl, base, BHIE_TXVECDB_OFFS,
- 			    BHIE_TXVECDB_SEQNUM_BMSK, BHIE_TXVECDB_SEQNUM_SHFT,
- 			    sequence_id);
-@@ -254,6 +257,9 @@ static int mhi_fw_load_sbl(struct mhi_controller *mhi_cntrl,
- 		      lower_32_bits(dma_addr));
- 	mhi_write_reg(mhi_cntrl, base, BHI_IMGSIZE, size);
- 	session_id = prandom_u32() & BHI_TXDB_SEQNUM_BMSK;
-+	if (unlikely(!session_id))
-+		session_id = 1;
-+
- 	mhi_write_reg(mhi_cntrl, base, BHI_IMGTXDB, session_id);
- 	read_unlock_bh(pm_lock);
- 
+ 		to_cpy = min(remainder, mhi_buf->len);
+ 		memcpy(mhi_buf->buf, buf, to_cpy);
+ 		bhi_vec->dma_addr = mhi_buf->dma_addr;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
