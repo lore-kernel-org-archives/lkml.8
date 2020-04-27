@@ -2,147 +2,128 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 333A7C54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B374C54EEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 172C2206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:44:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="otJ/1Xsx"
+	by mail.kernel.org (Postfix) with ESMTP id 36BDB206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 19:48:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbgD0Tow (ORCPT
+        id S1726581AbgD0TsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 15:44:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55778 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726205AbgD0Tow (ORCPT
+        Mon, 27 Apr 2020 15:48:20 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43192 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbgD0TsU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 15:44:52 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B9EFC0610D5;
-        Mon, 27 Apr 2020 12:44:51 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id s10so14454413edy.9;
-        Mon, 27 Apr 2020 12:44:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VQcsbuP3pB8CDC+cItJJV21Dnh5PuIRR4nPKttHGjzE=;
-        b=otJ/1XsxOtfHp14bHd8Kf93q9ptKtRm3hglsJawWMzxNHKYCD7z6ECVnscbS/vBVha
-         Zs0kLO2wdbw68nXZrww0yrjzXzy++SVTTkfKjR+ovO1otx1+cGbTyeruo2DDg0bJrb2K
-         /1lk1vT5EhWAFPpVmqCweZ7vf5ZgmEuzHwCe7focxGC0MWEXvhLb+q5NBFzpRnWcTNWh
-         XEvqoHCsoVjLAMeFAwBsLrDGX41nzUvanE6tM370s5f4+IZl5CFfYCvEdjIv44JBjrK1
-         q0YpwfJ50+lUfdzfPcXiUwiryMAQY8+BXLGb54Y/dLv/7ruwUlDi36CBtdHTZYZrvUf7
-         u0Qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VQcsbuP3pB8CDC+cItJJV21Dnh5PuIRR4nPKttHGjzE=;
-        b=GxksCuHzilDeMek4I5O0xxjEhBNgPQi1KiavkGqfh30BwqyQ7EetqwcABqvYC2jXkj
-         A63r7AI3HYtYgjnAXXNWTdyBQEGscgc1XackiFdATymcliMpP2M8bkXW5I7NszcqeGZd
-         ocs/Qhyr146aguf8zB+6caofWmD0VPDGin6Y+FaLqm01PpdwlR+NHbcGJje4krl+oDmr
-         CJCBJCK/Q1JPtxHEGUUSxNo6unwAh0HCGubQZ/R2NDgZ5rttOgaA9zGjNjjy/P2AvDaN
-         tOC6EFTozP//XezFaohkQD8zkFXk1yZDsMC4sJKIjGuDm34O35MjROEPQ59JKaHPsoLe
-         p4DQ==
-X-Gm-Message-State: AGi0PubIsjWHjadwQ9FhSKxA4lbkx9DxJIKE5PkJKLHordmCc6+2lWPb
-        ATr/4D0WGCt7dYSuz9vnNu1AAMjCNHbHmVTz66w=
-X-Google-Smtp-Source: APiQypKdvwLdxCF/E1pxaH6di+8W+pTb7+5wMbfJFWXAgXSq3W+jSu6jwARdIVsNAY136N7lf7NMNpJEjCTrQ7cHC7k=
-X-Received: by 2002:a50:f61c:: with SMTP id c28mr18663659edn.365.1588016690108;
- Mon, 27 Apr 2020 12:44:50 -0700 (PDT)
+        Mon, 27 Apr 2020 15:48:20 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jT9jk-0003p6-AT; Mon, 27 Apr 2020 19:48:16 +0000
+Date:   Mon, 27 Apr 2020 21:48:15 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        =?utf-8?B?U3TDqXBoYW5l?= Graber <stgraber@ubuntu.com>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: [PATCH] nsproxy: attach to namespaces via pidfds
+Message-ID: <20200427194815.nc22k7mj543swk7z@wittgenstein>
+References: <20200427143646.619227-1-christian.brauner@ubuntu.com>
+ <CAG48ez3eSJSODADpo=O-j9txJ=2R+EupunRvs5H9t5Wa8mvkRA@mail.gmail.com>
+ <20200427181507.ry3hw7ufiifwhi5k@wittgenstein>
+ <CAG48ez2D36QZU0djiXGbirCgcFeAWA02s8PCk6SWEY5MoKg_kg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200328003249.1248978-1-martin.blumenstingl@googlemail.com>
- <20200328003249.1248978-4-martin.blumenstingl@googlemail.com> <CAPDyKFqsG4kyABmxn__gAbe4fBmuZ=4mdFpRaCL0ih7QZEhwzQ@mail.gmail.com>
-In-Reply-To: <CAPDyKFqsG4kyABmxn__gAbe4fBmuZ=4mdFpRaCL0ih7QZEhwzQ@mail.gmail.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 27 Apr 2020 21:44:39 +0200
-Message-ID: <CAFBinCCr2yk5WOG_Y7E14ekpkOsyurkCfYBO0DOWg1MSjvxaTw@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] mmc: host: meson-mx-sdhc: new driver for the
- Amlogic Meson SDHC host
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        lnykww@gmail.com, yinxin_1989@aliyun.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAG48ez2D36QZU0djiXGbirCgcFeAWA02s8PCk6SWEY5MoKg_kg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ulf,
+On Mon, Apr 27, 2020 at 09:41:20PM +0200, Jann Horn wrote:
+> On Mon, Apr 27, 2020 at 8:15 PM Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> > On Mon, Apr 27, 2020 at 07:28:56PM +0200, Jann Horn wrote:
+> > > On Mon, Apr 27, 2020 at 4:47 PM Christian Brauner
+> > > <christian.brauner@ubuntu.com> wrote:
+> [...]
+> > > > That means
+> > > > setns(nsfd, CLONE_NEWNET) equals setns(pidfd, CLONE_NEWNET). However,
+> > > > when a pidfd is passed, multiple namespace flags can be specified in the
+> > > > second setns() argument and setns() will attach the caller to all the
+> > > > specified namespaces all at once or to none of them. If 0 is specified
+> > > > together with a pidfd then setns() will interpret it the same way 0 is
+> > > > interpreted together with a nsfd argument, i.e. attach to any/all
+> > > > namespaces.
+> > > [...]
+> > > > Apart from significiantly reducing the number of syscalls from double
+> > > > digit to single digit which is a decent reason post-spectre/meltdown
+> > > > this also allows to switch to a set of namespaces atomically, i.e.
+> > > > either attaching to all the specified namespaces succeeds or we fail.
+> > >
+> > > Apart from the issues I've pointed out below, I think it's worth
+> > > calling out explicitly that with the current design, the switch will
+> > > not, in fact, be fully atomic - the process will temporarily be in
+> > > intermediate stages where the switches to some namespaces have
+> > > completed while the switches to other namespaces are still pending;
+> > > and while there will be less of these intermediate stages than before,
+> > > it also means that they will be less explicit to userspace.
+> >
+> > Right, that can be fixed by switching to the unshare model of getting a
+> > new set of credentials and committing it after the nsproxy has been
+> > installed? Then there shouldn't be an intermediate state anymore or
+> > rather an intermediate stage where we can still fail somehow.
+> 
+> It still wouldn't be atomic (in the sense of parallelism, not in the
+> sense of intermediate error handling) though; for example, if task B
+> does setns(<pidfd_of_task_a>, 0) and task C concurrently does
+> setns(<pidfd_of_task_b>, 0), then task C may end up with the new mount
+> namespace of task B but the old user namespace, or something like
+> that. If C is more privileged than B, that may cause C to have more
+> privileges through its configuration of namespaces than B does (e.g.
+> by running in the &init_user_ns but with a mount namespace owned by an
+> unprivileged user), which C may not expect. Same thing for racing
+> between unshare() and setns().
+> 
+> [...]
+> > > > +               put_user_ns(user_ns);
+> > > > +       }
+> > > > +#else
+> > > > +       if (flags & CLONE_NEWUSER)
+> > > > +               ret = -EINVAL;
+> > > > +#endif
+> > > > +
+> > > > +       if (!ret && wants_ns(flags, CLONE_NEWNS))
+> > > > +               ret = __ns_install(nsproxy, mnt_ns_to_common(nsp->mnt_ns));
+> > >
+> > > And this one might be even worse, because the mount namespace change
+> > > itself is only stored in the nsproxy at this point, but the cwd and
+> > > root paths have already been overwritten on the task's fs_struct.
+> > >
+> > > To actually make sys_set_ns() atomic, I think you'd need some
+> > > moderately complicated prep work, splitting the ->install handlers up
+> > > into prep work and a commit phase that can't fail.
+> >
+> > Wouldn't it be sufficient to move to an unshare like model, i.e.
+> > creating a new set of creds, and passing the new user_ns to
+> > create_new_namespaces() as well as having a temporary new_fs struct?
+> > That should get rid of all intermediate stages.
+> 
+> Ah, good point, I didn't realize that that already exists for unshare().
 
-thank you for looking into this!
+Let me try and switch the patch to that.
 
-On Mon, Apr 27, 2020 at 9:20 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
-[...]
-> > +static void meson_mx_sdhc_wait_cmd_ready(struct mmc_host *mmc)
-> > +{
-> > +       struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-> > +       u32 stat, esta;
-> > +       int ret;
-> > +
-> > +       ret = regmap_read_poll_timeout(host->regmap, MESON_SDHC_STAT, stat,
-> > +                                      !(stat & MESON_SDHC_STAT_CMD_BUSY), 1,
-> > +                                      100000);
->
-> Please use defines for timeout values.
-I'll take care of this here and all other places which you have found
-
-[...]
-> > +       if (cmd->data)
-> > +               host->platform->set_pdma(mmc);
-> > +
-> > +       if (host->platform->wait_before_send)
-> > +               host->platform->wait_before_send(mmc);
-> > +
-> > +       regmap_write(host->regmap, MESON_SDHC_SEND, send);
->
-> Isn't there a configurable timeout to set for the command?
->
-> I mean the driver sets mmc->max_busy_timeout to 30s in ->probe(), but
-> can the timeout be configured to a lower value?
-there's MESON_SDHC_CTRL_RX_TIMEOUT and MESON_SDHC_CTRL_RX_PERIOD
-here's what the datasheet has to say about them:
-- rx_timeout(cmd or wcrc Receiving Timeout, default 64)
-- rc_period(Period between response/cmd and default next cmd,default
-8) - I'm not even sure if this is related somehow
-
-if you have a specific test-case for me to provoke these timeouts I
-can try playing around with these values
-otherwise we have to ask Jianxin and see whether he can get some
-information about this from the internal team at Amlogic
-
-[...]
-> > +       mmc->caps |= MMC_CAP_ERASE | MMC_CAP_HW_RESET;
->
-> Should you also set MMC_CAP_WAIT_WHILE_BUSY? It sounded like the
-> driver supported this.
-I can try setting it.
-From our previous discussion (on the meson-mx-sdio driver) I have
-learned that eMMC will be a good test-case for it ;-)
-
-[...]
-> FYI: I left out all comments related to the clock provider
-> initialization. I think it makes better sense to review that code,
-> after you have converted to use the devm_clk_hw_register() and avoid
-> registering a separate driver for it.
-yes, that makes sense
-I expect the code to be easier since it'll be one big driver with the
-next version (so no more platform device allocation, etc.)
-
-> Other than the minor comments, this looks good to me.
-great - it would be great if this could finally make it into v5.8
-
-
-Martin
+Christian
