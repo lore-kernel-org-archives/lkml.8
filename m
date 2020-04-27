@@ -2,128 +2,195 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4FAC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52DBEC55199
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD42F2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:36:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="meKAh8Fb"
+	by mail.kernel.org (Postfix) with ESMTP id 3421B20728
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 08:37:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbgD0Igs (ORCPT
+        id S1726755AbgD0Ihc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 04:36:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35488 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725899AbgD0Igr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 04:36:47 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35127C061A0F;
-        Mon, 27 Apr 2020 01:36:46 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id e2so13366919eje.13;
-        Mon, 27 Apr 2020 01:36:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vQTluHrFlTPouGYN0L8RFSa0ut56oC/RfYr17kNASok=;
-        b=meKAh8FbBdII7WfsflAdIDuNSKAWExOwNGTQONordCK+iMffZUBH4QRLKIj9g3hUAn
-         YdV1IZ903/Ia+CRl7z1QLOG/iAvLvkeIL46dC+N8HcIA085a47xkeVd/d8bh4ILznfGK
-         mYG0TqRV+AdXCoDveEOkLJcaLWYYbpZaf7DWgkpl3d7DEzkPG7MzqxCPG++2mTyCXzBB
-         hn2CMjRyBXSOLouKFBFwh/GBKSrvfsJlTDDekvK5NO2FzQWaOyfa9p1QwBfW9k21v7U5
-         PCHOoFKOplRT4+78hCu4tj17YMcjc4ZIs+YJhSOwjlxGEh0trr1ZwuzG8JMqICaBTnqK
-         TpeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vQTluHrFlTPouGYN0L8RFSa0ut56oC/RfYr17kNASok=;
-        b=Pep8qUtO9whatpkvdV2dFDFM3rFxdgQK3aDdbDTc8KCJ1rCBzapI+hEJFQ3TYNVr/E
-         U7vLVrx1pFuTz3DJ1cr+zHNDXV4b70dkoakAxAjJrKfy46Rkyv2EFP4a2Ze40vOuOic/
-         EJcBEIYeKmxL0VlysNFJX/ZWSMo6JJ4Alult+Z0Dnbqmt+rkMFQ8iJlNOo7n5glYhbKW
-         yJ8ABKfd7i3skHpg4dtX3puYlFbABudlPBxo7w06UDxjS9p6+VlwPvSRC4hpfUlJr5rw
-         nzvBu4SABmeX/hxjuYedX9iiDvMKdNW+mYP0OnW8yNt58lC4Xt4+rPPY2su/t6SVfFYf
-         wWkQ==
-X-Gm-Message-State: AGi0Pub0BJTlL/Dg+6awNXHr5lri0iyFuOsOHB80IXLcqNDu7O5rTlCl
-        rl7EuEKDpZyXt9WVDZSmYxGh+JmOu9DF/Q==
-X-Google-Smtp-Source: APiQypIRUAnXaWz08Q8liiasN60ylITxEvvKR+QbUyjJant5k2FUB9f77S8t1viHZzIbcdXyf4L9nA==
-X-Received: by 2002:a17:906:496:: with SMTP id f22mr18305568eja.311.1587976604820;
-        Mon, 27 Apr 2020 01:36:44 -0700 (PDT)
-Received: from localhost (ipv6-80adf4751ff4da96.ost.clients.hamburg.freifunk.net. [2a03:2267:4:0:80ad:f475:1ff4:da96])
-        by smtp.gmail.com with ESMTPSA id s18sm2810366ejm.63.2020.04.27.01.36.43
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 Apr 2020 01:36:44 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 10:36:42 +0200
-From:   Oliver Graute <oliver.graute@gmail.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-fbdev@vger.kernel.org,
-        Oliver Graute <oliver.graute@kococonnector.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v1] staging: fbtft: fb_st7789v: Initialize the Display
-Message-ID: <20200427083642.GD18436@portage>
-References: <1586424337-26602-1-git-send-email-oliver.graute@gmail.com>
- <20200409102013.GP2001@kadam>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200409102013.GP2001@kadam>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Mon, 27 Apr 2020 04:37:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:59856 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725899AbgD0Ihc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 04:37:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 29A871FB;
+        Mon, 27 Apr 2020 01:37:31 -0700 (PDT)
+Received: from dell3630.arm.com (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4AD333F68F;
+        Mon, 27 Apr 2020 01:37:27 -0700 (PDT)
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Luca Abeni <luca.abeni@santannapisa.it>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Wei Wang <wvw@google.com>, Quentin Perret <qperret@google.com>,
+        Alessio Balsini <balsini@google.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Qais Yousef <qais.yousef@arm.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/6] Capacity awareness for SCHED_DEADLINE
+Date:   Mon, 27 Apr 2020 10:37:03 +0200
+Message-Id: <20200427083709.30262-1-dietmar.eggemann@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/04/20, Dan Carpenter wrote:
-> On Thu, Apr 09, 2020 at 11:25:32AM +0200, Oliver Graute wrote:
-> > From: Oliver Graute <oliver.graute@kococonnector.com>
-> > 
-> > Set Gamma Values and Register Values for the HSD20_IPS
-> > 
-> > Signed-off-by: Oliver Graute <oliver.graute@kococonnector.com>
-> > ---
-> >  drivers/staging/fbtft/fb_st7789v.c | 12 ++++++------
-> >  1 file changed, 6 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/staging/fbtft/fb_st7789v.c b/drivers/staging/fbtft/fb_st7789v.c
-> > index 84c5af2dc9a0..b0aa96b703a8 100644
-> > --- a/drivers/staging/fbtft/fb_st7789v.c
-> > +++ b/drivers/staging/fbtft/fb_st7789v.c
-> > @@ -17,8 +17,8 @@
-> >  #define DRVNAME "fb_st7789v"
-> >  
-> >  #define DEFAULT_GAMMA \
-> > -	"70 2C 2E 15 10 09 48 33 53 0B 19 18 20 25\n" \
-> > -	"70 2C 2E 15 10 09 48 33 53 0B 19 18 20 25"
-> > +	"D0 05 0A 09 08 05 2E 44 45 0F 17 16 2B 33\n" \
-> > +	"D0 05 0A 09 08 05 2E 43 45 0F 16 16 2B 33"
-> 
-> How do you know this won't break someone else's setup?
+The SCHED_DEADLINE (DL) admission control does not work correctly on
+heterogeneous (asymmetric CPU capacity) systems such as Arm big.LITTLE
+or DynamIQ.
 
-Should I declare an extra define for my values?
+Let's fix this by explicitly considering CPU capacity in DL admission
+control and task migration.
 
-+#define HSD20_IPS_GAMMA \
-+	"D0 05 0A 09 08 05 2E 44 45 0F 17 16 2B 33\n" \
-+	"D0 05 0A 09 08 05 2E 43 45 0F 16 16 2B 33"
+The DL sched class now attempts to avoid missing task deadlines due to
+smaller CPU (CPU capacity < 1024) not being capable enough to finish a
+task in time. It does so by trying to place a task so that its CPU
+capacity scaled deadline is not smaller than its runtime.
 
-> 
-> Without knowing anything at all about this driver, it feels like this
-> should be:
-> 
-> 	if (new_hardware)
-> 		write_reg(par, PORCTRL, 0x05, 0x05, 0x00, 0x33, 0x33);
-> 	else
-> 		write_reg(par, PORCTRL, 0x08, 0x08, 0x00, 0x22, 0x22);
+This patch-set only supports capacity awareness in idle scenarios
+(cpudl::free_cpus not empty). Capacity awareness for non-idle cases
+should be added in a later series.
 
-ok, I'll update this.
+Changes v1 [1] -> v2:
 
-Best regards,
+Discussion about capacity awareness in idle and non-idle scenarios
+indicated that the current patch-set only supports the former.
 
-Oliver
+Per-patch changes:
+
+(1) Use rq->cpu_capacity_orig or capacity_orig_of() instead of
+    arch_scale_cpu_capacity() [patch 1,6/6]
+
+(2) Optimize dl_bw_cpus(), i.e. return weight of rd->span if rd->span
+    &sube cpu_active_mask [patch 2/6]
+
+(3) Replace rd_capacity() with dl_bw_capacity(). [patch 3/6]
+
+Changes RFC [2] -> v1:
+
+Only use static values for CPU bandwidth (sched_dl_entity::dl_runtime,
+::dl_deadline) and CPU capacity (arch_scale_cpu_capacity()) to fix DL
+admission control.
+
+Dynamic values for CPU bandwidth (sched_dl_entity::runtime, ::deadline)
+and CPU capacity (capacity_of()) are considered to be more related to
+energy trade-off calculations which could be later introduced using the
+Energy Model.
+
+Since the design of the DL and RT sched classes are very similar, the
+implementation follows the overall design of RT capacity awareness
+(commit 804d402fb6f6 ("sched/rt: Make RT capacity-aware")).
+
+Per-patch changes:
+
+(1) Store CPU capacity sum in the root domain during
+    build_sched_domains() [patch 1/4]
+
+(2) Adjust to RT capacity awareness design [patch 3/4]
+
+(3) Remove CPU capacity aware placement in switched_to_dl()
+    (dl_migrate callback) [RFC patch 3/6]
+
+    Balance callbacks (push, pull) run only in schedule_tail()
+    __schedule(), rt_mutex_setprio() or __sched_setscheduler().
+    DL throttling leads to a call to __dequeue_task_dl() which is not a
+    full task dequeue. The task is still enqueued and only removed from
+    the rq.
+    So a queue_balance_callback() call in update_curr_dl()->
+    __dequeue_task_dl() will not be followed by a balance_callback()
+    call in one of the 4 functions mentioned above.
+
+(4) Remove 'dynamic CPU bandwidth' consideration and only support
+    'static CPU bandwidth' (ratio between sched_dl_entity::dl_runtime
+    and ::dl_deadline) [RFC patch 4/6]
+
+(5) Remove modification to migration logic which tried to schedule
+    small tasks on LITTLE CPUs [RFC patch 6/6]
+
+[1] https://lore.kernel.org/r/20200408095012.3819-1-dietmar.eggemann@arm.com
+[2] https://lore.kernel.org/r/20190506044836.2914-1-luca.abeni@santannapisa.it
+
+The following rt-app testcase tailored to Arm64 Hikey960:
+
+root@h960:~# cat /sys/devices/system/cpu/cpu*/cpu_capacity
+462
+462
+462
+462
+1024
+1024
+1024
+1024
+
+shows the expected behavior.
+
+According to the following condition in dl_task_fits_capacity()
+
+    cap_scale(dl_deadline, arch_scale_cpu_capacity(cpu)) >= dl_runtime
+
+thread0-[0-3] are placed on a big CPUs whereas thread1-[0-3] run on a
+LITTLE CPU respectively.
+
+...
+"tasks" : {
+ "thread0" : {
+  "policy" : "SCHED_DEADLINE",
+  "instance" : 4,
+  "timer" : { "ref" : "unique0", "period" : 16000, "mode" : "absolute" },
+  "run" : 10000,
+  "dl-runtime" : 11000,
+  "dl-period" : 16000,
+  "dl-deadline" : 16000
+},
+ "thread1" : {
+  "policy" : "SCHED_DEADLINE",
+  "instance" : 4,
+  "delay" : 1000,
+  "timer" : { "ref" : "unique1", "period" : 16000, "mode" : "absolute" },
+  "run" : 5500,
+  "dl-runtime" : 6500			
+  "dl-period" : 16000,
+  "dl-deadline" : 16000
+}
+...
+
+Tests were run with Performance CPUfreq governor so that the Schedutil
+CPUfreq governor DL threads (sugov:[0,4]), necessary on a
+slow-switching platform like Hikey960, do not interfere with the
+rt-app test tasks. Using Schedutil would require to lower the number of
+tasks to 3 instances each.
+
+Dietmar Eggemann (3):
+  sched/topology: Store root domain CPU capacity sum
+  sched/deadline: Optimize dl_bw_cpus()
+  sched/deadline: Add dl_bw_capacity()
+
+Luca Abeni (3):
+  sched/deadline: Improve admission control for asymmetric CPU
+    capacities
+  sched/deadline: Make DL capacity-aware
+  sched/deadline: Implement fallback mechanism for !fit case
+
+ kernel/sched/cpudeadline.c | 23 +++++++++++
+ kernel/sched/deadline.c    | 80 +++++++++++++++++++++++++++++---------
+ kernel/sched/sched.h       | 22 +++++++++--
+ kernel/sched/topology.c    | 15 +++++--
+ 4 files changed, 115 insertions(+), 25 deletions(-)
+
+-- 
+2.17.1
+
