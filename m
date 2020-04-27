@@ -2,67 +2,99 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6134CC54EEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF62C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 481A22072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:40:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588020017;
-	bh=UoFNoceYZZH5pyapz8+tDtt45JQ4gGxzCkqT0ld/LeQ=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=vLzmnyEO52tQyqB5CDUhc7N83Na23yYlw3zfgfEhsbm2drpMkXIvWyTE3nsD9fkqk
-	 5ajcw7fhFfwyoIzC5jKtHGw0b9x6+uXCI0PKqiF5kc8rD1YgGk8mC0/usxj1LAAMm1
-	 C3fMHPFM/jRW7wMny7XpMP6crjskVQKWRcuA811I=
+	by mail.kernel.org (Postfix) with ESMTP id F36232073C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 20:42:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="noKuBg1N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgD0UkQ (ORCPT
+        id S1726737AbgD0Um4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 16:40:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48404 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726205AbgD0UkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 16:40:15 -0400
-Subject: Re: [GIT PULL] Btrfs fixes for 5.7-rc4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588020014;
-        bh=UoFNoceYZZH5pyapz8+tDtt45JQ4gGxzCkqT0ld/LeQ=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=WdYQQTkyxeK95T8CuHjz8bTH+zFimCl4GD6Z+WidKsgXUWQuUhxmGWIoYhTkfxRsc
-         WU9DRhYs/o3mb7CHXk72wj710Uk1LzdjmY3VPTJLQwYrvijiq4cP69Opj6nhKhH2hz
-         nQSFSeNmB+XfoO2o+ArhUknYksQMF/8aLB8Mc+vU=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <cover.1587992189.git.dsterba@suse.com>
-References: <cover.1587992189.git.dsterba@suse.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <cover.1587992189.git.dsterba@suse.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.7-rc3-tag
-X-PR-Tracked-Commit-Id: 1402d17dfd9657be0da8458b2079d03c2d61c86a
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 51184ae37e0518fd90cb437a2fbc953ae558cd0d
-Message-Id: <158802001470.5189.1036883224851379926.pr-tracker-bot@kernel.org>
-Date:   Mon, 27 Apr 2020 20:40:14 +0000
-To:     David Sterba <dsterba@suse.com>
-Cc:     torvalds@linux-foundation.org, David Sterba <dsterba@suse.com>,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+        Mon, 27 Apr 2020 16:42:56 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:54826 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbgD0Um4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 16:42:56 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03RKg7ao016845;
+        Mon, 27 Apr 2020 15:42:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588020127;
+        bh=lsXYqzJZ87/b6MFwb+B5fUGJvdO4PlNLviGnIO0YnAo=;
+        h=From:To:CC:Subject:Date;
+        b=noKuBg1NElWkIauG42saatFVPHdxtBT6s7C7V9rBxs1bD2QpLjquLnhOTElNvrbdb
+         pz36GfwWTSnnxJoHkFP4+VD97M4nE1PwA19O+niyJZUBTrJG6i+6QjqKGI/t5oUWq3
+         HRTL76pFRPgpFPGtefghQpe3rRaUbV1z6SxWENI8=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RKg7Yf070719;
+        Mon, 27 Apr 2020 15:42:07 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 27
+ Apr 2020 15:42:07 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 27 Apr 2020 15:42:07 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03RKg7gb098139;
+        Mon, 27 Apr 2020 15:42:07 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>, <stable@vger.kernel.org>
+Subject: [PATCH] ASoC: tlv320adcx140: Fix mic gain registers
+Date:   Mon, 27 Apr 2020 15:36:08 -0500
+Message-ID: <20200427203608.7031-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 27 Apr 2020 15:45:28 +0200:
+Fix the mic gain registers for channels 2-4.
+The incorret register was being set as it was touching the CH1 config
+registers.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.7-rc3-tag
+Fixes: 37bde5acf040 ("ASoC: tlv320adcx140: Add the tlv320adcx140 codec driver family")
+Cc: stable@vger.kernel.org
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ sound/soc/codecs/tlv320adcx140.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/51184ae37e0518fd90cb437a2fbc953ae558cd0d
-
-Thank you!
-
+diff --git a/sound/soc/codecs/tlv320adcx140.c b/sound/soc/codecs/tlv320adcx140.c
+index 38897568ee96..0f713efde046 100644
+--- a/sound/soc/codecs/tlv320adcx140.c
++++ b/sound/soc/codecs/tlv320adcx140.c
+@@ -511,11 +511,11 @@ static const struct snd_soc_dapm_route adcx140_audio_map[] = {
+ static const struct snd_kcontrol_new adcx140_snd_controls[] = {
+ 	SOC_SINGLE_TLV("Analog CH1 Mic Gain Volume", ADCX140_CH1_CFG1, 2, 42, 0,
+ 			adc_tlv),
+-	SOC_SINGLE_TLV("Analog CH2 Mic Gain Volume", ADCX140_CH1_CFG2, 2, 42, 0,
++	SOC_SINGLE_TLV("Analog CH2 Mic Gain Volume", ADCX140_CH2_CFG1, 2, 42, 0,
+ 			adc_tlv),
+-	SOC_SINGLE_TLV("Analog CH3 Mic Gain Volume", ADCX140_CH1_CFG3, 2, 42, 0,
++	SOC_SINGLE_TLV("Analog CH3 Mic Gain Volume", ADCX140_CH3_CFG1, 2, 42, 0,
+ 			adc_tlv),
+-	SOC_SINGLE_TLV("Analog CH4 Mic Gain Volume", ADCX140_CH1_CFG4, 2, 42, 0,
++	SOC_SINGLE_TLV("Analog CH4 Mic Gain Volume", ADCX140_CH4_CFG1, 2, 42, 0,
+ 			adc_tlv),
+ 
+ 	SOC_SINGLE_TLV("DRE Threshold", ADCX140_DRE_CFG0, 4, 9, 0,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.25.1
+
