@@ -2,148 +2,384 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09356C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E55EC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D698A206B9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:10:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="jpEv9qVT"
+	by mail.kernel.org (Postfix) with ESMTP id 21C4A206B9
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 15:10:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728006AbgD0PKh (ORCPT
+        id S1728167AbgD0PKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 11:10:37 -0400
-Received: from mga03.intel.com ([134.134.136.65]:21280 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727073AbgD0PKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 11:10:36 -0400
-IronPort-SDR: y9zE6cf6rcs+89TJEhEj37LuLKBusRfQtJetu9jLPgf6lqzEHKn9E/lCgF4yeuzbq3j4/PRJTu
- /dCv839It4lQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2020 08:10:35 -0700
-IronPort-SDR: wdlmObYwbkVYGyiD0n1ilmUGHOfipKS5vDbXzPE36zk6DX6VbyLkBjM50VZh2W1kEHVWrzvwaf
- 5lZMufc/E9lA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,324,1583222400"; 
-   d="scan'208";a="257295815"
-Received: from orsmsx101.amr.corp.intel.com ([10.22.225.128])
-  by orsmga003.jf.intel.com with ESMTP; 27 Apr 2020 08:10:35 -0700
-Received: from orsmsx126.amr.corp.intel.com (10.22.240.126) by
- ORSMSX101.amr.corp.intel.com (10.22.225.128) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 27 Apr 2020 08:10:35 -0700
-Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
- ORSMSX126.amr.corp.intel.com (10.22.240.126) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 27 Apr 2020 08:10:35 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (104.47.37.56) by
- edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Mon, 27 Apr 2020 08:10:35 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WiHEzJBHA5G2tw/AINJhTgAB4iVFF+nYzKiiHnO27ngj4DnmuBTtYz1ITg5NjRoHSdlcAA/5Jr0owJX3C0506XhW8lW0phbayy+JZrNfBp0UR5HWFYraVUYFVLWernxFu6esPHbqFDncoV2spb9sg/gE33ZL7s6jQxSPaYylezJKOWmxPOSWkQlxwuEQBfI6a0cJfrfIipuqshhWEFJCSeORA6gb5BeQMLHCI3PbjAkV244YzVp76hnoQ++Rvx/5LYqRoEK/cmFYfW9jU0vPx3+jOzDcgQC7FJq4tJsH5rYuNahRRYNF0dcLHyir86pK/6+9NVhJr9BUmIEcvwfsXw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ax/xBl4graRX2ZEgZ6kL7Mjyd2V6IbAxhIRJkNxS5jw=;
- b=PHdU+ARvXaeMs9jd7+IYB35aMZwzZbrOEfF2kLz5W3HznFe4ToPki+pp3n3KCue3oQhxvnivvyFOXmngSuzcWiBgrnwv4qN1l5RSLv5je+NmQa0WB98yzM1/ZyDInSVMgMR39pdDaqjF6uXuWxW7BgLLstpa0LW8VKjoukKCbdNp8sge+1KRcVgbJm3N+oPCOfB1Kx0/TqnjZnfCRt+ZkDWm7DX4OYtbX/Qq/zR2+C9ZMBtzQTJYjGIf83f9rZa3EQTLNNJcNiLQfdjsGfoqTjq2h2322HvgwnXdtiocVbueCXGUDNez4uDsMgyTZPDRH+utTJmo2OwsgLAIWw+PtQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ax/xBl4graRX2ZEgZ6kL7Mjyd2V6IbAxhIRJkNxS5jw=;
- b=jpEv9qVTLBu9jitelSidTsfxfuc2WecyTG19nfjLv48ygRvCeRcYfpFhkhHLhUxPKIKYTmmJaDJdgrzWrxwmPrlaDUmjN57VsgluLqGDjhdbJdyAFRwlmKRVMJdcNL0Nrz+Wr3WSr6TdRRrrOHmbxetVHsb3y6X1WwkGfoC+SXU=
-Received: from BN6PR1101MB2132.namprd11.prod.outlook.com
- (2603:10b6:405:5b::22) by BN6PR1101MB2307.namprd11.prod.outlook.com
- (2603:10b6:405:53::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Mon, 27 Apr
- 2020 15:10:33 +0000
-Received: from BN6PR1101MB2132.namprd11.prod.outlook.com
- ([fe80::344b:59bc:1455:37a6]) by BN6PR1101MB2132.namprd11.prod.outlook.com
- ([fe80::344b:59bc:1455:37a6%11]) with mapi id 15.20.2937.023; Mon, 27 Apr
- 2020 15:10:33 +0000
-From:   "Lu, Brent" <brent.lu@intel.com>
-To:     "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-CC:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        "Mark Brown" <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Ben Zhang <benzh@chromium.org>,
-        "Chiang, Mac" <mac.chiang@intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 0/3] add channel constraint for BDW machine drivers
-Thread-Topic: [PATCH 0/3] add channel constraint for BDW machine drivers
-Thread-Index: AQHWHG/538arzRVuVUW0WV5CErDv0qiMzXUAgAAD8ICAAD9FwA==
-Date:   Mon, 27 Apr 2020 15:10:32 +0000
-Message-ID: <BN6PR1101MB2132DEC140145F90645BF2B997AF0@BN6PR1101MB2132.namprd11.prod.outlook.com>
-References: <1587976638-29806-1-git-send-email-brent.lu@intel.com>
- <1375d0b1-fafa-95b5-9a06-eefb1897ca42@intel.com>
- <1bcd3310-34c3-7d90-cb18-f474d9e30c25@intel.com>
-In-Reply-To: <1bcd3310-34c3-7d90-cb18-f474d9e30c25@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=brent.lu@intel.com; 
-x-originating-ip: [111.248.248.241]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4ae111be-8b38-4db1-0b75-08d7eabd21ba
-x-ms-traffictypediagnostic: BN6PR1101MB2307:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN6PR1101MB230755E768D41036F3A2578497AF0@BN6PR1101MB2307.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0386B406AA
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR1101MB2132.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(39860400002)(366004)(396003)(136003)(66556008)(66476007)(81156014)(7696005)(66446008)(8676002)(316002)(86362001)(33656002)(66946007)(8936002)(76116006)(64756008)(186003)(9686003)(6506007)(55016002)(26005)(5660300002)(2906002)(71200400001)(7416002)(4744005)(52536014)(110136005)(54906003)(478600001)(4326008);DIR:OUT;SFP:1102;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: vQWn1bK5cuv+u+nzAYOmsXP6ivxfP8FvBoeYcWA58zlfqn996mNuhzCsK407GHHszwWaTejOFQgMH4meLoHhPSeXDRsdBlkWJRu/nET9nE3mpbEXWUb7Cr6qsxCQWwsaGsjzSOZHz6lkwIDIYOFyutl22G+hYtXnFLcc14PFzw/tI0NP1yYtqn5D3Q5oMY2m0NqA7AeSW1Hc4NOG78yZWjoIHaICgYCc1I03mKAlv7r+U/pvYsLOKD3Ezh2gp5hP8je9UVvIBMhJ2JA8MBH10Tt8+zkJUUapDepXdEXXli471nry1Le6LQIozsgPoArU42FgsWpvkB05phQa4ezgV509FL3q5ZnwHg2GEG3BKstY8C5XtpA2K/cpc/8wfVqBfFPLp6tmJ8J677wt0CWQXAodv/AujLRleWcmSJzzN/LuokzYKOIX6uK03uPAXhjw
-x-ms-exchange-antispam-messagedata: XpOSEn6tZw/pWvGFoz+KWrycC2vXqPr0vRVqTlQIgatCOUqssMe6DKdxjFkyqfASjgkSE3YQoL/2KZftvwM0kMKHkPkh+kC9ISJE5Ax6oOfaQkdX2gyn30cuk2Mb7OmyBhoMkb94Dyc/WGzbcw9tCqcDoySVXdGqp07RJ4ETJUoLOrSKaCmdlhUvqZHvIZXJ/oub8Bqi4pZ50Es7HT5n94wA9U7l2iPS4Ps1jkkbt+kCTT716RpMPGY/fe0NkqXBFDgWo/WKQ819aMCE7NogNq7bVSL0CFT/Y99RmFmdsd9R3D/NB9NJ18Si1mocTBcWvFihos5bbDzb6c5NclKT92Kq8Xj41bUQ+md4wNBI5ACCnh8idbpo1tqw1cWKlg1EtEM3dNxJeU2Gjsjwm/Q2wSEzpO7XilVaxuHlfOAIg6qDWNXI+WVVkNBluwnqr1eWhZYv+8SK+561+0LZk9cbaHSX+6pF3vSix5SO4+ktlOSddvFjfFnDzCIpGjrwWYDP/hyzJTOuw49dxB1SjRjdrG3vZ+qubyicXQx9LM86rPDlq6RwG1NnBM75oGAKfyN97JLNY2QxRvY55a5EB6yDV2j+NWZ0E8RUDCpmt2saYr28f/bi2cC720+EkIuk65BEuIsqD/T3IZPs7Jxr/HqCPKlOwbtpi6Oyw3Z2XF6XdOH8HT7x3KH4Z6it04eTXbmFYTNSfxQEKw7bozBwGIFwzYtWXTIzxFjsmvoJOejRTFsohf/9HBGgEB37STtP3/36uoA7FQAXNkJ9HN0ZKJfHMIPvoa9eYIkNsKO3ODMNwn0qyIi3zIea25OKl6mjH2oS
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 27 Apr 2020 11:10:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40702 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727807AbgD0PKx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Apr 2020 11:10:53 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A981FC0610D5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 08:10:52 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1jT5PB-0008Di-4p; Mon, 27 Apr 2020 17:10:45 +0200
+Message-ID: <0d301ed303faea4895d30b682133ec5c9d44bd8b.camel@pengutronix.de>
+Subject: Re: [PATCH] soc: imx: Add power domain driver support for i.mx8m
+ family
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Abel Vesa <abel.vesa@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Mon, 27 Apr 2020 17:10:44 +0200
+In-Reply-To: <1587999532-30006-1-git-send-email-abel.vesa@nxp.com>
+References: <1587999532-30006-1-git-send-email-abel.vesa@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1 (3.36.1-1.fc32) 
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4ae111be-8b38-4db1-0b75-08d7eabd21ba
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Apr 2020 15:10:32.8165
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aep+3UsY6J1dZ5JKfedwjKQiv10g/qAqC5qVCKVcRuUIamM6FUvxQ06K2FPy0IJB/noBfxeqND+q/33snXwIwA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1101MB2307
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiA+DQo+ID4gQXBhcnQgZnJvbSByZXZpZXcgZ2l2ZW4gZm9yIGVhY2ggYW5kIGV2ZXJ5IHBhdGNo
-IChhbHRob3VnaCBtb3N0IGlzc3Vlcw0KPiA+IGFyZSBzaGFyZWQgc28gdGhlcmUgaXMgbm90IGFz
-IG11Y2ggdG8gYWRkcmVzcykgbXkgcXVlc3Rpb24gaXM6DQo+ID4gLSBhcmUgdGhlc2UgaHcgbGlt
-aXRhdGlvbnMgb3Igc29mdHdhcmUgKG1hY2hpbmUgYm9hcmQpIGxpbWl0YXRpb25zPw0KDQpUaGUg
-bGltaXRhdGlvbiBjb21lcyBmcm9tIGJvYXJkLiBCZHctcnQ1Njc3IGFuZCBCcm9hZHdlbGwgYXJl
-IHVzaW5nIEkyUyB3aXRoDQoyIG1pY3JvcGhvbmVzIHdoaWxlIEJkdy1ydDU2NTAgaXMgdXNpbmcg
-UENNIFRETSB3aXRoIDQgbWljcm9waG9uZXMuIE91cg0KRFNQIHN1cHBvcnRzIHN0ZXJlbyBwbGF5
-YmFjayBhbmQgMiBvciA0LWNoYW5uZWwgY2FwdHVyZSAoaGFzd2VsbC9zc3QtaGFzd2VsbC1wY20u
-YykuDQoNCg0KPiA+DQo+ID4gQ3phcmVrDQo+ID4NCj4gPj4gQnJlbnQgTHUgKDMpOg0KPiA+PiDC
-oMKgIEFTb0M6IGJkdy1ydDU2Nzc6IGNoYW5uZWwgY29uc3RyYWludCBzdXBwb3J0DQo+ID4+IMKg
-wqAgQVNvQzogYmR3LXJ0NTY1MDogY2hhbm5lbCBjb25zdHJhaW50IHN1cHBvcnQNCj4gPj4gwqDC
-oCBBU29DOiBicm9hZHdlbGw6IGNoYW5uZWwgY29uc3RyYWludCBzdXBwb3J0DQo+ID4+DQo+ID4+
-IMKgIHNvdW5kL3NvYy9pbnRlbC9ib2FyZHMvYmR3LXJ0NTY1MC5jIHwgMzQNCj4gPj4gKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+PiDCoCBzb3VuZC9zb2MvaW50ZWwvYm9h
-cmRzL2Jkdy1ydDU2NzcuYyB8IDMzDQo+ID4+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKw0KPiA+PiDCoCBzb3VuZC9zb2MvaW50ZWwvYm9hcmRzL2Jyb2Fkd2VsbC5jwqAgfCAzMw0K
-PiA+PiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPj4gwqAgMyBmaWxlcyBj
-aGFuZ2VkLCAxMDAgaW5zZXJ0aW9ucygrKQ0KPiA+Pg0K
+Am Montag, den 27.04.2020, 17:58 +0300 schrieb Abel Vesa:
+> From: Jacky Bai <ping.bai@nxp.com>
+> 
+> The i.MX8M family is a set of NXP product focus on delivering
+> the latest and greatest video and audio experience combining
+> state-of-the-art media-specific features with high-performance
+> processing while optimized for lowest power consumption.
+> 
+> i.MX8MQ, i.MX8MM, i.MX8MN, even the furture i.MX8MP are all
+> belong to this family. A GPC module is used to manage all the
+> PU power domain on/off. But the situation is that the number of
+> power domains & the power up sequence has significate difference
+> on those SoCs. Even on the same SoC. The power up sequence still
+> has big difference. It makes us hard to reuse the GPCv2 driver to
+> cover the whole i.MX8M family. Each time a new SoC is supported in
+> the mainline kernel, we need to modify the GPCv2 driver to support
+> it. We need to add or modify hundred lines of code in worst case.
+> It is a bad practice for the driver maintainability.
+> 
+> This driver add a more generic power domain driver that the actual
+> power on/off is done by TF-A code. the abstraction give us the
+> possibility that using one driver to cover the whole i.MX8M family
+> in kernel side.
+> 
+
+Again: what does this driver bring to the table, other than moving a
+fraction of the power domain functionality into the firmware?
+
+The discussions on the last submissions of this driver already
+established that we can't move all functionality for the power domains
+into the firmware, as controlling regulators is probably not easy to do
+from this context. Also the TF-A side implementation of this driver is
+"interesting" IMHO, it does stuff like accessing the clock controller
+registers without any locking or other means of mutual exclusion with
+the Linux kernel clock controller driver.
+
+Why can't we just extend the existing GPCv2 driver with support for the
+other i.MX8M family members?
+
+Regards,
+Lucas
+
+> Signed-off-by: Jacky Bai <ping.bai@nxp.com>
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> ---
+>  drivers/soc/imx/Kconfig            |   6 +
+>  drivers/soc/imx/Makefile           |   1 +
+>  drivers/soc/imx/imx8m_pm_domains.c | 224 +++++++++++++++++++++++++++++++++++++
+>  include/soc/imx/imx_sip.h          |  12 ++
+>  4 files changed, 243 insertions(+)
+>  create mode 100644 drivers/soc/imx/imx8m_pm_domains.c
+>  create mode 100644 include/soc/imx/imx_sip.h
+> 
+> diff --git a/drivers/soc/imx/Kconfig b/drivers/soc/imx/Kconfig
+> index d515d2c..7837199 100644
+> --- a/drivers/soc/imx/Kconfig
+> +++ b/drivers/soc/imx/Kconfig
+> @@ -27,4 +27,10 @@ config SOC_IMX8M
+>  	  support, it will provide the SoC info like SoC family,
+>  	  ID and revision etc.
+>  
+> +config IMX8M_PM_DOMAINS
+> +	bool "i.MX8M PM domains"
+> +	depends on ARCH_MXC || (COMPILE_TEST && OF)
+> +	depends on PM
+> +	select PM_GENERIC_DOMAINS
+> +
+>  endmenu
+> diff --git a/drivers/soc/imx/Makefile b/drivers/soc/imx/Makefile
+> index 103e2c9..a22e24b 100644
+> --- a/drivers/soc/imx/Makefile
+> +++ b/drivers/soc/imx/Makefile
+> @@ -3,3 +3,4 @@ obj-$(CONFIG_HAVE_IMX_GPC) += gpc.o
+>  obj-$(CONFIG_IMX_GPCV2_PM_DOMAINS) += gpcv2.o
+>  obj-$(CONFIG_SOC_IMX8M) += soc-imx8m.o
+>  obj-$(CONFIG_IMX_SCU_SOC) += soc-imx-scu.o
+> +obj-$(CONFIG_IMX8M_PM_DOMAINS) += imx8m_pm_domains.o
+> diff --git a/drivers/soc/imx/imx8m_pm_domains.c b/drivers/soc/imx/imx8m_pm_domains.c
+> new file mode 100644
+> index 00000000..ce06a05
+> --- /dev/null
+> +++ b/drivers/soc/imx/imx8m_pm_domains.c
+> @@ -0,0 +1,224 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2019 NXP.
+> + */
+> +
+> +#include <linux/arm-smccc.h>
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_domain.h>
+> +#include <linux/regulator/consumer.h>
+> +
+> +#include <soc/imx/imx_sip.h>
+> +
+> +#define MAX_CLK_NUM	6
+> +#define to_imx8m_pm_domain(_genpd) container_of(_genpd, struct imx8m_pm_domain, pd)
+> +
+> +
+> +struct imx8m_pm_domain {
+> +	struct device *dev;
+> +	struct generic_pm_domain pd;
+> +	u32 domain_index;
+> +	struct clk *clk[MAX_CLK_NUM];
+> +	unsigned int num_clks;
+> +	struct regulator *reg;
+> +};
+> +
+> +enum imx8m_pm_domain_state {
+> +	PD_STATE_OFF,
+> +	PD_STATE_ON,
+> +};
+> +
+> +static DEFINE_MUTEX(gpc_pd_mutex);
+> +
+> +static int imx8m_pd_power_on(struct generic_pm_domain *genpd)
+> +{
+> +	struct imx8m_pm_domain *domain = to_imx8m_pm_domain(genpd);
+> +	struct arm_smccc_res res;
+> +	int index, ret = 0;
+> +
+> +	/* power on the external supply */
+> +	if (!IS_ERR(domain->reg)) {
+> +		ret = regulator_enable(domain->reg);
+> +		if (ret) {
+> +			dev_warn(domain->dev, "failed to power up the reg%d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	/* enable the necessary clks needed by the power domain */
+> +	if (domain->num_clks) {
+> +		for (index = 0; index < domain->num_clks; index++)
+> +			clk_prepare_enable(domain->clk[index]);
+> +	}
+> +
+> +	mutex_lock(&gpc_pd_mutex);
+> +	arm_smccc_smc(IMX_SIP_GPC, IMX_SIP_CONFIG_GPC_PM_DOMAIN, domain->domain_index,
+> +		      PD_STATE_ON, 0, 0, 0, 0, &res);
+> +	mutex_unlock(&gpc_pd_mutex);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx8m_pd_power_off(struct generic_pm_domain *genpd)
+> +{
+> +	struct imx8m_pm_domain *domain = to_imx8m_pm_domain(genpd);
+> +	struct arm_smccc_res res;
+> +	int index, ret = 0;
+> +
+> +	mutex_lock(&gpc_pd_mutex);
+> +	arm_smccc_smc(IMX_SIP_GPC, IMX_SIP_CONFIG_GPC_PM_DOMAIN, domain->domain_index,
+> +		      PD_STATE_OFF, 0, 0, 0, 0, &res);
+> +	mutex_unlock(&gpc_pd_mutex);
+> +
+> +	/* power off the external supply */
+> +	if (!IS_ERR(domain->reg)) {
+> +		ret = regulator_disable(domain->reg);
+> +		if (ret) {
+> +			dev_warn(domain->dev, "failed to power off the reg%d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	/* disable clks when power domain is off */
+> +	if (domain->num_clks) {
+> +		for (index = 0; index < domain->num_clks; index++)
+> +			clk_disable_unprepare(domain->clk[index]);
+> +	}
+> +
+> +	return ret;
+> +};
+> +
+> +static int imx8m_pd_get_clocks(struct imx8m_pm_domain *domain)
+> +{
+> +	int i, ret;
+> +
+> +	for (i = 0; ; i++) {
+> +		struct clk *clk = of_clk_get(domain->dev->of_node, i);
+> +		if (IS_ERR(clk))
+> +			break;
+> +		if (i >= MAX_CLK_NUM) {
+> +			dev_err(domain->dev, "more than %d clocks\n",
+> +				MAX_CLK_NUM);
+> +			ret = -EINVAL;
+> +			goto clk_err;
+> +		}
+> +		domain->clk[i] = clk;
+> +	}
+> +	domain->num_clks = i;
+> +
+> +	return 0;
+> +
+> +clk_err:
+> +	while (i--)
+> +		clk_put(domain->clk[i]);
+> +
+> +	return ret;
+> +}
+> +
+> +static void imx8m_pd_put_clocks(struct imx8m_pm_domain *domain)
+> +{
+> +	int i;
+> +
+> +	for (i = domain->num_clks - 1; i >= 0; i--)
+> +		clk_put(domain->clk[i]);
+> +}
+> +
+> +static const struct of_device_id imx8m_pm_domain_ids[] = {
+> +	{.compatible = "fsl,imx8m-pm-domain"},
+> +	{},
+> +};
+> +
+> +static int imx8m_pm_domain_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+> +	struct imx8m_pm_domain *domain;
+> +	struct of_phandle_args parent, child;
+> +	int ret;
+> +
+> +	domain = devm_kzalloc(dev, sizeof(*domain), GFP_KERNEL);
+> +	if (!domain)
+> +		return -ENOMEM;
+> +
+> +	child.np = np;
+> +	domain->dev = dev;
+> +
+> +	ret = of_property_read_string(np, "domain-name", &domain->pd.name);
+> +	if (ret) {
+> +		dev_err(dev, "failed to get the domain name\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = of_property_read_u32(np, "domain-index", &domain->domain_index);
+> +	if (ret) {
+> +		dev_err(dev, "failed to get the domain index\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	domain->reg = devm_regulator_get_optional(dev, "power");
+> +	if (IS_ERR(domain->reg)) {
+> +		if (PTR_ERR(domain->reg) != -ENODEV) {
+> +			if (PTR_ERR(domain->reg) != -EPROBE_DEFER)
+> +				dev_err(dev, "failed to get domain's regulator\n");
+> +			return PTR_ERR(domain->reg);
+> +		}
+> +	}
+> +
+> +	ret = imx8m_pd_get_clocks(domain);
+> +	if (ret) {
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "failed to get domain's clocks\n");
+> +		return ret;
+> +	}
+> +
+> +	domain->pd.power_off = imx8m_pd_power_off;
+> +	domain->pd.power_on = imx8m_pd_power_on;
+> +
+> +	pm_genpd_init(&domain->pd, NULL, true);
+> +
+> +	ret = of_genpd_add_provider_simple(np, &domain->pd);
+> +	if (ret) {
+> +		dev_err(dev, "failed to add the domain provider\n");
+> +		pm_genpd_remove(&domain->pd);
+> +		imx8m_pd_put_clocks(domain);
+> +		return ret;
+> +	}
+> +
+> +	/* add it as subdomain if necessary */
+> +	if (!of_parse_phandle_with_args(np, "parent-domains",
+> +			"#power-domain-cells", 0, &parent)) {
+> +		ret = of_genpd_add_subdomain(&parent, &child);
+> +		of_node_put(parent.np);
+> +
+> +		if (ret < 0) {
+> +			dev_dbg(dev, "failed to add the subdomain: %s: %d",
+> +				domain->pd.name, ret);
+> +			of_genpd_del_provider(np);
+> +			pm_genpd_remove(&domain->pd);
+> +			imx8m_pd_put_clocks(domain);
+> +			return driver_deferred_probe_check_state(dev);
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver imx8m_pm_domain_driver = {
+> +	.driver = {
+> +		.name	= "imx8m_pm_domain",
+> +		.owner	= THIS_MODULE,
+> +		.of_match_table = imx8m_pm_domain_ids,
+> +	},
+> +	.probe = imx8m_pm_domain_probe,
+> +};
+> +module_platform_driver(imx8m_pm_domain_driver);
+> +
+> +MODULE_AUTHOR("NXP");
+> +MODULE_DESCRIPTION("NXP i.MX8M power domain driver");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/include/soc/imx/imx_sip.h b/include/soc/imx/imx_sip.h
+> new file mode 100644
+> index 00000000..6b96b33
+> --- /dev/null
+> +++ b/include/soc/imx/imx_sip.h
+> @@ -0,0 +1,12 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright 2019 NXP
+> + */
+> +
+> +#ifndef __IMX_SIP_H__
+> +#define __IMX_SIP_H__
+> +
+> +#define IMX_SIP_GPC			0xC2000000
+> +#define IMX_SIP_CONFIG_GPC_PM_DOMAIN	0x03
+> +
+> +#endif /* __IMX_SIP_H__ */
+
