@@ -2,357 +2,250 @@ Return-Path: <SRS0=jv8X=6L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E77DAC4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CB8C4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2E39206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:48:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z8kGvYRN"
+	by mail.kernel.org (Postfix) with ESMTP id 2911920728
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Apr 2020 18:49:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbgD0SsE (ORCPT
+        id S1726650AbgD0StW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Apr 2020 14:48:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46674 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbgD0SsD (ORCPT
+        Mon, 27 Apr 2020 14:49:22 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:42158 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726525AbgD0StW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Apr 2020 14:48:03 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89197C0610D5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 11:48:02 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id a7so10622406uak.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Apr 2020 11:48:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=cFn00JHO3//cIrlbFatqYT5gKfrzHc2bMxqCPhl3DDk=;
-        b=Z8kGvYRNc3cU4CYxNXtCQpRxxZmVaZfpzE/MSz3U/6rA4aTwWVgKQa4V4AN01u0OlD
-         WbZeyFUDbAxHOvqxU6EB6lc4Qe3GW4aCnRLCZoRj/eAswrAaiSZpH3Qlmk7ZM/BZrLm3
-         7Dn2kHG/tMV0nai5SbBRPg4Ztg1d0O8LKr+74e3QjYiJwbUbUCdcJJB7rzKRwmAcKiXW
-         mMQEaXZnrdVVjd+yQRvHqsGSh8E5lXX4i2xkvj8ET0RcHCkL/jWrblLA3lSHDK19CkjG
-         uG8VzDKK3JnWVxGrLiGARmzLzUoVlUDsSPE+JWgincUgONghx4Vf/elPzgmGLW7s+v7g
-         ef6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=cFn00JHO3//cIrlbFatqYT5gKfrzHc2bMxqCPhl3DDk=;
-        b=QnHehJVFwgRZ3B6aRMu/pY9+sVe+wAe06d/gANOV21XWQf/LQBBqxLqkU8AmS6qLqr
-         7asThGb3EWx15kLiL3oSwhMAJmL/rkeM+HGdP2WQipAmzvRugw4CEB7J4nb/o0awLKS9
-         pNBad9l3hczl0Q18nL8asDR9Ifql9Yd+dA5C6+92Rkl6r31ANZnYYflCgUCZdMjg/u1l
-         JL8aqIVRCRKs06ndcl5OCpISS+Oix4ogeUeIOxF3wuLJ224NP0Vk3uLDxs4PWjsXuY6T
-         mHWgQr+uW8ezm1fz+IvRrqN0om7zDBUYpHgjASGEbrlAX/RDEnwMIIC3Xlj8sqyDZXOO
-         yLmw==
-X-Gm-Message-State: AGi0Pubo8bnCChYHYqiW4aoUUxCS4/hFwLkYBLfqT2vP1VnGsVLHN4Qs
-        c30HuuTgmRUlm+plWOeMNw+zfQ/lgsHtYCKonipQAA==
-X-Google-Smtp-Source: APiQypLu6VKxQGNQLLvqKo1WMOawCQmpu4RzXh4UZIdVYvclWAiYpQcdFRX9JT1mAatyGGYXf/UXXMUFbn6PhtF1OwM=
-X-Received: by 2002:ab0:202:: with SMTP id 2mr17746122uas.42.1588013281404;
- Mon, 27 Apr 2020 11:48:01 -0700 (PDT)
+        Mon, 27 Apr 2020 14:49:22 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 062D220026;
+        Mon, 27 Apr 2020 20:49:15 +0200 (CEST)
+Date:   Mon, 27 Apr 2020 20:49:09 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Xin Ji <xji@analogixsemi.com>
+Cc:     devel@driverdev.osuosl.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Nicolas Boichat <drinkcat@google.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        David Airlie <airlied@linux.ie>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Sheng Pan <span@analogixsemi.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH v8 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
+ transmitter binding
+Message-ID: <20200427184909.GA15880@ravnborg.org>
+References: <cover.1587880280.git.xji@analogixsemi.com>
+ <67ccead807b7d0a50df479cab2c9d325041224bc.1587880280.git.xji@analogixsemi.com>
 MIME-Version: 1.0
-References: <CAJuCfpG4NkhpQvZjgXZ_3gm6Hf1QgN_eUOQ8iX9Cv1k9whLwSQ@mail.gmail.com>
- <CAJuCfpGMdegJvLO-o-96PNf6iV5sWcmj=WUovi9ixRbeiHX70w@mail.gmail.com>
- <20200424174025.GA13592@hirez.programming.kicks-ass.net> <CAJuCfpEEp=UVa=WXtXwdKbUa_yZsrmaE=wqhQL7xEYHXcKbg=w@mail.gmail.com>
- <CALvZod4hNWFMErVSCPnPV4TJAhJHH11ta_c30dhOgaWOesQxaA@mail.gmail.com> <CAJuCfpECDryYL7ia+JH8HZtWRWHtLFFg2ZwtAB4nj=mXDDPENg@mail.gmail.com>
-In-Reply-To: <CAJuCfpECDryYL7ia+JH8HZtWRWHtLFFg2ZwtAB4nj=mXDDPENg@mail.gmail.com>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Mon, 27 Apr 2020 11:47:50 -0700
-Message-ID: <CAJuCfpE+qHpOVU9JS+CEVKgdJMgZB8jG3KKq=AMFNZXCgvE69Q@mail.gmail.com>
-Subject: Re: lockdep warning about possible circular dependency in PSI
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>, will@kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <67ccead807b7d0a50df479cab2c9d325041224bc.1587880280.git.xji@analogixsemi.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=ULXz4hXy c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8 a=bbNUuHX0AAAA:8 a=gEfo2CItAAAA:8
+        a=5HKp4fn5R8_46mwjT_sA:9 a=tXNADfTO3e5-O_bI:21 a=RL_1sUc0Wx0J8rAF:21
+        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=3b-t3vAtY4IUXy2q2Ylb:22
+        a=sptkURWiP4Gy88Gu7hUp:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 5:00 PM Suren Baghdasaryan <surenb@google.com> wrot=
-e:
->
-> On Fri, Apr 24, 2020 at 1:54 PM Shakeel Butt <shakeelb@google.com> wrote:
-> >
-> > On Fri, Apr 24, 2020 at 10:52 AM Suren Baghdasaryan <surenb@google.com>=
- wrote:
-> > >
-> > > On Fri, Apr 24, 2020 at 10:40 AM Peter Zijlstra <peterz@infradead.org=
-> wrote:
-> > > >
-> > > > On Fri, Apr 24, 2020 at 09:34:42AM -0700, Suren Baghdasaryan wrote:
-> > > > > Sorry to bother you again folks. Any suggestions on how to silenc=
-e
-> > > > > this lockdep warning which I believe to be a false positive?
-> > > > >
-> > > > > On Wed, Apr 15, 2020 at 4:01 PM Suren Baghdasaryan <surenb@google=
-.com> wrote:
-> > > > > >
-> > > > > > I received a report about possible circular locking dependency =
-warning
-> > > > > > generated from PSI polling code. I think we are protected from =
-this
-> > > > > > scenario by poll_scheduled atomic but wanted to double-check an=
-d I=E2=80=99m
-> > > > > > looking for an advice on how to annotate this case to fix the l=
-ockdep
-> > > > > > warning. I copied the detailed information at the end of this e=
-mail
-> > > > > > but the short story is this:
-> > > > > >
-> > > > > > "WARNING: possible circular locking dependency detected" is gen=
-erated
-> > > > > > with CONFIG_PSI and CONFIG_LOCKDEP enabled. The dependency chai=
-n it
-> > > > > > describes is:
-> > > > > >
-> > > > > > #0
-> > > > > > kthread_delayed_work_timer_fn()
-> > > > > >  |
-> > > > > > worker->lock
-> > > > > >  |
-> > > > > > try_to_wake_up()
-> > > > > >  |
-> > > > > > p->pi_lock
-> > > > > >
-> > > > > > #1
-> > > > > > sched_fork()
-> > > > > >  |
-> > > > > > p->pi_lock
-> > > > > >  |
-> > > > > > task_fork_fair()
-> > > > > >  |
-> > > > > > rq->lock
-> > > > > >
-> > > > > > #2
-> > > > > > psi_memstall_enter
-> > > > > >  |
-> > > > > > rq->lock
-> > > > > >  |
-> > > > > > kthread_queue_delayed_work()
-> > > > > >  |
-> > > > > > worker->lock
-> > > >
-> > > > Irrespective of it actually being a deadlock or not, it is fairly
-> > > > fragile. Ideally we'd fix #2, we really should minimize the number =
-of
-> > > > locks nested under rq->lock.
-> > > >
-> > > > That said, here's the easy fix, which breaks #0.
-> > > >
-> > >
-> > > Thanks for the suggestion, Peter. Let me digest this and will post a
-> > > patch with your Suggested-by.
-> > > Cheers!
-> > >
-> >
-> > I tested on my simple repro and the patch fixes the lockdep splat.
-> >
-> > You can add
-> > Tested-by: Shakeel Butt <shakeelb@google.com>
-> >
->
-> Thanks Shakeel! Will do.
->
-> > > > ---
-> > > > diff --git a/kernel/kthread.c b/kernel/kthread.c
-> > > > index bfbfa481be3a..b443bba7dd21 100644
-> > > > --- a/kernel/kthread.c
-> > > > +++ b/kernel/kthread.c
-> > > > @@ -806,14 +806,15 @@ static void kthread_insert_work_sanity_check(=
-struct kthread_worker *worker,
-> > > >  /* insert @work before @pos in @worker */
-> > > >  static void kthread_insert_work(struct kthread_worker *worker,
-> > > >                                 struct kthread_work *work,
-> > > > -                               struct list_head *pos)
-> > > > +                               struct list_head *pos,
-> > > > +                               struct wake_q_head *wake_q)
-> > > >  {
-> > > >         kthread_insert_work_sanity_check(worker, work);
-> > > >
-> > > >         list_add_tail(&work->node, pos);
-> > > >         work->worker =3D worker;
-> > > >         if (!worker->current_work && likely(worker->task))
-> > > > -               wake_up_process(worker->task);
-> > > > +               wake_q_add(wake_q, worker->task);
-> > > >  }
-> > > >
-> > > >  /**
-> > > > @@ -831,15 +832,19 @@ static void kthread_insert_work(struct kthrea=
-d_worker *worker,
-> > > >  bool kthread_queue_work(struct kthread_worker *worker,
-> > > >                         struct kthread_work *work)
-> > > >  {
-> > > > -       bool ret =3D false;
-> > > > +       DEFINE_WAKE_Q(wake_q);
-> > > >         unsigned long flags;
-> > > > +       bool ret =3D false;
-> > > >
-> > > >         raw_spin_lock_irqsave(&worker->lock, flags);
-> > > >         if (!queuing_blocked(worker, work)) {
-> > > > -               kthread_insert_work(worker, work, &worker->work_lis=
-t);
-> > > > +               kthread_insert_work(worker, work, &worker->work_lis=
-t, &wake_q);
-> > > >                 ret =3D true;
-> > > >         }
-> > > >         raw_spin_unlock_irqrestore(&worker->lock, flags);
-> > > > +
-> > > > +       wake_up_q(&wake_q);
-> > > > +
-> > > >         return ret;
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(kthread_queue_work);
-> > > > @@ -857,6 +862,7 @@ void kthread_delayed_work_timer_fn(struct timer=
-_list *t)
-> > > >         struct kthread_delayed_work *dwork =3D from_timer(dwork, t,=
- timer);
-> > > >         struct kthread_work *work =3D &dwork->work;
-> > > >         struct kthread_worker *worker =3D work->worker;
-> > > > +       DEFINE_WAKE_Q(wake_q);
-> > > >         unsigned long flags;
-> > > >
-> > > >         /*
-> > > > @@ -873,15 +879,18 @@ void kthread_delayed_work_timer_fn(struct tim=
-er_list *t)
-> > > >         /* Move the work from worker->delayed_work_list. */
-> > > >         WARN_ON_ONCE(list_empty(&work->node));
-> > > >         list_del_init(&work->node);
-> > > > -       kthread_insert_work(worker, work, &worker->work_list);
-> > > > +       kthread_insert_work(worker, work, &worker->work_list, &wake=
-_q);
-> > > >
-> > > >         raw_spin_unlock_irqrestore(&worker->lock, flags);
-> > > > +
-> > > > +       wake_up_q(&wake_q);
-> > > >  }
-> > > >  EXPORT_SYMBOL(kthread_delayed_work_timer_fn);
-> > > >
-> > > >  static void __kthread_queue_delayed_work(struct kthread_worker *wo=
-rker,
-> > > >                                          struct kthread_delayed_wor=
-k *dwork,
-> > > > -                                        unsigned long delay)
-> > > > +                                        unsigned long delay,
-> > > > +                                        struct wake_q_head *wake_q=
-)
-> > > >  {
-> > > >         struct timer_list *timer =3D &dwork->timer;
-> > > >         struct kthread_work *work =3D &dwork->work;
-> > > > @@ -895,7 +904,7 @@ static void __kthread_queue_delayed_work(struct=
- kthread_worker *worker,
-> > > >          * on that there's no such delay when @delay is 0.
-> > > >          */
-> > > >         if (!delay) {
-> > > > -               kthread_insert_work(worker, work, &worker->work_lis=
-t);
-> > > > +               kthread_insert_work(worker, work, &worker->work_lis=
-t, wake_q);
-> > > >                 return;
-> > > >         }
-> > > >
-> > > > @@ -928,17 +937,21 @@ bool kthread_queue_delayed_work(struct kthrea=
-d_worker *worker,
-> > > >                                 unsigned long delay)
-> > > >  {
-> > > >         struct kthread_work *work =3D &dwork->work;
-> > > > +       DEFINE_WAKE_Q(wake_q);
-> > > >         unsigned long flags;
-> > > >         bool ret =3D false;
-> > > >
-> > > >         raw_spin_lock_irqsave(&worker->lock, flags);
-> > > >
-> > > >         if (!queuing_blocked(worker, work)) {
-> > > > -               __kthread_queue_delayed_work(worker, dwork, delay);
-> > > > +               __kthread_queue_delayed_work(worker, dwork, delay, =
-&wake_q);
-> > > >                 ret =3D true;
-> > > >         }
-> > > >
-> > > >         raw_spin_unlock_irqrestore(&worker->lock, flags);
-> > > > +
-> > > > +       wake_up_q(&wake_q);
-> > > > +
-> > > >         return ret;
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(kthread_queue_delayed_work);
-> > > > @@ -967,6 +980,7 @@ void kthread_flush_work(struct kthread_work *wo=
-rk)
-> > > >                 KTHREAD_WORK_INIT(fwork.work, kthread_flush_work_fn=
-),
-> > > >                 COMPLETION_INITIALIZER_ONSTACK(fwork.done),
-> > > >         };
-> > > > +       DEFINE_WAKE_Q(wake_q);
-> > > >         struct kthread_worker *worker;
-> > > >         bool noop =3D false;
-> > > >
-> > > > @@ -979,15 +993,17 @@ void kthread_flush_work(struct kthread_work *=
-work)
-> > > >         WARN_ON_ONCE(work->worker !=3D worker);
-> > > >
-> > > >         if (!list_empty(&work->node))
-> > > > -               kthread_insert_work(worker, &fwork.work, work->node=
-.next);
-> > > > +               kthread_insert_work(worker, &fwork.work, work->node=
-.next, &wake_q);
-> > > >         else if (worker->current_work =3D=3D work)
-> > > >                 kthread_insert_work(worker, &fwork.work,
-> > > > -                                   worker->work_list.next);
-> > > > +                                   worker->work_list.next, &wake_q=
-);
-> > > >         else
-> > > >                 noop =3D true;
-> > > >
-> > > >         raw_spin_unlock_irq(&worker->lock);
-> > > >
-> > > > +       wake_up_q(&wake_q);
-> > > > +
-> > > >         if (!noop)
-> > > >                 wait_for_completion(&fwork.done);
-> > > >  }
-> > > > @@ -1065,6 +1081,7 @@ bool kthread_mod_delayed_work(struct kthread_=
-worker *worker,
-> > > >                               unsigned long delay)
-> > > >  {
-> > > >         struct kthread_work *work =3D &dwork->work;
-> > > > +       DEFINE_WAKE_Q(wake_q);
-> > > >         unsigned long flags;
-> > > >         int ret =3D false;
-> > > >
-> > > > @@ -1083,9 +1100,12 @@ bool kthread_mod_delayed_work(struct kthread=
-_worker *worker,
-> > > >
-> > > >         ret =3D __kthread_cancel_work(work, true, &flags);
-> > > >  fast_queue:
-> > > > -       __kthread_queue_delayed_work(worker, dwork, delay);
-> > > > +       __kthread_queue_delayed_work(worker, dwork, delay, &wake_q)=
-;
-> > > >  out:
-> > > >         raw_spin_unlock_irqrestore(&worker->lock, flags);
-> > > > +
-> > > > +       wake_up_q(&wake_q);
-> > > > +
-> > > >         return ret;
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(kthread_mod_delayed_work);
-> > > >
+Hi Xin Ji
 
-Patch is posted at https://lkml.org/lkml/2020/4/27/985 . Had to
-include linux/sched/wake_q.h and fix a long line but other than that
-it's unchanged.
-Thanks!
+On Mon, Apr 27, 2020 at 02:17:46PM +0800, Xin Ji wrote:
+> The ANX7625 is an ultra-low power 4K Mobile HD Transmitter designed
+> for portable device. It converts MIPI to DisplayPort 1.3 4K.
 
-> > > > --
-> > > > To unsubscribe from this group and stop receiving emails from it, s=
-end an email to kernel-team+unsubscribe@android.com.
-> > > >
+Thanks for providing this binding.
+When you re-submit please also send to devicetree@vger.kernel.org.
+
+Running the binding through dt_binding_check gives me:
+
+/home/sam/drm/linux.git/Documentation/devicetree/bindings/display/bridge/anx7625.yaml: ignoring, error in schema:
+warning: no schema found in file: /home/sam/drm/linux.git/Documentation/devicetree/bindings/display/bridge/anx7625.yaml
+make[2]: *** [/home/sam/drm/linux.git/Documentation/devicetree/bindings/Makefile:42: Documentation/devicetree/bindings/processed-schema.yaml] Error 255
+make[2]: *** Waiting for unfinished jobs....
+/home/sam/drm/linux.git/Documentation/devicetree/bindings/display/bridge/anx7625.yaml: Additional properties are not allowed ('example' was unexpected)
+/home/sam/drm/linux.git/Documentation/devicetree/bindings/display/bridge/anx7625.yaml: Additional properties are not allowed ('example' was unexpected)
+
+See writing-schemas.rst for instruction installing tools etc.
+
+> 
+> You can add support to your board with binding.
+> 
+> Example:
+> 	anx7625_bridge: encoder@58 {
+> 		compatible = "analogix,anx7625";
+> 		reg = <0x58>;
+> 		status = "okay";
+> 		panel-flags = <1>;
+> 		enable-gpios = <&pio 45 GPIO_ACTIVE_HIGH>;
+> 		reset-gpios = <&pio 73 GPIO_ACTIVE_HIGH>;
+> 		#address-cells = <1>;
+> 		#size-cells = <0>;
+> 
+> 		port@0 {
+> 		  reg = <0>;
+> 		  anx_1_in: endpoint {
+> 		    remote-endpoint = <&mipi_dsi>;
+> 		  };
+> 		};
+> 
+> 		port@2 {
+> 		  reg = <2>;
+> 		  anx_1_out: endpoint {
+> 		    remote-endpoint = <&panel_in>;
+> 		  };
+> 		};
+> 	};
+> 
+> Signed-off-by: Xin Ji <xji@analogixsemi.com>
+> ---
+>  .../bindings/display/bridge/anx7625.yaml           | 91 ++++++++++++++++++++++
+>  1 file changed, 91 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/anx7625.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/anx7625.yaml b/Documentation/devicetree/bindings/display/bridge/anx7625.yaml
+> new file mode 100644
+> index 0000000..1149ebb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/anx7625.yaml
+
+Name the file "analogix,anx7625.yaml".
+(We should rename anx6345.yaml, so others do not omit the company name)
+
+> @@ -0,0 +1,91 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 Analogix Semiconductor, Inc.
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/display/bridge/anx7625.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Analogix ANX7625 SlimPort (4K Mobile HD Transmitter)
+> +
+> +maintainers:
+> +  - Xin Ji <xji@analogixsemi.com>
+> +
+> +description: |
+> +  The ANX7625 is an ultra-low power 4K Mobile HD Transmitter
+> +  designed for portable devices.
+> +
+> +properties:
+> +  "#address-cells": true
+> +  "#size-cells": true
+> +
+> +  compatible:
+> +    items:
+> +      - const: analogix,anx7625
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  panel-flags:
+> +    description: indicate the panel is internal or external.
+> +    maxItems: 1
+This property hint at something needs to be modelled in a different way.
+I do not recall other bindings need similar info.
+
+> +
+> +  interrupts:
+> +    maxItems: 1
+A description would be nice.
+
+> +
+> +  enable-gpios:
+> +    description: used for power on chip control, POWER_EN pin D2.
+> +    maxItems: 1
+> +
+> +  reset-gpios:
+> +    description: used for reset chip control, RESET_N pin B7.
+> +    maxItems: 1
+> +
+> +  port@0:
+> +    type: object
+> +    description:
+> +      A port node pointing to MIPI DSI host port node.
+> +
+> +  port@1:
+> +    type: object
+> +    description:
+> +      A port node pointing to MIPI DPI host port node.
+Maybe explain how it differs from port@0 and why it is optional.
+
+> +
+> +  port@2:
+> +    type: object
+> +    description:
+> +      A port node pointing to panel port node.
+Unless there is a good reason not to then please use a ports node, like
+you see in almost (all?) other bridge bindings.
+
+> +
+> +required:
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - compatible
+> +  - reg
+> +  - port@0
+> +  - port@2
+
+additionalProperties: false??
+
+
+> +
+> +example:
+It must be named "examples:" - this is what dt_binding_check complains
+about.
+
+> +  - |
+> +    anx7625_bridge: encoder@58 {
+> +        compatible = "analogix,anx7625";
+> +        reg = <0x58>;
+> +        status = "okay";
+No status in examples.
+
+> +        panel-flags = <1>;
+> +        enable-gpios = <&pio 45 GPIO_ACTIVE_HIGH>;
+You need to include a header file to pull in GPIO_ACTIVE_HIGH - see what
+other bindings do.
+> +        reset-gpios = <&pio 73 GPIO_ACTIVE_HIGH>;
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        port@0 {
+> +          reg = <0>;
+Be consistent with indent. My personal preference is 4 spaces.
+
+> +          anx_1_in: endpoint {
+> +            remote-endpoint = <&mipi_dsi>;
+> +          };
+> +        };
+> +
+> +        port@2 {
+> +          reg = <2>;
+> +          anx_1_out: endpoint {
+> +            remote-endpoint = <&panel_in>;
+> +          };
+> +        };
+> +    };
+
+Lot's of small comments. But if this is your first binding then this is
+expected.
+Looks forward for v2.
+
+	Sam
